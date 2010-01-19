@@ -1,0 +1,69 @@
+<div class="verse-list">
+
+	<table cellpadding="6" cellspacing="0">
+		<tr>
+			<td><b><%= link_to 'ID',			:action => 'list_assets', :sort_order => 'avail_history'%></b></td>					
+			<td><b><%= link_to 'Translation',	:action => 'list_assets', :sort_order => 'avail_history'%></b></td>		  	 
+			<td><b><%= link_to 'Book Num',		:action => 'list_assets', :sort_order => 'avail_history'%></b></td>	
+			<td><b><%= link_to 'Book',			:action => 'list_assets', :sort_order => 'first_traded'%></b></td>
+			<td><b><%= link_to 'Chapter', 		:action => 'list_assets', :sort_order => 'updated_at'%></b></td>		  				  	  		  		  		  
+			<td><b><%= link_to 'Verse',			:action => 'list_assets', :sort_order => 'avail_history'%></b></td>	
+			<td><b><%= link_to 'Users',			:action => 'list_assets', :sort_order => 'avail_history'%></b></td>				
+			<td><b><%= link_to 'Text',			:action => 'list_assets', :sort_order => 'first_traded'%></b></td>
+			<td><b><%= link_to 'Verified?',		:action => 'list_assets', :sort_order => 'first_traded'%></b></td>
+		</tr>
+		<% for vs in @need_verification %>
+		<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
+			<td><%= vs.id				%></td>				
+			<td><%= vs.translation		%></td>		 
+			<td><%= book_index(vs.book)	%></td>	
+			<td><%= vs.book				%></td>			
+			<td><%= vs.chapter			%></td>
+			<td><%= vs.versenum			%></td>
+			<td><%= vs.memverses.length	%></td>	
+			<td class="edit_area" id=<%= vs.id %>><%= vs.text %></td>
+			<td><%= vs.verified			%></td>	
+			<td><%= link_to 'Edit',   :action => 'edit_verse', :id => vs %></td>
+			<td class="verify"><%= link_to_remote 'Verify', :url => { :action => "verify_verse", :id => vs.id },
+											 :update => { :success => "Verified", :failure => "Error"} %>
+			</td>
+			<td><%= link_to 'X', { :action => 'destroy_verse',  :id => vs }, :confirm => 'Are you sure?', :method => :post %></td>								
+		</tr>
+		<% end %>
+	
+	</table>
+
+</div>
+
+<!-- http://www.appelsiini.net/projects/jeditable -->
+<script type="text/javascript">
+	 $(document).ready(function() {   
+	     $('.edit').editable('/admin/set_verse_text', {
+	         indicator : 'Saving...',
+	         tooltip   : 'Click to edit...'
+	     });
+	     $('.edit_area').editable('/admin/set_verse_text', { 
+	         type      : 'textarea',
+	         cancel    : 'Cancel',
+	         submit    : 'OK',
+	         indicator : 'Saving...',
+	         tooltip   : 'Click to edit...'
+	     });
+	 });
+</script>
+
+<!-- Highlight verse to be verified -->
+<script>
+  $(document).ready(function(){
+    
+    $('.verify').click(function () { 
+      $(this).closest('tr').fadeOut("slow"); 
+    });
+    $('.verify').hover(function () {
+      $(this).closest('tr').addClass("hilite");
+    }, function () {
+      $(this).closest('tr').removeClass("hilite");
+    });
+
+  });
+</script>

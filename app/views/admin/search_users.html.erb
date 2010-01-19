@@ -1,0 +1,24 @@
+<div class="details-form">
+		
+	<fieldset>
+		<legend> Enter User login, email or name</legend>
+		
+ 			<% form_tag( {:action => 'interactive'}, { :id => 'advanced_search' } ) do %>
+			  <p>
+				Search:			<%= text_field_tag( :search_param, 	params[:search_param],  :size =>  40 )%>	
+			  </p>
+			  							
+			<% end %>
+					
+	</fieldset>
+				
+	<%= observe_form 	'advanced_search',
+						:frequency	=> 0.5,
+						:update		=> 'search_results',
+						:url		=> {:action => 'search_user', :only_path => false} %>
+</div>	
+
+<div id="search_results">
+	<%= render :partial=>'search_user' %>
+</div>
+

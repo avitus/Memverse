@@ -1,0 +1,85 @@
+<div id="user-stats">
+	<table class="user-stats-table" cellpadding="6" cellspacing="0" border="1">	
+		<tr>
+			<th align="center">Verses</th>
+			<th align="center">Users</th>
+			<th align="center">%</th>
+		</tr>
+		<% @table_keys.each do |x| %>
+			<tr>
+				<td align="center"><%= x %></td>
+				<td align="center"><%= @usage_table[x] %></td>
+				<td align="right"><%= number_with_precision(@usage_table[x].to_f / @num_users.to_f * 100, :precision => 1) %>%</td>
+			</tr>
+		<% end %>
+		<tr>
+			<th>Total</th>
+			<td align="center"><%=@num_users%></td>
+			<td align="right">100.0%</td>
+		</tr>
+	</table>
+</div>
+
+<div id="weekly-activity">
+	<table class="user-stats-table" cellpadding="6" cellspacing="0" border="1">	
+		<th colspan="2">Weekly Activity</th>
+		<tr>
+			<td>New Verses</td>
+			<td><%= @new_verses_this_week %></td>
+		</tr>
+		<tr>
+			<td>New Memory Verses</td>
+			<td><%= @new_mvs_this_week %></td>
+		</tr>
+		<tr>
+			<td>New Users</td>
+			<td><%= @new_users_this_week %></td>
+		</tr>
+		<tr>
+			<td>Active Users</td>
+			<td><%= @active_users_this_week %></td>
+		</tr>				
+	</table>
+</div>
+
+<div id="daily-activity">
+	<table class="user-stats-table" cellpadding="6" cellspacing="0" border="1">	
+		<th colspan="2">Activity Today</th>
+		<tr>
+			<td>New Verses</td>
+			<td><%= @new_verses_today %></td>
+		</tr>
+		<tr>
+			<td>New Memory Verses</td>
+			<td><%= @new_mvs_today %></td>
+		</tr>
+		<tr>
+			<td>New Users</td>
+			<td><%= @new_users_today %></td>
+		</tr>
+		<tr>
+			<td>Active Users</td>
+			<td><%= @active_users_today %></td>
+		</tr>				
+	</table>
+</div>
+
+
+<div id="cohort-analysis">
+	<table class="user-stats-table" cellpadding="6" cellspacing="0" border="1">	
+		<tr>
+			<th>Cohort</th>
+			<th>Initial</th>
+			<th>Past Month</th>
+			<th>% Active</th>
+		</tr>
+		<% @cohort_table.keys.sort.each do |cohort| %>
+			<tr>
+				<td><%= cohort %></td>
+				<td align="center"><%= @cohort_table[cohort] %></td>
+				<td align="center"><%= @activity_table[cohort] %></td>
+				<td align="right"><%= number_with_precision( @activity_table[cohort].to_f / @cohort_table[cohort].to_f * 100, :precision => 1) %>%</td>
+			</tr>	
+		<% end %>	
+	</table>
+</div>

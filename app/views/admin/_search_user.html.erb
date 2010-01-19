@@ -1,0 +1,30 @@
+<div class="verse-list">
+
+	<table cellpadding="6" cellspacing="0">
+		<tr>
+			<th>Login</th>
+			<th>Name</th>
+			<th>Email</th>
+			<th>Church</th>
+			<th>Country</th>
+			<th>Memorized</th>
+			<th>Learning</th>
+		</tr>
+		<% for u in @user_list %>
+			<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
+				<td><%= link_to u.login, show_user_info_path(:id => u) %></td>				
+				<td><%= u.name ? u.name : ""						%></td>		 
+				<td><%= u.email										%></td>	
+				<td><%= u.church ? u.church.name : ""				%></td>			
+				<td><%= u.country ? u.country.printable_name : ""	%></td>
+				<td><%= u.memorized									%></td>
+				<td><%= u.learning									%></td>				
+				
+				<td><%= link_to 'Edit',   :action => 'edit_user', :id => u %></td>
+				<td><%= link_to 'X', { :action => 'destroy_user',  :id => u }, :confirm => 'Are you sure?', :method => :post %></td>								
+			</tr>
+		<% end %>
+	
+	</table>
+
+</div>

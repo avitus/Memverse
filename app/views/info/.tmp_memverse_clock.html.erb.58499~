@@ -1,0 +1,3 @@
+<p>All memory verses (learning) : <%=@mv_count_learning %></p>
+<p>All memory verses (memorized): <%=@mv_count_memorized%></p>
+<p>All memory verses (total)	: <%=@mv_count		  %></p>

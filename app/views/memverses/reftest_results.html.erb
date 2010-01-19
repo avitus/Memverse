@@ -1,0 +1,22 @@
+<div>
+	<h2>You scored <%=@correct%> out of <%=@answered%></h2>
+</div>
+
+<p>These are the references you got wrong:</p>
+
+<div>
+	<table cellpadding="6" cellspacing="1" border="1">
+		<tr>		  	 
+			<th>Reference</td>	
+			<th>Memory Verse</td>
+		</tr>
+
+		<% for mistake in @incorrect %>
+			<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
+				<td><%=session[:ref_soln][mistake][0]%> <%=session[:ref_soln][mistake][1]%>:<%=session[:ref_soln][mistake][2]%></td>
+				<td><%= session[:ref_test][mistake] %></td>				
+			</tr>
+		<% end %>
+	</table>
+</div>
+

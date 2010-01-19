@@ -1,0 +1,88 @@
+<!-- Only active until the end of 2010 -->
+<script src="http://cdn.jquerytools.org/1.0.2/jquery.tools.min.js"></script>
+
+<div class="entry-form" id="signup-page-form">
+
+	<% @user.password = @user.password_confirmation = nil %>
+	<%= title "Signup", :h2 %>
+	<% form_for @user do |f| %>
+		<%= f.error_messages %>
+		<fieldset>
+			<legend>Your Details</legend>
+			<ol>
+				<li>
+					<%= f.label 			:login, 'Username' %>
+					<%= f.text_field 		:login %>
+					<div class="tooltip">You'll use this username to login to Memverse.</div>					
+				</li>
+				<li>
+					<%= f.label 			:email %>
+					<%= f.text_field 		:email %>
+					<div class="tooltip">Check this carefully. You will receive an activation email at this email address. We highly recommend adding
+										 admin@memverse.com to your email address book to ensure delivery of the activation email.</div>					
+				</li>
+				<li>
+					<%= f.label 			:password %>
+					<%= f.password_field 	:password %>
+					<div class="tooltip">Use one you'll remember. We use the highest level of encryption.</div>					
+				</li>
+				<li>
+					<%= f.label 			:password_confirmation, 'Confirm Password' %>
+					<%= f.password_field 	:password_confirmation %>
+					<div class="tooltip">One more time and you're done!</div>						
+				</li>
+			</ol>
+		</fieldset>
+		
+		<br>
+		
+		<div class="buttons">
+			<%= submit_tag 'Sign up' %>
+		</div>			
+
+<!-- Be sure to enable on login page 		
+		<br>
+		
+		<fieldset>
+			<legend>Signup with OpenID</legend>
+			<ol>
+				<li>
+					<label for="openid_url">OpenID URL</label>
+					<%= text_field_tag :openid_url, params[:openid_url] || params['openid.identity'] %>
+					<span id="open-id-link"><%= link_to( '[What is OpenID?]', 'http://openid.net') %></span>
+				</li> 
+			</ol>
+		</fieldset>
+
+		
+		<br>
+		
+		<div class="buttons">
+			<%= submit_tag 'Sign up' %>
+		</div>	
+		
+-->
+			
+	<% end %>
+</div>
+
+
+<script type="text/javascript">
+// select all desired input fields and attach tooltips to them 
+$("#new_user :input").tooltip({ 
+ 
+    // place tooltip on the right edge 
+    position: ['center', 'right'], 
+ 
+    // a little tweaking of the position 
+    offset: [-2, 100], 
+ 
+    // use a simple show/hide effect 
+    effect: 'toggle', 
+     
+    // custom opacity setting 
+    opacity: 0.7 
+});
+</script>
+
+

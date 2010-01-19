@@ -1,0 +1,3 @@
+<%= render :partial => 'verse_form' %>
+
+<%= link_to '[Add]', :action => 'quick_add', :vs => @verse %>

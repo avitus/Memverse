@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+	<head>
+		<title><%= @page_title || APP_CONFIG[:site_name] %></title>
+		<meta http-equiv="content-type" content="text/xhtml; charset=utf-8" />
+		<meta http-equiv="imagetoolbar" content="no" />
+		<meta name="distribution" content="all" />
+		<meta name="robots" content="all" />	
+		<meta name="resource-type" content="document" />
+		<meta name="MSSmartTagsPreventParsing" content="true" />
+
+		<meta name="description" content="A free, online tool for memorizing the bible" />	
+		<meta name="keywords" content="memorize bible, memorize scripture, popular bible verses, memorize bible verses," />		
+		
+		<!-- Google verification -->
+		<meta name="verify-v1" content="IrqDYi2zxAyS8GUAqQcyXvnmcxhtuNITeCIFYLa76LQ=" />	
+		<!-- Microsoft verification -->		
+		<meta name="msvalidate.01" content="A1BB69E880870637C825F612E2FA4034" />				
+
+		
+		<!-- Main Stylesheet -->
+		<%= stylesheet_link_tag 'base' %>
+  		
+		<!-- Auxiliiary stylesheets, etc -->
+		<%= yield(:head) %>
+				
+		<!-- Using Jquery and Jrails -->
+		<%= javascript_include_tag 'jquery-1.3.2' 		%>
+		<%= javascript_include_tag 'jquery-ui' 			%>
+		<%= javascript_include_tag 'jrails' 			%>
+		<%= javascript_include_tag 'jquery.quickflip'	%>
+		<%= javascript_include_tag 'jquery.hoverIntent' %>	
+		<%= javascript_include_tag '2leveltab' 			%>
+		<%= javascript_include_tag 'jquery.autocomplete'%> <!-- http://www.devbridge.com/projects/autocomplete/jquery/ -->						
+				
+		<!-- Shortcut Icons -->
+		<link rel="shortcut icon" href="/images/favicon.ico" />
+		<link rel="icon" 		  href="/images/favicon.ico" />	
+		
+		<!-- Menu tabs -->
+		<link rel="stylesheet" type="text/css" href="/stylesheets/2leveltab.css" />		
+		<script type="text/javascript" src="/javascripts/2leveltab.js">
+		/***********************************************
+		* 2 level Horizontal Tab Menu- by JavaScript Kit (www.javascriptkit.com)
+		* This notice must stay intact for usage
+		* Visit JavaScript Kit at http://www.javascriptkit.com/ for full source code
+		***********************************************/
+		</script>		
+	</head>
+	
+	<body id="user">
+		<div id="container">
+			<div id="auth">
+				<ul>
+					<% if logged_in? %>
+					<li><%= link_to 'Logout', logout_path %></li>
+					<li><%= current_user.login %></li>					
+					<% else %>
+					<li><%= link_to 'Login', login_path %></li>
+					<li><%= link_to 'Signup', signup_path %></li>
+					<% end %>
+				</ul>
+			</div> <!-- End of Auth -->			
+		 	<div id="banner">
+			    <%= image_tag("bible.gif") %>
+			    <%= @page_title || "Bible Verse Memorization" %>				
+		  	</div> <!-- End of Banner -->
+
+				
+			<div id="main">
+				<% if logged_in? %>
+				<div id="menu-tabs">
+					<ul id="maintab" class="basictab">
+						<li <%= tab(@tab=="home"		) %> rel="homepage">	<%= link_to 'Home &#9660;', 		home_path %></li>	
+						<li <%= tab(@tab=="mem"			) %> rel="memory">		<%= link_to 'Memorize &#9660;', 	test_verse_path %></li>
+						<li <%= tab(@tab=="learn"		) %> rel="tutorials">	<%= link_to 'Learn &#9660;', 		tutorial_path %></li>
+						<li <%= tab(@tab=="profile"		) %> rel="profile">		<%= link_to 'Profile &#9660;', 		update_profile_path %></li>
+						<li <%= tab(@tab=="contact"		) %> rel="contact">		<%= link_to 'Contact &#9660;', 		contact_path %></li>	
+						<li <%= tab(@tab=="leaderboard"	) %> rel="leaderboard">	<%= link_to 'Leaderboards &#9660;', leaderboard_path %></li>	
+						<li <%= tab(@tab=="blog"		) %> rel="blog">		<%= link_to 'Blog &#9660;', 		blog_path %></li>
+					</ul>
+
+					<div id="homepage" class="submenustyle">
+						<%= link_to 'My Verses', show_all_my_verses_path %>
+						<%= link_to 'Add Verse', add_verse_path %>
+						<%= link_to 'My Progress', progress_path %>	
+						<%= link_to 'Popular Verses', popular_verses_path %>	
+					</div>
+
+					<div id="memory" class="submenustyle">
+						<%= link_to 'Memorize', test_verse_path %>
+						<%= link_to 'Reference Recall', start_ref_test_path %>
+						<%= link_to 'Practice', drill_verse_path %>						
+					</div>
+					
+					<div id="tutorials" class="submenustyle">
+						<%= link_to 'Tutorial', tutorial_path %>
+						<%= link_to 'SuperMemo Algorithm', supermemo_path %>
+					</div>
+
+					<div id="profile" class="submenustyle">
+						<%= link_to 'Profile', update_profile_path %>
+						<%= link_to 'My Church', church_path %>
+					</div>
+
+					<div id="contact" class="submenustyle">
+						<%= link_to 'Contact', contact_path %>
+						<%= link_to 'Volunteer', volunteer_path %>
+					</div>
+					
+					<div id="leaderboard" class="submenustyle">	
+						<%= link_to 'Leaderboard', leaderboard_path %>
+						<%= link_to 'Church Challenge', churchboard_path %>
+						<%= link_to 'Country Challenge', countryboard_path %>
+						
+					</div>					
+
+					<div id="blog" class="submenustyle">
+						<%= link_to 'View Blog', blog_path %>
+					</div>
+									
+				</div>  <!-- End of Menu Tabs -->
+				<% end %> <!-- if logged_in? -->
+				
+				<%= flash_messages %>
+				<%= yield(:content) or yield %>
+			</div> <!-- End of Main -->
+		</div> <!-- End of Container -->
+
+		<!-- Start of Menu Tab Code  -->
+		<% if logged_in? %>
+			<script type="text/javascript">
+				//initialize tab menu, by passing in ID of UL
+				initalizetab("maintab")
+			</script>	
+		<% end %>	
+		
+		<!-- Start of Google Analytics Code  -->
+		<script type="text/javascript">
+			var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+			document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		</script>
+		<script type="text/javascript">
+			try {
+			var pageTracker = _gat._getTracker("UA-4539114-5");
+			pageTracker._trackPageview();
+			} catch(err) {}
+		</script>
+		<!-- End of Google Analytics Code  -->
+		
+	</body>
+</html>
+

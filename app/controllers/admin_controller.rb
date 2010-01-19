@@ -1,0 +1,748 @@
+class AdminController < ApplicationController
+
+  protect_from_forgery  :except => [:set_verse_text, :verify_verse] 
+  in_place_edit_for     :verse, :text  
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Admin Dashboard
+  # ----------------------------------------------------------------------------------------------------------   
+  def dashboard
+    
+    @active_users_this_week = 0
+    @active_users_today     = 0
+    
+    # Memory Verses Per User
+    @usage_table  = Hash.new(0)    
+    @table_keys   = ["Pending", "0", "1-5", "6-10",  "11-20", "21-50", ">50"]
+      
+    # TODO: this table should be created using some fancy named scopes
+    User.find(:all).each { |u| 
+      if u.state=="pending"
+        @usage_table["Pending"] += 1
+      else
+        @usage_table[quantize_mvs(u.memverses.count)] += 1
+      end
+    }     
+    
+    @num_users = User.count
+    
+    # Weekly Activity
+    one_week_ago = Date.today-7
+    
+    @new_users_this_week    = User.count(     :all,  :conditions => ["created_at > ?", one_week_ago]) 
+    @new_verses_this_week   = Verse.count(    :all,  :conditions => ["created_at > ?", one_week_ago])
+    @new_mvs_this_week      = Memverse.count( :all,  :conditions => ["created_at > ?", one_week_ago])
+    @active_users_this_week = User.active_this_week.count
+    # Daily Activity   
+    today = Date.today
+    
+    @new_users_today    = User.count(     :all,  :conditions => ["created_at > ?", today]) 
+    @new_verses_today   = Verse.count(    :all,  :conditions => ["created_at > ?", today]) 
+    @new_mvs_today      = Memverse.count( :all,  :conditions => ["created_at > ?", today])     
+    @active_users_today = User.active_today.count
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Cohort Analysis
+  # ----------------------------------------------------------------------------------------------------------   
+  def cohort_analysis
+    # Cohort analysis for users who added at least one verse
+    
+    @cohort_table   = Hash.new(0) # users who signed up in a given month
+    @activity_table = Hash.new(0) # users who were active in past month
+   
+    # Cohort analysis     
+    User.all.each { |u|
+      if u.state=="active" and u.has_started?
+        # Churn rate and cohort analysis
+        @cohort_table[ date_label(u.created_at) ] += 1
+        if Date.today - u.last_activity_date <= 30
+          @activity_table[ date_label(u.created_at) ] += 1
+        end        
+      end
+    }
+  end
+  
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Convert date to month label
+  # Input: 3/16/09
+  # Output: 2009 03
+  # ----------------------------------------------------------------------------------------------------------
+  def date_label(date)
+    month = date.month < 10 ? "0"+date.month.to_s : date.month.to_s
+    year  = date.year.to_s
+    
+    return year + "-" + month
+  end
+
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Quantize Memory Verse per User
+  # ----------------------------------------------------------------------------------------------------------
+  def quantize_mvs(num_verses)
+    return case num_verses
+      when   0     then   "0"
+      when   1..5  then   "1-5"
+      when   6..10 then   "6-10"
+      when  11..20 then   "11-20"
+      when  21..50 then   "21-50"
+      else                ">50"
+    end
+  end
+
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Update table of popular verses
+  # 
+  # Returns data structure as follows:
+  #  [Verse0, [translation_0, id_0], [translation_1, id_1]]
+  #  [Verse1, [tranalation_0, id_0]
+  #  etc.
+  # Popular verses accesses the following DB tables:
+  #   - Verse
+  #   - Memory_Verse
+  #   - User
+  # ---------------------------------------------------------------------------------------------------------- 
+  def update_popular_verses(limit = 25, include_current_user_verses = true)
+
+    logger.info("===== Updating popular verses table ====")
+
+    # Delete previous table
+    Popverse.delete_all    
+
+    # Changing the number of verses returned doesn't buy anything because you have to access entire memory verse table
+    pop_mv = Verse.rank_verse_popularity(100) 
+    
+    pop_mv.each { |x|
+    
+      pv = Popverse.new
+    
+      pv.pop_ref    = x[0]
+      pv.num_users  = x[1]
+      errorcode, pv.book, pv.chapter, pv.versenum = parse_verse(pv.pop_ref)
+          
+    
+      avail_translations = Verse.find( :all, 
+                                       :conditions => ["book = ? and chapter = ? and versenum = ?", 
+                                                        pv.book, pv.chapter, pv.versenum])              
+          
+      avail_translations.each { |vs|
+      
+        case vs.translation 
+          when "NIV" then pv.niv = vs.id
+          when "ESV" then pv.esv = vs.id
+          when "NAS" then pv.nas = vs.id
+          when "NKJ" then pv.nkj = vs.id
+          when "KJV" then pv.kjv = vs.id
+          when "RSV" then pv.rsv = vs.id        
+        end    
+
+        case vs.translation 
+          when "NIV" then pv.niv_text = vs.text
+          when "ESV" then pv.esv_text = vs.text
+          when "NAS" then pv.nas_text = vs.text
+          when "NKJ" then pv.nkj_text = vs.text
+          when "KJV" then pv.kjv_text = vs.text
+          when "RSV" then pv.rsv_text = vs.text      
+        end 
+      }
+    
+      pv.save
+
+    }
+    
+    redirect_to :action => 'show_popverses'     
+  end
+    
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Mass Email
+  # ----------------------------------------------------------------------------------------------------------   
+  def mass_email
+    # Send out an email
+    UserMailer.deliver_encourage_new_user_email(current_user)
+    redirect_to :action => 'leaderboard' 
+  end
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Send Newsletter
+  # ----------------------------------------------------------------------------------------------------------   
+  def send_newsletter
+    
+    start_with_user = 1
+    
+    # Send out an email
+    recipients = User.find(:all, :conditions => ["id >= ?", start_with_user])
+    logger.info("*** Sending newsletter to #{recipients.length} users")
+    recipients.each { |r|
+      if r.id >= start_with_user
+        UserMailer.deliver_newsletter_email(r)
+      end
+    }
+    redirect_to :action => 'leaderboard' 
+  end  
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Send Reminder Emails - sent out nightly at midnight
+  # ----------------------------------------------------------------------------------------------------------   
+  def send_reminder
+    
+    @emails_sent        = 0
+    @email_list         = Array.new
+    @reactivation_list  = Array.new  
+    @encourage_list     = Array.new
+    @bounce_list        = Array.new
+    
+
+    # Retrieve records for all users  
+    User.find(:all).each { |r|
+      # Change reminder frequency (if necessary) to not be annoying
+      r.update_reminder_freq
+      
+      if r.reminder_freq != "Never" and @emails_sent < 90
+        
+        # ==== Users who have added verses but are behind on memorizing ====
+        if r.needs_reminder?
+          if r.email.nil?
+            logger.info("*** Error: Unable to email user with id: #{r.id}")
+            @bounce_list << r
+          else
+            if r.is_inactive?             
+              # Reminder for inactive users
+              logger.info("*** Sending reminder email to #{r.login} - they've been inactive for two months")
+              UserMailer.deliver_reminder_email_for_inactive(r)               
+            else 
+              # Standard reminder email
+              logger.info("*** Sending reminder email to #{r.login}")
+              UserMailer.deliver_reminder_email(r)           
+            end
+            @emails_sent += 1
+            r.last_reminder = Date.today
+            r.save
+            @email_list << r
+          end
+        end
+        
+        # ==== Users who never activated their accounts ====
+        # ==== Send a second activation email and then delete the account after three days =====
+        if r.never_activated?
+          if r.created_at < 3.days.ago
+            # TODO: Need to check this ... seems to be deleting accounts every night
+            r.delete_account
+          elsif r.last_reminder
+            # do nothing - they've already received a second activation email
+          else
+            logger.info("*** Resending activation email to #{r.login}")
+            UserMailer.deliver_signup_notification(r)
+            @emails_sent += 1
+            r.last_reminder = Date.today
+            r.save
+            @reactivation_list << r
+          end
+        end
+        
+        # ==== Users who have activated but haven't ever added a verse ====
+        if r.needs_kick_in_pants?    
+          if r.email.nil?
+            logger.info("*** Error: Unable to email user with id: #{r.id}")
+            @bounce_list << r
+          else
+            logger.info("*** Sending kick in the pants to #{r.login}")
+            UserMailer.deliver_encourage_new_user_email(r)
+            @emails_sent += 1
+            r.last_reminder = Date.today
+            r.save
+            @encourage_list << r          
+          end
+        end
+        
+      end # block for users who want reminders
+            
+    }
+    logger.info(" *** Sent #{@emails_sent} reminder emails")
+  end  
+
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Show unapproved blog comments
+  # ----------------------------------------------------------------------------------------------------------   
+  def unapproved_comments
+    @comments         = BlogComment.find_all_by_approved(false)
+    @newest_comments  = BlogComment.find(:all, :limit => 10, :order => "updated_at DESC")
+  end
+    
+  # ----------------------------------------------------------------------------------------------------------
+  # Remove dormant accounts and memory verses that haven't been started
+  # TODO: This method is not currently being used
+  # ----------------------------------------------------------------------------------------------------------   
+  def housecleaning
+    # Delete accounts of users with a) no verses and b) no activity for three months
+    User.delete_users_who_never_got_started
+    # Delete memory verses which have never been started and are a year old
+    Memverse.delete_unstarted_memory_verses
+    # Delete user accounts which have been inactive for two years
+  end
+      
+  def mv_stats
+    # TODO: Save statistics on deleted memory verses
+    @never_started  = Memverse.never_started  # No attempts ever
+    @abandoned      = Memverse.abandoned      # No attempts in 3 months
+    @learning       = Memverse.learning       # Attempt in last three months but not yet memorized
+    @memorized      = Memverse.memorized      # Memorized
+  end
+    
+  # ----------------------------------------------------------------------------------------------------------
+  # Send Reminder Emails
+  # ----------------------------------------------------------------------------------------------------------   
+  def send_reminder_test
+    
+    # Retrieve records for all users
+    recipient = User.find(2) # This is me
+
+    UserMailer.deliver_reminder_email(recipient)
+
+    redirect_to :action => 'show_verses' 
+  end   
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Leaderboard
+  # ----------------------------------------------------------------------------------------------------------  
+  def leaderboard
+    
+    @page_title = "Memverse Leaderboard"
+    @leaderboard = User.top_users(40)  # returns top users sorted by number of verses memorized
+
+    # TODO: move this somewhere else
+    DailyStats.update()
+
+  end
+  
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Show all verses
+  # ----------------------------------------------------------------------------------------------------------   
+  def show_verses
+    @vs_list = Verse.find(:all, :order => params[:sort_order])    
+  end
+    
+  # ----------------------------------------------------------------------------------------------------------
+  # Show verses that need verification ie. more than one user and have never been modified
+  # ----------------------------------------------------------------------------------------------------------   
+  def show_verses_to_be_checked
+    @need_verification  = Array.new
+    
+    @error_reported   = Verse.find(:all, :conditions => {:error_flag => true })
+    
+    unverified_verses = Verse.find(:all, :conditions => {:verified => 'False'})
+    unverified_verses.each { |vs| 
+      # verse is unverified and has multiple users (ESV doesn't require checking, AFR will be checked by someone else
+      if vs.memverses.count > 1 and vs.translation != "AFR"
+        @need_verification << vs
+      end
+    }
+    
+    # If there are no unverified verses with more than one user then work on the rest
+    if @need_verification.length == 0
+      unverified_verses.each { |vs|
+        if vs.translation != "AFR"
+          @need_verification << vs
+        end  
+      }
+    end
+
+  end    
+    
+  # ----------------------------------------------------------------------------------------------------------
+  # Show most popular verses
+  # ----------------------------------------------------------------------------------------------------------   
+  def show_popverses
+    @vs_list = Popverse.find(:all)    
+  end    
+    
+    
+  # ----------------------------------------------------------------------------------------------------------
+  # Edit a verse
+  # ----------------------------------------------------------------------------------------------------------   
+  def edit_verse
+    @verse = Verse.find(params[:id])    
+  end  
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Edit a verse
+  # ----------------------------------------------------------------------------------------------------------   
+  def edit_church
+    @church = Church.find(params[:id])    
+  end    
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Interactive Database Filter
+  # Inputs:   
+  # Outputs:  
+  # ----------------------------------------------------------------------------------------------------------  
+  def search_verses
+    @vs_list = Array.new  
+  end  
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Interactive Database Filter
+  # Inputs:   
+  # Outputs:  
+  # ----------------------------------------------------------------------------------------------------------  
+  def search_verse
+    
+    book         = params[:book]
+    chapter      = params[:chapter]
+    verse        = params[:verse]
+    translation  = params[:translation]   
+    
+    @vs_list = Verse.find(:all, :conditions => {:book => book, :chapter => chapter, :versenum => verse, :translation => translation}, :limit => 24)
+#    @vs_list = Verse.find(:all, :conditions => ["book = ? and chapter = ? and versenum = ? and translation = ?", book, chapter, verse, translation], :limit => 24)
+    
+    render :partial => 'search_verse', :layout=>false 
+  end    
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Interactive Database Filter
+  # Inputs:   
+  # Outputs:  
+  # ----------------------------------------------------------------------------------------------------------  
+  def search_users
+    @user_list = Array.new  
+  end  
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Interactive Database Filter
+  # Inputs:   
+  # Outputs:  
+  # ----------------------------------------------------------------------------------------------------------  
+  def search_user
+    
+    search_param = params[:search_param]
+    
+    # TODO: Is there a better way to do this search?
+    
+    @user_list =  User.find(:all, :conditions => {:login => search_param }, :limit => 5)
+    
+    if @user_list.empty?
+      @user_list = User.find(:all, :conditions => {:email => search_param }, :limit => 5)
+    end
+  
+    if @user_list.empty?
+      @user_list = User.find(:all, :conditions => {:name  => search_param }, :limit => 5)
+    end 
+    
+    render :partial => 'search_user', :layout=>false 
+  end      
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Show comprehensive data for a user
+  # ----------------------------------------------------------------------------------------------------------   
+  def show_user_info
+    @user = User.find(params[:id])
+    
+    @mv_list = Memverse.find(:all, :conditions => ["user_id = ?", @user.id]).sort!
+    
+  end
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Update a verse
+  # ----------------------------------------------------------------------------------------------------------   
+  def update_church
+    @church = Church.find(params[:id])
+    if @church.update_attributes(params[:church])
+      flash[:notice] = "Church successfully updated"
+      redirect_to :action => 'show_churches'
+    else
+      render :action => edit_church
+    end
+  end   
+  
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # In place editing support
+  # ----------------------------------------------------------------------------------------------------------    
+  def set_verse_text
+    @verse = Verse.find(params[:id])
+    new_text = params[:value] # need to clean this up with hpricot or equivalent
+    @verse.text = new_text
+    @verse.save
+    render :text => @verse.text
+  end  
+  
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Verify a verse
+  # ----------------------------------------------------------------------------------------------------------  
+  def verify_verse
+    @verse = Verse.find(params[:id])
+    @verse.verified   = true
+    @verse.error_flag = false
+    @verse.save
+    render :text => "Verified"
+  end
+  
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Update a verse TODO: Add automatic verification if the admin edits a verse
+  # TODO: Check for duplicate verses
+  # ----------------------------------------------------------------------------------------------------------   
+  def update_verse
+    @verse = Verse.find(params[:id])
+    if @verse.update_attributes(params[:verse])
+      flash[:notice] = "Verse successfully updated"
+      redirect_to :action => 'search_verses'
+    else
+      render :action => edit_verse
+    end
+  end   
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Delete a verse (this probably shouldn't ever be required
+  # ----------------------------------------------------------------------------------------------------------   
+  def destroy_verse
+    Verse.find(params[:id]).destroy
+    # TODO: need to remove related memory verses !!!!!
+    redirect_to :action => 'search_verses'
+  end     
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Repair broken memory links for user
+  # ----------------------------------------------------------------------------------------------------------   
+  def fix_verse_linkage
+    if params[:id]
+      @report = User.find(params[:id]).fix_verse_linkage(repair = true)
+    else
+      flash[:notice] = "No user selected"
+      redirect_to :action => 'search_users'
+    end
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Show all memory verses for all users
+  # ----------------------------------------------------------------------------------------------------------   
+  def show_memory_verses
+
+    user_id = params[:id]
+    @mv_list = Array.new
+    
+    if (user_id)
+      mem_vs = Memverse.find(:all, :conditions => ["user_id = ?", user_id], :order => "next_test ASC")
+    else
+      mem_vs = Memverse.find(:all, :include => :verse, :order => params[:sort_order])
+    end
+    
+    # TODO: Get rid of this hash ... we can get everything we need from a single DB call
+    
+    mem_vs.each { |mv|
+ 
+      memory_verse  = Hash.new
+      memory_verse['id']            = mv.id
+      memory_verse['user']          = mv.user.login
+      memory_verse['verse_id']      = mv.verse.id
+      memory_verse['verse']         = mv.verse.ref 
+      memory_verse['efactor']       = mv.efactor
+      memory_verse['status']        = mv.status
+      memory_verse['last_tested']   = mv.last_tested
+      memory_verse['next_test']     = mv.next_test
+      memory_verse['test_interval'] = mv.test_interval
+      memory_verse['n']             = mv.rep_n
+      memory_verse['attempts']      = mv.attempts
+      
+      memory_verse['next']          = mv.next_verse
+      memory_verse['prev']          = mv.prev_verse     
+      memory_verse['first']         = mv.first_verse
+      
+      memory_verse['started']       = mv.created_at
+      
+      @mv_list << memory_verse
+    }
+
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Remove a memory verse (Make sure this method is consistent with the one in memverses_controller
+  # ----------------------------------------------------------------------------------------------------------   
+  def destroy_mv
+    
+    # We need to remove inter-verse linkage
+    dead_mv   = Memverse.find(params[:id])
+    next_ptr  = dead_mv.next_verse
+    prev_ptr  = dead_mv.prev_verse
+     
+    # If there is a prev verse
+    # => Find previous verse and remove its 'next' ptr
+    if prev_ptr
+      logger.debug("Removing link from previous verse: #{prev_ptr}")
+      
+      # TODO: This find method is necesary rather than .find(prev_ptr) for the case (which shouldn't ever happen)
+      # when the next/prev pointers aren't valid
+      prev_vs = Memverse.find(:first, :conditions => {:id => prev_ptr})
+      if prev_vs
+        prev_vs.next_verse = nil
+        prev_vs.save
+      else
+        logger.warn("*** Alert: A verse was deleted which had an invalid prev pointer - this should never happen")        
+      end
+    
+    end
+    
+    # If there is a next verse
+    # => Find next verse and make it the first verse in the sequence
+    if next_ptr
+      logger.debug("Setting the next verse: #{next_ptr} to be first verse of sequence")
+      next_vs = Memverse.find(:first, :conditions => {:id =>next_ptr})
+      if next_vs
+        next_vs.first_verse = nil # Starting verses in a sequence to not reference themselves as the first verse
+        next_vs.prev_verse  = nil
+        next_vs.save
+        # Follow chain and correct first verse
+        update_downstream_start_verses(next_vs)  
+      else
+        logger.warn("*** Alert: A verse was deleted which had an invalid next pointer - this should never happen")        
+      end
+    end
+    
+    # Finally, delete the verse
+    dead_mv.destroy  
+
+    redirect_to :action => 'show_memory_verses'   
+  end 
+
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Show all users
+  # ----------------------------------------------------------------------------------------------------------   
+  def show_users
+    
+    period = params[:period] || 'All'
+    @user_list = Array.new
+    
+    case period
+      when 'Today' then
+        @user_list = User.find(:all, :order => params[:sort_order], :conditions => ["created_at > ?", Date.today]) 
+      when 'Active' then 
+          User.find(:all, :order => params[:sort_order]).each { |user|
+            if Date.today == user.last_activity_date
+              @user_list << user
+            end
+          }
+      when 'Pending' then
+        @user_list = User.find(:all, :order => params[:sort_order], :conditions => ["state = ?", "Pending"])         
+      when 'All' then
+        @user_list = User.find(:all, :order => params[:sort_order])   
+    end
+  end    
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Show all churches
+  # ----------------------------------------------------------------------------------------------------------   
+  def show_churches
+    @church_list = Array.new
+    @church_list = Church.find(:all)
+  end   
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Show Church Members
+  # ----------------------------------------------------------------------------------------------------------  
+  def show_church
+    
+    @page_title = "Church Members"
+    @tab        = "churches"
+
+    if params[:church]
+      @church         = Church.find(params[:church])
+      @church_members = @church.users
+    else
+      flash[:notice]  = "No church selected"
+      redirect_to :action => 'show_churches'
+    end
+
+  end     
+  
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Show all countries
+  # ----------------------------------------------------------------------------------------------------------   
+  def show_countries
+    
+    @country_list = Array.new
+    
+    all_country_list = Country.find(:all)
+    all_country_list.each { |country|
+      if country.users.length != 0
+        @country_list << country
+      end  
+    }
+
+  end   
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Edit a user
+  # ----------------------------------------------------------------------------------------------------------   
+  def edit_user
+    
+    # -- Tabs and Title --
+    @tab = "users"    
+    @page_title = "Memverse : Edit User"
+    
+    # -- Display Form --
+    @user           = User.find(params[:id])
+    @user_country   = @user.country ? @user.country.printable_name : ""
+    @user_church    = @user.church ?  @user.church.name : ""
+    
+    # -- Process Form --
+    if request.put? # For some reason this is a 'put' not a 'post'
+      if @user.update_profile(params[:user])
+        flash[:notice] = "Profile successfully updated"
+        redirect_to :action => 'search_users'
+      else
+        render :action => update_profile
+      end
+    end
+    
+    
+  end # method: update_profile
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Update a user
+  # ----------------------------------------------------------------------------------------------------------   
+  def update_user
+    @user = User.find(params[:id])
+    if @user.update_attributes(params[:user])
+      flash[:notice] = "User successfully updated"
+      redirect_to :action => 'show_users'
+    else
+      render :action => edit_user
+    end
+  end   
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Delete a user -- DON'T USE THIS, Use 'delete_account' user method instead
+  # ----------------------------------------------------------------------------------------------------------   
+  def destroy_user
+    
+    dead_user = User.find(params[:id])
+    
+    dead_user.delete_account   
+    
+    redirect_to :action => 'search_users'   
+  end    
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Delete a church
+  # ----------------------------------------------------------------------------------------------------------   
+  def destroy_church
+    
+    dead_church = Church.find(params[:id])
+    
+    # We need to handle the removal of a church with users better
+    # -- TODO: Insert code here --
+    
+    dead_church.destroy    
+    redirect_to :action => 'show_churches'   
+  end     
+  
+  
+end
+

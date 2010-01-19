@@ -1,0 +1,47 @@
+<div class="max-width">
+	<h2>What is Supermemo</h2>
+	
+	<p>SuperMemo is based on the insight that there is an ideal moment to practice what you've learned. 
+	Practice too soon and you waste your time. Practice too late and you've forgotten the material and have to relearn it. 
+	The right time to practice is just at the moment you're about to forget. Unfortunately, this moment is different for 
+	every person and each bit of information. Imagine a pile of thousands of flash cards with bible memory verses. 
+	Somewhere in this pile are the ones you should be reviewing right now. Which are they? </p>
+
+	<p>Fortunately, human forgetting follows a pattern. We forget exponentially. A graph of our likelihood of 
+	remembering a bible verse sweeps quickly downward over time and then levels off. 
+	This pattern has long been known to cognitive psychology, but it has been difficult to put to practical use. 
+	It's too complex for us to employ with our naked brains.</p>
+	
+	<h2>How the SuperMemo Algorithm Works</h2>
+	
+	<p>SuperMemo is a program that keeps track of discrete bits of information you've learned and want to retain. 
+	For example, say you're memorizing bible verses. Your chance of recalling a given verse declines over 
+	time according to a predictable pattern. The SuperMemo algorithm tracks this forgetting curve and reminds you to 
+	rehearse your knowledge when your chance of recalling it has dropped to, say, 90 percent. When you first learn 
+	a new bible verse, your chance of recalling it will drop quickly. But after SuperMemo reminds you of the verse, 
+	the rate of forgetting levels out. The algorithm tracks this new decline and waits longer to quiz you the next time.</p>
+	
+	<div style="width: 630px;">
+		<img src="/images/supermemo_reminders.jpg" alt="How Supermemo Works">
+	</div>	
+	
+	<p>As you use Memverse you will find that you are able to retain more memory verses because the software prompts you 
+	to review passages at the appropriate time. In other words, you spend less of your time reviewing verses you already
+	know, and more of your time on the memory verses that you don't know well.</p>
+	
+	<p>You will find that you are able to memorize more of the bible in less time. Many users spend 10-15 minutes three or
+	four times per week and are able to retain hundreds of memory verses. No one has yet made it to 1000 verses but we'll
+	let you know when they do!</p>
+	
+</div>
+
+<% if !logged_in? %>
+	<div>
+		<ol>
+			<li><%= link_to 'Learn More about Memverse 			-->', tutorial_path, :class => "action-link"%></li>	
+			<li><%= link_to 'Sign Up and Start Memorizing Today	-->', signup_path, 	 :class => "action-link"%></li>
+			<li><%= link_to 'Top 100 Memory Verses  -->', popular_path,  :class => "action-link"%></li>
+			<li><%= link_to 'Try the Demo  -->', demo_path,  :class => "action-link"%></li>				
+		</ol>	
+	</div>
+<% end %>

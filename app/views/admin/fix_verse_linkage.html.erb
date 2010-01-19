@@ -1,0 +1,21 @@
+<div>
+
+	<table cellpadding="6" cellspacing="4">
+	  <tr> 
+		  <th>mvID</th>		  
+		  <th>Ref</th>
+		  <th>Prev</th>
+		  <th>Next</th>		  
+	  </tr>
+	<% for record in @report %>
+		<tr>
+			<td align="right"> 	<%= record['mvID']	%></td>
+			<td align="left"> 	<%= record['Ref']	%></td>
+			<td align="center"> <%= record['Prev']	%></td>
+			<td align="center"> <%= record['Next']	%></td>										
+	  	</tr>
+	<% end %>
+
+	</table>
+
+</div>

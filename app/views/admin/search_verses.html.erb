@@ -1,0 +1,27 @@
+<div class="details-form">
+		
+	<fieldset>
+		<legend> Enter Filter Parameters</legend>
+		
+ 			<% form_tag( {:action => 'interactive'}, { :id => 'advanced_search' } ) do %>
+			  <p>
+				Book: 			<%= text_field_tag( :book, 			params[:book],  		:size =>  16 )%>	
+				Chapter: 		<%= text_field_tag( :chapter, 		params[:chapter], 		:size =>   6 )%>				
+				Verse: 			<%= text_field_tag( :verse, 		params[:verse], 		:size =>   6 )%>	
+				Translation: 	<%= text_field_tag( :translation, 	params[:translation], 	:size =>   8 )%>						
+			  </p>
+			  							
+			<% end %>
+					
+	</fieldset>
+				
+	<%= observe_form 	'advanced_search',
+						:frequency	=> 0.5,
+						:update		=> 'search_results',
+						:url		=> {:action => 'search_verse', :only_path => false} %>
+</div>	
+
+<div id="search_results">
+	<%= render :partial=>'search_verse' %>
+</div>
+

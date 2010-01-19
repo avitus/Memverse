@@ -1,0 +1,6 @@
+<td align="center" class="flag_verse" id=<%= @verse.id %>><%= 			
+	link_to_remote @verse.error_flag ? "Error Reported" : "Verified", 
+					:url 		=> { :action => "toggle_verse_flag", :id => @verse.id },
+					:update 	=> @verse.id
+
+%></td>
