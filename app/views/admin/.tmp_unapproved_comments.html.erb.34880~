@@ -1,0 +1,41 @@
+<div class="user-list">
+
+	<h1>Comments Requiring Approval</h1>
+
+	<table cellpadding="6" cellspacing="1" border="1">  	
+		<tr>
+			<th>User</th>
+			<th>Title</th>
+			<th>Comment</th>
+		</tr>
+		
+		<% for comment in @comments %>
+			<tr valign="top">
+				<td align="left"> <%= comment.user.login %></td>
+				<td align="left"> <%= comment.blog_post.title %></td>
+				<td align="left"> <%= comment.comment %></td>
+			</tr>
+		<% end %>
+	</table>
+
+	<h1>Latest Comments</h1>
+
+	<table cellpadding="6" cellspacing="1" border="1">  	
+		<tr>
+			<th>User</th>
+			<th>Title</th>
+			<th>Comment</th>
+			<th>Updated</th>
+		</tr>
+		
+		<% for comment in @newest_comments %>
+			<tr valign="top">
+				<td align="left"> <%= comment.user.login %></td>
+				<td align="left"> <%= comment.blog_post ? comment.blog_post.title : "" %></td>
+				<td align="left"> <%= comment.comment %></td>
+				<td align="left"> <%= comment.updated_at.to_date %></td>
+			</tr>
+		<% end %>
+	</table>
+
+</div>

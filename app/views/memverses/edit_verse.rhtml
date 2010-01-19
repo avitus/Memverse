@@ -1,0 +1,7 @@
+<h1>Editing Verse</h1>
+
+<% form_tag :action => 'update_verse', :id => @verse do %>
+  <%= render :partial => 'edit_verse_form' %>
+  <%= submit_tag 'Edit' %>
+<% end %>
+

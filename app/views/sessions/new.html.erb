@@ -1,0 +1,73 @@
+<div id="announcement">
+</div>
+	
+
+<div id="intro-description">
+	<h1>Quickly Memorize Bible Verses</h1>
+	<ol>
+		<li>100% Online - no software to download</li>
+		<li>No flash cards to carry around or lose</li>
+		<li>An optimal review system promotes retention</li>
+		<li>Proceed at your own pace</li>
+		<li>Free!</li>
+	</ol>
+	
+	<ol>
+		<li><%= link_to 'Learn More 			-->', tutorial_path, :class => "action-link"%></li>
+		<li><%= link_to 'Top 100 Memory Verses  -->', popular_path,  :class => "action-link"%></li>	
+		<li><%= link_to 'Try the Demo  			-->', demo_path,     :class => "action-link"%></li>				
+		<li><%= link_to 'Sign Up    			-->', signup_path, 	 :class => "action-link"%></li>			
+		<li><%= link_to 'Blog	    			-->', blog_path, 	 :class => "action-link"%></li>	
+	</ol>	
+	
+</div>
+
+
+<div class="entry-form" id="login-page-form">
+	<% form_tag session_path do %>
+		<fieldset>
+			<legend>Login</legend>
+			<ol>
+				<li>
+					<%= label_tag 'login', 'Username' %>
+					<%= text_field_tag 'login', @login %>
+				</li>
+				<li>
+					<%= label_tag 'password' %>
+					<%= password_field_tag 'password', nil %>
+				</li>
+				<li>
+					<%= label_tag 'remember_me', 'Remember me' %>
+					<%= check_box_tag 'remember_me', '1', @remember_me %>
+				</li>
+			</ol>
+		</fieldset>
+		
+		
+<!-- 	Disable OpenID login for now (need to disable/enable on signup page too
+	
+		<br>
+		
+		<fieldset>
+			<legend>Login with OpenID</legend>
+			<ol>
+				<li>
+					<%= label_tag 'openid_url', 'OpenID URL' %>
+					<%= text_field_tag 'openid_url' %>
+				</li>
+			</ol>
+						
+		</fieldset>
+-->
+		
+	<br>
+
+	<div class="buttons">
+		<%= submit_tag 'Login' %>
+		<%= link_to '[Forgot Password?]', forgot_password_path, :class => "inline-footnote"%>
+	</div>	
+			
+	<% end -%>
+</div>
+
+

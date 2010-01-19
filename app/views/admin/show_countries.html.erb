@@ -1,0 +1,19 @@
+<div class="verse-list">
+
+	<table class="sortable" id="usertable" cellpadding="6" cellspacing="0">
+		
+		<tr>
+			<th align="left">Country</th>
+			<th align="center">Users</th>	
+		</tr>
+		
+		<% for country in @country_list %>
+		<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">	
+			<td> <%= country.printable_name	%></td>				
+			<td align="center"> <%= country.users.length %></td>												
+		</tr>
+		<% end %>
+	
+	</table>
+
+</div>

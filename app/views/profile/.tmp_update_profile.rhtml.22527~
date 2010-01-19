@@ -1,0 +1,82 @@
+<h1>Update Profile</h1>
+
+<% form_tag :action => 'update_profile', :id => @user do %>
+	<div class="entry-form" id="edit-profile-form">
+	
+		<% form_for @user do |f| %>
+			<%= f.error_messages %>
+			<fieldset>
+				<legend>Your Profile</legend>
+				<ol>
+					<li>
+						<%= f.label 			:name, 'Name' %>
+						<%= f.text_field 		:name %>
+					</li>
+					<li>
+						<%= f.label 			:email, 'Email' %>
+						<%= f.text_field 		:email %>
+					</li>
+					
+					<li>
+						<%= f.label 			:newsletters, 'Receive newsletters' %>
+						<%= f.check_box 		:newsletters %>
+					</li>
+					<li>
+						<%= f.label 			:reminder_freq, 'Reminder frequency' %>
+						<%= f.select			:reminder_freq,
+									[["Daily", 		'Daily'		],
+									["Weekly",		'Weekly'	], 
+									["Monthly", 	'Monthly'	], 
+									["Quarterly", 	'Quarterly'	],
+									["Never", 		'Never'		]]      
+									 %>
+					</li>
+					<li>
+						<%= f.label 			:language, 'Language' %>
+						<%= f.select			:language,
+									[["English", 	'English'	],
+									["Swedish",		'Swedish'	], 
+									["Afrikaans", 	'Afrikaans'	]]      
+									 %>
+					</li>	
+					<li>
+						<%= f.label 			:time_allocation, 'Target Time' %>
+						<%= f.select			:time_allocation,
+									[[" 3 Minutes per Day",  3	],
+									 [" 5 Minutes per Day",  5	],
+									 ["10 Minutes per Day", 10	], 
+									 ["15 Minutes per Day", 15	],
+									 ["20 Minutes per Day", 20	]]      
+									 %>
+					</li>								
+					<li>
+						<%= f.label 			:church, 'Church / Organization' %>
+						<%= f.text_field 		:church, :value => @user_church %>
+					</li>	
+					<li>
+						<%= f.label 			:country, 'Country' %>
+						<%= f.text_field 		:country, :value => @user_country %>
+					</li>
+				</ol>
+				 
+				<div class="buttons">				
+					<%= submit_tag 'Update Profile' %>	
+				</div>
+					
+			</fieldset>	
+		<% end %> <!-- End: Error Messages -->
+	</div>
+<% end %> <!-- End: Form Tag -->
+
+<!-- http://www.devbridge.com/projects/autocomplete/jquery/ -->
+<script type="text/javascript">
+	$(document).ready(function() {	
+		a = $('#user_country').autocomplete({ serviceUrl:'profile/country_autocomplete'  								   
+		});
+		
+		b = $('#user_church').autocomplete({ serviceUrl:'profile/church_autocomplete'  								   
+		});
+	});
+</script>
+
+

@@ -1,0 +1,17 @@
+<fieldset id="avail-translations" class="entry-form">
+	<legend>Available Translations</legend>
+		<table cellpadding="4" cellspacing="0">
+			<% if !@avail_translations.nil? %>
+				<% for vs in @avail_translations %>
+					<tr>
+						<td><%= vs.translation %></td>
+						<td><%= link_to '[Add]', :action => 'quick_add', :vs => vs %></td>		 		
+					</tr>
+				<% end %>	
+			<% else %>
+					<tr>
+						<td>None found</td>		 		
+					</tr>			
+			<% end %>	
+		</table>
+</fieldset>	

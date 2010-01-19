@@ -1,0 +1,38 @@
+<div class="verse-list">
+
+	<table cellpadding="8" cellspacing="6">
+	  <tr> 
+		  <td><b>User</b></td>		  
+		  <td><b>Verse</b></td>			  
+		  <td><b><%= link_to 'eFactor',		:action => 'show_all_my_verses', :sort_order => 'efactor'		%></b></td>
+		  <td><b><%= link_to 'Status', 		:action => 'show_all_my_verses', :sort_order => 'status'		%></b></td>		  				  	  		  		  		  
+		  <td><b><%= link_to 'Last Tested',	:action => 'show_all_my_verses', :sort_order => 'last_tested'	%></b></td>	
+		  <td><b><%= link_to 'Next Test',	:action => 'show_all_my_verses', :sort_order => 'next_test'		%></b></td>
+		  <td><b><%= link_to 'N', 			:action => 'show_all_my_verses', :sort_order => 'rep_n'			%></b></td>
+		  <td><b><%= link_to 'Interval', 	:action => 'show_all_my_verses', :sort_order => 'test_interval'	%></b></td>
+		  <td><b><%= link_to 'Attempts', 	:action => 'show_all_my_verses', :sort_order => 'attempts'		%></b></td>		  
+		  <td><b><%= link_to 'Started', 	:action => 'show_all_my_verses', :sort_order => 'started'		%></b></td>
+
+	  </tr>
+	<% for mv in @mv_list %>
+	  <tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
+		<td> <%= mv['user']			%></td>	
+		<td> <%= link_to mv['verse'], :action => 'edit_verse', :id => mv['verse_id'] %></td>				 
+	 	<td> <%= mv['efactor']		%></td>	
+	 	<td> <%= mv['status']		%></td>			
+	 	<td> <%= mv['last_tested']	%></td>
+	 	<td> <%= mv['next_test']	%></td>	
+	 	<td> <%= mv['n']			%></td>			
+	 	<td> <%= mv['test_interval']%></td>	
+	 	<td> <%= mv['attempts']		%></td>		
+	 	<td> <%= mv['started']		%></td>
+			
+		<td><%= link_to 'Edit',   :action => 'edit_mv', :id => mv['id'] %></td>
+		<td><%= link_to 'X', { :action => 'destroy_mv', :id => mv['id'] }, :confirm => 'Are you sure?', :method => :post %></td>	
+				
+	  </tr>
+	<% end %>
+
+	</table>
+
+</div>
