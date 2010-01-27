@@ -228,7 +228,6 @@ class AdminController < ApplicationController
         # ==== Send a second activation email and then delete the account after three days =====
         if r.never_activated?
           if r.created_at < 3.days.ago
-            # TODO: Need to check this ... seems to be deleting accounts every night
             r.delete_account
           elsif r.last_reminder
             # do nothing - they've already received a second activation email
@@ -269,7 +268,7 @@ class AdminController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------   
   def unapproved_comments
     @comments         = BlogComment.find_all_by_approved(false)
-    @newest_comments  = BlogComment.find(:all, :limit => 10, :order => "updated_at DESC")
+    @newest_comments  = BlogComment.find_all_by_approved(true, :all, :limit => 10, :order => "updated_at DESC")
   end
     
   # ----------------------------------------------------------------------------------------------------------

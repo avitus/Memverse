@@ -45,7 +45,8 @@ ActionController::Routing::Routes.draw do |map|
   map.update_profile      '/update_profile',            :controller => 'profile',     :action => 'update_profile'
   map.church              '/church',                    :controller => 'profile',     :action => 'show_church'
   
-  map.blog                '/blog',                      :controller => 'blog_posts',  :action => 'index'
+  map.blog                '/blog',                      :controller => 'blog_posts',    :action => 'index'
+  map.blog_comments_new   '/blog_comments_new',         :controller => 'blog_comments', :action => 'recent_comments'
   
   # Routes for Ziya graphs
   map.load_progress       '/chart/load_progress/:user', :controller => 'chart',       :action => 'load_progress'
