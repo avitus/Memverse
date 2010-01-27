@@ -34,6 +34,11 @@ class BlogCommentsController < ApplicationController
 		redirect_to(params[:referring_url])
 	end
 	
+  # Added by ALV
+  def recent_comments
+    @newest_comments  = BlogComment.find_all_by_approved(true, :all, :limit => 10, :order => "updated_at DESC")  
+  end
+  
 	def load_blog_comment 
 		@blog_comment = BlogComment.find(params[:id])
 		@blog_post = @blog_comment.try(:blog_post)
