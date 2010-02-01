@@ -30,8 +30,6 @@ class Memverse < ActiveRecord::Base
   # Validations
   validates_presence_of :user_id, :verse_id
 
-  # TODO: add some named searches for easier stats
-
   # ----------------------------------------------------------------------------------------------------------
   # Implement counter caches for number of verses memorized and learning
   # ----------------------------------------------------------------------------------------------------------   
@@ -49,7 +47,6 @@ class Memverse < ActiveRecord::Base
     self.user.last_activity_date = Date.today
     self.user.save
   end
-
 
   # ----------------------------------------------------------------------------------------------------------
   # Return length of verse sequence
