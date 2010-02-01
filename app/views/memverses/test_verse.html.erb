@@ -38,9 +38,10 @@
 			<% if !@prior_text.nil? %>			
 				<span class="superscript"><%=@current_versenum%></span>
 			<% end %>
+
 			<span id="ajaxWrapper">
-				<%= render :partial=>'feedback' %>
-			</span>
+				<%= render :partial=>'feedback', :locals => {:show_feedback => @show_feedback} %>
+			</span>					
 		</div>
 	</div>
 </fieldset>	
@@ -79,12 +80,12 @@
 			<%= render :partial => "upcoming_verses" %>						
 	</fieldset>		
 </div>
-		
+	
 <%= observe_field :verseguess,
 	:frequency	=> 0.6,
 	:update		=> 'ajaxWrapper',
 	:url		=> {:action => 'feedback', :only_path => false},
-	:with		=> "'correct=#{escape_verse(@text)}&verseguess='+encodeURIComponent(value)"
+	:with		=> "'echo=#{@show_feedback}&correct=#{escape_verse(@text)}&verseguess='+encodeURIComponent(value)"
 %>
 
 <script language="JavaScript" type="text/javascript">

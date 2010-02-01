@@ -80,7 +80,7 @@
 					:frequency	=> 0.5,
 					:update		=> 'ajaxWrapper',
 					:url		=> {:action => 'feedback', :only_path => false},
-					:with		=> "'correct=#{escape_verse(@text)}&verseguess='+encodeURIComponent(value)"
+					:with		=> "'echo=#{@show_feedback}&correct=#{escape_verse(@text)}&verseguess='+encodeURIComponent(value)"
 %>
 
 <script language="JavaScript" type="text/javascript">

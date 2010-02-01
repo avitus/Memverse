@@ -659,7 +659,7 @@ class MemversesController < ApplicationController
  
     @tab = "mem"  
     @page_title = "Memory Verse Review"
-    
+    @show_feedback = true
     
     # First check for verses in session queue that need to be tested
     if mv = get_memverse_from_queue()
@@ -667,6 +667,7 @@ class MemversesController < ApplicationController
       @verse            = get_memverse(mv.verse_id)
       @text             = mv.verse.text
       @current_versenum = mv.verse.versenum
+      @show_feedback    = mv.test_interval < 60 or current_user.show_echo
       # Put memory verse into session
       session[:memverse] = mv.id  
     else
@@ -689,7 +690,8 @@ class MemversesController < ApplicationController
           # This verse needs to be memorized
           @verse            = get_memverse(mv.verse_id)
           @text             = mv.verse.text 
-          @current_versenum = mv.verse.versenum          
+          @current_versenum = mv.verse.versenum    
+          @show_feedback    = mv.test_interval < 60 or current_user.show_echo       
         else
           # There are no more verses to be tested today
           @verse            = "No more verses for today"
@@ -889,12 +891,15 @@ class MemversesController < ApplicationController
     @tab        = "mem" 
     @page_title = "Memory Verse Practice"
     
+    @show_feedback = true
+    
     # First check for verses in session queue that need to be tested
     if mv = get_memverse_from_queue()
       # This verse needs to be memorized
       @verse            = get_memverse(mv.verse_id)
       @text             = mv.verse.text
       @current_versenum = mv.verse.versenum
+      @show_feedback    = mv.test_interval < 60 or current_user.show_echo      
       # Put memory verse into session
       session[:memverse] = mv.id  
     else
@@ -917,7 +922,8 @@ class MemversesController < ApplicationController
         # This verse needs to be memorized
         @verse            = get_memverse(mv.verse_id)
         @text             = mv.verse.text 
-        @current_versenum = mv.verse.versenum          
+        @current_versenum = mv.verse.versenum 
+        @show_feedback    = mv.test_interval < 60 or current_user.show_echo        
       else
         # There are no more verses to be tested today
         @verse            = "No more verses for today"
@@ -1003,6 +1009,7 @@ class MemversesController < ApplicationController
 
     guess   = params[:verseguess] ? params[:verseguess].gsub(/\s+/," ").strip : ""  # Remove double spaces from guesses    
     correct = params[:correct]    ? params[:correct].gsub(/\s+/," ").strip    : ""  # The correct verse was stripped, cleaned when first saved
+    echo    = !(params[:echo] == "false")
     
     @correct  = correct
     @feedback = ""  # find a better way to construct the string
@@ -1012,21 +1019,25 @@ class MemversesController < ApplicationController
     guess_words = guess.split
     right_words = correct.split  
     
+
     if !right_words.empty?
-        
-      guess_words.each_index { |i|
-        if i < right_words.length # check that guess isn't longer than correct answer
-          if guess_words[i].downcase.gsub(/[^a-z ]/, '') == right_words[i].downcase.gsub(/[^a-z ]/, '')
-            @feedback = @feedback + right_words[i] + " "  
-          else
-            @feedback = @feedback + "..."
-          end
-        end          
-      }
-    
+      # Calculate feedback string
+      if echo    
+        guess_words.each_index { |i|
+          if i < right_words.length # check that guess isn't longer than correct answer
+            if guess_words[i].downcase.gsub(/[^a-z ]/, '') == right_words[i].downcase.gsub(/[^a-z ]/, '')
+              @feedback = @feedback + right_words[i] + " "  
+            else
+              @feedback = @feedback + "..."
+            end
+          end          
+        } 
+      else
+        @feedback = "< Feedback disabled >"        
+      end
+      
       # Check for complete match       
-      @match = (  guess.downcase.gsub(/[^a-z ]/, '') == correct.downcase.gsub(/[^a-z ]/, '')  )
- 
+      @match    = (  guess.downcase.gsub(/[^a-z ]/, '') == correct.downcase.gsub(/[^a-z ]/, '')  )
     end
 
     render :partial=>'feedback', :layout=>false
