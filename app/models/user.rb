@@ -112,6 +112,9 @@ class User < ActiveRecord::Base
     return false
   end
   
+  
+  
+  
   # ----------------------------------------------------------------------------------------------------------
   # Check whether current user is memorizing a given verse (see also: 'has_verse' method above)
   # Input: verse_id

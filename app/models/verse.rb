@@ -30,6 +30,42 @@ class Verse < ActiveRecord::Base
   end
 
   # ----------------------------------------------------------------------------------------------------------
+  # Return data about testament
+  # ----------------------------------------------------------------------------------------------------------  
+  def old_testament?
+    return book_index < 40
+  end
+
+  def new_testament?
+    return book_index >= 40
+  end
+
+  def testament
+    book_index >= 40 ? "New" : "Old"
+  end
+  
+  def history?
+    (1..17).include?(book_index)
+  end
+ 
+  def wisdom?
+    (18..22).include?(book_index)
+  end  
+  
+  def prophecy?
+    (23..39).include?(book_index)
+  end
+
+  def gospel?
+    (40..43).include?(book_index)
+  end
+
+  def epistle?
+    (45..65).include?(book_index)
+  end
+  
+
+  # ----------------------------------------------------------------------------------------------------------
   # Returns hash of verses and number of users for each verse
   # ----------------------------------------------------------------------------------------------------------   
   def self.rank_verse_popularity(limit = 25)
