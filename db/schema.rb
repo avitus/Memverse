@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 17) do
+ActiveRecord::Schema.define(:version => 18) do
 
   create_table "blog_assets", :force => true do |t|
     t.integer "blog_post_id"
@@ -232,6 +232,7 @@ ActiveRecord::Schema.define(:version => 17) do
     t.integer  "memorized",                                :default => 0
     t.integer  "learning",                                 :default => 0
     t.date     "last_activity_date"
+    t.boolean  "show_echo",                                :default => true
   end
 
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true

@@ -23,6 +23,7 @@
 #    t.integer  "memorized",                                :default => 0
 #    t.integer  "learning",                                 :default => 0
 #    t.date     "last_activity_date"
+#    t.boolean  "show_echo",                               :default => true
 
 require 'digest/sha1'
 require 'md5' # required for Gravatar support in Bloggity
@@ -68,7 +69,7 @@ class User < ActiveRecord::Base
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here
   attr_accessible :login, :email, :name, :password, :password_confirmation, :identity_url, 
-                  :newsletters, :reminder_freq, :last_reminder, :church, :country
+                  :newsletters, :reminder_freq, :last_reminder, :church, :country, :show_echo
 
 
   # Authenticates a user by their login name and unencrypted password - Returns the user or nil
@@ -168,6 +169,7 @@ class User < ActiveRecord::Base
     self.newsletters      = new_params["newsletters"]
     self.language         = new_params["language"]
     self.time_allocation  = new_params["time_allocation"]    
+    self.show_echo        = new_params["show_echo"] 
     self.save
   end
 
