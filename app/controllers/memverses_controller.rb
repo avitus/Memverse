@@ -1,4 +1,3 @@
-# ! Fix deletion of pending users
 # * Add a rewards page
 # * Add client side verse memorization feedback
 # - Infer users favorite translation
@@ -93,6 +92,7 @@
 # 01/10/10 : Bug fix: Handle titleization of "Song of Songs"
 # 01/10/10 : Bug fix: Pagination now works on blog; form_name wasn't being passed as a parameter
 # 01/13/10 : Added manual activation, check for session variable in mark_test and mark_drill
+# 02/01/10 : Feedback now optional once interval reaches 60 days
 
 class MemversesController < ApplicationController
   

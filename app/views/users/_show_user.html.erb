@@ -1,9 +1,30 @@
 <div id="show_user">
 	<table cellpadding="6" cellspacing="1" border="1">
 		<tr><td>Name</td>			<td><%= @user.name || @user.login %></td></tr>
-		<tr><td>Memorized</td>		<td><%= @user.memorized%></td></tr>
-		<tr><td>Learning</td>		<td><%= @user.learning%></td></tr>
 		<tr><td>Church</td>			<td><%= @user.church ? @user.church.name : "" %></td></tr>
 		<tr><td>Country</td>		<td><%= @user.country ? @user.country.printable_name : "" %></td></tr>	
+	</table>
+	
+	<br>
+	
+	<table cellpadding="6" cellspacing="1" border="1">
+		<th> 								<td>Memorized</td> 								<td>Learning</td>							</th>	
+		<tr> <td width=200>All Verses</td>	<td><%= @user.memorized%></td>					<td><%= @user.learning%></td>				</tr>
 	</table>	
+
+	<table cellpadding="6" cellspacing="1" border="1">
+		<th> 								<td>Memorized</td> 								<td>Learning</td>							</th>	
+		<tr><td width=200>Old Testament</td><td><%= @user.ot_verses["Memorized"]%></td>		<td><%= @user.ot_verses["Learning"]%></td>	</tr>
+		<tr><td>New Testament</td>			<td><%= @user.nt_verses["Memorized"]%></td>		<td><%= @user.nt_verses["Learning"]%></td>	</tr>			
+	</table>	
+
+	<table cellpadding="6" cellspacing="1" border="1">
+		<th> 								<td>Memorized</td> 								<td>Learning</td>							</th>	
+		<tr><td width="200">History</td>	<td><%= @user.history["Memorized"]%></td>		<td><%= @user.history["Learning"]%></td>	</tr>	
+		<tr><td>Wisdom</td>					<td><%= @user.wisdom["Memorized"]%></td>		<td><%= @user.wisdom["Learning"]%></td>		</tr>	
+		<tr><td>Prophecy</td>				<td><%= @user.prophecy["Memorized"]%></td>		<td><%= @user.prophecy["Learning"]%></td>	</tr>	
+		<tr><td>Gospels</td>				<td><%= @user.gospel["Memorized"]%></td>		<td><%= @user.gospel["Learning"]%></td>		</tr>	
+		<tr><td>Epistles</td>				<td><%= @user.epistle["Memorized"]%></td>		<td><%= @user.epistle["Learning"]%></td>	</tr>							
+	</table>	
+	
 </div>
