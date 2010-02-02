@@ -148,6 +148,55 @@ class User < ActiveRecord::Base
   end
 
   # ----------------------------------------------------------------------------------------------------------
+  # Return hash of OT Verses memorized and learning
+  # ----------------------------------------------------------------------------------------------------------   
+  def ot_verses    
+    { "Memorized" => self.memverses.memorized.old_testament.count, "Learning" => self.memverses.learning.old_testament.count }
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Return hash of NT Verses memorized and learning
+  # ----------------------------------------------------------------------------------------------------------   
+  def nt_verses    
+    { "Memorized" => self.memverses.memorized.new_testament.count, "Learning" => self.memverses.learning.new_testament.count }
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Return hash of Histroy Verses memorized and learning
+  # ----------------------------------------------------------------------------------------------------------   
+  def history    
+    { "Memorized" => self.memverses.memorized.history.count, "Learning" => self.memverses.learning.history.count }
+  end
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Return hash of Wisdom Verses memorized and learning
+  # ----------------------------------------------------------------------------------------------------------   
+  def wisdom    
+    { "Memorized" => self.memverses.memorized.wisdom.count, "Learning" => self.memverses.learning.wisdom.count }
+  end
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Return hash of Prophecy Verses memorized and learning
+  # ----------------------------------------------------------------------------------------------------------   
+  def prophecy    
+    { "Memorized" => self.memverses.memorized.prophecy.count, "Learning" => self.memverses.learning.prophecy.count }
+  end
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Return hash of Gospel Verses memorized and learning
+  # ----------------------------------------------------------------------------------------------------------   
+  def gospel    
+    { "Memorized" => self.memverses.memorized.gospel.count, "Learning" => self.memverses.learning.gospel.count }
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Return hash of Epistle Verses memorized and learning
+  # ----------------------------------------------------------------------------------------------------------   
+  def epistle    
+    { "Memorized" => self.memverses.memorized.epistle.count, "Learning" => self.memverses.learning.epistle.count }
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
   # Has user ever finished a day of memorization
   # Input: User object
   # ----------------------------------------------------------------------------------------------------------

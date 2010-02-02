@@ -26,7 +26,15 @@ class Memverse < ActiveRecord::Base
   named_scope :learning, :conditions => { :status => "Learning" }
   named_scope :current, lambda { {:conditions => ['next_test >= ?', Date.today ]} }
   named_scope :american, :include => {:user, :country}, :conditions => { 'countries.printable_name' => 'United States' }
+  named_scope :old_testament, :include => :verse, :conditions => { 'verses.book_index' =>  1..39 }
+  named_scope :new_testament, :include => :verse, :conditions => { 'verses.book_index' => 40..66 }
   
+  named_scope :history,   :include => :verse, :conditions => { 'verses.book_index' =>  1..17 }
+  named_scope :wisdom,    :include => :verse, :conditions => { 'verses.book_index' => 18..22 }
+  named_scope :prophecy,  :include => :verse, :conditions => { 'verses.book_index' => 23..39 }
+  named_scope :gospel,    :include => :verse, :conditions => { 'verses.book_index' => 40..43 }
+  named_scope :epistle,   :include => :verse, :conditions => { 'verses.book_index' => 45..65 }
+    
   # Validations
   validates_presence_of :user_id, :verse_id
 
