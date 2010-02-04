@@ -4,11 +4,11 @@
 		<table cellpadding="6" cellspacing="0">
 			<tr>
 				<th><%= link_to 'ID',			:action => 'list_assets', :sort_order => 'avail_history'%></th>					
-				<th><%= link_to 'Translation',	:action => 'list_assets', :sort_order => 'avail_history'%></th>	  	 
+				<th><%= link_to 'Ver',			:action => 'list_assets', :sort_order => 'avail_history'%></th>	  	 
 				<th><%= link_to 'Reference',	:action => 'list_assets', :sort_order => 'first_traded'%></th>
 				<th><%= link_to 'Users',		:action => 'list_assets', :sort_order => 'avail_history'%></th>				
 				<th><%= link_to 'Text',			:action => 'list_assets', :sort_order => 'first_traded'%></th>
-				<th><%= link_to 'Verified?',	:action => 'list_assets', :sort_order => 'first_traded'%></th>
+				<th><%= link_to 'Web Check',	:action => 'list_assets', :sort_order => 'first_traded'%></th>				
 			</tr>
 			<% for vs in @error_reported %>
 			<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
@@ -17,7 +17,7 @@
 				<td align="left"><%= vs.ref				%></td>			
 				<td align="center"><%= vs.memverses.length	%></td>	
 				<td class="edit_area" id=<%= vs.id %>><%= vs.text %></td>
-				<td><%= vs.verified			%></td>	
+				<td><%= vs.web_check		%></td>	
 				<td><%= link_to 'Edit',   :action => 'edit_verse', :id => vs %></td>
 				<td class="verify"><%= link_to_remote 'Verify', :url => { :action => "verify_verse", :id => vs.id },
 												 :update => { :success => "Verified", :failure => "Error"} %>
@@ -36,11 +36,11 @@
 	<table cellpadding="6" cellspacing="0">
 		<tr>
 			<th><%= link_to 'ID',			:action => 'list_assets', :sort_order => 'avail_history'%></th>					
-			<th><%= link_to 'Translation',	:action => 'list_assets', :sort_order => 'avail_history'%></th>	  	 
+			<th><%= link_to 'Ver',			:action => 'list_assets', :sort_order => 'avail_history'%></th>	  	 
 			<th><%= link_to 'Reference',	:action => 'list_assets', :sort_order => 'first_traded'%></th>
 			<th><%= link_to 'Users',		:action => 'list_assets', :sort_order => 'avail_history'%></th>				
 			<th><%= link_to 'Text',			:action => 'list_assets', :sort_order => 'first_traded'%></th>
-			<th><%= link_to 'Verified?',	:action => 'list_assets', :sort_order => 'first_traded'%></th>
+			<th><%= link_to 'Web Check',	:action => 'list_assets', :sort_order => 'first_traded'%></th>
 		</tr>
 		<% for vs in @need_verification %>
 		<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
@@ -49,7 +49,7 @@
 			<td align="left"><%= vs.ref				%></td>			
 			<td align="center"><%= vs.memverses.length	%></td>	
 			<td class="edit_area" id=<%= vs.id %>><%= vs.text %></td>
-			<td><%= vs.verified			%></td>	
+			<td><%= vs.web_check		%></td>	
 			<td><%= link_to 'Edit',   :action => 'edit_verse', :id => vs %></td>
 			<td class="verify"><%= link_to_remote 'Verify', :url => { :action => "verify_verse", :id => vs.id },
 											 :update => { :success => "Verified", :failure => "Error"} %>
