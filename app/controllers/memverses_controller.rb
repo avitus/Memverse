@@ -1,4 +1,3 @@
-# ! Fix deletion of pending users
 # * Add a rewards page
 # * Add client side verse memorization feedback
 # - Infer users favorite translation
@@ -93,6 +92,7 @@
 # 01/10/10 : Bug fix: Handle titleization of "Song of Songs"
 # 01/10/10 : Bug fix: Pagination now works on blog; form_name wasn't being passed as a parameter
 # 01/13/10 : Added manual activation, check for session variable in mark_test and mark_drill
+# 02/01/10 : Feedback now optional once interval reaches 60 days
 
 class MemversesController < ApplicationController
   
@@ -667,7 +667,8 @@ class MemversesController < ApplicationController
       @verse            = get_memverse(mv.verse_id)
       @text             = mv.verse.text
       @current_versenum = mv.verse.versenum
-      @show_feedback    = mv.test_interval < 60 or current_user.show_echo
+      @show_feedback    = (mv.test_interval < 60 or current_user.show_echo)
+      logger.debug("Show feedback for verse from queue: #{@show_feedback}. Interval is #{mv.test_interval} and request feedback is #{current_user.show_echo}")
       # Put memory verse into session
       session[:memverse] = mv.id  
     else
@@ -691,7 +692,8 @@ class MemversesController < ApplicationController
           @verse            = get_memverse(mv.verse_id)
           @text             = mv.verse.text 
           @current_versenum = mv.verse.versenum    
-          @show_feedback    = mv.test_interval < 60 or current_user.show_echo       
+          @show_feedback    = (mv.test_interval < 60 or current_user.show_echo) 
+          logger.debug("Show feedback for verse overdue: #{@show_feedback}. Interval is #{mv.test_interval} and request feedback is #{current_user.show_echo}")
         else
           # There are no more verses to be tested today
           @verse            = "No more verses for today"
@@ -899,7 +901,8 @@ class MemversesController < ApplicationController
       @verse            = get_memverse(mv.verse_id)
       @text             = mv.verse.text
       @current_versenum = mv.verse.versenum
-      @show_feedback    = mv.test_interval < 60 or current_user.show_echo      
+      @show_feedback    = (mv.test_interval < 60 or current_user.show_echo)
+      logger.debug("Show feedback for verse from queue: #{@show_feedback}. Interval is #{mv.test_interval} and request feedback is #{current_user.show_echo}")
       # Put memory verse into session
       session[:memverse] = mv.id  
     else
@@ -923,7 +926,8 @@ class MemversesController < ApplicationController
         @verse            = get_memverse(mv.verse_id)
         @text             = mv.verse.text 
         @current_versenum = mv.verse.versenum 
-        @show_feedback    = mv.test_interval < 60 or current_user.show_echo        
+        @show_feedback    = (mv.test_interval < 60 or current_user.show_echo)
+        logger.debug("Show feedback for verse overdue: #{@show_feedback}. Interval is #{mv.test_interval} and request feedback is #{current_user.show_echo}")
       else
         # There are no more verses to be tested today
         @verse            = "No more verses for today"
@@ -1009,7 +1013,9 @@ class MemversesController < ApplicationController
 
     guess   = params[:verseguess] ? params[:verseguess].gsub(/\s+/," ").strip : ""  # Remove double spaces from guesses    
     correct = params[:correct]    ? params[:correct].gsub(/\s+/," ").strip    : ""  # The correct verse was stripped, cleaned when first saved
-    echo    = !(params[:echo] == "false")
+    echo    = (params[:echo] == "true")
+
+    logger.debug("Echo (give feedback) is set to: #{echo}")
     
     @correct  = correct
     @feedback = ""  # find a better way to construct the string
