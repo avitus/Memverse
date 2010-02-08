@@ -1023,17 +1023,9 @@ class MemversesController < ApplicationController
     @correct  = correct
     @feedback = ""  # find a better way to construct the string
  
-    # TODO: get rid of having to type in dashes - the problem is that they're regarded as a whole word, unlike other punctuation
-    # easiest solution is probably to drop any words that are just a dash or check documentation on how split works. We still need to handle
-    # this character: "—"
     guess_words = guess.split(/\s-\s|\s-|\s—\s|\s—|\s/)
     right_words = correct.split
-    
-    logger.debug("Guess: #{guess_words}, length: #{guess_words.length}")
-    logger.debug("Right: #{right_words}, length: #{right_words.length}")  
-    logger.debug("For match the guess is: #{guess.downcase.gsub(/[^a-z ]|\s-|\s—/, '')}")
-    logger.debug("for match the right is: #{correct.downcase.gsub(/[^a-z ]|\s-|\s—/, '')}")
-    
+        
     if !right_words.empty?
       # Calculate feedback string
       if echo    
@@ -1046,14 +1038,11 @@ class MemversesController < ApplicationController
               @feedback = @feedback + "..."
             end
             
-            logger.debug("Next correct word at position #{i+1}: #{right_words[i+1]}")
-            
             if right_words[i+1] == "-" || right_words[i+1] == "—"
               @feedback = @feedback + right_words[i+1] + " "
               # Remove the dash from the array
               right_words.delete_at(i+1)
             end
-            
             
           end          
         } 
