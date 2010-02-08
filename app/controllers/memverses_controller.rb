@@ -976,14 +976,17 @@ class MemversesController < ApplicationController
       q = params[:commit].slice!(/[0-5]?/).to_i
       
       # Retrieve verse from DB
-      mv = Memverse.find( session[:memverse] ) # TODO: check whether session variable is ok
+      mv = Memverse.find( session[:memverse] )
       
       # Execute Supermemo algorithm
       n_new, efactor_new, interval_new = supermemo(q, mv.efactor, mv.test_interval, mv.rep_n)
 
       # Give encouragement if verse transitions from "Learning" to "Memorized"
       if verse_status(n_new, efactor_new, interval_new) == "Memorized" and verse_status(mv.rep_n, mv.efactor, mv.test_interval) == "Learning"
-        flash[:notice] = "Congratulations. You have memorized #{mv.verse.ref}"
+        flash[:notice] = "Congratulations. You have memorized #{mv.verse.ref}."
+        if current_user.reaching_milestone
+          flash[:notice] << " That was your #{current_user.memorized+1}th memorized verse!"
+        end
       end
       
       # Update memory verse parameters
@@ -1021,21 +1024,37 @@ class MemversesController < ApplicationController
     @feedback = ""  # find a better way to construct the string
  
     # TODO: get rid of having to type in dashes - the problem is that they're regarded as a whole word, unlike other punctuation
-    # easiest solution is probably to drop any words that are just a dash or check documentation on how split works
-    guess_words = guess.split
-    right_words = correct.split  
+    # easiest solution is probably to drop any words that are just a dash or check documentation on how split works. We still need to handle
+    # this character: "—"
+    guess_words = guess.split(/\s-\s|\s-|\s—\s|\s—|\s/)
+    right_words = correct.split
     
-
+    logger.debug("Guess: #{guess_words}, length: #{guess_words.length}")
+    logger.debug("Right: #{right_words}, length: #{right_words.length}")  
+    logger.debug("For match the guess is: #{guess.downcase.gsub(/[^a-z ]|\s-|\s—/, '')}")
+    logger.debug("for match the right is: #{correct.downcase.gsub(/[^a-z ]|\s-|\s—/, '')}")
+    
     if !right_words.empty?
       # Calculate feedback string
       if echo    
         guess_words.each_index { |i|
           if i < right_words.length # check that guess isn't longer than correct answer
+            
             if guess_words[i].downcase.gsub(/[^a-z ]/, '') == right_words[i].downcase.gsub(/[^a-z ]/, '')
               @feedback = @feedback + right_words[i] + " "  
             else
               @feedback = @feedback + "..."
             end
+            
+            logger.debug("Next correct word at position #{i+1}: #{right_words[i+1]}")
+            
+            if right_words[i+1] == "-" || right_words[i+1] == "—"
+              @feedback = @feedback + right_words[i+1] + " "
+              # Remove the dash from the array
+              right_words.delete_at(i+1)
+            end
+            
+            
           end          
         } 
       else
@@ -1043,7 +1062,7 @@ class MemversesController < ApplicationController
       end
       
       # Check for complete match       
-      @match    = (  guess.downcase.gsub(/[^a-z ]/, '') == correct.downcase.gsub(/[^a-z ]/, '')  )
+      @match    = (  guess.downcase.gsub(/[^a-z ]|\s-|\s—/, '') == correct.downcase.gsub(/[^a-z ]|\s-|\s—/, '')  )
     end
 
     render :partial=>'feedback', :layout=>false
