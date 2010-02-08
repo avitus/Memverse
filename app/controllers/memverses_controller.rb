@@ -1,10 +1,8 @@
 # * Add a rewards page
 # * Add client side verse memorization feedback
 # - Infer users favorite translation
-# - Find a way to verify verse entry - we can't check everything ourselves.
 # - Add link in reminder emails to delete account
 # - Add moderators for different translations
-# - Get rid of having to type the dash ('-')
 # - Add nice, explanatory pop-up boxes using jQuery
 # - Allow for idle verses
 # - Add better verse search - allow for missing search parameters to return, for instance, all translations of a given verse
@@ -93,6 +91,7 @@
 # 01/10/10 : Bug fix: Pagination now works on blog; form_name wasn't being passed as a parameter
 # 01/13/10 : Added manual activation, check for session variable in mark_test and mark_drill
 # 02/01/10 : Feedback now optional once interval reaches 60 days
+# 02/07/10 : No longer need to type dash, congratulations on milestones, fixed NKJ verification
 
 class MemversesController < ApplicationController
   
