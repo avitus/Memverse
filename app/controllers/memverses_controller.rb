@@ -1,10 +1,8 @@
 # * Add a rewards page
 # * Add client side verse memorization feedback
 # - Infer users favorite translation
-# - Find a way to verify verse entry - we can't check everything ourselves.
 # - Add link in reminder emails to delete account
 # - Add moderators for different translations
-# - Get rid of having to type the dash ('-')
 # - Add nice, explanatory pop-up boxes using jQuery
 # - Allow for idle verses
 # - Add better verse search - allow for missing search parameters to return, for instance, all translations of a given verse
@@ -93,6 +91,7 @@
 # 01/10/10 : Bug fix: Pagination now works on blog; form_name wasn't being passed as a parameter
 # 01/13/10 : Added manual activation, check for session variable in mark_test and mark_drill
 # 02/01/10 : Feedback now optional once interval reaches 60 days
+# 02/07/10 : No longer need to type dash, congratulations on milestones, fixed NKJ verification
 
 class MemversesController < ApplicationController
   
@@ -976,14 +975,17 @@ class MemversesController < ApplicationController
       q = params[:commit].slice!(/[0-5]?/).to_i
       
       # Retrieve verse from DB
-      mv = Memverse.find( session[:memverse] ) # TODO: check whether session variable is ok
+      mv = Memverse.find( session[:memverse] )
       
       # Execute Supermemo algorithm
       n_new, efactor_new, interval_new = supermemo(q, mv.efactor, mv.test_interval, mv.rep_n)
 
       # Give encouragement if verse transitions from "Learning" to "Memorized"
       if verse_status(n_new, efactor_new, interval_new) == "Memorized" and verse_status(mv.rep_n, mv.efactor, mv.test_interval) == "Learning"
-        flash[:notice] = "Congratulations. You have memorized #{mv.verse.ref}"
+        flash[:notice] = "Congratulations. You have memorized #{mv.verse.ref}."
+        if current_user.reaching_milestone
+          flash[:notice] << " That was your #{current_user.memorized+1}th memorized verse!"
+        end
       end
       
       # Update memory verse parameters
@@ -1020,22 +1022,27 @@ class MemversesController < ApplicationController
     @correct  = correct
     @feedback = ""  # find a better way to construct the string
  
-    # TODO: get rid of having to type in dashes - the problem is that they're regarded as a whole word, unlike other punctuation
-    # easiest solution is probably to drop any words that are just a dash or check documentation on how split works
-    guess_words = guess.split
-    right_words = correct.split  
-    
-
+    guess_words = guess.split(/\s-\s|\s-|\s—\s|\s—|\s/)
+    right_words = correct.split
+        
     if !right_words.empty?
       # Calculate feedback string
       if echo    
         guess_words.each_index { |i|
           if i < right_words.length # check that guess isn't longer than correct answer
+            
             if guess_words[i].downcase.gsub(/[^a-z ]/, '') == right_words[i].downcase.gsub(/[^a-z ]/, '')
               @feedback = @feedback + right_words[i] + " "  
             else
               @feedback = @feedback + "..."
             end
+            
+            if right_words[i+1] == "-" || right_words[i+1] == "—"
+              @feedback = @feedback + right_words[i+1] + " "
+              # Remove the dash from the array
+              right_words.delete_at(i+1)
+            end
+            
           end          
         } 
       else
@@ -1043,7 +1050,7 @@ class MemversesController < ApplicationController
       end
       
       # Check for complete match       
-      @match    = (  guess.downcase.gsub(/[^a-z ]/, '') == correct.downcase.gsub(/[^a-z ]/, '')  )
+      @match    = (  guess.downcase.gsub(/[^a-z ]|\s-|\s—/, '') == correct.downcase.gsub(/[^a-z ]|\s-|\s—/, '')  )
     end
 
     render :partial=>'feedback', :layout=>false
