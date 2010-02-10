@@ -105,17 +105,17 @@ class Verse < ActiveRecord::Base
   def web_check
     
     tl = case self.translation
-      when "NAS" then "nasb"
-      when "NKJ" then "nkj"
+      when "NAS" then "NASB"
+      when "NKJ" then "NKJV"
       else self.translation.downcase
     end
     
     
     url = 'http://www.biblegateway.com/passage/?search=' + CGI.escape(self.ref) + '&version=' + tl.to_s
-    logger.debug("URL: #{url}")
     doc = Nokogiri::HTML(open(url))
     # The third gsub removes weirdly encoded characters at the start of strings
-    txt =  doc.at_css(".result-text-style-normal").to_s.gsub(/<sup.+?<\/sup>/, "").gsub(/<\/?[^>]*>/, "").gsub(/[\x80-\xff]/,"").strip
+    txt = doc.at_css(".result-text-style-normal").to_s.gsub(/<sup.+?<\/sup>/, "").gsub(/<\/?[^>]*>/, "").gsub(/[\x80-\xff]/,"").split("Footnotes")[0]
+    txt = txt.strip unless !txt
     txt == self.text ? true : txt
   end
 
