@@ -4,7 +4,7 @@
    session in the past month.</p>
 
 <div class="user-list">
-	<table cellpadding="6" cellspacing="1" border="1">  	
+	<table id="leaderboard" cellpadding="6" cellspacing="1" border="1">  	
 		<tr>
 			<th>Rank</th>
 			<th>Name</th>	
@@ -16,7 +16,7 @@
 		</tr>
 		
 		<% for user in @leaderboard %>
-			<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
+			<tr valign="top" <%=css_current_user_check(user[0])%> >
 				<td align="center"> <%= @leaderboard.index(user)+1%></td>
 				<td align="left">   <%= user[0].name.empty? ? "[" + user[0].login + "]" : user[0].name	%></td>
 				<td align="center"> <%= user[1]				%></td>	

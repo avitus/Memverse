@@ -501,7 +501,7 @@ class User < ActiveRecord::Base
   # Returns hash of top ten users (sorted by number of verses memorized)
   # TODO: Find a way to speed this up ... eager loading (?), cache number of verses memorized?
   # ---------------------------------------------------------------------------------------------------------- 
-  def self.top_users(numusers=25)
+  def self.top_users(numusers=40)
 
     leaderboard = Hash.new(0)
     
