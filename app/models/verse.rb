@@ -24,7 +24,7 @@ class Verse < ActiveRecord::Base
                 'Eccl', 'Song', 'Isa', 'Jer', 'Lam', 'Ezk', 'Dan', 'Hos', 'Joel', 
                 'Amos', 'Obad', 'Jonah', 'Mic', 'Nahum', 'Hab', 'Zeph', 'Hag', 'Zech', 'Mal', 'Matt',
                 'Mark', 'Luke', 'Jn', 'Acts', 'Rom', '1 Cor', '2 Cor', 'Gal', 'Eph', 'Phil',
-                'Col', '1 Thess', '2 Thess', '1 Tim', '2 Tim', 'Tit', 'Phil', 'Heb', 'James',
+                'Col', '1 Thess', '2 Thess', '1 Tim', '2 Tim', 'Tit', 'Phlm', 'Heb', 'James',
                 '1 Pet', '2 Pet', '1 John', '2 John', '3 John', 'Jude', 'Rev']
 
   # ----------------------------------------------------------------------------------------------------------
