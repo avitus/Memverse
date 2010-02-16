@@ -654,6 +654,10 @@ div#currentVerse div#matchbox {
 	margin-right: 20px;
 }
 
+.mnemonic {
+	font-size: 95%;
+}
+
 /* === Styling for Upcoming list === */
 
 #upcoming-list {

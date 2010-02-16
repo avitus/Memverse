@@ -120,6 +120,13 @@ class Verse < ActiveRecord::Base
   end
 
   # ----------------------------------------------------------------------------------------------------------
+  # Create mnemonic for verse text
+  # ---------------------------------------------------------------------------------------------------------- 
+  def mnemonic
+    self.text.gsub(/[^a-zA-Z ]/, '').split.map { |x| x[0].chr }.join(" ")
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
   # Returns array of all translations for a given verse
   # Input:  A verse ID
   # Output: Array of all translations of a given verse
