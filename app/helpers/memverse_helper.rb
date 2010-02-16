@@ -26,6 +26,19 @@ module MemverseHelper
     end
   end
   
+
+  # Determines the CSS class based on whether this is the current user
+  # (returns the string version of the class, lowercased, as the CSS class name)
+  def css_current_user_check( user, include_class_text = true )
+    value = 'not-current_user'
+    value = 'current_user' if current_user == user
+    
+    if include_class_text
+      'class="' << value << '"'
+    else
+      value
+    end
+  end  
   
   
 end

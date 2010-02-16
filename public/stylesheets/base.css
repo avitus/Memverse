@@ -704,6 +704,12 @@ div#currentVerse div#matchbox {
 	margin-left: 1em;
 }
 
+/* === Leaderboard Styles === */
+#leaderboard .current_user {
+	background: #687284
+}
+
+
 /* === Flash Messages === */
 
 div#flash-notice {	
