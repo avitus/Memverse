@@ -904,14 +904,13 @@ class MemversesController < ApplicationController
       @text             = mv.verse.text
       @current_versenum = mv.verse.versenum
       @show_feedback    = (mv.test_interval < 60 or current_user.show_echo)
-      logger.debug("Show feedback for verse from queue: #{@show_feedback}. Interval is #{mv.test_interval} and request feedback is #{current_user.show_echo}")
       # Put memory verse into session
       session[:memverse] = mv.id  
     else
-      # Otherwise, present the most difficult verse for memorization
+      # Otherwise, find the verse with the shortest test_interval i.e. a new or difficult verse
       mv = Memverse.find( :first, 
                           :conditions => ["user_id = ? and last_tested < ?", current_user.id, Date.today], 
-                          :order      => "efactor ASC")
+                          :order      => "test_interval ASC")
  
       if !mv.nil? # We've found a verse
                               
@@ -929,7 +928,6 @@ class MemversesController < ApplicationController
         @text             = mv.verse.text 
         @current_versenum = mv.verse.versenum 
         @show_feedback    = (mv.test_interval < 60 or current_user.show_echo)
-        logger.debug("Show feedback for verse overdue: #{@show_feedback}. Interval is #{mv.test_interval} and request feedback is #{current_user.show_echo}")
       else
         # There are no more verses to be tested today
         @verse            = "No more verses for today"
