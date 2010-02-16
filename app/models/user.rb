@@ -597,13 +597,13 @@ class User < ActiveRecord::Base
   # Whether a user can moderate the comments for a given blog
   # Implement in your user model
   def can_moderate_blog_comments?(blog_id = nil)
-    self.id == 2 or self.memverses.memorized.count > 200
+    self.id == 2 or self.memverses.memorized.count > 1000
   end
   
   # Whether the comments that a user makes within a given blog are automatically approved (as opposed to being queued until a moderator approves them)
   # Implement in your user model, if you care.
   def blog_comment_auto_approved?(blog_id = nil)
-    self.id ==2 or self.memverses.memorized.count > 25
+    self.id ==2 or self.memverses.memorized.count > 5
   end
   
   # Whether a user has access to create, edit and destroy blogs
