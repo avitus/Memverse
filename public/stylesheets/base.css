@@ -656,6 +656,8 @@ div#currentVerse div#matchbox {
 
 .mnemonic {
 	font-size: 95%;
+	margin-left: 10%;
+	margin-right: 10%;
 }
 
 /* === Styling for Upcoming list === */
