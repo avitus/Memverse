@@ -24,7 +24,7 @@ class Verse < ActiveRecord::Base
                 'Eccl', 'Song', 'Isa', 'Jer', 'Lam', 'Ezk', 'Dan', 'Hos', 'Joel', 
                 'Amos', 'Obad', 'Jonah', 'Mic', 'Nahum', 'Hab', 'Zeph', 'Hag', 'Zech', 'Mal', 'Matt',
                 'Mark', 'Luke', 'Jn', 'Acts', 'Rom', '1 Cor', '2 Cor', 'Gal', 'Eph', 'Phil',
-                'Col', '1 Thess', '2 Thess', '1 Tim', '2 Tim', 'Tit', 'Phil', 'Heb', 'James',
+                'Col', '1 Thess', '2 Thess', '1 Tim', '2 Tim', 'Tit', 'Phlm', 'Heb', 'James',
                 '1 Pet', '2 Pet', '1 John', '2 John', '3 John', 'Jude', 'Rev']
 
   # ----------------------------------------------------------------------------------------------------------
@@ -114,7 +114,7 @@ class Verse < ActiveRecord::Base
     url = 'http://www.biblegateway.com/passage/?search=' + CGI.escape(self.ref) + '&version=' + tl.to_s
     doc = Nokogiri::HTML(open(url))
     # The third gsub removes weirdly encoded characters at the start of strings
-    txt = doc.at_css(".result-text-style-normal").to_s.gsub(/<sup.+?<\/sup>/, "").gsub(/<\/?[^>]*>/, "").gsub(/[\x80-\xff]/,"").split("Footnotes")[0]
+    txt = doc.at_css(".result-text-style-normal").to_s.gsub(/<sup.+?<\/sup>/, "").gsub(/<h(4|5).+?<\/h(4|5)>/,"").gsub(/<\/?[^>]*>/, "").gsub(/[\x80-\xff]/,"").split("Footnotes")[0]
     txt = txt.strip unless !txt
     txt == self.text ? true : txt
   end
