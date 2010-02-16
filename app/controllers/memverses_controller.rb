@@ -92,6 +92,7 @@
 # 01/13/10 : Added manual activation, check for session variable in mark_test and mark_drill
 # 02/01/10 : Feedback now optional once interval reaches 60 days
 # 02/07/10 : No longer need to type dash, congratulations on milestones, fixed NKJ verification
+# 02/15/10 : Added mnemonics for verses
 
 class MemversesController < ApplicationController
   
