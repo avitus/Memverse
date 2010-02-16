@@ -158,19 +158,20 @@ class ChartController < ApplicationController
   
   def vertical_axis_max( maxval )
     case maxval
-      when    0..    7  then     8 # Interval per division =    1
-      when    8..   15  then    16 # Interval per division =    2
-      when   16..   23  then    24 # Interval per division =    3
-      when   24..   31  then    32 # Interval per division =    4
-      when   32..   39  then    40 # Interval per division =    5
-      when   40..   47  then    48 # Interval per division =    6
-      when   48..   55  then    56 # Interval per division =    7
-      when   56..   63  then    64 # Interval per division =    8
-      when   64..   79  then    80 # Interval per division =   10
-      when   80..  159  then   160 # Interval per division =   20
-      when  160..  239  then   240 # Interval per division =   30
-      when 8000..15999  then 16000 # Interval per division = 2000
-      else                     320 # Interval per division =  ?
+      when     0..    7  then     8 # Interval per division =    1
+      when     8..   15  then    16 # Interval per division =    2
+      when    16..   23  then    24 # Interval per division =    3
+      when    24..   31  then    32 # Interval per division =    4
+      when    32..   39  then    40 # Interval per division =    5
+      when    40..   47  then    48 # Interval per division =    6
+      when    48..   55  then    56 # Interval per division =    7
+      when    56..   63  then    64 # Interval per division =    8
+      when    64..   79  then    80 # Interval per division =   10
+      when    80..  159  then   160 # Interval per division =   20
+      when   160..  239  then   240 # Interval per division =   30
+      when  8000..15999  then 16000 # Interval per division = 2000
+      when 16000..23999  then 24000 # Interval per division = 3000      
+      else                     320  # Interval per division =  ?
     end
   end
 
