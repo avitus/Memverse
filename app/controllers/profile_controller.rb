@@ -39,6 +39,7 @@ class ProfileController < ApplicationController
     @user           = User.find(current_user)
     @user_country   = @user.country ? @user.country.printable_name : ""
     @user_church    = @user.church ?  @user.church.name : ""
+    @user_state     = @user.state ?  @user.state.name : ""
     
     # -- Process Form --
     if request.put? # For some reason this is a 'put' not a 'post'
@@ -84,6 +85,39 @@ class ProfileController < ApplicationController
     render :json => {:query => query, :suggestions => @suggestions }.to_json
 
   end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Autcomplete for State Names
+  # Input: params[:query]
+  # Output: JSON object
+  # ----------------------------------------------------------------------------------------------------------   
+  def state_autocomplete
+    
+    # Return state list in JSON format
+    #    {
+    #       query:'Mi',
+    #       suggestions:['Minnesota','Michigan', etc],
+    #       data:[ ? ]
+    #    }
+
+    @suggestions = Array.new
+
+    query         = params[:query]
+    query_length  = query.length
+    
+    all_states = State.find(:all, :select => 'name')
+    
+    all_states.each { |state|
+      name = state.name
+      if name[0...query_length].downcase == query.downcase
+        @suggestions << name
+      end
+    }
+    
+    render :json => {:query => query, :suggestions => @suggestions }.to_json
+
+  end
+
 
   # ----------------------------------------------------------------------------------------------------------
   # Autcomplete for Church Names

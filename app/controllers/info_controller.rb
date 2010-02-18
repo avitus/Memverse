@@ -39,8 +39,8 @@ class InfoController < ApplicationController
   # Show some nice statistics
   # ----------------------------------------------------------------------------------------------------------   
   def memverse_clock
-    @tab = "home"    
-    @page_title = "Memverse Clock"
+    @tab        = "leaderboard"    
+    @page_title = "Memverse Global Chart"
     
     last_entry        = DailyStats.global.find(:first, :order => "entry_date DESC")
     
