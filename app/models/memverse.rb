@@ -211,6 +211,15 @@ class Memverse < ActiveRecord::Base
     end
   end
   
+  def needs_mnemonic?
+    return case self.user.mnemonic_use
+      when "Never"  then false
+      when "Always" then true
+      when "Learning" then self.test_interval < 7
+    end
+  end
+  
+  
   # ----------------------------------------------------------------------------------------------------------
   # Retrieve previous/next memory verse NOTE: Replacement for method in application_controller.rb
   #   Input: verse_id

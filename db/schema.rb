@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 18) do
+ActiveRecord::Schema.define(:version => 19) do
 
   create_table "blog_assets", :force => true do |t|
     t.integer "blog_post_id"
@@ -206,6 +206,13 @@ ActiveRecord::Schema.define(:version => 18) do
   add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
   add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
 
+  create_table "states", :force => true do |t|
+    t.string  "abbrev",      :limit => 20, :default => "", :null => false
+    t.string  "name",        :limit => 50, :default => "", :null => false
+    t.integer "users_count",               :default => 0
+    t.integer "population"
+  end
+
   create_table "users", :force => true do |t|
     t.string   "login",                     :limit => 40
     t.string   "identity_url"
@@ -215,7 +222,7 @@ ActiveRecord::Schema.define(:version => 18) do
     t.string   "salt",                      :limit => 40
     t.string   "remember_token",            :limit => 40
     t.string   "activation_code",           :limit => 40
-    t.string   "state",                                    :default => "passive", :null => false
+    t.string   "state",                                    :default => "passive",  :null => false
     t.datetime "remember_token_expires_at"
     t.datetime "activated_at"
     t.datetime "deleted_at"
@@ -233,6 +240,9 @@ ActiveRecord::Schema.define(:version => 18) do
     t.integer  "learning",                                 :default => 0
     t.date     "last_activity_date"
     t.boolean  "show_echo",                                :default => true
+    t.integer  "max_interval",                             :default => 366
+    t.string   "mnemonic_use",                             :default => "Learning"
+    t.integer  "state_id"
   end
 
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true

@@ -16,7 +16,18 @@
 						<%= f.label 			:email, 'Email' %>
 						<%= f.text_field 		:email %>
 					</li>
-					
+					<li>
+						<%= f.label 			:country, 'Country' %>
+						<%= f.text_field 		:country, :value => @user_country %>
+					</li>
+					<li id="state-entry">
+						<%= f.label 			:state, 'State' %>
+						<%= f.text_field 		:state, :value => @user_state %>
+					</li>
+					<li>
+						<%= f.label 			:church, 'Church / Organization' %>
+						<%= f.text_field 		:church, :value => @user_church %>
+					</li>					
 					<li>
 						<%= f.label 			:newsletters, 'Receive newsletters' %>
 						<%= f.check_box 		:newsletters %>
@@ -48,19 +59,19 @@
 									 ["15 Minutes per Day", 15	],
 									 ["20 Minutes per Day", 20	]]      
 									 %>
-					</li>								
-					<li>
-						<%= f.label 			:church, 'Church / Organization' %>
-						<%= f.text_field 		:church, :value => @user_church %>
-					</li>	
-					<li>
-						<%= f.label 			:country, 'Country' %>
-						<%= f.text_field 		:country, :value => @user_country %>
-					</li>
+					</li>														
 					<li>
 						<%= f.label 			:show_echo, 'Always show feedback?' %>
 						<%= f.check_box 		:show_echo %>
 					</li>
+					<li>
+						<%= f.label 			:mnemonic_use, 'Prompt setting' %>
+						<%= f.select			:mnemonic_use,
+									[["Always", 	'Always'	],
+									 ["Learning",	'Learning'	], 
+									 ["Never", 		'Never'		]]     
+									 %>
+					</li>					
 				</ol>
 				 
 				<div class="buttons">				
@@ -82,10 +93,35 @@ to your blog comments.</p>
 	$(document).ready(function() {	
 		a = $('#user_country').autocomplete({ serviceUrl:'profile/country_autocomplete'  								   
 		});
-		
+
+		c = $('#user_state').autocomplete({ serviceUrl:'profile/state_autocomplete'  								   
+		});
+	
 		b = $('#user_church').autocomplete({ serviceUrl:'profile/church_autocomplete'  								   
 		});
 	});
 </script>
 
+<!-- Hide state entry field if not US -->
+<script type="text/javascript">
+	$(document).ready(function() {
+			
+		if ($('#user_country').val() == "United States") {
+			$('#state-entry').show();		
+		}
+		else {
+			$('#state-entry').hide();
+		}
+		
+		$('#user_country').blur(function() {
+			if (this.value == "United States") {
+				$('#state-entry').show();		
+			}
+			else {
+				$('#state-entry').hide();
+			}
+		});
+		
+	});
+</script>
 

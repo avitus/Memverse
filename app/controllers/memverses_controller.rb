@@ -666,7 +666,7 @@ class MemversesController < ApplicationController
       # This verse needs to be memorized
       @verse            = get_memverse(mv.verse_id)
       @text             = mv.verse.text
-      @mnemonic         = mv.verse.mnemonic if mv.test_interval < 7
+      @mnemonic         = mv.verse.mnemonic if mv.needs_mnemonic?
       @current_versenum = mv.verse.versenum
       @show_feedback    = (mv.test_interval < 60 or current_user.show_echo)
       logger.debug("Show feedback for verse from queue: #{@show_feedback}. Interval is #{mv.test_interval} and request feedback is #{current_user.show_echo}")
@@ -692,7 +692,7 @@ class MemversesController < ApplicationController
           # This verse needs to be memorized
           @verse            = get_memverse(mv.verse_id)
           @text             = mv.verse.text 
-          @mnemonic         = mv.verse.mnemonic if mv.test_interval < 7          
+          @mnemonic         = mv.verse.mnemonic if mv.needs_mnemonic?         
           @current_versenum = mv.verse.versenum    
           @show_feedback    = (mv.test_interval < 60 or current_user.show_echo) 
           logger.debug("Show feedback for verse overdue: #{@show_feedback}. Interval is #{mv.test_interval} and request feedback is #{current_user.show_echo}")
