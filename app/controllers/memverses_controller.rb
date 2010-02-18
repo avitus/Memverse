@@ -1257,7 +1257,7 @@ class MemversesController < ApplicationController
     interval_new = case n_new
       when 1 then 1
       when 2 then 4
-      else [interval * efactor_new, 365].min.round # Don't set interval to more than one year for now
+      else [interval * efactor_new, current_user.max_interval].min.round # Don't set interval to more than one year for now
     end  
     
     return n_new.to_i, efactor_new, interval_new.to_i

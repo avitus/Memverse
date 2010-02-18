@@ -225,6 +225,7 @@ class User < ActiveRecord::Base
     self.time_allocation  = new_params["time_allocation"]    
     self.show_echo        = new_params["show_echo"] 
     self.mnemonic_use     = new_params["mnemonic_use"] 
+    self.max_interval     = new_params["max_interval"] 
     self.save
   end
 
