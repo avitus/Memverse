@@ -52,9 +52,9 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :roles
   has_many                :memverses 
   has_many                :progress_reports
-  belongs_to              :country, :counter_cache => true
-  belongs_to              :church,  :counter_cache => true
-  belongs_to              :state,   :counter_cache => true
+  belongs_to              :country,         :counter_cache => true
+  belongs_to              :church,          :counter_cache => true
+  belongs_to              :american_state,  :counter_cache => true
   
   # Associations for bloggity
   has_many :blog_posts
@@ -70,7 +70,8 @@ class User < ActiveRecord::Base
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here
   attr_accessible :login, :email, :name, :password, :password_confirmation, :identity_url, 
-                  :newsletters, :reminder_freq, :last_reminder, :church, :country, :show_echo
+                  :newsletters, :reminder_freq, :last_reminder, :church, :country, :american_state, 
+                  :show_echo, :max_interval, :mnemonic_use
 
 
   # Authenticates a user by their login name and unencrypted password - Returns the user or nil
@@ -217,7 +218,7 @@ class User < ActiveRecord::Base
     self.email            = new_params["email"]
     self.reminder_freq    = new_params["reminder_freq"]
     self.country          = Country.find(:first, :conditions => ["printable_name = ?", new_params["country"]])
-    self.state            = State.find(:first, :conditions => ["name = ?", new_params["state"]])
+    self.american_state   = AmericanState.find(:first, :conditions => ["name = ?", new_params["american_state"]])
     # If church doesn't exist in database we add it
     self.church           = Church.find(:first, :conditions => ["name = ?", new_params["church"]]) || Church.create(:name => new_params["church"])
     self.newsletters      = new_params["newsletters"]

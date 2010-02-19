@@ -1,7 +1,7 @@
 
-DROP TABLE IF EXISTS states;
+DROP TABLE IF EXISTS american_states;
 
-CREATE TABLE `states` (
+CREATE TABLE `american_states` (
   `id` SMALLINT NOT NULL PRIMARY KEY,
   `abbrev` varchar(20) NOT NULL default '',
   `name` varchar(50) NOT NULL default ''
@@ -11,7 +11,7 @@ CREATE TABLE `states` (
 -- Dumping data for table `state_abbreviations`
 -- 
 
-INSERT INTO `states` (`id`, `abbrev`, `name`) VALUES ('0', 'AL', 'Alabama'),
+INSERT INTO `american_states` (`id`, `abbrev`, `name`) VALUES ('0', 'AL', 'Alabama'),
 ('1', 'AK', 'Alaska'),
 ('2', 'AZ', 'Arizona'),
 ('3', 'AR', 'Arkansas'),

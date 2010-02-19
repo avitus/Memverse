@@ -21,8 +21,8 @@
 						<%= f.text_field 		:country, :value => @user_country %>
 					</li>
 					<li id="state-entry">
-						<%= f.label 			:state, 'State' %>
-						<%= f.text_field 		:state, :value => @user_state %>
+						<%= f.label 			:american_state, 'State' %>
+						<%= f.text_field 		:american_state, :value => @user_state %>
 					</li>
 					<li>
 						<%= f.label 			:church, 'Church / Organization' %>
@@ -105,7 +105,7 @@ to your blog comments.</p>
 		a = $('#user_country').autocomplete({ serviceUrl:'profile/country_autocomplete'  								   
 		});
 
-		c = $('#user_state').autocomplete({ serviceUrl:'profile/state_autocomplete'  								   
+		c = $('#user_american_state').autocomplete({ serviceUrl:'profile/state_autocomplete'  								   
 		});
 	
 		b = $('#user_church').autocomplete({ serviceUrl:'profile/church_autocomplete'  								   
