@@ -37,9 +37,9 @@ class ProfileController < ApplicationController
     
     # -- Display Form --
     @user           = User.find(current_user)
-    @user_country   = @user.country ? @user.country.printable_name : ""
-    @user_church    = @user.church ?  @user.church.name : ""
-    @user_state     = @user.state ?  @user.state.name : ""
+    @user_country   = @user.country ?         @user.country.printable_name  : ""
+    @user_church    = @user.church ?          @user.church.name             : ""
+    @user_state     = @user.american_state ?  @user.american_state.name     : ""
     
     # -- Process Form --
     if request.put? # For some reason this is a 'put' not a 'post'
@@ -105,7 +105,7 @@ class ProfileController < ApplicationController
     query         = params[:query]
     query_length  = query.length
     
-    all_states = State.find(:all, :select => 'name')
+    all_states = AmericanState.find(:all, :select => 'name')
     
     all_states.each { |state|
       name = state.name

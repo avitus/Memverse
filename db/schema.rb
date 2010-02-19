@@ -11,6 +11,13 @@
 
 ActiveRecord::Schema.define(:version => 19) do
 
+  create_table "american_states", :force => true do |t|
+    t.string  "abbrev",      :limit => 20, :default => "", :null => false
+    t.string  "name",        :limit => 50, :default => "", :null => false
+    t.integer "users_count",               :default => 0
+    t.integer "population"
+  end
+
   create_table "blog_assets", :force => true do |t|
     t.integer "blog_post_id"
     t.integer "parent_id"
@@ -206,13 +213,6 @@ ActiveRecord::Schema.define(:version => 19) do
   add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
   add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
 
-  create_table "states", :force => true do |t|
-    t.string  "abbrev",      :limit => 20, :default => "", :null => false
-    t.string  "name",        :limit => 50, :default => "", :null => false
-    t.integer "users_count",               :default => 0
-    t.integer "population"
-  end
-
   create_table "users", :force => true do |t|
     t.string   "login",                     :limit => 40
     t.string   "identity_url"
@@ -242,7 +242,7 @@ ActiveRecord::Schema.define(:version => 19) do
     t.boolean  "show_echo",                                :default => true
     t.integer  "max_interval",                             :default => 366
     t.string   "mnemonic_use",                             :default => "Learning"
-    t.integer  "state_id"
+    t.integer  "american_state_id"
   end
 
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true
