@@ -123,7 +123,13 @@ class Verse < ActiveRecord::Base
   # Create mnemonic for verse text
   # ---------------------------------------------------------------------------------------------------------- 
   def mnemonic
-    self.text.gsub(/[^a-zA-Z ]/, '').split.map { |x| x[0].chr }.join(" ")
+    self.text.gsub(/[^a-zA-Z,. ]/, '').split.map { |x| 
+      if (x.last =~ /[a-zA-Z]/).nil?
+        x[0].chr + x.last
+      else
+        x[0].chr
+      end
+      }.join(" ")
   end
 
   # ----------------------------------------------------------------------------------------------------------
