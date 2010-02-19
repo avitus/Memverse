@@ -124,7 +124,7 @@ class Verse < ActiveRecord::Base
   # TODO: Add support for inverted commas, dashes and other punctuation
   # ---------------------------------------------------------------------------------------------------------- 
   def mnemonic
-    self.text.gsub(/[^a-zA-Z,. ]/, '').split.map { |x| 
+    self.text.gsub(/[^a-zA-Z,;. ]/, '').split.map { |x| 
       if (x.last =~ /[a-zA-Z]/).nil? # The word is terminated with a non letter
         x[0].chr + x.last
       else
