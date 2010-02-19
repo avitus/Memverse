@@ -115,7 +115,7 @@ class Verse < ActiveRecord::Base
     doc = Nokogiri::HTML(open(url))
     # The third gsub removes weirdly encoded characters at the start of strings
     txt = doc.at_css(".result-text-style-normal").to_s.gsub(/<sup.+?<\/sup>/, "").gsub(/<h(4|5).+?<\/h(4|5)>/,"").gsub(/<\/?[^>]*>/, "").gsub(/[\x80-\xff]/,"").split("Footnotes")[0]
-    txt = txt.strip unless !txt
+    txt = txt.gsub(/\s{2,}/, " ").strip unless !txt  # remove extra white space in verse and at beginning and end
     txt == self.text ? true : txt
   end
 
