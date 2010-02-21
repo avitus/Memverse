@@ -215,6 +215,17 @@ class MemversesController < ApplicationController
 #    @not_on_leaderboard = (current_user.memorized < @leaderboard.last[1])
 
   end    
+
+  # ----------------------------------------------------------------------------------------------------------
+  # US States Leaderboard
+  # ----------------------------------------------------------------------------------------------------------  
+  def stateboard
+    
+    @tab          = "leaderboard" 
+    @page_title   = "Memverse US State Challenge"
+    @stateboard   = AmericanState.top_states  # returns top states sorted by number of verses memorized
+
+  end       
     
   # ----------------------------------------------------------------------------------------------------------
   # Country Leaderboard

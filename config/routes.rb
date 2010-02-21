@@ -32,6 +32,7 @@ ActionController::Routing::Routes.draw do |map|
   map.home                '/home',                      :controller => 'memverses',   :action => 'index'
   map.leaderboard         '/leaderboard',               :controller => 'memverses',   :action => 'leaderboard'
   map.churchboard         '/churchboard',               :controller => 'memverses',   :action => 'churchboard'
+  map.stateboard          '/stateboard',                :controller => 'memverses',   :action => 'stateboard'
   map.countryboard        '/countryboard',              :controller => 'memverses',   :action => 'countryboard'
   map.starter_pack        '/starter_pack',              :controller => 'memverses',   :action => 'starter_pack'
   
