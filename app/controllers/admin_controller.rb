@@ -11,21 +11,6 @@ class AdminController < ApplicationController
     @active_users_this_week = 0
     @active_users_today     = 0
     
-    # Memory Verses Per User
-    @usage_table  = Hash.new(0)    
-    @table_keys   = ["Pending", "0", "1-5", "6-10",  "11-20", "21-50", ">50"]
-      
-    # TODO: this table should be created using some fancy named scopes
-    User.find(:all).each { |u| 
-      if u.state=="pending"
-        @usage_table["Pending"] += 1
-      else
-        @usage_table[quantize_mvs(u.memverses.count)] += 1
-      end
-    }     
-    
-    @num_users = User.count
-    
     # Weekly Activity
     one_week_ago = Date.today-7
     
@@ -41,6 +26,29 @@ class AdminController < ApplicationController
     @new_mvs_today      = Memverse.count( :all,  :conditions => ["created_at > ?", today])     
     @active_users_today = User.active_today.count
   end
+
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Verses per User
+  # ----------------------------------------------------------------------------------------------------------   
+  def verses_per_user
+    
+    # Memory Verses Per User
+    @usage_table  = Hash.new(0)    
+    @table_keys   = ["Pending", "0", "1-5", "6-10",  "11-20", "21-50", ">50"]
+      
+    # TODO: this table should be created using some fancy named scopes
+    User.find(:all).each { |u| 
+      if u.state=="pending"
+        @usage_table["Pending"] += 1
+      else
+        @usage_table[quantize_mvs(u.memverses.count)] += 1
+      end
+    }     
+    
+    @num_users = User.count
+  end
+
 
   # ----------------------------------------------------------------------------------------------------------
   # Cohort Analysis
