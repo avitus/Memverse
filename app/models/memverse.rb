@@ -115,6 +115,40 @@ class Memverse < ActiveRecord::Base
    return self.id <=> o.id
   end
   
+  # ----------------------------------------------------------------------------------------------------------
+  # User has entire chapter: i.e. does user have the last first in the chapter and is it linked to the 1st verse
+  # ----------------------------------------------------------------------------------------------------------  
+  def part_of_entire_chapter?
+    
+    eocv = self.verse.end_of_chapter_verse
+    
+    if self.user.has_verse?(eocv.book, eocv.chapter, eocv.last_verse)
+      # Get that verse and check that it's linked to the first verse
+      lv = self.user.memverses.find(  :first, 
+                                      :include => :verse, 
+                                      :conditions => { 'verses.book' => eocv.book, 'verses.chapter' => eocv.chapter, 'verses.versenum' => eocv.last_verse})
+      lv.linked_to_first_verse?                               
+                                      
+    else
+      false
+    end
+
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Is this verse linked to the first verse of a chapter?
+  # ----------------------------------------------------------------------------------------------------------
+  # TODO: what should we return if this is the first verse?  
+  def linked_to_first_verse?
+    if self.solo_verse?
+      return false
+    elsif self.first_verse
+      Memverse.find(self.first_verse).verse.versenum.to_i == 1
+    else
+      return false
+    end
+  end
+
 
   # ----------------------------------------------------------------------------------------------------------
   # Return first overdue verse in a sequence

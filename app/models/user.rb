@@ -100,6 +100,8 @@ class User < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   # Check whether current user is memorizing a given verse in any translation
   # Input: "John 3:16"
+  # TODO: This can be rewritten as self.memverses.find(:first, :conditions => {}) .... will be much faster!
+  # TODO: Need to do a table join
   # ----------------------------------------------------------------------------------------------------------     
   def has_verse?(book, chapter, versenum)
 
@@ -113,10 +115,7 @@ class User < ActiveRecord::Base
     }
     return false
   end
-  
-  
-  
-  
+
   # ----------------------------------------------------------------------------------------------------------
   # Check whether current user is memorizing a given verse (see also: 'has_verse' method above)
   # Input: verse_id
