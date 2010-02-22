@@ -3,6 +3,10 @@ class AdminController < ApplicationController
   protect_from_forgery  :except => [:set_verse_text, :verify_verse] 
   in_place_edit_for     :verse, :text  
   
+  # Only needed for getting last verse data - TODO: Comment out aftwards
+  require 'open-uri'
+  require 'nokogiri'
+  
   # ----------------------------------------------------------------------------------------------------------
   # Admin Dashboard
   # ----------------------------------------------------------------------------------------------------------   
@@ -48,6 +52,65 @@ class AdminController < ApplicationController
     
     @num_users = User.count
   end
+
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Verses per User
+  # ----------------------------------------------------------------------------------------------------------   
+  def get_last_verse_data
+  
+  
+  completed = []
+  
+  biblebooks = ['Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy', 'Joshua', 'Judges', 'Ruth', '1 Samuel', '2 Samuel',
+                '1 Kings', '2 Kings','1 Chronicles', '2 Chronicles', 'Ezra', 'Nehemiah', 'Esther', 'Job', 'Psalms', 'Proverbs',
+                'Ecclesiastes', 'Song of Songs', 'Isaiah', 'Jeremiah', 'Lamentations', 'Ezekiel', 'Daniel', 'Hosea', 'Joel', 
+                'Amos', 'Obadiah', 'Jonah', 'Micah', 'Nahum', 'Habakkuk', 'Zephaniah', 'Haggai', 'Zechariah', 'Malachi', 'Matthew',
+                'Mark', 'Luke', 'John', 'Acts', 'Romans', '1 Corinthians', '2 Corinthians', 'Galatians', 'Ephesians', 'Philippians',
+                'Colossians', '1 Thessalonians', '2 Thessalonians', '1 Timothy', '2 Timothy', 'Titus', 'Philemon', 'Hebrews', 'James',
+                '1 Peter', '2 Peter', '1 John', '2 John', '3 John', 'Jude', 'Revelation']     
+    
+ 
+    logger.info("===== Updating final verses table ====")
+    # Delete previous table
+    FinalVerse.delete_all     
+    
+    
+    biblebooks.each { |bk|
+    
+      sleep(2)
+    
+      book = bk.downcase.gsub(" ","")
+      logger.debug("Requesting URL for #{book}")
+      
+      url = 'http://www.deafmissions.com/tally/' + CGI.escape(book) + '.html'
+      doc = Nokogiri::HTML(open(url))
+      
+      ch_vs_array = doc.at_css("tr").to_s.gsub(/<\/?[^>]*>/, "").split    
+
+      # Need this from Daniel onwards
+      if ch_vs_array.empty?
+        ch_vs_array = doc.at_css("blockquote center").to_s.gsub(/<\/?[^>]*>/, "").split  
+      end
+      
+      ch_vs_array.each { |cv| 
+        
+        ch, vs = cv.split(':')
+        
+        if ch.to_i == 0
+          ch = CGI.escape(ch).gsub("%C2%A0","").to_i  # handle nbsp characters in a few chapters in Psalms
+        end
+        
+        FinalVerse.create(:book => bk, :chapter => ch.to_i, :last_verse => vs.to_i )
+        
+      }
+    
+    }
+    
+    
+  end
+
+
 
 
   # ----------------------------------------------------------------------------------------------------------
