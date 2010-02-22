@@ -99,6 +99,21 @@ class Verse < ActiveRecord::Base
     return self.verified
   end
 
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Is this the last verse of a chapter?
+  # ---------------------------------------------------------------------------------------------------------- 
+  def last_in_chapter?
+    !FinalVerse.find(:first, :conditions => { :book => self.book, :chapter => self.chapter, :last_verse => self.versenum }).nil?
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Find the last verse of the chapter
+  # ---------------------------------------------------------------------------------------------------------- 
+  def end_of_chapter_verse
+    FinalVerse.find(:first, :conditions => { :book => self.book, :chapter => self.chapter })
+  end
+
   # ----------------------------------------------------------------------------------------------------------
   # Check with biblegateway for correctly entered verse
   # ----------------------------------------------------------------------------------------------------------  
