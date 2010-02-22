@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 19) do
+ActiveRecord::Schema.define(:version => 20) do
 
   create_table "american_states", :force => true do |t|
     t.string  "abbrev",      :limit => 20, :default => "", :null => false
@@ -120,6 +120,12 @@ ActiveRecord::Schema.define(:version => 19) do
     t.integer "memverses_learning_active_in_month"
     t.integer "memverses_memorized_not_overdue"
     t.string  "segment",                            :default => "Global"
+  end
+
+  create_table "final_verses", :force => true do |t|
+    t.string  "book",       :null => false
+    t.integer "chapter",    :null => false
+    t.integer "last_verse", :null => false
   end
 
   create_table "memverses", :force => true do |t|
