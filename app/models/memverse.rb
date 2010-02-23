@@ -132,7 +132,65 @@ class Memverse < ActiveRecord::Base
     else
       false
     end
+  end
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # User has entire chapter memorized
+  # Returns: true                       - if entire passage is memorized
+  #          false                      - if user isn't learning entire passage
+  #          [true, false, false ... ]  - if user hasn't memorized entire passage (not implemented)
+  # ----------------------------------------------------------------------------------------------------------  
+  def chapter_memorized?
+    
+    if self.part_of_entire_chapter?
+      self.passage.map { |vs| 
+        vs.memorized?
+      }.all?
+    else
+      false
+    end
+  end
 
+    
+  # ----------------------------------------------------------------------------------------------------------
+  # Returns array of Memverse objects that form passage
+  # ----------------------------------------------------------------------------------------------------------      
+  def passage
+    
+    return nil if self.solo_verse?
+    
+    passage     = Array.new
+    
+    if self.is_first_verse?
+      passage << self
+    else
+      first_verse = Memverse.find(self.first_verse)
+      passage << first_verse
+    end
+    
+    while passage.last.next_verse
+      passage << Memverse.find(passage.last.next_verse)
+    end
+    
+    return passage
+    
+  end
+
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Is a verse memorized?
+  # ----------------------------------------------------------------------------------------------------------    
+  def memorized?
+    self.status == "Memorized"
+  end
+
+
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Is this the first verse in a sequence or a solo verse ?
+  # ----------------------------------------------------------------------------------------------------------  
+  def is_first_verse?
+    return !self.prev_verse
   end
 
   # ----------------------------------------------------------------------------------------------------------

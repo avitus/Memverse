@@ -207,6 +207,31 @@ class User < ActiveRecord::Base
     return !entries.nil?                             
   end
 
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Returns list of complete chapters that user is memorizing
+  # ----------------------------------------------------------------------------------------------------------
+  def complete_chapters
+    
+    cc = Array.new
+    
+    # Get all memory verses for user that are the first verse in a chapter
+    start_mv = self.memverses.find(:all, :include => :verse, :conditions => { 'verses.versenum' => 1 })
+    start_mv.each { |smv| 
+      if smv.part_of_entire_chapter?
+        if smv.chapter_memorized?
+          cc << ["Complete", smv.verse.book + " " + smv.verse.chapter]
+        else
+          cc << ["Learning", smv.verse.book + " " + smv.verse.chapter]
+        end
+      end
+    }
+    
+    return cc
+    
+  end
+
+
   # ----------------------------------------------------------------------------------------------------------
   # Update user profile
   # Input: Params from 'update_profile' form
