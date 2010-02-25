@@ -1,6 +1,6 @@
 class ProfileController < ApplicationController
  
-  before_filter :login_required 
+  before_filter :login_required, :except => :unsubscribe
  
   # ----------------------------------------------------------------------------------------------------------
   # Show Church Members
@@ -24,6 +24,31 @@ class ProfileController < ApplicationController
   end   
 
  
+  # ----------------------------------------------------------------------------------------------------------
+  # Unsubscribe user from email
+  # ----------------------------------------------------------------------------------------------------------   
+  def unsubscribe
+    email_address = params[:email][0]
+    
+    u = User.find_by_email(email_address)
+    
+    if u
+      if u.unsubscribe
+        flash[:notice] = "You have been unsubscribed from all Memverse emails."
+        logger.info("*** User #{u.login} unsubscribed from all emails")
+      else
+        flash[:notice] = "Sorry. We failed to save the changes to your email preferences."
+        logger.error("*** Couldn't execute email unsubscribe request for #{email_address}")
+      end
+    else
+      flash[:notice] = "We couldn't find a user with that email address"
+      logger.warning("*** Couldn't find user with email address #{email_address}")
+    end
+    
+    
+  end
+
+
   # ----------------------------------------------------------------------------------------------------------
   # Update Profile
   # Input: params[:user]

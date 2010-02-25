@@ -45,15 +45,15 @@ class UserMailer < ActionMailer::Base
     @subject << 'Reminder'
     @body[:url]   = APP_CONFIG[:site_url]
   end    
-  
-  
+    
   protected
   
   def setup_email(user)
-    @recipients = "#{user.email}"
-    @from = APP_CONFIG[:admin_email]
-    @subject = "#{APP_CONFIG[:site_name]} "
-    @sent_on = Time.now
-    @body[:user] = user
+    @recipients             = "#{user.email}"
+    @from                   = APP_CONFIG[:admin_email]
+    @subject                = "#{APP_CONFIG[:site_name]} "
+    @sent_on                = Time.now
+    @body[:user]            = user
+    @body[:unsubscribe_url] = "#{APP_CONFIG[:site_url]}/unsubscribe/#{user.email}"   
   end
 end

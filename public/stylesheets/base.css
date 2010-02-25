@@ -57,6 +57,11 @@ img {
 	font-weight:  bold;		
 }
 
+.unsubscribe-link {
+	font-style: italic;
+	font-weight:  bold;		
+}
+
 .superscript {
 	vertical-align: super; 
 	font-size: 70%;	
