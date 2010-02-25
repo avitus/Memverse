@@ -303,12 +303,12 @@ class AdminController < ApplicationController
           elsif r.last_reminder
             # do nothing - they've already received a second activation email
           else
-            logger.info("*** Resending activation email to #{r.login}")
-            UserMailer.deliver_signup_notification(r)
-            @emails_sent += 1
-            r.last_reminder = Date.today
-            r.save
-            @reactivation_list << r
+            # logger.info("*** Resending activation email to #{r.login}")
+            # UserMailer.deliver_signup_notification(r)
+            # @emails_sent += 1
+            # r.last_reminder = Date.today
+            # r.save
+            # @reactivation_list << r
           end
         end
         
