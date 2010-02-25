@@ -1,7 +1,6 @@
 # * Add a rewards page
 # * Add client side verse memorization feedback
 # - Infer users favorite translation
-# - Add link in reminder emails to delete account
 # - Add moderators for different translations
 # - Add nice, explanatory pop-up boxes using jQuery
 # - Allow for idle verses
@@ -93,6 +92,7 @@
 # 02/01/10 : Feedback now optional once interval reaches 60 days
 # 02/07/10 : No longer need to type dash, congratulations on milestones, fixed NKJ verification
 # 02/15/10 : Added mnemonics for verses
+# 02/25/10 : Added unsubscribe link to reminder emails, decrease email reminder frequency more quickly
 
 class MemversesController < ApplicationController
   
