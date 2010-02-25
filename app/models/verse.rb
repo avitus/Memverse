@@ -128,8 +128,7 @@ class Verse < ActiveRecord::Base
     url = 'http://www.biblegateway.com/passage/?search=' + CGI.escape(self.ref) + '&version=' + tl.to_s
     doc = Nokogiri::HTML(open(url))
     # The third gsub removes weirdly encoded characters at the start of strings
-    txt = doc.at_css(".result-text-style-normal").to_s.gsub(/<sup.+?<\/sup>/, "").gsub(/<h(4|5).+?<\/h(4|5)>/,"").gsub(/<\/?[^>]*>/, "").gsub(/[\x80-\xff]/,"")
-    txt = txt.split("Footnotes")[0].split("Cross References")[0]  # remove Footnotes and Cross References
+    txt = doc.at_css(".result-text-style-normal").to_s.gsub(/<sup.+?<\/sup>/, "").gsub(/<h(4|5).+?<\/h(4|5)>/,"").gsub(/<\/?[^>]*>/, "").gsub(/[\x80-\xff]/,"").split("Footnotes")[0].split("Cross")[0]
     txt = txt.gsub(/\s{2,}/, " ").strip unless !txt               # remove extra white space in verse and at beginning and end
     txt == self.text ? true : txt
   end
