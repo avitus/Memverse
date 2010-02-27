@@ -998,6 +998,9 @@ class MemversesController < ApplicationController
         if current_user.reaching_milestone
           flash[:notice] << " That was your #{current_user.memorized+1}th memorized verse!"
         end
+        if mv.chapter_memorized?
+          flash[:notice] << " You have now memorized all of #{mv.verse.book} #{mv.verse.chapter}. Great job!"
+        end
       end
       
       # Update memory verse parameters
