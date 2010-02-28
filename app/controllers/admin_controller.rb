@@ -730,6 +730,18 @@ class AdminController < ApplicationController
 
   end     
   
+  # ----------------------------------------------------------------------------------------------------------
+  # Update users counter cache for churches 
+  # TODO: for some reason this occasionally gets out of synch ... possibly when editing churches manually
+  # ---------------------------------------------------------------------------------------------------------- 
+  def update_church_users_counter 
+    Church.reset_column_information  
+    Church.all.each do |c|  
+      c.update_attribute :users_count, c.users.length  
+    end
+    redirect_to :action => 'show_churches'
+  end
+  
   
   # ----------------------------------------------------------------------------------------------------------
   # Show all countries
