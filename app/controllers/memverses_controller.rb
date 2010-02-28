@@ -212,8 +212,6 @@ class MemversesController < ApplicationController
     @page_title   = "Memverse Church Leaderboard"
     @churchboard  = Church.top_churches  # returns top users sorted by number of verses memorized
 
-#    @not_on_leaderboard = (current_user.memorized < @leaderboard.last[1])
-
   end    
 
   # ----------------------------------------------------------------------------------------------------------
