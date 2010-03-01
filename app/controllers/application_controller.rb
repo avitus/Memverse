@@ -65,7 +65,11 @@ class ApplicationController < ActionController::Base
         return 2, book # Error code for invalid book of the bible
       else
         chapter, verse  = vsref.split(/:|vs/)
-        return false, full_book_name(book), chapter.slice(/[0-9]+/).to_i, verse.slice(/[0-9]+/).to_i
+        if chapter and verse
+          return false, full_book_name(book), chapter.slice(/[0-9]+/).to_i, verse.slice(/[0-9]+/).to_i
+        else
+          return 1
+        end
       end
     elsif vsref.nil?
       return 3 # Probably no need to return an error here
@@ -210,8 +214,13 @@ class ApplicationController < ActionController::Base
   # ----------------------------------------------------------------------------------------------------------  
   def get_memverse(verse_id)
     vs    = Verse.find(verse_id)
-    verse = db_to_vs(vs.book, vs.chapter, vs.versenum)
-    return verse
+    if vs
+      verse = db_to_vs(vs.book, vs.chapter, vs.versenum)
+      return verse
+    else
+      # In case the memory verse is being retrieved from a session variable but has been deleted
+      return false
+    end
   end
   
   # ----------------------------------------------------------------------------------------------------------
@@ -310,7 +319,7 @@ class ApplicationController < ActionController::Base
   end
    
   # ----------------------------------------------------------------------------------------------------------
-  # Returns true if str is a valid bible reference
+  # Returns true (0) if str is a valid bible reference otherwise nil
   # ----------------------------------------------------------------------------------------------------------  
   def valid_ref(str)
     return str =~ /([0-3]?\s+)?[a-z]+\s+[0-9]+(:|(\s?vs\s?))[0-9]+/i
