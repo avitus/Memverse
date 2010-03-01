@@ -17,9 +17,11 @@ ActionController::Routing::Routes.draw do |map|
   
   # My Mappings
   map.add_verse           '/add_verse',                 :controller => 'memverses',   :action => 'add_verse'
+  map.quick_add           '/quick_add',                 :controller => 'memverses',   :action => 'quick_add'
   map.test_verse          '/test_verse',                :controller => 'memverses',   :action => 'test_verse' 
   map.test_ref            '/test_ref',                  :controller => 'memverses',   :action => 'test_ref'   
   map.start_ref_test      '/start_ref_test',            :controller => 'memverses',   :action => 'load_test_ref'
+  map.exam                '/test_yourself',             :controller => 'memverses',   :action => 'load_exam'
   map.drill_verse         '/drill_verse',               :controller => 'memverses',   :action => 'drill_verse'
   map.mark_test           '/mark_test',                 :controller => 'memverses',   :action => 'mark_test'    
   map.mark_drill          '/mark_drill',                :controller => 'memverses',   :action => 'mark_drill'
