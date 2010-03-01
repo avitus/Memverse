@@ -553,6 +553,15 @@ class MemversesController < ApplicationController
       end
     end
     
+    # Remove verse from memorization queue
+    mem_queue = session[:mv_queue]
+    
+    # We need to check that there is a verse sequence and also that the array isn't empty
+    if !mem_queue.blank?
+      # Remove verse from the memorization queue if it is sitting in there
+      mem_queue.delete(dead_mv.id)
+    end
+
     # Finally, delete the verse
     dead_mv.destroy  
 
