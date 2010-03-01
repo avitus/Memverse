@@ -800,7 +800,54 @@ class MemversesController < ApplicationController
   end
 
   # ----------------------------------------------------------------------------------------------------------
-  # Prepare for Testing Difficult References
+  # Prepare for Exam
+  # ----------------------------------------------------------------------------------------------------------
+  def load_exam
+    
+    @tab = "mem" 
+    
+    exam_questions  = Array.new
+    exam_answers    = Array.new
+    exam_id         = Array.new
+    
+    
+    if current_user.memorized > 10
+      # Find the memorized verses and pick 10 at random for the test
+      exam = Memverse.find( :all, 
+                            :conditions => { :user_id => current_user.id, :status => "Memorized"}
+                          ).sort_by{ rand }.slice(0...10)
+       
+      # Put verses into session variable
+      exam.each { |mv|
+        exam_questions  << [mv.verse.ref, mv.verse.translation]
+        exam_answers    << mv.verse.text 
+        exam_id         << mv.id
+      }
+  
+      # Create session variables
+      session[:exam_questions]    = exam_questions
+      session[:exam_answers]      = exam_answers
+      session[:exam_id]           = exam_id
+      session[:exam_cntr]         = 0
+      session[:exam_correct]      = 0    
+      session[:exam_answered]     = 0
+      session[:exam_length]       = exam.length
+      session[:exam_incorrect]    = Array.new
+      
+      # Start Test
+      redirect_to :action => 'test_exam'
+    else
+      flash[:notice] = "You need to memorize 10 verse before you can take the test"
+      redirect_to :action => 'index'
+    end
+    
+  end
+
+
+
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Test a Difficult Reference
   # ----------------------------------------------------------------------------------------------------------
   def test_ref
     
@@ -814,6 +861,24 @@ class MemversesController < ApplicationController
     end
     
   end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Exam Question
+  # ----------------------------------------------------------------------------------------------------------
+  def test_exam
+    
+    @tab          = "mem"
+    if session[:exam_cntr] # The session variables are not set if user comes straight to this page
+      @question_num = session[:exam_cntr]
+      @ref          = session[:exam_questions][@question_num][0]
+      @tl           = session[:exam_questions][@question_num][1]
+      @soln         = session[:exam_answers][@question_num]
+    else
+      redirect_to :action => 'index'
+    end
+    
+  end
+
 
   # ----------------------------------------------------------------------------------------------------------
   # Score Reference Test
@@ -869,13 +934,79 @@ class MemversesController < ApplicationController
   end
   
   # ----------------------------------------------------------------------------------------------------------
+  # Score Exam
+  # ----------------------------------------------------------------------------------------------------------
+  def mark_exam
+    
+    # Score Questions
+    answer        = params[:answer].gsub(/\s+/," ").strip
+#    errorcode, book, chapter, verse = parse_verse(answer) 
+    
+    question_num  = session[:exam_cntr]  
+    solution      = session[:exam_answers][question_num].gsub(/\s+/," ").strip if session[:exam_answers]
+ 
+    
+    guess   = params[:verseguess] ? params[:verseguess].gsub(/\s+/," ").strip : ""  # Remove double spaces from guesses    
+    correct = params[:correct]    ? params[:correct].gsub(/\s+/," ").strip    : ""  # The correct verse was stripped, cleaned when first saved    
+    
+    
+    if solution
+      
+      logger.debug("Answer: #{answer.downcase.gsub(/[^a-z ]|\s-|\s—/, '')}")
+      logger.debug("Solutn: #{solution.downcase.gsub(/[^a-z ]|\s-|\s—/, '')}")
+      # ---- Update this for greater leniency --------------
+      if answer.downcase.gsub(/[^a-z ]|\s-|\s—/, '') == solution.downcase.gsub(/[^a-z ]|\s-|\s—/, '')
+        flash[:notice] = "Correct"
+        session[:exam_correct] += 1
+      else
+        flash[:notice] = "Incorrect"
+        session[:exam_incorrect] << question_num
+      end
+      # ---- Update this --------------
+
+      # Update score
+      session[:exam_answered] += 1
+      
+  
+      # Start Next Question
+      session[:exam_cntr] += 1
+      
+      # Stop after questions are finished or if user quits
+      if session[:exam_answered] >= session[:exam_length] or params[:commit]=="Done" 
+        redirect_to :action => 'exam_results'
+      else
+        redirect_to :action => 'test_exam'
+      end
+    
+    else
+      # Probably caused by user using the back button after test is finished
+      logger.info("*** User probably hit the back button")
+      flash[:notice] = "Exam already completed"
+      redirect_to :action => 'index'
+    end    
+    
+  end  
+  
+  
+  
+  # ----------------------------------------------------------------------------------------------------------
   # Score Reference Test
   # ----------------------------------------------------------------------------------------------------------
-  def reftest_results
-    if session[:reftest_answered]
-      @correct    = session[:reftest_correct]
-      @answered   = session[:reftest_answered]
-      @incorrect  = session[:reftest_incorrect]
+  def exam_results
+    if session[:exam_answered]
+      @correct    = session[:exam_correct]
+      @answered   = session[:exam_answered]
+      @incorrect  = session[:exam_incorrect]
+      
+      score = (@correct.to_f / @answered.to_f) * 100
+      
+      @old_accuracy = current_user.accuracy
+      @new_accuracy = ((@old_accuracy.to_f * 0.75) + (score.to_f * 0.25)).to_i 
+      
+      # Update user's accuracy grade
+      current_user.accuracy = @new_accuracy
+      current_user.save
+      
     else
       redirect_to :action => 'index'      
     end
