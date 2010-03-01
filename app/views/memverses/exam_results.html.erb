@@ -1,0 +1,25 @@
+<div>
+	<h2>You scored <%=@correct%> out of <%=@answered%></h2>
+</div>
+
+<p> Your previous accuracy score was <%=@old_accuracy%> </p>
+<p> Your new accuracy score is <%=@new_accuracy%> </p>
+
+<p>These are the references you got wrong:</p>
+
+<div>
+	<table cellpadding="6" cellspacing="1" border="1">
+		<tr>		  	 
+			<th>Reference</td>	
+			<th>Memory Verse</td>
+		</tr>
+
+		<% for mistake in @incorrect %>
+			<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
+				<td><%=session[:exam_questions][mistake][0]%></td>
+				<td><%= session[:exam_answers][mistake] %></td>				
+			</tr>
+		<% end %>
+	</table>
+</div>
+
