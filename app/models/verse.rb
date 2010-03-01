@@ -90,6 +90,25 @@ class Verse < ActiveRecord::Base
     find(:first, :conditions => { :book => bk, :chapter => ch, :versenum => vs, :translation => tl })
   end
 
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Return subsequent verse in same translation (if it exists) 
+  # ----------------------------------------------------------------------------------------------------------   
+  def following_verse
+    if self.last_in_chapter?
+      Verse.find(:first, :conditions => { :book         => self.book, 
+                                          :chapter      => self.chapter.to_i+1, 
+                                          :versenum     => 1,               
+                                          :translation  => self.translation })
+    else
+      Verse.find(:first, :conditions => { :book         => self.book, 
+                                          :chapter      => self.chapter,   
+                                          :versenum     => self.versenum.to_i+1, 
+                                          :translation  => self.translation })
+    end
+  end
+
+
   # ----------------------------------------------------------------------------------------------------------
   # Checks whether verse has been verified or not
   # Input:  A verse ID
@@ -127,8 +146,9 @@ class Verse < ActiveRecord::Base
        
     url = 'http://www.biblegateway.com/passage/?search=' + CGI.escape(self.ref) + '&version=' + tl.to_s
     doc = Nokogiri::HTML(open(url))
-    # The third gsub removes weirdly encoded characters at the start of strings
-    txt = doc.at_css(".result-text-style-normal").to_s.gsub(/<sup.+?<\/sup>/, "").gsub(/<h(4|5).+?<\/h(4|5)>/,"").gsub(/<\/?[^>]*>/, "").gsub(/[\x80-\xff]/,"").split("Footnotes")[0].split("Cross")[0]
+    # The fourth gsub removes weirdly encoded characters at the start of strings
+    txt = doc.at_css(".result-text-style-normal").to_s.gsub(/<sup.+?<\/sup>/, "").gsub(/<h(4|5).+?<\/h(4|5)>/,"").gsub(/<\/?[^>]*>/, "").gsub(/[\x80-\xff]/,"")
+    txt = txt.split("Footnotes")[0].split("Cross")[0] unless !txt
     txt = txt.gsub(/\s{2,}/, " ").strip unless !txt               # remove extra white space in verse and at beginning and end
     txt == self.text ? true : txt
   end

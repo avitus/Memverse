@@ -212,8 +212,6 @@ class MemversesController < ApplicationController
     @page_title   = "Memverse Church Leaderboard"
     @churchboard  = Church.top_churches  # returns top users sorted by number of verses memorized
 
-#    @not_on_leaderboard = (current_user.memorized < @leaderboard.last[1])
-
   end    
 
   # ----------------------------------------------------------------------------------------------------------
@@ -445,11 +443,7 @@ class MemversesController < ApplicationController
     else
       # Save verse as a memory verse for user      
       save_mv_for_user(vs)
-      if vs.memverses.length == 2
-        flash[:notice] = "#{vs.ref} has been added to your list of memory verses. Since you are only the second user to start memorizing this verse, it has not yet been verified by a moderator. It will be verified within the next 24 hours so please be patient if you see an error."
-      else
-        flash[:notice] = "#{vs.ref} has been added to your list of memory verses"
-      end       
+      flash_for_successful_verse_addition(vs)
     end
     @popular_verses = popular_verses(8, false)
     render(:template => 'memverses/add_verse.html.erb')     
@@ -490,11 +484,7 @@ class MemversesController < ApplicationController
       else
         # Save verse as a memory verse for user      
         save_mv_for_user(vs)
-        if vs.memverses.length == 2
-          flash[:notice] = "#{vs.ref} has been added to your list of memory verses. Since you are only the second user to start memorizing this verse, it has not yet been verified by a moderator. It will be verified within the next 24 hours so please be patient if you see an error."
-        else
-          flash[:notice] = "#{vs.ref} has been added to your list of memory verses"
-        end
+        flash_for_successful_verse_addition(vs)
         params[:versetext] = ""
       end
       
@@ -511,6 +501,23 @@ class MemversesController < ApplicationController
     
   end
  
+  # ----------------------------------------------------------------------------------------------------------
+  # Notification after verse added
+  # ----------------------------------------------------------------------------------------------------------   
+  def flash_for_successful_verse_addition(vs)
+    if vs.memverses.length == 2
+      flash[:notice] = "#{vs.ref} has been added to your list of memory verses. Since you are only the second user to start memorizing this verse, it has not yet been verified by a moderator. It will be verified within the next 24 hours so please be patient if you see an error. "
+    else
+      flash[:notice] = "#{vs.ref} has been added to your list of memory verses. "
+    end
+
+    # Add link to next verse in same translation
+    if next_verse = vs.following_verse
+      link = "<a href=\"#{url_for(:action => 'quick_add', :vs => next_verse)}\">Add #{next_verse.ref}</a>"
+      flash[:notice] << " [ #{link} ]"
+    end
+      
+  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Delete a memory verse
@@ -555,6 +562,15 @@ class MemversesController < ApplicationController
       end
     end
     
+    # Remove verse from memorization queue
+    mem_queue = session[:mv_queue]
+    
+    # We need to check that there is a verse sequence and also that the array isn't empty
+    if !mem_queue.blank?
+      # Remove verse from the memorization queue if it is sitting in there
+      mem_queue.delete(dead_mv.id)
+    end
+
     # Finally, delete the verse
     dead_mv.destroy  
 
@@ -997,6 +1013,9 @@ class MemversesController < ApplicationController
         flash[:notice] = "Congratulations. You have memorized #{mv.verse.ref}."
         if current_user.reaching_milestone
           flash[:notice] << " That was your #{current_user.memorized+1}th memorized verse!"
+        end
+        if mv.chapter_memorized?
+          flash[:notice] << " You have now memorized all of #{mv.verse.book} #{mv.verse.chapter}. Great job!"
         end
       end
       
