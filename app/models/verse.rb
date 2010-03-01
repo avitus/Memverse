@@ -90,6 +90,25 @@ class Verse < ActiveRecord::Base
     find(:first, :conditions => { :book => bk, :chapter => ch, :versenum => vs, :translation => tl })
   end
 
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Return subsequent verse in same translation (if it exists) 
+  # ----------------------------------------------------------------------------------------------------------   
+  def following_verse
+    if self.last_in_chapter?
+      Verse.find(:first, :conditions => { :book         => self.book, 
+                                          :chapter      => self.chapter.to_i+1, 
+                                          :versenum     => 1,               
+                                          :translation  => self.translation })
+    else
+      Verse.find(:first, :conditions => { :book         => self.book, 
+                                          :chapter      => self.chapter,   
+                                          :versenum     => self.versenum.to_i+1, 
+                                          :translation  => self.translation })
+    end
+  end
+
+
   # ----------------------------------------------------------------------------------------------------------
   # Checks whether verse has been verified or not
   # Input:  A verse ID
