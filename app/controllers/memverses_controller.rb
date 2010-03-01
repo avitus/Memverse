@@ -443,11 +443,7 @@ class MemversesController < ApplicationController
     else
       # Save verse as a memory verse for user      
       save_mv_for_user(vs)
-      if vs.memverses.length == 2
-        flash[:notice] = "#{vs.ref} has been added to your list of memory verses. Since you are only the second user to start memorizing this verse, it has not yet been verified by a moderator. It will be verified within the next 24 hours so please be patient if you see an error."
-      else
-        flash[:notice] = "#{vs.ref} has been added to your list of memory verses"
-      end       
+      flash_for_successful_verse_addition(vs)
     end
     @popular_verses = popular_verses(8, false)
     render(:template => 'memverses/add_verse.html.erb')     
@@ -488,11 +484,7 @@ class MemversesController < ApplicationController
       else
         # Save verse as a memory verse for user      
         save_mv_for_user(vs)
-        if vs.memverses.length == 2
-          flash[:notice] = "#{vs.ref} has been added to your list of memory verses. Since you are only the second user to start memorizing this verse, it has not yet been verified by a moderator. It will be verified within the next 24 hours so please be patient if you see an error."
-        else
-          flash[:notice] = "#{vs.ref} has been added to your list of memory verses"
-        end
+        flash_for_successful_verse_addition(vs)
         params[:versetext] = ""
       end
       
@@ -509,6 +501,23 @@ class MemversesController < ApplicationController
     
   end
  
+  # ----------------------------------------------------------------------------------------------------------
+  # Notification after verse added
+  # ----------------------------------------------------------------------------------------------------------   
+  def flash_for_successful_verse_addition(vs)
+    if vs.memverses.length == 2
+      flash[:notice] = "#{vs.ref} has been added to your list of memory verses. Since you are only the second user to start memorizing this verse, it has not yet been verified by a moderator. It will be verified within the next 24 hours so please be patient if you see an error. "
+    else
+      flash[:notice] = "#{vs.ref} has been added to your list of memory verses. "
+    end
+
+    # Add link to next verse in same translation
+    if next_verse = vs.following_verse
+      link = "<a href=\"#{url_for(:action => 'quick_add', :vs => next_verse)}\">Add #{next_verse.ref}</a>"
+      flash[:notice] << " [ #{link} ]"
+    end
+      
+  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Delete a memory verse
