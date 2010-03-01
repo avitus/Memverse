@@ -1,0 +1,19 @@
+<!-- Focus cursor on verse entry box -->
+<body onload="document.getElementById('answer').focus()">
+
+<!-- Question-side : Entry box -->	
+<fieldset id="question-side">
+	<legend>Verse <%=@question_num+1%> : <%=@ref%> [<%=@tl%>]</legend>
+		<% form_tag :action => 'mark_exam' do %>
+			
+			<div id="answerbox">
+		  		<%= text_area_tag(:answer, params[:answer] )%>			
+		  	</div>
+		
+			<div id="scoreTestButtons">								
+				<%= submit_tag "Submit", :class => "submit" %>								
+				<%= submit_tag "Done", 	 :class => "submit" %>	
+			</div>			  
+		
+		<% end %>	
+</fieldset>	
