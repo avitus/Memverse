@@ -19,15 +19,15 @@ class Church < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   # Returns hash of top churches (sorted by number of verses memorized)
   # ---------------------------------------------------------------------------------------------------------- 
-  def self.top_churches(numchurches=20)
+  def self.top_churches(numchurches=50)
 
     churchboard = Hash.new(0)
     
     # TODO: Optimize this
-    find(:all, :conditions => ['users_count >= 3']).each { |c|
+    find(:all, :conditions => ['users_count >= 3']).each { |church|
       
       score = 0
-      c.users.each { |u|
+      church.users.each { |u|
         if u.last_activity_date
           if (Date.today - u.last_activity_date).to_i < 30
             # Add score
@@ -35,7 +35,7 @@ class Church < ActiveRecord::Base
           end
         end
       }
-      churchboard[ c ] = score
+      churchboard[ church ] = score
     }
     
     return churchboard.sort{|a,b| a[1]<=>b[1]}.reverse[0...numchurches]
