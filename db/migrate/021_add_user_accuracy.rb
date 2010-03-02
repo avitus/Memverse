@@ -1,7 +1,7 @@
 class AddUserAccuracy < ActiveRecord::Migration
  
   def self.up
-    add_column :users, :accuracy, :integer, :default => 50   
+    add_column :users, :accuracy, :integer, :default => 10   
   end
 
   def self.down

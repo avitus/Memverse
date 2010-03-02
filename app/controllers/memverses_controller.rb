@@ -980,7 +980,7 @@ class MemversesController < ApplicationController
       session[:exam_cntr] += 1
       
       # Stop after questions are finished or if user quits
-      if session[:exam_answered] >= session[:exam_length] or params[:commit]=="Done" 
+      if session[:exam_answered] >= session[:exam_length] or params[:commit]=="Exit Exam" 
         redirect_to :action => 'exam_results'
       else
         redirect_to :action => 'test_exam'
@@ -1011,9 +1011,15 @@ class MemversesController < ApplicationController
       @old_accuracy = current_user.accuracy
       @new_accuracy = ((@old_accuracy.to_f * 0.75) + (score.to_f * 0.25)).to_i 
       
+      @perfect_score = (@correct == @answered)
+      
+      
       # Update user's accuracy grade
       current_user.accuracy = @new_accuracy
       current_user.save
+      
+      # Clear session variables so that user can't hit refresh and bump up score
+      session[:exam_answered] = nil
       
     else
       redirect_to :action => 'index'      
