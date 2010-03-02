@@ -11,8 +11,7 @@ class Verse < ActiveRecord::Base
   # Validations
   validates_presence_of :translation, :book, :chapter, :versenum, :text
 
-               
-                  
+                            
   # ----------------------------------------------------------------------------------------------------------
   # Outputs friendly verse reference: eg. "John 3:16"
   # ----------------------------------------------------------------------------------------------------------   

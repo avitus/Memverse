@@ -995,10 +995,22 @@ class MemversesController < ApplicationController
     
   end  
   
-  
-  
   # ----------------------------------------------------------------------------------------------------------
   # Score Reference Test
+  # ----------------------------------------------------------------------------------------------------------
+  def reftest_results
+    if session[:reftest_answered]
+      @correct    = session[:reftest_correct]
+      @answered   = session[:reftest_answered]
+      @incorrect  = session[:reftest_incorrect]
+    else
+      redirect_to :action => 'index'      
+    end
+  
+  end  
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Score Accuracy Exam
   # ----------------------------------------------------------------------------------------------------------
   def exam_results
     if session[:exam_answered]
