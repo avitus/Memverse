@@ -71,7 +71,7 @@ class User < ActiveRecord::Base
   # anything else you want your user to change should be added here
   attr_accessible :login, :email, :name, :password, :password_confirmation, :identity_url, 
                   :newsletters, :reminder_freq, :last_reminder, :church, :country, :american_state, 
-                  :show_echo, :max_interval, :mnemonic_use
+                  :show_echo, :max_interval, :mnemonic_use, :all_refs
 
 
   # Authenticates a user by their login name and unencrypted password - Returns the user or nil
@@ -250,6 +250,7 @@ class User < ActiveRecord::Base
     self.time_allocation  = new_params["time_allocation"]    
     self.show_echo        = new_params["show_echo"] 
     self.mnemonic_use     = new_params["mnemonic_use"] 
+    self.all_refs         = new_params["all_refs"] 
     self.max_interval     = new_params["max_interval"] 
     self.save
   end
