@@ -22,7 +22,6 @@ class ApplicationController < ActionController::Base
     end
   end
   
-  
   # ----------------------------------------------------------------------------------------------------------
   # Parse verse reference
   # Input:    string, eg. "1 John 2:5" or "1 Jn 2:5"   
@@ -119,8 +118,6 @@ class ApplicationController < ActionController::Base
   def verse_too_long?(txt)
     return txt.split.length > 91
   end
-
-
 
   # ----------------------------------------------------------------------------------------------------------
   # Checks whether verse is in DB
