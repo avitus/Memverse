@@ -766,10 +766,19 @@ class MemversesController < ApplicationController
     ref_id            = Array.new
     
     # Find the 50 hardest (first) verses and pick 10 at random for the test
-    refs = Memverse.find( :all, 
-                          :conditions => ["user_id = ? and prev_verse is ?", current_user.id, nil], 
-                          :order      => "ref_interval ASC",
-                          :limit      => 50 ).sort_by{ rand }.slice(0...10)
+    if current_user.all_refs
+      refs = Memverse.find( :all, 
+                            :conditions => ["user_id = ?", current_user.id], 
+                            :order      => "ref_interval ASC",
+                            :limit      => 30 ).sort_by{ rand }.slice(0...10)
+    else
+      refs = Memverse.find( :all, 
+                            :conditions => ["user_id = ? and prev_verse is ?", current_user.id, nil], 
+                            :order      => "ref_interval ASC",
+                            :limit      => 30 ).sort_by{ rand }.slice(0...10)      
+    end
+  
+                          
     
     if !refs.empty?
     
@@ -850,9 +859,6 @@ class MemversesController < ApplicationController
     end
     
   end
-
-
-
 
   # ----------------------------------------------------------------------------------------------------------
   # Test a Difficult Reference
