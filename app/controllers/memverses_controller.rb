@@ -799,6 +799,14 @@ class MemversesController < ApplicationController
     
   end
 
+  def explain_exam
+    @tab = "mem"
+    @page_title = "Memverse Accuracy Test"
+    
+    
+    
+  end
+
   # ----------------------------------------------------------------------------------------------------------
   # Prepare for Exam
   # ----------------------------------------------------------------------------------------------------------

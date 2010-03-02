@@ -246,7 +246,6 @@ ActiveRecord::Schema.define(:version => 21) do
     t.integer  "learning",                                 :default => 0
     t.date     "last_activity_date"
     t.boolean  "show_echo",                                :default => true
-    t.integer  "state_id"
     t.integer  "max_interval",                             :default => 366
     t.string   "mnemonic_use",                             :default => "Learning"
     t.integer  "american_state_id"
