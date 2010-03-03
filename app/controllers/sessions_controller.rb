@@ -54,7 +54,17 @@ class SessionsController < ApplicationController
   end
 
   def note_failed_signin
-    flash[:error] = "Sorry. We couldn't log you in as '#{params[:login]}'. Please sign up first or check username and password"
+    if u = User.find_by_login(params[:login])
+      if u.state == 'pending'
+        flash[:error] = "Your account has not yet been activated. Please click on the link in the email you received from Memverse. It might be in your spam / junk mail folder."
+      else
+        flash[:error] = "Your password is incorrect."
+      end
+    else
+      flash[:error] = "Sorry. We couldn't find a user with user name '#{params[:login]}'. Please sign up first or check username."
+    end
+
     logger.warn "Failed login for '#{params[:login]}' from #{request.remote_ip} at #{Time.now.utc}"
+
   end
 end
