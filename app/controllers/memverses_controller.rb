@@ -102,12 +102,6 @@ class MemversesController < ApplicationController
   prawnto :prawn => { :bottom_margin  => 50 }
   prawnto :prawn => { :left_margin    => 50 }
   prawnto :prawn => { :right_margin   => 50 }
-
-
-  def contact
-    @tab = "contact"    
-    @page_title = "Memverse : Contact / Feedback" 
-  end
   
   def sm_description
     @page_title = "The SuperMemo Algorithm" 
