@@ -103,10 +103,6 @@ class MemversesController < ApplicationController
   prawnto :prawn => { :left_margin    => 50 }
   prawnto :prawn => { :right_margin   => 50 }
   
-  def sm_description
-    @page_title = "The SuperMemo Algorithm" 
-  end
-  
   # ----------------------------------------------------------------------------------------------------------
   # Home / Start Page
   # ----------------------------------------------------------------------------------------------------------   
