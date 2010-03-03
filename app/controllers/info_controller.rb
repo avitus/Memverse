@@ -14,6 +14,15 @@ class InfoController < ApplicationController
     @tab = "contact"     
     @page_title = "Volunteer" 
   end  
+
+  # ----------------------------------------------------------------------------------------------------------   
+  # Contact and Connect Page
+  # ----------------------------------------------------------------------------------------------------------    
+  def contact
+    @tab = "contact"    
+    @page_title = "Memverse : Contact / Feedback" 
+  end  
+  
   
   # ----------------------------------------------------------------------------------------------------------   
   # Show most popular verses

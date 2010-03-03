@@ -27,7 +27,6 @@ ActionController::Routing::Routes.draw do |map|
   map.mark_test           '/mark_test',                 :controller => 'memverses',   :action => 'mark_test'    
   map.mark_drill          '/mark_drill',                :controller => 'memverses',   :action => 'mark_drill'
   map.show_all_my_verses  '/show_all_my_verses',        :controller => 'memverses',   :action => 'show_all_my_verses'
-  map.contact             '/contact',                   :controller => 'memverses',   :action => 'contact'   
   map.user_stats          '/user_stats',                :controller => 'memverses',   :action => 'user_stats'
   map.progress            '/progress',                  :controller => 'memverses',   :action => 'show_progress'
   map.show_user_info      '/show_user_info',            :controller => 'admin',       :action => 'show_user_info'
@@ -39,6 +38,8 @@ ActionController::Routing::Routes.draw do |map|
   map.countryboard        '/countryboard',              :controller => 'memverses',   :action => 'countryboard'
   map.starter_pack        '/starter_pack',              :controller => 'memverses',   :action => 'starter_pack'
   
+  # Doesn't require a login
+  map.contact             '/contact',                   :controller => 'info',        :action => 'contact'   
   map.tutorial            '/tutorial',                  :controller => 'info',        :action => 'tutorial'  
   map.volunteer           '/volunteer',                 :controller => 'info',        :action => 'volunteer' 
   map.popular             '/popular',                   :controller => 'info',        :action => 'pop_verses'
