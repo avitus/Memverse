@@ -10,7 +10,22 @@ class ApplicationController < ActionController::Base
  
   helper Ziya::HtmlHelpers::Charts
   helper Ziya::YamlHelpers::Charts
-    
+  
+  before_filter :set_locale 
+  
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Localization
+  # ---------------------------------------------------------------------------------------------------------- 
+  def set_locale 
+    # if params[:locale] is nil then I18n.default_locale will be used  
+    I18n.locale = case current_user.language
+      when "English" then "en"
+      when "Spanish" then "es"
+      else "en"
+    end
+  end     
+
   # ----------------------------------------------------------------------------------------------------------
   # Return memorization status
   # ----------------------------------------------------------------------------------------------------------
