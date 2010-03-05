@@ -63,9 +63,9 @@
 	</div>
 	
 	<div id="memverse-actions" class="front-page-segment">
-		<h2>Memverse Today</h2>	
-		<p>You have <%=@due_today%> verses to review today.</p>
-		<p>You currently need about <%=current_user.work_load%> mins per day.</p>		
+		<h2><%= t '.memverse_today' %></h2>	
+		<p><%= t '.review_a' %> <%=@due_today%> <%= t '.review_b' %></p>
+		<p><%= t '.time_req_a' %> <%=current_user.work_load%> <%= t '.time_req_b' %></p>		
 	</div>
 </div>
 

@@ -106,12 +106,7 @@ class AdminController < ApplicationController
       }
     
     }
-    
-    
   end
-
-
-
 
   # ----------------------------------------------------------------------------------------------------------
   # Cohort Analysis

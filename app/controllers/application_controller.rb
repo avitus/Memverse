@@ -18,11 +18,15 @@ class ApplicationController < ActionController::Base
   # Localization
   # ---------------------------------------------------------------------------------------------------------- 
   def set_locale 
-    # if params[:locale] is nil then I18n.default_locale will be used  
-    I18n.locale = case current_user.language
-      when "English" then "en"
-      when "Spanish" then "es"
-      else "en"
+    # if params[:locale] is nil then I18n.default_locale will be used
+    if current_user  
+      I18n.locale = case current_user.language
+        when "English" then "en"
+        when "Spanish" then "es"
+        else "en"
+      end
+    else
+      I18n.locale = "en"
     end
   end     
 
@@ -52,6 +56,9 @@ class ApplicationController < ActionController::Base
     if valid_ref(vsref)
       
       book  = vsref.slice!(/([0-3]?\s+)?[a-z]+\s+/i).rstrip!.titleize
+      
+      # --- Book name should be translated into English after this point --- 
+      
       book  = "Psalms" if book == "Psalm"
  
       if !BIBLEBOOKS.include?(full_book_name(book)) # This is not a book of the bible

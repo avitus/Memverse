@@ -11,11 +11,11 @@
 		  	</div>
 		
 		<div id="scoreTestButtons">								
-		  <div align="left"><%= submit_tag "5 Remembered - Perfect", 	 	:class => "submit", :q => 5 %></div>								
-		  <div align="left"><%= submit_tag "4 Remembered - Hesitation", 	:class => "submit", :q => 4 %></div>	
-		  <div align="left"><%= submit_tag "3 Remembered - Difficult",  	:class => "submit", :q => 3 %></div>	
-		  <div align="left"><%= submit_tag "2 Don't Know - Familiar",		:class => "submit", :q => 2 %></div>	
-		  <div align="left"><%= submit_tag "1 Don't Know - No Idea", 		:class => "submit", :q => 1 %></div>	
+		  <div align="left"><%= submit_tag t('.b5'), 	:class => "submit", :q => 5 %></div>								
+		  <div align="left"><%= submit_tag t('.b4'), 	:class => "submit", :q => 4 %></div>	
+		  <div align="left"><%= submit_tag t('.b3'),  	:class => "submit", :q => 3 %></div>	
+		  <div align="left"><%= submit_tag t('.b2'),	:class => "submit", :q => 2 %></div>	
+		  <div align="left"><%= submit_tag t('.b1'), 	:class => "submit", :q => 1 %></div>	
 		</div>			  
 		
 		<% end %>	
@@ -23,7 +23,7 @@
 
 <!-- Comparison section -->		
 <fieldset id="comparison">
-	<legend>Feedback</legend>
+	<legend><%= t('.feedback') %></legend>
 	<div id="verseFeedback">
 		
 		<!-- Prior verse, if available -->
@@ -52,7 +52,7 @@
 	    <div class="quickFlipPanel refPanel">
 	        <p><%=@verse%></p>
 			<p class="mnemonic"><%=@mnemonic%></p>
-	        <p class="quickFlipCta">Show Verse</p>
+	        <p class="quickFlipCta"><%= t('.show_verse') %></p>
 	    </div>
 	
 	    <div class="quickFlipPanel textPanel">
@@ -67,7 +67,7 @@
 					<% end %>
 					<%=@text%>
 				</p>
-		        <p class="quickFlipCta">Back to test</p>
+		        <p class="quickFlipCta"><%= t('.back_to_test') %></p>
 			</div>			
 	    </div>
 	</div> <!-- end of quickFlip -->
@@ -77,7 +77,7 @@
 <!-- Upcoming verses -->	
 <div id="upcoming-list">
 	<fieldset>
-		<legend>Upcoming</legend>
+		<legend><%= t('.upcoming') %></legend>
 			<%= render :partial => "upcoming_verses" %>						
 	</fieldset>		
 </div>
