@@ -112,13 +112,13 @@
 				<% if logged_in? %>
 				<div id="menu-tabs">
 					<ul id="maintab" class="basictab">
-						<li <%= tab(@tab=="home"		) %> rel="homepage">	<%= link_to t( 'txt.menu.home'), 		home_path %></li>	
-						<li <%= tab(@tab=="mem"			) %> rel="memory">		<%= link_to t( 'txt.menu.memorize'), 	test_verse_path %></li>
-						<li <%= tab(@tab=="learn"		) %> rel="tutorials">	<%= link_to t( 'txt.menu.learn'), 		tutorial_path %></li>
-						<li <%= tab(@tab=="profile"		) %> rel="profile">		<%= link_to t( 'txt.menu.profile'), 	update_profile_path %></li>
-						<li <%= tab(@tab=="contact"		) %> rel="contact">		<%= link_to t( 'txt.menu.contact'), 	contact_path %></li>	
-						<li <%= tab(@tab=="leaderboard"	) %> rel="leaderboard">	<%= link_to t( 'txt.menu.leaderboard'), leaderboard_path %></li>	
-						<li <%= tab(@tab=="blog"		) %> rel="blog">		<%= link_to t( 'txt.menu.blog'), 		blog_path %></li>
+						<li <%= tab(@tab=="home"		) %> rel="homepage">	<%= link_to t('txt.menu.home'), 		home_path %></li>	
+						<li <%= tab(@tab=="mem"			) %> rel="memory">		<%= link_to t('txt.menu.memorize'), 	test_verse_path %></li>
+						<li <%= tab(@tab=="learn"		) %> rel="tutorials">	<%= link_to t('txt.menu.learn'), 		tutorial_path %></li>
+						<li <%= tab(@tab=="profile"		) %> rel="profile">		<%= link_to t('txt.menu.profile'), 		update_profile_path %></li>
+						<li <%= tab(@tab=="contact"		) %> rel="contact">		<%= link_to t('txt.menu.contact'), 		contact_path %></li>	
+						<li <%= tab(@tab=="leaderboard"	) %> rel="leaderboard">	<%= link_to t('txt.menu.leaderboard'), 	leaderboard_path %></li>	
+						<li <%= tab(@tab=="blog"		) %> rel="blog">		<%= link_to t('txt.menu.blog'), 		blog_path %></li>
 					</ul>
 
 					<div id="homepage" class="submenustyle">

@@ -454,7 +454,10 @@ class MemversesController < ApplicationController
     txt = params[:versetext]
     tl  = params[:translation]
     
-    errorcode, book, chapter, verse = parse_verse(ref) 
+    errorcode, book, chapter, verse = parse_verse(ref)
+    
+    # <--- At this point the book name should already be translated into English --->
+    
     if request.post? and txt.empty? # ie. a form is being submitted
       errorcode = 4 # No text in entry box
     end
