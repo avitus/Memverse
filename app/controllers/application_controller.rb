@@ -28,7 +28,24 @@ class ApplicationController < ActionController::Base
     else
       I18n.locale = "en"
     end
+    
+    I18n.backend.send(:init_translations)
   end     
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Convert foreign language bible books to English
+  # TODO: should also handle the abbreviated form of a book name
+  # ----------------------------------------------------------------------------------------------------------   
+  def translate_to_english(book)
+    
+    logger.info("Locale: #{I18n.locale}")
+
+    if I18n.backend.send(:translations)
+      return I18n.backend.send(:translations)[I18n.locale.to_sym][:book][:name].index(book).to_s
+    else
+      return book
+    end
+  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Return memorization status
@@ -42,7 +59,7 @@ class ApplicationController < ActionController::Base
   end
   
   # ----------------------------------------------------------------------------------------------------------
-  # Parse verse reference
+  # Parse verse reference -- this function is used a lot
   # Input:    string, eg. "1 John 2:5" or "1 Jn 2:5"   
   # Outputs:  array,  eg. "[errorcode, '1 John', 2, 5]
   # ----------------------------------------------------------------------------------------------------------   
@@ -55,10 +72,12 @@ class ApplicationController < ActionController::Base
     # Check for correct string formatting
     if valid_ref(vsref)
       
-      book  = vsref.slice!(/([0-3]?\s+)?[a-z]+\s+/i).rstrip!.titleize
+      entered_book_name  = vsref.slice!(/([0-3]?\s+)?[a-z]+\s+/i).rstrip!.titleize
       
-      # --- Book name should be translated into English after this point --- 
-      
+      # --- Book name should be translated into English after this point ---
+      book = I18n.locale == 'en' ? entered_book_name : translate_to_english(entered_book_name)
+
+
       book  = "Psalms" if book == "Psalm"
  
       if !BIBLEBOOKS.include?(full_book_name(book)) # This is not a book of the bible

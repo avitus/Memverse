@@ -684,7 +684,7 @@ class MemversesController < ApplicationController
     # First check for verses in session queue that need to be tested
     if mv = get_memverse_from_queue()
       # This verse needs to be memorized
-      @verse            = get_memverse(mv.verse_id)
+      @verse            = mv.verse.ref
       @text             = mv.verse.text
       @mnemonic         = mv.verse.mnemonic if mv.needs_mnemonic?
       @current_versenum = mv.verse.versenum
@@ -710,7 +710,7 @@ class MemversesController < ApplicationController
           session[:memverse] = mv.id
 
           # This verse needs to be memorized
-          @verse            = get_memverse(mv.verse_id)
+          @verse            = mv.verse.ref
           @text             = mv.verse.text 
           @mnemonic         = mv.verse.mnemonic if mv.needs_mnemonic?         
           @current_versenum = mv.verse.versenum    
@@ -1031,6 +1031,7 @@ class MemversesController < ApplicationController
       
       # Clear session variables so that user can't hit refresh and bump up score
       session[:exam_answered] = nil
+      session[:exam_cntr]     = nil
       
     else
       redirect_to :action => 'index'      
