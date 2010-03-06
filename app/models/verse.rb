@@ -13,10 +13,12 @@ class Verse < ActiveRecord::Base
 
                             
   # ----------------------------------------------------------------------------------------------------------
-  # Outputs friendly verse reference: eg. "John 3:16"
+  # Outputs friendly verse reference: eg. "Jn 3:16"
   # ----------------------------------------------------------------------------------------------------------   
   def ref
-    return abbr(book) + ' ' + chapter.to_s + ':' + versenum.to_s
+    
+    book_tl = I18n.t abbr(book).to_sym, :scope => [:book, :abbrev]     
+    return book_tl + ' ' + chapter.to_s + ':' + versenum.to_s
   end
 
   # ----------------------------------------------------------------------------------------------------------
