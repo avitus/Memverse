@@ -893,7 +893,7 @@ div.tooltip {
 }
 
 #edit-profile-form label {
-	width: 12em;
+	width: 15em;  /* changed from 12em on March 6 2010 */
 	padding-right: 0.5em;
 }
 

@@ -1,4 +1,4 @@
-<h1>Update Profile</h1>
+<h1><%=t('.Update profile')%></h1>
 
 <% form_tag :action => 'update_profile', :id => @user do %>
 	<div class="entry-form" id="edit-profile-form">
@@ -6,34 +6,34 @@
 		<% form_for @user do |f| %>
 			<%= f.error_messages %>
 			<fieldset>
-				<legend>Your Profile</legend>
+				<legend><%=t('.Your profile')%></legend>
 				<ol>
 					<li>
-						<%= f.label 			:name, 'Name' %>
+						<%= f.label 			:name, t('.Name') %>
 						<%= f.text_field 		:name %>
 					</li>
 					<li>
-						<%= f.label 			:email, 'Email' %>
+						<%= f.label 			:email, t('.Email') %>
 						<%= f.text_field 		:email %>
 					</li>
 					<li>
-						<%= f.label 			:country, 'Country' %>
+						<%= f.label 			:country, t('.Country') %>
 						<%= f.text_field 		:country, :value => @user_country %>
 					</li>
 					<li id="state-entry">
-						<%= f.label 			:american_state, 'State' %>
+						<%= f.label 			:american_state, t('.State') %>
 						<%= f.text_field 		:american_state, :value => @user_state %>
 					</li>
 					<li>
-						<%= f.label 			:church, 'Church / Organization' %>
+						<%= f.label 			:church, t('.Church') %>
 						<%= f.text_field 		:church, :value => @user_church %>
 					</li>					
 					<li>
-						<%= f.label 			:newsletters, 'Receive newsletters' %>
+						<%= f.label 			:newsletters, t('.Receive newsletters') %>
 						<%= f.check_box 		:newsletters %>
 					</li>
 					<li>
-						<%= f.label 			:reminder_freq, 'Reminder frequency' %>
+						<%= f.label 			:reminder_freq, t('.Reminder frequency') %>
 						<%= f.select			:reminder_freq,
 									[["Daily", 		'Daily'		],
 									["Weekly",		'Weekly'	], 
@@ -43,7 +43,7 @@
 									 %>
 					</li>
 					<li>
-						<%= f.label 			:language, 'Language' %>
+						<%= f.label 			:language, t('.Language') %>
 						<%= f.select			:language,
 									[["English", 	'English'	],
 									 ["Spanish",	'Spanish'	], 
@@ -53,7 +53,7 @@
 									 %>
 					</li>	
 					<li>
-						<%= f.label 			:time_allocation, 'Target Time' %>
+						<%= f.label 			:time_allocation, t('.Target Time') %>
 						<%= f.select			:time_allocation,
 									[[" 3 Minutes per Day",  3	],
 									 [" 5 Minutes per Day",  5	],
@@ -63,7 +63,7 @@
 									 %>
 					</li>														
 					<li>
-						<%= f.label 			:max_interval, 'Max. repetition interval' %>
+						<%= f.label 			:max_interval, t('.Max Repetition Interval') %>
 						<%= f.select			:max_interval,
 									[["1 Month", 	 31	],
 									 ["3 Months", 	 91	],
@@ -73,7 +73,7 @@
 									 %>
 					</li>					
 					<li>
-						<%= f.label 			:mnemonic_use, '1st Letter Prompts' %>
+						<%= f.label 			:mnemonic_use, t('.1st Letter Prompts') %>
 						<%= f.select			:mnemonic_use,
 									[["Always", 	'Always'	],
 									 ["Learning",	'Learning'	], 
@@ -81,17 +81,17 @@
 									 %>
 					</li>
 					<li>
-						<%= f.label 			:all_refs, 'Test all references?' %>
+						<%= f.label 			:all_refs, t('.Test all references') %>
 						<%= f.check_box 		:all_refs %>
 					</li>						
 					<li>
-						<%= f.label 			:show_echo, 'Always show feedback?' %>
+						<%= f.label 			:show_echo, t('.Always show feedback') %>
 						<%= f.check_box 		:show_echo %>
 					</li>										
 				</ol>
 				 
 				<div class="buttons">				
-					<%= submit_tag 'Update Profile' %>	
+					<%= submit_tag t('.Update profile') %>	
 				</div>
 					
 			</fieldset>	
@@ -99,9 +99,7 @@
 	</div>
 <% end %> <!-- End: Form Tag -->
 
-<p>If you'd like to upload a photo of yourself, please visit <b><%= link_to 'Gravatar', 'http://www.gravatar.com', {:target => '_blank'} %></b> and 
-associate the same email address you use on Memverse with the photo or avatar that you'd like to display. The photo will appear next
-to your blog comments.</p>
+<p><%= t('.Photo Upload A') %> <b><%= link_to 'Gravatar', 'http://www.gravatar.com', {:target => '_blank'} %></b> <%= t('.Photo Upload B')%></p>
 
 
 <!-- http://www.devbridge.com/projects/autocomplete/jquery/ -->

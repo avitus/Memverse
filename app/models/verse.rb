@@ -146,11 +146,13 @@ class Verse < ActiveRecord::Base
   # TODO: Add support for inverted commas, dashes, long dashes (—) and other punctuation  
   # ---------------------------------------------------------------------------------------------------------- 
   def mnemonic
-    self.text.gsub(/[^a-zA-Z,:;.\- ]/, '').split.map { |x| 
-      if (x.last =~ /[a-zA-Z]/).nil? # The word is terminated with a non letter
-        x[0].chr + x.last
+    self.text.gsub(/[^a-zA-Záéíóúüñ¿¡,:;.\- ]/, '').split.map { |x| 
+      if (x.last =~ /[a-zA-Záéíóúüñ]/).nil? # The word is terminated with a non letter
+        x.match(/^(.)/).to_s + x.last
+#      elsif (x.match(/^(.)/) =~ /[a-zA-Záéíóúüñ]/).nil? # The word starts with a non letter (Spanish texts)
+#        x.match(/^(..)/).to_s
       else
-        x[0].chr
+        x.match(/^(.)/) # This handles accented letters properly (^ matches start of word, (.) matches first char)
       end
       }.join(" ")
   end
