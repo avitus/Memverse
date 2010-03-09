@@ -594,7 +594,7 @@ class User < ActiveRecord::Base
       
       if mv.next_verse   != mv.get_next_verse
         logger.warn("*** WARNING: Had to add linkage to next verse for memory verse #{mv.id}")
-        record['Prev'] = repair ? 'Fixed' : 'Error'
+        record['Next'] = repair ? 'Fixed' : 'Error'
         mv.next_verse = mv.get_next_verse unless !repair
       else
         logger.debug("*** #{mv.id} : Next verse link OK") 
@@ -602,6 +602,14 @@ class User < ActiveRecord::Base
       end
 
       # TODO: Need to fix first verse entry as well
+      if mv.first_verse != mv.get_first_verse
+        logger.warn("*** WARNING: Had to add linkage to first verse for memory verse #{mv.id}")
+        record['First'] = repair ? 'Fixed' : 'Error'
+        mv.first_verse = mv.get_first_verse unless !repair
+      else
+        logger.debug("*** #{mv.id} : First verse link OK") 
+        record['First'] = '-'        
+      end
 
       mv.save
       report << record
