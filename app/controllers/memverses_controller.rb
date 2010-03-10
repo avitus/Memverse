@@ -93,6 +93,8 @@
 # 02/07/10 : No longer need to type dash, congratulations on milestones, fixed NKJ verification
 # 02/15/10 : Added mnemonics for verses
 # 02/25/10 : Added unsubscribe link to reminder emails, decrease email reminder frequency more quickly
+# 03/05/10 : Started adding support for Spanish
+# 03/09/10 : Added indexes for performance gains
 
 class MemversesController < ApplicationController
   
