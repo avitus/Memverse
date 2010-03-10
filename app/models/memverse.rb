@@ -369,7 +369,7 @@ class Memverse < ActiveRecord::Base
       first_verse = prev_mv
     end
     
-    return first_verse
+    return first_verse ? first_verse.id : nil
     
   end
 
