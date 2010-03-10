@@ -203,6 +203,8 @@ ActiveRecord::Schema.define(:version => 23) do
     t.integer "time_allocation"
   end
 
+  add_index "progress_reports", ["user_id"], :name => "index_progress_reports_on_user_id"
+
   create_table "roles", :force => true do |t|
     t.string "name"
   end

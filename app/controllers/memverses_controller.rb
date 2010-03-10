@@ -597,7 +597,7 @@ class MemversesController < ApplicationController
     @tab = "home"
     
     # TODO: we need to include a) verse reference and b) verse translation to speed up this page
-    @my_verses = Memverse.find(:all, :conditions => ["user_id = ?", current_user.id], :order => params[:sort_order])
+    @my_verses = current_user.memverses.all(:include => :verse, :order => params[:sort_order])
 
     if !params[:sort_order]
       @my_verses.sort!
