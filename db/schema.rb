@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 22) do
+ActiveRecord::Schema.define(:version => 23) do
 
   create_table "american_states", :force => true do |t|
     t.string  "abbrev",      :limit => 20, :default => "", :null => false
@@ -146,6 +146,9 @@ ActiveRecord::Schema.define(:version => 22) do
     t.integer  "ref_interval",                                :default => 1
     t.date     "next_ref_test"
   end
+
+  add_index "memverses", ["user_id"], :name => "index_memverses_on_user_id"
+  add_index "memverses", ["verse_id"], :name => "index_memverses_on_verse_id"
 
   create_table "open_id_authentication_associations", :force => true do |t|
     t.integer "issued"
