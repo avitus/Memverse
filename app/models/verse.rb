@@ -11,12 +11,21 @@ class Verse < ActiveRecord::Base
   # Validations
   validates_presence_of :translation, :book, :chapter, :versenum, :text
 
+  named_scope :old_testament, :conditions => { :book_index =>  1..39 }
+  named_scope :new_testament, :conditions => { :book_index => 40..66 }
+  
+  named_scope :history,   :conditions => { :book_index =>  1..17 }
+  named_scope :wisdom,    :conditions => { :book_index => 18..22 }
+  named_scope :prophecy,  :conditions => { :book_index => 23..39 }
+  named_scope :gospel,    :conditions => { :book_index => 40..43 }
+  named_scope :epistle,   :conditions => { :book_index => 45..65 }
+
+  named_scope :tl, lambda { |tl| {:conditions => ['translation = ?', tl ]} }
                             
   # ----------------------------------------------------------------------------------------------------------
   # Outputs friendly verse reference: eg. "Jn 3:16"
   # ----------------------------------------------------------------------------------------------------------   
   def ref
-    
     book_tl = I18n.t abbr(book).to_sym, :scope => [:book, :abbrev]     
     return book_tl + ' ' + chapter.to_s + ':' + versenum.to_s
   end
