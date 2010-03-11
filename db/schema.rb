@@ -128,6 +128,8 @@ ActiveRecord::Schema.define(:version => 23) do
     t.integer "last_verse", :null => false
   end
 
+  add_index "final_verses", ["book", "chapter"], :name => "index_final_verses_on_book_and_chapter"
+
   create_table "memverses", :force => true do |t|
     t.integer  "user_id",                                                      :null => false
     t.integer  "verse_id",                                                     :null => false
@@ -251,10 +253,11 @@ ActiveRecord::Schema.define(:version => 23) do
     t.integer  "learning",                                 :default => 0
     t.date     "last_activity_date"
     t.boolean  "show_echo",                                :default => true
+    t.integer  "state_id"
     t.integer  "max_interval",                             :default => 366
     t.string   "mnemonic_use",                             :default => "Learning"
     t.integer  "american_state_id"
-    t.integer  "accuracy",                                 :default => 10
+    t.integer  "accuracy",                                 :default => 50
     t.boolean  "all_refs",                                 :default => true
   end
 
