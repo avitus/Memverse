@@ -99,21 +99,13 @@ class User < ActiveRecord::Base
   
   # ----------------------------------------------------------------------------------------------------------
   # Check whether current user is memorizing a given verse in any translation
-  # Input: "John 3:16"
-  # TODO: This can be rewritten as self.memverses.find(:first, :conditions => {}) .... will be much faster!
-  # TODO: Need to do a table join
+  # Input: "John", 3, 16
+  # Output: mv object (if found) or nil (if not)
   # ----------------------------------------------------------------------------------------------------------     
   def has_verse?(book, chapter, versenum)
 
-    # Get all the memory verses for a given user ... check whether any matches this verse
-    self.memverses.each { |mv|
-      # Check each memory verse for a match
-      vs = mv.verse
-      if vs.book.to_s == book.to_s and vs.chapter.to_i == chapter.to_i and vs.versenum.to_i == versenum.to_i
-        return true
-      end
-    }
-    return false
+    self.memverses.first(:include => :verse, :conditions => {'verses.book' => book, 'verses.chapter' => chapter, 'verses.versenum' => versenum})
+
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -210,6 +202,7 @@ class User < ActiveRecord::Base
 
   # ----------------------------------------------------------------------------------------------------------
   # Returns list of complete chapters that user is memorizing
+  # TODO: This needs serious opimization ... page load time for user with lots of complete books is 40 secs
   # ----------------------------------------------------------------------------------------------------------
   def complete_chapters
     

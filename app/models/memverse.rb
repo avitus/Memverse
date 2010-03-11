@@ -122,13 +122,9 @@ class Memverse < ActiveRecord::Base
     
     eocv = self.verse.end_of_chapter_verse
     
-    if self.user.has_verse?(eocv.book, eocv.chapter, eocv.last_verse)
-      # Get that verse and check that it's linked to the first verse
-      lv = self.user.memverses.find(  :first, 
-                                      :include => :verse, 
-                                      :conditions => { 'verses.book' => eocv.book, 'verses.chapter' => eocv.chapter, 'verses.versenum' => eocv.last_verse})
+    if lv = self.user.has_verse?(eocv.book, eocv.chapter, eocv.last_verse)
+      # check that it's linked to the first verse
       lv.linked_to_first_verse?                               
-                                      
     else
       false
     end
