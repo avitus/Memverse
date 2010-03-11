@@ -4,6 +4,7 @@ class AddMemverseIndexes < ActiveRecord::Migration
     add_index :memverses,         :user_id
     add_index :memverses,         :verse_id
     add_index :progress_reports,  :user_id
+    add_index :final_verses,      [:book, :chapter]
      
   end
 
@@ -12,6 +13,7 @@ class AddMemverseIndexes < ActiveRecord::Migration
     remove_index :memverses,        :user_id
     remove_index :memverses,        :verse_id
     remove_index :progress_reports, :user_id
+    remove_index :final_verses,     [:book, :chapter]
     
   end
   
