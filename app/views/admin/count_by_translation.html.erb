@@ -1,0 +1,28 @@
+<div id="tl-stats">
+	<table class="user-stats-table" cellpadding="6" cellspacing="0" border="1">	
+		<th>Translation</th>
+		<th>Total</th>
+		<th>OT</th>
+		<th>NT</th>
+		<th>History</th>
+		<th>Wisdom</th>
+		<th>Prophecy</th>
+		<th>Gospel</th>
+		<th>Epistle</th>		
+		
+		<% TRANSLATIONS.keys.each do |tl| %>
+			<tr>
+				<td><%= TRANSLATIONS[tl] %></td>
+				<td><%= Verse.tl(tl.to_s).count %></td>
+				<td><%= Verse.tl(tl.to_s).old_testament.count %></td>
+				<td><%= Verse.tl(tl.to_s).new_testament.count %></td>
+				<td><%= Verse.tl(tl.to_s).history.count %></td>
+				<td><%= Verse.tl(tl.to_s).wisdom.count %></td>
+				<td><%= Verse.tl(tl.to_s).prophecy.count %></td>
+				<td><%= Verse.tl(tl.to_s).gospel.count %></td>
+				<td><%= Verse.tl(tl.to_s).epistle.count %></td>
+			</tr>	
+		<% end %>	
+				
+	</table>
+</div>

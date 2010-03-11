@@ -91,6 +91,25 @@ ExceptionNotifier.exception_recipients = %w(andy@memverse.com)
 ExceptionNotifier.sender_address = %("Application Error" <app.error@memverse.com>)  
 ExceptionNotifier.email_prefix = "[APP] " # defaults to "[ERROR] "
 
+TRANSLATIONS = { 
+    :NIV => "New International Version",
+    :NAS => "New American Standard Bible", 
+    :NKJ => "New King James Version", 
+    :KJV => "King James Version",
+    :RSV => "Revised Standard Version",
+    :NRS => "New Revised Standard Version",                          
+    :ESV => "English Standard Version",
+    :NLT => "New Living Translation",
+    :IRV => "New International Reader's Version",
+    :UKJ => "Updated King James Version",
+    :GRK => "Biblical Greek",
+    :NVI => "Nueva Version Internacional",
+    :RVR => "Reina-Valera 1960",
+    :AFR => "Afrikaans 1983 Translation",
+    :NBV => "De Nieuwe Bijbelvertaling",
+    :SPB => "Svenska Folkbibeln" 
+  }
+
 BIBLEBOOKS = ['Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy', 'Joshua', 'Judges', 'Ruth', '1 Samuel', '2 Samuel',
               '1 Kings', '2 Kings','1 Chronicles', '2 Chronicles', 'Ezra', 'Nehemiah', 'Esther', 'Job', 'Psalms', 'Proverbs',
               'Ecclesiastes', 'Song of Songs', 'Isaiah', 'Jeremiah', 'Lamentations', 'Ezekiel', 'Daniel', 'Hosea', 'Joel', 
