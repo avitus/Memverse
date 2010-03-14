@@ -103,9 +103,25 @@ class User < ActiveRecord::Base
   # Output: mv object (if found) or nil (if not)
   # ----------------------------------------------------------------------------------------------------------     
   def has_verse?(book, chapter, versenum)
-
+    
+    book = "Psalms" if book == "Psalm" 
     self.memverses.first(:include => :verse, :conditions => {'verses.book' => book, 'verses.chapter' => chapter, 'verses.versenum' => versenum})
 
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Check whether current user is memorizing a given chapter in any translation
+  # Input: "John", 3
+  # Output: chapter array (if found) or nil (if not)
+  # ---------------------------------------------------------------------------------------------------------- 
+  def has_chapter?(book, chapter)
+    
+    book = "Psalms" if book == "Psalm" 
+    if mv = self.has_verse?(book, chapter, 1)
+      return mv.chapter
+    else
+      return nil
+    end
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -533,7 +549,7 @@ class User < ActiveRecord::Base
   # Returns hash of top ten users (sorted by number of verses memorized)
   # TODO: Find a way to speed this up ... eager loading (?), cache number of verses memorized?
   # ---------------------------------------------------------------------------------------------------------- 
-  def self.top_users(numusers=40)
+  def self.top_users(numusers=50)
 
     leaderboard = Hash.new(0)
     

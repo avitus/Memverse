@@ -708,63 +708,15 @@ class MemversesController < ApplicationController
   def test_chapter
  
     @tab = "mem"  
-    @page_title = "Memory Verse Review"
+    @page_title = "Chapter Review"
     @show_feedback = true
     
-    # First check for verses in session queue that need to be tested
-    if mv = get_memverse_from_queue()
-      # This verse needs to be memorized
-      @verse            = mv.verse.ref
-      @text             = mv.verse.text
-      @mnemonic         = mv.verse.mnemonic if mv.needs_mnemonic?
-      @current_versenum = mv.verse.versenum
-      @show_feedback    = (mv.test_interval < 60 or current_user.show_echo)
-      logger.debug("Show feedback for verse from queue: #{@show_feedback}. Interval is #{mv.test_interval} and request feedback is #{current_user.show_echo}")
-      # Put memory verse into session
-      session[:memverse] = mv.id  
-    else
-      # Otherwise, present the most overdue verse for memorization
-      mv = Memverse.find( :first, 
-                          :conditions => ["user_id = ?", current_user.id], 
-                          :order      => "next_test ASC")
-      if !mv.nil? # We've found a verse
-         
-        if mv.next_test <= Date.today
-                  
-          # Are there any verses preceding/succeeding this one? If so, we should test those first    
-          if mv.prev_verse or mv.next_verse
-            # put verses into session queue and begin with start verse
-            mv = put_memverse_cohort_into_queue(mv, "test")
-          end               
-          # Put memory verse into session
-          session[:memverse] = mv.id
-
-          # This verse needs to be memorized
-          @verse            = mv.verse.ref
-          @text             = mv.verse.text 
-          @mnemonic         = mv.verse.mnemonic if mv.needs_mnemonic?         
-          @current_versenum = mv.verse.versenum    
-          @show_feedback    = (mv.test_interval < 60 or current_user.show_echo) 
-          logger.debug("Show feedback for verse overdue: #{@show_feedback}. Interval is #{mv.test_interval} and request feedback is #{current_user.show_echo}")
-        else
-          # There are no more verses to be tested today
-          @verse            = "No more verses for today"
-          mv                = nil # clear out the loaded memory verse
-
-          # Update progress report
-          save_progress_report(current_user)
-          
-          # Redirect user to a page of statistics and recommendations
-          redirect_to :action => 'show_progress'   
-          flash[:notice] = "You have no more verses to memorize today. Your next memory verse is due for review " + current_user.next_verse_due           
-        end
-        
-      else # this user has no verses
-        redirect_to :action => 'add_verse'
-        flash[:notice] = "You should first add a few verses"       
-      end
-    end
-        
+    bk, ch = params[:book_chapter].split
+    
+    @chapter = current_user.has_chapter?(bk,ch)
+    @bk_ch   = bk + " " + ch
+    @verse   = @bk_ch + ":" + "1"
+            
   end
 
 
@@ -1207,6 +1159,8 @@ class MemversesController < ApplicationController
       mv.status         = verse_status(n_new, efactor_new, interval_new)
       mv.attempts       += 1      
       mv.save
+      
+      # TODO: We should check that the verse has been saved before moving on ... otherwise you could reload the same verse if it isn't finished saving
     
       # We should check to see whether there are any more verses to be memorized and redirect elsewhere
       redirect_to :action => 'test_verse'

@@ -12,8 +12,8 @@
 		
 		<% for cc in current_user.complete_chapters %>
 			<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
-				<td align="center">	<%= cc[0]	%></td>		
-				<td align="left">	<%= cc[1]	%></td>	
+				<td align="center">	<%= cc[0] %></td>		
+				<td align="left">	<%= link_to cc[1], :action => 'test_chapter', :book_chapter => cc[1]	%></td>	
 			</tr>
 		<% end %>
 	</table>
