@@ -23,6 +23,7 @@ ActionController::Routing::Routes.draw do |map|
   map.start_ref_test      '/start_ref_test',            :controller => 'memverses',   :action => 'load_test_ref'
   map.exam                '/test_yourself',             :controller => 'memverses',   :action => 'load_exam'
   map.pre_exam            '/accuracy_explanation',      :controller => 'memverses',   :action => 'explain_exam'
+  map.pre_chapter         '/chapter_review',            :controller => 'memverses',   :action => 'chapter_explanation'
   map.drill_verse         '/drill_verse',               :controller => 'memverses',   :action => 'drill_verse'
   map.mark_test           '/mark_test',                 :controller => 'memverses',   :action => 'mark_test'    
   map.mark_drill          '/mark_drill',                :controller => 'memverses',   :action => 'mark_drill'
@@ -32,10 +33,6 @@ ActionController::Routing::Routes.draw do |map|
   map.show_user_info      '/show_user_info',            :controller => 'admin',       :action => 'show_user_info'
   map.popular_verses      '/popular_verses',            :controller => 'memverses',   :action => 'pop_verses'
   map.home                '/home',                      :controller => 'memverses',   :action => 'index'
-  map.leaderboard         '/leaderboard',               :controller => 'memverses',   :action => 'leaderboard'
-  map.churchboard         '/churchboard',               :controller => 'memverses',   :action => 'churchboard'
-  map.stateboard          '/stateboard',                :controller => 'memverses',   :action => 'stateboard'
-  map.countryboard        '/countryboard',              :controller => 'memverses',   :action => 'countryboard'
   map.starter_pack        '/starter_pack',              :controller => 'memverses',   :action => 'starter_pack'
   
   # Doesn't require a login
@@ -44,7 +41,11 @@ ActionController::Routing::Routes.draw do |map|
   map.volunteer           '/volunteer',                 :controller => 'info',        :action => 'volunteer' 
   map.popular             '/popular',                   :controller => 'info',        :action => 'pop_verses'
   map.supermemo           '/supermemo',                 :controller => 'info',        :action => 'sm_description'
-  map.demo                '/demo',                      :controller => 'info',        :action => 'demo_test_verse'  
+  map.demo                '/demo',                      :controller => 'info',        :action => 'demo_test_verse' 
+  map.leaderboard         '/leaderboard',               :controller => 'info',        :action => 'leaderboard'
+  map.churchboard         '/churchboard',               :controller => 'info',        :action => 'churchboard'
+  map.stateboard          '/stateboard',                :controller => 'info',        :action => 'stateboard'
+  map.countryboard        '/countryboard',              :controller => 'info',        :action => 'countryboard'  
   map.memverse_clock      '/memverse_clock',            :controller => 'info',        :action => 'memverse_clock'  
  
   map.update_profile      '/update_profile',            :controller => 'profile',     :action => 'update_profile'
