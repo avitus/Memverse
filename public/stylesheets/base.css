@@ -865,12 +865,25 @@ div#currentVerse div#matchbox {
 
 /* === Prior Verses in Chapter === */
 #chapter-prior-verses {
-	margin-top: 16px;
+	margin-top: 0px;
 	float: left;
 	width: 820px;
 	height: 750px;
 	padding: 1em;
 	background: #BAB18E; 	
+}
+
+#chapter-prior-verses legend {
+	background: #687284; 
+	color: #1F2229;
+	padding: 0.2em 1em;
+}
+
+#chapter-prior-verses label {
+	width: 10em;
+	text-align: right;
+	margin-right: 0.5em;
+	display: block;
 }
 
 
