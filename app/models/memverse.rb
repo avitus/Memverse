@@ -116,6 +116,13 @@ class Memverse < ActiveRecord::Base
   end
   
   # ----------------------------------------------------------------------------------------------------------
+  # Return entire chapter as array
+  # ----------------------------------------------------------------------------------------------------------   
+  def chapter
+    self.part_of_entire_chapter? ? self.passage : nil
+  end
+  
+  # ----------------------------------------------------------------------------------------------------------
   # User has entire chapter: i.e. does user have the last first in the chapter and is it linked to the 1st verse
   # ----------------------------------------------------------------------------------------------------------  
   def part_of_entire_chapter?
@@ -203,6 +210,19 @@ class Memverse < ActiveRecord::Base
     end
   end
 
+  # ----------------------------------------------------------------------------------------------------------
+  # Return first  verse in a sequence
+  # ----------------------------------------------------------------------------------------------------------  
+  def first_verse_in_sequence    
+    if self.first_verse
+      initial_mv = find( self.first_verse )
+    else
+      initial_mv = self
+    end
+    
+    return initial_mv
+    
+  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Return first overdue verse in a sequence
@@ -220,6 +240,7 @@ class Memverse < ActiveRecord::Base
     else
       
       # find the first verse - we don't know whether this is the first verse so need to check
+      # TODO: Can replace with first_verse_in_sequence method above (once thoroughly tested)
       if self.first_verse
         initial_mv = Memverse.find( self.first_verse )
       else
