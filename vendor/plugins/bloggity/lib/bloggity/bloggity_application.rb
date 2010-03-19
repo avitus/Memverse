@@ -5,21 +5,21 @@ module Bloggity::BloggityApplication
 	include BloggityPageNames
 	include BloggityUrlHelper
 	
-	# Implement in your application
-	def current_user
-		User.find(1)
-	end
+	# Implement in your application - commented out 3/10/2010
+#	def current_user
+#		User.find(1)
+#	end
 	
-	# Implement in your application
-	def login_required
-		if current_user
-      true
-    else
-			flash[:error] = "Login required to do this action."
-			redirect_to :controller => "blog_posts" # Send them to wherever they login on your site...
-	    false
-	  end
-  end
+	# Implement in your application - commented out 3/10/2010
+#	def login_required
+#		if current_user
+#      true
+#    else
+#			flash[:error] = "Login required to do this action."
+#			redirect_to :controller => "blog_posts" # Send them to wherever they login on your site...
+#	    false
+#	  end
+#  end
 	
 	def blog_logged_in?
 		current_user && current_user.logged_in?

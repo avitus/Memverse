@@ -32,17 +32,17 @@
 	<h2>Complete Chapters</h2>
 	
 	<table cellpadding="6" cellspacing="1" border="1">
-	  <tr>		  	   	  		  
-		  <th>Status</th>
-		  <th>Chapter</th>
-	  </tr>
-	<% for cc in @user.complete_chapters %>
-	  <tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
-		<td align="center">	<%= cc[0]		%></td>		
-	 	<td align="left">	<%= cc[1]		%></td>	
-	  </tr>
-	<% end %>
-
+		<tr>		  	   	  		  
+			<th>Status</th>
+			<th>Chapter</th>
+		</tr>
+		
+		<% for cc in @user.complete_chapters %>
+			<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
+				<td align="center">	<%= cc[0]	%></td>		
+				<td align="left">	<%= cc[1]	%></td>	
+			</tr>
+		<% end %>
 	</table>	
 	
 	

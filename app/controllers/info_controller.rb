@@ -44,6 +44,53 @@ class InfoController < ApplicationController
     @verse = Verse.find(params[:vs])
   end  
   
+  # ----------------------------------------------------------------------------------------------------------
+  # Leaderboard
+  # ----------------------------------------------------------------------------------------------------------  
+  def leaderboard
+    
+    @tab          = "leaderboard" 
+    @page_title   = "Memverse Leaderboard"
+    @leaderboard  = User.top_users  # returns top users sorted by number of verses memorized
+
+    @not_on_leaderboard = (current_user.memorized < @leaderboard.last[1]) unless !current_user
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Church Leaderboard
+  # ----------------------------------------------------------------------------------------------------------  
+  def churchboard
+    
+    @tab          = "leaderboard" 
+    @page_title   = "Memverse Church Leaderboard"
+    @churchboard  = Church.top_churches  # returns top users sorted by number of verses memorized
+
+  end    
+
+  # ----------------------------------------------------------------------------------------------------------
+  # US States Leaderboard
+  # ----------------------------------------------------------------------------------------------------------  
+  def stateboard
+    
+    @tab          = "leaderboard" 
+    @page_title   = "Memverse US State Challenge"
+    @stateboard   = AmericanState.top_states  # returns top states sorted by number of verses memorized
+
+  end       
+    
+  # ----------------------------------------------------------------------------------------------------------
+  # Country Leaderboard
+  # ----------------------------------------------------------------------------------------------------------  
+  def countryboard
+    
+    @tab          = "leaderboard" 
+    @page_title   = "Memverse Global Challenge"
+    @countryboard  = Country.top_countries  # returns top users sorted by number of verses memorized
+
+  end      
+    
+  
+  
   # ----------------------------------------------------------------------------------------------------------   
   # Show some nice statistics
   # ----------------------------------------------------------------------------------------------------------   

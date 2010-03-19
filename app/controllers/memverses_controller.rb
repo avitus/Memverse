@@ -93,6 +93,8 @@
 # 02/07/10 : No longer need to type dash, congratulations on milestones, fixed NKJ verification
 # 02/15/10 : Added mnemonics for verses
 # 02/25/10 : Added unsubscribe link to reminder emails, decrease email reminder frequency more quickly
+# 03/05/10 : Started adding support for Spanish
+# 03/09/10 : Added indexes for performance gains
 
 class MemversesController < ApplicationController
   
@@ -179,53 +181,6 @@ class MemversesController < ApplicationController
 
   end
  
- 
-  # ----------------------------------------------------------------------------------------------------------
-  # Leaderboard
-  # ----------------------------------------------------------------------------------------------------------  
-  def leaderboard
-    
-    @tab          = "leaderboard" 
-    @page_title   = "Memverse Leaderboard"
-    @leaderboard  = User.top_users  # returns top users sorted by number of verses memorized
-
-    @not_on_leaderboard = (current_user.memorized < @leaderboard.last[1])
-
-  end
-
-  # ----------------------------------------------------------------------------------------------------------
-  # Church Leaderboard
-  # ----------------------------------------------------------------------------------------------------------  
-  def churchboard
-    
-    @tab          = "leaderboard" 
-    @page_title   = "Memverse Church Leaderboard"
-    @churchboard  = Church.top_churches  # returns top users sorted by number of verses memorized
-
-  end    
-
-  # ----------------------------------------------------------------------------------------------------------
-  # US States Leaderboard
-  # ----------------------------------------------------------------------------------------------------------  
-  def stateboard
-    
-    @tab          = "leaderboard" 
-    @page_title   = "Memverse US State Challenge"
-    @stateboard   = AmericanState.top_states  # returns top states sorted by number of verses memorized
-
-  end       
-    
-  # ----------------------------------------------------------------------------------------------------------
-  # Country Leaderboard
-  # ----------------------------------------------------------------------------------------------------------  
-  def countryboard
-    
-    @tab          = "leaderboard" 
-    @page_title   = "Memverse Global Challenge"
-    @countryboard  = Country.top_countries  # returns top users sorted by number of verses memorized
-
-  end      
-  
   # ----------------------------------------------------------------------------------------------------------
   # Verse of the day
   # ----------------------------------------------------------------------------------------------------------  
@@ -485,9 +440,9 @@ class MemversesController < ApplicationController
       flash[:notice] = case errorcode
         when 1 then "Bible reference is incorrectly formatted. Format should be John 3:16 or John 3 vs 16"
         when 2 then "#{book} is not a valid book of the bible"
-        when 3 then "Enter a bible reference eg. John 3:16. Please enter each verse individually and remove any verse numbering or footnote information. Adjacent verses will be grouped into a single memory verse. Please enter verses with great care as subsequent users will be memorizing the same verse. Think like a scribe!"
+        when 3 then "Enter a bible reference eg. John 3:16. Please enter each verse individually and remove any verse numbering or footnote information. Consecutive verses will be grouped into a single memory passage. Please enter verses with great care as subsequent users will be memorizing the same verse. Think like a scribe!"
         when 4 then "Please enter the text for your memory verse. Please do not include any verse numbering or footnote information"
-        else        "The verse you entered is longer than the longest verse in the bible! Please enter one verse at a time. Adjacent verses will be grouped into a single memory verse"         
+        else        "The verse you entered is longer than the longest verse in the bible! Please enter one verse at a time. Consecutive verses will be grouped into a single memory passage."         
       end
       render(:template => 'memverses/add_verse.html.erb')
     end
@@ -597,7 +552,7 @@ class MemversesController < ApplicationController
     @tab = "home"
     
     # TODO: we need to include a) verse reference and b) verse translation to speed up this page
-    @my_verses = Memverse.find(:all, :conditions => ["user_id = ?", current_user.id], :order => params[:sort_order])
+    @my_verses = current_user.memverses.all(:include => :verse, :order => params[:sort_order])
 
     if !params[:sort_order]
       @my_verses.sort!
@@ -746,6 +701,24 @@ class MemversesController < ApplicationController
     @upcoming_verses = upcoming_verses() 
     
   end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Review an entire chapter
+  # ----------------------------------------------------------------------------------------------------------   
+  def test_chapter
+ 
+    @tab = "mem"  
+    @page_title = "Chapter Review"
+    @show_feedback = true
+    
+    bk, ch = params[:book_chapter].split
+    
+    @chapter = current_user.has_chapter?(bk,ch)
+    @bk_ch   = bk + " " + ch
+    @verse   = 1
+            
+  end
+
 
   # ----------------------------------------------------------------------------------------------------------
   # Prepare for Testing Difficult References
@@ -1152,7 +1125,8 @@ class MemversesController < ApplicationController
     
   # ----------------------------------------------------------------------------------------------------------
   # Score the verse memory test
-  # NB: Need to fix this so that user can't hammer away on a button and keep scoring the last verse
+  # TODO: Need to fix this so that user can't hammer away on a button and keep scoring the last verse
+  # TODO: This should be a method for the memverse model
   # ----------------------------------------------------------------------------------------------------------   
   def mark_test
     # Update the interval and efactor
@@ -1185,6 +1159,8 @@ class MemversesController < ApplicationController
       mv.status         = verse_status(n_new, efactor_new, interval_new)
       mv.attempts       += 1      
       mv.save
+      
+      # TODO: We should check that the verse has been saved before moving on ... otherwise you could reload the same verse if it isn't finished saving
     
       # We should check to see whether there are any more verses to be memorized and redirect elsewhere
       redirect_to :action => 'test_verse'

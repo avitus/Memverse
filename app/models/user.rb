@@ -99,21 +99,29 @@ class User < ActiveRecord::Base
   
   # ----------------------------------------------------------------------------------------------------------
   # Check whether current user is memorizing a given verse in any translation
-  # Input: "John 3:16"
-  # TODO: This can be rewritten as self.memverses.find(:first, :conditions => {}) .... will be much faster!
-  # TODO: Need to do a table join
+  # Input: "John", 3, 16
+  # Output: mv object (if found) or nil (if not)
   # ----------------------------------------------------------------------------------------------------------     
   def has_verse?(book, chapter, versenum)
+    
+    book = "Psalms" if book == "Psalm" 
+    self.memverses.first(:include => :verse, :conditions => {'verses.book' => book, 'verses.chapter' => chapter, 'verses.versenum' => versenum})
 
-    # Get all the memory verses for a given user ... check whether any matches this verse
-    self.memverses.each { |mv|
-      # Check each memory verse for a match
-      vs = mv.verse
-      if vs.book.to_s == book.to_s and vs.chapter.to_i == chapter.to_i and vs.versenum.to_i == versenum.to_i
-        return true
-      end
-    }
-    return false
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Check whether current user is memorizing a given chapter in any translation
+  # Input: "John", 3
+  # Output: chapter array (if found) or nil (if not)
+  # ---------------------------------------------------------------------------------------------------------- 
+  def has_chapter?(book, chapter)
+    
+    book = "Psalms" if book == "Psalm" 
+    if mv = self.has_verse?(book, chapter, 1)
+      return mv.chapter
+    else
+      return nil
+    end
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -210,6 +218,7 @@ class User < ActiveRecord::Base
 
   # ----------------------------------------------------------------------------------------------------------
   # Returns list of complete chapters that user is memorizing
+  # TODO: This needs serious opimization ... page load time for user with lots of complete books is 40 secs
   # ----------------------------------------------------------------------------------------------------------
   def complete_chapters
     
@@ -540,7 +549,7 @@ class User < ActiveRecord::Base
   # Returns hash of top ten users (sorted by number of verses memorized)
   # TODO: Find a way to speed this up ... eager loading (?), cache number of verses memorized?
   # ---------------------------------------------------------------------------------------------------------- 
-  def self.top_users(numusers=40)
+  def self.top_users(numusers=50)
 
     leaderboard = Hash.new(0)
     
@@ -594,7 +603,7 @@ class User < ActiveRecord::Base
       
       if mv.next_verse   != mv.get_next_verse
         logger.warn("*** WARNING: Had to add linkage to next verse for memory verse #{mv.id}")
-        record['Prev'] = repair ? 'Fixed' : 'Error'
+        record['Next'] = repair ? 'Fixed' : 'Error'
         mv.next_verse = mv.get_next_verse unless !repair
       else
         logger.debug("*** #{mv.id} : Next verse link OK") 
@@ -602,6 +611,14 @@ class User < ActiveRecord::Base
       end
 
       # TODO: Need to fix first verse entry as well
+      if mv.first_verse != mv.get_first_verse
+        logger.warn("*** WARNING: Had to add linkage to first verse for memory verse #{mv.id}")
+        record['First'] = repair ? 'Fixed' : 'Error'
+        mv.first_verse = mv.get_first_verse unless !repair
+      else
+        logger.debug("*** #{mv.id} : First verse link OK") 
+        record['First'] = '-'        
+      end
 
       mv.save
       report << record
