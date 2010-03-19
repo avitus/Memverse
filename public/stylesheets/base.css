@@ -568,10 +568,6 @@ h2 {
 	background: #BAB18E;  /* light green */		
 }
 
-#ajaxWrapper {
-
-}
-
 #priorVerse {
 	color: #444444;  /* gray */
 	padding-bottom: 16px;
@@ -582,16 +578,6 @@ h2 {
 	width: 290px;	
 }
 
-/* 
-#feedback-container {
-	position: relative;	
-	width: 290px;
-	height: 380px; 
-}
-*/
-
-/* See this URL for help aligning buttons to bottom of a div */
-/* http://www.sommitrealweird.co.uk/css/bottomaligned.html */
 div#currentVerse div#matchbox {
 	position: absolute;
 	bottom: -60px;
@@ -689,6 +675,219 @@ div#currentVerse div#matchbox {
 	background: #BAB18E; /* dark green */
 	color: #1F2229; /* lightest green */
 	padding: 0.2em 1em;
+}
+
+/* === Styling for Chapter Review === */
+
+
+#test-chapter {
+	float: left;
+	width: 400px;
+}
+
+/* 1st Panel */
+#test-chapter #question-side {
+	height: 240px; /* <== Changed from test review */
+	width: 350px;
+	margin-right: 1px;
+	background-color: #BAB18E; 
+}
+
+#test-chapter #question-side legend {
+	background: #687284; 
+	color: #1F2229;
+	padding: 0.2em 1em;
+}
+
+#test-chapter #question-side label {
+	width: 10em;
+	text-align: right;
+	margin-right: 0.5em;
+	display: block;
+}
+
+#test-chapter #question-side .submit {
+	margin-left: 2.5em;
+}
+
+#test-chapter #question-side #scoreTestButtons .buttons {
+	margin-left: 2.5em;
+}
+
+#test-chapter #answerbox {
+	width:	320px;
+	height:	102px;  /* <== Changed from test review */
+	margin-top: 20px;
+	margin-bottom: 5px;
+	margin-left: auto;
+	margin-right: auto;	
+}
+
+#test-chapter #answerbox #answer {
+	width: 100%;
+	height: 140px;  /* <== Changed from test review */
+	margin-left: auto;
+	margin-right: auto;		
+}
+
+#test-chapter #verseguess {
+	width:	324px;
+	height:	130px;  /* <== Changed from test review */
+	margin-left: -0.3em;
+	margin-right: auto;
+	overflow: hidden;
+	font-size: 105%;
+}
+
+#test-chapter #scoreTestButtons {
+	padding-top: 10%;
+}
+
+#test-chapter #scoreTestButtons .submit {
+	margin-top: 3%;
+	width: 8%;    /* <== Changed from test review */
+	padding-top: 2px;
+	padding-bottom: 2px;
+	text-align: center;
+}
+
+/* Middle Panel */
+#test-chapter #comparison {
+	width: 350px;
+	height: 240px;  /* <== Changed from test review */
+	margin-left: 1px;
+	background-color: #BAB18E; 	
+}
+
+#test-chapter #comparison legend {
+	background: #687284; 
+	color: #1F2229; 
+	padding: 0.2em 1em;
+}
+
+#test-chapter #verseFeedback {
+	width: 310px; 
+	height: 180px;  /* <== Changed from test review */
+	margin-top:	15px;
+	padding-left: 20px;
+	padding-right: 20px;
+	background: #BAB18E; 	
+}
+
+#test-chapter #priorVerse {
+	color: #444444; 
+	padding-bottom: 16px;
+}
+
+#test-chapter #currentVerse {
+	position: relative;
+	width: 290px;	
+}
+
+#test-chapter div#currentVerse div#matchbox {
+	position: absolute;
+	bottom: -60px;
+}
+
+#test-chapter #matchbox p {
+	font-size: 130%;
+   	text-align: center;		
+	color: #1F2229; 
+	background: #687284;
+	padding: 0.2em 1em 0.2em 1em;
+	margin: 10 0 0 25px;		
+}
+
+#test-chapter #matchbox .incorrect {
+	background: #687284; 
+	font-size: 200%;
+	font-style: italic;
+}
+
+#test-chapter #matchbox .correct {
+	background: #687284; 
+	font-size: 500%;	
+	font-style: italic;
+}
+
+/* === Styling for Flashcard === */
+
+#test-chapter #flashcard {
+	width: 370px;
+	height: 246px;  /* <== Changed from test review */
+	margin-top: 13px;
+}
+
+#test-chapter .quickFlip, .quickFlipPanel {
+    width: 	370px;
+    height: 242px;	/* <== Changed from test review */
+	padding-left: 0px;
+}
+
+#test-chapter .refPanel {
+    background-color: #BAB18E;  
+    border: 2px solid  #A69A6E;
+   	text-align: center;	
+	font-size: 130%;
+	color: #1F2229;	
+}
+
+#test-chapter .textPanel {
+	background-color: #BAB18E;
+	color: #1F2229; 	
+    border: 2px solid  #A69A6E; 
+}
+
+#test-chapter .quickFlipCta {
+    cursor: pointer;
+   	text-align: center;
+
+	position: absolute;
+	bottom: 10px;	
+
+	font-size: 100%;
+	color: #1F2229;  	
+	background: #687284; 
+	padding: 0.2em 1em 0.2em 1em;
+	margin: 0 0 0 85px;	
+}
+
+#test-chapter #flashcard-back-text {
+	margin-left: 20px;
+	margin-right: 20px;
+}
+
+#test-chapter .mnemonic {
+	font-size: 95%;
+	margin-left: 10%;
+	margin-right: 10%;
+}
+
+/* === Prior Verses in Chapter === */
+#chapter-prior-verses {
+	margin-top: 0px;
+	float: left;
+	width: 820px;
+	height: 750px;
+	padding: 1em;
+	background: #BAB18E; 	
+}
+
+#chapter-prior-verses legend {
+	background: #687284; 
+	color: #1F2229;
+	padding: 0.2em 1em;
+}
+
+#chapter-prior-verses label {
+	width: 10em;
+	text-align: right;
+	margin-right: 0.5em;
+	display: block;
+}
+
+#chapter-text .verse-text {
+	display: none;
 }
 
 /* === Reference Test === */

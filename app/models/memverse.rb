@@ -116,19 +116,22 @@ class Memverse < ActiveRecord::Base
   end
   
   # ----------------------------------------------------------------------------------------------------------
+  # Return entire chapter as array
+  # ----------------------------------------------------------------------------------------------------------   
+  def chapter
+    self.part_of_entire_chapter? ? self.passage : nil
+  end
+  
+  # ----------------------------------------------------------------------------------------------------------
   # User has entire chapter: i.e. does user have the last first in the chapter and is it linked to the 1st verse
   # ----------------------------------------------------------------------------------------------------------  
   def part_of_entire_chapter?
     
     eocv = self.verse.end_of_chapter_verse
     
-    if self.user.has_verse?(eocv.book, eocv.chapter, eocv.last_verse)
-      # Get that verse and check that it's linked to the first verse
-      lv = self.user.memverses.find(  :first, 
-                                      :include => :verse, 
-                                      :conditions => { 'verses.book' => eocv.book, 'verses.chapter' => eocv.chapter, 'verses.versenum' => eocv.last_verse})
+    if lv = self.user.has_verse?(eocv.book, eocv.chapter, eocv.last_verse)
+      # check that it's linked to the first verse
       lv.linked_to_first_verse?                               
-                                      
     else
       false
     end
@@ -207,6 +210,19 @@ class Memverse < ActiveRecord::Base
     end
   end
 
+  # ----------------------------------------------------------------------------------------------------------
+  # Return first  verse in a sequence
+  # ----------------------------------------------------------------------------------------------------------  
+  def first_verse_in_sequence    
+    if self.first_verse
+      initial_mv = find( self.first_verse )
+    else
+      initial_mv = self
+    end
+    
+    return initial_mv
+    
+  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Return first overdue verse in a sequence
@@ -224,6 +240,7 @@ class Memverse < ActiveRecord::Base
     else
       
       # find the first verse - we don't know whether this is the first verse so need to check
+      # TODO: Can replace with first_verse_in_sequence method above (once thoroughly tested)
       if self.first_verse
         initial_mv = Memverse.find( self.first_verse )
       else
@@ -327,7 +344,7 @@ class Memverse < ActiveRecord::Base
     # Check for 2 conditions
     #   previous verse is in db
     #   and prev_verse is in user's list of memory verses  
-    if prev_vs = Verse.exists_in_db(book, chapter, verse-1, transl) and prev_mv = self.user.has_verse_id?(prev_vs) 
+    if (prev_vs = Verse.exists_in_db(book, chapter, verse-1, transl)) and prev_mv = self.user.has_verse_id?(prev_vs) 
       return prev_mv.id 
     else
       return nil
@@ -344,15 +361,33 @@ class Memverse < ActiveRecord::Base
     # Check for 2 conditions
     #   previous verse is in db
     #   and prev_verse is in user's list of memory verses  
-    if next_vs = Verse.exists_in_db(book, chapter, verse+1, transl) and next_mv = self.user.has_verse_id?(next_vs) 
+    if (next_vs = Verse.exists_in_db(book, chapter, verse+1, transl)) and next_mv = self.user.has_verse_id?(next_vs) 
       return next_mv.id 
     else
       return nil
     end 
   end
 
+  # ----------------------------------------------------------------------------------------------------------
+  # Return first verse in a series but does not use any of the linkage stored in the DB
+  #   Input:  mv_id
+  #   Output: mv_id or nil if no first verse
+  # ----------------------------------------------------------------------------------------------------------
   def get_first_verse
-    # TODO -- need to implement this
+    
+    book    = self.verse.book
+    chapter = self.verse.chapter.to_i
+    verse   = self.verse.versenum.to_i
+    transl  = self.verse.translation
+    
+    # TODO -- this has been hacked out ... check VERY CAREFULLY
+    while (prev_vs = Verse.exists_in_db(book, chapter, verse-1, transl)) and prev_mv = self.user.has_verse_id?(prev_vs)
+      verse = verse-1
+      first_verse = prev_mv
+    end
+    
+    return first_verse ? first_verse.id : nil
+    
   end
 
   # ============= Protected below this line ==================================================================

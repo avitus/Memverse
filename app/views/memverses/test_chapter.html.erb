@@ -1,0 +1,86 @@
+<!-- Focus cursor on verse entry box -->
+<body onload="document.getElementById('verseguess').focus()">
+	
+<div id="test-chapter">
+	<!-- Question-side : Entry box -->	
+	<fieldset id="question-side">
+		<legend><%=@bk_ch + ":" + @verse.to_s%></legend>
+			<% form_tag :action => 'test_chapter' do %>
+				
+				<div id="answerbox">
+			  		<%= text_area_tag(:verseguess, params[:verseguess] )%>			
+			  	</div>
+			
+			<div id="scoreTestButtons">								
+			  <span><%= submit_tag 5, 	:class => "submit", :q => 5 %>
+			  		<%= submit_tag 4, 	:class => "submit", :q => 4 %>	
+			  		<%= submit_tag 3,  	:class => "submit", :q => 3 %>	
+			  		<%= submit_tag 2,	:class => "submit", :q => 2 %>	
+			  		<%= submit_tag 1, 	:class => "submit", :q => 1 %></span>	
+			</div>			  
+			
+			<% end %>	
+	</fieldset>	
+	
+	<!-- Comparison section -->		
+	<fieldset id="comparison">
+		<legend><%= t('memverses.test_verse.feedback') %></legend>
+		<div id="verseFeedback">		
+			<!-- Current verse -->
+			<span id="ajaxWrapper">
+				<%= render :partial=>'feedback', :locals => {:show_feedback => @show_feedback} %>
+			</span>					
+		</div>
+	</fieldset>	
+	
+	<!-- Flashcard -->	
+	<div id="flashcard">
+		<div class="quickFlip">
+		    <div class="quickFlipPanel refPanel">
+		        <p><%=@bk_ch + ":" + @verse.to_s%></p>
+				<p class="mnemonic"><%=@mnemonic%></p>
+		        <p class="quickFlipCta"><%= t('memverses.test_verse.show_verse') %></p>
+		    </div>
+		
+		    <div class="quickFlipPanel textPanel">
+		    	<div id="flashcard-back-text">
+			        <p><%=@bk_ch + ":" + @verse.to_s%></p>				   	
+			        <p><%=@text%></p>
+			        <p class="quickFlipCta"><%= t('memverses.test_verse.back_to_test') %></p>
+				</div>			
+		    </div>
+		</div> <!-- end of quickFlip -->
+	</div> <!-- end of flashcard -->
+</div>
+
+<fieldset id="chapter-prior-verses">
+	<legend><%= @bk_ch %></legend>	
+	<div id="chapter-text">
+		<% for mv in @chapter %>
+			<span class="verse-text" id="<%=mv.verse.versenum%>">
+				<span class="superscript"><%= mv.verse.versenum %></span><span><%= mv.verse.text %></span>
+			</span>	
+		<% end %>
+	</div>
+</fieldset>	
+
+	
+<%= observe_field :verseguess,
+	:frequency	=> 0.6,
+	:update		=> 'ajaxWrapper',
+	:url		=> {:action => 'feedback', :only_path => false},
+	:with		=> "'echo=#{@show_feedback}&correct=#{escape_verse(@chapter[0].verse.text)}&verseguess='+encodeURIComponent(value)"
+%>
+
+<script language="JavaScript" type="text/javascript">
+	$(document).ready(function() {
+	    $('.quickFlip').quickFlip();
+		$('.submit').click( function() {
+			$("#chapter-text > .verse-text:hidden:first").fadeIn(2000);
+			$("#verseguess").val('');
+			$("#ajaxWrapper").text('');
+			return(false)
+		})
+	});
+</script>
+

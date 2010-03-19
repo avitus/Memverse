@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 22) do
+ActiveRecord::Schema.define(:version => 23) do
 
   create_table "american_states", :force => true do |t|
     t.string  "abbrev",      :limit => 20, :default => "", :null => false
@@ -128,6 +128,8 @@ ActiveRecord::Schema.define(:version => 22) do
     t.integer "last_verse", :null => false
   end
 
+  add_index "final_verses", ["book", "chapter"], :name => "index_final_verses_on_book_and_chapter"
+
   create_table "memverses", :force => true do |t|
     t.integer  "user_id",                                                      :null => false
     t.integer  "verse_id",                                                     :null => false
@@ -146,6 +148,9 @@ ActiveRecord::Schema.define(:version => 22) do
     t.integer  "ref_interval",                                :default => 1
     t.date     "next_ref_test"
   end
+
+  add_index "memverses", ["user_id"], :name => "index_memverses_on_user_id"
+  add_index "memverses", ["verse_id"], :name => "index_memverses_on_verse_id"
 
   create_table "open_id_authentication_associations", :force => true do |t|
     t.integer "issued"
@@ -199,6 +204,8 @@ ActiveRecord::Schema.define(:version => 22) do
     t.integer "memorized"
     t.integer "time_allocation"
   end
+
+  add_index "progress_reports", ["user_id"], :name => "index_progress_reports_on_user_id"
 
   create_table "roles", :force => true do |t|
     t.string "name"

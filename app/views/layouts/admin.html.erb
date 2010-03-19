@@ -130,6 +130,7 @@
 
 					<div id="verses" class="submenustyle">
 						<%= link_to 'Verses per User',	:controller => 'admin',	:action => 'verses_per_user' %>
+						<%= link_to 'Translation Stats',:controller => 'admin',	:action => 'count_by_translation' %>
 						<%= link_to 'All',				:controller => 'admin',	:action => 'show_verses', :sort_order => 'ID DESC'%>
 						<%= link_to 'Search',			:controller => 'admin',	:action => 'search_verses' %>
 						<%= link_to 'To Check',			:controller => 'admin',	:action => 'show_verses_to_be_checked' %>
