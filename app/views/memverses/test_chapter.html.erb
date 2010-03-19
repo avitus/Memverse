@@ -4,7 +4,7 @@
 <div id="test-chapter">
 	<!-- Question-side : Entry box -->	
 	<fieldset id="question-side">
-		<legend> <%=@verse%> </legend>
+		<legend><%=@bk_ch + ":" + @verse.to_s%></legend>
 			<% form_tag :action => 'test_chapter' do %>
 				
 				<div id="answerbox">
@@ -37,14 +37,14 @@
 	<div id="flashcard">
 		<div class="quickFlip">
 		    <div class="quickFlipPanel refPanel">
-		        <p><%=@verse%></p>
+		        <p><%=@bk_ch + ":" + @verse.to_s%></p>
 				<p class="mnemonic"><%=@mnemonic%></p>
 		        <p class="quickFlipCta"><%= t('memverses.test_verse.show_verse') %></p>
 		    </div>
 		
 		    <div class="quickFlipPanel textPanel">
 		    	<div id="flashcard-back-text">
-			        <p><%=@verse%></p>				   	
+			        <p><%=@bk_ch + ":" + @verse.to_s%></p>				   	
 			        <p><%=@text%></p>
 			        <p class="quickFlipCta"><%= t('memverses.test_verse.back_to_test') %></p>
 				</div>			
@@ -55,9 +55,11 @@
 
 <fieldset id="chapter-prior-verses">
 	<legend><%= @bk_ch %></legend>	
-	<div>
+	<div id="chapter-text">
 		<% for mv in @chapter %>
-			<span class="superscript"><%= mv.verse.versenum %></span><span><%= mv.verse.text %></span>
+			<span class="verse-text" id="<%=mv.verse.versenum%>">
+				<span class="superscript"><%= mv.verse.versenum %></span><span><%= mv.verse.text %></span>
+			</span>	
 		<% end %>
 	</div>
 </fieldset>	
@@ -67,11 +69,18 @@
 	:frequency	=> 0.6,
 	:update		=> 'ajaxWrapper',
 	:url		=> {:action => 'feedback', :only_path => false},
-	:with		=> "'echo=#{@show_feedback}&correct=#{escape_verse(@text)}&verseguess='+encodeURIComponent(value)"
+	:with		=> "'echo=#{@show_feedback}&correct=#{escape_verse(@chapter[0].verse.text)}&verseguess='+encodeURIComponent(value)"
 %>
 
 <script language="JavaScript" type="text/javascript">
 	$(document).ready(function() {
 	    $('.quickFlip').quickFlip();
+		$('.submit').click( function() {
+			$("#chapter-text > .verse-text:hidden:first").fadeIn(2000);
+			$("#verseguess").val('');
+			$("#ajaxWrapper").text('');
+			return(false)
+		})
 	});
 </script>
+
