@@ -51,7 +51,7 @@ ActionController::Routing::Routes.draw do |map|
   map.church              '/church',                    :controller => 'profile',     :action => 'show_church'
   map.unsubscribe         '/unsubscribe/*email',        :controller => 'profile',     :action => 'unsubscribe'
   
-  map.blog                '/blog',                      :controller => 'blog_posts',    :action => 'index'
+  map.blog              '/blog',                        :controller => 'blog_posts',    :action => 'index'
   map.blog_comments_new   '/blog_comments_new',         :controller => 'blog_comments', :action => 'recent_comments'
   
   # Routes for Ziya graphs

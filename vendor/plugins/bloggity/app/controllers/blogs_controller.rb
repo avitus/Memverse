@@ -1,7 +1,7 @@
 class BlogsController < ApplicationController
-  before_filter :get_bloggity_page_name
-	before_filter :can_modify_blogs_or_redirect, :except => [:feed, :show]
-	before_filter :load_blog, :only => [:feed, :show]
+#  before_filter :get_bloggity_page_name
+#	before_filter :can_modify_blogs_or_redirect, :except => [:feed, :show]
+#	before_filter :load_blog, :only => [:feed, :show]
 	
   def index
     @tab = "blog"
