@@ -715,7 +715,7 @@ class MemversesController < ApplicationController
     
     @chapter = current_user.has_chapter?(bk,ch)
     @bk_ch   = bk + " " + ch
-    @verse   = @bk_ch + ":" + "1"
+    @verse   = 1
             
   end
 
