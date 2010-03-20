@@ -4,7 +4,7 @@
 <div id="test-chapter">
 	<!-- Question-side : Entry box -->	
 	<fieldset id="question-side">
-		<legend><%=@bk_ch + ":" + @verse.to_s%></legend>
+		<legend><%=@bk_ch%>:<span class="current_verse"><%=@verse.to_s%></span></legend>
 			<% form_tag :action => 'test_chapter' do %>
 				
 				<div id="answerbox">
@@ -37,15 +37,15 @@
 	<div id="flashcard">
 		<div class="quickFlip">
 		    <div class="quickFlipPanel refPanel">
-		        <p><%=@bk_ch + ":" + @verse.to_s%></p>
+		        <p><%=@bk_ch%>:<span class="current_verse"><%=@verse.to_s%></span></p>
 				<p class="mnemonic"><%=@mnemonic%></p>
 		        <p class="quickFlipCta"><%= t('memverses.test_verse.show_verse') %></p>
 		    </div>
 		
 		    <div class="quickFlipPanel textPanel">
 		    	<div id="flashcard-back-text">
-			        <p><%=@bk_ch + ":" + @verse.to_s%></p>				   	
-			        <p><%=@text%></p>
+			        <p><%=@bk_ch%>:<span class="current_verse"><%=@verse.to_s%></span></p>				   	
+			        <p><%=@chapter[0].verse.text%></p>
 			        <p class="quickFlipCta"><%= t('memverses.test_verse.back_to_test') %></p>
 				</div>			
 		    </div>
@@ -69,16 +69,25 @@
 	:frequency	=> 0.6,
 	:update		=> 'ajaxWrapper',
 	:url		=> {:action => 'feedback', :only_path => false},
-	:with		=> "'echo=#{@show_feedback}&correct=#{escape_verse(@chapter[0].verse.text)}&verseguess='+encodeURIComponent(value)"
+	:with		=> "'echo=#{@show_feedback}&correct=#{escape_verse(@chapter[0].verse.text)}&verseguess='+encodeURIComponent(value)+'&vsnum='+current_verse"
 %>
 
+<!-- Script for updating current verse, clearing input etc -->
 <script language="JavaScript" type="text/javascript">
+	
+	var current_verse = 1
+	
 	$(document).ready(function() {
 	    $('.quickFlip').quickFlip();
+		
 		$('.submit').click( function() {
 			$("#chapter-text > .verse-text:hidden:first").fadeIn(2000);
 			$("#verseguess").val('');
 			$("#ajaxWrapper").text('');
+			
+			current_verse++;
+			$(".current_verse").text(current_verse);
+			
 			return(false)
 		})
 	});
