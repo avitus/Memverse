@@ -30,10 +30,11 @@ ActionController::Routing::Routes.draw do |map|
   map.show_all_my_verses  '/show_all_my_verses',        :controller => 'memverses',   :action => 'show_all_my_verses'
   map.user_stats          '/user_stats',                :controller => 'memverses',   :action => 'user_stats'
   map.progress            '/progress',                  :controller => 'memverses',   :action => 'show_progress'
-  map.show_user_info      '/show_user_info',            :controller => 'admin',       :action => 'show_user_info'
   map.popular_verses      '/popular_verses',            :controller => 'memverses',   :action => 'pop_verses'
   map.home                '/home',                      :controller => 'memverses',   :action => 'index'
   map.starter_pack        '/starter_pack',              :controller => 'memverses',   :action => 'starter_pack'
+  
+  map.show_user_info      '/show_user_info',            :controller => 'admin',       :action => 'show_user_info'  
   
   # Doesn't require a login
   map.contact             '/contact',                   :controller => 'info',        :action => 'contact'   
@@ -52,7 +53,8 @@ ActionController::Routing::Routes.draw do |map|
   map.church              '/church',                    :controller => 'profile',     :action => 'show_church'
   map.unsubscribe         '/unsubscribe/*email',        :controller => 'profile',     :action => 'unsubscribe'
   
-  map.blog              '/blog',                        :controller => 'blog_posts',    :action => 'index'
+  # Blog routes
+  map.blog                '/blog',                      :controller => 'blog_posts',    :action => 'index'
   map.blog_comments_new   '/blog_comments_new',         :controller => 'blog_comments', :action => 'recent_comments'
   
   # Routes for Ziya graphs
