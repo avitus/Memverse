@@ -713,9 +713,10 @@ class MemversesController < ApplicationController
     
     bk, ch = params[:book_chapter].split
     
-    @chapter = current_user.has_chapter?(bk,ch)
-    @bk_ch   = bk + " " + ch
-    @verse   = 1
+    @chapter      = current_user.has_chapter?(bk,ch)
+    @bk_ch        = bk + " " + ch
+    @verse        = 1
+    @final_verse  = @chapter.length
             
   end
 

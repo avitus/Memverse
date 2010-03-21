@@ -28,15 +28,17 @@
 			
 			<!--- FrontSide --->
 		    <div class="quickFlipPanel refPanel">
-		        <p><%=@bk_ch%>:<span class="current_verse"><%=@verse.to_s%></span></p>
-				<p class="mnemonic"><%=@mnemonic%></p>
-				<div id="verseFeedback">		
-					<!-- Current verse -->
-					<span id="ajaxWrapper">
-						<%= render :partial=>'feedback', :locals => {:show_feedback => @show_feedback} %>
-					</span>					
-				</div>
-		        <p class="quickFlipCta"><%= t('memverses.test_verse.show_verse') %></p>
+		    	<div id="flashcard-front-text">		    	
+			        <p><%=@bk_ch%>:<span class="current_verse"><%=@verse.to_s%></span></p>
+					<!-- <p class="mnemonic"><%=@chapter[0].verse.mnemonic%></p> -->
+					<div id="verseFeedback">		
+						<!-- Current verse -->
+						<span id="ajaxWrapper">
+							<%= render :partial=>'feedback', :locals => {:show_feedback => @show_feedback} %>
+						</span>					
+					</div>
+			        <p class="quickFlipCta"><%= t('memverses.test_verse.show_verse') %></p>
+				</div>	<!-- end of flashcard-front-text -->			
 		    </div>
 		
 			<!--- BackSide --->
@@ -48,8 +50,8 @@
 							<%= mv.verse.text %>
 						</span>	
 					<% end %>
-			        <p class="quickFlipCta"><%= t('memverses.test_verse.back_to_test') %></p>
-				</div>			
+				</div>	<!-- end of flashcard-back-text -->	
+			    <p class="quickFlipCta"><%= t('memverses.test_verse.back_to_test') %></p>
 		    </div>
 		</div> <!-- end of quickFlip -->
 	</div> <!-- end of flashcard -->
@@ -78,9 +80,9 @@
 <script language="JavaScript" type="text/javascript">
 	
 	var current_verse = 1
+	var final_verse	  = '<%= @final_verse %>'
 	var current_text  = $("#" + current_verse).html()
 
-	
 	$(document).ready(function() {
 	    $('.quickFlip').quickFlip();
 		
@@ -89,29 +91,49 @@
 		
 		$('.submit').click( function() {
 			
-			// Display the next verse
-			$("#chapter-text > .verse-text:hidden:first").fadeIn(2000);
-			// Scroll to bottom of chapter
-			nDiv = document.getElementById('chapter-text');
-			setTimeout("nDiv.scrollTop = nDiv.scrollHeight",1);
+			if (current_verse == final_verse) {
+				// Display the next verse
+				$("#chapter-text > .verse-text:hidden:first").fadeIn(2000);
+				// Scroll to bottom of chapter
+				nDiv = document.getElementById('chapter-text');
+				setTimeout("nDiv.scrollTop = nDiv.scrollHeight",1);
 
-			// Remove the currently displayed verse and reveal the next verse
-			$("#flashcard-back-text > .verse-text:first").remove();			
-			$("#flashcard-back-text > .verse-text:hidden:first").fadeIn(10);
+				// Clear the input box and the feedback
+				$("#verseguess").val('');
+				$("#ajaxWrapper").text('End of Chapter');					
+
+				// Replace submit buttons with something else
+				
+				return (false)
+				
+			}
+			else {
+				// Display the next verse
+				$("#chapter-text > .verse-text:hidden:first").fadeIn(2000);
+				// Scroll to bottom of chapter
+				nDiv = document.getElementById('chapter-text');
+				setTimeout("nDiv.scrollTop = nDiv.scrollHeight",1);
+	
+				// Remove the currently displayed verse and reveal the next verse
+				$("#flashcard-back-text > .verse-text:first").remove();			
+				$("#flashcard-back-text > .verse-text:hidden:first").fadeIn(10);
+				
+				// Clear the input box and the feedback
+				$("#verseguess").val('');
+				$("#ajaxWrapper").text('');
+				
+				// Increment the verse counter, update the labels, and get the new text
+				current_verse++;
+				$(".current_verse").text(current_verse);
+				current_text  = $("#" + current_verse).html()
+				
+				// Reset the flashcard
+				$('.quickFlip').quickFlipper( {}, 0 );
+				
+				return(false)				
+			}
+
 			
-			// Clear the input box and the feedback
-			$("#verseguess").val('');
-			$("#ajaxWrapper").text('');
-			
-			// Increment the verse counter, update the labels, and get the new text
-			current_verse++;
-			$(".current_verse").text(current_verse);
-			current_text  = $("#" + current_verse).html()
-			
-			// Reset the flashcard
-			$('.quickFlip').quickFlipper( {}, 0 );
-			
-			return(false)
 		})
 	});
 </script>
