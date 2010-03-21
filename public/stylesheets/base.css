@@ -857,6 +857,11 @@ div#currentVerse div#matchbox {
 	margin-right: 20px;
 }
 
+#test-chapter #flashcard-back-text .verse-text {
+	display: none;
+}
+
+
 #test-chapter .mnemonic {
 	font-size: 95%;
 	margin-left: 10%;
@@ -868,9 +873,9 @@ div#currentVerse div#matchbox {
 	margin-top: 0px;
 	float: left;
 	width: 820px;
-	height: 750px;
+	height: 650px;
 	padding: 1em;
-	background: #BAB18E; 	
+	background: #BAB18E; 
 }
 
 #chapter-prior-verses legend {
@@ -884,6 +889,11 @@ div#currentVerse div#matchbox {
 	text-align: right;
 	margin-right: 0.5em;
 	display: block;
+}
+
+#chapter-text {
+	height: 630px; /* 20px less than the height of chapter-prior-verses */
+	overflow-y: auto;
 }
 
 #chapter-text .verse-text {

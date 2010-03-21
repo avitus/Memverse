@@ -21,31 +21,33 @@
 			
 			<% end %>	
 	</fieldset>	
-	
-	<!-- Comparison section -->		
-	<fieldset id="comparison">
-		<legend><%= t('memverses.test_verse.feedback') %></legend>
-		<div id="verseFeedback">		
-			<!-- Current verse -->
-			<span id="ajaxWrapper">
-				<%= render :partial=>'feedback', :locals => {:show_feedback => @show_feedback} %>
-			</span>					
-		</div>
-	</fieldset>	
-	
+		
 	<!-- Flashcard -->	
 	<div id="flashcard">
 		<div class="quickFlip">
+			
+			<!--- FrontSide --->
 		    <div class="quickFlipPanel refPanel">
 		        <p><%=@bk_ch%>:<span class="current_verse"><%=@verse.to_s%></span></p>
 				<p class="mnemonic"><%=@mnemonic%></p>
+				<div id="verseFeedback">		
+					<!-- Current verse -->
+					<span id="ajaxWrapper">
+						<%= render :partial=>'feedback', :locals => {:show_feedback => @show_feedback} %>
+					</span>					
+				</div>
 		        <p class="quickFlipCta"><%= t('memverses.test_verse.show_verse') %></p>
 		    </div>
 		
+			<!--- BackSide --->
 		    <div class="quickFlipPanel textPanel">
 		    	<div id="flashcard-back-text">
 			        <p><%=@bk_ch%>:<span class="current_verse"><%=@verse.to_s%></span></p>				   	
-			        <p><%=@chapter[0].verse.text%></p>
+					<% for mv in @chapter %>
+						<span class="verse-text" id="<%=mv.verse.versenum%>">
+							<%= mv.verse.text %>
+						</span>	
+					<% end %>
 			        <p class="quickFlipCta"><%= t('memverses.test_verse.back_to_test') %></p>
 				</div>			
 		    </div>
@@ -69,24 +71,45 @@
 	:frequency	=> 0.6,
 	:update		=> 'ajaxWrapper',
 	:url		=> {:action => 'feedback', :only_path => false},
-	:with		=> "'echo=#{@show_feedback}&correct=#{escape_verse(@chapter[0].verse.text)}&verseguess='+encodeURIComponent(value)+'&vsnum='+current_verse"
+	:with		=> "'echo=#{@show_feedback}&correct='+current_text+'&verseguess='+encodeURIComponent(value)+'&vsnum='+current_verse"
 %>
 
 <!-- Script for updating current verse, clearing input etc -->
 <script language="JavaScript" type="text/javascript">
 	
 	var current_verse = 1
+	var current_text  = $("#" + current_verse).html()
+
 	
 	$(document).ready(function() {
 	    $('.quickFlip').quickFlip();
 		
+		// Display the first verse on the back of the flash card
+		$("#flashcard-back-text > .verse-text:hidden:first").fadeIn(10);	
+		
 		$('.submit').click( function() {
+			
+			// Display the next verse
 			$("#chapter-text > .verse-text:hidden:first").fadeIn(2000);
+			// Scroll to bottom of chapter
+			nDiv = document.getElementById('chapter-text');
+			setTimeout("nDiv.scrollTop = nDiv.scrollHeight",1);
+
+			// Remove the currently displayed verse and reveal the next verse
+			$("#flashcard-back-text > .verse-text:first").remove();			
+			$("#flashcard-back-text > .verse-text:hidden:first").fadeIn(10);
+			
+			// Clear the input box and the feedback
 			$("#verseguess").val('');
 			$("#ajaxWrapper").text('');
 			
+			// Increment the verse counter, update the labels, and get the new text
 			current_verse++;
 			$(".current_verse").text(current_verse);
+			current_text  = $("#" + current_verse).html()
+			
+			// Reset the flashcard
+			$('.quickFlip').quickFlipper( {}, 0 );
 			
 			return(false)
 		})
