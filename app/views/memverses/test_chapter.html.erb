@@ -73,7 +73,7 @@
 	:frequency	=> 0.6,
 	:update		=> 'ajaxWrapper',
 	:url		=> {:action => 'feedback', :only_path => false},
-	:with		=> "'echo=#{@show_feedback}&correct='+current_text+'&verseguess='+encodeURIComponent(value)+'&vsnum='+current_verse"
+	:with		=> "'echo=#{@show_feedback}&correct='+escape(current_text)+'&verseguess='+encodeURIComponent(value)+'&vsnum='+current_verse"
 %>
 
 <!-- Script for updating current verse, clearing input etc -->
