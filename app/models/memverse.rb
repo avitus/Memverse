@@ -56,6 +56,66 @@ class Memverse < ActiveRecord::Base
     self.user.save
   end
 
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Implementation of SM-2 algorithm
+  # Inputs:
+  #     q             - result of test
+  #     n             - current iteration in learning sequence
+  #     interval      - interval in days before next test
+  #     efactor       - easiness factor
+  #
+  # Outputs:
+  #     n_new         - increment by 1 unless answer was incorrect
+  #     efactor_new   - updated efactor
+  #     interval_new  - new interval
+  # ----------------------------------------------------------------------------------------------------------     
+  def supermemo(q)
+    
+    prev_learning = (self.status == "Learning")
+    
+    if q<3 # answer was incorrect
+      n_new = 1  # Start from the beginning
+    else
+      n_new = self.rep_n + 1 # Go on to next iteration
+    end
+    
+    # Q  Change in EF
+    # ~~~~~~~~~~~~~~~~
+    # 0     -0.80
+    # 1     -0.54
+    # 2     -0.32
+    # 3     -0.14
+    # 4     +0.00
+    # 5     +0.10
+ 
+    efactor_new = [ self.efactor - 0.8 + (0.28 * q) - (0.02 * q * q), 3.0 ].min # Cap eFactor at 3.0 
+    if efactor_new < 1.2       
+      efactor_new = 1.2 # Set minimum efactor to 1.2
+    end    
+    
+    # Calculate new interval
+    interval_new = case n_new
+      when 1 then 1
+      when 2 then 4
+      else [self.test_interval * efactor_new, self.user.max_interval].min.round # Don't set interval to more than one year for now
+    end  
+    
+    # Update memory verse parameters
+    self.rep_n          = n_new
+    self.efactor        = efactor_new
+    self.test_interval  = interval_new
+    self.next_test      = Date.today + interval_new
+    self.last_tested    = Date.today
+    self.status         = interval_new > 30 ? "Memorized" : "Learning"
+    self.attempts       += 1      
+    self.save
+    # TODO: We should check that the verse has been saved before moving on ... otherwise you could reload the same verse if it isn't finished saving    
+    
+    return (prev_learning and (self.status == "Memorized")) 
+  end
+
+
   # ----------------------------------------------------------------------------------------------------------
   # Return length of verse sequence
   # Input: memverse_id
