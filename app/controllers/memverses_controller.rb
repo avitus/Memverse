@@ -1127,7 +1127,6 @@ class MemversesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   # Score the verse memory test
   # TODO: Need to fix this so that user can't hammer away on a button and keep scoring the last verse
-  # TODO: This should be a method for the memverse model
   # ----------------------------------------------------------------------------------------------------------   
   def mark_test
     # Update the interval and efactor
@@ -1138,10 +1137,10 @@ class MemversesController < ApplicationController
       mv = Memverse.find( session[:memverse] )
       
       # Execute Supermemo algorithm
-      n_new, efactor_new, interval_new = supermemo(q, mv.efactor, mv.test_interval, mv.rep_n)
+      newly_memorized = mv.supermemo(q)
 
       # Give encouragement if verse transitions from "Learning" to "Memorized"
-      if verse_status(n_new, efactor_new, interval_new) == "Memorized" and verse_status(mv.rep_n, mv.efactor, mv.test_interval) == "Learning"
+      if newly_memorized
         flash[:notice] = "Congratulations. You have memorized #{mv.verse.ref}."
         if current_user.reaching_milestone
           flash[:notice] << " That was your #{current_user.memorized+1}th memorized verse!"
@@ -1150,19 +1149,7 @@ class MemversesController < ApplicationController
           flash[:notice] << " You have now memorized all of #{mv.verse.book} #{mv.verse.chapter}. Great job!"
         end
       end
-      
-      # Update memory verse parameters
-      mv.rep_n          = n_new
-      mv.efactor        = efactor_new
-      mv.test_interval  = interval_new
-      mv.next_test      = Date.today + interval_new
-      mv.last_tested    = Date.today
-      mv.status         = verse_status(n_new, efactor_new, interval_new)
-      mv.attempts       += 1      
-      mv.save
-      
-      # TODO: We should check that the verse has been saved before moving on ... otherwise you could reload the same verse if it isn't finished saving
-    
+                
       # We should check to see whether there are any more verses to be memorized and redirect elsewhere
       redirect_to :action => 'test_verse'
     else
