@@ -99,11 +99,25 @@ body {
 /* === Container for Page === */
 #container {
 	width: 1280px;
-	height: 900px;
+	height: 950px;
 	margin-left: auto;
 	margin-right: auto;
-	
 }
+
+#footer-container {
+	width: 100%;
+	margin-left: auto;
+	margin-right: auto;	
+	clear: both;
+}
+
+#footer {
+	font-size: 80%;
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;		
+}
+
 
 /* === Maximum width content e.g. tutorials, descriptions etc === */
 .max-width {

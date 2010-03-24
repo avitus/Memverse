@@ -37,9 +37,7 @@ class ApplicationController < ActionController::Base
   # TODO: should also handle the abbreviated form of a book name
   # ----------------------------------------------------------------------------------------------------------   
   def translate_to_english(book)
-    
-    logger.info("Locale: #{I18n.locale}")
-
+   
     if I18n.backend.send(:translations)
       return I18n.backend.send(:translations)[I18n.locale.to_sym][:book][:name].index(book).to_s
     else
