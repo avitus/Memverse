@@ -98,9 +98,10 @@ body {
 
 /* === Container for Page === */
 #container {
-	width: 1280px ;
-	margin-left: auto ;
-	margin-right: auto ;
+	width: 1280px;
+	height: 900px;
+	margin-left: auto;
+	margin-right: auto;
 	
 }
 
