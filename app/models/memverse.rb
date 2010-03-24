@@ -98,7 +98,7 @@ class Memverse < ActiveRecord::Base
     interval_new = case n_new
       when 1 then 1
       when 2 then 4
-      else [self.test_interval * efactor_new, self.user.max_interval].min.round # Don't set interval to more than one year for now
+      else [self.test_interval * efactor_new, self.user.max_interval.to_i].min.round # Don't set interval to more than one year for now
     end  
     
     # Update memory verse parameters

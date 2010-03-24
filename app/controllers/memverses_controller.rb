@@ -711,7 +711,14 @@ class MemversesController < ApplicationController
     @page_title = "Chapter Review"
     @show_feedback = true
     
-    bk, ch = params[:book_chapter].split
+    if params[:book_chapter].split.length == 3
+      bk_num, bk_name, ch = params[:book_chapter].split
+      bk = bk_num + " " + bk_name
+    else
+      bk, ch = params[:book_chapter].split      
+    end
+
+    logger.info("*** Testing chapter: #{bk} #{ch}")
     
     @chapter      = current_user.has_chapter?(bk,ch)
     @bk_ch        = bk + " " + ch

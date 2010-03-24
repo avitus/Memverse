@@ -1,3 +1,10 @@
+class Array
+  def every(n)
+    select {|x| index(x) % n == 0}
+  end
+end
+
+
 class ChartController < ApplicationController
 
   before_filter :login_required, :except => :load_memverse_clock
@@ -42,7 +49,15 @@ class ChartController < ApplicationController
         y_time      << 0
         x_date      << Date.today.to_s     
     end
-  
+
+    # If too many entries, sample the set TODO: consider deleting extra entries periodically
+#    if entries.length > 150
+#      pick = entries.length / 75
+#      y_learning  = y_learning.every(pick)
+#      y_memorized = y_memorized.every(pick)
+#      y_time      = y_time.every(pick)
+#      x_date      = x_date.every(pick)
+#    end
         
     # Create graph 
     chart = Ziya::Charts::Mixed.new('JTA-A16M--GO.945CWK-2XOI1X0-7L', 'stacked_column_chart') # args: license key, chart name
