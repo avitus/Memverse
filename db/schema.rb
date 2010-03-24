@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 23) do
+ActiveRecord::Schema.define(:version => 24) do
 
   create_table "american_states", :force => true do |t|
     t.string  "abbrev",      :limit => 20, :default => "", :null => false
@@ -226,6 +226,23 @@ ActiveRecord::Schema.define(:version => 23) do
   add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
   add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
 
+  create_table "tweets", :force => true do |t|
+    t.integer  "importance",        :default => 5
+    t.integer  "user_id"
+    t.integer  "church_id"
+    t.integer  "american_state_id"
+    t.integer  "country_id"
+    t.string   "news"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "tweets", ["american_state_id"], :name => "index_tweets_on_american_state_id"
+  add_index "tweets", ["church_id"], :name => "index_tweets_on_church_id"
+  add_index "tweets", ["country_id"], :name => "index_tweets_on_country_id"
+  add_index "tweets", ["importance"], :name => "index_tweets_on_importance"
+  add_index "tweets", ["user_id"], :name => "index_tweets_on_user_id"
+
   create_table "users", :force => true do |t|
     t.string   "login",                     :limit => 40
     t.string   "identity_url"
@@ -253,6 +270,7 @@ ActiveRecord::Schema.define(:version => 23) do
     t.integer  "learning",                                 :default => 0
     t.date     "last_activity_date"
     t.boolean  "show_echo",                                :default => true
+    t.integer  "state_id"
     t.integer  "max_interval",                             :default => 366
     t.string   "mnemonic_use",                             :default => "Learning"
     t.integer  "american_state_id"

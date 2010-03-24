@@ -1142,11 +1142,14 @@ class MemversesController < ApplicationController
       # Give encouragement if verse transitions from "Learning" to "Memorized"
       if newly_memorized
         flash[:notice] = "Congratulations. You have memorized #{mv.verse.ref}."
+        Tweet.create(:news => "#{current_user.name} has memorized #{mv.verse.ref}", :user_id => current_user.id, :importance => 5)
         if current_user.reaching_milestone
           flash[:notice] << " That was your #{current_user.memorized+1}th memorized verse!"
+          Tweet.create(:news => "#{current_user.name} has memorized their #{current_user.memorized+1}th verse", :user_id => current_user.id, :importance => 4)
         end
         if mv.chapter_memorized?
           flash[:notice] << " You have now memorized all of #{mv.verse.book} #{mv.verse.chapter}. Great job!"
+          Tweet.create(:news => "#{current_user.name} has memorized #{mv.verse.book} #{mv.verse.chapter}", :user_id => current_user.id, :importance => 3)          
         end
       end
                 

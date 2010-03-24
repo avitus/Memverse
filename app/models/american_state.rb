@@ -7,6 +7,7 @@ class AmericanState < ActiveRecord::Base
  
   # Relationships
   has_many :users
+  has_many :tweets  
   
   # Validations
   validates_presence_of :name, :abbrev

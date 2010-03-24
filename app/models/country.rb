@@ -8,6 +8,7 @@ class Country < ActiveRecord::Base
   # Relationships
   has_many :users
   has_many :churches
+  has_many :tweets  
   
   
   # Validations
