@@ -28,13 +28,14 @@
 		<%= yield(:head) %>
 				
 		<!-- Using Jquery and Jrails -->
-		<%= javascript_include_tag 'jquery-1.4' 		%> <!-- main jQuery library -->
-		<%= javascript_include_tag 'jquery-ui' 			%> <!-- jQuery UI library -->
-		<%= javascript_include_tag 'jrails' 			%> <!-- needed to use jQuery with Prototype/Scriptaculous -->
-		<%= javascript_include_tag 'jquery.quickflip'	%> <!-- version 2.1 -->
-		<%= javascript_include_tag 'jquery.hoverIntent' %>	
-		<%= javascript_include_tag '2leveltab' 			%>
-		<%= javascript_include_tag 'jquery.autocomplete'%> <!-- http://www.devbridge.com/projects/autocomplete/jquery/ -->						
+		<%= javascript_include_tag 'jquery-1.4' 				%> <!-- main jQuery library -->
+		<%= javascript_include_tag 'jquery-ui' 					%> <!-- jQuery UI library -->
+		<%= javascript_include_tag 'jrails' 					%> <!-- needed to use jQuery with Prototype/Scriptaculous -->
+		<%= javascript_include_tag 'jquery.quickflip'			%> <!-- version 2.1 -->
+		<%= javascript_include_tag 'jquery.hoverIntent' 		%>	
+		<%= javascript_include_tag '2leveltab' 					%>
+		<%= javascript_include_tag 'jquery.periodicalupdater' 	%>
+		<%= javascript_include_tag 'jquery.autocomplete'		%> <!-- http://www.devbridge.com/projects/autocomplete/jquery/ -->						
 				
 		<!-- Shortcut Icons -->
 		<link rel="shortcut icon" href="/images/favicon.ico" />
@@ -170,6 +171,9 @@
 				
 				<%= flash_messages %>
 				<%= yield(:content) or yield %>
+				<div id="meebo-toolbar">
+					<!-- no content -->
+				</div>
 			</div> <!-- End of Main -->
 		</div> <!-- End of Container -->
 

@@ -104,6 +104,11 @@ body {
 	margin-right: auto;
 }
 
+#meebo-toolbar {
+	width: 100%;
+	height: 50px;
+}
+
 #footer-container {
 	width: 100%;
 	margin-left: auto;
