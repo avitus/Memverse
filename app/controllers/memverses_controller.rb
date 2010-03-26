@@ -126,7 +126,29 @@ class MemversesController < ApplicationController
         @user_has_test_today = (mv.next_test <= Date.today)
       end
     end
-      
+
+    # === Get Recent Tweets ===    
+    @tweets = Tweet.all(:limit => 20, :order => "created_at DESC", :conditions => ["importance <= 5"])      
+            
+    # === RSS Devotional ===
+    dev_url   = 'http://www.heartlight.org/rss/track/devos/spurgeon-morning/'
+    dailydev  = RssReader.posts_for(dev_url, length=1, perform_validation=false)[0]
+    
+    # Clean up feed
+    if dailydev
+      @devotion = dailydev.description.split("<P></div>")[0].split("<h4>Thought</h4>")[1]
+      @dev_ref  = dailydev.description.split("<h4>Verse</h4>")[1].split("<h4>Thought</h4>")[0].gsub("<P>", "").gsub("</P>","")
+    end
+    
+    # === Verse of the Day ===   
+    @votd_txt, @votd_ref, @votd_tl, @votd_id  = verse_of_the_day()
+       
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # RSS News Feed
+  # ---------------------------------------------------------------------------------------------------------- 
+  def news
     # === RSS News feed ===
     # Poached from http://www.robbyonrails.com/articles/2005/05/11/parsing-a-rss-feed
     feed_url  = 'http://feeds.christianitytoday.com/christianitytoday/ctmag'
@@ -145,24 +167,8 @@ class MemversesController < ApplicationController
         post.description = post.description.split("<div")[0]
       }
     end
-      
-    # === RSS Devotional ===
-    dev_url   = 'http://www.heartlight.org/rss/track/devos/spurgeon-morning/'
-    dailydev  = RssReader.posts_for(dev_url, length=1, perform_validation=false)[0]
-    
-    # Clean up feed
-    if dailydev
-      @devotion = dailydev.description.split("<P></div>")[0].split("<h4>Thought</h4>")[1]
-      @dev_ref  = dailydev.description.split("<h4>Verse</h4>")[1].split("<h4>Thought</h4>")[0].gsub("<P>", "").gsub("</P>","")
-    end
-    
-    # === Verse of the Day ===   
-    @votd_txt, @votd_ref, @votd_tl, @votd_id  = verse_of_the_day()
-    
-    
-    
   end
-
+  
  
   # ----------------------------------------------------------------------------------------------------------
   # Starter pack - select verses from top ten verses

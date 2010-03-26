@@ -1,0 +1,14 @@
+<div id="news-feed" class="front-page-segment">
+	<h2>Latest News</h2>
+	<ul>
+		<% if @posts %>
+			<% @posts.each do |post| %>
+				<li>
+					<%= link_to post.title, post.link %>
+					<br>
+					<div id="post-description"><%=post.description%></div>
+				</li>
+			<% end %>
+		<% end %>
+	</ul>	
+</div>
