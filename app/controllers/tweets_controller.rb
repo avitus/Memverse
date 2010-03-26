@@ -22,8 +22,10 @@ class TweetsController < ApplicationController
   def update
     @tweet = Tweet.first(:order => "created_at DESC")
     
-    render :json => { :tweet => @tweet.news, :time => @tweet.created_at }.to_json
-  
+#    render :xml => { :tweet => @tweet.news, :time => @tweet.created_at }.to_xml
+#    render @tweet.news, :time => @tweet.created_at }.to_xml
+    render :partial=>'tweet', :layout=>false
+    
   end
 
 end # Class
