@@ -32,6 +32,7 @@ ActionController::Routing::Routes.draw do |map|
   map.progress            '/progress',                  :controller => 'memverses',   :action => 'show_progress'
   map.popular_verses      '/popular_verses',            :controller => 'memverses',   :action => 'pop_verses'
   map.home                '/home',                      :controller => 'memverses',   :action => 'index'
+  map.news                '/news',                      :controller => 'memverses',   :action => 'news'
   map.starter_pack        '/starter_pack',              :controller => 'memverses',   :action => 'starter_pack'
   
   map.show_user_info      '/show_user_info',            :controller => 'admin',       :action => 'show_user_info'  
