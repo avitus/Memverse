@@ -18,11 +18,8 @@
 				<td align="center"><%= vs.memverses.length	%></td>	
 				<td class="edit_area" id=<%= vs.id %>><%= vs.text %></td>
 				<td><%= vs.web_check		%></td>	
-				<td><%= link_to 'Edit',   :action => 'edit_verse', :id => vs %></td>
 				<td class="verify"><%= link_to_remote 'Verify', :url => { :action => "verify_verse", :id => vs.id },
-												 :update => { :success => "Verified", :failure => "Error"} %>
-				</td>
-				<td><%= link_to 'X', { :action => 'destroy_verse',  :id => vs }, :confirm => 'Are you sure?', :method => :post %></td>								
+												 :update => { :success => "Verified", :failure => "Error"} %></td>							
 			</tr>
 			<% end %>
 		</table>
@@ -50,11 +47,9 @@
 			<td align="center"><%= vs.memverses.length	%></td>	
 			<td class="edit_area" id=<%= vs.id %>><%= vs.text %></td>
 			<td><%= vs.web_check		%></td>	
-			<td><%= link_to 'Edit',   :action => 'edit_verse', :id => vs %></td>
 			<td class="verify"><%= link_to_remote 'Verify', :url => { :action => "verify_verse", :id => vs.id },
-											 :update => { :success => "Verified", :failure => "Error"} %>
-			</td>
-			<td><%= link_to 'X', { :action => 'destroy_verse',  :id => vs }, :confirm => 'Are you sure?', :method => :post %></td>								
+											 :update => { :success => "Verified", :failure => "Error"} %></td>
+							
 		</tr>
 		<% end %>
 	
