@@ -1,7 +1,7 @@
 class TweetsController < ApplicationController
  
   def index
-    @tweets = Tweet.all(:order => "created_at DESC")
+    @tweets = Tweet.all(:limit => 100, :order => "created_at DESC")
     respond_to do |format|
       format.html
     end
@@ -24,7 +24,7 @@ class TweetsController < ApplicationController
     
 #    render :xml => { :tweet => @tweet.news, :time => @tweet.created_at }.to_xml
 #    render @tweet.news, :time => @tweet.created_at }.to_xml
-    render :partial=>'tweet', :layout=>false
+    render :partial=> @tweet, :layout=>false
     
   end
 

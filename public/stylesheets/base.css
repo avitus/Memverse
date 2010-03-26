@@ -952,6 +952,18 @@ div#currentVerse #matchbox .correct {
 	margin-left: 1em;
 }
 
+
+/* === Tweets === */
+div.tweet {
+	padding-top: 0.2em;
+	padding-bottom: 0.2em;
+}
+
+.tweet .time {
+	color: #606060;
+	font-size: 80%
+}
+
 /* === Leaderboard Styles === */
 #leaderboard .current_user {
 	background: #687284

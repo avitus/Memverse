@@ -135,16 +135,16 @@ class User < ActiveRecord::Base
     return ref  
   end  
 
-   
   # ----------------------------------------------------------------------------------------------------------
   # Check whether current user is memorizing a given verse in any translation
   # Input: User object
+  # TODO: This method occasionally returns infinity
   # ----------------------------------------------------------------------------------------------------------     
   def work_load
     time_per_verse = 1.0 # minutes
     verses_per_day = 2.0 # login, setup time etc
     self.memverses.each { |mv|
-      verses_per_day += (1 / mv.test_interval.to_f)
+      verses_per_day += (1 / mv.test_interval.to_f) 
     }
     return (verses_per_day * time_per_verse).round 
   end
@@ -241,6 +241,12 @@ class User < ActiveRecord::Base
     
   end
 
+  # ----------------------------------------------------------------------------------------------------------
+  # Returns user's name or login
+  # ----------------------------------------------------------------------------------------------------------  
+  def name_or_login
+    self.name.empty? ? self.login : self.name
+  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Update user profile
