@@ -149,6 +149,9 @@ class MemversesController < ApplicationController
   # RSS News Feed
   # ---------------------------------------------------------------------------------------------------------- 
   def news
+    @page_title = "Add New Verses"
+    @tab = "home"    
+    
     # === RSS News feed ===
     # Poached from http://www.robbyonrails.com/articles/2005/05/11/parsing-a-rss-feed
     feed_url  = 'http://feeds.christianitytoday.com/christianitytoday/ctmag'
