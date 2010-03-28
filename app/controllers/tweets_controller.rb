@@ -1,12 +1,18 @@
 class TweetsController < ApplicationController
  
+  # ----------------------------------------------------------------------------------------------------------
+  # Show recent tweets
+  # ----------------------------------------------------------------------------------------------------------  
   def index
     @tweets = Tweet.all(:limit => 100, :order => "created_at DESC")
     respond_to do |format|
       format.html
     end
   end
-
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Create a new tweet
+  # ----------------------------------------------------------------------------------------------------------   
   def create
     @tweet = Tweet.create(:message => params[:message])
     respond_to do |format|
@@ -19,12 +25,17 @@ class TweetsController < ApplicationController
     end
   end
 
+  # ----------------------------------------------------------------------------------------------------------
+  # Get the lastest news event that exceeds a certain importance level
+  # ----------------------------------------------------------------------------------------------------------   
   def update
-    @tweet = Tweet.first(:order => "created_at DESC")
     
-#    render :xml => { :tweet => @tweet.news, :time => @tweet.created_at }.to_xml
-#    render @tweet.news, :time => @tweet.created_at }.to_xml
-    render :partial=> @tweet, :layout=>false
+    importance = params[:importance].to_i || 5
+    logger.debug("Checking for tweets more important than #{importance}")
+    
+    @tweet = Tweet.first(:order => "created_at DESC", :conditions => ["importance <= ?", importance])
+    
+    render :partial=> 'tweets/tweet', :locals => { :tweet => @tweet }, :layout=>false
     
   end
 

@@ -128,7 +128,7 @@ class MemversesController < ApplicationController
     end
 
     # === Get Recent Tweets ===    
-    @tweets = Tweet.all(:limit => 20, :order => "created_at DESC", :conditions => ["importance <= 5"])      
+    @tweets = Tweet.all(:limit => 20, :order => "created_at DESC", :conditions => ["importance <= 4"])      
             
     # === RSS Devotional ===
     dev_url   = 'http://www.heartlight.org/rss/track/devos/spurgeon-morning/'
