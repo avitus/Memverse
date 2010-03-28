@@ -105,6 +105,9 @@ class BlogPostsController < ApplicationController
 
     if @blog_post.update_attributes(params[:blog_post])
       redirect_to blog_named_link(@blog_post)
+      # Create tweet    
+      link = "<a href=\"#{blog_named_link(@blog_post, :show)}\">#{@blog_post.title}</a>"      
+      Tweet.create(:news => "#{current_user.name_or_login} has written a new blog post: '#{link}'", :user_id => current_user.id, :importance => 3)      
     else
       render blog_named_link(@blog_post, :edit)
     end
