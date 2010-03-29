@@ -70,7 +70,7 @@ class ApplicationController < ActionController::Base
     # Check for correct string formatting
     if valid_ref(vsref)
       
-      entered_book_name  = vsref.slice!(/([0-3]?\s+)?[a-z]+\s+/i).rstrip!.titleize
+      entered_book_name  = vsref.slice!(/([0-3]?\s+)?[a-záéíóúüñ]+\s+/i).rstrip!.titleize
       
       # --- Book name should be translated into English after this point ---
       book = I18n.locale == 'en' ? entered_book_name : translate_to_english(entered_book_name)
@@ -337,7 +337,7 @@ class ApplicationController < ActionController::Base
   # Returns true (0) if str is a valid bible reference otherwise nil
   # ----------------------------------------------------------------------------------------------------------  
   def valid_ref(str)
-    return str =~ /([0-3]?\s+)?[a-z]+\s+[0-9]+(:|(\s?vs\s?))[0-9]+/i
+    return str =~ /([0-3]?\s+)?[a-záéíóúüñ]+\s+[0-9]+(:|(\s?vs\s?))[0-9]+/i
   end   
   
   

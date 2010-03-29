@@ -419,6 +419,7 @@ class MemversesController < ApplicationController
     tl  = params[:translation]
     
     errorcode, book, chapter, verse = parse_verse(ref)
+    logger.debug("*** Adding #{book} #{chapter}:#{verse}")
     
     # <--- At this point the book name should already be translated into English --->
     
