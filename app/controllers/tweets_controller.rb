@@ -31,7 +31,13 @@ class TweetsController < ApplicationController
   def update
     
     importance = params[:importance].to_i || 5
-    logger.debug("Checking for tweets more important than #{importance}")
+    
+    # Handles case where importance is not specified
+    if importance == 0
+      importance = 5
+    end
+    
+    logger.info("Checking for tweets more important than #{importance}")
     
     @tweet = Tweet.first(:order => "created_at DESC", :conditions => ["importance <= ?", importance])
     
