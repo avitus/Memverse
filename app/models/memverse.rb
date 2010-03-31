@@ -115,7 +115,6 @@ class Memverse < ActiveRecord::Base
     return (prev_learning and (self.status == "Memorized")) 
   end
 
-
   # ----------------------------------------------------------------------------------------------------------
   # Return length of verse sequence
   # Input: memverse_id
@@ -158,9 +157,12 @@ class Memverse < ActiveRecord::Base
     
     users_with_problems = Array.new
     
-    mv_num = 2    
+    mv_num = 0   
+    all_mv = self.count
     
-    while mv_num < self.count
+    logger.info("Number of memory verses to check: #{all_mv}")
+    
+    while mv_num < all_mv
       to_check = find(:first, :conditions => {:id => mv_num})      
       if to_check
         # get the next verse in the database
@@ -169,7 +171,8 @@ class Memverse < ActiveRecord::Base
           # check for same verse_id and user_id
           if (to_check.verse_id == the_next_mv.verse_id) and (to_check.user_id == the_next_mv.user_id)
             logger.warn("*** Alert: #{to_check.user.login} has verse #{to_check.verse.ref} twice in his/her list")
-            users_with_problems << to_check.user     
+            users_with_problems << to_check.user 
+            # TODO: remove duplicate verse, then fix verse linkage
           end
         end
       end

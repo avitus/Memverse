@@ -580,8 +580,9 @@ class AdminController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   # Check for duplicate verses
   # ----------------------------------------------------------------------------------------------------------    
-  def check_for_duplicates
+  def users_with_problems
     @users = Memverse.check_for_duplicates
+    logger.debug("Users with duplicate verses: #{@users.size}")
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -684,7 +685,7 @@ class AdminController < ApplicationController
     # Finally, delete the verse
     dead_mv.destroy  
 
-    redirect_to :action => 'show_memory_verses'   
+    redirect_to :back
   end 
 
   

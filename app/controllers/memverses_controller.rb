@@ -367,7 +367,7 @@ class MemversesController < ApplicationController
     mv.prev_verse   = prev_verse(vs)
     mv.next_verse   = next_verse(vs)
     mv.first_verse  = first_verse(mv)
-    mv.save
+    mv.save # TODO need to find a way to ensure no duplication
     
     # Adding inbound links
     if mv.prev_verse
@@ -383,6 +383,9 @@ class MemversesController < ApplicationController
       # Updating starting point for downstream verses 
       update_downstream_start_verses(subs_vs)
     end
+    
+    # TODO: Check once more for duplication at this point and then save  
+    
   end # end of save verse as a memory verse for user    
 
   # ----------------------------------------------------------------------------------------------------------
@@ -479,6 +482,7 @@ class MemversesController < ApplicationController
 
   # ----------------------------------------------------------------------------------------------------------
   # Delete a memory verse
+  # TODO: make this a method of Memverse.rb
   # ---------------------------------------------------------------------------------------------------------- 
   def destroy_mv
     
