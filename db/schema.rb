@@ -9,13 +9,14 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 24) do
+ActiveRecord::Schema.define(:version => 25) do
 
   create_table "american_states", :force => true do |t|
     t.string  "abbrev",      :limit => 20, :default => "", :null => false
     t.string  "name",        :limit => 50, :default => "", :null => false
     t.integer "users_count",               :default => 0
     t.integer "population"
+    t.integer "rank"
   end
 
   create_table "blog_assets", :force => true do |t|
@@ -98,6 +99,7 @@ ActiveRecord::Schema.define(:version => 24) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "users_count", :default => 0
+    t.integer  "rank"
   end
 
   create_table "countries", :force => true do |t|
@@ -107,6 +109,7 @@ ActiveRecord::Schema.define(:version => 24) do
     t.string  "iso3",           :limit => 3
     t.integer "numcode",        :limit => 2
     t.integer "users_count",                  :default => 0
+    t.integer "rank"
   end
 
   create_table "daily_stats", :force => true do |t|
@@ -276,6 +279,7 @@ ActiveRecord::Schema.define(:version => 24) do
     t.integer  "american_state_id"
     t.integer  "accuracy",                                 :default => 50
     t.boolean  "all_refs",                                 :default => true
+    t.integer  "rank"
   end
 
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true
