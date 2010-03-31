@@ -423,7 +423,7 @@ class MemversesController < ApplicationController
     
     # <--- At this point the book name should already be translated into English --->
     
-    if request.post? and txt.empty? # ie. a form is being submitted
+    if request.post? and txt.blank? # ie. a form is being submitted
       errorcode = 4 # No text in entry box
     end
     
@@ -499,6 +499,7 @@ class MemversesController < ApplicationController
         prev_vs.next_verse = nil
         prev_vs.save
       else
+        # TODO: This is occasionally happening ... caused by verses being duplicated from double-clicking on links
         logger.warn("*** Alert: A verse was deleted which had an invalid prev pointer - this should never happen")        
       end
     

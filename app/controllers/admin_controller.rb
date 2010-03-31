@@ -576,7 +576,14 @@ class AdminController < ApplicationController
     # TODO: need to remove related memory verses !!!!!
     redirect_to :action => 'search_verses'
   end     
-  
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Check for duplicate verses
+  # ----------------------------------------------------------------------------------------------------------    
+  def check_for_duplicates
+    @users = Memverse.check_for_duplicates
+  end
+
   # ----------------------------------------------------------------------------------------------------------
   # Repair broken memory links for user
   # ----------------------------------------------------------------------------------------------------------   
