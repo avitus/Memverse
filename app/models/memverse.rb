@@ -141,7 +141,7 @@ class Memverse < ActiveRecord::Base
     end
   end
 
-    # ----------------------------------------------------------------------------------------------------------
+  # ----------------------------------------------------------------------------------------------------------
   # Delete accounts of users that never added any verses
   # ----------------------------------------------------------------------------------------------------------  
   def self.delete_unstarted_memory_verses    
@@ -149,8 +149,36 @@ class Memverse < ActiveRecord::Base
       # mv.destroy
       logger.info("Removing memory verse #{mv.verse.ref} belong to #{mv.user.login}")
     }
-    
   end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Delete accounts of users that never added any verses
+  # ----------------------------------------------------------------------------------------------------------  
+  def self.check_for_duplicates
+    
+    users_with_problems = Array.new
+    
+    mv_num = 2    
+    
+    while mv_num < self.count
+      to_check = find(:first, :conditions => {:id => mv_num})      
+      if to_check
+        # get the next verse in the database
+        the_next_mv = find(:first, :conditions => {:id => mv_num+1})
+        if the_next_mv
+          # check for same verse_id and user_id
+          if (to_check.verse_id == the_next_mv.verse_id) and (to_check.user_id == the_next_mv.user_id)
+            logger.warn("*** Alert: #{to_check.user.login} has verse #{to_check.verse.ref} twice in his/her list")
+            users_with_problems << to_check.user     
+          end
+        end
+      end
+      mv_num += 1
+    end
+    
+    return users_with_problems
+  end  
+
 
   # ----------------------------------------------------------------------------------------------------------
   # Sort Memory Verse objects according to biblical book order
