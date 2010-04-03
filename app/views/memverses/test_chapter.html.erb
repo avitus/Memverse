@@ -119,9 +119,11 @@
 				$("#flashcard-back-text > .verse-text:first").remove();			
 				$("#flashcard-back-text > .verse-text:hidden:first").fadeIn(10);
 				
-				// Clear the input box and the feedback
+				// Clear the input box and the feedback and put cursor in input box
 				$("#verseguess").val('');
 				$("#ajaxWrapper").text('');
+				$("#verseguess").focus();
+				
 				
 				// Increment the verse counter, update the labels, and get the new text
 				current_verse++;
