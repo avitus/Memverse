@@ -158,10 +158,10 @@ class Verse < ActiveRecord::Base
 
   # ----------------------------------------------------------------------------------------------------------
   # Create mnemonic for verse text
-  # TODO: Add support for inverted commas, dashes, long dashes (—) and other punctuation  
+  # TODO: Add support for " ', long dashes (—) and other punctuation  
   # ---------------------------------------------------------------------------------------------------------- 
   def mnemonic
-    self.text.gsub(/[^a-zA-Záéíóúüñ¿¡,:;.\- ]/, '').split.map { |x| 
+    self.text.gsub(/[^a-zA-Záéíóúüñ¿¡?!,:;.\- ]/, '').split.map { |x| 
       if (x.last =~ /[a-zA-Záéíóúüñ]/).nil? # The word is terminated with a non letter
         x.match(/^(.)/).to_s + x.last
 #      elsif (x.match(/^(.)/) =~ /[a-zA-Záéíóúüñ]/).nil? # The word starts with a non letter (Spanish texts)
