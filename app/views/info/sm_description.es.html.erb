@@ -1,0 +1,46 @@
+<div class="max-width">
+	<h2>¿Qué es SuperMemo</h2>
+	
+	<p>SuperMemo se basa en la idea de que hay un momento ideal para practicar lo que has aprendido.
+	Práctica demasiado pronto y usted pierda su tiempo. Práctica demasiado tarde y se le ha olvidado el material y tener que volver a aprender.
+	El momento adecuado para la práctica es justo en el momento que estás a punto de olvidar. Por desgracia, este momento es diferente para
+	cada persona y cada bit de información. Imagina un montón de miles de tarjetas con versículos de la Biblia.
+	En algún lugar de esta pila son las que usted debe revisar en este momento. ¿Cuáles son?</p>
+
+	<p>Afortunadamente, olvidando humanos sigue un patrón. Nos olvidamos de manera exponencial. Un gráfico de nuestra probabilidad de
+	recordar un versículo de la Biblia barre rápidamente a la baja con el tiempo y luego se nivelan.
+	Este patrón ha sido durante mucho tiempo sabe que la psicología cognitiva, pero ha sido difícil poner en práctica.
+	Es demasiado complejo para nosotros a emplear con el cerebro desnudo.</p>
+	
+	<h2>¿Cómo funciona el algoritmo SuperMemo</h2>
+	
+	<p>SuperMemo es un programa que realiza un seguimiento de bits discretos de información que has aprendido y desea conservar.
+	Por ejemplo, digamos que está memorizar versículos de la Biblia. Su oportunidad de recordar un verso dado disminuye con el
+	tiempo de acuerdo a un patrón predecible. El algoritmo SuperMemo pistas de esta curva de olvido y le recuerda que debe
+	ensayar su conocimiento cuando tu oportunidad de recordar que se ha reducido a, digamos, 90 por ciento. Cuando usted primero aprende
+	un versículo de la Biblia nueva, la posibilidad de recordar caerá rápidamente. Pero después de SuperMemo recuerda el verso,
+	la tasa de olvido nivela. El algoritmo de pistas de este nuevo descenso y espera más tiempo para usted prueba la próxima vez.</p>
+	
+	<div style="width: 630px;">
+		<img src="/images/supermemo_reminders.jpg" alt="¿Cómo funciona el algoritmo SuperMemo">
+	</div>	
+	
+	<p>Al utilizar Memverse usted encontrará que usted es capaz de retener más de memoria versos porque el software se lo solicite
+	para revisar los pasajes en el momento oportuno. En otras palabras, gastar menos de su tiempo a revisar ya que los versos
+	sabe, y más de su tiempo en la memoria los versos que no conozco bien.</p>
+	
+	<p>Usted encontrará que usted es capaz de memorizar más de la Biblia en menos tiempo. Muchos usuarios pasan 10-15 minutos tres o
+	cuatro veces por semana y son capaces de retener a cientos de versos de memoria. Algunas de ellas han memorizado más de mil versos!</p>
+	
+</div>
+
+<% if !logged_in? %>
+	<div>
+		<ol>
+			<li><%= link_to 'Más información acerca de Memverse  -->', tutorial_path, :class => "action-link"%></li>	
+			<li><%= link_to 'Regístrate y empieza a memorizar Hoy  -->', signup_path, 	 :class => "action-link"%></li>
+			<li><%= link_to 'Top 100 de memoria versos  -->', popular_path,  :class => "action-link"%></li>
+			<li><%= link_to 'Prueba la demostración  -->', demo_path,  :class => "action-link"%></li>				
+		</ol>	
+	</div>
+<% end %>
