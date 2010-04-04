@@ -21,8 +21,6 @@
 			<li><%= link_to 'New American Standard', 		:action => 'starter_pack', :translation => 'NAS' %></li>
 			<li><%= link_to 'Revisted Standard Version', 	:action => 'starter_pack', :translation => 'RSV' %></li>
 		</ul>
-
-
 	</div>
 
 <% elsif @user_has_too_few_verses %>
@@ -39,47 +37,30 @@
 
 <% else %>
 
-<div id="news-feed" class="front-page-segment">
-	<h2><%= link_to 'Recently on Memverse', tweets_path %></h2>
-	<%= render :partial => @tweets %>	
-</div>
-
-<!--
-<div id="news-feed" class="front-page-segment">
-	<h2>Latest News</h2>
-	<ul>
-		<% if @posts %>
-			<% @posts.each do |post| %>
-				<li>
-					<%= link_to post.title, post.link %>
-					<br>
-					<div id="post-description"><%=post.description%></div>
-				</li>
-			<% end %>
-		<% end %>
-	</ul>	
-</div>
--->
-
-<div id="column-mid">
-	<div id="verse-of-the-day" class="front-page-segment">
-		<h2>Verse of the day</h2>
-		<p id="votd-txt"><%= @votd_txt %></p>
-		<p id="votd-ref"><%= @votd_ref %>, <%= @votd_tl %></p>					
+	<div id="news-feed" class="front-page-segment">
+		<h2><%= link_to 'Recently on Memverse', tweets_path %></h2>
+		<%= render :partial => @tweets %>	
+	</div>
+		
+	<div id="column-mid">
+		<div id="verse-of-the-day" class="front-page-segment">
+			<h2>Verse of the day</h2>
+			<p id="votd-txt"><%= @votd_txt %></p>
+			<p id="votd-ref"><%= @votd_ref %>, <%= @votd_tl %></p>					
+		</div>
+		
+		<div id="memverse-actions" class="front-page-segment">
+			<h2><%= t '.memverse_today' %></h2>	
+			<p><%= t '.review_a' %> <%=@due_today%> <%= t '.review_b' %></p>
+			<p><%= t '.time_req_a' %> <%=current_user.work_load%> <%= t '.time_req_b' %></p>		
+		</div>
 	</div>
 	
-	<div id="memverse-actions" class="front-page-segment">
-		<h2><%= t '.memverse_today' %></h2>	
-		<p><%= t '.review_a' %> <%=@due_today%> <%= t '.review_b' %></p>
-		<p><%= t '.time_req_a' %> <%=current_user.work_load%> <%= t '.time_req_b' %></p>		
+	<div id="devotional" class="front-page-segment">
+		<h2>Spurgeon's Daily Devotion</h2>
+		<h4><%=@dev_ref%></h4>
+		<%=@devotion%>
 	</div>
-</div>
-
-<div id="devotional" class="front-page-segment">
-	<h2>Spurgeon's Daily Devotion</h2>
-	<h4><%=@dev_ref%></h4>
-	<%=@devotion%>
-</div>
 	
 
 <% end %>
