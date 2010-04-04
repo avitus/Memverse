@@ -474,8 +474,8 @@ class MemversesController < ApplicationController
 
     # Add link to next verse in same translation
     if next_verse = vs.following_verse
-      link = "<a href=\"#{url_for(:action => 'quick_add', :vs => next_verse)}\">Add #{next_verse.ref}</a>"
-      flash[:notice] << " [ #{link} ]"
+      link = "<a href=\"#{url_for(:action => 'quick_add', :vs => next_verse)}\">[Add #{next_verse.ref}]</a>"
+      flash[:notice] << " #{link} "
     end
       
   end

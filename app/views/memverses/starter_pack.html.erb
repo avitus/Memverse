@@ -10,7 +10,7 @@
 	  <tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
 		<td align="left"><%= mv.pop_ref							%></td>		 
 	 	<td align="left"><%= mv.send(@translation + '_text') 	%></td>
-		<td align="center" class="starter_add">
+		<td align="center" class="starter_add" class="no-dbl-click">
 			<%= link_to_remote 'Start Memorizing', 	:url 	=> { :action => "quick_add", :vs => mv.send(@translation) }, 
 													:update => { :success => "Added", :failure => "Error"} %>
 		</td>
@@ -26,11 +26,12 @@
 	</p>
 </div>
 
-<!-- Highlight verse to be verified -->
+<!-- Highlight verse to be added -->
 <script>
   $(document).ready(function(){
     
     $('.starter_add').click(function () { 
+	  $(this).children().attr('disabled', 'disabled').hide();
       $(this).closest('tr').fadeOut("slow"); 
     });
     $('.starter_add').hover(function () {
@@ -40,4 +41,13 @@
     });
 
   });
+</script>
+
+<!-- Prevent double-clicking of links to add verses -->
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('.no-dbl-click').click( function() {
+			$(this)
+		});
+	});
 </script>

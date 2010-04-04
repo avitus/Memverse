@@ -6,7 +6,7 @@
 					<td><%= vs[0] %></td>
 					<% for tl in vs[1] %>
 
-						<td>
+						<td class="no-dbl-click">
 							<%= link_to tl[0], :action => 'quick_add', :vs => tl[1] %>
 							<em><%=tl[2]%></em>
 						</td>													
