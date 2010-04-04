@@ -43,7 +43,7 @@
 </fieldset>		
 
 <!-- Available translations -->		
-<div id="foundVerse">
+<div id="foundVerse" class="no-dbl-click">
 		<%= render :partial=>'avail_translations' %>			
 </div>
 
@@ -71,6 +71,15 @@
 			$(this).next("em").animate({opacity: "show", left: "375"}, "slow");
 		}, function() {
 			$(this).next("em").animate({opacity: "hide", left: "410"}, "medium");
+		});
+	});
+</script>
+
+<!-- Prevent double-clicking of links to add verses -->
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('.no-dbl-click').click( function() {
+			$(this).attr('disabled', 'disabled').hide();
 		});
 	});
 </script>

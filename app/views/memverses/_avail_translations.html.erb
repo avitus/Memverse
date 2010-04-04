@@ -5,7 +5,7 @@
 				<% for vs in @avail_translations %>
 					<tr>
 						<td><%= vs.translation %></td>
-						<td><%= link_to '[Add]', :action => 'quick_add', :vs => vs %></td>		 		
+						<td class="no-dbl-click"><%= link_to '[Add]', :action => 'quick_add', :vs => vs %></td>		 		
 					</tr>
 				<% end %>	
 			<% else %>

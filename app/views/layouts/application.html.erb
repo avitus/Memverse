@@ -86,7 +86,7 @@
 			Meebo('makeEverythingSharable');
 			}
 		</script>
-		<!-- Start of Meebo Toolbar  -->
+		<!-- End of Meebo Toolbar  -->
 		
 		
 		
@@ -216,6 +216,14 @@
  			Meebo("domReady");
 		</script>
 
+		<!-- Prevent double-clicking links in the flash -->
+		<script type="text/javascript">
+			$(document).ready(function(){
+				$('#flash-notice').click( function() {
+					$(this).children().attr('disabled', 'disabled').hide();
+				});
+			});
+		</script>
 				
 	</body>
 </html>
