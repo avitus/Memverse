@@ -41,7 +41,7 @@ module Spawn
   def spawn(options = {})
     options.symbolize_keys!
     # setting options[:method] will override configured value in @@method
-    if options[:method] == :yield || @@method == :yield
+    if options[:method] == :yield || (options[:method] == nil && @@method == :yield)
       yield
     elsif options[:method] == :thread || (options[:method] == nil && @@method == :thread)
       # for versions before 2.2, check for allow_concurrency
@@ -116,6 +116,8 @@ module Spawn
           end
         ensure
           @@logger.info "spawn> child[#{Process.pid}] took #{Time.now - start} sec"
+          # ensure log is flushed since we are using exit!
+          @@logger.flush if @@logger.respond_to?(:flush)
           # this form of exit doesn't call at_exit handlers
           exit!(0)
         end
