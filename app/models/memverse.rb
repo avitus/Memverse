@@ -89,7 +89,7 @@ class Memverse < ActiveRecord::Base
     # 4     +0.00
     # 5     +0.10
  
-    efactor_new = [ self.efactor - 0.8 + (0.28 * q) - (0.02 * q * q), 3.0 ].min # Cap eFactor at 3.0 
+    efactor_new = [ self.efactor - 0.8 + (0.28 * q) - (0.02 * q * q), 2.5 ].min # Cap eFactor at 2.5
     if efactor_new < 1.2       
       efactor_new = 1.2 # Set minimum efactor to 1.2
     end    
@@ -151,7 +151,7 @@ class Memverse < ActiveRecord::Base
   end
 
   # ----------------------------------------------------------------------------------------------------------
-  # Delete accounts of users that never added any verses
+  # Check for users with duplicates
   # ----------------------------------------------------------------------------------------------------------  
   def self.check_for_duplicates
     

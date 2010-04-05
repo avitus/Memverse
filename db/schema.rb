@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 25) do
+ActiveRecord::Schema.define(:version => 26) do
 
   create_table "american_states", :force => true do |t|
     t.string  "abbrev",      :limit => 20, :default => "", :null => false
@@ -152,6 +152,7 @@ ActiveRecord::Schema.define(:version => 25) do
     t.date     "next_ref_test"
   end
 
+  add_index "memverses", ["user_id", "verse_id"], :name => "index_memverses_on_user_id_and_verse_id", :unique => true
   add_index "memverses", ["user_id"], :name => "index_memverses_on_user_id"
   add_index "memverses", ["verse_id"], :name => "index_memverses_on_verse_id"
 
