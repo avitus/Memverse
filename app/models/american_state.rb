@@ -35,7 +35,13 @@ class AmericanState < ActiveRecord::Base
       stateboard[ c ] = score
     }
     
-    return stateboard.sort{|a,b| a[1]<=>b[1]}.reverse[0...numstates]
+    stateboard.sort{|a,b| a[1]<=>b[1]}.reverse[0...numstates].each_with_index { |grp, index|
+      if grp[0].rank.nil? or index+1 < grp[0].rank
+        Tweet.create(:news => "#{grp[0].name} is now ##{index+1} on the US state leaderboard", :country_id => self.id, :importance => 3)
+      end
+      grp[0].rank = index+1
+      grp[0].save
+    } 
     
   end    
   

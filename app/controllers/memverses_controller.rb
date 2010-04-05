@@ -95,6 +95,7 @@
 # 02/25/10 : Added unsubscribe link to reminder emails, decrease email reminder frequency more quickly
 # 03/05/10 : Started adding support for Spanish
 # 03/09/10 : Added indexes for performance gains
+# 04/04/10 : Bug fix: added unique index to prevent duplicate memverse entries and reinforced with client side behavior
 
 class MemversesController < ApplicationController
   
@@ -142,6 +143,12 @@ class MemversesController < ApplicationController
     
     # === Verse of the Day ===   
     @votd_txt, @votd_ref, @votd_tl, @votd_id  = verse_of_the_day()
+           
+  spawn do
+    logger.info("I feel sleepy...")
+    sleep 11
+    logger.info("Time to wake up!")
+  end           
            
   end
 

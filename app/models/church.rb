@@ -1,5 +1,4 @@
 class Church < ActiveRecord::Base
-
   
   #  t.string    :name,          :null => false
   #  t.text      :description
@@ -12,10 +11,9 @@ class Church < ActiveRecord::Base
   has_many    :tweets
   belongs_to  :country
   
-  
   # Validations
   validates_presence_of   :name 
-  validates_uniqueness_of :name
+  validates_uniqueness_of :name  
   
   # ----------------------------------------------------------------------------------------------------------
   # Returns *array* of top churches (sorted by number of verses memorized)
@@ -25,10 +23,10 @@ class Church < ActiveRecord::Base
     churchboard = Hash.new(0)
     
     # TODO: Optimize this
-    find(:all, :conditions => ['users_count >= 3']).each { |church|
+    find(:all, :conditions => ['users_count >= 3']).each { |grp|
       
       score = 0
-      church.users.each { |u|
+      grp.users.each { |u|
         if u.last_activity_date
           if (Date.today - u.last_activity_date).to_i < 30
             # Add score
@@ -36,10 +34,16 @@ class Church < ActiveRecord::Base
           end
         end
       }
-      churchboard[ church ] = score
+      churchboard[ grp ] = score
     }
-        
-    return churchboard.sort{|a,b| a[1]<=>b[1]}.reverse[0...numchurches]
+    
+    churchboard.sort{|a,b| a[1]<=>b[1]}.reverse[0...numchurches].each_with_index { |grp, index|
+      if grp[0].rank.nil? or index+1 < grp[0].rank
+        Tweet.create(:news => "#{grp[0].name} is now ##{index+1} on the church leaderboard", :church_id => self.id, :importance => 3)
+      end
+      grp[0].rank = index+1
+      grp[0].save
+    }       
     
   end   
   
