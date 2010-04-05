@@ -142,7 +142,7 @@ class MemversesController < ApplicationController
     
     # === Verse of the Day ===   
     @votd_txt, @votd_ref, @votd_tl, @votd_id  = verse_of_the_day()
-       
+           
   end
 
   # ----------------------------------------------------------------------------------------------------------
