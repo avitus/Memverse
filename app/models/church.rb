@@ -18,7 +18,7 @@ class Church < ActiveRecord::Base
   validates_uniqueness_of :name
   
   # ----------------------------------------------------------------------------------------------------------
-  # Returns hash of top churches (sorted by number of verses memorized)
+  # Returns *array* of top churches (sorted by number of verses memorized)
   # ---------------------------------------------------------------------------------------------------------- 
   def self.top_churches(numchurches=50)
 
@@ -38,7 +38,7 @@ class Church < ActiveRecord::Base
       }
       churchboard[ church ] = score
     }
-    
+        
     return churchboard.sort{|a,b| a[1]<=>b[1]}.reverse[0...numchurches]
     
   end   
