@@ -143,13 +143,7 @@ class MemversesController < ApplicationController
     
     # === Verse of the Day ===   
     @votd_txt, @votd_ref, @votd_tl, @votd_id  = verse_of_the_day()
-           
-  spawn do
-    logger.info("I feel sleepy...")
-    sleep 11
-    logger.info("Time to wake up!")
-  end           
-           
+                      
   end
 
   # ----------------------------------------------------------------------------------------------------------
