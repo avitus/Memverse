@@ -16,7 +16,7 @@
 		<% for country in @countryboard %>
 			<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
 				<td align="center"> <%= @countryboard.index(country)+1	%></td>			
-				<td align="left">   <%= country[0].printable_name		%></td>	
+				<td align="left">   <%= link_to( country[0].printable_name, { :controller => "country", :action => "show", :id => country[0] })  %></td>	
 				<td align="center"> <%= country[0].users_count			%></td>	
 				<td align="center"> <%= country[1]						%></td>				
 			</tr>
