@@ -281,6 +281,13 @@ h2 {
   background:   #B99500;
 }
 
+table.user-list {
+	width: 			80%;
+	cellpadding: 	6px;
+	cellspacing: 	1px;
+	border: 		1px solid;
+	background-color: #BAB18E;	
+}
 
 /* === Home Page === */
 
@@ -305,10 +312,10 @@ h2 {
 	color: 			#A6886E	;	
 }
 
-/* --- News Feed --- */
+/* --- News Feed : Left Column --- */
 #news-feed {
 	float:			left;
-	width:			30%;
+	width:			34.5%;
 }
 
 #news-feed a {
@@ -325,14 +332,16 @@ h2 {
 	font-size:		80%
 }
 
+/* --- Verse of the Day and Activity : Center Column --- */
 #column-mid {
 	float:			left;
 	width:			20%
 }
 
+/* --- Devotional : Right Column --- */
 #devotional {
 	float:			right;
-	width:			44.5%
+	width:			40%
 }
 
 /* --- Verse of the Day --- */
