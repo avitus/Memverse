@@ -16,7 +16,7 @@
 		<% for us_state in @stateboard %>
 			<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
 				<td align="center"> <%= @stateboard.index(us_state)+1	%></td>			
-				<td align="left">   <%= us_state[0].name		%></td>	
+				<td align="left">   <%= link_to( us_state[0].name, { :controller => "american_state", :action => "show", :id => us_state[0] })	%></td>
 				<td align="center"> <%= us_state[0].users_count			%></td>	
 				<td align="center"> <%= us_state[1]						%></td>				
 			</tr>

@@ -1,8 +1,11 @@
 <div id="show_user">
 	<table cellpadding="6" cellspacing="1" border="1">
-		<tr><td>Name</td>			<td><%= @user.name || @user.login %></td></tr>
-		<tr><td>Church</td>			<td><%= @user.church ? @user.church.name : "" %></td></tr>
-		<tr><td>Country</td>		<td><%= @user.country ? @user.country.printable_name : "" %></td></tr>	
+		<tr><td>Name</td>		<td><%= @user.name || @user.login %></td></tr>
+		<tr><td>Church</td>		<td><%= @user.church ? @user.church.name : "" %></td></tr>
+		<tr><td>Country</td>	<td><%= @user.country ? @user.country.printable_name : "" %></td></tr>
+		<% if @user.american_state %>	
+			<tr><td>State</td>	<td><%= @user.american_state.name %></td></tr>	
+		<% end %>
 	</table>
 	
 	<br>
