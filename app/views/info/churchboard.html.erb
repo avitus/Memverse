@@ -16,23 +16,11 @@
 		<% for church in @churchboard %>
 			<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
 				<td align="center"> <%= @churchboard.index(church)+1%></td>			
-				<td align="left">   <%= link_to( church[0].name, { :controller => "profile", :action => "show_church", :church => church[0] })		%></td>	
+				<td align="left">   <%= link_to( church[0].name, { :controller => "church", :action => "show", :id => church[0] })		%></td>	
 				<td align="center"> <%= church[0].users_count	%></td>	
 				<td align="center"> <%= church[1]				%></td>				
 			</tr>
 		<% end %>
 
-<!--		
-		<% if @not_on_leaderboard %>
-			<tr>
-				<td align="center">You</td>
-				<td align="left"> 	<%= current_user.login												%></td>	
-				<td align="left"> 	<%= current_user.name												%></td>
-				<td align="center"> <%= current_user.memorized 											%></td>			
-				<td align="center"> <%= current_user.learning 											%></td>
-				<td align="left"> 	<%= current_user.church ? link_to(current_user.church.name, { :controller => "profile", :action => "show_church", :church => current_user.church.id }) : "" %></td>
-				<td align="left"> 	<%= current_user.country ? current_user.country.printable_name : "" %></td>
-			</tr>
-		<% end %> -->
 	</table>
 </div>
