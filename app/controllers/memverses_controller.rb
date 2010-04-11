@@ -663,6 +663,9 @@ class MemversesController < ApplicationController
     @page_title = "Memory Verse Review"
     @show_feedback = true
     
+    # If referring path is from the practice section then we need to clear the queue
+    # TODO: maybe use a different session variable
+    
     # First check for verses in session queue that need to be tested
     if mv = get_memverse_from_queue()
       # This verse needs to be memorized
