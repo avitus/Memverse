@@ -144,6 +144,16 @@ class MemversesController < ApplicationController
     
     # === Verse of the Day ===   
     @votd_txt, @votd_ref, @votd_tl, @votd_id  = verse_of_the_day()
+    
+    # === Check for incomplete profile ===
+    if current_user.country_id == 226 and current_user.american_state.nil?      
+      link = "<a href=\"#{update_profile_path}\">Please update your profile to reflect your state.</a>"
+      if flash[:notice] 
+        flash[:notice] << " #{link} " 
+      else
+        flash[:notice] = "#{link}"
+      end
+    end
                       
   end
 

@@ -39,8 +39,10 @@ class Country < ActiveRecord::Base
     }
     
     countryboard.sort{|a,b| a[1]<=>b[1]}.reverse[0...numcountries].each_with_index { |grp, index|
-      if grp[0].rank.nil? or index+1 < grp[0].rank
-        Tweet.create(:news => "#{grp[0].printable_name} is now ##{index+1} on the country leaderboard", :country_id => self.id, :importance => 3)
+      if grp[0].rank.nil? 
+        Tweet.create(:news => "#{grp[0].printable_name} has joined the country leaderboard at position ##{index+1}", :country_id => self.id, :importance => 3)
+      elsif index+1 < grp[0].rank
+         Tweet.create(:news => "#{grp[0].printable_name} is now ##{index+1} on the country leaderboard", :country_id => self.id, :importance => 3)       
       end
       grp[0].rank = index+1
       grp[0].save
