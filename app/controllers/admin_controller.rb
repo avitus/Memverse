@@ -3,9 +3,9 @@ class AdminController < ApplicationController
   protect_from_forgery  :except => [:set_verse_text, :verify_verse] 
   in_place_edit_for     :verse, :text  
   
-  # Only needed for getting last verse data - TODO: Comment out aftwards
-  require 'open-uri'
-  require 'nokogiri'
+  # Only needed for scraping last verse data from BibleGateway
+  #  require 'open-uri'
+  #  require 'nokogiri'
   
   # ----------------------------------------------------------------------------------------------------------
   # Admin Dashboard
@@ -29,13 +29,6 @@ class AdminController < ApplicationController
     @new_verses_today   = Verse.count(    :all,  :conditions => ["created_at > ?", today]) 
     @new_mvs_today      = Memverse.count( :all,  :conditions => ["created_at > ?", today])     
     @active_users_today = User.active_today.count
-  end
-
-  # ----------------------------------------------------------------------------------------------------------
-  # Verse count by translation
-  # ----------------------------------------------------------------------------------------------------------  
-  def count_by_translation
-    
   end
 
   # ----------------------------------------------------------------------------------------------------------
