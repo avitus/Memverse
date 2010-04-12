@@ -149,6 +149,16 @@ class MemversesController < ApplicationController
     
     # === Verse of the Day ===   
     @votd_txt, @votd_ref, @votd_tl, @votd_id  = verse_of_the_day()
+    
+    # === Check for incomplete profile ===
+    if current_user.country_id == 226 and current_user.american_state.nil?      
+      link = "<a href=\"#{update_profile_path}\">Please update your profile to reflect your state.</a>"
+      if flash[:notice] 
+        flash[:notice] << " #{link} " 
+      else
+        flash[:notice] = "#{link}"
+      end
+    end
                       
   end
 
@@ -657,6 +667,9 @@ class MemversesController < ApplicationController
     @tab = "mem"  
     @page_title = "Memory Verse Review"
     @show_feedback = true
+    
+    # If referring path is from the practice section then we need to clear the queue
+    # TODO: maybe use a different session variable
     
     # First check for verses in session queue that need to be tested
     if mv = get_memverse_from_queue()
