@@ -86,6 +86,7 @@ class BlogPostsController < ApplicationController
 
   # POST /blog_posts
   # POST /blog_posts.xml
+  # Note: this method never seems to be called
   def create
     @tab = "blog"
 		@blog_post = BlogPost.new(params[:blog_post])

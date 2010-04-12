@@ -100,7 +100,12 @@
 
 class MemversesController < ApplicationController
   
-  before_filter :login_required 
+  before_filter :login_required
+  
+  # Added 4/7/10 to prevent invalid authenticity token errors
+  # http://ryandaigle.com/articles/2007/9/24/what-s-new-in-edge-rails-better-cross-site-request-forging-prevention
+  protect_from_forgery :only => [:create, :update, :destroy]
+
 
   prawnto :prawn => { :top_margin     => 50 }
   prawnto :prawn => { :bottom_margin  => 50 }
@@ -361,7 +366,7 @@ class MemversesController < ApplicationController
     mv = Memverse.new
     mv.user_id      = current_user.id
     mv.verse_id     = vs.id
-    mv.efactor      = 1.5  # Initial seed value
+    mv.efactor      = 1.7  # Initial seed value
     mv.last_tested  = Date.today
     mv.next_test    = Date.today # Start testing tomorrow
     mv.status       = "Learning"
