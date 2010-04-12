@@ -69,7 +69,7 @@ class ProfileController < ApplicationController
     # -- Process Form --
     if request.put? # For some reason this is a 'put' not a 'post'
       if @user.update_profile(params[:user])
-        flash[:notice] = "Profile successfully updated"
+        flash[:notice] = "Profile successfully updated. "
         redirect_to home_path
       else
         render :action => update_profile
