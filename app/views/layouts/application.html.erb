@@ -28,14 +28,8 @@
 		<%= yield(:head) %>
 
 		<!-- Using Jquery and Jrails -->
-		<%= javascript_include_merged 'jquery-1.4' 					%> <!-- main jQuery library -->
-		<%= javascript_include_merged 'jquery-ui' 					%> <!-- jQuery UI library -->
-		<%= javascript_include_merged 'jrails' 						%> <!-- needed to use jQuery with Prototype/Scriptaculous -->
-		<%= javascript_include_merged 'jquery.quickflip'			%> <!-- version 2.1 -->
-		<%= javascript_include_merged 'jquery.hoverIntent' 			%>	
-		<%= javascript_include_merged '2leveltab' 					%> <!-- Menu tabs -->
-		<%= javascript_include_merged 'jquery.periodicalupdater' 	%>
-		<%= javascript_include_merged 'jquery.autocomplete'			%> <!-- http://www.devbridge.com/projects/autocomplete/jquery/ -->	
+		<%= javascript_include_merged 	'jquery-1.4', 'jquery-ui', 'jrails', 'jquery.quickflip', 'jquery.hoverIntent', '2leveltab', 
+										'jquery.periodicalupdater', 'jquery.autocomplete' %> 
 								
 		<!-- Shortcut Icons -->
 		<link rel="shortcut icon" href="/images/favicon.ico" />
