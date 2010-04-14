@@ -1,0 +1,12 @@
+<h1>Recently on Memverse</h1>
+
+<div id="latest-tweets">
+	<% for tweet in @tweets %>
+		<div class="tweet">
+			<span><%= link_to '[x]', { :action => 'destroy_tweet',  :id => tweet }, :confirm => 'Are you sure?', :method => :post %></span>
+			<span class="news-event"><%= tweet.news %></span> 
+			<span class="time">[<%= time_ago_in_words(tweet.created_at) %> ago]</span>
+		</div>
+	<% end %>
+</div>
+

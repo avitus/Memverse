@@ -1,5 +1,9 @@
 <h1><%= @country.rank %>. <%= @country.printable_name %></h1>
 
+<h2 class="country-detail">
+	<span id="country-name">Members: <%= @country.users_count %></span> 
+</h2>
+
 <table class="user-list">
 	
 	<tr>
@@ -12,6 +16,6 @@
 		<th align="center" 	id='start'>	Started		</th>
 	</tr>
 	
-	
-	<%= render :partial => @users %>	
+	<%= render :partial => @users %>
+		
 </table>

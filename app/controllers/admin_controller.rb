@@ -32,6 +32,25 @@ class AdminController < ApplicationController
   end
 
   # ----------------------------------------------------------------------------------------------------------
+  # Show recent tweets
+  # ----------------------------------------------------------------------------------------------------------  
+  def tweets
+    @tweets = Tweet.all(:limit => 100, :order => "created_at DESC")
+    respond_to do |format|
+      format.html
+    end
+  end
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Create a new tweet
+  # ----------------------------------------------------------------------------------------------------------   
+  def destroy_tweet
+    @tweet = Tweet.find(params[:id])
+    @tweet.destroy
+    redirect_to :action => 'tweets' 
+  end 
+
+  # ----------------------------------------------------------------------------------------------------------
   # Verses per User
   # ----------------------------------------------------------------------------------------------------------   
   def verses_per_user
@@ -744,6 +763,26 @@ class AdminController < ApplicationController
     redirect_to :action => 'show_churches'
   end
   
+  # ----------------------------------------------------------------------------------------------------------
+  # Update users counter cache for countries 
+  # TODO: for some reason this occasionally gets out of synch ... not sure why
+  # ---------------------------------------------------------------------------------------------------------- 
+  def update_country_users_counter 
+    Country.reset_column_information  
+    Country.all.each do |c|  
+      c.update_attribute :users_count, c.users.length  
+    end
+    redirect_to :action => 'show_countries'
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Fix corrupted counter cache - does this for a single country
+  # ----------------------------------------------------------------------------------------------------------   
+  def update_country_user_count
+    c = Country.find(params[:id])
+    c.update_attribute :users_count, c.users.length
+    redirect_to :action => 'show_countries'
+  end  
   
   # ----------------------------------------------------------------------------------------------------------
   # Show all countries
@@ -754,7 +793,7 @@ class AdminController < ApplicationController
     
     all_country_list = Country.find(:all)
     all_country_list.each { |country|
-      if country.users.length != 0
+      if country.users_count != 0
         @country_list << country
       end  
     }
