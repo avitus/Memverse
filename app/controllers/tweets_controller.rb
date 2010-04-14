@@ -43,6 +43,6 @@ class TweetsController < ApplicationController
     
     render :partial=> 'tweets/tweet', :locals => { :tweet => @tweet }, :layout=>false
     
-  end
+  end 
 
 end # Class

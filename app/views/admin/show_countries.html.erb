@@ -11,6 +11,8 @@
 		<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">	
 			<td> <%= country.printable_name	%></td>				
 			<td align="center"> <%= country.users.length %></td>												
+			<td align="center"> <%= country.users_count %></td>												
+			<td align="center"> <%= link_to "Fix User Count", {:action => 'update_country_user_count', :id => country } %></td>
 		</tr>
 		<% end %>
 	

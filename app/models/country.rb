@@ -19,7 +19,7 @@ class Country < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   # Returns hash of top countries (sorted by number of verses memorized)
   # ---------------------------------------------------------------------------------------------------------- 
-  def self.top_countries(numcountries=10)
+  def self.top_countries(numcountries=20)
 
     countryboard = Hash.new(0)
     
@@ -41,9 +41,10 @@ class Country < ActiveRecord::Base
     countryboard.sort{|a,b| a[1]<=>b[1]}.reverse[0...numcountries].each_with_index { |grp, index|
       if grp[0].rank.nil? 
         Tweet.create(:news => "#{grp[0].printable_name} has joined the country leaderboard at position ##{index+1}", :country_id => self.id, :importance => 3)
-      elsif index+1 < grp[0].rank
+      elsif (index+1 < grp[0].rank)
          Tweet.create(:news => "#{grp[0].printable_name} is now ##{index+1} on the country leaderboard", :country_id => self.id, :importance => 3)       
       end
+      logger.info("** Saving countryboard info for: #{grp[0].printable_name}")
       grp[0].rank = index+1
       grp[0].save
     } 
