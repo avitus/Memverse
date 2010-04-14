@@ -17,39 +17,28 @@
 		<meta name="verify-v1" content="IrqDYi2zxAyS8GUAqQcyXvnmcxhtuNITeCIFYLa76LQ=" />	
 		<!-- Microsoft verification -->		
 		<meta name="msvalidate.01" content="A1BB69E880870637C825F612E2FA4034" />				
-
 		
 		<!-- Main Stylesheet -->
-		<%= stylesheet_link_tag 'base' %>
+		<%= stylesheet_link_merged 'base' %>
   		
 		<!-- Auxiliiary stylesheets, etc -->
 		<%= yield(:head) %>
 				
 		<!-- Using Jquery and Jrails -->
-		<%= javascript_include_tag 'jquery-1.4' 		%>
-		<%= javascript_include_tag 'jquery-ui' 			%>
-		<%= javascript_include_tag 'jrails' 			%>
-		<%= javascript_include_tag 'jquery.quickflip'	%>
-		<%= javascript_include_tag 'jquery.hoverIntent' %>	
-		<%= javascript_include_tag '2leveltab' 			%>
-		<%= javascript_include_tag 'jquery.jeditable' 	%>  <!-- http://www.appelsiini.net/projects/jeditable -->			
-		<%= javascript_include_tag 'jquery.autocomplete'%> 	<!-- http://www.devbridge.com/projects/autocomplete/jquery/ -->						
-		<%= javascript_include_tag 'sorttable' %>			<!-- http://www.kryogenix.org/code/browser/sorttable/ -->
-		<!-- This alternative doesn't sort the number columns correctly http://yoast.com/articles/sortable-table/ -->
-				
+		<%= javascript_include_merged 'jquery-1.4' 			%>
+		<%= javascript_include_merged 'jquery-ui' 			%>
+		<%= javascript_include_merged 'jrails' 				%>
+		<%= javascript_include_merged 'jquery.quickflip'	%>
+		<%= javascript_include_merged 'jquery.hoverIntent' 	%>	
+		<%= javascript_include_merged '2leveltab' 			%>  <!-- Menu tabs -->
+		<%= javascript_include_merged 'jquery.jeditable' 	%>  <!-- http://www.appelsiini.net/projects/jeditable -->			
+		<%= javascript_include_merged 'jquery.autocomplete'	%> 	<!-- http://www.devbridge.com/projects/autocomplete/jquery/ -->						
+		<%= javascript_include_merged 'sorttable' 			%>	<!-- http://www.kryogenix.org/code/browser/sorttable/ -->
+		
 		<!-- Shortcut Icons -->
 		<link rel="shortcut icon" href="/images/favicon.ico" />
 		<link rel="icon" 		  href="/images/favicon.ico" />	
-		
-		<!-- Menu tabs -->
-		<link rel="stylesheet" type="text/css" href="/stylesheets/2leveltab.css" />		
-		<script type="text/javascript" src="/javascripts/2leveltab.js">
-		/***********************************************
-		* 2 level Horizontal Tab Menu- by JavaScript Kit (www.javascriptkit.com)
-		* This notice must stay intact for usage
-		* Visit JavaScript Kit at http://www.javascriptkit.com/ for full source code
-		***********************************************/
-		</script>		
+			
 	</head>
 	
 	<body id="user">

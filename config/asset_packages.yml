@@ -1,12 +1,24 @@
 --- 
 javascripts: 
 - base: 
-  - prototype
-  - effects
-  - dragdrop
-  - controls
+  - jquery-1.4
+  - jquery-ui
+  - jrails
+  - jquery.jeditable
   - application
+  - dragdrop
+  - prototype
+  - jquery.hoverIntent
+  - effects
+  - controls
+  - jquery.updater
+  - jquery.periodicalupdater
+  - 2leveltab
+  - jquery.quickflip
+  - jquery.autocomplete  
+  - sorttable
 stylesheets: 
-- base:
+- base: 
   - base
-
+  - 2leveltab
+  - bloggity  
