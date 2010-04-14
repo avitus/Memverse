@@ -8,7 +8,6 @@ javascripts:
   - application
   - dragdrop
   - prototype
-  - jquery.hoverIntent
   - effects
   - controls
   - jquery.updater
@@ -17,6 +16,7 @@ javascripts:
   - jquery.quickflip
   - jquery.autocomplete  
   - sorttable
+  - jquery.hoverIntent  
 stylesheets: 
 - base: 
   - base

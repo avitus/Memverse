@@ -25,15 +25,8 @@
 		<%= yield(:head) %>
 				
 		<!-- Using Jquery and Jrails -->
-		<%= javascript_include_merged 'jquery-1.4' 			%>
-		<%= javascript_include_merged 'jquery-ui' 			%>
-		<%= javascript_include_merged 'jrails' 				%>
-		<%= javascript_include_merged 'jquery.quickflip'	%>
-		<%= javascript_include_merged 'jquery.hoverIntent' 	%>	
-		<%= javascript_include_merged '2leveltab' 			%>  <!-- Menu tabs -->
-		<%= javascript_include_merged 'jquery.jeditable' 	%>  <!-- http://www.appelsiini.net/projects/jeditable -->			
-		<%= javascript_include_merged 'jquery.autocomplete'	%> 	<!-- http://www.devbridge.com/projects/autocomplete/jquery/ -->						
-		<%= javascript_include_merged 'sorttable' 			%>	<!-- http://www.kryogenix.org/code/browser/sorttable/ -->
+		<%= javascript_include_merged 	'jquery-1.4', 'jquery-ui', 'jrails', 'jquery.quickflip', 'jquery.hoverIntent', 
+										'2leveltab', 'jquery.jeditable', 'jquery.autocomplete', 'sorttable' %>
 		
 		<!-- Shortcut Icons -->
 		<link rel="shortcut icon" href="/images/favicon.ico" />
