@@ -23,6 +23,7 @@
 	
 		<!-- Main Stylesheet -->
 		<%= stylesheet_link_merged 'base', :cache => 'cache/all' %>
+		<%= stylesheet_link_tag 'mobile' if mobile_device? %>
   		
 		<!-- Auxiliary stylesheets, etc -->
 		<%= yield(:head) %>
