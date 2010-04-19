@@ -11,9 +11,8 @@ class ApplicationController < ActionController::Base
   helper Ziya::HtmlHelpers::Charts
   helper Ziya::YamlHelpers::Charts
   
-  before_filter :set_locale 
-  
-  
+  before_filter :set_locale, :prepare_for_mobile  
+   
   # ----------------------------------------------------------------------------------------------------------
   # Localization
   # ---------------------------------------------------------------------------------------------------------- 
@@ -339,8 +338,28 @@ class ApplicationController < ActionController::Base
   def valid_ref(str)
     return str =~ /([0-3]?\s+)?[a-záéíóúüñ]+\s+[0-9]+(:|(\s?vs\s?))[0-9]+/i
   end   
+
+  private  
   
-  
+  # ----------------------------------------------------------------------------------------------------------
+  # Check for mobile devices
+  # ----------------------------------------------------------------------------------------------------------      
+  def mobile_device?  
+    if session[:mobile_param]  
+      session[:mobile_param] == "1"  
+    else  
+      request.user_agent =~ /Mobile|webOS/  
+      end  
+    end  
+    helper_method :mobile_device?  
+      
+  def prepare_for_mobile  
+    session[:mobile_param] = params[:mobile] if params[:mobile]  
+    request.format = :mobile if mobile_device?  
+  end    
+    
+    
+    
   protected
   
   # Automatically respond with 404 for ActiveRecord::RecordNotFound
