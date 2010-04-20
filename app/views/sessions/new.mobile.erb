@@ -1,0 +1,24 @@
+<div class="entry-form" id="login-page-form">
+	<% form_tag session_path do %>
+
+		<ul class="rounded">
+			<li>
+				<%= label_tag 'login', 'Username' %>
+				<%= text_field_tag 'login', @login, :placeholder => "Username" %>
+			</li>
+			<li>
+				<%= label_tag 'password' %>
+				<%= password_field_tag 'password', nil, :placeholder => "Password" %>
+			</li>
+			<li>
+				<%= label_tag 'remember_me', 'Remember me' %>
+				<%= check_box_tag 'remember_me', '1', @remember_me %>
+			</li>
+		</ul>
+
+	<%= submit_tag 'Login', :class => "whiteButton submit" %>
+			
+	<% end -%>
+	
+</div>
+
