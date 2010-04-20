@@ -1,0 +1,27 @@
+<h2>Leaderboard</h2>
+
+<div class="user-list">
+	<table id="leaderboard" cellpadding="6" cellspacing="1" border="1">  	
+		<tr>
+			<th>Rank</th>
+			<th>Name</th>	
+			<th>Memorized</th>
+		</tr>
+		
+		<% for user in @leaderboard %>
+			<tr valign="top" <%=css_current_user_check(user[0])%> >
+				<td align="center"> <%= @leaderboard.index(user)+1%></td>
+				<td align="left">   <%= user[0].name.empty? ? "[" + user[0].login + "]" : user[0].name	%></td>
+				<td align="center"> <%= user[1]				%></td>				
+			</tr>
+		<% end %>
+		
+		<% if @not_on_leaderboard %>
+			<tr>
+				<td align="center">		You																	  </td>
+				<td align="left"> 	<%= current_user.name.empty? ? current_user.login : current_user.name	%></td>
+				<td align="center"> <%= current_user.memorized 												%></td>										
+			</tr>
+		<% end %>
+	</table>
+</div>
