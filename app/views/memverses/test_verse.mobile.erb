@@ -1,6 +1,13 @@
 <!-- Flashcard -->	
-<div class="flip">
-    <p><%=@verse%></p>
+<div id="flashcard-front-text" class="current">
+	
+    <div class="toolbar">
+		<%= yield(:toolbar) %>    	
+	    <%= link_to "Back", nil, :class => "back" unless current_page? root_path %>	
+    	<h1><%=@verse%></h1>
+    	<a class="button flip" href="#flashcard-back-text">Show Verse</a>
+	</div>
+	
 	<p class="mnemonic"><%=@mnemonic%></p>
 
 	<% form_tag :action => 'mark_test' do %>			
@@ -12,12 +19,18 @@
 		  <div align="left"><%= submit_tag t('.b1'), 	:class => "submit", :q => 1 %></div>	
 		</div>			  
 	<% end %>
-
-    <p class="flip"><%= t('.show_verse') %></p>
-</div>
 	
+</div>
+
+
+
 <div id="flashcard-back-text">
-    <p><%=@verse%></p>
+	
+    <div class="toolbar">
+    	<h1><%=@verse%></h1>
+    	<a class="button flip" href="#flashcard-front-text">Back to Test</a>
+	</div>
+	
 	<% if !@prior_text.nil? %>
 		<p><span class="superscript"><%= @prior_versenum   %></span><%=@prior_text%></p>
 	<% end %>				   	
@@ -27,6 +40,6 @@
 		<% end %>
 		<%=@text%>
 	</p>
-    <p class="flip"><%= t('.back_to_test') %></p>
+
 </div>			
 
