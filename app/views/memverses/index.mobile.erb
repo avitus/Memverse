@@ -1,3 +1,22 @@
+<div class="current">
+  <%- if true -%>  <!-- Set optional title 'if show_title?' -->
+  <div class="toolbar">
+    <%= link_to "Back", nil, :class => "back" unless current_page? root_path %>
+    <h1><%=h yield(:title) || "Memverse" %></h1>
+    <%= link_to "Full Site", root_url(:mobile => 0), :class => "button", :rel => "external" %>
+    <%= yield(:toolbar) %>
+  </div>
+  <%- end -%>
+  
+  <% unless flash.empty? %>
+    <div class="info">
+    <%- flash.each do |name, msg| -%>
+      <%= content_tag :div, msg, :id => "flash_#{name}" %>
+    <%- end -%>
+    </div>
+  <% end %>
+
+
 <% title "Memverse" %>
 
 <ul class="rounded">
