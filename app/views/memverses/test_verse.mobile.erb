@@ -1,5 +1,6 @@
 <!-- Flashcard -->	
-<div class="flip">
+<div id="flashcard-front-text" class="current">
+	
     <p><%=@verse%></p>
 	<p class="mnemonic"><%=@mnemonic%></p>
 
@@ -13,9 +14,11 @@
 		</div>			  
 	<% end %>
 
-    <p class="flip"><%= t('.show_verse') %></p>
+    <p class="flip"><a href="#flashcard-back-text">Show Verse</a></p>
 </div>
-	
+
+
+
 <div id="flashcard-back-text">
     <p><%=@verse%></p>
 	<% if !@prior_text.nil? %>
@@ -27,6 +30,6 @@
 		<% end %>
 		<%=@text%>
 	</p>
-    <p class="flip"><%= t('.back_to_test') %></p>
+    <p class="flip"><a href="#flashcard-front-text">Back to Test</a></p>
 </div>			
 
