@@ -118,7 +118,7 @@ class MemversesController < ApplicationController
   def index
     
     @tab = "home"
-    @due_today = upcoming_verses(50).length
+    @due_today = upcoming_verses(50).length unless mobile_device?
     
     
     # Has this user added any verses?
@@ -733,7 +733,8 @@ class MemversesController < ApplicationController
     end
   
     # --- Load upcoming verses ---
-    @upcoming_verses = upcoming_verses() 
+    logger.debug("*** Mobile Device: #{mobile_device?}")
+    @upcoming_verses = upcoming_verses() unless mobile_device?
     
   end
 
@@ -1198,6 +1199,7 @@ class MemversesController < ApplicationController
       # We should check to see whether there are any more verses to be memorized and redirect elsewhere
       redirect_to :action => 'test_verse'
     else
+      logger.debug("*** Invalid parameters!")
       redirect_to :action => 'index'
     end  
   end    
