@@ -358,8 +358,6 @@ class ApplicationController < ActionController::Base
     request.format = :mobile if mobile_device?  
   end    
     
-    
-    
   protected
   
   # Automatically respond with 404 for ActiveRecord::RecordNotFound
