@@ -556,20 +556,14 @@ class User < ActiveRecord::Base
   # Returns hash of top ten users (sorted by number of verses memorized)
   # TODO: Find a way to speed this up ... eager loading (?), cache number of verses memorized?
   # ---------------------------------------------------------------------------------------------------------- 
-  def self.top_users(numusers=50)
+  def self.top_users(numusers=100)
 
     leaderboard = Hash.new(0)
     
     # TODO: Only bring back active users, who have verses memorized, and only select the columns we need
-    all_users = find(:all)
+    all_users = self.active
     
-    all_users.each { |u|
-      if u.last_activity_date
-        if (Date.today - u.last_activity_date).to_i < 30
-          leaderboard[ u ] = u.memorized
-        end
-      end
-    }
+    all_users.each { |u| leaderboard[ u ] = u.memorized }
     
     return leaderboard.sort{|a,b| a[1]<=>b[1]}.reverse[0...numusers]
     
