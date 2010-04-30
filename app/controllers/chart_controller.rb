@@ -33,7 +33,11 @@ class ChartController < ApplicationController
       user_id = current_user.id
     end
 
-    entries = ProgressReport.find( :all, :conditions => { :user_id => user_id }) 
+    all_entries = ProgressReport.find( :all, :conditions => { :user_id => user_id }) 
+    
+    # TODO: Consider deleting extra entries periodically
+    # TODO: Add in last entry so that graph always shows current day
+    entries = all_entries.length > 150 ? all_entries.every( all_entries.length / 75 ) : all_entries
     
     if !entries.empty?
       # Build data series
@@ -49,15 +53,6 @@ class ChartController < ApplicationController
         y_time      << 0
         x_date      << Date.today.to_s     
     end
-
-    # If too many entries, sample the set TODO: consider deleting extra entries periodically
-#    if entries.length > 150
-#      pick = entries.length / 75
-#      y_learning  = y_learning.every(pick)
-#      y_memorized = y_memorized.every(pick)
-#      y_time      = y_time.every(pick)
-#      x_date      = x_date.every(pick)
-#    end
         
     # Create graph 
     chart = Ziya::Charts::Mixed.new('JTA-A16M--GO.945CWK-2XOI1X0-7L', 'stacked_column_chart') # args: license key, chart name
@@ -186,6 +181,7 @@ class ChartController < ApplicationController
       when   160..  239  then   240 # Interval per division =   30
       when  8000..15999  then 16000 # Interval per division = 2000
       when 16000..23999  then 24000 # Interval per division = 3000      
+      when 24000..31999  then 24000 # Interval per division = 3000      
       else                     320  # Interval per division =  ?
     end
   end
