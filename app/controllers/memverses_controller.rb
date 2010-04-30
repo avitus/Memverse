@@ -838,7 +838,7 @@ class MemversesController < ApplicationController
     exam_id         = Array.new
     
     
-    if current_user.memorized > 10
+    if current_user.memorized >= 10
       # Find the memorized verses and pick 10 at random for the test
       exam = Memverse.find( :all, 
                             :conditions => { :user_id => current_user.id, :status => "Memorized"}
