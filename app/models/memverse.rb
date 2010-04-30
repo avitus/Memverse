@@ -355,6 +355,7 @@ class Memverse < ActiveRecord::Base
   # Is there anything else to memorize in this sequence or can we move on
   # Input: memverse_id (can be a single verse or any verse in a sequence)
   # Returns: true if there are more verses to memorize downstream in a sequence
+  # TODO: find a way to skip long memorized sections
   # ----------------------------------------------------------------------------------------------------------   
   def more_to_memorize_in_sequence?
     
