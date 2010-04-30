@@ -10,18 +10,24 @@
 	
 	<p class="mnemonic"><%=@mnemonic%></p>
 
-	<% form_tag :action => 'mark_test' do %>			
-		<div id="scoreTestButtons">								
-		  <div align="left"><%= submit_tag t('.b5'), 	:class => "submit", :q => 5 %></div>								
-		  <div align="left"><%= submit_tag t('.b4'), 	:class => "submit", :q => 4 %></div>	
-		  <div align="left"><%= submit_tag t('.b3'),  	:class => "submit", :q => 3 %></div>	
-		  <div align="left"><%= submit_tag t('.b2'),	:class => "submit", :q => 2 %></div>	
-		  <div align="left"><%= submit_tag t('.b1'), 	:class => "submit", :q => 1 %></div>	
-		</div>			  
+	<% form_tag mark_test_path do %>			
+		<ul class="rounded">
+			<li>
+				<select id="commit">
+				        <option value ="5">Remembered - Perfect</option>
+				        <option value ="4">Remembered - Hesitation</option>
+				        <option value ="3">Remembered - Difficult</option>			
+				        <option value ="2">Forgotten - Familiar</option>
+				        <option value ="1">Forgotten - No Idea</option>
+				</select>
+			</li>			
+		</ul>
+		  
+		<%= submit_tag 'Rate Recall', :class => "whiteButton submit" %>
+		  
 	<% end %>
-	
+			
 </div>
-
 
 
 <div id="flashcard-back-text">
