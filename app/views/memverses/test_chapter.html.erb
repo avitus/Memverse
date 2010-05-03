@@ -4,7 +4,7 @@
 <div id="test-chapter">
 	<!-- Question-side : Entry box -->	
 	<fieldset id="question-side">
-		<legend><%=@bk_ch%>:<span class="current_verse"><%=@verse.to_s%></span></legend>
+		<legend><span class="current-ref"><%=@bk_ch%>:<span class="current_verse"><%=@verse.to_s%></span></span></legend>
 			<% form_tag :action => 'test_chapter' do %>
 				
 				<div id="answerbox">
@@ -29,7 +29,7 @@
 			<!--- FrontSide --->
 		    <div class="quickFlipPanel refPanel">
 		    	<div id="flashcard-front-text">		    	
-			        <p><%=@bk_ch%>:<span class="current_verse"><%=@verse.to_s%></span></p>
+			        <p><span class="current-ref"><%=@bk_ch%>:<span class="current_verse"><%=@verse.to_s%></span></span></p>
 					<!-- <p class="mnemonic"><%=@chapter[0].verse.mnemonic%></p> -->
 					<div id="verseFeedback">		
 						<!-- Current verse -->
@@ -92,8 +92,10 @@
 		$('.submit').click( function() {
 			
 			if (current_verse == final_verse) {
-				// Display the next verse
+				
+				// Display the next verse on the right
 				$("#chapter-text > .verse-text:hidden:first").fadeIn(2000);
+				
 				// Scroll to bottom of chapter
 				nDiv = document.getElementById('chapter-text');
 				setTimeout("nDiv.scrollTop = nDiv.scrollHeight",1);
@@ -104,13 +106,17 @@
 
 				// Replace submit buttons with something else
 				$("#scoreTestButtons").remove()
+				$("#answerbox").remove()
+				$(".current-ref").text("End");
 				
 				return (false)
 				
 			}
 			else {
+				
 				// Display the next verse
 				$("#chapter-text > .verse-text:hidden:first").fadeIn(2000);
+				
 				// Scroll to bottom of chapter
 				nDiv = document.getElementById('chapter-text');
 				setTimeout("nDiv.scrollTop = nDiv.scrollHeight",1);
@@ -132,6 +138,8 @@
 				
 				// Reset the flashcard
 				$('.quickFlip').quickFlipper( {}, 0 );
+				
+				// Score the memory verse
 				
 				return(false)				
 			}
