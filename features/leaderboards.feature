@@ -6,6 +6,7 @@ Feature: Leaderboards
   Scenario: Displaying countryboard
 	Given I go to the countryboard page
     Then I should see "South Africa"
+    And I should see "United States"
 
   Scenario: Displaying leaderboard
 	Given I go to the leaderboard page
