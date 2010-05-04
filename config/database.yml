@@ -15,7 +15,7 @@ development:
   host: localhost
   socket: /var/run/mysqld/mysqld.sock  
   
-test:
+test: &TEST
   # Sqlite Settings
   adapter: sqlite3
   database: db/test.sqlite3
@@ -52,3 +52,5 @@ production:
     
    
    
+cucumber:
+  <<: *TEST
