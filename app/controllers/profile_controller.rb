@@ -45,7 +45,6 @@ class ProfileController < ApplicationController
       logger.warning("*** Couldn't find user with email address #{email_address}")
     end
     
-    
   end
 
 

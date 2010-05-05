@@ -16,6 +16,17 @@ require 'capybara/rails'
 require 'capybara/cucumber'
 require 'capybara/session'
 require 'cucumber/rails/capybara_javascript_emulation' # Lets you click links with onclick javascript handlers without using @culerity or @javascript
+
+# test unit - Added May 3, 2010
+require 'spec/test/unit'
+require 'test_help'
+require 'test/unit'
+
+# factory girl  - Added May 3, 2010
+require 'factory_girl'
+require RAILS_ROOT + "/spec/factories.rb" 
+
+
 # Capybara defaults to XPath selectors rather than Webrat's default of CSS3. In
 # order to ease the transition to Capybara we set the default here. If you'd
 # prefer to use XPath just remove this line and adjust any selectors in your
@@ -56,3 +67,6 @@ if defined?(ActiveRecord::Base)
   rescue LoadError => ignore_if_database_cleaner_not_present
   end
 end
+
+
+
