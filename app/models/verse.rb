@@ -7,6 +7,7 @@ class Verse < ActiveRecord::Base
   
   # Relationships
   has_many :memverses
+  has_and_belongs_to_many :collections
   
   # Validations
   validates_presence_of :translation, :book, :chapter, :versenum, :text
