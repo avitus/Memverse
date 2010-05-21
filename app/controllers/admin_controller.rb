@@ -785,6 +785,15 @@ class AdminController < ApplicationController
   end  
   
   # ----------------------------------------------------------------------------------------------------------
+  # Fix corrupted counter cache - does this for a single church
+  # ----------------------------------------------------------------------------------------------------------   
+  def update_church_user_count
+    c = Church.find(params[:id])
+    c.update_attribute :users_count, c.users.length
+    redirect_to :action => 'show_churches'
+  end    
+  
+  # ----------------------------------------------------------------------------------------------------------
   # Show all countries
   # ----------------------------------------------------------------------------------------------------------   
   def show_countries
