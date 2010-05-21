@@ -730,7 +730,7 @@ class AdminController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------   
   def show_churches
     @church_list = Array.new
-    @church_list = Church.find(:all)
+    @church_list = Church.find(:all, :order => "users_count DESC")
   end   
   
   # ----------------------------------------------------------------------------------------------------------
