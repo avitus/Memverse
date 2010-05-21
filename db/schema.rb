@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 26) do
+ActiveRecord::Schema.define(:version => 28) do
 
   create_table "american_states", :force => true do |t|
     t.string  "abbrev",      :limit => 20, :default => "", :null => false
@@ -100,6 +100,21 @@ ActiveRecord::Schema.define(:version => 26) do
     t.datetime "updated_at"
     t.integer  "users_count", :default => 0
     t.integer  "rank"
+  end
+
+  create_table "collections", :force => true do |t|
+    t.string   "name"
+    t.integer  "user_id",     :null => false
+    t.string   "translation", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "collections_verses", :id => false, :force => true do |t|
+    t.integer  "collection_id"
+    t.integer  "verse_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "countries", :force => true do |t|
@@ -274,6 +289,7 @@ ActiveRecord::Schema.define(:version => 26) do
     t.integer  "learning",                                 :default => 0
     t.date     "last_activity_date"
     t.boolean  "show_echo",                                :default => true
+    t.integer  "state_id"
     t.integer  "max_interval",                             :default => 366
     t.string   "mnemonic_use",                             :default => "Learning"
     t.integer  "american_state_id"
