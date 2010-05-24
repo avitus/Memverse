@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 28) do
+ActiveRecord::Schema.define(:version => 29) do
 
   create_table "american_states", :force => true do |t|
     t.string  "abbrev",      :limit => 20, :default => "", :null => false
@@ -296,6 +296,7 @@ ActiveRecord::Schema.define(:version => 28) do
     t.integer  "accuracy",                                 :default => 50
     t.boolean  "all_refs",                                 :default => true
     t.integer  "rank"
+    t.integer  "ref_grade",                                :default => 10
   end
 
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true

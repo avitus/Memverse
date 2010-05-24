@@ -765,7 +765,7 @@ class MemversesController < ApplicationController
 
 
   # ----------------------------------------------------------------------------------------------------------
-  # Prepare for Testing Difficult References
+  # Prepare for Reference Test
   # ----------------------------------------------------------------------------------------------------------
   def load_test_ref
     
@@ -805,6 +805,7 @@ class MemversesController < ApplicationController
       session[:ref_id]            = ref_id
       session[:ref_test_cntr]     = 0
       session[:reftest_correct]   = 0    
+      session[:reftest_grade]     = 0    
       session[:reftest_answered]  = 0
       session[:reftest_length]    = refs.length
       session[:reftest_incorrect] = Array.new
@@ -918,26 +919,32 @@ class MemversesController < ApplicationController
     
     if solution
     
+      mv = Memverse.find( session[:ref_id][question_num] )
+    
       if book==solution[0] and chapter==solution[1].to_i and verse==solution[2].to_i
-        flash[:notice] = "CORRECT"
+        flash[:notice] = "Perfect!"
         session[:reftest_correct] += 1
-        mv = Memverse.find( session[:ref_id][question_num] )
+        session[:reftest_grade] += 10
         mv.ref_interval   = [(mv.ref_interval * 1.5), 365].min.round
-        mv.next_ref_test  = Date.today + mv.ref_interval
-        mv.save
-      else
+      elsif
+        book==solution[0] and chapter==solution[1].to_i
+        flash[:notice] = "Correct book and chapter. The correct reference is " + solution[0] + " " + solution[1] + ":" + solution[2]
+        session[:reftest_incorrect] << question_num
+        session[:reftest_grade] += 5
+        mv.ref_interval = (mv.ref_interval * 0.7).round
+      else 
         session[:reftest_incorrect] << question_num
         flash[:notice] = "Sorry - Incorrect. The correct reference is " + solution[0] + " " + solution[1] + ":" + solution[2]
-        mv = Memverse.find( session[:ref_id][question_num] )
         mv.ref_interval = (mv.ref_interval * 0.6).round
-        mv.next_ref_test  = Date.today + mv.ref_interval        
-        mv.save        
       end
+       
+      # Update date for next ref test
+      mv.next_ref_test  = Date.today + mv.ref_interval        
+      mv.save        
        
       # Update score
       session[:reftest_answered] += 1
       
-  
       # Start Next Question
       session[:ref_test_cntr] += 1
       
@@ -1019,6 +1026,19 @@ class MemversesController < ApplicationController
       @correct    = session[:reftest_correct]
       @answered   = session[:reftest_answered]
       @incorrect  = session[:reftest_incorrect]
+      @grade      = session[:reftest_grade]
+      
+      # Update user's accuracy grade
+      @old_ref_grade = current_user.ref_grade
+      @new_ref_grade = ((@old_ref_grade.to_f * 0.75) + (@grade.to_f * 0.25)).to_i       
+      
+      current_user.ref_grade = @new_ref_grade
+      current_user.save      
+
+      # Clear session variables so that user can't hit refresh and bump up score
+      session[:reftest_answered] = nil
+      session[:reftest_correct]  = nil
+      
     else
       redirect_to :action => 'index'      
     end
@@ -1040,8 +1060,7 @@ class MemversesController < ApplicationController
       @new_accuracy = ((@old_accuracy.to_f * 0.75) + (score.to_f * 0.25)).to_i 
       
       @perfect_score = (@correct == @answered)
-      
-      
+          
       # Update user's accuracy grade
       current_user.accuracy = @new_accuracy
       current_user.save
