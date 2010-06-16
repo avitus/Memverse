@@ -1030,7 +1030,7 @@ class MemversesController < ApplicationController
       
       # Update user's accuracy grade
       @old_ref_grade = current_user.ref_grade
-      @new_ref_grade = ((@old_ref_grade.to_f * 0.75) + (@grade.to_f * 0.25)).to_i       
+      @new_ref_grade = ((@old_ref_grade.to_f * 0.75) + (@grade.to_f * 0.25)).ceil.to_i       
       
       current_user.ref_grade = @new_ref_grade
       current_user.save      
