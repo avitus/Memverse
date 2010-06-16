@@ -37,7 +37,7 @@ class ChartController < ApplicationController
     
     # TODO: Consider deleting extra entries periodically
     # TODO: Add in last entry so that graph always shows current day
-    entries = all_entries.length > 150 ? all_entries.every( all_entries.length / 75 ) : all_entries
+    entries = all_entries.length > 180 ? all_entries.every( all_entries.length / 90 ) : all_entries
     
     if !entries.empty?
       # Build data series
@@ -110,13 +110,19 @@ class ChartController < ApplicationController
     x_date      = Array.new    
     
     # Get daily statistics and build data series
-    DailyStats.find(:all, :conditions => {:segment => "Global"}).each { |entry|
+    all_entries = DailyStats.find(:all, :conditions => {:segment => "Global"})
+     
+    # TODO: Consider deleting extra entries periodically
+    # TODO: Add in last entry so that graph always shows current day
+    entries = all_entries.length > 180 ? all_entries.every( all_entries.length / 90 ) : all_entries        
+  
+    entries.each { |entry|
       y_learning  << entry.memverses_learning
       y_memorized << entry.memverses_memorized
       y_users     << entry.users_active_in_month
       x_date      << entry.entry_date.to_s
-    }
-        
+    }     
+                
     # Create graph 
     chart = Ziya::Charts::Mixed.new('JTA-A16M--GO.945CWK-2XOI1X0-7L', 'memverse_clock_chart') # args: license key, chart name
     chart.add :chart_types, %w[column column line]
