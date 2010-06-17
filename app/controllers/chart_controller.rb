@@ -37,7 +37,7 @@ class ChartController < ApplicationController
     
     # TODO: Consider deleting extra entries periodically
     # TODO: Add in last entry so that graph always shows current day
-    entries = all_entries.length > 180 ? all_entries.every( all_entries.length / 90 ) : all_entries
+    entries = all_entries.length > 160 ? all_entries.every( all_entries.length / 80 ) : all_entries
     
     if !entries.empty?
       # Build data series
@@ -114,7 +114,7 @@ class ChartController < ApplicationController
      
     # TODO: Consider deleting extra entries periodically
     # TODO: Add in last entry so that graph always shows current day
-    entries = all_entries.length > 180 ? all_entries.every( all_entries.length / 90 ) : all_entries        
+    entries = all_entries.length > 160 ? all_entries.every( all_entries.length / 80 ) : all_entries        
   
     entries.each { |entry|
       y_learning  << entry.memverses_learning
