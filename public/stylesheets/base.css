@@ -332,6 +332,11 @@ table.user-list {
 	font-size:		80%
 }
 
+#video-feed {
+	float:			left;
+	width:			60%;	
+}
+
 /* --- Verse of the Day and Activity : Center Column --- */
 #column-mid {
 	float:			left;
