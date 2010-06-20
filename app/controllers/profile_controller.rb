@@ -42,7 +42,7 @@ class ProfileController < ApplicationController
       end
     else
       flash[:notice] = "We couldn't find a user with that email address"
-      logger.warning("*** Couldn't find user with email address #{email_address}")
+      logger.warn("*** Couldn't find user with email address #{email_address}")
     end
     
   end
