@@ -129,6 +129,27 @@ class Verse < ActiveRecord::Base
   def end_of_chapter_verse
     FinalVerse.find(:first, :conditions => { :book => self.book, :chapter => self.chapter })
   end
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Returns array containing all verses in chapter but 'false' if any verse is missing
+  # ----------------------------------------------------------------------------------------------------------   
+  
+  def entire_chapter
+    
+    full_chapter  = Array.new
+    bk            = self.book
+    ch            = self.chapter
+    tl            = self.translation
+    
+    num_verses = self.end_of_chapter_verse.last_verse
+    
+    (1..num_verses).each { |vs|
+      full_chapter << Verse.exists_in_db(bk, ch, vs, tl)
+    }
+    
+    return full_chapter
+    
+  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Check with biblegateway for correctly entered verse
