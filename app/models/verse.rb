@@ -70,13 +70,15 @@ class Verse < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   # Returns hash of verses and number of users for each verse
   # ----------------------------------------------------------------------------------------------------------   
-  def self.rank_verse_popularity(limit = 25)
+  def self.rank_verse_popularity(limit=25, book=nil)
     
     vs_popularity = Hash.new(0) 
     
-    find(:all).each { |vs|
-      vs_popularity[vs.ref] += vs.memverses.count # returns an array of associated memory verses
-    }   
+    if book
+      find(:all, :conditions => { :book => book}).each { |vs| vs_popularity[vs.ref] += vs.memverses.count }
+    else
+      find(:all).each { |vs| vs_popularity[vs.ref] += vs.memverses.count } # returns an array of associated memory verses
+    end
     return vs_popularity.sort{|a,b| a[1]<=>b[1]}.reverse[0..limit]
   end
   

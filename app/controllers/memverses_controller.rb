@@ -413,7 +413,7 @@ class MemversesController < ApplicationController
     vs  = Verse.find(params[:vs])
       
     if your_mv = verse_in_userlist(vs)
-      flash[:notice] = "You already have #{your_mv.verse.ref} in the #{your_mv.verse.translation} translation in your list of memory verses"
+      flash[:notice] = "You already have #{your_mv.verse.ref} in the #{your_mv.verse.translation} translation in your list of memory verses."
     else
       # Save verse as a memory verse for user      
       save_mv_for_user(vs)
@@ -426,23 +426,30 @@ class MemversesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   # Add an entire chapter
   # TODO: pass in entire chapter if searching again proves to be too slow
+  # TODO: doesn't handle case where user already has some verses in a different translation ... just inserts new verses in the current translation
   # ---------------------------------------------------------------------------------------------------------- 
   def quick_add_chapter
     
-    ch  = Verse.find(params[:vs]).entire_chapter
+    ch          = Verse.find(params[:vs]).entire_chapter
+    book        = ch[0].book
+    chapter     = ch[0].chapter
+    translation = ch[0].translation
     
-    ch.each { |vs| 
-      if your_mv = verse_in_userlist(vs)
-        # Don't add
-        # flash[:notice] = "You already have #{your_mv.verse.ref} in the #{your_mv.verse.translation} translation in your list of memory verses"
-      else
-        # Save verse as a memory verse for user      
-        save_mv_for_user(vs)
-        # flash_for_successful_verse_addition(vs)
-      end    
-    }
-    
-    flash[:notice] = "#{ch[0].book} #{ch[0].chapter} [#{ch[0].translation}] has been added to your list of memory verses"
+    if current_user.has_chapter?(book, chapter)
+      flash[:notice] = "You already have #{book} #{chapter} in the #{translation} translation in your list of memory verses."
+    else
+      ch.each { |vs| 
+        if your_mv = verse_in_userlist(vs)
+          # Don't add
+          # flash[:notice] = "You already have #{your_mv.verse.ref} in the #{your_mv.verse.translation} translation in your list of memory verses"
+        else
+          # Save verse as a memory verse for user      
+          save_mv_for_user(vs)
+          # flash_for_successful_verse_addition(vs)
+        end    
+      }
+      flash[:notice] = "#{book} #{chapter} in the #{translation} translation has been added to your list of memory verses."
+    end
     
     @popular_verses = popular_verses(8, false)
     render(:template => 'memverses/add_verse.html.erb')     
@@ -481,11 +488,11 @@ class MemversesController < ApplicationController
       else      
         # Save verse to database of verses     
         vs = save_verse_to_db(tl, book, chapter, verse, txt.gsub!(/\s+/," "))
-        flash[:notice] = "Verse has been saved"
+        flash[:notice] = "Verse has been saved."
       end
       
       if your_mv = verse_in_userlist(vs)
-        flash[:notice] = "You already have #{your_mv.verse.ref} in the #{your_mv.verse.translation} translation in your list of memory verses"
+        flash[:notice] = "You already have #{your_mv.verse.ref} in the #{your_mv.verse.translation} translation in your list of memory verses."
       else
         # Save verse as a memory verse for user      
         save_mv_for_user(vs)
@@ -498,7 +505,7 @@ class MemversesController < ApplicationController
         when 1 then "Bible reference is incorrectly formatted. Format should be John 3:16 or John 3 vs 16"
         when 2 then "#{book} is not a valid book of the bible"
         when 3 then "Enter a bible reference eg. John 3:16. Please enter each verse individually and remove any verse numbering or footnote information. Consecutive verses will be grouped into a single memory passage. Please enter verses with great care as subsequent users will be memorizing the same verse. Think like a scribe!"
-        when 4 then "Please enter the text for your memory verse. Please do not include any verse numbering or footnote information"
+        when 4 then "Please enter the text for your memory verse. Please do not include any verse numbering or footnote information."
         else        "The verse you entered is longer than the longest verse in the bible! Please enter one verse at a time. Consecutive verses will be grouped into a single memory passage."         
       end
       render(:template => 'memverses/add_verse.html.erb')
