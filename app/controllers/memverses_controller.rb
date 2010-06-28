@@ -406,7 +406,7 @@ class MemversesController < ApplicationController
   end # end of save verse as a memory verse for user    
 
   # ----------------------------------------------------------------------------------------------------------
-  # Add a an existing memory verse
+  # Add an existing memory verse
   # ---------------------------------------------------------------------------------------------------------- 
   def quick_add
     
@@ -422,6 +422,33 @@ class MemversesController < ApplicationController
     @popular_verses = popular_verses(8, false)
     render(:template => 'memverses/add_verse.html.erb')     
   end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Add an entire chapter
+  # TODO: pass in entire chapter if searching again proves to be too slow
+  # ---------------------------------------------------------------------------------------------------------- 
+  def quick_add_chapter
+    
+    ch  = Verse.find(params[:vs]).entire_chapter
+    
+    ch.each { |vs| 
+      if your_mv = verse_in_userlist(vs)
+        # Don't add
+        # flash[:notice] = "You already have #{your_mv.verse.ref} in the #{your_mv.verse.translation} translation in your list of memory verses"
+      else
+        # Save verse as a memory verse for user      
+        save_mv_for_user(vs)
+        # flash_for_successful_verse_addition(vs)
+      end    
+    }
+    
+    flash[:notice] = "#{ch[0].book} #{ch[0].chapter} [#{ch[0].translation}] has been added to your list of memory verses"
+    
+    @popular_verses = popular_verses(8, false)
+    render(:template => 'memverses/add_verse.html.erb')     
+  end
+
+
 
   # ----------------------------------------------------------------------------------------------------------
   # Add a new memory verse
@@ -567,10 +594,23 @@ class MemversesController < ApplicationController
     errorcode, book, chapter, versenum = parse_verse(ref) 
 
     if (!errorcode) # If verse is ok
+      
+      @avail_chapters = Array.new
+      
       # Check whether verse is already in DB
       @avail_translations = Verse.find( :all, 
                                         :conditions => ["book = ? and chapter = ? and versenum = ?", 
-                                                         full_book_name(book), chapter, versenum])                                                       
+                                                         full_book_name(book), chapter, versenum])
+      # Check whether entire chapter is available                                                   
+      @avail_translations.each { |vs| 
+        if !vs.entire_chapter.include?(nil) # if all verses are in db
+          logger.debug("*** Adding #{vs.translation} as an available translation")
+          @avail_chapters << vs.translation    
+        end
+      }
+      
+      logger.debug("*** Available chapters: #{@avail_chapters}")
+                                                         
     end
     render :partial=>'avail_translations', :layout=>false      
   end
