@@ -36,6 +36,28 @@ class InfoController < ApplicationController
     @vs_list = Popverse.find( :all, :limit => @page_size, :offset => @page*@page_size )    
   end   
   
+  # ----------------------------------------------------------------------------------------------------------
+  # Interactive Database Filter
+  # Inputs:   
+  # Outputs:  
+  # ----------------------------------------------------------------------------------------------------------  
+  def pop_verses_by_book
+    @vs_list = Array.new
+  end
+  
+  
+  def pop_verse_search
+
+    @page_title = "Memverse : Popular Verses"     
+    
+    book = params[:search_param]
+        
+    @vs_list =  Verse.rank_verse_popularity(limit=10, book)
+    
+    render :partial => 'pop_verses', :layout=>false 
+  end   
+  
+  
   # ----------------------------------------------------------------------------------------------------------   
   # Display a single verse
   # ---------------------------------------------------------------------------------------------------------- 
