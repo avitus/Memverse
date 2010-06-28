@@ -3,7 +3,7 @@
 	<fieldset>
 		<legend> Enter Filter Parameters</legend>
 		
- 			<% form_tag( {:action => 'interactive'}, { :id => 'advanced_search' } ) do %>
+ 			<% form_tag( {}, { :id => 'advanced_search' } ) do %>
 			  <p>
 				Book: 			<%= text_field_tag( :book, 			params[:book],  		:size =>  16 )%>	
 				Chapter: 		<%= text_field_tag( :chapter, 		params[:chapter], 		:size =>   6 )%>				

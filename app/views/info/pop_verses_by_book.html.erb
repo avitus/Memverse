@@ -5,9 +5,9 @@
 	<fieldset>
 		<legend>Enter Book</legend>
 		
- 			<% form_tag( {:action => 'interactive'}, { :id => 'advanced_search' } ) do %>
+ 			<% form_tag( {}, {:disabled => true, :id => 'advanced_search' } ) do %>
 			  <p>
-				Book:	<%= text_field_tag( :search_param, 	params[:search_param],  :size =>  40 )%>	
+				<%= text_field_tag( :search_param, 	params[:search_param],  :size =>  40 )%>	
 			  </p>
 			  							
 			<% end %>
