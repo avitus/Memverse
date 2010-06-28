@@ -52,7 +52,7 @@ class InfoController < ApplicationController
     
     book = params[:search_param]
         
-    @vs_list =  Verse.rank_verse_popularity(limit=10, book)
+    @vs_list =  Verse.rank_verse_popularity(limit=9, book)
     
     render :partial => 'pop_verses', :layout=>false 
   end   
