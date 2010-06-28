@@ -271,79 +271,80 @@ class AdminController < ApplicationController
   # Send Reminder Emails - sent out nightly at midnight
   # ----------------------------------------------------------------------------------------------------------   
   def send_reminder
-    
+  
     @emails_sent        = 0
     @email_list         = Array.new
     @reactivation_list  = Array.new  
     @encourage_list     = Array.new
     @bounce_list        = Array.new
-    
-
-    # Retrieve records for all users  
-    User.find(:all).each { |r|
-      # Change reminder frequency (if necessary) to not be annoying
-      r.update_reminder_freq
       
-      if r.reminder_freq != "Never" and @emails_sent < 90
+    spawn do  
+      # Retrieve records for all users  
+      User.find(:all).each { |r|
+        # Change reminder frequency (if necessary) to not be annoying
+        r.update_reminder_freq
         
-        # ==== Users who have added verses but are behind on memorizing ====
-        if r.needs_reminder?
-          if r.email.nil?
-            logger.info("*** Error: Unable to email user with id: #{r.id}")
-            @bounce_list << r
-          else
-            if r.is_inactive?             
-              # Reminder for inactive users
-              logger.info("*** Sending reminder email to #{r.login} - they've been inactive for two months")
-              UserMailer.deliver_reminder_email_for_inactive(r)               
-            else 
-              # Standard reminder email
-              logger.info("*** Sending reminder email to #{r.login}")
-              UserMailer.deliver_reminder_email(r)           
+        if r.reminder_freq != "Never" and @emails_sent < 90
+          
+          # ==== Users who have added verses but are behind on memorizing ====
+          if r.needs_reminder?
+            if r.email.nil?
+              logger.info("** Error: Unable to email user with id: #{r.id}")
+              @bounce_list << r
+            else
+              if r.is_inactive?             
+                # Reminder for inactive users
+                logger.info("* Sending reminder email to #{r.login} - they've been inactive for two months")
+                UserMailer.deliver_reminder_email_for_inactive(r)               
+              else 
+                # Standard reminder email
+                logger.info("* Sending reminder email to #{r.login}")
+                UserMailer.deliver_reminder_email(r)           
+              end
+              @emails_sent += 1
+              r.last_reminder = Date.today
+              r.save
+              @email_list << r
             end
-            @emails_sent += 1
-            r.last_reminder = Date.today
-            r.save
-            @email_list << r
           end
-        end
-        
-        # ==== Users who never activated their accounts ====
-        # ==== Send a second activation email and then delete the account after three days =====
-        if r.never_activated?
-          if r.created_at < 3.days.ago
-            r.delete_account
-          elsif r.last_reminder
-            # do nothing - they've already received a second activation email
-          else
-            # logger.info("*** Resending activation email to #{r.login}")
-            # UserMailer.deliver_signup_notification(r)
-            # @emails_sent += 1
-            # r.last_reminder = Date.today
-            # r.save
-            # @reactivation_list << r
+          
+          # ==== Users who never activated their accounts ====
+          # ==== Send a second activation email and then delete the account after three days =====
+          if r.never_activated?
+            if r.created_at < 3.days.ago
+              r.delete_account
+            elsif r.last_reminder
+              # do nothing - they've already received a second activation email
+            else
+              # logger.info("*** Resending activation email to #{r.login}")
+              # UserMailer.deliver_signup_notification(r)
+              # @emails_sent += 1
+              # r.last_reminder = Date.today
+              # r.save
+              # @reactivation_list << r
+            end
           end
-        end
-        
-        # ==== Users who have activated but haven't ever added a verse ====
-        if r.needs_kick_in_pants?    
-          if r.email.nil?
-            logger.info("*** Error: Unable to email user with id: #{r.id}")
-            @bounce_list << r
-          else
-            logger.info("*** Sending kick in the pants to #{r.login}")
-            UserMailer.deliver_encourage_new_user_email(r)
-            @emails_sent += 1
-            r.last_reminder = Date.today
-            r.save
-            @encourage_list << r          
+          
+          # ==== Users who have activated but haven't ever added a verse ====
+          if r.needs_kick_in_pants?    
+            if r.email.nil?
+              logger.info("** Error: Unable to email user with id: #{r.id}")
+              @bounce_list << r
+            else
+              logger.info("* Sending kick in the pants to #{r.login}")
+              UserMailer.deliver_encourage_new_user_email(r)
+              @emails_sent += 1
+              r.last_reminder = Date.today
+              r.save
+              @encourage_list << r          
+            end
           end
-        end
-        
-      end # block for users who want reminders
-            
-    }
-    logger.info(" *** Sent #{@emails_sent} reminder emails")
+          
+        end # block for users who want reminders
+              
+      }
+      logger.info(" *** Sent #{@emails_sent} reminder emails")
+    end # of spawn process
   end  
 
 
