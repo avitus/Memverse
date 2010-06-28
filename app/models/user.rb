@@ -138,12 +138,17 @@ class User < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   # Check whether current user is memorizing a given verse in any translation
   # Input: User object
-  # TODO: This method occasionally returns infinity
+  # TODO: This method occasionally returns infinity due to test_interval being zero. This is not the best place
+  #       to fix the problem but good enough hack for now.
   # ----------------------------------------------------------------------------------------------------------     
   def work_load
     time_per_verse = 1.0 # minutes
     verses_per_day = 2.0 # login, setup time etc
     self.memverses.each { |mv|
+      if mv.test_interval == 0
+        mv.test_interval = 1
+        mv.save
+      end
       verses_per_day += (1 / mv.test_interval.to_f) 
     }
     return (verses_per_day * time_per_verse).round 
