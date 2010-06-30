@@ -35,7 +35,6 @@ ActionController::Routing::Routes.draw do |map|
   map.progress            '/progress',                  :controller => 'memverses',   :action => 'show_progress'
   map.popular_verses      '/popular_verses',            :controller => 'memverses',   :action => 'pop_verses'
   map.home                '/home',                      :controller => 'memverses',   :action => 'index'
-  map.news                '/news',                      :controller => 'memverses',   :action => 'news'
   map.starter_pack        '/starter_pack',              :controller => 'memverses',   :action => 'starter_pack'
   
   map.show_user_info      '/show_user_info',            :controller => 'admin',       :action => 'show_user_info'  
@@ -52,6 +51,9 @@ ActionController::Routing::Routes.draw do |map|
   map.stateboard          '/stateboard',                :controller => 'info',        :action => 'stateboard'
   map.countryboard        '/countryboard',              :controller => 'info',        :action => 'countryboard'  
   map.memverse_clock      '/memverse_clock',            :controller => 'info',        :action => 'memverse_clock'  
+  map.news                '/news',                      :controller => 'info',        :action => 'news'
+
+ 
  
   map.update_profile      '/update_profile',            :controller => 'profile',     :action => 'update_profile'
   map.church              '/church',                    :controller => 'profile',     :action => 'show_church'
