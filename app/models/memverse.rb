@@ -1,7 +1,5 @@
-class Memverse < ActiveRecord::Base
-  
-  #    t.integer  "user_id",                                                      :null => false
-  #    t.integer  "verse_id",                                                     :null => false
+  #    t.integer  "user_id",                                     :null => false
+  #    t.integer  "verse_id",                                    :null => false
   #    t.decimal  "efactor",       :precision => 5, :scale => 1, :default => 0.0
   #    t.integer  "test_interval",                               :default => 1
   #    t.integer  "rep_n",                                       :default => 1
@@ -16,7 +14,11 @@ class Memverse < ActiveRecord::Base
   #    t.integer  "next_verse"
   #    t.integer  "ref_interval"                                 :default => 1
   #    t.date     "next_ref_test'
-  
+
+class Memverse < ActiveRecord::Base
+
+  acts_as_taggable # Alias for 'acts_as_taggable_on :tags'
+    
   # Relationships
   belongs_to  :user
   belongs_to  :verse

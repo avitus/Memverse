@@ -40,6 +40,10 @@ Rails::Initializer.run do |config|
   # Sounds as though this gem will be obsolete once Prawn 0.7 is released
   config.gem 'prawn-layout',          :lib => 'prawn/layout'
   
+  # Taggable gem
+  config.gem "acts-as-taggable-on", :source => "http://gemcutter.org", :version => '2.0.0.rc1'
+  
+  
   # These cause problems with irb. Left in for reference
   # config.gem 'rspec-rails', :lib => 'spec/rails', :version => '1.1.11'
   # config.gem 'rspec', :lib => 'spec', :version => '1.1.11'
