@@ -1,4 +1,17 @@
+#    t.string   "translation",                    :null => false
+#    t.integer  "book_index",                     :null => false
+#    t.string   "book",                           :null => false
+#    t.string   "chapter",                        :null => false
+#    t.string   "versenum",                       :null => false
+#    t.text     "text"
+#    t.datetime "created_at"
+#    t.datetime "updated_at"
+#    t.boolean  "verified",    :default => false, :null => false
+#    t.boolean  "error_flag",  :default => false, :null => false
+
 class Verse < ActiveRecord::Base
+
+  acts_as_taggable # Alias for 'acts_as_taggable_on :tags'
 
   require 'cgi'  
   require 'open-uri'
