@@ -334,7 +334,8 @@ table.user-list {
 
 #video-feed {
 	float:			left;
-	width:			60%;	
+	width:			60%;
+	border-style:	none;	
 }
 
 /* --- Verse of the Day and Activity : Center Column --- */

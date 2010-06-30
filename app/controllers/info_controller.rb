@@ -127,6 +127,33 @@ class InfoController < ApplicationController
     @memorized_verses = last_entry.memverses_memorized
     
   end
+ 
+  # ----------------------------------------------------------------------------------------------------------
+  # RSS News Feed
+  # ---------------------------------------------------------------------------------------------------------- 
+  def news
+    @page_title = "Add New Verses"
+    @tab = "home"    
+    
+    # === RSS News feed ===
+    # Poached from http://www.robbyonrails.com/articles/2005/05/11/parsing-a-rss-feed
+    feed_url  = 'http://feeds.christianitytoday.com/christianitytoday/ctmag'
+    feed_sec  = 'http://feeds.christianitytoday.com/christianitytoday/history'
+    
+    @posts    = RssReader.posts_for(feed_url, length=5, perform_validation=false)
+
+    # === Check secondary feed if necessary
+    if !@posts
+      @posts   = RssReader.posts_for(feed_sec, length=5, perform_validation=false)
+    end
+  
+    # Strip out links to Digg, StumbleUpon etc.
+    if @posts
+      @posts.each { |post| 
+        post.description = post.description.split("<div")[0]
+      }
+    end
+  end  
   
   # ----------------------------------------------------------------------------------------------------------
   # Memorize

@@ -97,6 +97,7 @@
 # 03/09/10 : Added indexes for performance gains
 # 04/04/10 : Bug fix: added unique index to prevent duplicate memverse entries and reinforced with client side behavior
 # 04/06/10 : Added pages showing state/country members, added event feed for churches, states and countries
+# 06/28/10 : New feature: add entire chapters
 
 class MemversesController < ApplicationController
   
@@ -160,33 +161,6 @@ class MemversesController < ApplicationController
       end
     end
                       
-  end
-
-  # ----------------------------------------------------------------------------------------------------------
-  # RSS News Feed
-  # ---------------------------------------------------------------------------------------------------------- 
-  def news
-    @page_title = "Add New Verses"
-    @tab = "home"    
-    
-    # === RSS News feed ===
-    # Poached from http://www.robbyonrails.com/articles/2005/05/11/parsing-a-rss-feed
-    feed_url  = 'http://feeds.christianitytoday.com/christianitytoday/ctmag'
-    feed_sec  = 'http://feeds.christianitytoday.com/christianitytoday/history'
-    
-    @posts    = RssReader.posts_for(feed_url, length=5, perform_validation=false)
-
-    # === Check secondary feed if necessary
-    if !@posts
-      @posts   = RssReader.posts_for(feed_sec, length=5, perform_validation=false)
-    end
-  
-    # Strip out links to Digg, StumbleUpon etc.
-    if @posts
-      @posts.each { |post| 
-        post.description = post.description.split("<div")[0]
-      }
-    end
   end
   
  
@@ -990,7 +964,7 @@ class MemversesController < ApplicationController
       mv.save        
        
       # Update score
-      session[:reftest_answered] += 1
+      session[:reftest_answered] += 1 if session[:reftest_answered]
       
       # Start Next Question
       session[:ref_test_cntr] += 1
