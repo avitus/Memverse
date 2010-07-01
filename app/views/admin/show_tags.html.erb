@@ -1,0 +1,23 @@
+<div class="tag-list">
+
+	<table cellpadding="6" cellspacing="0">
+		<tr>
+			<th><%= link_to 'ID',			:action => 'list_assets', :sort_order => 'avail_history'%></th>				
+			<th><%= link_to 'Tag',			:action => 'list_assets', :sort_order => 'avail_history'%></th>		  	 	
+			<th><%= link_to 'Used',			:action => 'list_assets', :sort_order => 'avail_history'%></th>		  	 	
+		</tr>
+		<% for tag in @tags %>
+		<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
+			<td><%= tag.id															%></td>				
+			<td><%= link_to tag.name, :action => 'show_verses_with_tag', :id => tag	%></td>		 
+			<td><%= tag.taggings.length												%></td>				
+
+			
+			<td><%= link_to 'Edit',   :action => 'edit_verse', :id => tag %></td>
+			<td><%= link_to 'X', { :action => 'destroy_verse',  :id => tag }, :confirm => 'Are you sure?', :method => :post %></td>								
+		</tr>
+		<% end %>
+	
+	</table>
+
+</div>

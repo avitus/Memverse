@@ -57,6 +57,9 @@ class User < ActiveRecord::Base
   belongs_to              :church,          :counter_cache => true
   belongs_to              :american_state,  :counter_cache => true
   
+  # Record who tagged which verse
+  acts_as_tagger
+  
   # Associations for bloggity
   has_many :blog_posts
   has_many :blog_comments

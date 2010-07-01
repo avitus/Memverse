@@ -542,6 +542,27 @@ class AdminController < ApplicationController
     end
   end   
   
+  def show_tags
+    @tags = Tag.all
+  end
+  
+  def show_verses_with_tag
+    
+    @mv_list = Array.new 
+    @vs_list = Array.new
+    
+    @tag = Tag.find(params[:id])
+    @tagged_items = @tag.taggings
+    
+    @tagged_items.each { |tagging|
+      case tagging.taggable_type
+        when "Memverse" then @mv_list << Memverse.find(tagging.taggable_id)
+        when "Verse"    then @vs_list << Verse.find(tagging.taggable_id)
+        else logger.info("*** Unknown object type has been tagged. This is bad") 
+      end
+    }
+    
+  end
   
   # ----------------------------------------------------------------------------------------------------------
   # In place editing support
