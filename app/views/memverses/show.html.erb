@@ -1,0 +1,91 @@
+
+<!--[form:verse]-->
+
+<div id='verse-show' class='verse-text'>
+	<h2><%= @verse.book %> <%= @verse.chapter %>:<%= @verse.versenum %> [<%=@verse.translation%>] </h2>
+	
+	<p class="verse-text" id="show-verse"> <%=@verse.text%> </p>
+</div>
+
+<div id='verse-tags' class='tag-list'>
+	<h2>Memverse Tags</h2>
+	
+	<table cellpadding="6" cellspacing="1">
+		<% for tag in @tags %>
+			<tr>
+				<td class="tag"><%= tag.name %></td>
+				<% if current_user.has_role?("admin") %>
+					<td>[x]</td>
+				<% end %>
+			</tr>	
+		<% end %>
+		
+		<% if current_user.has_role?("admin") %>
+			<tr>
+				<td class="tag edit_vs" id=<%= @verse.id %>>[New Tag]</td>
+			</tr>
+		<% end %>
+	</table>
+</div>
+
+<div id='user-tags' class='tag-list'>
+	<h2>Your Tags</h2>
+	
+	<table cellpadding="6" cellspacing="1">
+		<% for tag in @user_tags %>
+			<tr>
+				<td class="tag"><%= tag.name %></td>
+				<% if current_user == @mv.user %>
+					<td><%= link_to '[x]', {:action => 'remove_verse_tag', :id => tag.id, :mv => @mv.id }, 
+										    :confirm => 'Are you sure you want to delete this tag?', 
+										    :method => :post %></td>
+				<% end %>
+			</tr>	
+		<% end %>
+		
+		<% if current_user == @mv.user %>
+			<tr>
+				<td class="tag edit_mv" id=<%= @mv.id %>>[New Tag]</td>
+			</tr>
+		<% end %>
+	</table>
+</div>
+
+<div id='other-tags' class='tag-list'>
+	<h2>User Tags</h2>
+	
+	<table cellpadding="6" cellspacing="1">
+		<% for tag in @other_tags %>
+			<tr>
+				<td class="tag"><%= tag[0].name %></td>
+			</tr>	
+		<% end %>
+	</table>
+</div>
+
+
+
+<!--[eoform:verse]-->
+
+<!-- http://www.appelsiini.net/projects/jeditable -->
+<script type="text/javascript">
+	 $(document).ready(function() {   
+	     $('.edit_vs').editable('/verses/add_verse_tag', {
+	         indicator : 'Saving...',
+	         tooltip   : 'Click to edit...'
+	     });
+	     $('.edit_mv').editable('/memverses/add_verse_tag', {
+	         indicator : 'Saving...',
+	         tooltip   : 'Click to edit...'
+	     });		 
+	 });
+</script>
+
+<!-- Prevent double-clicking of links to add verses -->
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('.no-dbl-click').click( function() {
+			$(this).attr('disabled', 'disabled').hide();
+		});
+	});
+</script>

@@ -1,0 +1,64 @@
+
+<!--[form:verse]-->
+
+<div id='verse-show' class='verse-text'>
+	<h2><%= @verse.book %> <%= @verse.chapter %>:<%= @verse.versenum %> [<%=@verse.translation%>] </h2>
+	
+	<p class="verse-text" id="show-verse"> <%=@verse.text%> </p>
+	
+	<!-- Link to add verse -->
+	<% if !current_user.has_verse_id?(@verse) %>
+		<div class="no-dbl-click">
+			<%= link_to '[Add Verse]', :controller => 'memverses', :action => 'quick_add', :vs => @verse %>
+		</div>
+	<% end %>
+</div>
+
+<div id='verse-tags'>
+	<h2>Memverse Tags</h2>
+	
+	<table cellpadding="6" cellspacing="1">
+		<% for tag in @tags %>
+			<tr>
+				<td class="tag"><%= tag.name %></td>
+				<% if current_user.has_role?("admin") %>
+					<td>[x]</td>
+				<% end %>
+			</tr>	
+		<% end %>
+		
+		<% if current_user.has_role?("admin") %>
+			<tr>
+				<td class="tag edit" id=<%= @verse.id %>>[New Tag]</td>
+			</tr>
+		<% end %>
+	</table>
+</div>
+
+<!--[eoform:verse]-->
+
+<!-- http://www.appelsiini.net/projects/jeditable -->
+<script type="text/javascript">
+	 $(document).ready(function() {   
+	     $('.edit').editable('/verses/add_verse_tag', {
+	         indicator : 'Saving...',
+	         tooltip   : 'Click to edit...'
+	     });
+	     $('.edit_area').editable('/verses/add_verse_tag', { 
+	         type      : 'textarea',
+	         cancel    : 'Cancel',
+	         submit    : 'OK',
+	         indicator : 'Saving...',
+	         tooltip   : 'Click to edit...'
+	     });
+	 });
+</script>
+
+<!-- Prevent double-clicking of links to add verses -->
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('.no-dbl-click').click( function() {
+			$(this).attr('disabled', 'disabled').hide();
+		});
+	});
+</script>

@@ -252,10 +252,45 @@ class MemversesController < ApplicationController
 
 
   # ----------------------------------------------------------------------------------------------------------   
-  # Display a single verse
+  # Display a single verse TODO: We shouldn't use this ... there is a show method in the verse controller
   # ---------------------------------------------------------------------------------------------------------- 
   def show_vs
     @verse = Verse.find(params[:vs])
+  end
+
+  # ----------------------------------------------------------------------------------------------------------   
+  # Display a single memory verse
+  # ----------------------------------------------------------------------------------------------------------  
+  def show
+    @mv         = Memverse.find(params[:id])
+    @verse      = @mv.verse
+    @user_tags  = @mv.tags
+    @tags       = @verse.tags
+    
+    @other_tags = @verse.all_user_tags
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # In place editing support
+  # ----------------------------------------------------------------------------------------------------------    
+  def add_verse_tag
+    @mv = Memverse.find(params[:id])
+    new_tag = params[:value] # need to clean this up with hpricot or equivalent
+    @mv.tag_list << new_tag.titleize
+    @mv.save
+    render :text => new_tag  
+  end
+  
+  def remove_verse_tag    
+    Tagging.find(:first, :conditions => {:tag_id => params[:id], :taggable_id => params[:mv], :taggable_type => 'Memverse' }).destroy
+    
+    # We should remove the tag if it is no longer tagging anything
+    if Tag.find(params[:id]).taggings.length == 0
+      Tag.find(params[:id]).destroy
+    end
+    
+    redirect_to(:action => 'show', :id => params[:mv])
+    
   end
 
   # ----------------------------------------------------------------------------------------------------------
