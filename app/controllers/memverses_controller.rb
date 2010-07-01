@@ -275,8 +275,10 @@ class MemversesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------    
   def add_verse_tag
     @mv = Memverse.find(params[:id])
-    new_tag = params[:value] # need to clean this up with hpricot or equivalent
-    @mv.tag_list << new_tag.titleize
+    new_tag = params[:value].titleize # need to clean this up with hpricot or equivalent
+    
+    @mv.tag_list << new_tag
+    # current_user.tag(@mv, :with => new_tag)  <-- this doesn't work for some reason but can get owner from mv anyway      
     @mv.save
     render :text => new_tag  
   end
