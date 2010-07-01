@@ -94,4 +94,8 @@ class VersesController < ApplicationController
     @verse.save
     render :text => new_tag  
   end
+  
+  def show_tag
+    @verses = Memverse.tagged_with(params[:tag]).map { |mv| mv.verse }
+  end
 end

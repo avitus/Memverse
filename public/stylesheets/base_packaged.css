@@ -63,6 +63,7 @@ table.user-list {width: 85%; cellpadding: 6px; cellspacing: 1px; border: 1px sol
 #news-feed a {font-weight: bold}
 #news-feed ul {padding-left: 0.1em; font-size: 130%}
 #news-feed #post-description {padding-left: 0.5em; font-size: 80% }
+#video-feed {float: left; width: 60%; border-style: none}
  #column-mid {float: left; width: 20% }
  #devotional {float: right; width: 40% }
  #verse-of-the-day {float: left; width: 100%; height: 15em}
@@ -84,7 +85,11 @@ table.user-list {width: 85%; cellpadding: 6px; cellspacing: 1px; border: 1px sol
  #pop-verses-table {width: 30em; position: relative}
 #pop-verses-table .is-in-user-list {background: #687284 }
 .menu-popular td em {display: none; font-weight: normal; font-style: normal; z-index: 2; position: absolute; left: 32em; text-align: left; width: 250px; background-color: #1F2229; outline: 1px solid #669; border: 2px solid #fff; padding: 10px 15px; color: #fff; font-size: 100%}
- .verse-text {width: 20em}
+  .verse-text {width: 20em; float: left}
+.tag {background-color: #687284; padding-left: 1em; padding-right: 1em}
+#verse-tags {}
+#user-tags {}
+.tag-list {padding: 0em 1em 1em 1em; float: left}
  .menu td em {display: none; font-weight: normal; font-style: normal; z-index: 2; position: absolute; top: 50px; left: 410px;  text-align: left; text-align: left; width: 250px; background-color: #1F2229; outline: 1px solid #669; border: 2px solid #fff; padding: 10px 15px; color: #fff; font-size: 100%}
  .user-stats-table {float: left; margin: 0.2em}
   #question-side {float: left; height: 440px; width: 350px; margin-right: 1px; background-color: #BAB18E;  }

@@ -24,10 +24,10 @@ class Memverse < ActiveRecord::Base
   belongs_to  :verse
   
   # Named Scopes
-  named_scope :memorized, :conditions => { :status => "Memorized" }
-  named_scope :learning, :conditions => { :status => "Learning" }
+  named_scope :memorized,     :conditions => { :status => "Memorized" }
+  named_scope :learning,      :conditions => { :status => "Learning" }
   named_scope :current, lambda { {:conditions => ['next_test >= ?', Date.today ]} }
-  named_scope :american, :include => {:user, :country}, :conditions => { 'countries.printable_name' => 'United States' }
+  named_scope :american,      :include => {:user, :country}, :conditions => { 'countries.printable_name' => 'United States' }
   named_scope :old_testament, :include => :verse, :conditions => { 'verses.book_index' =>  1..39 }
   named_scope :new_testament, :include => :verse, :conditions => { 'verses.book_index' => 40..66 }
   
