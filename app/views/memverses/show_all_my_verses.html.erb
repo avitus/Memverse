@@ -18,7 +18,7 @@
 	  </tr>
 	<% for mv in @my_verses %>
 	  <tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
-		<td align="left">  <%= mv.verse.ref				%></td>		 
+		<td align="left">  <%= link_to mv.verse.ref, {:action => 'show', :id => mv.id } %></td>		 
 		<td align="center"><%= mv.verse.translation		%></td>		
 	 	<td align="center"><%= mv.efactor				%></td>	
 	 	<td align="center"><%= mv.status				%></td>			

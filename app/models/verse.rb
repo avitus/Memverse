@@ -166,6 +166,25 @@ class Verse < ActiveRecord::Base
     
   end
 
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Returns all tags associated with a given verse
+  # ---------------------------------------------------------------------------------------------------------- 
+  def all_user_tags(numtags = 3)
+    
+    all_tags = Hash.new(0)
+    
+    self.alternative_translations.each { |tl|
+      tl.memverses.each { |mv|
+        mv.tags.each { |tag|
+          all_tags[tag] += 1
+        }
+      }
+    }
+    
+    return all_tags.sort{|a,b| a[1]<=>b[1]}.reverse[0...numtags]
+  end
+
   # ----------------------------------------------------------------------------------------------------------
   # Check with biblegateway for correctly entered verse
   # ----------------------------------------------------------------------------------------------------------  
@@ -216,6 +235,21 @@ class Verse < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------   
   def alternative_translations
     Verse.find( :all, :conditions => { :book => self.book, :chapter => self.chapter, :versenum => self.versenum } )
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Returns array of all memory verses for a given reference, irrespective of translation
+  # Input:  A verse ID
+  # Output: Array of mv
+  # ---------------------------------------------------------------------------------------------------------- 
+  def all_memory_verses
+    all_mv = Array.new
+    
+    self.alternative_translations.each { |vs| 
+      all_mv << vs.memverses 
+    }
+    
+    return all_mv.flatten   
   end
 
   # ----------------------------------------------------------------------------------------------------------

@@ -474,9 +474,31 @@ table.user-list {
     font-size: 100%; 	
 }
 
+/* === Show Verse Page === */
+
 /* For nice display of verses anywhere on website */
 .verse-text {
 	width: 20em;
+	float: left;
+}
+
+.tag {
+	background-color: #687284;
+	padding-left: 1em;
+	padding-right: 1em;
+}
+
+#verse-tags {
+	
+}
+
+#user-tags {
+	
+}
+
+.tag-list {
+	padding: 0em 1em 1em 1em;
+	float: left;
 }
 
 /* === Verse animation : Add Verses Page === */

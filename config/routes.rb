@@ -36,6 +36,7 @@ ActionController::Routing::Routes.draw do |map|
   map.popular_verses      '/popular_verses',            :controller => 'memverses',   :action => 'pop_verses'
   map.home                '/home',                      :controller => 'memverses',   :action => 'index'
   map.starter_pack        '/starter_pack',              :controller => 'memverses',   :action => 'starter_pack'
+  map.memory_verse        '/memory_verse/:id',          :controller => 'memverses',   :action => 'show'
   
   map.show_user_info      '/show_user_info',            :controller => 'admin',       :action => 'show_user_info'  
   

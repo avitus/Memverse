@@ -422,6 +422,10 @@ class Memverse < ActiveRecord::Base
     end
   end
   
+  def all_user_tags
+    self.verse.all_user_tags
+  end
+  
   
   # ----------------------------------------------------------------------------------------------------------
   # Retrieve previous/next memory verse NOTE: Replacement for method in application_controller.rb
