@@ -812,7 +812,7 @@ class MemversesController < ApplicationController
       bk, ch = params[:book_chapter].split      
     end
 
-    logger.info("*** Testing chapter: #{bk} #{ch}")
+    logger.info("* Testing chapter: #{bk} #{ch}")
     
     @chapter      = current_user.has_chapter?(bk,ch)
     @bk_ch        = bk + " " + ch
