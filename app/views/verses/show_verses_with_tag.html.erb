@@ -1,65 +1,21 @@
 <div class="verse-list">
 
-<h2>Verses tagged '<%= @tag.name %>' by Administrator</h2>
-
-	<table cellpadding="6" cellspacing="0">
-		<tr>
-			<td><b><%= link_to 'ID',			:action => 'list_assets', :sort_order => 'avail_history'%></b></td>					
-			<td><b><%= link_to 'Ver',			:action => 'list_assets', :sort_order => 'avail_history'%></b></td>		  	 
-			<td><b><%= link_to 'Book',			:action => 'list_assets', :sort_order => 'first_traded'%></b></td>
-			<td><b><%= link_to 'Chapter', 		:action => 'list_assets', :sort_order => 'updated_at'%></b></td>		  				  	  		  		  		  
-			<td><b><%= link_to 'Verse',			:action => 'list_assets', :sort_order => 'avail_history'%></b></td>	
-			<td><b><%= link_to 'Users',			:action => 'list_assets', :sort_order => 'avail_history'%></b></td>				
-			<td><b><%= link_to 'Verified',		:action => 'list_assets', :sort_order => 'avail_history'%></b></td>
-			<td><b><%= link_to 'Text',			:action => 'list_assets', :sort_order => 'first_traded'%></b></td>
-		</tr>
-		<% for vs in @vs_list %>
-		<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
-			<td><%= vs.id				%></td>				
-			<td><%= vs.translation		%></td>		 
-			<td><%= vs.book				%></td>			
-			<td><%= vs.chapter			%></td>
-			<td><%= vs.versenum			%></td>
-			<td><%= vs.memverses.length	%></td>				
-			<td><%= vs.verified			%></td>
-			<td><%= vs.text				%></td>	
-			
-			<td><%= link_to 'Edit',   :action => 'edit_verse', :id => vs %></td>
-			<td><%= link_to 'X', { :action => 'destroy_verse',  :id => vs }, :confirm => 'Are you sure?', :method => :post %></td>								
-		</tr>
-		<% end %>
-	</table>
-
 <h2>Verses tagged '<%= @tag.name %>' by Users</h2>
 
 	<table cellpadding="6" cellspacing="0">
 		<tr>
-			<td><b><%= link_to 'ID',			:action => 'list_assets', :sort_order => 'avail_history'%></b></td>					
-			<td><b><%= link_to 'Ver',			:action => 'list_assets', :sort_order => 'avail_history'%></b></td>		  	 
-			<td><b><%= link_to 'Book',			:action => 'list_assets', :sort_order => 'first_traded'%></b></td>
-			<td><b><%= link_to 'Chapter', 		:action => 'list_assets', :sort_order => 'updated_at'%></b></td>		  				  	  		  		  		  
-			<td><b><%= link_to 'Verse',			:action => 'list_assets', :sort_order => 'avail_history'%></b></td>	
-			<td><b><%= link_to 'Users',			:action => 'list_assets', :sort_order => 'avail_history'%></b></td>				
-			<td><b><%= link_to 'Verified',		:action => 'list_assets', :sort_order => 'avail_history'%></b></td>
-			<td><b><%= link_to 'Text',			:action => 'list_assets', :sort_order => 'first_traded'%></b></td>
+			<th>Ver</th>
+			<th>Verse</th>
+			<th>Text</th>
+			<th>Status</th>
 		</tr>
-		<% for mv in @mv_list %>
+		<% for vs in @user_list %>
 		<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
-			<td><%= mv.id				%></td>				
-			<td><%= mv.verse.translation		%></td>		 
-			<td><%= mv.verse.book				%></td>			
-			<td><%= mv.verse.chapter			%></td>
-			<td><%= mv.verse.versenum			%></td>
-			<td><%= mv.verse.memverses.length	%></td>				
-			<td><%= mv.verse.verified			%></td>
-			<td><%= mv.verse.text				%></td>	
-			
-			<td><%= link_to 'Edit',   :action => 'edit_mv', :id => mv %></td>
-			<td><%= link_to 'X', { :action => 'destroy_mv',  :id => mv }, :confirm => 'Are you sure?', :method => :post %></td>								
+			<td><%= vs.translation		%></td>		 
+			<td><%= vs.ref				%></td>			
+			<td><%= vs.text				%></td>	
+			<td><%= current_user.has_verse?(vs.book, vs.chapter, vs.versenum)? "In Your List" : link_to("Add to List", :controller => 'memverses', :action => 'quick_add', :vs => vs) %></td>								
 		</tr>
 		<% end %>
 	</table>
-
-
-
 </div>
