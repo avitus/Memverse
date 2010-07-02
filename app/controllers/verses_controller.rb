@@ -94,8 +94,14 @@ class VersesController < ApplicationController
     @verse.save
     render :text => new_tag  
   end
+
+  def tag_cloud
+    @tags = Tag.all
+  end
   
   def show_verses_with_tag
-    @verses = Memverse.tagged_with(params[:tag]).map { |mv| mv.verse }
+    # TODO: Need to filter by bible translation as well
+    @tag       = Tag.find_by_name(params[:tag])
+    @user_list = Memverse.tagged_with(params[:tag]).map { |mv| mv.verse }
   end
 end

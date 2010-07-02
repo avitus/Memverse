@@ -38,6 +38,8 @@ ActionController::Routing::Routes.draw do |map|
   map.starter_pack        '/starter_pack',              :controller => 'memverses',   :action => 'starter_pack'
   map.memory_verse        '/memory_verse/:id',          :controller => 'memverses',   :action => 'show'
   
+  map.tag_cloud           '/tag_cloud',                 :controller => 'verses',      :action => 'tag_cloud'
+  
   map.show_user_info      '/show_user_info',            :controller => 'admin',       :action => 'show_user_info'  
   
   # Doesn't require a login
