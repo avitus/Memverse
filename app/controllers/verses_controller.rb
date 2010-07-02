@@ -102,6 +102,6 @@ class VersesController < ApplicationController
   def show_verses_with_tag
     # TODO: Need to filter by bible translation as well
     @tag       = Tag.find_by_name(params[:tag])
-    @user_list = Memverse.tagged_with(params[:tag]).map { |mv| mv.verse }
+    @user_list = Memverse.tagged_with(params[:tag]).map{ |mv| mv.verse}.uniq
   end
 end
