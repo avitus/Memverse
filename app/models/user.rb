@@ -322,25 +322,25 @@ class User < ActiveRecord::Base
       return true  # don't change anything
     else
       if reminder_freq == "weekly" and days_since_active > 10  # focus on users who never set their reminder frequency
-        logger.info("* Changing reminder frequency for #{self.login} to a monthly schedule. Last activity was #{days_since_active} days ago")
+        logger.info("*** Changing reminder frequency for #{self.login} to a monthly schedule. Last activity was #{days_since_active} days ago")
         self.reminder_freq = "Never"
         self.save
       end
       
       if reminder_freq == "Weekly" and days_since_active > 40
-        logger.info("* Changing reminder frequency for #{self.login} to a monthly schedule. Last activity was #{days_since_active} days ago")
+        logger.info("*** Changing reminder frequency for #{self.login} to a monthly schedule. Last activity was #{days_since_active} days ago")
         self.reminder_freq = "Monthly"
         self.save
       end
       
       if reminder_freq == "Monthly" and days_since_active > 65
-        logger.info("* Changing reminder frequency for #{self.login} to a quarterly schedule. Last activity was #{days_since_active} days ago")
+        logger.info("*** Changing reminder frequency for #{self.login} to a quarterly schedule. Last activity was #{days_since_active} days ago")
         self.reminder_freq = "Quarterly"
         self.save
       end 
       
       if reminder_freq == "Daily" and days_since_active > 25
-        logger.info("* Changing reminder frequency for #{self.login} to a weekly schedule. Last activity was #{days_since_active} days ago")
+        logger.info("*** Changing reminder frequency for #{self.login} to a weekly schedule. Last activity was #{days_since_active} days ago")
         self.reminder_freq = "Weekly"
         self.save
       end        

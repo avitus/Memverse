@@ -812,7 +812,7 @@ class MemversesController < ApplicationController
       bk, ch = params[:book_chapter].split      
     end
 
-    logger.info("* Testing chapter: #{bk} #{ch}")
+    logger.info("*** Testing chapter: #{bk} #{ch}")
     
     @chapter      = current_user.has_chapter?(bk,ch)
     @bk_ch        = bk + " " + ch
@@ -1115,7 +1115,7 @@ class MemversesController < ApplicationController
       score = (@correct.to_f / @answered.to_f) * 100
       
       @old_accuracy = current_user.accuracy
-      @new_accuracy = ((@old_accuracy.to_f * 0.75) + (score.to_f * 0.25)).to_i 
+      @new_accuracy = ((@old_accuracy.to_f * 0.75) + (score.to_f * 0.25)).ceil.to_i       
       
       @perfect_score = (@correct == @answered)
           
