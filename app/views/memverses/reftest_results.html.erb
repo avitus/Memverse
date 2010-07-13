@@ -1,22 +1,24 @@
 <div>
-	<h2>You got <%=@correct%> out of <%=@answered%> verses correct and scored <%=@grade%>/100.</h2>
+	<h2>You got <%=@correct%> out of <%=@answered%> verses correct and scored <%=@grade%>/100. Your current reference accuracy is now <%= @new_ref_grade %>%</h2>
 </div>
 
-<p>These are the references you got wrong:</p>
-
-<div>
-	<table cellpadding="6" cellspacing="1" border="1">
-		<tr>		  	 
-			<th>Reference</td>	
-			<th>Memory Verse</td>
-		</tr>
-
-		<% for mistake in @incorrect %>
-			<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
-				<td><%=session[:ref_soln][mistake][0]%> <%=session[:ref_soln][mistake][1]%>:<%=session[:ref_soln][mistake][2]%></td>
-				<td><%= session[:ref_test][mistake] %></td>				
+<% if @incorrect.length > 0 %>
+	<p>These are the references you got wrong:</p>
+	
+	<div>
+		<table cellpadding="6" cellspacing="1" border="1">
+			<tr>		  	 
+				<th>Reference</td>	
+				<th>Memory Verse</td>
 			</tr>
-		<% end %>
-	</table>
-</div>
+	
+			<% for mistake in @incorrect %>
+				<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
+					<td><%=session[:ref_soln][mistake][0]%> <%=session[:ref_soln][mistake][1]%>:<%=session[:ref_soln][mistake][2]%></td>
+					<td><%= session[:ref_test][mistake] %></td>				
+				</tr>
+			<% end %>
+		</table>
+	</div>
+<% end %>	
 
