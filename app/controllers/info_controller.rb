@@ -132,7 +132,7 @@ class InfoController < ApplicationController
   # RSS News Feed
   # ---------------------------------------------------------------------------------------------------------- 
   def news
-    @page_title = "Add New Verses"
+    @page_title = "Memverse News Network"
     @tab = "home"    
     
     # === RSS News feed ===

@@ -1007,7 +1007,7 @@ class MemversesController < ApplicationController
       session[:ref_test_cntr] += 1
       
       # Stop after questions are finished or if user quits
-      if session[:reftest_answered] >= session[:reftest_length] or params[:commit]=="Done" 
+      if session[:reftest_answered] >= session[:reftest_length] or params[:commit]=="Done"  # TODO: handle case where session variables are Nil
         redirect_to :action => 'reftest_results'
       else
         redirect_to :action => 'test_ref'
