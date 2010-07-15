@@ -52,6 +52,26 @@ module ApplicationHelper
     end
   end  
 
+  # ----------------------------------------------------------------------------------------------------------
+  # Support for tag cloud
+  # ----------------------------------------------------------------------------------------------------------   
+  def tag_cloud( tags )
+    classes = %w(cloud1 cloud2 cloud3 cloud4 cloud5 cloud6 cloud7)
+  
+    max, min = 0, 0
+    
+    tags.each { |t|
+      max = t.count.to_i if t.count.to_i > max
+      min = t.count.to_i if t.count.to_i < min
+    }
+  
+    divisor = ((max - min) / classes.size) + 1 
+  
+    tags.each { |t|
+       yield t.name, classes[(t.count.to_i - min) / divisor]
+    }
+  end
+  
   
   # ----------------------------------------------------------------------------------------------------------
   # This function replaces 'escape_javascript' which used to work under Rails 2.2.2 but stopped working in 

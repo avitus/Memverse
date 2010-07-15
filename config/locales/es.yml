@@ -299,6 +299,8 @@
     update_profile:
       Name:                     "Nombre"
       Email:                    "Correo"
+      Gender:                   "Género"
+      Translation:              "Traducción"      
       Country:                  "País"
       State:                    "Estado"
       Church:                   "Iglesia / Organización"

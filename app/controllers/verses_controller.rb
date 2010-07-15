@@ -96,7 +96,7 @@ class VersesController < ApplicationController
   end
 
   def tag_cloud
-    @tags = Tag.all
+    @tags = Memverse.tag_counts( :order => "name" )
   end
   
   def show_verses_with_tag
