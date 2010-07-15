@@ -300,6 +300,8 @@
     update_profile:
       Name:                     "Name"
       Email:                    "Email"
+      Gender:                   "Gender"
+      Translation:              "Translation"
       Country:                  "Country"
       State:                    "State"
       Church:                   "Church / Organization"

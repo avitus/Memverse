@@ -113,6 +113,14 @@ class User < ActiveRecord::Base
 
   end
 
+  def his_or_her
+    case self.gender 
+      when "Female" then "her" 
+      when "Male"   then "his"
+      else "their"
+    end
+  end
+
   # ----------------------------------------------------------------------------------------------------------
   # Check whether current user is memorizing a given chapter in any translation
   # Input: "John", 3
@@ -264,6 +272,8 @@ class User < ActiveRecord::Base
         
     self.name             = new_params["name"]
     self.email            = new_params["email"]
+    self.gender           = new_params["gender"]
+    self.translation      = new_params["translation"]
     self.reminder_freq    = new_params["reminder_freq"]
     self.country          = Country.find(:first, :conditions => ["printable_name = ?", new_params["country"]])
     self.american_state   = AmericanState.find(:first, :conditions => ["name = ?", new_params["american_state"]])

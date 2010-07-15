@@ -299,7 +299,6 @@ class MemversesController < ApplicationController
   # Edit a verse
   # ----------------------------------------------------------------------------------------------------------   
   def edit_verse
-    logger.debug("*** Looking for verse #{params[:mv_id]}")
     @verse = Memverse.find(params[:mv_id]).verse 
   end 
 
@@ -1265,7 +1264,7 @@ class MemversesController < ApplicationController
         Tweet.create(:news => "#{current_user.name_or_login} has memorized #{mv.verse.ref}", :user_id => current_user.id, :importance => 5)
         if current_user.reaching_milestone
           flash[:notice] << " That was your #{current_user.memorized+1}th memorized verse!"
-          Tweet.create(:news => "#{current_user.name_or_login} has memorized their #{current_user.memorized+1}th verse", :user_id => current_user.id, :importance => 3)
+          Tweet.create(:news => "#{current_user.name_or_login} has memorized #{current_user.his_or_her} #{current_user.memorized+1}th verse", :user_id => current_user.id, :importance => 3)
         end
         if mv.chapter_memorized?
           flash[:notice] << " You have now memorized all of #{mv.verse.book} #{mv.verse.chapter}. Great job!"

@@ -1,17 +1,7 @@
-<div class="tag-list">
-
-	<table cellpadding="6" cellspacing="0">
-		<tr>
-			<th>Tag</th>		  	 	
-			<th>Verses</th>		  	 	
-		</tr>
-		<% for tag in @tags %>
-		<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
-			<td><%= link_to tag.name, :action => 'show_verses_with_tag', :tag => tag.name	%></td>		 
-			<td><%= tag.taggings.length														%></td>											
-		</tr>
-		<% end %>
-	
-	</table>
-
+<div>
+	<% tag_cloud @tags do |name, css_class|  %>
+	      <%= link_to name, {:action => 'show_verses_with_tag', :tag => tag.name},
+	            :class => css_class %>
+	<% end %>
 </div>
+
