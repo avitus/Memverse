@@ -40,7 +40,9 @@ ActionController::Routing::Routes.draw do |map|
   
   map.tag_cloud           '/tag_cloud',                 :controller => 'verses',      :action => 'tag_cloud'
   
-  map.show_user_info      '/show_user_info',            :controller => 'admin',       :action => 'show_user_info'  
+  map.show_user_info      '/show_user_info',            :controller => 'admin',       :action => 'show_user_info' 
+  map.show_tags           '/show_tags',                 :controller => 'admin',       :action => 'show_tags'
+  
   
   # Doesn't require a login
   map.contact             '/contact',                   :controller => 'info',        :action => 'contact'   
@@ -61,6 +63,8 @@ ActionController::Routing::Routes.draw do |map|
   map.update_profile      '/update_profile',            :controller => 'profile',     :action => 'update_profile'
   map.church              '/church',                    :controller => 'profile',     :action => 'show_church'
   map.unsubscribe         '/unsubscribe/*email',        :controller => 'profile',     :action => 'unsubscribe'
+
+  map.edit_tag           '/edit_tag/:id',               :controller => 'tag',         :action => 'edit_tag'
 
   # Tweet routes
   map.tweets              '/tweets',                    :controller => 'tweets',      :action => 'index'  
