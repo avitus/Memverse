@@ -238,6 +238,15 @@ class Verse < ActiveRecord::Base
   end
 
   # ----------------------------------------------------------------------------------------------------------
+  # Returns array of all translations for a given verse
+  # Input:  A verse ID
+  # Output: verse in different translation or nil
+  # ----------------------------------------------------------------------------------------------------------  
+  def switch_tl(tl)
+    Verse.find( :first, :conditions => { :translation => tl, :book => self.book, :chapter => self.chapter, :versenum => self.versenum } )
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
   # Returns array of all memory verses for a given reference, irrespective of translation
   # Input:  A verse ID
   # Output: Array of mv

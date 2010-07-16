@@ -14,13 +14,13 @@
  .secondary-b-4 {background-color: #BAA18C }
 .secondary-b-5 {background-color: #BAA28E }
  .blacktext {background-color: #1F2229 }
-  .cloud1 {font-size: 100%;}
-.cloud2 {font-size: 120%;}
-.cloud3 {font-size: 140%;}
-.cloud4 {font-size: 160%;}
-.cloud5 {font-size: 180%;}
-.cloud6 {font-size: 200%;}
-.cloud7 {font-size: 220%;}
+  .cloud1 {padding: 0px 7px 0px 7px; margin-top: 2px; font-size: 100%; background-color: #BAB18E;}
+.cloud2 {padding: 0px 7px 0px 7px; margin-top: 2px; font-size: 120%; background-color: #BAB18E}
+.cloud3 {padding: 0px 7px 0px 7px; margin-top: 2px; font-size: 140%; background-color: #BAA28E}
+.cloud4 {padding: 0px 7px 0px 7px; margin-top: 2px; font-size: 160%; background-color: #BAA28E}
+.cloud5 {padding: 0px 7px 0px 7px; margin-top: 2px; font-size: 180%; background-color: #BAA28E}
+.cloud6 {padding: 0px 7px 0px 7px; margin-top: 2px; font-size: 200%; background-color: #687284}
+.cloud7 {padding: 0px 7px 0px 7px; margin-top: 2px; font-size: 220%; background-color: #687284}
  a:link {text-decoration: none}
 a:visited {text-decoration: none}
 a:hover {text-decoration: underline}

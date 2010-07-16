@@ -95,13 +95,20 @@ class VersesController < ApplicationController
     render :text => new_tag  
   end
 
+  # ----------------------------------------------------------------------------------------------------------
+  # Scrappy little tag cloud
+  # ----------------------------------------------------------------------------------------------------------   
   def tag_cloud
+    @tab = "home"    
+    @page_title = "Memory Verse Tag Cloud"     
     @tags = Memverse.tag_counts( :order => "name" )
   end
-  
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Show verses with tag (in preferred translation if available)
+  # ---------------------------------------------------------------------------------------------------------- 
   def show_verses_with_tag
-    # TODO: Need to filter by bible translation as well
     @tag       = Tag.find_by_name(params[:tag])
-    @user_list = Memverse.tagged_with(params[:tag]).map{ |mv| mv.verse}.uniq
+    @user_list = Memverse.tagged_with(params[:tag]).map{ |mv| mv.verse.switch_tl(current_user.translation) || mv.verse}.uniq
   end
 end
