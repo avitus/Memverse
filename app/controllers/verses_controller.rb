@@ -1,4 +1,7 @@
 class VersesController < ApplicationController
+  
+  before_filter :login_required, :except => :index
+  
   # GET /verses
   # GET /verses.xml
   def index
