@@ -43,6 +43,9 @@ Rails::Initializer.run do |config|
   # Taggable gem
   config.gem "acts-as-taggable-on", :source => "http://gemcutter.org", :version => '2.0.0.rc1'
   
+  # Error tracking
+  config.gem 'exceptional'
+  
   
   # These cause problems with irb. Left in for reference
   # config.gem 'rspec-rails', :lib => 'spec/rails', :version => '1.1.11'
