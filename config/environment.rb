@@ -94,9 +94,10 @@ Rails::Initializer.run do |config|
     
 end
 
-ExceptionNotifier.exception_recipients = %w(andy@memverse.com)
-ExceptionNotifier.sender_address = %("Application Error" <app.error@memverse.com>)  
-ExceptionNotifier.email_prefix = "[APP] " # defaults to "[ERROR] "
+# No longer using exception notification ... using Exceptional web service instead
+# ExceptionNotifier.exception_recipients = %w(andy@memverse.com)
+# ExceptionNotifier.sender_address = %("Application Error" <app.error@memverse.com>)  
+# ExceptionNotifier.email_prefix = "[APP] " # defaults to "[ERROR] "
 
 TRANSLATIONS = { 
     :NIV => "New International Version",
