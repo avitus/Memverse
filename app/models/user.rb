@@ -666,7 +666,7 @@ class User < ActiveRecord::Base
     #
     # Of course, you could also create a join table to join users to blogs they can blog in.  But do you want to do 
     # that with blog comments and ability to moderate comments as well?
-    self.id == 2 or self.id == 366 or self.id == 1138 or self.id == 3113 # Restrict blogging to me, Heather-Kate Taylor and Phil Walker
+    self.id == 2 or self.id == 366 or self.id == 1138 or self.id == 3113 or self.id == 4024 # Restrict blogging to me, Heather-Kate Taylor and Phil Walker
   end
   
   # Whether a user can moderate the comments for a given blog
