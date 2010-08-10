@@ -1,0 +1,29 @@
+<h1>Listing quests</h1>
+
+<table>
+  <tr>
+    <th>Rank</th>
+    <th>Task</th>
+    <th>Description</th>
+  </tr>
+
+<% @quests.each do |quest| %>
+  <tr>
+    <td><%=h quest.rank %></td>
+    <td><%=h quest.task %></td>
+    <td><%=h quest.description %></td>
+    <td><%= link_to 'Show', quest %></td>
+	
+	<% if admin? %>
+	    <td><%= link_to 'Edit', edit_quest_path(quest) %></td>
+	    <td><%= link_to 'Destroy', quest, :confirm => 'Are you sure?', :method => :delete %></td>
+	<% end %>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<% if admin? %>
+	<%= link_to 'New quest', new_quest_path %>
+<% end %>

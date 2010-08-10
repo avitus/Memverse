@@ -1,0 +1,24 @@
+<h1>Editing quest</h1>
+
+<% form_for(@quest) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :rank %><br />
+    <%= f.text_field :rank %>
+  </p>
+  <p>
+    <%= f.label :task %><br />
+    <%= f.text_field :task %>
+  </p>
+  <p>
+    <%= f.label :description %><br />
+    <%= f.text_area :description %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @quest %> |
+<%= link_to 'Back', quests_path %>

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 29) do
+ActiveRecord::Schema.define(:version => 30) do
 
   create_table "american_states", :force => true do |t|
     t.string  "abbrev",      :limit => 20, :default => "", :null => false
@@ -210,6 +210,21 @@ ActiveRecord::Schema.define(:version => 29) do
   end
 
   add_index "progress_reports", ["user_id"], :name => "index_progress_reports_on_user_id"
+
+  create_table "quests", :force => true do |t|
+    t.integer  "rank"
+    t.string   "task"
+    t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "quests", ["rank"], :name => "index_quests_on_rank"
+
+  create_table "quests_users", :id => false, :force => true do |t|
+    t.integer "quest_id"
+    t.integer "user_id"
+  end
 
   create_table "roles", :force => true do |t|
     t.string "name"
