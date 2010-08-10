@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  include ExceptionNotifiable
+#  include ExceptionNotifiable
   include AuthenticatedSystem
   include RoleRequirementSystem
 
@@ -12,6 +12,25 @@ class ApplicationController < ActionController::Base
   helper Ziya::YamlHelpers::Charts
   
   before_filter :set_locale, :prepare_for_mobile  
+   
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Admin Authorization
+  # ----------------------------------------------------------------------------------------------------------    
+  helper_method :admin?    
+  protected  
+  def admin?  
+    current_user.has_role?('admin')  
+  end    
+   
+  def authorize  
+    unless admin?  
+      flash[:error] = "Unauthorized access."
+      redirect_to home_path  
+      false  
+    end  
+  end    
+   
    
   # ----------------------------------------------------------------------------------------------------------
   # Localization

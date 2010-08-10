@@ -50,6 +50,7 @@ class User < ActiveRecord::Base
   
   # Relationships
   has_and_belongs_to_many :roles
+  has_and_belongs_to_many :quests
   has_many                :memverses 
   has_many                :progress_reports
   has_many                :tweets

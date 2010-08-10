@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :quests
+
   map.resources :collections
  
   # Restful Authentication Rewrites
