@@ -56,9 +56,9 @@ class BlogPostsController < ApplicationController
 		@recent_posts = recent_posts(blog_page)
 		@blog_post = BlogPost.find(:first, :conditions => ["id = ? OR url_identifier = ?", params[:id], params[:id]])
 
-		if !@blog_post || (!@blog_post.is_complete && !current_user.can_blog?(@blog_post.blog_id))
+		if !@blog_post || (!@blog_post.is_complete  && (!current_user || !current_user.can_blog?(@blog_post.blog_id)))
 			@blog_post = nil
-			flash[:error] = "You do not have permission to see this blog."
+			flash[:error] = "You do not have permission to see that blog post."
 			return (redirect_to( :action => 'index' ))
 		else
 			@page_name = @blog_post.title

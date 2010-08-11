@@ -1,12 +1,20 @@
 <div id="show_user">
-	<table cellpadding="6" cellspacing="1" border="1">
-		<tr><td>Name</td>		<td><%= @user.name || @user.login %></td></tr>
-		<tr><td>Church</td>		<td><%= @user.church ? @user.church.name : "" %></td></tr>
-		<tr><td>Country</td>	<td><%= @user.country ? @user.country.printable_name : "" %></td></tr>
-		<% if @user.american_state %>	
-			<tr><td>State</td>	<td><%= @user.american_state.name %></td></tr>	
-		<% end %>
-	</table>
+	<div id="main-stats">
+		<table cellpadding="6" cellspacing="1" border="1">
+			<tr><td>Name</td>		<td><%= @user.name || @user.login %></td></tr>
+			<tr><td>Church</td>		<td><%= @user.church ? @user.church.name : "" %></td></tr>
+			<tr><td>Country</td>	<td><%= @user.country ? @user.country.printable_name : "" %></td></tr>
+			<% if @user.american_state %>	
+				<tr><td>State</td>	<td><%= @user.american_state.name %></td></tr>	
+			<% end %>
+			<tr><td>Level</td>		<td><%= @user.rank %></td></tr>
+			<tr><td>Memorized</td>	<td><%= @user.memorized %></td></tr>
+		</table>
+	</div>
+	
+	<div id="quest-info">
+		<%= render :partial => "quests/current_user_quests" %> 
+	</div>
 	
 	<br>
 	

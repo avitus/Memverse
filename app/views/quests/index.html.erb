@@ -2,14 +2,14 @@
 
 <table>
   <tr>
-    <th>Rank</th>
+    <th>Level</th>
     <th>Task</th>
     <th>Description</th>
   </tr>
 
 <% @quests.each do |quest| %>
   <tr>
-    <td><%=h quest.rank %></td>
+    <td><%=h quest.level %></td>
     <td><%=h quest.task %></td>
     <td><%=h quest.description %></td>
     <td><%= link_to 'Show', quest %></td>

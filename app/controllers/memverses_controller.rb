@@ -1030,7 +1030,7 @@ class MemversesController < ApplicationController
     answer        = params[:answer].gsub(/\s+/," ").strip
 #    errorcode, book, chapter, verse = parse_verse(answer) 
     
-    question_num  = session[:exam_cntr]  
+    question_num  = session[:exam_cntr] || 1  # Set exam question number to 1 if session variable is nil
     solution      = session[:exam_answers][question_num].gsub(/\s+/," ").strip if session[:exam_answers]
  
     

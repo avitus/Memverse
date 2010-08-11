@@ -4,8 +4,8 @@
   <%= f.error_messages %>
 
   <p>
-    <%= f.label :rank %><br />
-    <%= f.text_field :rank %>
+    <%= f.label :level %><br />
+    <%= f.text_field :level %>
   </p>
   <p>
     <%= f.label :task %><br />
@@ -15,6 +15,19 @@
     <%= f.label :description %><br />
     <%= f.text_area :description %>
   </p>
+  <p>
+    <%= f.label :objective %><br />
+    <%= f.text_field :objective %>
+  </p>
+  <p>
+    <%= f.label :qualifier %><br />
+    <%= f.text_field :qualifier %>
+  </p>
+  <p>
+    <%= f.label :quantity %><br />
+    <%= f.text_field :quantity %>
+  </p>   
+  
   <p>
     <%= f.submit 'Create' %>
   </p>
