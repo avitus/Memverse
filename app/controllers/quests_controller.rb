@@ -5,7 +5,7 @@ class QuestsController < ApplicationController
   # GET /quests
   # GET /quests.xml
   def index
-    @quests = Quest.all
+    @quests = Quest.all(:order => 'level')
 
     respond_to do |format|
       format.html # index.html.erb
@@ -86,8 +86,22 @@ class QuestsController < ApplicationController
     end
   end
   
+  def current_user_quests
+    @current_user_quests = current_user.quests
+    
+    logger.debug("Found #{@current_quests.length} quests for user #{current_user.login}")
+    
+    render :partial=>'current_user_quests', :layout=>false
+  end
+  
   def quest_completion_check
     # TODO: Check for quests that have been completed by user
     # Maybe we want to pass in a specific quest that has been completed
+    # There are various different types of objects we can check
+    #  - Memverses, chapters, books, psalms, proverbs, tags, invitees (future), url
+    # better: obj = {vs, ch, bk, url, disciples, email invites, sessions, blog post}, type = { any, Romans, wisdom, history, ot, nt etc), quantity = {1, 2, 5, 10 etc}
+    
+    
+    
   end
 end

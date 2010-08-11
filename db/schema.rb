@@ -212,14 +212,20 @@ ActiveRecord::Schema.define(:version => 30) do
   add_index "progress_reports", ["user_id"], :name => "index_progress_reports_on_user_id"
 
   create_table "quests", :force => true do |t|
-    t.integer  "rank"
+    t.integer  "level"
     t.string   "task"
     t.text     "description"
+    t.string   "objective"
+    t.string   "qualifier"
+    t.integer  "quantity"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "url"
   end
 
-  add_index "quests", ["rank"], :name => "index_quests_on_rank"
+  add_index "quests", ["level"], :name => "index_quests_on_level"
+  add_index "quests", ["objective"], :name => "index_quests_on_objective"
+  add_index "quests", ["qualifier"], :name => "index_quests_on_qualifier"
 
   create_table "quests_users", :id => false, :force => true do |t|
     t.integer "quest_id"
@@ -315,6 +321,7 @@ ActiveRecord::Schema.define(:version => 30) do
     t.integer  "ref_grade",                                :default => 10
     t.string   "gender"
     t.string   "translation",                              :default => "NIV"
+    t.integer  "level",                                    :default => 0,          :null => false
   end
 
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true

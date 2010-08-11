@@ -8,6 +8,7 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
+    @current_user_quests = @user.current_uncompleted_quests
   end 
  
   def create

@@ -224,6 +224,20 @@ class User < ActiveRecord::Base
   end
 
   # ----------------------------------------------------------------------------------------------------------
+  # Returns all quests still needed for user's current level
+  # ----------------------------------------------------------------------------------------------------------   
+  def current_uncompleted_quests
+    Quest.find(:all, :conditions => { :level => self.level+1 } ) - self.current_completed_quests
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Returns all quests completed for user's current level
+  # ----------------------------------------------------------------------------------------------------------  
+  def current_completed_quests
+    self.quests(:level => self.level+1)
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
   # Has user ever finished a day of memorization
   # Input: User object
   # ----------------------------------------------------------------------------------------------------------
