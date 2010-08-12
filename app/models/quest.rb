@@ -30,6 +30,12 @@ class Quest < ActiveRecord::Base
       when 'Books'
         false
         
+      when 'Accuracy'
+        user.accuracy >= self.quantity
+        
+      when 'References'
+        user.ref_grade >= self.quantity
+        
       when 'Sessions'
         user.num_sessions >= self.quantity
       
