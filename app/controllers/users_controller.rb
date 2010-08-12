@@ -19,7 +19,8 @@ class UsersController < ApplicationController
       flash[:notice] = "Congratulations!! You have reached level #{@user.level}."
     end    
     
-    @current_user_quests = @user.current_uncompleted_quests
+    @current_user_quests      = @user.current_uncompleted_quests
+    @current_completed_quests = @user.current_completed_quests
     
   end 
  

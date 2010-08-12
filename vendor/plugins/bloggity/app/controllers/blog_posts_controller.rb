@@ -62,6 +62,15 @@ class BlogPostsController < ApplicationController
 			return (redirect_to( :action => 'index' ))
 		else
 			@page_name = @blog_post.title
+      
+      # Used to check off quests
+      spawn do
+        if q = Quest.find_by_url( blog_named_link(@blog_post, :quest) )
+          q.check_quest_off(current_user)
+          flash.keep[:notice] = "You have completed the task: #{q.task}"
+        end
+      end        
+      
 		end
 	
     respond_to do |format|
