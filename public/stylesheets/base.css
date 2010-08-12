@@ -89,6 +89,32 @@ img {
 	background: yellow;
 }
 
+table.memverse-standard {
+	border-width: 1px;
+	border-spacing: 1px;
+	border-style: none;
+	border-color: black;
+	border-collapse: separate;
+	background-color: white;
+}
+table.memverse-standard th {
+	border-width: thin;
+	padding: 3px;
+	border-style: solid;
+	border-color: gray;
+	background-color: #687284;
+	-moz-border-radius: 3px 3px 3px 3px;
+}
+table.memverse-standard td {
+	border-width: thin;
+	padding: 3px;
+	border-style: solid;
+	border-color: gray;
+	background-color: #BAB18E;
+	-moz-border-radius: 3px 3px 3px 3px;
+}
+
+
 /* Default sans-serif fonts */
 body {
 	font-family: verdana, helvetica, arial, sans-serif;
@@ -376,6 +402,32 @@ table.user-list {
 	position:		relative;
 	clear:			both;
 }
+
+/* === User Dashboard === */
+
+#show-user #main-stats {
+	float:			left;
+	width:			30%;
+}
+
+#show-user #quest-info {
+	float:			left;
+	width:			50%;
+}
+
+
+#show-user #complete-chapters {
+	float:			left;
+	width:			30%;
+	clear:			both;	
+}
+
+#show-user #verse-distribution {
+	float:			left;
+	width:			50%;
+}
+
+
 
 /* === Add a Verse Page and Forms === */
 #add_verse_form {

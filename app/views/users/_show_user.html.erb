@@ -1,60 +1,52 @@
-<div id="show_user">
+<div id="show-user">
 	<div id="main-stats">
-		<table cellpadding="6" cellspacing="1" border="1">
-			<tr><td>Name</td>		<td><%= @user.name || @user.login %></td></tr>
-			<tr><td>Church</td>		<td><%= @user.church ? @user.church.name : "" %></td></tr>
-			<tr><td>Country</td>	<td><%= @user.country ? @user.country.printable_name : "" %></td></tr>
-			<% if @user.american_state %>	
-				<tr><td>State</td>	<td><%= @user.american_state.name %></td></tr>	
-			<% end %>
-			<tr><td>Level</td>		<td><%= @user.level %></td></tr>
-			<tr><td>Memorized</td>	<td><%= @user.memorized %></td></tr>
-		</table>
+		<%= render :partial => "users/user_info" %>
 	</div>
 	
 	<div id="quest-info">
 		<%= render :partial => "quests/current_user_quests" %> 
 	</div>
 	
-	<br>
-	
-	<table cellpadding="6" cellspacing="1" border="1">
-		<th> 								<td>Memorized</td> 								<td>Learning</td>							</th>	
-		<tr> <td width=200>All Verses</td>	<td><%= @user.memorized%></td>					<td><%= @user.learning%></td>				</tr>
-	</table>	
 
-	<table cellpadding="6" cellspacing="1" border="1">
-		<th> 								<td>Memorized</td> 								<td>Learning</td>							</th>	
-		<tr><td width=200>Old Testament</td><td><%= @user.ot_verses["Memorized"]%></td>		<td><%= @user.ot_verses["Learning"]%></td>	</tr>
-		<tr><td>New Testament</td>			<td><%= @user.nt_verses["Memorized"]%></td>		<td><%= @user.nt_verses["Learning"]%></td>	</tr>			
-	</table>	
-
-	<table cellpadding="6" cellspacing="1" border="1">
-		<th> 								<td>Memorized</td> 								<td>Learning</td>							</th>	
-		<tr><td width="200">History</td>	<td><%= @user.history["Memorized"]%></td>		<td><%= @user.history["Learning"]%></td>	</tr>	
-		<tr><td>Wisdom</td>					<td><%= @user.wisdom["Memorized"]%></td>		<td><%= @user.wisdom["Learning"]%></td>		</tr>	
-		<tr><td>Prophecy</td>				<td><%= @user.prophecy["Memorized"]%></td>		<td><%= @user.prophecy["Learning"]%></td>	</tr>	
-		<tr><td>Gospels</td>				<td><%= @user.gospel["Memorized"]%></td>		<td><%= @user.gospel["Learning"]%></td>		</tr>	
-		<tr><td>Epistles</td>				<td><%= @user.epistle["Memorized"]%></td>		<td><%= @user.epistle["Learning"]%></td>	</tr>							
-	</table>	
 	
-	<br>
+	<div id="complete-chapters">	
+		<h2>Complete Chapters</h2>
 	
-	<h2>Complete Chapters</h2>
-	
-	<table cellpadding="6" cellspacing="1" border="1">
-		<tr>		  	   	  		  
-			<th>Status</th>
-			<th>Chapter</th>
-		</tr>
+		<table class="memverse-standard">
 		
-		<% for cc in @user.complete_chapters %>
-			<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
-				<td align="center">	<%= cc[0]	%></td>		
-				<td align="left">	<%= cc[1]	%></td>	
-			</tr>
-		<% end %>
-	</table>	
+			<% for cc in @user.complete_chapters %>
+				<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">	
+					<td align="left">	<%= cc[1]	%></td>	
+					<td align="center">	<%= cc[0]	%></td>						
+				</tr>
+			<% end %>
+		</table>	
+	</div>
+
+	<div id="verse-distribution">
+		
+		<h2>Verse Distribution</h2>
+		<table class="memverse-standard">
+			<tr> <th></th>						<th>Memorized</th> 								<th>Learning</th>							</tr>	
+			<tr> <td width=200>All Verses</td>	<td><%= @user.memorized%></td>					<td><%= @user.learning%></td>				</tr>
+		</table>	
 	
+		<table class="memverse-standard">
+			<tr> <th></th>						<th>Memorized</th> 								<th>Learning</th>							</tr>	
+			<tr><td width=200>Old Testament</td><td><%= @user.ot_verses["Memorized"]%></td>		<td><%= @user.ot_verses["Learning"]%></td>	</tr>
+			<tr><td>New Testament</td>			<td><%= @user.nt_verses["Memorized"]%></td>		<td><%= @user.nt_verses["Learning"]%></td>	</tr>			
+		</table>	
+	
+		<table class="memverse-standard">
+			<tr> <th></th>						<th>Memorized</th> 								<th>Learning</th>							</tr>	
+			<tr><td width="200">History</td>	<td><%= @user.history["Memorized"]%></td>		<td><%= @user.history["Learning"]%></td>	</tr>	
+			<tr><td>Wisdom</td>					<td><%= @user.wisdom["Memorized"]%></td>		<td><%= @user.wisdom["Learning"]%></td>		</tr>	
+			<tr><td>Prophecy</td>				<td><%= @user.prophecy["Memorized"]%></td>		<td><%= @user.prophecy["Learning"]%></td>	</tr>	
+			<tr><td>Gospels</td>				<td><%= @user.gospel["Memorized"]%></td>		<td><%= @user.gospel["Learning"]%></td>		</tr>	
+			<tr><td>Epistles</td>				<td><%= @user.epistle["Memorized"]%></td>		<td><%= @user.epistle["Learning"]%></td>	</tr>							
+		</table>	
+	</div>
+
+
 	
 </div>
