@@ -94,14 +94,12 @@ class QuestsController < ApplicationController
     render :partial=>'current_user_quests', :layout=>false
   end
   
-  def quest_completion_check
+  def quest_completion_check(u = current_user)
     # TODO: Check for quests that have been completed by user
     # Maybe we want to pass in a specific quest that has been completed
     # There are various different types of objects we can check
     #  - Memverses, chapters, books, psalms, proverbs, tags, invitees (future), url
     # better: obj = {vs, ch, bk, url, disciples, email invites, sessions, blog post}, type = { any, Romans, wisdom, history, ot, nt etc), quantity = {1, 2, 5, 10 etc}
-    
-    
     
   end
 end

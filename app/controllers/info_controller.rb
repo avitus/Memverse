@@ -3,6 +3,12 @@ class InfoController < ApplicationController
   def tutorial
     @tab = "learn"    
     @page_title = "Memverse : Overview" 
+    # Check for quest completion
+    spawn do
+      q = Quest.find_by_url(url_for(:action => 'tutorial', :controller => 'info', :only_path => false))
+      q.check_quest_off(current_user)
+      flash.keep[:notice] = "You have completed the task: #{q.task}"
+    end
   end
   
   def sm_description

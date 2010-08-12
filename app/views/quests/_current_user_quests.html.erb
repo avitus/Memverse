@@ -2,7 +2,12 @@
 	<h2>Current Level Goals</h2>
 	
 	<% for quest in current_user_quests %>
-		- <%= quest.task %>
+		<% if quest.url %>
+			<p>- <%= link_to_if(quest.url, quest.task, quest.url) %></p>
+		<% else %>
+			<p>- <%= quest.task %></p>
+		<% end %>
 	<% end %>
 	
 </div>
+
