@@ -231,6 +231,40 @@ class User < ActiveRecord::Base
   end
 
   # ----------------------------------------------------------------------------------------------------------
+  # Check whether quests are complete and level up if necessary
+  # ---------------------------------------------------------------------------------------------------------- 
+  def check_for_level_up
+    if self.level_complete?
+      self.level_up
+      return true
+    else
+      return false
+    end
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # All quests for current level complete?
+  # ----------------------------------------------------------------------------------------------------------   
+  def level_complete?
+    self.current_uncompleted_quests.empty?
+  end
+ 
+  # ----------------------------------------------------------------------------------------------------------
+  # Level up user
+  # ----------------------------------------------------------------------------------------------------------  
+  def level_up
+    
+    # TODO: Can remove this if sure that no users have a nil level field
+    if self.level.nil?
+      self.level = 0
+    end
+    
+    self.level += 1
+    self.save
+    
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
   # Returns all quests completed for user's current level
   # ----------------------------------------------------------------------------------------------------------  
   def current_completed_quests
@@ -245,6 +279,14 @@ class User < ActiveRecord::Base
     entries = ProgressReport.find( :first, 
                                    :conditions => ["user_id = ?", self.id])                          
     return !entries.nil?                             
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Has user ever finished a day of memorization
+  # Input: User object
+  # ----------------------------------------------------------------------------------------------------------
+  def num_sessions
+    ProgressReport.find( :all, :conditions => ["user_id = ?", self.id]).length                                                     
   end
 
 
