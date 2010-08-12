@@ -4,6 +4,7 @@ module BloggityUrlHelper
 	# Create a named url for the blog and action combination
 	def blog_named_link(blog_post, the_action = :show, options = {})
 		case the_action
+    when :quest: "#{DOMAIN_NAME}/blog/#{blog_post.blog.url_identifier}/#{blog_post.url_identifier}"   
 		when :show: "/blog/#{blog_post.blog.url_identifier}/#{blog_post.url_identifier}"
 		when :index: "/blog/#{options[:blog].url_identifier}"
 		when :feed: { :controller => 'blogs', :id => options[:blog].id, :action => :feed }
