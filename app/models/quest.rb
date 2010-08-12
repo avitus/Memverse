@@ -38,6 +38,9 @@ class Quest < ActiveRecord::Base
         
       when 'Sessions'
         user.num_sessions >= self.quantity
+        
+      when 'Referrals'
+        user.num_referrals >= self.quantity
       
       when 'Url'
         false # Quest if flagged as complete when user visits URL
