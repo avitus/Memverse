@@ -87,4 +87,5 @@ class UsersController < ApplicationController
     flash[:error] = message
     render :action => :new
   end
+   
 end

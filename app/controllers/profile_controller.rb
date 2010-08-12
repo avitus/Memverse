@@ -79,7 +79,7 @@ class ProfileController < ApplicationController
   end # method: update_profile
 
   # ----------------------------------------------------------------------------------------------------------
-  # Autcomplete for Country Names
+  # Autocomplete for Country Names
   # Input: params[:query]
   # Output: JSON object
   # ----------------------------------------------------------------------------------------------------------   
@@ -173,5 +173,45 @@ class ProfileController < ApplicationController
     render :json => {:query => query, :suggestions => @suggestions }.to_json
 
   end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Set the person who referred you
+  # ----------------------------------------------------------------------------------------------------------    
+  def set_as_referrer
+    referrer = User.find(params[:id])
+    current_user.referred_by = referrer.id
+    current_user.save
+    
+    flash[:notice] = "You have set your referrer as: #{referrer.name || referrer.login}"
+    
+    redirect_to home_path
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Interactive User Search (To Find Referrer)
+  # ----------------------------------------------------------------------------------------------------------  
+  def search_user
+    
+    search_param = params[:search_param]
+    
+    # TODO: Is there a better way to do this search?
+    
+    @user_list =  User.find(:all, :conditions => {:login => search_param }, :limit => 5)
+    
+    if @user_list.empty?
+      @user_list = User.find(:all, :conditions => {:email => search_param }, :limit => 5)
+    end
+  
+    if @user_list.empty?
+      @user_list = User.find(:all, :conditions => {:name  => search_param }, :limit => 5)
+    end 
+    
+    render :partial => 'search_user', :layout=>false 
+  end 
+
+
+  def set_referrer
+    @user_list = Array.new  
+  end 
 
 end # Class

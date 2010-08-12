@@ -1,0 +1,25 @@
+<div class="verse-list">
+
+	<table cellpadding="6" cellspacing="2">
+		<tr>
+			<th>Login</th>
+			<th>Name</th>
+			<th>Church</th>
+			<th>Country</th>
+			<th>State</th>
+		</tr>
+		<% for u in @user_list %>
+			<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
+				<td><%= link_to u.login, show_user_info_path(:id => u) %></td>				
+				<td><%= u.name ? u.name : ""						%></td>		 
+				<td><%= u.church ? u.church.name : ""				%></td>			
+				<td><%= u.country ? u.country.printable_name : ""	%></td>
+				<td><%= u.american_state ? u.american_state.name : ""	%></td>
+								
+				<td><%= link_to 'Select',   :action => 'set_as_referrer', :id => u %></td>							
+			</tr>
+		<% end %>
+	
+	</table>
+
+</div>
