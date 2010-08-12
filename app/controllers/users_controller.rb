@@ -9,17 +9,14 @@ class UsersController < ApplicationController
   def show
     @user = User.find(params[:id])
     
-    quests_to_check = @user.current_uncompleted_quests
-    quests_to_check.each { |q|
-      if q.complete?(@user)
-        q.check_quest_off(@user)
-        flash[:notice] = "Great. You have completed the following task: #{q.task}"
-      end
-    }
+    # Check for completed tasks    
+    if quests = @user.check_for_completed_quests
+      flash[:notice] = "Great. You have completed the following task: #{quests.length}"
+    end
     
     # Has user leveled up?
     if @user.check_for_level_up
-      flash[:notice] = "Congratulations!! You have reached a new level."
+      flash[:notice] = "Congratulations!! You have reached level #{@user.level}."
     end    
     
     @current_user_quests = @user.current_uncompleted_quests
