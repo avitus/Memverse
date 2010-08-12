@@ -1,0 +1,27 @@
+<h1>Who Referred You?</h1>
+
+<p>You can enter either the name, login (username) or the email address of the person who referred you:</p>
+
+<div class="details-form">
+		
+	<fieldset>
+		<legend> Enter User login, email or name</legend>
+		
+ 			<% form_tag( {}, { :id => 'advanced_search' } ) do %>
+			  <p>
+				Search:			<%= text_field_tag( :search_param, 	params[:search_param],  :size =>  40 )%>	
+			  </p>
+			  							
+			<% end %>
+					
+	</fieldset>
+				
+	<%= observe_form 	'advanced_search',
+						:frequency	=> 0.5,
+						:update		=> 'search_results',
+						:url		=> {:controller => 'profile', :action => 'search_user', :only_path => false} %>
+</div>	
+
+<div id="search_results">
+	<%= render :partial=>'search_user' %>
+</div>

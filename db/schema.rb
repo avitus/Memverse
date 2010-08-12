@@ -322,9 +322,11 @@ ActiveRecord::Schema.define(:version => 30) do
     t.string   "gender"
     t.string   "translation",                              :default => "NIV"
     t.integer  "level",                                    :default => 0,          :null => false
+    t.integer  "referred_by"
   end
 
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true
+  add_index "users", ["referred_by"], :name => "index_users_on_referred_by"
 
   create_table "verses", :force => true do |t|
     t.string   "translation",                    :null => false

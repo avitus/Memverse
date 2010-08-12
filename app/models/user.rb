@@ -76,7 +76,7 @@ class User < ActiveRecord::Base
   # anything else you want your user to change should be added here
   attr_accessible :login, :email, :name, :password, :password_confirmation, :identity_url, 
                   :newsletters, :reminder_freq, :last_reminder, :church, :country, :american_state, 
-                  :show_echo, :max_interval, :mnemonic_use, :all_refs
+                  :show_echo, :max_interval, :mnemonic_use, :all_refs, :referred_by
 
 
   # Authenticates a user by their login name and unencrypted password - Returns the user or nil
@@ -291,6 +291,20 @@ class User < ActiveRecord::Base
     
     return newly_completed_quests.empty? ? nil : newly_completed_quests  
       
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Return list of people a user has referred
+  # ----------------------------------------------------------------------------------------------------------  
+  def referrals
+    User.find(:all, :conditions => { :referred_by => self.id })
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Return list of people a user has referred
+  # ----------------------------------------------------------------------------------------------------------  
+  def num_referrals
+    User.find(:all, :conditions => { :referred_by => self.id }).length
   end
 
   # ----------------------------------------------------------------------------------------------------------
