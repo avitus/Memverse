@@ -87,10 +87,7 @@ class QuestsController < ApplicationController
   end
   
   def current_user_quests
-    @current_user_quests = current_user.quests
-    
-    logger.debug("Found #{@current_quests.length} quests for user #{current_user.login}")
-    
+    @current_user_quests = current_user.quests    
     render :partial=>'current_user_quests', :layout=>false
   end
   

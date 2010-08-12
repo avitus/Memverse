@@ -262,7 +262,33 @@ class User < ActiveRecord::Base
     self.level += 1
     self.save
     
+    # TODO: Need to check whether tasks have been completed for the new level already
+    
   end
+
+
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Return array of newly completed quests
+  # ----------------------------------------------------------------------------------------------------------  
+  def check_for_completed_quests
+    
+    newly_completed_quests = Array.new
+    
+    quests_to_check = self.current_uncompleted_quests
+    
+    quests_to_check.each { |q|
+      if q.complete?(self)
+        q.check_quest_off(self)
+        newly_completed_quests << q    
+      end
+    }  
+    
+    return newly_completed_quests.empty? ? nil : newly_completed_quests  
+      
+  end
+  
+
 
   # ----------------------------------------------------------------------------------------------------------
   # Returns all quests completed for user's current level
