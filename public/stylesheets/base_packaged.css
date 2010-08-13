@@ -33,6 +33,9 @@ img {border: 0}
 .footnote {font-size: 78%; margin-top: 1em}
 .text-highlight {color: #A6886E; font-weight: bold}
 .hilite {background: yellow}
+table.memverse-standard {border-width: 1px; border-spacing: 1px; border-style: none; border-color: black; border-collapse: separate; background-color: white}
+table.memverse-standard th {border-width: thin; padding: 3px; border-style: solid; border-color: gray; background-color: #687284; -moz-border-radius: 3px 3px 3px 3px}
+table.memverse-standard td {border-width: thin; padding: 3px; border-style: solid; border-color: gray; background-color: #BAB18E; -moz-border-radius: 3px 3px 3px 3px}
  body {font-family: verdana, helvetica, arial, sans-serif; font-size:100%; background-image:url('/images/background.jpg'); background-repeat:no-repeat; background-position:top center}
  #menu-tabs {padding-bottom: 2em}
  #container {width: 1280px; height: 950px; margin-left: auto; margin-right: auto}
@@ -76,6 +79,10 @@ table.user-list {width: 85%; cellpadding: 6px; cellspacing: 1px; border: 1px sol
  #verse-of-the-day {float: left; width: 100%; height: 15em}
 #verse-of-the-day #votd-ref {float: right; padding-right: 1em}
 #memverse-actions {width: 100%; position: relative; clear: both}
+ #show-user #main-stats {float: left; width: 30%}
+#show-user #quest-info {float: left; width: 50%}
+#show-user #complete-chapters {float: left; width: 30%; clear: both}
+#show-user #verse-distribution {float: left; width: 50%}
  #add_verse_form {width: 450px; background-color: #BAB18E;  float: left}
 #add_verse_form label {width: 20em; float: left; text-align: right; margin-right: 0.5em; display: block }
 #add_verse_form legend {background: #687284;  color: #1F2229;  padding: 0.2em 1em}
