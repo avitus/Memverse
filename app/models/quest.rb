@@ -6,6 +6,7 @@ class Quest < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------       
   def complete?(user)
     case self.objective
+      
       when 'Verses'
         
         case self.qualifier
@@ -16,7 +17,58 @@ class Quest < ActiveRecord::Base
           else
             false
         end
-        
+      
+      when 'Gospels'
+        case self.qualifier
+          when 'Learning'
+            user.memverses.gospel.learning.length >= self.quantity
+          when 'Memorized'
+            user.memverses.gospel.memorized.length >= self.quantity
+          else
+            false
+        end        
+
+      
+      when 'Epistles'
+        case self.qualifier
+          when 'Learning'
+            user.memverses.epistle.learning.length >= self.quantity
+          when 'Memorized'
+            user.memverses.epistle.memorized.length >= self.quantity
+          else
+            false
+        end        
+      
+      when 'Wisdom'
+        case self.qualifier
+          when 'Learning'
+            user.memverses.wisdom.learning.length >= self.quantity
+          when 'Memorized'
+            user.memverses.wisdom.memorized.length >= self.quantity
+          else
+            false
+        end        
+                              
+      when 'History'
+        case self.qualifier
+          when 'Learning'
+            user.memverses.history.learning.length >= self.quantity
+          when 'Memorized'
+            user.memverses.history.memorized.length >= self.quantity
+          else
+            false
+        end        
+      
+      when 'Prophecy'
+        case self.qualifier
+          when 'Learning'
+            user.memverses.prophecy.learning.length >= self.quantity
+          when 'Memorized'
+            user.memverses.prophecy.memorized.length >= self.quantity
+          else
+            false
+        end        
+                       
       when 'Chapters'
         case self.qualifier
           when 'Learning'
