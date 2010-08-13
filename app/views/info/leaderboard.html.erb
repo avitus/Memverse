@@ -7,6 +7,7 @@
 	<table id="leaderboard" cellpadding="6" cellspacing="1" border="1">  	
 		<tr>
 			<th>Rank</th>
+			<th>Level</th>
 			<th>Name</th>	
 			<th>Memorized</th>
 			<th>Learning</th>
@@ -20,6 +21,7 @@
 		<% for user in @leaderboard %>
 			<tr valign="top" <%=css_current_user_check(user[0])%> >
 				<td align="center"> <%= @leaderboard.index(user)+1%></td>
+				<td align="center"> <%= user[0].level ? user[0].level : "" %></td>
 				<td align="left">   <%= user[0].name.empty? ? "[" + user[0].login + "]" : user[0].name	%></td>
 				<td align="center"> <%= user[1]				%></td>	
 				<td align="center"> <%= user[0].learning 	%></td>
@@ -34,11 +36,12 @@
 		<% if @not_on_leaderboard %>
 			<tr>
 				<td align="center">		You																	  </td>
+				<td align="center"> <%= user[0].level ? user[0].level : "" 									%></td>				
 				<td align="left"> 	<%= current_user.name.empty? ? current_user.login : current_user.name	%></td>
 				<td align="center"> <%= current_user.memorized 												%></td>			
 				<td align="center"> <%= current_user.learning 												%></td>
-        <td align="center"> <%= current_user.accuracy                         %>%</td>
-        <td align="center"> <%= current_user.ref_grade                        %>%</td>
+        <td align="center"> <%= current_user.accuracy                         								%>%</td>
+        <td align="center"> <%= current_user.ref_grade                        								%>%</td>
 				<td align="left"> 	<%= current_user.church ? link_to(current_user.church.name, { :controller => "profile", :action => "show_church", :church => current_user.church.id }) : "" %></td>
 				<td align="left"> 	<%= current_user.country ? current_user.country.printable_name : "" 	%></td>
 				<td align="center"> <%= current_user.created_at.to_date 									%></td>								
