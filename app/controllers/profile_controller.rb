@@ -69,6 +69,11 @@ class ProfileController < ApplicationController
     if request.put? # For some reason this is a 'put' not a 'post'
       if @user.update_profile(params[:user])
         flash[:notice] = "Profile successfully updated. "
+        spawn do
+          q = Quest.find_by_url(url_for(:action => 'update_profile', :controller => 'profile', :only_path => false))
+          q.check_quest_off(current_user)
+          flash.keep[:notice] = "You have completed the task: #{q.task}"
+        end        
         redirect_to home_path
       else
         render :action => update_profile

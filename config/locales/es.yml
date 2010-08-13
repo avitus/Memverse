@@ -263,9 +263,9 @@
     Tutorial:              "Tutorial"
     SuperMemo Algorithm:   "SuperMemo Algoritmo"
   profile_menu:
+    Dashboard:             "Tablero de Instrumentos"  
     Profile:               "Perfil"
     My Church:             "Mi Iglesia"
-    Reports:               "Informes"
   contact_menu:
     Contact:               "Contacto"
     Volunteer:             "Voluntariado"
