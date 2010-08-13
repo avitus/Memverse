@@ -3,10 +3,11 @@
 		<%= render :partial => "users/user_info" %>
 	</div>
 	
-	<div id="quest-info">
-		<%= render :partial => "quests/current_user_quests", :locals => { :completed => @current_completed_quests } %> 
-	</div>
-	
+	<% if @user == current_user %>
+		<div id="quest-info">
+			<%= render :partial => "quests/current_user_quests", :locals => { :completed => @current_completed_quests } %> 
+		</div>
+	<% end %>
 
 	
 	<div id="complete-chapters">	
