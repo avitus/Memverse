@@ -325,6 +325,12 @@ class User < ActiveRecord::Base
     ProgressReport.find( :all, :conditions => ["user_id = ?", self.id]).length                                                     
   end
 
+  # ----------------------------------------------------------------------------------------------------------
+  # Number of tags a user has applied
+  # ----------------------------------------------------------------------------------------------------------  
+  def num_taggings
+    Tagging.find(:all, :conditions => {:tagger_type => "user", :tagger_id => self.id}).length
+  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Returns list of complete chapters that user is memorizing
