@@ -276,9 +276,14 @@ class MemversesController < ApplicationController
   def add_verse_tag
     @mv = Memverse.find(params[:id])
     new_tag = params[:value].titleize # need to clean this up with hpricot or equivalent
+
+
+    # current_user.tag(@mv, :with => new_tag, :on => :tags)  # <-- this doesn't work for some reason but can get owner from mv anyway      
+    # Owned tags don't seem to be visible. They show up in the Taggings table but aren't reported with mv.tags or user.owned_taggings  
+    
     
     @mv.tag_list << new_tag
-    # current_user.tag(@mv, :with => new_tag)  <-- this doesn't work for some reason but can get owner from mv anyway      
+    current_user.tag(@mv, :with => new_tag, :on => :tags)  # We're doing this for now to track which users are tagging
     @mv.save
     render :text => new_tag  
   end
