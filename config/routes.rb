@@ -64,6 +64,7 @@ ActionController::Routing::Routes.draw do |map|
  
   map.update_profile      '/update_profile',            :controller => 'profile',     :action => 'update_profile'
   map.church              '/church',                    :controller => 'profile',     :action => 'show_church'
+  map.referrals           '/referrals/:id',             :controller => 'profile',     :action => 'referrals'
   map.unsubscribe         '/unsubscribe/*email',        :controller => 'profile',     :action => 'unsubscribe'
 
   map.edit_tag           '/edit_tag/:id',               :controller => 'tag',         :action => 'edit_tag'

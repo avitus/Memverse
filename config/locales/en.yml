@@ -266,6 +266,7 @@
   profile_menu:
     Dashboard:             "Dashboard"  
     Profile:               "Profile"
+    Referrals:             "Referrals"
     My Church:             "My Church"
   contact_menu:
     Contact:               "Contact"
