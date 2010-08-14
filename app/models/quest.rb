@@ -21,7 +21,7 @@ class Quest < ActiveRecord::Base
       when 'Gospels'
         case self.qualifier
           when 'Learning'
-            user.memverses.gospel.learning.length >= self.quantity
+            user.memverses.gospel.length >= self.quantity
           when 'Memorized'
             user.memverses.gospel.memorized.length >= self.quantity
           else
@@ -32,7 +32,7 @@ class Quest < ActiveRecord::Base
       when 'Epistles'
         case self.qualifier
           when 'Learning'
-            user.memverses.epistle.learning.length >= self.quantity
+            user.memverses.epistle.length >= self.quantity
           when 'Memorized'
             user.memverses.epistle.memorized.length >= self.quantity
           else
@@ -42,7 +42,7 @@ class Quest < ActiveRecord::Base
       when 'Wisdom'
         case self.qualifier
           when 'Learning'
-            user.memverses.wisdom.learning.length >= self.quantity
+            user.memverses.wisdom.length >= self.quantity
           when 'Memorized'
             user.memverses.wisdom.memorized.length >= self.quantity
           else
@@ -52,7 +52,7 @@ class Quest < ActiveRecord::Base
       when 'History'
         case self.qualifier
           when 'Learning'
-            user.memverses.history.learning.length >= self.quantity
+            user.memverses.history.length >= self.quantity
           when 'Memorized'
             user.memverses.history.memorized.length >= self.quantity
           else
@@ -62,7 +62,7 @@ class Quest < ActiveRecord::Base
       when 'Prophecy'
         case self.qualifier
           when 'Learning'
-            user.memverses.prophecy.learning.length >= self.quantity
+            user.memverses.prophecy.length >= self.quantity
           when 'Memorized'
             user.memverses.prophecy.memorized.length >= self.quantity
           else

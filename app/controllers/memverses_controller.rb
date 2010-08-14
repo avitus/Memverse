@@ -98,6 +98,7 @@
 # 04/04/10 : Bug fix: added unique index to prevent duplicate memverse entries and reinforced with client side behavior
 # 04/06/10 : Added pages showing state/country members, added event feed for churches, states and countries
 # 06/28/10 : New feature: add entire chapters
+# 08/14/10 : New feature: launch of solo progression track
 
 class MemversesController < ApplicationController
   
