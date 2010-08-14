@@ -19,11 +19,11 @@ class UsersController < ApplicationController
       if @user.check_for_level_up
         flash[:notice] = "Congratulations!! You have reached level #{@user.level}."
         if @user.level >= 20
-          Tweet.create(:news => "#{@user.name_or_login} has reached level #{@user.level}", :user_id => current_user.id, :importance => 1)
+          Tweet.create(:news => "#{@user.name_or_login} has reached level #{@user.level+1}", :user_id => @user.id, :importance => 1)
         elsif @user.level >= 4
-          Tweet.create(:news => "#{@user.name_or_login} has reached level #{@user.level}", :user_id => current_user.id, :importance => 3)
+          Tweet.create(:news => "#{@user.name_or_login} has reached level #{@user.level+1}", :user_id => @user.id, :importance => 3)
         else
-          Tweet.create(:news => "#{@user.name_or_login} has reached level #{@user.level}", :user_id => current_user.id, :importance => 5)
+          Tweet.create(:news => "#{@user.name_or_login} has reached level #{@user.level+1}", :user_id => @user.id, :importance => 5)
         end          
       end    
       
