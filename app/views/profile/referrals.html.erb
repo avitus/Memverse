@@ -1,0 +1,22 @@
+<h1>Referrals</h1>
+
+<% if @user == current_user %>
+	<% if @referrer %>
+		<p>You were referred by <%= @referrer.name_or_login %>.  <%= link_to "[Change this]", :controller => "profile", :action => "set_referrer" %></p>
+	<% else %>
+		<%= link_to "Who referred you?", :controller => "profile", :action => "set_referrer" %>
+	<% end %>	
+<% else %>
+	<p><% @user.name_or_login %> was referred by <%= @referrer %>.</p>
+<% end %>
+
+<h2>
+	<% if @user == current_user %>
+		People You Have Referred
+	<% else %>
+		People <% @user.name_or_login %> has referred
+	<% end %>
+</h2>
+
+<%= render :partial=>"/users/user", :locals => { :user => @referrals } %>
+
