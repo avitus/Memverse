@@ -193,6 +193,17 @@ class ProfileController < ApplicationController
   end
 
   # ----------------------------------------------------------------------------------------------------------
+  # Referral page
+  # ----------------------------------------------------------------------------------------------------------   
+  def referrals
+    @user = User.find(params[:id]) || current_user
+    
+    @referrer = User.find(@user.referred_by) if @user.referred_by
+    @referrals = User.find(:all, :conditions => {:referred_by => @user.id})
+    
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
   # Interactive User Search (To Find Referrer)
   # ----------------------------------------------------------------------------------------------------------  
   def search_user

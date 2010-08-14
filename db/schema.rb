@@ -218,9 +218,9 @@ ActiveRecord::Schema.define(:version => 30) do
     t.string   "objective"
     t.string   "qualifier"
     t.integer  "quantity"
+    t.string   "url"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "url"
   end
 
   add_index "quests", ["level"], :name => "index_quests_on_level"
@@ -312,6 +312,7 @@ ActiveRecord::Schema.define(:version => 30) do
     t.integer  "learning",                                 :default => 0
     t.date     "last_activity_date"
     t.boolean  "show_echo",                                :default => true
+    t.integer  "state_id"
     t.integer  "max_interval",                             :default => 366
     t.string   "mnemonic_use",                             :default => "Learning"
     t.integer  "american_state_id"
