@@ -198,8 +198,8 @@ class ProfileController < ApplicationController
   def referrals
     @user = User.find(params[:id]) || current_user
     
-    @referrer = User.find(@user.referred_by) if @user.referred_by
-    @referrals = User.find(:all, :conditions => {:referred_by => @user.id})
+    @referrer  = User.find(@user.referred_by) if @user.referred_by
+    @users     = User.find(:all, :conditions => {:referred_by => @user.id})
     
   end
 
