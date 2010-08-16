@@ -184,12 +184,18 @@ class ProfileController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------    
   def set_as_referrer
     referrer = User.find(params[:id])
-    current_user.referred_by = referrer.id
-    current_user.save
     
-    flash[:notice] = "You have set your referrer as: #{referrer.name || referrer.login}"
-    
-    redirect_to home_path
+    if referrer == current_user
+      flash[:notice] = "You cannot refer yourself!"
+    elsif referrer.referred_by == current_user.id
+      flash[:notice] = "You cannot be referred by a person you referred."
+    else
+      current_user.referred_by = referrer.id
+      current_user.save
+      flash[:notice] = "You have set your referrer as: #{referrer.name_or_login}"
+    end
+  
+    redirect_to referrals_path(current_user)
   end
 
   # ----------------------------------------------------------------------------------------------------------
