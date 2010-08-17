@@ -11,7 +11,7 @@ class Quest < ActiveRecord::Base
         
         case self.qualifier
           when 'Learning'
-            user.learning >= self.quantity
+            user.learning + user.memorized >= self.quantity
           when 'Memorized'
             user.memorized >= self.quantity
           else
