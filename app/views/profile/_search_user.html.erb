@@ -10,7 +10,7 @@
 		</tr>
 		<% for u in @user_list %>
 			<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
-				<td><%= link_to u.login, show_user_info_path(:id => u) %></td>				
+				<td><%= u.login %></td>				
 				<td><%= u.name ? u.name : ""						%></td>		 
 				<td><%= u.church ? u.church.name : ""				%></td>			
 				<td><%= u.country ? u.country.printable_name : ""	%></td>
