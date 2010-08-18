@@ -36,6 +36,28 @@ class Verse < ActiveRecord::Base
 
   named_scope :tl, lambda { |tl| {:conditions => ['translation = ?', tl ]} }
                             
+                            
+  # ----------------------------------------------------------------------------------------------------------
+  # Sort Verse objects according to biblical book order
+  # ----------------------------------------------------------------------------------------------------------    
+  def <=>(o)
+   
+   # Compare book
+   book_cmp = self.book_index.to_i <=> o.book_index.to_i
+   return book_cmp unless book_cmp == 0
+
+   # Compare chapter
+   chapter_cmp = self.chapter.to_i <=> o.chapter.to_i
+   return chapter_cmp unless chapter_cmp == 0
+
+   # Compare verse
+   verse_cmp = self.versenum.to_i <=> o.versenum.to_i
+   return verse_cmp unless verse_cmp == 0
+
+   # Otherwise, compare IDs
+   return self.id <=> o.id
+  end                            
+                            
   # ----------------------------------------------------------------------------------------------------------
   # Outputs friendly verse reference: eg. "Jn 3:16"
   # ----------------------------------------------------------------------------------------------------------   
