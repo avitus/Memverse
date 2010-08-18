@@ -20,7 +20,7 @@ class ApplicationController < ActionController::Base
   helper_method :admin?    
   protected  
   def admin?  
-    current_user.has_role?('admin')  
+    current_user && current_user.has_role?('admin')  
   end    
    
   def authorize  
