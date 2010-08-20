@@ -74,7 +74,7 @@ class Quest < ActiveRecord::Base
           when 'Learning'
             user.complete_chapters.length >= self.quantity 
           when 'Memorized'
-            user.complete_chapters.select { |ch| ch[0] == "Memorized" }
+            user.complete_chapters.select { |ch| ch[0] == "Memorized" }.length
           else
             false
         end
