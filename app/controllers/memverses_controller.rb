@@ -838,7 +838,7 @@ class MemversesController < ApplicationController
     ref_quizz_answers = Array.new
     ref_id            = Array.new
     
-    # Find the 50 hardest (first) verses and pick 10 at random for the test
+    # Find the 30 hardest (first) verses and pick 10 at random for the test
     if current_user.all_refs
       refs = Memverse.find( :all, 
                             :conditions => ["user_id = ?", current_user.id], 
@@ -857,8 +857,8 @@ class MemversesController < ApplicationController
     
       # Put verses into session variable
       refs.each { |r|
-        ref_quizz         << r.verse.text
-        ref_quizz_answers << [r.verse.book, r.verse.chapter, r.verse.versenum] 
+        ref_quizz         << r.verse.text # TODO: if verse has duplicates we should show prior verse
+        ref_quizz_answers << [r.verse.book, r.verse.chapter.to_i, r.verse.versenum.to_i] 
         ref_id            << r.id
       }
   
@@ -980,24 +980,29 @@ class MemversesController < ApplicationController
     question_num  = session[:ref_test_cntr]  
     solution      = session[:ref_soln][question_num] if session[:ref_soln]
     
+    # We need to check for alternative solutions to account for identical verses
+    alt_soln      = identical_verses( solution )
+    
+    logger.debug("*** Solution   : #{solution}")
+    logger.debug("*** Alternative: #{alt_soln}")
+    
     if solution
     
       mv = Memverse.find( session[:ref_id][question_num] )
     
-      if book==solution[0] and chapter==solution[1].to_i and verse==solution[2].to_i
+      if (book==solution[0] and chapter==solution[1].to_i and verse==solution[2].to_i) or (book==alt_soln[0] and chapter==alt_soln[1].to_i and verse==alt_soln[2].to_i)
         flash[:notice] = "Perfect!"
         session[:reftest_correct] += 1
         session[:reftest_grade] += 10
         mv.ref_interval   = [(mv.ref_interval * 1.5), 365].min.round
-      elsif
-        book==solution[0] and chapter==solution[1].to_i
-        flash[:notice] = "Correct book and chapter. The correct reference is " + solution[0] + " " + solution[1] + ":" + solution[2]
+      elsif (book==solution[0] and chapter==solution[1].to_i) or (book==alt_soln[0] and chapter==alt_soln[1].to_i)
+        flash[:notice] = "Correct book and chapter. The correct reference is " + solution[0].to_s + " " + solution[1].to_s + ":" + solution[2].to_s
         session[:reftest_incorrect] << question_num
         session[:reftest_grade] += 5
         mv.ref_interval = (mv.ref_interval * 0.7).round
       else 
         session[:reftest_incorrect] << question_num
-        flash[:notice] = "Sorry - Incorrect. The correct reference is " + solution[0] + " " + solution[1] + ":" + solution[2]
+        flash[:notice] = "Sorry - Incorrect. The correct reference is " + solution[0].to_s + " " + solution[1].to_s + ":" + solution[2].to_s
         mv.ref_interval = (mv.ref_interval * 0.6).round
       end
        
