@@ -271,7 +271,7 @@ class MemversesController < ApplicationController
   end
 
   # ----------------------------------------------------------------------------------------------------------
-  # In place editing support
+  # In place editing support for tag addition
   # ----------------------------------------------------------------------------------------------------------    
   def add_verse_tag
     @mv = Memverse.find(params[:id])
@@ -281,13 +281,20 @@ class MemversesController < ApplicationController
     # current_user.tag(@mv, :with => new_tag, :on => :tags)  # <-- this doesn't work for some reason but can get owner from mv anyway      
     # Owned tags don't seem to be visible. They show up in the Taggings table but aren't reported with mv.tags or user.owned_taggings  
     
+    if !new_tag.empty?
+      @mv.tag_list << new_tag
+      current_user.tag(@mv, :with => new_tag, :on => :tags)  # We're doing this for now to track which users are tagging
+      @mv.save
+      render :text => new_tag
+    else
+      render :text => "[Enter tag name here]"
+    end
     
-    @mv.tag_list << new_tag
-    current_user.tag(@mv, :with => new_tag, :on => :tags)  # We're doing this for now to track which users are tagging
-    @mv.save
-    render :text => new_tag  
   end
-  
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Remove a verse tag
+  # ---------------------------------------------------------------------------------------------------------- 
   def remove_verse_tag    
     Tagging.find(:first, :conditions => {:tag_id => params[:id], :taggable_id => params[:mv], :taggable_type => 'Memverse' }).destroy
     
