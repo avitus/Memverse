@@ -1,6 +1,6 @@
 # * Add a rewards page
 # * Add client side verse memorization feedback
-# - Infer users favorite translation
+# * Add an index for verse table -- at least on versenum to speed up chapter retrieval
 # - Add moderators for different translations
 # - Add nice, explanatory pop-up boxes using jQuery
 # - Allow for idle verses
@@ -8,7 +8,6 @@
 # ? Fix link to RSS feed (add nicer link)
 # ? Allow users to enter first letter of each word when memorizing
 # ? Allow for multiple groups
-# ? Add tagging functionality
 
 # --- Change Log -------------------------------------------------------------------------------------------
 #
@@ -489,7 +488,6 @@ class MemversesController < ApplicationController
     tl  = params[:translation]
     
     errorcode, book, chapter, verse = parse_verse(ref)
-    logger.debug("*** Adding #{book} #{chapter}:#{verse}")
     
     # <--- At this point the book name should already be translated into English --->
     
@@ -982,10 +980,7 @@ class MemversesController < ApplicationController
     
     # We need to check for alternative solutions to account for identical verses
     alt_soln      = identical_verses( solution )
-    
-    logger.debug("*** Solution   : #{solution}")
-    logger.debug("*** Alternative: #{alt_soln}")
-    
+        
     if solution
     
       mv = Memverse.find( session[:ref_id][question_num] )
