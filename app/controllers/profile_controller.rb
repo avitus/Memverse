@@ -225,18 +225,22 @@ class ProfileController < ApplicationController
   def search_user
     
     search_param = params[:search_param]
+    @user_list   = Array.new
     
     # TODO: Is there a better way to do this search?
     
-    @user_list =  User.find(:all, :conditions => {:login => search_param }, :limit => 5)
+    if !search_param.empty?
+      @user_list =  User.find(:all, :conditions => {:name => search_param }, :limit => 5)
+      
+      if @user_list.empty?
+        @user_list = User.find(:all, :conditions => {:email => search_param }, :limit => 5)
+      end
     
-    if @user_list.empty?
-      @user_list = User.find(:all, :conditions => {:email => search_param }, :limit => 5)
+      if @user_list.empty?
+        @user_list = User.find(:all, :conditions => {:login  => search_param }, :limit => 5)
+      end 
     end
-  
-    if @user_list.empty?
-      @user_list = User.find(:all, :conditions => {:name  => search_param }, :limit => 5)
-    end 
+     
     
     render :partial => 'search_user', :layout=>false 
   end 
