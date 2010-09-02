@@ -121,6 +121,9 @@ class MemversesController < ApplicationController
     @tab = "home"
     @due_today = upcoming_verses(50).length unless mobile_device?
     
+    # Level information
+    quests_remaining = current_user.current_uncompleted_quests.length
+    @quests_to_next_level = quests_remaining==1 ? "one quest" : quests_remaining.to_s + " quests"
     
     # Has this user added any verses?
     @user_has_no_verses           = (current_user.learning == 0) && (current_user.memorized == 0)
