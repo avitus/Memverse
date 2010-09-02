@@ -1,17 +1,4 @@
 <h1><%= @us_state.rank %>. <%= @us_state.name %></h1>
 
-<table class="user-list">
-	
-	<tr>
-		<th align="left" 	id='name'>	Name 		</th>
-		<th align="center" 	id='mem'>	Memorized	</th>
-		<th align="center" 	id='lrn'>	Learning	</th>
-		<th align="center" 	id='acc'>	Accuracy	</th>
-		<th align="left" 	id='church'>Church/Group</th>
-		<th align="left" 	id='cntry'>	Country		</th>	
-		<th align="center" 	id='start'>	Started		</th>
-	</tr>
-	
-	
-	<%= render :partial => @users %>	
-</table>
+<%= render :partial=>"/users/user" %>
+

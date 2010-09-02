@@ -52,6 +52,7 @@
 		<div id="memverse-actions" class="front-page-segment">
 			<h2><%= t '.memverse_today' %></h2>	
 			<p><%= t '.review_a' %> <%=@due_today%> <%= t '.review_b' %></p>
+			<p>You have <%= link_to "#{@quests_to_next_level} to complete", current_user %> to reach level <%= current_user.level+1 %>.</p>
 			<p><%= t '.time_req_a' %> <%=current_user.work_load%> <%= t '.time_req_b' %></p>		
 		</div>
 	</div>

@@ -112,6 +112,6 @@ class VersesController < ApplicationController
   # ---------------------------------------------------------------------------------------------------------- 
   def show_verses_with_tag
     @tag       = Tag.find_by_name(params[:tag])
-    @user_list = Memverse.tagged_with(params[:tag]).map{ |mv| mv.verse.switch_tl(current_user.translation) || mv.verse}.uniq
+    @user_list = Memverse.tagged_with(params[:tag]).map{ |mv| mv.verse.switch_tl(current_user.translation) || mv.verse}.uniq.sort!
   end
 end

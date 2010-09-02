@@ -11,7 +11,7 @@ class Quest < ActiveRecord::Base
         
         case self.qualifier
           when 'Learning'
-            user.learning >= self.quantity
+            user.learning + user.memorized >= self.quantity
           when 'Memorized'
             user.memorized >= self.quantity
           else
@@ -74,7 +74,7 @@ class Quest < ActiveRecord::Base
           when 'Learning'
             user.complete_chapters.length >= self.quantity 
           when 'Memorized'
-            user.complete_chapters.select { |ch| ch[0] == "Memorized" }
+            user.complete_chapters.select { |ch| ch[0] == "Memorized" }.length
           else
             false
         end
@@ -107,10 +107,12 @@ class Quest < ActiveRecord::Base
   end
  
   # ----------------------------------------------------------------------------------------------------------
-  # Adds task to list of completed tasks
+  # Adds task to list of completed tasks (if not already completed)
   # ----------------------------------------------------------------------------------------------------------    
   def check_quest_off(user)
-    user.quests << self
+    if user.quests.include(self)
+      user.quests << self
+    end
   end
     
 end
