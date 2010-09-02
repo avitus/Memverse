@@ -110,7 +110,7 @@ class Quest < ActiveRecord::Base
   # Adds task to list of completed tasks (if not already completed)
   # ----------------------------------------------------------------------------------------------------------    
   def check_quest_off(user)
-    if user.quests.include?(self)
+    if !user.quests.include?(self)
       user.quests << self
     end
   end
