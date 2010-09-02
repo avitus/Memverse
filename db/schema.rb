@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 30) do
+ActiveRecord::Schema.define(:version => 31) do
 
   create_table "american_states", :force => true do |t|
     t.string  "abbrev",      :limit => 20, :default => "", :null => false
@@ -218,9 +218,9 @@ ActiveRecord::Schema.define(:version => 30) do
     t.string   "objective"
     t.string   "qualifier"
     t.integer  "quantity"
-    t.string   "url"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "url"
   end
 
   add_index "quests", ["level"], :name => "index_quests_on_level"
@@ -312,7 +312,6 @@ ActiveRecord::Schema.define(:version => 30) do
     t.integer  "learning",                                 :default => 0
     t.date     "last_activity_date"
     t.boolean  "show_echo",                                :default => true
-    t.integer  "state_id"
     t.integer  "max_interval",                             :default => 366
     t.string   "mnemonic_use",                             :default => "Learning"
     t.integer  "american_state_id"
@@ -341,5 +340,10 @@ ActiveRecord::Schema.define(:version => 30) do
     t.boolean  "verified",    :default => false, :null => false
     t.boolean  "error_flag",  :default => false, :null => false
   end
+
+  add_index "verses", ["book"], :name => "index_verses_on_book"
+  add_index "verses", ["chapter"], :name => "index_verses_on_chapter"
+  add_index "verses", ["translation"], :name => "index_verses_on_translation"
+  add_index "verses", ["versenum"], :name => "index_verses_on_versenum"
 
 end

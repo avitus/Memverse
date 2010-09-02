@@ -103,6 +103,13 @@ class User < ActiveRecord::Base
   
   
   # ----------------------------------------------------------------------------------------------------------
+  # Link to get referral credit
+  # ----------------------------------------------------------------------------------------------------------
+  def referral_link
+    "#{DOMAIN_NAME}"+"/?referrer="+"#{self.login}"
+  end
+  
+  # ----------------------------------------------------------------------------------------------------------
   # Check whether current user is memorizing a given verse in any translation
   # Input: "John", 3, 16
   # Output: mv object (if found) or nil (if not)
@@ -114,6 +121,9 @@ class User < ActiveRecord::Base
 
   end
 
+  # ----------------------------------------------------------------------------------------------------------
+  # Gender-specific pronouns are cool
+  # ----------------------------------------------------------------------------------------------------------
   def his_or_her
     case self.gender 
       when "Female" then "her" 

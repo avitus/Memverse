@@ -36,6 +36,28 @@ class Verse < ActiveRecord::Base
 
   named_scope :tl, lambda { |tl| {:conditions => ['translation = ?', tl ]} }
                             
+                            
+  # ----------------------------------------------------------------------------------------------------------
+  # Sort Verse objects according to biblical book order
+  # ----------------------------------------------------------------------------------------------------------    
+  def <=>(o)
+   
+   # Compare book
+   book_cmp = self.book_index.to_i <=> o.book_index.to_i
+   return book_cmp unless book_cmp == 0
+
+   # Compare chapter
+   chapter_cmp = self.chapter.to_i <=> o.chapter.to_i
+   return chapter_cmp unless chapter_cmp == 0
+
+   # Compare verse
+   verse_cmp = self.versenum.to_i <=> o.versenum.to_i
+   return verse_cmp unless verse_cmp == 0
+
+   # Otherwise, compare IDs
+   return self.id <=> o.id
+  end                            
+                            
   # ----------------------------------------------------------------------------------------------------------
   # Outputs friendly verse reference: eg. "Jn 3:16"
   # ----------------------------------------------------------------------------------------------------------   
@@ -183,6 +205,30 @@ class Verse < ActiveRecord::Base
     }
     
     return all_tags.sort{|a,b| a[1]<=>b[1]}.reverse[0...numtags]
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Return list of duplicate verses (if any)
+  # ----------------------------------------------------------------------------------------------------------
+  def has_duplicates?
+    iv = Hash[
+      ["Luke", 12, 34]      => ["Matthew", 6, 21],
+      ["Matthew", 6, 21]    => ["Luke", 12, 34],
+      ["Proverbs", 14, 12]  => ["Proverbs", 16, 25],
+      ["Proverbs", 16, 25]  => ["Proverbs", 14, 12],
+      ["Judges", 21, 25]    => ["Judges", 17, 6],
+      ["Judges", 17, 6]     => ["Judges", 21, 25],
+      ["Matthew", 25, 21]   => ["Matthew", 25, 23],
+      ["Matthew", 25, 23]   => ["Matthew", 25, 21],
+      ["Leviticus", 19, 30] => ["Leviticus", 26, 2],
+      ["Leviticus", 26, 2]  => ["Leviticus", 19, 30],
+      ["Psalms", 107,  8]   => [["Psalms", 107, 15], ["Psalms", 107, 22], ["Psalms", 107, 31]],
+      ["Psalms", 107, 15]   => [["Psalms", 107,  8], ["Psalms", 107, 22], ["Psalms", 107, 31]],
+      ["Psalms", 107, 22]   => [["Psalms", 107,  8], ["Psalms", 107, 15], ["Psalms", 107, 31]],
+      ["Psalms", 107, 31]   => [["Psalms", 107,  8], ["Psalms", 107, 15], ["Psalms", 107, 22]]
+    ]
+    
+    return iv[ [self.book, self.chapter.to_i, self.versenum.to_i] ] || []    
   end
 
   # ----------------------------------------------------------------------------------------------------------

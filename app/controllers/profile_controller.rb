@@ -12,10 +12,10 @@ class ProfileController < ApplicationController
 
     if params[:church]
       @church         = Church.find(params[:church])
-      @userlist       = @church.users
+      @users          = @church.users
     elsif current_user.church
       @church         = current_user.church
-      @userlist       = @church.users
+      @users          = @church.users
     else
       flash[:notice]  = "You have not yet selected a church or organization to belong to. Please update your profile."
       redirect_to update_profile_path
@@ -184,12 +184,18 @@ class ProfileController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------    
   def set_as_referrer
     referrer = User.find(params[:id])
-    current_user.referred_by = referrer.id
-    current_user.save
     
-    flash[:notice] = "You have set your referrer as: #{referrer.name || referrer.login}"
-    
-    redirect_to home_path
+    if referrer == current_user
+      flash[:notice] = "You cannot refer yourself!"
+    elsif referrer.referred_by == current_user.id
+      flash[:notice] = "You cannot be referred by a person you referred."
+    else
+      current_user.referred_by = referrer.id
+      current_user.save
+      flash[:notice] = "You have set your referrer as: #{referrer.name_or_login}"
+    end
+  
+    redirect_to referrals_path(current_user)
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -198,8 +204,18 @@ class ProfileController < ApplicationController
   def referrals
     @user = User.find(params[:id]) || current_user
     
-    @referrer = User.find(@user.referred_by) if @user.referred_by
-    @userlist = User.find(:all, :conditions => {:referred_by => @user.id})
+    @referrer  = User.find(@user.referred_by) if @user.referred_by
+    
+    # Clean up users who have referred themselves
+    # TODO: This section can be removed since we now prevent this from happening
+    if @user == @referrer
+      flash[:notice] = "You can't refer yourself!"
+      @user.referred_by = nil
+      @user.save
+      @referrer = nil
+    end
+    
+    @users     = User.find(:all, :conditions => {:referred_by => @user.id})
     
   end
 

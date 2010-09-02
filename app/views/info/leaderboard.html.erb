@@ -4,15 +4,15 @@
    session in the past month.</p>
 
 <div class="user-list">
-	<table id="leaderboard" cellpadding="6" cellspacing="1" border="1">  	
+	<table id="leaderboard" class="memverse-standard">  	
 		<tr>
 			<th>Rank</th>
 			<th>Level</th>
 			<th>Name</th>	
 			<th>Memorized</th>
 			<th>Learning</th>
-      <th><%= link_to 'Accuracy', pre_exam_path%></th> 
-      <th>RefRecall</th>
+      		<th><%= link_to 'Accuracy', pre_exam_path%></th> 
+      		<th>RefRecall</th>
 			<th>Affiliation</th>
 			<th>Country</th>
 			<th>Joined</th>
@@ -25,8 +25,8 @@
 				<td align="left">   <%= user[0].name.empty? ? "[" + user[0].login + "]" : user[0].name	%></td>
 				<td align="center"> <%= user[1]				%></td>	
 				<td align="center"> <%= user[0].learning 	%></td>
-        <td align="center"> <%= user[0].accuracy  %>%</td>
-        <td align="center"> <%= user[0].ref_grade  %>%</td>
+        		<td align="center"> <%= user[0].accuracy  %>%</td>
+        		<td align="center"> <%= user[0].ref_grade  %>%</td>
 				<td align="left"> 	<%= user[0].church ? link_to(user[0].church.name, { :controller => "profile", :action => "show_church", :church => user[0].church.id }) : "" %></td>
 				<td align="left"> 	<%= user[0].country ? user[0].country.printable_name : "" %></td>
 				<td align="center"> <%= user[0].created_at.to_date %></td>				

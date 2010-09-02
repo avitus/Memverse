@@ -7,16 +7,29 @@
 		<%= link_to "Who referred you?", :controller => "profile", :action => "set_referrer" %>
 	<% end %>	
 <% else %>
-	<p><% @user.name_or_login %> was referred by <%= @referrer %>.</p>
+	<% if @referrer %>
+		<p><%= @user.name_or_login %> was referred by <%= @referrer.name_or_login %>.</p>
+	<% else %>
+		<p>No one referred <%= @user.name_or_login %>.</p>
+	<% end %>		
 <% end %>
 
-<h2>
-	<% if @user == current_user %>
-		People You Have Referred
-	<% else %>
-		People <% @user.name_or_login %> has referred
-	<% end %>
-</h2>
 
-<%= render :partial=>"/users/user", :locals => { :user => @referrals } %>
+<% if @user == current_user %>
+	<h2>People You Have Referred</h2>
+	<% if @users.empty? %>
+		<%= render :partial=> "profile/refer"%>
+	<% else %>
+		<%= render :partial=> "/users/user" %>
+	<% end %>
+<% else %>
+	<h2>People <%= @user.name_or_login %> has referred</h2>
+	<% if @users.empty? %>
+		<p>No referrals yet.</p>
+	<% else %>
+		<%= render :partial=> "/users/user" %>
+	<% end %>
+<% end %>
+
+
 
