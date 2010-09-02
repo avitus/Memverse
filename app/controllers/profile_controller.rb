@@ -12,10 +12,10 @@ class ProfileController < ApplicationController
 
     if params[:church]
       @church         = Church.find(params[:church])
-      @users          = @church.users
+      @userlist       = @church.users
     elsif current_user.church
       @church         = current_user.church
-      @users          = @church.users
+      @userlist       = @church.users
     else
       flash[:notice]  = "You have not yet selected a church or organization to belong to. Please update your profile."
       redirect_to update_profile_path
@@ -199,7 +199,7 @@ class ProfileController < ApplicationController
     @user = User.find(params[:id]) || current_user
     
     @referrer = User.find(@user.referred_by) if @user.referred_by
-    @referrals = User.find(:all, :conditions => {:referred_by => @user.id})
+    @userlist = User.find(:all, :conditions => {:referred_by => @user.id})
     
   end
 
