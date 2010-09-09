@@ -2,7 +2,7 @@ class AdminController < ApplicationController
 
   protect_from_forgery  :except => [:set_verse_text, :verify_verse] 
   in_place_edit_for     :verse, :text  
-  before_filter :authorize, :except => [:dashboard ]
+  before_filter :authorize, :except => [:dashboard, :send_reminder ]
 
   
   # Only needed for scraping last verse data from BibleGateway
