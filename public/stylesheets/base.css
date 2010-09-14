@@ -1015,6 +1015,7 @@ div#currentVerse #matchbox .correct {
 
 #chapter-text .verse-text {
 	display: none;
+	width: 100%;
 }
 
 /* === Reference Test === */
