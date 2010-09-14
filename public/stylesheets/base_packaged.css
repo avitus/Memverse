@@ -167,7 +167,7 @@ div#currentVerse #matchbox .correct {background: #687284;  font-size: 500%; font
 #chapter-prior-verses legend {background: #687284; color: #1F2229; padding: 0.2em 1em}
 #chapter-prior-verses label {width: 10em; text-align: right; margin-right: 0.5em; display: block}
 #chapter-text {height: 530px;  overflow-y: auto}
-#chapter-text .verse-text {display: none}
+#chapter-text .verse-text {display: none; width: 100%}
  #reftest {width: 430px; height: 240px; margin-left: 1px; background-color: #BAB18E}
 #reftestVerse {padding: 0.75em; font-size: 105%}
 #reftest legend {background: #687284; color: #1F2229; padding: 0.2em 1em}
