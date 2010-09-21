@@ -192,7 +192,7 @@ class Verse < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   # Returns all tags associated with a given verse
   # ---------------------------------------------------------------------------------------------------------- 
-  def all_user_tags(numtags = 3)
+  def all_user_tags(numtags = 5)
     
     all_tags = Hash.new(0)
     
