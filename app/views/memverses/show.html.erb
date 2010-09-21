@@ -31,7 +31,7 @@
 <div id='user-tags' class='tag-list'>
 	<h2>Your Tags</h2>
 	
-	<table cellpadding="6" cellspacing="1">
+	<table id="list-of-user-tags" cellpadding="6" cellspacing="1">
 		<% for tag in @user_tags %>
 			<tr>
 				<td class="tag"><%= link_to tag.name, {:controller => :verses, :action => :show_verses_with_tag, :tag => tag.name, :tl => @mv.verse.translation } %></td>
@@ -58,6 +58,7 @@
 		<% for tag in @other_tags %>
 			<tr>
 				<td class="tag"><%= link_to tag[0].name, {:controller => :verses, :action => :show_verses_with_tag, :tag => tag[0].name, :tl => @mv.verse.translation } %></td>
+				<td class="add-tag">[+]</td>
 			</tr>	
 		<% end %>
 	</table>
@@ -66,6 +67,32 @@
 
 
 <!--[eoform:verse]-->
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('.add-tag').click(function() {
+			
+			TagToAdd = $(this).prev().text()
+			
+			// Add the tag
+			$.post("/memverses/add_verse_tag", { id: <%= @mv.id %>, value: TagToAdd } );
+			
+			// Insert tag at top of list of user tags						
+			$("#list-of-user-tags").find('tbody')
+			    .prepend($('<tr>')
+			        .append($("<td class='tag'>")
+			            .append($('<a>')
+			                .attr('href', '/verses/show_verses_with_tag?tag='+TagToAdd+'&tl=<%=@mv.verse.translation%>')
+			                .text(TagToAdd)
+			            )
+			        )			        
+			    );
+
+			
+		});
+	});
+</script>
+
 
 <!-- http://www.appelsiini.net/projects/jeditable -->
 <script type="text/javascript">
