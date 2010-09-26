@@ -117,7 +117,13 @@ class InfoController < ApplicationController
 
   end      
     
-  
+  def referralboard
+    @tab            = "leaderboard"
+    @page_title     = "Referrals Leaderboard"
+    @referralboard = User.top_referrers
+    
+    @not_on_referralboard = (current_user.num_referrals < @referralboard.last[1]) unless !current_user
+  end
   
   # ----------------------------------------------------------------------------------------------------------   
   # Show some nice statistics
