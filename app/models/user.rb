@@ -311,7 +311,7 @@ class User < ActiveRecord::Base
   end
 
   # ----------------------------------------------------------------------------------------------------------
-  # Return list of people a user has referred
+  # Return number of people a user has referred
   # ----------------------------------------------------------------------------------------------------------  
   def num_referrals
     User.find(:all, :conditions => { :referred_by => self.id }).length
@@ -695,6 +695,18 @@ class User < ActiveRecord::Base
     return leaderboard.sort{|a,b| a[1]<=>b[1]}.reverse[0...numusers]
     
   end 
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Return hash of top referrers
+  # ----------------------------------------------------------------------------------------------------------   
+  def self.top_referrers(numusers=50)
+    leaderboard = Hash.new(0)
+    
+    all_users = self.active
+    all_users.each { |u| leaderboard[ u ] = u.num_referrals }
+    
+    return leaderboard.sort{|a,b| a[1]<=>b[1]}.reverse[0...numusers]
+  end
  
   # ----------------------------------------------------------------------------------------------------------
   # Delete accounts of users that never added any verses
