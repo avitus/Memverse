@@ -220,7 +220,8 @@ class Memverse < ActiveRecord::Base
     
     eocv = self.verse.end_of_chapter_verse
     
-    if lv = self.user.has_verse?(eocv.book, eocv.chapter, eocv.last_verse)
+    # Sept 22, 2010 -- eocv occasionally equal to nil ... not sure why
+    if eocv and lv = self.user.has_verse?(eocv.book, eocv.chapter, eocv.last_verse)
       # check that it's linked to the first verse
       lv.linked_to_first_verse?                               
     else
