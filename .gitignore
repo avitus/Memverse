@@ -7,3 +7,4 @@ coverage
 db/*.sqlite3
 *.tmp_*
 config/database.yml
+config/database.yml
