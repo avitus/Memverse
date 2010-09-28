@@ -1,0 +1,11 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  book: MyString
+  chapter: 1
+  versenum: 1
+
+two:
+  book: MyString
+  chapter: 1
+  versenum: 1

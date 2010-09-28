@@ -1,0 +1,24 @@
+<h1>Listing uberverses</h1>
+
+<table>
+  <tr>
+    <th>Book</th>
+    <th>Chapter</th>
+    <th>Versenum</th>
+  </tr>
+
+<% @uberverses.each do |uberverse| %>
+  <tr>
+    <td><%=h uberverse.book %></td>
+    <td><%=h uberverse.chapter %></td>
+    <td><%=h uberverse.versenum %></td>
+    <td><%= link_to 'Show', uberverse %></td>
+    <td><%= link_to 'Edit', edit_uberverse_path(uberverse) %></td>
+    <td><%= link_to 'Destroy', uberverse, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New uberverse', new_uberverse_path %>

@@ -1,0 +1,20 @@
+<h1>Listing sermons</h1>
+
+<table>
+  <tr>
+    <th>Title</th>
+  </tr>
+
+<% @sermons.each do |sermon| %>
+  <tr>
+    <td><%=h sermon.title %></td>
+    <td><%= link_to 'Show', sermon %></td>
+    <td><%= link_to 'Edit', edit_sermon_path(sermon) %></td>
+    <td><%= link_to 'Destroy', sermon, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New sermon', new_sermon_path %>
