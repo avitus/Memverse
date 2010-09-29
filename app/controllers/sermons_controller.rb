@@ -1,4 +1,7 @@
 class SermonsController < ApplicationController
+  
+  before_filter :authorize
+  
   # GET /sermons
   # GET /sermons.xml
   def index

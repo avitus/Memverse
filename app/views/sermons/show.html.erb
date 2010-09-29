@@ -4,6 +4,31 @@
 </p>
 
 <p>
+  <b>Summary:</b>
+  <%=h @sermon.summary %>
+</p>
+
+<p>
+  <b>Church:</b>
+  <%=h @sermon.church_id %>
+</p>
+
+<p>
+  <b>Pastor:</b>
+  <%=h @sermon.pastor_id %>
+</p>
+
+<p>
+  <b>User:</b>
+  <%=h @sermon.user_id %>
+</p>
+
+<p>
+  <b>Uberverse:</b>
+  <%=h @sermon.uberverse_id %>
+</p>
+
+<p>
   <b>Mp3:</b>
   <%= link_to @sermon.mp3_file_name, @sermon.mp3.url %><br>
 </p>

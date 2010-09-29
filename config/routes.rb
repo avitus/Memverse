@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :sermons
+
 
   map.resources :uberverses
   map.resources :pastors
