@@ -14,7 +14,7 @@
 
 			
 			<td><%= link_to 'Edit', :controller => 'tag',  :action => 'edit_tag', :id => tag %></td>
-			<td><%= link_to 'X', { :action => 'destroy_tag',  :id => tag }, :confirm => 'Are you sure?', :method => :post %></td>								
+			<td><%= link_to 'X', { :controller => 'tag', :action => 'destroy_tag',  :id => tag }, :confirm => 'Are you sure?', :method => :post %></td>								
 		</tr>
 		<% end %>
 	

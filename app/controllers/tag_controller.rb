@@ -16,7 +16,8 @@ class TagController < ApplicationController
         format.html { redirect_to(show_tags_url) }
         format.xml  { head :ok }
       else
-        format.html { render :action => "edit" }
+        # TODO: If the name has been taken we'd like to merge with the existing tag
+        format.html { render :action => "edit_tag" }
         format.xml  { render :xml => @tag.errors, :status => :unprocessable_entity }
       end
     end
