@@ -1,0 +1,13 @@
+<p>
+  <b>Title:</b>
+  <%=h @sermon.title %>
+</p>
+
+<p>
+  <b>Mp3:</b>
+  <%= link_to @sermon.mp3_file_name, @sermon.mp3.url %><br>
+</p>
+
+
+<%= link_to 'Edit', edit_sermon_path(@sermon) %> |
+<%= link_to 'Back', sermons_path %>

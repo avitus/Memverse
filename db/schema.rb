@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 31) do
+ActiveRecord::Schema.define(:version => 32) do
 
   create_table "american_states", :force => true do |t|
     t.string  "abbrev",      :limit => 20, :default => "", :null => false
@@ -150,6 +150,7 @@ ActiveRecord::Schema.define(:version => 31) do
     t.integer  "next_verse"
     t.integer  "ref_interval",                                :default => 1
     t.date     "next_ref_test"
+    t.integer  "uberverse_id"
   end
 
   add_index "memverses", ["user_id", "verse_id"], :name => "index_memverses_on_user_id_and_verse_id", :unique => true
@@ -178,6 +179,14 @@ ActiveRecord::Schema.define(:version => 31) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "pastors", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "pastors", ["name"], :name => "index_pastors_on_name"
 
   create_table "popverses", :force => true do |t|
     t.string   "pop_ref",    :null => false
@@ -218,9 +227,9 @@ ActiveRecord::Schema.define(:version => 31) do
     t.string   "objective"
     t.string   "qualifier"
     t.integer  "quantity"
+    t.string   "url"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "url"
   end
 
   add_index "quests", ["level"], :name => "index_quests_on_level"
@@ -240,6 +249,27 @@ ActiveRecord::Schema.define(:version => 31) do
     t.integer "role_id"
     t.integer "user_id"
   end
+
+  create_table "sermons", :force => true do |t|
+    t.string   "title"
+    t.text     "summary"
+    t.integer  "church_id"
+    t.integer  "pastor_id"
+    t.integer  "user_id"
+    t.integer  "uberverse_id"
+    t.string   "mp3_file_name"
+    t.string   "mp3_content_type"
+    t.integer  "mp3_file_size"
+    t.datetime "mp3_updated_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "sermons", ["church_id"], :name => "index_sermons_on_church_id"
+  add_index "sermons", ["pastor_id"], :name => "index_sermons_on_pastor_id"
+  add_index "sermons", ["title"], :name => "index_sermons_on_title"
+  add_index "sermons", ["uberverse_id"], :name => "index_sermons_on_uberverse_id"
+  add_index "sermons", ["user_id"], :name => "index_sermons_on_user_id"
 
   create_table "sessions", :force => true do |t|
     t.string   "session_id", :null => false
@@ -285,6 +315,23 @@ ActiveRecord::Schema.define(:version => 31) do
   add_index "tweets", ["importance"], :name => "index_tweets_on_importance"
   add_index "tweets", ["user_id"], :name => "index_tweets_on_user_id"
 
+  create_table "uberverses", :force => true do |t|
+    t.string   "book",       :null => false
+    t.integer  "chapter",    :null => false
+    t.integer  "versenum",   :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "uberverses", ["book"], :name => "index_uberverses_on_book"
+  add_index "uberverses", ["chapter"], :name => "index_uberverses_on_chapter"
+  add_index "uberverses", ["versenum"], :name => "index_uberverses_on_versenum"
+
+  create_table "uberverses_sermons", :id => false, :force => true do |t|
+    t.integer "uberverse_id"
+    t.integer "sermon_id"
+  end
+
   create_table "users", :force => true do |t|
     t.string   "login",                     :limit => 40
     t.string   "identity_url"
@@ -312,6 +359,7 @@ ActiveRecord::Schema.define(:version => 31) do
     t.integer  "learning",                                 :default => 0
     t.date     "last_activity_date"
     t.boolean  "show_echo",                                :default => true
+    t.integer  "state_id"
     t.integer  "max_interval",                             :default => 366
     t.string   "mnemonic_use",                             :default => "Learning"
     t.integer  "american_state_id"
@@ -329,16 +377,17 @@ ActiveRecord::Schema.define(:version => 31) do
   add_index "users", ["referred_by"], :name => "index_users_on_referred_by"
 
   create_table "verses", :force => true do |t|
-    t.string   "translation",                    :null => false
-    t.integer  "book_index",                     :null => false
-    t.string   "book",                           :null => false
-    t.string   "chapter",                        :null => false
-    t.string   "versenum",                       :null => false
+    t.string   "translation",                     :null => false
+    t.integer  "book_index",                      :null => false
+    t.string   "book",                            :null => false
+    t.string   "chapter",                         :null => false
+    t.string   "versenum",                        :null => false
     t.text     "text"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "verified",    :default => false, :null => false
-    t.boolean  "error_flag",  :default => false, :null => false
+    t.boolean  "verified",     :default => false, :null => false
+    t.boolean  "error_flag",   :default => false, :null => false
+    t.integer  "uberverse_id"
   end
 
   add_index "verses", ["book"], :name => "index_verses_on_book"

@@ -1,6 +1,4 @@
-# * Add a rewards page
 # * Add client side verse memorization feedback
-# * Add an index for verse table -- at least on versenum to speed up chapter retrieval
 # - Add moderators for different translations
 # - Add nice, explanatory pop-up boxes using jQuery
 # - Allow for idle verses

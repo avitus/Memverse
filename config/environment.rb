@@ -30,8 +30,7 @@ Rails::Initializer.run do |config|
   
   # will_paginate is required for bloggity
   config.gem 'will_paginate',         :version => '~> 2.3.11', :source => 'http://gemcutter.org'
-
-# config.gem 'derailed-ziya',         :version => '2.1.5',  :source => 'http://gems.github.com' # including this give an error but it is required
+# config.gem 'derailed-ziya',         :version => '2.1.5',  :source => 'http://gems.github.com' # including this gives an error but it is required
   config.gem 'logging',               :version => '1.1.0',  :source => 'http://gems.github.com' # versions higher than 1.1.0 give error in Ziya
   config.gem 'color',                 :version => '1.4.0',  :source => 'http://gemcutter.org'
   
@@ -46,7 +45,9 @@ Rails::Initializer.run do |config|
   # Error tracking
   config.gem 'exceptional'
   
-  
+  # Attachment handling
+  config.gem 'paperclip', :source => 'http://rubygems.org'
+    
   # These cause problems with irb. Left in for reference
   # config.gem 'rspec-rails', :lib => 'spec/rails', :version => '1.1.11'
   # config.gem 'rspec', :lib => 'spec', :version => '1.1.11'
