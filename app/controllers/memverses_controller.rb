@@ -268,6 +268,9 @@ class MemversesController < ApplicationController
     @user_tags  = @mv.tags
     @tags       = @verse.tags
     
+    @next_mv = @mv.next_verse || @mv.next_verse_in_user_list
+    @prev_mv = @mv.prev_verse || @mv.prev_verse_in_user_list
+    
     @other_tags = @verse.all_user_tags
   end
 

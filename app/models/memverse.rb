@@ -425,6 +425,26 @@ class Memverse < ActiveRecord::Base
     self.verse.all_user_tags
   end
   
+  # ----------------------------------------------------------------------------------------------------------
+  # Find the next/prev verse in the users list ... used to step through verses when tagging
+  # ----------------------------------------------------------------------------------------------------------     
+  def next_verse_in_user_list
+    
+    u           = self.user
+    all_verses  = u.memverses.all(:include => :verse).sort!
+    
+    position    = all_verses.index(self)
+    return all_verses[position+1] || all_verses[0]
+  end
+  
+  def prev_verse_in_user_list
+    
+    u           = self.user
+    all_verses  = u.memverses.all(:include => :verse).sort!
+    
+    position    = all_verses.index(self)
+    return all_verses[position-1]
+  end  
   
   # ----------------------------------------------------------------------------------------------------------
   # Retrieve previous/next memory verse NOTE: Replacement for method in application_controller.rb
