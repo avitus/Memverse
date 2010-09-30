@@ -1,21 +1,31 @@
 
 <!--[form:verse]-->
 
-<div id='verse-show' class='verse-text'>
-	<h2><%= @verse.book %> <%= @verse.chapter %>:<%= @verse.versenum %> [<%=@verse.translation%>] </h2>
+<div class='verse-text'>
+	<div id='verse-show'>
+		<h2><%= @verse.book %> <%= @verse.chapter %>:<%= @verse.versenum %> [<%=@verse.translation%>] </h2>
+		
+		<p class="verse-text" id="show-verse"> <%=@verse.text%> </p>	
+	</div>
+
+	<div id='nav'>
+		<span>
+			<% if @prev_mv %>
+				<%= link_to '<-- Prev Verse', {:action => 'show', :id => @prev_mv } %>		
+			<% end %>
+		</span>
+		<span>
+			|
+		</span>
+		<span>
+			<% if @next_mv %>
+				<%= link_to 'Next Verse -->', {:action => 'show', :id => @next_mv } %>
+			<% end %>
+		</span>
+	</div>	
 	
-	<p class="verse-text" id="show-verse"> <%=@verse.text%> </p>	
 </div>
 
-<div id='nav'>
-	<% if @prev_mv %>
-		<%= link_to 'Prev Verse', {:action => 'show', :id => @prev_mv } %>		
-	<% end %>
-	
-	<% if @next_mv %>
-		<%= link_to 'Next Verse', {:action => 'show', :id => @next_mv } %>
-	<% end %>
-</div>
 
 
 <div id='verse-tags' class='tag-list'>

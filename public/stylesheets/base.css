@@ -540,6 +540,23 @@ table.user-list {
 .verse-text {
 	width: 20em;
 	float: left;
+	margin-right: 1em;
+}
+
+
+#verse-show {
+	height: 280px;
+}
+
+.verse-text #show-verse {
+	background-color: #BAB18E;
+	padding: 0.5em;
+	margin-top: 0;	
+}
+
+.verse-text #nav {
+	width: 75%;
+	margin: auto;
 }
 
 .tag {
