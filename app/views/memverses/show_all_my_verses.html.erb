@@ -10,7 +10,7 @@
 		  <th><%= link_to 'Next Test',	:action => 'show_all_my_verses', :sort_order => 'next_test'			%></th>
 <!--	  <th><%= link_to 'N', 			:action => 'show_all_my_verses', :sort_order => 'rep_n'				%></th> -->
 		  <th><%= link_to 'Interval', 	:action => 'show_all_my_verses', :sort_order => 'test_interval'		%></th>
-<!--	  <th><%= link_to 'Attempts', 	:action => 'show_all_my_verses', :sort_order => 'attempts'			%></th> -->
+		  <th><%= link_to 'Attempts', 	:action => 'show_all_my_verses', :sort_order => 'attempts'			%></th>
 		  <th><%= link_to 'Ref Int', 	:action => 'show_all_my_verses', :sort_order => 'ref_interval'		%></th>		  	  		  
 		  <th><%= link_to 'Ref Test', 	:action => 'show_all_my_verses', :sort_order => 'next_ref_test'		%></th>		  	  		  
 		  <th>Tags</th>
@@ -27,7 +27,7 @@
 	 	<td align="center"><%= mv.next_test				%></td>	
 <!-- 	<td align="center"><%= mv.rep_n					%></td>	-->		
 	 	<td align="center"><%= mv.test_interval			%></td>	
-<!-- 	<td align="center"><%= mv.attempts				%></td> -->
+		<td align="center"><%= mv.attempts				%></td>
 	 	<td align="center"><%= mv.ref_interval			%></td>
 	 	<td align="center"><%= mv.next_ref_test			%></td>
 	 	<td align="left">  <%= mv.tag_list.to_s			%></td>

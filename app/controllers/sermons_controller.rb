@@ -84,5 +84,7 @@ class SermonsController < ApplicationController
       format.html { redirect_to(sermons_url) }
       format.xml  { head :ok }
     end
-  end
+  end  
+  
+  
 end

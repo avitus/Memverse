@@ -1,12 +1,4 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :sermons
-
-
-  map.resources :uberverses
-  map.resources :pastors
-  map.resources :sermons
-  map.resources :quests
-  map.resources :collections
  
   # Restful Authentication Rewrites
   map.logout            '/logout',                      :controller => 'sessions',    :action => 'destroy'
@@ -23,6 +15,11 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :users
   map.resources :passwords
   map.resource  :session
+  map.resources :uberverses
+  map.resources :pastors
+  map.resources :sermons
+  map.resources :quests
+  map.resources :collections  
   
   # My Mappings
   map.add_verse           '/add_verse',                 :controller => 'memverses',   :action => 'add_verse'
@@ -64,14 +61,12 @@ ActionController::Routing::Routes.draw do |map|
   map.countryboard        '/countryboard',              :controller => 'info',        :action => 'countryboard'  
   map.memverse_clock      '/memverse_clock',            :controller => 'info',        :action => 'memverse_clock'  
   map.news                '/news',                      :controller => 'info',        :action => 'news'
-
- 
  
   map.update_profile      '/update_profile',            :controller => 'profile',     :action => 'update_profile'
   map.church              '/church',                    :controller => 'profile',     :action => 'show_church'
   map.referrals           '/referrals/:id',             :controller => 'profile',     :action => 'referrals'
   map.unsubscribe         '/unsubscribe/*email',        :controller => 'profile',     :action => 'unsubscribe'
-
+  
   map.edit_tag           '/edit_tag/:id',               :controller => 'tag',         :action => 'edit_tag'
 
   # Tweet routes
