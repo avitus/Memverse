@@ -45,6 +45,10 @@ class SermonsController < ApplicationController
   def create
     @sermon = Sermon.new(params[:sermon])
 
+    @sermon.church = Church.find_by_name(params[:sermon][:church_id]) || Church.create(:name => params[:sermon][:church_id])
+    @sermon.pastor = Pastor.find_by_name(params[:sermon][:pastor_id]) || Pastor.create(:name => params[:sermon][:pastor_id])
+    @sermon.user   = current_user
+
     respond_to do |format|
       if @sermon.save
         flash[:notice] = 'Sermon was successfully created.'
@@ -61,6 +65,8 @@ class SermonsController < ApplicationController
   # PUT /sermons/1.xml
   def update
     @sermon = Sermon.find(params[:id])
+
+    # TODO - need to enable update of church/pastor/verse when editing sermon
 
     respond_to do |format|
       if @sermon.update_attributes(params[:sermon])

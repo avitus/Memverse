@@ -1,4 +1,5 @@
 class PastorsController < ApplicationController
+  
   # GET /pastors
   # GET /pastors.xml
   def index
@@ -82,4 +83,37 @@ class PastorsController < ApplicationController
       format.xml  { head :ok }
     end
   end
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Autcomplete for Pastor Names
+  # Input: params[:query]
+  # Output: JSON object
+  # ----------------------------------------------------------------------------------------------------------   
+  def pastor_autocomplete
+    # Return country list in JSON format
+    #    {
+    #       query:'Li',
+    #       suggestions:['Liberia','Libyan Arab Jamahiriya','Liechtenstein','Lithuania'],
+    #       data:['LR','LY','LI','LT']
+    #    }
+
+    @suggestions = Array.new
+
+    query         = params[:query]
+    query_length  = query.length
+    
+    all_pastors = Pastor.find(:all, :select => 'name')
+    
+    all_pastors.each { |pastor|
+      name = pastor.name
+      if name[0...query_length].downcase == query.downcase
+        @suggestions << name
+      end
+    }
+    
+    render :json => {:query => query, :suggestions => @suggestions }.to_json
+
+  end  
+  
+  
 end

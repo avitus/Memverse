@@ -54,6 +54,7 @@ class User < ActiveRecord::Base
   has_many                :memverses 
   has_many                :progress_reports
   has_many                :tweets
+  has_many                :sermons
   belongs_to              :country,         :counter_cache => true
   belongs_to              :church,          :counter_cache => true
   belongs_to              :american_state,  :counter_cache => true

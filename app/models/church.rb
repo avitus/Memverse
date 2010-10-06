@@ -9,6 +9,7 @@ class Church < ActiveRecord::Base
   # Relationships
   has_many    :users
   has_many    :tweets
+  has_many    :sermons  
   belongs_to  :country
   
   # Validations

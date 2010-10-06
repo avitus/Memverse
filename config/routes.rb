@@ -16,7 +16,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :passwords
   map.resource  :session
   map.resources :uberverses
-  map.resources :pastors
+#  map.resources :pastors
   map.resources :sermons
   map.resources :quests
   map.resources :collections  
