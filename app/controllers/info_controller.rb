@@ -116,7 +116,10 @@ class InfoController < ApplicationController
     @countryboard  = Country.top_countries  # returns top users sorted by number of verses memorized
 
   end      
-    
+
+  # ----------------------------------------------------------------------------------------------------------   
+  # Top referrers
+  # ---------------------------------------------------------------------------------------------------------- 
   def referralboard
     @tab            = "leaderboard"
     @page_title     = "Referrals Leaderboard"

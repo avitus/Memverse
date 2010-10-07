@@ -1,4 +1,6 @@
 <h1><%= @country.rank %>. <%= @country.printable_name %></h1>
 
-<%= render :partial=>"/users/user" %>
-
+<table class="memverse-standard">
+	<%= render :partial => "users/user_headings" %>
+	<%= render :partial => "users/user", :collection => @users %>
+</table>

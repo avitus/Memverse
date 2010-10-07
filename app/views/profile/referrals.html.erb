@@ -17,19 +17,46 @@
 
 <% if @user == current_user %>
 	<h2>People You Have Referred</h2>
-	<% if @users.empty? %>
-		<%= render :partial=> "profile/refer"%>
+	
+	<% if @referees.empty? %>
+		<%= render :partial => "profile/refer"%>
 	<% else %>
-		<%= render :partial=> "/users/user" %>
+		<table class="memverse-standard">
+			<%= render :partial => "users/user_headings" %>
+			<%= render :partial => "users/user", :collection => @referees  %>
+		</table>
 	<% end %>
+	
+	<h2>People Your Referees Have Referred</h2>
+	<% if @level_two.empty? %>
+		<p>No referrals yet. You should encourage them.</p>
+	<% else %>	
+		<table class="memverse-standard">
+			<%= render :partial => "users/user_headings" %>
+			<%= render :partial => "users/user", :collection => @level_two %>
+		</table>	
+	<% end %>	
+	
 <% else %>
 	<h2>People <%= @user.name_or_login %> has referred</h2>
-	<% if @users.empty? %>
+	<% if @referees.empty? %>
 		<p>No referrals yet.</p>
 	<% else %>
-		<%= render :partial=> "/users/user" %>
+		<table class="memverse-standard">
+			<%= render :partial => "users/user_headings" %>
+			<%= render :partial=> "users/user", :collection => @referees %>
+		</table>	
 	<% end %>
+	
+	<h2>People <%= @user.name_or_login %>'s Referees Have Referred</h2>
+	<% if @level_two.empty? %>
+		<p>No referrals yet.</p>
+	<% else %>	
+		<table class="memverse-standard">
+			<%= render :partial => "users/user_headings" %>
+			<%= render :partial => "users/user", :collection => @level_two %>
+		</table>	
+	<% end %>	
+	
 <% end %>
-
-
-
+	

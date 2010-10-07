@@ -215,7 +215,11 @@ class ProfileController < ApplicationController
       @referrer = nil
     end
     
-    @users     = User.find(:all, :conditions => {:referred_by => @user.id})
+    @referees  = @user.referrals
+    
+    @level_two = @referees.collect { |r| r.referrals }.flatten
+    
+    logger.debug("*** level two referees: #{@level_two}")
     
   end
 

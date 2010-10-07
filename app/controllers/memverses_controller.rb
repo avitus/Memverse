@@ -1057,9 +1057,7 @@ class MemversesController < ApplicationController
     
     if solution
       
-      logger.debug("Answer: #{answer.downcase.gsub(/[^a-z ]|\s-|\s—/, '')}")
-      logger.debug("Solutn: #{solution.downcase.gsub(/[^a-z ]|\s-|\s—/, '')}")
-      # ---- Update this for greater leniency --------------
+      # ---- TODO: Update this for greater leniency --------------
       if answer.downcase.gsub(/[^a-z ]|\s-|\s—/, '') == solution.downcase.gsub(/[^a-z ]|\s-|\s—/, '')
         flash[:notice] = "Correct"
         session[:exam_correct] += 1

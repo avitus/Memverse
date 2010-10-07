@@ -307,15 +307,19 @@ class User < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   # Return list of people a user has referred
   # ----------------------------------------------------------------------------------------------------------  
-  def referrals
-    User.find(:all, :conditions => { :referred_by => self.id })
+  def referrals( active = false )
+    if active
+      User.active.find(:all, :conditions => { :referred_by => self.id })
+    else
+      User.find(:all, :conditions => { :referred_by => self.id })
+    end
   end
 
   # ----------------------------------------------------------------------------------------------------------
   # Return number of people a user has referred
   # ----------------------------------------------------------------------------------------------------------  
-  def num_referrals
-    User.find(:all, :conditions => { :referred_by => self.id }).length
+  def num_referrals( active = false )
+    self.referrals(active).length
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -607,17 +611,24 @@ class User < ActiveRecord::Base
   end
 
   # ----------------------------------------------------------------------------------------------------------
+  # User status
+  # ----------------------------------------------------------------------------------------------------------   
+  def status
+    return self.is_active? ? "Active" : "Inactive"
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
   # User has been active in last month
   # ----------------------------------------------------------------------------------------------------------   
   def is_active?
-    return self.last_activity_date > 1.month.ago.to_date
+    return self.last_activity_date && self.last_activity_date > 1.month.ago.to_date
   end
 
   # ----------------------------------------------------------------------------------------------------------
   # User has not been active for two months or more
   # ---------------------------------------------------------------------------------------------------------- 
   def is_inactive?
-    return self.last_activity_date < 3.months.ago.to_date
+    return self.last_activity_date || self.last_activity_date < 3.months.ago.to_date
   end
   # ----------------------------------------------------------------------------------------------------------
   # Check whether user needs reminder
@@ -704,7 +715,13 @@ class User < ActiveRecord::Base
     leaderboard = Hash.new(0)
     
     all_users = self.active
-    all_users.each { |u| leaderboard[ u ] = u.num_referrals }
+    all_users.each { |u| 
+      referral_score = u.num_referrals(active=true).to_f
+      u.referrals(active=true).each { |r|
+        referral_score += r.num_referrals(active=true)/2.to_f
+      }
+      leaderboard[ u ] = referral_score
+    }
     
     return leaderboard.sort{|a,b| a[1]<=>b[1]}.reverse[0...numusers]
   end

@@ -1,15 +1,3 @@
-<table class="memverse-standard">
-	<tr>
-		<th>Name</th>
-		<th>Memorized</th>
-		<th>Learning</th>
-		<th>Accuracy</th>
-		<th>Group</th>
-		<th>Country</th>
-		<th>Joined</th>
-	</tr>
-	
-	<% for user in @users %>
 	<tr>
 		<td align="left" 	id='name'>	<%= user.name_or_login	%></td>
 		<td align="center" 	id='mem'>	<%= user.memorized %></td>
@@ -18,6 +6,5 @@
 		<td align="left" 	id='church'><%= user.church ? link_to(user.church.name, { :controller => "profile", :action => "show_church", :church => user.church.id }) : "" %></td>
 		<td align="left" 	id='cntry'>	<%= user.country ? user.country.printable_name : "" %></td>	
 		<td align="center" 	id='start'>	<%= user.created_at.to_date %></td>
+		<td align="center" 	id='status'><%= user.status %></td>
 	</tr>
-	<% end %>
-</table>
