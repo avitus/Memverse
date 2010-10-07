@@ -44,10 +44,13 @@ class SermonsController < ApplicationController
   # POST /sermons.xml
   def create
     @sermon = Sermon.new(params[:sermon])
-
-    @sermon.church = Church.find_by_name(params[:sermon][:church_id]) || Church.create(:name => params[:sermon][:church_id])
-    @sermon.pastor = Pastor.find_by_name(params[:sermon][:pastor_id]) || Pastor.create(:name => params[:sermon][:pastor_id])
-    @sermon.user   = current_user
+    
+    errorcode, bk, ch, vs = parse_verse(params[:sermon][:uberverse_id])
+    @sermon.uberverse = Uberverse.first(:conditions => {:book => bk, :chapter => ch, :versenum => vs}) || Uberverse.create(:book => bk, :chapter => ch, :versenum => vs)
+    
+    @sermon.church    = Church.find_by_name(params[:sermon][:church_id]) || Church.create(:name => params[:sermon][:church_id].titleize )
+    @sermon.pastor    = Pastor.find_by_name(params[:sermon][:pastor_id]) || Pastor.create(:name => params[:sermon][:pastor_id].titleize )
+    @sermon.user      = current_user
 
     respond_to do |format|
       if @sermon.save

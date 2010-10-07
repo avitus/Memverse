@@ -1,36 +1,35 @@
-<p>
-  <b>Title:</b>
-  <%=h @sermon.title %>
-</p>
-
-<p>
-  <b>Summary:</b>
-  <%=h @sermon.summary %>
-</p>
-
-<p>
-  <b>Church:</b>
-  <%=h @sermon.church_id %>
-</p>
+<h1><%=h @sermon.title %></h1>
 
 <p>
   <b>Pastor:</b>
-  <%=h @sermon.pastor_id %>
+  <%=h @sermon.pastor.name %>
 </p>
 
 <p>
-  <b>User:</b>
-  <%=h @sermon.user_id %>
+  <b>Key Verse:</b>
+  <%=h @sermon.uberverse.ref %>
+</p>
+  
+<p>
+  <b>Church:</b>
+  <%=h @sermon.church.name %>
 </p>
 
 <p>
-  <b>Uberverse:</b>
-  <%=h @sermon.uberverse_id %>
+  <%=h @sermon.summary %>
 </p>
 
 <p>
   <b>Mp3:</b>
   <%= link_to @sermon.mp3_file_name, @sermon.mp3.url %><br>
+</p>
+
+<audio src="<%= @sermon.mp3.url %>" controls="controls">
+	Your browser does not support the audio element. You will need to upgrade to a modern browser.
+</audio>
+
+<p>
+  Uploaded by: <%=h @sermon.user.name_or_login %>
 </p>
 
 

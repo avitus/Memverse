@@ -60,6 +60,7 @@ ActionController::Routing::Routes.draw do |map|
   map.stateboard          '/stateboard',                :controller => 'info',        :action => 'stateboard'
   map.countryboard        '/countryboard',              :controller => 'info',        :action => 'countryboard'  
   map.memverse_clock      '/memverse_clock',            :controller => 'info',        :action => 'memverse_clock'  
+  map.referralboard       '/referralboard',             :controller => 'info',        :action => 'referralboard'  
   map.news                '/news',                      :controller => 'info',        :action => 'news'
  
   map.update_profile      '/update_profile',            :controller => 'profile',     :action => 'update_profile'

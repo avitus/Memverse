@@ -20,12 +20,11 @@ class CreateSermons < ActiveRecord::Migration
     end
       
     create_table :uberverses do |t|
-      t.string :book,       :null => false
+      t.string  :book,       :null => false
       t.integer :chapter,   :null => false
       t.integer :versenum,  :null => false
       t.timestamps
     end
-    
     
     add_index :sermons,     :title
     add_index :sermons,     :church_id 
@@ -46,6 +45,7 @@ class CreateSermons < ActiveRecord::Migration
     create_table :uberverses_sermons, :id => false do |t|
       t.belongs_to :uberverse
       t.belongs_to :sermon
+      t.boolean    :primary_verse, :default => false
     end        
   end
 

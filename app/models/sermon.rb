@@ -3,6 +3,7 @@ class Sermon < ActiveRecord::Base
   
   belongs_to :pastor
   belongs_to :church
-  belongs_to :user 
+  belongs_to :user
+  belongs_to :uberverse
   
 end
