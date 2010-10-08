@@ -1,6 +1,6 @@
 class SermonsController < ApplicationController
   
-  before_filter :authorize
+  before_filter :authorize, :except => [:index, :show ]
   
   # GET /sermons
   # GET /sermons.xml
