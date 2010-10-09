@@ -20,7 +20,7 @@
 	    <td><%=h sermon.uberverse.ref %></td>
 	    <td><%= link_to 'Listen', sermon %></td>
 	    <td><%= link_to 'Edit', edit_sermon_path(sermon) %></td>
-	    <td><%= link_to 'Destroy', sermon, :confirm => 'Are you sure?', :method => :delete %></td>
+	    <td><%= link_to '[x]', sermon, :confirm => 'Are you sure?', :method => :delete %></td>
 	  </tr>
 	<% end %>
 </table>
