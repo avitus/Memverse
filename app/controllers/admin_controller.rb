@@ -853,7 +853,8 @@ class AdminController < ApplicationController
         flash[:notice] = "Profile successfully updated"
         redirect_to :action => 'search_users'
       else
-        render :action => update_profile
+        flash[:notice] = "Couldn't update user. Possible duplicate email or username."        
+        render :action => edit_user
       end
     end
     
