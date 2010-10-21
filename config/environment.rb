@@ -43,7 +43,7 @@ Rails::Initializer.run do |config|
   config.gem "acts-as-taggable-on", :source => "http://gemcutter.org", :version => '2.0.0.rc1'
   
   # Error tracking
-  config.gem 'exceptional'
+  config.gem 'hoptoad_notifier'
   
   # Attachment handling
   config.gem 'paperclip', :source => 'http://rubygems.org'

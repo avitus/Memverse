@@ -82,14 +82,14 @@ ActionController::Routing::Routes.draw do |map|
   # Routes for Ziya graphs
   map.load_progress       '/chart/load_progress/:user', :controller => 'chart',       :action => 'load_progress'
   map.load_memverse_clock '/chart/load_memverse_clock', :controller => 'chart',       :action => 'load_memverse_clock'
-  
-  # Route for random pages
-  map.page                ':action',                    :controller => 'pages'  
-  
+    
   # Home Page
   map.root :controller => 'sessions', :action => 'new'
 
   # Install the default routes as the lowest priority.
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'
+  
+  # Route for random pages
+  map.page                ':action',                    :controller => 'pages'    
 end
