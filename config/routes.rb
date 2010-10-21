@@ -83,6 +83,9 @@ ActionController::Routing::Routes.draw do |map|
   map.load_progress       '/chart/load_progress/:user', :controller => 'chart',       :action => 'load_progress'
   map.load_memverse_clock '/chart/load_memverse_clock', :controller => 'chart',       :action => 'load_memverse_clock'
   
+  # Route for random pages
+  map.page                ':action',                    :controller => 'pages'  
+  
   # Home Page
   map.root :controller => 'sessions', :action => 'new'
 
