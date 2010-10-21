@@ -1,5 +1,4 @@
 class ApplicationController < ActionController::Base
-#  include ExceptionNotifiable
   include AuthenticatedSystem
   include RoleRequirementSystem
 
