@@ -227,9 +227,9 @@ ActiveRecord::Schema.define(:version => 32) do
     t.string   "objective"
     t.string   "qualifier"
     t.integer  "quantity"
+    t.string   "url"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "url"
   end
 
   add_index "quests", ["level"], :name => "index_quests_on_level"
@@ -330,7 +330,6 @@ ActiveRecord::Schema.define(:version => 32) do
   create_table "uberverses_sermons", :id => false, :force => true do |t|
     t.integer "uberverse_id"
     t.integer "sermon_id"
-    t.boolean "primary_verse", :default => false
   end
 
   create_table "users", :force => true do |t|
@@ -360,6 +359,7 @@ ActiveRecord::Schema.define(:version => 32) do
     t.integer  "learning",                                 :default => 0
     t.date     "last_activity_date"
     t.boolean  "show_echo",                                :default => true
+    t.integer  "state_id"
     t.integer  "max_interval",                             :default => 366
     t.string   "mnemonic_use",                             :default => "Learning"
     t.integer  "american_state_id"

@@ -1,0 +1,294 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>RedStart Design:  Specials</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"></meta>
+	<link 	href="Redstyles.css" rel ="stylesheet" type="text/css" />
+	<script language="javascript" type="text/javascript">
+	<!--
+	//var description = new Array("RedStart has made a variety of sculptural heart shape pieces. Choose from a literal heart to an infinity loop to represent the prefect symbol of your love.",   
+	//						"This slimmer version of our infinity loop looks more like a heart.  This rose gold pendant comes on a sterling silver chain and will add a unique metal to her collection.",
+	//						"Here our slimmer infinity loops are made into silver heart-shaped earrings.",
+	//						"This smooth heart pendant was first created for a client who wanted a heart shaped piece that also subtly suggested an infinity loop.",
+	//						"The Infinity pendant of the <a href='Stream.html'  class='toplinksRed'>Stream Series </a>is a dynamic expression of love. Inspired by the symbol for the mathematical concept of infinity and the simple notion of a heart, this pendant celebrates eternal hopefulness and strength.",
+	//						"The Infinity pendant of the <a href='StreamSilver.html'  class='toplinksRed'>Stream Series </a> is a dynamic expression of love. Inspired by the symbol for the mathematical concept of infinity and the simple notion of a heart, this pendant celebrates eternal hopefulness and strength."
+	//						);
+	
+	//var Title = new Array(	"Heart Specials",
+	//						"14k Rose Gold Sculptural Heart Pendant",
+	//						"Sterling Silver Sculptural Heart Earrings",
+	//						"Sterling Silver Smooth Heart Pendant",
+	//						"14k Yellow Gold Infinity Pendant",
+	//						"Sterling Silver Infinity Pendant"
+	//					    );
+							
+	//var Style = new Array(  "",
+	//						"Style: STR43",
+	//						"Style: STS15",
+	//						"Style: HTS10",
+	//						"Style: STY42",
+	//						"Style: STS12"
+	//					    );
+	
+	//var PPStyle = new Array(  "",
+	//						"STR43",
+	//						"STS15",
+	//						"HTS10",
+	//						"STY42",
+	//						"STS12"
+	//					    );
+	
+	//var Mat = new Array(	"",
+	//						"Material: 14k rose gold pendant with sterling silver chain",
+	//						"Material: sterling silver pendant and chain",
+	//						"Material: sterling silver pendant and chain",
+	//						"Material: 14k yellow gold pendant and chain",
+	//						"Material: sterling silver pendant and chain"
+	//					    );
+	
+	//var Price = new Array(  "",
+	//						"Price: $220",
+	//						"Price: $140",
+	//						"Price: $85",
+	//						"Price: $380",
+	//						"Price: $110"
+	//					    );
+	
+	//var Cost = new Array(   "",
+	//						"220.00",
+	//						"140.00",
+	//						"85.00",
+	//						"380.00",
+	//						"110.00"
+	//					    );
+	
+	
+	
+	var largePics = new Array("images/RoseLoopL.gif",
+							 "images/RoseLoopStillL.gif"
+						 );
+						
+	var smallPics = new Array("images/RoseLoopS.gif",
+							 "images/RoseLoopStillS.gif"
+						 );
+	
+	var Buttons = new Array('Pictures/ViewPurchaseDown.bmp',
+							'Pictures/ViewPurchase.bmp',
+							'Pictures/AddPurchaseDown.bmp',
+							'Pictures/AddPurchase.bmp'
+							)
+	function ViewDown(){
+		document.getElementById('view').src='Graphics/ViewCartOn.gif';
+	}
+	
+	function ViewUp(){
+		document.getElementById('view').src='Graphics/ViewCart.gif';
+	}
+	
+	function AddDown(){
+		document.getElementById('add').src='Graphics/AddToCartOn.gif';
+	}
+	
+	function AddUp(){
+		document.getElementById('add').src='Graphics/AddToCart.gif';
+	}
+	
+	function changePhoto(num){
+		document.largePhoto.src=largePics[num];
+		//document.buy.amount.value=Cost[num];
+		//document.buy.item_number.value=PPStyle[num];
+		//document.buy.item_name.value=Title[num];
+		
+		//var paragraph = document.getElementById("text");	
+		//paragraph.innerHTML=description[num];
+		//var thetitle = document.getElementById("title");	
+		//thetitle.innerHTML=Title[num];
+		//var thestyle = document.getElementById("style");	
+		//thestyle.innerHTML=Style[num];
+		//var thematerial = document.getElementById("material");	
+		//thematerial.innerHTML=Mat[num];
+		//var theprice = document.getElementById("cost");	
+		//theprice.innerHTML=Price[num]
+		
+		}
+		
+	function LoadPics(){
+	    for(var i=0; i < largePics.length; i++) {
+		var imgS = new Image();
+		var imgL = new Image();
+		imgS.src = smallPics[i] ;
+		imgL.src = largePics[i] ;
+		}
+		for(var i=0; i < Buttons.length; i++) {
+		var butts = new Image();
+		butts.src = Buttons[i] ;
+		}
+		}
+	
+	
+	
+	function PullDownShow(j){
+		var Link = new Array(document.getElementById('Womens'),
+							document.getElementById('Subtle'),
+							document.getElementById('Mens'),
+							document.getElementById('Measure')
+							);
+		
+		var curleft = curtop = 0;
+		if (Link[j].offsetParent) {
+			curleft = Link[j].offsetLeft
+			curtop = Link[j].offsetTop
+			while (Link[j] = Link[j].offsetParent) {
+				curleft += Link[j].offsetLeft
+				curtop += Link[j].offsetTop
+			}
+		}
+		curleft = curleft -12;
+		if(j==0){document.getElementById('PullOne').style.visibility="visible";
+				 document.getElementById('PullOne').style.left=curleft+'px';
+				 document.getElementById('PullOne').style.top=curtop+'px';
+				 }
+		else if (j==1){document.getElementById('PullTwo').style.visibility="visible";
+				 document.getElementById('PullTwo').style.left=curleft+'px';
+				 document.getElementById('PullTwo').style.top=curtop+'px';}
+		else if (j==2){document.getElementById('PullThree').style.visibility="visible";
+				 document.getElementById('PullThree').style.left=curleft+'px';
+				 document.getElementById('PullThree').style.top=curtop+'px';}
+		else if (j==3){document.getElementById('PullFour').style.visibility="visible";
+				 document.getElementById('PullFour').style.left=curleft+'px';
+				 document.getElementById('PullFour').style.top=curtop+'px';}
+			
+	}
+	
+	function PullDownHide(j){
+		if(j==0){	document.getElementById('PullOne').style.visibility="hidden";}
+		else if (j==1){	document.getElementById('PullTwo').style.visibility="hidden";}
+		else if (j==2){	document.getElementById('PullThree').style.visibility="hidden";}
+		else if (j==3){	document.getElementById('PullFour').style.visibility="hidden";}
+	
+	}
+	
+	-->
+	</script>
+</head>
+
+<body onload="LoadPics();" >
+
+<div id="PullOne" style="position: absolute; top: 60px; left:150px; visibility: hidden;"onmouseout="PullDownHide(0);" onmouseover="PullDownShow(0);" >
+
+<table cellpadding="0" cellspacing="0" >
+	<tr><td width="12" bgcolor="#cccccc"></td><td height="20" bgcolor="#cccccc">Women's Jewelry</td></tr>
+	<tr><td bgcolor="#cccccc"></td><td height="22" valign="bottom" width="98" bgcolor="#cccccc"><a href="Stream.html" class="toplinks">Stream Series</a></td></tr>
+	<tr><td bgcolor="#cccccc"></td><td height="22" valign="bottom" bgcolor="#cccccc"><a href="Bone.html" class="toplinks">Bone Series</a></td></tr>
+	<tr><td bgcolor="#cccccc"></td><td height="22" valign="bottom" bgcolor="#cccccc"><a href="Petals.html" class="toplinks">Petals Series</a></td></tr>
+	<tr><td bgcolor="#cccccc"></td><td height="22" valign="bottom" bgcolor="#cccccc"><a href="Vine.html" class="toplinks">Vine Series</a></td></tr>	
+	<tr><td bgcolor="#cccccc"></td><td height="22" valign="bottom" bgcolor="#cccccc"><a href="Bubbles.html" class="toplinks">Bubble Series</a></td></tr>	<tr><td bgcolor="#cccccc"></td><td height="22" valign="bottom" bgcolor="#cccccc"><a href="RoseLoop.html" class="toplinks">Rose Loop</a></td></tr>
+
+	<tr><td bgcolor="#cccccc"></td><td height="22" valign="bottom" bgcolor="#cccccc"><a href="Compass.html" class="toplinks">Compass Ring</a></td></tr>
+	<tr><td bgcolor="#cccccc"></td><td height="22" valign="bottom" bgcolor="#cccccc"><a href="Level.html" class="toplinks">Level Ring</a></td></tr>
+	<tr><td bgcolor="#cccccc"></td><td height="22" valign="bottom" bgcolor="#cccccc"><a href="SubtleSafety.html" class="toplinks">Subtle Safety</a></td></tr>
+    <tr><td height="15" colspan="2" valign="middle" ><img src="Graphics/PullBottom.gif" width="110" height="15" /></td></tr>
+	</table></div>
+
+<div id="PullTwo" style="position: absolute; top: 60px; visibility: hidden;" onmouseout="PullDownHide(1);" onmouseover="PullDownShow(1);" >
+<table cellpadding="0" cellspacing="0" >
+	<tr><td width="12" bgcolor="#cccccc"></td><td height="20" width="88" bgcolor="#cccccc">Subtle Safety</td></tr>
+
+	<tr><td bgcolor="#cccccc"></td><td height="22" valign="bottom" bgcolor="#cccccc"><a href="SubtleSafety.html" class="toplinks">Subtle Safety</a></tr>
+    <tr><td height="15" colspan="2" valign="middle" width="90"><img src="Graphics/PullBottom2.gif" width="100" height="15" /></td></tr>
+	</table></div>
+	
+<div id="PullThree" style="position: absolute; top: 60px; visibility: hidden;" onmouseout="PullDownHide(2);" onmouseover="PullDownShow(2);" >
+<table cellpadding="0" cellspacing="0" >
+	<tr><td width="12" bgcolor="#cccccc"></td><td height="20"bgcolor="#cccccc">Men's Jewelry</td></tr>
+	<tr><td bgcolor="#cccccc"></td><td bgcolor="#cccccc"height="22" valign="bottom" width="94"><a href="StreamMen.html" class="toplinks">Stream Series</a></td></tr>	
+	<tr><td bgcolor="#cccccc"></td><td bgcolor="#cccccc"height="22" valign="bottom"><a href="BoneMen.html" class="toplinks">Bone Series</a></td></tr>
+
+	<tr><td bgcolor="#cccccc"></td><td bgcolor="#cccccc"height="22" valign="bottom"><a href="Compass.html" class="toplinks">Compass Ring</a></td></tr>
+	<tr><td bgcolor="#cccccc"></td><td bgcolor="#cccccc"height="22" valign="bottom"><a href="Level.html" class="toplinks">Level Ring</a></td></tr>
+    <tr><td height="15" colspan="2" valign="middle"><img src="Graphics/PullBottom3.gif" width="106" height="15" /></td></tr>
+	</table></div>
+	
+<div id="PullFour" style="position: absolute; top: 60px; visibility: hidden;" onmouseout="PullDownHide(3);" onmouseover="PullDownShow(3);" >
+<table  cellpadding="0" cellspacing="0" >
+	<tr><td width="12" bgcolor="#cccccc"></td><td height="20" width="94"bgcolor="#cccccc">Measurings</td></tr>
+	<tr><td bgcolor="#cccccc"></td><td bgcolor="#cccccc"height="22" valign="bottom"><a href="Compass.html" class="toplinks">Compass Ring</a></td></tr>
+
+	<tr><td bgcolor="#cccccc"></td><td bgcolor="#cccccc"height="22" valign="bottom"><a href="Level.html" class="toplinks">Level Ring</a></td></tr>
+    <tr><td height="15" colspan="2" valign="middle" ><img src="Graphics/PullBottom3.gif" width="106" height="15" /></td></tr>
+	</table></div>
+
+<table width="750px" align="center" border="0px" cellpadding="0px" cellspacing="0px" height="450" >
+
+<!--Top Navagation Bar-->		
+
+<tr><td height="260"><table cellpadding="0px" cellspacing="0px" border="0" height="260">
+<tr>
+	<td rowspan="9"><img src="images/RoseLoopL.jpg" alt="Bubbles Collection" name="largePhoto" width="260" height="260" id="largePhoto"/> </td>
+	<td width="30" rowspan="9"></td>
+	<td height="10">
+</tr>
+
+<tr>
+  <td height="20" valign="top" class="RedlinksLarge" id="title" ><h1>New Beginnings Pendant</h1></td>
+</tr>
+<tr>
+  <td height="70" id="text" >
+  	The latest piece from Redstart Design, the New Beginnings Pendant celebrates the dignity of the individual and the renewal of the spirit. The organic
+	egg-like shape symbolizes the new life God freely offers all of us. The pendant comes on a 16" sterling silver chain and the pendant itself is available
+	in a choice of sterling silver, 14K gold, or 14K rose gold.
+  </td>
+</tr>
+
+<tr>
+  <td height="10" ></td>
+</tr>
+
+
+<tr><td  width="470" valign="top"  colspan="4">
+	<table cellpadding="0" cellspacing="0" border="0">
+
+		<form target="paypal" action="https://www.paypal.com/cgi-bin/webscr" method="post">
+		<input type="hidden" name="cmd" value="_s-xclick">
+		<input type="hidden" name="hosted_button_id" value="K3LA3EZKZNWFE">
+		<table>
+		<tr><td><input type="hidden" name="on0" value="Option">Option</td></tr><tr><td><select name="os0">
+			<option value="Sterling Silver">Sterling Silver $129.99</option>
+			<option value="Gold 14K">Gold 14K $299.99</option>
+			<option value="Rose Gold 14K">Rose Gold 14K $319.99</option>
+		</select> </td></tr>
+		</table>
+		<input type="hidden" name="currency_code" value="USD">
+		<input type="image" src="https://www.paypal.com/en_US/i/btn/btn_cart_SM.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+		<img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
+		</form>
+		
+	</table></td></tr>
+
+<tr><td height="10px"></td></tr>  
+
+<tr valign="bottom"><td colspan="2"><table cellpadding="0px" cellspacing="0px"  border="0px">
+
+	<tr><td width="100" height="100"><img class="linkish" src="images/RoseLoopS.gif" alt="Bone Family"  onclick="changePhoto(0);" width="100" height="100"/></td>
+    <td width="20"></td>
+	<td width="100"><img class="linkish" src="images/RoseLoopStillS.gif" alt="Pendant"  onclick="changePhoto(1);" width="100" height="100"/></td>
+	<td width="80"></td>
+	<td width="400" class="toplinksRed">
+		100% of the profits from your purchase will be donated to the Home of New Beginnings, a safe haven in Thailand for victims of human trafficking. Each
+		necklace will be enclosed in a Thai silk pouch embroidered by residents of the Home of New Beginnings.
+	</td>
+	</tr></table></td></tr>
+
+<tr><td height="7px"></td></tr>
+
+</table>
+</body>
+</html>
+
+
+
+
+
+
+
+

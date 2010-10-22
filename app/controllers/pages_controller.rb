@@ -1,6 +1,5 @@
 class PagesController < ApplicationController
-  def necklace
-    @page_title = "HNB Necklace"
-    
+  def pendant
+    @page_title = "The New Beginnings Pendant"
   end
 end
