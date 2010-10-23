@@ -1,17 +1,14 @@
 <head>
-	<title>Home of New Beginnings Pendant</title>
+	<title>The New Beginnings Pendant</title>
 	
 	<script language="javascript" type="text/javascript">
-		
 		var largePics = new Array(	"images/hnb/RoseLoopL.jpg",
 								 	"images/hnb/RoseLoopStillL.jpg",
-								 	"images/hnb/SilverEggL.jpg"
-							 );
+								 	"images/hnb/SilverEggL.jpg" );
 							
 		var smallPics = new Array(	"images/hnb/RoseLoopS.jpg",
 								 	"images/hnb/RoseLoopStillS.jpg",
-								 	"images/hnb/SilverEggS.jpg"									
-							 );
+								 	"images/hnb/SilverEggS.jpg" );
 		
 		function changePhoto(num){
 			document.largePhoto.src=largePics[num];	
@@ -19,21 +16,19 @@
 			
 		function LoadPics(){
 		    for(var i=0; i < largePics.length; i++) {
-			var imgS = new Image();
-			var imgL = new Image();
-			imgS.src = smallPics[i] ;
-			imgL.src = largePics[i] ;
+				var imgS = new Image();
+				var imgL = new Image();
+				imgS.src = smallPics[i] ;
+				imgL.src = largePics[i] ;
+				}
 			}
-			}
-	
 	</script>
 </head>
 
 <body onload="LoadPics();">
 
 <table width="1000px" align="center" border="0px" cellpadding="0px" cellspacing="0px" height="550">
-
-	<!--Top Navagation Bar-->		
+	
 	<tr>
 		<td height="20px"></td>
 	</tr> 
@@ -81,6 +76,10 @@
 				  <td height="30" id="text" class="inline-footnote" >
 				  	<em>Your necklace will be custom cast specifically for you. Please allow up to 8 weeks for delivery.</em>
 				  </td>
+				</tr>
+
+				<tr>
+				  <td height="10" ></td>
 				</tr>
 
 				<tr>
@@ -150,7 +149,6 @@
 						</table> 
 					</td>
 				</tr>
-
 
 			</table>
 		</td> 
