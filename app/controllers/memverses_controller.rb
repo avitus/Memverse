@@ -714,8 +714,7 @@ class MemversesController < ApplicationController
       else
         initial_mv = Memverse.find( mv.first_verse )
       end
-      
-       
+          
     else # this is the first verse of the sequence
       initial_mv = mv
     end

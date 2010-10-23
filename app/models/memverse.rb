@@ -143,7 +143,7 @@ class Memverse < ActiveRecord::Base
   end
 
   # ----------------------------------------------------------------------------------------------------------
-  # Delete accounts of users that never added any verses
+  # Delete accounts of users that never added any verses TODO: Is this method ever used?
   # ----------------------------------------------------------------------------------------------------------  
   def self.delete_unstarted_memory_verses    
     find(:all, :conditions => [ "created_at < ? and attempts = ?", 6.months.ago, 0 ]).each { |mv|
@@ -153,7 +153,7 @@ class Memverse < ActiveRecord::Base
   end
 
   # ----------------------------------------------------------------------------------------------------------
-  # Check for users with duplicates
+  # Check for users with duplicates TODO: Is this method ever used?
   # ----------------------------------------------------------------------------------------------------------  
   def self.check_for_duplicates
     
@@ -272,14 +272,14 @@ class Memverse < ActiveRecord::Base
   end
 
 
+
+
   # ----------------------------------------------------------------------------------------------------------
   # Is a verse memorized?
   # ----------------------------------------------------------------------------------------------------------    
   def memorized?
     self.status == "Memorized"
   end
-
-
 
   # ----------------------------------------------------------------------------------------------------------
   # Is this the first verse in a sequence or a solo verse ?
@@ -303,6 +303,14 @@ class Memverse < ActiveRecord::Base
   end
 
   # ----------------------------------------------------------------------------------------------------------
+  # Is a verse due for memorization
+  # ----------------------------------------------------------------------------------------------------------   
+  def due
+    return self.next_test <= Date.today
+  end
+
+
+  # ----------------------------------------------------------------------------------------------------------
   # Return first  verse in a sequence
   # ----------------------------------------------------------------------------------------------------------  
   def first_verse_in_sequence    
@@ -324,8 +332,8 @@ class Memverse < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------   
   def first_verse_due_in_sequence 
     
-    slack         =  7 # Add some slack to avoid having to review the entire sequence too soon afterwards
-    min_test_freq = 60 # Minimum test frequency in days for entire sequence 
+    slack         =  5 # Add some slack to avoid having to review the entire sequence too soon afterwards
+    min_test_freq = 90 # Minimum test frequency in days for entire sequence 
     
     if self.solo_verse? # not part of a sequence
       return self
@@ -351,6 +359,9 @@ class Memverse < ActiveRecord::Base
     end
   end
   
+  def next_verse_due_in_sequence
+    # TODO: Write method to find next verse due in sequence to enable users to skip long passages they already know
+  end
   
   # ----------------------------------------------------------------------------------------------------------
   # Is there anything else to memorize in this sequence or can we move on
@@ -360,8 +371,8 @@ class Memverse < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------   
   def more_to_memorize_in_sequence?
     
-    slack         =  7 # Add some slack to avoid having to review the entire sequence too soon afterwards
-    min_test_freq = 60 # Minimum test frequency in days for entire sequence     
+    slack         =  5 # Add some slack to avoid having to review the entire sequence too soon afterwards
+    min_test_freq = 90 # Minimum test frequency in days for entire sequence     
     
     if self.solo_verse? or self.next_verse.nil?
       return false
