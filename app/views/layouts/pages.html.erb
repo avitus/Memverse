@@ -1,0 +1,183 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+	<head>
+		<title><%= @page_title || APP_CONFIG[:site_name] %></title>
+		<meta http-equiv="content-type" content="text/xhtml; charset=utf-8" />
+		<meta http-equiv="imagetoolbar" content="no" />
+		<meta name="distribution" content="all" />
+		<meta name="robots" content="all" />	
+		<meta name="resource-type" content="document" />
+		<meta name="MSSmartTagsPreventParsing" content="true" />
+
+		<meta name="description" content="A free, online tool for memorizing the bible" />	
+		<meta name="keywords" content="memorize bible, memorize scripture, popular bible verses, memorize bible verses," />		
+		
+		<!-- Google verification -->
+		<meta name="verify-v1" content="IrqDYi2zxAyS8GUAqQcyXvnmcxhtuNITeCIFYLa76LQ=" />	
+		<!-- Microsoft verification -->		
+		<meta name="msvalidate.01" content="A1BB69E880870637C825F612E2FA4034" />				
+
+		<!-- Identify blog feed -->
+		<link rel="alternate" type="application/rss+xml" title="Memverse Blog" href="http://feeds.feedburner.com/MemverseBlog" />
+	
+		<!-- Main Stylesheet -->
+		<%= stylesheet_link_merged 'base', :cache => 'cache/all' %>
+		<%= stylesheet_link_tag 'mobile' if mobile_device? %>
+  		
+		<!-- Auxiliary stylesheets, etc -->
+		<%= yield(:head) %>
+
+		<!-- Using Jquery and Jrails -->
+		<%= javascript_include_tag 	'jquery-1.4', 'jquery-ui', 'jrails', 'jquery.quickflip', 'jquery.hoverIntent', '2leveltab', 
+									'jquery.periodicalupdater', 'jquery.jeditable', 'jquery.autocomplete', :cache => 'cache/all' %> 
+								
+		<!-- Shortcut Icons -->
+		<link rel="shortcut icon" href="/images/favicon.ico" />
+		<link rel="icon" 		  href="/images/favicon.ico" />	
+			
+	</head>
+	
+	<body id="user">
+		
+		<!-- Start of Google Analytics Code  -->	
+		<script type="text/javascript">
+		
+		  var _gaq = _gaq || [];
+		  _gaq.push(['_setAccount', 'UA-4539114-5']);
+		  _gaq.push(['_trackPageview']);
+		
+		  (function() {
+		    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		    ga.src = 'http://www.google-analytics.com/ga.js';
+		    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ga);
+		  })();
+
+		</script>		
+		<!-- End of Google Analytics Code  -->
+			
+		
+		<div id="container">
+			<div id="auth">
+				<ul>
+					<% if logged_in? %>
+					<li><%= link_to 'Logout', logout_path %></li>
+					<li><%= current_user.login %></li>					
+					<% else %>
+					<li><%= link_to 'Login', login_path %></li>
+					<li><%= link_to 'Signup', signup_path %></li>
+					<% end %>
+				</ul>
+			</div> <!-- End of Auth -->			
+		 	<div id="banner">
+			    <!-- <%= image_tag("bible.gif") %> -->
+			    <%= @page_title || "Bible Verse Memorization" %>				
+		  	</div> <!-- End of Banner -->
+
+				
+			<div id="main">
+				<% if logged_in? %>
+				<div id="menu-tabs">
+					<ul id="maintab" class="basictab">
+						<li <%= tab(@tab=="home"		) %> rel="homepage">	<%= link_to t('menu.home'), 		home_path %></li>	
+						<li <%= tab(@tab=="mem"			) %> rel="memory">		<%= link_to t('menu.memorize'), 	test_verse_path %></li>
+						<li <%= tab(@tab=="learn"		) %> rel="tutorials">	<%= link_to t('menu.learn'), 		tutorial_path %></li>
+						<li <%= tab(@tab=="profile"		) %> rel="profile">		<%= link_to t('menu.profile'), 		update_profile_path %></li>
+						<li <%= tab(@tab=="contact"		) %> rel="contact">		<%= link_to t('menu.contact'), 		contact_path %></li>	
+						<li <%= tab(@tab=="leaderboard"	) %> rel="leaderboard">	<%= link_to t('menu.leaderboard'), 	leaderboard_path %></li>	
+						<li <%= tab(@tab=="blog"		) %> rel="blog">		<%= link_to t('menu.blog'), 		blog_path %></li>
+					</ul>
+
+					<div id="homepage" class="submenustyle">
+						<%= link_to t('home_menu.My Verses'),				show_all_my_verses_path %>
+						<%= link_to t('home_menu.Add Verse'),				add_verse_path %>
+						<%= link_to t('home_menu.My Progress'),				progress_path %>	
+						<%= link_to t('home_menu.Popular Verses'),			popular_verses_path %>	
+						<%= link_to t('home_menu.Tag Cloud'),				tag_cloud_path %>	
+						<%= link_to t('home_menu.News'),					news_path %>	
+					</div>
+
+					<div id="memory" class="submenustyle">
+						<%= link_to t('memorize_menu.Memorize'),			test_verse_path %>
+						<%= link_to t('memorize_menu.Reference Recall'), 	start_ref_test_path %>
+						<%= link_to t('memorize_menu.Practice'), 			drill_verse_path %>						
+						<%= link_to t('memorize_menu.Accuracy Test'), 		pre_exam_path %>	
+						<%= link_to t('memorize_menu.Chapter Review'), 		pre_chapter_path %>	
+					</div>
+					
+					<div id="tutorials" class="submenustyle">
+						<%= link_to t('learn_menu.Tutorial'), 				tutorial_path %>
+						<%= link_to t('learn_menu.SuperMemo Algorithm'), 	supermemo_path %>
+					</div>
+
+					<div id="profile" class="submenustyle">
+						<%= link_to t('profile_menu.Dashboard'), 			current_user %>						
+						<%= link_to t('profile_menu.Profile'), 				update_profile_path %>
+						<%= link_to t('profile_menu.My Church'), 			church_path %>
+						<%= link_to t('profile_menu.Referrals'), 			referrals_path(current_user) %>
+					</div>
+
+					<div id="contact" class="submenustyle">
+						<%= link_to t('contact_menu.Contact'), 				contact_path %>
+						<%= link_to t('contact_menu.Volunteer'), 			volunteer_path %>
+					</div>
+					
+					<div id="leaderboard" class="submenustyle">	
+						<%= link_to t('leader_menu.Leaderboard'),			leaderboard_path %>
+						<%= link_to t('leader_menu.Church Leaderboard'), 	churchboard_path %>
+						<%= link_to t('leader_menu.State Leaderboard'), 	stateboard_path %>
+						<%= link_to t('leader_menu.Country Leaderboard'), 	countryboard_path %>
+						<%= link_to t('leader_menu.Referralboard'), 		referralboard_path %>						
+						<%= link_to t('leader_menu.One Church'), 			memverse_clock_path %>						
+					</div>					
+
+					<div id="blog" class="submenustyle">
+						<%= link_to t('blog_menu.View Blog'), 				blog_path %>
+						<%= link_to t('blog_menu.Recent Comments'),			blog_comments_new_path %>
+					</div>
+									
+				</div>  <!-- End of Menu Tabs -->
+				<% end %> <!-- if logged_in? -->
+				
+				<%= flash_messages %>
+				<%= yield(:content) or yield %>
+			</div> <!-- End of Main -->
+		</div> <!-- End of Container -->
+
+		<!--
+		<div id="footer-container">
+			<div id="footer">
+				&copy; <%= link_to t('txt.main_title'), home_path %> 2010
+			</div> 
+		</div>  End of Footer -->
+
+		<!-- Start of Menu Tab Code  -->
+		<% if logged_in? %>
+			<script type="text/javascript">
+				//initialize tab menu, by passing in ID of UL
+				initalizetab("maintab")
+			</script>	
+		<% end %>	
+		
+		<!-- Start of Get Satisfaction Script  -->		
+		<script type="text/javascript" charset="utf-8">
+		  var is_ssl = ("https:" == document.location.protocol);
+		  var asset_host = is_ssl ? "https://s3.amazonaws.com/getsatisfaction.com/" : "http://s3.amazonaws.com/getsatisfaction.com/";
+		  document.write(unescape("%3Cscript src='" + asset_host + "javascripts/feedback-v2.js' type='text/javascript'%3E%3C/script%3E"));
+		</script>
+		
+		<script type="text/javascript" charset="utf-8">
+		  var feedback_widget_options = {};
+		
+		  feedback_widget_options.display = "overlay";  
+		  feedback_widget_options.company = "memverse";
+		  feedback_widget_options.placement = "right";
+		  feedback_widget_options.color = "#222";
+		  feedback_widget_options.style = "idea";
+		
+		  var feedback_widget = new GSFN.feedback_widget(feedback_widget_options);
+		</script>	<!-- End: Get Satisfaction Script  -->	
+						
+	</body>
+</html>
+
