@@ -26,10 +26,6 @@
 			imgS.src = smallPics[i] ;
 			imgL.src = largePics[i] ;
 			}
-			for(var i=0; i < Buttons.length; i++) {
-			var butts = new Image();
-			butts.src = Buttons[i] ;
-			}
 			}
 	
 	</script>
@@ -37,7 +33,7 @@
 
 <body onload="LoadPics();" >
 
-<table width="1000px" align="center" border="0px" cellpadding="0px" cellspacing="0px" height="550" >
+<table width="1000px" align="center" border="0px" cellpadding="0px" cellspacing="0px" height="550">
 
 	<!--Top Navagation Bar-->		
 	<tr>
@@ -49,7 +45,7 @@
 			<table cellpadding="0px" cellspacing="0px" border="0" height="400">
 			
 				<tr>
-					<td rowspan="9"><img src="images/hnb/RoseLoopL.jpg" alt="HNB Pendant" name="largePhoto" width="400" height="400" id="largePhoto"/> </td>
+					<td rowspan="9"><img src="images/hnb/RoseLoopL.jpg" alt="HNB Pendant" name="largePhoto" width="400" height="400" id="largePhoto"/></td>
 					<td width="30" rowspan="9"></td>
 					<td height="10"></td>
 				</tr>
@@ -60,9 +56,10 @@
 				
 				<tr>
 				  <td height="70" id="text" >
-				  	The latest piece from Redstart Design, the New Beginnings Pendant celebrates the dignity of the individual and the renewal of the spirit. The organic
-					egg-like shape symbolizes the new life God freely offers all of us. The pendant comes on a 16" sterling silver chain and the pendant itself is available
-					in a choice of sterling silver, 14K gold, or 14K rose gold.
+				  	The latest piece from <a class="action-link" href="http://www.redstartdesign.com/">Redstart Design</a>, the New Beginnings Pendant celebrates the 
+					dignity of the individual and the renewal of the spirit. The organic egg-like shape symbolizes the new life God freely offers 
+					all of us. The pendant comes on a 16" sterling silver chain and the pendant itself is available in a choice of sterling silver, 
+					14K gold, or 14K rose gold.
 				  </td>
 				</tr>
 
@@ -72,34 +69,39 @@
 
 				<tr>
 				  <td height="70" id="text" >
-				  	Redstart Design is a woman-founded, -owned, and -operated San Francisco-based boutique jeweler. It is known for its surging popularity with
-					stars like Jessica Alba, Brooke Shiedlds, Hayden Panettiere and many more.
+				  	<a href="http://www.redstartdesign.com/">Redstart Design</a>'s appeal is ageless, timeless and universal - making it the quintessential
+					choice for a woman who, rather than being driven by trends, is driven by an inner beauty. Redstart is known for its surging popularity 
+					with stars like Jessica Alba, Brooke Shields, Hayden Panettiere and	<a href="http://www.redstartdesign.com/celebrity.html">many more</a>.
 				  </td>
 				</tr>
-
 
 				<tr>
 				  <td height="10" ></td>
 				</tr>
 
 				<tr>
-				  <td height="50" id="text" >
-				  	Your necklace will be custom cast specifically for you. Please allow up to 8 weeks for delivery.
+				  <td height="30" id="text" class="inline-footnote" >
+				  	<em>Your necklace will be custom cast specifically for you. Please allow up to 8 weeks for delivery.</em>
 				  </td>
 				</tr>
 
 				<tr>
-					<td  width="470" valign="top"  colspan="4">
+					<td width="470" valign="top"  colspan="4">
 						<table cellpadding="0" cellspacing="0" border="0">	
 							<form target="paypal" action="https://www.paypal.com/cgi-bin/webscr" method="post">
 								<input type="hidden" name="cmd" value="_s-xclick">
 								<input type="hidden" name="hosted_button_id" value="K3LA3EZKZNWFE">
 								<table>
-									<tr><td><input type="hidden" name="on0" value="Option">Option</td></tr><tr><td><select name="os0">
-										<option value="Sterling Silver">Sterling Silver $129.99</option>
-										<option value="Gold 14K">Gold 14K $299.99</option>
-										<option value="Rose Gold 14K">Rose Gold 14K $319.99</option>
-									</select> </td></tr>
+									<tr><td><input type="hidden" name="on0" value="Option">Option</td></tr>
+									<tr>
+										<td>
+											<select name="os0">
+												<option value="Sterling Silver">Sterling Silver $129.99</option>
+												<option value="Gold 14K">Gold 14K $299.99</option>
+												<option value="Rose Gold 14K">Rose Gold 14K $319.99</option>
+											</select>
+										</td>
+									</tr>
 								</table>
 								<input type="hidden" name="currency_code" value="USD">
 								<input type="image" src="https://www.paypal.com/en_US/i/btn/btn_cart_SM.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
@@ -125,16 +127,32 @@
 								<td width="120"><img class="linkish" src="images/hnb/SilverEggS.jpg" alt="Pendant"  onclick="changePhoto(2);" width="120" height="120"/></td>
 								<td width="40"></td>
 								<td width="550" class="toplinksRed">
-									100% of the profits from your purchase will be donated to the Home of New Beginnings, a safe haven in Thailand for victims of human trafficking. Each
-									necklace will be enclosed in a Thai silk pouch embroidered by residents of the Home of New Beginnings. </td>
+									100% of the profits from your purchase will be donated to the 
+									<a class="action-link" href="http://www.homeofnewbeginnings.com">Home of New Beginnings</a>, a safe haven in 
+									Thailand for victims of human trafficking. Each necklace will be enclosed in a Thai silk pouch embroidered by residents of the 
+									Home of New Beginnings. </td>
 							</tr>	
 						</table>
 					</td>
 				</tr>
 
 				<tr>
-					<td height="7px"></td>
+					<td height="25px"></td>
 				</tr>
+
+				<tr>
+					<td valign="bottom">
+						<table width="1010" frame="above" cellpadding="0" cellspacing="0">
+							<tr><td align="center" class="light" height="20" >
+								<em class="inline-footnote">
+									"Everyone who saw it said, "Such a thing has never been seen or done, not since the day the Israelites came up out of Egypt. 
+									Think about it! Consider it! Tell us what to do!" - Judges 19:30
+								</em>
+							</td></tr>
+						</table> 
+					</td>
+				</tr>
+
 
 			</table>
 		</td> 
