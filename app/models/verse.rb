@@ -178,7 +178,7 @@ class Verse < ActiveRecord::Base
     ch            = self.chapter
     tl            = self.translation
     
-    num_verses = self.end_of_chapter_verse.last_verse
+    num_verses = self.end_of_chapter_verse.last_verse unless !self.end_of_chapter_verse
     
     (1..num_verses).each { |vs|
       full_chapter << Verse.exists_in_db(bk, ch, vs, tl)
