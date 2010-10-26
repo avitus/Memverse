@@ -188,11 +188,11 @@ class MemversesController < ApplicationController
   def verse_of_the_day
     
     # Find a popular verse eg: ['Jn 3:16', [['NIV', id] ['ESV', id]]]
-    verse     = popular_verses(20).rand # get 20 most popular verses - pick one at random
+    verse     = popular_verses(50).rand # get 20 most popular verses - pick one at random
       
-    # Pick out a translation at random
-    verse_ref         = verse[0]
-    verse_tl          = verse[1].rand
+    # Pick out a translation in user's preferred translation or at random
+    verse_ref         = verse[0]     
+    verse_tl          = verse[1].select{ |tl| tl[0] == current_user.translation }.compact.first || verse[1].rand
     verse_id          = verse_tl[1]
     verse_translation = verse_tl[0]
     
