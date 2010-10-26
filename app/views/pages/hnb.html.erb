@@ -6,7 +6,7 @@
      =================================================================================================================== -->
 <!-- first try HTML5 playback: if serving as XML, expand `controls` to `controls="controls"` and autoplay likewise       -->
 <!-- warning: playback does not work on iPad/iPhone if you include the poster attribute! fixed in iOS4.0                 -->
-<video width="720" height="480" controls preload autoplay>
+<video width="720" height="480" controls preload>
 	
 	<!-- MP4 must be first for iPad! -->
 	<source src="videos/hnb.mp4" 	type="video/mp4" /><!-- WebKit video, IE9 	-->
@@ -18,7 +18,7 @@
 	<object width="720" height="480" type="application/x-shockwave-flash" data="/jwplayer/player.swf">
 		<!-- Firefox uses the `data` attribute above, IE/Safari uses the param below -->
 		<param name="movie" value="/jwplayer/player.swf" />
-		<param name="flashvars" value="autostart=true&amp;controlbar=over&amp;image=poster.jpg&amp;file=/videos/hnb.mp4" />
+		<param name="flashvars" value="autostart=false&amp;controlbar=over&amp;image=poster.jpg&amp;file=/videos/hnb.mp4" />
 		<!-- fallback image -->
 		<img src="hnb.jpg" width="720" height="480" alt="Home of New Beginnings"
 		     title="No video playback capabilities, please download the video below" />
