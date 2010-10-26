@@ -1038,12 +1038,12 @@ class MemversesController < ApplicationController
   end
   
   # ----------------------------------------------------------------------------------------------------------
-  # Score Exam
+  # Score Accuracy Test
   # ----------------------------------------------------------------------------------------------------------
   def mark_exam
     
     # Score Questions
-    answer        = params[:answer].gsub(/\s+/," ").strip
+    answer        = params[:answer].gsub(/\s+/," ").strip if params[:answer]
 #    errorcode, book, chapter, verse = parse_verse(answer) 
     
     question_num  = session[:exam_cntr] || 1  # Set exam question number to 1 if session variable is nil
