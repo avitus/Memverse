@@ -6,7 +6,7 @@
      =================================================================================================================== -->
 <!-- first try HTML5 playback: if serving as XML, expand `controls` to `controls="controls"` and autoplay likewise       -->
 <!-- warning: playback does not work on iPad/iPhone if you include the poster attribute! fixed in iOS4.0                 -->
-<video width="720" height="480" controls preload>
+<video width="720" height="480" controls preload autoplay>
 	
 	<!-- MP4 must be first for iPad! -->
 	<source src="videos/hnb.mp4" 	type="video/mp4" /><!-- WebKit video    -->
@@ -14,21 +14,16 @@
 	<source src="videos/hnb.webm" 	type='video/webm; codecs="vp8, vorbis"' />
 
 	<!-- fallback to Flash: -->
-	<object width="425" height="344">
-		<param name="movie" value="http://www.youtube.com/v/I77_90kQjgo?hl=en&fs=1"></param>
-		<param name="allowFullScreen" value="true"></param>
-		<param name="allowscriptaccess" value="always"></param>
-		<img 	src="poster.jpg" width="720" height="480" alt="Home of New Beginnings"
-			    title="No video playback capabilities, please download the video below" />
-		<embed 	src="http://www.youtube.com/v/I77_90kQjgo?hl=en&fs=1" 
-				type="application/x-shockwave-flash" 
-				allowscriptaccess="always" 
-				allowfullscreen="true" 
-				width="425" 
-				height="344">
-		</embed>
-	</object>
-	
+	<!-- http://www.longtailvideo.com/players/jw-flv-player/ -->
+	<object width="720" height="480" type="application/x-shockwave-flash" data="/jwplayer/player.swf">
+		<!-- Firefox uses the `data` attribute above, IE/Safari uses the param below -->
+		<param name="movie" value="/jwplayer/player.swf" />
+		<param name="flashvars" value="autostart=true&amp;controlbar=over&amp;image=poster.jpg&amp;file=/videos/hnb.mp4" />
+		<!-- fallback image -->
+		<img src="hnb.jpg" width="720" height="480" alt="Home of New Beginnings"
+		     title="No video playback capabilities, please download the video below" />
+	</object>	
+		
 </video>
 
 <p>	
