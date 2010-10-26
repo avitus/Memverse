@@ -605,10 +605,11 @@ class AdminController < ApplicationController
   end   
   
   # ----------------------------------------------------------------------------------------------------------
-  # Delete a verse (this probably shouldn't ever be required
+  # Delete a verse (this probably shouldn't ever be required)
   # ----------------------------------------------------------------------------------------------------------   
   def destroy_verse
     Verse.find(params[:id]).destroy
+    
     # TODO: need to remove related memory verses !!!!!
     redirect_to :action => 'search_verses'
   end     

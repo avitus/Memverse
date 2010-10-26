@@ -17,10 +17,12 @@ class Verse < ActiveRecord::Base
   require 'open-uri'
   require 'nokogiri'
 
+  before_destroy :delete_memverses
+  
   
   # Relationships
   has_many :memverses
-  has_and_belongs_to_many :collections
+  # TODO: this is not used ... need to clean up: has_and_belongs_to_many :collections
   
   # Validations
   validates_presence_of :translation, :book, :chapter, :versenum, :text
@@ -345,6 +347,18 @@ class Verse < ActiveRecord::Base
     return BIBLEABBREV[book_index(book)-1]
   end  
   
+  # ============= Private below this line - can only be called on self =======================================
+  private
   
+  def delete_memverses
+    logger.warn("*** Deleting the following verse: #{self.ref} [#{self.translation}]  ")
+    logger.warn("*** Deleting associated memory verses")
+    logger.warn("*** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    self.memverses.each { |mv|
+      logger.warn("*** #{mv.user.name_or_login}")
+    }
+    
+    self.memverses.destroy_all
+  end
   
 end
