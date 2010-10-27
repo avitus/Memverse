@@ -625,10 +625,11 @@ class User < ActiveRecord::Base
   end
 
   # ----------------------------------------------------------------------------------------------------------
-  # User has not been active for two months or more
+  # User has not been active for two months or more 
+  # (remember, nil evaluates to false => a user who never activated will never be 'inactive')
   # ---------------------------------------------------------------------------------------------------------- 
   def is_inactive?
-    return self.last_activity_date || self.last_activity_date < 3.months.ago.to_date
+    return self.last_activity_date && self.last_activity_date < 3.months.ago.to_date
   end
   # ----------------------------------------------------------------------------------------------------------
   # Check whether user needs reminder

@@ -6,7 +6,7 @@ class SessionsController < ApplicationController
   end
 
   def create
-    logout_keeping_session!
+    logout_keeping_session! # Make sure to kill all session variable in lib/authenticated_system.rb
     if using_open_id?
       open_id_authentication
     else
