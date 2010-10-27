@@ -137,7 +137,28 @@ module AuthenticatedSystem
       @current_user = false     # not logged in, and don't do it for me
       kill_remember_cookie!     # Kill client-side auth cookie
       session[:user_id] = nil   # keeps the session but kill our variable
+      
       # explicitly kill any other session variables you set
+      session[:mv_queue]          = nil  # Clear the memory verse queue
+      session[:memverse]          = nil  # Remove any memory verse in the session
+      session[:ref_test]          = nil
+      session[:ref_soln]          = nil
+      session[:ref_id]            = nil
+      session[:ref_test_cntr]     = nil
+      session[:reftest_correct]   = nil    
+      session[:reftest_grade]     = nil    
+      session[:reftest_answered]  = nil
+      session[:reftest_length]    = nil
+      session[:reftest_incorrect] = nil      
+      session[:exam_questions]    = nil
+      session[:exam_answers]      = nil
+      session[:exam_id]           = nil
+      session[:exam_cntr]         = nil
+      session[:exam_correct]      = nil    
+      session[:exam_answered]     = nil
+      session[:exam_length]       = nil
+      session[:exam_incorrect]    = nil 
+      session[:referrer]          = nil
     end
 
     # The session should only be reset at the tail end of a form POST --
