@@ -11,3 +11,9 @@ ActionController::Routing::Routes.draw do |map|
 	map.connect  'blog/:blog_url_id_or_id/:id', :controller => 'blog_posts', :action => 'show'
 	map.blog     'blog',                        :controller => 'blog_posts', :action => 'index', :blog_url_id_or_id => 'main'
 end
+
+# Useful URL's for handling routing of blog resources
+# https://rails.lighthouseapp.com/projects/8994/tickets/267-form_for-for-singular-resource-will-products-plural-invokes
+# http://www.hostingrails.com/undefined-method-to_sym-for-nil-NilClass-error
+# http://www.ruby-forum.com/topic/165511
+# http://guides.rubyonrails.org/routing.html
