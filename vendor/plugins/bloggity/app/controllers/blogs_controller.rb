@@ -6,7 +6,7 @@ class BlogsController < ApplicationController
   def index
     @tab = "blog"
     @blogs = Blog.all
-
+   
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @blogs }
@@ -42,7 +42,7 @@ class BlogsController < ApplicationController
     respond_to do |format|
       if @blog.save
         flash[:notice] = 'Blog was successfully created.'
-        format.html { redirect_to(@blog) }
+        format.html { redirect_to('/blogs/' + @blog.id.to_s)}
         format.xml  { render :xml => @blog, :status => :created, :location => @blog }
       else
         format.html { render :action => "new" }
@@ -57,9 +57,10 @@ class BlogsController < ApplicationController
     respond_to do |format|
       if @blog.update_attributes(params[:blog])
         flash[:notice] = 'Blog was successfully updated.'
-        format.html { redirect_to(@blog) }
+        format.html { redirect_to('/blogs/' + @blog.id.to_s) }
         format.xml  { head :ok }
       else
+        flash[:notice] = 'Blog was not updated.'
         format.html { render :action => "edit" }
         format.xml  { render :xml => @blog.errors, :status => :unprocessable_entity }
       end

@@ -1,18 +1,25 @@
 <h1>Listing blogs</h1>
 
 <table>
-  <tr>
-    <th>Url identifier</th>
+	<tr>
+		<th>Title</th>
+		<th>Subtitle</th>	
+		<th>Url identifier</th>
 		<th>Actions</th>
-  </tr>
+	</tr>
 
-<% @blogs.each do |blog| %>
-  <tr>
-    <td><%=h blog.url_identifier %></td>
-    <td><%= link_to 'Show', blog %>, <%= link_to 'Edit', edit_blog_path(blog) %>, <%= link_to 'Destroy', blog, :confirm => 'Are you sure?', :method => :delete %></td>
-  </tr>
-<% end %>
+	<% @blogs.each do |b| %>
+	  <tr>
+	  	<td><%= b.title %></td>
+		<td><%= b.subtitle %></td>
+	    <td><%= b.url_identifier %></td>
+	    <td><%= link_to 'Show', 	'/blogs/' + b.id.to_s %>, 
+			<%= link_to 'Edit', 	edit_blog_path(b) %>, 
+			<%= link_to 'Destroy', 	'/blogs/' + b.id.to_s, :confirm => 'Are you sure?', :method => :delete %></td>
+	  </tr>
+	<% end %>
 </table>
+
 
 <br />
 

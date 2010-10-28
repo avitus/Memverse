@@ -19,7 +19,7 @@ ActionController::Routing::Routes.draw do |map|
 #  map.resources :pastors
   map.resources :sermons
   map.resources :quests
-  map.resources :collections  
+
   
   # My Mappings
   map.add_verse           '/add_verse',                 :controller => 'memverses',   :action => 'add_verse'
@@ -75,7 +75,7 @@ ActionController::Routing::Routes.draw do |map|
   
   
   # Blog routes
-  map.blog                '/blog',                      :controller => 'blog_posts',    :action => 'index'
+#  map.blog                '/blog',                      :controller => 'blog_posts',    :action => 'index'
   map.blog_comments_new   '/blog_comments_new',         :controller => 'blog_comments', :action => 'recent_comments'
   
   
