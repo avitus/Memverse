@@ -1,0 +1,124 @@
+"http://www.memverse.com/stylesheets/cache/all.css?1286493157","http://s.meebocdn.net/cim/skin_v88_cim_9_4_6/base.w3c.css","http://s.meebocdn.net/cim/skin_v88_cim_9_4_6/share.w3c.css","http://www.memverse.com/stylesheets/bloggity.css?1271280811"
+"121 unused selectors:","No unused selectors!","No unused selectors!","43 unused selectors:"
+,,,
+.primary-1,,,#bloggity_container th
+.primary-2,,,#bloggity_container h3
+.primary-3,,,#bloggity_container h5
+.primary-4,,,#bloggity_container h6
+.primary-5,,,#bloggity_container h3
+.secondary-a-1,,,#bloggity_container h5
+.secondary-a-2,,,#bloggity_container h6
+.secondary-a-3,,,#bloggity_container strong
+.secondary-a-4,,,#bloggity_container abbr
+.secondary-a-5,,,#bloggity_container acronym
+.secondary-b-1,,,#bloggity_container address
+.secondary-b-2,,,#bloggity_container pre
+.secondary-b-3,,,#bloggity_container code
+.secondary-b-4,,,#bloggity_container pre
+.secondary-b-5,,,#bloggity_container code
+.blacktext,,,#bloggity_container tt
+.cloud4,,,#bloggity_container th
+.unsubscribe-link,,,#bloggity_container th
+.hilite,,,#bloggity_container tr.even td
+#footer-container,,,#bloggity_container caption
+#footer,,,#bloggity_container .small
+#banner img,,,#bloggity_container .large
+#columns,,,#bloggity_container .hide
+#side,,,#bloggity_container label
+#side h3,,,#bloggity_container fieldset
+#side ul,,,#bloggity_container legend
+#side a,,,#bloggity_container input.text
+#side #sidebar-menu,,,#bloggity_container input.title
+#left-footer,,,#bloggity_container textarea
+#skyscraper-right,,,#bloggity_container select
+#skyscraper-ad-right,,,#bloggity_container input.text:focus
+#verse-list .list-title,,,#bloggity_container input.title:focus
+#verse-list .list-image,,,#bloggity_container textarea:focus
+#verse-list .list-actions,,,#bloggity_container select:focus
+#verse-list .list-line-even,,,#bloggity_container input.text
+#verse-list .list-line-odd,,,#bloggity_container input.title
+table.user-list,,,#bloggity_container input.title
+#add_verse_form label,,,#bloggity_container #header
+#add_verse_form fieldset,,,#bloggity_container #header h1
+.user-stats-table,,,#bloggity_container #header h1 a
+#question-side label,,,#bloggity_container #header .subtitle
+#question-side .buttons,,,#bloggity_container .comments_body li.not_approved .comment_body
+#answerbox #answer,,,#bloggity_container #inner_asset_container .uploaded_asset
+div#currentVerse #matchbox .incorrect,,,
+div#currentVerse #matchbox .correct,,,
+#test-chapter #question-side label,,,
+#test-chapter #question-side #scoreTestButtons .buttons,,,
+#test-chapter #answerbox #answer,,,
+#test-chapter #comparison,,,
+#test-chapter #priorVerse,,,
+#test-chapter #currentVerse,,,
+#test-chapter #matchbox,,,
+#test-chapter #matchbox p,,,
+#test-chapter #matchbox .incorrect,,,
+#test-chapter #matchbox .correct,,,
+#test-chapter .mnemonic,,,
+#chapter-prior-verses label,,,
+#leaderboard .current_user,,,
+div#flash-warning,,,
+div#flash-error,,,
+div#errorExplanation,,,
+div#errorExplanation h2,,,
+div#errorExplanation p,,,
+div#errorExplanation ul,,,
+div#errorExplanation ul li,,,
+#open-id-link,,,
+#reset_password,,,
+#reset_password label,,,
+#reset_password .buttons,,,
+.autocomplete .selected,,,
+.start-page-actions,,,
+#getting_started,,,
+.start-page-actions ol li,,,
+div.fieldWithErrors,,,
+div.fieldWithErrors label,,,
+div.fieldWithErrors input,,,
+div.fieldWithErrors select,,,
+div.fieldWithErrors textarea,,,
+#bloggity_container th,,,
+#bloggity_container h3,,,
+#bloggity_container h5,,,
+#bloggity_container h6,,,
+#bloggity_container h3,,,
+#bloggity_container h5,,,
+#bloggity_container h6,,,
+#bloggity_container strong,,,
+#bloggity_container abbr,,,
+#bloggity_container acronym,,,
+#bloggity_container address,,,
+#bloggity_container pre,,,
+#bloggity_container code,,,
+#bloggity_container pre,,,
+#bloggity_container code,,,
+#bloggity_container tt,,,
+#bloggity_container th,,,
+#bloggity_container th,,,
+#bloggity_container tr.even td,,,
+#bloggity_container caption,,,
+#bloggity_container .small,,,
+#bloggity_container .large,,,
+#bloggity_container .hide,,,
+#bloggity_container label,,,
+#bloggity_container fieldset,,,
+#bloggity_container legend,,,
+#bloggity_container input.text,,,
+#bloggity_container input.title,,,
+#bloggity_container textarea,,,
+#bloggity_container select,,,
+#bloggity_container input.text:focus,,,
+#bloggity_container input.title:focus,,,
+#bloggity_container textarea:focus,,,
+#bloggity_container select:focus,,,
+#bloggity_container input.text,,,
+#bloggity_container input.title,,,
+#bloggity_container input.title,,,
+#bloggity_container #header,,,
+#bloggity_container #header h1,,,
+#bloggity_container #header h1 a,,,
+#bloggity_container #header .subtitle,,,
+#bloggity_container .comments_body li.not_approved .comment_body,,,
+#bloggity_container #inner_asset_container .uploaded_asset,,,
