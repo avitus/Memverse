@@ -50,6 +50,7 @@ ActionController::Routing::Routes.draw do |map|
   
   # Doesn't require a login
   map.contact             '/contact',                   :controller => 'info',        :action => 'contact'   
+  map.faq                 '/faq',                       :controller => 'info',        :action => 'faq'   
   map.tutorial            '/tutorial',                  :controller => 'info',        :action => 'tutorial'  
   map.volunteer           '/volunteer',                 :controller => 'info',        :action => 'volunteer' 
   map.popular             '/popular',                   :controller => 'info',        :action => 'pop_verses'

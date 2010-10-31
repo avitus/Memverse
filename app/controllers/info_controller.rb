@@ -28,7 +28,14 @@ class InfoController < ApplicationController
     @tab = "contact"    
     @page_title = "Memverse : Contact / Feedback" 
   end  
-  
+ 
+  # ----------------------------------------------------------------------------------------------------------   
+  # Contact and Connect Page
+  # ----------------------------------------------------------------------------------------------------------    
+  def faq
+    @tab = "contact"    
+    @page_title = "Memverse : Help & Support" 
+  end    
   
   # ----------------------------------------------------------------------------------------------------------   
   # Show most popular verses
