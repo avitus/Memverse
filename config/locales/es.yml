@@ -297,6 +297,16 @@
       b4:              "4 Recordar - Vacilación"
       b3:              "3 Recordar - Difícil"
       b2:              "2 No Sabe  - Familiar"
+      b1:              "1 No Sabe  - Ni Idea"    
+    test_verse_quick:
+      feedback:        "Reacción"
+      show_verse:      "Mostrar verso"
+      upcoming:        "Próximos" 
+      back_to_test:    "Volver a la prueba"    
+      b5:              "5 Recordar - Perfecto"
+      b4:              "4 Recordar - Vacilación"
+      b3:              "3 Recordar - Difícil"
+      b2:              "2 No Sabe  - Familiar"
       b1:              "1 No Sabe  - Ni Idea"
   profile:
     update_profile:

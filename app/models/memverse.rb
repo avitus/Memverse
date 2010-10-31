@@ -490,17 +490,20 @@ class Memverse < ActiveRecord::Base
   def next_verse_due(skip = false)
     # Check whether this verse is part of a passage. If it is, and there is a verse further down in the passage
     # then return the next verse in the passage or (if user requests) skip to the next verse that is due
-    if self.next && self.more_to_memorize_in_sequence
+    if self.next_verse && self.more_to_memorize_in_sequence?
       
       if skip
         # Jump to the next verse that is due in this passage
-        
+        logger.debug("*** Skipping to next verse due in sequence")              
+        return self.next_verse_due_in_sequence
       else
         # Just return the next verse
-        return find(self.next)
+        logger.debug("*** Returning next verse in sequence")      
+        return find(self.next_verse)
       end
     
     else
+      logger.debug("*** No more verses in this sequence")
       find(:first, :conditions => { :user_id => self.user.id }, :order => "next_test ASC")    
     end
     

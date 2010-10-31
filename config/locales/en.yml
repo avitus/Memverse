@@ -298,7 +298,17 @@
       b4:              "4 Remembered - Hesitation"
       b3:              "3 Remembered - Difficult"
       b2:              "2 Don't Know - Familiar"
-      b1:              "1 Don't Know - No Idea"  
+      b1:              "1 Don't Know - No Idea" 
+    test_verse_quick:
+      feedback:        "Feedback"
+      show_verse:      "Show Verse"
+      upcoming:        "Upcoming" 
+      back_to_test:    "Back to Test" 
+      b5:              "5 Remembered - Perfect"
+      b4:              "4 Remembered - Hesitation"
+      b3:              "3 Remembered - Difficult"
+      b2:              "2 Don't Know - Familiar"
+      b1:              "1 Don't Know - No Idea"        
   profile:
     update_profile:
       Name:                     "Name"

@@ -835,14 +835,51 @@ class MemversesController < ApplicationController
   end
 
   # ----------------------------------------------------------------------------------------------------------
+  # Memorize - Now with JS
+  # ----------------------------------------------------------------------------------------------------------   
+  def test_verse_quick
+ 
+    @tab = "mem"  
+    @page_title = "Memory Verse Review"
+    @show_feedback = true
+    
+
+    @mv = Memverse.find( :first, :conditions => ["user_id = ?", current_user.id], :order      => "next_test ASC")
+    
+    if @mv
+      # ok to test
+    else # this user has no verses
+      redirect_to :action => 'add_verse'
+      flash[:notice] = "You should first add a few verses"       
+    end
+
+    
+    # --- Load prior verse if available
+    if @mv and @mv.prev_verse
+      prior_verse       = Memverse.find(@mv.prev_verse).verse
+      @prior_text       = prior_verse.text
+      @prior_versenum   = prior_verse.versenum
+    end
+  
+    # --- Load upcoming verses ---
+    logger.debug("*** Mobile Device: #{mobile_device?}")
+    @upcoming_verses = upcoming_verses() unless mobile_device?
+    
+  end
+
+
+
+  # ----------------------------------------------------------------------------------------------------------
   # Returns the next verse to be tested - this is a service URL for a js routine
   # ---------------------------------------------------------------------------------------------------------- 
   def test_next_verse
     # Default to not skipping verses
     skip = params[:skip] || false
-    mv   = params[:mv]
+    mv   = Memverse.find(params[:mv])
     
     @next_mv = mv.next_verse_due(skip)
+    
+    render :json => @next_mv.verse
     
   end
 

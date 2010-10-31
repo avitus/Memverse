@@ -3,7 +3,7 @@
 
 <!-- Question-side : Entry box -->	
 <fieldset id="question-side">
-	<legend> <%=@verse%> </legend>
+	<legend> <%=@mv.verse.ref%> </legend>
 		<% form_tag :action => 'mark_test' do %>
 			
 			<div id="answerbox">
@@ -57,7 +57,7 @@
 	
 	    <div class="quickFlipPanel textPanel">
 	    	<div id="flashcard-back-text">
-		        <p><%=@verse%></p>
+		        <p><%=@mv.verse.ref%></p>
 				<% if !@prior_text.nil? %>
 					<p><span class="superscript"><%= @prior_versenum   %></span><%=@prior_text%></p>
 				<% end %>				   	
@@ -65,7 +65,7 @@
 					<% if !@prior_text.nil? %>
 						<span class="superscript"><%= @current_versenum %></span>
 					<% end %>
-					<%=@text%>
+					<%=@mv.verse.text%>
 				</p>
 		        <p class="quickFlipCta"><%= t('.back_to_test') %></p>
 			</div>			
@@ -86,12 +86,34 @@
 	:frequency	=> 0.6,
 	:update		=> 'ajaxWrapper',
 	:url		=> {:action => 'feedback', :only_path => false},
-	:with		=> "'echo=#{@show_feedback}&correct=#{escape_verse(@text)}&verseguess='+encodeURIComponent(value)"
+	:with		=> "'echo=#{@show_feedback}&correct=#{escape_verse(@mv.verse.text)}&verseguess='+encodeURIComponent(value)"
 %>
 
 <script language="JavaScript" type="text/javascript">
+		
 	$(document).ready(function() {
 	    $('.quickFlip').quickFlip();
+		
+		// Load next verse
+		$.get("/memverses/test_next_verse", { skip: "true", mv: 53 },
+		   function(data){
+		     alert("Data Loaded: " + data);
+		   });
+			
+		$('.submit').click( function() {
+			// 1. Update change label on testing box
+			// 2. Clear feedback box
+			// 3. Update front of flash card
+			// 4. Update back of flash card
+			// 5. Remove verse from list of upcoming verses
+			// 6. Score verse
+			// 7. Load next verse
+			
+			// 8. Return false
+			return (false)	
+		})	
+		
+
 	});
 </script>
 
