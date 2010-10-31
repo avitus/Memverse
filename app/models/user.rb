@@ -191,12 +191,20 @@ class User < ActiveRecord::Base
   def ot_verses    
     { "Memorized" => self.memverses.memorized.old_testament.count, "Learning" => self.memverses.learning.old_testament.count }
   end
+  
+  def ot_perc
+    (self.memverses.old_testament.count.to_f / self.memverses.count.to_f * 100).round
+  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Return hash of NT Verses memorized and learning
   # ----------------------------------------------------------------------------------------------------------   
   def nt_verses    
     { "Memorized" => self.memverses.memorized.new_testament.count, "Learning" => self.memverses.learning.new_testament.count }
+  end
+
+  def nt_perc
+    (self.memverses.new_testament.count.to_f / self.memverses.count.to_f * 100).round
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -206,12 +214,20 @@ class User < ActiveRecord::Base
     { "Memorized" => self.memverses.memorized.history.count, "Learning" => self.memverses.learning.history.count }
   end
   
+  def h_perc
+    (self.memverses.history.count.to_f / self.memverses.count.to_f * 100).round
+  end  
+  
   # ----------------------------------------------------------------------------------------------------------
   # Return hash of Wisdom Verses memorized and learning
   # ----------------------------------------------------------------------------------------------------------   
   def wisdom    
     { "Memorized" => self.memverses.memorized.wisdom.count, "Learning" => self.memverses.learning.wisdom.count }
   end
+  
+  def w_perc
+    (self.memverses.wisdom.count.to_f / self.memverses.count.to_f * 100).round
+  end    
   
   # ----------------------------------------------------------------------------------------------------------
   # Return hash of Prophecy Verses memorized and learning
@@ -220,6 +236,10 @@ class User < ActiveRecord::Base
     { "Memorized" => self.memverses.memorized.prophecy.count, "Learning" => self.memverses.learning.prophecy.count }
   end
   
+  def p_perc
+    (self.memverses.prophecy.count.to_f / self.memverses.count.to_f * 100).round
+  end    
+  
   # ----------------------------------------------------------------------------------------------------------
   # Return hash of Gospel Verses memorized and learning
   # ----------------------------------------------------------------------------------------------------------   
@@ -227,12 +247,20 @@ class User < ActiveRecord::Base
     { "Memorized" => self.memverses.memorized.gospel.count, "Learning" => self.memverses.learning.gospel.count }
   end
 
+  def g_perc
+    (self.memverses.gospel.count.to_f / self.memverses.count.to_f * 100).round
+  end  
+
   # ----------------------------------------------------------------------------------------------------------
   # Return hash of Epistle Verses memorized and learning
   # ----------------------------------------------------------------------------------------------------------   
   def epistle    
     { "Memorized" => self.memverses.memorized.epistle.count, "Learning" => self.memverses.learning.epistle.count }
   end
+
+  def e_perc
+    (self.memverses.epistle.count.to_f / self.memverses.count.to_f * 100).round
+  end  
 
   # ----------------------------------------------------------------------------------------------------------
   # Returns all quests still needed for user's current level
