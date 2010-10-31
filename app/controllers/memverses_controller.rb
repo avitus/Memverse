@@ -825,7 +825,7 @@ class MemversesController < ApplicationController
       bk, ch = params[:book_chapter].split      
     end
 
-    logger.info("*** Testing chapter: #{bk} #{ch}")
+    logger.info("* Testing chapter: #{bk} #{ch}")
     
     @chapter      = current_user.has_chapter?(bk,ch)
     @bk_ch        = bk + " " + ch
@@ -834,6 +834,17 @@ class MemversesController < ApplicationController
             
   end
 
+  # ----------------------------------------------------------------------------------------------------------
+  # Returns the next verse to be tested - this is a service URL for a js routine
+  # ---------------------------------------------------------------------------------------------------------- 
+  def test_next_verse
+    # Default to not skipping verses
+    skip = params[:skip] || false
+    mv   = params[:mv]
+    
+    @next_mv = mv.next_verse_due(skip)
+    
+  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Prepare for Reference Test

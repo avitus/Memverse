@@ -1,9 +1,0 @@
-<div id="show_user">
-	<table cellpadding="6" cellspacing="0">
-		<tr><td>Name</td>			<td><%= @user.name || @user.login %></td></tr>
-		<tr><td>Memorized</td>		<td><%= @user.memorized%></td></tr>
-		<tr><td>Learning</td>		<td><%= @user.learning%></td></tr>
-		<tr><td>Church</td>			<td><%= @user.church ? @user.church.name : "" %></td></tr>
-		<tr><td>Country</td>		<td><%= @user.country ? @user.country.printable_name : "" %></td></tr>	
-	</table>	
-</div>

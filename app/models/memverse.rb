@@ -358,21 +358,41 @@ class Memverse < ActiveRecord::Base
       return x
     end
   end
+
   
+  # ----------------------------------------------------------------------------------------------------------
+  # Returns the next verse that is due in a sequence
+  # Input: memverse_id (can be a single verse or any verse in a sequence)
+  # Returns: the next memory verse due in the passage or nil
+  # ----------------------------------------------------------------------------------------------------------   
   def next_verse_due_in_sequence
-    # TODO: Write method to find next verse due in sequence to enable users to skip long passages they already know
+    
+    if self.solo_verse? or self.next_verse.nil?
+      return nil
+    else
+      x = Memverse.find(self.next_verse)
+      
+      while (x.next_test > Date.today) and x.next_verse
+        x = Memverse.find(x.next_verse)   
+      end 
+           
+      if x.next_test <= Date.today
+        return x
+      else
+        return nil
+      end
+    end      
   end
   
   # ----------------------------------------------------------------------------------------------------------
   # Is there anything else to memorize in this sequence or can we move on
   # Input: memverse_id (can be a single verse or any verse in a sequence)
   # Returns: true if there are more verses to memorize downstream in a sequence
-  # TODO: find a way to skip long memorized sections
   # ----------------------------------------------------------------------------------------------------------   
   def more_to_memorize_in_sequence?
     
     slack         =  5 # Add some slack to avoid having to review the entire sequence too soon afterwards
-    min_test_freq = 90 # Minimum test frequency in days for entire sequence     
+    min_test_freq = self.user.max_interval || 120 # Minimum test frequency in days for entire sequence     
     
     if self.solo_verse? or self.next_verse.nil?
       return false
@@ -423,7 +443,10 @@ class Memverse < ActiveRecord::Base
       return false
     end
   end
-  
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Returns: TRUE/FALSE depending on whether wants Mnemonic support, verse is memorized etc.
+  # ----------------------------------------------------------------------------------------------------------   
   def needs_mnemonic?
     return case self.user.mnemonic_use
       when "Never"  then false
@@ -432,6 +455,9 @@ class Memverse < ActiveRecord::Base
     end
   end
   
+  # ----------------------------------------------------------------------------------------------------------
+  # Returns: list of all the tags for that verse
+  # ----------------------------------------------------------------------------------------------------------   
   def all_user_tags
     self.verse.all_user_tags
   end
@@ -456,6 +482,29 @@ class Memverse < ActiveRecord::Base
     position    = all_verses.index(self)
     return all_verses[position-1]
   end  
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Return the next verse that needs to be memorized today
+  # See companion method in user model for 'first verse due'
+  # ----------------------------------------------------------------------------------------------------------   
+  def next_verse_due(skip = false)
+    # Check whether this verse is part of a passage. If it is, and there is a verse further down in the passage
+    # then return the next verse in the passage or (if user requests) skip to the next verse that is due
+    if self.next && self.more_to_memorize_in_sequence
+      
+      if skip
+        # Jump to the next verse that is due in this passage
+        
+      else
+        # Just return the next verse
+        return find(self.next)
+      end
+    
+    else
+      find(:first, :conditions => { :user_id => self.user.id }, :order => "next_test ASC")    
+    end
+    
+  end
   
   # ----------------------------------------------------------------------------------------------------------
   # Retrieve previous/next memory verse NOTE: Replacement for method in application_controller.rb
@@ -487,8 +536,8 @@ class Memverse < ActiveRecord::Base
     transl  = self.verse.translation
 
     # Check for 2 conditions
-    #   previous verse is in db
-    #   and prev_verse is in user's list of memory verses  
+    #   next verse is in db
+    #   and next verse is in user's list of memory verses  
     if (next_vs = Verse.exists_in_db(book, chapter, verse+1, transl)) and next_mv = self.user.has_verse_id?(next_vs) 
       return next_mv.id 
     else

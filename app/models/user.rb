@@ -193,7 +193,7 @@ class User < ActiveRecord::Base
   end
   
   def ot_perc
-    (self.memverses.old_testament.count.to_f / self.memverses.count.to_f * 100).round
+    self.has_started? ? (self.memverses.old_testament.count.to_f / self.memverses.count.to_f * 100).round : 0
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -204,7 +204,7 @@ class User < ActiveRecord::Base
   end
 
   def nt_perc
-    (self.memverses.new_testament.count.to_f / self.memverses.count.to_f * 100).round
+    self.has_started? ? (self.memverses.new_testament.count.to_f / self.memverses.count.to_f * 100).round : 0
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -215,7 +215,7 @@ class User < ActiveRecord::Base
   end
   
   def h_perc
-    (self.memverses.history.count.to_f / self.memverses.count.to_f * 100).round
+    self.has_started? ? (self.memverses.history.count.to_f / self.memverses.count.to_f * 100).round : 0
   end  
   
   # ----------------------------------------------------------------------------------------------------------
@@ -226,7 +226,7 @@ class User < ActiveRecord::Base
   end
   
   def w_perc
-    (self.memverses.wisdom.count.to_f / self.memverses.count.to_f * 100).round
+    self.has_started? ? (self.memverses.wisdom.count.to_f / self.memverses.count.to_f * 100).round : 0
   end    
   
   # ----------------------------------------------------------------------------------------------------------
@@ -237,7 +237,7 @@ class User < ActiveRecord::Base
   end
   
   def p_perc
-    (self.memverses.prophecy.count.to_f / self.memverses.count.to_f * 100).round
+    self.has_started? ? (self.memverses.prophecy.count.to_f / self.memverses.count.to_f * 100).round : 0
   end    
   
   # ----------------------------------------------------------------------------------------------------------
@@ -248,7 +248,7 @@ class User < ActiveRecord::Base
   end
 
   def g_perc
-    (self.memverses.gospel.count.to_f / self.memverses.count.to_f * 100).round
+    self.has_started? ? (self.memverses.gospel.count.to_f / self.memverses.count.to_f * 100).round : 0
   end  
 
   # ----------------------------------------------------------------------------------------------------------
@@ -259,7 +259,7 @@ class User < ActiveRecord::Base
   end
 
   def e_perc
-    (self.memverses.epistle.count.to_f / self.memverses.count.to_f * 100).round
+    self.has_started? ? (self.memverses.epistle.count.to_f / self.memverses.count.to_f * 100).round : 0
   end  
 
   # ----------------------------------------------------------------------------------------------------------
