@@ -499,12 +499,13 @@ class Memverse < ActiveRecord::Base
       else
         # Just return the next verse
         logger.debug("*** Returning next verse in sequence")      
-        return find(self.next_verse)
+        return Memverse.find(self.next_verse)
       end
     
     else
       logger.debug("*** No more verses in this sequence")
-      find(:first, :conditions => { :user_id => self.user.id }, :order => "next_test ASC")    
+      # TODO: We can't return this verse since this is the verse the user is currently working on
+      Memverse.find(:first, :conditions => { :user_id => self.user.id }, :order => "next_test ASC")    
     end
     
   end

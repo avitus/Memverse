@@ -843,8 +843,10 @@ class MemversesController < ApplicationController
     @page_title = "Memory Verse Review"
     @show_feedback = true
     
-
-    @mv = Memverse.find( :first, :conditions => ["user_id = ?", current_user.id], :order      => "next_test ASC")
+    # This won't return the first verse in the sequence 
+    # Need a 'first verse due' method in the user model
+    @mv = User.first_verse_today
+#    @mv = Memverse.find( :first, :conditions => ["user_id = ?", current_user.id], :order      => "next_test ASC")
     
     if @mv
       # ok to test
@@ -853,12 +855,9 @@ class MemversesController < ApplicationController
       flash[:notice] = "You should first add a few verses"       
     end
 
-    
     # --- Load prior verse if available
-    if @mv and @mv.prev_verse
-      prior_verse       = Memverse.find(@mv.prev_verse).verse
-      @prior_text       = prior_verse.text
-      @prior_versenum   = prior_verse.versenum
+    if @next_mv and @next_mv.prev_verse
+      @next_prior = Memverse.find(@next_mv.prev_verse).verse
     end
   
     # --- Load upcoming verses ---
@@ -879,8 +878,13 @@ class MemversesController < ApplicationController
     
     @next_mv = mv.next_verse_due(skip)
     
-    render :json => @next_mv.verse
+    # --- Load prior verse if available
+    if @next_mv and @next_mv.prev_verse
+      @next_prior_vs = Memverse.find(@next_mv.prev_verse).verse
+    end
     
+    render :json => { :next => @next_mv.verse, :next_prior => @next_prior_vs, :mv_id => @next_mv.id }.to_json
+       
   end
 
   # ----------------------------------------------------------------------------------------------------------
