@@ -74,6 +74,9 @@ ActionController::Routing::Routes.draw do |map|
 
   # Tweet routes
   map.tweets              '/tweets',                    :controller => 'tweets',      :action => 'index'  
+
+  # Game routes  
+  map.verse_scramble      '/verse_scramble',            :controller => 'games',       :action => 'verse_scramble'  
   
   
   # Blog routes
