@@ -303,7 +303,7 @@ class Memverse < ActiveRecord::Base
   end
 
   # ----------------------------------------------------------------------------------------------------------
-  # Is a verse due for memorization
+  # Is a verse due for memorization?
   # ----------------------------------------------------------------------------------------------------------   
   def due
     return self.next_test <= Date.today
@@ -332,7 +332,7 @@ class Memverse < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------   
   def first_verse_due_in_sequence 
     
-    slack         =  5 # Add some slack to avoid having to review the entire sequence too soon afterwards
+    slack         =  4 # Add some slack to avoid having to review the entire sequence too soon afterwards
     min_test_freq = 90 # Minimum test frequency in days for entire sequence 
     
     if self.solo_verse? # not part of a sequence

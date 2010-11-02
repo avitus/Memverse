@@ -11,9 +11,9 @@
 		  	</div>
 		
 		<div id="scoreTestButtons">								
-		  <div align="left"><%= submit_tag t('.b5'), 	:class => "submit", :q => 5 %></div>								
-		  <div align="left"><%= submit_tag t('.b4'), 	:class => "submit", :q => 4 %></div>	
-		  <div align="left"><%= submit_tag t('.b3'),  	:class => "submit", :q => 3 %></div>	
+		  <div align="left"><%= submit_tag t('.b5'),	:class => "submit", :q => 5 %></div>								
+		  <div align="left"><%= submit_tag t('.b4'),	:class => "submit", :q => 4 %></div>	
+		  <div align="left"><%= submit_tag t('.b3'), 	:class => "submit", :q => 3 %></div>	
 		  <div align="left"><%= submit_tag t('.b2'),	:class => "submit", :q => 2 %></div>	
 		  <div align="left"><%= submit_tag t('.b1'), 	:class => "submit", :q => 1 %></div>	
 		</div>			  
@@ -95,15 +95,19 @@
 	    $('.quickFlip').quickFlip();
 		
 		// Load next verse
-		$.getJSON("/memverses/test_next_verse", { skip: "true", mv: "<%=@mv.id%>" },
+		$.getJSON("/memverses/test_next_verse", { skip: "false", mv: "<%=@mv.id%>" },
 		   function(data){
-		     alert("Loaded: " + data.next.verse.book + " " + data.next.verse.chapter + ":" + data.next.verse.versenum + " - " + data.next.verse.text);
+		     // alert("Loaded: " + data.next.verse.book + " " + data.next.verse.chapter + ":" + data.next.verse.versenum + " - " + data.next.verse.text);
 			 ref 		= data.next.verse.book + " " + data.next.verse.chapter + ":" + data.next.verse.versenum
 			 txt 		= data.next.verse.text
 			 priortxt	= data.next_prior.verse.text
+			 mv_testing = "<%= @mv.id %>"
+			 mv_id		= data.mv_id
 		   });
 			
 		$('.submit').click( function() {
+			
+			alert("You pressed " + $(this).attr("q"));
 			
 			// == Update references on testing box
 			$(".verse-ref").text(ref);
@@ -130,8 +134,25 @@
 			$("#flashcard-back-text #prior-text").text(priortxt);   // TODO: if previous verse didn't have a prior text then it won't be there
 			
 			// == Remove verse from list of upcoming verses
+			
 			// == Score verse
+			$.getJSON("/memverses/mark_test_quick", { mv: mv_testing, q: 1  },
+				function(data){
+					// Give user a nice response
+					alert(data.msg)
+				});			
+			
 			// == Load next verse
+			$.getJSON("/memverses/test_next_verse", { skip: "false", mv: mv_id },
+			   function(data){
+			     alert("Loaded: " + data.next.verse.book + " " + data.next.verse.chapter + ":" + data.next.verse.versenum + " - " + data.next.verse.text);
+				 ref 		= data.next.verse.book + " " + data.next.verse.chapter + ":" + data.next.verse.versenum
+				 txt 		= data.next.verse.text
+				 priortxt	= data.next_prior.verse.text
+				 mv_testing = mv_id
+				 mv_id		= data.mv_id
+			   });
+
 			
 			// == Return false
 			return (false)	

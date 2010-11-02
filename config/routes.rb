@@ -27,6 +27,7 @@ ActionController::Routing::Routes.draw do |map|
   map.test_verse          '/test_verse',                :controller => 'memverses',   :action => 'test_verse' 
   map.test_verse_quick    '/test_verse_quick',          :controller => 'memverses',   :action => 'test_verse_quick' 
   map.mark_test           '/mark_test',                 :controller => 'memverses',   :action => 'mark_test' 
+  map.mark_test_quick     '/mark_test_quick',           :controller => 'memverses',   :action => 'mark_test_quick' 
   map.test_ref            '/test_ref',                  :controller => 'memverses',   :action => 'test_ref'   
   map.start_ref_test      '/start_ref_test',            :controller => 'memverses',   :action => 'load_test_ref'
   map.exam                '/test_yourself',             :controller => 'memverses',   :action => 'load_exam'

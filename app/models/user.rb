@@ -449,6 +449,16 @@ class User < ActiveRecord::Base
     return overdue_mv
   end
 
+  def first_verse_today
+    mv = Memverse.find( :first, :conditions => {:user_id => self.id}, :order => "next_test ASC")
+    
+    if mv 
+      return mv.first_verse_due_in_sequence
+    else
+      return nil
+    end
+    
+  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Returns upcoming verses that need to be tested today for this user

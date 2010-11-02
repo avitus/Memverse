@@ -835,7 +835,7 @@ class MemversesController < ApplicationController
   end
 
   # ----------------------------------------------------------------------------------------------------------
-  # Memorize - Now with JS
+  # Memorize [AJAX]
   # ----------------------------------------------------------------------------------------------------------   
   def test_verse_quick
  
@@ -843,21 +843,26 @@ class MemversesController < ApplicationController
     @page_title = "Memory Verse Review"
     @show_feedback = true
     
-    # This won't return the first verse in the sequence 
-    # Need a 'first verse due' method in the user model
-    @mv = User.first_verse_today
-#    @mv = Memverse.find( :first, :conditions => ["user_id = ?", current_user.id], :order      => "next_test ASC")
+    @mv = current_user.first_verse_today
     
     if @mv
-      # ok to test
+    
+      logger.debug("Starting with verse: #{@mv.verse.ref}, ID: #{@mv.id}")
+      
+      # --- Ok to test : Load prior verse if available
+      if @mv.prev_verse
+        @prev_mv        = Memverse.find(@mv.prev_verse)
+        @prior_text     = @prev_mv.verse.text
+        @prior_versenum = @prev_mv.verse.versenum
+      end
     else # this user has no verses
-      redirect_to :action => 'add_verse'
-      flash[:notice] = "You should first add a few verses"       
-    end
-
-    # --- Load prior verse if available
-    if @next_mv and @next_mv.prev_verse
-      @next_prior = Memverse.find(@next_mv.prev_verse).verse
+      if current_user.has_started?
+        redirect_to :action => 'show_progress'   
+        flash[:notice] = "You have no more verses to memorize today. Your next memory verse is due for review " + current_user.next_verse_due         
+      else
+        redirect_to :action => 'add_verse'
+        flash[:notice] = "You should first add a few verses"   
+      end
     end
   
     # --- Load upcoming verses ---
@@ -866,7 +871,36 @@ class MemversesController < ApplicationController
     
   end
 
+  # ----------------------------------------------------------------------------------------------------------
+  # Implement Supermemo Algorithm [AJAX]
+  # ----------------------------------------------------------------------------------------------------------     
+  def mark_test_quick
+    
+    # Find verse
+    mv  = Memverse.find(params[:mv])
+    q   = params[:q].to_i
+    
+    # Execute Supermemo algorithm
+    newly_memorized = mv.supermemo(q)
 
+    # Give encouragement if verse transitions from "Learning" to "Memorized"
+    if newly_memorized
+      msg = "Congratulations. You have memorized #{mv.verse.ref}."
+      Tweet.create(:news => "#{current_user.name_or_login} has memorized #{mv.verse.ref}", :user_id => current_user.id, :importance => 5)
+      if current_user.reaching_milestone
+        msg << " That was your #{current_user.memorized+1}th memorized verse!"
+        Tweet.create(:news => "#{current_user.name_or_login} has memorized #{current_user.his_or_her} #{current_user.memorized+1}th verse", :user_id => current_user.id, :importance => 3)
+      end
+      if mv.chapter_memorized?
+        msg << " You have now memorized all of #{mv.verse.book} #{mv.verse.chapter}. Great job!"
+        Tweet.create(:news => "#{current_user.name_or_login} has memorized #{mv.verse.book} #{mv.verse.chapter}", :user_id => current_user.id, :importance => 2)          
+      end
+    end
+    
+    render :json => msg
+    
+    
+  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Returns the next verse to be tested - this is a service URL for a js routine
@@ -1555,55 +1589,6 @@ class MemversesController < ApplicationController
     return upcoming[0..limit]
     
   end  
-  
-  
-  # ----------------------------------------------------------------------------------------------------------
-  # Implementation of SM-2 algorithm
-  # Inputs:
-  #     q             - result of test
-  #     n             - current iteration in learning sequence
-  #     interval      - interval in days before next test
-  #     efactor       - easiness factor
-  #
-  # Outputs:
-  #     n_new         - increment by 1 unless answer was incorrect
-  #     efactor_new   - updated efactor
-  #     interval_new  - new interval
-  # ----------------------------------------------------------------------------------------------------------     
-  def supermemo(q, efactor, interval, n)
-    if q<3 # answer was incorrect
-      n_new = 1  # Start from the beginning
-    else
-      n_new = n + 1 # Go on to next iteration
-    end
-       
-    # Update eFactor - need to prevent eFactor falling below 1.3
-    
-    # Q  Change in EF
-    # ~~~~~~~~~~~~~~~~
-    # 0     -0.80
-    # 1     -0.54
-    # 2     -0.32
-    # 3     -0.14
-    # 4     +0.00
-    # 5     +0.10
- 
-    efactor_new = [ efactor - 0.8 + (0.28 * q) - (0.02 * q * q), 3.0 ].min # Cap eFactor at 3.0 
-    if efactor_new < 1.2       
-      efactor_new = 1.2 # Set minimum efactor to 1.2
-    end    
-    
-    # Calculate new interval
-    interval_new = case n_new
-      when 1 then 1
-      when 2 then 4
-      else [interval * efactor_new, current_user.max_interval].min.round # Don't set interval to more than one year for now
-    end  
-    
-    return n_new.to_i, efactor_new, interval_new.to_i
-  end
-   
-
 end
 
 # Books in the Bible: 66
