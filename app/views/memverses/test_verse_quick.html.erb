@@ -29,7 +29,8 @@
 		<!-- Prior verse, if available -->
 		<% if !@prior_text.nil? %>
 			<div id="priorVerse">
-				<span class="superscript"><%=@prior_versenum%></span><span><%=@prior_text%></span>
+				<span class="prior-versenum superscript">	<%=@prior_versenum%></span>
+				<span class="prior-text">					<%=@prior_text%>	</span>
 			</div>
 		<% end %>
 		
@@ -49,23 +50,26 @@
 <!-- Flashcard -->	
 <div id="flashcard">
 	<div class="quickFlip">
+		
+		<!-- Front Panel -->
 	    <div class="quickFlipPanel refPanel">
 	        <p class="verse-ref"><%= @mv.verse.ref %></p>
 			<p class="mnemonic"><%=@mnemonic%></p>
 	        <p class="quickFlipCta"><%= t('.show_verse') %></p>
 	    </div>
 	
+		<!-- Back Panel -->
 	    <div class="quickFlipPanel textPanel">
 	    	<div id="flashcard-back-text">
 		        <p class="verse-ref"><%=@mv.verse.ref%></p>				
 				<p>
-					<span id="prior-versenum" class="superscript">	<%= @prior_versenum if @prior_text %>	</span>
-					<span id="prior-text">							<%= @prior_text if @prior_text %>		</span>
+					<span class="prior-versenum superscript">			<%= @prior_versenum if @prior_text %>	</span>
+					<span class="prior-text">							<%= @prior_text if @prior_text %>		</span>
 				</p>
 			   	
 		        <p> 
 					<span id="current-versenum" class="superscript">	<%= @mv.verse.versenum if @prior_text %></span>
-					<span id="current-text">							<%=@mv.verse.text%></span>
+					<span id="current-text">							<%= @mv.verse.text%>					</span>
 				</p>
 		        <p class="quickFlipCta"><%= t('.back_to_test') %></p>
 			</div>			
@@ -99,15 +103,20 @@
 		   function(data){
 		     // alert("Loaded: " + data.next.verse.book + " " + data.next.verse.chapter + ":" + data.next.verse.versenum + " - " + data.next.verse.text);
 			 ref 		= data.next.verse.book + " " + data.next.verse.chapter + ":" + data.next.verse.versenum
+			 
 			 txt 		= data.next.verse.text
+			 versenum	= data.next.verse.versenum
+			 
 			 priortxt	= data.next_prior.verse.text
+			 priornum	= data.next_prior.verse.versenum
 			 mv_testing = "<%= @mv.id %>"
 			 mv_id		= data.mv_id
 		   });
 			
 		$('.submit').click( function() {
 			
-			alert("You pressed " + $(this).attr("q"));
+			// == Set key press
+			q = $(this).attr("q");
 			
 			// == Update references on testing box
 			$(".verse-ref").text(ref);
@@ -119,24 +128,25 @@
 			// == Clear the feedback 
 			$("#ajaxWrapper").text('');
 								
-			// == Clear the prior verse 								
-
-			// == Insert next prior verse (if any)
-			
-								
+			// == Update prior verse and reference		
+			$(".prior-text").text(priortxt);   		// TODO: if previous verse didn't have a prior text then it won't be there
+			$(".prior-versenum").text(priornum);	// TODO: if previous verse didn't have a prior text then it won't be there
+											
 			// == Reset the flashcard 
 			$('.quickFlip').quickFlipper( {}, 0 );
 			
-			// == Update front of flash card
+			// == Update front of flash card with Mnemonic (if necessary)
 						
-			// == Update back of flash card
+			// == Update current verse on back of flash card
 			$("#flashcard-back-text #current-text").text(txt);
-			$("#flashcard-back-text #prior-text").text(priortxt);   // TODO: if previous verse didn't have a prior text then it won't be there
+			$("#flashcard-back-text #current-versenum").text(versenum);
+			
+
 			
 			// == Remove verse from list of upcoming verses
 			
 			// == Score verse
-			$.getJSON("/memverses/mark_test_quick", { mv: mv_testing, q: 1  },
+			$.getJSON("/memverses/mark_test_quick", { mv: mv_testing, q: q  },
 				function(data){
 					// Give user a nice response
 					alert(data.msg)
@@ -145,10 +155,13 @@
 			// == Load next verse
 			$.getJSON("/memverses/test_next_verse", { skip: "false", mv: mv_id },
 			   function(data){
-			     alert("Loaded: " + data.next.verse.book + " " + data.next.verse.chapter + ":" + data.next.verse.versenum + " - " + data.next.verse.text);
 				 ref 		= data.next.verse.book + " " + data.next.verse.chapter + ":" + data.next.verse.versenum
+				 
 				 txt 		= data.next.verse.text
+				 versenum	= data.next.verse.versenum
+				 
 				 priortxt	= data.next_prior.verse.text
+				 priornum	= data.next_prior.verse.versenum				 
 				 mv_testing = mv_id
 				 mv_id		= data.mv_id
 			   });
@@ -158,7 +171,6 @@
 			return (false)	
 		})	
 		
-
 	});
 </script>
 
