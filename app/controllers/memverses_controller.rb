@@ -907,14 +907,18 @@ class MemversesController < ApplicationController
   # ---------------------------------------------------------------------------------------------------------- 
   def test_next_verse
     # Default to not skipping verses
-    skip = params[:skip] || false
+    skip = (params[:skip]==true) || false
+    logger.debug("Skip is set to: #{skip} from parameter: #{params[:skip]}")
     mv   = Memverse.find(params[:mv])
     
     @next_mv = mv.next_verse_due(skip)
     
+    logger.debug("=== Loading memory verse: #{@next_mv.verse.ref}")
+    
     # --- Load prior verse if available
     if @next_mv and @next_mv.prev_verse
       @next_prior_vs = Memverse.find(@next_mv.prev_verse).verse
+      logger.debug(" -- Loading accompanying previous memory verse: #{@next_prior_vs.ref}")
     end
     
     render :json => { :next => @next_mv.verse, :next_prior => @next_prior_vs, :mv_id => @next_mv.id }.to_json
@@ -978,10 +982,7 @@ class MemversesController < ApplicationController
 
   def explain_exam
     @tab = "mem"
-    @page_title = "Memverse Accuracy Test"
-    
-    
-    
+    @page_title = "Memverse Accuracy Test" 
   end
 
   # ----------------------------------------------------------------------------------------------------------

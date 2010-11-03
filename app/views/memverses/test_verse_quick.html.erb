@@ -37,7 +37,7 @@
 		<!-- Current verse -->
 		<div id="currentVerse">
 			<% if !@prior_text.nil? %>			
-				<span class="superscript"><%=@current_versenum%></span>
+				<span class="current-versenum superscript"><%=@mv.verse.versenum%></span>
 			<% end %>
 
 			<span id="ajaxWrapper">
@@ -68,7 +68,7 @@
 				</p>
 			   	
 		        <p> 
-					<span id="current-versenum" class="superscript">	<%= @mv.verse.versenum if @prior_text %></span>
+					<span class="current-versenum superscript">			<%= @mv.verse.versenum if @prior_text %></span>
 					<span id="current-text">							<%= @mv.verse.text%>					</span>
 				</p>
 		        <p class="quickFlipCta"><%= t('.back_to_test') %></p>
@@ -85,13 +85,15 @@
 			<%= render :partial => "upcoming_verses" %>						
 	</fieldset>		
 </div>
-	
+
+<!--	
 <%= observe_field :verseguess,
 	:frequency	=> 0.6,
 	:update		=> 'ajaxWrapper',
 	:url		=> {:action => 'feedback', :only_path => false},
 	:with		=> "'echo=#{@show_feedback}&correct=#{escape_verse(@mv.verse.text)}&verseguess='+encodeURIComponent(value)"
 %>
+-->
 
 <script language="JavaScript" type="text/javascript">
 		
@@ -99,7 +101,7 @@
 	    $('.quickFlip').quickFlip();
 		
 		// Load next verse
-		$.getJSON("/memverses/test_next_verse", { skip: "false", mv: "<%=@mv.id%>" },
+		$.getJSON("/memverses/test_next_verse", { skip: false, mv: "<%=@mv.id%>" },
 		   function(data){
 		     // alert("Loaded: " + data.next.verse.book + " " + data.next.verse.chapter + ":" + data.next.verse.versenum + " - " + data.next.verse.text);
 			 ref 		= data.next.verse.book + " " + data.next.verse.chapter + ":" + data.next.verse.versenum
@@ -110,8 +112,18 @@
 			 priortxt	= data.next_prior.verse.text
 			 priornum	= data.next_prior.verse.versenum
 			 mv_testing = "<%= @mv.id %>"
+			 mv_verse	= "<%=@mv.verse.text%>"
 			 mv_id		= data.mv_id
 		   });
+		
+		$("#verseguess").observe_field(0.5, function( ) {			
+            //Get feedback
+			$.get("/memverses/feedback", { correct: mv_verse, verseguess: this.value, echo: true  },
+				function(data){
+					$("#ajaxWrapper").html(data);
+				});	
+        });
+		
 			
 		$('.submit').click( function() {
 			
@@ -139,7 +151,7 @@
 						
 			// == Update current verse on back of flash card
 			$("#flashcard-back-text #current-text").text(txt);
-			$("#flashcard-back-text #current-versenum").text(versenum);
+			$(".current-versenum").text(versenum);
 			
 
 			
@@ -153,17 +165,22 @@
 				});			
 			
 			// == Load next verse
-			$.getJSON("/memverses/test_next_verse", { skip: "false", mv: mv_id },
-			   function(data){
-				 ref 		= data.next.verse.book + " " + data.next.verse.chapter + ":" + data.next.verse.versenum
-				 
-				 txt 		= data.next.verse.text
-				 versenum	= data.next.verse.versenum
-				 
-				 priortxt	= data.next_prior.verse.text
-				 priornum	= data.next_prior.verse.versenum				 
-				 mv_testing = mv_id
-				 mv_id		= data.mv_id
+			$.getJSON("/memverses/test_next_verse", { skip: false, mv: mv_id },
+				function(data){
+				
+					// data for the verse we're currently testing
+					mv_testing 	= mv_id
+					mv_verse	= txt
+					mv_versenum = versenum
+					mv_id		= data.mv_id
+
+					// data for the next verse
+					ref 		= data.next.verse.book + " " + data.next.verse.chapter + ":" + data.next.verse.versenum					
+					txt 		= data.next.verse.text
+					versenum	= data.next.verse.versenum
+					priortxt	= data.next_prior.verse.text
+					priornum	= data.next_prior.verse.versenum				 
+
 			   });
 
 			

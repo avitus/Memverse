@@ -452,7 +452,7 @@ class User < ActiveRecord::Base
   def first_verse_today
     mv = Memverse.find( :first, :conditions => {:user_id => self.id}, :order => "next_test ASC")
     
-    if mv 
+    if mv && mv.due?
       return mv.first_verse_due_in_sequence
     else
       return nil

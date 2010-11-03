@@ -305,7 +305,7 @@ class Memverse < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   # Is a verse due for memorization?
   # ----------------------------------------------------------------------------------------------------------   
-  def due
+  def due?
     return self.next_test <= Date.today
   end
 
@@ -484,7 +484,7 @@ class Memverse < ActiveRecord::Base
   end  
   
   # ----------------------------------------------------------------------------------------------------------
-  # Return the next verse that needs to be memorized today
+  # Return the next verse that needs to be memorized today [AJAX]
   # See companion method in user model for 'first verse due'
   # ----------------------------------------------------------------------------------------------------------   
   def next_verse_due(skip = false)
@@ -504,8 +504,16 @@ class Memverse < ActiveRecord::Base
     
     else
       logger.debug("*** No more verses in this sequence")
-      # TODO: We can't return this verse since this is the verse the user is currently working on
-      Memverse.find(:first, :conditions => { :user_id => self.user.id }, :order => "next_test ASC")    
+      # Return the second verse due - the 1st verse is the one the user is currently working on
+      mv = Memverse.find(:all, :conditions => { :user_id => self.user.id }, :order => "next_test ASC", :limit => 2)[1]
+      
+      if mv && mv.due? 
+        return mv.first_verse_due_in_sequence
+      else
+        return nil
+      end      
+      
+      
     end
     
   end
