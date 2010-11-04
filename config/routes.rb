@@ -79,9 +79,8 @@ ActionController::Routing::Routes.draw do |map|
   # Game routes  
   map.verse_scramble      '/verse_scramble',            :controller => 'games',       :action => 'verse_scramble'  
   
-  
   # Blog routes
-#  map.blog                '/blog',                      :controller => 'blog_posts',    :action => 'index'
+  # map.blog                '/blog',                      :controller => 'blog_posts',    :action => 'index'
   map.blog_comments_new   '/blog_comments_new',         :controller => 'blog_comments', :action => 'recent_comments'
   
   
