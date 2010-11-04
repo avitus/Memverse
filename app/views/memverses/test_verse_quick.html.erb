@@ -103,17 +103,24 @@
 		// Load next verse
 		$.getJSON("/memverses/test_next_verse", { skip: false, mv: "<%=@mv.id%>" },
 		   function(data){
-		     // alert("Loaded: " + data.next.verse.book + " " + data.next.verse.chapter + ":" + data.next.verse.versenum + " - " + data.next.verse.text);
-			 ref 		= data.next.verse.book + " " + data.next.verse.chapter + ":" + data.next.verse.versenum
+
+			 finished	= data.finished
 			 
-			 txt 		= data.next.verse.text
-			 versenum	= data.next.verse.versenum
-			 
-			 priortxt	= data.next_prior.verse.text
-			 priornum	= data.next_prior.verse.versenum
 			 mv_testing = "<%= @mv.id %>"
 			 mv_verse	= "<%=@mv.verse.text%>"
-			 mv_id		= data.mv_id
+			 
+			 if (!finished)
+			 {
+			 	
+				 ref 		= data.next.verse.book + " " + data.next.verse.chapter + ":" + data.next.verse.versenum
+				 mv_id		= data.mv_id		 
+				 txt 		= data.next.verse.text
+				 versenum	= data.next.verse.versenum
+				 
+				 priortxt	= data.next_prior.verse.text
+				 priornum	= data.next_prior.verse.versenum			 	
+			 }
+
 		   });
 		
 		$("#verseguess").observe_field(0.5, function( ) {			
@@ -129,6 +136,21 @@
 			
 			// == Set key press
 			q = $(this).attr("q");
+
+			// == Score verse
+			$.getJSON("/memverses/mark_test_quick", { mv: mv_testing, q: q  },
+				function(data){
+					// Give user a nice response
+					alert(data.msg)
+				});	
+				
+			// Check whether we're done for the day
+			if (finished)
+			{
+			  window.location="./progress";
+			  return (false)
+			}
+					
 			
 			// == Update references on testing box
 			$(".verse-ref").text(ref);
@@ -153,36 +175,34 @@
 			$("#flashcard-back-text #current-text").text(txt);
 			$(".current-versenum").text(versenum);
 			
-
 			
 			// == Remove verse from list of upcoming verses
+					
 			
-			// == Score verse
-			$.getJSON("/memverses/mark_test_quick", { mv: mv_testing, q: q  },
-				function(data){
-					// Give user a nice response
-					alert(data.msg)
-				});			
-			
-			// == Load next verse
+			// == Load next verse Note: this runs concurrently with verse scoring above.
 			$.getJSON("/memverses/test_next_verse", { skip: false, mv: mv_id },
 				function(data){
 				
+					finished	= data.finished
+		
 					// data for the verse we're currently testing
 					mv_testing 	= mv_id
 					mv_verse	= txt
 					mv_versenum = versenum
-					mv_id		= data.mv_id
 
-					// data for the next verse
-					ref 		= data.next.verse.book + " " + data.next.verse.chapter + ":" + data.next.verse.versenum					
-					txt 		= data.next.verse.text
-					versenum	= data.next.verse.versenum
-					priortxt	= data.next_prior.verse.text
-					priornum	= data.next_prior.verse.versenum				 
-
+					if (!finished)
+					{
+						// data for the next verse ...
+						ref 		= data.next.verse.book + " " + data.next.verse.chapter + ":" + data.next.verse.versenum					
+						txt 		= data.next.verse.text
+						versenum	= data.next.verse.versenum
+						mv_id		= data.mv_id
+						// ... and its prior verse
+						priortxt	= data.next_prior.verse.text
+						priornum	= data.next_prior.verse.versenum						
+					}
+														
 			   });
-
 			
 			// == Return false
 			return (false)	

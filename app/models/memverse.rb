@@ -106,7 +106,7 @@ class Memverse < ActiveRecord::Base
     # Update memory verse parameters
     self.rep_n          = n_new
     self.efactor        = efactor_new
-    self.test_interval  = interval_new
+    self.test_interval  = [interval_new,1].max
     self.next_test      = Date.today + interval_new
     self.last_tested    = Date.today
     self.status         = interval_new > 30 ? "Memorized" : "Learning"
@@ -504,9 +504,13 @@ class Memverse < ActiveRecord::Base
     
     else
       logger.debug("*** No more verses in this sequence")
-      # Return the second verse due - the 1st verse is the one the user is currently working on
-      mv = Memverse.find(:all, :conditions => { :user_id => self.user.id }, :order => "next_test ASC", :limit => 2)[1]
       
+      # Need to handle case where it's the first verse of the day so verse hasn't been scored yet      
+      mv = Memverse.find( :first, 
+                          :conditions => ["user_id = ? and id != ?", self.user.id, self.id], 
+                          :order      => "next_test ASC")            
+            
+            
       if mv && mv.due? 
         return mv.first_verse_due_in_sequence
       else

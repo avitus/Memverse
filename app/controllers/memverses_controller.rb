@@ -913,15 +913,24 @@ class MemversesController < ApplicationController
     
     @next_mv = mv.next_verse_due(skip)
     
-    logger.debug("=== Loading memory verse: #{@next_mv.verse.ref}")
-    
+    if @next_mv
+      logger.debug("=== Loading next memory verse: #{@next_mv.verse.ref}")
+    else
+      logger.debug("=== Loading next memory verse: None found.")
+    end
+      
     # --- Load prior verse if available
     if @next_mv and @next_mv.prev_verse
       @next_prior_vs = Memverse.find(@next_mv.prev_verse).verse
       logger.debug(" -- Loading accompanying previous memory verse: #{@next_prior_vs.ref}")
     end
     
-    render :json => { :next => @next_mv.verse, :next_prior => @next_prior_vs, :mv_id => @next_mv.id }.to_json
+    if @next_mv
+      render :json => { :finished => false, :next => @next_mv.verse, :next_prior => @next_prior_vs, :mv_id => @next_mv.id }.to_json
+    else
+      render :json => { :finished => true }
+    end
+    
        
   end
 
