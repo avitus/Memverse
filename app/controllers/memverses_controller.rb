@@ -896,8 +896,8 @@ class MemversesController < ApplicationController
         Tweet.create(:news => "#{current_user.name_or_login} has memorized #{mv.verse.book} #{mv.verse.chapter}", :user_id => current_user.id, :importance => 2)          
       end
     end
-    
-    render :json => msg
+   
+    render :json => {:msg => msg } unless msg
     
     
   end
@@ -926,7 +926,7 @@ class MemversesController < ApplicationController
     end
     
     if @next_mv
-      render :json => { :finished => false, :next => @next_mv.verse, :next_prior => @next_prior_vs, :mv_id => @next_mv.id }.to_json
+      render :json => { :finished => false, :next => @next_mv.verse, :next_prior => @next_prior_vs, :mv_id => @next_mv.id, :ref => @next_mv.verse.ref }.to_json
     else
       render :json => { :finished => true }
     end

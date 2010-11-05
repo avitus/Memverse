@@ -4,7 +4,7 @@
 <!-- Question-side : Entry box -->	
 <fieldset id="question-side">
 	<legend class="verse-ref"><%=@mv.verse.ref%> </legend>
-		<% form_tag :action => 'mark_test' do %>
+		<% form_tag :action => 'mark_test_quick' do %>
 			
 			<div id="answerbox">
 		  		<%= text_area_tag(:verseguess, params[:verseguess] )%>			
@@ -26,20 +26,16 @@
 	<legend><%= t('.feedback') %></legend>
 	<div id="verseFeedback">
 		
-		<!-- Prior verse, if available -->
-		<% if !@prior_text.nil? %>
-			<div id="priorVerse">
-				<span class="prior-versenum superscript">	<%=@prior_versenum%></span>
-				<span class="prior-text">					<%=@prior_text%>	</span>
-			</div>
-		<% end %>
+		<div id="priorVerse">
+			<!-- Prior verse, if available -->
+			<span class="prior-versenum superscript">	<%=@prior_versenum if @prior_text%></span>
+			<span class="prior-text">					<%=@prior_text if @prior_text%>	</span>
+		</div>
 		
 		<!-- Current verse -->
 		<div id="currentVerse">
-			<% if !@prior_text.nil? %>			
-				<span class="current-versenum superscript"><%=@mv.verse.versenum%></span>
-			<% end %>
-
+					
+			<span class="current-versenum superscript"><%=@mv.verse.versenum if @prior_text%></span>
 			<span id="ajaxWrapper">
 				<%= render :partial=>'feedback', :locals => {:show_feedback => @show_feedback} %>
 			</span>					
@@ -99,30 +95,32 @@
 		
 	$(document).ready(function() {
 	    $('.quickFlip').quickFlip();
+
+		$("table#upcoming-verses .upcoming-verse-ref:contains('<%=@mv.verse.ref%>')").remove()				
+
 		
 		// Load next verse
 		$.getJSON("/memverses/test_next_verse", { skip: false, mv: "<%=@mv.id%>" },
 		   function(data){
 
-			 finished	= data.finished
+			 finished	= data.finished;
 			 
-			 mv_testing = "<%= @mv.id %>"
-			 mv_verse	= "<%=@mv.verse.text%>"
+			 mv_testing = "<%= @mv.id %>";
+			 mv_verse	= "<%=escape_verse@mv.verse.text%>";
 			 
 			 if (!finished)
-			 {
-			 	
-				 ref 		= data.next.verse.book + " " + data.next.verse.chapter + ":" + data.next.verse.versenum
-				 mv_id		= data.mv_id		 
-				 txt 		= data.next.verse.text
-				 versenum	= data.next.verse.versenum
+			 {	
+				 ref 		= data.ref;
+				 mv_id		= data.mv_id;	 
+				 txt 		= data.next.verse.text;
+				 versenum	= data.next.verse.versenum;
 				 
-				 priortxt	= data.next_prior.verse.text
-				 priornum	= data.next_prior.verse.versenum			 	
+				 priortxt	= data.next_prior.verse.text;
+				 priornum	= data.next_prior.verse.versenum;			 	
 			 }
-
 		   });
 		
+			
 		$("#verseguess").observe_field(0.5, function( ) {			
             //Get feedback
 			$.get("/memverses/feedback", { correct: mv_verse, verseguess: this.value, echo: true  },
@@ -140,15 +138,22 @@
 			// == Score verse
 			$.getJSON("/memverses/mark_test_quick", { mv: mv_testing, q: q  },
 				function(data){
-					// Give user a nice response
-					alert(data.msg)
+					if (data.msg) 
+					{
+						// Give user a nice response
+						alert(data.msg);						
+					}
+
 				});	
+				
+			// == Remove verse from list of upcoming verses
+			$("table#upcoming-verses .upcoming-verse-ref:contains(" + ref + ")").remove()				
 				
 			// Check whether we're done for the day
 			if (finished)
 			{
 			  window.location="./progress";
-			  return (false)
+			  return (false);
 			}
 					
 			
@@ -175,37 +180,34 @@
 			$("#flashcard-back-text #current-text").text(txt);
 			$(".current-versenum").text(versenum);
 			
-			
-			// == Remove verse from list of upcoming verses
-					
-			
+		
 			// == Load next verse Note: this runs concurrently with verse scoring above.
 			$.getJSON("/memverses/test_next_verse", { skip: false, mv: mv_id },
 				function(data){
 				
-					finished	= data.finished
+					finished	= data.finished;
 		
 					// data for the verse we're currently testing
-					mv_testing 	= mv_id
-					mv_verse	= txt
-					mv_versenum = versenum
+					mv_testing 	= mv_id;
+					mv_verse	= txt;
+					mv_versenum = versenum;
 
 					if (!finished)
 					{
 						// data for the next verse ...
-						ref 		= data.next.verse.book + " " + data.next.verse.chapter + ":" + data.next.verse.versenum					
-						txt 		= data.next.verse.text
-						versenum	= data.next.verse.versenum
-						mv_id		= data.mv_id
+						ref 		= data.ref;					
+						txt 		= data.next.verse.text;
+						versenum	= data.next.verse.versenum;
+						mv_id		= data.mv_id;
 						// ... and its prior verse
-						priortxt	= data.next_prior.verse.text
-						priornum	= data.next_prior.verse.versenum						
+						priortxt	= data.next_prior.verse.text;
+						priornum	= data.next_prior.verse.versenum;						
 					}
 														
 			   });
 			
 			// == Return false
-			return (false)	
+			return (false);	
 		})	
 		
 	});

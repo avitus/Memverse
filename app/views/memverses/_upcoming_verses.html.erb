@@ -1,4 +1,4 @@
-<table cellpadding="4" cellspacing="0">
+<table cellpadding="4" cellspacing="0" id="upcoming-verses">
 	
 	<% if @upcoming_verses.empty? %>
 			<tr>
@@ -7,7 +7,7 @@
 	<% else%>
 		<% for mv in @upcoming_verses %>
 			<tr>
-				<td><%= mv['verse'] %></td>		 		
+				<td class="upcoming-verse-ref"><%= mv['verse'] %></td>		 		
 			</tr>
 		<% end %>
 	<% end %>	
