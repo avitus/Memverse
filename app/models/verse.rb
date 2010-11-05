@@ -243,6 +243,7 @@ class Verse < ActiveRecord::Base
     tl = case self.translation
       when "NAS" then "NASB"
       when "NKJ" then "NKJV"
+      when "NIV" then "NIV1984"
       else self.translation.downcase
     end
        
