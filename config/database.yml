@@ -10,7 +10,7 @@ development:
   encoding: utf8
   database: memverse_development
   username: root
-  password: veetle77
+  password: [hidden]
   pool: 5
   host: localhost
   socket: /var/run/mysqld/mysqld.sock  
@@ -35,7 +35,7 @@ staging:
    adapter: mysql
    database: memverse_staging
    username: avitus
-   password: veetle77
+   password: [hidden]
    host: mysql.memverse.com
    pool: 5
   
