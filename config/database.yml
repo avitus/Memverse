@@ -44,7 +44,7 @@ production:
    adapter: mysql
    database: memverse_production
    username: avitus
-   password: veetle77
+   password: [hidden]
    host: mysql.memverse.com
    pool: 5
      
