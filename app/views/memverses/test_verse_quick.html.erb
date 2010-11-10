@@ -26,19 +26,22 @@
 	<legend><%= t('.feedback') %></legend>
 	<div id="verseFeedback">
 		
-		<div id="priorVerse">
-			<!-- Prior verse, if available -->
-			<span class="prior-versenum superscript">	<%=@prior_versenum if @prior_text%></span>
-			<span class="prior-text">					<%=@prior_text if @prior_text%>	</span>
+		<div class="priorVerse">
+			<p>
+				<!-- Prior verse, if available -->
+				<span class="prior-versenum superscript">	<%=@prior_versenum if @prior_text%></span>
+				<span class="prior-text">					<%=@prior_text if @prior_text%>	</span>
+			</p>
 		</div>
 		
 		<!-- Current verse -->
 		<div id="currentVerse">
-					
-			<span class="current-versenum superscript"><%=@mv.verse.versenum if @prior_text%></span>
-			<span id="ajaxWrapper">
-				<%= render :partial=>'feedback', :locals => {:show_feedback => @show_feedback} %>
-			</span>					
+			<p>		
+				<span class="current-versenum superscript"><%=@mv.verse.versenum if @prior_text%></span>
+				<span id="ajaxWrapper">
+					<%= render :partial=>'feedback', :locals => {:show_feedback => @show_feedback} %>
+				</span>
+			</p>					
 		</div>
 	</div>
 </fieldset>	
@@ -57,11 +60,14 @@
 		<!-- Back Panel -->
 	    <div class="quickFlipPanel textPanel">
 	    	<div id="flashcard-back-text">
-		        <p class="verse-ref"><%=@mv.verse.ref%></p>				
-				<p>
-					<span class="prior-versenum superscript">			<%= @prior_versenum if @prior_text %>	</span>
-					<span class="prior-text">							<%= @prior_text if @prior_text %>		</span>
-				</p>
+		        <p class="verse-ref"><%=@mv.verse.ref%></p>
+				
+				<div class="priorVerse">
+					<p>
+						<span class="prior-versenum superscript">			<%= @prior_versenum if @prior_text %>	</span>
+						<span class="prior-text">							<%= @prior_text if @prior_text %>		</span>
+					</p>
+				</div>
 			   	
 		        <p> 
 					<span class="current-versenum superscript">			<%= @mv.verse.versenum if @prior_text %></span>
@@ -115,8 +121,16 @@
 				 txt 		= data.next.verse.text;
 				 versenum	= data.next.verse.versenum;
 				 
-				 priortxt	= data.next_prior.verse.text;
-				 priornum	= data.next_prior.verse.versenum;			 	
+				 if(typeof(data.next_prior) !== 'undefined' && data.next_prior != null)
+				 {
+				 	priortxt	= data.next_prior.verse.text;
+				 	priornum	= data.next_prior.verse.versenum;				 	
+				 }
+				 else
+				 {
+				 	priortxt	= null;
+					priornum	= null;
+				 }
 			 }
 		   });
 		
@@ -167,9 +181,18 @@
 			// == Clear the feedback 
 			$("#ajaxWrapper").text('');
 								
-			// == Update prior verse and reference		
-			$(".prior-text").text(priortxt);   		// TODO: if previous verse didn't have a prior text then it won't be there
-			$(".prior-versenum").text(priornum);	// TODO: if previous verse didn't have a prior text then it won't be there
+			// == Update prior verse and reference	
+			if (typeof(priortxt) !== 'undefined' && priortxt != null)
+			{
+				$(".priorVerse").show()				
+				$(".prior-text").text(priortxt);   		// TODO: if previous verse didn't have a prior text then it won't be there
+				$(".prior-versenum").text(priornum);	// TODO: if previous verse didn't have a prior text then it won't be there				
+			}
+			else 
+			{
+				$(".priorVerse").hide()
+			}
+
 											
 			// == Reset the flashcard 
 			$('.quickFlip').quickFlipper( {}, 0 );
@@ -200,8 +223,17 @@
 						versenum	= data.next.verse.versenum;
 						mv_id		= data.mv_id;
 						// ... and its prior verse
-						priortxt	= data.next_prior.verse.text;
-						priornum	= data.next_prior.verse.versenum;						
+						if(typeof(data.next_prior) !== 'undefined' && data.next_prior != null)
+						{
+							priortxt	= data.next_prior.verse.text;
+							priornum	= data.next_prior.verse.versenum;							
+						}
+						else
+						{
+							priortxt = null;
+							priornum = null;
+						}
+						
 					}
 														
 			   });
