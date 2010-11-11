@@ -148,17 +148,6 @@
 			
 			// == Set key press
 			q = $(this).attr("q");
-
-			// == Score verse
-			$.getJSON("/memverses/mark_test_quick", { mv: mv_testing, q: q  },
-				function(data){
-					if (data.msg) 
-					{
-						// Give user a nice response
-						alert(data.msg);						
-					}
-
-				});	
 				
 			// == Remove verse from list of upcoming verses
 			$("table#upcoming-verses .upcoming-verse-ref:contains(" + ref + ")").remove()				
@@ -169,8 +158,7 @@
 			  window.location="./progress";
 			  return (false);
 			}
-					
-			
+								
 			// == Update references on testing box
 			$(".verse-ref").text(ref);
 						
@@ -203,40 +191,52 @@
 			$("#flashcard-back-text #current-text").text(txt);
 			$(".current-versenum").text(versenum);
 			
-		
-			// == Load next verse Note: this runs concurrently with verse scoring above.
-			$.getJSON("/memverses/test_next_verse", { skip: false, mv: mv_id },
+			// == Score verse
+			$.getJSON("/memverses/mark_test_quick", { mv: mv_testing, q: q  },
 				function(data){
-				
-					finished	= data.finished;
-		
-					// data for the verse we're currently testing
-					mv_testing 	= mv_id;
-					mv_verse	= txt;
-					mv_versenum = versenum;
-
-					if (!finished)
+					if (data.msg) 
 					{
-						// data for the next verse ...
-						ref 		= data.ref;					
-						txt 		= data.next.verse.text;
-						versenum	= data.next.verse.versenum;
-						mv_id		= data.mv_id;
-						// ... and its prior verse
-						if(typeof(data.next_prior) !== 'undefined' && data.next_prior != null)
-						{
-							priortxt	= data.next_prior.verse.text;
-							priornum	= data.next_prior.verse.versenum;							
-						}
-						else
-						{
-							priortxt = null;
-							priornum = null;
-						}
-						
+						// Give user a nice response
+						alert(data.msg);												
 					}
-														
-			   });
+					
+					// == Runs only on successful callback from mark test call above
+					$.getJSON("/memverses/test_next_verse", { skip: false, mv: mv_id },
+						function(data){
+						
+							finished	= data.finished;
+				
+							// data for the verse we're currently testing
+							mv_testing 	= mv_id;
+							mv_verse	= txt;
+							mv_versenum = versenum;
+		
+							if (!finished)
+							{
+								// data for the next verse ...
+								ref 		= data.ref;					
+								txt 		= data.next.verse.text;
+								versenum	= data.next.verse.versenum;
+								mv_id		= data.mv_id;
+								// ... and its prior verse
+								if(typeof(data.next_prior) !== 'undefined' && data.next_prior != null)
+								{
+									priortxt	= data.next_prior.verse.text;
+									priornum	= data.next_prior.verse.versenum;							
+								}
+								else
+								{
+									priortxt = null;
+									priornum = null;
+								}
+								
+							}
+																
+					   });
+
+				});	
+		
+
 			
 			// == Return false
 			return (false);	
