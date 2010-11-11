@@ -150,13 +150,15 @@
 			q = $(this).attr("q");
 				
 			// == Remove verse from list of upcoming verses
+			// TODO: Need to keep refreshing the upcoming verses box if less than x verses
 			$("table#upcoming-verses .upcoming-verse-ref:contains(" + ref + ")").remove()				
 				
 			// Check whether we're done for the day
 			if (finished)
 			{
-			  window.location="./progress";
-			  return (false);
+				// TODO: Need to update progress table
+				window.location="./progress";
+				return (false);
 			}
 								
 			// == Update references on testing box
