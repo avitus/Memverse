@@ -432,21 +432,17 @@ class User < ActiveRecord::Base
   end
 
   # ----------------------------------------------------------------------------------------------------------
-  # Returns number of overdue verses
-  # Input: User object
+  # Returns number of overdue verses (does not include verses that are due today)
   # ----------------------------------------------------------------------------------------------------------  
   def overdue_verses
-    
-    overdue_mv = 0
-    
-    # TODO: this should be done with a named search otherwise we bring back every memory verse
-    self.memverses.each { |mv|
-      if mv.next_test < Date.today
-        overdue_mv += 1
-      end
-    }
- 
-    return overdue_mv
+    Memverse.find(:all, :conditions => ["user_id = ? and next_test < ?", self.id, Date.today]).count    
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Returns number of due verses
+  # ----------------------------------------------------------------------------------------------------------
+  def due_verses
+    Memverse.find(:all, :conditions => ["user_id = ? and next_test <= ?", self.id, Date.today]).count  
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -454,13 +450,10 @@ class User < ActiveRecord::Base
   # ---------------------------------------------------------------------------------------------------------- 
   def first_verse_today
     mv = Memverse.find( :first, :conditions => {:user_id => self.id}, :order => "next_test ASC")
-    logger.debug("*** First verse due is #{mv.verse.ref} ... checking for prior verses in this sequence that are due")
     
     if mv && mv.due?
-      logger.debug("*** First verse due in this sequence is: #{mv.first_verse_due_in_sequence.verse.ref}")
       return mv.first_verse_due_in_sequence
     else
-      logger.debug("*** No verses due")
       return nil
     end
     
@@ -468,12 +461,51 @@ class User < ActiveRecord::Base
 
   # ----------------------------------------------------------------------------------------------------------
   # Returns upcoming verses that need to be tested today for this user
-  # Input:
-  # Output: 
   # ----------------------------------------------------------------------------------------------------------  
-  def upcoming_verses
+  def upcoming_verses(limit = 12, mode = "test")
+    mvs = Memverse.find(:all, :conditions => ["user_id = ? and next_test <= ?", self.id, Date.today], :order => "next_test ASC", :limit => limit)
     
+    mvs.collect! { |mv|
+    
+        # First handle the case where this is not a starting verse
+        if mv.first_verse? # i.e. there is an earlier verse in the sequence
+          # Either return first verse that is due in the sequence
+          if mv.sequence_length > 5 and mode == "test"
+            mv.first_verse_due_in_sequence   # This method returns the first verse due as an object
+          # Or return the first verse no matter what if it is a short sequence
+          else
+            Memverse.find( mv.first_verse )  # Go find the first verse
+          end          
+        # Otherwise, this is a first verse so just return it
+        else
+          mv
+        end
+    }.uniq!  # this handles the case where multiple verses are pointing to a first verse
+    # TODO: how should we sort the upcoming verses
+
+    upcoming = Array.new
+       
+    # At this point, mem_vs array has pointers to all the starting verses due today. Now we add the downstream verses
+    mvs.each { |mv|
+    
+        upcoming << mv
+        
+        # Add any subsequent verses in the chain
+        next_verse = mv.next_verse
+        if next_verse  
+          cmv = Memverse.find( next_verse )
+        end
+        while (next_verse) and cmv.more_to_memorize_in_sequence?
+          cmv         = Memverse.find(next_verse)          
+          upcoming << cmv
+          next_verse = cmv.next_verse
+        end     
+    }
+    
+    return upcoming
+       
   end
+
 
   # ----------------------------------------------------------------------------------------------------------
   # Change reminder frequency for inactive users

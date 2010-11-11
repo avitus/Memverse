@@ -7,10 +7,11 @@
 	<% else%>
 		<% for mv in @upcoming_verses %>
 			<tr>
-				<td class="upcoming-verse-ref"><%= mv['verse'] %></td>		 		
+				<td class="upcoming-verse-ref"><%= mv.verse.ref %></td>		 		
 			</tr>
 		<% end %>
-	<% end %>	
+	<% end %>
+		
 </table>	
 
 	
