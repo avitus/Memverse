@@ -107,44 +107,8 @@
 %>
 -->
 
-<script language="JavaScript" type="text/javascript">
 
-
-	function stageverse(skip, mv) {
-
-		$.getJSON("/memverses/test_next_verse", { skip: false, mv: "<%=@mv.id%>" },
-			function(data){
-			
-				var mv = {}
-			
-				mv.finished	= data.finished;
-							
-				if (!mv.finished)
-				{					
-					// data for the next verse ...
-					mv.ref 		= data.ref;
-					mv.id		= data.mv_id;	 
-					mv.txt 		= data.next.verse.text;
-					mv.versenum	= data.next.verse.versenum;
-					
-					// ... and its prior verse
-					if(typeof(data.next_prior) !== 'undefined' && data.next_prior != null)
-					{
-						mv.priortxt	= data.next_prior.verse.text;
-						mv.priornum	= data.next_prior.verse.versenum;				 	
-					}
-					else
-					{
-						mv.priortxt	= null;
-						mv.priornum	= null;
-					}
-				}
-		}); // end of getJSON
-	
-	return mv
-	
-	};
-		
+<script language="JavaScript" type="text/javascript"><!--
 		
 	$(document).ready(function() {
 		
@@ -153,20 +117,17 @@
 		$("table#upcoming-verses .upcoming-verse-ref:contains('<%=@mv.verse.ref%>')").remove()				
 			 
 		mv_testing	= "<%= @mv.id %>";
-		mv_verse	= "<%=escape_verse@mv.verse.text%>";
+		mv_verse	= "<%= @mv.verse.text %>";
 		
 		// Load next verse
-		var ondeck = stageverse(skip=false, mv_testing)		
+		var ondeck = stageverse(false, mv_testing);		
 			
-		$("#verseguess").observe_field(0.5, function( ) {			
-            //Get feedback
-			$.get("/memverses/feedback", { correct: mv_verse, verseguess: this.value, echo: true  },
-				function(data){
-					$("#ajaxWrapper").html(data);
-				});	
+		$("#verseguess").observe_field(0.5, function( ) { 
+			$.get("/memverses/feedback", { correct: encodeURIComponent(mv_verse), verseguess: encodeURIComponent(this.value), echo: true  },
+				function(data){	$("#ajaxWrapper").html(data);
+			});	
         });
-		
-		
+				
 		$('#ff-button').click(function() {
 			alert('User wants to skip verse');
 		});
@@ -178,47 +139,36 @@
 				
 			// == Remove verse from list of upcoming verses
 			// TODO: Need to keep refreshing the upcoming verses box if less than x verses
-			$("table#upcoming-verses .upcoming-verse-ref:contains(" + ref + ")").remove()				
+			$("table#upcoming-verses .upcoming-verse-ref:contains(" + ondeck.ref + ")").remove()				
 				
 			// Check whether we're done for the day
-			if (ondeck.finished)
-			{
+			if (ondeck.finished) {
 				// TODO: Need to update progress table
 				window.location="./progress";
 				return (false);
 			}
 								
-			// == Update references on testing box
-			$(".verse-ref").text(ondeck.ref);
-						
-			// == Clear the input box and put cursor in input box
-			$("#verseguess").val('');
-			$("#verseguess").focus();
 			
-			// == Clear the feedback 
-			$("#ajaxWrapper").text('');
+			$(".verse-ref").text(ondeck.ref);							// Update references on testing box					
+			$("#verseguess").val('');									// Clear the input box 
+			$("#verseguess").focus();									// Put cursor in input box
+			$("#ajaxWrapper").text('');									// Clear the feedback 
+			$('.quickFlip').quickFlipper( {}, 0 );						// Reset the flashcard 
+			$("#flashcard-back-text #current-text").text(ondeck.txt);	// Update current verse on back of flash card
+			$(".current-versenum").text(ondeck.versenum);
 								
 			// == Update prior verse and reference	
-			if (typeof(ondeck.priortxt) !== 'undefined' && ondeck.priortxt != null)
-			{
+			if (typeof(ondeck.priortxt) !== 'undefined' && ondeck.priortxt != null)	{
 				$(".priorVerse").show()				
 				$(".prior-text").text(ondeck.priortxt);   		
 				$(".prior-versenum").text(ondeck.priornum);				
 			}
-			else 
-			{
+			else {
 				$(".priorVerse").hide()
 			}
-
-											
-			// == Reset the flashcard 
-			$('.quickFlip').quickFlipper( {}, 0 );
 			
 			// == Update front of flash card with Mnemonic (if necessary)
-						
-			// == Update current verse on back of flash card
-			$("#flashcard-back-text #current-text").text(ondeck.txt);
-			$(".current-versenum").text(ondeck.versenum);
+					
 			
 			// == Score verse
 			$.getJSON("/memverses/mark_test_quick", { mv: mv_testing, q: q  },
@@ -228,16 +178,15 @@
 						// Give user a nice response
 						alert(data.msg);												
 					}
-					
-					
+										
 					// data for the verse we're now testing
 					mv_testing 	= ondeck.id;
-					mv_verse	= ondeck.txt; // where is this used?
-					mv_versenum = ondeck.versenum; // where is this used?
+					mv_verse	= ondeck.txt; 		// Used to generate feedback
+					// mv_versenum = ondeck.versenum; // where is this used?
 					
 					
 					// == Runs only on successful callback from mark test call above
-					ondeck = stageverse(skip=false, mv_testing)	
+					ondeck = stageverse(false, mv_testing)	
 					
 			});	
 			
@@ -246,10 +195,7 @@
 		})	
 		
 	});
-</script>
-
-
-
+--></script>
 
 
 

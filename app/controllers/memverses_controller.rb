@@ -1399,11 +1399,14 @@ class MemversesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------  
   def feedback
 
-    guess   = params[:verseguess] ? params[:verseguess].gsub(/\s+/," ").strip : ""  # Remove double spaces from guesses    
-    correct = params[:correct]    ? params[:correct].gsub(/\s+/," ").strip    : ""  # The correct verse was stripped, cleaned when first saved
+    guess   = params[:verseguess] ? url_unescape(params[:verseguess]).gsub(/\s+/," ").strip : ""  # Remove double spaces from guesses    
+    correct = params[:correct]    ? url_unescape(params[:correct]).gsub(/\s+/," ").strip    : ""  # The correct verse was stripped, cleaned when first saved
     echo    = (params[:echo] == "true")
 
     logger.debug("Echo (give feedback) is set to: #{echo}")
+    logger.debug("Guess   : #{guess}")
+    logger.debug("Correct : #{correct}")
+    
     
     @correct  = correct
     @feedback = ""  # find a better way to construct the string

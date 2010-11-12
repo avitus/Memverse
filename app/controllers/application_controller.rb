@@ -334,7 +334,24 @@ class ApplicationController < ActionController::Base
     return start_vs_id
    
   end
+
+ 
+  # ----------------------------------------------------------------------------------------------------------
+  # For URL escaping/unescaping
+  #   Input: URL with encoded characters
+  #   Output: string
+  # ----------------------------------------------------------------------------------------------------------     
+  def url_escape(string)
+    string.gsub(/([^ a-zA-Z0-9_.-]+)/n) do
+    '%' + $1.unpack('H2' * $1.size).join('%').upcase
+    end.tr(' ', '+')
+  end
   
+  def url_unescape(string)
+    string.tr('+', ' ').gsub(/((?:%[0-9a-fA-F]{2})+)/n) do
+    [$1.delete('%')].pack('H*')
+    end
+  end  
   
   # ----------------------------------------------------------------------------------------------------------
   # Update starting verse for downstream verses
@@ -370,8 +387,6 @@ class ApplicationController < ActionController::Base
     
     # Look for other translations
     # mem_vs = Memverse.find(:all, :conditions => ["user_id = ?", current_user.id])       
-    
-    
     
     return false
   end
