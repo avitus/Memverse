@@ -10,13 +10,23 @@
 		  		<%= text_area_tag(:verseguess, params[:verseguess] )%>			
 		  	</div>
 		
-		<div id="scoreTestButtons">								
-		  <div align="left"><%= submit_tag t('.b5'),	:class => "submit", :q => 5 %></div>								
-		  <div align="left"><%= submit_tag t('.b4'),	:class => "submit", :q => 4 %></div>	
-		  <div align="left"><%= submit_tag t('.b3'), 	:class => "submit", :q => 3 %></div>	
-		  <div align="left"><%= submit_tag t('.b2'),	:class => "submit", :q => 2 %></div>	
-		  <div align="left"><%= submit_tag t('.b1'), 	:class => "submit", :q => 1 %></div>	
-		</div>			  
+			<div id="scoreTestButtons">								
+				<div align="left"><%= submit_tag t('.b5'),	:class => "submit", :q => 5 %></div>								
+				<div align="left"><%= submit_tag t('.b4'),	:class => "submit", :q => 4 %></div>	
+				<div align="left"><%= submit_tag t('.b3'), 	:class => "submit", :q => 3 %>
+								
+					<div id="ff-button" align="right">
+						<% if @mv.due? %>
+						<img alt="FastForward" border="0" src="images/fast_forward.png" width="48" height="48">
+						<% end %>
+					</div>
+					
+				</div>	
+				<div align="left"><%= submit_tag t('.b2'),	:class => "submit", :q => 2 %></div>	
+				<div align="left"><%= submit_tag t('.b1'), 	:class => "submit", :q => 1 %></div>	  	
+			</div>			
+			  
+		
 		
 		<% end %>	
 </fieldset>	
