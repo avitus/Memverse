@@ -16,9 +16,7 @@
 				<div align="left"><%= submit_tag t('.b3'), 	:class => "submit", :q => 3 %>
 								
 					<div id="ff-button" align="right">
-						<% if @mv.due? %>
 						<img alt="FastForward" border="0" src="images/fast_forward.png" width="48" height="48">
-						<% end %>
 					</div>
 					
 				</div>	
@@ -116,8 +114,8 @@
 
 		$("table#upcoming-verses .upcoming-verse-ref:contains('<%=@mv.verse.ref%>')").remove()				
 			 
-		mv_testing	= "<%= @mv.id %>";
-		mv_verse	= "<%= @mv.verse.text %>";
+		mv_testing		= "<%= @mv.id %>";
+		mv_verse		= "<%= escape_verse(@mv.verse.text) %>";
 		
 		// Load next verse
 		var ondeck = stageverse(false, mv_testing);		
@@ -167,6 +165,15 @@
 				$(".priorVerse").hide()
 			}
 			
+			// == Hide/Show fast forward button
+			if (ondeck.skippable) {
+				$("#ff-button").show();
+			}
+			else {
+				$("#ff-button").hide();
+			}
+				
+			
 			// == Update front of flash card with Mnemonic (if necessary)
 					
 			
@@ -180,8 +187,8 @@
 					}
 										
 					// data for the verse we're now testing
-					mv_testing 	= ondeck.id;
-					mv_verse	= ondeck.txt; 		// Used to generate feedback
+					mv_testing 		= ondeck.id;
+					mv_verse		= ondeck.txt; 		// Used to generate feedback
 					// mv_versenum = ondeck.versenum; // where is this used?
 					
 					

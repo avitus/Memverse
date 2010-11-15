@@ -13,10 +13,11 @@ function stageverse(skip, mv_current) {
 			if (!mv.finished)
 			{					
 				// data for the next verse ...
-				mv.ref 		= data.ref;
-				mv.id		= data.mv_id;	 
-				mv.txt 		= data.next.verse.text;
-				mv.versenum	= data.next.verse.versenum;
+				mv.ref 			= data.ref;
+				mv.id			= data.mv_id;	 
+				mv.txt 			= data.next.verse.text;
+				mv.versenum		= data.next.verse.versenum;
+				mv.skippable	= data.mv_skippable;
 				
 				// ... and its prior verse
 				if(typeof(data.next_prior) !== 'undefined' && data.next_prior != null)

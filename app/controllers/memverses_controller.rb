@@ -925,7 +925,12 @@ class MemversesController < ApplicationController
     end
     
     if @next_mv
-      render :json => { :finished => false, :next => @next_mv.verse, :next_prior => @next_prior_vs, :mv_id => @next_mv.id, :ref => @next_mv.verse.ref }.to_json
+      render :json => { :finished       => false, 
+                        :next           => @next_mv.verse, 
+                        :next_prior     => @next_prior_vs, 
+                        :mv_id          => @next_mv.id, 
+                        :mv_skippable   => !@next_mv.due?, 
+                        :ref            => @next_mv.verse.ref }.to_json
     else
       render :json => { :finished => true }
     end
