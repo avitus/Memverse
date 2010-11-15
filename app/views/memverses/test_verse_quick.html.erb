@@ -15,7 +15,7 @@
 				<div align="left"><%= submit_tag t('.b4'),	:class => "submit", :q => 4 %></div>	
 				<div align="left"><%= submit_tag t('.b3'), 	:class => "submit", :q => 3 %>
 								
-					<div id="ff-button" align="right">
+					<div id="ff-button" align="right" style="display: none" >
 						<img alt="FastForward" border="0" src="images/fast_forward.png" width="48" height="48">
 					</div>
 					
@@ -118,7 +118,9 @@
 		mv_verse		= "<%= escape_verse(@mv.verse.text) %>";
 		
 		// Load next verse
-		var ondeck = stageverse(false, mv_testing);		
+		var ondeck = stageverse(false, mv_testing);	
+		$('#ff-button').toggle(ondeck.skippable);					// Hide/Show fast forward button
+
 			
 		$("#verseguess").observe_field(0.5, function( ) { 
 			$.get("/memverses/feedback", { correct: encodeURIComponent(mv_verse), verseguess: encodeURIComponent(this.value), echo: true  },
@@ -154,6 +156,7 @@
 			$('.quickFlip').quickFlipper( {}, 0 );						// Reset the flashcard 
 			$("#flashcard-back-text #current-text").text(ondeck.txt);	// Update current verse on back of flash card
 			$(".current-versenum").text(ondeck.versenum);
+			$('#ff-button').toggle(ondeck.skippable);					// Hide/Show fast forward button
 								
 			// == Update prior verse and reference	
 			if (typeof(ondeck.priortxt) !== 'undefined' && ondeck.priortxt != null)	{
@@ -164,15 +167,6 @@
 			else {
 				$(".priorVerse").hide()
 			}
-			
-			// == Hide/Show fast forward button
-			if (ondeck.skippable) {
-				$("#ff-button").show();
-			}
-			else {
-				$("#ff-button").hide();
-			}
-				
 			
 			// == Update front of flash card with Mnemonic (if necessary)
 					
