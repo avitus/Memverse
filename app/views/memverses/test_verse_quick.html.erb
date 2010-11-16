@@ -3,7 +3,7 @@
 
 <!-- Question-side : Entry box -->	
 <fieldset id="question-side">
-	<legend class="verse-ref"><%=@mv.verse.ref%> </legend>
+	<legend class="verse-ref"><%=@mv.verse.ref%> [<%=@mv.verse.translation %>]</legend> 
 		<% form_tag :action => 'mark_test_quick' do %>
 			
 			<div id="answerbox">
@@ -15,7 +15,7 @@
 				<div align="left"><%= submit_tag t('.b4'),	:class => "submit", :q => 4 %></div>	
 				<div align="left"><%= submit_tag t('.b3'), 	:class => "submit", :q => 3 %>
 								
-					<div id="ff-button" align="right" style="display: none" >
+					<div id="ff-button" align="right">
 						<img alt="FastForward" border="0" src="images/fast_forward.png" width="48" height="48">
 					</div>
 					
@@ -119,11 +119,11 @@
 		
 		// Load next verse
 		var ondeck = stageverse(false, mv_testing);	
-		$('#ff-button').toggle(ondeck.skippable);					// Hide/Show fast forward button
+		$('#ff-button').toggle(<%= !@mv.due? %>);					// Hide/Show fast forward button
 
 			
 		$("#verseguess").observe_field(0.5, function( ) { 
-			$.get("/memverses/feedback", { correct: encodeURIComponent(mv_verse), verseguess: encodeURIComponent(this.value), echo: true  },
+			$.get("/memverses/feedback", { correct: mv_verse, verseguess: encodeURIComponent(this.value), echo: true  },
 				function(data){	$("#ajaxWrapper").html(data);
 			});	
         });
