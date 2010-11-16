@@ -896,7 +896,7 @@ class MemversesController < ApplicationController
       end
     end
    
-    render :json => {:msg => msg } unless msg
+    render :json => {:msg => msg }
     
     
   end
