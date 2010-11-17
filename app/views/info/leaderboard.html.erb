@@ -23,8 +23,8 @@
 				<td align="center"> <%= @leaderboard.index(user)+1%></td>
 				<td align="center"> <%= user[0].level ? user[0].level : "" %></td>
 				<td align="left">   <%= user[0].name.empty? ? "[" + user[0].login + "]" : user[0].name	%></td>
-				<td align="center"> <%= user[1]				%></td>	
-				<td align="center"> <%= user[0].learning 	%></td>
+				<td align="center"> <%= number_with_delimiter(user[1])				%></td>	
+				<td align="center"> <%= number_with_delimiter(user[0].learning) 	%></td>
         		<td align="center"> <%= user[0].accuracy  %>%</td>
         		<td align="center"> <%= user[0].ref_grade  %>%</td>
 				<td align="left"> 	<%= user[0].church ? link_to(user[0].church.name, { :controller => "profile", :action => "show_church", :church => user[0].church.id }) : "" %></td>

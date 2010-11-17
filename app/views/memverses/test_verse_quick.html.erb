@@ -107,33 +107,44 @@
 
 
 <script language="JavaScript" type="text/javascript"><!--
+
+    // unblock when ajax activity stops 
+    $(document).ajaxStop($.unblockUI);
 		
 	$(document).ready(function() {
+		
+		
+		var ondeck 	= {}
+		var current	= {};
 		
 	    $('.quickFlip').quickFlip();
 
 		$("table#upcoming-verses .upcoming-verse-ref:contains('<%=@mv.verse.ref%>')").remove()				
 			 
-		mv_testing		= "<%= @mv.id %>";
-		mv_verse		= "<%= escape_verse(@mv.verse.text) %>";
+		current.id		= "<%= @mv.id %>";
+		current.txt		= "<%= escape_verse(@mv.verse.text) %>";
 		
 		// Load next verse
-		var ondeck = stageverse(false, mv_testing);	
+		ondeck = stageverse(false, current.id);	
 		$('#ff-button').toggle(<%= !@mv.due? %>);					// Hide/Show fast forward button
 
 			
 		$("#verseguess").observe_field(0.5, function( ) { 
-			$.get("/memverses/feedback", { correct: mv_verse, verseguess: encodeURIComponent(this.value), echo: true  },
+			$.get("/memverses/feedback", { correct: current.txt, verseguess: encodeURIComponent(this.value), echo: true  },
 				function(data){	$("#ajaxWrapper").html(data);
 			});	
         });
-				
+						
 		$('#ff-button').click(function() {
-			alert('User wants to skip verse');
+			$.blockUI({ message: null });
+			current	= stageverse(true, current.id);
+			ondeck	= setTimeout("stageverse(false, current.id)", 4000);	
 		});
 			
 		$('.submit').click( function() {
-			
+						
+			$.blockUI({ message: null }); 						
+						
 			// == Set key press
 			q = $(this).attr("q");
 				
@@ -149,30 +160,11 @@
 			}
 								
 			
-			$(".verse-ref").text(ondeck.ref);							// Update references on testing box					
-			$("#verseguess").val('');									// Clear the input box 
-			$("#verseguess").focus();									// Put cursor in input box
-			$("#ajaxWrapper").text('');									// Clear the feedback 
-			$('.quickFlip').quickFlipper( {}, 0 );						// Reset the flashcard 
-			$("#flashcard-back-text #current-text").text(ondeck.txt);	// Update current verse on back of flash card
-			$(".current-versenum").text(ondeck.versenum);
-			$('#ff-button').toggle(ondeck.skippable);					// Hide/Show fast forward button
-								
-			// == Update prior verse and reference	
-			if (typeof(ondeck.priortxt) !== 'undefined' && ondeck.priortxt != null)	{
-				$(".priorVerse").show()				
-				$(".prior-text").text(ondeck.priortxt);   		
-				$(".prior-versenum").text(ondeck.priornum);				
-			}
-			else {
-				$(".priorVerse").hide()
-			}
-			
-			// == Update front of flash card with Mnemonic (if necessary)
-					
-			
+			// Update page with Ondeck verse
+			success = insertondeck(ondeck);
+
 			// == Score verse
-			$.getJSON("/memverses/mark_test_quick", { mv: mv_testing, q: q  },
+			$.getJSON("/memverses/mark_test_quick", { mv: current.id, q: q  },
 				function(data){
 					if (data.msg) 
 					{
@@ -181,13 +173,13 @@
 					}
 										
 					// data for the verse we're now testing
-					mv_testing 		= ondeck.id;
-					mv_verse		= ondeck.txt; 		// Used to generate feedback
+					current.id 		= ondeck.id;
+					current.txt		= ondeck.txt; 		// Used to generate feedback
 					// mv_versenum = ondeck.versenum; // where is this used?
 					
 					
 					// == Runs only on successful callback from mark test call above
-					ondeck = stageverse(false, mv_testing)	
+					ondeck = stageverse(false, current.id);
 					
 			});	
 			

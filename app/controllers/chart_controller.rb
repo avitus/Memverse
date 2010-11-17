@@ -193,6 +193,7 @@ class ChartController < ApplicationController
       when 24000..31999  then 32000 # Interval per division = 3000      
       when 32000..39999  then 40000 # Interval per division = 3000      
       when 40000..47999  then 48000 # Interval per division = 3000      
+      when 48000..55999  then 56000 # Interval per division = 3000      
       else                     320  # Interval per division =  ?
     end
   end

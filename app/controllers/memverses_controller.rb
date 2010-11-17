@@ -906,7 +906,7 @@ class MemversesController < ApplicationController
   # ---------------------------------------------------------------------------------------------------------- 
   def test_next_verse
     # Default to not skipping verses
-    skip = (params[:skip]==true) || false
+    skip = (params[:skip]=="true") || false
     logger.debug("Skip is set to: #{skip} from parameter: #{params[:skip]}")
     mv   = Memverse.find(params[:mv])
     

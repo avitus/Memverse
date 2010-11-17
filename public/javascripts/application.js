@@ -5,7 +5,7 @@ function stageverse(skip, mv_current) {
 	
 	var mv = {};
 	
-	$.getJSON("/memverses/test_next_verse", { skip: false, mv: mv_current },
+	$.getJSON("/memverses/test_next_verse", { skip: skip, mv: mv_current },
 		function(data){
 				
 			mv.finished	= data.finished;
@@ -30,9 +30,44 @@ function stageverse(skip, mv_current) {
 					mv.priortxt	= null;
 					mv.priornum	= null;
 				}
-			}			
+			}
+			
+			if (skip) { // we need to get this verse loaded asap
+				insertondeck(mv)
+			} 
+								
 	}); // end of getJSON
 	
-	return mv;	
+	return mv;	// putting this in callback function results in null being returned
 };
+
+
+function insertondeck(ondeck) {
+	
+	$(".verse-ref").text(ondeck.ref);							// Update references on testing box					
+	$("#verseguess").val('');									// Clear the input box 
+	$("#verseguess").focus();									// Put cursor in input box
+	$("#ajaxWrapper").text('');									// Clear the feedback 
+	$('.quickFlip').quickFlipper( {}, 0 );						// Reset the flashcard 
+	$("#flashcard-back-text #current-text").text(ondeck.txt);	// Update current verse on back of flash card
+	$(".current-versenum").text(ondeck.versenum);
+	$('#ff-button').toggle(ondeck.skippable);					// Hide/Show fast forward button
+						
+	// == Update prior verse and reference	
+	if (typeof(ondeck.priortxt) !== 'undefined' && ondeck.priortxt != null)	{
+		$(".priorVerse").show()				
+		$(".prior-text").text(ondeck.priortxt);   		
+		$(".prior-versenum").text(ondeck.priornum);				
+	}
+	else {
+		$(".priorVerse").hide()
+	}
+	
+	// == Update front of flash card with Mnemonic (if necessary)	
+	return true
+	
+}
+
+
+
 	
