@@ -95,7 +95,6 @@ class BlogPostsController < ApplicationController
 
   # POST /blog_posts
   # POST /blog_posts.xml
-  # Note: this method never seems to be called
   def create
     @tab = "blog"
 		@blog_post = BlogPost.new(params[:blog_post])
@@ -112,12 +111,17 @@ class BlogPostsController < ApplicationController
   # PUT /blog_posts/1.xml
   def update
     @blog_post = BlogPost.find(params[:id])
+    new_post = @blog_post.title.nil?
 
     if @blog_post.update_attributes(params[:blog_post])
       redirect_to blog_named_link(@blog_post)
-      # Create tweet    
-      link = "<a href=\"#{blog_named_link(@blog_post, :show)}\">#{@blog_post.title}</a>"      
-      Tweet.create(:news => "#{current_user.name_or_login} has written a new blog post: '#{link}'", :user_id => current_user.id, :importance => 3)      
+      # Create tweet
+      spawn do
+        if new_post
+          link = "<a href=\"#{blog_named_link(@blog_post, :show)}\">#{@blog_post.title}</a>"      
+          Tweet.create(:news => "#{current_user.name_or_login} has written a new blog post: '#{link}'", :user_id => current_user.id, :importance => 3)  
+        end
+      end
     else
       render blog_named_link(@blog_post, :edit)
     end

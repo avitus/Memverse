@@ -36,7 +36,7 @@ class BlogCommentsController < ApplicationController
 	
   # Added by ALV
   def recent_comments
-    @newest_comments  = BlogComment.find_all_by_approved(true, :all, :limit => 10, :order => "updated_at DESC")  
+    @newest_comments  = BlogComment.find_all_by_approved(true, :all, :limit => 40, :order => "updated_at DESC")  
   end
   
 	def load_blog_comment 
