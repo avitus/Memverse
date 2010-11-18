@@ -3,11 +3,9 @@ tmp/**/*
 .DS_Store
 doc/api
 doc/app
-config/deploy*
 coverage
 db/*.sqlite3
 *.tmp_*
-config/database.yml
 config/database.yml
 *vendor/gems/*
 *public/system/*
