@@ -116,7 +116,6 @@
 		var ondeck 				= {};
 		var current				= {};
 
-		$.blockUI({ message: null });
 	    $('.quickFlip').quickFlip();
 
 		$("table#upcoming-verses .upcoming-verse-ref:contains('<%=@mv.verse.ref%>')").remove()				
@@ -125,6 +124,7 @@
 		current.text	= "<%= escape_verse(@mv.verse.text) %>";
 		
 		// Load next verse
+		$.blockUI({ message: null });
 		ondeck = stageverses(current.id);	
 		$('#ff-button').toggle(<%= !@mv.due? %>);					// Hide/Show fast forward button
 
@@ -137,18 +137,17 @@
 			
 		// ==== User clicks on fastforward button ====				
 		$('#ff-button').click(function() {
-			$.blockUI({ message: null });
+			
 			success = insertondeck(ondeck.mv_skip, ondeck.mv_prior_skip);	// Update page with ondeck verses
 			current = ondeck.mv_skip										// Update current verse
+			$.blockUI({ message: null });
 			ondeck = stageverses(current.id);								// Get new ondeck verses						
 			return (false);	
 		});
 		
 		// ==== User clicks 1-5 button ====			
 		$('.submit').click( function() {
-						
-			$.blockUI({ message: null }); 						
-						
+						 						
 			// == Set key press
 			q = $(this).attr("q");
 				
@@ -167,6 +166,7 @@
 			success = insertondeck(ondeck.mv, ondeck.mv_prior);
 
 			// == Score verse
+			$.blockUI({ message: null });
 			$.getJSON("/memverses/mark_test_quick", { mv: current.id, q: q  },
 				function(data){
 					if (data.msg) 
