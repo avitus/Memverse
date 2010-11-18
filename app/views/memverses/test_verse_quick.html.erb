@@ -112,35 +112,39 @@
     $(document).ajaxStop($.unblockUI);
 		
 	$(document).ready(function() {
-		
-		
-		var ondeck 	= {}
-		var current	= {};
-		
+			
+		var ondeck 				= {};
+		var current				= {};
+
+		$.blockUI({ message: null });
 	    $('.quickFlip').quickFlip();
 
 		$("table#upcoming-verses .upcoming-verse-ref:contains('<%=@mv.verse.ref%>')").remove()				
 			 
 		current.id		= "<%= @mv.id %>";
-		current.txt		= "<%= escape_verse(@mv.verse.text) %>";
+		current.text	= "<%= escape_verse(@mv.verse.text) %>";
 		
 		// Load next verse
-		ondeck = stageverse(false, current.id);	
+		ondeck = stageverses(current.id);	
 		$('#ff-button').toggle(<%= !@mv.due? %>);					// Hide/Show fast forward button
 
 			
 		$("#verseguess").observe_field(0.5, function( ) { 
-			$.get("/memverses/feedback", { correct: current.txt, verseguess: encodeURIComponent(this.value), echo: true  },
+			$.get("/memverses/feedback", { correct: current.text, verseguess: encodeURIComponent(this.value), echo: true  },
 				function(data){	$("#ajaxWrapper").html(data);
 			});	
         });
-						
+			
+		// ==== User clicks on fastforward button ====				
 		$('#ff-button').click(function() {
 			$.blockUI({ message: null });
-			current	= stageverse(true, current.id);
-			ondeck	= setTimeout("stageverse(false, current.id)", 4000);	
+			success = insertondeck(ondeck.mv_skip, ondeck.mv_prior_skip);	// Update page with ondeck verses
+			current = ondeck.mv_skip										// Update current verse
+			ondeck = stageverses(current.id);								// Get new ondeck verses						
+			return (false);	
 		});
-			
+		
+		// ==== User clicks 1-5 button ====			
 		$('.submit').click( function() {
 						
 			$.blockUI({ message: null }); 						
@@ -158,10 +162,9 @@
 				window.location="./progress";
 				return (false);
 			}
-								
-			
+										
 			// Update page with Ondeck verse
-			success = insertondeck(ondeck);
+			success = insertondeck(ondeck.mv, ondeck.mv_prior);
 
 			// == Score verse
 			$.getJSON("/memverses/mark_test_quick", { mv: current.id, q: q  },
@@ -173,13 +176,10 @@
 					}
 										
 					// data for the verse we're now testing
-					current.id 		= ondeck.id;
-					current.txt		= ondeck.txt; 		// Used to generate feedback
-					// mv_versenum = ondeck.versenum; // where is this used?
-					
-					
+					current 		= ondeck.mv
+										
 					// == Runs only on successful callback from mark test call above
-					ondeck = stageverse(false, current.id);
+					ondeck = stageverses(current.id);
 					
 			});	
 			

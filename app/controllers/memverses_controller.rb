@@ -905,32 +905,21 @@ class MemversesController < ApplicationController
   # Returns the next verse to be tested - this is a service URL for a js routine
   # ---------------------------------------------------------------------------------------------------------- 
   def test_next_verse
-    # Default to not skipping verses
-    skip = (params[:skip]=="true") || false
-    logger.debug("Skip is set to: #{skip} from parameter: #{params[:skip]}")
-    mv   = Memverse.find(params[:mv])
+
+    current_mv      = Memverse.find(params[:mv])
     
-    @next_mv = mv.next_verse_due(skip)
-    
-    if @next_mv
-      logger.debug("=== Loading next memory verse: #{@next_mv.verse.ref}")
-    else
-      logger.debug("=== Loading next memory verse: None found.")
-    end
+    mv              = current_mv.next_verse_due(false)
+    mv_skip         = current_mv.next_verse_due(true)
+
+    prior_mv        = mv && mv.prior_mv
+    prior_mv_skip   = mv_skip && mv_skip.prior_mv
       
-    # --- Load prior verse if available
-    if @next_mv and @next_mv.prev_verse
-      @next_prior_vs = Memverse.find(@next_mv.prev_verse).verse
-      logger.debug(" -- Loading accompanying previous memory verse: #{@next_prior_vs.ref}")
-    end
-    
-    if @next_mv
+    if mv
       render :json => { :finished       => false, 
-                        :next           => @next_mv.verse, 
-                        :next_prior     => @next_prior_vs, 
-                        :mv_id          => @next_mv.id, 
-                        :mv_skippable   => !@next_mv.due?, 
-                        :ref            => @next_mv.verse.ref }.to_json
+                        :mv             => mv, 
+                        :mv_skip        => mv_skip, 
+                        :prior_mv       => prior_mv, 
+                        :prior_mv_skip  => prior_mv_skip }
     else
       render :json => { :finished => true }
     end

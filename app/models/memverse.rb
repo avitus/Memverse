@@ -58,6 +58,18 @@ class Memverse < ActiveRecord::Base
     self.user.save
   end
 
+  # ----------------------------------------------------------------------------------------------------------
+  # Convert to JSON format (for AJAX goodness on main memorization page
+  # ---------------------------------------------------------------------------------------------------------- 
+  def as_json(options={})
+    { 
+      :id         => self.id, 
+      :ref        => self.verse.ref,
+      :text       => self.verse.text,
+      :versenum   => self.verse.versenum,
+      :skippable  => !self.due?
+    }
+  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Implementation of SM-2 algorithm
@@ -412,6 +424,7 @@ class Memverse < ActiveRecord::Base
         
     end
   end
+  
 
   # ----------------------------------------------------------------------------------------------------------
   # Checks whether verse is locked
@@ -559,6 +572,18 @@ class Memverse < ActiveRecord::Base
     else
       return nil
     end 
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Return previous memory verse
+  # ----------------------------------------------------------------------------------------------------------
+  def prior_mv
+    # --- Load prior verse if available
+    if self.prev_verse
+      @next_prior_vs = Memverse.find(self.prev_verse)
+    else
+      return nil
+    end
   end
 
   # ----------------------------------------------------------------------------------------------------------
