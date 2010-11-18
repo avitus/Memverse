@@ -3,6 +3,7 @@ tmp/**/*
 .DS_Store
 doc/api
 doc/app
+config/deploy*
 coverage
 db/*.sqlite3
 *.tmp_*

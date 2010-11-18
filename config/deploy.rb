@@ -1,15 +1,17 @@
-set :user, 'andyvitus'  # Your hosting account's username
-set :domain, 'ps19952.dreamhost.com'  # Hosting servername where your account is located
-set :project, 'Memverse'  # Your application as its called in the repository
-set :application, 'staging.memverse.com'  # Your app's location (domain or subdomain)
-set :applicationdir, "/home/#{user}/#{application}"  # The location of your application on your hosting (may differ for each hosting provider)
+set :user, 'andyvitus'                                # Your hosting account's username
+set :domain, 'memverse.com'                           # Hosting servername where your account is located
+set :project, 'Memverse'                              # Your application as its called in the repository
+set :application, 'staging.memverse.com'              # Your app's location (domain or subdomain)
+set :applicationdir, "/home/#{user}/#{application}"   # The location of your application on your hosting (may differ for each hosting provider)
+
 # version control config
 set :scm, 'git'
+set :scm_passphrase, "veetle77"  # The deploy user's password
 set :repository,  "git@github.com:avitus/Memverse.git" # Your git repository location
-set :deploy_via, :remote_cache
-set :git_enable_submodules, 1 # if you have vendored rails
-set :branch, 'master'
-set :git_shallow_clone, 1
+
+# set :git_enable_submodules, 1 # if you have vendored rails
+set :branch, 'master'  # tell cap the branch to checkout during deployment
+# set :git_shallow_clone, 1
 set :scm_verbose, true
 # roles (servers)
 role :web, domain
@@ -17,11 +19,22 @@ role :app, domain
 role :db,  domain, :primary => true
 # deploy config
 set :deploy_to, applicationdir # deploy to directory set above
-set :deploy_via, :export
+set :deploy_via, :remote_cache # Remote caching will keep a local git repo on the server you’re deploying to and simply run a fetch from that rather than an entire clone. This is probably the best option as it will only fetch the changes since the last.
 # additional settings
-default_run_options[:pty] = true  # Forgo errors when deploying from windows
+default_run_options[:pty] = true  # Forgo errors when deploying from windows, Must be set for the password prompt from git to work
 set :chmod755, "app config db lib public vendor script script/* public/disp*"
 set :use_sudo, false
+
+# If having problems with SSH authentication
+ssh_options[:keys] = %w(/home/avitus/.ssh/id_rsa)
+ssh_options[:paranoid] = false
+# ssh_options[:port] = 22
+default_run_options[:pty] = true 
+# ssh_options[:verbose] = :debug
+
+# f you’re using your own private keys for git you might want to tell Capistrano to use agent forwarding with this command. 
+# Agent forwarding can make key management much simpler as it uses your local keys instead of keys installed on the server.
+# ssh_options[:forward_agent] = true
 
 # Original below this line ---------
 
