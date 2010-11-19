@@ -61,7 +61,7 @@
 	<legend><%= @bk_ch %></legend>	
 	<div id="chapter-text">
 		<% for mv in @chapter %>
-			<span class="verse-text" id="<%=mv.verse.versenum%>">
+			<span class="verse-text" id="<%=mv.verse.versenum%>" mvid="<%=mv.id%>">
 				<span class="superscript"><%= mv.verse.versenum %></span><span><%= mv.verse.text %></span>
 			</span>	
 		<% end %>
@@ -79,9 +79,10 @@
 <!-- Script for updating current verse, clearing input etc -->
 <script language="JavaScript" type="text/javascript">
 	
-	var current_verse = 1
-	var final_verse	  = '<%= @final_verse %>'
-	var current_text  = $("#" + current_verse).html()
+	var current_verse 	= 1
+	var final_verse	  	= '<%= @final_verse %>'
+	var current_text  	= $("#" + current_verse).html()
+	var mv_id			= '<%= @chapter.first.id %>'
 
 	$(document).ready(function() {
 	    $('.quickFlip').quickFlip();
@@ -90,19 +91,30 @@
 		$("#flashcard-back-text > .verse-text:hidden:first").fadeIn(10);	
 		
 		$('.submit').click( function() {
-						
-			// Display the next verse on right
-			$("#chapter-text > .verse-text:hidden:first").fadeIn(2000);
-			$("#chapter-text > .verse-text:hidden:first").fadeIn(2000);
 			
-			// Scroll to bottom of chapter
-			nDiv = document.getElementById('chapter-text');
-			setTimeout("nDiv.scrollTop = nDiv.scrollHeight",1);
+			// == Set key press
+			q = $(this).attr("q");
 			
-			// Score the memory verse -- not yet implemented
+			// Score the memory verse
+			$.getJSON("/memverses/mark_test_quick", { mv: mv_id, q: q  },
+				function(data) {
+					if (data.msg) {
+						// Give user a nice response
+						alert(data.msg);												
+					}
+					
+			});	
+			
 			
 			if (current_verse == final_verse) {
 				
+				// Display the next verse on the right
+				$("#chapter-text > .verse-text:hidden:first").fadeIn(2000);
+				
+				// Scroll to bottom of chapter
+				nDiv = document.getElementById('chapter-text');
+				setTimeout("nDiv.scrollTop = nDiv.scrollHeight",1);
+
 				// Clear the input box and the feedback
 				$("#verseguess").val('');
 				$("#ajaxWrapper").text('');					
@@ -116,7 +128,15 @@
 				
 			}
 			else {
-					
+				
+				// Display the next verse
+				$("#chapter-text > .verse-text:hidden:first").fadeIn(2000);
+				mv_id = $("#chapter-text > .verse-text:hidden:first").attr('mvid')
+				
+				// Scroll to bottom of chapter
+				nDiv = document.getElementById('chapter-text');
+				setTimeout("nDiv.scrollTop = nDiv.scrollHeight",1);
+	
 				// Remove the currently displayed verse and reveal the next verse
 				$("#flashcard-back-text > .verse-text:first").remove();			
 				$("#flashcard-back-text > .verse-text:hidden:first").fadeIn(10);
@@ -125,8 +145,7 @@
 				$("#verseguess").val('');
 				$("#ajaxWrapper").text('');
 				$("#verseguess").focus();
-				
-				
+							
 				// Increment the verse counter, update the labels, and get the new text
 				current_verse++;
 				$(".current_verse").text(current_verse);

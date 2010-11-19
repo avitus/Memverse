@@ -83,37 +83,45 @@ class Memverse < ActiveRecord::Base
   #     n_new         - increment by 1 unless answer was incorrect
   #     efactor_new   - updated efactor
   #     interval_new  - new interval
+  #
+  #   Q  Change in EF
+  #   ~~~~~~~~~~~~~~~~
+  #   0     -0.80
+  #   1     -0.54
+  #   2     -0.32
+  #   3     -0.14
+  #   4     +0.00
+  #   5     +0.10
   # ----------------------------------------------------------------------------------------------------------     
   def supermemo(q)
-    
+        
     prev_learning = (self.status == "Learning")
     
-    if q<3 # answer was incorrect
-      n_new = 1  # Start from the beginning
+    
+    if self.due?
+      if q<3 # answer was incorrect
+        n_new = 1  # Start from the beginning
+      else
+        n_new = self.rep_n + 1 # Go on to next iteration
+      end
+   
+      efactor_new = [ self.efactor - 0.8 + (0.28 * q) - (0.02 * q * q), 2.5 ].min # Cap eFactor at 2.5
+      if efactor_new < 1.2       
+        efactor_new = 1.2 # Set minimum efactor to 1.2
+      end    
+      
+      # Calculate new interval
+      interval_new = case n_new
+        when 1 then 1
+        when 2 then 4
+        else [self.test_interval * efactor_new, self.user.max_interval.to_i].min.round # Don't set interval to more than one year for now
+      end  
     else
-      n_new = self.rep_n + 1 # Go on to next iteration
+      n_new         = self.rep_n
+      interval_new  = self.test_interval
+      efactor_new   = self.efactor
     end
     
-    # Q  Change in EF
-    # ~~~~~~~~~~~~~~~~
-    # 0     -0.80
-    # 1     -0.54
-    # 2     -0.32
-    # 3     -0.14
-    # 4     +0.00
-    # 5     +0.10
- 
-    efactor_new = [ self.efactor - 0.8 + (0.28 * q) - (0.02 * q * q), 2.5 ].min # Cap eFactor at 2.5
-    if efactor_new < 1.2       
-      efactor_new = 1.2 # Set minimum efactor to 1.2
-    end    
-    
-    # Calculate new interval
-    interval_new = case n_new
-      when 1 then 1
-      when 2 then 4
-      else [self.test_interval * efactor_new, self.user.max_interval.to_i].min.round # Don't set interval to more than one year for now
-    end  
     
     # Update memory verse parameters
     self.rep_n          = n_new
