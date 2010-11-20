@@ -61,7 +61,7 @@
 		<!-- Front Panel -->
 	    <div class="quickFlipPanel refPanel">
 	        <p class="verse-ref"><%= @mv.verse.ref %></p>
-			<p class="mnemonic"><%=@mnemonic%></p>
+			<p class="mnemonic"><%= @mv.mnemonic_if_req %></p>
 	        <p class="quickFlipCta"><%= t('.show_verse') %></p>
 	    </div>
 	

@@ -67,7 +67,8 @@ class Memverse < ActiveRecord::Base
       :ref        => self.verse.ref,
       :text       => self.verse.text,
       :versenum   => self.verse.versenum,
-      :skippable  => !self.due?
+      :skippable  => !self.due?,
+      :mnemonic   => self.needs_mnemonic? ? self.verse.mnemonic : nil
     }
   end
 
@@ -474,6 +475,10 @@ class Memverse < ActiveRecord::Base
       when "Always" then true
       when "Learning" then self.test_interval < 7
     end
+  end
+  
+  def mnemonic_if_req
+    self.needs_mnemonic? ? self.verse.mnemonic : "-"
   end
   
   # ----------------------------------------------------------------------------------------------------------
