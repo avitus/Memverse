@@ -333,6 +333,30 @@ class User < ActiveRecord::Base
   end
 
   # ----------------------------------------------------------------------------------------------------------
+  # Save Entry in Progress Table
+  # ----------------------------------------------------------------------------------------------------------
+  def save_progress_report
+    
+    # Check whether there is already an entry for today
+    pr = ProgressReport.find(:first, :conditions => { :user_id => self.id, :entry_date => Date.today} )    
+    
+    if pr.nil?
+    
+      pr = ProgressReport.new
+      
+      pr.user_id          = self.id
+      pr.entry_date       = Date.today
+      pr.memorized        = self.memorized
+      pr.learning         = self.learning
+      pr.time_allocation  = self.work_load
+      
+      pr.save
+      
+    end
+  end
+
+
+  # ----------------------------------------------------------------------------------------------------------
   # Return list of people a user has referred
   # ----------------------------------------------------------------------------------------------------------  
   def referrals( active = false )

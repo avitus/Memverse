@@ -1,6 +1,17 @@
 // Place your application-specific JavaScript functions and classes here
 // This file is automatically included by javascript_include_tag :defaults
 
+
+function log_progress(user_id) {
+	$.ajax( {
+		url: 		'/memverses/save_progress_report',
+		dataType: 	'json',
+		async:		false,
+		data: 		{ user_id: user_id },
+		success: 	function(data) {}
+	});
+}
+
 function stageverses(mv_current) {
 	
 	var finished;
@@ -58,9 +69,6 @@ function insertondeck(ondeck, ondeck_prior) {
 	else {
 		$(".priorVerse").hide()
 	}
-	
-
-	
 	
 	return true
 	
