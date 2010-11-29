@@ -58,6 +58,7 @@ function insertondeck(ondeck, ondeck_prior) {
 	$("#flashcard-back-text #current-text").text(ondeck.text);	// Update current verse on back of flash card
 	$(".current-versenum").text(ondeck.versenum);
 	$('#ff-button').toggle(ondeck.skippable);					// Hide/Show fast forward button
+	$('.mnemonic').text('');									// Clear the mnemonic
 	$('.mnemonic').text(ondeck.mnemonic);						// Update front of flash card with Mnemonic (if necessary)
 
 	// == Update prior verse and reference	
