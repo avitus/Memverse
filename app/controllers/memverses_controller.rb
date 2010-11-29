@@ -783,7 +783,7 @@ class MemversesController < ApplicationController
           mv                = nil # clear out the loaded memory verse
 
           # Update progress report
-          save_progress_report(current_user)
+          current_user.save_progress_report
           
           # Redirect user to a page of statistics and recommendations
           redirect_to :action => 'show_progress'   
@@ -1238,25 +1238,11 @@ class MemversesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   # Save Entry in Progress Table
   # ----------------------------------------------------------------------------------------------------------
-  def save_progress_report(user)
-    
-    # Check whether there is already an entry for today
-    pr = ProgressReport.find( :first, 
-                              :conditions => ["user_id = ? and entry_date = ?", current_user.id, Date.today])    
-    
-    if pr.nil?
-    
-      pr = ProgressReport.new
-      
-      pr.user_id          = user.id
-      pr.entry_date       = Date.today
-      pr.memorized        = user.memorized
-      pr.learning         = user.learning
-      pr.time_allocation  = user.work_load
-      
-      pr.save
-      
-    end
+  def save_progress_report
+    user_id = params[:user_id]
+    u = User.find(user_id)
+    u.save_progress_report unless u.nil?
+    render :json => { :saved => true } # TODO: sloppy, we should check whether it actually was saved
   end
 
   # ----------------------------------------------------------------------------------------------------------

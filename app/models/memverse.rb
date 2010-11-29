@@ -117,7 +117,7 @@ class Memverse < ActiveRecord::Base
         when 2 then 4
         else [self.test_interval * efactor_new, self.user.max_interval.to_i].min.round # Don't set interval to more than one year for now
       end  
-    else
+    else # don't update verses that aren't due
       n_new         = self.rep_n
       interval_new  = self.test_interval
       efactor_new   = self.efactor

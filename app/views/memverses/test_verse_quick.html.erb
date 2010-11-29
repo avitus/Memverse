@@ -115,6 +115,7 @@
 			
 		var ondeck 				= {};
 		var current				= {};
+		var user_id				= "<%= current_user.id %>";		
 
 	    $('.quickFlip').quickFlip();
 
@@ -157,7 +158,7 @@
 				
 			// Check whether we're done for the day
 			if (ondeck.finished) {
-				// TODO: Need to update progress table
+				log_progress(user_id)
 				window.location="./progress";
 				return (false);
 			}
@@ -176,7 +177,7 @@
 					}
 										
 					// data for the verse we're now testing
-					current 		= ondeck.mv
+					current = ondeck.mv
 										
 					// == Runs only on successful callback from mark test call above
 					ondeck = stageverses(current.id);
