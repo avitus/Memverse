@@ -75,7 +75,7 @@
 <script language="JavaScript" type="text/javascript"><!--	
 	$.PeriodicalUpdater('/memverses/memverse_counter', {
 	    method: 'get',          // method; get or post
-	    minTimeout: 10*1000,    // starting value for the timeout in milliseconds
+	    minTimeout: 5*1000,    	// starting value for the timeout in milliseconds
 	    maxTimeout: 30*60*1000, // maximum length of time between requests is 30 mins
 	    multiplier: 2,          // if set to 2, timerInterval will double each time the response hasn't changed (up to maxTimeout)
 	    type: 'json',           // response type - text, xml, json, etc.  See $.ajax config options
@@ -83,6 +83,7 @@
 	    autoStop: 0             // automatically stop requests after this many returns of the same data. 0 = disabled.
 		}, function(data) {
 				// Insert the refreshed data
+				$('#memverse-counter').effect("highlight", {}, 3000);
 				$('#count').replaceWith(data.total_verses);
 		});		
 --></script>
