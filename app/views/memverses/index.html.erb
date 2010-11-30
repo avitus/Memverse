@@ -45,7 +45,7 @@
 	<div id="column-mid">
 		<div id="memverse-counter" class="front-page-segment">
 			<h2>Verses Memorized</h2>
-			<p> <span id="count"></span><span> verses memorized on Memverse.</span></p>
+			<p> <span id="count"></span><%=Memverse.memorized.count%><span> verses memorized on Memverse.</span></p>
 		</div>
 
 		
@@ -72,28 +72,17 @@
 
 <% end %>
 
-<script language="JavaScript" type="text/javascript"><!--
-	$.ajax( {
-		url: 		'/memverses/memverse_counter',
-		dataType: 	'json',
-		success: 	function(data) {
-			// Insert the refreshed data
-			$('#count').text(data.total_verses);
-		} // end of success function
-		
-	});
-		
+<script language="JavaScript" type="text/javascript"><!--	
 	$.PeriodicalUpdater('/memverses/memverse_counter', {
 	    method: 'get',          // method; get or post
-	    minTimeout: 15*1000,    // starting value for the timeout in milliseconds
-	    maxTimeout: 30*60*1000, // maximum length of time between requests is 10 mins
+	    minTimeout: 10*1000,    // starting value for the timeout in milliseconds
+	    maxTimeout: 30*60*1000, // maximum length of time between requests is 30 mins
 	    multiplier: 2,          // if set to 2, timerInterval will double each time the response hasn't changed (up to maxTimeout)
 	    type: 'json',           // response type - text, xml, json, etc.  See $.ajax config options
 	    maxCalls: 0,            // maximum number of calls. 0 = no limit.
 	    autoStop: 0             // automatically stop requests after this many returns of the same data. 0 = disabled.
 		}, function(data) {
 				// Insert the refreshed data
-				$('#count').text(data.total_verses);
-		});	
-	
+				$('#count').replaceWith(data.total_verses);
+		});		
 --></script>
