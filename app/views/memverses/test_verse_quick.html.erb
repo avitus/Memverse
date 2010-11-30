@@ -139,11 +139,19 @@
 		// ==== User clicks on fastforward button ====				
 		$('#ff-button').click(function() {
 			
-			success = insertondeck(ondeck.mv_skip, ondeck.mv_prior_skip);	// Update page with ondeck verses
-			current = ondeck.mv_skip										// Update current verse
-			$.blockUI({ message: null });
-			ondeck = stageverses(current.id);								// Get new ondeck verses						
-			return (false);	
+			// Check whether we're done for the day
+			if (ondeck.finished) {
+				log_progress(user_id)
+				window.location="./progress";
+				return (false);
+			}
+			else {
+				success = insertondeck(ondeck.mv_skip, ondeck.mv_prior_skip);	// Update page with ondeck verses
+				current = ondeck.mv_skip										// Update current verse
+				$.blockUI({ message: null });									// Block UI while new verses are loaded
+				ondeck = stageverses(current.id);								// Get new ondeck verses						
+				return (false);	
+			}			
 		});
 		
 		// ==== User clicks 1-5 button ====			
@@ -157,34 +165,32 @@
 				
 			// Check whether we're done for the day
 			if (ondeck.finished) {
-				log_progress(user_id)
+				$.getJSON("/memverses/mark_test_quick", { mv: current.id, q: q  }, 	// Score verse
+					function(data) {
+						if (data.msg) {
+							alert(data.msg); 										// Give user a nice response												
+						}						
+				});								
+				log_progress(user_id)												// TODO: this will execute before final verse is scored
 				window.location="./progress";
 				return (false);
 			}
+			else {
+				
+				success = insertondeck(ondeck.mv, ondeck.mv_prior);					// Update page with Ondeck verse
+				$.blockUI({ message: null });
+				$.getJSON("/memverses/mark_test_quick", { mv: current.id, q: q  }, 	// Score verse
+					function(data) {
+						if (data.msg) {
+							alert(data.msg); 										// Give user a nice response												
+						}
+						current = ondeck.mv											// data for the verse we're now testing															
+						ondeck = stageverses(current.id);							// Runs only on successful callback from mark test call above
+						
+				});					
+				return (false);	
+			}
 										
-			// Update page with Ondeck verse
-			success = insertondeck(ondeck.mv, ondeck.mv_prior);
-
-			// == Score verse
-			$.blockUI({ message: null });
-			$.getJSON("/memverses/mark_test_quick", { mv: current.id, q: q  },
-				function(data){
-					if (data.msg) 
-					{
-						// Give user a nice response
-						alert(data.msg);												
-					}
-										
-					// data for the verse we're now testing
-					current = ondeck.mv
-										
-					// == Runs only on successful callback from mark test call above
-					ondeck = stageverses(current.id);
-					
-			});	
-			
-			// == Return false
-			return (false);	
 		})	
 		
 	});

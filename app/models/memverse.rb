@@ -508,6 +508,26 @@ class Memverse < ActiveRecord::Base
     position    = all_verses.index(self)
     return all_verses[position-1]
   end  
+
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Find a verse that is due but not this one
+  # ----------------------------------------------------------------------------------------------------------    
+  def another_due_verse
+
+    mv = Memverse.find( :first, :conditions => ["user_id = ? and id != ?", self.user.id, self.id], 
+                        :order => "next_test ASC")            
+          
+          
+    if mv && mv.due? 
+      return mv.first_verse_due_in_sequence
+    else
+      return nil
+    end   
+  
+  end
+
+  
   
   # ----------------------------------------------------------------------------------------------------------
   # Return the next verse that needs to be memorized today [AJAX]
@@ -519,9 +539,9 @@ class Memverse < ActiveRecord::Base
     if self.next_verse && self.more_to_memorize_in_sequence?
       
       if skip
-        # Jump to the next verse that is due in this passage
+        # Jump to the next verse that is due in this passage or if there isn't one just get another verse that is due
         logger.debug("*** Skipping to next verse due in sequence")              
-        return self.next_verse_due_in_sequence
+        return self.next_verse_due_in_sequence || self.another_due_verse
       else
         # Just return the next verse
         logger.debug("*** Returning next verse in sequence")      
@@ -529,21 +549,10 @@ class Memverse < ActiveRecord::Base
       end
     
     else
+    
       logger.debug("*** No more verses in this sequence")
-      
-      # Need to handle case where it's the first verse of the day so verse hasn't been scored yet      
-      mv = Memverse.find( :first, 
-                          :conditions => ["user_id = ? and id != ?", self.user.id, self.id], 
-                          :order      => "next_test ASC")            
-            
-            
-      if mv && mv.due? 
-        return mv.first_verse_due_in_sequence
-      else
-        return nil
-      end      
-      
-      
+      return self.another_due_verse    
+    
     end
     
   end
