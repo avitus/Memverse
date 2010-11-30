@@ -2,6 +2,20 @@
 // This file is automatically included by javascript_include_tag :defaults
 
 
+function update_upcoming(num_verses) {
+	$.ajax( {
+		url: 		'/memverses/upcoming_verses',
+		dataType: 	'json',
+		async:		true,
+		data: 		{ mv: mv_current },
+		success: 	function(data) {
+			// Insert the refreshed data
+			
+		} // end of success function
+		
+	});	
+}
+
 function log_progress(user_id) {
 	$.ajax( {
 		url: 		'/memverses/save_progress_report',

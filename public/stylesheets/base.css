@@ -378,6 +378,12 @@ table.user-list {
 	width:			20%
 }
 
+#memverse_counter {
+	float:			left;
+	width:			100%;
+}
+
+
 /* --- Devotional : Right Column --- */
 #devotional {
 	float:			right;
@@ -390,6 +396,7 @@ table.user-list {
 	width:			100%;
 	height:			15em;
 }
+
 
 #verse-of-the-day #votd-ref {
 	float:			right;
