@@ -164,6 +164,13 @@ class MemversesController < ApplicationController
                       
   end
   
+  # ----------------------------------------------------------------------------------------------------------
+  # AJAX: Memorized verses
+  # ----------------------------------------------------------------------------------------------------------  
+  def memverse_counter
+    total_verses = Memverse.memorized.count
+    render :json => { :total_verses => total_verses }
+  end
  
   # ----------------------------------------------------------------------------------------------------------
   # Starter pack - select verses from top ten verses

@@ -153,8 +153,7 @@
 			q = $(this).attr("q");
 				
 			// == Remove verse from list of upcoming verses
-			// TODO: Need to keep refreshing the upcoming verses box if less than x verses
-			$("table#upcoming-verses .upcoming-verse-ref:contains(" + ondeck.ref + ")").remove()				
+			$("table#upcoming-verses .upcoming-verse-ref:contains(" + ondeck.mv.ref + ")").remove()				
 				
 			// Check whether we're done for the day
 			if (ondeck.finished) {
