@@ -75,6 +75,7 @@ table.user-list {width: 85%; cellpadding: 6px; cellspacing: 1px; border: 1px sol
 #news-feed #post-description {padding-left: 0.5em; font-size: 80% }
 #video-feed {float: left; width: 60%; border-style: none}
  #column-mid {float: left; width: 20% }
+#memverse-counter {float: left; width: 100%}
  #devotional {float: right; width: 40% }
  #verse-of-the-day {float: left; width: 100%; height: 15em}
 #verse-of-the-day #votd-ref {float: right; padding-right: 1em}
