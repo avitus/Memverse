@@ -7,7 +7,7 @@ test:
   <<: *non_production_settings
 
 staging:
-  site_url: http://staging.memverse.com
+  site_url: http://dev2.memverse.com
   site_name: Memverse Staging
   admin_email: admin@memverse.com  
   
