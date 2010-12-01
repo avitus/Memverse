@@ -5,12 +5,11 @@
 function update_upcoming(num_verses) {
 	$.ajax( {
 		url: 		'/memverses/upcoming_verses',
-		dataType: 	'json',
+		dataType: 	'html',
 		async:		true,
-		data: 		{ mv: mv_current },
 		success: 	function(data) {
 			// Insert the refreshed data
-			
+			$("#upcoming-verses").html(data)
 		} // end of success function
 		
 	});	

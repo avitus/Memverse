@@ -148,6 +148,7 @@
 			else {
 				success = insertondeck(ondeck.mv_skip, ondeck.mv_prior_skip);	// Update page with ondeck verses
 				current = ondeck.mv_skip										// Update current verse
+				update_upcoming(12);
 				$.blockUI({ message: null });									// Block UI while new verses are loaded
 				ondeck = stageverses(current.id);								// Get new ondeck verses						
 				return (false);	
@@ -178,6 +179,7 @@
 			else {
 				
 				success = insertondeck(ondeck.mv, ondeck.mv_prior);					// Update page with Ondeck verse
+				update_upcoming(12);
 				$.blockUI({ message: null });
 				$.getJSON("/memverses/mark_test_quick", { mv: current.id, q: q  }, 	// Score verse
 					function(data) {
