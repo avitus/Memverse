@@ -1,10 +1,9 @@
 ##############################################################
 ##	Application
 ##############################################################
-#
-#set :application, "Memverse"
-#set :deploy_to, applicationdir
-#
+
+# set :application, 'memverse.com'              # Your app's location (domain or subdomain)
+
 ##############################################################
 ##	Settings
 ##############################################################
@@ -13,7 +12,7 @@
 #ssh_options[:forward_agent] = true
 #set :use_sudo, true
 #set :scm_verbose, true
-#set :rails_env, "production" 
+# set :rails_env, "production" 
 #
 ##############################################################
 ##	Servers
