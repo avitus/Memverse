@@ -2,11 +2,12 @@
 // This file is automatically included by javascript_include_tag :defaults
 
 
-function update_upcoming(num_verses) {
+function update_upcoming(num_verses, mv_id) {
 	$.ajax( {
 		url: 		'/memverses/upcoming_verses',
 		dataType: 	'html',
 		async:		true,
+		data: 		{ mv_id: mv_id },
 		success: 	function(data) {
 			// Insert the refreshed data
 			$("#upcoming-verses").html(data)
