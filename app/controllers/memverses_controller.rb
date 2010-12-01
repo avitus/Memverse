@@ -1438,7 +1438,9 @@ class MemversesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------  
   def upcoming_verses(limit = 12, mode = "test")
     
-    @upcoming_verses = current_user.upcoming_verses
+    current_mv_id = params[:mv_id]
+    
+    @upcoming_verses = current_user.upcoming_verses(limit, mode, current_mv_id)
     
     respond_to do |format|
       format.html { render :partial=>'upcoming_verses', :layout=>false }

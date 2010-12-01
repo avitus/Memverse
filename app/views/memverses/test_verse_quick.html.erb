@@ -148,7 +148,7 @@
 			else {
 				success = insertondeck(ondeck.mv_skip, ondeck.mv_prior_skip);	// Update page with ondeck verses
 				current = ondeck.mv_skip										// Update current verse
-				update_upcoming(12);
+				update_upcoming(12, ondeck.mv_skip.id);							// Update upcoming verses
 				$.blockUI({ message: null });									// Block UI while new verses are loaded
 				ondeck = stageverses(current.id);								// Get new ondeck verses						
 				return (false);	
@@ -177,9 +177,7 @@
 				return (false);
 			}
 			else {
-				
 				success = insertondeck(ondeck.mv, ondeck.mv_prior);					// Update page with Ondeck verse
-				update_upcoming(12);
 				$.blockUI({ message: null });
 				$.getJSON("/memverses/mark_test_quick", { mv: current.id, q: q  }, 	// Score verse
 					function(data) {
@@ -189,7 +187,8 @@
 						current = ondeck.mv											// data for the verse we're now testing															
 						ondeck = stageverses(current.id);							// Runs only on successful callback from mark test call above
 						
-				});					
+				});	
+				update_upcoming(12, ondeck.mv.id);				
 				return (false);	
 			}
 										

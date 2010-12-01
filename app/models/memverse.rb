@@ -294,8 +294,6 @@ class Memverse < ActiveRecord::Base
   end
 
 
-
-
   # ----------------------------------------------------------------------------------------------------------
   # Is a verse memorized?
   # ----------------------------------------------------------------------------------------------------------    
@@ -329,6 +327,21 @@ class Memverse < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------   
   def due?
     return self.next_test <= Date.today
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Is this verse a prior verse in the same passage
+  # ----------------------------------------------------------------------------------------------------------    
+  def prior_in_passage_to?(mv)
+  
+    passage = self.passage  
+    
+    if passage and passage.index(mv)
+      return passage.index(self) <= passage.index(mv)
+    else
+      return false
+    end
+  
   end
 
 

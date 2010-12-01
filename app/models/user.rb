@@ -486,8 +486,11 @@ class User < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   # Returns upcoming verses that need to be tested today for this user
   # ----------------------------------------------------------------------------------------------------------  
-  def upcoming_verses(limit = 12, mode = "test")
+  def upcoming_verses(limit = 15, mode = "test", mv_id = nil)
+    
     mvs = Memverse.find(:all, :conditions => ["user_id = ? and next_test <= ?", self.id, Date.today], :order => "next_test ASC", :limit => limit)
+    current_mv = Memverse.find(mv_id) unless mv_id.nil?
+    logger.debug("*** Ignoring verses prior to #{current_mv.verse.ref}") unless mv_id.nil?
     
     mvs.collect! { |mv|
     
@@ -513,7 +516,7 @@ class User < ActiveRecord::Base
     # At this point, mvs array contains all the starting verses due today. Now we add the downstream verses
     mvs.each { |mv|
     
-        upcoming << mv
+        upcoming << mv unless mv.prior_in_passage_to?(current_mv)
         
         # Add any subsequent verses in the chain
         next_verse = mv.next_verse
@@ -522,8 +525,8 @@ class User < ActiveRecord::Base
         end
         while (next_verse) and cmv.more_to_memorize_in_sequence?
           cmv         = Memverse.find(next_verse)          
-          upcoming << cmv
-          next_verse = cmv.next_verse
+          upcoming   << cmv unless cmv.prior_in_passage_to?(current_mv)
+          next_verse  = cmv.next_verse
         end     
     }
     
