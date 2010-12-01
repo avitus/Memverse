@@ -2,17 +2,17 @@
 
 	<table class="memverse-standard">
 	  <tr>		  	 
-		  <th><%= link_to 'Verse',		:action => 'show_all_my_verses'										%></th>
+		  <th><%= link_to 'Verse',			:action => 'show_all_my_verses'									%></th>
 		  <th><%= link_to 'Version',		:action => 'show_all_my_verses'									%></th>
 		  <th><%= link_to 'eFactor',		:action => 'show_all_my_verses', :sort_order => 'efactor'		%></th>
 		  <th><%= link_to 'Status', 		:action => 'show_all_my_verses', :sort_order => 'status'		%></th>		  				  	  		  		  		  
 		  <th><%= link_to 'Last Tested',	:action => 'show_all_my_verses', :sort_order => 'last_tested'	%></th>	
-		  <th><%= link_to 'Next Test',	:action => 'show_all_my_verses', :sort_order => 'next_test'			%></th>
-<!--	  <th><%= link_to 'N', 			:action => 'show_all_my_verses', :sort_order => 'rep_n'				%></th> -->
-		  <th><%= link_to 'Interval', 	:action => 'show_all_my_verses', :sort_order => 'test_interval'		%></th>
-		  <th><%= link_to 'Attempts', 	:action => 'show_all_my_verses', :sort_order => 'attempts'			%></th>
-		  <th><%= link_to 'Ref Int', 	:action => 'show_all_my_verses', :sort_order => 'ref_interval'		%></th>		  	  		  
-		  <th><%= link_to 'Ref Test', 	:action => 'show_all_my_verses', :sort_order => 'next_ref_test'		%></th>		  	  		  
+		  <th><%= link_to 'Next Test',		:action => 'show_all_my_verses', :sort_order => 'next_test'		%></th>
+<!--	  <th><%= link_to 'N', 				:action => 'show_all_my_verses', :sort_order => 'rep_n'			%></th> -->
+		  <th><%= link_to 'Interval', 		:action => 'show_all_my_verses', :sort_order => 'test_interval'	%></th>
+		  <th><%= link_to 'Attempts', 		:action => 'show_all_my_verses', :sort_order => 'attempts'		%></th>
+		  <th><%= link_to 'Ref Int', 		:action => 'show_all_my_verses', :sort_order => 'ref_interval'	%></th>		  	  		  
+		  <th><%= link_to 'Ref Test', 		:action => 'show_all_my_verses', :sort_order => 'next_ref_test'	%></th>		  	  		  
 		  <th>Tags</th>
 		  <th>Del</th>
 		  <th>Verse Status</th>
@@ -32,7 +32,7 @@
 	 	<td align="center"><%= mv.next_ref_test			%></td>
 	 	<td align="left">  <%= mv.tag_list.to_s			%></td>
 		<td align="center"><%= link_to '[x]', {:action => 'destroy_mv', :id => mv.id }, 
-								:confirm => 'Are you sure you want to delete this memory verse?', 
+								:confirm => "Are you sure you want to delete #{mv.verse.ref}?", 
 								:method => :post %></td>
 	 	<td align="center" class="flag_verse" id=<%= mv.verse.id %>><%= 			
 			if mv.verified?
