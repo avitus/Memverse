@@ -3,7 +3,6 @@
 # - Add nice, explanatory pop-up boxes using jQuery
 # - Allow for idle verses
 # - Add better verse search - allow for missing search parameters to return, for instance, all translations of a given verse
-# ? Fix link to RSS feed (add nicer link)
 # ? Allow users to enter first letter of each word when memorizing
 # ? Allow for multiple groups
 
@@ -96,6 +95,7 @@
 # 04/06/10 : Added pages showing state/country members, added event feed for churches, states and countries
 # 06/28/10 : New feature: add entire chapters
 # 08/14/10 : New feature: launch of solo progression track
+# 12/01/10 : New feature: QuickMem (now with Javascript)
 
 class MemversesController < ApplicationController
   
@@ -1443,6 +1443,7 @@ class MemversesController < ApplicationController
     respond_to do |format|
       format.html { render :partial=>'upcoming_verses', :layout=>false }
       format.xml  { render :xml => @upcoming_verses }
+      format.json { render :json => @upcoming_verses }
     end
     
   end

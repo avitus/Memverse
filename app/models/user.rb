@@ -506,10 +506,11 @@ class User < ActiveRecord::Base
         end
     }.uniq!  # this handles the case where multiple verses are pointing to a first verse
     # TODO: how should we sort the upcoming verses
+    # TODO: we should convert passages into Gen 1:1-10
 
     upcoming = Array.new
        
-    # At this point, mem_vs array has pointers to all the starting verses due today. Now we add the downstream verses
+    # At this point, mvs array contains all the starting verses due today. Now we add the downstream verses
     mvs.each { |mv|
     
         upcoming << mv
