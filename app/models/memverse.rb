@@ -65,6 +65,7 @@ class Memverse < ActiveRecord::Base
     { 
       :id         => self.id, 
       :ref        => self.verse.ref,
+      :tl         => self.verse.translation,
       :text       => self.verse.text,
       :versenum   => self.verse.versenum,
       :skippable  => !self.due?,
