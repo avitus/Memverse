@@ -3,7 +3,7 @@
 
 <!-- Question-side : Entry box -->	
 <fieldset id="question-side">
-	<legend class="verse-ref"><%=@mv.verse.ref%> [<%=@mv.verse.translation %>]</legend> 
+	<legend><span class="verse-ref"><%=@mv.verse.ref%></span><span class="verse-tl"> [<%=@mv.verse.translation %>]</span></legend> 
 		<% form_tag :action => 'mark_test_quick' do %>
 			
 			<div id="answerbox">

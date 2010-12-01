@@ -64,12 +64,13 @@ function stageverses(mv_current) {
 function insertondeck(ondeck, ondeck_prior) {
 	
 	$(".verse-ref").text(ondeck.ref);							// Update references on testing box					
+	$(".verse-tl").text(' [' + ondeck.tl + ']');				// Update translation on testing box					
 	$("#verseguess").val('');									// Clear the input box 
 	$("#verseguess").focus();									// Put cursor in input box
 	$("#ajaxWrapper").text('');									// Clear the feedback 
 	$('.quickFlip').quickFlipper( {}, 0 );						// Reset the flashcard 
 	$("#flashcard-back-text #current-text").text(ondeck.text);	// Update current verse on back of flash card
-	$(".current-versenum").text(ondeck.versenum);
+	$(".current-versenum").text(ondeck.versenum);				// Update verse number superscript
 	$('#ff-button').toggle(ondeck.skippable);					// Hide/Show fast forward button
 	$('.mnemonic').text('');									// Clear the mnemonic
 	$('.mnemonic').text(ondeck.mnemonic);						// Update front of flash card with Mnemonic (if necessary)
