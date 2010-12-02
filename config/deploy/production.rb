@@ -2,7 +2,10 @@
 ##	Application
 ##############################################################
 
-# set :application, 'memverse.com'              # Your app's location (domain or subdomain)
+set :user, 'andyvitus'
+set :application, 'memverse.com'                              # Your app's location (domain or subdomain)
+set :applicationdir, "/home/#{user}/#{application}"           # The location of your application on your hosting (may differ for each hosting provider)
+set :deploy_to, applicationdir
 
 ##############################################################
 ##	Settings
@@ -12,8 +15,8 @@
 #ssh_options[:forward_agent] = true
 #set :use_sudo, true
 #set :scm_verbose, true
-# set :rails_env, "production" 
-#
+set :rails_env, "production" 
+
 ##############################################################
 ##	Servers
 ##############################################################
