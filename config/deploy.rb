@@ -56,7 +56,7 @@ require File.expand_path("#{File.dirname(__FILE__)}/../vendor/gems/capistrano-ex
 ##############################################################
 ##  Database config and restart
 ##############################################################
-after 'deploy:update_code', 'deploy:symlink_db'
+after 'deploy:update_code', 'deploy:symlink_db', "deploy:set_rails_env"
 
 namespace :deploy do  
   desc "Symlinks the database.yml"                            # Link in the database config
@@ -67,6 +67,16 @@ namespace :deploy do
   desc "Restarting mod_rails with restart.txt"                # Restart passenger on deploy
   task :restart, :roles => :app, :except => { :no_release => true } do
     run "touch #{current_path}/tmp/restart.txt"
+  end  
+  
+  desc "Sets the rails environment variable"
+  task :set_rails_env do                                      # Set the Rails environment variable
+    tmp = "#{deploy_to}/tmp/environment.rb"
+    final = "#{deploy_to}/config/environment.rb"
+    run <<-BASH
+    echo 'RAILS_ENV = "#{rails_env}"' > #{tmp};
+    cat #{final} >> #{tmp} && mv #{tmp} #{final};
+    BASH
   end  
  
 end
