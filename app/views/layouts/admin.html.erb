@@ -25,8 +25,8 @@
 		<%= yield(:head) %>
 				
 		<!-- Using Jquery and Jrails -->
-		<%= javascript_include_merged 	'jquery-1.4', 'jquery-ui', 'jrails', 'jquery.quickflip', 'jquery.hoverIntent', 
-										'2leveltab', 'jquery.jeditable', 'jquery.autocomplete', 'sorttable' %>
+		<%= javascript_include_merged 	'jquery-1.4.3.min', 'jquery-ui-1.8.6.custom.min', 'jrails', 'jquery.quickflip', 'jquery.hoverIntent', 
+										'2leveltab', 'jquery.jeditable', 'jquery.autocomplete', 'sorttable', :cache => 'cache/all' %>
 		
 		<!-- Shortcut Icons -->
 		<link rel="shortcut icon" href="/images/favicon.ico" />
