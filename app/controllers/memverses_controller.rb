@@ -195,7 +195,7 @@ class MemversesController < ApplicationController
   def verse_of_the_day
     
     # Find a popular verse eg: ['Jn 3:16', [['NIV', id] ['ESV', id]]]
-    verse     = popular_verses(50).rand # get 20 most popular verses - pick one at random
+    verse     = popular_verses(100).rand # get 100 most popular verses - pick one at random
       
     # Pick out a translation in user's preferred translation or at random
     verse_ref         = verse[0]     
