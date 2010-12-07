@@ -6,6 +6,8 @@
 # Usage:
 #    mysql -u username -ppassword database_name < ./iso_country_list.sql
 #
+# [ALV] mysql -u [username] -p[password] -hmysql.[domainname].com [database_name] < iso_country_list.sql
+#
 # For updates to this file, see http://27.org/isocountrylist/
 # For more about ISO 3166, see http://www.iso.ch/iso/en/prods-services/iso3166ma/02iso-3166-code-lists/list-en1.html
 #
