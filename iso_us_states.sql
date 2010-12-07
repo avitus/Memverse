@@ -1,3 +1,4 @@
+# [ALV] mysql -u [username] -p[password] -hmysql.[domainname].com [database_name] < iso_country_list.sql
 
 DROP TABLE IF EXISTS american_states;
 
