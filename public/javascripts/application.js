@@ -4,13 +4,13 @@
 
 function update_upcoming(num_verses, mv_id) {
 	$.ajax( {
-		url: 		'/memverses/upcoming_verses',
-		dataType: 	'html',
+		url:		'/memverses/upcoming_verses',
+		dataType:	'html',
 		async:		true,
-		data: 		{ mv_id: mv_id },
-		success: 	function(data) {
+		data:		{ mv_id: mv_id },
+		success:	function(data) {
 			// Insert the refreshed data
-			$("#upcoming-verses").html(data)
+			$("#upcoming-verses").html(data);
 		} // end of success function
 		
 	});	
@@ -18,49 +18,49 @@ function update_upcoming(num_verses, mv_id) {
 
 function log_progress(user_id) {
 	$.ajax( {
-		url: 		'/memverses/save_progress_report',
-		dataType: 	'json',
+		url:		'/memverses/save_progress_report',
+		dataType:	'json',
 		async:		false,
-		data: 		{ user_id: user_id },
-		success: 	function(data) {}
+		data:		{ user_id: user_id },
+		success:	function(data) {}
 	});
 }
 
 function stageverses(mv_current) {
 	
 	var finished;
-	var mv 				= {};
+	var mv				= {};
 	var mv_skip			= {};
 	var mv_prior		= {};
 	var mv_prior_skip	= {};	
 	
 	$.ajax( {
-		url: 		'/memverses/test_next_verse',
-		dataType: 	'json',
+		url:		'/memverses/test_next_verse',
+		dataType:	'json',
 		async:		false,
-		data: 		{ mv: mv_current },
-		success: 	function(data) {
+		data:		{ mv: mv_current },
+		success:	function(data) {
 		
 			finished = data.finished;
 			
 			if (!finished) {
-				mv				= data.mv
-				mv_skip			= data.mv_skip
-				mv_prior		= data.prior_mv
-				mv_prior_skip	= data.prior_mv_skip
+				mv				= data.mv;
+				mv_skip			= data.mv_skip;
+				mv_prior		= data.prior_mv;
+				mv_prior_skip	= data.prior_mv_skip;
 			}
 		} // end of success function
 		
 	});
 	
 	return {
-		finished: 		finished,
+		finished:		finished,
 		mv:				mv,
 		mv_skip:		mv_skip,
 		mv_prior:		mv_prior,
 		mv_prior_skip:	mv_prior_skip	
-	}
-};
+	};
+}
 
 function insertondeck(ondeck, ondeck_prior) {
 	
@@ -77,19 +77,15 @@ function insertondeck(ondeck, ondeck_prior) {
 	$('.mnemonic').text(ondeck.mnemonic);						// Update front of flash card with Mnemonic (if necessary)
 
 	// == Update prior verse and reference	
-	if (typeof(ondeck_prior) !== 'undefined' && ondeck_prior != null)	{
-		$(".priorVerse").show()				
-		$(".prior-text").text(ondeck_prior.text);   		
-		$(".prior-versenum").text(ondeck_prior.versenum);				
+	if (typeof(ondeck_prior) !== 'undefined' && ondeck_prior != null) {
+		$(".priorVerse").show();
+		$(".prior-text").text(ondeck_prior.text);
+		$(".prior-versenum").text(ondeck_prior.versenum);
 	}
 	else {
-		$(".priorVerse").hide()
+		$(".priorVerse").hide();
 	}
 	
-	return true
+	return true;
 	
 }
-
-
-
-	
