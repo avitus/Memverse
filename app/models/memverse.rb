@@ -426,7 +426,7 @@ class Memverse < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------   
   def more_to_memorize_in_sequence?
     
-    slack         =  5 # Add some slack to avoid having to review the entire sequence too soon afterwards
+    slack         =  7 # Add some slack to avoid having to review the entire sequence too soon afterwards
     min_test_freq = self.user.max_interval || 120 # Minimum test frequency in days for entire sequence     
     
     if self.solo_verse? or self.next_verse.nil?
