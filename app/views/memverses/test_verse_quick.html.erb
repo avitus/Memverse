@@ -184,16 +184,15 @@
 						if (data.msg) {
 							alert(data.msg); 										// Give user a nice response												
 						}
+						update_upcoming(12, ondeck.mv.id);							// Update upcoming verses
 						current = ondeck.mv											// data for the verse we're now testing															
 						ondeck = stageverses(current.id);							// Runs only on successful callback from mark test call above
 						
-				});	
-				update_upcoming(12, ondeck.mv.id);				
+				});					
 				return (false);	
 			}
 										
-		})	
-		
+		})			
 	});
 --></script>
 
