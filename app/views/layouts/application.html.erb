@@ -69,7 +69,7 @@
 	</script>		
 	<!-- End of Google Analytics Code  -->
 	
-	<= if @show_toolbar == "true" %>
+	<% if @show_toolbar == "true" %>
 	<!-- Start of Meebo Toolbar  -->
 	<script type="text/javascript">
 		if (typeof Meebo == 'undefined') {
@@ -87,9 +87,9 @@
 		}
 	</script>
 	<!-- End of Meebo Toolbar  -->		
-	<= else %>
+	<% else %>
 	<!-- Toolbar not enabled -->
-	<= end %>
+	<% end %>
 	<div id="container">
 		<div id="auth">
 			<ul>
