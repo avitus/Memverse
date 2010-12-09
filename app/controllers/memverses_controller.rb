@@ -663,10 +663,11 @@ class MemversesController < ApplicationController
     @tab = "home"
     
     # TODO: we need to include a) verse reference and b) verse translation to speed up this page
+    # TODO: can we include a secondary sort order on the canonical verse order? MySQL has no knowledge of verse ordering
     @my_verses = current_user.memverses.all(:include => :verse, :order => params[:sort_order])
 
     if !params[:sort_order]
-      @my_verses.sort!
+      @my_verses.sort!  # default to canonical sort
     end
     
     respond_to do |format| 
