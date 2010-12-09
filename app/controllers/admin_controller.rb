@@ -355,7 +355,8 @@ class AdminController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------   
   def unapproved_comments
     @comments         = BlogComment.find_all_by_approved(false)
-    @newest_comments  = BlogComment.find_all_by_approved(true, :all, :limit => 10, :order => "updated_at DESC")
+    @newest_comments  = BlogComment.find_all_by_approved(true, :all, :limit => 50, :order => "updated_at DESC")
+    # TODO - figure out what to do with comments from deleted blog posts
   end
     
   # ----------------------------------------------------------------------------------------------------------
