@@ -2,7 +2,7 @@ class CountryController < ApplicationController
  
   def show
     @country  = Country.find(params[:id])
-    @users    = @country.users
+    @users    = @country.users.active
   end   
   
 end
