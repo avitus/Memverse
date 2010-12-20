@@ -64,6 +64,7 @@ namespace :deploy do
     run "ln -nfs #{deploy_to}/shared/config/database.yml #{release_path}/config/database.yml"
   end
 
+  # TODO: This doesn't work at the moment ... have to do manually
   desc "Sets the rails environment variable"
   task :set_rails_env do                                      # Set the Rails environment variable
     tmp = "#{current_path}/tmp/environment.rb"
