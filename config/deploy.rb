@@ -80,13 +80,12 @@ namespace :deploy do
     cd #{release_path} && rake asset:packager:build_all
     EOF
   end  
- 
+
   desc "Restarting mod_rails with restart.txt"                # Restart passenger on deploy
   task :restart, :roles => :app, :except => { :no_release => true } do
     run "touch #{current_path}/tmp/restart.txt"
   end   
- 
- 
+  
 end
 
 ##############################################################

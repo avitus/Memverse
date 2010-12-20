@@ -85,7 +85,7 @@ function insertondeck(ondeck, ondeck_prior) {
 	else {
 		$(".priorVerse").hide();
 	}
-	
+
 	return true;
 	
 }
