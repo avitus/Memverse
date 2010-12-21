@@ -69,10 +69,10 @@ namespace :deploy do
   task :set_rails_env do                                      # Set the Rails environment variable
     tmp = "#{current_path}/tmp/environment.rb"
     final = "#{current_path}/config/environment.rb"
-    run <<-BASH
+    run <<-CMD
     echo 'RAILS_ENV = "#{rails_env}"' > #{tmp};
     cat #{final} >> #{tmp} && mv #{tmp} #{final};
-    BASH
+    CMD
   end  
 
   desc "Create asset packages for production" 
