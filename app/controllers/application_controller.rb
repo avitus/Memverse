@@ -162,9 +162,8 @@ class ApplicationController < ActionController::Base
     vs.versenum    = verse.to_i
     if (tl=='ESV')
       vs.text      = Esv.request(book + ' ' + chapter.to_s + ':' + verse.to_s)
-      vs.text      = vs.text.gsub(/-{2,}/, "-")  # replace double-dash with single dash
-      vs.text      = vs.text.gsub(/\s{2,}/, " ").strip # remove extra white space
-      
+      vs.text      = vs.text.gsub(/-{2,}/, " - ")  # replace double-dash with single dash
+      vs.text      = vs.text.gsub(/\s{2,}/, " ").strip # remove extra white space      
       vs.verified  = true
       if vs.text.include?("ERROR")
         logger.info("*** ESV Query returned an error: #{vs.text}")
