@@ -1,11 +1,10 @@
-<SCRIPT LANGUAGE="JavaScript">
-<!-- Begin
-
+<script type="text/javascript">
+<!--
+// Thanks to Dustin for post: http://www.dustindiaz.com/check-one-check-all-javascript/
 function checkAllFields(ref)
 {
 var chkAll = document.getElementById('checkAll');
 var checks = document.getElementsByName('mv[]');
-var removeButton = document.getElementById('removeChecked');
 var boxLength = checks.length;
 var allChecked = false;
 var totalChecked = 0;
@@ -47,11 +46,9 @@ var totalChecked = 0;
 		if ( checks[j].checked == true )
 		totalChecked++;
 	}
-	removeButton.value = "Remove ["+totalChecked+"] Selected";
 }
 
-
-// End -->
+//-->
 </script>
 <div class="verse-list">
 <% form_tag({:action => 'manage_verses'}, :method => :post, :name => "manage_verses") do %>
@@ -75,7 +72,7 @@ var totalChecked = 0;
 	  </tr>
 	<% for mv in @my_verses %>
 	  <tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
-		<td align="center"><%= check_box_tag("mv[]", mv.id, :class=>'mv', :onclick=>"checkAllFields(2);") %></td>
+		<td align="center"><%= check_box_tag("mv[]", mv.id, false, :onclick => "checkAllFields(2);", :class => "boxes") %></td>
 		<td align="left">  <%= link_to mv.verse.ref, {:action => 'show', :id => mv.id } %></td>		 
 		<td align="center"><%= mv.verse.translation		%></td>		
 	 	<td align="center"><%= mv.efactor				%></td>	
