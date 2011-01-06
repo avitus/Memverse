@@ -96,6 +96,7 @@
 # 06/28/10 : New feature: add entire chapters
 # 08/14/10 : New feature: launch of solo progression track
 # 12/01/10 : New feature: QuickMem (now with Javascript)
+# 01/06/11 : New feature: Multi-verse management (delete)
 
 class MemversesController < ApplicationController
   
@@ -1450,6 +1451,76 @@ class MemversesController < ApplicationController
     end
     
   end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Manage verses
+  # ----------------------------------------------------------------------------------------------------------     
+  def manage_verses
+  verses = params[:mv]
+  action = params[:commit]
+  
+   verses.each { |vs| 
+     if action == "Delete"
+              # We need to remove inter-verse linkage
+       dead_mv   = Memverse.find(vs)
+       next_ptr  = dead_mv.next_verse
+       prev_ptr  = dead_mv.prev_verse
+       
+       # If there is a prev verse
+       # => Find previous verse and remove its 'next' ptr
+       if prev_ptr
+         logger.debug("Removing link from previous verse: #{prev_ptr}")
+         
+         # TODO: This find method is necesary rather than .find(prev_ptr) for the case (which shouldn't ever happen)
+         # when the next/prev pointers aren't valid
+         prev_vs = Memverse.find(:first, :conditions => {:id => prev_ptr})
+         if prev_vs
+           prev_vs.next_verse = nil
+           prev_vs.save
+         else
+           # TODO: This is occasionally happening ... caused by verses being duplicated from double-clicking on links
+           logger.warn("*** Alert: A verse was deleted which had an invalid prev pointer - this should never happen")        
+         end
+       
+       end
+       
+       # If there is a next verse
+       # => Find next verse and make it the first verse in the sequence
+       if next_ptr
+         logger.debug("Setting the next verse: #{next_ptr} to be first verse of sequence")
+         next_vs = Memverse.find(:first, :conditions => {:id => next_ptr})
+         if next_vs
+           next_vs.first_verse = nil # Starting verses in a sequence to not reference themselves as the first verse
+           next_vs.prev_verse  = nil
+           next_vs.save
+           # Follow chain and correct first verse
+           update_downstream_start_verses(next_vs)  
+         else
+           logger.warn("*** Alert: A verse was deleted which had an invalid next pointer - this should never happen")        
+         end
+       end
+       
+       # Remove verse from memorization queue
+       mem_queue = session[:mv_queue]
+       
+       # We need to check that there is a verse sequence and also that the array isn't empty
+       if !mem_queue.blank?
+         # Remove verse from the memorization queue if it is sitting in there
+         mem_queue.delete(dead_mv.id)
+       end
+   
+       # Finally, delete the verse
+       dead_mv.destroy  
+   
+     
+	 else
+      redirect_to :action => 'show_all_my_verses'
+     end
+    }
+   
+   redirect_to :action => 'show_all_my_verses'   
+
+  end  
 
   # ----------------------------------------------------------------------------------------------------------
   # Returns array of upcoming (or overdue) memory verses for current user
