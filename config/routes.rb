@@ -45,6 +45,7 @@ ActionController::Routing::Routes.draw do |map|
   map.memory_verse        '/memory_verse/:id',          :controller => 'memverses',   :action => 'show'
   
   map.tag_cloud           '/tag_cloud',                 :controller => 'verses',      :action => 'tag_cloud'
+  map.check_verses        '/check_verses',              :controller => 'verses',      :action => 'check_verses'
   
   map.show_user_info      '/show_user_info',            :controller => 'admin',       :action => 'show_user_info' 
   map.show_tags           '/show_tags',                 :controller => 'admin',       :action => 'show_tags'
