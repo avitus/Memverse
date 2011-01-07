@@ -1454,17 +1454,18 @@ class MemversesController < ApplicationController
 
   # ----------------------------------------------------------------------------------------------------------
   # Manage verses
-  # ----------------------------------------------------------------------------------------------------------     
+  # ----------------------------------------------------------------------------------------------------------
   def manage_verses
   verses = params[:mv]
   action = params[:commit]
   
-   verses.each { |vs| 
+  if !verses.blank?
+   verses.each { |vs|
      if action == "Delete"
               # We need to remove inter-verse linkage
-       dead_mv   = Memverse.find(vs)
-       next_ptr  = dead_mv.next_verse
-       prev_ptr  = dead_mv.prev_verse
+       dead_mv = Memverse.find(vs)
+       next_ptr = dead_mv.next_verse
+       prev_ptr = dead_mv.prev_verse
        
        # If there is a prev verse
        # => Find previous verse and remove its 'next' ptr
@@ -1479,7 +1480,7 @@ class MemversesController < ApplicationController
            prev_vs.save
          else
            # TODO: This is occasionally happening ... caused by verses being duplicated from double-clicking on links
-           logger.warn("*** Alert: A verse was deleted which had an invalid prev pointer - this should never happen")        
+           logger.warn("*** Alert: A verse was deleted which had an invalid prev pointer - this should never happen")
          end
        
        end
@@ -1491,12 +1492,12 @@ class MemversesController < ApplicationController
          next_vs = Memverse.find(:first, :conditions => {:id => next_ptr})
          if next_vs
            next_vs.first_verse = nil # Starting verses in a sequence to not reference themselves as the first verse
-           next_vs.prev_verse  = nil
+           next_vs.prev_verse = nil
            next_vs.save
            # Follow chain and correct first verse
-           update_downstream_start_verses(next_vs)  
+           update_downstream_start_verses(next_vs)
          else
-           logger.warn("*** Alert: A verse was deleted which had an invalid next pointer - this should never happen")        
+           logger.warn("*** Alert: A verse was deleted which had an invalid next pointer - this should never happen")
          end
        end
        
@@ -1510,17 +1511,21 @@ class MemversesController < ApplicationController
        end
    
        # Finally, delete the verse
-       dead_mv.destroy  
+       dead_mv.destroy
    
      
-	 else
+else
       redirect_to :action => 'show_all_my_verses'
      end
     }
    
-   redirect_to :action => 'show_all_my_verses'   
-
-  end  
+   redirect_to :action => 'show_all_my_verses'
+  
+  else
+   flash[:notice] = "Requested action not performed: no verses selected."
+   redirect_to :action => 'show_all_my_verses'
+  end
+  end 
 
   # ----------------------------------------------------------------------------------------------------------
   # Returns array of upcoming (or overdue) memory verses for current user
