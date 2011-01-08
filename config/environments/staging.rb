@@ -1,5 +1,9 @@
 # Settings specified here will take precedence over those in config/environment.rb
+<<<<<<< HEAD
 config.gem 'hoptoad_notifier'
+=======
+
+>>>>>>> 8f874e11923c15cc5e0cde638c1ba033
 # The production environment is meant for finished, "live" apps.
 # Code is not reloaded between requests
 config.cache_classes = true
