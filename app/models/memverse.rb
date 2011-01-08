@@ -35,7 +35,7 @@ class Memverse < ActiveRecord::Base
   named_scope :wisdom,    :include => :verse, :conditions => { 'verses.book_index' => 18..22 }
   named_scope :prophecy,  :include => :verse, :conditions => { 'verses.book_index' => 23..39 } # TODO: include Revelation
   named_scope :gospel,    :include => :verse, :conditions => { 'verses.book_index' => 40..43 }
-  named_scope :epistle,   :include => :verse, :conditions => { 'verses.book_index' => 45..65 }
+  named_scope :epistle,   :include => :verse, :conditions => { 'verses.book_index' => 45..66 } # TODO: switch Revelation to prophecy
     
   # Validations
   validates_presence_of :user_id, :verse_id
