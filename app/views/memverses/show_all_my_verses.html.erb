@@ -52,7 +52,6 @@ var totalChecked = 0;
 </script>
 <div class="verse-list">
 <% form_tag({:action => 'manage_verses'}, :method => :post, :name => "manage_verses") do %>
-<%= submit_tag "Delete", :onclick => "return #{confirm_javascript_function("Are you sure you want to delete selected verse(s)?")}" %>
 	<table class="memverse-standard">
 	  <tr>		  	 
 		  <th><input type="checkbox" onclick="checkAllFields(1);" id="checkAll" /></th>
