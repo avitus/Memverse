@@ -1,7 +1,60 @@
-<div class="verse-list">
+<script type="text/javascript">
+<!--
+// Thanks to Dustin for post: http://www.dustindiaz.com/check-one-check-all-javascript/
+function checkAllFields(ref)
+{
+var chkAll = document.getElementById('checkAll');
+var checks = document.getElementsByName('mv[]');
+var boxLength = checks.length;
+var allChecked = false;
+var totalChecked = 0;
+	if ( ref == 1 )
+	{
+		if ( chkAll.checked == true )
+		{
+			for ( i=0; i < boxLength; i++ )
+			checks[i].checked = true;
+		}
+		else
+		{
+			for ( i=0; i < boxLength; i++ )
+			checks[i].checked = false;
+		}
+	}
+	else
+	{
+		for ( i=0; i < boxLength; i++ )
+		{
+			if ( checks[i].checked == true )
+			{
+			allChecked = true;
+			continue;
+			}
+			else
+			{
+			allChecked = false;
+			break;
+			}
+		}
+		if ( allChecked == true )
+		chkAll.checked = true;
+		else
+		chkAll.checked = false;
+	}
+	for ( j=0; j < boxLength; j++ )
+	{
+		if ( checks[j].checked == true )
+		totalChecked++;
+	}
+}
 
+//-->
+</script>
+<div class="verse-list">
+<% form_tag({:action => 'manage_verses'}, :method => :post, :name => "manage_verses") do %>
 	<table class="memverse-standard">
 	  <tr>		  	 
+		  <th><input type="checkbox" onclick="checkAllFields(1);" id="checkAll" /></th>
 		  <th><%= link_to 'Verse',			:action => 'show_all_my_verses'									%></th>
 		  <th>Version</th>
 		  <th><%= link_to 'eFactor',		:action => 'show_all_my_verses', :sort_order => 'efactor'		%></th>
@@ -14,11 +67,11 @@
 		  <th><%= link_to 'Ref Int', 		:action => 'show_all_my_verses', :sort_order => 'ref_interval'	%></th>		  	  		  
 		  <th><%= link_to 'Ref Test', 		:action => 'show_all_my_verses', :sort_order => 'next_ref_test'	%></th>		  	  		  
 		  <th>Tags</th>
-		  <th>Del</th>
 		  <th>Verse Status</th>
 	  </tr>
 	<% for mv in @my_verses %>
 	  <tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
+		<td align="center"><%= check_box_tag("mv[]", mv.id, false, :onclick => "checkAllFields(2);", :class => "boxes") %></td>
 		<td align="left">  <%= link_to mv.verse.ref, {:action => 'show', :id => mv.id } %></td>		 
 		<td align="center"><%= mv.verse.translation		%></td>		
 	 	<td align="center"><%= mv.efactor				%></td>	
@@ -31,9 +84,6 @@
 	 	<td align="center"><%= mv.ref_interval			%></td>
 	 	<td align="center"><%= mv.next_ref_test			%></td>
 	 	<td align="left">  <%= mv.tag_list.to_s			%></td>
-		<td align="center"><%= link_to '[x]', {:action => 'destroy_mv', :id => mv.id }, 
-								:confirm => "Are you sure you want to delete #{mv.verse.ref}?", 
-								:method => :post %></td>
 	 	<td align="center" class="flag_verse" id=<%= mv.verse.id %>><%= 			
 			if mv.verified?
 				link_to_remote mv.verse.error_flag ? "Error Reported" : "Verified", 
@@ -49,6 +99,8 @@
 	<% end %>
 
 	</table>
+	<%= submit_tag "Delete", :onclick => "return #{confirm_javascript_function("Are you sure you want to delete selected verse(s)?")}" %>
+<% end %>
 
 </div>
 

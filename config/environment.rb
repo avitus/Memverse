@@ -5,7 +5,11 @@
 ENV['RAILS_ENV'] ||= 'production'
 
 # Use this to force Rails into staging mode ... should be commented out in production.
+<<<<<<< HEAD
 #RAILS_ENV = 'staging'  
+=======
+RAILS_ENV = 'staging'  
+>>>>>>> 2f6d8d5e3506f692b34581cf6b345041fea6b8a4
 
 # Set path to add local gems on Dreamhost
 ENV['GEM_PATH'] = '/home/andyvitus/.gems:/usr/lib/ruby/gems/1.8'

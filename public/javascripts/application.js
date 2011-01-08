@@ -85,7 +85,11 @@ function insertondeck(ondeck, ondeck_prior) {
 	else {
 		$(".priorVerse").hide();
 	}
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> 2f6d8d5e3506f692b34581cf6b345041fea6b8a4
 	return true;
 	
 }
