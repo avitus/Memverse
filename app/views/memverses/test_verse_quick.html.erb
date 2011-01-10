@@ -132,8 +132,9 @@
 			
 		$("#verseguess").observe_field(0.5, function( ) { 
 			$.get("/memverses/feedback", { correct: current.text, verseguess: encodeURIComponent(this.value), echo: true  },
-				function(data){	$("#ajaxWrapper").html(data);
-			});	
+				function(data){	
+					$("#ajaxWrapper").html(data);
+			});
         });
 			
 		// ==== User clicks on fastforward button ====				
@@ -186,12 +187,7 @@
 						}
 						update_upcoming(12, ondeck.mv.id);							// Update upcoming verses
 						current = ondeck.mv											// data for the verse we're now testing															
-<<<<<<< HEAD
 						ondeck = stageverses(current.id);							// Runs only on successful callback from mark test call above					
-=======
-						ondeck = stageverses(current.id);							// Runs only on successful callback from mark test call above
-						
->>>>>>> 2f6d8d5e3506f692b34581cf6b345041fea6b8a4
 				});					
 				return (false);	
 			}
