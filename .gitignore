@@ -1,0 +1,15 @@
+log/*.log
+tmp/**/*
+.DS_Store
+doc/api
+doc/app
+coverage
+db/*.sqlite3
+*.tmp_*
+config/database.yml
+*vendor/gems/*
+*public/system/*
+mkmf.log
+/config/initializers/site_keys.rb
+memverse
+memverse.pub
