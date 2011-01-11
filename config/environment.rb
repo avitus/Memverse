@@ -2,7 +2,7 @@
 
 # Use this to force Rails into staging mode 
 # *** Comment out in production and in development ***
-# RAILS_ENV = 'staging'
+RAILS_ENV = 'staging'
 
 # Uncomment below to force Rails into production mode when
 # you don't control web/app server and can't set it the proper way
