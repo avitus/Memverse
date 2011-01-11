@@ -1,55 +1,3 @@
-<script type="text/javascript">
-<!--
-// Thanks to Dustin for post: http://www.dustindiaz.com/check-one-check-all-javascript/
-function checkAllFields(ref)
-{
-var chkAll = document.getElementById('checkAll');
-var checks = document.getElementsByName('mv[]');
-var boxLength = checks.length;
-var allChecked = false;
-var totalChecked = 0;
-	if ( ref == 1 )
-	{
-		if ( chkAll.checked == true )
-		{
-			for ( i=0; i < boxLength; i++ )
-			checks[i].checked = true;
-		}
-		else
-		{
-			for ( i=0; i < boxLength; i++ )
-			checks[i].checked = false;
-		}
-	}
-	else
-	{
-		for ( i=0; i < boxLength; i++ )
-		{
-			if ( checks[i].checked == true )
-			{
-			allChecked = true;
-			continue;
-			}
-			else
-			{
-			allChecked = false;
-			break;
-			}
-		}
-		if ( allChecked == true )
-		chkAll.checked = true;
-		else
-		chkAll.checked = false;
-	}
-	for ( j=0; j < boxLength; j++ )
-	{
-		if ( checks[j].checked == true )
-		totalChecked++;
-	}
-}
-
-//-->
-</script>
 <div class="verse-list">
 <% form_tag({:action => 'manage_verses'}, :method => :post, :name => "manage_verses") do %>
 	<table class="memverse-standard">
@@ -69,37 +17,41 @@ var totalChecked = 0;
 		  <th>Tags</th>
 		  <th>Verse Status</th>
 	  </tr>
-	<% for mv in @my_verses %>
-	  <tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
-		<td align="center"><%= check_box_tag("mv[]", mv.id, false, :onclick => "checkAllFields(2);", :class => "boxes") %></td>
-		<td align="left">  <%= link_to mv.verse.ref, {:action => 'show', :id => mv.id } %></td>		 
-		<td align="center"><%= mv.verse.translation		%></td>		
-	 	<td align="center"><%= mv.efactor				%></td>	
-	 	<td align="center"><%= mv.status				%></td>			
-	 	<td align="center"><%= mv.last_tested			%></td>
-	 	<td align="center"><%= mv.next_test				%></td>	
-<!-- 	<td align="center"><%= mv.rep_n					%></td>	-->		
-	 	<td align="center"><%= mv.test_interval			%></td>	
-		<td align="center"><%= mv.attempts				%></td>
-	 	<td align="center"><%= mv.ref_interval			%></td>
-	 	<td align="center"><%= mv.next_ref_test			%></td>
-	 	<td align="left">  <%= mv.tag_list.to_s			%></td>
-	 	<td align="center" class="flag_verse" id=<%= mv.verse.id %>><%= 			
-			if mv.verified?
-				link_to_remote mv.verse.error_flag ? "Error Reported" : "Verified", 
-								:url 		=> { :action => "toggle_verse_flag", :id => mv.verse.id },
-								:update 	=> mv.verse.id
-			elsif !mv.locked?
-				link_to '[Editable]', :action => 'edit_verse', :mv_id => mv.id
-			else
-				'Pending Verification'
-			end
-		%></td>
-	  </tr>
-	<% end %>
+		<% for mv in @my_verses %>
+		  <tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
+			<td align="center"><%= check_box_tag("mv[]", mv.id, false, :onclick => "checkAllFields(2);", :class => "boxes") %></td>
+			<td align="left">  <%= link_to mv.verse.ref, {:action => 'show', :id => mv.id } %></td>		 
+			<td align="center"><%= mv.verse.translation		%></td>		
+		 	<td align="center"><%= mv.efactor				%></td>	
+		 	<td align="center"><%= mv.status				%></td>			
+		 	<td align="center"><%= mv.last_tested			%></td>
+		 	<td align="center"><%= mv.next_test				%></td>	
+	<!-- 	<td align="center"><%= mv.rep_n					%></td>	-->		
+		 	<td align="center"><%= mv.test_interval			%></td>	
+			<td align="center"><%= mv.attempts				%></td>
+		 	<td align="center"><%= mv.ref_interval			%></td>
+		 	<td align="center"><%= mv.next_ref_test			%></td>
+		 	<td align="left">  <%= mv.tag_list.to_s			%></td>
+		 	<td align="center" class="flag_verse" id=<%= mv.verse.id %>><%= 			
+				if mv.verified?
+					link_to_remote mv.verse.error_flag ? "Error Reported" : "Verified", 
+									:url 		=> { :action => "toggle_verse_flag", :id => mv.verse.id },
+									:update 	=> mv.verse.id
+				elsif !mv.locked?
+					link_to '[Editable]', :action => 'edit_verse', :mv_id => mv.id
+				else
+					'Pending Verification'
+				end
+			%></td>
+		  </tr>
+		<% end %>
 
 	</table>
+	
+	<br>
+	
 	<%= submit_tag "Delete", :onclick => "return #{confirm_javascript_function("Are you sure you want to delete selected verse(s)?")}" %>
+	
 <% end %>
 
 </div>
@@ -116,6 +68,5 @@ var totalChecked = 0;
     $('.flag_verse').click(function () { 
       $(this).closest('tr').toggleClass("hilite"); 
     });
-
   });
 </script>

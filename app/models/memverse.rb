@@ -175,6 +175,67 @@ class Memverse < ActiveRecord::Base
   end
 
   # ----------------------------------------------------------------------------------------------------------
+  # Remove a memory verse (delete a memory verse)
+  # ---------------------------------------------------------------------------------------------------------- 
+  def remove_mv
+    next_ptr  = self.next_verse
+    prev_ptr  = self.prev_verse
+     
+    # If there is a prev verse
+    # => Find previous verse and remove its 'next' ptr
+    if prev_ptr
+      logger.debug("Removing link from previous verse: #{prev_ptr}")
+      
+      # TODO: This find method is necesary rather than .find(prev_ptr) for the case (which shouldn't ever happen)
+      # when the next/prev pointers aren't valid
+      prev_vs = Memverse.find(:first, :conditions => {:id => prev_ptr})
+      if prev_vs
+        prev_vs.next_verse = nil
+        prev_vs.save
+      else
+        # TODO: This is occasionally happening ... caused by verses being duplicated from double-clicking on links
+        logger.warn("*** Alert: A verse was deleted which had an invalid prev pointer - this should never happen")        
+      end
+    
+    end
+    
+    # If there is a next verse
+    # => Find next verse and make it the first verse in the sequence
+    if next_ptr
+      logger.debug("Setting the next verse: #{next_ptr} to be first verse of sequence")
+      next_vs = Memverse.find(:first, :conditions => {:id => next_ptr})
+      if next_vs
+        next_vs.first_verse = nil # Starting verses in a sequence to not reference themselves as the first verse
+        next_vs.prev_verse  = nil
+        next_vs.save
+        # Follow chain and correct first verse
+        next_vs.update_downstream_start_verses  
+      else
+        logger.warn("*** Alert: A verse was deleted which had an invalid next pointer - this should never happen")        
+      end
+    end
+    
+    self.destroy
+    
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Update the starting verse for downstream verses -- mostly used when a verse is deleted
+  # ---------------------------------------------------------------------------------------------------------- 
+  def update_downstream_start_verses
+    # If mv is pointing to a start verse, use that as the first verse, otherwise set mv as the first verse
+    new_starting_verse = self.first_verse || self.id # || returns first operator that satisfies condition
+   
+    mv = self
+   
+    while mv.next_verse
+      mv = Memverse.find(mv.next_verse)
+      mv.first_verse = new_starting_verse
+      mv.save
+    end    
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
   # Check for users with duplicates TODO: Is this method ever used?
   # ----------------------------------------------------------------------------------------------------------  
   def self.check_for_duplicates
