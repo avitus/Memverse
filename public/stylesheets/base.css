@@ -89,6 +89,11 @@ img {
 	background: yellow;
 }
 
+.instructions {
+	background: #687284;
+	padding: 0.3em 1em 0.3em 1em;
+}
+
 table.memverse-standard {
 	border-width: 1px;
 	border-spacing: 1px;
