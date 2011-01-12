@@ -32,7 +32,8 @@
 	<link rel="alternate" type="application/rss+xml" title="Memverse Blog" href="http://feeds.feedburner.com/MemverseBlog" />
 
 	<!-- Main Stylesheet -->
-	<%= stylesheet_link_merged 'base', :cache => 'cache/all' %>
+	<%= stylesheet_link_tag 'base', :cache => 'cache/all' %>
+	<!-- <%= stylesheet_link_merged 'base', :cache => 'cache/all' %> -->
 	<%= stylesheet_link_tag 'mobile' if mobile_device? %>
 		
 	<!-- Auxiliary stylesheets, etc -->
@@ -175,7 +176,7 @@
 			<% end %> <!-- if logged_in? -->
 			
 			<%= flash_messages %>
-			<%= yield(:content) or yield %>
+			<%= content_for?(:content) ? yield(:content) : yield %>
 			<div id="meebo-toolbar">
 				<!-- no content -->
 			</div>

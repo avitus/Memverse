@@ -68,10 +68,10 @@ class User < ActiveRecord::Base
   has_many :blog_comments
   
   # Named Scopes
-  named_scope :active,            lambda { {:conditions => ['last_activity_date >= ?', 1.month.ago ]} }
-  named_scope :active_today,      lambda { {:conditions => ['last_activity_date = ?',  Date.today  ]} }
-  named_scope :active_this_week,  lambda { {:conditions => ['last_activity_date >= ?', 1.week.ago  ]} }  
-  named_scope :american,          :include => :country, :conditions => { 'countries.printable_name' => 'United States' }
+  scope :active,            lambda { where('last_activity_date >= ?', 1.month.ago) }
+  scope :active_today,      lambda { where('last_activity_date = ?',  Date.today) }
+  scope :active_this_week,  lambda { where('last_activity_date >= ?', 1.week.ago) }  
+  scope :american, where('countries.printable_name' => 'United States').includes(:country)
 
   # HACK HACK HACK -- how to do attr_accessible from here?
   # prevents a user from submitting a crafted form that bypasses activation

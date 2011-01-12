@@ -24,7 +24,7 @@
 
 
 <div class="entry-form" id="login-page-form">
-	<% form_tag session_path do %>
+	<%= form_tag session_path do %>
 		<fieldset>
 			<legend>Login</legend>
 			<ol>
@@ -60,12 +60,12 @@
 		</fieldset>
 -->
 		
-	<br>
-
-	<div class="buttons">
-		<%= submit_tag 'Login' %>
-		<%= link_to '[Forgot Password?]', forgot_password_path, :class => "inline-footnote"%>
-	</div>	
+		<br>
+	
+		<div class="buttons">
+			<%= submit_tag 'Login' %>
+			<%= link_to '[Forgot Password?]', forgot_password_path, :class => "inline-footnote"%>
+		</div>	
 			
 	<% end -%>
 </div>
