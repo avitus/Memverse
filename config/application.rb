@@ -6,7 +6,7 @@ require 'rails/all'
 # you've limited to :test, :development, or :production.
 Bundler.require(:default, Rails.env) if defined?(Bundler)
 
-module Memverse
+module MemverseApp
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
@@ -37,11 +37,11 @@ module Memverse
     # Your secret key for verifying cookie session data integrity.
     # If you change this key, all old sessions will become invalid!
     # Make sure the secret is at least 30 characters and all random, 
-    # no regular words or you'll be exposed to dictionary attacks.
-    config.action_controller.session = {
-      :session_key => '_bort_session',
-      :secret      => 'a3e2a51a371bb964a4250c21f8d083f9ddb224d455171dcba55518e74af43366e52e3f239773f90aed0ab6caf6554f051504ce7232599d066150dbabff0f1654'
-    }
+    # no regular words or you'll be exposed to dictionary attacks. 
+    # TODO: the key should be stored somewhere else and not checked into github  
+    config.session_store(
+      :session_key => '_Memverse_session', 
+      :secret => 'a3e2a51a371bb964a4250c21f8d083f9ddb224d455171dcba55518e74af43366e52e3f239773f90aed0ab6caf6554f051504ce7232599d066150dbabff0f1654')
 
     # JavaScript files you want as :defaults (application.js is always included).
     # config.action_view.javascript_expansions[:defaults] = %w(jquery rails)

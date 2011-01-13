@@ -13,9 +13,10 @@ class Verse < ActiveRecord::Base
 
   acts_as_taggable # Alias for 'acts_as_taggable_on :tags'
 
-  require 'cgi'  
-  require 'open-uri'
-  require 'nokogiri'
+#  Rails 2
+#  require 'cgi'  
+#  require 'open-uri'
+#  require 'nokogiri'
 
   before_destroy :delete_memverses
   

@@ -8,7 +8,7 @@ gem 'will_paginate', '>=3.0.pre'						# :source => 'http://gemcutter.org', will_
 gem 'prawn', :git => "git://github.com/sandal/prawn", :tag => '0.10.2', :submodules => true
 # gem 'prawn-core', :require => 'prawn/core'
 # gem 'prawn-layout', :require => 'prawn/layout'		# Sounds as though this gem will be obsolete once Prawn 0.7 is released
-gem 'acts-as-taggable-on', '2.0.0.rc1'					# :source => "http://gemcutter.org", Taggable gem, 
+gem 'acts-as-taggable-on'								# :source => "http://gemcutter.org", Taggable gem, 
 gem 'hoptoad_notifier'									# Error tracking
 gem 'paperclip'											# :source => 'http://rubygems.org', Attachment handling 
 gem 'capistrano'										# Deploy with Capistrano
@@ -18,8 +18,8 @@ gem 'color'												# Required for Ziya
 gem 'logging'											# Required for Ziya
 gem 'builder'											# Required for Ziya
 gem 'jrails'											# jQuery drop-in replacement for Prototype/Scriptaulous
-gem 'mysql2'
-
+gem 'mysql2'											# This be the db
+gem 'nokogiri'											# HTML/XML parsing
 
 # To use debugger (ruby-debug for Ruby 1.8.7+, ruby-debug19 for Ruby 1.9.2+)
 # gem 'ruby-debug'

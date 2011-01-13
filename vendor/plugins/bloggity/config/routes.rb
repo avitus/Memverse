@@ -1,4 +1,4 @@
-Memverse::Application.routes.draw do |map|
+MemverseApp::Application.routes.draw do |map|
   map.resources :blogs, :member => { :feed => :get } do |blogs|
 		blogs.resources :blog_posts, :collection => { :create_asset => :post, :pending => :get }, :member => { :close => :get }
 	end

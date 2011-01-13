@@ -64,6 +64,7 @@ module Bloggity::BloggityApplication
 	end
 		
   def get_bloggity_page_name
+    logger.debug("Looking up page name for controller: #{params[:controller]} and action: #{params[:method]}")
   	@page_name = look_up_page_name(params[:controller], params[:action])
   end
   

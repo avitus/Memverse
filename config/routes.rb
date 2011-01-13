@@ -1,4 +1,4 @@
-Memverse::Application.routes.draw do
+MemverseApp::Application.routes.draw do
  
   # Restful Authentication Rewrites
   
@@ -32,17 +32,17 @@ Memverse::Application.routes.draw do
   match '/mark_test',             :to => 'memverses#mark_test',             :as => 'mark_test'
   match '/mark_test_quick',       :to => 'memverses#mark_test_quick',       :as => 'mark_test_quick'
   match '/test_ref',              :to => 'memverses#test_ref',              :as => 'test_ref'
-  match '/start_ref_test',        :to => 'memverses#load_test_ref',         :as => 'load_test_ref'
+  match '/start_ref_test',        :to => 'memverses#load_test_ref',         :as => 'start_ref_test'
   match '/exam',                  :to => 'memverses#load_exam',             :as => 'load_exam'
-  match '/pre_exam',              :to => 'memverses#explain_exam',          :as => 'explain_exam'
-  match '/pre_chapter',           :to => 'memverses#chapter_explanation',   :as => 'chapter_explanation'
+  match '/pre_exam',              :to => 'memverses#explain_exam',          :as => 'pre_exam'
+  match '/pre_chapter',           :to => 'memverses#chapter_explanation',   :as => 'pre_chapter'
   match '/drill_verse',           :to => 'memverses#drill_verse',           :as => 'drill_verse'
   match '/mark_test',             :to => 'memverses#mark_test',             :as => 'mark_test'
   match '/mark_drill',            :to => 'memverses#mark_drill',            :as => 'mark_drill'
   match '/show_all_my_verses',    :to => 'memverses#show_all_my_verses',    :as => 'show_all_my_verses'
   match '/user_stats',            :to => 'memverses#user_stats',            :as => 'user_stats'
-  match '/progress',              :to => 'memverses#show_progress',         :as => 'show_progress'
-  match '/popular_verses',        :to => 'memverses#pop_verses',            :as => 'pop_verses'
+  match '/progress',              :to => 'memverses#show_progress',         :as => 'progress'
+  match '/popular_verses',        :to => 'memverses#pop_verses',            :as => 'popular_verses'
   match '/home',                  :to => 'memverses#index',                 :as => 'index'
   match '/starter_pack',          :to => 'memverses#starter_pack',          :as => 'starter_pack'
   match '/memory_verse/:id',      :to => 'memverses#show',                  :as => 'memory_verse'
@@ -71,7 +71,7 @@ Memverse::Application.routes.draw do
   match '/news',                  :to => 'info#news',                       :as => 'news'
  
   match '/update_profile',        :to => 'profile#update_profile',          :as => 'update_profile'
-  match '/church',                :to => 'profile#show_church',             :as => 'show_church'
+  match '/church',                :to => 'profile#show_church',             :as => 'church'
   match '/referrals/:id',         :to => 'profile#referrals',               :as => 'referrals'
   match '/unsubscribe/*email',    :to => 'profile#unsubscribe',             :as => 'unsubscribe'
   
@@ -85,7 +85,7 @@ Memverse::Application.routes.draw do
   
   # Blog routes
   # map.blog                '/blog',                      :controller => 'blog_posts',    :action => 'index'
-  match '/.blog_comments_new',    :to => 'blog_comments#recent_comments',   :as => 'recent_comments'
+  match '/.blog_comments_new',    :to => 'blog_comments#recent_comments',   :as => 'blog_comments_new'
   
   
   # Routes for Ziya graphs
