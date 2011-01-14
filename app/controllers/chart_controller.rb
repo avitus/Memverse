@@ -9,11 +9,10 @@ class ChartController < ApplicationController
 
   before_filter :login_required, :except => :load_memverse_clock
 
-  helper Ziya::HtmlHelpers::Charts
-  helper Ziya::YamlHelpers::Charts
+  respond_to :html, :xml
+#  layout nil
 
-  respond_to :xml
-
+  helper Ziya::HtmlHelpers::Charts, Ziya::YamlHelpers::Charts
 
   # Callback from the flash movie to get the chart's data
   # Uses line_chart.yml for style
@@ -166,7 +165,20 @@ class ChartController < ApplicationController
     @chart.add( :theme , "memverse" )  
     
     logger.debug("*** chart data #{@chart}")
-    respond_with @chart
+#    respond_with(@chart, :location => load_memverse_clock_url, :layout => false)
+
+#    respond_with @chart do |format|
+#      format.xml { render :layout => false }
+#    end
+
+    respond_to do |fmt|
+      fmt.xml { render :xml => chart.to_xml, :layout => false }
+    end
+
+
+#    respond_to do |fmt|
+#      fmt.xml { render :xml => @chart.to_xml }
+#    end
   
   end # load_memverse_clock
   

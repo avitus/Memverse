@@ -13,7 +13,7 @@ gem 'hoptoad_notifier'									# Error tracking
 gem 'paperclip'											# :source => 'http://rubygems.org', Attachment handling 
 gem 'capistrano'										# Deploy with Capistrano
 gem 'ruby-openid'
-gem 'ziya', '2.3.0'										# Required for flash charts
+gem 'ziya', '>=2.3.0'									# Required for flash charts
 gem 'color'												# Required for Ziya
 gem 'logging'											# Required for Ziya
 gem 'builder'											# Required for Ziya
