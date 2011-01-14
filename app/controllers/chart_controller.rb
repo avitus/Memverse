@@ -7,6 +7,8 @@ end
 
 class ChartController < ApplicationController
 
+  respond_to :xml
+
   before_filter :login_required, :except => :load_memverse_clock
 
   helper Ziya::HtmlHelpers::Charts
@@ -165,7 +167,7 @@ class ChartController < ApplicationController
     respond_to do |fmt|
       fmt.xml { render :xml => chart.to_xml }
     end
-
+  
   end # load_memverse_clock
   
   # ----------------------------------------------------------------------------------------------------------

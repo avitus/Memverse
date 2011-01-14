@@ -8,6 +8,7 @@ class BlogPostsController < ApplicationController
   def index
     
     @tab = "blog"
+    logger.debug("*** Looking for blog with page number: #{params[:page]}")
 		blog_page = params[:page] || 1
     @recent_posts = recent_posts(blog_page)
 		@blog_posts = if(params[:tag_name] || params[:category_id])

@@ -63,8 +63,9 @@ module Bloggity::BloggityApplication
 		end
 	end
 		
+  # ALV: This doesn't seem particularly useful as @page_name is never displayed in any view
   def get_bloggity_page_name
-    logger.debug("Looking up page name for controller: #{params[:controller]} and action: #{params[:method]}")
+    logger.debug("*** Looking up page name for controller: #{params[:controller]} and action: #{params[:method]}")
   	@page_name = look_up_page_name(params[:controller], params[:action])
   end
   

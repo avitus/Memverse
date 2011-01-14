@@ -9,7 +9,6 @@
 		  <th><%= link_to 'Status', 		:action => 'show_all_my_verses', :sort_order => 'status'		%></th>		  				  	  		  		  		  
 		  <th><%= link_to 'Last Tested',	:action => 'show_all_my_verses', :sort_order => 'last_tested'	%></th>	
 		  <th><%= link_to 'Next Test',		:action => 'show_all_my_verses', :sort_order => 'next_test'		%></th>
-<!--	  <th><%= link_to 'N', 				:action => 'show_all_my_verses', :sort_order => 'rep_n'			%></th> -->
 		  <th><%= link_to 'Interval', 		:action => 'show_all_my_verses', :sort_order => 'test_interval'	%></th>
 		  <th><%= link_to 'Attempts', 		:action => 'show_all_my_verses', :sort_order => 'attempts'		%></th>
 		  <th><%= link_to 'Ref Int', 		:action => 'show_all_my_verses', :sort_order => 'ref_interval'	%></th>		  	  		  
@@ -26,7 +25,6 @@
 		 	<td align="center"><%= mv.status				%></td>			
 		 	<td align="center"><%= mv.last_tested			%></td>
 		 	<td align="center"><%= mv.next_test				%></td>	
-	<!-- 	<td align="center"><%= mv.rep_n					%></td>	-->		
 		 	<td align="center"><%= mv.test_interval			%></td>	
 			<td align="center"><%= mv.attempts				%></td>
 		 	<td align="center"><%= mv.ref_interval			%></td>
@@ -34,9 +32,10 @@
 		 	<td align="left">  <%= mv.tag_list.to_s			%></td>
 		 	<td align="center" class="flag_verse" id=<%= mv.verse.id %>><%= 			
 				if mv.verified?
-					link_to_remote mv.verse.error_flag ? "Error Reported" : "Verified", 
+					link_to mv.verse.error_flag ? "Error Reported" : "Verified", 
 									:url 		=> { :action => "toggle_verse_flag", :id => mv.verse.id },
-									:update 	=> mv.verse.id
+									:update 	=> mv.verse.id,
+									:remote		=> true
 				elsif !mv.locked?
 					link_to '[Editable]', :action => 'edit_verse', :mv_id => mv.id
 				else
@@ -50,8 +49,8 @@
 	
 	<br>
 	
-	<%= submit_tag "Delete", :onclick => "return #{confirm_javascript_function("Are you sure you want to delete selected verse(s)?")}" %>
-	
+	<%= submit_tag "Delete", :confirm => "Are you sure you want to delete selected verse(s)?", :remote => true %>
+		
 <% end %>
 
 </div>

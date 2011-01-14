@@ -24,18 +24,18 @@ class Memverse < ActiveRecord::Base
   belongs_to  :verse
   
   # Named Scopes
-  named_scope :memorized,     :conditions => { :status => "Memorized" }
-  named_scope :learning,      :conditions => { :status => "Learning" }
-  named_scope :current, lambda { {:conditions => ['next_test >= ?', Date.today ]} }
-  named_scope :american,      :include => {:user, :country}, :conditions => { 'countries.printable_name' => 'United States' }
-  named_scope :old_testament, :include => :verse, :conditions => { 'verses.book_index' =>  1..39 }
-  named_scope :new_testament, :include => :verse, :conditions => { 'verses.book_index' => 40..66 }
+  scope :memorized,         where(:status => "Memorized")
+  scope :learning,          where(:status => "Learning" )
+  scope :current,  lambda { where('next_test >= ?', Date.today) }
+  scope :american,          where('countries.printable_name' => 'United States').includes([:user, :country])
+  scope :old_testament,     where('verses.book_index' =>  1..39).includes(:verse)
+  scope :new_testament,     where('verses.book_index' => 40..66).includes(:verse)
   
-  named_scope :history,   :include => :verse, :conditions => { 'verses.book_index' =>  1..17 }
-  named_scope :wisdom,    :include => :verse, :conditions => { 'verses.book_index' => 18..22 }
-  named_scope :prophecy,  :include => :verse, :conditions => { 'verses.book_index' => 23..39 } # TODO: include Revelation
-  named_scope :gospel,    :include => :verse, :conditions => { 'verses.book_index' => 40..43 }
-  named_scope :epistle,   :include => :verse, :conditions => { 'verses.book_index' => 45..66 } # TODO: switch Revelation to prophecy
+  scope :history,   where('verses.book_index' =>  1..17).includes(:verse)
+  scope :wisdom,    where('verses.book_index' => 18..22).includes(:verse)
+  scope :prophecy,  where('verses.book_index' => 23..39).includes(:verse) # TODO: include Revelation
+  scope :gospel,    where('verses.book_index' => 40..43).includes(:verse)
+  scope :epistle,   where('verses.book_index' => 45..66).includes(:verse) # TODO: switch Revelation to prophecy
     
   # Validations
   validates_presence_of :user_id, :verse_id
@@ -43,13 +43,8 @@ class Memverse < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   # Implement counter caches for number of verses memorized and learning
   # ----------------------------------------------------------------------------------------------------------   
-  def after_save
-    self.update_counter_cache
-  end
-  
-  def after_destroy
-    self.update_counter_cache
-  end
+  after_save    :update_counter_cache
+  after_destroy :update_counter_cache
   
   def update_counter_cache
     self.user.memorized = Memverse.count(:all, :conditions => ["user_id = ? and status = ?", self.user.id, "Memorized"])

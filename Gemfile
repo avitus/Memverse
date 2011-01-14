@@ -21,6 +21,9 @@ gem 'jrails'											# jQuery drop-in replacement for Prototype/Scriptaulous
 gem 'mysql2'											# This be the db
 gem 'nokogiri'											# HTML/XML parsing
 
+# Support for observe_field etc.
+gem 'prototype_legacy_helper', '0.0.0', :git => 'git://github.com/rails/prototype_legacy_helper.git'
+
 # To use debugger (ruby-debug for Ruby 1.8.7+, ruby-debug19 for Ruby 1.9.2+)
 # gem 'ruby-debug'
 # gem 'ruby-debug19'

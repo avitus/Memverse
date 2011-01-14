@@ -78,19 +78,18 @@ MemverseApp::Application.routes.draw do
   match '/edit_tag/:id',          :to => 'tag#edit_tag',                    :as => 'edit_tag'
 
   # Tweet routes
-  match '/tweets',                :to => 'tweets#index',                    :as => 'index'  
+  match '/tweets',                :to => 'tweets#index',                    :as => 'tweets'  
 
   # Game routes  
   match '/verse_scramble',        :to => 'games#verse_scramble',            :as => 'verse_scramble'  
   
   # Blog routes
   # map.blog                '/blog',                      :controller => 'blog_posts',    :action => 'index'
-  match '/.blog_comments_new',    :to => 'blog_comments#recent_comments',   :as => 'blog_comments_new'
-  
+  match '/blog_comments_new',    :to => 'blog_comments#recent_comments',   :as => 'blog_comments_new'
   
   # Routes for Ziya graphs
-  match '/.load_progress/:user',  :to => 'chart#load_progress',             :as => 'load_progress'
-  match '/.load_memverse_clock',  :to => 'chart#load_memverse_clock',       :as => 'load_memverse_clock'
+  match '/load_progress/:user',  :to => 'chart#load_progress',             :as => 'load_progress'
+  match '/load_memverse_clock',  :to => 'chart#load_memverse_clock',       :as => 'load_memverse_clock' 
   
   # Root Home Page
   root :to => 'sessions#new', :as => 'home'
