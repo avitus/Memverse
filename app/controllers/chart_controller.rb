@@ -7,12 +7,13 @@ end
 
 class ChartController < ApplicationController
 
-  respond_to :xml
-
   before_filter :login_required, :except => :load_memverse_clock
 
   helper Ziya::HtmlHelpers::Charts
   helper Ziya::YamlHelpers::Charts
+
+  respond_to :xml
+
 
   # Callback from the flash movie to get the chart's data
   # Uses line_chart.yml for style
@@ -126,17 +127,17 @@ class ChartController < ApplicationController
     }     
                 
     # Create graph 
-    chart = Ziya::Charts::Mixed.new('JTA-A16M--GO.945CWK-2XOI1X0-7L', 'memverse_clock_chart') # args: license key, chart name
-    chart.add :chart_types, %w[column column line]
+    @chart = Ziya::Charts::Mixed.new('JTA-A16M--GO.945CWK-2XOI1X0-7L', 'memverse_clock_chart') # args: license key, chart name
+    @chart.add :chart_types, %w[column column line]
 
     # X-Axis
-    chart.add( :axis_category_text, x_date )
+    @chart.add( :axis_category_text, x_date )
 
     # Space out the labels on the x-axis. A zero value doesn't hide any labels. 
     # If the skip value is 1, then the first label is displayed, the following label is skipped, and so on. 
     # If the skip value is 2, then the first label is displayed, the following 2 are skipped, and so on.
     skip = x_date.length / 14 # Show max of 16 data labels
-    chart.add( :user_data, :skip, skip )
+    @chart.add( :user_data, :skip, skip )
     
     # Secondary Axis Labels
     max_users           = y_users.compact.max # first remove nil's
@@ -155,18 +156,17 @@ class ChartController < ApplicationController
     }
     
     # Y-Axis
-    chart.add( :series, "Memorized",    y_memorized )
-    chart.add( :series, "Learning",     y_learning  )
-    chart.add( :series, "Active Users", y_users      )
+    @chart.add( :series, "Memorized",    y_memorized )
+    @chart.add( :series, "Learning",     y_learning  )
+    @chart.add( :series, "Active Users", y_users      )
     
-    chart.add( :user_data, :secondary_y_interval, user_axis_interval )
+    @chart.add( :user_data, :secondary_y_interval, user_axis_interval )
     
     # Theme
-    chart.add( :theme , "memverse" )  
+    @chart.add( :theme , "memverse" )  
     
-    respond_to do |fmt|
-      fmt.xml { render :xml => chart.to_xml }
-    end
+    logger.debug("*** chart data #{@chart}")
+    respond_with @chart
   
   end # load_memverse_clock
   
@@ -205,5 +205,5 @@ class ChartController < ApplicationController
       else                      800 # Interval per division =  ?
     end
   end
-
 end
+
