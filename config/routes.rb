@@ -92,7 +92,8 @@ MemverseApp::Application.routes.draw do
   match '/load_memverse_clock',  :to => 'chart#load_memverse_clock',       :as => 'load_memverse_clock' 
   
   # Root Home Page
-  root :to => 'sessions#new', :as => 'home'
+  root :to => 'sessions#new'
+  match '/home',                  :to => 'sessions#new'
 
   # Install the default routes as the lowest priority. 
   match '/:controller(/:action(/:id))'

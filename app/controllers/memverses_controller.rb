@@ -1,3 +1,5 @@
+# coding: utf-8
+
 # * Add client side verse memorization feedback
 # - Add moderators for different translations
 # - Add nice, explanatory pop-up boxes using jQuery

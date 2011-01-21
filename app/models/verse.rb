@@ -1,3 +1,5 @@
+# coding: utf-8
+
 #    t.string   "translation",                    :null => false
 #    t.integer  "book_index",                     :null => false
 #    t.string   "book",                           :null => false
@@ -258,7 +260,7 @@ class Verse < ActiveRecord::Base
     txt = txt.gsub(/[’‘]/, "\'")
     txt = txt.gsub(/[“”]/, '"')
     # Removes weirdly encoded characters at the start of strings
-    txt = txt.gsub(/[\x80-\xff]/," ")  # ALV: 2011-01-13 Changed to replacing with a space to avoid collapsing newline/carriage return
+    # txt = txt.gsub(/[\x80-\xff]/," ")  # ALV: 2011-01-13 Changed to replacing with a space to avoid collapsing newline/carriage return
     txt = txt.split("Footnotes")[0] unless !txt
     txt = txt.split("Cross")[0] unless !txt
     txt = txt.gsub(/\s{2,}/, " ").strip unless !txt               # remove extra white space in verse and at beginning and end
