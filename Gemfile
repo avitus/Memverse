@@ -20,6 +20,7 @@ gem 'builder'											# Required for Ziya
 gem 'jrails'											# jQuery drop-in replacement for Prototype/Scriptaulous
 gem 'mysql2'											# This be the db
 gem 'nokogiri'											# HTML/XML parsing
+gem 'test-unit'                   # Required for restful_authentication (?)
 
 # Support for observe_field etc.
 gem 'prototype_legacy_helper', '0.0.0', :git => 'git://github.com/rails/prototype_legacy_helper.git'
