@@ -159,7 +159,7 @@ module AuthenticatedSystem
       session[:exam_answered]     = nil
       session[:exam_length]       = nil
       session[:exam_incorrect]    = nil 
-      session[:referrer]          = nil
+      # session[:referrer]          = nil # Clearing the referrer variable prevents referral information being captured
     end
 
     # The session should only be reset at the tail end of a form POST --

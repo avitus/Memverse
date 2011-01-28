@@ -273,10 +273,8 @@ class MemversesController < ApplicationController
   # Display a single memory verse
   # ----------------------------------------------------------------------------------------------------------  
   def show
-    logger.debug("*** Searching for verse with ID: #{params[:id]}")
-    logger.debug("*** Params inspect: #{params.inspect}")
     @mv         = Memverse.find(params[:id])
-    logger.debug("*** Found verse: #{@mv.verse.ref}")
+
     @verse      = @mv.verse
     @user_tags  = @mv.tags
     @tags       = @verse.tags

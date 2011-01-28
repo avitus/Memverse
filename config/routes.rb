@@ -11,8 +11,9 @@ MemverseApp::Application.routes.draw do
   match '/forgot_password',             :to => 'passwords#new',     :as => 'forgot_password'
   match '/change_password/:reset_code', :to => 'passwords#reset',   :as => 'change_password'
 
-  match '/opensession',                 :to => 'sessions#create',   :as => 'open_id_complete',  :via => [:get]
-  match '/opencreate',                  :to => 'users#create',      :as => 'open_id_create',    :via => [:get]
+  # Remove open_id_authentication to solve problem with empty params hash
+  # match '/opensession',                 :to => 'sessions#create',   :as => 'open_id_complete',  :via => [:get]
+  # match '/opencreate',                  :to => 'users#create',      :as => 'open_id_create',    :via => [:get]
 
   
   # Restful Authentication Resources
