@@ -1,3 +1,4 @@
+# coding: utf-8
 MemverseApp::Application.routes.draw do
  
   # Restful Authentication Rewrites
