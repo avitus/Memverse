@@ -22,6 +22,7 @@ MemverseApp::Application.routes.draw do
 # resources :pastors
   resources :sermons
   resources :quests
+  resources :memverses
 
   
   # My Mappings
@@ -91,9 +92,10 @@ MemverseApp::Application.routes.draw do
   match '/load_progress/:user',  :to => 'chart#load_progress',             :as => 'load_progress'
   match '/load_memverse_clock',  :to => 'chart#load_memverse_clock',       :as => 'load_memverse_clock' 
   
-  # Root Home Page
+  # Root and Home Page
   root :to => 'sessions#new'
   match '/home',                  :to => 'sessions#new'
+
 
   # Install the default routes as the lowest priority. 
   match '/:controller(/:action(/:id))'

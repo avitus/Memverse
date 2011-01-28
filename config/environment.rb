@@ -15,6 +15,9 @@ TRANSLATIONS = {
     :NRS => "New Revised Standard Version",                          
     :ESV => "English Standard Version",
     :NLT => "New Living Translation",
+    :HCS => "Holman Christian Standard Bible",
+    :DTL => "Darby Translation",
+    :MSG => "The Message",
     :IRV => "New International Reader's Version",
     :UKJ => "Updated King James Version",
     :GRK => "Biblical Greek",
@@ -22,6 +25,7 @@ TRANSLATIONS = {
     :RVR => "Reina-Valera 1960",
     :AFR => "Afrikaans 1983 Translation",
     :NBV => "De Nieuwe Bijbelvertaling",
+    :TMB => "Terjemahan Baru",
     :SPB => "Svenska Folkbibeln" 
   }
 

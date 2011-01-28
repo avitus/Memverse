@@ -38,8 +38,9 @@ class ApplicationController < ActionController::Base
     # if params[:locale] is nil then I18n.default_locale will be used
     if current_user  
       I18n.locale = case current_user.language
-        when "English" then "en"
-        when "Spanish" then "es"
+        when "English"          then "en"
+        when "Spanish"          then "es"
+        when "Bahasa Indonesia" then "in"
         else "en"
       end
     else

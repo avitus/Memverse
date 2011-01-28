@@ -5,6 +5,12 @@ GIT
     prototype_legacy_helper (0.0.0)
 
 GIT
+  remote: git://github.com/rfc2822/spawn
+  revision: d8cc4ee362e3e2cfd28e62fc6d89d6703f58cac5
+  specs:
+    spawn (1.0.1)
+
+GIT
   remote: git://github.com/sandal/prawn
   revision: 89ba0ebf7ac3705756330a25ab4c88e4c71e36d8
   tag: 0.10.2
@@ -140,6 +146,7 @@ DEPENDENCIES
   prototype_legacy_helper (= 0.0.0)!
   rails (= 3.0.3)
   ruby-openid
+  spawn!
   sqlite3-ruby
   test-unit (= 1.2.3)
   will_paginate (>= 3.0.pre)

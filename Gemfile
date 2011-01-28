@@ -21,6 +21,10 @@ gem 'mysql2'											# This be the db
 gem 'nokogiri'										# HTML/XML parsing
 gem 'test-unit', '=1.2.3'         # Required for restful_authentication (?)
 
+
+# Use this for now (instead of the plugin ... check to see whether master branch ever supports Rails 3)
+gem 'spawn', :git => 'git://github.com/rfc2822/spawn'
+
 # Support for observe_field etc.
 gem 'prototype_legacy_helper', '0.0.0', :git => 'git://github.com/rails/prototype_legacy_helper.git'
 

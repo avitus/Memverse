@@ -6,7 +6,8 @@ class RssReader
 
   def self.posts_for(feed_url, length=2, perform_validation=false)
     posts = []
-    open(feed_url) do |rss|
+    # open(feed_url) do |rss|
+    open('http://www.heartlight.org/rss/track/devos/spurgeon-morning/') do |rss|
       posts = RSS::Parser.parse(rss, perform_validation)
     end
     
