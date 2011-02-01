@@ -24,18 +24,18 @@ class Memverse < ActiveRecord::Base
   belongs_to  :verse
   
   # Named Scopes
-  named_scope :memorized,     :conditions => { :status => "Memorized" }
-  named_scope :learning,      :conditions => { :status => "Learning" }
-  named_scope :current, lambda { {:conditions => ['next_test >= ?', Date.today ]} }
-  named_scope :american,      :include => {:user, :country}, :conditions => { 'countries.printable_name' => 'United States' }
-  named_scope :old_testament, :include => :verse, :conditions => { 'verses.book_index' =>  1..39 }
-  named_scope :new_testament, :include => :verse, :conditions => { 'verses.book_index' => 40..66 }
+  scope :memorized,         where(:status => "Memorized")
+  scope :learning,          where(:status => "Learning" )
+  scope :current,  lambda { where('next_test >= ?', Date.today) }
+  scope :american,          where('countries.printable_name' => 'United States').includes([:user, :country])
+  scope :old_testament,     where('verses.book_index' =>  1..39).includes(:verse)
+  scope :new_testament,     where('verses.book_index' => 40..66).includes(:verse)
   
-  named_scope :history,   :include => :verse, :conditions => { 'verses.book_index' =>  1..17 }
-  named_scope :wisdom,    :include => :verse, :conditions => { 'verses.book_index' => 18..22 }
-  named_scope :prophecy,  :include => :verse, :conditions => { 'verses.book_index' => 23..39 } # TODO: include Revelation
-  named_scope :gospel,    :include => :verse, :conditions => { 'verses.book_index' => 40..43 }
-  named_scope :epistle,   :include => :verse, :conditions => { 'verses.book_index' => 45..66 } # TODO: switch Revelation to prophecy
+  scope :history,   where('verses.book_index' =>  1..17).includes(:verse)
+  scope :wisdom,    where('verses.book_index' => 18..22).includes(:verse)
+  scope :prophecy,  where('verses.book_index' => 23..39).includes(:verse) # TODO: include Revelation
+  scope :gospel,    where('verses.book_index' => 40..43).includes(:verse)
+  scope :epistle,   where('verses.book_index' => 45..66).includes(:verse) # TODO: switch Revelation to prophecy
     
   # Validations
   validates_presence_of :user_id, :verse_id
@@ -43,13 +43,8 @@ class Memverse < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   # Implement counter caches for number of verses memorized and learning
   # ----------------------------------------------------------------------------------------------------------   
-  def after_save
-    self.update_counter_cache
-  end
-  
-  def after_destroy
-    self.update_counter_cache
-  end
+  after_save    :update_counter_cache
+  after_destroy :update_counter_cache
   
   def update_counter_cache
     self.user.memorized = Memverse.count(:all, :conditions => ["user_id = ? and status = ?", self.user.id, "Memorized"])
@@ -172,6 +167,67 @@ class Memverse < ActiveRecord::Base
       # mv.destroy
       logger.info("Removing memory verse #{mv.verse.ref} belong to #{mv.user.login}")
     }
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Remove a memory verse (delete a memory verse)
+  # ---------------------------------------------------------------------------------------------------------- 
+  def remove_mv
+    next_ptr  = self.next_verse
+    prev_ptr  = self.prev_verse
+     
+    # If there is a prev verse
+    # => Find previous verse and remove its 'next' ptr
+    if prev_ptr
+      logger.debug("Removing link from previous verse: #{prev_ptr}")
+      
+      # TODO: This find method is necesary rather than .find(prev_ptr) for the case (which shouldn't ever happen)
+      # when the next/prev pointers aren't valid
+      prev_vs = Memverse.find(:first, :conditions => {:id => prev_ptr})
+      if prev_vs
+        prev_vs.next_verse = nil
+        prev_vs.save
+      else
+        # TODO: This is occasionally happening ... caused by verses being duplicated from double-clicking on links
+        logger.warn("*** Alert: A verse was deleted which had an invalid prev pointer - this should never happen")        
+      end
+    
+    end
+    
+    # If there is a next verse
+    # => Find next verse and make it the first verse in the sequence
+    if next_ptr
+      logger.debug("Setting the next verse: #{next_ptr} to be first verse of sequence")
+      next_vs = Memverse.find(:first, :conditions => {:id => next_ptr})
+      if next_vs
+        next_vs.first_verse = nil # Starting verses in a sequence to not reference themselves as the first verse
+        next_vs.prev_verse  = nil
+        next_vs.save
+        # Follow chain and correct first verse
+        next_vs.update_downstream_start_verses  
+      else
+        logger.warn("*** Alert: A verse was deleted which had an invalid next pointer - this should never happen")        
+      end
+    end
+    
+    self.destroy
+    
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Update the starting verse for downstream verses -- mostly used when a verse is deleted
+  # ---------------------------------------------------------------------------------------------------------- 
+  def update_downstream_start_verses
+    # If mv is pointing to a start verse, use that as the first verse, otherwise set mv as the first verse
+    new_starting_verse = self.first_verse || self.id # || returns first operator that satisfies condition
+   
+    mv = self
+   
+    while mv.next_verse
+      mv = Memverse.find(mv.next_verse)
+      mv.first_verse = new_starting_verse
+      mv.save
+    end    
   end
 
   # ----------------------------------------------------------------------------------------------------------

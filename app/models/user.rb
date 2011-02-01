@@ -35,19 +35,36 @@ class User < ActiveRecord::Base
   include Authentication::ByCookieToken
   include Authorization::AasmRoles
 
-  # Validations
-  validates_presence_of :login, :if => :not_using_openid?
-  validates_length_of :login, :within => 3..40, :if => :not_using_openid?
-  validates_uniqueness_of :login, :case_sensitive => false, :if => :not_using_openid?
-  validates_format_of :login, :with => RE_LOGIN_OK, :message => MSG_LOGIN_BAD, :if => :not_using_openid?
-  validates_format_of :name, :with => RE_NAME_OK, :message => MSG_NAME_BAD, :allow_nil => true
-  validates_length_of :name, :maximum => 100
-  validates_presence_of :email, :if => :not_using_openid?
-  validates_length_of :email, :within => 6..100, :if => :not_using_openid?
-  validates_uniqueness_of :email, :case_sensitive => false, :if => :not_using_openid?
-  validates_format_of :email, :with => RE_EMAIL_OK, :message => MSG_EMAIL_BAD, :if => :not_using_openid?
-  validates_uniqueness_of :identity_url, :unless => :not_using_openid?
-  validate :normalize_identity_url
+  # Validations - Rails 2
+  #  validates_presence_of :login, :if => :not_using_openid?
+  #  validates_length_of :login, :within => 3..40, :if => :not_using_openid?
+  #  validates_uniqueness_of :login, :case_sensitive => false, :if => :not_using_openid?
+  #  validates_format_of :login, :with => RE_LOGIN_OK, :message => MSG_LOGIN_BAD, :if => :not_using_openid?
+  #  validates_format_of :name, :with => RE_NAME_OK, :message => MSG_NAME_BAD, :allow_nil => true
+  #  validates_length_of :name, :maximum => 100
+  #  validates_presence_of :email, :if => :not_using_openid?
+  #  validates_length_of :email, :within => 6..100, :if => :not_using_openid?
+  #  validates_uniqueness_of :email, :case_sensitive => false, :if => :not_using_openid?
+  #  validates_format_of :email, :with => RE_EMAIL_OK, :message => MSG_EMAIL_BAD, :if => :not_using_openid?
+  #  validates_uniqueness_of :identity_url, :unless => :not_using_openid?
+  #  validate :normalize_identity_url
+  
+  validates :login, :presence   => true,
+                    :uniqueness => true,
+                    :length     => { :within => 3..40 },
+                    :format     => { :with => Authentication.login_regex, :message => Authentication.bad_login_message }
+
+  validates :name,  :format     => { :with => Authentication.name_regex, :message => Authentication.bad_name_message },
+                    :length     => { :maximum => 100 },
+                    :allow_nil  => true
+
+  validates :email, :presence   => true,
+                    :uniqueness => true,
+                    :format     => { :with => Authentication.email_regex, :message => Authentication.bad_email_message },
+                    :length     => { :within => 6..100 }  
+  
+  
+  
   
   # Relationships
   has_and_belongs_to_many :roles
@@ -68,10 +85,10 @@ class User < ActiveRecord::Base
   has_many :blog_comments
   
   # Named Scopes
-  named_scope :active,            lambda { {:conditions => ['last_activity_date >= ?', 1.month.ago ]} }
-  named_scope :active_today,      lambda { {:conditions => ['last_activity_date = ?',  Date.today  ]} }
-  named_scope :active_this_week,  lambda { {:conditions => ['last_activity_date >= ?', 1.week.ago  ]} }  
-  named_scope :american,          :include => :country, :conditions => { 'countries.printable_name' => 'United States' }
+  scope :active,            lambda { where('last_activity_date >= ?', 1.month.ago) }
+  scope :active_today,      lambda { where('last_activity_date = ?',  Date.today) }
+  scope :active_this_week,  lambda { where('last_activity_date >= ?', 1.week.ago) }  
+  scope :american, where('countries.printable_name' => 'United States').includes(:country)
 
   # HACK HACK HACK -- how to do attr_accessible from here?
   # prevents a user from submitting a crafted form that bypasses activation
@@ -81,11 +98,18 @@ class User < ActiveRecord::Base
                   :show_echo, :max_interval, :mnemonic_use, :all_refs, :referred_by, :show_toolbar
 
 
+  # Rails 2 version
   # Authenticates a user by their login name and unencrypted password - Returns the user or nil
+  #  def self.authenticate(login, password)
+  #    u = find_in_state :first, :active, :conditions => { :login => login } # need to get the salt
+  #    u && u.authenticated?(password) ? u : nil
+  #  end
+  
   def self.authenticate(login, password)
-    u = find_in_state :first, :active, :conditions => { :login => login } # need to get the salt
+    return nil if login.blank? || password.blank?
+    u = find_by_login(login.downcase) # need to get the salt
     u && u.authenticated?(password) ? u : nil
-  end
+  end  
   
   # Check if a user has a role
   def has_role?(role)

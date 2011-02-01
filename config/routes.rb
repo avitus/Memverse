@@ -1,101 +1,102 @@
-ActionController::Routing::Routes.draw do |map|
+MemverseApp::Application.routes.draw do
  
   # Restful Authentication Rewrites
-  map.logout            '/logout',                      :controller => 'sessions',    :action => 'destroy'
-  map.login             '/login',                       :controller => 'sessions',    :action => 'new'
-  map.register          '/register',                    :controller => 'users',       :action => 'create'
-  map.signup            '/signup',                      :controller => 'users',       :action => 'new'
-  map.activate          '/activate/:activation_code',   :controller => 'users',       :action => 'activate',  :activation_code => nil
-  map.forgot_password   '/forgot_password',             :controller => 'passwords',   :action => 'new'
-  map.change_password   '/change_password/:reset_code', :controller => 'passwords',   :action => 'reset'
-  map.open_id_complete  '/opensession',                 :controller => "sessions",    :action => "create",    :requirements => { :method => :get }
-  map.open_id_create    '/opencreate',                  :controller => "users",       :action => "create",    :requirements => { :method => :get }
+  
+  match '/login',                       :to => 'sessions#new',      :as => 'login'
+  match '/logout',                      :to => 'sessions#destroy',  :as => 'logout'
+  match '/register',                    :to => 'users#create',      :as => 'register'
+  match '/signup',                      :to => 'users#new',         :as => 'signup'
+  match '/activate/:activation_code',   :to => 'users#activate',    :as => 'activate',  :activation_code => nil
+  match '/forgot_password',             :to => 'passwords#new',     :as => 'forgot_password'
+  match '/change_password/:reset_code', :to => 'passwords#reset',   :as => 'change_password'
+
+  match '/opensession',                 :to => 'sessions#create',   :as => 'open_id_complete',  :via => [:get]
+  match '/opencreate',                  :to => 'users#create',      :as => 'open_id_create',    :via => [:get]
+
   
   # Restful Authentication Resources
-  map.resources :users
-  map.resources :passwords
-  map.resource  :session
-  map.resources :uberverses
-#  map.resources :pastors
-  map.resources :sermons
-  map.resources :quests
+  resources :users
+  resources :passwords
+  resource  :session
+  resources :uberverses
+# resources :pastors
+  resources :sermons
+  resources :quests
 
   
   # My Mappings
-  map.add_verse           '/add_verse',                 :controller => 'memverses',   :action => 'add_verse'
-  map.quick_add           '/quick_add',                 :controller => 'memverses',   :action => 'quick_add'
-  map.test_verse          '/test_verse',                :controller => 'memverses',   :action => 'test_verse' 
-  map.test_verse_quick    '/test_verse_quick',          :controller => 'memverses',   :action => 'test_verse_quick' 
-  map.mark_test           '/mark_test',                 :controller => 'memverses',   :action => 'mark_test' 
-  map.mark_test_quick     '/mark_test_quick',           :controller => 'memverses',   :action => 'mark_test_quick' 
-  map.test_ref            '/test_ref',                  :controller => 'memverses',   :action => 'test_ref'   
-  map.start_ref_test      '/start_ref_test',            :controller => 'memverses',   :action => 'load_test_ref'
-  map.exam                '/test_yourself',             :controller => 'memverses',   :action => 'load_exam'
-  map.pre_exam            '/accuracy_explanation',      :controller => 'memverses',   :action => 'explain_exam'
-  map.pre_chapter         '/chapter_review',            :controller => 'memverses',   :action => 'chapter_explanation'
-  map.drill_verse         '/drill_verse',               :controller => 'memverses',   :action => 'drill_verse'
-  map.mark_test           '/mark_test',                 :controller => 'memverses',   :action => 'mark_test'    
-  map.mark_drill          '/mark_drill',                :controller => 'memverses',   :action => 'mark_drill'
-  map.show_all_my_verses  '/show_all_my_verses',        :controller => 'memverses',   :action => 'show_all_my_verses'
-  map.user_stats          '/user_stats',                :controller => 'memverses',   :action => 'user_stats'
-  map.progress            '/progress',                  :controller => 'memverses',   :action => 'show_progress'
-  map.popular_verses      '/popular_verses',            :controller => 'memverses',   :action => 'pop_verses'
-  map.home                '/home',                      :controller => 'memverses',   :action => 'index'
-  map.starter_pack        '/starter_pack',              :controller => 'memverses',   :action => 'starter_pack'
-  map.memory_verse        '/memory_verse/:id',          :controller => 'memverses',   :action => 'show'
+  match '/add_verse',             :to => 'memverses#add_verse',             :as => 'add_verse'
+  match '/quick_add',             :to => 'memverses#quick_add',             :as => 'quick_add'
+  match '/test_verse',            :to => 'memverses#test_verse',            :as => 'test_verse'
+  match '/test_verse_quick',      :to => 'memverses#test_verse_quick',      :as => 'test_verse_quick'
+  match '/mark_test',             :to => 'memverses#mark_test',             :as => 'mark_test'
+  match '/mark_test_quick',       :to => 'memverses#mark_test_quick',       :as => 'mark_test_quick'
+  match '/test_ref',              :to => 'memverses#test_ref',              :as => 'test_ref'
+  match '/start_ref_test',        :to => 'memverses#load_test_ref',         :as => 'start_ref_test'
+  match '/exam',                  :to => 'memverses#load_exam',             :as => 'load_exam'
+  match '/pre_exam',              :to => 'memverses#explain_exam',          :as => 'pre_exam'
+  match '/pre_chapter',           :to => 'memverses#chapter_explanation',   :as => 'pre_chapter'
+  match '/drill_verse',           :to => 'memverses#drill_verse',           :as => 'drill_verse'
+  match '/mark_test',             :to => 'memverses#mark_test',             :as => 'mark_test'
+  match '/mark_drill',            :to => 'memverses#mark_drill',            :as => 'mark_drill'
+  match '/show_all_my_verses',    :to => 'memverses#show_all_my_verses',    :as => 'show_all_my_verses'
+  match '/user_stats',            :to => 'memverses#user_stats',            :as => 'user_stats'
+  match '/progress',              :to => 'memverses#show_progress',         :as => 'progress'
+  match '/popular_verses',        :to => 'memverses#pop_verses',            :as => 'popular_verses'
+  match '/home',                  :to => 'memverses#index',                 :as => 'index'
+  match '/starter_pack',          :to => 'memverses#starter_pack',          :as => 'starter_pack'
+  match '/memory_verse/:id',      :to => 'memverses#show',                  :as => 'memory_verse'
   
-  map.tag_cloud           '/tag_cloud',                 :controller => 'verses',      :action => 'tag_cloud'
-  map.check_verses        '/check_verses',              :controller => 'verses',      :action => 'check_verses'
+  match '/tag_cloud',             :to => 'verses#tag_cloud',                :as => 'tag_cloud'
+  match '/check_verses',          :to => 'verses#check_verses',             :as => 'check_verses'
   
-  map.show_user_info      '/show_user_info',            :controller => 'admin',       :action => 'show_user_info' 
-  map.show_tags           '/show_tags',                 :controller => 'admin',       :action => 'show_tags'
+  match '/show_user_info',        :to => 'admin#show_user_info',            :as => 'show_user_info'
+  match '/show_tags',             :to => 'admin#show_tags',                 :as => 'show_tags'
   
   
   # Doesn't require a login
-  map.contact             '/contact',                   :controller => 'info',        :action => 'contact'   
-  map.faq                 '/faq',                       :controller => 'info',        :action => 'faq'   
-  map.tutorial            '/tutorial',                  :controller => 'info',        :action => 'tutorial'  
-  map.volunteer           '/volunteer',                 :controller => 'info',        :action => 'volunteer' 
-  map.popular             '/popular',                   :controller => 'info',        :action => 'pop_verses'
-  map.supermemo           '/supermemo',                 :controller => 'info',        :action => 'sm_description'
-  map.demo                '/demo',                      :controller => 'info',        :action => 'demo_test_verse' 
-  map.leaderboard         '/leaderboard',               :controller => 'info',        :action => 'leaderboard'
-  map.churchboard         '/churchboard',               :controller => 'info',        :action => 'churchboard'
-  map.stateboard          '/stateboard',                :controller => 'info',        :action => 'stateboard'
-  map.countryboard        '/countryboard',              :controller => 'info',        :action => 'countryboard'  
-  map.memverse_clock      '/memverse_clock',            :controller => 'info',        :action => 'memverse_clock'  
-  map.referralboard       '/referralboard',             :controller => 'info',        :action => 'referralboard'  
-  map.news                '/news',                      :controller => 'info',        :action => 'news'
+  match '/contact',               :to => 'info#contact',                    :as => 'contact'   
+  match '/faq',                   :to => 'info#faq',                        :as => 'faq'
+  match '/tutorial',              :to => 'info#tutorial',                   :as => 'tutorial'
+  match '/volunteer',             :to => 'info#volunteer',                  :as => 'volunteer'
+  match '/popular',               :to => 'info#pop_verses',                 :as => 'popular'
+  match '/supermemo',             :to => 'info#sm_description',             :as => 'supermemo'
+  match '/demo',                  :to => 'info#demo_test_verse',            :as => 'demo'
+  match '/leaderboard',           :to => 'info#leaderboard',                :as => 'leaderboard'
+  match '/churchboard',           :to => 'info#churchboard',                :as => 'churchboard'
+  match '/stateboard',            :to => 'info#stateboard',                 :as => 'stateboard'
+  match '/countryboard',          :to => 'info#countryboard',               :as => 'countryboard'
+  match '/memverse_clock',        :to => 'info#memverse_clock',             :as => 'memverse_clock'
+  match '/referralboard',         :to => 'info#referralboard',              :as => 'referralboard'
+  match '/news',                  :to => 'info#news',                       :as => 'news'
  
-  map.update_profile      '/update_profile',            :controller => 'profile',     :action => 'update_profile'
-  map.church              '/church',                    :controller => 'profile',     :action => 'show_church'
-  map.referrals           '/referrals/:id',             :controller => 'profile',     :action => 'referrals'
-  map.unsubscribe         '/unsubscribe/*email',        :controller => 'profile',     :action => 'unsubscribe'
+  match '/update_profile',        :to => 'profile#update_profile',          :as => 'update_profile'
+  match '/church',                :to => 'profile#show_church',             :as => 'church'
+  match '/referrals/:id',         :to => 'profile#referrals',               :as => 'referrals'
+  match '/unsubscribe/*email',    :to => 'profile#unsubscribe',             :as => 'unsubscribe'
   
-  map.edit_tag           '/edit_tag/:id',               :controller => 'tag',         :action => 'edit_tag'
+  match '/edit_tag/:id',          :to => 'tag#edit_tag',                    :as => 'edit_tag'
 
   # Tweet routes
-  map.tweets              '/tweets',                    :controller => 'tweets',      :action => 'index'  
+  match '/tweets',                :to => 'tweets#index',                    :as => 'tweets'  
 
   # Game routes  
-  map.verse_scramble      '/verse_scramble',            :controller => 'games',       :action => 'verse_scramble'  
+  match '/verse_scramble',        :to => 'games#verse_scramble',            :as => 'verse_scramble'  
   
   # Blog routes
   # map.blog                '/blog',                      :controller => 'blog_posts',    :action => 'index'
-  map.blog_comments_new   '/blog_comments_new',         :controller => 'blog_comments', :action => 'recent_comments'
-  
+  match '/blog_comments_new',    :to => 'blog_comments#recent_comments',   :as => 'blog_comments_new'
   
   # Routes for Ziya graphs
-  map.load_progress       '/chart/load_progress/:user', :controller => 'chart',       :action => 'load_progress'
-  map.load_memverse_clock '/chart/load_memverse_clock', :controller => 'chart',       :action => 'load_memverse_clock'
-    
-  # Home Page
-  map.root :controller => 'sessions', :action => 'new'
+  match '/load_progress/:user',  :to => 'chart#load_progress',             :as => 'load_progress'
+  match '/load_memverse_clock',  :to => 'chart#load_memverse_clock',       :as => 'load_memverse_clock' 
+  
+  # Root Home Page
+  root :to => 'sessions#new', :as => 'home'
 
-  # Install the default routes as the lowest priority.
-  map.connect ':controller/:action/:id'
-  map.connect ':controller/:action/:id.:format'
+  # Install the default routes as the lowest priority. 
+  match '/:controller(/:action(/:id))'
   
   # Route for random pages
-  map.page                ':action',                    :controller => 'pages'    
+  # match.page                ':action',                    :controller => 'pages'    
 end

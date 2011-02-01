@@ -32,7 +32,8 @@
 	<link rel="alternate" type="application/rss+xml" title="Memverse Blog" href="http://feeds.feedburner.com/MemverseBlog" />
 
 	<!-- Main Stylesheet -->
-	<%= stylesheet_link_merged 'base', :cache => 'cache/all' %>
+	<%= stylesheet_link_tag 'base_packaged', :cache => 'cache/all' %>
+	<!-- <%= stylesheet_link_merged 'base', :cache => 'cache/all' %> -->
 	<%= stylesheet_link_tag 'mobile' if mobile_device? %>
 		
 	<!-- Auxiliary stylesheets, etc -->
@@ -107,18 +108,18 @@
 		    <%= @page_title || "Bible Verse Memorization" %>				
 	  	</div> <!-- End of Banner -->
 
-			
+		<!-- http://stackoverflow.com/questions/3477522/preventing-html-character-entities-in-locale-files-from-getting-munged-by-rails3 -->	
 		<div id="main">
 			<% if logged_in? %>
 			<div id="menu-tabs">
 				<ul id="maintab" class="basictab">
-					<li <%= tab(@tab=="home"		) %> rel="homepage">	<%= link_to t('menu.home'), 		home_path %></li>	
-					<li <%= tab(@tab=="mem"			) %> rel="memory">		<%= link_to t('menu.memorize'), 	test_verse_path %></li>
-					<li <%= tab(@tab=="learn"		) %> rel="tutorials">	<%= link_to t('menu.learn'), 		tutorial_path %></li>
-					<li <%= tab(@tab=="profile"		) %> rel="profile">		<%= link_to t('menu.profile'), 		current_user %></li>
-					<li <%= tab(@tab=="contact"		) %> rel="contact">		<%= link_to t('menu.contact'), 		contact_path %></li>	
-					<li <%= tab(@tab=="leaderboard"	) %> rel="leaderboard">	<%= link_to t('menu.leaderboard'), 	leaderboard_path %></li>	
-					<li <%= tab(@tab=="blog"		) %> rel="blog">		<%= link_to t('menu.blog'), 		blog_path %></li>
+					<li <%= tab(@tab=="home"		) %> rel="homepage">	<%= link_to t('menu.home').html_safe, 			home_path %></li>	
+					<li <%= tab(@tab=="mem"			) %> rel="memory">		<%= link_to t('menu.memorize').html_safe, 		test_verse_path %></li>
+					<li <%= tab(@tab=="learn"		) %> rel="tutorials">	<%= link_to t('menu.learn').html_safe, 			tutorial_path %></li>
+					<li <%= tab(@tab=="profile"		) %> rel="profile">		<%= link_to t('menu.profile').html_safe, 		current_user %></li>
+					<li <%= tab(@tab=="contact"		) %> rel="contact">		<%= link_to t('menu.contact').html_safe, 		contact_path %></li>	
+					<li <%= tab(@tab=="leaderboard"	) %> rel="leaderboard">	<%= link_to t('menu.leaderboard').html_safe, 	leaderboard_path %></li>	
+					<li <%= tab(@tab=="blog"		) %> rel="blog">		<%= link_to t('menu.blog').html_safe, 			blog_path %></li>
 				</ul>
 
 				<div id="homepage" class="submenustyle">
@@ -175,9 +176,9 @@
 			<% end %> <!-- if logged_in? -->
 			
 			<%= flash_messages %>
-			<%= yield(:content) or yield %>
+			<%= content_for?(:content) ? yield(:content) : yield %>
 			<div id="meebo-toolbar">
-				<!-- no content -->
+				<!-- no content, just here to add space -->
 			</div>
 		</div> <!-- End of Main -->
 	</div> <!-- End of Container -->

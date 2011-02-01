@@ -18,8 +18,8 @@ class DailyStats < ActiveRecord::Base
   validates_presence_of :entry_date
 
   # Named scopes
-  named_scope :global,    :conditions => { :segment => "Global" }
-  named_scope :american,  :conditions => { :segment => "United States" }
+  scope :global,    where(:segment => "Global")
+  scope :american,  where(:segment => "United States")
   
   # ----------------------------------------------------------------------------------------------------------
   # Capture Daily Stats

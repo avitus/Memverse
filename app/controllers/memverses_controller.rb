@@ -196,11 +196,11 @@ class MemversesController < ApplicationController
   def verse_of_the_day
     
     # Find a popular verse eg: ['Jn 3:16', [['NIV', id] ['ESV', id]]]
-    verse     = popular_verses(100).rand # get 100 most popular verses - pick one at random
+    verse     = popular_verses(100).sample # get 100 most popular verses - pick one at random
       
     # Pick out a translation in user's preferred translation or at random
     verse_ref         = verse[0]     
-    verse_tl          = verse[1].select{ |tl| tl[0] == current_user.translation }.compact.first || verse[1].rand
+    verse_tl          = verse[1].select{ |tl| tl[0] == current_user.translation }.compact.first || verse[1].sample
     verse_id          = verse_tl[1]
     verse_translation = verse_tl[0]
     
@@ -537,10 +537,11 @@ class MemversesController < ApplicationController
       flash[:notice] = case errorcode
         when 1 then "Bible reference is incorrectly formatted. Format should be John 3:16 or John 3 vs 16"
         when 2 then "#{book} is not a valid book of the bible"
-        when 3 then "Enter a bible reference eg. John 3:16. Please enter each verse individually and remove any verse numbering or footnote information. Consecutive verses will be grouped into a single memory passage. Please enter verses with great care as subsequent users will be memorizing the same verse. Think like a scribe!"
+        when 3 then 'Enter a bible reference eg. John 3:16. Please enter each verse individually and remove any verse numbering or footnote information. Consecutive verses will be grouped into a single memory passage. Please enter verses with great care as subsequent users will be memorizing the same verse. Think like a scribe!'
         when 4 then "Please enter the text for your memory verse. Please do not include any verse numbering or footnote information."
         else        "The verse you entered is longer than the longest verse in the bible! Please enter one verse at a time. Consecutive verses will be grouped into a single memory passage."         
       end
+      flash[:notice].html_safe
       render(:template => 'memverses/add_verse.html.erb')
     end
     
@@ -572,42 +573,6 @@ class MemversesController < ApplicationController
     
     # We need to remove inter-verse linkage
     dead_mv   = Memverse.find(params[:id])
-    next_ptr  = dead_mv.next_verse
-    prev_ptr  = dead_mv.prev_verse
-     
-    # If there is a prev verse
-    # => Find previous verse and remove its 'next' ptr
-    if prev_ptr
-      logger.debug("Removing link from previous verse: #{prev_ptr}")
-      
-      # TODO: This find method is necesary rather than .find(prev_ptr) for the case (which shouldn't ever happen)
-      # when the next/prev pointers aren't valid
-      prev_vs = Memverse.find(:first, :conditions => {:id => prev_ptr})
-      if prev_vs
-        prev_vs.next_verse = nil
-        prev_vs.save
-      else
-        # TODO: This is occasionally happening ... caused by verses being duplicated from double-clicking on links
-        logger.warn("*** Alert: A verse was deleted which had an invalid prev pointer - this should never happen")        
-      end
-    
-    end
-    
-    # If there is a next verse
-    # => Find next verse and make it the first verse in the sequence
-    if next_ptr
-      logger.debug("Setting the next verse: #{next_ptr} to be first verse of sequence")
-      next_vs = Memverse.find(:first, :conditions => {:id => next_ptr})
-      if next_vs
-        next_vs.first_verse = nil # Starting verses in a sequence to not reference themselves as the first verse
-        next_vs.prev_verse  = nil
-        next_vs.save
-        # Follow chain and correct first verse
-        update_downstream_start_verses(next_vs)  
-      else
-        logger.warn("*** Alert: A verse was deleted which had an invalid next pointer - this should never happen")        
-      end
-    end
     
     # Remove verse from memorization queue
     mem_queue = session[:mv_queue]
@@ -618,11 +583,48 @@ class MemversesController < ApplicationController
       mem_queue.delete(dead_mv.id)
     end
 
-    # Finally, delete the verse
-    dead_mv.destroy  
-
+    dead_mv.remove_mv  # remove verse and sort out next and previous pointers
+    
     redirect_to :action => 'show_all_my_verses'   
   end 
+ 
+  # ----------------------------------------------------------------------------------------------------------
+  # Manage verses - used to delete a lot of verses 
+  # TODO: see above ... should re-use code from above and call a model method
+  # ----------------------------------------------------------------------------------------------------------
+  def manage_verses
+    
+    mv_ids = params[:mv]
+    action = params[:commit]
+  
+    if (!mv_ids.blank?) and (action == "Delete")
+      mv_ids.each { |mv_id|   
+      
+        # Find verse in DB
+        logger.debug("*** Finding mv with id: #{mv_id}")
+        mv = Memverse.find(mv_id)
+        
+      
+        # Remove verse from memorization queue
+        mem_queue = session[:mv_queue]        
+        # We need to check that there is a verse sequence and also that the array isn't empty
+        if !mem_queue.blank?
+          logger.debug("*** Found session queue with verses")
+          # Remove verse from the memorization queue if it is sitting in there
+          mem_queue.delete(mv_id)
+        end
+
+        mv.remove_mv
+
+      }
+    else
+      flash[:notice] = "No verses deleted since you didn't select any."
+    end
+    
+    redirect_to :action => 'show_all_my_verses'
+    
+  end 
+ 
  
   # ----------------------------------------------------------------------------------------------------------
   # Check whether any translations of entered verse are in DB
@@ -1451,81 +1453,6 @@ class MemversesController < ApplicationController
     end
     
   end
-
-  # ----------------------------------------------------------------------------------------------------------
-  # Manage verses
-  # ----------------------------------------------------------------------------------------------------------
-  def manage_verses
-  verses = params[:mv]
-  action = params[:commit]
-  
-  if !verses.blank?
-   verses.each { |vs|
-     if action == "Delete"
-              # We need to remove inter-verse linkage
-       dead_mv = Memverse.find(vs)
-       next_ptr = dead_mv.next_verse
-       prev_ptr = dead_mv.prev_verse
-       
-       # If there is a prev verse
-       # => Find previous verse and remove its 'next' ptr
-       if prev_ptr
-         logger.debug("Removing link from previous verse: #{prev_ptr}")
-         
-         # TODO: This find method is necesary rather than .find(prev_ptr) for the case (which shouldn't ever happen)
-         # when the next/prev pointers aren't valid
-         prev_vs = Memverse.find(:first, :conditions => {:id => prev_ptr})
-         if prev_vs
-           prev_vs.next_verse = nil
-           prev_vs.save
-         else
-           # TODO: This is occasionally happening ... caused by verses being duplicated from double-clicking on links
-           logger.warn("*** Alert: A verse was deleted which had an invalid prev pointer - this should never happen")
-         end
-       
-       end
-       
-       # If there is a next verse
-       # => Find next verse and make it the first verse in the sequence
-       if next_ptr
-         logger.debug("Setting the next verse: #{next_ptr} to be first verse of sequence")
-         next_vs = Memverse.find(:first, :conditions => {:id => next_ptr})
-         if next_vs
-           next_vs.first_verse = nil # Starting verses in a sequence to not reference themselves as the first verse
-           next_vs.prev_verse = nil
-           next_vs.save
-           # Follow chain and correct first verse
-           update_downstream_start_verses(next_vs)
-         else
-           logger.warn("*** Alert: A verse was deleted which had an invalid next pointer - this should never happen")
-         end
-       end
-       
-       # Remove verse from memorization queue
-       mem_queue = session[:mv_queue]
-       
-       # We need to check that there is a verse sequence and also that the array isn't empty
-       if !mem_queue.blank?
-         # Remove verse from the memorization queue if it is sitting in there
-         mem_queue.delete(dead_mv.id)
-       end
-   
-       # Finally, delete the verse
-       dead_mv.destroy
-   
-     
-else
-      redirect_to :action => 'show_all_my_verses'
-     end
-    }
-   
-   redirect_to :action => 'show_all_my_verses'
-  
-  else
-   flash[:notice] = "Requested action not performed: no verses selected."
-   redirect_to :action => 'show_all_my_verses'
-  end
-  end 
 
   # ----------------------------------------------------------------------------------------------------------
   # Returns array of upcoming (or overdue) memory verses for current user

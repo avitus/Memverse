@@ -1,9 +1,9 @@
 <h1><%=t('.Update profile')%></h1>
 
-<% form_tag :action => 'update_profile', :id => @user do %>
+<%= form_tag :action => 'update_profile', :id => @user do %>
 	<div class="entry-form" id="edit-profile-form">
 	
-		<% form_for @user do |f| %>
+		<%= form_for @user do |f| %>
 			<%= f.error_messages %>
 			<fieldset>
 				<legend><%=t('.Your profile')%></legend>
@@ -42,6 +42,7 @@
 														["Reina-Valera 1960",					'RVR' ],
 														["Afrikaans 1983 Translation",			'AFR' ],
 														["De Nieuwe Bijbelvertaling",			'NBV' ],
+														["Terjemahan Baru",						'TMB' ],
 														["Svenska Folkbibeln",					'SPB' ]]    
 									 %>
 					</li>					

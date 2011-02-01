@@ -1,3 +1,5 @@
+.bundle
+db/*.sqlite3
 log/*.log
 tmp/**/*
 .DS_Store
@@ -11,5 +13,5 @@ config/database.yml
 *public/system/*
 mkmf.log
 /config/initializers/site_keys.rb
-memverse
-memverse.pub
+*.rails2
+*plugins/rails_upgrade/*
