@@ -114,7 +114,9 @@ class ApplicationController < ActionController::Base
     # Check for correct string formatting
     if valid_ref(vsref)
       
-      entered_book_name  = vsref.slice!(/([0-3]?\s+)?[a-záéíóúüñ]+\s+/i).rstrip!.titleize
+      entered_book_name  = vsref.slice!(/([0-3]?\s+)?([a-záéíóúüñ\-]+\s)+/i).rstrip!.titleize
+      
+      logger.debug("*** Translating entered book name: #{entered_book_name}")
       
       # --- Book name should be translated into English after this point ---
       book = I18n.locale == 'en' ? entered_book_name : translate_to_english(entered_book_name)
