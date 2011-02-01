@@ -7,11 +7,14 @@ class SessionsController < ApplicationController
 
   def create
     logout_keeping_session! # Make sure to kill all session variable in ./lib/authenticated_system.rb
-    if using_open_id?
-      open_id_authentication
-    else
-      password_authentication
-    end
+    password_authentication
+    
+    # Remove open_id_authentication to solve empty params hash problem in Rails 3.0.3
+    # if using_open_id?
+    #   open_id_authentication
+    # else
+    #   password_authentication
+    # end
   end
 
   def destroy
@@ -20,17 +23,18 @@ class SessionsController < ApplicationController
     redirect_back_or_default(root_path)
   end
   
-  def open_id_authentication
-    authenticate_with_open_id do |result, identity_url|
-      if result.successful? && self.current_user = User.find_by_identity_url(identity_url)
-        successful_login
-      else
-        flash[:error] = result.message || "Sorry no user with that identity URL exists"
-        @remember_me = params[:remember_me]
-        render :action => :new
-      end
-    end
-  end
+  # Remove open_id_authentication to solve empty params hash problem in Rails 3.0.3
+  # def open_id_authentication
+  #   authenticate_with_open_id do |result, identity_url|
+  #     if result.successful? && self.current_user = User.find_by_identity_url(identity_url)
+  #       successful_login
+  #     else
+  #       flash[:error] = result.message || "Sorry no user with that identity URL exists"
+  #       @remember_me = params[:remember_me]
+  #       render :action => :new
+  #     end
+  #   end
+  # end
 
   protected
   

@@ -27,7 +27,7 @@
 #    t.boolean  "show_toolbar",                            :default => true
 
 require 'digest/sha1'
-require 'md5' # required for Gravatar support in Bloggity
+require 'digest/md5' # required for Gravatar support in Bloggity
 
 class User < ActiveRecord::Base
   include Authentication

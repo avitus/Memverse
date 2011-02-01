@@ -1,3 +1,4 @@
+# coding: utf-8
 MemverseApp::Application.routes.draw do
  
   # Restful Authentication Rewrites
@@ -10,8 +11,9 @@ MemverseApp::Application.routes.draw do
   match '/forgot_password',             :to => 'passwords#new',     :as => 'forgot_password'
   match '/change_password/:reset_code', :to => 'passwords#reset',   :as => 'change_password'
 
-  match '/opensession',                 :to => 'sessions#create',   :as => 'open_id_complete',  :via => [:get]
-  match '/opencreate',                  :to => 'users#create',      :as => 'open_id_create',    :via => [:get]
+  # Remove open_id_authentication to solve problem with empty params hash
+  # match '/opensession',                 :to => 'sessions#create',   :as => 'open_id_complete',  :via => [:get]
+  # match '/opencreate',                  :to => 'users#create',      :as => 'open_id_create',    :via => [:get]
 
   
   # Restful Authentication Resources
@@ -22,6 +24,7 @@ MemverseApp::Application.routes.draw do
 # resources :pastors
   resources :sermons
   resources :quests
+  resources :memverses
 
   
   # My Mappings
@@ -91,8 +94,10 @@ MemverseApp::Application.routes.draw do
   match '/load_progress/:user',  :to => 'chart#load_progress',             :as => 'load_progress'
   match '/load_memverse_clock',  :to => 'chart#load_memverse_clock',       :as => 'load_memverse_clock' 
   
-  # Root Home Page
-  root :to => 'sessions#new', :as => 'home'
+  # Root and Home Page
+  root :to => 'sessions#new'
+  match '/home',                  :to => 'sessions#new'
+
 
   # Install the default routes as the lowest priority. 
   match '/:controller(/:action(/:id))'

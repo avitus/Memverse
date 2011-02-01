@@ -26,9 +26,11 @@ class CreateQuests < ActiveRecord::Migration
     admin_role   = Role.find_by_name('admin')
     
     # Create admin and blogger role to me
-    u = User.find_by_login('avitus') 
-    u.roles << admin_role
-    u.roles << blogger_role
+    u = User.find_by_login('avitus')
+    if u 
+      u.roles << admin_role
+      u.roles << blogger_role
+    end
     
     # Set rank default to 0
     add_column :users, :level, :integer, :null => false, :default => 0   
