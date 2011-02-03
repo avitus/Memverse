@@ -91,7 +91,7 @@ MemverseApp::Application.routes.draw do
   match '/verse_scramble',        :to => 'games#verse_scramble',            :as => 'verse_scramble'  
   
   # Blog routes
-  # map.blog                '/blog',                      :controller => 'blog_posts',    :action => 'index'
+  match '/blog',                 :to => 'blog_posts#index',                :as => 'blog'
   match '/blog_comments_new',    :to => 'blog_comments#recent_comments',   :as => 'blog_comments_new'
   
   # Routes for Ziya graphs
@@ -102,10 +102,10 @@ MemverseApp::Application.routes.draw do
   root :to => 'sessions#new'
   match '/home',                  :to => 'sessions#new'
 
-
   # Install the default routes as the lowest priority. 
   match '/:controller(/:action(/:id))'
-  
+
   # Route for random pages
-  # match.page                ':action',                    :controller => 'pages'    
+  match '/:action',                 :to => 'pages#:action' 
+  
 end

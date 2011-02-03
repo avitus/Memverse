@@ -153,7 +153,7 @@ class MemversesController < ApplicationController
     # end
     
     # === Verse of the Day ===   
-    # @votd_txt, @votd_ref, @votd_tl, @votd_id  = verse_of_the_day()
+    @votd_txt, @votd_ref, @votd_tl, @votd_id  = verse_of_the_day()
     
     # === Check for incomplete profile ===
     if current_user.country_id == 226 and current_user.american_state.nil?      
@@ -199,6 +199,8 @@ class MemversesController < ApplicationController
     
     # Find a popular verse eg: ['Jn 3:16', [['NIV', id] ['ESV', id]]]
     verse     = popular_verses(100).sample # get 100 most popular verses - pick one at random
+      
+    logger.debug("Verse of the day: #{verse.inspect}")
       
     # Pick out a translation in user's preferred translation or at random
     verse_ref         = verse[0]     
