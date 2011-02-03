@@ -54,7 +54,7 @@ function checkAllFields(ref)
 
 function update_upcoming(num_verses, mv_id) {
 	$.ajax( {
-		url:		'/memverses/upcoming_verses',
+		url:		'/upcoming_verses',
 		dataType:	'html',
 		async:		true,
 		data:		{ mv_id: mv_id },
@@ -68,7 +68,7 @@ function update_upcoming(num_verses, mv_id) {
 
 function log_progress(user_id) {
 	$.ajax( {
-		url:		'/memverses/save_progress_report',
+		url:		'/save_progress_report',
 		dataType:	'json',
 		async:		false,
 		data:		{ user_id: user_id },
@@ -85,7 +85,7 @@ function stageverses(mv_current) {
 	var mv_prior_skip	= {};	
 	
 	$.ajax( {
-		url:		'/memverses/test_next_verse',
+		url:		'/test_next_verse',
 		dataType:	'json',
 		async:		false,
 		data:		{ mv: mv_current },
