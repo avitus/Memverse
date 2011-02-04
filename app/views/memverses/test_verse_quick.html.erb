@@ -73,13 +73,13 @@
 				<div class="priorVerse">
 					<p>
 						<span class="prior-versenum superscript">			<%= @prior_versenum if @prior_text %>	</span>
-						<span class="prior-text">							<%= @prior_text if @prior_text %>		</span>
+						<span class="prior-text">							        <%= @prior_text if @prior_text %>		</span>
 					</p>
 				</div>
 			   	
 		        <p> 
 					<span class="current-versenum superscript">			<%= @mv.verse.versenum if @prior_text %></span>
-					<span id="current-text">							<%= @mv.verse.text%>					</span>
+					<span id="current-text">							          <%= @mv.verse.text%>					</span>
 				</p>
 		        <p class="quickFlipCta"><%= t('.back_to_test') %></p>
 			</div>			
@@ -131,7 +131,7 @@
 
 			
 		$("#verseguess").observe_field(0.5, function( ) { 
-			$.get("/memverses/feedback", { correct: current.text, verseguess: encodeURIComponent(this.value), echo: true  },
+			$.get("/feedback", { correct: current.text, verseguess: encodeURIComponent(this.value), echo: true  },
 				function(data){	
 					$("#ajaxWrapper").html(data);
 			});
@@ -167,7 +167,7 @@
 				
 			// Check whether we're done for the day
 			if (ondeck.finished) {
-				$.getJSON("/memverses/mark_test_quick", { mv: current.id, q: q  }, 	// Score verse
+				$.getJSON("/mark_test_quick", { mv: current.id, q: q  }, 	// Score verse
 					function(data) {
 						if (data.msg) {
 							alert(data.msg); 										// Give user a nice response												
@@ -180,7 +180,7 @@
 			else {
 				success = insertondeck(ondeck.mv, ondeck.mv_prior);					// Update page with Ondeck verse
 				$.blockUI({ message: null });
-				$.getJSON("/memverses/mark_test_quick", { mv: current.id, q: q  }, 	// Score verse
+				$.getJSON("/mark_test_quick", { mv: current.id, q: q  }, 	// Score verse
 					function(data) {
 						if (data.msg) {
 							alert(data.msg); 										// Give user a nice response												

@@ -71,6 +71,7 @@ GEM
       builder
     i18n (0.5.0)
     jrails (0.6.0)
+    json (1.5.1)
     little-plugger (1.1.2)
     logging (1.4.3)
       little-plugger (>= 1.1.2)
@@ -138,6 +139,7 @@ DEPENDENCIES
   color
   hoptoad_notifier
   jrails
+  json
   logging
   mysql2
   nokogiri

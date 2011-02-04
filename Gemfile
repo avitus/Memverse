@@ -20,7 +20,7 @@ gem 'jrails'											# jQuery drop-in replacement for Prototype/Scriptaulous
 gem 'mysql2'											# This be the db
 gem 'nokogiri'										# HTML/XML parsing
 gem 'test-unit', '=1.2.3'         # Required for restful_authentication (?)
-
+gem 'json'                        # Javascript Object Notation support
 
 # Use this for now (instead of the plugin ... check to see whether master branch ever supports Rails 3)
 gem 'spawn', :git => 'git://github.com/rfc2822/spawn'

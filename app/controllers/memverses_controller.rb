@@ -153,7 +153,7 @@ class MemversesController < ApplicationController
     # end
     
     # === Verse of the Day ===   
-    # @votd_txt, @votd_ref, @votd_tl, @votd_id  = verse_of_the_day()
+    @votd_txt, @votd_ref, @votd_tl, @votd_id  = verse_of_the_day()
     
     # === Check for incomplete profile ===
     if current_user.country_id == 226 and current_user.american_state.nil?      
@@ -199,6 +199,8 @@ class MemversesController < ApplicationController
     
     # Find a popular verse eg: ['Jn 3:16', [['NIV', id] ['ESV', id]]]
     verse     = popular_verses(100).sample # get 100 most popular verses - pick one at random
+      
+    logger.debug("Verse of the day: #{verse.inspect}")
       
     # Pick out a translation in user's preferred translation or at random
     verse_ref         = verse[0]     
@@ -861,7 +863,7 @@ class MemversesController < ApplicationController
     
     if @mv
     
-      logger.debug("Starting with verse: #{@mv.verse.ref}, ID: #{@mv.id}")
+      logger.debug("*** Starting with verse: #{@mv.verse.ref}, ID: #{@mv.id}")
       
       # --- Ok to test : Load prior verse if available
       if @mv.prev_verse
@@ -920,6 +922,8 @@ class MemversesController < ApplicationController
   # ---------------------------------------------------------------------------------------------------------- 
   def test_next_verse
 
+    logger.debug('*** Loading next verse ...')
+
     current_mv      = Memverse.find(params[:mv])
     
     mv              = current_mv.next_verse_due(false)
@@ -927,7 +931,12 @@ class MemversesController < ApplicationController
 
     prior_mv        = mv && mv.prior_mv
     prior_mv_skip   = mv_skip && mv_skip.prior_mv
-      
+
+    logger.debug("*** MV              : #{mv.inspect}")
+    logger.debug("*** MV (skip)       : #{mv_skip.inspect}")
+    logger.debug("*** Prior MV        : #{prior_mv.inspect}")
+    logger.debug("*** Prior MV (skip) : #{prior_mv_skip.inspect}")
+     
     if mv
       render :json => { :finished       => false, 
                         :mv             => mv, 

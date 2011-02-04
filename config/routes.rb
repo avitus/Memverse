@@ -31,7 +31,10 @@ MemverseApp::Application.routes.draw do
   match '/add_verse',             :to => 'memverses#add_verse',             :as => 'add_verse'
   match '/quick_add',             :to => 'memverses#quick_add',             :as => 'quick_add'
   match '/test_verse',            :to => 'memverses#test_verse',            :as => 'test_verse'
+  match '/feedback',              :to => 'memverses#feedback',              :as => 'feedback'
+  match '/upcoming_verses',       :to => 'memverses#upcoming_verses',       :as => 'upcoming_verses'
   match '/test_verse_quick',      :to => 'memverses#test_verse_quick',      :as => 'test_verse_quick'
+  match '/test_next_verse',       :to => 'memverses#test_next_verse',       :as => 'test_next_verse'
   match '/mark_test',             :to => 'memverses#mark_test',             :as => 'mark_test'
   match '/mark_test_quick',       :to => 'memverses#mark_test_quick',       :as => 'mark_test_quick'
   match '/test_ref',              :to => 'memverses#test_ref',              :as => 'test_ref'
@@ -45,6 +48,7 @@ MemverseApp::Application.routes.draw do
   match '/show_all_my_verses',    :to => 'memverses#show_all_my_verses',    :as => 'show_all_my_verses'
   match '/user_stats',            :to => 'memverses#user_stats',            :as => 'user_stats'
   match '/progress',              :to => 'memverses#show_progress',         :as => 'progress'
+  match '/save_progress_report',  :to => 'memverses#save_progress_report',  :as => 'save_progress_report'
   match '/popular_verses',        :to => 'memverses#pop_verses',            :as => 'popular_verses'
   match '/home',                  :to => 'memverses#index',                 :as => 'index'
   match '/starter_pack',          :to => 'memverses#starter_pack',          :as => 'starter_pack'
@@ -87,7 +91,7 @@ MemverseApp::Application.routes.draw do
   match '/verse_scramble',        :to => 'games#verse_scramble',            :as => 'verse_scramble'  
   
   # Blog routes
-  # map.blog                '/blog',                      :controller => 'blog_posts',    :action => 'index'
+  match '/blog',                 :to => 'blog_posts#index',                :as => 'blog'
   match '/blog_comments_new',    :to => 'blog_comments#recent_comments',   :as => 'blog_comments_new'
   
   # Routes for Ziya graphs
@@ -98,10 +102,10 @@ MemverseApp::Application.routes.draw do
   root :to => 'sessions#new'
   match '/home',                  :to => 'sessions#new'
 
-
   # Install the default routes as the lowest priority. 
   match '/:controller(/:action(/:id))'
-  
+
   # Route for random pages
-  # match.page                ':action',                    :controller => 'pages'    
+  match '/:action',                 :to => 'pages#:action' 
+  
 end
