@@ -637,8 +637,11 @@ class MemversesController < ApplicationController
   def avail_translations
     
     ref = params[:verse]
+	logger.debug("Looking up reference: #{ref}")
     
     errorcode, book, chapter, versenum = parse_verse(ref) 
+	logger.debug("Reference parsed as: #{book} #{chapter}:#{versenum}")
+
 
     if (!errorcode) # If verse is ok
       
@@ -859,12 +862,10 @@ class MemversesController < ApplicationController
     @page_title = "Memory Verse Review"
     @show_feedback = true
     
-    @mv = current_user.first_verse_today
-    
+    @mv 			= current_user.first_verse_today
+        
     if @mv
-    
-      logger.debug("*** Starting with verse: #{@mv.verse.ref}, ID: #{@mv.id}")
-      
+      @show_feedback 	= (@mv.test_interval < 90 or current_user.show_echo)        
       # --- Ok to test : Load prior verse if available
       if @mv.prev_verse
         @prev_mv        = Memverse.find(@mv.prev_verse)
@@ -1135,9 +1136,9 @@ class MemversesController < ApplicationController
       
       # Stop after questions are finished or if user quits
       if session[:reftest_answered] >= session[:reftest_length] or params[:commit]=="Done"  # TODO: handle case where session variables are Nil
-        redirect_to :action => 'reftest_results'
+        redirect_to reftest_results_path
       else
-        redirect_to :action => 'test_ref'
+        redirect_to test_ref_path
       end
     
     else

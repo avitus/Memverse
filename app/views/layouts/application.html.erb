@@ -43,8 +43,10 @@
 	<%= yield(:head) %>
 
 	<!-- Using Jquery and Jrails NOTE: not using asset packager at the moment -->
-	<%= javascript_include_tag 	'rails', 'prototype', 'jquery-1.4.3.min', 'jquery-ui-1.8.6.custom.min', 
-								'jrails', 'jquery.quickflip', 'jquery.hoverIntent', '2leveltab', 
+	<!-- No longer using 'prototype' or 'jrails' (only for pre-Rails 3)-->
+	<%= javascript_include_tag 	'jquery.min', 'rails', 
+								'jquery-ui-1.8.6.custom.min', 
+								'jquery.quickflip', 'jquery.hoverIntent', '2leveltab', 
 								'jquery.periodicalupdater', 'jquery.jeditable', 'jquery.autocomplete', 'modernizr-1.6.min', 
 								'jquery.shuffle',  'jquery.observe_field', 'jquery.blockUI',
 								'application', :cache => 'cache/all' %> 
@@ -219,17 +221,7 @@
 	
 	  var feedback_widget = new GSFN.feedback_widget(feedback_widget_options);
 	</script>	<!-- End: Get Satisfaction Script  -->	
-	
-	
-	<!-- Start of Clickable Script  -->
-	<script type="text/javascript">
-	document.write(unescape("%3Cscript src='" + (location.protocol=="https:" ? "https://" : "http://") + "cn.clickable.net/js/cct.js' type='text/javascript'%3E%3C/script%3E"));
-	</script>
-	<script type="text/javascript">
-	document.cookie=cct.CookieCheck(document.cookie);
-	cct.cct_log('0820-4Pea0g3efV9i2e5wa9524bfab41177e692c4e0df');
-	</script> <!-- End: Clickable Script  -->
-	
+		
 	<script type="text/javascript">
 			Meebo("domReady");
 	</script>
