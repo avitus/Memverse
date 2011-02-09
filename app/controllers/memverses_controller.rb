@@ -859,12 +859,10 @@ class MemversesController < ApplicationController
     @page_title = "Memory Verse Review"
     @show_feedback = true
     
-    @mv = current_user.first_verse_today
-    
+    @mv 			= current_user.first_verse_today
+        
     if @mv
-    
-      logger.debug("*** Starting with verse: #{@mv.verse.ref}, ID: #{@mv.id}")
-      
+      @show_feedback 	= (@mv.test_interval < 90 or current_user.show_echo)        
       # --- Ok to test : Load prior verse if available
       if @mv.prev_verse
         @prev_mv        = Memverse.find(@mv.prev_verse)
