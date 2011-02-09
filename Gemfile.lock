@@ -70,6 +70,9 @@ GEM
       activesupport
       builder
     i18n (0.5.0)
+    jquery-rails (0.2.7)
+      rails (~> 3.0)
+      thor (~> 0.14.4)
     jrails (0.6.0)
     json (1.5.1)
     little-plugger (1.1.2)
@@ -138,6 +141,7 @@ DEPENDENCIES
   capistrano
   color
   hoptoad_notifier
+  jquery-rails (>= 0.2.6)
   jrails
   json
   logging
