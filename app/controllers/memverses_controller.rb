@@ -637,8 +637,11 @@ class MemversesController < ApplicationController
   def avail_translations
     
     ref = params[:verse]
+	logger.debug("Looking up reference: #{ref}")
     
     errorcode, book, chapter, versenum = parse_verse(ref) 
+	logger.debug("Reference parsed as: #{book} #{chapter}:#{versenum}")
+
 
     if (!errorcode) # If verse is ok
       
@@ -1133,9 +1136,9 @@ class MemversesController < ApplicationController
       
       # Stop after questions are finished or if user quits
       if session[:reftest_answered] >= session[:reftest_length] or params[:commit]=="Done"  # TODO: handle case where session variables are Nil
-        redirect_to :action => 'reftest_results'
+        redirect_to reftest_results_path
       else
-        redirect_to :action => 'test_ref'
+        redirect_to test_ref_path
       end
     
     else

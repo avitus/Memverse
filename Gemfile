@@ -29,6 +29,14 @@ gem 'spawn', :git => 'git://github.com/rfc2822/spawn'
 # Support for observe_field etc.
 gem 'prototype_legacy_helper', '0.0.0', :git => 'git://github.com/rails/prototype_legacy_helper.git'
 
+
+group :console do
+  gem 'wirble'
+  gem 'hirb'
+  gem 'map_by_method'
+end
+
+
 # To use debugger (ruby-debug for Ruby 1.8.7+, ruby-debug19 for Ruby 1.9.2+)
 # gem 'ruby-debug'
 # gem 'ruby-debug19'

@@ -30,6 +30,7 @@ MemverseApp::Application.routes.draw do
   # My Mappings
   match '/add_verse',             :to => 'memverses#add_verse',             :as => 'add_verse'
   match '/quick_add',             :to => 'memverses#quick_add',             :as => 'quick_add'
+  match '/avail_translations',    :to => 'memverses#avail_translations',    :as => 'avail_translations'
   match '/test_verse',            :to => 'memverses#test_verse',            :as => 'test_verse'
   match '/feedback',              :to => 'memverses#feedback',              :as => 'feedback'
   match '/upcoming_verses',       :to => 'memverses#upcoming_verses',       :as => 'upcoming_verses'
@@ -38,8 +39,9 @@ MemverseApp::Application.routes.draw do
   match '/mark_test',             :to => 'memverses#mark_test',             :as => 'mark_test'
   match '/mark_test_quick',       :to => 'memverses#mark_test_quick',       :as => 'mark_test_quick'
   match '/test_ref',              :to => 'memverses#test_ref',              :as => 'test_ref'
+  match '/reftest_results',       :to => 'memverses#reftest_results',       :as => 'reftest_results'
   match '/start_ref_test',        :to => 'memverses#load_test_ref',         :as => 'start_ref_test'
-  match '/exam',                  :to => 'memverses#load_exam',             :as => 'load_exam'
+  match '/exam',                  :to => 'memverses#load_exam',             :as => 'exam'
   match '/pre_exam',              :to => 'memverses#explain_exam',          :as => 'pre_exam'
   match '/pre_chapter',           :to => 'memverses#chapter_explanation',   :as => 'pre_chapter'
   match '/drill_verse',           :to => 'memverses#drill_verse',           :as => 'drill_verse'
@@ -53,6 +55,8 @@ MemverseApp::Application.routes.draw do
   match '/home',                  :to => 'memverses#index',                 :as => 'index'
   match '/starter_pack',          :to => 'memverses#starter_pack',          :as => 'starter_pack'
   match '/memory_verse/:id',      :to => 'memverses#show',                  :as => 'memory_verse'
+  match '/memverse_counter',      :to => 'memverses#memverse_counter',      :as => 'memverse_counter'
+
   
   match '/tag_cloud',             :to => 'verses#tag_cloud',                :as => 'tag_cloud'
   match '/check_verses',          :to => 'verses#check_verses',             :as => 'check_verses'
