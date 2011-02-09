@@ -81,6 +81,7 @@ MemverseApp::Application.routes.draw do
   match '/church',                :to => 'profile#show_church',             :as => 'church'
   match '/referrals/:id',         :to => 'profile#referrals',               :as => 'referrals'
   match '/unsubscribe/*email',    :to => 'profile#unsubscribe',             :as => 'unsubscribe'
+  match '/search_user',    		  :to => 'profile#search_user',             :as => 'search_user'
   
   match '/edit_tag/:id',          :to => 'tag#edit_tag',                    :as => 'edit_tag'
 

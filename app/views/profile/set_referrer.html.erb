@@ -17,12 +17,12 @@
           
   </fieldset>
         
-  <%= observe_form  'advanced_search',
+<!--  <%= observe_form  'advanced_search',
             :frequency  => 0.5,
             :update   => 'search_results',
             :loading  => "$('.spinner').show()",
             :complete   => "$('.spinner').hide()",
-            :url    => {:controller => 'profile', :action => 'search_user', :only_path => false} %>
+            :url    => {:controller => 'profile', :action => 'search_user', :only_path => false} %> -->  
 </div>  
 
 <br>
@@ -30,3 +30,24 @@
 <div id="search_results">
   <%= render :partial=>'search_user' %>
 </div>
+
+<script language="JavaScript" type="text/javascript"><!--		
+	$(document).ready(function() {
+		$("#search_param").observe_field(0.5, function( ) { 
+			$.get("/search_user", { search_param: encodeURIComponent(this.value) },
+				function(data){	
+					$("#search_results").html(data);
+			});
+        });
+    });
+    
+	$('.spinner').ajaxStart(function() {
+	        $(this).show();
+	    })
+	$('.spinner').ajaxStop(function() {
+	        $(this).hide();
+    });
+      
+--></script>
+
+
