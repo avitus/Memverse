@@ -328,7 +328,7 @@ class MemversesController < ApplicationController
   # Edit a verse
   # ----------------------------------------------------------------------------------------------------------   
   def edit_verse
-    @verse = Memverse.find(params[:mv_id]).verse 
+    @verse = Memverse.find(params[:id]).verse 
   end 
 
   # ----------------------------------------------------------------------------------------------------------

@@ -1,3 +1,5 @@
+# coding: utf-8
+
 class AdminController < ApplicationController
 
   protect_from_forgery  :except => [:set_verse_text, :verify_verse] 
@@ -79,7 +81,8 @@ class AdminController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------   
   def get_last_verse_data
   
-  
+  require 'nokogiri'
+
   completed = []
   
   biblebooks = ['Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy', 'Joshua', 'Judges', 'Ruth', '1 Samuel', '2 Samuel',
@@ -98,7 +101,7 @@ class AdminController < ApplicationController
     
     biblebooks.each { |bk|
     
-      sleep(2)
+      sleep(1)
     
       book = bk.downcase.gsub(" ","")
       logger.debug("Requesting URL for #{book}")

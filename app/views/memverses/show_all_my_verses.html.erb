@@ -37,7 +37,7 @@
 									:update 	=> mv.verse.id,
 									:remote		=> true
 				elsif !mv.locked?
-					link_to '[Editable]', :action => 'edit_verse', :mv_id => mv.id
+					link_to '[Editable]', edit_verse_path(mv)
 				else
 					'Pending Verification'
 				end
