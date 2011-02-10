@@ -280,7 +280,7 @@ class AdminController < ApplicationController
     @encourage_list     = Array.new
     @bounce_list        = Array.new
       
-    spawn do  
+    spawn_block do  
       # Retrieve records for all users  
       User.find(:all).each { |r|
         # Change reminder frequency (if necessary) to not be annoying
