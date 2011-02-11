@@ -51,6 +51,9 @@
 				</span>
 			</p>					
 		</div>
+		
+		<img class="center spinner " id="ajax_spinner" src="/images/indicator2.gif" alt="Comparing..." style="display: none" /> 			
+				
 	</div>
 </fieldset>	
 
@@ -136,6 +139,14 @@
 					$("#ajaxWrapper").html(data);
 			});
         });
+        
+        $('.spinner')
+			.ajaxStart(function() {
+		        $(this).show();
+		    })
+			.ajaxStop(function() {
+		        $(this).hide();
+    	});
 			
 		// ==== User clicks on fastforward button ====				
 		$('#ff-button').click(function() {
