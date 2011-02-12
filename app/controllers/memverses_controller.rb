@@ -99,6 +99,7 @@
 # 08/14/10 : New feature: launch of solo progression track
 # 12/01/10 : New feature: QuickMem (now with Javascript)
 # 01/06/11 : New feature: Multi-verse management (delete)
+# 02/11/11 : ** Converted to Rails 3.0.3 and Ruby 1.9.2 **
 
 class MemversesController < ApplicationController
   
@@ -419,7 +420,7 @@ class MemversesController < ApplicationController
     mv.last_tested  = Date.today
     mv.next_test    = Date.today # Start testing tomorrow
     mv.status       = "Learning"
-    # Add multi-verse linkage     
+    # Add multi-verse linkage  
     mv.prev_verse   = prev_verse(vs)
     mv.next_verse   = next_verse(vs)
     mv.first_verse  = first_verse(mv)

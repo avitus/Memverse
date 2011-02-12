@@ -25,9 +25,19 @@
 		<!-- Auxiliiary stylesheets, etc -->
 		<%= yield(:head) %>
 				
-		<!-- Using Jquery and Jrails -->
-		<%= javascript_include_tag 	'jquery-1.4.3.min', 'jquery-ui-1.8.6.custom.min', 'jrails', 'jquery.quickflip', 'jquery.hoverIntent', 
-										'2leveltab', 'jquery.jeditable', 'jquery.autocomplete', 'sorttable', :cache => 'cache/all' %>
+		<!-- Rails 3 XSS protection -->
+		<%= csrf_meta_tag %> 
+
+		<!-- Using Jquery and Jrails NOTE: not using asset packager at the moment -->
+		<!-- No longer using 'prototype' or 'jrails' (only for pre-Rails 3)-->
+		<%= javascript_include_tag 	'jquery.min', 'rails', 
+									'jquery-ui-1.8.6.custom.min', 
+									'jquery.quickflip', 'jquery.hoverIntent', '2leveltab', 
+									'jquery.periodicalupdater', 'jquery.jeditable', 'jquery.autocomplete', 'modernizr-1.6.min', 
+									'jquery.shuffle',  'jquery.observe_field', 'jquery.blockUI',
+									'application', :cache => 'cache/all' %> 
+
+
 		
 		<!-- Shortcut Icons -->
 		<link rel="shortcut icon" href="/images/favicon.ico" />
