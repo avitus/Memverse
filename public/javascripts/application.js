@@ -76,6 +76,16 @@ var totalChecked = 0;
           return false;
         }
     }
+    if ( ref == 4 )
+    {
+        if ( totalChecked == 0 ) {
+        alert("Requested action could not be performed: no verses selected.");
+        return false;
+        }
+        else {
+        return true;
+        }
+    }
 }
 
 

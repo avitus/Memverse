@@ -49,7 +49,7 @@
 	
 	<br>
 	
-	<%= submit_tag "Delete", :confirm => "Are you sure you want to delete selected verse(s)?", :onclick => "return checkAllFields(3);", :remote => true %>
+	<%= submit_tag t('.print_selected'), :onclick => "return checkAllFields(4);", :remote => true, :format => :pdf %> <%= submit_tag t('.delete_selected'), :onclick => "return checkAllFields(3);", :remote => true %>
 		
 <% end %>
 
@@ -58,7 +58,7 @@
 <br>
 
 <div>
-	<%= link_to 'Print (PDF)', {:controller => :memverses, :action => :show_all_my_verses, :format => :pdf}%>
+	<%= link_to 'Print All Verses (PDF)', {:controller => :memverses, :action => :show_all_my_verses, :format => :pdf}%>
 </div>
 
 <!-- Highlight verse to be verified -->

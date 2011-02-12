@@ -309,6 +309,9 @@
       b3:              "3 Recordar - Difícil"
       b2:              "2 No Sabe  - Familiar"
       b1:              "1 No Sabe  - Ni Idea"
+    show_all_my_verses:
+      delete_selected: "Borrar selección"
+      print_selected:  "Imprimir selección"
   profile:
     update_profile:
       Name:                     "Nombre"
