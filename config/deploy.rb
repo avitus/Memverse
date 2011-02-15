@@ -1,8 +1,97 @@
+##############################################################
+##  Application
+##############################################################
+set :user, 'andyvitus'                                        # Your hosting account's username
+set :domain, 'memverse.com'                                   # Hosting servername where your account is located
+set :project, 'Memverse'                                      # Your application as its called in the repository
+set :application, 'staging.memverse.com'                      # Your app's location (domain or subdomain)
+set :applicationdir, "/home/#{user}/#{application}"           # The location of your application on your hosting (may differ for each hosting provider)
+
+##############################################################
+##  Servers
+##############################################################
+role :web, domain
+role :app, domain
+role :db,  domain, :primary => true
+
+##############################################################
+##  Git
+##############################################################
+set :scm, 'git'
+set :repository,  "git@github.com:avitus/Memverse.git"        # Your git repository location
+set :branch, 'master'                                         # tell cap the branch to checkout during deployment
+set :scm_verbose, true
+
+# set :scm_passphrase, "pa$$word"                             # The deploy user's password
+# set :git_enable_submodules, 1                               # if you have vendored rails
+# set :git_shallow_clone, 1
+
+##############################################################
+##  Deployment Config
+##############################################################
+set :deploy_to, applicationdir                                # deploy to directory set above
+set :deploy_via, :remote_cache                                # Remote caching will keep a local git repo on the server you’re deploying to and simply run a fetch from that rather than an entire clone. This is probably the best option as it will only fetch the changes since the last.
+default_run_options[:pty] = true                              # Forgo errors when deploying from windows, Must be set for the password prompt from git to work
+set :chmod755, "app config db lib public vendor script script/* public/disp*"
+set :use_sudo, false
+set :rails_env, "staging"
+
+##############################################################
+##  Authentication
+##############################################################
+ssh_options[:keys] = %w(/home/avitus/.ssh/id_rsa)
+ssh_options[:paranoid] = false
+default_run_options[:pty] = true 
+ssh_options[:forward_agent] = true                            # Use agent forwarding to simplify key management in order to use local keys
+# ssh_options[:verbose] = :debug
+# ssh_options[:port] = 22
+
+##############################################################
+##  Staging
+##############################################################
 set :stages, %w(staging production)
-set :default_stage, "production"
+set :default_stage, "staging"
 require File.expand_path("#{File.dirname(__FILE__)}/../vendor/gems/capistrano-ext-1.2.1/lib/capistrano/ext/multistage")
 
+##############################################################
+##  Database config and restart
+##############################################################
+after 'deploy:update_code', 'deploy:symlink_db', "deploy:set_rails_env"
 
+namespace :deploy do  
+  desc "Symlinks the database.yml"                            # Link in the database config
+  task :symlink_db, :roles => :app do
+    run "ln -nfs #{deploy_to}/shared/config/database.yml #{release_path}/config/database.yml"
+  end
+
+  # TODO: This doesn't work at the moment ... have to do manually
+  desc "Sets the rails environment variable"
+  task :set_rails_env do                                      # Set the Rails environment variable
+    tmp = "#{current_path}/tmp/environment.rb"
+    final = "#{current_path}/config/environment.rb"
+    run <<-CMD
+    echo 'RAILS_ENV = "#{rails_env}"' > #{tmp};
+    cat #{final} >> #{tmp} && mv #{tmp} #{final};
+    CMD
+  end  
+
+  desc "Create asset packages for production" 
+  task :after_update_code, :roles => [:web] do                 # Compress and minify javascript and css files
+    run <<-EOF
+    cd #{release_path} && rake asset:packager:build_all
+    EOF
+  end  
+
+  desc "Restarting mod_rails with restart.txt"                # Restart passenger on deploy
+  task :restart, :roles => :app, :except => { :no_release => true } do
+    run "touch #{current_path}/tmp/restart.txt"
+  end   
+  
+end
+
+##############################################################
+##  Database tasks
+##############################################################
 namespace :db do
   desc 'Dumps the production database to db/production_data.sql on the remote server'
   task :remote_db_dump, :roles => :db, :only => { :primary => true } do
@@ -36,6 +125,9 @@ namespace :db do
   end
 end
 
+##############################################################
+##  Hoptoad
+##############################################################
 Dir[File.join(File.dirname(__FILE__), '..', 'vendor', 'gems', 'hoptoad_notifier-*')].each do |vendored_notifier|
   $: << File.join(vendored_notifier, 'lib')
 end

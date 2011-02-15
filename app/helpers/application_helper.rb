@@ -11,16 +11,29 @@ module ApplicationHelper
   end
   
   # ----------------------------------------------------------------------------------------------------------
-  # Outputs the corresponding flash message if any are set
+  # Outputs the corresponding flash message if any are set (Rails 2 version left for reference)
   # ----------------------------------------------------------------------------------------------------------  
+  #  def flash_messages
+  #    messages = []
+  #    %w(notice warning error).each do |msg|
+  ##      messages << content_tag(:div, html_escape(flash[msg.to_sym]), :id => "flash-#{msg}") unless flash[msg.to_sym].blank?
+  #      messages << content_tag(:div, flash[msg.to_sym].html_safe, :id => "flash-#{msg}") unless flash[msg.to_sym].blank?
+  #    end
+  #    messages
+  #  end
+      
   def flash_messages
-    messages = []
-    %w(notice warning error).each do |msg|
-#      messages << content_tag(:div, html_escape(flash[msg.to_sym]), :id => "flash-#{msg}") unless flash[msg.to_sym].blank?
-      messages << content_tag(:div, flash[msg.to_sym], :id => "flash-#{msg}") unless flash[msg.to_sym].blank?
+    messages = ''.html_safe
+    [:error, :notice].each do |t|
+      if flash[t]
+        messages << content_tag(:div, flash[t].html_safe, :id => "flash-#{t}")
+     end
     end
-    messages
-  end
+    unless messages.blank?
+       content_tag(:div, messages)
+    end
+  end     
+    
     
   # ----------------------------------------------------------------------------------------------------------
   # Returns bible book index
@@ -94,7 +107,6 @@ module ApplicationHelper
       ''
     end
   end
-
   
   
 end

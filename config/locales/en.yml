@@ -260,6 +260,7 @@
     Practice:              "Practice"
     Accuracy Test:         "Accuracy Test"
     Chapter Review:        "Chapter Review"
+    Quick Mem:             "QuickMem (beta)"
   learn_menu:
     Tutorial:              "Tutorial"
     SuperMemo Algorithm:   "Supermemo Algorithm"
@@ -326,6 +327,7 @@
       1st Letter Prompts:       "1st Letter Prompts"
       Test all references:      "Test all references?"
       Always show feedback:     "Always show feedback?"
+      Show social toolbar:      "Show social toolbar?"
       Update profile:           "Update Profile"
       Your profile:             "Your Profile"
       Photo Upload A:           "If you'd like to upload a photo of yourself, please visit"

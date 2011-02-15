@@ -19,18 +19,18 @@
 	</div>
 	
 	<p><% if blog_post.fck_created %>
-		<%= blog_post.body -%>
+		<%= blog_post.body.html_safe -%>
 	<% else %>
 		<%= simple_format(auto_link(blog_post.body)) %>
 	<% end %>
 	</p>
 	
 	<% if blog_post.category %>
-		<%= image_tag "bloggity/cat.gif" -%> <%= link_to blog_post.category.name, {:controller => 'blog_posts', :action => :index, :blog_id => blog_post.blog_id, :category_id => blog_post.category_id} %>
+		<%= image_tag "bloggity/cat.gif" -%> <%= link_to blog_post.category.name.html_safe, {:controller => 'blog_posts', :action => :index, :blog_id => blog_post.blog_id, :category_id => blog_post.category_id} %>
 	<% end %>
 	
 	<% unless blog_post.tags.blank? %>
-		<%= image_tag "bloggity/tag.gif" -%> <%= blog_post.tags.collect { |t| link_to(t.name, {:controller => 'blog_posts', :action => :index, :blog_id => blog_post.blog_id}.merge(:tag_name => t.name)) }.join(", ") %>
+		<%= image_tag "bloggity/tag.gif" -%> <%= blog_post.tags.collect { |t| link_to(t.name, {:controller => 'blog_posts', :action => :index, :blog_id => blog_post.blog_id}.merge(:tag_name => t.name)) }.join(", ").html_safe %>
 	<% end %>
 	
 	<% if blog_logged_in? && (current_user.can_blog?(@blog_id) || current_user.can_moderate_blog_comments?(@blog_id)) %>
@@ -39,7 +39,7 @@
 		actions << link_to('Destroy', blog_named_link(blog_post, :destroy), :confirm => 'Are you sure?', :method => :delete) if current_user.can_blog?(@blog_id) 
 		actions << link_to('Close commenting', blog_named_link(blog_post, :close), :confirm => 'Are you sure?') if current_user.can_moderate_blog_comments?(@blog_id) && !blog_post.comments_closed?
 		%>
-		<br /><br /><%= actions.join(" or ") -%>
+		<br /><br /><%= actions.join(" or ").html_safe -%>
 	<% end %>
 <br/>
 </div>

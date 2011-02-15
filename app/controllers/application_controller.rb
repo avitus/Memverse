@@ -1,10 +1,10 @@
+# coding: utf-8
 class ApplicationController < ActionController::Base
   include AuthenticatedSystem
   include RoleRequirementSystem
 
   helper :all # include all helpers, all the time
   protect_from_forgery
-  filter_parameter_logging :password, :password_confirmation
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
  
   helper Ziya::HtmlHelpers::Charts
@@ -38,8 +38,9 @@ class ApplicationController < ActionController::Base
     # if params[:locale] is nil then I18n.default_locale will be used
     if current_user  
       I18n.locale = case current_user.language
-        when "English" then "en"
-        when "Spanish" then "es"
+        when "English"          then "en"
+        when "Spanish"          then "es"
+        when "Bahasa Indonesia" then "in"
         else "en"
       end
     else
@@ -56,6 +57,7 @@ class ApplicationController < ActionController::Base
   def translate_to_english(book)
    
     if I18n.backend.send(:translations)
+      # TODO: should change 'index' in line below to 'key'
       return I18n.backend.send(:translations)[I18n.locale.to_sym][:book][:name].index(book).to_s
     else
       return book
@@ -113,13 +115,16 @@ class ApplicationController < ActionController::Base
     # Check for correct string formatting
     if valid_ref(vsref)
       
-      entered_book_name  = vsref.slice!(/([0-3]?\s+)?[a-záéíóúüñ]+\s+/i).rstrip!.titleize
-      
+      entered_book_name  = vsref.slice!(/([0-3]?\s+)?([a-záéíóúüñ\-]+\s)+/i).rstrip!.titleize
+            
       # --- Book name should be translated into English after this point ---
-      book = I18n.locale == 'en' ? entered_book_name : translate_to_english(entered_book_name)
-
-
-      book  = "Psalms" if book == "Psalm"
+      if I18n.locale == :en
+      	book = entered_book_name 
+	  else 
+	  	book = translate_to_english(entered_book_name)
+	  end
+	  	  
+      book = "Psalms" if book == "Psalm"
  
       if !BIBLEBOOKS.include?(full_book_name(book)) # This is not a book of the bible
         return 2, book # Error code for invalid book of the bible
@@ -162,6 +167,8 @@ class ApplicationController < ActionController::Base
     vs.versenum    = verse.to_i
     if (tl=='ESV')
       vs.text      = Esv.request(book + ' ' + chapter.to_s + ':' + verse.to_s)
+      vs.text      = vs.text.gsub(/-{2,}/, " - ")  # replace double-dash with single dash
+      vs.text      = vs.text.gsub(/\s{2,}/, " ").strip # remove extra white space      
       vs.verified  = true
       if vs.text.include?("ERROR")
         logger.info("*** ESV Query returned an error: #{vs.text}")
@@ -295,8 +302,11 @@ class ApplicationController < ActionController::Base
     #   previous verse is in db
     #   and prev_verse is in user's list of memory verses  
     if (!errorcode) and prev_vs = verse_in_db(book, chapter, verse-1, verse_id.translation) and prev_mv = verse_in_userlist(prev_vs) 
+      logger.debug("*** Found previous verse: #{prev_mv.verse.ref}")
       return prev_mv.id 
     else
+      logger.debug("*** No previous verse found")
+	  logger.debug("***** Verse parsed with error code: #{errorcode}")
       return nil
     end
     
@@ -334,7 +344,24 @@ class ApplicationController < ActionController::Base
     return start_vs_id
    
   end
+
+ 
+  # ----------------------------------------------------------------------------------------------------------
+  # For URL escaping/unescaping
+  #   Input: URL with encoded characters
+  #   Output: string
+  # ----------------------------------------------------------------------------------------------------------     
+  def url_escape(string)
+    string.gsub(/([^ a-zA-Z0-9_.-]+)/n) do
+    '%' + $1.unpack('H2' * $1.size).join('%').upcase
+    end.tr(' ', '+')
+  end
   
+  def url_unescape(string)
+    string.tr('+', ' ').gsub(/((?:%[0-9a-fA-F]{2})+)/n) do
+    [$1.delete('%')].pack('H*')
+    end
+  end  
   
   # ----------------------------------------------------------------------------------------------------------
   # Update starting verse for downstream verses
@@ -370,8 +397,6 @@ class ApplicationController < ActionController::Base
     
     # Look for other translations
     # mem_vs = Memverse.find(:all, :conditions => ["user_id = ?", current_user.id])       
-    
-    
     
     return false
   end

@@ -3,20 +3,28 @@
 
 <!-- Question-side : Entry box -->	
 <fieldset id="question-side">
-	<legend class="verse-ref"><%=@mv.verse.ref%> </legend>
+	<legend><span class="verse-ref"><%=@mv.verse.ref%></span><span class="verse-tl"> [<%=@mv.verse.translation %>]</span></legend> 
 		<% form_tag :action => 'mark_test_quick' do %>
 			
 			<div id="answerbox">
 		  		<%= text_area_tag(:verseguess, params[:verseguess] )%>			
 		  	</div>
 		
-		<div id="scoreTestButtons">								
-		  <div align="left"><%= submit_tag t('.b5'),	:class => "submit", :q => 5 %></div>								
-		  <div align="left"><%= submit_tag t('.b4'),	:class => "submit", :q => 4 %></div>	
-		  <div align="left"><%= submit_tag t('.b3'), 	:class => "submit", :q => 3 %></div>	
-		  <div align="left"><%= submit_tag t('.b2'),	:class => "submit", :q => 2 %></div>	
-		  <div align="left"><%= submit_tag t('.b1'), 	:class => "submit", :q => 1 %></div>	
-		</div>			  
+			<div id="scoreTestButtons">								
+				<div align="left"><%= submit_tag t('.b5'),	:class => "submit", :q => 5 %></div>								
+				<div align="left"><%= submit_tag t('.b4'),	:class => "submit", :q => 4 %></div>	
+				<div align="left"><%= submit_tag t('.b3'), 	:class => "submit", :q => 3 %>
+								
+					<div id="ff-button" align="right">
+						<img alt="FastForward" border="0" src="images/fast_forward.png" width="48" height="48">
+					</div>
+					
+				</div>	
+				<div align="left"><%= submit_tag t('.b2'),	:class => "submit", :q => 2 %></div>	
+				<div align="left"><%= submit_tag t('.b1'), 	:class => "submit", :q => 1 %></div>	  	
+			</div>			
+			  
+		
 		
 		<% end %>	
 </fieldset>	
@@ -43,6 +51,9 @@
 				</span>
 			</p>					
 		</div>
+		
+		<img class="center spinner" id="ajax_spinner" src="/images/indicator2.gif" alt="Comparing..." style="display: none" /> 			
+				
 	</div>
 </fieldset>	
 
@@ -53,7 +64,7 @@
 		<!-- Front Panel -->
 	    <div class="quickFlipPanel refPanel">
 	        <p class="verse-ref"><%= @mv.verse.ref %></p>
-			<p class="mnemonic"><%=@mnemonic%></p>
+			<p class="mnemonic"><%= @mv.mnemonic_if_req %></p>
 	        <p class="quickFlipCta"><%= t('.show_verse') %></p>
 	    </div>
 	
@@ -70,8 +81,8 @@
 				</div>
 			   	
 		        <p> 
-					<span class="current-versenum superscript">			<%= @mv.verse.versenum if @prior_text %></span>
-					<span id="current-text">							<%= @mv.verse.text%>					</span>
+					<span class="current-versenum superscript">				<%= @mv.verse.versenum if @prior_text %></span>
+					<span id="current-text">							    <%= @mv.verse.text%>					</span>
 				</p>
 		        <p class="quickFlipCta"><%= t('.back_to_test') %></p>
 			</div>			
@@ -97,158 +108,104 @@
 %>
 -->
 
-<script language="JavaScript" type="text/javascript">
+
+<script language="JavaScript" type="text/javascript"><!--
+
+    // unblock when ajax activity stops 
+    $(document).ajaxStop($.unblockUI);
 		
 	$(document).ready(function() {
+			
+		var ondeck 				= {};
+		var current				= {};
+		var user_id				= "<%= current_user.id %>";		
+
 	    $('.quickFlip').quickFlip();
 
 		$("table#upcoming-verses .upcoming-verse-ref:contains('<%=@mv.verse.ref%>')").remove()				
-
+			 
+		current.id		= "<%= @mv.id %>";
+		current.text	= "<%= escape_verse(@mv.verse.text) %>";
 		
 		// Load next verse
-		$.getJSON("/memverses/test_next_verse", { skip: false, mv: "<%=@mv.id%>" },
-		   function(data){
+		$.blockUI({ message: null });
+		ondeck = stageverses(current.id);	
+		$('#ff-button').toggle(<%= !@mv.due? %>);					// Hide/Show fast forward button
 
-			 finished	= data.finished;
-			 
-			 mv_testing = "<%= @mv.id %>";
-			 mv_verse	= "<%=escape_verse@mv.verse.text%>";
-			 
-			 if (!finished)
-			 {	
-				 ref 		= data.ref;
-				 mv_id		= data.mv_id;	 
-				 txt 		= data.next.verse.text;
-				 versenum	= data.next.verse.versenum;
-				 
-				 if(typeof(data.next_prior) !== 'undefined' && data.next_prior != null)
-				 {
-				 	priortxt	= data.next_prior.verse.text;
-				 	priornum	= data.next_prior.verse.versenum;				 	
-				 }
-				 else
-				 {
-				 	priortxt	= null;
-					priornum	= null;
-				 }
-			 }
-		   });
-		
-			
-		$("#verseguess").observe_field(0.5, function( ) {			
-            //Get feedback
-			$.get("/memverses/feedback", { correct: mv_verse, verseguess: this.value, echo: true  },
-				function(data){
+		// Verse feedback	
+		$("#verseguess").observe_field(0.5, function( ) { 
+			$.get("/feedback", { correct: current.text, verseguess: encodeURIComponent(this.value), echo: <%= @show_feedback %>  },
+				function(data){	
 					$("#ajaxWrapper").html(data);
-				});	
+			});
         });
+        
+        $('.spinner')
+			.ajaxStart(function() {
+		        $(this).show();
+		    })
+			.ajaxStop(function() {
+		        $(this).hide();
+    	});
+			
+		// ==== User clicks on fastforward button ====				
+		$('#ff-button').click(function() {
+			
+			// Check whether we're done for the day
+			if (ondeck.finished) {
+				log_progress(user_id)
+				window.location="./progress";
+				return (false);
+			}
+			else {
+				success = insertondeck(ondeck.mv_skip, ondeck.mv_prior_skip);	// Update page with ondeck verses
+				current = ondeck.mv_skip										// Update current verse
+				update_upcoming(12, ondeck.mv_skip.id);							// Update upcoming verses
+				$.blockUI({ message: null });									// Block UI while new verses are loaded
+				ondeck = stageverses(current.id);								// Get new ondeck verses						
+				return (false);	
+			}			
+		});
 		
-			
+		// ==== User clicks 1-5 button ====			
 		$('.submit').click( function() {
-			
+						 						
 			// == Set key press
 			q = $(this).attr("q");
 				
 			// == Remove verse from list of upcoming verses
-			// TODO: Need to keep refreshing the upcoming verses box if less than x verses
-			$("table#upcoming-verses .upcoming-verse-ref:contains(" + ref + ")").remove()				
+			$("table#upcoming-verses .upcoming-verse-ref:contains(" + ondeck.mv.ref + ")").remove()				
 				
 			// Check whether we're done for the day
-			if (finished)
-			{
-				// TODO: Need to update progress table
+			if (ondeck.finished) {
+				$.getJSON("/mark_test_quick", { mv: current.id, q: q  }, 			// Score verse
+					function(data) {
+						if (data.msg) {
+							alert(data.msg); 										// Give user a nice response												
+						}						
+				});								
+				log_progress(user_id)												// TODO: this will execute before final verse is scored
 				window.location="./progress";
 				return (false);
 			}
-								
-			// == Update references on testing box
-			$(".verse-ref").text(ref);
-						
-			// == Clear the input box and put cursor in input box
-			$("#verseguess").val('');
-			$("#verseguess").focus();
-			
-			// == Clear the feedback 
-			$("#ajaxWrapper").text('');
-								
-			// == Update prior verse and reference	
-			if (typeof(priortxt) !== 'undefined' && priortxt != null)
-			{
-				$(".priorVerse").show()				
-				$(".prior-text").text(priortxt);   		// TODO: if previous verse didn't have a prior text then it won't be there
-				$(".prior-versenum").text(priornum);	// TODO: if previous verse didn't have a prior text then it won't be there				
+			else {
+				success = insertondeck(ondeck.mv, ondeck.mv_prior);					// Update page with Ondeck verse
+				$.blockUI({ message: null });
+				$.getJSON("/mark_test_quick", { mv: current.id, q: q  }, 			// Score verse
+					function(data) {
+						if (data.msg) {
+							alert(data.msg); 										// Give user a nice response												
+						}
+						update_upcoming(12, ondeck.mv.id);							// Update upcoming verses
+						current = ondeck.mv											// data for the verse we're now testing															
+						ondeck = stageverses(current.id);							// Runs only on successful callback from mark test call above					
+				});					
+				return (false);	
 			}
-			else 
-			{
-				$(".priorVerse").hide()
-			}
-
-											
-			// == Reset the flashcard 
-			$('.quickFlip').quickFlipper( {}, 0 );
-			
-			// == Update front of flash card with Mnemonic (if necessary)
-						
-			// == Update current verse on back of flash card
-			$("#flashcard-back-text #current-text").text(txt);
-			$(".current-versenum").text(versenum);
-			
-			// == Score verse
-			$.getJSON("/memverses/mark_test_quick", { mv: mv_testing, q: q  },
-				function(data){
-					if (data.msg) 
-					{
-						// Give user a nice response
-						alert(data.msg);												
-					}
-					
-					// == Runs only on successful callback from mark test call above
-					$.getJSON("/memverses/test_next_verse", { skip: false, mv: mv_id },
-						function(data){
-						
-							finished	= data.finished;
-				
-							// data for the verse we're currently testing
-							mv_testing 	= mv_id;
-							mv_verse	= txt;
-							mv_versenum = versenum;
-		
-							if (!finished)
-							{
-								// data for the next verse ...
-								ref 		= data.ref;					
-								txt 		= data.next.verse.text;
-								versenum	= data.next.verse.versenum;
-								mv_id		= data.mv_id;
-								// ... and its prior verse
-								if(typeof(data.next_prior) !== 'undefined' && data.next_prior != null)
-								{
-									priortxt	= data.next_prior.verse.text;
-									priornum	= data.next_prior.verse.versenum;							
-								}
-								else
-								{
-									priortxt = null;
-									priornum = null;
-								}
-								
-							}
-																
-					   });
-
-				});	
-		
-
-			
-			// == Return false
-			return (false);	
-		})	
-		
+										
+		})			
 	});
-</script>
-
-
-
+--></script>
 
 
 

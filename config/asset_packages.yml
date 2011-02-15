@@ -1,8 +1,8 @@
 --- 
 javascripts: 
 - base: 
-  - jquery-1.4
-  - jquery-ui
+  - jquery-1.4.3.min
+  - jquery-ui-1.8.6.custom.min
   - jrails
   - jquery.jeditable
   - application
@@ -16,7 +16,8 @@ javascripts:
   - jquery.quickflip
   - jquery.autocomplete  
   - sorttable
-  - jquery.hoverIntent  
+  - jquery.hoverIntent
+  - jquery.observe_field
 stylesheets: 
 - base: 
   - base

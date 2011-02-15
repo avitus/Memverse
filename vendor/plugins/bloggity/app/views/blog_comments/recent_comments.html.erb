@@ -2,11 +2,13 @@
 	<h3>Latest Comments</h3>
 		
 	<% for comment in @newest_comments %>
-		<div>
-			<p><%= comment.user.display_name %> commented on <%= link_to(comment.blog_post.title, blog_named_link(comment.blog_post)) %> ( <%= comment.updated_at.to_date %> )</p>
-			<blockquote><%= comment.comment %></blockquote>
-			<hr>
-		</div>
+		<% if comment.blog_post %>
+			<div>
+				<p><%= comment.user.display_name %> commented on <%= link_to(comment.blog_post.title, blog_named_link(comment.blog_post)) %> ( <%= comment.updated_at.to_date %> )</p>
+				<blockquote><%= comment.comment %></blockquote>
+				<hr>
+			</div>
+		<% end %>
 	<% end %>
 
 </div>

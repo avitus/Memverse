@@ -1,54 +1,57 @@
 <div class="verse-list">
-
+<% form_tag({:action => 'manage_verses'}, :method => :post, :name => "manage_verses") do %>
 	<table class="memverse-standard">
 	  <tr>		  	 
-		  <th><%= link_to 'Verse',		:action => 'show_all_my_verses'										%></th>
-		  <th><%= link_to 'Version',		:action => 'show_all_my_verses'									%></th>
+		  <th><input type="checkbox" onclick="checkAllFields(1);" id="checkAll" /></th>
+		  <th><%= link_to 'Verse',			:action => 'show_all_my_verses'									%></th>
+		  <th>Version</th>
 		  <th><%= link_to 'eFactor',		:action => 'show_all_my_verses', :sort_order => 'efactor'		%></th>
 		  <th><%= link_to 'Status', 		:action => 'show_all_my_verses', :sort_order => 'status'		%></th>		  				  	  		  		  		  
 		  <th><%= link_to 'Last Tested',	:action => 'show_all_my_verses', :sort_order => 'last_tested'	%></th>	
-		  <th><%= link_to 'Next Test',	:action => 'show_all_my_verses', :sort_order => 'next_test'			%></th>
-<!--	  <th><%= link_to 'N', 			:action => 'show_all_my_verses', :sort_order => 'rep_n'				%></th> -->
-		  <th><%= link_to 'Interval', 	:action => 'show_all_my_verses', :sort_order => 'test_interval'		%></th>
-		  <th><%= link_to 'Attempts', 	:action => 'show_all_my_verses', :sort_order => 'attempts'			%></th>
-		  <th><%= link_to 'Ref Int', 	:action => 'show_all_my_verses', :sort_order => 'ref_interval'		%></th>		  	  		  
-		  <th><%= link_to 'Ref Test', 	:action => 'show_all_my_verses', :sort_order => 'next_ref_test'		%></th>		  	  		  
+		  <th><%= link_to 'Next Test',		:action => 'show_all_my_verses', :sort_order => 'next_test'		%></th>
+		  <th><%= link_to 'Interval', 		:action => 'show_all_my_verses', :sort_order => 'test_interval'	%></th>
+		  <th><%= link_to 'Attempts', 		:action => 'show_all_my_verses', :sort_order => 'attempts'		%></th>
+		  <th><%= link_to 'Ref Int', 		:action => 'show_all_my_verses', :sort_order => 'ref_interval'	%></th>		  	  		  
+		  <th><%= link_to 'Ref Test', 		:action => 'show_all_my_verses', :sort_order => 'next_ref_test'	%></th>		  	  		  
 		  <th>Tags</th>
-		  <th>Del</th>
 		  <th>Verse Status</th>
 	  </tr>
-	<% for mv in @my_verses %>
-	  <tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
-		<td align="left">  <%= link_to mv.verse.ref, {:action => 'show', :id => mv.id } %></td>		 
-		<td align="center"><%= mv.verse.translation		%></td>		
-	 	<td align="center"><%= mv.efactor				%></td>	
-	 	<td align="center"><%= mv.status				%></td>			
-	 	<td align="center"><%= mv.last_tested			%></td>
-	 	<td align="center"><%= mv.next_test				%></td>	
-<!-- 	<td align="center"><%= mv.rep_n					%></td>	-->		
-	 	<td align="center"><%= mv.test_interval			%></td>	
-		<td align="center"><%= mv.attempts				%></td>
-	 	<td align="center"><%= mv.ref_interval			%></td>
-	 	<td align="center"><%= mv.next_ref_test			%></td>
-	 	<td align="left">  <%= mv.tag_list.to_s			%></td>
-		<td align="center"><%= link_to '[x]', {:action => 'destroy_mv', :id => mv.id }, 
-								:confirm => 'Are you sure you want to delete this memory verse?', 
-								:method => :post %></td>
-	 	<td align="center" class="flag_verse" id=<%= mv.verse.id %>><%= 			
-			if mv.verified?
-				link_to_remote mv.verse.error_flag ? "Error Reported" : "Verified", 
-								:url 		=> { :action => "toggle_verse_flag", :id => mv.verse.id },
-								:update 	=> mv.verse.id
-			elsif !mv.locked?
-				link_to '[Editable]', :action => 'edit_verse', :mv_id => mv.id
-			else
-				'Pending Verification'
-			end
-		%></td>
-	  </tr>
-	<% end %>
+		<% for mv in @my_verses %>
+		  <tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
+			<td align="center"><%= check_box_tag("mv[]", mv.id, false, :onclick => "checkAllFields(2);", :class => "boxes") %></td>
+			<td align="left">  <%= link_to mv.verse.ref, {:action => 'show', :id => mv.id } %></td>		 
+			<td align="center"><%= mv.verse.translation		%></td>		
+		 	<td align="center"><%= mv.efactor				%></td>	
+		 	<td align="center"><%= mv.status				%></td>			
+		 	<td align="center"><%= mv.last_tested			%></td>
+		 	<td align="center"><%= mv.next_test				%></td>	
+		 	<td align="center"><%= mv.test_interval			%></td>	
+			<td align="center"><%= mv.attempts				%></td>
+		 	<td align="center"><%= mv.ref_interval			%></td>
+		 	<td align="center"><%= mv.next_ref_test			%></td>
+		 	<td align="left">  <%= mv.tag_list.to_s			%></td>
+		 	<td align="center" class="flag_verse" id=<%= mv.verse.id %>><%= 			
+				if mv.verified?
+					link_to mv.verse.error_flag ? "Error Reported" : "Verified", 
+									:url 		=> { :action => "toggle_verse_flag", :id => mv.verse.id },
+									:update 	=> mv.verse.id,
+									:remote		=> true
+				elsif !mv.locked?
+					link_to '[Editable]', edit_verse_path(mv)
+				else
+					'Pending Verification'
+				end
+			%></td>
+		  </tr>
+		<% end %>
 
 	</table>
+	
+	<br>
+	
+	<%= submit_tag "Delete", :confirm => "Are you sure you want to delete selected verse(s)?", :remote => true %>
+		
+<% end %>
 
 </div>
 
@@ -64,6 +67,5 @@
     $('.flag_verse').click(function () { 
       $(this).closest('tr').toggleClass("hilite"); 
     });
-
   });
 </script>

@@ -24,18 +24,18 @@ class Memverse < ActiveRecord::Base
   belongs_to  :verse
   
   # Named Scopes
-  named_scope :memorized,     :conditions => { :status => "Memorized" }
-  named_scope :learning,      :conditions => { :status => "Learning" }
-  named_scope :current, lambda { {:conditions => ['next_test >= ?', Date.today ]} }
-  named_scope :american,      :include => {:user, :country}, :conditions => { 'countries.printable_name' => 'United States' }
-  named_scope :old_testament, :include => :verse, :conditions => { 'verses.book_index' =>  1..39 }
-  named_scope :new_testament, :include => :verse, :conditions => { 'verses.book_index' => 40..66 }
+  scope :memorized,         where(:status => "Memorized")
+  scope :learning,          where(:status => "Learning" )
+  scope :current,  lambda { where('next_test >= ?', Date.today) }
+  scope :american,          where('countries.printable_name' => 'United States').includes([:user, :country])
+  scope :old_testament,     where('verses.book_index' =>  1..39).includes(:verse)
+  scope :new_testament,     where('verses.book_index' => 40..66).includes(:verse)
   
-  named_scope :history,   :include => :verse, :conditions => { 'verses.book_index' =>  1..17 }
-  named_scope :wisdom,    :include => :verse, :conditions => { 'verses.book_index' => 18..22 }
-  named_scope :prophecy,  :include => :verse, :conditions => { 'verses.book_index' => 23..39 }
-  named_scope :gospel,    :include => :verse, :conditions => { 'verses.book_index' => 40..43 }
-  named_scope :epistle,   :include => :verse, :conditions => { 'verses.book_index' => 45..65 }
+  scope :history,   where('verses.book_index' =>  1..17).includes(:verse)
+  scope :wisdom,    where('verses.book_index' => 18..22).includes(:verse)
+  scope :prophecy,  where('verses.book_index' => 23..39).includes(:verse) # TODO: include Revelation
+  scope :gospel,    where('verses.book_index' => 40..43).includes(:verse)
+  scope :epistle,   where('verses.book_index' => 45..66).includes(:verse) # TODO: switch Revelation to prophecy
     
   # Validations
   validates_presence_of :user_id, :verse_id
@@ -43,13 +43,8 @@ class Memverse < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   # Implement counter caches for number of verses memorized and learning
   # ----------------------------------------------------------------------------------------------------------   
-  def after_save
-    self.update_counter_cache
-  end
-  
-  def after_destroy
-    self.update_counter_cache
-  end
+  after_save    :update_counter_cache
+  after_destroy :update_counter_cache
   
   def update_counter_cache
     self.user.memorized = Memverse.count(:all, :conditions => ["user_id = ? and status = ?", self.user.id, "Memorized"])
@@ -58,6 +53,20 @@ class Memverse < ActiveRecord::Base
     self.user.save
   end
 
+  # ----------------------------------------------------------------------------------------------------------
+  # Convert to JSON format (for AJAX goodness on main memorization page
+  # ---------------------------------------------------------------------------------------------------------- 
+  def as_json(options={})
+    { 
+      :id         => self.id, 
+      :ref        => self.verse.ref,
+      :tl         => self.verse.translation,
+      :text       => self.verse.text,
+      :versenum   => self.verse.versenum,
+      :skippable  => !self.due?,
+      :mnemonic   => self.needs_mnemonic? ? self.verse.mnemonic : nil
+    }
+  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Implementation of SM-2 algorithm
@@ -71,37 +80,45 @@ class Memverse < ActiveRecord::Base
   #     n_new         - increment by 1 unless answer was incorrect
   #     efactor_new   - updated efactor
   #     interval_new  - new interval
+  #
+  #   Q  Change in EF
+  #   ~~~~~~~~~~~~~~~~
+  #   0     -0.80
+  #   1     -0.54
+  #   2     -0.32
+  #   3     -0.14
+  #   4     +0.00
+  #   5     +0.10
   # ----------------------------------------------------------------------------------------------------------     
   def supermemo(q)
-    
+        
     prev_learning = (self.status == "Learning")
     
-    if q<3 # answer was incorrect
-      n_new = 1  # Start from the beginning
-    else
-      n_new = self.rep_n + 1 # Go on to next iteration
+    
+    if self.due?
+      if q<3 # answer was incorrect
+        n_new = 1  # Start from the beginning
+      else
+        n_new = self.rep_n + 1 # Go on to next iteration
+      end
+   
+      efactor_new = [ self.efactor - 0.8 + (0.28 * q) - (0.02 * q * q), 2.5 ].min # Cap eFactor at 2.5
+      if efactor_new < 1.2       
+        efactor_new = 1.2 # Set minimum efactor to 1.2
+      end    
+      
+      # Calculate new interval
+      interval_new = case n_new
+        when 1 then 1
+        when 2 then 4
+        else [self.test_interval * efactor_new, self.user.max_interval.to_i].min.round # Don't set interval to more than one year for now
+      end  
+    else # don't update verses that aren't due
+      n_new         = self.rep_n
+      interval_new  = self.test_interval
+      efactor_new   = self.efactor
     end
     
-    # Q  Change in EF
-    # ~~~~~~~~~~~~~~~~
-    # 0     -0.80
-    # 1     -0.54
-    # 2     -0.32
-    # 3     -0.14
-    # 4     +0.00
-    # 5     +0.10
- 
-    efactor_new = [ self.efactor - 0.8 + (0.28 * q) - (0.02 * q * q), 2.5 ].min # Cap eFactor at 2.5
-    if efactor_new < 1.2       
-      efactor_new = 1.2 # Set minimum efactor to 1.2
-    end    
-    
-    # Calculate new interval
-    interval_new = case n_new
-      when 1 then 1
-      when 2 then 4
-      else [self.test_interval * efactor_new, self.user.max_interval.to_i].min.round # Don't set interval to more than one year for now
-    end  
     
     # Update memory verse parameters
     self.rep_n          = n_new
@@ -150,6 +167,67 @@ class Memverse < ActiveRecord::Base
       # mv.destroy
       logger.info("Removing memory verse #{mv.verse.ref} belong to #{mv.user.login}")
     }
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Remove a memory verse (delete a memory verse)
+  # ---------------------------------------------------------------------------------------------------------- 
+  def remove_mv
+    next_ptr  = self.next_verse
+    prev_ptr  = self.prev_verse
+     
+    # If there is a prev verse
+    # => Find previous verse and remove its 'next' ptr
+    if prev_ptr
+      logger.debug("Removing link from previous verse: #{prev_ptr}")
+      
+      # TODO: This find method is necesary rather than .find(prev_ptr) for the case (which shouldn't ever happen)
+      # when the next/prev pointers aren't valid
+      prev_vs = Memverse.find(:first, :conditions => {:id => prev_ptr})
+      if prev_vs
+        prev_vs.next_verse = nil
+        prev_vs.save
+      else
+        # TODO: This is occasionally happening ... caused by verses being duplicated from double-clicking on links
+        logger.warn("*** Alert: A verse was deleted which had an invalid prev pointer - this should never happen")        
+      end
+    
+    end
+    
+    # If there is a next verse
+    # => Find next verse and make it the first verse in the sequence
+    if next_ptr
+      logger.debug("Setting the next verse: #{next_ptr} to be first verse of sequence")
+      next_vs = Memverse.find(:first, :conditions => {:id => next_ptr})
+      if next_vs
+        next_vs.first_verse = nil # Starting verses in a sequence to not reference themselves as the first verse
+        next_vs.prev_verse  = nil
+        next_vs.save
+        # Follow chain and correct first verse
+        next_vs.update_downstream_start_verses  
+      else
+        logger.warn("*** Alert: A verse was deleted which had an invalid next pointer - this should never happen")        
+      end
+    end
+    
+    self.destroy
+    
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Update the starting verse for downstream verses -- mostly used when a verse is deleted
+  # ---------------------------------------------------------------------------------------------------------- 
+  def update_downstream_start_verses
+    # If mv is pointing to a start verse, use that as the first verse, otherwise set mv as the first verse
+    new_starting_verse = self.first_verse || self.id # || returns first operator that satisfies condition
+   
+    mv = self
+   
+    while mv.next_verse
+      mv = Memverse.find(mv.next_verse)
+      mv.first_verse = new_starting_verse
+      mv.save
+    end    
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -272,8 +350,6 @@ class Memverse < ActiveRecord::Base
   end
 
 
-
-
   # ----------------------------------------------------------------------------------------------------------
   # Is a verse memorized?
   # ----------------------------------------------------------------------------------------------------------    
@@ -307,6 +383,21 @@ class Memverse < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------   
   def due?
     return self.next_test <= Date.today
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Is this verse a prior verse in the same passage
+  # ----------------------------------------------------------------------------------------------------------    
+  def prior_in_passage_to?(mv)
+  
+    passage = self.passage  
+    
+    if passage and passage.index(mv)
+      return passage.index(self) <= passage.index(mv)
+    else
+      return false
+    end
+  
   end
 
 
@@ -391,7 +482,7 @@ class Memverse < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------   
   def more_to_memorize_in_sequence?
     
-    slack         =  5 # Add some slack to avoid having to review the entire sequence too soon afterwards
+    slack         =  7 # Add some slack to avoid having to review the entire sequence too soon afterwards
     min_test_freq = self.user.max_interval || 120 # Minimum test frequency in days for entire sequence     
     
     if self.solo_verse? or self.next_verse.nil?
@@ -412,6 +503,7 @@ class Memverse < ActiveRecord::Base
         
     end
   end
+  
 
   # ----------------------------------------------------------------------------------------------------------
   # Checks whether verse is locked
@@ -455,6 +547,10 @@ class Memverse < ActiveRecord::Base
     end
   end
   
+  def mnemonic_if_req
+    self.needs_mnemonic? ? self.verse.mnemonic : "-"
+  end
+  
   # ----------------------------------------------------------------------------------------------------------
   # Returns: list of all the tags for that verse
   # ----------------------------------------------------------------------------------------------------------   
@@ -482,6 +578,26 @@ class Memverse < ActiveRecord::Base
     position    = all_verses.index(self)
     return all_verses[position-1]
   end  
+
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Find a verse that is due but not this one
+  # ----------------------------------------------------------------------------------------------------------    
+  def another_due_verse
+
+    mv = Memverse.find( :first, :conditions => ["user_id = ? and id != ?", self.user.id, self.id], 
+                        :order => "next_test ASC")            
+          
+          
+    if mv && mv.due? 
+      return mv.first_verse_due_in_sequence
+    else
+      return nil
+    end   
+  
+  end
+
+  
   
   # ----------------------------------------------------------------------------------------------------------
   # Return the next verse that needs to be memorized today [AJAX]
@@ -493,9 +609,9 @@ class Memverse < ActiveRecord::Base
     if self.next_verse && self.more_to_memorize_in_sequence?
       
       if skip
-        # Jump to the next verse that is due in this passage
+        # Jump to the next verse that is due in this passage or if there isn't one just get another verse that is due
         logger.debug("*** Skipping to next verse due in sequence")              
-        return self.next_verse_due_in_sequence
+        return self.next_verse_due_in_sequence || self.another_due_verse
       else
         # Just return the next verse
         logger.debug("*** Returning next verse in sequence")      
@@ -503,21 +619,10 @@ class Memverse < ActiveRecord::Base
       end
     
     else
+    
       logger.debug("*** No more verses in this sequence")
-      
-      # Need to handle case where it's the first verse of the day so verse hasn't been scored yet      
-      mv = Memverse.find( :first, 
-                          :conditions => ["user_id = ? and id != ?", self.user.id, self.id], 
-                          :order      => "next_test ASC")            
-            
-            
-      if mv && mv.due? 
-        return mv.first_verse_due_in_sequence
-      else
-        return nil
-      end      
-      
-      
+      return self.another_due_verse    
+    
     end
     
   end
@@ -559,6 +664,18 @@ class Memverse < ActiveRecord::Base
     else
       return nil
     end 
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Return previous memory verse
+  # ----------------------------------------------------------------------------------------------------------
+  def prior_mv
+    # --- Load prior verse if available
+    if self.prev_verse
+      @next_prior_vs = Memverse.find(self.prev_verse)
+    else
+      return nil
+    end
   end
 
   # ----------------------------------------------------------------------------------------------------------

@@ -24,9 +24,10 @@
 #    t.integer  "learning",                                 :default => 0
 #    t.date     "last_activity_date"
 #    t.boolean  "show_echo",                               :default => true
+#    t.boolean  "show_toolbar",                            :default => true
 
 require 'digest/sha1'
-require 'md5' # required for Gravatar support in Bloggity
+require 'digest/md5' # required for Gravatar support in Bloggity
 
 class User < ActiveRecord::Base
   include Authentication
@@ -34,19 +35,36 @@ class User < ActiveRecord::Base
   include Authentication::ByCookieToken
   include Authorization::AasmRoles
 
-  # Validations
-  validates_presence_of :login, :if => :not_using_openid?
-  validates_length_of :login, :within => 3..40, :if => :not_using_openid?
-  validates_uniqueness_of :login, :case_sensitive => false, :if => :not_using_openid?
-  validates_format_of :login, :with => RE_LOGIN_OK, :message => MSG_LOGIN_BAD, :if => :not_using_openid?
-  validates_format_of :name, :with => RE_NAME_OK, :message => MSG_NAME_BAD, :allow_nil => true
-  validates_length_of :name, :maximum => 100
-  validates_presence_of :email, :if => :not_using_openid?
-  validates_length_of :email, :within => 6..100, :if => :not_using_openid?
-  validates_uniqueness_of :email, :case_sensitive => false, :if => :not_using_openid?
-  validates_format_of :email, :with => RE_EMAIL_OK, :message => MSG_EMAIL_BAD, :if => :not_using_openid?
-  validates_uniqueness_of :identity_url, :unless => :not_using_openid?
-  validate :normalize_identity_url
+  # Validations - Rails 2
+  #  validates_presence_of :login, :if => :not_using_openid?
+  #  validates_length_of :login, :within => 3..40, :if => :not_using_openid?
+  #  validates_uniqueness_of :login, :case_sensitive => false, :if => :not_using_openid?
+  #  validates_format_of :login, :with => RE_LOGIN_OK, :message => MSG_LOGIN_BAD, :if => :not_using_openid?
+  #  validates_format_of :name, :with => RE_NAME_OK, :message => MSG_NAME_BAD, :allow_nil => true
+  #  validates_length_of :name, :maximum => 100
+  #  validates_presence_of :email, :if => :not_using_openid?
+  #  validates_length_of :email, :within => 6..100, :if => :not_using_openid?
+  #  validates_uniqueness_of :email, :case_sensitive => false, :if => :not_using_openid?
+  #  validates_format_of :email, :with => RE_EMAIL_OK, :message => MSG_EMAIL_BAD, :if => :not_using_openid?
+  #  validates_uniqueness_of :identity_url, :unless => :not_using_openid?
+  #  validate :normalize_identity_url
+  
+  validates :login, :presence   => true,
+                    :uniqueness => true,
+                    :length     => { :within => 3..40 },
+                    :format     => { :with => Authentication.login_regex, :message => Authentication.bad_login_message }
+
+  validates :name,  :format     => { :with => Authentication.name_regex, :message => Authentication.bad_name_message },
+                    :length     => { :maximum => 100 },
+                    :allow_nil  => true
+
+  validates :email, :presence   => true,
+                    :uniqueness => true,
+                    :format     => { :with => Authentication.email_regex, :message => Authentication.bad_email_message },
+                    :length     => { :within => 6..100 }  
+  
+  
+  
   
   # Relationships
   has_and_belongs_to_many :roles
@@ -67,24 +85,31 @@ class User < ActiveRecord::Base
   has_many :blog_comments
   
   # Named Scopes
-  named_scope :active,            lambda { {:conditions => ['last_activity_date >= ?', 1.month.ago ]} }
-  named_scope :active_today,      lambda { {:conditions => ['last_activity_date = ?',  Date.today  ]} }
-  named_scope :active_this_week,  lambda { {:conditions => ['last_activity_date >= ?', 1.week.ago  ]} }  
-  named_scope :american,          :include => :country, :conditions => { 'countries.printable_name' => 'United States' }
+  scope :active,            lambda { where('last_activity_date >= ?', 1.month.ago) }
+  scope :active_today,      lambda { where('last_activity_date = ?',  Date.today) }
+  scope :active_this_week,  lambda { where('last_activity_date >= ?', 1.week.ago) }  
+  scope :american, 					 where('countries.printable_name' => 'United States').includes(:country)
 
   # HACK HACK HACK -- how to do attr_accessible from here?
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here
   attr_accessible :login, :email, :name, :password, :password_confirmation, :identity_url, 
                   :newsletters, :reminder_freq, :last_reminder, :church, :country, :american_state, 
-                  :show_echo, :max_interval, :mnemonic_use, :all_refs, :referred_by
+                  :show_echo, :max_interval, :mnemonic_use, :all_refs, :referred_by, :show_toolbar
 
 
+  # Rails 2 version
   # Authenticates a user by their login name and unencrypted password - Returns the user or nil
+  #  def self.authenticate(login, password)
+  #    u = find_in_state :first, :active, :conditions => { :login => login } # need to get the salt
+  #    u && u.authenticated?(password) ? u : nil
+  #  end
+  
   def self.authenticate(login, password)
-    u = find_in_state :first, :active, :conditions => { :login => login } # need to get the salt
+    return nil if login.blank? || password.blank?
+    u = find_by_login(login.downcase) # need to get the salt
     u && u.authenticated?(password) ? u : nil
-  end
+  end  
   
   # Check if a user has a role
   def has_role?(role)
@@ -333,6 +358,30 @@ class User < ActiveRecord::Base
   end
 
   # ----------------------------------------------------------------------------------------------------------
+  # Save Entry in Progress Table
+  # ----------------------------------------------------------------------------------------------------------
+  def save_progress_report
+    
+    # Check whether there is already an entry for today
+    pr = ProgressReport.find(:first, :conditions => { :user_id => self.id, :entry_date => Date.today} )    
+    
+    if pr.nil?
+    
+      pr = ProgressReport.new
+      
+      pr.user_id          = self.id
+      pr.entry_date       = Date.today
+      pr.memorized        = self.memorized
+      pr.learning         = self.learning
+      pr.time_allocation  = self.work_load
+      
+      pr.save
+      
+    end
+  end
+
+
+  # ----------------------------------------------------------------------------------------------------------
   # Return list of people a user has referred
   # ----------------------------------------------------------------------------------------------------------  
   def referrals( active = false )
@@ -428,25 +477,22 @@ class User < ActiveRecord::Base
     self.mnemonic_use     = new_params["mnemonic_use"] 
     self.all_refs         = new_params["all_refs"] 
     self.max_interval     = new_params["max_interval"] 
+    self.show_toolbar     = new_params["show_toolbar"] 
     self.save
   end
 
   # ----------------------------------------------------------------------------------------------------------
-  # Returns number of overdue verses
-  # Input: User object
+  # Returns number of overdue verses (does not include verses that are due today)
   # ----------------------------------------------------------------------------------------------------------  
   def overdue_verses
-    
-    overdue_mv = 0
-    
-    # TODO: this should be done with a named search otherwise we bring back every memory verse
-    self.memverses.each { |mv|
-      if mv.next_test < Date.today
-        overdue_mv += 1
-      end
-    }
- 
-    return overdue_mv
+    Memverse.find(:all, :conditions => ["user_id = ? and next_test < ?", self.id, Date.today]).count    
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Returns number of due verses
+  # ----------------------------------------------------------------------------------------------------------
+  def due_verses
+    Memverse.find(:all, :conditions => ["user_id = ? and next_test <= ?", self.id, Date.today]).count  
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -454,13 +500,10 @@ class User < ActiveRecord::Base
   # ---------------------------------------------------------------------------------------------------------- 
   def first_verse_today
     mv = Memverse.find( :first, :conditions => {:user_id => self.id}, :order => "next_test ASC")
-    logger.debug("*** First verse due is #{mv.verse.ref} ... checking for prior verses in this sequence that are due")
     
     if mv && mv.due?
-      logger.debug("*** First verse due in this sequence is: #{mv.first_verse_due_in_sequence.verse.ref}")
       return mv.first_verse_due_in_sequence
     else
-      logger.debug("*** No verses due")
       return nil
     end
     
@@ -468,12 +511,55 @@ class User < ActiveRecord::Base
 
   # ----------------------------------------------------------------------------------------------------------
   # Returns upcoming verses that need to be tested today for this user
-  # Input:
-  # Output: 
   # ----------------------------------------------------------------------------------------------------------  
-  def upcoming_verses
+  def upcoming_verses(limit = 15, mode = "test", mv_id = nil)
     
+    mvs = Memverse.find(:all, :conditions => ["user_id = ? and next_test <= ?", self.id, Date.today], :order => "next_test ASC", :limit => limit)
+    current_mv = Memverse.find(mv_id) unless mv_id.nil?
+    logger.debug("*** Ignoring verses prior to #{current_mv.verse.ref}") unless mv_id.nil?
+    
+    mvs.collect! { |mv|
+    
+        # First handle the case where this is not a starting verse
+        if mv.first_verse? # i.e. there is an earlier verse in the sequence
+          # Either return first verse that is due in the sequence
+          if mv.sequence_length > 5 and mode == "test"
+            mv.first_verse_due_in_sequence   # This method returns the first verse due as an object
+          # Or return the first verse no matter what if it is a short sequence
+          else
+            Memverse.find( mv.first_verse )  # Go find the first verse
+          end          
+        # Otherwise, this is a first verse so just return it
+        else
+          mv
+        end
+    }.uniq!  # this handles the case where multiple verses are pointing to a first verse
+    # TODO: how should we sort the upcoming verses
+    # TODO: we should convert passages into Gen 1:1-10
+
+    upcoming = Array.new
+       
+    # At this point, mvs array contains all the starting verses due today. Now we add the downstream verses
+    mvs.each { |mv|
+    
+        upcoming << mv unless mv.prior_in_passage_to?(current_mv)
+        
+        # Add any subsequent verses in the chain
+        next_verse = mv.next_verse
+        if next_verse  
+          cmv = Memverse.find( next_verse )
+        end
+        while (next_verse) and cmv.more_to_memorize_in_sequence?
+          cmv         = Memverse.find(next_verse)          
+          upcoming   << cmv unless cmv.prior_in_passage_to?(current_mv)
+          next_verse  = cmv.next_verse
+        end     
+    }
+    
+    return upcoming
+       
   end
+
 
   # ----------------------------------------------------------------------------------------------------------
   # Change reminder frequency for inactive users

@@ -1,3 +1,5 @@
+# coding: utf-8
+
 #    t.string   "translation",                    :null => false
 #    t.integer  "book_index",                     :null => false
 #    t.string   "book",                           :null => false
@@ -13,30 +15,31 @@ class Verse < ActiveRecord::Base
 
   acts_as_taggable # Alias for 'acts_as_taggable_on :tags'
 
-  require 'cgi'  
-  require 'open-uri'
-  require 'nokogiri'
+#  Rails 2
+#  require 'cgi'  
+#  require 'open-uri'
+#  require 'nokogiri'
 
   before_destroy :delete_memverses
   
   
   # Relationships
   has_many :memverses
-  # TODO: this is not used ... need to clean up: has_and_belongs_to_many :collections
+  # TODO: this is not used ... need to clean up: has_and_belongs_to_many :collections ... tags has replace the idea of collections
   
   # Validations
   validates_presence_of :translation, :book, :chapter, :versenum, :text
 
-  named_scope :old_testament, :conditions => { :book_index =>  1..39 }
-  named_scope :new_testament, :conditions => { :book_index => 40..66 }
+  scope :old_testament, where(:book_index =>  1..39)
+  scope :new_testament, where(:book_index => 40..66)
   
-  named_scope :history,   :conditions => { :book_index =>  1..17 }
-  named_scope :wisdom,    :conditions => { :book_index => 18..22 }
-  named_scope :prophecy,  :conditions => { :book_index => 23..39 }
-  named_scope :gospel,    :conditions => { :book_index => 40..43 }
-  named_scope :epistle,   :conditions => { :book_index => 45..65 }
+  scope :history,  where(:book_index =>  1..17)
+  scope :wisdom,   where(:book_index => 18..22)
+  scope :prophecy, where(:book_index => 23..39)  # TODO: need to include Revelation -- make this a class method: http://asciicasts.com/episodes/215-advanced-queries-in-rails-3
+  scope :gospel,   where(:book_index => 40..43)
+  scope :epistle,  where(:book_index => 45..65)
 
-  named_scope :tl, lambda { |tl| {:conditions => ['translation = ?', tl ]} }
+  scope :tl, lambda { |tl| where('translation = ?', tl) }
                             
                             
   # ----------------------------------------------------------------------------------------------------------
@@ -244,6 +247,7 @@ class Verse < ActiveRecord::Base
       when "NAS" then "NASB"
       when "NKJ" then "NKJV"
       when "NIV" then "NIV1984"
+      when "NNV" then "NIV"
       else self.translation.downcase
     end
        
@@ -256,11 +260,18 @@ class Verse < ActiveRecord::Base
     txt = txt.gsub(/[’‘]/, "\'")
     txt = txt.gsub(/[“”]/, '"')
     # Removes weirdly encoded characters at the start of strings
-    txt = txt.gsub(/[\x80-\xff]/,"")
+    # txt = txt.gsub(/[\x80-\xff]/," ")  # ALV: 2011-01-13 Changed to replacing with a space to avoid collapsing newline/carriage return
     txt = txt.split("Footnotes")[0] unless !txt
     txt = txt.split("Cross")[0] unless !txt
     txt = txt.gsub(/\s{2,}/, " ").strip unless !txt               # remove extra white space in verse and at beginning and end
-    txt == self.text ? true : txt
+    
+    # Clean up verse in DB. Change stylish quotation marks to boring vertical ones ... ok to leave in DB with the stylish quotes.
+    in_db = self.text
+    in_db = in_db.gsub(/[’‘]/, "\'")
+    in_db = in_db.gsub(/[“”]/, '"')
+    
+    
+    txt == in_db ? true : txt
   end
 
   # ----------------------------------------------------------------------------------------------------------

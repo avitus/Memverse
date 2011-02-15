@@ -5,7 +5,7 @@
 	
 	<% if @user == current_user %>
 		<div id="quest-info">
-			<%= render :partial => "quests/current_user_quests", :locals => { :completed => @current_completed_quests } %> 
+			<%= render :partial => "quests/current_user_quests", :locals => { :completed => @current_completed_quests, :current_user_quests => @current_user_quests } %> 
 		</div>
 	<% end %>
 

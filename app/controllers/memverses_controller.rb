@@ -1,9 +1,10 @@
+# coding: utf-8
+
 # * Add client side verse memorization feedback
 # - Add moderators for different translations
 # - Add nice, explanatory pop-up boxes using jQuery
 # - Allow for idle verses
 # - Add better verse search - allow for missing search parameters to return, for instance, all translations of a given verse
-# ? Fix link to RSS feed (add nicer link)
 # ? Allow users to enter first letter of each word when memorizing
 # ? Allow for multiple groups
 
@@ -96,6 +97,9 @@
 # 04/06/10 : Added pages showing state/country members, added event feed for churches, states and countries
 # 06/28/10 : New feature: add entire chapters
 # 08/14/10 : New feature: launch of solo progression track
+# 12/01/10 : New feature: QuickMem (now with Javascript)
+# 01/06/11 : New feature: Multi-verse management (delete)
+# 02/11/11 : ** Converted to Rails 3.0.3 and Ruby 1.9.2 **
 
 class MemversesController < ApplicationController
   
@@ -117,7 +121,7 @@ class MemversesController < ApplicationController
   def index
     
     @tab = "home"
-    @due_today = upcoming_verses(50).length unless mobile_device?
+    @due_today = current_user.due_verses unless mobile_device?
     
     # Level information
     quests_remaining = current_user.current_uncompleted_quests.length
@@ -139,15 +143,15 @@ class MemversesController < ApplicationController
     # === Get Recent Tweets ===    
     @tweets = Tweet.all(:limit => 20, :order => "created_at DESC", :conditions => ["importance <= 3"])      
             
-    # === RSS Devotional ===
-    dev_url   = 'http://www.heartlight.org/rss/track/devos/spurgeon-morning/'
-    dailydev  = RssReader.posts_for(dev_url, length=1, perform_validation=false)[0]
-    
-    # Clean up feed
-    if dailydev
-      @devotion = dailydev.description.split("<P></div>")[0].split("<h4>Thought</h4>")[1]
-      @dev_ref  = dailydev.description.split("<h4>Verse</h4>")[1].split("<h4>Thought</h4>")[0].gsub("<P>", "").gsub("</P>","")
-    end
+    # # === RSS Devotional ===
+    # dev_url   = 'http://www.heartlight.org/rss/track/devos/spurgeon-morning/'
+    # dailydev  = RssReader.posts_for(dev_url, length=1, perform_validation=false)[0]
+    # 
+    # # Clean up feed
+    # if dailydev
+    #   @devotion = dailydev.description.split("<P></div>")[0].split("<h4>Thought</h4>")[1]
+    #   @dev_ref  = dailydev.description.split("<h4>Verse</h4>")[1].split("<h4>Thought</h4>")[0].gsub("<P>", "").gsub("</P>","")
+    # end
     
     # === Verse of the Day ===   
     @votd_txt, @votd_ref, @votd_tl, @votd_id  = verse_of_the_day()
@@ -164,6 +168,13 @@ class MemversesController < ApplicationController
                       
   end
   
+  # ----------------------------------------------------------------------------------------------------------
+  # AJAX: Memorized verses
+  # ----------------------------------------------------------------------------------------------------------  
+  def memverse_counter
+    total_verses = Memverse.memorized.count
+    render :json => { :total_verses => total_verses }
+  end
  
   # ----------------------------------------------------------------------------------------------------------
   # Starter pack - select verses from top ten verses
@@ -188,11 +199,13 @@ class MemversesController < ApplicationController
   def verse_of_the_day
     
     # Find a popular verse eg: ['Jn 3:16', [['NIV', id] ['ESV', id]]]
-    verse     = popular_verses(50).rand # get 20 most popular verses - pick one at random
+    verse     = popular_verses(100).sample # get 100 most popular verses - pick one at random
+      
+    logger.debug("Verse of the day: #{verse.inspect}")
       
     # Pick out a translation in user's preferred translation or at random
     verse_ref         = verse[0]     
-    verse_tl          = verse[1].select{ |tl| tl[0] == current_user.translation }.compact.first || verse[1].rand
+    verse_tl          = verse[1].select{ |tl| tl[0] == current_user.translation }.compact.first || verse[1].sample
     verse_id          = verse_tl[1]
     verse_translation = verse_tl[0]
     
@@ -264,6 +277,7 @@ class MemversesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------  
   def show
     @mv         = Memverse.find(params[:id])
+
     @verse      = @mv.verse
     @user_tags  = @mv.tags
     @tags       = @verse.tags
@@ -315,7 +329,7 @@ class MemversesController < ApplicationController
   # Edit a verse
   # ----------------------------------------------------------------------------------------------------------   
   def edit_verse
-    @verse = Memverse.find(params[:mv_id]).verse 
+    @verse = Memverse.find(params[:id]).verse 
   end 
 
   # ----------------------------------------------------------------------------------------------------------
@@ -406,7 +420,7 @@ class MemversesController < ApplicationController
     mv.last_tested  = Date.today
     mv.next_test    = Date.today # Start testing tomorrow
     mv.status       = "Learning"
-    # Add multi-verse linkage     
+    # Add multi-verse linkage  
     mv.prev_verse   = prev_verse(vs)
     mv.next_verse   = next_verse(vs)
     mv.first_verse  = first_verse(mv)
@@ -529,10 +543,11 @@ class MemversesController < ApplicationController
       flash[:notice] = case errorcode
         when 1 then "Bible reference is incorrectly formatted. Format should be John 3:16 or John 3 vs 16"
         when 2 then "#{book} is not a valid book of the bible"
-        when 3 then "Enter a bible reference eg. John 3:16. Please enter each verse individually and remove any verse numbering or footnote information. Consecutive verses will be grouped into a single memory passage. Please enter verses with great care as subsequent users will be memorizing the same verse. Think like a scribe!"
+        when 3 then 'Enter a bible reference eg. John 3:16. Please enter each verse individually and remove any verse numbering or footnote information. Consecutive verses will be grouped into a single memory passage. Please enter verses with great care as subsequent users will be memorizing the same verse. Think like a scribe!'
         when 4 then "Please enter the text for your memory verse. Please do not include any verse numbering or footnote information."
         else        "The verse you entered is longer than the longest verse in the bible! Please enter one verse at a time. Consecutive verses will be grouped into a single memory passage."         
       end
+      flash[:notice].html_safe
       render(:template => 'memverses/add_verse.html.erb')
     end
     
@@ -564,42 +579,6 @@ class MemversesController < ApplicationController
     
     # We need to remove inter-verse linkage
     dead_mv   = Memverse.find(params[:id])
-    next_ptr  = dead_mv.next_verse
-    prev_ptr  = dead_mv.prev_verse
-     
-    # If there is a prev verse
-    # => Find previous verse and remove its 'next' ptr
-    if prev_ptr
-      logger.debug("Removing link from previous verse: #{prev_ptr}")
-      
-      # TODO: This find method is necesary rather than .find(prev_ptr) for the case (which shouldn't ever happen)
-      # when the next/prev pointers aren't valid
-      prev_vs = Memverse.find(:first, :conditions => {:id => prev_ptr})
-      if prev_vs
-        prev_vs.next_verse = nil
-        prev_vs.save
-      else
-        # TODO: This is occasionally happening ... caused by verses being duplicated from double-clicking on links
-        logger.warn("*** Alert: A verse was deleted which had an invalid prev pointer - this should never happen")        
-      end
-    
-    end
-    
-    # If there is a next verse
-    # => Find next verse and make it the first verse in the sequence
-    if next_ptr
-      logger.debug("Setting the next verse: #{next_ptr} to be first verse of sequence")
-      next_vs = Memverse.find(:first, :conditions => {:id => next_ptr})
-      if next_vs
-        next_vs.first_verse = nil # Starting verses in a sequence to not reference themselves as the first verse
-        next_vs.prev_verse  = nil
-        next_vs.save
-        # Follow chain and correct first verse
-        update_downstream_start_verses(next_vs)  
-      else
-        logger.warn("*** Alert: A verse was deleted which had an invalid next pointer - this should never happen")        
-      end
-    end
     
     # Remove verse from memorization queue
     mem_queue = session[:mv_queue]
@@ -610,11 +589,48 @@ class MemversesController < ApplicationController
       mem_queue.delete(dead_mv.id)
     end
 
-    # Finally, delete the verse
-    dead_mv.destroy  
-
+    dead_mv.remove_mv  # remove verse and sort out next and previous pointers
+    
     redirect_to :action => 'show_all_my_verses'   
   end 
+ 
+  # ----------------------------------------------------------------------------------------------------------
+  # Manage verses - used to delete a lot of verses 
+  # TODO: see above ... should re-use code from above and call a model method
+  # ----------------------------------------------------------------------------------------------------------
+  def manage_verses
+    
+    mv_ids = params[:mv]
+    action = params[:commit]
+  
+    if (!mv_ids.blank?) and (action == "Delete")
+      mv_ids.each { |mv_id|   
+      
+        # Find verse in DB
+        logger.debug("*** Finding mv with id: #{mv_id}")
+        mv = Memverse.find(mv_id)
+        
+      
+        # Remove verse from memorization queue
+        mem_queue = session[:mv_queue]        
+        # We need to check that there is a verse sequence and also that the array isn't empty
+        if !mem_queue.blank?
+          logger.debug("*** Found session queue with verses")
+          # Remove verse from the memorization queue if it is sitting in there
+          mem_queue.delete(mv_id)
+        end
+
+        mv.remove_mv
+
+      }
+    else
+      flash[:notice] = "No verses deleted since you didn't select any."
+    end
+    
+    redirect_to :action => 'show_all_my_verses'
+    
+  end 
+ 
  
   # ----------------------------------------------------------------------------------------------------------
   # Check whether any translations of entered verse are in DB
@@ -622,8 +638,11 @@ class MemversesController < ApplicationController
   def avail_translations
     
     ref = params[:verse]
+	logger.debug("Looking up reference: #{ref}")
     
     errorcode, book, chapter, versenum = parse_verse(ref) 
+	logger.debug("Reference parsed as: #{book} #{chapter}:#{versenum}")
+
 
     if (!errorcode) # If verse is ok
       
@@ -656,10 +675,11 @@ class MemversesController < ApplicationController
     @tab = "home"
     
     # TODO: we need to include a) verse reference and b) verse translation to speed up this page
+    # TODO: can we include a secondary sort order on the canonical verse order? MySQL has no knowledge of verse ordering
     @my_verses = current_user.memverses.all(:include => :verse, :order => params[:sort_order])
 
     if !params[:sort_order]
-      @my_verses.sort!
+      @my_verses.sort!  # default to canonical sort
     end
     
     respond_to do |format| 
@@ -783,7 +803,7 @@ class MemversesController < ApplicationController
           mv                = nil # clear out the loaded memory verse
 
           # Update progress report
-          save_progress_report(current_user)
+          current_user.save_progress_report
           
           # Redirect user to a page of statistics and recommendations
           redirect_to :action => 'show_progress'   
@@ -805,7 +825,7 @@ class MemversesController < ApplicationController
   
     # --- Load upcoming verses ---
     logger.debug("*** Mobile Device: #{mobile_device?}")
-    @upcoming_verses = upcoming_verses() unless mobile_device?
+    @upcoming_verses = current_user.upcoming_verses() unless mobile_device?
     
   end
 
@@ -843,12 +863,10 @@ class MemversesController < ApplicationController
     @page_title = "Memory Verse Review"
     @show_feedback = true
     
-    @mv = current_user.first_verse_today
-    
+    @mv 			= current_user.first_verse_today
+        
     if @mv
-    
-      logger.debug("Starting with verse: #{@mv.verse.ref}, ID: #{@mv.id}")
-      
+      @show_feedback 	= (@mv.test_interval < 90 or current_user.show_echo)        
       # --- Ok to test : Load prior verse if available
       if @mv.prev_verse
         @prev_mv        = Memverse.find(@mv.prev_verse)
@@ -866,8 +884,7 @@ class MemversesController < ApplicationController
     end
   
     # --- Load upcoming verses ---
-    logger.debug("*** Mobile Device: #{mobile_device?}")
-    @upcoming_verses = upcoming_verses() unless mobile_device?
+    @upcoming_verses = current_user.upcoming_verses() unless mobile_device?
     
   end
 
@@ -897,7 +914,7 @@ class MemversesController < ApplicationController
       end
     end
    
-    render :json => {:msg => msg } unless msg
+    render :json => {:msg => msg }
     
     
   end
@@ -906,27 +923,28 @@ class MemversesController < ApplicationController
   # Returns the next verse to be tested - this is a service URL for a js routine
   # ---------------------------------------------------------------------------------------------------------- 
   def test_next_verse
-    # Default to not skipping verses
-    skip = (params[:skip]==true) || false
-    logger.debug("Skip is set to: #{skip} from parameter: #{params[:skip]}")
-    mv   = Memverse.find(params[:mv])
+
+    logger.debug('*** Loading next verse ...')
+
+    current_mv      = Memverse.find(params[:mv])
     
-    @next_mv = mv.next_verse_due(skip)
-    
-    if @next_mv
-      logger.debug("=== Loading next memory verse: #{@next_mv.verse.ref}")
-    else
-      logger.debug("=== Loading next memory verse: None found.")
-    end
-      
-    # --- Load prior verse if available
-    if @next_mv and @next_mv.prev_verse
-      @next_prior_vs = Memverse.find(@next_mv.prev_verse).verse
-      logger.debug(" -- Loading accompanying previous memory verse: #{@next_prior_vs.ref}")
-    end
-    
-    if @next_mv
-      render :json => { :finished => false, :next => @next_mv.verse, :next_prior => @next_prior_vs, :mv_id => @next_mv.id, :ref => @next_mv.verse.ref }.to_json
+    mv              = current_mv.next_verse_due(false)
+    mv_skip         = current_mv.next_verse_due(true)
+
+    prior_mv        = mv && mv.prior_mv
+    prior_mv_skip   = mv_skip && mv_skip.prior_mv
+
+    logger.debug("*** MV              : #{mv.inspect}")
+    logger.debug("*** MV (skip)       : #{mv_skip.inspect}")
+    logger.debug("*** Prior MV        : #{prior_mv.inspect}")
+    logger.debug("*** Prior MV (skip) : #{prior_mv_skip.inspect}")
+     
+    if mv
+      render :json => { :finished       => false, 
+                        :mv             => mv, 
+                        :mv_skip        => mv_skip, 
+                        :prior_mv       => prior_mv, 
+                        :prior_mv_skip  => prior_mv_skip }
     else
       render :json => { :finished => true }
     end
@@ -1119,9 +1137,9 @@ class MemversesController < ApplicationController
       
       # Stop after questions are finished or if user quits
       if session[:reftest_answered] >= session[:reftest_length] or params[:commit]=="Done"  # TODO: handle case where session variables are Nil
-        redirect_to :action => 'reftest_results'
+        redirect_to reftest_results_path
       else
-        redirect_to :action => 'test_ref'
+        redirect_to test_ref_path
       end
     
     else
@@ -1245,25 +1263,11 @@ class MemversesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   # Save Entry in Progress Table
   # ----------------------------------------------------------------------------------------------------------
-  def save_progress_report(user)
-    
-    # Check whether there is already an entry for today
-    pr = ProgressReport.find( :first, 
-                              :conditions => ["user_id = ? and entry_date = ?", current_user.id, Date.today])    
-    
-    if pr.nil?
-    
-      pr = ProgressReport.new
-      
-      pr.user_id          = user.id
-      pr.entry_date       = Date.today
-      pr.memorized        = user.memorized
-      pr.learning         = user.learning
-      pr.time_allocation  = user.work_load
-      
-      pr.save
-      
-    end
+  def save_progress_report
+    user_id = params[:user_id]
+    u = User.find(user_id)
+    u.save_progress_report unless u.nil?
+    render :json => { :saved => true } # TODO: sloppy, we should check whether it actually was saved
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -1329,9 +1333,11 @@ class MemversesController < ApplicationController
       @prior_text       = prior_verse.text
       @prior_versenum   = prior_verse.versenum
     end
-  
+    
     # --- Load upcoming verses ---
-    @upcoming_verses = upcoming_drills() 
+    logger.debug("*** Mobile Device: #{mobile_device?}")
+    @upcoming_verses = current_user.upcoming_verses(limit = 15, mode = "drills" ) unless mobile_device?
+    logger.debug("** Returned #{@upcoming_verses.length} upcoming verses")
    
   end
 
@@ -1398,11 +1404,14 @@ class MemversesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------  
   def feedback
 
-    guess   = params[:verseguess] ? params[:verseguess].gsub(/\s+/," ").strip : ""  # Remove double spaces from guesses    
-    correct = params[:correct]    ? params[:correct].gsub(/\s+/," ").strip    : ""  # The correct verse was stripped, cleaned when first saved
+    guess   = params[:verseguess] ? url_unescape(params[:verseguess]).gsub(/\s+/," ").strip : ""  # Remove double spaces from guesses    
+    correct = params[:correct]    ? url_unescape(params[:correct]).gsub(/\s+/," ").strip    : ""  # The correct verse was stripped, cleaned when first saved
     echo    = (params[:echo] == "true")
 
     logger.debug("Echo (give feedback) is set to: #{echo}")
+    logger.debug("Guess   : #{guess}")
+    logger.debug("Correct : #{correct}")
+    
     
     @correct  = correct
     @feedback = ""  # find a better way to construct the string
@@ -1443,162 +1452,179 @@ class MemversesController < ApplicationController
   end  
 
   # ----------------------------------------------------------------------------------------------------------
+  # Respond to AJAX request for upcoming verses
+  # ----------------------------------------------------------------------------------------------------------  
+  def upcoming_verses(limit = 12, mode = "test")
+    
+    current_mv_id = params[:mv_id]
+    
+    @upcoming_verses = current_user.upcoming_verses(limit, mode, current_mv_id)
+    
+    respond_to do |format|
+      format.html { render :partial=>'upcoming_verses', :layout=>false }
+      format.xml  { render :xml => @upcoming_verses }
+      format.json { render :json => @upcoming_verses }
+    end
+    
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
   # Returns array of upcoming (or overdue) memory verses for current user
   # [ mv_obj, mv_obj, mv_obj ... ]
   # TODO: this is an awful piece of coding ... rewrite as method for user
   # ----------------------------------------------------------------------------------------------------------   
-  def upcoming_verses(limit = 12, mode = "test")
-    
-    logger.debug("==== Getting upcoming verses ===")
-    
-    today   = Date.today    
-    mem_vs  = Memverse.find(:all, 
-                            :conditions => ["user_id = ? and next_test <= ?", current_user.id, today],
-                            :order      => "next_test ASC",
-                            :limit      => limit )
-    
-    # Add in first verse from session variable
-    if session[:mv_queue] and !session[:mv_queue].empty?
-      mem_vs << Memverse.find( session[:mv_queue][0] )
-    end
-        
-    mem_vs.collect! { |mv|
-    
-        # First handle the case where this is not a starting verse
-        if mv.first_verse? # i.e. there is an earlier verse in the sequence
-          # Either return first verse that is due in the sequence
-          if mv.sequence_length > 5 and mode == "test"
-            mv.first_verse_due_in_sequence   # This method returns the first verse due as an object
-          # Or return the first verse no matter what if it is a short sequence
-          else
-            Memverse.find( mv.first_verse )  # Go find the first verse
-          end          
-        # Otherwise, this is a first verse so just return it
-        else
-          mv
-        end
-    }.uniq!  # this handles the case where multiple verses are pointing to a first verse
-
-    upcoming = Array.new
-
-    logger.debug("==== Adding downstream verses to upcoming verses list ===")
-    
-    
-    # At this point, mem_vs array has pointers to all the starting verses due today
-    mem_vs.each { |mv|
-        
-        memory_verse  = Hash.new 
-        memory_verse['verse']         = mv.verse.ref  # TODO: this is the only col not in the table ... no need for this hash silliness
-        memory_verse['efactor']       = mv.efactor
-        memory_verse['status']        = mv.status
-        memory_verse['last_tested']   = mv.last_tested
-        memory_verse['next_test']     = mv.next_test
-        memory_verse['test_interval'] = mv.test_interval
-        memory_verse['n']             = mv.rep_n
-        memory_verse['attempts']      = mv.attempts
-        
-        upcoming << memory_verse
-        
-        # Add any subsequent verses in the chain
-        next_verse = mv.next_verse
-        if next_verse  
-          cmv = Memverse.find( next_verse )
-        end
-        while (next_verse) and cmv.more_to_memorize_in_sequence?
-          
-          cmv         = Memverse.find(next_verse)
-               
-          memory_verse  = Hash.new 
-          memory_verse['verse']         = cmv.verse.ref  # Note: this is the only col not in the table ... no need for this hash silliness
-          memory_verse['efactor']       = cmv.efactor
-          memory_verse['status']        = cmv.status
-          memory_verse['last_tested']   = cmv.last_tested
-          memory_verse['next_test']     = cmv.next_test
-          memory_verse['test_interval'] = cmv.test_interval
-          memory_verse['n']             = cmv.rep_n
-          memory_verse['attempts']      = cmv.attempts         
-          
-          upcoming << memory_verse
-          
-          next_verse = cmv.next_verse
-        end 
-      
-    }
-    
-    return upcoming
-    
-  end
+#  def upcoming_verses(limit = 12, mode = "test")
+#    
+#    logger.debug("==== Getting upcoming verses ===")
+#    
+#    today   = Date.today    
+#    mem_vs  = Memverse.find(:all, 
+#                            :conditions => ["user_id = ? and next_test <= ?", current_user.id, today],
+#                            :order      => "next_test ASC",
+#                            :limit      => limit )
+#    
+#    # Add in first verse from session variable
+#    if session[:mv_queue] and !session[:mv_queue].empty?
+#      mem_vs << Memverse.find( session[:mv_queue][0] )
+#    end
+#        
+#    mem_vs.collect! { |mv|
+#    
+#        # First handle the case where this is not a starting verse
+#        if mv.first_verse? # i.e. there is an earlier verse in the sequence
+#          # Either return first verse that is due in the sequence
+#          if mv.sequence_length > 5 and mode == "test"
+#            mv.first_verse_due_in_sequence   # This method returns the first verse due as an object
+#          # Or return the first verse no matter what if it is a short sequence
+#          else
+#            Memverse.find( mv.first_verse )  # Go find the first verse
+#          end          
+#        # Otherwise, this is a first verse so just return it
+#        else
+#          mv
+#        end
+#    }.uniq!  # this handles the case where multiple verses are pointing to a first verse
+#
+#    upcoming = Array.new
+#
+#    logger.debug("==== Adding downstream verses to upcoming verses list ===")
+#    
+#    
+#    # At this point, mem_vs array has pointers to all the starting verses due today
+#    mem_vs.each { |mv|
+#        
+#        memory_verse  = Hash.new 
+#        memory_verse['verse']         = mv.verse.ref  # TODO: this is the only col not in the table ... no need for this hash silliness
+#        memory_verse['efactor']       = mv.efactor
+#        memory_verse['status']        = mv.status
+#        memory_verse['last_tested']   = mv.last_tested
+#        memory_verse['next_test']     = mv.next_test
+#        memory_verse['test_interval'] = mv.test_interval
+#        memory_verse['n']             = mv.rep_n
+#        memory_verse['attempts']      = mv.attempts
+#        
+#        upcoming << memory_verse
+#        
+#        # Add any subsequent verses in the chain
+#        next_verse = mv.next_verse
+#        if next_verse  
+#          cmv = Memverse.find( next_verse )
+#        end
+#        while (next_verse) and cmv.more_to_memorize_in_sequence?
+#          
+#          cmv         = Memverse.find(next_verse)
+#               
+#          memory_verse  = Hash.new 
+#          memory_verse['verse']         = cmv.verse.ref  # Note: this is the only col not in the table ... no need for this hash silliness
+#          memory_verse['efactor']       = cmv.efactor
+#          memory_verse['status']        = cmv.status
+#          memory_verse['last_tested']   = cmv.last_tested
+#          memory_verse['next_test']     = cmv.next_test
+#          memory_verse['test_interval'] = cmv.test_interval
+#          memory_verse['n']             = cmv.rep_n
+#          memory_verse['attempts']      = cmv.attempts         
+#          
+#          upcoming << memory_verse
+#          
+#          next_verse = cmv.next_verse
+#        end 
+#      
+#    }
+#    
+#    return upcoming
+#    
+#  end
   
   
   # ----------------------------------------------------------------------------------------------------------
   # Returns array of upcoming memory verse drills for current user
   # ----------------------------------------------------------------------------------------------------------   
-  def upcoming_drills(limit = 12)
-    
-    today   = Date.today    
-    mem_vs  = Memverse.find(:all, 
-                            :conditions => ["user_id = ? and last_tested < ?", current_user.id, today],
-                            :order      => "efactor ASC",
-                            :limit      => limit )
-    
-    mem_vs.collect! { |mv|
-        if mv.first_verse?
-          Memverse.find(mv.first_verse)
-        else
-          mv
-        end
-    }.uniq!
-
-
-    upcoming = Array.new
-    
-    # At this point, mem_vs array has pointers to all the starting verses due today
-    mem_vs.each { |mv|
-        
-        vs            = Verse.find(mv.verse_id)
-        verse         = db_to_vs(vs.book, vs.chapter, vs.versenum)
-   
-        memory_verse  = Hash.new 
-        memory_verse['verse']         = verse  # Note: this is the only col not in the table ... no need for this hash silliness
-        memory_verse['efactor']       = mv.efactor
-        memory_verse['status']        = mv.status
-        memory_verse['last_tested']   = mv.last_tested
-        memory_verse['next_test']     = mv.next_test
-        memory_verse['test_interval'] = mv.test_interval
-        memory_verse['n']             = mv.rep_n
-        memory_verse['attempts']      = mv.attempts
-        
-        upcoming << memory_verse
-        
-        # Add any subsequent verses in the chain
-        next_verse = mv.next_verse
-        while (next_verse)
-          
-          cmv         = Memverse.find(next_verse)
-          
-          vs          = cmv.verse
-          verse       = db_to_vs(vs.book, vs.chapter, vs.versenum)         
-          
-          memory_verse  = Hash.new 
-          memory_verse['verse']         = verse  # Note: this is the only col not in the table ... no need for this hash silliness
-          memory_verse['efactor']       = cmv.efactor
-          memory_verse['status']        = cmv.status
-          memory_verse['last_tested']   = cmv.last_tested
-          memory_verse['next_test']     = cmv.next_test
-          memory_verse['test_interval'] = cmv.test_interval
-          memory_verse['n']             = cmv.rep_n
-          memory_verse['attempts']      = cmv.attempts         
-          
-          upcoming << memory_verse
-          
-          next_verse = cmv.next_verse
-        end 
-      
-    }
-    
-    return upcoming[0..limit]
-    
-  end  
+#  def upcoming_drills(limit = 12)
+#    
+#    today   = Date.today    
+#    mem_vs  = Memverse.find(:all, 
+#                            :conditions => ["user_id = ? and last_tested < ?", current_user.id, today],
+#                            :order      => "efactor ASC",
+#                            :limit      => limit )
+#    
+#    mem_vs.collect! { |mv|
+#        if mv.first_verse?
+#          Memverse.find(mv.first_verse)
+#        else
+#          mv
+#        end
+#    }.uniq!
+#
+#
+#    upcoming = Array.new
+#    
+#    # At this point, mem_vs array has pointers to all the starting verses due today
+#    mem_vs.each { |mv|
+#        
+#        vs            = Verse.find(mv.verse_id)
+#        verse         = db_to_vs(vs.book, vs.chapter, vs.versenum)
+#   
+#        memory_verse  = Hash.new 
+#        memory_verse['verse']         = verse  # Note: this is the only col not in the table ... no need for this hash silliness
+#        memory_verse['efactor']       = mv.efactor
+#        memory_verse['status']        = mv.status
+#        memory_verse['last_tested']   = mv.last_tested
+#        memory_verse['next_test']     = mv.next_test
+#        memory_verse['test_interval'] = mv.test_interval
+#        memory_verse['n']             = mv.rep_n
+#        memory_verse['attempts']      = mv.attempts
+#        
+#        upcoming << memory_verse
+#        
+#        # Add any subsequent verses in the chain
+#        next_verse = mv.next_verse
+#        while (next_verse)
+#          
+#          cmv         = Memverse.find(next_verse)
+#          
+#          vs          = cmv.verse
+#          verse       = db_to_vs(vs.book, vs.chapter, vs.versenum)         
+#          
+#          memory_verse  = Hash.new 
+#          memory_verse['verse']         = verse  # Note: this is the only col not in the table ... no need for this hash silliness
+#          memory_verse['efactor']       = cmv.efactor
+#          memory_verse['status']        = cmv.status
+#          memory_verse['last_tested']   = cmv.last_tested
+#          memory_verse['next_test']     = cmv.next_test
+#          memory_verse['test_interval'] = cmv.test_interval
+#          memory_verse['n']             = cmv.rep_n
+#          memory_verse['attempts']      = cmv.attempts         
+#          
+#          upcoming << memory_verse
+#          
+#          next_verse = cmv.next_verse
+#        end 
+#      
+#    }
+#    
+#    return upcoming[0..limit]
+#    
+#  end  
 end
 
 # Books in the Bible: 66

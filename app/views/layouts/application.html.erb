@@ -32,16 +32,24 @@
 	<link rel="alternate" type="application/rss+xml" title="Memverse Blog" href="http://feeds.feedburner.com/MemverseBlog" />
 
 	<!-- Main Stylesheet -->
-	<%= stylesheet_link_merged 'base', :cache => 'cache/all' %>
+	<%= stylesheet_link_tag 'base_packaged', :cache => 'cache/all' %>
+	<!-- <%= stylesheet_link_merged 'base', :cache => 'cache/all' %> -->
 	<%= stylesheet_link_tag 'mobile' if mobile_device? %>
+
+  <!-- Rails 3 XSS protection -->
+  <%= csrf_meta_tag %>
 		
 	<!-- Auxiliary stylesheets, etc -->
 	<%= yield(:head) %>
 
-	<!-- Using Jquery and Jrails -->
-	<%= javascript_include_tag 	'jquery-1.4.3.min', 'jquery-ui', 'jrails', 'jquery.quickflip', 'jquery.hoverIntent', '2leveltab', 
+	<!-- Using Jquery and Jrails NOTE: not using asset packager at the moment -->
+	<!-- No longer using 'prototype' or 'jrails' (only for pre-Rails 3)-->
+	<%= javascript_include_tag 	'jquery.min', 'rails', 
+								'jquery-ui-1.8.6.custom.min', 
+								'jquery.quickflip', 'jquery.hoverIntent', '2leveltab', 
 								'jquery.periodicalupdater', 'jquery.jeditable', 'jquery.autocomplete', 'modernizr-1.6.min', 
-								'jquery.shuffle', 'jquery-ui-1.7.2.custom.min', 'jquery.observe_field', :cache => 'cache/all' %> 
+								'jquery.shuffle',  'jquery.observe_field', 'jquery.blockUI',
+								'application', :cache => 'cache/all' %> 
 							
 	<!-- Shortcut Icons -->
 	<link rel="shortcut icon" href="/images/favicon.ico" />
@@ -67,25 +75,28 @@
 	</script>		
 	<!-- End of Google Analytics Code  -->
 	
-	<!-- Start of Meebo Toolbar  -->
-	<script type="text/javascript">
-		if (typeof Meebo == 'undefined') {
-		Meebo=function(){(Meebo._=Meebo._||[]).push(arguments)};
-		(function(q){
-			var args = arguments;
-			if (!document.body) { return setTimeout(function(){ args.callee.apply(this, args) }, 100); }
-			var d=document, b=d.body, m=b.insertBefore(d.createElement('div'), b.firstChild); s=d.createElement('script');
-			m.id='meebo'; m.style.display='none'; m.innerHTML='<iframe id="meebo-iframe"></iframe>';
-			s.src='http'+(q.https?'s':'')+'://'+(q.stage?'stage-':'')+'cim.meebo.com/cim/cim.php?network='+q.network;
-			b.insertBefore(s, b.firstChild);
-		
-		})({network:'memverse_lu08jo'});
-		Meebo('makeEverythingSharable');
-		}
-	</script>
-	<!-- End of Meebo Toolbar  -->		
+	<% if logged_in? and current_user.show_toolbar %>
+		<!-- Start of Meebo Toolbar  -->
+		<script type="text/javascript">
+			if (typeof Meebo == 'undefined') {
+			Meebo=function(){(Meebo._=Meebo._||[]).push(arguments)};
+			(function(q){
+				var args = arguments;
+				if (!document.body) { return setTimeout(function(){ args.callee.apply(this, args) }, 100); }
+				var d=document, b=d.body, m=b.insertBefore(d.createElement('div'), b.firstChild); s=d.createElement('script');
+				m.id='meebo'; m.style.display='none'; m.innerHTML='<iframe id="meebo-iframe"></iframe>';
+				s.src='http'+(q.https?'s':'')+'://'+(q.stage?'stage-':'')+'cim.meebo.com/cim/cim.php?network='+q.network;
+				b.insertBefore(s, b.firstChild);
+			
+			})({network:'memverse_lu08jo'});
+			Meebo('makeEverythingSharable');
+			}
+		</script>
+		<!-- End of Meebo Toolbar  -->		
+	<% end %>
 	
 	<div id="container">
+	  <noscript><center><p>JavaScript is required to use many features of this website. Please enable JavaScript in your browser and refresh the page.</p></center></noscript>
 		<div id="auth">
 			<ul>
 				<% if logged_in? %>
@@ -102,18 +113,18 @@
 		    <%= @page_title || "Bible Verse Memorization" %>				
 	  	</div> <!-- End of Banner -->
 
-			
+		<!-- http://stackoverflow.com/questions/3477522/preventing-html-character-entities-in-locale-files-from-getting-munged-by-rails3 -->	
 		<div id="main">
 			<% if logged_in? %>
 			<div id="menu-tabs">
 				<ul id="maintab" class="basictab">
-					<li <%= tab(@tab=="home"		) %> rel="homepage">	<%= link_to t('menu.home'), 		home_path %></li>	
-					<li <%= tab(@tab=="mem"			) %> rel="memory">		<%= link_to t('menu.memorize'), 	test_verse_path %></li>
-					<li <%= tab(@tab=="learn"		) %> rel="tutorials">	<%= link_to t('menu.learn'), 		tutorial_path %></li>
-					<li <%= tab(@tab=="profile"		) %> rel="profile">		<%= link_to t('menu.profile'), 		current_user %></li>
-					<li <%= tab(@tab=="contact"		) %> rel="contact">		<%= link_to t('menu.contact'), 		contact_path %></li>	
-					<li <%= tab(@tab=="leaderboard"	) %> rel="leaderboard">	<%= link_to t('menu.leaderboard'), 	leaderboard_path %></li>	
-					<li <%= tab(@tab=="blog"		) %> rel="blog">		<%= link_to t('menu.blog'), 		blog_path %></li>
+					<li <%= tab(@tab=="home"		) %> rel="homepage">	<%= link_to t('menu.home').html_safe, 			home_path %></li>	
+					<li <%= tab(@tab=="mem"			) %> rel="memory">		<%= link_to t('menu.memorize').html_safe, 		test_verse_path %></li>
+					<li <%= tab(@tab=="learn"		) %> rel="tutorials">	<%= link_to t('menu.learn').html_safe, 			tutorial_path %></li>
+					<li <%= tab(@tab=="profile"		) %> rel="profile">		<%= link_to t('menu.profile').html_safe, 		current_user %></li>
+					<li <%= tab(@tab=="contact"		) %> rel="contact">		<%= link_to t('menu.contact').html_safe, 		contact_path %></li>	
+					<li <%= tab(@tab=="leaderboard"	) %> rel="leaderboard">	<%= link_to t('menu.leaderboard').html_safe, 	leaderboard_path %></li>	
+					<li <%= tab(@tab=="blog"		) %> rel="blog">		<%= link_to t('menu.blog').html_safe, 			blog_path %></li>
 				</ul>
 
 				<div id="homepage" class="submenustyle">
@@ -131,6 +142,7 @@
 					<%= link_to t('memorize_menu.Practice'), 			drill_verse_path %>						
 					<%= link_to t('memorize_menu.Accuracy Test'), 		pre_exam_path %>	
 					<%= link_to t('memorize_menu.Chapter Review'), 		pre_chapter_path %>	
+					<%= link_to t('memorize_menu.Quick Mem'), 			test_verse_quick_path %>	
 				</div>
 				
 				<div id="tutorials" class="submenustyle">
@@ -169,9 +181,9 @@
 			<% end %> <!-- if logged_in? -->
 			
 			<%= flash_messages %>
-			<%= yield(:content) or yield %>
+			<%= content_for?(:content) ? yield(:content) : yield %>
 			<div id="meebo-toolbar">
-				<!-- no content -->
+				<!-- no content, just here to add space -->
 			</div>
 		</div> <!-- End of Main -->
 	</div> <!-- End of Container -->
@@ -209,17 +221,7 @@
 	
 	  var feedback_widget = new GSFN.feedback_widget(feedback_widget_options);
 	</script>	<!-- End: Get Satisfaction Script  -->	
-	
-	
-	<!-- Start of Clickable Script  -->
-	<script type="text/javascript">
-	document.write(unescape("%3Cscript src='" + (location.protocol=="https:" ? "https://" : "http://") + "cn.clickable.net/js/cct.js' type='text/javascript'%3E%3C/script%3E"));
-	</script>
-	<script type="text/javascript">
-	document.cookie=cct.CookieCheck(document.cookie);
-	cct.cct_log('0820-4Pea0g3efV9i2e5wa9524bfab41177e692c4e0df');
-	</script> <!-- End: Clickable Script  -->
-	
+		
 	<script type="text/javascript">
 			Meebo("domReady");
 	</script>

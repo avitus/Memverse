@@ -258,7 +258,8 @@
     Reference Recall:      "Referencia Recall"
     Practice:              "Práctica"
     Accuracy Test:         "Exactitud de la prueba"
-    Chapter Review:        "Revisión del capítulo"    
+    Chapter Review:        "Revisión del capítulo"
+    Quick Mem:             "QuickMem (beta)"   
   learn_menu:
     Tutorial:              "Tutorial"
     SuperMemo Algorithm:   "SuperMemo Algoritmo"
@@ -325,6 +326,7 @@
       1st Letter Prompts:       "1 ª Carta pide"
       Test all references:      "Pruebe todas las referencias?"
       Always show feedback:     "Mostrar siempre los comentarios?"
+      Show social toolbar:      "Mostrar siempre la barra de herramientas?"
       Update profile:           "Actualizar perfil"
       Your profile:             "Su perfil"      
       Photo Upload A:           "Si quieres subir una foto de sí mismo, por favor visite"

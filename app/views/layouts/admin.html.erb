@@ -19,14 +19,25 @@
 		<meta name="msvalidate.01" content="A1BB69E880870637C825F612E2FA4034" />				
 		
 		<!-- Main Stylesheet -->
-		<%= stylesheet_link_merged 'base' %>
+		<!-- <%= stylesheet_link_merged 'base' %> -->
+		<%= stylesheet_link_tag 'base_packaged', :cache => 'cache/all' %>
   		
 		<!-- Auxiliiary stylesheets, etc -->
 		<%= yield(:head) %>
 				
-		<!-- Using Jquery and Jrails -->
-		<%= javascript_include_merged 	'jquery-1.4', 'jquery-ui', 'jrails', 'jquery.quickflip', 'jquery.hoverIntent', 
-										'2leveltab', 'jquery.jeditable', 'jquery.autocomplete', 'sorttable' %>
+		<!-- Rails 3 XSS protection -->
+		<%= csrf_meta_tag %> 
+
+		<!-- Using Jquery and Jrails NOTE: not using asset packager at the moment -->
+		<!-- No longer using 'prototype' or 'jrails' (only for pre-Rails 3)-->
+		<%= javascript_include_tag 	'jquery.min', 'rails', 
+									'jquery-ui-1.8.6.custom.min', 
+									'jquery.quickflip', 'jquery.hoverIntent', '2leveltab', 
+									'jquery.periodicalupdater', 'jquery.jeditable', 'jquery.autocomplete', 'modernizr-1.6.min', 
+									'jquery.shuffle',  'jquery.observe_field', 'jquery.blockUI',
+									'application', :cache => 'cache/all' %> 
+
+
 		
 		<!-- Shortcut Icons -->
 		<link rel="shortcut icon" href="/images/favicon.ico" />
@@ -74,13 +85,13 @@
 			<div id="main">
 				<div id="menu-tabs">
 					<ul id="maintab" class="basictab">
-						<li <%= tab(@tab=="home"		) %> rel="homepage">	<%= link_to 'Home &#9660;', 	 		home_path %></li>	
-						<li <%= tab(@tab=="dash"		) %> rel="dashboard">	<%= link_to 'Dashboard &#9660;', 		:controller => 'admin', :action => 'dashboard' %></li>
-						<li <%= tab(@tab=="users"		) %> rel="users">		<%= link_to 'Users &#9660;', 	 		:controller => 'admin', :action => 'show_users', :sort_order => 'ID DESC', :period => 'Active' %></li>
-						<li <%= tab(@tab=="verses"		) %> rel="verses">		<%= link_to 'Verses &#9660;',			:controller => 'admin', :action => 'show_verses_to_be_checked' %></li>
-						<li <%= tab(@tab=="churches"	) %> rel="churches">	<%= link_to 'Churches &#9660;', 		:controller => 'admin', :action => 'show_churches' %></li>	
-						<li <%= tab(@tab=="countries"	) %> rel="countries">	<%= link_to 'Countries &#9660;', 		:controller => 'admin', :action => 'show_countries' %></li>
-						<li <%= tab(@tab=="popverses"	) %> rel="popverses">	<%= link_to 'Popular Verses &#9660;',	:controller => 'admin', :action => 'show_popverses' %></li>						
+						<li <%= tab(@tab=="home"		) %> rel="homepage">	<%= link_to 'Home &#9660;'.html_safe, 	 		home_path %></li>	
+						<li <%= tab(@tab=="dash"		) %> rel="dashboard">	<%= link_to 'Dashboard &#9660;'.html_safe, 		:controller => 'admin', :action => 'dashboard' %></li>
+						<li <%= tab(@tab=="users"		) %> rel="users">		<%= link_to 'Users &#9660;'.html_safe, 	 		:controller => 'admin', :action => 'show_users', :sort_order => 'ID DESC', :period => 'Active' %></li>
+						<li <%= tab(@tab=="verses"		) %> rel="verses">		<%= link_to 'Verses &#9660;'.html_safe,			:controller => 'admin', :action => 'show_verses_to_be_checked' %></li>
+						<li <%= tab(@tab=="churches"	) %> rel="churches">	<%= link_to 'Churches &#9660;'.html_safe, 		:controller => 'admin', :action => 'show_churches' %></li>	
+						<li <%= tab(@tab=="countries"	) %> rel="countries">	<%= link_to 'Countries &#9660;'.html_safe, 		:controller => 'admin', :action => 'show_countries' %></li>
+						<li <%= tab(@tab=="popverses"	) %> rel="popverses">	<%= link_to 'Popular Verses &#9660;'.html_safe,	:controller => 'admin', :action => 'show_popverses' %></li>						
 					</ul>
 
 					<div id="homepage" class="submenustyle">
@@ -135,7 +146,7 @@
 				</div>  <!-- End of Menu Tabs -->
 				
 				<%= flash_messages %>
-				<%= yield(:content) or yield %>
+				<%= content_for?(:content) ? yield(:content) : yield %>
 			</div> <!-- End of Main -->
 		</div> <!-- End of Container -->
 

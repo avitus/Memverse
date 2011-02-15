@@ -111,7 +111,46 @@ class VersesController < ApplicationController
   # Show verses with tag (in preferred translation if available)
   # ---------------------------------------------------------------------------------------------------------- 
   def show_verses_with_tag
-    @tag       = Tag.find_by_name(params[:tag])
+    @tag       = ActsAsTaggableOn::Tag.find_by_name(params[:tag])
     @user_list = Memverse.tagged_with(params[:tag]).map{ |mv| mv.verse.switch_tl(current_user.translation) || mv.verse}.uniq.sort!
   end
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Show verses that need verification ie. more than one user and have never been modified
+  # ----------------------------------------------------------------------------------------------------------   
+  def check_verses
+    
+    @need_verification  = Array.new
+    tl = current_user.translation
+        
+    unverified_verses = Verse.find(:all, :conditions => {:verified => 'False', :translation => tl, :checked_by => nil})
+    unverified_verses.each { |vs| 
+      if vs.memverses.count > 1 and vs.web_check != true
+        @need_verification << vs
+      end
+    }
+  end
+    
+  # ----------------------------------------------------------------------------------------------------------
+  # In place editing support
+  # ----------------------------------------------------------------------------------------------------------    
+  def set_verse_text
+    @verse = Verse.find(params[:id])
+    new_text = params[:value] # need to clean this up with hpricot or equivalent
+    @verse.text = new_text
+    @verse.checked_by = current_user.login
+    @verse.save
+    render :text => @verse.text
+  end   
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Verify a verse
+  # ----------------------------------------------------------------------------------------------------------  
+  def check_verse
+    @verse = Verse.find(params[:id])
+    @verse.checked_by = current_user.login
+    @verse.save
+    render :text => "Checked"
+  end  
+  
 end

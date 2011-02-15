@@ -1,3 +1,5 @@
+.bundle
+db/*.sqlite3
 log/*.log
 tmp/**/*
 .DS_Store
@@ -7,6 +9,9 @@ coverage
 db/*.sqlite3
 *.tmp_*
 config/database.yml
-config/database.yml
 *vendor/gems/*
 *public/system/*
+mkmf.log
+/config/initializers/site_keys.rb
+*.rails2
+*plugins/rails_upgrade/*

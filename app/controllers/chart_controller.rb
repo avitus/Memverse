@@ -9,8 +9,10 @@ class ChartController < ApplicationController
 
   before_filter :login_required, :except => :load_memverse_clock
 
-  helper Ziya::HtmlHelpers::Charts
-  helper Ziya::YamlHelpers::Charts
+  respond_to :html, :xml
+#  layout nil
+
+  helper Ziya::HtmlHelpers::Charts, Ziya::YamlHelpers::Charts
 
   # Callback from the flash movie to get the chart's data
   # Uses line_chart.yml for style
@@ -155,17 +157,16 @@ class ChartController < ApplicationController
     # Y-Axis
     chart.add( :series, "Memorized",    y_memorized )
     chart.add( :series, "Learning",     y_learning  )
-    chart.add( :series, "Active Users", y_users      )
-    
+    chart.add( :series, "Active Users", y_users      )    
     chart.add( :user_data, :secondary_y_interval, user_axis_interval )
     
     # Theme
     chart.add( :theme , "memverse" )  
-    
+
     respond_to do |fmt|
       fmt.xml { render :xml => chart.to_xml }
     end
-
+  
   end # load_memverse_clock
   
   # ----------------------------------------------------------------------------------------------------------
@@ -188,13 +189,20 @@ class ChartController < ApplicationController
       when   240..  319  then   320 # Interval per division =   30
       when   320..  399  then   400 # Interval per division =   30
       when   400..  479  then   480 # Interval per division =   30
+      when   480..  559  then   560 # Interval per division =   30
+      when   560..  639  then   640 # Interval per division =   30
+      when   640..  719  then   720 # Interval per division =   30
+      when   720..  799  then   800 # Interval per division =   30
       when  8000..15999  then 16000 # Interval per division = 2000
       when 16000..23999  then 24000 # Interval per division = 3000      
-      when 24000..31999  then 32000 # Interval per division = 3000      
-      when 32000..39999  then 40000 # Interval per division = 3000      
-      when 40000..47999  then 48000 # Interval per division = 3000      
-      else                     320  # Interval per division =  ?
+      when 24000..31999  then 32000 # Interval per division = 4000      
+      when 32000..39999  then 40000 # Interval per division = 5000      
+      when 40000..47999  then 48000 # Interval per division = 6000      
+      when 48000..55999  then 56000 # Interval per division = 7000      
+      when 56000..63999  then 64000 # Interval per division = 8000      
+      when 64000..71999  then 72000 # Interval per division = 9000      
+      else                      800 # Interval per division =  ?
     end
   end
-
 end
+

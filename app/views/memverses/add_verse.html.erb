@@ -8,6 +8,8 @@
 		  <ul>
 		  	<li>
 				<div class="box-label">Verse:</div><%= text_field_tag(:verse, params[:verse] )%>
+				<img class="spinner" id="ajax_spinner" src="/images/indicator2.gif" alt="Searching ..." style="display: none" /> 
+				<!-- http://www.ajaxload.info/ -->
 			</li>
 			<li>
 				<div class="box-label">Translation:</div>
@@ -23,6 +25,7 @@
 														["English Standard Version", 			'ESV' ],
                             							["New Living Translation",        		'NLT' ],
                             							["Holman Christian Standard Bible",		'HCS' ],
+                            							["Darby Translation",					'DTL' ],
                             							["The Message",                   		'MSG' ],
 														["New International Reader's Version", 	'IRV' ],
 														["Updated King James Version",		 	'UKJ' ],
@@ -31,6 +34,7 @@
 														["Reina-Valera 1960",					'RVR' ],
 														["Afrikaans 1983 Translation",			'AFR' ],
 														["De Nieuwe Bijbelvertaling",			'NBV' ],
+														["Terjemahan Baru",						'TMB' ],
 														["Svenska Folkbibeln",					'SPB' ]],
 									params[:translation])) %>
 			</li>									
@@ -46,22 +50,27 @@
 </fieldset>		
 
 <!-- Available translations -->		
-<div id="foundVerse" class="no-dbl-click">
-		<%= render :partial=>'avail_translations' %>			
-</div>
+<fieldset id="avail-translations" class="entry-form">
+	<legend>Available Translations</legend>
+		<div id="foundVerse" class="no-dbl-click">
+			<%= render :partial=>'avail_translations' %>			
+		</div>
+</fieldset>	
+
+
 
 <!-- Popular verses -->		
 <div>
 		<%= render :partial=>'popular_verses' %>			
 </div>
 
-
+<!-->
 <%= observe_field :verse,
 	:frequency	=> 0.5,
 	:update		=> 'foundVerse',
 	:url		=> {:action => 'avail_translations', :only_path => false},
 	:with		=> "'verse='+encodeURIComponent(value)"
-%>
+%> -->
 
 
 <!-- http://www.webdesignerwall.com/tutorials/jquery-tutorials-for-designers/ -->
@@ -75,7 +84,30 @@
 		}, function() {
 			$(this).next("em").animate({opacity: "hide", left: "410"}, "medium");
 		});
+		
+		
+		$("#verse").observe_field(0.3, function( ) { 
+			$.get("/avail_translations", { verse: this.value },
+				function(data){	
+					$("#foundVerse").html(data);
+			});
+        });		
+		
+		$('.spinner')
+			.ajaxStart(function() {
+		        $(this).show();
+		    })
+			.ajaxStop(function() {
+		        $(this).hide();
+	    }); 		
+		
 	});
+	
+	
+	
+	
+	
+	
 </script>
 
 <!-- Prevent double-clicking of links to add verses -->

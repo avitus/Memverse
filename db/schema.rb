@@ -1,15 +1,16 @@
-# This file is auto-generated from the current state of the database. Instead of editing this file, 
-# please use the migrations feature of Active Record to incrementally modify your database, and
-# then regenerate this schema definition.
+# This file is auto-generated from the current state of the database. Instead
+# of editing this file, please use the migrations feature of Active Record to
+# incrementally modify your database, and then regenerate this schema definition.
 #
-# Note that this schema.rb definition is the authoritative source for your database schema. If you need
-# to create the application database on another system, you should be using db:schema:load, not running
-# all the migrations from scratch. The latter is a flawed and unsustainable approach (the more migrations
+# Note that this schema.rb definition is the authoritative source for your
+# database schema. If you need to create the application database on another
+# system, you should be using db:schema:load, not running all the migrations
+# from scratch. The latter is a flawed and unsustainable approach (the more migrations
 # you'll amass, the slower it'll run and the greater likelihood for issues).
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 33) do
+ActiveRecord::Schema.define(:version => 35) do
 
   create_table "american_states", :force => true do |t|
     t.string  "abbrev",      :limit => 20, :default => "", :null => false
@@ -18,79 +19,6 @@ ActiveRecord::Schema.define(:version => 33) do
     t.integer "population"
     t.integer "rank"
   end
-
-  create_table "blog_assets", :force => true do |t|
-    t.integer "blog_post_id"
-    t.integer "parent_id"
-    t.string  "content_type"
-    t.string  "filename"
-    t.string  "thumbnail"
-    t.integer "size"
-    t.integer "width"
-    t.integer "height"
-  end
-
-  create_table "blog_categories", :force => true do |t|
-    t.string   "name"
-    t.integer  "parent_id"
-    t.integer  "blog_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "blog_categories", ["blog_id"], :name => "index_blog_categories_on_blog_id"
-  add_index "blog_categories", ["parent_id"], :name => "index_blog_categories_on_parent_id"
-
-  create_table "blog_comments", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "blog_post_id"
-    t.text     "comment"
-    t.boolean  "approved"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "blog_comments", ["blog_post_id"], :name => "index_blog_comments_on_blog_post_id"
-
-  create_table "blog_posts", :force => true do |t|
-    t.string   "title"
-    t.text     "body"
-    t.string   "tag_string"
-    t.integer  "posted_by_id"
-    t.boolean  "is_complete"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "url_identifier"
-    t.boolean  "comments_closed"
-    t.integer  "category_id"
-    t.integer  "blog_id",         :default => 1
-    t.boolean  "fck_created"
-  end
-
-  add_index "blog_posts", ["blog_id"], :name => "index_blog_posts_on_blog_id"
-  add_index "blog_posts", ["category_id"], :name => "index_blog_posts_on_category_id"
-  add_index "blog_posts", ["url_identifier"], :name => "index_blog_posts_on_url_identifier"
-
-  create_table "blog_tags", :force => true do |t|
-    t.string   "name"
-    t.integer  "blog_post_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "blog_tags", ["blog_post_id"], :name => "index_blog_tags_on_blog_post_id"
-
-  create_table "blogs", :force => true do |t|
-    t.string   "title"
-    t.string   "subtitle"
-    t.string   "url_identifier"
-    t.string   "stylesheet"
-    t.string   "feedburner_url"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "blogs", ["url_identifier"], :name => "index_blogs_on_url_identifier"
 
   create_table "churches", :force => true do |t|
     t.string   "name",                       :null => false
@@ -330,6 +258,7 @@ ActiveRecord::Schema.define(:version => 33) do
   create_table "uberverses_sermons", :id => false, :force => true do |t|
     t.integer "uberverse_id"
     t.integer "sermon_id"
+    t.boolean "primary_verse", :default => false
   end
 
   create_table "users", :force => true do |t|
@@ -359,11 +288,10 @@ ActiveRecord::Schema.define(:version => 33) do
     t.integer  "learning",                                 :default => 0
     t.date     "last_activity_date"
     t.boolean  "show_echo",                                :default => true
-    t.integer  "state_id"
     t.integer  "max_interval",                             :default => 366
     t.string   "mnemonic_use",                             :default => "Learning"
     t.integer  "american_state_id"
-    t.integer  "accuracy",                                 :default => 50
+    t.integer  "accuracy",                                 :default => 10
     t.boolean  "all_refs",                                 :default => true
     t.integer  "rank"
     t.integer  "ref_grade",                                :default => 10
@@ -371,6 +299,7 @@ ActiveRecord::Schema.define(:version => 33) do
     t.string   "translation",                              :default => "NIV"
     t.integer  "level",                                    :default => 0,          :null => false
     t.integer  "referred_by"
+    t.boolean  "show_toolbar",                             :default => true
   end
 
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true
@@ -388,6 +317,7 @@ ActiveRecord::Schema.define(:version => 33) do
     t.boolean  "verified",     :default => false, :null => false
     t.boolean  "error_flag",   :default => false, :null => false
     t.integer  "uberverse_id"
+    t.string   "checked_by"
   end
 
   add_index "verses", ["book"], :name => "index_verses_on_book"

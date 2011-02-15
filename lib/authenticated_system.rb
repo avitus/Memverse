@@ -132,6 +132,7 @@ module AuthenticatedSystem
     # havoc with forgery protection, and is only strictly necessary on login.
     # However, **all session state variables should be unset here**.
     def logout_keeping_session!
+      @current_user.save_progress_report if @current_user.is_a? User
       # Kill server-side auth cookie
       @current_user.forget_me if @current_user.is_a? User
       @current_user = false     # not logged in, and don't do it for me
@@ -158,7 +159,7 @@ module AuthenticatedSystem
       session[:exam_answered]     = nil
       session[:exam_length]       = nil
       session[:exam_incorrect]    = nil 
-      session[:referrer]          = nil
+      # session[:referrer]          = nil # Clearing the referrer variable prevents referral information being captured
     end
 
     # The session should only be reset at the tail end of a form POST --

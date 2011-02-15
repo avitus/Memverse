@@ -1,3 +1,5 @@
+# coding: utf-8
+
 class AdminController < ApplicationController
 
   protect_from_forgery  :except => [:set_verse_text, :verify_verse] 
@@ -79,7 +81,8 @@ class AdminController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------   
   def get_last_verse_data
   
-  
+  require 'nokogiri'
+
   completed = []
   
   biblebooks = ['Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy', 'Joshua', 'Judges', 'Ruth', '1 Samuel', '2 Samuel',
@@ -98,7 +101,7 @@ class AdminController < ApplicationController
     
     biblebooks.each { |bk|
     
-      sleep(2)
+      sleep(1)
     
       book = bk.downcase.gsub(" ","")
       logger.debug("Requesting URL for #{book}")
@@ -280,7 +283,7 @@ class AdminController < ApplicationController
     @encourage_list     = Array.new
     @bounce_list        = Array.new
       
-    spawn do  
+    spawn_block do  
       # Retrieve records for all users  
       User.find(:all).each { |r|
         # Change reminder frequency (if necessary) to not be annoying
@@ -355,7 +358,8 @@ class AdminController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------   
   def unapproved_comments
     @comments         = BlogComment.find_all_by_approved(false)
-    @newest_comments  = BlogComment.find_all_by_approved(true, :all, :limit => 10, :order => "updated_at DESC")
+    @newest_comments  = BlogComment.find_all_by_approved(true, :all, :limit => 50, :order => "updated_at DESC")
+    # TODO - figure out what to do with comments from deleted blog posts
   end
     
   # ----------------------------------------------------------------------------------------------------------
@@ -680,47 +684,20 @@ class AdminController < ApplicationController
   # Remove a memory verse (Make sure this method is consistent with the one in memverses_controller
   # ----------------------------------------------------------------------------------------------------------   
   def destroy_mv
-    
+
     # We need to remove inter-verse linkage
     dead_mv   = Memverse.find(params[:id])
-    next_ptr  = dead_mv.next_verse
-    prev_ptr  = dead_mv.prev_verse
-     
-    # If there is a prev verse
-    # => Find previous verse and remove its 'next' ptr
-    if prev_ptr
-      logger.debug("Removing link from previous verse: #{prev_ptr}")
-      
-      # TODO: This find method is necesary rather than .find(prev_ptr) for the case (which shouldn't ever happen)
-      # when the next/prev pointers aren't valid
-      prev_vs = Memverse.find(:first, :conditions => {:id => prev_ptr})
-      if prev_vs
-        prev_vs.next_verse = nil
-        prev_vs.save
-      else
-        logger.warn("*** Alert: A verse was deleted which had an invalid prev pointer - this should never happen")        
-      end
     
+    # Remove verse from memorization queue
+    mem_queue = session[:mv_queue]
+    
+    # We need to check that there is a verse sequence and also that the array isn't empty
+    if !mem_queue.blank?
+      # Remove verse from the memorization queue if it is sitting in there
+      mem_queue.delete(dead_mv.id)
     end
-    
-    # If there is a next verse
-    # => Find next verse and make it the first verse in the sequence
-    if next_ptr
-      logger.debug("Setting the next verse: #{next_ptr} to be first verse of sequence")
-      next_vs = Memverse.find(:first, :conditions => {:id =>next_ptr})
-      if next_vs
-        next_vs.first_verse = nil # Starting verses in a sequence to not reference themselves as the first verse
-        next_vs.prev_verse  = nil
-        next_vs.save
-        # Follow chain and correct first verse
-        update_downstream_start_verses(next_vs)  
-      else
-        logger.warn("*** Alert: A verse was deleted which had an invalid next pointer - this should never happen")        
-      end
-    end
-    
-    # Finally, delete the verse
-    dead_mv.destroy  
+
+    dead_mv.remove_mv  # remove verse and sort out next and previous pointers 
 
     redirect_to :back
   end 
