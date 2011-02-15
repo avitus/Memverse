@@ -88,7 +88,7 @@ class User < ActiveRecord::Base
   scope :active,            lambda { where('last_activity_date >= ?', 1.month.ago) }
   scope :active_today,      lambda { where('last_activity_date = ?',  Date.today) }
   scope :active_this_week,  lambda { where('last_activity_date >= ?', 1.week.ago) }  
-  scope :american, where('countries.printable_name' => 'United States').includes(:country)
+  scope :american, 					 where('countries.printable_name' => 'United States').includes(:country)
 
   # HACK HACK HACK -- how to do attr_accessible from here?
   # prevents a user from submitting a crafted form that bypasses activation
