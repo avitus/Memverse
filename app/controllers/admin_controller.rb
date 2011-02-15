@@ -810,6 +810,15 @@ class AdminController < ApplicationController
   end  
   
   # ----------------------------------------------------------------------------------------------------------
+  # Fix corrupted counter cache - does this for a single state
+  # ----------------------------------------------------------------------------------------------------------   
+  def update_state_user_count
+    c = AmericanState.find(params[:id])
+    c.update_attribute :users_count, c.users.length
+    redirect_to :action => 'show_states'
+  end   
+  
+  # ----------------------------------------------------------------------------------------------------------
   # Fix corrupted counter cache - does this for a single church
   # ----------------------------------------------------------------------------------------------------------   
   def update_church_user_count
@@ -829,6 +838,22 @@ class AdminController < ApplicationController
     all_country_list.each { |country|
       if country.users_count != 0
         @country_list << country
+      end  
+    }
+
+  end   
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Show all states
+  # ----------------------------------------------------------------------------------------------------------   
+  def show_states
+    
+    @state_list = Array.new
+    
+    all_state_list = AmericanState.find(:all)
+    all_state_list.each { |us_state|
+      if us_state.users_count != 0
+        @state_list << us_state
       end  
     }
 
