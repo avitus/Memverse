@@ -19,7 +19,7 @@ module ApplicationHelper
     if banner
       content_for(:page_banner) { banner }
     else
-      content_for?(:page_banner) ? content_for(:page_banner) : "MemVerse"
+      content_for?(:page_banner) ? content_for(:page_banner) : "Bible Verse Memorization"
     end
   end
   
