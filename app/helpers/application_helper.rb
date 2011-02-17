@@ -19,7 +19,7 @@ module ApplicationHelper
     if banner
       content_for(:page_banner) { banner }
     else
-      content_for?(:page_banner) ? content_for(:page_banner) : "Bible Verse Memorization"
+      content_for?(:page_banner) ? content_for(:page_banner) : t(:default, :scope => 'page_banners')
     end
   end
   
@@ -27,7 +27,7 @@ module ApplicationHelper
     if description
       content_for(:page_description) { description }
     else
-      content_for?(:page_description) ? content_for(:page_description) : "A free, online tool for memorizing the Bible"
+      content_for?(:page_description) ? content_for(:page_description) : t(:default, :scope => 'page_descriptions')
     end
   end
 # Remember to def page_description and to def page_banner
