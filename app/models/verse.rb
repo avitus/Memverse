@@ -162,14 +162,31 @@ class Verse < ActiveRecord::Base
   # Is this the last verse of a chapter?
   # ---------------------------------------------------------------------------------------------------------- 
   def last_in_chapter?
-    !FinalVerse.find(:first, :conditions => { :book => self.book, :chapter => self.chapter, :last_verse => self.versenum }).nil?
+  	if self.book == "3 John"
+	  if ["NAS", "NLT", "ESV"].include?(self.translation)
+		return self.versenum.to_i == 15
+	  else
+		return self.versenum.to_i == 14
+	  end
+  	else
+      !FinalVerse.find(:first, :conditions => { :book => self.book, :chapter => self.chapter, :last_verse => self.versenum }).nil?
+    end
+    
   end
 
   # ----------------------------------------------------------------------------------------------------------
   # Find the last verse of the chapter
   # ---------------------------------------------------------------------------------------------------------- 
   def end_of_chapter_verse
-    FinalVerse.find(:first, :conditions => { :book => self.book, :chapter => self.chapter })
+  	if self.book == "3 John"
+  		if ["NAS", "NLT", "ESV"].include?(self.translation)
+  			FinalVerse.new(:book => "3 John", :chapter => 1, :last_verse => 15)
+  		else
+  			FinalVerse.new(:book => "3 John", :chapter => 1, :last_verse => 14)
+  		end
+  	else
+    	FinalVerse.find(:first, :conditions => { :book => self.book, :chapter => self.chapter })
+    end
   end
   
   # ----------------------------------------------------------------------------------------------------------
