@@ -35,7 +35,8 @@
 						<!-- Current verse -->
 						<span id="ajaxWrapper">
 							<%= render :partial=>'feedback', :locals => {:show_feedback => @show_feedback} %>
-						</span>					
+						</span>	
+						<img class="center spinner" id="ajax_spinner" src="/images/indicator2.gif" alt="Comparing..." style="display: none" />				
 					</div>
 			        <p class="quickFlipCta"><%= t('memverses.test_verse.show_verse') %></p>
 				</div>	<!-- end of flashcard-front-text -->			
@@ -68,13 +69,13 @@
 	</div>
 </fieldset>	
 
-	
+<!--	
 <%= observe_field :verseguess,
 	:frequency	=> 0.6,
 	:update		=> 'ajaxWrapper',
 	:url		=> {:action => 'feedback', :only_path => false},
 	:with		=> "'echo=#{@show_feedback}&correct='+escape(current_text)+'&verseguess='+encodeURIComponent(value)+'&vsnum='+current_verse"
-%>
+%> -->
 
 <!-- Script for updating current verse, clearing input etc -->
 <script language="JavaScript" type="text/javascript">
@@ -89,14 +90,31 @@
 		
 		// Display the first verse on the back of the flash card
 		$("#flashcard-back-text > .verse-text:hidden:first").fadeIn(10);	
+				
+		// Verse feedback	
+		$("#verseguess").observe_field(0.5, function( ) { 
+			$.get("/feedback", { correct: current_text, verseguess: encodeURIComponent(this.value), echo: <%= @show_feedback %>  },
+				function(data){	
+					$("#ajaxWrapper").html(data);
+			});
+        });
+        
+        $('.spinner')
+			.ajaxStart(function() {
+		        $(this).show();
+		    })
+			.ajaxStop(function() {
+		        $(this).hide();
+    	});		
 		
+		// Handle scoring of verse
 		$('.submit').click( function() {
 			
 			// == Set key press
 			q = $(this).attr("q");
 			
 			// Score the memory verse
-			$.getJSON("/memverses/mark_test_quick", { mv: mv_id, q: q  },
+			$.getJSON("/mark_test_quick", { mv: mv_id, q: q  },
 				function(data) {
 					if (data.msg) {
 						// Give user a nice response
