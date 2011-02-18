@@ -967,13 +967,12 @@ class User < ActiveRecord::Base
   def blog_avatar_url
     if(self.respond_to?(:email))
       downcased_email_address = self.email.downcase
-      hash = MD5::md5(downcased_email_address)
+      hash = Digest::MD5::hexdigest(downcased_email_address)
       "http://www.gravatar.com/avatar/#{hash}?d=wavatar"
     else
       "http://www.pistonsforum.com/images/avatars/avatar22.gif"
     end
-  end  
-  
+  end
   
   # ============= Protected below this line ==================================================================
   
