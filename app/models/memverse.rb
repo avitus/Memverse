@@ -17,17 +17,18 @@
 
 class Memverse < ActiveRecord::Base
 
-  acts_as_taggable # Alias for 'acts_as_taggable_on :tags'
+  acts_as_taggable # Alias for acts_as_taggable_on :tags
     
   # Relationships
-  belongs_to  :user
-  belongs_to  :verse
+  belongs_to :user
+  belongs_to :verse
+  has_one :country, :through => :user
   
   # Named Scopes
   scope :memorized,         where(:status => "Memorized")
   scope :learning,          where(:status => "Learning" )
   scope :current,  lambda { where('next_test >= ?', Date.today) }
-  scope :american,          where('countries.printable_name' => 'United States').includes([:user, :country])
+  scope :american, 			joins(:user, :country).where('countries.name' => 'United States')
   scope :old_testament,     where('verses.book_index' =>  1..39).includes(:verse)
   scope :new_testament,     where('verses.book_index' => 40..66).includes(:verse)
   
