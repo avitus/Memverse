@@ -143,15 +143,18 @@ class MemversesController < ApplicationController
     # === Get Recent Tweets ===    
     @tweets = Tweet.all(:limit => 20, :order => "created_at DESC", :conditions => ["importance <= 3"])      
             
-    # # === RSS Devotional ===
-    # dev_url   = 'http://www.heartlight.org/rss/track/devos/spurgeon-morning/'
-    # dailydev  = RssReader.posts_for(dev_url, length=1, perform_validation=false)[0]
-    # 
-    # # Clean up feed
-    # if dailydev
-    #   @devotion = dailydev.description.split("<P></div>")[0].split("<h4>Thought</h4>")[1]
-    #   @dev_ref  = dailydev.description.split("<h4>Verse</h4>")[1].split("<h4>Thought</h4>")[0].gsub("<P>", "").gsub("</P>","")
-    # end
+    # === RSS Devotional ===
+    dev_url   = 'http://www.heartlight.org/rss/track/devos/spurgeon-morning/'
+    dailydev  = RssReader.posts_for(dev_url, length=1, perform_validation=false)[0]
+    
+   
+    
+    # Parse feed with Nokogiri
+    if dailydev
+	    dd = Nokogiri::HTML(dailydev.description)
+	    @dev_ref 	= dd.at_css("a").child.to_s.capitalize
+	    @devotion	= dailydev.description.split("<P></P></div>")[0].split("<h4>Thought</h4><P>")[1]
+    end
     
     # === Verse of the Day ===   
     @votd_txt, @votd_ref, @votd_tl, @votd_id  = verse_of_the_day()
