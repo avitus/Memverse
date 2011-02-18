@@ -1,6 +1,5 @@
-<% page_title "My Memory Verses" %>
-<% page_banner "My Memory Verses" %>
-<% page_description "Show all the verses in my MemVerse account." %>
+<% page_title I18n.t :my_memory_verses, :scope => 'page_titles' %>
+<% page_banner I18n.t :my_memory_verses, :scope => 'page_titles' %>
 <div class="verse-list">
 <% form_tag({:action => 'manage_verses'}, :method => :post, :name => "manage_verses") do %>
 	<table class="memverse-standard">
@@ -21,7 +20,7 @@
 	  </tr>
 		<% for mv in @my_verses %>
 		  <tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
-			<td align="center"><%= check_box_tag("mv[]", mv.id, false, :onclick => "checkAllFields(2);", :class => "boxes") %></td>
+			<td align="center"><input class="boxes" id="mv_" name="mv[]" onclick="checkAllFields(2);" type="checkbox" value="<%= mv.id %>" /></td>
 			<td align="left">  <%= link_to mv.verse.ref, {:action => 'show', :id => mv.id } %></td>		 
 			<td align="center"><%= mv.verse.translation		%></td>		
 		 	<td align="center"><%= mv.efactor				%></td>	
@@ -61,7 +60,7 @@
 <br>
 
 <div>
-	<%= link_to 'Print All Verses (PDF)', {:controller => :memverses, :action => :show_all_my_verses, :format => :pdf}%>
+	<%= link_to 'Print (PDF)', {:controller => :memverses, :action => :show_all_my_verses, :format => :pdf}%>
 </div>
 
 <!-- Highlight verse to be verified -->
