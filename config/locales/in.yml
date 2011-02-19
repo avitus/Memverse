@@ -312,7 +312,7 @@
       b1:              "1 Tidak tahu – Sama sekali"        
     show_all_my_verses:
       delete_selected: "Hapus yang Dipilih"
-      print_selected:  "Cetak Dipilih"
+      show_selected:   "Tampilkan Dipilih"
   profile:
     update_profile:
       Name:                     "Nama"

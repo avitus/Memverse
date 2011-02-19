@@ -311,7 +311,7 @@
       b1:              "1 No Sabe  - Ni Idea"
     show_all_my_verses:
       delete_selected: "Borrar selección"
-      print_selected:  "Imprimir selección"
+      show_selected:   "Mostrar la selección"
   profile:
     update_profile:
       Name:                     "Nombre"

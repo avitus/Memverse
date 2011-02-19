@@ -312,7 +312,7 @@
       b1:              "1 Don't Know - No Idea"        
   show_all_my_verses:
     delete_selected:   "Delete Selected"
-    print_selected:    "Print Selected"
+    show_selected:     "Show Selected"
   profile:
     update_profile:
       Name:                     "Name"

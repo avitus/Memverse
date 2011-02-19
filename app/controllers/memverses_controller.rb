@@ -604,9 +604,8 @@ class MemversesController < ApplicationController
   def manage_verses
     
     mv_ids = params[:mv]
-    action = params[:commit]
   
-    if (!mv_ids.blank?) and (action == "Delete")
+    if (!mv_ids.blank?) and (params['Delete'])
       mv_ids.each { |mv_id|   
       
         # Find verse in DB
@@ -626,8 +625,10 @@ class MemversesController < ApplicationController
         mv.remove_mv
 
       }
+    elsif (!mv_ids.blank?) and (params['Show'])
+      flash[:notice] = "Multiverse show feature still in development."
     else
-      flash[:notice] = "No verses deleted since you didn't select any."
+      flash[:notice] = "Action not performed as no verses were selected."
     end
     
     redirect_to :action => 'show_all_my_verses'
