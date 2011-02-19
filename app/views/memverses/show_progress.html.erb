@@ -1,3 +1,6 @@
+<% page_title I18n.t :progress, :scope => 'page_titles' %>
+<% page_banner I18n.t :progress, :scope => 'page_titles' %>
+<% page_description I18n.t :progress, :scope => 'page_descriptions' %>
 <% if current_user.memverses.length == 0 %>
 
 	You first need to <%= link_to 'add a memory verse', :action => 'add_verse' %>
