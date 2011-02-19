@@ -620,14 +620,24 @@ class MemversesController < ApplicationController
         mv.remove_mv
 
       }
+      redirect_to :action => 'show_all_my_verses'
     elsif (!mv_ids.blank?) and (params['Show'])
-      flash[:notice] = "Multiverse show feature still in development."
+      @selected_verses = current_user.memverses.all.find(:conditions => ["verse_id=?", mv_ids], :include => :verse)
+
+      # TODO: Allow for verse sorting based off what was submitted from show_all_my_verses.html.erb.
+      
+      format = params[:format]
+        
+      respond_to do |format| 
+        format.html
+        format.pdf { render :layout => false } if format == 'PDF'
+          prawnto :filename => "Memverses.pdf", :prawn => { }
+      end
     else
       flash[:notice] = "Action not performed as no verses were selected."
+      redirect_to :action => 'show_all_my_verses'
     end
-    
-    redirect_to :action => 'show_all_my_verses'
-    
+       
   end 
  
  
