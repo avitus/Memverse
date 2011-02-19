@@ -4,7 +4,6 @@ class InfoController < ApplicationController
  
   def tutorial
     @tab = "learn"    
-    @page_title = "Memverse : Overview" 
     # Check for quest completion
     spawn_block do
       q = Quest.find_by_url(url_for(:action => 'tutorial', :controller => 'info', :only_path => false))
@@ -15,12 +14,10 @@ class InfoController < ApplicationController
   
   def sm_description
     @tab = "learn"     
-    @page_title = "The SuperMemo Algorithm" 
   end
   
   def volunteer
     @tab = "contact"     
-    @page_title = "Volunteer" 
   end  
 
   # ----------------------------------------------------------------------------------------------------------   
@@ -28,7 +25,6 @@ class InfoController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------    
   def contact
     @tab = "contact"    
-    @page_title = "Memverse : Contact / Feedback" 
   end  
  
   # ----------------------------------------------------------------------------------------------------------   
@@ -36,7 +32,6 @@ class InfoController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------    
   def faq
     @tab = "contact"    
-    @page_title = "Memverse : Help & Support" 
   end    
   
   # ----------------------------------------------------------------------------------------------------------   
@@ -44,7 +39,6 @@ class InfoController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------   
   def pop_verses
     
-    @page_title = "Memverse : Popular Verses"     
     @page       = params[:page].to_i    # page number
     @page_size  = 10                    # number of verses per page
        
@@ -62,9 +56,7 @@ class InfoController < ApplicationController
   
   
   def pop_verse_search
-
-    @page_title = "Memverse : Popular Verses"     
-    
+   
     book = params[:search_param]
         
     @vs_list =  Verse.rank_verse_popularity(limit=9, book)
@@ -77,7 +69,6 @@ class InfoController < ApplicationController
   # Display a single verse
   # ---------------------------------------------------------------------------------------------------------- 
   def show_vs
-    @page_title = "Memverse : Popular Verses" 
     @verse = Verse.find(params[:vs])
   end  
   
@@ -87,7 +78,6 @@ class InfoController < ApplicationController
   def leaderboard
     
     @tab          = "leaderboard" 
-    @page_title   = "Memverse Leaderboard"
     @leaderboard  = User.top_users  # returns top users sorted by number of verses memorized
 
     @not_on_leaderboard = (current_user.memorized < @leaderboard.last[1]) unless !current_user
@@ -99,7 +89,6 @@ class InfoController < ApplicationController
   def churchboard
     
     @tab          = "leaderboard" 
-    @page_title   = "Memverse Church Leaderboard"
     @churchboard  = Church.top_churches  # returns top users sorted by number of verses memorized
 
   end    
@@ -110,7 +99,6 @@ class InfoController < ApplicationController
   def stateboard
     
     @tab          = "leaderboard" 
-    @page_title   = "Memverse US State Challenge"
     @stateboard   = AmericanState.top_states  # returns top states sorted by number of verses memorized
 
   end       
@@ -121,7 +109,6 @@ class InfoController < ApplicationController
   def countryboard
     
     @tab          = "leaderboard" 
-    @page_title   = "Memverse Global Challenge"
     @countryboard  = Country.top_countries  # returns top users sorted by number of verses memorized
 
   end      
@@ -131,7 +118,6 @@ class InfoController < ApplicationController
   # ---------------------------------------------------------------------------------------------------------- 
   def referralboard
     @tab            = "leaderboard"
-    @page_title     = "Referrals Leaderboard"
     @referralboard = User.top_referrers
     
     @not_on_referralboard = (current_user.num_referrals < @referralboard.last[1]) unless !current_user
@@ -142,8 +128,7 @@ class InfoController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------   
   def memverse_clock
     @tab        = "leaderboard"    
-    @page_title = "Memverse Global Chart"
-    
+   
     last_entry        = DailyStats.global.find(:first, :order => "entry_date DESC")
     
     @global_users     = last_entry.users_active_in_month
@@ -156,7 +141,6 @@ class InfoController < ApplicationController
   # RSS News Feed
   # ---------------------------------------------------------------------------------------------------------- 
   def news
-    @page_title = "Memverse News Network"
     @tab = "home"    
     
     # === RSS News feed ===
@@ -183,8 +167,6 @@ class InfoController < ApplicationController
   # Memorize
   # ----------------------------------------------------------------------------------------------------------   
   def demo_test_verse
- 
-    @page_title = "Demo Memory Verse Review"
      
     params[:verseguess] = ""  
     @verse            = "Romans 12:2"

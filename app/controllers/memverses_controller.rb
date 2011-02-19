@@ -184,8 +184,6 @@ class MemversesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------  
   def starter_pack
     
-    @page_title = "Memverse QuickStart"
-
     @translation = params[:translation]
     
     # TODO: get rid of the archaic 'IS NOT NULL' syntax
@@ -224,7 +222,6 @@ class MemversesController < ApplicationController
   # ---------------------------------------------------------------------------------------------------------- 
   def user_stats
     
-    @page_title = "My Stats"
     @my_verses    = Array.new
     @status_table = Hash.new(0)
     
@@ -259,8 +256,7 @@ class MemversesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------   
   def pop_verses
 
-    @tab = "home"    
-    @page_title = "Most Popular Memory Verses"     
+    @tab = "home"      
     @page       = params[:page].to_i    # page number
     @page_size  = 20                    # number of verses per page
        
@@ -505,7 +501,6 @@ class MemversesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------   
   def add_verse
 
-    @page_title = "Add New Verses"
     @tab = "home"    
     @popular_verses = popular_verses(8, false)
     
@@ -675,7 +670,6 @@ class MemversesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------   
   def show_all_my_verses
 
-    @page_title = "My Memory Verses"
     @tab = "home"
     
     # TODO: we need to include a) verse reference and b) verse translation to speed up this page
@@ -760,7 +754,6 @@ class MemversesController < ApplicationController
   def test_verse
  
     @tab = "mem"  
-    @page_title = "Memory Verse Review"
     @show_feedback = true
     
     # If referring path is from the practice section then we need to clear the queue
@@ -839,7 +832,6 @@ class MemversesController < ApplicationController
   def test_chapter
  
     @tab = "mem"  
-    @page_title = "Chapter Review"
     @show_feedback = true
     
     if params[:book_chapter].split.length == 3
@@ -864,7 +856,6 @@ class MemversesController < ApplicationController
   def test_verse_quick
  
     @tab = "mem"  
-    @page_title = "Memory Verse Review"
     @show_feedback = true
     
     @mv 			= current_user.first_verse_today
@@ -1013,7 +1004,6 @@ class MemversesController < ApplicationController
 
   def explain_exam
     @tab = "mem"
-    @page_title = "Memverse Accuracy Test" 
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -1279,7 +1269,6 @@ class MemversesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   def show_progress
     @tab = "home"    
-    @page_title = "Progress"
   end  
 
   # ----------------------------------------------------------------------------------------------------------
@@ -1288,8 +1277,6 @@ class MemversesController < ApplicationController
   def drill_verse
     
     @tab        = "mem" 
-    @page_title = "Memory Verse Practice"
-    
     @show_feedback = true
     
     # First check for verses in session queue that need to be tested
