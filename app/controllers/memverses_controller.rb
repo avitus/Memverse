@@ -983,7 +983,7 @@ class MemversesController < ApplicationController
   
                           
     
-    if !refs.empty?
+    if refs.length >= 10
     
       # Put verses into session variable
       refs.each { |r|
@@ -1006,8 +1006,8 @@ class MemversesController < ApplicationController
       # Start Test
       redirect_to :action => 'test_ref'
     else
-      flash[:notice] = "You first need to add a memory verse before you can take the reference recall test."
-      redirect_to :action => 'add_verse'
+      flash[:warning] = "You must have 10 verse references in your account before you can take the reference recall test."
+      redirect_to :action => 'index'
     end
     
   end
