@@ -1,25 +1,24 @@
 --- 
 javascripts: 
 - base: 
-  - jquery-1.4.3.min
+  - jquery.min
+  - rails
   - jquery-ui-1.8.6.custom.min
-  - jrails
-  - jquery.jeditable
-  - application
-  - dragdrop
-  - prototype
-  - effects
-  - controls
-  - jquery.updater
-  - jquery.periodicalupdater
-  - 2leveltab
   - jquery.quickflip
-  - jquery.autocomplete  
-  - sorttable
-  - jquery.hoverIntent
+  - jquery.hoverIntent  
+  - 2leveltab
+  - jquery.periodicalupdater
+  - jquery.jeditable
+  - jquery.autocomplete
+  - modernizr-1.6.min
+  - jquery.shuffle
   - jquery.observe_field
+  - jquery.blockUI
+  - application
 stylesheets: 
 - base: 
   - base
   - 2leveltab
+  - jquery-ui-1.7.2.custom
   - bloggity
+  - necklace
