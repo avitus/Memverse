@@ -25,6 +25,8 @@
 	<% end %>
 	</p>
 	
+	<script src="http://connect.facebook.net/en_US/all.js#xfbml=1"></script><fb:like show_faces="true" width="450"></fb:like>
+		
 	<% if blog_post.category %>
 		<%= image_tag "bloggity/cat.gif" -%> <%= link_to blog_post.category.name.html_safe, {:controller => 'blog_posts', :action => :index, :blog_id => blog_post.blog_id, :category_id => blog_post.category_id} %>
 	<% end %>
