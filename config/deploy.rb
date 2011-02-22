@@ -77,9 +77,9 @@ namespace :deploy do
 
   desc "Create asset packages for production" 
   task :after_update_code, :roles => [:web] do                 # Compress and minify javascript and css files
-    run <<-EOF
-    cd #{release_path} && rake asset:packager:build_all
-    EOF
+    # run <<-EOF
+    # cd #{release_path} && rake asset:packager:build_all
+    # EOF
   end  
 
   desc "Restarting mod_rails with restart.txt"                # Restart passenger on deploy
