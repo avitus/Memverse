@@ -9,9 +9,9 @@ module ApplicationHelper
    
   def page_title(title = nil)
     if title
-      content_for(:page_title) { title + " - MemVerse" }
+      content_for(:page_title) { title + " - Memverse" }
     else
-      content_for?(:page_title) ? content_for(:page_title) : "MemVerse"
+      content_for?(:page_title) ? content_for(:page_title) : "Memverse"
     end
   end
 
