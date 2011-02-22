@@ -1,5 +1,8 @@
 require File.expand_path('../boot', __FILE__)
 
+# ALV - added to solve problem with Passenger not finding bundler
+ENV['GEM_PATH'] = File.expand_path('~/.gems') + ':/usr/lib/ruby/gems/1.8'
+
 require 'rails/all'
 
 # If you have a Gemfile, require the gems listed there, including any gems
