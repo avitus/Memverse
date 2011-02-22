@@ -59,11 +59,7 @@ require File.expand_path("#{File.dirname(__FILE__)}/../vendor/gems/capistrano-ex
 ##############################################################
 ##  Hooks
 ##############################################################
-after "deploy:update_code" do
-  deploy:symlink_db
-  deploy:set_rails_env
-  # ...
-end
+after "deploy:update_code", "deploy:symlink_db", "deploy:set_rails_env"
 
 ##############################################################
 ##  Database config and restart
