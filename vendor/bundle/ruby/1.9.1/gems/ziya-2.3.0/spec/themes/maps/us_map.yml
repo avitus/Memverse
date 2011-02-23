@@ -1,6 +1,0 @@
-<%=map :us %>
-  <%=config :default_color %>
-    color: 0000ff
-    
-  <%=config :background_color %>
-    opacity: 50    
