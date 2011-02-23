@@ -597,10 +597,16 @@ class MemversesController < ApplicationController
   # TODO: see above ... should re-use code from above and call a model method
   # ----------------------------------------------------------------------------------------------------------
   def manage_verses
-
+    
     @tab = "home"
+    @submitted = "false"
+ #   if (params[:submitted] == "true")
+ #     @submitted = "true"
+ #     mv_ids = params[:mv]
+ #     @format = params[:format]
+ #   end
   
-    if (!params[:mv].blank?) and (params['Delete'])
+    if (@submitted = "true") and (!mv_ids.blank?) and (params['Delete'])
       mv_ids = params[:mv]
       mv_ids.each { |mv_id|   
       
@@ -621,28 +627,25 @@ class MemversesController < ApplicationController
         mv.remove_mv
 
       }
-      redirect_to :action => 'show_all_my_verses'
-    elsif (!params[:mv].blank?) and (params['Show'])
-      mv_ids = params[:mv]
-      session[:format_] = params[:format]
-      session[:mv_ids_] = mv_ids
-      redirect_to :action => 'show_selected_verses' # This is just temporary...
+      redirect_to :action => 'manage_verses'
+    elsif (@submitted = "true") and (!mv_ids.blank?) and (params['Show'])
+      redirect_to :action => 'index' # This is just temporary...
     elsif (params[:submitted] == "true")
       flash[:notice] = "Action not performed as no verses were selected."
-      redirect_to :action => 'show_all_my_verses'
+      redirect_to :action => 'manage_verses'
     else
       @my_verses = current_user.memverses.all(:include => :verse, :order => params[:sort_order])
 
       if !params[:sort_order]
         @my_verses.sort!  # default to canonical sort
       end
+    end
       respond_to do |format| 
         format.html
-      #  format.pdf { render :layout => false } if params[:format] == 'pdf'
-      #    prawnto :filename => "Memverse.pdf", :prawn => { }
+        format.pdf { render :layout => false } if params[:format] == 'pdf'
+          prawnto :filename => "Memverse.pdf", :prawn => { }
       end
-    end
-       
+      
   end 
  
   #
