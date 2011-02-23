@@ -49,7 +49,7 @@ MemverseApp::Application.routes.draw do
   match '/drill_verse',           :to => 'memverses#drill_verse',           :as => 'drill_verse'
   match '/mark_test',             :to => 'memverses#mark_test',             :as => 'mark_test'
   match '/mark_drill',            :to => 'memverses#mark_drill',            :as => 'mark_drill'
-  match '/show_all_my_verses',    :to => 'memverses#show_all_my_verses',    :as => 'show_all_my_verses'
+  match '/manage_verses',         :to => 'memverses#manage_verses',         :as => 'manage_verses'
   match '/user_stats',            :to => 'memverses#user_stats',            :as => 'user_stats'
   match '/progress',              :to => 'memverses#show_progress',         :as => 'progress'
   match '/save_progress_report',  :to => 'memverses#save_progress_report',  :as => 'save_progress_report'
@@ -65,7 +65,6 @@ MemverseApp::Application.routes.draw do
   
   match '/show_user_info', :to => 'admin#show_user_info', :as => 'show_user_info'
   match '/show_tags', :to => 'admin#show_tags', :as => 'show_tags'
-  match '/print_selected', :to => 'memverses#print_selected',  :as => 'print_selected'
   
   # Doesn't require a login
   match '/contact', :to => 'info#contact', :as => 'contact'

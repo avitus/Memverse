@@ -593,14 +593,15 @@ class MemversesController < ApplicationController
   end 
  
   # ----------------------------------------------------------------------------------------------------------
-  # Manage verses - used to delete a lot of verses 
+  # Manage verses - used to delete a lot of verses and display all verses to user
   # TODO: see above ... should re-use code from above and call a model method
   # ----------------------------------------------------------------------------------------------------------
   def manage_verses
-    
-    mv_ids = params[:mv]
+
+    @tab = "home"
   
-    if (!mv_ids.blank?) and (params['Delete'])
+    if (!params[:mv].blank?) and (params['Delete'])
+      mv_ids = params[:mv]
       mv_ids.each { |mv_id|   
       
         # Find verse in DB
@@ -621,27 +622,31 @@ class MemversesController < ApplicationController
 
       }
       redirect_to :action => 'show_all_my_verses'
-    elsif (!mv_ids.blank?) and (params['Show'])
-      @selected_verses = current_user.memverses.all.find(:conditions => ["verse_id=?", mv_ids], :include => :verse)
-
-      # TODO: Allow for verse sorting based off what was submitted from show_all_my_verses.html.erb.
-      
-      format = params[:format]
-        
-      respond_to do |format| 
-        format.html
-        format.pdf { render :layout => false } if format == 'PDF'
-          prawnto :filename => "Memverses.pdf", :prawn => { }
-      end
-    else
+    elsif (!params[:mv].blank?) and (params['Show'])
+      mv_ids = params[:mv]
+      session[:format_] = params[:format]
+      session[:mv_ids_] = mv_ids
+      redirect_to :action => 'show_selected_verses' # This is just temporary...
+    elsif (!params[:mv].blank?)
       flash[:notice] = "Action not performed as no verses were selected."
       redirect_to :action => 'show_all_my_verses'
+    else
+      @my_verses = current_user.memverses.all(:include => :verse, :order => params[:sort_order])
+
+      if !params[:sort_order]
+        @my_verses.sort!  # default to canonical sort
+      end
+      respond_to do |format| 
+        format.html
+      #  format.pdf { render :layout => false } if params[:format] == 'pdf'
+      #    prawnto :filename => "Memverse.pdf", :prawn => { }
+      end
     end
        
   end 
  
- 
-  # ----------------------------------------------------------------------------------------------------------
+  #
+----------------------------------------------------------------------------------------------------------
   # Check whether any translations of entered verse are in DB
   # ----------------------------------------------------------------------------------------------------------    
   def avail_translations
@@ -678,25 +683,25 @@ class MemversesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   # Show all memory verses for current user
   # ----------------------------------------------------------------------------------------------------------   
-  def show_all_my_verses
-
-    @tab = "home"
-    
+#  def show_all_my_verses
+#
+#    @tab = "home"
+#    
     # TODO: we need to include a) verse reference and b) verse translation to speed up this page
     # TODO: can we include a secondary sort order on the canonical verse order? MySQL has no knowledge of verse ordering
-    @my_verses = current_user.memverses.all(:include => :verse, :order => params[:sort_order])
-
-    if !params[:sort_order]
-      @my_verses.sort!  # default to canonical sort
-    end
-    
-    respond_to do |format| 
-      format.html
-      format.pdf { render :layout => false } if params[:format] == 'pdf'
-        prawnto :filename => "Memverse.pdf", :prawn => { }
-    end
-  end
- 
+#    @my_verses = current_user.memverses.all(:include => :verse, :order => params[:sort_order])
+#
+#    if !params[:sort_order]
+#      @my_verses.sort!  # default to canonical sort
+#    end
+#    
+#    respond_to do |format| 
+#      format.html
+#      format.pdf { render :layout => false } if params[:format] == 'pdf'
+#        prawnto :filename => "Memverse.pdf", :prawn => { }
+#    end
+#  end
+# 
   # ----------------------------------------------------------------------------------------------------------
   # Get Memverse from Queue - returns nil if queue is empty
   # ----------------------------------------------------------------------------------------------------------   
