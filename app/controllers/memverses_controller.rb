@@ -627,7 +627,7 @@ class MemversesController < ApplicationController
       session[:format_] = params[:format]
       session[:mv_ids_] = mv_ids
       redirect_to :action => 'show_selected_verses' # This is just temporary...
-    elsif (params[:mv].blank?)
+    elsif (params[:submitted] == "true")
       flash[:notice] = "Action not performed as no verses were selected."
       redirect_to :action => 'show_all_my_verses'
     else
