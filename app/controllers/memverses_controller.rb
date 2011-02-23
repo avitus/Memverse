@@ -606,7 +606,7 @@ class MemversesController < ApplicationController
       @format = params[:format]
     end
   
-    if (@submitted = "false")
+    if (@submitted == "false")
       @my_verses = current_user.memverses.all(:include => :verse, :order => params[:sort_order])
 
       if !params[:sort_order]
@@ -625,7 +625,7 @@ class MemversesController < ApplicationController
         mem_queue = session[:mv_queue]        
         # We need to check that there is a verse sequence and also that the array isn't empty
         if !mem_queue.blank?
-          logger.debug("*** Found session queue with verses")
+          logger.debug("*** Found session queue with verses")	
           # Remove verse from the memorization queue if it is sitting in there
           mem_queue.delete(mv_id)
         end
@@ -634,7 +634,7 @@ class MemversesController < ApplicationController
 
       }
       redirect_to :action => 'manage_verses'
-    elsif (@submitted = "true") and (!mv_ids.blank?) and (params['Show'])
+    elsif (@submitted == "true") and (!mv_ids.blank?) and (params['Show'])
       redirect_to :action => 'index' # This is just temporary...
     elsif (params[:submitted] == "true")
       flash[:notice] = "Action not performed as no verses were selected."
