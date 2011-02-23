@@ -612,7 +612,7 @@ class MemversesController < ApplicationController
       if !params[:sort_order]
         @my_verses.sort!  # default to canonical sort
       end
-    elsif (@submitted = "true") and (!mv_ids.blank?) and (params['Delete'])
+    elsif (@submitted == "true") and (!mv_ids.blank?) and (params['Delete'])
       mv_ids = params[:mv]
       mv_ids.each { |mv_id|   
       
