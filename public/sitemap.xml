@@ -679,15 +679,15 @@
   <priority>0.0571</priority>
  </url>
  <url>
-  <loc>http://www.memverse.com/show_all_my_verses</loc>
+  <loc>http://www.memverse.com/manage_verses</loc>
   <priority>0.0857</priority>
  </url>
  <url>
-  <loc>http://www.memverse.com/show_all_my_verses?sort_order=next_test</loc>
+  <loc>http://www.memverse.com/manage_verses?sort_order=next_test</loc>
   <priority>0.0095</priority>
  </url>
  <url>
-  <loc>http://www.memverse.com/show_all_my_verses?sort_order=test_interval</loc>
+  <loc>http://www.memverse.com/manage_verses?sort_order=test_interval</loc>
   <priority>0.0095</priority>
  </url>
  <url>

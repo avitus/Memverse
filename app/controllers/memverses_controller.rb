@@ -338,7 +338,7 @@ class MemversesController < ApplicationController
     @verse = Verse.find(params[:id])
     if @verse.update_attributes(params[:verse])
       flash[:notice] = "Verse successfully updated"
-      redirect_to :action => 'show_all_my_verses'
+      redirect_to :action => 'manage_verses'
     else
       render :action => edit_verse
     end
@@ -589,7 +589,7 @@ class MemversesController < ApplicationController
 
     dead_mv.remove_mv  # remove verse and sort out next and previous pointers
     
-    redirect_to :action => 'show_all_my_verses'   
+    redirect_to :action => 'manage_verses'   
   end 
  
   # ----------------------------------------------------------------------------------------------------------

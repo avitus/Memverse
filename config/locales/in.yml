@@ -310,7 +310,7 @@
       b3:              "3 Ingat - Sulit"
       b2:              "2 Tidak tahu – Pernah Dengar"
       b1:              "1 Tidak tahu – Sama sekali"        
-    show_all_my_verses:
+    manage_verses:
       delete_selected: "Hapus yang Dipilih"
       show_selected:   "Tampilkan Dipilih"
   profile:
