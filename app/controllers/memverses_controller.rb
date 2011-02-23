@@ -593,20 +593,26 @@ class MemversesController < ApplicationController
   end 
  
   # ----------------------------------------------------------------------------------------------------------
-  # Manage verses - used to delete a lot of verses and display all verses to user
+  # Manage verses - used to delete a lot of verses and display verse management page to user
   # TODO: see above ... should re-use code from above and call a model method
   # ----------------------------------------------------------------------------------------------------------
   def manage_verses
     
     @tab = "home"
     @submitted = "false"
- #   if (params[:submitted] == "true")
- #     @submitted = "true"
- #     mv_ids = params[:mv]
- #     @format = params[:format]
- #   end
+    if (params[:submitted] == "true")
+      @submitted = "true"
+      mv_ids = params[:mv]
+      @format = params[:format]
+    end
   
-    if (@submitted = "true") and (!mv_ids.blank?) and (params['Delete'])
+    if (@submitted = "false")
+      @my_verses = current_user.memverses.all(:include => :verse, :order => params[:sort_order])
+
+      if !params[:sort_order]
+        @my_verses.sort!  # default to canonical sort
+      end
+    elsif (@submitted = "true") and (!mv_ids.blank?) and (params['Delete'])
       mv_ids = params[:mv]
       mv_ids.each { |mv_id|   
       
@@ -633,18 +639,13 @@ class MemversesController < ApplicationController
     elsif (params[:submitted] == "true")
       flash[:notice] = "Action not performed as no verses were selected."
       redirect_to :action => 'manage_verses'
-    else
-      @my_verses = current_user.memverses.all(:include => :verse, :order => params[:sort_order])
-
-      if !params[:sort_order]
-        @my_verses.sort!  # default to canonical sort
-      end
     end
-      respond_to do |format| 
-        format.html
-        format.pdf { render :layout => false } if params[:format] == 'pdf'
-          prawnto :filename => "Memverse.pdf", :prawn => { }
-      end
+
+    respond_to do |format| 
+      format.html
+      format.pdf { render :layout => false } if params[:format] == 'pdf'
+        prawnto :filename => "Memverse.pdf", :prawn => { }
+    end
       
   end 
  
