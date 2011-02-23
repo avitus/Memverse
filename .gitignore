@@ -15,3 +15,4 @@ mkmf.log
 /config/initializers/site_keys.rb
 *.rails2
 *plugins/rails_upgrade/*
+.bundle\n
