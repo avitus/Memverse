@@ -10,7 +10,7 @@ module BloggityPageNames
 	# Figure out the name for a page from its controller and action.  First we check
 	# the table of exceptions (above), and if not, we create the name from the action/controller
 	# combo 
-  # ALV: This doesn't seem particularly useful ... not sure where @page_name is actually used.
+    # ALV: This doesn't seem particularly useful ... not sure where @page_name is actually used.
 	def look_up_page_name(controller_name, action_name)
     logger.debug("*** Page name lookup called with controller name: #{controller_name} and action name: #{action_name}")
     if controller_name.blank? or action_name.blank?
