@@ -9,7 +9,9 @@ class BlogPostsController < ApplicationController
     
     @tab = "blog"
     logger.debug("*** Looking for blog with page number: #{params[:page]}")
-		blog_page = params[:page] || 1
+    # For some reason the page parameter doesn't seem to get passed in. So we just force the blog ID to 9 as in the main production DB
+    # Change it to 1 to match blog id in development
+	blog_page = params[:page] || 9
     @recent_posts = recent_posts(blog_page)
 		@blog_posts = if(params[:tag_name] || params[:category_id])
 			# This is how I'd *like* to filter on tag/category:  
