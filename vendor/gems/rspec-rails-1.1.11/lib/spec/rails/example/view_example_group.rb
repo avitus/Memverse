@@ -1,7 +1,7 @@
 module Spec
   module Rails
     module Example
-      # View Examples live in $RAILS_ROOT/spec/views/.
+      # View Examples live in $Rails.root/spec/views/.
       #
       # View Specs use Spec::Rails::Example::ViewExampleGroup,
       # which provides access to views without invoking any of your controllers.

@@ -5,7 +5,7 @@ module TaskUtil
 	# 
 	def setup_logger(options = {})
 		log_name = options[:log_name] || "raketasks"
-		logger = Logger.new("#{RAILS_ROOT}/log/#{log_name}.log")
+		logger = Logger.new("#{Rails.root}/log/#{log_name}.log")
 		logger.info("Logger started at #{Time.now.strftime('%c')}")
 		logger
 	end

@@ -23,7 +23,7 @@
 # In one application that uses this plugin, we decide that the name used in the
 # index action should be "Robbie", not "HAL 9000". To override this single method,
 # we create the corresponding controller in our application 
-# (<tt>RAILS_ROOT/app/controllers/my_controller.rb</tt>), and redefine the method:
+# (<tt>Rails.root/app/controllers/my_controller.rb</tt>), and redefine the method:
 #
 #   class MyController < ApplicationController
 #     def index
@@ -119,7 +119,7 @@ module Engines::RailsExtensions::Dependencies
         # from an engine
         unless Engines.disable_application_code_loading
           # Ensure we are only loading from the /app directory at this point
-          app_file_name = File.join(RAILS_ROOT, 'app', "#{file_type}s", "#{base_name}")
+          app_file_name = File.join(Rails.root, 'app', "#{file_type}s", "#{base_name}")
           if File.file?("#{app_file_name}.rb")
             file_loaded = true if require_or_load_without_engine_additions(app_file_name, const_path)
           end

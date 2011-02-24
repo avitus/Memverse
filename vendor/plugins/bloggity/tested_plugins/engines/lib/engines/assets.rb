@@ -7,7 +7,7 @@ each time Rails starts (script/server, script/console... and so on).
 Any edits you make will NOT persist across the next server restart; instead you
 should edit the files within the <plugin_name>/assets/ directory itself.}     
        
-      # Ensure that the plugin asset subdirectory of RAILS_ROOT/public exists, and
+      # Ensure that the plugin asset subdirectory of Rails.root/public exists, and
       # that we've added a little warning message to instruct developers not to mess with
       # the files inside, since they're automatically generated.
       def initialize_base_public_directory

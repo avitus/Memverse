@@ -22,7 +22,7 @@ module Spec
       if defined?(ActiveRecord::Base)
         def initialize
           super
-          self.fixture_path = RAILS_ROOT + '/spec/fixtures'
+          self.fixture_path = Rails.root + '/spec/fixtures'
         end
 
         def use_transactional_fixtures

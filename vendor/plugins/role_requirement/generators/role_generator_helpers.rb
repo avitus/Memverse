@@ -34,7 +34,7 @@ module RoleGeneratorHelpers
   end
   
   def add_dependencies_to_test_helper_rb
-    app_filename = "#{RAILS_ROOT}/test/test_helper.rb"
+    app_filename = "#{Rails.root}/test/test_helper.rb"
     
     test_helper_content = <<EOF
   # RoleRequirementTestHelper must be included to test RoleRequirement
@@ -49,7 +49,7 @@ EOF
   end
 
   def add_dependencies_to_application_rb
-    app_filename = "#{RAILS_ROOT}/app/controllers/application.rb"
+    app_filename = "#{Rails.root}/app/controllers/application.rb"
     
     auth_system_content = <<EOF
   # AuthenticatedSystem must be included for RoleRequirement, and is provided by installing acts_as_authenticates and running 'script/generate authenticated account user'.

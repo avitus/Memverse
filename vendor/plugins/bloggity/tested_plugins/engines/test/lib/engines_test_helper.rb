@@ -1,6 +1,6 @@
 module TestHelper
   def self.report_location(path)
-    [RAILS_ROOT + '/', 'vendor/plugins/'].each { |part| path.sub! part, ''}
+    [Rails.root + '/', 'vendor/plugins/'].each { |part| path.sub! part, ''}
     path = path.split('/')
     location, subject = path.first, path.last
     if subject.sub! '.rb', ''
@@ -12,7 +12,7 @@ module TestHelper
   end
   
   def self.view_path_for path
-    [RAILS_ROOT + '/', 'vendor/plugins/', '.html.erb'].each { |part| path.sub! part, ''}
+    [Rails.root + '/', 'vendor/plugins/', '.html.erb'].each { |part| path.sub! part, ''}
     parts = path.split('/')
     parts[(parts.index('views')+1)..-1].join('/')
   end

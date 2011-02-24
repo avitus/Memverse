@@ -4,7 +4,7 @@ require 'rails_generator/scripts/generate'
 
 class MigrationsTest < Test::Unit::TestCase
   
-  @@migration_dir = "#{RAILS_ROOT}/db/migrate"
+  @@migration_dir = "#{Rails.root}/db/migrate"
 
   def setup
     ActiveRecord::Migration.verbose = false
