@@ -599,21 +599,18 @@ class MemversesController < ApplicationController
   def manage_verses
     
     @tab = "home"
-    @submitted = "false"
-    if (params[:submitted] == "true")
-      @submitted = "true"
+    if (!params[:submitted].nil?)
       mv_ids = params[:mv]
-      @format = params[:format]
+      format = params[:format]
     end
   
-    if (@submitted == "false")
+    if (!params[:submitted].nil?)
       @my_verses = current_user.memverses.all(:include => :verse, :order => params[:sort_order])
 
       if !params[:sort_order]
         @my_verses.sort!  # default to canonical sort
       end
-    elsif (@submitted == "true") and (!mv_ids.blank?) and (params['Delete'])
-      mv_ids = params[:mv]
+    elsif (!params[:submitted].nil?) and (!mv_ids.blank?) and (params['Delete'])
       mv_ids.each { |mv_id|   
       
         # Find verse in DB
@@ -634,9 +631,9 @@ class MemversesController < ApplicationController
 
       }
       redirect_to :action => 'manage_verses'
-    elsif (@submitted == "true") and (!mv_ids.blank?) and (params['Show'])
-      redirect_to :action => 'index' # This is just temporary...
-    elsif (params[:submitted] == "true")
+    #elsif (!params[:submitted].nil?) and (!mv_ids.blank?) and (params['Show'])
+    #  redirect_to :action => 'index' # This is just temporary...
+    elsif (!params[:submitted].nil?) and (mv_ids.blank?)
       flash[:notice] = "Action not performed as no verses were selected."
       redirect_to :action => 'manage_verses'
     end

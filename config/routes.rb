@@ -3,23 +3,23 @@ MemverseApp::Application.routes.draw do
  
   # Restful Authentication Rewrites
   
-  match '/login', :to => 'sessions#new', :as => 'login'
-  match '/logout', :to => 'sessions#destroy', :as => 'logout'
-  match '/register', :to => 'users#create', :as => 'register'
-  match '/signup', :to => 'users#new', :as => 'signup'
-  match '/activate/:activation_code', :to => 'users#activate', :as => 'activate', :activation_code => nil
-  match '/forgot_password', :to => 'passwords#new', :as => 'forgot_password'
-  match '/change_password/:reset_code', :to => 'passwords#reset', :as => 'change_password'
+  match '/login',                       :to => 'sessions#new',      :as => 'login'
+  match '/logout',                      :to => 'sessions#destroy',  :as => 'logout'
+  match '/register',                    :to => 'users#create',      :as => 'register'
+  match '/signup',                      :to => 'users#new',         :as => 'signup'
+  match '/activate/:activation_code',   :to => 'users#activate',    :as => 'activate',  :activation_code => nil
+  match '/forgot_password',             :to => 'passwords#new',     :as => 'forgot_password'
+  match '/change_password/:reset_code', :to => 'passwords#reset',   :as => 'change_password'
 
   # Remove open_id_authentication to solve problem with empty params hash
-  # match '/opensession', :to => 'sessions#create', :as => 'open_id_complete', :via => [:get]
-  # match '/opencreate', :to => 'users#create', :as => 'open_id_create', :via => [:get]
+  # match '/opensession',                 :to => 'sessions#create',   :as => 'open_id_complete',  :via => [:get]
+  # match '/opencreate',                  :to => 'users#create',      :as => 'open_id_create',    :via => [:get]
 
   
   # Restful Authentication Resources
   resources :users
   resources :passwords
-  resource :session
+  resource  :session
   resources :uberverses
 # resources :pastors
   resources :sermons
@@ -59,59 +59,60 @@ MemverseApp::Application.routes.draw do
   match '/memory_verse/:id',      :to => 'memverses#show',                  :as => 'memory_verse'
   match '/memverse_counter',      :to => 'memverses#memverse_counter',      :as => 'memverse_counter'
 
- 
-  match '/tag_cloud', :to => 'verses#tag_cloud', :as => 'tag_cloud'
-  match '/check_verses', :to => 'verses#check_verses', :as => 'check_verses'
   
-  match '/show_user_info', :to => 'admin#show_user_info', :as => 'show_user_info'
-  match '/show_tags', :to => 'admin#show_tags', :as => 'show_tags'
+  match '/tag_cloud',             :to => 'verses#tag_cloud',                :as => 'tag_cloud'
+  match '/check_verses',          :to => 'verses#check_verses',             :as => 'check_verses'
+  
+  match '/show_user_info',        :to => 'admin#show_user_info',            :as => 'show_user_info'
+  match '/show_tags',             :to => 'admin#show_tags',                 :as => 'show_tags'
+  
   
   # Doesn't require a login
-  match '/contact', :to => 'info#contact', :as => 'contact'
-  match '/faq', :to => 'info#faq', :as => 'faq'
-  match '/tutorial', :to => 'info#tutorial', :as => 'tutorial'
-  match '/volunteer', :to => 'info#volunteer', :as => 'volunteer'
-  match '/popular', :to => 'info#pop_verses', :as => 'popular'
-  match '/supermemo', :to => 'info#sm_description', :as => 'supermemo'
-  match '/demo', :to => 'info#demo_test_verse', :as => 'demo'
-  match '/leaderboard', :to => 'info#leaderboard', :as => 'leaderboard'
-  match '/churchboard', :to => 'info#churchboard', :as => 'churchboard'
-  match '/stateboard', :to => 'info#stateboard', :as => 'stateboard'
-  match '/countryboard', :to => 'info#countryboard', :as => 'countryboard'
-  match '/memverse_clock', :to => 'info#memverse_clock', :as => 'memverse_clock'
-  match '/referralboard', :to => 'info#referralboard', :as => 'referralboard'
-  match '/news', :to => 'info#news', :as => 'news'
+  match '/contact',               :to => 'info#contact',                    :as => 'contact'   
+  match '/faq',                   :to => 'info#faq',                        :as => 'faq'
+  match '/tutorial',              :to => 'info#tutorial',                   :as => 'tutorial'
+  match '/volunteer',             :to => 'info#volunteer',                  :as => 'volunteer'
+  match '/popular',               :to => 'info#pop_verses',                 :as => 'popular'
+  match '/supermemo',             :to => 'info#sm_description',             :as => 'supermemo'
+  match '/demo',                  :to => 'info#demo_test_verse',            :as => 'demo'
+  match '/leaderboard',           :to => 'info#leaderboard',                :as => 'leaderboard'
+  match '/churchboard',           :to => 'info#churchboard',                :as => 'churchboard'
+  match '/stateboard',            :to => 'info#stateboard',                 :as => 'stateboard'
+  match '/countryboard',          :to => 'info#countryboard',               :as => 'countryboard'
+  match '/memverse_clock',        :to => 'info#memverse_clock',             :as => 'memverse_clock'
+  match '/referralboard',         :to => 'info#referralboard',              :as => 'referralboard'
+  match '/news',                  :to => 'info#news',                       :as => 'news'
  
   match '/update_profile',        :to => 'profile#update_profile',          :as => 'update_profile'
   match '/church',                :to => 'profile#show_church',             :as => 'church'
   match '/referrals/:id',         :to => 'profile#referrals',               :as => 'referrals'
   match '/unsubscribe/*email',    :to => 'profile#unsubscribe',             :as => 'unsubscribe'
   match '/search_user',    		  :to => 'profile#search_user',             :as => 'search_user'
-
-  match '/edit_tag/:id', :to => 'tag#edit_tag', :as => 'edit_tag'
+  
+  match '/edit_tag/:id',          :to => 'tag#edit_tag',                    :as => 'edit_tag'
 
   # Tweet routes
-  match '/tweets', :to => 'tweets#index', :as => 'tweets'
+  match '/tweets',                :to => 'tweets#index',                    :as => 'tweets'  
 
-  # Game routes
-  match '/verse_scramble', :to => 'games#verse_scramble', :as => 'verse_scramble'
+  # Game routes  
+  match '/verse_scramble',        :to => 'games#verse_scramble',            :as => 'verse_scramble'  
   
   # Blog routes
-  match '/blog', :to => 'blog_posts#index', :as => 'blog'
-  match '/blog_comments_new', :to => 'blog_comments#recent_comments', :as => 'blog_comments_new'
+  match '/blog',                 :to => 'blog_posts#index',                :as => 'blog'
+  match '/blog_comments_new',    :to => 'blog_comments#recent_comments',   :as => 'blog_comments_new'
   
   # Routes for Ziya graphs
-  match '/load_progress/:user', :to => 'chart#load_progress', :as => 'load_progress'
-  match '/load_memverse_clock', :to => 'chart#load_memverse_clock', :as => 'load_memverse_clock'
+  match '/load_progress/:user',  :to => 'chart#load_progress',             :as => 'load_progress'
+  match '/load_memverse_clock',  :to => 'chart#load_memverse_clock',       :as => 'load_memverse_clock' 
   
   # Root and Home Page
   root :to => 'sessions#new'
-  match '/home', :to => 'sessions#new'
+  match '/home',                  :to => 'sessions#new'
 
-  # Install the default routes as the lowest priority.
+  # Install the default routes as the lowest priority. 
   match '/:controller(/:action(/:id))'
 
   # Route for random pages
-  match '/:action', :to => 'pages#:action'
+  match '/:action',                 :to => 'pages#:action' 
   
 end
