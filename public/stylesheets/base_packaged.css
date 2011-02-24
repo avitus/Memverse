@@ -37,7 +37,7 @@ img {border: 0}
 table.memverse-standard {border-width: 1px; border-spacing: 1px; border-style: none; border-color: black; border-collapse: separate; background-color: white}
 table.memverse-standard th {border-width: thin; padding: 3px; border-style: solid; border-color: gray; background-color: #687284; -moz-border-radius: 3px 3px 3px 3px}
 table.memverse-standard td {border-width: thin; padding: 3px; border-style: solid; border-color: gray; background-color: #BAB18E; -moz-border-radius: 3px 3px 3px 3px}
- body {font-family: verdana, helvetica, arial, sans-serif; font-size:100%; background-image:url('/images/background.jpg'); background-repeat:no-repeat; background-position:top center}
+ body {font-family: verdana, helvetica, arial, sans-serif; font-size:100%; background-image:url('/images/background.jpg?1296695733'); background-repeat:no-repeat; background-position:top center}
  img.left {float:left}
 img.right {float:right}
 img.centre {display:block; margin-left:auto; margin-right:auto}
@@ -210,7 +210,7 @@ div#errorExplanation ul li {font-size: 12px; list-style: square}
 #edit-profile-form label {width: 15em;  padding-right: 0.5em}
 #edit-profile-form li {padding-top: 0.12em; padding-bottom: 0.12em; width: 570px}
 #edit-profile-form .buttons {margin-left: 12em; padding-top: 0.25em; margin-bottom: 0.7em}
-.autocomplete-w1 {background:url(../images/shadow.png) no-repeat bottom right; position:absolute; top:0px; left:0px; margin:8px 0 0 6px;  _background:none; _margin:0}
+.autocomplete-w1 {background:url(../images/shadow.png?1296695733) no-repeat bottom right; position:absolute; top:0px; left:0px; margin:8px 0 0 6px;  _background:none; _margin:0}
 .autocomplete {border:1px solid #999; background:#FFF; cursor:default; text-align:left; max-height:350px; overflow:auto; margin:-6px 6px 6px -6px;  _height:350px; _margin:0; _overflow-x:hidden}
 .autocomplete .selected {background:#687284}
  .autocomplete div {padding:2px 5px; white-space:nowrap}
@@ -253,32 +253,32 @@ div.fieldWithErrors input, div.fieldWithErrors select, div.fieldWithErrors texta
   .ui-widget-overlay {position: absolute; top: 0; left: 0; width: 100%; height: 100%}
   .ui-widget {font-family: Trebuchet MS, Tahoma, Verdana, Arial, sans-serif; font-size: 1.1em}
 .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button {font-family: Trebuchet MS, Tahoma, Verdana, Arial, sans-serif; font-size: 1em}
-.ui-widget-content {border: 1px solid #dddddd; background: #eeeeee url(images/ui-bg_highlight-soft_100_eeeeee_1x100.png) 50% top repeat-x; color: #333333}
+.ui-widget-content {border: 1px solid #dddddd; background: #eeeeee url(images/ui-bg_highlight-soft_100_eeeeee_1x100.png?1296695741) 50% top repeat-x; color: #333333}
 .ui-widget-content a {color: #333333}
-.ui-widget-header {border: 1px solid #e78f08; background: #f6a828 url(images/ui-bg_gloss-wave_35_f6a828_500x100.png) 50% 50% repeat-x; color: #ffffff; font-weight: bold}
+.ui-widget-header {border: 1px solid #e78f08; background: #f6a828 url(images/ui-bg_gloss-wave_35_f6a828_500x100.png?1296695741) 50% 50% repeat-x; color: #ffffff; font-weight: bold}
 .ui-widget-header a {color: #ffffff}
- .ui-state-default, .ui-widget-content .ui-state-default {border: 1px solid #cccccc; background: #f6f6f6 url(images/ui-bg_glass_100_f6f6f6_1x400.png) 50% 50% repeat-x; font-weight: bold; color: #1c94c4; outline: none}
+ .ui-state-default, .ui-widget-content .ui-state-default {border: 1px solid #cccccc; background: #f6f6f6 url(images/ui-bg_glass_100_f6f6f6_1x400.png?1296695741) 50% 50% repeat-x; font-weight: bold; color: #1c94c4; outline: none}
 .ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited {color: #1c94c4; text-decoration: none; outline: none}
-.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus {border: 1px solid #fbcb09; background: #fdf5ce url(images/ui-bg_glass_100_fdf5ce_1x400.png) 50% 50% repeat-x; font-weight: bold; color: #c77405; outline: none}
+.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus {border: 1px solid #fbcb09; background: #fdf5ce url(images/ui-bg_glass_100_fdf5ce_1x400.png?1296695741) 50% 50% repeat-x; font-weight: bold; color: #c77405; outline: none}
 .ui-state-hover a, .ui-state-hover a:hover {color: #c77405; text-decoration: none; outline: none}
-.ui-state-active, .ui-widget-content .ui-state-active {border: 1px solid #fbd850; background: #ffffff url(images/ui-bg_glass_65_ffffff_1x400.png) 50% 50% repeat-x; font-weight: bold; color: #eb8f00; outline: none}
+.ui-state-active, .ui-widget-content .ui-state-active {border: 1px solid #fbd850; background: #ffffff url(images/ui-bg_glass_65_ffffff_1x400.png?1296695741) 50% 50% repeat-x; font-weight: bold; color: #eb8f00; outline: none}
 .ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited {color: #eb8f00; outline: none; text-decoration: none}
- .ui-state-highlight, .ui-widget-content .ui-state-highlight {border: 1px solid #fed22f; background: #ffe45c url(images/ui-bg_highlight-soft_75_ffe45c_1x100.png) 50% top repeat-x; color: #363636}
+ .ui-state-highlight, .ui-widget-content .ui-state-highlight {border: 1px solid #fed22f; background: #ffe45c url(images/ui-bg_highlight-soft_75_ffe45c_1x100.png?1296695741) 50% top repeat-x; color: #363636}
 .ui-state-highlight a, .ui-widget-content .ui-state-highlight a {color: #363636}
-.ui-state-error, .ui-widget-content .ui-state-error {border: 1px solid #cd0a0a; background: #b81900 url(images/ui-bg_diagonals-thick_18_b81900_40x40.png) 50% 50% repeat; color: #ffffff}
+.ui-state-error, .ui-widget-content .ui-state-error {border: 1px solid #cd0a0a; background: #b81900 url(images/ui-bg_diagonals-thick_18_b81900_40x40.png?1296695741) 50% 50% repeat; color: #ffffff}
 .ui-state-error a, .ui-widget-content .ui-state-error a {color: #ffffff}
 .ui-state-error-text, .ui-widget-content .ui-state-error-text {color: #ffffff}
 .ui-state-disabled, .ui-widget-content .ui-state-disabled {opacity: .35; filter:Alpha(Opacity=35); background-image: none}
 .ui-priority-primary, .ui-widget-content .ui-priority-primary {font-weight: bold}
 .ui-priority-secondary, .ui-widget-content .ui-priority-secondary {opacity: .7; filter:Alpha(Opacity=70); font-weight: normal}
-  .ui-icon {width: 16px; height: 16px; background-image: url(images/ui-icons_222222_256x240.png)}
-.ui-widget-content .ui-icon {background-image: url(images/ui-icons_222222_256x240.png)}
-.ui-widget-header .ui-icon {background-image: url(images/ui-icons_ffffff_256x240.png)}
-.ui-state-default .ui-icon {background-image: url(images/ui-icons_ef8c08_256x240.png)}
-.ui-state-hover .ui-icon, .ui-state-focus .ui-icon {background-image: url(images/ui-icons_ef8c08_256x240.png)}
-.ui-state-active .ui-icon {background-image: url(images/ui-icons_ef8c08_256x240.png)}
-.ui-state-highlight .ui-icon {background-image: url(images/ui-icons_228ef1_256x240.png)}
-.ui-state-error .ui-icon, .ui-state-error-text .ui-icon {background-image: url(images/ui-icons_ffd27a_256x240.png)}
+  .ui-icon {width: 16px; height: 16px; background-image: url(images/ui-icons_222222_256x240.png?1296695741)}
+.ui-widget-content .ui-icon {background-image: url(images/ui-icons_222222_256x240.png?1296695741)}
+.ui-widget-header .ui-icon {background-image: url(images/ui-icons_ffffff_256x240.png?1296695741)}
+.ui-state-default .ui-icon {background-image: url(images/ui-icons_ef8c08_256x240.png?1296695741)}
+.ui-state-hover .ui-icon, .ui-state-focus .ui-icon {background-image: url(images/ui-icons_ef8c08_256x240.png?1296695741)}
+.ui-state-active .ui-icon {background-image: url(images/ui-icons_ef8c08_256x240.png?1296695741)}
+.ui-state-highlight .ui-icon {background-image: url(images/ui-icons_228ef1_256x240.png?1296695741)}
+.ui-state-error .ui-icon, .ui-state-error-text .ui-icon {background-image: url(images/ui-icons_ffd27a_256x240.png?1296695741)}
  .ui-icon-carat-1-n {background-position: 0 0}
 .ui-icon-carat-1-ne {background-position: -16px 0}
 .ui-icon-carat-1-e {background-position: -32px 0}
@@ -461,8 +461,8 @@ div.fieldWithErrors input, div.fieldWithErrors select, div.fieldWithErrors texta
 .ui-corner-right {-moz-border-radius-topright: 4px; -webkit-border-top-right-radius: 4px; -moz-border-radius-bottomright: 4px; -webkit-border-bottom-right-radius: 4px}
 .ui-corner-left {-moz-border-radius-topleft: 4px; -webkit-border-top-left-radius: 4px; -moz-border-radius-bottomleft: 4px; -webkit-border-bottom-left-radius: 4px}
 .ui-corner-all {-moz-border-radius: 4px; -webkit-border-radius: 4px}
- .ui-widget-overlay {background: #666666 url(images/ui-bg_diagonals-thick_20_666666_40x40.png) 50% 50% repeat; opacity: .50;filter:Alpha(Opacity=50)}
-.ui-widget-shadow {margin: -5px 0 0 -5px; padding: 5px; background: #000000 url(images/ui-bg_flat_10_000000_40x100.png) 50% 50% repeat-x; opacity: .20;filter:Alpha(Opacity=20); -moz-border-radius: 5px; -webkit-border-radius: 5px}
+ .ui-widget-overlay {background: #666666 url(images/ui-bg_diagonals-thick_20_666666_40x40.png?1296695741) 50% 50% repeat; opacity: .50;filter:Alpha(Opacity=50)}
+.ui-widget-shadow {margin: -5px 0 0 -5px; padding: 5px; background: #000000 url(images/ui-bg_flat_10_000000_40x100.png?1296695741) 50% 50% repeat-x; opacity: .20;filter:Alpha(Opacity=20); -moz-border-radius: 5px; -webkit-border-radius: 5px}
 .ui-accordion .ui-accordion-header {cursor: pointer; position: relative; margin-top: 1px; zoom: 1}
 .ui-accordion .ui-accordion-li-fix {display: inline}
 .ui-accordion .ui-accordion-header-active {border-bottom: 0 !important}
@@ -615,53 +615,3 @@ div.fieldWithErrors input, div.fieldWithErrors select, div.fieldWithErrors texta
 #bloggity_container .comments_body li.not_approved .comment_body {background-color:yellow}
 #bloggity_container .comments_body li.approved .comment_body {background-color:#eee}
 #bloggity_container #inner_asset_container .uploaded_asset {background:#eee; border:1px solid #ccc; padding:10px; margin:3px 0}
- body {font-size:11px; color: #333333; font-family: Geneva, Arial, Helvetica, sans-serif; word-spacing:1px; background-color:#eeeeee}
-option {background-color: #eeeeee}
-select{ background-color: #eeeeee; color:#333333; font-family: Geneva, Arial, Helvetica, sans-serif; word-spacing:1px; font-weight: bold; text-decoration: none; font-size: 11px}
-table {font-size:11px; color: #333333; font-family: Geneva, Arial, Helvetica, sans-serif}
-th {font-weight: bold; font-size: 14px; color: #b04329}
-.white{ font-weight: bold; font-size: 14px; color: #ffffff; text-decoration: none}
-.blank{ color:#000000}
-.linkish{ cursor:pointer;}
-.toplinks{ color:#333333; font-weight: bold; text-decoration: none; font-size: 11px}
-.toplinksLight{ color:#333333; font-weight:normal; text-decoration: none; font-size: 11px}
-a.toplinks:visited{color:#333333; text-decoration:none}
-a.toplinksLight:visited{color:#333333; text-decoration:none}
-a.toplinks:hover{color:#b04329; text-decoration: none}
-a.toplinksLight:hover{color:#b04329; text-decoration: none}
-.toplinksRed{ color:#b04329; font-weight: bold; text-decoration: none; font-size: 11px}
-.toplinksRedLight{ color:#b04329; font-weight: normal; text-decoration: none; font-size: 11px}
-a.toplinksRed:visited{color:#b04329; text-decoration:none}
-a.toplinksRedLight:visited{color:#b04329; text-decoration:none}
-a.toplinks:hover{color:#b04329; text-decoration: none}
-a.toplinksLight:hover{color:#b04329; text-decoration: none}
-.RedlinksLarge{ color:#b04329; font-weight: bold; text-decoration: none; font-size: 14px}
-.HugeRed{ color:#990000; font-weight: bold; text-decoration: none; font-size: 20px}
-a.RedlinksLarge:visited{color:#b04329; text-decoration:none}
-a.RedlinksLarge:hover{color:#b04329; text-decoration: none}
-.Sectionlinks{ color:#999999; font-weight: bold; text-decoration: none; font-size: 11px}
-a.Sectionlinks:visited{color:#999999; text-decoration:none}
-a.Sectionlinks:hover{color:#990000; text-decoration:none}
-.subon{ color:#b04329; font-size: 11px; text-decoration: none; font-weight:bold}
-a.subon:visited{color:#b04329; text-decoration:none}
-.subtitle{ color:#999999; font-size: 11px; text-decoration: none; font-weight:bold}
-.lightgreytitle{ font-weight: bold; font-size:13px; color:#DDDDDD}
-.goldtext{ color:#F7D891}
-.goldlink{ font-weight: bold; font-size:11px; text-decoration: none; color:#F7D891}
-.whitequote{ font-size:13px; color:#DDDDDD}
-.italics{ font-size:11px; color:#333333; font-style: italic}
-.text {font-size:12px; color: #333333}
-.Redtext{ color:#990000; font-weight: bold; text-decoration: none; font-size: 11px; letter-spacing: normal}
-.Redtitle{ color:#990000; font-size: 14px; text-decoration: none; font-weight:bold}
-.Greyheader{ color:#333333; font-size: 14px; text-decoration: none; font-weight:bold}
-.Redheader{ color:#990000; font-size: 14px; text-decoration: none; font-weight:bold}
-.Graytitle{ color:#333333; font-size: 15px; text-decoration: none; font-weight:bold}
-.Whitetitle{ color:#FFFFFF; font-size: 21px; text-decoration: none}
-.Darktitle{ color:#333333; font-size: 21px; text-decoration: none}
-.light{ font-size:11px; color:#777777}
-.littlesubtitle{ color:#999999; font-size: 11px; text-decoration: none}
-.TMtext{font-size: 5px}
-a.subtitle:visited{color:#999999; text-decoration:none}
-a.goldlink:visited{color:#F7D891; text-decoration:none}
-a.subtitle:hover{color:#CC6666; text-decoration:none}
-a.Title:visited{text-decoration:none}

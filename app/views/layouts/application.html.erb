@@ -43,8 +43,9 @@
 
 	<!-- Main Stylesheet -->
 	<%= stylesheet_link_tag 'base_packaged', :cache => 'cache/all' %>
-	<!-- <%= stylesheet_link_merged 'base', :cache => 'cache/all' %> -->
 	<%= stylesheet_link_tag 'mobile' if mobile_device? %>
+	<!-- <%= stylesheet_link_merged 'base', :cache => 'cache/all' %> -->
+
 
   <!-- Rails 3 XSS protection -->
   <%= csrf_meta_tag %>
