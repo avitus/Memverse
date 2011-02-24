@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.0.4'
+gem 'rails', '>=3.0.3'
 gem 'mysql2'
 # gem 'rubyist-aasm', '2.2.0', :require => 'aasm'		# :source => 'http://gems.github.com',   
 gem 'aasm', '2.2.0', 		:require => 'aasm'			# :source => 'http://gems.github.com',   
