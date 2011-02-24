@@ -152,7 +152,7 @@ DEPENDENCIES
   paperclip
   prawn!
   prototype_legacy_helper (= 0.0.0)!
-  rails (= 3.0.4)
+  rails (>= 3.0.3)
   ruby-openid
   spawn!
   test-unit (= 1.2.3)
