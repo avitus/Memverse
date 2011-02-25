@@ -50,6 +50,7 @@ MemverseApp::Application.routes.draw do
   match '/mark_test',             :to => 'memverses#mark_test',             :as => 'mark_test'
   match '/mark_drill',            :to => 'memverses#mark_drill',            :as => 'mark_drill'
   match '/manage_verses',         :to => 'memverses#manage_verses',         :as => 'manage_verses'
+  match '/show_all_my_verses',    :to => 'memverses#manage_verses',         :as => 'manage_verses'
   match '/user_stats',            :to => 'memverses#user_stats',            :as => 'user_stats'
   match '/progress',              :to => 'memverses#show_progress',         :as => 'progress'
   match '/save_progress_report',  :to => 'memverses#save_progress_report',  :as => 'save_progress_report'
