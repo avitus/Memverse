@@ -599,18 +599,18 @@ class MemversesController < ApplicationController
   def manage_verses
     
     @tab = "home"
-    if (!params[:submitted].nil?)
+    if (params[:submitted])
       mv_ids = params[:mv]
       format = params[:format]
     end
   
-    if (!params[:submitted].nil?)
+    if (!params[:submitted])
       @my_verses = current_user.memverses.all(:include => :verse, :order => params[:sort_order])
 
       if !params[:sort_order]
         @my_verses.sort!  # default to canonical sort
       end
-    elsif (!params[:submitted].nil?) and (!mv_ids.blank?) and (params['Delete'])
+    elsif (params[:submitted]) and (!mv_ids.blank?) and (params['Delete'])
       mv_ids.each { |mv_id|   
       
         # Find verse in DB
@@ -633,7 +633,7 @@ class MemversesController < ApplicationController
       redirect_to :action => 'manage_verses'
     #elsif (!params[:submitted].nil?) and (!mv_ids.blank?) and (params['Show'])
     #  redirect_to :action => 'index' # This is just temporary...
-    elsif (!params[:submitted].nil?) and (mv_ids.blank?)
+    elsif (params[:submitted]) and (mv_ids.blank?)
       flash[:notice] = "Action not performed as no verses were selected."
       redirect_to :action => 'manage_verses'
     end
@@ -646,8 +646,7 @@ class MemversesController < ApplicationController
       
   end 
  
-  #
-----------------------------------------------------------------------------------------------------------
+  # ----------------------------------------------------------------------------------------------------------
   # Check whether any translations of entered verse are in DB
   # ----------------------------------------------------------------------------------------------------------    
   def avail_translations
