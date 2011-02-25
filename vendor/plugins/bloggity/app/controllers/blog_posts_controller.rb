@@ -1,33 +1,34 @@
 class BlogPostsController < ApplicationController
   before_filter :get_bloggity_page_name
-	before_filter :load_blog_post
-	before_filter :blog_writer_or_redirect, :except => [:close, :index, :show, :feed]
+  before_filter :load_blog_post
+  before_filter :blog_writer_or_redirect, :except => [:close, :index, :show, :feed]
 	
-	# GET /blog_posts
+  # GET /blog_posts
   # GET /blog_posts.xml
   def index
     
     @tab = "blog"
-    logger.debug("*** Looking for blog with page number: #{params[:page]}")
-		blog_page = params[:page] || 1
+
+	blog_page = params[:page] || 1
     @recent_posts = recent_posts(blog_page)
-		@blog_posts = if(params[:tag_name] || params[:category_id])
-			# This is how I'd *like* to filter on tag/category:  
-			#search_condition = { :blog_id => @blog_id, :is_complete => true }
-			#search_condition.merge!(:blog_tags => { :name => params[:tag_name] }) if params[:tag_name]
-			# However something about the interaction of these options is terminally dumb, as the include or join 
-			# is ignored by the test suite or script/server, respectively, when using this logic.
-			
-			# So alas... we must hack away:
-			search_condition = ["blog_id = ? AND is_complete = ? #{"AND blog_tags.name = ?" if params[:tag_name]} #{"AND category_id = ?" if params[:category_id]}", @blog_id, true, params[:tag_name], params[:category_id]].compact
-			BlogPost.paginate(:all, :select => "DISTINCT blog_posts.*", :conditions => search_condition, :include => :tags, :order => "blog_posts.created_at DESC", :page => blog_page, :per_page => 15)
-		else
-			@recent_posts
-		end
+	@blog_posts = if(params[:tag_name] || params[:category_id])
+		# This is how I'd *like* to filter on tag/category:  
+		#search_condition = { :blog_id => @blog_id, :is_complete => true }
+		#search_condition.merge!(:blog_tags => { :name => params[:tag_name] }) if params[:tag_name]
+		# However something about the interaction of these options is terminally dumb, as the include or join 
+		# is ignored by the test suite or script/server, respectively, when using this logic.
 		
-		@page_name = @blog.title
+		# So alas... we must hack away:
+		search_condition = ["blog_id = ? AND is_complete = ? #{"AND blog_tags.name = ?" if params[:tag_name]} #{"AND category_id = ?" if params[:category_id]}", @blog_id, true, params[:tag_name], params[:category_id]].compact
+		BlogPost.paginate(:all, :select => "DISTINCT blog_posts.*", :conditions => search_condition, :include => :tags, :order => "blog_posts.created_at DESC", :page => blog_page, :per_page => 15)
+	else
+		logger.info("*** Showing recent posts ")
+		@recent_posts
+	end
+		
+	@page_name = @blog.title
     
-		respond_to do |format|
+	respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @blog_posts }
     end
@@ -62,7 +63,7 @@ class BlogPostsController < ApplicationController
 			flash[:error] = "You do not have permission to see that blog post."
 			return (redirect_to( :action => 'index' ))
 		else
-			@page_name = @blog_post.title
+			@page_name = @page_title = @blog_post.title
       
       # Used to check off quests
       spawn_block do
@@ -156,6 +157,7 @@ class BlogPostsController < ApplicationController
 	end
 	
 	def recent_posts(blog_page)
+		logger.info("*** Loading recent posts for blog with id: #{@blog_id}")
 		BlogPost.paginate(:all, :select => "DISTINCT blog_posts.*", :conditions => ["blog_id = ? AND is_complete = ?", @blog_id, true], :order => "blog_posts.created_at DESC", :page => blog_page, :per_page => 15)		
 	end
 end

@@ -11,7 +11,7 @@ require File.join(File.dirname(__FILE__), 'engines/rails_extensions/rails')
 # The Engines module has a number of public configuration parameters:
 #
 # [+public_directory+]  The directory into which plugin assets should be
-#                       mirrored. Defaults to <tt>RAILS_ROOT/public/plugin_assets</tt>.
+#                       mirrored. Defaults to <tt>Rails.root/public/plugin_assets</tt>.
 # [+schema_info_table+] The table to use when storing plugin migration 
 #                       version information. Defaults to +plugin_schema_info+.
 #
@@ -46,9 +46,9 @@ module Engines
   self.rails_extensions = %w(asset_helpers form_tag_helpers migrations dependencies)
   
   # The name of the public directory to mirror public engine assets into.
-  # Defaults to <tt>RAILS_ROOT/public/plugin_assets</tt>.
+  # Defaults to <tt>Rails.root/public/plugin_assets</tt>.
   mattr_accessor :public_directory
-  self.public_directory = File.join(RAILS_ROOT, 'public', 'plugin_assets')
+  self.public_directory = File.join(Rails.root, 'public', 'plugin_assets')
 
   # The table in which to store plugin schema information. Defaults to
   # "plugin_schema_info".
@@ -87,7 +87,7 @@ module Engines
     end
     
     def logger
-      RAILS_DEFAULT_LOGGER
+      Rails.logger
     end
     
     def load_extensions

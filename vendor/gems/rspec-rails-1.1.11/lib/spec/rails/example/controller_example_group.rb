@@ -1,7 +1,7 @@
 module Spec
   module Rails
     module Example
-      # Controller Examples live in $RAILS_ROOT/spec/controllers/.
+      # Controller Examples live in $Rails.root/spec/controllers/.
       #
       # Controller Examples use Spec::Rails::Example::ControllerExampleGroup, which supports running specs for
       # Controllers in two modes, which represent the tension between the more granular

@@ -62,7 +62,7 @@ require 'controller_spec_controller'
       get 'action_with_render_update'
     end
     
-    it "should allow a path relative to RAILS_ROOT/app/views/ when specifying a partial" do
+    it "should allow a path relative to Rails.root/app/views/ when specifying a partial" do
       get 'action_with_partial'
       response.should render_template("controller_spec/_partial")
     end

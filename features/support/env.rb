@@ -24,7 +24,7 @@ require 'test/unit'
 
 # factory girl  - Added May 3, 2010
 require 'factory_girl'
-require RAILS_ROOT + "/spec/factories.rb" 
+require Rails.root + "/spec/factories.rb" 
 
 
 # Capybara defaults to XPath selectors rather than Webrat's default of CSS3. In

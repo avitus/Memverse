@@ -99,8 +99,8 @@ MemverseApp::Application.routes.draw do
   match '/verse_scramble',        :to => 'games#verse_scramble',            :as => 'verse_scramble'  
   
   # Blog routes
-  match '/blog',                 :to => 'blog_posts#index',                :as => 'blog'
-  match '/blog_comments_new',    :to => 'blog_comments#recent_comments',   :as => 'blog_comments_new'
+  match '/blog',                  :to => 'blog_posts#index', :blog_url_id_or_id => 'main',  :as => 'blog'
+  match '/blog_comments_new',     :to => 'blog_comments#recent_comments',   				:as => 'blog_comments_new'
   
   # Routes for Ziya graphs
   match '/load_progress/:user',  :to => 'chart#load_progress',             :as => 'load_progress'

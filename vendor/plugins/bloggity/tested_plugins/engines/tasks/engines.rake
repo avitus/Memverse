@@ -140,7 +140,7 @@ namespace :db do
       task :load => :environment do
         require 'active_record/fixtures'
         ActiveRecord::Base.establish_connection(RAILS_ENV.to_sym)
-        Dir.glob(File.join(RAILS_ROOT, 'vendor', 'plugins', ENV['PLUGIN'] || '**', 
+        Dir.glob(File.join(Rails.root, 'vendor', 'plugins', ENV['PLUGIN'] || '**', 
                  'test', 'fixtures', '*.yml')).each do |fixture_file|
           Fixtures.create_fixtures(File.dirname(fixture_file), File.basename(fixture_file, '.*'))
         end
@@ -164,7 +164,7 @@ namespace :doc do
     plugins.each do |plugin|
       desc "Create plugin documentation for '#{plugin}'"
       Rake::Task.redefine_task(plugin => :environment) do
-        plugin_base   = RAILS_ROOT + "/vendor/plugins/#{plugin}"
+        plugin_base   = Rails.root + "/vendor/plugins/#{plugin}"
         options       = []
         files         = Rake::FileList.new
         options << "-o doc/plugins/#{plugin}"

@@ -1,8 +1,7 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.0.4'
+gem 'rails', '>=3.0.3'
 gem 'mysql2'
-gem 'sqlite3-ruby', :require => 'sqlite3'
 # gem 'rubyist-aasm', '2.2.0', :require => 'aasm'		# :source => 'http://gems.github.com',   
 gem 'aasm', '2.2.0', 		:require => 'aasm'			# :source => 'http://gems.github.com',   
 gem 'will_paginate', '>=3.0.pre'						# :source => 'http://gemcutter.org', will_paginate is required for bloggity
@@ -53,3 +52,5 @@ end
 # group :development, :test do
 #   gem 'webrat'
 # end
+
+# gem 'sqlite3-ruby', :require => 'sqlite3'     # Don't need sqlite

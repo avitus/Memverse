@@ -24,6 +24,7 @@ TRANSLATIONS = {
     :NVI => "Nueva Version Internacional",
     :RVR => "Reina-Valera 1960",
     :AFR => "Afrikaans 1983 Translation",
+    :HSV => "Herziene Statenvertaling",
     :NBV => "De Nieuwe Bijbelvertaling",
     :TMB => "Terjemahan Baru",
     :SPB => "Svenska Folkbibeln" 

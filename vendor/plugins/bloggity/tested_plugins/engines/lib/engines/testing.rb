@@ -15,7 +15,7 @@ require 'fileutils'
 # Since Rails' own fixtures method is fairly strict about where files can be loaded from,
 # the simplest approach when running plugin tests with fixtures is to simply copy all
 # fixtures into a single temporary location and inform the standard Rails mechanism to
-# use this directory, rather than RAILS_ROOT/test/fixtures.
+# use this directory, rather than Rails.root/test/fixtures.
 #
 # The Engines::Testing#setup_plugin_fixtures method does this, copying all plugin fixtures
 # into the temporary location before and tests are performed. This behaviour is invoked
@@ -78,7 +78,7 @@ module Engines::Testing
         Engines.mirror_files_from(plugin_fixtures_directory, self.temporary_fixtures_directory)
       end
     end
-    Engines.mirror_files_from(File.join(RAILS_ROOT, "test", "fixtures"),
+    Engines.mirror_files_from(File.join(Rails.root, "test", "fixtures"),
                               self.temporary_fixtures_directory)
   end
   

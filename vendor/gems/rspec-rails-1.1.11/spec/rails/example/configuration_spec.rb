@@ -53,10 +53,10 @@ module Spec
     describe Configuration, "#fixture_path" do
       it_should_behave_like "Spec::Example::Configuration"
 
-      it "should default to RAILS_ROOT + '/spec/fixtures'" do
-        @config.fixture_path.should == RAILS_ROOT + '/spec/fixtures'
+      it "should default to Rails.root + '/spec/fixtures'" do
+        @config.fixture_path.should == Rails.root + '/spec/fixtures'
         Configuration::EXAMPLE_GROUP_CLASSES.each do |example_group|
-          example_group.fixture_path.should == RAILS_ROOT + '/spec/fixtures'
+          example_group.fixture_path.should == Rails.root + '/spec/fixtures'
         end
       end
 

@@ -25,7 +25,7 @@ class AssetsTest < Test::Unit::TestCase
   end
   
   def test_engines_has_not_created_duplicated_file_structure
-    assert !File.exists?(File.join(Engines.public_directory, "test_assets", RAILS_ROOT))
+    assert !File.exists?(File.join(Engines.public_directory, "test_assets", Rails.root))
   end
   
   def test_public_files_have_been_copied_from_test_assets_with_assets_dir_plugin

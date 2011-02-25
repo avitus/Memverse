@@ -201,7 +201,7 @@
 
 * Added some more tests (in particular, see rails_engines/applications/engines_test).
 
-* Another attempt at solving Ticket #53 - controllers and helpers should now be loadable from modules, and if a full path (including RAILS_ROOT/ENGINES_ROOT) is given, it should be safely stripped from the require filename such that corresponding files can be located in any active engines. In other words, controller/helper overloading should now completely work, even if the controllers/helpers are in modules.
+* Another attempt at solving Ticket #53 - controllers and helpers should now be loadable from modules, and if a full path (including Rails.root/ENGINES_ROOT) is given, it should be safely stripped from the require filename such that corresponding files can be located in any active engines. In other words, controller/helper overloading should now completely work, even if the controllers/helpers are in modules.
 
 * Added (finally) patch from Ticket #22 - ActionMailer helpers should now load
 
@@ -211,7 +211,7 @@
 
 * Fixed minor documentation error ('Engine.start' ==> 'Engines.start') (Ticket #57)
 
-* Fixed double inclusion of RAILS_ROOT in engine_migrate rake task (Ticket #61)
+* Fixed double inclusion of Rails.root in engine_migrate rake task (Ticket #61)
 
 * Added ability to force config values even if given as a hash (Ticket #62)
 

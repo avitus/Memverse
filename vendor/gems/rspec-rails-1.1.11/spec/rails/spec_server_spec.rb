@@ -5,7 +5,7 @@
 #   attr_reader :animals_yml_path, :original_animals_content
 # 
 #   before do
-#     @animals_yml_path = File.expand_path("#{RAILS_ROOT}/spec/fixtures/animals.yml")
+#     @animals_yml_path = File.expand_path("#{Rails.root}/spec/fixtures/animals.yml")
 #     @original_animals_content = File.read(animals_yml_path)
 #   end
 # 
@@ -24,7 +24,7 @@
 #     output = ""
 #     Timeout.timeout(10) do
 #       loop do
-#         output = `#{RAILS_ROOT}/script/spec #{dir}/sample_spec.rb --drb 2>&1`
+#         output = `#{Rails.root}/script/spec #{dir}/sample_spec.rb --drb 2>&1`
 #         break unless output.include?("No server is running")
 #       end
 #     end
@@ -42,7 +42,7 @@
 # 
 #     Timeout.timeout(10) do
 #       loop do
-#         output = `#{RAILS_ROOT}/script/spec #{dir}/sample_modified_fixture.rb --drb 2>&1`
+#         output = `#{Rails.root}/script/spec #{dir}/sample_modified_fixture.rb --drb 2>&1`
 #         break unless output.include?("No server is running")
 #       end
 #     end
@@ -55,7 +55,7 @@
 #   def start_spec_server
 #     dir = File.dirname(__FILE__)
 #     Thread.start do
-#       system "cd #{RAILS_ROOT}; script/spec_server"
+#       system "cd #{Rails.root}; script/spec_server"
 #     end
 # 
 #     file_content = ""

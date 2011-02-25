@@ -14,7 +14,7 @@ Example:
 
   This will generate:
 
-    RAILS_ROOT
+    Rails.root
       |- db
           |-migrate
               |- xxx_plugin_migrations.rb

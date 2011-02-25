@@ -1,3 +1,5 @@
+require 'bundler/deployment'
+
 ##############################################################
 ##  Application
 ##############################################################
@@ -53,11 +55,15 @@ set :stages, %w(staging production)
 set :default_stage, "staging"
 require File.expand_path("#{File.dirname(__FILE__)}/../vendor/gems/capistrano-ext-1.2.1/lib/capistrano/ext/multistage")
 
+
+##############################################################
+##  Hooks
+##############################################################
+after "deploy:update_code", "deploy:symlink_db", "deploy:set_rails_env"
+
 ##############################################################
 ##  Database config and restart
 ##############################################################
-after 'deploy:update_code', 'deploy:symlink_db', "deploy:set_rails_env"
-
 namespace :deploy do  
   desc "Symlinks the database.yml"                            # Link in the database config
   task :symlink_db, :roles => :app do
@@ -75,12 +81,12 @@ namespace :deploy do
     CMD
   end  
 
-  desc "Create asset packages for production" 
-  task :after_update_code, :roles => [:web] do                 # Compress and minify javascript and css files
-    run <<-EOF
-    cd #{release_path} && rake asset:packager:build_all
-    EOF
-  end  
+  # desc "Create asset packages for production" 
+  # task :after_update_code, :roles => [:web] do                 # Compress and minify javascript and css files
+    # run <<-EOF
+    # cd #{release_path} && rake asset:packager:build_all
+    # EOF
+  # end  
 
   desc "Restarting mod_rails with restart.txt"                # Restart passenger on deploy
   task :restart, :roles => :app, :except => { :no_release => true } do

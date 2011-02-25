@@ -46,4 +46,9 @@ MemverseApp::Application.configure do
 
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
+  
+  # Restful Authentication
+  REST_AUTH_SITE_KEY = 'f5945d1c74d3502f8a3de8562e5bf21fe3fec887'
+  REST_AUTH_DIGEST_STRETCHES = 10
+  
 end
