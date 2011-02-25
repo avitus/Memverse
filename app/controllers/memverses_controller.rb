@@ -1414,8 +1414,8 @@ class MemversesController < ApplicationController
     logger.debug("Echo (give feedback) is set to: #{echo}")
     logger.debug("Guess   			: #{guess}")
     logger.debug("Correct 			: #{correct}")
-    logger.debug("Guess encoding 	: #{guess.encoding.name}")
-    logger.debug("Correct encoding	: #{correct.encoding.name}")
+    # logger.debug("Guess encoding 	: #{guess.encoding.name}")  # encoding method only available in Ruby 1.9
+    # logger.debug("Correct encoding	: #{correct.encoding.name}")
 
     @correct  = correct
     @feedback = ""  # find a better way to construct the string
