@@ -63,7 +63,7 @@ class BlogPostsController < ApplicationController
 			flash[:error] = "You do not have permission to see that blog post."
 			return (redirect_to( :action => 'index' ))
 		else
-			@page_name = @blog_post.title
+			@page_name = @page_title = @blog_post.title
       
       # Used to check off quests
       spawn_block do
