@@ -593,16 +593,11 @@ class MemversesController < ApplicationController
   end 
  
   # ----------------------------------------------------------------------------------------------------------
-  # Manage verses - used to delete a lot of verses and display verse management page to user
-  # TODO: see above ... should re-use code from above and call a model method
+  # Manage verses - used to display verse management page to user
   # ----------------------------------------------------------------------------------------------------------
   def manage_verses
     
     @tab = "home"
-    if (params[:submitted])
-      mv_ids = params[:mv]
-      format = params[:format]
-    end
 
     @my_verses = current_user.memverses.all(:include => :verse, :order => params[:sort_order])
 
@@ -610,7 +605,26 @@ class MemversesController < ApplicationController
       @my_verses.sort!  # default to canonical sort
     end
 
-    if (params[:submitted]) and (!mv_ids.blank?) and (params['Delete'])
+    respond_to do |format| 
+      format.html
+      format.pdf { render :layout => false } if params[:format] == 'pdf'
+        prawnto :filename => "Memverse.pdf", :prawn => { }
+    end
+      
+  end 
+ 
+  # ----------------------------------------------------------------------------------------------------------
+  # Manage verses - used to handle the manage verses form (delete a lot of verses or show selected)
+  # TODO: see above ... should re-use code from above and call a model method
+  # ----------------------------------------------------------------------------------------------------------
+  def manage_verses_process
+    
+    @tab = "home"
+
+    mv_ids = params[:mv]
+    format = params[:format]
+
+    if (!mv_ids.blank?) and (params['Delete'])
       mv_ids.each { |mv_id|   
       
         # Find verse in DB
@@ -630,19 +644,15 @@ class MemversesController < ApplicationController
         mv.remove_mv
 
       }
-      flash.now[:notice] = "Verse deletion complete."
+      flash[:notice] = "Verse deletion complete."
       redirect_to :action => 'manage_verses'
-    #elsif (!params[:submitted].nil?) and (!mv_ids.blank?) and (params['Show'])
-    #  redirect_to :action => 'index' # This is just temporary...
-    elsif (params[:submitted]) and (mv_ids.blank?)
+    elsif (!mv_ids.blank?) and (params['Show'])
+      redirect_to :action => 'manage_verses' # This is just temporary...
+    elsif (mv_ids.blank?)
       flash[:notice] = "Action not performed as no verses were selected."
       redirect_to :action => 'manage_verses'
-    end
-
-    respond_to do |format| 
-      format.html
-      format.pdf { render :layout => false } if params[:format] == 'pdf'
-        prawnto :filename => "Memverse.pdf", :prawn => { }
+    else # in case of errors/unforeseen events
+      redirect_to :action => 'manage_verses'
     end
       
   end 

@@ -1,7 +1,7 @@
 <% page_title I18n.t :my_memory_verses, :scope => 'page_titles' %>
 <% page_banner I18n.t :my_memory_verses, :scope => 'page_titles' %>
 <div class="verse-list">
-<% form_tag({:action => 'manage_verses'}, :method => :post, :name => "manage_verses") do %>
+<% form_tag({:action => 'manage_verses_process'}, :method => :post, :name => "manage_verses_process") do %>
 	<table class="memverse-standard">
 	  <tr>		  	 
 		  <th><input type="checkbox" onclick="checkAllFields(1);" id="checkAll" /></th>
@@ -51,7 +51,7 @@
 	
 	<br>
 	
-	<input type="hidden" value="true" name="submitted" /><%= submit_tag t('.show_selected'), :onclick => "return checkAllFields(4);", :remote => true, :name => "Show" %> (Format: <select name="format"><option name="PDF">PDF</option><option name="HTML">HTML</option></select>) <%= submit_tag t('.delete_selected'), :onclick => "return checkAllFields(3);", :remote => true, :name => "Delete" %>
+	<%= submit_tag t('.show_selected'), :onclick => "return checkAllFields(4);", :remote => true, :name => "Show" %> (Format: <select name="format"><option name="PDF">PDF</option><option name="HTML">HTML</option></select>) <%= submit_tag t('.delete_selected'), :onclick => "return checkAllFields(3);", :remote => true, :name => "Delete" %>
 		
 <% end %>
 
