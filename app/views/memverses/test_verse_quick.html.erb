@@ -124,7 +124,7 @@
 		$("table#upcoming-verses .upcoming-verse-ref:contains('<%=@mv.verse.ref%>')").remove()				
 			 
 		current.id		= "<%= @mv.id %>";
-		current.text	= "<%= escape_verse(@mv.verse.text) %>";
+		current.text	= "<%= escape_verse(@mv.verse.text.html_safe) %>";
 		
 		// Load next verse
 		$.blockUI({ message: null });
