@@ -5,7 +5,7 @@ pdf.text "www.memverse.com",	:size => 15, :align => :center
 
 pdf.move_down(30)
 
-for mv in @selected_verses
+for mv in @my_verses
 		 
 	pdf.text mv.verse.text, :size => 12, :align => :left, :spacing => 20
 	pdf.text mv.verse.ref, 	:size =>  8, :align => :right, :spacing => 20

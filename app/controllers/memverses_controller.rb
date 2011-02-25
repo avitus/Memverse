@@ -603,14 +603,14 @@ class MemversesController < ApplicationController
       mv_ids = params[:mv]
       format = params[:format]
     end
-  
-    if (!params[:submitted])
-      @my_verses = current_user.memverses.all(:include => :verse, :order => params[:sort_order])
 
-      if !params[:sort_order]
-        @my_verses.sort!  # default to canonical sort
-      end
-    elsif (params[:submitted]) and (!mv_ids.blank?) and (params['Delete'])
+    @my_verses = current_user.memverses.all(:include => :verse, :order => params[:sort_order])
+
+    if !params[:sort_order]
+      @my_verses.sort!  # default to canonical sort
+    end
+
+    if (params[:submitted]) and (!mv_ids.blank?) and (params['Delete'])
       mv_ids.each { |mv_id|   
       
         # Find verse in DB
@@ -630,6 +630,7 @@ class MemversesController < ApplicationController
         mv.remove_mv
 
       }
+      flash.now[:notice] = "Verse deletion complete."
       redirect_to :action => 'manage_verses'
     #elsif (!params[:submitted].nil?) and (!mv_ids.blank?) and (params['Show'])
     #  redirect_to :action => 'index' # This is just temporary...
