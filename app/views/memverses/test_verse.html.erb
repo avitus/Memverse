@@ -83,17 +83,21 @@
 			<%= render :partial => "upcoming_verses" %>						
 	</fieldset>		
 </div>
-	
-<%= observe_field :verseguess,
-	:frequency	=> 0.6,
-	:update		=> 'ajaxWrapper',
-	:url		=> {:action => 'feedback', :only_path => false},
-	:with		=> "'echo=#{@show_feedback}&correct=#{escape_verse(@text)}&verseguess='+encodeURIComponent(value)"
-%>
 
 <script language="JavaScript" type="text/javascript">
 	$(document).ready(function() {
 	    $('.quickFlip').quickFlip();
+	    
+		var current_text = "<%= escape_verse(@text.html_safe) %>";	    
+	    
+		// Verse feedback	
+		$("#verseguess").observe_field(0.5, function( ) { 
+			$.get("/feedback", { correct: current_text, verseguess: encodeURIComponent(this.value), echo: <%= @show_feedback %>  },
+				function(data){	
+					$("#ajaxWrapper").html(data);
+			});
+        });		    
+	    
 	});
 </script>
 

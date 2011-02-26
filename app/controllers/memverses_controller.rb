@@ -1445,14 +1445,15 @@ class MemversesController < ApplicationController
     echo    = (params[:echo] == "true")
 
     logger.debug("Echo (give feedback) is set to: #{echo}")
-    logger.debug("Guess   : #{guess}")
-    logger.debug("Correct : #{correct}")
-    
-    
+    logger.debug("Guess   			: #{guess}")
+    logger.debug("Correct 			: #{correct}")
+    # logger.debug("Guess encoding 	: #{guess.encoding.name}")  # encoding method only available in Ruby 1.9
+    # logger.debug("Correct encoding	: #{correct.encoding.name}")
+
     @correct  = correct
     @feedback = ""  # find a better way to construct the string
  
-    guess_words = guess.split(/\s-\s|\s-|\s—\s|\s—|\s/)
+    guess_words = guess.split(/\s-\s|\s-|\s/)  # used to include the long dash but there isn't a way you can type a long dash'
     right_words = correct.split
         
     if !right_words.empty?
