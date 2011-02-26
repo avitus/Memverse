@@ -51,11 +51,13 @@ var totalChecked = 0;
     {
         if ( totalChecked == 1 ) {
         var agree=confirm("Are you sure you want to delete the selected verse?");
-         if (agree)
+         if (agree) {
+          document.manage_verses.action = '/memverses/delete_verses';
           return true;
-         else
+         }
+         else {
           return false;
-
+         }
         }
         else if ( totalChecked == 0 ) {
         alert("Requested action could not be performed: no verses selected.");
@@ -63,15 +65,19 @@ var totalChecked = 0;
         }
         else if ( totalChecked == boxLength ) {
         var agree=confirm("Are you sure you want to delete all "+totalChecked+" of your verses?");
-         if (agree)
+         if (agree) {
+          document.manage_verses.action = '/memverses/delete_verses';
           return true;
+         }
          else
           return false;
         }
         else {
         var agree=confirm("Are you sure you want to delete the "+totalChecked+" selected verses?");
-         if (agree)
+         if (agree) {
+          document.manage_verses.action = '/memverses/delete_verses';
           return true;
+         }
          else
           return false;
         }

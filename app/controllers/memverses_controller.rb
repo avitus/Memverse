@@ -321,6 +321,10 @@ class MemversesController < ApplicationController
       #  format.pdf { render :layout => false } if params[:format] == 'PDF'
       #    prawnto :filename => "Memverse.pdf", :prawn => { }
       #end
+      if (params['format'] == "PDF")
+        prawnto :filename => "Memverse.pdf", :prawn => { }
+        render :layout => false
+      end
     elsif (mv_ids.blank?)
       flash[:notice] = "Action not performed as no verses were selected."
       redirect_to :action => 'manage_verses'
