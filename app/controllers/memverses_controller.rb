@@ -114,6 +114,8 @@ class MemversesController < ApplicationController
   prawnto :prawn => { :bottom_margin  => 50 }
   prawnto :prawn => { :left_margin    => 50 }
   prawnto :prawn => { :right_margin   => 50 }
+
+  respond_to :html, :pdf
   
   # ----------------------------------------------------------------------------------------------------------
   # Home / Start Page
@@ -272,19 +274,60 @@ class MemversesController < ApplicationController
   end
 
   # ----------------------------------------------------------------------------------------------------------   
-  # Display a single memory verse
+  # Display a single memory verse or several verses as POSTed from manage_verses
   # ----------------------------------------------------------------------------------------------------------  
   def show
-    @mv         = Memverse.find(params[:id])
+    mv_ids = params[:mv]
 
-    @verse      = @mv.verse
-    @user_tags  = @mv.tags
-    @tags       = @verse.tags
+    if (params[:id])
+      @mv         = Memverse.find(params[:id])
+
+      @verse      = @mv.verse
+      @user_tags  = @mv.tags
+      @tags       = @verse.tags
     
-    @next_mv = @mv.next_verse || @mv.next_verse_in_user_list
-    @prev_mv = @mv.prev_verse || @mv.prev_verse_in_user_list
+      @next_mv = @mv.next_verse || @mv.next_verse_in_user_list
+      @prev_mv = @mv.prev_verse || @mv.prev_verse_in_user_list
     
-    @other_tags = @verse.all_user_tags
+      @other_tags = @verse.all_user_tags
+    elsif (!mv_ids.blank?) and (params['Delete'])
+#      mv_ids.each { |mv_id|   
+#      
+#        # Find verse in DB
+#        logger.debug("*** Finding mv with id: #{mv_id}")
+#        mv = Memverse.find(mv_id)
+#        
+#      
+#        # Remove verse from memorization queue
+#        mem_queue = session[:mv_queue]        
+#        # We need to check that there is a verse sequence and also that the array isn't empty
+#        if !mem_queue.blank?
+#          logger.debug("*** Found session queue with verses")	
+#          # Remove verse from the memorization queue if it is sitting in there
+#          mem_queue.delete(mv_id)
+#        end
+#
+#        mv.remove_mv
+#
+#      }
+#      flash[:notice] = "Verse deletion complete."
+      flash[:notice] = "JavaScript is required to delete verses. Please enable, then refresh page and try again."
+      redirect_to :action => 'manage_verses'
+    elsif (!mv_ids.blank?) and (params['Show'])
+      @mv_list = Memverse.find(mv_ids, :include => :verse)
+      # Need to  get PDF show working - may need to create separate method.
+      #respond_to do |format| 
+      #  format.html
+      #  format.pdf { render :layout => false } if params[:format] == 'PDF'
+      #    prawnto :filename => "Memverse.pdf", :prawn => { }
+      #end
+    elsif (mv_ids.blank?)
+      flash[:notice] = "Action not performed as no verses were selected."
+      redirect_to :action => 'manage_verses'
+    else
+      redirect_to :action => 'manage_verses'
+    end
+
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -601,6 +644,9 @@ class MemversesController < ApplicationController
 
     @my_verses = current_user.memverses.all(:include => :verse, :order => params[:sort_order])
 
+    # TODO: we need to include a) verse reference and b) verse translation to speed up this page
+    # TODO: can we include a secondary sort order on the canonical verse order? MySQL has no knowledge of verse ordering
+
     if !params[:sort_order]
       @my_verses.sort!  # default to canonical sort
     end
@@ -617,12 +663,9 @@ class MemversesController < ApplicationController
   # Manage verses - used to handle the manage verses form (delete a lot of verses or show selected)
   # TODO: see above ... should re-use code from above and call a model method
   # ----------------------------------------------------------------------------------------------------------
-  def manage_verses_process
+  def delete_verses
     
-    @tab = "home"
-
     mv_ids = params[:mv]
-    format = params[:format]
 
     if (!mv_ids.blank?) and (params['Delete'])
       mv_ids.each { |mv_id|   
@@ -646,12 +689,10 @@ class MemversesController < ApplicationController
       }
       flash[:notice] = "Verse deletion complete."
       redirect_to :action => 'manage_verses'
-    elsif (!mv_ids.blank?) and (params['Show'])
-      redirect_to :action => 'manage_verses' # This is just temporary...
     elsif (mv_ids.blank?)
       flash[:notice] = "Action not performed as no verses were selected."
       redirect_to :action => 'manage_verses'
-    else # in case of errors/unforeseen events
+    else
       redirect_to :action => 'manage_verses'
     end
       
@@ -691,28 +732,6 @@ class MemversesController < ApplicationController
     render :partial=>'avail_translations', :layout=>false      
   end
   
-  # ----------------------------------------------------------------------------------------------------------
-  # Show all memory verses for current user
-  # ----------------------------------------------------------------------------------------------------------   
-#  def show_all_my_verses
-#
-#    @tab = "home"
-#    
-    # TODO: we need to include a) verse reference and b) verse translation to speed up this page
-    # TODO: can we include a secondary sort order on the canonical verse order? MySQL has no knowledge of verse ordering
-#    @my_verses = current_user.memverses.all(:include => :verse, :order => params[:sort_order])
-#
-#    if !params[:sort_order]
-#      @my_verses.sort!  # default to canonical sort
-#    end
-#    
-#    respond_to do |format| 
-#      format.html
-#      format.pdf { render :layout => false } if params[:format] == 'pdf'
-#        prawnto :filename => "Memverse.pdf", :prawn => { }
-#    end
-#  end
-# 
   # ----------------------------------------------------------------------------------------------------------
   # Get Memverse from Queue - returns nil if queue is empty
   # ----------------------------------------------------------------------------------------------------------   

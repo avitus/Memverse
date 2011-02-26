@@ -1,7 +1,7 @@
 <% page_title I18n.t :view_vs, :scope => 'page_titles' %>
 <% page_banner I18n.t :view_vs, :scope => 'page_titles' %>
 <!--[form:verse]-->
-
+<% if @mv # If this statement is true, we are only displaying one verse and use below formatting %>
 <div class='verse-text'>
 	<div id='verse-show'>
 		<h2><%= @verse.book %> <%= @verse.chapter %>:<%= @verse.versenum %> [<%=@verse.translation%>] </h2>
@@ -138,3 +138,10 @@
 		});
 	});
 </script>
+<% elsif @mv_list # This means user requested specific verse(s) with checkboxes. Different formatting. %>
+<% for mv in @mv_list %>
+<h2><b><%= link_to mv.verse.ref, {:action => 'show', :id => mv.id } %></b> [<%= mv.verse.translation %>]</h2>
+<p><%= mv.verse.text %></p>
+<hr />
+<% end %>
+<% end %>
