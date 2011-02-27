@@ -58,6 +58,7 @@ MemverseApp::Application.routes.draw do
   match '/starter_pack',          :to => 'memverses#starter_pack',          :as => 'starter_pack'
   match '/memory_verse/:id',      :to => 'memverses#show',                  :as => 'memory_verse'
   match '/memverse_counter',      :to => 'memverses#memverse_counter',      :as => 'memverse_counter'
+  match '/toggle_error_flag/:id', :to => 'memverses#toggle_verse_flag',		:as => 'toggle_error_flag'
 
   
   match '/tag_cloud',             :to => 'verses#tag_cloud',                :as => 'tag_cloud'

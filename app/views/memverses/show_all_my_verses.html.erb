@@ -33,9 +33,9 @@
 		 	<td align="center" class="flag_verse" id=<%= mv.verse.id %>><%= 			
 				if mv.verified?
 					link_to mv.verse.error_flag ? "Error Reported" : "Verified", 
-									:url 		=> { :action => "toggle_verse_flag", :id => mv.verse.id },
-									:update 	=> mv.verse.id,
-									:remote		=> true
+									toggle_error_flag_path(mv.verse.id, :format	=> 'html'),
+									:update => mv.verse.id,
+									:remote	=> true
 				elsif !mv.locked?
 					link_to '[Editable]', edit_verse_path(mv)
 				else
@@ -67,5 +67,6 @@
     $('.flag_verse').click(function () { 
       $(this).closest('tr').toggleClass("hilite"); 
     });
+      
   });
 </script>
