@@ -1051,7 +1051,7 @@ class MemversesController < ApplicationController
       session[:exam_incorrect]    = Array.new
       
       # Start Test
-      redirect_to :action => 'test_exam'
+      redirect_to test_exam_path
     else
       flash[:notice] = "You need to memorize 10 verse before you can take the test"
       redirect_to :action => 'index'
