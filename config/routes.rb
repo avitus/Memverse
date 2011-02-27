@@ -43,6 +43,7 @@ MemverseApp::Application.routes.draw do
   match '/reftest_results',       :to => 'memverses#reftest_results',       :as => 'reftest_results'
   match '/start_ref_test',        :to => 'memverses#load_test_ref',         :as => 'start_ref_test'
   match '/exam',                  :to => 'memverses#load_exam',             :as => 'exam'
+  match '/test_exam',             :to => 'memverses#test_exam',             :as => 'test_exam'
   match '/pre_exam',              :to => 'memverses#explain_exam',          :as => 'pre_exam'
   match '/pre_chapter',           :to => 'memverses#chapter_explanation',   :as => 'pre_chapter'
   match '/test_chapter',          :to => 'memverses#test_chapter',			:as => 'test_chapter'
@@ -59,6 +60,7 @@ MemverseApp::Application.routes.draw do
   match '/starter_pack',          :to => 'memverses#starter_pack',          :as => 'starter_pack'
   match '/memory_verse/:id',      :to => 'memverses#show',                  :as => 'memory_verse'
   match '/memverse_counter',      :to => 'memverses#memverse_counter',      :as => 'memverse_counter'
+  match '/toggle_error_flag/:id', :to => 'memverses#toggle_verse_flag',		:as => 'toggle_error_flag'
 
   
   match '/tag_cloud',             :to => 'verses#tag_cloud',                :as => 'tag_cloud'

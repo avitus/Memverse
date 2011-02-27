@@ -268,7 +268,7 @@ class Verse < ActiveRecord::Base
       else self.translation.downcase
     end
        
-    url = 'http://www.biblegateway.com/passage/?search=' + CGI.escape(self.ref) + '&version=' + tl.to_s
+    url = 'http://www.biblegateway.com/passage/?search=' + self.ref + '&version=' + tl.to_s
     doc = Nokogiri::HTML(open(url))
 
     txt = doc.at_css(".result-text-style-normal").to_s.gsub(/<sup.+?<\/sup>/, "").gsub(/<h(4|5).+?<\/h(4|5)>/,"").gsub(/<\/?[^>]*>/, "")
