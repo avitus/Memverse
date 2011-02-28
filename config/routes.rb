@@ -44,6 +44,7 @@ MemverseApp::Application.routes.draw do
   match '/start_ref_test',        :to => 'memverses#load_test_ref',         :as => 'start_ref_test'
   match '/exam',                  :to => 'memverses#load_exam',             :as => 'exam'
   match '/test_exam',             :to => 'memverses#test_exam',             :as => 'test_exam'
+  match '/exam_results',          :to => 'memverses#exam_results',          :as => 'exam_results'
   match '/pre_exam',              :to => 'memverses#explain_exam',          :as => 'pre_exam'
   match '/pre_chapter',           :to => 'memverses#chapter_explanation',   :as => 'pre_chapter'
   match '/test_chapter',          :to => 'memverses#test_chapter',			:as => 'test_chapter'
