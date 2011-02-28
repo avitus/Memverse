@@ -1192,9 +1192,9 @@ class MemversesController < ApplicationController
       
       # Stop after questions are finished or if user quits
       if session[:exam_answered] >= session[:exam_length] or params[:commit]=="Exit Exam" 
-        redirect_to :action => 'exam_results'
+        redirect_to exam_results_path
       else
-        redirect_to :action => 'test_exam'
+        redirect_to test_exam_path
       end
     
     else
