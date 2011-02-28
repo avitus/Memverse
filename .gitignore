@@ -13,6 +13,8 @@ config/database.yml
 *public/system/*
 mkmf.log
 /config/initializers/site_keys.rb
+/config/initializers/setup_mail.rb
 *.rails2
 *plugins/rails_upgrade/*
-.bundle\n
+.bundle
+

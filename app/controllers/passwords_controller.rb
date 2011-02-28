@@ -8,7 +8,7 @@ class PasswordsController < ApplicationController
     @password.user = User.find_by_email(@password.email)
     
     if @password.save
-      PasswordMailer.deliver_forgot_password(@password)
+      PasswordMailer.forgot_password(@password).deliver
       flash[:notice] = "A link to change your password has been sent to #{@password.email}."
       redirect_to :action => :new
     else

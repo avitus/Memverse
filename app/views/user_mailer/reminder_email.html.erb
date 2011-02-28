@@ -23,9 +23,9 @@
 		<p>You can login at <%= @url %>. Your username is <b><%= @user.login %></b>.</p>
 		
 		<!-- For those short on time -->
-		<p>We realize that time is often scarce so we've included one of your most difficult verses for your review:
+		<p>We realize that time is often scarce so we've included one of your most difficult verses for your review:</p>
 		
-		<h3><%= @verse.book %> <%= @verse.chapter %>:<%= @verse.versenum %> [<%=@verse.translation%>] </h3>
+		<h4><%= @verse.book %> <%= @verse.chapter %>:<%= @verse.versenum %> [<%=@verse.translation%>] </h4>
 
 		<p class="verse-text" id="show-verse"> <%=@verse.text%> </p>
 		

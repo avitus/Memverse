@@ -146,6 +146,7 @@ DEPENDENCIES
   jrails
   json
   logging
+  mail (>= 2.2.15)
   map_by_method
   mysql2
   nokogiri

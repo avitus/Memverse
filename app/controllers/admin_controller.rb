@@ -250,7 +250,7 @@ class AdminController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------   
   def mass_email
     # Send out an email
-    UserMailer.deliver_encourage_new_user_email(current_user)
+    UserMailer.encourage_new_user_email(current_user).deliver
     redirect_to :action => 'leaderboard' 
   end
   
@@ -266,7 +266,7 @@ class AdminController < ApplicationController
     logger.info("*** Sending newsletter to #{recipients.length} users")
     recipients.each { |r|
       if r.id >= start_with_user
-        UserMailer.deliver_newsletter_email(r)
+        UserMailer.newsletter_email(r).deliver
       end
     }
     redirect_to :action => 'leaderboard' 
@@ -300,11 +300,11 @@ class AdminController < ApplicationController
               if r.is_inactive?             
                 # Reminder for inactive users
                 logger.info("* Sending reminder email to #{r.login} - they've been inactive for two months")
-                UserMailer.deliver_reminder_email_for_inactive(r)               
+                UserMailer.reminder_email_for_inactive(r).deliver             
               else 
                 # Standard reminder email
                 logger.info("* Sending reminder email to #{r.login}")
-                UserMailer.deliver_reminder_email(r)           
+                UserMailer.reminder_email(r).deliver          
               end
               @emails_sent += 1
               r.last_reminder = Date.today
@@ -322,7 +322,7 @@ class AdminController < ApplicationController
               # do nothing - they've already received a second activation email
             else
               # logger.info("*** Resending activation email to #{r.login}")
-              # UserMailer.deliver_signup_notification(r)
+              # UserMailer.signup_notification(r).deliver
               # @emails_sent += 1
               # r.last_reminder = Date.today
               # r.save
@@ -337,7 +337,7 @@ class AdminController < ApplicationController
               @bounce_list << r
             else
               logger.info("* Sending kick in the pants to #{r.login}")
-              UserMailer.deliver_encourage_new_user_email(r)
+              UserMailer.encourage_new_user_email(r).deliver
               @emails_sent += 1
               r.last_reminder = Date.today
               r.save
@@ -390,7 +390,7 @@ class AdminController < ApplicationController
     # Retrieve records for all users
     recipient = User.find(2) # This is me
 
-    UserMailer.deliver_reminder_email(recipient)
+    UserMailer.reminder_email(recipient).deliver
 
     redirect_to :action => 'show_verses' 
   end   

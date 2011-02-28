@@ -15,7 +15,7 @@ class <%= controller_class_name %>Controller < ApplicationController
     
     respond_to do |format|
       if @<%= file_name %>.save
-        <%= class_name %>Mailer.deliver_forgot_password(@<%= file_name %>)
+        <%= class_name %>Mailer.forgot_password(@<%= file_name %>).deliver
         flash[:notice] = "A link to change your password has been sent to #{@<%= file_name %>.email}."
         format.html { redirect_to(:action => 'new') }
         format.xml  { render :xml => @<%= file_name %>, :status => :created, :location => @<%= file_name %> }
