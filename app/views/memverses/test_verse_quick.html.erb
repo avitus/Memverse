@@ -125,7 +125,7 @@
 			 
 		current.id		 = "<%= @mv.id %>";
 		current.text	 = "<%= escape_verse(@mv.verse.text.html_safe) %>";
-		current.feedback = "<%= @mv.show_feedback %>"
+		current.feedback = "<%= @mv.show_feedback? %>"
 		
 		// Load next verse
 		$.blockUI({ message: null });
@@ -134,7 +134,7 @@
 
 		// Verse feedback	
 		$("#verseguess").observe_field(0.4, function( ) { 
-			$.get("/feedback", { correct: current.text, verseguess: encodeURIComponent(this.value), echo: current.feedback %>  },
+			$.get("/feedback", { correct: current.text, verseguess: encodeURIComponent(this.value), echo: current.feedback },
 				function(data){	
 					$("#ajaxWrapper").html(data);
 			});

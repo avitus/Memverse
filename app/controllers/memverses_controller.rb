@@ -317,11 +317,11 @@ class MemversesController < ApplicationController
   # Remove a verse tag
   # ---------------------------------------------------------------------------------------------------------- 
   def remove_verse_tag    
-    Tagging.find(:first, :conditions => {:tag_id => params[:id], :taggable_id => params[:mv], :taggable_type => 'Memverse' }).destroy
+    ActsAsTaggableOn::Tagging.find(:first, :conditions => {:tag_id => params[:id], :taggable_id => params[:mv], :taggable_type => 'Memverse' }).destroy
     
     # We should remove the tag if it is no longer tagging anything
-    if Tag.find(params[:id]).taggings.length == 0
-      Tag.find(params[:id]).destroy
+    if ActsAsTaggableOn::Tag.find(params[:id]).taggings.length == 0
+      ActsAsTaggableOn::Tag.find(params[:id]).destroy
     end
     
     redirect_to(:action => 'show', :id => params[:mv])

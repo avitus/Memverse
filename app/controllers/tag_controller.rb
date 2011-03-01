@@ -2,13 +2,13 @@ class TagController < ApplicationController
   
   # GET /verses/1/edit
   def edit_tag
-    @tag = Tag.find(params[:id])
+    @tag = ActsAsTaggableOn::Tag.find(params[:id])
   end
   
   # PUT /verses/1
   # PUT /verses/1.xml
   def update_tag
-    @tag = Tag.find(params[:id])
+    @tag = ActsAsTaggableOn::Tag.find(params[:id])
 
     respond_to do |format|
       if @tag.update_attributes(params[:tag])
@@ -26,7 +26,7 @@ class TagController < ApplicationController
   # DELETE /verses/1
   # DELETE /verses/1.xml
   def destroy_tag
-    @tag = Tag.find(params[:id])
+    @tag = ActsAsTaggableOn::Tag.find(params[:id])
     @tag.destroy
 
     respond_to do |format|
