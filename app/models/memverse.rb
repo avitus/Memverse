@@ -65,7 +65,8 @@ class Memverse < ActiveRecord::Base
       :text       => self.verse.text,
       :versenum   => self.verse.versenum,
       :skippable  => !self.due?,
-      :mnemonic   => self.needs_mnemonic? ? self.verse.mnemonic : nil
+      :mnemonic   => self.needs_mnemonic? ? self.verse.mnemonic : nil,
+      :feedback   => self.show_feedback?
     }
   end
 
@@ -550,6 +551,13 @@ class Memverse < ActiveRecord::Base
   
   def mnemonic_if_req
     self.needs_mnemonic? ? self.verse.mnemonic : "-"
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Should we show feedback for this verse?
+  # ----------------------------------------------------------------------------------------------------------   
+  def show_feedback?
+  	return (self.test_interval < 90 or self.user.show_echo)
   end
   
   # ----------------------------------------------------------------------------------------------------------

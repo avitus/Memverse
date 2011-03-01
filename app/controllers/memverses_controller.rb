@@ -772,7 +772,7 @@ class MemversesController < ApplicationController
       @text             = mv.verse.text
       @mnemonic         = mv.verse.mnemonic if mv.needs_mnemonic?
       @current_versenum = mv.verse.versenum
-      @show_feedback    = (mv.test_interval < 90 or current_user.show_echo)
+      @show_feedback    = mv.show_feedback? || true  # default to true in case of nil something in first expression
       logger.debug("Show feedback for verse from queue: #{@show_feedback}. Interval is #{mv.test_interval} and request feedback is #{current_user.show_echo}")
       # Put memory verse into session
       session[:memverse] = mv.id  
@@ -798,7 +798,7 @@ class MemversesController < ApplicationController
           @text             = mv.verse.text 
           @mnemonic         = mv.verse.mnemonic if mv.needs_mnemonic?         
           @current_versenum = mv.verse.versenum    
-          @show_feedback    = (mv.test_interval < 60 or current_user.show_echo) 
+          @show_feedback    = mv.show_feedback? || true  # default to true in case of nil something in first expression
           logger.debug("Show feedback for verse overdue: #{@show_feedback}. Interval is #{mv.test_interval} and request feedback is #{current_user.show_echo}")
         else
           # There are no more verses to be tested today
@@ -869,7 +869,7 @@ class MemversesController < ApplicationController
     @mv 			= current_user.first_verse_today
         
     if @mv
-      @show_feedback 	= (@mv.test_interval < 90 or current_user.show_echo)        
+      @show_feedback    = mv.show_feedback? || true  # default to true in case of nil something in first expression        
       # --- Ok to test : Load prior verse if available
       if @mv.prev_verse
         @prev_mv        = Memverse.find(@mv.prev_verse)
