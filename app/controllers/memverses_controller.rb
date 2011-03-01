@@ -114,6 +114,8 @@ class MemversesController < ApplicationController
   prawnto :prawn => { :bottom_margin  => 50 }
   prawnto :prawn => { :left_margin    => 50 }
   prawnto :prawn => { :right_margin   => 50 }
+
+  respond_to :html, :pdf
   
   # ----------------------------------------------------------------------------------------------------------
   # Home / Start Page
@@ -184,8 +186,6 @@ class MemversesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------  
   def starter_pack
     
-    @page_title = "Memverse QuickStart"
-
     @translation = params[:translation]
     
     # TODO: get rid of the archaic 'IS NOT NULL' syntax
@@ -224,7 +224,6 @@ class MemversesController < ApplicationController
   # ---------------------------------------------------------------------------------------------------------- 
   def user_stats
     
-    @page_title = "My Stats"
     @my_verses    = Array.new
     @status_table = Hash.new(0)
     
@@ -259,8 +258,7 @@ class MemversesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------   
   def pop_verses
 
-    @tab = "home"    
-    @page_title = "Most Popular Memory Verses"     
+    @tab = "home"      
     @page       = params[:page].to_i    # page number
     @page_size  = 20                    # number of verses per page
        
@@ -276,19 +274,64 @@ class MemversesController < ApplicationController
   end
 
   # ----------------------------------------------------------------------------------------------------------   
-  # Display a single memory verse
+  # Display a single memory verse or several verses as POSTed from manage_verses
   # ----------------------------------------------------------------------------------------------------------  
   def show
-    @mv         = Memverse.find(params[:id])
+    mv_ids = params[:mv]
 
-    @verse      = @mv.verse
-    @user_tags  = @mv.tags
-    @tags       = @verse.tags
+    if (params[:id])
+      @mv         = Memverse.find(params[:id])
+
+      @verse      = @mv.verse
+      @user_tags  = @mv.tags
+      @tags       = @verse.tags
     
-    @next_mv = @mv.next_verse || @mv.next_verse_in_user_list
-    @prev_mv = @mv.prev_verse || @mv.prev_verse_in_user_list
+      @next_mv = @mv.next_verse || @mv.next_verse_in_user_list
+      @prev_mv = @mv.prev_verse || @mv.prev_verse_in_user_list
     
-    @other_tags = @verse.all_user_tags
+      @other_tags = @verse.all_user_tags
+    elsif (!mv_ids.blank?) and (params['Delete'])
+#      mv_ids.each { |mv_id|   
+#      
+#        # Find verse in DB
+#        logger.debug("*** Finding mv with id: #{mv_id}")
+#        mv = Memverse.find(mv_id)
+#        
+#      
+#        # Remove verse from memorization queue
+#        mem_queue = session[:mv_queue]        
+#        # We need to check that there is a verse sequence and also that the array isn't empty
+#        if !mem_queue.blank?
+#          logger.debug("*** Found session queue with verses")	
+#          # Remove verse from the memorization queue if it is sitting in there
+#          mem_queue.delete(mv_id)
+#        end
+#
+#        mv.remove_mv
+#
+#      }
+#      flash[:notice] = "Verse deletion complete."
+      flash[:notice] = "JavaScript is required to delete verses. Please enable, then refresh page and try again."
+      redirect_to :action => 'manage_verses'
+    elsif (!mv_ids.blank?) and (params['Show'])
+      @mv_list = Memverse.find(mv_ids, :include => :verse)
+      # Need to  get PDF show working - may need to create separate method.
+      #respond_to do |format| 
+      #  format.html
+      #  format.pdf { render :layout => false } if params[:format] == 'PDF'
+      #    prawnto :filename => "Memverse.pdf", :prawn => { }
+      #end
+      if (params['format'] == "PDF")
+        prawnto :filename => "Memverse.pdf", :prawn => { }
+        render :layout => false
+      end
+    elsif (mv_ids.blank?)
+      flash[:notice] = "Action not performed as no verses were selected."
+      redirect_to :action => 'manage_verses'
+    else
+      redirect_to :action => 'manage_verses'
+    end
+
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -342,7 +385,7 @@ class MemversesController < ApplicationController
     @verse = Verse.find(params[:id])
     if @verse.update_attributes(params[:verse])
       flash[:notice] = "Verse successfully updated"
-      redirect_to :action => 'show_all_my_verses'
+      redirect_to :action => 'manage_verses'
     else
       render :action => edit_verse
     end
@@ -505,7 +548,6 @@ class MemversesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------   
   def add_verse
 
-    @page_title = "Add New Verses"
     @tab = "home"    
     @popular_verses = popular_verses(8, false)
     
@@ -594,19 +636,42 @@ class MemversesController < ApplicationController
 
     dead_mv.remove_mv  # remove verse and sort out next and previous pointers
     
-    redirect_to :action => 'show_all_my_verses'   
+    redirect_to :action => 'manage_verses'   
   end 
  
   # ----------------------------------------------------------------------------------------------------------
-  # Manage verses - used to delete a lot of verses 
-  # TODO: see above ... should re-use code from above and call a model method
+  # Manage verses - used to display verse management page to user
   # ----------------------------------------------------------------------------------------------------------
   def manage_verses
     
+    @tab = "home"
+
+    @my_verses = current_user.memverses.all(:include => :verse, :order => params[:sort_order])
+
+    # TODO: we need to include a) verse reference and b) verse translation to speed up this page
+    # TODO: can we include a secondary sort order on the canonical verse order? MySQL has no knowledge of verse ordering
+
+    if !params[:sort_order]
+      @my_verses.sort!  # default to canonical sort
+    end
+
+    respond_to do |format| 
+      format.html
+      format.pdf { render :layout => false } if params[:format] == 'pdf'
+        prawnto :filename => "Memverse.pdf", :prawn => { }
+    end
+      
+  end 
+ 
+  # ----------------------------------------------------------------------------------------------------------
+  # Manage verses - used to handle the manage verses form (delete a lot of verses or show selected)
+  # TODO: see above ... should re-use code from above and call a model method
+  # ----------------------------------------------------------------------------------------------------------
+  def delete_verses
+    
     mv_ids = params[:mv]
-    action = params[:commit]
-  
-    if (!mv_ids.blank?) and (action == "Delete")
+
+    if (!mv_ids.blank?) and (params['Delete'])
       mv_ids.each { |mv_id|   
       
         # Find verse in DB
@@ -618,7 +683,7 @@ class MemversesController < ApplicationController
         mem_queue = session[:mv_queue]        
         # We need to check that there is a verse sequence and also that the array isn't empty
         if !mem_queue.blank?
-          logger.debug("*** Found session queue with verses")
+          logger.debug("*** Found session queue with verses")	
           # Remove verse from the memorization queue if it is sitting in there
           mem_queue.delete(mv_id)
         end
@@ -626,14 +691,16 @@ class MemversesController < ApplicationController
         mv.remove_mv
 
       }
+      flash[:notice] = "Verse deletion complete."
+      redirect_to :action => 'manage_verses'
+    elsif (mv_ids.blank?)
+      flash[:notice] = "Action not performed as no verses were selected."
+      redirect_to :action => 'manage_verses'
     else
-      flash[:notice] = "No verses deleted since you didn't select any."
+      redirect_to :action => 'manage_verses'
     end
-    
-    redirect_to :action => 'show_all_my_verses'
-    
+      
   end 
- 
  
   # ----------------------------------------------------------------------------------------------------------
   # Check whether any translations of entered verse are in DB
@@ -669,29 +736,6 @@ class MemversesController < ApplicationController
     render :partial=>'avail_translations', :layout=>false      
   end
   
-  # ----------------------------------------------------------------------------------------------------------
-  # Show all memory verses for current user
-  # ----------------------------------------------------------------------------------------------------------   
-  def show_all_my_verses
-
-    @page_title = "My Memory Verses"
-    @tab = "home"
-    
-    # TODO: we need to include a) verse reference and b) verse translation to speed up this page
-    # TODO: can we include a secondary sort order on the canonical verse order? MySQL has no knowledge of verse ordering
-    @my_verses = current_user.memverses.all(:include => :verse, :order => params[:sort_order])
-
-    if !params[:sort_order]
-      @my_verses.sort!  # default to canonical sort
-    end
-    
-    respond_to do |format| 
-      format.html
-      format.pdf { render :layout => false } if params[:format] == 'pdf'
-        prawnto :filename => "Memverse.pdf", :prawn => { }
-    end
-  end
- 
   # ----------------------------------------------------------------------------------------------------------
   # Get Memverse from Queue - returns nil if queue is empty
   # ----------------------------------------------------------------------------------------------------------   
@@ -759,7 +803,6 @@ class MemversesController < ApplicationController
   def test_verse
  
     @tab = "mem"  
-    @page_title = "Memory Verse Review"
     @show_feedback = true
     
     # If referring path is from the practice section then we need to clear the queue
@@ -838,7 +881,6 @@ class MemversesController < ApplicationController
   def test_chapter
  
     @tab = "mem"  
-    @page_title = "Chapter Review"
     @show_feedback = true
     
     if params[:book_chapter].split.length == 3
@@ -863,7 +905,6 @@ class MemversesController < ApplicationController
   def test_verse_quick
  
     @tab = "mem"  
-    @page_title = "Memory Verse Review"
     @show_feedback = true
     
     @mv 			= current_user.first_verse_today
@@ -981,7 +1022,7 @@ class MemversesController < ApplicationController
   
                           
     
-    if !refs.empty?
+    if refs.length >= 10
     
       # Put verses into session variable
       refs.each { |r|
@@ -1004,15 +1045,14 @@ class MemversesController < ApplicationController
       # Start Test
       redirect_to :action => 'test_ref'
     else
-      flash[:notice] = "You first need to add a memory verse before you can take the reference recall test."
-      redirect_to :action => 'add_verse'
+      flash[:notice] = "You must have 10 verse references in your account before you can take the reference recall test."
+      redirect_to :action => 'index'
     end
     
   end
 
   def explain_exam
     @tab = "mem"
-    @page_title = "Memverse Accuracy Test" 
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -1278,7 +1318,6 @@ class MemversesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   def show_progress
     @tab = "home"    
-    @page_title = "Progress"
   end  
 
   # ----------------------------------------------------------------------------------------------------------
@@ -1287,8 +1326,6 @@ class MemversesController < ApplicationController
   def drill_verse
     
     @tab        = "mem" 
-    @page_title = "Memory Verse Practice"
-    
     @show_feedback = true
     
     # First check for verses in session queue that need to be tested

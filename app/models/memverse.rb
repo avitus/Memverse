@@ -34,7 +34,7 @@ class Memverse < ActiveRecord::Base
   
   scope :history,   where('verses.book_index' =>  1..17).includes(:verse)
   scope :wisdom,    where('verses.book_index' => 18..22).includes(:verse)
-  scope :prophecy,  where('verses.book_index' => 23..39).includes(:verse) # TODO: include Revelation
+  scope :prophecy,  where('verses.book_index' => 23..39).includes(:verse)# TODO: include Revelation 23..39
   scope :gospel,    where('verses.book_index' => 40..43).includes(:verse)
   scope :epistle,   where('verses.book_index' => 45..66).includes(:verse) # TODO: switch Revelation to prophecy
     

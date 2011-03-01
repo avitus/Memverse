@@ -328,3 +328,4 @@ ActiveRecord::Schema.define(:version => 35) do
   add_index "verses", ["versenum"], :name => "index_verses_on_versenum"
 
 end
+
