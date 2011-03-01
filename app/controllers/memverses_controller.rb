@@ -277,9 +277,17 @@ class MemversesController < ApplicationController
   # Display a single memory verse or several verses as POSTed from manage_verses
   # ----------------------------------------------------------------------------------------------------------  
   def show
-    mv_ids = params[:mv]
+  	
+  	logger.debug("Parameters #{params.inspect}")
+  	
+    mv_ids = params[:mv] # || Array.new([45,46])
 
-    if (params[:id])
+	logger.debug("Mem verse ID list: #{mv_ids.inspect}")
+
+	# Displaying a single verse
+    if params[:id]
+    
+      logger.debug("Displaying single verse with ID: #{params[:id]}")	
       @mv         = Memverse.find(params[:id])
 
       @verse      = @mv.verse
@@ -290,47 +298,42 @@ class MemversesController < ApplicationController
       @prev_mv = @mv.prev_verse || @mv.prev_verse_in_user_list
     
       @other_tags = @verse.all_user_tags
-    elsif (!mv_ids.blank?) and (params['Delete'])
-#      mv_ids.each { |mv_id|   
-#      
-#        # Find verse in DB
-#        logger.debug("*** Finding mv with id: #{mv_id}")
-#        mv = Memverse.find(mv_id)
-#        
-#      
-#        # Remove verse from memorization queue
-#        mem_queue = session[:mv_queue]        
-#        # We need to check that there is a verse sequence and also that the array isn't empty
-#        if !mem_queue.blank?
-#          logger.debug("*** Found session queue with verses")	
-#          # Remove verse from the memorization queue if it is sitting in there
-#          mem_queue.delete(mv_id)
-#        end
-#
-#        mv.remove_mv
-#
-#      }
-#      flash[:notice] = "Verse deletion complete."
+    
+    # Error: no verse ID's passed with request to delete'  
+    elsif (mv_ids.blank?) and (params[:Delete])
+
       flash[:notice] = "JavaScript is required to delete verses. Please enable, then refresh page and try again."
       redirect_to :action => 'manage_verses'
-    elsif (!mv_ids.blank?) and (params['Show'])
+
+    elsif (!mv_ids.blank?) and (params[:Show])
+
+      logger.debug("Displaying selected verses with ID: #{mv_ids.inspect}")	    	
       @mv_list = Memverse.find(mv_ids, :include => :verse)
-      # Need to  get PDF show working - may need to create separate method.
-      #respond_to do |format| 
-      #  format.html
-      #  format.pdf { render :layout => false } if params[:format] == 'PDF'
-      #    prawnto :filename => "Memverse.pdf", :prawn => { }
-      #end
-      if (params['format'] == "PDF")
-        prawnto :filename => "Memverse.pdf", :prawn => { }
-        render :layout => false
-      end
+      
     elsif (mv_ids.blank?)
+    	
       flash[:notice] = "Action not performed as no verses were selected."
       redirect_to :action => 'manage_verses'
+      
     else
+    	
       redirect_to :action => 'manage_verses'
+      
     end
+    
+    # logger.debug("Inspecting format: #{format.inspect}")
+    
+    respond_to do |format|
+      format.html
+      format.pdf { render :layout => false } # if params[:format] == 'pdf'
+        prawnto :filename => "Memverse.pdf", :prawn => { }
+    end    
+    
+	
+	  #     if (params['format'] == "PDF")
+	  # prawnto :filename => "Memverse.pdf", :prawn => { }
+	  #       render :layout => false
+	  #     end
 
   end
 

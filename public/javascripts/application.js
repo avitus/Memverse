@@ -9,7 +9,7 @@ var checks = document.getElementsByName('mv[]');
 var boxLength = checks.length;
 var allChecked = false;
 var totalChecked = 0;
-    if ( ref == 1 )
+    if ( ref == 1 )  // Selecting all verses
     {
         if ( chkAll.checked == true )
         {
@@ -22,7 +22,7 @@ var totalChecked = 0;
             checks[i].checked = false;
         }
     }
-    if (ref == 2)
+    if (ref == 2)  // Selecting specific verses
     {
         for ( i=0; i < boxLength; i++ )
         {
@@ -47,7 +47,7 @@ var totalChecked = 0;
         if ( checks[j].checked == true )
         totalChecked++;
     }
-    if ( ref == 3 )
+    if ( ref == 3 ) // Deleting Verses
     {
         if ( totalChecked == 1 ) {
         var agree=confirm("Are you sure you want to delete the selected verse?");
@@ -82,7 +82,7 @@ var totalChecked = 0;
           return false;
         }
     }
-    if ( ref == 4 )
+    if ( ref == 4 ) // Showing Verses
     {
         if ( totalChecked == 0 ) {
         alert("Requested action could not be performed: no verses selected.");
