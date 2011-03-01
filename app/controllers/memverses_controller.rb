@@ -869,7 +869,7 @@ class MemversesController < ApplicationController
     @mv 			= current_user.first_verse_today
         
     if @mv
-      @show_feedback    = mv.show_feedback? || true  # default to true in case of nil something in first expression        
+      @show_feedback    = @mv.show_feedback? || true  # default to true in case of nil something in first expression        
       # --- Ok to test : Load prior verse if available
       if @mv.prev_verse
         @prev_mv        = Memverse.find(@mv.prev_verse)

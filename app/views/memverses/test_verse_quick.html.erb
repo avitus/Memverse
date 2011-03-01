@@ -123,8 +123,9 @@
 
 		$("table#upcoming-verses .upcoming-verse-ref:contains('<%=@mv.verse.ref%>')").remove()				
 			 
-		current.id		= "<%= @mv.id %>";
-		current.text	= "<%= escape_verse(@mv.verse.text.html_safe) %>";
+		current.id		 = "<%= @mv.id %>";
+		current.text	 = "<%= escape_verse(@mv.verse.text.html_safe) %>";
+		current.feedback = "<%= @mv.show_feedback %>"
 		
 		// Load next verse
 		$.blockUI({ message: null });
@@ -132,8 +133,8 @@
 		$('#ff-button').toggle(<%= !@mv.due? %>);					// Hide/Show fast forward button
 
 		// Verse feedback	
-		$("#verseguess").observe_field(0.5, function( ) { 
-			$.get("/feedback", { correct: current.text, verseguess: encodeURIComponent(this.value), echo: <%= @show_feedback %>  },
+		$("#verseguess").observe_field(0.4, function( ) { 
+			$.get("/feedback", { correct: current.text, verseguess: encodeURIComponent(this.value), echo: current.feedback %>  },
 				function(data){	
 					$("#ajaxWrapper").html(data);
 			});
