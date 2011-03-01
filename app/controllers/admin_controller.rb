@@ -549,7 +549,7 @@ class AdminController < ApplicationController
   end   
   
   def show_tags
-    @tags = Tag.all
+    @tags = ActsAsTaggableOn::Tag.all
   end
   
   def show_verses_with_tag
@@ -557,7 +557,7 @@ class AdminController < ApplicationController
     @mv_list = Array.new 
     @vs_list = Array.new
     
-    @tag = Tag.find(params[:id])
+    @tag = ActsAsTaggableOn::Tag.find(params[:id])
     @tagged_items = @tag.taggings
     
     @tagged_items.each { |tagging|

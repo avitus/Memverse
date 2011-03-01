@@ -30,6 +30,7 @@ MemverseApp::Application.routes.draw do
   # My Mappings
   match '/add_verse',             :to => 'memverses#add_verse',             :as => 'add_verse'
   match '/quick_add',             :to => 'memverses#quick_add',             :as => 'quick_add'
+  match '/quick_add_chapter',     :to => 'memverses#quick_add_chapter',     :as => 'quick_add_chapter'
   match '/avail_translations',    :to => 'memverses#avail_translations',    :as => 'avail_translations'
   match '/edit_verse/:id',    	  :to => 'memverses#edit_verse',    		:as => 'edit_verse'
   match '/test_verse',            :to => 'memverses#test_verse',            :as => 'test_verse'
