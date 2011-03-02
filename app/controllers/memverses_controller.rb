@@ -1324,7 +1324,7 @@ class MemversesController < ApplicationController
     if mv = get_memverse_from_queue()
       # This verse needs to be memorized
       @verse            = get_memverse(mv.verse_id)
-      @text             = mv.verse.text || ""
+      @text             = mv.verse.text
       @current_versenum = mv.verse.versenum
       @show_feedback    = (mv.test_interval < 60 or current_user.show_echo)
       # Put memory verse into session
@@ -1348,7 +1348,7 @@ class MemversesController < ApplicationController
 
         # This verse needs to be memorized
         @verse            = get_memverse(mv.verse_id)
-        @text             = mv.verse.text || ""
+        @text             = mv.verse.text
         @current_versenum = mv.verse.versenum 
         @show_feedback    = (mv.test_interval < 60 or current_user.show_echo)
       else
