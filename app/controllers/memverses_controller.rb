@@ -269,9 +269,7 @@ class MemversesController < ApplicationController
   	
   	logger.debug("Parameters #{params.inspect}")
   	
-    mv_ids = params[:mv] # || Array.new([45,46])
-
-	logger.debug("Mem verse ID list: #{mv_ids.inspect}")
+    mv_ids = params[:mv] 
 
 	# Displaying a single verse
     if params[:id]
@@ -310,20 +308,12 @@ class MemversesController < ApplicationController
       
     end
     
-    # logger.debug("Inspecting format: #{format.inspect}")
-    
     respond_to do |format|
       format.html
       format.pdf { render :layout => false } # if params[:format] == 'pdf'
         prawnto :filename => "Memverse.pdf", :prawn => { }
     end    
     
-	
-	  #     if (params['format'] == "PDF")
-	  # prawnto :filename => "Memverse.pdf", :prawn => { }
-	  #       render :layout => false
-	  #     end
-
   end
 
   # ----------------------------------------------------------------------------------------------------------
