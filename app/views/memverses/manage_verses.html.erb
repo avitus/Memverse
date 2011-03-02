@@ -38,6 +38,7 @@
 					link_to mv.verse.error_flag ? "Error Reported" : "Verified", 
 									toggle_error_flag_path(mv.verse.id, :format	=> 'html'),
 									:update => mv.verse.id,
+									:confirm => mv.verse.error_flag ? "Cancel reported error?" : "You are reporting an error in this verse. Are you sure?",					
 									:remote	=> true
 				elsif !mv.locked?
 					link_to '[Editable]', edit_verse_path(mv)
@@ -74,13 +75,12 @@
     })
 
 	.bind("ajax:beforeSend", function(evt, xhr, settings){
-	  var $submitButton = $(this)
-	  $submitButton.text( "Submitting..." );
+
 	})
 	
 	.bind("ajax:success", function(evt, data, status, xhr){
 	  var $submitButton = $(this)
-	  $submitButton.thtml(xhr.responseText);
+	  $submitButton.html(data);
 	});
           
   });
