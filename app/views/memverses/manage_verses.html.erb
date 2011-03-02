@@ -67,9 +67,21 @@
 <!-- Highlight verse to be verified -->
 <script>
   $(document).ready(function(){    
-    $('.flag_verse').click(function () { 
+    $('.flag_verse')
+    
+    .click(function () { 
       $(this).closest('tr').toggleClass("hilite"); 
-    });
-      
+    })
+
+	.bind("ajax:beforeSend", function(evt, xhr, settings){
+	  var $submitButton = $(this)
+	  $submitButton.text( "Submitting..." );
+	})
+	
+	.bind("ajax:success", function(evt, data, status, xhr){
+	  var $submitButton = $(this)
+	  $submitButton.thtml(xhr.responseText);
+	});
+          
   });
 </script>
