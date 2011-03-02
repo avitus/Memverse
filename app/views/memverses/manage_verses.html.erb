@@ -56,10 +56,7 @@
 		<%= submit_tag t('.show_selected'), :onclick => "return checkAllFields(4);", :remote => true, :name => "Show", :format => :pdf %> 
 		(Format: <select name="format"><option name="HTML">HTML</option><option name="PDF">PDF</option></select>) 
 		<%= submit_tag t('.delete_selected'), :onclick => "return checkAllFields(3);", :remote => true, :name => "Delete" %>
-	</div>
-		
-	<%= link_to 'Print (PDF)', {:controller => :memverses, :action => :manage_verses, :format => :pdf}%>		
-		
+	</div>		
 		
 <% end %>
 
