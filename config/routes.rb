@@ -24,7 +24,7 @@ MemverseApp::Application.routes.draw do
 # resources :pastors
   resources :sermons
   resources :quests
-  resources :memverses
+# resources :memverses
 
   
   # My Mappings
@@ -118,6 +118,6 @@ MemverseApp::Application.routes.draw do
   match '/:controller(/:action(/:id))'
 
   # Route for random pages
-  match '/:action',                 :to => 'pages#:action' 
+  match '/:action',               :to => 'pages#:action' 
   
 end

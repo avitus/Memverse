@@ -235,18 +235,7 @@ class MemversesController < ApplicationController
       verse         = db_to_vs(vs.book, vs.chapter, vs.versenum)
  
       @status_table[mv.status]  += 1
- 
-      # memory_verse  = Hash.new 
-      # memory_verse['verse']         = verse  # Note: this is the only col not in the table ... no need for this hash silliness
-      # memory_verse['efactor']       = mv.efactor
-      # memory_verse['status']        = mv.status
-      # memory_verse['last_tested']   = mv.last_tested
-      # memory_verse['next_test']     = mv.next_test
-      # memory_verse['test_interval'] = mv.test_interval
-      # memory_verse['n']             = mv.rep_n
-      # memory_verse['attempts']      = mv.attempts
-      
-      # @my_verses << memory_verse
+
     }
     
     @pop_verses = Popverse.find(:all, :limit => 15)
