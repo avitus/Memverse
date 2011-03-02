@@ -53,9 +53,9 @@
 	<br>
 	
 	<div class="buttons">
-		<%= submit_tag t('.show_selected'), :onclick => "return checkAllFields(4);", :remote => true, :name => "Show", :format => :pdf %> 
+		<%= submit_tag t('.show_selected'), :onclick => "return checkAllFields(4);", :name => "Show" %> 
 		(Format: <select name="format"><option name="HTML">HTML</option><option name="PDF">PDF</option></select>) 
-		<%= submit_tag t('.delete_selected'), :onclick => "return checkAllFields(3);", :remote => true, :name => "Delete" %>
+		<%= submit_tag t('.delete_selected'), :onclick => "return checkAllFields(3);", :name => "Delete" %>
 	</div>		
 		
 <% end %>
