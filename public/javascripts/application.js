@@ -60,7 +60,7 @@ var totalChecked = 0;
          }
         }
         else if ( totalChecked == 0 ) {
-        alert("Requested action could not be performed: no verses selected.");
+        alert("You should first select the verses using the check boxes on the left.");
         return false;
         }
         else if ( totalChecked == boxLength ) {
@@ -85,7 +85,7 @@ var totalChecked = 0;
     if ( ref == 4 ) // Showing Verses
     {
         if ( totalChecked == 0 ) {
-        alert("Requested action could not be performed: no verses selected.");
+        alert("You should first select the verses using the check boxes on the left.");
         return false;
         }
         else {

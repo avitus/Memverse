@@ -25,7 +25,19 @@
 	<% end %>
 	</p>
 	
+	<!-- 
 	<script src="http://connect.facebook.net/en_US/all.js#xfbml=1"></script><fb:like show_faces="true" width="450"></fb:like>
+	-->
+	
+	<!-- AddThis Button BEGIN -->
+	<div class="addthis_toolbox addthis_default_style ">
+	    <a class="addthis_button_preferred_1"></a>
+	    <a class="addthis_button_preferred_2"></a>
+	    <a class="addthis_button_preferred_3"></a>
+	</div>
+	<script type="text/javascript">var addthis_config = {"data_track_clickback":true};</script>
+	<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4d6dc48d2a620dab"></script>
+	<!-- AddThis Button END -->
 		
 	<% if blog_post.category %>
 		<%= image_tag "bloggity/cat.gif" -%> <%= link_to blog_post.category.name.html_safe, {:controller => 'blog_posts', :action => :index, :blog_id => blog_post.blog_id, :category_id => blog_post.category_id} %>
