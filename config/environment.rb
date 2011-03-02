@@ -18,6 +18,7 @@ TRANSLATIONS = {
     :HCS => "Holman Christian Standard Bible",
     :DTL => "Darby Translation",
     :MSG => "The Message",
+    :AMP => "Amplified Bible",
     :IRV => "New International Reader's Version",
     :UKJ => "Updated King James Version",
     :GRK => "Biblical Greek",
