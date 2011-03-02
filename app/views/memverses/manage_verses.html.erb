@@ -54,7 +54,7 @@
 	
 	<div class="buttons">
 		<%= submit_tag t('.show_selected'), :onclick => "return checkAllFields(4);", :name => "Show" %> 
-		<%= select_tag :format, options_for_select([["HTML", "html"], ["PDF", "pdf"]], "html") %>
+		<%= select_tag :format, options_for_select([["Screen", "html"], ["Print", "pdf"]], "html") %>
 		<%= submit_tag t('.delete_selected'), :onclick => "return checkAllFields(3);", :name => "Delete" %>
 	</div>		
 		
