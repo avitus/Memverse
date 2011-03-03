@@ -3,7 +3,7 @@
 # blog_post: the blog post
 -%>
 
-<% responses = blog_post.comments.size %>
+<a name="comments"></a><% responses = blog_post.comments.size %>
 <div id="commentContainer">
 	<h2><%= pluralize(blog_post.approved_comments.size, 'response') %> to <%= blog_post.title %></h2>
 	<% if responses > 0 %>
