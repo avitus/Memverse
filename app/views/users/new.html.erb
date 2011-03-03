@@ -4,7 +4,7 @@
 <div class="entry-form" id="signup-page-form">
 
 	<% @user.password = @user.password_confirmation = nil %>
-<!--	<%= title "Signup", :h2 %> -->
+
 	<% form_for @user do |f| %>
 		<%= f.error_messages %>
 		<fieldset>
