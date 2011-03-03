@@ -14,7 +14,7 @@
 		<%= image_tag "bloggity/time.gif" -%> Posted on <%= blog_post.created_at.strftime("%B %d, %Y") %>
 		<%= image_tag "bloggity/user.gif" -%> <%= link_to(blog_post.posted_by.display_name, blog_post.posted_by) -%>
 		<% if show_comment_count %>
-			<%= image_tag "bloggity/comment.gif" -%> <% if blog_post.approved_comments.empty? %><%= link_to "No comments", blog_named_link(blog_post) -%><% else %><%= link_to pluralize(blog_post.approved_comments.size, "comment"), blog_named_link(blog_post) -%><% end %>
+			<%= image_tag "bloggity/comment.gif" -%> <% if blog_post.approved_comments.empty? %><%= link_to "No comments", blog_named_link(blog_post) + "#comments" -%><% else %><%= link_to pluralize(blog_post.approved_comments.size, "comment"), blog_named_link(blog_post) + "#comments" -%><% end %>
 		<% end %>
 	</div>
 	
