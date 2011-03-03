@@ -259,39 +259,18 @@ class Verse < ActiveRecord::Base
   # Check with biblegateway for correctly entered verse
   # ----------------------------------------------------------------------------------------------------------  
   def web_check
-    
-    require 'open-uri'
-    require 'nokogiri'    
-        
-    tl = case self.translation
-      when "NAS" then "NASB"
-      when "NKJ" then "NKJV"
-      when "NIV" then "NIV1984"
-      when "NNV" then "NIV"
-      else self.translation.downcase
-    end
-       
-    url = 'http://www.biblegateway.com/passage/?search=' + CGI.escape(self.ref) + '&version=' + tl.to_s
-    doc = Nokogiri::HTML(open(url))
-
-    txt = doc.at_css(".result-text-style-normal").to_s.gsub(/<sup.+?<\/sup>/, "").gsub(/<h(4|5).+?<\/h(4|5)>/,"").gsub(/<\/?[^>]*>/, "")
-    
-    # Replace angled double and single quotes with ASCII equivalents
-    txt = txt.gsub(/[’‘]/, "\'")
-    txt = txt.gsub(/[“”]/, '"')
-    # Removes weirdly encoded characters at the start of strings
-    # txt = txt.gsub(/[\x80-\xff]/," ")  # ALV: 2011-01-13 Changed to replacing with a space to avoid collapsing newline/carriage return
-    txt = txt.split("Footnotes")[0] unless !txt
-    txt = txt.split("Cross")[0] unless !txt
-    txt = txt.gsub(/\s{2,}/, " ").strip unless !txt               # remove extra white space in verse and at beginning and end
-    
-    # Clean up verse in DB. Change stylish quotation marks to boring vertical ones ... ok to leave in DB with the stylish quotes.
+  
+    on_bg = BibleGateway.new(self.translation.to_sym).lookup(self.ref)[:content]  
     in_db = self.text
+    
+    # Ok to differ in style of quotation marks  
     in_db = in_db.gsub(/[’‘]/, "\'")
     in_db = in_db.gsub(/[“”]/, '"')
     
+    on_bg = on_bg.gsub(/[’‘]/, "\'")
+    on_bg = on_bg.gsub(/[“”]/, '"')    
     
-    txt == in_db ? true : txt
+    (on_bg == in_db) ? true : on_bg  # return what we pulled from web if different
   end
 
   # ----------------------------------------------------------------------------------------------------------

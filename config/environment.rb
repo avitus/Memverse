@@ -8,6 +8,7 @@ MemverseApp::Application.initialize!
 
 TRANSLATIONS = { 
     :NIV => "New International Version",
+    :NNV => "2010 New International Version",    
     :NAS => "New American Standard Bible", 
     :NKJ => "New King James Version", 
     :KJV => "King James Version",
