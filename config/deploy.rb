@@ -1,4 +1,4 @@
-require 'bundler/deployment'
+require 'bundler/capistrano'
 
 ##############################################################
 ##  Application
