@@ -33,7 +33,6 @@ class BibleGateway
     :SPB => "Svenska Folkbibeln" 
   }
   
-  
   def self.versions
     VERSIONS.keys
   end
@@ -64,16 +63,21 @@ class BibleGateway
     end
 
     def scrape_passage(doc)
-      title = doc.css('h2')[0].content
+      title = doc.css('h2')[0] ? doc.css('h2')[0].content : "No title"
       segment = doc.at('div.result-text-style-normal')
-      segment.search('sup.xref').remove 				# remove cross reference links
-      segment.search('sup.footnote').remove 			# remove footnote links
-      segment.search("div.crossrefs").remove 			# remove cross references
-      segment.search("div.footnotes").remove 			# remove footnotes
-      segment.search('sup.versenum').remove				# remove verse numbering
       
-      # remove headings, html tags, comments, non-breaking space, and trailing or leading whitespace
-      content = segment.inner_html.gsub(/<h(4|5).+?<\/h(4|5)>/,"").gsub(/<b.+?<\/b>/,"").gsub(/<\/?[^>]*>/, "").gsub(/<!--.*?-->/, '').gsub("\u00A0", "").strip
+      if segment
+	    segment.search('sup.xref').remove 				# remove cross reference links
+	    segment.search('sup.footnote').remove 			# remove footnote links
+	    segment.search("div.crossrefs").remove 			# remove cross references
+	    segment.search("div.footnotes").remove 			# remove footnotes
+	    segment.search('sup.versenum').remove				# remove verse numbering
+	     
+	    # remove headings, html tags, comments, non-breaking space, and trailing or leading whitespace
+	    content = segment.inner_html.gsub(/<h(4|5).+?<\/h(4|5)>/,"").gsub(/<b.+?<\/b>/,"").gsub(/<\/?[^>]*>/, "").gsub(/<!--.*?-->/, '').gsub("\u00A0", "").gsub(/\s{2,}/, " ").strip
+      else
+      	{:title => "--", :content => "--" }
+      end
       {:title => title, :content => content }
     end
 end

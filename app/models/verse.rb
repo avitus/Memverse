@@ -267,8 +267,11 @@ class Verse < ActiveRecord::Base
     in_db = in_db.gsub(/[’‘]/, "\'")
     in_db = in_db.gsub(/[“”]/, '"')
     
-    on_bg = on_bg.gsub(/[’‘]/, "\'")
-    on_bg = on_bg.gsub(/[“”]/, '"')    
+    if on_bg
+	  on_bg = on_bg.gsub(/[’‘]/, "\'") 
+	  on_bg = on_bg.gsub(/[“”]/, '"')
+	end
+	   
     
     (on_bg == in_db) ? true : on_bg  # return what we pulled from web if different
   end
