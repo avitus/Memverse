@@ -1,3 +1,5 @@
+<script src="http://cdn.jquerytools.org/1.0.2/jquery.tools.min.js"></script>
+
 <% page_title  I18n.t :signup, :scope => 'page_titles' %>
 <% page_banner I18n.t :signup, :scope => 'page_titles' %>
 
@@ -68,21 +70,21 @@
 
 
 <script type="text/javascript">
-// select all desired input fields and attach tooltips to them 
-$("#new_user :input").tooltip({ 
- 
-    // place tooltip on the right edge 
-    position: ['center', 'right'], 
- 
-    // a little tweaking of the position 
-    offset: [-2, 100], 
- 
-    // use a simple show/hide effect 
-    effect: 'toggle', 
-     
-    // custom opacity setting 
-    opacity: 0.7 
-});
+	// select all desired input fields and attach tooltips to them 
+	$("#new_user :input").tooltip({ 
+	 
+	    // place tooltip on the right edge 
+	    position: ['center', 'right'], 
+	 
+	    // a little tweaking of the position 
+	    offset: [-2, 110], 
+	 
+	    // use a simple show/hide effect 
+	    effect: 'toggle', 
+	     
+	    // custom opacity setting 
+	    opacity: 0.7 
+	});
 </script>
 
 

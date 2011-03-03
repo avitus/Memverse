@@ -336,7 +336,7 @@
       Photo Upload A:           "If you'd like to upload a photo of yourself, please visit"
       Photo Upload B:           "and associate the same email address you use on Memverse with the photo or avatar that you'd like to display. The photo will appear next to your blog comments."
   page_titles:
-  	signup:						"Register"
+    signup:                     "Register"
     my_memory_verses:           "My Memory Verses"
     church_members:             "Church Members"
     tutorial:                   "Tutorial"

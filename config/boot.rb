@@ -20,8 +20,8 @@ begin
   # 
   #     require 'yaml'
   #     YAML::ENGINE.yamler= 'syck'   
-  # require 'yaml'
-  # YAML::ENGINE.yamler= 'syck'
+  require 'yaml'
+  YAML::ENGINE.yamler= 'syck'
   
   ENV['BUNDLE_GEMFILE'] = gemfile
   require 'bundler'

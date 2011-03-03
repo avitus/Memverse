@@ -1193,30 +1193,43 @@ div#errorExplanation ul li {
 /* === Login Page === */
 
 #login-page-form {
-	width:	440px;
+	width:	540px;
+	margin-left: 50px;
+	margin-top: 0.25em;
 	padding-top: 2em;
 	float: left;
+	font-size: 150%;
 }
 
 #login-page-form label {
 	width: 7em;
 }
 
+#login-page-form li#remember-me label {
+	font-size: 100%;
+}
+
 #intro-description {
+	margin-top: 0.1em;
+	margin-left: 25px;
 	float: left;
 	width:  500px;
 	height: 400px;
+	font-size: 125%;
 }
 
 #intro-description li {
-	font-size: 120%;
+	font-size: 100%;
 }
 
 
 /* === Signup Page === */
 
 #signup-page-form {
-	width:	550px;
+    font-size: 140%;
+	width:	640px;
+	margin-left: 7%;
+	margin-top: 1.5em;
 }
 
 #signup-page-form label {
@@ -1253,7 +1266,6 @@ div#errorExplanation ul li {
 	margin-left: 9em;
 }
 
-
 /* simple css-based tooltip */ 
 div.tooltip { 
     background-color: #1F2229; 
@@ -1267,9 +1279,9 @@ div.tooltip {
     font-size: 100%; 
  
     /* outline radius for mozilla/firefox only */ 
-    outline-radius: 4px; 
-    -moz-outline-radius: 4px; 
-    -webkit-outline-radius: 4px; 
+	/* outline radius for mozilla/firefox only */
+	-moz-box-shadow:0 0 10px #000;
+	-webkit-box-shadow:0 0 10px #000;
 }
 
 /* === Edit Profile Page === */
