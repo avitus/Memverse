@@ -1,3 +1,5 @@
+# coding: utf-8
+
 module MemverseHelper
   
   # Coloring for test page feedback
@@ -7,7 +9,7 @@ module MemverseHelper
     value = 'correct'   if match
     
     if include_class_text
-      'class="' << value << '"'
+      'class=' << value
     else
       value
     end
@@ -20,7 +22,7 @@ module MemverseHelper
     value = 'is-in-user-list' if current_user.has_verse_id?(vs_id)
     
     if include_class_text
-      'class="' << value << '"'
+      'class=' << value
     else
       value
     end
@@ -34,7 +36,7 @@ module MemverseHelper
     value = 'current_user' if current_user == user
     
     if include_class_text
-      'class="' << value << '"'
+      'class=' << value
     else
       value
     end

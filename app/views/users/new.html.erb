@@ -1,10 +1,12 @@
-<!-- Only active until the end of 2010 -->
 <script src="http://cdn.jquerytools.org/1.0.2/jquery.tools.min.js"></script>
+
+<% page_title  I18n.t :signup, :scope => 'page_titles' %>
+<% page_banner I18n.t :signup, :scope => 'page_titles' %>
 
 <div class="entry-form" id="signup-page-form">
 
 	<% @user.password = @user.password_confirmation = nil %>
-	<%= title "Signup", :h2 %>
+
 	<% form_for @user do |f| %>
 		<%= f.error_messages %>
 		<fieldset>
@@ -68,21 +70,21 @@
 
 
 <script type="text/javascript">
-// select all desired input fields and attach tooltips to them 
-$("#new_user :input").tooltip({ 
- 
-    // place tooltip on the right edge 
-    position: ['center', 'right'], 
- 
-    // a little tweaking of the position 
-    offset: [-2, 100], 
- 
-    // use a simple show/hide effect 
-    effect: 'toggle', 
-     
-    // custom opacity setting 
-    opacity: 0.7 
-});
+	// select all desired input fields and attach tooltips to them 
+	$("#new_user :input").tooltip({ 
+	 
+	    // place tooltip on the right edge 
+	    position: ['center', 'right'], 
+	 
+	    // a little tweaking of the position 
+	    offset: [-2, 110], 
+	 
+	    // use a simple show/hide effect 
+	    effect: 'toggle', 
+	     
+	    // custom opacity setting 
+	    opacity: 0.7 
+	});
 </script>
 
 
