@@ -197,12 +197,14 @@ class AdminController < ApplicationController
 
     logger.info("===== Updating popular verses table ====")
 
-    # Delete previous table
-    Popverse.delete_all    
-
     # Changing the number of verses returned doesn't buy anything because you have to access entire memory verse table
     pop_mv = Verse.rank_verse_popularity(100) 
+
+    logger.info("===== Deleting old table of popular verses ====")
+    # Delete previous table
+    Popverse.delete_all    
     
+    logger.info("===== Saving new table with available translations ====")
     pop_mv.each { |x|
     
       pv = Popverse.new
