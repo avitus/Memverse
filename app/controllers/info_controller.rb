@@ -16,6 +16,10 @@ class InfoController < ApplicationController
     @tab = "learn"     
   end
   
+  def video_tut
+  	@tab = "learn"
+  end
+  
   def volunteer
     @tab = "contact"     
   end  
