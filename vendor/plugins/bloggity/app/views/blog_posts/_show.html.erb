@@ -18,12 +18,11 @@
 		<% end %>
 	</div>
 	
-	<p><% if blog_post.fck_created %>
+	<br /><% if blog_post.fck_created %>
 		<%= blog_post.body.html_safe -%>
 	<% else %>
 		<%= simple_format(auto_link(blog_post.body)) %>
 	<% end %>
-	</p>
 	
 	<!-- 
 	<script src="http://connect.facebook.net/en_US/all.js#xfbml=1"></script><fb:like show_faces="true" width="450"></fb:like>
