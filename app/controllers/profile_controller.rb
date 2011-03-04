@@ -231,6 +231,8 @@ class ProfileController < ApplicationController
     search_param = params[:search_param]
     @user_list   = Array.new
     
+    logger.debug("Searching for ... #{search_param.inspect}")
+    
     # TODO: Is there a better way to do this search?
     
     if !search_param.empty?
