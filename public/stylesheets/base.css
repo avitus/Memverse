@@ -365,6 +365,27 @@ table.user-list {
 }
 
 /* --- News Feed : Left Column --- */
+#mv-news-feed {
+	float:			left;
+	width:			34.5%;
+}
+
+#mv-news-feed a {
+	font-weight:	bold;
+}
+
+#mv-news-feed ul {
+	padding-left:	0.1em;
+	font-size:		130%;	
+}
+
+#mv-news-feed #post-description {
+	padding-left:	0.5em;
+	font-size:		80%
+}
+
+
+/* --- News Page --- */
 .news-feed {
 	float:			left;
 	width:			45%;
