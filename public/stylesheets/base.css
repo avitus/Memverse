@@ -365,21 +365,43 @@ table.user-list {
 }
 
 /* --- News Feed : Left Column --- */
-#news-feed {
+#mv-news-feed {
 	float:			left;
 	width:			34.5%;
 }
 
-#news-feed a {
+#mv-news-feed a {
 	font-weight:	bold;
 }
 
-#news-feed ul {
+#mv-news-feed ul {
 	padding-left:	0.1em;
 	font-size:		130%;	
 }
 
-#news-feed #post-description {
+#mv-news-feed #post-description {
+	padding-left:	0.5em;
+	font-size:		80%
+}
+
+
+/* --- News Page --- */
+.news-feed {
+	float:			left;
+	width:			45%;
+	height:			450px;
+}
+
+.news-feed a {
+	font-weight:	bold;
+}
+
+.news-feed ul {
+	padding-left:	0.1em;
+	font-size:		130%;	
+}
+
+.news-feed .post-description {
 	padding-left:	0.5em;
 	font-size:		80%
 }
@@ -1188,8 +1210,12 @@ div#errorExplanation ul li {
   list-style: square;	
 }
 
-/* === Verse Filtering === */
+/* === Video === */
+div.video {
 
+}
+
+/* === Verse Filtering === */
 #vsfilter {
   -webkit-border-radius: 10px;
   background-color: white;

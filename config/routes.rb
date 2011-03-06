@@ -76,6 +76,7 @@ MemverseApp::Application.routes.draw do
   match '/contact',               :to => 'info#contact',                    :as => 'contact'   
   match '/faq',                   :to => 'info#faq',                        :as => 'faq'
   match '/tutorial',              :to => 'info#tutorial',                   :as => 'tutorial'
+  # match '/video_tutorial',        :to => 'info#video_tut',                  :as => 'video_tut'
   match '/volunteer',             :to => 'info#volunteer',                  :as => 'volunteer'
   match '/popular',               :to => 'info#pop_verses',                 :as => 'popular'
   match '/supermemo',             :to => 'info#sm_description',             :as => 'supermemo'
