@@ -220,6 +220,7 @@ div#errorExplanation ul li {font-size: 12px; list-style: square}
 #getting_started {float: left; width: 800px; height: 420px}
 .start-page-actions ol li {font-size: 120%; list-style-type: decimal}
 #volunteer a:link {text-decoration: underline}
+#vsfilter {-webkit-border-radius: 10px; background-color: white; padding: 10px; position: fixed; right:40px; top:100px; display: none;}
  .entry-form {width: 360px}
 .entry-form fieldset {background-color: #BAB18E;  }
 .entry-form legend {background: #687284;  color: #1F2229;  padding: 0.2em 1em}

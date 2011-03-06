@@ -1,20 +1,64 @@
 // Place your application-specific JavaScript functions and classes here
 // This file is automatically included by javascript_include_tag :defaults
 
+// Verse filtering; used script from http://net.tutsplus.com/tutorials/javascript-ajax/using-jquery-to-manipulate-and-filter-data/
+
+$(document).ready(function() {
+		
+	//default each row to visible
+	$('tbody tr').addClass('visible');
+	
+	//overrides CSS display:none property
+	//so only users w/ JS will see the
+	//filter box
+	$('#vsfilter').show();
+	
+	$('#filter').keyup(function(event) {
+		//if esc is pressed or nothing is entered
+    if (event.keyCode == 27 || $(this).val() == '') {
+			//if esc is pressed we want to clear the value of search box
+			$(this).val('');
+			
+			//we want each row to be visible because if nothing
+			//is entered then all rows are matched.
+      $('tbody tr').removeClass('visible').show().addClass('visible');
+    }
+
+		//if there is text, lets filter
+		else {
+      filter('tbody tr', $(this).val());
+    }
+
+	});
+});
+
+
+//filter results based on query
+function filter(selector, query) {
+	query	=	$.trim(query); //trim white space
+  query = query.replace(/ /gi, '|'); //add OR for regex
+  
+  $(selector).each(function() {
+    ($(this).text().search(new RegExp(query, "i")) < 0) ? $(this).hide().removeClass('visible') : $(this).show().addClass('visible');
+  });
+}
+
 // Thanks to Dustin for post: http://www.dustindiaz.com/check-one-check-all-javascript/
 function checkAllFields(ref)
 {
 var chkAll = document.getElementById('checkAll');
 var checks = document.getElementsByName('mv[]');
+var visiblechecks = $('input[name="mv[]"]:visible');
 var boxLength = checks.length;
+var visibleboxLength = visiblecheck.length;
 var allChecked = false;
 var totalChecked = 0;
-    if ( ref == 1 )  // Selecting all verses
+    if ( ref == 1 )  // Selecting all visible verses
     {
         if ( chkAll.checked == true )
         {
             for ( i=0; i < boxLength; i++ )
-            checks[i].checked = true;
+            visiblechecks[i].checked = true;
         }
         else
         {
