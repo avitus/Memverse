@@ -365,21 +365,22 @@ table.user-list {
 }
 
 /* --- News Feed : Left Column --- */
-#news-feed {
+.news-feed {
 	float:			left;
-	width:			34.5%;
+	width:			45%;
+	height:			450px;
 }
 
-#news-feed a {
+.news-feed a {
 	font-weight:	bold;
 }
 
-#news-feed ul {
+.news-feed ul {
 	padding-left:	0.1em;
 	font-size:		130%;	
 }
 
-#news-feed #post-description {
+.news-feed .post-description {
 	padding-left:	0.5em;
 	font-size:		80%
 }
