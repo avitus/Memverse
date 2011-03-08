@@ -11,7 +11,7 @@
 		
 		<% for comment in @comments %>
 			<tr valign="top">
-				<td align="left"><%= comment.user.login %></td>
+				<td align="left"><%= comment.user.name_or_login %></td>
 				<td align="left"><%= comment.blog_post ? link_to(comment.blog_post.title, blog_named_link(comment.blog_post)) : "[Deleted blog post]" %></td>
 				<td align="left"><%= comment.comment %></td>
 				<td><%= link_to "Approve comment", { :controller => 'blog_comments', :action => :approve, :id => comment, :referring_url => params } %></td>
@@ -35,7 +35,7 @@
 		
 		<% for comment in @newest_comments %>
 			<tr valign="top">
-				<td align="left"> <%= comment.user.login %></td>
+				<td align="left"> <%= comment.user.name_or_login %></td>
 				<td align="left"> <%= comment.blog_post ? link_to(comment.blog_post.title, blog_named_link(comment.blog_post)) : "" %></td>
 				<td align="left"> <%= comment.comment %></td>
 				<td align="left"> <%= comment.updated_at.to_date %></td>
