@@ -1,27 +1,30 @@
 <div class="details-form">
-		
-	<fieldset>
-		<legend> Enter Filter Parameters</legend>
-		
- 			<% form_tag( {}, { :id => 'advanced_search' } ) do %>
-			  <p>
-				Book: 			<%= text_field_tag( :book, 			params[:book],  		:size =>  16 )%>	
-				Chapter: 		<%= text_field_tag( :chapter, 		params[:chapter], 		:size =>   6 )%>				
-				Verse: 			<%= text_field_tag( :verse, 		params[:verse], 		:size =>   6 )%>	
-				Translation: 	<%= text_field_tag( :translation, 	params[:translation], 	:size =>   8 )%>						
-			  </p>
-			  							
-			<% end %>
-					
-	</fieldset>
-				
-	<%= observe_form 	'advanced_search',
-						:frequency	=> 0.5,
-						:update		=> 'search_results',
-						:url		=> {:action => 'search_verse', :only_path => false} %>
+			Verse: 	<%= text_field_tag( :verse,	params[:verse],  :size =>  16 )%>							
 </div>	
+
+<br>
 
 <div id="search_results">
 	<%= render :partial=>'search_verse' %>
 </div>
 
+<script type="text/javascript">
+	$(document).ready(function(){
+		
+		$("#verse").observe_field(0.3, function( ) { 
+			$.get("/admin_search_verse", {  verse: this.value },
+				function(data){	
+					$("#search_results").html(data);
+			});
+        });		
+		
+		$('.spinner')
+			.ajaxStart(function() {
+		        $(this).show();
+		    })
+			.ajaxStop(function() {
+		        $(this).hide();
+	    }); 		
+		
+	});
+</script>

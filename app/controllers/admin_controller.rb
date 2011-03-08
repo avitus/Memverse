@@ -483,13 +483,20 @@ class AdminController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------  
   def search_verse
     
-    book         = params[:book]
-    chapter      = params[:chapter]
-    verse        = params[:verse]
-    translation  = params[:translation]   
+    # book         = params[:book]
+    # chapter      = params[:chapter]
+    # verse        = params[:verse]
+    # translation  = params[:translation]   
     
-    @vs_list = Verse.find(:all, :conditions => {:book => book, :chapter => chapter, :versenum => verse, :translation => translation}, :limit => 24)
-#    @vs_list = Verse.find(:all, :conditions => ["book = ? and chapter = ? and versenum = ? and translation = ?", book, chapter, verse, translation], :limit => 24)
+    errorcode, book, chapter, verse = parse_verse(params[:verse])
+    
+    logger.debug("Bk: #{book}")
+    logger.debug("Ch: #{chapter}")
+    logger.debug("Vs: #{verse}")
+    
+    @vs_list = Verse.find(:all, :conditions => {:book => book, :chapter => chapter.to_i, :versenum => verse.to_i})
+
+	logger.debug("Verses found: #{@vs_list.inspect}")
     
     render :partial => 'search_verse', :layout=>false 
   end    

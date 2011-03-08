@@ -70,12 +70,13 @@ MemverseApp::Application.routes.draw do
   
   match '/show_user_info',        :to => 'admin#show_user_info',            :as => 'show_user_info'
   match '/show_tags',             :to => 'admin#show_tags',                 :as => 'show_tags'
-  
+  match '/admin_search_verse',	  :to => 'admin#search_verse',				:as => 'admin_search_verse'
   
   # Doesn't require a login
   match '/contact',               :to => 'info#contact',                    :as => 'contact'   
   match '/faq',                   :to => 'info#faq',                        :as => 'faq'
   match '/tutorial',              :to => 'info#tutorial',                   :as => 'tutorial'
+  # match '/video_tutorial',        :to => 'info#video_tut',                  :as => 'video_tut'
   match '/volunteer',             :to => 'info#volunteer',                  :as => 'volunteer'
   match '/popular',               :to => 'info#pop_verses',                 :as => 'popular'
   match '/supermemo',             :to => 'info#sm_description',             :as => 'supermemo'

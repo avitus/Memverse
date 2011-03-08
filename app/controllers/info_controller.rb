@@ -16,6 +16,10 @@ class InfoController < ApplicationController
     @tab = "learn"     
   end
   
+  def video_tut
+  	@tab = "learn"
+  end
+  
   def volunteer
     @tab = "contact"     
   end  
@@ -143,24 +147,28 @@ class InfoController < ApplicationController
   def news
     @tab = "home"    
     
+    feed_urls	= Array.new
+    @feeds 		= Array.new
+    
     # === RSS News feed ===
     # Poached from http://www.robbyonrails.com/articles/2005/05/11/parsing-a-rss-feed
-    feed_url  = 'http://feeds.christianitytoday.com/christianitytoday/ctmag'
-    feed_sec  = 'http://feeds.christianitytoday.com/christianitytoday/history'
+    feed_urls << 'http://feeds.christianitytoday.com/christianitytoday/ctmag'
+    feed_urls << 'http://feeds.christianitytoday.com/christianitytoday/history'
+    feed_urls << 'http://www.christianpost.com/services/rss/feed/most-popular'
+    feed_urls << 'http://rss.feedsportal.com/c/32752/f/517092/index.rss'
+        
+    feed_urls.each { |fd_url|
+	  @feeds[ feed_urls.index(fd_url) ]  = RssReader.posts_for(fd_url, length=5, perform_validation=false)
+    }
     
-    @posts    = RssReader.posts_for(feed_url, length=5, perform_validation=false)
-
-    # === Check secondary feed if necessary
-    if !@posts
-      @posts   = RssReader.posts_for(feed_sec, length=5, perform_validation=false)
-    end
-  
-    # Strip out links to Digg, StumbleUpon etc.
-    if @posts
-      @posts.each { |post| 
-        post.description = post.description.split("<div")[0]
-      }
-    end
+    @feeds.each { |feed|
+      if feed
+        feed.each { |post| 
+          # Strip out links to Digg, StumbleUpon etc.
+          post.description = post.description.split("<div")[0].split("<img")[0]
+        }      	
+      end	
+    } 
   end  
   
   # ----------------------------------------------------------------------------------------------------------
