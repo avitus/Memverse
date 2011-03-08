@@ -296,6 +296,7 @@ class MemversesController < ApplicationController
 
       logger.debug("Displaying selected verses with ID: #{mv_ids.inspect}")	    	
       @mv_list = Memverse.find(mv_ids, :include => :verse)
+      @mv_list.sort! # Sort by book. TODO: Pass paramaters from manage_verses and sort by that order...
       
     elsif (mv_ids.blank?)
     	
