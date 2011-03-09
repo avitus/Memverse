@@ -47,30 +47,30 @@ function filter(selector, query) {
 function checkAllFields(ref)
 {
 var chkAll = document.getElementById('checkAll');
-var checks = document.getElementsByName('mv[]');
+// var checks = document.getElementsByName('mv[]');
 var visiblechecks = $('input[name="mv[]"]:visible');
-var boxLength = checks.length;
+// var boxLength = checks.length;
 var visibleboxLength = visiblechecks.length;
 var allChecked = false;
-var totalChecked = 0;
+var totalChecked = 0; // Number of visible checkboxes checked. Must add JavaScript code to change input of mv[] checkbox array to only checkboxes which are visible.
     if ( ref == 1 )  // Selecting all visible verses
     {
         if ( chkAll.checked == true )
         {
-            for ( i=0; i < boxLength; i++ )
+            for ( i=0; i < visibleboxLength; i++ )
             visiblechecks[i].checked = true;
         }
         else
         {
-            for ( i=0; i < boxLength; i++ )
-            checks[i].checked = false;
+            for ( i=0; i < visibleboxLength; i++ )
+            visiblechecks[i].checked = false;
         }
     }
     if (ref == 2)  // Selecting specific verses
     {
-        for ( i=0; i < boxLength; i++ )
+        for ( i=0; i < visibleboxLength; i++ )
         {
-            if ( checks[i].checked == true )
+            if ( visiblechecks[i].checked == true )
             {
             allChecked = true;
             continue;
@@ -88,7 +88,7 @@ var totalChecked = 0;
     }
     for ( j=0; j < boxLength; j++ )
     {
-        if ( checks[j].checked == true )
+        if ( visiblechecks[j].checked == true )
         totalChecked++;
     }
     if ( ref == 3 ) // Deleting Verses
