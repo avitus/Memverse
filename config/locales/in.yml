@@ -377,6 +377,7 @@
     reftest_results:            "Reference Test Results"
     view_vs:                    "View Memory Verse"
     reftest:                    "Reference Test"
+    my_dashboard:               "My Dashboard"
   page_banners:
     default:                    "Bible Verse Memorization"
   page_descriptions:

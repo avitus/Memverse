@@ -370,6 +370,7 @@
     reftest_results:            "Reference Test Results"
     view_vs:                    "Vista la memoria el versículo"
     reftest:                    "Test de Referencia"
+    my_dashboard:               "Mi Panel"
   page_banners:
     default:                    "Verso de la Biblia Memorización"
   page_descriptions:
