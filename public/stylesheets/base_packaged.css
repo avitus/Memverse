@@ -145,7 +145,7 @@ div#currentVerse #matchbox .correct {background: #687284;  font-size: 500%; font
 .quickFlipCta {cursor: pointer; text-align: center; position: absolute; bottom: 10px; font-size: 100%; color: #1F2229;  background: #687284;  padding: 0.2em 1em 0.2em 1em; margin: 0 0 0 85px}
 #flashcard-back-text {margin-left: 20px; margin-right: 20px}
 .mnemonic {font-size: 95%; margin-left: 10%; margin-right: 10%}
- #upcoming-list {float: left; margin-left: 0.3em; width: 128px}
+ #upcoming-list {float: left; margin-left: 0.3em; width: 138px}
 #upcoming-list fieldset {background:#687284;  }
 #upcoming-list legend {background: #BAB18E;  color: #1F2229;  padding: 0.2em 1em}
  #test-chapter {float: left; width: 400px}
