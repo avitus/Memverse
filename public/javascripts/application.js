@@ -50,7 +50,7 @@ var chkAll = document.getElementById('checkAll');
 var checks = document.getElementsByName('mv[]');
 var visiblechecks = $('input[name="mv[]"]:visible');
 var boxLength = checks.length;
-var visibleboxLength = visiblecheck.length;
+var visibleboxLength = visiblechecks.length;
 var allChecked = false;
 var totalChecked = 0;
     if ( ref == 1 )  // Selecting all visible verses
@@ -116,7 +116,7 @@ var totalChecked = 0;
          else
           return false;
         }
-        else {
+        else { // User is deleting 1 - all of their verses. Need to alert them if some of these are invisible. This is not necessary in other cases.
         var agree=confirm("Are you sure you want to delete the "+totalChecked+" selected verses?");
          if (agree) {
           document.manage_verses.action = '/memverses/delete_verses';
