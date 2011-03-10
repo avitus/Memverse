@@ -49,10 +49,12 @@ function checkAllFields(ref)
 var chkAll = document.getElementById('checkAll');
 // var checks = document.getElementsByName('mv[]');
 var visiblechecks = $('input[name="mv[]"]:visible');
+var invisiblechecks = $('input[name="mv[]"]:not(".visible")');
 // var boxLength = checks.length;
 var visibleboxLength = visiblechecks.length;
+var invisibleboxLength = invisiblechecks.length;
 var allChecked = false;
-var totalChecked = 0; // Number of visible checkboxes checked. Must add JavaScript code to change input of mv[] checkbox array to only checkboxes which are visible.
+var totalChecked = 0; // Number of visible checkboxes checked. Must add JavaScript code to uncheck "invisible" checkboxes (due to filtering).
     if ( ref == 1 )  // Selecting all visible verses
     {
         if ( chkAll.checked == true )
@@ -108,6 +110,8 @@ var totalChecked = 0; // Number of visible checkboxes checked. Must add JavaScri
         return false;
         }
         else if ( totalChecked == visibleboxLength ) {
+        for ( k=0; k < invisibleboxLength; k++ )
+        invisiblechecks[k].checked = false;
         var agree=confirm("Are you sure you want to delete all "+totalChecked+" of the verses shown on this page?");
          if (agree) {
           document.manage_verses.action = '/memverses/delete_verses';
@@ -117,6 +121,8 @@ var totalChecked = 0; // Number of visible checkboxes checked. Must add JavaScri
           return false;
         }
         else { // User is deleting 1 - all of their verses. Need to alert them if some of these are invisible. This is not necessary in other cases.
+        for ( l=0; l < invisibleboxLength; l++ )
+        invisiblechecks[l].checked = false;
         var agree=confirm("Are you sure you want to delete the "+totalChecked+" selected verses?");
          if (agree) {
           document.manage_verses.action = '/memverses/delete_verses';
