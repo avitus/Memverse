@@ -86,7 +86,7 @@ var totalChecked = 0; // Number of visible checkboxes checked. Must add JavaScri
         else
         chkAll.checked = false;
     }
-    for ( j=0; j < boxLength; j++ )
+    for ( j=0; j < visibleboxLength; j++ )
     {
         if ( visiblechecks[j].checked == true )
         totalChecked++;
@@ -107,8 +107,8 @@ var totalChecked = 0; // Number of visible checkboxes checked. Must add JavaScri
         alert("You should first select the verses using the check boxes on the left.");
         return false;
         }
-        else if ( totalChecked == boxLength ) {
-        var agree=confirm("Are you sure you want to delete all "+totalChecked+" of your verses?");
+        else if ( totalChecked == visibleboxLength ) {
+        var agree=confirm("Are you sure you want to delete all "+totalChecked+" of the verses shown on this page?");
          if (agree) {
           document.manage_verses.action = '/memverses/delete_verses';
           return true;
