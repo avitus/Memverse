@@ -296,6 +296,7 @@ class MemversesController < ApplicationController
 
       logger.debug("Displaying selected verses with ID: #{mv_ids.inspect}")	    	
       @mv_list = Memverse.find(mv_ids, :include => :verse)
+      @mv_list.sort! # Sort by book. TODO: Pass paramaters from manage_verses and sort by that order...
       
     elsif (mv_ids.blank?)
     	
@@ -798,7 +799,6 @@ class MemversesController < ApplicationController
       @mnemonic         = mv.verse.mnemonic if mv.needs_mnemonic?
       @current_versenum = mv.verse.versenum
       @show_feedback    = mv.show_feedback? || true  # default to true in case of nil something in first expression
-      logger.debug("Show feedback for verse from queue: #{@show_feedback}. Interval is #{mv.test_interval} and request feedback is #{current_user.show_echo}")
       # Put memory verse into session
       session[:memverse] = mv.id  
     else

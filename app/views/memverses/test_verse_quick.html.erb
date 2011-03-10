@@ -24,9 +24,7 @@
 				</div>	
 				<div align="left"><%= submit_tag t('.b2'),	:class => "submit", :q => 2 %></div>	
 				<div align="left"><%= submit_tag t('.b1'), 	:class => "submit", :q => 1 %></div>	  	
-			</div>			
-			  
-		
+			</div>				
 		
 		<% end %>	
 </fieldset>	
@@ -100,20 +98,10 @@
 	</fieldset>		
 </div>
 
-<!--	
-<%= observe_field :verseguess,
-	:frequency	=> 0.6,
-	:update		=> 'ajaxWrapper',
-	:url		=> {:action => 'feedback', :only_path => false},
-	:with		=> "'echo=#{@show_feedback}&correct=#{escape_verse(@mv.verse.text)}&verseguess='+encodeURIComponent(value)"
-%>
--->
-
-
 <script language="JavaScript" type="text/javascript"><!--
 
     // unblock when ajax activity stops 
-    $(document).ajaxStop($.unblockUI);
+    $(document).ajaxStart($('#scoreTestButtons').block()).ajaxStop($('#scoreTestButtons').unblock());
 		
 	$(document).ready(function() {
 			
@@ -130,9 +118,8 @@
 		current.feedback = "<%= @mv.show_feedback? %>"
 		
 		// Load next verse
-		$.blockUI({ message: null });
-		ondeck = stageverses(current.id);	
 		$('#ff-button').toggle(<%= !@mv.due? %>);					// Hide/Show fast forward button
+		ondeck = stageverses(current.id);	
 
 		// Verse feedback	
 		$("#verseguess").observe_field(0.4, function( ) { 
@@ -163,7 +150,6 @@
 				success = insertondeck(ondeck.mv_skip, ondeck.mv_prior_skip);	// Update page with ondeck verses
 				current = ondeck.mv_skip										// Update current verse
 				update_upcoming(12, ondeck.mv_skip.id);							// Update upcoming verses
-				$.blockUI({ message: null });									// Block UI while new verses are loaded
 				ondeck = stageverses(current.id);								// Get new ondeck verses						
 				return (false);	
 			}			
@@ -192,7 +178,6 @@
 			}
 			else {
 				success = insertondeck(ondeck.mv, ondeck.mv_prior);					// Update page with Ondeck verse
-				$.blockUI({ message: null });
 				$.getJSON("/mark_test_quick", { mv: current.id, q: q  }, 			// Score verse
 					function(data) {
 						if (data.msg) {
