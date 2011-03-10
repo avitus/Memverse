@@ -15,7 +15,6 @@ gem 'ziya', '>=2.3.0'								# Required for flash charts
 gem 'color'											# Required for Ziya
 gem 'logging'										# Required for Ziya
 gem 'builder'										# Required for Ziya
-gem 'jrails'										# jQuery drop-in replacement for Prototype/Scriptaulous
 gem 'mysql2'										# This be the db
 gem 'nokogiri'										# HTML/XML parsing
 gem 'test-unit', '=1.2.3'         					# Required for restful_authentication (?)
