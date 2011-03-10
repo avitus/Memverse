@@ -376,6 +376,7 @@
     accuracy_results:           "Accuracy Test Results"
     reftest_results:            "Reference Test Results"
     view_vs:                    "View Memory Verse"
+    view_vs_s:                  "View Memory Verses"
     reftest:                    "Reference Test"
     my_dashboard:               "My Dashboard"
   page_banners:

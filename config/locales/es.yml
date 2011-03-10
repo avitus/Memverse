@@ -368,7 +368,8 @@
     edit_verse:                 "Edición Verso"
     accuracy_results:           "Accuracy Test Results"
     reftest_results:            "Reference Test Results"
-    view_vs:                    "Vista la memoria el versículo"
+    view_vs:                    "Ver Verso de Memoria"
+    view_vs_s:                  "Ver los Versos de Memoria"
     reftest:                    "Test de Referencia"
     my_dashboard:               "Mi Panel"
   page_banners:
