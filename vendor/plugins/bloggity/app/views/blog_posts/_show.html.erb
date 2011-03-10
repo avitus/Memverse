@@ -18,7 +18,9 @@
 		<% end %>
 	</div>
 	
-	<br /><% if blog_post.fck_created %>
+	<br />
+	
+	<% if blog_post.fck_created %>
 		<%= blog_post.body.html_safe -%>
 	<% else %>
 		<%= simple_format(auto_link(blog_post.body)) %>
@@ -37,6 +39,8 @@
 	<script type="text/javascript">var addthis_config = {"data_track_clickback":true};</script>
 	<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4d6dc48d2a620dab"></script>
 	<!-- AddThis Button END -->
+
+	<br />
 		
 	<% if blog_post.category %>
 		<%= image_tag "bloggity/cat.gif" -%> <%= link_to blog_post.category.name.html_safe, {:controller => 'blog_posts', :action => :index, :blog_id => blog_post.blog_id, :category_id => blog_post.category_id} %>
@@ -52,7 +56,8 @@
 		actions << link_to('Destroy', blog_named_link(blog_post, :destroy), :confirm => 'Are you sure?', :method => :delete) if current_user.can_blog?(@blog_id) 
 		actions << link_to('Close commenting', blog_named_link(blog_post, :close), :confirm => 'Are you sure?') if current_user.can_moderate_blog_comments?(@blog_id) && !blog_post.comments_closed?
 		%>
-		<br /><br /><%= actions.join(" or ").html_safe -%>
+		<br /><br />
+		<%= actions.join(" or ").html_safe -%>
 	<% end %>
 <br/>
 </div>

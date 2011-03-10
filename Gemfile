@@ -15,13 +15,14 @@ gem 'ziya', '>=2.3.0'								# Required for flash charts
 gem 'color'											# Required for Ziya
 gem 'logging'										# Required for Ziya
 gem 'builder'										# Required for Ziya
-gem 'jrails'										# jQuery drop-in replacement for Prototype/Scriptaulous
 gem 'mysql2'										# This be the db
 gem 'nokogiri'										# HTML/XML parsing
 gem 'test-unit', '=1.2.3'         					# Required for restful_authentication (?)
 gem 'json'                        					# Javascript Object Notation support
 gem 'jquery-rails', '>= 0.2.6'	  					# Unobtrusive scripting adapter for jQuery
 gem 'mail', '>= 2.2.15'								# Emails
+gem 'newrelic_rpm'									# Performance monitoring
+
 
 # Use this for now (instead of the plugin ... check to see whether master branch ever supports Rails 3)
 gem 'spawn', :git => 'git://github.com/rfc2822/spawn'
