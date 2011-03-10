@@ -1215,6 +1215,16 @@ div.video {
 
 }
 
+/* === Verse Filtering === */
+#vsfilter {
+  -webkit-border-radius: 10px;
+  background-color: white;
+  padding: 10px;
+  position: fixed;
+  right: 40px;
+  top: 100px;
+  display: none;
+}
 
 /* === Login Page === */
 

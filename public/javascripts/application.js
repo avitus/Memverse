@@ -1,32 +1,78 @@
 // Place your application-specific JavaScript functions and classes here
 // This file is automatically included by javascript_include_tag :defaults
 
+// Verse filtering; used script from http://net.tutsplus.com/tutorials/javascript-ajax/using-jquery-to-manipulate-and-filter-data/
+
+$(document).ready(function() {
+		
+	//default each row to visible
+	$('tbody tr').addClass('visible');
+	
+	//overrides CSS display:none property
+	//so only users w/ JS will see the
+	//filter box
+	$('#vsfilter').show();
+	
+	$('#filter').keyup(function(event) {
+		//if esc is pressed or nothing is entered
+    if (event.keyCode == 27 || $(this).val() == '') {
+			//if esc is pressed we want to clear the value of search box
+			$(this).val('');
+			
+			//we want each row to be visible because if nothing
+			//is entered then all rows are matched.
+      $('tbody tr').removeClass('visible').show().addClass('visible');
+    }
+
+		//if there is text, lets filter
+		else {
+      filter('tbody tr', $(this).val());
+    }
+
+	});
+});
+
+
+//filter results based on query
+function filter(selector, query) {
+//	query	=	$.trim(query); //trim white space
+//  query = query.replace(/ /gi, '|'); //add OR for regex
+  
+  $(selector).each(function() {
+    ($(this).text().search(new RegExp(query, "i")) < 0) ? $(this).hide().removeClass('visible') : $(this).show().addClass('visible');
+  });
+}
+
 // Thanks to Dustin for post: http://www.dustindiaz.com/check-one-check-all-javascript/
 function checkAllFields(ref)
 {
 var chkAll = document.getElementById('checkAll');
-var checks = document.getElementsByName('mv[]');
-var boxLength = checks.length;
+// var checks = document.getElementsByName('mv[]');
+var visiblechecks = $('input[name="mv[]"]:visible');
+var invisiblechecked = $('input[name="mv[]"]').not(':visible');
+// var boxLength = checks.length;
+var visibleboxLength = visiblechecks.length;
+var invisibleboxLength = invisiblechecked.length;
 var allChecked = false;
-var totalChecked = 0;
-    if ( ref == 1 )  // Selecting all verses
+var totalChecked = 0; // Number of visible checkboxes checked.
+    if ( ref == 1 )  // Selecting all visible verses
     {
         if ( chkAll.checked == true )
         {
-            for ( i=0; i < boxLength; i++ )
-            checks[i].checked = true;
+            for ( i=0; i < visibleboxLength; i++ )
+            visiblechecks[i].checked = true;
         }
         else
         {
-            for ( i=0; i < boxLength; i++ )
-            checks[i].checked = false;
+            for ( i=0; i < visibleboxLength; i++ )
+            visiblechecks[i].checked = false;
         }
     }
     if (ref == 2)  // Selecting specific verses
     {
-        for ( i=0; i < boxLength; i++ )
+        for ( i=0; i < visibleboxLength; i++ )
         {
-            if ( checks[i].checked == true )
+            if ( visiblechecks[i].checked == true )
             {
             allChecked = true;
             continue;
@@ -42,13 +88,15 @@ var totalChecked = 0;
         else
         chkAll.checked = false;
     }
-    for ( j=0; j < boxLength; j++ )
+    for ( j=0; j < visibleboxLength; j++ )
     {
-        if ( checks[j].checked == true )
+        if ( visiblechecks[j].checked == true )
         totalChecked++;
     }
     if ( ref == 3 ) // Deleting Verses
     {
+        for ( k=0; k < invisibleboxLength; k++ )
+        invisiblechecked[k].checked = false; // This unchecks invisible boxes before any deletion (or even deletion cancelation) occurs.
         if ( totalChecked == 1 ) {
         var agree=confirm("Are you sure you want to delete the selected verse?");
          if (agree) {
@@ -63,8 +111,8 @@ var totalChecked = 0;
         alert("You should first select the verses using the check boxes on the left.");
         return false;
         }
-        else if ( totalChecked == boxLength ) {
-        var agree=confirm("Are you sure you want to delete all "+totalChecked+" of your verses?");
+        else if ( totalChecked == visibleboxLength ) {
+        var agree=confirm("Are you sure you want to delete all "+totalChecked+" of the verses shown on this page?");
          if (agree) {
           document.manage_verses.action = '/memverses/delete_verses';
           return true;
@@ -72,7 +120,7 @@ var totalChecked = 0;
          else
           return false;
         }
-        else {
+        else { // User is deleting 1 - all of their verses. Need to alert them if some of these are invisible. This is not necessary in other cases.
         var agree=confirm("Are you sure you want to delete the "+totalChecked+" selected verses?");
          if (agree) {
           document.manage_verses.action = '/memverses/delete_verses';
@@ -84,6 +132,8 @@ var totalChecked = 0;
     }
     if ( ref == 4 ) // Showing Verses
     {
+        for ( k=0; k < invisibleboxLength; k++ )
+        invisiblechecked[k].checked = false; // This unchecks invisible boxes.
         if ( totalChecked == 0 ) {
         alert("You should first select the verses using the check boxes on the left.");
         return false;
