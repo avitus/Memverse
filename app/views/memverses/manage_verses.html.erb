@@ -23,7 +23,7 @@
       </thead>
       <tbody>
 	<% for mv in @my_verses %>
-	<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
+	<tr valign="top">
 	<td align="center"><input class="boxes" id="mv_" name="mv[]" onclick="checkAllFields(2);" type="checkbox" value="<%= mv.id %>" /></td>
 	<td align="left">  <%= link_to mv.verse.ref, {:action => 'show', :id => mv.id } %></td>		 
 	<td align="center"><%= mv.verse.translation		%></td>		
