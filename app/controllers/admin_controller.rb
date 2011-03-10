@@ -768,8 +768,8 @@ class AdminController < ApplicationController
   # ---------------------------------------------------------------------------------------------------------- 
   def update_church_users_counter 
     Church.reset_column_information  
-    Church.all.each do |c|  
-      c.update_attribute :users_count, c.users.length  
+    Church.find_each do |c|  
+      Church.reset_counters( c.id, :users ) 
     end
     redirect_to :action => 'show_churches'
   end
@@ -780,8 +780,8 @@ class AdminController < ApplicationController
   # ---------------------------------------------------------------------------------------------------------- 
   def update_country_users_counter 
     Country.reset_column_information  
-    Country.all.each do |c|  
-      c.update_attribute :users_count, c.users.length  
+    Country.find_each do |c|  
+      Country.reset_counters( c.id, :users )
     end
     redirect_to :action => 'show_countries'
   end
@@ -791,7 +791,7 @@ class AdminController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------   
   def update_country_user_count
     c = Country.find(params[:id])
-    c.update_attribute :users_count, c.users.length
+    Country.reset_counters( c.id, :users )
     redirect_to :action => 'show_countries'
   end  
   
@@ -800,7 +800,7 @@ class AdminController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------   
   def update_state_user_count
     c = AmericanState.find(params[:id])
-    c.update_attribute :users_count, c.users.length
+    AmericanState.reset_counters( c.id, :users )
     redirect_to :action => 'show_states'
   end   
   
@@ -809,7 +809,7 @@ class AdminController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------   
   def update_church_user_count
     c = Church.find(params[:id])
-    c.update_attribute :users_count, c.users.length
+    Church.reset_counters( c.id, :users )
     redirect_to :action => 'show_churches'
   end    
   
