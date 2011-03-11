@@ -17,6 +17,23 @@ $(document).ready(function() {
 	$('#vsfilter').slideToggle(400);
         return false;
         });
+// Thanks to Sam Dunn: http://buildinternet.com/2009/01/changing-form-input-styles-on-focus-with-jquery/
+     $('input[name="filter"]').addClass("idleField");  
+     $('input[name="filter"]').focus(function() {  
+         $(this).removeClass("idleField").addClass("focusField");  
+         if (this.value == this.defaultValue){  
+             this.value = '';  
+         }  
+         if(this.value != this.defaultValue){  
+             this.select();  
+         }  
+     });  
+     $('input[name="filter"]').blur(function() {  
+         $(this).removeClass("focusField").addClass("idleField");  
+         if ($.trim(this.value == '')){  
+             this.value = (this.defaultValue ? this.defaultValue : '');  
+         }  
+     });  
 	
 	$('#filter').keyup(function(event) {
 		//if esc is pressed or nothing is entered

@@ -1217,9 +1217,8 @@ div.video {
 
 /* === Verse Filtering === */
 #vsfilter {
-  -webkit-border-radius: 10px;
-  background-color: white;
   padding: 10px;
+  font:bold 12px "Lucida Grande", Arial, sans-serif;
   position: fixed;
   right: 40px;
   top: 210px;
@@ -1232,6 +1231,18 @@ div.video {
   right: -10px;
   top: 210px;
   display: none;
+  cursor: pointer;
+}
+
+.focusField{  
+    border:solid 2px #73A6FF;  
+    background:#EFF5FF;  
+    color:#000;  
+}
+.idleField{  
+    background:#EEE;  
+    color: #6F6F6F;  
+    border: solid 2px #DFDFDF;  
 }
 
 /* === Login Page === */

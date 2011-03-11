@@ -225,8 +225,10 @@ div#errorExplanation ul li {font-size: 12px; list-style: square}
 #getting_started {float: left; width: 800px; height: 420px}
 .start-page-actions ol li {font-size: 120%; list-style-type: decimal}
 #volunteer a:link {text-decoration: underline}
-#vsfilter {-webkit-border-radius: 10px; background-color: white; padding: 10px; position: fixed; right:40px; top:210px; display: none;}
-#searchico {position:fixed; right:-10px; top:210px; display:none;}
+#vsfilter {padding:10px; font:bold 12px "Lucida Grande", Arial, sans-serif; position: fixed; right:40px; top:210px; display: none;}
+#searchico {position:fixed; right:-10px; top:210px; display:none; cursor:pointer;}
+.focusField {border:solid 2px #73A6FF; background:#EFF5FF; color:#000;}  
+.idleField {background:#EEE; color:#6F6F6F; border: solid 2px #DFDFDF;} 
  .entry-form {width: 360px}
 .entry-form fieldset {background-color: #BAB18E;  }
 .entry-form legend {background: #687284;  color: #1F2229;  padding: 0.2em 1em}

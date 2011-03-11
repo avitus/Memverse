@@ -1,6 +1,6 @@
 <% page_title I18n.t :my_memory_verses, :scope => 'page_titles' %>
 <% page_banner I18n.t :my_memory_verses, :scope => 'page_titles' %>
-<div id="searchico"><img src="/images/search.png" /></div><div id="vsfilter"><label for="filter">Filter</label> <input type="text" name="filter" value="" id="filter" /></div>
+<div id="searchico"><img src="/images/search.png" /></div><div id="vsfilter"><input type="text" name="filter" id="filter" value="Filter verses" style="width:100px;" /></div>
 <div class="verse-list">
 <%= form_tag( {:action => 'show'}, :method => :post, :name => "manage_verses" ) do %>
   <table class="memverse-standard">
