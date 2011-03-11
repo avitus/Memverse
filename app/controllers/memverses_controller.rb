@@ -1343,8 +1343,9 @@ class MemversesController < ApplicationController
         @show_feedback    = (mv.test_interval < 60 or current_user.show_echo)
       else
         # There are no more verses to be tested today
-        @verse            = "No more verses for today"
-        mv                = nil # clear out the loaded memory verse
+        flash[:notice] = "You have been through all your memory verses for today."
+        mv             = nil # clear out the loaded memory verse
+        redirect_to home_path
       end
        
     end
