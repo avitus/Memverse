@@ -1222,7 +1222,15 @@ div.video {
   padding: 10px;
   position: fixed;
   right: 40px;
-  top: 100px;
+  top: 210px;
+  display: none;
+}
+
+/* === Search Icon === */
+#searchico {
+  position: fixed;
+  right: -10px;
+  top: 210px;
   display: none;
 }
 

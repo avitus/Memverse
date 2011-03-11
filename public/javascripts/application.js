@@ -11,7 +11,12 @@ $(document).ready(function() {
 	//overrides CSS display:none property
 	//so only users w/ JS will see the
 	//filter box
-	$('#vsfilter').show();
+	$('#searchico').show();
+	$('#vsfilter').hide();
+	$('#searchico').click(function() {
+	$('#vsfilter').slideToggle(400);
+        return false;
+        });
 	
 	$('#filter').keyup(function(event) {
 		//if esc is pressed or nothing is entered
