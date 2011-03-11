@@ -22,6 +22,7 @@ TRANSLATIONS = {
     :AMP => "Amplified Bible",
     :IRV => "New International Reader's Version",
     :UKJ => "Updated King James Version",
+    :GEN => "Geneva Bible",
     :GRK => "Biblical Greek",
     :NVI => "Nueva Version Internacional",
     :RVR => "Reina-Valera 1960",
