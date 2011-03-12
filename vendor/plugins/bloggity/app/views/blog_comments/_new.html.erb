@@ -6,5 +6,5 @@
 <% form_for(:blog_comment, BlogComment.new, :url => { :controller => 'blog_comments', :action => :create } ) do |f| %>
 	<%= f.hidden_field :blog_post_id, :value => blog_post.id %>
 	<%= f.text_area :comment, :cols => 100, :rows => 10 %><br /><br />
-	<%= f.submit "Submit comment", :class => 'button26', :onclick => "this.disabled=true" %>
+	<%= f.submit "Submit comment", :class => 'button26', :onsubmit => "document.getElementById('blog_comment_submit').disabled = true;" %>
 <% end %>
