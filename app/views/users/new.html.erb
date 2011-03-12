@@ -1,5 +1,4 @@
 <script src="http://cdn.jquerytools.org/1.0.2/jquery.tools.min.js"></script>
-
 <% page_title  I18n.t :signup, :scope => 'page_titles' %>
 <% page_banner I18n.t :signup, :scope => 'page_titles' %>
 
@@ -39,35 +38,12 @@
 		<br>
 		
 		<div class="buttons">
-			<%= submit_tag 'Sign up' %>
+			<%= submit_tag 'Sign up', :class => "no-dbl-click"  %>
+			<img class="spinner" id="ajax_spinner" src="/images/indicator2.gif" alt="Submitting ..." style="display: none" />
 		</div>			
-
-<!-- Be sure to enable on login page 		
-		<br>
-		
-		<fieldset>
-			<legend>Signup with OpenID</legend>
-			<ol>
-				<li>
-					<label for="openid_url">OpenID URL</label>
-					<%= text_field_tag :openid_url, params[:openid_url] || params['openid.identity'] %>
-					<span id="open-id-link"><%= link_to( '[What is OpenID?]', 'http://openid.net') %></span>
-				</li> 
-			</ol>
-		</fieldset>
-
-		
-		<br>
-		
-		<div class="buttons">
-			<%= submit_tag 'Sign up' %>
-		</div>	
-		
--->
-			
+					
 	<% end %>
 </div>
-
 
 <script type="text/javascript">
 	// select all desired input fields and attach tooltips to them 
@@ -87,4 +63,13 @@
 	});
 </script>
 
+<!-- Prevent double-clicking on sign-up submit button -->
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('.no-dbl-click').click( function() {
+			$(this).attr('disabled', 'disabled').hide();
+			$('.spinner').show();
+		});
+	});
+</script>
 
