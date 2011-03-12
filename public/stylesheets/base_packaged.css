@@ -225,8 +225,9 @@ div#errorExplanation ul li {font-size: 12px; list-style: square}
 #getting_started {float: left; width: 800px; height: 420px}
 .start-page-actions ol li {font-size: 120%; list-style-type: decimal}
 #volunteer a:link {text-decoration: underline}
-#vsfilter {padding:10px; font:bold 12px "Lucida Grande", Arial, sans-serif; position: fixed; right:40px; top:210px; display: none;}
-#searchico {position:fixed; right:-10px; top:210px; display:none; cursor:pointer;}
+#scontainer {position:fixed; right:-10px; height:150px; top:25%;}
+#vsfilter {padding:10px; font:bold 12px "Lucida Grande", Arial, sans-serif; position: absolute; right:50px; top:100px; display: none;}
+#searchico {position:absolute; right:0px; top:100px; display:none; cursor:pointer;}
 .focusField {border:solid 2px #73A6FF; background:#EFF5FF; color:#000;}  
 .idleField {background:#EEE; color:#6F6F6F; border: solid 2px #DFDFDF;} 
  .entry-form {width: 360px}
