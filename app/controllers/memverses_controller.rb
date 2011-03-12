@@ -103,7 +103,7 @@
 
 class MemversesController < ApplicationController
   
-  before_filter :login_required
+  before_filter :login_required, :except => :memverse_counter
   
   # Added 4/7/10 to prevent invalid authenticity token errors
   # http://ryandaigle.com/articles/2007/9/24/what-s-new-in-edge-rails-better-cross-site-request-forging-prevention

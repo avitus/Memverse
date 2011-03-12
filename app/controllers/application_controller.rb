@@ -414,13 +414,15 @@ class ApplicationController < ActionController::Base
   # Check for mobile devices
   # ----------------------------------------------------------------------------------------------------------      
   def mobile_device?  
-    if session[:mobile_param]  
-      session[:mobile_param] == "1"  
-    else  
-      request.user_agent =~ /Mobile|webOS/  
-      end  
-    end  
-    helper_method :mobile_device?  
+  	
+  	return false # TODO: not supporting mobile devices for now ... uncomment below and remove this line to add support
+    # if session[:mobile_param]  
+    #   session[:mobile_param] == "1"  
+    # else  
+    #   request.user_agent =~ /Mobile|webOS/  
+    # end  
+  end  
+  helper_method :mobile_device?  
       
   def prepare_for_mobile  
     session[:mobile_param] = params[:mobile] if params[:mobile]  
