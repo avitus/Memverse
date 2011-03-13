@@ -276,14 +276,15 @@
     Volunteer:             "Volunteer"
   leader_menu:
     Leaderboard:           "Leaderboard"
-    Church Leaderboard:    "Church Leaderboard"    
+    Church Leaderboard:    "Church Leaderboard"
     State Leaderboard:     "State Leaderboard"
     Country Leaderboard:   "Country Leaderboard"
     One Church:            "One Church"
     Referralboard:         "Referralboard"
   blog_menu:
     View Blog:             "View Blog"
-    Recent Comments:       "Recent Comments"                     
+    Recent Comments:       "Recent Comments"
+    Blog Search:           "Blog Search"
   memverses:
     index:
       memverse_today:  "Memverse Today"
