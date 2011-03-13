@@ -283,7 +283,8 @@
     Referralboard:         "Juara Pengundang"
   blog_menu:
     View Blog:             "Lihat Blog"
-    Recent Comments:       "Komentar Akhir"                     
+    Recent Comments:       "Komentar Akhir"
+    Blog Search:           "Blog Search"                     
   memverses:
     index:
       memverse_today:  "Memverse Hari Ini"

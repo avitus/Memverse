@@ -2,26 +2,27 @@ source 'http://rubygems.org'
 
 gem 'rails', '>=3.0.3'
 gem 'mysql2'
-# gem 'rubyist-aasm', '2.2.0', :require => 'aasm'		# :source => 'http://gems.github.com',   
-gem 'aasm', '2.2.0', 		:require => 'aasm'			# :source => 'http://gems.github.com',   
-gem 'will_paginate', '>=3.0.pre'						# :source => 'http://gemcutter.org', will_paginate is required for bloggity
+# gem 'rubyist-aasm', '2.2.0', :require => 'aasm'				# :source => 'http://gems.github.com',   
+gem 'aasm', '2.2.0', 		:require => 'aasm'					# :source => 'http://gems.github.com',   
+gem 'will_paginate', '>=3.0.pre'								# :source => 'http://gemcutter.org', will_paginate is required for bloggity
 gem 'prawn', :git => "git://github.com/sandal/prawn", :tag => '0.10.2', :submodules => true
-gem 'acts-as-taggable-on'							# :source => "http://gemcutter.org", Taggable gem, 
-gem 'hoptoad_notifier'								# Error tracking
-gem 'paperclip'										# :source => 'http://rubygems.org', Attachment handling 
-gem 'capistrano'									# Deploy with Capistrano
+gem 'acts-as-taggable-on'										# :source => "http://gemcutter.org", Taggable gem, 
+gem 'hoptoad_notifier'											# Error tracking
+gem 'paperclip'													# :source => 'http://rubygems.org', Attachment handling 
+gem 'capistrano'												# Deploy with Capistrano
 gem 'ruby-openid'
-gem 'ziya', '>=2.3.0'								# Required for flash charts
-gem 'color'											# Required for Ziya
-gem 'logging'										# Required for Ziya
-gem 'builder'										# Required for Ziya
-gem 'mysql2'										# This be the db
-gem 'nokogiri'										# HTML/XML parsing
-gem 'test-unit', '=1.2.3'         					# Required for restful_authentication (?)
-gem 'json'                        					# Javascript Object Notation support
-gem 'jquery-rails', '>= 0.2.6'	  					# Unobtrusive scripting adapter for jQuery
-gem 'mail', '>= 2.2.15'								# Emails
-gem 'newrelic_rpm'									# Performance monitoring
+gem 'ziya', '>=2.3.0'											# Required for flash charts
+gem 'color'														# Required for Ziya
+gem 'logging'													# Required for Ziya
+gem 'builder'													# Required for Ziya
+gem 'mysql2'													# This be the db
+gem 'nokogiri'													# HTML/XML parsing
+gem 'test-unit', '=1.2.3'         								# Required for restful_authentication (?)
+gem 'json'                        								# Javascript Object Notation support
+gem 'jquery-rails', '>= 0.2.6'	  								# Unobtrusive scripting adapter for jQuery
+gem 'mail', '>= 2.2.15'											# Emails
+gem 'newrelic_rpm'												# Performance monitoring
+gem 'thinking-sphinx', '>=2.0.0', :require => 'thinking_sphinx'	# Connector to Sphinx - for global search
 
 
 # Use this for now (instead of the plugin ... check to see whether master branch ever supports Rails 3)

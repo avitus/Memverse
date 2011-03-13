@@ -93,6 +93,12 @@ namespace :deploy do
     run "touch #{current_path}/tmp/restart.txt"
   end   
   
+  desc "Start Sphinx daemon" 
+  task :after_deploy, :roles => :app do
+    run "#{current_path}/rake thinking_sphinx:start"
+  end
+  
+  
 end
 
 ##############################################################

@@ -144,6 +144,27 @@ class BlogPostsController < ApplicationController
 		@pending_posts = BlogPost.paginate(:all, :conditions => ["blog_id = ? AND is_complete = ?", @blog_id, false], :order => "blog_posts.created_at DESC", :page => blog_page, :per_page => 15)
 		@recent_posts = recent_posts(blog_page)
 	end
+	
+	
+  # ----------------------------------------------------------------------------------------------------------
+  # Blog Search
+  # ----------------------------------------------------------------------------------------------------------  	
+	def blog_search_results
+
+	    search_param = params[:search_param]
+	    
+	    logger.debug("Searching for ... #{search_param.inspect}")
+	
+		@blog_search_results = BlogPost.search(search_param)     
+	    
+	    logger.debug("Results: #{@blog_search_results.inspect}")
+	    
+	    render :partial => 'blog_search_results', :layout=>false 
+	end
+	
+	def blog_search
+		@blog_search_results = Array.new
+	end
 
 	# --------------------------------------------------------------------------------------
 	# --------------------------------------------------------------------------------------

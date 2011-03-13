@@ -282,7 +282,8 @@
     Referralboard:         "Referencias"    
   blog_menu:
     View Blog:             "Ver blog"
-    Recent Comments:       "Comentarios recientes"                  
+    Recent Comments:       "Comentarios recientes"
+    Blog Search:           "Blog Search"                                         
   memverses:      
     index:
       memverse_today:  "Memverso Hoy"
