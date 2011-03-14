@@ -71,14 +71,6 @@
 		<%= render :partial=>'popular_verses' %>			
 </div>
 
-<!-->
-<%= observe_field :verse,
-	:frequency	=> 0.5,
-	:update		=> 'foundVerse',
-	:url		=> {:action => 'avail_translations', :only_path => false},
-	:with		=> "'verse='+encodeURIComponent(value)"
-%> -->
-
 
 <!-- http://www.webdesignerwall.com/tutorials/jquery-tutorials-for-designers/ -->
 <!-- Verse will enter from the 'show' coordinate and will depart to the "hide" coordinate --> 

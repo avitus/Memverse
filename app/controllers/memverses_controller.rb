@@ -103,7 +103,7 @@
 
 class MemversesController < ApplicationController
   
-  before_filter :login_required
+  before_filter :login_required, :except => :memverse_counter
   
   # Added 4/7/10 to prevent invalid authenticity token errors
   # http://ryandaigle.com/articles/2007/9/24/what-s-new-in-edge-rails-better-cross-site-request-forging-prevention
@@ -1343,8 +1343,9 @@ class MemversesController < ApplicationController
         @show_feedback    = (mv.test_interval < 60 or current_user.show_echo)
       else
         # There are no more verses to be tested today
-        @verse            = "No more verses for today"
-        mv                = nil # clear out the loaded memory verse
+        flash[:notice] = "You have been through all your memory verses for today."
+        mv             = nil # clear out the loaded memory verse
+        redirect_to home_path
       end
        
     end
