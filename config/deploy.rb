@@ -95,9 +95,9 @@ namespace :deploy do
   
   desc "Start Sphinx daemon" 
   task :after_deploy, :roles => :app do
-    run "#{current_path}/rake thinking_sphinx:start"
+    run "cd #{deploy_to}/#{current_dir} && " +
+      "rake RAILS_ENV=#{rails_env} thinking_sphinx:start"         
   end
-  
   
 end
 
