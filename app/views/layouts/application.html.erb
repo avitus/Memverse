@@ -258,9 +258,11 @@
 	  var feedback_widget = new GSFN.feedback_widget(feedback_widget_options);
 	</script>	<!-- End: Get Satisfaction Script  -->	
 		
-	<script type="text/javascript">
+	<% if logged_in? and current_user.show_toolbar %>
+        <script type="text/javascript">
 			Meebo("domReady");
 	</script>
+	<% end %>
 
 	<!-- Prevent double-clicking links in the flash -->
 	<script type="text/javascript">
