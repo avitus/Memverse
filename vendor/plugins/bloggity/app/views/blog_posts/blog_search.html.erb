@@ -24,7 +24,7 @@
 			$.get("/blog_posts/blog_search_results", { search_param: this.value },
 				function(data){	
 					$("#search_results").html(data);
-			});
+			}, "html");
         });
     });
     
