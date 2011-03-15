@@ -1,0 +1,43 @@
+<div id="weekly-activity">
+	<table class="user-stats-table" cellpadding="6" cellspacing="0" border="1">	
+		<th colspan="2">Weekly Activity</th>
+		<tr>
+			<td>New Verses</td>
+			<td><%= @new_verses_this_week %></td>
+		</tr>
+		<tr>
+			<td>New Memory Verses</td>
+			<td><%= @new_mvs_this_week %></td>
+		</tr>
+		<tr>
+			<td>New Users</td>
+			<td><%= @new_users_this_week %></td>
+		</tr>
+		<tr>
+			<td>Active Users</td>
+			<td><%= @active_users_this_week %></td>
+		</tr>				
+	</table>
+</div>
+
+<div id="daily-activity">
+	<table class="user-stats-table" cellpadding="6" cellspacing="0" border="1">	
+		<th colspan="2">Activity Today</th>
+		<tr>
+			<td>New Verses</td>
+			<td><%= @new_verses_today %></td>
+		</tr>
+		<tr>
+			<td>New Memory Verses</td>
+			<td><%= @new_mvs_today %></td>
+		</tr>
+		<tr>
+			<td>New Users</td>
+			<td><%= @new_users_today %></td>
+		</tr>
+		<tr>
+			<td>Active Users</td>
+			<td><%= @active_users_today %></td>
+		</tr>				
+	</table>
+</div>

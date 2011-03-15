@@ -1,0 +1,90 @@
+<% page_title I18n.t :my_memory_verses, :scope => 'page_titles' %>
+<% page_banner I18n.t :my_memory_verses, :scope => 'page_titles' %>
+<div id="scontainer"><div id="searchico"><img src="/images/search.png" /></div><div id="vsfilter"><input type="text" name="filter" id="filter" value="Filter verses" style="width:150px;height:20px;padding:4px;" /></div></div>
+<div class="verse-list">
+<%= form_tag( {:action => 'show'}, :method => :post, :name => "manage_verses" ) do %>
+  <table class="memverse-standard">
+    <thead>
+      <tr>		  	 
+	<th><input type="checkbox" onclick="checkAllFields(1);" id="checkAll" /></th>
+	<th><%= link_to 'Verse',			:action => 'manage_verses'									%></th>
+	<th>Version</th>
+	<th><%= link_to 'eFactor',		:action => 'manage_verses', :sort_order => 'efactor'		%></th>
+	<th><%= link_to 'Status', 		:action => 'manage_verses', :sort_order => 'status'		%></th>		  				  	  		  		  		  
+	<th><%= link_to 'Last Tested',	:action => 'manage_verses', :sort_order => 'last_tested'	%></th>	
+	<th><%= link_to 'Next Test',		:action => 'manage_verses', :sort_order => 'next_test'		%></th>
+	<th><%= link_to 'Interval', 		:action => 'manage_verses', :sort_order => 'test_interval'	%></th>
+	<th><%= link_to 'Attempts', 		:action => 'manage_verses', :sort_order => 'attempts'		%></th>
+	<th><%= link_to 'Ref Int', 		:action => 'manage_verses', :sort_order => 'ref_interval'	%></th>		  	  		  
+	<th><%= link_to 'Ref Test', 		:action => 'manage_verses', :sort_order => 'next_ref_test'	%></th>		  	  		  
+	<th>Tags</th>
+	<th>Verse Status</th>
+       </tr>
+      </thead>
+      <tbody>
+	<% for mv in @my_verses %>
+	<tr valign="top">
+	<td align="center"><input class="boxes" id="mv_" name="mv[]" onclick="checkAllFields(2);" type="checkbox" value="<%= mv.id %>" /></td>
+	<td align="left">  <%= link_to mv.verse.ref, {:action => 'show', :id => mv.id } %></td>		 
+	<td align="center"><%= mv.verse.translation		%></td>		
+	<td align="center"><%= mv.efactor				%></td>	
+	<td align="center"><%= mv.status				%></td>			
+	<td align="center"><%= mv.last_tested			%></td>
+	<td align="center"><%= mv.next_test				%></td>	
+	<td align="center"><%= mv.test_interval			%></td>	
+	<td align="center"><%= mv.attempts				%></td>
+	<td align="center"><%= mv.ref_interval			%></td>
+	<td align="center"><%= mv.next_ref_test			%></td>
+	<td align="left">  <%= mv.tag_list.to_s			%></td>
+	<td align="center" class="flag_verse" id=<%= mv.verse.id %>><%= 			
+				if mv.verified?
+					link_to mv.verse.error_flag ? "Error Reported" : "Verified", 
+									toggle_error_flag_path(mv.verse.id, :format	=> 'html'),
+									:update => mv.verse.id,
+									:confirm => mv.verse.error_flag ? "Cancel reported error?" : "You are reporting an error in this verse. Are you sure?",					
+									:remote	=> true
+				elsif !mv.locked?
+					link_to '[Editable]', edit_verse_path(mv)
+				else
+					'Pending Verification'
+				end
+			%></td>
+      </tr>
+     <% end %>
+    </tbody>
+  </table>
+	
+	<br>
+	
+	<div class="buttons">
+		<%= submit_tag t('.show_selected'), :onclick => "return checkAllFields(4);", :name => "Show" %> 
+		<%= select_tag :format, options_for_select([["Screen", "html"], ["Print", "pdf"]], "html") %>
+		<%= submit_tag t('.delete_selected'), :onclick => "return checkAllFields(3);", :name => "Delete" %>
+	</div>		
+		
+<% end %>
+
+</div>
+
+<br>
+
+<!-- Highlight verse to be verified -->
+<script>
+  $(document).ready(function(){    
+    $('.flag_verse')
+    
+    .click(function () { 
+      $(this).closest('tr').toggleClass("hilite"); 
+    })
+
+	.bind("ajax:beforeSend", function(evt, xhr, settings){
+
+	})
+	
+	.bind("ajax:success", function(evt, data, status, xhr){
+	  var $submitButton = $(this)
+	  $submitButton.html(data);
+	});
+          
+  });
+</script>

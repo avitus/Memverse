@@ -1,0 +1,10 @@
+<% if @user == current_user %>
+ <% page_title I18n.t :my_dashboard, :scope => 'page_titles' %>
+ <% page_banner I18n.t :my_dashboard, :scope => 'page_titles' %>
+<% else %>
+ <% page_title @user.name_or_login + "'s Profile" %>
+ <% page_banner @user.name_or_login + "'s Profile" %>
+<% end %>
+<%= render :partial => 'show_user' %>
+
+

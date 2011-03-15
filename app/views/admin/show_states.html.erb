@@ -1,0 +1,23 @@
+<div class="verse-list">
+
+	<table class="sortable" id="usertable" cellpadding="6" cellspacing="0">
+		
+		<tr>
+			<th align="left">State</th>
+			<th align="left">Rank</th>
+			<th align="center">Users</th>	
+		</tr>
+		
+		<% for st in @state_list %>
+		<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">	
+			<td> <%= st.name	%></td>				
+			<td align="center"> <%= st.rank %></td>												
+			<td align="center"> <%= st.users.length %></td>												
+			<td align="center"> <%= st.users_count %></td>												
+			<td align="center"> <%= link_to "Fix User Count", {:action => 'update_state_user_count', :id => st } %></td>
+		</tr>
+		<% end %>
+	
+	</table>
+
+</div>

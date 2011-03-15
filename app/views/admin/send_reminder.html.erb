@@ -1,0 +1,114 @@
+<h1>Check log for details. This process was run as a spawn.</h1>
+
+<h2>Sent <%= @emails_sent %> emails</h2>
+
+<h3>Reminders</h3>
+<div class="verse-list">
+
+	<table cellpadding="6" cellspacing="0">
+		<tr>
+			<td><b><%= link_to 'ID',			:action => 'show_users', :sort_order => 'id'%></b></td>				
+			<td><b><%= link_to 'Name',			:action => 'show_users', :sort_order => 'name'%></b></td>			
+			<td><b><%= link_to 'Login',			:action => 'show_users', :sort_order => 'login'%></b></td>		  	 
+			<td><b><%= link_to 'Email',			:action => 'show_users', :sort_order => 'email'%></b></td>					
+			<td><b><%= link_to 'Last Login',	:action => 'show_users', :sort_order => 'updated_at DESC'%></b></td>
+			<td><b><%= link_to 'Last Reminder',	:action => 'show_users', :sort_order => 'last_reminder DESC'%></b></td>			
+			<td><b><%= link_to 'Reminder Freq',	:action => 'show_users', :sort_order => 'reminder_freq'%></b></td>						
+			<td><b><%= link_to 'Memverses',		:action => 'show_users', :sort_order => 'num_verses'%></b></td>
+			<td><b><%= link_to 'Newsletter', 	:action => 'show_users', :sort_order => 'newsletters'%></b></td>		  				  	  		  		  		  
+		</tr>
+		<% for user in @email_list %>
+		<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
+			<td><%= user.id					%></td>	
+			<td><%= user.name				%></td>				
+			<td><%= link_to user.login, :controller => 'admin', :action => 'show_memory_verses', :id => user.id %></td>		 
+			<td><%= user.email				%></td>
+			<td><%= user.updated_at			%></td>	
+			<td><%= user.last_reminder		%></td>	
+			<td><%= user.reminder_freq		%></td>									
+			<td><%= user.memverses.length	%></td>
+			<td><%= user.newsletters		%></td>	
+			
+			<td><%= link_to 'Edit',   :action => 'edit_user', :id => user %></td>
+			<td><%= link_to 'X', { :action => 'destroy_user',  :id => user }, :confirm => 'Are you sure?', :method => :post %></td>					
+			
+		</tr>
+		<% end %>
+	
+	</table>
+
+</div>
+
+<h3>Encouragement to Start</h3>
+<div class="verse-list">
+
+	<table cellpadding="6" cellspacing="0">
+		<tr>
+			<td><b><%= link_to 'ID',			:action => 'show_users', :sort_order => 'id'%></b></td>				
+			<td><b><%= link_to 'Name',			:action => 'show_users', :sort_order => 'name'%></b></td>			
+			<td><b><%= link_to 'Login',			:action => 'show_users', :sort_order => 'login'%></b></td>		  	 
+			<td><b><%= link_to 'Email',			:action => 'show_users', :sort_order => 'email'%></b></td>					
+			<td><b><%= link_to 'Last Login',	:action => 'show_users', :sort_order => 'updated_at DESC'%></b></td>
+			<td><b><%= link_to 'Last Reminder',	:action => 'show_users', :sort_order => 'last_reminder DESC'%></b></td>			
+			<td><b><%= link_to 'Reminder Freq',	:action => 'show_users', :sort_order => 'reminder_freq'%></b></td>						
+			<td><b><%= link_to 'Memverses',		:action => 'show_users', :sort_order => 'num_verses'%></b></td>
+			<td><b><%= link_to 'Newsletter', 	:action => 'show_users', :sort_order => 'newsletters'%></b></td>		  				  	  		  		  		  
+		</tr>
+		<% for user in @encourage_list %>
+		<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
+			<td><%= user.id					%></td>	
+			<td><%= user.name				%></td>				
+			<td><%= link_to user.login, :controller => 'admin', :action => 'show_memory_verses', :id => user.id %></td>		 
+			<td><%= user.email				%></td>
+			<td><%= user.updated_at			%></td>	
+			<td><%= user.last_reminder		%></td>	
+			<td><%= user.reminder_freq		%></td>									
+			<td><%= user.memverses.length	%></td>
+			<td><%= user.newsletters		%></td>	
+			
+			<td><%= link_to 'Edit',   :action => 'edit_user', :id => user %></td>
+			<td><%= link_to 'X', { :action => 'destroy_user',  :id => user }, :confirm => 'Are you sure?', :method => :post %></td>					
+			
+		</tr>
+		<% end %>
+	
+	</table>
+
+</div>
+
+<h3>Re-activation</h3>
+<div class="verse-list">
+
+	<table cellpadding="6" cellspacing="0">
+		<tr>
+			<td><b><%= link_to 'ID',			:action => 'show_users', :sort_order => 'id'%></b></td>				
+			<td><b><%= link_to 'Name',			:action => 'show_users', :sort_order => 'name'%></b></td>			
+			<td><b><%= link_to 'Login',			:action => 'show_users', :sort_order => 'login'%></b></td>		  	 
+			<td><b><%= link_to 'Email',			:action => 'show_users', :sort_order => 'email'%></b></td>					
+			<td><b><%= link_to 'Last Login',	:action => 'show_users', :sort_order => 'updated_at DESC'%></b></td>
+			<td><b><%= link_to 'Last Reminder',	:action => 'show_users', :sort_order => 'last_reminder DESC'%></b></td>			
+			<td><b><%= link_to 'Reminder Freq',	:action => 'show_users', :sort_order => 'reminder_freq'%></b></td>						
+			<td><b><%= link_to 'Memverses',		:action => 'show_users', :sort_order => 'num_verses'%></b></td>
+			<td><b><%= link_to 'Newsletter', 	:action => 'show_users', :sort_order => 'newsletters'%></b></td>		  				  	  		  		  		  
+		</tr>
+		<% for user in @reactivation_list %>
+		<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
+			<td><%= user.id					%></td>	
+			<td><%= user.name				%></td>				
+			<td><%= link_to user.login, :controller => 'admin', :action => 'show_memory_verses', :id => user.id %></td>		 
+			<td><%= user.email				%></td>
+			<td><%= user.updated_at			%></td>	
+			<td><%= user.last_reminder		%></td>	
+			<td><%= user.reminder_freq		%></td>									
+			<td><%= user.memverses.length	%></td>
+			<td><%= user.newsletters		%></td>	
+			
+			<td><%= link_to 'Edit',   :action => 'edit_user', :id => user %></td>
+			<td><%= link_to 'X', { :action => 'destroy_user',  :id => user }, :confirm => 'Are you sure?', :method => :post %></td>					
+			
+		</tr>
+		<% end %>
+	
+	</table>
+
+</div>

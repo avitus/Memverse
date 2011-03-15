@@ -1,0 +1,149 @@
+<!--[form:verse]-->
+<% if @mv # If this statement is true, we are only displaying one verse and use below formatting %>
+<% page_title I18n.t :view_vs, :scope => 'page_titles' %>
+<% page_banner I18n.t :view_vs, :scope => 'page_titles' %>
+<div class='verse-text'>
+	<div id='verse-show'>
+		<h2><%= @verse.book %> <%= @verse.chapter %>:<%= @verse.versenum %> [<%=@verse.translation%>] </h2>
+		
+		<p class="verse-text" id="show-verse"> <%=@verse.text%> </p>	
+	</div>
+
+	<div id='nav'>
+		<span>
+			<% if @prev_mv %>
+				<%= link_to '<-- Prev Verse', {:action => 'show', :id => @prev_mv } %>		
+			<% end %>
+		</span>
+		<span>
+			|
+		</span>
+		<span>
+			<% if @next_mv %>
+				<%= link_to 'Next Verse -->', {:action => 'show', :id => @next_mv } %>
+			<% end %>
+		</span>
+	</div>	
+	
+</div>
+
+
+
+<div id='verse-tags' class='tag-list'>
+	<h2>Memverse Tags</h2>
+	
+	<table cellpadding="6" cellspacing="1">
+		<% for tag in @tags %>
+			<tr>
+				<td class="tag"><%= tag.name %></td>
+				<% if current_user.has_role?("admin") %>
+					<td>[x]</td>
+				<% end %>
+			</tr>	
+		<% end %>
+		
+		<% if current_user.has_role?("admin") %>
+			<tr>
+				<td class="tag edit_vs" id=<%= @verse.id %>>[New Tag]</td>
+			</tr>
+		<% end %>
+	</table>
+</div>
+
+<div id='user-tags' class='tag-list'>
+	<h2>Your Tags</h2>
+	
+	<table id="list-of-user-tags" cellpadding="6" cellspacing="1">
+		<% for tag in @user_tags %>
+			<tr>
+				<td class="tag"><%= link_to tag.name, {:controller => :verses, :action => :show_verses_with_tag, :tag => tag.name, :tl => @mv.verse.translation } %></td>
+				<% if current_user == @mv.user %>
+					<td><%= link_to '[x]', {:action => 'remove_verse_tag', :id => tag.id, :mv => @mv.id }, 
+										    :confirm => 'Are you sure you want to delete this tag?', 
+										    :method => :post %></td>
+				<% end %>
+			</tr>	
+		<% end %>
+		
+		<% if current_user == @mv.user %>
+			<tr>
+				<td class="tag edit_mv" id=<%= @mv.id %>>[New Tag]</td>
+			</tr>
+		<% end %>
+	</table>
+</div>
+
+<div id='other-tags' class='tag-list'>
+	<h2>User Tags</h2>
+	
+	<table cellpadding="6" cellspacing="1">
+		<% for tag in @other_tags %>
+			<tr>
+				<td class="tag"><%= link_to tag[0].name, {:controller => :verses, :action => :show_verses_with_tag, :tag => tag[0].name, :tl => @mv.verse.translation } %></td>
+				<td class="add-tag">[+]</td>
+			</tr>	
+		<% end %>
+	</table>
+</div>
+
+
+
+<!--[eoform:verse]-->
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('.add-tag').click(function() {
+			
+			TagToAdd = $(this).prev().text()
+			
+			// Add the tag
+			$.post("/memverses/add_verse_tag", { id: <%= @mv.id %>, value: TagToAdd } );
+			
+			// Insert tag at top of list of user tags						
+			$("#list-of-user-tags").find('tbody')
+			    .prepend($('<tr>')
+			        .append($("<td class='tag'>")
+			            .append($('<a>')
+			                .attr('href', '/verses/show_verses_with_tag?tag='+TagToAdd+'&tl=<%=@mv.verse.translation%>')
+			                .text(TagToAdd)
+			            )
+			        )			        
+			    );
+
+			
+		});
+	});
+</script>
+
+
+<!-- http://www.appelsiini.net/projects/jeditable -->
+<script type="text/javascript">
+	 $(document).ready(function() {   
+	     $('.edit_vs').editable('/verses/add_verse_tag', {
+	         indicator : 'Saving...',
+	         tooltip   : 'Click to edit...'
+	     });
+	     $('.edit_mv').editable('/memverses/add_verse_tag', {
+	         indicator : 'Saving...',
+	         tooltip   : 'Click to edit...'
+	     });		 
+	 });
+</script>
+
+<!-- Prevent double-clicking of links to add verses -->
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('.no-dbl-click').click( function() {
+			$(this).attr('disabled', 'disabled').hide();
+		});
+	});
+</script>
+<% elsif @mv_list # This means user requested specific verse(s) with checkboxes. Different formatting. %>
+<% page_title I18n.t :view_vs_s, :scope => 'page_titles' %>
+<% page_banner I18n.t :view_vs_s, :scope => 'page_titles' %>
+<% for mv in @mv_list %>
+<h2><b><%= link_to mv.verse.ref, {:action => 'show', :id => mv.id } %></b> [<%= mv.verse.translation %>]</h2>
+<p><%= mv.verse.text %></p>
+<hr />
+<% end %>
+<% end %>

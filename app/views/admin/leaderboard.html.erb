@@ -1,0 +1,34 @@
+<h2>Leaderboard</h2>
+
+<p>The following table shows the users with the most verses memorized. To appear on the leaderboard you must have completed a memorization
+   session in the past month.</p>
+
+<div class="user-list">
+	<table cellpadding="6" cellspacing="1" border="1">  	
+		<tr>
+			<th>Rank</th>
+			<th>Username</th>		  
+			<th>Name</th>	
+			<th>Memorized</th>
+			<th>Learning</th>
+			<th>Affiliation</th>
+			<th>Country</th>
+			<th>Last Active</th>
+		</tr>
+		
+		<% for user in @leaderboard %>
+			<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
+				<td align="center"> <%= @leaderboard.index(user)+1%></td>
+				<td align="left">   <%= user[0].login		%></td>	
+				<td align="left">   <%= user[0].name		%></td>
+				<td align="center"> <%= user[1]				%></td>	
+				<td align="center"> <%= user[0].learning 	%></td>
+				<td align="left"> 	<%= user[0].church ? user[0].church.name : "" %></td>
+				<td align="left"> 	<%= user[0].country ? user[0].country.printable_name : "" %></td>
+				<td align="left">   <%= user[0].last_activity_date	%></td>
+			</tr>
+		<% end %>
+	</table>
+</div>
+
+<p> </p>

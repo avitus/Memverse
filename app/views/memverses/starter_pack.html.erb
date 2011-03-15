@@ -1,0 +1,56 @@
+<% page_title I18n.t :quickstart, :scope => 'page_titles' %>
+<% page_banner I18n.t :quickstart, :scope => 'page_titles' %>
+<% page_description I18n.t :quickstart, :scope => 'page_descriptions' %>
+<div class="verse-list">
+
+	<table cellpadding="6" cellspacing="1" border="1">
+	  <tr>		  	 
+		  <th>Verse</th>
+		  <th>Text</th>	
+		  <th></th>	  	  		  
+	  </tr>
+	<% for mv in @suggestions %>
+	  <tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
+		<td align="left"><%= mv.pop_ref							%></td>		 
+	 	<td align="left"><%= mv.send(@translation + '_text') 	%></td>
+		<td align="center" class="starter_add" class="no-dbl-click">
+			<%= link_to_remote 'Start Memorizing', 	:url 	=> { :action => "quick_add", :vs => mv.send(@translation) }, 
+													:update => { :success => "Added", :failure => "Error"} %>
+		</td>
+	  </tr>
+	<% end %>
+
+	</table>
+</div>
+
+<div>
+	<p>
+		<%= link_to "I'm ready - start memorizing", test_verse_path, :class => "action-link" %>
+	</p>
+</div>
+
+<!-- Highlight verse to be added -->
+<script>
+  $(document).ready(function(){
+    
+    $('.starter_add').click(function () { 
+	  $(this).children().attr('disabled', 'disabled').hide();
+      $(this).closest('tr').fadeOut("slow"); 
+    });
+    $('.starter_add').hover(function () {
+      $(this).closest('tr').addClass("hilite");
+    }, function () {
+      $(this).closest('tr').removeClass("hilite");
+    });
+
+  });
+</script>
+
+<!-- Prevent double-clicking of links to add verses -->
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('.no-dbl-click').click( function() {
+			$(this)
+		});
+	});
+</script>

@@ -1,0 +1,21 @@
+<div class="verse-list">
+
+<h2>Verses tagged '<%= @tag.name %>' by Users</h2>
+
+	<table cellpadding="6" cellspacing="0">
+		<tr>
+			<th>Ver</th>
+			<th>Verse</th>
+			<th>Text</th>
+			<th>Status</th>
+		</tr>
+		<% for vs in @user_list %>
+		<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
+			<td><%= vs.translation		%></td>		 
+			<td><%= vs.ref				%></td>			
+			<td><%= vs.text				%></td>	
+			<td><%= current_user.has_verse?(vs.book, vs.chapter, vs.versenum)? "In Your List" : link_to("Add to List", :controller => 'memverses', :action => 'quick_add', :vs => vs) %></td>								
+		</tr>
+		<% end %>
+	</table>
+</div>

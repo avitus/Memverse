@@ -1,0 +1,17 @@
+development: &non_production_settings
+  site_url: http://localhost:3000
+  site_name: MemVerse Development
+  admin_email: admin@memverse.com
+  
+test:
+  <<: *non_production_settings
+
+staging:
+  site_url: http://staging.memverse.com
+  site_name: Memverse Staging
+  admin_email: admin@memverse.com  
+  
+production:
+  site_url: http://www.memverse.com
+  site_name: MemVerse
+  admin_email: admin@memverse.com

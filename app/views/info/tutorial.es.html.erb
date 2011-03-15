@@ -1,0 +1,76 @@
+<% page_title I18n.t :tutorial, :scope => 'page_titles' %>
+<% page_banner I18n.t :tutorial, :scope => 'page_titles' %>
+<% page_description I18n.t :tutorial, :scope => 'page_descriptions' %>
+<div class="max-width">
+	<h1>¿Cómo funciona</h1>
+	
+	<p>Memverse.com mantiene un registro de todos sus versos de memoria la Biblia. Es totalmente en línea para
+	no hay ningún software para descargar, no hay tarjetas flash de llevar, y, lo mejor de todo, usted
+	se incrementará gradualmente hasta una biblioteca de conocimientos bíblicos. También es libre, y siempre
+	será.</p>
+	
+	<p>Cuando inicia la sesión primera, se le dará la oportunidad de agregar versos de memoria. Nosotros
+	recomendamos empezar con cerca de 6 a 10 versos de memoria y luego, gradualmente, la adición de memoria los versículos
+	con el tiempo a medida que memorizar los que están en su repertorio.</p>
+	
+	<div style="width: 630px;">
+		<img src="/images/AddVerse.png" alt="Adding a Verse">
+	</div>
+
+	<p>Hay dos maneras de agregar versos. Como la captura de pantalla de arriba muestra, usted puede escribir
+	el verso a ti mismo (en la traducción de su elección), o puede seleccionar un verso de una lista de
+	de los versos de la memoria popular. Si alguien ya ha añadido un verso puede simplemente hacer clic en "Añadir" y
+	que se añadirá a la lista de los versos de memoria.</p>
+	
+	<h3>Memorización</h3>
+	
+	<p>versos Una vez que haya añadido, puede comenzar a memorizar. Algunas personas sesión cada día, otros
+	una vez a la semana. Depende de usted. Al inicio de sesión, Memverse le presentará en los versos que
+	que se deben revisar. El tiempo entre revisiones es calculado por el software de modo que
+	no es necesario hacer un seguimiento de este mismo.</p>
+	
+	<p>La página principal es la memorización donde pasará la mayor parte de su tiempo. El software
+	compara el verso que está entrando con el verso correcto. También hay un "flash card"
+	que se puede entregar si está completamente paralizado.</p>	
+	
+	<div style="width: 630px;">
+		<img src="/images/Memorize.png" alt="Memorization">
+	</div>	
+	
+	<p>Una vez que hayas entrado en el verso, que el grado mismo de lo bien que lo sabía. Esto determinará
+	¿Qué tan pronto se le dará la oportunidad de revisar el verso. Si recordamos el verso
+	(sin mover de un tirón en la tarjeta!), debe seleccionar las opciones de 3 a 5. Si tiene problemas para
+	recordar el verso, pero que finalmente conseguirlo correcta, seleccione la opción 3. Si recordamos el verso
+	instantáneamente y sin vacilar, seleccione la opción 5</p>	
+
+	<p> Si usted no recuerda el verso o no podía recordar el texto asociado con la referencia,
+	seleccione la opción 1 o 2. Esto le permitirá practicar el verso de nuevo la próxima vez que te registres.</p>	
+
+	<h3>Seguimiento a su progreso</h3>
+	
+	<p>Por último, el programa seguirá la pista de la memoria todos los versos y le mostrará cómo
+	que están progresando. Se recomienda agregar nuevos versos en el momento oportuno. Ya que
+	que se familiarice más con un versículo de la Biblia determinado, se presentará a usted con menos frecuencia.</p>
+	
+	<div style="width: 630px;">
+		<img src="/images/stats.png" alt="Memorization">
+	</div>		
+	
+	<p>de memoria versos que abarcan varios versos se agrupan automáticamente en un solo versículo de memoria.
+	De esta manera, usted puede memorizar la totalidad de los romanos</p>	
+	
+	<div style="width: 630px;">
+		<img src="/images/verselist-es.gif" height="250" width="750" alt="Memorización">
+	</div>			
+
+	<% if !logged_in? %>	
+		<div>
+			<ol>
+				<li><%= link_to 'Regístrate y empieza a memorizar Hoy	-->', signup_path, 	 :class => "action-link"%></li>
+				<li><%= link_to 'Probar el Demo  -->', demo_path,  :class => "action-link"%></li>	
+				<li><%= link_to 'Top 100 de memoria los versículos  -->', popular_path,  :class => "action-link"%></li>
+				<li><%= link_to 'El Memverso Blog  -->', blog_path,  :class => "action-link"%></li>				
+			</ol>	
+		</div>
+	<% end %>
+</div>

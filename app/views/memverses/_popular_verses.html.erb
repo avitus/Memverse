@@ -1,0 +1,26 @@
+<fieldset id="popular-verses" class="entry-form">
+	<legend>Most Popular Verses</legend>
+		<table class="menu" cellpadding="4" cellspacing="0">
+			<% for vs in @popular_verses %>
+				<tr>
+					<td><%= vs[0] %></td>
+					<% for tl in vs[1] %>
+
+						<td class="no-dbl-click">
+							<%= link_to tl[0], :action => 'quick_add', :vs => tl[1] %>
+							<em><%=tl[2]%></em>
+						</td>													
+
+					<% end %>				 		
+				</tr>
+			<% end %>						
+		</table>
+</fieldset>		
+
+
+
+
+
+
+	
+	

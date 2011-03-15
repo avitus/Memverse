@@ -1,0 +1,17 @@
+<table cellpadding="4" cellspacing="0">
+	<% if @avail_translations and !@avail_translations.empty? %>
+		<% for vs in @avail_translations %>
+			<tr>
+				<td><%= vs.translation %></td>
+				<td class="no-dbl-click"><%= link_to '[Add Verse]', :action => 'quick_add', :vs => vs %></td>
+				<% if @avail_chapters.include?(vs.translation)%>
+					<td><%= link_to '[Add Chapter]', :action => 'quick_add_chapter', :vs => vs %></td>
+				<% end %>	 		
+			</tr>
+		<% end %>	
+	<% else %>
+			<tr>
+				<td>None found</td>		 		
+			</tr>			
+	<% end %>	
+</table>

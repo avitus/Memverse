@@ -1,0 +1,6 @@
+<h1><%= @church.rank %>. <%= @church.name %></h1>
+
+<table class="memverse-standard">
+	<%= render :partial => "users/user_headings" %>
+	<%= render :partial => "users/user", :collection => @users %>
+</table>

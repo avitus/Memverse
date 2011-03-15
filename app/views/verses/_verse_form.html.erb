@@ -1,0 +1,9 @@
+<%= error_messages_for 'verse' %>
+
+<!--[form:verse]-->
+
+<h2><%= @verse.book %> <%= @verse.chapter %>:<%= @verse.versenum %> [<%=@verse.translation%>] </h2>
+
+<p class="verse-text" id="show-verse"> <%=@verse.text%> </p>
+
+<!--[eoform:verse]-->

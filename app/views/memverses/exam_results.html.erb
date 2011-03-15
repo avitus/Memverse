@@ -1,0 +1,30 @@
+<% page_title I18n.t :accuracy_results, :scope => 'page_titles' %>
+<% page_banner I18n.t :accuracy_results, :scope => 'page_titles' %>
+<div>
+	<h2>You scored <%=@correct%> out of <%=@answered%></h2>
+</div>
+
+<h4>Your new accuracy score is <%=@new_accuracy%>%. Your previous accuracy score was <%=@old_accuracy%>%</h4>
+
+<% if !@perfect_score %>
+	<p>These are the memory verses you got wrong:</p>
+	
+	<div>
+		<table cellpadding="6" cellspacing="1" border="1">
+			<tr>		  	 
+				<th>Reference</td>	
+				<th>Memory Verse</td>
+				<th>Interval</td>
+			</tr>
+	
+			<% for mistake in @incorrect %>
+				<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
+					<td>				<%= session[:exam_questions][mistake][0]%></td>
+					<td>				<%= session[:exam_answers][mistake] %></td>
+					<td align="center">	<%= Memverse.find( session[:exam_id][mistake] ).test_interval %>			
+				</tr>
+			<% end %>
+		</table>
+	</div>
+<% end %>
+

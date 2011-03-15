@@ -1,0 +1,28 @@
+<div class="verse-list">
+	<% if @user_list %>
+		<% if @user_list.empty? %>
+			<p>Sorry. We can't find any user with that email address or login name.</p>
+		<% else %>
+			<table cellpadding="6" cellspacing="2">
+				<tr>
+					<th>Login</th>
+					<th>Name</th>
+					<th>Church</th>
+					<th>Country</th>
+					<th>State</th>
+				</tr>
+					<% for u in @user_list %>
+						<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
+							<td><%= u.login %></td>				
+							<td><%= u.name ? u.name : ""						%></td>		 
+							<td><%= u.church ? u.church.name : ""				%></td>			
+							<td><%= u.country ? u.country.printable_name : ""	%></td>
+							<td><%= u.american_state ? u.american_state.name : ""	%></td>
+											
+							<td><%= link_to 'Select',   :action => 'set_as_referrer', :id => u %></td>							
+						</tr>
+					<% end %>
+			</table>
+		<% end %>
+	<% end %>
+</div>

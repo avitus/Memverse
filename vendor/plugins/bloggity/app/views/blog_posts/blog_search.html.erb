@@ -1,0 +1,38 @@
+<h1>Search the Blog</h1>
+
+<div class="details-form">
+        
+      <% form_tag( {}, { :id => 'advanced_search' } ) do %>
+        <p>
+        Search:     <%= text_field_tag( :search_param,  params[:search_param],  :size =>  40 )%>
+        <img class="spinner" id="ajax_spinner" src="/images/indicator.gif" alt="Searching ..." style="display: none" /> 
+        </p>
+                      
+      <% end %>
+
+</div>  
+
+<br>
+
+<div id="search_results">
+  <%= render :partial=>'blog_search_results' %>
+</div>
+
+<script language="JavaScript" type="text/javascript"><!--		
+	$(document).ready(function() {
+		$("#search_param").observe_field(0.5, function( ) { 
+			$.get("/blog_posts/blog_search_results", { search_param: this.value },
+				function(data){	
+					$("#search_results").html(data);
+			}, "html");
+        });
+    });
+    
+	$('.spinner')
+		.ajaxStart(function() {
+	        $(this).show();
+	    })
+		.ajaxStop(function() {
+	        $(this).hide();
+    });     
+--></script>

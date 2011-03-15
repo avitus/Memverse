@@ -1,0 +1,261 @@
+<%= chart :stacked_column %>
+
+  <%=comp :axis_value %>
+    shadow:        low
+    steps:           8
+    size:           14
+    alpha:          50
+    decimals:        0
+    color:      000000
+    show_min:     true
+    tooltips:     none
+
+  <%=comp :chart_pref %>
+    point_shape:     none
+    line_thickness:    2
+
+
+  <%=comp :axis_category %>
+    shadow:  low
+    size:    12
+    skip:    <%=options[:skip]%>    
+
+  <%=comp :chart_border %>
+    top_thickness:          0
+    bottom_thickness:       3
+    left_thickness:         0
+    color:             000000
+    right_thickness:        0
+
+  <%=comp :chart_grid_h %>
+    alpha:          20
+    thickness:       1
+    type:        solid
+    color:      000000
+
+
+  <%=comp :chart_label %>
+    background_color:  aaff00
+    size:                  12
+    alpha:                 75
+    color:             111122
+    position:          cursor
+
+  <%=comp :chart_rect %>
+    shadow:              bg
+    x:                  125
+    positive_alpha:      90
+    y:                   65
+    height:             400
+    positive_color:  eeeeff
+    negative_color:  ff4400
+    negative_alpha:      75
+    width:              900
+
+  <%=comp :chart_transition %>
+    delay:          0
+    order:     series
+    type:        none
+    duration:     0.6
+
+  <%=comp :chart_type %>
+
+  <%=comp :draw %>
+    components:
+      - <%= drawing :text %>
+          shadow:         title
+          alpha:             25
+          rotation:         -90
+          size:              64
+          x:                  0
+          delay:            0.6
+          y:                430
+          color:         000033
+          height:            65
+          h_align:        right
+          duration:         0.5
+          transition:      none
+          width:            430
+          v_align:       middle
+          text:     '  PROGRESS'
+
+      - <%= drawing :text %>
+          alpha:             75
+          rotation:           0
+          size:              15
+          x:                665
+          delay:              0.6
+          y:                430
+          color:         CC9944
+          height:            65
+          h_align:        right
+          duration:         1.2
+          transition:      none
+          width:            430
+          v_align:       middle
+          text:        <%=options[:secondary_y_interval]*0%> Mins 
+
+      - <%= drawing :text %>
+          alpha:             75
+          rotation:           0
+          size:              15
+          x:                665
+          delay:              0.6
+          y:                330
+          color:         CC9944
+          height:            65
+          h_align:        right
+          duration:         1.2
+          transition:      none
+          width:            430
+          v_align:       middle
+          text:        <%=options[:secondary_y_interval]*2%> Mins
+          
+      - <%= drawing :text %>
+          alpha:             75
+          rotation:           0
+          size:              15
+          x:                665
+          delay:              0.6
+          y:                230
+          color:         CC9944
+          height:            65
+          h_align:        right
+          duration:         1.2
+          transition:      none
+          width:            430
+          v_align:       middle
+          text:      <%=options[:secondary_y_interval]*4%> Mins
+
+      - <%= drawing :text %>
+          alpha:             75
+          rotation:           0
+          size:              15
+          x:                665
+          delay:              0.6
+          y:                130
+          color:         CC9944
+          height:            65
+          h_align:        right
+          duration:         1.2
+          transition:      none
+          width:            430
+          v_align:       middle
+          text:       <%=options[:secondary_y_interval]*6%> Mins
+
+      - <%= drawing :text %>
+          alpha:             75
+          rotation:           0
+          size:              15
+          x:                665
+          delay:             0.6
+          y:                 30
+          color:         CC9944
+          height:            65
+          h_align:        right
+          duration:         1.2
+          transition:      none
+          width:            430
+          v_align:       middle
+          text:       <%=options[:secondary_y_interval]*8%> Mins
+
+
+
+
+      - <%= drawing :text %>
+          shadow:           low
+          alpha:             50
+          rotation:         -90
+          size:              25
+          x:                 32
+          delay:            1.1
+          y:                403
+          color:         ffffff
+          height:            50
+          h_align:        right
+          duration:         0.7
+          transition:      none
+          width:            400
+          v_align:       middle
+          text:        '  report'
+      - <%= drawing :image %>
+          alpha:                           80
+          x:                               93
+          delay:                          1.2
+          y:                               28
+          url:         charts/full_screen.swf
+          height:                          15
+          transition:                dissolve
+          width:                           20
+          text:        '                      '
+
+  <%=comp :filter %>
+    filters:
+      - <%= filter_type :shadow %>
+          blurY:       10
+          inner:     true
+          angle:       10
+          alpha:       40
+          id:          bg
+          distance:     5
+          blurX:       10
+      - <%= filter_type :shadow %>
+          blurY:         8
+          inner:      true
+          angle:        45
+          alpha:       100
+          id:        title
+          knockout:   true
+          distance:      3
+          blurX:         8
+      - <%= filter_type :shadow %>
+          blurY:       10
+          angle:       40
+          alpha:       35
+          id:        data
+          distance:     3
+          blurX:       10
+      - <%= filter_type :shadow %>
+          blurY:       5
+          angle:      45
+          alpha:      35
+          id:        low
+          distance:    2
+          blurX:       5
+      - <%= filter_type :bevel %>
+          blurY:                5
+          angle:                2
+          highlightAlpha:      10
+          id:              bevel1
+          highlightColor:  ffffff
+          shadowAlpha:         50
+          blurX:               20
+          distance:            10
+
+  <%=comp :legend %>
+    shadow:                 low
+    line_alpha:               0
+    size:                    22
+    alpha:                   95
+    x:                      125
+    fill_alpha:              60
+    delay:                    0.8
+    y:                       25
+    margin:                   5
+    line_color:          000000
+    height:                  10
+    fill_color:          ffffff
+    color:               444466
+    duration:                 1
+    line_thickness:           0
+    transition:            none
+    width:                  500
+    layout:          horizontal
+
+  <%=comp :link %>
+
+  <%=comp :series %>
+    set_gap:  35
+
+  <%=comp :series_color %>
+    colors: 687284, BAB18E, CC9944

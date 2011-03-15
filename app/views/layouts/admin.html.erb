@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+	<head>
+		<title><%= @page_title || APP_CONFIG[:site_name] %></title>
+		<meta http-equiv="content-type" content="text/xhtml; charset=utf-8" />
+		<meta http-equiv="imagetoolbar" content="no" />
+		<meta name="distribution" content="all" />
+		<meta name="robots" content="all" />	
+		<meta name="resource-type" content="document" />
+		<meta name="MSSmartTagsPreventParsing" content="true" />
+
+		<meta name="description" content="A free, online tool for memorizing the bible" />	
+		<meta name="keywords" content="memorize bible, memorize scripture, popular bible verses, memorize bible verses," />		
+		
+		<!-- Google verification -->
+		<meta name="verify-v1" content="IrqDYi2zxAyS8GUAqQcyXvnmcxhtuNITeCIFYLa76LQ=" />	
+		<!-- Microsoft verification -->		
+		<meta name="msvalidate.01" content="A1BB69E880870637C825F612E2FA4034" />				
+		
+		<!-- Main Stylesheet -->
+		<%= stylesheet_link_tag 'base_packaged', :cache => 'cache/all' %>
+  		
+		<!-- Auxiliiary stylesheets, etc -->
+		<%= yield(:head) %>
+				
+		<!-- Rails 3 XSS protection -->
+		<%= csrf_meta_tag %> 
+
+		<!-- NOTE: not using asset packager at the moment -->
+		<%= javascript_include_tag 	'jquery.min', 'rails', 
+									'jquery-ui-1.8.6.custom.min', 
+									'jquery.quickflip', 'jquery.hoverIntent', '2leveltab', 
+									'jquery.periodicalupdater', 'jquery.jeditable', 'jquery.autocomplete', 'modernizr-1.6.min', 
+									'jquery.shuffle',  'jquery.observe_field', 'jquery.blockUI',
+									'application', :cache => 'cache/all' %> 
+
+
+		
+		<!-- Shortcut Icons -->
+		<link rel="shortcut icon" href="/images/favicon.ico" />
+		<link rel="icon" 		  href="/images/favicon.ico" />	
+			
+	</head>
+	
+	<body id="user">
+		
+		<!-- Start of Google Analytics Code  -->	
+		<script type="text/javascript">
+		
+		  var _gaq = _gaq || [];
+		  _gaq.push(['_setAccount', 'UA-4539114-5']);
+		  _gaq.push(['_trackPageview']);
+		
+		  (function() {
+		    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		    ga.src = 'http://www.google-analytics.com/ga.js';
+		    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ga);
+		  })();
+
+		</script>		
+		<!-- End of Google Analytics Code  -->		
+		
+		<div id="container">
+			<div id="auth">
+				<ul>
+					<% if logged_in? %>
+					<li><%= link_to 'Logout', logout_path %></li>
+					<li><%= current_user.login %></li>					
+					<% else %>
+					<li><%= link_to 'Login', login_path %></li>
+					<li><%= link_to 'Signup', signup_path %></li>
+					<% end %>
+				</ul>
+			</div> <!-- End of Auth -->	
+					
+		 	<div id="banner">
+			    <%= image_tag("bible.gif") %>
+			    <%= @page_title || "Bible Verse Memorization" %>				
+		  	</div> <!-- End of Banner -->
+
+				
+			<div id="main">
+				<div id="menu-tabs">
+					<ul id="maintab" class="basictab">
+						<li <%= tab(@tab=="home"		) %> rel="homepage">	<%= link_to 'Home &#9660;'.html_safe, 	 		home_path %></li>	
+						<li <%= tab(@tab=="dash"		) %> rel="dashboard">	<%= link_to 'Dashboard &#9660;'.html_safe, 		:controller => 'admin', :action => 'dashboard' %></li>
+						<li <%= tab(@tab=="users"		) %> rel="users">		<%= link_to 'Users &#9660;'.html_safe, 	 		:controller => 'admin', :action => 'show_users', :sort_order => 'ID DESC', :period => 'Active' %></li>
+						<li <%= tab(@tab=="verses"		) %> rel="verses">		<%= link_to 'Verses &#9660;'.html_safe,			:controller => 'admin', :action => 'show_verses_to_be_checked' %></li>
+						<li <%= tab(@tab=="churches"	) %> rel="churches">	<%= link_to 'Churches &#9660;'.html_safe, 		:controller => 'admin', :action => 'show_churches' %></li>	
+						<li <%= tab(@tab=="countries"	) %> rel="countries">	<%= link_to 'Countries &#9660;'.html_safe, 		:controller => 'admin', :action => 'show_countries' %></li>
+						<li <%= tab(@tab=="popverses"	) %> rel="popverses">	<%= link_to 'Popular Verses &#9660;'.html_safe,	:controller => 'admin', :action => 'show_popverses' %></li>						
+					</ul>
+
+					<div id="homepage" class="submenustyle">
+						<%= link_to 'My Verses', manage_verses_path %>
+						<%= link_to 'Add Verse', add_verse_path %>
+						<%= link_to 'My Progress', progress_path %>	
+						<%= link_to 'Popular Verses', popular_verses_path %>	
+						<%= link_to 'Leaderboard', leaderboard_path %>
+					</div>
+
+					<div id="dashboard" class="submenustyle">
+						<%= link_to 'Dashboard',		:controller => 'admin',	:action => 'dashboard'%>
+						<%= link_to 'Churn',			:controller => 'admin',	:action => 'cohort_analysis'%>
+						<%= link_to 'Leaderboard',		:controller => 'admin',	:action => 'leaderboard'%>	
+						<%= link_to 'Memory Verses',	:controller => 'admin',	:action => 'show_memory_verses', :id => nil, :sort_order => 'ID DESC' %>
+						<%= link_to 'Send Reminder',	:controller => 'admin',	:action => 'send_reminder'%>						
+						<%= link_to 'Comments', 		:controller => 'admin', :action => 'unapproved_comments' %>
+						<%= link_to 'De-dupe',	 		:controller => 'admin', :action => 'users_with_problems' %>
+					</div>
+					
+					<div id="users" class="submenustyle">						
+						<%= link_to 'All',				:controller => 'admin',	:action => 'show_users', :sort_order => 'ID DESC', :period => 'All' %>
+						<%= link_to 'Today (New)',		:controller => 'admin',	:action => 'show_users', :sort_order => 'ID DESC', :period => 'Today'%>
+						<%= link_to 'Today (Active)',	:controller => 'admin',	:action => 'show_users', :sort_order => 'ID DESC', :period => 'Active'%>																		
+						<%= link_to 'Pending',			:controller => 'admin',	:action => 'show_users', :sort_order => 'ID DESC', :period => 'Pending'%>
+						<%= link_to 'Search',			:controller => 'admin',	:action => 'search_users' %>
+						
+					</div>
+
+					<div id="verses" class="submenustyle">
+						<%= link_to 'Verses per User',	:controller => 'admin',	:action => 'verses_per_user' %>
+						<%= link_to 'Translation Stats',:controller => 'admin',	:action => 'count_by_translation' %>
+						<%= link_to 'All',				:controller => 'admin',	:action => 'show_verses', :sort_order => 'ID DESC'%>
+						<%= link_to 'Search',			:controller => 'admin',	:action => 'search_verses' %>
+						<%= link_to 'To Check',			:controller => 'admin',	:action => 'show_verses_to_be_checked' %>
+					</div>
+
+					<div id="churches" class="submenustyle">
+						<%= link_to 'All',				:controller => 'admin',	:action => 'show_churches' %>
+					</div>
+
+					<div id="countries" class="submenustyle">
+						<%= link_to 'All',				:controller => 'admin',	:action => 'show_countries' %>
+					</div>
+
+					<div id="popverses" class="submenustyle">
+						<%= link_to 'Show',				:controller => 'admin',	:action => 'show_popverses'%>
+						<%= link_to 'Update',			:controller => 'admin',	:action => 'update_popular_verses'%>
+						<%= link_to 'Tags',				:controller => 'admin',	:action => 'show_tags'%>						
+					</div>
+									
+				</div>  <!-- End of Menu Tabs -->
+				
+				<%= flash_messages %>
+				<%= content_for?(:content) ? yield(:content) : yield %>
+			</div> <!-- End of Main -->
+		</div> <!-- End of Container -->
+
+		<!-- Start of Menu Tab Code  -->
+		<script type="text/javascript">
+			//initialize tab menu, by passing in ID of UL
+			initalizetab("maintab")
+		</script>			
+	</body>
+</html>
