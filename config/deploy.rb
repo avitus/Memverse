@@ -102,7 +102,7 @@ namespace :deploy do
   
   desc "Symlink the Sphinx index"
   task :symlink_sphinx_indexes, :roles => [:app] do
-	run "ln -nfs #{shared_path}/db/sphinx #{release_path}/db/sphinx"
+	run "ln -nfs #{deploy_to}/shared/db/sphinx #{release_path}/db/sphinx"
   end  
    
 end
