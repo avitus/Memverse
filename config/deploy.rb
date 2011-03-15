@@ -61,7 +61,7 @@ require File.expand_path("#{File.dirname(__FILE__)}/../vendor/gems/capistrano-ex
 ##############################################################
 ##  Hooks
 ##############################################################
-after "deploy:update_code", "deploy:symlink_db", "deploy:set_rails_env"
+after "deploy:update_code", "deploy:symlink_db" #, "deploy:set_rails_env"
 
 before "deploy:update_code", "thinking_sphinx:stop"
 after "deploy:update_code", "deploy:symlink_sphinx_indexes"
