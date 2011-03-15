@@ -149,18 +149,11 @@ class BlogPostsController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   # Blog Search Results
   # ----------------------------------------------------------------------------------------------------------  	
-	def blog_search_results
-
-	    search_param = params[:search_param]
-	    
-	    logger.info("Searching for ... #{search_param.inspect}")
-	
-		@blog_search_results = BlogPost.search(search_param)     
-	    
-	    logger.info("Results: #{@blog_search_results.inspect}")
-	    
+	def blog_search_results	    
+	    @blog_search_results = BlogPost.search( params[:search_param] )
 	    respond_to do |format| 
 	      format.html { render :partial => 'blog_search_results', :layout=>false }
+	      format.xml  { render :xml 	=> @blog_search_results }
 	    end	    
 	end
 

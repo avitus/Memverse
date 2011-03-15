@@ -1,4 +1,4 @@
-staging:
+development:
   pid_file: '~/projects/Memverse/tmp/searchd.pid'
   searchd_file_path: '~/projects/Memverse/db/sphinx'
   bin_path: '/usr/local/bin/'

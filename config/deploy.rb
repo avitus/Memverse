@@ -63,12 +63,10 @@ require File.expand_path("#{File.dirname(__FILE__)}/../vendor/gems/capistrano-ex
 ##############################################################
 after "deploy:update_code", "deploy:symlink_db", "deploy:set_rails_env"
 
-# before "deploy:update_code", "thinking_sphinx:stop"
-# after "deploy:update_code", "symlink_sphinx_indexes"
-# after "deploy:update_code", "thinking_sphinx:configure"
-# after "deploy:update_code", "thinking_sphinx:start"
-
-
+before "deploy:update_code", "thinking_sphinx:stop"
+after "deploy:update_code", "symlink_sphinx_indexes"
+after "deploy:update_code", "thinking_sphinx:configure"
+after "deploy:update_code", "thinking_sphinx:start"
 
 ##############################################################
 ##  Database config and restart
@@ -100,8 +98,13 @@ namespace :deploy do
   desc "Restarting mod_rails with restart.txt"                # Restart passenger on deploy
   task :restart, :roles => :app, :except => { :no_release => true } do
     run "touch #{current_path}/tmp/restart.txt"
-  end   
-
+  end  
+  
+  desc "Symlink the Sphinx index"
+  task :symlink_sphinx_indexes, :roles => [:app] do
+	run "ln -nfs #{shared_path}/db/sphinx #{release_path}/db/sphinx"
+  end  
+   
 end
 
 ##############################################################
