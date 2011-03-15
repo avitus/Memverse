@@ -11,4 +11,6 @@
 		</table>
 		<%= will_paginate(@blog_search_results, {:form_name => :blog_show_params, :param_name => :page} ) %>
 	</div>
+<% else %>
+	<h2>No blog posts that match your search were found</h2>
 <% end %>
