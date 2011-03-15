@@ -1,9 +1,9 @@
 staging:
-  pid_file: /home/andyvitus/staging.memverse.com/current/tmp/searchd.pid
-  searchd_file_path: /home/andyvitus/staging.memverse.com/current/db/sphinx
-  bin_path: /home/andyvitus/local/bin 
+  pid_file: '/home/andyvitus/staging.memverse.com/current/tmp/searchd.pid'
+  searchd_file_path: '/home/andyvitus/staging.memverse.com/current/db/sphinx'
+  bin_path: '/home/andyvitus/local/bin'
 production:
-  pid_file: /home/andyvitus/memverse.com/current/tmp/searchd.pid
-  searchd_file_path: /home/andyvitus/memverse.com/current/db/sphinx
-  bin_path: /home/andyvitus/local/bin 
+  pid_file: '/home/andyvitus/memverse.com/current/tmp/searchd.pid'
+  searchd_file_path: '/home/andyvitus/memverse.com/current/db/sphinx'
+  bin_path: '/home/andyvitus/local/bin'
 
