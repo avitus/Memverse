@@ -1,7 +1,7 @@
 class BlogPostsController < ApplicationController
-  before_filter :get_bloggity_page_name
-  before_filter :load_blog_post
-  before_filter :blog_writer_or_redirect, :except => [:close, :index, :show, :feed]
+  before_filter :get_bloggity_page_name, :except => :blog_search
+  before_filter :load_blog_post, :except => :blog_search
+  before_filter :blog_writer_or_redirect, :except => [:close, :index, :show, :feed, :blog_search]
 	
   # GET /blog_posts
   # GET /blog_posts.xml
@@ -143,6 +143,33 @@ class BlogPostsController < ApplicationController
     blog_page = params[:page] || 1
 		@pending_posts = BlogPost.paginate(:all, :conditions => ["blog_id = ? AND is_complete = ?", @blog_id, false], :order => "blog_posts.created_at DESC", :page => blog_page, :per_page => 15)
 		@recent_posts = recent_posts(blog_page)
+	end
+	
+	
+  # ----------------------------------------------------------------------------------------------------------
+  # Blog Search Results
+  # ----------------------------------------------------------------------------------------------------------  	
+	def blog_search_results
+
+	    search_param = params[:search_param]
+	    
+	    logger.info("Searching for ... #{search_param.inspect}")
+	
+		@blog_search_results = BlogPost.search(search_param)     
+	    
+	    logger.info("Results: #{@blog_search_results.inspect}")
+	    
+	    respond_to do |format| 
+	      format.html { render :partial => 'blog_search_results', :layout=>false }
+	    end	    
+	end
+
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Blog Search Query page
+  # ---------------------------------------------------------------------------------------------------------- 	
+	def blog_search
+		@blog_search_results = Array.new
 	end
 
 	# --------------------------------------------------------------------------------------

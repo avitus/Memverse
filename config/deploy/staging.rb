@@ -29,7 +29,7 @@ set :rails_env, "staging"
 ##############################################################
 #
 #set :scm, :git
-#set :branch, "master"
+set :branch, $1 if `git branch` =~ /\* (\S+)\s/m
 #set :scm_user, 'andyvitus'
 #set :scm_passphrase, "pa$$word"
 #set :repository, "git@github.com:avitus/Memverse.git"

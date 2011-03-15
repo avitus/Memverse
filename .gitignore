@@ -1,6 +1,8 @@
 .bundle
 db/*.sqlite3
 log/*.log
+db/sphinx/development/*
+log/searchd.development.pid
 tmp/**/*
 .DS_Store
 doc/api

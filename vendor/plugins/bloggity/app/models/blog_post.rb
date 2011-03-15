@@ -21,7 +21,7 @@
 
 class BlogPost < ActiveRecord::Base
 	belongs_to :posted_by, :class_name => 'User'
-  belongs_to :category, :class_name => 'BlogCategory'
+  	belongs_to :category, :class_name => 'BlogCategory'
 	has_many :comments, :class_name => 'BlogComment'
 	has_many :approved_comments, :conditions => %{approved = true}, :class_name => 'BlogComment'
 	has_many :assets, :class_name => 'BlogAsset'
@@ -35,6 +35,19 @@ class BlogPost < ActiveRecord::Base
 	# xss_terminate :except => [ :body ]
 	after_save :save_tags
 	before_save :update_url_identifier
+
+
+    # Define Sphinx index
+    define_index do
+	    # fields
+	    indexes title, :sortable => true
+	    indexes body
+	    indexes posted_by.name, :as => :author, :sortable => true
+	    
+	    # attributes
+	    has posted_by_id, created_at, updated_at
+    end
+
 	
 	def comments_closed?
 		self.comments_closed
