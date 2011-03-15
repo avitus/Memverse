@@ -79,19 +79,19 @@ namespace :deploy do
   
   desc "Symlink the Sphinx index"
   task :symlink_sphinx_indexes, :roles => [:app] do
-	run "ln -nfs #{deploy_to}/shared/db/sphinx #{release_path}/db/sphinx"
+	run "ln -nfs #{deploy_to}/shared/db/sphinx #{release_path}/db/"
   end  
 
   # TODO: This doesn't work at the moment ... have to do manually
-  desc "Sets the rails environment variable"
-  task :set_rails_env do                                      # Set the Rails environment variable
-    tmp = "#{current_path}/tmp/environment.rb"
-    final = "#{current_path}/config/environment.rb"
-    run <<-CMD
-    echo 'RAILS_ENV = "#{rails_env}"' > #{tmp};
-    cat #{final} >> #{tmp} && mv #{tmp} #{final};
-    CMD
-  end  
+  # desc "Sets the rails environment variable"
+  # task :set_rails_env do                                      # Set the Rails environment variable
+  #   tmp = "#{current_path}/tmp/environment.rb"
+  #   final = "#{current_path}/config/environment.rb"
+  #   run <<-CMD
+  #   echo 'RAILS_ENV = "#{rails_env}"' > #{tmp};
+  #   cat #{final} >> #{tmp} && mv #{tmp} #{final};
+  #   CMD
+  # end  
 
   # desc "Create asset packages for production" 
   # task :after_update_code, :roles => [:web] do                 # Compress and minify javascript and css files
