@@ -1,7 +1,7 @@
 class BlogPostsController < ApplicationController
-  before_filter :get_bloggity_page_name
-  before_filter :load_blog_post
-  before_filter :blog_writer_or_redirect, :except => [:close, :index, :show, :feed]
+  before_filter :get_bloggity_page_name, :except => :blog_search
+  before_filter :load_blog_post, :except => :blog_search
+  before_filter :blog_writer_or_redirect, :except => [:close, :index, :show, :feed, :blog_search]
 	
   # GET /blog_posts
   # GET /blog_posts.xml
