@@ -1,12 +1,12 @@
 development:
-  pid_file: '~/projects/Memverse/tmp/searchd.pid'
+  pid_file: '~/projects/Memverse/log/searchd.development.pid'
   searchd_file_path: '~/projects/Memverse/db/sphinx'
   bin_path: '/usr/local/bin/'
 staging:
-  pid_file: '/home/andyvitus/staging.memverse.com/current/tmp/searchd.pid'
+  pid_file: '/home/andyvitus/staging.memverse.com/current/log/searchd.production.pid'
   searchd_file_path: '/home/andyvitus/staging.memverse.com/shared/db/sphinx'
   bin_path: '/home/andyvitus/local/bin'
 production:
-  pid_file: '/home/andyvitus/memverse.com/current/tmp/searchd.pid'
+  pid_file: '/home/andyvitus/memverse.com/current/log/searchd.production.pid'
   searchd_file_path: '/home/andyvitus/memverse.com/shared/db/sphinx'
   bin_path: '/home/andyvitus/local/bin'
