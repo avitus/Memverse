@@ -1,4 +1,6 @@
 require 'bundler/capistrano'
+require 'thinking_sphinx/deploy/capistrano'
+
 
 ##############################################################
 ##  Application
@@ -61,6 +63,13 @@ require File.expand_path("#{File.dirname(__FILE__)}/../vendor/gems/capistrano-ex
 ##############################################################
 after "deploy:update_code", "deploy:symlink_db", "deploy:set_rails_env"
 
+before "deploy:update_code", "thinking_sphinx:stop"
+after "deploy:update_code", "symlink_sphinx_indexes"
+after "deploy:update_code", "thinking_sphinx:configure"
+after "deploy:update_code", "thinking_sphinx:start"
+
+
+
 ##############################################################
 ##  Database config and restart
 ##############################################################
@@ -92,13 +101,7 @@ namespace :deploy do
   task :restart, :roles => :app, :except => { :no_release => true } do
     run "touch #{current_path}/tmp/restart.txt"
   end   
-  
-  desc "Start Sphinx daemon" 
-  task :after_deploy, :roles => :app do
-    run "cd #{deploy_to}/#{current_dir} && " +
-      "rake RAILS_ENV=#{rails_env} thinking_sphinx:start"         
-  end
-  
+
 end
 
 ##############################################################
