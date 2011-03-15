@@ -159,7 +159,9 @@ class BlogPostsController < ApplicationController
 	    
 	    logger.info("Results: #{@blog_search_results.inspect}")
 	    
-	    render :partial => 'blog_search_results', :layout=>false 
+	    respond_to do |format| 
+	      format.html { render :partial => 'blog_search_results', :layout=>false }
+	    end	    
 	end
 
 
