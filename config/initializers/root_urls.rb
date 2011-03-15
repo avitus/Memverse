@@ -1,2 +1,0 @@
-DOMAIN_NAMES = {"staging" => "http://staging.memverse.com", "development" => "http://localhost:3000", "production" =>  "http://www.memverse.com", "test" => "http://localhost:3000"}
-DOMAIN_NAME = DOMAIN_NAMES[Rails.env]
