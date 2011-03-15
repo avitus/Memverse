@@ -147,21 +147,25 @@ class BlogPostsController < ApplicationController
 	
 	
   # ----------------------------------------------------------------------------------------------------------
-  # Blog Search
+  # Blog Search Results
   # ----------------------------------------------------------------------------------------------------------  	
 	def blog_search_results
 
 	    search_param = params[:search_param]
 	    
-	    logger.debug("Searching for ... #{search_param.inspect}")
+	    logger.info("Searching for ... #{search_param.inspect}")
 	
 		@blog_search_results = BlogPost.search(search_param)     
 	    
-	    logger.debug("Results: #{@blog_search_results.inspect}")
+	    logger.info("Results: #{@blog_search_results.inspect}")
 	    
 	    render :partial => 'blog_search_results', :layout=>false 
 	end
-	
+
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Blog Search Query page
+  # ---------------------------------------------------------------------------------------------------------- 	
 	def blog_search
 		@blog_search_results = Array.new
 	end
