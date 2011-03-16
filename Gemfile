@@ -23,6 +23,7 @@ gem 'jquery-rails', '>= 0.2.6'	  								# Unobtrusive scripting adapter for jQu
 gem 'mail', '>= 2.2.15'											# Emails
 gem 'newrelic_rpm'												# Performance monitoring
 gem 'thinking-sphinx', '>=2.0.0', :require => 'thinking_sphinx'	# Connector to Sphinx - for global search
+gem 'riddle'													# Seems to be needed for Thinking_Sphinx ... not clear, though
 
 
 # Use this for now (instead of the plugin ... check to see whether master branch ever supports Rails 3)
