@@ -120,7 +120,7 @@ var totalChecked = 0; // Number of visible checkboxes checked.
         for ( k=0; k < invisibleboxLength; k++ )
         invisiblechecked[k].checked = false; // This unchecks invisible boxes before any deletion (or even deletion cancelation) occurs.
         if ( totalChecked == 1 ) {
-        var agree=confirm("Are you sure you want to delete the selected verse?");
+        var agree=confirm(I18n.t("js_msgs.delete_one"));
          if (agree) {
           document.manage_verses.action = '/memverses/delete_verses';
           return true;
@@ -130,11 +130,11 @@ var totalChecked = 0; // Number of visible checkboxes checked.
          }
         }
         else if ( totalChecked == 0 ) {
-        alert("You should first select the verses using the check boxes on the left.");
+        alert(I18n.t("js_msgs.none_selected"));
         return false;
         }
         else if ( totalChecked == visibleboxLength ) {
-        var agree=confirm("Are you sure you want to delete all "+totalChecked+" of the verses shown on this page?");
+        var agree=confirm(I18n.t("js_msgs.all_selected", {quantity: totalChecked}));
          if (agree) {
           document.manage_verses.action = '/memverses/delete_verses';
           return true;
@@ -142,8 +142,8 @@ var totalChecked = 0; // Number of visible checkboxes checked.
          else
           return false;
         }
-        else { // User is deleting 1 - all of their verses. Need to alert them if some of these are invisible. This is not necessary in other cases.
-        var agree=confirm("Are you sure you want to delete the "+totalChecked+" selected verses?");
+        else { // User is deleting between one and all of their verses. Need to alert them if some of these are invisible. This is not necessary in other cases.
+        var agree=confirm(I18n.t("js_msgs.some_selected", {quantity: totalChecked}));
          if (agree) {
           document.manage_verses.action = '/memverses/delete_verses';
           return true;
@@ -157,7 +157,7 @@ var totalChecked = 0; // Number of visible checkboxes checked.
         for ( k=0; k < invisibleboxLength; k++ )
         invisiblechecked[k].checked = false; // This unchecks invisible boxes.
         if ( totalChecked == 0 ) {
-        alert("You should first select the verses using the check boxes on the left.");
+        alert(I18n.t("js_msgs.none_selected"));
         return false;
         }
         else {
