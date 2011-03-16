@@ -61,7 +61,12 @@ require File.expand_path("#{File.dirname(__FILE__)}/../vendor/gems/capistrano-ex
 ##############################################################
 ##  Hooks
 ##############################################################
-after "deploy:update_code", "deploy:symlink_db", "deploy:set_rails_env"
+after "deploy:update_code", "deploy:symlink_db" #, "deploy:set_rails_env"
+
+before "deploy:update_code", "thinking_sphinx:stop"
+after "deploy:update_code", "deploy:symlink_sphinx_indexes"
+after "deploy:update_code", "thinking_sphinx:configure"
+after "deploy:update_code", "thinking_sphinx:start"
 
 # before "deploy:update_code", "thinking_sphinx:stop"
 # after "deploy:update_code", "symlink_sphinx_indexes"
@@ -78,17 +83,22 @@ namespace :deploy do
   task :symlink_db, :roles => :app do
     run "ln -nfs #{deploy_to}/shared/config/database.yml #{release_path}/config/database.yml"
   end
+  
+  desc "Symlink the Sphinx index"
+  task :symlink_sphinx_indexes, :roles => [:app] do
+	run "ln -nfs #{deploy_to}/shared/db/sphinx #{release_path}/db"
+  end  
 
   # TODO: This doesn't work at the moment ... have to do manually
-  desc "Sets the rails environment variable"
-  task :set_rails_env do                                      # Set the Rails environment variable
-    tmp = "#{current_path}/tmp/environment.rb"
-    final = "#{current_path}/config/environment.rb"
-    run <<-CMD
-    echo 'RAILS_ENV = "#{rails_env}"' > #{tmp};
-    cat #{final} >> #{tmp} && mv #{tmp} #{final};
-    CMD
-  end  
+  # desc "Sets the rails environment variable"
+  # task :set_rails_env do                                      # Set the Rails environment variable
+  #   tmp = "#{current_path}/tmp/environment.rb"
+  #   final = "#{current_path}/config/environment.rb"
+  #   run <<-CMD
+  #   echo 'RAILS_ENV = "#{rails_env}"' > #{tmp};
+  #   cat #{final} >> #{tmp} && mv #{tmp} #{final};
+  #   CMD
+  # end  
 
   # desc "Create asset packages for production" 
   # task :after_update_code, :roles => [:web] do                 # Compress and minify javascript and css files
@@ -100,8 +110,8 @@ namespace :deploy do
   desc "Restarting mod_rails with restart.txt"                # Restart passenger on deploy
   task :restart, :roles => :app, :except => { :no_release => true } do
     run "touch #{current_path}/tmp/restart.txt"
-  end   
-
+  end  
+ 
 end
 
 ##############################################################
