@@ -3,10 +3,10 @@ development:
   searchd_file_path: '~/projects/Memverse/db/sphinx'
   bin_path: '/usr/local/bin/'
 staging:
-  pid_file: '/home/andyvitus/staging.memverse.com/current/log/searchd.pid'
+  pid_file: '/home/andyvitus/staging.memverse.com/shared/log/searchd.pid'
   searchd_file_path: '/home/andyvitus/staging.memverse.com/shared/db/sphinx'
   bin_path: '/home/andyvitus/local/bin'
 production:
-  pid_file: '/home/andyvitus/staging.memverse.com/current/log/searchd.pid'
+  pid_file: '/home/andyvitus/staging.memverse.com/shared/log/searchd.pid'
   searchd_file_path: '/home/andyvitus/staging.memverse.com/shared/db/sphinx'
   bin_path: '/home/andyvitus/local/bin'
