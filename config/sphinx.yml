@@ -7,6 +7,6 @@ staging:
   searchd_file_path: '/home/andyvitus/staging.memverse.com/shared/db/sphinx'
   bin_path: '/home/andyvitus/local/bin'
 production:
-  pid_file: '/home/andyvitus/memverse.com/current/log/searchd.production.pid'
-  searchd_file_path: '/home/andyvitus/memverse.com/shared/db/sphinx'
+  pid_file: '/home/andyvitus/staging.memverse.com/current/log/searchd.production.pid'
+  searchd_file_path: '/home/andyvitus/staging.memverse.com/shared/db/sphinx'
   bin_path: '/home/andyvitus/local/bin'
