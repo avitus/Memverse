@@ -163,7 +163,7 @@ class BlogPostsController < ApplicationController
   # ---------------------------------------------------------------------------------------------------------- 	
 	def blog_search
 		@blog_search_results = Array.new
-	    @blog_search_results = BlogPost.search( params[:search_param] )
+	    @blog_search_results = BlogPost.search( params[:search_param] || "memorize" )
 	end
 
 	# --------------------------------------------------------------------------------------
