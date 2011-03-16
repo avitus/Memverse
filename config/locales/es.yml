@@ -373,6 +373,7 @@
     view_vs_s:                  "Ver los Versos de Memoria"
     reftest:                    "Test de Referencia"
     my_dashboard:               "Mi Panel"
+    user_profile:               "Perfil de %{name}"
   page_banners:
     default:                    "Verso de la Biblia Memorización"
   page_descriptions:

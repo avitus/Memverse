@@ -380,6 +380,7 @@
     view_vs_s:                  "View Memory Verses"
     reftest:                    "Reference Test"
     my_dashboard:               "My Dashboard"
+    user_profile:               "{{name}}'s Profile"
   page_banners:
     default:                    "Bible Verse Memorization"
   page_descriptions:
