@@ -373,6 +373,7 @@
     view_vs_s:                  "Ver los Versos de Memoria"
     reftest:                    "Test de Referencia"
     my_dashboard:               "Mi Panel"
+    user_profile:               "Perfil de %{name}"
   page_banners:
     default:                    "Verso de la Biblia Memorización"
   page_descriptions:
@@ -393,3 +394,8 @@
     accuracy_test:              "Prueba de la exactitud de su memorización."
     progress:                   "Ver su progreso en la memorización de la Palabra de Dios."
     quickstart:                 "Rápidamente añadir algunos versos de arranque a su cuenta."
+  js_msgs:
+    delete_one:                 "¿Está seguro que desea eliminar el verso seleccionado?"
+    none_selected:              "En primer lugar, debe seleccionar los versos utilizando las casillas de verificación a la izquierda."
+    all_selected:               "¿Está seguro que desea eliminar todos los {{quantity}} de los versos que aparecen en esta página?"
+    some_selected:              "¿Está seguro que desea eliminar los {{quantity}} versos seleccionados?"

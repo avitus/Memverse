@@ -374,6 +374,7 @@
     view_vs_s:                  "View Memory Verses"
     reftest:                    "Reference Test"
     my_dashboard:               "My Dashboard"
+    user_profile:               "%{name}'s Profile"
   page_banners:
     default:                    "Bible Verse Memorization"
   page_descriptions:
@@ -394,3 +395,8 @@
     accuracy_test:              "Test the accuracy of your memorization."
     progress:                   "View your progress in memorizing God's Word."
     quickstart:                 "Quickly add some starter verses to your account."
+  js_msgs:
+    delete_one:                 "Are you sure you want to delete the selected verse?"
+    none_selected:              "You should first select the verses using the check boxes on the left."
+    all_selected:               "Are you sure you want to delete all {{quantity}} of the verses shown on this page?"
+    some_selected:              "Are you sure you want to delete the {{quantity}} selected verses?"
