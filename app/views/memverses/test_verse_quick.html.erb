@@ -106,6 +106,7 @@
 	$(document).ready(function() {
 			
 		var ondeck 				= {};
+		var prior               = {};
 		var current				= {};
 		var user_id				= "<%= current_user.id %>";		
 
@@ -178,8 +179,9 @@
 			}
 			else {
 				success = insertondeck(ondeck.mv, ondeck.mv_prior);					// Update page with Ondeck verse
+				prior   = current
 				current = ondeck.mv													// data for the verse we're now testing															
-				$.getJSON("/mark_test_quick", { mv: current.id, q: q  }, 			// Score verse
+				$.getJSON("/mark_test_quick", { mv: prior.id, q: q  }, 			    // Score verse
 					function(data) {
 						if (data.msg) {	alert(data.msg); }							// Give user a nice response												
 						update_upcoming(12, ondeck.mv.id);							// Req successful callback from mark_test_quick: Update upcoming verses

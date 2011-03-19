@@ -143,6 +143,17 @@ img.centre {
 	margin-right:auto;
 }
 
+div.center {
+	width: 50%;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+#search-box {
+	margin-top: 	1em;
+	margin-bottom:	1em; 
+}
+
 /* === Menu Tabs === */
 #menu-tabs {
 	padding-bottom: 2em;
