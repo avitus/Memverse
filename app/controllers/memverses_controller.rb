@@ -286,11 +286,11 @@ class MemversesController < ApplicationController
     
       @other_tags = @verse.all_user_tags
     
-    # Error: no verse ID's passed with request to delete'  
-    elsif (mv_ids.blank?) and (params[:Delete])
+    # Error: verse ID's passed with request to delete  
+    elsif (!mv_ids.blank?) and (params[:Delete])
 
       flash[:notice] = "JavaScript is required to delete verses. Please enable, then refresh page and try again."
-      redirect_to :action => 'manage_verses'
+      redirect_to :action => 'manage_verses' and return
 
     elsif (!mv_ids.blank?) and (params[:Show])
 
@@ -301,11 +301,11 @@ class MemversesController < ApplicationController
     elsif (mv_ids.blank?)
     	
       flash[:notice] = "Action not performed as no verses were selected."
-      redirect_to :action => 'manage_verses'
+      redirect_to :action => 'manage_verses' and return
       
     else
     	
-      redirect_to :action => 'manage_verses'
+      redirect_to :action => 'manage_verses' and return
       
     end
     
