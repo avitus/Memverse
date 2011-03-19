@@ -271,7 +271,7 @@ class MemversesController < ApplicationController
   	
     mv_ids = params[:mv] 
 
-	# Displaying a single verse
+	# ==== Displaying a single verse ====
     if params[:id]
     
       logger.debug("Displaying single verse with ID: #{params[:id]}")	
@@ -285,22 +285,22 @@ class MemversesController < ApplicationController
       @prev_mv = @mv.prev_verse || @mv.prev_verse_in_user_list
     
       @other_tags = @verse.all_user_tags
-    
+
+	# ==== Displaying multiple verses ====    
+    elsif (!mv_ids.blank?) and (params[:Show])
+
+      @mv_list = Memverse.find(mv_ids, :include => :verse)
+      @mv_list.sort! # Sort by book. TODO: Pass paramaters from manage_verses and sort by that order...
+      
     # Error: verse ID's passed with request to delete  
     elsif (!mv_ids.blank?) and (params[:Delete])
 
       flash[:notice] = "JavaScript is required to delete verses. Please enable, then refresh page and try again."
       redirect_to :action => 'manage_verses' and return
 
-    elsif (!mv_ids.blank?) and (params[:Show])
-
-      logger.debug("Displaying selected verses with ID: #{mv_ids.inspect}")	    	
-      @mv_list = Memverse.find(mv_ids, :include => :verse)
-      @mv_list.sort! # Sort by book. TODO: Pass paramaters from manage_verses and sort by that order...
-      
     elsif (mv_ids.blank?)
     	
-      flash[:notice] = "Action not performed as no verses were selected."
+      flash[:notice] = "Please select verses using the checkboxes in the first column."
       redirect_to :action => 'manage_verses' and return
       
     else
