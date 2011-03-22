@@ -1130,7 +1130,7 @@ class MemversesController < ApplicationController
     # We need to check for alternative solutions to account for identical verses
     alt_soln      = identical_verses( solution )
         
-    if solution
+    if solution && session[:reftest_answered]
     
       mv = Memverse.find( session[:ref_id][question_num] )
     
@@ -1169,8 +1169,8 @@ class MemversesController < ApplicationController
     
     else
       # Probably caused by user using the back button after test is finished
-      logger.info("*** User probably hit the back button")
-      flash[:notice] = "Reference recall test already completed"
+      logger.info("*** User probably hit the back button or returned next day without session variable set up")
+      flash[:notice] = "Reference recall test already completed or not initialized"
       redirect_to :action => 'index'
     end    
     

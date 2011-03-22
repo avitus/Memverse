@@ -57,7 +57,6 @@ set :stages, %w(staging production)
 set :default_stage, "staging"
 require File.expand_path("#{File.dirname(__FILE__)}/../vendor/gems/capistrano-ext-1.2.1/lib/capistrano/ext/multistage")
 
-
 ##############################################################
 ##  Hooks
 ##############################################################
@@ -67,13 +66,6 @@ before "deploy:update_code", "thinking_sphinx:stop"
 after "deploy:update_code", "deploy:symlink_sphinx_indexes"
 after "deploy:update_code", "thinking_sphinx:configure"
 after "deploy:update_code", "thinking_sphinx:start"
-
-# before "deploy:update_code", "thinking_sphinx:stop"
-# after "deploy:update_code", "symlink_sphinx_indexes"
-# after "deploy:update_code", "thinking_sphinx:configure"
-# after "deploy:update_code", "thinking_sphinx:start"
-
-
 
 ##############################################################
 ##  Database config and restart
