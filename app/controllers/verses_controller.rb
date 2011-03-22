@@ -1,6 +1,7 @@
 class VersesController < ApplicationController
   
   before_filter :login_required, :except => :index
+  skip_before_filter :verify_authenticity_token, :only => [:set_verse_text, :check_verse]  # ALV: attempt to stop redirects to login page when setting verse text
   
   # GET /verses
   # GET /verses.xml
