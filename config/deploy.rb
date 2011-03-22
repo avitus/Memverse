@@ -53,7 +53,7 @@ ssh_options[:forward_agent] = true                            # Use agent forwar
 ##############################################################
 ##  Staging
 ##############################################################
-set :stages, %w(staging production)
+set :stages, %w(dev1 dev2 testing staging production)
 set :default_stage, "staging"
 require File.expand_path("#{File.dirname(__FILE__)}/../vendor/gems/capistrano-ext-1.2.1/lib/capistrano/ext/multistage")
 
