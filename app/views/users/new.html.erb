@@ -38,7 +38,7 @@
 		<br>
 		
 		<div class="buttons">
-			<%= submit_tag 'Sign up', :class => "no-dbl-click"  %>
+			<%= submit_tag 'Sign up', :id => 'register_submit', :class => "no-dbl-click", :onsubmit => "document.getElementById('register_submit').disabled = true;" %>
 			<img class="spinner" id="ajax_spinner" src="/images/indicator2.gif" alt="Submitting ..." style="display: none" />
 		</div>			
 					
@@ -62,14 +62,3 @@
 	    opacity: 0.7 
 	});
 </script>
-
-<!-- Prevent double-clicking on sign-up submit button : TODO -- this is causing a problem in Google Chrome. Button is disabled but form is not submitted.
-<script type="text/javascript">
-	$(document).ready(function(){
-		$('.no-dbl-click').click( function() {
-			$(this).attr('disabled', 'disabled').hide();
-			$('.spinner').show();
-			return true;
-		});
-	});
-</script> -->
