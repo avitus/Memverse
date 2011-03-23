@@ -85,7 +85,6 @@ GEM
       i18n (>= 0.4.0)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
-    map_by_method (0.8.3)
     mime-types (1.16)
     mysql2 (0.2.6)
     net-scp (1.0.4)
@@ -153,7 +152,6 @@ DEPENDENCIES
   json
   logging
   mail (>= 2.2.15)
-  map_by_method
   mysql2
   newrelic_rpm
   nokogiri

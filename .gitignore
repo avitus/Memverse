@@ -2,6 +2,8 @@
 db/*.sqlite3
 log/*.log
 db/sphinx/development/*
+db/sphinx/*
+config/development.sphinx.conf
 log/searchd.development.pid
 tmp/**/*
 .DS_Store

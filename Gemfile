@@ -37,7 +37,6 @@ gem 'prototype_legacy_helper', '0.0.0', :git => 'git://github.com/rails/prototyp
 group :console do
   gem 'wirble'
   gem 'hirb'
-  gem 'map_by_method'
 end
 
 

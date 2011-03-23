@@ -1,0 +1,17 @@
+<div id="search-box" class="center">
+	<% form_tag verse_search_path, :method => :get do %>
+	  <p>
+	    <%= text_field_tag( :search_param, params[:search_param], :size =>  50 ) %>
+	    <%= submit_tag "Search Bibles", :name => nil %>
+	  </p>
+	<% end %>
+</div>
+
+<br>
+
+<div id="search_results">	
+	<table class="memverse-standard">
+		<%= render :partial => "verses/verse_headings" %>
+		<%= render :partial => "verses/verse_one_line", :collection => @verses %>
+	</table>
+</div>
