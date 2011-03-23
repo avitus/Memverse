@@ -50,7 +50,7 @@ class User < ActiveRecord::Base
   #  validate :normalize_identity_url
   
   validates :login, :presence   => true,
-                    :uniqueness => true,
+                    :uniqueness => { :case_sensitive => false },
                     :length     => { :within => 3..40 },
                     :format     => { :with => Authentication.login_regex, :message => Authentication.bad_login_message }
 
@@ -59,13 +59,10 @@ class User < ActiveRecord::Base
                     :allow_nil  => true
 
   validates :email, :presence   => true,
-                    :uniqueness => true,
+                    :uniqueness => { :case_sensitive => false },
                     :format     => { :with => Authentication.email_regex, :message => Authentication.bad_email_message },
                     :length     => { :within => 6..100 }  
-  
-  
-  
-  
+   
   # Relationships
   has_and_belongs_to_many :roles
   has_and_belongs_to_many :quests
