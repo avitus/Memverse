@@ -117,6 +117,25 @@ class VersesController < ApplicationController
   end
   
   # ----------------------------------------------------------------------------------------------------------
+  # Verse Search Results
+  # ----------------------------------------------------------------------------------------------------------  	
+  def verse_search_results	    
+	@verse_search_results = Verse.search( params[:search_param] )
+	  respond_to do |format| 
+	    format.html { render :partial => 'verse_search_results', :layout=>false }
+	    format.xml  { render :xml 	=> @verse_search_results }
+	  end	    
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Verse Search Query page
+  # ---------------------------------------------------------------------------------------------------------- 	
+  def verse_search
+	@verse_search_results = Array.new
+	@verse_search_results = Verse.search( params[:search_param] || "Jesus" )
+  end
+  
+  # ----------------------------------------------------------------------------------------------------------
   # Show verses that need verification ie. more than one user and have never been modified
   # ----------------------------------------------------------------------------------------------------------   
   def check_verses
