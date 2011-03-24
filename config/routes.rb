@@ -24,12 +24,13 @@ MemverseApp::Application.routes.draw do
 # resources :pastors
   resources :sermons
   resources :quests
+  resources :verses
 # resources :memverses
-
-  
+ 
   # My Mappings
   match '/add_verse',             :to => 'memverses#add_verse',             :as => 'add_verse'
-  match '/quick_add',             :to => 'memverses#quick_add',             :as => 'quick_add'
+  match '/add/:id',				  :to => 'memverses#ajax_add',				:as => 'add'
+  match '/quick_add/:vs',         :to => 'memverses#quick_add',             :as => 'quick_add'
   match '/quick_add_chapter',     :to => 'memverses#quick_add_chapter',     :as => 'quick_add_chapter'
   match '/avail_translations',    :to => 'memverses#avail_translations',    :as => 'avail_translations'
   match '/edit_verse/:id',    	  :to => 'memverses#edit_verse',    		:as => 'edit_verse'
@@ -63,10 +64,10 @@ MemverseApp::Application.routes.draw do
   match '/memory_verse/:id',      :to => 'memverses#show',                  :as => 'memory_verse'
   match '/memverse_counter',      :to => 'memverses#memverse_counter',      :as => 'memverse_counter'
   match '/toggle_error_flag/:id', :to => 'memverses#toggle_verse_flag',		:as => 'toggle_error_flag'
-
-  
+ 
   match '/tag_cloud',             :to => 'verses#tag_cloud',                :as => 'tag_cloud'
   match '/check_verses',          :to => 'verses#check_verses',             :as => 'check_verses'
+  match '/search_verse',          :to => 'verses#verse_search',             :as => 'search_verse'
   
   match '/show_user_info',        :to => 'admin#show_user_info',            :as => 'show_user_info'
   match '/show_tags',             :to => 'admin#show_tags',                 :as => 'show_tags'

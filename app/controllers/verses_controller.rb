@@ -119,20 +119,20 @@ class VersesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   # Verse Search Results
   # ----------------------------------------------------------------------------------------------------------  	
-  def verse_search_results	    
-	@verse_search_results = Verse.search( params[:search_param] )
-	  respond_to do |format| 
-	    format.html { render :partial => 'verse_search_results', :layout=>false }
-	    format.xml  { render :xml 	=> @verse_search_results }
-	  end	    
-  end
+	#   def verse_search_results	    
+	# @verse_search_results = Verse.search( params[:search_param] )
+	#   respond_to do |format| 
+	#     format.html { render :partial => 'verse_search_results', :layout=>false }
+	#     format.xml  { render :xml 	=> @verse_search_results }
+	#   end	    
+	#   end
 
   # ----------------------------------------------------------------------------------------------------------
   # Verse Search Query page
   # ---------------------------------------------------------------------------------------------------------- 	
   def verse_search
-	@verse_search_results = Array.new
-	@verse_search_results = Verse.search( params[:search_param] || "Jesus" )
+	@verses = Array.new
+	@verses = Verse.search( params[:search_param] ) if params[:search_param]
   end
   
   # ----------------------------------------------------------------------------------------------------------

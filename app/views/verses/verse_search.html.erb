@@ -1,17 +1,30 @@
 <div id="search-box" class="center">
-	<% form_tag verse_search_path, :method => :get do %>
+	<% form_tag search_verse_path, :method => :get do %>
 	  <p>
 	    <%= text_field_tag( :search_param, params[:search_param], :size =>  50 ) %>
-	    <%= submit_tag "Search Bibles", :name => nil %>
+	    <%= submit_tag "Search Bible", :name => nil %>
 	  </p>
 	<% end %>
 </div>
 
 <br>
 
-<div id="search_results">	
-	<table class="memverse-standard">
-		<%= render :partial => "verses/verse_headings" %>
-		<%= render :partial => "verses/verse_one_line", :collection => @verses %>
-	</table>
-</div>
+<% unless @verses.empty? %>
+	<div id="search_results">	
+		<table class="memverse-standard">
+			<%= render :partial => "verses/verse_headings" %>
+			<%= render :partial => "verses/verse", :collection => @verses %>
+		</table>
+	</div>
+<% end %>
+
+<script type="text/javascript">
+
+  $(".add").bind("ajax:success", function(data, status, xhr) {
+  	var resp = jQuery.parseJSON(data);
+    $(this).html(resp.msg); // insert content
+  });
+
+
+  
+</script>
