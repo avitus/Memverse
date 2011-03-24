@@ -19,12 +19,7 @@
 <% end %>
 
 <script type="text/javascript">
-
-  $(".add").bind("ajax:success", function(data, status, xhr) {
-  	var resp = jQuery.parseJSON(data);
-    $(this).html(resp.msg); // insert content
-  });
-
-
-  
+  $(".add")
+  	.live("ajax:success", function(evt, data, status, xhr) { $(this).html(data.msg) })
+	.live("ajax:beforeSend", function(evt, xhr, settings) { $(this).find("a").html("Adding...") });
 </script>
