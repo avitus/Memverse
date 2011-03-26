@@ -198,6 +198,13 @@ class User < ActiveRecord::Base
     }
     return (verses_per_day * time_per_verse).round 
   end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # TRUE if user requires more time per day than their allocation
+  # ----------------------------------------------------------------------------------------------------------    
+  def overworked?
+  	return work_load >= time_allocation
+  end
     
   # ----------------------------------------------------------------------------------------------------------
   # Check whether current user is memorizing any verses at all
