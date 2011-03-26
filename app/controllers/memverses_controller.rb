@@ -448,7 +448,7 @@ class MemversesController < ApplicationController
     mv.efactor      = 1.8  # Initial seed value
     mv.last_tested  = Date.today
     mv.next_test    = Date.today # Start testing tomorrow
-    mv.status       = "Learning"
+    mv.status       = current_user.overworked? ? "Pending" : "Learning"
     # Add multi-verse linkage  
     mv.prev_verse   = prev_verse(vs)
     mv.next_verse   = next_verse(vs)
