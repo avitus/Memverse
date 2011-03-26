@@ -22,6 +22,9 @@
 			<% end %>					
 </fieldset>	
 
+<div id="ajaxWrapper">
+</div>
+
 <!-- http://www.devbridge.com/projects/autocomplete/jquery/ -->
 <script type="text/javascript">
 	$(document).ready(function() {
@@ -33,6 +36,21 @@
 		            'Colossians', '1 Thessalonians', '2 Thessalonians', '1 Timothy', '2 Timothy', 'Titus', 'Philemon', 'Hebrews', 'James',
 		            '1 Peter', '2 Peter', '1 John', '2 John', '3 John', 'Jude', 'Revelation']						
 		});
+		
+		// Verify verse format	
+		$("#answer").observe_field(0.3, function( ) { 
+			$.get('/verify_vs_format', { vs_str: this.value },
+				function(data){	
+					if (data == true) {
+						$("#answer").css({ borderColor: '#4C586E', backgroundColor: '#687284' });
+					}
+					else {
+						$("#answer").removeAttr("style");
+					}	
+			}, "json" );
+        });
+		
+		
    });
 </script>
 

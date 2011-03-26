@@ -126,7 +126,7 @@ class ApplicationController < ActionController::Base
 	  	  
       book = "Psalms" if book == "Psalm"
       book = "Song of Songs" if book == "Song Of Songs"
- 
+  
       if !BIBLEBOOKS.include?(full_book_name(book)) # This is not a book of the bible
       	logger.info("*** Could not find book: #{book}")
         return 2, book # Error code for invalid book of the bible

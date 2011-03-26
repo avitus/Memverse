@@ -1,3 +1,4 @@
+# coding: utf-8
 class VersesController < ApplicationController
   
   before_filter :login_required, :except => :index
@@ -86,6 +87,19 @@ class VersesController < ApplicationController
       format.html { redirect_to(verses_url) }
       format.xml  { head :ok }
     end
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Verify that string is in correct verse format
+  # ----------------------------------------------------------------------------------------------------------  
+  def verify_format
+  	vs_str = params[:vs_str].html_safe
+  	
+  	error_code, bk, ch, vs = parse_verse(vs_str)
+  	logger.debug("Parsed verse string #{vs_str}: #{error_code}")
+	verse_ok = (error_code == false)
+  	render :json => verse_ok
+  	
   end
 
   # ----------------------------------------------------------------------------------------------------------
