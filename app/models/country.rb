@@ -44,7 +44,6 @@ class Country < ActiveRecord::Base
       elsif (index+1 < grp[0].rank)
          Tweet.create(:news => "#{grp[0].printable_name} is now ##{index+1} on the country leaderboard", :country_id => self.id, :importance => 3)       
       end
-      logger.info("** Saving countryboard info for: #{grp[0].printable_name}")
       grp[0].rank = index+1
       grp[0].save
     } 
