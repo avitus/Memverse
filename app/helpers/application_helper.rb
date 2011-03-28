@@ -38,7 +38,7 @@ module ApplicationHelper
 #
 #  def page_title(title = nil)
 #    if title
-#      content_for(:page_title) { title } + " &mdash; MemVerse"
+#      content_for(:page_title) { title } + " &mdash; Memverse"
 #    else
 #      content_for?(:page_title) ? content_for(:page_title) : APP_CONFIG[:site_name]  # or a hard-coded default
 #    end
