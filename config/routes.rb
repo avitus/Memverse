@@ -116,6 +116,11 @@ MemverseApp::Application.routes.draw do
   match '/load_progress/:user',    :to => 'chart#load_progress',             :as => 'load_progress'
   match '/load_memverse_clock',    :to => 'chart#load_memverse_clock',       :as => 'load_memverse_clock' 
   
+  # Routes for chat channels  
+  match "/chat/send", 		:controller => "chat", :action => "send_message"
+  match "/chat/channel1", 	:controller => "chat", :action => "channel1"
+  match "/chat/channel2", 	:controller => "chat", :action => "channel2"  
+  
   # Root and Home Page
   root :to => 'sessions#new'
   match '/home',                   :to => 'sessions#new'
