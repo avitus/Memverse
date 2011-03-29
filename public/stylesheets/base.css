@@ -556,6 +556,11 @@ table.user-list {
 	height: 200px;	
 }
 
+.edit_area {
+	overflow: hidden;
+	font-size: 110%;
+}
+
 /* === Demo Page for Test Verse === */
 
 #instructions {
