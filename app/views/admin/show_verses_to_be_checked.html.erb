@@ -3,11 +3,11 @@
 	<div class="verse-list">
 		<table cellpadding="6" cellspacing="0">
 			<tr>
-				<th><%= link_to 'Ver'		</th>	  	 
-				<th><%= link_to 'Reference'	</th>
-				<th><%= link_to 'Users'		</th>				
-				<th><%= link_to 'Text'		</th>
-				<th><%= link_to 'Web Check'	</th>				
+				<th>Ver			</th>	  	 
+				<th>Reference	</th>
+				<th>Users		</th>				
+				<th>Text		</th>
+				<th>Web Check	</th>				
 			</tr>
 			<% for vs in @error_reported %>
 			<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
@@ -30,12 +30,12 @@
 
 	<table cellpadding="6" cellspacing="0">
 		<tr>
-			<th><%= link_to 'ID'			</th>					
-			<th><%= link_to 'Ver'			</th>	  	 
-			<th><%= link_to 'Reference'		</th>
-			<th><%= link_to 'Users'			</th>				
-			<th><%= link_to 'Text'			</th>
-			<th><%= link_to 'Web Check'		</th>
+			<th>ID			</th>					
+			<th>Ver			</th>	  	 
+			<th>Reference	</th>
+			<th>Users		</th>				
+			<th>Text		</th>
+			<th>Web Check	</th>
 		</tr>
 		<% for vs in @need_verification %>
 		<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
