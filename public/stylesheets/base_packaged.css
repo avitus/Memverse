@@ -104,6 +104,7 @@ table.user-list {width: 85%; padding: 6px; border-spacing: 1px; border: 1px soli
 #versetext {overflow: hidden; margin-left: 5%; margin-right: 5%; font-size: large; width: 400px; height: 200px}
 #avail-translations {background-color: #BAB18E;  width: 325px }
 #popular-verses {position: relative; background-color: #BAB18E;  width: 325px; margin-top: 0.7em }
+ .verse_input {overflow: hidden; font-size: large; width: 400px; height: 200px}
  #instructions {position: relative; width: 95%; min-height: 7em}
 #instructions #instr-1 {}
 #instructions #instr-2 {display: none}

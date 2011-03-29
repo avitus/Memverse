@@ -1,15 +1,7 @@
 <%= error_messages_for 'verse' %>
 
-
 <h2><%= @verse.book %> <%= @verse.chapter %>:<%= @verse.versenum %> [<%=@verse.translation%>] </h2>
 
-<!-- Only allow editing of text to avoid duplicate DB entries -->
-<!--[form:investment]-->
+<%= text_area 'verse', 'text', :class => 'verse_input' %></p>
 
-<p><label for="verse_text">Text</label><br/>
-<%= text_area 'verse', 'text'  %></p>
 
-<!--[eoform:verse]-->
-<style type="text/css">
-textarea {font:100% Verdana,Helvetica,Arial,sans-serif;}
-</style>

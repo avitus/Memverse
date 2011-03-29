@@ -547,6 +547,14 @@ table.user-list {
 	margin-top: 0.7em
 }
 
+/* === Edit Verse === */
+
+.verse_input {
+	overflow: hidden;
+	font-size: large;
+	width: 400px;
+	height: 200px;	
+}
 
 /* === Demo Page for Test Verse === */
 
