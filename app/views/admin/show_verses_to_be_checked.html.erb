@@ -39,15 +39,14 @@
 		</tr>
 		<% for vs in @need_verification %>
 		<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
-			<td><%= vs.id				%></td>				
-			<td align="center"><%= vs.translation		%></td>		 
-			<td align="left"><%= vs.ref				%></td>			
-			<td align="center"><%= vs.memverses.length	%></td>	
-			<td class="edit_area" id=<%= vs.id %>><%= vs.text %></td>
-			<td><%= vs.web_check		%></td>	
-			<td class="verify"><%= link_to_remote 'Verify', :url => { :action => "verify_verse", :id => vs.id },
-											 :update => { :success => "Verified", :failure => "Error"} %></td>
-			<td><%= vs.checked_by		%></td>											
+			<td>									<%= vs.id				%></td>				
+			<td align="center">						<%= vs.translation		%></td>		 
+			<td align="left">						<%= vs.ref				%></td>			
+			<td align="center">						<%= vs.memverses.length	%></td>	
+			<td class="edit_area" id=<%= vs.id %>>	<%= vs.text 			%></td>
+			<td>									<%= vs.web_check		%></td>	
+			<td class="verify">						<%= link_to 'Verify', admin_verify_verse_path(vs.id), :remote => true %></td>
+			<td>									<%= vs.checked_by		%></td>											
 		</tr>
 		<% end %>
 	
