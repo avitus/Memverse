@@ -3,6 +3,11 @@ require "juggernaut"
 class ChatController < ApplicationController
 	
 	def send_message
+		
+		Juggernaut.subscribe do |event, data|
+		  logger.debug("Event: #{event.inspect}, Data: #{data.inspect}")
+		end			
+		
 	  @messg = params[:msg_body]
 	  @sender = params[:sender]
  	  Juggernaut.publish(select_channel("/channel1"), parse_chat_message(params[:msg_body], params[:sender]))	
@@ -10,6 +15,13 @@ class ChatController < ApplicationController
 	    format.js
   	  end
 	end
+	
+	def update_roster
+		Juggernaut.subscribe do |event, data|
+		  logger.debug("Event: #{event.inspect}, Data: #{data.inspect}")
+		end	
+	end
+	
 
 	def parse_chat_message(msg, user)
 	  return "#{user}: #{msg}"
