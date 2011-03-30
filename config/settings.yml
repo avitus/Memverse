@@ -1,6 +1,6 @@
 development: &non_production_settings
   site_url: http://localhost:3000
-  site_name: MemVerse Development
+  site_name: Memverse Development
   admin_email: admin@memverse.com
   
 test:
@@ -13,5 +13,5 @@ staging:
   
 production:
   site_url: http://www.memverse.com
-  site_name: MemVerse
+  site_name: Memverse
   admin_email: admin@memverse.com
