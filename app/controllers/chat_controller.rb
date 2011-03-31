@@ -2,6 +2,8 @@ require "juggernaut"
 
 class ChatController < ApplicationController
 	
+	before_filter :login_required
+	
   # ----------------------------------------------------------------------------------------------------------
   # Push message to node.js server via Juggernaut
   # ---------------------------------------------------------------------------------------------------------- 	
