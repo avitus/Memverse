@@ -190,8 +190,10 @@ div#currentVerse #matchbox .correct {background: #687284;  font-size: 500%; font
 #reftest legend {background: #687284; color: #1F2229; padding: 0.2em 1em}
 #reftest-answer {margin-top: 1em; width: 430px; margin-left: 1px; background-color: #BAB18E}
 #reftest-answer #answer {margin-top: 2%; margin-bottom: 2%; margin-left: 1em}
- div#chat-stream {height: 600px; width: 800px; background-color: #BAB18E; overflow: auto}
+ div#chat-stream {height: 600px; width: 1000px; background-color: #BAB18E; overflow: auto}
 #chat_window {margin-top: 1em}
+.chat-username {background-color: #687284; float: left; width: 120px; padding-left: 0.2em}
+.chat-message {padding-left: 0.2em}
  div.tweet {padding-top: 0.2em; padding-bottom: 0.2em}
 .tweet .time {color: #606060; font-size: 80% }
  #leaderboard .current_user {background: #687284 }

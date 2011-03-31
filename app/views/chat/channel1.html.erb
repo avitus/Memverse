@@ -21,16 +21,12 @@
 		
 		[user, message] = data.split(":")
 		
-		u.text(user);
-		m.text(message);
+		u.text(user).addClass("chat-username");
+		m.text(message).addClass("chat-message");
 		
-		u.addClass("chat-username")
-		m.addClass("chat-message")
+		li.append(u).append(m);
 		
-		li.text(u);
 		$("#chat-stream").append(li);
-		$("#chat-stream").append(u);
-		$("#chat-stream").append(m);
 		$("#chat-stream").scrollTop($("#chat-stream")[0].scrollHeight);
 	}); 
 
