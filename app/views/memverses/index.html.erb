@@ -1,95 +1,179 @@
-<% if @user_has_no_verses %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>MemVerse</title>
+<link href="css/style.css" rel="stylesheet" type="text/css" />
 
-	<div id="getting_started" class="start-page-actions">
-		<h1>Getting started</h1>
-		<ol>
-			<li><%= link_to 'Read the tutorial', 					tutorial_path 		%></li>				
-			<li><%= link_to 'Read about the SuperMemo Algorithm',	supermemo_path		%> - (only if you're interested)</li>
-			<li><%= link_to 'Update your profile',					update_profile_path	%> - (set email reminders etc.)</li>			
-			<li><%= link_to 'Add your first memory verse', 			add_verse_path		%> - (feel free to jump straight to this step!)</li>	
-		</ol>
+<!--[if IE 6]>
+<style type="text/css">
+	.learn-area
+	{
+		padding-top:16px;
+	}
+</style>
+<![endif]-->
 
-		<h1>In a Rush?</h1>
+<style type="text/css">
+.left-widget
+{
+	-moz-border-radius:8px;
+	-webkit-border-radius:8px;
+	-o-border-radius:8px;
+	border-radius:8px;
+	behavior:url(PIE.htc);
+}
 
-		<p>Get started quickly by selecting from the most popular verses in the translation of your choice</p>
-		
-		<ul>
-			<li><%= link_to 'New International Version', 	:action => 'starter_pack', :translation => 'NIV' %></li>
-			<li><%= link_to 'English Standard Version',		:action => 'starter_pack', :translation => 'ESV' %></li>
-			<li><%= link_to 'King James Version', 			:action => 'starter_pack', :translation => 'KJV' %></li>
-			<li><%= link_to 'New King James Version',		:action => 'starter_pack', :translation => 'NKJ' %></li>
-			<li><%= link_to 'New American Standard', 		:action => 'starter_pack', :translation => 'NAS' %></li>
-			<li><%= link_to 'Revised Standard Version', 	:action => 'starter_pack', :translation => 'RSV' %></li>
-		</ul>
-	</div>
+.main-right
+{
+	-moz-border-radius:8px;
+	-webkit-border-radius:8px;
+	-o-border-radius:8px;
+	border-radius:8px;
+	behavior:url(PIE.htc);
+}
+</style>
 
-<% elsif @user_has_too_few_verses %>
+</head>
 
-	<div id="getting_started" class="start-page-actions">
-		<h1>Recommendations</h1>
-		<ol>
-			<li><%= link_to 'Add another memory verse',				:action => 'add_verse'%></li>	
-			<% if @user_has_test_today %>
-			<li><%= link_to 'Memorize!', 							:action => 'test_verse' %></li>			
-			<% end %>
-		</ol>
-	</div>
+<body id="inner1-body">
+<div id="wrapper"><!--wrapper start-->
 
-<% else %>
-
-	<div id="mv-news-feed" class="front-page-segment">
-		<h2><%= link_to 'Recently on Memverse', tweets_path %></h2>
-		<%= render :partial => @tweets %>	
-	</div>
-		
-	<div id="column-mid">
-		<div id="memverse-counter" class="front-page-segment">
-			<h2>Verses Memorized</h2>
-			<p><span id="count"><%=Memverse.memorized.count%></span><span> verses memorized on Memverse.</span></p>
-		</div>
-
-		
-		<div id="verse-of-the-day" class="front-page-segment">
-			<h2>Verse of the Minute</h2>
-			<p id="votd-txt"><%= @votd_txt %></p>
-			<p id="votd-ref"><%= @votd_ref %>, <%= @votd_tl %></p>					
-		</div>
-		
-		<div id="memverse-actions" class="front-page-segment">
-			<h2><%= t '.memverse_today' %></h2>	
-			<p><%= t '.review_a' %> <%=@due_today%> <%= t '.review_b' %></p>
-			<p>You have <%= link_to "#{@quests_to_next_level} to complete", current_user %> to reach level <%= current_user.level+1 %>.</p>
-			<p><%= t '.time_req_a' %> <%=current_user.work_load%> <%= t '.time_req_b' %></p>		
-		</div>
-	</div>
-	
-	<div id="devotional" class="front-page-segment">
-		<!--
-		<audio controls="controls" width="200" height="100" autoplay="autoplay">
-			<source src="music/christmas.ogg" type="audio/ogg" />
-	  		<source src="music/christmas.wav" type="audio/wav" />
-			Your browser does not support the audio element.
-		</audio> -->
-		<h2>Spurgeon's Daily Devotion</h2>
-		<h4><%=@dev_ref%></h4>
-		<%=@devotion.html_safe%>
-	</div>
-	
-
-<% end %>
-
-<script language="JavaScript" type="text/javascript"><!--	
-	$.PeriodicalUpdater('/memverse_counter', {
-	    method: 'get',          // method; get or post
-	    minTimeout: 5*1000,    	// starting value for the timeout in milliseconds
-	    maxTimeout: 30*60*1000, // maximum length of time between requests is 30 mins
-	    multiplier: 1.3,        // if set to 2, timerInterval will double each time the response hasn't changed (up to maxTimeout)
-	    type: 'json',           // response type - text, xml, json, etc.  See $.ajax config options
-	    maxCalls: 0,            // maximum number of calls. 0 = no limit.
-	    autoStop: 0             // automatically stop requests after this many returns of the same data. 0 = disabled.
-		}, function(data) {
-				// Insert the refreshed data
-				$('#memverse-counter').effect("highlight", {}, 3000);
-				$('#count').text(data.total_verses);
-		});		
---></script>
+	<div id="header"><!--header start-->
+    	<div class="header-top"><!--header-top start-->
+        	<div id="logo"><a href="#"><img src="images/logo.png" width="253" height="31" alt="" /></a></div>
+            <div class="inner-top-right"><!--inner-top-right start-->
+                <strong>Welcome:</strong> User Name Goes Here 
+            </div><!--inner-top-right end-->
+        </div><!--header-top end-->
+        
+        <div class="menu"><!--menu start-->
+        	<ul>
+            	<li><a href="#">Home</a></li>
+                <li><a href="#">Memorize</a></li>
+                <li><a href="#">Learn</a></li>
+                <li><a href="#">Profile</a></li>
+                <li><a href="#">LeaderBoards</a></li>
+                <li><a href="#">FAQ</a></li>
+                <li><a href="#">Blog</a></li>
+                <li><a href="#">Contact</a></li>
+                <li>&nbsp;</li>
+            </ul>
+        </div><!--menu end-->
+    </div><!--header end-->
+    
+    <div class="submenu"><!--submenu start-->
+    	<div class="submenu-left">
+        	<ul>
+            	<li class="nopad active"><a href="#">MV Dashboard</a></li>
+                <li><a href="#">My Account</a></li>
+                <li><a href="#">My Verses</a></li>
+                <li><a href="#">My Progress</a></li>
+                <li><a href="#">Popular Verses</a></li>
+                <li><a href="#">Reference Call</a></li>
+                <li><a href="#">Practice</a></li>
+            </ul>
+        </div>
+        <div class="submenu-icon"><a href="#"><img src="images/new-icon.png" width="32" height="32" alt="" /></a></div>
+        <div class="clr"></div>
+    </div><!--submenu end-->
+    
+    <div class="breadcum-area"><!--breadcum start-->
+    	<div class="breadcum-left">
+        	<span class="home-icon"><a href="#"><img src="images/home-icon.png" width="25" height="23" alt="" /></a></span>
+            <div class="breadcum-link">
+            	<ul>
+                	<li><a href="#">Bread Crumb</a></li>
+                    <li><a href="#">Navigation</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="breadcum-right">
+        	<a href="#"><img src="images/your-verses.png" width="172" height="25" alt="" /></a>
+            <a href="#"><img src="images/more-verses.png" width="192" height="25" alt="" /></a>
+        </div>
+    </div><!--breadcum end-->
+    
+    <div class="error-bg"><!--error-bg end-->
+    	YOU HAVE <span>"26 Verses "</span> TO REVIEW TODAY! YOU CURRENTLY NEED ABOUT <span>21</span> MINUTES PER DAY.
+    </div><!--error-bg end-->
+    <div><img src="images/trans.png" width="1" height="10" alt="" /></div>
+    
+    <div class="two-box"><!--two-box start-->
+    	<div class="white-box1">
+        	<div class="yellow-icon"><img src="images/icon3.png" width="49" height="49" alt="" /></div>
+            <div class="wbox-text">
+            	<h3>Verse of the Minute</h3>
+                <p>Though I speak with the tongues of men and of angels, and have not charity, I am become as sounding brass, or a tinkling cymbal.</p>
+                <span class="verse"><strong>KJV</strong></span>
+            </div>
+        </div>
+        <div class="white-box2">
+        	<div class="yellow-icon"><img src="images/icon4.png" width="49" height="49" alt="" /></div>
+        	<div class="wbox-text2">
+            	<h3 class="nospace">Verse of the Minute</h3>
+                <p><span class="number">54,586</span>&nbsp;&nbsp; verses memorized on <strong>Memverse</strong>.</p>
+                <span class="verse"><a href="#">Go To Your Verses</a></span>
+            </div>
+        </div>
+    </div><!--two-box end-->
+    <div><img src="images/trans.png" width="1" height="10" alt="" />&nbsp;</div>
+    
+    <div class="tab-bg">
+    <div class="tab-top">
+    <div class="tab-bottom">
+    	<div class="tab-nav">
+        	<ul>
+            	<li class="dashboard active"><a href="#">Dashboard</a></li>
+                <li class="devotions"><a href="#">Spurgeons Daily Devotions</a></li>
+                <li class="dashboard"><a href="#">Verse of the Day</a></li>
+            </ul>
+        </div>
+		<div class="tab-content">
+        	<h3>Recently on Memverse</h3>
+            <div class="tab-content-left">
+            	<ul>
+                	<li><a href="#">Eunice Sophia has memorized her 40th verse</a> <span>[20 minutes ago]</span></li>
+                    <li><a href="#">Eunice Sophia has memorized her 40th verse</a> <span>[20 minutes ago]</span></li>
+                    <li><a href="#">Eunice Sophia has memorized her 40th verse</a> <span>[20 minutes ago]</span></li>
+                    <li><a href="#">Eunice Sophia has memorized her 40th verse</a> <span>[20 minutes ago]</span></li>
+                    <li><a href="#">Eunice Sophia has memorized her 40th verse</a> <span>[20 minutes ago]</span></li>
+                    <li><a href="#">Eunice Sophia has memorized her 40th verse</a> <span>[20 minutes ago]</span></li>
+                    <li><a href="#">Eunice Sophia has memorized her 40th verse</a> <span>[20 minutes ago]</span></li>
+                    <li><a href="#">Eunice Sophia has memorized her 40th verse</a> <span>[20 minutes ago]</span></li>
+                    <li><a href="#">Eunice Sophia has memorized her 40th verse</a> <span>[20 minutes ago]</span></li>
+                    <li><a href="#">Eunice Sophia has memorized her 40th verse</a> <span>[20 minutes ago]</span></li>
+                    <li><a href="#">Eunice Sophia has memorized her 40th verse</a> <span>[20 minutes ago]</span></li>
+                    <li><a href="#">Eunice Sophia has memorized her 40th verse</a> <span>[20 minutes ago]</span></li>
+                </ul>
+            </div>
+            <div class="tab-content-right">
+            	<ul>
+                	<li><a href="#">Eunice Sophia has memorized her 40th verse</a> <span>[20 minutes ago]</span></li>
+                    <li><a href="#">Eunice Sophia has memorized her 40th verse</a> <span>[20 minutes ago]</span></li>
+                    <li><a href="#">Eunice Sophia has memorized her 40th verse</a> <span>[20 minutes ago]</span></li>
+                    <li><a href="#">Eunice Sophia has memorized her 40th verse</a> <span>[20 minutes ago]</span></li>
+                    <li><a href="#">Eunice Sophia has memorized her 40th verse</a> <span>[20 minutes ago]</span></li>
+                    <li><a href="#">Eunice Sophia has memorized her 40th verse</a> <span>[20 minutes ago]</span></li>
+                    <li><a href="#">Eunice Sophia has memorized her 40th verse</a> <span>[20 minutes ago]</span></li>
+                    <li><a href="#">Eunice Sophia has memorized her 40th verse</a> <span>[20 minutes ago]</span></li>
+                    <li><a href="#">Eunice Sophia has memorized her 40th verse</a> <span>[20 minutes ago]</span></li>
+                    <li><a href="#">Eunice Sophia has memorized her 40th verse</a> <span>[20 minutes ago]</span></li>
+                    <li><a href="#">Eunice Sophia has memorized her 40th verse</a> <span>[20 minutes ago]</span></li>
+                    <li><a href="#">Eunice Sophia has memorized her 40th verse</a> <span>[20 minutes ago]</span></li>
+                </ul>
+            </div>
+            <div class="clr"></div>
+        </div>
+    </div>
+    </div>
+    </div>
+    <div class="clr"></div>
+    
+    <div id="footer"><!--footer end-->
+    	This is your copyright information or this potentially could be your contact information. It's up to you. Let me know what you think. <span><a href="#">info@memverse.com</a></span>
+    </div><!--footer end-->
+    
+</div><!--wrapper end-->
+</body>
+</html>
