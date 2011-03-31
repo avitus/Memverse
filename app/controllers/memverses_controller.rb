@@ -445,10 +445,10 @@ class MemversesController < ApplicationController
     mv = Memverse.new
     mv.user_id      = current_user.id
     mv.verse_id     = vs.id
-    mv.efactor      = 1.7  # Initial seed value
+    mv.efactor      = 1.8  # Initial seed value
     mv.last_tested  = Date.today
     mv.next_test    = Date.today # Start testing tomorrow
-    mv.status       = "Learning"
+    mv.status       = current_user.overworked? ? "Pending" : "Learning"
     # Add multi-verse linkage  
     mv.prev_verse   = prev_verse(vs)
     mv.next_verse   = next_verse(vs)
@@ -473,6 +473,26 @@ class MemversesController < ApplicationController
     # TODO: Check once more for duplication at this point and then save  
     
   end # end of save verse as a memory verse for user    
+  
+
+  # ----------------------------------------------------------------------------------------------------------
+  # AJAX Verse Add
+  # ---------------------------------------------------------------------------------------------------------- 
+  def ajax_add
+  	vs  = Verse.find(params[:id])
+  	
+    if current_user.has_verse_id?(vs)
+      msg = "Previously Added"
+    else
+      # Save verse as a memory verse for user      
+      save_mv_for_user(vs)  # TODO rather use a user model method ... this is archaic!
+      msg = "Added"
+    end  	
+  	
+  	render :json => {:msg => msg }
+  	
+  end
+  
 
   # ----------------------------------------------------------------------------------------------------------
   # Add an existing memory verse
@@ -1130,7 +1150,7 @@ class MemversesController < ApplicationController
     # We need to check for alternative solutions to account for identical verses
     alt_soln      = identical_verses( solution )
         
-    if solution
+    if solution && session[:reftest_answered]
     
       mv = Memverse.find( session[:ref_id][question_num] )
     
@@ -1169,8 +1189,8 @@ class MemversesController < ApplicationController
     
     else
       # Probably caused by user using the back button after test is finished
-      logger.info("*** User probably hit the back button")
-      flash[:notice] = "Reference recall test already completed"
+      logger.info("*** User probably hit the back button or returned next day without session variable set up")
+      flash[:notice] = "Reference recall test already completed or not initialized"
       redirect_to :action => 'index'
     end    
     

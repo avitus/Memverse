@@ -50,7 +50,7 @@ class User < ActiveRecord::Base
   #  validate :normalize_identity_url
   
   validates :login, :presence   => true,
-                    :uniqueness => true,
+                    :uniqueness => { :case_sensitive => false },
                     :length     => { :within => 3..40 },
                     :format     => { :with => Authentication.login_regex, :message => Authentication.bad_login_message }
 
@@ -59,13 +59,10 @@ class User < ActiveRecord::Base
                     :allow_nil  => true
 
   validates :email, :presence   => true,
-                    :uniqueness => true,
+                    :uniqueness => { :case_sensitive => false },
                     :format     => { :with => Authentication.email_regex, :message => Authentication.bad_email_message },
                     :length     => { :within => 6..100 }  
-  
-  
-  
-  
+   
   # Relationships
   has_and_belongs_to_many :roles
   has_and_belongs_to_many :quests
@@ -200,6 +197,13 @@ class User < ActiveRecord::Base
       verses_per_day += (1 / mv.test_interval.to_f) 
     }
     return (verses_per_day * time_per_verse).round 
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # TRUE if user requires more time per day than their allocation
+  # ----------------------------------------------------------------------------------------------------------    
+  def overworked?
+  	return work_load >= time_allocation
   end
     
   # ----------------------------------------------------------------------------------------------------------
@@ -936,7 +940,7 @@ class User < ActiveRecord::Base
     #
     # Of course, you could also create a join table to join users to blogs they can blog in.  But do you want to do 
     # that with blog comments and ability to moderate comments as well?
-    self.id == 2 or self.id == 366 or self.id == 1138 or self.id == 3113 or self.id == 4024 or self.id == 3486 # Restrict blogging to me, Heather-Kate Taylor, Phil Walker, Dakota Lynch, River La Belle and Alex Watt
+    self.id == 2 or self.id == 366 or self.id == 1138 or self.id == 3113 or self.id == 4024 or self.id == 3486 or self.id == 4565 # Restrict blogging to me, Heather-Kate Taylor, Phil Walker, Dakota Lynch, River La Belle, Alex Watt and Nathan Burkhalter
   end
   
   # Whether a user can moderate the comments for a given blog

@@ -46,7 +46,6 @@
 
 	<!-- Main Stylesheet -->
 	<%= stylesheet_link_tag 'base_packaged', :cache => 'cache/all' %>
-	<%= stylesheet_link_tag 'jquery.fancybox-1.3.4'%>
 	<%= stylesheet_link_tag 'mobile' if mobile_device? %>
 
   <!-- Rails 3 XSS protection -->
@@ -59,9 +58,9 @@
 	<%= javascript_include_tag 	'jquery.min', 'rails', 
 								'jquery-ui-1.8.6.custom.min', 
 								'jquery.quickflip', 'jquery.hoverIntent', '2leveltab', 
-								'jquery.periodicalupdater', 'jquery.jeditable', 'jquery.autocomplete', 'modernizr-1.6.min', 
-								'jquery.shuffle',  'jquery.observe_field', 'jquery.blockUI', 'jquery.fancybox-1.3.4.pack',
-								'application.min', 'i18n.min', 'translations', :cache => 'cache/all' %> 
+								'jquery.periodicalupdater', 'jquery.jeditable.min', 'jquery.autocomplete', 'modernizr-1.6.min', 
+								'jquery.shuffle',  'jquery.observe_field', 'jquery.blockUI.min', 'jquery.fancybox-1.3.4.pack',
+								'application.min', 'i18n.min', 'translations', 'juggernaut', :cache => 'cache/all' %> 
 							
 	<!-- Shortcut Icons -->
 	<link rel="shortcut icon" href="/images/favicon.ico" />
@@ -148,6 +147,7 @@
 				<div id="homepage" class="submenustyle">
 					<%= link_to t('home_menu.My Verses'),				manage_verses_path %>
 					<%= link_to t('home_menu.Add Verse'),				add_verse_path %>
+					<%= link_to t('home_menu.Search Bible'),			search_verse_path %>
 					<%= link_to t('home_menu.My Progress'),				progress_path %>	
 					<%= link_to t('home_menu.Popular Verses'),			popular_verses_path %>	
 					<%= link_to t('home_menu.Tag Cloud'),				tag_cloud_path %>	

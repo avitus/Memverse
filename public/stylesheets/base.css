@@ -547,6 +547,19 @@ table.user-list {
 	margin-top: 0.7em
 }
 
+/* === Edit Verse === */
+
+.verse_input {
+	overflow: hidden;
+	font-size: large;
+	width: 400px;
+	height: 200px;	
+}
+
+.edit_area {
+	overflow: hidden;
+	font-size: 110%;
+}
 
 /* === Demo Page for Test Verse === */
 
@@ -1130,6 +1143,28 @@ div#currentVerse #matchbox .correct {
 	margin-left: 1em;
 }
 
+/* === Chat === */
+div#chat-stream {
+	height: 600px;
+	width: 1000px;
+	background-color: #BAB18E;
+	overflow: auto;
+}
+
+#chat_window {
+	margin-top: 1em;
+}
+
+.chat-username {
+	background-color: #687284;
+    float: left;
+    width: 120px;
+    padding-left: 0.2em;	
+}
+
+.chat-message {
+	padding-left: 0.2em;
+}
 
 /* === Tweets === */
 div.tweet {

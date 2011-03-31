@@ -13,7 +13,7 @@
 			as they are part of the text</li>
 		<li><strong>Periods and Fullstops: </strong>These are frequently left out at the end of verses. When you are copying and pasting from another website, please ensure
 			that you capture the final punctuation.</li>
-		<li><strong>Double dashes: </strong>Please convert all double dashes ('--') to single dashes ('-')</li>
+		<li><strong>Double dashes: </strong>Please convert all double dashes ('--') to single dashes with a space on either side (' - ')</li>
 	</ul>	
 	
 	<p>To make changes, click on the text of the verse you'd like to correct and then make any changes in the edit box. Click 'Ok' to save the change and then
@@ -35,8 +35,7 @@
 			<td align="center"><%= vs.translation		%></td>		 
 			<td align="left"><%= vs.ref				%></td>			
 			<td class="edit_area" id=<%= vs.id %>><%= vs.text %></td>	
-			<td class="verify"><%= link_to_remote 'OK', :url => { :action => "check_verse", :id => vs.id },
-												 :update => { :success => "Checked", :failure => "Error"} %></td>									
+			<td class="verify"><%= link_to 'OK', check_verse_path(vs), :remote => true  %></td>									
 		</tr>
 		<% end %>	
 	</table>
@@ -60,7 +59,7 @@
 	 });
 </script>
 
-<!-- Highlight verse to be verified -->
+<!-- Highlight verse to be verified, remove after verification -->
 <script>
   $(document).ready(function(){
     
@@ -72,6 +71,7 @@
     }, function () {
       $(this).closest('tr').removeClass("hilite");
     });
-
+          
   });
 </script>
+

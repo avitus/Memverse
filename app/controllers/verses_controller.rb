@@ -1,6 +1,8 @@
+# coding: utf-8
 class VersesController < ApplicationController
   
   before_filter :login_required, :except => :index
+  skip_before_filter :verify_authenticity_token, :only => [:set_verse_text, :check_verse]  # ALV: attempt to stop redirects to login page when setting verse text
   
   # GET /verses
   # GET /verses.xml
@@ -88,6 +90,19 @@ class VersesController < ApplicationController
   end
 
   # ----------------------------------------------------------------------------------------------------------
+  # Verify that string is in correct verse format
+  # ----------------------------------------------------------------------------------------------------------  
+  def verify_format
+  	vs_str = params[:vs_str].html_safe
+  	
+  	error_code, bk, ch, vs = parse_verse(vs_str)
+  	logger.debug("Parsed verse string #{vs_str}: #{error_code}")
+	verse_ok = (error_code == false)
+  	render :json => verse_ok
+  	
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
   # In place editing support
   # ----------------------------------------------------------------------------------------------------------    
   def add_verse_tag
@@ -113,6 +128,25 @@ class VersesController < ApplicationController
   def show_verses_with_tag
     @tag       = ActsAsTaggableOn::Tag.find_by_name(params[:tag])
     @user_list = Memverse.tagged_with(params[:tag]).map{ |mv| mv.verse.switch_tl(current_user.translation) || mv.verse}.uniq.sort!
+  end
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Verse Search Results
+  # ----------------------------------------------------------------------------------------------------------  	
+	#   def verse_search_results	    
+	# @verse_search_results = Verse.search( params[:search_param] )
+	#   respond_to do |format| 
+	#     format.html { render :partial => 'verse_search_results', :layout=>false }
+	#     format.xml  { render :xml 	=> @verse_search_results }
+	#   end	    
+	#   end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Verse Search Query page
+  # ---------------------------------------------------------------------------------------------------------- 	
+  def verse_search
+	@verses = Array.new
+	@verses = Verse.search( params[:search_param] ) if params[:search_param]
   end
   
   # ----------------------------------------------------------------------------------------------------------
