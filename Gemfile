@@ -26,10 +26,8 @@ gem 'riddle'																																										# Seems to be needed for T
 gem 'i18n-js'																																										# Uses config/locale files to build a JavaScript equivalent of i18n in Rails
 gem 'spawn', :git => 'git://github.com/rfc2822/spawn'																						# Use this for now (instead of the plugin ... check to see whether master branch ever supports Rails 3)
 
-
 # Support for observe_field etc.
 gem 'prototype_legacy_helper', '0.0.0', :git => 'git://github.com/rails/prototype_legacy_helper.git'
-
 
 group :console do
   gem 'wirble'
