@@ -1,4 +1,5 @@
-<div id="mesg"></div>
+<div id="chat-stream">
+</div>
 
 <% form_tag('/chat/send', :id => 'chat_window', :remote => true) do %>
 	<%= text_field_tag 'msg_body', '', :size => 50 %>
@@ -9,13 +10,30 @@
 <script type="text/javascript" charset="utf-8">
     var jug = new Juggernaut();
 
-    $("#mesg").append($("<li/>").append("Welcome to MemChat"));
+    $("#chat-stream").append($("<li/>").append("Welcome to MemChat"));
 	
 	jug.subscribe("/chats/channel1", function(data){
-		var li = $("<li/>");
-		li.text(data);
-		$("#mesg").append(li);
+		var li 		= $("<li/>");
+		var u  		= $("<span/>");
+		var m 		= $("<span/>");
+		var user;
+		var message;
+		
+		[user, message] = data.split(":")
+		
+		u.text(user);
+		m.text(message);
+		
+		u.addClass("chat-username")
+		m.addClass("chat-message")
+		
+		li.text(u);
+		$("#chat-stream").append(li);
+		$("#chat-stream").append(u);
+		$("#chat-stream").append(m);
+		$("#chat-stream").scrollTop($("#chat-stream")[0].scrollHeight);
 	}); 
+
 
 </script>
 

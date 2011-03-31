@@ -1143,6 +1143,17 @@ div#currentVerse #matchbox .correct {
 	margin-left: 1em;
 }
 
+/* === Chat === */
+div#chat-stream {
+	height: 600px;
+	width: 800px;
+	background-color: #BAB18E;
+	overflow: auto;
+}
+
+#chat_window {
+	margin-top: 1em;
+}
 
 /* === Tweets === */
 div.tweet {

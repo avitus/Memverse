@@ -2,20 +2,19 @@ require "juggernaut"
 
 class ChatController < ApplicationController
 	
-	def send_message
-		
-		Juggernaut.subscribe do |event, data|
-		  logger.debug("Event: #{event.inspect}, Data: #{data.inspect}")
-		end			
-		
+  # ----------------------------------------------------------------------------------------------------------
+  # Push message to node.js server via Juggernaut
+  # ---------------------------------------------------------------------------------------------------------- 	
+	def send_message		
 	  @messg = params[:msg_body]
 	  @sender = params[:sender]
  	  Juggernaut.publish(select_channel("/channel1"), parse_chat_message(params[:msg_body], params[:sender]))	
 	  respond_to do |format|
 	    format.js
-  	  end
+  	end
 	end
 	
+	# Not working ...
 	def update_roster
 		Juggernaut.subscribe do |event, data|
 		  logger.debug("Event: #{event.inspect}, Data: #{data.inspect}")
