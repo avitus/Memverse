@@ -16,10 +16,13 @@
 		var li 		= $("<li/>");
 		var u  		= $("<span/>");
 		var m 		= $("<span/>");
+		var um_arr  = new Array();
 		var user;
 		var message;
 		
-		[user, message] = data.split(":")
+		um_arr  = data.split(":");
+		user    = um_arr[0];
+		message = um_arr[1];
 		
 		u.text(user).addClass("chat-username");
 		m.text(message).addClass("chat-message");
@@ -29,7 +32,6 @@
 		$("#chat-stream").append(li);
 		$("#chat-stream").scrollTop($("#chat-stream")[0].scrollHeight);
 	}); 
-
 
 </script>
 
