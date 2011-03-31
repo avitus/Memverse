@@ -2,9 +2,45 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>MemVerse</title>
+				
+<title><%= page_title %></title>
+	
+<meta name="distribution" content="all" />
+<meta name="robots" content="all" />	
+<meta name="resource-type" content="document" />
+<meta name="MSSmartTagsPreventParsing" content="true" />
+
+<meta name="description" content="<%= page_description %>" />	
+<meta name="keywords" content="memorize bible, memorize scripture, popular bible verses, memorize bible verses," />	
+	
+<!-- Facebook Open Graph tags -->
+<meta property="og:title"		content="<%= @page_title || Memverse %>"/>	
+<meta property="og:type"		content="website"/>	
+<meta property="og:image"		content="http://www.memverse.com/images/memverse_swords.jpg"/>	
+<meta property="og:url"			content=<%= request.url %>/>	
+<meta property="og:site_name"	content="Memverse"/>	
+<meta property="fb:admins"		content="1799626379, kyrriana"/>
+<meta property="og:description" content="A community of believers memorizing the bible"/>
+		
+<!-- Google, Microsoft verification -->
+<meta name="verify-v1" content="IrqDYi2zxAyS8GUAqQcyXvnmcxhtuNITeCIFYLa76LQ=" />	
+<meta name="msvalidate.01" content="A1BB69E880870637C825F612E2FA4034" />				
+
+<!-- Identify blog feed -->
+<link rel="alternate" type="application/rss+xml" title="Memverse Blog" href="http://feeds.feedburner.com/MemverseBlog" />
+
+<!-- Load fonts -->
+<script type="text/javascript" src="http://use.typekit.com/wxl5kyc.js"></script>
+<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+<!-- Rails 3 XSS protection -->
+<%= csrf_meta_tag %>
+		
 <!-- Main Stylesheet -->
 <%= stylesheet_link_tag 'base_packaged', :cache => 'cache/all' %>
+
+<!-- Auxiliary stylesheets, etc -->
+<%= yield(:head) %>
 
 <!-- Javascript -->
 <!-- NOTE: not using asset packager at the moment -->
@@ -14,6 +50,11 @@
 							'jquery.periodicalupdater', 'jquery.jeditable.min', 'jquery.autocomplete', 'modernizr-1.6.min', 
 							'jquery.shuffle',  'jquery.observe_field', 'jquery.blockUI.min', 'jquery.fancybox-1.3.4.pack',
 							'application.min', 'i18n.min', 'translations', 'juggernaut', :cache => 'cache/all' %> 
+
+
+<!-- Shortcut Icons -->
+<link rel="shortcut icon" href="/images/favicon.ico" />
+<link rel="icon" 		  href="/images/favicon.ico" />	
 
 <!--[if IE 6]>
 <style type="text/css">
