@@ -1146,7 +1146,7 @@ div#currentVerse #matchbox .correct {
 /* === Chat === */
 div#chat-stream {
 	height: 600px;
-	width: 1000px;
+	width: 1280px;
 	background-color: #BAB18E;
 	overflow: auto;
 }
@@ -1158,7 +1158,7 @@ div#chat-stream {
 .chat-username {
 	background-color: #687284;
     float: left;
-    width: 120px;
+    width: 160px;
     padding-left: 0.2em;	
 }
 
