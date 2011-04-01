@@ -71,7 +71,7 @@ body
 {
 	background:#bfbebe url(../images/body-bg.png) repeat-x left top;
 	font-family:Arial, Helvetica, sans-serif;
-	font-size:12px;
+	font-size:13px;
 	color:#333333;
 	padding:0px;
 	margin:0px;
@@ -127,6 +127,12 @@ img a
 	width:1080px;
 	margin:0px auto;
 }
+
+#page-content
+{
+
+}
+
 
 /*========== Header ==========*/
 
@@ -244,7 +250,7 @@ img a
 
 .menu
 {
-	height:42px;
+	height:90px;
 }
 
 .menu ul
@@ -841,7 +847,7 @@ img a
 
 .submenu-left
 {
-	width:720px;
+	width:1040px;
 	height:42px;
 	float:left;
 }
@@ -889,6 +895,13 @@ img a
 	padding-top:3px;
 }
 
+/* Start with submenus hidden */
+.submenustyle {
+	display: none;
+	filter:alpha(opacity=0);
+	-moz-opacity:0;
+}
+
 .breadcum-area
 {
 	width:1080px;
@@ -913,7 +926,7 @@ img a
 
 .breadcum-link
 {
-	width:160px;
+	width:250px;
 	height:23px;
 	float:left;
 	padding-top:8px;
@@ -966,7 +979,7 @@ img a
 .error-bg
 {
 	background:url(../images/error-bg.png) no-repeat left top;
-	width:900px;
+	width:1040px;
 	height:29px;
 	font-size:13px;
 	font-weight:bold;
@@ -1232,7 +1245,7 @@ img a
 	text-decoration:none;
 }
 
-/*========== Inner2 ==========*/
+/*========== Test Verse Page ==========*/
 
 .inner2-bg
 {
@@ -2096,27 +2109,42 @@ table.memverse-standard th {
 	padding: 3px;
 	border-style: solid;
 	border-color: gray;
-	background-color: #687284;
+	color: #f2f1f1;
+	background-color: #333333;
 	-moz-border-radius: 3px 3px 3px 3px;
 }
+
+.table.memverse-standard th a
+{
+	color: #f2f1f1;
+}
+
+.table.memverse-standard th a:hover
+{
+	color:#FFF;
+}
+
 table.memverse-standard td {
 	border-width: thin;
 	padding: 3px;
 	border-style: solid;
 	border-color: gray;
-	background-color: #BAB18E;
+	color:#232323;	
+	background-color: #bfbebe;
 	-moz-border-radius: 3px 3px 3px 3px;
 }
 
-
-/* Default sans-serif fonts */
-body {
-	font-family: verdana, helvetica, arial, sans-serif;
-	font-size:100%;
-	background-image:url('/images/background.jpg');
-	background-repeat:no-repeat;
-	background-position:top center;		
+.table.memverse-standard td a
+{
+	color:#232323;
 }
+
+
+.table.memverse-standard td a:hover
+{
+	color:#000;
+}
+
 
 
 /* Image tags */
@@ -2145,7 +2173,6 @@ div.center {
 
 /* === Menu Tabs === */
 #menu-tabs {
-	padding-bottom: 2em;
 }
 
 /* === Container for Page === */
@@ -2619,7 +2646,7 @@ table.user-list {
 	margin: auto;
 }
 
-.tag {
+.verse-tag {
 	background-color: #687284;
 	padding-left: 1em;
 	padding-right: 1em;

@@ -21,7 +21,7 @@
 .cloud5 {padding: 0px 7px 0px 7px; margin-top: 2px; font-size: 180%; background-color: #BAA28E}
 .cloud6 {padding: 0px 7px 0px 7px; margin-top: 2px; font-size: 200%; background-color: #687284}
 .cloud7 {padding: 0px 7px 0px 7px; margin-top: 2px; font-size: 220%; background-color: #687284}
- body {background:#bfbebe url(../images/body-bg.png?1301602188) repeat-x left top; font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#333333; padding:0px; margin:0px; line-height:normal}
+ body {background:#bfbebe url(../images/body-bg.png?1301602188) repeat-x left top; font-family:Arial, Helvetica, sans-serif; font-size:13px; color:#333333; padding:0px; margin:0px; line-height:normal}
 form, input {padding:0px; margin:0px}
 a {outline:none}
 a:hover {outline:none}
@@ -44,7 +44,7 @@ img a {border:none}
 .button ul li {background:url(../images/top-button.png?1301602188) no-repeat left top; width:79px; height:25px; text-align:center; line-height:25px; font-size:10px; font-weight:bold; color:#333; float:left; margin-right:6px}
 .button ul li a {display:block; width:79px; height:25px; color:#333; text-decoration:none}
 .button ul li a:hover {color:#b95c2e; text-decoration:none}
-.menu {height:42px}
+.menu {height:90px}
 .menu ul {list-style:none; padding:0px; margin:0px}
 .menu ul li {background:url(../images/nav-sepa.png?1301602188) no-repeat left top; float:left; height:42px; line-height:42px; font-size:12px; color:#FFF; font-weight:normal; text-transform:uppercase}
 .menu ul li a {color:#FFF; text-decoration:none; padding:0px 15px}
@@ -125,24 +125,25 @@ img a {border:none}
  #inner1-body {background:#bfbebe url(../images/body-bg2.png?1301602188) repeat-x left top}
 .inner-top-right {background:url(../images/user-icon.png?1301602188) no-repeat left top; width:220px; height:18px; line-height:18px; margin-top:23px; float:right; color:#FFF; text-align:right}
 .submenu {height:42px}
-.submenu-left {width:720px; height:42px; float:left}
+.submenu-left {width:1040px; height:42px; float:left}
 .submenu ul {list-style:none; padding:0px; margin:0px}
 .submenu ul li {float:left; height:33px; line-height:33px; font-size:12px; color:#99cc33; font-weight:normal; padding:0px 10px}
 .submenu ul li.nopad {padding-left:0px}
 .submenu ul li a {color:#99cc33; text-decoration:none}
 .submenu ul li a:hover, .submenu ul li.active a {color:#ffcc33; text-decoration:none}
 .submenu-icon {width:32px; height:32px; float:right; padding-top:3px}
+.submenustyle {display: none; filter:alpha(opacity=0); -moz-opacity:0}
 .breadcum-area {width:1080px; height:38px}
 .breadcum-left {width:420px; float:left}
 .home-icon {display:block; width:25px; height:23px; float:left; padding-top:6px; margin-right:6px}
-.breadcum-link {width:160px; height:23px; float:left; padding-top:8px}
+.breadcum-link {width:250px; height:23px; float:left; padding-top:8px}
 .breadcum-link ul {list-style:none; padding:0px; margin:0px}
 .breadcum-link ul li {background:url(../images/b-sepa.png?1301602188) no-repeat left center; height:23px; line-height:23px; font-size:12px; color:#000; padding:0px 7px; float:left}
 .breadcum-link ul li a {color:#000; text-decoration:none}
 .breadcum-link ul li a:hover {color:#000; text-decoration:underline}
 .breadcum-right {width:395px; float:right; text-align:right; padding-top:5px}
 .breadcum-right img {margin-left:8px; height:25px}
-.error-bg {background:url(../images/error-bg.png?1301602188) no-repeat left top; width:900px; height:29px; font-size:13px; font-weight:bold; color:#FFF; line-height:29px; padding-left:40px; text-transform:uppercase}
+.error-bg {background:url(../images/error-bg.png?1301602188) no-repeat left top; width:1040px; height:29px; font-size:13px; font-weight:bold; color:#FFF; line-height:29px; padding-left:40px; text-transform:uppercase}
 .error-bg span {color:#ffcc00}
 .two-box {width:1080px; height:105px; font-size:12px; color:#666666}
 .two-box p {padding:0px; margin:0px}
@@ -296,15 +297,18 @@ img {border: 0}
 .hilite {background: yellow}
 .instructions {background: #687284; padding: 0.3em 1em 0.3em 1em}
 table.memverse-standard {border-width: 1px; border-spacing: 1px; border-style: none; border-color: black; border-collapse: separate; background-color: white}
-table.memverse-standard th {border-width: thin; padding: 3px; border-style: solid; border-color: gray; background-color: #687284; -moz-border-radius: 3px 3px 3px 3px}
-table.memverse-standard td {border-width: thin; padding: 3px; border-style: solid; border-color: gray; background-color: #BAB18E; -moz-border-radius: 3px 3px 3px 3px}
- body {font-family: verdana, helvetica, arial, sans-serif; font-size:100%; background-image:url('/images/background.jpg?1301602188'); background-repeat:no-repeat; background-position:top center}
+table.memverse-standard th {border-width: thin; padding: 3px; border-style: solid; border-color: gray; color: #f2f1f1; background-color: #333333; -moz-border-radius: 3px 3px 3px 3px}
+.table.memverse-standard th a {color: #f2f1f1}
+.table.memverse-standard th a:hover {color:#FFF}
+table.memverse-standard td {border-width: thin; padding: 3px; border-style: solid; border-color: gray; color:#232323; background-color: #bfbebe; -moz-border-radius: 3px 3px 3px 3px}
+.table.memverse-standard td a {color:#232323}
+.table.memverse-standard td a:hover {color:#000}
  img.left {float:left}
 img.right {float:right}
 img.centre {display:block; margin-left:auto; margin-right:auto}
 div.center {width: 50%; margin-left:auto; margin-right:auto}
 #search-box {margin-top: 1em; margin-bottom: 1em}
- #menu-tabs {padding-bottom: 2em}
+ #menu-tabs {}
  #container {width: 1280px; height: 950px; margin-left: auto; margin-right: auto}
 #meebo-toolbar {width: 100%; height: 70px}
 #footer-container {width: 100%; margin-left: auto; margin-right: auto; clear: both}
@@ -377,7 +381,7 @@ table.user-list {width: 85%; padding: 6px; border-spacing: 1px; border: 1px soli
 #verse-show {height: 280px}
 .verse-text #show-verse {background-color: #BAB18E; padding: 0.5em; margin-top: 0}
 .verse-text #nav {width: 75%; margin: auto}
-.tag {background-color: #687284; padding-left: 1em; padding-right: 1em}
+.verse-tag {background-color: #687284; padding-left: 1em; padding-right: 1em}
 #verse-tags {}
 #user-tags {}
 .tag-list {padding: 0em 1em 1em 1em; float: left}
@@ -932,7 +936,7 @@ div.fieldWithErrors input, div.fieldWithErrors select, div.fieldWithErrors texta
 #bloggity_container #header h1 {font-family:"Avenir Light","Futura Light",helvetica,arial,sans-serif; font-size:36px; font-weight:normal; line-height:1; margin-bottom:9px; color:White}
 #bloggity_container #header h1 a {color:White; text-decoration:none}
 #bloggity_container #header .subtitle {color:White; font-weight:normal}
-#bloggity_container #main_content {min-width:500px; max-width:970px; float:left; padding:15px}
+#bloggity_container #main_content {min-width:500px; max-width:780px; float:left; padding:15px}
 #bloggity_container #main_content .one_blog h1, #bloggity_container #main_content .one_blog h2 {padding-bottom:8px}
 #bloggity_container #main_content .one_blog h1 a, #bloggity_container #main_content .one_blog h2 a {text-decoration:none; color:Black; font-size:28px; border-bottom:1px black dashed}
 #bloggity_container #side_nav_container {background:#eee; float:right; width:250px}

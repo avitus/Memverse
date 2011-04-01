@@ -94,7 +94,12 @@
     	<div class="header-top"><!--header-top start-->
         	<div id="logo"><a href="#"><img src="images/logo.png" width="253" height="31" alt="" /></a></div>
             <div class="inner-top-right"><!--inner-top-right start-->
-                <strong>Welcome:</strong> <%= current_user.name_or_login %>
+                <strong>Welcome:</strong> 
+                <%= if logged_in? 
+                		current_user.name_or_login 
+                	else 
+                		link_to 'Login', login_path	
+                	end %>
             </div><!--inner-top-right end-->
         </div><!--header-top end-->
 
@@ -212,7 +217,9 @@
     <div><img src="images/trans.png" width="1" height="10" alt="" /></div>
     
     <!--Content Block -->
-	<%= content_for?(:content) ? yield(:content) : yield %>
+    <div class="page-content">
+		<%= content_for?(:content) ? yield(:content) : yield %>
+    </div>
     
     <div><img src="images/trans.png" width="1" height="10" alt="" />&nbsp;</div>
     

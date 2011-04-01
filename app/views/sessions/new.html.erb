@@ -128,25 +128,30 @@
     </div><!--box2 end-->
     
     <div class="content-box3-area"><!--box3-area start-->
-    	<div class="content-box3"><!--box3 start-->
+    <div class="content-box3"><!--box3 start-->
     <div class="content-box3-bottom">
     <div class="content-box3-top">
     	<h2 class="red">Sign In</h2>
+    	
         <div class="sign-field">
-        	<form action="" method="get">
+        	<%= form_tag session_path do %>
             	<div>
-                	<input name="" type="text" class="new-field" />
-                    <input name="" type="text" class="new-field" />
+                	<%= text_field_tag 'login', @login, :class => "new-field" %>
+                	<%= password_field_tag 'password', nil, :class => "new-field" %>
                 </div>
                 <div class="button-area">
                 	<div class="forgot">
                     	<input name="" type="radio" value="" />
                         Forgot Password
                     </div>
-                    <div class="right-button"><input name="" type="button" class="submit-button" value="" /></div>
+                    <div class="right-button">
+                    	<%= submit_tag '', :class => "submit-button" %>
+                    </div>
                 </div>
-            </form>
+            <% end 	%>
         </div>
+                
+        
     </div>
     </div>
     </div><!--box3 end-->
