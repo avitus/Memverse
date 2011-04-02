@@ -16,7 +16,7 @@
         	<div class="wbox-text2">
             	<h3 class="nospace">Verses Memorized</h3>
                 <p><span class="number"><%= number_with_delimiter(Memverse.memorized.count) %></span>&nbsp;&nbsp; verses memorized on <strong>Memverse</strong>.</p>
-                <span class="verse"><a href="#">Go To Your Verses</a></span>
+                <span class="verse"><%= link_to "Go To Your Verses", :controller => 'memverses', :action => 'manage_verses' %></span>
             </div>
         </div>
     </div><!--two-box end-->
