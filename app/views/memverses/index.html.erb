@@ -7,8 +7,8 @@
         	<div class="yellow-icon"><img src="images/icon3.png" width="49" height="49" alt="" /></div>
             <div class="wbox-text">
             	<h3>Verse of the Minute</h3>
-                <p>Though I speak with the tongues of men and of angels, and have not charity, I am become as sounding brass, or a tinkling cymbal.</p>
-                <span class="verse"><strong>KJV</strong></span>
+                <p><%= @votd_txt %></p>
+                <span class="verse"><strong><%= @votd_ref %> (<%= @votd_tl %>)</strong></span>
             </div>
         </div>
         <div class="white-box2">
@@ -34,7 +34,7 @@
             </ul>
         </div>
 		<div class="tab-content">
-        	<h3>Recently on Memverse</h3>
+        	<h3><%= link_to 'Recently on Memverse', tweets_path %></h3>
             <div class="tab-content-left">
             	<ul>
                 	<li><a href="#">Eunice Sophia has memorized her 40th verse</a> <span>[20 minutes ago]</span></li>
