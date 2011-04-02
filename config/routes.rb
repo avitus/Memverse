@@ -69,12 +69,12 @@ MemverseApp::Application.routes.draw do
   match '/check_verses',           :to => 'verses#check_verses',             :as => 'check_verses'
   match '/check_verse/:id',        :to => 'verses#check_verse',              :as => 'check_verse'
   match '/search_verse',           :to => 'verses#verse_search',             :as => 'search_verse'
-  match '/verify_vs_format',       :to => 'verses#verify_format',			 :as => 'verify_vs_format'
+  match '/verify_vs_format',       :to => 'verses#verify_format',			 			 :as => 'verify_vs_format'
    
   match '/show_user_info',         :to => 'admin#show_user_info',            :as => 'show_user_info'
   match '/show_tags',              :to => 'admin#show_tags',                 :as => 'show_tags'
-  match '/admin_search_verse',	   :to => 'admin#search_verse',				 :as => 'admin_search_verse'
-  match '/admin_verify_verse/:id', :to => 'admin#verify_verse',				 :as => 'admin_verify_verse'
+  match '/admin_search_verse',	   :to => 'admin#search_verse',				       :as => 'admin_search_verse'
+  match '/admin_verify_verse/:id', :to => 'admin#verify_verse',				       :as => 'admin_verify_verse'
   
   # Doesn't require a login
   match '/contact',                :to => 'info#contact',                    :as => 'contact'   
@@ -97,7 +97,7 @@ MemverseApp::Application.routes.draw do
   match '/church',                 :to => 'profile#show_church',             :as => 'church'
   match '/referrals/:id',          :to => 'profile#referrals',               :as => 'referrals'
   match '/unsubscribe/*email',     :to => 'profile#unsubscribe',             :as => 'unsubscribe'
-  match '/search_user',    		   :to => 'profile#search_user',             :as => 'search_user'
+  match '/search_user',    		     :to => 'profile#search_user',             :as => 'search_user'
   
   match '/edit_tag/:id',           :to => 'tag#edit_tag',                    :as => 'edit_tag'
 
@@ -109,15 +109,15 @@ MemverseApp::Application.routes.draw do
   
   # Blog routes
   match '/blog',                   :to => 'blog_posts#index', :blog_url_id_or_id => 'main',  :as => 'blog'
-  match '/blog_comments_new',      :to => 'blog_comments#recent_comments',   				 :as => 'blog_comments_new'
-  match '/blog_search',			   :to => 'blog_posts#blog_search',							 :as => 'blog_search'
+  match '/blog_comments_new',      :to => 'blog_comments#recent_comments',   				         :as => 'blog_comments_new'
+  match '/blog_search',			       :to => 'blog_posts#blog_search',							             :as => 'blog_search'
   
   # Routes for Ziya graphs
   match '/load_progress/:user',    :to => 'chart#load_progress',             :as => 'load_progress'
   match '/load_memverse_clock',    :to => 'chart#load_memverse_clock',       :as => 'load_memverse_clock' 
   
   # Routes for chat channels  
-  match "/chat/send", 		:controller => "chat", :action => "send_message"
+  match "/chat/send", 		  :controller => "chat", :action => "send_message"
   match "/chat/channel1", 	:controller => "chat", :action => "channel1"
   match "/chat/channel2", 	:controller => "chat", :action => "channel2"  
   
