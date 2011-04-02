@@ -58,10 +58,10 @@
     </div><!--banner-top end-->
     <div class="banner-bottom"><!--banner-bottom start-->
     	<ul>
-        	<li><a href="#">try the memverse demo</a></li>
-            <li><a href="#">top 100 memory verses</a></li>
-            <li><a href="#">learn more</a></li>
-            <li><a href="#" class="active">sign up today</a></li>
+            <li><%= link_to 'try the memverse demo', demo_path %></li>
+            <li><%= link_to 'top 100 memory verses', popular_path %></li>
+            <li><%= link_to 'learn more', tutorial_path %></li>
+            <li><%= link_to 'sign up today', signup_path, :class => 'active' %></li>
         </ul>
     </div><!--banner-bottom end-->
 </div><!--banner-bg end-->
