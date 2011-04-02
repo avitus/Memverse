@@ -92,7 +92,7 @@
 
 	<div id="header"><!--header start-->
     	<div class="header-top"><!--header-top start-->
-        	<div id="logo"><a href="#"><img src="images/logo.png" width="253" height="31" alt="" /></a></div>
+        	<div id="logo"><a href="/"><img src="images/logo.png" width="253" height="31" alt="" /></a></div>
             <div class="inner-top-right"><!--inner-top-right start-->
                 <strong>Welcome:</strong> 
                 <%= if logged_in? 
@@ -197,7 +197,7 @@
 
     <div class="breadcum-area"><!--breadcum start-->
     	<div class="breadcum-left">
-        	<span class="home-icon"><a href="#"><img src="images/home-icon.png" width="25" height="23" alt="" /></a></span>
+        	<span class="home-icon"><a href="/"><img src="images/home-icon.png" width="25" height="23" alt="" /></a></span>
             <div class="breadcum-link">
             	<ul>
                 	<li><a href="#">Bread Crumb</a></li>
@@ -206,8 +206,8 @@
             </div>
         </div>
         <div class="breadcum-right">
-        	<a href="#"><img src="images/your-verses.png" width="172" height="25" alt="" /></a>
-            <a href="#"><img src="images/more-verses.png" width="192" height="25" alt="" /></a>
+        	<%= link_to image_tag("your-verses.png", :width=>"172", :height=>"25", :alt=>"Your Verses"), :controller => 'memverses', :action => 'manage_verses' %>
+            <%= link_to image_tag("more-verses.png", :width=>"192", :height=>"25", :alt=>"Add More Verses"), :controller => 'memverses', :action => 'add_verse' %>
         </div>
     </div><!--breadcum end-->
     
