@@ -1,0 +1,6 @@
+<tr>
+	<td align="center" class='tl' >	<%= verse.translation	%></td>
+	<td align="left"   class='ref'>	<%= link_to verse.ref, verse_path(:id => verse.id)	%></td>
+	<td align="left"   class='txt'>	<%= verse.text			%></td>
+	<td align="left"   class='add'>	<%= link_to 'Add', add_path(verse.id), :remote => true	%></td>
+</tr>

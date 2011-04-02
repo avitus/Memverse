@@ -1,0 +1,58 @@
+<div id="chat-stream">
+</div>
+
+<% form_tag('/chat/send', :id => 'chat_window', :remote => true) do %>
+	<%= text_field_tag 'msg_body', '', :size => 50 %>
+	<%= hidden_field_tag 'sender', current_user.name_or_login %>
+	<%= submit_tag 'Send Message' %>
+<% end %>
+
+<script type="text/javascript" charset="utf-8">
+    var jug = new Juggernaut();
+
+    $("#chat-stream").append($("<li/>").append("Welcome to MemChat"));
+	
+	jug.subscribe("/chats/channel1", function(data){
+		var li 		= $("<li/>");
+		var u  		= $("<span/>");
+		var m 		= $("<span/>");
+		var um_arr  = new Array();
+		var user;
+		var message;
+		
+		um_arr  = data.split(":");
+		user    = um_arr[0];
+		message = um_arr[1];
+		
+		u.text(user).addClass("chat-username");
+		m.text(message).addClass("chat-message");
+		
+		li.append(u).append(m);
+		
+		$("#chat-stream").append(li);
+		$("#chat-stream").scrollTop($("#chat-stream")[0].scrollHeight);
+	}); 
+
+</script>
+
+
+<script type="text/javascript" charset="utf-8">
+
+	jQuery.ajaxSetup({ 
+	  'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript")}
+	})
+	
+	jQuery.fn.submitWithAjax = function() {
+	  this.submit(function() {
+	    $.post(this.action, $(this).serialize(), null, "script");
+	    return false;
+	  })
+	  return this;
+	};
+	
+	$(document).ready(function() {
+	  $("#chat_window").submitWithAjax();
+	})
+</script>
+
+

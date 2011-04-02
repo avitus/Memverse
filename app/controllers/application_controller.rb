@@ -1,4 +1,5 @@
 # coding: utf-8
+require "juggernaut"  # needed for chat channels
 class ApplicationController < ActionController::Base
   include AuthenticatedSystem
   include RoleRequirementSystem
@@ -11,7 +12,22 @@ class ApplicationController < ActionController::Base
   helper Ziya::YamlHelpers::Charts
   
   before_filter :set_locale, :prepare_for_mobile  
-   
+
+
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Chat client functionality
+  # ----------------------------------------------------------------------------------------------------------    
+
+	def send_message
+	  render_text "<li>" + params[:msg_body] + "</li>"
+	  Juggernaut.publish("/chats", parse_chat_message(params[:msg_body], "Prabhat"))
+	end
+	    
+	def parse_chat_message(msg, user)
+	  return "#{user} says: #{msg}"
+	end
+
 
   # ----------------------------------------------------------------------------------------------------------
   # Admin Authorization
@@ -126,7 +142,7 @@ class ApplicationController < ActionController::Base
 	  	  
       book = "Psalms" if book == "Psalm"
       book = "Song of Songs" if book == "Song Of Songs"
- 
+  
       if !BIBLEBOOKS.include?(full_book_name(book)) # This is not a book of the bible
       	logger.info("*** Could not find book: #{book}")
         return 2, book # Error code for invalid book of the bible

@@ -20,7 +20,7 @@
 	<table cellpadding="6" cellspacing="1">
 		<% for tag in @tags %>
 			<tr>
-				<td class="tag"><%= tag.name %></td>
+				<td class="verse-tag"><%= tag.name %></td>
 				<% if current_user.has_role?("admin") %>
 					<td>[x]</td>
 				<% end %>
