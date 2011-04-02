@@ -1,135 +1,56 @@
-<% page_title I18n.t :memory_verse_review, :scope => 'page_titles' %>
-<% page_banner I18n.t :memory_verse_review, :scope => 'page_titles' %>
-<!-- Focus cursor on verse entry box -->
-<body onload="document.getElementById('verseguess').focus()">
-
-<!-- Question-side : Entry box -->	
-<fieldset id="question-side">
-	<legend> <%=@verse%> </legend>
-		<% form_tag :action => 'mark_test' do %>
-			
-			<div id="answerbox">
-		  		<%= text_area_tag(:verseguess, params[:verseguess] )%>			
-		  	</div>
-		
-		<div id="scoreTestButtons">								
-		  <div align="left"><%= submit_tag t('.b5'), 	:class => "submit", :q => 5 %></div>								
-		  <div align="left"><%= submit_tag t('.b4'), 	:class => "submit", :q => 4 %></div>	
-		  <div align="left"><%= submit_tag t('.b3'),  	:class => "submit", :q => 3 %></div>	
-		  <div align="left"><%= submit_tag t('.b2'),	:class => "submit", :q => 2 %></div>	
-		  <div align="left"><%= submit_tag t('.b1'), 	:class => "submit", :q => 1 %></div>	
-		</div>			  
-		
-		<% end %>	
-</fieldset>	
-
-<!-- Comparison section -->		
-<fieldset id="comparison">
-	<legend><%= t('.feedback') %></legend>
-	<div id="verseFeedback">
-		
-		<!-- Prior verse, if available -->
-		<% if !@prior_text.nil? %>
-			<div id="priorVerse">
-				<span class="superscript"><%=@prior_versenum%></span><span><%=@prior_text%></span>
-			</div>
-		<% end %>
-		
-		<!-- Current verse -->
-		<div id="currentVerse">
-			<% if !@prior_text.nil? %>			
-				<span class="superscript"><%=@current_versenum%></span>
-			<% end %>
-
-			<span id="ajaxWrapper">
-				<%= render :partial=>'feedback', :locals => {:show_feedback => @show_feedback} %>
-			</span>					
-		</div>
+<div class="inner2-bg">
+<div class="inner2-top">
+<div class="inner2-bottom">
+	<div class="content-sepa">
+    
+    	<div class="new-verse">
+        	<div class="top-heading">
+            	<h2><span>Verse:</span> John 15:7</h2>
+                <div class="hide-hints"><a href="#">Hide Hint</a></div>
+            </div>
+            <div class="yellow-box">W s w a a c a w s g a c o w, l u l a e w, a t s w d s e b u, a l u r w p t r t i s b u,</div>
+            <div class="field-area">
+            	<form action="" method="get">
+                	<div>
+                		<textarea name="" cols="" rows="" class="being-field"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="tool-tip-nav">Rate Your Performance Level:</div>
+            <div class="tool-tip-number">
+            	<a href="#">1<span>Don't Know - No Idea</span></a>
+                <a href="#">2</a>
+                <a href="#">3</a>
+                <a href="#">4</a>
+                <a href="#">5</a>
+            </div>
+        </div>
+        
+        <div class="feed">
+        	<h2>Live Feed Back</h2>
+            <p>Waiting for you to begin typing...</p>
+        </div>
+        
+        <div class="upcoming">
+        	<h2>Upcoming Verses</h2>
+            <ul>
+            	<li class="gray2"><a href="#">Jn 15:7</a></li>
+                <li class="white2"><a href="#">Jn 15:7</a></li>
+                <li class="gray2"><a href="#">Jn 15:7</a></li>
+                <li class="white2"><a href="#">Jn 15:7</a></li>
+                <li class="gray2"><a href="#">Jn 15:7</a></li>
+                <li class="white2"><a href="#">Jn 15:7</a></li>
+                <li class="gray2"><a href="#">Jn 15:7</a></li>
+            </ul>
+            <div class="upcoming-button">
+            	<a href="#"><img src="images/add-more.png" width="192" height="25" alt="" /></a>
+                <a href="#"><img src="images/modify.png" width="192" height="25" alt="" /></a>
+            </div>
+        </div>
+        <div class="clr"></div>
 	</div>
-</fieldset>	
-
-<!-- Flashcard -->	
-<div id="flashcard">
-	<div class="quickFlip">
-	    <div class="quickFlipPanel refPanel">
-	        <p><%=@verse%></p>
-			<p class="mnemonic"><%=@mnemonic%></p>
-	        <p class="quickFlipCta"><%= t('.show_verse') %></p>
-	    </div>
-	
-	    <div class="quickFlipPanel textPanel">
-	    	<div id="flashcard-back-text">
-		        <p><%=@verse%></p>
-				<% if !@prior_text.nil? %>
-					<p><span class="superscript"><%= @prior_versenum   %></span><%=@prior_text%></p>
-				<% end %>				   	
-		        <p> 
-					<% if !@prior_text.nil? %>
-						<span class="superscript"><%= @current_versenum %></span>
-					<% end %>
-					<%=@text%>
-				</p>
-		        <p class="quickFlipCta"><%= t('.back_to_test') %></p>
-			</div>			
-	    </div>
-	</div> <!-- end of quickFlip -->
-</div> <!-- end of flashcard -->
-
-
-<!-- Upcoming verses -->	
-<div id="upcoming-list">
-	<fieldset>
-		<legend><%= t('.upcoming') %></legend>
-			<%= render :partial => "upcoming_verses" %>						
-	</fieldset>		
 </div>
+</div>
+</div>
+        
 
-<script language="JavaScript" type="text/javascript">
-	$(document).ready(function() {
-	    $('.quickFlip').quickFlip();
-	    
-		var current_text = "<%= escape_verse(@text.html_safe) %>";	    
-	    
-		// Verse feedback	
-		$("#verseguess").observe_field(0.5, function( ) { 
-			$.get("/feedback", { correct: current_text, verseguess: encodeURIComponent(this.value), echo: <%= @show_feedback %>  },
-				function(data){	
-					$("#ajaxWrapper").html(data);
-			});
-        });		    
-	    
-	});
-</script>
-
-
-<!-- Google Code for Memverse - Login Conversion Page -->
-<script language="JavaScript" type="text/javascript">
-<!--
-	var google_conversion_id = 1055933402;
-	var google_conversion_language = "en_US";
-	var google_conversion_format = "3";
-	var google_conversion_color = "ffffff";
-	var google_conversion_label = "9GgaCKqlhwEQ2ofB9wM";
-	if (0.5) {
-	var google_conversion_value = 0.5;
-}
-//-->
-
-</script>
-	<script language="JavaScript" src="http://www.googleadservices.com/pagead/conversion.js">
-</script>
-
-<noscript>
-	<img height="1" width="1" border="0" src="http://www.googleadservices.com/pagead/conversion/1055933402/?value=0.5&amp;label=9GgaCKqlhwEQ2ofB9wM&amp;guid=ON&amp;script=0"/>
-</noscript> <!-- END: Google Code for Memverse - Login Conversion Page -->
-
-
-<!-- Clickable Code for Memverse - Login Conversion Page -->
-<script type="text/javascript">
-	document.write(unescape("%3Cscript src='" + (location.protocol=="https:" ? "https://" : "http://") + "cn.clickable.net/js/cct.js' type='text/javascript'%3E%3C/script%3E"));
-</script>
-<script type="text/javascript">
-	document.cookie=cct.CookieCheck(document.cookie);
-	cct.conversion_value = '<%= current_user.login %>';
-	cct.cct_log('0420-4Lee0a3df925a9524bfab41177e692c4e0df');
-</script> <!-- END: Clickable Code for Memverse - Login Conversion Page -->

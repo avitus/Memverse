@@ -1,136 +1,110 @@
-<!doctype html>		
-
-<!--[if lt IE 7 ]> <html lang="en" class="no-js ie6"> <![endif]-->
-<!--[if IE 7 ]>    <html lang="en" class="no-js ie7"> <![endif]-->
-<!--[if IE 8 ]>    <html lang="en" class="no-js ie8"> <![endif]-->
-<!--[if IE 9 ]>    <html lang="en" class="no-js ie9"> <![endif]-->
-<!--[if (gt IE 9)|!(IE)]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
-						
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+				
+<title><%= page_title %></title>
 	
-	<!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame  -->
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-	<!-- <meta http-equiv="X-UA-Compatible" content="IE=8"> -->
-			
-	<title><%= page_title %></title>
-	
-	<meta name="distribution" content="all" />
-	<meta name="robots" content="all" />	
-	<meta name="resource-type" content="document" />
-	<meta name="MSSmartTagsPreventParsing" content="true" />
+<meta name="distribution" content="all" />
+<meta name="robots" content="all" />	
+<meta name="resource-type" content="document" />
+<meta name="MSSmartTagsPreventParsing" content="true" />
 
-	<meta name="description" content="<%= page_description %>" />	
-	<meta name="keywords" content="memorize bible, memorize scripture, popular bible verses, memorize bible verses," />	
+<meta name="description" content="<%= page_description %>" />	
+<meta name="keywords" content="memorize bible, memorize scripture, popular bible verses, memorize bible verses," />	
 	
-	<!-- Facebook Open Graph tags -->
-	<meta property="og:title"		content="<%= @page_title || Memverse %>"/>	
-	<meta property="og:type"		content="website"/>	
-	<meta property="og:image"		content="http://www.memverse.com/images/memverse_swords.jpg"/>	
-	<meta property="og:url"			content=<%= request.url %>/>	
-	<meta property="og:site_name"	content="Memverse"/>	
-	<meta property="fb:admins"		content="1799626379, kyrriana"/>
-	<meta property="og:description" content="A community of believers memorizing the bible"/>
-	
-	
-	<!-- Google verification -->
-	<meta name="verify-v1" content="IrqDYi2zxAyS8GUAqQcyXvnmcxhtuNITeCIFYLa76LQ=" />	
-	<!-- Microsoft verification -->		
-	<meta name="msvalidate.01" content="A1BB69E880870637C825F612E2FA4034" />				
-
-	<!-- Identify blog feed -->
-	<link rel="alternate" type="application/rss+xml" title="Memverse Blog" href="http://feeds.feedburner.com/MemverseBlog" />
-
-	<!-- Main Stylesheet -->
-	<%= stylesheet_link_tag 'base_packaged', :cache => 'cache/all' %>
-	<%= stylesheet_link_tag 'mobile' if mobile_device? %>
-
-  <!-- Rails 3 XSS protection -->
-  <%= csrf_meta_tag %>
+<!-- Facebook Open Graph tags -->
+<meta property="og:title"		content="<%= @page_title || Memverse %>"/>	
+<meta property="og:type"		content="website"/>	
+<meta property="og:image"		content="http://www.memverse.com/images/memverse_swords.jpg"/>	
+<meta property="og:url"			content=<%= request.url %>/>	
+<meta property="og:site_name"	content="Memverse"/>	
+<meta property="fb:admins"		content="1799626379, kyrriana"/>
+<meta property="og:description" content="A community of believers memorizing the bible"/>
 		
-	<!-- Auxiliary stylesheets, etc -->
-	<%= yield(:head) %>
+<!-- Google, Microsoft verification -->
+<meta name="verify-v1" content="IrqDYi2zxAyS8GUAqQcyXvnmcxhtuNITeCIFYLa76LQ=" />	
+<meta name="msvalidate.01" content="A1BB69E880870637C825F612E2FA4034" />				
 
-	<!-- NOTE: not using asset packager at the moment -->
-	<%= javascript_include_tag 	'jquery.min', 'rails', 
-								'jquery-ui-1.8.6.custom.min', 
-								'jquery.quickflip', 'jquery.hoverIntent', '2leveltab', 
-								'jquery.periodicalupdater', 'jquery.jeditable.min', 'jquery.autocomplete', 'modernizr-1.6.min', 
-								'jquery.shuffle',  'jquery.observe_field', 'jquery.blockUI.min', 'jquery.fancybox-1.3.4.pack',
-								'application.min', 'i18n.min', 'translations', 'juggernaut', :cache => 'cache/all' %> 
-							
-	<!-- Shortcut Icons -->
-	<link rel="shortcut icon" href="/images/favicon.ico" />
-	<link rel="icon" 		  href="/images/favicon.ico" />	
+<!-- Identify blog feed -->
+<link rel="alternate" type="application/rss+xml" title="Memverse Blog" href="http://feeds.feedburner.com/MemverseBlog" />
+
+<!-- Load fonts -->
+<script type="text/javascript" src="http://use.typekit.com/wxl5kyc.js"></script>
+<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+<!-- Rails 3 XSS protection -->
+<%= csrf_meta_tag %>
 		
+<!-- Main Stylesheet -->
+<%= stylesheet_link_tag 'base_packaged', :cache => 'cache/all' %>
+
+<!-- Auxiliary stylesheets, etc -->
+<%= yield(:head) %>
+
+<!-- Javascript -->
+<!-- NOTE: not using asset packager at the moment -->
+<%= javascript_include_tag 	'jquery.min', 'rails', 
+							'jquery-ui-1.8.6.custom.min', 
+							'jquery.quickflip', 'jquery.hoverIntent', '2leveltab', 
+							'jquery.periodicalupdater', 'jquery.jeditable.min', 'jquery.autocomplete', 'modernizr-1.6.min', 
+							'jquery.shuffle',  'jquery.observe_field', 'jquery.blockUI.min', 'jquery.fancybox-1.3.4.pack',
+							'application.min', 'i18n.min', 'translations', 'juggernaut', :cache => 'cache/all' %> 
+
+
+<!-- Shortcut Icons -->
+<link rel="shortcut icon" href="/images/favicon.ico" />
+<link rel="icon" 		  href="/images/favicon.ico" />	
+
+<!--[if IE 6]>
+<style type="text/css">
+	.learn-area
+	{
+		padding-top:16px;
+	}
+</style>
+<![endif]-->
+
+<style type="text/css">
+.left-widget
+{
+	-moz-border-radius:8px;
+	-webkit-border-radius:8px;
+	-o-border-radius:8px;
+	border-radius:8px;
+	behavior:url(PIE.htc);
+}
+
+.main-right
+{
+	-moz-border-radius:8px;
+	-webkit-border-radius:8px;
+	-o-border-radius:8px;
+	border-radius:8px;
+	behavior:url(PIE.htc);
+}
+</style>
+
 </head>
 
-<body id="user">
-	
-	<!-- Start of Google Analytics Code  -->	
-	<script type="text/javascript">
-	
-	  var _gaq = _gaq || [];
-	  _gaq.push(['_setAccount', 'UA-4539114-5']);
-	  _gaq.push(['_trackPageview']);
-	
-	  (function() {
-	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-	    ga.src = 'http://www.google-analytics.com/ga.js';
-	    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ga);
-	  })();
+<body id="inner1-body">
+<div id="wrapper"><!--wrapper start-->
 
-	</script>		
-	<!-- End of Google Analytics Code  -->
-	<!-- Start of I18n-js code  -->
-	<script type="text/javascript">
-	  I18n.defaultLocale = "<%= I18n.default_locale %>";
-	  I18n.locale = "<%= I18n.locale %>";
-	</script>
-	<!-- End of I18n-js code  -->
-	
-	<% if logged_in? and current_user.show_toolbar %>
-		<!-- Start of Meebo Toolbar  -->
-		<script type="text/javascript">
-			if (typeof Meebo == 'undefined') {
-			Meebo=function(){(Meebo._=Meebo._||[]).push(arguments)};
-			(function(q){
-				var args = arguments;
-				if (!document.body) { return setTimeout(function(){ args.callee.apply(this, args) }, 100); }
-				var d=document, b=d.body, m=b.insertBefore(d.createElement('div'), b.firstChild); s=d.createElement('script');
-				m.id='meebo'; m.style.display='none'; m.innerHTML='<iframe id="meebo-iframe"></iframe>';
-				s.src='http'+(q.https?'s':'')+'://'+(q.stage?'stage-':'')+'cim.meebo.com/cim/cim.php?network='+q.network;
-				b.insertBefore(s, b.firstChild);
-			
-			})({network:'memverse_lu08jo'});
-			Meebo('makeEverythingSharable');
-			}
-		</script>
-		<!-- End of Meebo Toolbar  -->		
-	<% end %>
-	
-	<div id="container">
-	  <noscript><p style="text-align: center">JavaScript is required to use many features of this website. Please enable JavaScript in your browser and refresh the page.</p></noscript>
-		<div id="auth">
-			<ul>
-				<% if logged_in? %>
-				<li><%= link_to 'Logout', logout_path %></li>
-				<li><%= current_user.login %></li>					
-				<% else %>
-				<li><%= link_to 'Login', login_path %></li>
-				<li><%= link_to 'Signup', signup_path %></li>
-				<% end %>
-			</ul>
-		</div> <!-- End of Auth -->			
-	 	<div id="banner">
-		  <!-- <%= image_tag("bible.gif") %> -->
-		  <%= page_banner %>
-	  	</div> <!-- End of Banner -->
+	<div id="header"><!--header start-->
+    	<div class="header-top"><!--header-top start-->
+        	<div id="logo"><a href="#"><img src="images/logo.png" width="253" height="31" alt="" /></a></div>
+            <div class="inner-top-right"><!--inner-top-right start-->
+                <strong>Welcome:</strong> 
+                <%= if logged_in? 
+                		current_user.name_or_login 
+                	else 
+                		link_to 'Login', login_path	
+                	end %>
+            </div><!--inner-top-right end-->
+        </div><!--header-top end-->
 
-		<!-- http://stackoverflow.com/questions/3477522/preventing-html-character-entities-in-locale-files-from-getting-munged-by-rails3 -->	
-		<div id="main">
-			<% if logged_in? %>
-			<div id="menu-tabs">
+		<% if logged_in? %>
+			<div id="menu-tabs" class="menu">
 				<ul id="maintab" class="basictab">
 					<li <%= tab(@tab=="home"		) %> rel="homepage">	<%= link_to t('menu.home').html_safe, 			home_path %></li>	
 					<li <%= tab(@tab=="mem"			) %> rel="memory">		<%= link_to t('menu.memorize').html_safe, 		test_verse_path %></li>
@@ -139,147 +113,131 @@
 					<li <%= tab(@tab=="contact"		) %> rel="contact">		<%= link_to t('menu.contact').html_safe, 		contact_path %></li>	
 					<li <%= tab(@tab=="leaderboard"	) %> rel="leaderboard">	<%= link_to t('menu.leaderboard').html_safe, 	leaderboard_path %></li>	
 					<li <%= tab(@tab=="blog"		) %> rel="blog">		<%= link_to t('menu.blog').html_safe, 			blog_path %></li>
+	                <li>&nbsp;</li>
 				</ul>
-
-				<div id="homepage" class="submenustyle">
-					<%= link_to t('home_menu.My Verses'),				manage_verses_path %>
-					<%= link_to t('home_menu.Add Verse'),				add_verse_path %>
-					<%= link_to t('home_menu.Search Bible'),			search_verse_path %>
-					<%= link_to t('home_menu.My Progress'),				progress_path %>	
-					<%= link_to t('home_menu.Popular Verses'),			popular_verses_path %>	
-					<%= link_to t('home_menu.Tag Cloud'),				tag_cloud_path %>	
-					<%= link_to t('home_menu.News'),					news_path %>	
-				</div>
-
-				<div id="memory" class="submenustyle">
-					<%= link_to t('memorize_menu.Memorize'),			test_verse_path %>
-					<%= link_to t('memorize_menu.Reference Recall'), 	start_ref_test_path %>
-					<%= link_to t('memorize_menu.Practice'), 			drill_verse_path %>						
-					<%= link_to t('memorize_menu.Accuracy Test'), 		pre_exam_path %>	
-					<%= link_to t('memorize_menu.Chapter Review'), 		pre_chapter_path %>	
-					<%= link_to t('memorize_menu.Quick Mem'), 			test_verse_quick_path %>	
-				</div>
 				
-				<div id="tutorials" class="submenustyle">
-					<%= link_to t('learn_menu.Tutorial'), 				tutorial_path %>
-					<%= link_to t('learn_menu.SuperMemo Algorithm'), 	supermemo_path %>
-					<%= link_to t('learn_menu.Video Tutorial'), 		"http://www.youtube.com/watch?v=vVtT6T-CXo8&fs=1&feature=player_embedded", :id => 'tut-video' %>
-				</div>
-
-				<div id="profile" class="submenustyle">
-					<%= link_to t('profile_menu.Dashboard'), 			current_user %>						
-					<%= link_to t('profile_menu.Profile'), 				update_profile_path %>
-					<%= link_to t('profile_menu.My Church'), 			church_path %>
-					<%= link_to t('profile_menu.Referrals'), 			referrals_path(current_user) %>
-				</div>
-
-				<div id="contact" class="submenustyle">
-					<%= link_to t('contact_menu.Contact'), 				contact_path %>
-					<%= link_to t('contact_menu.Help'), 				faq_path %>
-					<%= link_to t('contact_menu.Volunteer'), 			volunteer_path %>
-				</div>
-				
-				<div id="leaderboard" class="submenustyle">	
-					<%= link_to t('leader_menu.Leaderboard'),			leaderboard_path %>
-					<%= link_to t('leader_menu.Church Leaderboard'), 	churchboard_path %>
-					<%= link_to t('leader_menu.State Leaderboard'), 	stateboard_path %>
-					<%= link_to t('leader_menu.Country Leaderboard'), 	countryboard_path %>
-					<%= link_to t('leader_menu.Referralboard'), 		referralboard_path %>						
-					<%= link_to t('leader_menu.One Church'), 			memverse_clock_path %>						
-				</div>					
-
-				<div id="blog" class="submenustyle">
-					<%= link_to t('blog_menu.View Blog'), 				blog_path %>
-					<%= link_to t('blog_menu.Recent Comments'),			blog_comments_new_path %>
-					<%= link_to t('blog_menu.Blog Search'),				blog_search_path %>
-				</div>
-								
-			</div>  <!-- End of Menu Tabs -->
-			<% end %> <!-- if logged_in? -->
-			
-			<%= flash_messages %>
-			<%= content_for?(:content) ? yield(:content) : yield %>
-			<div id="meebo-toolbar">
-				<!-- no content, just here to add space -->
-			</div>
-		</div> <!-- End of Main -->
-	</div> <!-- End of Container -->
-
-	<!--
-	<div id="footer-container">
-		<div id="footer">
-			&copy; <%= link_to t('txt.main_title'), home_path %> 2010
-		</div> 
-	</div>  End of Footer -->
-
-	<!-- Start of Menu Tab Code  -->
-	<% if logged_in? %>
-		<script type="text/javascript">
-			//initialize tab menu, by passing in ID of UL
-			initalizetab("maintab")
-		</script>	
-	<% end %>	
-	
-	<!-- Tutorial video using fancybox -->
-	<script type="text/javascript">
-		$(document).ready(function() {			
-			$("#tut-video").click(function() {
-				$.fancybox({
-						'padding'		: 0,
-						'autoScale'		: false,
-						'transitionIn'	: 'none',
-						'transitionOut'	: 'none',
-						'title'			: this.title,
-						'width'			: 1280,
-						'height'		: 750,
-						'href'			: this.href.replace(new RegExp("watch\\?v=", "i"), 'v/'),
-						'type'			: 'swf',
-						'swf'			: {	'wmode'				: 'transparent',
-											'allowfullscreen'	: 'true' }
-					});
-			
-				return false;
-			});	
-		});	
-	</script>
-	
-	
-	
-	<!-- Start of Get Satisfaction Script  -->		
-	<script type="text/javascript">
-	  var is_ssl = ("https:" == document.location.protocol);
-	  var asset_host = is_ssl ? "https://s3.amazonaws.com/getsatisfaction.com/" : "http://s3.amazonaws.com/getsatisfaction.com/";
-	  document.write(unescape("%3Cscript src='" + asset_host + "javascripts/feedback-v2.js' type='text/javascript'%3E%3C/script%3E"));
-	</script>
-	
-	<script type="text/javascript">
-	  var feedback_widget_options = {};
-	
-	  feedback_widget_options.display = "overlay";  
-	  feedback_widget_options.company = "memverse";
-	  feedback_widget_options.placement = "right";
-	  feedback_widget_options.color = "#222";
-	  feedback_widget_options.style = "idea";
-	
-	  var feedback_widget = new GSFN.feedback_widget(feedback_widget_options);
-	</script>	<!-- End: Get Satisfaction Script  -->	
+				<div class="submenu"><!--submenu start-->
 		
-	<% if logged_in? and current_user.show_toolbar %>
-        <script type="text/javascript">
-			Meebo("domReady");
-	</script>
-	<% end %>
-
-	<!-- Prevent double-clicking links in the flash -->
-	<script type="text/javascript">
-		$(document).ready(function(){
-			$('#flash-notice').click( function() {
-				$(this).children().hide(); 
-				
-			});
-		});
-	</script>
+		    		<div class="submenu-left">
+		
+						<div id="homepage" class="submenustyle">
+							<ul>							
+								<li><%= link_to t('home_menu.My Verses'),				manage_verses_path %></li>
+								<li><%= link_to t('home_menu.Add Verse'),				add_verse_path %></li>
+								<li><%= link_to t('home_menu.Search Bible'),			search_verse_path %></li>
+								<li><%= link_to t('home_menu.My Progress'),				progress_path %></li>	
+								<li><%= link_to t('home_menu.Popular Verses'),			popular_verses_path %></li>	
+								<li><%= link_to t('home_menu.Tag Cloud'),				tag_cloud_path %></li>	
+								<li><%= link_to t('home_menu.News'),					news_path %></li>
+							</ul>	
+						</div>
 			
+						<div id="memory" class="submenustyle">
+							<ul>							
+								<li><%= link_to t('memorize_menu.Memorize'),			test_verse_path %></li>
+								<li><%= link_to t('memorize_menu.Reference Recall'), 	start_ref_test_path %></li>
+								<li><%= link_to t('memorize_menu.Practice'), 			drill_verse_path %></li>						
+								<li><%= link_to t('memorize_menu.Accuracy Test'), 		pre_exam_path %></li>	
+								<li><%= link_to t('memorize_menu.Chapter Review'), 		pre_chapter_path %></li>	
+								<li><%= link_to t('memorize_menu.Quick Mem'), 			test_verse_quick_path %></li>
+							</ul>	
+						</div>
+						
+						<div id="tutorials" class="submenustyle">
+							<ul>
+								<li><%= link_to t('learn_menu.Tutorial'), 				tutorial_path %></li>
+								<li><%= link_to t('learn_menu.SuperMemo Algorithm'), 	supermemo_path %></li>
+								<li><%= link_to t('learn_menu.Video Tutorial'), 		"http://www.youtube.com/watch?v=vVtT6T-CXo8&fs=1&feature=player_embedded", :id => 'tut-video' %></li>
+							</ul>
+						</div>
+			
+						<div id="profile" class="submenustyle">
+							<ul>
+								<li><%= link_to t('profile_menu.Dashboard'), 			current_user %></li>					
+								<li><%= link_to t('profile_menu.Profile'), 				update_profile_path %></li>
+								<li><%= link_to t('profile_menu.My Church'), 			church_path %></li>
+								<li><%= link_to t('profile_menu.Referrals'), 			referrals_path(current_user) %></li>
+							</ul>
+						</div>
+			
+						<div id="contact" class="submenustyle">
+							<ul>
+								<li><%= link_to t('contact_menu.Contact'), 				contact_path %></li>
+								<li><%= link_to t('contact_menu.Help'), 				faq_path %></li>
+								<li><%= link_to t('contact_menu.Volunteer'), 			volunteer_path %></li>
+							</ul>
+						</div>
+						
+						<div id="leaderboard" class="submenustyle">
+							<ul>
+								<li><%= link_to t('leader_menu.Leaderboard'),			leaderboard_path %></li>
+								<li><%= link_to t('leader_menu.Church Leaderboard'), 	churchboard_path %></li>
+								<li><%= link_to t('leader_menu.State Leaderboard'), 	stateboard_path %></li>
+								<li><%= link_to t('leader_menu.Country Leaderboard'), 	countryboard_path %></li>
+								<li><%= link_to t('leader_menu.Referralboard'), 		referralboard_path %></li>						
+								<li><%= link_to t('leader_menu.One Church'), 			memverse_clock_path %></li>	
+							</ul>					
+						</div>					
+			
+						<div id="blog" class="submenustyle">
+							<ul>
+								<li><%= link_to t('blog_menu.View Blog'), 				blog_path %></li>
+								<li><%= link_to t('blog_menu.Recent Comments'),			blog_comments_new_path %></li>
+								<li><%= link_to t('blog_menu.Blog Search'),				blog_search_path %></li>
+							</ul>
+						</div>
+					</div><!--submenu-left end-->
+					<div class="submenu-icon submenustyle"><a href="#"><img src="images/new-icon.png" width="32" height="32" alt="" /></a></div>
+		        	<div class="clr"></div>
+		        	
+				</div><!--submenu end-->				
+			</div>  <!-- End of Menu Tabs -->
+		<% end %> <!-- if logged_in? -->
+
+
+    <div class="breadcum-area"><!--breadcum start-->
+    	<div class="breadcum-left">
+        	<span class="home-icon"><a href="#"><img src="images/home-icon.png" width="25" height="23" alt="" /></a></span>
+            <div class="breadcum-link">
+            	<ul>
+                	<li><a href="#">Bread Crumb</a></li>
+                    <li><a href="#">Navigation</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="breadcum-right">
+        	<a href="#"><img src="images/your-verses.png" width="172" height="25" alt="" /></a>
+            <a href="#"><img src="images/more-verses.png" width="192" height="25" alt="" /></a>
+        </div>
+    </div><!--breadcum end-->
+    
+    <div class="error-bg"><!--error-bg end-->
+    	YOU HAVE <span>"26 Verses "</span> TO REVIEW TODAY! YOU CURRENTLY NEED ABOUT <span>21</span> MINUTES PER DAY.
+    </div><!--error-bg end-->
+    <div><img src="images/trans.png" width="1" height="10" alt="" /></div>
+    
+    <!--Content Block -->
+    <div class="page-content">
+		<%= content_for?(:content) ? yield(:content) : yield %>
+    </div>
+    
+    <div><img src="images/trans.png" width="1" height="10" alt="" />&nbsp;</div>
+    
+    <div class="clr"></div>
+    
+    <div id="footer"><!--footer end-->
+    	This is your copyright information or this potentially could be your contact information. It's up to you. Let me know what you think. <span><a href="#">info@memverse.com</a></span>
+    </div><!--footer end-->
+    
+</div><!--wrapper end-->
+
+<!-- Start of Menu Tab Code  -->
+<% if logged_in? %>
+	<script type="text/javascript">
+		//initialize tab menu, by passing in ID of UL
+		initalizetab("maintab")
+	</script>	
+<% end %>	
+
 </body>
 </html>
-
