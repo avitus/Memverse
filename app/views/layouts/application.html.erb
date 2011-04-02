@@ -92,7 +92,7 @@
 
 	<div id="header"><!--header start-->
     	<div class="header-top"><!--header-top start-->
-        	<div id="logo"><a href="/"><img src="images/logo.png" width="253" height="31" alt="" /></a></div>
+        	<div id="logo"><a href="/"><img src="/images/logo.png" width="253" height="31" alt="" /></a></div>
             <div class="inner-top-right"><!--inner-top-right start-->
                 <strong>Welcome:</strong> 
                 <%= if logged_in? 
@@ -187,7 +187,7 @@
 							</ul>
 						</div>
 					</div><!--submenu-left end-->
-					<div class="submenu-icon submenustyle"><a href="#"><img src="images/new-icon.png" width="32" height="32" alt="" /></a></div>
+					<div class="submenu-icon submenustyle"><a href="#"><img src="/images/new-icon.png" width="32" height="32" alt="" /></a></div>
 		        	<div class="clr"></div>
 		        	
 				</div><!--submenu end-->				
@@ -197,7 +197,7 @@
 
     <div class="breadcum-area"><!--breadcum start-->
     	<div class="breadcum-left">
-        	<span class="home-icon"><a href="/"><img src="images/home-icon.png" width="25" height="23" alt="" /></a></span>
+        	<span class="home-icon"><a href="/"><img src="/images/home-icon.png" width="25" height="23" alt="" /></a></span>
             <div class="breadcum-link">
             	<ul>
                 	<li><a href="#">Bread Crumb</a></li>
@@ -214,14 +214,14 @@
     <div class="error-bg"><!--error-bg end-->
     	YOU HAVE <span>"26 Verses "</span> TO REVIEW TODAY! YOU CURRENTLY NEED ABOUT <span>21</span> MINUTES PER DAY.
     </div><!--error-bg end-->
-    <div><img src="images/trans.png" width="1" height="10" alt="" /></div>
+    <div><img src="/images/trans.png" width="1" height="10" alt="" /></div>
     
     <!--Content Block -->
     <div class="page-content">
 		<%= content_for?(:content) ? yield(:content) : yield %>
     </div>
     
-    <div><img src="images/trans.png" width="1" height="10" alt="" />&nbsp;</div>
+    <div><img src="/images/trans.png" width="1" height="10" alt="" />&nbsp;</div>
     
     <div class="clr"></div>
     
