@@ -16,6 +16,6 @@
 	
 	<p>
 		Memverse has <%= number_with_delimiter(@global_users) %> active users as of <%= @last_entry %>. 
-		As a church, we have <%= number_with_delimiter(@memorized_verses) %> verses memorized.
+		As a church, we have <%= number_with_delimiter(Memverse.memorized.count) %> verses memorized.
 	</p>
 </div>
