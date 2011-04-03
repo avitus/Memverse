@@ -286,7 +286,7 @@
     Recent Comments:       "Comentarios recientes"
     Blog Search:           "Blog Search"   
   messages:
-    today_msg_html:        "USTED TIENE <span>%{due_today}</span> VERSOS PARA EXAMINAR HOY! QUE ACTUALMENTE NECESITA UNOS <span>%{time}</span> MINUTOS POR DIA."                                  
+    today_msg_html:        "USTED TIENE <span>%{due_today} VERSOS</span> PARA EXAMINAR HOY! QUE ACTUALMENTE NECESITA UNOS <span>%{time}</span> MINUTOS POR DIA."                                  
   memverses:      
     index:
       memverse_today:  "Memverso Hoy"

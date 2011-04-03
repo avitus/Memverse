@@ -287,7 +287,7 @@
     Recent Comments:       "Komentar Akhir"
     Blog Search:           "Blog Search"                     
   messages:
-    today_msg_html:        "YOU HAVE <span>%{due_today}</span> VERSES TO REVIEW TODAY! YOU CURRENTLY NEED ABOUT <span>%{time}</span> MINUTES PER DAY."
+    today_msg_html:        "YOU HAVE <span>%{due_today} VERSES</span> TO REVIEW TODAY! YOU CURRENTLY NEED ABOUT <span>%{time}</span> MINUTES PER DAY."
   memverses:
     index:
       memverse_today:  "Memverse Hari Ini"
