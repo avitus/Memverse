@@ -286,10 +286,11 @@
     View Blog:             "View Blog"
     Recent Comments:       "Recent Comments"
     Blog Search:           "Blog Search"
+  messages:
+    today_msg_html:        "YOU HAVE <span>%{due_today}</span> VERSES TO REVIEW TODAY! YOU CURRENTLY NEED ABOUT <span>%{time}</span> MINUTES PER DAY."
   memverses:
     index:
       memverse_today:  "Memverse Today"
-      review_a:        "You have"
       review_b:        "verses to review today"
       time_req_a:      "You currently need about" 
       time_req_b:      "minutes per day"

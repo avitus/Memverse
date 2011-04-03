@@ -210,10 +210,11 @@
             <%= link_to image_tag("more-verses.png", :width=>"192", :height=>"25", :alt=>"Add More Verses"), add_verse_path %>
         </div>
     </div><!--breadcum end-->
-    
+    <% if logged_in? %>
     <div class="error-bg"><!--error-bg end-->
-    	YOU HAVE <span>"26 Verses "</span> TO REVIEW TODAY! YOU CURRENTLY NEED ABOUT <span>21</span> MINUTES PER DAY.
+    	<%= t('messages.today_msg_html', :due_today => @due_today, :time => current_user.work_load) %>
     </div><!--error-bg end-->
+    <% end %>
     <div><img src="/images/trans.png" width="1" height="10" alt="" /></div>
     
     <!--Content Block -->

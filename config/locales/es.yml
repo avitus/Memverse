@@ -284,7 +284,9 @@
   blog_menu:
     View Blog:             "Ver blog"
     Recent Comments:       "Comentarios recientes"
-    Blog Search:           "Blog Search"                                         
+    Blog Search:           "Blog Search"   
+  messages:
+    today_msg_html:        "USTED TIENE <span>%{due_today}</span> VERSOS PARA EXAMINAR HOY! QUE ACTUALMENTE NECESITA UNOS <span>%{time}</span> MINUTOS POR DIA."                                  
   memverses:      
     index:
       memverse_today:  "Memverso Hoy"
