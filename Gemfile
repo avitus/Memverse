@@ -2,8 +2,8 @@ source 'http://rubygems.org'
 
 gem 'rails', '>=3.0.3'
 gem 'mysql2'
-gem 'aasm', '2.2.0', 		:require => 'aasm'																											# :source => 'http://gems.github.com',   
-gem 'will_paginate', '>=3.0.pre'																																# :source => 'http://gemcutter.org', will_paginate is required for bloggity
+gem 'aasm', '2.2.0', 		:require => 'aasm'																                      # :source => 'http://gems.github.com',   
+gem 'will_paginate', '>=3.0.pre'																									              # :source => 'http://gemcutter.org', will_paginate is required for bloggity
 gem 'prawn', :git => "git://github.com/sandal/prawn", :tag => '0.10.2', :submodules => true
 gem 'acts-as-taggable-on'																																				# :source => "http://gemcutter.org", Taggable gem, 
 gem 'hoptoad_notifier'																																					# Error tracking
@@ -25,6 +25,7 @@ gem 'thinking-sphinx', '>=2.0.0', :require => 'thinking_sphinx'																	
 gem 'riddle'																																										# Seems to be needed for Thinking_Sphinx ... not clear, though
 gem 'i18n-js'																																										# Uses config/locale files to build a JavaScript equivalent of i18n in Rails
 gem 'spawn', :git => 'git://github.com/rfc2822/spawn'																						# Use this for now (instead of the plugin ... check to see whether master branch ever supports Rails 3)
+gem 'juggernaut', :git => 'git://github.com/maccman/juggernaut.git'
 
 # Support for observe_field etc.
 gem 'prototype_legacy_helper', '0.0.0', :git => 'git://github.com/rails/prototype_legacy_helper.git'
