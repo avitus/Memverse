@@ -4,7 +4,7 @@
   
     <div class="two-box"><!--two-box start-->
     	<div class="white-box1">
-        	<div class="yellow-icon"><img src="images/icon3.png" width="49" height="49" alt="" /></div>
+        	<div class="yellow-icon"><img src="/images/icon3.png" width="49" height="49" alt="" /></div>
             <div class="wbox-text">
             	<h3>Verse of the Minute</h3>
                 <p><%= @votd_txt %></p>
@@ -12,16 +12,16 @@
             </div>
         </div>
         <div class="white-box2">
-        	<div class="yellow-icon"><img src="images/icon4.png" width="49" height="49" alt="" /></div>
+        	<div class="yellow-icon"><img src="/images/icon4.png" width="49" height="49" alt="" /></div>
         	<div class="wbox-text2">
             	<h3 class="nospace">Verses Memorized</h3>
                 <p><span class="number"><%= number_with_delimiter(Memverse.memorized.count) %></span>&nbsp;&nbsp; verses memorized on <strong>Memverse</strong>.</p>
-                <span class="verse"><%= link_to "Go To Your Verses", :controller => 'memverses', :action => 'manage_verses' %></span>
+                <span class="verse"><%= link_to "Go To Your Verses", manage_verses_path %></span>
             </div>
         </div>
     </div><!--two-box end-->
     
-    <div><img src="images/trans.png" width="1" height="10" alt="" />&nbsp;</div>
+    <div><img src="/images/trans.png" width="1" height="10" alt="" />&nbsp;</div>
     
     <div class="tab-bg">
     <div class="tab-top">
