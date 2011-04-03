@@ -212,7 +212,7 @@
     </div><!--breadcum end-->
     <% if logged_in? %>
     <div class="error-bg"><!--error-bg end-->
-    	<%= t('messages.today_msg_html', :due_today => @due_today, :time => current_user.work_load) %>
+    	<%= t('messages.today_msg_html', :due_today => current_user.due_verses, :time => current_user.work_load) %>
     </div><!--error-bg end-->
     <% end %>
     <div><img src="/images/trans.png" width="1" height="10" alt="" /></div>
