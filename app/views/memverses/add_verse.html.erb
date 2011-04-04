@@ -1,66 +1,48 @@
 <% page_title I18n.t :add_new_verses, :scope => 'page_titles' %>
 <% page_description I18n.t :add_new_verses, :scope => 'page_descriptions' %>
-<div class="inner2-bg">
-<div class="inner2-top">
-<div class="inner2-bottom">
-	<div class="content-sepa2">
-    
-    	<div class="enter-verse">
-        	<div class="top-heading">
-            	<h2><span>Enter a Bible Verse</span></h2>
-            </div>
-            <form action="" method="get">
-	            <div class="verse-field">
+<div class="white-box-bg">
+	    
+	    	<div class="enter-verse">
+	        	<div class="top-heading">
+	            	<h2><span>Enter a Bible Verse</span></h2>
+	            </div>
+	            <form action="" method="get">
+		            <div class="verse-field">
+		            	<div>
+		            		<label class="tag">Verse:</label>
+		                	<input name="" type="text" class="verse-search" />
+		                </div>
+		            </div>
+		            
+		            <div class="translate">
+		            	<div>
+		            		<label class="tag">Translation:</label>
+		                	<select name="" class="translation-drop"><option>New International Version</option></select>
+		                </div>
+		            </div>
+		            
+		            <div class="field-area">
+		                	<div>
+		                    	<label class="tag">Enter Bible Verse:</label>
+		                		<textarea name="" cols="" rows="" class="verse-entry-box"></textarea>
+		                    </div>
+		            </div>
+		            
+		            <div class="trans-button"><input name="" type="button" class="add-verse" value="" /></div>          
+	       		</form>    
+	       </div> <!-- enter-verse -->
+	        	        
+	        <div class="translation">
+	        	<h2>Available Translations</h2>
+	            <form action="" method="get">
 	            	<div>
-	            		<label class="tag">Verse:</label>
-	                	<input name="" type="text" class="verse-search" />
+	                	<select name="" class="translation-drop2"><option>None</option></select>
 	                </div>
-	            </div>
-	            
-	            <div class="translate">
-	            	<div>
-	            		<label class="tag">Translation:</label>
-	                	<select name="" class="translation-drop"><option>New International Version</option></select>
-	                </div>
-	            </div>
-	            
-	            <div class="field-area">
-	                	<div>
-	                    	<label class="tag">Enter Bible Verse:</label>
-	                		<textarea name="" cols="" rows="" class="being-field2"></textarea>
-	                    </div>
-	            </div>
-	            
-	            <div class="trans-button"><input name="" type="button" class="add-verse" value="" /></div>          
-       		</form>    
-       </div> <!-- enter-verse -->
-        
-        <div class="popular">
-        	<h2>Most Popular Verses</h2>
-            <ul>
-            	<li class="gray3"><a href="#">Jn 15:7</a></li>
-                <li class="white3"><a href="#">Jn 15:7</a></li>
-                <li class="gray3"><a href="#">Jn 15:7</a></li>
-                <li class="white3"><a href="#">Jn 15:7</a></li>
-                <li class="gray3"><a href="#">Jn 15:7</a></li>
-                <li class="white3"><a href="#">Jn 15:7</a></li>
-                <li class="gray3"><a href="#">Jn 15:7</a></li>
-            </ul>
-        </div>
-        
-        <div class="translation">
-        	<h2>Available Translations</h2>
-            <form action="" method="get">
-            	<div>
-                	<select name="" class="translation-drop2"><option>None</option></select>
-                </div>
-            </form>
-        </div>
-        <div class="clr"></div>
-	</div>   
-</div>
-</div>
-</div>
-</div>
+	            </form>
+	        </div>
+	        <div class="clr"></div>	
+
+</div> <!-- white-box-bg -->
+
         
 

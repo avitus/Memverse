@@ -978,7 +978,6 @@ img a
 
 .error-bg
 {
-	background:url(../images/error-bg.png) no-repeat left top;
 	width:1040px;
 	height:29px;
 	font-size:13px;
@@ -1266,6 +1265,30 @@ img a
 	padding:30px 0px;
 }
 
+.white-box-bg {
+	width:1080px;
+	background: #FFFFFF;
+	border-style: solid; 
+	border-width: 1px;
+	border-color: #555555;
+	padding: 2em 0em 2em 0em;
+	-moz-border-radius: 10px;
+	-webkit-border-radius:10px;
+	border-radius: 10px; 
+}
+
+.gray-box-bg {
+	width:1030px;
+	background: #717171;
+	border-style: solid; 
+	border-width: 1px;
+	border-color: #717171;
+	padding: 0 25px 0 25px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius:10px;
+	border-radius: 10px; 
+}
+
 .content-sepa
 {
 	background:url(../images/content-sepa.png) repeat-y left top;
@@ -1510,25 +1533,23 @@ img a
 
 /*========== Inner3 ==========*/
 
-.content-sepa2
-{
-	background:url(../images/content-sepa2.png) repeat-y left top;
-	width:881px;
-	padding:0 20px 0 39px;
-}
-
 .enter-verse
 {
-	width:320px;
+	width:45%;
 	float:left;
-	margin-right:38px;
+	padding-left: 3em;
+	padding-right: 2em;
+	margin-right: 4em;
+	border-right-color: #bfbebe;
+	border-right-style: solid;
+	border-right-width: 1px;
 }
 
 .popular
 {
-	width:282px;
+	width:25%;
 	float:left;
-	margin-right:33px;
+	padding-left: 2em;
 }
 
 .popular h2
@@ -1541,9 +1562,9 @@ img a
 	color:#7ca529;
 }
 
-.being-field2
+.verse-entry-box
 {
-	width:318px;
+	width:100%;
 	height:140px;
 	background:#f2f1f1;
 	border:1px solid #cccccc;
@@ -1581,8 +1602,9 @@ img a
 
 .translation
 {
-	width:208px;
+	width:25%;
 	float:left;
+	padding-left: 2em;
 }
 
 .translation h2
