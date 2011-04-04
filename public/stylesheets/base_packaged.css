@@ -35,12 +35,12 @@ img a {border:none}
  #header {width:1080px; margin:0px auto}
 .header-top {width:1080px; height:63px}
 #logo {width:253px; height:31px; float:left; padding-top:17px}
-.top-right {width:470px; float:right}
+.top-right {width:490px; float:right}
 .resize {width:40px; height:15px; float:left; margin-right:5px; padding-top:25px}
 #large {background:url(../images/resize-big.png?1301602188) no-repeat left top; width:15px; height:15px; float:left; margin-right:6px; cursor:pointer}
 #small {background:url(../images/resize-small.png?1301602188) no-repeat left top; width:15px; height:15px; float:left; cursor:pointer}
 .iphone {background:url(../images/i-phone.png?1301602188) no-repeat right center; font-family:"Times New Roman", Times, serif; width:245px; height:31px; float:left; margin-top:18px; line-height:31px; color:#FFF; font-size:16px; margin-right:5px}
-.button {width:175px; float:left; padding-top:20px}
+.button {width:195px; float:left; padding-top:20px}
 .button ul {list-style:none; padding:0px; margin:0px}
 .button ul li {background:url(../images/top-button.png?1301602188) no-repeat left top; width:79px; height:25px; text-align:center; line-height:25px; font-size:10px; font-weight:bold; color:#333; float:left; margin-right:6px}
 .button ul li a {display:block; width:79px; height:25px; color:#333; text-decoration:none}
