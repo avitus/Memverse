@@ -95,8 +95,7 @@
         	<div id="logo"><a href="/"><img src="/images/logo.png" width="253" height="31" alt="" /></a></div>
             <% if logged_in? %>
             <div class="inner-top-right"><!--inner-top-right start-->
-                <strong>Welcome:</strong> 
-                <% current_user.name_or_login %>
+                <strong>Welcome:</strong> <%= current_user.name_or_login %>
             </div><!--inner-top-right end-->
             <% else %>
             <div class="top-right"><!--top-right start-->
