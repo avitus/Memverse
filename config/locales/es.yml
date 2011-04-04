@@ -377,8 +377,7 @@
     reftest:                    "Test de Referencia"
     my_dashboard:               "Mi Panel"
     user_profile:               "Perfil de %{name}"
-  page_banners:
-    default:                    "Verso de la Biblia Memorización"
+    mainpage:                   "Verso de la Biblia Memorización"
   page_descriptions:
     default:                    "Una herramienta online y gratuita para memorizar la Biblia."
     tutorial:                   "Aprenda a memorizar versículos de las Escrituras en línea con Memverse."
