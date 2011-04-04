@@ -180,32 +180,28 @@ img a {border:none}
 .tab-content ul li span {color:#6b9620}
 .tab-content ul li a {color:#666; text-decoration:none}
 .tab-content ul li a:hover {color:#000; text-decoration:none}
- .inner2-bg {background:url(../images/inner2-bg-mid.png?1301602188) repeat-y left top; width:1080px}
-.inner2-top {background:url(../images/inner2-bg-top.png?1301602188) no-repeat left top; width:1080px}
-.inner2-bottom {background:url(../images/inner2-bg-bottom.png?1301602188) no-repeat left bottom; width:1080px; padding:30px 0px}
-.white-box-bg {width:1080px; background: #FFFFFF; border-style: solid; border-width: 1px; border-color: #555555; padding: 2em 0em 2em 0em; -moz-border-radius: 10px; -webkit-border-radius:10px; border-radius: 10px}
+ .white-box-bg {width:1080px; background: #FFFFFF; border-style: solid; border-width: 1px; border-color: #555555; padding: 2em 0em 2em 0em; -moz-border-radius: 10px; -webkit-border-radius:10px; border-radius: 10px}
 .gray-box-bg {width:1030px; background: #717171; border-style: solid; border-width: 1px; border-color: #717171; padding: 0 25px 0 25px; -moz-border-radius: 10px; -webkit-border-radius:10px; border-radius: 10px}
-.content-sepa {background:url(../images/content-sepa.png?1301602188) repeat-y left top; width:862px; padding:0 38px 0 40px}
-.new-verse {width:320px; float:left; margin-right:27px}
-.top-heading {height:30px; margin-bottom:5px}
-.top-heading h2 {padding:0px; margin:0px; width:155px; height:30px; font-size:17px; line-height:30px; color:#999999; float:left}
+.test-verse {width:35%; float:left; padding-left: 3em; padding-right: 2em; border-right-color: #bfbebe; border-right-style: solid; border-right-width: 1px}
+.top-heading {height:30px; margin-bottom:5px; width:100%}
+.top-heading h2 {padding:0px; margin:0px; height:30px; font-size:17px; line-height:30px; color:#999999; float:left}
 .top-heading h2 span {color:#7ca529}
 .hide-hints {background:url(../images/plus.png?1301602188) no-repeat right center; width:81px; height:30px; float:right; color:#999; line-height:30px; font-size:13px; font-weight:bold}
 .hide-hints a {width:81px; height:30px; display:block; color:#999; text-decoration:none}
 .hide-hints a:hover {color:#333; text-decoration:none}
-.yellow-box {background:#ffffcc; border:1px solid #cccccc; width:290px; padding:14px; font-size:12px; font-weight:bold; color:#666; text-align:center; text-transform:uppercase; margin-bottom:8px}
-.field-area {margin-bottom:8px}
-.being-field {width:318px; height:205px; background:#f2f1f1; border:1px solid #cccccc; overflow:auto; margin-bottom:25px}
+.yellow-box {background:#ffffcc; border:1px solid #cccccc; padding:1em; font-weight:bold; color:#666; text-align:center; text-transform:uppercase; margin-bottom:8px}
+.verse-test-area {margin-bottom:8px}
+.verse-test-entry-box {width:100%; height:205px; background:#f2f1f1; border:1px solid #cccccc; overflow:auto; margin-bottom:25px}
 .tool-tip-nav {background:url(../images/tick.png?1301602188) no-repeat left top; width:195px; height:21px; float:left; font-size:13px; color:#666666; font-weight:bold; line-height:21px; padding-left:25px}
 .tool-tip-number {width:100px; height:21px; float:left; position:relative}
 .tool-tip-number a {font-size:13px; color:#999999; text-decoration:none; font-weight:bold; line-height:21px; padding:0px 3px}
 .tool-tip-number a:hover {font-size:13px; color:#7ca529; text-decoration:none}
 .tool-tip-number a span {background:url(../images/tool-tip-box.png?1301602188) no-repeat left top; width:309px; height:28px; line-height:23px; padding-left:10px; font-size:11px; color:#669933; display:block; position:absolute; left:-218px; top:-25px}
 .tool-tip-number a:hover span, a span:hover {display:block}
-.feed {width:302px; float:left; margin-right:21px; color:#666666 }
-.feed p {padding:10px 0px; margin:0px}
-.feed h2 {padding:0px; margin:0px; height:30px; font-size:17px; line-height:30px; color:#7ca529}
-.upcoming {width:192px; float:left}
+.feedback {width:28%; height: 362px; float:left; color:#666666; padding-left: 2em; padding-right: 2em; border-right-color: #bfbebe; border-right-style: solid; border-right-width: 1px}
+.feedback p {padding:10px 0px; margin:0px}
+.feedback h2 {padding:0px; margin:0px; height:30px; font-size:17px; line-height:30px; color:#7ca529}
+.upcoming {width:20%; padding-left: 2em; float:left}
 .upcoming h2 {padding:0px; margin:0px; height:30px; font-size:17px; line-height:30px; color:#7ca529}
 .upcoming ul {list-style:none; padding:0px; margin:0px; padding-top:10px}
 .upcoming ul li {font-size:14px; width:167px; height:21px; color:#666666; line-height:21px; padding-left:25px}
