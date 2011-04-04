@@ -286,6 +286,8 @@
     View Blog:             "Lihat Blog"
     Recent Comments:       "Komentar Akhir"
     Blog Search:           "Blog Search"                     
+  messages:
+    today_msg_html:        "YOU HAVE <span>%{due_today} VERSES</span> TO REVIEW TODAY! YOU CURRENTLY NEED ABOUT <span>%{time}</span> MINUTES PER DAY."
   memverses:
     index:
       memverse_today:  "Memverse Hari Ini"
@@ -382,8 +384,7 @@
     reftest:                    "Reference Test"
     my_dashboard:               "My Dashboard"
     user_profile:               "{{name}}'s Profile"
-  page_banners:
-    default:                    "Bible Verse Memorization"
+    mainpage:                   "Menghafal Ayat Alkitab"
   page_descriptions:
     default:                    "A free, online tool for memorizing the Bible."
     tutorial:                   "Learn how to memorize Scripture verses online with Memverse."

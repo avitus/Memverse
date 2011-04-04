@@ -284,7 +284,9 @@
   blog_menu:
     View Blog:             "Ver blog"
     Recent Comments:       "Comentarios recientes"
-    Blog Search:           "Blog Search"                                         
+    Blog Search:           "Blog Search"   
+  messages:
+    today_msg_html:        "USTED TIENE <span>%{due_today} VERSOS</span> PARA EXAMINAR HOY! QUE ACTUALMENTE NECESITA UNOS <span>%{time}</span> MINUTOS POR DIA."                                  
   memverses:      
     index:
       memverse_today:  "Memverso Hoy"
@@ -375,8 +377,7 @@
     reftest:                    "Test de Referencia"
     my_dashboard:               "Mi Panel"
     user_profile:               "Perfil de %{name}"
-  page_banners:
-    default:                    "Verso de la Biblia Memorización"
+    mainpage:                   "Verso de la Biblia Memorización"
   page_descriptions:
     default:                    "Una herramienta online y gratuita para memorizar la Biblia."
     tutorial:                   "Aprenda a memorizar versículos de las Escrituras en línea con Memverse."

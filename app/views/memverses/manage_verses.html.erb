@@ -1,5 +1,4 @@
 <% page_title I18n.t :my_memory_verses, :scope => 'page_titles' %>
-<% page_banner I18n.t :my_memory_verses, :scope => 'page_titles' %>
 
 <% if @my_verses.blank? # No verses in account %>
 
@@ -44,7 +43,7 @@
 			<td align="center"><%= mv.ref_interval		%></td>
 			<td align="center"><%= mv.next_ref_test		%></td>
 			<td align="left">  <%= mv.tag_list.to_s		%></td>
-			<td align="center" class="flag_verse" id=<%= mv.verse.id %>><%= 			
+			<td align="center" class="flag_verse" id="<%= mv.verse.id %>"><%= 			
 						if mv.verified?
 							link_to mv.verse.error_flag ? "Error Reported" : "Verified", 
 											toggle_error_flag_path(mv.verse.id, :format	=> 'html'),
@@ -62,7 +61,7 @@
 		    </tbody>
 	  </table>
 		
-		<br>
+		<br />
 		
 		<div class="buttons">
 			<%= submit_tag t('.show_selected'), :onclick => "return checkAllFields(4);", :name => "Show" %> 
@@ -74,7 +73,7 @@
 
 </div>
 
-<br>
+<br />
 
 <!-- Highlight verse to be verified -->
 <script>
@@ -97,3 +96,4 @@
   });
 </script>
 <% end %>
+

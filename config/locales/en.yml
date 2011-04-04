@@ -286,10 +286,11 @@
     View Blog:             "View Blog"
     Recent Comments:       "Recent Comments"
     Blog Search:           "Blog Search"
+  messages:
+    today_msg_html:        "YOU HAVE <span>%{due_today} VERSES</span> TO REVIEW TODAY! YOU CURRENTLY NEED ABOUT <span>%{time}</span> MINUTES PER DAY."
   memverses:
     index:
       memverse_today:  "Memverse Today"
-      review_a:        "You have"
       review_b:        "verses to review today"
       time_req_a:      "You currently need about" 
       time_req_b:      "minutes per day"
@@ -376,8 +377,7 @@
     reftest:                    "Reference Test"
     my_dashboard:               "My Dashboard"
     user_profile:               "%{name}'s Profile"
-  page_banners:
-    default:                    "Bible Verse Memorization"
+    mainpage:                   "Bible Verse Memorization"
   page_descriptions:
     default:                    "A free, online tool for memorizing the Bible."
     tutorial:                   "Learn how to memorize Scripture verses online with Memverse."

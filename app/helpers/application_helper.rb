@@ -3,7 +3,7 @@ module ApplicationHelper
   # ----------------------------------------------------------------------------------------------------------             
   # Idea came from http://stackoverflow.com/questions/185965/how-do-i-change-the-title-of-a-page-in-rails
   # <title><%= page_title %></title> goes in layout view
-  # <%= page_heading "Awesome" %> goes in the actual view. This changes the title also.
+  # <% page_title "Page Title" %> goes in the actual view. This changes the title also.
   # In our case, page_headings will use the translations found in config/locales ----------------------------------------------------------------------------------------------------------  
    
    
@@ -14,15 +14,7 @@ module ApplicationHelper
       content_for?(:page_title) ? content_for(:page_title) : "Memverse"
     end
   end
-
-  def page_banner(banner = nil)
-    if banner
-      content_for(:page_banner) { banner }
-    else
-      content_for?(:page_banner) ? content_for(:page_banner) : t(:default, :scope => 'page_banners')
-    end
-  end
-  
+ 
   def page_description(description = nil)
     if description
       content_for(:page_description) { description }
@@ -30,7 +22,7 @@ module ApplicationHelper
       content_for?(:page_description) ? content_for(:page_description) : t(:default, :scope => 'page_descriptions')
     end
   end
-# Remember to def page_description and to def page_banner
+# Remember to def page_description
 # Original description: A free, online tool for memorizing the bible
 #  def page_heading(text)
 #    content_tag(:p, content_for(:title){ text })
@@ -43,9 +35,6 @@ module ApplicationHelper
 #      content_for?(:page_title) ? content_for(:page_title) : APP_CONFIG[:site_name]  # or a hard-coded default
 #    end
 #  end
-  # TODO: Adjust usage of h1. Original script above from Stack Overflow had
-  # content_tag(:h1, content_for(:title){ text })
-  # thus assigning h1 tag to whatever was the page heading. Eventually we should do this.  
   # ----------------------------------------------------------------------------------------------------------
   # Outputs the corresponding flash message if any are set (Rails 2 version left for reference)
   # ----------------------------------------------------------------------------------------------------------  

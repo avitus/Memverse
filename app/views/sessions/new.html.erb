@@ -1,26 +1,4 @@
-<div id="header"><!--header start-->
-	<div class="header-top"><!--header-top start-->
-    	<div id="logo"><a href="#"><img src="images/logo.png" width="253" height="31" alt="" /></a></div>
-        <div class="top-right"><!--top-right start-->
-        
-        	<div class="resize">
-            	<a class="fontblk" id="large" title="Increase Font Size"></a>
-                <a class="fontblk" id="small" title="Decrease Font Size"></a>
-            </div>
-            
-        	<div class="iphone">iPhone / iPad App (coming soon):</div>
-            
-            <div class="button">
-            	<ul>
-                	<li><a href="#">SIGN UP</a></li>
-                    <li><a href="#">LOG IN</a></li>
-                </ul>
-            </div>
-            
-        </div><!--top-right end-->
-    </div><!--header-top end-->
-</div><!--header end-->
-
+<% page_title I18n.t :mainpage, :scope => 'page_titles' %>
 <div><img src="images/trans.png" width="1" height="8" alt="" /></div>
 
 <div id="news-strip"><!--news-strip start-->
@@ -161,7 +139,7 @@
     	<h2 class="gray">Volunteer</h2>
         <div class="volunteers">
         	<p>We are looking for <span><a href="#">volunteers</a></span> in a variety of areas. If you'd like to help, we'd like to hear from you...</p>
-            <div class="learn-area"><a href="#"><img src="images/learn-more.png" width="179" height="25" alt="" /></a></div>
+            <div class="learn-area"><%= link_to image_tag("learn-more.png", :width=>"179", :height=>"25", :alt=>"Volunteer"), volunteer_path %></div>
         </div>
     </div>
     </div>
