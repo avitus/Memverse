@@ -837,7 +837,8 @@ img a
 	margin-top:23px;
 	float:right;
 	color:#FFF;
-	text-align:right;
+	text-align:left;
+	padding-left:25px;
 }
 
 .submenu

@@ -124,7 +124,7 @@ img a {border:none}
 #footer span a {color:#993333; text-decoration:underline}
 #footer span a:hover {color:#FFF; text-decoration:underline}
  #inner1-body {background:#bfbebe url(../images/body-bg2.png?1301602188) repeat-x left top}
-.inner-top-right {background:url(../images/user-icon.png?1301602188) no-repeat left top; width:220px; height:18px; line-height:18px; margin-top:23px; float:right; color:#FFF; text-align:right}
+.inner-top-right {background:url(../images/user-icon.png?1301602188) no-repeat left top; width:220px; height:18px; line-height:18px; margin-top:23px; float:right; color:#FFF; text-align:left; padding-left:25px;}
 .submenu {height:42px}
 .submenu-left {width:1040px; height:42px; float:left}
 .submenu ul {list-style:none; padding:0px; margin:0px}
