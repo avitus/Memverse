@@ -94,27 +94,25 @@
     	<div class="header-top"><!--header-top start-->
         	<div id="logo"><a href="/"><img src="/images/logo.png" width="253" height="31" alt="" /></a></div>
             <% if logged_in? %>
-            <div class="inner-top-right"><!--inner-top-right start-->
-                <strong>Welcome:</strong> <%= current_user.name_or_login %>
-            </div><!--inner-top-right end-->
+	            <div class="inner-top-right"><!--inner-top-right start-->
+	                <strong>Welcome:</strong> <%= current_user.name_or_login %>
+	            </div><!--inner-top-right end-->
             <% else %>
-            <div class="top-right"><!--top-right start-->
-        
-        	<div class="resize">
-            	<a class="fontblk" id="large" title="Increase Font Size"></a>
-                <a class="fontblk" id="small" title="Decrease Font Size"></a>
-            </div>
-            
-        	<div class="iphone">iPhone / iPad App (coming soon):</div>
-            
-            <div class="button">
-            	<ul>
-                	<li><%= link_to 'SIGN UP', signup_path %></li>
-                    <li><a href="#">LOG IN</a></li>
-                </ul>
-            </div>
-            
-            </div><!--top-right end-->
+	            <div class="top-right"><!--top-right start-->        
+		        	<div class="resize">
+		            	<a class="fontblk" id="large" title="Increase Font Size"></a>
+		                <a class="fontblk" id="small" title="Decrease Font Size"></a>
+		            </div>
+		            
+		        	<div class="iphone">iPhone / iPad App (coming soon):</div>
+		            
+		            <div class="button">
+		            	<ul>
+		                	<li><%= link_to 'SIGN UP', signup_path %></li>
+		                    <li><a href="#">LOG IN</a></li>
+		                </ul>
+		            </div>
+	            </div><!--top-right end-->
             <% end %>
         </div><!--header-top end-->
 
@@ -210,26 +208,29 @@
 		<% end %> <!-- if logged_in? -->
 
 
-    <% if logged_in? %><!-- if logged_in? -->
-    <div class="breadcum-area"><!--breadcum start-->
-    	<div class="breadcum-left">
-        	<span class="home-icon"><a href="/"><img src="/images/home-icon.png" width="25" height="23" alt="" /></a></span>
-            <div class="breadcum-link">
-            	<ul>
-                	<li><a href="#">Bread Crumb</a></li>
-                    <li><a href="#">Navigation</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="breadcum-right">
-        	<%= link_to image_tag("your-verses.png", :width=>"172", :height=>"25", :alt=>"Your Verses"), manage_verses_path %>
-            <%= link_to image_tag("more-verses.png", :width=>"192", :height=>"25", :alt=>"Add More Verses"), add_verse_path %>
-        </div>
-    </div><!--breadcum end-->
-    <div class="error-bg gray-box-bg"><!--error-bg end-->
-    	<%= t('messages.today_msg_html', :due_today => current_user.due_verses, :time => current_user.work_load) %>
-    </div><!--error-bg end-->
-    <% end %><!-- if logged_in? -->
+	    <% if logged_in? %><!-- if logged_in? -->
+		    <div class="breadcum-area"><!--breadcum start-->
+		    	<div class="breadcum-left">
+		        	<span class="home-icon"><a href="/"><img src="/images/home-icon.png" width="25" height="23" alt="" /></a></span>
+		            <div class="breadcum-link">
+		            	<ul>
+		                	<li><a href="#">Bread Crumb</a></li>
+		                    <li><a href="#">Navigation</a></li>
+		                </ul>
+		            </div>
+		        </div>
+		        <div class="breadcum-right">
+		        	<%= link_to image_tag("your-verses.png", :width=>"172", :height=>"25", :alt=>"Your Verses"), manage_verses_path %>
+		            <%= link_to image_tag("more-verses.png", :width=>"192", :height=>"25", :alt=>"Add More Verses"), add_verse_path %>
+		        </div>
+		    </div><!--breadcum end-->
+		    <div class="error-bg gray-box-bg"><!--error-bg end-->
+		    	<%= t('messages.today_msg_html', :due_today => current_user.due_verses, :time => current_user.work_load) %>
+		    </div><!--error-bg end-->
+	    <% end %><!-- if logged_in? -->
+
+	</div> <!--header end-->
+    
     <div><img src="/images/trans.png" width="1" height="10" alt="" /></div>
     
     <!--Content Block -->
@@ -253,7 +254,8 @@
 		//initialize tab menu, by passing in ID of UL
 		initalizetab("maintab")
 	</script>	
-<% end %>	
+<% end %>
+
 <!-- Start of I18n-js code  -->
 <script type="text/javascript">
   I18n.defaultLocale = "<%= I18n.default_locale %>";
