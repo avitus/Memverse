@@ -34,6 +34,7 @@ img a {border:none}
 #page-content {}
  #header {width:1080px; margin:0px auto}
 .header-top {width:1080px; height:63px}
+ .header-top-narrow {width:940px; height:63px}
 #logo {width:253px; height:31px; float:left; padding-top:17px}
 .top-right {width:470px; float:right}
 .resize {width:40px; height:15px; float:left; margin-right:5px; padding-top:25px}
@@ -46,11 +47,12 @@ img a {border:none}
 .button ul li a {display:block; width:79px; height:25px; color:#333; text-decoration:none}
 .button ul li a:hover {color:#b95c2e; text-decoration:none}
 .menu {height:90px}
+.menu-main-only {height:48px}
 .menu ul {list-style:none; padding:0px; margin:0px}
 .menu ul li {background:url(../images/nav-sepa.png?1301602188) no-repeat left top; float:left; height:42px; line-height:42px; font-size:12px; color:#FFF; font-weight:normal; text-transform:uppercase}
 .menu ul li a {color:#FFF; text-decoration:none; padding:0px 15px}
 .menu ul li a:hover {color:#99cc33; text-decoration:none}
- #news-strip {background:url(../images/news-ribbon.png?1301602188) no-repeat left top; width:1080px; height:46px}
+ #news-strip {background:url(../images/news-ribbon.png?1301602188) no-repeat left top; width:940px; height:46px}
 .strip-left {width:171px; height:46px; float:left; line-height:46px; font-family:"Times New Roman", Times, serif; font-size:15px; color:#FFF; padding-left:50px}
 .strip-right {width:719px; height:46px; float:right; text-align:center; line-height:46px; font-style:italic; color:#666666; position:relative}
 .strip-right span {color:#000; font-weight:bold}
@@ -318,17 +320,6 @@ div.center {width: 50%; margin-left:auto; margin-right:auto}
 #banner {color: #1F2229;  background: #687284;  padding-top: 10px; padding-bottom: 16px; border-bottom: 2px solid; font-family: Georgia, "Times New Roman", serif; font-variant: small-caps; font-size: 50px; text-align: center}
 #banner img {float: left}
 #columns {background: #687284;  }
-#main {margin-left: 0em;  padding-top: 1em; padding-left: 0.5em; background: white}
-#side {float: left; padding-top: 1em; padding-left: 1em; padding-bottom: 1em; width: 10.3em; background: #687284;  }
-#side h3 {color: #1F2229;  }
-#side ul, li {border:0; padding:0; padding-left: .2em; margin:0.1em; list-style:none}
-#side a {color: #1F2229;  font-size: 100%}
-#side #sidebar-menu {color: #1F2229;  }
-#left-footer {padding-top: 3em; padding-left: 0em; padding-bottom: 16em; width: 10.3em; background: #687284;  color: #1F2229;  clear: left; list-style:none}
-#skyscraper-right {float: right; padding-top: 1em; padding-left: 1em; padding-bottom: 1em}
-#skyscraper-ad-right {float: right; margin-left: 1em; padding-left: 1em; padding-bottom: 1em}
-h1 {font-family: Georgia,"Times New Roman", serif; font-size: 150%; color: #B8763D;  border-bottom: 3px}
-h2 {font-family: Georgia,"Times New Roman", serif; font-size: 125%; color: #A6886E;  border-bottom: 3px}
  #verse-list .list-title {color: #244; font-weight: bold; font-size: medium}
 #verse-list .list-image {width: 60px; height: 70px}
 #verse-list .list-actions {font-size: x-small; text-align: right; padding-left: 1em}
