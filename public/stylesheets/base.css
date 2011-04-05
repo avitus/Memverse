@@ -288,6 +288,7 @@ img a
 	color:#FFF;
 	text-decoration:none;
 	padding:0px 15px;
+	display:block;
 }
 
 .menu ul li a:hover
@@ -891,6 +892,7 @@ img a
 {
 	color:#99cc33;
 	text-decoration:none;
+	display:block;
 }
 
 .submenu ul li a:hover, .submenu ul li.active a
