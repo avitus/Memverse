@@ -85,7 +85,12 @@
 
 	<div id="header"><!--header start-->
     	<div class="header-top-narrow"><!--header-top start-->
-        	<div id="logo"><a href="/"><img src="/images/logo.png" width="253" height="31" alt="" /></a></div>
+        	<div id="logo"><a href="/" title="<%= I18n.t :mainpage, :scope => 'page_titles' %> - Memverse"><img src="/images/logo.png" width="253" height="31" alt="" /></a></div>
+            <% if logged_in? %>
+	            <div class="inner-top-right"><!--inner-top-right start-->
+	                <strong>Welcome:</strong> <%= current_user.name_or_login %>
+	            </div><!--inner-top-right end-->
+            <% else %>
             <div class="top-right"><!--top-right start-->
             
             	<div class="resize">
@@ -103,6 +108,7 @@
                 </div>
                 
             </div><!--top-right end-->
+            <% end %>
         </div><!--header-top end-->
         
         <div class="menu menu-main-only"><!--menu start-->
