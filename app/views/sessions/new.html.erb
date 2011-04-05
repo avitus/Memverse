@@ -1,6 +1,105 @@
-<% page_title I18n.t :mainpage, :scope => 'page_titles' %>
-<div><img src="images/trans.png" width="1" height="8" alt="" /></div>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>MemVerse</title>
+<link href="stylesheets/base_packaged.css" rel="stylesheet" type="text/css" />
 
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js"></script>
+	<script type="text/javascript">
+       $(function(){
+               $('.fontblk').click(function(){
+                       var ourText = $(' p');
+                       var currFontSize = ourText.css('fontSize');
+                       var finalNum = parseFloat(currFontSize, 10);
+                       var stringEnding = currFontSize.slice(-2);
+                       if(this.id == 'large') {
+                               finalNum *= 1.2;
+                       }
+                       else if (this.id == 'small'){
+                               finalNum /=1.2;
+                       }
+                       ourText.animate({fontSize: finalNum + stringEnding},600);
+               });
+       });
+
+	</script>
+
+<!--[if IE 6]>
+<style type="text/css">
+	.learn-area
+	{
+		padding-top:16px;
+	}
+</style>
+<![endif]-->
+
+<style type="text/css">
+.left-widget
+{
+	-moz-border-radius:8px;
+	-webkit-border-radius:8px;
+	-o-border-radius:8px;
+	border-radius:8px;
+	behavior:url(PIE.htc);
+}
+
+.main-right
+{
+	-moz-border-radius:8px;
+	-webkit-border-radius:8px;
+	-o-border-radius:8px;
+	border-radius:8px;
+	behavior:url(PIE.htc);
+}
+</style>
+
+</head>
+
+<body>
+	
+<% page_title I18n.t :mainpage, :scope => 'page_titles' %>	
+	
+<div id="wrapper"><!--wrapper start-->
+
+	<div id="header"><!--header start-->
+    	<div class="header-top-narrow"><!--header-top start-->
+        	<div id="logo"><a href="#"><img src="images/logo.png" width="253" height="31" alt="" /></a></div>
+            <div class="top-right"><!--top-right start-->
+            
+            	<div class="resize">
+                	<a class="fontblk" id="large" title="Increase Font Size"></a>
+                    <a class="fontblk" id="small" title="Decrease Font Size"></a>
+                </div>
+                
+            	<div class="iphone">iPhone / iPad App (coming soon):</div>
+                
+                <div class="button">
+                	<ul>
+                    	<li><a href="#">SIGN UP</a></li>
+                        <li><a href="#">LOG IN</a></li>
+                    </ul>
+                </div>
+                
+            </div><!--top-right end-->
+        </div><!--header-top end-->
+        
+        <div class="menu menu-main-only"><!--menu start-->
+        	<ul>
+            	<li><a href="#">Home</a></li>
+                <li><a href="#">Memorize</a></li>
+                <li><a href="#">Learn</a></li>
+                <li><a href="#">Profile</a></li>
+                <li><a href="#">LeaderBoards</a></li>
+                <li><a href="#">FAQ</a></li>
+                <li><a href="#">Blog</a></li>
+                <li><a href="#">Contact</a></li>
+                <li>&nbsp;</li>
+            </ul>
+        </div><!--menu end-->
+    </div><!--header end-->
+    <div><img src="images/trans.png" width="1" height="8" alt="" /></div>
+    
 <div id="news-strip"><!--news-strip start-->
 	<div class="strip-left">Verse Illumination:</div>
     <div class="strip-right">
@@ -148,4 +247,31 @@
     
     <div class="clr"></div>
 </div><!--content end-->
+    
+    <div id="footer"><!--footer end-->
+    	This is your copyright information or this potentially could be your contact information. It's up to you. Let me know what you think. <span><a href="#">info@memverse.com</a></span>
+    </div><!--footer end-->
+    
+</div><!--wrapper end-->
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

@@ -148,6 +148,13 @@ img a
 	height:63px;
 }
 
+/* Narrower header for sign in page ... too difficult to resize this page now */
+.header-top-narrow
+{
+	width:940px;
+	height:63px;
+}
+
 #logo
 {
 	width:253px;
@@ -252,6 +259,11 @@ img a
 	height:90px;
 }
 
+.menu-main-only
+{
+	height:48px;
+}
+
 .menu ul
 {
 	list-style:none;
@@ -289,7 +301,7 @@ img a
 #news-strip
 {
 	background:url(../images/news-ribbon.png) no-repeat left top;
-	width:1080px;
+	width:940px;
 	height:46px;
 }
 
@@ -2257,85 +2269,6 @@ div.center {
 
 #columns {
 	background: #687284; /* dark green */
-}
-
-#main {
-	margin-left: 0em; /* Distance from left side of screen until start of main border */
-	padding-top: 1em;
-	padding-left: 0.5em;
-	background: white;
-}
-
-#side {
-	float: left;
-	padding-top: 1em;
-	padding-left: 1em;
-	padding-bottom: 1em;
-	width: 10.3em;
-	background: #687284; /* dark green */
-}
-
-#side h3 {
-	color: #1F2229;  /* yellow */
-}
-
-#side ul, li {
-	border:0; 
-	padding:0;
-	padding-left: .2em; 
-	margin:0.1em; 
-	list-style:none;	
-}
-
-
-#side a {
-	color: #1F2229; /* lightest green */
-	font-size: 100%;
-}
-
-#side #sidebar-menu {
-	color: #1F2229; /* lightest green */	
-}
-
-#left-footer {
-	padding-top: 3em;
-	padding-left: 0em;
-	padding-bottom: 16em;
-	width: 10.3em;
-	background: #687284; /* dark green */
-	color: #1F2229; /* lightest green */
-	clear: left;
-	list-style:none;    
-}
-
-
-
-#skyscraper-right {
-	float: right;
-	padding-top: 1em;
-	padding-left: 1em;
-	padding-bottom: 1em;
-}
-
-#skyscraper-ad-right {
-	float: right;
-	margin-left: 1em;
-	padding-left: 1em;
-	padding-bottom: 1em;
-}
-
-h1 {
-	font-family: Georgia,"Times New Roman", serif;
-	font-size: 150%;
-	color: #B8763D; /* orange */
-	border-bottom: 3px;
-}
-
-h2 {
-	font-family: Georgia,"Times New Roman", serif;
-	font-size: 125%;
-	color: #A6886E; /* orange */
-	border-bottom: 3px;
 }
 
 /* === Styling for list of verses === */

@@ -3,6 +3,7 @@ class SessionsController < ApplicationController
   
   def new
     session[:referrer] = params[:referrer]
+    render :layout => false
   end
 
   def create
