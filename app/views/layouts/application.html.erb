@@ -87,7 +87,11 @@
 
 </head>
 
+<% if logged_in? %>
 <body id="inner1-body">
+<% else %>
+<body>
+<% end %>
 <div id="wrapper"><!--wrapper start-->
 
 	<div id="header"><!--header start-->
@@ -205,10 +209,6 @@
 		        	
 				</div><!--submenu end-->				
 			</div>  <!-- End of Menu Tabs -->
-		<% end %> <!-- if logged_in? -->
-
-
-	    <% if logged_in? %><!-- if logged_in? -->
 		    <div class="breadcum-area"><!--breadcum start-->
 		    	<div class="breadcum-left">
 		        	<span class="home-icon"><a href="/"><img src="/images/home-icon.png" width="25" height="23" alt="" /></a></span>
@@ -227,8 +227,21 @@
 		    <div class="error-bg gray-box-bg"><!--error-bg end-->
 		    	<%= t('messages.today_msg_html', :due_today => current_user.due_verses, :time => current_user.work_load) %>
 		    </div><!--error-bg end-->
+	    <% else # if not logged in %>
+              <div class="menu menu-main-only"><!--menu start-->
+                <ul>
+            	  <li><%= link_to 'Home', home_path %></li>
+                  <li><%= link_to 'Memorize', test_verse_path %></li>
+                  <li><%= link_to 'Learn', tutorial_path %></li>
+                  <li><%= link_to 'Profile', current_user %></li>
+                  <li><%= link_to 'LeaderBoards', leaderboard_path %></li>
+                  <li><%= link_to 'FAQ', faq_path %></li>
+                  <li><%= link_to 'Blog', blog_path %></li>
+                  <li><%= link_to 'Contact', contact_path %></li>
+                  <li>&nbsp;</li>
+                </ul>
+              </div><!--menu end-->
 	    <% end %><!-- if logged_in? -->
-
 	</div> <!--header end-->
     
     <div><img src="/images/trans.png" width="1" height="10" alt="" /></div>
