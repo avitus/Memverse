@@ -224,7 +224,8 @@
 		            <%= link_to image_tag("more-verses.png", :width=>"192", :height=>"25", :alt=>"Add More Verses"), add_verse_path %>
 		        </div>
 		    </div><!--breadcum end-->
-		    <div class="error-bg gray-box-bg"><!--error-bg end-->
+		    <%= flash_messages %>
+		    <div class="error-bg gray-box-bg"><!--error-bg start-->
 		    	<%= t('messages.today_msg_html', :due_today => current_user.due_verses, :time => current_user.work_load) %>
 		    </div><!--error-bg end-->
 	    <% else # if not logged in %>
@@ -255,7 +256,7 @@
     
     <div class="clr"></div>
     
-    <div id="footer"><!--footer end-->
+    <div id="footer"><!--footer start-->
     	&copy; <%= Date.today.year %> Memverse  <span><a href="#">info@memverse.com</a></span>
     </div><!--footer end-->
     

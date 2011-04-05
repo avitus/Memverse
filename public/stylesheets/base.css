@@ -993,7 +993,7 @@ img a
 .error-bg
 {
 	width:1040px;
-	height:29px;
+	min-height:29px;
 	font-size:13px;
 	font-weight:bold;
 	color:#FFF;
