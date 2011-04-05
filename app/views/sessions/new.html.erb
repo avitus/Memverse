@@ -113,14 +113,14 @@
         
         <div class="menu menu-main-only"><!--menu start-->
         	<ul>
-            	<li><%= link_to 'Home', home_path %></li>
-                <li><%= link_to 'Memorize', test_verse_path %></li>
-                <li><%= link_to 'Learn', tutorial_path %></li>
-                <li><%= link_to 'Profile', current_user %></li>
-                <li><%= link_to 'LeaderBoards', leaderboard_path %></li>
-                <li><%= link_to 'FAQ', faq_path %></li>
-                <li><%= link_to 'Blog', blog_path %></li>
-                <li><%= link_to 'Contact', contact_path %></li>
+            	<li><%= link_to t('menu.home').html_safe, home_path %></li>
+                <li><%= link_to t('menu.memorize').html_safe, test_verse_path %></li>
+                <li><%= link_to t('menu.learn').html_safe, tutorial_path %></li>
+                <li><%= link_to t('menu.profile').html_safe, current_user %></li>
+                <li><%= link_to t('menu.leaderboard').html_safe, leaderboard_path %></li>
+                <li><%= link_to t('contact_menu.Help'), faq_path %></li>
+                <li><%= link_to t('menu.blog').html_safe, blog_path %></li>
+                <li><%= link_to t('menu.contact').html_safe, contact_path %></li>
                 <li>&nbsp;</li>
             </ul>
         </div><!--menu end-->
