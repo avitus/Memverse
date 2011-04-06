@@ -7,14 +7,17 @@
    state score.</p>
 
 <div class="user-list">
-	<table class="memverse-standard">  	
+	<table class="memverse-standard"> 
+	<thead>	
 		<tr>
 			<th>Rank</th>	  
 			<th>State</th>
 			<th>Members</th>
 			<th>MemScore</th>
 		</tr>
-		
+	</thead>
+	
+	<tbody>	
 		<% for us_state in @stateboard %>
 			<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
 				<td align="center"> <%= @stateboard.index(us_state)+1	%></td>			
@@ -23,5 +26,6 @@
 				<td align="center"> <%= number_with_delimiter(us_state[1])	%></td>				
 			</tr>
 		<% end %>
+	</tbody>
 	</table>
 </div>

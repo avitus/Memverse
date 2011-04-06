@@ -1,0 +1,10 @@
+<% if @user == current_user %>
+	<% page_title I18n.t :my_dashboard, :scope => 'page_titles' %>
+<% else %>
+	<% page_title I18n.t :user_profile, :scope => 'page_titles', :name => @user.name_or_login %>
+<% end %>
+
+<div class="white-box-with-margins">
+	<%= render :partial => 'show_user' %>
+</div>
+

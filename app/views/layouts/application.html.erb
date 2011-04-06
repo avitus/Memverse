@@ -17,7 +17,7 @@
 <meta property="og:title"		content="<%= page_title || Memverse %>"/>	
 <meta property="og:type"		content="website"/>	
 <meta property="og:image"		content="http://www.memverse.com/images/memverse_swords.jpg"/>	
-<meta property="og:url"			content=<%= request.url %>/>	
+<meta property="og:url"			content= "<%= request.url %>"/>	
 <meta property="og:site_name"	content="Memverse"/>	
 <meta property="fb:admins"		content="1799626379, kyrriana"/>
 <meta property="og:description" content="A community of believers memorizing the bible"/>
@@ -123,13 +123,13 @@
 		<% if logged_in? %>
 			<div id="menu-tabs" class="menu">
 				<ul id="maintab" class="basictab">
-					<li <%= tab(@tab=="home"		).html_safe %> rel="homepage">	<%= link_to t('menu.home').html_safe, 			home_path %></li>	
+					<li <%= tab(@tab=="home"		).html_safe %> rel="homepage">		<%= link_to t('menu.home').html_safe, 			home_path %></li>	
 					<li <%= tab(@tab=="mem"			).html_safe %> rel="memory">		<%= link_to t('menu.memorize').html_safe, 		test_verse_path %></li>
-					<li <%= tab(@tab=="learn"		).html_safe %> rel="tutorials">	<%= link_to t('menu.learn').html_safe, 			tutorial_path %></li>
+					<li <%= tab(@tab=="learn"		).html_safe %> rel="tutorials">		<%= link_to t('menu.learn').html_safe, 			tutorial_path %></li>
 					<li <%= tab(@tab=="profile"		).html_safe %> rel="profile">		<%= link_to t('menu.profile').html_safe, 		current_user %></li>
 					<li <%= tab(@tab=="contact"		).html_safe %> rel="contact">		<%= link_to t('menu.contact').html_safe, 		contact_path %></li>	
 					<li <%= tab(@tab=="leaderboard"	).html_safe %> rel="leaderboard">	<%= link_to t('menu.leaderboard').html_safe, 	leaderboard_path %></li>	
-					<li <%= tab(@tab=="blog"		).html_safe %> rel="blog">		<%= link_to t('menu.blog').html_safe, 			blog_path %></li>
+					<li <%= tab(@tab=="blog"		).html_safe %> rel="blog">			<%= link_to t('menu.blog').html_safe, 			blog_path %></li>
 	                <li>&nbsp;</li>
 				</ul>
 				

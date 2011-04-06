@@ -1,14 +1,19 @@
-<h2>User Info</h2>
+<div id="user-info">
+	<h2>User Info</h2>
+	
+	<table class="memverse-standard">
+		<tbody>
+			<tr><th>Name</th>		<td><%= @user.name || @user.login %></td></tr>
+			<tr><th>Church</th>		<td><%= @user.church ? @user.church.name : "" %></td></tr>
+			<tr><th>Country</th>	<td><%= @user.country ? @user.country.printable_name : "" %></td></tr>
+			<% if @user.american_state %>	
+				<tr><th>State</th>	<td><%= @user.american_state.name %></td></tr>	
+			<% end %>
+			<tr><th>Level</th>		<td><%= @user.level %></td></tr>
+			<tr><th>Memorized</th>	<td><%= @user.memorized %></td></tr>
+			<tr><th>Accuracy</th>	<td><%= @user.accuracy %>%</td></tr>
+			<tr><th>Ref. Recall</th><td><%= @user.ref_grade %>%</td></tr>
+		</tbody>		
+	</table>
+</div>
 
-<table class="memverse-standard">
-	<tr><th>Name</th>		<td><%= @user.name || @user.login %></td></tr>
-	<tr><th>Church</th>		<td><%= @user.church ? @user.church.name : "" %></td></tr>
-	<tr><th>Country</th>	<td><%= @user.country ? @user.country.printable_name : "" %></td></tr>
-	<% if @user.american_state %>	
-		<tr><th>State</th>	<td><%= @user.american_state.name %></td></tr>	
-	<% end %>
-	<tr><th>Level</th>		<td><%= @user.level %></td></tr>
-	<tr><th>Memorized</th>	<td><%= @user.memorized %></td></tr>
-	<tr><th>Accuracy</th>	<td><%= @user.accuracy %>%</td></tr>
-	<tr><th>Ref. Recall</th><td><%= @user.ref_grade %>%</td></tr>
-</table>
