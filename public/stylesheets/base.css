@@ -1131,33 +1131,39 @@ div#flash-error {
 
 
 .home-page-tabs {
+
+}
+
+.tab-top {
 	width:1080px;
-	background: #FFFFFF;
-	border-style: solid; 
+	background: #767575;
+	border-style: solid solid none solid; 
 	border-width: 1px;
 	border-color: #555555;
-	padding: 0em 0em 0em 0em;
-	-moz-border-radius: 10px;
-	-webkit-border-radius:10px;
-	border-radius: 10px; 
+	
+	-moz-border-radius-topright: 10px;
+	-webkit-border-radius-topright: 10px;
+	border-top-right-radius: 10px;
+	
+	-moz-border-radius-topleft: 10px;
+	-webkit-border-top-left-radius: 10px;
+	border-top-left-radius: 10px;
 }
 
-.tab-bg
-{
-	background:url(../images/tab-bg.png) repeat-y left top;
+.tab-bottom {
 	width:1080px;
-}
-
-.tab-top
-{
-	background:url(../images/tab-top.png) no-repeat left top;
-	width:1080px;
-}
-
-.tab-bottom
-{
-	background:url(../images/tap-bottom.png) no-repeat left bottom;
-	width:1080px;
+	background: #FFFFFF;
+	border-style: none solid solid solid; 
+	border-width: 1px;
+	border-color: #555555;
+	
+	-moz-border-radius-bottomright: 10px;
+	-webkit-border-radius-bottomright: 10px;
+	border-bottom-right-radius: 10px;
+	
+	-moz-border-radius-bottomleft: 10px;
+	-webkit-border-bottom-left-radius: 10px;
+	border-bottom-left-radius: 10px;
 }
 
 .tab-nav
@@ -1237,19 +1243,19 @@ div#flash-error {
 
 .tab-content
 {
-	width:900px;
+	width:1040px;
 	padding:25px 20px;
 }
 
 .tab-content h3
 {
-	padding:0px;
-	margin:0px;
+    margin: 0 0 15px;
+    padding: 0 0 10px;
 	font-size:18px;
 	color:#6b9620;
 	font-weight:bold;
 	padding-bottom:10px;
-	border-bottom:1px solid #a6a4a4; #3c5313; #aa0101; #6b9620; #ffcc00; #e17329; #993333; #1f8ec2; #555555; #577a1a; #666; #7ca529; #983626; #bfbebe
+	border-bottom:1px solid #a6a4a4;
 	margin-bottom:15px;
 }
 

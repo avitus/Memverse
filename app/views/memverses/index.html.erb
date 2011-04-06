@@ -23,25 +23,23 @@
 <div><img src="/images/trans.png" width="1" height="10" alt="" />&nbsp;</div>
     
 <div class="home-page-tabs">
-<div class="tab-top">
-<div class="tab-bottom">
-
-   	<div class="tab-nav">
-      	<ul>
-           	<li class="dashboard active"><a href="#">Dashboard</a></li>
-            <li class="devotions"><a href="#">Spurgeons Daily Devotions</a></li>
-            <li class="dashboard"><a href="#">Verse of the Day</a></li>
-        </ul>
-    </div>
-
-	<div class="tab-content">
-       	<h3><%= link_to 'Recently on Memverse', tweets_path %></h3>
-		<%= render :template => 'tweets/tweets_for_main' %>
-        <div class="clr"></div>
-    </div>
-
-</div>
-</div>
+	<div class="tab-top">
+	   	<div class="tab-nav">
+	      	<ul>
+	           	<li class="dashboard active"><a href="#">Dashboard</a></li>
+	            <li class="devotions"><a href="#">Spurgeons Daily Devotions</a></li>
+	            <li class="dashboard"><a href="#">Verse of the Day</a></li>
+	        </ul>
+	    </div>
+	</div>
+    
+	<div class="tab-bottom">
+		<div class="tab-content">
+	       	<h3><%= link_to 'Recently on Memverse', tweets_path %></h3>
+			<%= render "tweets/tweets_for_main" %>
+	        <div class="clr"></div>
+	    </div>
+	</div>
 </div> <!-- home-page-tabs-->
 
 <div class="clr"></div>
