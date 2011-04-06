@@ -156,14 +156,14 @@ div#flash-error {}
 .two-box p {padding:0px; margin:0px}
 .two-box h3 {padding:0px; margin:0px; font-size:18px; color:#6b9620; font-weight:bold; padding-bottom:5px}
 .two-box h3.nospace {padding-bottom:0px}
-.white-box1 {background:url(../images/white-box1.png?1301602188) no-repeat left top; width:524px; height:91px; float:left; padding:14px 14px 0 14px}
-.wbox-text {width:450px; float:right}
+.votm {width: 60%; height: 91px; float: left; padding: 14px 14px 0 14px; background: #FFFFFF; border-style: solid; border-width: 1px; border-color: #555555; -moz-border-radius: 10px; -webkit-border-radius:10px; border-radius: 10px}
+.progress-info {width: 33%; height: 91px; float: right; padding: 14px 14px 0 14px; background: #FFFFFF; border-style: solid; border-width: 1px; border-color: #555555; -moz-border-radius: 10px; -webkit-border-radius:10px; border-radius: 10px}
+.votm-text {width:88%; float:right}
 .yellow-icon {width:49px; height:49px; float:left; padding-top:12px}
 .verse {display:block; font-size:14px; color:#aa0101; font-style:italic; padding-top:5px; font-weight:normal}
 .verse a {color:#aa0101; text-decoration:underline}
 .verse a:hover {color:#F60; text-decoration:underline}
-.white-box2 {background:url(../images/white-box2.png?1301602188) no-repeat left top; width:352px; height:91px; float:right; padding:14px 14px 0 14px}
-.wbox-text2 {width:280px; float:right}
+.progress-text {width:80%; float:right}
 .number {font-family:Georgia, "Times New Roman", Times, serif; font-size:24px; color:#3c5313}
 .home-page-tabs {}
 .tab-top {width:1080px; background: #767575; border-style: solid solid none solid; border-width: 1px; border-color: #555555; -moz-border-radius-topright: 10px; -webkit-border-radius-topright: 10px; border-top-right-radius: 10px; -moz-border-radius-topleft: 10px; -webkit-border-top-left-radius: 10px; border-top-left-radius: 10px}
