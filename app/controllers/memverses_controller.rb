@@ -592,7 +592,7 @@ class MemversesController < ApplicationController
       flash[:notice] = case errorcode
         when 1 then "Bible reference is incorrectly formatted. Format should be John 3:16 or John 3 vs 16"
         when 2 then "#{book} is not a valid book of the bible"
-        when 3 then 'Enter a bible reference eg. John 3:16. Please enter each verse individually and remove any verse numbering or footnote information. Consecutive verses will be grouped into a single memory passage. Please enter verses with great care as subsequent users will be memorizing the same verse. Think like a scribe!'
+        when 3 then 'Please enter each verse individually and remove any verse numbering or footnote information.'
         when 4 then "Please enter the text for your memory verse. Please do not include any verse numbering or footnote information."
         else        "The verse you entered is longer than the longest verse in the bible! Please enter one verse at a time. Consecutive verses will be grouped into a single memory passage."         
       end
