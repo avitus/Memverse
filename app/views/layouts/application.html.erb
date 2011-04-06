@@ -92,8 +92,8 @@
 <% else %>
 <body>
 <% end %>
-<div id="wrapper"><!--wrapper start-->
 
+<div id="wrapper"><!--wrapper start-->
 	<div id="header"><!--header start-->
     	<div class="header-top"><!--header-top start-->
         	<div id="logo"><a href="/" title="<%= I18n.t :mainpage, :scope => 'page_titles' %> - Memverse"><img src="/images/logo.png" width="253" height="31" alt="" /></a></div>
@@ -224,10 +224,10 @@
 		            <%= link_to image_tag("more-verses.png", :width=>"192", :height=>"25", :alt=>"Add More Verses"), add_verse_path %>
 		        </div>
 		    </div><!--breadcum end-->
-		    <%= flash_messages %>
-		    <div class="error-bg gray-box-bg"><!--error-bg start-->
-		    	<%= t('messages.today_msg_html', :due_today => current_user.due_verses, :time => current_user.work_load) %>
-		    </div><!--error-bg end-->
+		    
+		    <div class="flash gray-box-bg"><!--flash start-->
+		    	<%= flash_messages || t('messages.today_msg_html', :due_today => current_user.due_verses, :time => current_user.work_load) %>
+		    </div><!--flash end-->
 	    <% else # if not logged in %>
               <div class="menu menu-main-only"><!--menu start-->
                 <ul>

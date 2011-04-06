@@ -143,10 +143,8 @@ class MemversesController < ApplicationController
     end
 
     # === Get Recent Tweets ===    
-    # Old code
-    #@tweets = Tweet.all(:limit => 20, :order => "created_at DESC", :conditions => ["importance <= 3"])      
-    @tweets1 = Tweet.all(:limit => 12, :order => "created_at DESC", :conditions => ["importance <= 3"])
-    @tweets2 = Tweet.all(:offset => 12, :limit => 12, :order => "created_at DESC", :conditions => ["importance <= 3"])
+    @tweets1 = Tweet.all(:limit => 12, :order => "created_at DESC", :conditions => ["importance <= 2"])  # Most important tweets
+    @tweets2 = Tweet.all(:limit => 12, :order => "created_at DESC", :conditions => ["importance  = 3"])  # Moderate importance
             
     # === RSS Devotional ===
     dev_url   = 'http://www.heartlight.org/rss/track/devos/spurgeon-morning/'

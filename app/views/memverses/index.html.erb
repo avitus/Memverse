@@ -1,42 +1,48 @@
- 
-    <div class="two-box"><!--two-box start-->
-    	<div class="white-box1">
-        	<div class="yellow-icon"><img src="/images/icon3.png" width="49" height="49" alt="" /></div>
-            <div class="wbox-text">
-            	<h3>Verse of the Minute</h3>
-                <p><%= @votd_txt %></p>
-                <span class="verse"><strong><%= @votd_ref %> (<%= @votd_tl %>)</strong></span>
-            </div>
+<div class="two-box"><!--two-box start-->
+	
+	<div class="white-box1">
+    	<div class="yellow-icon"><img src="/images/icon3.png" width="49" height="49" alt="" /></div>
+        <div class="wbox-text">
+          	<h3>Verse of the Minute</h3>
+            <p><%= @votd_txt %></p>
+            <span class="verse"><strong><%= @votd_ref %> (<%= @votd_tl %>)</strong></span>
         </div>
-        <div class="white-box2">
-        	<div class="yellow-icon"><img src="/images/icon4.png" width="49" height="49" alt="" /></div>
-        	<div class="wbox-text2">
-            	<h3 class="nospace">Verses Memorized</h3>
-                <p><span class="number"><%= number_with_delimiter(Memverse.memorized.count) %></span>&nbsp;&nbsp; verses memorized on <strong>Memverse</strong>.</p>
-                <span class="verse"><%= link_to "Go To Your Verses", manage_verses_path %></span>
-            </div>
-        </div>
-    </div><!--two-box end-->
+    </div>
     
-    <div><img src="/images/trans.png" width="1" height="10" alt="" />&nbsp;</div>
+    <div class="white-box2">
+       	<div class="yellow-icon"><img src="/images/icon4.png" width="49" height="49" alt="" /></div>
+       	<div class="wbox-text2">
+           	<h3 class="nospace">Verses Memorized</h3>
+            <p><span class="number"><%= number_with_delimiter(Memverse.memorized.count) %></span>&nbsp;&nbsp; verses memorized on <strong>Memverse</strong>.</p>
+            <span class="verse"><%= link_to "Go To Your Verses", manage_verses_path %></span>
+        </div>
+    </div>
+
+</div><!--two-box end-->
     
-    <div class="tab-bg">
-    <div class="tab-top">
-    <div class="tab-bottom">
-    	<div class="tab-nav">
-        	<ul>
-            	<li class="dashboard active"><a href="#">Dashboard</a></li>
-                <li class="devotions"><a href="#">Spurgeons Daily Devotions</a></li>
-                <li class="dashboard"><a href="#">Verse of the Day</a></li>
-            </ul>
-        </div>
-		<div class="tab-content">
-        	<h3><%= link_to 'Recently on Memverse', tweets_path %></h3>
-<%= render :template => 'tweets/tweets_for_main' %>
-            <div class="clr"></div>
-        </div>
-    </div> <!-- tab-bottom -->
-    </div> <!-- tab-top -->
-    </div> <!-- tab-bg -->
-    <div class="clr"></div>
+<div><img src="/images/trans.png" width="1" height="10" alt="" />&nbsp;</div>
+    
+<div class="home-page-tabs">
+<div class="tab-top">
+<div class="tab-bottom">
+
+   	<div class="tab-nav">
+      	<ul>
+           	<li class="dashboard active"><a href="#">Dashboard</a></li>
+            <li class="devotions"><a href="#">Spurgeons Daily Devotions</a></li>
+            <li class="dashboard"><a href="#">Verse of the Day</a></li>
+        </ul>
+    </div>
+
+	<div class="tab-content">
+       	<h3><%= link_to 'Recently on Memverse', tweets_path %></h3>
+		<%= render :template => 'tweets/tweets_for_main' %>
+        <div class="clr"></div>
+    </div>
+
+</div>
+</div>
+</div> <!-- home-page-tabs-->
+
+<div class="clr"></div>
 

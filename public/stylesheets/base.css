@@ -500,6 +500,47 @@ img a
 	text-decoration:none;
 }
 
+/* ===== Flash Messages ====== */
+
+
+.gray-box-bg {
+	width:1030px;
+	background: #717171;
+	border-style: solid; 
+	border-width: 1px;
+	border-color: #717171;
+	padding: 0 25px 0 25px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius:10px;
+	border-radius: 10px; 
+}
+
+
+div.flash {	
+	width:1030px;
+	min-height:29px;
+	font-size:13px;
+	font-weight:bold;
+	color:#FFF;
+	line-height:29px;
+	padding-left:25px;
+	text-transform:uppercase;
+}
+
+div.flash span
+{
+	color:#ffcc00;
+}
+
+div#flash-notice {
+}
+
+div#flash-warning {
+}
+
+div#flash-error {
+}
+
 /*========== Content ==========*/
 
 #content
@@ -833,7 +874,7 @@ img a
 	text-decoration:underline;
 }
 
-/*========== Inner1 ==========*/
+/*========== Layout ==========*/
 
 #inner1-body
 {
@@ -990,22 +1031,7 @@ img a
 	height:25px;
 }
 
-.error-bg
-{
-	width:1040px;
-	min-height:29px;
-	font-size:13px;
-	font-weight:bold;
-	color:#FFF;
-	line-height:29px;
-	padding-left:40px;
-	text-transform:uppercase;
-}
-
-.error-bg span
-{
-	color:#ffcc00;
-}
+/*========== Home Page ==========*/
 
 .two-box
 {
@@ -1101,6 +1127,19 @@ img a
 	font-family:Georgia, "Times New Roman", Times, serif;
 	font-size:24px;
 	color:#3c5313;
+}
+
+
+.home-page-tabs {
+	width:1080px;
+	background: #FFFFFF;
+	border-style: solid; 
+	border-width: 1px;
+	border-color: #555555;
+	padding: 0em 0em 0em 0em;
+	-moz-border-radius: 10px;
+	-webkit-border-radius:10px;
+	border-radius: 10px; 
 }
 
 .tab-bg
@@ -1267,18 +1306,6 @@ img a
 	border-width: 1px;
 	border-color: #555555;
 	padding: 2em 0em 2em 0em;
-	-moz-border-radius: 10px;
-	-webkit-border-radius:10px;
-	border-radius: 10px; 
-}
-
-.gray-box-bg {
-	width:1030px;
-	background: #717171;
-	border-style: solid; 
-	border-width: 1px;
-	border-color: #717171;
-	padding: 0 25px 0 25px;
 	-moz-border-radius: 10px;
 	-webkit-border-radius:10px;
 	border-radius: 10px; 
@@ -3137,45 +3164,6 @@ div.tweet {
 /* === Leaderboard Styles === */
 #leaderboard .current_user {
 	background: #687284
-}
-
-
-/* === Flash Messages === */
-
-div#flash-notice {	
-  border: 2px;
-  border-style: solid;  
-  border-color: #A69A6E;
-  padding: 1em;
-  margin-bottom: 2em;
-  background-color: #A6886E;
-  font-weight: bold;
-  font-size: 100%;
-  width: 94%;
-}
-
-div#flash-warning {
-  border: 2px;
-  border-style: solid;  
-  border-color: #A69A6E;
-  padding: 1em;
-  margin-bottom: 2em;
-  background-color: #A6886E;
-  font-weight: bold;
-  font-size: 100%;
-  width: 94%;
-}
-
-div#flash-error {
-  border: 2px;
-  border-style: solid;  
-  border-color: #A69A6E;
-  padding: 1em;
-  margin-bottom: 2em;
-  background-color: #A6886E;
-  font-weight: bold;
-  font-size: 100%;
-  width: 94%;	
 }
 
 /* === Error Messages === */
