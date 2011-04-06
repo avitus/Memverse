@@ -29,11 +29,11 @@ MemverseApp::Application.routes.draw do
  
   # My Mappings
   match '/add_verse',              :to => 'memverses#add_verse',             :as => 'add_verse'
-  match '/add/:id',				   :to => 'memverses#ajax_add',				 :as => 'add'
+  match '/add/:id',				   			 :to => 'memverses#ajax_add',				 			 :as => 'add'
   match '/quick_add/:vs',          :to => 'memverses#quick_add',             :as => 'quick_add'
   match '/quick_add_chapter',      :to => 'memverses#quick_add_chapter',     :as => 'quick_add_chapter'
   match '/avail_translations',     :to => 'memverses#avail_translations',    :as => 'avail_translations'
-  match '/edit_verse/:id',    	   :to => 'memverses#edit_verse',    		 :as => 'edit_verse'
+  match '/edit_verse/:id',    	   :to => 'memverses#edit_verse',    		 		 :as => 'edit_verse'
   match '/test_verse',             :to => 'memverses#test_verse',            :as => 'test_verse'
   match '/feedback',               :to => 'memverses#feedback',              :as => 'feedback'
   match '/upcoming_verses',        :to => 'memverses#upcoming_verses',       :as => 'upcoming_verses'
@@ -49,7 +49,7 @@ MemverseApp::Application.routes.draw do
   match '/exam_results',           :to => 'memverses#exam_results',          :as => 'exam_results'
   match '/pre_exam',               :to => 'memverses#explain_exam',          :as => 'pre_exam'
   match '/pre_chapter',            :to => 'memverses#chapter_explanation',   :as => 'pre_chapter'
-  match '/test_chapter',           :to => 'memverses#test_chapter',			 :as => 'test_chapter'
+  match '/test_chapter',           :to => 'memverses#test_chapter',			     :as => 'test_chapter'
   match '/drill_verse',            :to => 'memverses#drill_verse',           :as => 'drill_verse'
   match '/mark_test',              :to => 'memverses#mark_test',             :as => 'mark_test'
   match '/mark_drill',             :to => 'memverses#mark_drill',            :as => 'mark_drill'
@@ -70,6 +70,7 @@ MemverseApp::Application.routes.draw do
   match '/check_verse/:id',        :to => 'verses#check_verse',              :as => 'check_verse'
   match '/search_verse',           :to => 'verses#verse_search',             :as => 'search_verse'
   match '/verify_vs_format',       :to => 'verses#verify_format',			 			 :as => 'verify_vs_format'
+  match '/show_verses_with_tag',   :to => 'verses#show_verses_with_tag',     :as => 'show_verses_with_tag'
    
   match '/show_user_info',         :to => 'admin#show_user_info',            :as => 'show_user_info'
   match '/show_tags',              :to => 'admin#show_tags',                 :as => 'show_tags'

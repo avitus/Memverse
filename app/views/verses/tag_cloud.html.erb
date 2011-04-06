@@ -1,6 +1,6 @@
 <div>
 	<% tag_cloud @tags do |name, css_class|  %>
-	      <%= link_to name, {:action => 'show_verses_with_tag', :tag => name}, :class => css_class %>
+	      <%= link_to name, show_verses_with_tag_path(:tag => name), :class => css_class %>
 	<% end %>
 </div>
 

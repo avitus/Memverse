@@ -55,7 +55,7 @@
 	<table id="list-of-user-tags" cellpadding="6" cellspacing="1">
 		<% for tag in @user_tags %>
 			<tr>
-				<td class="verse-tag"><%= link_to tag.name, {:controller => :verses, :action => :show_verses_with_tag, :tag => tag.name, :tl => @mv.verse.translation } %></td>
+				<td class="verse-tag"><%= link_to tag.name, show_verses_with_tag_path(:tag => tag.name, :tl => @mv.verse.translation) %></td>
 				<% if current_user == @mv.user %>
 					<td><%= link_to '[x]', {:action => 'remove_verse_tag', :id => tag.id, :mv => @mv.id }, 
 										    :confirm => 'Are you sure you want to delete this tag?', 
