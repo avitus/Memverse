@@ -2090,43 +2090,48 @@ div#flash-error {
 	color:#983626;
 }
 
-.learning
+.vs-distribution
 {
 	width:657px;
 }
 
-.learning h5
-{
+
+.vs-distribution table {
+	border-spacing: 0;	
+}
+
+.vs-distribution table thead {
 	height:27px;
 	line-height:27px;
 	padding:0px;
 	margin:0px;
 	font-size:16px;
 	color:#983626;
-	font-weight:bold;
+	font-weight:bold;	
 }
 
-.learning-left
-{
-	width:328px;
-	float:left;
-}
-
-.learning-right
-{
-	width:328px;
-	float:left;
-}
-
-.new-row
-{
-	display:block;
-	border-top:1px solid #afaeae;
+.vs-distribution table tbody {
 	height:25px;
 	line-height:25px;
-	color:#666;
+	color:#666;	
 }
 
+.vs-distribution table tbody td {
+	border-top: 1px solid #afaeae;
+	border-collapse: collapse;
+}
+
+.vs-disti-left
+{
+	width:328px;
+	float:left;
+}
+
+.vs-disti-right
+{
+	width:328px;
+	float:left;
+}
 
 /*-- OLD STYLES BELOW THIS LINE ------------------*/
 

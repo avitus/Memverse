@@ -26,38 +26,38 @@
             </div>
         </div>
     	
-	<div class="user-settings">
-		<div class="user-settings-text">
-		<ul>
-			<li>
-			<div class="user-option-list"><span>Location: </span>
-			<% if @user.american_state %>	
-				<%= @user.american_state.name + ", " + @user.country.printable_name %></div>
-			<% else %>
-				<%= @user.country ? @user.country.printable_name : "" %></div>
-			<% end %>
-                        <div class="edit-option"><a href="#">Edit</a></div>
-                    </li>
-                    <li>
-                    	<div class="user-option-list"><span>Language: </span><%= @user.language %></div>
-                        <div class="edit-option"><a href="#">Edit</a></div>
-                    </li>
-                    <li>
-                    	<div class="user-option-list"><span>Church: </span><%= @user.church ? @user.church.name : "" %></div>
-                        <div class="user-option-info"><%= @user.church ? link_to(image_tag("blue-icon.png", :width=>"16", :height=>"16"), { :controller => "profile", :action => "show_church", :church => @user.church.id }) : "" %></div>
-                    </li>
-                </ul>
-            </div>
-        </div>
+		<div class="user-settings">
+			<div class="user-settings-text">
+				<ul>
+					<li>
+						<div class="user-option-list"><span>Location: </span>
+							<% if @user.american_state %>	
+								<%= @user.american_state.name + ", " + @user.country.printable_name %></div>
+							<% else %>
+								<%= @user.country ? @user.country.printable_name : "" %></div>
+							<% end %>
+			            <div class="edit-option"><a href="#">Edit</a></div>
+		            </li>
+		            <li>
+		            	<div class="user-option-list"><span>Language: </span><%= @user.language %></div>
+		                <div class="edit-option"><a href="#">Edit</a></div>
+		            </li>
+		            <li>
+		            	<div class="user-option-list"><span>Church: </span><%= @user.church ? @user.church.name : "" %></div>
+		                <div class="user-option-info"><%= @user.church ? link_to(image_tag("blue-icon.png", :width=>"16", :height=>"16"), { :controller => "profile", :action => "show_church", :church => @user.church.id }) : "" %></div>
+		            </li>
+		        </ul>
+	        </div>
+	    </div>
         
-        <div class="user-work-load">
-        	<span>Memory Time:</span> <%= @user.work_load %> Mins / Day
-            <% if @user == current_user %>
-            <div class="view-button"><%= link_to image_tag("view.png", :width=>"192", :height=>"25", :alt=>"View Of All Your Verses"), manage_verses_path %></div>
-            <% end %>
-        </div>
-        
-        <div class="clr"></div>
+	    <div class="user-work-load">
+	    	<span>Memory Time:</span> <%= @user.work_load %> Mins / Day
+	        <% if @user == current_user %>
+	        	<div class="view-button"><%= link_to image_tag("view.png", :width=>"192", :height=>"25", :alt=>"View Of All Your Verses"), manage_verses_path %></div>
+	        <% end %>
+	    </div>
+	    
+	    <div class="clr"></div>
         
     </div>
 </div> <!-- end: user-details -->
@@ -86,35 +86,54 @@
     <div class="main-right">
     	<h2>Verse Distribution</h2>
     	
-        <div class="row1">
-        	<span class="black">Memorized Learning</span>&nbsp;&nbsp;&nbsp; All Verses	0	&nbsp;&nbsp;&nbsp;<span class="red">30</span>
+        <div class="vs-distribution">
+			<table>
+				<thead>
+				<tr> <th></th>						<th>Memorized</th> 							<th>Learning</th>							</tr>	
+				</thead>
+				
+				<tbody>
+				<tr> <td width=200>All Verses</td>	<td><%= @user.memorized%></td>				<td><%= @user.learning%></td>				</tr>
+				<tr></tr>
+				</tbody>
+			</table>	
         </div>
         
-        <div class="learning">
-        	
-        	<div class="learning-left">
-            	<h5>Memorized Learning %</h5>
-            	<span class="new-row">Old Testament &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 &nbsp;&nbsp;&nbsp;&nbsp; 8 &nbsp;&nbsp;&nbsp;&nbsp; 27%</span>
-                <span class="new-row">New Testament &nbsp;&nbsp;&nbsp;&nbsp; 0 &nbsp;&nbsp;&nbsp;&nbsp; 8 &nbsp;&nbsp;&nbsp;&nbsp; 27%</span>
-                <span class="new-row">&nbsp;</span>
-                <span class="new-row">&nbsp;</span>
-                <span class="new-row">&nbsp;</span>
-                <span class="new-row">&nbsp;</span>
-            </div>
-            
-            <div class="learning-right">
-            	<h5>Memorized Learning %</h5>
-            	<span class="new-row">History &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 &nbsp;&nbsp;&nbsp;&nbsp; 8 &nbsp;&nbsp;&nbsp;&nbsp; 27%</span>
-                <span class="new-row">History &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 &nbsp;&nbsp;&nbsp;&nbsp; 8 &nbsp;&nbsp;&nbsp;&nbsp; 27%</span>
-                <span class="new-row">History &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 &nbsp;&nbsp;&nbsp;&nbsp; 8 &nbsp;&nbsp;&nbsp;&nbsp; 27%</span>
-                <span class="new-row">History &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 &nbsp;&nbsp;&nbsp;&nbsp; 8 &nbsp;&nbsp;&nbsp;&nbsp; 27%</span>
-                <span class="new-row">History &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 &nbsp;&nbsp;&nbsp;&nbsp; 8 &nbsp;&nbsp;&nbsp;&nbsp; 27%</span>
-                <span class="new-row">&nbsp;</span>
-            </div>
-            
+        <div class="vs-distribution">
+        	        	
+        	<div class="vs-disti-left">
+				<table>
+					<thead>			
+						<tr> <th></th>						<th>Memorized</th> 							<th>Learning</th><th>%</th>							</tr>	
+					</thead>
+					
+					<tbody>			
+						<tr><td>Old Testament</td><td><%= @user.ot_verses["Memorized"]%></td>	<td><%= @user.ot_verses["Learning"]%></td><td><%= @user.ot_perc %>%</td></tr>
+						<tr><td>New Testament</td><td><%= @user.nt_verses["Memorized"]%></td>	<td><%= @user.nt_verses["Learning"]%></td><td><%= @user.nt_perc %>%</td></tr>
+						<tr></tr>
+					</tbody>			
+				</table>
+			</div>	
+		
+			<div class="vs-disti-left">
+				<table>
+					<thead>			
+						<tr> <th></th>						<th>Memorized</th> 							<th>Learning</th><th>%</th>					</tr>	
+					</thead>
+					<tbody>
+						<tr><td>History</td>	<td><%= @user.history["Memorized"]%></td>	<td><%= @user.history["Learning"]%></td>	<td><%= @user.h_perc %>%</td>	</tr>	
+						<tr><td>Wisdom</td>		<td><%= @user.wisdom["Memorized"]%></td>	<td><%= @user.wisdom["Learning"]%></td>		<td><%= @user.w_perc %>%</td>	</tr>	
+						<tr><td>Prophecy</td>	<td><%= @user.prophecy["Memorized"]%></td>	<td><%= @user.prophecy["Learning"]%></td>	<td><%= @user.p_perc %>%</td>	</tr>	
+						<tr><td>Gospels</td>	<td><%= @user.gospel["Memorized"]%></td>	<td><%= @user.gospel["Learning"]%></td>		<td><%= @user.g_perc %>%</td>	</tr>	
+						<tr><td>Epistles</td>	<td><%= @user.epistle["Memorized"]%></td>	<td><%= @user.epistle["Learning"]%></td>	<td><%= @user.e_perc %>%</td>	</tr>
+						<tr></tr>
+					</tbody>							
+				</table>        	
+        	</div>
+                      
             <div class="clr"></div>
             
-        </div>
+       </div> <!--vs-distribution end-->
     </div> <!--main-right end-->
     
     <div class="clr"></div>

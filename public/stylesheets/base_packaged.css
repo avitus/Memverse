@@ -273,22 +273,24 @@ div#flash-error {}
 .main-content h2 {padding:0px; margin:0px; font-size:18px; color:#577a1a; font-weight:normal; padding-bottom:15px}
 .main-left {width:36%; float:left}
 .book {background:url(../images/book.png?1301602188) no-repeat 5px top; height:36px; font-family:Georgia, "Times New Roman", Times, serif; color:#666; font-size:39px; padding-left:83px}
-.left-widget {float:left; background:#FFF; border:1px solid #717171; margin-bottom:9px; padding:14px; position:relative; width: 80%}
+.left-widget {float:left; background:#FFF; border:1px solid #717171; margin-bottom:9px; padding:14px; position:relative; width: 92%}
 .left-widget ul {list-style:none; padding:0px; margin:0px}
 .left-widget ul li {background:url(../images/thumb.png?1301602188) no-repeat left top; font-size:13px; color:#666; padding-left:17px; padding-bottom:10px}
 .left-widget ul li a {color:#666; text-decoration:none}
 .left-widget ul li a:hover {color:#262626; text-decoration:none}
 .pad {padding-bottom:30px}
 .learn {font-family:Georgia, "Times New Roman", Times, serif; font-size:23px; color:#983626; line-height:15px}
-.main-right {width:61%; float:right; background:#FFF; border:1px solid #717171; padding:15px; position:relative}
+.main-right {width:60%; float:right; background:#FFF; border:1px solid #717171; padding:15px; position:relative}
 .row1 {border-top:1px solid #afaeae; height:55px; padding-top:20px; font-size:13px; color:#666}
 .black {font-size:16px; color:#272727}
 .red {font-size:24px; color:#983626}
-.learning {width:657px}
-.learning h5 {height:27px; line-height:27px; padding:0px; margin:0px; font-size:16px; color:#983626; font-weight:bold}
-.learning-left {width:328px; float:left}
-.learning-right {width:328px; float:left}
-.new-row {display:block; border-top:1px solid #afaeae; height:25px; line-height:25px; color:#666}
+.vs-distribution {width:657px}
+.vs-distribution table {border-spacing: 0}
+.vs-distribution table thead {height:27px; line-height:27px; padding:0px; margin:0px; font-size:16px; color:#983626; font-weight:bold}
+.vs-distribution table tbody {height:25px; line-height:25px; color:#666}
+.vs-distribution table tbody td {border-top: 1px solid #afaeae; border-collapse: collapse}
+.vs-disti-left {width:328px; float:left}
+.vs-disti-right {width:328px; float:left}
   a:link {text-decoration: none}
 a:visited {text-decoration: none}
 a:hover {text-decoration: underline}
