@@ -36,8 +36,8 @@
 <!-- Rails 3 XSS protection -->
 <%= csrf_meta_tag %>
 		
-<!-- Main Stylesheet -->
-<%= stylesheet_link_tag 'base_packaged', :cache => 'cache/all' %>
+<!-- Main Stylesheets (using Asset Packager) -->
+<%= stylesheet_link_merged :base, :cache => 'cache/all' %>
 
 <!-- Auxiliary stylesheets, etc -->
 <%= yield(:head) %>

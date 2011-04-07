@@ -2092,28 +2092,40 @@ div#flash-error {
 
 .vs-distribution
 {
-	width:657px;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 
 .vs-distribution table {
-	border-spacing: 0;	
+	border-spacing: 0;
+	text-align: center;
 }
 
 .vs-distribution table thead {
 	height:27px;
 	line-height:27px;
-	padding:0px;
+	padding:5px;
 	margin:0px;
 	font-size:16px;
 	color:#983626;
 	font-weight:bold;	
 }
 
+.vs-distribution table thead th {
+	padding: 5px;
+}
+
 .vs-distribution table tbody {
 	height:25px;
 	line-height:25px;
 	color:#666;	
+}
+
+.vs-distribution table tbody th {
+	border-top: 1px solid #afaeae;
+	border-collapse: collapse;
+	text-align: left;
 }
 
 .vs-distribution table tbody td {
@@ -2123,14 +2135,16 @@ div#flash-error {
 
 .vs-disti-left
 {
-	width:328px;
-	float:left;
+	width: 47%;
+	padding-left: 1.5em;
+	float: left;
 }
 
 .vs-disti-right
 {
-	width:328px;
-	float:left;
+	width: 47%;
+	float: left;
+	padding-left: 1.4em;	
 }
 
 /*-- OLD STYLES BELOW THIS LINE ------------------*/
