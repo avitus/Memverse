@@ -1998,8 +1998,38 @@ div#flash-error {
 
 .book
 {
-	background:url(../images/book.png) no-repeat 5px top;
+	background:url(/images/book.png) no-repeat 5px top;
 	height:36px;
+	font-family:Georgia, "Times New Roman", Times, serif;
+	color:#666;
+	font-size:39px;
+	padding-left:83px;
+}
+
+.lightbulb
+{
+	background:url(/images/light-bulb.png) no-repeat 5px top;
+	height:55px;
+	font-family:Georgia, "Times New Roman", Times, serif;
+	color:#666;
+	font-size:39px;
+	padding-left:83px;
+}
+
+.bullseye
+{
+	background:url(/images/bulls-eye.png) no-repeat 5px top;
+	height:55px;
+	font-family:Georgia, "Times New Roman", Times, serif;
+	color:#666;
+	font-size:39px;
+	padding-left:83px;
+}
+
+.level-icon
+{
+	background:url(/images/medal-icon.png) no-repeat 5px top;
+	height:55px;
 	font-family:Georgia, "Times New Roman", Times, serif;
 	color:#666;
 	font-size:39px;
@@ -2050,6 +2080,12 @@ div#flash-error {
 	padding-bottom:30px;
 }
 
+
+.left-widget-item {
+	float: left;
+	padding-left: 1.0em;
+	padding-right: 0.8em;
+}
 
 .learn
 {

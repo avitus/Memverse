@@ -1,33 +1,27 @@
-<div>
-	<h2>Current Level Goals</h2>
-	
-	<table class="memverse-standard">
-		<% for quest in current_user_quests %>
-			<tr>
-				<td>
-					<% if !quest.url.blank? %>
-						<%= link_to_if(quest.url, quest.task, quest.url) %>
-					<% else %>
-						<%= quest.task %>
-					<% end %>
-				</td>
-			</tr>
-		<% end %>
-	</table>
-	
-	<h3>Already completed</h3>
-	
-	<table class="memverse-standard">
-		<% for quest in completed %>
-			<tr>
-				<td>
-					<% if !quest.url.blank? %>
-						<%= link_to_if(quest.url, quest.task, quest.url) %>
-					<% else %>
-						<%= quest.task %>
-					<% end %>
-				</td>
-			</tr>
-		<% end %>
-	</table>	
-</div>
+<h2>Current Level Goals</h2>
+
+<ul>
+	<% for quest in current_user_quests %>
+		<li>
+			<% if !quest.url.blank? %>
+				<%= link_to_if(quest.url, quest.task, quest.url) %>
+			<% else %>
+				<%= quest.task %>
+			<% end %>
+		</li>
+	<% end %>
+</ul>	
+		
+<h2>Already completed</h2>
+
+<ul>
+	<% for quest in completed %>
+		<li>
+			<% if !quest.url.blank? %>
+				<%= link_to_if(quest.url, quest.task, quest.url) %>
+			<% else %>
+				<%= quest.task %>
+			<% end %>
+		</li>
+	<% end %>
+</ul>

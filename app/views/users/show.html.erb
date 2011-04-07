@@ -68,18 +68,28 @@
 <div class="main-content"><!--main-content start-->
 	<div class="main-left"><!--main-left start-->
     	<div class="left-widget">
-        	<h2>Complete Verses</h2>
-            <div class="book"><%= @user.memorized %></div>
+    		<div class="left-widget-item pad">
+	        	<h2>Memorized Verses</h2>
+	            <div class="book"><%= @user.memorized %></div> 
+	        </div>      		
+    		<div class="left-widget-item pad">
+	        	<h2>Level</h2>
+	            <div class="level-icon"><%= @user.level %></div> 
+	        </div>  
+
+	        <div class="left-widget-item">
+	        	<h2>Ref Recall</h2>
+	            <div class="lightbulb"><%= @user.ref_grade %>%</div> 
+	        </div>  
+	        <div class="left-widget-item">
+	        	<h2>Accuracy</h2>
+	            <div class="bullseye"><%= @user.accuracy %>%</div> 
+	        </div>  	             	
         </div>
-        <div class="left-widget pad">
-        	<h2>Accomplishments</h2>
-            <ul>
-            	<li><a href="#">Read Memverse Tutorial</a></li>
-                <li><a href="#">Started Learning <span class="learn">35</span> verses</a></li>
-                <li><a href="#">Watched Video Tutorial</a></li>
-                <li><a href="#">Completed Task 1</a></li>
-                <li><a href="#">Completed Task 2</a></li>
-            </ul>
+        <div class="left-widget pad">       	
+        	<div id="quest-info">
+				<%= render :partial => "quests/current_user_quests", :locals => { :completed => @current_completed_quests, :current_user_quests => @current_user_quests } %> 
+			</div>
         </div>
     </div><!--main-left end-->
     
