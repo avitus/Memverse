@@ -26,11 +26,16 @@
             </div>
         </div>
     	
-    	<div class="user-settings">
-        	<div class="user-settings-text">
-            	<ul>
-                	<li>
-                    	<div class="user-option-list"><span>Location: </span><%= @user.american_state.name %></div>
+	<div class="user-settings">
+		<div class="user-settings-text">
+		<ul>
+			<li>
+			<div class="user-option-list"><span>Location: </span>
+			<% if @user.american_state %>	
+				<%= @user.american_state.name + ", " + @user.country.printable_name %></div>
+			<% else %>
+				<%= @user.country ? @user.country.printable_name : "" %></div>
+			<% end %>
                         <div class="edit-option"><a href="#">Edit</a></div>
                     </li>
                     <li>
@@ -38,8 +43,8 @@
                         <div class="edit-option"><a href="#">Edit</a></div>
                     </li>
                     <li>
-                    	<div class="user-option-list"><span>Church: </span><%= @user.church.name %></div>
-                        <div class="user-option-info"><a href="#"><img src="/images/blue-icon.png" width="16" height="16" alt="" /></a></div>
+                    	<div class="user-option-list"><span>Church: </span><%= @user.church ? @user.church.name : "" %></div>
+                        <div class="user-option-info"><%= @user.church ? link_to(image_tag("blue-icon.png", :width=>"16", :height=>"16"), { :controller => "profile", :action => "show_church", :church => @user.church.id }) : "" %></div>
                     </li>
                 </ul>
             </div>
@@ -47,7 +52,9 @@
         
         <div class="user-work-load">
         	<span>Memory Time:</span> <%= @user.work_load %> Mins / Day
-            <div class="view-button"><a href="#"><img src="/images/view.png" width="192" height="25" alt="" /></a></div>
+            <% if @user == current_user %>
+            <div class="view-button"><%= link_to image_tag("view.png", :width=>"192", :height=>"25", :alt=>"View Of All Your Verses"), manage_verses_path %></div>
+            <% end %>
         </div>
         
         <div class="clr"></div>
