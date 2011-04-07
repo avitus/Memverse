@@ -1,5 +1,6 @@
 <% page_title I18n.t :progress, :scope => 'page_titles' %>
 <% page_description I18n.t :progress, :scope => 'page_descriptions' %>
+<div class="white-box-with-margins">
 <% if current_user.memverses.length == 0 %>
 
 	You first need to <%= link_to 'add a memory verse', :action => 'add_verse' %>
@@ -29,3 +30,4 @@
 	<span class=text-highlight><%= link_to 'review the references for your memory verses', start_ref_test_path %></span>, 
 	particularly if you know the text of the verse but have difficulty matching verses with the correct reference.</p>
 </div> 
+</div>
