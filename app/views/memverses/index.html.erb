@@ -27,7 +27,7 @@
 	   	<div class="tab-nav">
 	      	<ul class="tabs">
 	           	<li class="dashboard active"><a href="#dashboard">Dashboard</a></li>
-	            <li class="devotions"><a href="#devotion">Spurgeons Daily Devotions</a></li>
+	            <li class="devotions"><a href="#devotion">Spurgeon's Daily Devotions</a></li>
 	            <li class="dashboard"><a href="#verse">Verse of the Day</a></li>
 	        </ul>
 	    </div>
@@ -38,7 +38,9 @@
 	       	<div id="dashboard" class="tab_content"><h3><%= link_to 'Recently on Memverse', tweets_path %></h3>
 			<%= render "tweets/tweets_for_main" %>
 			</div>
-	        <div id="devotion" class="tab_content"><h3>Devotional</h3>
+	        <div id="devotion" class="tab_content"><h3>Spurgeon's Devotional</h3>
+	        <h4><%=@dev_ref%></h4>
+	        <%=@devotion.html_safe%>
 			</div>
 			<div id="verse" class="tab_content"><h3>Verse</h3>
 			</div>
