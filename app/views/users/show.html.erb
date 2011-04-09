@@ -86,11 +86,13 @@
 	            <div class="bullseye"><%= @user.accuracy %>%</div> 
 	        </div>  	             	
         </div>
+		<% if @user == current_user %>
         <div class="left-widget pad">       	
         	<div id="quest-info">
 				<%= render :partial => "quests/current_user_quests", :locals => { :completed => @current_completed_quests, :current_user_quests => @current_user_quests } %> 
 			</div>
         </div>
+		<% end %>
     </div><!--main-left end-->
     
     <div class="main-right">
