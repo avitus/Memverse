@@ -14,7 +14,6 @@
     point_shape:     none
     line_thickness:    2
 
-
   <%=comp :axis_category %>
     shadow:  low
     size:    12
@@ -33,7 +32,6 @@
     type:        solid
     color:      000000
 
-
   <%=comp :chart_label %>
     background_color:  aaff00
     size:                  12
@@ -43,14 +41,14 @@
 
   <%=comp :chart_rect %>
     shadow:              bg
-    x:                  125
+    x:                   40
     positive_alpha:      90
     y:                   65
     height:             400
-    positive_color:  eeeeff
+    positive_color:  f2f1f1
     negative_color:  ff4400
     negative_alpha:      75
-    width:              900
+    width:              950
 
   <%=comp :chart_transition %>
     delay:          0
@@ -62,22 +60,6 @@
 
   <%=comp :draw %>
     components:
-      - <%= drawing :text %>
-          shadow:         title
-          alpha:             25
-          rotation:         -90
-          size:              64
-          x:                  0
-          delay:            0.6
-          y:                430
-          color:         000033
-          height:            65
-          h_align:        right
-          duration:         0.5
-          transition:      none
-          width:            430
-          v_align:       middle
-          text:     '  MEMVERSE'
 
       - <%= drawing :text %>
           alpha:             75
@@ -86,7 +68,7 @@
           x:                635
           delay:            0.6
           y:                430
-          color:         CC9944
+          color:         b95c2e
           height:            65
           h_align:        right
           duration:         1.2
@@ -102,7 +84,7 @@
           x:                635
           delay:            0.6
           y:                330
-          color:         CC9944
+          color:         b95c2e
           height:            65
           h_align:        right
           duration:         1.2
@@ -118,7 +100,7 @@
           x:                635
           delay:            0.6
           y:                230
-          color:         CC9944
+          color:         b95c2e
           height:            65
           h_align:        right
           duration:         1.2
@@ -134,7 +116,7 @@
           x:                635
           delay:            0.6
           y:                130
-          color:         CC9944
+          color:         b95c2e
           height:            65
           h_align:        right
           duration:         1.2
@@ -150,7 +132,7 @@
           x:                635
           delay:            0.6
           y:                 30
-          color:         CC9944
+          color:         b95c2e
           height:            65
           h_align:        right
           duration:         1.2
@@ -159,30 +141,11 @@
           v_align:       middle
           text:       <%=options[:secondary_y_interval]*8%>
 
-
-
-
-      - <%= drawing :text %>
-          shadow:           low
-          alpha:             50
-          rotation:         -90
-          size:              25
-          x:                 32
-          delay:            1.1
-          y:                403
-          color:         ffffff
-          height:            50
-          h_align:        right
-          duration:         0.7
-          transition:      none
-          width:            400
-          v_align:       middle
-          text:        '  Stats'
       - <%= drawing :image %>
-          alpha:                           80
-          x:                               93
-          delay:                          1.2
-          y:                               28
+          alpha:                          100
+          x:                             1050
+          y:                                5
+          delay:                          1.0
           url:         charts/full_screen.swf
           height:                          15
           transition:                dissolve
@@ -237,15 +200,15 @@
     line_alpha:               0
     size:                    22
     alpha:                   95
-    x:                      125
+    x:                       40
+    y:                       15
     fill_alpha:              60
-    delay:                    0.8
-    y:                       25
+    delay:                  0.8
     margin:                   5
     line_color:          000000
     height:                  10
     fill_color:          ffffff
-    color:               444466
+    color:               262626
     duration:                 1
     line_thickness:           0
     transition:            none
@@ -258,4 +221,4 @@
     set_gap:  35
 
   <%=comp :series_color %>
-    colors: 687284, BAB18E, CC9944
+    colors: 6b9620, 555555, b95c2e

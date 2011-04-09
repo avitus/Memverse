@@ -1,20 +1,22 @@
 <% page_title I18n.t :global_stats, :scope => 'page_titles' %>
 <% page_description I18n.t :global_stats, :scope => 'page_descriptions' %>
-<h1>Memverse Stats</h1>
 
-<div>
-	<%= ziya_chart load_memverse_clock_url(:xml).html_safe, :size => "1100x500" -%>
-</div>
+<div class="white-box-with-margins">
 
-<br>
-
-<div>
-	<p>
-		This is the most important leaderboard. Denominations were man's idea; God only has one church. 
-	</p>
+	<div>
+		<%= ziya_chart load_memverse_clock_url(:xml).html_safe, :size => "1080x500" -%>
+	</div>
 	
-	<p>
-		Memverse has <%= number_with_delimiter(@global_users) %> active users as of <%= @last_entry %>. 
-		As a church, we have <%= number_with_delimiter(Memverse.memorized.count) %> verses memorized.
-	</p>
+	<br>
+	
+	<div>
+		<p>
+			This is the most important leaderboard. Denominations were man's idea; God only has one church. 
+		</p>
+		
+		<p>
+			Memverse has <%= number_with_delimiter(@global_users) %> active users as of <%= @last_entry %>. 
+			As a church, we have <%= number_with_delimiter(Memverse.memorized.count) %> verses memorized.
+		</p>
+	</div>
 </div>

@@ -2,36 +2,37 @@
 <!-- Focus cursor on verse entry box -->
 <body onload="document.getElementById('verseguess').focus()"></body>
 
-<div class="white-box-bg">
-	<div class="test-verse">
-    	<div class="top-heading">
-        	<h2><span>Verse:</span><%=@mv.verse.ref%></h2>
-            <div class="hide-hints"><a href="#">Hide Hint</a></div>
-        </div>
-        <div class="mnemonic"><%= @mv.mnemonic_if_req %></div>
-        <div class="verse-test-area">
-        	<% form_tag mark_test_quick_path, :id => 'test-verse-quick' do %>
-            	<div>
-            		<%= text_area_tag(:verseguess, params[:verseguess], :class => "verseguess" )%>	
-                </div>
-                
-                <div class="tool-tip-nav">Rate Your Performance Level:</div>
-                <div class="score-test-buttons">								
-					<%= link_to 1, {:class => "submit", :q => 1}, {:class => "test-button"} %> <div class="tooltip">Don't Know - No Idea</div>							
-					<%= link_to 2, {:class => "submit", :q => 2}, {:class => "test-button"} %> <div class="tooltip">Don't Know - Familiar</div>							
-					<%= link_to 3, {:class => "submit", :q => 3}, {:class => "test-button"} %> <div class="tooltip">Remembered - Difficult</div>							
-					<%= link_to 4, {:class => "submit", :q => 4}, {:class => "test-button"} %> <div class="tooltip">Remembered - Hesitation</div>							
-					<%= link_to 5, {:class => "submit", :q => 5}, {:class => "test-button"} %> <div class="tooltip">Remembered - Perfect</div>																																	  	
+<!-- Question-side : Entry box -->	
+<fieldset id="question-side">
+	<legend><span class="verse-ref"><%=@mv.verse.ref%></span><span class="verse-tl"> [<%=@mv.verse.translation %>]</span></legend> 
+		<% form_tag :action => 'mark_test_quick' do %>
+			
+			<div id="answerbox">
+		  		<%= text_area_tag(:verseguess, params[:verseguess] )%>			
+		  	</div>
+		
+			<div id="scoreTestButtons">								
+				<div align="left"><%= submit_tag t('.b5'),	:class => "submit", :q => 5 %></div>								
+				<div align="left"><%= submit_tag t('.b4'),	:class => "submit", :q => 4 %></div>	
+				<div align="left"><%= submit_tag t('.b3'), 	:class => "submit", :q => 3 %>
+								
+					<div id="ff-button" align="right">
+						<img alt="FastForward" border="0" src="/images/fast_forward.png" width="48" height="48">
+					</div>
+					
 				</div>	
-                
-            <% end %> <!-- end: form -->
-        </div> <!-- end: verse-test-area -->
+				<div align="left"><%= submit_tag t('.b2'),	:class => "submit", :q => 2 %></div>	
+				<div align="left"><%= submit_tag t('.b1'), 	:class => "submit", :q => 1 %></div>	  	
+			</div>				
+		
+		<% end %>	
+</fieldset>	
 
-   </div> <!-- end: test-verse -->
-    
-    <div class="feedback">
-    	<h2>Live Feedback</h2>
-
+<!-- Comparison section -->		
+<fieldset id="comparison">
+	<legend><%= t('.feedback') %></legend>
+	<div id="verseFeedback">
+		
 		<div class="priorVerse">
 			<p>
 				<!-- Prior verse, if available -->
@@ -50,30 +51,51 @@
 				<img class="center spinner" id="ajax_spinner" src="/images/indicator2.gif" alt="Comparing..." style="display: none" />
 			</p>					
 		</div>
+			
+	</div>
+</fieldset>	
+
+<!-- Flashcard -->	
+<div id="flashcard">
+	<div class="quickFlip">
+		
+		<!-- Front Panel -->
+	    <div class="quickFlipPanel refPanel">
+	        <p class="verse-ref"><%= @mv.verse.ref %></p>
+			<p class="mnemonic"><%= @mv.mnemonic_if_req %></p>
+	        <p class="quickFlipCta"><%= t('.show_verse') %></p>
+	    </div>
+	
+		<!-- Back Panel -->
+	    <div class="quickFlipPanel textPanel">
+	    	<div id="flashcard-back-text">
+		        <p class="verse-ref"><%=@mv.verse.ref%></p>
+				
+				<div class="priorVerse">
+					<p>
+						<span class="prior-versenum superscript">			<%= @prior_versenum if @prior_text %>	</span>
+						<span class="prior-text">							<%= @prior_text if @prior_text %>		</span>
+					</p>
+				</div>
+			   	
+		        <p> 
+					<span class="current-versenum superscript">				<%= @mv.verse.versenum if @prior_text %></span>
+					<span id="current-text">							    <%= @mv.verse.text%>					</span>
+				</p>
+		        <p class="quickFlipCta"><%= t('.back_to_test') %></p>
+			</div>			
+	    </div>
+	</div> <!-- end of quickFlip -->
+</div> <!-- end of flashcard -->
 
 
-    </div>
-    
-    <div class="upcoming">
-    	<h2>Upcoming Verses</h2>
-        <ul>
-        	<li class="gray2"><a href="#">Jn 15:7</a></li>
-            <li class="white2"><a href="#">Jn 15:7</a></li>
-            <li class="gray2"><a href="#">Jn 15:7</a></li>
-            <li class="white2"><a href="#">Jn 15:7</a></li>
-            <li class="gray2"><a href="#">Jn 15:7</a></li>
-            <li class="white2"><a href="#">Jn 15:7</a></li>
-            <li class="gray2"><a href="#">Jn 15:7</a></li>
-        </ul>
-        <div class="upcoming-button">
-        	<a href="#"><img src="/images/add-more.png" width="192" height="25" alt="" /></a>
-            <a href="#"><img src="/images/modify.png" width="192" height="25" alt="" /></a>
-        </div>
-    </div>
-    <div class="clr"></div>
+<!-- Upcoming verses -->	
+<div id="upcoming-list">
+	<fieldset>
+		<legend><%= t('.upcoming') %></legend>
+			<%= render :partial => "upcoming_verses" %>						
+	</fieldset>		
 </div>
-
-
 
 <script language="JavaScript" type="text/javascript"><!--
 
@@ -81,8 +103,6 @@
     $(document).ajaxStart($('#scoreTestButtons').block()).ajaxStop($('#scoreTestButtons').unblock());
 		
 	$(document).ready(function() {
-		
-		$("#test-verse-quick :input").tooltip();
 			
 		var ondeck 				= {};
 		var prior               = {};
