@@ -1,10 +1,11 @@
 <% content_for :head do %>
   	<%= stylesheet_link_tag 'bloggity' %>
-	<%= javascript_include_tag 'bloggity/jquery' %>
-	<%= javascript_include_tag 'bloggity/jquery-form' %>
-	<%= javascript_include_tag 'bloggity/fckeditor/fckeditor' %>  
+	<% if blog_logged_in? && current_user.can_blog?(@blog_id) %>
+		<%= javascript_include_tag 'bloggity/jquery' %>
+		<%= javascript_include_tag 'bloggity/jquery-form' %>
+		<%= javascript_include_tag 'bloggity/fckeditor/fckeditor' %>  
+	<% end %>
 <% end %>
-
 
 <% content_for :content do %>
 	<!-- bloggity styles namespaced by this div -->
