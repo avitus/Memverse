@@ -1,7 +1,7 @@
 <% page_title I18n.t :pop_verses_by_book, :scope => 'page_titles' %>
 <% page_description I18n.t :pop_verses_by_book, :scope => 'page_descriptions' %>
 <h1>Most Popular Memory Verses for Each Bible Book</h1>
-
+<div class="white-box-with-margins">
 <div class="details-form">
 		
 	<fieldset>
@@ -26,6 +26,7 @@
 
 <div id="search_results">
 	<%= render :partial=>'pop_verses' %>
+</div>
 </div>
 
 <!-- http://www.webdesignerwall.com/tutorials/jquery-tutorials-for-designers/ -->

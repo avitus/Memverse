@@ -1,6 +1,8 @@
-<h1><%= @country.rank %>. <%= @country.printable_name %></h1>
+<div class="white-box-with-margins">
+<h1><%= @country.rank ? @country.rank + ". " : "" %><%= @country.printable_name %></h1>
 
 <table class="memverse-standard">
 	<%= render :partial => "users/user_headings" %>
 	<%= render :partial => "users/user", :collection => @users %>
 </table>
+</div>
