@@ -255,8 +255,8 @@ function insertondeck(ondeck, ondeck_prior) {
 	$("#verseguess").val('');									// Clear the input box 
 	$("#verseguess").focus();									// Put cursor in input box
 	$("#ajaxWrapper").text('');									// Clear the feedback 
-	// $('.quickFlip').quickFlipper( {}, 0 );						// Reset the flashcard 
-	// $("#flashcard-back-text #current-text").text(ondeck.text);	// Update current verse on back of flash card
+	alert(ondeck.text);
+	$(".current-text").text(ondeck.text);						// Update current verse on back of flash card
 	$(".current-versenum").text(ondeck.versenum);				// Update verse number superscript
 	$('#ff-button').toggle(ondeck.skippable);					// Hide/Show fast forward button
 	$('.mnemonic').text('');									// Clear the mnemonic

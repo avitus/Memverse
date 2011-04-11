@@ -1397,7 +1397,7 @@ div#flash-error {
 	color:#7ca529; 
 }
 
-.hide-hints
+.toggle-hint
 {
 	background:url(../images/plus.png) no-repeat right center;
 	width:81px;
@@ -1409,7 +1409,7 @@ div#flash-error {
 	font-weight:bold;
 }
 
-.hide-hints a
+.toggle-hint a
 {
 	width:81px;
 	height:30px;
@@ -1418,7 +1418,7 @@ div#flash-error {
 	text-decoration:none;
 }
 
-.hide-hints a:hover
+.toggle-hint a:hover
 {
 	color:#333;
 	text-decoration:none;
@@ -2937,6 +2937,11 @@ table.user-list {
 
 #currentVerse {
 	position: relative;
+	width: 290px;	
+}
+
+#complete-hint {
+	display: none;
 	width: 290px;	
 }
 

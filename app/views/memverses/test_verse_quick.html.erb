@@ -6,7 +6,7 @@
 	<div class="test-verse">
     	<div class="top-heading">
         	<h2><span>Verse:</span><span class="verse-ref"><%=@mv.verse.ref%></span><span class="verse-tl"> [<%=@mv.verse.translation %>]</span></h2>
-            <div class="hide-hints"><a href="#">Hide Hint</a></div>
+            <div class="toggle-hint"><a href="#">Show Hint</a></div>
         </div>
         <div class="mnemonic"><%= @mv.mnemonic_if_req %></div>
         <div class="verse-test-area">
@@ -52,6 +52,14 @@
 				<img class="center spinner" id="ajax_spinner" src="/images/indicator2.gif" alt="Comparing..." style="display: none" />
 			</p>					
 		</div>
+		
+		<!-- Current verse answer -->
+		<div id="complete-hint">
+			<p>		
+				<span class="current-versenum superscript"><%=@mv.verse.versenum if @prior_text%></span>
+				<span class="current-text"><%= @mv.verse.text %></span>
+			</p>			
+		</div>
 
 
     </div>
@@ -84,7 +92,20 @@
 		
 	$(document).ready(function() {
 		
+		// tooltips for test buttons ... not working yet
 		$("a .test-button").tooltip();
+			
+		// show verse
+		$(".toggle-hint").click( function () {
+			$("#complete-hint").toggle();
+			$("#currentVerse").toggle();
+			if ($(this).text() == "Show Hint") {
+				$(".toggle-hint").text("Hide Hint");
+			} else {
+				$(".toggle-hint").text("Show Hint");
+			}
+			
+		});
 			
 		var ondeck 				= {};
 		var prior               = {};
