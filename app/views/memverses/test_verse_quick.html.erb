@@ -5,7 +5,7 @@
 <div class="white-box-bg">
 	<div class="test-verse">
     	<div class="top-heading">
-        	<h2><span>Verse:</span><%=@mv.verse.ref%></h2>
+        	<h2><span>Verse:</span><span class="verse-ref"><%=@mv.verse.ref%></span><span class="verse-tl"> [<%=@mv.verse.translation %>]</span></h2>
             <div class="hide-hints"><a href="#">Hide Hint</a></div>
         </div>
         <div class="mnemonic"><%= @mv.mnemonic_if_req %></div>
@@ -17,11 +17,13 @@
                 
                 <div class="tool-tip-nav">Rate Your Performance Level:</div>
                 <div class="score-test-buttons">								
-					<%= link_to 1, {:class => "submit", :q => 1}, {:class => "test-button"} %> <div class="tooltip">Don't Know - No Idea</div>							
-					<%= link_to 2, {:class => "submit", :q => 2}, {:class => "test-button"} %> <div class="tooltip">Don't Know - Familiar</div>							
-					<%= link_to 3, {:class => "submit", :q => 3}, {:class => "test-button"} %> <div class="tooltip">Remembered - Difficult</div>							
-					<%= link_to 4, {:class => "submit", :q => 4}, {:class => "test-button"} %> <div class="tooltip">Remembered - Hesitation</div>							
-					<%= link_to 5, {:class => "submit", :q => 5}, {:class => "test-button"} %> <div class="tooltip">Remembered - Perfect</div>																																	  	
+					<%= link_to 1, {:q => 1}, {:class => "test-button", :class => "submit", :remote => true} %> <div class="tooltip">Don't Know - No Idea</div>							
+					<%= link_to 2, {:q => 2}, {:class => "test-button", :class => "submit", :remote => true} %> <div class="tooltip">Don't Know - Familiar</div>							
+					<%= link_to 3, {:q => 3}, {:class => "test-button", :class => "submit", :remote => true} %> <div class="tooltip">Remembered - Difficult</div>							
+					<%= link_to 4, {:q => 4}, {:class => "test-button", :class => "submit", :remote => true} %> <div class="tooltip">Remembered - Hesitation</div>							
+					<%= link_to 5, {:q => 5}, {:class => "test-button", :class => "submit", :remote => true} %> <div class="tooltip">Remembered - Perfect</div>	
+					
+					<%= link_to '>>', {}, {:class => "test-button", :id => "ff-button", :remote => true} %> <div class="tooltip">Skip this verse for today</div>	
 				</div>	
                 
             <% end %> <!-- end: form -->
@@ -82,7 +84,7 @@
 		
 	$(document).ready(function() {
 		
-		$("#test-verse-quick :input").tooltip();
+		$("a .test-button").tooltip();
 			
 		var ondeck 				= {};
 		var prior               = {};

@@ -1,3 +1,4 @@
+<div class="white-box-with-margins">
 <h1><%=t('.Update profile')%></h1>
 
 <%= form_tag :action => 'update_profile', :id => @user do %>
@@ -5,9 +6,8 @@
 	
 		<%= form_for @user do |f| %>
 			<%= f.error_messages %>
-			<fieldset>
-				<legend><%=t('.Your profile')%></legend>
-				<ol>
+
+				<ul>
 					<li>
 						<%= f.label 			:name, t('.Name') %>
 						<%= f.text_field 		:name %>
@@ -132,18 +132,20 @@
 						<%= f.label 			:show_toolbar, t('.Show social toolbar') %>
 						<%= f.check_box 		:show_toolbar %>
 					</li>										
-				</ol>
+				</ul>
 				 
 				<div class="buttons">				
 					<%= submit_tag t('.Update profile') %>	
 				</div>
 					
-			</fieldset>	
 		<% end %> <!-- End: Error Messages -->
 	</div>
 <% end %> <!-- End: Form Tag -->
 
 <p><%= t('.Photo Upload A') %> <b><%= link_to 'Gravatar', 'http://www.gravatar.com', {:target => '_blank'} %></b> <%= t('.Photo Upload B')%></p>
+
+</div> <!-- End: White Box with Margins -->
+
 
 
 <!-- http://www.devbridge.com/projects/autocomplete/jquery/ -->
