@@ -135,6 +135,37 @@ img a
 
 /*========== Header ==========*/
 
+#no-js {
+	position:absolute;
+	top:0;
+	left:0;
+	height:30px;
+	line-height:30px;
+	background:#d65800;
+	width:100%;
+	border-bottom:2px solid #8e3800;
+}
+
+#no-js p{
+	text-align:center;
+	font:bold 14px/30px Arial,Helvetica,Geneva,sans-serif;
+	margin:0;
+	padding:0;
+	color:#fff;
+}
+
+#no-js p a{
+	color:#f7cb47;
+	text-decoration:underline;
+	padding:1px 4px 3px;
+	-webkit-border-radius:3px;
+	-moz-border-radius:3px;
+}
+
+#no-js p a:hover{
+	background:#e45d00;
+}
+
 #header
 {
 	width:1080px;
