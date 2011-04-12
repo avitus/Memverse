@@ -16,22 +16,22 @@
 .secondary-a-5 { background-color: #BAB18E } /* lightest */
 
 /* Oranges */
-.secondary-b-1 { background-color: #B29983 }
-.secondary-b-2 { background-color: #A9937F }
-.secondary-b-3 { background-color: #A6886E } /* darkest */
-.secondary-b-4 { background-color: #BAA18C }
-.secondary-b-5 { background-color: #BAA28E } /* lightest */
+.secondary-b-1 { background-color:#B29983 }
+.secondary-b-2 { background-color:#A9937F }
+.secondary-b-3 { background-color:#A6886E } /* darkest */
+.secondary-b-4 { background-color:#BAA18C }
+.secondary-b-5 { background-color:#BAA28E } /* lightest */
 
-.blacktext	{ background-color: #1F2229 } /* Almost black text */
+.blacktext	{ background-color:#1F2229 } /* Almost black text */
 
 /* Font sizes for Tag cloud */
-.cloud1 {padding: 0px 7px 0px 7px; margin-top: 2px; font-size: 100%; background-color: #BAB18E;}
-.cloud2 {padding: 0px 7px 0px 7px; margin-top: 2px; font-size: 120%; background-color: #BAB18E; }
-.cloud3 {padding: 0px 7px 0px 7px; margin-top: 2px; font-size: 140%; background-color: #BAA28E; }
-.cloud4 {padding: 0px 7px 0px 7px; margin-top: 2px; font-size: 160%; background-color: #BAA28E; }
-.cloud5 {padding: 0px 7px 0px 7px; margin-top: 2px; font-size: 180%; background-color: #BAA28E; }
-.cloud6 {padding: 0px 7px 0px 7px; margin-top: 2px; font-size: 200%; background-color: #687284; }
-.cloud7 {padding: 0px 7px 0px 7px; margin-top: 2px; font-size: 220%; background-color: #687284; }
+.cloud1 {padding: 0 7px 0 7px; margin-top:2px; font-size:100%; background-color:#BAB18E;}
+.cloud2 {padding: 0 7px 0 7px; margin-top:2px; font-size:120%; background-color:#BAB18E; }
+.cloud3 {padding: 0 7px 0 7px; margin-top:2px; font-size:140%; background-color:#BAA28E; }
+.cloud4 {padding: 0 7px 0 7px; margin-top:2px; font-size:160%; background-color:#BAA28E; }
+.cloud5 {padding: 0 7px 0 7px; margin-top:2px; font-size:180%; background-color:#BAA28E; }
+.cloud6 {padding: 0 7px 0 7px; margin-top:2px; font-size:200%; background-color:#687284; }
+.cloud7 {padding: 0 7px 0 7px; margin-top:2px; font-size:220%; background-color:#687284; }
 
 /* New colors
 
@@ -71,18 +71,16 @@ Blue
 body
 {
 	background:#bfbebe url(../images/body-bg.png) repeat-x left top;
-	font-family:Arial, Helvetica, sans-serif;
-	font-size:13px;
+	font:13px/normal Arial,Helvetica,sans-serif;
 	color:#333333;
-	padding:0px;
-	margin:0px;
-	line-height:normal;
+	padding:0;
+	margin:0;
 }
 
 form, input
 {
-	padding:0px;
-	margin:0px;
+	padding:0;
+	margin:0;
 }
 
 a
@@ -126,7 +124,7 @@ img a
 #wrapper
 {
 	width:1080px;
-	margin:0px auto;
+	margin:0 auto;
 }
 
 #page-content
@@ -140,7 +138,7 @@ img a
 #header
 {
 	width:1080px;
-	margin:0px auto;
+	margin:0 auto;
 }
 
 .header-top
@@ -201,14 +199,12 @@ img a
 .iphone
 {
 	background:url(../images/i-phone.png) no-repeat right center;
-	font-family:"Times New Roman", Times, serif;
+	font:16px/31px "Times New Roman",Times,serif;
 	width:245px;
 	height:31px;
 	float:left;
 	margin-top:18px;
-	line-height:31px;
 	color:#FFF;
-	font-size:16px;
 	margin-right:5px;
 }
 
@@ -222,8 +218,8 @@ img a
 .button ul
 {
 	list-style:none;
-	padding:0px;
-	margin:0px;
+	padding:0;
+	margin:0;
 }
 
 .button ul li
@@ -268,8 +264,8 @@ img a
 .menu ul
 {
 	list-style:none;
-	padding:0px;
-	margin:0px;
+	padding:0;
+	margin:0;
 }
 
 .menu ul li
@@ -288,7 +284,7 @@ img a
 {
 	color:#FFF;
 	text-decoration:none;
-	padding:0px 15px;
+	padding:0 15px;
 	display:block;
 }
 
@@ -312,9 +308,7 @@ img a
 	width:171px;
 	height:46px;
 	float:left;
-	line-height:46px;
-	font-family:"Times New Roman", Times, serif;
-	font-size:15px;
+	font:15px/46px "Times New Roman",Times,serif;
 	color:#FFF;
 	padding-left:50px;
 }
@@ -388,11 +382,9 @@ img a
 .banner-text h1
 {
 	padding:30px 0 15px 0;
-	margin:0px;
-	font-family:Georgia, "Times New Roman", Times, serif;
-	font-size:30px;
+	margin:0;
+	font:normal 30px Georgia,"Times New Roman",Times,serif;
 	color:#983626;
-	font-weight:normal;
 }
 
 .text-left
@@ -411,8 +403,8 @@ img a
 .banner-text ul
 {
 	list-style:none;
-	padding:0px;
-	margin:0px;
+	padding:0;
+	margin:0;
 }
 
 .banner-text ul li
@@ -465,8 +457,8 @@ img a
 .banner-bottom ul
 {
 	list-style:none;
-	padding:0px;
-	margin:0px;
+	padding:0;
+	margin:0;
 	padding:20px 0 0 60px;
 }
 
@@ -506,14 +498,14 @@ img a
 
 .gray-box-bg {
 	width:1030px;
-	background: #717171;
-	border-style: solid; 
-	border-width: 1px;
-	border-color: #717171;
-	padding: 0 25px 0 25px;
-	-moz-border-radius: 10px;
+	background:#717171;
+	border-style:solid; 
+	border-width:1px;
+	border-color:#717171;
+	padding:0 25px 0 25px;
+	-moz-border-radius:10px;
 	-webkit-border-radius:10px;
-	border-radius: 10px; 
+	border-radius:10px; 
 }
 
 
@@ -553,8 +545,8 @@ div#flash-error {
 {
 	height:39px;
 	line-height:39px;
-	padding:0px;
-	margin:0px;
+	padding:0;
+	margin:0;
 	font-size:18px;
 	color:#577a1a;
 	font-weight:normal;
@@ -573,13 +565,13 @@ div#flash-error {
 
 
 .side-margins {
-	padding-left: 2em;
-	padding-right: 2em;
+	padding-left:2em;
+	padding-right:2em;
 }
 
 .narrow-side-margins {
-	padding-left: 0.5em;
-	padding-right: 0.5em;	
+	padding-left:0.5em;
+	padding-right:0.5em;	
 }
 
 .content-box1
@@ -631,8 +623,8 @@ div#flash-error {
 
 .content-text h3
 {
-	padding:0px;
-	margin:0px;
+	padding:0;
+	margin:0;
 	font-size:16px;
 	color:#1f8ec2;
 	font-weight:bold;
@@ -641,8 +633,8 @@ div#flash-error {
 
 .content-text p
 {
-	padding:0px;
-	margin:0px;
+	padding:0;
+	margin:0;
 }
 
 .learn-more
@@ -715,8 +707,8 @@ div#flash-error {
 
 .content2-text h3
 {
-	padding:0px;
-	margin:0px;
+	padding:0;
+	margin:0;
 	font-size:16px;
 	color:#1f8ec2; 
 	font-weight:bold;
@@ -733,8 +725,8 @@ div#flash-error {
 
 .content2-text p
 {
-	padding:0px;
-	margin:0px;
+	padding:0;
+	margin:0;
 }
 
 .content-box3-area
@@ -774,7 +766,7 @@ div#flash-error {
 	background:url(../images/sign-field.png) no-repeat left top;
 	width:227px;
 	height:18px;
-	border:0px;
+	border:0;
 	padding:4px 5px;
 	line-height:18px;
 	margin-bottom:12px;
@@ -806,7 +798,7 @@ div#flash-error {
 	background:url(../images/submit.png) no-repeat left top;
 	width:69px;
 	height:25px;
-	border:0px;
+	border:0;
 	cursor:pointer;
 }
 
@@ -818,7 +810,7 @@ div#flash-error {
 
 .nomar
 {
-	margin-bottom:0px;
+	margin-bottom:0;
 }
 
 .volunteers
@@ -846,8 +838,8 @@ div#flash-error {
 
 .volunteers p
 {
-	padding:0px;
-	margin:0px;
+	padding:0;
+	margin:0;
 }
 
 .learn-area
@@ -921,8 +913,8 @@ div#flash-error {
 .submenu ul
 {
 	list-style:none;
-	padding:0px;
-	margin:0px;
+	padding:0;
+	margin:0;
 }
 
 .submenu ul li
@@ -933,12 +925,12 @@ div#flash-error {
 	font-size:12px;
 	color:#99cc33;
 	font-weight:normal;
-	padding:0px 10px;
+	padding:0 10px;
 }
 
 .submenu ul li.nopad
 {
-	padding-left:0px;
+	padding-left:0;
 }
 
 .submenu ul li a
@@ -964,7 +956,7 @@ div#flash-error {
 
 /* Start with submenus hidden */
 .submenustyle {
-	display: none;
+	display:none;
 	filter:alpha(opacity=0);
 	-moz-opacity:0;
 }
@@ -1002,8 +994,8 @@ div#flash-error {
 .breadcum-link ul
 {
 	list-style:none;
-	padding:0px;
-	margin:0px;
+	padding:0;
+	margin:0;
 }
 
 .breadcum-link ul li
@@ -1013,7 +1005,7 @@ div#flash-error {
 	line-height:23px;
 	font-size:12px;
 	color:#000;
-	padding:0px 7px;
+	padding:0 7px;
 	float:left;
 }
 
@@ -1055,14 +1047,14 @@ div#flash-error {
 
 .two-box p
 {
-	padding:0px;
-	margin:0px;
+	padding:0;
+	margin:0;
 }
 
 .two-box h3
 {
-	padding:0px;
-	margin:0px;
+	padding:0;
+	margin:0;
 	font-size:18px;
 	color:#6b9620;
 	font-weight:bold;
@@ -1071,41 +1063,41 @@ div#flash-error {
 
 .two-box h3.nospace
 {
-	padding-bottom:0px;
+	padding-bottom:0;
 }
 
 .votm
 {
-	width: 60%;
-	height: 91px;
-	float: left;
-	padding: 14px 14px 0 14px;
+	width:60%;
+	height:91px;
+	float:left;
+	padding:14px 14px 0 14px;
 	
-	background: #FFFFFF;
-	border-style: solid; 
-	border-width: 1px;
-	border-color: #555555;
+	background:#FFFFFF;
+	border-style:solid; 
+	border-width:1px;
+	border-color:#555555;
 
-	-moz-border-radius: 10px;
+	-moz-border-radius:10px;
 	-webkit-border-radius:10px;
-	border-radius: 10px; 		
+	border-radius:10px; 		
 }
 
 .progress-info
 {
-	width: 33%;
-	height: 91px;
-	float: right;
-	padding: 14px 14px 0 14px;
+	width:33%;
+	height:91px;
+	float:right;
+	padding:14px 14px 0 14px;
 	
-	background: #FFFFFF;
-	border-style: solid; 
-	border-width: 1px;
-	border-color: #555555;
+	background:#FFFFFF;
+	border-style:solid; 
+	border-width:1px;
+	border-color:#555555;
 
-	-moz-border-radius: 10px;
+	-moz-border-radius:10px;
 	-webkit-border-radius:10px;
-	border-radius: 10px;	
+	border-radius:10px;	
 }
 
 .votm-text
@@ -1152,8 +1144,7 @@ div#flash-error {
 
 .number
 {
-	font-family:Georgia, "Times New Roman", Times, serif;
-	font-size:24px;
+	font:24px Georgia,"Times New Roman",Times,serif;
 	color:#3c5313;
 }
 
@@ -1164,34 +1155,34 @@ div#flash-error {
 
 .tab-top {
 	width:1080px;
-	background: #767575;
-	border-style: solid solid none solid; 
-	border-width: 1px;
-	border-color: #555555;
+	background:#767575;
+	border-style:solid solid none solid; 
+	border-width:1px;
+	border-color:#555555;
 	
-	-moz-border-radius-topright: 10px;
-	-webkit-border-radius-topright: 10px;
-	border-top-right-radius: 10px;
+	-moz-border-radius-topright:10px;
+	-webkit-border-radius-topright:10px;
+	border-top-right-radius:10px;
 	
-	-moz-border-radius-topleft: 10px;
-	-webkit-border-top-left-radius: 10px;
-	border-top-left-radius: 10px;
+	-moz-border-radius-topleft:10px;
+	-webkit-border-top-left-radius:10px;
+	border-top-left-radius:10px;
 }
 
 .tab-bottom {
 	width:1080px;
-	background: #FFFFFF;
-	border-style: none solid solid solid; 
-	border-width: 1px;
-	border-color: #555555;
+	background:#FFFFFF;
+	border-style:none solid solid solid; 
+	border-width:1px;
+	border-color:#555555;
 	
-	-moz-border-radius-bottomright: 10px;
-	-webkit-border-radius-bottomright: 10px;
-	border-bottom-right-radius: 10px;
+	-moz-border-radius-bottomright:10px;
+	-webkit-border-radius-bottomright:10px;
+	border-bottom-right-radius:10px;
 	
-	-moz-border-radius-bottomleft: 10px;
-	-webkit-border-bottom-left-radius: 10px;
-	border-bottom-left-radius: 10px;
+	-moz-border-radius-bottomleft:10px;
+	-webkit-border-bottom-left-radius:10px;
+	border-bottom-left-radius:10px;
 }
 
 .tab-nav
@@ -1203,8 +1194,8 @@ div#flash-error {
 .tab-nav ul
 {
 	list-style:none;
-	padding:0px;
-	margin:0px;
+	padding:0;
+	margin:0;
 	padding:13px 0 0 18px;
 }
 
@@ -1277,8 +1268,8 @@ div#flash-error {
 
 .tab-content h3
 {
-    margin: 0 0 15px;
-    padding: 0 0 10px;
+    margin:0 0 15px;
+    padding:0 0 10px;
 	font-size:18px;
 	color:#6b9620;
 	font-weight:bold;
@@ -1302,8 +1293,8 @@ div#flash-error {
 .tab-content ul
 {
 	list-style:none;
-	padding:0px;
-	margin:0px;
+	padding:0;
+	margin:0;
 }
 
 .tab-content ul li
@@ -1341,37 +1332,37 @@ div#flash-error {
 
 .white-box-bg {
 	width:1080px;
-	background: #FFFFFF;
-	border-style: solid; 
-	border-width: 1px;
-	border-color: #555555;
-	padding: 2em 0em 2em 0em;
-	-moz-border-radius: 10px;
+	background:#FFFFFF;
+	border-style:solid; 
+	border-width:1px;
+	border-color:#555555;
+	padding:2em 0em 2em 0em;
+	-moz-border-radius:10px;
 	-webkit-border-radius:10px;
-	border-radius: 10px; 
+	border-radius:10px; 
 }
 
 .white-box-with-margins {
 	width:1080px;
-	background: #FFFFFF;
-	border-style: solid; 
-	border-width: 1px;
-	border-color: #555555;
-	padding: 1em 1em 1em 1em;
-	-moz-border-radius: 10px;
+	background:#FFFFFF;
+	border-style:solid; 
+	border-width:1px;
+	border-color:#555555;
+	padding:1em;
+	-moz-border-radius:10px;
 	-webkit-border-radius:10px;
-	border-radius: 10px; 
+	border-radius:10px; 
 }
 
 .test-verse
 {
 	width:35%;
 	float:left;
-	padding-left: 3em;
-	padding-right: 2em;
-	border-right-color: #bfbebe;
-	border-right-style: solid;
-	border-right-width: 1px;
+	padding-left:3em;
+	padding-right:2em;
+	border-right-color:#bfbebe;
+	border-right-style:solid;
+	border-right-width:1px;
 }
 
 .top-heading
@@ -1383,8 +1374,8 @@ div#flash-error {
 
 .top-heading h2
 {
-	padding:0px;
-	margin:0px;
+	padding:0;
+	margin:0;
 	height:30px;
 	font-size:17px;
 	line-height:30px;
@@ -1472,7 +1463,7 @@ div#flash-error {
 	text-decoration:none;
 	font-weight:bold;
 	line-height:21px;
-	padding:0px 3px;
+	padding:0 3px;
 }
 
 .score-test-buttons a:hover
@@ -1535,26 +1526,23 @@ div#flash-error {
 .feedback
 {
 	width:28%;
-	height: 362px;
+	height:362px;
 	float:left;
 	color:#666666;
-	padding-left: 2em;
-	padding-right: 2em;
-	border-right-color: #bfbebe;
-	border-right-style: solid;
-	border-right-width: 1px;	
+	padding:0 2em;
+	border-right:1px solid #bfbebe;
 }
 
 .feedback p
 {
-	padding:10px 0px;
-	margin:0px;
+	padding:10px 0;
+	margin:0;
 }
 
 .feedback h2
 {
-	padding:0px;
-	margin:0px;
+	padding:0;
+	margin:0;
 	height:30px;
 	font-size:17px;
 	line-height:30px;
@@ -1564,14 +1552,14 @@ div#flash-error {
 .upcoming
 {
 	width:20%;
-	padding-left: 2em;
+	padding-left:2em;
 	float:left;
 }
 
 .upcoming h2
 {
-	padding:0px;
-	margin:0px;
+	padding:0;
+	margin:0;
 	height:30px;
 	font-size:17px;
 	line-height:30px;
@@ -1581,8 +1569,8 @@ div#flash-error {
 .upcoming ul
 {
 	list-style:none;
-	padding:0px;
-	margin:0px;
+	padding:0;
+	margin:0;
 	padding-top:10px;
 }
 
@@ -1635,12 +1623,10 @@ div#flash-error {
 {
 	width:45%;
 	float:left;
-	padding-left: 3em;
-	padding-right: 2em;
-	margin-right: 4em;
-	border-right-color: #bfbebe;
-	border-right-style: solid;
-	border-right-width: 1px;
+	padding-left:3em;
+	padding-right:2em;
+	margin-right:4em;
+	border-right:1px solid #bfbebe;
 }
 
 .popular
@@ -1652,8 +1638,8 @@ div#flash-error {
 
 .popular h2
 {
-	padding:0px;
-	margin:0px;
+	padding:0;
+	margin:0;
 	height:30px;
 	font-size:17px;
 	line-height:30px;
@@ -1693,7 +1679,7 @@ div#flash-error {
 	background:url(../images/verse-field.png) no-repeat left top;
 	width:308px;
 	height:19px;
-	border:0px;
+	border:0;
 	padding:4px 5px;
 	line-height:19px;
 }
@@ -1707,8 +1693,8 @@ div#flash-error {
 
 .translation h2
 {
-	padding:0px;
-	margin:0px;
+	padding:0;
+	margin:0;
 	height:30px;
 	font-size:17px;
 	line-height:30px;
@@ -1731,15 +1717,15 @@ div#flash-error {
 	background:url(../images/add-verse.png) no-repeat left top;
 	width:122px;
 	height:25px;
-	border:0px;
+	border:0;
 	cursor:pointer;
 }
 
 .popular ul
 {
 	list-style:none;
-	padding:0px;
-	margin:0px;
+	padding:0;
+	margin:0;
 	padding-top:10px;
 }
 
@@ -1792,9 +1778,9 @@ div#flash-error {
 {
 	width:35%;
 	float:left;
-	padding-left: 1em;
+	padding-left:1em;
 	margin-right:38px;
-	border-right: 1px solid #BFBEBE;
+	border-right:1px solid #BFBEBE;
 }
 
 .user-details-img
@@ -1845,8 +1831,8 @@ div#flash-error {
 
 .user-details-text h4
 {
-	padding:0px;
-	margin:0px;
+	padding:0;
+	margin:0;
 	font-size:23px;
 	font-weight:bold;
 	color:#669933;
@@ -1855,8 +1841,8 @@ div#flash-error {
 .user-details-text ul
 {
 	list-style:none;
-	padding:0px;
-	margin:0px;
+	padding:0;
+	margin:0;
 	padding-top:5px;
 }
 
@@ -1936,8 +1922,8 @@ div#flash-error {
 .user-settings-text ul
 {
 	list-style:none;
-	padding:0px;
-	margin:0px;
+	padding:0;
+	margin:0;
 	padding-top:5px;
 }
 
@@ -2012,8 +1998,8 @@ div#flash-error {
 
 .main-content h2
 {
-	padding:0px;
-	margin:0px;
+	padding:0;
+	margin:0;
 	font-size:18px;
 	color:#577a1a; 
 	font-weight:normal;
@@ -2030,9 +2016,8 @@ div#flash-error {
 {
 	background:url(/images/book.png) no-repeat 5px top;
 	height:36px;
-	font-family:Georgia, "Times New Roman", Times, serif;
+	font:39px Georgia,"Times New Roman",Times,serif;
 	color:#666;
-	font-size:39px;
 	padding-left:83px;
 }
 
@@ -2040,9 +2025,8 @@ div#flash-error {
 {
 	background:url(/images/light-bulb.png) no-repeat 5px top;
 	height:55px;
-	font-family:Georgia, "Times New Roman", Times, serif;
+	font:39px Georgia,"Times New Roman",Times,serif;
 	color:#666;
-	font-size:39px;
 	padding-left:83px;
 }
 
@@ -2050,9 +2034,8 @@ div#flash-error {
 {
 	background:url(/images/bulls-eye.png) no-repeat 5px top;
 	height:55px;
-	font-family:Georgia, "Times New Roman", Times, serif;
+	font:39px Georgia,"Times New Roman",Times,serif;
 	color:#666;
-	font-size:39px;
 	padding-left:83px;
 }
 
@@ -2060,9 +2043,8 @@ div#flash-error {
 {
 	background:url(/images/medal-icon.png) no-repeat 5px top;
 	height:55px;
-	font-family:Georgia, "Times New Roman", Times, serif;
+	font:39px Georgia,"Times New Roman",Times,serif;
 	color:#666;
-	font-size:39px;
 	padding-left:83px;
 }
 
@@ -2080,8 +2062,8 @@ div#flash-error {
 .left-widget ul
 {
 	list-style:none;
-	padding:0px;
-	margin:0px;
+	padding:0;
+	margin:0;
 }
 
 .left-widget ul li
@@ -2119,10 +2101,8 @@ div#flash-error {
 
 .learn
 {
-	font-family:Georgia, "Times New Roman", Times, serif;
-	font-size:23px;
+	font:23px/15px Georgia,"Times New Roman",Times,serif;
 	color:#983626;
-	line-height:15px;
 }
 
 .main-right
@@ -2158,28 +2138,28 @@ div#flash-error {
 
 .vs-distribution
 {
-	margin-left: auto;
-	margin-right: auto;
+	margin-left:auto;
+	margin-right:auto;
 }
 
 
 .vs-distribution table {
-	border-spacing: 0;
-	text-align: center;
+	border-spacing:0;
+	text-align:center;
 }
 
 .vs-distribution table thead {
 	height:27px;
 	line-height:27px;
 	padding:5px;
-	margin:0px;
+	margin:0;
 	font-size:16px;
 	color:#983626;
 	font-weight:bold;	
 }
 
 .vs-distribution table thead th {
-	padding: 5px;
+	padding:5px;
 }
 
 .vs-distribution table tbody {
@@ -2189,28 +2169,28 @@ div#flash-error {
 }
 
 .vs-distribution table tbody th {
-	border-top: 1px solid #afaeae;
+	border-top:1px solid #afaeae;
 	border-collapse: collapse;
-	text-align: left;
+	text-align:left;
 }
 
 .vs-distribution table tbody td {
-	border-top: 1px solid #afaeae;
+	border-top:1px solid #afaeae;
 	border-collapse: collapse;
 }
 
 .vs-disti-left
 {
-	width: 47%;
-	padding-left: 1.5em;
-	float: left;
+	width:47%;
+	padding-left:1.5em;
+	float:left;
 }
 
 .vs-disti-right
 {
-	width: 47%;
-	float: left;
-	padding-left: 1.4em;	
+	width:47%;
+	float:left;
+	padding-left:1.4em;	
 }
 
 /*-- OLD STYLES BELOW THIS LINE ------------------*/
@@ -2308,7 +2288,7 @@ table.memverse-standard thead th {
         );
     -webkit-border-top-left-radius:5px;
     -webkit-border-top-right-radius:5px;
-    -moz-border-radius:5px 5px 0px 0px;
+    -moz-border-radius:5px 5px 0 0;
     border-top-left-radius:5px;
     border-top-right-radius:5px;		
 }
@@ -2360,7 +2340,7 @@ table.memverse-standard tbody th {
         );
     -webkit-border-top-left-radius:5px;
     -webkit-border-bottom-left-radius:5px;
-    -moz-border-radius:5px 0px 0px 5px;
+    -moz-border-radius:5px 0 0 5px;
     border-top-left-radius:5px;
     border-bottom-left-radius:5px;
 }
@@ -2469,9 +2449,7 @@ div.center {
 	padding-top: 10px;
 	padding-bottom: 16px;
 	border-bottom: 2px solid;
-	font-family: Georgia, "Times New Roman", serif;
-	font-variant: small-caps;
-	font-size: 50px;
+	font:small-caps 50px Georgia,"Times New Roman",serif;
 	text-align: center;
 }
 
@@ -2976,7 +2954,7 @@ div#currentVerse #matchbox .correct {
 .quickFlip, .quickFlipPanel {
     width: 	330px;
     height: 442px;	
-	padding-left: 0px;
+	padding-left: 0;
 	float: left;
 }
 
@@ -3176,7 +3154,7 @@ div#currentVerse #matchbox .correct {
 #test-chapter .quickFlip, .quickFlipPanel {
     width: 	370px;
     height: 296px;	/* <== Changed from test review */
-	padding-left: 0px;
+	padding-left: 0;
 }
 
 #test-chapter .refPanel {
@@ -3213,8 +3191,8 @@ div#currentVerse #matchbox .correct {
 }
 
 #test-chapter #flashcard-front-text {
-	margin-left: 0px;
-	margin-right: 0px;
+	margin-left: 0;
+	margin-right: 0;
 }
 
 #test-chapter #flashcard-back-text .verse-text {
@@ -3230,7 +3208,7 @@ div#currentVerse #matchbox .correct {
 
 /* === Prior Verses in Chapter === */
 #chapter-prior-verses {
-	margin-top: 0px;
+	margin-top: 0;
 	float: left;
 	width: 820px;
 	height: 550px;
@@ -3384,21 +3362,21 @@ div.video {
 
 /* === Verse Filtering === */
 #vsfilter {
-  padding: 10px;
-  font:bold 12px "Lucida Grande", Arial, sans-serif;
-  position: absolute;
-  right: 50px;
-  top: 100px;
-  display: none;
+  padding:10px;
+  font:bold 12px "Lucida Grande",Arial,sans-serif;
+  position:absolute;
+  right:50px;
+  top:100px;
+  display:none;
 }
 
 /* === Search Icon === */
 #searchico {
-  position: absolute;
-  right: 0px;
-  top: 100px;
-  display: none;
-  cursor: pointer;
+  position:absolute;
+  right:0;
+  top:100px;
+  display:none;
+  cursor:pointer;
 }
 
 .focusField{  
@@ -3408,111 +3386,111 @@ div.video {
 }
 .idleField{  
     background:#EEE;  
-    color: #6F6F6F;  
-    border: solid 2px #DFDFDF;  
+    color:#6F6F6F;  
+    border:solid 2px #DFDFDF;  
 }
 
 /* === Login Page === */
 
 #login-page-form {
-	width:	540px;
-	margin-left: 50px;
-	margin-top: 0.25em;
-	padding-top: 2em;
-	float: left;
-	font-size: 150%;
+	width:540px;
+	margin-left:50px;
+	margin-top:0.25em;
+	padding-top:2em;
+	float:left;
+	font-size:150%;
 }
 
 #login-page-form label {
-	width: 7em;
+	width:7em;
 }
 
 #login-page-form li#remember-me label {
-	font-size: 100%;
+	font-size:100%;
 }
 
 #intro-description {
-	margin-top: 0.1em;
-	margin-left: 25px;
-	float: left;
-	width:  500px;
-	height: 400px;
-	font-size: 125%;
+	margin-top:0.1em;
+	margin-left:25px;
+	float:left;
+	width:500px;
+	height:400px;
+	font-size:125%;
 }
 
 #intro-description li {
-	font-size: 100%;
+	font-size:100%;
 }
 
 
 /* === Signup Page === */
 
 #signup-page-form {
-    font-size: 140%;
-	width:	640px;
-	margin-left: 7%;
-	margin-top: 1.5em;
+    font-size:140%;
+	width:640px;
+	margin-left:7%;
+	margin-top:1.5em;
 }
 
 #signup-page-form label {
-	width: 8.5em;
+	width:8.5em;
 }
 
 #open-id-link {
-	font-size: 80%;
-	font-style: italic;
-	padding-left: 1em;	
+	font-size:80%;
+	font-style:italic;
+	padding-left:1em;	
 }
 
 /* === Forgotten password page (request email to be sent) === */
 
 #forgotten_password {
-	width: 550px;
+	width:550px;
 }
 
 #forgotten_password label {
-	width: 2.5em;
+	width:2.5em;
 }
 
 /* === Reset password page === */
 
 #reset_password {
-	width: 550px;
+	width:550px;
 }
 
 #reset_password label {
-	width: 5.5em;
+	width:5.5em;
 }
 
 #reset_password .buttons {
-	margin-left: 9em;
+	margin-left:9em;
 }
 
 /* === Edit Profile Page === */
 
 #edit-profile-form {
-	width:	600px;
+	width:600px;
 }
 
 #edit-profile-form label {
-	width: 15em;  /* changed from 12em on March 6 2010 */
-	padding-right: 0.5em;
+	width:15em;  /* changed from 12em on March 6 2010 */
+	padding-right:0.5em;
 }
 
 #edit-profile-form li {
-	padding-top: 	0.12em;
-	padding-bottom:	0.12em;
-	width: 570px;
-	list-style: none;
+	padding-top:0.12em;
+	padding-bottom:0.12em;
+	width:570px;
+	list-style:none;
 }
 
 #edit-profile-form .buttons {
-	margin-left: 	12em;
-	padding-top: 	0.25em;
-	margin-bottom:	0.7em;
+	margin-left:12em;
+	padding-top:0.25em;
+	margin-bottom:0.7em;
 }
 
-.autocomplete-w1 { background:url(../images/shadow.png) no-repeat bottom right; position:absolute; top:0px; left:0px; margin:8px 0 0 6px; /* IE6 fix: */ _background:none; _margin:0; }
+.autocomplete-w1 { background:url(../images/shadow.png) no-repeat bottom right; position:absolute; top:0; left:0; margin:8px 0 0 6px; /* IE6 fix: */ _background:none; _margin:0; }
 .autocomplete { border:1px solid #999; background:#FFF; cursor:default; text-align:left; max-height:350px; overflow:auto; margin:-6px 6px 6px -6px; /* IE6 specific: */ _height:350px;  _margin:0; _overflow-x:hidden; }
 .autocomplete .selected { background:#687284; } /* Background color for selected option */
 .autocomplete div { padding:2px 5px; white-space:nowrap; }
@@ -3521,66 +3499,66 @@ div.video {
 
 /* === Styles for home page === */
 .start-page-actions {
-	float: left;
-	width:  500px;
-	height: 220px;	
+	float:left;
+	width:500px;
+	height:220px;	
 }
 
 #getting_started {
-	float: left;
-	width:  800px;
-	height: 420px;	
+	float:left;
+	width:800px;
+	height:420px;	
 }
 
 .start-page-actions ol li {
-	font-size: 120%;
-	list-style-type: decimal;	
+	font-size:120%;
+	list-style-type:decimal;	
 }
 
 
 #volunteer a:link {
-	text-decoration: underline;
+	text-decoration:underline;
 }
 
 
 /* === Entry Forms === */
 
 .entry-form {
-	width:	360px;	
+	width:360px;	
 }
 
 .entry-form fieldset {
-	background-color: #BAB18E; /* light green */
+	background-color:#BAB18E; /* light green */
 }
 
 .entry-form legend {
-	background: #687284; /* dark green */
-	color: #1F2229; /* lightest green */
-	padding: 0.2em 1em;
+	background:#687284; /* dark green */
+	color:#1F2229; /* lightest green */
+	padding:0.2em 1em;
 }
 
 .entry-form label {
-	width: 6em;
-	float: left;
-	text-align: right;
-	margin-right: 0.5em;
-	display: block;
+	width:6em;
+	float:left;
+	text-align:right;
+	margin-right:0.5em;
+	display:block;
 }
 
 .entry-form .submit {
-	margin-left: 2.5em;
+	margin-left:2.5em;
 }
 
 .entry-form .buttons {
-	margin-left: 2.5em;
+	margin-left:2.5em;
 }
 
 /* === Forms: Errors === */
 
 div.fieldWithErrors {
-  padding: 2px;
-  background-color: red;
-  display: table;	
+  padding:2px;
+  background-color:red;
+  display:table;	
 }
 
 div.fieldWithErrors label {
