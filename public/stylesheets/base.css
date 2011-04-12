@@ -1379,13 +1379,18 @@ div#flash-error {
 	height:30px;
 	font-size:17px;
 	line-height:30px;
-	color:#999999;
+	color:#999;
 	float:left;
 }
 
 .top-heading h2 span
 {
-	color:#7ca529; 
+	color:#7ca529;
+}
+
+.top-heading h2 span.verse-ref, .top-heading h2 span.verse-tl
+{
+	color:#999;
 }
 
 .toggle-hint
