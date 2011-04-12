@@ -255,7 +255,9 @@ function insertondeck(ondeck, ondeck_prior) {
 	$("#verseguess").val('');									// Clear the input box 
 	$("#verseguess").focus();									// Put cursor in input box
 	$("#ajaxWrapper").text('');									// Clear the feedback 
-	alert(ondeck.text);
+	$("#complete-hint").hide();									// Hide the hint
+	$("#currentVerse").show();									// Show the feedback block
+	$(".toggle-hint").text("Show Hint");						// Reset show-hide hint toggle
 	$(".current-text").text(ondeck.text);						// Update current verse on back of flash card
 	$(".current-versenum").text(ondeck.versenum);				// Update verse number superscript
 	$('#ff-button').toggle(ondeck.skippable);					// Hide/Show fast forward button

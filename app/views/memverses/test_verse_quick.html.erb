@@ -112,8 +112,6 @@
 		var current				= {};
 		var user_id				= "<%= current_user.id %>";		
 
-	    $('.quickFlip').quickFlip();
-
 		$("table#upcoming-verses .upcoming-verse-ref:contains('<%=@mv.verse.ref%>')").remove()				
 			 
 		current.id		 = "<%= @mv.id %>";
