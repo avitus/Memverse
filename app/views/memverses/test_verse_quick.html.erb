@@ -5,8 +5,8 @@
 <div class="white-box-bg">
 	<div class="test-verse">
     	<div class="top-heading">
-        	<h2><span>Verse:</span><span class="verse-ref"><%=@mv.verse.ref%></span><span class="verse-tl"> [<%=@mv.verse.translation %>]</span></h2>
-            <div class="toggle-hint"><a href="#">Show Hint</a></div>
+        	<h2><span>Verse: </span><span class="verse-ref"><%=@mv.verse.ref%></span><span class="verse-tl"> [<%=@mv.verse.translation %>]</span></h2>
+            <div class="toggle-hint">Show Hint</div>
         </div>
         <div class="mnemonic"><%= @mv.mnemonic_if_req %></div>
         <div class="verse-test-area">
@@ -76,8 +76,8 @@
             <li class="gray2"><a href="#">Jn 15:7</a></li>
         </ul>
         <div class="upcoming-button">
-        	<a href="#"><img src="/images/add-more.png" width="192" height="25" alt="" /></a>
-            <a href="#"><img src="/images/modify.png" width="192" height="25" alt="" /></a>
+        	<%= link_to image_tag("add-more.png", :width=>"192", :height=>"25", :alt=>"Add More Verses"), add_verse_path %>
+            <%= link_to image_tag("modify.png", :width=>"192", :height=>"25", :alt=>"Modify Bible Version"), update_profile_path %>
         </div>
     </div>
     <div class="clr"></div>
@@ -106,6 +106,15 @@
 			}
 			
 		});
+				
+		$(".toggle-hint").hover(
+			function () {
+				$(this).addClass("hover1");
+			},
+			function () {
+				$(this).removeClass("hover1");
+			}
+		);
 			
 		var ondeck 				= {};
 		var prior               = {};

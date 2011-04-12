@@ -1400,25 +1400,17 @@ div#flash-error {
 .toggle-hint
 {
 	background:url(../images/plus.png) no-repeat right center;
-	width:81px;
+	width:85px;
 	height:30px;
 	float:right;
 	color:#999;
 	line-height:30px;
 	font-size:13px;
 	font-weight:bold;
+	cursor:pointer;
 }
 
-.toggle-hint a
-{
-	width:81px;
-	height:30px;
-	display:block;
-	color:#999;
-	text-decoration:none;
-}
-
-.toggle-hint a:hover
+.hover1
 {
 	color:#333;
 	text-decoration:none;
