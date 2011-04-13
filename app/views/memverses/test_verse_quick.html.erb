@@ -183,7 +183,7 @@
 				$.getJSON("/mark_test_quick", { mv: prior.id, q: q  }, 			    // Score verse
 					function(data) {
 						if (data.msg) {	alert(data.msg); }							// Give user a nice response												
-						update_upcoming(12, ondeck.mv.id);							// Req successful callback from mark_test_quick: Update upcoming verses
+						update_upcoming(20, ondeck.mv.id);							// Req successful callback from mark_test_quick: Update upcoming verses
 						ondeck = stageverses(current.id);							// Req successful callback from mark_test_quick: Get next verses				
 				});					
 				return (false);	

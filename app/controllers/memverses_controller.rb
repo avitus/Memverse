@@ -1499,7 +1499,7 @@ class MemversesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   # Respond to AJAX request for upcoming verses
   # ----------------------------------------------------------------------------------------------------------  
-  def upcoming_verses(limit = 12, mode = "test")
+  def upcoming_verses(limit = 20, mode = "test")
     
     current_mv_id = params[:mv_id]
     

@@ -10,7 +10,7 @@ javascripts:
   - jquery.periodicalupdater
   - jquery.jeditable
   - jquery.autocomplete
-  - modernizr-1.6.min
+  - modernizr-1.7.min
   - jquery.shuffle
   - jquery.observe_field
   - jquery.blockUI
