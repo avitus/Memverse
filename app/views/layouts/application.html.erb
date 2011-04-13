@@ -2,9 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-				
+
 <title><%= page_title %></title>
-	
+
 <meta name="distribution" content="all" />
 <meta name="robots" content="all" />	
 <meta name="resource-type" content="document" />
@@ -12,7 +12,7 @@
 
 <meta name="description" content="<%= page_description %>" />	
 <meta name="keywords" content="memorize bible, memorize scripture, popular bible verses, memorize bible verses," />	
-	
+
 <!-- Facebook Open Graph tags -->
 <meta property="og:title"		content="<%= page_title || Memverse %>"/>	
 <meta property="og:type"		content="website"/>	
@@ -21,7 +21,7 @@
 <meta property="og:site_name"	content="Memverse"/>	
 <meta property="fb:admins"		content="1799626379, kyrriana"/>
 <meta property="og:description" content="A community of believers memorizing the bible"/>
-		
+
 <!-- Google, Microsoft verification -->
 <meta name="verify-v1" content="IrqDYi2zxAyS8GUAqQcyXvnmcxhtuNITeCIFYLa76LQ=" />	
 <meta name="msvalidate.01" content="A1BB69E880870637C825F612E2FA4034" />				
@@ -35,7 +35,7 @@
 
 <!-- Rails 3 XSS protection -->
 <%= csrf_meta_tag %>
-		
+
 <!-- Main Stylesheets (using Asset Packager) -->
 <%= stylesheet_link_merged :base %>
 
@@ -99,30 +99,30 @@
 <noscript><div id="no-js"><p>Memverse requires Javascript, but you&rsquo;ve got Javascript disabled. <a href="http://www.google.com/search?btnI=1&amp;q=how+to+enable+javascript+in+my+browser">Fix that problem!</a></p></div></noscript>
 <div id="wrapper"><!--wrapper start-->
 	<div id="header"><!--header start-->
-    	<div class="header-top"><!--header-top start-->
-        	<div id="logo"><a href="/" title="<%= I18n.t :mainpage, :scope => 'page_titles' %> - Memverse"><img src="/images/logo.png" width="253" height="31" alt="" /></a></div>
-            <% if logged_in? %>
-	            <div class="inner-top-right"><!--inner-top-right start-->
-	                <strong>Welcome:</strong> <%= current_user.name_or_login %>
-	            </div><!--inner-top-right end-->
-            <% else %>
-	            <div class="top-right"><!--top-right start-->        
-		        	<div class="resize">
-		            	<a class="fontblk" id="large" title="Increase Font Size"></a>
-		                <a class="fontblk" id="small" title="Decrease Font Size"></a>
-		            </div>
-		            
-		        	<div class="iphone">iPhone / iPad App (coming soon):</div>
-		            
-		            <div class="button">
-		            	<ul>
-		                	<li><%= link_to 'SIGN UP', signup_path %></li>
-		                    <li><%= link_to 'LOG IN', login_path %></li>
-		                </ul>
-		            </div>
-	            </div><!--top-right end-->
-            <% end %>
-        </div><!--header-top end-->
+		<div class="header-top"><!--header-top start-->
+			<div id="logo"><a href="/" title="<%= I18n.t :mainpage, :scope => 'page_titles' %> - Memverse"><img src="/images/logo.png" width="253" height="31" alt="" /></a></div>
+			<% if logged_in? %>
+				<div class="inner-top-right"><!--inner-top-right start-->
+					<strong>Welcome:</strong> <%= current_user.name_or_login %>
+				</div><!--inner-top-right end-->
+			<% else %>
+				<div class="top-right"><!--top-right start-->        
+					<div class="resize">
+						<a class="fontblk" id="large" title="Increase Font Size"></a>
+						<a class="fontblk" id="small" title="Decrease Font Size"></a>
+					</div>
+
+					<div class="iphone">iPhone / iPad App (coming soon):</div>
+
+					<div class="button">
+						<ul>
+							<li><%= link_to 'SIGN UP', signup_path %></li>
+							<li><%= link_to 'LOG IN', login_path %></li>
+						</ul>
+					</div>
+				</div><!--top-right end-->
+			<% end %>
+		</div><!--header-top end-->
 
 		<% if logged_in? %>
 			<div id="menu-tabs" class="menu">
@@ -134,13 +134,13 @@
 					<li <%= tab(@tab=="contact"		).html_safe %> rel="contact">		<%= link_to t('menu.contact').html_safe, 		contact_path %></li>	
 					<li <%= tab(@tab=="leaderboard"	).html_safe %> rel="leaderboard">	<%= link_to t('menu.leaderboard').html_safe, 	leaderboard_path %></li>	
 					<li <%= tab(@tab=="blog"		).html_safe %> rel="blog">			<%= link_to t('menu.blog').html_safe, 			blog_path %></li>
-	                <li>&nbsp;</li>
+					<li>&nbsp;</li>
 				</ul>
-				
+
 				<div class="submenu"><!--submenu start-->
-		
-		    		<div class="submenu-left">
-		
+
+					<div class="submenu-left">
+
 						<div id="homepage" class="submenustyle">
 							<ul>							
 								<li><%= link_to t('home_menu.My Verses'),				manage_verses_path %></li>
@@ -152,7 +152,7 @@
 								<li><%= link_to t('home_menu.News'),					news_path %></li>
 							</ul>	
 						</div>
-			
+
 						<div id="memory" class="submenustyle">
 							<ul>							
 								<li><%= link_to t('memorize_menu.Memorize'),			test_verse_quick_path %></li>
@@ -162,7 +162,7 @@
 								<li><%= link_to t('memorize_menu.Chapter Review'), 		pre_chapter_path %></li>	
 							</ul>	
 						</div>
-						
+
 						<div id="tutorials" class="submenustyle">
 							<ul>
 								<li><%= link_to t('learn_menu.Tutorial'), 				tutorial_path %></li>
@@ -170,7 +170,7 @@
 								<li><%= link_to t('learn_menu.Video Tutorial'), 		"http://www.youtube.com/watch?v=vVtT6T-CXo8&fs=1&feature=player_embedded", :id => 'tut-video' %></li>
 							</ul>
 						</div>
-			
+
 						<div id="profile" class="submenustyle">
 							<ul>
 								<li><%= link_to t('profile_menu.Dashboard'), 			current_user %></li>					
@@ -179,7 +179,7 @@
 								<li><%= link_to t('profile_menu.Referrals'), 			referrals_path(current_user) %></li>
 							</ul>
 						</div>
-			
+
 						<div id="contact" class="submenustyle">
 							<ul>
 								<li><%= link_to t('contact_menu.Contact'), 				contact_path %></li>
@@ -187,7 +187,7 @@
 								<li><%= link_to t('contact_menu.Volunteer'), 			volunteer_path %></li>
 							</ul>
 						</div>
-						
+
 						<div id="leaderboard" class="submenustyle">
 							<ul>
 								<li><%= link_to t('leader_menu.Leaderboard'),			leaderboard_path %></li>
@@ -196,9 +196,9 @@
 								<li><%= link_to t('leader_menu.Country Leaderboard'), 	countryboard_path %></li>
 								<li><%= link_to t('leader_menu.Referralboard'), 		referralboard_path %></li>						
 								<li><%= link_to t('leader_menu.One Church'), 			memverse_clock_path %></li>	
-							</ul>					
-						</div>					
-			
+							</ul>
+						</div>			
+
 						<div id="blog" class="submenustyle">
 							<ul>
 								<li><%= link_to t('blog_menu.View Blog'), 				blog_path %></li>
@@ -209,60 +209,60 @@
 					</div><!--submenu-left end-->
 					<div class="submenu-icon submenustyle"><a href="#"><img src="/images/new-icon.png" width="32" height="32" alt="" /></a></div>
 		        	<div class="clr"></div>
-		        	
+
 				</div><!--submenu end-->				
 			</div>  <!-- End of Menu Tabs -->
-		    <div class="breadcum-area"><!--breadcum start-->
-		    	<div class="breadcum-left">
-		        	<span class="home-icon"><a href="/"><img src="/images/home-icon.png" width="25" height="23" alt="" /></a></span>
-		            <div class="breadcum-link">
-		            	<ul>
-		                	<li><a href="#">Bread Crumb</a></li>
-		                    <li><a href="#">Navigation</a></li>
-		                </ul>
-		            </div>
-		        </div>
-		        <div class="breadcum-right">
-		        	<%= link_to image_tag("your-verses.png", :width=>"172", :height=>"25", :alt=>"Your Verses"), manage_verses_path %>
-		            <%= link_to image_tag("more-verses.png", :width=>"192", :height=>"25", :alt=>"Add More Verses"), add_verse_path %>
-		        </div>
-		    </div><!--breadcum end-->
-		    
-		    <div id="flash" class="flash gray-box-bg"><!--flash start-->
-		    	<%= flash_messages || t('messages.today_msg_html', :due_today => current_user.due_verses, :time => current_user.work_load) %>
-		    </div><!--flash end-->
-	    <% else # if not logged in %>
-              <div class="menu menu-main-only"><!--menu start-->
-                <ul>
-            	  <li><%= link_to t('menu.home').html_safe, home_path %></li>
-            	  <li><%= link_to t('menu.memorize').html_safe, test_verse_path %></li>
-            	  <li><%= link_to t('menu.learn').html_safe, tutorial_path %></li>
-            	  <li><%= link_to t('menu.profile').html_safe, current_user %></li>
-            	  <li><%= link_to t('menu.leaderboard').html_safe, leaderboard_path %></li>
-            	  <li><%= link_to t('contact_menu.Help'), faq_path %></li>
-            	  <li><%= link_to t('menu.blog').html_safe, blog_path %></li>
-            	  <li><%= link_to t('menu.contact').html_safe, contact_path %></li>
-            	  <li>&nbsp;</li>
-                </ul>
-              </div><!--menu end-->
-	    <% end %><!-- if logged_in? -->
+			<div class="breadcum-area"><!--breadcum start-->
+				<div class="breadcum-left">
+					<span class="home-icon"><a href="/"><img src="/images/home-icon.png" width="25" height="23" alt="" /></a></span>
+					<div class="breadcum-link">
+						<ul>
+							<li><a href="#">Bread Crumb</a></li>
+							<li><a href="#">Navigation</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="breadcum-right">
+					<%= link_to image_tag("your-verses.png", :width=>"172", :height=>"25", :alt=>"Your Verses"), manage_verses_path %>
+					<%= link_to image_tag("more-verses.png", :width=>"192", :height=>"25", :alt=>"Add More Verses"), add_verse_path %>
+				</div>
+			</div><!--breadcum end-->
+
+			<div id="flash" class="flash gray-box-bg"><!--flash start-->
+				<%= flash_messages || t('messages.today_msg_html', :due_today => current_user.due_verses, :time => current_user.work_load) %>
+			</div><!--flash end-->
+		<% else # if not logged in %>
+			<div class="menu menu-main-only"><!--menu start-->
+				<ul>
+					<li><%= link_to t('menu.home').html_safe, home_path %></li>
+					<li><%= link_to t('menu.memorize').html_safe, test_verse_path %></li>
+					<li><%= link_to t('menu.learn').html_safe, tutorial_path %></li>
+					<li><%= link_to t('menu.profile').html_safe, current_user %></li>
+					<li><%= link_to t('menu.leaderboard').html_safe, leaderboard_path %></li>
+					<li><%= link_to t('contact_menu.Help'), faq_path %></li>
+					<li><%= link_to t('menu.blog').html_safe, blog_path %></li>
+					<li><%= link_to t('menu.contact').html_safe, contact_path %></li>
+					<li>&nbsp;</li>
+				</ul>
+			</div><!--menu end-->
+		<% end %><!-- if logged_in? -->
 	</div> <!--header end-->
-    
-    <div><img src="/images/trans.png" width="1" height="10" alt="" /></div>
-    
-    <!--Content Block -->
-    <div class="page-content">
+
+	<div><img src="/images/trans.png" width="1" height="10" alt="" /></div>
+
+	<!--Content Block -->
+	<div class="page-content">
 		<%= content_for?(:content) ? yield(:content) : yield %>
-    </div>
-    
-    <div><img src="/images/trans.png" width="1" height="10" alt="" />&nbsp;</div>
-    
-    <div class="clr"></div>
-    
-    <div id="footer"><!--footer start-->
-    	&copy; <%= Date.today.year %> Memverse  <span><a href="mailto:info@memverse.com">info@memverse.com</a></span>
-    </div><!--footer end-->
-    
+	</div>
+
+	<div><img src="/images/trans.png" width="1" height="10" alt="" />&nbsp;</div>
+
+	<div class="clr"></div>
+
+	<div id="footer"><!--footer start-->
+		&copy; <%= Date.today.year %> Memverse  <span><a href="mailto:info@memverse.com">info@memverse.com</a></span>
+	</div><!--footer end-->
+
 </div><!--wrapper end-->
 
 <!-- Start of Menu Tab Code  -->
@@ -302,7 +302,7 @@
 		});	
 	});	
 </script>
-	
+
 <!-- Start of Get Satisfaction Script  -->		
 <script type="text/javascript">
   var is_ssl = ("https:" == document.location.protocol);
@@ -326,8 +326,7 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 		$('#flash').click( function() {
-			$(this).children('a').hide(); 
-			
+			$(this).children('a').hide();
 		});
 	});
 </script>
