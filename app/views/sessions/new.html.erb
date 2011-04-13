@@ -216,7 +216,7 @@
 				</div>
 				<div class="button-area">
 					<div class="forgot">
-						<input name="" type="radio" value="" /> Forgot Password
+						<%= check_box_tag 'remember_me', '1', @remember_me %> <%= label_tag 'remember_me', 'Remember me' %> <%= link_to 'Forgot Password', forgot_password_path %>
 					</div>
 					<div class="right-button">
 						<%= submit_tag '', :class => "submit-button" %>
