@@ -1504,7 +1504,7 @@ class MemversesController < ApplicationController
     current_mv_id = params[:mv_id]
     
     @upcoming_verses = current_user.upcoming_verses(limit, mode, current_mv_id)
-    
+       
     respond_to do |format|
       format.html { render :partial=>'upcoming_verses', :layout=>false }
       format.xml  { render :xml => @upcoming_verses }

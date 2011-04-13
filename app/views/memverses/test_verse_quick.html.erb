@@ -61,22 +61,12 @@
 			</p>			
 		</div>
 
-
     </div>
     
     <div class="upcoming">
     	<h2>Upcoming Verses</h2>
-        <ul>
-        	<li class="gray2"><a href="#">Jn 15:7</a></li>
-            <li class="white2"><a href="#">Jn 15:7</a></li>
-            <li class="gray2"><a href="#">Jn 15:7</a></li>
-            <li class="white2"><a href="#">Jn 15:7</a></li>
-            <li class="gray2"><a href="#">Jn 15:7</a></li>
-            <li class="white2"><a href="#">Jn 15:7</a></li>
-            <li class="gray2"><a href="#">Jn 15:7</a></li>
-        </ul>
+		<%= render :partial => "upcoming_verses" %>						
         <div class="upcoming-button">
-        	<%= link_to image_tag("add-more.png", :width=>"192", :height=>"25", :alt=>"Add More Verses"), add_verse_path %>
             <%= link_to image_tag("modify.png", :width=>"192", :height=>"25", :alt=>"Modify Bible Version"), update_profile_path %>
         </div>
     </div>
@@ -172,7 +162,7 @@
 			q = $(this).attr("q");
 				
 			// == Remove verse from list of upcoming verses
-			$("table#upcoming-verses .upcoming-verse-ref:contains(" + ondeck.mv.ref + ")").remove()				
+			$("ul#upcoming-verses .upcoming-verse-ref:contains(" + ondeck.mv.ref + ")").remove()				
 				
 			// Check whether we're done for the day
 			if (ondeck.finished) {
