@@ -516,7 +516,7 @@ class User < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   # Returns upcoming verses that need to be tested today for this user
   # ----------------------------------------------------------------------------------------------------------  
-  def upcoming_verses(limit = 15, mode = "test", mv_id = nil)
+  def upcoming_verses(limit = 20, mode = "test", mv_id = nil)
     
     mvs = Memverse.find(:all, :conditions => ["user_id = ? and next_test <= ?", self.id, Date.today], :order => "next_test ASC", :limit => limit)
     current_mv = Memverse.find(mv_id) unless mv_id.nil?

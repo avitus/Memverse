@@ -190,7 +190,7 @@ var totalChecked = 0; // Number of visible checkboxes checked.
 
 function update_upcoming(num_verses, mv_id) {
 	$.ajax( {
-		url:		'/upcoming_verses',
+		url:		'/upcoming_verses.html',
 		dataType:	'html',
 		async:		true,
 		data:		{ mv_id: mv_id },
