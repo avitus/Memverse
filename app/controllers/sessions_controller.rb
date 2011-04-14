@@ -3,9 +3,10 @@ class SessionsController < ApplicationController
   
   def new
     session[:referrer] = params[:referrer]
+    @blogposts = BlogPost.all(:limit => 2, :order => "created_at DESC", :conditions => ["is_complete = ?", true])
     render :layout => false
   end
-
+  
   def create
     logout_keeping_session! # Make sure to kill all session variable in ./lib/authenticated_system.rb
     password_authentication

@@ -29,24 +29,23 @@
 <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js"></script>
-	<script type="text/javascript">
-       $(function(){
-               $('.fontblk').click(function(){
-                       var ourText = $(' p');
-                       var currFontSize = ourText.css('fontSize');
-                       var finalNum = parseFloat(currFontSize, 10);
-                       var stringEnding = currFontSize.slice(-2);
-                       if(this.id == 'large') {
-                               finalNum *= 1.2;
-                       }
-                       else if (this.id == 'small'){
-                               finalNum /=1.2;
-                       }
-                       ourText.animate({fontSize: finalNum + stringEnding},600);
-               });
-       });
-
-	</script>
+<script type="text/javascript">
+	$(function(){
+		$('.fontblk').click(function(){
+			var ourText = $(' p');
+			var currFontSize = ourText.css('fontSize');
+			var finalNum = parseFloat(currFontSize, 10);
+			var stringEnding = currFontSize.slice(-2);
+			if(this.id == 'large') {
+				finalNum *= 1.2;
+			}
+			else if (this.id == 'small'){
+				finalNum /=1.2;
+			}
+			ourText.animate({fontSize: finalNum + stringEnding},600);
+		});
+	});
+</script>
 
 <!--[if IE 6]>
 <style type="text/css">
@@ -80,205 +79,175 @@
 </head>
 
 <body>
-	
+
 <div id="wrapper"><!--wrapper start-->
 
 	<div id="header"><!--header start-->
-    	<div class="header-top-narrow"><!--header-top start-->
-        	<div id="logo"><a href="/" title="<%= I18n.t :mainpage, :scope => 'page_titles' %> - Memverse"><img src="/images/logo.png" width="253" height="31" alt="" /></a></div>
-            <% if logged_in? %>
-	            <div class="inner-top-right"><!--inner-top-right start-->
-	                <strong>Welcome:</strong> <%= current_user.name_or_login %>
-	            </div><!--inner-top-right end-->
-            <% else %>
-            <div class="top-right"><!--top-right start-->
-            
-            	<div class="resize">
-                	<a class="fontblk" id="large" title="Increase Font Size"></a>
-                    <a class="fontblk" id="small" title="Decrease Font Size"></a>
-                </div>
-                
-            	<div class="iphone">iPhone / iPad App (coming soon):</div>
-                
-                <div class="button">
-                	<ul>
-                    	<li><%= link_to 'SIGN UP', signup_path %></li>
-                        <li><a href="#login">LOG IN</a></li>
-                    </ul>
-                </div>
-                
-            </div><!--top-right end-->
-            <% end %>
-        </div><!--header-top end-->
-        
-        <div class="menu menu-main-only"><!--menu start-->
-        	<ul>
-            	<li><%= link_to t('menu.home').html_safe, home_path %></li>
-                <li><%= link_to t('menu.memorize').html_safe, test_verse_path %></li>
-                <li><%= link_to t('menu.learn').html_safe, tutorial_path %></li>
-                <li><%= link_to t('menu.profile').html_safe, current_user %></li>
-                <li><%= link_to t('menu.leaderboard').html_safe, leaderboard_path %></li>
-                <li><%= link_to t('contact_menu.Help'), faq_path %></li>
-                <li><%= link_to t('menu.blog').html_safe, blog_path %></li>
-                <li><%= link_to t('menu.contact').html_safe, contact_path %></li>
-                <li>&nbsp;</li>
-            </ul>
-        </div><!--menu end-->
-    </div><!--header end-->
-    <div><img src="/images/trans.png" width="1" height="8" alt="" /></div>
-    
+		<div class="header-top-narrow"><!--header-top start-->
+			<div id="logo"><a href="/" title="<%= I18n.t :mainpage, :scope => 'page_titles' %> - Memverse"><img src="/images/logo.png" width="253" height="31" alt="" /></a></div>
+			<% if logged_in? %>
+				<div class="inner-top-right"><!--inner-top-right start-->
+					<strong>Welcome:</strong> <%= current_user.name_or_login %>
+				</div><!--inner-top-right end-->
+			<% else %>
+			<div class="top-right"><!--top-right start-->
+
+				<div class="resize">
+					<a class="fontblk" id="large" title="Increase Font Size"></a>
+					<a class="fontblk" id="small" title="Decrease Font Size"></a>
+				</div>
+
+				<div class="iphone">iPhone / iPad App (coming soon):</div>
+
+				<div class="button">
+					<ul>
+						<li><%= link_to 'SIGN UP', signup_path %></li>
+						<li><a href="#login">LOG IN</a></li>
+					</ul>
+				</div>
+
+			</div><!--top-right end-->
+			<% end %>
+		</div><!--header-top end-->
+
+		<div class="menu menu-main-only"><!--menu start-->
+			<ul>
+				<li><%= link_to t('menu.home').html_safe, home_path %></li>
+				<li><%= link_to t('menu.memorize').html_safe, test_verse_path %></li>
+				<li><%= link_to t('menu.learn').html_safe, tutorial_path %></li>
+				<li><%= link_to t('menu.profile').html_safe, current_user %></li>
+				<li><%= link_to t('menu.leaderboard').html_safe, leaderboard_path %></li>
+				<li><%= link_to t('contact_menu.Help'), faq_path %></li>
+				<li><%= link_to t('menu.blog').html_safe, blog_path %></li>
+				<li><%= link_to t('menu.contact').html_safe, contact_path %></li>
+				<li>&nbsp;</li>
+			</ul>
+		</div><!--menu end-->
+	</div><!--header end-->
+	<div><img src="/images/trans.png" width="1" height="8" alt="" /></div>
+
 <div id="news-strip"><!--news-strip start-->
 	<div class="strip-left">Verse Illumination:</div>
-    <div class="strip-right">
-    	<span>Romans 10:9:</span> "That if thou shalt confess with thy mouth the Lord Jesus, and shalt believe in thine heart ..."
-        <div class="arrow-left"><a href="#"><img src="/images/arrow-left.png" width="15" height="26" alt="" /></a></div>
-        <div class="arrow-right"><a href="#"><img src="/images/arrow-right.png" width="15" height="26" alt="" /></a></div>
-    </div>
+	<div class="strip-right">
+		<span>Romans 10:9:</span> "That if thou shalt confess with thy mouth the Lord Jesus, and shalt believe in thine heart ..."
+		<div class="arrow-left"><a href="#"><img src="/images/arrow-left.png" width="15" height="26" alt="" /></a></div>
+		<div class="arrow-right"><a href="#"><img src="/images/arrow-right.png" width="15" height="26" alt="" /></a></div>
+	</div>
 </div><!--news-strip end-->
 
 <div><img src="/images/trans.png" width="1" height="20" alt="" /></div>
 
 <div id="banner-bg"><!--banner-bg start-->
 	<div class="banner-top"><!--banner-top start-->
-    	<div class="banner-img"><img src="/images/banner-img.png" width="209" height="211" alt="" /></div>
-        <div class="banner-text">
-        	<h1>Learn God's Word Like Never Before:</h1>
-            <div class="text-left">
-            	<ul>
-                	<li><a href="#">Quickly memorize Bible verses</a></li>
-                    <li><a href="#">100% Online (No software to download)</a></li>
-                    <li><a href="#">No flash cards to carry around or lose</a></li>
-                </ul>
-            </div>
-            <div class="text-right">
-            	<ul>
-                	<li><a href="#">An optimal review system</a></li>
-                    <li><a href="#">Proceed at your own pacee</a></li>
-                    <li class="free"><a href="#">IT'S FREE!</a></li>
-                </ul>
-            </div>
-            <div class="clr"></div>
-        </div>
-    </div><!--banner-top end-->
-    <div class="banner-bottom"><!--banner-bottom start-->
-    	<ul>
-            <li><%= link_to 'try the memverse demo', demo_path %></li>
-            <li><%= link_to 'top 100 memory verses', popular_path %></li>
-            <li><%= link_to 'learn more', tutorial_path %></li>
-            <li><%= link_to 'sign up today', signup_path, :class => 'active' %></li>
-        </ul>
-    </div><!--banner-bottom end-->
+		<div class="banner-img"><img src="/images/banner-img.png" width="209" height="211" alt="" /></div>
+		<div class="banner-text">
+			<h1>Learn God's Word Like Never Before:</h1>
+			<div class="text-left">
+				<ul>
+					<li><a href="#">Quickly memorize Bible verses</a></li>
+					<li><a href="#">100% Online (No software to download)</a></li>
+					<li><a href="#">No flash cards to carry around or lose</a></li>
+				</ul>
+			</div>
+			<div class="text-right">
+				<ul>
+					<li><a href="#">An optimal review system</a></li>
+					<li><a href="#">Proceed at your own pacee</a></li>
+					<li class="free"><a href="#">IT'S FREE!</a></li>
+				</ul>
+			</div>
+			<div class="clr"></div>
+		</div>
+	</div><!--banner-top end-->
+	<div class="banner-bottom"><!--banner-bottom start-->
+		<ul>
+			<li><%= link_to 'try the memverse demo', demo_path %></li>
+			<li><%= link_to 'top 100 memory verses', popular_path %></li>
+			<li><%= link_to 'learn more', tutorial_path %></li>
+			<li><%= link_to 'sign up today', signup_path, :class => 'active' %></li>
+		</ul>
+	</div><!--banner-bottom end-->
 </div><!--banner-bg end-->
 
 <div><img src="/images/trans.png" width="1" height="10" alt="" /></div>
 
 <div id="content"><!--content start-->
 	<div class="content-box1"><!--box1 start-->
-    <div class="content-box1-bottom">
-    <div class="content-box1-top">
-    	<h2>How it works</h2>
+	<div class="content-box1-bottom">
+	<div class="content-box1-top">
+		<h2>How it works</h2>
 		<div class="text-area1">
-        	<div class="content-row">
-            	<div class="content-icon"><img src="/images/icon1.png" width="32" height="28" alt="" /></div>
-                <div class="content-text">
-                	<h3>Memorization</h3>
-                    <p>When you login, Memverse will present you with the verses that you are due to revise. The timing between revisions is calculated by the software so you don't need to keep track of this yourself.</p>
-                    <span class="learn-more"><a href="#">Learn More</a></span>
-                </div>
-                <div class="clr"></div>
-            </div>
 			<div class="content-row">
-            	<div class="content-icon"><img src="/images/icon5.png" width="48" height="41" alt="" /></div>
-                <div class="content-text">
-                	<h3>Tracking Your Progress</h3>
-                    <p>Memverse will keep track of all your memory verses and will show you how you are progressing. It will recommend that you add new verses at the appropriate time.</p>
-                    <span class="learn-more"><a href="#">Learn More</a></span>
-                </div>
-                <div class="clr"></div>
-            </div>
-        </div>
-    </div>
-    </div>
-    </div><!--box1 end-->
+				<div class="content-icon"><img src="/images/icon1.png" width="32" height="28" alt="" /></div>
+				<div class="content-text">
+					<h3>Memorization</h3>
+					<p>When you login, Memverse will present you with the verses that you are due to revise. The timing between revisions is calculated by the software so you don't need to keep track of this yourself.</p>
+					<span class="learn-more"><a href="#">Learn More</a></span>
+				</div>
+				<div class="clr"></div>
+			</div>
+			<div class="content-row">
+				<div class="content-icon"><img src="/images/icon5.png" width="48" height="41" alt="" /></div>
+				<div class="content-text">
+					<h3>Tracking Your Progress</h3>
+					<p>Memverse will keep track of all your memory verses and will show you how you are progressing. It will recommend that you add new verses at the appropriate time.</p>
+					<span class="learn-more"><a href="#">Learn More</a></span>
+				</div>
+				<div class="clr"></div>
+			</div>
+		</div>
+	</div>
+	</div>
+	</div><!--box1 end-->
     
-    <div class="content-box2"><!--box2 start-->
-    <div class="content-box2-bottom">
-    <div class="content-box2-top">
-    	<h2>Memverse Blog</h2>
-        <div class="text-area2">
-        	<div class="content2-row">
-            	<div class="content2-icon"><img src="/images/clock.png" width="16" height="16" alt="" /></div>
-                <div class="content2-text">
-                	<h3>Print Your Memory Verses</h3>
-                    <span class="post-date">Posted on December 26, 2009</span>
-                    <p>I realize that the raison d'etre for Memverse was (in part) the elimination of bible flash cards...</p>
-                    <span class="learn-more"><a href="#">Read More</a></span>
-                </div>
-                <div class="clr"></div>
-            </div>
-            <div class="content2-row">
-            	<div class="content2-icon"><img src="/images/clock.png" width="16" height="16" alt="" /></div>
-                <div class="content2-text">
-                	<h3>Print Your Memory Verses</h3>
-                    <span class="post-date">Posted on December 26, 2009</span>
-                    <p>I realize that the raison d'etre for Memverse was (in part) the elimination of bible flash cards...</p>
-                    <span class="learn-more"><a href="#">Read More</a></span>
-                </div>
-                <div class="clr"></div>
-            </div>
-        </div>
-    </div>
-    </div>
-    </div><!--box2 end-->
+    <%= render "sessions/box2" %>
     
-    <div class="content-box3-area"><!--box3-area start-->
-    <div class="content-box3"><!--box3 start-->
-    <div class="content-box3-bottom">
-    <div class="content-box3-top">
-    	<a name="login"></a><h2 class="red">Sign In</h2>
-    	
-        <div class="sign-field">
-        	<%= form_tag session_path do %>
-            	<div>
-                	<%= text_field_tag 'login', @login, :class => "new-field" %>
-                	<%= password_field_tag 'password', nil, :class => "new-field" %>
-                </div>
-                <div class="button-area">
-                	<div class="forgot">
-                    	<input name="" type="radio" value="" />
-                        Forgot Password
-                    </div>
-                    <div class="right-button">
-                    	<%= submit_tag '', :class => "submit-button" %>
-                    </div>
-                </div>
-            <% end 	%>
-        </div>
-                
-        
-    </div>
-    </div>
-    </div><!--box3 end-->
-    	<div class="content-box3 nomar"><!--box3 start-->
-    <div class="content-box3-bottom">
-    <div class="content-box3-top2">
-    	<h2 class="gray">Volunteer</h2>
-        <div class="volunteers">
-        	<p>We are looking for <span><a href="#">volunteers</a></span> in a variety of areas. If you'd like to help, we'd like to hear from you...</p>
-            <div class="learn-area"><%= link_to image_tag("learn-more.png", :width=>"179", :height=>"25", :alt=>"Volunteer"), volunteer_path %></div>
-        </div>
-    </div>
-    </div>
-    </div><!--box3 end-->
-    </div><!--box3-area end-->
-    
-    <div class="clr"></div>
+	<div class="content-box3-area"><!--box3-area start-->
+	<div class="content-box3"><!--box3 start-->
+	<div class="content-box3-bottom">
+	<div class="content-box3-top">
+		<a name="login"></a><h2 class="red">Sign In</h2>
+
+		<div class="sign-field">
+			<%= form_tag session_path do %>
+				<div>
+					<%= text_field_tag 'login', @login, :class => "new-field" %>
+					<%= password_field_tag 'password', nil, :class => "new-field" %>
+				</div>
+				<div class="button-area">
+					<div class="forgot">
+						<%= check_box_tag 'remember_me', '1', @remember_me %> <%= label_tag 'remember_me', 'Remember me' %> 
+						<%= link_to 'Forgot Password', forgot_password_path %>						
+					</div>
+					<div class="right-button">
+						<%= submit_tag '', :class => "submit-button" %>
+					</div>
+				</div>
+			<% end 	%>
+		</div>
+	</div>
+	</div>
+	</div><!--box3 end-->
+	<div class="content-box3 nomar"><!--box3 start-->
+	<div class="content-box3-bottom">
+	<div class="content-box3-top2">
+		<h2 class="gray">Volunteer</h2>
+		<div class="volunteers">
+			<p>We are looking for <span><a href="#">volunteers</a></span> in a variety of areas. If you'd like to help, we'd like to hear from you...</p>
+			<div class="learn-area"><%= link_to image_tag("learn-more.png", :width=>"179", :height=>"25", :alt=>"Volunteer"), volunteer_path %></div>
+		</div>
+	</div>
+	</div>
+	</div><!--box3 end-->
+	</div><!--box3-area end-->
+
+	<div class="clr"></div>
 </div><!--content end-->
     
-    <div id="footer"><!--footer start-->
-    	&copy; <%= Date.today.year %> Memverse  <span><a href="#">info@memverse.com</a></span>
-    </div><!--footer end-->
-    
+	<div id="footer"><!--footer start-->
+		&copy; <%= Date.today.year %> Memverse  <span><a href="mailto:info@memverse.com">info@memverse.com</a></span>
+	</div><!--footer end-->
+
 </div><!--wrapper end-->
 </body>
 </html>

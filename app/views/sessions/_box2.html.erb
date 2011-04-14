@@ -1,0 +1,21 @@
+<div class="content-box2"><!--box2 start-->
+	<div class="content-box2-bottom">
+	<div class="content-box2-top">
+		<h2>Memverse Blog</h2>
+		<div class="text-area2">
+			<% for blog_post in @blogposts %>
+			<div class="content2-row">
+				<div class="content2-icon"><img src="/images/clock.png" width="16" height="16" alt="" /></div>
+				<div class="content2-text">
+					<h3><%= blog_post.title %></h3>
+					<span class="post-date">Posted on <%= blog_post.created_at.strftime("%B %d, %Y") %></span>
+					<p><%= (truncate(strip_tags(blog_post.body.html_safe), :length => 92, :separator => ' ')).html_safe %></p>
+					<span class="learn-more"><%= link_to("Read More", blog_named_link(blog_post)) %></span>
+				</div>
+				<div class="clr"></div>
+			</div>
+			<% end %>
+		</div>
+	</div>
+	</div>
+</div><!--box2 end-->
