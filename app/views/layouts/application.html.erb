@@ -214,42 +214,7 @@
 
 				</div><!--submenu end-->				
 			</div>  <!-- End of Menu Tabs -->
-<<<<<<< HEAD
-		    <div class="breadcum-area"><!--breadcum start-->
-		    	<div class="breadcum-left">
-		        	<span class="home-icon"><a href="/"><img src="/images/home-icon.png" width="25" height="23" alt="" /></a></span>
-		            <div class="breadcum-link">
-		            	<ul>
-		                	<li><a href="#">Bread Crumb</a></li>
-		                    <li><a href="#">Navigation</a></li>
-		                </ul>
-		            </div>
-		        </div>
-		        <div class="breadcum-right">
-		        	<%= link_to image_tag("your-verses.png", :width=>"172", :height=>"25", :alt=>"Your Verses"), manage_verses_path %>
-		            <%= link_to image_tag("more-verses.png", :width=>"192", :height=>"25", :alt=>"Add More Verses"), add_verse_path %>
-		        </div>
-		    </div><!--breadcum end-->
-		    
-		    <div id="flash" class="flash gray-box-bg"><!--flash start-->
-		    	<%= flash_messages || t('messages.today_msg_html', :due_today => current_user.due_verses, :time => current_user.work_load) %>
-		    </div><!--flash end-->
-	    <% else # if not logged in %>
-              <div class="menu menu-main-only"><!--menu start-->
-                <ul>
-            	  <li><%= link_to t('menu.home').html_safe, home_path %></li>
-            	  <li><%= link_to t('menu.memorize').html_safe, test_verse_quick_path %></li>
-            	  <li><%= link_to t('menu.learn').html_safe, tutorial_path %></li>
-            	  <li><%= link_to t('menu.profile').html_safe, current_user %></li>
-            	  <li><%= link_to t('menu.leaderboard').html_safe, leaderboard_path %></li>
-            	  <li><%= link_to t('contact_menu.Help'), faq_path %></li>
-            	  <li><%= link_to t('menu.blog').html_safe, blog_path %></li>
-            	  <li><%= link_to t('menu.contact').html_safe, contact_path %></li>
-            	  <li>&nbsp;</li>
-                </ul>
-              </div><!--menu end-->
-	    <% end %><!-- if logged_in? -->
-=======
+
 			<div class="breadcum-area"><!--breadcum start-->
 				<div class="breadcum-left">
 					<span class="home-icon"><a href="/"><img src="/images/home-icon.png" width="25" height="23" alt="" /></a></span>
@@ -284,7 +249,6 @@
 				</ul>
 			</div><!--menu end-->
 		<% end %><!-- if logged_in? -->
->>>>>>> 798fc75b6a28c8fd2e044de9e537238e96bcbb75
 	</div> <!--header end-->
 
 	<div><img src="/images/trans.png" width="1" height="10" alt="" /></div>
