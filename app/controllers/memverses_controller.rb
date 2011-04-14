@@ -944,6 +944,8 @@ class MemversesController < ApplicationController
     mv  = Memverse.find(params[:mv])
     q   = params[:q].to_i
     
+    logger.debug("*** Q: #{q}")
+    
     # Execute Supermemo algorithm
     newly_memorized = mv.supermemo(q)
 

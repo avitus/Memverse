@@ -17,11 +17,11 @@
                 
                 <div class="tool-tip-nav">Rate Your Performance Level:</div>
                 <div class="score-test-buttons">								
-					<%= link_to 1, {:q => 1}, {:class => "test-button", :class => "submit", :remote => true} %> <div class="tooltip">Don't Know - No Idea</div>							
-					<%= link_to 2, {:q => 2}, {:class => "test-button", :class => "submit", :remote => true} %> <div class="tooltip">Don't Know - Familiar</div>							
-					<%= link_to 3, {:q => 3}, {:class => "test-button", :class => "submit", :remote => true} %> <div class="tooltip">Remembered - Difficult</div>							
-					<%= link_to 4, {:q => 4}, {:class => "test-button", :class => "submit", :remote => true} %> <div class="tooltip">Remembered - Hesitation</div>							
-					<%= link_to 5, {:q => 5}, {:class => "test-button", :class => "submit", :remote => true} %> <div class="tooltip">Remembered - Perfect</div>	
+					<%= link_to 1, {:q => 1}, {:class => "test-button", :class => "submit", :remote => true, :q => 1} %> <div class="tooltip">Don't Know - No Idea</div>							
+					<%= link_to 2, {:q => 2}, {:class => "test-button", :class => "submit", :remote => true, :q => 2} %> <div class="tooltip">Don't Know - Familiar</div>							
+					<%= link_to 3, {:q => 3}, {:class => "test-button", :class => "submit", :remote => true, :q => 3} %> <div class="tooltip">Remembered - Difficult</div>							
+					<%= link_to 4, {:q => 4}, {:class => "test-button", :class => "submit", :remote => true, :q => 4} %> <div class="tooltip">Remembered - Hesitation</div>							
+					<%= link_to 5, {:q => 5}, {:class => "test-button", :class => "submit", :remote => true, :q => 5} %> <div class="tooltip">Remembered - Perfect</div>	
 					
 					<%= link_to '>>', {}, {:class => "test-button", :id => "ff-button", :remote => true} %> <div class="tooltip">Skip this verse for today</div>	
 				</div>	
@@ -180,7 +180,7 @@
 				success = insertondeck(ondeck.mv, ondeck.mv_prior);					// Update page with Ondeck verse
 				prior   = current
 				current = ondeck.mv													// data for the verse we're now testing															
-				$.getJSON("/mark_test_quick", { mv: prior.id, q: q  }, 			    // Score verse
+				$.getJSON("/mark_test_quick", { mv: prior.id, q: q  }, 	    		// Score verse
 					function(data) {
 						if (data.msg) {	alert(data.msg); }							// Give user a nice response												
 						update_upcoming(20, ondeck.mv.id);							// Req successful callback from mark_test_quick: Update upcoming verses
