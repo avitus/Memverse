@@ -119,6 +119,12 @@ img a
 	float:right;
 }
 
+.red-number {
+	font-size:larger;	
+	font-weight:bold;
+	color:#983626;
+}
+
 /*========== Wrapper ==========*/
 
 #wrapper
@@ -3299,7 +3305,6 @@ div#currentVerse #matchbox .correct {
 	margin-top: 1em;
 	width: 430px;
 	margin-left: 1px;
-	background-color: #BAB18E;	
 }
 
 #reftest-answer #answer {

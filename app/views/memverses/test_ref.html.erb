@@ -2,26 +2,31 @@
 <!-- Focus cursor on verse entry box -->
 <body onload="document.getElementById('answer').focus()">
 
-<fieldset id="reftest">
-	<legend>Verse <%=@question_num+1%></legend>
+<div class="white-box-with-margins">
+	
+	<div class="top-heading">
+    	<h2><span>Question: </span><span class="verse-ref"><%=@question_num+1%></span></h2>
+    </div>	
+	
 	<!-- Verse Text -->
 	<div id="reftestVerse">
 		<%= @ref%>
 	</div>
-</fieldset>
-
-<fieldset id=reftest-answer class="entry-form">
-		<legend>Reference</legend>
-			<% form_tag :action => 'mark_reftest' do %>
-
-				<%= text_field_tag(:answer, params[:answer], :autocomplete => "off" )%>
-				<%= submit_tag "Submit", :class => "submit" %>								
-				<%= submit_tag "Done", 	 :class => "submit" %>
 	
-			<% end %>					
-</fieldset>	
-
-<div id="ajaxWrapper">
+	<div id=reftest-answer>
+		
+		<div class="top-heading">
+	    	<h2><span>Reference: </span></h2>
+	    </div>	
+	    
+		<% form_tag :action => 'mark_reftest' do %>
+	
+			<%= text_field_tag(:answer, params[:answer], :autocomplete => "off" )%>
+			<%= submit_tag "Submit", :class => "submit" %>								
+			<%= submit_tag "Done", 	 :class => "submit" %>
+	
+		<% end %>					
+	</div>	
 </div>
 
 <!-- http://www.devbridge.com/projects/autocomplete/jquery/ -->
