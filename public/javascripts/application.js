@@ -29,18 +29,19 @@ $(document).ready(function() {
 	//default each row to visible
 	$('tbody tr').addClass('visible');
 	
+	var $searchico = $('#searchico');
+	var $filter = $('#filter');
+	
 	//overrides CSS display:none property
-	//so only users w/ JS will see the
-	//filter box
-	$('#searchico').show();
-	$('#vsfilter').hide();
-	$('#searchico').click(function() {
-	$('#vsfilter').slideToggle(400);
-        return false;
-        });
+	//so only users w/ JS will see the search icon
+	$searchico.show();
+	$searchico.click(function() {
+		$('#vsfilter').slideToggle(400);
+		$filter.focus();
+		return false;
+	});
 // Thanks to Sam Dunn: http://buildinternet.com/2009/01/changing-form-input-styles-on-focus-with-jquery/
-     $('input[name="filter"]').addClass("idleField");  
-     $('input[name="filter"]').focus(function() {  
+     $filter.focus(function() {  
          $(this).removeClass("idleField").addClass("focusField");  
          if (this.value == this.defaultValue){  
              this.value = '';  
@@ -49,27 +50,29 @@ $(document).ready(function() {
              this.select();  
          }  
      });  
-     $('input[name="filter"]').blur(function() {  
+     $filter.blur(function() {  
          $(this).removeClass("focusField").addClass("idleField");  
          if ($.trim(this.value) == ''){
            this.value = (this.defaultValue ? this.defaultValue : '');
          }
      });  
 	
-	$('#filter').keyup(function(event) {
-		//if esc is pressed or nothing is entered
-    if (event.keyCode == 27 || $(this).val() == '') {
-			//if esc is pressed we want to clear the value of search box
-			$(this).val('');
-			
-			//we want each row to be visible because if nothing
-			//is entered then all rows are matched.
-      $('tbody tr').removeClass('visible').show().addClass('visible');
+	$filter.keyup(function(event) {
+	//if esc is pressed
+    if (event.keyCode == 27) {
+		//if esc is pressed we want to clear the value of search box and hide it again
+		$filter.val('');
+		$('#vsfilter').slideToggle(400);
+	}
+	//if nothing is entered
+	if ($(this).val() == '') {
+		//we want each row to be visible because if nothing
+		//is entered then all rows are matched.
+		$('tbody tr').removeClass('visible').show().addClass('visible');
     }
-
-		//if there is text, lets filter
-		else {
-      filter('tbody tr', $(this).val());
+	//else: there is text, lets filter
+	else {
+		filter('tbody tr', $(this).val());
     }
 
 	});

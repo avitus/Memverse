@@ -8,7 +8,7 @@
 	
 	<% else # There are verses in account %>
 	
-		<div id="scontainer"><div id="searchico"><img src="/images/search.png" /></div><div id="vsfilter"><input type="text" name="filter" id="filter" value="Filter verses" style="width:150px;height:20px;padding:4px;" /></div></div>
+		<div id="scontainer"><div id="searchico"><img src="/images/search.png" /></div><div id="vsfilter"><input type="text" name="filter" id="filter" value="Filter verses" style="width:150px;height:20px;padding:4px;" class="idleField" /></div></div>
 		<div class="verse-list">
 		<%= form_tag( {:action => 'show'}, :method => :post, :name => "manage_verses" ) do %>
 		  	<table class="memverse-standard">
