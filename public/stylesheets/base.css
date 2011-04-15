@@ -1382,7 +1382,9 @@ div#flash-error {
 	padding:1em;
 	-moz-border-radius:10px;
 	-webkit-border-radius:10px;
-	border-radius:10px; 
+	border-radius:10px;
+	min-height: 475px;
+
 }
 
 .test-verse
@@ -2413,7 +2415,6 @@ div.center {
 #search-box {
 	margin-top: 	1em;
 	margin-bottom:	1em;
-	min-height: 475px;
 }
 
 /* === Menu Tabs === */
