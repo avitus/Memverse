@@ -288,27 +288,10 @@
   messages:
     today_msg_html:        "YOU HAVE <span>%{due_today} VERSES</span> TO REVIEW TODAY! YOU CURRENTLY NEED ABOUT <span>%{time}</span> MINUTES PER DAY."
   memverses:
-    index:
-      memverse_today:  "Memverse Hari Ini"
-      review_a:        "You have"
-      review_b:        "verses to review today"
-      time_req_a:      "Waktu yang dibutuhkan" 
-      time_req_b:      "minutes per day"
-    test_verse:
-      feedback:        "Komentar"
-      show_verse:      "Lihat ayat "
-      upcoming:        "Mendatang" 
-      back_to_test:    "Kembali ke Tes" 
-      b5:              "5 Ingat - Sempurna"
-      b4:              "4 Ingat – Ragu-ragu"
-      b3:              "3 Ingat - Sulit"
-      b2:              "2 Tidak tahu – Pernah Dengar"
-      b1:              "1 Tidak tahu – Sama sekali" 
     test_verse_quick:
-      feedback:        "Komentar"
-      show_verse:      "Lihat ayat"
-      upcoming:        "Mendatang" 
-      back_to_test:    "Kembali ke Tes" 
+      verse:           "Ayat"
+      feedback:        "Live Komentar"
+      upcoming_verses: "Ayat Mendatang"  
       b5:              "5 Ingat - Sempurna"
       b4:              "4 Ingat – Ragu-ragu"
       b3:              "3 Ingat - Sulit"

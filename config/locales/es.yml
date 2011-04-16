@@ -286,28 +286,11 @@
     Blog Search:           "Blog Search"   
   messages:
     today_msg_html:        "USTED TIENE <span>%{due_today} VERSOS</span> PARA EXAMINAR HOY! QUE ACTUALMENTE NECESITA UNOS <span>%{time}</span> MINUTOS POR DIA."                                  
-  memverses:      
-    index:
-      memverse_today:  "Memverso Hoy"
-      review_a:        "Tiene"
-      review_b:        "versiculos para repasar hoy"
-      time_req_a:      "Ahora necesita aproximadamente" 
-      time_req_b:      "minutos por día."  
-    test_verse:
-      feedback:        "Reacción"
-      show_verse:      "Mostrar verso"
-      upcoming:        "Próximos" 
-      back_to_test:    "Volver a la prueba"    
-      b5:              "5 Recordar - Perfecto"
-      b4:              "4 Recordar - Vacilación"
-      b3:              "3 Recordar - Difícil"
-      b2:              "2 No Sabe  - Familiar"
-      b1:              "1 No Sabe  - Ni Idea"    
+  memverses:       
     test_verse_quick:
-      feedback:        "Reacción"
-      show_verse:      "Mostrar verso"
-      upcoming:        "Próximos" 
-      back_to_test:    "Volver a la prueba"    
+      verse:           "Verso"
+      feedback:        "Reacción en Directo"
+      upcoming_verses: "Próximos Versos"    
       b5:              "5 Recordar - Perfecto"
       b4:              "4 Recordar - Vacilación"
       b3:              "3 Recordar - Difícil"

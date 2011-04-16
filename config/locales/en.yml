@@ -288,26 +288,10 @@
   messages:
     today_msg_html:        "YOU HAVE <span>%{due_today} VERSES</span> TO REVIEW TODAY! YOU CURRENTLY NEED ABOUT <span>%{time}</span> MINUTES PER DAY."
   memverses:
-    index:
-      memverse_today:  "Memverse Today"
-      review_b:        "verses to review today"
-      time_req_a:      "You currently need about" 
-      time_req_b:      "minutes per day"
-    test_verse:
-      feedback:        "Feedback"
-      show_verse:      "Show Verse"
-      upcoming:        "Upcoming" 
-      back_to_test:    "Back to Test" 
-      b5:              "5 Remembered - Perfect"
-      b4:              "4 Remembered - Hesitation"
-      b3:              "3 Remembered - Difficult"
-      b2:              "2 Don't Know - Familiar"
-      b1:              "1 Don't Know - No Idea" 
     test_verse_quick:
-      feedback:        "Feedback"
-      show_verse:      "Show Verse"
-      upcoming:        "Upcoming" 
-      back_to_test:    "Back to Test" 
+      verse:           "Verse"
+      feedback:        "Live Feedback"
+      upcoming_verses: "Upcoming Verses" 
       b5:              "5 Remembered - Perfect"
       b4:              "4 Remembered - Hesitation"
       b3:              "3 Remembered - Difficult"

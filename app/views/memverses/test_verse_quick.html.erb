@@ -5,7 +5,7 @@
 <div class="white-box-bg">
 	<div class="test-verse">
     	<div class="top-heading">
-        	<h2><span>Verse: </span><span class="verse-ref"><%=@mv.verse.ref%></span><span class="verse-tl"> [<%=@mv.verse.translation %>]</span></h2>
+        	<h2><span><%= t('.verse') %>: </span><span class="verse-ref"><%=@mv.verse.ref%></span><span class="verse-tl"> [<%=@mv.verse.translation %>]</span></h2>
             <div class="toggle-hint">Show Hint</div>
         </div>
         <div class="mnemonic"><%= @mv.mnemonic_if_req %></div>
@@ -32,7 +32,7 @@
    </div> <!-- end: test-verse -->
     
     <div class="feedback">
-    	<h2>Live Feedback</h2>
+    	<h2><%= t('.feedback') %></h2>
 
 		<div class="priorVerse">
 			<p>
@@ -64,7 +64,7 @@
     </div>
     
     <div class="upcoming">
-    	<h2>Upcoming Verses</h2>
+    	<h2><%= t('.upcoming_verses') %></h2>
 		<%= render :partial => "upcoming_verses" %>						
         <div class="upcoming-button">
             <%= link_to image_tag("modify.png", :width=>"192", :height=>"25", :alt=>"Modify Bible Version"), update_profile_path %>
