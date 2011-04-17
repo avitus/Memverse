@@ -358,7 +358,7 @@ img a
 	text-align:center;
 	line-height:46px;
 	font-style:italic;
-	color:#666666;
+	color:#666;
 	position:relative;
 }
 
@@ -536,9 +536,7 @@ img a
 .gray-box-bg {
 	width:1030px;
 	background:#717171;
-	border-style:solid; 
-	border-width:1px;
-	border-color:#717171;
+	border:1px solid #717171;
 	padding:0 25px 0 25px;
 	-moz-border-radius:10px;
 	-webkit-border-radius:10px;
@@ -559,7 +557,7 @@ div.flash {
 
 div.flash span
 {
-	color:#ffcc00;
+	color:#fc0;
 }
 
 div#flash-notice {
@@ -597,7 +595,7 @@ div#flash-error {
 
 #content h2.gray
 {
-	color:#555555;
+	color:#555;
 }
 
 
@@ -678,13 +676,13 @@ div#flash-error {
 {
 	display:block;
 	font-size:12px;
-	color:#993333;
+	color:#933;
 	padding-top:5px;
 }
 
 .learn-more a
 {
-	color:#993333;
+	color:#933;
 	text-decoration:underline;
 }
 
@@ -755,7 +753,7 @@ div#flash-error {
 .post-date
 {
 	display:block;
-	color:#999999;
+	color:#999;
 	font-size:11px;
 	padding-bottom:5px;
 }
@@ -858,18 +856,18 @@ div#flash-error {
 
 .volunteers span
 {
-	color:#993333;
+	color:#933;
 }
 
 .volunteers span a
 {
-	color:#993333;
+	color:#933;
 	text-decoration:none;
 }
 
 .volunteers span a:hover
 {
-	color:#993333;
+	color:#933;
 	text-decoration:underline;
 }
 
@@ -900,12 +898,12 @@ div#flash-error {
 
 #footer span
 {
-	color:#993333;
+	color:#933;
 }
 
 #footer span a
 {
-	color:#993333;
+	color:#933;
 	text-decoration:underline;
 }
 
@@ -960,7 +958,7 @@ div#flash-error {
 	height:33px;
 	line-height:33px;
 	font-size:12px;
-	color:#99cc33;
+	color:#9c3;
 	font-weight:normal;
 	padding:0 10px;
 }
@@ -972,14 +970,14 @@ div#flash-error {
 
 .submenu ul li a
 {
-	color:#99cc33;
+	color:#9c3;
 	text-decoration:none;
 	display:block;
 }
 
 .submenu ul li a:hover, .submenu ul li.active a
 {
-	color:#ffcc33;
+	color:#fc3;
 	text-decoration:none;
 }
 
@@ -1109,12 +1107,8 @@ div#flash-error {
 	height:91px;
 	float:left;
 	padding:14px 14px 0 14px;
-	
-	background:#FFFFFF;
-	border-style:solid; 
-	border-width:1px;
-	border-color:#555555;
-
+	background:#FFF;
+	border:1px solid #555;
 	-moz-border-radius:10px;
 	-webkit-border-radius:10px;
 	border-radius:10px; 		
@@ -1126,12 +1120,8 @@ div#flash-error {
 	height:91px;
 	float:right;
 	padding:14px 14px 0 14px;
-	
-	background:#FFFFFF;
-	border-style:solid; 
-	border-width:1px;
-	border-color:#555555;
-
+	background:#FFF;
+	border:1px solid #555;
 	-moz-border-radius:10px;
 	-webkit-border-radius:10px;
 	border-radius:10px;	
@@ -1195,7 +1185,7 @@ div#flash-error {
 	background:#767575;
 	border-style:solid solid none solid; 
 	border-width:1px;
-	border-color:#555555;
+	border-color:#555;
 	
 	-moz-border-radius-topright:10px;
 	-webkit-border-radius-topright:10px;
@@ -1208,10 +1198,10 @@ div#flash-error {
 
 .tab-bottom {
 	width:1080px;
-	background:#FFFFFF;
+	background:#FFF;
 	border-style:none solid solid solid; 
 	border-width:1px;
-	border-color:#555555;
+	border-color:#555;
 	
 	-moz-border-radius-bottomright:10px;
 	-webkit-border-radius-bottomright:10px;
@@ -1369,11 +1359,9 @@ div#flash-error {
 
 .white-box-bg {
 	width:1080px;
-	background:#FFFFFF;
-	border-style:solid; 
-	border-width:1px;
-	border-color:#555555;
-	padding:2em 0em 2em 0em;
+	background:#FFF;
+	border:1px solid #555;
+	padding:2em 0 2em 0;
 	-moz-border-radius:10px;
 	-webkit-border-radius:10px;
 	border-radius:10px; 
@@ -1381,10 +1369,8 @@ div#flash-error {
 
 .white-box-with-margins {
 	width:1056px;
-	background:#FFFFFF;
-	border-style:solid; 
-	border-width:1px;
-	border-color:#555555;
+	background:#FFF;
+	border:1px solid #555;
 	padding: 12px;
 	-moz-border-radius:10px;
 	-webkit-border-radius:10px;
@@ -1453,8 +1439,8 @@ div#flash-error {
 
 .mnemonic
 {
-	background:#ffffcc;
-	border:1px solid #cccccc;
+	background:#ffc;
+	border:1px solid #ccc;
 	padding:1em;
 	font-weight:bold;
 	color:#666;
@@ -1473,7 +1459,7 @@ div#flash-error {
 	width:100%;
 	height:205px;
 	background:#f2f1f1;
-	border:1px solid #cccccc;
+	border:1px solid #ccc;
 	overflow:auto;
 	margin-bottom:25px;
 }
@@ -1485,7 +1471,7 @@ div#flash-error {
 	height:21px;
 	float:left;
 	font-size:13px;
-	color:#666666;
+	color:#666;
 	font-weight:bold;
 	line-height:21px;
 	padding-left:25px;
@@ -1503,7 +1489,7 @@ div#flash-error {
 .score-test-buttons a
 {
 	font-size:13px;
-	color:#999999;
+	color:#999;
 	text-decoration:none;
 	font-weight:bold;
 	line-height:21px;
@@ -1525,7 +1511,7 @@ div#flash-error {
 	line-height:23px;
 	padding-left:10px;
 	font-size:11px;
-	color:#669933;
+	color:#693;
 	display:block;
 	position:absolute;
 	left:-218px;
@@ -1542,7 +1528,7 @@ div#flash-error {
 	line-height:23px;
 	padding-left:10px;
 	font-size:11px;
-	color:#669933;
+	color:#693;
 	position:absolute;
 	left:-218px;
 	top:-25px;
@@ -1572,7 +1558,7 @@ div#flash-error {
 	width:28%;
 	height:362px;
 	float:left;
-	color:#666666;
+	color:#666;
 	padding:0 2em;
 	border-right:1px solid #bfbebe;
 }
@@ -1623,7 +1609,7 @@ div#flash-error {
 	font-size:14px;
 	width:167px;
 	height:21px;
-	color:#666666;
+	color:#666;
 	line-height:21px;
 	padding-left:25px;
 }
@@ -1640,7 +1626,7 @@ div#flash-error {
 
 .upcoming ul li a
 {
-	color:#666666;
+	color:#666;
 	display:block;
 	text-decoration:none;
 }
@@ -1695,7 +1681,7 @@ div#flash-error {
 	width:100%;
 	height:140px;
 	background:#f2f1f1;
-	border:1px solid #cccccc;
+	border:1px solid #ccc;
 	overflow:auto;
 }
 
@@ -1778,7 +1764,7 @@ div#flash-error {
 	font-size:14px;
 	width:257px;
 	height:21px;
-	color:#666666;
+	color:#666;
 	line-height:21px;
 	padding-left:25px;
 }
@@ -1795,7 +1781,7 @@ div#flash-error {
 
 .popular ul li a
 {
-	color:#666666;
+	color:#666;
 	display:block;
 	text-decoration:none;
 }
@@ -1847,7 +1833,7 @@ div#flash-error {
 	background:url(../images/edit-icon.png) no-repeat 5px center;
 	height:16px;
 	line-height:16px;
-	color:#669933;
+	color:#693;
 	font-size:12px;
 	margin-top:5px;
 	padding-left:25px;
@@ -1857,13 +1843,13 @@ div#flash-error {
 {
 	display:block;
 	height:16px;
-	color:#669933;
+	color:#693;
 	text-decoration:none;
 }
 
 .edit a:hover
 {
-	color:#669933;
+	color:#693;
 	text-decoration:underline;
 }
 
@@ -1879,7 +1865,7 @@ div#flash-error {
 	margin:0;
 	font-size:23px;
 	font-weight:bold;
-	color:#669933;
+	color:#693;
 }
 
 .user-details-text ul
@@ -1893,18 +1879,18 @@ div#flash-error {
 .user-details-text ul li
 {
 	font-size:13px;
-	color:#666666;
+	color:#666;
 }
 
 .user-details-text ul li a
 {
-	color:#666666;
+	color:#666;
 	text-decoration:none;
 }
 
 .user-details-text ul li a:hover
 {
-	color:#666666;
+	color:#666;
 	text-decoration:none;
 }
 
@@ -1917,7 +1903,7 @@ div#flash-error {
 
 .member-list span
 {
-	color:#669933;
+	color:#693;
 	font-weight:bold;
 }
 
@@ -1928,7 +1914,7 @@ div#flash-error {
 	width:47px;
 	height:16px;
 	line-height:16px;
-	color:#669933;
+	color:#693;
 	font-size:12px;
 	float:left;
 	text-align:right;
@@ -1939,13 +1925,13 @@ div#flash-error {
 	display:block;
 	width:47px;
 	height:16px;
-	color:#669933 !important;
+	color:#693 !important;
 	text-decoration:none;
 }
 
 .edit-option a:hover
 {
-	color:#669933;
+	color:#693;
 	text-decoration:underline !important;
 }
 
@@ -1974,18 +1960,18 @@ div#flash-error {
 .user-settings-text ul li
 {
 	font-size:13px;
-	color:#666666;
+	color:#666;
 }
 
 .user-settings-text ul li a
 {
-	color:#666666;
+	color:#666;
 	text-decoration:none;
 }
 
 .user-settings-text ul li a:hover
 {
-	color:#666666;
+	color:#666;
 	text-decoration:none;
 }
 
@@ -1998,7 +1984,7 @@ div#flash-error {
 
 .user-option-list span
 {
-	color:#669933;
+	color:#693;
 	font-weight:bold;
 }
 
@@ -2008,7 +1994,7 @@ div#flash-error {
 	width:15%;
 	height:16px;
 	line-height:16px;
-	color:#669933;
+	color:#693;
 	font-size:12px;
 	float:left;
 	text-align:left;
@@ -2019,14 +2005,14 @@ div#flash-error {
 	width:20%;
 	float:left;
 	text-align:center;
-	color:#666666;
+	color:#666;
 	font-size:13px;
 }
 
 .work-load span
 {
 	font-weight:bold;
-	color:#669933;
+	color:#693;
 	font-size:13px;
 }
 
@@ -2301,10 +2287,8 @@ img {
 }
 
 table.memverse-standard {
-	border-width: 1px;
+	border:1px none black;
 	border-spacing: 1px;
-	border-style: none;
-	border-color: black;
 	border-collapse: separate;
 	background-color: white;
 }
@@ -2353,9 +2337,7 @@ table.memverse-standard thead th:empty{
 }
 
 table.memverse-standard td {
-	border-width: thin;
-	border-style: solid;
-	border-color: #f2f1f1;
+	border:thin solid #f2f1f1;
 	background-color: #f2f1f1;	
 	color:#232323;	
 	padding: 3px;	
