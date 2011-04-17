@@ -108,7 +108,7 @@
 <script language="JavaScript" type="text/javascript"><!--
 
     // unblock when ajax activity stops 
-    $(document).ajaxStart($('.score-test-buttons').block()).ajaxStop($('.score-test-buttons').unblock());
+    $(document).ajaxStart($('.score-test-buttons').block({ message: 'Please wait...', css: {width: '75%', border: '1px solid black', font: 'bold 13px/normal Arial,Helvetica,sans-serif'} })).ajaxStop($('.score-test-buttons').unblock());
 		
 	$(document).ready(function() {
 		<%= "$('.mnemonic').hide();" if !@mv.needs_mnemonic? %>
