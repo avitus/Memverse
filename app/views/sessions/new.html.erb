@@ -12,10 +12,10 @@
 <meta property="og:title"		content="<%= page_title || Memverse %>"/>	
 <meta property="og:type"		content="website"/>	
 <meta property="og:image"		content="http://www.memverse.com/images/memverse_swords.jpg"/>	
-<meta property="og:url"			content=<%= request.url %>/>	
-<meta property="og:site_name"		content="Memverse"/>	
+<meta property="og:url"			content="<%= request.url %>"/>	
+<meta property="og:site_name"	content="Memverse"/>	
 <meta property="fb:admins"		content="1799626379, kyrriana"/>
-<meta property="og:description" 	content="A community of believers memorizing the bible"/>
+<meta property="og:description" content="A community of believers memorizing the bible"/>
 		
 <!-- Google, Microsoft verification -->
 <meta name="verify-v1" content="IrqDYi2zxAyS8GUAqQcyXvnmcxhtuNITeCIFYLa76LQ=" />	
@@ -113,7 +113,7 @@
 		<div class="menu menu-main-only"><!--menu start-->
 			<ul>
 				<li><%= link_to t('menu.home').html_safe, home_path %></li>
-				<li><%= link_to t('menu.memorize').html_safe, test_verse_path %></li>
+				<li><%= link_to t('menu.memorize').html_safe, test_verse_quick_path %></li>
 				<li><%= link_to t('menu.learn').html_safe, tutorial_path %></li>
 				<li><%= link_to t('menu.profile').html_safe, current_user %></li>
 				<li><%= link_to t('menu.leaderboard').html_safe, leaderboard_path %></li>

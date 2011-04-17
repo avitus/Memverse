@@ -264,8 +264,6 @@ function insertondeck(ondeck, ondeck_prior) {
 	$(".current-text").text(ondeck.text);						// Update current verse on back of flash card
 	$(".current-versenum").text(ondeck.versenum);				// Update verse number superscript
 	$('#ff-button').toggle(ondeck.skippable);					// Hide/Show fast forward button
-	$('.mnemonic').text('');									// Clear the mnemonic
-	$('.mnemonic').text(ondeck.mnemonic);						// Update front of flash card with Mnemonic (if necessary)
 
 	// == Update prior verse and reference	
 	if (typeof(ondeck_prior) !== 'undefined' && ondeck_prior != null) {
@@ -275,6 +273,17 @@ function insertondeck(ondeck, ondeck_prior) {
 	}
 	else {
 		$(".priorVerse").hide();
+	}
+	
+	// == Update mnemonic
+	if (ondeck.mnemonic != null) {
+		$('.mnemonic').text('');								// Clear the mnemonic
+		$('.mnemonic').text(ondeck.mnemonic);					// Update front of flash card with mnemonic (if necessary)
+		$('.mnemonic').show();									// Show the mnemonic
+	}
+	else {
+		$('.mnemonic').text('');								// Clear the mnemonic
+		$('.mnemonic').hide();									// Hide the mnemonic
 	}
 	
 	return true;

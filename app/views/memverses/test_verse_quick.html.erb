@@ -111,6 +111,7 @@
     $(document).ajaxStart($('.score-test-buttons').block()).ajaxStop($('.score-test-buttons').unblock());
 		
 	$(document).ready(function() {
+		<%= "$('.mnemonic').hide();" if !@mv.needs_mnemonic? %>
 		// focus cursor on verse entry box
 		$('#verseguess').focus();
 		
