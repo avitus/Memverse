@@ -264,6 +264,7 @@ function insertondeck(ondeck, ondeck_prior) {
 	$(".current-text").text(ondeck.text);						// Update current verse on back of flash card
 	$(".current-versenum").text(ondeck.versenum);				// Update verse number superscript
 	$('#ff-button').toggle(ondeck.skippable);					// Hide/Show fast forward button
+	$('#waiting').show();										// Show the "Waiting for you to begin" span
 
 	// == Update prior verse and reference	
 	if (typeof(ondeck_prior) !== 'undefined' && ondeck_prior != null) {

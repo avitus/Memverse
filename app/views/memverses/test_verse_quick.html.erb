@@ -76,6 +76,7 @@
 		<div id="currentVerse">
 			<p>		
 				<span class="current-versenum superscript"><%=@mv.verse.versenum if @prior_text%></span>
+				<span id="waiting">Waiting for you to begin typing...</span>
 				<span id="ajaxWrapper">
 					<%= render :partial=>'feedback', :locals => {:show_feedback => @show_feedback} %>
 				</span>
@@ -163,6 +164,7 @@
 
 		// Verse feedback	
 		$("#verseguess").observe_field(0.4, function( ) { 
+			$('#waiting').hide();
 			$.get("/feedback", { correct: current.text, verseguess: encodeURIComponent(this.value), echo: current.feedback },
 				function(data){	
 					$("#ajaxWrapper").html(data);
