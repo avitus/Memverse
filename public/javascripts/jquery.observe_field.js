@@ -1,27 +1,39 @@
 // jquery.observe_field.js
-//
 
-jQuery.fn.observe_field = function(frequency, callback) {
 
-  return this.each(function(){
-    var element = $(this);
-    var prev = element.val();
+(function( $ ){
 
-    var chk = function() {
-      var val = element.val();
-      if(prev != val){
-        prev = val;
-        element.map(callback); // invokes the callback on the element
-      }
-    };
-    chk();
+  jQuery.fn.observe_field = function(frequency, callback) {
+
     frequency = frequency * 1000; // translate to milliseconds
-    var ti = setInterval(chk, frequency);
-    // reset counter after user interaction
-    element.bind('keyup', function() {
-      ti && clearInterval(ti);
-      ti = setInterval(chk, frequency);
-    });
-  });
 
-};
+    return this.each(function(){
+      var $this = $(this);
+      var prev = $this.val();
+
+      var check = function() {
+        var val = $this.val();
+        if(prev != val){
+          prev = val;
+          $this.map(callback); // invokes the callback on $this
+        }
+      };
+
+      var reset = function() {
+        if(ti){
+          clearInterval(ti);
+          ti = setInterval(check, frequency);
+        }
+      };
+
+      check();
+      var ti = setInterval(check, frequency); // invoke check periodically
+
+      // reset counter after user interaction
+      $this.bind('keyup click mousemove', reset); //mousemove is for selects
+    });
+
+  };
+
+})( jQuery );
+
