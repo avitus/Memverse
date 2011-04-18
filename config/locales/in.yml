@@ -239,13 +239,13 @@
       Jude:            "Yud"
       Rev:             "Why" 
   menu:
-    home:         "Home &#9660;"
-    memorize:     "Menghafal &#9660;"
-    learn:        "Belajar &#9660;"
-    profile:      "Account &#9660;"
-    contact:      "Hubungi &#9660;"
-    leaderboard:  "Juara &#9660;"
-    blog:         "Blog &#9660;"    
+    home:         "Home"
+    memorize:     "Menghafal"
+    learn:        "Belajar"
+    profile:      "Account"
+    contact:      "Hubungi"
+    leaderboard:  "Juara"
+    blog:         "Blog"    
 
   home_menu:      
     My Verses:             "Ayat Saya"

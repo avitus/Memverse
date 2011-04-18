@@ -288,6 +288,7 @@ img a
 	text-decoration:none;
 }
 
+/*========== Top Menu ==========*/
 .menu
 {
 	height:90px;
@@ -325,10 +326,76 @@ img a
 	display:block;
 }
 
-.menu ul li a:hover
+.menu ul li a:hover, ul li.selected a
 {
 	color:#99cc33;
 	text-decoration:none;
+}
+
+.submenu
+{
+	height:42px;
+}
+
+.submenu-left
+{
+	width:1040px;
+	height:42px;
+	float:left;
+}
+
+.submenu ul
+{
+	list-style:none;
+	padding:0;
+	margin:0;
+}
+
+.submenu ul li
+{
+	float:left;
+	height:33px;
+	line-height:33px;
+	font-size:12px;
+	margin-top:5px;
+	color:#9c3;
+	font-weight:normal;
+	padding:0 0px;
+	background: none;
+	text-transform: none;
+}
+
+.submenu ul li.nopad
+{
+	padding-left:0;
+}
+
+.submenu ul li a
+{
+	color:#9c3;
+	text-decoration:none;
+	display:block;
+}
+
+.submenu ul li a:hover, .submenu ul li.active a
+{
+	color:#fc3;
+	text-decoration:none;
+}
+
+.submenu-icon
+{
+	width:32px;
+	height:32px;
+	float:right;
+	padding-top:3px;
+}
+
+/* Start with submenus hidden */
+.submenustyle {
+	display:none;
+	filter:alpha(opacity=0);
+	-moz-opacity:0;
 }
 
 /*========== Ribbon ==========*/
@@ -933,68 +1000,6 @@ div#flash-error {
 	padding-left:25px;
 }
 
-.submenu
-{
-	height:42px;
-}
-
-.submenu-left
-{
-	width:1040px;
-	height:42px;
-	float:left;
-}
-
-.submenu ul
-{
-	list-style:none;
-	padding:0;
-	margin:0;
-}
-
-.submenu ul li
-{
-	float:left;
-	height:33px;
-	line-height:33px;
-	font-size:12px;
-	color:#9c3;
-	font-weight:normal;
-	padding:0 10px;
-}
-
-.submenu ul li.nopad
-{
-	padding-left:0;
-}
-
-.submenu ul li a
-{
-	color:#9c3;
-	text-decoration:none;
-	display:block;
-}
-
-.submenu ul li a:hover, .submenu ul li.active a
-{
-	color:#fc3;
-	text-decoration:none;
-}
-
-.submenu-icon
-{
-	width:32px;
-	height:32px;
-	float:right;
-	padding-top:3px;
-}
-
-/* Start with submenus hidden */
-.submenustyle {
-	display:none;
-	filter:alpha(opacity=0);
-	-moz-opacity:0;
-}
 
 .breadcum-area
 {
