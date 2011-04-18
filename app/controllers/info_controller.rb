@@ -147,7 +147,8 @@ class InfoController < ApplicationController
   # RSS News Feed
   # ---------------------------------------------------------------------------------------------------------- 
   def news
-    @tab = "home"    
+    @tab = "home" 
+    @sub = "news"   
     
     feed_urls	= Array.new
     @feeds 		= Array.new

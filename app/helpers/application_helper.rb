@@ -1,3 +1,5 @@
+# coding: utf-8
+
 module ApplicationHelper
 
   # ----------------------------------------------------------------------------------------------------------             
@@ -80,15 +82,31 @@ module ApplicationHelper
   # ---------------------------------------------------------------------------------------------------------- 
   def tab( tab, include_class_text = true )
 
-    value = ''
-    value = 'selected'   if tab
+    value = 'inactive'
+    value = 'selected' if tab
     
     if include_class_text
-      'class="' << value << '"'
+      'class=' << value
     else
       value
     end
   end  
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Adds 'selected' class to menu item matching current page
+  # ---------------------------------------------------------------------------------------------------------- 
+  def sub( sub, include_class_text = true )
+
+    value = 'inactive'
+    value = 'active' if sub
+    
+    if include_class_text
+      'class=' << value
+    else
+      value
+    end
+  end  
+
 
   # ----------------------------------------------------------------------------------------------------------
   # Support for tag cloud

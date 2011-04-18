@@ -248,7 +248,9 @@ class MemversesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------   
   def pop_verses
 
-    @tab = "home"      
+    @tab = "home" 
+    @sub = "popvs"
+         
     @page       = params[:page].to_i    # page number
     @page_size  = 20                    # number of verses per page
        
@@ -552,7 +554,8 @@ class MemversesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------   
   def add_verse
 
-    @tab = "home"    
+    @tab = "home"
+    @sub = "addvs"    
     @popular_verses = popular_verses(8, false)
     
     errorcode = false
@@ -649,6 +652,7 @@ class MemversesController < ApplicationController
   def manage_verses
     
     @tab = "home"
+    @sub = "manage"
 
     @my_verses = current_user.memverses.all(:include => :verse, :order => params[:sort_order])
 
@@ -1322,7 +1326,8 @@ class MemversesController < ApplicationController
   # Show Progress
   # ----------------------------------------------------------------------------------------------------------
   def show_progress
-    @tab = "home"    
+    @tab = "home" 
+    @sub = "progress"   
   end  
 
   # ----------------------------------------------------------------------------------------------------------

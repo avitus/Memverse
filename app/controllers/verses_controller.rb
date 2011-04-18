@@ -117,7 +117,8 @@ class VersesController < ApplicationController
   # Scrappy little tag cloud
   # ----------------------------------------------------------------------------------------------------------   
   def tag_cloud
-    @tab = "home"    
+    @tab = "home"
+    @sub = "cloud"  
     @page_title = "Memory Verse Tag Cloud"     
     @tags = Memverse.tag_counts( :order => "name" )
   end
@@ -145,8 +146,10 @@ class VersesController < ApplicationController
   # Verse Search Query page
   # ---------------------------------------------------------------------------------------------------------- 	
   def verse_search
-	@verses = Array.new
-	@verses = Verse.search( params[:search_param] ) if params[:search_param]
+  	@tab = "home"
+  	@sub = "searchvs"
+		@verses = Array.new
+		@verses = Verse.search( params[:search_param] ) if params[:search_param]
   end
   
   # ----------------------------------------------------------------------------------------------------------
