@@ -83,6 +83,10 @@ form, input
 	margin:0;
 }
 
+textarea{
+	font:13px/normal Arial,Helvetica,sans-serif
+}
+
 a
 {
 	outline:none;
