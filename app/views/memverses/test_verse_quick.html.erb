@@ -165,7 +165,7 @@
 		// Verse feedback	
 		$("#verseguess").observe_field(0.4, function( ) { 
 			$('#waiting').hide();
-			$.get("/feedback", { correct: current.text, verseguess: encodeURIComponent(this.value), echo: current.feedback },
+			$.get("/feedback.html", { correct: current.text, verseguess: encodeURIComponent(this.value), echo: current.feedback },
 				function(data){	
 					$("#ajaxWrapper").html(data);
 			});
