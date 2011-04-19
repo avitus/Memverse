@@ -31,11 +31,16 @@
 					
 		<% end %>	
 	</div>	
+	
+	<div class="clr"></div>
+
 		
 	<!-- Flashcard -->	
-	<div id="flashcard">			
+	<div id="flashcard" class="feedback">			
 		<!--- FrontSide --->
-    	<div id="flashcard-front-text">		    	
+    	<div id="flashcard-front-text">	
+    		<h2>Live Feedback</h2>
+	    	
 	        <p><span class="current-ref"><%=@bk_ch%>:<span class="current_verse"><%=@verse.to_s%></span></span></p>
 			<!-- <p class="mnemonic"><%=@chapter[0].verse.mnemonic%></p> -->
 			<div id="verseFeedback">		
@@ -114,10 +119,8 @@
 					if (data.msg) {
 						// Give user a nice response
 						alert(data.msg);												
-					}
-					
+					}				
 			});	
-			
 			
 			if (current_verse == final_verse) {
 				
