@@ -3,65 +3,69 @@
 <body onload="document.getElementById('verseguess').focus()">
 
 <div class="white-box-with-margins">
-<div id="test-chapter">
+<div class="test-verse">
+	
+    <div class="top-heading">
+		<h2><span class="current-ref"><%=@bk_ch%>:<span class="current_verse"><%=@verse.to_s%></span></span></h2>
+        <div class="toggle-hint">Show Hint</div>
+    </div>
+	
+	<div class="mnemonic"></div>
+
 	<!-- Question-side : Entry box -->	
-	<fieldset id="question-side">
-		<legend><span class="current-ref"><%=@bk_ch%>:<span class="current_verse"><%=@verse.to_s%></span></span></legend>
-			<% form_tag :action => 'test_chapter' do %>
-				
-				<div id="answerbox">
-			  		<%= text_area_tag(:verseguess, params[:verseguess] )%>			
-			  	</div>
-			
-			<div id="scoreTestButtons">								
-			  <span><%= submit_tag 5, 	:class => "submit", :q => 5 %>
-			  		<%= submit_tag 4, 	:class => "submit", :q => 4 %>	
-			  		<%= submit_tag 3,  	:class => "submit", :q => 3 %>	
-			  		<%= submit_tag 2,	:class => "submit", :q => 2 %>	
-			  		<%= submit_tag 1, 	:class => "submit", :q => 1 %></span>	
-			</div>			  
-			
-			<% end %>	
-	</fieldset>	
+	<div class="verse-test-area">
+		<% form_tag test_chapter_path do %>
+
+			<div id="answerbox">
+        		<%= text_area_tag(:verseguess, params[:verseguess], :class => "verseguess" )%>	
+            </div>			  	
+	  			
+            <div class="tool-tip-nav">Rate Your Performance Level:</div>
+            <div class="score-test-buttons">								
+				<%= link_to 1, {:q => 1}, {:class => "test-button", :class => "submit", :remote => true, :q => 1} %> <div class="tooltip">Don't Know - No Idea</div>							
+				<%= link_to 2, {:q => 2}, {:class => "test-button", :class => "submit", :remote => true, :q => 2} %> <div class="tooltip">Don't Know - Familiar</div>							
+				<%= link_to 3, {:q => 3}, {:class => "test-button", :class => "submit", :remote => true, :q => 3} %> <div class="tooltip">Remembered - Difficult</div>							
+				<%= link_to 4, {:q => 4}, {:class => "test-button", :class => "submit", :remote => true, :q => 4} %> <div class="tooltip">Remembered - Hesitation</div>							
+				<%= link_to 5, {:q => 5}, {:class => "test-button", :class => "submit", :remote => true, :q => 5} %> <div class="tooltip">Remembered - Perfect</div>		
+			</div>	<!-- end: scoreTestButtons -->			
+					
+		<% end %>	
+	</div>	
+	
+	<div class="clr"></div>
+
 		
 	<!-- Flashcard -->	
-	<div id="flashcard">
-		<div class="quickFlip">
-			
-			<!--- FrontSide --->
-		    <div class="quickFlipPanel refPanel">
-		    	<div id="flashcard-front-text">		    	
-			        <p><span class="current-ref"><%=@bk_ch%>:<span class="current_verse"><%=@verse.to_s%></span></span></p>
-					<!-- <p class="mnemonic"><%=@chapter[0].verse.mnemonic%></p> -->
-					<div id="verseFeedback">		
-						<!-- Current verse -->
-						<span id="ajaxWrapper">
-							<%= render :partial=>'feedback', :locals => {:show_feedback => @show_feedback} %>
-						</span>	
-						<img class="center spinner" id="ajax_spinner" src="/images/indicator2.gif" alt="Comparing..." style="display: none" />				
-					</div>
-			        <p class="quickFlipCta"><%= t('memverses.test_verse.show_verse') %></p>
-				</div>	<!-- end of flashcard-front-text -->			
-		    </div>
-		
-			<!--- BackSide --->
-		    <div class="quickFlipPanel textPanel">
-		    	<div id="flashcard-back-text">
-			        <p><%=@bk_ch%>:<span class="current_verse"><%=@verse.to_s%></span></p>				   	
-					<% for mv in @chapter %>
-						<span class="verse-text" id="<%=mv.verse.versenum%>">
-							<%= mv.verse.text %>
-						</span>	
-					<% end %>
-				</div>	<!-- end of flashcard-back-text -->	
-			    <p class="quickFlipCta"><%= t('memverses.test_verse.back_to_test') %></p>
-		    </div>
-		</div> <!-- end of quickFlip -->
-	</div> <!-- end of flashcard -->
+	<div id="flashcard" class="feedback">			
+		<!--- FrontSide --->
+    	<div id="flashcard-front-text">	
+    		<h2>Live Feedback</h2>
+	    	
+	        <p><span class="current-ref"><%=@bk_ch%>:<span class="current_verse"><%=@verse.to_s%></span></span></p>
+			<!-- <p class="mnemonic"><%=@chapter[0].verse.mnemonic%></p> -->
+			<div id="verseFeedback">		
+				<!-- Current verse -->
+				<span id="ajaxWrapper">
+					<%= render :partial=>'feedback', :locals => {:show_feedback => @show_feedback} %>
+				</span>	
+				<img class="center spinner" id="ajax_spinner" src="/images/indicator2.gif" alt="Comparing..." style="display: none" />				
+			</div>
+		</div>	<!-- end of flashcard-front-text -->			
+	
+		<!--- BackSide --->
+    	<div id="flashcard-back-text">
+	        <p><%=@bk_ch%>:<span class="current_verse"><%=@verse.to_s%></span></p>				   	
+			<% for mv in @chapter %>
+				<span class="verse-text" id="<%=mv.verse.versenum%>">
+					<%= mv.verse.text %>
+				</span>	
+			<% end %>
+		</div>	<!-- end of flashcard-back-text -->	
+	</div> <!-- end of flashcard -->	
 </div>
 
-<fieldset id="chapter-prior-verses">
-	<legend><%= @bk_ch %></legend>	
+<div id="chapter-prior-verses">
+	<h2><%= @bk_ch %></h2>	
 	<div id="chapter-text">
 		<% for mv in @chapter %>
 			<span class="verse-text" id="<%=mv.verse.versenum%>" mvid="<%=mv.id%>">
@@ -82,19 +86,19 @@
 	var mv_id			= '<%= @chapter.first.id %>'
 
 	$(document).ready(function() {
-	    $('.quickFlip').quickFlip();
+	    // $('.quickFlip').quickFlip();
 		
 		// Display the first verse on the back of the flash card
 		$("#flashcard-back-text > .verse-text:hidden:first").fadeIn(10);	
 				
 		// Verse feedback	
 		$("#verseguess").observe_field(0.5, function( ) { 
-			$.get("/feedback", { correct: current_text, verseguess: encodeURIComponent(this.value), echo: <%= @show_feedback %>  },
+			$.get("/feedback.html", { correct: current_text, verseguess: encodeURIComponent(this.value), echo: <%= @show_feedback %>  },
 				function(data){	
 					$("#ajaxWrapper").html(data);
 			});
         });
-        
+                
         $('.spinner')
 			.ajaxStart(function() {
 		        $(this).show();
@@ -115,10 +119,8 @@
 					if (data.msg) {
 						// Give user a nice response
 						alert(data.msg);												
-					}
-					
+					}				
 			});	
-			
 			
 			if (current_verse == final_verse) {
 				
@@ -166,7 +168,7 @@
 				current_text  = $("#" + current_verse).html()
 				
 				// Reset the flashcard
-				$('.quickFlip').quickFlipper( {}, 0 );
+				// $('.quickFlip').quickFlipper( {}, 0 );
 				
 				return(false)				
 			}
