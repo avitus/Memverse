@@ -2421,6 +2421,10 @@ div.center {
 	margin-bottom:	1em;
 }
 
+#search-box h2 {
+	padding-bottom: 5px;
+}
+
 /* === Menu Tabs === */
 #menu-tabs {
 }
