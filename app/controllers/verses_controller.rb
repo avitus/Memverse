@@ -149,7 +149,7 @@ class VersesController < ApplicationController
   	@tab = "home"
   	@sub = "searchvs"
 		@verses = Array.new
-		@verses = Verse.search( params[:search_param] ) if params[:search_param]
+		@verses = Verse.search( params[:searchParams] ) if params[:searchParams]
   end
   
   # ----------------------------------------------------------------------------------------------------------

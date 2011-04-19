@@ -1806,6 +1806,25 @@ div#flash-error {
 	width:208px;
 }
 
+/*========== Bible Search ==========*/
+
+#searchParams {
+    width: 500px;
+    height: 27px;
+    padding-right: 25px; /* puts padding on the right side, so text doesn't go under the button. NOTE: TOTAL WIDTH IS 240 + 25 = 265px */
+    float: left; /* some browsers display correctly without this, but better to leave it for cross browser compatibility */
+    border: 1px solid #577a1a; /* sets new color for border of the field */
+}
+#searchSubmit{
+    background: transparent url("../images/search_button.png") no-repeat;
+    width: 20px;
+    height: 20px;
+    border: none;
+    cursor: pointer;
+    margin-left: -24px; /* image is 20x20px, so leave little extra */
+    margin-top: 4px; /* leave some space from the top, so button looks in the middle */
+}
+
 /*========== User Dashboard ==========*/
 
 .three-box2
@@ -2305,7 +2324,6 @@ table.memverse-standard {
 table.memverse-standard thead th {
     padding:15px;
     color:#fff;
-    text-shadow:1px 1px 1px #568F23;
     border:1px solid #93CE37;
     border-bottom:3px solid #9ED929;
     background-color:#9DD929;
@@ -2323,11 +2341,6 @@ table.memverse-standard thead th {
         rgb(129,172,43) 51%,
         rgb(153,204,51) 87%
         );
-    -webkit-border-top-left-radius:5px;
-    -webkit-border-top-right-radius:5px;
-    -moz-border-radius:5px 5px 0 0;
-    border-top-left-radius:5px;
-    border-top-right-radius:5px;		
 }
 
 table.memverse-standard thead th:empty{
@@ -2355,7 +2368,6 @@ table.memverse-standard td {
 table.memverse-standard tbody th {
     padding:15px;
     color:#fff;
-    text-shadow:1px 1px 1px #568F23;
     border:1px solid #93CE37;
     border-right:3px solid #9ED929;
     background-color:#9DD929;
@@ -2373,11 +2385,6 @@ table.memverse-standard tbody th {
         rgb(129,172,43) 51%,
         rgb(153,204,51) 87%
         );
-    -webkit-border-top-left-radius:5px;
-    -webkit-border-bottom-left-radius:5px;
-    -moz-border-radius:5px 0 0 5px;
-    border-top-left-radius:5px;
-    border-bottom-left-radius:5px;
 }
 
 .table.memverse-standard td a
@@ -2412,6 +2419,10 @@ div.center {
 #search-box {
 	margin-top: 	1em;
 	margin-bottom:	1em;
+}
+
+#search-box h2 {
+	padding-bottom: 5px;
 }
 
 /* === Menu Tabs === */
