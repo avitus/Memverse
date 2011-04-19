@@ -1270,7 +1270,7 @@ div#flash-error {
 	text-decoration:none;
 }
 
-.tab-nav ul li.devotions
+.tab-nav ul li.widetab
 {
 	background:url(../images/tab2.png) no-repeat left top;
 	width:206px;
@@ -1280,7 +1280,7 @@ div#flash-error {
 	color:#666;
 }
 
-.tab-nav ul li.devotions a
+.tab-nav ul li.widetab a
 {
 	width:206px;
 	height:38px;
@@ -1289,7 +1289,7 @@ div#flash-error {
 	text-decoration:none;
 }
 
-.tab-nav ul li.devotions a:hover, .tab-nav ul li.devotions.active a
+.tab-nav ul li.widetab a:hover, .tab-nav ul li.widetab.active a
 {
 	background:url(../images/active-tab2.png) no-repeat left top;
 	color:#983626;
