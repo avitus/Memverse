@@ -1,10 +1,11 @@
-<div class="white-box-with-margins">
-	<div id="search-box" class="center">
+<div class="white-box-with-margins main-content">
+	<div id="search-box" class="center">			
+		<h2>Search the Bible</h2>
 		<% form_tag search_verse_path, :method => :get do %>
-		  <p>
-		    <%= text_field_tag( :search_param, params[:search_param], :size =>  50 ) %>
-		    <span><%= submit_tag "Search Bible", :name => nil %></span>
-		  </p>
+
+		    <%= text_field_tag( :searchParams ) %>
+		    <%= submit_tag "", :name => nil, :id => 'searchSubmit' %>
+
 		<% end %>
 	</div>
 	
