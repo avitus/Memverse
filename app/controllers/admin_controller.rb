@@ -426,10 +426,10 @@ class AdminController < ApplicationController
     
     @error_reported   = Verse.find(:all, :conditions => {:error_flag => true })
     
-    unverified_verses = Verse.find(:all, :conditions => {:verified => 'False'})
+    unverified_verses = Verse.find(:all, :conditions => {:verified => 'False'}, :limit => 20 )
     unverified_verses.each { |vs| 
       # verse is unverified and has multiple users (ESV doesn't require checking, AFR will be checked by someone else
-      if vs.memverses.count > 1 and vs.translation != "AFR"
+      if vs.memverses.count > 1
         @need_verification << vs
       end
     }
