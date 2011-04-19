@@ -2280,9 +2280,9 @@ img {
 }
 
 .action-link {
-	font-style: italic;
-	color: #A69A6E; /* orange */
-	font-weight:  bold;		
+	font-style:italic;
+	color:#577a1a; /* green */
+	font-weight:bold;		
 }
 
 .unsubscribe-link {
@@ -2301,8 +2301,8 @@ img {
 }
 
 .text-highlight {
-	color: #A6886E;
-	font-weight: bold;
+	color:#577a1a;
+	font-weight:bold;
 }
 
 .hilite {
@@ -2753,13 +2753,10 @@ table.user-list {
 /* === Demo Page for Test Verse === */
 
 #instructions {
-	position: relative;
-	width: 95%;
-	min-height: 7em;	
-}
-
-
-#instructions #instr-1 {
+	position:relative;
+	width:1056px;
+	padding:12px;
+	min-height:7em;	
 }
 
 #instructions #instr-2 {
@@ -2778,45 +2775,45 @@ table.user-list {
 }
 
 .menu-popular td em {
-	display: none;
-	font-weight: normal;
-	font-style: normal;
-	z-index: 2;	
-	position: absolute;
-	left: 32em;
-	text-align: left;
-	width: 250px;
-    background-color: #1F2229; 
-    outline: 1px solid #669; 
-    border: 2px solid #fff; 
-    padding: 10px 15px; 
-    color: #fff;  
-    font-size: 100%; 	
+	display:none;
+	font-weight:normal;
+	font-style:normal;
+	z-index:2;	
+	position:absolute;
+	left:32em;
+	text-align:left;
+	width:250px;
+    background-color:#1F2229; 
+    outline:1px solid #669; 
+    border:2px solid #fff; 
+    padding:10px 15px; 
+    color:#fff;  
+    font-size:100%; 	
 }
 
 /* === Show Verse Page === */
 
 /* For nice display of verses anywhere on website */
 .verse-text {
-	width: 20em;
-	float: left;
-	margin-right: 1em;
+	width:20em;
+	float:left;
+	margin-right:1em;
 }
 
 
 #verse-show {
-	height: 280px;
+	height:280px;
 }
 
 .verse-text #show-verse {
-	background-color: #BAB18E;
-	padding: 0.5em;
-	margin-top: 0;	
+	background-color:#BAB18E;
+	padding:0.5em;
+	margin-top:0;	
 }
 
 .verse-text #nav {
-	width: 75%;
-	margin: auto;
+	width:75%;
+	margin:auto;
 }
 
 .verse-tag {
