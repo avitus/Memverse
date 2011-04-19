@@ -2280,9 +2280,9 @@ img {
 }
 
 .action-link {
-	font-style: italic;
-	color: #A69A6E; /* orange */
-	font-weight:  bold;		
+	font-style:italic;
+	color:#577a1a; /* green */
+	font-weight:bold;		
 }
 
 .unsubscribe-link {
