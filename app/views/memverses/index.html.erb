@@ -26,7 +26,13 @@
 	<div class="tab-top">
 	   	<div class="tab-nav">
 	      	<ul class="tabs">
+	      		<% if @user_has_no_verses %>
+				<li class="getting-started active"><a href="#getting-started">Getting Started</a></li>
+				<% elsif @user_has_too_few_verses %>
+				<li class="recommendations active"><a href="#dashboard">Recommendations</a></li>
+				<% else %>
 	           	<li class="dashboard active"><a href="#dashboard">Dashboard</a></li>
+				<% end %>
 	            <li class="devotions"><a href="#devotion">Spurgeon's Daily Devotions</a></li>
 	            <li class="dashboard"><a href="#verse">Verse of the Day</a></li>
 	        </ul>
@@ -35,9 +41,42 @@
     
 	<div class="tab-bottom">
 		<div class="tab-content">
+			<% if @user_has_no_verses %>
+			<div id="getting-started" class="tab_content"><h3>Getting Started</h3>
+			<ol>
+				<li><%= link_to 'Read the tutorial', 					tutorial_path 		%></li>				
+				<li><%= link_to 'Read about the SuperMemo Algorithm',	supermemo_path		%> - (only if you're interested)</li>
+				<li><%= link_to 'Update your profile',					update_profile_path	%> - (set email reminders etc.)</li>			
+				<li><%= link_to 'Add your first memory verse', 			add_verse_path		%> - (feel free to jump straight to this step!)</li>	
+			</ol>
+
+			<h4>In a Rush?</h4>
+
+			<p>Get started quickly by selecting from the most popular verses in the translation of your choice</p>
+		
+			<ul>
+				<li><%= link_to 'New International Version', 	:action => 'starter_pack', :translation => 'NIV' %></li>
+				<li><%= link_to 'English Standard Version',		:action => 'starter_pack', :translation => 'ESV' %></li>
+				<li><%= link_to 'King James Version', 			:action => 'starter_pack', :translation => 'KJV' %></li>
+				<li><%= link_to 'New King James Version',		:action => 'starter_pack', :translation => 'NKJ' %></li>
+				<li><%= link_to 'New American Standard', 		:action => 'starter_pack', :translation => 'NAS' %></li>
+				<li><%= link_to 'Revised Standard Version', 	:action => 'starter_pack', :translation => 'RSV' %></li>
+			</ul>
+			</div>
+			<% elsif @user_has_too_few_verses %>
+			<div id="recommendations" class="tab_content"><h3>Recommendations</h3>
+				<ol>
+					<li><%= link_to 'Add another memory verse',				:action => 'add_verse'%></li>	
+					<% if @user_has_test_today %>
+					<li><%= link_to 'Memorize!', 							:action => 'test_verse' %></li>			
+					<% end %>
+				</ol>
+			</div>
+			<% else %>
 	       	<div id="dashboard" class="tab_content"><h3><%= link_to 'Recently on Memverse', tweets_path %></h3>
 			<%= render "tweets/tweets_for_main" %>
 			</div>
+			<% end %>
 	        <div id="devotion" class="tab_content"><h3>Spurgeon's Devotional</h3>
 	        <h4><%=@dev_ref%></h4>
 	        <%=@devotion.html_safe%>
