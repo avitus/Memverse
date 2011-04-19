@@ -2,8 +2,12 @@
 
 class InfoController < ApplicationController
  
+  # ----------------------------------------------------------------------------------------------------------   
+  # Memverse tutorial
+  # ---------------------------------------------------------------------------------------------------------- 
   def tutorial
-    @tab = "learn"    
+    @tab = "learn" 
+    @sub = "tutorial"   
     # Check for quest completion
     spawn_block do
       q = Quest.find_by_url(url_for(:action => 'tutorial', :controller => 'info', :only_path => false))
@@ -13,31 +17,45 @@ class InfoController < ApplicationController
       end
     end
   end
-  
+
+  # ----------------------------------------------------------------------------------------------------------   
+  # Supermemo Algorithm
+  # ----------------------------------------------------------------------------------------------------------   
   def sm_description
-    @tab = "learn"    
+    @tab = "learn" 
+    @sub = "smalg"   
   end
   
+  # ----------------------------------------------------------------------------------------------------------   
+  # Video Tutorial
+  # ----------------------------------------------------------------------------------------------------------   
   def video_tut
   	@tab = "learn"
+  	@sub = "vidtut"
   end
-  
+
+  # ----------------------------------------------------------------------------------------------------------   
+  # Volunteer Info
+  # ----------------------------------------------------------------------------------------------------------   
   def volunteer
     @tab = "contact"     
+    @sub = "volunteer"     
   end  
 
   # ----------------------------------------------------------------------------------------------------------   
   # Contact and Connect Page
   # ----------------------------------------------------------------------------------------------------------    
   def contact
-    @tab = "contact"    
+    @tab = "contact" 
+    @sub = "contact"        
   end  
  
   # ----------------------------------------------------------------------------------------------------------   
-  # Contact and Connect Page
+  # FAQ / Help
   # ----------------------------------------------------------------------------------------------------------    
   def faq
-    @tab = "contact"    
+    @tab = "contact"  
+    @sub = "help"        
   end    
   
   # ----------------------------------------------------------------------------------------------------------   
@@ -84,6 +102,7 @@ class InfoController < ApplicationController
   def leaderboard
     
     @tab          = "leaderboard" 
+    @sub 		  = "solo"
     @leaderboard  = User.top_users  # returns top users sorted by number of verses memorized
 
     @not_on_leaderboard = (current_user.memorized < @leaderboard.last[1]) unless !current_user
@@ -95,6 +114,8 @@ class InfoController < ApplicationController
   def churchboard
     
     @tab          = "leaderboard" 
+    @sub 		  = "church"
+    
     @churchboard  = Church.top_churches  # returns top users sorted by number of verses memorized
 
   end    
@@ -105,6 +126,8 @@ class InfoController < ApplicationController
   def stateboard
     
     @tab          = "leaderboard" 
+    @sub 		  = "us-state"
+    
     @stateboard   = AmericanState.top_states  # returns top states sorted by number of verses memorized
 
   end       
@@ -115,6 +138,8 @@ class InfoController < ApplicationController
   def countryboard
     
     @tab          = "leaderboard" 
+    @sub 		  = "country"
+    
     @countryboard  = Country.top_countries  # returns top users sorted by number of verses memorized
 
   end      
@@ -123,7 +148,9 @@ class InfoController < ApplicationController
   # Top referrers
   # ---------------------------------------------------------------------------------------------------------- 
   def referralboard
-    @tab            = "leaderboard"
+    @tab          = "leaderboard"
+    @sub 		  = "referrals"
+    
     @referralboard = User.top_referrers
     
     @not_on_referralboard = (current_user.num_referrals < @referralboard.last[1]) unless !current_user
@@ -133,7 +160,9 @@ class InfoController < ApplicationController
   # Show some nice statistics
   # ----------------------------------------------------------------------------------------------------------   
   def memverse_clock
-    @tab        = "leaderboard"    
+    @tab          = "leaderboard" 
+    @sub 		  = "global"
+       
    
     last_entry        = DailyStats.global.find(:first, :order => "entry_date DESC")
     

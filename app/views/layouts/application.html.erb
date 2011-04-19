@@ -156,19 +156,19 @@
 
 						<div id="memory" class="submenustyle">
 							<ul>							
-								<li><%= link_to t('memorize_menu.Memorize'),			test_verse_quick_path %></li>
-								<li><%= link_to t('memorize_menu.Reference Recall'), 	start_ref_test_path %></li>
-								<li><%= link_to t('memorize_menu.Practice'), 			drill_verse_path %></li>						
-								<li><%= link_to t('memorize_menu.Accuracy Test'), 		pre_exam_path %></li>	
-								<li><%= link_to t('memorize_menu.Chapter Review'), 		pre_chapter_path %></li>	
+								<li <%= sub(@sub=="mem"			)%>>><%= link_to t('memorize_menu.Memorize'),			test_verse_quick_path %></li>
+								<li <%= sub(@sub=="refrec"		)%>>><%= link_to t('memorize_menu.Reference Recall'), 	start_ref_test_path %></li>
+								<li <%= sub(@sub=="practice"	)%>>><%= link_to t('memorize_menu.Practice'), 			drill_verse_path %></li>						
+								<li <%= sub(@sub=="acctest"		)%>>><%= link_to t('memorize_menu.Accuracy Test'), 		pre_exam_path %></li>	
+								<li <%= sub(@sub=="chrev"		)%>>><%= link_to t('memorize_menu.Chapter Review'), 		pre_chapter_path %></li>	
 							</ul>	
 						</div>
 
 						<div id="tutorials" class="submenustyle">
 							<ul>
-								<li><%= link_to t('learn_menu.Tutorial'), 				tutorial_path %></li>
-								<li><%= link_to t('learn_menu.SuperMemo Algorithm'), 	supermemo_path %></li>
-								<li><%= link_to t('learn_menu.Video Tutorial'), 		"http://www.youtube.com/watch?v=vVtT6T-CXo8&fs=1&feature=player_embedded", :id => 'tut-video' %></li>
+								<li <%= sub(@sub=="tutorial"	)%>><%= link_to t('learn_menu.Tutorial'), 				tutorial_path %></li>
+								<li <%= sub(@sub=="smalg"		)%>><%= link_to t('learn_menu.SuperMemo Algorithm'), 	supermemo_path %></li>
+								<li <%= sub(@sub=="vidtut"		)%>><%= link_to t('learn_menu.Video Tutorial'), 		"http://www.youtube.com/watch?v=vVtT6T-CXo8&fs=1&feature=player_embedded", :id => 'tut-video' %></li>
 							</ul>
 						</div>
 
@@ -183,20 +183,20 @@
 
 						<div id="contact" class="submenustyle">
 							<ul>
-								<li><%= link_to t('contact_menu.Contact'), 				contact_path %></li>
-								<li><%= link_to t('contact_menu.Help'), 				faq_path %></li>
-								<li><%= link_to t('contact_menu.Volunteer'), 			volunteer_path %></li>
+								<li <%= sub(@sub=="contact"		)%>><%= link_to t('contact_menu.Contact'), 				contact_path %></li>
+								<li <%= sub(@sub=="help"		)%>><%= link_to t('contact_menu.Help'), 				faq_path %></li>
+								<li <%= sub(@sub=="volunteer"	)%>><%= link_to t('contact_menu.Volunteer'), 			volunteer_path %></li>
 							</ul>
 						</div>
 
 						<div id="leaderboard" class="submenustyle">
 							<ul>
-								<li><%= link_to t('leader_menu.Leaderboard'),			leaderboard_path %></li>
-								<li><%= link_to t('leader_menu.Church Leaderboard'), 	churchboard_path %></li>
-								<li><%= link_to t('leader_menu.State Leaderboard'), 	stateboard_path %></li>
-								<li><%= link_to t('leader_menu.Country Leaderboard'), 	countryboard_path %></li>
-								<li><%= link_to t('leader_menu.Referralboard'), 		referralboard_path %></li>						
-								<li><%= link_to t('leader_menu.One Church'), 			memverse_clock_path %></li>	
+								<li <%= sub(@sub=="solo"		)%>>><%= link_to t('leader_menu.Leaderboard'),			leaderboard_path %></li>
+								<li <%= sub(@sub=="church"		)%>>><%= link_to t('leader_menu.Church Leaderboard'), 	churchboard_path %></li>
+								<li <%= sub(@sub=="us-state"	)%>>><%= link_to t('leader_menu.State Leaderboard'), 	stateboard_path %></li>
+								<li <%= sub(@sub=="country"		)%>>><%= link_to t('leader_menu.Country Leaderboard'), 	countryboard_path %></li>
+								<li <%= sub(@sub=="referrals"	)%>>><%= link_to t('leader_menu.Referralboard'), 		referralboard_path %></li>						
+								<li <%= sub(@sub=="global"		)%>>><%= link_to t('leader_menu.One Church'), 			memverse_clock_path %></li>	
 							</ul>
 						</div>			
 
