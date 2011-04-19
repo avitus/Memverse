@@ -1,7 +1,8 @@
 <% page_title I18n.t :chapter_review, :scope => 'page_titles' %>
 <!-- Focus cursor on verse entry box -->
 <body onload="document.getElementById('verseguess').focus()">
-	
+
+<div class="white-box-with-margins">
 <div id="test-chapter">
 	<!-- Question-side : Entry box -->	
 	<fieldset id="question-side">
@@ -70,13 +71,7 @@
 	</div>
 </fieldset>	
 
-<!--	
-<%= observe_field :verseguess,
-	:frequency	=> 0.6,
-	:update		=> 'ajaxWrapper',
-	:url		=> {:action => 'feedback', :only_path => false},
-	:with		=> "'echo=#{@show_feedback}&correct='+escape(current_text)+'&verseguess='+encodeURIComponent(value)+'&vsnum='+current_verse"
-%> -->
+</div> <!-- End: white-box-with-margins -->
 
 <!-- Script for updating current verse, clearing input etc -->
 <script language="JavaScript" type="text/javascript">

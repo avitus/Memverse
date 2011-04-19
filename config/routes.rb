@@ -29,7 +29,7 @@ MemverseApp::Application.routes.draw do
  
   # My Mappings
   match '/add_verse',              :to => 'memverses#add_verse',             :as => 'add_verse'
-  match '/add/:id',				   			 :to => 'memverses#ajax_add',				 			 :as => 'add'
+  match '/add/:id',				   			 :to => 'memverses#ajax_add',	 			 			 :as => 'add'
   match '/quick_add/:vs',          :to => 'memverses#quick_add',             :as => 'quick_add'
   match '/quick_add_chapter',      :to => 'memverses#quick_add_chapter',     :as => 'quick_add_chapter'
   match '/avail_translations',     :to => 'memverses#avail_translations',    :as => 'avail_translations'
@@ -49,7 +49,7 @@ MemverseApp::Application.routes.draw do
   match '/exam_results',           :to => 'memverses#exam_results',          :as => 'exam_results'
   match '/pre_exam',               :to => 'memverses#explain_exam',          :as => 'pre_exam'
   match '/pre_chapter',            :to => 'memverses#chapter_explanation',   :as => 'pre_chapter'
-  match '/test_chapter',           :to => 'memverses#test_chapter',			     :as => 'test_chapter'
+  match '/test_chapter',           :to => 'memverses#test_chapter',					 :as => 'test_chapter'
   match '/drill_verse',            :to => 'memverses#drill_verse',           :as => 'drill_verse'
   match '/mark_test',              :to => 'memverses#mark_test',             :as => 'mark_test'
   match '/mark_drill',             :to => 'memverses#mark_drill',            :as => 'mark_drill'
