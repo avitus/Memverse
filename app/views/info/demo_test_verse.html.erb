@@ -12,7 +12,7 @@
 	<div id="instr-2">
 		<p>As you type, the feedback box will echo the verse and will alert you to any errors. Should you get stuck, you can click
 		on "Show Hint" to view the verse. Once you have completed the review, you would grade yourself with one of the 
-		five self-assessment buttons according to how well you remembered the verse. This determines when next you would review 
+		five self-assessment options according to how well you remembered the verse. This determines when next you would review 
 		that memory verse.</p>
 	</div>
 </div>
@@ -161,7 +161,7 @@
 		// Verse feedback	
 		$("#verseguess").observe_field(0.4, function( ) { 
 			$('#waiting').hide();
-			$.get("/feedback.html", { correct: current.text, verseguess: encodeURIComponent(this.value), echo: current.feedback },
+			$.get("/feedback.html", { correct: "<%= @text %>", verseguess: encodeURIComponent(this.value), echo: true },
 				function(data){	
 					$("#ajaxWrapper").html(data);
 			});
