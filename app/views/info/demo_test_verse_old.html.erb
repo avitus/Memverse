@@ -1,0 +1,110 @@
+<% page_title I18n.t :demo_memory_verse_review, :scope => 'page_titles' %>
+<% page_description I18n.t :demo_memory_verse_review, :scope => 'page_descriptions' %>
+<div id="instructions">
+	<div id="instr-1">
+		<p>This is a demo of the main memorization section of Memverse. For now, we will use the New International Version of the Bible but 
+		you will be able to select one of the many available translations in which to memorize your verses. Type Romans 12:2 into the text box
+		below.</p>
+	
+		<p>Hint: It begins <span class="text-highlight">"Do not conform any longer to the pattern of this world, but be ..."</span></p>
+	</div>
+	
+	<div id="instr-2">
+		<p>As you type, the feedback box will echo the verse and will alert you to any errors. Should you get stuck, you can click
+		on "Show Verse" on the flipcard on the right. Once you have completed the review, you would grade yourself with one of the 
+		five self-assessment buttons according to how well you remembered the verse. This determines when next you would review 
+		that memory verse.</p>
+	</div>
+</div>
+
+<!-- Question-side : Entry box -->	
+<fieldset id="question-side">
+	<legend> <%=@verse%> </legend>
+		<% form_tag :action => 'tutorial' do %>
+			
+			<div id="answerbox">
+		  		<%= text_area_tag(:verseguess, params[:verseguess] )%>			
+		  	</div>
+		
+		<div id="scoreTestButtons">								
+		  <div align="left"><%= submit_tag "5 Remembered - Perfect", 	 	:class => "submit", :q => 5 %></div>								
+		  <div align="left"><%= submit_tag "4 Remembered - Hesitation", 	:class => "submit", :q => 4 %></div>	
+		  <div align="left"><%= submit_tag "3 Remembered - Difficult",  	:class => "submit", :q => 3 %></div>	
+		  <div align="left"><%= submit_tag "2 Don't Know - Familiar",		:class => "submit", :q => 2 %></div>	
+		  <div align="left"><%= submit_tag "1 Don't Know - No Idea", 		:class => "submit", :q => 1 %></div>	
+		</div>			  
+		
+		<% end %>
+</fieldset>	
+
+<!-- Comparison section -->		
+<fieldset id="comparison">
+	<legend>Feedback</legend>
+	<div id="verseFeedback">
+		
+		<!-- Prior verse, if available -->
+		<% if !@prior_text.nil? %>
+			<div id="priorVerse">
+				<span class="superscript"><%=@prior_versenum%></span><span><%=@prior_text%></span>
+			</div>
+		<% end %>
+		
+		<!-- Current verse -->
+		<div id="currentVerse">
+			<% if !@prior_text.nil? %>			
+				<span class="superscript"><%=@current_versenum%></span>
+			<% end %>
+			<span id="ajaxWrapper">
+				<%= render :partial=>'feedback' %>
+			</span>
+		</div>
+	</div>
+</fieldset>	
+
+<!-- Flashcard -->	
+<div id="flashcard">
+	<div class="quickFlip">
+	    <div class="quickFlipPanel refPanel">
+	        <p><%=@verse%></p>
+	        <p class="quickFlipCta">Show Verse</p>
+	    </div>
+	
+	    <div class="quickFlipPanel textPanel">
+	    	<div id="flashcard-back-text">
+		        <p><%=@verse%></p>
+				<% if !@prior_text.nil? %>
+					<p><span class="superscript"><%= @prior_versenum   %></span><%=@prior_text%></p>
+				<% end %>				   	
+		        <p> 
+					<% if !@prior_text.nil? %>
+						<span class="superscript"><%= @current_versenum %></span>
+					<% end %>
+					<%=@text%>
+				</p>
+		        <p class="quickFlipCta">Back to test</p>
+			</div>			
+	    </div>
+	</div> <!-- end of quickFlip -->
+</div> <!-- end of flashcard -->
+
+
+<%= observe_field :verseguess, 
+	:frequency	=> 0.5,
+	:update		=> 'ajaxWrapper',
+	:url		=> {:action => 'feedback', :only_path => false},
+	:with		=> "'correct=#{escape_javascript(@text)}&verseguess='+encodeURIComponent(value)"
+%>	
+
+<script language="JavaScript" type="text/javascript">
+	$(document).ready(function() {
+	    $('.quickFlip').quickFlip();
+	});
+</script>
+
+<script language="JavaScript" type="text/javascript">
+	$(document).ready(function() {
+	    $('#verseguess').click( function() {
+			$('#instr-1').fadeOut(1000, function () { $('#instr-2').fadeIn(2000) } )
+		});
+	});
+</script>

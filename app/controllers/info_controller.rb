@@ -180,10 +180,10 @@ class InfoController < ApplicationController
   def demo_test_verse
      
     params[:verseguess] = ""  
-    @verse            = "Romans 12:2"
+    @verse            = "Rom 12:2"
     @text             = "Do not conform any longer to the pattern of this world, but be transformed by the renewing of your mind. Then you will be able to test and approve what God's will is — his good, pleasing and perfect will."
     @current_versenum = 2
-    
+    @mnemonic         = "D n c a l t t p o t w, b b t b t r o y m. T y w b a t t a a w G w i - h g, p a p w."
     @prior_text       = "Therefore, I urge you, brothers, in view of God's mercy, to offer your bodies as living sacrifices, holy and pleasing to God — this is your spiritual act of worship."
     @prior_versenum   = 1
 end
