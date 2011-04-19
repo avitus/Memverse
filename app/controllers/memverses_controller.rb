@@ -883,11 +883,21 @@ class MemversesController < ApplicationController
   end
 
   # ----------------------------------------------------------------------------------------------------------
+  # Select chapter to review
+  # ----------------------------------------------------------------------------------------------------------   
+  def chapter_explanation
+    @tab = "mem"  
+    @sub = "chrev" 
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
   # Review an entire chapter
   # ----------------------------------------------------------------------------------------------------------   
   def test_chapter
  
     @tab = "mem"  
+    @sub = "chrev"  
+    
     @show_feedback = true
     
     if params[:book_chapter].split.length == 3
@@ -912,6 +922,7 @@ class MemversesController < ApplicationController
   def test_verse_quick
  
     @tab = "mem"  
+    @sub = "mem"  
     @show_feedback = true
     
     @mv 			= current_user.first_verse_today
@@ -1113,7 +1124,9 @@ class MemversesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   def test_ref
     
-    @tab          = "mem"
+    @tab = "mem"
+    @sub = "refrec"  
+    
     if session[:ref_test_cntr] # The session variables are not set if user comes straight to this page
       @question_num = session[:ref_test_cntr]
       @ref          = session[:ref_test][@question_num]
@@ -1129,7 +1142,9 @@ class MemversesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   def test_exam
     
-    @tab          = "mem"
+    @tab = "mem"
+    @sub = "acctest"  
+    
     if session[:exam_cntr] # The session variables are not set if user comes straight to this page
       @question_num = session[:exam_cntr]
       @ref          = session[:exam_questions][@question_num][0]
@@ -1335,7 +1350,9 @@ class MemversesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------   
   def drill_verse
     
-    @tab        = "mem" 
+    @tab = "mem" 
+    @sub = "practice"  
+    
     @show_feedback = true
     
     # First check for verses in session queue that need to be tested
