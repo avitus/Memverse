@@ -1,4 +1,7 @@
 Memverse::Application.routes.draw do
+  
+  mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
+
   #get \"users\/show\"
 
   root :to => "home#index"
