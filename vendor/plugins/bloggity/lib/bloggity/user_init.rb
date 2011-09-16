@@ -50,7 +50,7 @@ module Bloggity
 				end
 				
 				# Implement in your user model 
-				def logged_in?
+				def user_signed_in?
 					true
 				end
 				

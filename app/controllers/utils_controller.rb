@@ -394,7 +394,7 @@ class UtilsController < ApplicationController
   def leaderboard
     
     @page_title = "Memverse Leaderboard"
-    @leaderboard = User.top_users(200)  # returns top users sorted by number of verses memorized
+    @leaderboard = User.top_users  # returns top users sorted by number of verses memorized
 
     # TODO: move this somewhere else
     DailyStats.update()
