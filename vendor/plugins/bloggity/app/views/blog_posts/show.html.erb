@@ -1,0 +1,13 @@
+<% page_title @blog_post.title %>
+
+<div id="main_content">
+	<% cache( [@blog_post, blog_logged_in? && (current_user.can_blog?(@blog_id) || current_user.can_moderate_blog_comments?(@blog_id))] ) do %>
+		<%= render :partial => 'show', :locals => { :blog_post => @blog_post } %>
+	<% end %>
+	
+	<%= render :partial => 'comments', :locals => { :blog_post => @blog_post } %>
+</div>
+
+<% cache( [@blog_page, "side-nav"], :expires_in => 40.minutes ) do %>
+	<%= render :partial => 'side_nav' %>
+<% end %>

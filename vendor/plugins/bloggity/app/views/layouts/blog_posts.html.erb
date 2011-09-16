@@ -1,0 +1,18 @@
+<% if blog_logged_in? && current_user.can_blog?(@blog_id) %>
+	<% content_for :head do %>
+		<%= javascript_include_tag 'bloggity/jquery' %>
+		<%= javascript_include_tag 'bloggity/jquery-form' %>
+		<%= javascript_include_tag 'bloggity/fckeditor/fckeditor' %>  
+	<% end %>
+<% end %>
+
+
+<% content_for :content do %>
+	<!-- bloggity styles namespaced by this div -->
+	<div id="bloggity_container">
+		<%= yield  %>
+		<div class="clr"></div><!-- Clear floats -->
+	</div> <!-- bloggity_container -->
+<% end -%>
+
+<%= render :file => "#{Rails.root}/app/views/layouts/application.html.erb" %>
