@@ -1,0 +1,125 @@
+<% page_title I18n.t :memory_verse_practice, :scope => 'page_titles' %>
+
+<div class="white-box-bg">
+
+	<!-- Question-side : Entry box -->	
+	<div class="test-verse">
+    	<div class="top-heading">
+        	<h2><span>Verse: </span><span class="verse-ref"><%= @verse %></span><span class="verse-tl"> [<%=@mv.verse.translation %>]</span></h2>
+            <div class="toggle-hint">Show Hint</div>
+        </div>
+        <div class="mnemonic"><%= @mv.mnemonic_if_req %></div>
+        <div class="verse-test-area">
+        	<% form_tag mark_drill_path, :id => 'mark_drill' do %>
+            	<div>
+            		<%= text_area_tag(:verseguess, params[:verseguess], :class => "verseguess" )%>	
+                </div>
+                
+                <div class="tool-tip-nav"></div>
+                <div id="test-buttons" class="score-test-buttons">								
+					<div align="left"><%= submit_tag "Next Verse", :class => "submit" %></div>
+				</div>	<!-- end: scoreTestButtons -->
+                
+            <% end %> <!-- end: form -->
+        </div> <!-- end: verse-test-area -->
+	</div> <!-- end: test-verse -->
+
+	<!-- Comparison section -->		
+    <div class="feedback verse-feedback">
+    	<h2>Feedback</h2>
+
+		<div class="priorVerse">
+			<p>
+				<!-- Prior verse, if available -->
+				<span class="prior-versenum superscript">	<%=@prior_versenum if @prior_text%></span>
+				<span class="prior-text">					<%=@prior_text if @prior_text%>	</span>
+			</p>
+		</div>
+		
+		<!-- Current verse -->
+		<div id="currentVerse">
+			<p>		
+				<span class="current-versenum superscript"><%=@mv.verse.versenum if @prior_text%></span>
+				<span id="waiting">Waiting for you to begin typing...</span>
+				<span id="ajaxWrapper">
+					<%= render :partial=>'feedback', :locals => {:show_feedback => @show_feedback} %>
+				</span>
+				<img class="center spinner" id="ajax_spinner" src="/images/indicator2.gif" alt="Comparing..." style="display: none" />
+			</p>					
+		</div>
+		
+		<!-- Current verse answer -->
+		<div id="complete-hint">
+			<p>		
+				<span class="current-versenum superscript"><%=@mv.verse.versenum if @prior_text%></span>
+				<span class="current-text"><%= @mv.verse.text %></span>
+			</p>			
+		</div>
+
+    </div> <!-- end: Feedback -->
+
+	<!-- Upcoming verses -->	
+    <div class="upcoming">
+    	<h2>Upcoming Verses</h2>
+		<%= render :partial => "upcoming_verses" %>						
+    </div>
+    <div class="clr"></div>
+
+</div> <!-- end: white-box-with-margins -->
+
+
+<script language="JavaScript" type="text/javascript"><!--
+	
+	$(document).ready(function() {
+	
+		<%= "$('.mnemonic').hide();" if !@mv.needs_mnemonic? %>
+		
+		// focus cursor on verse entry box
+		$('#verseguess').focus();
+			
+		// show verse
+		$(".toggle-hint").click( function () {
+			$("#complete-hint").toggle();
+			$("#currentVerse").toggle();
+			if ($(this).text() == "Show Hint") {
+				$(".toggle-hint").text("Hide Hint");
+			} else {
+				$(".toggle-hint").text("Show Hint");
+			}
+			
+		});
+		
+		// Verse feedback	
+		var current		= {};
+		current.text	= "<%= escape_verse(@mv.verse.text.html_safe) %>";
+		show_feedback	= <%= @mv.show_feedback? %>
+
+		$("#verseguess").observe_field(0.2, function( ) { 
+			$('#waiting').hide();
+			
+			$("#ajaxWrapper").html(versefeedback(current.text, this.value, show_feedback));
+			
+			if ($("#matchbox").length) {
+				$(".toggle-hint").fadeOut(500);
+			}
+			else if ($(".toggle-hint").is(":hidden")) {
+				$(".toggle-hint").text("Show Hint").fadeIn(500);
+			}
+			if ($("#complete-hint").is(":visible") && $("#matchbox").length) {
+				$("#complete-hint").toggle();
+				$("#currentVerse").toggle();
+			}
+        });
+        
+        $('.spinner')
+			.ajaxStart(function() {
+		        $(this).show();
+		    })
+			.ajaxStop(function() {
+		        $(this).hide();
+    	});
+				
+	});
+
+--></script>
+

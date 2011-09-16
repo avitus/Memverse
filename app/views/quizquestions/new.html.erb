@@ -1,0 +1,77 @@
+<% page_title "New Quiz Question" %>
+<div class="white-box-with-margins">
+	<h1>New Quiz Question</h1>
+	
+	<% form_for(@question, :as => :quiz_question, :url => { :action => "create" }, :html => { :multipart => true }) do |f| %>
+		<%= f.error_messages %>
+		<p>
+			<%= f.hidden_field  :quiz_id, :value => @quiz.id %>
+	  	</p>
+	  	<p>
+			<%= f.label 		:question_no, "Question number" %><br />
+			<%= f.select 		:question_no, (1..20), :selected => params[:qno] %>
+	  	</p>
+	  	<p>
+			<%= f.label 		:question_type, "Type of question" %><br />
+			<%= f.select		:question_type, [
+										['Recite verse',	'recitation'], 
+										['Give reference',	'reference'	], 
+										['Multiple Choice',	'mcq'		]],
+								{}, {:onchange => "questionType(this.value)"} %>
+	  	</p>
+ 		
+	  	<p id="passage">
+			<%= f.label 		:passage, "Passage Reference" %><br />
+			<%= f.text_field 	:passage %>	 	  		
+	  	</p>
+	  	<div id="mcq">
+	  	<p>
+			<%= f.label 		:mc_question, "Question text" %><br />
+			<%= f.text_area 	:mc_question %>
+		</p>
+
+	  	<p>
+			<%= f.label 		:mc_option_a, "Answer A" %><br />
+			<%= f.text_field 	:mc_option_a %>
+		</p>
+
+	  	<p>
+			<%= f.label 		:mc_option_b, "Answer B" %><br />
+			<%= f.text_field 	:mc_option_b %>
+		</p>
+
+	  	<p>
+			<%= f.label 		:mc_option_c, "Answer C" %><br />
+			<%= f.text_field 	:mc_option_c %>
+		</p>
+
+	  	<p>
+			<%= f.label 		:mc_option_d, "Answer D" %><br />
+			<%= f.text_field 	:mc_option_d %>
+		</p>				
+		<p>
+			<%= f.label 		:mc_answer, "Correct answer" %><br />
+			<%= f.text_field 	:mc_answer %>
+		</p>
+		</div>
+		<p>
+			<%= f.submit 'Create' %>
+		</p>
+	<% end %>
+
+</div>
+<script type="text/javascript">
+$passage = $("p#passage");
+$mcq = $("div#mcq");
+function questionType(qtype) {
+	if (qtype == 'mcq') {
+		$passage.hide();
+		$mcq.show();
+	}
+	else {
+		$passage.show();
+		$mcq.hide();
+	}
+}
+questionType($("select#quiz_question_question_type").val()); // setup the page based on what's selected at load time
+</script>

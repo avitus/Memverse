@@ -1,0 +1,31 @@
+<% page_title I18n.t :reftest_results, :scope => 'page_titles' %>
+<div class="white-box-with-margins">
+	<div>
+		<h2>You got <%=@correct%> out of <%=@answered%> verses correct and scored <%=@grade%>/100.</h2>
+		<p> Your current reference accuracy is now <span class="red-number"><%= @new_ref_grade %>%</span>. (Your previous reference accuracy score was <%= @old_ref_grade %>%.) </p>
+	</div>
+	
+	<% if @incorrect.length > 0 %>
+		<p>These are the references you got wrong:</p>
+		
+		<div>
+			<table class="memverse-standard">
+				<thead>
+					<tr>		  	 
+						<th>Reference</td>	
+						<th>Memory Verse</td>
+					</tr>
+				</thead>
+		
+				<tbody>
+					<% for mistake in @incorrect %>
+						<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
+							<td><%=session[:ref_soln][mistake][0]%> <%=session[:ref_soln][mistake][1]%>:<%=session[:ref_soln][mistake][2]%></td>
+							<td><%= session[:ref_test][mistake] %></td>				
+						</tr>
+					<% end %>					
+				</tbody>
+			</table>
+		</div>
+	<% end %>	
+</div>

@@ -1,0 +1,16 @@
+<% page_title "#{@verse.book} #{@verse.chapter}:#{@verse.versenum} [#{@verse.translation}]" %>
+<div class="white-box-with-margins">
+<%= render :partial => 'verse_form' %>
+
+<div class="clr"></div><br />
+
+<% if !logged_in? %>
+	<div>
+		<ol>
+			<li><%= link_to 'Learn More about Memverse 			-->', tutorial_path, :class => "action-link"%></li>	
+			<li><%= link_to 'Sign Up and Start Memorizing Today	-->', signup_path, 	 :class => "action-link"%></li>
+			<li><%= link_to 'Back to Top 100 Memory Verses  -->', popular_path,  :class => "action-link"%></li>				
+		</ol>	
+	</div>
+<% end %>
+</div>

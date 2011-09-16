@@ -1,0 +1,90 @@
+<div class="white-box-with-margins">
+	<% if !@error_reported.empty? %>
+		<h1>Verses Reported with an Error</h1>
+		<div class="verse-list">
+			<table cellpadding="6" cellspacing="0">
+				<tr>
+					<th>Ver			</th>	  	 
+					<th>Reference	</th>
+					<th>Users		</th>				
+					<th>Text		</th>
+					<th>Web Check	</th>				
+				</tr>
+				<% for vs in @error_reported %>
+				<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
+					<td align="center">						<%= vs.translation		%></td>		 
+					<td align="left">						<%= link_to vs.ref, vs.bg_link	%></td>			
+					<td align="center">						<%= vs.memverses_count	%></td>	
+					<td class="edit_area" id=<%= vs.id %>>	<%= vs.text 			%></td>
+					<td>									<%= vs.web_check		%></td>	
+					<td class="verify">						<%= link_to 'Verify', admin_verify_verse_path(vs.id), :remote => true %></td>
+					<td>									<%= vs.checked_by		%></td>							
+				</tr>
+				<% end %>
+			</table>
+		</div>
+	<% end %>
+	
+	<h1>Verses Requiring Verification</h1>
+	
+	<div class="verse-list">
+	
+		<table cellpadding="6" cellspacing="0">
+			<tr>
+				<th>ID			</th>					
+				<th>Ver			</th>	  	 
+				<th>Reference	</th>
+				<th>Users		</th>				
+				<th>Text		</th>
+				<th>Web Check	</th>
+			</tr>
+			<% for vs in @need_verification %>
+			<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
+				<td>									<%= vs.id				%></td>				
+				<td align="center">						<%= vs.translation		%></td>		 
+				<td align="left">						<%= link_to vs.ref, vs.bg_link	%></td>			
+				<td align="center">						<%= vs.memverses_count	%></td>	
+				<td class="edit_area" id=<%= vs.id %>>	<%= vs.text 			%></td>
+				<td>									<%= vs.web_check		%></td>	
+				<td class="verify">						<%= link_to 'Verify', admin_verify_verse_path(vs.id), :remote => true %></td>
+				<td>									<%= vs.checked_by		%></td>											
+			</tr>
+			<% end %>
+		
+		</table>
+	
+	</div>
+</div>
+
+<!-- http://www.appelsiini.net/projects/jeditable -->
+<script type="text/javascript">
+	 $(document).ready(function() {   
+	     $('.edit').editable('/admin/set_verse_text', {
+	         indicator : 'Saving...',
+	         tooltip   : 'Click to edit...'
+	     });
+	     $('.edit_area').editable('/admin/set_verse_text', { 
+	         type      : 'textarea',
+	         cancel    : 'Cancel',
+	         submit    : 'OK',
+	         indicator : 'Saving...',
+	         tooltip   : 'Click to edit...'
+	     });
+	 });
+</script>
+
+<!-- Highlight verse to be verified -->
+<script>
+  $(document).ready(function(){
+    
+    $('.verify').click(function () { 
+      $(this).closest('tr').fadeOut("slow"); 
+    });
+    $('.verify').hover(function () {
+      $(this).closest('tr').addClass("hilite");
+    }, function () {
+      $(this).closest('tr').removeClass("hilite");
+    });
+
+  });
+</script>

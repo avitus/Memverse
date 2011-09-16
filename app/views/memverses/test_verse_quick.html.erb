@@ -1,0 +1,352 @@
+<% page_title I18n.t :memory_verse_review, :scope => 'page_titles' %>
+
+<div class="white-box-bg">
+	<div class="test-verse">
+		<div class="top-heading">
+			<h2><span><%= t('.verse') %>: </span><span class="verse-ref"><%=@mv.verse.ref%></span><span class="verse-tl"> [<%=@mv.verse.translation %>]</span></h2>
+			<div class="toggle-hint"><%= t('.show_verse') %></div>
+		</div>
+		<div class="mnemonic"><div id="mtext"><%= @mv.mnemonic_if_req %></div><div id="mclose">x</div></div>
+		<div class="verse-test-area">
+			<%= form_tag mark_test_quick_path, :id => 'test-verse-quick' do %>
+				<div>
+				<%= text_area_tag(:verseguess, params[:verseguess], :class => "verseguess" )%>	
+				</div>
+				
+				<div class="tool-tip-nav">Rate Your Performance:</div>
+				<div id="test-buttons" class="score-test-buttons">				
+					<span class="submit" q="1">1</span> <div class="tooltip"><%= I18n.t "memverses.test_verse_quick.b1" %></div>							
+					<span class="submit" q="2">2</span> <div class="tooltip"><%= I18n.t "memverses.test_verse_quick.b2" %></div>							
+					<span class="submit" q="3">3</span> <div class="tooltip"><%= I18n.t "memverses.test_verse_quick.b3" %></div>							
+					<span class="submit" q="4">4</span> <div class="tooltip"><%= I18n.t "memverses.test_verse_quick.b4" %></div>							
+					<span class="submit" q="5">5</span> <div class="tooltip"><%= I18n.t "memverses.test_verse_quick.b5" %></div>	
+					
+					<span class="test-button" id="ff-button">&gt;&gt;</span> <div class="tooltip">Skip to next verse due</div>
+					
+					<span><%= link_to (image_tag("blue-icon.png", :width=>"16", :height=>"16")), "#info", :id => "inline" %></span> <div class="tooltip">Learn about rating your verses and keyboard shortcuts</div>
+					<div style="display:none">
+						<div id="info">
+							<%= render "memverses/rating_explanation" %>
+						</div> <!-- end: info -->
+					</div>	
+				</div>	<!-- end: scoreTestButtons -->
+				
+			<% end %> <!-- end: form -->
+		</div> <!-- end: verse-test-area -->
+
+	</div> <!-- end: test-verse -->
+   
+	<div class="feedback verse-feedback">
+		<h2><%= t('.feedback') %></h2>
+
+		<div class="priorVerse">
+			<p>
+				<!-- Prior verse, if available -->
+				<span class="prior-versenum superscript">	<%=@prior_versenum if @prior_text%></span>
+				<span class="prior-text">					<%=@prior_text if @prior_text%>	</span>
+			</p>
+		</div>
+		
+		<!-- Current verse -->
+		<div id="currentVerse">
+			<p>		
+				<span class="current-versenum superscript"><%=@mv.verse.versenum if @prior_text%></span>
+				<span id="feedback">Waiting for you to begin typing...</span>
+				<img class="center spinner" id="ajax_spinner" src="/images/indicator2.gif" alt="Comparing..." style="display: none" />
+			</p>					
+		</div>
+		
+		<!-- Current verse answer -->
+		<div id="complete-hint">
+			<p>		
+				<span class="current-versenum superscript"><%=@mv.verse.versenum if @prior_text%></span>
+				<span class="current-text"><%= @mv.verse.text %></span>
+				<img class="center spinner" id="ajax_spinner" src="/images/indicator2.gif" alt="Comparing..." style="display: none" />
+			</p>			
+		</div>
+
+	</div> <!-- end: Feedback -->
+	
+	<div class="upcoming">
+		<h2><%= t('.upcoming_verses') %></h2>
+		<%= render :partial => "upcoming_verses" %>						
+	</div>
+	<div class="clr"></div>
+</div> <!-- end: white-box-bg -->
+
+
+
+<script language="JavaScript" type="text/javascript"><!--
+	
+	$(document).ready(function() {
+	
+		<%= "$('.mnemonic').hide();" if !@mv.needs_mnemonic? %>
+		
+		// focus cursor on verse entry box
+		$('#verseguess').focus();
+		
+		//fancybox info
+		$("a#inline").fancybox({
+			'autoDimensions' : false,
+			'width'		     : '80%',
+			'height'		 : '90%'
+		});
+		
+		// Toggle verse function
+		function toggleverse() {
+			$("#complete-hint").toggle();
+			$("#currentVerse").toggle();
+			if ( $(".toggle-hint").text() == (I18n.t("memverses.test_verse_quick.show_verse")) ) {
+				$(".toggle-hint").text(I18n.t("memverses.test_verse_quick.hide_verse"));
+			} else {
+				$(".toggle-hint").text(I18n.t("memverses.test_verse_quick.show_verse"));
+			}
+		}
+		
+		// show verse
+		$(".toggle-hint").click( function () {
+			toggleverse();
+		});
+			
+		var ondeck 				= {};
+		var prior				= {};
+		var current				= {};
+		var user_id				= "<%= current_user.id %>";		
+
+		$("table#upcoming-verses .upcoming-verse-ref:contains('<%=@mv.verse.ref%>')").remove()				
+			 
+		current.id		 = "<%= @mv.id %>";
+		current.text   	 = "<%= escape_verse(@mv.verse.text.html_safe) %>";
+		current.feedback = <%= @mv.show_feedback? %>;
+		
+		// Load next verse
+		$('#ff-button').toggle(<%= !@mv.due? %>);					// Hide/Show fast forward button
+		ondeck = stageverses(current.id);
+
+		// Verse feedback	
+		$("#verseguess").observe_field(0.2, function( ) { 
+			
+			$("#feedback").html(versefeedback(current.text, this.value, current.feedback));
+			
+			if ($("#matchbox").length) {
+				$(".toggle-hint").fadeOut(500);
+			}
+			else if ($(".toggle-hint").is(":hidden")) {
+				$(".toggle-hint").text(I18n.t("memverses.test_verse_quick.show_verse")).fadeIn(500);
+			}
+			if ($("#complete-hint").is(":visible") && $("#matchbox").length) {
+				$("#complete-hint").toggle();
+				$("#currentVerse").toggle();
+			}
+		});
+
+		$('.spinner')
+			.ajaxStart(function() {
+				$(this).show();
+			})
+			.ajaxStop(function() {
+				$(this).hide();
+		});
+
+		// ==== Fastforward function ====		
+		function fastforward() {
+			// Check whether we're done for the day
+			if (ondeck.finished || typeof(ondeck.mv_skip) == 'undefined' || ondeck.mv_skip == null ) {
+				log_progress(user_id)
+				window.location="./progress";
+			}
+			else {
+				success = insertondeck(ondeck.mv_skip, ondeck.mv_prior_skip);	// Update page with ondeck verses
+				current = ondeck.mv_skip										// Update current verse
+				ondeck = stageverses(current.id);								// Get new ondeck verses
+			}
+		}
+		
+		// ==== User clicks on fastforward button ====				
+		$('#ff-button').click(function() {
+			fastforward();
+		});
+		
+		// ==== Show/Hide mnemonic ====
+		var mnemonic = "";
+		
+		function togglemnemonic(){
+			if ( $('#mclose').is(':hidden') ) {
+				$("#mtext").text(mnemonic);
+				$('#mclose').show();
+			}
+			else {
+				mnemonic = $('#mtext').text();
+				$('#mtext').html('<span>Show Prompts</span>');
+				$("#mclose").hide();
+			}
+		}
+		
+		$('#mclose').click(function() {
+			togglemnemonic();
+		});
+	
+		$('#mtext').click(function() {
+			if ( $('#mclose').is(':hidden') ) {
+				togglemnemonic();
+			}
+		});
+		
+		// ==== Verse rating function ====		
+		function rateverse() {
+			// == Remove verse from list of upcoming verses
+			$("ul#upcoming-verses .upcoming-verse-ref:contains(" + ondeck.mv.ref + ")").fadeOut(500);
+				
+			// Check whether we're done for the day
+			if (ondeck.finished) {
+				$.getJSON("/mark_test_quick", { mv: current.id, q: q  }, 			// Score verse
+					function(data) {
+						if (data.msg) {	alert(data.msg); }							// Give user a nice response
+						log_progress(user_id);									// Req successful callback from mark_test_quick: Log progress
+						window.location="./progress";							// Req successful callback from mark_test_quick: Navigate to progress
+				});
+			}
+			else {
+				success = insertondeck(ondeck.mv, ondeck.mv_prior);					// Update page with Ondeck verse
+				prior   = current;
+				current = ondeck.mv;												// data for the verse we're now testing
+				$.getJSON("/mark_test_quick", { mv: prior.id, q: q  }, 				// Score verse
+					function(data) {
+						if (data.msg) {	alert(data.msg); }							// Give user a nice response												
+						update_upcoming(20, ondeck.mv.id);							// Req successful callback from mark_test_quick: Update upcoming verses
+						ondeck = stageverses(current.id);							// Req successful callback from mark_test_quick: Get next verses				
+				});
+			}
+		}
+		
+		// ==== User clicks 1-5 button ====			
+		$('.submit').click( function() {
+			
+			// == Set key press
+			q = $(this).attr("q");
+			
+			rateverse();
+			
+		});
+
+		// Apply tooltips
+		$("#test-buttons span").tooltip({ 
+		
+			// place tooltip on the top edge
+			position: ['top', 'center'], 
+
+			// a little tweaking of the position 
+			offset: [0, -64], 
+
+			// use a simple show/hide effect 
+			effect: 'toggle', 
+
+			// specify relative to parent element
+			relative: true,
+
+			// custom opacity setting 
+			opacity: 0.8 
+		});
+
+		// Shortcuts
+		isShift = false;
+		isPlus = false;
+		pluskeys = [61, 107, 187];
+
+		$(document).keyup(function (e) {
+			if(e.which == 16) {
+				isShift=false;
+			}
+			if(jQuery.inArray(e.which,pluskeys) > -1) {
+				isPlus=false;
+			}
+		})
+		.keydown(function (e) {
+			if(e.which == 16) {
+				isShift=true;
+			}
+			if((jQuery.inArray(e.which,pluskeys) > -1) && (isShift == true)) { // FF on Windows 107, IE 187, Opera 61
+				isPlus=true;
+				return false;
+			}
+			if(isPlus == true && isShift == true){
+				if(e.which >= 49 && e.which <= 53) { // User must be rating verse
+					$("#verseguess").blur();
+					switch (e.which) { // Now set the "q" variable
+						case 49:
+							q = 1;
+							break;
+						case 50:
+							q = 2;
+							break;
+						case 51:
+							q = 3;
+							break;
+						case 52:
+							q = 4;
+							break;
+						case 53:
+							q = 5;
+							break;
+					}
+					rateverse();
+					return false;
+				}
+				if(e.which == 86) {
+					toggleverse();
+ 					return false;
+				}
+				if(e.which == 80 || e.which == 72) {
+					togglemnemonic();
+					return false;
+				}
+				if(e.which == 190) {
+					if ($("#ff-button").is(":visible")){
+						fastforward();
+					}
+					else {
+						alert("You cannot skip this verse. It is due for review today.");
+					}
+					return false;
+				}
+			} // end of if(isPlus == true && isShift == true)
+			
+		})
+		.keypress(function (e) {
+			if(e.which == 62 || e.which == 43) {
+				// Prevent ">" and "+" from going into textarea
+				e.preventDefault();
+				return false;
+			}
+			if((e.which == (33 || 64 || 35 || 36 || 37 || 80 || 86)) && isPlus == true) {
+				// All we're trying to do is prevent the shifted rating numbers or other symbols/characters for shortcuts from going into textarea
+				e.preventDefault();
+				return false;
+			}
+		})
+		;
+	}); // End of jQuery document ready
+
+--></script>
+
+<!-- Google Code for Memverse - Login Conversion Page -->
+<script language="JavaScript" type="text/javascript">
+<!--
+	var google_conversion_id = 1055933402;
+	var google_conversion_language = "en_US";
+	var google_conversion_format = "3";
+	var google_conversion_color = "ffffff";
+	var google_conversion_label = "9GgaCKqlhwEQ2ofB9wM";
+	if (0.5) {
+	var google_conversion_value = 0.5;
+}
+//-->
+
+</script>
+<script language="JavaScript" src="http://www.googleadservices.com/pagead/conversion.js">
+</script>
+
+<noscript>
+	<img height="1" width="1" border="0" src="http://www.googleadservices.com/pagead/conversion/1055933402/?value=0.5&amp;label=9GgaCKqlhwEQ2ofB9wM&amp;guid=ON&amp;script=0"/>
+</noscript> <!-- END: Google Code for Memverse - Login Conversion Page -->
+

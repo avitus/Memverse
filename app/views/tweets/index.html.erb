@@ -1,0 +1,38 @@
+<% page_title "Recently on Memverse" %>
+<div class="white-box-with-margins">
+	<h1>Recently on Memverse</h1>
+
+	<div id="latest-tweets">
+		<%= render :partial => "tweets/tweet", :locals => {:tweets => @tweets} %>	
+	</div>
+</div>
+<script language="JavaScript" type="text/javascript">
+$(document).ready(function() {
+  $('abbr.timeago').timeago();
+});
+
+$.PeriodicalUpdater('tweets/update', {
+    method: 'get',          // method; get or post
+    data: function() { return 'lastid='+$('.tweet:first').attr('id')+'&importance=5' },   // array of values to be passed to the page - e.g. {name: "John", greeting: "hello"}
+    minTimeout: 15*1000,    // starting value for the timeout in milliseconds
+    maxTimeout: 30*60*1000, // maximum length of time between requests is 10 mins
+    multiplier: 2,          // if set to 2, timerInterval will double each time the response hasn't changed (up to maxTimeout)
+    type: 'html',           // response type - text, xml, json, etc.  See $.ajax config options
+    maxCalls: 0,            // maximum number of calls. 0 = no limit.
+    autoStop: 0             // automatically stop requests after this many returns of the same data. 0 = disabled.
+}, function(data) {
+	
+	// Insert the new data (only called when there was a change)
+	if ( data != "" ) {
+		$firsttweet = $('.tweet:first')
+		lastid = $firsttweet.attr('id');
+		$firsttweet.before(data); // add new tweets to the top (before the old)
+		$('.tweet').filter(function() {
+			return  $(this).attr('id') > lastid;
+		}) // selects the new tweets
+		.effect('highlight', {}, 3000) // highlight them
+		.find('span.time > abbr.timeago').timeago(); // time in words
+	}
+});
+
+</script>

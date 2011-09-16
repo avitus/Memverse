@@ -1,0 +1,33 @@
+<% page_title I18n.t :global_challenge, :scope => 'page_titles' %>
+<% page_description I18n.t :global_challenge, :scope => 'page_descriptions' %>
+
+<div class="white-box-with-margins">
+<h2>Country Challenge</h2>
+<p>The following table shows the countries with the most verses memorized. For your country to be included on the leaderboard you
+   have to have at least 3 active members. Only members who have completed a memorization session in the past month count towards your 
+   country score.</p>
+
+<div class="user-list">
+	<table class="memverse-standard">
+	<thead>  	
+		<tr>
+			<th>Rank</th>	  
+			<th>Country</th>
+			<th>Members</th>
+			<th>MemScore</th>
+		</tr>
+	</thead>
+	
+	<tbody>
+		<% for country in @countryboard %>
+			<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
+				<td align="center"> <%= @countryboard.index(country)+1	%></td>			
+				<td align="left">   <%= link_to( country[0].printable_name, { :controller => "country", :action => "show", :id => country[0] })  %></td>	
+				<td align="center"> <%= number_with_delimiter(country[0].users_count)			%></td>	
+				<td align="center"> <%= number_with_delimiter(country[1])	%></td>				
+			</tr>
+		<% end %>
+	</tbody>
+	</table>
+</div>
+</div>

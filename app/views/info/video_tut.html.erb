@@ -1,0 +1,23 @@
+<a id="inline" title="Memverse Tutorial Video" href="http://www.youtube.com/watch?v=N8A71DIcr4Y&fs=1&feature=player_embedded">Memverse Tutorial Video</a>
+
+<script>
+	$(document).ready(function() {			
+		$("#inline").click(function() {
+			$.fancybox({
+					'padding'		: 0,
+					'autoScale'		: false,
+					'transitionIn'	: 'none',
+					'transitionOut'	: 'none',
+					'title'			: this.title,
+					'width'			: 1280,
+					'height'		: 750,
+					'href'			: this.href.replace(new RegExp("watch\\?v=", "i"), 'v/'),
+					'type'			: 'swf',
+					'swf'			: {	'wmode'				: 'transparent',
+										'allowfullscreen'	: 'true' }
+				});
+		
+			return false;
+		});	
+	});	
+</script>

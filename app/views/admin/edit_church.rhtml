@@ -1,0 +1,10 @@
+<div class="white-box-with-margins">
+
+	<h2>Editing Church</h2>
+	
+	<% form_tag :action => 'update_church', :id => @church do %>
+	  <%= render :partial => 'church_form' %>
+	  <%= submit_tag 'Edit' %>
+	<% end %>
+
+</div>

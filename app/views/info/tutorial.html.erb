@@ -1,0 +1,68 @@
+<% page_title I18n.t :tutorial, :scope => 'page_titles' %>
+<% page_description I18n.t :tutorial, :scope => 'page_descriptions' %>
+<div class="white-box-bg">
+	<div class="side-margins">
+		<h1>How it works</h1>
+		
+		<p>Memverse.com keeps track of all your Bible memory verses. It is entirely online so
+		there is no software to download, there are no flash cards to carry around, and, best of all, you 
+		will be gradually building up a library of biblical knowledge. It's also free, and always
+		will be.</p>
+		
+		<p>When you first login, you will be given the opportunity to add memory verses. We 
+		recommend starting with about 6 to 10 memory verses and then gradually adding memory verses 
+		over time as you memorize the ones in your repertoire.</p>
+		
+		<img src="/images/AddVerse.gif" alt="Adding a Verse" width="839" height="389"/>
+	
+		<p>There are two ways to add verses. As the screenshot above shows, you can either type in
+		the verse yourself (in the translation of your choice) or if someone has already added a verse 
+		you can simply click 'Add Verse' and it will be added to your list of memory verses.</p>
+		
+		<h3>Memorization</h3>
+		
+		<p>Once you have added verses, you can begin memorizing. Some people login every day, others
+		once a week. It's up to you. When you login, Memverse will present you with the verses that
+		you are due to review. The timing between reviews is calculated by the software so you 
+		don't need to keep track of this yourself.</p>
+		
+		<p>The main memorization page is where you will spend the majority of your time. The software
+		compares the verse that you're entering with the correct verse. You can also see the verse by 
+		clicking "Show Verse" if you're completely stuck.</p>	
+		
+		<img src="/images/Memorize.gif" alt="Memorization" width="1043" height="384" />
+		
+		<p>Once you've entered the verse, you grade	yourself on how well you knew it. This will determine
+		how soon you will be given the opportunity to review the verse. If you remembered the verse 
+		(without looking at the verse!) you should select options 3 through 5. If you struggled to 
+		recall the verse but did eventually get it correct, select option 3. If you remembered the verse 
+		instantaneously and without hesitation, select option 5.</p>	
+	
+		<p>If you could not recall the verse or could not remember the text associated with the reference,
+		select option 1 or 2. This will allow you to practise the verse again the next time you login.</p>	
+	
+		<h3>Tracking your Progress</h3>
+		
+		<p>Finally, the software will keep track of all your memory verses and will show you how
+		you are progressing. It will recommend that you add new verses at the appropriate time. As
+		you become more familiar with a given Bible verse, it will present it to you less frequently.</p>
+		
+		<img src="/images/stats.gif" height="502" width="1054" alt="Bible verse memorization progress">	
+		
+		<p>Memory verses that span multiple verses are automatically grouped into a single memory verse.
+		That way, you can memorize the whole of Romans!</p>	
+		
+		<img src="/images/verselist.gif" height="194" width="966" alt="Memorization">
+	
+		<% if !logged_in? %>	
+			<div>
+				<ol>
+					<li><%= link_to 'Sign Up and Start Memorizing Today	-->', signup_path, 	 :class => "action-link"%></li>
+					<li><%= link_to 'Try the Demo  -->', demo_path,  :class => "action-link"%></li>	
+					<li><%= link_to 'Top 100 Memory Verses  -->', popular_path,  :class => "action-link"%></li>
+					<li><%= link_to 'The Memverse Blog  -->', blog_path,  :class => "action-link"%></li>				
+				</ol>	
+			</div>
+		<% end %>
+	</div>
+</div>

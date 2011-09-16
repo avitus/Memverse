@@ -1,0 +1,14 @@
+            <div class="tab-content-left">
+            	<ul>
+            	  <% for tweet in @tweets1 %>
+                    <li><%= tweet.news.html_safe %> <span>[<%= time_ago_in_words(tweet.created_at) %> ago]</span></li>
+            	  <% end %>
+                </ul>
+            </div>
+            <div class="tab-content-right">
+            	<ul>
+            	  <% for tweet in @tweets2 %>
+                    <li><%= tweet.news.html_safe %> <span>[<%= time_ago_in_words(tweet.created_at) %> ago]</span></li>
+            	  <% end %>
+                </ul>
+            </div>

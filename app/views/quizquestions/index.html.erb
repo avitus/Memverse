@@ -1,0 +1,26 @@
+<% page_title "Quiz Questions" %>
+<div class="white-box-with-margins">
+<% if params[:quiz] %>
+<h1>Quiz Questions</h1>
+
+<table class="memverse-standard">
+  <tr>
+    <th>Question number</th>
+    <th>Variation</th>
+  </tr>
+
+	<% @quiz.quiz_questions.each do |question| %>
+	  <tr>
+	    <td><%=h link_to("Question #" + question.number, question) %></td>
+	    <td><%=h question.variation %></td>
+	  </tr>
+	<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New question', new_quizquestion_path(:quiz => @quiz.id) %>
+</div>
+<% else %>
+	<p>You need to specify a quiz in the parameters to view its questions.</p>
+<% end %>

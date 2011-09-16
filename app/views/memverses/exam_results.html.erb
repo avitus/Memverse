@@ -1,0 +1,37 @@
+<% page_title I18n.t :accuracy_results, :scope => 'page_titles' %>
+
+<div class="white-box-with-margins">
+
+	<h2>You scored <%=@correct%> out of <%=@answered%></h2>
+	
+	<h4>Your new accuracy score is <%=@new_accuracy%>%. Your previous accuracy score was <%=@old_accuracy%>%</h4>
+	
+	<% if !@perfect_score %>
+		<p>These are the memory verses you got wrong:</p>
+		
+		<div>
+			<table class="memverse-standard">
+				<thead>
+					<tr>		  	 
+						<th>Reference</td>	
+						<th>Correct Text</td>
+						<th>Your Answer</td>
+						<th>Interval</td>
+					</tr>
+				</thead>
+		
+				<tbody>
+					<% for mistake in @incorrect %>
+						<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
+							<td>				<%= session[:exam_questions][mistake][0]%></td>
+							<td>				<%= session[:exam_answers][mistake] %></td>
+							<td>				<%= session[:exam_submission][mistake].html_safe %></td>
+							<td align="center">	<%= Memverse.find( session[:exam_id][mistake] ).test_interval %>			
+						</tr>
+					<% end %>
+				</tbody>
+			</table>
+		</div>
+	<% end %>
+</div>
+

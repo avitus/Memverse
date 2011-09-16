@@ -1,0 +1,23 @@
+<div class="white-box-with-margins">
+	<div id="cohort-analysis">
+		<table class="user-stats-table" cellpadding="6" cellspacing="0" border="1">	
+			<tr>
+				<th>Cohort</th>
+				<th>Initial</th>
+				<th>Past Month</th>
+				<th>% Active</th>
+			</tr>
+			<% @cohort_table.keys.sort.each do |cohort| %>
+				<tr>
+					<td><%= cohort %></td>
+					<td align="center"><%= @cohort_table[cohort] %></td>
+					<td align="center"><%= @activity_table[cohort] %></td>
+					<td align="right"><%= number_with_precision( @activity_table[cohort].to_f / @cohort_table[cohort].to_f * 100, :precision => 1) %>%</td>
+				</tr>	
+			<% end %>	
+		</table>
+	</div>
+	
+	<div class="clr"></div>
+	
+</div>

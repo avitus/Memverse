@@ -1,0 +1,38 @@
+<% page_title I18n.t :my_stats, :scope => 'page_titles' %>
+<div id="user-stats">
+
+	<table class="user-stats-table" cellpadding="6" cellspacing="0" border="1">	
+		<tr>
+			<th>Most Popular</th>
+			<th>Users</th>
+		</tr>
+		<% @pop_verses.each do |x| %>
+			<tr>
+				<td><%= x.pop_ref %></td>
+				<td><%= x.num_users %></td>
+			</tr>
+		<% end %>
+	</table>	
+	
+
+	<table class="user-stats-table" cellpadding="6" cellspacing="0" border="1">	
+		<tr>
+			<th>My Verses</th>
+			<th>No. Verses</th>
+		</tr>
+		<% @status_table.keys.sort.each do |x| %>
+			<tr>
+				<td><%= x %></td>
+				<td><%= @status_table[x] %></td>
+			</tr>
+		<% end %>
+		<tr>
+			<th>Total</th>
+			<td><%=current_user.memverses.length%></td>
+		</tr>
+	</table>
+	
+
+
+
+</div>

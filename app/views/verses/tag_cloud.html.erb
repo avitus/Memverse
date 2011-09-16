@@ -1,0 +1,10 @@
+<% page_title I18n.t :tag_cloud, :scope => 'page_titles' %>
+
+<div class="white-box-with-margins">	
+	<div id="tagcloud">
+		<% tag_cloud @tags do |name, css_class|  %>
+		      <%= link_to name, show_verses_with_tag_path(:tag => name), :class => css_class %>
+		<% end %>
+	</div>
+</div>
+

@@ -1,0 +1,38 @@
+<% page_title "New Quiz" %>
+<div class="white-box-with-margins">
+	<h1>New Quiz</h1>
+<% form_for(@quiz, :html => { :multipart => true }) do |f| %>
+  <%= f.error_messages %>
+  <p>
+    <%= f.label 			:name, 'Quiz Name' %><br />
+	<%= f.text_field		:name %>
+  </p>
+  <p>
+    <%= f.label 			:description, 'Description' %><br />
+	<%= f.text_area			:description %>
+  </p>
+  <p>
+	<%= f.label 			:datetime, 'Date & Time Date & Time (YYYY-MM-DD HH:MM:SS in UTC)' %><br />
+	<%= f.text_field		:datetime %>
+  </p>
+  <p>
+    <%= f.label 			:open, 'Open quiz room' %><br />
+	<%= f.check_box			:open %>
+  </p>
+  <p>
+    <%= f.label 			:help_score, 'Enable "Help Score"' %><br />
+	<%= f.check_box			:help_score %>
+  </p>  
+  <p>
+    <%= f.label 			:help_score_description, 'Help Score information' %><br />
+	<%= f.text_area			:help_score_description %>
+  </p>
+  <p>
+  	<%= f.label 			:no_questions, 'Number of questions' %><br />
+	<%= f.select(:no_questions, (1..20).to_a) %>
+  </p>
+  <p>
+    <%= f.submit 'Create' %>
+  </p>
+<% end %>
+</div>

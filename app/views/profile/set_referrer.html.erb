@@ -1,0 +1,55 @@
+<div class="white-box-with-margins">
+	<h1>Who Referred You?</h1>
+	
+	<p>You can enter either the name, login (username) or the email address of the person who referred you:</p>
+	
+	<div class="details-form">
+	    
+	    <h2> Enter User login, email or name</h2>
+	    
+	      <%= form_tag( {}, { :id => 'advanced_search' } ) do %>
+	        <p>
+		        Search:     <%= text_field_tag( :search_param,  params[:search_param],  :size =>  40 )%>
+		        <img class="spinner" id="ajax_spinner" src="/images/indicator.gif" alt="Searching ..." style="display: none" /> 
+	        </p>	                      
+	      <% end %>
+	          
+	</div>  
+	
+	<br />
+	
+	<div id="search_results">
+	  <%= render :partial=>'search_user' %>
+	</div>
+</div>
+
+<script language="JavaScript" type="text/javascript"><!--		
+	$(document).ready(function() {
+		$("#search_param").observe_field(0.5, function( ) { 
+			$.get("/search_user", { search_param: this.value },
+				function(data){	
+					$("#search_results").html(data);
+			}, "html" );
+        })
+        .keypress(function(e) {
+        	if (e.which == 13) { // if press Enter/Return, look up user and preventDefault/return false
+        		$.get("/search_user", { search_param: this.value },
+					function(data){	
+						$("#search_results").html(data);
+				}, "html" );
+        		e.preventDefault();
+        		return false;
+        	}
+        });
+    });
+    
+	$('.spinner')
+		.ajaxStart(function() {
+	        $(this).show();
+	    })
+		.ajaxStop(function() {
+	        $(this).hide();
+    });     
+--></script>
+
+

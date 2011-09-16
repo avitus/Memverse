@@ -1,0 +1,32 @@
+<div class="white-box-with-margins">
+
+	<div class="verse-list">
+	
+		<table class="sortable" id="usertable" cellpadding="6" cellspacing="0">
+			
+			<tr>
+				<th>ID</th>
+				<th align="left">Church</th>
+				<th align="left">Rank</th>
+				<th align="center">Members</th>	
+			</tr>
+			
+			<% for church in @church_list %>
+			<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
+				<td> <%= church.id				%></td>	
+				<td> <%= church.rank			%></td>	
+				<td> <%= link_to church.name, { :controller => "admin", :action => "show_church", :church => church.id }	%></td>				
+				<td align="center"> <%= church.users.length	%></td>                       
+			    <td align="center"> <%= church.users_count %></td>                       
+			    <td align="center"> <%= link_to "Fix User Count", {:action => 'update_church_user_count', :id => church } %></td>			
+							
+				<td><%= link_to 'Edit', { :action => 'edit_church', 	:id => church } %></td>
+				<td><%= link_to 'X', 	{ :action => 'destroy_church',  :id => church }, :confirm => 'Are you sure?', :method => :post %></td>					
+				
+			</tr>
+			<% end %>
+		
+		</table>
+	
+	</div>
+</div>

@@ -1,0 +1,15 @@
+	<div id="news-strip"><!--news-strip start-->
+		<div class="strip-left">Verse Illumination:</div>
+		<div class="strip-right">
+			<div class="scrollable">
+				<div class="items">
+					<% for vs in @vsillumination %>
+					<div><span><%= link_to vs.book + " " + vs.chapter + ":" + vs.versenum, :controller => 'info', :action => 'show_vs', :vs => vs.niv%></span> <%= truncate(vs.niv_text, :length => 80, :separator => ' ') %> (NIV)</div>
+					<% end %>
+				</div>
+			</div>
+			<a class="prev arrow-left"><img src="/images/arrow-left.png" width="15" height="26" alt="" /></a>
+			<a class="next arrow-right"><img src="/images/arrow-right.png" width="15" height="26" alt="" /></a>
+		</div>
+	</div><!--news-strip end-->
+

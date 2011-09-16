@@ -1,0 +1,53 @@
+<% page_title I18n.t :referralboard, :scope => 'page_titles' %>
+<% page_description I18n.t :referralboard, :scope => 'page_descriptions' %>
+<div class="white-box-with-margins">
+	<h2>Referral Leaderboard</h2>
+	
+	<p>The following table shows the users who have referred the most new users to Memverse. Every active user you refer to Memverse counts for one point,
+	   and every active user they refer counts for an extra half point.</p>
+	
+	<div class="user-list">
+		<table id="leaderboard" class="memverse-standard"> 
+			<thead>	
+				<tr>
+					<th>Rank</th>
+					<th>Level</th>
+					<th>Name</th>	
+					<th>Referrals</th>
+					<th>Affiliation</th>
+					<th>Country</th>
+					<th>Joined</th>
+				</tr>
+			</thead> 
+			
+			<tbody>
+				<% for user in @referralboard %>
+					<tr valign="top" <%=css_current_user_check(user[0])%> >
+						<td align="center"> <%= @referralboard.index(user)+1%></td>
+						<td align="center"> <%= user[0].level ? user[0].level : "" %></td>
+						<td align="left">   <%= link_to user[0].name.empty? ? "[" + user[0].login + "]" : user[0].name, referrals_path(user[0].id)	%></td>
+						<td align="center"> <%= user[1]				%></td>	
+						<td align="left"> 	<%= user[0].church ? link_to(user[0].church.name, { :controller => "profile", :action => "show_church", :church => user[0].church.id }) : "" %></td>
+						<td align="left"> 	<%= user[0].country ? user[0].country.printable_name : "" %></td>
+						<td align="center"> <%= user[0].created_at.to_date %></td>				
+					</tr>
+				<% end %>
+				
+				<% if @not_on_referralboard %>
+					<tr>
+						<td align="center">		You																	  </td>
+						<td align="center"> <%= user[0].level ? user[0].level : "" 									%></td>				
+						<td align="left"> 	<%= current_user.name.empty? ? current_user.login : current_user.name	%></td>
+						<td align="center"> <%= current_user.num_referrals											%></td>			
+						<td align="center"> <%= current_user.memorized 												%></td>
+		        		<td align="center"> <%= current_user.accuracy                  								%>%</td>
+		        		<td align="center"> <%= current_user.ref_grade                 								%>%</td>
+						<td align="left"> 	<%= current_user.church ? link_to(current_user.church.name, { :controller => "profile", :action => "show_church", :church => current_user.church.id }) : "" %></td>
+						<td align="left"> 	<%= current_user.country ? current_user.country.printable_name : "" 	%></td>
+						<td align="center"> <%= current_user.created_at.to_date 									%></td>								
+					</tr>
+				<% end %>
+			</tbody>
+		</table>
+	</div>
+</div>

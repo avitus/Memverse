@@ -1,0 +1,26 @@
+<% page_title "New Quiz" %>
+<div class="white-box-with-margins">
+	
+	<h1>New Quiz</h1>
+	
+	<% form_for(@quiz, :html => { :multipart => true }) do |f| %>
+	
+	  <%= f.error_messages %>
+	  <p>
+	    <%= f.label 			:name, 'Quiz Name' %><br />
+		<%= f.text_field		:name %>
+	  </p>
+	  <p>
+	    <%= f.label 			:description, 'Description' %><br />
+		<%= f.text_area			:description %>
+	  </p>
+	  
+	  <p>
+		<%= f.label 			:start_time, "Start time" %><br />  	
+	  	<%= f.datetime_select	:start_time %>
+	  <p>
+	    <%= f.submit 'Create' %>
+	  </p>
+	
+	<% end %>
+</div>

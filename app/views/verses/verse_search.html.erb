@@ -1,0 +1,34 @@
+<% page_title I18n.t('home_menu.Search Bible') %>
+
+<div class="white-box-with-margins main-content">
+	
+	<div id="search-box" class="center">			
+	
+		<h2>Search the Bible</h2>
+
+		<% form_tag search_verse_path, :method => :get do %>
+
+		    <%= text_field_tag( :searchParams ) %>
+		    <%= submit_tag "", :name => nil, :id => 'searchSubmit' %>
+
+		<% end %>
+	</div>
+	
+	<br>
+	
+	<% unless @verses.empty? %>
+		<div id="search_results">	
+			<table class="memverse-standard">
+				<%= render :partial => "verses/verse_headings" %>
+				<%= render :partial => "verses/verse", :collection => @verses %>
+			</table>
+		</div>
+	<% end %>
+</div>
+
+
+<script type="text/javascript">
+  $(".add")
+  	.live("ajax:success", function(evt, data, status, xhr) { $(this).html(data.msg) })
+	.live("ajax:beforeSend", function(evt, xhr, settings) { $(this).find("a").html("Adding...") });
+</script>

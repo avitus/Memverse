@@ -1,0 +1,23 @@
+<ul id="upcoming-verses">
+	<% if @upcoming_verses.empty? %>
+
+		<li>(None)</li>		 				
+
+	<% else%>
+		
+		<% for mv in @upcoming_verses[0...14] %>
+			<li class="upcoming-verse-ref <%= cycle("gray2", "white2") %>">
+				<%= mv.verse.ref %>	 		
+			</li>
+		<% end %>
+		
+		<% if @upcoming_verses.length >= 15 %>
+			<li></li>
+			<li>( ... <%= @upcoming_verses.length-14 %> more )</li>
+		<% end %>
+		
+	<% end %>
+</ul>			
+
+	
+	

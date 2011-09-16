@@ -1,0 +1,34 @@
+<div class="white-box-with-margins">
+
+	<div class="details-form">
+		Verse: 	<%= text_field_tag( :verse,	params[:verse],  :size =>  16 )%>							
+	</div>	
+	
+	<br>
+	
+	<div id="search_results">
+		<%= render :partial=>'search_verse' %>
+	</div>
+
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		
+		$("#verse").observe_field(0.3, function( ) { 
+			$.get("/admin_search_verse", {  verse: this.value },
+				function(data){	
+					$("#search_results").html(data);
+			}, "html" );
+        });		
+		
+		$('.spinner')
+			.ajaxStart(function() {
+		        $(this).show();
+		    })
+			.ajaxStop(function() {
+		        $(this).hide();
+	    }); 		
+		
+	});
+</script>

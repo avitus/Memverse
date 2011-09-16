@@ -1,0 +1,39 @@
+<h1>Editing sermon</h1>
+
+<% form_for(@sermon, :html => { :multipart => true }) do |f| %>
+  <%= f.error_messages %>
+  <p>
+    <%= f.label :title %><br />
+    <%= f.text_field :title %>
+  </p>
+  <p>
+    <%= f.label :summary %><br />
+    <%= f.text_area :summary %>
+  </p>
+  <p>
+    <%= f.label :church_id %><br />
+    <%= f.text_field :church_id %>
+  </p>
+  <p>
+    <%= f.label :pastor_id %><br />
+    <%= f.text_field :pastor_id %>
+  </p>
+  <p>
+    <%= f.label :user_id %><br />
+    <%= f.text_field :user_id %>
+  </p>
+  <p>
+    <%= f.label :uberverse_id %><br />
+    <%= f.text_field :uberverse_id %>
+  </p>
+  <p>
+    <%= f.label :mp3 %><br />
+    <%= f.file_field :mp3 %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @sermon %> |
+<%= link_to 'Back', sermons_path %>

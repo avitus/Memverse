@@ -1,0 +1,196 @@
+<% page_title I18n.t :chapter_review, :scope => 'page_titles' %>
+
+<div class="white-box-bg">
+	<div id="chapter-test-left">	
+		<div class="test-chapter">
+			
+		    <div class="top-heading">
+				<h2><span class="current-ref"><%=@bk_ch%>:<span class="current_verse"><%=@verse.to_s%></span></span></h2>
+		        <div class="toggle-hint">Show Hint</div>
+		    </div>
+			
+			<div class="mnemonic"></div>
+		
+			<!-- Question-side : Entry box -->	
+			<div class="verse-test-area">
+				<% form_tag test_chapter_path do %>
+		
+					<div id="answerbox">
+		        		<%= text_area_tag(:verseguess, params[:verseguess], :class => "verseguess" )%>	
+		            </div>			  	
+			  			
+		            <div class="tool-tip-nav">Rate Your Performance:</div>
+		            <div class="score-test-buttons">								
+						<span class="submit" q="1">1</span> <div class="tooltip"><%= I18n.t "memverses.test_verse_quick.b1" %></div>							
+						<span class="submit" q="2">2</span> <div class="tooltip"><%= I18n.t "memverses.test_verse_quick.b2" %></div>							
+						<span class="submit" q="3">3</span> <div class="tooltip"><%= I18n.t "memverses.test_verse_quick.b3" %></div>							
+						<span class="submit" q="4">4</span> <div class="tooltip"><%= I18n.t "memverses.test_verse_quick.b4" %></div>							
+						<span class="submit" q="5">5</span> <div class="tooltip"><%= I18n.t "memverses.test_verse_quick.b5" %></div>		
+					</div>	<!-- end: scoreTestButtons -->			
+							
+				<% end %>	
+			</div> <!-- end: verse-test-area -->
+					
+		</div> <!-- end: test-chapter -->
+
+		<div class="clr"></div>
+
+		<!-- Flashcard -->	
+		<div id="flashcard" class="chapter-feedback">			
+			<!--- FrontSide --->
+	    	<div id="flashcard-front-text">	
+	    		<h2>Live Feedback</h2>
+		    	
+				<div id="currentVerse">		
+					<!-- Current verse -->
+					<span id="ajaxWrapper">
+						<%= render :partial=>'feedback', :locals => {:show_feedback => @show_feedback} %>
+					</span>	
+					<img class="center spinner" id="ajax_spinner" src="/images/indicator2.gif" alt="Comparing..." style="display: none" />				
+				</div>
+				
+				<!-- Current verse answer -->
+				<div id="complete-hint">
+					<p>		
+						<span class="current-versenum superscript"></span>
+						<span class="current-text"></span>
+					</p>			
+				</div>				
+			</div>	<!-- end of flashcard-front-text -->			
+		
+			<!--- BackSide --->
+	    	<div id="flashcard-back-text">
+		        <p><%=@bk_ch%>:<span class="current_verse"><%=@verse.to_s%></span></p>				   	
+				<% for mv in @chapter %>
+					<span class="verse-text" id="<%=mv.verse.versenum%>">
+						<%= mv.verse.text %>
+					</span>	
+				<% end %>
+			</div>	<!-- end: flashcard-back-text -->	
+		</div> <!-- end: flashcard -->
+	</div> <!-- end: chapter-test-left -->
+
+	<div id="chapter-prior-verses">
+		<h2><%= @bk_ch %></h2>	
+		<div id="chapter-text">
+			<% for mv in @chapter %>
+				<span class="verse-text" id="<%=mv.verse.versenum%>" mvid="<%=mv.id%>">
+					<span class="superscript"><%= mv.verse.versenum %></span><span><%= mv.verse.text %></span>
+				</span>	
+			<% end %>
+		</div> <!-- end: chapter-text -->
+	</div> <!-- end: chapter-prior-verses -->
+
+	<div class="clr"></div>
+
+</div> <!-- End: white-box-with-margins -->
+
+<!-- Script for updating current verse, clearing input etc -->
+<script language="JavaScript" type="text/javascript">
+	
+	var current_verse 	= 1
+	var final_verse	  	= '<%= @final_verse %>'
+	var current_text  	= $("#" + current_verse).html()
+	var mv_id			= '<%= @chapter.first.id %>'
+
+	$(document).ready(function() {
+		
+		// focus cursor on verse entry box
+		$('#verseguess').focus();
+		
+		// Display the first verse on the back of the flash card
+		$("#flashcard-back-text > .verse-text:hidden:first").fadeIn(10);	
+				        
+		// Verse feedback	
+		$("#verseguess").observe_field(0.2, function( ) { 		
+			$("#ajaxWrapper").html(versefeedback(current_text, this.value, <%= @show_feedback %>));
+		});        
+                
+        $('.spinner')
+			.ajaxStart(function() {
+		        $(this).show();
+		    })
+			.ajaxStop(function() {
+		        $(this).hide();
+    	});		
+    	
+		// show verse
+		$(".toggle-hint").click( function () {
+
+			if ($(this).text() == "Show Hint") {
+				$("#chapter-text > .verse-text:hidden:first").fadeIn(800);			
+				$(".toggle-hint").text("Hide Hint");
+			} else {
+				$("#chapter-text > .verse-text:visible:last").fadeOut(400);							
+				$(".toggle-hint").text("Show Hint");
+			}
+			
+		});    	
+    			
+		// Handle scoring of verse
+		$('.submit').click( function() {
+			
+			// == Set key press
+			q = $(this).attr("q");
+			
+			// Score the memory verse
+			$.getJSON("/mark_test_quick", { mv: mv_id, q: q  },
+				function(data) {
+					if (data.msg) {
+						// Give user a nice response
+						alert(data.msg);												
+					}				
+			});	
+			
+			if (current_verse == final_verse) {
+				
+				// Display the next verse on the right
+				$("#chapter-text > .verse-text:hidden:first").fadeIn(800);
+				
+				// Scroll to bottom of chapter
+				nDiv = document.getElementById('chapter-text');
+				setTimeout("nDiv.scrollTop = nDiv.scrollHeight",1);			
+
+				$("#chapter-test-left").fadeOut(500);
+				
+				return (false)
+				
+			}
+			else {
+				
+				// Display the next verse unless it is already displayed as a hint
+				if ($(".toggle-hint").text() == "Show Hint") {
+					$("#chapter-text > .verse-text:hidden:first").fadeIn(800);
+				} else {
+					$(".toggle-hint").text("Show Hint");
+				}
+				
+				// Get ID of next verse to be reviewed
+				mv_id = $("#chapter-text > .verse-text:hidden:first").attr('mvid')
+				
+				// Scroll to bottom of chapter
+				nDiv = document.getElementById('chapter-text');
+				setTimeout("nDiv.scrollTop = nDiv.scrollHeight",1);
+	
+				// Remove the currently displayed verse and reveal the next verse
+				$("#flashcard-back-text > .verse-text:first").remove();			
+				$("#flashcard-back-text > .verse-text:hidden:first").fadeIn(10);
+				
+				// Clear the input box and the feedback and put cursor in input box
+				$("#verseguess").val('');
+				$("#ajaxWrapper").text('');
+				$("#verseguess").focus();
+							
+				// Increment the verse counter, update the labels, and get the new text
+				current_verse++;
+				$(".current_verse").text(current_verse);
+				current_text  = $("#" + current_verse).html()
+				
+				return(false)				
+			}
+
+			
+		})
+	});
+</script>
+

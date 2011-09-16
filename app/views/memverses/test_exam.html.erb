@@ -1,0 +1,29 @@
+<% page_title I18n.t :accuracy_test, :scope => 'page_titles' %>
+
+<!-- Focus cursor on verse entry box -->
+<script>
+	$(document).ready(function() {
+		$("#answer").focus();
+	});
+</script>
+
+<div class="white-box-with-margins">
+
+	<!-- Question-side : Entry box -->	
+	<div id="exam-question-side">
+		<h2>Verse <%=@question_num+1%> : <%=@ref%> [<%=@tl%>]</h2>
+			<% form_tag :action => 'mark_exam' do %>
+				
+				<div id="exam-answer-box">
+					<%= text_area_tag(:answer, params[:answer], :class => "verseguess" )%>	
+			  	</div>
+			
+				<div id="scoreTestButtons">								
+					<%= submit_tag "Submit", 	:class => "submit" %>								
+					<%= submit_tag "Exit Exam", :class => "submit" %>	
+				</div>			  
+			
+			<% end %>	
+	</div>	
+
+</div>

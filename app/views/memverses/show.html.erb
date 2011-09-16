@@ -1,0 +1,197 @@
+<div class="white-box-with-margins">
+<!--[form:verse]-->
+<% if @mv # If this statement is true, we are only displaying one verse and use below formatting %>
+	<% page_title @verse.ref_long %>
+	<div class='verse-text'>
+		<div id='verse-show'>
+			<h2><%= @verse.ref_long %> [<%=@verse.translation%>] </h2>
+			
+			<div id="show-verse"> <%=@verse.text%> </div>	
+		</div>
+	
+		<div id='nav'>
+			<span>
+				<% if @prev_mv %>
+					<%= link_to '<-- Prev Verse', {:action => 'show', :id => @prev_mv } %>		
+				<% end %>
+			</span>
+			<span>
+				|
+			</span>
+			<span>
+				<% if @next_mv %>
+					<%= link_to 'Next Verse -->', {:action => 'show', :id => @next_mv } %>
+				<% end %>
+			</span>
+		</div>	
+		
+	</div> <!-- end: verse-text (left column) -->
+	
+	
+	<div class='tag-list'>
+
+		<h2>Tags</h2>
+		
+		<div id='user-tags'>
+			<h3>Your Tags</h3>
+			
+			<table id="list-of-user-tags" cellpadding="6" cellspacing="1">
+				<% for tag in @user_tags %>
+					<tr>
+						<td class="verse-tag"><%= link_to tag.name, show_verses_with_tag_path(:tag => tag.name, :tl => @mv.verse.translation) %></td>
+						<% if current_user == @mv.user %>
+							<td><%= link_to '[x]', {:action => 'remove_verse_tag', :id => tag.id, :mv => @mv.id }, 
+												    :confirm => 'Are you sure you want to delete this tag?', 
+												    :method => :post %></td>
+						<% end %>
+					</tr>	
+				<% end %>
+				
+				<% if current_user == @mv.user %>
+					<tr>
+						<td class="tag edit_mv" id=<%= @mv.id %>>[New Tag]</td>
+					</tr>
+				<% end %>
+			</table>
+		</div>
+		
+		<div id='other-tags'>
+			<h3>User Tags</h3>
+			
+			<table cellpadding="6" cellspacing="1">
+				<% for tag in @other_tags %>
+					<tr>
+						<td class="verse-tag"><%= link_to tag[0].name, {:controller => :verses, :action => :show_verses_with_tag, :tag => tag[0].name, :tl => @mv.verse.translation } %></td>
+						<td class="add-tag">[+]</td>
+					</tr>	
+				<% end %>
+			</table>
+		</div>
+
+		<div id='verse-tags'>
+			<h3>Global Tags</h3>
+			
+			<table cellpadding="6" cellspacing="1">
+				<% for tag in @tags %>
+					<tr>
+						<td class="verse-tag"><%= tag.name %></td>
+						<% if current_user.has_role?("admin") %>
+							<td>[x]</td>
+						<% end %>
+					</tr>	
+				<% end %>
+				
+				<% if current_user.has_role?("admin") %>
+					<tr>
+						<td class="tag edit_vs" id=<%= @verse.id %>>[New Tag]</td>
+					</tr>
+				<% end %>
+			</table>
+		</div>
+
+	</div>
+	
+	<div class="mv-info">
+		
+		<h2>Verse Information</h2>
+
+		<div class="user-settings-text">
+			<ul>
+	            <li><div class="user-option-list"><span class="mv-field">Last Tested: </span><%= @mv.last_tested %></div></li>
+	            <li><div class="user-option-list"><span class="mv-field">Next Test  : </span><%= @mv.next_test %></div></li>
+	            <li><div class="user-option-list"><span class="mv-field">Interval: </span><%= pluralize(@mv.test_interval, 'day') %></div></li>
+	            <li><div class="user-option-list"><span class="mv-field">Status: </span>
+	            	<span id="mv-status"><%= link_to @mv.status, toggle_mv_status_path(@mv.id, :format => 'html'), :remote => true %></span></div></li>
+	            <li><div class="user-option-list"><span class="mv-field">Difficulty: </span><%= @mv.efactor %></div></li>
+	        </ul>
+        </div>
+
+	</div>	
+
+	<!--[eoform:verse]-->
+	
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('.add-tag').click(function() {
+				
+				TagToAdd = $(this).prev().text()
+				
+				// Add the tag
+				$.post("/memverses/add_verse_tag", { id: <%= @mv.id %>, value: TagToAdd } );
+				
+				// Insert tag at top of list of user tags						
+				$("#list-of-user-tags").find('tbody')
+				    .prepend($('<tr>')
+				        .append($("<td class='tag'>")
+				            .append($('<a>')
+				                .attr('href', '/verses/show_verses_with_tag?tag='+TagToAdd+'&tl=<%=@mv.verse.translation%>')
+				                .text(TagToAdd)
+				            )
+				        )			        
+				    );
+	
+				
+			});
+		});
+	</script>
+	
+	
+	<!-- http://www.appelsiini.net/projects/jeditable -->
+	<script type="text/javascript">
+		 $(document).ready(function() {   
+		 	
+			$('.edit_vs').editable('/verses/add_verse_tag', {
+				indicator : 'Saving...',
+				tooltip   : 'Click to edit...',
+				select    : true,
+				data      : function(value){
+				 	if(value == null) return false;
+				}
+			});
+							     
+			$('.edit_mv').editable('/memverses/add_verse_tag', {
+				indicator : 'Saving...',
+				tooltip   : 'Click to edit...',
+				select    : true,
+				data      : function(value){
+				 	if(value == null) return false;
+				}
+			});
+		     
+			$('#mv-status')
+			
+				.click(function () { 
+					$(this).effect("highlight", {color: "#ffcc00"}, 5000); 
+				})
+				
+				.bind("ajax:beforeSend", function(evt, xhr, settings){
+					
+				})
+				
+				.bind("ajax:success", function(evt, data, status, xhr){
+					var $submitButton = $(this)
+					$submitButton.html(data);
+				});
+			
+		});
+	</script>
+	
+	<!-- Prevent double-clicking of links to add verses -->
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('.no-dbl-click').click( function() {
+				$(this).attr('disabled', 'disabled').hide();
+			});
+		});
+	</script>
+
+<% elsif @mv_list # This means user requested specific verse(s) with checkboxes. Different formatting. %>
+	<% page_title I18n.t :view_vs_s, :scope => 'page_titles' %>
+	<% for mv in @mv_list %>
+		<h2><b><%= link_to mv.verse.ref, {:action => 'show', :id => mv.id } %></b> [<%= mv.verse.translation %>]</h2>
+		<p><%= mv.verse.text %></p>
+		<hr />
+	<% end %>
+<% end %>
+
+</div><!-- End white box with margins -->

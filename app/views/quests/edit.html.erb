@@ -1,0 +1,41 @@
+<h1>Editing quest</h1>
+
+<% form_for(@quest) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :level %><br />
+    <%= f.text_field :level %>
+  </p>
+  <p>
+    <%= f.label :task %><br />
+    <%= f.text_field :task %>
+  </p>
+  <p>
+    <%= f.label :description %><br />
+    <%= f.text_area :description %>
+  </p>
+  <p>
+    <%= f.label :objective %><br />
+    <%= f.text_field :objective %>
+  </p>
+  <p>
+    <%= f.label :qualifier %><br />
+    <%= f.text_field :qualifier %>
+  </p>
+  <p>
+    <%= f.label :quantity %><br />
+    <%= f.text_field :quantity %>
+  </p>  
+  <p>
+    <%= f.label :url %><br />
+    <%= f.text_field :url %>
+  </p>   
+  
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @quest %> |
+<%= link_to 'Back', quests_path %>

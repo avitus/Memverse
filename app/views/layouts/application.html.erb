@@ -1,36 +1,361 @@
-<!doctype html>
-<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Memverse</title>
-  <meta name="description" content="">
-  <meta name="author" content="">
-  <%= stylesheet_link_tag    "application" %>
-  <%= javascript_include_tag "application" %>
-  <%= csrf_meta_tags %>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<title><%= page_title %></title>
+
+<meta name="distribution" content="all" />
+<meta name="robots" content="all" />	
+<meta name="resource-type" content="document" />
+<meta name="MSSmartTagsPreventParsing" content="true" />
+
+<meta name="description" content="<%= page_description %>" />	
+<meta name="keywords" content="memorize bible, memorize scripture, popular bible verses, memorize bible verses," />	
+
+<!-- Facebook Open Graph tags -->
+<meta property="og:title"		content="<%= page_title || Memverse %>"/>	
+<meta property="og:type"		content="website"/>	
+<meta property="og:image"		content="http://www.memverse.com/images/memverse_swords.jpg"/>	
+<meta property="og:url"			content="<%= request.url %>" />	
+<meta property="og:site_name"	content="Memverse"/>	
+<meta property="fb:admins"		content="1799626379, kyrriana"/>
+<meta property="og:description" content="A community of believers memorizing the bible"/>
+
+<!-- Google, Microsoft verification -->
+<meta name="verify-v1" content="IrqDYi2zxAyS8GUAqQcyXvnmcxhtuNITeCIFYLa76LQ=" />	
+<meta name="msvalidate.01" content="A1BB69E880870637C825F612E2FA4034" />				
+
+<!-- Identify blog feed -->
+<link rel="alternate" type="application/rss+xml" title="Memverse Blog" href="http://feeds.feedburner.com/MemverseBlog" />
+
+<!-- Load fonts -->
+<script type="text/javascript" src="http://use.typekit.com/wxl5kyc.js"></script>
+<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+<!-- Rails 3 XSS protection -->
+<%= csrf_meta_tag %>
+
+<!-- Main Stylesheets (using Asset Packager) -->
+<%= stylesheet_link_merged :base %>
+
+<!-- Javascript -->
+<!-- NOTE: not using asset packager at the moment -->
+<!-- jquery.tools 		: used for tool tips on main verse test page, scrollable on login page -->
+<!-- jqueryui 			: used for highlight effect on reset-schedule button -->
+<!-- 2leveltab    		: main menu tab system -->
+<!-- jquery.fancybox    : lightbox for tutorial video -->
+<!-- juggernaut		    : needed for chat room -->
+<!-- modernizr		    : support for CSS3 and HTML5 in older browsers -->
+<!-- countdown          : used for live quiz -->
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.6.min.js"></script>
+<script type="text/javascript" src="http://cdn.jquerytools.org/1.2.5/all/jquery.tools.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js"></script>
+
+<%= javascript_include_tag 	'rails', 'application', 
+							'jquery.hoverIntent', '2leveltab', 
+							'jquery.periodicalupdater', 'jquery.jeditable.min', 'jquery.autocomplete',
+							'jquery.shuffle', 'jquery.observe_field', 'jquery.blockUI.min', 'jquery.fancybox-1.3.4.pack',
+							'i18n.min', 'translations', 'jquery.timeago.min', 
+							'jquery.countdown.min', 'juggernaut', 'json', 'socket_io', :cache => 'cache/all' %> 
+
+<!-- Auxiliary stylesheets, scripts, etc -->
+<%= yield(:head) %>
+
+<!-- Shortcut Icons -->
+<link rel="shortcut icon" href="/images/favicon.ico" />
+<link rel="icon" 		  href="/images/favicon.ico" />	
+
+<!--[if IE 6]>
+<style type="text/css">
+	.learn-area
+	{
+		padding-top:16px;
+	}
+</style>
+<![endif]-->
+
+<style type="text/css">
+.left-widget
+{
+	-moz-border-radius:8px;
+	-webkit-border-radius:8px;
+	-o-border-radius:8px;
+	border-radius:8px;
+	behavior:url(PIE.htc);
+}
+
+.main-right
+{
+	-moz-border-radius:8px;
+	-webkit-border-radius:8px;
+	-o-border-radius:8px;
+	border-radius:8px;
+	behavior:url(PIE.htc);
+}
+</style>
+
+<!-- Start of Google Analytics Code  -->
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-4539114-5']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+<!-- End of Google Analytics Code  -->
+
 </head>
-<body class="<%= params[:controller] %>">
-  <div id="container" class="container">
-    <header>
-        <nav>
-          <ul class="hmenu">
-            <%= render 'shared/navigation' %>
-          </ul>
-        </nav>
-      <%- flash.each do |name, msg| -%>
-        <%= content_tag :div, msg, :id => "flash_#{name}" if msg.is_a?(String) %>
-      <%- end -%>
-    </header>
-    <div id="main" role="main">
-      <%= yield %>
-    </div>
-    <footer>
-    </footer>
-  </div> <!--! end of #container -->
+
+<% if logged_in? %>
+<body id="inner1-body">
+<% else %>
+<body>
+<% end %>
+<noscript><div id="no-js"><p>Memverse requires Javascript, but you&rsquo;ve got Javascript disabled. <a href="http://www.google.com/search?btnI=1&amp;q=how+to+enable+javascript+in+my+browser">Fix that problem!</a></p></div></noscript>
+<div id="wrapper"><!--wrapper start-->
+	<div id="header"><!--header start-->
+		<div class="header-top"><!--header-top start-->
+			<div id="logo"><a href="/" title="<%= I18n.t :mainpage, :scope => 'page_titles' %> - Memverse"><img src="/images/logo.png" width="253" height="31" alt="" /></a></div>
+			<% if logged_in? %>
+				<div class="inner-top-right"><!--inner-top-right start-->
+					<strong>Welcome:</strong> <%= current_user.name_or_login %> <strong><%= link_to "(Logout)", logout_path %></strong>
+				</div><!--inner-top-right end-->
+			<% else %>
+				<div class="top-right"><!--top-right start-->        
+					<div class="resize">
+						<a class="fontblk" id="large" title="Increase Font Size"></a>
+						<a class="fontblk" id="small" title="Decrease Font Size"></a>
+					</div>
+
+					<div class="iphone">iPhone / iPad App (coming soon):</div>
+
+					<div class="button">
+						<ul>
+							<li><%= link_to 'SIGN UP', signup_path %></li>
+							<li><%= link_to 'LOG IN', login_path %></li>
+						</ul>
+					</div>
+				</div><!--top-right end-->
+			<% end %>
+		</div><!--header-top end-->
+
+		<% if logged_in? %>
+			<div id="menu-tabs" class="menu">
+				<ul id="maintab" class="basictab">
+					<li <%= tab(@tab=="home"		) %> rel="homepage">	<%= link_to t('menu.home'), 		home_path %> </li>	 
+					<li <%= tab(@tab=="mem"			) %> rel="memory">		<%= link_to t('menu.memorize'), 	test_verse_quick_path %></li>
+					<li <%= tab(@tab=="learn"		) %> rel="tutorials">	<%= link_to t('menu.learn'), 		tutorial_path %></li>
+					<li <%= tab(@tab=="profile"		) %> rel="profile">		<%= link_to t('menu.profile'), 		current_user %></li>
+					<li <%= tab(@tab=="contact"		) %> rel="contact">		<%= link_to t('menu.contact'), 		contact_path %></li>	
+					<li <%= tab(@tab=="leaderboard"	) %> rel="leaderboard">	<%= link_to t('menu.leaderboard'), 	leaderboard_path %></li>	
+					<li <%= tab(@tab=="blog"		) %> rel="blog">		<%= link_to t('menu.blog'), 		blog_path %></li>
+					<li <%= tab(@tab=="help"		) %> rel="help">        <%= link_to t('menu.help'),         faq_path %></li>
+					<li>&nbsp;</li>
+				</ul>
+
+				<div class="submenu"><!--submenu start-->
+
+					<div class="submenu-left">
+
+						<div id="homepage" class="submenustyle">
+							<ul>							
+								<li <%= sub(@sub=="manage"		)%>><%= link_to t('home_menu.My Verses'),		manage_verses_path %></li>
+								<li <%= sub(@sub=="addvs"		)%>><%= link_to t('home_menu.Add Verse'),		add_verse_path %></li>
+								<li <%= sub(@sub=="searchvs"	)%>><%= link_to t('home_menu.Search Bible'),	search_verse_path %></li>
+								<li <%= sub(@sub=="progress"	)%>><%= link_to t('home_menu.My Progress'),		progress_path %></li>	
+								<li <%= sub(@sub=="popvs"		)%>><%= link_to t('home_menu.Popular Verses'),	popular_verses_path %></li>	
+								<li <%= sub(@sub=="cloud"		)%>><%= link_to t('home_menu.Tag Cloud'),		tag_cloud_path %></li>	
+								<li <%= sub(@sub=="news"		)%>><%= link_to t('home_menu.News'),			news_path %></li>
+							</ul>	
+						</div>
+
+						<div id="memory" class="submenustyle">
+							<ul>							
+								<li <%= sub(@sub=="mem"			)%>><%= link_to t('memorize_menu.Memorize'),			test_verse_quick_path %></li>
+								<li <%= sub(@sub=="refrec"		)%>><%= link_to t('memorize_menu.Reference Recall'), 	start_ref_test_path %></li>
+								<li <%= sub(@sub=="practice"	)%>><%= link_to t('memorize_menu.Practice'), 			drill_verse_path %></li>						
+								<li <%= sub(@sub=="acctest"		)%>><%= link_to t('memorize_menu.Accuracy Test'), 		pre_exam_path %></li>	
+								<li <%= sub(@sub=="chrev"		)%>><%= link_to t('memorize_menu.Chapter Review'), 		pre_chapter_path %></li>	
+							</ul>	
+						</div>
+
+						<div id="tutorials" class="submenustyle">
+							<ul>
+								<li <%= sub(@sub=="tutorial"	)%>><%= link_to t('learn_menu.Tutorial'), 				tutorial_path %></li>
+								<li <%= sub(@sub=="smalg"		)%>><%= link_to t('learn_menu.SuperMemo Algorithm'), 	supermemo_path %></li>
+								<li <%= sub(@sub=="vidtut"		)%>><%= link_to t('learn_menu.Video Tutorial'), 		"http://www.youtube.com/watch?v=N8A71DIcr4Y&fs=1&feature=player_embedded", :class => 'tut-video' %></li>
+							</ul>
+						</div>
+
+						<div id="profile" class="submenustyle">
+							<ul>
+								<li <%= sub(@sub=="dash"		)%>><%= link_to t('profile_menu.Dashboard'), 			current_user %></li>					
+								<li <%= sub(@sub=="prof"		)%>><%= link_to t('profile_menu.Profile'), 				update_profile_path %></li>
+								<li <%= sub(@sub=="mychurch"	)%>><%= link_to t('profile_menu.My Church'), 			church_path %></li>
+								<li <%= sub(@sub=="myrefs"		)%>><%= link_to t('profile_menu.Referrals'), 			referrals_path(current_user) %></li>
+							</ul>
+						</div>
+
+						<div id="contact" class="submenustyle">
+							<ul>
+								<li <%= sub(@sub=="contact"		)%>><%= link_to t('contact_menu.Contact'), 				contact_path %></li>
+								<li <%= sub(@sub=="volunteer"	)%>><%= link_to t('contact_menu.Volunteer'), 			volunteer_path %></li>
+							</ul>
+						</div>
+
+						<div id="leaderboard" class="submenustyle">
+							<ul>
+								<li <%= sub(@sub=="solo"		)%>><%= link_to t('leader_menu.Leaderboard'),			leaderboard_path %></li>
+								<li <%= sub(@sub=="church"		)%>><%= link_to t('leader_menu.Church Leaderboard'), 	churchboard_path %></li>
+								<li <%= sub(@sub=="us-state"	)%>><%= link_to t('leader_menu.State Leaderboard'), 	stateboard_path %></li>
+								<li <%= sub(@sub=="country"		)%>><%= link_to t('leader_menu.Country Leaderboard'), 	countryboard_path %></li>
+								<li <%= sub(@sub=="referrals"	)%>><%= link_to t('leader_menu.Referralboard'), 		referralboard_path %></li>						
+								<li <%= sub(@sub=="global"		)%>><%= link_to t('leader_menu.One Church'), 			memverse_clock_path %></li>	
+							</ul>
+						</div>			
+
+						<div id="blog" class="submenustyle">
+							<ul>
+								<li <%= sub(@sub=="view"		)%>><%= link_to t('blog_menu.View Blog'), 				blog_path %></li>
+								<li <%= sub(@sub=="comments"	)%>><%= link_to t('blog_menu.Recent Comments'),			blog_comments_new_path %></li>
+								<li <%= sub(@sub=="blogsearch"	)%>><%= link_to t('blog_menu.Blog Search'),				blog_search_path %></li>
+							</ul>
+						</div>
+						
+						<div id="help" class="submenustyle">
+							<ul>
+								<li <%= sub(@sub=="faq"		     )%>><%= link_to t('help_menu.faq'),                    faq_path %></li>								
+							</ul>
+						</div>
+					</div><!--submenu-left end-->
+					<div class="submenu-icon submenustyle"><a href="#"><img src="/images/new-icon.png" width="32" height="32" alt="" /></a></div>
+		        	<div class="clr"></div>
+
+				</div><!--submenu end-->				
+			</div>  <!-- End of Menu Tabs -->
+		
+		<% else # if not logged in %>
+			<div class="menu menu-main-only"><!--menu start-->
+				<ul>
+					<li><%= link_to t('menu.home').html_safe, home_path %></li>
+					<li><%= link_to t('menu.memorize').html_safe, test_verse_quick_path %></li>
+					<li><%= link_to t('menu.learn').html_safe, tutorial_path %></li>
+					<li><%= link_to t('menu.profile').html_safe, current_user %></li>
+					<li><%= link_to t('menu.leaderboard').html_safe, leaderboard_path %></li>
+					<li><%= link_to t('menu.help'), faq_path %></li>
+					<li><%= link_to t('menu.blog').html_safe, blog_path %></li>
+					<li><%= link_to t('menu.contact').html_safe, contact_path %></li>
+					<li>&nbsp;</li>
+				</ul>
+			</div><!--menu end-->
+		<% end %><!-- if logged_in? -->
+
+		<div class="breadcum-area"><!--breadcum start-->
+			<div class="breadcum-left">
+				<span class="home-icon"><a href="/"><img src="/images/home-icon.png" width="25" height="23" alt="" /></a></span>
+				<div class="breadcum-link">
+					/ <%= (render_breadcrumbs :separator => ' / ').html_safe %>
+				</div>
+			</div>
+			<% if logged_in? %>
+			<div class="breadcum-right">
+				<%= link_to image_tag("your-verses.png", :width=>"172", :height=>"25", :alt=>"Your Verses"), manage_verses_path %>
+				<%= link_to image_tag("more-verses.png", :width=>"192", :height=>"25", :alt=>"Add More Verses"), add_verse_path %>
+			</div>
+			<% end %>
+		</div><!--breadcum end-->
+
+		<%= flash_messages  %>
+		
+	</div> <!--header end-->
+
+	<!--Content Block -->
+	<div class="page-content">
+		<%= content_for?(:content) ? yield(:content) : yield %>
+	</div>
+
+	<div><img src="/images/trans.png" width="1" height="10" alt="" />&nbsp;</div>
+
+	<div class="clr"></div>
+
+	<div id="footer"><!--footer start-->
+		&copy; <%= Date.today.year %> Memverse |
+		<span>Web Design: <a href="http://www.emekarajis.org">Emeka Rajis</a></span>
+	</div><!--footer end-->
+
+</div><!--wrapper end-->
+
+<!-- Start of Menu Tab Code  -->
+<% if logged_in? %>
+	<script type="text/javascript">
+		//initialize tab menu, by passing in ID of UL
+		initalizetab("maintab")
+	</script>	
+<% end %>
+
+<!-- Start of I18n-js code  -->
+<script type="text/javascript">
+  I18n.defaultLocale = "<%= I18n.default_locale %>";
+  I18n.locale = "<%= I18n.locale %>";
+</script>
+<!-- End of I18n-js code  -->
+
+<!-- Tutorial video using fancybox -->
+<script type="text/javascript">
+	$(document).ready(function() {			
+		$(".tut-video").click(function() {
+			$.fancybox({
+					'padding'		: 0,
+					'autoScale'		: false,
+					'transitionIn'	: 'none',
+					'transitionOut'	: 'none',
+					'title'			: this.title,
+					'width'			: 1020,
+					'height'		: 600,
+					'href'			: this.href.replace(new RegExp("watch\\?v=", "i"), 'v/'),
+					'type'			: 'swf',
+					'swf'			: {	'wmode'				: 'transparent',
+										'allowfullscreen'	: 'true' }
+				});
+		
+			return false;
+		});	
+	});	
+</script>
+
+<!-- Start of Get Satisfaction Script  -->		
+<script type="text/javascript">
+  var is_ssl = ("https:" == document.location.protocol);
+  var asset_host = is_ssl ? "https://s3.amazonaws.com/getsatisfaction.com/" : "http://s3.amazonaws.com/getsatisfaction.com/";
+  document.write(unescape("%3Cscript src='" + asset_host + "javascripts/feedback-v2.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+<script type="text/javascript">
+  var feedback_widget_options = {};
+
+  feedback_widget_options.display = "overlay";  
+  feedback_widget_options.company = "memverse";
+  feedback_widget_options.placement = "right";
+  feedback_widget_options.color = "#222";
+  feedback_widget_options.style = "idea";
+
+  var feedback_widget = new GSFN.feedback_widget(feedback_widget_options);
+</script>	<!-- End: Get Satisfaction Script  -->	
+
+<!-- Prevent double-clicking links in the flash -->
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('#flash-notice a').click( function() {
+			$(this).hide();
+		});
+	});
+</script>
 </body>
 </html>

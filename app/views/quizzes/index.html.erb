@@ -1,0 +1,26 @@
+<% page_title "Quizzes" %>
+<div class="white-box-with-margins">
+	<h1>Quizzes</h1>
+	
+	<table class="memverse-standard">
+		<thead>
+		<tr>
+			<th>Name</th>
+			<th>Created by</th>
+			<th>Next Live</th>
+		</tr>
+		</thead>
+	
+		<% @quizzes.each do |quiz| %>
+		  <tr>
+		    <td><%=h link_to(quiz.name, quiz) %></td>
+		    <td><%=h quiz.user.name_or_login %></td>
+		    <td><%=h quiz.start_time %></td>
+		  </tr>
+		<% end %>
+	</table>
+	
+	<br />
+	
+	<%= link_to 'New quiz', new_quiz_path %>
+</div>

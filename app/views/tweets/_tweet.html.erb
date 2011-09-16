@@ -1,0 +1,5 @@
+<% for tweet in tweets %>
+<div id="<%= tweet.id %>" class="tweet">
+	<span class="news-event"><%= tweet.news.html_safe %></span> <span class="time">[<abbr class="timeago" title="<%= tweet.created_at.iso8601 %>"><%= tweet.created_at %></abbr>]</span>
+</div>
+<% end %>

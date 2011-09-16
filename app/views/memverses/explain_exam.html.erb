@@ -1,0 +1,25 @@
+<% page_title I18n.t :accuracy_test, :scope => 'page_titles' %>
+<% page_description I18n.t :accuracy_test, :scope => 'page_descriptions' %>
+
+<div class="white-box-with-margins">
+
+	<div class="left">
+	<h2>Accuracy Test</h2>
+	
+	<p>This is an opportunity to test how well you really know your memory verses. Our hope is that it will help guide you as to whether
+	you are rating your memory recall too high or too low during your memorization sessions.</p>
+	
+	<p>You will be presented with ten of your memory verses, selected at random from those verses that are currently classified as "Memorized".
+	There will be no feedback, no first letter prompting, and no flashcard. Just enter the verse and hit submit. At the end, we will calculate
+	an accuracy score between 1% and 100%. You will initially start at 10% and each time you take the test your score will increase or decrease.</p>
+	
+	<p>It's up to you what accuracy you want to aim for. It will take a few tests before your accuracy converges to your true score so you should
+	take the test every couple of weeks.</p>
+	
+	<br>
+	
+	<div align="center"><%= button_to 'Start Accuracy Test', exam_path %></div>
+	</div><!-- end left -->
+	
+</div>
+

@@ -1,0 +1,95 @@
+<% if @user_has_no_verses %>
+
+	<div id="getting_started" class="start-page-actions">
+		<h1>Getting started</h1>
+		<ol>
+			<li><%= link_to 'Read the tutorial', 					tutorial_path 		%></li>				
+			<li><%= link_to 'Read about the SuperMemo Algorithm',	supermemo_path		%> - (only if you're interested)</li>
+			<li><%= link_to 'Update your profile',					update_profile_path	%> - (set email reminders etc.)</li>			
+			<li><%= link_to 'Add your first memory verse', 			add_verse_path		%> - (feel free to jump straight to this step!)</li>	
+		</ol>
+
+		<h1>In a Rush?</h1>
+
+		<p>Get started quickly by selecting from the most popular verses in the translation of your choice</p>
+		
+		<ul>
+			<li><%= link_to 'New International Version', 	:action => 'starter_pack', :translation => 'NIV' %></li>
+			<li><%= link_to 'English Standard Version',		:action => 'starter_pack', :translation => 'ESV' %></li>
+			<li><%= link_to 'King James Version', 			:action => 'starter_pack', :translation => 'KJV' %></li>
+			<li><%= link_to 'New King James Version',		:action => 'starter_pack', :translation => 'NKJ' %></li>
+			<li><%= link_to 'New American Standard', 		:action => 'starter_pack', :translation => 'NAS' %></li>
+			<li><%= link_to 'Revised Standard Version', 	:action => 'starter_pack', :translation => 'RSV' %></li>
+		</ul>
+	</div>
+
+<% elsif @user_has_too_few_verses %>
+
+	<div id="getting_started" class="start-page-actions">
+		<h1>Recommendations</h1>
+		<ol>
+			<li><%= link_to 'Add another memory verse',				:action => 'add_verse'%></li>	
+			<% if @user_has_test_today %>
+			<li><%= link_to 'Memorize!', 							:action => 'test_verse' %></li>			
+			<% end %>
+		</ol>
+	</div>
+
+<% else %>
+
+	<div id="mv-news-feed" class="front-page-segment">
+		<h2><%= link_to 'Recently on Memverse', tweets_path %></h2>
+		<%= render :partial => @tweets %>	
+	</div>
+		
+	<div id="column-mid">
+		<div id="memverse-counter" class="front-page-segment">
+			<h2>Verses Memorized</h2>
+			<p><span id="count"><%=Memverse.memorized.count%></span><span> verses memorized on Memverse.</span></p>
+		</div>
+
+		
+		<div id="verse-of-the-day" class="front-page-segment">
+			<h2>Verse of the Minute</h2>
+			<p id="votd-txt"><%= @votd_txt %></p>
+			<p id="votd-ref"><%= @votd_ref %>, <%= @votd_tl %></p>					
+		</div>
+		
+		<div id="memverse-actions" class="front-page-segment">
+			<h2><%= t '.memverse_today' %></h2>	
+			<p><%= t '.review_a' %> <%=@due_today%> <%= t '.review_b' %></p>
+			<p>You have <%= link_to "#{@quests_to_next_level} to complete", current_user %> to reach level <%= current_user.level+1 %>.</p>
+			<p><%= t '.time_req_a' %> <%=current_user.work_load%> <%= t '.time_req_b' %></p>		
+		</div>
+	</div>
+	
+	<div id="devotional" class="front-page-segment">
+		<!--
+		<audio controls="controls" width="200" height="100" autoplay="autoplay">
+			<source src="music/christmas.ogg" type="audio/ogg" />
+	  		<source src="music/christmas.wav" type="audio/wav" />
+			Your browser does not support the audio element.
+		</audio> -->
+		<h2>Spurgeon's Daily Devotion</h2>
+		<h4><%=@dev_ref%></h4>
+		<%=@devotion.html_safe%>
+	</div>
+	
+
+<% end %>
+
+<script language="JavaScript" type="text/javascript"><!--	
+	$.PeriodicalUpdater('/memverse_counter', {
+	    method: 'get',          // method; get or post
+	    minTimeout: 5*1000,    	// starting value for the timeout in milliseconds
+	    maxTimeout: 30*60*1000, // maximum length of time between requests is 30 mins
+	    multiplier: 1.3,        // if set to 2, timerInterval will double each time the response hasn't changed (up to maxTimeout)
+	    type: 'json',           // response type - text, xml, json, etc.  See $.ajax config options
+	    maxCalls: 0,            // maximum number of calls. 0 = no limit.
+	    autoStop: 0             // automatically stop requests after this many returns of the same data. 0 = disabled.
+		}, function(data) {
+				// Insert the refreshed data
+				$('#memverse-counter').effect("highlight", {}, 3000);
+				$('#count').text(data.total_verses);
+		});		
+--></script>

@@ -1,0 +1,9 @@
+<% page_title I18n.t("memverses.manage_verses.show_prompt") %>
+
+<div class="white-box-with-margins">
+	<% for mv in @mv_list %>
+		<h2><b><%= link_to mv.verse.ref, {:action => 'show', :id => mv.id } %></b> [<%= mv.verse.translation %>]</h2>
+		<p><%= mv.verse.mnemonic %></p>
+		<hr />
+	<% end %>
+</div><!-- End white box with margins -->

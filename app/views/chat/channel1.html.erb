@@ -1,0 +1,38 @@
+<div id="chat-stream" class="white-box-with-margins">
+</div>
+
+<% form_tag('/chat/send', :id => 'chat_window', :remote => true) do %>
+	<%= text_field_tag 'msg_body', '', :size => 50 %>
+	<%= hidden_field_tag 'sender', current_user.name_or_login %>
+	<%= submit_tag 'Send Message' %>
+<% end %>
+
+<script type="text/javascript" charset="utf-8">
+    var jug = new Juggernaut();
+
+    $("#chat-stream").append($("<li/>").append("Welcome to MemChat"));
+	
+	jug.subscribe("/chats/channel1", function(data){
+		var u  		= $("<li/>");
+		var m 		= $("<li/>");
+		var um_arr  = new Array();
+		var user;
+		var message;
+		
+		um_arr  = data.split(":");
+		user    = um_arr[0];
+		message = um_arr[1];
+		
+		u.text(user).addClass("chat-username");
+		m.text(message).addClass("chat-message");
+		
+		$("#chat-stream").append(u).append(m);
+		$("#chat-stream").scrollTop($("#chat-stream")[0].scrollHeight);
+	}); 
+	
+	$(document).ready(function() {
+	  $("#chat_window").submitWithAjax();
+	});
+</script>
+
+
