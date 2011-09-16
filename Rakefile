@@ -4,4 +4,4 @@
 
 require File.expand_path('../config/application', __FILE__)
 
-Memverse::Application.load_tasks
+MemverseApp::Application.load_tasks

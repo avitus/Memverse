@@ -1,4 +1,4 @@
-Memverse::Application.routes.draw do
+MemverseApp::Application.routes.draw do
   
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
 
