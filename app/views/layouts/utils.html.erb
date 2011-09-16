@@ -36,8 +36,8 @@
 <!-- Rails 3 XSS protection -->
 <%= csrf_meta_tag %>
 
-<!-- Main Stylesheets (using Asset Packager) -->
-<%= stylesheet_link_merged :base %>
+<!-- Main Stylesheet Manifest -->
+<%= stylesheet_link_tag "application" %>
 
 <!-- Auxiliary stylesheets, etc -->
 <%= yield(:head) %>
@@ -54,10 +54,8 @@
 <script type="text/javascript" src="http://cdn.jquerytools.org/1.2.5/all/jquery.tools.min.js"></script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js"></script>
 
-<%= javascript_include_tag 	'rails', 'jquery.hoverIntent', '2leveltab', 
-							'jquery.periodicalupdater', 'jquery.jeditable.min', 'jquery.autocomplete',
-							'jquery.shuffle', 'jquery.observe_field', 'jquery.blockUI.min', 'jquery.fancybox-1.3.4.pack',
-							'application', 'i18n.min', 'translations', 'juggernaut', :cache => 'cache/all' %> 
+<!-- Main Javascript Manifest -->
+<%= javascript_include_tag "application" %>
 
 <!-- Shortcut Icons -->
 <link rel="shortcut icon" href="/images/favicon.ico" />
@@ -103,7 +101,7 @@
 <div id="wrapper"><!--wrapper start-->
 	<div id="header"><!--header start-->
 		<div class="header-top"><!--header-top start-->
-			<div id="logo"><a href="/" title="<%= I18n.t :mainpage, :scope => 'page_titles' %> - Memverse"><img src="/images/logo.png" width="253" height="31" alt="" /></a></div>
+			<div id="logo"><a href="/" title="<%= I18n.t :mainpage, :scope => 'page_titles' %> - Memverse"><img src="/assets/logo.png" width="253" height="31" alt="" /></a></div>
 			<% if user_signed_in? %>
 				<div class="inner-top-right"><!--inner-top-right start-->
 					<strong>Welcome:</strong> <%= current_user.name_or_login %> <strong><%= link_to "(Logout)", logout_path %></strong>
@@ -133,12 +131,12 @@
 
 				<ul id="maintab" class="basictab">
 					<li <%= tab(@tab=="home"		) %> rel="homepage">	<%= link_to 'Home', 	 		home_path %></li>	
-					<li <%= tab(@tab=="dash"		) %> rel="dashboard">	<%= link_to 'Dashboard', 		:controller => 'admin', :action => 'dashboard' %></li>
-					<li <%= tab(@tab=="users"		) %> rel="users">		<%= link_to 'Users', 	 		:controller => 'admin', :action => 'show_users', :sort_order => 'ID DESC', :period => 'Active' %></li>
-					<li <%= tab(@tab=="verses"		) %> rel="verses">		<%= link_to 'Verses',			:controller => 'admin', :action => 'show_verses_to_be_checked' %></li>
-					<li <%= tab(@tab=="churches"	) %> rel="churches">	<%= link_to 'Churches', 		:controller => 'admin', :action => 'show_churches' %></li>	
-					<li <%= tab(@tab=="countries"	) %> rel="countries">	<%= link_to 'Countries', 		:controller => 'admin', :action => 'show_countries' %></li>
-					<li <%= tab(@tab=="popverses"	) %> rel="popverses">	<%= link_to 'Popular Verses',	:controller => 'admin', :action => 'show_popverses' %></li>						
+					<li <%= tab(@tab=="dash"		) %> rel="dashboard">	<%= link_to 'Dashboard', 		:controller => 'utils', :action => 'dashboard' %></li>
+					<li <%= tab(@tab=="users"		) %> rel="users">		<%= link_to 'Users', 	 		:controller => 'utils', :action => 'show_users', :sort_order => 'ID DESC', :period => 'Active' %></li>
+					<li <%= tab(@tab=="verses"		) %> rel="verses">		<%= link_to 'Verses',			:controller => 'utils', :action => 'show_verses_to_be_checked' %></li>
+					<li <%= tab(@tab=="churches"	) %> rel="churches">	<%= link_to 'Churches', 		:controller => 'utils', :action => 'show_churches' %></li>	
+					<li <%= tab(@tab=="countries"	) %> rel="countries">	<%= link_to 'Countries', 		:controller => 'utils', :action => 'show_countries' %></li>
+					<li <%= tab(@tab=="popverses"	) %> rel="popverses">	<%= link_to 'Popular Verses',	:controller => 'utils', :action => 'show_popverses' %></li>						
 					<li>&nbsp;</li>
 				</ul>
 
@@ -160,58 +158,58 @@
 		
 						<div id="dashboard" class="submenustyle">
 							<ul>							
-								<li <%= sub(@sub=="manage"		)%>><%= link_to 'Dashboard',		:controller => 'admin',	:action => 'dashboard' %></li>
-								<li <%= sub(@sub=="addvs"		)%>><%= link_to 'Churn',			:controller => 'admin',	:action => 'cohort_analysis' %></li>
-								<li <%= sub(@sub=="searchvs"	)%>><%= link_to 'Leaderboard',		:controller => 'admin',	:action => 'leaderboard' %></li>
-								<li <%= sub(@sub=="progress"	)%>><%= link_to 'Memory Verses',	:controller => 'admin',	:action => 'show_memory_verses', :id => nil, :sort_order => 'ID DESC' %></li>	
-								<li <%= sub(@sub=="popvs"		)%>><%= link_to 'Send Reminder',	:controller => 'admin',	:action => 'send_reminder' %></li>	
-								<li <%= sub(@sub=="cloud"		)%>><%= link_to 'Comments', 		:controller => 'admin', :action => 'unapproved_comments' %></li>	
-								<li <%= sub(@sub=="news"		)%>><%= link_to 'De-dupe',	 		:controller => 'admin', :action => 'users_with_problems' %></li>
+								<li <%= sub(@sub=="manage"		)%>><%= link_to 'Dashboard',		:controller => 'utils',	:action => 'dashboard' %></li>
+								<li <%= sub(@sub=="addvs"		)%>><%= link_to 'Churn',			:controller => 'utils',	:action => 'cohort_analysis' %></li>
+								<li <%= sub(@sub=="searchvs"	)%>><%= link_to 'Leaderboard',		:controller => 'utils',	:action => 'leaderboard' %></li>
+								<li <%= sub(@sub=="progress"	)%>><%= link_to 'Memory Verses',	:controller => 'utils',	:action => 'show_memory_verses', :id => nil, :sort_order => 'ID DESC' %></li>	
+								<li <%= sub(@sub=="popvs"		)%>><%= link_to 'Send Reminder',	:controller => 'utils',	:action => 'send_reminder' %></li>	
+								<li <%= sub(@sub=="cloud"		)%>><%= link_to 'Comments', 		:controller => 'utils', :action => 'unapproved_comments' %></li>	
+								<li <%= sub(@sub=="news"		)%>><%= link_to 'De-dupe',	 		:controller => 'utils', :action => 'users_with_problems' %></li>
 							</ul>
 						</div>
 						
 						<div id="users" class="submenustyle">						
 							<ul>							
-								<li <%= sub(@sub=="manage"		)%>><%= link_to 'All',				:controller => 'admin',	:action => 'show_users', :sort_order => 'ID DESC', :period => 'All' %></li>
-								<li <%= sub(@sub=="addvs"		)%>><%= link_to 'Today (New)',		:controller => 'admin',	:action => 'show_users', :sort_order => 'ID DESC', :period => 'Today' %></li>
-								<li <%= sub(@sub=="searchvs"	)%>><%= link_to 'Today (Active)',	:controller => 'admin',	:action => 'show_users', :sort_order => 'ID DESC', :period => 'Active' %></li>
-								<li <%= sub(@sub=="progress"	)%>><%= link_to 'Pending',			:controller => 'admin',	:action => 'show_users', :sort_order => 'ID DESC', :period => 'Pending' %></li>	
-								<li <%= sub(@sub=="popvs"		)%>><%= link_to 'Search',			:controller => 'admin',	:action => 'search_users' %></li>	
+								<li <%= sub(@sub=="manage"		)%>><%= link_to 'All',				:controller => 'utils',	:action => 'show_users', :sort_order => 'ID DESC', :period => 'All' %></li>
+								<li <%= sub(@sub=="addvs"		)%>><%= link_to 'Today (New)',		:controller => 'utils',	:action => 'show_users', :sort_order => 'ID DESC', :period => 'Today' %></li>
+								<li <%= sub(@sub=="searchvs"	)%>><%= link_to 'Today (Active)',	:controller => 'utils',	:action => 'show_users', :sort_order => 'ID DESC', :period => 'Active' %></li>
+								<li <%= sub(@sub=="progress"	)%>><%= link_to 'Pending',			:controller => 'utils',	:action => 'show_users', :sort_order => 'ID DESC', :period => 'Pending' %></li>	
+								<li <%= sub(@sub=="popvs"		)%>><%= link_to 'Search',			:controller => 'utils',	:action => 'search_users' %></li>	
 							</ul>						
 						</div>
 		
 						<div id="verses" class="submenustyle">
 							<ul>							
-								<li <%= sub(@sub=="manage"		)%>><%= link_to 'Verses per User',	:controller => 'admin',	:action => 'verses_per_user' %></li>
-								<li <%= sub(@sub=="addvs"		)%>><%= link_to 'Translation Stats',:controller => 'admin',	:action => 'count_by_translation' %></li>
-								<li <%= sub(@sub=="searchvs"	)%>><%= link_to 'All',				:controller => 'admin',	:action => 'show_verses', :sort_order => 'ID DESC' %></li>
-								<li <%= sub(@sub=="progress"	)%>><%= link_to 'Search',			:controller => 'admin',	:action => 'search_verses' %></li>	
-								<li <%= sub(@sub=="popvs"		)%>><%= link_to 'To Check',			:controller => 'admin',	:action => 'show_verses_to_be_checked' %></li>	
+								<li <%= sub(@sub=="manage"		)%>><%= link_to 'Verses per User',	:controller => 'utils',	:action => 'verses_per_user' %></li>
+								<li <%= sub(@sub=="addvs"		)%>><%= link_to 'Translation Stats',:controller => 'utils',	:action => 'count_by_translation' %></li>
+								<li <%= sub(@sub=="searchvs"	)%>><%= link_to 'All',				:controller => 'utils',	:action => 'show_verses', :sort_order => 'ID DESC' %></li>
+								<li <%= sub(@sub=="progress"	)%>><%= link_to 'Search',			:controller => 'utils',	:action => 'search_verses' %></li>	
+								<li <%= sub(@sub=="popvs"		)%>><%= link_to 'To Check',			:controller => 'utils',	:action => 'show_verses_to_be_checked' %></li>	
 							</ul>
 						</div>
 		
 						<div id="churches" class="submenustyle">
 							<ul>
-								<li <%= sub(@sub=="manage"		)%>><%= link_to 'All',				:controller => 'admin',	:action => 'show_churches' %></li>
+								<li <%= sub(@sub=="manage"		)%>><%= link_to 'All',				:controller => 'utils',	:action => 'show_churches' %></li>
 							</ul>
 						</div>
 		
 						<div id="countries" class="submenustyle">
 							<ul>
-								<li <%= sub(@sub=="manage"		)%>><%= link_to 'All',				:controller => 'admin',	:action => 'show_countries' %></li>
+								<li <%= sub(@sub=="manage"		)%>><%= link_to 'All',				:controller => 'utils',	:action => 'show_countries' %></li>
 							</ul>
 						</div>
 		
 						<div id="popverses" class="submenustyle">
 							<ul>							
-								<li <%= sub(@sub=="manage"		)%>><%= link_to 'Show',				:controller => 'admin',	:action => 'show_popverses' %></li>
-								<li <%= sub(@sub=="addvs"		)%>><%= link_to 'Update',			:controller => 'admin',	:action => 'update_popular_verses' %></li>
-								<li <%= sub(@sub=="searchvs"	)%>><%= link_to 'Tags',				:controller => 'admin',	:action => 'show_tags' %></li>
+								<li <%= sub(@sub=="manage"		)%>><%= link_to 'Show',				:controller => 'utils',	:action => 'show_popverses' %></li>
+								<li <%= sub(@sub=="addvs"		)%>><%= link_to 'Update',			:controller => 'utils',	:action => 'update_popular_verses' %></li>
+								<li <%= sub(@sub=="searchvs"	)%>><%= link_to 'Tags',				:controller => 'utils',	:action => 'show_tags' %></li>
 							</ul>						
 						</div>
 
 					</div><!--submenu-left end-->
-					<div class="submenu-icon submenustyle"><a href="#"><img src="/images/new-icon.png" width="32" height="32" alt="" /></a></div>
+					<div class="submenu-icon submenustyle"><a href="#"><img src="/assets/new-icon.png" width="32" height="32" alt="" /></a></div>
 		        	<div class="clr"></div>
 
 				</div><!--submenu end-->				
@@ -219,7 +217,7 @@
 
 			<div class="breadcum-area"><!--breadcum start-->
 				<div class="breadcum-left">
-					<span class="home-icon"><a href="/"><img src="/images/home-icon.png" width="25" height="23" alt="" /></a></span>
+					<span class="home-icon"><a href="/"><img src="/assets/home-icon.png" width="25" height="23" alt="" /></a></span>
 					<div class="breadcum-link">
 						/ <%= (render_breadcrumbs :separator => ' / ').html_safe %>
 					</div>
@@ -246,7 +244,7 @@
 					<li>&nbsp;</li>
 				</ul>
 			</div><!--menu end-->
-			<div><img src="/images/trans.png" width="1" height="10" alt="" /></div>
+			<div><img src="trans.png" width="1" height="10" alt="" /></div>
 		<% end %><!-- if user_signed_in? -->
 	</div> <!--header end-->
 
@@ -255,7 +253,7 @@
 		<%= content_for?(:content) ? yield(:content) : yield %>
 	</div>
 
-	<div><img src="/images/trans.png" width="1" height="10" alt="" />&nbsp;</div>
+	<div><img src="trans.png" width="1" height="10" alt="" />&nbsp;</div>
 
 	<div class="clr"></div>
 

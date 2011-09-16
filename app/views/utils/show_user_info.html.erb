@@ -19,7 +19,7 @@
 			<tr>
 				<td> <%= @user.id				%></td>	
 				<td> <%= @user.name				%></td>				
-				<td> <%= link_to @user.login, :controller => 'admin', :action => 'show_memory_verses', :id => @user.id %></td>		 
+				<td> <%= link_to @user.login, :controller => 'utils', :action => 'show_memory_verses', :id => @user.id %></td>		 
 				<td> <%= @user.email				%> </td>
 				<td> <%= @user.church ? @user.church.name : ""	%> </td>
 				<td align = center> <%= @user.last_activity_date %> </td>	
@@ -30,7 +30,7 @@
 				<td align = center> <%= @user.newsletters		%> </td>	
 				<td> <%= @user.state				%> </td>	
 							
-				<td><%= link_to 'Edit',   :controller => 'admin', :action => 'edit_user', :id => @user %></td>
+				<td><%= link_to 'Edit',   :controller => 'utils', :action => 'edit_user', :id => @user %></td>
 				<td><%= link_to 'X', { :action => 'destroy_user',  :id => @user }, :confirm => 'Are you sure?', :method => :post %></td>					
 				
 			</tr>
@@ -45,7 +45,7 @@
 	
 	<br>
 	
-	<%= button_to 'Repair Links',   :controller => 'admin', :action => 'fix_verse_linkage', 	:id => @user %>
+	<%= button_to 'Repair Links',   :controller => 'utils', :action => 'fix_verse_linkage', 	:id => @user %>
 	
 	<div class="verse-list">
 	

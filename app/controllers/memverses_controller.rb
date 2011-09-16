@@ -230,9 +230,7 @@ class MemversesController < ApplicationController
     
     # Find a popular verse eg: ['Jn 3:16', [['NIV', id] ['ESV', id]]]
     verse     = popular_verses(100).sample # get 100 most popular verses - pick one at random
-      
-    logger.debug("Verse of the day: #{verse.inspect}")
-      
+            
     # Pick out a translation in user's preferred translation or at random
     verse_ref         = verse[0]     
     verse_tl          = verse[1].select{ |tl| tl[0] == current_user.translation }.compact.first || verse[1].sample

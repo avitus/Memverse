@@ -73,10 +73,11 @@ MemverseApp::Application.routes.draw do
   match '/verify_vs_format',       :to => 'verses#verify_format',            :as => 'verify_vs_format'
   match '/show_verses_with_tag',   :to => 'verses#show_verses_with_tag',     :as => 'show_verses_with_tag'
       
-  match '/show_user_info',         :to => 'admin#show_user_info',            :as => 'show_user_info'
-  match '/show_tags',              :to => 'admin#show_tags',                 :as => 'show_tags'
-  match '/admin_search_verse',     :to => 'admin#search_verse',              :as => 'admin_search_verse'
-  match '/admin_verify_verse/:id', :to => 'admin#verify_verse',              :as => 'admin_verify_verse'
+  match '/show_user_info',         :to => 'utils#show_user_info',            :as => 'show_user_info'
+  match '/show_tags',              :to => 'utils#show_tags',                 :as => 'show_tags'
+  match '/admin_search_verse',     :to => 'utils#search_verse',              :as => 'admin_search_verse'
+  match '/admin_verify_verse/:id', :to => 'utils#verify_verse',              :as => 'admin_verify_verse'
+  match '/utils_dashboard',        :to => 'utils#dashboard',                 :as => 'utils_dashboard'
     
   # Doesn't require a login
   match '/contact',                :to => 'info#contact',                    :as => 'contact'   
@@ -144,7 +145,6 @@ MemverseApp::Application.routes.draw do
 
   # Route for random pages
   match '/:action',                :to => 'pages#:action' 
-
 
 
   # The priority is based upon order of creation:

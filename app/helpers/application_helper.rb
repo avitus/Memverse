@@ -54,7 +54,7 @@ module ApplicationHelper
     messages = ''.html_safe
     [:error, :notice].each do |t|
       if flash[t]
-        messages << content_tag(:div, flash[t].html_safe, :id => "flash-#{t}", :class => "flash gray-box-bg" ) << '<div><img src="/images/trans.png" width="1" height="10" alt="" /></div>'.html_safe
+        messages << content_tag(:div, flash[t].html_safe, :id => "flash-#{t}", :class => "flash gray-box-bg" ) << '<div><img src="trans.png" width="1" height="10" alt="" /></div>'.html_safe
       end
     end
     unless messages.blank?

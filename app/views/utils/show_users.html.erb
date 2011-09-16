@@ -20,7 +20,7 @@
 			<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
 				<td> <%= user.id				%></td>	
 				<td> <%= user.name				%></td>				
-				<td> <%= link_to user.login, :controller => 'admin', :action => 'show_memory_verses', :id => user.id %></td>		 
+				<td> <%= link_to user.login, :controller => 'utils', :action => 'show_memory_verses', :id => user.id %></td>		 
 				<td> <%= user.email				%> </td>
 				<td> <%= user.church ? user.church.name : ""	%> </td>
 				<td align = center> <%= user.last_activity_date %> </td>	
@@ -34,7 +34,7 @@
 				<% end %>
 					
 							
-				<td><%= link_to 'Edit',   :controller => 'admin', :action => 'edit_user', :id => user %></td>
+				<td><%= link_to 'Edit',   :controller => 'utils', :action => 'edit_user', :id => user %></td>
 				<td><%= link_to 'X', { :action => 'destroy_user',  :id => user }, :confirm => 'Are you sure?', :method => :post %></td>					
 				
 			</tr>
