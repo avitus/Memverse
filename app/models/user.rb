@@ -551,14 +551,14 @@ class User < ActiveRecord::Base
   # Returns number of overdue verses (does not include verses that are due today)
   # ----------------------------------------------------------------------------------------------------------  
   def overdue_verses
-    Memverse.active.find(:all, :conditions => ["user_id = ? and next_test < ?", self.id, Date.today]).count    
+    Memverse.active.where("user_id = ? and next_test < ?", self.id, Date.today).count    
   end
 
   # ----------------------------------------------------------------------------------------------------------
   # Returns number of due verses
   # ----------------------------------------------------------------------------------------------------------
   def due_verses
-    Memverse.active.find(:all, :conditions => ["user_id = ? and next_test <= ?", self.id, Date.today]).count  
+    Memverse.active.where("user_id = ? and next_test <= ?", self.id, Date.today).count  
   end
 
   # ----------------------------------------------------------------------------------------------------------
