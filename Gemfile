@@ -27,7 +27,7 @@ gem 'rails_admin', :git => 'git://github.com/sferik/rails_admin.git'
 gem 'rails', '3.1.0'
 gem 'jquery-rails'
 gem 'sqlite3'
-gem 'mysql2'
+gem 'mysql2', '>= 0.3'
 gem 'aasm', '2.2.0',    :require => 'aasm'                                                      # :source => 'http://gems.github.com',   
 gem 'will_paginate', '>=3.0.pre'                                                                # :source => 'http://gemcutter.org', will_paginate is required for bloggity
 gem 'prawn', :git => "git://github.com/sandal/prawn", :submodules => true                       # PDF support

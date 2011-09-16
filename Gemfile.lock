@@ -304,7 +304,7 @@ DEPENDENCIES
   logging
   mail (>= 2.2.15)
   memcache-client
-  mysql2
+  mysql2 (>= 0.3)
   newrelic_rpm (>= 3.0.0)
   nokogiri (= 1.4.6)
   paperclip
