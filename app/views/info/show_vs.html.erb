@@ -4,7 +4,7 @@
 
 <div class="clr"></div><br />
 
-<% if !logged_in? %>
+<% if !user_signed_in? %>
 	<div>
 		<ol>
 			<li><%= link_to 'Learn More about Memverse 			-->', tutorial_path, :class => "action-link"%></li>	

@@ -37,7 +37,7 @@
 		four times per week and are able to retain hundreds of memory verses. A few have even memorized over a thousand verses!</p>
 	</div>
 	
-	<% if !logged_in? %>
+	<% if !user_signed_in? %>
 		<div>
 			<ol>
 				<li><%= link_to 'Learn More about Memverse 			-->', tutorial_path, :class => "action-link"%></li>	

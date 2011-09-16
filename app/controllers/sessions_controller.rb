@@ -2,7 +2,7 @@ class SessionsController < ApplicationController
   skip_before_filter :verify_authenticity_token, :only => :create
   
   def new
-    redirect_to :controller => "memverses", :action => "index" and return if logged_in?
+    redirect_to :controller => "memverses", :action => "index" and return if user_signed_in?
     session[:referrer] = params[:referrer]
     @blogposts = BlogPost.all(:limit => 2, :order => "created_at DESC", :conditions => ["is_complete = ?", true])
     @vsillumination = Popverse.find(:all, :order => "RAND()", :limit => 10)

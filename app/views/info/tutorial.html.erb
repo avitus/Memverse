@@ -54,7 +54,7 @@
 		
 		<img src="/images/verselist.gif" height="194" width="966" alt="Memorization">
 	
-		<% if !logged_in? %>	
+		<% if !user_signed_in? %>	
 			<div>
 				<ol>
 					<li><%= link_to 'Sign Up and Start Memorizing Today	-->', signup_path, 	 :class => "action-link"%></li>

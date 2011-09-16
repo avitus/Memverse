@@ -2,7 +2,7 @@
 
 class QuizquestionsController < ApplicationController
   
-  before_filter :login_required
+  before_filter :authenticate_user!
   
   add_breadcrumb "Home", :home_path
   

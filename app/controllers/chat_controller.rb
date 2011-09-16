@@ -2,7 +2,7 @@ require "juggernaut"
 
 class ChatController < ApplicationController
 	
-	before_filter :login_required, :only => :channel1
+	before_filter :authenticate_user!, :only => :channel1
 
   # ----------------------------------------------------------------------------------------------------------
   # Open chat channel

@@ -93,7 +93,7 @@
 
 </head>
 
-<% if logged_in? %>
+<% if user_signed_in? %>
 <body id="inner1-body">
 <% else %>
 <body>
@@ -103,7 +103,7 @@
 	<div id="header"><!--header start-->
 		<div class="header-top"><!--header-top start-->
 			<div id="logo"><a href="/" title="<%= I18n.t :mainpage, :scope => 'page_titles' %> - Memverse"><img src="/images/logo.png" width="253" height="31" alt="" /></a></div>
-			<% if logged_in? %>
+			<% if user_signed_in? %>
 				<div class="inner-top-right"><!--inner-top-right start-->
 					<strong>Welcome:</strong> <%= current_user.name_or_login %> <strong><%= link_to "(Logout)", logout_path %></strong>
 				</div><!--inner-top-right end-->
@@ -126,7 +126,7 @@
 			<% end %>
 		</div><!--header-top end-->
 
-		<% if logged_in? %>
+		<% if user_signed_in? %>
 			<div id="menu-tabs" class="menu">
 				<ul id="maintab" class="basictab">
 					<li <%= tab(@tab=="home"		) %> rel="homepage">	<%= link_to t('menu.home'), 		home_path %> </li>	 
@@ -229,7 +229,7 @@
 					<li>&nbsp;</li>
 				</ul>
 			</div><!--menu end-->
-		<% end %><!-- if logged_in? -->
+		<% end %><!-- if user_signed_in? -->
 		
 		<div class="breadcum-area"><!--breadcum start-->
 			<div class="breadcum-left">
@@ -238,7 +238,7 @@
 					/ <%= (render_breadcrumbs :separator => ' / ').html_safe %>
 				</div>
 			</div>
-			<% if logged_in? %>
+			<% if user_signed_in? %>
 			<div class="breadcum-right">
 				<%= link_to image_tag("your-verses.png", :width=>"172", :height=>"25", :alt=>"Your Verses"), manage_verses_path %>
 				<%= link_to image_tag("more-verses.png", :width=>"192", :height=>"25", :alt=>"Add More Verses"), add_verse_path %>
@@ -266,7 +266,7 @@
 </div><!--wrapper end-->
 
 <!-- Start of Menu Tab Code  -->
-<% if logged_in? %>
+<% if user_signed_in? %>
 	<script type="text/javascript">
 		//initialize tab menu, by passing in ID of UL
 		initalizetab("maintab")

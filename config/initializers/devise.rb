@@ -66,10 +66,12 @@ Devise.setup do |config|
   # Limiting the stretches to just one in testing will increase the performance of
   # your test suite dramatically. However, it is STRONGLY RECOMMENDED to not use
   # a value less than 10 in other environments.
-  config.stretches = Rails.env.test? ? 1 : 10
+  # config.stretches = Rails.env.test? ? 1 : 10
+  config.stretches = 1 # For backwards-compatibility with Restful Authentication
 
   # Setup a pepper to generate the encrypted password.
   # config.pepper = "b84287916453f01d221b4703762fae4ae51f0f3536f6649addf25db2bb7908e883fef897f1483cd1964357ed213401b423c710d6a3c03436e3264a1ac3822f1b"
+  config.pepper = "" # For backwards-compatibility with Restful Authentication
 
   # ==> Configuration for :confirmable
   # The time you want to give your user to confirm his account. During this time

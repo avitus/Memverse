@@ -7,7 +7,7 @@ end
 
 class ChartController < ApplicationController
 
-  before_filter :login_required, :except => :load_memverse_clock
+  before_filter :authenticate_user!, :except => :load_memverse_clock
 
   respond_to :html, :xml
 #  layout nil

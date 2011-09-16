@@ -4,7 +4,7 @@ require "juggernaut"
 
 class LiveQuizController < ApplicationController
   
-  before_filter :login_required, :only => :live_quiz
+  before_filter :authenticate_user!, :only => :live_quiz
  
  
   #-----------------------------------------------------------------------------------------------------------

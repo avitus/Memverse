@@ -45,10 +45,6 @@ require 'digest/sha1'
 require 'digest/md5' # required for Gravatar support in Bloggity
 
 class User < ActiveRecord::Base
-  include Authentication
-  include Authentication::ByPassword
-  include Authentication::ByCookieToken
-  include Authorization::AasmRoles
 
   # Include default devise modules. Others available are:
   # :token_authenticatable, :encryptable, :confirmable, :lockable, trackable, :timeoutable and :omniauthable
@@ -1034,7 +1030,7 @@ class User < ActiveRecord::Base
   end
   
   # Implement in your user model 
-  def logged_in?
+  def user_signed_in?
     true
   end
   

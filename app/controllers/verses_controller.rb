@@ -1,7 +1,7 @@
 # coding: utf-8
 class VersesController < ApplicationController
   
-  before_filter :login_required, :except => :index
+  before_filter :authenticate_user!, :except => :index
   skip_before_filter :verify_authenticity_token, :only => [:set_verse_text, :check_verse]  # ALV: attempt to stop redirects to login page when setting verse text
   
   add_breadcrumb "Home", :home_path
