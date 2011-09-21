@@ -213,12 +213,14 @@ var totalChecked = 0; // Number of visible checkboxes checked.
 		};
 
 function versefeedback(correctvs, verseguess, echo) {
-	guess   = $.trim(verseguess.replace(/\s+/g, " ")); // Remove double spaces from guess and trim
-	correct = $.trim(unescape(correctvs.replace(/\s+/g, " "))); // Remove any double spaces - shouldn't be any
+	guesstext   = $.trim(verseguess.replace(/\s+/g, " ")); // Remove double spaces from guess and trim
+	correcttext = $.trim(unescape(correctvs.replace(/\s+/g, " "))); // Remove any double spaces - shouldn't be any
+	
+	var correct = false;
 	var feedback = ""; // find a better way to construct the string
 
-	guess_words = guess.split(/\s-\s|\s-|\s/);
-	right_words = correct.split(/\s-\s|\s-|\s/);
+	guess_words = guesstext.split(/\s-\s|\s-|\s/);
+	right_words = correcttext.split(/\s-\s|\s-|\s/);
 
 	if (echo) {
 					
@@ -227,8 +229,13 @@ function versefeedback(correctvs, verseguess, echo) {
 				if ( guess_words[x].toLowerCase().replace(/[^a-z]+/g, "") == right_words[x].toLowerCase().replace(/[^a-z]+/g, "") ) {
 					feedback = feedback + right_words[x] + " ";
 				}
-				else if ( guess == "" ) { // This happens when nothing is in the textarea
+				else if ( guesstext == "" ) { // This happens when nothing is in the textarea
 					feedback = "Waiting for you to begin typing..."
+				}
+				else if ( guess_words[x] == "") {
+					// Most likely scenario: the last character was a dash ("-") that was used to split, and now this is empty. We don't want to add "... " to feedback.
+					// Only happens to dashes at the end of the text. Other ones are already handled.
+					feedback = feedback;
 				}
 				else {
 					feedback = feedback + "... ";
@@ -250,8 +257,14 @@ function versefeedback(correctvs, verseguess, echo) {
 	match = ( $.trim( verseguess.toLowerCase().replace(/[^a-z ]|\s-|\s—/g, '').replace(/\s+/g, " ") ) == $.trim( unescape(correctvs).toLowerCase().replace(/[^a-z ]|\s-|\s—/g, '').replace(/\s+/g, " ") ) );
 	if (match) {
 		feedback = feedback + '<div id="matchbox"><p>Correct</p></div>';
+		correct = true;
 	}
-	return feedback;
+	
+	return {
+		feedtext:		feedback,
+		correct:		correct
+	};
+	
 }
 
 function calculate_levenshtein_distance(s, t) {
@@ -470,12 +483,12 @@ function insertondeck(ondeck, ondeck_prior) {
 	// == Update mnemonic
 	if (ondeck.mnemonic != null) {
 		$('#mtext').text('').text(ondeck.mnemonic);				// Clear and update the mnemonic text
-		$('.mnemonic').show();									// Show mnemonic box
+		$('#mnemonic').show();									// Show mnemonic box
 		$("#mclose").show();									// Show close box
 	}
 	else {
 		$('#mtext').text('');									// Clear mnemonic text
-		$('.mnemonic').hide();									// Hide mnemonic box
+		$('#mnemonic').hide();									// Hide mnemonic box
 	}
 	
 	return true;
