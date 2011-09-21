@@ -88,10 +88,14 @@
 <!-- Script for updating current verse, clearing input etc -->
 <script language="JavaScript" type="text/javascript">
 	
-	var current_verse 	= 1
-	var final_verse	  	= '<%= @final_verse %>'
-	var current_text  	= $("#" + current_verse).html()
-	var mv_id			= '<%= @chapter.first.id %>'
+	var current_verse 	= 1;
+	var final_verse	  	= '<%= @final_verse %>';
+	var current_text  	= $("#" + current_verse).html();
+	var mv_id			= '<%= @chapter.first.id %>';
+	
+	var live = {};
+	live.correct     = false; // Can currently toggle verse (show/hide)
+	live.feedtext    = "Waiting for you to begin typing..."; // Live Feedback text
 
 	$(document).ready(function() {
 		
@@ -103,8 +107,9 @@
 				        
 		// Verse feedback	
 		$("#verseguess").observe_field(0.2, function( ) { 		
-			$("#ajaxWrapper").html(versefeedback(current_text, this.value, <%= @show_feedback %>));
-		});        
+			live = versefeedback(current_text, this.value, <%= @show_feedback %>);
+			$("#ajaxWrapper").html(live.feedtext);
+		});
                 
         $('.spinner')
 			.ajaxStart(function() {
