@@ -58,18 +58,18 @@
 		
 		<!-- Current verse answer -->
 		<div id="complete-hint">
-			<p>		
+			<p>
 				<span class="current-versenum superscript"><%=@mv.verse.versenum if @prior_text%></span>
 				<span class="current-text"><%= @mv.verse.text %></span>
 				<img class="center spinner" id="ajax_spinner" src="/assets/indicator2.gif" alt="Comparing..." style="display: none" />
-			</p>			
+			</p>
 		</div>
 
 	</div> <!-- end: Feedback -->
 	
 	<div class="upcoming">
 		<h2><%= t('.upcoming_verses') %></h2>
-		<%= render :partial => "upcoming_verses" %>						
+		<%= render :partial => "upcoming_verses" %>
 	</div>
 	<div class="clr"></div>
 </div> <!-- end: white-box-bg -->
@@ -126,6 +126,7 @@
 		current.id		 = "<%= @mv.id %>";
 		current.text   	 = "<%= escape_verse(@mv.verse.text.html_safe) %>";
 		current.feedback = <%= @mv.show_feedback? %>;
+		current.mnemonic = "<%= @mv.mnemonic_if_req %>"
 		live.correct     = false; // Can currently toggle verse (show/hide)
 		live.feedtext    = "Waiting for you to begin typing..."; // Live Feedback text
 		
@@ -139,7 +140,7 @@
 			$feedback.html(live.feedtext);
 			
 			if (live.correct) {
-				$(".toggle-hint").fadeOut(500);
+				$togglehint.fadeOut(500);
 			}
 			else if ($togglehint.is(":hidden")) { // Verse is incorrect; if the toggle option was unavailable, make it available now
 				$togglehint.text(I18n.t("memverses.test_verse_quick.show_verse")).fadeIn(500);
@@ -186,15 +187,12 @@
 		});
 		
 		// ==== Show/Hide mnemonic ====
-		var mnemonic = "";
-		
 		function togglemnemonic(){
 			if ( $('#mclose').is(':hidden') ) {
-				$("#mtext").text(mnemonic);
+				$("#mtext").text(current.mnemonic);
 				$('#mclose').show();
 			}
 			else {
-				mnemonic = $('#mtext').text();
 				$('#mtext').html('<span>Show Prompts</span>');
 				$("#mclose").hide();
 			}
@@ -243,26 +241,20 @@
 			
 			// == Set key press
 			q = $(this).attr("q");
-			
 			rateverse();
 			
 		});
 
 		// Apply tooltips
 		$("#test-buttons span").tooltip({ 
-		
 			// place tooltip on the top edge
 			position: ['top', 'center'], 
-
 			// a little tweaking of the position 
 			offset: [0, -64], 
-
 			// use a simple show/hide effect 
 			effect: 'toggle', 
-
 			// specify relative to parent element
 			relative: true,
-
 			// custom opacity setting 
 			opacity: 0.8 
 		});
