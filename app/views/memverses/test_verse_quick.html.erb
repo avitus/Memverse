@@ -4,9 +4,9 @@
 	<div class="test-verse">
 		<div class="top-heading">
 			<h2><span><%= t('.verse') %>: </span><span class="verse-ref"><%=@mv.verse.ref%></span><span class="verse-tl"> [<%=@mv.verse.translation %>]</span></h2>
-			<div class="toggle-hint"><%= t('.show_verse') %></div>
+			<div id="toggle-hint" class="toggle-hint"><%= t('.show_verse') %></div>
 		</div>
-		<div class="mnemonic"><div id="mtext"><%= @mv.mnemonic_if_req %></div><div id="mclose">x</div></div>
+		<div id="mnemonic" class="mnemonic"><div id="mtext"><%= @mv.mnemonic_if_req %></div><div id="mclose">x</div></div>
 		<div class="verse-test-area">
 			<%= form_tag mark_test_quick_path, :id => 'test-verse-quick' do %>
 				<div>
@@ -51,25 +51,25 @@
 		<div id="currentVerse">
 			<p>		
 				<span class="current-versenum superscript"><%=@mv.verse.versenum if @prior_text%></span>
-				<span id="feedback">Waiting for you to begin typing...</span>
+				<span id="feedback"></span>
 				<img class="center spinner" id="ajax_spinner" src="/assets/indicator2.gif" alt="Comparing..." style="display: none" />
 			</p>					
 		</div>
 		
 		<!-- Current verse answer -->
 		<div id="complete-hint">
-			<p>		
+			<p>
 				<span class="current-versenum superscript"><%=@mv.verse.versenum if @prior_text%></span>
 				<span class="current-text"><%= @mv.verse.text %></span>
 				<img class="center spinner" id="ajax_spinner" src="/assets/indicator2.gif" alt="Comparing..." style="display: none" />
-			</p>			
+			</p>
 		</div>
 
 	</div> <!-- end: Feedback -->
 	
 	<div class="upcoming">
 		<h2><%= t('.upcoming_verses') %></h2>
-		<%= render :partial => "upcoming_verses" %>						
+		<%= render :partial => "upcoming_verses" %>
 	</div>
 	<div class="clr"></div>
 </div> <!-- end: white-box-bg -->
@@ -79,11 +79,18 @@
 <script language="JavaScript" type="text/javascript"><!--
 	
 	$(document).ready(function() {
+		
+		// cache frequent DOM objects in variables
+		$completehint = $("#complete-hint");
+		$currentVerse = $("#currentVerse");
+		$togglehint   = $("#toggle-hint");
+		$feedback     = $("#feedback");
+		$verseguess   = $("#verseguess");
 	
-		<%= "$('.mnemonic').hide();" if !@mv.needs_mnemonic? %>
+		<%= "$('#mnemonic').hide();" if !@mv.needs_mnemonic? %>
 		
 		// focus cursor on verse entry box
-		$('#verseguess').focus();
+		$verseguess.focus();
 		
 		//fancybox info
 		$("a#inline").fancybox({
@@ -94,23 +101,24 @@
 		
 		// Toggle verse function
 		function toggleverse() {
-			$("#complete-hint").toggle();
-			$("#currentVerse").toggle();
-			if ( $(".toggle-hint").text() == (I18n.t("memverses.test_verse_quick.show_verse")) ) {
-				$(".toggle-hint").text(I18n.t("memverses.test_verse_quick.hide_verse"));
+			$completehint.toggle();
+			$currentVerse.toggle();
+			if ( $togglehint.text() == (I18n.t("memverses.test_verse_quick.show_verse")) ) {
+				$togglehint.text(I18n.t("memverses.test_verse_quick.hide_verse"));
 			} else {
-				$(".toggle-hint").text(I18n.t("memverses.test_verse_quick.show_verse"));
+				$togglehint.text(I18n.t("memverses.test_verse_quick.show_verse"));
 			}
 		}
 		
 		// show verse
-		$(".toggle-hint").click( function () {
+		$togglehint.click( function () {
 			toggleverse();
 		});
 			
 		var ondeck 				= {};
 		var prior				= {};
 		var current				= {};
+		var live				= {};
 		var user_id				= "<%= current_user.id %>";		
 
 		$("table#upcoming-verses .upcoming-verse-ref:contains('<%=@mv.verse.ref%>')").remove()				
@@ -118,26 +126,36 @@
 		current.id		 = "<%= @mv.id %>";
 		current.text   	 = "<%= escape_verse(@mv.verse.text.html_safe) %>";
 		current.feedback = <%= @mv.show_feedback? %>;
+		current.mnemonic = "<%= @mv.mnemonic_if_req %>"
+		live.correct     = false; // Can currently toggle verse (show/hide)
+		live.feedtext    = "Waiting for you to begin typing..."; // Live Feedback text
 		
 		// Load next verse
 		$('#ff-button').toggle(<%= !@mv.due? %>);					// Hide/Show fast forward button
 		ondeck = stageverses(current.id);
 
+		function getversefeedback(guess){
+			live = versefeedback(current.text, guess, current.feedback);
+			
+			$feedback.html(live.feedtext);
+			
+			if (live.correct) {
+				$togglehint.fadeOut(500);
+			}
+			else if ($togglehint.is(":hidden")) { // Verse is incorrect; if the toggle option was unavailable, make it available now
+				$togglehint.text(I18n.t("memverses.test_verse_quick.show_verse")).fadeIn(500);
+			}
+			if ($completehint.is(":visible") && live.correct) {
+				$completehint.toggle();
+				$currentVerse.toggle();
+			}
+		}
+
+		live = getversefeedback($verseguess.val()); // Run this once when page first loads
+
 		// Verse feedback	
-		$("#verseguess").observe_field(0.2, function( ) { 
-			
-			$("#feedback").html(versefeedback(current.text, this.value, current.feedback));
-			
-			if ($("#matchbox").length) {
-				$(".toggle-hint").fadeOut(500);
-			}
-			else if ($(".toggle-hint").is(":hidden")) {
-				$(".toggle-hint").text(I18n.t("memverses.test_verse_quick.show_verse")).fadeIn(500);
-			}
-			if ($("#complete-hint").is(":visible") && $("#matchbox").length) {
-				$("#complete-hint").toggle();
-				$("#currentVerse").toggle();
-			}
+		$verseguess.observe_field(0.2, function( ) { 
+			getversefeedback(this.value);
 		});
 
 		$('.spinner')
@@ -150,7 +168,7 @@
 
 		// ==== Fastforward function ====		
 		function fastforward() {
-			// Check whether we're done for the day
+			// Check whether we're done for the day	
 			if (ondeck.finished || typeof(ondeck.mv_skip) == 'undefined' || ondeck.mv_skip == null ) {
 				log_progress(user_id)
 				window.location="./progress";
@@ -158,6 +176,7 @@
 			else {
 				success = insertondeck(ondeck.mv_skip, ondeck.mv_prior_skip);	// Update page with ondeck verses
 				current = ondeck.mv_skip										// Update current verse
+				live = getversefeedback($verseguess.val());						// Update verse feedback
 				ondeck = stageverses(current.id);								// Get new ondeck verses
 			}
 		}
@@ -168,15 +187,12 @@
 		});
 		
 		// ==== Show/Hide mnemonic ====
-		var mnemonic = "";
-		
 		function togglemnemonic(){
 			if ( $('#mclose').is(':hidden') ) {
-				$("#mtext").text(mnemonic);
+				$("#mtext").text(current.mnemonic);
 				$('#mclose').show();
 			}
 			else {
-				mnemonic = $('#mtext').text();
 				$('#mtext').html('<span>Show Prompts</span>');
 				$("#mclose").hide();
 			}
@@ -210,6 +226,7 @@
 				success = insertondeck(ondeck.mv, ondeck.mv_prior);					// Update page with Ondeck verse
 				prior   = current;
 				current = ondeck.mv;												// data for the verse we're now testing
+				live = getversefeedback($verseguess.val());							// Update verse feedback
 				$.getJSON("/mark_test_quick", { mv: prior.id, q: q  }, 				// Score verse
 					function(data) {
 						if (data.msg) {	alert(data.msg); }							// Give user a nice response												
@@ -224,26 +241,20 @@
 			
 			// == Set key press
 			q = $(this).attr("q");
-			
 			rateverse();
 			
 		});
 
 		// Apply tooltips
 		$("#test-buttons span").tooltip({ 
-		
 			// place tooltip on the top edge
 			position: ['top', 'center'], 
-
 			// a little tweaking of the position 
 			offset: [0, -64], 
-
 			// use a simple show/hide effect 
 			effect: 'toggle', 
-
 			// specify relative to parent element
 			relative: true,
-
 			// custom opacity setting 
 			opacity: 0.8 
 		});
@@ -271,7 +282,7 @@
 			}
 			if(isPlus == true && isShift == true){
 				if(e.which >= 49 && e.which <= 53) { // User must be rating verse
-					$("#verseguess").blur();
+					$verseguess.blur();
 					switch (e.which) { // Now set the "q" variable
 						case 49:
 							q = 1;

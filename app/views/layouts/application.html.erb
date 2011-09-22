@@ -242,9 +242,9 @@
 			<div class="menu menu-main-only"><!--menu start-->
 				<ul>
 					<li><%= link_to t('menu.home').html_safe, home_path %></li>
-					<li><%= link_to t('menu.memorize').html_safe, test_verse_quick_path %></li>
+					<li><%= link_to t('menu.demo').html_safe, demo_path %></li>
 					<li><%= link_to t('menu.learn').html_safe, tutorial_path %></li>
-					<li><%= link_to t('menu.profile').html_safe, current_user %></li>
+					<li><%= link_to t('learn_menu.Video Tutorial').html_safe, "http://www.youtube.com/watch?v=N8A71DIcr4Y&fs=1&feature=player_embedded", :class => 'tut-video' %></li>
 					<li><%= link_to t('menu.leaderboard').html_safe, leaderboard_path %></li>
 					<li><%= link_to t('menu.help'), faq_path %></li>
 					<li><%= link_to t('menu.blog').html_safe, blog_path %></li>

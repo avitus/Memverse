@@ -12,7 +12,7 @@
 
 		<div id="instr-2">
 			<p>As you type, the feedback box will echo the verse and will alert you to any errors. Should you get stuck, you can click
-			on "Show Hint" to view the verse. Once you have completed the review, you would grade yourself with one of the 
+			on "Show Verse" to view the verse. Once you have completed the review, you would grade yourself with one of the 
 			five self-assessment options according to how well you remembered the verse. This determines when next you would review 
 			that memory verse.</p>
 		</div>
@@ -21,9 +21,9 @@
 	<div class="test-verse">
     	<div class="top-heading">
         	<h2><span>Verse: </span><span class="verse-ref"><%=@verse%></span><span class="verse-tl"> [NIV]</span></h2>
-            <div class="toggle-hint">Show Hint</div>
+            <div id="toggle-hint" class="toggle-hint">Show Verse</div>
         </div>
-        <div class="mnemonic"><%= @mnemonic %></div>
+        <div id="mnemonic" class="mnemonic"><div id="mtext"><%= @mnemonic %></div><div id="mclose">x</div></div>
         <div class="verse-test-area">
         	<% form_tag mark_test_quick_path, :id => 'test-verse-quick' do %>
             	<div>
@@ -38,44 +38,10 @@
 					<span class="submit" q="4">4</span> <div class="tooltip"><%= I18n.t "memverses.test_verse_quick.b4" %></div>							
 					<span class="submit" q="5">5</span> <div class="tooltip"><%= I18n.t "memverses.test_verse_quick.b5" %></div>	
 					
-					<span class="test-button" id="ff-button">&gt;&gt;</span> <div class="tooltip">Skip this verse for today</div>
-					
 					<span><%= link_to (image_tag("blue-icon.png", :width=>"16", :height=>"16")), "#info", :id => "inline" %></span> <div class="tooltip">Learn how to rate your memory</div>
 					<div style="display:none">
 						<div id="info">
-							<h2>Reviewing your verses</h2>
-							<p>Welcome to the verse memorization page. This is where you will spend most of your time.</p>
-							<h3>Learning by typing</h3>
-
-							<p>When Memverse gives you a verse, you will use the tools on this page to learn or review it. 
-							To begin, type the text of the verse as you remember it into the grey box. 
-							As you type, Memverse will give you live feedback. When Memverse gives you the "Correct" message,
-							it is time to rate your review. 
-							If a verse is new to you or you cannot remember it, you should use the "Show Hint" feature to view the verse text.
-							Then hide the hint and see how much you can remember by typing the text in the grey box. You should continue 
-							using the hint when you need it until you have typed the verse perfectly.
-							</p>
-
-							<p>Please note that if a verse is not due for review today, Memverse gives you the option to skip it with a  
-							fast-forward symbol (&gt;&gt;) next to the rating numbers. Clicking this will skip the verse for now, 
-							but Memverse will still bring it back to you another day.</p>
-							
-							<h3>Rating your recall</h3>
-							<p>Having reviewed a verse, it is important to tell the software how well you remembered it. 
-							This allows Memverse to bring it back to you for review at an optimal time. There are five possible ratings:</p>
-							
-							<h4>5. Remembered - Perfect</h4>
-							<p>Only select this option when you feel that you are reviewing a memory verse too frequently. Selecting this option will increase the review interval fairly dramatically. As tempting as it is to get the verse memorized as quickly as possible, you will find that you will have an increasingly difficult time recalling the verse if you select this option too frequently. It is best selected when you recall a verse instantly and can recite it perfectly without any hesitation whatsoever.</p>
-							<h4>4. Remembered - Hesitation</h4>
-							<p>We have had difficulty coming up with a suitable label for this option but it is intended to be used when you feel that you have recalled a memory verse to your satisfaction and with only slight hesitation. This is the option to select when everything feels just right. If you think to yourself: &quot;It's a good thing I reviewed this verse now otherwise I might have forgotten it,&quot; then you should select this option.</p>
-							<h4>3. Remembered - Difficult</h4>
-							<p>We recommend making frequent use of this option. If you struggle to recall a passage of scripture but can eventually <em>get it correct without viewing the hint</em> then you should select this option. If you have any doubt about rating yourself with option 4 or 5 then this is the selection for you. You will get to review the verse more frequently than the two options above but the interval will still continue to increase.</p>
-							<h4>2. Don't Know - Familiar</h4>
-							<p>Either of these next two options will reset the interval to one day and the verse will revert to 'learning' status. Don't worry, Bible memorization is a long term effort and starting again sooner, rather than later, will be profitable in the long run. Select this option if you can't associate the bible reference with the memory verse or if you cannot recite or type the verse without using the flash card.</p>
-							<h4>1. Don't Know - No Idea</h4>
-							<p>Select this when you can't remember anything. Memverse will adjust the review of the verse to be more frequent. This is a good option to select when you are starting a new verse as it will start the verse on a more frequent review schedule.</p>
-							<p>You shouldn't think of the five options as though you are grading yourself on a test. Rather, think of them as you giving feedback to the Memverse system to allow it to adjust the review schedule optimally. It is designed to be a flexible system: if you are the type of person who would like to know each verse backwards and forwards with perfect punctuation, then you can use the five memory assessment options to achieve that goal. If it's not critical to you whether you occasionally substitute the word 'for' in place of 'because' or swap 'Jesus Christ' with 'Christ Jesus' then you can adjust your feedback accordingly.</p>
-							<p>Finally, don't agonize too much over which rating you choose. If you remembered the verse select one in the 3 - 5 range. If you can't remember it select 1 or 2. The Memverse algorithm will gradually adjust over time.</p>
+							<%= render "memverses/rating_explanation" %>
 						</div> <!-- end: info -->
 					</div>	
 				</div>	<!-- end: scoreTestButtons -->
@@ -99,7 +65,7 @@
 		<div id="currentVerse">
 			<p>		
 				<span class="current-versenum superscript"><%= @current_versenum %></span>
-				<span id="waiting">Waiting for you to begin typing...</span>
+				<span id="feedback"></span>
 				<span id="ajaxWrapper">
 					<%= render :partial=>'feedback', :locals => {:show_feedback => @show_feedback} %>
 				</span>
@@ -128,12 +94,47 @@
 
 <script language="JavaScript" type="text/javascript"><!--
 
-    // unblock when ajax activity stops 
-    $(document).ajaxStart($('.score-test-buttons').block({ message: 'Please wait...', css: {width: '75%', border: '1px solid black', font: 'bold 13px/normal Arial,Helvetica,sans-serif'} })).ajaxStop($('.score-test-buttons').unblock());
 		
 	$(document).ready(function() {
+		
+		// cache frequent DOM objects in variables
+		$completehint = $("#complete-hint");
+		$currentVerse = $("#currentVerse");
+		$togglehint   = $("#toggle-hint");
+		$feedback     = $("#feedback");
+		$verseguess   = $("#verseguess");
+		
+		var current				= {};
+		var live				= {};
+		
+		current.text   	 = "<%= @text %>";
+		current.feedback = true;
+		current.mnemonic = "<%= @mnemonic %>";
+		
+		live.correct     = false; // Can currently toggle verse (show/hide)
+		live.feedtext    = "Waiting for you to begin typing..."; // Live Feedback text
+		
+		live = getversefeedback($verseguess.val()); // Run this once when page first loads
+		
+		function getversefeedback(guess){
+			live = versefeedback(current.text, guess, current.feedback);
+			
+			$feedback.html(live.feedtext);
+			
+			if (live.correct) {
+				$togglehint.fadeOut(500);
+			}
+			else if ($togglehint.is(":hidden")) { // Verse is incorrect; if the toggle option was unavailable, make it available now
+				$togglehint.text(I18n.t("memverses.test_verse_quick.show_verse")).fadeIn(500);
+			}
+			if ($completehint.is(":visible") && live.correct) {
+				$completehint.toggle();
+				$currentVerse.toggle();
+			}
+		}
+		
 		// focus cursor on verse entry box
-		$('#verseguess').focus();
+		$verseguess.focus();
 		
 		//fancybox info
 		$("a#inline").fancybox({
@@ -144,53 +145,59 @@
 		
 		// Apply tooltips
 		$("#test-buttons span").tooltip({ 
-		 
-		    // place tooltip on the top edge
-		    position: ['top', 'center'], 
-		 
-		    // a little tweaking of the position 
-		    offset: [0, -64], 
-		 
-		    // use a simple show/hide effect 
-		    effect: 'toggle', 
-
+			// place tooltip on the top edge
+			position: ['top', 'center'],
+			// a little tweaking of the position
+			offset: [0, -64], 
+			// use a simple show/hide effect
+			effect: 'toggle', 
 			// specify relative to parent element
 			relative: true,
-		     
-		    // custom opacity setting 
-		    opacity: 0.8 
+			// custom opacity setting
+			opacity: 0.8 
 		});
-			
-		// show verse
-		$(".toggle-hint").click( function () {
-			$("#complete-hint").toggle();
-			$("#currentVerse").toggle();
-			if ( $(this).text() == (I18n.t("memverses.test_verse_quick.show_verse")) ) {
-				$(".toggle-hint").text(I18n.t("memverses.test_verse_quick.hide_verse"));
-			} else {
-				$(".toggle-hint").text(I18n.t("memverses.test_verse_quick.show_verse"));
+		
+		// ==== Show/Hide mnemonic ====
+		function togglemnemonic(){
+			if ( $('#mclose').is(':hidden') ) {
+				$("#mtext").text(current.mnemonic);
+				$('#mclose').show();
+			}
+			else {
+				$('#mtext').html('<span>Show Prompts</span>');
+				$("#mclose").hide();
+			}
+		}
+		
+		$('#mclose').click(function() {
+			togglemnemonic();
+		});
+	
+		$('#mtext').click(function() {
+			if ( $('#mclose').is(':hidden') ) {
+				togglemnemonic();
 			}
 		});
-				
-		currenttext = "<%= escape_verse(@text.html_safe) %>";
-		show_feedback = "true";
+		
+		// Toggle verse function
+		function toggleverse() {
+			$completehint.toggle();
+			$currentVerse.toggle();
+			if ( $togglehint.text() == (I18n.t("memverses.test_verse_quick.show_verse")) ) {
+				$togglehint.text(I18n.t("memverses.test_verse_quick.hide_verse"));
+			} else {
+				$togglehint.text(I18n.t("memverses.test_verse_quick.show_verse"));
+			}
+		}
+		
+		// show verse
+		$(".toggle-hint").click( function () {
+			toggleverse();
+		});
 		
 		// Verse feedback	
 		$("#verseguess").observe_field(0.2, function( ) { 
-			$('#waiting').hide();
-			
-			$("#ajaxWrapper").html(versefeedback(currenttext, this.value, show_feedback));
-			
-			if ($("#matchbox").length) {
-				$(".toggle-hint").fadeOut(500);
-			}
-			else if ($(".toggle-hint").is(":hidden")) {
-				$(".toggle-hint").text("Show Hint").fadeIn(500);
-			}
-			if ($("#complete-hint").is(":visible") && $("#matchbox").length) {
-				$("#complete-hint").toggle();
-				$("#currentVerse").toggle();
-			}
+			getversefeedback(this.value);
         });
         
         $('.spinner')
@@ -200,12 +207,91 @@
 			.ajaxStop(function() {
 		        $(this).hide();
     	});
+		
+		
+		// ==== Mock "rateverse" function
+		function rateverse(){
+			window.location="./tutorial";
+			return (false);
+		}
 			
 		// ==== User clicks 1-5 button ====			
 		$('.submit').click( function() {
-			window.location="./tutorial";
-			return (false);
-		})			
+			rateverse();
+		});
+		
+		// Shortcuts
+		isShift = false;
+		isPlus = false;
+		pluskeys = [61, 107, 187];
+		
+		$(document).keyup(function (e) {
+			if(e.which == 16) {
+				isShift=false;
+			}
+			if(jQuery.inArray(e.which,pluskeys) > -1) {
+				isPlus=false;
+			}
+		})
+		.keydown(function (e) {
+			if(e.which == 16) {
+				isShift=true;
+			}
+			if((jQuery.inArray(e.which,pluskeys) > -1) && (isShift == true)) { // FF on Windows 107, IE 187, Opera 61
+				isPlus=true;
+				return false;
+			}
+			if(isPlus == true && isShift == true){
+				if(e.which >= 49 && e.which <= 53) { // User must be rating verse
+					$verseguess.blur();
+					switch (e.which) { // Now set the "q" variable
+						case 49:
+							q = 1;
+							break;
+						case 50:
+							q = 2;
+							break;
+						case 51:
+							q = 3;
+							break;
+						case 52:
+							q = 4;
+							break;
+						case 53:
+							q = 5;
+							break;
+					}
+					rateverse();
+					return false;
+				}
+				if(e.which == 86) {
+					toggleverse();
+ 					return false;
+				}
+				if(e.which == 80 || e.which == 72) {
+					togglemnemonic();
+					return false;
+				}
+				if(e.which == 190) {
+					alert("You cannot skip this verse. It is due for review today.");
+					return false;
+				}
+			} // end of if(isPlus == true && isShift == true)
+			
+		})
+		.keypress(function (e) {
+			if(e.which == 62 || e.which == 43) {
+				// Prevent ">" and "+" from going into textarea
+				e.preventDefault();
+				return false;
+			}
+			if((e.which == (33 || 64 || 35 || 36 || 37 || 80 || 86)) && isPlus == true) {
+				// All we're trying to do is prevent the shifted rating numbers or other symbols/characters for shortcuts from going into textarea
+				e.preventDefault();
+				return false;
+			}
+		})
+		;
 	});
 --></script>
 <script language="JavaScript" type="text/javascript">

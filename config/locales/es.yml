@@ -250,7 +250,8 @@
     contact:               "Contacto"
     leaderboard:           "Clasificación"
     blog:                  "Blog"  
-    help:                  "Ayuda y soporte técnico"        
+    help:                  "Ayuda y soporte técnico"
+    demo:                  "Memorice Demo"
   home_menu:      
     My Verses:             "Mis versos"
     Add Verse:             "Añadir Verso"
