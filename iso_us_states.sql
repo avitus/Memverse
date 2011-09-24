@@ -19,7 +19,7 @@ INSERT INTO `american_states` (`id`, `abbrev`, `name`) VALUES ('0', 'AL', 'Alaba
 ('4', 'CA', 'California'),
 ('5', 'CO', 'Colorado'),
 ('6', 'CT', 'Connecticut'),
-('7', 'DE', 'Delware'),
+('7', 'DE', 'Delaware'),
 ('8', 'DC', 'District of Columbia'),
 ('9', 'FL', 'Florida'),
 ('10', 'GA', 'Georgia'),
