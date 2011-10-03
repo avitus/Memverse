@@ -47,9 +47,10 @@ require 'digest/md5' # required for Gravatar support in Bloggity
 class User < ActiveRecord::Base
 
   # Include default devise modules. Others available are:
-  # :token_authenticatable, :encryptable, :confirmable, :lockable, trackable, :timeoutable and :omniauthable
+  # :token_authenticatable, :lockable, trackable, :timeoutable and :omniauthable 
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable
+         :recoverable, :rememberable, :confirmable, :validatable, 
+         :encryptable, :encryptor => :restful_authentication_sha1
   
   validates :login, :presence   => true,
                     :uniqueness => { :case_sensitive => false },
