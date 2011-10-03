@@ -8,12 +8,10 @@ require "active_resource/railtie"
 require "sprockets/railtie"
 # require "rails/test_unit/railtie"
 
-if defined?(Bundler)
-  # If you precompile assets before deploying to production, use this line
-  Bundler.require *Rails.groups(:assets => %w(development test))
-  # If you want your assets lazily compiled in production, use this line
-  # Bundler.require(:default, :assets, Rails.env)
-end
+# If you have a Gemfile, require the default gems, the ones in the
+# current environment and also include :assets gems if in development
+# or test environments.
+Bundler.require *Rails.groups(:assets) if defined?(Bundler)
 
 module MemverseApp
   class Application < Rails::Application
@@ -22,6 +20,7 @@ module MemverseApp
     config.generators do |g|
       g.view_specs false
       g.helper_specs false
+      g.stylesheets false      
     end
 
     # Settings in config/environments/* take precedence over those specified here.
