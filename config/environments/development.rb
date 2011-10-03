@@ -21,7 +21,6 @@ MemverseApp::Application.configure do
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.default :charset => "utf-8"
 
-
   # Print deprecation notices to the Rails logger
   config.active_support.deprecation = :log
 
@@ -33,4 +32,8 @@ MemverseApp::Application.configure do
 
   # Expands the lines which load the assets
   config.assets.debug = true
+  
+  # Configure Paperclip to access ImageMagick - this is the path returned by 'which convert'
+  Paperclip.options[:command_path] = "/usr/local/bin/"  
+  
 end
