@@ -67,11 +67,11 @@ Devise.setup do |config|
   # your test suite dramatically. However, it is STRONGLY RECOMMENDED to not use
   # a value less than 10 in other environments.
   # config.stretches = Rails.env.test? ? 1 : 10
-  config.stretches = 1 # For backwards-compatibility with Restful Authentication
+  config.stretches = 10 # For backwards-compatibility with Restful Authentication
 
   # Setup a pepper to generate the encrypted password.
   # config.pepper = "b84287916453f01d221b4703762fae4ae51f0f3536f6649addf25db2bb7908e883fef897f1483cd1964357ed213401b423c710d6a3c03436e3264a1ac3822f1b"
-  config.pepper = "" # For backwards-compatibility with Restful Authentication
+  config.pepper = "f5945d1c74d3502f8a3de8562e5bf21fe3fec887" # For backwards-compatibility with Restful Authentication
 
   # ==> Configuration for :confirmable
   # The time you want to give your user to confirm his account. During this time
@@ -157,6 +157,8 @@ Devise.setup do |config|
   # and :restful_authentication_sha1 (then you should set stretches to 10, and copy
   # REST_AUTH_SITE_KEY to pepper)
   # config.encryptor = :sha512
+  # config.encryptor = :old_restful_authentication  # ALV -- support for older versions of restful_auth
+  config.encryptor = :restful_authentication_sha1  # ALV -- need to use site key in pepper
 
   # ==> Configuration for :token_authenticatable
   # Defines name of the authentication token params key
