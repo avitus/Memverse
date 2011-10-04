@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111003220018) do
+ActiveRecord::Schema.define(:version => 20111004191815) do
 
   create_table "american_states", :force => true do |t|
     t.string  "abbrev",      :limit => 20, :default => "", :null => false
@@ -25,14 +25,18 @@ ActiveRecord::Schema.define(:version => 20111003220018) do
   add_index "american_states", ["users_count"], :name => "index_american_states_on_users_count"
 
   create_table "blog_assets", :force => true do |t|
-    t.integer "blog_post_id"
-    t.integer "parent_id"
-    t.string  "content_type"
-    t.string  "filename"
-    t.string  "thumbnail"
-    t.integer "size"
-    t.integer "width"
-    t.integer "height"
+    t.integer  "blog_post_id"
+    t.integer  "parent_id"
+    t.string   "content_type"
+    t.string   "filename"
+    t.string   "thumbnail"
+    t.integer  "size"
+    t.integer  "width"
+    t.integer  "height"
+    t.string   "blog_attachment_file_name"
+    t.string   "blog_attachment_content_type"
+    t.integer  "blog_attachment_file_size"
+    t.datetime "blog_attachment_updated_at"
   end
 
   create_table "blog_categories", :force => true do |t|
@@ -415,55 +419,52 @@ ActiveRecord::Schema.define(:version => 20111003220018) do
   end
 
   create_table "users", :force => true do |t|
-    t.string   "login",                        :limit => 40
+    t.string   "login",                     :limit => 40
     t.string   "identity_url"
-    t.string   "name",                         :limit => 100, :default => ""
-    t.string   "email",                        :limit => 100
-    t.string   "encrypted_password",           :limit => 128, :default => "",         :null => false
-    t.string   "password_salt",                :limit => 40,  :default => "",         :null => false
-    t.string   "remember_token",               :limit => 40
-    t.string   "confirmation_token",           :limit => 40
-    t.string   "state",                                       :default => "passive",  :null => false
+    t.string   "name",                      :limit => 100, :default => ""
+    t.string   "email",                     :limit => 100
+    t.string   "encrypted_password",        :limit => 128, :default => "",         :null => false
+    t.string   "password_salt",             :limit => 40,  :default => "",         :null => false
+    t.string   "remember_token",            :limit => 40
+    t.string   "confirmation_token",        :limit => 40
+    t.string   "state",                                    :default => "passive",  :null => false
     t.datetime "remember_token_expires_at"
     t.datetime "confirmed_at"
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.date     "last_reminder"
-    t.string   "reminder_freq",                               :default => "weekly"
-    t.boolean  "newsletters",                                 :default => true
+    t.string   "reminder_freq",                            :default => "weekly"
+    t.boolean  "newsletters",                              :default => true
     t.string   "church"
     t.integer  "church_id"
     t.integer  "country_id"
-    t.string   "language",                                    :default => "English"
-    t.integer  "time_allocation",                             :default => 5
-    t.integer  "memorized",                                   :default => 0
-    t.integer  "learning",                                    :default => 0
+    t.string   "language",                                 :default => "English"
+    t.integer  "time_allocation",                          :default => 5
+    t.integer  "memorized",                                :default => 0
+    t.integer  "learning",                                 :default => 0
     t.date     "last_activity_date"
-    t.boolean  "show_echo",                                   :default => true
-    t.integer  "max_interval",                                :default => 366
-    t.string   "mnemonic_use",                                :default => "Learning"
+    t.boolean  "show_echo",                                :default => true
+    t.integer  "max_interval",                             :default => 366
+    t.string   "mnemonic_use",                             :default => "Learning"
     t.integer  "american_state_id"
-    t.integer  "accuracy",                                    :default => 10
-    t.boolean  "all_refs",                                    :default => true
+    t.integer  "accuracy",                                 :default => 10
+    t.boolean  "all_refs",                                 :default => true
     t.integer  "rank"
-    t.integer  "ref_grade",                                   :default => 10
+    t.integer  "ref_grade",                                :default => 10
     t.string   "gender"
-    t.string   "translation",                                 :default => "NIV"
-    t.integer  "level",                                       :default => 0,          :null => false
+    t.string   "translation",                              :default => "NIV"
+    t.integer  "level",                                    :default => 0,          :null => false
     t.integer  "referred_by"
-    t.boolean  "show_toolbar",                                :default => true
-    t.boolean  "show_email",                                  :default => false
+    t.boolean  "show_toolbar",                             :default => true
+    t.boolean  "show_email",                               :default => false
     t.string   "bb_2011_age_group"
     t.string   "bb_2011_track"
-    t.boolean  "auto_work_load",                              :default => true
+    t.boolean  "auto_work_load",                           :default => true
     t.datetime "confirmation_sent_at"
     t.string   "reset_password_token"
     t.datetime "remember_created_at"
-    t.string   "blog_attachment_file_name"
-    t.string   "blog_attachment_content_type"
-    t.integer  "blog_attachment_file_size"
-    t.datetime "blog_attachment_updated_at"
+    t.boolean  "admin",                                    :default => false
   end
 
   add_index "users", ["american_state_id"], :name => "index_users_on_american_state_id"

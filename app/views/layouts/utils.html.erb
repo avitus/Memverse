@@ -130,7 +130,7 @@
 			<div id="menu-tabs" class="menu">
 
 				<ul id="maintab" class="basictab">
-					<li <%= tab(@tab=="home"		) %> rel="homepage">	<%= link_to 'Home', 	 		home_path %></li>	
+					<li <%= tab(@tab=="home"		) %> rel="homepage">	<%= link_to 'Home', 	 		root_path %></li>	
 					<li <%= tab(@tab=="dash"		) %> rel="dashboard">	<%= link_to 'Dashboard', 		:controller => 'utils', :action => 'dashboard' %></li>
 					<li <%= tab(@tab=="users"		) %> rel="users">		<%= link_to 'Users', 	 		:controller => 'utils', :action => 'show_users', :sort_order => 'ID DESC', :period => 'Active' %></li>
 					<li <%= tab(@tab=="verses"		) %> rel="verses">		<%= link_to 'Verses',			:controller => 'utils', :action => 'show_verses_to_be_checked' %></li>
