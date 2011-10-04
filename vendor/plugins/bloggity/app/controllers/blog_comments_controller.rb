@@ -1,6 +1,6 @@
 class BlogCommentsController < ApplicationController
 	helper :blogs
-	before_filter :login_required
+	before_filter :authenticate_user!
 	before_filter :load_blog_comment, :only => [:approve, :destroy, :edit, :update]
 	before_filter :blog_comment_moderator_or_redirect, :only => [:approve, :destroy]
 	
