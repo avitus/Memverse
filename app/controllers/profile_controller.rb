@@ -1,6 +1,6 @@
 class ProfileController < ApplicationController
   
-  add_breadcrumb "Home", :home_path
+  add_breadcrumb "Home", :root_path
   add_breadcrumb "Account", :current_user
   
   before_filter :authenticate_user!, :except => :unsubscribe
@@ -89,7 +89,7 @@ class ProfileController < ApplicationController
           flash.keep[:notice] = "You have completed the task: #{q.task}"
         end
       end        
-      redirect_to home_path
+      redirect_to root_path
     else # errors
       flash[:notice] = "Could not update profile: " + @user.errors.full_messages.to_sentence
       redirect_to :action => "update_profile"

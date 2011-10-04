@@ -1,7 +1,7 @@
 # coding: utf-8
 
 class InfoController < ApplicationController
-  add_breadcrumb "Home", :home_path
+  add_breadcrumb "Home", :root_path
   # ----------------------------------------------------------------------------------------------------------   
   # Memverse tutorial
   # ---------------------------------------------------------------------------------------------------------- 

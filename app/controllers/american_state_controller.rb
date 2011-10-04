@@ -1,6 +1,6 @@
 class AmericanStateController < ApplicationController
   
-  add_breadcrumb "Home", :home_path
+  add_breadcrumb "Home", :root_path
  
   def show
     @us_state = AmericanState.find(params[:id])

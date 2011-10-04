@@ -135,7 +135,7 @@
 
 					<div class="button">
 						<ul>
-							<li><%= link_to 'SIGN UP', signup_path %></li>
+							<li><%= link_to 'SIGN UP', new_user_registration_path %></li>
 							<li><%= link_to 'LOG IN', login_path %></li>
 						</ul>
 					</div>
@@ -146,7 +146,7 @@
 		<% if user_signed_in? %>
 			<div id="menu-tabs" class="menu">
 				<ul id="maintab" class="basictab">
-					<li <%= tab(@tab=="home"		) %> rel="homepage">	<%= link_to t('menu.home'), 		home_path %> </li>	 
+					<li <%= tab(@tab=="home"		) %> rel="homepage">	<%= link_to t('menu.home'), 		root_path %> </li>	 
 					<li <%= tab(@tab=="mem"			) %> rel="memory">		<%= link_to t('menu.memorize'), 	test_verse_quick_path %></li>
 					<li <%= tab(@tab=="learn"		) %> rel="tutorials">	<%= link_to t('menu.learn'), 		tutorial_path %></li>
 					<li <%= tab(@tab=="profile"		) %> rel="profile">		<%= link_to t('menu.profile'), 		current_user %></li>
@@ -241,7 +241,7 @@
 		<% else # if not logged in %>
 			<div class="menu menu-main-only"><!--menu start-->
 				<ul>
-					<li><%= link_to t('menu.home').html_safe, home_path %></li>
+					<li><%= link_to t('menu.home').html_safe, root_path %></li>
 					<li><%= link_to t('menu.demo').html_safe, demo_path %></li>
 					<li><%= link_to t('menu.learn').html_safe, tutorial_path %></li>
 					<li><%= link_to t('learn_menu.Video Tutorial').html_safe, "http://www.youtube.com/watch?v=N8A71DIcr4Y&fs=1&feature=player_embedded", :class => 'tut-video' %></li>

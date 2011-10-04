@@ -2,7 +2,7 @@ class UsersController < ApplicationController
   skip_before_filter :verify_authenticity_token, :only => :create
   before_filter :authenticate_user!, :only => :show
   
-  add_breadcrumb "Home", :home_path
+  add_breadcrumb "Home", :root_path
   
   def new
     @user = User.new

@@ -1,5 +1,5 @@
 class ChurchController < ApplicationController
-  add_breadcrumb "Home", :home_path
+  add_breadcrumb "Home", :root_path
   add_breadcrumb "Church Leaderboard", :churchboard_path
   def show
     @church = Church.find(params[:id])

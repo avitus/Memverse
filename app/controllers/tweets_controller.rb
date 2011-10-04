@@ -1,6 +1,6 @@
 class TweetsController < ApplicationController
  
-  add_breadcrumb "Home", :home_path
+  add_breadcrumb "Home", :root_path
   # ----------------------------------------------------------------------------------------------------------
   # Show recent tweets
   # ----------------------------------------------------------------------------------------------------------  

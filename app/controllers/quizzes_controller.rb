@@ -3,7 +3,7 @@
 class QuizzesController < ApplicationController
   before_filter :authenticate_user!
   
-  add_breadcrumb "Home", :home_path
+  add_breadcrumb "Home", :root_path
 
   # ----------------------------------------------------------------------------------------------------------   
   # /quizzes Main quizzes page

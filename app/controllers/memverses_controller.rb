@@ -116,7 +116,7 @@ class MemversesController < ApplicationController
 
   respond_to :html, :pdf
   
-  add_breadcrumb "Home", :home_path
+  add_breadcrumb "Home", :root_path
 
   # ----------------------------------------------------------------------------------------------------------
   # Home / Start Page
@@ -1576,7 +1576,7 @@ class MemversesController < ApplicationController
         # There are no more verses to be tested today
         flash[:notice] = "You have been through all your memory verses for today."
         @mv             = nil # clear out the loaded memory verse
-        redirect_to home_path
+        redirect_to root_path
       end
        
     end

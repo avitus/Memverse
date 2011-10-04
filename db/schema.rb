@@ -136,6 +136,8 @@ ActiveRecord::Schema.define(:version => 20111003220018) do
     t.string  "segment",                            :default => "Global"
   end
 
+  add_index "daily_stats", ["segment"], :name => "index_daily_stats_on_segment"
+
   create_table "devotions", :force => true do |t|
     t.string   "name"
     t.string   "ref"
@@ -157,22 +159,6 @@ ActiveRecord::Schema.define(:version => 20111003220018) do
   end
 
   add_index "final_verses", ["book", "chapter"], :name => "index_final_verses_on_book_and_chapter"
-
-  create_table "livequiz_answers", :force => true do |t|
-    t.integer "livequiz_id",      :null => false
-    t.integer "quiz_question_id", :null => false
-    t.integer "user_id",          :null => false
-    t.text    "text"
-    t.integer "score"
-  end
-
-  create_table "livequizzes", :force => true do |t|
-    t.integer  "quiz_id",                      :null => false
-    t.integer  "user_id",                      :null => false
-    t.datetime "datetime",                     :null => false
-    t.integer  "when_open", :default => 30
-    t.boolean  "finished",  :default => false
-  end
 
   create_table "memverses", :force => true do |t|
     t.integer  "user_id",                                                      :null => false
@@ -296,11 +282,6 @@ ActiveRecord::Schema.define(:version => 20111003220018) do
     t.string  "mc_answer"
   end
 
-  create_table "quiz_variations", :force => true do |t|
-    t.integer "quiz_id", :null => false
-    t.text    "name"
-  end
-
   create_table "quizzes", :force => true do |t|
     t.integer  "user_id",              :null => false
     t.string   "name"
@@ -315,7 +296,7 @@ ActiveRecord::Schema.define(:version => 20111003220018) do
     t.integer  "item"
     t.string   "table"
     t.integer  "month",      :limit => 2
-    t.integer  "year",       :limit => 5
+    t.integer  "year",       :limit => 8
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -420,9 +401,9 @@ ActiveRecord::Schema.define(:version => 20111003220018) do
     t.string   "name",                         :limit => 100, :default => ""
     t.string   "email",                        :limit => 100
     t.string   "encrypted_password",           :limit => 128, :default => "",         :null => false
-    t.string   "password_salt",                :limit => 40,  :default => "",         :null => false
+    t.string   "password_salt",                               :default => "",         :null => false
     t.string   "remember_token",               :limit => 40
-    t.string   "confirmation_token",           :limit => 40
+    t.string   "confirmation_token"
     t.string   "state",                                       :default => "passive",  :null => false
     t.datetime "remember_token_expires_at"
     t.datetime "confirmed_at"
@@ -490,6 +471,7 @@ ActiveRecord::Schema.define(:version => 20111003220018) do
   end
 
   add_index "verses", ["book"], :name => "index_verses_on_book"
+  add_index "verses", ["book_index"], :name => "index_verses_on_book_index"
   add_index "verses", ["chapter"], :name => "index_verses_on_chapter"
   add_index "verses", ["error_flag"], :name => "index_verses_on_error_flag"
   add_index "verses", ["translation"], :name => "index_verses_on_translation"

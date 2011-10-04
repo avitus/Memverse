@@ -1,5 +1,5 @@
 class PagesController < ApplicationController
-  add_breadcrumb "Home", :home_path
+  add_breadcrumb "Home", :root_path
   def pendant
     add_breadcrumb "The New Beginnings Pendant", :pendant_path
   end
