@@ -18,12 +18,14 @@
 	<%= f.submit "Save" %>
 <% end %>
 
-<br /><h3>Upload Assets</h3>
-<% remote_form_for(:blog_asset, :url => { :controller => "blog_posts", :action => :create_asset, :blog_id => @blog_id }, 
-		:html => { :method => :post, :id => 'uploadForm', :multipart => true }) do |f| -%>
-	<%= f.hidden_field :blog_post_id, :value => @blog_post.id %>
-	<label>Upload a file:</label> <%= f.file_field :uploaded_data %>
+<br />
+
+<h3>Upload Assets</h3>
+<% form_for :blog_asset, @blog_post, :url => { :controller => "blog_posts", :action => :create_asset, :blog_id => @blog_id }, :html => { :multipart => true } do |form| %>
+  <%= form.file_field :blog_attachment %>
 <% end %>
+
+
 
 <% javascript_tag do %>
 	jQuery(document).ready(function($) 
