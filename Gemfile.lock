@@ -72,6 +72,9 @@ GEM
     acts-as-taggable-on (2.1.1)
       rails
     addressable (2.2.6)
+    airbrake (3.0.4)
+      activesupport
+      builder
     arel (2.2.1)
     bcrypt-ruby (3.0.1)
     breadcrumbs_on_rails (2.0.0)
@@ -142,9 +145,6 @@ GEM
     hirb (0.5.0)
     hoe (2.12.3)
       rake (~> 0.8)
-    hoptoad_notifier (2.4.11)
-      activesupport
-      builder
     htmldiff (0.0.1)
     i18n (0.6.0)
     i18n-js (1.1.0)
@@ -283,6 +283,7 @@ PLATFORMS
 DEPENDENCIES
   aasm (= 2.2.0)
   acts-as-taggable-on
+  airbrake
   breadcrumbs_on_rails (>= 2.0.0)
   builder
   capistrano
@@ -295,7 +296,6 @@ DEPENDENCIES
   factory_girl_rails (>= 1.2.0)
   frontend-helpers
   hirb
-  hoptoad_notifier
   htmldiff
   i18n-js
   jquery-rails

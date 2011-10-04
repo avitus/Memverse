@@ -123,7 +123,7 @@ namespace :db do
 end
 
 ##############################################################
-##  Hoptoad
+##  Error Notification
 ##############################################################
 require './config/boot'
-require 'hoptoad_notifier/capistrano'
+require 'airbrake/capistrano'

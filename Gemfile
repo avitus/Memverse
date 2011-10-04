@@ -34,7 +34,7 @@ gem 'randumb'                                                                   
 gem 'prawn', :git => "git://github.com/sandal/prawn", :submodules => true                       # PDF support
 gem "prawnto_2", :require => "prawnto"                                                          # Integrating prawn into Rails
 gem 'acts-as-taggable-on'                                                                       # :source => "http://gemcutter.org", Taggable gem, 
-gem 'hoptoad_notifier'                                                                          # Error tracking
+gem 'airbrake'                                                                                  # Error tracking
 gem 'paperclip'                                                                                 # :source => 'http://rubygems.org', Attachment handling 
 gem 'capistrano'                                                                                # Deploy with Capistrano
 gem 'ruby-openid'
