@@ -30,6 +30,7 @@ gem 'sqlite3'
 gem 'mysql2', '>= 0.3'
 gem 'aasm', '2.2.0',    :require => 'aasm'                                                      # :source => 'http://gems.github.com',   
 gem 'will_paginate', '>=3.0.pre'                                                                # :source => 'http://gemcutter.org', will_paginate is required for bloggity
+gem 'randumb'                                                                                   # Retrieve a random record
 gem 'prawn', :git => "git://github.com/sandal/prawn", :submodules => true                       # PDF support
 gem "prawnto_2", :require => "prawnto"                                                          # Integrating prawn into Rails
 gem 'acts-as-taggable-on'                                                                       # :source => "http://gemcutter.org", Taggable gem, 
