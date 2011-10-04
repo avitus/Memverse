@@ -3,14 +3,14 @@ MemverseApp::Application.routes.draw do
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
 
   match '/login',                       :to => 'sessions#new',      :as => 'login'
-  match '/logout',                      :to => 'sessions#destroy',  :as => 'logout'
-  match '/register',                    :to => 'users#create',      :as => 'register'
-  match '/signup',                      :to => 'users#new',         :as => 'signup'
-  match '/activate/:activation_code',   :to => 'users#activate',    :as => 'activate',  :activation_code => nil
-  match '/forgot_password',             :to => 'passwords#new',     :as => 'forgot_password'
-  match '/change_password/:reset_code', :to => 'passwords#reset',   :as => 'change_password'
+  # match '/logout',                      :to => 'sessions#destroy',  :as => 'logout'
+  # match '/register',                    :to => 'users#create',      :as => 'register'
+  # match '/signup',                      :to => 'users#new',         :as => 'signup'
+  # match '/activate/:activation_code',   :to => 'users#activate',    :as => 'activate',  :activation_code => nil
+  # match '/forgot_password',             :to => 'passwords#new',     :as => 'forgot_password'
+  # match '/change_password/:reset_code', :to => 'passwords#reset',   :as => 'change_password'
 
-  root :to => "home#index"
+  # root :to => "home#index"
 
   devise_for :users
 
