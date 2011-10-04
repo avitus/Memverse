@@ -104,7 +104,7 @@
 			<div id="logo"><a href="/" title="<%= I18n.t :mainpage, :scope => 'page_titles' %> - Memverse"><img src="/assets/logo.png" width="253" height="31" alt="" /></a></div>
 			<% if user_signed_in? %>
 				<div class="inner-top-right"><!--inner-top-right start-->
-					<strong>Welcome:</strong> <%= current_user.name_or_login %> <strong><%= link_to "(Logout)", logout_path %></strong>
+					<strong>Welcome:</strong> <%= current_user.name_or_login %> <strong><%= link_to "(Logout)", destroy_user_session_path %></strong>
 				</div><!--inner-top-right end-->
 			<% else %>
 				<div class="top-right"><!--top-right start-->        
