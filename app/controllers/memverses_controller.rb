@@ -183,7 +183,7 @@ class MemversesController < ApplicationController
     end
     
     # === Verse of the Day ===   
-    # @votd_txt, @votd_ref, @votd_tl, @votd_id  = verse_of_the_day()
+    @votd_txt, @votd_ref, @votd_tl, @votd_id  = verse_of_the_day()
     
     # === Check for incomplete profile ===
     if current_user.country_id == 226 and current_user.american_state.nil?      
