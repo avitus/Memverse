@@ -1096,7 +1096,7 @@ class MemversesController < ApplicationController
     # Give encouragement if verse transitions from "Learning" to "Memorized"
     if newly_memorized
       msg = "Congratulations. You have memorized #{mv.verse.ref}."
-      Tweet.create(:news => "#{current_user.name_or_login} has memorized #{mv.verse.ref}", :user_id => current_user.id, :importance => 5)
+      Tweet.create(:news => "#{current_user.name_or_login} memorized #{mv.verse.ref}", :user_id => current_user.id, :importance => 5)
 
       if current_user.reaching_milestone
       	milestone = current_user.memorized+1
@@ -1110,13 +1110,13 @@ class MemversesController < ApplicationController
       	end
       	
         msg       << " That was your #{milestone}th memorized verse!"
-        broadcast  = "#{current_user.name_or_login} has memorized #{current_user.his_or_her} #{milestone}th verse"
+        broadcast  = "#{current_user.name_or_login} memorized #{current_user.his_or_her} #{milestone}th verse"
         Tweet.create(:news => broadcast, :user_id => current_user.id, :importance => importance)
       end
 
       if mv.chapter_memorized?
         msg << " You have now memorized all of #{mv.verse.book} #{mv.verse.chapter}. Great job!"
-        Tweet.create(:news => "#{current_user.name_or_login} has memorized #{mv.verse.book} #{mv.verse.chapter}", :user_id => current_user.id, :importance => 3)          
+        Tweet.create(:news => "#{current_user.name_or_login} memorized #{mv.verse.book} #{mv.verse.chapter}", :user_id => current_user.id, :importance => 3)          
       end
 
     end
@@ -1636,14 +1636,14 @@ class MemversesController < ApplicationController
       # Give encouragement if verse transitions from "Learning" to "Memorized"
       if newly_memorized
         flash[:notice] = "Congratulations. You have memorized #{mv.verse.ref}."
-        Tweet.create(:news => "#{current_user.name_or_login} has memorized #{mv.verse.ref}", :user_id => current_user.id, :importance => 5)
+        Tweet.create(:news => "#{current_user.name_or_login} memorized #{mv.verse.ref}", :user_id => current_user.id, :importance => 5)
         if current_user.reaching_milestone
           flash[:notice] << " That was your #{current_user.memorized+1}th memorized verse!"
-          Tweet.create(:news => "#{current_user.name_or_login} has memorized #{current_user.his_or_her} #{current_user.memorized+1}th verse", :user_id => current_user.id, :importance => 3)
+          Tweet.create(:news => "#{current_user.name_or_login} memorized #{current_user.his_or_her} #{current_user.memorized+1}th verse", :user_id => current_user.id, :importance => 3)
         end
         if mv.chapter_memorized?
           flash[:notice] << " You have now memorized all of #{mv.verse.book} #{mv.verse.chapter}. Great job!"
-          Tweet.create(:news => "#{current_user.name_or_login} has memorized #{mv.verse.book} #{mv.verse.chapter}", :user_id => current_user.id, :importance => 2)          
+          Tweet.create(:news => "#{current_user.name_or_login} memorized #{mv.verse.book} #{mv.verse.chapter}", :user_id => current_user.id, :importance => 2)          
         end
       end
                 

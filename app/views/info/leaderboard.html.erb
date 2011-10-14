@@ -32,7 +32,7 @@
 						<td align="center"> <%= number_with_delimiter(user.learning) 	%></td>
 		        		<td align="center"> <%= user.accuracy  %>%</td>
 		        		<td align="center"> <%= user.ref_grade  %>%</td>
-						<td align="left"> 	<%= user.church ? link_to(user.church.name, { :controller => "profile", :action => "show_church", :church => user.church.id }) : "" %></td>
+						<td align="left"> 	<%= user.church ? link_to(user.church.name, { :controller => "church", :action => "show", :id => user.church.id }) : "" %></td>
 						<td align="left"> 	<%= user.country ? user.country.printable_name : "" %></td>
 						<td align="center"> <%= user.created_at.to_date %></td>				
 					</tr>

@@ -181,8 +181,8 @@ $(document).ready(function() {
 			// Check that data is not empty and that there has been a change
 			if ( (data != "") && ($count.html() != addCommas(data.total_verses)) ) {
 				// Insert the refreshed data
-				$('p#count').effect("highlight", {}, 3000);
 				$count.html(addCommas(data.total_verses));
+				$('p#count').effect("highlight", {}, 3000);
 			}
 	});
 

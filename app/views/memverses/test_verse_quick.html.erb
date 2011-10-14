@@ -300,6 +300,7 @@
 							q = 5;
 							break;
 					}
+					isShift=false;isPlus=false; // Set isShift and isPlus to false before interface locks (during "async" ajax calls) and keyups aren't detected
 					rateverse();
 					return false;
 				}

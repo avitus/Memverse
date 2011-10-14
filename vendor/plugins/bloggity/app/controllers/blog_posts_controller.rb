@@ -132,7 +132,7 @@ class BlogPostsController < ApplicationController
       spawn_block do
         if new_post
           link = "<a href=\"#{blog_named_link(@blog_post, :show)}\">#{@blog_post.title}</a>"      
-          Tweet.create(:news => "#{current_user.name_or_login} has written a new blog post: '#{link}'", :user_id => current_user.id, :importance => 2)  
+          Tweet.create(:news => "#{current_user.name_or_login} wrote a new blog post: '#{link}'", :user_id => current_user.id, :importance => 2)  
         end
       end
     else
