@@ -29,7 +29,7 @@ class Church < ActiveRecord::Base
     
     churchboard.sort{|a,b| a[1]<=>b[1]}.reverse[0...numchurches].each_with_index { |grp, index|
       if grp[0].rank.nil? 
-        Tweet.create(:news => "#{grp[0].name} has joined the church leaderboard at position ##{index+1}", :church_id => grp[0].id, :importance => 4)
+        Tweet.create(:news => "#{grp[0].name} joined the church leaderboard at position ##{index+1}", :church_id => grp[0].id, :importance => 4)
       elsif (index+1 < grp[0].rank) and (grp[0].rank <= 20)
       	importance = [index + 1, 4].min      	
         Tweet.create(:news => "#{grp[0].name} is now ##{index+1} on the church leaderboard", :church_id => grp[0].id, :importance => importance)       
