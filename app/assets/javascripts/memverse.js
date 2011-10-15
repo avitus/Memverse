@@ -328,7 +328,7 @@ function scoreRecitation(versetext, usertext) {
 	correct = $.trim(versetext.toLowerCase().replace(/[^a-z ]|\s-|\s—/g, '').replace(/\s+/g, " "));
 
 	if (user == "") {
-		alert('Please recite the verse. You clicked "Answer!" without any words in the box.')
+		alert('Please recite the verse. You clicked "Submit" without any words in the box.')
 		return false;
 	}	
 	
@@ -369,7 +369,7 @@ function scoreReference(verseref, userref) {
 	right_verse = correct.substring(parseInt(correct.indexOf(':'))+1);
 
 	if ( user_book == "" || user_chapter == "" || user_verse == "" || user.indexOf(':') == "-1") {
-		alert("Your reference submission was missing one or more of the required elements or was in the wrong format.\n\nThe correct format is Book Chapter:Verse (for example, Genesis 1:1-2 is properly formatted and contains all elements).\n\nIf you are unsure of part of the reference, just take your best guess.\n\nPlease try again. Thank you!");
+		alert("Please format your reference answer as Book Chapter:Verse (for example, Genesis 1:1-2) and try again.\n\nIf you are unsure of part of the reference, just take your best guess. Thank you!");
 		return false;
 	}
 
@@ -381,12 +381,10 @@ function scoreReference(verseref, userref) {
 
 	if (score == 12) {
 		msg = "You answered perfectly and scored 12 points! Good job.";
-	}
-	else if (score >= 1) {
-		msg = "Although that wasn't perfect, you still received " + score + " points. Keep trying!\n\nThe correct reference was " + verseref + " (you entered " + userref + ").";
-	}
-	else {
-		msg = "I'm sorry, but that was not correct.\n\nThe correct reference was " + verseref + ".";
+	} else if (score >= 1) {
+		msg = "Although that wasn't perfect, you still received " + score + " points. Keep trying! The correct reference was " + verseref + " (you entered " + userref + ").";
+	} else {
+		msg = "Sorry, but that was not correct. The correct reference was " + verseref + ".";
 	}
 
 	return { score: score, msg: msg };
