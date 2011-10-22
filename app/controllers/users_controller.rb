@@ -26,7 +26,7 @@ class UsersController < ApplicationController
         
         case @user.level
         when 1..4 then importance = 5
-        when 4..20 then importnace = 3
+        when 5..20 then importance = 3
         else importance = 1
         end
         
