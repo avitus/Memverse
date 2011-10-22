@@ -3,9 +3,9 @@ HOST_OS = Config::CONFIG['host_os']
 source 'http://rubygems.org'
 
 group :assets do
-  gem 'sass-rails', "  ~> 3.1.0"
-  gem 'coffee-rails', "~> 3.1.0"
-  gem 'uglifier'
+  gem 'sass-rails', "  ~> 3.1.4"
+  gem 'coffee-rails', "~> 3.1.1"
+  gem 'uglifier', '>= 1.0.3'
 end
 
 if HOST_OS =~ /linux/i
@@ -24,7 +24,7 @@ gem "rails-footnotes", ">= 3.7", :group => :development
 gem 'rails_admin', :git => 'git://github.com/sferik/rails_admin.git'
 
 
-gem 'rails', '3.1.0'
+gem 'rails', '3.1.1'
 gem 'jquery-rails'
 gem 'sqlite3'
 gem 'mysql2', '>= 0.3'
