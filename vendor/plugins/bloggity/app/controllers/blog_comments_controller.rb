@@ -10,12 +10,15 @@ class BlogCommentsController < ApplicationController
   # POST /blogs_comments
 	# POST /blogs_comments.xml
 	def create
+	  Rails.logger.debug("*** Creating new comment ... checking for authorization")
 		if current_user.can_comment? && params[:subject].empty?
 			@blog_comment = BlogComment.new(params[:blog_comment])
 			@blog_comment.user_id = current_user.id
 			
 			@blog_comment.save
+			Rails.logger.debug("*** Comment saved")
 			@blog_post = @blog_comment.blog_post
+      Rails.logger.debug("*** Redirecting ...")
 			redirect_to(blog_named_link(@blog_post))
 		else
 			flash[:error] = "You are not yet allowed to comment on blog posts"

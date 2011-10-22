@@ -29,7 +29,8 @@ gem 'jquery-rails'
 gem 'sqlite3'
 gem 'mysql2', '>= 0.3'
 gem 'aasm', '2.2.0',    :require => 'aasm'                                                      # :source => 'http://gems.github.com',   
-gem 'will_paginate', '>=3.0.pre'                                                                # :source => 'http://gemcutter.org', will_paginate is required for bloggity
+gem 'will_paginate', '~> 3.0'                                                                   # :source => 'http://gemcutter.org', will_paginate is required for bloggity
+gem 'rinku', :require => 'rails_rinku'                                                          # Supports auto-linking of URL's in blog comments
 gem 'randumb'                                                                                   # Retrieve a random record
 gem 'prawn', :git => "git://github.com/sandal/prawn", :submodules => true                       # PDF support
 gem "prawnto_2", :require => "prawnto"                                                          # Integrating prawn into Rails

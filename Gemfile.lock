@@ -220,6 +220,7 @@ GEM
       json (~> 1.4)
     redis (2.2.2)
     riddle (1.4.0)
+    rinku (1.2.2)
     rspec (2.6.0)
       rspec-core (~> 2.6.0)
       rspec-expectations (~> 2.6.0)
@@ -319,6 +320,7 @@ DEPENDENCIES
   randumb
   redis (>= 2.2.0)
   riddle
+  rinku
   rspec-rails (>= 2.6.1)
   ruby-openid
   sass-rails (~> 3.1.4)
@@ -328,6 +330,6 @@ DEPENDENCIES
   therubyracer (>= 0.8.2)
   thinking-sphinx (>= 2.0.0)
   uglifier (>= 1.0.3)
-  will_paginate (>= 3.0.pre)
+  will_paginate (~> 3.0)
   wirble
   ziya (>= 2.3.0)

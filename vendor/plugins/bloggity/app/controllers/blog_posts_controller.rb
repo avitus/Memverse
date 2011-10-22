@@ -58,7 +58,13 @@ class BlogPostsController < ApplicationController
   def show
     @tab = "blog"
     @blog_page = params[:page] || 1
+    
+    Rails.logger.debug("*** Fetching recent posts for blog page #{@blog_page}")
+    
 		@recent_posts = recent_posts(@blog_page)
+		
+		Rails.logger.debug("*** Fetching blog post")
+		
 		@blog_post = BlogPost.find(:first, :conditions => ["id = ? OR url_identifier = ?", params[:id], params[:id]])
 
 		if !@blog_post || (!@blog_post.is_complete  && (!current_user || !current_user.can_blog?(@blog_post.blog_id)))
@@ -186,7 +192,8 @@ class BlogPostsController < ApplicationController
 	end
 	
 	def recent_posts(blog_page)
-		logger.info("*** Loading recent posts for blog with id: #{@blog_id}")
-		BlogPost.paginate(:all, :select => "DISTINCT blog_posts.*", :conditions => ["blog_id = ? AND is_complete = ?", @blog_id, true], :order => "blog_posts.created_at DESC", :page => blog_page, :per_page => 15)		
+		Rails.logger.debug("*** Loading recent posts for blog with id: #{@blog_id}")
+		# BlogPost.paginate(:all, :select => "DISTINCT blog_posts.*", :conditions => ["blog_id = ? AND is_complete = ?", @blog_id, true], :order => "blog_posts.created_at DESC", :page => blog_page, :per_page => 15)
+    BlogPost.where(:blog_id => @blog_id, :is_complete => true).paginate(:page => blog_page, :per_page => 15).order("created_at DESC")
 	end
 end
