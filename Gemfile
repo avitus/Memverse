@@ -32,7 +32,7 @@ gem 'rails', '3.1.1'
 gem 'jquery-rails'
 gem 'sqlite3'
 gem 'mysql2', '>= 0.3'
-gem 'aasm', '2.2.0',    :require => 'aasm'                                                      # :source => 'http://gems.github.com',   
+gem 'aasm', '2.2.0',    :require => 'aasm'                                                      # Is this needed now that we aren't using Restful Authentication ? 
 gem 'will_paginate', '~> 3.0'                                                                   # :source => 'http://gemcutter.org', will_paginate is required for bloggity
 gem 'rinku', :require => 'rails_rinku'                                                          # Supports auto-linking of URL's in blog comments
 gem 'randumb'                                                                                   # Retrieve a random record
