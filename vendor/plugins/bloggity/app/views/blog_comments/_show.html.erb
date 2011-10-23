@@ -16,7 +16,7 @@
 					<%= comment.created_at.strftime("%x at %X") %>
 				</p>
 		
-				<div style="margin:10px 5px 10px 0pt;"><%= simple_format(auto_link(sanitize(comment.comment))) %></div>
+				<div style="margin:10px 5px 10px 0pt;"><%= simple_format(Rinku.auto_link(sanitize(comment.comment))) %></div>
 		
 				<% if blog_logged_in? && (current_user == comment.user || current_user.can_moderate_blog_comments?(@blog_id)) %>
 					<%= link_to "Edit comment", { :controller => 'blog_comments', :action => :edit, :id => comment.id } %>
