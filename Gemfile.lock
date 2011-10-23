@@ -205,6 +205,8 @@ GEM
       activesupport (= 3.1.1)
       bundler (~> 1.0)
       railties (= 3.1.1)
+    rails-dev-tweaks (0.5.1)
+      rails (~> 3.1.0)
     rails-footnotes (3.7.4)
       rails (>= 3.0.0)
     railties (3.1.1)
@@ -315,6 +317,7 @@ DEPENDENCIES
   prawnto_2
   query_reviewer!
   rails (= 3.1.1)
+  rails-dev-tweaks (~> 0.5.1)
   rails-footnotes (>= 3.7)
   rails_admin!
   randumb

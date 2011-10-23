@@ -2,6 +2,10 @@ require 'rbconfig'
 HOST_OS = Config::CONFIG['host_os']
 source 'http://rubygems.org'
 
+group :development do 
+  gem 'rails-dev-tweaks', '~> 0.5.1'
+end
+
 group :assets do
   gem 'sass-rails', "  ~> 3.1.4"
   gem 'coffee-rails', "~> 3.1.1"
