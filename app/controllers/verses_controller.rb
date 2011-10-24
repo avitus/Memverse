@@ -172,10 +172,13 @@ class VersesController < ApplicationController
     tl = current_user.translation
     add_breadcrumb "Check Verses", :check_verses_path
         
-    unverified_verses = Verse.where(:verified => 'False', :translation => tl, :checked_by => nil).where("memverses_count > ?", 1)
+    unverified_verses = Verse.where(:verified => false, :translation => tl, :checked_by => nil).where("memverses_count > ?", 1).limit(60)
     unverified_verses.each { |vs| 
       if vs.web_check != true
         @need_verification << vs
+      else
+        vs.verified = true
+        vs.save
       end
     }
   end

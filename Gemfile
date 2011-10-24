@@ -2,10 +2,14 @@ require 'rbconfig'
 HOST_OS = Config::CONFIG['host_os']
 source 'http://rubygems.org'
 
+group :development do 
+  gem 'rails-dev-tweaks', '~> 0.5.1'
+end
+
 group :assets do
-  gem 'sass-rails', "  ~> 3.1.0"
-  gem 'coffee-rails', "~> 3.1.0"
-  gem 'uglifier'
+  gem 'sass-rails', "  ~> 3.1.4"
+  gem 'coffee-rails', "~> 3.1.1"
+  gem 'uglifier', '>= 1.0.3'
 end
 
 if HOST_OS =~ /linux/i
@@ -24,16 +28,18 @@ gem "rails-footnotes", ">= 3.7", :group => :development
 gem 'rails_admin', :git => 'git://github.com/sferik/rails_admin.git'
 
 
-gem 'rails', '3.1.0'
+gem 'rails', '3.1.1'
 gem 'jquery-rails'
 gem 'sqlite3'
 gem 'mysql2', '>= 0.3'
-gem 'aasm', '2.2.0',    :require => 'aasm'                                                      # :source => 'http://gems.github.com',   
-gem 'will_paginate', '>=3.0.pre'                                                                # :source => 'http://gemcutter.org', will_paginate is required for bloggity
+gem 'aasm', '2.2.0',    :require => 'aasm'                                                      # Is this needed now that we aren't using Restful Authentication ? 
+gem 'will_paginate', '~> 3.0'                                                                   # :source => 'http://gemcutter.org', will_paginate is required for bloggity
+gem 'rinku', :require => 'rails_rinku'                                                          # Supports auto-linking of URL's in blog comments
+gem 'randumb'                                                                                   # Retrieve a random record
 gem 'prawn', :git => "git://github.com/sandal/prawn", :submodules => true                       # PDF support
 gem "prawnto_2", :require => "prawnto"                                                          # Integrating prawn into Rails
 gem 'acts-as-taggable-on'                                                                       # :source => "http://gemcutter.org", Taggable gem, 
-gem 'hoptoad_notifier'                                                                          # Error tracking
+gem 'airbrake'                                                                                  # Error tracking
 gem 'paperclip'                                                                                 # :source => 'http://rubygems.org', Attachment handling 
 gem 'capistrano'                                                                                # Deploy with Capistrano
 gem 'ruby-openid'

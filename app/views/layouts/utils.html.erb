@@ -104,7 +104,7 @@
 			<div id="logo"><a href="/" title="<%= I18n.t :mainpage, :scope => 'page_titles' %> - Memverse"><img src="/assets/logo.png" width="253" height="31" alt="" /></a></div>
 			<% if user_signed_in? %>
 				<div class="inner-top-right"><!--inner-top-right start-->
-					<strong>Welcome:</strong> <%= current_user.name_or_login %> <strong><%= link_to "(Logout)", logout_path %></strong>
+					<strong>Welcome:</strong> <%= current_user.name_or_login %> <strong><%= link_to "(Logout)", destroy_user_session_path, :method => :delete %></strong>
 				</div><!--inner-top-right end-->
 			<% else %>
 				<div class="top-right"><!--top-right start-->        
@@ -118,7 +118,7 @@
 					<div class="button">
 						<ul>
 							<li><%= link_to 'SIGN UP', signup_path %></li>
-							<li><%= link_to 'LOG IN', login_path %></li>
+							<li><%= link_to 'LOG IN', new_user_session_path %></li>
 						</ul>
 					</div>
 				</div><!--top-right end-->
@@ -130,7 +130,7 @@
 			<div id="menu-tabs" class="menu">
 
 				<ul id="maintab" class="basictab">
-					<li <%= tab(@tab=="home"		) %> rel="homepage">	<%= link_to 'Home', 	 		home_path %></li>	
+					<li <%= tab(@tab=="home"		) %> rel="homepage">	<%= link_to 'Home', 	 		root_path %></li>	
 					<li <%= tab(@tab=="dash"		) %> rel="dashboard">	<%= link_to 'Dashboard', 		:controller => 'utils', :action => 'dashboard' %></li>
 					<li <%= tab(@tab=="users"		) %> rel="users">		<%= link_to 'Users', 	 		:controller => 'utils', :action => 'show_users', :sort_order => 'ID DESC', :period => 'Active' %></li>
 					<li <%= tab(@tab=="verses"		) %> rel="verses">		<%= link_to 'Verses',			:controller => 'utils', :action => 'show_verses_to_be_checked' %></li>
@@ -244,7 +244,7 @@
 					<li>&nbsp;</li>
 				</ul>
 			</div><!--menu end-->
-			<div><img src="assets/trans.png" width="1" height="10" alt="" /></div>
+			<div><%= image_tag "trans.png", :size => "1x10" %></div>
 		<% end %><!-- if user_signed_in? -->
 	</div> <!--header end-->
 
@@ -253,7 +253,7 @@
 		<%= content_for?(:content) ? yield(:content) : yield %>
 	</div>
 
-	<div><img src="assets/trans.png" width="1" height="10" alt="" />&nbsp;</div>
+	<div><%= image_tag "trans.png", :size => "1x10" %>&nbsp;</div>
 
 	<div class="clr"></div>
 

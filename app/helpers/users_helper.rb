@@ -71,7 +71,7 @@ module UsersHelper
     if tag = options.delete(:tag)
       content_tag tag, h(content_text), options
     else
-      link_to h(content_text), login_path, options
+      link_to h(content_text), new_user_session_path, options
     end
   end
 

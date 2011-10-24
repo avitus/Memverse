@@ -23,7 +23,7 @@
 	<% if blog_post.fck_created %>
 		<%= blog_post.body.html_safe -%>
 	<% else %>
-		<%= simple_format(auto_link(blog_post.body)) %>
+		<%= simple_format(Rinku.auto_link(blog_post.body)) %>
 	<% end %>
 	
 	<!-- 

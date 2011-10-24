@@ -52,9 +52,9 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :confirmable, :validatable, 
          :encryptable, :encryptor => :restful_authentication_sha1
   
-  validates :login, :presence   => true,
-                    :uniqueness => { :case_sensitive => false },
-                    :length     => { :within => 3..40 }
+  # validates :login, :presence   => true,
+                    # :uniqueness => { :case_sensitive => false },
+                    # :length     => { :within => 3..40 }
 
   validates :name,  :length     => { :maximum => 100 },
                     :allow_nil  => true
@@ -94,29 +94,12 @@ class User < ActiveRecord::Base
                   :newsletters, :reminder_freq, :last_reminder, :church, :country, :american_state, 
                   :show_echo, :max_interval, :mnemonic_use, :all_refs, :referred_by, :show_toolbar, :auto_work_load, :show_email
   
-  
-  def self.authenticate(login, password)
-    return nil if login.blank? || password.blank?
-    u = find_by_login(login.downcase) # need to get the salt
-    u && u.state == 'active' && u.authenticated?(password) ? u : nil
-  end  
-  
+    
   # Check if a user has a role
   def has_role?(role)
     list ||= self.roles.map(&:name)
     list.include?(role.to_s) || list.include?('admin')
   end
-  
-  # Not using open id
-  def not_using_openid?
-    identity_url.blank?
-  end
-  
-  # Overwrite password_required for open id
-  def password_required?
-    new_record? ? not_using_openid? && (crypted_password.blank? || !password.blank?) : !password.blank?
-  end
-  
   
   # ----------------------------------------------------------------------------------------------------------
   # Link to get referral credit

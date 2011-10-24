@@ -44,11 +44,13 @@
 <!-- jquery.tools 		: used for tool tips on main verse test page, scrollable on login page -->
 <!-- jqueryui 			: used for highlight effect on reset-schedule button -->
 <!-- 2leveltab    		: main menu tab system -->
+<!-- jeditable          : for in-place tag editing goodness -->
 <!-- jquery.fancybox    : lightbox for tutorial video -->
 <!-- juggernaut		    : needed for chat room -->
 <!-- modernizr		    : support for CSS3 and HTML5 in older browsers -->
 <!-- countdown          : used for live quiz -->
 <!-- hoverIntent        : used on popular verses page -->
+<!-- periodicalUpdater  : for home page memorized count -->
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.min.js"></script>
 <script type="text/javascript" src="http://cdn.jquerytools.org/1.2.5/all/jquery.tools.min.js"></script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js"></script>
@@ -60,8 +62,8 @@
 <%= yield(:head) %>
 
 <!-- Shortcut Icons -->
-<link rel="shortcut icon" href="/images/favicon.ico" />
-<link rel="icon" 		  href="/images/favicon.ico" />	
+<link rel="shortcut icon" href="favicon.ico" />
+<link rel="icon" 		  href="favicon.ico" />	
 
 <!--[if IE 6]>
 <style type="text/css">
@@ -122,7 +124,7 @@
 			<div id="logo"><a href="/" title="<%= I18n.t :mainpage, :scope => 'page_titles' %> - Memverse"><img src="/assets/logo.png" width="253" height="31" alt="" /></a></div>
 			<% if user_signed_in? %>
 				<div class="inner-top-right"><!--inner-top-right start-->
-					<strong>Welcome:</strong> <%= current_user.name_or_login %> <strong><%= link_to "(Logout)", logout_path %></strong>
+					<strong>Welcome:</strong> <%= current_user.name_or_login %> <strong><%= link_to "(Logout)", destroy_user_session_path, :method => :delete %></strong>
 				</div><!--inner-top-right end-->
 			<% else %>
 				<div class="top-right"><!--top-right start-->        
@@ -136,7 +138,7 @@
 					<div class="button">
 						<ul>
 							<li><%= link_to 'SIGN UP', new_user_registration_path %></li>
-							<li><%= link_to 'LOG IN', login_path %></li>
+							<li><%= link_to 'LOG IN', new_user_session_path %></li>
 						</ul>
 					</div>
 				</div><!--top-right end-->
@@ -278,7 +280,7 @@
 		<%= content_for?(:content) ? yield(:content) : yield %>
 	</div>
 
-	<div><img src="assets/trans.png" width="1" height="10" alt="" />&nbsp;</div>
+	<div><%= image_tag "trans.png", :size => "1x10" %>&nbsp;</div>
 
 	<div class="clr"></div>
 

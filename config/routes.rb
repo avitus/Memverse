@@ -2,7 +2,7 @@ MemverseApp::Application.routes.draw do
   
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
 
-  match '/login',                       :to => 'home#index',      :as => 'login'
+  # match '/login',                       :to => 'home#index',        :as => 'login'
   # match '/logout',                      :to => 'sessions#destroy',  :as => 'logout'
   # match '/register',                    :to => 'users#create',      :as => 'register'
   # match '/signup',                      :to => 'users#new',         :as => 'signup'
@@ -12,9 +12,9 @@ MemverseApp::Application.routes.draw do
 
   devise_for :users
 
-  resources :users
-  resources :passwords
-  resource  :session
+  resources :users, :only => :show
+#  resources :passwords
+#  resource  :session
   resources :uberverses
 # resources :pastors
   resources :sermons
