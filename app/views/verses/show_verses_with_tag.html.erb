@@ -19,7 +19,9 @@
 					<td><%= vs.translation		%></td>		 
 					<td><%= vs.ref				%></td>			
 					<td><%= vs.text				%></td>	
-					<td><%= current_user.has_verse?(vs.book, vs.chapter, vs.versenum)? "In Your List" : link_to("Add to List", :controller => 'memverses', :action => 'quick_add', :vs => vs) %></td>								
+					<td align="center" class="starter_add" class="no-dbl-click">
+						<%= current_user.has_verse?(vs.book, vs.chapter, vs.versenum)? 'In Your List' : link_to('Add to your list', quick_add_path(vs), :remote => true, :class => "quick-add") %> 
+					</td>								
 				</tr>
 				<% end %>
 			</tbody>
@@ -27,3 +29,35 @@
 		
 	</div>
 </div>
+
+<!-- Highlight verse to be added ALV TODO: compare this to adding directly from search ... seems like a better implementation using nice partials and whatnot -->
+<script>
+  $(document).ready(function(){
+    
+    $('.starter_add').click(function () { 
+	  $(this).children().attr('disabled', 'disabled').hide();
+      $(this).closest('tr').fadeOut("slow"); 
+    });
+    $('.starter_add').hover(function () {
+      $(this).closest('tr').addClass("hilite");
+    }, function () {
+      $(this).closest('tr').removeClass("hilite");
+    });
+
+  });
+</script>
+
+<!-- Prevent double-clicking of links to add verses and ajax binds (http://www.alfajango.com/blog/rails-3-remote-links-and-forms/) -->
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('.quick-add').click( function() {
+			$(this)
+		})
+		.bind('ajax:success', function(){
+  			// alert("Added");
+		})
+		.bind('ajax:error', function(){
+  			alert("Error");
+		});
+	});
+</script>
