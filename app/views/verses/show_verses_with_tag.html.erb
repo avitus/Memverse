@@ -4,60 +4,20 @@
 	
 		<h2>Verses tagged '<%= @tag.name %>' by Users</h2>
 	
-		<table class="memverse-standard">
-			<thead>
-				<tr>
-					<th>Ver</th>
-					<th>Verse</th>
-					<th>Text</th>
-					<th>Status</th>
-				</tr>
-			</thead>
-			<tbody>
-				<% for vs in @user_list %>
-				<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
-					<td><%= vs.translation		%></td>		 
-					<td><%= vs.ref				%></td>			
-					<td><%= vs.text				%></td>	
-					<td align="center" class="starter_add" class="no-dbl-click">
-						<%= current_user.has_verse?(vs.book, vs.chapter, vs.versenum)? 'In Your List' : link_to('Add to your list', quick_add_path(vs), :remote => true, :class => "quick-add") %> 
-					</td>								
-				</tr>
-				<% end %>
-			</tbody>
-		</table>
+		<% unless @verses.empty? %>
+			<div id="search_results">	
+				<table class="memverse-standard">
+					<%= render :partial => "verses/verse_headings" %>
+					<%= render :partial => "verses/verse", :collection => @verses %>
+				</table>
+			</div>
+		<% end %>
 		
 	</div>
 </div>
 
-<!-- Highlight verse to be added ALV TODO: compare this to adding directly from search ... seems like a better implementation using nice partials and whatnot -->
-<script>
-  $(document).ready(function(){
-    
-    $('.starter_add').click(function () { 
-	  $(this).children().attr('disabled', 'disabled').hide();
-      $(this).closest('tr').fadeOut("slow"); 
-    });
-    $('.starter_add').hover(function () {
-      $(this).closest('tr').addClass("hilite");
-    }, function () {
-      $(this).closest('tr').removeClass("hilite");
-    });
-
-  });
-</script>
-
-<!-- Prevent double-clicking of links to add verses and ajax binds (http://www.alfajango.com/blog/rails-3-remote-links-and-forms/) -->
 <script type="text/javascript">
-	$(document).ready(function(){
-		$('.quick-add').click( function() {
-			$(this)
-		})
-		.bind('ajax:success', function(){
-  			// alert("Added");
-		})
-		.bind('ajax:error', function(){
-  			alert("Error");
-		});
-	});
+  $(".add")
+  	.live("ajax:success", function(evt, data, status, xhr) { $(this).html(data.msg) })
+	.live("ajax:beforeSend", function(evt, xhr, settings) { $(this).find("a").html("Adding...") });
 </script>

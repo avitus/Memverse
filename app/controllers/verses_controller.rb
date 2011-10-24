@@ -137,8 +137,8 @@ class VersesController < ApplicationController
     @sub = "cloud"
     add_breadcrumb I18n.t('page_titles.tag_cloud'), :tag_cloud_path
     add_breadcrumb params[:tag], show_verses_with_tag_path(:tag => params[:tag])
-    @tag       = ActsAsTaggableOn::Tag.find_by_name(params[:tag])
-    @user_list = Memverse.tagged_with(params[:tag]).map{ |mv| mv.verse.switch_tl(current_user.translation) || mv.verse}.uniq.sort!
+    @tag    = ActsAsTaggableOn::Tag.find_by_name(params[:tag])
+    @verses = Memverse.tagged_with(params[:tag]).map{ |mv| mv.verse.switch_tl(current_user.translation) || mv.verse}.uniq.sort!
   end
   
   # ----------------------------------------------------------------------------------------------------------
