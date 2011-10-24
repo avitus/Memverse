@@ -61,8 +61,8 @@
 <%= yield(:head) %>
 
 <!-- Shortcut Icons -->
-<link rel="shortcut icon" href="/images/favicon.ico" />
-<link rel="icon" 		  href="/images/favicon.ico" />	
+<link rel="shortcut icon" href="favicon.ico" />
+<link rel="icon" 		  href="favicon.ico" />	
 
 <!--[if IE 6]>
 <style type="text/css">
@@ -279,7 +279,7 @@
 		<%= content_for?(:content) ? yield(:content) : yield %>
 	</div>
 
-	<div><img src="assets/trans.png" width="1" height="10" alt="" />&nbsp;</div>
+	<div><%= image_tag "trans.png", :size => "1x10" %>&nbsp;</div>
 
 	<div class="clr"></div>
 
