@@ -21,7 +21,7 @@
 	    	<h2><span>Reference: </span></h2>
 	    </div>	
 	    
-		<% form_tag :action => 'mark_reftest' do %>
+		<%= form_tag :action => 'mark_reftest' do %>
 	
 			<%= text_field_tag(:answer, params[:answer], :autocomplete => "off" )%>
 			<%= submit_tag "", 			:class => "submit-button" %>								
