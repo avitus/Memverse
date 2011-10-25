@@ -1231,23 +1231,13 @@ class MemversesController < ApplicationController
     
     
     if current_user.memorized >= 10
+      
       # Find the memorized verses and pick 10 at random for the test
-      exam = Memverse.find( :all, 
-                            :conditions => { :user_id => current_user.id, :status => "Memorized"}
-                          ).sort_by{ rand }.slice(0...10)
-       
-      # Put verses into session variable
-      exam.each { |mv|
-        exam_questions  << [mv.verse.ref, mv.verse.translation]
-        exam_answers    << mv.verse.text 
-        exam_id         << mv.id
-      }
-  
+      exam = Memverse.where(:user_id => current_user.id, :status => "Memorized").random(10)
+        
       # Create session variables
-      session[:exam_questions]    = exam_questions
-      session[:exam_answers]      = exam_answers
+      session[:exam_questions]    = exam.map { |mv| mv.id }
       session[:exam_submission]   = exam_submission
-      session[:exam_id]           = exam_id
       session[:exam_cntr]         = 0
       session[:exam_correct]      = 0    
       session[:exam_answered]     = 0
@@ -1258,27 +1248,6 @@ class MemversesController < ApplicationController
       redirect_to test_exam_path
     else
       flash[:notice] = "You need to memorize 10 verses before you can take the test."
-      redirect_to :action => 'index'
-    end
-    
-  end
-
-  # ----------------------------------------------------------------------------------------------------------
-  # Test a Difficult Reference
-  # ----------------------------------------------------------------------------------------------------------
-  def test_ref
-    
-    @tab = "mem"
-    @sub = "refrec"  
-    
-    add_breadcrumb I18n.t("memorize_menu.Memorize"), :test_verse_quick_path
-    add_breadcrumb I18n.t("memorize_menu.Reference Recall"), :start_ref_test_path
-    
-    if session[:ref_test_cntr] # The session variables are not set if user comes straight to this page
-      @question_num = session[:ref_test_cntr]
-      @ref          = session[:ref_test][@question_num]
-      @soln         = session[:ref_soln][@question_num]
-    else
       redirect_to :action => 'index'
     end
     
@@ -1296,10 +1265,138 @@ class MemversesController < ApplicationController
     add_breadcrumb I18n.t("memorize_menu.Accuracy Test"), :test_exam_path
     
     if session[:exam_cntr] # The session variables are not set if user comes straight to this page
+      
       @question_num = session[:exam_cntr]
-      @ref          = session[:exam_questions][@question_num][0]
-      @tl           = session[:exam_questions][@question_num][1]
-      @soln         = session[:exam_answers][@question_num]
+      @mv           = Memverse.find(session[:exam_questions][@question_num])
+      
+    else
+      redirect_to :action => 'index'
+    end
+    
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Score Accuracy Test
+  # ----------------------------------------------------------------------------------------------------------
+  def mark_exam
+    
+    question_num  = session[:exam_cntr] || 1  # Set exam question number to 1 if session variable is nil
+    mv            = Memverse.find(session[:exam_questions][question_num])
+
+    answer        = params[:answer].gsub(/\s+/," ").strip if params[:answer]    
+    solution      = mv.verse.text.gsub(/\s+/," ").strip
+    
+    logger.debug("Answer:   #{answer}")
+    logger.debug("Solution: #{solution}")
+    
+    if solution && answer
+      
+      # ---- TODO: Update this for greater leniency --------------
+      if answer.downcase.gsub(/[^a-z ]|\s-|\s—/, '') == solution.downcase.gsub(/[^a-z ]|\s-|\s—/, '')
+        flash[:notice] = "Correct"
+        session[:exam_correct] += 1
+      else
+        flash[:notice] = "Incorrect"
+        session[:exam_incorrect] << question_num
+      end
+      # ---- Update this --------------
+
+      # Update score
+      session[:exam_answered] += 1
+      session[:exam_submission] << Verse.diff(solution, answer)
+  
+      # Start Next Question
+      session[:exam_cntr] += 1
+      
+      # Stop after questions are finished or if user quits
+      if session[:exam_answered] >= session[:exam_length] or params[:commit]=="Exit Exam" 
+        redirect_to exam_results_path
+      else
+        redirect_to test_exam_path
+      end
+    
+    else
+      # Probably caused by user using the back button after test is finished
+      logger.info("*** User probably hit the back button")
+      flash[:notice] = "Exam already completed"
+      redirect_to :action => 'index'
+    end    
+    
+  end  
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Score Accuracy Exam
+  # ----------------------------------------------------------------------------------------------------------
+  def exam_results
+    
+    @tab = "mem"
+    @sub = "acctest"    
+    
+    add_breadcrumb I18n.t("memorize_menu.Memorize"), :test_verse_quick_path
+    add_breadcrumb I18n.t("memorize_menu.Accuracy Test"), :exam_results_path
+    
+    if session[:exam_answered]
+      @correct      = session[:exam_correct]
+      @answered     = session[:exam_answered]   
+      wrong_answers = session[:exam_incorrect]
+      
+      # Show where user made mistakes
+      @incorrect = Array.new     
+      wrong_answers.each do |q_num|
+        mv = Memverse.find(session[:exam_questions][q_num])
+        solution_set = Hash.new
+        solution_set['Ref']       = mv.verse.ref
+        solution_set['Txt']       = mv.verse.text
+        solution_set['Interval']  = mv.test_interval
+        solution_set['Answer']    = session[:exam_submission][q_num]
+        @incorrect << solution_set
+      end
+      
+      # Update score
+      score = (@correct.to_f / @answered.to_f) * 100
+      @old_accuracy = current_user.accuracy
+      @new_accuracy = ((@old_accuracy.to_f * 0.75) + (score.to_f * 0.25)).ceil.to_i
+      @perfect_score = (@correct == @answered)
+          
+      # Update user's accuracy grade
+      current_user.accuracy = @new_accuracy
+      current_user.save
+      
+      # Clear session variables so that user can't hit refresh and bump up score
+      session[:exam_answered] = nil
+      session[:exam_cntr]     = nil
+     
+      # Check for quest completion 
+      spawn_block do
+        if q = Quest.where(:url => exam_results_path, :level => current_user.level ).first        
+          if score >= q.quantity
+            q.check_quest_off(current_user)
+            flash.keep[:notice] = "You have completed the accuracy test for this level."
+          end 
+        end
+      end       
+      
+    else
+      redirect_to :action => 'index'      
+    end
+  
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Test a Difficult Reference
+  # ----------------------------------------------------------------------------------------------------------
+  def test_ref
+    
+    @tab = "mem"
+    @sub = "refrec"  
+    
+    add_breadcrumb I18n.t("memorize_menu.Memorize"), :test_verse_quick_path
+    add_breadcrumb I18n.t("memorize_menu.Reference Recall"), :start_ref_test_path
+    
+    if session[:ref_test_cntr] # The session variables are not set if user comes straight to this page
+      @question_num = session[:ref_test_cntr]
+      @ref          = session[:ref_test][@question_num]
+      @soln         = session[:ref_soln][@question_num]
     else
       redirect_to :action => 'index'
     end
@@ -1368,57 +1465,7 @@ class MemversesController < ApplicationController
     
   end
   
-  # ----------------------------------------------------------------------------------------------------------
-  # Score Accuracy Test
-  # ----------------------------------------------------------------------------------------------------------
-  def mark_exam
-    
-    # Score Questions
-    answer        = params[:answer].gsub(/\s+/," ").strip if params[:answer]
-#    errorcode, book, chapter, verse = parse_verse(answer) 
-    
-    question_num  = session[:exam_cntr] || 1  # Set exam question number to 1 if session variable is nil
-    solution      = session[:exam_answers][question_num].gsub(/\s+/," ").strip if session[:exam_answers]
- 
-    
-    guess   = params[:verseguess] ? params[:verseguess].gsub(/\s+/," ").strip : ""  # Remove double spaces from guesses    
-    correct = params[:correct]    ? params[:correct].gsub(/\s+/," ").strip    : ""  # The correct verse was stripped, cleaned when first saved    
-    
-    
-    if solution && answer
-      
-      # ---- TODO: Update this for greater leniency --------------
-      if answer.downcase.gsub(/[^a-z ]|\s-|\s—/, '') == solution.downcase.gsub(/[^a-z ]|\s-|\s—/, '')
-        flash[:notice] = "Correct"
-        session[:exam_correct] += 1
-      else
-        flash[:notice] = "Incorrect"
-        session[:exam_incorrect] << question_num
-      end
-      # ---- Update this --------------
 
-      # Update score
-      session[:exam_answered] += 1
-      session[:exam_submission] << Verse.diff(solution, answer)
-  
-      # Start Next Question
-      session[:exam_cntr] += 1
-      
-      # Stop after questions are finished or if user quits
-      if session[:exam_answered] >= session[:exam_length] or params[:commit]=="Exit Exam" 
-        redirect_to exam_results_path
-      else
-        redirect_to test_exam_path
-      end
-    
-    else
-      # Probably caused by user using the back button after test is finished
-      logger.info("*** User probably hit the back button")
-      flash[:notice] = "Exam already completed"
-      redirect_to :action => 'index'
-    end    
-    
-  end  
   
   # ----------------------------------------------------------------------------------------------------------
   # Score Reference Test
@@ -1461,52 +1508,6 @@ class MemversesController < ApplicationController
   
   end  
   
-  # ----------------------------------------------------------------------------------------------------------
-  # Score Accuracy Exam
-  # ----------------------------------------------------------------------------------------------------------
-  def exam_results
-  	
-    @tab = "mem"
-    @sub = "acctest"   	
-  	
-    add_breadcrumb I18n.t("memorize_menu.Memorize"), :test_verse_quick_path
-    add_breadcrumb I18n.t("memorize_menu.Accuracy Test"), :exam_results_path
-    
-    if session[:exam_answered]
-      @correct    = session[:exam_correct]
-      @answered   = session[:exam_answered]
-      @incorrect  = session[:exam_incorrect]
-      
-      score = (@correct.to_f / @answered.to_f) * 100
-      
-      @old_accuracy = current_user.accuracy
-      @new_accuracy = ((@old_accuracy.to_f * 0.75) + (score.to_f * 0.25)).ceil.to_i       
-      
-      @perfect_score = (@correct == @answered)
-          
-      # Update user's accuracy grade
-      current_user.accuracy = @new_accuracy
-      current_user.save
-      
-      # Clear session variables so that user can't hit refresh and bump up score
-      session[:exam_answered] = nil
-      session[:exam_cntr]     = nil
-     
-      # Check for quest completion 
-      spawn_block do
-        if q = Quest.where(:url => exam_results_path, :level => current_user.level ).first      	
-        	if score >= q.quantity
-	          q.check_quest_off(current_user)
-	          flash.keep[:notice] = "You have completed the accuracy test for this level."
-	        end 
-        end
-      end       
-      
-    else
-      redirect_to :action => 'index'      
-    end
-  
-  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Save Entry in Progress Table

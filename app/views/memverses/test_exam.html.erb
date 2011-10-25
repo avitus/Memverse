@@ -11,16 +11,16 @@
 
 	<!-- Question-side : Entry box -->	
 	<div id="exam-question-side">
-		<h2>Verse <%=@question_num+1%> : <%=@ref%> [<%=@tl%>]</h2>
-			<% form_tag :action => 'mark_exam' do %>
+		<h2>Verse <%=@question_num+1%> : <%=@mv.verse.ref%> [<%=@mv.verse.translation%>]</h2>
+			<%= form_tag :action => 'mark_exam' do %>
 				
 				<div id="exam-answer-box">
 					<%= text_area_tag(:answer, params[:answer], :class => "verseguess" )%>	
 			  	</div>
 			
 				<div id="scoreTestButtons">								
-					<%= submit_tag "Submit", 	:class => "submit" %>								
-					<%= submit_tag "Exit Exam", :class => "submit" %>	
+					<%= submit_tag "", 			:class => "submit-button" %>								
+					<%= submit_tag "Exit Exam", :class => "submit secondary" %>				
 				</div>			  
 			
 			<% end %>	

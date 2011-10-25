@@ -23,10 +23,10 @@
 				<tbody>
 					<% for mistake in @incorrect %>
 						<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
-							<td>				<%= session[:exam_questions][mistake][0]%></td>
-							<td>				<%= session[:exam_answers][mistake] %></td>
-							<td>				<%= session[:exam_submission][mistake].html_safe %></td>
-							<td align="center">	<%= Memverse.find( session[:exam_id][mistake] ).test_interval %>			
+							<td>				<%= mistake['Ref'] %></td>
+							<td>				<%= mistake['Text'] %></td>
+							<td>				<%= mistake['Answer'].html_safe %></td>
+							<td align="center">	<%= mistake['Interval'] %></td>			
 						</tr>
 					<% end %>
 				</tbody>
