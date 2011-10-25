@@ -408,7 +408,6 @@ class MemversesController < ApplicationController
     if !new_tag.empty?
       tag_list = @mv.all_tags_list.to_s + ", " + new_tag
       current_user.tag(@mv, :with => tag_list, :on => :tags)  # We're doing this for now to track which users are tagging
-      # @mv.save
       render :text => new_tag
     else
       render :text => "[Enter tag name here]"
