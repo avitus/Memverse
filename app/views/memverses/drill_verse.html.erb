@@ -10,7 +10,7 @@
         </div>
         <div id="mnemonic" class="mnemonic"><div id="mtext"><%= @mv.mnemonic_if_req %></div><div id="mclose">x</div></div>
         <div class="verse-test-area">
-        	<% form_tag mark_drill_path, :id => 'mark_drill' do %>
+        	<%= form_tag mark_drill_path, :id => 'mark_drill' do %>
             	<div>
             		<%= text_area_tag(:verseguess, params[:verseguess], :class => "verseguess" )%>	
                 </div>
