@@ -399,18 +399,16 @@ class MemversesController < ApplicationController
     new_tag = params[:value].titleize # need to clean this up with hpricot or equivalent
 
 
-    # current_user.tag(@mv, :with => new_tag, :on => :tags)  # <-- this doesn't work for some reason but can get owner from mv anyway      
-    # Owned tags don't seem to be visible. They show up in the Taggings table but aren't reported with mv.tags or user.owned_taggings  
-    # Rails 3.1.1 update: It appears as though adding the tag by both pushing into the tag_list *and* tagging via the user results in 
-    # duplicate tags. In other words, owned tags *are* now visible. All that seems to be lost is that by not pushing into the tag list
-    # one can't get a nice string of tags and we have to use mv.tags which returns an array. Unfortunately, though, each owner tagging
-    # seems to overwrite the previous one.
-    # Note: Verse tagging is currently completely broken due to duplicate tags
+    # Notes on using the acts_as_taggable_on gem
+    #
+    # 1. Owned tags and regular tags are handled in two different modules in the library
+    # 2. The method 'tag_list' only returns tags without owners. The method 'all_tags_list' returns all tags
+    # 3. user.tag(mv, :with => 'TagA', :on => :tags) *replaces* any prior tags. 
     
     if !new_tag.empty?
-      @mv.tag_list << new_tag
-      current_user.tag(@mv, :with => new_tag, :on => :tags)  # We're doing this for now to track which users are tagging
-      @mv.save
+      tag_list = @mv.all_tags_list.to_s + ", " + new_tag
+      current_user.tag(@mv, :with => tag_list, :on => :tags)  # We're doing this for now to track which users are tagging
+      # @mv.save
       render :text => new_tag
     else
       render :text => "[Enter tag name here]"
