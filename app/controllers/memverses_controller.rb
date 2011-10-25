@@ -401,6 +401,11 @@ class MemversesController < ApplicationController
 
     # current_user.tag(@mv, :with => new_tag, :on => :tags)  # <-- this doesn't work for some reason but can get owner from mv anyway      
     # Owned tags don't seem to be visible. They show up in the Taggings table but aren't reported with mv.tags or user.owned_taggings  
+    # Rails 3.1.1 update: It appears as though adding the tag by both pushing into the tag_list *and* tagging via the user results in 
+    # duplicate tags. In other words, owned tags *are* now visible. All that seems to be lost is that by not pushing into the tag list
+    # one can't get a nice string of tags and we have to use mv.tags which returns an array. Unfortunately, though, each owner tagging
+    # seems to overwrite the previous one.
+    # Note: Verse tagging is currently completely broken due to duplicate tags
     
     if !new_tag.empty?
       @mv.tag_list << new_tag
