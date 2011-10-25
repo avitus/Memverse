@@ -6,17 +6,22 @@
 	verses that are covered in this review will be omitted from your regular memorization session today.</p>
 		
 	<table class="memverse-standard">
-		<tr>		  	   	  		  
-			<th>Status</th>
-			<th>Chapter</th>
-		</tr>
-		
-		<% for cc in current_user.complete_chapters %>
-			<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
-				<td align="center">	<%= cc[0] %></td>		
-				<td align="left">	<%= link_to cc[1], :action => 'test_chapter', :book_chapter => cc[1]	%></td>	
+		<thead>
+			<tr>		  	   	  		  
+				<th>Status</th>
+				<th>Chapter</th>
 			</tr>
-		<% end %>
+		</thead>
+		
+		<tbody>
+			<% for cc in current_user.complete_chapters %>
+				<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
+					<td align="center">	<%= cc[0] %></td>		
+					<td align="left">	<%= link_to cc[1], :action => 'test_chapter', :book_chapter => cc[1]	%></td>	
+				</tr>
+			<% end %>
+		</tbody>
 	</table>
+	
 </div>
 

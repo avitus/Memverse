@@ -13,7 +13,7 @@
 		
 			<!-- Question-side : Entry box -->	
 			<div class="verse-test-area">
-				<% form_tag test_chapter_path do %>
+				<%= form_tag test_chapter_path do %>
 		
 					<div id="answerbox">
 		        		<%= text_area_tag(:verseguess, params[:verseguess], :class => "verseguess" )%>	
