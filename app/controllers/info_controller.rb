@@ -1,6 +1,9 @@
 # coding: utf-8
 
 class InfoController < ApplicationController
+  
+  caches_action :leaderboard, :churchboard, :stateboard, :countryboard, :layout => false, :expires_in => 1.hour
+  
   add_breadcrumb "Home", :root_path
   # ----------------------------------------------------------------------------------------------------------   
   # Memverse tutorial
