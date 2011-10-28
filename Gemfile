@@ -30,6 +30,7 @@ gem 'rails_admin', :git => 'git://github.com/sferik/rails_admin.git'
 
 gem 'rails', '3.1.1'
 gem 'jquery-rails'
+gem 'fancybox-rails'
 gem 'sqlite3'
 gem 'mysql2', '>= 0.3'
 gem 'aasm', '2.2.0',    :require => 'aasm'                                                      # Is this needed now that we aren't using Restful Authentication ? 
