@@ -333,7 +333,7 @@ input.secondary {
 	border:1px solid;
 	font-size: 100%;
 	height: 1.4em; 
-  	background-color:#f2f1f1; 	
+  background-color:#f2f1f1; 	
 	border-color: #9c3;
 	cursor:pointer;
 }
@@ -1637,20 +1637,6 @@ div#flash-error {
 	font-weight:bold;
 }
 /* END - tooltip styling */
-
-.tooltip2 {
-	background-color:#000;
-	border:1px solid #fff;
-	padding:10px 15px;
-	display:none;
-	color:#fff;
-	text-align:left;
-	font-size:12px;
-
-	/* outline radius for mozilla/firefox only */
-	-moz-box-shadow:0 0 10px #000;
-	-webkit-box-shadow:0 0 10px #000;
-}
 
 .score-test-buttons a:hover span, a span:hover
 {
@@ -2978,48 +2964,6 @@ div#errorExplanation ul li {
     border:solid 2px #DFDFDF;
 }
 
-/* === Signup Page === */
-
-#signup-page-form {
-    font-size:140%;
-	width:640px;
-	margin-left:7%;
-	margin-top:1.5em;
-}
-
-#signup-page-form label {
-	width:8.5em;
-}
-
-#open-id-link {
-	font-size:80%;
-	font-style:italic;
-	padding-left:1em;	
-}
-
-/* === Forgotten password page (request email to be sent) === */
-
-#forgotten_password {
-	width:550px;
-}
-
-#forgotten_password label {
-	width:2.5em;
-}
-
-/* === Reset password page === */
-
-#reset_password {
-	width:550px;
-}
-
-#reset_password label {
-	width:5.5em;
-}
-
-#reset_password .buttons {
-	margin-left:9em;
-}
 
 /* === Edit Profile Page === */
 

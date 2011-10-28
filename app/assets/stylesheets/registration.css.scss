@@ -1,0 +1,61 @@
+/* === Signup Page === */
+#signup-page-form {
+  font-size:140%;
+  width:700px;
+  margin-left:7%;
+  margin-top:1.5em;
+}
+
+#signup-page-form label {
+  width:10em;
+}
+
+#signup-page-form .submit-button {
+  margin-left: 15%;
+}
+
+#signup-page-form li {
+  margin-top: 0.7em;
+}
+
+.sign-up-links {
+  font-size: 65%;
+  float: left;
+  padding-left: 6%;
+}
+
+.tooltip2 {
+  background-color:#000;
+  border:1px solid #fff;
+  padding:10px 15px;
+  display:none;
+  color:#fff;
+  text-align:left;
+  font-size:12px;
+
+  /* outline radius for mozilla/firefox only */
+  -moz-box-shadow:0 0 10px #000;
+  -webkit-box-shadow:0 0 10px #000;
+}
+
+/* === Forgotten password page (request email to be sent) === */
+#forgotten_password {
+  width:550px;
+}
+
+#forgotten_password label {
+  width:2.5em;
+}
+
+/* === Reset password page === */
+#reset_password {
+  width:550px;
+}
+
+#reset_password label {
+  width:5.5em;
+}
+
+#reset_password .buttons {
+  margin-left:9em;
+}
