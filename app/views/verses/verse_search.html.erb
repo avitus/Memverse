@@ -6,7 +6,7 @@
 	
 		<h2>Search the Bible</h2>
 
-		<% form_tag search_verse_path, :method => :get do %>
+		<%= form_tag search_verse_path, :method => :get do %>
 
 		    <%= text_field_tag( :searchParams ) %>
 		    <%= submit_tag "", :name => nil, :id => 'searchSubmit' %>

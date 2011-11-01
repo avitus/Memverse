@@ -53,7 +53,7 @@ gem 'test-unit', '=1.2.3'                                                       
 gem 'json'                                                                                      # Javascript Object Notation support
 gem 'mail', '>= 2.2.15'                                                                         # Emails
 gem 'newrelic_rpm', '>=3.0.0'                                                                   # Performance monitoring
-gem 'thinking-sphinx', '>=2.0.0', :require => 'thinking_sphinx'                                 # Connector to Sphinx - for global search
+gem 'thinking-sphinx', '>=2.0.9', :require => 'thinking_sphinx'                                 # Connector to Sphinx - for global search
 gem 'riddle'                                                                                    # Seems to be needed for Thinking_Sphinx ... not clear, though
 gem 'i18n-js'                                                                                   # Uses config/locale files to build a JavaScript equivalent of i18n in Rails
 gem 'spawn', :git => 'git://github.com/jpfuentes2/spawn'                                        # Use this for now (instead of the plugin ... check to see whether master branch ever supports Rails 3)
