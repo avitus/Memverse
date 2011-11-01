@@ -15,6 +15,13 @@
 	<% else %>
 	
 		<div>
+			<p>
+				You have completed <%= current_user.completed_sessions %> memorization sessions and have memorized <%= current_user.memorized %> of your 
+				<%= current_user.memverses.count %> memory verses.
+			</p>
+		</div>
+	
+		<div>
 			<%= ziya_chart load_progress_url(current_user, :xml), :size => "1050x500" -%>
 		</div>
 	
