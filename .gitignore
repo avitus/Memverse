@@ -11,11 +11,13 @@
 # bundler state
 /.bundle
 /vendor/bundle/
+.rvmrc
 
 # minimal Rails specific artifacts
 db/*.sqlite3
 /log/*
 tmp/*
+dump.rdb
 
 # various artifacts
 **.war
@@ -26,10 +28,14 @@ tmp/*
 .sass-cache
 /config/config.yml
 /config/database.yml
+/config/development.sphinx.conf
+/config/initializers/setup_mail.rb
+/config/initializers/site_keys.rb
 /coverage.data
 /coverage/
 /db/*.javadb/
 /db/*.sqlite3-journal
+/db/sphinx/
 /doc/api/
 /doc/app/
 /doc/features.html
