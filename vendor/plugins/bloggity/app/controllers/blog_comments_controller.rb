@@ -53,7 +53,7 @@ class BlogCommentsController < ApplicationController
     add_breadcrumb I18n.t("blog_menu.Recent Comments"), "/blog_comments_new"
     
     @newest_comments = Rails.cache.fetch("recent_comments", :expires_in => 30.minutes) do
-			BlogComment.find_all_by_approved(true, :all, :limit => 40, :order => "updated_at DESC")     
+			BlogComment.find_all_by_approved(true, :all, :limit => 40, :order => "created_at DESC")     
 		end    
   end
   
