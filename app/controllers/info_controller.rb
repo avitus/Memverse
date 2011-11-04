@@ -204,10 +204,9 @@ class InfoController < ApplicationController
     
     @global_users     = last_entry.users_active_in_month
     @last_entry       = last_entry.entry_date
-    @memorized_verses = last_entry.memverses_memorized
-    
+    @memorized_verses = last_entry.memverses_memorized  
   end
- 
+   
   # ----------------------------------------------------------------------------------------------------------
   # RSS News Feed
   # ---------------------------------------------------------------------------------------------------------- 

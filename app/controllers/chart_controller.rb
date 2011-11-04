@@ -9,8 +9,7 @@ class ChartController < ApplicationController
 
   before_filter :authenticate_user!, :except => :load_memverse_clock
 
-  respond_to :html, :xml
-#  layout nil
+  # respond_to :html, :json
 
   helper Ziya::HtmlHelpers::Charts, Ziya::YamlHelpers::Charts
 
@@ -104,7 +103,9 @@ class ChartController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   # Chart Showing Total Users and Memory Verses
   # ----------------------------------------------------------------------------------------------------------  
-  def load_memverse_clock
+  def global_data
+    
+    chart_data = Array.new
     # Set up data series
     y_learning  = Array.new
     y_memorized = Array.new
@@ -124,49 +125,54 @@ class ChartController < ApplicationController
       y_users     << entry.users_active_in_month
       x_date      << entry.entry_date.to_s
     }     
-                
+           
+    chart_data << y_learning
+    chart_data << y_memorized
+    chart_data << y_users
+    chart_data << x_date       
+       
     # Create graph 
-    chart = Ziya::Charts::Mixed.new('JTA-A16M--GO.945CWK-2XOI1X0-7L', 'memverse_clock_chart') # args: license key, chart name
-    chart.add :chart_types, %w[column column line]
+    # chart = Ziya::Charts::Mixed.new('JTA-A16M--GO.945CWK-2XOI1X0-7L', 'memverse_clock_chart') # args: license key, chart name
+    # chart.add :chart_types, %w[column column line]
+# 
+    # # X-Axis
+    # chart.add( :axis_category_text, x_date )
+# 
+    # # Space out the labels on the x-axis. A zero value doesn't hide any labels. 
+    # # If the skip value is 1, then the first label is displayed, the following label is skipped, and so on. 
+    # # If the skip value is 2, then the first label is displayed, the following 2 are skipped, and so on.
+    # skip = x_date.length / 14 # Show max of 16 data labels
+    # chart.add( :user_data, :skip, skip )
+#     
+    # # Secondary Axis Labels
+    # max_users           = y_users.compact.max # first remove nil's
+    # min_users           = y_users.compact.min # first remove nil's
+    # user_axis_interval  = (max_users.to_f / 7).ceil  # There are 8 division on vertical axis, divide by two less to favor bottom part of graph
+#     
+    # # Calculate ratio between two axes
+    # secondary_axis_max  = user_axis_interval * 8 # <--- this 8 is the number of divisions on the axis
+    # primary_axis_max    = vertical_axis_max( (y_learning + y_memorized).max ) # find maximum element from either series
+#     
+    # # Scale secondary y-axis (time_allocation)
+    # y_users.collect! { |t|
+      # if !t.nil?
+        # (t.to_f * primary_axis_max.to_f / secondary_axis_max.to_f).to_i
+      # end
+    # }
+#     
+    # # Y-Axis
+    # chart.add( :series, "Memorized",    y_memorized )
+    # chart.add( :series, "Learning",     y_learning  )
+    # chart.add( :series, "Active Users", y_users      )    
+    # chart.add( :user_data, :secondary_y_interval, user_axis_interval )
+#     
+    # # Theme
+    # chart.add( :theme , "memverse" )  
 
-    # X-Axis
-    chart.add( :axis_category_text, x_date )
-
-    # Space out the labels on the x-axis. A zero value doesn't hide any labels. 
-    # If the skip value is 1, then the first label is displayed, the following label is skipped, and so on. 
-    # If the skip value is 2, then the first label is displayed, the following 2 are skipped, and so on.
-    skip = x_date.length / 14 # Show max of 16 data labels
-    chart.add( :user_data, :skip, skip )
-    
-    # Secondary Axis Labels
-    max_users           = y_users.compact.max # first remove nil's
-    min_users           = y_users.compact.min # first remove nil's
-    user_axis_interval  = (max_users.to_f / 7).ceil  # There are 8 division on vertical axis, divide by two less to favor bottom part of graph
-    
-    # Calculate ratio between two axes
-    secondary_axis_max  = user_axis_interval * 8 # <--- this 8 is the number of divisions on the axis
-    primary_axis_max    = vertical_axis_max( (y_learning + y_memorized).max ) # find maximum element from either series
-    
-    # Scale secondary y-axis (time_allocation)
-    y_users.collect! { |t|
-      if !t.nil?
-        (t.to_f * primary_axis_max.to_f / secondary_axis_max.to_f).to_i
-      end
-    }
-    
-    # Y-Axis
-    chart.add( :series, "Memorized",    y_memorized )
-    chart.add( :series, "Learning",     y_learning  )
-    chart.add( :series, "Active Users", y_users      )    
-    chart.add( :user_data, :secondary_y_interval, user_axis_interval )
-    
-    # Theme
-    chart.add( :theme , "memverse" )  
-
-    respond_to do |fmt|
-      fmt.xml { render :xml => chart.to_xml }
-    end
-  
+    respond_to do |format|
+      format.json { render json: chart_data }
+    end 
+ 
   end # load_memverse_clock
   
   # ----------------------------------------------------------------------------------------------------------

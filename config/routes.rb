@@ -120,7 +120,7 @@ MemverseApp::Application.routes.draw do
   
   # Routes for Ziya graphs
   match '/load_progress/:user',    :to => 'chart#load_progress',             :as => 'load_progress'
-  match '/load_memverse_clock',    :to => 'chart#load_memverse_clock',       :as => 'load_memverse_clock' 
+  match '/global_data',            :to => 'chart#global_data',               :as => 'global_data' 
   
   # Routes for chat channels  
   match "/chat/send",       :controller => "chat", :action => "send_message"
