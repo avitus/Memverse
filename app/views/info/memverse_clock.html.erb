@@ -37,7 +37,7 @@ $(document).ready(function() {
 	    },
 		chart: {
 			renderTo: 'container',
-			defaultSeriesType: 'area'
+			defaultSeriesType: 'column'
 		},
 		
 		title: {
@@ -104,13 +104,23 @@ $(document).ready(function() {
 				
 	$.get('/global_data.json', function(data) {
 		
-		var global_data = { data: [] };
+		var learning_data  = { data: [] };
+		var memorized_data = { data: [] };
         	        
-    	global_data.data = data[0];
+    	learning_data.data = data[0];
+    	learning_data.name = "Learning"
+
+    	memorized_data.data = data[1];
+    	memorized_data.name = "Memorized"
+
+		options.series.push(learning_data);
+		options.series.push(memorized_data);
+
+
     	// global_data.data.memorized = data[1];
     	// global_data.data.users     = data[2];
 		
-		options.series.push(global_data);
+		// options.series.push(global_data);
 
 	    // Create the chart
 	    var chart = new Highcharts.Chart(options);				
