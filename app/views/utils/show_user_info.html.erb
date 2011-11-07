@@ -37,14 +37,6 @@
 		</table>
 	</div>
 	
-	<br>
-	
-	<div>
-		<%= ziya_chart load_progress_url(@user, :xml), :size => "1100x500" -%>
-	</div>
-	
-	<br>
-	
 	<%= button_to 'Repair Links',   :controller => 'utils', :action => 'fix_verse_linkage', 	:id => @user %>
 	
 	<div class="verse-list">

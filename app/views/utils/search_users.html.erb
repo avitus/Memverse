@@ -26,7 +26,7 @@
 <script language="JavaScript" type="text/javascript"><!--		
 	$(document).ready(function() {
 		$("#search_param").observe_field(0.5, function( ) { 
-			$.get("/admin/search_user", { search_param: this.value },
+			$.get("/utils/search_user", { search_param: this.value },
 				function(data){	
 					$("#search_results").html(data);
 			}, "html" );
