@@ -45,7 +45,7 @@ gem "prawnto_2", :require => "prawnto"                                          
 gem 'acts-as-taggable-on'                                                                       # :source => "http://gemcutter.org", Taggable gem, 
 gem 'airbrake'                                                                                  # Error tracking
 gem 'paperclip'                                                                                 # :source => 'http://rubygems.org', Attachment handling 
-gem 'capistrano'                                                                                # Deploy with Capistrano
+gem 'capistrano', '>=2.9.0'                                                                     # Deploy with Capistrano
 gem 'ruby-openid'
 gem 'ziya', '>=2.3.0'                                                                           # Required for flash charts
 gem 'color'                                                                                     # Required for Ziya
