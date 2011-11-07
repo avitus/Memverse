@@ -41,7 +41,7 @@ $(document).ready(function() {
 		},
 		
 		title: {
-			text: 'Memorized Verses',
+			text: 'Global Statistics',
 	        style: {
 	            color: '#333333',
 	            fontWeight: 'bold'
@@ -77,32 +77,34 @@ $(document).ready(function() {
 	        }
 	    },		
 		plotOptions: {
-		   area: {
-		      fillColor: {
-		         linearGradient: [0, 0, 0, 300],
-		         stops: [
-		            [0, '#6b9620'],
-		            [1, 'rgba(2,0,0,0)']
-		         ]
-		      },
-		      lineWidth: 1,
-		      lineColor: '#6b9620',
-		      marker: {
-		         enabled: false,
-		         states: {
-		            hover: {
-		               enabled: true,
-		               radius: 5
-		            }
-		         }
-		      },
-		      shadow: false,
-		      states: {
-		         hover: {
-		            lineWidth: 1                  
-		         }
-		      }
-		   }
+			series: {
+				lineWidth: 2,
+				marker: {
+					enabled: false,
+					states: {
+						hover: {
+							enabled: true,
+							radius: 4
+						}
+					}
+				},
+				shadow: false,
+				states: {
+					hover: {
+						lineWidth: 1,                  
+					}
+				}			
+			},
+		   	area: {
+		    	fillColor: {
+		        	linearGradient: [0, 0, 0, 300],
+		        	stops: [[0, '#6b9620'],
+		            		[1, 'rgba(2,0,0,0)']],
+		    	},
+		    	lineColor: '#6b9620',
+		    },
+			line: {
+			}
 		},		
 		series: []
 	};	
@@ -112,9 +114,14 @@ $(document).ready(function() {
 	$.get('/global_data.json', function(data) {
 		
 		var learning_data  = { data: [] };
-		var memorized_data = { data: [] };
+		var memorized_data = { data: [], fillcolor: { 
+											        	linearGradient: [0, 0, 0, 300],
+											        	stops: [[0, '#3c5313'], [1, 'rgba(2,0,0,0)']],
+											    	},
+										  lineColor: '#3c5313',														
+							  };
 		var active_users   = { data: [], type: "line", yAxis: 1 };
-		// var dates		   = [];
+		var dates		   = [];
         	        
     	learning_data.data = data[0];
     	learning_data.name = "Learning"
@@ -125,12 +132,12 @@ $(document).ready(function() {
     	active_users.data = data[2];
     	active_users.name = "Active Users";
     	
-    	// dates = data[3];
+    	dates = data[3];
 
 		options.series.push(learning_data);
 		options.series.push(memorized_data);
 		options.series.push(active_users);
-		// options.xAxis.categories = dates;
+		options.xAxis.categories = dates;
 
 	    // Create the chart
 	    var chart = new Highcharts.Chart(options);				
