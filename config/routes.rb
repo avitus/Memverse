@@ -118,8 +118,8 @@ MemverseApp::Application.routes.draw do
   match '/blog_comments_new',      :to => 'blog_comments#recent_comments',                   :as => 'blog_comments_new'
   match '/blog_search',            :to => 'blog_posts#blog_search',                          :as => 'blog_search'
   
-  # Routes for Ziya graphs
-  match '/load_progress/:user',    :to => 'chart#load_progress',             :as => 'load_progress'
+  # Routes for graphs
+  match '/load_progress/',         :to => 'chart#load_progress',             :as => 'load_progress'
   match '/global_data',            :to => 'chart#global_data',               :as => 'global_data' 
   
   # Routes for chat channels  
