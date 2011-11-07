@@ -27,7 +27,7 @@ var chart; // globally available
 $(document).ready(function() {
 	
 	Highcharts.setOptions({
-	    colors: ['#6b9620', '#3c5313', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4']
+	    colors: ['#6b9620', '#3c5313', '#e17329', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4']
 	});	
 	
 	var options = {
@@ -47,8 +47,10 @@ $(document).ready(function() {
 	            fontWeight: 'bold'
 	        }			
 		},
-		xAxis: {
-			categories: [],
+		xAxis: {        
+	        labels: {
+	            enabled: false
+	        }
 		},
 		yAxis: [{
 			title: {
@@ -111,8 +113,8 @@ $(document).ready(function() {
 		
 		var learning_data  = { data: [] };
 		var memorized_data = { data: [] };
-		var active_users   = { data: [] };
-		var dates		   = [];
+		var active_users   = { data: [], type: "line" };
+		// var dates		   = [];
         	        
     	learning_data.data = data[0];
     	learning_data.name = "Learning"
