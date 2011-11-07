@@ -4,7 +4,7 @@
 	  <fieldset>
 	    <legend> Enter User login, email or name</legend>
 	    
-	      <% form_tag( {}, { :id => 'advanced_search' } ) do %>
+	      <%= form_tag( {}, { :id => 'advanced_search' } ) do %>
 	        <p>
 	        Search:     <%= text_field_tag( :search_param,  params[:search_param],  :size =>  40 )%>
 	        <img class="spinner" id="ajax_spinner" src="/assets/indicator.gif" alt="Searching ..." style="display: none" /> 
