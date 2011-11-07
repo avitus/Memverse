@@ -27,7 +27,7 @@ var chart; // globally available
 $(document).ready(function() {
 	
 	Highcharts.setOptions({
-	    colors: ['#6b9620', '#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4']
+	    colors: ['#6b9620', '#3c5313', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4']
 	});	
 	
 	var options = {
@@ -49,10 +49,6 @@ $(document).ready(function() {
 		},
 		xAxis: {
 			categories: [],
-			type: 'datetime',
-			dateTimeLabelFormats: {
-            	month: '%b \'%y' 
-            }
 		},
 		yAxis: {
 			title: {
@@ -106,21 +102,19 @@ $(document).ready(function() {
 		
 		var learning_data  = { data: [] };
 		var memorized_data = { data: [] };
+		var dates		   = [];
         	        
     	learning_data.data = data[0];
     	learning_data.name = "Learning"
 
     	memorized_data.data = data[1];
-    	memorized_data.name = "Memorized"
+    	memorized_data.name = "Memorized";
+    	
+    	dates = data[3];
 
 		options.series.push(learning_data);
 		options.series.push(memorized_data);
-
-
-    	// global_data.data.memorized = data[1];
-    	// global_data.data.users     = data[2];
-		
-		// options.series.push(global_data);
+		options.xAxis.categories = dates;
 
 	    // Create the chart
 	    var chart = new Highcharts.Chart(options);				
