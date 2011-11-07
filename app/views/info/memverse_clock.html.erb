@@ -50,7 +50,7 @@ $(document).ready(function() {
 		xAxis: {
 			categories: [],
 		},
-		yAxis: {
+		yAxis: [{
 			title: {
 				text: 'Verses',
 		        style: {
@@ -58,7 +58,16 @@ $(document).ready(function() {
 		            fontWeight: 'bold'
 		        }				
 			},
-		},
+		}, {
+			title: {
+				text: 'Users',
+		        style: {
+		            color: '#333333',
+		            fontWeight: 'bold'
+		        }				
+			},
+			opposite: true,
+		}],
 	    legend: {
 	        itemStyle: {
 	            color: '#333333',
@@ -102,6 +111,7 @@ $(document).ready(function() {
 		
 		var learning_data  = { data: [] };
 		var memorized_data = { data: [] };
+		var active_users   = { data: [] };
 		var dates		   = [];
         	        
     	learning_data.data = data[0];
@@ -109,12 +119,16 @@ $(document).ready(function() {
 
     	memorized_data.data = data[1];
     	memorized_data.name = "Memorized";
+
+    	active_users.data = data[2];
+    	active_users.name = "Active Users";
     	
-    	dates = data[3];
+    	// dates = data[3];
 
 		options.series.push(learning_data);
 		options.series.push(memorized_data);
-		options.xAxis.categories = dates;
+		options.series.push(active_users);
+		// options.xAxis.categories = dates;
 
 	    // Create the chart
 	    var chart = new Highcharts.Chart(options);				
