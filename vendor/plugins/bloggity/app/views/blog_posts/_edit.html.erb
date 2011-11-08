@@ -1,7 +1,22 @@
 <% page_title @blog_post.title ? "Editing Blog Post: " + @blog_post.title : "New Blog Post" %>
 <br /><br />
-<%= error_messages_for :blog_post %>
-<% form_for(@blog_post, :url => { :controller => 'blog_posts', :action => :update, :id => @blog_post, :blog_id => @blog_id }) do |f| %>
+
+<%= form_for(@blog_post, :url => { :controller => 'blog_posts', :action => :update, :id => @blog_post, :blog_id => @blog_id }) do |f| %>
+
+	<% if @blog_post.errors.any? %>
+    	<div id="error_explanation">
+    		<h2><%= pluralize(@blog_post.errors.count, "error") %> prevented your profile from being updated:</h2>
+
+          	<ul>
+            	<% @blog_post.errors.full_messages.each do |msg| %>
+              		<li><%= msg %></li>
+            	<% end %>
+          	</ul>
+
+		</div>
+
+	<% end %>
+
   <p>New Blog Title: &nbsp;<%= f.text_field :title, :style => "font-size:20px" %></p>
 
   <p>Body<br />
@@ -21,10 +36,9 @@
 <br />
 
 <h3>Upload Assets</h3>
-<% form_for :blog_asset, @blog_post, :url => { :controller => "blog_posts", :action => :create_asset, :blog_id => @blog_id }, :html => { :multipart => true } do |form| %>
+<%= form_for :blog_asset, @blog_post, :url => { :controller => "blog_posts", :action => :create_asset, :blog_id => @blog_id }, :html => { :multipart => true } do |form| %>
   <%= form.file_field :blog_attachment %>
 <% end %>
-
 
 
 <% javascript_tag do %>
@@ -54,6 +68,6 @@
 		});
 <% end %>
 
-	<div id="outer_asset_container">
-		<%= render :partial => "blog_assets", :locals => { :blog_assets => @blog_post.assets } -%>
-	</div>
+<div id="outer_asset_container">
+	<%= render :partial => "blog_assets", :locals => { :blog_assets => @blog_post.assets } -%>
+</div>
