@@ -36,7 +36,7 @@
 <br />
 
 <h3>Upload Assets</h3>
-<%= form_for :blog_asset, @blog_post, :url => { :controller => "blog_posts", :action => :create_asset, :blog_id => @blog_id }, :html => { :multipart => true } do |form| %>
+<%= form_for @blog_post, :url => { :controller => "blog_posts", :action => :create_asset, :blog_id => @blog_id }, :html => { :multipart => true } do |form| %>
   <%= form.file_field :blog_attachment %>
 <% end %>
 
