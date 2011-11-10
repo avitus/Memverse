@@ -6,6 +6,21 @@
   margin-top:1.5em;
 }
 
+#signup-page-form h2 {
+  padding: 0 0 5px 40px;
+  font-size: 120%;
+}
+
+#signup-page-form #error_explanation {
+  font-size: 88%;
+  color: #aa0101;
+  h2 {
+    padding: 10px 0 0 40px;
+    color: black;
+  }
+}
+  
+
 #signup-page-form label {
   width:10em;
 }

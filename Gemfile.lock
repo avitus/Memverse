@@ -176,7 +176,7 @@ GEM
     net-ssh (2.2.1)
     net-ssh-gateway (1.1.0)
       net-ssh (>= 1.99.1)
-    newrelic_rpm (3.1.2)
+    newrelic_rpm (3.3.0)
     nokogiri (1.4.6)
     orm_adapter (0.0.5)
     paperclip (2.4.1)
@@ -314,7 +314,7 @@ DEPENDENCIES
   mail (>= 2.2.15)
   memcache-client
   mysql2 (>= 0.3)
-  newrelic_rpm (>= 3.0.0)
+  newrelic_rpm (>= 3.3.0)
   nokogiri (= 1.4.6)
   paperclip
   prawn!

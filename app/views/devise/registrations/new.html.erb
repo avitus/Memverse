@@ -5,17 +5,20 @@
 <div class="entry-form" id="signup-page-form">
 
 	<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f| %>
-	<%= devise_error_messages! %>
+
 		<div>
-			<h2>Sign Up</h2>
+			<h2>Register for Memverse</h2>
+
+			<%= devise_error_messages! %>
+
 			<ul>
 				<li>
 					<%= f.text_field		:name, :placeholder => "Name" %>
-					<div class="tooltip2">You'll use this username to login to Memverse. No spaces please.</div>
+					<div class="tooltip2">This name will identify you on Memverse.</div>
 					<span id="error"></span>					
 				</li>
 				<li>
-					<%= f.email_field		:email, :placeholder => "Email Address" %>
+					<%= f.email_field		:email, :placeholder => "Email address" %>
 					<div class="tooltip2">Check this carefully. You will receive an activation email at this email address. We highly recommend adding
 										  admin@memverse.com to your email address book to ensure delivery of the activation email.</div>					
 				</li>
