@@ -231,7 +231,6 @@ class UtilsController < ApplicationController
           when "NAS" then pv.nas = vs.id
           when "NKJ" then pv.nkj = vs.id
           when "KJV" then pv.kjv = vs.id
-          when "RSV" then pv.rsv = vs.id        
         end    
 
         case vs.translation 
@@ -240,7 +239,6 @@ class UtilsController < ApplicationController
           when "NAS" then pv.nas_text = vs.text
           when "NKJ" then pv.nkj_text = vs.text
           when "KJV" then pv.kjv_text = vs.text
-          when "RSV" then pv.rsv_text = vs.text      
         end 
       }
     

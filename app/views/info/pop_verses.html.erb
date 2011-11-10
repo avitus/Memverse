@@ -75,15 +75,6 @@
 				<% else %>
 					<td></td>
 				<% end %>	
-				
-				<% if vs.rsv %>
-					<td>
-						<%= link_to 'RSV', :action => 'show_vs', :vs => vs.rsv%>
-						<em><%= vs.rsv_text %></em>
-					</td>			
-				<% else %>
-					<td></td>
-				<% end %>	
 									
 			</tr>
 			<% end %>

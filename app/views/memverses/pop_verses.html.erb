@@ -71,15 +71,6 @@
 				<% else %>
 					<td></td>
 				<% end %>	
-				
-				<% if vs.rsv %>
-					<td <%=css_in_user_list(vs.rsv)%> >
-						<%= link_to 'RSV', verse_path(vs.rsv) %>
-						<em><%= vs.rsv_text %></em>
-					</td>			
-				<% else %>
-					<td></td>
-				<% end %>	
 									
 			</tr>
 			<% end %>

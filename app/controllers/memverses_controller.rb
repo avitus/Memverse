@@ -515,8 +515,7 @@ class MemversesController < ApplicationController
                               ["ESV", vs.esv, vs.esv_text],
                               ["NAS", vs.nas, vs.nas_text],
                               ["NKJ", vs.nkj, vs.nkj_text],
-                              ["KJV", vs.kjv, vs.kjv_text],
-                              ["RSV", vs.rsv, vs.rsv_text]]
+                              ["KJV", vs.kjv, vs.kjv_text]]
                                                                      
         translations = Array.new
         avail_translations.each { |translation|
