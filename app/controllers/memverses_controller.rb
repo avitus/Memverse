@@ -117,9 +117,6 @@ class MemversesController < ApplicationController
   respond_to :html, :pdf
   
   add_breadcrumb "Home", :root_path
-  
-  caches_action :pop_verses, :layout => false, :expires_in => 1.day
-
 
   # ----------------------------------------------------------------------------------------------------------
   # Home / Start Page

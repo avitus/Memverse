@@ -3,7 +3,6 @@
 class InfoController < ApplicationController
   
   caches_action :leaderboard, :churchboard, :stateboard, :countryboard, :layout => false, :expires_in => 1.hour
-  caches_action :pop_verses, :layout => false, :expires_in => 1.day
   
   add_breadcrumb "Home", :root_path
   # ----------------------------------------------------------------------------------------------------------   
