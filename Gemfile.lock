@@ -78,6 +78,7 @@ GEM
     bcrypt-ruby (3.0.1)
     breadcrumbs_on_rails (2.0.0)
     builder (3.0.0)
+    cancan (1.6.7)
     capistrano (2.9.0)
       highline
       net-scp (>= 1.0.0)
@@ -293,6 +294,7 @@ DEPENDENCIES
   airbrake
   breadcrumbs_on_rails (>= 2.0.0)
   builder
+  cancan
   capistrano (>= 2.9.0)
   capybara (>= 1.1.1)
   coffee-rails (~> 3.1.1)
