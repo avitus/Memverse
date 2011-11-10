@@ -66,8 +66,8 @@ class User < ActiveRecord::Base
   # Relationships
   has_and_belongs_to_many :roles
   has_and_belongs_to_many :quests
-  has_many                :memverses 
-  has_many                :progress_reports
+  has_many                :memverses,         :dependent => :destroy 
+  has_many                :progress_reports,  :dependent => :destroy
   has_many                :tweets
   has_many                :sermons
   belongs_to              :country,         :counter_cache => true
