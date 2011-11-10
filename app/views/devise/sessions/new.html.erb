@@ -1,17 +1,40 @@
-<h2>Sign in</h2>
+<% page_title  I18n.t :signup, :scope => 'page_titles' %>
 
-<%= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
-  <div><%= f.label :email %><br />
-  <%= f.email_field :email %></div>
+<div class="white-box-with-margins">
+<div class="entry-form" id="signup-page-form">
+	
+	<%= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
+		<div>
+			<h2>Sign in</h2>
+			
+			<ul>
+				<li>
+					<%= f.email_field		:email, :placeholder => "Email address" %>					
+				</li>
+				<li>
+					<%= f.password_field 	:password, :placeholder => "Password" %>
+				</li>			
+			</ul>
+				
+			<% if devise_mapping.rememberable? -%>
+			<div class="remember-me"><%= f.check_box :remember_me %> <%= f.label :remember_me %></div>
+			<% end -%>			
 
-  <div><%= f.label :password %><br />
-  <%= f.password_field :password %></div>
+			<div>
+				<%= f.submit "", :class => "submit-button" %>
+			</div>	
+			
+		</div>
+	
+		<br />
+	
+		<div class="sign-up-links">
+			<%= render :partial => "devise/shared/links" %>	
+		</div>
+		
 
-  <% if devise_mapping.rememberable? -%>
-    <div><%= f.check_box :remember_me %> <%= f.label :remember_me %></div>
-  <% end -%>
-
-  <div><%= f.submit "Sign in" %></div>
-<% end %>
-
-<%= render :partial => "devise/shared/links" %>
+	  
+	<% end %>
+	
+</div>
+</div>
