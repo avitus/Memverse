@@ -1,0 +1,66 @@
+<% page_title  I18n.t :signup, :scope => 'page_titles' %>
+
+<div class="white-box-with-margins">
+			
+<div class="entry-form" id="signup-page-form">
+
+	<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f| %>
+
+		<div>
+			<h2>Register for Memverse</h2>
+
+			<%= devise_error_messages! %>
+
+			<ul>
+				<li>
+					<%= f.text_field		:name, :placeholder => "Name" %>
+					<div class="tooltip2">This name will identify you on Memverse.</div>
+					<span id="error"></span>					
+				</li>
+				<li>
+					<%= f.email_field		:email, :placeholder => "Email address" %>
+					<div class="tooltip2">Check this carefully. You will receive an activation email at this email address. We highly recommend adding
+										  admin@memverse.com to your email address book to ensure delivery of the activation email.</div>					
+				</li>
+				<li>
+					<%= f.password_field 	:password, :placeholder => "Password" %>
+					<div class="tooltip2">Use one you'll remember. We use the highest level of encryption.</div>					
+				</li>
+				<li>
+					<%= f.password_field	:password_confirmation, :placeholder => "Password" %>
+					<div class="tooltip2">One more time and you're done!</div>						
+				</li>
+			</ul>
+		</div>
+		
+		<br />
+	
+		<div class="sign-up-links">
+			<%= render :partial => "devise/shared/links" %>	
+		</div>
+		
+		<div>
+			  <div><%= f.submit "", :class => "submit-button" %></div>
+		</div>			
+						
+	<% end %>
+	
+</div> <!-- end: signup-page-form -->
+
+</div> <!-- end: white-box-with-margins -->
+
+<script type="text/javascript">
+	// select all desired input fields and attach tooltips to them 
+	$("#user_new :input").tooltip({ 
+	    // place tooltip on the right edge 
+	    position: ['center', 'right'], 	 
+	    // a little tweaking of the position 
+	    offset: [-2, 70], 
+	    // use a simple show/hide effect 
+	    effect: 'toggle', 
+	    // custom opacity setting 
+	    opacity: 0.7, 
+		//tooltip style
+		tipClass: 'tooltip2'
+	});
+</script>
