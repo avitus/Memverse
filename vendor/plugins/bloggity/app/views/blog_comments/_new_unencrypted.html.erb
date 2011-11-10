@@ -1,0 +1,11 @@
+<%# Guess.
+# -params-
+# blog: the blog post
+-%>
+
+<%= form_for(BlogComment.new, :url => { :controller => 'blog_comments', :action => :create }) do |f| %>
+	<%= f.hidden_field :blog_post_id, :value => blog_post.id %>
+	<%= f.text_area :comment %><br /><br />
+	<textarea id="blog_comment_subject" name="subject"></textarea>
+	<%= f.submit "Submit comment", :class => 'button26', :onsubmit => "document.getElementById('blog_comment_submit').disabled = true;" %>
+<% end %>
