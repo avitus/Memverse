@@ -161,7 +161,6 @@ GEM
     json_pure (1.6.0)
     launchy (2.0.5)
       addressable (~> 2.2.6)
-    libv8 (3.3.10.2)
     little-plugger (1.1.2)
     logging (1.6.1)
       little-plugger (>= 1.1.2)
@@ -264,8 +263,6 @@ GEM
     term-ansicolor (1.0.6)
     test-unit (1.2.3)
       hoe (>= 1.5.1)
-    therubyracer (0.9.8)
-      libv8 (~> 3.3.10)
     thinking-sphinx (2.0.9)
       activerecord (>= 3.0.3)
       builder (>= 2.1.2)
@@ -340,7 +337,6 @@ DEPENDENCIES
   spawn!
   sqlite3
   test-unit (= 1.2.3)
-  therubyracer (>= 0.8.2)
   thinking-sphinx (>= 2.0.9)
   uglifier (>= 1.0.3)
   will_paginate (~> 3.0)
