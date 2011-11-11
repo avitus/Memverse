@@ -7,5 +7,4 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery.fancybox-1.3.4
-//= require ckeditor/ckeditor
 //= require_tree .
