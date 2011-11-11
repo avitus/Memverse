@@ -1,4 +1,8 @@
+<%= javascript_include_tag "ckeditor/ckeditor.js" %>
+<%= javascript_include_tag "ckeditor/adapters/jquery.js" %>
+
 <% page_title @blog_post.title ? "Editing Blog Post: " + @blog_post.title : "New Blog Post" %>
+
 <br /><br />
 
 <%= form_for(@blog_post, :url => { :controller => 'blog_posts', :action => :update, :id => @blog_post, :blog_id => @blog_id }) do |f| %>
@@ -14,16 +18,15 @@
           	</ul>
 
 		</div>
-
 	<% end %>
 
-  <p>New Blog Title: &nbsp;<%= f.text_field :title, :style => "font-size:20px" %></p>
+	<p>Blog Post Title: &nbsp;<%= f.text_field :title, :style => "font-size:20px" %></p>
 
-  <p>Body<br />
-    <%= f.text_area :body, :cols => 80 %>
-  </p>
+	<p>
+		<%= f.text_area :body, :cols => 80 %>
+	</p>
 
-  <p>
+	<p>
 		<%= f.check_box :is_complete %> <%= f.label :is_complete -%>? <br />
 		Category <%= f.select :category_id, BlogCategory.find(:all).collect { |bc| [bc.name, bc.id] }.insert(0, ["None", nil]) %> <%= link_to "Create new category", { :controller => 'blog_categories', :action => :new }, :popup => true -%><br />
 		Blog <%= f.select :blog_id, Blog.find(:all).collect { |bc| [bc.title, bc.id] } %> <%= link_to "Create new blog", { :controller => 'blogs', :action => :new }, :popup => true -%><br /> 
@@ -31,43 +34,26 @@
 	</p>
 
 	<%= f.submit "Save" %>
+	
 <% end %>
 
 <br />
 
 <h3>Upload Assets</h3>
+
 <%= form_for @blog_post, :url => { :controller => "blog_posts", :action => :create_asset, :blog_id => @blog_id }, :html => { :multipart => true } do |form| %>
-  <%= form.file_field :blog_attachment %>
-<% end %>
-
-
-<% javascript_tag do %>
-	jQuery(document).ready(function($) 
-	{
-		var fckEditor = new FCKeditor('blog_post[body]');
-		fckEditor.BasePath = "/javascripts/bloggity/fckeditor/";
-		fckEditor.ReplaceTextarea();
-		
-		$('#uploadForm input').change(function(){
-				$(this).parent().ajaxSubmit({
-						beforeSubmit: function(a,f,o) {
-							o.dataType = 'json';
-						},
-						complete: function(XMLHttpRequest, textStatus) {
-							new_image = $("<img>").attr('src', XMLHttpRequest.responseText);
-							new_text = $("<div class='asset_filename'>").html("Asset file path: <a href='" + XMLHttpRequest.responseText + "'>" + XMLHttpRequest.responseText + "</a>");
-							new_container = $("<div class='uploaded_asset'>");
-							$('#inner_asset_container').append(new_container);
-							new_container.append(new_image).append(new_text);
-						},
-						success: function(data) { 
-							//afterSuccessfulUpload(data); 
-						}
-					});
-			});
-		});
+	<%= form.file_field :blog_attachment %>
 <% end %>
 
 <div id="outer_asset_container">
 	<%= render :partial => "blog_assets", :locals => { :blog_assets => @blog_post.assets } -%>
 </div>
+
+<script language="JavaScript" type="text/javascript"><!--
+	
+	$(document).ready(function() {
+		$('#blog_post_body' ).ckeditor();
+	});
+	
+--></script>	
+	

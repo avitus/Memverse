@@ -110,6 +110,20 @@ ActiveRecord::Schema.define(:version => 20111110192935) do
   add_index "churches", ["name"], :name => "index_churches_on_name", :unique => true
   add_index "churches", ["users_count"], :name => "index_churches_on_users_count"
 
+  create_table "ckeditor_assets", :force => true do |t|
+    t.string   "data_file_name",                  :null => false
+    t.string   "data_content_type"
+    t.integer  "data_file_size"
+    t.integer  "assetable_id"
+    t.string   "assetable_type",    :limit => 30
+    t.string   "type",              :limit => 30
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "ckeditor_assets", ["assetable_type", "assetable_id"], :name => "idx_ckeditor_assetable"
+  add_index "ckeditor_assets", ["assetable_type", "type", "assetable_id"], :name => "idx_ckeditor_assetable_type"
+
   create_table "countries", :force => true do |t|
     t.string  "iso",            :limit => 2,                 :null => false
     t.string  "name",           :limit => 80,                :null => false

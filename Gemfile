@@ -45,7 +45,8 @@ gem 'prawn', :git => "git://github.com/sandal/prawn", :submodules => true       
 gem "prawnto_2", :require => "prawnto"                                                          # Integrating prawn into Rails
 gem 'acts-as-taggable-on'                                                                       # :source => "http://gemcutter.org", Taggable gem, 
 gem 'airbrake'                                                                                  # Error tracking
-gem 'paperclip'                                                                                 # :source => 'http://rubygems.org', Attachment handling 
+gem 'ckeditor'                                                                                  # WYSIWYG editing
+gem 'paperclip'                                                                                 # Attachment handling 
 gem 'capistrano', '>=2.9.0'                                                                     # Deploy with Capistrano
 gem 'ruby-openid'
 gem 'ziya', '>=2.3.0'                                                                           # Required for flash charts
