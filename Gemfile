@@ -4,6 +4,7 @@ source 'http://rubygems.org'
 
 group :development do 
   gem 'rails-dev-tweaks', '~> 0.5.1'
+  gem "rails-footnotes", ">= 3.7", :group => :development
 end
 
 group :production do
@@ -32,7 +33,6 @@ gem "launchy", ">= 2.0.5", :group => :test
 gem "devise", ">= 1.4.5"
 gem "cancan"                                                                                    # Role-based authorization
 gem "frontend-helpers"
-gem "rails-footnotes", ">= 3.7", :group => :development
 gem 'rails_admin', :git => 'git://github.com/sferik/rails_admin.git'
 
 gem 'fancybox-rails'
