@@ -17,7 +17,6 @@
 class BlogAsset < ActiveRecord::Base
 	belongs_to :blog_post
 	
-	
   has_attached_file :blog_attachment, :styles => { :medium => "800x600>", :thumb => "267x214>" }	
 	
 	# has_attachment  

@@ -42,6 +42,7 @@ dump.rdb
 /doc/specs.html
 /public/cache
 /public/assets
+/public/ckeditor_assets/
 /public/stylesheets/compiled
 /public/system
 /spec/tmp/*

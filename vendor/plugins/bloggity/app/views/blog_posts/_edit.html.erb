@@ -37,18 +37,6 @@
 	
 <% end %>
 
-<br />
-
-<h3>Upload Assets</h3>
-
-<%= form_for @blog_post, :url => { :controller => "blog_posts", :action => :create_asset, :blog_id => @blog_id }, :html => { :multipart => true } do |form| %>
-	<%= form.file_field :blog_attachment %>
-<% end %>
-
-<div id="outer_asset_container">
-	<%= render :partial => "blog_assets", :locals => { :blog_assets => @blog_post.assets } -%>
-</div>
-
 <script language="JavaScript" type="text/javascript"><!--
 	
 	$(document).ready(function() {
