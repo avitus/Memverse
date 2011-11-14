@@ -22,7 +22,7 @@ if HOST_OS =~ /linux/i
 end
 
 gem 'rails', '3.1.1'
-gem 'jquery-rails'
+gem 'jquery-rails', '>=1.0.17'
 
 gem "rspec-rails", ">= 2.6.1", :group => [:development, :test]
 gem "factory_girl_rails", ">= 1.2.0", :group => :test

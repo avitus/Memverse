@@ -154,13 +154,14 @@ GEM
     i18n (0.6.0)
     i18n-js (1.1.0)
       i18n
-    jquery-rails (1.0.14)
+    jquery-rails (1.0.17)
       railties (~> 3.0)
       thor (~> 0.14)
     json (1.6.1)
     json_pure (1.6.0)
     launchy (2.0.5)
       addressable (~> 2.2.6)
+    libv8 (3.3.10.2)
     little-plugger (1.1.2)
     logging (1.6.1)
       little-plugger (>= 1.1.2)
@@ -263,6 +264,8 @@ GEM
     term-ansicolor (1.0.6)
     test-unit (1.2.3)
       hoe (>= 1.5.1)
+    therubyracer (0.9.8)
+      libv8 (~> 3.3.10)
     thinking-sphinx (2.0.9)
       activerecord (>= 3.0.3)
       builder (>= 2.1.2)
@@ -309,7 +312,7 @@ DEPENDENCIES
   hirb
   htmldiff
   i18n-js
-  jquery-rails
+  jquery-rails (>= 1.0.17)
   json
   juggernaut (>= 2.0.1)!
   launchy (>= 2.0.5)
@@ -337,6 +340,7 @@ DEPENDENCIES
   spawn!
   sqlite3
   test-unit (= 1.2.3)
+  therubyracer (>= 0.8.2)
   thinking-sphinx (>= 2.0.9)
   uglifier (>= 1.0.3)
   will_paginate (~> 3.0)

@@ -6,7 +6,9 @@ class BlogCommentsController < ApplicationController
 	
   add_breadcrumb "Home", "/home"
   add_breadcrumb "Blog", "/blog"
-  
+ 
+  protect_from_forgery :except => [:create]
+ 
   # POST /blogs_comments
 	# POST /blogs_comments.xml
 	def create
