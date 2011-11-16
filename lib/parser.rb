@@ -28,7 +28,7 @@ module Parser
       book = "Song of Songs" if book == "Song Of Songs"
   
       if !BIBLEBOOKS.include?(full_book_name(book)) # This is not a book of the bible
-      	logger.info("*** Could not find book: #{book}")
+      	logger.info("*** Could not find book: #{book} when parsing string #{parse_string}")
         return 2, book # Error code for invalid book of the bible
       else
         chapter, verse  = vsref.split(/:|vs/)
