@@ -404,10 +404,17 @@ class MemversesController < ApplicationController
     # 1. Owned tags and regular tags are handled in two different modules in the library
     # 2. The method 'tag_list' only returns tags without owners. The method 'all_tags_list' returns all tags
     # 3. user.tag(mv, :with => 'TagA', :on => :tags) *replaces* any prior tags. 
+    # 4. mv.tag_list = "tagC, tagD" does not appear to overwrite an existing tag list
     
     if !new_tag.empty?
       tag_list = @mv.all_tags_list.to_s + ", " + new_tag
       current_user.tag(@mv, :with => tag_list, :on => :tags)  # We're doing this for now to track which users are tagging
+      
+      # Update verse model with most popular tags
+      spawn_block do
+        @mv.verse.update_tags
+      end
+ 
       render :text => new_tag
     else
       render :text => "[Enter tag name here]"

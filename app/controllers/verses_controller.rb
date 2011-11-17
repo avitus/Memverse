@@ -23,9 +23,10 @@ class VersesController < ApplicationController
     @verse = Verse.find(params[:id])
     
     if @verse
-      @tags      = @verse.tags
-      @user_tags = @verse.all_user_tags(true).map { |t| t.first } # true = get tags only for same translation
       add_breadcrumb "#{@verse.book} #{@verse.chapter}:#{@verse.versenum}", {:action => 'show', :id => params[:id] }
+
+      @tags      = @verse.tags
+ 
     end
 
     respond_to do |format|
@@ -104,7 +105,7 @@ class VersesController < ApplicationController
   	
   	error_code, bk, ch, vs = parse_verse(vs_str)
   	logger.debug("Parsed verse string #{vs_str}: #{error_code}")
-	verse_ok = (error_code == false)
+    verse_ok = (error_code == false)
   	render :json => verse_ok
   	
   end
@@ -127,7 +128,7 @@ class VersesController < ApplicationController
     @tab = "home"
     @sub = "cloud"  
     add_breadcrumb I18n.t('page_titles.tag_cloud'), :tag_cloud_path
-    @tags = Memverse.tag_counts( :order => "name" )
+    @tags = Verse.tag_counts( :order => "name" ) # TODO: change this to Verse.tag_counts
   end
 
   # ----------------------------------------------------------------------------------------------------------

@@ -23,8 +23,7 @@ class Verse < ActiveRecord::Base
 #  require 'nokogiri'
 
   before_destroy :delete_memverses
-  
-  
+   
   # Relationships
   has_many :memverses
   
@@ -267,6 +266,16 @@ class Verse < ActiveRecord::Base
     end
     
     return all_tags.sort{|a,b| a[1]<=>b[1]}.reverse[0...numtags]
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Tag verse with most popular user tags
+  # ---------------------------------------------------------------------------------------------------------- 
+  def update_tags
+    user_tags = self.all_user_tags(true).map { |t| t.first.name }.join(', ') # true = get tags only for same translation
+    self.tag_list = []
+    self.tag_list = user_tags
+    self.save
   end
 
   # ----------------------------------------------------------------------------------------------------------
