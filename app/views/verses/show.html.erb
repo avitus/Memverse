@@ -21,8 +21,29 @@
 	<div id='verse-tags'>
 		<h2>Memverse Tags</h2>
 		
-		<table cellpadding="6" cellspacing="1">
+		<table id="list-of-user-tags" cellpadding="6" cellspacing="1">
 			<% for tag in @tags %>
+				<tr>
+					<td class="verse-tag"><%= tag.name %></td>
+					<% if current_user.has_role?("admin") %>
+						<td>[x]</td>
+					<% end %>
+				</tr>	
+			<% end %>
+			
+			<% if current_user.has_role?("admin") %>
+				<tr>
+					<td class="tag edit" id=<%= @verse.id %>>[New Tag]</td>
+				</tr>
+			<% end %>
+		</table>
+	</div>
+
+	<div id='verse-tags'>
+		<h2>User Tags</h2>
+		
+		<table id="list-of-user-tags" cellpadding="6" cellspacing="1">
+			<% for tag in @user_tags %>
 				<tr>
 					<td class="verse-tag"><%= tag.name %></td>
 					<% if current_user.has_role?("admin") %>

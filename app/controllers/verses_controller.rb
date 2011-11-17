@@ -23,7 +23,8 @@ class VersesController < ApplicationController
     @verse = Verse.find(params[:id])
     
     if @verse
-      @tags  = @verse.tags
+      @tags      = @verse.tags
+      @user_tags = @verse.memverses.collect { |mv| mv.tags}.flatten # TODO: The most common user tags should be assigned to the verse model
       add_breadcrumb "#{@verse.book} #{@verse.chapter}:#{@verse.versenum}", {:action => 'show', :id => params[:id] }
     end
 
@@ -112,7 +113,7 @@ class VersesController < ApplicationController
   # In place editing support
   # ----------------------------------------------------------------------------------------------------------    
   def add_verse_tag
-    @verse = Verse.find(params[:id])  # TODO: Should also add tag to the other translations
+    @verse = Verse.find(params[:id])  # TODO: Should also add tag to the other translations (?)
     new_tag = params[:value] # need to clean this up with hpricot or equivalent
     @verse.tag_list << new_tag
     @verse.save

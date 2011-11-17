@@ -301,7 +301,7 @@ class MemversesController < ApplicationController
   	  	
     mv_ids = params[:mv] 
 
-	# ==== Displaying a single verse ====
+    # ==== Displaying a single verse ====
     if params[:id]
     
       logger.debug("Displaying single verse with ID: #{params[:id]}")	
@@ -319,7 +319,7 @@ class MemversesController < ApplicationController
     
       @other_tags = @verse.all_user_tags
 
-	# ==== Displaying multiple verses ====    
+    # ==== Displaying multiple verses ====    
     elsif (!mv_ids.blank?) and (params[:Show])
 
       @mv_list = Memverse.find(mv_ids, :include => :verse)
