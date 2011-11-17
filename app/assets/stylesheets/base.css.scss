@@ -2988,12 +2988,6 @@ div#errorExplanation ul li {
 	margin-bottom:0.7em;
 }
 
-.autocomplete-w1 {background:url('shadow.png') no-repeat bottom right;position:absolute;top:0;left:0;margin:8px 0 0 6px; /* IE6 fix:*/ _background:none; _margin:0; }
-.autocomplete {border:1px solid #999;background:#FFF;cursor:default;text-align:left;max-height:350px;overflow:auto; margin:-6px 6px 6px -6px; /* IE6 specific:*/ _height:350px;  _margin:0; _overflow-x:hidden; }
-.autocomplete .selected {background:#afaeae;} /* Background color for selected option */
-.autocomplete div {padding:2px 5px;white-space:nowrap;}
-.autocomplete strong {font-weight:normal;color:#3c5313;}  /* Color for matching text */
-
 /* === Referrals Page === */
 .referrals-section {
 	margin-top:1.5em;
