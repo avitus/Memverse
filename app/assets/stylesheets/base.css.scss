@@ -2530,52 +2530,6 @@ table.user-list {
     font-size:100%; 	
 }
 
-/* === Show Verse Page === */
-
-/* For nice display of verses anywhere on website */
-.verse-text {
-	width:25%;
-	float:left;
-	padding:0 1em 0 2em
-}
-
-
-#verse-show {
-	height:240px;
-}
-
-#verse-show h2 {
-	text-align:center;
-}
-
-.verse-text #show-verse {
-	background-color:#EEE;
-	padding:0.5em;
-	margin-top:1em;	
-}
-
-.verse-text #nav {
-	width:78%;
-	margin:auto;
-}
-
-.verse-tag {
-	background-color:#EEE;
-	padding:0 1em;
-}
-
-.tag-list {
-	width:15%;
-	padding:0 1em 0 2em;
-	float:left;
-}
-
-.mv-info {
-	width:30%;
-	padding-left:2em;
-	float:left;
-}
-
 /* === User stats === */
 
 .user-stats-table {

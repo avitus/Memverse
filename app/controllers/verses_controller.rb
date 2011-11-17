@@ -24,9 +24,7 @@ class VersesController < ApplicationController
     
     if @verse
       add_breadcrumb "#{@verse.book} #{@verse.chapter}:#{@verse.versenum}", {:action => 'show', :id => params[:id] }
-
-      @tags      = @verse.tags
- 
+      @tags      = @verse.tags 
     end
 
     respond_to do |format|
