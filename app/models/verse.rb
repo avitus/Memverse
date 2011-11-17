@@ -246,17 +246,25 @@ class Verse < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   # Returns all tags associated with a given verse
   # ---------------------------------------------------------------------------------------------------------- 
-  def all_user_tags(numtags = 5)
+  def all_user_tags(same_tl = false, numtags = 5)
     
     all_tags = Hash.new(0)
     
-    self.alternative_translations.each { |tl|
-      tl.memverses.each { |mv|
-        mv.tags.each { |tag|
+    if same_tl
+      self.memverses.each { |mv|
+        mv.tags.each { |tag| 
           all_tags[tag] += 1
         }
       }
-    }
+    else
+      self.alternative_translations.each { |tl|
+        tl.memverses.each { |mv|
+          mv.tags.each { |tag|
+            all_tags[tag] += 1
+          }
+        }
+      }   
+    end
     
     return all_tags.sort{|a,b| a[1]<=>b[1]}.reverse[0...numtags]
   end

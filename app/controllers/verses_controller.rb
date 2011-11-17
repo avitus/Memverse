@@ -24,7 +24,7 @@ class VersesController < ApplicationController
     
     if @verse
       @tags      = @verse.tags
-      @user_tags = @verse.memverses.collect { |mv| mv.tags}.flatten # TODO: The most common user tags should be assigned to the verse model
+      @user_tags = @verse.all_user_tags(true).map { |t| t.first } # true = get tags only for same translation
       add_breadcrumb "#{@verse.book} #{@verse.chapter}:#{@verse.versenum}", {:action => 'show', :id => params[:id] }
     end
 
