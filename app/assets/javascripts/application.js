@@ -6,5 +6,6 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery-ui
 //= require jquery.fancybox-1.3.4
 //= require_tree .
