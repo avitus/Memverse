@@ -272,7 +272,9 @@ class Verse < ActiveRecord::Base
   # Tag verse with most popular user tags
   # ---------------------------------------------------------------------------------------------------------- 
   def update_tags
-    user_tags = self.all_user_tags(true).map { |t| t.first.name }.join(', ') # true = get tags only for same translation
+    
+    # true = get tags only for same translation
+    user_tags = self.all_user_tags(true).map { |t| t.first.name }.join(', ') 
     self.tag_list = []
     self.tag_list = user_tags
     self.save

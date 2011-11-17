@@ -56,28 +56,16 @@
 		</div>
 		
 		<div id='other-tags'>
-			<h3>User Tags</h3>
-			
-			<table cellpadding="6" cellspacing="1">
-				<% for tag in @other_tags %>
-					<tr>
-						<td class="verse-tag"><%= link_to tag[0].name, {:controller => :verses, :action => :show_verses_with_tag, :tag => tag[0].name, :tl => @mv.verse.translation } %></td>
-						<td class="add-tag">[+]</td>
-					</tr>	
-				<% end %>
-			</table>
-		</div>
-
-		<div id='verse-tags'>
-			<h3>Global Tags</h3>
+			<h3>Memverse Tags</h3>
 			
 			<table cellpadding="6" cellspacing="1">
 				<% for tag in @tags %>
 					<tr>
-						<td class="verse-tag"><%= tag.name %></td>
+						<td class="verse-tag"><%= link_to tag[0].name, {:controller => :verses, :action => :show_verses_with_tag, :tag => tag[0].name, :tl => @mv.verse.translation } %></td>
+						<td class="add-tag">[+]</td>
 						<% if current_user.has_role?("admin") %>
 							<td>[x]</td>
-						<% end %>
+						<% end %>						
 					</tr>	
 				<% end %>
 				
@@ -85,7 +73,8 @@
 					<tr>
 						<td class="tag edit_vs" id=<%= @verse.id %>>[New Tag]</td>
 					</tr>
-				<% end %>
+				<% end %>				
+				
 			</table>
 		</div>
 

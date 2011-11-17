@@ -304,20 +304,19 @@ class MemversesController < ApplicationController
     # ==== Displaying a single verse ====
     if params[:id]
     
-      logger.debug("Displaying single verse with ID: #{params[:id]}")	
+      add_breadcrumb I18n.t("home_menu.My Verses"), :manage_verses_path
+      add_breadcrumb "#{@verse.book} #{@verse.chapter}:#{@verse.versenum}", {:action => 'show', :id => params[:id] }
+      
       @mv         = Memverse.find(params[:id])
 
       @verse      = @mv.verse
       @user_tags  = @mv.tags
       @tags       = @verse.tags
+      # @other_tags = @verse.all_user_tags  # TODO: this is a very expensive transaction
       
-      add_breadcrumb I18n.t("home_menu.My Verses"), :manage_verses_path
-      add_breadcrumb "#{@verse.book} #{@verse.chapter}:#{@verse.versenum}", {:action => 'show', :id => params[:id] }
-    
       @next_mv = @mv.next_verse || @mv.next_verse_in_user_list
       @prev_mv = @mv.prev_verse || @mv.prev_verse_in_user_list
     
-      @other_tags = @verse.all_user_tags
 
     # ==== Displaying multiple verses ====    
     elsif (!mv_ids.blank?) and (params[:Show])
