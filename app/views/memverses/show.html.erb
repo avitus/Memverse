@@ -61,7 +61,7 @@
 			<table cellpadding="6" cellspacing="1">
 				<% for tag in @tags %>
 					<tr>
-						<td class="verse-tag"><%= link_to tag[0].name, {:controller => :verses, :action => :show_verses_with_tag, :tag => tag[0].name, :tl => @mv.verse.translation } %></td>
+						<td class="verse-tag"><%= link_to tag.name, {:controller => :verses, :action => :show_verses_with_tag, :tag => tag.name, :tl => @mv.verse.translation } %></td>
 						<td class="add-tag">[+]</td>
 						<% if current_user.has_role?("admin") %>
 							<td>[x]</td>
