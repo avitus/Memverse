@@ -6,9 +6,9 @@ GIT
 
 GIT
   remote: git://github.com/maccman/juggernaut.git
-  revision: 1e606b54a1b38e5e1a1a8b308a470ab4d3b9e395
+  revision: fe672b36c14ac5ed53cfd4105cfc2577d4300d6b
   specs:
-    juggernaut (2.0.1)
+    juggernaut (2.1.0)
       redis
 
 GIT
@@ -314,7 +314,7 @@ DEPENDENCIES
   i18n-js
   jquery-rails (>= 1.0.17)
   json
-  juggernaut (>= 2.0.1)!
+  juggernaut (>= 2.1.0)!
   launchy (>= 2.0.5)
   logging
   mail (>= 2.2.15)
