@@ -67,7 +67,7 @@ gem 'htmldiff'                                                                  
 gem 'breadcrumbs_on_rails', '>=2.0.0'                                                           # For breadcrumb navigation bar
 gem 'query_reviewer', :git => "git://github.com/nesquena/query_reviewer.git"                    # For finding slow queries
 gem 'memcache-client'                                                                           # Memcached client
-gem 'redis', '>=2.2.0'                                                                          # Redis Key-value store
+gem 'redis', '>=2.2.2'                                                                          # Redis Key-value store
 
 
 group :console do

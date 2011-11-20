@@ -331,7 +331,7 @@ DEPENDENCIES
   rails-footnotes (>= 3.7)
   rails_admin!
   randumb
-  redis (>= 2.2.0)
+  redis (>= 2.2.2)
   riddle
   rinku
   rspec-rails (>= 2.6.1)

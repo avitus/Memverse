@@ -69,5 +69,22 @@ MemverseApp::Application.configure do
 
   # Configure Paperclip to access ImageMagick - this is the path returned by 'which convert'
   Paperclip.options[:command_path] = "/usr/local/bin/" 
+  
+  # https://github.com/ezmobius/redis-rb/wiki/redis-rb-on-Phusion-Passenger
+  if defined?(PhusionPassenger)
+    PhusionPassenger.on_event(:starting_worker_process) do |forked|
+      # We're in smart spawning mode.
+      if forked
+        # Re-establish redis connection
+        require 'redis'
+        redis_config = YAML.load_file("#{Rails.root.to_s}/config/redis.yml")[Rails.env]
+  
+        # The important two lines
+        $redis.client.disconnect
+        $redis = Redis.new(:host => redis_config["host"], :port => redis_config["port"])
+      end
+    end
+  end  
+  
 
 end
