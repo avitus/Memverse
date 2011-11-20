@@ -35,15 +35,17 @@
 		four times per week and are able to retain hundreds of memory verses. A few have even memorized over a thousand verses!</p>
 	</div>
 	
-	<% if !user_signed_in? %>
-		<div>
-			<ol>
-				<li><%= link_to 'Learn More about Memverse 			-->', tutorial_path, :class => "action-link"%></li>	
-				<li><%= link_to 'Sign Up and Start Memorizing Today	-->', signup_path, 	 :class => "action-link"%></li>
-				<li><%= link_to 'Top 100 Memory Verses  -->', popular_path,  :class => "action-link"%></li>
-				<li><%= link_to 'Try the Demo  -->', demo_path,  :class => "action-link"%></li>				
-			</ol>	
-		</div>
+	<% if !user_signed_in? %>	
+	
+		<div class="banner-bottom"><!--banner-bottom start-->
+			<ul>
+				<li><%= link_to 'try the memverse demo',	demo_path %></li>
+				<li><%= link_to 'top 100 memory verses',	popular_path %></li>
+				<li><%= link_to 'blog',						blog_path %></li>
+				<li><%= link_to 'sign up today',			new_user_registration_path, :class => 'active' %></li>
+			</ul>
+		</div><!--banner-bottom end-->
+	
 	<% end %>
 
 </div>
