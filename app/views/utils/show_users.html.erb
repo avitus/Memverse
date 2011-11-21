@@ -30,7 +30,7 @@
 				<td align = right>[<%= user.memorized			%>]</td>			
 				<td align = center> <%= user.newsletters		%> </td>
 				<% if user.state == "pending" %>	
-					<td><%= link_to 'Activate', activate_path(user.activation_code) %> </td>
+					<td><%= link_to 'Activate', activate_path(user.confirmation_token) %> </td>
 				<% end %>
 					
 							

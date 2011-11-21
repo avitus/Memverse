@@ -58,6 +58,8 @@ class UsersController < ApplicationController
     # end
   end
   
+  
+  # TODO: no longer needed now that we're using Devise (?)
   def activate
     logout_keeping_session!
     user = User.find_by_activation_code(params[:activation_code]) unless params[:activation_code].blank?
