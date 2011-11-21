@@ -6,7 +6,6 @@
 			<tr>
 				<th>ID</th>
 				<th align="left">Name</th>
-				<th align="left">Login</th>
 				<th align="left">Email</th>
 				<th align="left">Church</th>
 				<th>Last Activity</th>
@@ -20,7 +19,6 @@
 			<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
 				<td> <%= user.id				%></td>	
 				<td> <%= user.name				%></td>				
-				<td> <%= link_to user.login, :controller => 'utils', :action => 'show_memory_verses', :id => user.id %></td>		 
 				<td> <%= user.email				%> </td>
 				<td> <%= user.church ? user.church.name : ""	%> </td>
 				<td align = center> <%= user.last_activity_date %> </td>	
@@ -29,8 +27,8 @@
 				<td align = right> <%= user.memverses.length	%> </td>
 				<td align = right>[<%= user.memorized			%>]</td>			
 				<td align = center> <%= user.newsletters		%> </td>
-				<% if user.state == "pending" %>	
-					<td><%= link_to 'Activate', activate_path(user.confirmation_token) %> </td>
+				<% if user.confirmed_at.nil? %>	
+					<td><%= link_to 'Activate', confirmation_url(user, :confirmation_token => user.confirmation_token) %> </td>					
 				<% end %>
 					
 							
