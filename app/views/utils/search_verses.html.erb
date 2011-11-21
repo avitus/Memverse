@@ -16,7 +16,7 @@
 	$(document).ready(function(){
 		
 		$("#verse").observe_field(0.3, function( ) { 
-			$.get("/admin_search_verse", {  verse: this.value },
+			$.get("/utils/search_verse", {  verse: this.value },
 				function(data){	
 					$("#search_results").html(data);
 			}, "html" );
