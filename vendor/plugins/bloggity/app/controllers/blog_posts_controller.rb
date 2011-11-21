@@ -23,7 +23,8 @@ class BlogPostsController < ApplicationController
 			
 			# So alas... we must hack away:
 			search_condition = ["blog_id = ? AND is_complete = ? #{"AND blog_tags.name = ?" if params[:tag_name]} #{"AND category_id = ?" if params[:category_id]}", @blog_id, true, params[:tag_name], params[:category_id]].compact
-			BlogPost.paginate(:all, :select => "DISTINCT blog_posts.*", :conditions => search_condition, :include => :tags, :order => "blog_posts.created_at DESC", :page => @blog_page, :per_page => 15)
+			#BlogPost.paginate(:all, :select => "DISTINCT blog_posts.*", :conditions => search_condition, :include => :tags, :order => "blog_posts.created_at DESC", :page => @blog_page, :per_page => 15)
+      BlogPost.where(search_condition).select("DISTINCT blog_posts.*").includes(:tags).paginate(:page => @blog_page, :per_page => 15).order("blog_posts.created_at DESC")      
 		else
 			logger.info("*** Showing recent posts ")
 			@recent_posts
