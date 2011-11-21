@@ -409,7 +409,7 @@ class MemversesController < ApplicationController
       current_user.tag(@mv, :with => tag_list, :on => :tags)  # We're doing this for now to track which users are tagging
       
       # Update verse model with most popular tags
-      spawn_block do
+      spawn do
         @mv.verse.update_tags
       end
  
@@ -1368,7 +1368,7 @@ class MemversesController < ApplicationController
       session[:exam_cntr]     = nil
      
       # Check for quest completion 
-      spawn_block do
+      spawn do
         if q = Quest.where(:url => exam_results_path, :level => current_user.level ).first        
           if score >= q.quantity
             q.check_quest_off(current_user)
@@ -1494,7 +1494,7 @@ class MemversesController < ApplicationController
       session[:reftest_correct]  = nil
       
       # Check for quest completion 
-      spawn_block do
+      spawn do
         if q = Quest.where(:url => reftest_results_path, :level => current_user.level ).first
         	if @grade >= q.quantity 
 	          q.check_quest_off(current_user)
@@ -1517,7 +1517,7 @@ class MemversesController < ApplicationController
     user_id = params[:user_id]
     u = User.find(user_id)
     unless u.nil?
-    	spawn_block do
+    	spawn do
 		    u.adjust_work_load
 	    end
 	    u.save_progress_report

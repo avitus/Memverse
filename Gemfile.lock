@@ -1,10 +1,4 @@
 GIT
-  remote: git://github.com/jpfuentes2/spawn
-  revision: a4a96cde092bb93ada9b3c236ec61c5c295d45ab
-  specs:
-    spawn (1.0.1)
-
-GIT
   remote: git://github.com/maccman/juggernaut.git
   revision: fe672b36c14ac5ed53cfd4105cfc2577d4300d6b
   specs:
@@ -34,6 +28,13 @@ GIT
       builder (~> 3.0.0)
       haml (>= 3.1.0, < 3.3.0)
       rails (~> 3.1.0)
+
+GIT
+  remote: git://github.com/tra/spawn
+  revision: 0e1ab99b8c90ec16f6163641d9e84005fea01263
+  branch: edge
+  specs:
+    spawn (1.1)
 
 GEM
   remote: http://rubygems.org/
