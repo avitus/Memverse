@@ -10,6 +10,7 @@ class CleanseVerses < ActiveRecord::Migration
       cleansed_text.gsub!('â€™',  '’')
       cleansed_text.gsub!('â€œ',  '“')
       cleansed_text.gsub!('â€', '”')
+      cleansed_text.gsub!('â€˜',  '‘')
 
       # if cleansed_text != vs.text
         # Rails.logger.info("Saving text: #{cleansed_text}")
