@@ -993,7 +993,7 @@ class User < ActiveRecord::Base
   # Whether a user can moderate the comments for a given blog
   # Implement in your user model
   def can_moderate_blog_comments?(blog_id = nil)
-    self.id == 2 or self.completed_sessions > 1000
+    self.id == 2 or self.id == 3486
   end
   
   # Whether the comments that a user makes within a given blog are automatically approved (as opposed to being queued until a moderator approves them)

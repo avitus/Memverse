@@ -40,9 +40,13 @@ class BlogPostsController < ApplicationController
 	
 	def close
 		@blog_post = BlogPost.find(params[:id])
-		@blog_post.update_attribute(:comments_closed, true)
-		flash[:notice] = "Commenting for this blog has been closed."
-		redirect_to blog_named_link(@blog_post)
+    if blog_logged_in? && current_user.can_moderate_blog_comments?(@blog_id)
+      @blog_post.update_attribute(:comments_closed, true)
+      flash[:notice] = "Commenting for this blog has been closed."
+    else
+      flash[:notice] = "You do not have sufficient privileges to complete this action."
+    end
+    redirect_to blog_named_link(@blog_post)
 	end
 
 	# Upload a blog asset
