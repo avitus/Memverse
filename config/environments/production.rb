@@ -68,6 +68,15 @@ MemverseApp::Application.configure do
     
   config.action_mailer.delivery_method = :smtp
  
+  config.action_mailer.smtp_settings = {
+    :address              => "smtp.gmail.com",
+    :port                 => 587,
+    :domain               => 'memverse.com',
+    :user_name            => 'admin@memverse.com',
+    :password             => 'veetle77',
+    :authentication       => "plain",
+    :enable_starttls_auto => true  }  
+   
   # Configure Paperclip to access ImageMagick - this is the path returned by 'which convert'
   Paperclip.options[:command_path] = "/usr/local/bin/" 
   
