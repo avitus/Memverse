@@ -1,6 +1,6 @@
 class UserMailer < ActionMailer::Base
   
-  default_url_options[:host] = "example.com"
+  default_url_options[:host] = "memverse.com"
   
   default :from => "admin@memverse.com"
     
