@@ -193,20 +193,23 @@
 <!-- Hide state entry field if not US -->
 <script type="text/javascript">
 	$(document).ready(function() {
-			
-		if ($('#user_country').val() == "United States") {
-			$('#state-entry').show();		
+		
+		$country = $('#user_country');
+		$state = $('#state-entry'); 
+		
+		if ($country.val() == "United States") {
+			$state.show();		
 		}
 		else {
-			$('#state-entry').hide();
+			$state.hide();
 		}
 		
-		$('#user_country').blur(function() {
-			if (this.value == "United States") {
-				$('#state-entry').show();		
+		$country.keyup(function() {
+			if ($country.val() == "United States") {
+				$state.show();		
 			}
 			else {
-				$('#state-entry').hide();
+				$state.val('').hide();
 			}
 		});
 		
