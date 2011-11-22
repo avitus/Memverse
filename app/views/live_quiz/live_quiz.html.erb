@@ -120,7 +120,7 @@
 		$('input#submit-answer').click(function() {			
 			var userAnswer = $('.q-answer-input').val();
 			grade = getScore(questionAnswer, userAnswer, questionType)
-			if (grade.score !== false) {
+			if (grade.score != null) {
 				$.post("/record_score", {	usr_id:		<%= current_user.id %>, 
 											usr_name:	'<%= current_user.name_or_login %>', 
 											usr_login:	'<%= current_user.login %>', 
