@@ -80,6 +80,9 @@ class BlogsController < ApplicationController
 	
   # GET the blog as a feed
 	def feed
+	  
+	  request.format = "xml" unless params[:format]
+	  
 		@blog = Blog.find(:first, :conditions => ["url_identifier = ? OR id = ?", params[:id], params[:id]])
 		unless @blog
 			flash[:error] = "Couldn't find that feed."
@@ -88,7 +91,9 @@ class BlogsController < ApplicationController
 		end
 		@blog_id = @blog.id
 		@blog_posts = BlogPost.find(:all, :conditions => ["blog_id = ? AND is_complete = ?", @blog_id, true], :order => "blog_posts.created_at DESC", :limit => 15)
-		render :action => :feed, :layout => false
+    respond_to do |format|
+      format.xml
+    end
 	end
 	
 	private 
