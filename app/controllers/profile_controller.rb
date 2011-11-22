@@ -112,7 +112,7 @@ class ProfileController < ApplicationController
 
     @suggestions = Array.new
 
-    query         = params[:query]
+    query         = params[:term]
     query_length  = query.length
     
     all_countries = Country.find(:all, :select => 'printable_name')
@@ -124,7 +124,7 @@ class ProfileController < ApplicationController
       end
     }
     
-    render :json => {:query => query, :suggestions => @suggestions }.to_json
+    render :json => @suggestions.to_json
 
   end
 
@@ -144,7 +144,7 @@ class ProfileController < ApplicationController
 
     @suggestions = Array.new
 
-    query         = params[:query]
+    query         = params[:term]
     query_length  = query.length
     
     all_states = AmericanState.find(:all, :select => 'name')
@@ -156,7 +156,7 @@ class ProfileController < ApplicationController
       end
     }
     
-    render :json => {:query => query, :suggestions => @suggestions }.to_json
+    render :json => @suggestions.to_json
 
   end
 
@@ -176,7 +176,7 @@ class ProfileController < ApplicationController
 
     @suggestions = Array.new
 
-    query         = params[:query]
+    query         = params[:term]
     query_length  = query.length
     
     all_churches = Church.find(:all, :select => 'name')
@@ -188,7 +188,7 @@ class ProfileController < ApplicationController
       end
     }
     
-    render :json => {:query => query, :suggestions => @suggestions }.to_json
+    render :json => @suggestions.to_json
 
   end
 
