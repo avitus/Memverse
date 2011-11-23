@@ -13,12 +13,18 @@ MemverseApp::Application.configure do
 
   # Compress JavaScripts and CSS
   config.assets.compress = true
+  
+  config.assets.js_compressor  = :uglifier
 
   # Don't fallback to assets pipeline if a precompiled asset is missed
   config.assets.compile = true # This should be false but seems to be a problem with Rails Admin ... try again with Rails 3.1.3
 
   # Generate digests for assets URLs
   config.assets.digest = true
+
+
+  config.static_cache_control = "public, max-age=86400"
+
 
   # Defaults to Rails.root.join("public/assets")
   # config.assets.manifest = YOUR_PATH
