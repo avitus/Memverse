@@ -245,20 +245,6 @@
 			
 		});
 
-		// Apply tooltips
-		$("#test-buttons span").tooltip({ 
-			// place tooltip on the top edge
-			position: ['top', 'center'], 
-			// a little tweaking of the position 
-			offset: [0, -64], 
-			// use a simple show/hide effect 
-			effect: 'toggle', 
-			// specify relative to parent element
-			relative: true,
-			// custom opacity setting 
-			opacity: 0.8 
-		});
-
 		// Shortcuts
 		isShift = false;
 		isPlus = false;
@@ -337,6 +323,21 @@
 			}
 		})
 		;
+		
+		// Apply tooltips
+		$("#test-buttons span").tooltip({ 
+			// place tooltip on the top edge
+			position: ['top', 'center'], 
+			// a little tweaking of the position 
+			offset: [0, -64], 
+			// use a simple show/hide effect 
+			effect: 'toggle', 
+			// specify relative to parent element
+			relative: true,
+			// custom opacity setting 
+			opacity: 0.8 
+		});
+	
 	}); // End of jQuery document ready
 
 --></script>
