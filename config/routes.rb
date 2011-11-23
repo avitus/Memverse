@@ -79,7 +79,7 @@ MemverseApp::Application.routes.draw do
   match '/show_user_info',         :to => 'utils#show_user_info',            :as => 'show_user_info'
   match '/show_tags',              :to => 'utils#show_tags',                 :as => 'show_tags'
   match '/admin_search_verse',     :to => 'utils#search_verse',              :as => 'admin_search_verse'
-  match '/admin_verify_verse/:id', :to => 'utils#verify_verse',              :as => 'admin_verify_verse'
+  match '/utils_verify_verse/:id', :to => 'utils#verify_verse',              :as => 'utils_verify_verse'
   match '/utils_dashboard',        :to => 'utils#dashboard',                 :as => 'utils_dashboard'
     
   # Doesn't require a login

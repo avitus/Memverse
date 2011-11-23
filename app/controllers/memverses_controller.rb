@@ -627,11 +627,14 @@ class MemversesController < ApplicationController
     chapter     = ch[0].chapter
     translation = ch[0].translation
     
-    if current_user.has_chapter?(book, chapter)
+    
+    if ch.include?(nil)
+      flash[:error] = "Sorry, we do not have all the verses for that chapter"
+    elsif current_user.has_chapter?(book, chapter)
       flash[:notice] = "You already have #{book} #{chapter} in the #{translation} translation in your list of memory verses."
     else
       ch.each { |vs| 
-    if your_mv = current_user.has_verse?(vs.book, vs.chapter, vs.versenum)
+        if your_mv = current_user.has_verse?(vs.book, vs.chapter, vs.versenum)
           # Don't add
           # flash[:notice] = "You already have #{your_mv.verse.ref} in the #{your_mv.verse.translation} translation in your list of memory verses"
         else

@@ -17,7 +17,7 @@
 					<td align="center">						<%= vs.memverses_count	%></td>	
 					<td class="edit_area" id=<%= vs.id %>>	<%= vs.text 			%></td>
 					<td>									<%= vs.web_check		%></td>	
-					<td class="verify">						<%= link_to 'Verify', admin_verify_verse_path(vs.id), :remote => true %></td>
+					<td class="verify">						<%= link_to 'Verify', utils_verify_verse_path(vs.id), :remote => true %></td>
 					<td>									<%= vs.checked_by		%></td>							
 				</tr>
 				<% end %>
@@ -46,7 +46,7 @@
 				<td align="center">						<%= vs.memverses_count	%></td>	
 				<td class="edit_area" id=<%= vs.id %>>	<%= vs.text 			%></td>
 				<td>									<%= vs.web_check		%></td>	
-				<td class="verify">						<%= link_to 'Verify', admin_verify_verse_path(vs.id), :remote => true %></td>
+				<td class="verify">						<%= link_to 'Verify', utils_verify_verse_path(vs.id), :remote => true %></td>
 				<td>									<%= vs.checked_by		%></td>											
 			</tr>
 			<% end %>
@@ -59,11 +59,11 @@
 <!-- http://www.appelsiini.net/projects/jeditable -->
 <script type="text/javascript">
 	 $(document).ready(function() {   
-	     $('.edit').editable('/admin/set_verse_text', {
+	     $('.edit').editable('/utils/set_verse_text', {
 	         indicator : 'Saving...',
 	         tooltip   : 'Click to edit...'
 	     });
-	     $('.edit_area').editable('/admin/set_verse_text', { 
+	     $('.edit_area').editable('/utils/set_verse_text', { 
 	         type      : 'textarea',
 	         cancel    : 'Cancel',
 	         submit    : 'OK',
