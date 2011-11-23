@@ -1,7 +1,7 @@
 <div class="white-box-with-margins">
 <h1>Editing quiz</h1>
 
-<% form_for(@quiz, :html => { :multipart => true }) do |f| %>
+<%= form_for(@quiz, :html => { :multipart => true }) do |f| %>
   <%= f.error_messages %>
   <p>
     <%= f.label :name %><br />

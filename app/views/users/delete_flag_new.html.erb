@@ -5,7 +5,7 @@
 
 	<% @user.password = @user.password_confirmation = nil %>
 
-	<% form_for @user do |f| %>
+	<%= form_for @user do |f| %>
 		<%= f.error_messages %>
 		<div>
 			<h2>Your Details</h2>
