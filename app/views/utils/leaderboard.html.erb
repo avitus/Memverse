@@ -9,7 +9,7 @@
 		<table cellpadding="6" cellspacing="1" border="1">  	
 			<tr>
 				<th>Rank</th>
-				<th>Name</th>	
+				<th>Email</th>	
 				<th>Memorized</th>
 				<th>Learning</th>
 				<th>Affiliation</th>
@@ -20,7 +20,7 @@
 			<% for user in @leaderboard %>
 				<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
 					<td align="center"> <%= @leaderboard.index(user)+1%></td>
-					<td align="left">   <%= user[0].name		%></td>
+					<td align="left">   <%= user[0].email		%></td>
 					<td align="center"> <%= user[1]				%></td>	
 					<td align="center"> <%= user[0].learning 	%></td>
 					<td align="left"> 	<%= user[0].church ? user[0].church.name : "" %></td>

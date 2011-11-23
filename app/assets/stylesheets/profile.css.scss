@@ -1,0 +1,25 @@
+/* === Edit Profile Page === */
+#edit-profile-form {
+  width:600px;
+}
+
+#edit-profile-form label {
+  width:15em;  /* changed from 12em on March 6 2010 */
+  padding-right:0.5em;
+}
+
+#edit-profile-form li {
+  padding:0.12em 0; 
+  width:570px;
+  list-style:none;
+  
+  div.ui-widget {
+    font-size: 100%
+  }
+}
+
+#edit-profile-form .buttons {
+  margin-left:12em;
+  padding-top:0.25em;
+  margin-bottom:0.7em;
+}

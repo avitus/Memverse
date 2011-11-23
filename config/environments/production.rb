@@ -13,12 +13,18 @@ MemverseApp::Application.configure do
 
   # Compress JavaScripts and CSS
   config.assets.compress = true
+  
+  config.assets.js_compressor  = :uglifier
 
   # Don't fallback to assets pipeline if a precompiled asset is missed
   config.assets.compile = true # This should be false but seems to be a problem with Rails Admin ... try again with Rails 3.1.3
 
   # Generate digests for assets URLs
   config.assets.digest = true
+
+
+  config.static_cache_control = "public, max-age=86400"
+
 
   # Defaults to Rails.root.join("public/assets")
   # config.assets.manifest = YOUR_PATH
@@ -62,11 +68,21 @@ MemverseApp::Application.configure do
   config.action_mailer.default_url_options = { :host => 'memverse.com' }
   # ActionMailer Config
   # Setup for production - deliveries, no errors raised
-  config.action_mailer.delivery_method = :smtp
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = false
   config.action_mailer.default :charset => "utf-8"
-
+    
+  config.action_mailer.delivery_method = :smtp
+ 
+  config.action_mailer.smtp_settings = {
+    :address              => "smtp.gmail.com",
+    :port                 => 587,
+    :domain               => 'memverse.com',
+    :user_name            => 'admin@memverse.com',
+    :password             => 'veetle77',
+    :authentication       => "plain",
+    :enable_starttls_auto => true  }  
+   
   # Configure Paperclip to access ImageMagick - this is the path returned by 'which convert'
   Paperclip.options[:command_path] = "/usr/local/bin/" 
   

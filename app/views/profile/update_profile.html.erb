@@ -68,20 +68,28 @@
 								 %>
 				</li>					
 
-
-
 				<li>
-					<%= f.label 			:country, t('.Country') %>
-					<%= f.text_field 		:country, :value => @user_country %>
+					<div class="ui-widget">
+						<%= f.label 			:country, t('.Country') %>
+						<%= f.text_field 		:country, :value => @user_country %>
+					</div>			
 				</li>
+				
+		
 				<li id="state-entry">
-					<%= f.label 			:american_state, t('.State') %>
-					<%= f.text_field 		:american_state, :value => @user_state %>
+					<div class="ui-widget">	
+						<%= f.label 			:american_state, t('.State') %>
+						<%= f.text_field 		:american_state, :value => @user_state %>
+					</div>
 				</li>
+
 				<li>
-					<%= f.label 			:church, t('.Church') %>
-					<%= f.text_field 		:church, :value => @user_church %>
+					<div class="ui-widget">
+						<%= f.label 			:church, t('.Church') %>
+						<%= f.text_field 		:church, :value => @user_church %>
+					</div>
 				</li>		
+
 				<li>
 					<%= f.label 			:newsletters, t('.Receive newsletters') %>
 					<%= f.check_box 		:newsletters %>
@@ -179,13 +187,13 @@
 <!-- http://www.devbridge.com/projects/autocomplete/jquery/ -->
 <script type="text/javascript">
 	$(document).ready(function() {	
-		a = $('#user_country').autocomplete({ serviceUrl:'profile/country_autocomplete'  								   
+		a = $('#user_country').focus().autocomplete({ source:'profile/country_autocomplete'
 		});
 
-		c = $('#user_american_state').autocomplete({ serviceUrl:'profile/state_autocomplete'  								   
+		c = $('#user_american_state').focus().autocomplete({ source:'profile/state_autocomplete'
 		});
 	
-		b = $('#user_church').autocomplete({ serviceUrl:'profile/church_autocomplete'  								   
+		b = $('#user_church').focus().autocomplete({ source:'profile/church_autocomplete'
 		});
 	});
 </script>

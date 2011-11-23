@@ -227,7 +227,7 @@
 		<% else # if not logged in %>
 			<div class="menu menu-main-only"><!--menu start-->
 				<ul>
-					<li><%= link_to t('menu.home').html_safe, home_path %></li>
+					<li><%= link_to t('menu.home').html_safe, root_path %></li>
 					<li><%= link_to t('menu.memorize').html_safe, test_verse_quick_path %></li>
 					<li><%= link_to t('menu.learn').html_safe, tutorial_path %></li>
 					<li><%= link_to t('menu.profile').html_safe, current_user %></li>
