@@ -32,24 +32,6 @@
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.min.js"></script>
 <script type="text/javascript" src="http://cdn.jquerytools.org/1.2.5/all/jquery.tools.min.js"></script>
 
-<script type="text/javascript">
-	$(function(){
-		$('.fontblk').click(function(){
-			var ourText = $(' p');
-			var currFontSize = ourText.css('fontSize');
-			var finalNum = parseFloat(currFontSize, 10);
-			var stringEnding = currFontSize.slice(-2);
-			if(this.id == 'large') {
-				finalNum *= 1.2;
-			}
-			else if (this.id == 'small'){
-				finalNum /=1.2;
-			}
-			ourText.animate({fontSize: finalNum + stringEnding},600);
-		});
-	});
-</script>
-
 <!--[if IE 6]>
 <style type="text/css">
 	.learn-area
@@ -90,11 +72,6 @@
 		<div class="header-top-narrow"><!--header-top start-->
 			<div id="logo"><a href="/" title="<%= I18n.t :mainpage, :scope => 'page_titles' %> - Memverse"><img src="/assets/logo.png" width="253" height="31" alt="" /></a></div>
 			<div class="top-right"><!--top-right start-->
-
-				<div class="resize">
-					<a class="fontblk" id="large" title="Increase Font Size"></a>
-					<a class="fontblk" id="small" title="Decrease Font Size"></a>
-				</div>
 
 				<div class="iphone">iPhone / iPad App (coming soon):</div>
 
