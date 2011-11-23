@@ -13,20 +13,24 @@
 
 			<ul>
 				<li>
+					<%= f.label				:name, "Name" %>
 					<%= f.text_field		:name, :placeholder => "Name" %>
 					<div class="tooltip2">This name will identify you on Memverse.</div>
 					<span id="error"></span>					
 				</li>
 				<li>
+					<%= f.label				:email, "Email" %>
 					<%= f.email_field		:email, :placeholder => "Email address" %>
 					<div class="tooltip2">Check this carefully. You will receive an activation email at this email address. We highly recommend adding
 										  admin@memverse.com to your email address book to ensure delivery of the activation email.</div>					
 				</li>
 				<li>
+					<%= f.label				:email, "Password" %>
 					<%= f.password_field 	:password, :placeholder => "Password" %>
 					<div class="tooltip2">Use one you'll remember. We use the highest level of encryption.</div>					
 				</li>
 				<li>
+					<%= f.label				:email, "Confirm Password" %>
 					<%= f.password_field	:password_confirmation, :placeholder => "Password" %>
 					<div class="tooltip2">One more time and you're done!</div>						
 				</li>
