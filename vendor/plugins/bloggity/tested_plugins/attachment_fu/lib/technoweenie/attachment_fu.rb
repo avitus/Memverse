@@ -312,7 +312,7 @@ module Technoweenie # :nodoc:
       # This method handles the uploaded file object.  If you set the field name to uploaded_data, you don't need
       # any special code in your controller.
       #
-      #   <% form_for :attachment, :html => { :multipart => true } do |f| -%>
+      #   <%= form_for :attachment, :html => { :multipart => true } do |f| -%>
       #     <p><%= f.file_field :uploaded_data %></p>
       #     <p><%= submit_tag :Save %>
       #   <% end -%>

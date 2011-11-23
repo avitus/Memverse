@@ -2,7 +2,7 @@
 <div class="white-box-with-margins">
 	<h1>New Quiz Question</h1>
 	
-	<% form_for(@question, :as => :quiz_question, :url => { :action => "create" }, :html => { :multipart => true }) do |f| %>
+	<%= form_for(@question, :as => :quiz_question, :url => { :action => "create" }, :html => { :multipart => true }) do |f| %>
 		<%= f.error_messages %>
 		<p>
 			<%= f.hidden_field  :quiz_id, :value => @quiz.id %>

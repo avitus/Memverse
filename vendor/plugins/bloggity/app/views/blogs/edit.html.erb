@@ -1,6 +1,6 @@
 <h1>Editing Blog</h1>
 
-<% form_for( @blog, :url => '/blogs/' + @blog.id.to_s ) do |f| %>
+<%= form_for( @blog, :url => '/blogs/' + @blog.id.to_s ) do |f| %>
   <%= f.error_messages %>
 
   <p>
