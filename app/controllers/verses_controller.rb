@@ -126,7 +126,7 @@ class VersesController < ApplicationController
     @tab = "home"
     @sub = "cloud"  
     add_breadcrumb I18n.t('page_titles.tag_cloud'), :tag_cloud_path
-    @tags = Verse.tag_counts( :order => "name" ) # TODO: change this to Verse.tag_counts
+    @tags = Verse.tag_counts( :order => "name" )
   end
 
   # ----------------------------------------------------------------------------------------------------------
