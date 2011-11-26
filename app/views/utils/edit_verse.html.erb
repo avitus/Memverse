@@ -2,7 +2,7 @@
 
 	<h2>Editing Verse</h2>
 	
-	<% form_tag :action => 'update_verse', :id => @verse do %>
+	<%= form_tag :action => 'update_verse', :id => @verse do %>
 	  <%= render :partial => 'verse_form' %>
 	  <%= submit_tag 'Edit' %>
 	<% end %>

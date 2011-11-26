@@ -72,7 +72,7 @@ class BibleGateway
     # Need to look for text immediately after superscript
     verse_number = doc.at('sup.versenum')
     
- 		segment = verse_number.next_sibling unless !verse_number
+ 		segment = verse_number.parent unless !verse_number
           
     if segment
 	    # segment.search('sup.xref').remove 				  # remove cross reference links
@@ -80,7 +80,9 @@ class BibleGateway
 	    # segment.search("div.crossrefs").remove 			# remove cross references
 	    # segment.search("div.footnotes").remove 			# remove footnotes
 	    # segment.search('sup.versenum').remove				# remove verse numbering
-	     
+	    
+	    segment.search("sup").remove      # remove superscripts (verse numbering, footnotes, etc.)
+	    
 	    # remove headings, html tags, comments, non-breaking space, and trailing or leading whitespace
 	    content = segment.text.gsub(/<h(4|5).+?<\/h(4|5)>/,"").gsub(/<b.+?<\/b>/,"").gsub(/<\/?[^>]*>/, "").gsub(/<!--.*?-->/, '').gsub("\u00A0", "").gsub(/\s{2,}/, " ").strip
     else
