@@ -5,7 +5,7 @@ class HomeController < ApplicationController
     session[:referrer] = params[:referrer]
      
     @blogposts = Rails.cache.fetch(["latest_blog_posts"], :expires_in => 2.hours) do 
-      BlogPost.where(:is_complete => true).order("created_at DESC").limit(2)
+      BlogPost.where(:is_complete => true).order("created_at DESC").limit(2).all
     end
     
     @vsillumination = Rails.cache.fetch(["pop_vs_illumination"], :expires_in => 24.hours) do 
