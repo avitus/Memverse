@@ -4,7 +4,7 @@ source 'http://rubygems.org'
 
 group :development do 
   gem 'rails-dev-tweaks', '~> 0.5.1'
-	  gem "rails-footnotes", ">= 3.7", :group => :development
+	gem "rails-footnotes", ">= 3.7", :group => :development
 end
 
 group :production do
