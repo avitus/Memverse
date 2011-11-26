@@ -597,9 +597,9 @@ class UtilsController < ApplicationController
       flash[:notice] = "Verse successfully updated"
       redirect_to :action => 'search_verses'
     else
-      render :action => edit_verse
+      render :action => "edit_verse"
     end
-  end   
+  end
   
   # ----------------------------------------------------------------------------------------------------------
   # Delete a verse
