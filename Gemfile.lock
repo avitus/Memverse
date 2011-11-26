@@ -154,7 +154,7 @@ GEM
     i18n (0.6.0)
     i18n-js (1.1.0)
       i18n
-    jquery-rails (1.0.17)
+    jquery-rails (1.0.18)
       railties (~> 3.0)
       thor (~> 0.14)
     json (1.6.1)
@@ -312,7 +312,7 @@ DEPENDENCIES
   hirb
   htmldiff
   i18n-js
-  jquery-rails (>= 1.0.17)
+  jquery-rails (= 1.0.18)
   json
   juggernaut (>= 2.1.0)!
   launchy (>= 2.0.5)
