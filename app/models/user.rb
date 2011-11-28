@@ -86,6 +86,7 @@ class User < ActiveRecord::Base
   scope :active_today,      lambda { where('last_activity_date = ?',  Date.today) }
   scope :active_this_week,  lambda { where('last_activity_date >= ?', 1.week.ago) }  
   scope :american,          where('countries.printable_name' => 'United States').includes(:country)
+  scope :pending,           where(:state => 'pending')
 
   # Setup accessible (or protected) attributes for your model
   # Prevents a user from submitting a crafted form that bypasses activation
@@ -874,25 +875,7 @@ class User < ActiveRecord::Base
     return [Date.today-last_reminded, Date.today-last_login].max.to_i
     
   end
-  
-  # ----------------------------------------------------------------------------------------------------------
-  # Number of verses a user has memorized -- REPLACED WITH COUNTER CACHE
-  # ---------------------------------------------------------------------------------------------------------- 
-  #  def memorized
-  #    Memverse.count(:all, :conditions => ["user_id = ? and status = ?", self.id, "Memorized"])
-  #  end  
-  
-  # ----------------------------------------------------------------------------------------------------------
-  # Number of verses a user is learning -- REPLACED WITH COUNTER CACHE
-  # ---------------------------------------------------------------------------------------------------------- 
-  #  def learning
-  #    Memverse.count(:all, :conditions => ["user_id = ? and status = ?", self.id, "Learning"])  
-  #  end
-  
-  def pending
-    Memverse.count(:all, :conditions => ["user_id = ? and status = ?", self.id, "Pending"])
-  end
-  
+    
   # ----------------------------------------------------------------------------------------------------------
   # Returns top 200 users (sorted by number of verses memorized)
   # ---------------------------------------------------------------------------------------------------------- 
