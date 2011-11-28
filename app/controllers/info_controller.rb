@@ -13,7 +13,7 @@ class InfoController < ApplicationController
     @sub = "tutorial"
     add_breadcrumb I18n.t('menu.learn'), :tutorial_path
     # Check for quest completion
-    spawn_block do
+    spawner do
       q = Quest.find_by_url(url_for(:action => 'tutorial', :controller => 'info', :only_path => false))
       if q
 		    q.check_quest_off(current_user)

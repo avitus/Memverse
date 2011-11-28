@@ -291,7 +291,7 @@ class UtilsController < ApplicationController
     # Delete users who never activated
     User.pending.where('created_at < ?', 2.days.ago ).delete_all
       
-    spawn_block do  
+    spawner do  
       # Retrieve records for all users - find_each does it in batches of 1000  
       User.find_each { |r|
         # Change reminder frequency (if necessary) to not be annoying
@@ -340,7 +340,7 @@ class UtilsController < ApplicationController
               
       }
       Rails.logger.info(" *** Sent #{@emails_sent} reminder emails")
-    end # of spawn_block process
+    end # of spawner process
   end  
 
 

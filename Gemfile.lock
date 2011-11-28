@@ -1,8 +1,8 @@
 GIT
-  remote: git://github.com/jpfuentes2/spawn
-  revision: a4a96cde092bb93ada9b3c236ec61c5c295d45ab
+  remote: git://github.com/drsharp/spawner.git
+  revision: b1fe6c0c2b6b1213ddbe55f1c4c221305a4d2d54
   specs:
-    spawn (1.0.1)
+    spawner (1.0.0)
 
 GIT
   remote: git://github.com/maccman/juggernaut.git
@@ -337,7 +337,7 @@ DEPENDENCIES
   rspec-rails (>= 2.6.1)
   ruby-openid
   sass-rails (~> 3.1.4)
-  spawn!
+  spawner!
   sqlite3
   test-unit (= 1.2.3)
   therubyracer (>= 0.8.2)

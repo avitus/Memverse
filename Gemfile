@@ -4,6 +4,7 @@ source 'http://rubygems.org'
 
 group :development do 
   gem 'rails-dev-tweaks', '~> 0.5.1'
+  gem 'query_reviewer', :git => "git://github.com/nesquena/query_reviewer.git"                  # For finding slow queries
 	gem "rails-footnotes", ">= 3.7", :group => :development
 end
 
@@ -61,14 +62,12 @@ gem 'newrelic_rpm', '>=3.3.0'                                                   
 gem 'thinking-sphinx', '>=2.0.9', :require => 'thinking_sphinx'                                 # Connector to Sphinx - for global search
 gem 'riddle'                                                                                    # Seems to be needed for Thinking_Sphinx ... not clear, though
 gem 'i18n-js'                                                                                   # Uses config/locale files to build a JavaScript equivalent of i18n in Rails
-gem 'spawn', :git => 'git://github.com/jpfuentes2/spawn'                                        # Use this for now (instead of the plugin ... check to see whether master branch ever supports Rails 3)
-gem 'juggernaut', '>=2.1.0', :git => 'git://github.com/maccman/juggernaut.git'
+gem "spawner", :git => 'git://github.com/drsharp/spawner.git'                                   # Check to see whether master branch ever supports Rails 3 & Ruby 1.92
+gem 'juggernaut', '>=2.1.0', :git => 'git://github.com/maccman/juggernaut.git'                  # Live chat
 gem 'htmldiff'                                                                                  # For showing errors in accuracy test
 gem 'breadcrumbs_on_rails', '>=2.0.0'                                                           # For breadcrumb navigation bar
-gem 'query_reviewer', :git => "git://github.com/nesquena/query_reviewer.git"                    # For finding slow queries
 gem 'memcache-client'                                                                           # Memcached client
 gem 'redis', '>=2.2.2'                                                                          # Redis Key-value store
-
 
 group :console do
   gem 'wirble'
