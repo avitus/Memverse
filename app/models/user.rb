@@ -916,7 +916,7 @@ class User < ActiveRecord::Base
     
     report = Array.new
     
-    Memverse.find(:all, :conditions => ["user_id = ?", self.id]).each { |mv|
+    Memverse.where(:user_id => self.id]).find_each { |mv|
     
       record            = Hash.new
       record['mvID']    = mv.id
