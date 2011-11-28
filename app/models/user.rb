@@ -875,7 +875,14 @@ class User < ActiveRecord::Base
     return [Date.today-last_reminded, Date.today-last_login].max.to_i
     
   end
-    
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Number of pending verses for user
+  # ----------------------------------------------------------------------------------------------------------   
+  def pending
+    Memverse.count(:all, :conditions => ["user_id = ? and status = ?", self.id, "Pending"])
+  end
+  
   # ----------------------------------------------------------------------------------------------------------
   # Returns top 200 users (sorted by number of verses memorized)
   # ---------------------------------------------------------------------------------------------------------- 
