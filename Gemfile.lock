@@ -1,9 +1,9 @@
 GIT
   remote: git://github.com/avitus/spawn.git
-  revision: 045846feae98843c794960c8205f027d21971fc5
+  revision: beaf7937cae96985de42081272a95386b8e474a3
   branch: edge
   specs:
-    spawn (1.1)
+    spawn (1.2)
 
 GIT
   remote: git://github.com/maccman/juggernaut.git
@@ -353,7 +353,7 @@ DEPENDENCIES
   rspec-rails (>= 2.6.1)
   ruby-openid
   sass-rails (~> 3.1.4)
-  spawn!
+  spawn (>= 1.2)!
   sqlite3
   test-unit (= 1.2.3)
   therubyracer (>= 0.8.2)
