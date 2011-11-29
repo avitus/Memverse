@@ -40,6 +40,9 @@ MemverseApp::Application.configure do
   # Use a different logger for distributed setups
   # config.logger = SyslogLogger.new
 
+  # Handle log rotation from within Rails environment
+  config.logger = Logger.new(config.paths.log.first, 5, 100.megabytes)
+
   # Use a different cache store in production
   config.cache_store = :mem_cache_store
 
