@@ -45,7 +45,7 @@
 						<!-- <div class="edit-option"><a href="#">Edit</a></div> -->
 					</li>
 					<li>
-						<div class="user-option-list"><span>Church: </span><%= @user.church ? link_to(@user.church.name, { :controller => "profile", :action => "show_church", :church => @user.church.id }) : "" %></div>
+						<div class="user-option-list"><span>Church: </span><%= @user.church ? link_to(@user.church.name, { :controller => "church", :action => "show", :id => @user.church.id }) : "" %></div>
 					</li>
 				</ul>
 			</div>

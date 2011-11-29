@@ -134,7 +134,7 @@ MemverseApp::Application.routes.draw do
   match "/live_quiz/channel1",    :controller => "live_quiz", :action => "channel1"
   match "/live_quiz/scoreboard",  :controller => "live_quiz", :action => "scoreboard"
   match "/record_score",          :controller => "live_quiz", :action => "record_score"
-  
+
   # Install the default routes as the lowest priority. 
   match '/:controller(/:action(/:id))'
 

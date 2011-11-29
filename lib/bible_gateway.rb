@@ -75,16 +75,15 @@ class BibleGateway
  		segment = verse_number.parent unless !verse_number
           
     if segment
-	    # segment.search('sup.xref').remove 				  # remove cross reference links
-	    # segment.search('sup.footnote').remove 			# remove footnote links
-	    # segment.search("div.crossrefs").remove 			# remove cross references
-	    # segment.search("div.footnotes").remove 			# remove footnotes
-	    # segment.search('sup.versenum').remove				# remove verse numbering
 	    
-	    segment.search("sup").remove      # remove superscripts (verse numbering, footnotes, etc.)
+	    segment.search("sup").remove                 # remove superscripts (verse numbering, footnotes, etc.)
+	    segment.search("h4").remove                  # remove headings
+	    segment.search("h5").remove                  # remove headings
+	    segment.search("div.footnotes").remove       # remove footnotes
+	    segment.search("div.crossrefs").remove       # remove cross references
 	    
-	    # remove headings, html tags, comments, non-breaking space, and trailing or leading whitespace
-	    content = segment.text.gsub(/<h(4|5).+?<\/h(4|5)>/,"").gsub(/<b.+?<\/b>/,"").gsub(/<\/?[^>]*>/, "").gsub(/<!--.*?-->/, '').gsub("\u00A0", "").gsub(/\s{2,}/, " ").strip
+	    # remove html tags, comments, non-breaking space, and trailing or leading whitespace
+	    content = segment.text.gsub(/<b.+?<\/b>/,"").gsub(/<\/?[^>]*>/, "").gsub(/<!--.*?-->/, '').gsub("\u00A0", "").gsub(/\s{2,}/, " ").strip
     else
     	{:title => "--", :content => "--" }
     end

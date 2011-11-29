@@ -27,12 +27,11 @@
 	   	<div class="tab-nav">
 	      	<ul class="tabs">
 	      		<% if @user_has_no_verses %>
-				<li class="widetab active"><a href="#getting-started">Getting Started</a></li>
+				<li class="widetab"><a href="#getting-started">Getting Started</a></li>
 				<% elsif @user_has_too_few_verses %>
-				<li class="widetab active"><a href="#recommendations">Recommendations</a></li>
-				<% else %>
-	           	<li class="normtab active"><a href="#dashboard">Dashboard</a></li>
+				<li class="widetab"><a href="#recommendations">Recommendations</a></li>
 				<% end %>
+	           	<li class="normtab"><a href="#dashboard">Dashboard</a></li>
 	            <li class="widetab"><a href="#devotion">Spurgeon's Daily Devotions</a></li>
 	            <li class="normtab"><a href="#verse">Memverse Today</a></li>
 	            <li class="normtab"><a href="#community">Community</a></li>
@@ -78,11 +77,10 @@
 						<% end %>
 					</ol>
 				</div>
-			<% else %>
+			<% end %>
 		       	<div id="dashboard" class="tab_content"><h3><%= link_to 'Recently on Memverse', tweets_path %></h3>
 				<%= render "tweets/tweets_for_main" %>
 				</div>
-			<% end %>
 
 	        <div id="devotion" class="tab_content">
 				<h3>Spurgeon's Devotional</h3>
@@ -126,7 +124,7 @@ $(document).ready(function() {
 	//Tab script from Soh Tanaka http://www.sohtanaka.com/web-design/simple-tabs-w-css-jquery/
 	//When page loads...
 	$(".tab_content").hide(); //Hide all content
-	//$("ul.tabs li:first").addClass("active").show(); //Activate first tab
+	$("ul.tabs li:first").addClass("active").show(); //Activate first tab
 	$(".tab_content:first").show(); //Show first tab content
 
 	//On Click Event
