@@ -15,7 +15,7 @@ class InfoController < ApplicationController
     
     if current_user
       # Check for quest completion
-      spawn_block do
+      spawn_block(:argv => "spawn-tutorial-quest") do
         q = Quest.find_by_url(url_for(:action => 'tutorial', :controller => 'info', :only_path => false))
         if q
   		    q.check_quest_off(current_user)

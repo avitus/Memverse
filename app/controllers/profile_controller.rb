@@ -83,7 +83,7 @@ class ProfileController < ApplicationController
     
     if @user.update_profile(params[:user]) # successful update
       flash[:notice] = "Profile successfully updated. "
-      spawn_block do
+      spawn_block(:argv => "spawn-profile-quest") do
         if q = Quest.find_by_url(url_for(:action => 'update_profile', :controller => 'profile', :only_path => false))
           q.check_quest_off(current_user)
           flash.keep[:notice] = "You have completed the task: #{q.task}"

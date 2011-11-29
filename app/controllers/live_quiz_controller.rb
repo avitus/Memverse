@@ -34,7 +34,7 @@ class LiveQuizController < ApplicationController
 		
 		quiz_questions	= quiz.quiz_questions.order("question_no ASC")
 
-		spawn_block do 
+		spawn_block(:argv => "spawn-quiz-questions") do 
 	    quiz_questions.each { |q|
 				Rails.logger.info("*** Publishing question #{q.question_no}.")
 				Rails.logger.info("*** Question type is: #{q.question_type}.")
