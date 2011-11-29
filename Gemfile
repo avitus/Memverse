@@ -62,7 +62,7 @@ gem 'newrelic_rpm', '>=3.3.0'                                                   
 gem 'thinking-sphinx', '>=2.0.9', :require => 'thinking_sphinx'                                 # Connector to Sphinx - for global search
 gem 'riddle'                                                                                    # Seems to be needed for Thinking_Sphinx ... not clear, though
 gem 'i18n-js'                                                                                   # Uses config/locale files to build a JavaScript equivalent of i18n in Rails
-gem "spawner", :git => 'git://github.com/drsharp/spawner.git'                                   # Check to see whether master branch ever supports Rails 3 & Ruby 1.92
+gem 'spawn', :git => 'git://github.com/avitus/spawn.git', :branch => 'edge'                     # Check to see whether master branch ever supports Rails 3 & Ruby 1.92
 gem 'juggernaut', '>=2.1.0', :git => 'git://github.com/maccman/juggernaut.git'                  # Live chat
 gem 'htmldiff'                                                                                  # For showing errors in accuracy test
 gem 'breadcrumbs_on_rails', '>=2.0.0'                                                           # For breadcrumb navigation bar

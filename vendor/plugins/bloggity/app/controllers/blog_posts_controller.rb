@@ -81,7 +81,7 @@ class BlogPostsController < ApplicationController
       add_breadcrumb @blog_post.title, blog_named_link(@blog_post)
 
       # Used to check off quests
-      spawner do
+      spawn_block do
         if q = Quest.find_by_url( blog_named_link(@blog_post, :quest) )
           q.check_quest_off(current_user)
           flash.keep[:notice] = "You have completed the task: #{q.task}"
@@ -133,7 +133,7 @@ class BlogPostsController < ApplicationController
     if @blog_post.update_attributes(params[:blog_post])
       redirect_to blog_named_link(@blog_post)
       # Create tweet
-      spawner do
+      spawn_block do
         if new_post
           link = "<a href=\"#{blog_named_link(@blog_post, :show)}\">#{@blog_post.title}</a>"      
           Tweet.create(:news => "#{current_user.name_or_login} wrote a new blog post: '#{link}'", :user_id => current_user.id, :importance => 2)  
