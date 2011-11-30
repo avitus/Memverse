@@ -7,7 +7,6 @@
 	
 		<%= form_for @user do |f| %>
 
-
 			<% if @user.errors.any? %>
 				<div id="error_explanation">
 					<h2><%= pluralize(@user.errors.count, "error") %> prevented your profile from being updated:</h2>
@@ -19,7 +18,6 @@
 					</ul>
 				</div>
 			<% end %>
-
 
 			<ul>
 				<li>
