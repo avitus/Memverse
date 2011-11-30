@@ -30,6 +30,6 @@
 	
 </div>
 
-<% cache( [@blog_page, "side-nav"], :expires_in => 40.minutes ) do %>
+<% cache( [@blog_page, "side-nav"], :expires_in => 15.minutes ) do %>
 	<%= render :partial => 'blog_posts/side_nav' %>
 <% end %>
