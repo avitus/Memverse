@@ -323,6 +323,9 @@ class Verse < ActiveRecord::Base
     (on_bg == in_db) ? true : on_bg  # return what we pulled from web if different
   end
 
+  # ----------------------------------------------------------------------------------------------------------
+  # Link to BibleGateway
+  # ---------------------------------------------------------------------------------------------------------- 
 	def bg_link
 		BibleGateway.new(self.translation.to_sym).passage_url(self.ref)
 	end

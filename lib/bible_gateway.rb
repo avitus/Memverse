@@ -82,8 +82,8 @@ class BibleGateway
 	    segment.search("div.footnotes").remove       # remove footnotes
 	    segment.search("div.crossrefs").remove       # remove cross references
 	    
-	    # remove html tags, comments, non-breaking space, and trailing or leading whitespace
-	    content = segment.text.gsub(/<b.+?<\/b>/,"").gsub(/<\/?[^>]*>/, "").gsub(/<!--.*?-->/, '').gsub("\u00A0", "").gsub(/\s{2,}/, " ").strip
+	    # remove html tags, comments, non-breaking space, double spaces, and trailing or leading whitespace
+	    content = segment.text.gsub(/<b.+?<\/b>/," ").gsub(/<\/?[^>]*>/, " ").gsub(/<!--.*?-->/, " ").gsub("\u00A0", " ").gsub(/\s{2,}/, " ").strip
     else
     	{:title => "--", :content => "--" }
     end
