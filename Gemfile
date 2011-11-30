@@ -34,12 +34,12 @@ gem "launchy", ">= 2.0.5", :group => :test
 gem "devise", ">= 1.4.5"
 gem "cancan"                                                                                    # Role-based authorization
 gem "frontend-helpers"
-gem 'rails_admin', :git => 'git://github.com/sferik/rails_admin.git'
+gem 'rails_admin', :git => 'git://github.com/sferik/rails_admin.git'                            # Admin console
 
 gem 'fancybox-rails'
 gem 'sqlite3'
 gem 'aasm', '2.2.0',    :require => 'aasm'                                                      # Is this needed now that we aren't using Restful Authentication ? 
-gem 'will_paginate', '~> 3.0'                                                                   # :source => 'http://gemcutter.org', will_paginate is required for bloggity
+gem 'kaminari'                                                                                  # Required for bloggity
 gem 'rinku', :require => 'rails_rinku'                                                          # Supports auto-linking of URL's in blog comments
 gem 'randumb'                                                                                   # Retrieve a random record
 gem 'prawn', :git => "git://github.com/sandal/prawn", :submodules => true                       # PDF support

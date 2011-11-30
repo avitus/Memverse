@@ -16,8 +16,8 @@
 		<% end %>
 	</ul>
 	
-	<% if @recent_posts && @recent_posts.total_pages > 1 -%>
-		<div style="padding-bottom:4px;">More pages</div> <%= will_paginate(@recent_posts, {:form_name => :blog_show_params, :param_name => :page} ) -%>
+	<% if @recent_posts %>
+		<div style="padding-bottom:4px;">More pages</div> <%= paginate @recent_posts %>
 	<% end %>
 	
 	<h4 class="subtitle">RSS Feed</h4>

@@ -21,9 +21,9 @@
 			<%= render :partial => 'show', :locals => { :blog_post => blog_post, :header_style => 'h2', :show_comment_count => true } %>
 		<% end %>
 		
-		<% if @blog_posts && @blog_posts.total_pages > 1 -%>
+		<% if @blog_posts %>
 			<br>
-			<div class="paginate_container"><%= will_paginate(@blog_posts, {:form_name => :blog_show_params, :param_name => :page} ) -%></div>
+			<div class="paginate_container"><%= paginate @blog_posts %></div>
 		<% end %>
 	<% end %>
 	

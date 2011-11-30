@@ -23,8 +23,7 @@ class BlogPostsController < ApplicationController
 			
 			# So alas... we must hack away:
 			search_condition = ["blog_id = ? AND is_complete = ? #{"AND blog_tags.name = ?" if params[:tag_name]} #{"AND category_id = ?" if params[:category_id]}", @blog_id, true, params[:tag_name], params[:category_id]].compact
-			#BlogPost.paginate(:all, :select => "DISTINCT blog_posts.*", :conditions => search_condition, :include => :tags, :order => "blog_posts.created_at DESC", :page => @blog_page, :per_page => 15)
-      BlogPost.where(search_condition).select("DISTINCT blog_posts.*").includes(:tags).paginate(:page => @blog_page, :per_page => 15).order("blog_posts.created_at DESC")      
+      BlogPost.where(search_condition).select("DISTINCT blog_posts.*").includes(:tags).page(@blog_page).per(15).order("blog_posts.created_at DESC")      
 		else
 			logger.info("*** Showing recent posts ")
 			@recent_posts
@@ -198,7 +197,6 @@ class BlogPostsController < ApplicationController
 	
 	def recent_posts(blog_page)
 		Rails.logger.debug("*** Loading recent posts for blog with id: #{@blog_id}")
-		# BlogPost.paginate(:all, :select => "DISTINCT blog_posts.*", :conditions => ["blog_id = ? AND is_complete = ?", @blog_id, true], :order => "blog_posts.created_at DESC", :page => blog_page, :per_page => 15)
-    BlogPost.where(:blog_id => @blog_id, :is_complete => true).paginate(:page => blog_page, :per_page => 15).order("created_at DESC")
+    BlogPost.where(:blog_id => @blog_id, :is_complete => true).page(@blog_page).per(15).order("created_at DESC")
 	end
 end
