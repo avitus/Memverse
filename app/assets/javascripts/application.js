@@ -7,7 +7,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery-ui
-//= require jquery.fancybox-1.3.4
+//= require fancybox
 //= require i18n
 //= require i18n/translations
 //= require_tree .
