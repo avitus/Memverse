@@ -1,7 +1,7 @@
 <div id="chat-stream" class="white-box-with-margins">
 </div>
 
-<% form_tag('/chat/send', :id => 'chat_window', :remote => true) do %>
+<%= form_tag('/chat/send', :id => 'chat_window', :remote => true) do %>
 	<%= text_field_tag 'msg_body', '', :size => 50 %>
 	<%= hidden_field_tag 'sender', current_user.name_or_login %>
 	<%= submit_tag 'Send Message' %>

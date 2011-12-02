@@ -1,7 +1,7 @@
 <!-- Add a verse -->	
 <fieldset id="add_verse_form">
 	<legend> Enter a Bible Verse </legend>
-		<% form_tag :action => 'add_verse' do %>
+		<%= form_tag :action => 'add_verse' do %>
 		  <ul>
 		  	<li>
 				<div class="box-label">Verse:</div><%= text_field_tag(:verse, params[:verse] )%>
