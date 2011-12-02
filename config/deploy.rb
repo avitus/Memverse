@@ -78,6 +78,11 @@ namespace :deploy do
   task :symlink_db, :roles => :app do
     run "ln -nfs #{deploy_to}/shared/config/database.yml #{latest_release}/config/database.yml"
   end
+  
+  desc "Symlinks the bloggity uploads"                        # Link in the bloggity uploads
+  task :symlink_bloggity, :roles => :app do
+    run "ln -nfs #{deploy_to}/shared/public/ckeditor_assets #{latest_release}/public/ckeditor_assets"
+  end
 
   desc "Restarting mod_rails with restart.txt"                # Restart passenger on deploy
   task :restart, :roles => :app, :except => { :no_release => true } do
