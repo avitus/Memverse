@@ -39,10 +39,9 @@ class TweetsController < ApplicationController
     if importance == 0
       importance = 5
     end
-    
-    logger.info("Checking for tweets more important than #{importance} with ID greater than #{lastid}")
-    
-    @tweets = Tweet.all(:order => "created_at DESC", :conditions => ["importance <= ? and id > ?", importance, lastid])
+        
+    # @tweets = Tweet.all(:order => "created_at DESC", :conditions => ["importance <= ? and id > ?", importance, lastid])
+    @tweets = Tweet.where("importance <= ? and id > ?", importance, lastid).limit(5).order("created_at DESC")
     
     render :partial=> 'tweets/tweet', :locals => { :tweets => @tweets }, :layout=>false
     
