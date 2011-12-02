@@ -78,7 +78,7 @@ class User < ActiveRecord::Base
   acts_as_tagger
   
   # Associations for bloggity
-  has_many :blog_posts
+  has_many :blog_posts, :foreign_key => "posted_by_id"
   has_many :blog_comments, :dependent => :destroy
   
   # Named Scopes
