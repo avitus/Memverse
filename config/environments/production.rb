@@ -21,6 +21,9 @@ MemverseApp::Application.configure do
 
   # Generate digests for assets URLs
   config.assets.digest = true
+  
+  # Set up CDN on Amazon Cloudfront
+  config.action_controller.asset_host = "//cdn.memverse.com"
 
   config.static_cache_control = "public, max-age=86400"
 
