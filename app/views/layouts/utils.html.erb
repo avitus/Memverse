@@ -101,7 +101,7 @@
 <div id="wrapper"><!--wrapper start-->
 	<div id="header"><!--header start-->
 		<div class="header-top"><!--header-top start-->
-			<div id="logo"><a href="/" title="<%= I18n.t :mainpage, :scope => 'page_titles' %> - Memverse"><img src="/assets/logo.png" width="253" height="31" alt="" /></a></div>
+			<div id="logo"><a href="/" title="<%= I18n.t :mainpage, :scope => 'page_titles' %> - Memverse"><%= image_tag("logo.png", :size => "253x31", :alt => "") %></a></div>
 			<% if user_signed_in? %>
 				<div class="inner-top-right"><!--inner-top-right start-->
 					<strong>Welcome:</strong> <%= current_user.name_or_login %> <strong><%= link_to "(Logout)", destroy_user_session_path, :method => :delete %></strong>
@@ -211,7 +211,7 @@
 
 			<div class="breadcum-area"><!--breadcum start-->
 				<div class="breadcum-left">
-					<span class="home-icon"><a href="/"><img src="/assets/home-icon.png" width="25" height="23" alt="" /></a></span>
+					<span class="home-icon"><a href="/"><%= image_tag("home-icon.png", :size => "25x23", :alt => "") %></a></span>
 					<div class="breadcum-link">
 						/ <%= (render_breadcrumbs :separator => ' / ').html_safe %>
 					</div>

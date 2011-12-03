@@ -1,7 +1,7 @@
 <div class="two-box"><!--two-box start-->
 	
 	<div class="votm">
-    	<div class="yellow-icon"><img src="/assets/icon3.png" width="49" height="49" alt="" /></div>
+    	<div class="yellow-icon"><%= image_tag("icon3.png", :size => "49x49", :alt => "") %></div>
         <div class="votm-text">
           	<h3>Verse of the Minute</h3>
             <p><%= @votd_txt %></p>
@@ -10,7 +10,7 @@
     </div>
     
     <div class="progress-info">
-       	<div class="yellow-icon"><img src="/assets/icon4.png" width="49" height="49" alt="" /></div>
+       	<div class="yellow-icon"><%= image_tag("icon4.png", :size => "49x49", :alt => "") %></div>
        	<div class="progress-text">
            	<h3 class="nospace">Verses Memorized</h3>
             <p id="count"><span id="count" class="number"><%= number_with_delimiter(Memverse.memorized.count) %></span>&nbsp;&nbsp; verses memorized on <strong>Memverse</strong>.</p>

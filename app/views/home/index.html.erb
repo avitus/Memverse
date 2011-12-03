@@ -70,7 +70,7 @@
 
 	<div id="header"><!--header start-->
 		<div class="header-top-narrow"><!--header-top start-->
-			<div id="logo"><a href="/" title="<%= I18n.t :mainpage, :scope => 'page_titles' %> - Memverse"><img src="/assets/logo.png" width="253" height="31" alt="" /></a></div>
+			<div id="logo"><a href="/" title="<%= I18n.t :mainpage, :scope => 'page_titles' %> - Memverse"><%= image_tag("logo.png", :size => "253x31", :alt => "") %></a></div>
 			<div class="top-right"><!--top-right start-->
 
 				<div class="iphone">iPhone / iPad App (coming soon):</div>
@@ -110,7 +110,7 @@
 
 	<div id="banner-bg"><!--banner-bg start-->
 		<div class="banner-top"><!--banner-top start-->
-			<div class="banner-img"><img src="/assets/banner-img.png" width="209" height="211" alt="" /></div>
+			<div class="banner-img"><%= image_tag("banner.png", :size => "209x211", :alt => "Bible") %></div>
 			<div class="banner-text">
 				<h1>Learn God's Word Like Never Before:</h1>
 				<div class="text-left">
@@ -149,7 +149,7 @@
 		<h2>How it works</h2>
 		<div class="text-area1">
 			<div class="content-row">
-				<div class="content-icon"><img src="/assets/icon1.png" width="32" height="28" alt="" /></div>
+				<div class="content-icon"><%= image_tag("icon1.png", :size => "32x28", :alt => "") %></div>
 				<div class="content-text">
 					<h3>Memorization</h3>
 					<p>When you login, Memverse will present you with the verses that you are due to review. The timing between review sessions is calculated by 
@@ -159,7 +159,7 @@
 				<div class="clr"></div>
 			</div>
 			<div class="content-row">
-				<div class="content-icon"><img src="/assets/icon5.png" width="48" height="41" alt="" /></div>
+				<div class="content-icon"><%= image_tag("icon5.png", :size => "48x41", :alt => "") %></div>
 				<div class="content-text">
 					<h3>Tracking Your Progress</h3>
 					<p>Memverse will keep track of all your memory verses and will show you how you are progressing. 

@@ -5,7 +5,7 @@
 		<div class="text-area2">
 			<% for blog_post in @blogposts %>
 				<div class="content2-row">
-					<div class="content2-icon"><img src="/assets/clock.png" width="16" height="16" alt="" /></div>
+					<div class="content2-icon"><%= image_tag("clock.png", :size => "16x16", :alt => "") %></div>
 					<div class="content2-text">
 						<h3><%= blog_post.title %></h3>
 						<span class="post-date">Posted on <%= blog_post.created_at.strftime("%B %d, %Y") %></span>
