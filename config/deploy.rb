@@ -67,7 +67,7 @@ set :default_stage, "production"
 ##  Hooks
 ##############################################################
 # after "deploy:update_code", "deploy:symlink_db" #, "deploy:set_rails_env"
-before "deploy:assets:precompile", "deploy:symlink_db", 
+before "deploy:assets:precompile", "deploy:symlink_db"
 after  "deploy:symlink_bloggity"
 
 ##############################################################
