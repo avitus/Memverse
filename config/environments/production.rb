@@ -44,7 +44,7 @@ MemverseApp::Application.configure do
   # config.logger = SyslogLogger.new
 
   # Handle log rotation from within Rails environment
-  config.logger = Logger.new(paths['log'].first, 5, 100.megabytes)
+  config.logger = Logger.new(config.paths['log'].first, 5, 100.megabytes)
 
   # Use a different cache store in production
   config.cache_store = :mem_cache_store
