@@ -21,26 +21,26 @@ class UserMailer < ActionMailer::Base
   def encourage_new_user_email(user)
     # @headers = {content_type => 'text/html'}
     setup_email(user)
-    mail(:to => email_with_name, :subject => "Welcome to Memverse")
+    mail(:to => @email_with_name, :subject => "Welcome to Memverse")
   end
   
   def newsletter_email(user)
     # @headers = {content_type => 'text/html'}
     setup_email(user)
-    mail(:to => email_with_name, :subject => "Memverse Newsletter")
+    mail(:to => @email_with_name, :subject => "Memverse Newsletter")
   end  
   
   def reminder_email(user)
     # @headers = {content_type => 'text/html'}
     setup_email(user)
     @verse = user.random_verse.verse
-    mail(:to => email_with_name, :subject => "Memverse Reminder")
+    mail(:to => @email_with_name, :subject => "Memverse Reminder")
   end    
 
   def reminder_email_for_inactive(user)
     # @headers = {content_type => 'text/html'}
     setup_email(user)
-    mail(:to => email_with_name, :subject => "Memverse Reminder")
+    mail(:to => @email_with_name, :subject => "Memverse Reminder")
   end    
  
   protected
@@ -49,7 +49,7 @@ class UserMailer < ActionMailer::Base
     @subject          = "Memverse"
     @sent_on          = Time.now
     @user		          = user
-    email_with_name   = "#{@user.name} <#{@user.email}>"
+    @email_with_name  = "#{@user.name} <#{@user.email}>"
     @url              = ApplicationSettings.config['url']
     @unsubscribe_url	= "#{ApplicationSettings.config['url']}/unsubscribe/#{user.email}"   
   end   
