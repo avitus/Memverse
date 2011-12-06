@@ -155,31 +155,14 @@ class MemversesController < ApplicationController
     @tweets2 = Tweet.where(:importance => 3..4).limit(12).order("created_at DESC")  # Moderate importance
             
     # === RSS Devotional ===
-
+    
     dd = Rails.cache.fetch(["devotion", Date.today.month, Date.today.day], :expires_in => 24.hours) do
-      Devotion.where( :name => "Spurgeon Morning", :month => Date.today.month, :day => Date.today.day ).first
+      Devotion.where(:name => "Spurgeon Morning", :month => Date.today.month, :day => Date.today.day ).first || Devotion.daily_refresh
     end
 
     if dd
       @dev_ref  = dd.ref
-      @devotion = dd.thought
-    	Rails.logger.debug("*** Devotion already in DB")
-    else
-    	Rails.logger.debug("*** Devotion not in DB -- retrieving from web")
-      dev_url   = 'http://www.heartlight.org/rss/track/devos/spurgeon-morning/'
-      dailydev  = RssReader.posts_for(dev_url, length=1, perform_validation=false)[0]
-       
-      # Parse feed with Nokogiri
-      if dailydev
-        dd = Nokogiri::HTML(dailydev.description)
-        @dev_ref  = dd.at_css("a").child.to_s.capitalize
-        @devotion = dailydev.description.split("<P></P></div>")[0].split("<h4>Thought</h4><P>")[1].split("</div>")[0]
-        
-        Devotion.create!( :name => "Spurgeon Morning", 
-                          :month => Date.today.month, :day => Date.today.day,
-                          :thought => @devotion,
-                          :ref => @dev_ref ) unless Devotion.exists?(:name => "Spurgeon Morning", :month => Date.today.month, :day => Date.today.day)
-      end           
+      @devotion = dd.thought      
     end
     
     # === Verse of the Day ===   
