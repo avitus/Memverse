@@ -160,10 +160,8 @@ class MemversesController < ApplicationController
       Devotion.where(:name => "Spurgeon Morning", :month => Date.today.month, :day => Date.today.day ).first || Devotion.daily_refresh
     end
 
-    if dd
-      @dev_ref  = dd.ref
-      @devotion = dd.thought      
-    end
+    @dev_ref  = dd.try(:ref) || ""
+    @devotion = dd.try(:thought) || ""     
     
     # === Verse of the Day ===   
     @votd_txt, @votd_ref, @votd_tl, @votd_id  = verse_of_the_day()
