@@ -102,7 +102,7 @@ MemverseApp::Application.routes.draw do
   match '/update_profile',         :to => 'profile#update_profile',          :as => 'update_profile'
   match '/church',                 :to => 'profile#show_church',             :as => 'church'
   match '/referrals/:id',          :to => 'profile#referrals',               :as => 'referrals'
-  match '/unsubscribe/*email',     :to => 'profile#unsubscribe',             :as => 'unsubscribe'
+  match '/unsubscribe/*email',     :to => 'profile#unsubscribe',             :as => 'unsubscribe', :format => false
   match '/search_user',            :to => 'profile#search_user',             :as => 'search_user'
   
   match '/edit_tag/:id',           :to => 'tag#edit_tag',                    :as => 'edit_tag'
@@ -137,8 +137,5 @@ MemverseApp::Application.routes.draw do
 
   # Install the default routes as the lowest priority. 
   match '/:controller(/:action(/:id))'
-
-  # Route for random pages
-  match '/:action',                :to => 'pages#:action' 
 
 end
