@@ -1,0 +1,86 @@
+<% page_title I18n.t :add_new_verses, :scope => 'page_titles' %>
+<% page_description I18n.t :add_new_verses, :scope => 'page_descriptions' %>
+<div class="white-box-with-margins">
+	<div class="enter-verse">
+		<h1><span>Enter a Bible Verse</span></h1>
+
+		<%= form_tag :action => 'add_verse' do %>
+		<%= text_field_tag(:verse, params[:verse], :class => "large" )%> in <span id="translation"><span id="current-translation"><%= current_user.translation %></span> (change translation)</span> <div class="trans-button"><input name="commit" type="submit" class="add-verse" value="" /></div>
+						<img class="spinner" id="ajax_spinner" src="/assets/indicator2.gif" alt="Searching ..." style="display: none" />
+		            		<label class="tag">Translation:</label>
+		                	<!-- Now need to add new translations to profile page but not anywhere else unless a major translation -->
+							<%= select_tag(:translation, 
+									options_for_select([["New International Version (1984)",	'NIV' ],
+														["New International Version (2011)",	'NNV' ],
+														["New American Standard Bible", 		'NAS' ], 
+														["New King James Version",				'NKJ' ], 
+														["King James Version",					'KJV' ], 
+														["Revised Standard Version",  			'RSV' ], 
+														["New Revised Standard Version",  		'NRS' ], 														
+														["English Standard Version", 			'ESV' ],
+                            							["New Living Translation",        		'NLT' ],
+                            							["Contemporary English Version",   		'CEV' ],
+                            							["Holman Christian Standard Bible",		'HCS' ],
+                            							["Darby Translation",					'DTL' ],
+                            							["The Message",                   		'MSG' ],
+                            							["Amplified Bible",                		'AMP' ],
+														["New International Reader's Version", 	'IRV' ],
+														["Updated King James Version",		 	'UKJ' ],
+														["Geneva Bible",					 	'GEN' ],
+														["Biblical Greek", 						'GRK' ],
+														["Nueva Version Internacional",			'NVI' ],
+														["Reina-Valera 1960",					'RVR' ],
+														["Louis Segond 1910",					'LSV' ],
+														["La Nuova Diodati",					'LND' ],
+														["Afrikaans 1983 Translation",			'AFR' ],
+														["Herziene Statenvertaling",			'HSV' ],
+														["De Nieuwe Bijbelvertaling",			'NBV' ],
+														["Terjemahan Baru",						'TMB' ],
+														["Magandang Balita Biblia",				'MBB' ],														
+														["Svenska Folkbibeln",					'SPB' ]],
+									:selected => current_user.translation), {:class=>"translation-drop"}) %>
+		                </div>
+		           </div>
+	       		<% end %>
+	       	</div><!-- end enter-verse -->
+	        <div class="clr"></div>	
+
+</div> <!-- white-box-bg -->
+
+<!-- http://www.webdesignerwall.com/tutorials/jquery-tutorials-for-designers/ -->
+<!-- Verse will enter from the 'show' coordinate and will depart to the "hide" coordinate --> 
+<!-- 'Hide' position should be the same as the position specified in the CSS stylesheet i.e. the starting position --> 
+<script type="text/javascript">
+	$(document).ready(function(){
+	
+		$("#verse").observe_field(0.3, function( ) { 
+			$.get("/avail_translations.html", { verse: this.value },
+				function(data){	
+					$("#foundVerse").html(data);
+			}, "html" );
+        });
+
+		$('#verse').focus().autocomplete({ source: ['Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy', 'Joshua', 'Judges', 'Ruth', '1 Samuel', '2 Samuel',
+	                '1 Kings', '2 Kings','1 Chronicles', '2 Chronicles', 'Ezra', 'Nehemiah', 'Esther', 'Job', 'Psalm', 'Proverbs',
+	                'Ecclesiastes', 'Song of Songs', 'Isaiah', 'Jeremiah', 'Lamentations', 'Ezekiel', 'Daniel', 'Hosea', 'Joel', 
+	                'Amos', 'Obadiah', 'Jonah', 'Micah', 'Nahum', 'Habakkuk', 'Zephaniah', 'Haggai', 'Zechariah', 'Malachi', 'Matthew',
+	                'Mark', 'Luke', 'John', 'Acts', 'Romans', '1 Corinthians', '2 Corinthians', 'Galatians', 'Ephesians', 'Philippians',
+	                'Colossians', '1 Thessalonians', '2 Thessalonians', '1 Timothy', '2 Timothy', 'Titus', 'Philemon', 'Hebrews', 'James',
+	                '1 Peter', '2 Peter', '1 John', '2 John', '3 John', 'Jude', 'Revelation']						
+		});	
+
+		
+		$('.spinner')
+			.ajaxStart(function() {
+		        $(this).show();
+		    })
+			.ajaxStop(function() {
+		        $(this).hide();
+	    });
+
+		$('#foundVerse').delegate('td.no-dbl-click a', 'click', function() {
+			$("#foundVerse").attr('disabled', 'disabled').hide();
+		});
+	});
+</script>
+

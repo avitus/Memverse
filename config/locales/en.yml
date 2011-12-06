@@ -340,7 +340,7 @@
     tutorial:                   "Tutorial"
     contact_feedback:           "Contact / Feedback"
     help_support:               "Help & Support"
-    popular_verses:             "Popular Verses"
+    popular_verses:             "Top 100 Bible Memory Verses"
     leaderboard:                "Leaderboard"
     church_leaderboard:         "Church Leaderboard"
     us_state_challenge:         "US State Challenge"
@@ -376,7 +376,7 @@
   page_descriptions:
     default:                    "A free, online tool for memorizing the Bible."
     tutorial:                   "Learn how to memorize Scripture verses online with Memverse."
-    popular_verses:             "Browse the most popular memory verses on Memverse."
+    popular_verses:             "Browse the top 100 most popular memory verses on Memverse."
     contact_feedback:           "Contact us or provide us with feedback. We would like to hear from you."
     global_challenge:           "See which countries have memorized the most verses."
     demo_memory_verse_review:   "Try Memverse for yourself with this verse review demo."

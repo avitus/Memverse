@@ -88,9 +88,9 @@
 		<div class="menu menu-main-only"><!--menu start-->
 			<ul>
 				<li><%= link_to t('menu.home'), root_path %></li>
-				<li><%= link_to t('menu.memorize'), test_verse_quick_path %></li>
-				<li><%= link_to t('menu.learn'), tutorial_path %></li>
-				<li><%= link_to t('menu.profile'), current_user %></li>
+				<li><%= link_to t('menu.demo').html_safe, demo_path %></li>
+				<li><%= link_to t('menu.learn').html_safe, tutorial_path %></li>
+				<li><%= link_to t('learn_menu.Video Tutorial').html_safe, "http://www.youtube.com/watch?v=N8A71DIcr4Y&fs=1&feature=player_embedded", :class => 'tut-video' %></li>
 				<li><%= link_to t('menu.leaderboard'), leaderboard_path %></li>
 				<li><%= link_to t('menu.help'), faq_path %></li>
 				<li><%= link_to t('menu.blog'), blog_path %></li>
@@ -206,7 +206,7 @@
 	<div class="content-box3-top2">
 		<h2 class="gray">Volunteer</h2>
 		<div class="volunteers">
-			<p>We are looking for <span><a href="#">volunteers</a></span> in a variety of areas. If you'd like to help, we'd like to hear from you...</p>
+			<p>We are looking for <span><%= link_to "volunteers", volunteer_path %></span> in a variety of areas. If you'd like to help, we'd like to hear from you...</p>
 			<div class="learn-area"><%= link_to image_tag("learn-more.png", :width=>"179", :height=>"25", :alt=>"Volunteer"), volunteer_path %></div>
 		</div>
 	</div>
@@ -223,7 +223,6 @@
 
 </div><!--wrapper end-->
 </div><!--narrow-login -->
-
 <script type="text/javascript">
 	$(function() {
 		// initialize scrollable

@@ -707,6 +707,19 @@ class MemversesController < ApplicationController
     end
     
   end
+  
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Add a new memory verse (new version)
+  # ----------------------------------------------------------------------------------------------------------   
+  def add_verse_quick
+
+    @tab = "home"
+    @sub = "addvs"    
+    
+    add_breadcrumb I18n.t("home_menu.Add Verse"), :add_verse_path
+    
+  end
  
   # ----------------------------------------------------------------------------------------------------------
   # Notification after verse added
