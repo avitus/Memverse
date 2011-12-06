@@ -1,0 +1,11 @@
+# application_settings.yml
+# ========================
+# This file is used to setup an application wide hash that can
+# easily enable or disable specific feature sets. Any settings declared
+# in this YAML file should be directly available in the ApplicationSettings class.
+
+development:
+  url: 'http://localhost:3000'
+
+production:
+  url: 'http://www.memverse.com/'

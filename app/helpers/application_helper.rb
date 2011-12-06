@@ -6,9 +6,8 @@ module ApplicationHelper
   # Idea came from http://stackoverflow.com/questions/185965/how-do-i-change-the-title-of-a-page-in-rails
   # <title><%= page_title %></title> goes in layout view
   # <% page_title "Page Title" %> goes in the actual view. This changes the title also.
-  # In our case, page_headings will use the translations found in config/locales ----------------------------------------------------------------------------------------------------------  
-   
-   
+  # In our case, page_headings will use the translations found in config/locales 
+  #----------------------------------------------------------------------------------------------------------   
   def page_title(title = nil)
     if title
       content_for(:page_title) { title + " - Memverse" }
@@ -24,31 +23,6 @@ module ApplicationHelper
       content_for?(:page_description) ? content_for(:page_description) : t(:default, :scope => 'page_descriptions')
     end
   end
-	# Remember to def page_description
-	# Original description: A free, online tool for memorizing the bible
-	#  def page_heading(text)
-	#    content_tag(:p, content_for(:title){ text })
-	#  end
-	#
-	#  def page_title(title = nil)
-	#    if title
-	#      content_for(:page_title) { title } + " &mdash; Memverse"
-	#    else
-	#      content_for?(:page_title) ? content_for(:page_title) : APP_CONFIG[:site_name]  # or a hard-coded default
-	#    end
-	#  end
-	
-  # ----------------------------------------------------------------------------------------------------------
-  # Outputs the corresponding flash message if any are set (Rails 2 version left for reference)
-  # ----------------------------------------------------------------------------------------------------------  
-  #  def flash_messages
-  #    messages = []
-  #    %w(notice warning error).each do |msg|
-  ##      messages << content_tag(:div, html_escape(flash[msg.to_sym]), :id => "flash-#{msg}") unless flash[msg.to_sym].blank?
-  #      messages << content_tag(:div, flash[msg.to_sym].html_safe, :id => "flash-#{msg}") unless flash[msg.to_sym].blank?
-  #    end
-  #    messages
-  #  end
       
   def flash_messages
     messages = ''.html_safe

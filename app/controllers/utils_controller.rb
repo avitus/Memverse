@@ -284,7 +284,6 @@ class UtilsController < ApplicationController
   
     @emails_sent        = 0
     @email_list         = Array.new
-    @reactivation_list  = Array.new  
     @encourage_list     = Array.new
     @bounce_list        = Array.new
     
