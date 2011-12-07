@@ -306,11 +306,11 @@ class UtilsController < ApplicationController
             else
               if r.is_inactive?             
                 # Reminder for inactive users
-                Rails.logger.info("* Sending reminder email to #{r.login} - they've been inactive for two months")
+                Rails.logger.info("* Sending reminder email to #{r.name_or_login} - they've been inactive for two months")
                 UserMailer.reminder_email_for_inactive(r).deliver             
               else 
                 # Standard reminder email
-                Rails.logger.info("* Sending reminder email to #{r.login}")
+                Rails.logger.info("* Sending reminder email to #{r.name_or_login}")
                 UserMailer.reminder_email(r).deliver          
               end
               @emails_sent += 1
@@ -326,7 +326,7 @@ class UtilsController < ApplicationController
               Rails.logger.info("** Error: Unable to email user with id: #{r.id}")
               @bounce_list << r
             else
-              Rails.logger.info("* Sending kick in the pants to #{r.login}")
+              Rails.logger.info("* Sending kick in the pants to #{r.name_or_login}")
               UserMailer.encourage_new_user_email(r).deliver
               @emails_sent += 1
               r.last_reminder = Date.today
