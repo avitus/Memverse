@@ -59,8 +59,7 @@ class ApplicationController < ActionController::Base
   def translate_to_english(book)
    
     if I18n.backend.send(:translations)
-      # TODO: should change 'index' in line below to 'key'
-      return I18n.backend.send(:translations)[I18n.locale.to_sym][:book][:name].index(book).to_s
+      return I18n.backend.send(:translations)[I18n.locale.to_sym][:book][:name].key(book).to_s
     else
       return book
     end
