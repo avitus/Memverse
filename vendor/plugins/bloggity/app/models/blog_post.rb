@@ -36,18 +36,16 @@ class BlogPost < ActiveRecord::Base
 	after_save :save_tags
 	before_save :update_url_identifier
 
-
-    # Define Sphinx index
-    define_index do
-	    # fields
-	    indexes title, :sortable => true
-	    indexes body
-	    indexes posted_by.name, :as => :author, :sortable => true
-	    
-	    # attributes
-	    has posted_by_id, created_at, updated_at
-    end
-
+  # Define Sphinx index
+  define_index do
+    # fields
+    indexes title, :sortable => true
+    indexes body
+    indexes posted_by.name, :as => :author, :sortable => true
+    
+    # attributes
+    has posted_by_id, created_at, updated_at
+  end
 	
 	def comments_closed?
 		self.comments_closed

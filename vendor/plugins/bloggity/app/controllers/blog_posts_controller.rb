@@ -63,13 +63,11 @@ class BlogPostsController < ApplicationController
     @tab = "blog"
     @blog_page = params[:page] || 1
     
-    Rails.logger.debug("*** Fetching recent posts for blog page #{@blog_page}")
+    Rails.logger.info("*** Fetching recent posts for blog page #{@blog_page}")
     
 		@recent_posts = recent_posts(@blog_page)
-		
-		Rails.logger.debug("*** Fetching blog post")
-		
-		@blog_post = BlogPost.find(:first, :conditions => ["id = ? OR url_identifier = ?", params[:id], params[:id]])
+				
+		@blog_post = BlogPost.where("id = ? OR url_identifier = ?", params[:id], params[:id]).first
 
 		if !@blog_post || (!@blog_post.is_complete  && (!current_user || !current_user.can_blog?(@blog_post.blog_id)))
 			@blog_post = nil

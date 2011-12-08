@@ -14,7 +14,7 @@
 
 class BlogComment < ActiveRecord::Base
 	belongs_to :user
-	belongs_to :blog_post
+	belongs_to :blog_post, :touch => true
 	attr_protected :approved
 	
 	validates_presence_of :blog_post_id, :user_id, :comment

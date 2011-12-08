@@ -67,7 +67,7 @@ set :default_stage, "production"
 ##  Hooks
 ##############################################################
 # after "deploy:update_code", "deploy:symlink_db" #, "deploy:set_rails_env"
-before "deploy:assets:precompile", "deploy:symlink_db", "deploy:symlink_bloggity"
+before "deploy:assets:precompile", "deploy:symlink_db", "deploy:symlink_bloggity", "deploy:symlink_docs"
 
 ##############################################################
 ##  Database config and restart
@@ -81,6 +81,11 @@ namespace :deploy do
   desc "Symlinks the bloggity uploads"                        # Link in the bloggity uploads
   task :symlink_bloggity, :roles => :app do
     run "ln -nfs #{deploy_to}/shared/public/ckeditor_assets #{latest_release}/public/ckeditor_assets"
+  end
+
+  desc "Symlinks document folder"                            # Link in the bloggity uploads
+  task :symlink_docs, :roles => :app do
+    run "ln -nfs #{deploy_to}/shared/public/docs #{latest_release}/public/docs"
   end
 
   desc "Restarting mod_rails with restart.txt"                # Restart passenger on deploy
