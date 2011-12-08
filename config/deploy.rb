@@ -83,7 +83,7 @@ namespace :deploy do
     run "ln -nfs #{deploy_to}/shared/public/ckeditor_assets #{latest_release}/public/ckeditor_assets"
   end
 
-  desc "Symlinks document folder"                            # Link in the bloggity uploads
+  desc "Symlinks document folder"                            # Link in the doc uploads (e.g. Memverse flyer)
   task :symlink_docs, :roles => :app do
     run "ln -nfs #{deploy_to}/shared/public/docs #{latest_release}/public/docs"
   end
