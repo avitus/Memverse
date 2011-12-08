@@ -28,6 +28,6 @@
 	<% end %>
 </div>
 
-<% cache( [@blog_page, "side-nav", "registered-#{blog_logged_in?}" ], :expires_in => 20.minutes ) do %>
+<% cache( ["side-nav", "page-#{@blog_page}", "registered-#{blog_logged_in?}" ], :expires_in => 20.minutes ) do %>
 	<%= render :partial => 'blog_posts/side_nav' %>
 <% end %>
