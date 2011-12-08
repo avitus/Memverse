@@ -10,6 +10,4 @@
 </div>
 
 <!-- Side navigation bar -->
-<% cache(["side-nav", "page-#{@blog_page}", "registered-#{blog_logged_in?}" ], :expires_in => 20.minutes ) do %>
-	<%= render :partial => 'side_nav' %>
-<% end %>
+<%= render :partial => 'side_nav' %>
