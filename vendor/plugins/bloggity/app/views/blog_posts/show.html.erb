@@ -8,6 +8,6 @@
 	<%= render :partial => 'comments', :locals => { :blog_post => @blog_post } %>
 </div>
 
-<% cache( [@blog_page, "side-nav"], :expires_in => 40.minutes ) do %>
+<% cache( [@blog_page, "side-nav", blog_logged_in? ], :expires_in => 20.minutes ) do %>
 	<%= render :partial => 'side_nav' %>
 <% end %>
