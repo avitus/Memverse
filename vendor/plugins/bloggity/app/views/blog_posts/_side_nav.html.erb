@@ -1,4 +1,4 @@
-<% cache(["side-nav", "page-#{@blog_page}", "registered-#{blog_logged_in?}" ], :expires_in => 20.minutes ) do %>
+<% cache( "side-nav-page-#{@blog_page}-registered-#{blog_logged_in?}", :expires_in => 20.minutes ) do %>
 
 	<div id="side_nav_container" style="padding:5px 10px;">
 	
