@@ -30,7 +30,7 @@ role :db,  domain, :primary => true
 ##############################################################
 set :scm, 'git'
 set :repository,  "git@github.com:avitus/Memverse.git"        # Your git repository location
-set :branch, 'fresh_start'                                    # tell cap the branch to checkout during deployment
+set :branch, 'master'                                         # tell cap the branch to checkout during deployment
 set :scm_verbose, true
 
 # set :scm_passphrase, "pa$$word"                             # The deploy user's password
