@@ -162,10 +162,12 @@ class UtilsController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------  
   def user_progression
     
-    @progression_table = Hash.new([0,0])
+    @progression_total    = Hash.new(0)
+    @progression_active   = Hash.new(0)
+    @progression_inactive = Hash.new(0)
     
-    month = params[:month]
-    year  = params[:year]
+    year  = params[:yr].to_i
+    month = params[:mo].to_i
     
     start_date = Date.new(year, month,  1)
     end_date   = Date.new(year, month, -1)
@@ -176,7 +178,13 @@ class UtilsController < ApplicationController
       
       progression = u.progression  # syntax [:level => '3 - Started', :active => true]
       
-      @progression_table[ progression[:level] ] =   
+      if progression[:active]
+        @progression_total[    progression[:level] ] += 1   
+        @progression_active[   progression[:level] ] += 1   
+      else
+        @progression_total[    progression[:level] ] += 1   
+        @progression_inactive[ progression[:level] ] += 1   
+      end
     end
         
   end

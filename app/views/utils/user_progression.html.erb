@@ -1,0 +1,25 @@
+<div class="white-box-with-margins">
+	<div id="cohort-analysis">
+		<table class="user-stats-table" cellpadding="6" cellspacing="0" border="1">	
+			<tr>
+				<th>Level</th>
+				<th>Total</th>
+				<th>Active</th>
+				<th>Inactive</th>
+				<th>% Active</th>
+			</tr>
+			<% @progression_total.keys.sort.each do |level| %>
+				<tr>
+					<td><%= level %></td>
+					<td align="center"><%= @progression_total[level] %></td>
+					<td align="center"><%= @progression_active[level] %></td>
+					<td align="center"><%= @progression_inactive[level] %></td>
+					<td align="right"><%= number_with_precision( @progression_active[level].to_f / @progression_total[level].to_f * 100, :precision => 1) %>%</td>
+				</tr>	
+			<% end %>	
+		</table>
+	</div>
+	
+	<div class="clr"></div>
+	
+</div>

@@ -81,6 +81,7 @@ MemverseApp::Application.routes.draw do
   match '/admin_search_verse',     :to => 'utils#search_verse',              :as => 'admin_search_verse'
   match '/utils_verify_verse/:id', :to => 'utils#verify_verse',              :as => 'utils_verify_verse'
   match '/utils_dashboard',        :to => 'utils#dashboard',                 :as => 'utils_dashboard'
+  match '/progression/:yr/:mo',    :to => 'utils#user_progression',          :as => 'progression'
     
   # Doesn't require a login
   match '/contact',                :to => 'info#contact',                    :as => 'contact'   
