@@ -157,6 +157,29 @@ class UtilsController < ApplicationController
     }
   end
   
+  # ----------------------------------------------------------------------------------------------------------
+  # User Progression by Cohort
+  # ----------------------------------------------------------------------------------------------------------  
+  def user_progression
+    
+    @progression_table = Hash.new([0,0])
+    
+    month = params[:month]
+    year  = params[:year]
+    
+    start_date = Date.new(year, month,  1)
+    end_date   = Date.new(year, month, -1)
+    
+    cohort = User.where(:created_at => start_date..end_date)
+    
+    cohort.each do |u|
+      
+      progression = u.progression  # syntax [:level => '3 - Started', :active => true]
+      
+      @progression_table[ progression[:level] ] =   
+    end
+        
+  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Convert date to month label
