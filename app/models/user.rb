@@ -182,7 +182,7 @@ class User < ActiveRecord::Base
     if completed_sessions >= 3
       return { :level => '6 - Onwards', :active => is_active? }
     elsif completed_sessions == 2
-      return { :level => '5 - Returning Noob', :active => is_active? }
+      return { :level => '5 - Returning User', :active => is_active? }
     elsif completed_sessions == 1
       return { :level => '4 - One Session Wonder', :active => is_active? }
     elsif has_started?
