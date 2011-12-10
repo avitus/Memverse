@@ -165,6 +165,8 @@ class UtilsController < ApplicationController
     @progression_total    = Hash.new(0)
     @progression_active   = Hash.new(0)
     @progression_inactive = Hash.new(0)
+    @cohort_active        = 0
+    @cohort_inactive      = 0
     
     year  = params[:yr].to_i
     month = params[:mo].to_i
@@ -174,16 +176,20 @@ class UtilsController < ApplicationController
     
     cohort = User.where(:created_at => start_date..end_date)
     
+    @cohort_size = cohort.count
+    
     cohort.each do |u|
       
       progression = u.progression  # syntax [:level => '3 - Started', :active => true]
       
       if progression[:active]
         @progression_total[    progression[:level] ] += 1   
-        @progression_active[   progression[:level] ] += 1   
+        @progression_active[   progression[:level] ] += 1 
+        @cohort_active += 1  
       else
         @progression_total[    progression[:level] ] += 1   
-        @progression_inactive[ progression[:level] ] += 1   
+        @progression_inactive[ progression[:level] ] += 1
+        @cohort_inactive += 1   
       end
     end
         
