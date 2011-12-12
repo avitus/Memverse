@@ -23,6 +23,10 @@
 			<div>Filtering all blogs in category "<%= cat.name -%>."  <%= link_to "Clear filter", blog_named_link(nil, :index, { :blog => @blog }) -%></div>
 		<% end %>
 	
+		<!-- Beacon Ads Zone Code -->
+		<div id="bsap_1270635" class="bsarocks bsap_e48f1701bd375546050e63082dc7a164"></div>
+		<!-- End Beacon Ads Zone Code -->	
+	
 		<!-- Show each post -->
 		<% for blog_post in @blog_posts %>
 			<%= render :partial => 'show', :locals => { :blog_post => blog_post, :header_style => 'h2', :show_comment_count => true } %>
