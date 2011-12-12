@@ -30,7 +30,7 @@ role :db,  domain, :primary => true
 ##############################################################
 set :scm, 'git'
 set :repository,  "git@github.com:avitus/Memverse.git"        # Your git repository location
-set :branch, 'fresh_start'                                    # tell cap the branch to checkout during deployment
+set :branch, 'master'                                         # tell cap the branch to checkout during deployment
 set :scm_verbose, true
 
 # set :scm_passphrase, "pa$$word"                             # The deploy user's password
@@ -67,7 +67,7 @@ set :default_stage, "production"
 ##  Hooks
 ##############################################################
 # after "deploy:update_code", "deploy:symlink_db" #, "deploy:set_rails_env"
-before "deploy:assets:precompile", "deploy:symlink_db", "deploy:symlink_bloggity", "deploy:symlink_docs"
+before "deploy:assets:precompile", "deploy:symlink_db", "deploy:symlink_bloggity"
 
 ##############################################################
 ##  Database config and restart
@@ -81,11 +81,6 @@ namespace :deploy do
   desc "Symlinks the bloggity uploads"                        # Link in the bloggity uploads
   task :symlink_bloggity, :roles => :app do
     run "ln -nfs #{deploy_to}/shared/public/ckeditor_assets #{latest_release}/public/ckeditor_assets"
-  end
-
-  desc "Symlinks document folder"                            # Link in the doc uploads (e.g. Memverse flyer)
-  task :symlink_docs, :roles => :app do
-    run "ln -nfs #{deploy_to}/shared/public/docs #{latest_release}/public/docs"
   end
 
   desc "Restarting mod_rails with restart.txt"                # Restart passenger on deploy
