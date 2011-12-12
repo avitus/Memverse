@@ -49,6 +49,8 @@ class ApplicationController < ActionController::Base
       I18n.locale = "en"
     end
     
+    # Load support for inverse translation i.e. retrieve English name of a book entered in Spanish
+    # TODO: This is 'wild hackery'
     I18n.backend.send(:init_translations)
   end     
 
