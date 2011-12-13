@@ -68,6 +68,7 @@ set :default_stage, "production"
 ##############################################################
 # after "deploy:update_code", "deploy:symlink_db" #, "deploy:set_rails_env"
 before "deploy:assets:precompile", "deploy:symlink_db", "deploy:symlink_bloggity"
+after "deploy", "deploy:migrate"
 
 ##############################################################
 ##  Database config and restart
