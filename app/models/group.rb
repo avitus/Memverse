@@ -9,7 +9,6 @@ class Group < ActiveRecord::Base
   # Relationships
   has_many    :users
   has_many    :tweets
-  has_many    :sermons  
   
   # Validations
   validates_presence_of   :name 
