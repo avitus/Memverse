@@ -281,6 +281,7 @@
   leader_menu:
     Leaderboard:           "Juara"
     Church Leaderboard:    "Juara Gereja"    
+    Group Leaderboard:     "Kelompok Leaderboard"    
     State Leaderboard:     "State Leaderboard"
     Country Leaderboard:   "Juara Negara"
     One Church:            "Satu Gereja"
@@ -320,6 +321,7 @@
       Country:                  "Negara"
       State:                    "State"
       Church:                   "Gereja"
+      Group:                    "Kelompok"
       Receive newsletters:      "Terima newsletter"
       Reminder frequency:       "Frekuensi Peringatan"
       Daily:                    "Tiap hari"
@@ -349,6 +351,7 @@
     popular_verses:             "Popular Verses"
     leaderboard:                "Leaderboard"
     church_leaderboard:         "Church Leaderboard"
+    group_leaderboard:          "Church Leaderboard"
     us_state_challenge:         "US State Challenge"
     global_challenge:           "Global Challenge"
     referralboard:              "Referrals Leaderboard"

@@ -12,6 +12,7 @@ class Tweet < ActiveRecord::Base
   # Relationships
   belongs_to  :user
   belongs_to  :church
+  belongs_to  :group
   belongs_to  :country
   belongs_to  :state
   

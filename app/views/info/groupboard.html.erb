@@ -1,0 +1,32 @@
+<% page_title I18n.t :group_leaderboard, :scope => 'page_titles' %>
+<div class="white-box-with-margins">
+	<h2>Group Leaderboard</h2>
+	
+	<p>The following table shows the groups with the most verses memorized. For your group to be included on the leaderboard you
+	   have to have at least 3 active members. Only members who have completed a memorization session in the past month count towards your 
+	   group score.</p>
+	
+	<div class="user-list">
+		<table class="memverse-standard">  
+			<thead>
+				<tr>
+					<th>Rank</th>	  
+					<th>Group</th>
+					<th>Members</th>
+					<th>MemScore</th>
+				</tr>
+			</thead>
+			
+			<tbody>
+				<% for grp in @groupboard %>
+					<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
+						<td align="center"> <%= @groupboard.index(grp)+1%></td>			
+						<td align="left">   <%= link_to( grp[0].name, { :controller => "group", :action => "show", :id => grp[0] })		%></td>	
+						<td align="center"> <%= number_with_delimiter(grp[0].users_count)	%></td>	
+						<td align="center"> <%= number_with_delimiter(grp[1])				%></td>				
+					</tr>
+				<% end %>
+			</tbody>
+		</table>
+	</div>
+</div>

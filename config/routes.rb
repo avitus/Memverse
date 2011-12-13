@@ -94,6 +94,7 @@ MemverseApp::Application.routes.draw do
   match '/demo',                   :to => 'info#demo_test_verse',            :as => 'demo'
   match '/leaderboard',            :to => 'info#leaderboard',                :as => 'leaderboard'
   match '/churchboard',            :to => 'info#churchboard',                :as => 'churchboard'
+  match '/groupboard',             :to => 'info#groupboard',                 :as => 'groupboard'
   match '/stateboard',             :to => 'info#stateboard',                 :as => 'stateboard'
   match '/countryboard',           :to => 'info#countryboard',               :as => 'countryboard'
   match '/memverse_clock',         :to => 'info#memverse_clock',             :as => 'memverse_clock'

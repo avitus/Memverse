@@ -72,6 +72,7 @@ class User < ActiveRecord::Base
   has_many                :sermons
   belongs_to              :country,         :counter_cache => true
   belongs_to              :church,          :counter_cache => true
+  belongs_to              :group,           :counter_cache => true
   belongs_to              :american_state,  :counter_cache => true
   
   # Record who tagged which verse - not working at the moment
@@ -92,7 +93,7 @@ class User < ActiveRecord::Base
   # Prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here
   attr_accessible :login, :email, :name, :password, :password_confirmation, :identity_url, :remember_me,
-                  :newsletters, :reminder_freq, :last_reminder, :church, :country, :american_state, 
+                  :newsletters, :reminder_freq, :last_reminder, :church, :group, :country, :american_state, 
                   :show_echo, :max_interval, :mnemonic_use, :all_refs, :referred_by, :show_toolbar, :auto_work_load, :show_email
   
     
@@ -511,8 +512,9 @@ class User < ActiveRecord::Base
     self.reminder_freq    = new_params["reminder_freq"]
     self.country          = Country.find(:first, :conditions => ["printable_name = ?", new_params["country"]])
     self.american_state   = AmericanState.find(:first, :conditions => ["name = ?", new_params["american_state"]])
-    # If church doesn't exist in database we add it
+    # If church, group doesn't exist in database we add it
     self.church           = Church.find(:first, :conditions => ["name = ?", new_params["church"]]) || Church.create(:name => new_params["church"])
+    self.group            = Group.find(:first, :conditions => ["name = ?", new_params["group"]]) || Group.create(:name => new_params["group"])
     self.newsletters      = new_params["newsletters"]
     self.language         = new_params["language"]
     self.time_allocation  = new_params["time_allocation"]    

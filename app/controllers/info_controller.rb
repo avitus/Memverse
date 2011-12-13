@@ -150,6 +150,21 @@ class InfoController < ApplicationController
   end    
 
   # ----------------------------------------------------------------------------------------------------------
+  # Group Leaderboard
+  # ----------------------------------------------------------------------------------------------------------  
+  def groupboard
+    
+    @tab = "leaderboard" 
+    @sub = "group"
+    
+    add_breadcrumb I18n.t("menu.leaderboard"), leaderboard_path
+    add_breadcrumb I18n.t("leader_menu.Group Leaderboard"), groupboard_path
+    
+    @groupboard  = Group.top_groups  # returns top churches sorted by number of verses memorized
+
+  end  
+
+  # ----------------------------------------------------------------------------------------------------------
   # US States Leaderboard
   # ----------------------------------------------------------------------------------------------------------  
   def stateboard

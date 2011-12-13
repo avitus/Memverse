@@ -89,6 +89,13 @@
 				</li>		
 
 				<li>
+					<div class="ui-widget">
+						<%= f.label 			:group, t('.Group') %>
+						<%= f.text_field 		:group, :value => @user_group %>
+					</div>
+				</li>	
+
+				<li>
 					<%= f.label 			:newsletters, t('.Receive newsletters') %>
 					<%= f.check_box 		:newsletters %>
 				</li>
@@ -192,6 +199,9 @@
 		});
 	
 		b = $('#user_church').focus().autocomplete({ source:'profile/church_autocomplete'
+		});
+			
+		d = $('#user_group').focus().autocomplete({ source:'profile/group_autocomplete'
 		});
 	});
 </script>

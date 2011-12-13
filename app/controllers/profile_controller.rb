@@ -68,6 +68,7 @@ class ProfileController < ApplicationController
     @user           = User.find(current_user)
     @user_country   = @user.country ?         @user.country.printable_name  : ""
     @user_church    = @user.church ?          @user.church.name             : ""
+    @user_group     = @user.group ?           @user.group.name             : ""
     @user_state     = @user.american_state ?  @user.american_state.name     : ""
     
   end # method: update_profile
@@ -191,6 +192,38 @@ class ProfileController < ApplicationController
     render :json => @suggestions.to_json
 
   end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Autcomplete for Group Names
+  # Input: params[:query]
+  # Output: JSON object
+  # ----------------------------------------------------------------------------------------------------------   
+  def group_autocomplete
+    # Return country list in JSON format
+    #    {
+    #       query:'Li',
+    #       suggestions:['Liberia','Libyan Arab Jamahiriya','Liechtenstein','Lithuania'],
+    #       data:['LR','LY','LI','LT']
+    #    }
+
+    @suggestions = Array.new
+
+    query         = params[:term]
+    query_length  = query.length
+    
+    all_groups = Group.find(:all, :select => 'name')
+    
+    all_groups.each { |group|
+      name = group.name
+      if name[0...query_length].downcase == query.downcase
+        @suggestions << name
+      end
+    }
+    
+    render :json => @suggestions.to_json
+
+  end
+
 
   # ----------------------------------------------------------------------------------------------------------
   # Set the person who referred you
