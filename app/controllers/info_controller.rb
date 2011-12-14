@@ -98,16 +98,11 @@ class InfoController < ApplicationController
     @vs_list = Array.new
   end
   
-  
-  def pop_verse_search
-   
+  def pop_verse_search 
     book = params[:search_param]
-        
     @vs_list =  Verse.rank_verse_popularity(limit=9, book)
-    
     render :partial => 'pop_verses', :layout=>false 
   end   
-  
   
   # ----------------------------------------------------------------------------------------------------------   
   # Display a single verse
@@ -283,8 +278,7 @@ end
   #       correctly stripped. Newer verses are stripped when saved
   # ----------------------------------------------------------------------------------------------------------  
   def feedback
-    
-    
+ 
     guess   = params[:verseguess] ? params[:verseguess].gsub(/\s+/," ").strip : ""  # Remove double spaces from guesses    
     correct = params[:correct]    ? params[:correct].gsub(/\s+/," ").strip    : ""  # The correct verse was stripped, cleaned when first saved    
         

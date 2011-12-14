@@ -91,6 +91,7 @@ MemverseApp::Application.routes.draw do
   match '/volunteer',              :to => 'info#volunteer',                  :as => 'volunteer'
   match '/popular',                :to => 'info#pop_verses',                 :as => 'popular'
   match '/supermemo',              :to => 'info#sm_description',             :as => 'supermemo'
+  match '/mission',                :to => 'info#mission_statement',          :as => 'mission'
   match '/demo',                   :to => 'info#demo_test_verse',            :as => 'demo'
   match '/leaderboard',            :to => 'info#leaderboard',                :as => 'leaderboard'
   match '/churchboard',            :to => 'info#churchboard',                :as => 'churchboard'

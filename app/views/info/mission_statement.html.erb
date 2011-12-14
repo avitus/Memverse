@@ -1,0 +1,53 @@
+<% page_title I18n.t :mission, :scope => 'page_titles' %>
+<% page_description I18n.t :default, :scope => 'page_descriptions' %>
+
+<div class="white-box-bg">
+	<div class="side-margins">
+		
+		<h2>Mission Statement</h2>
+				
+		<p>Our goal is to provide a free, global, online platform that strengthens personal faith in Christ by fostering a 
+		   life-long commitment to Bible memorization</p>
+		   
+		<h2>What We Believe</h2>	   
+		
+		<p>
+		    We believe in God, the Father almighty,
+		    creator of heaven and earth.
+		
+		    We believe in Jesus Christ, his only Son, our Lord,
+		    who was conceived by the Holy Spirit,
+		    born of the Virgin Mary,
+		    suffered under Pontius Pilate,
+		    was crucified, died, and was buried;
+		    he descended to the dead.
+		    On the third day he rose again;
+		    he ascended into heaven,
+		    he is seated at the right hand of the Father,
+		    and he will come to judge the living and the dead.
+		
+		    We believe in the Holy Spirit,
+		    the holy catholic Church,
+		    the communion of saints,
+		    the forgiveness of sins,
+		    the resurrection of the body,
+		    and the life everlasting.
+		    Amen. 
+		</p>
+
+	</div>
+	
+	<% if !user_signed_in? %>	
+	
+		<div class="banner-bottom"><!--banner-bottom start-->
+			<ul>
+				<li><%= link_to 'try the memverse demo',	demo_path %></li>
+				<li><%= link_to 'top 100 memory verses',	popular_path %></li>
+				<li><%= link_to 'blog',						blog_path %></li>
+				<li><%= link_to 'sign up today',			new_user_registration_path, :class => 'active' %></li>
+			</ul>
+		</div><!--banner-bottom end-->
+	
+	<% end %>
+
+</div>
