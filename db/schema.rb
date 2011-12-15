@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111212235116) do
+ActiveRecord::Schema.define(:version => 20111214222957) do
 
   create_table "american_states", :force => true do |t|
     t.string  "abbrev",      :limit => 20, :default => "", :null => false
@@ -454,7 +454,7 @@ ActiveRecord::Schema.define(:version => 20111212235116) do
     t.integer  "rank"
     t.integer  "ref_grade",                                   :default => 10
     t.string   "gender"
-    t.string   "translation",                                 :default => "NIV"
+    t.string   "translation"
     t.integer  "level",                                       :default => 0,          :null => false
     t.integer  "referred_by"
     t.boolean  "show_toolbar",                                :default => true
