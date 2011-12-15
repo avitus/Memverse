@@ -234,10 +234,16 @@ class User < ActiveRecord::Base
 	  end
 	  
   end
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # User hasn't added verses or picked translation => send to quick start page
+  # ----------------------------------------------------------------------------------------------------------    
+  def needs_quick_start?
+    !self.translation && self.memverses.count == 0 
+  end
     
   # ----------------------------------------------------------------------------------------------------------
   # Check whether current user is memorizing any verses at all
-  # Input: User object
   # ----------------------------------------------------------------------------------------------------------  
   def has_started?
     return self.memverses.count > 0
@@ -245,7 +251,6 @@ class User < ActiveRecord::Base
   
   # ----------------------------------------------------------------------------------------------------------
   # Check whether current user has any active verses
-  # Input: User object
   # ----------------------------------------------------------------------------------------------------------  
   def has_active?
     return self.memverses.active.count > 0

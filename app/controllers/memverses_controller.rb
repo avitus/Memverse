@@ -124,7 +124,11 @@ class MemversesController < ApplicationController
   def index
     
     @tab = "home"
-    
+
+    if current_user.needs_quick_start?
+      redirect_to :controller => "home", :action => "quick_start" and return        
+    end
+ 
     @due_today	= current_user.due_verses unless mobile_device?
     @overdue		= current_user.overdue_verses unless mobile_device?
     
@@ -133,9 +137,9 @@ class MemversesController < ApplicationController
     @quests_to_next_level = quests_remaining==1 ? "one quest" : quests_remaining.to_s + " quests"
     
     # Has this user added any verses?
-    @user_has_no_verses           = (current_user.learning == 0) && (current_user.memorized == 0)
+    # @user_has_no_verses           = (current_user.learning == 0) && (current_user.memorized == 0)
     # Does this user need more verses?
-    @user_has_too_few_verses      = (current_user.learning + current_user.memorized <= 5)
+    # @user_has_too_few_verses      = (current_user.learning + current_user.memorized <= 5)
     
     # Otherwise, show some nice statistics and direct user to memorization page if necessary
     if (!@user_has_no_verses)      

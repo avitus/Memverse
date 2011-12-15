@@ -17,6 +17,10 @@ class HomeController < ApplicationController
     @vsillumination = Popverse.random(10)
     
     render :layout => false
+  end
+  
+  def quick_start
+    
   end  
    
 end
