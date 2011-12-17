@@ -32,6 +32,9 @@
 <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
 <script type="text/javascript" src="http://cdn.jquerytools.org/1.2.6/tiny/jquery.tools.min.js"></script>
 
+<!-- Main Javascript Manifest -->
+<%= javascript_include_tag "application" %>
+
 <!--[if IE 6]>
 <style type="text/css">
 	.learn-area
@@ -225,23 +228,10 @@
 </div><!--narrow-login -->
 <script type="text/javascript">
 	$(function() {
+		// input placeholder fix
+		FauxPlaceholder();
 		// initialize scrollable
 		$(".scrollable").scrollable();
-// For now, comment out below:
-//		var $input = $('.sign-field :input');
-//		$input.focus(function() {  
-//			if (this.value == this.defaultValue){  
-//				this.value = '';  
-//			}  
-//			if(this.value != this.defaultValue){  
-//				this.select();  
-//			}  
-//		});  
-//		$input.blur(function() {  
-//			if ($.trim(this.value) == ''){
-//				this.value = (this.defaultValue ? this.defaultValue : '');
-//			}
-//		});
 	});
 </script>
 </body>

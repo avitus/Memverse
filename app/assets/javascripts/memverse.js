@@ -492,3 +492,34 @@ function insertondeck(ondeck, ondeck_prior) {
 	return true;
 	
 }
+
+// Faux placeholder function
+
+function FauxPlaceholder() {
+        if(!ElementSupportAttribute('input','placeholder')) {
+            $("input[placeholder]").each(function() {
+                var $input = $(this);
+                $input.after('<input id="'+$input.attr('id')+'-faux" style="display:none;" type="text" value="' + $input.attr('placeholder') + '" />');
+                var $faux = $('#'+$input.attr('id')+'-faux');
+
+                $faux.show().attr('class', $input.attr('class')).attr('style', $input.attr('style'));
+                $input.hide();
+
+                $faux.focus(function() {
+                    $faux.hide();
+                    $input.show().focus();
+                });
+
+                $input.blur(function() {
+                    if($input.val() === '') {
+                        $input.hide();
+                        $faux.show();
+                    }
+                });
+            });
+        }
+    }
+    function ElementSupportAttribute(elm, attr) {
+        var test = document.createElement(elm);
+        return attr in test;
+    }
