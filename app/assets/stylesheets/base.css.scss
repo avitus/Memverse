@@ -2991,3 +2991,37 @@ div.fieldWithErrors textarea
 }
 
 abbr.timeago{border-bottom:none}
+
+/* === Registration Page Styling === */
+div.signupform{
+  margin:auto 0;
+}
+
+div.signup {
+  position:relative;
+  height:50px;
+}
+div.signup input {
+  position:absolute;
+  top:0;
+  height:30px;
+  width:300px;
+}
+div.sidetip {
+  position:absolute;
+  left:320px;
+  top:0;
+  font-size:14px;
+}
+div.sidetip p {
+  display:none; /* hidden at first */
+}
+p.isaok{
+  color:#577a1a;
+}
+p.error{
+  color:#D14836;
+}
+div.sidetip a {
+  color:#12C;
+}

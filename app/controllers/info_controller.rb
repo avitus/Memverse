@@ -307,6 +307,20 @@ end
 
     render :partial=>'feedback', :layout=>false
     
-  end 
+  end
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Check whether email is available / used during registration
+  # ----------------------------------------------------------------------------------------------------------
+  
+  def email_available
+    @user = User.find_by_email(params[:email])
+    if @user
+      render :json => {:available => 'false'}
+    else
+      render :json => {:available => 'true'}
+    end
+    
+  end
   
 end
