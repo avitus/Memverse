@@ -1,6 +1,6 @@
 <% page_title  I18n.t :signup, :scope => 'page_titles' %>
 
-<!-- IMPORTANT TODO: ENCRYPT THIS FORM!!! -->
+<!-- IMPORTANT TODO: ENCRYPT THIS FORM!! ALSO, FIX IE PLACEHOLDERS!! -->
 
 <div class="white-box-with-margins">
 			
@@ -8,7 +8,7 @@
 
 	<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f| %>
 
-		<h2>Register for Memverse</h2><br />
+		<h2 style="color:#000">Register for Memverse</h2><br />
 
 		<%= devise_error_messages! %>
 		<div class="signup name">
@@ -23,7 +23,7 @@
 			<%= f.email_field		:email, :placeholder => "Email address" %>
 			<div class="sidetip">
 				<p class="tip">What's your email address?</p>
-				<p class="ok isaok">We'll send you a confirmation.</p>
+				<p class="ok isaok">We will email you a confirmation.</p>
 				<p class="checking"><img src="/assets/indicator2.gif" /> Checking...</p>
 				<p class="invalid error">Doesn't look like a valid email.</p>
 				<p class="blank error">An email is required!</p>
@@ -47,6 +47,7 @@
 			<div class="sidetip">
 				<p class="tip">One more time and you're done!</p>
 				
+				<p class="perfect isaok">Passwords match.</p>
 				<p class="invalid error">Passwords do not match.</p>
 				<p class="blank error">Password confirmation cannot be blank!</p>
 			</div>
@@ -71,6 +72,9 @@
 <script type="text/javascript">
 	// input placeholder fix
 	FauxPlaceholder();
+	
+	$("div.signup input").val(''); // clear all input values
+	emailtaken = false; // setup emailtaken variable
 	
 	$("div.signup input").focus(function() {
 		// Only show the tip if there was nothing showing before
@@ -102,18 +106,27 @@
 					var dotpos = email.lastIndexOf(".");
 					if (atpos<1 || dotpos<atpos+2 || dotpos+2>=email.length) {
 						$(this).parent().find("div.sidetip p.invalid").show();
+						emailtaken = false;
+					}
+					else if (emailtaken == $(this).val()) { // if the email address is already known to be taken, show old msg
+						$("div.email div.sidetip p").hide(); // Hide other messages
+						$("div.email div.sidetip p.taken").show();
 					}
 					else {
-						$(this).parent().find("div.sidetip p").hide(); // Hide other messages
+						// TODO: Move email changed logic into this part. If email hasn't changed, the error hasn't changed either...
 						$(this).parent().find("div.sidetip p.checking").show(); // Tell user that we're checking email
 						$.getJSON('/info/email_available?email='+email, function(data) {
 						  if(data.available == 'true') {
+						  	// TODO: Can I remove that first "hide" call?
 						  	$("div.email div.sidetip p").hide(); // Hide other messages
 						  	$("div.email div.sidetip p.isaok").show();
+						  	emailtaken = false;
 						  }
 						  else {
+						  	// TODO: Can I remove that first "hide" call?
 						  	$("div.email div.sidetip p").hide(); // Hide other messages
 						  	$("div.email div.sidetip p.taken").show();
+						  	emailtaken = email;
 						  }
 						});
 					}
@@ -130,6 +143,8 @@
 				case "user_password_confirmation":
 					if ( $(this).val() !== $("#user_password").val() ) { // if passwords do not match
 						$(this).parent().find("div.sidetip p.invalid").show();
+					} else {
+						$(this).parent().find("div.sidetip p.perfect").show();
 					}
 					break;
 				
@@ -138,10 +153,6 @@
 			}	
 		}
 		
-	});
-	$("#user_password").keyup(function() {
-		$(this).parent().find("div.sidetip p").hide(); // Hide old message
-		passwordStrength();
 	});
 	
 	function passwordStrength(){
@@ -164,4 +175,29 @@
 		}
 	}
 	
+	$("#user_password").keyup(function() {
+		$(this).parent().find("div.sidetip p").hide(); // Hide old message
+		passwordStrength();
+		
+		if( $("#user_password_confirmation").val() ) // if the user already has something in password confirmation input
+			if ( $("#user_password_confirmation").val() !== $(this).val() ) { // passwords don't match
+				$("div.passwordconfirm div.sidetip p").hide(); // hide old message
+				$("div.passwordconfirm div.sidetip p.invalid").show(); // tell user
+		} else { // passwords do match
+				$("div.passwordconfirm div.sidetip p").hide(); // hide old message
+				$("div.passwordconfirm div.sidetip p.perfect").show(); // tell user
+		}
+	});
+	
+	$("#user_password_confirmation").keyup(function() {
+		$(this).parent().find("div.sidetip p").hide(); // Hide old message
+		if ( !$(this).val() ) { // if there is nothing in field, just show tip
+			$(this).parent().find("div.sidetip p.tip").show();
+		}
+		else if ( $(this).val() !== $("#user_password").val() ) { // if passwords do not match
+			$(this).parent().find("div.sidetip p.invalid").show();
+		} else {
+			$(this).parent().find("div.sidetip p.perfect").show();
+		}
+	});
 </script>
