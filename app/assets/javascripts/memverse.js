@@ -226,7 +226,7 @@ function versefeedback(correctvs, verseguess, echo) {
 					
 		for (x in guess_words) {
 			if (x < right_words.length) { // check that guess isn't longer than correct answer
-				if ( guess_words[x].toLowerCase().replace(/[^a-z]+/g, "") == right_words[x].toLowerCase().replace(/[^a-z]+/g, "") ) {
+				if ( guess_words[x].toLowerCase().replace(/[^0-9a-z]+/g, "") == right_words[x].toLowerCase().replace(/[^0-9a-z]+/g, "") ) {
 					feedback = feedback + right_words[x] + " ";
 				}
 				else if ( guesstext == "" ) { // This happens when nothing is in the textarea

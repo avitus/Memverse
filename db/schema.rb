@@ -14,25 +14,23 @@
 ActiveRecord::Schema.define(:version => 20111212235116) do
 
   create_table "american_states", :force => true do |t|
-    t.string  "abbrev",      :limit => 20, :default => "", :null => false
-    t.string  "name",        :limit => 50, :default => "", :null => false
-    t.integer "users_count",               :default => 0
-    t.integer "population"
-    t.integer "rank"
+    t.string "abbrev", :limit => 20, :default => "", :null => false
+    t.string "name",   :limit => 50, :default => "", :null => false
   end
 
-  add_index "american_states", ["name"], :name => "index_american_states_on_name", :unique => true
-  add_index "american_states", ["users_count"], :name => "index_american_states_on_users_count"
-
   create_table "blog_assets", :force => true do |t|
-    t.integer "blog_post_id"
-    t.integer "parent_id"
-    t.string  "content_type"
-    t.string  "filename"
-    t.string  "thumbnail"
-    t.integer "size"
-    t.integer "width"
-    t.integer "height"
+    t.integer  "blog_post_id"
+    t.integer  "parent_id"
+    t.string   "content_type"
+    t.string   "filename"
+    t.string   "thumbnail"
+    t.integer  "size"
+    t.integer  "width"
+    t.integer  "height"
+    t.string   "blog_attachment_file_name"
+    t.string   "blog_attachment_content_type"
+    t.integer  "blog_attachment_file_size"
+    t.datetime "blog_attachment_updated_at"
   end
 
   create_table "blog_categories", :force => true do |t|
@@ -125,17 +123,12 @@ ActiveRecord::Schema.define(:version => 20111212235116) do
   add_index "ckeditor_assets", ["assetable_type", "type", "assetable_id"], :name => "idx_ckeditor_assetable_type"
 
   create_table "countries", :force => true do |t|
-    t.string  "iso",            :limit => 2,                 :null => false
-    t.string  "name",           :limit => 80,                :null => false
-    t.string  "printable_name", :limit => 80,                :null => false
+    t.string  "iso",            :limit => 2,  :null => false
+    t.string  "name",           :limit => 80, :null => false
+    t.string  "printable_name", :limit => 80, :null => false
     t.string  "iso3",           :limit => 3
     t.integer "numcode",        :limit => 2
-    t.integer "users_count",                  :default => 0
-    t.integer "rank"
   end
-
-  add_index "countries", ["printable_name"], :name => "index_countries_on_printable_name", :unique => true
-  add_index "countries", ["users_count"], :name => "index_countries_on_users_count"
 
   create_table "daily_stats", :force => true do |t|
     t.date    "entry_date",                                               :null => false
@@ -149,8 +142,6 @@ ActiveRecord::Schema.define(:version => 20111212235116) do
     t.integer "memverses_memorized_not_overdue"
     t.string  "segment",                            :default => "Global"
   end
-
-  add_index "daily_stats", ["segment"], :name => "index_daily_stats_on_segment"
 
   create_table "devotions", :force => true do |t|
     t.string   "name"
@@ -420,56 +411,52 @@ ActiveRecord::Schema.define(:version => 20111212235116) do
   end
 
   create_table "users", :force => true do |t|
-    t.string   "login",                        :limit => 40
+    t.string   "login",                     :limit => 40
     t.string   "identity_url"
-    t.string   "name",                         :limit => 100, :default => ""
-    t.string   "email",                        :limit => 100
-    t.string   "encrypted_password",           :limit => 128, :default => "",         :null => false
-    t.string   "password_salt",                               :default => "",         :null => false
-    t.string   "remember_token",               :limit => 40
+    t.string   "name",                      :limit => 100, :default => ""
+    t.string   "email",                     :limit => 100
+    t.string   "encrypted_password",        :limit => 128, :default => "",         :null => false
+    t.string   "password_salt",                            :default => "",         :null => false
+    t.string   "remember_token",            :limit => 40
     t.string   "confirmation_token"
-    t.string   "state",                                       :default => "passive",  :null => false
+    t.string   "state",                                    :default => "passive",  :null => false
     t.datetime "remember_token_expires_at"
     t.datetime "confirmed_at"
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.date     "last_reminder"
-    t.string   "reminder_freq",                               :default => "weekly"
-    t.boolean  "newsletters",                                 :default => true
+    t.string   "reminder_freq",                            :default => "weekly"
+    t.boolean  "newsletters",                              :default => true
     t.string   "church"
     t.integer  "church_id"
     t.integer  "country_id"
-    t.string   "language",                                    :default => "English"
-    t.integer  "time_allocation",                             :default => 5
-    t.integer  "memorized",                                   :default => 0
-    t.integer  "learning",                                    :default => 0
+    t.string   "language",                                 :default => "English"
+    t.integer  "time_allocation",                          :default => 5
+    t.integer  "memorized",                                :default => 0
+    t.integer  "learning",                                 :default => 0
     t.date     "last_activity_date"
-    t.boolean  "show_echo",                                   :default => true
-    t.integer  "max_interval",                                :default => 366
-    t.string   "mnemonic_use",                                :default => "Learning"
+    t.boolean  "show_echo",                                :default => true
+    t.integer  "max_interval",                             :default => 366
+    t.string   "mnemonic_use",                             :default => "Learning"
     t.integer  "american_state_id"
-    t.integer  "accuracy",                                    :default => 10
-    t.boolean  "all_refs",                                    :default => true
+    t.integer  "accuracy",                                 :default => 10
+    t.boolean  "all_refs",                                 :default => true
     t.integer  "rank"
-    t.integer  "ref_grade",                                   :default => 10
+    t.integer  "ref_grade",                                :default => 10
     t.string   "gender"
-    t.string   "translation",                                 :default => "NIV"
-    t.integer  "level",                                       :default => 0,          :null => false
+    t.string   "translation",                              :default => "NIV"
+    t.integer  "level",                                    :default => 0,          :null => false
     t.integer  "referred_by"
-    t.boolean  "show_toolbar",                                :default => true
-    t.boolean  "show_email",                                  :default => false
+    t.boolean  "show_toolbar",                             :default => true
+    t.boolean  "show_email",                               :default => false
     t.string   "bb_2011_age_group"
     t.string   "bb_2011_track"
-    t.boolean  "auto_work_load",                              :default => true
+    t.boolean  "auto_work_load",                           :default => true
     t.datetime "confirmation_sent_at"
     t.string   "reset_password_token"
     t.datetime "remember_created_at"
-    t.string   "blog_attachment_file_name"
-    t.string   "blog_attachment_content_type"
-    t.integer  "blog_attachment_file_size"
-    t.datetime "blog_attachment_updated_at"
-    t.boolean  "admin",                                       :default => false
+    t.boolean  "admin",                                    :default => false
     t.integer  "group_id"
   end
 
@@ -497,7 +484,6 @@ ActiveRecord::Schema.define(:version => 20111212235116) do
   end
 
   add_index "verses", ["book"], :name => "index_verses_on_book"
-  add_index "verses", ["book_index"], :name => "index_verses_on_book_index"
   add_index "verses", ["chapter"], :name => "index_verses_on_chapter"
   add_index "verses", ["error_flag"], :name => "index_verses_on_error_flag"
   add_index "verses", ["translation"], :name => "index_verses_on_translation"
