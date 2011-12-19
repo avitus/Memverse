@@ -83,76 +83,60 @@
 			$(this).parent().find("div.sidetip p.tip").show();
 		}
 		
-	})
-	.blur(function() { // validation
-		// First we hide other messages
-		$(this).parent().find("div.sidetip p").hide();
+	});
+	
+	$("#user_name").blur(function() {
+		$(this).parent().find("div.sidetip p").hide(); // First we hide other messages
 		
-		// Then we go through validation and generate new message
+		if( !$(this).val() ) { // give error if name is blank
+			$(this).parent().find("div.sidetip p.blank").show();
+		} else { // tell user that name is OK
+			$(this).parent().find("div.sidetip p.isaok").show();
+		}
+	});
+	
+	$("#user_email").blur(function() {
+		$(this).parent().find("div.sidetip p").hide(); // hide old message
+		if( !$(this).val() ) { // email is empty
+			
+			$(this).parent().find("div.sidetip p.blank").show();
+		} else { // email is not empty
+			
+			//simple email validation from http://www.w3schools.com/js/js_form_validation.asp
+			var email = $(this).val();
+			var atpos = email.indexOf("@");
+			var dotpos = email.lastIndexOf(".");
+			if (atpos<1 || dotpos<atpos+2 || dotpos+2>=email.length) {
+				$("div.email div.sidetip p").hide(); // Hide other messages
+				$("div.email div.sidetip p.invalid").show();
+				emailtaken = false;
+			}
+			else if (emailtaken == $(this).val()) { // if the email address is already known to be taken, show old msg
+				$("div.email div.sidetip p").hide(); // Hide other messages
+				$("div.email div.sidetip p.taken").show();
+			}
+			else {
+				$(this).parent().find("div.sidetip p.checking").show(); // Tell user that we're checking email
+				$.getJSON('/info/email_available?email='+email, function(data) {
+					if(data.available == 'true') {
+						$("div.email div.sidetip p").hide(); // Hide other messages
+						$("div.email div.sidetip p.isaok").show();
+						emailtaken = false;
+					} else {
+						$("div.email div.sidetip p").hide(); // Hide other messages
+				  		$("div.email div.sidetip p.taken").show();
+				  		emailtaken = email;
+					}
+				});
+			}
+		}
+	}); // end email blur
+	
+	$("#user_password, #user_password_confirmation").blur(function() { // this blur applies to all inputs. purpose is to display error if left blank
 		if( !$(this).val() ) {
+			$(this).parent().find("div.sidetip p").hide();
 			$(this).parent().find("div.sidetip p.blank").show();
 		}
-		else { // since the input is not empty, we will now try to validate it
-			switch($(this).attr("id")) {
-				case "user_name":
-					// We'll accept anything for a name
-					$(this).parent().find("div.sidetip p.isaok").show();
-					break;
-				
-				case "user_email":
-					//simple email validation from http://www.w3schools.com/js/js_form_validation.asp
-					var email = $(this).val();
-					var atpos = email.indexOf("@");
-					var dotpos = email.lastIndexOf(".");
-					if (atpos<1 || dotpos<atpos+2 || dotpos+2>=email.length) {
-						$(this).parent().find("div.sidetip p.invalid").show();
-						emailtaken = false;
-					}
-					else if (emailtaken == $(this).val()) { // if the email address is already known to be taken, show old msg
-						$("div.email div.sidetip p").hide(); // Hide other messages
-						$("div.email div.sidetip p.taken").show();
-					}
-					else {
-						// TODO: Move email changed logic into this part. If email hasn't changed, the error hasn't changed either...
-						$(this).parent().find("div.sidetip p.checking").show(); // Tell user that we're checking email
-						$.getJSON('/info/email_available?email='+email, function(data) {
-						  if(data.available == 'true') {
-						  	// TODO: Can I remove that first "hide" call?
-						  	$("div.email div.sidetip p").hide(); // Hide other messages
-						  	$("div.email div.sidetip p.isaok").show();
-						  	emailtaken = false;
-						  }
-						  else {
-						  	// TODO: Can I remove that first "hide" call?
-						  	$("div.email div.sidetip p").hide(); // Hide other messages
-						  	$("div.email div.sidetip p.taken").show();
-						  	emailtaken = email;
-						  }
-						});
-					}
-					break;
-				
-				case "user_password":
-					if ($(this).val().length < 6) { // if password isn't long enough
-						$(this).parent().find("div.sidetip p.invalid").show();
-					} else {
-						passwordStrength();
-					}
-					break;
-				
-				case "user_password_confirmation":
-					if ( $(this).val() !== $("#user_password").val() ) { // if passwords do not match
-						$(this).parent().find("div.sidetip p.invalid").show();
-					} else {
-						$(this).parent().find("div.sidetip p.perfect").show();
-					}
-					break;
-				
-				default:
-					//nothing for default
-			}	
-		}
-		
 	});
 	
 	function passwordStrength(){
