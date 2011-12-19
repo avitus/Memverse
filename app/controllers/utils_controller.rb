@@ -65,7 +65,7 @@ class UtilsController < ApplicationController
       
     # TODO: this table should be created using some fancy named scopes
     User.find(:all).each { |u| 
-      if u.state=="pending"
+      if !u.confirmed_at
         @usage_table["Pending"] += 1
       else
         @usage_table[quantize_mvs(u.memverses.count)] += 1

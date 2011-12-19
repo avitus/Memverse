@@ -87,7 +87,7 @@ class User < ActiveRecord::Base
   scope :active_today,      lambda { where('last_activity_date = ?',  Date.today) }
   scope :active_this_week,  lambda { where('last_activity_date >= ?', 1.week.ago) }  
   scope :american,          where('countries.printable_name' => 'United States').includes(:country)
-  scope :pending,           where(:state => 'pending')
+  scope :pending,           where(:confirmed_at => nil)
 
   # Setup accessible (or protected) attributes for your model
   # Prevents a user from submitting a crafted form that bypasses activation
@@ -823,14 +823,6 @@ class User < ActiveRecord::Base
     end
   end
 
-
-  # ----------------------------------------------------------------------------------------------------------
-  # Check whether user activated their account
-  # ----------------------------------------------------------------------------------------------------------   
-  def never_activated?
-    return self.state=="pending"
-  end
-
   # ----------------------------------------------------------------------------------------------------------
   # User status
   # ----------------------------------------------------------------------------------------------------------   
@@ -858,7 +850,7 @@ class User < ActiveRecord::Base
   # ---------------------------------------------------------------------------------------------------------- 
   def needs_kick_in_pants?   
     
-    if self.has_started? or self.state=="pending"  # user already has verses or never activated their account
+    if self.has_started? or !self.confirmed_at  # user already has verses or never activated their account
       return false
     else
       if self.last_reminder.nil? and  days_since_contact_or_login > 1 # user has never been reminded
