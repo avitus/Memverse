@@ -53,15 +53,13 @@
 			</div>
 		</div>
 		
+		<div><%= f.submit "", :class => "submit-button", :onclick => "return checkForm();" %></div>
+		
 		<br />
 		
 		<div class="sign-up-links">
 			<%= render :partial => "devise/shared/links" %>	
-		</div>
-		
-		<div>
-			  <div><%= f.submit "", :class => "submit-button" %></div>
-		</div>			
+		</div><br />
 						
 	<% end %>
 	
@@ -184,4 +182,35 @@
 			$(this).parent().find("div.sidetip p.perfect").show();
 		}
 	});
+	
+	function checkForm(){
+		var isFormValid = true;
+		var emptyFields = false;
+		var invalidFields = false;
+	
+		$("div.signup input").each(function(){
+			if ($.trim($(this).val()).length == 0){
+			    $(this).addClass("hilite");
+		    	isFormValid = false;
+		    	emptyFields = true;
+			} else if ( $(this).parent().find("div.sidetip p.error:visible").length ) {
+				$(this).addClass("hilite");
+		    	isFormValid = false;
+		    	invalidFields = true;
+			} else {
+				$(this).removeClass("hilite");
+			}
+		});
+	
+		if (!isFormValid) {
+			if (emptyFields && invalidFields) {
+				alert("Please complete any empty fields and correct any invalid fields.")
+			} else if (emptyFields) {
+				alert("Please complete any empty fields.")
+			} else if (invalidFields) {
+				alert("Please correct any invalid fields.")
+			}
+		}
+		return isFormValid;
+	}
 </script>
