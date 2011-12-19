@@ -142,17 +142,17 @@ class MemversesController < ApplicationController
     # @user_has_too_few_verses      = (current_user.learning + current_user.memorized <= 5)
     
     # Otherwise, show some nice statistics and direct user to memorization page if necessary
-    if (!@user_has_no_verses)      
-      mv = Memverse.find(:first, :conditions => ["user_id = ?", current_user.id], :order => "next_test ASC")
-      if !mv.nil?
-        @user_has_test_today = (mv.next_test <= Date.today)
-      end
-      
-      unless flash[:error] or flash[:notice] or !current_user.first_verse_today # Show flash with verses due and workload unless another flash or done with review
-        flash.now[:notice] = t('messages.today_msg_html', :due_today => current_user.due_verses, :time => current_user.work_load)
-      end
-
-    end
+    # if (!@user_has_no_verses)      
+      # mv = Memverse.find(:first, :conditions => ["user_id = ?", current_user.id], :order => "next_test ASC")
+      # if !mv.nil?
+        # @user_has_test_today = (mv.next_test <= Date.today)
+      # end
+#       
+      # unless flash[:error] or flash[:notice] or !current_user.first_verse_today # Show flash with verses due and workload unless another flash or done with review
+        # flash.now[:notice] = t('messages.today_msg_html', :due_today => current_user.due_verses, :time => current_user.work_load)
+      # end
+# 
+    # end
 
     # === Get Recent Tweets ===    
     @tweets1 = Tweet.where(:importance => 1..2).limit(12).order("created_at DESC")  # Most important tweets
