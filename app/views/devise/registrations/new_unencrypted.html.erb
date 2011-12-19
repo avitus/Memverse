@@ -73,9 +73,8 @@
 	FauxPlaceholder();
 	
 	$("div.signup input").focus(function() {
-		// if an "OK" message is hidden, then we show tip
-		// Couldn't just check if the "div.sidetip p.isaok" was hidden, since there is more than one such element for passwords (I tried that originally)
-		if ( $(this).parent().find("div.sidetip p:visible").eq(0).attr('class') == 'isaok' ) {
+		// Only show the tip if there was nothing showing before
+		if ( !$(this).parent().find("div.sidetip p:visible").length ) {
 			$(this).parent().find("div.sidetip p").hide();
 			$(this).parent().find("div.sidetip p.tip").show();
 		}
