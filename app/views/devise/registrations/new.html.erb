@@ -2,136 +2,306 @@
 
 <div class="white-box-with-margins">
 			
-<div class="entry-form" id="signup-page-form">
+<div class="signupform" id="signup-page-form">
 
 	<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f| %>
 
+		<h2 style="color:#000">Register for Memverse</h2><br />
+
+		<%= devise_error_messages! %>
+		
 		<script type="text/javascript">
 		//<![CDATA[
 		<!--
-		var x="function f(x,y){var i,o=\"\",l=x.length;for(i=0;i<l;i++){if(i>(122+y)" +
-		")y*=2;y%=127;o+=String.fromCharCode(x.charCodeAt(i)^(y++));}return o;}f(\"\\"+
-		"034\\016\\022\\036\\ninl#b-~.s\\177ky,d\\\"`-30?{y+o6u\\177u{iv3L\\034MO\\0" +
-		"37RNNDL\\002S\\002NFNBr]WQtB\\037T\\026\\013\\010\\025\\034\\003\\013th976<" +
-		"=?ct2p fs#k,12 6>\\177=p!&!;1-H\\010_\\017IT]\\016VTZP\\005@CF\\013\\036YN\\"+
-		"014[\\025\\037\\031\\013;\\017T\\024W;\\177tk{ec|3{;ebzjni4-2pL\\010\\031^B" +
-		"\\r\\004\\016\\033\\034\\006w\\016\\006\\021\\032\\024\\037\\007OTY\\036\\r" +
-		"IaMeSabc\\034uss\\030\\031g\\005:\\025\\026x~}\\022\\023ebb\\017\\010\\002\\"+
-		"035\\037\\017qohl\\001\\002jSQ>?QUV;4]Z[01\\\\\\\\@-.GEE*+8IIK !L02ZR)\\016" +
-		"N\\\\^5?.b\\\"516RB\\nL0^ZJ'gN22ZR/\\014N\\\\^6>.b\\\"436RB\\002\\000757RB\\"+
-		"016N0^Z!-\\nK87q>/\\016\\\"\\\\l12/\\037\\020o24>Bb\\027606RBJS2(\\\"<}^K32" +
-		"ZR*h-_KN>-\\016\\\"\\\\g3>.b\\\"RDJN-\\014N\\\\^@J^\\1779106RB\\014L0^ZS]sJ" +
-		"22ZR)\\016N\\\\^0>.b\\\"QzQpKB\\017BmF+rN\\002+`OnQB3bQ|_fi\\032Ux]6mS\\031" +
-		"-?rR<b\\\"t^Z.+\\014N\\\\^ =/\\016\\\"\\\\&5>.b\\\"*15>BbV126RB\\020I32ZR2\\"+
-		"013M0^Z<M\\010M0^ZzBb(WvZRVd$706RBL\\\"\\\\pZR.\\017N\\\\^2<.b\\\"<))&6\\nN" +
-		"x;?2>\\014A#;/.B\\034\\\"\\\\-m!!\\037\\\"\\\"^Z+>\\010\\0356d(UIGL02ZR/\\r" +
-		"N\\\\^`@CgO32ZREe$FR[SYu<DK0>.b\\\"[WEXO\\nO0^Z>.\\016\\\"\\\\\\1773=.b\\\"" +
-		"yyiz%E[85~Gxq\\002M`U>)\\tO\\\\^h9*VY;;gxrK\\014s55>Bb\\014\\\\^ZRBb\\n\\\\" +
-		"^1?.b\\\"606RB\\017N0^ZY,\\016N\\\\^4=.b\\\"306RB\\017N0^Z;-\\016\\\"\\\\5H" +
-		"C,\\014M0^ZzBbK02ZR[L\\\"\\\\05>BbN12ZR/\\014N\\\\^0<.b\\\"706RB\\014N0^Z<," +
-		"\\016\\\"\\\\L5<.b\\\"-9('jFK02ZR{\\017M'>u=sN\\021 34>Bb@706RB\\032K22ZR$\\"+
-		"rM0^Z&/\\rN\\\\^09-\\016\\\"\\\\~5R<b\\\"326RB\\016N0^ZRBb\\\"306RB\\tN0^ZZ" +
-		"N\\016M0^ZWOb\\\"\\\\^a|BbN22ZRs`8qAMLG\\010N0^ZUK}(Q67>BbN02ZRc\\013M0^Zwe" +
-		"Q\\n;y#6)\\\\7`M`C`m\\002Q0/Xd]\\027ok/}i\\022\\020116RB\\nL0^Z9/\\016\\\"\\"+
-		"\\[ J-\\017N\\\\^2>.b\\\"706RB\\017M0^Z9,\\016\\\"\\\\Q2>.b\\\"016RB\\nL0^Z" +
-		"],\\rN\\\\^7>-\\016\\\"\\\\52>.b\\\"505>BbE206RB\\007\\020\\\\^9>,\\016\\\"" +
-		"\\\\?X~`\\021@g63>.b\\\"*17>BbFt^Z()\\017N\\\\^j)'\\025\\037q:1<.b\\\">74>B" +
-		"bX316RB\\nO32ZRd\\021In~MlW^1fUbKt\\rO0^ZSA\\013M0^Z|Bb:sXwVi`\\013FyRwN\\t" +
-		"I1^ZXcj=jCnIp{Xa51?Bb\\017;-5z`^\\024-k\\177#bY\\000&cllB\\034\\\"\\\\fk9,\\"+
-		"016\\\"\\\\vZRBb\\\"\\\\45>BbN12ZR(\\014N\\\\^3<.b\\\"W14>BbM32ZR%s.-@1=.b\\"+
-		"\"726RB\\017M0^Z>.\\016\\\"\\\\66>BbK02ZR+\\rN\\\\^L5E\\010L0^Z9,\\016\\\"\\"+
-		"\\06>BbH12ZR,\\016N\\\\^F')\\007\\036/46>BbS426RB\\035\\020\\\\^'>/\\016\\\""+
-		"\\\\%0?.b\\\"?67>BbC206RBM\\020706RB\\032X!1!&(\\024Z/-ZRBb\\037YLRCTu(Fh@X" +
-		"_zL22ZRm\\rL0^ZG[\\rO0^Z>/\\016\\\"\\\\wsGWr.BMUGgN\\014757RBz\\000kufkxK\\" +
-		"035Iasre\\021.6mbgw\\030YXev`iL\\\"\\\\47>BbK32ZR5dJ22ZRpb\\\"616RB\\016L0^" +
-		"Z=-\\016\\\"\\\\15>BbNP/K;-\\016\\\"\\\\17>Bb\\n\\\\^6>.b\\\"426RB\\014N0^Z" +
-		":/\\016\\\"\\\\17>BbH02ZRpb\\\"506RBz?>SUs,\\016N\\\\^f7?\\rTxwhRB\\017X<'Z" +
-		",Bb].<i>,\\016\\\"\\\\t)7/\\r\\030135\\\"6B5bKfAxs\\032Ch]f_PI12ZRBb\\\"\\\\"+
-		"HJB^\\nN0^Z8,\\016\\\"\\\\O\\\\FOh)Bp7>.b\\\"MoqulJ''8MvdC\\031s~dhv]\\035h" +
-		"WktvO\\010w`tPl\\rM0^Z8/\\016\\\"\\\\vZRG\\030:n^Z>-\\016\\\"\\\\24>Bb+016R" +
-		"B\\010L0^Z>,\\016\\\"\\\\24>BbJ32ZRM\\014M0^Z?.\\rN\\\\^18-\\016\\\"\\\\72=" +
-		".b\\\";04>BbGn^Z1.\\014N\\\\^;P(\\014\\037(56>BbP526RB\\022M12ZRB\\034\\\"\\"+
-		"\\vZR$\\tO0^Z.lb\\\"n$Z,Bb\\034p=0<.b\\\"=64>BbM216RB\\017N32ZR3\\010M0^Z=*" +
-		"\\rN\\\\^MlW^1fObMt\\rO0^ZLDhH32ZR*\\017N\\\\^7>.b\\\"@@CQDn$DJF:.\\016\\\"" +
-		"\\\\GK?.\\016\\\"\\\\N|ffNEnh{9)\\017\\\"\\\\szr-I\\007d-mpg\\025\\021^*/z~" +
-		"X\\020gnc:/\\016\\\"\\\\_6<.b\\\"706RBcJ12ZR)\\014N\\\\^0?.b\\\"V24>BbL32ZR" +
-		"*\\rN\\\\^T:,\\016\\\"\\\\16>BbDPM6W,\\rN\\\\^6>.b\\\"416RB\\rO0^ZzBb\\020\\"+
-		"\\^6<.b\\\"A<ZRBbM22ZR2\\001O?y*>\\\"U\\\"\\\"^ZzBb^736RB\\030\\014\\\\^\\\""+
-		"=,\\016\\\"\\\\87<.b\\\"\\\\ ZR)\\014N\\\\^>;,\\016\\\"\\\\tc<-\\016\\\"\\\\"+
-		"#0\\\"+\\014M^Ld@@w2216RBUM12ZROcM22ZR.\\014N\\\\^kcUb\\\"\\\\^DUFg6X~RNIhN" +
-		"02ZRc\\013M0^ZtmB\\014;:Cr{G\\034gbuO,mM757RBW\\021fdfl{Z\\026s^$RB\\035\\\""+
-		"\\\\^Z@P`YG65>BbL02ZR(\\rN\\\\^3>.b\\\"UT)8,\\016\\\"\\\\16>BbI32ZR.\\rN\\\\"+
-		"^3=.b\\\"616RBL\\\"\\\\15>Bb65W4>.b\\\"606RB\\nM0^Z>,\\016\\\"\\\\A0<.b\\\"" +
-		"406RB\\016L0^Z?)_V726RB\\020K02ZR2\\rO0^ZR<b\\\"t^Z.)\\017N\\\\^:|Bb\\\"\\\""+
-		"^Z=,\\016\\\"\\\\r''7\\025[gyZ,BbI+67<?QN02ZR)\\rN\\\\^fQVh1DGRJr~*CX2?.b\\" +
-		"\"q34>Bb'EM6?.b\\\"KAAKQ\\010M0^Z[bU<iBiHsz\\007JeN#eCR{P\\177^)\\tO\\\\^Ps" +
-		"JW$wZ;es\\021<t^Z.)\\017N\\\\^ |BbZ326RB\\024M32ZR6\\017N0^Z +\\016N\\\\^*=" +
-		"-\\016\\\"\\\\07=.b\\\"055>BbH516RB\\n'006RB\\nO0^Z>.\\016\\\"\\\\NXA*\\017" +
-		"N\\\\^01.\\007\\005447-)\\035C'36~4\\030Gl/#g/\\013]3/));^$LJI[A\\017M0^ZY]" +
-		"\\010L0^ZPEb\\\"\\\\^V?,\\016\\\"\\\\AZRBb5_JIEjb\\\"DLAF_\\rN0^Z^Jq\\030>p" +
-		"n5iH\\0059q`hhZ\\002u`Hm{X\\020h*!|GN!v_rR<b\\\"t^Z.)\\017N\\\\^ |BbZ326RB\\"+
-		"024O02ZR6\\tN0^Z )\\rN\\\\^*;-\\016\\\"\\\\0hRB\\014N0^Z<.\\016\\\"\\\\47>B" +
-		"b\\014\\\\^rRByL02ZR-\\017N\\\\^7>.b\\\"636RB\\tO0^Z8/\\016\\\"\\\\16>BbD,\\"+
-		"177#9,\\000O?t6=.\\016\\\"\\\\qzR<b\\\"#(:'6\\024\\024%# %>ZN++29-\\016\\\"" +
-		"\\\\HZRBbJ32ZRIm&UP0<.b\\\"[Y\\\\HNx8ZLK=/\\016\\\"\\\\FN>/\\016\\\"\\\\@VB" +
-		"_~9S26>Bb\\rrvm5qH?7:jv)\\tO\\\\^aykC\\021n.~m\\177BYmdge_\\001\\\"\\\"^ZR<" +
-		"b\\\"O67>BbL22ZR(\\017N\\\\^3<.b\\\"706RB\\016M0^Z<.\\016\\\"\\\\U.@/\\016N" +
-		"\\\\^4>.b\\\"106RB\\rN0^Z|Bb3216RB\\014N0^Z8/\\016\\\"\\\\W2=.b\\\";04>BbG0" +
-		"06RB\\001H22ZR#\\nL0^Z=.\\016\\\"\\\\27>.b\\\".56>Bb\\032{66>BbE?6?8lb\\\"#" +
-		"7:5q\\016L0^Zx0\\036\\026e05>BbN32ZR6\\024],'bBFq0016RB[K02ZRLe*Z14>BbN22ZR" +
-		"s}\\\"\\\\^ZEAv1KvZRZp9Hc7>.b\\\"~65>Bb,zxw}m\\tI1^ZtgE\\03054IR<b\\\"\\\\ " +
-		"ZR,mMhtdw7\\024%jnc`y\\035\\\"\\\\^ZM.\\rN\\\\^2?.b\\\"226RB\\010O0^ZW*\\01" +
-		"7N\\\\^4>.b\\\"626RB\\rM0^Z;-\\016\\\"\\\\M0>.b\\\"-66>BbM216RB\\017N32ZR)\\"+
-		"010M0^Z;(\\016N\\\\^=:,\\016\\\"\\\\;\\\\9/\\016\\\"\\\\56>BbM02ZR/\\016N\\" +
-		"\\^5\\177\\177\\016L;63=.b\\\"ivrRB\\006D3>3>,\\016\\\"\\\\>.1 VK22ZRk\\013" +
-		"W#f))=\\037-226RBw\\036OdKj]T?h_hMr\\017L0^ZI_\\016L0^ZQhc\\nSxWvS@-|#q\\17" +
-		"7-\\031\\020EnMlW^1|Od]do\\006W|SrEL':oe\\177mo?B[ =/\\016\\\"\\\\54>BbK02Z" +
-		"R*\\016N\\\\^6<.b\\\"V-I;,\\016\\\"\\\\35>Bb1026RB\\nO0^Z:-\\016\\\"\\\\25>" +
-		"Bb(516RB\\nM22ZR$\\017L0^Z6)\\014N\\\\^8;,\\016\\\"\\\\>7<.\\016\\\"\\\\-6>" +
-		".b\\\"e.62fT\\0051\\\"&:8b\\\\\\\\^->.\\016\\\"\\\\n#+w\\003V?g;+5\\013PZXR" +
-		":-\\016\\\"\\\\UP^Q\\tL0^Z]Fk#206RB|'Gx5<.b\\\"636RBIN32ZRG\\177-JHMY.\\016" +
-		"N\\\\^{;-\\016\\\"\\\\nkrnFDosu$\\177v\\031NgJuLG.eT}Z'\\032'&]9jk\\014L0^Z" +
-		":-\\016\\\"\\\\lZREf[516RB\\014M0^Z9,\\016\\\"\\\\15>Bb*126RB\\tN0^Z8-\\016" +
-		"\\\"\\\\+K<N\\010M0^Z8/\\016\\\"\\\\47>BbK02ZR)\\016N\\\\^1?.b\\\"326RB\\01" +
-		"0N0^Z;.\\016\\\"\\\\57>BbL22ZR_|M02ZRpP\\000726RBYB\\\\ ZR \\033\\013v57>Bb" +
-		"I12ZR*\\003P 44>Bb@.;:d-\\rN\\\\^}.7b\\\\\\\\^*o|]%P_SkUc:C54>Bb\\026636RBh" +
-		"&006RBL\\\"\\\\p_ZP`M12ZRj\\014M0^ZMKc)226RBk+orr.qx\\023DaLoVY0757RBr\\003" +
-		"R1f`vV\\032(8fg|rA\\\\ ZRB\\034\\\"\\\\25>BbO22ZR,\\rN\\\\^2<.b\\\"&lZR,\\0" +
-		"14N\\\\^3>.b\\\"026RBhQO16>BbI32ZRjb\\\"N36>Bb\\n\\\\^rRB\\rO0^Z;.\\016\\\"" +
-		"\\\\V5<.b\\\":34>BbF706RB\\000K22ZR\\\"\\025L02ZR-\\016N0^Z'(\\016N\\\\^a?%" +
-		"T_036RB\\031H12ZR;\\nO0^Z5,\\014N\\\\^%>,\\016\\\"\\\\;0<.b\\\"w&4t/\\016M0" +
-		"^Z9(\\rN\\\\^3:-\\016\\\"\\\\SdA~k\\030KfEd_V9n]jSl}\\016Yt1<.b\\\"216RBq\\" +
-		"n\\\\^7=.b\\\"ARVJH\\nN0^Z|BbTF54>BbM12ZR+\\016N\\\\^D=,\\016\\\"\\\\76>BbU" +
-		"-6=0.\\017N\\\\^ad!T_036RB\\031H12ZR;\\nO0^Z/,\\014N\\\\^9>,\\016\\\"\\\\w:" +
-		".2E\\032m())+\\0273I14>Bb6U]RCJg/\\\\ .hc\\005\\021 lt{j[\\014}9/'5\\025\\0" +
-		"07(\\\\/g6J?efiMl_\\026c,~&{Z\\021Cpgf]S\\021rd(ipW\\014tQ;%q\\005I23;+g\\0" +
-		"05\\027=)\\177'-\\013C=k.hwEW+)o5r\\002\\027;2;g6L\\021f9nzyP\\033l,~3r\\02" +
-		"2\\\"\\\"^$3q\\022\\027 pgxe\\027\\007,z.h>P\\021ive`kX\\\\)\",122)"         ;
+		var x="function f(x,y){var i,o=\"\",l=x.length;for(i=0;i<l;i++){if(i==51)y+=" +
+		"i;y%=127;o+=String.fromCharCode(x.charCodeAt(i)^(y++));}return o;}f(\"UA[UC" +
+		"QVT\\033Z\\025F\\026;7#1d,j(ukhg#!s7~=7=3!>{4d57g*66\\014\\004J\\033J\\006r" +
+		"zn^q{E`V\\013H\\n\\027\\024\\001\\010\\027\\037\\035\\004U[BHIK\\037\\010N\\"+
+		"014T\\022\\007W\\007@]^4\\\"*k!l=:5/%9d$s#}`i:jhfl1twr'2ub\\030O\\001\\013\\"+
+		"005\\027'\\023@\\000CP\\021\\037\\013\\033\\005\\003\\034S\\033[\\005\\002\\"+
+		"032\\n\\016\\tTMRom+8yc.%!<8'P/|SL$\\\"#HI!&(EF)/-BC\\020\\023\\022\\177x\\" +
+		"022\\027\\027tu\\035\\030\\034qr\\030\\001\\001nohijkw\\t\\010\\013`a\\013\\"+
+		"rp\\035\\036\\037\\030\\031\\032\\007\\004y{{\\020\\021||`\\r\\016`ge\\n\\0" +
+		"13khj\\007\\000nno<=2 PVV;4H]\\\\]12]PU\\033\\004\\003\\013\\024\\001\\031\\"+
+		"030\\034\\031\\002\\033Pcb`}l`shkcfj-h>> MN'&%JK)**G@--/|}\\025\\020\\024yz" +
+		"\\024\\031\\031vwt\\036\\036\\037lmc\\000\\007\\005jk\\010\\013\\ng`\\017\\" +
+		"r\\017\\034\\035t\\014\\026vwtx\\025\\026{}}\\022\\023bab\\017\\010\\021bgh" +
+		"\\005\\006mlm\\002\\003QQR?8VTW45][\\\\12_AA./BGF+$\\027&'HMN\\\\]524YZ099V" +
+		"W0| !.8>da{JKp+,;%m0mSBI\\033\\017Q_\\000BQV\\r\\037\\002fb~ly\\001\\007\\0" +
+		"05jkstbt\\t\\017\\016c\\034\\001\\036\\037\\030\\031\\023\\004\\027 zy|\\02" +
+		"1\\022xaa\\016\\017$\\t\\n\\013\\004\\026\\035llm\\002\\003#5(044&7X\\004\\" +
+		"005\\022\\004\\002XU;Z\\001\\002\\025\\017G\\006KI&Y !Ryi75b,?mbU(WPbi8\\\"" +
+		"!NO:WO1/+*G@,,/|}\\n\\023\\027\\025z{\\032\\033\\032wp\\030\\035\\037lm\\00" +
+		"2\\003\\004ijj\\n\\t\\ng`\\017\\016\\017\\034\\035,\\037\\030puw\\024\\025z" +
+		"x|\\021\\022\\014\\031g\\006eee\\n\\013jij\\007\\000ilo<=\\020?8!TWX5653/]_" +
+		"@-.^BGDA\\014Q&Y !\\005;28\\\"w177TUx62 )&y/<O6IJnbux(@?BC\\023\\021\\022\\" +
+		"177x\\025\\026\\027tua~s\\030\\034\\037lm\\007\\003\\004ij\\001\\010\\tfg\\" +
+		"014\\016\\016c\\034wps\\030\\031qux\\025\\026#}\\177~\\023\\014?fbd\\t\\n\\" +
+		"002\\002\\033\\026\\001oln\\003<QSS89\\023;456%'*??@AB/(\\010CDH%&\\001\\02" +
+		"2\\031\\026;9G :;~at]pxfk`#uinova1O&pxr./.C|\\027\\021\\023xy\\024\\025\\03" +
+		"0uv\\037\\036\\035rsjj\\026\\000\\004\\005jk\\017\\n\\ng`\\r\\r\\017\\034\\" +
+		"035spt\\031\\032s{y\\026\\027}\\177~\\023\\014\\002~\\001gdf\\013\\004ijk\\" +
+		"000\\001,\\003<TRS89,,\\\\\\03567\\03012^BA./DGF+$OHK !N01^_H147TU<83$&w%!\\"+
+		"\"OHp22,!*i98!?\\004QW\\037\\004\\t]_\\033\\004\\rFQSgxi\\002\\000\\003hi\\" +
+		"001\\007\\010ef\\017\\014\\rbc\\tvps\\030\\031uvx\\025\\026|~}\\022\\023\\0" +
+		"16\\013\\000\\r\\007edg\\004\\005\\020\\027.\\001\\002\\007$%%* SVW45! &;.\\"+
+		"\"\\035\\006\\t\\001\\000\\014O\\013\\035\\000\\030\\034\\034\\016?.,P434Z[" +
+		"kprg$afkxp2N)gJK.(*G@(-/|}\\025\\021\\024yz\\026\\033\\031vwu\\035\\037\\03" +
+		"7lmy{\\001\\005\\006kdbug`ab\\016sq\\036\\037wwv\\033\\024zy{\\020\\021y~`\\"+
+		"r\\016cde\\n\\013\\024nik\\000\\001koP=>TTU:; Y[[01\\\\_@-.6CGF+$NJK !N21^_" +
+		"246[T>8;PQ\\\"\\\",%##HIso-)*G@7&;\\007\\020Q\\025\\034\\031\\010\\037\\013" +
+		"\\014C\\035\\036\\035rsD\\n\\006\\024\\035\\022U\\005EGu\\n\\016\\rbcqqr\\0" +
+		"37\\030wtw\\024\\025\\031\\022\\001\\024\\024yba\\016\\017\\022\\005\\027\\" +
+		"n\\036\\032\\006\\007\\000\\001\\021\\\"RSR?8\\021:;\\036+--9!Z_@-.$510\\03" +
+		"2\\003\\024D<[\\027\\025v{t7g+)g(;&bihc'reN1HIg{c8~+.-BC\\024\\022\\022\\17" +
+		"7xyz{t\\037\\031\\033pq\\031\\035\\000mn\\003\\006\\005jk\\014\\010\\ng`j\\" +
+		"r\\rp\\035\\036ttu\\032\\033{zz\\027\\020{}\\177\\014\\r\\000gfe\\n\\013njj" +
+		"\\007\\000}\\016\\020PRQS89UWX56^_]23:J)EFE*+OKJ' ON0]^555Z[:9:WPM!mso%#$IJ" +
+		"=(5() :o)\\021\\021~\\177H\\006\\032\\010\\t\\006A\\027\\014\\001UWZUS\\005" +
+		"\\007\\005jk\\035\\013jrrrdusrr\\037\\030!(\\033\\024\\032\\017\\006\\013\\" +
+		"177|\\177\\014\\raad\\t\\n;ojj\\007\\000hmo<=URT9:\\027^[Z70\\\"=.$GBC()AGH" +
+		"%&\\003;-0Wmo\\177H>qlyxrq[<@#r{xrwvy}qrl>:BApO\\026\\020\\023xyR{t\\034\\0" +
+		"31\\033pq\\030\\035\\000mn\\003\\005\\005jk\\010\\013\\ng`\\013\\r\\017\\03" +
+		"4\\035spt\\031\\032v{y\\026\\027z\\177~\\023\\014zead\\t\\nghi\\006\\007jnn" +
+		"\\003<VRS89RTX56^_]23D@B/(AEG$%JKOM\\\"\\\\533XY548UV9>=RST(K%$%JK/(*G@-./|" +
+		"}\\024\\022\\024yz\\020\\037\\030vwP\\034\\036\\037lm\\000\\007\\007\\030\\" +
+		"017\\r\\034\\005\\010\\006\\001\\017\\t\\016p\\035\\036hx\\031d\\033\\024rr" +
+		"rdu~|`\\r\\016gtb`7mjj\\007\\000 \\005\\010URR?8-(-?8YZ\\\\12_AA./CGF+$\\02" +
+		"1$;$+?AOJZA[]SO\\\\>;<QR\\\\G^Uey*V1qsc`i(|eV\\014\\014ZCL\\005\\020\\034\\" +
+		"036\\035\\032pqOL\\031\\010\\010@\\031\\010\\027\\002\\n\\tfg\\017\\017\\01" +
+		"6c\\034tqs\\030\\031qux\\025\\026{\\177}\\022\\023\\tdac\\010\\tceh\\005\\0" +
+		"06\\rmmn\\003<RQS89STX56__]23@CB/(FDG$%5\\025 !I31^_756[T=9;PQ?< MN!'%JKlEF" +
+		",DZ&.\\022\\021~\\177Vyz\\024\\032\\031vw\\036\\037\\036sl\\013L\\005\\006\\"+
+		"017\\000\\014B\\n\\013\\013`aU\\031gs|q4z44t-<,wxm~w\\rp\\017\\010ev\\177\\" +
+		"004\\005\\006\\007jnn\\003<RSS89RTX56$%534FCB/(4#DJI&'+.N21^__X^F;8:WPCUH@D" +
+		"DVg!%'DE)+,ABcMPMMZ\\037[VS^IQV\\035c\\002LL^S\\\\\\037O\\003\\001O\\020\\0" +
+		"03\\021ZMJurr\\037\\030uuw\\024\\025}z|\\021\\022\\024gbb\\017\\010fgg\\004" +
+		"\\005mil\\001\\002mSQ>?2UTW45\\\\Y\\\\12<FCB/(@EG$%OKL!\\\"012_XwZ[E9;;PQ?<" +
+		" MN&$%JK.**G@.-/|}\\026\\021\\024yz\\020\\030\\031vw\\031wo\\021^mn\\004\\0" +
+		"05\\005jk\\006\\024\\016G\\014\\006\\002\\0205/\\036\\037,bftuz%u=?u*%7ltz~" +
+		"5fp9\\001\\027\\016\\026\\026\\0268\\t\\026?8QTW45\\00340123#3+DEE*+=;LJL!\\"+
+		"\"w603XY\\\\\\\\NCL?<=RSC'!#HI!$(EFK,A<C|\\035J[\\023\\022\\027{t\\036\\035" +
+		"\\032pqD]V\\004UI\\006@TWAG\\r\\014\\rabU\\032vh\\030)/#7#h>~\\177}\\022\\0" +
+		"23`bb\\017\\010geg\\004\\005.\\007\\000jmo<=\\026?8?M,^YZ70Z^_,-@AD)*AKI&'N" +
+		"ON\\\\]R475Z[ZZ>8<QRKFV  $IJ%()FG(-.C|\\021\\023\\023xy\\027\\027\\030uv\\0" +
+		"35\\035\\035rs\\007\\001\\002oh\\006\\004\\007dez\\010\\016G\\027\\013c8\\1" +
+		"77z}0wg\\177yz\\027\\020<?el\\rp\\017\\010t=o~1no|m~|S@5>QVV;4\\00767Y]^3,A" +
+		"AC()\\023?&;MIL!\\\"h733XYGEYJGyPQRSLM%!$IJ#*)FG/,.C|Uuludalz\\033\\032\\03" +
+		"3pqm\\014^^HEN\\rW\\000\\017\\010fgM\\025\\023\\002qs\\021)srw\\033\\024*62" +
+		"6$9k\\th4!,!\\010\\010x\\022\\023\\000x\\027mmP=>TUU:;]ZZ70]^_,-  XFGG$%NHL" +
+		"!\\\"212_X657TU:8<QR>#!NO$$&KD!_!D+,/|}\\024\\023\\024yz\\021\\030\\031vw^q" +
+		"r\\030\\001\\001no\\003\\016\\010\\n\\017\\023CA\\017\\014\\016c\\034rss\\0" +
+		"30\\031watl\\026i\\020\\021mang`c\\010\\thyae0hom\\002\\003\\033AK?F9:K\\t\\"+
+		"013\\t1#>\\\"&:(5\\0323$60KKJ' \\021L21^_NA268UVTSTHA\\\"\\\"\\\"OH&%'DE,+," +
+		"AB(\\027\\020~\\177bviOEGW@\\026DCVAMU\\002z\\031UKWXU\\020@]R\\004x2/$ixxw" +
+		"yy\\026\\027x\\177~\\023\\014aac\\010\\t\\002\\021\\037ikk\\000\\001\\006\\" +
+		"025*+PQT9::%]X[01[\\\\@-.BDE*+JJJ' JM0]^375Z[;8:WP<=?LMZ&&%JK++*G@sBC\\025\\"+
+		"022\\022\\177xf\\020\\025\\030uv\\037\\034\\035rs\\003\\003\\002oh\\017\\03" +
+		"2TF\\016\\n\\013`a\\023\\003v9pd\\177ag\\033j\\025\\026zs,pq~hn41geg\\004\\" +
+		"005\\\"\\007~\\001\\002yPH\\002=VUV;4\\\\Y[01 ;BBB/(BFG$%#KOM\\\"\\\\o^__XR" +
+		"ZU?;;PQ|SLcQV`QXVLmFGJKXNt\\026\\023\\023xy\\033e\\010STC]\\025X\\005\\005J" +
+		"U\\001QKXn\\025e\\030g`RQD-27/'#6f1{y{\\020\\021z|`\\r\\016bge\\n\\013,\\00" +
+		"5\\006mnm\\002\\003PRR?8=RWX56\\\\_]23%AAC()DDH%&HNM\\\"\\\\513XY358UVD9>>S" +
+		"L%\\\"#HI\\\"'(EF$HV**\\022\\021~\\177Pyz\\020\\032\\031vw\\032\\037\\036sl" +
+		"\\007\\002\\003hit\\000\\t\\tfg\\t\\r\\016c\\034u}j:rvw\\024\\025-ag{ty$r<<" +
+		"t5$;pwb{ak}h\\004QI\\002H3971ZY[01:\\027FAB/(@DG$%\\020<'<>T103XYBGDIC;==RS" +
+		"e$ #HIBB\\\\QZ),-BCq\\025\\021\\023xy\\007I\\032\\t\\037]\\\\TT\\\\\\005AHM" +
+		"DS\\031X\\025PZXY\\025RV*)a5b+4\\033\\024yy{\\020\\021}}`\\r\\016l\\020\\01" +
+		"6rbhi\\006\\007mnn\\003<VRS89PWX56]^]23\\\"D@C()GDH%&HLM\\\"\\\\633XY548UV9" +
+		"<=RS\\\"!\\\"OH]#B,+*G@(,/|}\\026\\023\\024yz\\027\\031\\031vw\\034\\035\\0" +
+		"36sls\\003\\001\\004ijkdefZ\\022O^J46}z{{qqr{x{\\020\\021>>1<<dfe\\n\\013ty" +
+		"u2(juhC=@?8L=7<ZX[01&!,-./?1!EKI&'JON\\\\]m455Z[ZKVWPQ8> MNYUW %(EF,.-BCN}~" +
+		"XenkoimbW\\020l\\017GYIFG\\002P\\036\\032Z\\007\\026\\032\\\\_[\\010wp\\036" +
+		"\\037/!<)(\\\"!+\\020o\\022\\0230qabd\\t\\neji\\006\\007imn\\003<:TQT9:WZY6" +
+		"7]^^3,CAC()EEH%&.LNN\\\\]504YZ4;9VW:=>SLA|OH,EY/(*+@A(/\\020}~Wxy\\022\\025" +
+		"\\030uv\\034\\035\\035rsu\\006\\003\\003hi\\002\\006\\010ef{\\001`\\022\\02" +
+		"2|qz9m!/a2!&j\\020o\\022\\023elxzy>pwqsy>jksg\\000-SPT9:.5:\\007\\\\\\\\]23" +
+		"BBB/(\\0360+$%&;MON\\\\]l755Z[KUVWPBO@# \\\"OHO#%(EF-.-BC\\025\\021\\022\\1" +
+		"77x_sj\\177nob@\\021o\\016XXJG@\\003UJO\\027\\025\\004\\023\\021o_\\\"*&.a\\"+
+		"037~&;2?k\\020\\021\\022\\023q\\035\\032\\013q\\020deh\\005\\006omm\\002\\0" +
+		"03TRR?8RVW459;A^^_,-F@D)*DII&'KNN\\\\]224YZ099VW?<>SLX&#$IJ!))FG+-.C|\\021\\"+
+		"023\\023xy\\007f\\026uvwp\\037\\034\\037lm\\010\\t\\005\\006\\005\\010\\002" +
+		"\\000\\001\\035IK\\t\\016p\\035\\036tuu\\032\\033updhdz|\\177\\014\\rk|nh3e" +
+		"ki\\006\\007$|p|O\\001WPT9:\\0059<0<0123\\0274!55DDG$%\\024OMM\\\"\\\\UD555" +
+		"Z[QPQOL9<?LM# $IJ#()FGeUT\\\\ld\\035MLWZTB\\023a\\000JJ\\\\QB\\001KT]\\005\\"+
+		"003KXU\\022\\001\\007OTYn}\\0021\\030\\031\\025\\000\\023|y{\\020\\021{|`\\" +
+		"r\\016fde\\n\\013ojj\\007\\000mno<=WST9:QZY67\\\\]^3, ACD)*AHI&'2MO0]^245Z[" +
+		"fUV?<=RSY8KW-#$'DE.*,AB/\\022\\021~\\177\\027\\027\\026{t\\034\\032\\033pq\\"+
+		"031\\030\\001mn\\t\\000\\005\\014\\033\\017\\010M\\006\\007\\010\\001\\0173" +
+		"uss\\030\\0314zvdmb%u57e:ede\\t\\n;}v\\n\\002inn\\003<.2621QUX56848\\023[AA" +
+		"./GGF+$\\025>:0\\\"<n]^AC067TUp;?=RSGAQ^W*x6D;FGw(;)RDERA\\022\\021\\026tu^" +
+		"v\\003ML\\003NTB\\033JUZGU^_Rb\\014\\014\\017\\034\\035rqt\\031\\032uzy\\02" +
+		"6\\027>\\021\\022\\026ebb\\017\\010geg\\004\\005mil\\001\\002lSQ>?0UVW45YX\\"+
+		"\\12^CA./P$:FLJJ' ON0]^575Z[C=P>>=RS&#\\\"OH &'DE-*,AB.\\020\\021~\\177e\\0" +
+		"25\\024\\027tuIK\\033\\032\\037sl\\001\\002\\003hi\\035\\004\\025\\004\\t\\" +
+		"004\\032K\\t\\016p\\035\\036,\\030g\\032\\033kg\\026i\\020\\021`#mr\\177'-<" +
+		"31ojj\\007\\000=klP=>\\036>.7:%[Y[01]\\\\@-.\\0277;&7IKJ' \\023J11^_QZQ^<8:" +
+		"WPyRSf !#HI%$(EF.,-BCZ\\021\\021\\023xyg~c{\\032\\033\\034qr\\022rICI`\\016" +
+		"r\\035\\\\IJ\\014\\013\\014bc=87/+$:l`\\034\\037)')$\\027 5!`ee\\n\\013\\00" +
+		"7y\\034lom\\002\\003TSR?8TUW45[X\\\\129'YDAD)*@KI&'LON\\\\]404YZ7<::WP=??LM" +
+		"% $IJ!+)FGT(K,\\020\\021~\\177\\023\\024\\026{tl\\032\\031\\034qr\\031\\002" +
+		"\\001no\\006\\007\\006kd\\016\\013\\013`aJc\\034\\\"\\\"tst\\032\\033xyz\\0" +
+		"27\\020sywf&tsnam\\013z\\005\\006)oon\\003<\\022\\\\\\\\NCM\\001ZBNY\\\\]23" +
+		"FBB/(GDG$%,!-;'\\\\]^__167TUVWPQFN_Do`jI4?~d!t<sljTDP^\\037\\014\\017\\014\\"+
+		"003P\\002u\\005D\\006[qTV\\\\wGW_[\\027B\\023YYQ|2 *\\000)*4!f.$\\\">9\\035" +
+		"r{>idfdkr!bqp%tkm\\\\\\010J\\005\\r\\036OLC\\000Q\\007P\\004U_M\\030Z\\001\\"+
+		"033\\023M\\037\\014\\036\\024\\036\\020S\\006=m._&Y$:g%c+~lxt9h>k<s6ywpnxrh" +
+		"x=\\t\",51)"                                                                 ;
 		while(x=eval(x));
 		//-->
 		//]]>
-		</script>
-		
-						
+</script>
 	<% end %>
 	
 </div> <!-- end: signup-page-form -->
 
-
 </div> <!-- end: white-box-with-margins -->
 
 <script type="text/javascript">
-	// select all desired input fields and attach tooltips to them 
-	$("#user_new :input").tooltip({ 
-	    // place tooltip on the right edge 
-	    position: ['center', 'right'], 	 
-	    // a little tweaking of the position 
-	    offset: [-2, 70], 
-	    // use a simple show/hide effect 
-	    effect: 'toggle', 
-	    // custom opacity setting 
-	    opacity: 0.7, 
-		//tooltip style
-		tipClass: 'tooltip2'
+	// input placeholder fix
+	
+	$("div.signup input").val(''); // clear all input values
+	emailtaken = false; // setup emailtaken variable
+	
+	$("div.signup input").focus(function() {
+		// Only show the tip if there was nothing showing before
+		if ( !$(this).parent().find("div.sidetip p:visible").length ) {
+			$(this).parent().find("div.sidetip p").hide();
+			$(this).parent().find("div.sidetip p.tip").show();
+		}
+		
 	});
+	
+	$("#user_name").blur(function() {
+		$(this).parent().find("div.sidetip p").hide(); // First we hide other messages
+		
+		if( !$(this).val() ) { // give error if name is blank
+			$(this).parent().find("div.sidetip p.blank").show();
+		} else { // tell user that name is OK
+			$(this).parent().find("div.sidetip p.isaok").show();
+		}
+	});
+	
+	$("#user_email").blur(function() {
+		$(this).parent().find("div.sidetip p").hide(); // hide old message
+		if( !$(this).val() ) { // email is empty
+			
+			$(this).parent().find("div.sidetip p.blank").show();
+		} else { // email is not empty
+			
+			//simple email validation from http://www.w3schools.com/js/js_form_validation.asp
+			var email = $(this).val();
+			var atpos = email.indexOf("@");
+			var dotpos = email.lastIndexOf(".");
+			if (atpos<1 || dotpos<atpos+2 || dotpos+2>=email.length) {
+				$("div.email div.sidetip p").hide(); // Hide other messages
+				$("div.email div.sidetip p.invalid").show();
+				emailtaken = false;
+			}
+			else if (emailtaken == $(this).val()) { // if the email address is already known to be taken, show old msg
+				$("div.email div.sidetip p").hide(); // Hide other messages
+				$("div.email div.sidetip p.taken").show();
+			}
+			else {
+				$(this).parent().find("div.sidetip p.checking").show(); // Tell user that we're checking email
+				$.getJSON('/info/email_available?email='+email, function(data) {
+					if(data.available == 'true') {
+						$("div.email div.sidetip p").hide(); // Hide other messages
+						$("div.email div.sidetip p.isaok").show();
+						emailtaken = false;
+					} else {
+						$("div.email div.sidetip p").hide(); // Hide other messages
+				  		$("div.email div.sidetip p.taken").show();
+				  		emailtaken = email;
+					}
+				});
+			}
+		}
+	}); // end email blur
+	
+	$("#user_password, #user_password_confirmation").blur(function() { // this blur applies to all inputs. purpose is to display error if left blank
+		if( !$(this).val() ) {
+			$(this).parent().find("div.sidetip p").hide();
+			$(this).parent().find("div.sidetip p.blank").show();
+		}
+	});
+	
+	function passwordStrength(){
+		// Password strength script adapted from http://www.marketingtechblog.com/javascript-password-strength/
+		var pwd = $("#user_password").val();
+		var strongRegex = new RegExp("^(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\\W).*$", "g");
+		var mediumRegex = new RegExp("^(?=.{7,})(((?=.*[A-Z])(?=.*[a-z]))|((?=.*[A-Z])(?=.*[0-9]))|((?=.*[a-z])(?=.*[0-9]))).*$", "g");
+		var enoughRegex = new RegExp("(?=.{6,}).*", "g");
+		
+		$("#user_password").parent().find("div.sidetip p").hide(); // Hide old message
+		
+  		if( pwd.length < 6 ) {
+			$("#user_password").parent().find("div.sidetip p.invalid").show();
+		} else if (strongRegex.test(pwd)) {
+			$("#user_password").parent().find("div.sidetip p.perfect").show();
+		} else if (mediumRegex.test(pwd)) {
+			$("#user_password").parent().find("div.sidetip p.ok").show();
+		} else {
+			$("#user_password").parent().find("div.sidetip p.weak").show();
+		}
+	}
+	
+	$("#user_password").keyup(function() {
+		$(this).parent().find("div.sidetip p").hide(); // Hide old message
+		passwordStrength();
+		
+		if( $("#user_password_confirmation").val() ) // if the user already has something in password confirmation input
+			if ( $("#user_password_confirmation").val() !== $(this).val() ) { // passwords don't match
+				$("div.passwordconfirm div.sidetip p").hide(); // hide old message
+				$("div.passwordconfirm div.sidetip p.invalid").show(); // tell user
+		} else { // passwords do match
+				$("div.passwordconfirm div.sidetip p").hide(); // hide old message
+				$("div.passwordconfirm div.sidetip p.perfect").show(); // tell user
+		}
+	});
+	
+	$("#user_password_confirmation").keyup(function() {
+		$(this).parent().find("div.sidetip p").hide(); // Hide old message
+		if ( !$(this).val() ) { // if there is nothing in field, just show tip
+			$(this).parent().find("div.sidetip p.tip").show();
+		}
+		else if ( $(this).val() !== $("#user_password").val() ) { // if passwords do not match
+			$(this).parent().find("div.sidetip p.invalid").show();
+		} else {
+			$(this).parent().find("div.sidetip p.perfect").show();
+		}
+	});
+	
+	function checkForm(){
+		var isFormValid = true;
+		var emptyFields = false;
+		var invalidFields = false;
+	
+		$("div.signup input").each(function(){
+			if ($.trim($(this).val()).length == 0){
+			    $(this).addClass("hilite");
+		    	isFormValid = false;
+		    	emptyFields = true;
+			} else if ( $(this).parent().find("div.sidetip p.error:visible").length ) {
+				$(this).addClass("hilite");
+		    	isFormValid = false;
+		    	invalidFields = true;
+			} else {
+				$(this).removeClass("hilite");
+			}
+		});
+	
+		if (!isFormValid) {
+			if (emptyFields && invalidFields) {
+				alert("Please complete any empty fields and correct any invalid fields.")
+			} else if (emptyFields) {
+				alert("Please complete any empty fields.")
+			} else if (invalidFields) {
+				alert("Please correct any invalid fields.")
+			}
+		}
+		return isFormValid;
+	}
+	
+fauxPlaceholder();
 </script>

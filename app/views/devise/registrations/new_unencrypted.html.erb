@@ -1,7 +1,5 @@
 <% page_title  I18n.t :signup, :scope => 'page_titles' %>
 
-<!-- IMPORTANT TODO: ENCRYPT THIS FORM!! ALSO, FIX IE PLACEHOLDERS!! -->
-
 <div class="white-box-with-margins">
 			
 <div class="signupform" id="signup-page-form">
@@ -69,7 +67,6 @@
 
 <script type="text/javascript">
 	// input placeholder fix
-	FauxPlaceholder();
 	
 	$("div.signup input").val(''); // clear all input values
 	emailtaken = false; // setup emailtaken variable
@@ -213,4 +210,6 @@
 		}
 		return isFormValid;
 	}
+	
+fauxPlaceholder();
 </script>
