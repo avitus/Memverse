@@ -26,7 +26,7 @@ module ApplicationHelper
       
   def flash_messages
     messages = ''.html_safe
-    [:error, :notice].each do |t|
+    [:error, :notice, :alert].each do |t|
       if flash[t]
         messages << content_tag(:div, flash[t].html_safe, :id => "flash-#{t}", :class => "flash gray-box-bg" )
       end
