@@ -51,10 +51,6 @@ gem 'ckeditor'                                                                  
 gem 'paperclip'                                                                                 # Attachment handling 
 gem 'capistrano', '>=2.9.0'                                                                     # Deploy with Capistrano
 gem 'ruby-openid'
-gem 'ziya', '>=2.3.0'                                                                           # Required for flash charts
-gem 'color'                                                                                     # Required for Ziya
-gem 'logging'                                                                                   # Required for Ziya
-gem 'builder'                                                                                   # Required for Ziya
 gem 'nokogiri', '1.4.6'                                                                         # HTML/XML parsing
 gem 'test-unit', '=1.2.3'                                                                       # Required for restful_authentication (?)
 gem 'json'                                                                                      # Javascript Object Notation support

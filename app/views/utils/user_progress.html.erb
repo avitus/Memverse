@@ -1,3 +1,130 @@
 <div class="white-box-with-margins">
-	<%= ziya_chart load_progress_url, :user => @user_id, :size => "1000x800" -%>
+	<div id="container" style="width: 100%; height: 500px"></div>
 </div>
+
+<script type="text/javascript">
+
+var chart; // globally available
+
+$(document).ready(function() {
+	
+	Highcharts.setOptions({
+	    colors: ['#6b9620', '#3c5313', '#e17329', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4']
+	});	
+	
+	var options = {
+	    credits: {
+	        text: 'Memverse.com',
+	        href: 'http://www.memverse.com'
+	    },
+		chart: {
+			renderTo: 'container',
+			defaultSeriesType: 'area'
+		},
+		
+		title: {
+			text: "<%= @user.name_or_login %>'s Progress",
+	        style: {
+	            color: '#333333',
+	            fontWeight: 'bold'
+	        }			
+		},
+		xAxis: {        
+	        labels: {
+	            enabled: false
+	        }
+		},
+		yAxis: [{
+			title: {
+				text: 'Verses',
+		        style: {
+		            color: '#333333',
+		            fontWeight: 'bold'
+		        }				
+			},
+		}, {
+			title: {
+				text: 'Time Required [mins]',
+		        style: {
+		            color: '#333333',
+		            fontWeight: 'bold'
+		        }				
+			},
+			opposite: true,
+		}],
+	    legend: {
+	        itemStyle: {
+	            color: '#333333',
+	            fontWeight: 'bold'
+	        }
+	    },		
+		plotOptions: {
+			series: {
+				lineWidth: 2,
+				fillOpacity: 0.1,
+				marker: {
+					enabled: false,
+					states: {
+						hover: {
+							enabled: true,
+							radius: 4
+						}
+					}
+				},
+				shadow: false,
+				states: {
+					hover: {
+						lineWidth: 1,                  
+					}
+				}			
+			},
+		   	area: {
+		    	fillColor: {
+		        	linearGradient: [0, 0, 0, 450],
+		        	stops: [[0, '#6b9620'],
+		            		[1, 'rgba(0,0,0,0)']],
+		    	},
+		    	lineColor: '#6b9620',
+		    },
+			line: {
+			}
+		},		
+		series: []
+	};	
+	
+
+				
+	$.get('/load_progress.json?user=<%= @user.id %>', function(data) {
+		
+		var learning_data  = { data: [] };
+		var memorized_data = {	data: [], 
+								fillcolor: { stops: [[0, '#3c5313'], [1, 'rgba(0,0,0,0)']] },
+								lineColor: '#3c5313'														
+							  };
+		var time_req       = { data: [], type: "line", yAxis: 1 };
+		var dates		   = [];
+        	        
+    	learning_data.data = data[0];
+    	learning_data.name = "Learning"
+
+    	memorized_data.data = data[1];
+    	memorized_data.name = "Memorized";
+
+    	time_req.data = data[2];
+    	time_req.name = "Time Required [mins]";
+    	
+    	dates = data[3];
+
+		options.series.push(learning_data);
+		options.series.push(memorized_data);
+		options.series.push(time_req);
+		options.xAxis.categories = dates;
+
+	    // Create the chart
+	    var chart = new Highcharts.Chart(options);				
+							 			 
+	}, "json" );
+
+});
+
+</script>

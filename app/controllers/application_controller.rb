@@ -9,9 +9,6 @@ class ApplicationController < ActionController::Base
   helper :all # include all helpers, all the time
   protect_from_forgery
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
- 
-  helper Ziya::HtmlHelpers::Charts
-  helper Ziya::YamlHelpers::Charts
   
   before_filter :set_locale, :prepare_for_mobile  
 
