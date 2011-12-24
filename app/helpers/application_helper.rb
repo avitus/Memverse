@@ -105,6 +105,8 @@ module ApplicationHelper
   # ----------------------------------------------------------------------------------------------------------
   # This function replaces 'escape_javascript' which used to work under Rails 2.2.2 but stopped working in 
   # Rails 2.3.4. For some reason, verses were being truncated on semicolons.
+  # NOTE FROM ACW 12/24/2011: Reverted to using escape_javascript when escape_verse wasn't working properly when
+  # called in view, like <%= escape_verse(@mv.verse.text.html_safe) %> (which removed "s, instead of escaping them)
   # ----------------------------------------------------------------------------------------------------------   
   VS_ESCAPE_MAP = {
   '\\'    => '\\\\',

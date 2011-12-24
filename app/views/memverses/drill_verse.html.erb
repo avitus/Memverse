@@ -100,9 +100,9 @@
 		// Verse feedback	
 		var current		= {};
 		var live		= {};
-		current.text	= "<%= escape_verse(@mv.verse.text.html_safe) %>";
+		current.text	= "<%= escape_javascript(@mv.verse.text.html_safe) %>";
 		current.feedback = <%= @mv.show_feedback? %>;
-		current.mnemonic = "<%= @mv.mnemonic_if_req %>";
+		current.mnemonic = "<%= escape_javascript(@mv.mnemonic_if_req.html_safe) %>";
 
 		function getversefeedback(guess){
 			live = versefeedback(current.text, guess, current.feedback);
