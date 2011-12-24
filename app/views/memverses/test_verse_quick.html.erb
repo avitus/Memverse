@@ -126,7 +126,7 @@
 		current.id		 = "<%= @mv.id %>";
 		current.text   	 = "<%= escape_verse(@mv.verse.text.html_safe) %>";
 		current.feedback = <%= @mv.show_feedback? %>;
-		current.mnemonic = "<%= @mv.mnemonic_if_req %>"
+		current.mnemonic = "<%= @mv.mnemonic_if_req %>";
 		live.correct     = false; // Can currently toggle verse (show/hide)
 		live.feedtext    = "Waiting for you to begin typing..."; // Live Feedback text
 		

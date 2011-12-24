@@ -553,7 +553,7 @@ class Memverse < ActiveRecord::Base
   # Should we show feedback for this verse?
   # ----------------------------------------------------------------------------------------------------------   
   def show_feedback?
-  	return (self.test_interval < 90 or self.user.show_echo)
+  	self.test_interval < 90 or self.user.show_echo?
   end
   
   # ----------------------------------------------------------------------------------------------------------
