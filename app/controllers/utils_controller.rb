@@ -46,7 +46,7 @@ class UtilsController < ApplicationController
   end
   
   # ----------------------------------------------------------------------------------------------------------
-  # Create a new tweet
+  # Destroy a tweet
   # ----------------------------------------------------------------------------------------------------------   
   def destroy_tweet
     @tweet = Tweet.find(params[:id])
@@ -924,7 +924,7 @@ class UtilsController < ApplicationController
     dead_user.delete_account   
     
     redirect_to :action => 'search_users'   
-  end    
+  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Delete a church
@@ -938,8 +938,12 @@ class UtilsController < ApplicationController
     
     dead_church.destroy    
     redirect_to :action => 'show_churches'   
-  end     
+  end
   
+  def become_user
+    sign_in(:user, User.find(params[:id]))
+    redirect_to root_url
+  end
   
 end
 
