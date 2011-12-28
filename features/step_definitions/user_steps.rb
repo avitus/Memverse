@@ -57,3 +57,11 @@ Then /^I should be signed out$/ do
   And %{I should see "LOG IN"}
   And %{I should not see "Logout"}
 end
+
+Given /^the email address "(.*)" is confirmed$/ do |email|
+  User.find_by_email(email).confirm!
+end
+
+Given /^the email address "(.*)" is not confirmed$/ do |email|
+  !User.find_by_email(email).confirmed?
+end

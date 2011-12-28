@@ -24,9 +24,19 @@ Feature: Sign in
     Scenario: User signs in successfully with email
       Given I am not logged in
       And I am a user named "foo" with an email "user@test.com" and password "please"
+      And the email address "user@test.com" is confirmed
       When I go to the sign in page
       And I sign in as "user@test.com/please"
       Then I should see "Signed in successfully."
       And I should be signed in
       When I return next time
       Then I should be already signed in
+    
+    Scenario: User account is not confirmed
+      Given I am not logged in
+      And I am a user named "foo" with an email "user@test.com" and password "please"
+      And the email address "user@test.com" is not confirmed
+      When I go to the sign in page
+      And I sign in as "user@test.com/please"
+      Then I should see "You have to confirm your account before continuing."
+      And I should be signed out

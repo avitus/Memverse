@@ -5,6 +5,7 @@ Feature: Sign out
 
     Scenario: User signs out
       Given I am a user named "foo" with an email "user@test.com" and password "please"
+      And the email address "user@test.com" is confirmed
       When I sign in as "user@test.com/please"
       Then I should be signed in
       And I sign out
