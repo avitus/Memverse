@@ -65,8 +65,13 @@ gem 'htmldiff'                                                                  
 gem 'breadcrumbs_on_rails', '>=2.0.0'                                                           # For breadcrumb navigation bar
 gem 'memcache-client'                                                                           # Memcached client
 gem 'redis', '>=2.2.2'                                                                          # Redis Key-value store
+gem 'action_mailer_cache_delivery', git: 'git://github.com/ragaskar/action_mailer_cache_delivery.git' # Used to test email delivery with Cucumber
 
 group :console do
   gem 'wirble'
   gem 'hirb'
+end
+
+group :test do
+  gem 'email_spec'
 end

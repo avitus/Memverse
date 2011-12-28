@@ -39,9 +39,9 @@ end
 When /^I sign in as "(.*)\/(.*)"$/ do |email, password|
   Given %{I am not logged in}
   When %{I go to the sign in page}
-  And %{I fill in "Email" with "#{email}"}
-  And %{I fill in "Password" with "#{password}"}
-  And %{I press "Sign in"}
+  And %{I fill in "user[email]" with "#{email}"}
+  And %{I fill in "user[password]" with "#{password}"}
+  And %{I press "signinbutton"}
 end
 
 Then /^I should be signed in$/ do
@@ -53,7 +53,7 @@ When /^I return next time$/ do
 end
 
 Then /^I should be signed out$/ do
-  And %{I should see "Sign up"}
-  And %{I should see "Login"}
+  And %{I should see "SIGN UP"}
+  And %{I should see "LOG IN"}
   And %{I should not see "Logout"}
 end
