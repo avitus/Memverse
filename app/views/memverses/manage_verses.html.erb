@@ -107,7 +107,9 @@
 		.bind("ajax:success", function(evt, data, status, xhr){
 		  var $submitButton = $(this)
 		  $submitButton.html(data);
-		});		
+		});
+	
+	filtersetup(); // setup the verse filtering
    
   });
 </script>

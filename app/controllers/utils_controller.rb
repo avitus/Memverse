@@ -129,6 +129,8 @@ class UtilsController < ApplicationController
       }
     
     }
+    
+    redirect_to :action => 'dashboard'
   end
 
   # ----------------------------------------------------------------------------------------------------------

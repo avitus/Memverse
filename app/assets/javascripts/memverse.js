@@ -17,82 +17,83 @@ jQuery.fn.submitWithAjax = function() {
 };
 
 // Verse filtering; used and tweaked script from http://net.tutsplus.com/tutorials/javascript-ajax/using-jquery-to-manipulate-and-filter-data/
-var delay = (function(){
-  var timer = 0;
-  return function(callback, ms){
-    clearTimeout (timer);
-    timer = setTimeout(callback, ms);
-  };
-})(); // source: http://stackoverflow.com/questions/1909441/jquery-keyup-delay
-var $searchval = ""; 
-$(document).ready(function() {
+function filtersetup(){
+	var delay = (function(){
+	  var timer = 0;
+	  return function(callback, ms){
+	    clearTimeout (timer);
+	    timer = setTimeout(callback, ms);
+	  };
+	})(); // source: http://stackoverflow.com/questions/1909441/jquery-keyup-delay
+	var $searchval = ""; 
+	$(document).ready(function() {
+			
+		//default each row to visible
+		$('tbody tr').addClass('visible');
 		
-	//default each row to visible
-	$('tbody tr').addClass('visible');
+		var $searchico = $('#searchico');
+		var $filter = $('#filter');
+		
+		//overrides CSS display:none property
+		//so only users w/ JS will see the search icon
+		$searchico.show();
+		$searchico.click(function() {
+			$('#vsfilter').slideToggle(400);
+			$filter.focus();
+			return false;
+		});
+	// Thanks to Sam Dunn: http://buildinternet.com/2009/01/changing-form-input-styles-on-focus-with-jquery/
+	     $filter.focus(function() {  
+	         $(this).removeClass("idleField").addClass("focusField");  
+	         if (this.value == this.defaultValue){  
+	             this.value = '';  
+	         }  
+	         if(this.value != this.defaultValue){  
+	             this.select();  
+	         }  
+	     });  
+	     $filter.blur(function() {  
+	         $(this).removeClass("focusField").addClass("idleField");  
+	         if ($.trim(this.value) == ''){
+	           this.value = (this.defaultValue ? this.defaultValue : '');
+	         }
+	     });  
+		
+		$filter.keyup(function(event) {
+		//if esc is pressed
+	    if (event.keyCode == 27) {
+			//if esc is pressed we want to clear the value of search box and hide it again
+			$filter.val('');
+			$('#vsfilter').slideToggle(400);
+		}
+		//if nothing is entered
+		if ($(this).val() == '') {
+			//we want each row to be visible because if nothing
+			//is entered then all rows are matched.
+			$('tbody tr').removeClass('visible').show().addClass('visible');
+	    }
+		//else: there is text, let's set delay to filter (if user updates query soon, we won't be wasting resources filtering old)
+		else {
+			$searchval = $(this).val();
+			delay(function(){
+				filter('tbody tr', $searchval);
+			}, 300 );
+	    }
 	
-	var $searchico = $('#searchico');
-	var $filter = $('#filter');
-	
-	//overrides CSS display:none property
-	//so only users w/ JS will see the search icon
-	$searchico.show();
-	$searchico.click(function() {
-		$('#vsfilter').slideToggle(400);
-		$filter.focus();
-		return false;
+		});
 	});
-// Thanks to Sam Dunn: http://buildinternet.com/2009/01/changing-form-input-styles-on-focus-with-jquery/
-     $filter.focus(function() {  
-         $(this).removeClass("idleField").addClass("focusField");  
-         if (this.value == this.defaultValue){  
-             this.value = '';  
-         }  
-         if(this.value != this.defaultValue){  
-             this.select();  
-         }  
-     });  
-     $filter.blur(function() {  
-         $(this).removeClass("focusField").addClass("idleField");  
-         if ($.trim(this.value) == ''){
-           this.value = (this.defaultValue ? this.defaultValue : '');
-         }
-     });  
 	
-	$filter.keyup(function(event) {
-	//if esc is pressed
-    if (event.keyCode == 27) {
-		//if esc is pressed we want to clear the value of search box and hide it again
-		$filter.val('');
-		$('#vsfilter').slideToggle(400);
+	
+	//filter results based on query
+	function filter(selector, query) {
+	//	query	=	$.trim(query); //trim white space
+	//  query = query.replace(/ /gi, '|'); //add OR for regex
+	
+	  $(selector).each(function() {
+	    ($(this).text().search(new RegExp(query, "i")) < 0) ? $(this).hide().removeClass('visible') : $(this).show().addClass('visible');
+	  });
 	}
-	//if nothing is entered
-	if ($(this).val() == '') {
-		//we want each row to be visible because if nothing
-		//is entered then all rows are matched.
-		$('tbody tr').removeClass('visible').show().addClass('visible');
-    }
-	//else: there is text, let's set delay to filter (if user updates query soon, we won't be wasting resources filtering old)
-	else {
-		$searchval = $(this).val();
-		delay(function(){
-			filter('tbody tr', $searchval);
-		}, 300 );
-    }
-
-	});
-});
-
-
-//filter results based on query
-function filter(selector, query) {
-//	query	=	$.trim(query); //trim white space
-//  query = query.replace(/ /gi, '|'); //add OR for regex
-
-  $(selector).each(function() {
-    ($(this).text().search(new RegExp(query, "i")) < 0) ? $(this).hide().removeClass('visible') : $(this).show().addClass('visible');
-  });
 }
-
 // Thanks to Dustin for post: http://www.dustindiaz.com/check-one-check-all-javascript/
 function checkAllFields(ref)
 {
