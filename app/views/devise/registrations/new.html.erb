@@ -13,6 +13,44 @@
 		<script type="text/javascript">
 		//<![CDATA[
 		<!--
+		formSubmitted = false; // setup global variable
+		
+		function checkForm(){
+			var isFormValid = true;
+			var emptyFields = false;
+			var invalidFields = false;
+		
+			$("div.signup input").each(function(){
+				if ($.trim($(this).val()).length == 0){
+					$(this).addClass("hilite");
+					isFormValid = false;
+					emptyFields = true;
+				} else if ( $(this).parent().find("div.sidetip p.error:visible").length ) {
+					$(this).addClass("hilite");
+					isFormValid = false;
+					invalidFields = true;
+				} else {
+					$(this).removeClass("hilite");
+				}
+			});
+		
+			if (!isFormValid) {
+				if (emptyFields && invalidFields) {
+					alert("Please complete any empty fields and correct any invalid fields.")
+				} else if (emptyFields) {
+					alert("Please complete any empty fields.")
+				} else if (invalidFields) {
+					alert("Please correct any invalid fields.")
+				}
+			} else if (formSubmitted) { // form passes previous validation but has already been submitted
+				isFormValid = false;
+			} else { // The form is OK! We update global formSubmitted variable.
+				formSubmitted = true;
+			}
+			
+			return isFormValid;
+		}
+		
 		var x="function f(x,y){var i,o=\"\",l=x.length;for(i=0;i<l;i++){if(i==51)y+=" +
 		"i;y%=127;o+=String.fromCharCode(x.charCodeAt(i)^(y++));}return o;}f(\"UA[UC" +
 		"QVT\\033Z\\025F\\026;7#1d,j(ukhg#!s7~=7=3!>{4d57g*66\\014\\004J\\033J\\006r" +
@@ -270,37 +308,6 @@
 			$(this).parent().find("div.sidetip p.perfect").show();
 		}
 	});
-	
-	function checkForm(){
-		var isFormValid = true;
-		var emptyFields = false;
-		var invalidFields = false;
-	
-		$("div.signup input").each(function(){
-			if ($.trim($(this).val()).length == 0){
-			    $(this).addClass("hilite");
-		    	isFormValid = false;
-		    	emptyFields = true;
-			} else if ( $(this).parent().find("div.sidetip p.error:visible").length ) {
-				$(this).addClass("hilite");
-		    	isFormValid = false;
-		    	invalidFields = true;
-			} else {
-				$(this).removeClass("hilite");
-			}
-		});
-	
-		if (!isFormValid) {
-			if (emptyFields && invalidFields) {
-				alert("Please complete any empty fields and correct any invalid fields.")
-			} else if (emptyFields) {
-				alert("Please complete any empty fields.")
-			} else if (invalidFields) {
-				alert("Please correct any invalid fields.")
-			}
-		}
-		return isFormValid;
-	}
 	
 	// input placeholder fix
 	fauxPlaceholder();

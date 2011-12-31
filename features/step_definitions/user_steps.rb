@@ -16,10 +16,11 @@ end
 Given /^I am signed up as "(.*)\/(.*)"$/ do |email, password|
   Given %{I am not logged in}
   When %{I go to the sign up page}
-  And %{I fill in "Email" with "#{email}"}
-  And %{I fill in "Password" with "#{password}"}
-  And %{I fill in "Password confirmation" with "#{password}"}
-  And %{I press "Sign up"}
+  And %{I fill in "user[name]" with "My Name"}
+  And %{I fill in "user[email]" with "#{email}"}
+  And %{I fill in "user[password]" with "#{password}"}
+  And %{I fill in "user[password_confirmation]" with "#{password}"}
+  And %{I press "signupbutton"}
   Then %{I should see "You have signed up successfully. If enabled, a confirmation was sent to your e-mail."}
   And %{I am logout}
 end
