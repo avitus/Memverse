@@ -14,7 +14,7 @@ class Tweet < ActiveRecord::Base
   belongs_to  :church
   belongs_to  :group
   belongs_to  :country
-  belongs_to  :state
+  belongs_to  :smerican_state
   
   # Validations
   validates_presence_of   :news
