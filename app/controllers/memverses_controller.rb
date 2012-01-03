@@ -212,15 +212,19 @@ class MemversesController < ApplicationController
     verse     = popular_verses(100).sample # get 100 most popular verses - pick one at random
             
     # Pick out a translation in user's preferred translation or at random
-    verse_ref         = verse[0]     
-    verse_tl          = verse[1].select{ |tl| tl[0] == current_user.translation }.compact.first || verse[1].sample
-    verse_id          = verse_tl[1]
-    verse_translation = verse_tl[0]
-    
-    verse_txt         = Verse.find(verse_id).text
-    
-    return verse_txt, verse_ref, verse_translation, verse_id
-    
+    if verse  # TODO: Make bootstrapping of DB easier ... would be better to seed DB
+      verse_ref         = verse[0]     
+      verse_tl          = verse[1].select{ |tl| tl[0] == current_user.translation }.compact.first || verse[1].sample
+      verse_id          = verse_tl[1]
+      verse_translation = verse_tl[0]
+      
+      verse_txt         = Verse.find(verse_id).text
+      
+      return verse_txt, verse_ref, verse_translation, verse_id
+    else
+      return "Be joyful always", "1 Thess 5:16", "NIV", nil
+    end
+        
   end
   
   
