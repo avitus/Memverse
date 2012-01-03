@@ -44,7 +44,7 @@ Feature: Sign up
         | user_password              |                 |
         | user_password_confirmation | please          |
       And I press "submit"
-      Then I should see "Password can't be blank"
+      Then I should see "Password cannot be blank"
 
     @javascript
 	Scenario: User signs up without password confirmation
@@ -54,15 +54,15 @@ Feature: Sign up
         | user_password              | please          |
         | user_password_confirmation |                 |
       And I press "submit"
-      Then I should see "Password doesn't match confirmation"
+      Then I should see "Passwords do not match"
 
-	@javascript
+    @javascript
     Scenario: User signs up with mismatched password and confirmation
       And I fill in the following:
         | user_name                  | Testy McUserton |
         | user_email                 | user@test.com   |
         | user_password              | please          |
         | user_password_confirmation | please1         |
-      And I press "Sign up"
-      Then I should see "Password doesn't match confirmation"
+      And I press "submit"
+      Then I should see "Passwords do not match"
 
