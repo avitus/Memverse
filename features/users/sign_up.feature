@@ -16,7 +16,7 @@ Feature: Sign up
         | user_password              | please          |
         | user_password_confirmation | please          |
       And I press "submit"
-      Then I should see "YOU HAVE SIGNED UP SUCCESSFULLY."
+      Then I should see "You have signed up successfully. However, we could not sign you in because your account is unconfirmed."
       And "user@test.com" should receive an email
       And I open the email
       And I should see "activate your account"
@@ -56,13 +56,13 @@ Feature: Sign up
       And I press "submit"
       Then I should see "Passwords do not match"
 
-	@javascript
+    @javascript
     Scenario: User signs up with mismatched password and confirmation
       And I fill in the following:
         | user_name                  | Testy McUserton |
         | user_email                 | user@test.com   |
         | user_password              | please          |
         | user_password_confirmation | please1         |
-      And I press "Sign up"
+      And I press "submit"
       Then I should see "Passwords do not match"
 
