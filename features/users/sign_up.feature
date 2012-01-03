@@ -16,11 +16,11 @@ Feature: Sign up
         | user_password              | please          |
         | user_password_confirmation | please          |
       And I press "submit"
-      Then I should see "YOU HAVE SIGNED UP SUCCESSFULLY."
+      Then I should see "You have signed up successfully. However, we could not sign you in because your account is unconfirmed."
       And "user@test.com" should receive an email
       And I open the email
-      And I should see "activate your account"
-      And I follow "confirm"
+      And I should see "You can confirm your account through the link below"
+      And I follow "Confirm my account"
       Then I should see "Your account was successfully confirmed. Please sign in to continue."
       And "user@test.com" should receive an email
       And I open the email
