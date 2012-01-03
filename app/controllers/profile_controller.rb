@@ -68,7 +68,7 @@ class ProfileController < ApplicationController
     @user           = User.find(current_user)
     @user_country   = @user.country ?         @user.country.printable_name  : ""
     @user_church    = @user.church ?          @user.church.name             : ""
-    @user_group     = @user.group ?           @user.group.name             : ""
+    @user_group     = @user.group ?           @user.group.name              : ""
     @user_state     = @user.american_state ?  @user.american_state.name     : ""
     
   end # method: update_profile

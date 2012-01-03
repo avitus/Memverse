@@ -1,9 +1,10 @@
 require 'spec_helper'
 
 describe UsersController do
-
+  
   before (:each) do
     @user = Factory(:user)
+    @user.confirm!
     sign_in @user
   end
 
