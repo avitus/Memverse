@@ -15,8 +15,8 @@ Feature: Sign up
         | user[email]                 | user@test.com   |
         | user[password]              | please          |
         | user[password_confirmation] | please          |
-      And I press "commit"
-      Then I should see "Welcome! You have signed up successfully."
+      And I press "submit"
+      Then I should see "YOU HAVE SIGNED UP SUCCESSFULLY."
       And "user@test.com" should receive an email
       And I open the email
       And I should see "activate your account"
@@ -34,7 +34,7 @@ Feature: Sign up
         | user_password              | please          |
         | user_password_confirmation | please          |
       And I press "submit"
-      Then I should see "Email is invalid"
+      Then I should see "Doesn't look like a valid email"
 
     Scenario: User signs up without password
       And I fill in the following:
