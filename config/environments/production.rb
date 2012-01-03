@@ -54,7 +54,7 @@ MemverseApp::Application.configure do
     :port                 => 587,
     :domain               => 'memverse.com',
     :user_name            => 'admin@memverse.com',
-    :password             => 'veetle77',
+    :password             => 'Veetle77',
     :authentication       => "plain",
     :enable_starttls_auto => true  }  
    

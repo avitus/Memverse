@@ -33,7 +33,7 @@ Feature: Sign up
         | user_email                 | invalidemail    |
         | user_password              | please          |
         | user_password_confirmation | please          |
-      And I press "commit"
+      And I press "submit"
       Then I should see "Email is invalid"
 
     Scenario: User signs up without password
