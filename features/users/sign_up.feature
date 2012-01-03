@@ -11,10 +11,10 @@ Feature: Sign up
     @javascript
     Scenario: User signs up with valid data
       And I fill in the following:
-        | user[name]                  | Testy McUserton |
-        | user[email]                 | user@test.com   |
-        | user[password]              | please          |
-        | user[password_confirmation] | please          |
+        | user_name                  | Testy McUserton |
+        | user_email                 | user@test.com   |
+        | user_password              | please          |
+        | user_password_confirmation | please          |
       And I press "submit"
       Then I should see "YOU HAVE SIGNED UP SUCCESSFULLY."
       And "user@test.com" should receive an email
@@ -36,30 +36,33 @@ Feature: Sign up
       And I press "submit"
       Then I should see "Doesn't look like a valid email"
 
-    Scenario: User signs up without password
+    @javascript
+	Scenario: User signs up without password
       And I fill in the following:
-        | Name                  | Testy McUserton |
-        | Email                 | user@test.com   |
-        | Password              |                 |
-        | Password confirmation | please          |
-      And I press "Sign up"
+        | user_name                  | Testy McUserton |
+        | user_email                 | user@test.com   |
+        | user_password              |                 |
+        | user_password_confirmation | please          |
+      And I press "submit"
       Then I should see "Password can't be blank"
 
-    Scenario: User signs up without password confirmation
+    @javascript
+	Scenario: User signs up without password confirmation
       And I fill in the following:
-        | Name                  | Testy McUserton |
-        | Email                 | user@test.com   |
-        | Password              | please          |
-        | Password confirmation |                 |
-      And I press "Sign up"
+        | user_name                  | Testy McUserton |
+        | user_email                 | user@test.com   |
+        | user_password              | please          |
+        | user_password_confirmation |                 |
+      And I press "submit"
       Then I should see "Password doesn't match confirmation"
 
+	@javascript
     Scenario: User signs up with mismatched password and confirmation
       And I fill in the following:
-        | Name                  | Testy McUserton |
-        | Email                 | user@test.com   |
-        | Password              | please          |
-        | Password confirmation | please1         |
+        | user_name                  | Testy McUserton |
+        | user_email                 | user@test.com   |
+        | user_password              | please          |
+        | user_password_confirmation | please1         |
       And I press "Sign up"
       Then I should see "Password doesn't match confirmation"
 
