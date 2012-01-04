@@ -30,7 +30,7 @@ MemverseApp::Application.routes.draw do
   root        :to => 'home#index' 
 
   # Memverse Mappings
-  match 'reset_schedule',          :to => 'users#reset_schedule',            :as => 'reset_schedule'
+  match '/reset_schedule',         :to => 'users#reset_schedule',            :as => 'reset_schedule'
   
   match '/add_verse',              :to => 'memverses#add_verse',             :as => 'add_verse'
   match '/add/:id',                :to => 'memverses#ajax_add',              :as => 'add'

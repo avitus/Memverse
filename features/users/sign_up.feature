@@ -18,13 +18,10 @@ Feature: Sign up
       And I press "submit"
       Then I should see "You have signed up successfully. However, we could not sign you in because your account is unconfirmed."
       And "user@test.com" should receive an email
-      And I open the email
-      And I should see "You can confirm your account through the link below"
-      And I follow "Confirm my account"
-      Then I should see "Your account was successfully confirmed. Please sign in to continue."
-      And "user@test.com" should receive an email
-      And I open the email
-      And I should see "your account has been activated"
+      When I open the email
+      Then I should see "confirm your account" in the email body
+      When I follow "Confirm my account" in the email
+      Then I should see "Your account was successfully confirmed. You are now signed in."
     
     @javascript
     Scenario: User signs up with invalid email
