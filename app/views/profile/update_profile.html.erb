@@ -2,10 +2,9 @@
 <div class="white-box-with-margins">
 <h1><%=t('.Update profile')%></h1>
 
-<%= form_tag :action => 'update', :id => @user do %>
 	<div class="entry-form" id="edit-profile-form">
 	
-		<%= form_for @user do |f| %>
+		<%= form_for @user, :url => { :action => "update", :id => @user.id } do |f| %>
 
 			<% if @user.errors.any? %>
 				<div id="error_explanation">
@@ -144,19 +143,19 @@
 								 ["9 Months", 	273	],
 								 ["1 Year",		366 ]]     
 								 %>
-				</li>					
+				</li>
 				<li>
 					<%= f.label 			:mnemonic_use, t('.1st Letter Prompts') %>
 					<%= f.select			:mnemonic_use,
 								[["Always", 	'Always'	],
-								 ["Learning",	'Learning'	], 
-								 ["Never", 		'Never'		]]     
+								 ["Learning",	'Learning'	],
+								 ["Never", 		'Never'		]]
 								 %>
 				</li>
 				<li>
 					<%= f.label 			:auto_work_load, t('.Add verses as needed') %>
 					<%= f.check_box 		:auto_work_load %>
-				</li>					
+				</li>
 				<li>
 					<%= f.label 			:all_refs, t('.Test all references') %>
 					<%= f.check_box 		:all_refs %>
@@ -164,7 +163,7 @@
 				<li>
 					<%= f.label 			:show_echo, t('.Always show feedback') %>
 					<%= f.check_box 		:show_echo %>
-				</li>										
+				</li>
 				<!-- <li>
 					<%= f.label 			:show_toolbar, t('.Show social toolbar') %>
 					<%= f.check_box 		:show_toolbar %>
@@ -172,17 +171,16 @@
 				<li>
 					<%= f.label 			:show_email, t('.Show email') %>
 					<%= f.check_box 		:show_email %>
-				</li>	
+				</li>
 			</ul>
-			 				
+			
+			<div class="buttons">				
+				<%= submit_tag t('.Update profile') %>	
+			</div>
+		
 		<% end %> <!-- End: User form -->
 
-		<div class="buttons">				
-			<%= submit_tag t('.Update profile') %>	
-		</div>
-
 	</div>
-<% end %> <!-- End: Form Tag -->
 
 <p><%= t('.Photo Upload A') %> <b><%= link_to 'Gravatar', 'http://www.gravatar.com', {:target => '_blank'} %></b> <%= t('.Photo Upload B')%></p>
 
