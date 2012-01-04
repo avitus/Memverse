@@ -2,185 +2,185 @@
 <div class="white-box-with-margins">
 <h1><%=t('.Update profile')%></h1>
 
-	<div class="entry-form" id="edit-profile-form">
-	
-		<%= form_for @user, :url => { :action => "update", :id => @user.id } do |f| %>
+<div class="entry-form" id="edit-profile-form">
 
-			<% if @user.errors.any? %>
-				<div id="error_explanation">
-					<h2><%= pluralize(@user.errors.count, "error") %> prevented your profile from being updated:</h2>
+	<%= form_for @user, :url => { :action => "update", :id => @user.id } do |f| %>
 
-					<ul>
-						<% @user.errors.full_messages.each do |msg| %>
-							<li><%= msg %></li>
-						<% end %>
-					</ul>
-				</div>
-			<% end %> <!-- End: Error Messages -->
+		<% if @user.errors.any? %>
+			<div id="error_explanation">
+				<h2><%= pluralize(@user.errors.count, "error") %> prevented your profile from being updated:</h2>
 
-			<ul>
-				<li>
-					<%= f.label 			:name, t('.Name') %>
-					<%= f.text_field 		:name %>
-				</li>
-				<li>
-					<%= f.label 			:email, t('.Email') %>
-					<%= f.text_field 		:email %>
-				</li>
-				<li>
-					<%= f.label 			:gender, t('.Gender') %>
-					<%= f.select			:gender, [["Male", 'Male'],	["Female", 'Female']]  %>
-				</li>
-				<li>
-					<%= f.label 			:translation, t('.Translation') %>
-					<%= f.select			:translation,
-													[["New International Version (1984)",	'NIV' ],
-													["New International Version (2011)",	'NNV' ],
-													["New American Standard Bible", 		'NAS' ], 
-													["New King James Version",				'NKJ' ], 
-													["King James Version",					'KJV' ], 
-													["Revised Standard Version",  			'RSV' ], 
-													["New Revised Standard Version",  		'NRS' ], 														
-													["English Standard Version",          	'ESV' ],
-                        							["New Living Translation",        		'NLT' ],
-                        							["Contemporary English Version",   		'CEV' ],                            							
-                        							["Holman Christian Standard Bible",		'HCS' ],
-                        							["Darby Translation",					'DTL' ],
-                        							["The Message",                   		'MSG' ],
-                        							["Amplified Bible",                		'AMP' ],                            							
-													["New International Reader's Version",	'IRV' ],
-													["Updated King James Version",		 	'UKJ' ],
-													["Geneva Bible",					 	'GEN' ],
-													["Biblical Greek", 						'GRK' ],
-													["Nueva Version Internacional",			'NVI' ],
-													["Reina-Valera 1960",					'RVR' ],
-													["Louis Segond 1910",					'LSV' ],
-													["La Nuova Diodati",					'LND' ],														
-													["Afrikaans 1983 Translation",			'AFR' ],
-													["Herziene Statenvertaling",			'HSV' ],
-													["De Nieuwe Bijbelvertaling",			'NBV' ],
-													["Terjemahan Baru",						'TMB' ],
-													["Magandang Balita Biblia",				'MBB' ],																												
-													["Svenska Folkbibeln",					'SPB' ]]    
-								 %>
-				</li>					
-
-				<li>
-					<div class="ui-widget">
-						<%= f.label 			:country, t('.Country') %>
-						<%= f.text_field 		:country, :value => @user_country %>
-					</div>			
-				</li>
-				
-		
-				<li id="state-entry">
-					<div class="ui-widget">	
-						<%= f.label 			:american_state, t('.State') %>
-						<%= f.text_field 		:american_state, :value => @user_state %>
-					</div>
-				</li>
-
-				<li>
-					<div class="ui-widget">
-						<%= f.label 			:church, t('.Church') %>
-						<%= f.text_field 		:church, :value => @user_church %>
-					</div>
-				</li>		
-
-				<li>
-					<div class="ui-widget">
-						<%= f.label 			:group, t('.Group') %>
-						<%= f.text_field 		:group, :value => @user_group %>
-					</div>
-				</li>	
-
-				<li>
-					<%= f.label 			:newsletters, t('.Receive newsletters') %>
-					<%= f.check_box 		:newsletters %>
-				</li>
-				<li>
-					<%= f.label 			:reminder_freq, t('.Reminder frequency') %>
-					<%= f.select			:reminder_freq,
-								[["Daily", 		'Daily'		],
-								["Weekly",		'Weekly'	], 
-								["Monthly", 	'Monthly'	], 
-								["Quarterly", 	'Quarterly'	],
-								["Never", 		'Never'		]]      
-								 %>
-				</li>
-				<li>
-					<%= f.label 			:language, t('.Language') %>
-					<%= f.select			:language,
-								   [["English", 	      	'English'			],
-               						["Spanish",           	'Spanish' 			], 
-               						["French",           	'French' 			], 
-               						["Bahasa Indonesia",  	'Bahasa Indonesia'	], 
-								 	["Dutch",		      	'Dutch'				], 
-								 	["Swedish",				'Swedish'			], 
-								 	["Afrikaans", 	       	'Afrikaans'			]]      
-								 %>
-				</li>	
-				<li>
-					<%= f.label 			:time_allocation, t('.Target Time') %>
-					<%= f.select			:time_allocation,
-								[[" 3 Minutes per Day",  3	],
-								 [" 5 Minutes per Day",  5	],
-								 [" 7 Minutes per Day",  5	],
-								 ["10 Minutes per Day", 10	], 
-								 ["15 Minutes per Day", 15	],
-								 ["20 Minutes per Day", 20	],
-								 ["30 Minutes per Day", 30	],
-								 ["45 Minutes per Day", 45	],
-								 ["60 Minutes per Day", 60	]]      
-								 %>
-				</li>														
-				<li>
-					<%= f.label 			:max_interval, t('.Max Repetition Interval') %>
-					<%= f.select			:max_interval,
-								[["1 Month", 	 31	],
-								 ["3 Months", 	 91	],
-								 ["6 Months",	183	], 
-								 ["9 Months", 	273	],
-								 ["1 Year",		366 ]]     
-								 %>
-				</li>
-				<li>
-					<%= f.label 			:mnemonic_use, t('.1st Letter Prompts') %>
-					<%= f.select			:mnemonic_use,
-								[["Always", 	'Always'	],
-								 ["Learning",	'Learning'	],
-								 ["Never", 		'Never'		]]
-								 %>
-				</li>
-				<li>
-					<%= f.label 			:auto_work_load, t('.Add verses as needed') %>
-					<%= f.check_box 		:auto_work_load %>
-				</li>
-				<li>
-					<%= f.label 			:all_refs, t('.Test all references') %>
-					<%= f.check_box 		:all_refs %>
-				</li>
-				<li>
-					<%= f.label 			:show_echo, t('.Always show feedback') %>
-					<%= f.check_box 		:show_echo %>
-				</li>
-				<!-- <li>
-					<%= f.label 			:show_toolbar, t('.Show social toolbar') %>
-					<%= f.check_box 		:show_toolbar %>
-				</li> -->
-				<li>
-					<%= f.label 			:show_email, t('.Show email') %>
-					<%= f.check_box 		:show_email %>
-				</li>
-			</ul>
-			
-			<div class="buttons">				
-				<%= submit_tag t('.Update profile') %>	
+				<ul>
+					<% @user.errors.full_messages.each do |msg| %>
+						<li><%= msg %></li>
+					<% end %>
+				</ul>
 			</div>
-		
-		<% end %> <!-- End: User form -->
+		<% end %> <!-- End: Error Messages -->
 
-	</div>
+		<ul>
+			<li>
+				<%= f.label 			:name, t('.Name') %>
+				<%= f.text_field 		:name %>
+			</li>
+			<li>
+				<%= f.label 			:email, t('.Email') %>
+				<%= f.text_field 		:email %>
+			</li>
+			<li>
+				<%= f.label 			:gender, t('.Gender') %>
+				<%= f.select			:gender, [["Male", 'Male'],	["Female", 'Female']]  %>
+			</li>
+			<li>
+				<%= f.label 			:translation, t('.Translation') %>
+				<%= f.select			:translation,
+												[["New International Version (1984)",	'NIV' ],
+												["New International Version (2011)",	'NNV' ],
+												["New American Standard Bible", 		'NAS' ], 
+												["New King James Version",				'NKJ' ], 
+												["King James Version",					'KJV' ], 
+												["Revised Standard Version",  			'RSV' ], 
+												["New Revised Standard Version",  		'NRS' ], 														
+												["English Standard Version",          	'ESV' ],
+												["New Living Translation",        		'NLT' ],
+												["Contemporary English Version",   		'CEV' ],                            							
+												["Holman Christian Standard Bible",		'HCS' ],
+												["Darby Translation",					'DTL' ],
+												["The Message",                   		'MSG' ],
+												["Amplified Bible",                		'AMP' ],                            							
+												["New International Reader's Version",	'IRV' ],
+												["Updated King James Version",		 	'UKJ' ],
+												["Geneva Bible",					 	'GEN' ],
+												["Biblical Greek", 						'GRK' ],
+												["Nueva Version Internacional",			'NVI' ],
+												["Reina-Valera 1960",					'RVR' ],
+												["Louis Segond 1910",					'LSV' ],
+												["La Nuova Diodati",					'LND' ],														
+												["Afrikaans 1983 Translation",			'AFR' ],
+												["Herziene Statenvertaling",			'HSV' ],
+												["De Nieuwe Bijbelvertaling",			'NBV' ],
+												["Terjemahan Baru",						'TMB' ],
+												["Magandang Balita Biblia",				'MBB' ],																												
+												["Svenska Folkbibeln",					'SPB' ]]    
+							 %>
+			</li>					
+
+			<li>
+				<div class="ui-widget">
+					<%= f.label 			:country, t('.Country') %>
+					<%= f.text_field 		:country, :value => @user_country %>
+				</div>			
+			</li>
+			
+	
+			<li id="state-entry">
+				<div class="ui-widget">	
+					<%= f.label 			:american_state, t('.State') %>
+					<%= f.text_field 		:american_state, :value => @user_state %>
+				</div>
+			</li>
+
+			<li>
+				<div class="ui-widget">
+					<%= f.label 			:church, t('.Church') %>
+					<%= f.text_field 		:church, :value => @user_church %>
+				</div>
+			</li>		
+
+			<li>
+				<div class="ui-widget">
+					<%= f.label 			:group, t('.Group') %>
+					<%= f.text_field 		:group, :value => @user_group %>
+				</div>
+			</li>	
+
+			<li>
+				<%= f.label 			:newsletters, t('.Receive newsletters') %>
+				<%= f.check_box 		:newsletters %>
+			</li>
+			<li>
+				<%= f.label 			:reminder_freq, t('.Reminder frequency') %>
+				<%= f.select			:reminder_freq,
+							[["Daily", 		'Daily'		],
+							["Weekly",		'Weekly'	], 
+							["Monthly", 	'Monthly'	], 
+							["Quarterly", 	'Quarterly'	],
+							["Never", 		'Never'		]]      
+							 %>
+			</li>
+			<li>
+				<%= f.label 			:language, t('.Language') %>
+				<%= f.select			:language,
+							   [["English", 	      	'English'			],
+								["Spanish",           	'Spanish' 			], 
+								["French",           	'French' 			], 
+								["Bahasa Indonesia",  	'Bahasa Indonesia'	], 
+								["Dutch",		      	'Dutch'				], 
+								["Swedish",				'Swedish'			], 
+								["Afrikaans", 	       	'Afrikaans'			]]      
+							 %>
+			</li>	
+			<li>
+				<%= f.label 			:time_allocation, t('.Target Time') %>
+				<%= f.select			:time_allocation,
+							[[" 3 Minutes per Day",  3	],
+							 [" 5 Minutes per Day",  5	],
+							 [" 7 Minutes per Day",  5	],
+							 ["10 Minutes per Day", 10	], 
+							 ["15 Minutes per Day", 15	],
+							 ["20 Minutes per Day", 20	],
+							 ["30 Minutes per Day", 30	],
+							 ["45 Minutes per Day", 45	],
+							 ["60 Minutes per Day", 60	]]      
+							 %>
+			</li>														
+			<li>
+				<%= f.label 			:max_interval, t('.Max Repetition Interval') %>
+				<%= f.select			:max_interval,
+							[["1 Month", 	 31	],
+							 ["3 Months", 	 91	],
+							 ["6 Months",	183	], 
+							 ["9 Months", 	273	],
+							 ["1 Year",		366 ]]     
+							 %>
+			</li>
+			<li>
+				<%= f.label 			:mnemonic_use, t('.1st Letter Prompts') %>
+				<%= f.select			:mnemonic_use,
+							[["Always", 	'Always'	],
+							 ["Learning",	'Learning'	],
+							 ["Never", 		'Never'		]]
+							 %>
+			</li>
+			<li>
+				<%= f.label 			:auto_work_load, t('.Add verses as needed') %>
+				<%= f.check_box 		:auto_work_load %>
+			</li>
+			<li>
+				<%= f.label 			:all_refs, t('.Test all references') %>
+				<%= f.check_box 		:all_refs %>
+			</li>
+			<li>
+				<%= f.label 			:show_echo, t('.Always show feedback') %>
+				<%= f.check_box 		:show_echo %>
+			</li>
+			<!-- <li>
+				<%= f.label 			:show_toolbar, t('.Show social toolbar') %>
+				<%= f.check_box 		:show_toolbar %>
+			</li> -->
+			<li>
+				<%= f.label 			:show_email, t('.Show email') %>
+				<%= f.check_box 		:show_email %>
+			</li>
+		</ul>
+		
+		<div class="buttons">				
+			<%= submit_tag t('.Update profile') %>	
+		</div>
+	
+	<% end %> <!-- End: User form -->
+
+</div>
 
 <p><%= t('.Photo Upload A') %> <b><%= link_to 'Gravatar', 'http://www.gravatar.com', {:target => '_blank'} %></b> <%= t('.Photo Upload B')%></p>
 
