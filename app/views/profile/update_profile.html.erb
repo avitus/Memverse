@@ -17,7 +17,7 @@
 						<% end %>
 					</ul>
 				</div>
-			<% end %>
+			<% end %> <!-- End: Error Messages -->
 
 			<ul>
 				<li>
@@ -174,12 +174,13 @@
 					<%= f.check_box 		:show_email %>
 				</li>	
 			</ul>
-			 
-			<div class="buttons">				
-				<%= submit_tag t('.Update profile') %>	
-			</div>
-					
-		<% end %> <!-- End: Error Messages -->
+			 				
+		<% end %> <!-- End: User form -->
+
+		<div class="buttons">				
+			<%= submit_tag t('.Update profile') %>	
+		</div>
+
 	</div>
 <% end %> <!-- End: Form Tag -->
 
