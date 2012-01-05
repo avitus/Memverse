@@ -47,8 +47,8 @@ class ApplicationController < ActionController::Base
     end
     
     # Load support for inverse translation i.e. retrieve English name of a book entered in Spanish
-    # TODO: This is 'wild hackery'
-    I18n.backend.send(:init_translations)
+    # This is 'wild hackery'
+    # I18n.backend.send(:init_translations)
   end     
 
   # ----------------------------------------------------------------------------------------------------------
@@ -57,11 +57,18 @@ class ApplicationController < ActionController::Base
   # ----------------------------------------------------------------------------------------------------------   
   def translate_to_english(book)
    
-    if I18n.backend.send(:translations)
-      return I18n.backend.send(:translations)[I18n.locale.to_sym][:book][:name].key(book).to_s
-    else
-      return book
-    end
+    # This would be the preferred way to handle user input in another language. It used to work 
+    # but now causes the rack processes to get stuck at 100%
+    #--------------------------------------------------------------------------------
+    # if I18n.backend.send(:translations)
+    #   return I18n.backend.send(:translations)[I18n.locale.to_sym][:book][:name].key(book).to_s
+    # else
+    #   return book
+    # end
+    #--------------------------------------------------------------------------------
+    
+    return I18n.t book.to_sym, :scope => [:input, :book]
+    
   end
 
 
