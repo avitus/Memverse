@@ -403,6 +403,28 @@ class MemversesController < ApplicationController
     end
     
   end
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Autocomplete tag
+  # ---------------------------------------------------------------------------------------------------------- 
+ 
+  def autocomplete_tag
+    @suggestions = Array.new
+
+    query         = params[:term]
+    query_length  = query.length
+    
+    all_tags = Tag.find(:all, :select => 'name')
+    
+    all_tags.each { |tag|
+      name = tag.name
+      if name[0...query_length].downcase == query.downcase
+        @suggestions << name
+      end
+    }
+    
+    render :json => @suggestions.to_json
+  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Remove a verse tag

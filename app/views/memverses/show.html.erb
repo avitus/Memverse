@@ -101,6 +101,11 @@
 	
 	<script type="text/javascript">
 		$(document).ready(function() {
+			
+			a = $('.add-tag').focus().autocomplete({ source:'memverse/tag_autocomplete'
+			});
+
+
 			$('.add-tag').click(function() {
 				
 				TagToAdd = $(this).prev().text()
