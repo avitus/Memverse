@@ -42,4 +42,26 @@ describe("Feedback", function() {
 			correct  : false
 		})
 	});
+	
+	it("should not accept Spanish without special characters", function() {
+		expect(versefeedback(
+			'Por medio de él todas las cosas fueron creadas; sin él, nada de lo creado llegó a existir.',	// correct text
+			'Por medio de l todas las cosas fueron creadas; sin él',										// user guess
+			true																								// feedback enabled
+		)).toEqual({
+			feedtext : 'Por medio de ... todas las cosas fueron creadas; sin él ',
+			correct  : false
+		})
+	});
+	
+	it("should support Portuguese", function() {
+		expect(versefeedback(
+			'E fez Deus a expansão, e fez separação entre as águas que estavam debaixo da expansão e as águas que estavam sobre a expansão; e assim foi.',	// correct text
+			'E fez Deus a expansao, e fez separacão entre as águas que estavam debaixo da expanso',											// user guess
+			true																								// feedback enabled
+		)).toEqual({
+			feedtext : 'E fez Deus a ... e fez ... entre as águas que estavam debaixo da ... ',
+			correct  : false
+		})
+	});
 })
