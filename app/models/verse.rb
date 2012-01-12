@@ -334,7 +334,8 @@ class Verse < ActiveRecord::Base
   # Create mnemonic for verse text
   # ---------------------------------------------------------------------------------------------------------- 
   def mnemonic
-    self.text.gsub(/([\wáéíóúüñ])([\wáéíóúüñ]|[\-'’][\wáéíóúüñ])*/,'\1')
+    self.text.gsub(/([\wáâãàçéêíóôõúüñ])([\wáâãàçéêíóôõúüñ]|[\-'’][\wáâãàçéêíóôõúüñ])*/,'\1')
+    
     # In simpler language we are matching:
     # (Any alphanumerical character) followed by (all consecutive alphanumerical characters OR a -'’ character followed by an alphanumerical character)
     # The star (*) means we repeat the previous item as many times as possible (refers to set of parentheses matching alphanumerical OR -'’ followed by alphanumerical

@@ -227,7 +227,7 @@ function versefeedback(correctvs, verseguess, echo) {
 					
 		for (x in guess_words) {
 			if (x < right_words.length) { // check that guess isn't longer than correct answer
-				if ( guess_words[x].toLowerCase().replace(/[^0-9a-z]+/g, "") == right_words[x].toLowerCase().replace(/[^0-9a-z]+/g, "") ) {
+				if ( guess_words[x].toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "") == right_words[x].toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "") ) {
 					feedback = feedback + right_words[x] + " ";
 				}
 				else if ( guesstext == "" ) { // This happens when nothing is in the textarea
@@ -255,7 +255,7 @@ function versefeedback(correctvs, verseguess, echo) {
 	}
 	
 	// Check for exact match
-	match = ( $.trim( verseguess.toLowerCase().replace(/[^a-z ]|\s-|\s—/g, '').replace(/\s+/g, " ") ) == $.trim( unescape(correctvs).toLowerCase().replace(/[^a-z ]|\s-|\s—/g, '').replace(/\s+/g, " ") ) );
+	match = ( $.trim( verseguess.toLowerCase().replace(/[^a-záâãàçéêíóôõúüñ ]|\s-|\s—/g, '').replace(/\s+/g, " ") ) == $.trim( unescape(correctvs).toLowerCase().replace(/[^a-záâãàçéêíóôõúüñ ]|\s-|\s—/g, '').replace(/\s+/g, " ") ) );
 	if (match) {
 		feedback = feedback + '<div id="matchbox"><p>Correct</p></div>';
 		correct = true;
