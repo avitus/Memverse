@@ -113,14 +113,14 @@ class BlogPostsController < ApplicationController
   # POST /blog_posts.xml
   def create
     @tab = "blog"
-		@blog_post = BlogPost.new(params[:blog_post])
-	  @blog_post.posted_by = current_user
+    @blog_post = BlogPost.new(params[:blog_post])
+    @blog_post.posted_by = current_user
 
-		if(@blog_post.save)
-			redirect_to blog_named_link(@blog_post)
-		else
-			render blog_named_link(@blog_post, :new)
-		end
+    if(@blog_post.save)
+      redirect_to blog_named_link(@blog_post)
+    else
+      render blog_named_link(@blog_post, :new)
+    end
   end
 
   # PUT /blog_posts/1
