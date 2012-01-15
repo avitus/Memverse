@@ -1,5 +1,48 @@
 <div class="white-box-with-margins">
+
 	<div id="choose-translation">
-	Hi
-	</div>
+	
+		<h2>Step 1: Choose your translation</h2>
+		
+		<div id="major-translations">
+			<div class="banner-bottom">
+				<ul>
+					<li><%= link_to 'New International Version', set_translation_path('NIV'), :remote => true %></li>
+					<li><%= link_to 'English Standard Version',  set_translation_path('ESV'), :remote => true %></li>
+					<li><%= link_to 'King James Version',        set_translation_path('KJV'), :remote => true %></li>
+					<li><%= link_to 'New King James Version',    set_translation_path('NKJ'), :remote => true %></li>
+					<li><%= link_to 'New American Standard',     set_translation_path('NAS'), :remote => true %></li>
+					<li><%= link_to 'Show other translations', nil, :class => 'active', :remote => true %></li>
+				</ul>
+			</div>
+		</div>
+		
+		<div id="minor-translations">
+			
+		</div>
+		
+		<div id="foreign-translations">
+			
+		</div>
+	
+	<div id="choose-time-alloc">
+		
+		<h2>Step 2: Choose your time allocation</h2>
+		
+		<div id="major-translations">
+			<div class="banner-bottom">
+				<ul>
+					<li><%= link_to '5 Mins / Day', set_time_alloc(5), :remote => true %></li>
+					<li><%= link_to '5 Mins / Day', set_time_alloc(5), :remote => true %></li>
+					<li><%= link_to '5 Mins / Day', set_time_alloc(5), :remote => true %></li>
+				</ul>
+			</div>
+		</div>		
+		
+	
+	</div>	
+
+	<div id="choose-starting-verses">
+	</div>	
+
 </div>
