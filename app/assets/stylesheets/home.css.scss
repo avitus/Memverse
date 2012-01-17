@@ -3,6 +3,19 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 /* Start with quick start steps hidden */
+
+#minor-translations {
+  display:none;
+  filter:alpha(opacity=0);
+  -moz-opacity:0;
+}
+
+#foreign-translations {
+  display:none;
+  filter:alpha(opacity=0);
+  -moz-opacity:0;
+}
+
 #choose-time-alloc {
   display:none;
   filter:alpha(opacity=0);
