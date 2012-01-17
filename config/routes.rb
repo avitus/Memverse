@@ -107,6 +107,9 @@ MemverseApp::Application.routes.draw do
   match '/referrals/:id',          :to => 'profile#referrals',               :as => 'referrals'
   match '/unsubscribe/*email',     :to => 'profile#unsubscribe',             :as => 'unsubscribe', :format => false
   match '/search_user',            :to => 'profile#search_user',             :as => 'search_user'
+  match '/set_translation/:tl',    :to => 'profile#set_translation',         :as => 'set_translation'
+  match '/set_time_alloc/:time',   :to => 'profile#set_time_alloc',          :as => 'set_time_alloc'
+
   
   match '/edit_tag/:id',           :to => 'tag#edit_tag',                    :as => 'edit_tag'
 

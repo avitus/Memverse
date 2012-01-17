@@ -525,8 +525,6 @@ class UtilsController < ApplicationController
     logger.debug("Vs: #{verse}")
     
     @vs_list = Verse.find(:all, :conditions => {:book => book, :chapter => chapter.to_i, :versenum => verse.to_i})
-
-	logger.debug("Verses found: #{@vs_list.inspect}")
     
     render :partial => 'search_verse', :layout=>false 
   end    

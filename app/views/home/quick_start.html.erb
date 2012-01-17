@@ -1,19 +1,68 @@
 <div class="white-box-with-margins">
-	
-	
-	<div id="choose-translation">
-		<h2>Select your Translation</h2>
-		
-			  
-	</div>
 
-	<div id="select-workload">
+	<div id="choose-translation">
 	
-	</div>
-			
-	<div id="select-starting-verses">
-	
-	</div>
+		<h2>Step 1: Choose your translation</h2>
 		
+		<div id="major-translations">
+			<div class="quick-start-selection">
+				<ul>
+					<li class="tl-set"><%= link_to 'New International Version', set_translation_path('NIV'), :remote => true %></li>
+					<li class="tl-set"><%= link_to 'English Standard Version',  set_translation_path('ESV'), :remote => true %></li>
+					<li class="tl-set"><%= link_to 'King James Version',        set_translation_path('KJV'), :remote => true %></li>
+					<li class="tl-set"><%= link_to 'New King James Version',    set_translation_path('NKJ'), :remote => true %></li>
+					<li class="tl-set"><%= link_to 'New American Standard',     set_translation_path('NAS'), :remote => true %></li>
+					<li class="tl-set"><%= link_to 'Show other translations',   nil, :class => 'active',     :remote => true %></li>
+				</ul>
+			</div>
+		</div>
+		
+		<div id="minor-translations">
+			
+		</div>
+		
+		<div id="foreign-translations">
+			
+		</div>
+	</div>
+	
+	<div id="choose-time-alloc">
+		
+		<h2>Step 2: Choose your time allocation</h2>
+		
+		<div class="quick-start-selection">
+			<ul>
+				<li class="time-set"><%= link_to ' 5 Mins / Day', set_time_alloc_path( 5), :remote => true %></li>
+				<li class="time-set"><%= link_to '10 Mins / Day', set_time_alloc_path(10), :remote => true %></li>
+				<li class="time-set"><%= link_to '20 Mins / Day', set_time_alloc_path(20), :remote => true %></li>
+			</ul>
+		</div>
+
+	</div>	
+
+	<div id="choose-starting-verses">
+
+		<h2>Step 3: Choose your starting verses</h2>
+
+		
+	</div>	
 	
 </div>
+
+<script language="JavaScript" type="text/javascript"><!--
+	
+	$(document).ready(function() {
+		$(".tl-set").click(function() {
+			$("#choose-translation").hide();
+			$("#choose-time-alloc").show();
+		});	
+		
+		$(".time-set").click(function() {
+			$("#choose-time-alloc").hide();
+			$("#choose-starting-verses").show();
+		});			
+			
+		
+	}); // End of jQuery document ready
+
+--></script>
