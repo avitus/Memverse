@@ -1,0 +1,69 @@
+<div class="enter-verse">
+	
+	<div class="top-heading">
+    	<h2><span>Enter a Bible Verse</span></h2>
+    </div>
+    
+    <%= form_tag :action => 'add_verse' do %>
+        <div class="verse-field">
+        	<div class="ui-widget">
+        		<label class="tag">Verse:</label>
+            	<%= text_field_tag(:verse, params[:verse], :class => "verse-search" )%> 
+				<img class="spinner" id="ajax_spinner" src="/assets/indicator2.gif" alt="Searching ..." style="display: none" />
+            </div>
+        </div>
+        
+
+		<div class="translation">
+			<h2>Available Translations</h2>
+		    <div id="foundVerse">
+			</div>
+		</div>
+		
+		<div class="clr"></div>
+
+        <div class="trans-button"><input name="commit" type="submit" class="add-verse" value="" /></div>          
+	
+	<% end %>  <!-- end of form -->
+</div> <!-- enter-verse -->
+	        
+
+
+
+<!-- http://www.webdesignerwall.com/tutorials/jquery-tutorials-for-designers/ -->
+<!-- Verse will enter from the 'show' coordinate and will depart to the "hide" coordinate --> 
+<!-- 'Hide' position should be the same as the position specified in the CSS stylesheet i.e. the starting position --> 
+<script type="text/javascript">
+	$(document).ready(function(){
+	
+		$("#verse").observe_field(0.3, function( ) { 
+			$.get("/avail_translations.html", { verse: this.value },
+				function(data){	
+					$("#foundVerse").html(data);
+			}, "html" );
+        });
+
+		$('#verse').focus().autocomplete({ source: ['Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy', 'Joshua', 'Judges', 'Ruth', '1 Samuel', '2 Samuel',
+	                '1 Kings', '2 Kings','1 Chronicles', '2 Chronicles', 'Ezra', 'Nehemiah', 'Esther', 'Job', 'Psalm', 'Proverbs',
+	                'Ecclesiastes', 'Song of Songs', 'Isaiah', 'Jeremiah', 'Lamentations', 'Ezekiel', 'Daniel', 'Hosea', 'Joel', 
+	                'Amos', 'Obadiah', 'Jonah', 'Micah', 'Nahum', 'Habakkuk', 'Zephaniah', 'Haggai', 'Zechariah', 'Malachi', 'Matthew',
+	                'Mark', 'Luke', 'John', 'Acts', 'Romans', '1 Corinthians', '2 Corinthians', 'Galatians', 'Ephesians', 'Philippians',
+	                'Colossians', '1 Thessalonians', '2 Thessalonians', '1 Timothy', '2 Timothy', 'Titus', 'Philemon', 'Hebrews', 'James',
+	                '1 Peter', '2 Peter', '1 John', '2 John', '3 John', 'Jude', 'Revelation']						
+		});	
+
+		
+		$('.spinner')
+			.ajaxStart(function() {
+		        $(this).show();
+		    })
+			.ajaxStop(function() {
+		        $(this).hide();
+	    });
+
+		$('#foundVerse').delegate('td.no-dbl-click a', 'click', function() {
+			$("#foundVerse").attr('disabled', 'disabled').hide();
+		});
+	});
+</script>
+
