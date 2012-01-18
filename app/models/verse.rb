@@ -23,6 +23,7 @@ class Verse < ActiveRecord::Base
 #  require 'nokogiri'
 
   before_destroy :delete_memverses
+  before_save :cleanup_text
    
   # Relationships
   has_many :memverses
@@ -424,6 +425,10 @@ class Verse < ActiveRecord::Base
     }
     
     self.memverses.destroy_all
+  end
+  
+  def cleanup_text
+    self.text = self.text.gsub(/(\r)?\n/,'').squeeze.strip
   end
   
 end
