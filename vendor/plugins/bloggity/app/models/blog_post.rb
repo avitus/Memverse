@@ -16,25 +16,27 @@
 #  comments_closed :boolean(1)      
 #  category_id     :integer(4)      
 #  fck_created     :boolean(1)      
-#  blog_id     :integer(4)      
+#  blog_id         :integer(4)      
 #
 
 class BlogPost < ActiveRecord::Base
-	belongs_to :posted_by, :class_name => 'User'
+  include BloggityUrlHelper
+  
+  belongs_to :posted_by, :class_name => 'User'
   belongs_to :category, :class_name => 'BlogCategory'
-	has_many :comments, :class_name => 'BlogComment'
-	has_many :approved_comments, :conditions => %{approved = true}, :class_name => 'BlogComment'
-	has_many :assets, :class_name => 'BlogAsset'
-	has_many :tags, :class_name => 'BlogTag'
-	belongs_to :blog
-	
-	validates_presence_of :blog_id, :posted_by_id
-	validate :authorized_to_blog?
-	
-	# Recommended... but only if you have it:
-	# xss_terminate :except => [ :body ]
-	after_save :save_tags
-	before_save :update_url_identifier
+  has_many :comments, :class_name => 'BlogComment'
+  has_many :approved_comments, :conditions => %{approved = true}, :class_name => 'BlogComment'
+  has_many :assets, :class_name => 'BlogAsset'
+  has_many :tags, :class_name => 'BlogTag'
+  belongs_to :blog
+  
+  validates_presence_of :blog_id, :posted_by_id
+  validate :authorized_to_blog?
+  
+  # Recommended... but only if you have it:
+  # xss_terminate :except => [ :body ]
+  after_save :save_tags
+  before_save :update_url_identifier, :tweet_public_publish
 
   # Define Sphinx index
   define_index do
@@ -47,9 +49,9 @@ class BlogPost < ActiveRecord::Base
     has posted_by_id, created_at, updated_at
   end
 	
-	def comments_closed?
-		self.comments_closed
-	end
+  def comments_closed?
+    self.comments_closed
+  end
 	
 	# --------------------------------------------------------------------------------------
 	# --------------------------------------------------------------------------------------
@@ -80,4 +82,12 @@ class BlogPost < ActiveRecord::Base
 			BlogTag.create(:name => sanitary_tag, :blog_post_id => self.id)
 		end
 	end
+	
+  def tweet_public_publish # Note: this must be called before_save or else the tweeted attribute will not update.
+    if self.is_complete? && !self.tweeted?
+	  link = "<a href=\"#{blog_named_link(self)}\">#{self.title}</a>"      
+      Tweet.create(:news => "#{self.posted_by.name_or_login} wrote a new blog post: '#{link}'", :user_id => self.posted_by_id, :importance => 2)  
+	  self.tweeted = true
+	end
+  end
 end

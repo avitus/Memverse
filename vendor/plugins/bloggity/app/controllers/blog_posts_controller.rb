@@ -127,17 +127,9 @@ class BlogPostsController < ApplicationController
   # PUT /blog_posts/1.xml
   def update
     @blog_post = BlogPost.find(params[:id])
-    new_post = @blog_post.title.nil?
-
+    
     if @blog_post.update_attributes(params[:blog_post])
       redirect_to blog_named_link(@blog_post)
-      # Create tweet
-      # spawn_block do
-        if new_post
-          link = "<a href=\"#{blog_named_link(@blog_post, :show)}\">#{@blog_post.title}</a>"      
-          Tweet.create(:news => "#{current_user.name_or_login} wrote a new blog post: '#{link}'", :user_id => current_user.id, :importance => 2)  
-        end
-      # end
     else
       render blog_named_link(@blog_post, :edit)
     end
