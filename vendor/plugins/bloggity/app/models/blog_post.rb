@@ -48,46 +48,46 @@ class BlogPost < ActiveRecord::Base
     # attributes
     has posted_by_id, created_at, updated_at
   end
-	
+  
   def comments_closed?
     self.comments_closed
   end
-	
-	# --------------------------------------------------------------------------------------
-	# --------------------------------------------------------------------------------------
-	private
-	# --------------------------------------------------------------------------------------
-	# --------------------------------------------------------------------------------------
-	
-	def update_url_identifier
-		# We won't update URL identifier if ther'es no title, or if this blog was already published
-		# with a URL identifier (don't want links to get broken)
-		return if self.title.blank? || (self.is_complete && !self.url_identifier.blank?)
-		self.url_identifier = self.title.strip.gsub(/\W/, '_')
-		true
-	end
-	
-	def authorized_to_blog?
-		unless(self.posted_by && self.posted_by.can_blog?(self.blog_id))
-			self.errors.add(:posted_by_id, "is not authorized to post to this blog")
-		end
-	end
-	
-	def save_tags
-		return if self.tag_string.blank?
-		BlogTag.delete_all(["blog_post_id = ?", self.id])
-		these_tags = self.tag_string.split(",")
-		these_tags.each do |tag|
-			sanitary_tag = tag.strip.chomp
-			BlogTag.create(:name => sanitary_tag, :blog_post_id => self.id)
-		end
-	end
-	
+  
+  # --------------------------------------------------------------------------------------
+  # --------------------------------------------------------------------------------------
+  private
+  # --------------------------------------------------------------------------------------
+  # --------------------------------------------------------------------------------------
+  
+  def update_url_identifier
+    # We won't update URL identifier if ther'es no title, or if this blog was already published
+    # with a URL identifier (don't want links to get broken)
+    return if self.title.blank? || (self.is_complete && !self.url_identifier.blank?)
+    self.url_identifier = self.title.strip.gsub(/\W/, '_')
+    true
+  end
+  
+  def authorized_to_blog?
+    unless(self.posted_by && self.posted_by.can_blog?(self.blog_id))
+      self.errors.add(:posted_by_id, "is not authorized to post to this blog")
+    end
+  end
+  
+  def save_tags
+    return if self.tag_string.blank?
+    BlogTag.delete_all(["blog_post_id = ?", self.id])
+    these_tags = self.tag_string.split(",")
+    these_tags.each do |tag|
+      sanitary_tag = tag.strip.chomp
+      BlogTag.create(:name => sanitary_tag, :blog_post_id => self.id)
+    end
+  end
+  
   def tweet_public_publish # Note: this must be called before_save or else the tweeted attribute will not update.
     if self.is_complete? && !self.tweeted?
-	  link = "<a href=\"#{blog_named_link(self)}\">#{self.title}</a>"      
+      link = "<a href=\"#{blog_named_link(self)}\">#{self.title}</a>"      
       Tweet.create(:news => "#{self.posted_by.name_or_login} wrote a new blog post: '#{link}'", :user_id => self.posted_by_id, :importance => 2)  
-	  self.tweeted = true
-	end
+      self.tweeted = true
+    end
   end
 end
