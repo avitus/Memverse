@@ -428,7 +428,7 @@ class Verse < ActiveRecord::Base
   end
   
   def cleanup_text
-    self.text = self.text.gsub(/(\r)?\n/,'').squeeze.strip
+    self.text = self.text.gsub(/(\r)?\n/,'').squeeze(" ").strip
   end
   
 end
