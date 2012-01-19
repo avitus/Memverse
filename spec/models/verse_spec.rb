@@ -12,8 +12,8 @@ describe Verse do
   end
   
   it "should clean up the verse text" do
-    verse = Factory(:verse, :text => "This is a \r\n \r\n \n test test   \n   test. ")
+    verse = Factory(:verse, :text => "This is a \r\n \r\n \n test test   \n   teest. ")
 	verse.save!
-    verse.text.should == "This is a test test test."
+    verse.text.should == "This is a test test teest."
   end
 end
