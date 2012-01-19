@@ -102,10 +102,8 @@ class VersesController < ApplicationController
   	vs_str = params[:vs_str].html_safe
   	
   	error_code, bk, ch, vs = parse_verse(vs_str)
-  	logger.debug("Parsed verse string #{vs_str}: #{error_code}")
     verse_ok = (error_code == false)
-  	render :json => verse_ok
-  	
+  	render :json => verse_ok	
   end
 
   # ----------------------------------------------------------------------------------------------------------

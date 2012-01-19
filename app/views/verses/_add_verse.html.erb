@@ -37,7 +37,7 @@
 	$(document).ready(function(){
 	
 		$("#verse").observe_field(0.3, function( ) { 
-			$.get("/avail_translations.html", { verse: this.value },
+			$.get("/verses.html", { verse: this.value },
 				function(data){	
 					$("#foundVerse").html(data);
 			}, "html" );
