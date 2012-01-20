@@ -108,7 +108,9 @@
 			});
 			
 			$(document).on("click", "li.ui-menu-item", function() {
-				console.log("clicker_function_is_working");
+				TagToAdd = $(this).find("a").text();
+				$.post("/memverses/add_verse_tag", { id: <%= @mv.id %>, value: TagToAdd} );
+				$(".edit_mv").html(TagToAdd)
 			});
 			
 		$('.add-tag').click(function() {
