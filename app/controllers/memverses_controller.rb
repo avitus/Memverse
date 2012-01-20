@@ -408,13 +408,13 @@ class MemversesController < ApplicationController
   # Autocomplete tag
   # ---------------------------------------------------------------------------------------------------------- 
  
-  def autocomplete_tag
+  def tag_autocomplete
     @suggestions = Array.new
 
     query         = params[:term]
     query_length  = query.length
     
-    all_tags = Tag.find(:all, :select => 'name')
+    all_tags = ActsAsTaggableOn::Tag.find(:all, :select => 'name')
     
     all_tags.each { |tag|
       name = tag.name
