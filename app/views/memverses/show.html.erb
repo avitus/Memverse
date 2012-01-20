@@ -107,9 +107,13 @@
 				});		
 			});
 			
+			$(document).on("click", "li.ui-menu-item", function() {
+				console.log("clicker_function_is_working");
+			});
+			
 		$('.add-tag').click(function() {
 
-				TagToAdd = $(this).prev().text()
+				TagToAdd = $(this).prev().text();
 				
 				// Add the tag
 				$.post("/memverses/add_verse_tag", { id: <%= @mv.id %>, value: TagToAdd } );
