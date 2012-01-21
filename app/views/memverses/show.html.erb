@@ -108,9 +108,23 @@
 			});
 			
 			$(document).on("click", "li.ui-menu-item", function() {
-				TagToAdd = $(this).find("a").text();
-				$.post("/memverses/add_verse_tag", { id: <%= @mv.id %>, value: TagToAdd} );
-				$(".edit_mv").html(TagToAdd)
+		
+				//Previous Code:		
+				//TagtoAdd = $(this).find("a").text();
+				//$.post("/memverses/add_verse_tag", { id: <%= @mv.id %>, value: TagToAdd} );
+				//$(".edit_mv").html(TagToAdd)
+				$.post("/memverses/add_verse_tag", { id: <%= @mv.id %>, value: $(this).find("a").text()} );
+				$(".edit_mv").html($(this).find("a").text())
+
+				$("#list-of-user-tags").find('tbody')
+				    .prepend($('<tr>')
+				        .append($("<td class='tag'>")
+				            .append($('<a>')
+				          		  .attr('href', '/verses/show_verses_with_tag?tag='+$(this).find("a").text()+'&tl=<%=@mv.verse.translation%>')
+				                .text($(this).find("a").text())
+				            )
+				        )			        
+				    );
 			});
 			
 		$('.add-tag').click(function() {
