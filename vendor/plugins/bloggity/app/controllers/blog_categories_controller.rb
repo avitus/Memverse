@@ -44,7 +44,7 @@ class BlogCategoriesController < ApplicationController
 
     respond_to do |format|
       if @blog_category.save
-        flash[:notice] = 'BlogCategory was successfully created.'
+        flash[:notice] = 'Blog category was successfully created.'
         format.html { redirect_to(@blog_category) }
         format.xml  { render :xml => @blog_category, :status => :created, :location => @blog_category }
       else

@@ -6,7 +6,7 @@
 	<script type="text/javascript">
 		formSubmitted = false; // setup global variable
 		
-		function checkForm(){
+		checkForm = function(){
 			var isFormValid = true;
 			var emptyFields = false;
 			var invalidFields = false;
@@ -325,37 +325,11 @@
 		}
 	});
 	
-	function checkForm(){
-		var isFormValid = true;
-		var emptyFields = false;
-		var invalidFields = false;
-	
-		$("div.signup input").each(function(){
-			if ($.trim($(this).val()).length == 0){
-			    $(this).addClass("hilite");
-		    	isFormValid = false;
-		    	emptyFields = true;
-			} else if ( $(this).parent().find("div.sidetip p.error:visible").length ) {
-				$(this).addClass("hilite");
-		    	isFormValid = false;
-		    	invalidFields = true;
-			} else {
-				$(this).removeClass("hilite");
-			}
-		});
-	
-		if (!isFormValid) {
-			if (emptyFields && invalidFields) {
-				alert("Please complete any empty fields and correct any invalid fields.")
-			} else if (emptyFields) {
-				alert("Please complete any empty fields.")
-			} else if (invalidFields) {
-				alert("Please correct any invalid fields.")
-			}
-		}
-		return isFormValid;
-	}
-	
 	// input placeholder fix
 	fauxPlaceholder();
+	
+	$("form#user_new").keypress(function(e) {
+		$("form#user_new").submit(); // submits form by clicking the submit button and therefore runs checkForm()
+		return false;
+	});
 </script>

@@ -23,6 +23,7 @@ class Verse < ActiveRecord::Base
 #  require 'nokogiri'
 
   before_destroy :delete_memverses
+  before_save :cleanup_text
    
   # Relationships
   has_many :memverses
@@ -334,7 +335,8 @@ class Verse < ActiveRecord::Base
   # Create mnemonic for verse text
   # ---------------------------------------------------------------------------------------------------------- 
   def mnemonic
-    self.text.gsub(/([\wáéíóúüñ])([\wáéíóúüñ]|[\-'’][\wáéíóúüñ])*/,'\1')
+    self.text.gsub(/([\wáâãàçéêíóôõúüñ])([\wáâãàçéêíóôõúüñ]|[\-'’][\wáâãàçéêíóôõúüñ])*/,'\1')
+    
     # In simpler language we are matching:
     # (Any alphanumerical character) followed by (all consecutive alphanumerical characters OR a -'’ character followed by an alphanumerical character)
     # The star (*) means we repeat the previous item as many times as possible (refers to set of parentheses matching alphanumerical OR -'’ followed by alphanumerical
@@ -423,6 +425,10 @@ class Verse < ActiveRecord::Base
     }
     
     self.memverses.destroy_all
+  end
+  
+  def cleanup_text
+    self.text = self.text.gsub(/(\r)?\n/,'').squeeze(" ").strip
   end
   
 end

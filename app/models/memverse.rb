@@ -115,8 +115,7 @@ class Memverse < ActiveRecord::Base
       interval_new  = self.test_interval
       efactor_new   = self.efactor
     end
-    
-    
+        
     # Update memory verse parameters
     self.rep_n          = n_new
     self.efactor        = efactor_new
@@ -124,9 +123,8 @@ class Memverse < ActiveRecord::Base
     self.next_test      = Date.today + interval_new
     self.last_tested    = Date.today
     self.status         = interval_new > 30 ? "Memorized" : "Learning"
-    self.attempts       += 1      
-    self.save
-    # TODO: We should check that the verse has been saved before moving on ... otherwise you could reload the same verse if it isn't finished saving    
+    self.attempts      += 1      
+    self.save!
     
     return (prev_learning and (self.status == "Memorized")) 
   end

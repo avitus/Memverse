@@ -19,7 +19,7 @@ class Group < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   # Returns *array* of top groups (sorted by number of verses memorized)
   # ---------------------------------------------------------------------------------------------------------- 
-  def self.top_groups(numgroups=20)
+  def self.top_groups(numgroups=50)
 
     groupboard = Hash.new(0)
         

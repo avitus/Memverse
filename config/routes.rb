@@ -12,6 +12,7 @@ MemverseApp::Application.routes.draw do
 
   devise_for :users
 
+  resources :blog_categories
   resources :users, :only => :show
 #  resources :passwords
 #  resource  :session

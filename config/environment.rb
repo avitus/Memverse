@@ -33,8 +33,9 @@ TRANSLATIONS = {
     :HSV => "Herziene Statenvertaling",
     :NBV => "De Nieuwe Bijbelvertaling",
     :TMB => "Terjemahan Baru",
-    :MBB => "Magandang Balita Biblia",                            
-    :SPB => "Svenska Folkbibeln" 
+    :MBB => "Magandang Balita Biblia",
+    :SPB => "Svenska Folkbibeln",
+    :ACF => "Almeida Corrigida e Fiel"
   }
 
 MAJORS = { 

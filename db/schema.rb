@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111212235116) do
+ActiveRecord::Schema.define(:version => 20120117233221) do
 
   create_table "american_states", :force => true do |t|
     t.string  "abbrev",      :limit => 20, :default => "", :null => false
@@ -70,6 +70,7 @@ ActiveRecord::Schema.define(:version => 20111212235116) do
     t.integer  "category_id"
     t.integer  "blog_id",         :default => 1
     t.boolean  "fck_created"
+    t.boolean  "tweeted",         :default => false
   end
 
   add_index "blog_posts", ["blog_id"], :name => "index_blog_posts_on_blog_id"

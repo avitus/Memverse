@@ -21,7 +21,7 @@ class Church < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   # Returns *array* of top churches (sorted by number of verses memorized)
   # ---------------------------------------------------------------------------------------------------------- 
-  def self.top_churches(numchurches=50)
+  def self.top_churches(numchurches=60)
 
     churchboard = Hash.new(0)
         
