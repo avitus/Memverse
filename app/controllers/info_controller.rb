@@ -18,7 +18,7 @@ class InfoController < ApplicationController
       # Check for quest completion
       # spawn_block(:argv => "spawn-tutorial-quest") do
         q = Quest.find_by_url(url_for(:action => 'tutorial', :controller => 'info', :only_path => false))
-        if q
+        if q && !current_user.quests.where(:id => q.id).empty?
   		    q.check_quest_off(current_user)
   		    flash.keep[:notice] = "You have completed the task: #{q.task}"
         end
