@@ -191,8 +191,27 @@
 
 <!-- http://www.devbridge.com/projects/autocomplete/jquery/ -->
 <script type="text/javascript">
-	$(document).ready(function() {	
-		a = $('#user_country').focus().autocomplete({ source:'profile/country_autocomplete'
+
+	$(document).ready(function() {
+		
+		$country = $('#user_country');
+		$state = $('#state-entry'); 
+		
+		var togglestate = function(){
+			if ($country.val() == "United States") {
+				$state.show();		
+			} else {
+				$state.hide();
+			}
+		}
+		
+		togglestate(); // run on page load
+		
+		$country.keyup(function() {
+			togglestate();
+		});
+		
+		a = $('#user_country').focus().autocomplete({ source:'profile/country_autocomplete', change: function(event, ui) { togglestate(); }
 		});
 
 		c = $('#user_american_state').focus().autocomplete({ source:'profile/state_autocomplete'
@@ -203,32 +222,6 @@
 			
 		d = $('#user_group').focus().autocomplete({ source:'profile/group_autocomplete'
 		});
-	});
-</script>
-
-<!-- Hide state entry field if not US -->
-<script type="text/javascript">
-	$(document).ready(function() {
-		
-		$country = $('#user_country');
-		$state = $('#state-entry'); 
-		
-		if ($country.val() == "United States") {
-			$state.show();		
-		}
-		else {
-			$state.hide();
-		}
-		
-		$country.keyup(function() {
-			if ($country.val() == "United States") {
-				$state.show();		
-			}
-			else {
-				$state.val('').hide();
-			}
-		});
-		
 	});
 </script>
 
