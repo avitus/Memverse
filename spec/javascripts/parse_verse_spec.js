@@ -19,5 +19,4 @@ describe("ParseVerse", function() {
     expect(parseVerseRef("Ecclesiasticus 1:2")).toEqual( false );
   });
 
-
 });

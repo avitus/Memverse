@@ -29,7 +29,8 @@ class VersesController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @verse }
+      format.xml  { render :xml  => @verse }
+      format.json { render :json => @verse }
     end
   end
 
