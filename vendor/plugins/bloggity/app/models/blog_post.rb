@@ -60,10 +60,10 @@ class BlogPost < ActiveRecord::Base
   # --------------------------------------------------------------------------------------
   
   def update_url_identifier
-    # We won't update URL identifier if ther'es no title, or if this blog was already published
-    # with a URL identifier (don't want links to get broken)
+    # We won't update URL identifier if there's no title, or if this blog was already published
+    # with a URL identifier (don't want to break links)
     return if self.title.blank? || (self.is_complete && !self.url_identifier.blank?)
-    self.url_identifier = self.title.strip.gsub(/\W/, '_')
+    self.url_identifier = self.title.parameterize
     true
   end
   
