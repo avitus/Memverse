@@ -9,6 +9,10 @@ describe("ParseVerse", function() {
   
   it("parses a verse reference into chapter, book and verse and handles book names with spaces", function() {
     expect(parseVerseRef("Song of Songs 2:4")).toEqual( { bk: 'Song of Songs', ch: 2, vs: 4 } );
+  });  
+  
+  it("parses a verse reference into chapter, book and verse and handles lowercase book names", function() {
+    expect(parseVerseRef("romans 8:1")).toEqual( { bk: 'Romans', ch: 8, vs: 1 } );
   });
   
   it("parses a verse reference into chapter, book and verse, but rejects references without a verse", function() {

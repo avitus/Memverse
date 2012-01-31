@@ -6,6 +6,15 @@ BIBLEBOOKS = ['Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy', 'Joshu
 	           'Colossians', '1 Thessalonians', '2 Thessalonians', '1 Timothy', '2 Timothy', 'Titus', 'Philemon', 'Hebrews', 'James',
 	           '1 Peter', '2 Peter', '1 John', '2 John', '3 John', 'Jude', 'Revelation']
 
+
+
+/******************************************************************************
+ * Capitalize strings: romans -> Romans
+ ******************************************************************************/
+String.prototype.capitalize = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+}
+
 /******************************************************************************
  * Returns true if input is a valid verse reference
  ******************************************************************************/
@@ -26,7 +35,7 @@ function parseVerseRef(verseref) {
 		
 		vs = parseInt(split_text.pop());
 		ch = parseInt(split_text.pop());
-		bk = split_text.join(' ')
+		bk = split_text.join(' ');
 		
 		if (jQuery.inArray( bk, BIBLEBOOKS ) === -1) {
 			return false	

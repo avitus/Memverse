@@ -73,9 +73,11 @@ MemverseApp::Application.routes.draw do
   match '/tag_cloud',              :to => 'verses#tag_cloud',                :as => 'tag_cloud'
   match '/check_verses',           :to => 'verses#check_verses',             :as => 'check_verses'
   match '/check_verse/:id',        :to => 'verses#check_verse',              :as => 'check_verse'
-  match '/search_verse',           :to => 'verses#verse_search',             :as => 'search_verse'
   match '/verify_vs_format',       :to => 'verses#verify_format',            :as => 'verify_vs_format'
   match '/show_verses_with_tag',   :to => 'verses#show_verses_with_tag',     :as => 'show_verses_with_tag'
+  match '/search_verse',           :to => 'verses#verse_search',             :as => 'search_verse'
+  match '/lookup_verse',           :to => 'verses#lookup',                   :as => 'lookup_verse'
+
       
   match '/show_user_info',         :to => 'utils#show_user_info',            :as => 'show_user_info'
   match '/show_tags',              :to => 'utils#show_tags',                 :as => 'show_tags'

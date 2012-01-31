@@ -96,6 +96,17 @@ class VersesController < ApplicationController
     end
   end
 
+  def lookup
+    
+    @verse = Verse.where(:book => params[:bk], :chapter => params[:ch], :versenum => params[:vs], :translation => current_user.translation).first
+    
+    respond_to do |format|
+      format.html # show.html.erb
+      format.xml  { render :xml  => @verse }
+      format.json { render :json => @verse }
+    end    
+  end
+
   # ----------------------------------------------------------------------------------------------------------
   # Verify that string is in correct verse format
   # ----------------------------------------------------------------------------------------------------------  
