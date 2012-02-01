@@ -1,4 +1,4 @@
-<div class="enter-verse">
+<div class="quick-start-enter-verse">
 	
 	<div class="top-heading">
     	<h2><span>Enter a Bible Verse</span></h2>
@@ -22,12 +22,13 @@
 	
 	<div class="clr"></div>
 
-    <div class="trans-button"><input name="commit" type="submit" class="add-verse" value="" /></div>          
+    <div id="quick-start-add-verse" class="quick-start-add-verse">
+    </div>          
 	
 </div> <!-- enter-verse -->
 	        
 
-<script type="text/javascript">
+<script language="JavaScript" type="text/javascript"><!--
 	$(document).ready(function(){
 	
 		$("#verse").observe_field(0.3, function( ) { 
@@ -37,8 +38,10 @@
 					function(data) {	
 						if (typeof(data) !== 'undefined' && data != null) {
 							$("#foundVerse").html(data.text);
+							$("#quick-start-add-verse").html("<a href='/add_verse/" + data.id + "'class='quick-start-add-button'></a>");
 						} else {
 							$("#foundVerse").html("That verse is not in the database.");
+							$("#quick-start-add-verse").empty();
 						};
 				}, "json" );			
 			}
@@ -67,5 +70,5 @@
 			$("#foundVerse").attr('disabled', 'disabled').hide();
 		});
 	});
-</script>
+--></script>
 

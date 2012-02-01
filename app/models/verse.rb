@@ -82,6 +82,7 @@ class Verse < ActiveRecord::Base
   # ---------------------------------------------------------------------------------------------------------- 
   def as_json(options={})
     { 
+      :id   => self.id,
       :bk   => self.book, 
       :ch   => self.chapter, 
       :vs   => self.versenum, 

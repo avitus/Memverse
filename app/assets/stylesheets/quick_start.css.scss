@@ -1,3 +1,31 @@
 .quick-start-show-verse {
   min-height: 120px;
 }
+
+
+.quick-start-add-verse
+{
+  text-align:right;
+  padding-top:5px;
+}
+
+.quick-start-add-button
+{
+  background:url('add-verse.png') no-repeat left top;
+  width:122px;
+  height:25px;
+  padding:5px 125px 10px 0px;
+  border:0;
+  cursor:pointer;
+}
+
+.quick-start-enter-verse
+{
+  width:45%;
+  float:left;
+  padding-left:3em;
+  padding-right:2em;
+  padding-bottom:2em;
+  margin-right:4em;
+  border-right:1px solid #bfbebe;
+}
