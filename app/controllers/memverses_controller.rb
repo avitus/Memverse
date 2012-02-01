@@ -1019,7 +1019,7 @@ class MemversesController < ApplicationController
     @chapter      = current_user.has_chapter?(bk,ch)
     @bk_ch        = bk + " " + ch
     @verse        = 1
-    @final_verse  = @chapter.length
+    @final_verse  = @chapter.length if @chapter
             
   end
 
