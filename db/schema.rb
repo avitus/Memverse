@@ -476,7 +476,6 @@ ActiveRecord::Schema.define(:version => 20120131011758) do
     t.datetime "blog_attachment_updated_at"
     t.boolean  "admin",                                       :default => false
     t.integer  "group_id"
-    t.string   "slug"
   end
 
   add_index "users", ["american_state_id"], :name => "index_users_on_american_state_id"
@@ -485,7 +484,6 @@ ActiveRecord::Schema.define(:version => 20120131011758) do
   add_index "users", ["last_activity_date"], :name => "index_users_on_last_activity_date"
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true
   add_index "users", ["referred_by"], :name => "index_users_on_referred_by"
-  add_index "users", ["slug"], :name => "index_users_on_slug"
 
   create_table "verses", :force => true do |t|
     t.string   "translation",                        :null => false
