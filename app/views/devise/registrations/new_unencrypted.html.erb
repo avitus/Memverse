@@ -90,7 +90,7 @@
 			</div>
 		</div>
 		
-		<div><%= f.submit "", :class => "submit-button", :id => :submit, :onclick => "return checkForm();" %></div>
+		<div><%= f.submit "", :class => "submit-button", :id => :submit %></div>
 		
 		<br />
 		
@@ -221,8 +221,7 @@
 	// input placeholder fix
 	fauxPlaceholder();
 	
-	$("form#user_new").keypress(function(e) {
-		$("form#user_new").submit(); // submits form by clicking the submit button and therefore runs checkForm()
-		return false;
+	$("form#user_new").submit(function() {
+		return checkForm(); // call checkForm() when form submitted (no matter how)
 	});
 </script>
