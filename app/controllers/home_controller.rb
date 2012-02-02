@@ -2,7 +2,7 @@ class HomeController < ApplicationController
   
   def index
     redirect_to :controller => "memverses", :action => "index" and return if user_signed_in?
-    session[:referrer] = params[:referrer]
+    session[:referrer] = User.find_by_login(params[:referrer]).id if params[:referrer]
      
     # TODO: Caching these requests gives an error about a frozen object 
     # @blogposts = Rails.cache.fetch(["latest_blog_posts"], :expires_in => 2.hours) do 

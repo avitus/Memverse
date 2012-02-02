@@ -102,6 +102,8 @@ class UsersController < ApplicationController
     end
   end
   
+  # TODO: I think we can remove below since now handled by devise....
+  
   def successful_creation(user)
     redirect_back_or_default(root_path)
     add_referrer(user, session[:referrer]) if session[:referrer]   
@@ -114,11 +116,10 @@ class UsersController < ApplicationController
     flash[:error] = message
     render :action => :new
   end
-   
+  
   def add_referrer(user, referrer_login)
     referrer = User.find_by_login(session[:referrer])
     user.referred_by = referrer.id
     user.save
-  end  	
-   
+  end  
 end
