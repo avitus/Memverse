@@ -454,81 +454,80 @@ input.large {
 	-moz-opacity:0;
 }
 
-/*========== Ribbon ==========*/
-
+/*========== Verse Illumination Ribbon ==========*/
 #news-strip
 {
 	background:url('news-ribbon.png') no-repeat left top;
 	width:940px;
 	height:46px;
-}
-
-.strip-left
-{
-	width:171px;
-	height:46px;
-	float:left;
-	font:15px/46px "Times New Roman",Times,serif;
-	color:#FFF;
-	padding-left:50px;
-}
-
-.strip-right
-{
-	width:719px;
-	height:46px;
-	float:right;
-	text-align:center;
-	line-height:46px;
-	font-style:italic;
-	color:#666;
-	position:relative;
-}
-
-.strip-right span
-{
-	color:#000;
-	font-weight:bold;
-}
-
-.scrollable {
-	/* required settings */
-	position:absolute;
-	overflow:hidden;
-	left:35px;
-	width:650px;
-	height:90px;
-}
-
-.scrollable .items {
-	/* this cannot be too large */
-	width:20000em;
-	position:absolute;
-}
-
-.items div {
-	float:left;
-	width:650px;
-}
-
-.arrow-left
-{
-	width:15px;
-	height:26px;
-	position:absolute;
-	left:20px;
-	top:8px;
-	cursor:pointer;
-}
-
-.arrow-right
-{
-	width:15px;
-	height:26px;
-	position:absolute;
-	right:20px;
-	top:8px;
-	cursor:pointer;
+	
+  .scrollable {
+    /* required settings */
+    position:absolute;
+    overflow:hidden;
+    left:35px;
+    width:650px;
+    height:90px;
+  }
+  
+  .scrollable .items {
+    /* this cannot be too large */
+    width:20000em;
+    position:absolute;
+  }
+  
+  .items div {
+    float:left;
+    width:650px;
+  }		
+  
+  .strip-left
+  {
+    width:171px;
+    height:46px;
+    float:left;
+    font:15px/46px "Times New Roman",Times,serif;
+    color:#FFF;
+    padding-left:50px;
+  }
+  
+  .strip-right
+  {
+    width:719px;
+    height:46px;
+    float:right;
+    text-align:center;
+    line-height:46px;
+    font-style:italic;
+    color:#666;
+    position:relative;
+  }
+  
+  .strip-right span
+  {
+    color:#000;
+    font-weight:bold;
+  }
+  
+  .arrow-left
+  {
+    width:15px;
+    height:26px;
+    position:absolute;
+    left:20px;
+    top:8px;
+    cursor:pointer;
+  }
+  
+  .arrow-right
+  {
+    width:15px;
+    height:26px;
+    position:absolute;
+    right:20px;
+    top:8px;
+    cursor:pointer;
+  }  
 }
 
 /*========== Banner ==========*/

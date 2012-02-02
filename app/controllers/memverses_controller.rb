@@ -563,7 +563,7 @@ class MemversesController < ApplicationController
   
 
   # ----------------------------------------------------------------------------------------------------------
-  # AJAX Verse Add
+  # AJAX Verse Add (Assumes that verse is already in DB)
   # ---------------------------------------------------------------------------------------------------------- 
   def ajax_add
   	vs  = Verse.find(params[:id])
