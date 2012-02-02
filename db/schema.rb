@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120117233221) do
+ActiveRecord::Schema.define(:version => 20120131011758) do
 
   create_table "american_states", :force => true do |t|
     t.string  "abbrev",      :limit => 20, :default => "", :null => false
@@ -19,9 +19,11 @@ ActiveRecord::Schema.define(:version => 20120117233221) do
     t.integer "users_count",               :default => 0
     t.integer "population"
     t.integer "rank"
+    t.string  "slug"
   end
 
   add_index "american_states", ["name"], :name => "index_american_states_on_name", :unique => true
+  add_index "american_states", ["slug"], :name => "index_american_states_on_slug"
   add_index "american_states", ["users_count"], :name => "index_american_states_on_users_count"
 
   create_table "blog_assets", :force => true do |t|
@@ -133,9 +135,11 @@ ActiveRecord::Schema.define(:version => 20120117233221) do
     t.integer "numcode",        :limit => 2
     t.integer "users_count",                  :default => 0
     t.integer "rank"
+    t.string  "slug"
   end
 
   add_index "countries", ["printable_name"], :name => "index_countries_on_printable_name", :unique => true
+  add_index "countries", ["slug"], :name => "index_countries_on_slug"
   add_index "countries", ["users_count"], :name => "index_countries_on_users_count"
 
   create_table "daily_stats", :force => true do |t|
@@ -472,6 +476,7 @@ ActiveRecord::Schema.define(:version => 20120117233221) do
     t.datetime "blog_attachment_updated_at"
     t.boolean  "admin",                                       :default => false
     t.integer  "group_id"
+    t.string   "slug"
   end
 
   add_index "users", ["american_state_id"], :name => "index_users_on_american_state_id"
@@ -480,6 +485,7 @@ ActiveRecord::Schema.define(:version => 20120117233221) do
   add_index "users", ["last_activity_date"], :name => "index_users_on_last_activity_date"
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true
   add_index "users", ["referred_by"], :name => "index_users_on_referred_by"
+  add_index "users", ["slug"], :name => "index_users_on_slug"
 
   create_table "verses", :force => true do |t|
     t.string   "translation",                        :null => false
