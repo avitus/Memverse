@@ -102,24 +102,4 @@ class UsersController < ApplicationController
     end
   end
   
-  # TODO: I think we can remove below since now handled by devise....
-  
-  def successful_creation(user)
-    redirect_back_or_default(root_path)
-    add_referrer(user, session[:referrer]) if session[:referrer]   
-    flash[:notice] = "Thanks for signing up!"
-    flash[:notice] << " We're sending you an email with your activation code. Please make sure to check your spam folder if you don't receive the activation email." if @user.not_using_openid?
-    flash[:notice] << " You can now login with your OpenID." unless @user.not_using_openid?
-  end
-  
-  def failed_creation(message = 'Sorry, there was an error creating your account')
-    flash[:error] = message
-    render :action => :new
-  end
-  
-  def add_referrer(user, referrer_login)
-    referrer = User.find_by_login(session[:referrer])
-    user.referred_by = referrer.id
-    user.save
-  end  
 end
