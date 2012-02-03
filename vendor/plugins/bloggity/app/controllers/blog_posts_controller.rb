@@ -80,7 +80,8 @@ class BlogPostsController < ApplicationController
       # Used to check off quests
       # spawn_block do
         if current_user
-          if q = Quest.find_by_url( blog_named_link(@blog_post, :quest) ) && !current_user.quests.where(:id => q.id).empty?
+          q = Quest.find_by_url( blog_named_link(@blog_post, :quest) )
+          if q && !current_user.quests.where(:id => q.id).empty?
             q.check_quest_off(current_user)
             flash.keep[:notice] = "You have completed the task: #{q.task}"
           end
