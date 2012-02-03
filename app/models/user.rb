@@ -45,8 +45,8 @@ require 'digest/sha1'
 require 'digest/md5' # required for Gravatar support in Bloggity
 
 class User < ActiveRecord::Base
-  extend FriendlyId
-  friendly_id :login
+  # extend FriendlyId
+  # friendly_id :login
   
   before_save :generate_login
 

@@ -65,30 +65,29 @@ class BlogPostsController < ApplicationController
     
     Rails.logger.info("*** Fetching recent posts for blog page #{@blog_page}")
     
-		@recent_posts = recent_posts(@blog_page)
-				
-		@blog_post = BlogPost.where("id = ? OR url_identifier = ?", params[:id], params[:id]).first
-
-		if !@blog_post || (!@blog_post.is_complete  && (!current_user || !current_user.can_blog?(@blog_post.blog_id)))
-			@blog_post = nil
-			flash[:error] = "You do not have permission to see that blog post."
-			return (redirect_to( :action => 'index' ))
-		else
-			@page_name = @blog_post.title
+    @recent_posts = recent_posts(@blog_page)
+    
+    @blog_post = BlogPost.where("id = ? OR url_identifier = ?", params[:id], params[:id]).first
+    
+    if !@blog_post || (!@blog_post.is_complete  && (!current_user || !current_user.can_blog?(@blog_post.blog_id)))
+      @blog_post = nil
+      flash[:error] = "You do not have permission to see that blog post."
+      return (redirect_to( :action => 'index' ))
+    else
+	  @page_name = @blog_post.title
       add_breadcrumb @blog_post.title, blog_named_link(@blog_post)
 
       # Used to check off quests
       # spawn_block do
-        if current_user
-          q = Quest.find_by_url( blog_named_link(@blog_post, :quest) )
-          if q && !current_user.quests.where(:id => q.id).empty?
-            q.check_quest_off(current_user)
-            flash.keep[:notice] = "You have completed the task: #{q.task}"
-          end
+      if current_user && q = Quest.find_by_url( blog_named_link(@blog_post, :quest) )
+        if !current_user.quests.where(:id => q.id).empty?
+          q.check_quest_off(current_user)
+          flash.keep[:notice] = "You have completed the task: #{q.task}"
         end
+      end
       # end        
       
-		end
+    end
 	
     respond_to do |format|
       format.html # show.html.erb
