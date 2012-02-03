@@ -87,7 +87,7 @@ class ProfileController < ApplicationController
       # spawn_block(:argv => "spawn-profile-quest") do
         q = Quest.find_by_url(url_for(:action => 'update_profile', :controller => 'profile', :only_path => false))
         if q && !current_user.quests.where(:id => q.id).empty?
-		  q.check_quest_off(current_user)
+          q.check_quest_off(current_user)
           flash.keep[:notice] = "You have completed the task: #{q.task}"
         end
       # end        
