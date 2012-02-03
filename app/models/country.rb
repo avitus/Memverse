@@ -14,7 +14,10 @@ class Country < ActiveRecord::Base
   # Validations
   validates_presence_of :name, :printable_name  
   
-  scope :vibrant, where('users_count >= 3') 
+  scope :vibrant, where('users_count >= 3')
+  
+  extend FriendlyId
+  friendly_id :printable_name, use: :slugged
     
   # ----------------------------------------------------------------------------------------------------------
   # Returns hash of top countries (sorted by number of verses memorized)

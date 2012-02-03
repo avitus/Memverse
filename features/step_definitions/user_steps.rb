@@ -66,3 +66,16 @@ end
 Given /^the email address "(.*)" is not confirmed$/ do |email|
   !User.find_by_email(email).confirmed?
 end
+
+Given /^a user with the login of "(.*)"$/ do |login|
+  User.new(:name => "Test User",
+            :email => "testemail@test.com",
+			:login => login,
+            :password => "secret",
+            :password_confirmation => "secret").save!
+end
+
+Then /^there should be a user with an email of "(.*)" whose referrer's login is "(.*)"$/ do |email, login|
+  referring_id = User.find_by_email(email).referred_by
+  User.find(referring_id).login == login
+end
