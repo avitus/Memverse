@@ -1,4 +1,4 @@
-<div class="enter-verse">
+<div class="quick-start-enter-verse">
 	
 	<div class="top-heading">
     	<h2><span>Enter a Bible Verse</span></h2>
@@ -22,14 +22,20 @@
 	
 	<div class="clr"></div>
 
-    <div class="trans-button"><input name="commit" type="submit" class="add-verse" value="" /></div>          
+    <div id="quick-start-add-verse" class="quick-start-add-verse">
+    </div>          
 	
 </div> <!-- enter-verse -->
 	        
+<div class="quick-start-popular-scroll">
+	<%= render "verses/popular_scroll" %>
+</div>
 
-<script type="text/javascript">
+
+<script language="JavaScript" type="text/javascript"><!--
 	$(document).ready(function(){
 	
+		// Verse entry and retrieval
 		$("#verse").observe_field(0.3, function( ) { 
 									
 			if (ref = parseVerseRef(this.value)) {
@@ -37,14 +43,33 @@
 					function(data) {	
 						if (typeof(data) !== 'undefined' && data != null) {
 							$("#foundVerse").html(data.text);
+							$("#quick-start-add-verse").html("<a data-remote='true' href='/add/" + data.id + "'class='quick-start-add-button' id='quick-start-add'></a>");
 						} else {
 							$("#foundVerse").html("That verse is not in the database.");
+							$("#quick-start-add-verse").empty();
 						};
 				}, "json" );			
-			}
-						
+			}					
         });
-
+        
+        // Verse addition
+        $('#quick-start-add-verse').on("click", function() {      // Bind to DIV enclosing button to allow for event delegation
+			
+			// Clear verse text of the verse just added
+			$("#foundVerse").fadeOut(1000, function() {
+			    $("#foundVerse").empty().append("Verse has been added to your list").fadeIn();
+			});
+			
+			// Remove the add button
+			$("#quick-start-add").fadeOut();
+			
+			// +1 to number of verses
+			
+			// Check whether user has enough verses to start first memorization session
+			
+		});
+        
+		// Reference autocomplete
 		$('#verse').focus().autocomplete({ source: ['Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy', 'Joshua', 'Judges', 'Ruth', '1 Samuel', '2 Samuel',
 	                '1 Kings', '2 Kings','1 Chronicles', '2 Chronicles', 'Ezra', 'Nehemiah', 'Esther', 'Job', 'Psalm', 'Proverbs',
 	                'Ecclesiastes', 'Song of Songs', 'Isaiah', 'Jeremiah', 'Lamentations', 'Ezekiel', 'Daniel', 'Hosea', 'Joel', 
@@ -67,5 +92,5 @@
 			$("#foundVerse").attr('disabled', 'disabled').hide();
 		});
 	});
-</script>
+--></script>
 

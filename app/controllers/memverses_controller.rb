@@ -126,7 +126,7 @@ class MemversesController < ApplicationController
     @tab = "home"
 
     if current_user.needs_quick_start?
-      redirect_to :controller => "home", :action => "quick_start" and return        
+      redirect_to :controller => "home", :action => "quick_start", :notice => "Signed in successfully." and return        
     end
  
     @due_today	= current_user.due_verses unless mobile_device?
@@ -563,7 +563,7 @@ class MemversesController < ApplicationController
   
 
   # ----------------------------------------------------------------------------------------------------------
-  # AJAX Verse Add
+  # AJAX Verse Add (Assumes that verse is already in DB)
   # ---------------------------------------------------------------------------------------------------------- 
   def ajax_add
   	vs  = Verse.find(params[:id])

@@ -1,3 +1,130 @@
 .quick-start-show-verse {
   min-height: 120px;
 }
+
+
+.quick-start-add-verse {
+  text-align:right;
+  padding-top:5px;
+}
+
+.quick-start-add-button {
+  background:url('add-verse.png') no-repeat left top;
+  width:122px;
+  height:25px;
+  padding:5px 125px 10px 0px;
+  border:0;
+  cursor:pointer;
+}
+
+.quick-start-enter-verse {
+  width:40%;
+  min-height:400px;
+  float:left;
+  padding-left:3em;
+  padding-right:2em;
+  padding-bottom:2em;
+  margin-right:4em;
+  border-right:1px solid #bfbebe;
+}
+
+/* Popular verses scroll */
+.quick-start-popular-scroll {
+  width:40%;
+  float:left;
+  padding-left:0.5em;
+  padding-right:1em;  
+  padding-bottom:2em; 
+  
+  /* root element for scrollable */
+  .scrollable {
+  
+    /* required settings */
+    position:relative;
+    overflow:hidden;
+  
+    /* vertical scrollables have typically larger height than width but not now */
+    height: 365px; // should match height of vertical class
+    width: 400px;  // should match width of vertical class and actions
+  }
+  
+  /* root element for scrollable items */
+  .scrollable .items {
+    position:absolute;
+  
+    /* this time we have very large space for the height */
+    height:20000em;
+  }
+  
+  /* root element for scrollable */
+  .vertical {  
+    
+    /* required settings */
+    position:relative;
+    overflow:hidden;  
+  
+    /* vertical scrollers have typically larger height than width */  
+    height: 365px; // should match height of scrollable class  
+    width: 400px;  // should match width of scrollable class and actions
+    border-top:1px solid #ddd;  
+  }
+  
+  /* root element for scrollable items */
+  .items {  
+    position:absolute;
+    
+    /* this time we have very large space for height */ 
+    height:20000em; 
+    margin: 0px;
+  }
+  
+  /* single scrollable item */
+  .item {
+    border-bottom:1px solid #ddd;
+    margin:10px 0;
+    padding:10px;
+    height:100px;
+  }
+  
+  /* elements inside single item */
+  .item img {
+    float:left;
+    margin-right:20px;
+    height:180px;
+    width:240px;
+  }
+  
+  .item h3 {
+    margin:0 0 5px 0;
+    font-size:16px;
+    color:#456;
+    font-weight:normal;
+  }
+  
+  /* the action buttons above the scrollable */
+  #actions {
+    width:400px;   // should match width of vertical and scrollable class
+    margin:30px 0 10px 0; 
+  }
+  
+  #actions a {
+    font-size:11px;   
+    cursor:pointer;
+    color:#666;
+  }
+  
+  #actions a:hover {
+    text-decoration:underline;
+    color:#000;
+  }
+  
+  .disabled {
+    visibility:hidden;    
+  }
+  
+  .next {
+    float:right;
+  }   
+}
+
+
