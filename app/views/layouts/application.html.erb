@@ -54,7 +54,9 @@
 <!-- hoverIntent        : used on popular verses page -->
 <!-- periodicalUpdater  : for home page memorized count -->
 
+<!-- jQuery: try CDN but fallback on local copy -->
 <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+<script>window.jQuery || document.write('<script src="/javascripts/jquery-1.7.min.js"><\/script>')</script>
 <script type="text/javascript" src="http://cdn.jquerytools.org/1.2.6/tiny/jquery.tools.min.js"></script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
 
@@ -218,7 +220,7 @@
 
 						<div id="leaderboard" class="submenustyle">
 							<ul>
-								<li <%= sub(@sub=="solo"		)%>><%= link_to t('leader_menu.Leaderboard'),			leaderboard_path %></li>
+								<li <%= sub(@sub=="solo"		)%>><%= link_to t('leader_menu.Leaderboard'), 			leaderboard_path %></li>
 								<li <%= sub(@sub=="church"		)%>><%= link_to t('leader_menu.Church Leaderboard'), 	churchboard_path %></li>
 								<li <%= sub(@sub=="group"		)%>><%= link_to t('leader_menu.Group Leaderboard'), 	groupboard_path %></li>
 								<li <%= sub(@sub=="us-state"	)%>><%= link_to t('leader_menu.State Leaderboard'), 	stateboard_path %></li>

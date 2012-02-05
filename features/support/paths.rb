@@ -16,6 +16,8 @@ module NavigationHelpers
 
     when /the sign in page/
       '/users/sign_in'
+	when /^(.*)'s referrer page$/i
+      '/?referrer=$1'
 
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:

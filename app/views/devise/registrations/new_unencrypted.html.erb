@@ -44,7 +44,9 @@
 	</script>
 	
 	<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f| %>
-
+		
+		<%= ('<input type="hidden" name="user[referred_by]" value="' + session[:referrer].to_s + '">').html_safe if session[:referrer] %>
+		
 		<h2 style="color:#111">Register for Memverse</h2><br />
 
 		<%= devise_error_messages! %>
@@ -90,7 +92,7 @@
 			</div>
 		</div>
 		
-		<div><%= f.submit "", :class => "submit-button", :id => :submit, :onclick => "return checkForm();" %></div>
+		<div><%= f.submit "", :class => "submit-button", :id => :submit %></div>
 		
 		<br />
 		
@@ -221,8 +223,7 @@
 	// input placeholder fix
 	fauxPlaceholder();
 	
-	$("form#user_new").keypress(function(e) {
-		$("form#user_new").submit(); // submits form by clicking the submit button and therefore runs checkForm()
-		return false;
+	$("form#user_new").submit(function() {
+		return checkForm(); // call checkForm() when form submitted (no matter how)
 	});
 </script>

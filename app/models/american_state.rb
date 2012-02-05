@@ -12,7 +12,10 @@ class AmericanState < ActiveRecord::Base
   # Validations
   validates_presence_of :name, :abbrev
   
-  scope :vibrant, where('users_count >= 3') 
+  scope :vibrant, where('users_count >= 3')
+  
+  extend FriendlyId
+  friendly_id :name, use: :slugged
   
   # ----------------------------------------------------------------------------------------------------------
   # Returns hash of top countries (sorted by number of verses memorized)
