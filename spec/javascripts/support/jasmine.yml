@@ -11,7 +11,7 @@
 #   - dist/**/*.js
 #
 src_files:
-  - spec/javascripts/jquery-1.7.min.js
+  - public/javascripts/jquery-1.7.min.js
   - app/assets/javascripts/**/*.js
 
 # stylesheets

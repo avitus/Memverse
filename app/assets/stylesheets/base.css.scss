@@ -1552,14 +1552,13 @@ div#flash-error {
 	margin-bottom:8px;
 }
 
-.verseguess
-{
-	width:99.5%;
-	height:205px;
-	background:#f2f1f1;
-	border:1px solid #ccc;
-	overflow:auto;
-	margin-bottom:34px;
+.verseguess {
+  height:205px; /* height on chapter review page should be 110px */
+  width:99.5%;
+  background:#f2f1f1;
+  border:1px solid #ccc;
+  overflow:auto;
+  margin-bottom:34px;
 }
 
 #exam-answer-box {

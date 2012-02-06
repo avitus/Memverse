@@ -7,3 +7,7 @@ Sitemap: http://www.memverse.com/sitemap.xml
 User-agent: *
 Disallow: /admin/ 		# Administrators only
 Disallow: /utils/ 		# Administrators only
+Disallow: /images/ 		# Images
+Disallow: /javascripts/		# Javascript directory
+Disallow: /charts/		# Old flash charts
+
