@@ -271,14 +271,6 @@ class MemversesController < ApplicationController
     @vs_list = Popverse.find( :all, :limit => @page_size, :offset => @page*@page_size )    
   end 
 
-
-  # ----------------------------------------------------------------------------------------------------------   
-  # Display a single verse TODO: We shouldn't use this ... there is a show method in the verse controller
-  # ---------------------------------------------------------------------------------------------------------- 
-  # def show_vs
-    # @verse = Verse.find(params[:vs])
-  # end
-
   # ----------------------------------------------------------------------------------------------------------   
   # Display a single memory verse or several verses as POSTed from manage_verses
   # ----------------------------------------------------------------------------------------------------------  
