@@ -38,7 +38,7 @@
   float:left;
   padding-left:0.5em;
   padding-right:1em;  
-  padding-bottom:2em; 
+  padding-bottom:1em; 
   
   /* root element for scrollable */
   .scrollable {
@@ -48,8 +48,8 @@
     overflow:hidden;
   
     /* vertical scrollables have typically larger height than width but not now */
-    height: 400px; // should match height of vertical class ... height should be 3x size of item height + margins
-    width: 400px;  // should match width of vertical class and actions
+    height: 430px; // should match height of vertical class ... height should be 3x size of item height + padding
+    width: 420px;  // should match width of vertical class and actions
   }
   
   /* root element for scrollable items */
@@ -68,8 +68,8 @@
     overflow:hidden;  
   
     /* vertical scrollers have typically larger height than width */  
-    height: 400px; // should match height of scrollable class  
-    width: 400px;  // should match width of scrollable class and actions
+    height: 430px; // should match height of scrollable class  
+    width: 420px;  // should match width of scrollable class and actions
     border-top:1px solid #ddd;  
   }
   
@@ -85,9 +85,8 @@
   /* single scrollable item */
   .item {
     border-bottom:1px solid #ddd;
-    margin:10px 0;
-    padding:10px;
-    height:100px;
+    padding:10px 0 0 0;
+    height:133px;
   }
   
   /* elements inside single item */
@@ -101,13 +100,13 @@
   .item h3 {
     margin:0 0 5px 0;
     font-size:16px;
-    color:#456;
+    /* color:#456; */
     font-weight:normal;
   }
   
   /* the action buttons above the scrollable */
   #actions {
-    width:400px;   // should match width of vertical and scrollable class
+    width:420px;   // should match width of vertical and scrollable class
     margin:30px 0 10px 0; 
   }
   

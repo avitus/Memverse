@@ -7,7 +7,7 @@ class PopversesController < ApplicationController
     
     @pop_verses = Array.new
     
-    translation = params[:tl] || "NIV"   # default to NIV translation
+    translation = params[:tl] || current_user.translation || "NIV"   # default to NIV translation
     popverses   = Popverse.order("num_users DESC")
         
     if MAJORS.keys.include?(translation.upcase.to_sym)

@@ -15,7 +15,6 @@
 	<% end %>  <!-- end of form -->
         
 	<div class="quick-start-show-verse">
-		<h2>Verse Text</h2>
 	    <div id="foundVerse">
 		</div>
 	</div>
@@ -42,7 +41,7 @@
 				$.get("/lookup_verse.json", { bk: ref.bk, ch: ref.ch, vs: ref.vs },
 					function(data) {	
 						if (typeof(data) !== 'undefined' && data != null) {
-							$("#foundVerse").html(data.text);
+							$("#foundVerse").append($('<h3/>').text(data.ref)).append($('<p/>').text(data.text));
 							$("#quick-start-add-verse").html("<a data-remote='true' href='/add/" + data.id + "'class='quick-start-add-button' id='quick-start-add'></a>");
 						} else {
 							$("#foundVerse").html("That verse is not in the database.");

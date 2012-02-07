@@ -11,12 +11,12 @@
 		<div id="major-translations">
 			<div class="quick-start-selection">
 				<ul>
-					<li class="tl-set"><%= link_to 'NIV (1984 Edition)',        set_translation_path('NIV'), :remote => true %></li>
-					<li class="tl-set"><%= link_to 'English Standard Version',  set_translation_path('ESV'), :remote => true %></li>
-					<li class="tl-set"><%= link_to 'King James Version',        set_translation_path('KJV'), :remote => true %></li>
-					<li class="tl-set"><%= link_to 'New King James Version',    set_translation_path('NKJ'), :remote => true %></li>
-					<li class="tl-set"><%= link_to 'New American Standard',     set_translation_path('NAS'), :remote => true %></li>
-					<li id="minor-tl"> <%= link_to 'Show other translations',   nil, :class => 'active',     :remote => true %></li>
+					<li id="NIV" class="tl-set"><%= link_to 'NIV (1984 Edition)',        set_translation_path('NIV'), :remote => true %></li>
+					<li id="ESV" class="tl-set"><%= link_to 'English Standard Version',  set_translation_path('ESV'), :remote => true %></li>
+					<li id="KJV" class="tl-set"><%= link_to 'King James Version',        set_translation_path('KJV'), :remote => true %></li>
+					<li id="NKJ" class="tl-set"><%= link_to 'New King James Version',    set_translation_path('NKJ'), :remote => true %></li>
+					<li id="NAS" class="tl-set"><%= link_to 'New American Standard',     set_translation_path('NAS'), :remote => true %></li>
+					<li id="minor-tl">          <%= link_to 'Show other translations',   nil, :class => 'active',     :remote => true %></li>
 				</ul>
 			</div>
 		</div>
@@ -24,19 +24,19 @@
 		<div id="minor-translations">
 			<div class="quick-start-selection">
 				<ul>
-					<li class="tl-set"><%= link_to 'NIV (2011 Edition)',                 set_translation_path('NNV'), :remote => true %></li>
-					<li class="tl-set"><%= link_to 'Revised Standard Version',           set_translation_path('NRS'), :remote => true %></li>
-					<li class="tl-set"><%= link_to 'New Revised Standard Version',       set_translation_path('RSV'), :remote => true %></li>
-					<li class="tl-set"><%= link_to 'New Living Translation',             set_translation_path('NLT'), :remote => true %></li>
-					<li class="tl-set"><%= link_to 'Contemporary English Version',       set_translation_path('CEV'), :remote => true %></li>
-					<li class="tl-set"><%= link_to 'Holman Christian Standard',          set_translation_path('HCS'), :remote => true %></li>
-					<li class="tl-set"><%= link_to 'Darby Translation',                  set_translation_path('DTL'), :remote => true %></li>
-					<li class="tl-set"><%= link_to 'The Message',                        set_translation_path('MSG'), :remote => true %></li>
-					<li class="tl-set"><%= link_to 'Amplified Bible',                    set_translation_path('AMP'), :remote => true %></li>
-					<li class="tl-set"><%= link_to "New International Reader's Ver",     set_translation_path('IRV'), :remote => true %></li>
-					<li class="tl-set"><%= link_to 'Updated King James Version',         set_translation_path('UKJ'), :remote => true %></li>
-					<li class="tl-set"><%= link_to 'Geneva Bible',                       set_translation_path('GEN'), :remote => true %></li>
-					<li id="global-tl"><%= link_to 'Show other languages',               nil, :class => 'active',     :remote => true %></li>
+					<li id="NNV" class="tl-set"><%= link_to 'NIV (2011 Edition)',                 set_translation_path('NNV'), :remote => true %></li>
+					<li id="RSV" class="tl-set"><%= link_to 'Revised Standard Version',           set_translation_path('NRS'), :remote => true %></li>
+					<li id="NRS" class="tl-set"><%= link_to 'New Revised Standard Version',       set_translation_path('RSV'), :remote => true %></li>
+					<li id="NLT" class="tl-set"><%= link_to 'New Living Translation',             set_translation_path('NLT'), :remote => true %></li>
+					<li id="CEV" class="tl-set"><%= link_to 'Contemporary English Version',       set_translation_path('CEV'), :remote => true %></li>
+					<li id="HCS" class="tl-set"><%= link_to 'Holman Christian Standard',          set_translation_path('HCS'), :remote => true %></li>
+					<li id="DTL" class="tl-set"><%= link_to 'Darby Translation',                  set_translation_path('DTL'), :remote => true %></li>
+					<li id="MSG" class="tl-set"><%= link_to 'The Message',                        set_translation_path('MSG'), :remote => true %></li>
+					<li id="AMP" class="tl-set"><%= link_to 'Amplified Bible',                    set_translation_path('AMP'), :remote => true %></li>
+					<li id="IRV" class="tl-set"><%= link_to "New International Reader's",     set_translation_path('IRV'), :remote => true %></li>
+					<li id="UKJ" class="tl-set"><%= link_to 'Updated King James Version',         set_translation_path('UKJ'), :remote => true %></li>
+					<li id="GEN" class="tl-set"><%= link_to 'Geneva Bible',                       set_translation_path('GEN'), :remote => true %></li>
+					<li id="global-tl">         <%= link_to 'Show other languages',               nil, :class => 'active',     :remote => true %></li>
 				</ul>
 			</div>			
 		</div>
@@ -44,18 +44,18 @@
 		<div id="foreign-translations">
 			<div class="quick-start-selection">
 				<ul>
-					<li class="tl-set"><%= link_to 'Biblical Greek',              set_translation_path('GRK'), :remote => true %></li>
-					<li class="tl-set"><%= link_to 'Nueva Version Internacional', set_translation_path('NVI'), :remote => true %></li>
-					<li class="tl-set"><%= link_to 'Reina-Valera 1960',           set_translation_path('RVR'), :remote => true %></li>
-					<li class="tl-set"><%= link_to 'Louis Segond 1910',           set_translation_path('LSV'), :remote => true %></li>
-					<li class="tl-set"><%= link_to 'La Nuova Diodati',            set_translation_path('LND'), :remote => true %></li>
-					<li class="tl-set"><%= link_to 'Afrikaans 1983 Translation',  set_translation_path('AFR'), :remote => true %></li>
-					<li class="tl-set"><%= link_to 'Herziene Statenvertaling',    set_translation_path('HSV'), :remote => true %></li>
-					<li class="tl-set"><%= link_to 'De Nieuwe Bijbelvertaling',   set_translation_path('NBV'), :remote => true %></li>
-					<li class="tl-set"><%= link_to 'Terjemahan Baru',             set_translation_path('TMB'), :remote => true %></li>
-					<li class="tl-set"><%= link_to "Magandang Balita Biblia",     set_translation_path('MBB'), :remote => true %></li>
-					<li class="tl-set"><%= link_to 'Svenska Folkbibeln',          set_translation_path('SPB'), :remote => true %></li>
-					<li class="tl-set"><%= link_to 'Almeida Corrigida e Fiel',    set_translation_path('ACF'), :remote => true %></li>
+					<li id="GRK" class="tl-set"><%= link_to 'Biblical Greek',              set_translation_path('GRK'), :remote => true %></li>
+					<li id="NVI" class="tl-set"><%= link_to 'Nueva Version Internacional', set_translation_path('NVI'), :remote => true %></li>
+					<li id="RVR" class="tl-set"><%= link_to 'Reina-Valera 1960',           set_translation_path('RVR'), :remote => true %></li>
+					<li id="LSV" class="tl-set"><%= link_to 'Louis Segond 1910',           set_translation_path('LSV'), :remote => true %></li>
+					<li id="LND" class="tl-set"><%= link_to 'La Nuova Diodati',            set_translation_path('LND'), :remote => true %></li>
+					<li id="AFR" class="tl-set"><%= link_to 'Afrikaans 1983 Translation',  set_translation_path('AFR'), :remote => true %></li>
+					<li id="HSV" class="tl-set"><%= link_to 'Herziene Statenvertaling',    set_translation_path('HSV'), :remote => true %></li>
+					<li id="NBV" class="tl-set"><%= link_to 'De Nieuwe Bijbelvertaling',   set_translation_path('NBV'), :remote => true %></li>
+					<li id="TMB" class="tl-set"><%= link_to 'Terjemahan Baru',             set_translation_path('TMB'), :remote => true %></li>
+					<li id="MBB" class="tl-set"><%= link_to "Magandang Balita Biblia",     set_translation_path('MBB'), :remote => true %></li>
+					<li id="SPB" class="tl-set"><%= link_to 'Svenska Folkbibeln',          set_translation_path('SPB'), :remote => true %></li>
+					<li id="ACF" class="tl-set"><%= link_to 'Almeida Corrigida e Fiel',    set_translation_path('ACF'), :remote => true %></li>
 				</ul>
 			</div>	
 		</div>
@@ -103,10 +103,11 @@
 		});		
 		
 		$(".tl-set").click(function() {
+			var tl = this.id
 			$("#choose-translation").hide();
 			$("#choose-time-alloc").show();
 			// Load popular verses in chosen translation
-			$.getJSON("/popverses/index.json", { tl: "ESV" }, function(pop_verses) {
+			$.getJSON("/popverses/index.json", { tl: tl }, function(pop_verses) {
 				$.each (pop_verses, function(i, pv) {
 					// We need to group popular verses		
 					if (i % 3 == 0) {
