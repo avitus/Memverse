@@ -18,7 +18,7 @@ module NavigationHelpers
       '/users/sign_in'
     when /(.*)'s referrer page/
       '/?referrer='+$1
-    when /the new blog post page for the blog titled titled "(.*)"/
+    when /the new blog post page for the blog titled "(.*)"/
       blog_id = Blog.find_by_title($1).id.to_s
       '/blog_posts/new?blog_id='+blog_id
     when /the blog/
