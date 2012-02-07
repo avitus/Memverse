@@ -3,21 +3,24 @@ Feature: Post on Blog
   As a user
   I want to be able to post on the blog
   
+    Background:
+      Given a blog titled "Memverse Blog"
+  
     @blog
-	Scenario: I am not logged in and cannot post
-	  When I go to the blog
-	  Then I should not see "New blog post"
-	  When I go to the new blog post page
-	  Then I should see "The page you were looking for doesn't exist"
+    Scenario: I am not logged in and cannot post
+      When I go to the blog
+      Then I should not see "New blog post"
+      When I go to the new blog post page for the blog titled "Memverse Blog"
+      Then I should see "You don't have permission to do that."
     
     @blog
     Scenario: I sign in but am not authorized to blog
       When I go to the blog
 	  Then I should not see "New blog post"
-	  When I go to the new blog post page
-	  Then I should see "The page you were looking for doesn't exist"
+	  When I go to the new blog post page for the blog titled "Memverse Blog"
+	  Then I should see "You don't have permission to do that."
 	
-	@blog
+    @blog
     Scenario: User signs in and creates two blog posts with same name
 	  Given I am a user named "foo" with an email "user@test.com" and password "please"
       And the email address "user@test.com" is confirmed

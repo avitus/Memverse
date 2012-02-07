@@ -20,8 +20,9 @@ module NavigationHelpers
       '/?referrer=$1'
     when /the blog/
       '/blog'
-    when /the new blog post page/
-      '/blog_posts/new'
+    when /^the new blog post page for the blog titled "(.*)"$/i
+      blog_id = Blog.find_by_title($1).id
+      '/blog_posts/new?blog_id='+blog_id
 
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
