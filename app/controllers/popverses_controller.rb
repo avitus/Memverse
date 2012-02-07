@@ -9,8 +9,8 @@ class PopversesController < ApplicationController
     
     translation = params[:tl] || "NIV"   # default to NIV translation
     popverses   = Popverse.order("num_users DESC")
-    
-    if MAJORS.keys.include?(translation.to_sym)
+        
+    if MAJORS.keys.include?(translation.upcase.to_sym)
       # All needed fields are included in Popverse table
       popverses.each do |pv|
         if pv.send(translation.downcase)  # we have the text for that verse in the required translation
@@ -18,7 +18,13 @@ class PopversesController < ApplicationController
         end
       end
     else
-      # Needed to build from Verse model
+      # Need to build from Verse model
+      popverses.each do |pv|
+        vs = Verse.where(:book => pv.book, :chapter => pv.chapter, :versenum => pv.versenum, :translation => translation.upcase).first
+        if vs
+          @pop_verses << {:ref => vs.ref, :id => vs.id, :text => vs.text}
+        end
+      end
     end
     
     respond_to do |format|
@@ -26,9 +32,6 @@ class PopversesController < ApplicationController
       format.json { render :json => @pop_verses }
     end    
 
-  end
-
-  def show
   end
 
 end
