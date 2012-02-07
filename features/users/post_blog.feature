@@ -8,14 +8,14 @@ Feature: Post on Blog
 	  When I go to the blog
 	  Then I should not see "New blog post"
 	  When I go to the new blog post page
-	  Then I should see "unauthorized"
+	  Then I should see "The page you were looking for doesn't exist"
     
     @blog
     Scenario: I sign in but am not authorized to blog
       When I go to the blog
 	  Then I should not see "New blog post"
 	  When I go to the new blog post page
-	  Then I should see "unauthorized"
+	  Then I should see "The page you were looking for doesn't exist"
 	
 	@blog
     Scenario: User signs in and creates two blog posts with same name
