@@ -14,3 +14,12 @@ Factory.define :verse do |f|
   f.chapter '1'
   f.versenum '1'
 end
+
+Factory.define :blog do |f|
+  f.id 1
+  f.title 'Memverse Blog'
+end
+
+Factory.define :blog_post do |f|
+  f.posted_by_id 2
+end

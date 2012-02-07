@@ -16,8 +16,12 @@ module NavigationHelpers
 
     when /the sign in page/
       '/users/sign_in'
-	when /^(.*)'s referrer page$/i
+    when /^(.*)'s referrer page$/i
       '/?referrer=$1'
+    when /the blog/
+      '/blog'
+    when /the new blog post page/
+      '/blog_posts/new'
 
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
