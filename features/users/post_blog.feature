@@ -15,6 +15,10 @@ Feature: Post on Blog
     
     @blog
     Scenario: I sign in but am not authorized to blog
+      Given I am a user named "foo" with an email "user@test.com" and password "please"
+      And the email address "user@test.com" is confirmed
+      When I sign in as "user@test.com/please"
+      Then I should be signed in
       When I go to the blog
 	  Then I should not see "New blog post"
 	  When I go to the new blog post page for the blog titled "Memverse Blog"

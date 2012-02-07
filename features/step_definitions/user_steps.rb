@@ -81,13 +81,13 @@ Then /^there should be a user with an email of "(.*)" whose referrer's login is 
 end
 
 Given /^the user with the email address "([^"]*)" can blog$/ do |email|
-  class User < ActiveRecord::Base
-    def can_blog?
-      self.id == User.find_by_email(email).id
-	end
-  end
+  # class User < ActiveRecord::Base
+  #   def can_blog?
+  #     self.id == User.find_by_email(email).id
+  #  end
+  # end
 end
 
 Given /^a blog titled "(.*)"$/ do |title|
-  Blog.new(:title => title, :url_identifier => "main")
+  Blog.new(:title => title, :url_identifier => "main").save!
 end
