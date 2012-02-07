@@ -1,7 +1,10 @@
+.quick-start {
+  min-height:550px;
+}
+
 .quick-start-show-verse {
   min-height: 120px;
 }
-
 
 .quick-start-add-verse {
   text-align:right;
@@ -19,7 +22,7 @@
 
 .quick-start-enter-verse {
   width:40%;
-  min-height:400px;
+  min-height:500px;
   float:left;
   padding-left:3em;
   padding-right:2em;
@@ -31,6 +34,7 @@
 /* Popular verses scroll */
 .quick-start-popular-scroll {
   width:40%;
+  min-height:500px;
   float:left;
   padding-left:0.5em;
   padding-right:1em;  
@@ -44,7 +48,7 @@
     overflow:hidden;
   
     /* vertical scrollables have typically larger height than width but not now */
-    height: 365px; // should match height of vertical class
+    height: 400px; // should match height of vertical class ... height should be 3x size of item height + margins
     width: 400px;  // should match width of vertical class and actions
   }
   
@@ -64,7 +68,7 @@
     overflow:hidden;  
   
     /* vertical scrollers have typically larger height than width */  
-    height: 365px; // should match height of scrollable class  
+    height: 400px; // should match height of scrollable class  
     width: 400px;  // should match width of scrollable class and actions
     border-top:1px solid #ddd;  
   }
