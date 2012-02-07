@@ -1552,13 +1552,22 @@ div#flash-error {
 	margin-bottom:8px;
 }
 
-.verseguess {
-  height:205px; /* height on chapter review page should be 110px */
+@mixin verse-entry-box {
   width:99.5%;
   background:#f2f1f1;
   border:1px solid #ccc;
   overflow:auto;
-  margin-bottom:34px;
+  margin-bottom:34px;  
+}
+
+.verseguess {
+  height:205px;
+  @include verse-entry-box;
+}
+
+.chapter-guess {
+  height:110px;
+  @include verse-entry-box;
 }
 
 #exam-answer-box {
@@ -2618,6 +2627,7 @@ div#currentVerse #matchbox .correct {
 	padding:0 2em 0 3em;
 	float:left;
 	border-right:1px solid #bfbebe;
+	min-height:480px;
 }
 
 .chapter-feedback #currentVerse {

@@ -15,10 +15,8 @@
 			<div class="verse-test-area">
 				<%= form_tag test_chapter_path do %>
 		
-					<div id="answerbox">
-		        		<%= text_area_tag(:verseguess, params[:verseguess], :class => "verseguess" )%>	
-		            </div>			  	
-			  			
+		        	<%= text_area_tag(:verseguess, params[:verseguess], :class => "chapter-guess" )%>				  			
+		            
 		            <div class="tool-tip-nav">Rate Your Performance:</div>
 		            <div class="score-test-buttons">								
 						<span class="submit" q="1">1</span> <div class="tooltip"><%= I18n.t "memverses.test_verse_quick.b1" %></div>							
