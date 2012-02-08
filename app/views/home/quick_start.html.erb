@@ -77,7 +77,7 @@
 
 	<div id="choose-starting-verses">
 
-		<h2>Step 3: Choose your starting verses</h2>
+		<h2>Step 3: Select 5-10 verses to start memorizing</h2>
 
 		<%= render "verses/add_verse" %>
 		
@@ -116,7 +116,7 @@
 						$('.items').append($new_vs_group)
 					} 
 					var $new_pv = $('<div/>').addClass('item')
-						.append($('<h3/>').text(pv.ref))
+						.append($('<h4/>').text(pv.ref))
 						.append($('<p/>').text(pv.text))
 						.append($('<div/>', {class: 'quick-start-add-verse', id: 'quick-start-add-verse'})
 						.html("<a data-remote='true' href='/add/" + pv.id + "'class='quick-start-add-button' id='quick-start-add'></a>"));					

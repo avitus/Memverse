@@ -1,7 +1,7 @@
 <div class="quick-start-enter-verse">
 	
 	<div class="top-heading">
-    	<h2><span>Enter a Bible Verse</span></h2>
+    	<h3><span>Enter a Bible Verse</span></h3>
     </div>
     
     <%= form_tag :action => 'add_verse' do %>
@@ -41,7 +41,7 @@
 				$.get("/lookup_verse.json", { bk: ref.bk, ch: ref.ch, vs: ref.vs },
 					function(data) {	
 						if (typeof(data) !== 'undefined' && data != null) {
-							$("#foundVerse").append($('<h3/>').text(data.ref)).append($('<p/>').text(data.text));
+							$("#foundVerse").append($('<h4/>').text(data.ref)).append($('<p/>').text(data.text));
 							$("#quick-start-add-verse").html("<a data-remote='true' href='/add/" + data.id + "'class='quick-start-add-button' id='quick-start-add'></a>");
 						} else {
 							$("#foundVerse").html("That verse is not in the database.");
