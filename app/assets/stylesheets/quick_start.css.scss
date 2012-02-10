@@ -2,6 +2,78 @@
   min-height:550px;
 }
 
+/* Start with quick start steps hidden */
+#minor-translations {
+  display:none;
+  filter:alpha(opacity=0);
+  -moz-opacity:0;
+}
+
+#foreign-translations {
+  display:none;
+  filter:alpha(opacity=0);
+  -moz-opacity:0;
+}
+
+#choose-time-alloc {
+  display:none;
+  filter:alpha(opacity=0);
+  -moz-opacity:0;
+}
+
+#choose-starting-verses {
+  display:none;
+  filter:alpha(opacity=0);
+  -moz-opacity:0;
+}
+
+.quick-start-selection
+{
+  width:880px;
+  height:63px;
+}
+
+.quick-start-selection ul
+{
+  list-style:none;
+  padding:0;
+  margin:0;
+  padding:20px 0 0 60px;
+}
+
+.quick-start-selection ul li
+{
+  background:url('main-buttons.png') no-repeat left top;
+  width:179px;
+  height:25px;
+  float:left;
+  text-align:center;
+  line-height:25px;
+  font-size:11px;
+  font-weight:bold;
+  color:#FFF;
+  text-transform:uppercase;
+  margin-right:35px;
+  margin-bottom:15px;
+}
+
+.quick-start-selection ul li a
+{
+  width:179px;
+  height:25px;
+  display:block;
+  color:#FFF;
+  text-decoration:none;
+}
+
+.quick-start-selection ul li a:hover, .quick-start-selection ul li a.active
+{
+  background:url('main-buttons.png') no-repeat 0 -75px;
+  color:#FFF;
+  text-decoration:none;
+}
+
+
 .quick-start-show-verse {
   min-height: 120px;
 }
@@ -29,6 +101,14 @@
   padding-bottom:2em;
   margin-right:4em;
   border-right:1px solid #bfbebe;
+}
+
+#start-memorizing {
+  display:none;
+  filter:alpha(opacity=0);
+  -moz-opacity:0;
+  padding-left:2em;
+  width: 100%;  
 }
 
 /* Popular verses scroll */
@@ -128,6 +208,6 @@
   .next {
     float:right;
   }   
-}
+} /* end of scroll styles */
 
 

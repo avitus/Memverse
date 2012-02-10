@@ -1,4 +1,4 @@
-<div class="quick-start-enter-verse">
+<div class="quick-start-enter-verse quick-start-add-section">
 	
 	<div class="top-heading">
     	<h3><span>Enter a Bible Verse</span></h3>
@@ -17,79 +17,20 @@
 	<div class="quick-start-show-verse">
 	    <div id="foundVerse">
 		</div>
-	</div>
-	
-	<div class="clr"></div>
 
-    <div id="quick-start-add-verse" class="quick-start-add-verse">
-    </div>          
+	    <div id="quick-start-add-verse" class="quick-start-add-verse">
+	    </div>
+	</div>
+    
+    <div id="start-memorizing" class="quick-start-selection">
+		<ul>
+			<li id="start-memorizing-button"><%= link_to 'Start Memorizing', nil, :class => 'active', :remote => true %></li>
+		</ul>    	
+    </div>      
 	
 </div> <!-- enter-verse -->
 	        
-<div class="quick-start-popular-scroll">
+<div class="quick-start-popular-scroll quick-start-add-section">
 	<%= render "verses/popular_scroll" %>
 </div>
-
-
-<script language="JavaScript" type="text/javascript"><!--
-	$(document).ready(function(){
-	
-		// Verse entry and retrieval
-		$("#verse").observe_field(0.3, function( ) { 
-									
-			if (ref = parseVerseRef(this.value)) {
-				$.get("/lookup_verse.json", { bk: ref.bk, ch: ref.ch, vs: ref.vs },
-					function(data) {	
-						if (typeof(data) !== 'undefined' && data != null) {
-							$("#foundVerse").append($('<h4/>').text(data.ref)).append($('<p/>').text(data.text));
-							$("#quick-start-add-verse").html("<a data-remote='true' href='/add/" + data.id + "'class='quick-start-add-button' id='quick-start-add'></a>");
-						} else {
-							$("#foundVerse").html("That verse is not in the database.");
-							$("#quick-start-add-verse").empty();
-						};
-				}, "json" );			
-			}					
-        });
-        
-        // Verse addition
-        $('#quick-start-add-verse').on("click", function() {      // Bind to DIV enclosing button to allow for event delegation
-			
-			// Clear verse text of the verse just added
-			$("#foundVerse").fadeOut(1000, function() {
-			    $("#foundVerse").empty().append("Verse has been added to your list").fadeIn();
-			});
-			
-			// Remove the add button
-			$("#quick-start-add").fadeOut();
-			
-			// +1 to number of verses
-			
-			// Check whether user has enough verses to start first memorization session
-			
-		});
-        
-		// Reference autocomplete
-		$('#verse').focus().autocomplete({ source: ['Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy', 'Joshua', 'Judges', 'Ruth', '1 Samuel', '2 Samuel',
-	                '1 Kings', '2 Kings','1 Chronicles', '2 Chronicles', 'Ezra', 'Nehemiah', 'Esther', 'Job', 'Psalm', 'Proverbs',
-	                'Ecclesiastes', 'Song of Songs', 'Isaiah', 'Jeremiah', 'Lamentations', 'Ezekiel', 'Daniel', 'Hosea', 'Joel', 
-	                'Amos', 'Obadiah', 'Jonah', 'Micah', 'Nahum', 'Habakkuk', 'Zephaniah', 'Haggai', 'Zechariah', 'Malachi', 'Matthew',
-	                'Mark', 'Luke', 'John', 'Acts', 'Romans', '1 Corinthians', '2 Corinthians', 'Galatians', 'Ephesians', 'Philippians',
-	                'Colossians', '1 Thessalonians', '2 Thessalonians', '1 Timothy', '2 Timothy', 'Titus', 'Philemon', 'Hebrews', 'James',
-	                '1 Peter', '2 Peter', '1 John', '2 John', '3 John', 'Jude', 'Revelation']						
-		});	
-
-		
-		$('.spinner')
-			.ajaxStart(function() {
-		        $(this).show();
-		    })
-			.ajaxStop(function() {
-		        $(this).hide();
-	    });
-
-		$('#foundVerse').delegate('td.no-dbl-click a', 'click', function() {
-			$("#foundVerse").attr('disabled', 'disabled').hide();
-		});
-	});
---></script>
 
