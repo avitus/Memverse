@@ -103,6 +103,21 @@
   border-right:1px solid #bfbebe;
 }
 
+.verse-added
+{
+  background:#FFF url('tick.png') no-repeat right center;
+  height:30px;
+  float:right;
+  text-align:right;
+  padding-right:20px;
+  margin-right:50px;
+  color:#999;
+  line-height:30px;
+  font-size:13px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
 #start-memorizing {
   display:none;
   filter:alpha(opacity=0);

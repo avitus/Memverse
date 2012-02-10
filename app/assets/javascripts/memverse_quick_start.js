@@ -74,7 +74,9 @@ $(document).ready(function() {
     $('.quick-start-add-section').on("click", ".quick-start-add-button", function() {      // Bind to DIV enclosing button to allow for event delegation
 				
 		// Clear verse text of the verse just added
-		$(this).closest(".quick-start-show-verse").empty();
+		$(this).fadeOut( 400, function () {
+			$(this).replaceWith("<div class='verse-added'></div>");
+		});
 
 		// +1 to number of verses
 		versesAdded += 1;
