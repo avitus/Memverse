@@ -27,10 +27,32 @@ Feature: Sign in
       And the email address "user@test.com" is confirmed
       When I go to the sign in page
       And I sign in as "user@test.com/please"
-      Then I should see "Signed in successfully."
+      Then I should see "Choose your translation"
       And I should be signed in
       When I return next time
       Then I should be already signed in
+      
+      
+    Scenario: User who has already add verses signs in
+    Given the following user exists:
+	  | name     | email               | password |
+      | Old Hand | olddog@test.com    | please   |
+    And the following verses exist:
+      | translation | book_index | book    | chapter | versenum |
+      | NIV         | 1          | Genesis | 1       | 1        |
+      | NIV         | 1          | Genesis | 1       | 2        |      
+    And the following memverses exist:
+      | User     | Verse |
+      | Old Hand | 1     |
+      | Old Hand | 2     |
+    And the email address "olddog@test.com" is confirmed
+    When I go to the sign in page
+    And I sign in as "olddog@test.com/please"
+    Then I should see "Signed in successfully"
+    And I should be signed in
+    When I return next time
+    Then I should be already signed in    
+      
     
     Scenario: User account is not confirmed
       Given I am a user named "foo" with an email "user@test.com" and password "please"
