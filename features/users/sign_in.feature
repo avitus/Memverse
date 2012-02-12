@@ -31,20 +31,19 @@ Feature: Sign in
       And I should be signed in
       When I return next time
       Then I should be already signed in
-      
-      
-    Scenario: User who has already add verses signs in
-    Given the following user exists:
-	  | name     | email               | password |
-      | Old Hand | olddog@test.com    | please   |
-    And the following verses exist:
-      | translation | book_index | book    | chapter | versenum |
-      | NIV         | 1          | Genesis | 1       | 1        |
-      | NIV         | 1          | Genesis | 1       | 2        |      
+           
+    Scenario: User who has already added verses signs in
+    Given the following verses exist:
+      |id | translation | book_index | book    | chapter | versenum | text                                                    |
+      | 1 | NIV         | 1          | Genesis | 1       | 1        | In the beginning God created the heavens and the earth  |
+      | 2 | NIV         | 1          | Genesis | 1       | 2        | Now the earth was formless and void                     |
+    And the following user exists:
+	  | name    | email             | password |
+      | Old Dog | olddog@test.com   | please   |
     And the following memverses exist:
-      | User     | Verse |
-      | Old Hand | 1     |
-      | Old Hand | 2     |
+      | User          | Verse |
+      | name: Old Dog | id: 1 |
+      | name: Old Dog | id: 2 |
     And the email address "olddog@test.com" is confirmed
     When I go to the sign in page
     And I sign in as "olddog@test.com/please"
@@ -53,7 +52,6 @@ Feature: Sign in
     When I return next time
     Then I should be already signed in    
       
-    
     Scenario: User account is not confirmed
       Given I am a user named "foo" with an email "user@test.com" and password "please"
       And the email address "user@test.com" is not confirmed

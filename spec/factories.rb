@@ -1,15 +1,15 @@
 require 'factory_girl'
 
-Factory.define :user do |f|
-  f.name 'Test User'
-  f.email 'user@test.com'
-  f.password 'please'
-  f.password_confirmation { |u| u.password }
+Factory.define :user do |u|
+  u.name 'Test User'
+  u.email 'user@test.com'
+  u.password 'please'
+  u.password_confirmation { |u| u.password }
 end
 
 Factory.define :memverse do |mv|
-  mv.association :user,  :factory => :user
   mv.association :verse, :factory => :verse
+  mv.association :user, :factory => :user  
 end
 
 Factory.define :verse do |v|
@@ -18,7 +18,6 @@ Factory.define :verse do |v|
   v.book 'Genesis'
   v.chapter '1'
   v.versenum '1'
-  v.association :memverse, :factory => :memverse
 end
 
 Factory.define :blog do |f|
