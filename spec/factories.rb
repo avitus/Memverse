@@ -7,17 +7,17 @@ Factory.define :user do |u|
   u.password_confirmation { |u| u.password }
 end
 
-Factory.define :memverse do |mv|
-  mv.association :verse, :factory => :verse
-  mv.association :user, :factory => :user  
-end
-
 Factory.define :verse do |v|
   v.translation 'NIV'
   v.book_index '1'
   v.book 'Genesis'
   v.chapter '1'
   v.versenum '1'
+end
+
+Factory.define :memverse do |mv|
+  mv.association :verse, :factory => :verse
+  mv.association :user, :factory => :user  
 end
 
 Factory.define :blog do |f|
