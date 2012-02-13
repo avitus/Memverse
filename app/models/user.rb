@@ -224,12 +224,15 @@ class User < ActiveRecord::Base
   	if self.auto_work_load
   		
 	  	time_shortfall = time_allocation - work_load
-	  	Rails.logger.debug("Adjusting workload for #{self.login}. Time shortfall is #{time_shortfall}")
+
 	  	if time_shortfall >= 1
 	  		verses_activated = Array.new
 	  		pending_verses = self.memverses.inactive.order("created_at ASC").limit(time_shortfall)
 	  		pending_verses.each { |pv|
-	  			pv.status = pv.test_interval > 30 ? "Memorized" : "Learning"
+	  			pv.status    = pv.test_interval > 30 ? "Memorized" : "Learning"
+	  			if pv.next_test <= Date.today
+	  			  pv.next_test = Date.today + 1
+	  			end
 	  			pv.save
 	  			verses_activated << pv
 	  		}
