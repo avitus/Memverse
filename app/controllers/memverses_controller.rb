@@ -933,75 +933,7 @@ class MemversesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------   
   def test_verse
  
-    @tab = "mem"  
-    @show_feedback = true
-    
-    # If referring path is from the practice section then we need to clear the queue
-    # TODO: maybe use a different session variable
-    
-    # First check for verses in session queue that need to be tested
-    if mv = get_memverse_from_queue()
-      # This verse needs to be memorized
-      @verse            = mv.verse.ref
-      @text             = mv.verse.text
-      @mnemonic         = mv.verse.mnemonic if mv.needs_mnemonic?
-      @current_versenum = mv.verse.versenum
-      @show_feedback    = mv.show_feedback? || true  # default to true in case of nil something in first expression
-      # Put memory verse into session
-      session[:memverse] = mv.id  
-    else
-      # Otherwise, present the most overdue verse for memorization
-      mv = Memverse.find( :first, 
-                          :conditions => ["user_id = ?", current_user.id], 
-                          :order      => "next_test ASC")
-      if !mv.nil? # We've found a verse
-         
-        if mv.next_test <= Date.today
-                  
-          # Are there any verses preceding/succeeding this one? If so, we should test those first    
-          if mv.prev_verse or mv.next_verse
-            # put verses into session queue and begin with start verse
-            mv = put_memverse_cohort_into_queue(mv, "test")
-          end               
-          # Put memory verse into session
-          session[:memverse] = mv.id
-
-          # This verse needs to be memorized
-          @verse            = mv.verse.ref
-          @text             = mv.verse.text 
-          @mnemonic         = mv.verse.mnemonic if mv.needs_mnemonic?         
-          @current_versenum = mv.verse.versenum    
-          @show_feedback    = mv.show_feedback? || true  # default to true in case of nil something in first expression
-          logger.debug("Show feedback for verse overdue: #{@show_feedback}. Interval is #{mv.test_interval} and request feedback is #{current_user.show_echo}")
-        else
-          # There are no more verses to be tested today
-          @verse            = "No more verses for today"
-          mv                = nil # clear out the loaded memory verse
-
-          # Update progress report
-          current_user.save_progress_report
-          
-          # Redirect user to a page of statistics and recommendations
-          redirect_to :action => 'show_progress'   
-          flash[:notice] = "You have no more verses to memorize today. Your next memory verse is due for review " + current_user.next_verse_due           
-        end
-        
-      else # this user has no verses
-        redirect_to :action => 'add_verse'
-        flash[:notice] = "You should first add a few verses"       
-      end
-    end
-    
-    # --- Load prior verse if available
-    if mv and mv.prev_verse
-      prior_verse       = Memverse.find(mv.prev_verse).verse
-      @prior_text       = prior_verse.text
-      @prior_versenum   = prior_verse.versenum
-    end
-  
-    # --- Load upcoming verses ---
-    logger.debug("*** Mobile Device: #{mobile_device?}")
-    @upcoming_verses = current_user.upcoming_verses() unless mobile_device?
+    redirect_to :action => "test_verse_quick"
     
   end
 
@@ -1041,7 +973,7 @@ class MemversesController < ApplicationController
     @chapter      = current_user.has_chapter?(bk,ch)
     @bk_ch        = bk + " " + ch
     @verse        = 1
-    @final_verse  = @chapter.length
+    @final_verse  = @chapter.length if @chapter
             
   end
 

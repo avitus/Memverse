@@ -32,6 +32,7 @@ class BlogPost < ActiveRecord::Base
   
   validates_presence_of :blog_id, :posted_by_id
   validate :authorized_to_blog?
+  validates :url_identifier, :uniqueness => true
   
   # Recommended... but only if you have it:
   # xss_terminate :except => [ :body ]
@@ -60,10 +61,16 @@ class BlogPost < ActiveRecord::Base
   # --------------------------------------------------------------------------------------
   
   def update_url_identifier
-    # We won't update URL identifier if ther'es no title, or if this blog was already published
-    # with a URL identifier (don't want links to get broken)
+    # We won't update URL identifier if there's no title, or if this blog was already published
+    # with a URL identifier (don't want to break links)
     return if self.title.blank? || (self.is_complete && !self.url_identifier.blank?)
-    self.url_identifier = self.title.strip.gsub(/\W/, '_')
+    url_identifier = self.title.parameterize
+	x = 0
+	while BlogPost.find_by_url_identifier(url_identifier) do
+	  x += 1
+	  url_identifier = self.title.parameterize + "--" + x.to_s
+	end	
+	self.url_identifier = url_identifier
     true
   end
   

@@ -2,10 +2,12 @@ Feature: Sign in
   In order to get access to protected sections of the site
   A user
   Should be able to sign in
+  
+    Background:
+      Given I am not logged in
 
     Scenario: User is not signed up
-      Given I am not logged in
-      And no user exists with an email of "user@test.com"
+      Given no user exists with an email of "user@test.com"
       When I go to the sign in page
       And I sign in as "user@test.com/please"
       Then I should see "Invalid email or password."
@@ -13,8 +15,7 @@ Feature: Sign in
       And I should be signed out
 
     Scenario: User enters wrong password
-      Given I am not logged in
-      And I am a user named "foo" with an email "user@test.com" and password "please"
+      Given I am a user named "foo" with an email "user@test.com" and password "please"
       When I go to the sign in page
       And I sign in as "user@test.com/wrongpassword"
       Then I should see "Invalid email or password."
@@ -22,8 +23,7 @@ Feature: Sign in
       And I should be signed out
 
     Scenario: User signs in successfully with email
-      Given I am not logged in
-      And I am a user named "foo" with an email "user@test.com" and password "please"
+      Given I am a user named "foo" with an email "user@test.com" and password "please"
       And the email address "user@test.com" is confirmed
       When I go to the sign in page
       And I sign in as "user@test.com/please"
@@ -33,8 +33,7 @@ Feature: Sign in
       Then I should be already signed in
     
     Scenario: User account is not confirmed
-      Given I am not logged in
-      And I am a user named "foo" with an email "user@test.com" and password "please"
+      Given I am a user named "foo" with an email "user@test.com" and password "please"
       And the email address "user@test.com" is not confirmed
       When I go to the sign in page
       And I sign in as "user@test.com/please"

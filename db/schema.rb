@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120117233221) do
+ActiveRecord::Schema.define(:version => 20120131011758) do
 
   create_table "american_states", :force => true do |t|
     t.string  "abbrev",      :limit => 20, :default => "", :null => false
@@ -19,9 +19,11 @@ ActiveRecord::Schema.define(:version => 20120117233221) do
     t.integer "users_count",               :default => 0
     t.integer "population"
     t.integer "rank"
+    t.string  "slug"
   end
 
   add_index "american_states", ["name"], :name => "index_american_states_on_name", :unique => true
+  add_index "american_states", ["slug"], :name => "index_american_states_on_slug"
   add_index "american_states", ["users_count"], :name => "index_american_states_on_users_count"
 
   create_table "blog_assets", :force => true do |t|
@@ -133,9 +135,11 @@ ActiveRecord::Schema.define(:version => 20120117233221) do
     t.integer "numcode",        :limit => 2
     t.integer "users_count",                  :default => 0
     t.integer "rank"
+    t.string  "slug"
   end
 
   add_index "countries", ["printable_name"], :name => "index_countries_on_printable_name", :unique => true
+  add_index "countries", ["slug"], :name => "index_countries_on_slug"
   add_index "countries", ["users_count"], :name => "index_countries_on_users_count"
 
   create_table "daily_stats", :force => true do |t|

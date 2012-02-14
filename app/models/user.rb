@@ -45,6 +45,10 @@ require 'digest/sha1'
 require 'digest/md5' # required for Gravatar support in Bloggity
 
 class User < ActiveRecord::Base
+  # extend FriendlyId
+  # friendly_id :login
+  
+  before_save :generate_login
 
   # Include default devise modules. Others available are:
   # :token_authenticatable, :lockable, trackable, :timeoutable and :omniauthable 
@@ -220,12 +224,15 @@ class User < ActiveRecord::Base
   	if self.auto_work_load
   		
 	  	time_shortfall = time_allocation - work_load
-	  	Rails.logger.debug("Adjusting workload for #{self.login}. Time shortfall is #{time_shortfall}")
+
 	  	if time_shortfall >= 1
 	  		verses_activated = Array.new
 	  		pending_verses = self.memverses.inactive.order("created_at ASC").limit(time_shortfall)
 	  		pending_verses.each { |pv|
-	  			pv.status = pv.test_interval > 30 ? "Memorized" : "Learning"
+	  			pv.status    = pv.test_interval > 30 ? "Memorized" : "Learning"
+	  			if pv.next_test <= Date.today
+	  			  pv.next_test = Date.today + 1
+	  			end
 	  			pv.save
 	  			verses_activated << pv
 	  		}
@@ -1057,6 +1064,18 @@ class User < ActiveRecord::Base
     self.identity_url = OpenIdAuthentication.normalize_url(identity_url) unless not_using_openid?
   rescue URI::InvalidURIError
     errors.add_to_base("Invalid OpenID URL")
+  end
+  
+  def generate_login
+    if !self.login?
+      login = self.name.parameterize
+	  x = 0
+	  while User.find_by_login(login) do
+	    x += 1
+	    login = self.name.parameterize + "--" + x.to_s
+	  end
+	  self.login = login
+	end
   end
   
 end
