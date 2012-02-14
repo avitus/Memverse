@@ -1,9 +1,11 @@
+<!-- Search for a verse -->
 <div class="quick-start-enter-verse quick-start-add-section">
 	
 	<div class="top-heading">
     	<h3><span>Enter a Bible Verse</span></h3>
     </div>
     
+    <!-- Verse entry box -->
     <%= form_tag :action => 'add_verse' do %>
         <div class="verse-field">
         	<div class="ui-widget">
@@ -12,24 +14,31 @@
 				<img class="spinner" id="ajax_spinner" src="/assets/indicator2.gif" alt="Searching ..." style="display: none" />
             </div>
         </div>
-	<% end %>  <!-- end of form -->
+	<% end %>
         
+    <!-- Show verse -->
 	<div class="quick-start-show-verse">
-	    <div id="foundVerse">
-		</div>
-
-	    <div id="quick-start-add-verse" class="quick-start-add-verse">
-	    </div>
+	    <div id="foundVerse"></div>
+	    <div id="quick-start-add-verse" class="quick-start-add-verse"></div>
 	</div>
-    
+	
+    <!-- Enter a new verse -->
+	<div id="new-verse-entry">
+    	<label class="tag">Enter Verse Text:</label>
+		<%= text_area_tag(:versetext, params[:versetext], :overflow => "hidden", :class => "verse-entry-box" )%>
+    </div>
+	
+    <!-- Start memorizing button -->
     <div id="start-memorizing" class="quick-start-selection">
 		<ul>
-			<li id="start-memorizing-button"><%= link_to 'Start Memorizing', nil, :class => 'active', :remote => true %></li>
+			<li id="start-memorizing-button"><%= link_to 'Start Memorizing', test_verse_quick_path, :class => 'active' %></li>
 		</ul>    	
     </div>      
 	
-</div> <!-- enter-verse -->
-	        
+</div>
+
+
+<!-- Popular verse selection -->	        
 <div class="quick-start-popular-scroll quick-start-add-section">
 	<%= render "verses/popular_scroll" %>
 </div>

@@ -58,16 +58,21 @@ $(document).ready(function() {
 		if (ref = parseVerseRef(this.value)) {
 			$.get("/lookup_verse.json", { bk: ref.bk, ch: ref.ch, vs: ref.vs },
 				function(data) {	
-					$("#foundVerse").empty()
+					$("#foundVerse").empty();
 					if (typeof(data) !== 'undefined' && data != null) {
+				        $("#new-verse-entry").hide();												
 						$("#foundVerse").append($('<h4/>').text(data.ref)).append($('<p/>').text(data.text));
 						$("#quick-start-add-verse").html("<a data-remote='true' href='/add/" + data.id + "'class='quick-start-add-button' id='quick-start-add'></a>");
-					} else {
-						$("#foundVerse").html("That verse is not in the database.");
+					} else {					
+				        $("#new-verse-entry").slideDown();																
 						$("#quick-start-add-verse").empty();
 					};
 			}, "json" );			
-		}					
+		} else {
+	        $("#new-verse-entry").hide();		   // Hide new verse entry div						
+			$("#foundVerse").empty();              // Remove verse
+			$("#quick-start-add-verse").empty();   // Remove add button
+		}				
     });
     
     // Verse addition

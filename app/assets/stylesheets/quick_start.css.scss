@@ -118,6 +118,13 @@
   cursor:pointer;
 }
 
+#new-verse-entry {
+  display:none;
+  filter:alpha(opacity=0);
+  -moz-opacity:0;
+}
+
+
 #start-memorizing {
   display:none;
   filter:alpha(opacity=0);
