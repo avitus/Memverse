@@ -6,8 +6,10 @@ class VersesController < ApplicationController
   
   add_breadcrumb "Home", :root_path
   
+  # ----------------------------------------------------------------------------------------------------------    
   # GET /verses
   # GET /verses.xml
+  # ----------------------------------------------------------------------------------------------------------    
   def index
     @verses = Verse.all
 
@@ -17,8 +19,10 @@ class VersesController < ApplicationController
     end
   end
 
+  # ----------------------------------------------------------------------------------------------------------    
   # GET /verses/1
   # GET /verses/1.xml
+  # ----------------------------------------------------------------------------------------------------------    
   def show
     @verse = Verse.find(params[:id])
     
@@ -34,8 +38,10 @@ class VersesController < ApplicationController
     end
   end
 
+  # ----------------------------------------------------------------------------------------------------------    
   # GET /verses/new
   # GET /verses/new.xml
+  # ----------------------------------------------------------------------------------------------------------    
   def new
     @verse = Verse.new
 
@@ -45,13 +51,18 @@ class VersesController < ApplicationController
     end
   end
 
+  # ----------------------------------------------------------------------------------------------------------    
   # GET /verses/1/edit
+  # ----------------------------------------------------------------------------------------------------------    
   def edit
     @verse = Verse.find(params[:id])
   end
 
+  
+  # ----------------------------------------------------------------------------------------------------------
   # POST /verses
   # POST /verses.xml
+  # ----------------------------------------------------------------------------------------------------------    
   def create
     @verse = Verse.new(params[:verse])
 
@@ -60,15 +71,18 @@ class VersesController < ApplicationController
         flash[:notice] = 'Verse was successfully created.'
         format.html { redirect_to(@verse) }
         format.xml  { render :xml => @verse, :status => :created, :location => @verse }
+        format.json { render :json => { msg: "Success"} }
       else
         format.html { render :action => "new" }
         format.xml  { render :xml => @verse.errors, :status => :unprocessable_entity }
       end
     end
   end
-
+  
+  # ----------------------------------------------------------------------------------------------------------
   # PUT /verses/1
   # PUT /verses/1.xml
+  # ----------------------------------------------------------------------------------------------------------    
   def update
     @verse = Verse.find(params[:id])
 
@@ -84,8 +98,10 @@ class VersesController < ApplicationController
     end
   end
 
+  # ----------------------------------------------------------------------------------------------------------    
   # DELETE /verses/1
   # DELETE /verses/1.xml
+  # ----------------------------------------------------------------------------------------------------------    
   def destroy
     @verse = Verse.find(params[:id])
     @verse.destroy
@@ -96,6 +112,9 @@ class VersesController < ApplicationController
     end
   end
 
+  # ----------------------------------------------------------------------------------------------------------
+  # Find a verse for a user
+  # ----------------------------------------------------------------------------------------------------------    
   def lookup
     
     @verse = Verse.where(:book => params[:bk], :chapter => params[:ch], :versenum => params[:vs], :translation => current_user.translation).first

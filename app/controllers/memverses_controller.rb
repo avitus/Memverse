@@ -574,7 +574,7 @@ class MemversesController < ApplicationController
   
 
   # ----------------------------------------------------------------------------------------------------------
-  # Add an existing memory verse
+  # Add an existing memory verse (Assumes that verse is already in DB)
   # ---------------------------------------------------------------------------------------------------------- 
   def quick_add
     

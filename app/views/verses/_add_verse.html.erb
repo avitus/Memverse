@@ -2,10 +2,10 @@
 <div class="quick-start-enter-verse quick-start-add-section">
 	
 	<div class="top-heading">
-    	<h3><span>Enter a Bible Verse</span></h3>
+    	<h3><span>Select a Bible Verse</span></h3>
     </div>
     
-    <!-- Verse entry box -->
+    <!-- Reference entry box -->
     <%= form_tag :action => 'add_verse' do %>
         <div class="verse-field">
         	<div class="ui-widget">
@@ -16,16 +16,24 @@
         </div>
 	<% end %>
         
-    <!-- Show verse -->
-	<div class="quick-start-show-verse">
-	    <div id="foundVerse"></div>
-	    <div id="quick-start-add-verse" class="quick-start-add-verse"></div>
-	</div>
-	
-    <!-- Enter a new verse -->
-	<div id="new-verse-entry">
-    	<label class="tag">Enter Verse Text:</label>
-		<%= text_area_tag(:versetext, params[:versetext], :overflow => "hidden", :class => "verse-entry-box" )%>
+    
+    <div id="quick-start-verse-selection">
+    	
+	    <!-- Show found verse -->
+		<div id="existing-verse-add" class="quick-start-show-verse">
+		    <div id="foundVerse"></div>
+		    <div id="quick-start-add-verse" class="quick-start-add-verse"></div>
+		</div>
+		
+	    <!-- Enter a new verse -->
+		<div id="new-verse-entry">
+	    	<label class="tag">Enter Verse Text:</label>
+			<%= text_area_tag(:versetext, params[:versetext], :overflow => "hidden", :class => "verse-entry-box" )%>
+		    <div class="quick-start-add-verse">
+		   		<%= link_to '', verses_path(), :method => :post, :class => "quick-start-add-button", :format => :json, :remote => true %>
+		   	</div>
+	    </div>    	
+	    	    	  	
     </div>
 	
     <!-- Start memorizing button -->

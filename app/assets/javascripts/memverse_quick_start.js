@@ -37,7 +37,7 @@ $(document).ready(function() {
 				var $new_pv = $('<div/>').addClass('item quick-start-show-verse')
 					.append($('<h4/>').text(pv.ref))
 					.append($('<p/>').text(pv.text))
-					.append($('<div/>', {class: 'quick-start-add-verse', id: 'quick-start-add-verse'})
+					.append($('<div/>', {class: 'quick-start-add-verse'})
 					.html("<a data-remote='true' href='/add/" + pv.id + "'class='quick-start-add-button' id='quick-start-add'></a>"));					
 				$('.pop-verse-group').filter(':last').append($new_pv);																
 			});
@@ -53,7 +53,7 @@ $(document).ready(function() {
 	});			
 		
 	// Verse entry and retrieval
-	$("#verse").observe_field(0.3, function( ) { 
+	$("#verse").observe_field(0.2, function( ) { 
 								
 		if (ref = parseVerseRef(this.value)) {
 			$.get("/lookup_verse.json", { bk: ref.bk, ch: ref.ch, vs: ref.vs },

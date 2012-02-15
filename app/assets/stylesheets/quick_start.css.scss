@@ -74,6 +74,20 @@
 }
 
 
+#quick-start-verse-selection {
+  position:relative; 
+  #new-verse-entry {
+    position:absolute;
+    width: 90%;    
+    display:none;
+    filter:alpha(opacity=0);
+    -moz-opacity:0;
+  }  
+  #existing-verse-add {
+    position:absolute;
+  }
+}
+
 .quick-start-show-verse {
   min-height: 120px;
 }
@@ -117,13 +131,6 @@
   font-weight:bold;
   cursor:pointer;
 }
-
-#new-verse-entry {
-  display:none;
-  filter:alpha(opacity=0);
-  -moz-opacity:0;
-}
-
 
 #start-memorizing {
   display:none;
