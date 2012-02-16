@@ -65,6 +65,8 @@ class VersesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------    
   def create
     @verse = Verse.new(params[:verse])
+    
+    Rails.logger.debug("Creating new verse: #{@verse.inspect}")
 
     respond_to do |format|
       if @verse.save
@@ -75,6 +77,7 @@ class VersesController < ApplicationController
       else
         format.html { render :action => "new" }
         format.xml  { render :xml => @verse.errors, :status => :unprocessable_entity }
+        format.json { render :json => { msg: "Failure"} }
       end
     end
   end

@@ -1,6 +1,7 @@
 $(document).ready(function() {
 
 	var versesAdded = 0;
+	var tl;
 	
 	$("#minor-tl").click(function() {
 		$("#major-translations").hide();
@@ -21,7 +22,7 @@ $(document).ready(function() {
 	});	
 	
 	$(".tl-set").click(function() {
-		var tl = this.id
+		tl = this.id
 		$("#choose-translation").hide();
 		$("#choose-time-alloc").show();
 		
@@ -75,7 +76,7 @@ $(document).ready(function() {
 		}				
     });
     
-    // Verse addition
+    // Adding an existing verse 
     $('.quick-start-add-section').on("click", ".quick-start-add-button", function() {      // Bind to DIV enclosing button to allow for event delegation
 				
 		// Clear verse text of the verse just added
@@ -91,7 +92,27 @@ $(document).ready(function() {
 			$("#start-memorizing").fadeIn();
 		}
 	});
-    
+	
+	// Adding a new verse TODO: this should probably be abstracted into a nice function
+	$('.quick-start-new-section').on("click", ".quick-start-add-button", function() {      // Bind to DIV enclosing button to allow for event delegation
+		ref      = parseVerseRef( $("#verse").val());
+		newVerse = $("#versetext").val();
+		
+		if ( ref ) {
+			$.post('/verses.json', { verse: {book: ref.bk, chapter: ref.ch, versenum: ref.vs, translation: tl, text: newVerse, book_index: ref.bi} }, function(data) {
+		    	if (data.msg === "Success") {
+		    		// Show that verse has been added and add verse for user
+		    		$("#versetext").val('');
+		    	} else {
+		    		// Alert user to error
+		    		alert("Verse was not saved successfully. Sorry.");
+		    	}
+			}, 'json');
+		} else {
+			alert("Verse reference doesn't seem to be valid");
+		};
+	});
+	
 	// Reference autocomplete
 	$('#verse').focus().autocomplete({ source: ['Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy', 'Joshua', 'Judges', 'Ruth', '1 Samuel', '2 Samuel',
                 '1 Kings', '2 Kings','1 Chronicles', '2 Chronicles', 'Ezra', 'Nehemiah', 'Esther', 'Job', 'Psalm', 'Proverbs',

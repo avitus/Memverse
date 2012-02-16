@@ -1,5 +1,5 @@
 <!-- Search for a verse -->
-<div class="quick-start-enter-verse quick-start-add-section">
+<div class="quick-start-enter-verse">
 	
 	<div class="top-heading">
     	<h3><span>Select a Bible Verse</span></h3>
@@ -20,17 +20,17 @@
     <div id="quick-start-verse-selection">
     	
 	    <!-- Show found verse -->
-		<div id="existing-verse-add" class="quick-start-show-verse">
+		<div id="existing-verse-add" class="quick-start-show-verse quick-start-add-section">
 		    <div id="foundVerse"></div>
 		    <div id="quick-start-add-verse" class="quick-start-add-verse"></div>
 		</div>
 		
 	    <!-- Enter a new verse -->
-		<div id="new-verse-entry">
+		<div id="new-verse-entry" class="quick-start-new-section">
 	    	<label class="tag">Enter Verse Text:</label>
 			<%= text_area_tag(:versetext, params[:versetext], :overflow => "hidden", :class => "verse-entry-box" )%>
 		    <div class="quick-start-add-verse">
-		   		<%= link_to '', verses_path(), :method => :post, :class => "quick-start-add-button", :format => :json, :remote => true %>
+		   		<div class="quick-start-add-button"></div>
 		   	</div>
 	    </div>    	
 	    	    	  	

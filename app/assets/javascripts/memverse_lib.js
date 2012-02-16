@@ -36,11 +36,12 @@ function parseVerseRef(verseref) {
 		vs = parseInt(split_text.pop());
 		ch = parseInt(split_text.pop());
 		bk = split_text.join(' ');
+		bi = jQuery.inArray( bk, BIBLEBOOKS );
 		
-		if (jQuery.inArray( bk, BIBLEBOOKS ) === -1) {
+		if (bi === -1) {
 			return false	
 		} else {
-			return { bk: bk, ch: ch, vs: vs};						
+			return { bk: bk, ch: ch, vs: vs, bi: bi+1};						
 		}					
 	} else {
 		return false;
