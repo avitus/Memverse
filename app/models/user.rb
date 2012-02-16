@@ -193,9 +193,9 @@ class User < ActiveRecord::Base
       return { :level => '4 - One Session Wonder', :active => is_active? }
     elsif has_started?
       return { :level => '3 - Added Verses', :active => is_active? }
-    elsif state == 'active'
+    elsif confirmed_at
       return { :level => '2 - Activated', :active =>  is_active? }
-    elsif state == 'passive'
+    elsif !confirmed_at
       return { :level => '1 - Registered', :active => is_active? }
     else
       return { :level => 'ERROR', :active => false }

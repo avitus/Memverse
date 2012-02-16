@@ -1219,9 +1219,6 @@ class MemversesController < ApplicationController
     answer        = params[:answer].gsub(/\s+/," ").strip if params[:answer]    
     solution      = mv.verse.text.gsub(/\s+/," ").strip
     
-    logger.debug("Answer:   #{answer}")
-    logger.debug("Solution: #{solution}")
-    
     if solution && answer
       
       # ---- TODO: Update this for greater leniency --------------
@@ -1250,7 +1247,6 @@ class MemversesController < ApplicationController
     
     else
       # Probably caused by user using the back button after test is finished
-      logger.info("*** User probably hit the back button")
       flash[:notice] = "Exam already completed"
       redirect_to :action => 'index'
     end    
