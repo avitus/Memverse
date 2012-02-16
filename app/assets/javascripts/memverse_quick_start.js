@@ -95,14 +95,25 @@ $(document).ready(function() {
 	
 	// Adding a new verse TODO: this should probably be abstracted into a nice function
 	$('.quick-start-new-section').on("click", ".quick-start-add-button", function() {      // Bind to DIV enclosing button to allow for event delegation
-		ref      = parseVerseRef( $("#verse").val());
+		ref      = parseVerseRef( $("#verse").val());			
 		newVerse = $("#versetext").val();
+		
+		// ========== TODO ======================================
+		// Handle: abbreviations, foreign language book names
+		// Clean up verse text as much as possible
+		// ======================================================		
 		
 		if ( ref ) {
 			$.post('/verses.json', { verse: {book: ref.bk, chapter: ref.ch, versenum: ref.vs, translation: tl, text: newVerse, book_index: ref.bi} }, function(data) {
 		    	if (data.msg === "Success") {
 		    		// Show that verse has been added and add verse for user
 		    		$("#versetext").val('');
+		    		$.post("/add/" + data.verse_id, function(data) {
+		    			// Tell user whether verse was saved 
+		    			if (data.msg === "Error") {
+		    				alert("We were unable to save the verse to your list of verses.");
+		    			};
+		    		});
 		    	} else {
 		    		// Alert user to error
 		    		alert("Verse was not saved successfully. Sorry.");

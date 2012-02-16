@@ -560,14 +560,18 @@ class MemversesController < ApplicationController
   def ajax_add
   	vs  = Verse.find(params[:id])
   	
-    if current_user.has_verse_id?(vs)
-      msg = "Previously Added"
+  	if vs and current_user
+      if current_user.has_verse_id?(vs)
+        msg = "Previously Added"
+      else
+        # Save verse as a memory verse for user      
+        save_mv_for_user(vs)  # TODO rather use a model method ... this is archaic!
+        msg = "Added"
+      end
     else
-      # Save verse as a memory verse for user      
-      save_mv_for_user(vs)  # TODO rather use a model method ... this is archaic!
-      msg = "Added"
-    end  	
-  	
+      msg = "Error"
+    end
+          
   	render :json => {:msg => msg }
   	
   end

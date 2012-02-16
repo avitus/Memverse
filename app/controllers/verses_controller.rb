@@ -66,14 +66,12 @@ class VersesController < ApplicationController
   def create
     @verse = Verse.new(params[:verse])
     
-    Rails.logger.debug("Creating new verse: #{@verse.inspect}")
-
     respond_to do |format|
       if @verse.save
         flash[:notice] = 'Verse was successfully created.'
         format.html { redirect_to(@verse) }
         format.xml  { render :xml => @verse, :status => :created, :location => @verse }
-        format.json { render :json => { msg: "Success"} }
+        format.json { render :json => { msg: "Success", verse_id: @verse.id } }
       else
         format.html { render :action => "new" }
         format.xml  { render :xml => @verse.errors, :status => :unprocessable_entity }
