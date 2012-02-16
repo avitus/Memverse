@@ -67,6 +67,7 @@ $(document).ready(function() {
 					} else {					
 				        $("#new-verse-entry").slideDown();																
 						$("#quick-start-add-verse").empty();
+						$("#new-verse-entry .quick-start-add-verse").html("<div class='quick-start-add-button'></div>")  // show add button
 					};
 			}, "json" );			
 		} else {
