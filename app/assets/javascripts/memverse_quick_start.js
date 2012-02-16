@@ -56,7 +56,7 @@ $(document).ready(function() {
 	// Verse entry and retrieval
 	$("#verse").observe_field(0.2, function( ) { 
 								
-		if (ref = parseVerseRef(this.value)) {
+		if (ref = parseVerseRef(this.value.trim())) {
 			$.get("/lookup_verse.json", { bk: ref.bk, ch: ref.ch, vs: ref.vs },
 				function(data) {	
 					$("#foundVerse").empty();
@@ -79,8 +79,8 @@ $(document).ready(function() {
     // Adding an existing verse 
     $('.quick-start-add-section').on("click", ".quick-start-add-button", function() {      // Bind to DIV enclosing button to allow for event delegation
 				
-		// Clear verse text of the verse just added
-		$(this).fadeOut( 400, function () {
+		// Replace button with checkbox
+		$(this).fadeOut( 200, function () {
 			$(this).replaceWith("<div class='verse-added'></div>");
 		});
 
@@ -90,20 +90,16 @@ $(document).ready(function() {
 		// Check whether user has enough verses to start first memorization session
 		if (versesAdded >= 5) {
 			$("#start-memorizing").fadeIn();
-		}
+		};
 	});
 	
 	// Adding a new verse TODO: this should probably be abstracted into a nice function
 	$('.quick-start-new-section').on("click", ".quick-start-add-button", function() {      // Bind to DIV enclosing button to allow for event delegation
-		ref       = parseVerseRef( $("#verse").val());			
+		$button   = $('.quick-start-new-section .quick-start-add-button');
+		ref       = parseVerseRef( $("#verse").val().trim());			
 		userVerse = $("#versetext").val();
-		console.log( userVerse );
 		newVerse  = cleanseVerseText( userVerse );		
-		
-		// ========== TODO ======================================
-		// Handle: abbreviations, foreign language book names
-		// ======================================================		
-				
+					
 		if ( ref ) {
 			$.post('/verses.json', { verse: {book: ref.bk, chapter: ref.ch, versenum: ref.vs, translation: tl, text: newVerse, book_index: ref.bi} }, function(data) {
 		    	if (data.msg === "Success") {
@@ -113,6 +109,19 @@ $(document).ready(function() {
 		    			// Tell user whether verse was saved 
 		    			if (data.msg === "Error") {
 		    				alert("We were unable to save the verse to your list of verses.");
+		    			} else {
+							// Replace button with checkbox
+							$button.fadeOut( 200, function () {
+								$(this).replaceWith("<div class='verse-added'></div>");
+							});
+					
+							// +1 to number of verses
+							versesAdded += 1;
+							
+							// Check whether user has enough verses to start first memorization session
+							if (versesAdded >= 5) {
+								$("#start-memorizing").fadeIn();
+							};	    				
 		    			};
 		    		});
 		    	} else {

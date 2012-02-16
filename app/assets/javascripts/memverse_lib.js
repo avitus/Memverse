@@ -1,18 +1,20 @@
 BIBLEBOOKS = ['Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy', 'Joshua', 'Judges', 'Ruth', '1 Samuel', '2 Samuel',
-	          '1 Kings', '2 Kings','1 Chronicles', '2 Chronicles', 'Ezra', 'Nehemiah', 'Esther', 'Job', 'Psalm', 'Proverbs',
+	          '1 Kings', '2 Kings','1 Chronicles', '2 Chronicles', 'Ezra', 'Nehemiah', 'Esther', 'Job', 'Psalms', 'Proverbs',
 	           'Ecclesiastes', 'Song of Songs', 'Isaiah', 'Jeremiah', 'Lamentations', 'Ezekiel', 'Daniel', 'Hosea', 'Joel', 
 	           'Amos', 'Obadiah', 'Jonah', 'Micah', 'Nahum', 'Habakkuk', 'Zephaniah', 'Haggai', 'Zechariah', 'Malachi', 'Matthew',
 	           'Mark', 'Luke', 'John', 'Acts', 'Romans', '1 Corinthians', '2 Corinthians', 'Galatians', 'Ephesians', 'Philippians',
 	           'Colossians', '1 Thessalonians', '2 Thessalonians', '1 Timothy', '2 Timothy', 'Titus', 'Philemon', 'Hebrews', 'James',
 	           '1 Peter', '2 Peter', '1 John', '2 John', '3 John', 'Jude', 'Revelation']
 
-
-
 /******************************************************************************
  * Capitalize strings: romans -> Romans
  ******************************************************************************/
 String.prototype.capitalize = function() {
-    return this.charAt(0).toUpperCase() + this.slice(1);
+	if (this.charAt(0).match(/[1-3]/)) {
+      return this.charAt(0) + this.charAt(1) + this.charAt(2).toUpperCase() + this.slice(3);		
+	} else {
+      return this.charAt(0).toUpperCase() + this.slice(1);		
+	}
 }
 
 /******************************************************************************
@@ -21,7 +23,6 @@ String.prototype.capitalize = function() {
 function validVerseRef(verseref) {
     return /([0-3]?\s+)?[a-záéíóúüñ]+\s+[0-9]+(:|(\s?vs\s?))[0-9]+/i.test(verseref);
 }
-
 
 /******************************************************************************
  * Clean up user entered verses
@@ -42,18 +43,26 @@ function cleanseVerseText( versetext ) {
  * Parses reference into a book, chapter & verse
  ******************************************************************************/
 function parseVerseRef(verseref) {
+		
+	// ========== TODO ======================================
+	// Handle: abbreviations, foreign language book names
+	// ======================================================	
 
 	var split_text;
 	
 	if (validVerseRef(verseref)) {
 		
+		// Handle corner cases
+		verseref = verseref.replace(/(song of songs)/i, "Song of Songs")
+						   .replace(/(psalm )/i,         "Psalms ");
+			
 		split_text = verseref.split(/:|\s/);
 		
 		vs = parseInt(split_text.pop());
 		ch = parseInt(split_text.pop());
-		bk = split_text.join(' ');
+		bk = split_text.join(' ').capitalize();
 		bi = jQuery.inArray( bk, BIBLEBOOKS );
-		
+				
 		if (bi === -1) {
 			return false	
 		} else {
