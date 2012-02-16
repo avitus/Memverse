@@ -95,14 +95,15 @@ $(document).ready(function() {
 	
 	// Adding a new verse TODO: this should probably be abstracted into a nice function
 	$('.quick-start-new-section').on("click", ".quick-start-add-button", function() {      // Bind to DIV enclosing button to allow for event delegation
-		ref      = parseVerseRef( $("#verse").val());			
-		newVerse = $("#versetext").val();
+		ref       = parseVerseRef( $("#verse").val());			
+		userVerse = $("#versetext").val();
+		console.log( userVerse );
+		newVerse  = cleanseVerseText( userVerse );		
 		
 		// ========== TODO ======================================
 		// Handle: abbreviations, foreign language book names
-		// Clean up verse text as much as possible
 		// ======================================================		
-		
+				
 		if ( ref ) {
 			$.post('/verses.json', { verse: {book: ref.bk, chapter: ref.ch, versenum: ref.vs, translation: tl, text: newVerse, book_index: ref.bi} }, function(data) {
 		    	if (data.msg === "Success") {

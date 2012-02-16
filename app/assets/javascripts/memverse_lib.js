@@ -22,12 +22,28 @@ function validVerseRef(verseref) {
     return /([0-3]?\s+)?[a-záéíóúüñ]+\s+[0-9]+(:|(\s?vs\s?))[0-9]+/i.test(verseref);
 }
 
+
+/******************************************************************************
+ * Clean up user entered verses
+ ******************************************************************************/
+function cleanseVerseText( versetext ) {
+	
+	versetext = versetext.replace(/—/g, ' — ')    // add spaces around em dash
+	                     .replace(/--/g, ' — ')   // replace double dash with em dash
+	                     .replace(/\[\w\]/g, " ") // remove footnotes
+	                     .replace(/\n/g,' ')      // remove newlines
+	                     .replace(/\s{2,}/g,' ')  // remove double spaces
+						 .trim();                 // remove trailing and leading whitespace
+						 
+	return versetext;
+}
+
 /******************************************************************************
  * Parses reference into a book, chapter & verse
  ******************************************************************************/
 function parseVerseRef(verseref) {
 
-	var split_text
+	var split_text;
 	
 	if (validVerseRef(verseref)) {
 		
@@ -42,10 +58,10 @@ function parseVerseRef(verseref) {
 			return false	
 		} else {
 			return { bk: bk, ch: ch, vs: vs, bi: bi+1};						
-		}					
+		};		
 	} else {
 		return false;
-	}
+	};
 }
 
 
