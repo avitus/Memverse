@@ -55,7 +55,7 @@ $(document).ready(function() {
 	// Verse entry and retrieval
 	$("#verse").observe_field(0.2, function( ) { 
 								
-		if (ref = parseVerseRef(this.value.trim())) {
+		if (ref = parseVerseRef($.trim(this.value))) {
 			$.get("/lookup_verse.json", { bk: ref.bk, ch: ref.ch, vs: ref.vs },
 				function(data) {	
 					$("#foundVerse").empty();

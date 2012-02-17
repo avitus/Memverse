@@ -5,26 +5,18 @@
 /* Start with quick start steps hidden */
 #minor-translations {
   display:none;
-  filter:alpha(opacity=0);
-  -moz-opacity:0;
 }
 
 #foreign-translations {
   display:none;
-  filter:alpha(opacity=0);
-  -moz-opacity:0;
 }
 
 #choose-time-alloc {
   display:none;
-  filter:alpha(opacity=0);
-  -moz-opacity:0;
 }
 
 #choose-starting-verses {
   display:none;
-  filter:alpha(opacity=0);
-  -moz-opacity:0;
 }
 
 .quick-start-selection
@@ -73,17 +65,13 @@
   text-decoration:none;
 }
 
-
 #quick-start-verse-selection {
-  position:relative; 
+  position:relative;
   min-height: 250px;
   #new-verse-entry {
     position:absolute;
-    width: 90%;    
-    display:none;
-    filter:alpha(opacity=0);
-    -moz-opacity:0;
-  }  
+    width: 90%;
+  }
   #existing-verse-add {
     position:absolute;
   }
@@ -135,8 +123,6 @@
 
 #start-memorizing {
   display:none;
-  filter:alpha(opacity=0);
-  -moz-opacity:0;
   padding-left:2em;
   width: 100%;  
 }
@@ -186,7 +172,6 @@
   /* root element for scrollable items */
   .items {  
     position:absolute;
-    
     /* this time we have very large space for height */ 
     height:20000em; 
     margin: 0px;
