@@ -38,8 +38,8 @@ $(document).ready(function() {
 				var $new_pv = $('<div/>').addClass('item quick-start-show-verse')
 					.append($('<h4/>').text(pv.ref))
 					.append($('<p/>').text(pv.text))
-					.append($('<div/>', {class: 'quick-start-add-verse'})
-					.html("<a data-remote='true' href='/add/" + pv.id + "'class='quick-start-add-button' id='quick-start-add'></a>"));					
+					.append($('<div.quick-start-add-verse/>'))
+					.html("<a data-remote='true' href='/add/" + pv.id + "'class='quick-start-add-button' id='quick-start-add'></a>");					
 				$('.pop-verse-group').filter(':last').append($new_pv);																
 			});
 			// initialize scrollable without mousewheel support
