@@ -124,7 +124,11 @@ class MemversesController < ApplicationController
   def index
     
     @tab = "home"
-    
+
+    if current_user.needs_quick_start?
+      redirect_to :controller => "home", :action => "quick_start" and return
+    end
+ 
     @due_today	= current_user.due_verses unless mobile_device?
     @overdue		= current_user.overdue_verses unless mobile_device?
     
@@ -133,22 +137,22 @@ class MemversesController < ApplicationController
     @quests_to_next_level = quests_remaining==1 ? "one quest" : quests_remaining.to_s + " quests"
     
     # Has this user added any verses?
-    @user_has_no_verses           = (current_user.learning == 0) && (current_user.memorized == 0)
+    # @user_has_no_verses           = (current_user.learning == 0) && (current_user.memorized == 0)
     # Does this user need more verses?
-    @user_has_too_few_verses      = (current_user.learning + current_user.memorized <= 5)
+    # @user_has_too_few_verses      = (current_user.learning + current_user.memorized <= 5)
     
     # Otherwise, show some nice statistics and direct user to memorization page if necessary
-    if (!@user_has_no_verses)      
-      mv = Memverse.find(:first, :conditions => ["user_id = ?", current_user.id], :order => "next_test ASC")
-      if !mv.nil?
-        @user_has_test_today = (mv.next_test <= Date.today)
-      end
-      
-      unless flash[:error] or flash[:notice] or !current_user.first_verse_today # Show flash with verses due and workload unless another flash or done with review
-        flash.now[:notice] = t('messages.today_msg_html', :due_today => current_user.due_verses, :time => current_user.work_load)
-      end
-
-    end
+    # if (!@user_has_no_verses)      
+      # mv = Memverse.find(:first, :conditions => ["user_id = ?", current_user.id], :order => "next_test ASC")
+      # if !mv.nil?
+        # @user_has_test_today = (mv.next_test <= Date.today)
+      # end
+#       
+      # unless flash[:error] or flash[:notice] or !current_user.first_verse_today # Show flash with verses due and workload unless another flash or done with review
+        # flash.now[:notice] = t('messages.today_msg_html', :due_today => current_user.due_verses, :time => current_user.work_load)
+      # end
+# 
+    # end
 
     # === Get Recent Tweets ===    
     @tweets1 = Tweet.where(:importance => 1..2).limit(12).order("created_at DESC")  # Most important tweets
@@ -266,14 +270,6 @@ class MemversesController < ApplicationController
        
     @vs_list = Popverse.find( :all, :limit => @page_size, :offset => @page*@page_size )    
   end 
-
-
-  # ----------------------------------------------------------------------------------------------------------   
-  # Display a single verse TODO: We shouldn't use this ... there is a show method in the verse controller
-  # ---------------------------------------------------------------------------------------------------------- 
-  # def show_vs
-    # @verse = Verse.find(params[:vs])
-  # end
 
   # ----------------------------------------------------------------------------------------------------------   
   # Display a single memory verse or several verses as POSTed from manage_verses
@@ -581,26 +577,30 @@ class MemversesController < ApplicationController
   
 
   # ----------------------------------------------------------------------------------------------------------
-  # AJAX Verse Add
+  # AJAX Verse Add (Assumes that verse is already in DB)
   # ---------------------------------------------------------------------------------------------------------- 
   def ajax_add
   	vs  = Verse.find(params[:id])
   	
-    if current_user.has_verse_id?(vs)
-      msg = "Previously Added"
+  	if vs and current_user
+      if current_user.has_verse_id?(vs)
+        msg = "Previously Added"
+      else
+        # Save verse as a memory verse for user      
+        save_mv_for_user(vs)  # TODO rather use a model method ... this is archaic!
+        msg = "Added"
+      end
     else
-      # Save verse as a memory verse for user      
-      save_mv_for_user(vs)  # TODO rather use a model method ... this is archaic!
-      msg = "Added"
-    end  	
-  	
+      msg = "Error"
+    end
+          
   	render :json => {:msg => msg }
   	
   end
   
 
   # ----------------------------------------------------------------------------------------------------------
-  # Add an existing memory verse
+  # Add an existing memory verse (Assumes that verse is already in DB)
   # ---------------------------------------------------------------------------------------------------------- 
   def quick_add
     
@@ -1241,9 +1241,6 @@ class MemversesController < ApplicationController
     answer        = params[:answer].gsub(/\s+/," ").strip if params[:answer]    
     solution      = mv.verse.text.gsub(/\s+/," ").strip
     
-    logger.debug("Answer:   #{answer}")
-    logger.debug("Solution: #{solution}")
-    
     if solution && answer
       
       # ---- TODO: Update this for greater leniency --------------
@@ -1272,7 +1269,6 @@ class MemversesController < ApplicationController
     
     else
       # Probably caused by user using the back button after test is finished
-      logger.info("*** User probably hit the back button")
       flash[:notice] = "Exam already completed"
       redirect_to :action => 'index'
     end    

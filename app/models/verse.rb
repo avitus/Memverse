@@ -75,7 +75,22 @@ class Verse < ActiveRecord::Base
 
    # Otherwise, compare IDs
    return self.id <=> o.id
-  end                            
+  end      
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Convert to JSON format
+  # ---------------------------------------------------------------------------------------------------------- 
+  def as_json(options={})
+    { 
+      :id   => self.id,
+      :bk   => self.book, 
+      :ch   => self.chapter, 
+      :vs   => self.versenum, 
+      :tl   => self.translation,
+      :ref  => self.ref,
+      :text => self.text
+    }
+  end
                             
   # ----------------------------------------------------------------------------------------------------------
   # Outputs friendly verse reference: eg. "Jn 3:16"
@@ -128,7 +143,6 @@ class Verse < ActiveRecord::Base
     (45..65).include?(book_index)
   end
   
-
   # ----------------------------------------------------------------------------------------------------------
   # Returns hash of verses and number of users for each verse
   # ----------------------------------------------------------------------------------------------------------   

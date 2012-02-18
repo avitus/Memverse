@@ -170,11 +170,23 @@ class UtilsController < ApplicationController
     @cohort_active        = 0
     @cohort_inactive      = 0
     
-    year  = params[:yr].to_i
-    month = params[:mo].to_i
     
-    start_date = Date.new(year, month,  1)
-    end_date   = Date.new(year, month, -1)
+    @year  = (params[:yr] || Date.today.year).to_i
+    @month = (params[:mo] || Date.today.month).to_i
+    
+    if @month == 0
+      @year -= 1
+      @month = 12
+    end
+    
+    if @month == 13
+      @year += 1
+      @month = 1
+    end
+    
+    
+    start_date = Date.new(@year, @month,  1)
+    end_date   = Date.new(@year, @month, -1)
     
     cohort = User.where(:created_at => start_date..end_date)
     
@@ -525,8 +537,6 @@ class UtilsController < ApplicationController
     logger.debug("Vs: #{verse}")
     
     @vs_list = Verse.find(:all, :conditions => {:book => book, :chapter => chapter.to_i, :versenum => verse.to_i})
-
-	logger.debug("Verses found: #{@vs_list.inspect}")
     
     render :partial => 'search_verse', :layout=>false 
   end    

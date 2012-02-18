@@ -35,10 +35,7 @@
 # t.string   "translation",                              :default => "NIV"
 # t.integer  "level",                                    :default => 0,          :null => false
 # t.integer  "referred_by"
-# t.boolean  "show_toolbar",                             :default => true
 # t.boolean  "show_email",                               :default => false
-# t.string   "bb_2011_age_group"
-# t.string   "bb_2011_track"
 # t.boolean  "auto_work_load",                           :default => true
 
 require 'digest/sha1'
@@ -99,7 +96,7 @@ class User < ActiveRecord::Base
   # anything else you want your user to change should be added here
   attr_accessible :login, :email, :name, :password, :password_confirmation, :identity_url, :remember_me,
                   :newsletters, :reminder_freq, :last_reminder, :church, :group, :country, :american_state, 
-                  :show_echo, :max_interval, :mnemonic_use, :all_refs, :referred_by, :show_toolbar, :auto_work_load, :show_email
+                  :show_echo, :max_interval, :mnemonic_use, :all_refs, :referred_by, :auto_work_load, :show_email
   
     
   # Check if a user has a role
@@ -193,9 +190,9 @@ class User < ActiveRecord::Base
       return { :level => '4 - One Session Wonder', :active => is_active? }
     elsif has_started?
       return { :level => '3 - Added Verses', :active => is_active? }
-    elsif state == 'active'
+    elsif confirmed_at
       return { :level => '2 - Activated', :active =>  is_active? }
-    elsif state == 'passive'
+    elsif !confirmed_at
       return { :level => '1 - Registered', :active => is_active? }
     else
       return { :level => 'ERROR', :active => false }
@@ -242,10 +239,16 @@ class User < ActiveRecord::Base
 	  end
 	  
   end
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # User hasn't added verses or picked translation => send to quick start page
+  # ----------------------------------------------------------------------------------------------------------    
+  def needs_quick_start?
+    !self.translation && self.memverses.count == 0 
+  end
     
   # ----------------------------------------------------------------------------------------------------------
   # Check whether current user is memorizing any verses at all
-  # Input: User object
   # ----------------------------------------------------------------------------------------------------------  
   def has_started?
     return self.memverses.count > 0
@@ -253,7 +256,6 @@ class User < ActiveRecord::Base
   
   # ----------------------------------------------------------------------------------------------------------
   # Check whether current user has any active verses
-  # Input: User object
   # ----------------------------------------------------------------------------------------------------------  
   def has_active?
     return self.memverses.active.count > 0
@@ -531,7 +533,6 @@ class User < ActiveRecord::Base
     self.all_refs         = new_params["all_refs"] 
     self.auto_work_load   = new_params["auto_work_load"] 
     self.max_interval     = new_params["max_interval"] 
-    self.show_toolbar     = new_params["show_toolbar"] 
     self.show_email       = new_params["show_email"] 
     
     if self.valid? # We shouldn't call self.save unless this is valid

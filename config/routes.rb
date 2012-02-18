@@ -73,16 +73,19 @@ MemverseApp::Application.routes.draw do
   match '/tag_cloud',              :to => 'verses#tag_cloud',                :as => 'tag_cloud'
   match '/check_verses',           :to => 'verses#check_verses',             :as => 'check_verses'
   match '/check_verse/:id',        :to => 'verses#check_verse',              :as => 'check_verse'
-  match '/search_verse',           :to => 'verses#verse_search',             :as => 'search_verse'
   match '/verify_vs_format',       :to => 'verses#verify_format',            :as => 'verify_vs_format'
   match '/show_verses_with_tag',   :to => 'verses#show_verses_with_tag',     :as => 'show_verses_with_tag'
+  match '/search_verse',           :to => 'verses#verse_search',             :as => 'search_verse'
+  match '/lookup_verse',           :to => 'verses#lookup',                   :as => 'lookup_verse'
+
+  match '/get_popverses',          :to => 'popverses#index',                 :as => 'get_popverses'
       
   match '/show_user_info',         :to => 'utils#show_user_info',            :as => 'show_user_info'
   match '/show_tags',              :to => 'utils#show_tags',                 :as => 'show_tags'
   match '/admin_search_verse',     :to => 'utils#search_verse',              :as => 'admin_search_verse'
   match '/utils_verify_verse/:id', :to => 'utils#verify_verse',              :as => 'utils_verify_verse'
   match '/utils_dashboard',        :to => 'utils#dashboard',                 :as => 'utils_dashboard'
-  match '/progression/:yr/:mo',    :to => 'utils#user_progression',          :as => 'progression'
+  match '/progression/(:yr)/(:mo)',:to => 'utils#user_progression',          :as => 'progression'
     
   # Doesn't require a login
   match '/contact',                :to => 'info#contact',                    :as => 'contact'   
@@ -108,6 +111,9 @@ MemverseApp::Application.routes.draw do
   match '/referrals/:id',          :to => 'profile#referrals',               :as => 'referrals'
   match '/unsubscribe/*email',     :to => 'profile#unsubscribe',             :as => 'unsubscribe', :format => false
   match '/search_user',            :to => 'profile#search_user',             :as => 'search_user'
+  match '/set_translation/:tl',    :to => 'profile#set_translation',         :as => 'set_translation'
+  match '/set_time_alloc/:time',   :to => 'profile#set_time_alloc',          :as => 'set_time_alloc'
+
   
   match '/edit_tag/:id',           :to => 'tag#edit_tag',                    :as => 'edit_tag'
 

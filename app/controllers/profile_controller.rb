@@ -225,6 +225,25 @@ class ProfileController < ApplicationController
 
   end
 
+  # ----------------------------------------------------------------------------------------------------------
+  # Set translation (used for QuickStart)
+  # ----------------------------------------------------------------------------------------------------------  
+  def set_translation
+    tl = params[:tl]
+    current_user.translation = tl
+    current_user.save
+    render :nothing => true
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Set time allocation (used for QuickStart)
+  # ----------------------------------------------------------------------------------------------------------  
+  def set_time_alloc
+    time_allocation = params[:time]
+    current_user.time_allocation = time_allocation
+    current_user.save
+    render :nothing => true
+  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Set the person who referred you

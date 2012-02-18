@@ -166,6 +166,7 @@
 								<li <%= sub(@sub=="searchvs"	)%>><%= link_to 'Today (Active)',	:controller => 'utils',	:action => 'show_users', :sort_order => 'ID DESC', :period => 'Active' %></li>
 								<li <%= sub(@sub=="progress"	)%>><%= link_to 'Pending',			:controller => 'utils',	:action => 'show_users', :sort_order => 'ID DESC', :period => 'Pending' %></li>	
 								<li <%= sub(@sub=="popvs"		)%>><%= link_to 'Search',			:controller => 'utils',	:action => 'search_users' %></li>	
+								<li <%= sub(@sub=="cohort"  	)%>><%= link_to 'Cohorts',			progression_path %></li>	
 							</ul>						
 						</div>
 		

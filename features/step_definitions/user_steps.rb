@@ -46,7 +46,7 @@ When /^I sign in as "(.*)\/(.*)"$/ do |email, password|
 end
 
 Then /^I should be signed in$/ do
-  Then %{I should see "Signed in successfully."}
+  Then %{I should see "Logout"}
 end
 
 When /^I return next time$/ do
@@ -70,7 +70,7 @@ end
 Given /^a user with the login of "(.*)"$/ do |login|
   User.new(:name => "Test User",
             :email => "testemail@test.com",
-			:login => login,
+            :login => login,
             :password => "secret",
             :password_confirmation => "secret").save!
 end
@@ -90,4 +90,11 @@ end
 
 Given /^a blog titled "(.*)"$/ do |title|
   Blog.new(:title => title, :url_identifier => "main").save!
+end
+
+Given /^I sign in as a normal user$/ do
+  Given %{I am a user named "normal" with an email "user@test.com" and password "please"}
+  And %{the email address "user@test.com" is confirmed}
+  When %{I sign in as "user@test.com/please"}
+  Then %{I should be signed in}
 end
