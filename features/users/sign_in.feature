@@ -47,8 +47,7 @@ Feature: Sign in
     And the email address "olddog@test.com" is confirmed
     When I go to the sign in page
     And I sign in as "olddog@test.com/please"
-    Then I should see "Signed in successfully"
-    And I should be signed in
+    Then I should be signed in
     When I return next time
     Then I should be already signed in    
       

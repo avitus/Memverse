@@ -35,7 +35,6 @@
 # t.string   "translation",                              :default => "NIV"
 # t.integer  "level",                                    :default => 0,          :null => false
 # t.integer  "referred_by"
-# t.boolean  "show_toolbar",                             :default => true
 # t.boolean  "show_email",                               :default => false
 # t.boolean  "auto_work_load",                           :default => true
 
@@ -97,7 +96,7 @@ class User < ActiveRecord::Base
   # anything else you want your user to change should be added here
   attr_accessible :login, :email, :name, :password, :password_confirmation, :identity_url, :remember_me,
                   :newsletters, :reminder_freq, :last_reminder, :church, :group, :country, :american_state, 
-                  :show_echo, :max_interval, :mnemonic_use, :all_refs, :referred_by, :show_toolbar, :auto_work_load, :show_email
+                  :show_echo, :max_interval, :mnemonic_use, :all_refs, :referred_by, :auto_work_load, :show_email
   
     
   # Check if a user has a role
@@ -534,7 +533,6 @@ class User < ActiveRecord::Base
     self.all_refs         = new_params["all_refs"] 
     self.auto_work_load   = new_params["auto_work_load"] 
     self.max_interval     = new_params["max_interval"] 
-    self.show_toolbar     = new_params["show_toolbar"] 
     self.show_email       = new_params["show_email"] 
     
     if self.valid? # We shouldn't call self.save unless this is valid
