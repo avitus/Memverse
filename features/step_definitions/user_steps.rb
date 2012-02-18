@@ -91,3 +91,10 @@ end
 Given /^a blog titled "(.*)"$/ do |title|
   Blog.new(:title => title, :url_identifier => "main").save!
 end
+
+Given /^I sign in as a normal user$/ do
+  Given %{I am a user named "normal" with an email "user@test.com" and password "please"}
+  And %{the email address "user@test.com" is confirmed}
+  When %{I sign in as "user@test.com/please"}
+  Then %{I should be signed in}
+end
