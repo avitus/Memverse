@@ -37,8 +37,6 @@
 # t.integer  "referred_by"
 # t.boolean  "show_toolbar",                             :default => true
 # t.boolean  "show_email",                               :default => false
-# t.string   "bb_2011_age_group"
-# t.string   "bb_2011_track"
 # t.boolean  "auto_work_load",                           :default => true
 
 require 'digest/sha1'
