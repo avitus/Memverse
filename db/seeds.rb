@@ -38,5 +38,11 @@ for i in 10..50
   chapters_learning  = ((i-5).to_f / 3.0).round
   chapters_memorized = ((i-7).to_f / 3.0).round
 
+  # Learning quests
+  q = Quest.where(:level => i, :objective => 'Verses', :qualifier => 'Learning')
+  if !q
+    Quest.create(:level => i, :objective => 'Verses', :qualifier => 'Learning', :quantity => learning_verses, :description => 'Learn #{learning_verses} verses')
+  end
+  
   
 end
