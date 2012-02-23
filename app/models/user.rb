@@ -261,8 +261,17 @@ class User < ActiveRecord::Base
     return self.memverses.active.count > 0
   end
 
-	def completed_sessions
-		return self.progress_reports.count
+  # ----------------------------------------------------------------------------------------------------------
+  # Completed sessions over various time periods
+  # ---------------------------------------------------------------------------------------------------------- 
+	def completed_sessions(time_period = :total)
+	  return case time_period
+	    when :week  then self.progress_reports.where('entry_date > ?', 1.week.ago).count
+	    when :month then self.progress_reports.where('entry_date > ?', 1.month.ago).count
+	    when :year  then self.progress_reports.where('entry_date > ?', 1.year.ago).count
+	    when :total then self.progress_reports.count
+	    else self.progress_reports.count
+	  end  
 	end
 
   # ----------------------------------------------------------------------------------------------------------
