@@ -89,7 +89,7 @@ class Quest < ActiveRecord::Base
         user.ref_grade >= self.quantity
         
       when 'Sessions'
-        user.num_sessions >= self.quantity
+        user.completed_sessions >= self.quantity
         
       when 'Referrals'
         user.num_referrals(true) >= self.quantity
