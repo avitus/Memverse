@@ -13,12 +13,6 @@ GIT
       redis
 
 GIT
-  remote: git://github.com/nesquena/query_reviewer.git
-  revision: 2fb260047843fb9966c3454f530421bd21ec22e8
-  specs:
-    query_reviewer (0.1.5)
-
-GIT
   remote: git://github.com/ragaskar/action_mailer_cache_delivery.git
   revision: 20a2dd50e54fcb45ff38afa2cdfdc08d5b479c74
   specs:
@@ -35,7 +29,7 @@ GIT
 
 GIT
   remote: git://github.com/sferik/rails_admin.git
-  revision: 00984918e3fc49de3a115548fafd2a624304a6a8
+  revision: e8f7be22a219015b4bbfa016b3fdb118b9001067
   specs:
     rails_admin (0.0.1)
       bbenezech-nested_form (~> 0.0.5)
@@ -203,7 +197,7 @@ GEM
     newrelic_rpm (3.3.2)
     nokogiri (1.4.6)
     orm_adapter (0.0.6)
-    paperclip (2.6.0)
+    paperclip (2.7.0)
       activerecord (>= 2.3.0)
       activesupport (>= 2.3.2)
       cocaine (>= 0.0.2)
@@ -344,7 +338,6 @@ DEPENDENCIES
   paperclip
   prawn!
   prawnto_2
-  query_reviewer!
   rails (= 3.2.0)
   rails-footnotes (>= 3.7)
   rails_admin!

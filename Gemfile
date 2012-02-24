@@ -3,7 +3,7 @@ HOST_OS = Config::CONFIG['host_os']
 source 'http://rubygems.org'
 
 group :development do 
-  gem 'query_reviewer', :git => "git://github.com/nesquena/query_reviewer.git"                  # For finding slow queries
+  # gem 'query_reviewer', :git => "git://github.com/nesquena/query_reviewer.git"                  # For finding slow queries ... problems with Rails 3.2 (?)
 	gem "rails-footnotes", ">= 3.7", :group => :development
   gem 'sqlite3'
 end
