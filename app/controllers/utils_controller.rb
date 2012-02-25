@@ -758,21 +758,15 @@ class UtilsController < ApplicationController
   def show_users
     
     period = params[:period] || 'All'
-    @user_list = Array.new
-    
     case period
       when 'Today' then
-        @user_list = User.find(:all, :order => params[:sort_order], :conditions => ["created_at > ?", Date.today]) 
+        @user_list = User.where("created_at > ?", Date.today).order(params[:sort_order])
       when 'Active' then 
-          User.find(:all, :order => params[:sort_order]).each { |user|
-            if Date.today == user.last_activity_date
-              @user_list << user
-            end
-          }
+        @user_list = User.where("last_activity_date = ?", Date.today)
       when 'Pending' then
-        @user_list = User.where(:confirmed_at => nil).order(params[:sort_order])         
+        @user_list = User.where(:confirmed_at => nil).order(params[:sort_order])
       when 'All' then
-        @user_list = User.find(:all, :order => params[:sort_order])   
+        @user_list = User.order(params[:sort_order])
     end
   end    
   
@@ -780,8 +774,7 @@ class UtilsController < ApplicationController
   # Show all churches
   # ----------------------------------------------------------------------------------------------------------   
   def show_churches
-    @church_list = Array.new
-    @church_list = Church.find(:all, :order => "users_count DESC")
+    @church_list = Church.order("users_count DESC")
   end   
   
   # ----------------------------------------------------------------------------------------------------------
