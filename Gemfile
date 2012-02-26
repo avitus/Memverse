@@ -3,9 +3,9 @@ HOST_OS = Config::CONFIG['host_os']
 source 'http://rubygems.org'
 
 group :development do 
-  gem 'rails-dev-tweaks', '~> 0.5.1'
-  gem 'query_reviewer', :git => "git://github.com/nesquena/query_reviewer.git"                  # For finding slow queries
+  # gem 'query_reviewer', :git => "git://github.com/nesquena/query_reviewer.git"                  # For finding slow queries ... problems with Rails 3.2 (?)
 	gem "rails-footnotes", ">= 3.7", :group => :development
+  gem 'sqlite3'
 end
 
 group :production do
@@ -13,8 +13,8 @@ group :production do
 end
 
 group :assets do
-  gem 'sass-rails', "  ~> 3.1.4"
-  gem 'coffee-rails', "~> 3.1.1"
+  gem 'sass-rails', "  ~> 3.2.3"
+  gem 'coffee-rails', "~> 3.2.1"
   gem 'uglifier', '>= 1.0.3'
 end
 
@@ -22,8 +22,9 @@ if HOST_OS =~ /linux/i
   gem 'therubyracer', '>= 0.8.2'
 end
 
-gem 'rails', '3.1.1'
+gem 'rails', '3.2.0'
 gem 'jquery-rails', '=1.0.18'
+
 
 gem "rspec-rails", ">= 2.6.1", :group => [:development, :test]
 gem "factory_girl_rails", ">= 1.2.0", :group => :test
@@ -34,11 +35,10 @@ gem "launchy", ">= 2.0.5", :group => :test
 gem 'jasmine', :group => [:development, :test]
 gem "devise", ">= 1.4.5"
 gem "cancan"                                                                                    # Role-based authorization
-gem "frontend-helpers"
+# gem "frontend-helpers"
 gem 'rails_admin', :git => 'git://github.com/sferik/rails_admin.git'                            # Admin console
 
 gem 'fancybox-rails'
-gem 'sqlite3'
 gem 'aasm', '2.2.0',    :require => 'aasm'                                                      # Is this needed now that we aren't using Restful Authentication ? 
 gem 'kaminari'                                                                                  # Required for bloggity
 gem 'rinku', :require => 'rails_rinku'                                                          # Supports auto-linking of URL's in blog comments

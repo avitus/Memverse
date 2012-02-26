@@ -14,6 +14,8 @@
 				<th>Learning</th>
 				<th>Affiliation</th>
 				<th>Country</th>
+				<th>Year</th>
+				<th>Month</th>
 			</tr>
 			
 			<% for user in @leaderboard %>
@@ -24,6 +26,8 @@
 					<td align="center"> <%= user.learning 	%></td>
 					<td align="left"> 	<%= user.church ? user.church.name : "" %></td>
 					<td align="left"> 	<%= user.country ? user.country.printable_name : "" %></td>
+					<td align="center"> <%= user.completed_sessions(:year)	%></td>	
+					<td align="center"> <%= user.completed_sessions(:month)	%></td>	
 				</tr>
 			<% end %>
 		</table>

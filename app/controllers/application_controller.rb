@@ -1,10 +1,6 @@
 # coding: utf-8
 
-# require "juggernaut"  # needed for chat channels
-
 class ApplicationController < ActionController::Base
-#  include RoleRequirementSystem
-  include BreadcrumbsOnRails::ControllerMixin
 
   helper :all # include all helpers, all the time
   protect_from_forgery

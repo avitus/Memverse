@@ -16,7 +16,7 @@ Feature: Sign up
         | user_password              | please          |
         | user_password_confirmation | please          |
       And I press "submit"
-      Then I should see "You have signed up successfully. However, we could not sign you in because your account is unconfirmed."
+      Then I should see "A message with a confirmation link has been sent to your email address. Please open the link to activate your account."
       And "user@test.com" should receive an email
       When I open the email
       Then I should see "confirm your account" in the email body

@@ -16,8 +16,8 @@
 	
 		<div>
 			<p>
-				You have completed <%= current_user.completed_sessions %> memorization sessions and have memorized <%= current_user.memorized %> of your 
-				<%= current_user.memverses.count %> memory verses.
+				You have completed <%= current_user.completed_sessions(:year) %> memorization sessions over the past year 
+				and have memorized <%= current_user.memorized %> of your <%= current_user.memverses.count %> memory verses.
 			</p>
 		</div>
 	

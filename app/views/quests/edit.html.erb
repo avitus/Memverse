@@ -1,7 +1,20 @@
+<div class="white-box-with-margins">
+
 <h1>Editing quest</h1>
 
 <%= form_for(@quest) do |f| %>
-  <%= f.error_messages %>
+
+	<% if @quest.errors.any? %>
+		<div id="error_explanation">
+			<h2><%= pluralize(@quest.errors.count, "error") %> prevented your profile from being updated:</h2>
+	
+			<ul>
+				<% @quest.errors.full_messages.each do |msg| %>
+					<li><%= msg %></li>
+				<% end %>
+			</ul>
+		</div>
+	<% end %> <!-- End: Error Messages -->
 
   <p>
     <%= f.label :level %><br />
@@ -39,3 +52,5 @@
 
 <%= link_to 'Show', @quest %> |
 <%= link_to 'Back', quests_path %>
+
+</div>
