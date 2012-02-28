@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120217223503) do
+ActiveRecord::Schema.define(:version => 20120227222224) do
 
   create_table "american_states", :force => true do |t|
     t.string  "abbrev",      :limit => 20, :default => "", :null => false
@@ -468,6 +468,7 @@ ActiveRecord::Schema.define(:version => 20120217223503) do
     t.datetime "remember_created_at"
     t.boolean  "admin",                                    :default => false
     t.integer  "group_id"
+    t.datetime "reset_password_sent_at"
   end
 
   add_index "users", ["american_state_id"], :name => "index_users_on_american_state_id"

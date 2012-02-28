@@ -9,6 +9,13 @@ Given /^I am a user named "([^"]*)" with an email "([^"]*)" and password "([^"]*
             :password_confirmation => password).save!
 end
 
+Given /^I am a confirmed user named "([^"]*)" with an email "([^"]*)" and password "([^"]*)"$/ do |name, email, password|
+  User.new(:name => name,
+            :email => email,
+            :password => password,
+            :password_confirmation => password).confirm!
+end
+
 Then /^I should be already signed in$/ do
   And %{I should see "Logout"}
 end
@@ -98,3 +105,4 @@ Given /^I sign in as a normal user$/ do
   When %{I sign in as "user@test.com/please"}
   Then %{I should be signed in}
 end
+
