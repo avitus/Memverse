@@ -1,16 +1,37 @@
-<h2>Change your password</h2>
+<% page_title "Change Password" %>
 
-<%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :put }) do |f| %>
-  <%= devise_error_messages! %>
-  <%= f.hidden_field :reset_password_token %>
+<div class="white-box-with-margins">
+<div class="entry-form" id="signup-page-form">
 
-  <div><%= f.label :password, "New password" %><br />
-  <%= f.password_field :password %></div>
+	<%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :put }) do |f| %>
+	
+		<h2>Change your password</h2>
 
-  <div><%= f.label :password_confirmation, "Confirm new password" %><br />
-  <%= f.password_field :password_confirmation %></div>
+		<%= devise_error_messages! %>
+	
+		<%= f.hidden_field :reset_password_token %>
+			
+		<ul>
+			<li>
+				<%= f.password_field :password, 			 :placeholder => "New password" %>					
+			</li>
+			<li>
+				<%= f.password_field :password_confirmation, :placeholder => "Confirm new password" %>
+			</li>			
+		</ul>			
+	
+		<div><%= f.submit "Change my password", :class => "request-button" %></div>
+	<% end %>
 
-  <div><%= f.submit "Change my password" %></div>
-<% end %>
+	<br />
+	
+	<div class="sign-up-links">
+		<%= render :partial => "devise/shared/links" %>	
+	</div>	
 
-<%= render :partial => "devise/shared/links" %>
+</div>
+</div>
+
+<script type="text/javascript">
+	fauxPlaceholder();
+</script>
