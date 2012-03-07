@@ -77,6 +77,7 @@ MemverseApp::Application.routes.draw do
   match '/show_verses_with_tag',   :to => 'verses#show_verses_with_tag',     :as => 'show_verses_with_tag'
   match '/search_verse',           :to => 'verses#verse_search',             :as => 'search_verse'
   match '/lookup_verse',           :to => 'verses#lookup',                   :as => 'lookup_verse'
+  match '/lookup_passage',         :to => 'verses#lookup_passage',           :as => 'lookup_passage'
 
   match '/get_popverses',          :to => 'popverses#index',                 :as => 'get_popverses'
       
