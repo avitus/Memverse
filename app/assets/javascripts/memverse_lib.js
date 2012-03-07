@@ -19,9 +19,23 @@ String.prototype.capitalize = function() {
 
 /******************************************************************************
  * Returns true if input is a valid verse reference
+ * Accepts: Romans 8:1
+ * Rejects: Romans 8
+ * Rejects: Romans 8:1-3
  ******************************************************************************/
 function validVerseRef(verseref) {
-    return /([0-3]?\s+)?[a-záéíóúüñ]+\s+[0-9]+(:|(\s?vs\s?))[0-9]+/i.test(verseref);
+    return /([0-3]?\s+)?[a-záéíóúüñ]+\s+[0-9]+(:|(\s?vs\s?))[0-9]+$/i.test(verseref);
+}
+
+/******************************************************************************
+ * Returns true if input is a valid verse reference
+
+ * Accepts: Romans 8
+ * Accepts: Romans 8:1-3
+ * Rejects: Romans 8:1
+ *******************************************************************************/
+function validPassageRef(passage) {
+    return /([0-3]?\s+)?[a-záéíóúüñ]+\s+[0-9]+((:|(\s?vs\s?))[0-9]+(-)[0-9]+)?$/i.test(passage);	
 }
 
 /******************************************************************************
