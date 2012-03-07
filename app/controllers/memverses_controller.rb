@@ -580,24 +580,24 @@ class MemversesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   # Add an existing memory verse (Assumes that verse is already in DB)
   # ---------------------------------------------------------------------------------------------------------- 
-  def quick_add
-    
-    @tab = "home"
-    @sub = "addvs"    
-    
-    add_breadcrumb I18n.t("home_menu.Add Verse"), :add_verse_path
-    
-    vs = Verse.find(params[:vs])
-      
-    if your_mv = current_user.has_verse?(vs.book, vs.chapter, vs.versenum)
-      flash.now[:notice] = "You already have #{your_mv.verse.ref} in the #{your_mv.verse.translation} translation in your list of memory verses."
-    else
-      # Save verse as a memory verse for user      
-      save_mv_for_user(vs) # TODO rather use a model method ... this is archaic!
-      flash_for_successful_verse_addition(vs)
-    end
-    render(:template => 'memverses/add_verse.html.erb')     
-  end
+  # def quick_add
+#     
+    # @tab = "home"
+    # @sub = "addvs"    
+#     
+    # add_breadcrumb I18n.t("home_menu.Add Verse"), :add_verse_path
+#     
+    # vs = Verse.find(params[:vs])
+#       
+    # if your_mv = current_user.has_verse?(vs.book, vs.chapter, vs.versenum)
+      # flash.now[:notice] = "You already have #{your_mv.verse.ref} in the #{your_mv.verse.translation} translation in your list of memory verses."
+    # else
+      # # Save verse as a memory verse for user      
+      # save_mv_for_user(vs) # TODO rather use a model method ... this is archaic!
+      # flash_for_successful_verse_addition(vs)
+    # end
+    # render(:template => 'memverses/add_verse.html.erb')     
+  # end
 
   # ----------------------------------------------------------------------------------------------------------
   # Add an entire chapter
@@ -644,84 +644,39 @@ class MemversesController < ApplicationController
     @sub = "addvs"    
     
     add_breadcrumb I18n.t("home_menu.Add Verse"), :add_verse_path
-    
-    errorcode = false
-    
-    ref = params[:verse]
-    txt = params[:versetext]
-    tl  = params[:translation]
-    
-    errorcode, book, chapter, verse = parse_verse(ref)
-    
-    # <--- At this point the book name should already be translated into English --->
-    
-    if request.post? and txt.blank? # ie. a form is being submitted
-      errorcode = 4 # No text in entry box
-    end
-    
-    if (!errorcode) and (!verse_too_long?(txt)) # If verse is ok and not too long
-      # Check whether verse is already in DB
-      if vs = verse_in_db(book, chapter, verse, tl)
-        flash.now[:notice] = "Verse is already in database. Added to your memory list."       
-      else      
-        # Save verse to database of verses     
-        vs = save_verse_to_db(tl, book, chapter, verse, txt.gsub!(/\s+/," "))
-        flash.now[:notice] = "Verse has been saved."
-      end
-      
-      if your_mv = current_user.has_verse?(vs.book, vs.chapter, vs.versenum)
-        flash.now[:notice] = "You already have #{your_mv.verse.ref} in the #{your_mv.verse.translation} translation in your list of memory verses."
-      else
-        # Save verse as a memory verse for user      
-        save_mv_for_user(vs)
-        flash_for_successful_verse_addition(vs)
-        params[:versetext] = ""
-      end
-      
-    else
-      flash.now[:notice] = case errorcode
-        when 1 then "Bible reference is incorrectly formatted. Format should be John 3:16 or John 3 vs 16"
-        when 2 then "#{book} is not a valid book of the Bible"
-        when 3 then 'Please enter each verse individually and remove any verse numbering or footnote information.'
-        when 4 then "Please enter the text for your memory verse. Please do not include any verse numbering or footnote information."
-        else        "The verse you entered is longer than the longest verse in the Bible! Please enter one verse at a time. Consecutive verses will be grouped into a single memory passage."         
-      end
-      flash.now[:notice].html_safe
-      render(:template => 'memverses/add_verse.html.erb')
-    end
-    
+        
   end
   
   
   # ----------------------------------------------------------------------------------------------------------
   # Add a new memory verse (new version)
   # ----------------------------------------------------------------------------------------------------------   
-  def add_verse_quick
-
-    @tab = "home"
-    @sub = "addvs"    
-    
-    add_breadcrumb I18n.t("home_menu.Add Verse"), :add_verse_path
-    
-  end
+  # def add_verse_quick
+# 
+    # @tab = "home"
+    # @sub = "addvs"    
+#     
+    # add_breadcrumb I18n.t("home_menu.Add Verse"), :add_verse_path
+#     
+  # end
  
   # ----------------------------------------------------------------------------------------------------------
   # Notification after verse added
   # ----------------------------------------------------------------------------------------------------------   
-  def flash_for_successful_verse_addition(vs)
-    if vs.memverses.length == 2
-      flash.now[:notice] = "#{vs.ref} has been added to your list of memory verses. Since you are only the second user to start memorizing this verse, it has not yet been verified by a moderator. It will be verified within the next 24 hours so please be patient if you see an error. "
-    else
-      flash.now[:notice] = "#{vs.ref} has been added to your list of memory verses. "
-    end
-
-    # Add link to next verse in same translation
-    if next_verse = vs.following_verse
-      link = "<a href=\"#{url_for(:action => 'quick_add', :vs => next_verse)}\">[Add #{next_verse.ref}]</a>"
-      flash.now[:notice] << " #{link} "
-    end
-      
-  end
+  # def flash_for_successful_verse_addition(vs)
+    # if vs.memverses.length == 2
+      # flash.now[:notice] = "#{vs.ref} has been added to your list of memory verses. Since you are only the second user to start memorizing this verse, it has not yet been verified by a moderator. It will be verified within the next 24 hours so please be patient if you see an error. "
+    # else
+      # flash.now[:notice] = "#{vs.ref} has been added to your list of memory verses. "
+    # end
+# 
+    # # Add link to next verse in same translation
+    # if next_verse = vs.following_verse
+      # link = "<a href=\"#{url_for(:action => 'quick_add', :vs => next_verse)}\">[Add #{next_verse.ref}]</a>"
+      # flash.now[:notice] << " #{link} "
+    # end
+#       
+  # end
 
   # ----------------------------------------------------------------------------------------------------------
   # Delete a memory verse
