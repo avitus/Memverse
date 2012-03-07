@@ -38,6 +38,18 @@ function validPassageRef(passage) {
     return /([0-3]?\s+)?[a-záéíóúüñ]+\s+[0-9]+((:|(\s?vs\s?))[0-9]+(-)[0-9]+)?$/i.test(passage);	
 }
 
+
+/******************************************************************************
+ * Returns true iff input is a passage reference
+
+ * Accepts: Romans 8:1-3
+ * Rejects: Romans 8
+ * Rejects: Romans 8:1
+ *******************************************************************************/
+function validSubChapterPassage(passage) {
+    return /([0-3]?\s+)?[a-záéíóúüñ]+\s+[0-9]+(:|(\s?vs\s?))[0-9]+(-)[0-9]+/i.test(passage);	
+}
+
 /******************************************************************************
  * Clean up user entered verses
  ******************************************************************************/
@@ -63,12 +75,13 @@ function parseVerseRef(verseref) {
 	// ======================================================	
 
 	var split_text;
-	
+	var ch, bk, bi, vs;
+		
 	if (validVerseRef(verseref)) {
 		
 		// Handle corner cases
 		verseref = verseref.replace(/(song of songs)/i, "Song of Songs")
-						   .replace(/(psalm )/i,         "Psalms ");
+						   .replace(/(psalm )/i,        "Psalms ");
 			
 		split_text = verseref.split(/:|\s/);
 		
@@ -82,6 +95,48 @@ function parseVerseRef(verseref) {
 		} else {
 			return { bk: bk, ch: ch, vs: vs, bi: bi+1};						
 		};		
+	} else {
+		return false;
+	};
+}
+
+/******************************************************************************
+ * Parses passage reference into a book, chapter, start verse & end verse
+ ******************************************************************************/
+function parsePassageRef(passage) {
+		
+	// ========== TODO ======================================
+	// Handle: abbreviations, foreign language book names
+	// ======================================================	
+
+	var split_text;
+	var ch, bk, bi;
+	var vs_start = null;
+	var vs_end   = null;
+	
+	if (validPassageRef(passage)) {
+		
+		// Handle corner cases
+		passage = passage.replace(/(song of songs)/i, "Song of Songs")
+						 .replace(/(psalm )/i,        "Psalms ");
+			
+		split_text = passage.split(/:|-|\s/);  /* split on dash, colon or space */
+									 
+		if (validSubChapterPassage(passage)) {
+			vs_end   = parseInt(split_text.pop());
+			vs_start = parseInt(split_text.pop());	
+		} 
+								
+		ch       = parseInt(split_text.pop());
+		bk       = split_text.join(' ').capitalize();
+		bi       = jQuery.inArray( bk, BIBLEBOOKS );
+				
+		if (bi === -1) {
+			return false	
+		} else {
+			return { bk: bk, ch: ch, vs_start: vs_start, vs_end: vs_end, bi: bi+1};						
+		};									
+		
 	} else {
 		return false;
 	};
