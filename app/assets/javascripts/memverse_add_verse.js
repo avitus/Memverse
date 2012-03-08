@@ -1,7 +1,19 @@
+function resetScrollable() {
+
+	// get handle to scrollable API
+	var api = $(".scrollable").data("scrollable");
+	
+	// use API to move back to the beginning
+	api.begin();
+}
+
+
 function clearSearchResults () {
+	resetScrollable();
 	$('.scrollable .items').empty();
 	$("#foundVerse").empty();
-	$("#quick-start-add-verse").empty();	
+	$("#quick-start-add-verse").empty();
+		
 };
 
 function displaySearchResults (verses) {
@@ -18,16 +30,17 @@ function displaySearchResults (verses) {
 			.append('<div class="quick-start-add-verse"><a data-remote="true" href="/add/' + pv.id + '" class="quick-start-add-button" id="quick-start-add"></a></div>');
 		$('.pop-verse-group').filter(':last').append($new_pv);																
 	});
-	
-	// initialize scrollable module
-	$(".scrollable").scrollable({ vertical: true, mousewheel: true });		
+		
 };
 
 $(document).ready(function() {
 
+	// initialize scrollable module
+	$(".scrollable").scrollable({ vertical: true, mousewheel: true });	
+
 	// Verse entry and retrieval
 	$(".flex-verse-search").observe_field(0.2, function( ) { 
-		
+				
 		// User is looking for a single verse						
 		if (ref = parseVerseRef($.trim(this.value))) {
 			$.get("/lookup_verse.json", { bk: ref.bk, ch: ref.ch, vs: ref.vs },
