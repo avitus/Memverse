@@ -12,6 +12,10 @@ $(document).ready(function() {
 			$.get("/lookup_passage.json", { bk: ref.bk, ch: ref.ch, vs_start: ref.vs_start, vs_end: ref.vs_end },
 				function(data) {
 					
+				// Insert missing verses with option to create a new verse
+				
+				// Display verses
+					
 			}, "json" );
 		} else {
 			// User didn't enter a verse reference ... do a keyword search
