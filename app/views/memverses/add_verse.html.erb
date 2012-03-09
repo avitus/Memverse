@@ -20,19 +20,22 @@
 	        	        
 	    <!-- Results of verse retrieval -->    
 	    <div id="quick-start-verse-selection">
-		    <!-- Show found verse -->
+		    
+		    <!-- Display existing verse -->
 			<div id="existing-verse-add" class="quick-start-show-verse quick-start-add-section">
-			    <div id="foundVerse"></div>
-			    <div id="quick-start-add-verse" class="quick-start-add-verse"></div>
+			    <div id="foundVerse"></div>  											<!-- Text of retrieved verse-->
+			    <div id="quick-start-add-verse" class="quick-start-add-verse"></div>	<!-- Button to add verse -->
 			</div>
-		    <!-- Enter a new verse -->
-			<div id="new-verse-entry" class="quick-start-new-section">
+		    
+		    <!-- Display box to enter a new verse -->
+			<div id="new-verse-entry" class="create-and-add">
 		    	<label class="tag">Enter Verse Text:</label>
 				<%= text_area_tag(:versetext, params[:versetext], :overflow => "hidden", :class => "verse-entry-box" )%>
 			    <div class="quick-start-add-verse">
 			   		<div class="quick-start-add-button"></div>
 			   	</div>
-		    </div>    	  	  	
+		    </div>
+		        	  	  	
 	    </div>
 				
 	</div>	  

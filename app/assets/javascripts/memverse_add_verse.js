@@ -1,21 +1,17 @@
-function resetScrollable() {
-
-	// get handle to scrollable API
-	var api = $(".scrollable").data("scrollable");
-	
-	// use API to move back to the beginning
-	api.begin();
-}
-
-
+/******************************************************************************
+ * Remove prior search results anywhere on page
+ ******************************************************************************/
 function clearSearchResults () {
 	resetScrollable();
 	$('.scrollable .items').empty();
 	$("#foundVerse").empty();
 	$("#quick-start-add-verse").empty();
-		
+	$("#versetext").val('');
 };
 
+/******************************************************************************
+ * Display scrollable list of results
+ ******************************************************************************/
 function displaySearchResults (verses) {
 	$.each (verses, function(i, pv) {
 		// We need to group popular verses		
@@ -29,9 +25,30 @@ function displaySearchResults (verses) {
 			.append($('<p/>').text(pv.text))
 			.append('<div class="quick-start-add-verse"><a data-remote="true" href="/add/' + pv.id + '" class="quick-start-add-button" id="quick-start-add"></a></div>');
 		$('.pop-verse-group').filter(':last').append($new_pv);																
-	});
-		
+	});	
 };
+
+/******************************************************************************
+ * Create new verse in database and add for user
+ ******************************************************************************/
+function createVerseAndAdd (ref, tl, txt, $button) {
+	$.post('/verses.json', { verse: {book: ref.bk, chapter: ref.ch, versenum: ref.vs, translation: tl, text: txt, book_index: ref.bi} }, function(data) {
+		if (data.msg === "Success") {
+			$.post("/add/" + data.verse_id, function(data) {
+				if (data.msg === "Error") {
+					alert("The verse was created but could not be saved to your list.");  // Couldn't save verse for user 
+				} else {
+					$button.fadeOut( 200, function () {
+						$(this).replaceWith("<div class='verse-added'></div>");
+					});	
+				};
+			});
+		} else {
+			alert("Something went wrong. The verse was not saved.");  // New verse could not be created
+		}
+	}, 'json');	
+};
+
 
 $(document).ready(function() {
 
@@ -84,5 +101,19 @@ $(document).ready(function() {
 			}, "json" );
 		}			
 	});
+	
+	// User adds a verse
+	$('.create-and-add').on("click", ".quick-start-add-button", function() {      // Bind to DIV enclosing button to allow for event delegation
+		$button   = $('.create-and-add .quick-start-add-button');
+		ref       = parseVerseRef( $("#verse").val().trim());
+		newVerse  = cleanseVerseText( $("#versetext").val() );		
+		tl        = "NIV";	
+					
+		if ( ref ) { 
+			createVerseAndAdd(ref, tl, newVerse, $button);
+		} else {
+			alert("The Bible reference you have entered is not valid.")
+		};	
+	});	
 	
 });

@@ -143,6 +143,14 @@ function parsePassageRef(passage) {
 }
 
 /******************************************************************************
+ * Reset scrollable list of verses to the beginning
+ ******************************************************************************/
+function resetScrollable() {
+	var api = $(".scrollable").data("scrollable"); 	// get handle to scrollable API
+	api.begin(); 									// use API to move back to the beginning
+}
+
+/******************************************************************************
  * All DOM attachments that are common to multiple pages should go here
  ******************************************************************************/
 $(document).ready(function() {
