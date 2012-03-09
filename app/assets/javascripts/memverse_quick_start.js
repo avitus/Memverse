@@ -26,6 +26,10 @@ $(document).ready(function() {
 		$("#choose-translation").hide();
 		$("#choose-time-alloc").show();
 		
+
+		// initialize scrollable without mousewheel support
+		$(".scrollable").scrollable({ vertical: true, mousewheel: true });	
+
 		// Load popular verses in chosen translation
 		$.getJSON("/popverses/index.json", { tl: tl }, function(pop_verses) {
 			$.each (pop_verses, function(i, pv) {
@@ -41,8 +45,8 @@ $(document).ready(function() {
 					.append('<div class="quick-start-add-verse"><a data-remote="true" href="/add/' + pv.id + '" class="quick-start-add-button" id="quick-start-add"></a></div>');
 				$('.pop-verse-group').filter(':last').append($new_pv);																
 			});
-			// initialize scrollable without mousewheel support
-			$(".scrollable").scrollable({ vertical: true, mousewheel: true });	
+
+			resetScrollable(); // reset to start of list
 		});
 
 	});	

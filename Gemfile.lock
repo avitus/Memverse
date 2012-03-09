@@ -352,6 +352,6 @@ DEPENDENCIES
   sqlite3
   test-unit (= 1.2.3)
   therubyracer (>= 0.8.2)
-  thinking-sphinx (>= 2.0.9)
+  thinking-sphinx (>= 2.0.10)
   uglifier (>= 1.0.3)
   wirble
