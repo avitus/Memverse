@@ -1,13 +1,33 @@
 /* Left section of add_verse page */
-.add-verse-enter-ref {
+#add-verse-enter-ref {
   width:20%;
   min-height:500px;
   float:left;
-  padding-left:3em;
-  padding-right:2em;
-  padding-bottom:2em;
-  margin-right:4em;
+  padding: 0 2em 2em 3em;
   border-right:1px solid #bfbebe;
+}
+
+#verse-search-results {
+  width: 70%;
+  float: left;
+  padding: 0 1em 0 2em;
+}
+
+/* Display search result for retrieval of single verse */
+#verse-search-single-result {
+  position:relative;
+  min-height: 200px;
+  display: none;
+  padding: 5em 3em 0 3em;
+  width: 50%;
+  #new-verse-entry {
+    position:absolute;
+    width: 90%;
+    display:none;
+  }
+  #existing-verse-add {
+    position:absolute;
+  }
 }
 
 /* Single element for verses in search result ... */
@@ -27,8 +47,9 @@ div.verse-and-ref {
 
 /* Scroll section for add_verse search results */
 .verse-search-results-scroll {
-  width:60%;
+  width:100%;
   min-height:500px;
+  display: none;
   float:left;
   padding-left:0.5em;
   padding-right:1em;  

@@ -2,8 +2,8 @@
 <% page_description I18n.t :add_new_verses, :scope => 'page_descriptions' %>
 <div class="white-box-with-margins">
 	    
-	<!-- Search for a verse -->
-	<div class="add-verse-enter-ref">
+	<!-- SEARCH ENTRY: LEFT COLUMN -->
+	<div id="add-verse-enter-ref">
 		
 		<div class="top-heading">
 	    	<h3><span>Add a New Memory Verse</span></h3>
@@ -17,13 +17,19 @@
 				<img class="spinner" id="ajax_spinner" src="/assets/indicator2.gif" alt="Searching ..." style="display: none" />
 	        </div>
 	    </div>
-	        	        
-	    <!-- Results of verse retrieval -->    
-	    <div id="quick-start-verse-selection">
+	        	        				
+	</div>	  
+	
+	
+	<!-- SEARCH RESULTS: RIGHT COLUMN -->
+	<div id="verse-search-results">
+		
+		<!-- Results of single verse retrieval -->    
+	    <div id="verse-search-single-result">
 		    
 		    <!-- Display existing verse -->
 			<div id="existing-verse-add" class="quick-start-show-verse quick-start-add-section">
-			    <div id="foundVerse"></div>  											<!-- Text of retrieved verse-->
+			    <div id="foundVerse"></div>  							    <!-- Text of retrieved verse-->
 			    <div id="add-verse-button" class="add-verse-button"></div>	<!-- Button to add verse -->
 			</div>
 		    
@@ -35,15 +41,16 @@
 			   		<div class="quick-start-add-button"></div>
 			   	</div>
 		    </div>
-		        	  	  	
+		    
 	    </div>
-				
-	</div>	  
+		
+		<!-- Results of passage or multiple verse retrieval -->    		
+		<div class="verse-search-results-scroll quick-start-add-section">
+			<%= render "verses/scroll" %>
+		</div>			
+			
+	</div>
 	
-	
-	<div class="verse-search-results-scroll quick-start-add-section">
-		<%= render "verses/scroll" %>
-	</div>	
   
 	    
 </div> <!-- white-box-bg -->

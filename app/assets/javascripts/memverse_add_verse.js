@@ -13,6 +13,8 @@ function clearSearchResults () {
  * Display scrollable list of results
  ******************************************************************************/
 function displaySearchResults (verses) {
+	$(".verse-search-results-scroll").show();
+	$("#verse-search-single-result").hide();
 	$.each (verses, function(i, pv) {
 		// We need to group popular verses		
 		if (i % 3 == 0) {
@@ -66,7 +68,9 @@ $(document).ready(function() {
 
 					// Clear search results
 					clearSearchResults();
-		
+					$(".verse-search-results-scroll").hide();
+					$("#verse-search-single-result").show();
+							
 					if (typeof(verse) !== 'undefined' && verse != null) {
 						$("#new-verse-entry").hide();												
 						$("#foundVerse").append($('<h4/>').text(verse.ref)).append($('<p/>').text(verse.text));
@@ -86,7 +90,7 @@ $(document).ready(function() {
 					
 					// TODO: Insert missing verses with option to create a new verse
 					
-					clearSearchResults();  // clear existing search results
+					clearSearchResults();         // clear existing search results
 					displaySearchResults(verses); // display new search results
 					
 			}, "json" );
@@ -96,7 +100,7 @@ $(document).ready(function() {
 			$.get("/search_verse.json", { searchParams: $.trim(this.value)  },
 				function(verses) {
 					
-					clearSearchResults();  // clear existing search results
+					clearSearchResults();         // clear existing search results
 					displaySearchResults(verses); // display new search results			
 					
 			}, "json" );
