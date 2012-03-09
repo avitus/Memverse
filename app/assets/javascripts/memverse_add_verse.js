@@ -5,7 +5,7 @@ function clearSearchResults () {
 	resetScrollable();
 	$('.scrollable .items').empty();
 	$("#foundVerse").empty();
-	$("#quick-start-add-verse").empty();
+	$("#add-verse-button").empty();
 	$("#versetext").val('');
 };
 
@@ -21,9 +21,10 @@ function displaySearchResults (verses) {
 			$('.items').append($new_vs_group);
 		} 
 		var $new_pv = $('<div/>').addClass('item quick-start-show-verse')
-			.append($('<h4/>').text(pv.ref))
-			.append($('<p/>').text(pv.text))
-			.append('<div class="quick-start-add-verse"><a data-remote="true" href="/add/' + pv.id + '" class="quick-start-add-button" id="quick-start-add"></a></div>');
+			.append($('<div class="verse-and-ref" />')
+				.append($('<h4/>').text(pv.ref))
+				.append($('<p/>').text(pv.text)) )
+			.append('<div class="add-verse-button"><a data-remote="true" href="/add/' + pv.id + '" class="quick-start-add-button" id="quick-start-add"></a></div>');
 		$('.pop-verse-group').filter(':last').append($new_pv);																
 	});	
 };
@@ -69,11 +70,11 @@ $(document).ready(function() {
 					if (typeof(verse) !== 'undefined' && verse != null) {
 						$("#new-verse-entry").hide();												
 						$("#foundVerse").append($('<h4/>').text(verse.ref)).append($('<p/>').text(verse.text));
-						$("#quick-start-add-verse").html("<a data-remote='true' href='/add/" + verse.id + "'class='quick-start-add-button' id='quick-start-add'></a>");
+						$("#add-verse-button").html("<a data-remote='true' href='/add/" + verse.id + "'class='quick-start-add-button' id='quick-start-add'></a>");
 					} else {					
 						$("#new-verse-entry").slideDown();																
-						$("#quick-start-add-verse").empty();
-						$("#new-verse-entry .quick-start-add-verse").html("<div class='quick-start-add-button'></div>")  // show add button
+						$("#add-verse-button").empty();
+						$("#new-verse-entry .add-verse-button").html("<div class='quick-start-add-button'></div>")  // show add button
 					};
 
 			}, "json" );	

@@ -3,7 +3,7 @@
 <div class="white-box-with-margins">
 	    
 	<!-- Search for a verse -->
-	<div class="quick-start-enter-verse">
+	<div class="add-verse-enter-ref">
 		
 		<div class="top-heading">
 	    	<h3><span>Add a New Memory Verse</span></h3>
@@ -24,14 +24,14 @@
 		    <!-- Display existing verse -->
 			<div id="existing-verse-add" class="quick-start-show-verse quick-start-add-section">
 			    <div id="foundVerse"></div>  											<!-- Text of retrieved verse-->
-			    <div id="quick-start-add-verse" class="quick-start-add-verse"></div>	<!-- Button to add verse -->
+			    <div id="add-verse-button" class="add-verse-button"></div>	<!-- Button to add verse -->
 			</div>
 		    
 		    <!-- Display box to enter a new verse -->
 			<div id="new-verse-entry" class="create-and-add">
 		    	<label class="tag">Enter Verse Text:</label>
 				<%= text_area_tag(:versetext, params[:versetext], :overflow => "hidden", :class => "verse-entry-box" )%>
-			    <div class="quick-start-add-verse">
+			    <div class="add-verse-button">
 			   		<div class="quick-start-add-button"></div>
 			   	</div>
 		    </div>
@@ -41,7 +41,7 @@
 	</div>	  
 	
 	
-	<div class="quick-start-popular-scroll quick-start-add-section">
+	<div class="verse-search-results-scroll quick-start-add-section">
 		<%= render "verses/scroll" %>
 	</div>	
   
