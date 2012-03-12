@@ -488,13 +488,14 @@ class User < ActiveRecord::Base
     cc = Array.new
     
     # Get all memory verses for user that are the first verse in a chapter
-    start_mv = self.memverses.find(:all, :include => :verse, :conditions => { 'verses.versenum' => 1 })
+    start_mv = self.memverses.includes(:verse).where('verses.versenum' => 1)
     start_mv.sort!.each { |smv| 
       if smv.part_of_entire_chapter?
         if smv.chapter_memorized?
           cc << ["Memorized", smv.verse.book + " " + smv.verse.chapter.to_s]
         else
           cc << ["Learning", smv.verse.book + " " + smv.verse.chapter.to_s]
+          # TODO: What should we do about "Pending" chapters?
         end
       end
     }

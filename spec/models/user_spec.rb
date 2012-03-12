@@ -107,6 +107,8 @@ describe User do
       # TODO: Consider loading all FinalVerses anytime db is created (put in seeds file?)
     end
     
+	# TODO: Move logic for linking memverses out of controller and into model so that tests can pass (and as good practice).
+	
     it "should list Psalm 117 when complete chapter is in account" do
       for i in 1..2
         verse = FactoryGirl.create(:verse, :book_index => 19, :book => "Psalms", :chapter => '117', :versenum => i)
