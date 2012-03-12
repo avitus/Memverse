@@ -99,5 +99,35 @@ describe User do
     end
 
   end
+  
+  describe "complete chapters" do
+    before(:each) do
+      @user = FactoryGirl.create(:user)
+      FactoryGirl.create(:final_verse, :book => "Psalms", :chapter => 117, :last_verse => 2)
+      # TODO: Consider loading all FinalVerses anytime db is created (put in seeds file?)
+    end
+    
+    it "should list Psalm 117 when complete chapter is in account" do
+      for i in 1..2
+        verse = FactoryGirl.create(:verse, :book_index => 19, :book => "Psalms", :chapter => '117', :versenum => i)
+        FactoryGirl.create(:memverse, :user_id => @user.id, :verse_id => verse.id)
+      end
+      @user.complete_chapters.should include("Psalms 117")
+    end
+    
+    it "should list also Psalm 117 when complete chapter, as well as verse 0, are in account" do
+      for i in 0..2
+        verse = FactoryGirl.create(:verse, :book_index => 19, :book => "Psalms", :chapter => 117, :versenum => i)
+        FactoryGirl.create(:memverse, :user_id => @user.id, :verse_id => verse.id)
+      end
+      @user.complete_chapters.should include("Psalms 117")
+    end
+    
+    it "should not list Psalm 117 when only verse 2 is in account" do
+      verse = FactoryGirl.create(:verse, :book_index => 19, :book => "Psalms", :chapter => 117, :versenum => 2)
+      FactoryGirl.create(:memverse, :user_id => @user.id, :verse_id => verse.id)
+      @user.complete_chapters.should_not include("Psalms 117")
+    end
+  end
 
 end

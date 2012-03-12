@@ -9,10 +9,11 @@ end
 
 Factory.define :verse do |v|
   v.translation 'NIV'
-  v.book_index '1'
+  v.book_index 1
   v.book 'Genesis'
-  v.chapter '1'
-  v.versenum '1'
+  v.chapter 1
+  v.versenum 1
+  v.text 'In the beginning, God created the heavens and the earth.'
 end
 
 Factory.define :memverse do |mv|
@@ -27,4 +28,10 @@ end
 
 Factory.define :blog_post do |f|
   f.posted_by_id 2
+end
+
+Factory.define :final_verse do |f|
+  f.book 'Genesis'
+  f.chapter 1
+  f.last_verse 31
 end
