@@ -117,14 +117,56 @@ class VersesController < ApplicationController
   # Find a verse for a user
   # ----------------------------------------------------------------------------------------------------------    
   def lookup
-    
-    @verse = Verse.where(:book => params[:bk], :chapter => params[:ch], :versenum => params[:vs], :translation => current_user.translation).first
+    tl = params[:tl] ? params[:tl] : current_user.translation
+    @verse = Verse.where(:book => params[:bk], :chapter => params[:ch], :versenum => params[:vs], 
+                         :translation => tl).first
     
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml  => @verse }
       format.json { render :json => @verse }
     end    
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Find a passage
+  # ----------------------------------------------------------------------------------------------------------  
+  def lookup_passage
+    tl = params[:tl]
+    
+    if params[:vs_start] != "null" and params[:vs_end] != "null"
+      @verses = Verse.where(:book => params[:bk], :chapter => params[:ch], :versenum => params[:vs_start]..params[:vs_end], :translation => tl).order('versenum')
+    else
+      @verses = Verse.where(:book => params[:bk], :chapter => params[:ch], :translation => tl).order('versenum')
+    end
+                      
+    respond_to do |format|
+      format.html # show.html.erb
+      format.xml  { render :xml  => @verses }
+      format.json { render :json => @verses }
+    end  
+  end
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Check whether entire chapter is in DB
+  # ----------------------------------------------------------------------------------------------------------  
+  def chapter_available
+    tl = params[:tl]
+    
+    verse = Verse.where(:book => params[:bk], :chapter => params[:ch], :versenum => 1, :translation => tl).first
+    
+    if verse && verse.entire_chapter_available
+      response = true
+    else
+      response = false
+    end
+    
+    respond_to do |format|
+      format.html # show.html.erb
+      format.xml  { render :xml  => response }
+      format.json { render :json => response }
+    end  
+    
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -172,7 +214,7 @@ class VersesController < ApplicationController
   end
   
   # ----------------------------------------------------------------------------------------------------------
-  # Verse Search Results
+  # Verse Search Results # commented out in 2011
   # ----------------------------------------------------------------------------------------------------------  	
 	#   def verse_search_results	    
 	# @verse_search_results = Verse.search( params[:search_param] )
@@ -191,6 +233,13 @@ class VersesController < ApplicationController
     add_breadcrumb I18n.t('home_menu.Search Bible'), :search_verse_path
 		@verses = Array.new
 		@verses = Verse.search( params[:searchParams] ) if params[:searchParams]
+		
+    respond_to do |format|
+      format.html # show.html.erb
+      format.xml  { render :xml  => @verses }
+      format.json { render :json => @verses }
+    end		
+		
   end
   
   # ----------------------------------------------------------------------------------------------------------

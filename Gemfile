@@ -22,14 +22,14 @@ if HOST_OS =~ /linux/i
   gem 'therubyracer', '>= 0.8.2'
 end
 
-gem 'rails', '3.2.0'
+gem 'rails', '3.2.2'
 gem 'jquery-rails', '=1.0.18'
 
 
 gem "rspec-rails", ">= 2.6.1", :group => [:development, :test]
 gem "factory_girl_rails", ">= 1.2.0", :group => :test
 gem "cucumber-rails", ">= 1.0.2", :group => :test
-gem "capybara", ">= 1.1.1", :group => :test
+gem "capybara", ">= 1.1.2", :group => :test
 gem "database_cleaner", ">= 0.6.7", :group => :test
 gem "launchy", ">= 2.0.5", :group => :test
 gem 'jasmine', :group => [:development, :test]
@@ -56,7 +56,7 @@ gem 'test-unit', '=1.2.3'                                                       
 gem 'json'                                                                                      # Javascript Object Notation support
 gem 'mail', '>= 2.2.15'                                                                         # Emails
 gem 'newrelic_rpm', '>=3.3.0'                                                                   # Performance monitoring
-gem 'thinking-sphinx', '>=2.0.9', :require => 'thinking_sphinx'                                 # Connector to Sphinx - for global search
+gem 'thinking-sphinx', '>=2.0.10'                                                               # Connector to Sphinx - for global search
 gem 'riddle'                                                                                    # Seems to be needed for Thinking_Sphinx ... not clear, though
 gem 'i18n-js'                                                                                   # Uses config/locale files to build a JavaScript equivalent of i18n in Rails
 gem 'spawn', '>=1.2', :git => 'git://github.com/avitus/spawn.git', :branch => 'edge'            # Check to see whether master branch ever supports Rails 3 & Ruby 1.92

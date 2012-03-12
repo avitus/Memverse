@@ -1,6 +1,6 @@
 <h2>Current Level Goals</h2>
 
-<ul>
+<ul class="custom-bullets">
 	<% for quest in current_user_quests %>
 		<li>
 			<% if !quest.url.blank? %>
@@ -14,7 +14,7 @@
 		
 <h2>Already completed</h2>
 
-<ul>
+<ul class="thumbs">
 	<% for quest in completed %>
 		<li>
 			<% if !quest.url.blank? %>

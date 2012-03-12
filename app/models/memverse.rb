@@ -32,22 +32,15 @@ class Memverse < ActiveRecord::Base
   # Validations
   validates :user_id,  :presence => true
   validates :verse_id, :presence => true, :uniqueness => {:scope => :user_id}
+  
+  # Set initial values and link verse other verses
+  before_create  :supermemo_init
+  after_create   :add_links
+  before_destroy :update_links
 
-  # ----------------------------------------------------------------------------------------------------------
-  # Implement counter caches for number of verses memorized and learning
-  # ----------------------------------------------------------------------------------------------------------   
+  # Update counter cache
   after_save    :update_counter_cache
   after_destroy :update_counter_cache
-  
-  def update_counter_cache
-    self.user.memorized = Memverse.count(:all, :conditions => ["user_id = ? and status = ?", self.user.id, "Memorized"])
-    self.user.learning  = Memverse.count(:all, :conditions => ["user_id = ? and status = ?", self.user.id, "Learning"])
-    self.user.last_activity_date = Date.today
-    self.user.save
-    
-    self.verse.memverses_count = Memverse.count(:all, :conditions => { :verse_id => self.verse.id })
-    self.verse.save
-  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Convert to JSON format (for AJAX goodness on main memorization page
@@ -165,51 +158,6 @@ class Memverse < ActiveRecord::Base
   end
 
   # ----------------------------------------------------------------------------------------------------------
-  # Remove a memory verse (delete a memory verse)
-  # ---------------------------------------------------------------------------------------------------------- 
-  def remove_mv
-    next_ptr  = self.next_verse
-    prev_ptr  = self.prev_verse
-     
-    # If there is a prev verse
-    # => Find previous verse and remove its 'next' ptr
-    if prev_ptr
-      logger.debug("Removing link from previous verse: #{prev_ptr}")
-      
-      # TODO: This find method is necesary rather than .find(prev_ptr) for the case (which shouldn't ever happen)
-      # when the next/prev pointers aren't valid
-      prev_vs = Memverse.find(:first, :conditions => {:id => prev_ptr})
-      if prev_vs
-        prev_vs.next_verse = nil
-        prev_vs.save
-      else
-        # TODO: This is occasionally happening ... caused by verses being duplicated from double-clicking on links
-        logger.warn("*** Alert: A verse was deleted which had an invalid prev pointer - this should never happen")        
-      end
-    
-    end
-    
-    # If there is a next verse
-    # => Find next verse and make it the first verse in the sequence
-    if next_ptr
-      logger.debug("Setting the next verse: #{next_ptr} to be first verse of sequence")
-      next_vs = Memverse.find(:first, :conditions => {:id => next_ptr})
-      if next_vs
-        next_vs.first_verse = nil # Starting verses in a sequence to not reference themselves as the first verse
-        next_vs.prev_verse  = nil
-        next_vs.save
-        # Follow chain and correct first verse
-        next_vs.update_downstream_start_verses  
-      else
-        logger.warn("*** Alert: A verse was deleted which had an invalid next pointer - this should never happen")        
-      end
-    end
-    
-    self.destroy
-    
-  end
-
-  # ----------------------------------------------------------------------------------------------------------
   # Update the starting verse for downstream verses -- mostly used when a verse is deleted
   # ---------------------------------------------------------------------------------------------------------- 
   def update_downstream_start_verses
@@ -295,9 +243,9 @@ class Memverse < ActiveRecord::Base
     eocv = self.verse.end_of_chapter_verse
     
     # Sept 22, 2010 -- eocv occasionally equal to nil ... not sure why
-    if eocv and lv = self.user.has_verse?(eocv.book, eocv.chapter, eocv.last_verse)
+    if eocv && lv = self.user.has_verse?(eocv.book, eocv.chapter, eocv.last_verse)
       # check that it's linked to the first verse
-      lv.linked_to_first_verse?                               
+      lv.linked_to_first_verse? # TODO: This is where the versenum 0 gets in trouble. Instead we should check if linked to the first verse, assuming that first verse has versenum 1! That will make it work again :)
     else
       false
     end
@@ -368,7 +316,7 @@ class Memverse < ActiveRecord::Base
     if self.solo_verse?
       return false
     elsif self.first_verse
-      Memverse.find(self.first_verse).verse.versenum.to_i == 1
+      Memverse.find(self.first_verse).verse.versenum.to_i <= 1  # Handles Psalm x:0 case where title is in verse 0
     else
       return false
     end
@@ -699,5 +647,95 @@ class Memverse < ActiveRecord::Base
 
   # ============= Protected below this line ==================================================================
   protected
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Initialize new memory verse [hook: before_create]
+  # ----------------------------------------------------------------------------------------------------------  
+  def supermemo_init
+    self.efactor      = 2.0
+    self.last_tested  = Date.today
+    self.next_test    = Date.today
+    self.status       = self.user.overworked? ? "Pending" : "Learning"
+
+    # Add multi-verse linkage  
+    self.prev_verse   = self.get_prev_verse
+    self.next_verse   = self.get_next_verse
+    self.first_verse  = self.get_first_verse
+  end
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Add links from other verses [hook: after_create]
+  # ----------------------------------------------------------------------------------------------------------  
+  def add_links
+       
+    # Adding inbound links
+    if self.prev_verse
+      prior_vs             = Memverse.find(self.prev_verse)      
+      prior_vs.next_verse  = self.id
+      prior_vs.save!
+    end
+    
+    if self.next_verse
+      subs_vs             = Memverse.find(self.next_verse)
+      subs_vs.prev_verse  = self.id
+      subs_vs.first_verse = self.first_verse || self.id
+      subs_vs.save!
+      
+      # Updating starting point for downstream verses 
+      subs_vs.update_downstream_start_verses
+    end    
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Update surrounding links before destroying a memory verse [hook: before_destroy]
+  # ---------------------------------------------------------------------------------------------------------- 
+  def update_links 
+    next_ptr  = self.next_verse
+    prev_ptr  = self.prev_verse
+     
+    # If there is a prev verse
+    # => Find previous verse and remove its 'next' ptr
+    if prev_ptr      
+      # TODO: This find method is necesary rather than .find(prev_ptr) for the case (which shouldn't ever happen)
+      # when the next/prev pointers aren't valid
+      prev_vs = Memverse.where(:id => prev_ptr).first
+      if prev_vs
+        prev_vs.next_verse = nil
+        prev_vs.save
+      else
+        # TODO: This is occasionally happening ... caused by verses being duplicated from double-clicking on links
+        logger.warn("*** Alert: A verse was deleted which had an invalid prev pointer - this should never happen")        
+      end
+    
+    end
+    
+    # If there is a next verse
+    # => Find next verse and make it the first verse in the sequence
+    if next_ptr
+      next_vs = Memverse.where(:id => next_ptr).first
+      if next_vs
+        next_vs.first_verse = nil # Starting verses in a sequence to not reference themselves as the first verse
+        next_vs.prev_verse  = nil
+        next_vs.save
+        # Follow chain and correct first verse
+        next_vs.update_downstream_start_verses  
+      else
+        logger.warn("*** Alert: A verse was deleted which had an invalid next pointer - this should never happen")        
+      end
+    end
+  end
+    
+  # ----------------------------------------------------------------------------------------------------------
+  # Implement counter caches for number of verses memorized and learning
+  # ----------------------------------------------------------------------------------------------------------     
+  def update_counter_cache
+    self.user.memorized = Memverse.count(:all, :conditions => ["user_id = ? and status = ?", self.user.id, "Memorized"])
+    self.user.learning  = Memverse.count(:all, :conditions => ["user_id = ? and status = ?", self.user.id, "Learning"])
+    self.user.last_activity_date = Date.today
+    self.user.save
+    
+    self.verse.memverses_count = Memverse.count(:all, :conditions => { :verse_id => self.verse.id })
+    self.verse.save
+  end
   
 end

@@ -9,7 +9,7 @@
     <div class="verse-field">
     	<div class="ui-widget">
     		<label class="tag">Verse:</label>
-        	<%= text_field_tag(:verse, params[:verse], :class => "verse-search" )%> 
+        	<%= text_field_tag(:verse, params[:verse], :class => "verse-search-by-tl-and-display" )%> 
 			<img class="spinner" id="ajax_spinner" src="/assets/indicator2.gif" alt="Searching ..." style="display: none" />
         </div>
     </div>
@@ -41,8 +41,12 @@
 </div>
 
 
-<!-- Popular verse selection -->	        
+<!-- Popular verse selection -->	
+<div class="top-heading">
+	<h3><span>Choose from Popular Verses</span></h3>
+</div>
+        
 <div class="quick-start-popular-scroll quick-start-add-section">
-	<%= render "verses/popular_scroll" %>
+	<%= render "verses/scroll" %>
 </div>
 

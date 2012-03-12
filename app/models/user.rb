@@ -141,12 +141,9 @@ class User < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   # Check whether current user is memorizing a given verse in any translation
   # ----------------------------------------------------------------------------------------------------------     
-  def has_verse?(book, chapter, versenum)
-    
+  def has_verse?(book, chapter, versenum)    
     book = "Psalms" if book == "Psalm" 
-    # self.memverses.first(:include => :verse, :conditions => {'verses.book' => book, 'verses.chapter' => chapter, 'verses.versenum' => versenum})
     self.memverses.includes(:verse).where('verses.book' => book, 'verses.chapter' => chapter, 'verses.versenum' => versenum).first()
-    
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -481,20 +478,21 @@ class User < ActiveRecord::Base
 
   # ----------------------------------------------------------------------------------------------------------
   # Returns list of complete chapters that user is memorizing
-  # TODO: This needs serious opimization ... page load time for user with lots of complete books is 40 secs
+  # TODO: This needs serious optimization ... page load time for user with lots of complete books is 40 secs
   # ----------------------------------------------------------------------------------------------------------
   def complete_chapters
     
     cc = Array.new
     
     # Get all memory verses for user that are the first verse in a chapter
-    start_mv = self.memverses.find(:all, :include => :verse, :conditions => { 'verses.versenum' => 1 })
+    start_mv = self.memverses.includes(:verse).where('verses.versenum' => 1)
     start_mv.sort!.each { |smv| 
       if smv.part_of_entire_chapter?
         if smv.chapter_memorized?
           cc << ["Memorized", smv.verse.book + " " + smv.verse.chapter.to_s]
         else
           cc << ["Learning", smv.verse.book + " " + smv.verse.chapter.to_s]
+          # TODO: What should we do about "Pending" chapters?
         end
       end
     }

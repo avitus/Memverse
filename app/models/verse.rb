@@ -228,14 +228,13 @@ class Verse < ActiveRecord::Base
   			FinalVerse.new(:book => "3 John", :chapter => 1, :last_verse => 14)
   		end
   	else
-    	FinalVerse.find(:first, :conditions => { :book => self.book, :chapter => self.chapter })
+    	FinalVerse.where(:book => self.book, :chapter => self.chapter).first
     end
   end
   
   # ----------------------------------------------------------------------------------------------------------
-  # Returns array containing all verses in chapter but 'false' if any verse is missing
+  # Returns array containing all verses in chapter with 'nil' for missing verses
   # ----------------------------------------------------------------------------------------------------------   
-  
   def entire_chapter
     
     full_chapter  = Array.new
@@ -255,6 +254,16 @@ class Verse < ActiveRecord::Base
     
   end
 
+  # ----------------------------------------------------------------------------------------------------------
+  # Return true if entire chapter is in database
+  # ----------------------------------------------------------------------------------------------------------   
+  def entire_chapter_available
+    if self.end_of_chapter_verse
+      return Verse.where("book = ? and chapter = ? and translation = ? and versenum not in (?)", self.book, self.chapter, self.translation, 0).count == self.end_of_chapter_verse.last_verse
+    else
+      return false
+    end
+  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Returns all tags associated with a given verse

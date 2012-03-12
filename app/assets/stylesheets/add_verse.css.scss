@@ -1,0 +1,202 @@
+/* Left section of add_verse page */
+#add-verse-enter-ref {
+  width:20%;
+  min-height:450px;
+  float:left;
+  padding:0 2em;
+  border-right:1px solid #bfbebe;
+}
+
+#verse-search-results {
+  width:70%;
+  float:left;
+  padding:0 1em 0 2em;
+}
+
+.verse-field {
+  position:relative;
+}
+
+.verse-field .flex-verse-search {
+  width:100%;
+}
+
+.verse-field .spinner-add-verse {
+  position:absolute;
+  right:0.3em;
+  margin-top:0.3em;
+}
+
+/* Add entire chapter button */
+.add-chapter-button
+{
+  background:url('main-buttons.png') no-repeat left top;
+  width:179px;
+  height:25px;
+  float:left;
+  text-align:center;
+  line-height:25px;
+  font-size:11px;
+  font-weight:bold;
+  color:#FFF;
+  text-transform:uppercase;
+  margin-right:35px;
+  display:none;
+}
+
+.add-chapter-button a
+{
+  width:179px;
+  height:25px;
+  display:block;
+  color:#FFF;
+  text-decoration:none;
+}
+
+.add-chapter a:hover, .add-chapter a.active
+{
+  background:url('main-buttons.png') no-repeat 0 -75px;
+  color:#FFF;
+  text-decoration:none;
+}
+
+/* Display search result for retrieval of single verse */
+#verse-search-single-result {
+  position:relative;
+  min-height: 200px;
+  display: none;
+  padding: 5em 3em 0 3em;
+  width: 50%;
+  #new-verse-entry {
+    position:absolute;
+    width: 90%;
+    display:none;
+  }
+  #existing-verse-add {
+    position:absolute;
+  }
+}
+
+/* Single element for verses in search result ... */
+div.verse-and-ref {
+  float:left;
+  width:75%;
+  padding-right:4%;
+}
+
+/* ... and associated button */
+.add-verse-button {
+  text-align:right;
+  padding-top:10px;
+  float: right;
+  width: 20%;
+}
+
+/* Scroll section for add_verse search results */
+.verse-search-results-scroll {
+  width:100%;
+  min-height:500px;
+  display: none;
+  float:left;
+  padding-left:0.5em;
+  padding-right:1em;  
+  padding-bottom:1em; 
+  
+  /* root element for scrollable */
+  .scrollable {
+  
+    /* required settings */
+    position:relative;
+    overflow:hidden;
+  
+    /* vertical scrollables have typically larger height than width but not now */
+    height: 430px; // should match height of vertical class ... height should be 3x size of item height + padding
+    width: 100%;   // should match width of vertical class and actions
+  }
+  
+  /* root element for scrollable items */
+  .scrollable .items {
+    position:absolute;
+  
+    /* this time we have very large space for the height */
+    height:20000em;
+  }
+  
+  /* root element for scrollable */
+  .vertical {  
+    
+    /* required settings */
+    position:relative;
+    overflow:hidden;  
+  
+    /* vertical scrollers have typically larger height than width */  
+    height: 430px; // should match height of scrollable class  
+    width: 100%;   // should match width of scrollable class and actions
+    border-top:1px solid #ddd;  
+  }
+  
+  /* root element for scrollable items */
+  .items {  
+    position:absolute;
+    /* this time we have very large space for height */ 
+    height:20000em; 
+    margin: 0px;
+  }
+  
+  /* single scrollable item */
+  .item {
+    border-bottom:1px solid #ddd;
+    padding:10px 0 0 0;
+    height:133px;
+  }
+  
+  /* elements inside single item */
+  .item img {
+    float:left;
+    margin-right:20px;
+    height:180px;
+    width:240px;
+  }
+  
+  .item h3 {
+    margin:0 0 5px 0;
+    font-size:16px;
+    /* color:#456; */
+    font-weight:normal;
+  }
+  
+  /* the action buttons above the scrollable */
+  #actions {
+    width:100%;   // should match width of vertical and scrollable class
+    margin:30px 0 10px 0;
+    position:relative;
+    font-size:11px;
+  }
+  
+  #actions a {
+    cursor:pointer;
+    color:#666;
+  }
+  
+  #actions a:hover {
+    text-decoration:underline;
+    color:#000;
+  }
+  
+  .disabled {
+    visibility:hidden;    
+  }
+  
+  .next {
+    float:right;
+  }
+  
+  .bible-version {
+    // 60% wide with 20% on either side so that version doesn't overlap left/right navigation
+    left:20%;
+    width:60%;
+    text-align:center;
+    position:absolute;
+    cursor:pointer;
+  }
+} /* end of scroll styles */

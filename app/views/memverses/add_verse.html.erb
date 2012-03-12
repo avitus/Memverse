@@ -1,113 +1,114 @@
 <% page_title I18n.t :add_new_verses, :scope => 'page_titles' %>
 <% page_description I18n.t :add_new_verses, :scope => 'page_descriptions' %>
 <div class="white-box-bg">
-	    
-	    	<div class="enter-verse">
-	        	<div class="top-heading">
-	            	<h2><span>Enter a Bible Verse</span></h2>
-	            </div>
-	            <%= form_tag :action => 'add_verse' do %>
-		            <div class="verse-field">
-		            	<div class="ui-widget">
-		            		<label class="tag">Verse:</label>
-		                	<%= text_field_tag(:verse, params[:verse], :class => "verse-search" )%> 
-							<img class="spinner" id="ajax_spinner" src="/assets/indicator2.gif" alt="Searching ..." style="display: none" />
-		                </div>
-		            </div>
-		            
-		            <div class="translate">
-		            	<div>
-		            		<label class="tag">Translation:</label>
-		                	<!-- Now need to add new translations to profile page and quick_start page but not anywhere else unless a major translation -->
-							<%= select_tag(:translation, 
-									options_for_select([["New International Version (1984)",	'NIV' ],
-														["New International Version (2011)",	'NNV' ],
-														["New American Standard Bible", 		'NAS' ], 
-														["New King James Version",				'NKJ' ], 
-														["King James Version",					'KJV' ], 
-														["Revised Standard Version",  			'RSV' ], 
-														["New Revised Standard Version",  		'NRS' ], 														
-														["English Standard Version", 			'ESV' ],
-														["New Living Translation",        		'NLT' ],
-														["Contemporary English Version",   		'CEV' ],
-														["Holman Christian Standard Bible",		'HCS' ],
-														["Darby Translation",					'DTL' ],
-														["The Message",                   		'MSG' ],
-														["Amplified Bible",                		'AMP' ],
-														["New International Reader's Version", 	'IRV' ],
-														["Updated King James Version",		 	'UKJ' ],
-														["Geneva Bible",					 	'GEN' ],
-														["Biblical Greek", 						'GRK' ],
-														["Nueva Version Internacional",			'NVI' ],
-														["Reina-Valera 1960",					'RVR' ],
-														["Louis Segond 1910",					'LSV' ],
-														["La Nuova Diodati",					'LND' ],
-														["Afrikaans 1983 Translation",			'AFR' ],
-														["Herziene Statenvertaling",			'HSV' ],
-														["De Nieuwe Bijbelvertaling",			'NBV' ],
-														["Terjemahan Baru",						'TMB' ],
-														["Magandang Balita Biblia",				'MBB' ],														
-														["Svenska Folkbibeln",					'SPB' ],
-														["Almeida Corrigida e Fiel",            'ACF' ]],
-									:selected => current_user.translation), {:class=>"translation-drop"}) %>
-		                </div>
-		            </div>
-		            
-		            <div class="field-area">
-		                	<div>
-		                    	<label class="tag">Enter Bible Verse:</label>
-		                		<%= text_area_tag(:versetext, params[:versetext], :overflow => "hidden", :class => "verse-entry-box" )%>
-		                    </div>
-		            </div>
-		            
-		            <div class="trans-button"><input name="commit" type="submit" class="add-verse" value="" /></div>          
-	       		<% end %>  
-	       </div> <!-- enter-verse -->
-	        	        
-	        <div class="translation">
-	        	<h2>Available Translations</h2>
-	            <div id="foundVerse">
-					<%= render :partial=>'avail_translations' %>			
-				</div>
-	        </div>
-	        <div class="clr"></div>	
+	
+	<!-- SEARCH ENTRY: LEFT COLUMN -->
+	<div id="add-verse-enter-ref">
+		
+		<div class="top-heading">
+	    	<h3><span>Add a New Memory Verse</span></h3>
+	    </div>
 
+		<%= content_tag "div", id: "translation", data: {tl: @translation } do %>
+		<!-- Get translation -->
+		<% end %>
+
+		<!-- Reference entry box -->
+		<div class="verse-field ui-widget">
+			<label class="tag">Enter a reference or keyword</label>
+			<img class="spinner spinner-add-verse" id="ajax_spinner" src="/assets/indicator2.gif" alt="Searching ..." style="display: none" />
+			<%= text_field_tag(:verse, params[:verse], :class => "flex-verse-search", :id => "js_flex-verse-search" )%> 
+		</div>
+
+		<!-- Add entire chapter -->
+		<div class="add-chapter">
+			<%= link_to 'Add Chapter', '#', :class => "add-chapter-button", :id => "add-chapter" %>						
+		</div>
+
+	</div>	  
+
+	<!-- SEARCH RESULTS: RIGHT COLUMN -->
+	<div id="verse-search-results">
+				
+		<!-- Results of single verse retrieval -->    
+	    <div id="verse-search-single-result">
+
+		    <!-- Translation -->			
+			<h5><span class="js_bible-version" class="bible-version"><%= TRANSLATIONS[@translation.try(:to_sym)] %></span></h5>
+    
+		    <!-- Display existing verse -->
+			<div id="existing-verse-add" class="quick-start-show-verse quick-start-add-section">
+			    <div id="foundVerse"></div>  							    <!-- Text of retrieved verse-->
+			    <div id="add-verse-button" class="add-verse-button"></div>	<!-- Button to add verse -->
+			</div>
+		    
+		    <!-- Display box to enter a new verse -->
+			<div id="new-verse-entry" class="create-and-add">
+		    	<label class="tag">Enter Verse Text:</label>
+				<%= text_area_tag(:versetext, params[:versetext], :overflow => "hidden", :class => "verse-entry-box" )%>
+			    <div class="add-verse-button">
+			   		<div class="quick-start-add-button"></div>
+			   	</div>
+		    </div>
+		    
+	    </div>
+		
+		<!-- Results of passage or multiple verse retrieval -->    		
+		<div class="verse-search-results-scroll quick-start-add-section">
+			<%= render "verses/scroll" %>
+		</div>			
+			
+	</div>
+	
+	<div class="clr"></div><!-- Clear floats -->
 </div> <!-- white-box-bg -->
 
-<!-- http://www.webdesignerwall.com/tutorials/jquery-tutorials-for-designers/ -->
-<!-- Verse will enter from the 'show' coordinate and will depart to the "hide" coordinate --> 
-<!-- 'Hide' position should be the same as the position specified in the CSS stylesheet i.e. the starting position --> 
-<script type="text/javascript">
-	$(document).ready(function(){
+<script language="JavaScript" type="text/javascript"><!--
+	$(document).ready(function() {
 	
-		$("#verse").observe_field(0.3, function( ) { 
-			$.get("/avail_translations.html", { verse: this.value },
-				function(data){	
-					$("#foundVerse").html(data);
-			}, "html" );
-        });
-
-		$('#verse').focus().autocomplete({ source: ['Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy', 'Joshua', 'Judges', 'Ruth', '1 Samuel', '2 Samuel',
-	                '1 Kings', '2 Kings','1 Chronicles', '2 Chronicles', 'Ezra', 'Nehemiah', 'Esther', 'Job', 'Psalm', 'Proverbs',
-	                'Ecclesiastes', 'Song of Songs', 'Isaiah', 'Jeremiah', 'Lamentations', 'Ezekiel', 'Daniel', 'Hosea', 'Joel', 
-	                'Amos', 'Obadiah', 'Jonah', 'Micah', 'Nahum', 'Habakkuk', 'Zephaniah', 'Haggai', 'Zechariah', 'Malachi', 'Matthew',
-	                'Mark', 'Luke', 'John', 'Acts', 'Romans', '1 Corinthians', '2 Corinthians', 'Galatians', 'Ephesians', 'Philippians',
-	                'Colossians', '1 Thessalonians', '2 Thessalonians', '1 Timothy', '2 Timothy', 'Titus', 'Philemon', 'Hebrews', 'James',
-	                '1 Peter', '2 Peter', '1 John', '2 John', '3 John', 'Jude', 'Revelation']						
-		});	
-
-		
-		$('.spinner')
-			.ajaxStart(function() {
-		        $(this).show();
-		    })
-			.ajaxStop(function() {
-		        $(this).hide();
-	    });
-
-		$('#foundVerse').delegate('td.no-dbl-click a', 'click', function() {
-			$("#foundVerse").attr('disabled', 'disabled').hide();
+		// Get user's translation
+		tl = $('#translation').data('tl'); // Get the users translation
+	
+		// initialize scrollable module
+		$(".scrollable").scrollable({ vertical: true, mousewheel: true });
+				
+		// Setup jEditable for version changing
+		$('.js_bible-version').editable(function(value, settings) { 
+			tl = value; // change tl
+			flexversesearch($("#js_flex-verse-search").val()); // refresh results
+			return(settings.data[value]);
+			// TODO: Can't figure out why after changing the version and clicking on the select again, it still defaults to the original 'selected' value
+		}, { 
+			data   : <%= TRANSLATIONS.to_json.html_safe %>,
+			type   : 'select',
+			submit : 'OK'
 		});
+	
+		// Verse entry and retrieval
+		$("#js_flex-verse-search").observe_field(0.2, function( ) { 
+			flexversesearch(this.value);
+		});
+		
+		// User adds a new verse
+		$('.create-and-add').on("click", ".quick-start-add-button", function() {      // Bind to DIV enclosing button to allow for event delegation
+			$button   = $('.create-and-add .quick-start-add-button');
+			ref       = parseVerseRef( $("#js_flex-verse-search").val().trim()); // SEEMS TO BE AN ERROR WITH THIS LINE
+			newVerse  = cleanseVerseText( $("#versetext").val() );
+						
+			if ( ref ) { 
+				createVerseAndAdd(ref, tl, newVerse, $button);
+			} else {
+				alert("The Bible reference you have entered is not valid.")
+			};	
+		});	
+	
+		// User adds entire passage	
+		$('.add-chapter').on("click", ".add-chapter-button", function() {		
+			ref = parsePassageRef( $("#js_flex-verse-search").val().trim() );
+			$.post("/add_chapter.json", { bk: ref.bk, ch: ref.ch, tl: tl }, function(response) { 
+				$(".add-chapter-button").replaceWith("<div class='verse-added'></div>");
+			});
+		});
+		
 	});
-</script>
-
+--></script>

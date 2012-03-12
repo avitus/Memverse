@@ -1,0 +1,12 @@
+<div id="actions">
+   <a class="prev">&laquo; Back</a>
+   <a class="next">More verses &raquo;</a>
+   <span class="js_bible-version bible-version"><%= TRANSLATIONS[@translation.try(:to_sym)] %></span>
+</div>
+
+<!-- root element for scrollable -->
+<div class="scrollable vertical">
+   <!-- root element for the scrollable elements -->
+   <div class="items">
+   </div>   
+</div>

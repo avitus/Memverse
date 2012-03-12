@@ -2,6 +2,12 @@ require 'spec_helper'
 
 describe PopversesController do
 
+  before (:each) do
+    @user = Factory(:user)
+    @user.confirm!
+    sign_in @user    
+  end
+
   describe "GET 'index'" do
     it "returns http success" do
       get 'index'

@@ -126,14 +126,6 @@
 		$("#verseguess").observe_field(0.2, function( ) { 			
 			getversefeedback(this.value);
         });
-        
-        $('.spinner')
-			.ajaxStart(function() {
-		        $(this).show();
-		    })
-			.ajaxStop(function() {
-		        $(this).hide();
-    	});
     	
     	// ==== Show/Hide mnemonic ====
 		function togglemnemonic(){

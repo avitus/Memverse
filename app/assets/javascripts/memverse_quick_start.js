@@ -26,6 +26,10 @@ $(document).ready(function() {
 		$("#choose-translation").hide();
 		$("#choose-time-alloc").show();
 		
+
+		// initialize scrollable without mousewheel support
+		$(".scrollable").scrollable({ vertical: true, mousewheel: true });	
+
 		// Load popular verses in chosen translation
 		$.getJSON("/popverses/index.json", { tl: tl }, function(pop_verses) {
 			$.each (pop_verses, function(i, pv) {
@@ -41,8 +45,8 @@ $(document).ready(function() {
 					.append('<div class="quick-start-add-verse"><a data-remote="true" href="/add/' + pv.id + '" class="quick-start-add-button" id="quick-start-add"></a></div>');
 				$('.pop-verse-group').filter(':last').append($new_pv);																
 			});
-			// initialize scrollable without mousewheel support
-			$(".scrollable").scrollable({ vertical: true, mousewheel: true });	
+
+			resetScrollable(); // reset to start of list
 		});
 
 	});	
@@ -53,7 +57,7 @@ $(document).ready(function() {
 	});			
 		
 	// Verse entry and retrieval
-	$("#verse").observe_field(0.2, function( ) { 
+	$(".verse-search-by-tl-and-display").observe_field(0.2, function( ) { 
 								
 		if (ref = parseVerseRef($.trim(this.value))) {
 			$.get("/lookup_verse.json", { bk: ref.bk, ch: ref.ch, vs: ref.vs },
@@ -134,25 +138,6 @@ $(document).ready(function() {
 		};
 	});
 	
-	// Reference autocomplete
-	$('#verse').focus().autocomplete({ source: ['Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy', 'Joshua', 'Judges', 'Ruth', '1 Samuel', '2 Samuel',
-				'1 Kings', '2 Kings','1 Chronicles', '2 Chronicles', 'Ezra', 'Nehemiah', 'Esther', 'Job', 'Psalm', 'Proverbs',
-				'Ecclesiastes', 'Song of Songs', 'Isaiah', 'Jeremiah', 'Lamentations', 'Ezekiel', 'Daniel', 'Hosea', 'Joel', 
-				'Amos', 'Obadiah', 'Jonah', 'Micah', 'Nahum', 'Habakkuk', 'Zephaniah', 'Haggai', 'Zechariah', 'Malachi', 'Matthew',
-				'Mark', 'Luke', 'John', 'Acts', 'Romans', '1 Corinthians', '2 Corinthians', 'Galatians', 'Ephesians', 'Philippians',
-				'Colossians', '1 Thessalonians', '2 Thessalonians', '1 Timothy', '2 Timothy', 'Titus', 'Philemon', 'Hebrews', 'James',
-				'1 Peter', '2 Peter', '1 John', '2 John', '3 John', 'Jude', 'Revelation']						
-	});	
-
-	
-	$('.spinner')
-		.ajaxStart(function() {
-			$(this).show();
-		})
-		.ajaxStop(function() {
-			$(this).hide();
-	});
-
 	$('#foundVerse').delegate('td.no-dbl-click a', 'click', function() {
 		$("#foundVerse").attr('disabled', 'disabled').hide();
 	});

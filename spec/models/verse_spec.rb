@@ -13,7 +13,25 @@ describe Verse do
   
   it "should clean up the verse text" do
     verse = Factory(:verse, :text => "This is a \r\n \r\n \n test test   \n   teest. ")
-	verse.save!
+	  verse.save!
     verse.text.should == "This is a test test teest."
   end
+  
+  describe "entire_chapter_available" do
+    it "should not think an incomplete chapter is available" do
+      final_verse = Factory(:final_verse, :book => "Psalms", :chapter => 117, :last_verse => 2)
+      verse1 = Factory(:verse, :book => "Psalms", :chapter => 117, :versenum => 1)
+      
+      verse1.entire_chapter_available.should be_false
+    end
+    
+    it "should think a complete chapter is available" do
+      final_verse = Factory(:final_verse, :book => "Psalms", :chapter => 117, :last_verse => 2)
+      verse1 = Factory(:verse, :book => "Psalms", :chapter => 117, :versenum => 1)
+      verse2 = Factory(:verse, :book => "Psalms", :chapter => 117, :versenum => 2)
+      
+      verse1.entire_chapter_available.should be_true
+    end
+  end
+  
 end

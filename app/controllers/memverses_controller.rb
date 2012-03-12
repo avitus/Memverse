@@ -539,44 +539,6 @@ class MemversesController < ApplicationController
   end
   
   # ----------------------------------------------------------------------------------------------------------
-  # Save memory verse for user and update all links
-  # ---------------------------------------------------------------------------------------------------------- 
-  def save_mv_for_user(vs)
-    # Save verse as a memory verse for user      
-    mv = Memverse.new
-    mv.user_id      = current_user.id
-    mv.verse_id     = vs.id
-    mv.efactor      = 2.0  # Initial seed value
-    mv.last_tested  = Date.today
-    mv.next_test    = Date.today # Start testing tomorrow
-    mv.status       = current_user.overworked? ? "Pending" : "Learning"
-    # Add multi-verse linkage  
-    mv.prev_verse   = mv.get_prev_verse
-    mv.next_verse   = mv.get_next_verse
-    mv.first_verse  = mv.get_first_verse
-    mv.save # TODO need to find a way to ensure no duplication
-    
-    # Adding inbound links
-    if mv.prev_verse
-      prior_vs             = Memverse.find(mv.prev_verse)
-      prior_vs.next_verse  = mv.id
-      prior_vs.save
-    end
-    if mv.next_verse
-      subs_vs             = Memverse.find(mv.next_verse)
-      subs_vs.prev_verse  = mv.id
-      subs_vs.first_verse = mv.first_verse || mv.id # || returns first operator that satisfies condition
-      subs_vs.save
-      # Updating starting point for downstream verses 
-      update_downstream_start_verses(subs_vs)
-    end
-    
-    # TODO: Check once more for duplication at this point and then save  
-    
-  end # end of save verse as a memory verse for user    
-  
-
-  # ----------------------------------------------------------------------------------------------------------
   # AJAX Verse Add (Assumes that verse is already in DB)
   # ---------------------------------------------------------------------------------------------------------- 
   def ajax_add
@@ -585,9 +547,11 @@ class MemversesController < ApplicationController
   	if vs and current_user
       if current_user.has_verse_id?(vs)
         msg = "Previously Added"
+      elsif current_user.has_verse?(vs.book, vs.chapter, vs.versenum)
+        msg = "Added in another translation"
       else
         # Save verse as a memory verse for user      
-        save_mv_for_user(vs)  # TODO rather use a model method ... this is archaic!
+        Memverse.create(:user_id => current_user.id, :verse_id => vs.id)
         msg = "Added"
       end
     else
@@ -598,153 +562,42 @@ class MemversesController < ApplicationController
   	
   end
   
-
-  # ----------------------------------------------------------------------------------------------------------
-  # Add an existing memory verse (Assumes that verse is already in DB)
-  # ---------------------------------------------------------------------------------------------------------- 
-  def quick_add
-    
-    @tab = "home"
-    @sub = "addvs"    
-    
-    add_breadcrumb I18n.t("home_menu.Add Verse"), :add_verse_path
-    
-    vs = Verse.find(params[:vs])
-      
-    if your_mv = current_user.has_verse?(vs.book, vs.chapter, vs.versenum)
-      flash.now[:notice] = "You already have #{your_mv.verse.ref} in the #{your_mv.verse.translation} translation in your list of memory verses."
-    else
-      # Save verse as a memory verse for user      
-      save_mv_for_user(vs) # TODO rather use a model method ... this is archaic!
-      flash_for_successful_verse_addition(vs)
-    end
-    render(:template => 'memverses/add_verse.html.erb')     
-  end
-
   # ----------------------------------------------------------------------------------------------------------
   # Add an entire chapter
-  # TODO: pass in entire chapter if searching again proves to be too slow
-  # TODO: doesn't handle case where user already has some verses in a different translation ... just inserts new verses in the current translation
-  # ---------------------------------------------------------------------------------------------------------- 
-  def quick_add_chapter
-    
-    ch          = Verse.find(params[:vs]).entire_chapter
-    book        = ch[0].book
-    chapter     = ch[0].chapter
-    translation = ch[0].translation
-    
-    
-    if ch.include?(nil)
-      flash[:error] = "Sorry, we do not have all the verses for that chapter"
-    elsif current_user.has_chapter?(book, chapter)
-      flash[:notice] = "You already have #{book} #{chapter} in the #{translation} translation in your list of memory verses."
-    else
-      ch.each { |vs| 
-        if your_mv = current_user.has_verse?(vs.book, vs.chapter, vs.versenum)
-          # Don't add
-          # flash[:notice] = "You already have #{your_mv.verse.ref} in the #{your_mv.verse.translation} translation in your list of memory verses"
-        else
-          # Save verse as a memory verse for user      
-          save_mv_for_user(vs)
-          # flash_for_successful_verse_addition(vs)
-        end    
-      }
-      flash[:notice] = "#{book} #{chapter} in the #{translation} translation has been added to your list of memory verses."
-    end
-    
-    render(:template => 'memverses/add_verse.html.erb')     
-  end
+  # ----------------------------------------------------------------------------------------------------------   
+  def add_chapter
 
+    bk = params[:bk]
+    ch = params[:ch]
+    tl = params[:tl] || current_user.translation
+    
+    chapter_verses = Verse.where("book = ? and chapter = ? and translation = ? and versenum not in (?)", bk, ch, tl, 0)
+    
+    chapter_verses.each do |vs|
+      if current_user.has_verse?(vs.book, vs.chapter, vs.versenum)
+        msg = "You already have #{vs.ref} in a different translation"
+      else
+        Memverse.create(:user_id => current_user.id, :verse_id => vs.id)
+      end
+    end
+
+    render :json => {:msg => "Added Chapter" }
+    
+  end  
 
 
   # ----------------------------------------------------------------------------------------------------------
   # Add a new memory verse
   # ----------------------------------------------------------------------------------------------------------   
   def add_verse
-
     @tab = "home"
-    @sub = "addvs"    
+    @sub = "addvs"       
+    add_breadcrumb I18n.t("home_menu.Add Verse"), :add_verse_path  
     
-    add_breadcrumb I18n.t("home_menu.Add Verse"), :add_verse_path
-    
-    errorcode = false
-    
-    ref = params[:verse]
-    txt = params[:versetext]
-    tl  = params[:translation]
-    
-    errorcode, book, chapter, verse = parse_verse(ref)
-    
-    # <--- At this point the book name should already be translated into English --->
-    
-    if request.post? and txt.blank? # ie. a form is being submitted
-      errorcode = 4 # No text in entry box
-    end
-    
-    if (!errorcode) and (!verse_too_long?(txt)) # If verse is ok and not too long
-      # Check whether verse is already in DB
-      if vs = verse_in_db(book, chapter, verse, tl)
-        flash.now[:notice] = "Verse is already in database. Added to your memory list."       
-      else      
-        # Save verse to database of verses     
-        vs = save_verse_to_db(tl, book, chapter, verse, txt.gsub!(/\s+/," "))
-        flash.now[:notice] = "Verse has been saved."
-      end
-      
-      if your_mv = current_user.has_verse?(vs.book, vs.chapter, vs.versenum)
-        flash.now[:notice] = "You already have #{your_mv.verse.ref} in the #{your_mv.verse.translation} translation in your list of memory verses."
-      else
-        # Save verse as a memory verse for user      
-        save_mv_for_user(vs)
-        flash_for_successful_verse_addition(vs)
-        params[:versetext] = ""
-      end
-      
-    else
-      flash.now[:notice] = case errorcode
-        when 1 then "Bible reference is incorrectly formatted. Format should be John 3:16 or John 3 vs 16"
-        when 2 then "#{book} is not a valid book of the Bible"
-        when 3 then 'Please enter each verse individually and remove any verse numbering or footnote information.'
-        when 4 then "Please enter the text for your memory verse. Please do not include any verse numbering or footnote information."
-        else        "The verse you entered is longer than the longest verse in the Bible! Please enter one verse at a time. Consecutive verses will be grouped into a single memory passage."         
-      end
-      flash.now[:notice].html_safe
-      render(:template => 'memverses/add_verse.html.erb')
-    end
-    
+    @translation            = current_user.translation? ? current_user.translation : "NIV" # fallback on NIV
+    TRANSLATIONS[:selected] = @translation # used for jEditable
   end
-  
-  
-  # ----------------------------------------------------------------------------------------------------------
-  # Add a new memory verse (new version)
-  # ----------------------------------------------------------------------------------------------------------   
-  def add_verse_quick
-
-    @tab = "home"
-    @sub = "addvs"    
     
-    add_breadcrumb I18n.t("home_menu.Add Verse"), :add_verse_path
-    
-  end
- 
-  # ----------------------------------------------------------------------------------------------------------
-  # Notification after verse added
-  # ----------------------------------------------------------------------------------------------------------   
-  def flash_for_successful_verse_addition(vs)
-    if vs.memverses.length == 2
-      flash.now[:notice] = "#{vs.ref} has been added to your list of memory verses. Since you are only the second user to start memorizing this verse, it has not yet been verified by a moderator. It will be verified within the next 24 hours so please be patient if you see an error. "
-    else
-      flash.now[:notice] = "#{vs.ref} has been added to your list of memory verses. "
-    end
-
-    # Add link to next verse in same translation
-    if next_verse = vs.following_verse
-      link = "<a href=\"#{url_for(:action => 'quick_add', :vs => next_verse)}\">[Add #{next_verse.ref}]</a>"
-      flash.now[:notice] << " #{link} "
-    end
-      
-  end
-
   # ----------------------------------------------------------------------------------------------------------
   # Delete a memory verse
   # TODO: make this a method of Memverse.rb
@@ -820,10 +673,10 @@ class MemversesController < ApplicationController
           mem_queue.delete(mv_id)
         end
 
-        mv.remove_mv
+        mv.destroy
 
       }
-      flash[:notice] = "Verse deletion complete."
+      flash[:notice] = "Memory verses have been deleted."
       redirect_to :action => 'manage_verses'
     elsif (mv_ids.blank?)
       flash[:notice] = "Action not performed as no verses were selected."

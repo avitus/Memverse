@@ -5,27 +5,6 @@
 @charset "utf-8";
 /* CSS Document */
 
-/* http://colorschemedesigner.com/ */
-.primary-1 { background-color:#5A6476 }
-.primary-2 { background-color:#576070 }
-.primary-3 { background-color:#4C586E } /* darkest */
-.primary-4 { background-color:#667184 }
-.primary-5 { background-color:#687284 } /* lightest */
-
-/* Tans */
-.secondary-a-1 { background-color:#B2A883 }
-.secondary-a-2 { background-color:#A9A07F }
-.secondary-a-3 { background-color:#A69A6E } /* darkest */
-.secondary-a-4 { background-color:#BAB08C }
-.secondary-a-5 { background-color:#BAB18E } /* lightest */
-
-/* Oranges */
-.secondary-b-1 { background-color:#B29983 }
-.secondary-b-2 { background-color:#A9937F }
-.secondary-b-3 { background-color:#A6886E } /* darkest */
-.secondary-b-4 { background-color:#BAA18C }
-.secondary-b-5 { background-color:#BAA28E } /* lightest */
-
 .blacktext	{ background-color:#1F2229 } /* Almost black text */
 
 /* Font sizes for Tag cloud */
@@ -137,10 +116,6 @@ img a
 	float:right;
 }
 
-.border1blk{
-	border:1px solid #000;
-}
-
 .red-number {
 	font-size:larger;	
 	font-weight:bold;
@@ -174,6 +149,13 @@ font-family:"museo-slab-1",Georgia,"Times New Roman",Times,serif;
     margin:0;
     font-size:13px;
     line-height:16px;
+  }
+  
+  h5 {
+    padding:0;
+    margin:0 0 1em 0;
+    font-size: 11px;
+    line-height: 16px;
   }
   
 } 
@@ -2061,31 +2043,37 @@ div#flash-error {
 	width:92%;
 }
 
-.left-widget ul
+ul.thumbs, ul.custom-bullets
 {
-	list-style:none;
 	padding:0;
 	margin:0;
+	list-style:none;
 }
 
-.left-widget ul li
+ul.thumbs li, ul.custom-bullets li
 {
-	background:url('thumb.png') no-repeat left top;
 	font-size:13px;
 	color:#666;
 	padding-left:17px;
 	padding-bottom:10px;
 }
 
-.left-widget ul li a
-{
-	color:#666;
-	text-decoration:none;
+ul.thumbs li {
+	background:url('thumb.png') no-repeat left top;
 }
 
-.left-widget ul li a:hover
+ul.custom-bullets li {
+	background:url('bloggity/bullet-white.gif') no-repeat left top;
+}
+
+ul.thumbs li a:hover, ul.custom-bullets li a:hover
 {
 	color:#262626;
+}
+
+ul.thumbs li a, ul.custom-bullets a
+{
+	color:#666;
 	text-decoration:none;
 }
 

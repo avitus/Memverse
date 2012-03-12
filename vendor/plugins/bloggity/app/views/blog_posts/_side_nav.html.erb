@@ -2,7 +2,7 @@
 
 	<div id="side_nav_container" style="padding:5px 10px;">
 	
-		<% if !blog_logged_in? %>
+		<% if rand > 0.5 %>
 			<!-- Ad unit -->
 			<script type="text/javascript"><!--
 				google_ad_client = "ca-pub-3231194436906765";
@@ -15,9 +15,13 @@
 			<script type="text/javascript"
 				src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 			</script> <!-- end of ad unit -->
+		<% else %>
+			<!-- Show Bible Bee ad to logged in users -->		
+			<a href='http://www.biblebee.org/?banner=516'><img src='http://www.biblebee.org/userfiles/banners/250x250.jpg' border='0'></a>	
+			<br />
 		<% end %>	
 		
-		<br/>	
+		<br />	
 	
 		<h4 class="subtitle">Recent Posts</h4>
 		
