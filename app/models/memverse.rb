@@ -368,7 +368,7 @@ class Memverse < ActiveRecord::Base
     if self.solo_verse?
       return false
     elsif self.first_verse
-      Memverse.find(self.first_verse).verse.versenum.to_i == 1
+      Memverse.find(self.first_verse).verse.versenum.to_i <= 1  # Handles Psalm x:0 case where title is in verse 0
     else
       return false
     end
