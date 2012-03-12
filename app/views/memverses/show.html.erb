@@ -109,10 +109,6 @@
 			
 			$(document).on("click", "li.ui-menu-item", function() {
 		
-				//Previous Code:		
-				//TagtoAdd = $(this).find("a").text();
-				//$.post("/memverses/add_verse_tag", { id: <%= @mv.id %>, value: TagToAdd} );
-				//$(".edit_mv").html(TagToAdd)
 				$.post("/memverses/add_verse_tag", { id: <%= @mv.id %>, value: $(this).find("a").text()} );
 				$(".edit_mv").html($(this).find("a").text())
 
