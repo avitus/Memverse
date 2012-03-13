@@ -252,9 +252,9 @@ class Memverse < ActiveRecord::Base
     eocv = self.verse.end_of_chapter_verse
     
     # Sept 22, 2010 -- eocv occasionally equal to nil ... not sure why
-    if eocv and lv = self.user.has_verse?(eocv.book, eocv.chapter, eocv.last_verse)
+    if eocv && lv = self.user.has_verse?(eocv.book, eocv.chapter, eocv.last_verse)
       # check that it's linked to the first verse
-      lv.linked_to_first_verse?                               
+      lv.linked_to_first_verse? # TODO: This is where the versenum 0 gets in trouble. Instead we should check if linked to the first verse, assuming that first verse has versenum 1! That will make it work again :)
     else
       false
     end
