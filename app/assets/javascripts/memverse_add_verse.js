@@ -7,7 +7,7 @@ function clearSearchResults () {
 	$("#foundVerse").empty();
 	$("#add-verse-button").empty();
 	$("#versetext").val('');
-	$(".add-chapter").hide();
+	$("#add-chapter").hide();
 };
 
 /******************************************************************************
@@ -60,7 +60,7 @@ function createVerseAndAdd (ref, tl, txt, $button) {
 function checkChapter(ref) {
 	$.get("/chapter_available.json", {bk: ref.bk, ch: ref.ch}, function(response) {
 		if (response === true) {
-			$(".add-chapter").fadeIn("fast");			
+			$("#add-chapter").fadeIn("fast");			
 		}
 	});
 };

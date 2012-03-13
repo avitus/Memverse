@@ -3,23 +3,31 @@
   width:20%;
   min-height:450px;
   float:left;
-  padding: 0 1em 2em;
+  padding:0 1em 2em;
   border-right:1px solid #bfbebe;
 }
 
 #verse-search-results {
-  width: 70%;
-  float: left;
-  padding: 0 1em 0 2em;
+  width:70%;
+  float:left;
+  padding:0 1em 0 2em;
 }
 
+.verse-field {
+  position:relative;
+}
+
+.verse-field .flex-verse-search {
+  width:179px;
+}
+
+.verse-field .spinner-add-verse {
+  position:absolute;
+  margin-top:5px;
+  margin-left:160px;
+}
 
 /* Add entire chapter button */
-.add-chapter {
-  display:none;
-  width: 100%;  
-}
-
 .add-chapter-button
 {
   background:url('main-buttons.png') no-repeat left top;
@@ -33,6 +41,7 @@
   color:#FFF;
   text-transform:uppercase;
   margin-right:35px;
+  display:none;
 }
 
 .add-chapter-button a

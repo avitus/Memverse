@@ -8,25 +8,20 @@
 		<div class="top-heading">
 	    	<h3><span>Add a New Memory Verse</span></h3>
 	    </div>
-	    
-	    <!-- Reference entry box -->
-	    <div class="verse-field">
-	    	<div class="ui-widget">
-	    		<label class="tag">Enter a reference or keyword</label>
-	        	<%= text_field_tag(:verse, params[:verse], :class => "flex-verse-search" )%> 
-				<img class="spinner" id="ajax_spinner" src="/assets/indicator2.gif" alt="Searching ..." style="display: none" />
-	        </div>
-	    </div>
 
+		<!-- Reference entry box -->
+		<div class="verse-field">
+			<div class="ui-widget">
+				<label class="tag">Enter a reference or keyword</label>
+				<img class="spinner spinner-add-verse" id="ajax_spinner" src="/assets/indicator2.gif" alt="Searching ..." style="display: none" />
+				<%= text_field_tag(:verse, params[:verse], :class => "flex-verse-search" )%> 
+			</div>
+		</div>
 
-	    <!-- Add entire chapter -->
-	    <div class="add-chapter">
-			<%= link_to 'Add Chapter', test_verse_quick_path, :class => "add-chapter-button" %>
-	    </div>  
-	        	        				
+		<!-- Add entire chapter -->
+		<%= link_to 'Add Chapter', test_verse_quick_path, :class => "add-chapter-button", :id => "add-chapter" %>
 	</div>	  
-	
-	
+
 	<!-- SEARCH RESULTS: RIGHT COLUMN -->
 	<div id="verse-search-results">
 		
