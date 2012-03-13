@@ -133,9 +133,9 @@ class VersesController < ApplicationController
   def lookup_passage
     
     if params[:vs_start] != "null" and params[:vs_end] != "null"
-      @verses = Verse.where(:book => params[:bk], :chapter => params[:ch], :versenum => params[:vs_start]..params[:vs_end], :translation => current_user.translation)
+      @verses = Verse.where(:book => params[:bk], :chapter => params[:ch], :versenum => params[:vs_start]..params[:vs_end], :translation => current_user.translation).order('versenum')
     else
-      @verses = Verse.where(:book => params[:bk], :chapter => params[:ch], :translation => current_user.translation)
+      @verses = Verse.where(:book => params[:bk], :chapter => params[:ch], :translation => current_user.translation).order('versenum')
     end
                       
     respond_to do |format|
