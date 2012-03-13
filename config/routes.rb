@@ -34,9 +34,9 @@ MemverseApp::Application.routes.draw do
   match '/reset_schedule',         :to => 'users#reset_schedule',            :as => 'reset_schedule'
   
   match '/add_verse',              :to => 'memverses#add_verse',             :as => 'add_verse'
+  match '/add_chapter',            :to => 'memverses#add_chapter',           :as => 'add_chapter'
   match '/add/:id',                :to => 'memverses#ajax_add',              :as => 'add'
   match '/quick_add/:vs',          :to => 'memverses#quick_add',             :as => 'quick_add'
-  match '/quick_add_chapter',      :to => 'memverses#quick_add_chapter',     :as => 'quick_add_chapter'
   match '/avail_translations',     :to => 'memverses#avail_translations',    :as => 'avail_translations'
   match '/edit_verse/:id',         :to => 'memverses#edit_verse',            :as => 'edit_verse'
   match '/test_verse',             :to => 'memverses#test_verse',            :as => 'test_verse'

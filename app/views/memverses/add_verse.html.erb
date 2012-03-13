@@ -19,7 +19,10 @@
 		</div>
 
 		<!-- Add entire chapter -->
-		<%= link_to 'Add Chapter', test_verse_quick_path, :class => "add-chapter-button", :id => "add-chapter" %>
+		<div class="add-chapter">
+			<%= link_to 'Add Chapter', add_chapter_path, :class => "add-chapter-button", :id => "add-chapter", :remote => true %>						
+		</div>
+
 	</div>	  
 
 	<!-- SEARCH RESULTS: RIGHT COLUMN -->
@@ -52,7 +55,6 @@
 			
 	</div>
 	
-  
-	    
+      
 </div> <!-- white-box-bg -->
 

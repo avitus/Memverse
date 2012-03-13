@@ -135,5 +135,11 @@ $(document).ready(function() {
 			alert("The Bible reference you have entered is not valid.")
 		};	
 	});	
+
+	// User adds entire passage	
+	$('.add-chapter').on("click", ".add-chapter-button", function() {		
+		ref = parsePassageRef( $("#verse").val().trim() );
+		$.post("/add_chapter.json", { bk: ref.bk, ch: ref.ch }, function(response) { /* Alert user */ });
+	});
 	
 });
