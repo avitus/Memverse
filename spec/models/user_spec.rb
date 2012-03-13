@@ -106,15 +106,13 @@ describe User do
       FactoryGirl.create(:final_verse, :book => "Psalms", :chapter => 117, :last_verse => 2)
       # TODO: Consider loading all FinalVerses anytime db is created (put in seeds file?)
     end
-    
-	# TODO: Move logic for linking memverses out of controller and into model so that tests can pass (and as good practice).
 	
     it "should list Psalm 117 when complete chapter is in account" do
       for i in 1..2
         verse = FactoryGirl.create(:verse, :book_index => 19, :book => "Psalms", :chapter => '117', :versenum => i)
         FactoryGirl.create(:memverse, :user_id => @user.id, :verse_id => verse.id)
       end
-      @user.complete_chapters.should include("Psalms 117")
+      @user.complete_chapters.first.should include("Psalms 117")
     end
     
     it "should list also Psalm 117 when complete chapter, as well as verse 0, are in account" do
@@ -122,13 +120,13 @@ describe User do
         verse = FactoryGirl.create(:verse, :book_index => 19, :book => "Psalms", :chapter => 117, :versenum => i)
         FactoryGirl.create(:memverse, :user_id => @user.id, :verse_id => verse.id)
       end
-      @user.complete_chapters.should include("Psalms 117")
+      @user.complete_chapters.first.should include("Psalms 117")
     end
     
     it "should not list Psalm 117 when only verse 2 is in account" do
       verse = FactoryGirl.create(:verse, :book_index => 19, :book => "Psalms", :chapter => 117, :versenum => 2)
       FactoryGirl.create(:memverse, :user_id => @user.id, :verse_id => verse.id)
-      @user.complete_chapters.should_not include("Psalms 117")
+      @user.complete_chapters.first.should be_nil
     end
   end
 
