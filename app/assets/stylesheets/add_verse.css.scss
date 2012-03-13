@@ -15,11 +15,61 @@
 
 
 /* Add entire chapter button */
-#add-chapter {
+.add-chapter {
   display:none;
-  padding-left:2em;
   width: 100%;  
 }
+
+.add-chapter-button
+{
+  background:url('main-buttons.png') no-repeat left top;
+  width:179px;
+  height:25px;
+  float:left;
+  text-align:center;
+  line-height:25px;
+  font-size:11px;
+  font-weight:bold;
+  color:#FFF;
+  text-transform:uppercase;
+  margin-right:35px;
+}
+
+.add-chapter-button a
+{
+  width:179px;
+  height:25px;
+  display:block;
+  color:#FFF;
+  text-decoration:none;
+}
+
+.add-chapter a:hover, .add-chapter a.active
+{
+  background:url('main-buttons.png') no-repeat 0 -75px;
+  color:#FFF;
+  text-decoration:none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* Display search result for retrieval of single verse */
 #verse-search-single-result {
