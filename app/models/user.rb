@@ -481,7 +481,7 @@ class User < ActiveRecord::Base
 
   # ----------------------------------------------------------------------------------------------------------
   # Returns list of complete chapters that user is memorizing
-  # TODO: This needs serious opimization ... page load time for user with lots of complete books is 40 secs
+  # TODO: This needs serious optimization ... page load time for user with lots of complete books is 40 secs
   # ----------------------------------------------------------------------------------------------------------
   def complete_chapters
     

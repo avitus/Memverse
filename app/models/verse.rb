@@ -233,9 +233,8 @@ class Verse < ActiveRecord::Base
   end
   
   # ----------------------------------------------------------------------------------------------------------
-  # Returns array containing all verses in chapter but 'false' if any verse is missing
+  # Returns array containing all verses in chapter with 'nil' for missing verses
   # ----------------------------------------------------------------------------------------------------------   
-  
   def entire_chapter
     
     full_chapter  = Array.new
@@ -255,6 +254,12 @@ class Verse < ActiveRecord::Base
     
   end
 
+  # ----------------------------------------------------------------------------------------------------------
+  # Return true if entire chapter is in database
+  # ----------------------------------------------------------------------------------------------------------   
+  def entire_chapter_available
+    return !self.entire_chapter.include?(nil)
+  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Returns all tags associated with a given verse

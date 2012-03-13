@@ -12,11 +12,19 @@
 	    <!-- Reference entry box -->
 	    <div class="verse-field">
 	    	<div class="ui-widget">
-	    		<label class="tag">Enter a verse reference or keyword</label>
+	    		<label class="tag">Enter a reference or keyword</label>
 	        	<%= text_field_tag(:verse, params[:verse], :class => "flex-verse-search" )%> 
 				<img class="spinner" id="ajax_spinner" src="/assets/indicator2.gif" alt="Searching ..." style="display: none" />
 	        </div>
 	    </div>
+
+
+	    <!-- Add entire chapter -->
+	    <div id="add-chapter" class="button">
+			<ul>
+				<li id="add-chapter-button"><%= link_to 'Add Chapter', test_verse_quick_path, :class => 'active' %></li>
+			</ul>    	
+	    </div>  
 	        	        				
 	</div>	  
 	

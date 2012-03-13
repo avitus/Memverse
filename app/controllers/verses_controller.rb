@@ -144,6 +144,28 @@ class VersesController < ApplicationController
       format.json { render :json => @verses }
     end  
   end
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Check whether entire chapter is in DB
+  # ----------------------------------------------------------------------------------------------------------  
+  def chapter_available
+    tl = current_user.translation
+    
+    verse = Verse.where(:book => params[:bk], :chapter => params[:ch], :versenum => 1, :translation => tl).first
+    
+    if verse && verse.entire_chapter_available
+      response = true
+    else
+      response = false
+    end
+    
+    respond_to do |format|
+      format.html # show.html.erb
+      format.xml  { render :xml  => response }
+      format.json { render :json => response }
+    end  
+    
+  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Verify that string is in correct verse format

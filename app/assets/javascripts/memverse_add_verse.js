@@ -7,6 +7,7 @@ function clearSearchResults () {
 	$("#foundVerse").empty();
 	$("#add-verse-button").empty();
 	$("#versetext").val('');
+	$("#add-chapter").hide();
 };
 
 /******************************************************************************
@@ -53,6 +54,19 @@ function createVerseAndAdd (ref, tl, txt, $button) {
 };
 
 
+/******************************************************************************
+ * Check for chapter availability
+ ******************************************************************************/
+function checkChapter(ref) {
+	$.get("/chapter_available.json", {bk: ref.bk, ch: ref.ch}, function(response) {
+		if (response === true) {
+			$("#add-chapter").fadeIn("fast");			
+		}
+	});
+};
+
+
+
 $(document).ready(function() {
 
 	// initialize scrollable module
@@ -92,6 +106,7 @@ $(document).ready(function() {
 					
 					clearSearchResults();         // clear existing search results
 					displaySearchResults(verses); // display new search results
+					checkChapter(ref);
 					
 			}, "json" );
 		
@@ -107,7 +122,7 @@ $(document).ready(function() {
 		}			
 	});
 	
-	// User adds a verse
+	// User adds a new verse
 	$('.create-and-add').on("click", ".quick-start-add-button", function() {      // Bind to DIV enclosing button to allow for event delegation
 		$button   = $('.create-and-add .quick-start-add-button');
 		ref       = parseVerseRef( $("#verse").val().trim());

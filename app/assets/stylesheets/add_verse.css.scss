@@ -13,6 +13,14 @@
   padding: 0 1em 0 2em;
 }
 
+
+/* Add entire chapter button */
+#add-chapter {
+  display:none;
+  padding-left:2em;
+  width: 100%;  
+}
+
 /* Display search result for retrieval of single verse */
 #verse-search-single-result {
   position:relative;
