@@ -517,44 +517,6 @@ class MemversesController < ApplicationController
   end
   
   # ----------------------------------------------------------------------------------------------------------
-  # Save memory verse for user and update all links
-  # ---------------------------------------------------------------------------------------------------------- 
-  def save_mv_for_user(vs)
-    # Save verse as a memory verse for user      
-    mv = Memverse.new
-    mv.user_id      = current_user.id
-    mv.verse_id     = vs.id
-    mv.efactor      = 2.0  # Initial seed value
-    mv.last_tested  = Date.today
-    mv.next_test    = Date.today # Start testing tomorrow
-    mv.status       = current_user.overworked? ? "Pending" : "Learning"
-    # Add multi-verse linkage  
-    mv.prev_verse   = mv.get_prev_verse
-    mv.next_verse   = mv.get_next_verse
-    mv.first_verse  = mv.get_first_verse
-    mv.save # TODO need to find a way to ensure no duplication
-    
-    # Adding inbound links
-    if mv.prev_verse
-      prior_vs             = Memverse.find(mv.prev_verse)
-      prior_vs.next_verse  = mv.id
-      prior_vs.save
-    end
-    if mv.next_verse
-      subs_vs             = Memverse.find(mv.next_verse)
-      subs_vs.prev_verse  = mv.id
-      subs_vs.first_verse = mv.first_verse || mv.id # || returns first operator that satisfies condition
-      subs_vs.save
-      # Updating starting point for downstream verses 
-      update_downstream_start_verses(subs_vs)
-    end
-    
-    # TODO: Check once more for duplication at this point and then save  
-    
-  end # end of save verse as a memory verse for user    
-  
-
-  # ----------------------------------------------------------------------------------------------------------
   # AJAX Verse Add (Assumes that verse is already in DB)
   # ---------------------------------------------------------------------------------------------------------- 
   def ajax_add
@@ -565,7 +527,7 @@ class MemversesController < ApplicationController
         msg = "Previously Added"
       else
         # Save verse as a memory verse for user      
-        save_mv_for_user(vs)  # TODO rather use a model method ... this is archaic!
+        Memverse.create(:user_id => current_user.id, :verse_id => vs.id)
         msg = "Added"
       end
     else
@@ -600,7 +562,7 @@ class MemversesController < ApplicationController
   # end
 
   # ----------------------------------------------------------------------------------------------------------
-  # Add an entire chapter
+  # Add an entire chapter -- this method is old and can be deleted (ALV 3/13/2012)
   # TODO: pass in entire chapter if searching again proves to be too slow
   # TODO: doesn't handle case where user already has some verses in a different translation ... just inserts new verses in the current translation
   # ---------------------------------------------------------------------------------------------------------- 
@@ -633,6 +595,23 @@ class MemversesController < ApplicationController
     render(:template => 'memverses/add_verse.html.erb')     
   end
 
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Add an entire chapter
+  # ----------------------------------------------------------------------------------------------------------   
+  def add_chapter
+
+    bk = params[:bk]
+    ch = params[:ch]
+    tl = params[:tl] || current_user.translation
+    
+    chapter_verses = Verse.where(:book => bk, :chapter => ch, :translation => tl)
+
+
+    
+    
+        
+  end  
 
 
   # ----------------------------------------------------------------------------------------------------------
@@ -753,7 +732,7 @@ class MemversesController < ApplicationController
           mem_queue.delete(mv_id)
         end
 
-        mv.remove_mv
+        mv.destroy
 
       }
       flash[:notice] = "Verse deletion complete."

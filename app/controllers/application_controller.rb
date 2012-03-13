@@ -280,23 +280,6 @@ class ApplicationController < ActionController::Base
   end  
   
   # ----------------------------------------------------------------------------------------------------------
-  # Update starting verse for downstream verses
-  #   Input: mv (obj) <-- this is the first verse in the sequence which has a pointer to the first verse
-  # ----------------------------------------------------------------------------------------------------------     
-  def update_downstream_start_verses(mv)
-    
-    # If mv is pointing to a start verse, use that as the first verse, otherwise set mv as the first verse
-    new_starting_verse = mv.first_verse || mv.id # || returns first operator that satisfies condition
-   
-    while mv.next_verse
-      mv = Memverse.find(mv.next_verse)
-      mv.first_verse = new_starting_verse
-      mv.save
-    end
-  end
-  
-  
-  # ----------------------------------------------------------------------------------------------------------
   # Does a verse belong to the current user
   #   Input: verse_id
   #   Output: 'true' if verse is a memory verse (IN ANY TRANSLATION) for current user

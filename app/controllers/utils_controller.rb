@@ -746,7 +746,7 @@ class UtilsController < ApplicationController
       mem_queue.delete(dead_mv.id)
     end
 
-    dead_mv.remove_mv  # remove verse and sort out next and previous pointers 
+    dead_mv.destroy  # remove verse and sort out next and previous pointers 
 
     redirect_to :back
   end 

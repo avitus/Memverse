@@ -32,22 +32,15 @@ class Memverse < ActiveRecord::Base
   # Validations
   validates :user_id,  :presence => true
   validates :verse_id, :presence => true, :uniqueness => {:scope => :user_id}
+  
+  # Set initial values and link verse other verses
+  before_create  :supermemo_init
+  after_create   :add_links
+  before_destroy :update_links
 
-  # ----------------------------------------------------------------------------------------------------------
-  # Implement counter caches for number of verses memorized and learning
-  # ----------------------------------------------------------------------------------------------------------   
+  # Update counter cache
   after_save    :update_counter_cache
   after_destroy :update_counter_cache
-  
-  def update_counter_cache
-    self.user.memorized = Memverse.count(:all, :conditions => ["user_id = ? and status = ?", self.user.id, "Memorized"])
-    self.user.learning  = Memverse.count(:all, :conditions => ["user_id = ? and status = ?", self.user.id, "Learning"])
-    self.user.last_activity_date = Date.today
-    self.user.save
-    
-    self.verse.memverses_count = Memverse.count(:all, :conditions => { :verse_id => self.verse.id })
-    self.verse.save
-  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Convert to JSON format (for AJAX goodness on main memorization page
@@ -64,6 +57,15 @@ class Memverse < ActiveRecord::Base
       :feedback   => self.show_feedback?
     }
   end
+
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Add verse as a memory verse for a user
+  # ---------------------------------------------------------------------------------------------------------- 
+  def add_vs_to_user(vs, user)
+    
+  end
+
 
   # ----------------------------------------------------------------------------------------------------------
   # Implementation of SM-2 algorithm
@@ -162,51 +164,6 @@ class Memverse < ActiveRecord::Base
       # mv.destroy
       logger.info("Removing memory verse #{mv.verse.ref} belong to #{mv.user.login}")
     }
-  end
-
-  # ----------------------------------------------------------------------------------------------------------
-  # Remove a memory verse (delete a memory verse)
-  # ---------------------------------------------------------------------------------------------------------- 
-  def remove_mv
-    next_ptr  = self.next_verse
-    prev_ptr  = self.prev_verse
-     
-    # If there is a prev verse
-    # => Find previous verse and remove its 'next' ptr
-    if prev_ptr
-      logger.debug("Removing link from previous verse: #{prev_ptr}")
-      
-      # TODO: This find method is necesary rather than .find(prev_ptr) for the case (which shouldn't ever happen)
-      # when the next/prev pointers aren't valid
-      prev_vs = Memverse.find(:first, :conditions => {:id => prev_ptr})
-      if prev_vs
-        prev_vs.next_verse = nil
-        prev_vs.save
-      else
-        # TODO: This is occasionally happening ... caused by verses being duplicated from double-clicking on links
-        logger.warn("*** Alert: A verse was deleted which had an invalid prev pointer - this should never happen")        
-      end
-    
-    end
-    
-    # If there is a next verse
-    # => Find next verse and make it the first verse in the sequence
-    if next_ptr
-      logger.debug("Setting the next verse: #{next_ptr} to be first verse of sequence")
-      next_vs = Memverse.find(:first, :conditions => {:id => next_ptr})
-      if next_vs
-        next_vs.first_verse = nil # Starting verses in a sequence to not reference themselves as the first verse
-        next_vs.prev_verse  = nil
-        next_vs.save
-        # Follow chain and correct first verse
-        next_vs.update_downstream_start_verses  
-      else
-        logger.warn("*** Alert: A verse was deleted which had an invalid next pointer - this should never happen")        
-      end
-    end
-    
-    self.destroy
-    
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -699,5 +656,96 @@ class Memverse < ActiveRecord::Base
 
   # ============= Protected below this line ==================================================================
   protected
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Initialize new memory verse
+  # ----------------------------------------------------------------------------------------------------------  
+  def supermemo_init
+    self.efactor      = 2.0
+    self.last_tested  = Date.today
+    self.next_test    = Date.today
+    self.status       = self.user.overworked? ? "Pending" : "Learning"
+
+    # Add multi-verse linkage  
+    self.prev_verse   = self.get_prev_verse
+    self.next_verse   = self.get_next_verse
+    self.first_verse  = self.get_first_verse
+
+  end
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Add links to/from other verses
+  # ----------------------------------------------------------------------------------------------------------  
+  def add_links
+       
+    # Adding inbound links
+    if self.prev_verse
+      prior_vs             = Memverse.find(self.prev_verse)      
+      prior_vs.next_verse  = self.id
+      prior_vs.save!
+    end
+    
+    if self.next_verse
+      subs_vs             = Memverse.find(self.next_verse)
+      subs_vs.prev_verse  = self.id
+      subs_vs.first_verse = self.first_verse || self.id
+      subs_vs.save!
+      
+      # Updating starting point for downstream verses 
+      subs_vs.update_downstream_start_verses
+    end    
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Update surrounding links before destroying a memory verse
+  # ---------------------------------------------------------------------------------------------------------- 
+  def update_links 
+    next_ptr  = self.next_verse
+    prev_ptr  = self.prev_verse
+     
+    # If there is a prev verse
+    # => Find previous verse and remove its 'next' ptr
+    if prev_ptr      
+      # TODO: This find method is necesary rather than .find(prev_ptr) for the case (which shouldn't ever happen)
+      # when the next/prev pointers aren't valid
+      prev_vs = Memverse.find(:first, :conditions => {:id => prev_ptr})
+      if prev_vs
+        prev_vs.next_verse = nil
+        prev_vs.save
+      else
+        # TODO: This is occasionally happening ... caused by verses being duplicated from double-clicking on links
+        logger.warn("*** Alert: A verse was deleted which had an invalid prev pointer - this should never happen")        
+      end
+    
+    end
+    
+    # If there is a next verse
+    # => Find next verse and make it the first verse in the sequence
+    if next_ptr
+      next_vs = Memverse.find(:first, :conditions => {:id => next_ptr})
+      if next_vs
+        next_vs.first_verse = nil # Starting verses in a sequence to not reference themselves as the first verse
+        next_vs.prev_verse  = nil
+        next_vs.save
+        # Follow chain and correct first verse
+        next_vs.update_downstream_start_verses  
+      else
+        logger.warn("*** Alert: A verse was deleted which had an invalid next pointer - this should never happen")        
+      end
+    end
+  end
+    
+  # ----------------------------------------------------------------------------------------------------------
+  # Implement counter caches for number of verses memorized and learning
+  # ----------------------------------------------------------------------------------------------------------     
+  def update_counter_cache
+    self.user.memorized = Memverse.count(:all, :conditions => ["user_id = ? and status = ?", self.user.id, "Memorized"])
+    self.user.learning  = Memverse.count(:all, :conditions => ["user_id = ? and status = ?", self.user.id, "Learning"])
+    self.user.last_activity_date = Date.today
+    self.user.save
+    
+    self.verse.memverses_count = Memverse.count(:all, :conditions => { :verse_id => self.verse.id })
+    self.verse.save
+  end
   
 end
