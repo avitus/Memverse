@@ -127,7 +127,7 @@ $(document).ready(function() {
 		$button   = $('.create-and-add .quick-start-add-button');
 		ref       = parseVerseRef( $("#verse").val().trim());
 		newVerse  = cleanseVerseText( $("#versetext").val() );		
-		tl        = "NIV";	
+		tl        = "NIV";
 					
 		if ( ref ) { 
 			createVerseAndAdd(ref, tl, newVerse, $button);
