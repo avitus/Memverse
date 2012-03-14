@@ -6,10 +6,7 @@ FactoryGirl.define do
     u.name 'Test User'
     u.email 'user@test.com'
     u.password 'please'
-    u.password_confirmation { |u| u.password }
-    
-    
-      
+    u.password_confirmation { |u| u.password }     
   end
   
   factory :verse do |v|
