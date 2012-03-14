@@ -547,14 +547,14 @@ class MemversesController < ApplicationController
     ch = params[:ch]
     tl = params[:tl] || current_user.translation
     
-    chapter_verses = Verse.where(:book => bk, :chapter => ch, :translation => tl)
+    chapter_verses = Verse.where("book = ? and chapter = ? and translation = ? and versenum not in (?)", bk, ch, tl, 0)
     
     chapter_verses.each do |vs|
-        Memverse.create(:user_id => current_user.id, :verse_id => vs.id)      
+      Memverse.create(:user_id => current_user.id, :verse_id => vs.id)
     end
 
     render :json => {:msg => "Added Chapter" }
-            
+    
   end  
 
 
