@@ -69,6 +69,9 @@ function checkChapter(ref) {
 
 $(document).ready(function() {
 
+	// Get user's translation
+	tl = $('#translation').data('tl'); // Get the users translation
+
 	// initialize scrollable module
 	$(".scrollable").scrollable({ vertical: true, mousewheel: true });	
 
@@ -127,7 +130,6 @@ $(document).ready(function() {
 		$button   = $('.create-and-add .quick-start-add-button');
 		ref       = parseVerseRef( $("#verse").val().trim());
 		newVerse  = cleanseVerseText( $("#versetext").val() );		
-		tl        = "NIV"; // TODO: Get the actual tl...
 					
 		if ( ref ) { 
 			createVerseAndAdd(ref, tl, newVerse, $button);
@@ -139,7 +141,7 @@ $(document).ready(function() {
 	// User adds entire passage	
 	$('.add-chapter').on("click", ".add-chapter-button", function() {		
 		ref = parsePassageRef( $("#verse").val().trim() );
-		$.post("/add_chapter.json", { bk: ref.bk, ch: ref.ch }, function(response) { alert(response.msg); });
+		$.post("/add_chapter.json", { bk: ref.bk, ch: ref.ch, tl: tl }, function(response) { alert(response.msg); });
 	});
 	
 });

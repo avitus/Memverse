@@ -564,7 +564,9 @@ class MemversesController < ApplicationController
   def add_verse
     @tab = "home"
     @sub = "addvs"       
-    add_breadcrumb I18n.t("home_menu.Add Verse"), :add_verse_path        
+    add_breadcrumb I18n.t("home_menu.Add Verse"), :add_verse_path  
+    
+    @translation = current_user.translation      
   end
     
   # ----------------------------------------------------------------------------------------------------------

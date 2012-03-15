@@ -8,6 +8,10 @@
 	    	<h3><span>Add a New Memory Verse</span></h3>
 	    </div>
 
+		<%= content_tag "div", id: "translation", data: {tl: @translation } do %>
+		<!-- Get translation -->
+		<% end %>
+
 		<!-- Reference entry box -->
 		<div class="verse-field ui-widget">
 			<label class="tag">Enter a reference or keyword</label>
