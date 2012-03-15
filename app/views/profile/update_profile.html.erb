@@ -33,37 +33,7 @@
 			</li>
 			<li>
 				<%= f.label 			:translation, t('.Translation') %>
-				<%= f.select			:translation,
-												[["New International Version (1984)",	'NIV' ],
-												["New International Version (2011)",	'NNV' ],
-												["New American Standard Bible", 		'NAS' ], 
-												["New King James Version",				'NKJ' ], 
-												["King James Version",					'KJV' ], 
-												["Revised Standard Version",  			'RSV' ], 
-												["New Revised Standard Version",  		'NRS' ], 														
-												["English Standard Version",          	'ESV' ],
-												["New Living Translation",        		'NLT' ],
-												["Contemporary English Version",   		'CEV' ],                            							
-												["Holman Christian Standard Bible",		'HCS' ],
-												["Darby Translation",					'DTL' ],
-												["The Message",                   		'MSG' ],
-												["Amplified Bible",                		'AMP' ],                            							
-												["New International Reader's Version",	'IRV' ],
-												["Updated King James Version",		 	'UKJ' ],
-												["Geneva Bible",					 	'GEN' ],
-												["Biblical Greek", 						'GRK' ],
-												["Nueva Version Internacional",			'NVI' ],
-												["Reina-Valera 1960",					'RVR' ],
-												["Louis Segond 1910",					'LSV' ],
-												["La Nuova Diodati",					'LND' ],														
-												["Afrikaans 1983 Translation",			'AFR' ],
-												["Herziene Statenvertaling",			'HSV' ],
-												["De Nieuwe Bijbelvertaling",			'NBV' ],
-												["Terjemahan Baru",						'TMB' ],
-												["Magandang Balita Biblia",				'MBB' ],																												
-												["Svenska Folkbibeln",					'SPB' ],
-												["Almeida Corrigida e Fiel",            'ACF' ]],
-							 %>
+				<%= f.select			:translation, TRANSLATIONS.invert %>
 			</li>					
 
 			<li>
