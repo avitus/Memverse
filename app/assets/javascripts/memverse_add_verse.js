@@ -7,7 +7,8 @@ function clearSearchResults () {
 	$("#foundVerse").empty();
 	$("#add-verse-button").empty();
 	$("#versetext").val('');
-	$("#add-chapter").hide();
+	$(".verse-added").replaceWith("<a id='add-chapter' class='add-chapter-button' href='#' style='display: inline;'>Add Chapter</a>");
+	$("#add-chapter").fadeOut("fast");
 };
 
 /******************************************************************************
@@ -65,8 +66,6 @@ function checkChapter(ref) {
 	});
 };
 
-
-
 $(document).ready(function() {
 
 	// Get user's translation
@@ -105,8 +104,7 @@ $(document).ready(function() {
 			$.get("/lookup_passage.json", { bk: ref.bk, ch: ref.ch, vs_start: ref.vs_start, vs_end: ref.vs_end },
 				function(verses) {
 					
-					// TODO: Insert missing verses with option to create a new verse
-					
+					// TODO: Potentially insert missing verses with option to create a new verse					
 					clearSearchResults();         // clear existing search results
 					displaySearchResults(verses); // display new search results
 					checkChapter(ref);
@@ -141,7 +139,9 @@ $(document).ready(function() {
 	// User adds entire passage	
 	$('.add-chapter').on("click", ".add-chapter-button", function() {		
 		ref = parsePassageRef( $("#verse").val().trim() );
-		$.post("/add_chapter.json", { bk: ref.bk, ch: ref.ch, tl: tl }, function(response) { alert(response.msg); });
+		$.post("/add_chapter.json", { bk: ref.bk, ch: ref.ch, tl: tl }, function(response) { 
+			$(".add-chapter-button").replaceWith("<div class='verse-added'></div>");
+		});
 	});
 	
 });
