@@ -18,7 +18,7 @@
 		            <div class="translate">
 		            	<div>
 		            		<label class="tag">Translation:</label>
-		                	<!-- Now need to add new translations to profile page and quick_start page but not anywhere else unless a major translation -->
+		                	<!-- Add new translations to global variable and quick_start page but not anywhere else unless a major translation -->
 							<%= select_tag(:translation, 
 									options_for_select(TRANSLATIONS.invert,
 									:selected => current_user.translation), {:class=>"translation-drop"}) %>
