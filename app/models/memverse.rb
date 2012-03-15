@@ -649,7 +649,7 @@ class Memverse < ActiveRecord::Base
   protected
   
   # ----------------------------------------------------------------------------------------------------------
-  # Initialize new memory verse
+  # Initialize new memory verse [hook: before_create]
   # ----------------------------------------------------------------------------------------------------------  
   def supermemo_init
     self.efactor      = 2.0
@@ -661,11 +661,10 @@ class Memverse < ActiveRecord::Base
     self.prev_verse   = self.get_prev_verse
     self.next_verse   = self.get_next_verse
     self.first_verse  = self.get_first_verse
-
   end
   
   # ----------------------------------------------------------------------------------------------------------
-  # Add links to/from other verses
+  # Add links from other verses [hook: after_create]
   # ----------------------------------------------------------------------------------------------------------  
   def add_links
        
@@ -688,7 +687,7 @@ class Memverse < ActiveRecord::Base
   end
 
   # ----------------------------------------------------------------------------------------------------------
-  # Update surrounding links before destroying a memory verse
+  # Update surrounding links before destroying a memory verse [hook: before_destroy]
   # ---------------------------------------------------------------------------------------------------------- 
   def update_links 
     next_ptr  = self.next_verse
@@ -699,7 +698,7 @@ class Memverse < ActiveRecord::Base
     if prev_ptr      
       # TODO: This find method is necesary rather than .find(prev_ptr) for the case (which shouldn't ever happen)
       # when the next/prev pointers aren't valid
-      prev_vs = Memverse.find(:first, :conditions => {:id => prev_ptr})
+      prev_vs = Memverse.where(:id => prev_ptr).first
       if prev_vs
         prev_vs.next_verse = nil
         prev_vs.save
@@ -713,7 +712,7 @@ class Memverse < ActiveRecord::Base
     # If there is a next verse
     # => Find next verse and make it the first verse in the sequence
     if next_ptr
-      next_vs = Memverse.find(:first, :conditions => {:id => next_ptr})
+      next_vs = Memverse.where(:id => next_ptr).first
       if next_vs
         next_vs.first_verse = nil # Starting verses in a sequence to not reference themselves as the first verse
         next_vs.prev_verse  = nil

@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pp'
 
 describe Memverse do
   
@@ -18,13 +19,21 @@ describe Memverse do
       @passage = Array.new
          
       for i in 1..6
-        verse       = FactoryGirl.create(:verse, :book_index => 19, :book => "Psalms", :chapter => '1', :versenum => i)
-        @passage[i] = Memverse.create(:user => @user, :verse => verse)
+        verse       = Factory(:verse, :book_index => 19, :book => "Psalms", :chapter => '1', :versenum => i)
+        @passage[i] = Factory(:memverse, :user => @user, :verse => verse)
       end      
       
     end
     
     it "should link a new verse to the following verse" do
+      
+      pp @passage[1]
+      pp @passage[2]
+      pp @passage[3]
+      pp @passage[4]
+      pp @passage[5]
+      pp @passage[6]
+      
       @passage[2].next_verse.should  == @passage[3].id
     end
 
