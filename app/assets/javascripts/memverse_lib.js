@@ -5,6 +5,14 @@ BIBLEBOOKS = ['Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy', 'Joshu
 	           'Mark', 'Luke', 'John', 'Acts', 'Romans', '1 Corinthians', '2 Corinthians', 'Galatians', 'Ephesians', 'Philippians',
 	           'Colossians', '1 Thessalonians', '2 Thessalonians', '1 Timothy', '2 Timothy', 'Titus', 'Philemon', 'Hebrews', 'James',
 	           '1 Peter', '2 Peter', '1 John', '2 John', '3 John', 'Jude', 'Revelation']
+	           
+BIBLEABBREV = ['Gen', 'Ex', 'Lev', 'Num', 'Deut', 'Josh', 'Judg', 'Ruth', '1 Sam', '2 Sam',
+              '1 Kings', '2 Kings','1 Chron', '2 Chron', 'Ezra', 'Neh', 'Es', 'Job', 'Ps', 'Prov',
+              'Eccl', 'Song', 'Isa', 'Jer', 'Lam', 'Ezk', 'Dan', 'Hos', 'Joel', 
+              'Amos', 'Obad', 'Jonah', 'Mic', 'Nahum', 'Hab', 'Zeph', 'Hag', 'Zech', 'Mal', 'Matt',
+              'Mark', 'Luke', 'Jn', 'Acts', 'Rom', '1 Cor', '2 Cor', 'Gal', 'Eph', 'Phil',
+              'Col', '1 Thess', '2 Thess', '1 Tim', '2 Tim', 'Tit', 'Phlm', 'Heb', 'James',
+              '1 Pet', '2 Pet', '1 John', '2 John', '3 John', 'Jude', 'Rev']	           
 
 /******************************************************************************
  * Capitalize strings: romans -> Romans
@@ -15,6 +23,18 @@ String.prototype.capitalize = function() {
 	} else {
       return this.charAt(0).toUpperCase() + this.slice(1);		
 	}
+}
+
+/******************************************************************************
+ * Substitute abbreviations
+ ******************************************************************************/
+function unabbreviate(book_name) {
+	book_index = jQuery.inArray( book_name, BIBLEABBREV );
+	if (book_index === -1) {
+		return book_name;
+	} else {
+		return BIBLEBOOKS[book_index];						
+	}	
 }
 
 /******************************************************************************
@@ -87,7 +107,7 @@ function parseVerseRef(verseref) {
 		
 		vs = parseInt(split_text.pop());
 		ch = parseInt(split_text.pop());
-		bk = split_text.join(' ').capitalize();
+		bk = unabbreviate( split_text.join(' ').capitalize() );
 		bi = jQuery.inArray( bk, BIBLEBOOKS );
 				
 		if (bi === -1) {
@@ -128,7 +148,7 @@ function parsePassageRef(passage) {
 		} 
 								
 		ch       = parseInt(split_text.pop());
-		bk       = split_text.join(' ').capitalize();
+		bk       = unabbreviate( split_text.join(' ').capitalize() );
 		bi       = jQuery.inArray( bk, BIBLEBOOKS );
 				
 		if (bi === -1) {
