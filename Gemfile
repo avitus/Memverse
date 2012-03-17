@@ -29,7 +29,7 @@ gem 'jquery-rails', '=1.0.18'
 gem "rspec-rails", ">= 2.6.1", :group => [:development, :test]
 gem "factory_girl_rails", ">= 1.2.0", :group => :test
 gem "cucumber-rails", ">= 1.0.2", :group => :test
-gem "capybara", ">= 1.1.1", :group => :test
+gem "capybara", ">= 1.1.2", :group => :test
 gem "database_cleaner", ">= 0.6.7", :group => :test
 gem "launchy", ">= 2.0.5", :group => :test
 gem 'jasmine', :group => [:development, :test]
