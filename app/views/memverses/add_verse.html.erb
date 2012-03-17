@@ -17,7 +17,7 @@
 		<div class="verse-field ui-widget">
 			<label class="tag">Enter a reference or keyword</label>
 			<img class="spinner spinner-add-verse" id="ajax_spinner" src="/assets/indicator2.gif" alt="Searching ..." style="display: none" />
-			<%= text_field_tag(:verse, params[:verse], :class => "flex-verse-search" )%> 
+			<%= text_field_tag(:verse, params[:verse], :class => "flex-verse-search", :id => "js_flex-verse-search" )%> 
 		</div>
 
 		<!-- Add entire chapter -->
@@ -67,14 +67,13 @@
 		tl = $('#translation').data('tl'); // Get the users translation
 	
 		// initialize scrollable module
-		$(".scrollable").scrollable({ vertical: true, mousewheel: true });	
-	
-		// Verse entry and retrieval
-		$(".flex-verse-search").observe_field(0.2, function( ) { 
-					
+		$(".scrollable").scrollable({ vertical: true, mousewheel: true });
+		
+		// define flexversesearch function
+		function flexversesearch(text){
 			// User is looking for a single verse						
-			if (ref = parseVerseRef($.trim(this.value))) {
-				$.get("/lookup_verse.json", { bk: ref.bk, ch: ref.ch, vs: ref.vs },
+			if (ref = parseVerseRef($.trim(text))) {
+				$.get("/lookup_verse.json", { bk: ref.bk, ch: ref.ch, vs: ref.vs, tl: tl },
 					function(verse) {	
 	
 						// Clear search results
@@ -95,8 +94,8 @@
 				}, "json" );	
 						
 			// User is searching for a passage
-			} else if (ref = parsePassageRef($.trim(this.value))) {
-				$.get("/lookup_passage.json", { bk: ref.bk, ch: ref.ch, vs_start: ref.vs_start, vs_end: ref.vs_end },
+			} else if (ref = parsePassageRef($.trim(text))) {
+				$.get("/lookup_passage.json", { bk: ref.bk, ch: ref.ch, vs_start: ref.vs_start, vs_end: ref.vs_end, tl: tl },
 					function(verses) {
 						
 						// TODO: Potentially insert missing verses with option to create a new verse					
@@ -108,14 +107,31 @@
 			
 			// User didn't enter a verse reference ... do a keyword search
 			} else {
-				$.get("/search_verse.json", { searchParams: $.trim(this.value)  },
+				$.get("/search_verse.json", { searchParams: $.trim(text + " " + tl)  },
 					function(verses) {
-						
+					
 						clearSearchResults();         // clear existing search results
 						displaySearchResults(verses); // display new search results			
-						
+					
 				}, "json" );
-			}			
+			}
+		} // end flexversesearch function
+		
+		// Setup jEditable for version changing
+		$('#js_bible-version').editable(function(value, settings) { 
+			tl = value; // change tl
+			flexversesearch($("#js_flex-verse-search").val()); // refresh results
+			return(settings.data[value]);
+			// TODO: Can't figure out why after changing the version and clicking on the select again, it still defaults to the original 'selected' value
+		}, { 
+			data   : <%= TRANSLATIONS.to_json.html_safe %>,
+			type   : 'select',
+			submit : 'OK'
+		});
+	
+		// Verse entry and retrieval
+		$("#js_flex-verse-search").observe_field(0.2, function( ) { 
+			flexversesearch(this.value);
 		});
 		
 		// User adds a new verse

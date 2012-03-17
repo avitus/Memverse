@@ -566,7 +566,8 @@ class MemversesController < ApplicationController
     @sub = "addvs"       
     add_breadcrumb I18n.t("home_menu.Add Verse"), :add_verse_path  
     
-    @translation = current_user.translation? ? current_user.translation : "NIV" # use NIV if current_user.translation is empty
+    @translation            = current_user.translation? ? current_user.translation : "NIV" # fallback on NIV
+    TRANSLATIONS[:selected] = @translation # used for jEditable
   end
     
   # ----------------------------------------------------------------------------------------------------------

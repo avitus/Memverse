@@ -116,9 +116,10 @@ class VersesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   # Find a verse for a user
   # ----------------------------------------------------------------------------------------------------------    
-  def lookup    
+  def lookup
+    tl = params[:tl] ? params[:tl] : current_user.translation
     @verse = Verse.where(:book => params[:bk], :chapter => params[:ch], :versenum => params[:vs], 
-                         :translation => current_user.translation).first
+                         :translation => tl).first
     
     respond_to do |format|
       format.html # show.html.erb
@@ -131,11 +132,12 @@ class VersesController < ApplicationController
   # Find a passage
   # ----------------------------------------------------------------------------------------------------------  
   def lookup_passage
+    tl = params[:tl]
     
     if params[:vs_start] != "null" and params[:vs_end] != "null"
-      @verses = Verse.where(:book => params[:bk], :chapter => params[:ch], :versenum => params[:vs_start]..params[:vs_end], :translation => current_user.translation).order('versenum')
+      @verses = Verse.where(:book => params[:bk], :chapter => params[:ch], :versenum => params[:vs_start]..params[:vs_end], :translation => tl).order('versenum')
     else
-      @verses = Verse.where(:book => params[:bk], :chapter => params[:ch], :translation => current_user.translation).order('versenum')
+      @verses = Verse.where(:book => params[:bk], :chapter => params[:ch], :translation => tl).order('versenum')
     end
                       
     respond_to do |format|
