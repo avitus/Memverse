@@ -1,7 +1,7 @@
 <div id="actions">
    <a class="prev">&laquo; Back</a>
    <a class="next">More verses &raquo;</a>
-   <span class="version"><%= TRANSLATIONS[@translation.to_sym] %></span>
+   <span class="version"><%= TRANSLATIONS[@translation.try(:to_sym)] %></span>
 </div>
 
 <!-- root element for scrollable -->
