@@ -24,8 +24,18 @@ RSpec.configure do |config|
   # examples within a transaction, remove the following line or assign false
   # instead of true.
   config.use_transactional_fixtures = true
+  
+  # Use color in STDOUT
+  config.color_enabled = true
+
+  # Use color not only in STDOUT but also in pagers and files
+  config.tty = true
+
+  # Use the specified formatter
+  config.formatter = :documentation # :progress, :html, :textmate    
 end
 
 class ActionController::TestCase
   include Devise::TestHelpers
 end
+

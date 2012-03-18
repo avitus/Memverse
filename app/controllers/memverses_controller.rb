@@ -525,6 +525,8 @@ class MemversesController < ApplicationController
   	if vs and current_user
       if current_user.has_verse_id?(vs)
         msg = "Previously Added"
+      elsif current_user.has_verse?(vs.book, vs.chapter, vs.versenum)
+        msg = "Added in another translation"
       else
         # Save verse as a memory verse for user      
         Memverse.create(:user_id => current_user.id, :verse_id => vs.id)
@@ -550,7 +552,11 @@ class MemversesController < ApplicationController
     chapter_verses = Verse.where("book = ? and chapter = ? and translation = ? and versenum not in (?)", bk, ch, tl, 0)
     
     chapter_verses.each do |vs|
-      Memverse.create(:user_id => current_user.id, :verse_id => vs.id)
+      if current_user.has_verse?(vs.book, vs.chapter, vs.versenum)
+        msg = "You already have #{vs.ref} in a different translation"
+      else
+        Memverse.create(:user_id => current_user.id, :verse_id => vs.id)
+      end
     end
 
     render :json => {:msg => "Added Chapter" }

@@ -141,12 +141,9 @@ class User < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   # Check whether current user is memorizing a given verse in any translation
   # ----------------------------------------------------------------------------------------------------------     
-  def has_verse?(book, chapter, versenum)
-    
+  def has_verse?(book, chapter, versenum)    
     book = "Psalms" if book == "Psalm" 
-    # self.memverses.first(:include => :verse, :conditions => {'verses.book' => book, 'verses.chapter' => chapter, 'verses.versenum' => versenum})
     self.memverses.includes(:verse).where('verses.book' => book, 'verses.chapter' => chapter, 'verses.versenum' => versenum).first()
-    
   end
 
   # ----------------------------------------------------------------------------------------------------------
