@@ -29,10 +29,13 @@
 
 	<!-- SEARCH RESULTS: RIGHT COLUMN -->
 	<div id="verse-search-results">
-		
+				
 		<!-- Results of single verse retrieval -->    
 	    <div id="verse-search-single-result">
-		    
+
+		    <!-- Translation -->			
+			<h5><span id="js_bible-version" class="version"><%= TRANSLATIONS[@translation.try(:to_sym)] %></span></h5>
+    
 		    <!-- Display existing verse -->
 			<div id="existing-verse-add" class="quick-start-show-verse quick-start-add-section">
 			    <div id="foundVerse"></div>  							    <!-- Text of retrieved verse-->
