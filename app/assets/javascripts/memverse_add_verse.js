@@ -58,10 +58,10 @@ function createVerseAndAdd (ref, tl, txt, $button) {
 /******************************************************************************
  * Check for chapter availability
  ******************************************************************************/
-function checkChapter(ref) {
-	$.get("/chapter_available.json", {bk: ref.bk, ch: ref.ch}, function(response) {
+function checkChapter(ref, tl) {
+	$.get("/chapter_available.json", {bk: ref.bk, ch: ref.ch, tl: tl}, function(response) {
 		if (response === true) {
-			$("#add-chapter").fadeIn("fast");			
+			$("#add-chapter").fadeIn("fast");
 		}
 	});
 };

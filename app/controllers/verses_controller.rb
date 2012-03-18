@@ -151,7 +151,7 @@ class VersesController < ApplicationController
   # Check whether entire chapter is in DB
   # ----------------------------------------------------------------------------------------------------------  
   def chapter_available
-    tl = current_user.translation
+    tl = params[:tl]
     
     verse = Verse.where(:book => params[:bk], :chapter => params[:ch], :versenum => 1, :translation => tl).first
     
