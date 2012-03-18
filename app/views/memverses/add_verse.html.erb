@@ -137,8 +137,8 @@
 		// User adds a new verse
 		$('.create-and-add').on("click", ".quick-start-add-button", function() {      // Bind to DIV enclosing button to allow for event delegation
 			$button   = $('.create-and-add .quick-start-add-button');
-			ref       = parseVerseRef( $("#verse").val().trim());
-			newVerse  = cleanseVerseText( $("#versetext").val() );		
+			ref       = parseVerseRef( $("#js_flex-verse-search").val().trim()); // SEEMS TO BE AN ERROR WITH THIS LINE
+			newVerse  = cleanseVerseText( $("#versetext").val() );
 						
 			if ( ref ) { 
 				createVerseAndAdd(ref, tl, newVerse, $button);
@@ -149,7 +149,7 @@
 	
 		// User adds entire passage	
 		$('.add-chapter').on("click", ".add-chapter-button", function() {		
-			ref = parsePassageRef( $("#verse").val().trim() );
+			ref = parsePassageRef( $("#js_flex-verse-search").val().trim() );
 			$.post("/add_chapter.json", { bk: ref.bk, ch: ref.ch, tl: tl }, function(response) { 
 				$(".add-chapter-button").replaceWith("<div class='verse-added'></div>");
 			});
