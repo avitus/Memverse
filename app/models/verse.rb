@@ -228,7 +228,7 @@ class Verse < ActiveRecord::Base
   			FinalVerse.new(:book => "3 John", :chapter => 1, :last_verse => 14)
   		end
   	else
-    	FinalVerse.find(:first, :conditions => { :book => self.book, :chapter => self.chapter })
+    	FinalVerse.where(:book => self.book, :chapter => self.chapter).first
     end
   end
   
@@ -258,7 +258,11 @@ class Verse < ActiveRecord::Base
   # Return true if entire chapter is in database
   # ----------------------------------------------------------------------------------------------------------   
   def entire_chapter_available
-    return !self.entire_chapter.include?(nil)
+    if self.end_of_chapter_verse
+      return Verse.where("book = ? and chapter = ? and translation = ? and versenum not in (?)", self.book, self.chapter, self.translation, 0).count == self.end_of_chapter_verse.last_verse
+    else
+      return false
+    end
   end
 
   # ----------------------------------------------------------------------------------------------------------

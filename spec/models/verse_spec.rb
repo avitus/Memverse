@@ -17,4 +17,21 @@ describe Verse do
     verse.text.should == "This is a test test teest."
   end
   
+  describe "entire_chapter_available" do
+    it "should not think an incomplete chapter is available" do
+      final_verse = Factory(:final_verse, :book => "Psalms", :chapter => 117, :last_verse => 2)
+      verse1 = Factory(:verse, :book => "Psalms", :chapter => 117, :versenum => 1)
+      
+      verse1.entire_chapter_available.should be_false
+    end
+    
+    it "should think a complete chapter is available" do
+      final_verse = Factory(:final_verse, :book => "Psalms", :chapter => 117, :last_verse => 2)
+      verse1 = Factory(:verse, :book => "Psalms", :chapter => 117, :versenum => 1)
+      verse2 = Factory(:verse, :book => "Psalms", :chapter => 117, :versenum => 2)
+      
+      verse1.entire_chapter_available.should be_true
+    end
+  end
+  
 end
