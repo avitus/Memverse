@@ -73,7 +73,7 @@ function validPassageRef(passage) {
 
 
 /******************************************************************************
- * Returns true iff input is a passage reference
+ * Returns true if input is a passage reference
 
  * Accepts: Romans 8:1-3
  * Rejects: Romans 8
@@ -94,7 +94,7 @@ function cleanseVerseText( versetext ) {
 	                     .replace(/\n/g,' ')      // remove newlines
 	                     .replace(/\s{2,}/g,' ')  // remove double spaces
 						 .trim();                 // remove trailing and leading whitespace
-						 
+	
 	return versetext;
 }
 
@@ -109,7 +109,7 @@ function parseVerseRef(verseref) {
 
 	var split_text;
 	var ch, bk, bi, vs;
-		
+	
 	if (validVerseRef(verseref)) {
 		
 		// Handle corner cases
@@ -152,24 +152,24 @@ function parsePassageRef(passage) {
 		// Handle corner cases
 		passage = passage.replace(/(song of songs)/i, "Song of Songs")
 						 .replace(/(psalm )/i,        "Psalms ");
-			
+		
 		split_text = passage.split(/:|-|\s/);  /* split on dash, colon or space */
-									 
+		
 		if (validSubChapterPassage(passage)) {
 			vs_end   = parseInt(split_text.pop());
 			vs_start = parseInt(split_text.pop());	
 		} 
-								
+		
 		ch       = parseInt(split_text.pop());
 		bk       = unabbreviate( split_text.join(' ').capitalize() );
 		bi       = jQuery.inArray( bk, BIBLEBOOKS );
-				
+		
 		if (bi === -1) {
 			return false	
 		} else {
 			return { bk: bk, ch: ch, vs_start: vs_start, vs_end: vs_end, bi: bi+1};						
 		};									
-		
+	
 	} else {
 		return false;
 	};
@@ -187,7 +187,7 @@ function resetScrollable() {
  * All DOM attachments that are common to multiple pages should go here
  ******************************************************************************/
 $(document).ready(function() {
-	
+
 	// Add spinners where needed to show activity
 	$('.spinner')
 		.ajaxStart(function() {
@@ -198,6 +198,6 @@ $(document).ready(function() {
 	});
 
 	$('input#verse').focus().autocomplete({ source: BIBLEBOOKS });
-	
+
 });
 
