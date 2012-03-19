@@ -98,8 +98,10 @@ function createVerseAndAdd (ref, tl, txt, $button) {
 					});	
 				};
 			});
+		} else if ((data.errors) && (!data.errors.length < 1)) {
+			alert(data.errors.join()); // New verse could not be created and errors returned; display errors
 		} else {
-			alert("Something went wrong. The verse was not saved.");  // New verse could not be created
+			alert("Something went wrong. The verse was not saved.");  // New verse could not be created and no errors returned
 		}
 	}, 'json');	
 };

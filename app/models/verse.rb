@@ -23,7 +23,7 @@ class Verse < ActiveRecord::Base
 #  require 'nokogiri'
 
   before_destroy :delete_memverses
-  before_save :cleanup_text
+  before_save :cleanup_text, :validate_ref
    
   # Relationships
   has_many :memverses
@@ -452,6 +452,28 @@ class Verse < ActiveRecord::Base
   
   def cleanup_text
     self.text = self.text.gsub(/(\r)?\n/,'').squeeze(" ").strip
+  end
+  
+  def validate_ref
+    bk = self.book
+    ch = self.chapter
+    vs = self.versenum
+    
+    verse = Verse.where(:book => bk, :chapter => ch, :versenum => vs, :translation => self.translation).first
+    final_verse = FinalVerse.where(:book => bk, :chapter => ch).first
+    
+    if verse
+      errors.add(:base, "Verse already exists in #{self.translation}")
+      return false
+    elsif !final_verse
+      errors.add(:base, "Invalid chapter")
+      return false
+    elsif vs > final_verse.last_verse
+      errors.add(:base, "Invalid verse number")
+      return false
+    else
+      return true
+    end
   end
   
 end

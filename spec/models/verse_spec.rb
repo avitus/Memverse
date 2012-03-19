@@ -34,4 +34,32 @@ describe Verse do
     end
   end
   
+  describe "validate ref" do
+    before(:each) do
+      @finalverse = Factory(:final_verse, :book => "Psalms", :chapter => 117, :last_verse => 2)
+      # For these tests, Psalm 117 is the only valid chapter, and verse 2 is the last verse.
+    end
+    
+    it "should prevent a duplicate verse" do
+      verse1 = Factory.build(:verse, :book => "Psalms", :chapter => 117, :versenum => 1)
+      verse2 = Factory.build(:verse, :book => "Psalms", :chapter => 117, :versenum => 1)
+      
+      verse1.save.should be_true
+      verse2.save.should be_false
+      verse2.errors.full_messages.first.should == "Verse already exists in NIV"
+    end
+    
+    it "should reject an invalid chapter" do
+      verse = Factory.build(:verse, :book => "Psalms", :chapter => 151, :versenum => 1)
+      verse.save.should be_false
+       verse.errors.full_messages.first.should == "Invalid chapter"
+    end
+    
+    it "should reject an invalid versenum" do
+      verse = Factory.build(:verse, :book => "Psalms", :chapter => 117, :versenum => 3, :translation => "ESV")
+      verse.save.should be_false
+      verse.errors.full_messages.first.should == "Invalid verse number"
+    end
+  end
+  
 end

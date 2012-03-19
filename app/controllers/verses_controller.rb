@@ -75,7 +75,7 @@ class VersesController < ApplicationController
       else
         format.html { render :action => "new" }
         format.xml  { render :xml => @verse.errors, :status => :unprocessable_entity }
-        format.json { render :json => { msg: "Failure"} }
+        format.json { render :json => { msg: "Failure", errors: @verse.errors.full_messages } }
       end
     end
   end
