@@ -101,9 +101,31 @@
 	
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('.add-tag').click(function() {
-				
-				TagToAdd = $(this).prev().text()
+					
+			$("table").on("focus", "input", function() {
+				a = $('input').focus().autocomplete({ source:'/memverses/tag_autocomplete'
+				});		
+			});
+			
+			$(document).on("click", "li.ui-menu-item", function() {
+		
+				$.post("/memverses/add_verse_tag", { id: <%= @mv.id %>, value: $(this).find("a").text()} );
+				$(".edit_mv").html($(this).find("a").text())
+
+				$("#list-of-user-tags").find('tbody')
+				    .prepend($('<tr>')
+				        .append($("<td class='tag'>")
+				            .append($('<a>')
+				          		  .attr('href', '/verses/show_verses_with_tag?tag='+$(this).find("a").text()+'&tl=<%=@mv.verse.translation%>')
+				                .text($(this).find("a").text())
+				            )
+				        )			        
+				    );
+			});
+			
+		$('.add-tag').click(function() {
+
+				TagToAdd = $(this).prev().text();
 				
 				// Add the tag
 				$.post("/memverses/add_verse_tag", { id: <%= @mv.id %>, value: TagToAdd } );
