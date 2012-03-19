@@ -1,3 +1,19 @@
+# t.integer  "level"
+# t.string   "task"
+# t.text     "description"
+# t.string   "objective"
+# t.string   "qualifier"
+# t.integer  "quantity"
+# t.string   "url"
+# t.datetime "created_at"
+# t.datetime "updated_at"
+#
+# +-----+-------+-----------------------------------------+-------------+-----------+-----------+----------+-----+-------------------------+-------------------------+
+# | id  | level | task                                    | description | objective | qualifier | quantity | url | created_at              | updated_at              |
+# +-----+-------+-----------------------------------------+-------------+-----------+-----------+----------+-----+-------------------------+-------------------------+
+# | 200 | 16    | Memorize 13 verses of biblical prophecy |             | Prophecy  | Memorized | 13       |     | 2011-01-14 15:31:25 UTC | 2011-01-14 15:32:17 UTC |
+# +-----+-------+-----------------------------------------+-------------+-----------+-----------+----------+-----+-------------------------+-------------------------+
+
 class Quest < ActiveRecord::Base
   has_and_belongs_to_many :users
    
