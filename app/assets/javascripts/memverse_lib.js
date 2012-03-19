@@ -73,7 +73,7 @@ function validPassageRef(passage) {
 
 
 /******************************************************************************
- * Returns true if input is a passage reference
+ * Returns true iff input is a passage reference
 
  * Accepts: Romans 8:1-3
  * Rejects: Romans 8
