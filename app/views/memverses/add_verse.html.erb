@@ -34,7 +34,7 @@
 	    <div id="verse-search-single-result">
 
 		    <!-- Translation -->			
-			<h5><span id="js_bible-version" class="version"><%= TRANSLATIONS[@translation.try(:to_sym)] %></span></h5>
+			<h5><span class="js_bible-version" class="bible-version"><%= TRANSLATIONS[@translation.try(:to_sym)] %></span></h5>
     
 		    <!-- Display existing verse -->
 			<div id="existing-verse-add" class="quick-start-show-verse quick-start-add-section">
@@ -73,7 +73,7 @@
 		$(".scrollable").scrollable({ vertical: true, mousewheel: true });
 				
 		// Setup jEditable for version changing
-		$('#js_bible-version').editable(function(value, settings) { 
+		$('.js_bible-version').editable(function(value, settings) { 
 			tl = value; // change tl
 			flexversesearch($("#js_flex-verse-search").val()); // refresh results
 			return(settings.data[value]);
