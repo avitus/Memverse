@@ -23,7 +23,7 @@ module NavigationHelpers
       '/blog_posts/new?blog_id='+blog_id
     when /the blog/
       '/blog'     
-    when /the page for the memverse with the id of "(.*)"/
+    when /the page for the memverse with the id of ([0-9]+)/
       '/memory_verse/'+$1
 
 
