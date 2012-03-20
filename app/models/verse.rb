@@ -267,6 +267,8 @@ class Verse < ActiveRecord::Base
 
   # ----------------------------------------------------------------------------------------------------------
   # Returns all tags associated with a given verse
+  #  - Gets all tags for all memverses
+  #  - Returns most popular tags across all memory verses
   # ---------------------------------------------------------------------------------------------------------- 
   def all_user_tags(same_tl = false, numtags = 5)
     
@@ -293,11 +295,12 @@ class Verse < ActiveRecord::Base
 
   # ----------------------------------------------------------------------------------------------------------
   # Tag verse with most popular user tags
+  #  - when we have millions of users we can restrict tags by translation. 
+  #  - for now we need the critical mass across translations and can only use top 3 tags
+  #  - With settings (true, 5) the tag cloud had 2852 tags as of 3/19/2012. 
   # ---------------------------------------------------------------------------------------------------------- 
-  def update_tags
-    
-    # true = get tags only for same translation
-    user_tags = self.all_user_tags(true).map { |t| t.first.name }.join(', ') 
+  def update_tags    
+    user_tags = self.all_user_tags(false, 3).map { |t| t.first.name }.join(', ') # false = get tags for all translations
     self.tag_list = []
     self.tag_list = user_tags
     self.save
