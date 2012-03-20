@@ -485,7 +485,11 @@ class MemversesController < ApplicationController
     	@mv.status = 'Pending'
     end
     @mv.save
-    render :partial => 'mv_status_toggle', :layout => false
+    
+    respond_to do |format|
+      format.html { render :partial => 'mv_status_toggle', :layout => false }
+    end      
+    
   end  
 
   # ----------------------------------------------------------------------------------------------------------

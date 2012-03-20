@@ -83,11 +83,12 @@
 $(document).ready(function(){    
   	
     $('.flag_verse').on("click", function (data) { 
-		$(this).closest('tr').toggleClass("hilite").html(data); 
+		$(this).parent().closest('tr').toggleClass("hilite")
+		$(this).html(data); 
 	});
 	
-	$('.mv-status a').on("click", function (data) { 
-		$(this).parent().effect("highlight", {color: "#ffcc00"}, 6000).html(data); 
+	$('.mv-status').on("click", "a", function (data) { 
+		$(this).html(data); 
 	}, "html" );
 			
 	filtersetup(); // setup the verse filtering
