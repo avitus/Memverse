@@ -90,7 +90,7 @@
 		.bind("ajax:beforeSend", function(evt, xhr, settings){
 		})
 		.bind("ajax:success", function(evt, data, status, xhr){
-		  var $submitButton = $(this)
+		  var $submitButton = $(this);
 		  $submitButton.html(data);
 		});
 	
@@ -105,7 +105,7 @@
 		})
 		
 		.bind("ajax:success", function(evt, data, status, xhr){
-		  var $submitButton = $(this)
+		  var $submitButton = $(this);
 		  $submitButton.html(data);
 		});
 	
