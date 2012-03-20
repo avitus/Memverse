@@ -143,3 +143,37 @@ for i in 19..50
     Quest.create(:level => i, :objective => 'Chapters', :qualifier => 'Memorized', :quantity => chapters_memorized, :task => "Memorize #{chapters_memorized} complete chapters.")
   end    
 end
+
+puts 'ADDING FINAL VERSE DATA'
+
+# Delete previous table
+FinalVerse.delete_all
+
+BIBLEBOOKS.each { |bk|
+
+  sleep(1)
+
+  book = bk.downcase.gsub(" ","")
+
+  url = 'http://www.deafmissions.com/tally/' + CGI.escape(book) + '.html'
+  doc = Nokogiri::HTML(open(url))
+
+  ch_vs_array = doc.at_css("tr").to_s.gsub(/<\/?[^>]*>/, "").split    
+  # Need this from Daniel onwards
+  if ch_vs_array.empty?
+    ch_vs_array = doc.at_css("blockquote center").to_s.gsub(/<\/?[^>]*>/, "").split  
+  end
+
+  ch_vs_array.each { |cv| 
+
+    ch, vs = cv.split(':')
+
+    if ch.to_i == 0
+      ch = CGI.escape(ch).gsub("%C2%A0","").to_i  # handle nbsp characters in a few chapters in Psalms
+    end
+
+    FinalVerse.create(:book => bk, :chapter => ch.to_i, :last_verse => vs.to_i )
+
+  }
+
+}
