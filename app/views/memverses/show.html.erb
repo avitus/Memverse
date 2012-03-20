@@ -169,21 +169,11 @@
 				}
 			});
 		     
-			$('#mv-status')
-			
-				.click(function () { 
-					$(this).effect("highlight", {color: "#ffcc00"}, 5000); 
-				})
-				
-				.bind("ajax:beforeSend", function(evt, xhr, settings){
-					
-				})
-				
-				.bind("ajax:success", function(evt, data, status, xhr){
-					var $submitButton = $(this)
-					$submitButton.html(data);
-				});
-			
+			$('#mv-status').click( function (data) { 
+				$(this).effect("highlight", {color: "#ffcc00"}, 5000);
+				$(this).html(data); 
+			}, "html" );
+							
 		});
 	</script>
 	

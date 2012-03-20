@@ -79,37 +79,20 @@
 
 </div> <!-- white-box-with-margins -->
 
-<!-- Highlight verse to be verified -->
 <script type="text/javascript">
-  $(document).ready(function(){    
+$(document).ready(function(){    
   	
-    $('.flag_verse') 
-	    .click(function () { 
-	      $(this).closest('tr').toggleClass("hilite"); 
-	    })
-		.bind("ajax:beforeSend", function(evt, xhr, settings){
-		})
-		.bind("ajax:success", function(evt, data, status, xhr){
-		  var $submitButton = $(this);
-		  $submitButton.html(data);
-		});
+    $('.flag_verse').on("click", function (data) { 
+		$(this).closest('tr').toggleClass("hilite"); 
+		$(this).html(data);
+	});
 	
-	
-	$('.mv-status a')
-		.click(function () { 
+	$('.mv-status').on("click", function (data) { 
 		  $(this).parent().effect("highlight", {color: "#ffcc00"}, 6000); 
-		})
-		
-		.bind("ajax:beforeSend", function(evt, xhr, settings){
-		
-		})
-		
-		.bind("ajax:success", function(evt, data, status, xhr){
-		  var $submitButton = $(this);
-		  $submitButton.html(data);
-		});
-	
+		  $(this).html(data);
+	});
+			
 	filtersetup(); // setup the verse filtering
    
-  });
+});
 </script>

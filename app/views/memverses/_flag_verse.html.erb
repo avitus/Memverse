@@ -1,9 +1,6 @@
-<!doctype html>
-	<%= 
-		link_to @verse.error_flag ? "Error Reported" : "Verified", 
-						toggle_error_flag_path(@verse.id, :format	=> 'html'),
-						:update => @verse.id,
-						:confirm => @verse.error_flag ? "Cancel reported error?" : "You are reporting an error in this verse. Are you sure?",					
-						:remote	=> true
-	%>
-</html>
+<%= link_to @verse.error_flag ? "Error Reported" : "Verified", 
+		toggle_error_flag_path(@verse.id, :format	=> 'html'),
+		:update => @verse.id,
+		:confirm => @verse.error_flag ? "Cancel reported error?" : "You are reporting an error in this verse. Are you sure?",					
+		:remote	=> true
+%>
