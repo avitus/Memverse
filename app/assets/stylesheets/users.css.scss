@@ -1,3 +1,360 @@
 // Place all the styles related to the users controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+/*========== User Dashboard and Profile ==========*/
+.user-info-top-box
+{
+  width:100%;
+}
+
+.user-details
+{
+  width:35%;
+  float:left;
+  padding-left:1em;
+  border-right:1px solid #BFBEBE;
+}
+
+.user-details-img
+{
+  width:80px;
+  float:left;
+  margin-right:22px;
+}
+
+.avatar
+{
+  display:block;
+  width:80px;
+  height:80px;
+}
+
+.user-details-text
+{
+  width:225px;
+  float:left;
+}
+
+.user-details-text h4
+{
+  padding:0;
+  margin:0;
+  font-size:23px;
+  font-weight:bold;
+  color:#693;
+}
+
+.user-details-text ul
+{
+  list-style:none;
+  padding:0;
+  margin:0;
+  padding-top:5px;
+}
+
+.user-details-text ul li
+{
+  font-size:13px;
+  color:#666;
+}
+
+.user-details-text ul li a
+{
+  color:#666;
+  text-decoration:none;
+}
+
+.user-details-text ul li a:hover
+{
+  color:#666;
+  text-decoration:none;
+}
+
+.member-list
+{
+  width:240px;
+  float:left;
+  padding-bottom:10px;
+}
+
+.member-list span
+{
+  color:#693;
+  font-weight:bold;
+}
+
+#user-profile {
+  border-right:1px solid #BFBEBE;
+}
+
+.user-settings
+{
+  width:28%;
+  float:left;
+  padding-left:36px;
+}
+
+.user-settings-text
+{
+  width:95%;
+  float:left;
+}
+
+.user-settings-text ul
+{
+  list-style:none;
+  padding:0;
+  margin:0;
+  padding-top:5px;
+}
+
+.user-settings-text ul li
+{
+  font-size:13px;
+  color:#666;
+}
+
+.user-option-list
+{
+  width:95%;
+  float:left;
+  padding-bottom:10px;
+}
+
+.user-option-list span.mv-field
+{
+  color:#693;
+  font-weight:bold;
+}
+
+.view-button
+{
+  padding-top:15px;
+}
+
+.main-content
+{
+  width:1080px;
+}
+
+.main-content h2
+{
+  padding:0;
+  margin:0;
+  font-size:18px;
+  color:#577a1a; 
+  font-weight:normal;
+  padding-bottom:15px;
+}
+
+.main-left
+{
+  width:36%;
+  float:left;
+}
+
+.book
+{
+  background:url('book.png') no-repeat 5px top;
+  height:36px;
+  font:39px Georgia,"Times New Roman",Times,serif;
+  color:#666;
+  padding-left:80px;
+}
+
+.lightbulb
+{
+  background:url('light-bulb.png') no-repeat 5px top;
+  height:55px;
+  font:39px Georgia,"Times New Roman",Times,serif;
+  color:#666;
+  padding-left:80px;
+}
+
+.bullseye
+{
+  background:url('bulls-eye.png') no-repeat 5px top;
+  height:55px;
+  font:39px Georgia,"Times New Roman",Times,serif;
+  color:#666;
+  padding-left:65px;
+}
+
+.level-icon
+{
+  background:url('medal-icon.png') no-repeat 5px top;
+  height:55px;
+  font:39px Georgia,"Times New Roman",Times,serif;
+  color:#666;
+  padding-left:80px;
+}
+
+.left-widget
+{
+  float:left;
+  background:#FFF;
+  border:1px solid #717171;
+  margin-bottom:9px;
+  padding:14px;
+  position:relative;
+  width:92%;
+}
+
+ul.thumbs, ul.custom-bullets
+{
+  padding:0;
+  margin:0;
+  list-style:none;
+}
+
+ul.thumbs li, ul.custom-bullets li
+{
+  font-size:13px;
+  color:#666;
+  padding-left:17px;
+  padding-bottom:10px;
+}
+
+ul.thumbs li {
+  background:url('thumb.png') no-repeat left top;
+}
+
+ul.custom-bullets li {
+  background:url('bloggity/bullet-white.gif') no-repeat left top;
+}
+
+ul.thumbs li a:hover, ul.custom-bullets li a:hover
+{
+  color:#262626;
+}
+
+ul.thumbs li a, ul.custom-bullets a
+{
+  color:#666;
+  text-decoration:none;
+}
+
+.pad
+{
+  padding-bottom:30px;
+}
+
+
+.left-widget-item {
+  float:left;
+  padding-left:1em;
+  padding-right:0.8em;
+}
+
+.learn
+{
+  font:23px/15px Georgia,"Times New Roman",Times,serif;
+  color:#983626;
+}
+
+.main-right
+{
+  width:60%;
+  float:right;
+  background:#FFF;
+  border:1px solid #717171;
+  padding:15px;
+  position:relative;
+  margin-bottom: 0.7em;
+}
+
+
+@mixin badge-properties {
+  width: 140px;
+  min-height: 140px;
+  padding: 10px;
+  float: left;  
+}
+
+.sermon-on-the-mount {
+  @include badge-properties;
+  background:url('badges/Sermon-on-the-Mount/Sermon-on-the-Mount.png') no-repeat;    
+}
+  
+.consistency {
+  @include badge-properties;
+  background:url('badges/Consistency/Consistency-Teaser.png') no-repeat;        
+}
+
+.row1
+{
+  border-top:1px solid #afaeae;
+  height:55px;
+  padding-top:20px;
+  font-size:13px;
+  color:#666;
+}
+
+.black
+{
+  font-size:16px;
+  color:#272727;
+}
+
+.red
+{
+  font-size:24px;
+  color:#983626;
+}
+
+.vs-distribution
+{
+  margin:0 auto
+}
+
+
+.vs-distribution table {
+  border-spacing:0;
+  text-align:center;
+}
+
+.vs-distribution table thead {
+  height:27px;
+  line-height:27px;
+  padding:5px;
+  margin:0;
+  font-size:16px;
+  color:#983626;
+  font-weight:bold; 
+}
+
+.vs-distribution table thead th {
+  padding:5px;
+}
+
+.vs-distribution table tbody {
+  height:25px;
+  line-height:25px;
+  color:#666; 
+}
+
+.vs-distribution table tbody th {
+  border-top:1px solid #afaeae;
+  border-collapse:collapse;
+  text-align:left;
+}
+
+.vs-distribution table tbody td {
+  border-top:1px solid #afaeae;
+  border-collapse:collapse;
+}
+
+.vs-disti-left
+{
+  width:47%;
+  padding-left:1.5em;
+  float:left;
+}
+
+.vs-disti-right
+{
+  width:47%;
+  float:left;
+  padding-left:1.4em; 
+}
