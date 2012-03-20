@@ -179,62 +179,6 @@ ActiveRecord::Schema.define(:version => 20120227222224) do
 
   add_index "final_verses", ["book", "chapter"], :name => "index_final_verses_on_book_and_chapter"
 
-  create_table "forem_categories", :force => true do |t|
-    t.string   "name",       :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "forem_forums", :force => true do |t|
-    t.string  "title"
-    t.text    "description"
-    t.integer "category_id"
-  end
-
-  create_table "forem_posts", :force => true do |t|
-    t.integer  "topic_id"
-    t.text     "text"
-    t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "reply_to_id"
-  end
-
-  add_index "forem_posts", ["reply_to_id"], :name => "index_forem_posts_on_reply_to_id"
-  add_index "forem_posts", ["topic_id"], :name => "index_forem_posts_on_topic_id"
-  add_index "forem_posts", ["user_id"], :name => "index_forem_posts_on_user_id"
-
-  create_table "forem_subscriptions", :force => true do |t|
-    t.integer "subscriber_id"
-    t.integer "topic_id"
-  end
-
-  create_table "forem_topics", :force => true do |t|
-    t.integer  "forum_id"
-    t.integer  "user_id"
-    t.string   "subject"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean  "locked",     :default => false, :null => false
-    t.boolean  "pinned",     :default => false
-    t.boolean  "hidden",     :default => false
-  end
-
-  add_index "forem_topics", ["forum_id"], :name => "index_forem_topics_on_forum_id"
-  add_index "forem_topics", ["user_id"], :name => "index_forem_topics_on_user_id"
-
-  create_table "forem_views", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "topic_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "count",      :default => 0
-  end
-
-  add_index "forem_views", ["topic_id"], :name => "index_forem_views_on_topic_id"
-  add_index "forem_views", ["updated_at"], :name => "index_forem_views_on_updated_at"
-  add_index "forem_views", ["user_id"], :name => "index_forem_views_on_user_id"
-
   create_table "groups", :force => true do |t|
     t.string   "name",                       :null => false
     t.text     "description"
@@ -524,7 +468,6 @@ ActiveRecord::Schema.define(:version => 20120227222224) do
     t.datetime "remember_created_at"
     t.boolean  "admin",                                    :default => false
     t.integer  "group_id"
-    t.boolean  "forem_admin",                              :default => false
     t.datetime "reset_password_sent_at"
   end
 
