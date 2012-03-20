@@ -169,10 +169,10 @@
 				}
 			});
 		     
-			$('#mv-status').click( function (data) { 
+			$('#mv-status').on("click", function (data) { 
 				$(this).effect("highlight", {color: "#ffcc00"}, 5000);
 				$(this).html(data); 
-			}, "html" );
+			});
 							
 		});
 	</script>

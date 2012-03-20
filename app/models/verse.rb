@@ -23,7 +23,8 @@ class Verse < ActiveRecord::Base
 #  require 'nokogiri'
 
   before_destroy :delete_memverses
-  before_save :cleanup_text, :validate_ref
+  before_save :cleanup_text
+  before_create :validate_ref
    
   # Relationships
   has_many :memverses
