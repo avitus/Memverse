@@ -470,7 +470,11 @@ class MemversesController < ApplicationController
     @verse = Verse.find(params[:id])
     @verse.error_flag = !@verse.error_flag
     @verse.save
-    render :partial => 'flag_verse', :layout => false
+
+    respond_to do |format|
+      format.html { render :partial => 'flag_verse', :layout => false }
+      format.json { render :json => { :mv_error_flag => @verse.error_flag} }
+    end     
   end
   
   # ----------------------------------------------------------------------------------------------------------
@@ -488,6 +492,7 @@ class MemversesController < ApplicationController
     
     respond_to do |format|
       format.html { render :partial => 'mv_status_toggle', :layout => false }
+      format.json { render :json => { :mv_status => @mv.status} }
     end      
     
   end  
