@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120227222224) do
+ActiveRecord::Schema.define(:version => 20120321232139) do
 
   create_table "american_states", :force => true do |t|
     t.string  "abbrev",      :limit => 20, :default => "", :null => false
@@ -25,6 +25,14 @@ ActiveRecord::Schema.define(:version => 20120227222224) do
   add_index "american_states", ["name"], :name => "index_american_states_on_name", :unique => true
   add_index "american_states", ["slug"], :name => "index_american_states_on_slug"
   add_index "american_states", ["users_count"], :name => "index_american_states_on_users_count"
+
+  create_table "badges", :force => true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.string   "color"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
 
   create_table "blog_assets", :force => true do |t|
     t.integer "blog_post_id"
@@ -286,6 +294,7 @@ ActiveRecord::Schema.define(:version => 20120227222224) do
     t.string   "url"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "badge_id"
   end
 
   add_index "quests", ["level"], :name => "index_quests_on_level"

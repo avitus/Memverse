@@ -144,36 +144,58 @@ for i in 19..50
   end    
 end
 
-puts 'ADDING FINAL VERSE DATA'
+puts 'CREATING BADGES'
 
-# Delete previous table
-FinalVerse.delete_all
+puts ' - Sermon on the Mount Badge'
+sotm = Badge.where(:name => 'Sermon on the Mount')
+if sotm.empty?
+  sotm = Badge.create(:name => 'Sermon on the Mount', :color => 'solo', :description => "Memorize Jesus' entire Sermon on the Mount (Matthew 5-7)")
+end
 
-BIBLEBOOKS.each { |bk|
+  puts '   - Adding three quests for Matthew 5-7'
+  q = Quest.where(:objective => 'Chapters', :qualifier => 'Matthew 5')
+  if q.empty?
+    Quest.create(:badge_id => sotm, :objective => 'Chapters', :qualifier => 'Matthew 5', :task => "Memorize Matthew 5")
+  end  
+  q = Quest.where(:objective => 'Chapters', :qualifier => 'Matthew 6')
+  if q.empty?
+    Quest.create(:badge_id => sotm, :objective => 'Chapters', :qualifier => 'Matthew 6', :task => "Memorize Matthew 6")
+  end  
+  q = Quest.where(:objective => 'Chapters', :qualifier => 'Matthew 7')
+  if q.empty?
+    Quest.create(:badge_id => sotm, :objective => 'Chapters', :qualifier => 'Matthew 7', :task => "Memorize Matthew 7")
+  end    
 
-  sleep(1)
 
-  book = bk.downcase.gsub(" ","")
-
-  url = 'http://www.deafmissions.com/tally/' + CGI.escape(book) + '.html'
-  doc = Nokogiri::HTML(open(url))
-
-  ch_vs_array = doc.at_css("tr").to_s.gsub(/<\/?[^>]*>/, "").split    
-  # Need this from Daniel onwards
-  if ch_vs_array.empty?
-    ch_vs_array = doc.at_css("blockquote center").to_s.gsub(/<\/?[^>]*>/, "").split  
-  end
-
-  ch_vs_array.each { |cv| 
-
-    ch, vs = cv.split(':')
-
-    if ch.to_i == 0
-      ch = CGI.escape(ch).gsub("%C2%A0","").to_i  # handle nbsp characters in a few chapters in Psalms
+if ActiveRecord::Base.connection.table_exists? 'final_verses'
+  puts 'FINAL VERSE DATA ALREADY EXISTS - SKIPPING TABLE CREATION'
+else
+  puts 'ADDING FINAL VERSE DATA'
+  BIBLEBOOKS.each { |bk|
+  
+    sleep(1)
+  
+    book = bk.downcase.gsub(" ","")
+  
+    url = 'http://www.deafmissions.com/tally/' + CGI.escape(book) + '.html'
+    doc = Nokogiri::HTML(open(url))
+  
+    ch_vs_array = doc.at_css("tr").to_s.gsub(/<\/?[^>]*>/, "").split    
+    # Need this from Daniel onwards
+    if ch_vs_array.empty?
+      ch_vs_array = doc.at_css("blockquote center").to_s.gsub(/<\/?[^>]*>/, "").split  
     end
+  
+    ch_vs_array.each { |cv| 
+  
+      ch, vs = cv.split(':')
+  
+      if ch.to_i == 0
+        ch = CGI.escape(ch).gsub("%C2%A0","").to_i  # handle nbsp characters in a few chapters in Psalms
+      end
+  
+      FinalVerse.create(:book => bk, :chapter => ch.to_i, :last_verse => vs.to_i )
+    }
+  }  
+end
 
-    FinalVerse.create(:book => bk, :chapter => ch.to_i, :last_verse => vs.to_i )
-
-  }
-
-}

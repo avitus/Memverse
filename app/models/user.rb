@@ -356,7 +356,7 @@ class User < ActiveRecord::Base
   end
 
   # ----------------------------------------------------------------------------------------------------------
-  # Returns all quests completed for user's current level
+  # Returns all quests completed for user's current level (Quests 'belong' to a user once completed)
   # ----------------------------------------------------------------------------------------------------------  
   def current_completed_quests
     self.quests.where(:level => self.level+1)

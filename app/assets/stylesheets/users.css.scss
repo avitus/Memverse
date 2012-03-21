@@ -264,7 +264,7 @@ ul.thumbs li a, ul.custom-bullets a
   margin-bottom: 0.7em;
 }
 
-
+/*========== Badges ==========*/
 @mixin badge-properties {
   width: 120px;
   height: 120px;
@@ -291,6 +291,7 @@ ul.thumbs li a, ul.custom-bullets a
     .earned-gold { background:url('badges/Referrer/Referrer-Gold.png'    ) no-repeat; };
     &:hover      { background:url('badges/Referrer/Referrer-On-Hover.png') no-repeat; };
 }
+/*========== End: Badges ==========*/
 
 .row1
 {
