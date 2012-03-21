@@ -23,7 +23,8 @@ class Verse < ActiveRecord::Base
 #  require 'nokogiri'
 
   before_destroy :delete_memverses
-  before_save :cleanup_text, :validate_ref
+  before_save :cleanup_text
+  before_create :validate_ref
    
   # Relationships
   has_many :memverses
@@ -298,6 +299,7 @@ class Verse < ActiveRecord::Base
   #  - when we have millions of users we can restrict tags by translation. 
   #  - for now we need the critical mass across translations and can only use top 3 tags
   #  - With settings (true, 5) the tag cloud had 2852 tags as of 3/19/2012. 
+  #  - Current problem: this doesn't remove old Taggings on Verse model
   # ---------------------------------------------------------------------------------------------------------- 
   def update_tags    
     user_tags = self.all_user_tags(false, 3).map { |t| t.first.name }.join(', ') # false = get tags for all translations

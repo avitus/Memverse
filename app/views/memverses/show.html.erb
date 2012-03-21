@@ -90,7 +90,7 @@
 	            <li><div class="user-option-list"><span class="mv-field">Next Test  : </span><%= @mv.next_test %></div></li>
 	            <li><div class="user-option-list"><span class="mv-field">Interval: </span><%= pluralize(@mv.test_interval, 'day') %></div></li>
 	            <li><div class="user-option-list"><span class="mv-field">Status: </span>
-	            	<span id="mv-status"><%= link_to @mv.status, toggle_mv_status_path(@mv.id, :format => 'html'), :remote => true %></span></div></li>
+	            	<span id="mv-status"><%= link_to @mv.status, toggle_mv_status_path(@mv.id, :format => 'json'), :remote => true %></span></div></li>
 	            <li><div class="user-option-list"><span class="mv-field">Difficulty: </span><%= @mv.efactor %></div></li>
 	        </ul>
         </div>
@@ -169,21 +169,15 @@
 				}
 			});
 		     
-			$('#mv-status')
-			
-				.click(function () { 
-					$(this).effect("highlight", {color: "#ffcc00"}, 5000); 
-				})
-				
-				.bind("ajax:beforeSend", function(evt, xhr, settings){
-					
-				})
-				
-				.bind("ajax:success", function(evt, data, status, xhr){
-					var $submitButton = $(this)
-					$submitButton.html(data);
-				});
-			
+		$('#mv-status a')	
+			.click( function() {
+				$(this).parent().effect("highlight", {color: "#ffcc00"}, 2000);	
+			})
+		
+			.on('ajax:success', function (event, data) { 
+				$(this).html(data.mv_status); 
+			});
+							
 		});
 	</script>
 	

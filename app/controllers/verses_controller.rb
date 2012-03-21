@@ -214,17 +214,6 @@ class VersesController < ApplicationController
   end
   
   # ----------------------------------------------------------------------------------------------------------
-  # Verse Search Results # commented out in 2011
-  # ----------------------------------------------------------------------------------------------------------  	
-	#   def verse_search_results	    
-	# @verse_search_results = Verse.search( params[:search_param] )
-	#   respond_to do |format| 
-	#     format.html { render :partial => 'verse_search_results', :layout=>false }
-	#     format.xml  { render :xml 	=> @verse_search_results }
-	#   end	    
-	#   end
-
-  # ----------------------------------------------------------------------------------------------------------
   # Verse Search Query page
   # ---------------------------------------------------------------------------------------------------------- 	
   def verse_search

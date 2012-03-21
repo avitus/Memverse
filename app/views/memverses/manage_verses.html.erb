@@ -33,11 +33,11 @@
 			    <tbody>
 					<% for mv in @my_verses %>
 					<tr valign="top" class=<%= cycle("gray2", "white2") %>>
-					<td align="center"><input class="boxes" id="mv_" name="mv[]" onclick="checkAllFields(2);" type="checkbox" value="<%= mv.id %>" /></td>
+					<td align="center"><input class="boxes" id="mv_" name="mv[]" type="checkbox" value="<%= mv.id %>" /></td>
 					<td align="left">  <%= link_to mv.verse.ref, {:action => 'show', :id => mv.id } %></td>		 
 					<td align="center"><%= mv.verse.translation	%></td>		
 					<td align="center"><%= mv.efactor			%></td>	
-					<td align="center" class="mv-status"><%= link_to mv.status, toggle_mv_status_path(mv.id, :format => 'html'), :remote => true %></td>	
+					<td align="center" class="mv-status"><%= link_to mv.status, toggle_mv_status_path(mv.id, :format => 'json'), :remote => true %></td>	
 					<td align="center"><%= mv.last_tested		%></td>
 					<td align="center"><%= mv.next_test			%></td>	
 					<td align="center"><%= mv.test_interval		%></td>	
@@ -79,37 +79,28 @@
 
 </div> <!-- white-box-with-margins -->
 
-<!-- Highlight verse to be verified -->
 <script type="text/javascript">
-  $(document).ready(function(){    
+$(document).ready(function(){    
   	
-    $('.flag_verse') 
-	    .click(function () { 
-	      $(this).closest('tr').toggleClass("hilite"); 
-	    })
-		.bind("ajax:beforeSend", function(evt, xhr, settings){
+    $('.flag_verse')    
+	    .on('ajax:success', function (event, data) { 
+			$(this).html(data); 
+		});
+		
+	$('.mv-status a	')	
+		.click( function() {
+			$(this).parent().effect("highlight", {color: "#ffcc00"}, 2000);	
 		})
-		.bind("ajax:success", function(evt, data, status, xhr){
-		  var $submitButton = $(this)
-		  $submitButton.html(data);
+	
+		.on('ajax:success', function (event, data) { 
+			$(this).html(data.mv_status); 
 		});
 	
-	
-	$('.mv-status a')
-		.click(function () { 
-		  $(this).parent().effect("highlight", {color: "#ffcc00"}, 6000); 
-		})
-		
-		.bind("ajax:beforeSend", function(evt, xhr, settings){
-		
-		})
-		
-		.bind("ajax:success", function(evt, data, status, xhr){
-		  var $submitButton = $(this)
-		  $submitButton.html(data);
-		});
+	$("table.memverse-standard").on("click", "td input.boxes", function() {
+		checkAllFields(2);
+	});
 	
 	filtersetup(); // setup the verse filtering
    
-  });
+});
 </script>

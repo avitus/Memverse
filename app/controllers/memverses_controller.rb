@@ -410,7 +410,8 @@ class MemversesController < ApplicationController
     query         = params[:term]
     query_length  = query.length
     
-    all_tags = ActsAsTaggableOn::Tag.find(:all, :select => 'name')
+    # This has the effect of restricting autocomplete to only :taggable_type => Verse
+    all_tags = Verse.tag_counts
     
     all_tags.each { |tag|
       name = tag.name
@@ -470,7 +471,11 @@ class MemversesController < ApplicationController
     @verse = Verse.find(params[:id])
     @verse.error_flag = !@verse.error_flag
     @verse.save
-    render :partial => 'flag_verse', :layout => false
+
+    respond_to do |format|
+      format.html { render :partial => 'flag_verse', :layout => false }
+      format.json { render :json => { :mv_error_flag => @verse.error_flag} }
+    end     
   end
   
   # ----------------------------------------------------------------------------------------------------------
@@ -485,7 +490,12 @@ class MemversesController < ApplicationController
     	@mv.status = 'Pending'
     end
     @mv.save
-    render :partial => 'mv_status_toggle', :layout => false
+    
+    respond_to do |format|
+      format.html { render :partial => 'mv_status_toggle', :layout => false }
+      format.json { render :json => { :mv_status => @mv.status} }
+    end      
+    
   end  
 
   # ----------------------------------------------------------------------------------------------------------
