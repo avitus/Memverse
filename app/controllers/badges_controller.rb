@@ -10,7 +10,10 @@ class BadgesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------   
   def earned_badges
     
-    @earned_badges = Badge.all # current_user.badges
+    @earned_badges = Array.new
+    @earned_badges << Badge.where(:name => 'Consistency', :color => 'silver').first # current_user.badges
+    @earned_badges << Badge.where(:name => 'Referrer', :color => 'bronze').first
+    @earned_badges << Badge.where(:name => 'Sermon on the Mount').first
     
     respond_to do |format|
       format.html  # earned_badges.html.erb

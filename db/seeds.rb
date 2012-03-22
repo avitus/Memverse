@@ -212,6 +212,46 @@ if !q
   Quest.create(:badge_id => referrer_bronze.id, :objective => 'Referrals', :quantity =>  50, :task => "Refer  50 Active Users")
 end  
 
+# ---- Consistency Medals ----------------------------
+consistency_gold = Badge.where(:name => 'Consistency', :color => 'gold').first
+if !consistency_gold
+  puts ' - Creating Consistency Gold Medal'
+  consistency_gold = Badge.create(:name => 'Consistency', :color => 'gold',     :description => "Complete 350 sessions in a year")
+end
+
+consistency_silver = Badge.where(:name => 'Consistency', :color => 'silver').first
+if !consistency_silver
+  puts ' - Creating Consistency Silver Medal'
+  consistency_silver = Badge.create(:name => 'Consistency', :color => 'silver', :description => "Complete 325 sessions in a year")
+end
+
+consistency_bronze = Badge.where(:name => 'Consistency', :color => 'bronze').first
+if !consistency_bronze
+  puts ' - Creating Consistency Bronze Medal'
+  consistency_bronze = Badge.create(:name => 'Consistency', :color => 'bronze', :description => "Complete 300 sessions in a year")
+end
+
+puts '   - Adding Consistency Quests'
+q = Quest.where(:objective => 'Annual Sessions', :quantity => 350).first
+if !q
+  puts '      - Consistency gold medal quests'
+  consistency_gold = Badge.where(:name => 'Consistency', :color => 'gold').first
+  Quest.create(:badge_id => consistency_gold.id, :objective => 'Annual Sessions',   :quantity => 350, :task => "Complete 350 sessions in a year")
+end  
+q = Quest.where(:objective => 'Annual Sessions', :quantity => 325).first
+if !q
+  puts '      - Consistency silver medal quests'
+  consistency_silver = Badge.where(:name => 'Consistency', :color => 'silver').first
+  Quest.create(:badge_id => consistency_silver.id, :objective => 'Annual Sessions', :quantity => 325, :task => "Complete 325 sessions in a year")
+end  
+q = Quest.where(:objective => 'Annual Sessions', :quantity =>  300).first
+if !q
+  puts '      - Consistency bronze medal quests'
+  consistency_bronze = Badge.where(:name => 'Consistency', :color => 'bronze').first  
+  Quest.create(:badge_id => consistency_bronze.id, :objective => 'Annual Sessions', :quantity => 300, :task => "Complete 300 sessions in a year")
+end  
+
+
 # ----------------------------------------------------------------------------------------------------------   
 # Create Final Verse data table
 # ---------------------------------------------------------------------------------------------------------- 

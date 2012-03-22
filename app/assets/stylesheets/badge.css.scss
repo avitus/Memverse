@@ -17,14 +17,7 @@
   background:url('badges/Sermon-on-the-Mount/Sermon-on-the-Mount.png') no-repeat;
 }
   
-.consistency {
-  @include badge-properties;
-  background:url('badges/Consistency/Consistency-Teaser.png') no-repeat;        
-    .earned-gold { background:url('badges/Consistency/Consistency-Gold.png'    ) no-repeat; };
-    &:hover      { background:url('badges/Consistency/Consistency-On-Hover.png') no-repeat; };
-}
-
-.referrer .unearned {
+.referrer.unearned {
   @include badge-properties;         
   background:url('badges/Referrer/Referrer-Teaser.png'  ) no-repeat;
   &:hover { background:url('badges/Referrer/Referrer-On-Hover.png') no-repeat; };
@@ -33,6 +26,37 @@
 .referrer.earned-gold {
   @include badge-properties;         
   background:url('badges/Referrer/Referrer-Gold.png'    ) no-repeat;
+}
+
+.referrer.earned-silver {
+  @include badge-properties;         
+  background:url('badges/Referrer/Referrer-Silver.png'    ) no-repeat;
+}
+
+.referrer.earned-bronze {
+  @include badge-properties;         
+  background:url('badges/Referrer/Referrer-Bronze.png'    ) no-repeat;
+}
+
+.consistency.unearned {
+  @include badge-properties;         
+  background:url('badges/Consistency/Consistency-Teaser.png'  ) no-repeat;
+  &:hover { background:url('badges/Consistency/Consistency-On-Hover.png') no-repeat; };
+}
+
+.consistency.earned-gold {
+  @include badge-properties;         
+  background:url('badges/Consistency/Consistency-Gold.png'    ) no-repeat;
+}
+
+.consistency.earned-silver {
+  @include badge-properties;         
+  background:url('badges/Consistency/Consistency-Silver.png'    ) no-repeat;
+}
+
+.consistency.earned-bronze {
+  @include badge-properties;         
+  background:url('badges/Consistency/Consistency-Bronze.png'    ) no-repeat;
 }
 
 /*========== End: Badges ==========*/
