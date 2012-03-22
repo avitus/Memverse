@@ -9,6 +9,11 @@ class CreateBadges < ActiveRecord::Migration
     end
     
     add_column :quests, :badge_id, :integer
-        
+
+    create_table :badges_users, :id => false do |t|
+      t.belongs_to :badge
+      t.belongs_to :user
+    end
+     
   end
 end

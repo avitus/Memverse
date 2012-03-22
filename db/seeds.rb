@@ -146,13 +146,13 @@ end
 
 puts 'CREATING BADGES'
 
-puts ' - Sermon on the Mount Badge'
 sotm = Badge.where(:name => 'Sermon on the Mount')
 if sotm.empty?
+  puts ' - Creating Sermon on the Mount Badge'
   sotm = Badge.create(:name => 'Sermon on the Mount', :color => 'solo', :description => "Memorize Jesus' entire Sermon on the Mount (Matthew 5-7)")
 end
 
-  puts '   - Adding three quests for Matthew 5-7'
+  puts '   - Adding three quests for Sermon on the Mount Badge (Matthew 5-7)'
   q = Quest.where(:objective => 'Chapters', :qualifier => 'Matthew 5')
   if q.empty?
     Quest.create(:badge_id => sotm, :objective => 'Chapters', :qualifier => 'Matthew 5', :task => "Memorize Matthew 5")

@@ -34,6 +34,11 @@ ActiveRecord::Schema.define(:version => 20120321232139) do
     t.datetime "updated_at",  :null => false
   end
 
+  create_table "badges_users", :id => false, :force => true do |t|
+    t.integer "badge_id"
+    t.integer "user_id"
+  end
+
   create_table "blog_assets", :force => true do |t|
     t.integer "blog_post_id"
     t.integer "parent_id"
