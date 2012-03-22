@@ -264,35 +264,6 @@ ul.thumbs li a, ul.custom-bullets a
   margin-bottom: 0.7em;
 }
 
-/*========== Badges ==========*/
-@mixin badge-properties {
-  width: 120px;
-  height: 120px;
-  float: left;
-  margin: 0 1em;  
-}
-
-.sermon-on-the-mount {
-  @include badge-properties;
-  background:url('badges/Sermon-on-the-Mount/Sermon-on-the-Mount-Teaser.png') no-repeat;    
-    &:hover      { background:url('badges/Sermon-on-the-Mount/Sermon-on-the-Mount-on-Hover.png') no-repeat; };
-}
-  
-.consistency {
-  @include badge-properties;
-  background:url('badges/Consistency/Consistency-Teaser.png') no-repeat;        
-    .earned-gold { background:url('badges/Consistency/Consistency-Gold.png'    ) no-repeat; };
-    &:hover      { background:url('badges/Consistency/Consistency-On-Hover.png') no-repeat; };
-}
-
-.referrer {
-  @include badge-properties;
-  background:url('badges/Referrer/Referrer-Teaser.png') no-repeat;        
-    .earned-gold { background:url('badges/Referrer/Referrer-Gold.png'    ) no-repeat; };
-    &:hover      { background:url('badges/Referrer/Referrer-On-Hover.png') no-repeat; };
-}
-/*========== End: Badges ==========*/
-
 .row1
 {
   border-top:1px solid #afaeae;

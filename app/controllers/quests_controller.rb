@@ -94,14 +94,4 @@ class QuestsController < ApplicationController
     render :partial=>'current_user_quests', :layout=>false
   end
   
-  # ----------------------------------------------------------------------------------------------------------   
-  # Show badges earned by user
-  # ----------------------------------------------------------------------------------------------------------   
-  def earned_badges
-    user = User.find(:params[:user_id]) || current_user
-    
-    earned_badges = user.quests.where(:badge => true)
-    
-  end
-
 end

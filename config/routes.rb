@@ -1,5 +1,9 @@
 MemverseApp::Application.routes.draw do
   
+  get "badges/index"
+
+  get "badges/show"
+
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
 
   # match '/login',                       :to => 'home#index',        :as => 'login'
@@ -116,6 +120,7 @@ MemverseApp::Application.routes.draw do
   match '/set_translation/:tl',    :to => 'profile#set_translation',         :as => 'set_translation'
   match '/set_time_alloc/:time',   :to => 'profile#set_time_alloc',          :as => 'set_time_alloc'
 
+  match '/earned_badges',          :to => 'badges#earned_badges',            :as => 'earned_badges'     
   
   match '/edit_tag/:id',           :to => 'tag#edit_tag',                    :as => 'edit_tag'
 

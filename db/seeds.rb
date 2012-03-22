@@ -144,29 +144,77 @@ for i in 19..50
   end    
 end
 
+# ----------------------------------------------------------------------------------------------------------   
+# Create Badges
+# ---------------------------------------------------------------------------------------------------------- 
 puts 'CREATING BADGES'
 
-sotm = Badge.where(:name => 'Sermon on the Mount')
-if sotm.empty?
+# ---- Sermon on the Mount Badge ------------------
+sotm = Badge.where(:name => 'Sermon on the Mount').first
+if !sotm
   puts ' - Creating Sermon on the Mount Badge'
   sotm = Badge.create(:name => 'Sermon on the Mount', :color => 'solo', :description => "Memorize Jesus' entire Sermon on the Mount (Matthew 5-7)")
 end
 
-  puts '   - Adding three quests for Sermon on the Mount Badge (Matthew 5-7)'
-  q = Quest.where(:objective => 'Chapters', :qualifier => 'Matthew 5')
-  if q.empty?
-    Quest.create(:badge_id => sotm, :objective => 'Chapters', :qualifier => 'Matthew 5', :task => "Memorize Matthew 5")
-  end  
-  q = Quest.where(:objective => 'Chapters', :qualifier => 'Matthew 6')
-  if q.empty?
-    Quest.create(:badge_id => sotm, :objective => 'Chapters', :qualifier => 'Matthew 6', :task => "Memorize Matthew 6")
-  end  
-  q = Quest.where(:objective => 'Chapters', :qualifier => 'Matthew 7')
-  if q.empty?
-    Quest.create(:badge_id => sotm, :objective => 'Chapters', :qualifier => 'Matthew 7', :task => "Memorize Matthew 7")
-  end    
+puts '   - Confirming three quests for Sermon on the Mount Badge (Matthew 5-7)'
+q = Quest.where(:objective => 'Chapters', :qualifier => 'Matthew 5').first
+if !q
+  puts '      - Added Matthew 5 quest'
+  Quest.create(:badge_id => sotm, :objective => 'Chapters', :qualifier => 'Matthew 5', :task => "Memorize Matthew 5")
+end  
+q = Quest.where(:objective => 'Chapters', :qualifier => 'Matthew 6').first
+if !q
+  puts '      - Added Matthew 6 quest'
+  Quest.create(:badge_id => sotm, :objective => 'Chapters', :qualifier => 'Matthew 6', :task => "Memorize Matthew 6")
+end  
+q = Quest.where(:objective => 'Chapters', :qualifier => 'Matthew 7').first
+if !q
+  puts '      - Added Matthew 7 quest'
+  Quest.create(:badge_id => sotm, :objective => 'Chapters', :qualifier => 'Matthew 7', :task => "Memorize Matthew 7")
+end    
 
+# ---- Referrer Medals ----------------------------
+referrer_gold = Badge.where(:name => 'Referrer', :color => 'gold').first
+if !referrer_gold
+  puts ' - Creating Referrer Gold Medal'
+  referrer_gold = Badge.create(:name => 'Referrer', :color => 'gold',     :description => "Refer 200 Active Users")
+end
 
+referrer_silver = Badge.where(:name => 'Referrer', :color => 'silver').first
+if !referrer_silver
+  puts ' - Creating Referrer Silver Medal'
+  referrer_silver = Badge.create(:name => 'Referrer', :color => 'silver', :description => "Refer 100 Active Users")
+end
+
+referrer_bronze = Badge.where(:name => 'Referrer', :color => 'bronze').first
+if !referrer_bronze
+  puts ' - Creating Referrer Bronze Medal'
+  referrer_bronze = Badge.create(:name => 'Referrer', :color => 'bronze', :description => "Refer 50 Active Users")
+end
+
+puts '   - Adding Referrer Quests'
+q = Quest.where(:objective => 'Referrals', :quantity => 200).first
+if !q
+  puts '      - Referrer gold medal quests'
+  referrer_gold = Badge.where(:name => 'Referrer', :color => 'gold').first
+  Quest.create(:badge_id => referrer_gold.id, :objective => 'Referrals',   :quantity => 200, :task => "Refer 200 Active Users")
+end  
+q = Quest.where(:objective => 'Referrals', :quantity => 100).first
+if !q
+  puts '      - Referrer silver medal quests'
+  referrer_silver = Badge.where(:name => 'Referrer', :color => 'silver').first
+  Quest.create(:badge_id => referrer_silver.id, :objective => 'Referrals', :quantity => 100, :task => "Refer 100 Active Users")
+end  
+q = Quest.where(:objective => 'Referrals', :quantity =>  50).first
+if !q
+  puts '      - Referrer bronze medal quests'
+  referrer_bronze = Badge.where(:name => 'Referrer', :color => 'bronze').first  
+  Quest.create(:badge_id => referrer_bronze.id, :objective => 'Referrals', :quantity =>  50, :task => "Refer  50 Active Users")
+end  
+
+# ----------------------------------------------------------------------------------------------------------   
+# Create Final Verse data table
+# ---------------------------------------------------------------------------------------------------------- 
 if ActiveRecord::Base.connection.table_exists? 'final_verses'
   puts 'FINAL VERSE DATA ALREADY EXISTS - SKIPPING TABLE CREATION'
 else

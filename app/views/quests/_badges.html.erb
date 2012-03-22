@@ -1,13 +1,20 @@
 <div>
-		<div class="sermon-on-the-mount unearned"></div>		
-		<div class="consistency         unearned"></div>
-		<div class="referrer            unearned"></div>
+	<div id="1" class="sermon-on-the-mount earned"></div>		
+	<div id="2" class="consistency         unearned"></div>
+	<div id="3" class="referrer            earned-gold"></div>
 </div>
 
 <script type="text/javascript">
 $(document).ready(function() {
-
-
-
+	$.getJSON('/earned_badges.json', function(badges_array) {
+		$.each(badges_array, function(index, badge) {
+			switch( badge.color ) {
+				case 'gold'  : $("#" + badge.id).removeClass("unearned").addClass("earned-gold");   break;
+				case 'silver': $("#" + badge.id).removeClass("unearned").addClass("earned-silver"); break;
+				case 'bronze': $("#" + badge.id).removeClass("unearned").addClass("earned-bronze"); break;
+				case 'solo'  : $("#" + badge.id).removeClass("unearned").addClass("earned");        break;
+			}
+		});
+	});
 });
 </script>
