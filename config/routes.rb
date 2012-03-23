@@ -121,6 +121,8 @@ MemverseApp::Application.routes.draw do
   match '/set_time_alloc/:time',   :to => 'profile#set_time_alloc',          :as => 'set_time_alloc'
 
   match '/earned_badges',          :to => 'badges#earned_badges',            :as => 'earned_badges'     
+ 
+  match '/badge_quests_check',     :to => 'quests#badge_quests_check',       :as => 'badge_quests_check' 
   
   match '/edit_tag/:id',           :to => 'tag#edit_tag',                    :as => 'edit_tag'
 
