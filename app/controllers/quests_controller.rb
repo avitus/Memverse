@@ -93,5 +93,27 @@ class QuestsController < ApplicationController
     @current_user_quests = current_user.quests    
     render :partial=>'current_user_quests', :layout=>false
   end
+
+  # ----------------------------------------------------------------------------------------------------------   
+  # Check whether user has completed any badge quests
+  # ----------------------------------------------------------------------------------------------------------   
+  def badge_quests_check
+    
+    @completed_badge_quests = Array.new
+    
+    badge_quests = Quest.where(:level => nil)  # Get all quests not associated with levels
+    badge_quests.each do |q|
+      if q.complete?(current_user)
+        q.check_quest_off(current_user)
+        @completed_badge_quests << q
+      end
+    end
+    
+    respond_to do |format|
+      format.html
+      format.json  { render :json => @completed_badge_quests }
+    end    
+    
+  end
   
 end
