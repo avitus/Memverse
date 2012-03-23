@@ -410,7 +410,8 @@ class MemversesController < ApplicationController
     query         = params[:term]
     query_length  = query.length
     
-    all_tags = ActsAsTaggableOn::Tag.find(:all, :select => 'name')
+    # This has the effect of restricting autocomplete to only :taggable_type => Verse
+    all_tags = Verse.tag_counts
     
     all_tags.each { |tag|
       name = tag.name
