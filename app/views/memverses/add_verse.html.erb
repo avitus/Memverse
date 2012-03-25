@@ -92,7 +92,7 @@
 		// User adds a new verse
 		$('.create-and-add').on("click", ".quick-start-add-button", function() {      // Bind to DIV enclosing button to allow for event delegation
 			$button   = $('.create-and-add .quick-start-add-button');
-			ref       = parseVerseRef( $("#js_flex-verse-search").val().trim()); // SEEMS TO BE AN ERROR WITH THIS LINE
+			ref       = parseVerseRef( $.trim($("#js_flex-verse-search").val()) ); // SEEMS TO BE AN ERROR WITH THIS LINE
 			newVerse  = cleanseVerseText( $("#versetext").val() );
 						
 			if ( ref ) { 
