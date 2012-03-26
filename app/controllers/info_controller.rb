@@ -198,8 +198,6 @@ class InfoController < ApplicationController
     add_breadcrumb I18n.t("leader_menu.Referralboard"), referralboard_path
     
     @referralboard = User.top_referrers
-    
-    @not_on_referralboard = (current_user.num_referrals < @referralboard.last[1]) unless !current_user
   end
   
   # ----------------------------------------------------------------------------------------------------------   
