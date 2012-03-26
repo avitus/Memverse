@@ -125,8 +125,6 @@ class InfoController < ApplicationController
     add_breadcrumb I18n.t("leader_menu.Leaderboard"), leaderboard_path
     
     @leaderboard = User.top_users # returns top users sorted by number of verses memorized
-
-    @not_on_leaderboard = (current_user.memorized < @leaderboard.last.memorized) unless !current_user
   end
 
   # ----------------------------------------------------------------------------------------------------------
