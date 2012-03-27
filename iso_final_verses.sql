@@ -1,20 +1,14 @@
-DROP TABLE IF EXISTS `final_verses`;
+DROP TABLE IF EXISTS final_verses;
 
 CREATE TABLE `final_verses` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `book` varchar(255) NOT NULL,
-  `chapter` int(11) NOT NULL,
-  `last_verse` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
+  id int(11) NOT NULL PRIMARY KEY,
+  book varchar(255) NOT NULL,
+  chapter int(11) NOT NULL,
+  last_verse int(11) NOT NULL
+);
 
-  KEY `index_final_verses_on_book_and_chapter` (`book`,`chapter`)
-) ENGINE=InnoDB AUTO_INCREMENT=1623 DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `final_verses`
---
-
-INSERT INTO `final_verses` VALUES (6,'Genesis',1,31),
+INSERT INTO final_verses VALUES 
+(6,'Genesis',1,31),
 (7,'Genesis',2,25),
 (8,'Genesis',3,24),
 (9,'Genesis',4,26),
