@@ -2,7 +2,8 @@
 -- Dumping data for table `final_verses`
 --
 
-INSERT INTO `final_verses` VALUES (6,'Genesis',1,31),
+INSERT INTO `final_verses` VALUES
+(6,'Genesis',1,31),
 (7,'Genesis',2,25),
 (8,'Genesis',3,24),
 (9,'Genesis',4,26),
