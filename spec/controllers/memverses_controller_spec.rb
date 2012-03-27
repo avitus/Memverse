@@ -28,7 +28,7 @@ describe MemversesController do
       @verse_niv = Factory(:verse, :translation => 'NIV')
       @verse_esv = Factory(:verse, :translation => 'ESV')
       get :ajax_add, :id => @verse_niv
-      get :ajax_add, :id => @verse_esv  
+      get :ajax_add, :id => @verse_esv # This test is currently failing since it can't save the Memverse object it makes with this request
       @user.memverses.count.should == 1            
     end
     
