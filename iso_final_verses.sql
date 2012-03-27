@@ -1,1622 +1,1617 @@
---
--- Dumping data for table `final_verses`
---
-
-INSERT INTO `final_verses` VALUES
-(6,'Genesis',1,31),
-(7,'Genesis',2,25),
-(8,'Genesis',3,24),
-(9,'Genesis',4,26),
-(10,'Genesis',5,32),
-(11,'Genesis',6,22),
-(12,'Genesis',7,24),
-(13,'Genesis',8,22),
-(14,'Genesis',9,29),
-(15,'Genesis',10,32),
-(16,'Genesis',11,32),
-(17,'Genesis',12,20),
-(18,'Genesis',13,18),
-(19,'Genesis',14,24),
-(20,'Genesis',15,21),
-(21,'Genesis',16,16),
-(22,'Genesis',17,27),
-(23,'Genesis',18,33),
-(24,'Genesis',19,38),
-(25,'Genesis',20,18),
-(26,'Genesis',21,34),
-(27,'Genesis',22,24),
-(28,'Genesis',23,20),
-(29,'Genesis',24,67),
-(30,'Genesis',25,34),
-(31,'Genesis',26,35),
-(32,'Genesis',27,46),
-(33,'Genesis',28,22),
-(34,'Genesis',29,35),
-(35,'Genesis',30,43),
-(36,'Genesis',31,55),
-(37,'Genesis',32,32),
-(38,'Genesis',33,20),
-(39,'Genesis',34,31),
-(40,'Genesis',35,29),
-(41,'Genesis',36,43),
-(42,'Genesis',37,36),
-(43,'Genesis',38,30),
-(44,'Genesis',39,23),
-(45,'Genesis',40,23),
-(46,'Genesis',41,57),
-(47,'Genesis',42,38),
-(48,'Genesis',43,34),
-(49,'Genesis',44,34),
-(50,'Genesis',45,28),
-(51,'Genesis',46,34),
-(52,'Genesis',47,31),
-(53,'Genesis',48,22),
-(54,'Genesis',49,33),
-(55,'Genesis',50,26),
-(56,'Exodus',1,22),
-(57,'Exodus',2,25),
-(58,'Exodus',3,22),
-(59,'Exodus',4,31),
-(60,'Exodus',5,23),
-(61,'Exodus',6,30),
-(62,'Exodus',7,25),
-(63,'Exodus',8,32),
-(64,'Exodus',9,35),
-(65,'Exodus',10,29),
-(66,'Exodus',11,10),
-(67,'Exodus',12,51),
-(68,'Exodus',13,22),
-(69,'Exodus',14,31),
-(70,'Exodus',15,27),
-(71,'Exodus',16,36),
-(72,'Exodus',17,16),
-(73,'Exodus',18,27),
-(74,'Exodus',19,25),
-(75,'Exodus',20,26),
-(76,'Exodus',21,36),
-(77,'Exodus',22,31),
-(78,'Exodus',23,33),
-(79,'Exodus',24,18),
-(80,'Exodus',25,40),
-(81,'Exodus',26,37),
-(82,'Exodus',27,21),
-(83,'Exodus',28,43),
-(84,'Exodus',29,46),
-(85,'Exodus',30,38),
-(86,'Exodus',31,18),
-(87,'Exodus',32,35),
-(88,'Exodus',33,23),
-(89,'Exodus',34,35),
-(90,'Exodus',35,35),
-(91,'Exodus',36,38),
-(92,'Exodus',37,29),
-(93,'Exodus',38,31),
-(94,'Exodus',39,43),
-(95,'Exodus',40,38),
-(96,'Leviticus',1,17),
-(97,'Leviticus',2,16),
-(98,'Leviticus',3,17),
-(99,'Leviticus',4,35),
-(100,'Leviticus',5,19),
-(101,'Leviticus',6,30),
-(102,'Leviticus',7,38),
-(103,'Leviticus',8,36),
-(104,'Leviticus',9,24),
-(105,'Leviticus',10,20),
-(106,'Leviticus',11,47),
-(107,'Leviticus',12,8),
-(108,'Leviticus',13,59),
-(109,'Leviticus',14,57),
-(110,'Leviticus',15,33),
-(111,'Leviticus',16,34),
-(112,'Leviticus',17,16),
-(113,'Leviticus',18,30),
-(114,'Leviticus',19,37),
-(115,'Leviticus',20,27),
-(116,'Leviticus',21,24),
-(117,'Leviticus',22,33),
-(118,'Leviticus',23,44),
-(119,'Leviticus',24,23),
-(120,'Leviticus',25,55),
-(121,'Leviticus',26,46),
-(122,'Leviticus',27,34),
-(123,'Numbers',1,54),
-(124,'Numbers',2,34),
-(125,'Numbers',3,51),
-(126,'Numbers',4,49),
-(127,'Numbers',5,31),
-(128,'Numbers',6,27),
-(129,'Numbers',7,89),
-(130,'Numbers',8,26),
-(131,'Numbers',9,23),
-(132,'Numbers',10,36),
-(133,'Numbers',11,35),
-(134,'Numbers',12,16),
-(135,'Numbers',13,33),
-(136,'Numbers',14,45),
-(137,'Numbers',15,41),
-(138,'Numbers',16,50),
-(139,'Numbers',17,13),
-(140,'Numbers',18,32),
-(141,'Numbers',19,22),
-(142,'Numbers',20,29),
-(143,'Numbers',21,35),
-(144,'Numbers',22,41),
-(145,'Numbers',23,30),
-(146,'Numbers',24,25),
-(147,'Numbers',25,18),
-(148,'Numbers',26,65),
-(149,'Numbers',27,23),
-(150,'Numbers',28,31),
-(151,'Numbers',29,40),
-(152,'Numbers',30,16),
-(153,'Numbers',31,54),
-(154,'Numbers',32,42),
-(155,'Numbers',33,56),
-(156,'Numbers',34,29),
-(157,'Numbers',35,34),
-(158,'Numbers',36,13),
-(159,'Deuteronomy',1,46),
-(160,'Deuteronomy',2,37),
-(161,'Deuteronomy',3,29),
-(162,'Deuteronomy',4,49),
-(163,'Deuteronomy',5,33),
-(164,'Deuteronomy',6,25),
-(165,'Deuteronomy',7,26),
-(166,'Deuteronomy',8,20),
-(167,'Deuteronomy',9,29),
-(168,'Deuteronomy',10,22),
-(169,'Deuteronomy',11,32),
-(170,'Deuteronomy',12,32),
-(171,'Deuteronomy',13,18),
-(172,'Deuteronomy',14,29),
-(173,'Deuteronomy',15,23),
-(174,'Deuteronomy',16,22),
-(175,'Deuteronomy',17,20),
-(176,'Deuteronomy',18,22),
-(177,'Deuteronomy',19,21),
-(178,'Deuteronomy',20,20),
-(179,'Deuteronomy',21,23),
-(180,'Deuteronomy',22,30),
-(181,'Deuteronomy',23,25),
-(182,'Deuteronomy',24,22),
-(183,'Deuteronomy',25,19),
-(184,'Deuteronomy',26,19),
-(185,'Deuteronomy',27,26),
-(186,'Deuteronomy',28,68),
-(187,'Deuteronomy',29,29),
-(188,'Deuteronomy',30,20),
-(189,'Deuteronomy',31,30),
-(190,'Deuteronomy',32,52),
-(191,'Deuteronomy',33,29),
-(192,'Deuteronomy',34,12),
-(193,'Joshua',1,18),
-(194,'Joshua',2,24),
-(195,'Joshua',3,17),
-(196,'Joshua',4,24),
-(197,'Joshua',5,15),
-(198,'Joshua',6,27),
-(199,'Joshua',7,26),
-(200,'Joshua',8,35),
-(201,'Joshua',9,27),
-(202,'Joshua',10,43),
-(203,'Joshua',11,23),
-(204,'Joshua',12,24),
-(205,'Joshua',13,33),
-(206,'Joshua',14,15),
-(207,'Joshua',15,63),
-(208,'Joshua',16,10),
-(209,'Joshua',17,18),
-(210,'Joshua',18,28),
-(211,'Joshua',19,51),
-(212,'Joshua',20,9),
-(213,'Joshua',21,45),
-(214,'Joshua',22,34),
-(215,'Joshua',23,16),
-(216,'Joshua',24,33),
-(217,'Judges',1,36),
-(218,'Judges',2,23),
-(219,'Judges',3,31),
-(220,'Judges',4,24),
-(221,'Judges',5,31),
-(222,'Judges',6,40),
-(223,'Judges',7,25),
-(224,'Judges',8,35),
-(225,'Judges',9,57),
-(226,'Judges',10,18),
-(227,'Judges',11,40),
-(228,'Judges',12,15),
-(229,'Judges',13,25),
-(230,'Judges',14,20),
-(231,'Judges',15,20),
-(232,'Judges',16,31),
-(233,'Judges',17,13),
-(234,'Judges',18,31),
-(235,'Judges',19,30),
-(236,'Judges',20,48),
-(237,'Judges',21,25),
-(238,'Ruth',1,22),
-(239,'Ruth',2,23),
-(240,'Ruth',3,18),
-(241,'Ruth',4,22),
-(242,'1 Samuel',1,28),
-(243,'1 Samuel',2,36),
-(244,'1 Samuel',3,21),
-(245,'1 Samuel',4,22),
-(246,'1 Samuel',5,12),
-(247,'1 Samuel',6,21),
-(248,'1 Samuel',7,17),
-(249,'1 Samuel',8,22),
-(250,'1 Samuel',9,27),
-(251,'1 Samuel',10,27),
-(252,'1 Samuel',11,15),
-(253,'1 Samuel',12,25),
-(254,'1 Samuel',13,23),
-(255,'1 Samuel',14,52),
-(256,'1 Samuel',15,35),
-(257,'1 Samuel',16,23),
-(258,'1 Samuel',17,58),
-(259,'1 Samuel',18,30),
-(260,'1 Samuel',19,24),
-(261,'1 Samuel',20,42),
-(262,'1 Samuel',21,15),
-(263,'1 Samuel',22,23),
-(264,'1 Samuel',23,29),
-(265,'1 Samuel',24,22),
-(266,'1 Samuel',25,44),
-(267,'1 Samuel',26,25),
-(268,'1 Samuel',27,12),
-(269,'1 Samuel',28,25),
-(270,'1 Samuel',29,11),
-(271,'1 Samuel',30,31),
-(272,'1 Samuel',31,13),
-(273,'2 Samuel',1,27),
-(274,'2 Samuel',2,32),
-(275,'2 Samuel',3,39),
-(276,'2 Samuel',4,12),
-(277,'2 Samuel',5,25),
-(278,'2 Samuel',6,23),
-(279,'2 Samuel',7,29),
-(280,'2 Samuel',8,18),
-(281,'2 Samuel',9,13),
-(282,'2 Samuel',10,19),
-(283,'2 Samuel',11,27),
-(284,'2 Samuel',12,31),
-(285,'2 Samuel',13,39),
-(286,'2 Samuel',14,33),
-(287,'2 Samuel',15,37),
-(288,'2 Samuel',16,23),
-(289,'2 Samuel',17,29),
-(290,'2 Samuel',18,33),
-(291,'2 Samuel',19,43),
-(292,'2 Samuel',20,26),
-(293,'2 Samuel',21,22),
-(294,'2 Samuel',22,51),
-(295,'2 Samuel',23,39),
-(296,'2 Samuel',24,25),
-(297,'1 Kings',1,53),
-(298,'1 Kings',2,46),
-(299,'1 Kings',3,28),
-(300,'1 Kings',4,34),
-(301,'1 Kings',5,18),
-(302,'1 Kings',6,38),
-(303,'1 Kings',7,51),
-(304,'1 Kings',8,66),
-(305,'1 Kings',9,28),
-(306,'1 Kings',10,29),
-(307,'1 Kings',11,43),
-(308,'1 Kings',12,33),
-(309,'1 Kings',13,34),
-(310,'1 Kings',14,31),
-(311,'1 Kings',15,34),
-(312,'1 Kings',16,34),
-(313,'1 Kings',17,24),
-(314,'1 Kings',18,46),
-(315,'1 Kings',19,21),
-(316,'1 Kings',20,43),
-(317,'1 Kings',21,29),
-(318,'1 Kings',22,53),
-(319,'2 Kings',1,18),
-(320,'2 Kings',2,25),
-(321,'2 Kings',3,27),
-(322,'2 Kings',4,44),
-(323,'2 Kings',5,27),
-(324,'2 Kings',6,33),
-(325,'2 Kings',7,20),
-(326,'2 Kings',8,29),
-(327,'2 Kings',9,37),
-(328,'2 Kings',10,36),
-(329,'2 Kings',11,21),
-(330,'2 Kings',12,21),
-(331,'2 Kings',13,25),
-(332,'2 Kings',14,29),
-(333,'2 Kings',15,38),
-(334,'2 Kings',16,20),
-(335,'2 Kings',17,41),
-(336,'2 Kings',18,37),
-(337,'2 Kings',19,37),
-(338,'2 Kings',20,21),
-(339,'2 Kings',21,26),
-(340,'2 Kings',22,20),
-(341,'2 Kings',23,37),
-(342,'2 Kings',24,20),
-(343,'2 Kings',25,30),
-(344,'1 Chronicles',1,54),
-(345,'1 Chronicles',2,55),
-(346,'1 Chronicles',3,24),
-(347,'1 Chronicles',4,43),
-(348,'1 Chronicles',5,26),
-(349,'1 Chronicles',6,81),
-(350,'1 Chronicles',7,40),
-(351,'1 Chronicles',8,40),
-(352,'1 Chronicles',9,44),
-(353,'1 Chronicles',10,14),
-(354,'1 Chronicles',11,47),
-(355,'1 Chronicles',12,40),
-(356,'1 Chronicles',13,14),
-(357,'1 Chronicles',14,17),
-(358,'1 Chronicles',15,29),
-(359,'1 Chronicles',16,43),
-(360,'1 Chronicles',17,27),
-(361,'1 Chronicles',18,17),
-(362,'1 Chronicles',19,19),
-(363,'1 Chronicles',20,8),
-(364,'1 Chronicles',21,30),
-(365,'1 Chronicles',22,19),
-(366,'1 Chronicles',23,32),
-(367,'1 Chronicles',24,31),
-(368,'1 Chronicles',25,31),
-(369,'1 Chronicles',26,32),
-(370,'1 Chronicles',27,34),
-(371,'1 Chronicles',28,21),
-(372,'1 Chronicles',29,30),
-(373,'2 Chronicles',1,17),
-(374,'2 Chronicles',2,18),
-(375,'2 Chronicles',3,17),
-(376,'2 Chronicles',4,22),
-(377,'2 Chronicles',5,14),
-(378,'2 Chronicles',6,42),
-(379,'2 Chronicles',7,22),
-(380,'2 Chronicles',8,18),
-(381,'2 Chronicles',9,31),
-(382,'2 Chronicles',10,19),
-(383,'2 Chronicles',11,23),
-(384,'2 Chronicles',12,16),
-(385,'2 Chronicles',13,22),
-(386,'2 Chronicles',14,15),
-(387,'2 Chronicles',15,19),
-(388,'2 Chronicles',16,14),
-(389,'2 Chronicles',17,19),
-(390,'2 Chronicles',18,34),
-(391,'2 Chronicles',19,11),
-(392,'2 Chronicles',20,37),
-(393,'2 Chronicles',21,20),
-(394,'2 Chronicles',22,12),
-(395,'2 Chronicles',23,21),
-(396,'2 Chronicles',24,27),
-(397,'2 Chronicles',25,28),
-(398,'2 Chronicles',26,23),
-(399,'2 Chronicles',27,9),
-(400,'2 Chronicles',28,27),
-(401,'2 Chronicles',29,36),
-(402,'2 Chronicles',30,27),
-(403,'2 Chronicles',31,21),
-(404,'2 Chronicles',32,33),
-(405,'2 Chronicles',33,25),
-(406,'2 Chronicles',34,33),
-(407,'2 Chronicles',35,27),
-(408,'2 Chronicles',36,23),
-(409,'Ezra',1,11),
-(410,'Ezra',2,70),
-(411,'Ezra',3,13),
-(412,'Ezra',4,24),
-(413,'Ezra',5,17),
-(414,'Ezra',6,22),
-(415,'Ezra',7,28),
-(416,'Ezra',8,36),
-(417,'Ezra',9,15),
-(418,'Ezra',10,44),
-(419,'Nehemiah',1,11),
-(420,'Nehemiah',2,20),
-(421,'Nehemiah',3,32),
-(422,'Nehemiah',4,23),
-(423,'Nehemiah',5,19),
-(424,'Nehemiah',6,19),
-(425,'Nehemiah',7,73),
-(426,'Nehemiah',8,18),
-(427,'Nehemiah',9,38),
-(428,'Nehemiah',10,39),
-(429,'Nehemiah',11,36),
-(430,'Nehemiah',12,47),
-(431,'Nehemiah',13,31),
-(432,'Esther',1,22),
-(433,'Esther',2,23),
-(434,'Esther',3,15),
-(435,'Esther',4,17),
-(436,'Esther',5,14),
-(437,'Esther',6,14),
-(438,'Esther',7,10),
-(439,'Esther',8,17),
-(440,'Esther',9,32),
-(441,'Esther',10,3),
-(442,'Job',1,22),
-(443,'Job',2,13),
-(444,'Job',3,26),
-(445,'Job',4,21),
-(446,'Job',5,27),
-(447,'Job',6,30),
-(448,'Job',7,21),
-(449,'Job',8,22),
-(450,'Job',9,35),
-(451,'Job',10,22),
-(452,'Job',11,20),
-(453,'Job',12,25),
-(454,'Job',13,28),
-(455,'Job',14,22),
-(456,'Job',15,35),
-(457,'Job',16,22),
-(458,'Job',17,16),
-(459,'Job',18,21),
-(460,'Job',19,29),
-(461,'Job',20,29),
-(462,'Job',21,34),
-(463,'Job',22,30),
-(464,'Job',23,17),
-(465,'Job',24,25),
-(466,'Job',25,6),
-(467,'Job',26,14),
-(468,'Job',27,23),
-(469,'Job',28,28),
-(470,'Job',29,25),
-(471,'Job',30,31),
-(472,'Job',31,40),
-(473,'Job',32,22),
-(474,'Job',33,33),
-(475,'Job',34,37),
-(476,'Job',35,16),
-(477,'Job',36,33),
-(478,'Job',37,24),
-(479,'Job',38,41),
-(480,'Job',39,30),
-(481,'Job',40,24),
-(482,'Job',41,34),
-(483,'Job',42,17),
-(484,'Psalms',1,6),
-(485,'Psalms',2,12),
-(486,'Psalms',3,8),
-(487,'Psalms',4,8),
-(488,'Psalms',5,12),
-(489,'Psalms',6,10),
-(490,'Psalms',7,17),
-(491,'Psalms',8,9),
-(492,'Psalms',9,20),
-(493,'Psalms',10,18),
-(494,'Psalms',11,7),
-(495,'Psalms',12,8),
-(496,'Psalms',13,6),
-(497,'Psalms',14,7),
-(498,'Psalms',15,5),
-(499,'Psalms',16,11),
-(500,'Psalms',17,15),
-(501,'Psalms',18,50),
-(502,'Psalms',19,14),
-(503,'Psalms',20,9),
-(504,'Psalms',21,13),
-(505,'Psalms',22,31),
-(506,'Psalms',23,6),
-(507,'Psalms',24,10),
-(508,'Psalms',25,22),
-(509,'Psalms',0,12),
-(510,'Psalms',27,14),
-(511,'Psalms',28,9),
-(512,'Psalms',29,11),
-(513,'Psalms',30,12),
-(514,'Psalms',31,24),
-(515,'Psalms',32,11),
-(516,'Psalms',33,22),
-(517,'Psalms',34,22),
-(518,'Psalms',35,28),
-(519,'Psalms',36,12),
-(520,'Psalms',37,40),
-(521,'Psalms',38,22),
-(522,'Psalms',39,13),
-(523,'Psalms',40,17),
-(524,'Psalms',41,13),
-(525,'Psalms',42,11),
-(526,'Psalms',43,5),
-(527,'Psalms',44,26),
-(528,'Psalms',45,17),
-(529,'Psalms',46,11),
-(530,'Psalms',47,9),
-(531,'Psalms',48,14),
-(532,'Psalms',49,20),
-(533,'Psalms',50,23),
-(534,'Psalms',0,19),
-(535,'Psalms',52,9),
-(536,'Psalms',53,6),
-(537,'Psalms',54,7),
-(538,'Psalms',55,23),
-(539,'Psalms',56,13),
-(540,'Psalms',57,11),
-(541,'Psalms',58,11),
-(542,'Psalms',59,17),
-(543,'Psalms',60,12),
-(544,'Psalms',61,8),
-(545,'Psalms',62,12),
-(546,'Psalms',63,11),
-(547,'Psalms',64,10),
-(548,'Psalms',65,13),
-(549,'Psalms',66,20),
-(550,'Psalms',67,7),
-(551,'Psalms',68,35),
-(552,'Psalms',69,36),
-(553,'Psalms',70,5),
-(554,'Psalms',71,24),
-(555,'Psalms',72,20),
-(556,'Psalms',73,28),
-(557,'Psalms',74,23),
-(558,'Psalms',75,10),
-(559,'Psalms',0,12),
-(560,'Psalms',77,20),
-(561,'Psalms',78,72),
-(562,'Psalms',79,13),
-(563,'Psalms',80,19),
-(564,'Psalms',81,16),
-(565,'Psalms',82,8),
-(566,'Psalms',83,18),
-(567,'Psalms',84,12),
-(568,'Psalms',85,13),
-(569,'Psalms',86,17),
-(570,'Psalms',87,7),
-(571,'Psalms',88,18),
-(572,'Psalms',89,52),
-(573,'Psalms',90,17),
-(574,'Psalms',91,16),
-(575,'Psalms',92,15),
-(576,'Psalms',93,5),
-(577,'Psalms',94,23),
-(578,'Psalms',95,11),
-(579,'Psalms',96,13),
-(580,'Psalms',97,12),
-(581,'Psalms',98,9),
-(582,'Psalms',0,0),
-(583,'Psalms',0,0),
-(584,'Psalms',0,0),
-(585,'Psalms',0,0),
-(586,'Psalms',0,0),
-(587,'Psalms',0,0),
-(588,'Psalms',0,0),
-(589,'Psalms',0,0),
-(590,'Psalms',0,0),
-(591,'Psalms',0,0),
-(592,'Psalms',0,0),
-(593,'Psalms',0,0),
-(594,'Psalms',150,0),
-(595,'Psalms',0,0),
-(596,'Psalms',2461,0),
-(597,'Psalms',0,0),
-(598,'Psalms',0,0),
-(599,'Psalms',0,0),
-(600,'Psalms',0,0),
-(601,'Psalms',0,0),
-(602,'Psalms',0,0),
-(603,'Psalms',0,0),
-(604,'Psalms',0,0),
-(605,'Psalms',0,0),
-(606,'Psalms',0,0),
-(607,'Psalms',0,0),
-(608,'Psalms',0,0),
-(609,'Psalms',0,0),
-(610,'Psalms',0,0),
-(611,'Psalms',0,0),
-(612,'Psalms',0,0),
-(613,'Psalms',0,0),
-(614,'Psalms',0,0),
-(615,'Psalms',0,0),
-(616,'Psalms',0,0),
-(617,'Psalms',0,0),
-(618,'Psalms',0,0),
-(619,'Psalms',0,0),
-(620,'Psalms',0,0),
-(621,'Psalms',0,0),
-(622,'Psalms',0,0),
-(623,'Psalms',0,0),
-(624,'Psalms',0,0),
-(625,'Psalms',0,0),
-(626,'Psalms',0,0),
-(627,'Psalms',0,0),
-(628,'Psalms',0,0),
-(629,'Psalms',119,0),
-(630,'Psalms',0,0),
-(631,'Psalms',20,0),
-(632,'Psalms',0,0),
-(633,'Psalms',0,0),
-(634,'Psalms',0,0),
-(635,'Psalms',0,0),
-(636,'Psalms',119,0),
-(637,'Psalms',0,0),
-(638,'Psalms',20,0),
-(639,'Psalms',0,0),
-(640,'Psalms',0,0),
-(641,'Psalms',0,0),
-(642,'Psalms',0,0),
-(643,'Psalms',0,0),
-(644,'Psalms',0,0),
-(645,'Psalms',0,0),
-(646,'Psalms',0,0),
-(647,'Psalms',0,0),
-(648,'Psalms',0,0),
-(649,'Psalms',0,0),
-(650,'Psalms',0,0),
-(651,'Psalms',0,0),
-(652,'Psalms',0,0),
-(653,'Psalms',0,0),
-(654,'Psalms',0,0),
-(655,'Psalms',0,0),
-(656,'Psalms',0,0),
-(657,'Psalms',0,0),
-(658,'Psalms',0,0),
-(659,'Psalms',0,0),
-(660,'Psalms',0,0),
-(661,'Psalms',0,0),
-(662,'Psalms',0,0),
-(663,'Psalms',0,0),
-(664,'Psalms',0,0),
-(665,'Psalms',0,0),
-(666,'Psalms',0,0),
-(667,'Psalms',0,0),
-(668,'Psalms',0,0),
-(669,'Psalms',0,0),
-(670,'Psalms',0,0),
-(671,'Psalms',0,0),
-(672,'Psalms',0,0),
-(673,'Psalms',0,0),
-(674,'Psalms',0,0),
-(675,'Psalms',0,0),
-(676,'Psalms',0,0),
-(677,'Psalms',0,0),
-(678,'Psalms',0,0),
-(679,'Psalms',0,0),
-(680,'Psalms',0,0),
-(681,'Psalms',0,0),
-(682,'Psalms',0,0),
-(683,'Psalms',0,0),
-(684,'Psalms',0,0),
-(685,'Psalms',0,0),
-(686,'Psalms',0,0),
-(687,'Psalms',0,0),
-(688,'Psalms',0,0),
-(689,'Psalms',0,0),
-(690,'Psalms',0,0),
-(691,'Psalms',0,0),
-(692,'Psalms',0,0),
-(693,'Psalms',0,0),
-(694,'Psalms',0,0),
-(695,'Psalms',0,0),
-(696,'Psalms',0,0),
-(697,'Psalms',0,0),
-(698,'Psalms',0,0),
-(699,'Psalms',0,0),
-(700,'Psalms',0,0),
-(701,'Psalms',0,0),
-(702,'Psalms',0,0),
-(703,'Psalms',0,0),
-(704,'Psalms',0,0),
-(705,'Psalms',0,0),
-(706,'Psalms',0,0),
-(707,'Psalms',0,0),
-(708,'Psalms',0,0),
-(709,'Psalms',0,0),
-(710,'Psalms',0,0),
-(711,'Psalms',0,0),
-(712,'Psalms',0,0),
-(713,'Psalms',0,0),
-(714,'Psalms',0,0),
-(715,'Psalms',0,0),
-(716,'Psalms',0,0),
-(717,'Psalms',0,0),
-(718,'Psalms',0,0),
-(719,'Psalms',0,0),
-(720,'Psalms',0,0),
-(721,'Psalms',0,0),
-(722,'Psalms',0,0),
-(723,'Psalms',0,0),
-(724,'Psalms',0,0),
-(725,'Psalms',0,0),
-(726,'Psalms',0,0),
-(727,'Psalms',0,0),
-(728,'Psalms',0,0),
-(729,'Psalms',0,0),
-(730,'Psalms',0,0),
-(731,'Psalms',0,0),
-(732,'Psalms',0,0),
-(733,'Psalms',0,0),
-(734,'Psalms',0,0),
-(735,'Psalms',0,0),
-(736,'Psalms',0,0),
-(737,'Psalms',0,0),
-(738,'Psalms',0,0),
-(739,'Psalms',0,0),
-(740,'Psalms',0,0),
-(741,'Psalms',0,0),
-(742,'Psalms',0,0),
-(743,'Psalms',0,0),
-(744,'Psalms',0,0),
-(745,'Psalms',0,0),
-(746,'Psalms',0,0),
-(747,'Psalms',0,0),
-(748,'Psalms',0,0),
-(749,'Psalms',0,0),
-(750,'Psalms',0,0),
-(751,'Psalms',0,0),
-(752,'Psalms',0,0),
-(753,'Psalms',0,0),
-(754,'Psalms',0,0),
-(755,'Psalms',0,0),
-(756,'Psalms',0,0),
-(757,'Psalms',0,0),
-(758,'Psalms',0,0),
-(759,'Psalms',0,0),
-(760,'Psalms',0,0),
-(761,'Psalms',0,0),
-(762,'Psalms',0,0),
-(763,'Psalms',0,0),
-(764,'Psalms',0,0),
-(765,'Psalms',0,0),
-(766,'Psalms',0,0),
-(767,'Psalms',116,0),
-(768,'Psalms',0,0),
-(769,'Psalms',0,0),
-(770,'Psalms',119,0),
-(771,'Psalms',0,0),
-(772,'Psalms',0,0),
-(773,'Psalms',0,0),
-(774,'Psalms',0,0),
-(775,'Psalms',0,0),
-(776,'Psalms',0,0),
-(777,'Psalms',0,0),
-(778,'Psalms',22,0),
-(779,'Psalms',0,0),
-(780,'Psalms',0,0),
-(781,'Psalms',0,0),
-(782,'Psalms',0,0),
-(783,'Psalms',0,0),
-(784,'Psalms',0,0),
-(785,'Psalms',0,0),
-(786,'Psalms',0,0),
-(787,'Psalms',0,0),
-(788,'Psalms',0,0),
-(789,'Psalms',0,0),
-(790,'Psalms',22,0),
-(791,'Psalms',0,0),
-(792,'Psalms',0,0),
-(793,'Psalms',0,0),
-(794,'Psalms',0,0),
-(795,'Psalms',0,0),
-(796,'Psalms',0,0),
-(797,'Psalms',0,0),
-(798,'Psalms',0,0),
-(799,'Psalms',0,0),
-(800,'Psalms',0,0),
-(801,'Psalms',0,0),
-(802,'Psalms',0,0),
-(803,'Psalms',0,0),
-(804,'Psalms',119,0),
-(805,'Psalms',0,0),
-(806,'Psalms',0,0),
-(807,'Psalms',0,0),
-(808,'Psalms',0,0),
-(809,'Psalms',0,0),
-(810,'Psalms',0,0),
-(811,'Psalms',0,0),
-(812,'Psalms',0,0),
-(813,'Psalms',0,0),
-(814,'Psalms',0,0),
-(815,'Psalms',137,0),
-(816,'Psalms',0,0),
-(817,'Psalms',0,0),
-(818,'Psalms',0,0),
-(819,'Psalms',0,0),
-(820,'Psalms',116,0),
-(821,'Psalms',0,0),
-(822,'Psalms',0,0),
-(823,'Psalms',0,0),
-(824,'Psalms',0,0),
-(825,'Psalms',0,0),
-(826,'Psalms',0,0),
-(827,'Psalms',0,0),
-(828,'Psalms',0,0),
-(829,'Psalms',0,0),
-(830,'Psalms',0,0),
-(831,'Psalms',137,0),
-(832,'Psalms',0,0),
-(833,'Psalms',0,0),
-(834,'Psalms',0,0),
-(835,'Psalms',0,0),
-(836,'Psalms',0,0),
-(837,'Psalms',1,6),
-(838,'Psalms',2,12),
-(839,'Psalms',3,8),
-(840,'Psalms',4,8),
-(841,'Psalms',5,12),
-(842,'Psalms',6,10),
-(843,'Psalms',7,17),
-(844,'Psalms',8,9),
-(845,'Psalms',9,20),
-(846,'Psalms',10,18),
-(847,'Psalms',11,7),
-(848,'Psalms',12,8),
-(849,'Psalms',13,6),
-(850,'Psalms',14,7),
-(851,'Psalms',15,5),
-(852,'Psalms',16,11),
-(853,'Psalms',17,15),
-(854,'Psalms',18,50),
-(855,'Psalms',19,14),
-(856,'Psalms',20,9),
-(857,'Psalms',21,13),
-(858,'Psalms',22,31),
-(859,'Psalms',23,6),
-(860,'Psalms',24,10),
-(861,'Psalms',25,22),
-(862,'Psalms',0,12),
-(863,'Psalms',27,14),
-(864,'Psalms',28,9),
-(865,'Psalms',29,11),
-(866,'Psalms',30,12),
-(867,'Psalms',31,24),
-(868,'Psalms',32,11),
-(869,'Psalms',33,22),
-(870,'Psalms',34,22),
-(871,'Psalms',35,28),
-(872,'Psalms',36,12),
-(873,'Psalms',37,40),
-(874,'Psalms',38,22),
-(875,'Psalms',39,13),
-(876,'Psalms',40,17),
-(877,'Psalms',41,13),
-(878,'Psalms',42,11),
-(879,'Psalms',43,5),
-(880,'Psalms',44,26),
-(881,'Psalms',45,17),
-(882,'Psalms',46,11),
-(883,'Psalms',47,9),
-(884,'Psalms',48,14),
-(885,'Psalms',49,20),
-(886,'Psalms',50,23),
-(887,'Psalms',0,19),
-(888,'Psalms',52,9),
-(889,'Psalms',53,6),
-(890,'Psalms',54,7),
-(891,'Psalms',55,23),
-(892,'Psalms',56,13),
-(893,'Psalms',57,11),
-(894,'Psalms',58,11),
-(895,'Psalms',59,17),
-(896,'Psalms',60,12),
-(897,'Psalms',61,8),
-(898,'Psalms',62,12),
-(899,'Psalms',63,11),
-(900,'Psalms',64,10),
-(901,'Psalms',65,13),
-(902,'Psalms',66,20),
-(903,'Psalms',67,7),
-(904,'Psalms',68,35),
-(905,'Psalms',69,36),
-(906,'Psalms',70,5),
-(907,'Psalms',71,24),
-(908,'Psalms',72,20),
-(909,'Psalms',73,28),
-(910,'Psalms',74,23),
-(911,'Psalms',75,10),
-(912,'Psalms',0,12),
-(913,'Psalms',77,20),
-(914,'Psalms',78,72),
-(915,'Psalms',79,13),
-(916,'Psalms',80,19),
-(917,'Psalms',81,16),
-(918,'Psalms',82,8),
-(919,'Psalms',83,18),
-(920,'Psalms',84,12),
-(921,'Psalms',85,13),
-(922,'Psalms',86,17),
-(923,'Psalms',87,7),
-(924,'Psalms',88,18),
-(925,'Psalms',89,52),
-(926,'Psalms',90,17),
-(927,'Psalms',91,16),
-(928,'Psalms',92,15),
-(929,'Psalms',93,5),
-(930,'Psalms',94,23),
-(931,'Psalms',95,11),
-(932,'Psalms',96,13),
-(933,'Psalms',97,12),
-(934,'Psalms',98,9),
-(935,'Psalms',99,9),
-(936,'Psalms',100,5),
-(937,'Psalms',0,8),
-(938,'Psalms',102,28),
-(939,'Psalms',103,22),
-(940,'Psalms',104,35),
-(941,'Psalms',105,45),
-(942,'Psalms',106,48),
-(943,'Psalms',107,43),
-(944,'Psalms',108,13),
-(945,'Psalms',109,31),
-(946,'Psalms',110,7),
-(947,'Psalms',111,10),
-(948,'Psalms',112,10),
-(949,'Psalms',113,9),
-(950,'Psalms',114,8),
-(951,'Psalms',115,18),
-(952,'Psalms',116,19),
-(953,'Psalms',117,2),
-(954,'Psalms',118,29),
-(955,'Psalms',119,176),
-(956,'Psalms',120,7),
-(957,'Psalms',121,8),
-(958,'Psalms',122,9),
-(959,'Psalms',123,4),
-(960,'Psalms',124,8),
-(961,'Psalms',125,5),
-(962,'Psalms',0,6),
-(963,'Psalms',127,5),
-(964,'Psalms',128,6),
-(965,'Psalms',129,8),
-(966,'Psalms',130,8),
-(967,'Psalms',131,3),
-(968,'Psalms',132,18),
-(969,'Psalms',133,3),
-(970,'Psalms',134,3),
-(971,'Psalms',135,21),
-(972,'Psalms',136,26),
-(973,'Psalms',137,9),
-(974,'Psalms',138,8),
-(975,'Psalms',139,24),
-(976,'Psalms',140,13),
-(977,'Psalms',141,10),
-(978,'Psalms',142,7),
-(979,'Psalms',143,12),
-(980,'Psalms',144,15),
-(981,'Psalms',145,21),
-(982,'Psalms',146,10),
-(983,'Psalms',147,20),
-(984,'Psalms',148,14),
-(985,'Psalms',149,9),
-(986,'Psalms',150,6),
-(987,'Psalms',0,0),
-(988,'Psalms',0,0),
-(989,'Psalms',0,0),
-(990,'Psalms',0,0),
-(991,'Psalms',0,0),
-(992,'Psalms',0,0),
-(993,'Psalms',0,0),
-(994,'Psalms',0,0),
-(995,'Psalms',0,0),
-(996,'Psalms',0,0),
-(997,'Psalms',0,0),
-(998,'Psalms',0,0),
-(999,'Psalms',0,0),
-(1000,'Psalms',0,0),
-(1001,'Psalms',0,0),
-(1002,'Psalms',0,0),
-(1003,'Psalms',0,0),
-(1004,'Psalms',0,0),
-(1005,'Psalms',0,0),
-(1006,'Psalms',0,0),
-(1007,'Psalms',0,0),
-(1008,'Psalms',0,0),
-(1009,'Psalms',0,0),
-(1010,'Psalms',0,0),
-(1011,'Psalms',0,0),
-(1012,'Psalms',0,0),
-(1013,'Psalms',0,0),
-(1014,'Psalms',0,0),
-(1015,'Psalms',0,0),
-(1016,'Psalms',0,0),
-(1017,'Psalms',0,0),
-(1018,'Psalms',0,0),
-(1019,'Psalms',0,0),
-(1020,'Psalms',0,0),
-(1021,'Psalms',0,0),
-(1022,'Psalms',0,0),
-(1023,'Psalms',0,0),
-(1024,'Psalms',0,0),
-(1025,'Psalms',0,0),
-(1026,'Psalms',0,0),
-(1027,'Psalms',0,0),
-(1028,'Psalms',0,0),
-(1029,'Psalms',0,0),
-(1030,'Psalms',0,0),
-(1031,'Psalms',0,0),
-(1032,'Psalms',0,0),
-(1033,'Psalms',0,0),
-(1034,'Psalms',0,0),
-(1035,'Psalms',0,0),
-(1036,'Psalms',0,0),
-(1037,'Psalms',0,0),
-(1038,'Psalms',0,0),
-(1039,'Psalms',0,0),
-(1040,'Psalms',0,0),
-(1041,'Psalms',0,0),
-(1042,'Psalms',0,0),
-(1043,'Psalms',0,0),
-(1044,'Psalms',0,0),
-(1045,'Psalms',0,0),
-(1046,'Psalms',0,0),
-(1047,'Psalms',0,0),
-(1048,'Psalms',0,0),
-(1049,'Psalms',0,0),
-(1050,'Psalms',0,0),
-(1051,'Psalms',0,0),
-(1052,'Psalms',0,0),
-(1053,'Psalms',0,0),
-(1054,'Psalms',0,0),
-(1055,'Psalms',0,0),
-(1056,'Psalms',0,0),
-(1057,'Psalms',0,0),
-(1058,'Psalms',0,0),
-(1059,'Psalms',0,0),
-(1060,'Psalms',0,0),
-(1061,'Psalms',0,0),
-(1062,'Proverbs',1,33),
-(1063,'Proverbs',2,22),
-(1064,'Proverbs',3,35),
-(1065,'Proverbs',4,27),
-(1066,'Proverbs',5,23),
-(1067,'Proverbs',6,35),
-(1068,'Proverbs',7,27),
-(1069,'Proverbs',8,36),
-(1070,'Proverbs',9,18),
-(1071,'Proverbs',10,32),
-(1072,'Proverbs',11,31),
-(1073,'Proverbs',12,28),
-(1074,'Proverbs',13,25),
-(1075,'Proverbs',14,35),
-(1076,'Proverbs',15,33),
-(1077,'Proverbs',16,33),
-(1078,'Proverbs',17,28),
-(1079,'Proverbs',18,24),
-(1080,'Proverbs',19,29),
-(1081,'Proverbs',20,30),
-(1082,'Proverbs',21,31),
-(1083,'Proverbs',22,29),
-(1084,'Proverbs',23,35),
-(1085,'Proverbs',24,34),
-(1086,'Proverbs',25,28),
-(1087,'Proverbs',26,28),
-(1088,'Proverbs',27,27),
-(1089,'Proverbs',28,28),
-(1090,'Proverbs',29,27),
-(1091,'Proverbs',30,33),
-(1092,'Proverbs',31,31),
-(1093,'Ecclesiastes',1,18),
-(1094,'Ecclesiastes',2,26),
-(1095,'Ecclesiastes',3,22),
-(1096,'Ecclesiastes',4,16),
-(1097,'Ecclesiastes',5,20),
-(1098,'Ecclesiastes',6,12),
-(1099,'Ecclesiastes',7,29),
-(1100,'Ecclesiastes',8,17),
-(1101,'Ecclesiastes',9,18),
-(1102,'Ecclesiastes',10,20),
-(1103,'Ecclesiastes',11,10),
-(1104,'Ecclesiastes',12,14),
-(1105,'Song of Songs',1,17),
-(1106,'Song of Songs',2,17),
-(1107,'Song of Songs',3,11),
-(1108,'Song of Songs',4,16),
-(1109,'Song of Songs',5,16),
-(1110,'Song of Songs',6,13),
-(1111,'Song of Songs',7,13),
-(1112,'Song of Songs',8,14),
-(1113,'Isaiah',1,31),
-(1114,'Isaiah',2,22),
-(1115,'Isaiah',3,26),
-(1116,'Isaiah',4,6),
-(1117,'Isaiah',5,30),
-(1118,'Isaiah',6,13),
-(1119,'Isaiah',7,25),
-(1120,'Isaiah',8,22),
-(1121,'Isaiah',9,21),
-(1122,'Isaiah',10,34),
-(1123,'Isaiah',11,16),
-(1124,'Isaiah',12,6),
-(1125,'Isaiah',13,22),
-(1126,'Isaiah',14,32),
-(1127,'Isaiah',15,9),
-(1128,'Isaiah',16,14),
-(1129,'Isaiah',17,14),
-(1130,'Isaiah',18,7),
-(1131,'Isaiah',19,25),
-(1132,'Isaiah',20,6),
-(1133,'Isaiah',21,17),
-(1134,'Isaiah',22,25),
-(1135,'Isaiah',23,18),
-(1136,'Isaiah',24,23),
-(1137,'Isaiah',25,12),
-(1138,'Isaiah',26,21),
-(1139,'Isaiah',27,13),
-(1140,'Isaiah',28,29),
-(1141,'Isaiah',29,24),
-(1142,'Isaiah',30,33),
-(1143,'Isaiah',31,9),
-(1144,'Isaiah',32,20),
-(1145,'Isaiah',33,24),
-(1146,'Isaiah',34,17),
-(1147,'Isaiah',35,10),
-(1148,'Isaiah',36,22),
-(1149,'Isaiah',37,38),
-(1150,'Isaiah',38,22),
-(1151,'Isaiah',39,8),
-(1152,'Isaiah',40,31),
-(1153,'Isaiah',41,29),
-(1154,'Isaiah',42,25),
-(1155,'Isaiah',43,28),
-(1156,'Isaiah',44,28),
-(1157,'Isaiah',45,25),
-(1158,'Isaiah',46,13),
-(1159,'Isaiah',47,15),
-(1160,'Isaiah',48,22),
-(1161,'Isaiah',49,26),
-(1162,'Isaiah',50,11),
-(1163,'Isaiah',51,23),
-(1164,'Isaiah',52,15),
-(1165,'Isaiah',53,12),
-(1166,'Isaiah',54,17),
-(1167,'Isaiah',55,13),
-(1168,'Isaiah',56,12),
-(1169,'Isaiah',57,21),
-(1170,'Isaiah',58,14),
-(1171,'Isaiah',59,21),
-(1172,'Isaiah',60,22),
-(1173,'Isaiah',61,11),
-(1174,'Isaiah',62,12),
-(1175,'Isaiah',63,19),
-(1176,'Isaiah',64,12),
-(1177,'Isaiah',65,25),
-(1178,'Isaiah',66,24),
-(1179,'Jeremiah',1,19),
-(1180,'Jeremiah',2,37),
-(1181,'Jeremiah',3,25),
-(1182,'Jeremiah',4,31),
-(1183,'Jeremiah',5,31),
-(1184,'Jeremiah',6,30),
-(1185,'Jeremiah',7,34),
-(1186,'Jeremiah',8,22),
-(1187,'Jeremiah',9,26),
-(1188,'Jeremiah',10,25),
-(1189,'Jeremiah',11,23),
-(1190,'Jeremiah',12,17),
-(1191,'Jeremiah',13,27),
-(1192,'Jeremiah',14,22),
-(1193,'Jeremiah',15,21),
-(1194,'Jeremiah',16,21),
-(1195,'Jeremiah',17,27),
-(1196,'Jeremiah',18,23),
-(1197,'Jeremiah',19,15),
-(1198,'Jeremiah',20,18),
-(1199,'Jeremiah',21,14),
-(1200,'Jeremiah',22,30),
-(1201,'Jeremiah',23,40),
-(1202,'Jeremiah',24,10),
-(1203,'Jeremiah',25,38),
-(1204,'Jeremiah',26,24),
-(1205,'Jeremiah',27,22),
-(1206,'Jeremiah',28,17),
-(1207,'Jeremiah',29,32),
-(1208,'Jeremiah',30,24),
-(1209,'Jeremiah',31,40),
-(1210,'Jeremiah',32,44),
-(1211,'Jeremiah',33,26),
-(1212,'Jeremiah',34,22),
-(1213,'Jeremiah',35,19),
-(1214,'Jeremiah',36,32),
-(1215,'Jeremiah',37,21),
-(1216,'Jeremiah',38,28),
-(1217,'Jeremiah',39,18),
-(1218,'Jeremiah',40,16),
-(1219,'Jeremiah',41,18),
-(1220,'Jeremiah',42,22),
-(1221,'Jeremiah',43,13),
-(1222,'Jeremiah',44,30),
-(1223,'Jeremiah',45,5),
-(1224,'Jeremiah',46,28),
-(1225,'Jeremiah',47,7),
-(1226,'Jeremiah',48,47),
-(1227,'Jeremiah',49,39),
-(1228,'Jeremiah',50,46),
-(1229,'Jeremiah',51,64),
-(1230,'Jeremiah',52,34),
-(1231,'Lamentations',1,22),
-(1232,'Lamentations',2,22),
-(1233,'Lamentations',3,66),
-(1234,'Lamentations',4,22),
-(1235,'Lamentations',5,22),
-(1236,'Ezekiel',1,28),
-(1237,'Ezekiel',2,10),
-(1238,'Ezekiel',3,27),
-(1239,'Ezekiel',4,17),
-(1240,'Ezekiel',5,17),
-(1241,'Ezekiel',6,14),
-(1242,'Ezekiel',7,27),
-(1243,'Ezekiel',8,18),
-(1244,'Ezekiel',9,11),
-(1245,'Ezekiel',10,22),
-(1246,'Ezekiel',11,25),
-(1247,'Ezekiel',12,28),
-(1248,'Ezekiel',13,23),
-(1249,'Ezekiel',14,23),
-(1250,'Ezekiel',15,8),
-(1251,'Ezekiel',16,63),
-(1252,'Ezekiel',17,24),
-(1253,'Ezekiel',18,32),
-(1254,'Ezekiel',19,14),
-(1255,'Ezekiel',20,49),
-(1256,'Ezekiel',21,32),
-(1257,'Ezekiel',22,31),
-(1258,'Ezekiel',23,49),
-(1259,'Ezekiel',24,27),
-(1260,'Ezekiel',25,17),
-(1261,'Ezekiel',26,21),
-(1262,'Ezekiel',27,36),
-(1263,'Ezekiel',28,26),
-(1264,'Ezekiel',29,21),
-(1265,'Ezekiel',30,26),
-(1266,'Ezekiel',31,18),
-(1267,'Ezekiel',32,32),
-(1268,'Ezekiel',33,33),
-(1269,'Ezekiel',34,31),
-(1270,'Ezekiel',35,15),
-(1271,'Ezekiel',36,38),
-(1272,'Ezekiel',37,28),
-(1273,'Ezekiel',38,23),
-(1274,'Ezekiel',39,29),
-(1275,'Ezekiel',40,49),
-(1276,'Ezekiel',41,26),
-(1277,'Ezekiel',42,20),
-(1278,'Ezekiel',43,27),
-(1279,'Ezekiel',44,31),
-(1280,'Ezekiel',45,25),
-(1281,'Ezekiel',46,24),
-(1282,'Ezekiel',47,23),
-(1283,'Ezekiel',48,35),
-(1284,'Daniel',1,21),
-(1285,'Daniel',2,49),
-(1286,'Daniel',3,30),
-(1287,'Daniel',4,37),
-(1288,'Daniel',5,31),
-(1289,'Daniel',6,28),
-(1290,'Daniel',7,28),
-(1291,'Daniel',8,27),
-(1292,'Daniel',9,27),
-(1293,'Daniel',10,21),
-(1294,'Daniel',11,45),
-(1295,'Daniel',12,13),
-(1296,'Hosea',1,11),
-(1297,'Hosea',2,23),
-(1298,'Hosea',3,5),
-(1299,'Hosea',4,19),
-(1300,'Hosea',5,15),
-(1301,'Hosea',6,11),
-(1302,'Hosea',7,16),
-(1303,'Hosea',8,14),
-(1304,'Hosea',9,17),
-(1305,'Hosea',10,15),
-(1306,'Hosea',11,12),
-(1307,'Hosea',12,14),
-(1308,'Hosea',13,16),
-(1309,'Hosea',14,9),
-(1310,'Joel',1,20),
-(1311,'Joel',2,32),
-(1312,'Joel',3,21),
-(1313,'Amos',1,15),
-(1314,'Amos',2,16),
-(1315,'Amos',3,15),
-(1316,'Amos',4,13),
-(1317,'Amos',5,27),
-(1318,'Amos',6,14),
-(1319,'Amos',7,17),
-(1320,'Amos',8,14),
-(1321,'Amos',9,15),
-(1322,'Obadiah',1,21),
-(1323,'Jonah',1,17),
-(1324,'Jonah',2,10),
-(1325,'Jonah',3,10),
-(1326,'Jonah',4,11),
-(1327,'Micah',1,16),
-(1328,'Micah',2,13),
-(1329,'Micah',3,12),
-(1330,'Micah',4,13),
-(1331,'Micah',5,15),
-(1332,'Micah',6,16),
-(1333,'Micah',7,20),
-(1334,'Nahum',1,15),
-(1335,'Nahum',2,13),
-(1336,'Nahum',3,19),
-(1337,'Habakkuk',1,17),
-(1338,'Habakkuk',2,20),
-(1339,'Habakkuk',3,19),
-(1340,'Zephaniah',1,18),
-(1341,'Zephaniah',2,15),
-(1342,'Zephaniah',3,20),
-(1343,'Haggai',1,15),
-(1344,'Haggai',2,23),
-(1345,'Zechariah',1,21),
-(1346,'Zechariah',2,13),
-(1347,'Zechariah',3,10),
-(1348,'Zechariah',4,14),
-(1349,'Zechariah',5,11),
-(1350,'Zechariah',6,15),
-(1351,'Zechariah',7,14),
-(1352,'Zechariah',8,23),
-(1353,'Zechariah',9,17),
-(1354,'Zechariah',10,12),
-(1355,'Zechariah',11,17),
-(1356,'Zechariah',12,14),
-(1357,'Zechariah',13,9),
-(1358,'Zechariah',14,21),
-(1359,'Malachi',1,14),
-(1360,'Malachi',2,17),
-(1361,'Malachi',3,18),
-(1362,'Malachi',4,6),
-(1363,'Matthew',1,25),
-(1364,'Matthew',2,23),
-(1365,'Matthew',3,17),
-(1366,'Matthew',4,25),
-(1367,'Matthew',5,48),
-(1368,'Matthew',6,34),
-(1369,'Matthew',7,29),
-(1370,'Matthew',8,34),
-(1371,'Matthew',9,38),
-(1372,'Matthew',10,42),
-(1373,'Matthew',11,30),
-(1374,'Matthew',12,50),
-(1375,'Matthew',13,58),
-(1376,'Matthew',14,36),
-(1377,'Matthew',15,39),
-(1378,'Matthew',16,28),
-(1379,'Matthew',17,27),
-(1380,'Matthew',18,35),
-(1381,'Matthew',19,30),
-(1382,'Matthew',20,34),
-(1383,'Matthew',21,46),
-(1384,'Matthew',22,46),
-(1385,'Matthew',23,39),
-(1386,'Matthew',24,51),
-(1387,'Matthew',25,46),
-(1388,'Matthew',26,75),
-(1389,'Matthew',27,66),
-(1390,'Matthew',28,20),
-(1391,'Mark',1,45),
-(1392,'Mark',2,28),
-(1393,'Mark',3,35),
-(1394,'Mark',4,41),
-(1395,'Mark',5,43),
-(1396,'Mark',6,56),
-(1397,'Mark',7,37),
-(1398,'Mark',8,38),
-(1399,'Mark',9,50),
-(1400,'Mark',10,52),
-(1401,'Mark',11,33),
-(1402,'Mark',12,44),
-(1403,'Mark',13,37),
-(1404,'Mark',14,72),
-(1405,'Mark',15,47),
-(1406,'Mark',16,20),
-(1407,'Luke',1,80),
-(1408,'Luke',2,52),
-(1409,'Luke',3,38),
-(1410,'Luke',4,44),
-(1411,'Luke',5,39),
-(1412,'Luke',6,49),
-(1413,'Luke',7,50),
-(1414,'Luke',8,56),
-(1415,'Luke',9,62),
-(1416,'Luke',10,42),
-(1417,'Luke',11,54),
-(1418,'Luke',12,59),
-(1419,'Luke',13,35),
-(1420,'Luke',14,35),
-(1421,'Luke',15,32),
-(1422,'Luke',16,31),
-(1423,'Luke',17,37),
-(1424,'Luke',18,43),
-(1425,'Luke',19,48),
-(1426,'Luke',20,47),
-(1427,'Luke',21,38),
-(1428,'Luke',22,71),
-(1429,'Luke',23,56),
-(1430,'Luke',24,53),
-(1431,'John',1,51),
-(1432,'John',2,25),
-(1433,'John',3,36),
-(1434,'John',4,54),
-(1435,'John',5,47),
-(1436,'John',6,71),
-(1437,'John',7,53),
-(1438,'John',8,59),
-(1439,'John',9,41),
-(1440,'John',10,42),
-(1441,'John',11,57),
-(1442,'John',12,50),
-(1443,'John',13,38),
-(1444,'John',14,31),
-(1445,'John',15,27),
-(1446,'John',16,33),
-(1447,'John',17,26),
-(1448,'John',18,40),
-(1449,'John',19,42),
-(1450,'John',20,31),
-(1451,'John',21,25),
-(1452,'Acts',1,26),
-(1453,'Acts',2,47),
-(1454,'Acts',3,26),
-(1455,'Acts',4,37),
-(1456,'Acts',5,42),
-(1457,'Acts',6,15),
-(1458,'Acts',7,60),
-(1459,'Acts',8,40),
-(1460,'Acts',9,43),
-(1461,'Acts',10,48),
-(1462,'Acts',11,30),
-(1463,'Acts',12,25),
-(1464,'Acts',13,52),
-(1465,'Acts',14,28),
-(1466,'Acts',15,41),
-(1467,'Acts',16,40),
-(1468,'Acts',17,34),
-(1469,'Acts',18,28),
-(1470,'Acts',19,41),
-(1471,'Acts',20,38),
-(1472,'Acts',21,40),
-(1473,'Acts',22,30),
-(1474,'Acts',23,35),
-(1475,'Acts',24,27),
-(1476,'Acts',25,27),
-(1477,'Acts',26,32),
-(1478,'Acts',27,44),
-(1479,'Acts',28,31),
-(1480,'Romans',1,32),
-(1481,'Romans',2,29),
-(1482,'Romans',3,31),
-(1483,'Romans',4,25),
-(1484,'Romans',5,21),
-(1485,'Romans',6,23),
-(1486,'Romans',7,25),
-(1487,'Romans',8,39),
-(1488,'Romans',9,33),
-(1489,'Romans',10,21),
-(1490,'Romans',11,36),
-(1491,'Romans',12,21),
-(1492,'Romans',13,14),
-(1493,'Romans',14,23),
-(1494,'Romans',15,33),
-(1495,'Romans',16,27),
-(1496,'1 Corinthians',1,31),
-(1497,'1 Corinthians',2,16),
-(1498,'1 Corinthians',3,23),
-(1499,'1 Corinthians',4,21),
-(1500,'1 Corinthians',5,13),
-(1501,'1 Corinthians',6,20),
-(1502,'1 Corinthians',7,40),
-(1503,'1 Corinthians',8,13),
-(1504,'1 Corinthians',9,27),
-(1505,'1 Corinthians',10,33),
-(1506,'1 Corinthians',11,34),
-(1507,'1 Corinthians',12,31),
-(1508,'1 Corinthians',13,13),
-(1509,'1 Corinthians',14,40),
-(1510,'1 Corinthians',15,58),
-(1511,'1 Corinthians',16,24),
-(1512,'2 Corinthians',1,24),
-(1513,'2 Corinthians',2,17),
-(1514,'2 Corinthians',3,18),
-(1515,'2 Corinthians',4,18),
-(1516,'2 Corinthians',5,21),
-(1517,'2 Corinthians',6,18),
-(1518,'2 Corinthians',7,16),
-(1519,'2 Corinthians',8,24),
-(1520,'2 Corinthians',9,15),
-(1521,'2 Corinthians',10,18),
-(1522,'2 Corinthians',11,33),
-(1523,'2 Corinthians',12,21),
-(1524,'2 Corinthians',13,14),
-(1525,'Galatians',1,24),
-(1526,'Galatians',2,21),
-(1527,'Galatians',3,29),
-(1528,'Galatians',4,31),
-(1529,'Galatians',5,26),
-(1530,'Galatians',6,18),
-(1531,'Ephesians',1,23),
-(1532,'Ephesians',2,22),
-(1533,'Ephesians',3,21),
-(1534,'Ephesians',4,32),
-(1535,'Ephesians',5,33),
-(1536,'Ephesians',6,24),
-(1537,'Philippians',1,30),
-(1538,'Philippians',2,30),
-(1539,'Philippians',3,21),
-(1540,'Philippians',4,23),
-(1541,'Colossians',1,29),
-(1542,'Colossians',2,23),
-(1543,'Colossians',3,25),
-(1544,'Colossians',4,18),
-(1545,'1 Thessalonians',1,10),
-(1546,'1 Thessalonians',2,20),
-(1547,'1 Thessalonians',3,13),
-(1548,'1 Thessalonians',4,18),
-(1549,'1 Thessalonians',5,28),
-(1550,'2 Thessalonians',1,12),
-(1551,'2 Thessalonians',2,17),
-(1552,'2 Thessalonians',3,18),
-(1553,'1 Timothy',1,20),
-(1554,'1 Timothy',2,15),
-(1555,'1 Timothy',3,16),
-(1556,'1 Timothy',4,16),
-(1557,'1 Timothy',5,25),
-(1558,'1 Timothy',6,21),
-(1559,'2 Timothy',1,18),
-(1560,'2 Timothy',2,26),
-(1561,'2 Timothy',3,17),
-(1562,'2 Timothy',4,22),
-(1563,'Titus',1,16),
-(1564,'Titus',2,15),
-(1565,'Titus',3,15),
-(1566,'Philemon',1,25),
-(1567,'Hebrews',1,14),
-(1568,'Hebrews',2,18),
-(1569,'Hebrews',3,19),
-(1570,'Hebrews',4,16),
-(1571,'Hebrews',5,14),
-(1572,'Hebrews',6,20),
-(1573,'Hebrews',7,28),
-(1574,'Hebrews',8,13),
-(1575,'Hebrews',9,28),
-(1576,'Hebrews',10,39),
-(1577,'Hebrews',11,40),
-(1578,'Hebrews',12,29),
-(1579,'Hebrews',13,25),
-(1580,'James',1,27),
-(1581,'James',2,26),
-(1582,'James',3,18),
-(1583,'James',4,17),
-(1584,'James',5,20),
-(1585,'1 Peter',1,25),
-(1586,'1 Peter',2,25),
-(1587,'1 Peter',3,22),
-(1588,'1 Peter',4,19),
-(1589,'1 Peter',5,14),
-(1590,'2 Peter',1,21),
-(1591,'2 Peter',2,22),
-(1592,'2 Peter',3,18),
-(1593,'1 John',1,10),
-(1594,'1 John',2,29),
-(1595,'1 John',3,24),
-(1596,'1 John',4,21),
-(1597,'1 John',5,21),
-(1598,'2 John',1,13),
-(1599,'3 John',1,15),
-(1600,'Jude',1,25),
-(1601,'Revelation',1,20),
-(1602,'Revelation',2,29),
-(1603,'Revelation',3,22),
-(1604,'Revelation',4,11),
-(1605,'Revelation',5,14),
-(1606,'Revelation',6,17),
-(1607,'Revelation',7,17),
-(1608,'Revelation',8,13),
-(1609,'Revelation',9,21),
-(1610,'Revelation',10,11),
-(1611,'Revelation',11,19),
-(1612,'Revelation',12,17),
-(1613,'Revelation',13,18),
-(1614,'Revelation',14,20),
-(1615,'Revelation',15,8),
-(1616,'Revelation',16,21),
-(1617,'Revelation',17,18),
-(1618,'Revelation',18,24),
-(1619,'Revelation',19,21),
-(1620,'Revelation',20,15),
-(1621,'Revelation',21,27),
-(1622,'Revelation',22,21);
+INSERT INTO `final_verses` VALUES (6,'Genesis',1,31);
+INSERT INTO `final_verses` VALUES (7,'Genesis',2,25);
+INSERT INTO `final_verses` VALUES (8,'Genesis',3,24);
+INSERT INTO `final_verses` VALUES (9,'Genesis',4,26);
+INSERT INTO `final_verses` VALUES (10,'Genesis',5,32);
+INSERT INTO `final_verses` VALUES (11,'Genesis',6,22);
+INSERT INTO `final_verses` VALUES (12,'Genesis',7,24);
+INSERT INTO `final_verses` VALUES (13,'Genesis',8,22);
+INSERT INTO `final_verses` VALUES (14,'Genesis',9,29);
+INSERT INTO `final_verses` VALUES (15,'Genesis',10,32);
+INSERT INTO `final_verses` VALUES (16,'Genesis',11,32);
+INSERT INTO `final_verses` VALUES (17,'Genesis',12,20);
+INSERT INTO `final_verses` VALUES (18,'Genesis',13,18);
+INSERT INTO `final_verses` VALUES (19,'Genesis',14,24);
+INSERT INTO `final_verses` VALUES (20,'Genesis',15,21);
+INSERT INTO `final_verses` VALUES (21,'Genesis',16,16);
+INSERT INTO `final_verses` VALUES (22,'Genesis',17,27);
+INSERT INTO `final_verses` VALUES (23,'Genesis',18,33);
+INSERT INTO `final_verses` VALUES (24,'Genesis',19,38);
+INSERT INTO `final_verses` VALUES (25,'Genesis',20,18);
+INSERT INTO `final_verses` VALUES (26,'Genesis',21,34);
+INSERT INTO `final_verses` VALUES (27,'Genesis',22,24);
+INSERT INTO `final_verses` VALUES (28,'Genesis',23,20);
+INSERT INTO `final_verses` VALUES (29,'Genesis',24,67);
+INSERT INTO `final_verses` VALUES (30,'Genesis',25,34);
+INSERT INTO `final_verses` VALUES (31,'Genesis',26,35);
+INSERT INTO `final_verses` VALUES (32,'Genesis',27,46);
+INSERT INTO `final_verses` VALUES (33,'Genesis',28,22);
+INSERT INTO `final_verses` VALUES (34,'Genesis',29,35);
+INSERT INTO `final_verses` VALUES (35,'Genesis',30,43);
+INSERT INTO `final_verses` VALUES (36,'Genesis',31,55);
+INSERT INTO `final_verses` VALUES (37,'Genesis',32,32);
+INSERT INTO `final_verses` VALUES (38,'Genesis',33,20);
+INSERT INTO `final_verses` VALUES (39,'Genesis',34,31);
+INSERT INTO `final_verses` VALUES (40,'Genesis',35,29);
+INSERT INTO `final_verses` VALUES (41,'Genesis',36,43);
+INSERT INTO `final_verses` VALUES (42,'Genesis',37,36);
+INSERT INTO `final_verses` VALUES (43,'Genesis',38,30);
+INSERT INTO `final_verses` VALUES (44,'Genesis',39,23);
+INSERT INTO `final_verses` VALUES (45,'Genesis',40,23);
+INSERT INTO `final_verses` VALUES (46,'Genesis',41,57);
+INSERT INTO `final_verses` VALUES (47,'Genesis',42,38);
+INSERT INTO `final_verses` VALUES (48,'Genesis',43,34);
+INSERT INTO `final_verses` VALUES (49,'Genesis',44,34);
+INSERT INTO `final_verses` VALUES (50,'Genesis',45,28);
+INSERT INTO `final_verses` VALUES (51,'Genesis',46,34);
+INSERT INTO `final_verses` VALUES (52,'Genesis',47,31);
+INSERT INTO `final_verses` VALUES (53,'Genesis',48,22);
+INSERT INTO `final_verses` VALUES (54,'Genesis',49,33);
+INSERT INTO `final_verses` VALUES (55,'Genesis',50,26);
+INSERT INTO `final_verses` VALUES (56,'Exodus',1,22);
+INSERT INTO `final_verses` VALUES (57,'Exodus',2,25);
+INSERT INTO `final_verses` VALUES (58,'Exodus',3,22);
+INSERT INTO `final_verses` VALUES (59,'Exodus',4,31);
+INSERT INTO `final_verses` VALUES (60,'Exodus',5,23);
+INSERT INTO `final_verses` VALUES (61,'Exodus',6,30);
+INSERT INTO `final_verses` VALUES (62,'Exodus',7,25);
+INSERT INTO `final_verses` VALUES (63,'Exodus',8,32);
+INSERT INTO `final_verses` VALUES (64,'Exodus',9,35);
+INSERT INTO `final_verses` VALUES (65,'Exodus',10,29);
+INSERT INTO `final_verses` VALUES (66,'Exodus',11,10);
+INSERT INTO `final_verses` VALUES (67,'Exodus',12,51);
+INSERT INTO `final_verses` VALUES (68,'Exodus',13,22);
+INSERT INTO `final_verses` VALUES (69,'Exodus',14,31);
+INSERT INTO `final_verses` VALUES (70,'Exodus',15,27);
+INSERT INTO `final_verses` VALUES (71,'Exodus',16,36);
+INSERT INTO `final_verses` VALUES (72,'Exodus',17,16);
+INSERT INTO `final_verses` VALUES (73,'Exodus',18,27);
+INSERT INTO `final_verses` VALUES (74,'Exodus',19,25);
+INSERT INTO `final_verses` VALUES (75,'Exodus',20,26);
+INSERT INTO `final_verses` VALUES (76,'Exodus',21,36);
+INSERT INTO `final_verses` VALUES (77,'Exodus',22,31);
+INSERT INTO `final_verses` VALUES (78,'Exodus',23,33);
+INSERT INTO `final_verses` VALUES (79,'Exodus',24,18);
+INSERT INTO `final_verses` VALUES (80,'Exodus',25,40);
+INSERT INTO `final_verses` VALUES (81,'Exodus',26,37);
+INSERT INTO `final_verses` VALUES (82,'Exodus',27,21);
+INSERT INTO `final_verses` VALUES (83,'Exodus',28,43);
+INSERT INTO `final_verses` VALUES (84,'Exodus',29,46);
+INSERT INTO `final_verses` VALUES (85,'Exodus',30,38);
+INSERT INTO `final_verses` VALUES (86,'Exodus',31,18);
+INSERT INTO `final_verses` VALUES (87,'Exodus',32,35);
+INSERT INTO `final_verses` VALUES (88,'Exodus',33,23);
+INSERT INTO `final_verses` VALUES (89,'Exodus',34,35);
+INSERT INTO `final_verses` VALUES (90,'Exodus',35,35);
+INSERT INTO `final_verses` VALUES (91,'Exodus',36,38);
+INSERT INTO `final_verses` VALUES (92,'Exodus',37,29);
+INSERT INTO `final_verses` VALUES (93,'Exodus',38,31);
+INSERT INTO `final_verses` VALUES (94,'Exodus',39,43);
+INSERT INTO `final_verses` VALUES (95,'Exodus',40,38);
+INSERT INTO `final_verses` VALUES (96,'Leviticus',1,17);
+INSERT INTO `final_verses` VALUES (97,'Leviticus',2,16);
+INSERT INTO `final_verses` VALUES (98,'Leviticus',3,17);
+INSERT INTO `final_verses` VALUES (99,'Leviticus',4,35);
+INSERT INTO `final_verses` VALUES (100,'Leviticus',5,19);
+INSERT INTO `final_verses` VALUES (101,'Leviticus',6,30);
+INSERT INTO `final_verses` VALUES (102,'Leviticus',7,38);
+INSERT INTO `final_verses` VALUES (103,'Leviticus',8,36);
+INSERT INTO `final_verses` VALUES (104,'Leviticus',9,24);
+INSERT INTO `final_verses` VALUES (105,'Leviticus',10,20);
+INSERT INTO `final_verses` VALUES (106,'Leviticus',11,47);
+INSERT INTO `final_verses` VALUES (107,'Leviticus',12,8);
+INSERT INTO `final_verses` VALUES (108,'Leviticus',13,59);
+INSERT INTO `final_verses` VALUES (109,'Leviticus',14,57);
+INSERT INTO `final_verses` VALUES (110,'Leviticus',15,33);
+INSERT INTO `final_verses` VALUES (111,'Leviticus',16,34);
+INSERT INTO `final_verses` VALUES (112,'Leviticus',17,16);
+INSERT INTO `final_verses` VALUES (113,'Leviticus',18,30);
+INSERT INTO `final_verses` VALUES (114,'Leviticus',19,37);
+INSERT INTO `final_verses` VALUES (115,'Leviticus',20,27);
+INSERT INTO `final_verses` VALUES (116,'Leviticus',21,24);
+INSERT INTO `final_verses` VALUES (117,'Leviticus',22,33);
+INSERT INTO `final_verses` VALUES (118,'Leviticus',23,44);
+INSERT INTO `final_verses` VALUES (119,'Leviticus',24,23);
+INSERT INTO `final_verses` VALUES (120,'Leviticus',25,55);
+INSERT INTO `final_verses` VALUES (121,'Leviticus',26,46);
+INSERT INTO `final_verses` VALUES (122,'Leviticus',27,34);
+INSERT INTO `final_verses` VALUES (123,'Numbers',1,54);
+INSERT INTO `final_verses` VALUES (124,'Numbers',2,34);
+INSERT INTO `final_verses` VALUES (125,'Numbers',3,51);
+INSERT INTO `final_verses` VALUES (126,'Numbers',4,49);
+INSERT INTO `final_verses` VALUES (127,'Numbers',5,31);
+INSERT INTO `final_verses` VALUES (128,'Numbers',6,27);
+INSERT INTO `final_verses` VALUES (129,'Numbers',7,89);
+INSERT INTO `final_verses` VALUES (130,'Numbers',8,26);
+INSERT INTO `final_verses` VALUES (131,'Numbers',9,23);
+INSERT INTO `final_verses` VALUES (132,'Numbers',10,36);
+INSERT INTO `final_verses` VALUES (133,'Numbers',11,35);
+INSERT INTO `final_verses` VALUES (134,'Numbers',12,16);
+INSERT INTO `final_verses` VALUES (135,'Numbers',13,33);
+INSERT INTO `final_verses` VALUES (136,'Numbers',14,45);
+INSERT INTO `final_verses` VALUES (137,'Numbers',15,41);
+INSERT INTO `final_verses` VALUES (138,'Numbers',16,50);
+INSERT INTO `final_verses` VALUES (139,'Numbers',17,13);
+INSERT INTO `final_verses` VALUES (140,'Numbers',18,32);
+INSERT INTO `final_verses` VALUES (141,'Numbers',19,22);
+INSERT INTO `final_verses` VALUES (142,'Numbers',20,29);
+INSERT INTO `final_verses` VALUES (143,'Numbers',21,35);
+INSERT INTO `final_verses` VALUES (144,'Numbers',22,41);
+INSERT INTO `final_verses` VALUES (145,'Numbers',23,30);
+INSERT INTO `final_verses` VALUES (146,'Numbers',24,25);
+INSERT INTO `final_verses` VALUES (147,'Numbers',25,18);
+INSERT INTO `final_verses` VALUES (148,'Numbers',26,65);
+INSERT INTO `final_verses` VALUES (149,'Numbers',27,23);
+INSERT INTO `final_verses` VALUES (150,'Numbers',28,31);
+INSERT INTO `final_verses` VALUES (151,'Numbers',29,40);
+INSERT INTO `final_verses` VALUES (152,'Numbers',30,16);
+INSERT INTO `final_verses` VALUES (153,'Numbers',31,54);
+INSERT INTO `final_verses` VALUES (154,'Numbers',32,42);
+INSERT INTO `final_verses` VALUES (155,'Numbers',33,56);
+INSERT INTO `final_verses` VALUES (156,'Numbers',34,29);
+INSERT INTO `final_verses` VALUES (157,'Numbers',35,34);
+INSERT INTO `final_verses` VALUES (158,'Numbers',36,13);
+INSERT INTO `final_verses` VALUES (159,'Deuteronomy',1,46);
+INSERT INTO `final_verses` VALUES (160,'Deuteronomy',2,37);
+INSERT INTO `final_verses` VALUES (161,'Deuteronomy',3,29);
+INSERT INTO `final_verses` VALUES (162,'Deuteronomy',4,49);
+INSERT INTO `final_verses` VALUES (163,'Deuteronomy',5,33);
+INSERT INTO `final_verses` VALUES (164,'Deuteronomy',6,25);
+INSERT INTO `final_verses` VALUES (165,'Deuteronomy',7,26);
+INSERT INTO `final_verses` VALUES (166,'Deuteronomy',8,20);
+INSERT INTO `final_verses` VALUES (167,'Deuteronomy',9,29);
+INSERT INTO `final_verses` VALUES (168,'Deuteronomy',10,22);
+INSERT INTO `final_verses` VALUES (169,'Deuteronomy',11,32);
+INSERT INTO `final_verses` VALUES (170,'Deuteronomy',12,32);
+INSERT INTO `final_verses` VALUES (171,'Deuteronomy',13,18);
+INSERT INTO `final_verses` VALUES (172,'Deuteronomy',14,29);
+INSERT INTO `final_verses` VALUES (173,'Deuteronomy',15,23);
+INSERT INTO `final_verses` VALUES (174,'Deuteronomy',16,22);
+INSERT INTO `final_verses` VALUES (175,'Deuteronomy',17,20);
+INSERT INTO `final_verses` VALUES (176,'Deuteronomy',18,22);
+INSERT INTO `final_verses` VALUES (177,'Deuteronomy',19,21);
+INSERT INTO `final_verses` VALUES (178,'Deuteronomy',20,20);
+INSERT INTO `final_verses` VALUES (179,'Deuteronomy',21,23);
+INSERT INTO `final_verses` VALUES (180,'Deuteronomy',22,30);
+INSERT INTO `final_verses` VALUES (181,'Deuteronomy',23,25);
+INSERT INTO `final_verses` VALUES (182,'Deuteronomy',24,22);
+INSERT INTO `final_verses` VALUES (183,'Deuteronomy',25,19);
+INSERT INTO `final_verses` VALUES (184,'Deuteronomy',26,19);
+INSERT INTO `final_verses` VALUES (185,'Deuteronomy',27,26);
+INSERT INTO `final_verses` VALUES (186,'Deuteronomy',28,68);
+INSERT INTO `final_verses` VALUES (187,'Deuteronomy',29,29);
+INSERT INTO `final_verses` VALUES (188,'Deuteronomy',30,20);
+INSERT INTO `final_verses` VALUES (189,'Deuteronomy',31,30);
+INSERT INTO `final_verses` VALUES (190,'Deuteronomy',32,52);
+INSERT INTO `final_verses` VALUES (191,'Deuteronomy',33,29);
+INSERT INTO `final_verses` VALUES (192,'Deuteronomy',34,12);
+INSERT INTO `final_verses` VALUES (193,'Joshua',1,18);
+INSERT INTO `final_verses` VALUES (194,'Joshua',2,24);
+INSERT INTO `final_verses` VALUES (195,'Joshua',3,17);
+INSERT INTO `final_verses` VALUES (196,'Joshua',4,24);
+INSERT INTO `final_verses` VALUES (197,'Joshua',5,15);
+INSERT INTO `final_verses` VALUES (198,'Joshua',6,27);
+INSERT INTO `final_verses` VALUES (199,'Joshua',7,26);
+INSERT INTO `final_verses` VALUES (200,'Joshua',8,35);
+INSERT INTO `final_verses` VALUES (201,'Joshua',9,27);
+INSERT INTO `final_verses` VALUES (202,'Joshua',10,43);
+INSERT INTO `final_verses` VALUES (203,'Joshua',11,23);
+INSERT INTO `final_verses` VALUES (204,'Joshua',12,24);
+INSERT INTO `final_verses` VALUES (205,'Joshua',13,33);
+INSERT INTO `final_verses` VALUES (206,'Joshua',14,15);
+INSERT INTO `final_verses` VALUES (207,'Joshua',15,63);
+INSERT INTO `final_verses` VALUES (208,'Joshua',16,10);
+INSERT INTO `final_verses` VALUES (209,'Joshua',17,18);
+INSERT INTO `final_verses` VALUES (210,'Joshua',18,28);
+INSERT INTO `final_verses` VALUES (211,'Joshua',19,51);
+INSERT INTO `final_verses` VALUES (212,'Joshua',20,9);
+INSERT INTO `final_verses` VALUES (213,'Joshua',21,45);
+INSERT INTO `final_verses` VALUES (214,'Joshua',22,34);
+INSERT INTO `final_verses` VALUES (215,'Joshua',23,16);
+INSERT INTO `final_verses` VALUES (216,'Joshua',24,33);
+INSERT INTO `final_verses` VALUES (217,'Judges',1,36);
+INSERT INTO `final_verses` VALUES (218,'Judges',2,23);
+INSERT INTO `final_verses` VALUES (219,'Judges',3,31);
+INSERT INTO `final_verses` VALUES (220,'Judges',4,24);
+INSERT INTO `final_verses` VALUES (221,'Judges',5,31);
+INSERT INTO `final_verses` VALUES (222,'Judges',6,40);
+INSERT INTO `final_verses` VALUES (223,'Judges',7,25);
+INSERT INTO `final_verses` VALUES (224,'Judges',8,35);
+INSERT INTO `final_verses` VALUES (225,'Judges',9,57);
+INSERT INTO `final_verses` VALUES (226,'Judges',10,18);
+INSERT INTO `final_verses` VALUES (227,'Judges',11,40);
+INSERT INTO `final_verses` VALUES (228,'Judges',12,15);
+INSERT INTO `final_verses` VALUES (229,'Judges',13,25);
+INSERT INTO `final_verses` VALUES (230,'Judges',14,20);
+INSERT INTO `final_verses` VALUES (231,'Judges',15,20);
+INSERT INTO `final_verses` VALUES (232,'Judges',16,31);
+INSERT INTO `final_verses` VALUES (233,'Judges',17,13);
+INSERT INTO `final_verses` VALUES (234,'Judges',18,31);
+INSERT INTO `final_verses` VALUES (235,'Judges',19,30);
+INSERT INTO `final_verses` VALUES (236,'Judges',20,48);
+INSERT INTO `final_verses` VALUES (237,'Judges',21,25);
+INSERT INTO `final_verses` VALUES (238,'Ruth',1,22);
+INSERT INTO `final_verses` VALUES (239,'Ruth',2,23);
+INSERT INTO `final_verses` VALUES (240,'Ruth',3,18);
+INSERT INTO `final_verses` VALUES (241,'Ruth',4,22);
+INSERT INTO `final_verses` VALUES (242,'1 Samuel',1,28);
+INSERT INTO `final_verses` VALUES (243,'1 Samuel',2,36);
+INSERT INTO `final_verses` VALUES (244,'1 Samuel',3,21);
+INSERT INTO `final_verses` VALUES (245,'1 Samuel',4,22);
+INSERT INTO `final_verses` VALUES (246,'1 Samuel',5,12);
+INSERT INTO `final_verses` VALUES (247,'1 Samuel',6,21);
+INSERT INTO `final_verses` VALUES (248,'1 Samuel',7,17);
+INSERT INTO `final_verses` VALUES (249,'1 Samuel',8,22);
+INSERT INTO `final_verses` VALUES (250,'1 Samuel',9,27);
+INSERT INTO `final_verses` VALUES (251,'1 Samuel',10,27);
+INSERT INTO `final_verses` VALUES (252,'1 Samuel',11,15);
+INSERT INTO `final_verses` VALUES (253,'1 Samuel',12,25);
+INSERT INTO `final_verses` VALUES (254,'1 Samuel',13,23);
+INSERT INTO `final_verses` VALUES (255,'1 Samuel',14,52);
+INSERT INTO `final_verses` VALUES (256,'1 Samuel',15,35);
+INSERT INTO `final_verses` VALUES (257,'1 Samuel',16,23);
+INSERT INTO `final_verses` VALUES (258,'1 Samuel',17,58);
+INSERT INTO `final_verses` VALUES (259,'1 Samuel',18,30);
+INSERT INTO `final_verses` VALUES (260,'1 Samuel',19,24);
+INSERT INTO `final_verses` VALUES (261,'1 Samuel',20,42);
+INSERT INTO `final_verses` VALUES (262,'1 Samuel',21,15);
+INSERT INTO `final_verses` VALUES (263,'1 Samuel',22,23);
+INSERT INTO `final_verses` VALUES (264,'1 Samuel',23,29);
+INSERT INTO `final_verses` VALUES (265,'1 Samuel',24,22);
+INSERT INTO `final_verses` VALUES (266,'1 Samuel',25,44);
+INSERT INTO `final_verses` VALUES (267,'1 Samuel',26,25);
+INSERT INTO `final_verses` VALUES (268,'1 Samuel',27,12);
+INSERT INTO `final_verses` VALUES (269,'1 Samuel',28,25);
+INSERT INTO `final_verses` VALUES (270,'1 Samuel',29,11);
+INSERT INTO `final_verses` VALUES (271,'1 Samuel',30,31);
+INSERT INTO `final_verses` VALUES (272,'1 Samuel',31,13);
+INSERT INTO `final_verses` VALUES (273,'2 Samuel',1,27);
+INSERT INTO `final_verses` VALUES (274,'2 Samuel',2,32);
+INSERT INTO `final_verses` VALUES (275,'2 Samuel',3,39);
+INSERT INTO `final_verses` VALUES (276,'2 Samuel',4,12);
+INSERT INTO `final_verses` VALUES (277,'2 Samuel',5,25);
+INSERT INTO `final_verses` VALUES (278,'2 Samuel',6,23);
+INSERT INTO `final_verses` VALUES (279,'2 Samuel',7,29);
+INSERT INTO `final_verses` VALUES (280,'2 Samuel',8,18);
+INSERT INTO `final_verses` VALUES (281,'2 Samuel',9,13);
+INSERT INTO `final_verses` VALUES (282,'2 Samuel',10,19);
+INSERT INTO `final_verses` VALUES (283,'2 Samuel',11,27);
+INSERT INTO `final_verses` VALUES (284,'2 Samuel',12,31);
+INSERT INTO `final_verses` VALUES (285,'2 Samuel',13,39);
+INSERT INTO `final_verses` VALUES (286,'2 Samuel',14,33);
+INSERT INTO `final_verses` VALUES (287,'2 Samuel',15,37);
+INSERT INTO `final_verses` VALUES (288,'2 Samuel',16,23);
+INSERT INTO `final_verses` VALUES (289,'2 Samuel',17,29);
+INSERT INTO `final_verses` VALUES (290,'2 Samuel',18,33);
+INSERT INTO `final_verses` VALUES (291,'2 Samuel',19,43);
+INSERT INTO `final_verses` VALUES (292,'2 Samuel',20,26);
+INSERT INTO `final_verses` VALUES (293,'2 Samuel',21,22);
+INSERT INTO `final_verses` VALUES (294,'2 Samuel',22,51);
+INSERT INTO `final_verses` VALUES (295,'2 Samuel',23,39);
+INSERT INTO `final_verses` VALUES (296,'2 Samuel',24,25);
+INSERT INTO `final_verses` VALUES (297,'1 Kings',1,53);
+INSERT INTO `final_verses` VALUES (298,'1 Kings',2,46);
+INSERT INTO `final_verses` VALUES (299,'1 Kings',3,28);
+INSERT INTO `final_verses` VALUES (300,'1 Kings',4,34);
+INSERT INTO `final_verses` VALUES (301,'1 Kings',5,18);
+INSERT INTO `final_verses` VALUES (302,'1 Kings',6,38);
+INSERT INTO `final_verses` VALUES (303,'1 Kings',7,51);
+INSERT INTO `final_verses` VALUES (304,'1 Kings',8,66);
+INSERT INTO `final_verses` VALUES (305,'1 Kings',9,28);
+INSERT INTO `final_verses` VALUES (306,'1 Kings',10,29);
+INSERT INTO `final_verses` VALUES (307,'1 Kings',11,43);
+INSERT INTO `final_verses` VALUES (308,'1 Kings',12,33);
+INSERT INTO `final_verses` VALUES (309,'1 Kings',13,34);
+INSERT INTO `final_verses` VALUES (310,'1 Kings',14,31);
+INSERT INTO `final_verses` VALUES (311,'1 Kings',15,34);
+INSERT INTO `final_verses` VALUES (312,'1 Kings',16,34);
+INSERT INTO `final_verses` VALUES (313,'1 Kings',17,24);
+INSERT INTO `final_verses` VALUES (314,'1 Kings',18,46);
+INSERT INTO `final_verses` VALUES (315,'1 Kings',19,21);
+INSERT INTO `final_verses` VALUES (316,'1 Kings',20,43);
+INSERT INTO `final_verses` VALUES (317,'1 Kings',21,29);
+INSERT INTO `final_verses` VALUES (318,'1 Kings',22,53);
+INSERT INTO `final_verses` VALUES (319,'2 Kings',1,18);
+INSERT INTO `final_verses` VALUES (320,'2 Kings',2,25);
+INSERT INTO `final_verses` VALUES (321,'2 Kings',3,27);
+INSERT INTO `final_verses` VALUES (322,'2 Kings',4,44);
+INSERT INTO `final_verses` VALUES (323,'2 Kings',5,27);
+INSERT INTO `final_verses` VALUES (324,'2 Kings',6,33);
+INSERT INTO `final_verses` VALUES (325,'2 Kings',7,20);
+INSERT INTO `final_verses` VALUES (326,'2 Kings',8,29);
+INSERT INTO `final_verses` VALUES (327,'2 Kings',9,37);
+INSERT INTO `final_verses` VALUES (328,'2 Kings',10,36);
+INSERT INTO `final_verses` VALUES (329,'2 Kings',11,21);
+INSERT INTO `final_verses` VALUES (330,'2 Kings',12,21);
+INSERT INTO `final_verses` VALUES (331,'2 Kings',13,25);
+INSERT INTO `final_verses` VALUES (332,'2 Kings',14,29);
+INSERT INTO `final_verses` VALUES (333,'2 Kings',15,38);
+INSERT INTO `final_verses` VALUES (334,'2 Kings',16,20);
+INSERT INTO `final_verses` VALUES (335,'2 Kings',17,41);
+INSERT INTO `final_verses` VALUES (336,'2 Kings',18,37);
+INSERT INTO `final_verses` VALUES (337,'2 Kings',19,37);
+INSERT INTO `final_verses` VALUES (338,'2 Kings',20,21);
+INSERT INTO `final_verses` VALUES (339,'2 Kings',21,26);
+INSERT INTO `final_verses` VALUES (340,'2 Kings',22,20);
+INSERT INTO `final_verses` VALUES (341,'2 Kings',23,37);
+INSERT INTO `final_verses` VALUES (342,'2 Kings',24,20);
+INSERT INTO `final_verses` VALUES (343,'2 Kings',25,30);
+INSERT INTO `final_verses` VALUES (344,'1 Chronicles',1,54);
+INSERT INTO `final_verses` VALUES (345,'1 Chronicles',2,55);
+INSERT INTO `final_verses` VALUES (346,'1 Chronicles',3,24);
+INSERT INTO `final_verses` VALUES (347,'1 Chronicles',4,43);
+INSERT INTO `final_verses` VALUES (348,'1 Chronicles',5,26);
+INSERT INTO `final_verses` VALUES (349,'1 Chronicles',6,81);
+INSERT INTO `final_verses` VALUES (350,'1 Chronicles',7,40);
+INSERT INTO `final_verses` VALUES (351,'1 Chronicles',8,40);
+INSERT INTO `final_verses` VALUES (352,'1 Chronicles',9,44);
+INSERT INTO `final_verses` VALUES (353,'1 Chronicles',10,14);
+INSERT INTO `final_verses` VALUES (354,'1 Chronicles',11,47);
+INSERT INTO `final_verses` VALUES (355,'1 Chronicles',12,40);
+INSERT INTO `final_verses` VALUES (356,'1 Chronicles',13,14);
+INSERT INTO `final_verses` VALUES (357,'1 Chronicles',14,17);
+INSERT INTO `final_verses` VALUES (358,'1 Chronicles',15,29);
+INSERT INTO `final_verses` VALUES (359,'1 Chronicles',16,43);
+INSERT INTO `final_verses` VALUES (360,'1 Chronicles',17,27);
+INSERT INTO `final_verses` VALUES (361,'1 Chronicles',18,17);
+INSERT INTO `final_verses` VALUES (362,'1 Chronicles',19,19);
+INSERT INTO `final_verses` VALUES (363,'1 Chronicles',20,8);
+INSERT INTO `final_verses` VALUES (364,'1 Chronicles',21,30);
+INSERT INTO `final_verses` VALUES (365,'1 Chronicles',22,19);
+INSERT INTO `final_verses` VALUES (366,'1 Chronicles',23,32);
+INSERT INTO `final_verses` VALUES (367,'1 Chronicles',24,31);
+INSERT INTO `final_verses` VALUES (368,'1 Chronicles',25,31);
+INSERT INTO `final_verses` VALUES (369,'1 Chronicles',26,32);
+INSERT INTO `final_verses` VALUES (370,'1 Chronicles',27,34);
+INSERT INTO `final_verses` VALUES (371,'1 Chronicles',28,21);
+INSERT INTO `final_verses` VALUES (372,'1 Chronicles',29,30);
+INSERT INTO `final_verses` VALUES (373,'2 Chronicles',1,17);
+INSERT INTO `final_verses` VALUES (374,'2 Chronicles',2,18);
+INSERT INTO `final_verses` VALUES (375,'2 Chronicles',3,17);
+INSERT INTO `final_verses` VALUES (376,'2 Chronicles',4,22);
+INSERT INTO `final_verses` VALUES (377,'2 Chronicles',5,14);
+INSERT INTO `final_verses` VALUES (378,'2 Chronicles',6,42);
+INSERT INTO `final_verses` VALUES (379,'2 Chronicles',7,22);
+INSERT INTO `final_verses` VALUES (380,'2 Chronicles',8,18);
+INSERT INTO `final_verses` VALUES (381,'2 Chronicles',9,31);
+INSERT INTO `final_verses` VALUES (382,'2 Chronicles',10,19);
+INSERT INTO `final_verses` VALUES (383,'2 Chronicles',11,23);
+INSERT INTO `final_verses` VALUES (384,'2 Chronicles',12,16);
+INSERT INTO `final_verses` VALUES (385,'2 Chronicles',13,22);
+INSERT INTO `final_verses` VALUES (386,'2 Chronicles',14,15);
+INSERT INTO `final_verses` VALUES (387,'2 Chronicles',15,19);
+INSERT INTO `final_verses` VALUES (388,'2 Chronicles',16,14);
+INSERT INTO `final_verses` VALUES (389,'2 Chronicles',17,19);
+INSERT INTO `final_verses` VALUES (390,'2 Chronicles',18,34);
+INSERT INTO `final_verses` VALUES (391,'2 Chronicles',19,11);
+INSERT INTO `final_verses` VALUES (392,'2 Chronicles',20,37);
+INSERT INTO `final_verses` VALUES (393,'2 Chronicles',21,20);
+INSERT INTO `final_verses` VALUES (394,'2 Chronicles',22,12);
+INSERT INTO `final_verses` VALUES (395,'2 Chronicles',23,21);
+INSERT INTO `final_verses` VALUES (396,'2 Chronicles',24,27);
+INSERT INTO `final_verses` VALUES (397,'2 Chronicles',25,28);
+INSERT INTO `final_verses` VALUES (398,'2 Chronicles',26,23);
+INSERT INTO `final_verses` VALUES (399,'2 Chronicles',27,9);
+INSERT INTO `final_verses` VALUES (400,'2 Chronicles',28,27);
+INSERT INTO `final_verses` VALUES (401,'2 Chronicles',29,36);
+INSERT INTO `final_verses` VALUES (402,'2 Chronicles',30,27);
+INSERT INTO `final_verses` VALUES (403,'2 Chronicles',31,21);
+INSERT INTO `final_verses` VALUES (404,'2 Chronicles',32,33);
+INSERT INTO `final_verses` VALUES (405,'2 Chronicles',33,25);
+INSERT INTO `final_verses` VALUES (406,'2 Chronicles',34,33);
+INSERT INTO `final_verses` VALUES (407,'2 Chronicles',35,27);
+INSERT INTO `final_verses` VALUES (408,'2 Chronicles',36,23);
+INSERT INTO `final_verses` VALUES (409,'Ezra',1,11);
+INSERT INTO `final_verses` VALUES (410,'Ezra',2,70);
+INSERT INTO `final_verses` VALUES (411,'Ezra',3,13);
+INSERT INTO `final_verses` VALUES (412,'Ezra',4,24);
+INSERT INTO `final_verses` VALUES (413,'Ezra',5,17);
+INSERT INTO `final_verses` VALUES (414,'Ezra',6,22);
+INSERT INTO `final_verses` VALUES (415,'Ezra',7,28);
+INSERT INTO `final_verses` VALUES (416,'Ezra',8,36);
+INSERT INTO `final_verses` VALUES (417,'Ezra',9,15);
+INSERT INTO `final_verses` VALUES (418,'Ezra',10,44);
+INSERT INTO `final_verses` VALUES (419,'Nehemiah',1,11);
+INSERT INTO `final_verses` VALUES (420,'Nehemiah',2,20);
+INSERT INTO `final_verses` VALUES (421,'Nehemiah',3,32);
+INSERT INTO `final_verses` VALUES (422,'Nehemiah',4,23);
+INSERT INTO `final_verses` VALUES (423,'Nehemiah',5,19);
+INSERT INTO `final_verses` VALUES (424,'Nehemiah',6,19);
+INSERT INTO `final_verses` VALUES (425,'Nehemiah',7,73);
+INSERT INTO `final_verses` VALUES (426,'Nehemiah',8,18);
+INSERT INTO `final_verses` VALUES (427,'Nehemiah',9,38);
+INSERT INTO `final_verses` VALUES (428,'Nehemiah',10,39);
+INSERT INTO `final_verses` VALUES (429,'Nehemiah',11,36);
+INSERT INTO `final_verses` VALUES (430,'Nehemiah',12,47);
+INSERT INTO `final_verses` VALUES (431,'Nehemiah',13,31);
+INSERT INTO `final_verses` VALUES (432,'Esther',1,22);
+INSERT INTO `final_verses` VALUES (433,'Esther',2,23);
+INSERT INTO `final_verses` VALUES (434,'Esther',3,15);
+INSERT INTO `final_verses` VALUES (435,'Esther',4,17);
+INSERT INTO `final_verses` VALUES (436,'Esther',5,14);
+INSERT INTO `final_verses` VALUES (437,'Esther',6,14);
+INSERT INTO `final_verses` VALUES (438,'Esther',7,10);
+INSERT INTO `final_verses` VALUES (439,'Esther',8,17);
+INSERT INTO `final_verses` VALUES (440,'Esther',9,32);
+INSERT INTO `final_verses` VALUES (441,'Esther',10,3);
+INSERT INTO `final_verses` VALUES (442,'Job',1,22);
+INSERT INTO `final_verses` VALUES (443,'Job',2,13);
+INSERT INTO `final_verses` VALUES (444,'Job',3,26);
+INSERT INTO `final_verses` VALUES (445,'Job',4,21);
+INSERT INTO `final_verses` VALUES (446,'Job',5,27);
+INSERT INTO `final_verses` VALUES (447,'Job',6,30);
+INSERT INTO `final_verses` VALUES (448,'Job',7,21);
+INSERT INTO `final_verses` VALUES (449,'Job',8,22);
+INSERT INTO `final_verses` VALUES (450,'Job',9,35);
+INSERT INTO `final_verses` VALUES (451,'Job',10,22);
+INSERT INTO `final_verses` VALUES (452,'Job',11,20);
+INSERT INTO `final_verses` VALUES (453,'Job',12,25);
+INSERT INTO `final_verses` VALUES (454,'Job',13,28);
+INSERT INTO `final_verses` VALUES (455,'Job',14,22);
+INSERT INTO `final_verses` VALUES (456,'Job',15,35);
+INSERT INTO `final_verses` VALUES (457,'Job',16,22);
+INSERT INTO `final_verses` VALUES (458,'Job',17,16);
+INSERT INTO `final_verses` VALUES (459,'Job',18,21);
+INSERT INTO `final_verses` VALUES (460,'Job',19,29);
+INSERT INTO `final_verses` VALUES (461,'Job',20,29);
+INSERT INTO `final_verses` VALUES (462,'Job',21,34);
+INSERT INTO `final_verses` VALUES (463,'Job',22,30);
+INSERT INTO `final_verses` VALUES (464,'Job',23,17);
+INSERT INTO `final_verses` VALUES (465,'Job',24,25);
+INSERT INTO `final_verses` VALUES (466,'Job',25,6);
+INSERT INTO `final_verses` VALUES (467,'Job',26,14);
+INSERT INTO `final_verses` VALUES (468,'Job',27,23);
+INSERT INTO `final_verses` VALUES (469,'Job',28,28);
+INSERT INTO `final_verses` VALUES (470,'Job',29,25);
+INSERT INTO `final_verses` VALUES (471,'Job',30,31);
+INSERT INTO `final_verses` VALUES (472,'Job',31,40);
+INSERT INTO `final_verses` VALUES (473,'Job',32,22);
+INSERT INTO `final_verses` VALUES (474,'Job',33,33);
+INSERT INTO `final_verses` VALUES (475,'Job',34,37);
+INSERT INTO `final_verses` VALUES (476,'Job',35,16);
+INSERT INTO `final_verses` VALUES (477,'Job',36,33);
+INSERT INTO `final_verses` VALUES (478,'Job',37,24);
+INSERT INTO `final_verses` VALUES (479,'Job',38,41);
+INSERT INTO `final_verses` VALUES (480,'Job',39,30);
+INSERT INTO `final_verses` VALUES (481,'Job',40,24);
+INSERT INTO `final_verses` VALUES (482,'Job',41,34);
+INSERT INTO `final_verses` VALUES (483,'Job',42,17);
+INSERT INTO `final_verses` VALUES (484,'Psalms',1,6);
+INSERT INTO `final_verses` VALUES (485,'Psalms',2,12);
+INSERT INTO `final_verses` VALUES (486,'Psalms',3,8);
+INSERT INTO `final_verses` VALUES (487,'Psalms',4,8);
+INSERT INTO `final_verses` VALUES (488,'Psalms',5,12);
+INSERT INTO `final_verses` VALUES (489,'Psalms',6,10);
+INSERT INTO `final_verses` VALUES (490,'Psalms',7,17);
+INSERT INTO `final_verses` VALUES (491,'Psalms',8,9);
+INSERT INTO `final_verses` VALUES (492,'Psalms',9,20);
+INSERT INTO `final_verses` VALUES (493,'Psalms',10,18);
+INSERT INTO `final_verses` VALUES (494,'Psalms',11,7);
+INSERT INTO `final_verses` VALUES (495,'Psalms',12,8);
+INSERT INTO `final_verses` VALUES (496,'Psalms',13,6);
+INSERT INTO `final_verses` VALUES (497,'Psalms',14,7);
+INSERT INTO `final_verses` VALUES (498,'Psalms',15,5);
+INSERT INTO `final_verses` VALUES (499,'Psalms',16,11);
+INSERT INTO `final_verses` VALUES (500,'Psalms',17,15);
+INSERT INTO `final_verses` VALUES (501,'Psalms',18,50);
+INSERT INTO `final_verses` VALUES (502,'Psalms',19,14);
+INSERT INTO `final_verses` VALUES (503,'Psalms',20,9);
+INSERT INTO `final_verses` VALUES (504,'Psalms',21,13);
+INSERT INTO `final_verses` VALUES (505,'Psalms',22,31);
+INSERT INTO `final_verses` VALUES (506,'Psalms',23,6);
+INSERT INTO `final_verses` VALUES (507,'Psalms',24,10);
+INSERT INTO `final_verses` VALUES (508,'Psalms',25,22);
+INSERT INTO `final_verses` VALUES (509,'Psalms',0,12);
+INSERT INTO `final_verses` VALUES (510,'Psalms',27,14);
+INSERT INTO `final_verses` VALUES (511,'Psalms',28,9);
+INSERT INTO `final_verses` VALUES (512,'Psalms',29,11);
+INSERT INTO `final_verses` VALUES (513,'Psalms',30,12);
+INSERT INTO `final_verses` VALUES (514,'Psalms',31,24);
+INSERT INTO `final_verses` VALUES (515,'Psalms',32,11);
+INSERT INTO `final_verses` VALUES (516,'Psalms',33,22);
+INSERT INTO `final_verses` VALUES (517,'Psalms',34,22);
+INSERT INTO `final_verses` VALUES (518,'Psalms',35,28);
+INSERT INTO `final_verses` VALUES (519,'Psalms',36,12);
+INSERT INTO `final_verses` VALUES (520,'Psalms',37,40);
+INSERT INTO `final_verses` VALUES (521,'Psalms',38,22);
+INSERT INTO `final_verses` VALUES (522,'Psalms',39,13);
+INSERT INTO `final_verses` VALUES (523,'Psalms',40,17);
+INSERT INTO `final_verses` VALUES (524,'Psalms',41,13);
+INSERT INTO `final_verses` VALUES (525,'Psalms',42,11);
+INSERT INTO `final_verses` VALUES (526,'Psalms',43,5);
+INSERT INTO `final_verses` VALUES (527,'Psalms',44,26);
+INSERT INTO `final_verses` VALUES (528,'Psalms',45,17);
+INSERT INTO `final_verses` VALUES (529,'Psalms',46,11);
+INSERT INTO `final_verses` VALUES (530,'Psalms',47,9);
+INSERT INTO `final_verses` VALUES (531,'Psalms',48,14);
+INSERT INTO `final_verses` VALUES (532,'Psalms',49,20);
+INSERT INTO `final_verses` VALUES (533,'Psalms',50,23);
+INSERT INTO `final_verses` VALUES (534,'Psalms',0,19);
+INSERT INTO `final_verses` VALUES (535,'Psalms',52,9);
+INSERT INTO `final_verses` VALUES (536,'Psalms',53,6);
+INSERT INTO `final_verses` VALUES (537,'Psalms',54,7);
+INSERT INTO `final_verses` VALUES (538,'Psalms',55,23);
+INSERT INTO `final_verses` VALUES (539,'Psalms',56,13);
+INSERT INTO `final_verses` VALUES (540,'Psalms',57,11);
+INSERT INTO `final_verses` VALUES (541,'Psalms',58,11);
+INSERT INTO `final_verses` VALUES (542,'Psalms',59,17);
+INSERT INTO `final_verses` VALUES (543,'Psalms',60,12);
+INSERT INTO `final_verses` VALUES (544,'Psalms',61,8);
+INSERT INTO `final_verses` VALUES (545,'Psalms',62,12);
+INSERT INTO `final_verses` VALUES (546,'Psalms',63,11);
+INSERT INTO `final_verses` VALUES (547,'Psalms',64,10);
+INSERT INTO `final_verses` VALUES (548,'Psalms',65,13);
+INSERT INTO `final_verses` VALUES (549,'Psalms',66,20);
+INSERT INTO `final_verses` VALUES (550,'Psalms',67,7);
+INSERT INTO `final_verses` VALUES (551,'Psalms',68,35);
+INSERT INTO `final_verses` VALUES (552,'Psalms',69,36);
+INSERT INTO `final_verses` VALUES (553,'Psalms',70,5);
+INSERT INTO `final_verses` VALUES (554,'Psalms',71,24);
+INSERT INTO `final_verses` VALUES (555,'Psalms',72,20);
+INSERT INTO `final_verses` VALUES (556,'Psalms',73,28);
+INSERT INTO `final_verses` VALUES (557,'Psalms',74,23);
+INSERT INTO `final_verses` VALUES (558,'Psalms',75,10);
+INSERT INTO `final_verses` VALUES (559,'Psalms',0,12);
+INSERT INTO `final_verses` VALUES (560,'Psalms',77,20);
+INSERT INTO `final_verses` VALUES (561,'Psalms',78,72);
+INSERT INTO `final_verses` VALUES (562,'Psalms',79,13);
+INSERT INTO `final_verses` VALUES (563,'Psalms',80,19);
+INSERT INTO `final_verses` VALUES (564,'Psalms',81,16);
+INSERT INTO `final_verses` VALUES (565,'Psalms',82,8);
+INSERT INTO `final_verses` VALUES (566,'Psalms',83,18);
+INSERT INTO `final_verses` VALUES (567,'Psalms',84,12);
+INSERT INTO `final_verses` VALUES (568,'Psalms',85,13);
+INSERT INTO `final_verses` VALUES (569,'Psalms',86,17);
+INSERT INTO `final_verses` VALUES (570,'Psalms',87,7);
+INSERT INTO `final_verses` VALUES (571,'Psalms',88,18);
+INSERT INTO `final_verses` VALUES (572,'Psalms',89,52);
+INSERT INTO `final_verses` VALUES (573,'Psalms',90,17);
+INSERT INTO `final_verses` VALUES (574,'Psalms',91,16);
+INSERT INTO `final_verses` VALUES (575,'Psalms',92,15);
+INSERT INTO `final_verses` VALUES (576,'Psalms',93,5);
+INSERT INTO `final_verses` VALUES (577,'Psalms',94,23);
+INSERT INTO `final_verses` VALUES (578,'Psalms',95,11);
+INSERT INTO `final_verses` VALUES (579,'Psalms',96,13);
+INSERT INTO `final_verses` VALUES (580,'Psalms',97,12);
+INSERT INTO `final_verses` VALUES (581,'Psalms',98,9);
+INSERT INTO `final_verses` VALUES (582,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (583,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (584,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (585,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (586,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (587,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (588,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (589,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (590,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (591,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (592,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (593,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (594,'Psalms',150,0);
+INSERT INTO `final_verses` VALUES (595,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (596,'Psalms',2461,0);
+INSERT INTO `final_verses` VALUES (597,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (598,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (599,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (600,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (601,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (602,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (603,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (604,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (605,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (606,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (607,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (608,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (609,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (610,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (611,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (612,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (613,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (614,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (615,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (616,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (617,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (618,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (619,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (620,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (621,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (622,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (623,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (624,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (625,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (626,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (627,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (628,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (629,'Psalms',119,0);
+INSERT INTO `final_verses` VALUES (630,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (631,'Psalms',20,0);
+INSERT INTO `final_verses` VALUES (632,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (633,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (634,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (635,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (636,'Psalms',119,0);
+INSERT INTO `final_verses` VALUES (637,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (638,'Psalms',20,0);
+INSERT INTO `final_verses` VALUES (639,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (640,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (641,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (642,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (643,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (644,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (645,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (646,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (647,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (648,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (649,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (650,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (651,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (652,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (653,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (654,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (655,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (656,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (657,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (658,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (659,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (660,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (661,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (662,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (663,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (664,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (665,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (666,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (667,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (668,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (669,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (670,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (671,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (672,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (673,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (674,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (675,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (676,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (677,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (678,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (679,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (680,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (681,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (682,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (683,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (684,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (685,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (686,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (687,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (688,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (689,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (690,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (691,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (692,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (693,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (694,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (695,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (696,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (697,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (698,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (699,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (700,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (701,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (702,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (703,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (704,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (705,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (706,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (707,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (708,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (709,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (710,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (711,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (712,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (713,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (714,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (715,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (716,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (717,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (718,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (719,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (720,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (721,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (722,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (723,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (724,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (725,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (726,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (727,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (728,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (729,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (730,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (731,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (732,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (733,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (734,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (735,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (736,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (737,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (738,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (739,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (740,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (741,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (742,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (743,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (744,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (745,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (746,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (747,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (748,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (749,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (750,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (751,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (752,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (753,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (754,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (755,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (756,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (757,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (758,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (759,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (760,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (761,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (762,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (763,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (764,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (765,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (766,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (767,'Psalms',116,0);
+INSERT INTO `final_verses` VALUES (768,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (769,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (770,'Psalms',119,0);
+INSERT INTO `final_verses` VALUES (771,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (772,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (773,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (774,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (775,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (776,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (777,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (778,'Psalms',22,0);
+INSERT INTO `final_verses` VALUES (779,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (780,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (781,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (782,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (783,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (784,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (785,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (786,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (787,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (788,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (789,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (790,'Psalms',22,0);
+INSERT INTO `final_verses` VALUES (791,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (792,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (793,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (794,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (795,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (796,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (797,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (798,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (799,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (800,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (801,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (802,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (803,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (804,'Psalms',119,0);
+INSERT INTO `final_verses` VALUES (805,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (806,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (807,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (808,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (809,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (810,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (811,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (812,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (813,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (814,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (815,'Psalms',137,0);
+INSERT INTO `final_verses` VALUES (816,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (817,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (818,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (819,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (820,'Psalms',116,0);
+INSERT INTO `final_verses` VALUES (821,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (822,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (823,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (824,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (825,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (826,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (827,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (828,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (829,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (830,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (831,'Psalms',137,0);
+INSERT INTO `final_verses` VALUES (832,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (833,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (834,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (835,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (836,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (837,'Psalms',1,6);
+INSERT INTO `final_verses` VALUES (838,'Psalms',2,12);
+INSERT INTO `final_verses` VALUES (839,'Psalms',3,8);
+INSERT INTO `final_verses` VALUES (840,'Psalms',4,8);
+INSERT INTO `final_verses` VALUES (841,'Psalms',5,12);
+INSERT INTO `final_verses` VALUES (842,'Psalms',6,10);
+INSERT INTO `final_verses` VALUES (843,'Psalms',7,17);
+INSERT INTO `final_verses` VALUES (844,'Psalms',8,9);
+INSERT INTO `final_verses` VALUES (845,'Psalms',9,20);
+INSERT INTO `final_verses` VALUES (846,'Psalms',10,18);
+INSERT INTO `final_verses` VALUES (847,'Psalms',11,7);
+INSERT INTO `final_verses` VALUES (848,'Psalms',12,8);
+INSERT INTO `final_verses` VALUES (849,'Psalms',13,6);
+INSERT INTO `final_verses` VALUES (850,'Psalms',14,7);
+INSERT INTO `final_verses` VALUES (851,'Psalms',15,5);
+INSERT INTO `final_verses` VALUES (852,'Psalms',16,11);
+INSERT INTO `final_verses` VALUES (853,'Psalms',17,15);
+INSERT INTO `final_verses` VALUES (854,'Psalms',18,50);
+INSERT INTO `final_verses` VALUES (855,'Psalms',19,14);
+INSERT INTO `final_verses` VALUES (856,'Psalms',20,9);
+INSERT INTO `final_verses` VALUES (857,'Psalms',21,13);
+INSERT INTO `final_verses` VALUES (858,'Psalms',22,31);
+INSERT INTO `final_verses` VALUES (859,'Psalms',23,6);
+INSERT INTO `final_verses` VALUES (860,'Psalms',24,10);
+INSERT INTO `final_verses` VALUES (861,'Psalms',25,22);
+INSERT INTO `final_verses` VALUES (862,'Psalms',0,12);
+INSERT INTO `final_verses` VALUES (863,'Psalms',27,14);
+INSERT INTO `final_verses` VALUES (864,'Psalms',28,9);
+INSERT INTO `final_verses` VALUES (865,'Psalms',29,11);
+INSERT INTO `final_verses` VALUES (866,'Psalms',30,12);
+INSERT INTO `final_verses` VALUES (867,'Psalms',31,24);
+INSERT INTO `final_verses` VALUES (868,'Psalms',32,11);
+INSERT INTO `final_verses` VALUES (869,'Psalms',33,22);
+INSERT INTO `final_verses` VALUES (870,'Psalms',34,22);
+INSERT INTO `final_verses` VALUES (871,'Psalms',35,28);
+INSERT INTO `final_verses` VALUES (872,'Psalms',36,12);
+INSERT INTO `final_verses` VALUES (873,'Psalms',37,40);
+INSERT INTO `final_verses` VALUES (874,'Psalms',38,22);
+INSERT INTO `final_verses` VALUES (875,'Psalms',39,13);
+INSERT INTO `final_verses` VALUES (876,'Psalms',40,17);
+INSERT INTO `final_verses` VALUES (877,'Psalms',41,13);
+INSERT INTO `final_verses` VALUES (878,'Psalms',42,11);
+INSERT INTO `final_verses` VALUES (879,'Psalms',43,5);
+INSERT INTO `final_verses` VALUES (880,'Psalms',44,26);
+INSERT INTO `final_verses` VALUES (881,'Psalms',45,17);
+INSERT INTO `final_verses` VALUES (882,'Psalms',46,11);
+INSERT INTO `final_verses` VALUES (883,'Psalms',47,9);
+INSERT INTO `final_verses` VALUES (884,'Psalms',48,14);
+INSERT INTO `final_verses` VALUES (885,'Psalms',49,20);
+INSERT INTO `final_verses` VALUES (886,'Psalms',50,23);
+INSERT INTO `final_verses` VALUES (887,'Psalms',0,19);
+INSERT INTO `final_verses` VALUES (888,'Psalms',52,9);
+INSERT INTO `final_verses` VALUES (889,'Psalms',53,6);
+INSERT INTO `final_verses` VALUES (890,'Psalms',54,7);
+INSERT INTO `final_verses` VALUES (891,'Psalms',55,23);
+INSERT INTO `final_verses` VALUES (892,'Psalms',56,13);
+INSERT INTO `final_verses` VALUES (893,'Psalms',57,11);
+INSERT INTO `final_verses` VALUES (894,'Psalms',58,11);
+INSERT INTO `final_verses` VALUES (895,'Psalms',59,17);
+INSERT INTO `final_verses` VALUES (896,'Psalms',60,12);
+INSERT INTO `final_verses` VALUES (897,'Psalms',61,8);
+INSERT INTO `final_verses` VALUES (898,'Psalms',62,12);
+INSERT INTO `final_verses` VALUES (899,'Psalms',63,11);
+INSERT INTO `final_verses` VALUES (900,'Psalms',64,10);
+INSERT INTO `final_verses` VALUES (901,'Psalms',65,13);
+INSERT INTO `final_verses` VALUES (902,'Psalms',66,20);
+INSERT INTO `final_verses` VALUES (903,'Psalms',67,7);
+INSERT INTO `final_verses` VALUES (904,'Psalms',68,35);
+INSERT INTO `final_verses` VALUES (905,'Psalms',69,36);
+INSERT INTO `final_verses` VALUES (906,'Psalms',70,5);
+INSERT INTO `final_verses` VALUES (907,'Psalms',71,24);
+INSERT INTO `final_verses` VALUES (908,'Psalms',72,20);
+INSERT INTO `final_verses` VALUES (909,'Psalms',73,28);
+INSERT INTO `final_verses` VALUES (910,'Psalms',74,23);
+INSERT INTO `final_verses` VALUES (911,'Psalms',75,10);
+INSERT INTO `final_verses` VALUES (912,'Psalms',0,12);
+INSERT INTO `final_verses` VALUES (913,'Psalms',77,20);
+INSERT INTO `final_verses` VALUES (914,'Psalms',78,72);
+INSERT INTO `final_verses` VALUES (915,'Psalms',79,13);
+INSERT INTO `final_verses` VALUES (916,'Psalms',80,19);
+INSERT INTO `final_verses` VALUES (917,'Psalms',81,16);
+INSERT INTO `final_verses` VALUES (918,'Psalms',82,8);
+INSERT INTO `final_verses` VALUES (919,'Psalms',83,18);
+INSERT INTO `final_verses` VALUES (920,'Psalms',84,12);
+INSERT INTO `final_verses` VALUES (921,'Psalms',85,13);
+INSERT INTO `final_verses` VALUES (922,'Psalms',86,17);
+INSERT INTO `final_verses` VALUES (923,'Psalms',87,7);
+INSERT INTO `final_verses` VALUES (924,'Psalms',88,18);
+INSERT INTO `final_verses` VALUES (925,'Psalms',89,52);
+INSERT INTO `final_verses` VALUES (926,'Psalms',90,17);
+INSERT INTO `final_verses` VALUES (927,'Psalms',91,16);
+INSERT INTO `final_verses` VALUES (928,'Psalms',92,15);
+INSERT INTO `final_verses` VALUES (929,'Psalms',93,5);
+INSERT INTO `final_verses` VALUES (930,'Psalms',94,23);
+INSERT INTO `final_verses` VALUES (931,'Psalms',95,11);
+INSERT INTO `final_verses` VALUES (932,'Psalms',96,13);
+INSERT INTO `final_verses` VALUES (933,'Psalms',97,12);
+INSERT INTO `final_verses` VALUES (934,'Psalms',98,9);
+INSERT INTO `final_verses` VALUES (935,'Psalms',99,9);
+INSERT INTO `final_verses` VALUES (936,'Psalms',100,5);
+INSERT INTO `final_verses` VALUES (937,'Psalms',0,8);
+INSERT INTO `final_verses` VALUES (938,'Psalms',102,28);
+INSERT INTO `final_verses` VALUES (939,'Psalms',103,22);
+INSERT INTO `final_verses` VALUES (940,'Psalms',104,35);
+INSERT INTO `final_verses` VALUES (941,'Psalms',105,45);
+INSERT INTO `final_verses` VALUES (942,'Psalms',106,48);
+INSERT INTO `final_verses` VALUES (943,'Psalms',107,43);
+INSERT INTO `final_verses` VALUES (944,'Psalms',108,13);
+INSERT INTO `final_verses` VALUES (945,'Psalms',109,31);
+INSERT INTO `final_verses` VALUES (946,'Psalms',110,7);
+INSERT INTO `final_verses` VALUES (947,'Psalms',111,10);
+INSERT INTO `final_verses` VALUES (948,'Psalms',112,10);
+INSERT INTO `final_verses` VALUES (949,'Psalms',113,9);
+INSERT INTO `final_verses` VALUES (950,'Psalms',114,8);
+INSERT INTO `final_verses` VALUES (951,'Psalms',115,18);
+INSERT INTO `final_verses` VALUES (952,'Psalms',116,19);
+INSERT INTO `final_verses` VALUES (953,'Psalms',117,2);
+INSERT INTO `final_verses` VALUES (954,'Psalms',118,29);
+INSERT INTO `final_verses` VALUES (955,'Psalms',119,176);
+INSERT INTO `final_verses` VALUES (956,'Psalms',120,7);
+INSERT INTO `final_verses` VALUES (957,'Psalms',121,8);
+INSERT INTO `final_verses` VALUES (958,'Psalms',122,9);
+INSERT INTO `final_verses` VALUES (959,'Psalms',123,4);
+INSERT INTO `final_verses` VALUES (960,'Psalms',124,8);
+INSERT INTO `final_verses` VALUES (961,'Psalms',125,5);
+INSERT INTO `final_verses` VALUES (962,'Psalms',0,6);
+INSERT INTO `final_verses` VALUES (963,'Psalms',127,5);
+INSERT INTO `final_verses` VALUES (964,'Psalms',128,6);
+INSERT INTO `final_verses` VALUES (965,'Psalms',129,8);
+INSERT INTO `final_verses` VALUES (966,'Psalms',130,8);
+INSERT INTO `final_verses` VALUES (967,'Psalms',131,3);
+INSERT INTO `final_verses` VALUES (968,'Psalms',132,18);
+INSERT INTO `final_verses` VALUES (969,'Psalms',133,3);
+INSERT INTO `final_verses` VALUES (970,'Psalms',134,3);
+INSERT INTO `final_verses` VALUES (971,'Psalms',135,21);
+INSERT INTO `final_verses` VALUES (972,'Psalms',136,26);
+INSERT INTO `final_verses` VALUES (973,'Psalms',137,9);
+INSERT INTO `final_verses` VALUES (974,'Psalms',138,8);
+INSERT INTO `final_verses` VALUES (975,'Psalms',139,24);
+INSERT INTO `final_verses` VALUES (976,'Psalms',140,13);
+INSERT INTO `final_verses` VALUES (977,'Psalms',141,10);
+INSERT INTO `final_verses` VALUES (978,'Psalms',142,7);
+INSERT INTO `final_verses` VALUES (979,'Psalms',143,12);
+INSERT INTO `final_verses` VALUES (980,'Psalms',144,15);
+INSERT INTO `final_verses` VALUES (981,'Psalms',145,21);
+INSERT INTO `final_verses` VALUES (982,'Psalms',146,10);
+INSERT INTO `final_verses` VALUES (983,'Psalms',147,20);
+INSERT INTO `final_verses` VALUES (984,'Psalms',148,14);
+INSERT INTO `final_verses` VALUES (985,'Psalms',149,9);
+INSERT INTO `final_verses` VALUES (986,'Psalms',150,6);
+INSERT INTO `final_verses` VALUES (987,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (988,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (989,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (990,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (991,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (992,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (993,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (994,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (995,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (996,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (997,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (998,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (999,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1000,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1001,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1002,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1003,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1004,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1005,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1006,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1007,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1008,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1009,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1010,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1011,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1012,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1013,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1014,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1015,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1016,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1017,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1018,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1019,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1020,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1021,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1022,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1023,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1024,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1025,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1026,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1027,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1028,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1029,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1030,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1031,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1032,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1033,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1034,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1035,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1036,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1037,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1038,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1039,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1040,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1041,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1042,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1043,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1044,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1045,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1046,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1047,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1048,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1049,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1050,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1051,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1052,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1053,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1054,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1055,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1056,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1057,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1058,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1059,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1060,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1061,'Psalms',0,0);
+INSERT INTO `final_verses` VALUES (1062,'Proverbs',1,33);
+INSERT INTO `final_verses` VALUES (1063,'Proverbs',2,22);
+INSERT INTO `final_verses` VALUES (1064,'Proverbs',3,35);
+INSERT INTO `final_verses` VALUES (1065,'Proverbs',4,27);
+INSERT INTO `final_verses` VALUES (1066,'Proverbs',5,23);
+INSERT INTO `final_verses` VALUES (1067,'Proverbs',6,35);
+INSERT INTO `final_verses` VALUES (1068,'Proverbs',7,27);
+INSERT INTO `final_verses` VALUES (1069,'Proverbs',8,36);
+INSERT INTO `final_verses` VALUES (1070,'Proverbs',9,18);
+INSERT INTO `final_verses` VALUES (1071,'Proverbs',10,32);
+INSERT INTO `final_verses` VALUES (1072,'Proverbs',11,31);
+INSERT INTO `final_verses` VALUES (1073,'Proverbs',12,28);
+INSERT INTO `final_verses` VALUES (1074,'Proverbs',13,25);
+INSERT INTO `final_verses` VALUES (1075,'Proverbs',14,35);
+INSERT INTO `final_verses` VALUES (1076,'Proverbs',15,33);
+INSERT INTO `final_verses` VALUES (1077,'Proverbs',16,33);
+INSERT INTO `final_verses` VALUES (1078,'Proverbs',17,28);
+INSERT INTO `final_verses` VALUES (1079,'Proverbs',18,24);
+INSERT INTO `final_verses` VALUES (1080,'Proverbs',19,29);
+INSERT INTO `final_verses` VALUES (1081,'Proverbs',20,30);
+INSERT INTO `final_verses` VALUES (1082,'Proverbs',21,31);
+INSERT INTO `final_verses` VALUES (1083,'Proverbs',22,29);
+INSERT INTO `final_verses` VALUES (1084,'Proverbs',23,35);
+INSERT INTO `final_verses` VALUES (1085,'Proverbs',24,34);
+INSERT INTO `final_verses` VALUES (1086,'Proverbs',25,28);
+INSERT INTO `final_verses` VALUES (1087,'Proverbs',26,28);
+INSERT INTO `final_verses` VALUES (1088,'Proverbs',27,27);
+INSERT INTO `final_verses` VALUES (1089,'Proverbs',28,28);
+INSERT INTO `final_verses` VALUES (1090,'Proverbs',29,27);
+INSERT INTO `final_verses` VALUES (1091,'Proverbs',30,33);
+INSERT INTO `final_verses` VALUES (1092,'Proverbs',31,31);
+INSERT INTO `final_verses` VALUES (1093,'Ecclesiastes',1,18);
+INSERT INTO `final_verses` VALUES (1094,'Ecclesiastes',2,26);
+INSERT INTO `final_verses` VALUES (1095,'Ecclesiastes',3,22);
+INSERT INTO `final_verses` VALUES (1096,'Ecclesiastes',4,16);
+INSERT INTO `final_verses` VALUES (1097,'Ecclesiastes',5,20);
+INSERT INTO `final_verses` VALUES (1098,'Ecclesiastes',6,12);
+INSERT INTO `final_verses` VALUES (1099,'Ecclesiastes',7,29);
+INSERT INTO `final_verses` VALUES (1100,'Ecclesiastes',8,17);
+INSERT INTO `final_verses` VALUES (1101,'Ecclesiastes',9,18);
+INSERT INTO `final_verses` VALUES (1102,'Ecclesiastes',10,20);
+INSERT INTO `final_verses` VALUES (1103,'Ecclesiastes',11,10);
+INSERT INTO `final_verses` VALUES (1104,'Ecclesiastes',12,14);
+INSERT INTO `final_verses` VALUES (1105,'Song of Songs',1,17);
+INSERT INTO `final_verses` VALUES (1106,'Song of Songs',2,17);
+INSERT INTO `final_verses` VALUES (1107,'Song of Songs',3,11);
+INSERT INTO `final_verses` VALUES (1108,'Song of Songs',4,16);
+INSERT INTO `final_verses` VALUES (1109,'Song of Songs',5,16);
+INSERT INTO `final_verses` VALUES (1110,'Song of Songs',6,13);
+INSERT INTO `final_verses` VALUES (1111,'Song of Songs',7,13);
+INSERT INTO `final_verses` VALUES (1112,'Song of Songs',8,14);
+INSERT INTO `final_verses` VALUES (1113,'Isaiah',1,31);
+INSERT INTO `final_verses` VALUES (1114,'Isaiah',2,22);
+INSERT INTO `final_verses` VALUES (1115,'Isaiah',3,26);
+INSERT INTO `final_verses` VALUES (1116,'Isaiah',4,6);
+INSERT INTO `final_verses` VALUES (1117,'Isaiah',5,30);
+INSERT INTO `final_verses` VALUES (1118,'Isaiah',6,13);
+INSERT INTO `final_verses` VALUES (1119,'Isaiah',7,25);
+INSERT INTO `final_verses` VALUES (1120,'Isaiah',8,22);
+INSERT INTO `final_verses` VALUES (1121,'Isaiah',9,21);
+INSERT INTO `final_verses` VALUES (1122,'Isaiah',10,34);
+INSERT INTO `final_verses` VALUES (1123,'Isaiah',11,16);
+INSERT INTO `final_verses` VALUES (1124,'Isaiah',12,6);
+INSERT INTO `final_verses` VALUES (1125,'Isaiah',13,22);
+INSERT INTO `final_verses` VALUES (1126,'Isaiah',14,32);
+INSERT INTO `final_verses` VALUES (1127,'Isaiah',15,9);
+INSERT INTO `final_verses` VALUES (1128,'Isaiah',16,14);
+INSERT INTO `final_verses` VALUES (1129,'Isaiah',17,14);
+INSERT INTO `final_verses` VALUES (1130,'Isaiah',18,7);
+INSERT INTO `final_verses` VALUES (1131,'Isaiah',19,25);
+INSERT INTO `final_verses` VALUES (1132,'Isaiah',20,6);
+INSERT INTO `final_verses` VALUES (1133,'Isaiah',21,17);
+INSERT INTO `final_verses` VALUES (1134,'Isaiah',22,25);
+INSERT INTO `final_verses` VALUES (1135,'Isaiah',23,18);
+INSERT INTO `final_verses` VALUES (1136,'Isaiah',24,23);
+INSERT INTO `final_verses` VALUES (1137,'Isaiah',25,12);
+INSERT INTO `final_verses` VALUES (1138,'Isaiah',26,21);
+INSERT INTO `final_verses` VALUES (1139,'Isaiah',27,13);
+INSERT INTO `final_verses` VALUES (1140,'Isaiah',28,29);
+INSERT INTO `final_verses` VALUES (1141,'Isaiah',29,24);
+INSERT INTO `final_verses` VALUES (1142,'Isaiah',30,33);
+INSERT INTO `final_verses` VALUES (1143,'Isaiah',31,9);
+INSERT INTO `final_verses` VALUES (1144,'Isaiah',32,20);
+INSERT INTO `final_verses` VALUES (1145,'Isaiah',33,24);
+INSERT INTO `final_verses` VALUES (1146,'Isaiah',34,17);
+INSERT INTO `final_verses` VALUES (1147,'Isaiah',35,10);
+INSERT INTO `final_verses` VALUES (1148,'Isaiah',36,22);
+INSERT INTO `final_verses` VALUES (1149,'Isaiah',37,38);
+INSERT INTO `final_verses` VALUES (1150,'Isaiah',38,22);
+INSERT INTO `final_verses` VALUES (1151,'Isaiah',39,8);
+INSERT INTO `final_verses` VALUES (1152,'Isaiah',40,31);
+INSERT INTO `final_verses` VALUES (1153,'Isaiah',41,29);
+INSERT INTO `final_verses` VALUES (1154,'Isaiah',42,25);
+INSERT INTO `final_verses` VALUES (1155,'Isaiah',43,28);
+INSERT INTO `final_verses` VALUES (1156,'Isaiah',44,28);
+INSERT INTO `final_verses` VALUES (1157,'Isaiah',45,25);
+INSERT INTO `final_verses` VALUES (1158,'Isaiah',46,13);
+INSERT INTO `final_verses` VALUES (1159,'Isaiah',47,15);
+INSERT INTO `final_verses` VALUES (1160,'Isaiah',48,22);
+INSERT INTO `final_verses` VALUES (1161,'Isaiah',49,26);
+INSERT INTO `final_verses` VALUES (1162,'Isaiah',50,11);
+INSERT INTO `final_verses` VALUES (1163,'Isaiah',51,23);
+INSERT INTO `final_verses` VALUES (1164,'Isaiah',52,15);
+INSERT INTO `final_verses` VALUES (1165,'Isaiah',53,12);
+INSERT INTO `final_verses` VALUES (1166,'Isaiah',54,17);
+INSERT INTO `final_verses` VALUES (1167,'Isaiah',55,13);
+INSERT INTO `final_verses` VALUES (1168,'Isaiah',56,12);
+INSERT INTO `final_verses` VALUES (1169,'Isaiah',57,21);
+INSERT INTO `final_verses` VALUES (1170,'Isaiah',58,14);
+INSERT INTO `final_verses` VALUES (1171,'Isaiah',59,21);
+INSERT INTO `final_verses` VALUES (1172,'Isaiah',60,22);
+INSERT INTO `final_verses` VALUES (1173,'Isaiah',61,11);
+INSERT INTO `final_verses` VALUES (1174,'Isaiah',62,12);
+INSERT INTO `final_verses` VALUES (1175,'Isaiah',63,19);
+INSERT INTO `final_verses` VALUES (1176,'Isaiah',64,12);
+INSERT INTO `final_verses` VALUES (1177,'Isaiah',65,25);
+INSERT INTO `final_verses` VALUES (1178,'Isaiah',66,24);
+INSERT INTO `final_verses` VALUES (1179,'Jeremiah',1,19);
+INSERT INTO `final_verses` VALUES (1180,'Jeremiah',2,37);
+INSERT INTO `final_verses` VALUES (1181,'Jeremiah',3,25);
+INSERT INTO `final_verses` VALUES (1182,'Jeremiah',4,31);
+INSERT INTO `final_verses` VALUES (1183,'Jeremiah',5,31);
+INSERT INTO `final_verses` VALUES (1184,'Jeremiah',6,30);
+INSERT INTO `final_verses` VALUES (1185,'Jeremiah',7,34);
+INSERT INTO `final_verses` VALUES (1186,'Jeremiah',8,22);
+INSERT INTO `final_verses` VALUES (1187,'Jeremiah',9,26);
+INSERT INTO `final_verses` VALUES (1188,'Jeremiah',10,25);
+INSERT INTO `final_verses` VALUES (1189,'Jeremiah',11,23);
+INSERT INTO `final_verses` VALUES (1190,'Jeremiah',12,17);
+INSERT INTO `final_verses` VALUES (1191,'Jeremiah',13,27);
+INSERT INTO `final_verses` VALUES (1192,'Jeremiah',14,22);
+INSERT INTO `final_verses` VALUES (1193,'Jeremiah',15,21);
+INSERT INTO `final_verses` VALUES (1194,'Jeremiah',16,21);
+INSERT INTO `final_verses` VALUES (1195,'Jeremiah',17,27);
+INSERT INTO `final_verses` VALUES (1196,'Jeremiah',18,23);
+INSERT INTO `final_verses` VALUES (1197,'Jeremiah',19,15);
+INSERT INTO `final_verses` VALUES (1198,'Jeremiah',20,18);
+INSERT INTO `final_verses` VALUES (1199,'Jeremiah',21,14);
+INSERT INTO `final_verses` VALUES (1200,'Jeremiah',22,30);
+INSERT INTO `final_verses` VALUES (1201,'Jeremiah',23,40);
+INSERT INTO `final_verses` VALUES (1202,'Jeremiah',24,10);
+INSERT INTO `final_verses` VALUES (1203,'Jeremiah',25,38);
+INSERT INTO `final_verses` VALUES (1204,'Jeremiah',26,24);
+INSERT INTO `final_verses` VALUES (1205,'Jeremiah',27,22);
+INSERT INTO `final_verses` VALUES (1206,'Jeremiah',28,17);
+INSERT INTO `final_verses` VALUES (1207,'Jeremiah',29,32);
+INSERT INTO `final_verses` VALUES (1208,'Jeremiah',30,24);
+INSERT INTO `final_verses` VALUES (1209,'Jeremiah',31,40);
+INSERT INTO `final_verses` VALUES (1210,'Jeremiah',32,44);
+INSERT INTO `final_verses` VALUES (1211,'Jeremiah',33,26);
+INSERT INTO `final_verses` VALUES (1212,'Jeremiah',34,22);
+INSERT INTO `final_verses` VALUES (1213,'Jeremiah',35,19);
+INSERT INTO `final_verses` VALUES (1214,'Jeremiah',36,32);
+INSERT INTO `final_verses` VALUES (1215,'Jeremiah',37,21);
+INSERT INTO `final_verses` VALUES (1216,'Jeremiah',38,28);
+INSERT INTO `final_verses` VALUES (1217,'Jeremiah',39,18);
+INSERT INTO `final_verses` VALUES (1218,'Jeremiah',40,16);
+INSERT INTO `final_verses` VALUES (1219,'Jeremiah',41,18);
+INSERT INTO `final_verses` VALUES (1220,'Jeremiah',42,22);
+INSERT INTO `final_verses` VALUES (1221,'Jeremiah',43,13);
+INSERT INTO `final_verses` VALUES (1222,'Jeremiah',44,30);
+INSERT INTO `final_verses` VALUES (1223,'Jeremiah',45,5);
+INSERT INTO `final_verses` VALUES (1224,'Jeremiah',46,28);
+INSERT INTO `final_verses` VALUES (1225,'Jeremiah',47,7);
+INSERT INTO `final_verses` VALUES (1226,'Jeremiah',48,47);
+INSERT INTO `final_verses` VALUES (1227,'Jeremiah',49,39);
+INSERT INTO `final_verses` VALUES (1228,'Jeremiah',50,46);
+INSERT INTO `final_verses` VALUES (1229,'Jeremiah',51,64);
+INSERT INTO `final_verses` VALUES (1230,'Jeremiah',52,34);
+INSERT INTO `final_verses` VALUES (1231,'Lamentations',1,22);
+INSERT INTO `final_verses` VALUES (1232,'Lamentations',2,22);
+INSERT INTO `final_verses` VALUES (1233,'Lamentations',3,66);
+INSERT INTO `final_verses` VALUES (1234,'Lamentations',4,22);
+INSERT INTO `final_verses` VALUES (1235,'Lamentations',5,22);
+INSERT INTO `final_verses` VALUES (1236,'Ezekiel',1,28);
+INSERT INTO `final_verses` VALUES (1237,'Ezekiel',2,10);
+INSERT INTO `final_verses` VALUES (1238,'Ezekiel',3,27);
+INSERT INTO `final_verses` VALUES (1239,'Ezekiel',4,17);
+INSERT INTO `final_verses` VALUES (1240,'Ezekiel',5,17);
+INSERT INTO `final_verses` VALUES (1241,'Ezekiel',6,14);
+INSERT INTO `final_verses` VALUES (1242,'Ezekiel',7,27);
+INSERT INTO `final_verses` VALUES (1243,'Ezekiel',8,18);
+INSERT INTO `final_verses` VALUES (1244,'Ezekiel',9,11);
+INSERT INTO `final_verses` VALUES (1245,'Ezekiel',10,22);
+INSERT INTO `final_verses` VALUES (1246,'Ezekiel',11,25);
+INSERT INTO `final_verses` VALUES (1247,'Ezekiel',12,28);
+INSERT INTO `final_verses` VALUES (1248,'Ezekiel',13,23);
+INSERT INTO `final_verses` VALUES (1249,'Ezekiel',14,23);
+INSERT INTO `final_verses` VALUES (1250,'Ezekiel',15,8);
+INSERT INTO `final_verses` VALUES (1251,'Ezekiel',16,63);
+INSERT INTO `final_verses` VALUES (1252,'Ezekiel',17,24);
+INSERT INTO `final_verses` VALUES (1253,'Ezekiel',18,32);
+INSERT INTO `final_verses` VALUES (1254,'Ezekiel',19,14);
+INSERT INTO `final_verses` VALUES (1255,'Ezekiel',20,49);
+INSERT INTO `final_verses` VALUES (1256,'Ezekiel',21,32);
+INSERT INTO `final_verses` VALUES (1257,'Ezekiel',22,31);
+INSERT INTO `final_verses` VALUES (1258,'Ezekiel',23,49);
+INSERT INTO `final_verses` VALUES (1259,'Ezekiel',24,27);
+INSERT INTO `final_verses` VALUES (1260,'Ezekiel',25,17);
+INSERT INTO `final_verses` VALUES (1261,'Ezekiel',26,21);
+INSERT INTO `final_verses` VALUES (1262,'Ezekiel',27,36);
+INSERT INTO `final_verses` VALUES (1263,'Ezekiel',28,26);
+INSERT INTO `final_verses` VALUES (1264,'Ezekiel',29,21);
+INSERT INTO `final_verses` VALUES (1265,'Ezekiel',30,26);
+INSERT INTO `final_verses` VALUES (1266,'Ezekiel',31,18);
+INSERT INTO `final_verses` VALUES (1267,'Ezekiel',32,32);
+INSERT INTO `final_verses` VALUES (1268,'Ezekiel',33,33);
+INSERT INTO `final_verses` VALUES (1269,'Ezekiel',34,31);
+INSERT INTO `final_verses` VALUES (1270,'Ezekiel',35,15);
+INSERT INTO `final_verses` VALUES (1271,'Ezekiel',36,38);
+INSERT INTO `final_verses` VALUES (1272,'Ezekiel',37,28);
+INSERT INTO `final_verses` VALUES (1273,'Ezekiel',38,23);
+INSERT INTO `final_verses` VALUES (1274,'Ezekiel',39,29);
+INSERT INTO `final_verses` VALUES (1275,'Ezekiel',40,49);
+INSERT INTO `final_verses` VALUES (1276,'Ezekiel',41,26);
+INSERT INTO `final_verses` VALUES (1277,'Ezekiel',42,20);
+INSERT INTO `final_verses` VALUES (1278,'Ezekiel',43,27);
+INSERT INTO `final_verses` VALUES (1279,'Ezekiel',44,31);
+INSERT INTO `final_verses` VALUES (1280,'Ezekiel',45,25);
+INSERT INTO `final_verses` VALUES (1281,'Ezekiel',46,24);
+INSERT INTO `final_verses` VALUES (1282,'Ezekiel',47,23);
+INSERT INTO `final_verses` VALUES (1283,'Ezekiel',48,35);
+INSERT INTO `final_verses` VALUES (1284,'Daniel',1,21);
+INSERT INTO `final_verses` VALUES (1285,'Daniel',2,49);
+INSERT INTO `final_verses` VALUES (1286,'Daniel',3,30);
+INSERT INTO `final_verses` VALUES (1287,'Daniel',4,37);
+INSERT INTO `final_verses` VALUES (1288,'Daniel',5,31);
+INSERT INTO `final_verses` VALUES (1289,'Daniel',6,28);
+INSERT INTO `final_verses` VALUES (1290,'Daniel',7,28);
+INSERT INTO `final_verses` VALUES (1291,'Daniel',8,27);
+INSERT INTO `final_verses` VALUES (1292,'Daniel',9,27);
+INSERT INTO `final_verses` VALUES (1293,'Daniel',10,21);
+INSERT INTO `final_verses` VALUES (1294,'Daniel',11,45);
+INSERT INTO `final_verses` VALUES (1295,'Daniel',12,13);
+INSERT INTO `final_verses` VALUES (1296,'Hosea',1,11);
+INSERT INTO `final_verses` VALUES (1297,'Hosea',2,23);
+INSERT INTO `final_verses` VALUES (1298,'Hosea',3,5);
+INSERT INTO `final_verses` VALUES (1299,'Hosea',4,19);
+INSERT INTO `final_verses` VALUES (1300,'Hosea',5,15);
+INSERT INTO `final_verses` VALUES (1301,'Hosea',6,11);
+INSERT INTO `final_verses` VALUES (1302,'Hosea',7,16);
+INSERT INTO `final_verses` VALUES (1303,'Hosea',8,14);
+INSERT INTO `final_verses` VALUES (1304,'Hosea',9,17);
+INSERT INTO `final_verses` VALUES (1305,'Hosea',10,15);
+INSERT INTO `final_verses` VALUES (1306,'Hosea',11,12);
+INSERT INTO `final_verses` VALUES (1307,'Hosea',12,14);
+INSERT INTO `final_verses` VALUES (1308,'Hosea',13,16);
+INSERT INTO `final_verses` VALUES (1309,'Hosea',14,9);
+INSERT INTO `final_verses` VALUES (1310,'Joel',1,20);
+INSERT INTO `final_verses` VALUES (1311,'Joel',2,32);
+INSERT INTO `final_verses` VALUES (1312,'Joel',3,21);
+INSERT INTO `final_verses` VALUES (1313,'Amos',1,15);
+INSERT INTO `final_verses` VALUES (1314,'Amos',2,16);
+INSERT INTO `final_verses` VALUES (1315,'Amos',3,15);
+INSERT INTO `final_verses` VALUES (1316,'Amos',4,13);
+INSERT INTO `final_verses` VALUES (1317,'Amos',5,27);
+INSERT INTO `final_verses` VALUES (1318,'Amos',6,14);
+INSERT INTO `final_verses` VALUES (1319,'Amos',7,17);
+INSERT INTO `final_verses` VALUES (1320,'Amos',8,14);
+INSERT INTO `final_verses` VALUES (1321,'Amos',9,15);
+INSERT INTO `final_verses` VALUES (1322,'Obadiah',1,21);
+INSERT INTO `final_verses` VALUES (1323,'Jonah',1,17);
+INSERT INTO `final_verses` VALUES (1324,'Jonah',2,10);
+INSERT INTO `final_verses` VALUES (1325,'Jonah',3,10);
+INSERT INTO `final_verses` VALUES (1326,'Jonah',4,11);
+INSERT INTO `final_verses` VALUES (1327,'Micah',1,16);
+INSERT INTO `final_verses` VALUES (1328,'Micah',2,13);
+INSERT INTO `final_verses` VALUES (1329,'Micah',3,12);
+INSERT INTO `final_verses` VALUES (1330,'Micah',4,13);
+INSERT INTO `final_verses` VALUES (1331,'Micah',5,15);
+INSERT INTO `final_verses` VALUES (1332,'Micah',6,16);
+INSERT INTO `final_verses` VALUES (1333,'Micah',7,20);
+INSERT INTO `final_verses` VALUES (1334,'Nahum',1,15);
+INSERT INTO `final_verses` VALUES (1335,'Nahum',2,13);
+INSERT INTO `final_verses` VALUES (1336,'Nahum',3,19);
+INSERT INTO `final_verses` VALUES (1337,'Habakkuk',1,17);
+INSERT INTO `final_verses` VALUES (1338,'Habakkuk',2,20);
+INSERT INTO `final_verses` VALUES (1339,'Habakkuk',3,19);
+INSERT INTO `final_verses` VALUES (1340,'Zephaniah',1,18);
+INSERT INTO `final_verses` VALUES (1341,'Zephaniah',2,15);
+INSERT INTO `final_verses` VALUES (1342,'Zephaniah',3,20);
+INSERT INTO `final_verses` VALUES (1343,'Haggai',1,15);
+INSERT INTO `final_verses` VALUES (1344,'Haggai',2,23);
+INSERT INTO `final_verses` VALUES (1345,'Zechariah',1,21);
+INSERT INTO `final_verses` VALUES (1346,'Zechariah',2,13);
+INSERT INTO `final_verses` VALUES (1347,'Zechariah',3,10);
+INSERT INTO `final_verses` VALUES (1348,'Zechariah',4,14);
+INSERT INTO `final_verses` VALUES (1349,'Zechariah',5,11);
+INSERT INTO `final_verses` VALUES (1350,'Zechariah',6,15);
+INSERT INTO `final_verses` VALUES (1351,'Zechariah',7,14);
+INSERT INTO `final_verses` VALUES (1352,'Zechariah',8,23);
+INSERT INTO `final_verses` VALUES (1353,'Zechariah',9,17);
+INSERT INTO `final_verses` VALUES (1354,'Zechariah',10,12);
+INSERT INTO `final_verses` VALUES (1355,'Zechariah',11,17);
+INSERT INTO `final_verses` VALUES (1356,'Zechariah',12,14);
+INSERT INTO `final_verses` VALUES (1357,'Zechariah',13,9);
+INSERT INTO `final_verses` VALUES (1358,'Zechariah',14,21);
+INSERT INTO `final_verses` VALUES (1359,'Malachi',1,14);
+INSERT INTO `final_verses` VALUES (1360,'Malachi',2,17);
+INSERT INTO `final_verses` VALUES (1361,'Malachi',3,18);
+INSERT INTO `final_verses` VALUES (1362,'Malachi',4,6);
+INSERT INTO `final_verses` VALUES (1363,'Matthew',1,25);
+INSERT INTO `final_verses` VALUES (1364,'Matthew',2,23);
+INSERT INTO `final_verses` VALUES (1365,'Matthew',3,17);
+INSERT INTO `final_verses` VALUES (1366,'Matthew',4,25);
+INSERT INTO `final_verses` VALUES (1367,'Matthew',5,48);
+INSERT INTO `final_verses` VALUES (1368,'Matthew',6,34);
+INSERT INTO `final_verses` VALUES (1369,'Matthew',7,29);
+INSERT INTO `final_verses` VALUES (1370,'Matthew',8,34);
+INSERT INTO `final_verses` VALUES (1371,'Matthew',9,38);
+INSERT INTO `final_verses` VALUES (1372,'Matthew',10,42);
+INSERT INTO `final_verses` VALUES (1373,'Matthew',11,30);
+INSERT INTO `final_verses` VALUES (1374,'Matthew',12,50);
+INSERT INTO `final_verses` VALUES (1375,'Matthew',13,58);
+INSERT INTO `final_verses` VALUES (1376,'Matthew',14,36);
+INSERT INTO `final_verses` VALUES (1377,'Matthew',15,39);
+INSERT INTO `final_verses` VALUES (1378,'Matthew',16,28);
+INSERT INTO `final_verses` VALUES (1379,'Matthew',17,27);
+INSERT INTO `final_verses` VALUES (1380,'Matthew',18,35);
+INSERT INTO `final_verses` VALUES (1381,'Matthew',19,30);
+INSERT INTO `final_verses` VALUES (1382,'Matthew',20,34);
+INSERT INTO `final_verses` VALUES (1383,'Matthew',21,46);
+INSERT INTO `final_verses` VALUES (1384,'Matthew',22,46);
+INSERT INTO `final_verses` VALUES (1385,'Matthew',23,39);
+INSERT INTO `final_verses` VALUES (1386,'Matthew',24,51);
+INSERT INTO `final_verses` VALUES (1387,'Matthew',25,46);
+INSERT INTO `final_verses` VALUES (1388,'Matthew',26,75);
+INSERT INTO `final_verses` VALUES (1389,'Matthew',27,66);
+INSERT INTO `final_verses` VALUES (1390,'Matthew',28,20);
+INSERT INTO `final_verses` VALUES (1391,'Mark',1,45);
+INSERT INTO `final_verses` VALUES (1392,'Mark',2,28);
+INSERT INTO `final_verses` VALUES (1393,'Mark',3,35);
+INSERT INTO `final_verses` VALUES (1394,'Mark',4,41);
+INSERT INTO `final_verses` VALUES (1395,'Mark',5,43);
+INSERT INTO `final_verses` VALUES (1396,'Mark',6,56);
+INSERT INTO `final_verses` VALUES (1397,'Mark',7,37);
+INSERT INTO `final_verses` VALUES (1398,'Mark',8,38);
+INSERT INTO `final_verses` VALUES (1399,'Mark',9,50);
+INSERT INTO `final_verses` VALUES (1400,'Mark',10,52);
+INSERT INTO `final_verses` VALUES (1401,'Mark',11,33);
+INSERT INTO `final_verses` VALUES (1402,'Mark',12,44);
+INSERT INTO `final_verses` VALUES (1403,'Mark',13,37);
+INSERT INTO `final_verses` VALUES (1404,'Mark',14,72);
+INSERT INTO `final_verses` VALUES (1405,'Mark',15,47);
+INSERT INTO `final_verses` VALUES (1406,'Mark',16,20);
+INSERT INTO `final_verses` VALUES (1407,'Luke',1,80);
+INSERT INTO `final_verses` VALUES (1408,'Luke',2,52);
+INSERT INTO `final_verses` VALUES (1409,'Luke',3,38);
+INSERT INTO `final_verses` VALUES (1410,'Luke',4,44);
+INSERT INTO `final_verses` VALUES (1411,'Luke',5,39);
+INSERT INTO `final_verses` VALUES (1412,'Luke',6,49);
+INSERT INTO `final_verses` VALUES (1413,'Luke',7,50);
+INSERT INTO `final_verses` VALUES (1414,'Luke',8,56);
+INSERT INTO `final_verses` VALUES (1415,'Luke',9,62);
+INSERT INTO `final_verses` VALUES (1416,'Luke',10,42);
+INSERT INTO `final_verses` VALUES (1417,'Luke',11,54);
+INSERT INTO `final_verses` VALUES (1418,'Luke',12,59);
+INSERT INTO `final_verses` VALUES (1419,'Luke',13,35);
+INSERT INTO `final_verses` VALUES (1420,'Luke',14,35);
+INSERT INTO `final_verses` VALUES (1421,'Luke',15,32);
+INSERT INTO `final_verses` VALUES (1422,'Luke',16,31);
+INSERT INTO `final_verses` VALUES (1423,'Luke',17,37);
+INSERT INTO `final_verses` VALUES (1424,'Luke',18,43);
+INSERT INTO `final_verses` VALUES (1425,'Luke',19,48);
+INSERT INTO `final_verses` VALUES (1426,'Luke',20,47);
+INSERT INTO `final_verses` VALUES (1427,'Luke',21,38);
+INSERT INTO `final_verses` VALUES (1428,'Luke',22,71);
+INSERT INTO `final_verses` VALUES (1429,'Luke',23,56);
+INSERT INTO `final_verses` VALUES (1430,'Luke',24,53);
+INSERT INTO `final_verses` VALUES (1431,'John',1,51);
+INSERT INTO `final_verses` VALUES (1432,'John',2,25);
+INSERT INTO `final_verses` VALUES (1433,'John',3,36);
+INSERT INTO `final_verses` VALUES (1434,'John',4,54);
+INSERT INTO `final_verses` VALUES (1435,'John',5,47);
+INSERT INTO `final_verses` VALUES (1436,'John',6,71);
+INSERT INTO `final_verses` VALUES (1437,'John',7,53);
+INSERT INTO `final_verses` VALUES (1438,'John',8,59);
+INSERT INTO `final_verses` VALUES (1439,'John',9,41);
+INSERT INTO `final_verses` VALUES (1440,'John',10,42);
+INSERT INTO `final_verses` VALUES (1441,'John',11,57);
+INSERT INTO `final_verses` VALUES (1442,'John',12,50);
+INSERT INTO `final_verses` VALUES (1443,'John',13,38);
+INSERT INTO `final_verses` VALUES (1444,'John',14,31);
+INSERT INTO `final_verses` VALUES (1445,'John',15,27);
+INSERT INTO `final_verses` VALUES (1446,'John',16,33);
+INSERT INTO `final_verses` VALUES (1447,'John',17,26);
+INSERT INTO `final_verses` VALUES (1448,'John',18,40);
+INSERT INTO `final_verses` VALUES (1449,'John',19,42);
+INSERT INTO `final_verses` VALUES (1450,'John',20,31);
+INSERT INTO `final_verses` VALUES (1451,'John',21,25);
+INSERT INTO `final_verses` VALUES (1452,'Acts',1,26);
+INSERT INTO `final_verses` VALUES (1453,'Acts',2,47);
+INSERT INTO `final_verses` VALUES (1454,'Acts',3,26);
+INSERT INTO `final_verses` VALUES (1455,'Acts',4,37);
+INSERT INTO `final_verses` VALUES (1456,'Acts',5,42);
+INSERT INTO `final_verses` VALUES (1457,'Acts',6,15);
+INSERT INTO `final_verses` VALUES (1458,'Acts',7,60);
+INSERT INTO `final_verses` VALUES (1459,'Acts',8,40);
+INSERT INTO `final_verses` VALUES (1460,'Acts',9,43);
+INSERT INTO `final_verses` VALUES (1461,'Acts',10,48);
+INSERT INTO `final_verses` VALUES (1462,'Acts',11,30);
+INSERT INTO `final_verses` VALUES (1463,'Acts',12,25);
+INSERT INTO `final_verses` VALUES (1464,'Acts',13,52);
+INSERT INTO `final_verses` VALUES (1465,'Acts',14,28);
+INSERT INTO `final_verses` VALUES (1466,'Acts',15,41);
+INSERT INTO `final_verses` VALUES (1467,'Acts',16,40);
+INSERT INTO `final_verses` VALUES (1468,'Acts',17,34);
+INSERT INTO `final_verses` VALUES (1469,'Acts',18,28);
+INSERT INTO `final_verses` VALUES (1470,'Acts',19,41);
+INSERT INTO `final_verses` VALUES (1471,'Acts',20,38);
+INSERT INTO `final_verses` VALUES (1472,'Acts',21,40);
+INSERT INTO `final_verses` VALUES (1473,'Acts',22,30);
+INSERT INTO `final_verses` VALUES (1474,'Acts',23,35);
+INSERT INTO `final_verses` VALUES (1475,'Acts',24,27);
+INSERT INTO `final_verses` VALUES (1476,'Acts',25,27);
+INSERT INTO `final_verses` VALUES (1477,'Acts',26,32);
+INSERT INTO `final_verses` VALUES (1478,'Acts',27,44);
+INSERT INTO `final_verses` VALUES (1479,'Acts',28,31);
+INSERT INTO `final_verses` VALUES (1480,'Romans',1,32);
+INSERT INTO `final_verses` VALUES (1481,'Romans',2,29);
+INSERT INTO `final_verses` VALUES (1482,'Romans',3,31);
+INSERT INTO `final_verses` VALUES (1483,'Romans',4,25);
+INSERT INTO `final_verses` VALUES (1484,'Romans',5,21);
+INSERT INTO `final_verses` VALUES (1485,'Romans',6,23);
+INSERT INTO `final_verses` VALUES (1486,'Romans',7,25);
+INSERT INTO `final_verses` VALUES (1487,'Romans',8,39);
+INSERT INTO `final_verses` VALUES (1488,'Romans',9,33);
+INSERT INTO `final_verses` VALUES (1489,'Romans',10,21);
+INSERT INTO `final_verses` VALUES (1490,'Romans',11,36);
+INSERT INTO `final_verses` VALUES (1491,'Romans',12,21);
+INSERT INTO `final_verses` VALUES (1492,'Romans',13,14);
+INSERT INTO `final_verses` VALUES (1493,'Romans',14,23);
+INSERT INTO `final_verses` VALUES (1494,'Romans',15,33);
+INSERT INTO `final_verses` VALUES (1495,'Romans',16,27);
+INSERT INTO `final_verses` VALUES (1496,'1 Corinthians',1,31);
+INSERT INTO `final_verses` VALUES (1497,'1 Corinthians',2,16);
+INSERT INTO `final_verses` VALUES (1498,'1 Corinthians',3,23);
+INSERT INTO `final_verses` VALUES (1499,'1 Corinthians',4,21);
+INSERT INTO `final_verses` VALUES (1500,'1 Corinthians',5,13);
+INSERT INTO `final_verses` VALUES (1501,'1 Corinthians',6,20);
+INSERT INTO `final_verses` VALUES (1502,'1 Corinthians',7,40);
+INSERT INTO `final_verses` VALUES (1503,'1 Corinthians',8,13);
+INSERT INTO `final_verses` VALUES (1504,'1 Corinthians',9,27);
+INSERT INTO `final_verses` VALUES (1505,'1 Corinthians',10,33);
+INSERT INTO `final_verses` VALUES (1506,'1 Corinthians',11,34);
+INSERT INTO `final_verses` VALUES (1507,'1 Corinthians',12,31);
+INSERT INTO `final_verses` VALUES (1508,'1 Corinthians',13,13);
+INSERT INTO `final_verses` VALUES (1509,'1 Corinthians',14,40);
+INSERT INTO `final_verses` VALUES (1510,'1 Corinthians',15,58);
+INSERT INTO `final_verses` VALUES (1511,'1 Corinthians',16,24);
+INSERT INTO `final_verses` VALUES (1512,'2 Corinthians',1,24);
+INSERT INTO `final_verses` VALUES (1513,'2 Corinthians',2,17);
+INSERT INTO `final_verses` VALUES (1514,'2 Corinthians',3,18);
+INSERT INTO `final_verses` VALUES (1515,'2 Corinthians',4,18);
+INSERT INTO `final_verses` VALUES (1516,'2 Corinthians',5,21);
+INSERT INTO `final_verses` VALUES (1517,'2 Corinthians',6,18);
+INSERT INTO `final_verses` VALUES (1518,'2 Corinthians',7,16);
+INSERT INTO `final_verses` VALUES (1519,'2 Corinthians',8,24);
+INSERT INTO `final_verses` VALUES (1520,'2 Corinthians',9,15);
+INSERT INTO `final_verses` VALUES (1521,'2 Corinthians',10,18);
+INSERT INTO `final_verses` VALUES (1522,'2 Corinthians',11,33);
+INSERT INTO `final_verses` VALUES (1523,'2 Corinthians',12,21);
+INSERT INTO `final_verses` VALUES (1524,'2 Corinthians',13,14);
+INSERT INTO `final_verses` VALUES (1525,'Galatians',1,24);
+INSERT INTO `final_verses` VALUES (1526,'Galatians',2,21);
+INSERT INTO `final_verses` VALUES (1527,'Galatians',3,29);
+INSERT INTO `final_verses` VALUES (1528,'Galatians',4,31);
+INSERT INTO `final_verses` VALUES (1529,'Galatians',5,26);
+INSERT INTO `final_verses` VALUES (1530,'Galatians',6,18);
+INSERT INTO `final_verses` VALUES (1531,'Ephesians',1,23);
+INSERT INTO `final_verses` VALUES (1532,'Ephesians',2,22);
+INSERT INTO `final_verses` VALUES (1533,'Ephesians',3,21);
+INSERT INTO `final_verses` VALUES (1534,'Ephesians',4,32);
+INSERT INTO `final_verses` VALUES (1535,'Ephesians',5,33);
+INSERT INTO `final_verses` VALUES (1536,'Ephesians',6,24);
+INSERT INTO `final_verses` VALUES (1537,'Philippians',1,30);
+INSERT INTO `final_verses` VALUES (1538,'Philippians',2,30);
+INSERT INTO `final_verses` VALUES (1539,'Philippians',3,21);
+INSERT INTO `final_verses` VALUES (1540,'Philippians',4,23);
+INSERT INTO `final_verses` VALUES (1541,'Colossians',1,29);
+INSERT INTO `final_verses` VALUES (1542,'Colossians',2,23);
+INSERT INTO `final_verses` VALUES (1543,'Colossians',3,25);
+INSERT INTO `final_verses` VALUES (1544,'Colossians',4,18);
+INSERT INTO `final_verses` VALUES (1545,'1 Thessalonians',1,10);
+INSERT INTO `final_verses` VALUES (1546,'1 Thessalonians',2,20);
+INSERT INTO `final_verses` VALUES (1547,'1 Thessalonians',3,13);
+INSERT INTO `final_verses` VALUES (1548,'1 Thessalonians',4,18);
+INSERT INTO `final_verses` VALUES (1549,'1 Thessalonians',5,28);
+INSERT INTO `final_verses` VALUES (1550,'2 Thessalonians',1,12);
+INSERT INTO `final_verses` VALUES (1551,'2 Thessalonians',2,17);
+INSERT INTO `final_verses` VALUES (1552,'2 Thessalonians',3,18);
+INSERT INTO `final_verses` VALUES (1553,'1 Timothy',1,20);
+INSERT INTO `final_verses` VALUES (1554,'1 Timothy',2,15);
+INSERT INTO `final_verses` VALUES (1555,'1 Timothy',3,16);
+INSERT INTO `final_verses` VALUES (1556,'1 Timothy',4,16);
+INSERT INTO `final_verses` VALUES (1557,'1 Timothy',5,25);
+INSERT INTO `final_verses` VALUES (1558,'1 Timothy',6,21);
+INSERT INTO `final_verses` VALUES (1559,'2 Timothy',1,18);
+INSERT INTO `final_verses` VALUES (1560,'2 Timothy',2,26);
+INSERT INTO `final_verses` VALUES (1561,'2 Timothy',3,17);
+INSERT INTO `final_verses` VALUES (1562,'2 Timothy',4,22);
+INSERT INTO `final_verses` VALUES (1563,'Titus',1,16);
+INSERT INTO `final_verses` VALUES (1564,'Titus',2,15);
+INSERT INTO `final_verses` VALUES (1565,'Titus',3,15);
+INSERT INTO `final_verses` VALUES (1566,'Philemon',1,25);
+INSERT INTO `final_verses` VALUES (1567,'Hebrews',1,14);
+INSERT INTO `final_verses` VALUES (1568,'Hebrews',2,18);
+INSERT INTO `final_verses` VALUES (1569,'Hebrews',3,19);
+INSERT INTO `final_verses` VALUES (1570,'Hebrews',4,16);
+INSERT INTO `final_verses` VALUES (1571,'Hebrews',5,14);
+INSERT INTO `final_verses` VALUES (1572,'Hebrews',6,20);
+INSERT INTO `final_verses` VALUES (1573,'Hebrews',7,28);
+INSERT INTO `final_verses` VALUES (1574,'Hebrews',8,13);
+INSERT INTO `final_verses` VALUES (1575,'Hebrews',9,28);
+INSERT INTO `final_verses` VALUES (1576,'Hebrews',10,39);
+INSERT INTO `final_verses` VALUES (1577,'Hebrews',11,40);
+INSERT INTO `final_verses` VALUES (1578,'Hebrews',12,29);
+INSERT INTO `final_verses` VALUES (1579,'Hebrews',13,25);
+INSERT INTO `final_verses` VALUES (1580,'James',1,27);
+INSERT INTO `final_verses` VALUES (1581,'James',2,26);
+INSERT INTO `final_verses` VALUES (1582,'James',3,18);
+INSERT INTO `final_verses` VALUES (1583,'James',4,17);
+INSERT INTO `final_verses` VALUES (1584,'James',5,20);
+INSERT INTO `final_verses` VALUES (1585,'1 Peter',1,25);
+INSERT INTO `final_verses` VALUES (1586,'1 Peter',2,25);
+INSERT INTO `final_verses` VALUES (1587,'1 Peter',3,22);
+INSERT INTO `final_verses` VALUES (1588,'1 Peter',4,19);
+INSERT INTO `final_verses` VALUES (1589,'1 Peter',5,14);
+INSERT INTO `final_verses` VALUES (1590,'2 Peter',1,21);
+INSERT INTO `final_verses` VALUES (1591,'2 Peter',2,22);
+INSERT INTO `final_verses` VALUES (1592,'2 Peter',3,18);
+INSERT INTO `final_verses` VALUES (1593,'1 John',1,10);
+INSERT INTO `final_verses` VALUES (1594,'1 John',2,29);
+INSERT INTO `final_verses` VALUES (1595,'1 John',3,24);
+INSERT INTO `final_verses` VALUES (1596,'1 John',4,21);
+INSERT INTO `final_verses` VALUES (1597,'1 John',5,21);
+INSERT INTO `final_verses` VALUES (1598,'2 John',1,13);
+INSERT INTO `final_verses` VALUES (1599,'3 John',1,15);
+INSERT INTO `final_verses` VALUES (1600,'Jude',1,25);
+INSERT INTO `final_verses` VALUES (1601,'Revelation',1,20);
+INSERT INTO `final_verses` VALUES (1602,'Revelation',2,29);
+INSERT INTO `final_verses` VALUES (1603,'Revelation',3,22);
+INSERT INTO `final_verses` VALUES (1604,'Revelation',4,11);
+INSERT INTO `final_verses` VALUES (1605,'Revelation',5,14);
+INSERT INTO `final_verses` VALUES (1606,'Revelation',6,17);
+INSERT INTO `final_verses` VALUES (1607,'Revelation',7,17);
+INSERT INTO `final_verses` VALUES (1608,'Revelation',8,13);
+INSERT INTO `final_verses` VALUES (1609,'Revelation',9,21);
+INSERT INTO `final_verses` VALUES (1610,'Revelation',10,11);
+INSERT INTO `final_verses` VALUES (1611,'Revelation',11,19);
+INSERT INTO `final_verses` VALUES (1612,'Revelation',12,17);
+INSERT INTO `final_verses` VALUES (1613,'Revelation',13,18);
+INSERT INTO `final_verses` VALUES (1614,'Revelation',14,20);
+INSERT INTO `final_verses` VALUES (1615,'Revelation',15,8);
+INSERT INTO `final_verses` VALUES (1616,'Revelation',16,21);
+INSERT INTO `final_verses` VALUES (1617,'Revelation',17,18);
+INSERT INTO `final_verses` VALUES (1618,'Revelation',18,24);
+INSERT INTO `final_verses` VALUES (1619,'Revelation',19,21);
+INSERT INTO `final_verses` VALUES (1620,'Revelation',20,15);
+INSERT INTO `final_verses` VALUES (1621,'Revelation',21,27);
+INSERT INTO `final_verses` VALUES (1622,'Revelation',22,21);
