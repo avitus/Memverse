@@ -154,7 +154,7 @@
 				$.getJSON('/info/email_available?email='+email, function(data) {
 					if(data.available == 'true') {
 						$("div.email div.sidetip p").hide(); // Hide other messages
-						var domains = ['hotmail.com', 'gmail.com', 'aol.com', 'bellsouth.net'];
+						var domains = ['hotmail.com', 'gmail.com', 'aol.com', 'bellsouth.net', 'yahoo.com' ];
 
 						$("input#user_email").mailcheck(domains, {
 							suggested: function(element, suggestion) {

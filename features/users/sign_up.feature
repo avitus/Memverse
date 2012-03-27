@@ -62,10 +62,10 @@ Feature: Sign up
     @javascript
     Scenario: User signs up but misspells popular domain name
       And I fill in the following:
-        | user_name                  | Testy McUserton       |
-        | user_email                 | awfulspeller@gmal.com |
-        | user_password              | please                |
-        | user_password_confirmation | please                |
+        | user_name                  | Testy McUsrton        |
+        | user_email                 | awfulspeller@gmil.com |
+        | user_password              | pleese                |
+        | user_password_confirmation | pleese                |
       Then I should see "Did you mean awfulspeller@gmail.com"
 	  When I click inside "a.email"
 	  Then I should see "We will email you a confirmation"
