@@ -552,7 +552,7 @@ class MemversesController < ApplicationController
   # AJAX Verse Add (Assumes that verse is already in DB)
   # ---------------------------------------------------------------------------------------------------------- 
   def ajax_add
-  	vs  = Verse.find(params[:id])
+  	vs = Verse.find(params[:id])
   	
   	if vs and current_user
       if current_user.has_verse_id?(vs)

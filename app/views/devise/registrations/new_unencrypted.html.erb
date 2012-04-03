@@ -13,15 +13,12 @@
 		
 			$("div.signup input").each(function(){
 				if ($.trim($(this).val()).length == 0){
-					$(this).addClass("hilite");
+					$(this).parent().find("div.sidetip p.blank").show();
 					isFormValid = false;
 					emptyFields = true;
 				} else if ( $(this).parent().find("div.sidetip p.error:visible").length ) {
-					$(this).addClass("hilite");
 					isFormValid = false;
 					invalidFields = true;
-				} else {
-					$(this).removeClass("hilite");
 				}
 			});
 		
@@ -62,11 +59,13 @@
 			<%= f.email_field		:email, :placeholder => "Email address" %>
 			<div class="sidetip">
 				<p class="tip">What's your email address?</p>
+				<p class="ok suggestion">Did you mean <a class="email"><span class="address">asf</span>@<span class="domain">gmail.com</span></a>?</p>
 				<p class="ok isaok">We will email you a confirmation.</p>
 				<p class="checking"><img src="/assets/indicator2.gif" /> Checking...</p>
 				<p class="invalid error">Doesn't look like a valid email.</p>
 				<p class="blank error">An email is required!</p>
 				<p class="taken error">This email is already registered. Want to <%= link_to 'login', new_user_session_path %> or <%= link_to "reset your password", new_password_path(resource_name) %>?</p>
+				
 			</div>
 		</div>
 		<div class="signup password">
@@ -155,7 +154,21 @@
 				$.getJSON('/info/email_available?email='+email, function(data) {
 					if(data.available == 'true') {
 						$("div.email div.sidetip p").hide(); // Hide other messages
-						$("div.email div.sidetip p.isaok").show();
+						var domains = ['hotmail.com', 'gmail.com', 'aol.com', 'bellsouth.net', 'yahoo.com' ];
+
+						$("input#user_email").mailcheck(domains, {
+							suggested: function(element, suggestion) {
+								$("a span.address").text(suggestion.address);
+								$("a span.domain").text(suggestion.domain);
+								$("a.email").click(function() {
+									$("input#user_email").val($(this).text()).focus().blur(); // insert the suggested email, then focus and blur to re-trigger validation and make sure user doesn't already exist
+								});
+								$("div.email div.sidetip p.suggestion").show();
+							},
+							empty: function(element) {
+								$("div.email div.sidetip p.isaok").show();
+							}
+						});
 						emailtaken = false;
 					} else {
 						$("div.email div.sidetip p").hide(); // Hide other messages
@@ -223,7 +236,7 @@
 	// input placeholder fix
 	fauxPlaceholder();
 	
-	$("form#user_new").submit(function() {
+	$("form#new_user").submit(function() {
 		return checkForm(); // call checkForm() when form submitted (no matter how)
 	});
 </script>

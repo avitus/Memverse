@@ -30,7 +30,6 @@ Feature: Sign up
         | user_email                 | invalidemail    |
         | user_password              | please          |
         | user_password_confirmation | please          |
-      And I press "submit"
       Then I should see "Doesn't look like a valid email"
 
     @javascript
@@ -40,7 +39,6 @@ Feature: Sign up
         | user_email                 | user@test.com   |
         | user_password              |                 |
         | user_password_confirmation | please          |
-      And I press "submit"
       Then I should see "Password cannot be blank"
 
     @javascript
@@ -50,7 +48,6 @@ Feature: Sign up
         | user_email                 | user@test.com   |
         | user_password              | please          |
         | user_password_confirmation |                 |
-      And I press "submit"
       Then I should see "Passwords do not match"
 
     @javascript
@@ -60,6 +57,16 @@ Feature: Sign up
         | user_email                 | user@test.com   |
         | user_password              | please          |
         | user_password_confirmation | please1         |
-      And I press "submit"
       Then I should see "Passwords do not match"
 
+    @javascript
+    Scenario: User signs up but misspells popular domain name
+      And I fill in the following:
+        | user_name                  | Testy McUsrton        |
+        | user_email                 | awfulspeller@gmil.com |
+        | user_password              | pleese                |
+        | user_password_confirmation | pleese                |
+      Then I should see "Did you mean awfulspeller@gmail.com"
+	  When I click inside "a.email"
+	  Then I should see "We will email you a confirmation"
+	  

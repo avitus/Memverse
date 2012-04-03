@@ -25,10 +25,10 @@ describe MemversesController do
     end
     
     it "should not allow the same verse in two different translations" do
-      @verse_niv = Factory(:verse, :translation => 'NIV')
+      @verse_kjv = Factory(:verse, :translation => 'KJV')
       @verse_esv = Factory(:verse, :translation => 'ESV')
-      get :ajax_add, :id => @verse_niv
-      get :ajax_add, :id => @verse_esv  
+      get :ajax_add, :id => @verse_kjv
+      get :ajax_add, :id => @verse_esv
       @user.memverses.count.should == 1            
     end
     

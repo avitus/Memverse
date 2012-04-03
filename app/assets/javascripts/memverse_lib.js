@@ -92,8 +92,8 @@ function cleanseVerseText( versetext ) {
 	                     .replace(/--/g, ' — ')   // replace double dash with em dash
 	                     .replace(/\[\w\]/g, " ") // remove footnotes
 	                     .replace(/\n/g,' ')      // remove newlines
-	                     .replace(/\s{2,}/g,' ')  // remove double spaces
-						 .trim();                 // remove trailing and leading whitespace
+	                     .replace(/\s{2,}/g,' '); // remove double space
+	versetext = $.trim(versetext);                // remove trailing and leading whitespace. Using jQuery's trim() to support IE.
 	
 	return versetext;
 }

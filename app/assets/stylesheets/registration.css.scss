@@ -63,6 +63,45 @@
   -webkit-box-shadow:0 0 10px #000;
 }
 
+
+/* === Registration Page Styling === */
+div.signupform{                 /* TODO: is this used? */
+  margin:auto 0;
+}
+
+div.signup {                    /* TODO: is this used? */
+  position:relative;
+  height:50px;
+}
+div.signup input {              /* TODO: is this used? */
+  height:25px;
+  width:300px;
+  padding:5px;
+}
+
+div.sidetip {
+  position:absolute;
+  left:320px;
+  top:0;
+  font-size:14px;
+}
+
+div.sidetip p {
+  display:none; /* hidden at first */
+}
+
+p.isaok{
+  color:#577a1a;
+}
+
+p.error{
+  color:#983626;
+}
+
+div.sidetip a {
+  color:#111;
+}
+
 /* === Forgotten password page (request email to be sent) === */
 #forgotten_password {
   width:550px;
