@@ -510,7 +510,7 @@ class MemversesController < ApplicationController
   #   - Memory_Verse
   #   - User
   #
-  # NB: MIRROR ANY CHANGES HERE TO ADMIN_CONTROLLER !!!!!!
+  # NB: MIRROR ANY CHANGES HERE TO UTILS_CONTROLLER !!!!!!
   # ---------------------------------------------------------------------------------------------------------- 
   def popular_verses(limit = 8, include_current_user_verses = true)
 
@@ -533,14 +533,14 @@ class MemversesController < ApplicationController
                               ["NAS", vs.nas, vs.nas_text],
                               ["NKJ", vs.nkj, vs.nkj_text],
                               ["KJV", vs.kjv, vs.kjv_text]]
-                                                                     
+        
         translations = Array.new
         avail_translations.each { |translation|
           if !translation[1].nil?
             translations << translation
           end
         }
-                                                          
+        
         pop_verses << [verse, translations]
       end
     }
@@ -567,7 +567,7 @@ class MemversesController < ApplicationController
     else
       msg = "Error"
     end
-          
+    
   	render :json => {:msg => msg }
   	
   end
