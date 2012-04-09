@@ -67,6 +67,7 @@ gem 'memcache-client'                                                           
 gem 'redis', '>=2.2.2'                                                                          # Redis Key-value store
 gem 'action_mailer_cache_delivery', git: 'git://github.com/ragaskar/action_mailer_cache_delivery.git' # Used to test email delivery with Cucumber
 gem 'friendly_id'                                                                               # Makes nice IDs for models
+gem 'foreman'                                                                                   # Helps manage multiple processes when running app in development.
 
 group :console do
   gem 'wirble'

@@ -106,3 +106,7 @@ Given /^I sign in as a normal user$/ do
   Then %{I should be signed in}
 end
 
+Then /^the tag "(.*)" should exist for memverse #([0-9]+)$/ do |tagname, id|
+  mv = Memverse.find(id)
+  mv.tags.include? tagname
+end

@@ -20,16 +20,18 @@ Feature: Tag Verse
     
    @javascript
    Scenario: User tags with valid tag
-    And I make a tag named "Creation"
+    When I click "New Tag"
+	And I fill in "new tag" with "Creation"
     And I press "enter"
-    Then tag should be added
-    Then tag should be inserted at top of user tags
+    Then I should see "Creation" in "#user-tags"
+    And tag should be inserted at top of user tags
     
    @javascript
    Scenario: User tags with duplicate tag
     Given I have tag: Creation
-    And I fill in "new tag" with "Creation"
-    And I press "enter" # perhaps, "And I submit the form"???
+    When I fill in "td.edit_verse form input" with "Creation"
+    And I submit the form
+	Then I should get an error
     
    @javascript 
    Scenario: User tags with autocomplete tag
@@ -39,5 +41,5 @@ Feature: Tag Verse
    	And I fill in "new_tag" with "cre"
    	Then I should see "Creation"
    	When I click "Creation"
-   	Then tag should be added
-   	And tag should be inserted at top of user tags
+   	Then the tag "Creation" should exist for memverse #1
+   	And I should see "Creation" in "#user-tags"

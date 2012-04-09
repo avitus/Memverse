@@ -98,18 +98,18 @@
 			if ( ref ) { 
 				createVerseAndAdd(ref, tl, newVerse, $button);
 			} else {
-				alert("The Bible reference you have entered is not valid.")
-			};	
-		});	
+				alert("The Bible reference you have entered is not valid.");
+			};
+		});
 	
 		// User adds entire passage	
-		$('.add-chapter').on("click", ".add-chapter-button", function() {		
-			ref = parsePassageRef( $("#js_flex-verse-search").val().trim() );
-			$.post("/add_chapter.json", { bk: ref.bk, ch: ref.ch, tl: tl }, function(response) { 
+		$('.add-chapter').on("click", ".add-chapter-button", function() {
+			ref = parsePassageRef( $.trim( $("#js_flex-verse-search").val() ) );
+			$.post("/add_chapter.json", { bk: ref.bk, ch: ref.ch, tl: tl }, function(response) {
 				$(".add-chapter-button").replaceWith("<div class='verse-added'></div>");
 			});
 		});
-		
+	
 	});
 --></script>
 

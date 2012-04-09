@@ -64,13 +64,17 @@ class BlogPost < ActiveRecord::Base
     # We won't update URL identifier if there's no title, or if this blog was already published
     # with a URL identifier (don't want to break links)
     return if self.title.blank? || (self.is_complete && !self.url_identifier.blank?)
+
     url_identifier = self.title.parameterize
-	x = 0
-	while BlogPost.find_by_url_identifier(url_identifier) do
-	  x += 1
-	  url_identifier = self.title.parameterize + "--" + x.to_s
-	end	
-	self.url_identifier = url_identifier
+    x = 0
+
+    while BlogPost.where("url_identifier = ? and id != ?", url_identifier, self.id).first do
+      x += 1
+      url_identifier = self.title.parameterize + "--" + x.to_s
+    end
+
+    self.url_identifier = url_identifier
+
     true
   end
   
