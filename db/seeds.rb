@@ -256,7 +256,7 @@ end
 # ----------------------------------------------------------------------------------------------------------   
 # Create Final Verse data table
 # ---------------------------------------------------------------------------------------------------------- 
-config = ActiveRecord::Base.configurations['test']
+config = ActiveRecord::Base.configurations['test']  # Change this to 'development' if seeding a new database TODO: would be nice to have working for either case
 if config['adapter'] == 'mysql2'
   system("mysql --user=#{config['username']} --password=#{config['password']} #{config['database']} < iso_final_verses.sql")
 elsif config['adapter'] == 'sqlite3'
