@@ -5,8 +5,15 @@
 # +----+---------------------+----------------------------------------------------------+-------+-------------------------+-------------------------+
 
 class Badge < ActiveRecord::Base
+  
+  include Comparable
+  
   has_and_belongs_to_many :users
   has_many :quests
+    
+  def <=> (other)
+    MEDALS[self.color.to_sym] <=> MEDALS[other.color.to_sym]
+  end
   
   # ----------------------------------------------------------------------------------------------------------
   # Convert to JSON format

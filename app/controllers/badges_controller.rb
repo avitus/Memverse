@@ -21,5 +21,18 @@ class BadgesController < ApplicationController
     end    
     
   end
+
+  # ----------------------------------------------------------------------------------------------------------   
+  # Check whether user has earned any badges
+  # ----------------------------------------------------------------------------------------------------------  
+  def badge_completion_check
+    # need to handle gold, silver, bronze issue
+    # first generate a list of badges the user would be interested in earning i.e. all badges of higher level
+    # or unearned solo badges.
+    badges_to_check = Badge.all - current_user.badges
+    
+    
+  end    
+    
     
 end
