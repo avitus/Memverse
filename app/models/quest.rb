@@ -111,7 +111,7 @@ class Quest < ActiveRecord::Base
         user.completed_sessions(:year) >= self.quantity
         
       when 'Referrals'
-        user.num_referrals(true) >= self.quantity
+        user.num_referrals(true) >= 0
         
       when 'Tags'
         user.num_taggings >= self.quantity

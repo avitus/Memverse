@@ -173,7 +173,9 @@ $(document).ready(function() {
 			$.getJSON('/badge_completion_check.json', function(badges) {
 				// Alert user to completed badges
 				if ( badges.length !== 0 ) {
-					
+					for (var i = 0; i < badges.length; i++) {
+    					alert("Congratulations! You have been awarded a " + badges[i]["color"] + " " + badges[i]["name"] + " badge.");
+					}
 				}
 			});
 		};
