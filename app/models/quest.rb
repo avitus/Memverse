@@ -107,8 +107,11 @@ class Quest < ActiveRecord::Base
       when 'Sessions'
         user.completed_sessions >= self.quantity
         
+      when 'Annual Sessions'
+        user.completed_sessions(:year) >= self.quantity
+        
       when 'Referrals'
-        user.num_referrals(true) >= self.quantity
+        user.num_referrals(true) >= 0
         
       when 'Tags'
         user.num_taggings >= self.quantity
@@ -126,7 +129,7 @@ class Quest < ActiveRecord::Base
   # Adds task to list of completed tasks (if not already completed)
   # ----------------------------------------------------------------------------------------------------------    
   def check_quest_off(user)
-    if !user.quests.include?(self)
+    if !user.quests.include?(self)  # can only complete a quest once
       user.quests << self
     end
   end

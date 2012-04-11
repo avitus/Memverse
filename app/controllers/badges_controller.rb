@@ -1,4 +1,7 @@
 class BadgesController < ApplicationController
+  
+  before_filter :authenticate_user!
+  
   def index
   end
 
@@ -10,11 +13,8 @@ class BadgesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------   
   def earned_badges
     
-    @earned_badges = Array.new
-    @earned_badges << Badge.where(:name => 'Consistency', :color => 'silver').first # current_user.badges
-    @earned_badges << Badge.where(:name => 'Referrer', :color => 'bronze').first
-    @earned_badges << Badge.where(:name => 'Sermon on the Mount').first
-    
+    @earned_badges = current_user.badges
+
     respond_to do |format|
       format.html  # earned_badges.html.erb
       format.json  { render :json => @earned_badges }
@@ -26,13 +26,24 @@ class BadgesController < ApplicationController
   # Check whether user has earned any badges
   # ----------------------------------------------------------------------------------------------------------  
   def badge_completion_check
-    # need to handle gold, silver, bronze issue
-    # first generate a list of badges the user would be interested in earning i.e. all badges of higher level
-    # or unearned solo badges.
-    badges_to_check = Badge.all - current_user.badges
     
+    @recently_awarded_badges = Array.new
     
+    # Get badges user is working towards
+    badges_to_check = current_user.badges_to_strive_for
+    
+    badges_to_check.each do |badge|
+      if badge.achieved?(current_user)
+        badge.award_badge(current_user)
+        @recently_awarded_badges << badge
+      end
+    end  
+      
+    respond_to do |format|
+      format.html  
+      format.json  { render :json => @recently_awarded_badges }
+    end        
+      
   end    
-    
     
 end

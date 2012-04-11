@@ -162,6 +162,19 @@ $(document).ready(function() {
 	    var chart = new Highcharts.Chart(options);				
 							 			 
 	}, "json" );
+	
+	
+	// ========== Get badges =========================
+	$.getJSON('/badge_quests_check.json', function(quests) {
+		if ( quests.length !== 0 ) {
+			// Alert user to completion of quests necessary for badges
+			
+			// Check for awarded badges
+			$.getJSON('/badge_completion_check.json', function(badges) {
+				// Alert user to completed badges
+			});
+		};
+	});
 
 });
 

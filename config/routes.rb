@@ -1,24 +1,11 @@
 MemverseApp::Application.routes.draw do
   
-  get "badges/index"
-
-  get "badges/show"
-
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
-
-  # match '/login',                       :to => 'home#index',        :as => 'login'
-  # match '/logout',                      :to => 'sessions#destroy',  :as => 'logout'
-  # match '/register',                    :to => 'users#create',      :as => 'register'
-  # match '/signup',                      :to => 'users#new',         :as => 'signup'
-  # match '/activate/:activation_code',   :to => 'users#activate',    :as => 'activate',  :activation_code => nil
-  # match '/forgot_password',             :to => 'passwords#new',     :as => 'forgot_password'
-  # match '/change_password/:reset_code', :to => 'passwords#reset',   :as => 'change_password'
 
   devise_for :users
 
   resources :blog_categories
   resources :users, :only => :show
-#  resources :passwords
 #  resource  :session
   resources :uberverses
 # resources :pastors
@@ -121,6 +108,7 @@ MemverseApp::Application.routes.draw do
   match '/set_time_alloc/:time',   :to => 'profile#set_time_alloc',          :as => 'set_time_alloc'
 
   match '/earned_badges',          :to => 'badges#earned_badges',            :as => 'earned_badges'     
+  match '/badge_completion_check', :to => 'badges#badge_completion_check',   :as => 'badge_completion_check'
  
   match '/badge_quests_check',     :to => 'quests#badge_quests_check',       :as => 'badge_quests_check' 
   
@@ -142,9 +130,9 @@ MemverseApp::Application.routes.draw do
   match '/global_data',            :to => 'chart#global_data',               :as => 'global_data' 
   
   # Routes for chat channels  
-  match "/chat/send",       :controller => "chat", :action => "send_message"
-  match "/chat/channel1",   :controller => "chat", :action => "channel1"
-  match "/chat/channel2",   :controller => "chat", :action => "channel2"  
+  match "/chat/send",              :controller => "chat", :action => "send_message"
+  match "/chat/channel1",          :controller => "chat", :action => "channel1"
+  match "/chat/channel2",          :controller => "chat", :action => "channel2"  
 
   
   # Routes for live quiz

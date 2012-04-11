@@ -1,6 +1,7 @@
 class QuestsController < ApplicationController
   
-  before_filter :authorize, :except => [:index, :show ]
+  before_filter :authenticate_user!
+  before_filter :authorize, :except => [:index, :show, :badge_quests_check ]
   
   # GET /quests
   # GET /quests.xml
@@ -103,7 +104,7 @@ class QuestsController < ApplicationController
     
     badge_quests = Quest.where(:level => nil)  # Get all quests not associated with levels
     badge_quests.each do |q|
-      if q.complete?(current_user)
+      if q.complete?(current_user) && !current_user.quests.include?(q)
         q.check_quest_off(current_user)
         @completed_badge_quests << q
       end

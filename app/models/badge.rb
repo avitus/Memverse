@@ -25,6 +25,30 @@ class Badge < ActiveRecord::Base
       :description => self.description,
       :color       => self.color,
     }
-  end  
+  end 
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Check whether badge requirements have been achieved NOTE: does not award badge
+  # ----------------------------------------------------------------------------------------------------------   
+  def achieved?(user)   
+    self.quests.each do |q|
+        if !user.quests.include?(q)
+          return false
+        end
+    end
+    return true
+  end
+ 
+  # ----------------------------------------------------------------------------------------------------------
+  # Adds badge to list of awards (only if not already awarded)
+  # ---------------------------------------------------------------------------------------------------------- 
+  def award_badge(user)
+    if !user.badges.include?(self)  # can only be awarded a badge once
+      # First remove all lower level badges
+      user.badges.where(:name => self.name).destroy_all
+      # Award new badge
+      user.badges << self      
+    end    
+  end
   
 end

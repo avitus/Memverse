@@ -419,6 +419,29 @@ class User < ActiveRecord::Base
       
   end
 
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Badges that user is working towards
+  # ----------------------------------------------------------------------------------------------------------  
+  def badges_to_strive_for
+    # need to handle gold, silver, bronze issue
+    # first generate a list of badges the user would be interested in earning i.e. all badges of higher level
+    # or unearned solo badges.
+    
+    user_badges   = self.badges
+    lesser_badges = Array.new
+    
+    user_badges.each do |user_badge|
+      Badge.where(:name => user_badge.name).each do |badge_in_series|
+        if badge_in_series <= user_badge
+          lesser_badges << badge_in_series
+        end
+      end
+    end
+        
+    return Badge.all - lesser_badges
+  end
+
   # ----------------------------------------------------------------------------------------------------------
   # Save Entry in Progress Table
   # ----------------------------------------------------------------------------------------------------------
