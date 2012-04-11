@@ -92,7 +92,7 @@ class Quest < ActiveRecord::Base
           when 'Memorized'
             user.complete_chapters.select { |ch| ch[0] == "Memorized" }.length >= self.quantity
           else
-            false
+            user.complete_chapters.select { |ch| ch[0] == "Memorized" && ch[1] == self.qualifier }.length >= 1
         end
         
       when 'Books'

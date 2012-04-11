@@ -29,13 +29,22 @@ class BadgesController < ApplicationController
     
     @recently_awarded_badges = Array.new
     
-    # Get badges user is working towards
-    badges_to_check = current_user.badges_to_strive_for
-    
+    # Get badges user is working towards. Check most valuable (gold) badges first
+    badges_to_check = current_user.badges_to_strive_for.sort.reverse
+        
     badges_to_check.each do |badge|
+      Rails.logger.debug("Checking whether user has earned #{badge.color} #{badge.name} badge")
       if badge.achieved?(current_user)
         badge.award_badge(current_user)
         @recently_awarded_badges << badge
+        
+        if badge.color == "solo"
+          broadcast = "#{current_user.name_or_login} has earned the #{badge.name} badge"
+        else
+          broadcast  = "#{current_user.name_or_login} has earned a #{badge.color} #{badge.name} badge"
+        end       
+        Tweet.create(:news => broadcast, :user_id => current_user.id, :importance => 2)        
+        
       end
     end  
       

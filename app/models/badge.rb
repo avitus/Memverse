@@ -30,13 +30,20 @@ class Badge < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   # Check whether badge requirements have been achieved NOTE: does not award badge
   # ----------------------------------------------------------------------------------------------------------   
-  def achieved?(user)   
-    self.quests.each do |q|
-        if !user.quests.include?(q)
-          return false
-        end
+  def achieved?(user)
+    # Only check if more valuable badge has not already been awarded
+    user_badge_in_series = user.badges.where(:name => self.name).sort.last
+    
+    if user_badge_in_series && user_badge_in_series >= self
+      return false
+    else
+      self.quests.each do |q|
+          if !user.quests.include?(q)
+            return false
+          end
+      end
+      return true
     end
-    return true
   end
  
   # ----------------------------------------------------------------------------------------------------------

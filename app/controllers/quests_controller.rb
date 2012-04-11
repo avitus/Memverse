@@ -104,6 +104,9 @@ class QuestsController < ApplicationController
     
     badge_quests = Quest.where(:level => nil)  # Get all quests not associated with levels
     badge_quests.each do |q|
+      Rails.logger.debug("Checking whether user has completed #{q.task}")
+      Rails.logger.debug("Task complete: #{q.complete?(current_user)}")
+      Rails.logger.debug("User completed: #{current_user.quests.include?(q)}")
       if q.complete?(current_user) && !current_user.quests.include?(q)
         q.check_quest_off(current_user)
         @completed_badge_quests << q

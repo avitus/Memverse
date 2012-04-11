@@ -432,12 +432,16 @@ class User < ActiveRecord::Base
     lesser_badges = Array.new
     
     user_badges.each do |user_badge|
+      Rails.logger.debug("User already has #{user_badge.color} #{user_badge.name}")
       Badge.where(:name => user_badge.name).each do |badge_in_series|
         if badge_in_series <= user_badge
+          Rails.logger.debug("Removing #{user_badge.color} #{user_badge.name} from list of badges to strive for.")
           lesser_badges << badge_in_series
         end
       end
     end
+
+    Rails.logger.debug("Final list of badges to strive for: #{Badge.all - lesser_badges}")
         
     return Badge.all - lesser_badges
   end

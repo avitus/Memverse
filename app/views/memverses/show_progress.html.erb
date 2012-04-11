@@ -172,6 +172,9 @@ $(document).ready(function() {
 			// Check for awarded badges
 			$.getJSON('/badge_completion_check.json', function(badges) {
 				// Alert user to completed badges
+				if ( badges.length !== 0 ) {
+					
+				}
 			});
 		};
 	});
