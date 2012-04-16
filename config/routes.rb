@@ -107,7 +107,7 @@ MemverseApp::Application.routes.draw do
   match '/set_translation/:tl',    :to => 'profile#set_translation',         :as => 'set_translation'
   match '/set_time_alloc/:time',   :to => 'profile#set_time_alloc',          :as => 'set_time_alloc'
 
-  match '/earned_badges',          :to => 'badges#earned_badges',            :as => 'earned_badges'     
+  match '/earned_badges/:id',      :to => 'badges#earned_badges',            :as => 'earned_badges'     
   match '/badge_completion_check', :to => 'badges#badge_completion_check',   :as => 'badge_completion_check'
  
   match '/badge_quests_check',     :to => 'quests#badge_quests_check',       :as => 'badge_quests_check' 

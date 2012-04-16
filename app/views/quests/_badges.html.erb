@@ -6,7 +6,7 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-	$.getJSON('/earned_badges.json', function(badges_array) {
+	$.getJSON('/earned_badges/<%=@user.id%>.json', function(badges_array) {
 		$.each(badges_array, function(index, badge) {
 			var badgeclass = badge.name.replace(/ +/g, '-').toLowerCase();
 			switch( badge.color ) {

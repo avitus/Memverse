@@ -13,7 +13,8 @@ class BadgesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------   
   def earned_badges
     
-    @earned_badges = current_user.badges
+    user = User.find(params[:id])
+    @earned_badges = user.badges unless !user
 
     respond_to do |format|
       format.html  # earned_badges.html.erb
