@@ -183,6 +183,28 @@ function resetScrollable() {
 	api.begin(); 									// use API to move back to the beginning
 }
 
+
+/******************************************************************************
+ * Check for completed badges
+ ******************************************************************************/
+function mvCheckBadgeCompletion() {
+	$.getJSON('/badge_quests_check.json', function(quests) {
+		if ( quests.length !== 0 ) {
+			// Alert user to completion of quests necessary for badges
+			
+			// Check for awarded badges
+			$.getJSON('/badge_completion_check.json', function(badges) {
+				// Alert user to completed badges
+				if ( badges.length !== 0 ) {
+					for (var i = 0; i < badges.length; i++) {
+    					alert("Congratulations! You have been awarded a " + badges[i]["color"] + " " + badges[i]["name"] + " badge.");
+					}
+				}
+			});
+		};
+	});	
+}
+
 /******************************************************************************
  * All DOM attachments that are common to multiple pages should go here
  ******************************************************************************/

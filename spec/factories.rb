@@ -37,5 +37,18 @@ FactoryGirl.define do
     f.chapter 1
     f.last_verse 31
   end
+  
+  factory :badge do |b|
+    b.name 'Sermon on the Mount'
+    b.description 'Memorize the Sermon on the Mount'
+    b.color 'solo'
+  end
+  
+  factory :quest do |q|
+    q.task 'Memorize Matthew 5'
+    q.objective 'Chapters'
+    q.qualifier 'Matthew 5'
+    q.association :badge, :factory => :badge
+  end
 
 end
