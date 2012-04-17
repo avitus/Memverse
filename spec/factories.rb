@@ -20,7 +20,8 @@ FactoryGirl.define do
   
   factory :memverse do |mv|
     mv.association :verse, :factory => :verse
-    mv.association :user,  :factory => :user  
+    mv.association :user,  :factory => :user
+    mv.status 'Learning'
   end
   
   factory :blog do |f|

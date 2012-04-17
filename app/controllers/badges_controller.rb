@@ -40,9 +40,9 @@ class BadgesController < ApplicationController
         @recently_awarded_badges << badge
         
         if badge.color == "solo"
-          broadcast = "#{current_user.name_or_login} has earned the #{badge.name} badge"
+          broadcast = "#{current_user.name_or_login} has been awarded the #{badge.name} badge"
         else
-          broadcast  = "#{current_user.name_or_login} has earned a #{badge.color} #{badge.name} badge"
+          broadcast  = "#{current_user.name_or_login} has been awarded a #{badge.color} #{badge.name} badge"
         end       
         Tweet.create(:news => broadcast, :user_id => current_user.id, :importance => 2)        
         

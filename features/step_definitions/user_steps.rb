@@ -109,13 +109,15 @@ end
 Given /^I sign in as an advanced user$/ do
   Given %{I am a user named "advanced" with an email "advanced_user@test.com" and password "please"}
   And %{the email address "advanced_user@test.com" is confirmed}
-  And %{The user with the login of "advanced_user@test.com" has 10 verses in his list}
+  And %{the user with the email of "advanced_user@test.com" has 10 verses in his list}
   When %{I sign in as "advanced_user@test.com/please"}
   Then %{I should be signed in}
 end
 
-Given /^The user with the login of "(.*)" has (\d+) verses in his list$/ do |login, n|
-  n.to_i.times { |i| Memverse.create(:verse => Verse.find(i+1), :user => User.find_by_login(login)) }
+Given /^the user with the email of "(.*)" has (\d+) verses in his list$/ do |email, n|
+  user = User.find_by_email(email)
+  # n.to_i.times { |i| Memverse.create(:verse => Verse.find(i+1), :user => User.find_by_login(login)) }
+  n.to_i.times { |i| FactoryGirl.create(:memverse, :user_id => user.id, :verse_id => i+1) }
 end
 
 

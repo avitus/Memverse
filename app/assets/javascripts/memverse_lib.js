@@ -197,12 +197,25 @@ function mvCheckBadgeCompletion() {
 				// Alert user to completed badges
 				if ( badges.length !== 0 ) {
 					for (var i = 0; i < badges.length; i++) {
-    					alert("Congratulations! You have been awarded a " + badges[i]["color"] + " " + badges[i]["name"] + " badge.");
+    					displayAlertMessage("Congratulations! You have been awarded a " + badges[i]["color"] + " " + badges[i]["name"] + " badge.");
 					}
 				}
 			});
 		};
 	});	
+}
+
+/******************************************************************************
+ * Show an alert
+ ******************************************************************************/
+function displayAlertMessage(message) {
+
+	var timeOut = 7;
+
+	$('.mvMessageBox').text(message).fadeIn().css('display', 'block');
+	setTimeout(function() {
+		jQuery('.mvMessageBox').fadeOut().css('display', 'none');
+	}, timeOut * 1000);
 }
 
 /******************************************************************************
