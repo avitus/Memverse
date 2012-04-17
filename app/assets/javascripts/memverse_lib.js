@@ -64,11 +64,12 @@ function validVerseRef(verseref) {
  * Returns true if input is a valid verse reference
 
  * Accepts: Romans 8
+ * Accepts: Romans 8:
  * Accepts: Romans 8:1-3
  * Rejects: Romans 8:1
  *******************************************************************************/
 function validPassageRef(passage) {
-    return /([0-3]?\s+)?[a-záéíóúüñ]+\s+[0-9]+((:|(\s?vs\s?))[0-9]+(-)[0-9]+)?$/i.test(passage);	
+    return /([0-3]?\s+)?[a-záéíóúüñ]+\s+[0-9]+(((:|(\s?vs\s?))[0-9]+(-)[0-9]+)|:)?$/i.test(passage);	
 }
 
 
@@ -151,7 +152,8 @@ function parsePassageRef(passage) {
 		
 		// Handle corner cases
 		passage = passage.replace(/(song of songs)/i, "Song of Songs")
-						 .replace(/(psalm )/i,        "Psalms ");
+						 .replace(/(psalm )/i,        "Psalms ")
+						 .replace(/\:$/, ''); // Something like "Romans 8:" -- can happen on Add Verse page as user types
 		
 		split_text = passage.split(/:|-|\s/);  /* split on dash, colon or space */
 		
