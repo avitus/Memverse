@@ -115,11 +115,14 @@
 			if ($(this).text() == "Show Hint") {
 				$("#chapter-text > .verse-text:hidden:first").fadeIn(800);			
 				$(".toggle-hint").text("Hide Hint");
+				// Scroll to bottom of chapter
+				nDiv = document.getElementById('chapter-text');
+				setTimeout("nDiv.scrollTop = nDiv.scrollHeight",1);	
 			} else {
 				$("#chapter-text > .verse-text:visible:last").fadeOut(400);							
 				$(".toggle-hint").text("Show Hint");
 			}
-			
+						
 		});    	
     			
 		// Handle scoring of verse
