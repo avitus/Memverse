@@ -264,3 +264,18 @@ elsif config['adapter'] == 'sqlite3'
 else
   puts "WARNING: FinalVerse data could not be seeded for #{config['adapter']}. Please see db/seeds.rb."
 end
+
+# ----------------------------------------------------------------------------------------------------------   
+# Seed some initial verses
+# ---------------------------------------------------------------------------------------------------------- 
+
+
+
+
+
+
+
+
+
+
+

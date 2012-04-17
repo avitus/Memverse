@@ -51,4 +51,11 @@ FactoryGirl.define do
     q.association :badge, :factory => :badge
   end
 
+  factory :progress_report do |pr|
+    pr.association :user, :factory => :user
+    pr.learning   50
+    pr.memorized 100
+    pr.entry_date Date.today
+  end
+
 end
