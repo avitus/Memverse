@@ -4,9 +4,8 @@ Feature: Earn badges
   Should be able to earn badges
   
   Background:
-  	Given I am a 
+  	Given I sign in as an advanced user
     Given I have completed 300 memorization sessions in the past year
-    Given I have 10 verses in my list
      
     @javascript
     Scenario: User completes final session required to earn silver consistency badge

@@ -107,11 +107,17 @@ Given /^I sign in as a normal user$/ do
 end
 
 Given /^I sign in as an advanced user$/ do
-  Given %{I am a user named "normal" with an email "user@test.com" and password "please"}
-  And %{the email address "user@test.com" is confirmed}
-  When %{I sign in as "user@test.com/please"}
+  Given %{I am a user named "advanced" with an email "advanced_user@test.com" and password "please"}
+  And %{the email address "advanced_user@test.com" is confirmed}
+  And %{The user with the login of "advanced_user@test.com" has 10 verses in his list}
+  When %{I sign in as "advanced_user@test.com/please"}
   Then %{I should be signed in}
 end
+
+Given /^The user with the login of "(.*)" has (\d+) verses in his list$/ do |login, n|
+  n.to_i.times { |i| Memverse.create(:verse => Verse.find(i+1), :user => User.find_by_login(login)) }
+end
+
 
 Then /^the tag "(.*)" should exist for memverse #([0-9]+)$/ do |tagname, id|
   mv = Memverse.find(id)
