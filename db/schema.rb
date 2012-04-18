@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120321232139) do
+ActiveRecord::Schema.define(:version => 20120418230169) do
 
   create_table "american_states", :force => true do |t|
     t.string  "abbrev",      :limit => 20, :default => "", :null => false
@@ -191,6 +191,93 @@ ActiveRecord::Schema.define(:version => 20120321232139) do
   end
 
   add_index "final_verses", ["book", "chapter"], :name => "index_final_verses_on_book_and_chapter"
+
+  create_table "forem_categories", :force => true do |t|
+    t.string   "name",       :null => false
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "forem_forums", :force => true do |t|
+    t.string  "title"
+    t.text    "description"
+    t.integer "category_id"
+    t.integer "views_count", :default => 0
+  end
+
+  create_table "forem_groups", :force => true do |t|
+    t.string "name"
+  end
+
+  add_index "forem_groups", ["name"], :name => "index_forem_groups_on_name"
+
+  create_table "forem_memberships", :force => true do |t|
+    t.integer "group_id"
+    t.integer "member_id"
+  end
+
+  add_index "forem_memberships", ["group_id"], :name => "index_forem_memberships_on_group_id"
+
+  create_table "forem_moderator_groups", :force => true do |t|
+    t.integer "forum_id"
+    t.integer "group_id"
+  end
+
+  add_index "forem_moderator_groups", ["forum_id"], :name => "index_forem_moderator_groups_on_forum_id"
+
+  create_table "forem_posts", :force => true do |t|
+    t.integer  "topic_id"
+    t.text     "text"
+    t.integer  "user_id"
+    t.datetime "created_at",                                :null => false
+    t.datetime "updated_at",                                :null => false
+    t.integer  "reply_to_id"
+    t.string   "state",       :default => "pending_review"
+    t.boolean  "notified",    :default => false
+  end
+
+  add_index "forem_posts", ["reply_to_id"], :name => "index_forem_posts_on_reply_to_id"
+  add_index "forem_posts", ["state"], :name => "index_forem_posts_on_state"
+  add_index "forem_posts", ["topic_id"], :name => "index_forem_posts_on_topic_id"
+  add_index "forem_posts", ["user_id"], :name => "index_forem_posts_on_user_id"
+
+  create_table "forem_subscriptions", :force => true do |t|
+    t.integer "subscriber_id"
+    t.integer "topic_id"
+  end
+
+  create_table "forem_topics", :force => true do |t|
+    t.integer  "forum_id"
+    t.integer  "user_id"
+    t.string   "subject"
+    t.datetime "created_at",                                 :null => false
+    t.datetime "updated_at",                                 :null => false
+    t.boolean  "locked",       :default => false,            :null => false
+    t.boolean  "pinned",       :default => false
+    t.boolean  "hidden",       :default => false
+    t.datetime "last_post_at"
+    t.string   "state",        :default => "pending_review"
+    t.integer  "views_count",  :default => 0
+  end
+
+  add_index "forem_topics", ["forum_id"], :name => "index_forem_topics_on_forum_id"
+  add_index "forem_topics", ["state"], :name => "index_forem_topics_on_state"
+  add_index "forem_topics", ["user_id"], :name => "index_forem_topics_on_user_id"
+
+  create_table "forem_views", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "viewable_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "count",             :default => 0
+    t.string   "viewable_type"
+    t.datetime "current_viewed_at"
+    t.datetime "past_viewed_at"
+  end
+
+  add_index "forem_views", ["updated_at"], :name => "index_forem_views_on_updated_at"
+  add_index "forem_views", ["user_id"], :name => "index_forem_views_on_user_id"
+  add_index "forem_views", ["viewable_id"], :name => "index_forem_views_on_topic_id"
 
   create_table "groups", :force => true do |t|
     t.string   "name",                       :null => false
@@ -443,8 +530,8 @@ ActiveRecord::Schema.define(:version => 20120321232139) do
     t.string   "identity_url"
     t.string   "name",                      :limit => 100, :default => ""
     t.string   "email",                     :limit => 100
-    t.string   "encrypted_password",        :limit => 128, :default => "",         :null => false
-    t.string   "password_salt",                            :default => "",         :null => false
+    t.string   "encrypted_password",        :limit => 128, :default => "",               :null => false
+    t.string   "password_salt",                            :default => "",               :null => false
     t.string   "remember_token",            :limit => 40
     t.string   "confirmation_token"
     t.datetime "remember_token_expires_at"
@@ -473,7 +560,7 @@ ActiveRecord::Schema.define(:version => 20120321232139) do
     t.integer  "ref_grade",                                :default => 10
     t.string   "gender"
     t.string   "translation"
-    t.integer  "level",                                    :default => 0,          :null => false
+    t.integer  "level",                                    :default => 0,                :null => false
     t.integer  "referred_by"
     t.boolean  "show_email",                               :default => false
     t.boolean  "auto_work_load",                           :default => true
@@ -483,6 +570,8 @@ ActiveRecord::Schema.define(:version => 20120321232139) do
     t.boolean  "admin",                                    :default => false
     t.integer  "group_id"
     t.datetime "reset_password_sent_at"
+    t.boolean  "forem_admin",                              :default => false
+    t.string   "forem_state",                              :default => "pending_review"
   end
 
   add_index "users", ["american_state_id"], :name => "index_users_on_american_state_id"
