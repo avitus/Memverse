@@ -154,40 +154,50 @@
   float:left;
 }
 
-.book
+@import "user-dashboard/*.png";
+
+.book 
 {
-  background:url('book.png') no-repeat 5px top;
+  @include user-dashboard-sprite(book);
   height:36px;
   font:39px Georgia,"Times New Roman",Times,serif;
   color:#666;
   padding-left:80px;
+  position:relative;
+  left:5px;
 }
 
 .lightbulb
 {
-  background:url('light-bulb.png') no-repeat 5px top;
+  @include user-dashboard-sprite(light-bulb);
   height:55px;
   font:39px Georgia,"Times New Roman",Times,serif;
   color:#666;
   padding-left:80px;
+  position:relative;
+  left:5px;
 }
 
 .bullseye
 {
-  background:url('bulls-eye.png') no-repeat 5px top;
-  height:55px;
+  @include user-dashboard-sprite(bulls-eye);
+  height:52px;
   font:39px Georgia,"Times New Roman",Times,serif;
   color:#666;
   padding-left:65px;
+  position:relative;
+  left:5px;
 }
 
 .level-icon
 {
-  background:url('medal-icon.png') no-repeat 5px top;
-  height:55px;
+  @include user-dashboard-sprite(medal-icon);
+  height:50px;
   font:39px Georgia,"Times New Roman",Times,serif;
   color:#666;
   padding-left:80px;
+  position:relative;
+  left:5px;
 }
 
 .left-widget
