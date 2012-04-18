@@ -6,57 +6,63 @@
   margin: 0 1em;  
 }
 
+@import "badges/Sermon-on-the-Mount/*.png";
+
 .sermon-on-the-mount {
   @include badge-properties;
-  background:url('badges/Sermon-on-the-Mount/Sermon-on-the-Mount-Teaser.png') no-repeat;    
-    &:hover      { background:url('badges/Sermon-on-the-Mount/Sermon-on-the-Mount-on-Hover.png') no-repeat; };
+  @include Sermon-on-the-Mount-sprite(teaser);
+    &:hover      { @include Sermon-on-the-Mount-sprite(hover); };
 }
 
 .sermon-on-the-mount.earned {
   @include badge-properties;
-  background:url('badges/Sermon-on-the-Mount/Sermon-on-the-Mount.png') no-repeat;
+  @include Sermon-on-the-Mount-sprite(badge);
 }
-  
+
+@import "badges/Referrer/*.png";
+
 .referrer.unearned {
   @include badge-properties;         
-  background:url('badges/Referrer/Referrer-Teaser.png'  ) no-repeat;
-  &:hover { background:url('badges/Referrer/Referrer-On-Hover.png') no-repeat; };
+  @include Referrer-sprite(teaser);
+  &:hover { @include Referrer-sprite(hover); };
 }
 
 .referrer.earned-gold {
   @include badge-properties;         
-  background:url('badges/Referrer/Referrer-Gold.png'    ) no-repeat;
+  @include Referrer-sprite(gold);
 }
 
 .referrer.earned-silver {
   @include badge-properties;         
-  background:url('badges/Referrer/Referrer-Silver.png'    ) no-repeat;
+  @include Referrer-sprite(silver);
 }
 
 .referrer.earned-bronze {
   @include badge-properties;         
-  background:url('badges/Referrer/Referrer-Bronze.png'    ) no-repeat;
+  @include Referrer-sprite(bronze);
 }
+
+@import "badges/Consistency/*.png";
 
 .consistency.unearned {
   @include badge-properties;         
-  background:url('badges/Consistency/Consistency-Teaser.png'  ) no-repeat;
-  &:hover { background:url('badges/Consistency/Consistency-On-Hover.png') no-repeat; };
+  @include Consistency-sprite(teaser);
+  &:hover { @include Consistency-sprite(hover); };
 }
 
 .consistency.earned-gold {
   @include badge-properties;         
-  background:url('badges/Consistency/Consistency-Gold.png'    ) no-repeat;
+  @include Consistency-sprite(gold);
 }
 
 .consistency.earned-silver {
   @include badge-properties;         
-  background:url('badges/Consistency/Consistency-Silver.png'    ) no-repeat;
+  @include Consistency-sprite(silver);
 }
 
 .consistency.earned-bronze {
   @include badge-properties;         
-  background:url('badges/Consistency/Consistency-Bronze.png'    ) no-repeat;
+  @include Consistency-sprite(bronze);
 }
 
 /*========== End: Badges ==========*/
