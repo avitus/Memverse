@@ -63,11 +63,6 @@
 					<li>
 						<div class="user-option-list"><span>Completed Sessions:</span> <%= @user.completed_sessions %> </div>
 					</li>
-					
-					<% if @user == current_user %>
-						<div class="view-button"><%= link_to image_tag("view.png", :width=>"192", :height=>"25", :alt=>"View All of Your Verses"), manage_verses_path %></div>
-					<% end %>
-				
 				</ul>				
 			</div>
 		</div>
@@ -181,21 +176,25 @@
 				<div class="clr"></div>
 	
 			</div> <!-- end: vs-distribution -->
-			<hr />
-			<h2>Complete Chapters</h2>
-			<div id="complete-chapters">
-				<table class="memverse-standard">
-					<tbody>
-						<% for cc in @user.complete_chapters %>
-							<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
-								<td align="left">	<%= cc[1]	%></td>
-								<td align="center">	<%= cc[0]	%></td>
-							</tr>
-						<% end %>
-					</tbody>
-				</table>
-			</div> <!--complete-chapters end-->
 		</div> <!--main-right end-->
+		
+		<% if !@user.complete_chapters.empty? %>
+			<div class="main-right">
+				<h2>Complete Chapters</h2>
+				<div id="complete-chapters">
+					<table class="memverse-standard">
+						<tbody>
+							<% for cc in @user.complete_chapters %>
+								<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
+									<td align="left">	<%= cc[1]	%></td>
+									<td align="center">	<%= cc[0]	%></td>
+								</tr>
+							<% end %>
+						</tbody>
+					</table>
+				</div> <!--complete-chapters end-->
+			</div> <!--main-right end-->
+		<% end %>
 	    
 	    <div class="clr"></div>
     </div>
