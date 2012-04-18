@@ -52,7 +52,7 @@ describe Verse do
     it "should reject an invalid chapter" do
       verse = Factory.build(:verse, :book => "Psalms", :chapter => 151, :versenum => 1)
       verse.save.should be_false
-       verse.errors.full_messages.first.should == "Invalid chapter"
+      verse.errors.full_messages.first.should == "Invalid chapter"
     end
     
     it "should reject an invalid versenum" do

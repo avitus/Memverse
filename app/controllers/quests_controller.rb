@@ -1,6 +1,7 @@
 class QuestsController < ApplicationController
   
-  before_filter :authorize, :except => [:index, :show ]
+  before_filter :authenticate_user!
+  before_filter :authorize, :except => [:index, :show, :badge_quests_check ]
   
   # GET /quests
   # GET /quests.xml
@@ -85,18 +86,37 @@ class QuestsController < ApplicationController
       format.xml  { head :ok }
     end
   end
-  
+
+  # ----------------------------------------------------------------------------------------------------------   
+  # Show quests that current user is working on
+  # ----------------------------------------------------------------------------------------------------------     
   def current_user_quests
     @current_user_quests = current_user.quests    
     render :partial=>'current_user_quests', :layout=>false
   end
-  
-  def quest_completion_check(u = current_user)
-    # TODO: Check for quests that have been completed by user
-    # Maybe we want to pass in a specific quest that has been completed
-    # There are various different types of objects we can check
-    #  - Memverses, chapters, books, psalms, proverbs, tags, invitees (future), url
-    # better: obj = {vs, ch, bk, url, disciples, email invites, sessions, blog post}, type = { any, Romans, wisdom, history, ot, nt etc), quantity = {1, 2, 5, 10 etc}
+
+  # ----------------------------------------------------------------------------------------------------------   
+  # Check whether user has completed any badge quests
+  # ----------------------------------------------------------------------------------------------------------   
+  def badge_quests_check
+    
+    @completed_badge_quests = Array.new
+    
+    badge_quests = Quest.where(:level => nil)  # Get all quests not associated with levels
+    badge_quests.each do |q|
+
+      if q.complete?(current_user) && !current_user.quests.include?(q)
+        q.check_quest_off(current_user)
+        @completed_badge_quests << q
+      end
+
+    end
+    
+    respond_to do |format|
+      format.html
+      format.json  { render :json => @completed_badge_quests }
+    end    
     
   end
+  
 end

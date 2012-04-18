@@ -27,9 +27,9 @@
 	   	<div class="tab-nav">
 	      	<ul class="tabs">
 	      		<% if @user_has_no_verses %>
-				<li class="widetab"><a href="#getting-started">Getting Started</a></li>
+					<li class="widetab"><a href="#getting-started">Getting Started</a></li>
 				<% elsif @user_has_too_few_verses %>
-				<li class="widetab"><a href="#recommendations">Recommendations</a></li>
+					<li class="widetab"><a href="#recommendations">Recommendations</a></li>
 				<% end %>
 	           	<li class="normtab"><a href="#dashboard">Dashboard</a></li>
 	            <li class="widetab"><a href="#devotion">Spurgeon's Daily Devotions</a></li>
@@ -78,9 +78,10 @@
 					</ol>
 				</div>
 			<% end %>
-		       	<div id="dashboard" class="tab_content"><h3><%= link_to 'Recently on Memverse', tweets_path %></h3>
+			
+	       	<div id="dashboard" class="tab_content"><h3><%= link_to 'Recently on Memverse', tweets_path %></h3>
 				<%= render "tweets/tweets_for_main" %>
-				</div>
+			</div>
 
 	        <div id="devotion" class="tab_content">
 				<h3>Spurgeon's Devotional</h3>
