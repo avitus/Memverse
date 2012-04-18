@@ -2,6 +2,12 @@
 
 class ApplicationController < ActionController::Base
 
+  def forem_user
+    current_user
+  end
+  helper_method :forem_user
+
+
   helper :all # include all helpers, all the time
   protect_from_forgery
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
