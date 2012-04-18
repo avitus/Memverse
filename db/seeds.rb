@@ -159,17 +159,17 @@ if !sotm
 end
 
 puts '   - Confirming three quests for Sermon on the Mount Badge (Matthew 5-7)'
-q = Quest.where(:objective => 'Chapters', :qualifier => 'Matthew 5').first
+q = Quest.where(:level => nil, :objective => 'Chapters', :qualifier => 'Matthew 5').first
 if !q
   puts '      - Added Matthew 5 quest'
   Quest.create(:badge_id => sotm, :objective => 'Chapters', :qualifier => 'Matthew 5', :task => "Memorize Matthew 5")
 end  
-q = Quest.where(:objective => 'Chapters', :qualifier => 'Matthew 6').first
+q = Quest.where(:level => nil, :objective => 'Chapters', :qualifier => 'Matthew 6').first
 if !q
   puts '      - Added Matthew 6 quest'
   Quest.create(:badge_id => sotm, :objective => 'Chapters', :qualifier => 'Matthew 6', :task => "Memorize Matthew 6")
 end  
-q = Quest.where(:objective => 'Chapters', :qualifier => 'Matthew 7').first
+q = Quest.where(:level => nil, :objective => 'Chapters', :qualifier => 'Matthew 7').first
 if !q
   puts '      - Added Matthew 7 quest'
   Quest.create(:badge_id => sotm, :objective => 'Chapters', :qualifier => 'Matthew 7', :task => "Memorize Matthew 7")
@@ -195,19 +195,19 @@ if !referrer_bronze
 end
 
 puts '   - Adding Referrer Quests'
-q = Quest.where(:objective => 'Referrals', :quantity => 200).first
+q = Quest.where(:level => nil, :objective => 'Referrals', :quantity => 200).first
 if !q
   puts '      - Referrer gold medal quests'
   referrer_gold = Badge.where(:name => 'Referrer', :color => 'gold').first
   Quest.create(:badge_id => referrer_gold.id, :objective => 'Referrals',   :quantity => 200, :task => "Refer 200 Active Users")
 end  
-q = Quest.where(:objective => 'Referrals', :quantity => 100).first
+q = Quest.where(:level => nil, :objective => 'Referrals', :quantity => 100).first
 if !q
   puts '      - Referrer silver medal quests'
   referrer_silver = Badge.where(:name => 'Referrer', :color => 'silver').first
   Quest.create(:badge_id => referrer_silver.id, :objective => 'Referrals', :quantity => 100, :task => "Refer 100 Active Users")
 end  
-q = Quest.where(:objective => 'Referrals', :quantity =>  50).first
+q = Quest.where(:level => nil, :objective => 'Referrals', :quantity =>  50).first
 if !q
   puts '      - Referrer bronze medal quests'
   referrer_bronze = Badge.where(:name => 'Referrer', :color => 'bronze').first  
@@ -234,19 +234,19 @@ if !consistency_bronze
 end
 
 puts '   - Adding Consistency Quests'
-q = Quest.where(:objective => 'Annual Sessions', :quantity => 350).first
+q = Quest.where(:level => nil, :objective => 'Annual Sessions', :quantity => 350).first
 if !q
   puts '      - Consistency gold medal quests'
   consistency_gold = Badge.where(:name => 'Consistency', :color => 'gold').first
   Quest.create(:badge_id => consistency_gold.id, :objective => 'Annual Sessions',   :quantity => 350, :task => "Complete 350 sessions in a year")
 end  
-q = Quest.where(:objective => 'Annual Sessions', :quantity => 325).first
+q = Quest.where(:level => nil, :objective => 'Annual Sessions', :quantity => 325).first
 if !q
   puts '      - Consistency silver medal quests'
   consistency_silver = Badge.where(:name => 'Consistency', :color => 'silver').first
   Quest.create(:badge_id => consistency_silver.id, :objective => 'Annual Sessions', :quantity => 325, :task => "Complete 325 sessions in a year")
 end  
-q = Quest.where(:objective => 'Annual Sessions', :quantity =>  300).first
+q = Quest.where(:level => nil, :objective => 'Annual Sessions', :quantity =>  300).first
 if !q
   puts '      - Consistency bronze medal quests'
   consistency_bronze = Badge.where(:name => 'Consistency', :color => 'bronze').first  
