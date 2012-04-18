@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'rbconfig'
 HOST_OS = RbConfig::CONFIG['host_os']
 source 'http://rubygems.org'
@@ -38,6 +39,7 @@ gem "devise", ">= 1.4.5"
 gem "cancan"                                                                                    # Role-based authorization
 # gem "frontend-helpers"
 gem 'rails_admin', :git => 'git://github.com/sferik/rails_admin.git'                            # Admin console
+gem 'forem', :git => "git://github.com/radar/forem.git"                                         # Forum engine
 
 gem 'fancybox-rails'
 gem 'aasm', '2.2.0',    :require => 'aasm'                                                      # Is this needed now that we aren't using Restful Authentication ? 
