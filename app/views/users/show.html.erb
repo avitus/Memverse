@@ -3,30 +3,31 @@
 <% else %>
 	<% page_title I18n.t :user_profile, :scope => 'page_titles', :name => @user.name_or_login %>
 <% end %>
+
 <div class="user-dashboard white-box-bg">
-	<div class="three-box2">
+	<div class="user-info-top-box">
     	
     	<div class="user-details">
+    		
         	<div class="user-details-img">
             	<span class="avatar"><a href="#"><%= image_tag @user.blog_avatar_url -%></a></span>
-                <!-- <span class="edit"><a href="#">Edit</a></span> -->
             </div>
+            
             <div class="user-details-text">
             	<h4><%= @user.name_or_login %></h4>
                 <ul>
                 	<li>
                     	<div class="member-list"><span>Member Since: </span><%= @user.created_at.to_date %></div>
-                        <!-- <div class="edit-option"><a href="#">Edit</a></div> -->
                     </li>
 					<% if @user.show_email? %>
                     <li>
                     	<div class="member-list"><span>Email: </span><%= @user.email %></div>
-                        <!-- <div class="edit-option"><a href="#">Edit</a></div> -->
                     </li>
 					<% end %>
                 </ul>
             </div>
-        </div>
+            
+       </div> <!-- end: user-details -->
     	
 		<div id="user-profile" class="user-settings">
 			<div class="user-settings-text">
@@ -34,15 +35,14 @@
 					<li>
 						<div class="user-option-list"><span>Location: </span>
 							<% if @user.american_state && @user.country %>	
-								<%= @user.american_state.name + ", " + @user.country.printable_name %></div>
+								<%= @user.american_state.name + ", " + @user.country.printable_name %>
 							<% else %>
-								<%= @user.country ? @user.country.printable_name : "" %></div>
+								<%= @user.country ? @user.country.printable_name : "" %>
 							<% end %>
-			            <!-- <div class="edit-option"><a href="#">Edit</a></div> -->
+						</div>
 		            </li>
 					<li>
 						<div class="user-option-list"><span>Language: </span><%= @user.language %></div>
-						<!-- <div class="edit-option"><a href="#">Edit</a></div> -->
 					</li>
 					<li>
 						<div class="user-option-list"><span>Church: </span><%= @user.church ? link_to(@user.church.name, { :controller => "church", :action => "show", :id => @user.church.id }) : "" %></div>
@@ -74,9 +74,8 @@
 	    
 	    <div class="clr"></div>
         
-    </div>
+    </div> <!-- end: user-info-top-box -->
 </div> <!-- end: user-details -->
-
 
 <div><%= image_tag("trans.png", :size => "1x10", :alt => "") %></div>
 
@@ -91,16 +90,20 @@
 				<h2>Level</h2>
 				<div class="level-icon"><%= @user.level %></div> 
 			</div>  
-
 	        <div class="left-widget-item">
 				<h2>Ref Recall</h2>
-				<div class="lightbulb"><%= @user.ref_grade %>%</div> 
-	        </div>  
+				<div class="lightbulb">
+					<%= @user.ref_grade %> %
+				</div> 
+	        </div>        
 	        <div class="left-widget-item">
 				<h2>Accuracy</h2>
-				<div class="bullseye"><%= @user.accuracy %>%</div> 
+				<div class="bullseye">
+					<%= @user.accuracy %> %
+				</div> 
 			</div>  	             	
-		</div>
+		</div> <!-- end: left-widget -->
+		
 		<% if @user == current_user %>
 		<div class="left-widget pad">       	
 			<div id="quest-info">
@@ -108,64 +111,94 @@
 			</div>
 		</div>
 		<% end %>
+		
 	</div><!--main-left end-->
 
 	<div class="main-right">
-	<h2>Verse Distribution</h2>
-    	      
-        <div class="vs-distribution">
-        	        	
-        	<div class="vs-disti-left">
-				<table>
-					<thead>			
-						<tr> <th></th><th>Memorized</th><th>Learning</th><th>%</th></tr>	
-					</thead>
-					
-					<tbody>			
-						<tr><th>Old Testament</th><td><%= @user.ot_verses["Memorized"]%></td>	<td><%= @user.ot_verses["Learning"]%></td><td><%= @user.ot_perc %>%</td></tr>
-						<tr><th>New Testament</th><td><%= @user.nt_verses["Memorized"]%></td>	<td><%= @user.nt_verses["Learning"]%></td><td><%= @user.nt_perc %>%</td></tr>
-						<tr><th>All Verses</th><td><%= @user.memorized%></td>	<td><%= @user.learning %></td><td></td></tr>
-						<tr></tr>
-					</tbody>			
-				</table>
-			</div>	
-		
-			<div class="vs-disti-right">
-				<table>
-					<thead>			
-						<tr> <th></th>						<th>Memorized</th> 							<th>Learning</th><th>%</th>					</tr>	
-					</thead>
+		<%= render :partial => "quests/badges" %>
+	</div>
+
+	<div class="main-right">
+		<h2>Verse Distribution</h2>
+	    	      
+	        <div class="vs-distribution">
+	        	        	
+	        	<div class="vs-disti-left">
+					<table>
+						<thead>			
+							<tr> <th></th><th>Memorized</th><th>Learning</th><th>%</th></tr>	
+						</thead>
+						
+						<tbody>			
+							<tr><th>Old Testament</th><td><%= @user.ot_verses["Memorized"]%></td>	<td><%= @user.ot_verses["Learning"]%></td><td><%= @user.ot_perc %>%</td></tr>
+							<tr><th>New Testament</th><td><%= @user.nt_verses["Memorized"]%></td>	<td><%= @user.nt_verses["Learning"]%></td><td><%= @user.nt_perc %>%</td></tr>
+							<tr><th>All Verses</th><td><%= @user.memorized%></td>	<td><%= @user.learning %></td><td></td></tr>
+							<tr></tr>
+						</tbody>			
+					</table>
+				</div>	
+			
+				<div class="vs-disti-right">
+					<table>
+						<thead>			
+							<tr> <th></th>						<th>Memorized</th> 							<th>Learning</th><th>%</th>					</tr>	
+						</thead>
+						<tbody>
+							<tr>
+								<th title="<%= I18n.t("book.name.Genesis") + " - " + I18n.t("book.name.Esther")%>">History</th>		
+								<td><%= @user.history["Memorized"]%></td>	
+								<td><%= @user.history["Learning"]%></td>	
+								<td><%= @user.h_perc %>%</td>	
+							</tr>	
+							<tr>
+								<th title="<%= I18n.t("book.name.Job") + " - " + I18n.t("book.name.Song of Songs")%>">Wisdom</th>	
+								<td><%= @user.wisdom["Memorized"]%></td>	
+								<td><%= @user.wisdom["Learning"]%></td>		
+								<td><%= @user.w_perc %>%</td>	
+							</tr>	
+							<tr>
+								<th title="<%= I18n.t("book.name.Isaiah") + " - " + I18n.t("book.name.Malachi") + " & " + I18n.t("book.name.Revelation") %>">Prophecy</th>	
+								<td><%= @user.prophecy["Memorized"]%></td>	
+								<td><%= @user.prophecy["Learning"]%></td>	
+								<td><%= @user.p_perc %>%</td>	
+							</tr>	
+							<tr>
+								<th title="<%= I18n.t("book.name.Matthew") + " - " + I18n.t("book.name.John")%>">Gospels</th>		
+								<td><%= @user.gospel["Memorized"]%></td>	
+								<td><%= @user.gospel["Learning"]%></td>		
+								<td><%= @user.g_perc %>%</td>	
+							</tr>	
+							<tr>
+								<th title="<%= I18n.t("book.name.Acts") + " - " + I18n.t("book.name.Jude")%>">Epistles</th>	
+								<td><%= @user.epistle["Memorized"]%></td>	
+								<td><%= @user.epistle["Learning"]%></td>	
+								<td><%= @user.e_perc %>%</td>	
+							</tr>
+						</tbody>							
+					</table>        	
+	        	</div>
+	
+				<div class="clr"></div>
+	
+			</div> <!-- end: vs-distribution -->
+			<hr />
+			<h2>Complete Chapters</h2>
+			<div id="complete-chapters">
+				<table class="memverse-standard">
 					<tbody>
-						<tr><th title="<%= I18n.t("book.name.Genesis") + " - " + I18n.t("book.name.Esther")%>">History</th>		<td><%= @user.history["Memorized"]%></td>	<td><%= @user.history["Learning"]%></td>	<td><%= @user.h_perc %>%</td>	</tr>	
-						<tr><th title="<%= I18n.t("book.name.Job") + " - " + I18n.t("book.name.Song of Songs")%>">Wisdom</th>	<td><%= @user.wisdom["Memorized"]%></td>	<td><%= @user.wisdom["Learning"]%></td>		<td><%= @user.w_perc %>%</td>	</tr>	
-						<tr><th title="<%= I18n.t("book.name.Isaiah") + " - " + I18n.t("book.name.Malachi") + " & " + I18n.t("book.name.Revelation") %>">Prophecy</th>	<td><%= @user.prophecy["Memorized"]%></td>	<td><%= @user.prophecy["Learning"]%></td>	<td><%= @user.p_perc %>%</td>	</tr>	
-						<tr><th title="<%= I18n.t("book.name.Matthew") + " - " + I18n.t("book.name.John")%>">Gospels</th>		<td><%= @user.gospel["Memorized"]%></td>	<td><%= @user.gospel["Learning"]%></td>		<td><%= @user.g_perc %>%</td>	</tr>	
-						<tr><th title="<%= I18n.t("book.name.Acts") + " - " + I18n.t("book.name.Jude")%>">Epistles</th>	<td><%= @user.epistle["Memorized"]%></td>	<td><%= @user.epistle["Learning"]%></td>	<td><%= @user.e_perc %>%</td>	</tr>
-						<tr></tr>
-					</tbody>							
-				</table>        	
-        	</div>
-
-			<div class="clr"></div>
-
-		</div> <!--vs-distribution end-->
-		<hr />
-		<h2>Complete Chapters</h2>
-		<div id="complete-chapters">
-			<table class="memverse-standard">
-				<tbody>
-					<% for cc in @user.complete_chapters %>
-						<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
-							<td align="left">	<%= cc[1]	%></td>
-							<td align="center">	<%= cc[0]	%></td>
-						</tr>
-					<% end %>
-				</tbody>
-			</table>
-		</div> <!--complete-chapters end-->
-	</div> <!--main-right end-->
-    
-    <div class="clr"></div>
+						<% for cc in @user.complete_chapters %>
+							<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
+								<td align="left">	<%= cc[1]	%></td>
+								<td align="center">	<%= cc[0]	%></td>
+							</tr>
+						<% end %>
+					</tbody>
+				</table>
+			</div> <!--complete-chapters end-->
+		</div> <!--main-right end-->
+	    
+	    <div class="clr"></div>
+    </div>
     
 </div><!--main-content end-->
     

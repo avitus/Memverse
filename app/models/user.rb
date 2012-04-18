@@ -68,6 +68,7 @@ class User < ActiveRecord::Base
   # Relationships
   has_and_belongs_to_many :roles
   has_and_belongs_to_many :quests
+  has_and_belongs_to_many :badges
   has_many                :memverses,         :dependent => :destroy 
   has_many                :progress_reports,  :dependent => :destroy
   has_many                :tweets
@@ -356,7 +357,7 @@ class User < ActiveRecord::Base
   end
 
   # ----------------------------------------------------------------------------------------------------------
-  # Returns all quests completed for user's current level
+  # Returns all quests completed for user's current level (Quests 'belong' to a user once completed)
   # ----------------------------------------------------------------------------------------------------------  
   def current_completed_quests
     self.quests.where(:level => self.level+1)
@@ -416,6 +417,33 @@ class User < ActiveRecord::Base
     
     return newly_completed_quests.empty? ? nil : newly_completed_quests  
       
+  end
+
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Badges that user is working towards
+  # ----------------------------------------------------------------------------------------------------------  
+  def badges_to_strive_for
+    # need to handle gold, silver, bronze issue
+    # first generate a list of badges the user would be interested in earning i.e. all badges of higher level
+    # or unearned solo badges.
+    
+    user_badges   = self.badges
+    lesser_badges = Array.new
+    
+    user_badges.each do |user_badge|
+      Rails.logger.debug("User already has #{user_badge.color} #{user_badge.name}")
+      Badge.where(:name => user_badge.name).each do |badge_in_series|
+        if badge_in_series <= user_badge
+          Rails.logger.debug("Removing #{user_badge.color} #{user_badge.name} from list of badges to strive for.")
+          lesser_badges << badge_in_series
+        end
+      end
+    end
+
+    Rails.logger.debug("Final list of badges to strive for: #{Badge.all - lesser_badges}")
+        
+    return Badge.all - lesser_badges
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -758,7 +786,7 @@ class User < ActiveRecord::Base
   # User about to reach a milestone
   # ----------------------------------------------------------------------------------------------------------    
   def reaching_milestone
-    [9, 19, 29, 39, 49, 99, 199, 299, 399, 499, 599, 699, 799, 899, 999, 1099, 1199, 1299, 1399, 1499, 1599, 1699, 1799, 1899, 1999, 2499, 2999, 9999].include?(self.memorized)
+    [9, 19, 29, 39, 49, 99, 199, 299, 399, 499, 599, 699, 799, 899, 999, 1099, 1199, 1299, 1399, 1499, 1599, 1699, 1799, 1899, 1999, 2499, 2999, 3999].include?(self.memorized)
   end
   
   # ----------------------------------------------------------------------------------------------------------

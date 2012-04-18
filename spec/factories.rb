@@ -20,7 +20,8 @@ FactoryGirl.define do
   
   factory :memverse do |mv|
     mv.association :verse, :factory => :verse
-    mv.association :user,  :factory => :user  
+    mv.association :user,  :factory => :user
+    mv.status 'Learning'
   end
   
   factory :blog do |f|
@@ -36,6 +37,26 @@ FactoryGirl.define do
     f.book 'Genesis'
     f.chapter 1
     f.last_verse 31
+  end
+  
+  factory :badge do |b|
+    b.name 'Sermon on the Mount'
+    b.description 'Memorize the Sermon on the Mount'
+    b.color 'solo'
+  end
+  
+  factory :quest do |q|
+    q.task 'Memorize Matthew 5'
+    q.objective 'Chapters'
+    q.qualifier 'Matthew 5'
+    q.association :badge, :factory => :badge
+  end
+
+  factory :progress_report do |pr|
+    pr.association :user, :factory => :user
+    pr.learning   50
+    pr.memorized 100
+    pr.entry_date Date.today
   end
 
 end

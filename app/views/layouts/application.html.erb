@@ -134,6 +134,10 @@
 <noscript><div id="no-js"><p>Memverse requires Javascript, but you&rsquo;ve got Javascript disabled. <a href="http://www.google.com/search?btnI=1&amp;q=how+to+enable+javascript+in+my+browser">Fix that problem!</a></p></div></noscript>
 <div id="wrapper"><!--wrapper start-->
 	<div id="header"><!--header start-->
+		
+		<!-- General messages -->
+		<div class="mvMessageBox"></div>		
+		
 		<div class="header-top"><!--header-top start-->
 			<div id="logo"><a href="/" title="<%= I18n.t :mainpage, :scope => 'page_titles' %> - Memverse"><%= image_tag("logo.png", :size => "253x31", :alt => "") %></a></div>
 			<% if user_signed_in? %>
@@ -280,6 +284,7 @@
 			<% end %>
 		</div><!--breadcum end-->
 
+		<!-- Flash message notification -->
 		<%= flash_messages  %>
 		
 	</div> <!--header end-->
