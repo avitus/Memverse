@@ -15,7 +15,6 @@
 }
 
 .sermon-on-the-mount.earned {
-  @include badge-properties;
   @include Sermon-on-the-Mount-sprite(badge);
 }
 
