@@ -1,5 +1,15 @@
 @import "variables";
 
+#forums_container {
+  width:1080px;
+  background:#FFF;
+  border:1px solid #555;
+  padding:2em 1.5em;
+  -moz-border-radius:10px;
+  -webkit-border-radius:10px;
+  border-radius:10px;   
+}
+
 #forums {
   .title {
     font-size: 175%;
