@@ -10,7 +10,7 @@ class UsersController < ApplicationController
   def show
     @tab = "profile"
     @sub = "dash" 	
-    @user = User.find(params[:id])
+    @user = User.find(params[:id]) || current_user
     
     if @user == current_user
       add_breadcrumb I18n.t('menu.profile'), :current_user

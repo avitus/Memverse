@@ -1,6 +1,6 @@
 MemverseApp::Application.routes.draw do
-  mount Forem::Engine, :at => "/forums"
   
+  mount Forem::Engine, :at => "/forums"
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
 
   devise_for :users

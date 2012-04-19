@@ -2,18 +2,18 @@
 describe BlogPost do
 
   before(:each) do
-    @blog = Factory(:blog, :title => "Memverse Blog")
+    @blog = FactoryGirl.create(:blog, :title => "Memverse Blog")
   end
 
   # it "should give URL identifier" do
-  #   post = Factory(:blog_post, :title => "Scripture Memorization", :blog_id => @blog.id)
+  #   post = FactoryGirl.create(:blog_post, :title => "Scripture Memorization", :blog_id => @blog.id)
   #   post.url_identifier.should == "scripture-memorization"
   # end
   # 
   # it "should not give the same URL identifier" do
-  #   post1 = Factory(:blog_post, :title => "Scripture Memorization", :blog_id => @blog.id)
+  #   post1 = FactoryGirl.create(:blog_post, :title => "Scripture Memorization", :blog_id => @blog.id)
   #   post1.url_identifier.should == "scripture-memorization"
-  #   post2 = Factory(:blog_post, :title => "Scripture Memorization", :blog_id => @blog.id)
+  #   post2 = FactoryGirl.create(:blog_post, :title => "Scripture Memorization", :blog_id => @blog.id)
   #   post2.url_identifier.should == "scripture-memorization--1"
   # end
   
