@@ -13,6 +13,8 @@
 
 puts 'Seeding database'
 
+# TODO Add countries, states etc.
+
 # Add 50 quest levels
 puts 'SETTING UP QUESTS'
 for i in 19..50

@@ -13,9 +13,9 @@ describe Badge do
   describe "should understand badge hierarchy" do
     
     before(:each) do
-      @gold_badge   = Factory(:badge, :color => "gold")
-      @silver_badge = Factory(:badge, :color => "silver")
-      @bronze_badge = Factory(:badge, :color => "bronze")
+      @gold_badge   = FactoryGirl.create(:badge, :color => "gold")
+      @silver_badge = FactoryGirl.create(:badge, :color => "silver")
+      @bronze_badge = FactoryGirl.create(:badge, :color => "bronze")
     end
     
     it "should value a gold medal more than a silver medal" do
