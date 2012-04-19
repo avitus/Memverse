@@ -53,17 +53,11 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :confirmable, :validatable, 
          :encryptable, :encryptor => :restful_authentication_sha1
   
-  # validates :login, :presence   => true,
-                    # :uniqueness => { :case_sensitive => false },
-                    # :length     => { :within => 3..40 }
-
+  
   validates :name,  :length     => { :maximum => 100 },
                     :allow_nil  => true
 
-  # "validatable" module of devise already handles email validation (was getting 2 error messages)
-  # validates :email, :presence   => true,
-  #                   :uniqueness => { :case_sensitive => false },
-  #                   :length     => { :within => 6..100 }  
+  # "validatable" module of devise already handles email validation
    
   # Relationships
   has_and_belongs_to_many :roles
