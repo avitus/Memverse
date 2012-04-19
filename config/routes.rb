@@ -4,7 +4,8 @@ MemverseApp::Application.routes.draw do
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
 
   devise_for :users
-
+  match '/users/sign_in', :to => "devise/sessions#new", :as => "sign_in"
+  
   resources :blog_categories
   resources :users, :only => :show
 #  resource  :session
