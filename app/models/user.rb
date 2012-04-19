@@ -99,8 +99,17 @@ class User < ActiveRecord::Base
                   :newsletters, :reminder_freq, :last_reminder, :church, :group, :country, :american_state, 
                   :show_echo, :max_interval, :mnemonic_use, :all_refs, :referred_by, :auto_work_load, :show_email
   
-    
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Display name
+  # ----------------------------------------------------------------------------------------------------------
+  def to_s
+    name
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
   # Check if a user has a role
+  # ----------------------------------------------------------------------------------------------------------
   def has_role?(role)
     list ||= self.roles.map(&:name)
     list.include?(role.to_s) || list.include?('admin')
