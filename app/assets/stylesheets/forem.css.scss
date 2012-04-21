@@ -16,11 +16,11 @@
   }
 }
 
-form.new_topic {
+form.new_topic, form.new_post {
   label {
     display: block;
     float: left;
-    width: 6em;
+    width: 5em;
   }
   
   textarea {
