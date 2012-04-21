@@ -16,6 +16,22 @@
   }
 }
 
+form.new_topic {
+  label {
+    display: block;
+    float: left;
+    width: 6em;
+  }
+  
+  textarea {
+    width: 430px;
+  }
+  
+  input[type="submit"] {
+    margin: 1em 30em;
+  }
+}
+
 #forum{
   position: relative;
   .secondary-nav{
