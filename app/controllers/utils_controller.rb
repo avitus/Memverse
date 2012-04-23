@@ -4,7 +4,7 @@ class UtilsController < ApplicationController
 
   protect_from_forgery  :except => [:set_verse_text, :verify_verse, :send_reminder] 
   # in_place_edit_for     :verse, :text  # Doesn't seem to work with Rails 3.1
-  before_filter :authorize, :except => [:dashboard, :send_reminder ]
+  before_filter :authenticate_user!, :except => [:dashboard, :user_progression ]
 
   
   # Only needed for scraping last verse data from BibleGateway
