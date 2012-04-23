@@ -14,7 +14,7 @@ GIT
 
 GIT
   remote: git://github.com/radar/forem.git
-  revision: 3c3e61c7af7282c3c5f4b1d100a81d55fe2f108b
+  revision: e482122af8a1baf93007223b576a4e35f3c90228
   specs:
     forem (1.0.0.beta1)
       cancan
@@ -40,7 +40,7 @@ GIT
 
 GIT
   remote: git://github.com/sferik/rails_admin.git
-  revision: e12f8b4fd0d2198da2684ad787c488e26564eaa0
+  revision: a6b65ec5fa1b6f035ccf1c63f55a2d90b2ebeb78
   specs:
     rails_admin (0.0.1)
       bbenezech-nested_form (~> 0.0.6)
@@ -115,7 +115,7 @@ GEM
       rack-test (>= 0.5.4)
       selenium-webdriver (~> 2.0)
       xpath (~> 0.1.4)
-    childprocess (0.3.1)
+    childprocess (0.3.2)
       ffi (~> 1.0.6)
     chunky_png (1.2.5)
     ckeditor (3.6.3)
@@ -169,7 +169,7 @@ GEM
     forem-redcarpet (1.0.0)
       pygments.rb (= 0.2.4)
       redcarpet (= 2.0.1)
-    foreman (0.42.0)
+    foreman (0.44.0)
       thor (>= 0.13.6)
     friendly_id (4.0.4)
     fssm (0.2.9)
@@ -224,7 +224,7 @@ GEM
     net-ssh (2.3.0)
     net-ssh-gateway (1.1.0)
       net-ssh (>= 1.99.1)
-    newrelic_rpm (3.3.3)
+    newrelic_rpm (3.3.4)
     nokogiri (1.4.6)
     orm_adapter (0.0.7)
     paperclip (3.0.2)
@@ -260,7 +260,7 @@ GEM
       activesupport (= 3.2.2)
       bundler (~> 1.0)
       railties (= 3.2.2)
-    rails-footnotes (3.7.7)
+    rails-footnotes (3.7.8)
       rails (>= 3.0.0)
     railties (3.2.2)
       actionpack (= 3.2.2)
@@ -297,7 +297,7 @@ GEM
       blankslate (>= 2.1.2.3)
       ffi (~> 1.0.7)
     rubyzip (0.9.7)
-    sass (3.1.15)
+    sass (3.1.16)
     sass-rails (3.2.5)
       railties (~> 3.2.0)
       sass (>= 3.1.10)
