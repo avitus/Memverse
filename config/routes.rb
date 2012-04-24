@@ -4,6 +4,8 @@ MemverseApp::Application.routes.draw do
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
 
   devise_for :users
+  
+  # Should be able to remove this route once Forem allows configurable sign_in path
   match '/users/sign_in', :to => "devise/sessions#new", :as => "sign_in"
   
   resources :blog_categories

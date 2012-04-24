@@ -43,23 +43,11 @@ form.new_topic, form.new_post {
     color: $lighter-text;
     font-style: oblique;
   }
-  menu{
-    padding-left: 0;
-    a{
-      background-color: $bar1-midbg;
-      padding: .5em;
-      display: inline-block;
-      color: $default-text;
-      text-decoration: none;
-      &:hover{
-        background-color: $bar1-bottombg;
-      }
-      margin: 0;
-    }
-  }
+
 }
 
 #topic, #forum {
+  
   h2{
     padding: .5em;
     position: relative;
@@ -87,6 +75,45 @@ form.new_topic, form.new_post {
       }
     }
   }
+  
+  small {
+    float: left;
+    width: 100%;
+    margin: 1em 0 0 1em;
+  }
+  
+  menu{
+    width: 35%;
+    float: left;
+    padding-left: 0;
+    a{
+      background-color: $bar1-midbg;
+      padding: .5em;
+      display: inline-block;
+      color: $default-text;
+      text-decoration: none;
+      &:hover{
+        background-color: $bar1-bottombg;
+      }
+      margin: 0;
+    }
+  } 
+   
+  nav.pagination {
+    float: right;
+    padding: 1em 0;
+    a{
+      background-color: $bar1-midbg;
+      padding: .5em;
+      display: inline-block;
+      color: $default-text;
+      text-decoration: none;
+      &:hover{
+        background-color: $bar1-bottombg;
+      }
+      margin: 0;
+    }    
+  }  
 }
 
 #posts{
