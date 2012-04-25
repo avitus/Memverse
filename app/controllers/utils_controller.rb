@@ -472,9 +472,20 @@ class UtilsController < ApplicationController
     
     @need_verification = Array.new
     
-    @error_reported	= Verse.where(:error_flag => true )    
-    unverified			= Verse.where(:verified => false).where("memverses_count > ?", 1).where("checked_by IS NOT NULL").limit(60)
+    @error_reported	= Verse.where(:error_flag => true ) 
+     
+    if params[:checked_by_users] == true
+      @checked_user = true
+    else
+      @checked_user = false
+    end
 
+    if @checked_user == true  
+      unverified			= Verse.where(:verified => false).where("memverses_count > ?", 1).where("checked_by IS NOT NULL").limit(60)
+    else
+      unverified      = Verse.where(:verified => false).where("memverses_count > ?", 1).where("checked_by IS NULL").limit(60)
+    end
+    
     unverified.each { |vs| 
       if vs.web_check == true
         vs.verified = true
@@ -647,6 +658,7 @@ class UtilsController < ApplicationController
   # Update a verse TODO: Add automatic verification if the admin edits a verse
   # TODO: Check for duplicate verses
   # ----------------------------------------------------------------------------------------------------------   
+  
   def update_verse
     @verse = Verse.find(params[:id])
     if @verse.update_attributes(params[:verse])
