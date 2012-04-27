@@ -4,7 +4,7 @@ FactoryGirl.define do
 
   factory :user do |u|
     u.name 'Test User'
-    u.email 'user@test.com'
+	u.sequence(:email) { |n| "user#{n}@test.com" }
     u.password 'please'
     u.password_confirmation { |u| u.password }     
   end
@@ -30,7 +30,13 @@ FactoryGirl.define do
   end
   
   factory :blog_post do |f|
-    f.posted_by_id 2
+    f.association :posted_by_id, :factory => :user
+  end
+  
+  factory :blog_comment do |bc|
+    bc.association :blog_post, :factory => :blog_post
+	bc.association :user, :factory => :user
+	bc.comment 'Nice blog post!'
   end
   
   factory :final_verse do |f|
@@ -58,5 +64,4 @@ FactoryGirl.define do
     pr.memorized 100
     pr.entry_date Date.today
   end
-
 end
