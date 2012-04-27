@@ -10,7 +10,7 @@
 		<!-- Create new post -->
 		<% if blog_logged_in? && current_user.can_blog?(@blog_id) %>
 			<%= link_to "New blog post", { :controller => 'blog_posts', :action => :new, :blog_id => @blog_id } %>
-			or <%= link_to "see pending posts", blog_named_link(nil, :pending, { :blog => @blog }) %>
+			or <%= link_to "see pending posts", { :controller => 'blog_posts', :action => 'pending', :blog_id => @blog_id } %>
 		<% end %>
 
 		<!-- Filter by tags -->		
