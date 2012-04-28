@@ -259,7 +259,7 @@ end
 # Create Final Verse data table
 # ---------------------------------------------------------------------------------------------------------- 
 puts "Adding final verse data"
-config = ActiveRecord::Base.configurations['test']  # Change this to 'development' if seeding a new database TODO: would be nice to have working for either case
+config = ActiveRecord::Base.configurations[Rails.env]
 if config['adapter'] == 'mysql2'
   system("mysql --user=#{config['username']} --password=#{config['password']} #{config['database']} < iso_final_verses.sql")
 elsif config['adapter'] == 'sqlite3'
@@ -273,7 +273,7 @@ end
 # ALV: Seeding the database with real verses currently breaks a lot of the Rspec tests.
 # ---------------------------------------------------------------------------------------------------------- 
 # puts "Adding seed verses"
-# config = ActiveRecord::Base.configurations['test']  # Change this to 'development' if seeding a new database TODO: would be nice to have working for either case
+# config = ActiveRecord::Base.configurations[Rails.env]
 # if config['adapter'] == 'mysql2'
   # system("mysql --user=#{config['username']} --password=#{config['password']} #{config['database']} < seed_verses.sql")
 # elsif config['adapter'] == 'sqlite3'
@@ -357,11 +357,4 @@ end
 # | 72 | ESV         | 19         | Psalms       | 1       | 5        | Therefore the wick... | 2012-03-15 04:33:5... | 2012-03-18 19:36:01... | false    | false      |              |            | 0               |
 # | 73 | ESV         | 19         | Psalms       | 1       | 6        | for the Lord knows... | 2012-03-15 04:34:1... | 2012-03-18 19:36:01... | false    | false      |              |            | 0               |
 # +----+-------------+------------+--------------+---------+----------+-----------------------+-----------------------+------------------------+----------+------------+--------------+------------+-----------------+
-
-
-
-
-
-
-
 
