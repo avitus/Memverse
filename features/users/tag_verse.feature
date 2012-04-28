@@ -28,8 +28,8 @@ Feature: Tag Verse
     @javascript
     Scenario: User tags with duplicate tag
       Given I have tag: Creation
-      When I fill in "td.edit_verse form input" with "Creation"
-      And I submit the form
+      When I click inside "td.tag"
+	  And I type in "Crea" into autocomplete list "input" and I choose "Creation"
       Then I should get an error
 
     @javascript 
@@ -37,8 +37,6 @@ Feature: Tag Verse
       Given the following tag exists:
         | name     |
         | Creation |
-      And I fill in "new_tag" with "cre"
-      Then I should see "Creation"
-      When I follow "Creation"
+      And I type in "Crea" into autocomplete list "new_tag" and I choose "Creation"
       Then the tag "Creation" should exist for memverse #1
       And I should see "Creation" in "#user-tags"
