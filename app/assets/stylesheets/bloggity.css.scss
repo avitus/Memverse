@@ -253,26 +253,58 @@
 	font-weight:bold;
 }
 
-#bloggity_container .comments_body {
-	list-style-type:none;
-	margin:0;
-	padding:0;
+#bloggity_container .comment {
+	border-bottom:1px solid #ddd;
+	margin-bottom:1em;
 }
 
-#bloggity_container .comments_body .comment_image {
-	width:55px;
-	vertical-align:top;
+#bloggity_container .comment .comment-body {
+	margin-left:90px;
+	min-height:30px;
+	padding:1em;
+	padding-bottom:0;
 }
 
-#bloggity_container .comments_body .comment_body {
-}
-
-#bloggity_container .comments_body li.not_approved .comment_body {
+#bloggity_container .comment.not_approved .comment-body {
 	background-color:yellow;
 }
 
-#bloggity_container .comments_body li.approved .comment_body {
+#bloggity_container .comment-img img {
+	float:left;
+	@include border-radius(5px, 5px);
+}
+
+#bloggity_container .comment-head {
+	height:40px;
+	margin-left:90px;
 	background-color:#eee;
+	overflow:hidden;
+	text-overflow:ellipsis;
+	@include border-radius(5px, 5px);
+}
+
+#bloggity_container .comment-head a.commenter, time {
+	padding:1em;
+}
+
+#bloggity_container .comment-head a.commenter {
+	float:left;
+	font-weight:bold;
+	color:#999;
+}
+
+#bloggity_container .comment-head time {
+	float:right;
+}
+
+#bloggity_container .comment-body ul.comment-actions {
+	display:block;
+	padding:0;
+	text-align:right;
+}
+
+#bloggity_container .comment-body ul.comment-actions li {
+	display:inline;
 }
 
 #bloggity_container #inner_asset_container .uploaded_asset {
