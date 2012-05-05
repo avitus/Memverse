@@ -11,7 +11,7 @@
 			<!-- Link to add verse -->
 			<% if !current_user.has_verse_id?(@verse) %>
 				<div class="no-dbl-click">
-					<%= link_to '[Add Verse]', :controller => 'memverses', :action => 'quick_add', :vs => @verse %>
+					<%= link_to '[Add Verse]', { :controller => 'memverses', :action => 'ajax_add', :id => @verse }, :remote => true, :id => "ajax_add" %>
 				</div>
 			<% end %>
 
@@ -46,9 +46,9 @@
 
 <!--[eoform:verse]-->
 
-<!-- http://www.appelsiini.net/projects/jeditable -->
 <script type="text/javascript">
-	 $(document).ready(function() {   
+	 $(document).ready(function() {
+		 // http://www.appelsiini.net/projects/jeditable
 	     $('.edit').editable('/verses/add_verse_tag', {
 	         indicator : 'Saving...',
 	         tooltip   : 'Click to edit...'
@@ -60,14 +60,13 @@
 	         indicator : 'Saving...',
 	         tooltip   : 'Click to edit...'
 	     });
-	 });
-</script>
-
-<!-- Prevent double-clicking of links to add verses -->
-<script type="text/javascript">
-	$(document).ready(function(){
-		$('.no-dbl-click').click( function() {
+		// Prevent double-clicking of links to add verses
+		$('a#ajax_add').click( function() {
 			$(this).attr('disabled', 'disabled').hide();
+		})
+		// Give user msg returned from ajax add call
+		.bind('ajax:success', function(evt, data, status, xhr){
+			$(this).parent().html(data.msg);
 		});
-	});
+	 });
 </script>

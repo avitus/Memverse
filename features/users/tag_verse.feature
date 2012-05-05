@@ -12,32 +12,31 @@ Feature: Tag Verse
 	  | name    | email               | password |
       | Old Dog | olddog@test.com     | please   |
     And the following memverses exist:
-      | User           | Verse |
-      | name: Old Dog  | id: 1 |
+      | id | User           | Verse |
+      | 1  | name: Old Dog  | id: 1 |
     And Old Dog is signed in
     And I go to the page for the memverse with the id of 1
     
-    
-   @javascript
-   Scenario: User tags with valid tag
-    And I make a tag named "Creation"
-    And I press "enter"
-    Then tag should be added
-    Then tag should be inserted at top of user tags
-    
-   @javascript
-   Scenario: User tags with duplicate tag
-    Given I have tag: Creation
-    And I fill in "new tag" with "Creation"
-    And I press "enter" # perhaps, "And I submit the form"???
-    
-   @javascript 
-   Scenario: User tags with autocomplete tag
-   	Given the following tag exists:
-      | name     |
-	  | Creation |
-   	And I fill in "new_tag" with "cre"
-   	Then I should see "Creation"
-   	When I click "Creation"
-   	Then tag should be added
-   	And tag should be inserted at top of user tags
+    @javascript
+    Scenario: User tags with valid tag
+	  I should see "In the beginning God"
+	  When I click inside "td.tag"
+      And I fill in "td.tag form input" with "Creation"
+      And I submit the form
+      Then I should see "Creation" in "#user-tags"
+
+    @javascript
+    Scenario: User tags with duplicate tag
+      Given I have tag: Creation
+      When I click inside "td.tag"
+	  And I type in "Crea" into autocomplete list "input" and I choose "Creation"
+      Then I should get an error
+
+    @javascript 
+    Scenario: User tags with autocomplete tag
+      Given the following tag exists:
+        | name     |
+        | Creation |
+      And I type in "Crea" into autocomplete list "new_tag" and I choose "Creation"
+      Then the tag "Creation" should exist for memverse #1
+      And I should see "Creation" in "#user-tags"

@@ -1,20 +1,15 @@
 MemverseApp::Application.routes.draw do
   
+  mount Forem::Engine, :at => "/forums"
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
 
-  # match '/login',                       :to => 'home#index',        :as => 'login'
-  # match '/logout',                      :to => 'sessions#destroy',  :as => 'logout'
-  # match '/register',                    :to => 'users#create',      :as => 'register'
-  # match '/signup',                      :to => 'users#new',         :as => 'signup'
-  # match '/activate/:activation_code',   :to => 'users#activate',    :as => 'activate',  :activation_code => nil
-  # match '/forgot_password',             :to => 'passwords#new',     :as => 'forgot_password'
-  # match '/change_password/:reset_code', :to => 'passwords#reset',   :as => 'change_password'
-
   devise_for :users
-
+  
+  # Should be able to remove this route once Forem allows configurable sign_in path
+  match '/users/sign_in', :to => "devise/sessions#new", :as => "sign_in"
+  
   resources :blog_categories
   resources :users, :only => :show
-#  resources :passwords
 #  resource  :session
   resources :uberverses
 # resources :pastors
@@ -90,23 +85,24 @@ MemverseApp::Application.routes.draw do
   match '/progression/(:yr)/(:mo)',:to => 'utils#user_progression',          :as => 'progression'
     
   # Doesn't require a login
-  match '/contact',                :to => 'info#contact',                    :as => 'contact'   
-  match '/faq',                    :to => 'info#faq',                        :as => 'faq'
-  match '/tutorial',               :to => 'info#tutorial',                   :as => 'tutorial'
-  # match '/video_tutorial',        :to => 'info#video_tut',                  :as => 'video_tut'
-  match '/volunteer',              :to => 'info#volunteer',                  :as => 'volunteer'
-  match '/popular',                :to => 'info#pop_verses',                 :as => 'popular'
-  match '/supermemo',              :to => 'info#sm_description',             :as => 'supermemo'
-  match '/mission',                :to => 'info#mission_statement',          :as => 'mission'
-  match '/demo',                   :to => 'info#demo_test_verse',            :as => 'demo'
-  match '/leaderboard',            :to => 'info#leaderboard',                :as => 'leaderboard'
-  match '/churchboard',            :to => 'info#churchboard',                :as => 'churchboard'
-  match '/groupboard',             :to => 'info#groupboard',                 :as => 'groupboard'
-  match '/stateboard',             :to => 'info#stateboard',                 :as => 'stateboard'
-  match '/countryboard',           :to => 'info#countryboard',               :as => 'countryboard'
-  match '/memverse_clock',         :to => 'info#memverse_clock',             :as => 'memverse_clock'
-  match '/referralboard',          :to => 'info#referralboard',              :as => 'referralboard'
-  match '/news',                   :to => 'info#news',                       :as => 'news'
+  match '/contact'        => 'info#contact'
+  match '/faq'            => 'info#faq'
+  match '/tutorial'       => 'info#tutorial'
+  # match '/video_tutorial' => 'info#video_tut'
+  match '/volunteer'      => 'info#volunteer'
+  match '/popular'        => 'info#pop_verses'
+  match '/supermemo'      => 'info#sm_description'
+  match '/mission'        => 'info#mission_statement'
+  match '/demo'           => 'info#demo_test_verse'
+  match '/leaderboard'    => 'info#leaderboard'
+  match '/churchboard'    => 'info#churchboard'
+  match '/groupboard'     => 'info#groupboard'
+  match '/stateboard'     => 'info#stateboard'
+  match '/countryboard'   => 'info#countryboard'
+  match '/memverse_clock' => 'info#memverse_clock'
+  match '/referralboard'  => 'info#referralboard'
+  match '/news'           => 'info#news'
+  match '/stt_setia'      => 'info#stt_setia'
  
   match '/update_profile',         :to => 'profile#update_profile',          :as => 'update_profile'
   match '/church',                 :to => 'profile#show_church',             :as => 'church'
@@ -116,6 +112,10 @@ MemverseApp::Application.routes.draw do
   match '/set_translation/:tl',    :to => 'profile#set_translation',         :as => 'set_translation'
   match '/set_time_alloc/:time',   :to => 'profile#set_time_alloc',          :as => 'set_time_alloc'
 
+  match '/earned_badges/:id',      :to => 'badges#earned_badges',            :as => 'earned_badges'     
+  match '/badge_completion_check', :to => 'badges#badge_completion_check',   :as => 'badge_completion_check'
+ 
+  match '/badge_quests_check',     :to => 'quests#badge_quests_check',       :as => 'badge_quests_check' 
   
   match '/edit_tag/:id',           :to => 'tag#edit_tag',                    :as => 'edit_tag'
 
@@ -135,9 +135,9 @@ MemverseApp::Application.routes.draw do
   match '/global_data',            :to => 'chart#global_data',               :as => 'global_data' 
   
   # Routes for chat channels  
-  match "/chat/send",       :controller => "chat", :action => "send_message"
-  match "/chat/channel1",   :controller => "chat", :action => "channel1"
-  match "/chat/channel2",   :controller => "chat", :action => "channel2"  
+  match "/chat/send",              :controller => "chat", :action => "send_message"
+  match "/chat/channel1",          :controller => "chat", :action => "channel1"
+  match "/chat/channel2",          :controller => "chat", :action => "channel2"  
 
   
   # Routes for live quiz

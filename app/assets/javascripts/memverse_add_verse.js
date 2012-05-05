@@ -11,7 +11,7 @@ function flexversesearch(text){
 				clearSearchResults();
 				$(".verse-search-results-scroll").hide();
 				$("#verse-search-single-result").show();
-						
+				
 				if (typeof(verse) !== 'undefined' && verse != null) {
 					$("#new-verse-entry").hide();												
 					$("#foundVerse").append($('<h4/>').text(verse.ref)).append($('<p/>').text(verse.text));
@@ -22,7 +22,7 @@ function flexversesearch(text){
 					$("#new-verse-entry .add-verse-button").html("<div class='quick-start-add-button'></div>")  // show add button
 				};
 
-		}, "json" );	
+		}, "json" );
 				
 	// User is searching for a passage
 	} else if (ref = parsePassageRef($.trim(text))) {

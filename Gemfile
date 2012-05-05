@@ -1,5 +1,6 @@
+# encoding: utf-8
 require 'rbconfig'
-HOST_OS = Config::CONFIG['host_os']
+HOST_OS = RbConfig::CONFIG['host_os']
 source 'http://rubygems.org'
 
 group :development do 
@@ -16,6 +17,7 @@ group :assets do
   gem 'sass-rails', "  ~> 3.2.3"
   gem 'coffee-rails', "~> 3.2.1"
   gem 'uglifier', '>= 1.0.3'
+  gem 'compass-rails'
 end
 
 if HOST_OS =~ /linux/i
@@ -37,6 +39,7 @@ gem "devise", ">= 1.4.5"
 gem "cancan"                                                                                    # Role-based authorization
 # gem "frontend-helpers"
 gem 'rails_admin', :git => 'git://github.com/sferik/rails_admin.git'                            # Admin console
+gem 'forem', :git => "git://github.com/radar/forem.git"                                         # Forum engine
 
 gem 'fancybox-rails'
 gem 'aasm', '2.2.0',    :require => 'aasm'                                                      # Is this needed now that we aren't using Restful Authentication ? 
@@ -67,6 +70,7 @@ gem 'memcache-client'                                                           
 gem 'redis', '>=2.2.2'                                                                          # Redis Key-value store
 gem 'action_mailer_cache_delivery', git: 'git://github.com/ragaskar/action_mailer_cache_delivery.git' # Used to test email delivery with Cucumber
 gem 'friendly_id'                                                                               # Makes nice IDs for models
+gem 'foreman'                                                                                   # Helps manage multiple processes when running app in development.
 
 group :console do
   gem 'wirble'
