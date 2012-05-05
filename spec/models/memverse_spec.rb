@@ -24,8 +24,8 @@ describe Memverse do
 #      @passage = Array.new
 #         
 #      for i in 1..6
-#        verse       = Factory(:verse, :book_index => 19, :book => "Psalms", :chapter => '1', :versenum => i)
-#        @passage[i] = Factory(:memverse, :user => @user, :verse => verse)
+#        verse       = FactoryGirl.create(:verse, :book_index => 19, :book => "Psalms", :chapter => '1', :versenum => i)
+#        @passage[i] = FactoryGirl.create(:memverse, :user => @user, :verse => verse)
 #      end      
 #      
 #    end

@@ -667,10 +667,10 @@ class Memverse < ActiveRecord::Base
   # Add links from other verses [hook: after_create]
   # ----------------------------------------------------------------------------------------------------------  
   def add_links
-       
+    
     # Adding inbound links
     if self.prev_verse
-      prior_vs             = Memverse.find(self.prev_verse)      
+      prior_vs             = Memverse.find(self.prev_verse)
       prior_vs.next_verse  = self.id
       prior_vs.save!
     end
@@ -681,9 +681,9 @@ class Memverse < ActiveRecord::Base
       subs_vs.first_verse = self.first_verse || self.id
       subs_vs.save!
       
-      # Updating starting point for downstream verses 
+      # Updating starting point for downstream verses
       subs_vs.update_downstream_start_verses
-    end    
+    end
   end
 
   # ----------------------------------------------------------------------------------------------------------

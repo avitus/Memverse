@@ -106,3 +106,32 @@ Given /^I sign in as a normal user$/ do
   Then %{I should be signed in}
 end
 
+Given /^I sign in as an advanced user$/ do
+  Given %{I am a user named "advanced" with an email "advanced_user@test.com" and password "please"}
+  And %{the email address "advanced_user@test.com" is confirmed}
+  And %{the user with the email of "advanced_user@test.com" has 10 verses in his list}
+  When %{I sign in as "advanced_user@test.com/please"}
+  Then %{I should be signed in}
+end
+
+Given /^the user with the email of "(.*)" has (\d+) verses in his list$/ do |email, n|
+  user = User.find_by_email(email)
+  n.to_i.times { |i| 
+    vs = FactoryGirl.create(:verse, :chapter => 20, :versenum => i)
+    FactoryGirl.create(:memverse, :user_id => user.id, :verse_id => vs.id) 
+  }
+end
+
+
+Then /^the tag "(.*)" should exist for memverse #([0-9]+)$/ do |tagname, id|
+  mv = Memverse.find(id)
+  mv.tags.include? tagname
+end
+
+When /^I type in "([^\"]*)" into autocomplete list "([^\"]*)" and I choose "([^\"]*)"$/ do |typed, input_name,should_select|
+   page.driver.browser.execute_script %Q{ $('input[data-autocomplete]').trigger("focus") }
+   fill_in("#{input_name}",:with => typed)
+   page.driver.browser.execute_script %Q{ $('input[data-autocomplete]').trigger("keydown") }
+   sleep 1
+   page.driver.browser.execute_script %Q{ $('.ui-menu-item a:contains("#{should_select}")').trigger("mouseenter").trigger("click"); }
+end

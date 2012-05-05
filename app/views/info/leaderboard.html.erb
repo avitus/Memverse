@@ -37,21 +37,6 @@
 						<td align="center"> <%= user.created_at.to_date %></td>				
 					</tr>
 				<% end %>
-				
-				<% if @not_on_leaderboard %>
-					<tr>
-						<td align="center">		You																	  </td>
-						<td align="center"> <%= current_user.level ? current_user.level : "" 						%></td>				
-						<td align="left"> 	<%= current_user.name.empty? ? current_user.login : current_user.name	%></td>
-						<td align="center"> <%= current_user.memorized 												%></td>			
-						<td align="center"> <%= current_user.learning 												%></td>
-		        		<td align="center"> <%= current_user.accuracy                         								%>%</td>
-		        		<td align="center"> <%= current_user.ref_grade                        								%>%</td>
-						<td align="left"> 	<%= current_user.church ? link_to(current_user.church.name, { :controller => "profile", :action => "show_church", :church => current_user.church.id }) : "" %></td>
-						<td align="left"> 	<%= current_user.country ? current_user.country.printable_name : "" 	%></td>
-						<td align="center"> <%= current_user.created_at.to_date 									%></td>								
-					</tr>
-				<% end %>
 			</tbody>
 		</table>
 	</div>

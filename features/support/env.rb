@@ -7,6 +7,7 @@
 require 'cucumber/rails'
 require 'email_spec/cucumber'
 require 'factory_girl/step_definitions' # Added by ALV
+load "#{Rails.root}/db/seeds.rb" # Added by ACW
 
 # Capybara defaults to XPath selectors rather than Webrat's default of CSS3. In
 # order to ease the transition to Capybara we set the default here. If you'd

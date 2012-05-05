@@ -10,4 +10,5 @@ Disallow: /utils/ 		# Administrators only
 Disallow: /images/ 		# Images
 Disallow: /javascripts/		# Javascript directory
 Disallow: /charts/		# Old flash charts
-
+Disallow: /videos/Spirit-of-Setia.flv # Setia video
+Disallow: /stt_setia    # Setia page

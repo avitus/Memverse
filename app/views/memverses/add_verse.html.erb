@@ -92,23 +92,45 @@
 		// User adds a new verse
 		$('.create-and-add').on("click", ".quick-start-add-button", function() {      // Bind to DIV enclosing button to allow for event delegation
 			$button   = $('.create-and-add .quick-start-add-button');
-			ref       = parseVerseRef( $("#js_flex-verse-search").val().trim()); // SEEMS TO BE AN ERROR WITH THIS LINE
+			ref       = parseVerseRef( $.trim($("#js_flex-verse-search").val()) );
 			newVerse  = cleanseVerseText( $("#versetext").val() );
 						
 			if ( ref ) { 
 				createVerseAndAdd(ref, tl, newVerse, $button);
 			} else {
-				alert("The Bible reference you have entered is not valid.")
-			};	
-		});	
+				alert("The Bible reference you have entered is not valid.");
+			};
+		});
 	
 		// User adds entire passage	
-		$('.add-chapter').on("click", ".add-chapter-button", function() {		
-			ref = parsePassageRef( $("#js_flex-verse-search").val().trim() );
-			$.post("/add_chapter.json", { bk: ref.bk, ch: ref.ch, tl: tl }, function(response) { 
+		$('.add-chapter').on("click", ".add-chapter-button", function() {
+			ref = parsePassageRef( $.trim( $("#js_flex-verse-search").val() ) );
+			$.post("/add_chapter.json", { bk: ref.bk, ch: ref.ch, tl: tl }, function(response) {
 				$(".add-chapter-button").replaceWith("<div class='verse-added'></div>");
 			});
 		});
-		
+	
 	});
 --></script>
+
+<!-- Google Code for Memverse - Add Verse Conversion Page -->
+<script type="text/javascript">
+	/* <![CDATA[ */
+	var google_conversion_id = 1055933402;
+	var google_conversion_language = "en";
+	var google_conversion_format = "3";
+	var google_conversion_color = "ffffff";
+	var google_conversion_label = "sZWTCNjY5wIQ2ofB9wM";
+	var google_conversion_value = 0;
+	if (0.25) {
+	  google_conversion_value = 0.25;
+	}
+	/* ]]> */
+</script>
+<script type="text/javascript" src="http://www.googleadservices.com/pagead/conversion.js">
+</script>
+<noscript>
+<div style="display:inline;">
+<img height="1" width="1" style="border-style:none;" alt="" src="http://www.googleadservices.com/pagead/conversion/1055933402/?value=0.25&amp;label=sZWTCNjY5wIQ2ofB9wM&amp;guid=ON&amp;script=0"/>
+</div>
+</noscript>

@@ -1,7 +1,7 @@
 #Background info
 
 And /^I make a tag named ".*"$/ do |tag_name| 
-   Tag.new(:tag_name => name)
+   Tag.new(:name => tag_name)
 end
 
 And /^Old Dog is signed in$/ do

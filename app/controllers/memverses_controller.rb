@@ -510,7 +510,7 @@ class MemversesController < ApplicationController
   #   - Memory_Verse
   #   - User
   #
-  # NB: MIRROR ANY CHANGES HERE TO ADMIN_CONTROLLER !!!!!!
+  # NB: MIRROR ANY CHANGES HERE TO UTILS_CONTROLLER !!!!!!
   # ---------------------------------------------------------------------------------------------------------- 
   def popular_verses(limit = 8, include_current_user_verses = true)
 
@@ -533,14 +533,14 @@ class MemversesController < ApplicationController
                               ["NAS", vs.nas, vs.nas_text],
                               ["NKJ", vs.nkj, vs.nkj_text],
                               ["KJV", vs.kjv, vs.kjv_text]]
-                                                                     
+        
         translations = Array.new
         avail_translations.each { |translation|
           if !translation[1].nil?
             translations << translation
           end
         }
-                                                          
+        
         pop_verses << [verse, translations]
       end
     }
@@ -552,7 +552,7 @@ class MemversesController < ApplicationController
   # AJAX Verse Add (Assumes that verse is already in DB)
   # ---------------------------------------------------------------------------------------------------------- 
   def ajax_add
-  	vs  = Verse.find(params[:id])
+  	vs = Verse.find(params[:id])
   	
   	if vs and current_user
       if current_user.has_verse_id?(vs)
@@ -567,7 +567,7 @@ class MemversesController < ApplicationController
     else
       msg = "Error"
     end
-          
+    
   	render :json => {:msg => msg }
   	
   end
@@ -920,8 +920,8 @@ class MemversesController < ApplicationController
       	
       	importance = case milestone
 	      	when    0..    9 then 4
-	      	when   10..  199 then 3
-	      	when  200..  999 then 2
+	      	when   10..  399 then 3
+	      	when  400..  999 then 2
 	      	when 1000..10000 then 1 
 	      	else                  5
       	end
@@ -1430,44 +1430,6 @@ class MemversesController < ApplicationController
     end        
   end
 
-    
-  # ----------------------------------------------------------------------------------------------------------
-  # Score the verse memory test
-  # TODO: Need to fix this so that user can't hammer away on a button and keep scoring the last verse
-  # ----------------------------------------------------------------------------------------------------------   
-  def mark_test
-    # Update the interval and efactor
-    if params[:commit] and session[:memverse]
-      q = params[:commit].slice!(/[0-5]?/).to_i
-      
-      # Retrieve verse from DB
-      mv = Memverse.find( session[:memverse] )
-      
-      # Execute Supermemo algorithm
-      newly_memorized = mv.supermemo(q)
-
-      # Give encouragement if verse transitions from "Learning" to "Memorized"
-      if newly_memorized
-        flash[:notice] = "Congratulations. You have memorized #{mv.verse.ref}."
-        Tweet.create(:news => "#{current_user.name_or_login} memorized #{mv.verse.ref}", :user_id => current_user.id, :importance => 5)
-        if current_user.reaching_milestone
-          flash[:notice] << " That was your #{current_user.memorized+1}th memorized verse!"
-          Tweet.create(:news => "#{current_user.name_or_login} memorized #{current_user.his_or_her} #{current_user.memorized+1}th verse", :user_id => current_user.id, :importance => 3)
-        end
-        if mv.chapter_memorized?
-          flash[:notice] << " You have now memorized all of #{mv.verse.book} #{mv.verse.chapter}. Great job!"
-          Tweet.create(:news => "#{current_user.name_or_login} memorized #{mv.verse.book} #{mv.verse.chapter}", :user_id => current_user.id, :importance => 2)          
-        end
-      end
-                
-      # We should check to see whether there are any more verses to be memorized and redirect elsewhere
-      redirect_to :action => 'test_verse'
-    else
-      logger.debug("*** Invalid parameters!")
-      redirect_to :action => 'index'
-    end  
-  end    
-  
   # ----------------------------------------------------------------------------------------------------------
   # Check for errors in verse test
   # Note: we should remove the 'strip' and whitespace substitution 

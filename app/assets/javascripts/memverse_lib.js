@@ -64,11 +64,12 @@ function validVerseRef(verseref) {
  * Returns true if input is a valid verse reference
 
  * Accepts: Romans 8
+ * Accepts: Romans 8:
  * Accepts: Romans 8:1-3
  * Rejects: Romans 8:1
  *******************************************************************************/
 function validPassageRef(passage) {
-    return /([0-3]?\s+)?[a-záéíóúüñ]+\s+[0-9]+((:|(\s?vs\s?))[0-9]+(-)[0-9]+)?$/i.test(passage);	
+    return /([0-3]?\s+)?[a-záéíóúüñ]+\s+[0-9]+(((:|(\s?vs\s?))[0-9]+(-)[0-9]+)|:)?$/i.test(passage);	
 }
 
 
@@ -92,8 +93,8 @@ function cleanseVerseText( versetext ) {
 	                     .replace(/--/g, ' — ')   // replace double dash with em dash
 	                     .replace(/\[\w\]/g, " ") // remove footnotes
 	                     .replace(/\n/g,' ')      // remove newlines
-	                     .replace(/\s{2,}/g,' ')  // remove double spaces
-						 .trim();                 // remove trailing and leading whitespace
+	                     .replace(/\s{2,}/g,' '); // remove double space
+	versetext = $.trim(versetext);                // remove trailing and leading whitespace. Using jQuery's trim() to support IE.
 	
 	return versetext;
 }
@@ -151,7 +152,8 @@ function parsePassageRef(passage) {
 		
 		// Handle corner cases
 		passage = passage.replace(/(song of songs)/i, "Song of Songs")
-						 .replace(/(psalm )/i,        "Psalms ");
+						 .replace(/(psalm )/i,        "Psalms ")
+						 .replace(/\:$/, ''); // Something like "Romans 8:" -- can happen on Add Verse page as user types
 		
 		split_text = passage.split(/:|-|\s/);  /* split on dash, colon or space */
 		
@@ -181,6 +183,41 @@ function parsePassageRef(passage) {
 function resetScrollable() {
 	var api = $(".scrollable").data("scrollable"); 	// get handle to scrollable API
 	api.begin(); 									// use API to move back to the beginning
+}
+
+
+/******************************************************************************
+ * Check for completed badges
+ ******************************************************************************/
+function mvCheckBadgeCompletion() {
+	$.getJSON('/badge_quests_check.json', function(quests) {
+		if ( quests.length !== 0 ) {
+			// Alert user to completion of quests necessary for badges
+			
+			// Check for awarded badges
+			$.getJSON('/badge_completion_check.json', function(badges) {
+				// Alert user to completed badges
+				if ( badges.length !== 0 ) {
+					for (var i = 0; i < badges.length; i++) {
+    					displayAlertMessage("Congratulations! You have been awarded a " + badges[i]["color"] + " " + badges[i]["name"] + " badge.");
+					}
+				}
+			});
+		};
+	});	
+}
+
+/******************************************************************************
+ * Show an alert
+ ******************************************************************************/
+function displayAlertMessage(message) {
+
+	var timeOut = 7;
+
+	$('.mvMessageBox').text(message).fadeIn().css('display', 'block');
+	setTimeout(function() {
+		jQuery('.mvMessageBox').fadeOut().css('display', 'none');
+	}, timeOut * 1000);
 }
 
 /******************************************************************************
