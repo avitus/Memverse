@@ -474,13 +474,13 @@ class UtilsController < ApplicationController
     
     @error_reported	= Verse.where(:error_flag => true ) 
      
-    if params[:checked_by_users] == true
+    if params[:checked_by_users] == "true"
       @checked_user = true
     else
       @checked_user = false
     end
 
-    if @checked_user == true  
+    if @checked_user 
       unverified			= Verse.where(:verified => false).where("memverses_count > ?", 1).where("checked_by IS NOT NULL").limit(60)
     else
       unverified      = Verse.where(:verified => false).where("memverses_count > ?", 1).where("checked_by IS NULL").limit(60)
