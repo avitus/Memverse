@@ -1053,12 +1053,7 @@ class User < ActiveRecord::Base
   def can_modify_blogs?
     self.id == 2
   end
-
-  # Allow logged in users to read forem forums
-  def can_read_forem_forums?
-    return self.id
-  end
-
+  
   # Implement in your user model 
   def user_signed_in?
     true
