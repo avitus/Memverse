@@ -35,9 +35,11 @@ gem "capybara", ">= 1.1.2", :group => :test
 gem "database_cleaner", ">= 0.6.7", :group => :test
 gem "launchy", ">= 2.0.5", :group => :test
 gem 'jasmine', :group => [:development, :test]
-gem "devise", ">= 1.4.5"
+
+gem "devise"                                                                                    # Authentication
+gem "devise-encryptable"                                                                        # TODO: Is this required?
 gem "cancan"                                                                                    # Role-based authorization
-# gem "frontend-helpers"
+
 gem 'rails_admin', :git => 'git://github.com/sferik/rails_admin.git'                            # Admin console
 gem 'forem', :git => "git://github.com/radar/forem.git"                                         # Forum engine
 
