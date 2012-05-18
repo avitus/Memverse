@@ -9,7 +9,10 @@ describe Badge do
   it "should create a new instance given a valid attribute" do
     Badge.create!(:name => 'Sermon on the Mount', :description => 'Memorize Matthew 5-7', :color => 'solo')
   end  
-  
+
+  #----------------------------------------------------------------------------------------------
+  # Badge hierarchy
+  #----------------------------------------------------------------------------------------------    
   describe "should understand badge hierarchy" do
     
     before(:each) do
@@ -27,7 +30,10 @@ describe Badge do
     end    
         
   end
-  
+
+  #----------------------------------------------------------------------------------------------
+  # Reporting earned badges
+  #----------------------------------------------------------------------------------------------   
   describe "should correctly report which badges a user has earned" do
     
     before(:each) do
@@ -51,7 +57,21 @@ describe Badge do
       bronze_quests = bronze_badge.quests      
       bronze_quests.each { |q| @user.quests << q }
       
-      bronze_badge.achieved?(@user).should be_false      
+      bronze_badge.achieved?(@user).should be_false  
+    end
+    
+    it "should remove lower level badges when a higher level badge is earned" do
+      # award silver badge
+      @user.badges << @badge 
+      
+      # award gold badge to user
+      gold_badge = Badge.where(:name => "Consistency", :color => "gold").first
+      gold_badge.award_badge(@user) 
+      
+      # user should no longer have the silver badge ...
+      @badge.achieved?(@user).should be_false
+      # ... but it should still exist and be able to be awarded to other users
+      Badge.exists?(:name => "Consistency", :color => "silver").should be_true
     end
     
   end
@@ -66,6 +86,5 @@ describe Badge do
     @user.badges.where(:name => "Consistency").length.should == 1
     @user.badges.where(:name => "Consistency").first.color.should == "gold"
   end
-  
-  
+    
 end

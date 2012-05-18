@@ -52,7 +52,7 @@ class Badge < ActiveRecord::Base
   def award_badge(user)
     if !user.badges.include?(self)  # can only be awarded a badge once
       # First remove all lower level badges
-      user.badges.where(:name => self.name).destroy_all
+      user.badges.delete( Badge.where(:name => self.name) )
       # Award new badge
       user.badges << self      
     end    
