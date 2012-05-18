@@ -8,4 +8,5 @@
 //= require fancybox
 //= require i18n
 //= require i18n/translations
+//= require ckeditor/init
 //= require_tree .
