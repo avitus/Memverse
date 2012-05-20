@@ -13,11 +13,9 @@ describe BlogPost do
 
   it "should not give the same URL identifier" do
     post1 = FactoryGirl.create(:blog_post, :title => "Scripture Memorization", :blog_id => @blog.id, :posted_by => @user)
-    post1.url_identifier.should == "scripture-memorization"
-    pp post1.id
-
     post2 = FactoryGirl.create(:blog_post, :title => "Scripture Memorization", :blog_id => @blog.id, :posted_by => @user)
+    
+    post1.url_identifier.should == "scripture-memorization"
     post2.url_identifier.should == "scripture-memorization--1"
-    pp post2.id
   end
 end
