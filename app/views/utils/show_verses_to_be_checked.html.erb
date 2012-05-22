@@ -27,6 +27,13 @@
 	
 	<h1>Verses Requiring Verification</h1>
 	
+		
+	<% if @checked_user %>
+		<%= link_to("Show verses not checked by users", :controller => 'utils', :action => 'show_verses_to_be_checked', :checked_by_users => false) %> 
+	<% else %>
+		<%= link_to("Show verses checked by users", :controller => 'utils', :action => 'show_verses_to_be_checked', :checked_by_users => true) %>
+	<% end %>
+	
 	<div class="verse-list">
 	
 		<table cellpadding="6" cellspacing="0">
@@ -54,12 +61,6 @@
 		</table>
 	
 	</div>
-	
-	<% if @checked_user %>
-		<%= link_to("Show verses not checked by User", :controller => 'utils', :action => 'show_verses_to_be_checked', :checked_by_users => false) %> 
-	<% else %>
-		<%= link_to("Show verses checked by User", :controller => 'utils', :action => 'show_verses_to_be_checked', :checked_by_users => true) %>
-	<% end %>
 </div>
 
 <!-- http://www.appelsiini.net/projects/jeditable -->
