@@ -42,4 +42,22 @@
 			</tr>				
 		</table>
 	</div>
+	
+	<div id="verification-stats">
+		<table class="user-stats-table" cellpadding="6" cellspacing="0" border="1">	
+			<th colspan="2">Pending Verification</th>
+			<tr>
+				<td>Checked by users</td>
+				<td><%= @checked_by_users %></td>
+			</tr>
+			<tr>
+				<td>Not checked by users</td>
+				<td><%= @not_checked_by_users %></td>
+			</tr>
+			<tr>
+				<td>Total</td>
+				<td><%= @checked_by_users + @not_checked_by_users %></td>
+			</tr>				
+		</table>
+	</div>
 </div>

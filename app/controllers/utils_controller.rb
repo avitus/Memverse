@@ -26,6 +26,7 @@ class UtilsController < ApplicationController
     @new_verses_this_week   = Verse.count(    :all,  :conditions => ["created_at > ?", one_week_ago])
     @new_mvs_this_week      = Memverse.count( :all,  :conditions => ["created_at > ?", one_week_ago])
     @active_users_this_week = User.active_this_week.count
+    
     # Daily Activity   
     today = Date.today
     
@@ -33,6 +34,11 @@ class UtilsController < ApplicationController
     @new_verses_today   = Verse.count(    :all,  :conditions => ["created_at > ?", today]) 
     @new_mvs_today      = Memverse.count( :all,  :conditions => ["created_at > ?", today])     
     @active_users_today = User.active_today.count
+    
+    # Pending Verification
+    @checked_by_users = Verse.where(:verified => false).where("memverses_count > ?", 1).where("checked_by IS NOT NULL").count
+    @not_checked_by_users = Verse.where(:verified => false).where("memverses_count > ?", 1).where("checked_by IS NULL").count
+    
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -474,10 +480,10 @@ class UtilsController < ApplicationController
     
     @error_reported	= Verse.where(:error_flag => true ) 
      
-    if params[:checked_by_users] == "true"
-      @checked_user = true
-    else
+    if params[:checked_by_users] == "false"
       @checked_user = false
+    else
+      @checked_user = true
     end
 
     if @checked_user 
