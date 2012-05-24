@@ -105,7 +105,9 @@
 		current.mnemonic = "<%= escape_javascript(@mv.mnemonic_if_req.html_safe) %>";
 
 		function getversefeedback(guess){
-			live = versefeedback(current.text, guess, current.feedback);
+			allowFirstLetter = (current.mnemonic == (null || "-"))?true:false;
+			
+			live = versefeedback(current.text, guess, current.feedback, allowFirstLetter);
 			
 			$feedback.html(live.feedtext);
 			

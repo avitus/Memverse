@@ -206,6 +206,10 @@ var totalChecked = 0; // Number of visible checkboxes checked.
     }
 }
 
+mnemonic = function(text) {
+	return text.replace(/([\wáâãàçéêíóôõúüñ])([\wáâãàçéêíóôõúüñ]|[\-'’][\wáâãàçéêíóôõúüñ])*/g,"$1");
+};
+
 // Array Remove - By John Resig (MIT Licensed)
 Array.remove = function(array, from, to) {
   var rest = array.slice((to || from) + 1 || array.length);
@@ -213,7 +217,9 @@ Array.remove = function(array, from, to) {
   return array.push.apply(array, rest);
 };
 
-function versefeedback(correctvs, verseguess, echo) {
+versefeedback = function(correctvs, verseguess, echo, firstletter) {
+	firstletter = (typeof firstletter == "undefined")?false:firstletter;
+	
 	guesstext   = $.trim(verseguess.replace(/\s+/g, " ")); // Remove double spaces from guess and trim
 	correcttext = $.trim(unescape(correctvs.replace(/\s+/g, " "))); // Remove any double spaces - shouldn't be any
 	
@@ -224,24 +230,25 @@ function versefeedback(correctvs, verseguess, echo) {
 	right_words = correcttext.split(/\s-\s|\s-|\s/);
 
 	if (echo) {
-					
+	
 		for (x in guess_words) {
 			if (x < right_words.length) { // check that guess isn't longer than correct answer
 				if ( guess_words[x].toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "") == right_words[x].toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "") ) {
 					feedback = feedback + right_words[x] + " ";
-				}
-				else if ( guesstext == "" ) { // This happens when nothing is in the textarea
+				} else if ( firstletter && guess_words[x].toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "") == right_words[x].toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "").charAt(0) ) { // firstletter mode
+					feedback = feedback + right_words[x] + " ";
+				} else if ( guesstext == "" ) { // This happens when nothing is in the textarea
 					feedback = "Waiting for you to begin typing..."
-				}
-				else if ( guess_words[x] == "") {
+				} else if ( guess_words[x] == "") {
 					// Most likely scenario: the last character was a dash ("-") that was used to split, and now this is empty. We don't want to add "... " to feedback.
 					// Only happens to dashes at the end of the text. Other ones are already handled.
 					feedback = feedback;
-				}
-				else {
+				} else {
 					feedback = feedback + "... ";
 				}
-					y = parseInt(x) + 1;
+				
+				y = parseInt(x) + 1;
+				
 				if (right_words[y] == "-" || right_words[y] == "—" ) {
 					feedback = feedback + right_words[y] + " ";
 					// Remove the dash from the array
@@ -249,13 +256,16 @@ function versefeedback(correctvs, verseguess, echo) {
 				}
 			}
 		}
-	}
-	else {
+	} else {
 		feedback = "< Feedback disabled >";
 	}
 	
 	// Check for exact match
-	match = ( $.trim( verseguess.toLowerCase().replace(/[^a-záâãàçéêíóôõúüñ ]|\s-|\s—/g, '').replace(/\s+/g, " ") ) == $.trim( unescape(correctvs).toLowerCase().replace(/[^a-záâãàçéêíóôõúüñ ]|\s-|\s—/g, '').replace(/\s+/g, " ") ) );
+	match = ( $.trim( verseguess.toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ ]|\s-|\s—/g, '').replace(/\s+/g, " ") ) == $.trim( unescape(correctvs).toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ ]|\s-|\s—/g, '').replace(/\s+/g, " ") ) );
+	if(!match && firstletter) { // Check verseguess against first letters of correctvs
+		match = ( $.trim( verseguess.toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ ]|\s-|\s—/g, '').replace(/\s+/g, " ") ) == $.trim( mnemonic( unescape(correctvs).toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ ]|\s-|\s—/g, '').replace(/\s+/g, " ") ) ) );
+	}
+	
 	if (match) {
 		feedback = feedback + '<div id="matchbox"><p>Correct</p></div>';
 		correct = true;
@@ -265,8 +275,8 @@ function versefeedback(correctvs, verseguess, echo) {
 		feedtext:		feedback,
 		correct:		correct
 	};
-	
-}
+
+};
 
 function calculate_levenshtein_distance(s, t) {
   var m = s.length + 1, n = t.length + 1;
