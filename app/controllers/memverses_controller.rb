@@ -1377,7 +1377,7 @@ class MemversesController < ApplicationController
                           :order      => "test_interval ASC")
  
       if !@mv.nil? # We've found a verse
-                              
+        
         # Are there any verses preceding/succeeding this one? If so, we should test those first    
         if @mv.prev_verse or @mv.next_verse
           # Put verses into session queue and begin with start verse
