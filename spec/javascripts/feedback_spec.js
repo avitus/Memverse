@@ -68,7 +68,7 @@ describe("Feedback", function() {
 	it("should accept first letter if mnemonic disabled", function() {
 		expect(versefeedback(
 			'For God so loved the world that he gave his one and only Son',		// correct text
-			'F G s l t w t h g h o a o s',										// user guess
+			'F G s l t w t h g h o a o s ',										// user guess
 			true,																// feedback
 			true																// allow first-letter
 		)).toEqual({
@@ -80,12 +80,24 @@ describe("Feedback", function() {
 	it("should accept accented first letters if mnemonic disabled", function() {
 		expect(versefeedback(
 			'En él estaba la vida, y la vida era la luz de los hombres.',		// correct text
-			'E é e l v y l v e l l d l h',										// user guess
+			'E é e l v y l v e l l d l h.',										// user guess
 			true,																// feedback
 			true																// allow first-letter
 		)).toEqual({
 			feedtext : 'En él estaba la vida, y la vida era la luz de los hombres. <div id="matchbox"><p>Correct</p></div>',
 			correct  : true
+		})
+	});
+	
+	it("should not recognize last first-letter without a subsequent space or punctuation mark", function() {
+		expect(versefeedback(
+			'This is a test.',		// correct text
+			'T i a t',				// user guess
+			true,					// feedback
+			true					// allow first-letter
+		)).toEqual({
+			feedtext : 'This is a ',
+			correct  : false
 		})
 	});
 	
