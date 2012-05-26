@@ -230,9 +230,7 @@ versefeedback = function(correctvs, verseguess, echo, firstletter) {
 	right_words = correcttext.split(/\s-\s|\s-|\s/);
 
 	for (x in guess_words) {
-		// alert(x);
-		// alert("Guess words length:" + guess_words.length);
-		
+
 		if (x < right_words.length) { // check that guess isn't longer than correct answer
 			if ( guess_words[x].toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "") == right_words[x].toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "") ) {
 				// exact match of words/numbers
