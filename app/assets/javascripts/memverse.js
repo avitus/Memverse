@@ -230,11 +230,20 @@ versefeedback = function(correctvs, verseguess, echo, firstletter) {
 	right_words = correcttext.split(/\s-\s|\s-|\s/);
 
 	for (x in guess_words) {
+		// alert(x);
+		// alert("Guess words length:" + guess_words.length);
+		
 		if (x < right_words.length) { // check that guess isn't longer than correct answer
 			if ( guess_words[x].toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "") == right_words[x].toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "") ) {
+				// exact match of words/numbers
 				feedback = feedback + right_words[x] + " ";
-			} else if ( firstletter && guess_words[x].toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "") == right_words[x].toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "").charAt(0) ) { // firstletter mode
-				feedback = feedback + right_words[x] + " ";
+			} else if ( firstletter && guess_words[x].toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "") == right_words[x].toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "").charAt(0) ) {
+				// above validates if firstletter mode is on and letter matches; below checks that there is also whitespace or other punctuation after the last first-letter
+				if ( ( (parseInt(x) + 1 == guess_words.length) && (verseguess.charAt(verseguess.length - 1).match(/\s|[.,:;]/g)) ) || (parseInt(x) + 1 != guess_words.length) ) {
+					feedback = feedback + right_words[x] + " ";
+				} else {
+					correct = false;
+				}
 			} else if ( guesstext == "" ) { // This happens when nothing is in the textarea
 				feedback = "Waiting for you to begin typing..."
 			} else if ( guess_words[x] == "") {
