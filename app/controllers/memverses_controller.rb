@@ -983,10 +983,7 @@ class MemversesController < ApplicationController
     if current_user.all_refs
       refs = Memverse.active.where("user_id = ?", current_user.id).order("ref_interval ASC").limit(30).sort_by{ rand }.slice(0...10)
     else
-      refs = Memverse.active.find( :all, 
-                            :conditions => ["user_id = ? and prev_verse is ?", current_user.id, nil], 
-                            :order      => "ref_interval ASC",
-                            :limit      => 30 ).sort_by{ rand }.slice(0...10)      
+      refs = Memverse.active.where("user_id = ? and prev_verse is ?", current_user.id, nil).order("ref_interval ASC").limit(30).sort_by{ rand }.slice(0...10)
     end
 
     if refs.length >= 10

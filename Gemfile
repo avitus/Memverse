@@ -73,6 +73,7 @@ gem 'redis', '>=2.2.2'                                                          
 gem 'action_mailer_cache_delivery', git: 'git://github.com/ragaskar/action_mailer_cache_delivery.git' # Used to test email delivery with Cucumber
 gem 'friendly_id'                                                                               # Makes nice IDs for models
 gem 'foreman'                                                                                   # Helps manage multiple processes when running app in development.
+gem 'supermodel', git: 'git://github.com/KonaTeam/supermodel.git'                               # Uses ActiveModel for in-memory storage with redis
 
 group :console do
   gem 'wirble'
