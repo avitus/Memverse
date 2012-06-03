@@ -1,4 +1,11 @@
 GIT
+  remote: git://github.com/KonaTeam/supermodel.git
+  revision: fc77e8ce188fdfa03b1c2f97d134d81012966862
+  specs:
+    supermodel (0.1.4)
+      activemodel (>= 3.0.0)
+
+GIT
   remote: git://github.com/avitus/spawn.git
   revision: beaf7937cae96985de42081272a95386b8e474a3
   branch: edge
@@ -400,6 +407,7 @@ DEPENDENCIES
   sass-rails (~> 3.2.3)
   spawn (>= 1.2)!
   sqlite3
+  supermodel!
   test-unit (= 1.2.3)
   therubyracer (>= 0.8.2)
   thinking-sphinx (>= 2.0.10)

@@ -67,7 +67,8 @@
 </div>
 	
 <script type="text/javascript" charset="utf-8">
-    var jug = new Juggernaut();
+	var jug = new Juggernaut();
+	jug.meta = {user_id: <%= current_user.id %>};
 	
 	jug.subscribe("/chats/channel2", function(data){
 		var u  		= $("<li/>");
@@ -213,8 +214,18 @@
 			$("#live-quiz-scores").append(li);
 			$("#live-quiz-scores").scrollTop(0);
 		});
-	}); 		
+	});
+
+	user_id = "<%= current_user.id %>";
 	
+	jug.subscribe("/observer/" + user_id, function(msg) {
+		alert("Something happened.");
+		// msg.klass
+		alert(msg.type);
+		// msg.id
+		// msg.record
+	});
+
 	function submitmsg() {    
 		if ($("#msg_body").val() == "") {
 			alert("Please put text in your message.");
@@ -223,7 +234,7 @@
 		else {
 			return true;
 		}
-	}	 
+	}
 
 </script>
 

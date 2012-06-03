@@ -4,8 +4,18 @@
 	<h1>New Quiz</h1>
 	
 	<%= form_for(@quiz, :html => { :multipart => true }) do |f| %>
-	
-	  <%= f.error_messages %>
+
+	  <% if @quiz.errors.any? %>
+	  <div id="errorExplanation">
+		<h2><%= pluralize(@quiz.errors.count, "error") %> prohibited this quiz from being saved:</h2>
+		<ul>
+		<% @quiz.errors.full_messages.each do |msg| %>
+		  <li><%= msg %></li>
+		<% end %>
+		</ul>
+	  </div>
+	  <% end %>
+
 	  <p>
 	    <%= f.label 			:name, 'Quiz Name' %><br />
 		<%= f.text_field		:name %>
