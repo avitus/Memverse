@@ -68,7 +68,7 @@
 	
 <script type="text/javascript" charset="utf-8">
 	var jug = new Juggernaut();
-	jug.meta = {user_id: <%= current_user.id %>};
+	jug.meta = {user_id: <%= current_user.id %>, user_name: "<%= current_user.name %>"};
 	
 	jug.subscribe("/chats/channel2", function(data){
 		var u  		= $("<li/>");
@@ -219,11 +219,20 @@
 	user_id = "<%= current_user.id %>";
 	
 	jug.subscribe("/observer/" + user_id, function(msg) {
-		alert("Something happened.");
-		// msg.klass
-		alert(msg.type);
-		// msg.id
-		// msg.record
+		// Somebody joined or left the room
+		// We need to post a little status message in the chat log column
+		// console.log(msg.klass);
+		// ^^ Currently the msg.klass is always Roster. But if we started using the /observer/user_id channel for other things, it might not be.
+		if(msg.klass == "Roster") {
+			switch(msg.type){
+				case 'create':
+					console.log(msg.record.roster.user_name + " entered the room");
+					break;
+				case 'destroy':
+					console.log(msg.record.roster.user_name + " left the room");
+					break;
+			}
+		}
 	});
 
 	function submitmsg() {    
