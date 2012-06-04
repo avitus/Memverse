@@ -7,6 +7,10 @@ class Roster < SuperModel::Base
   belongs_to :user
   validates_presence_of :user_id
 
+  after_create 'self.publish_roster(:create)'
+  # after_update 'self.publish_roster(:update)' # I don't think we need to publish the roster when a roster record is updated
+  after_destroy 'self.publish_roster(:destroy)'
+
   indexes :user_id
 
   class << self
@@ -39,22 +43,22 @@ class Roster < SuperModel::Base
         user = find_by_user_id(user_id) || self.new(:user_id => user_id)
         user.increment!
       end
-      
+
       def event_unsubscribe(user_id)
         user = find_by_user_id(user_id)
         user && user.decrement!
       end
   end
-  
+
   def count
     read_attribute(:count) || 0
   end
-  
+
   def increment!
     self.count += 1
     save!
   end
-  
+
   def decrement!
     self.count -= 1
     self.count > 0 ? save! : destroy
@@ -67,6 +71,15 @@ class Roster < SuperModel::Base
       user_ids << user.gsub("roster:user_id:","").to_i
     end
     return user_ids
+  end
+  
+  def publish_roster(type)
+    Juggernaut.publish(
+      Array(self.observer_clients).map {|c| "/observer/#{c}" }, 
+      {
+        :type  => type, :id => self.id, 
+        :klass => self.class.name, :record => self
+      })
   end
 
 end
