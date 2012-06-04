@@ -2,7 +2,7 @@ class Roster < SuperModel::Base
   include SuperModel::Redis::Model
   include SuperModel::Timestamp::Model
 
-  attributes :count
+  attributes :count, :user_name
 
   belongs_to :user
   validates_presence_of :user_id
@@ -27,11 +27,12 @@ class Roster < SuperModel::Base
       Juggernaut.subscribe do |event, data|
         data.default = {}
         user_id = data["meta"]["user_id"]
+		user_name = data["meta"]["user_name"]
         next unless user_id
 
         case event
         when :subscribe
-          event_subscribe(user_id)
+          event_subscribe(user_id, user_name)
         when :unsubscribe
           event_unsubscribe(user_id)
         end
@@ -39,8 +40,8 @@ class Roster < SuperModel::Base
     end
 
     protected
-      def event_subscribe(user_id)
-        user = find_by_user_id(user_id) || self.new(:user_id => user_id)
+      def event_subscribe(user_id, user_name)
+        user = find_by_user_id(user_id) || self.new(:user_id => user_id, :user_name => user_name)
         user.increment!
       end
 
@@ -77,7 +78,7 @@ class Roster < SuperModel::Base
     Juggernaut.publish(
       Array(self.observer_clients).map {|c| "/observer/#{c}" }, 
       {
-        :type  => type, :id => self.id, 
+        :type  => type, :id => self.id,
         :klass => self.class.name, :record => self
       })
   end
