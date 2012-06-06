@@ -46,13 +46,14 @@ class LiveQuizController < ApplicationController
       case q.question_type
       when "recitation"
         time_alloc = (q.passage_translations.first.last.split(" ").length * 2.5 + 15.0).to_i # 24 WPM typing speed with 15 seconds to think
-        Juggernaut.publish( select_channel("/quiz_stream"), {:q_num => num, :q_type => "recitation", :q_ref => ref, :q_passages => passages, :time_alloc => time_alloc} ) 
+        Juggernaut.publish( select_channel("/quiz_stream"), {:q_num => num, :q_type => "recitation", :q_ref => ref, :q_passages => passages, :time_alloc => time_alloc} )
         sleep(time_alloc+1)				
       when "reference"
-        Juggernaut.publish( select_channel("/quiz_stream"), {:q_num => num, :q_type => "reference", :q_ref => ref, :q_passages => passages, :time_alloc => 25} ) 				
+        Juggernaut.publish( select_channel("/quiz_stream"), {:q_num => num, :q_type => "reference", :q_ref => ref, :q_passages => passages, :time_alloc => 25} )
         sleep(26)
       when "mcq"
-        sleep(20)				
+		# Juggernaut.publish( select_channel("/quiz_stream"), {:q_num => num, :q_type => "mcq", :mc_option_a => q.mc_option_a, :mc_option_b => q.mc_option_b, :mc_option_c => q.mc_option_c, :mc_option_d => q.mc_option_d, :mc_answer => q.mc_answer, :time_alloc => 20} )
+		sleep(21)
       else
         sleep(20)
       end
