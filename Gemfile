@@ -24,9 +24,8 @@ if HOST_OS =~ /linux/i
   gem 'therubyracer', '>= 0.8.2'
 end
 
-gem 'rails', '3.2.2'
+gem 'rails', '3.2.4'
 gem 'jquery-rails', '=1.0.18'
-
 
 gem "rspec-rails", ">= 2.6.1", :group => [:development, :test]
 gem "factory_girl_rails", ">= 1.2.0", :group => :test
