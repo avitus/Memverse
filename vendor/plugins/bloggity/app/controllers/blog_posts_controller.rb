@@ -154,7 +154,7 @@ class BlogPostsController < ApplicationController
     search_condition = ["blog_id = ? AND is_complete = ?", @blog_id, false].compact
     @pending_posts = BlogPost.where(search_condition).page(@blog_page).order("blog_posts.created_at DESC")
 
-		@recent_posts = recent_posts(blog_page)
+		@recent_posts = recent_posts(@blog_page)
 	end
 		
   # ----------------------------------------------------------------------------------------------------------
