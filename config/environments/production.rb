@@ -74,6 +74,9 @@ MemverseApp::Application.configure do
   # Enable threaded mode
   # config.threadsafe!
   
+  # Load dependencies when running a rake task
+  config.dependency_loading = true if $rails_rake_task
+  
   # https://github.com/ezmobius/redis-rb/wiki/redis-rb-on-Phusion-Passenger
   # if defined?(PhusionPassenger)
     # PhusionPassenger.on_event(:starting_worker_process) do |forked|
