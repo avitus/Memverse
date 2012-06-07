@@ -135,7 +135,7 @@
 		ondeck = stageverses(current.id);
 
 		function getversefeedback(guess){
-			allowFirstLetter = (current.mnemonic === null || current.mnemonic == "-")?true:false;
+			allowFirstLetter = (current.mnemonic === null || current.mnemonic == "-");
 
 			live = versefeedback(current.text, guess, current.feedback, allowFirstLetter);
 
