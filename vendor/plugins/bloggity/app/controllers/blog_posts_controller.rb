@@ -143,15 +143,20 @@ class BlogPostsController < ApplicationController
     flash[:message] = "Blog #{@blog_post.title} was destroyed."
     redirect_to(blog_named_link(nil, :index, { :blog => @blog }))
   end
-	
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Posts that are unpublished
+  # ---------------------------------------------------------------------------------------------------------- 	
 	def pending
     @tab = "blog" 
-    blog_page = params[:page] || 1
-		@pending_posts = BlogPost.paginate(:all, :conditions => ["blog_id = ? AND is_complete = ?", @blog_id, false], :order => "blog_posts.created_at DESC", :page => blog_page, :per_page => 15)
-		@recent_posts = recent_posts(blog_page)
+    @blog_page = params[:page] || 1
+
+    search_condition = ["blog_id = ? AND is_complete = ?", @blog_id, false].compact
+    @pending_posts = BlogPost.where(search_condition).page(@blog_page).order("blog_posts.created_at DESC")
+
+		@recent_posts = recent_posts(@blog_page)
 	end
-	
-	
+		
   # ----------------------------------------------------------------------------------------------------------
   # Blog Search Results
   # ----------------------------------------------------------------------------------------------------------  	
