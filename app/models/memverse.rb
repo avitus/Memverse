@@ -669,13 +669,16 @@ class Memverse < ActiveRecord::Base
   def add_links
     
     # Adding inbound links
-    if self.prev_verse
+    if self.prev_verse ||= self.get_prev_verse # Attempt to fix race condition
       prior_vs             = Memverse.find(self.prev_verse)
       prior_vs.next_verse  = self.id
       prior_vs.save!
+      
+      self.first_verse ||= self.get_first_verse # Attempt to fix race condition
+      
     end
-    
-    if self.next_verse
+      
+    if self.next_verse ||= self.get_next_verse # Attempt to fix race condition
       subs_vs             = Memverse.find(self.next_verse)
       subs_vs.prev_verse  = self.id
       subs_vs.first_verse = self.first_verse || self.id
@@ -684,6 +687,7 @@ class Memverse < ActiveRecord::Base
       # Updating starting point for downstream verses
       subs_vs.update_downstream_start_verses
     end
+    
   end
 
   # ----------------------------------------------------------------------------------------------------------
