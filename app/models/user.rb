@@ -854,11 +854,11 @@ class User < ActiveRecord::Base
   #     - Adding a new verse (not yet added)
   # ----------------------------------------------------------------------------------------------------------     
   def init_activity_date
-    mv = Memverse.find(:first, :select => "last_tested", :conditions => ["user_id = ?", self.id], :order => "last_tested DESC")    
+    mv = self.memverses.order("last_tested DESC").first
     if mv
       return mv.last_tested
     else
-      return nil
+      return created_at.to_date # if user hasn't added verses then just use the day they signed up
     end
   end
 
