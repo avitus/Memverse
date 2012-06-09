@@ -24,9 +24,8 @@ if HOST_OS =~ /linux/i
   gem 'therubyracer', '>= 0.8.2'
 end
 
-gem 'rails', '3.2.2'
+gem 'rails', '3.2.4'
 gem 'jquery-rails', '=1.0.18'
-
 
 gem "rspec-rails", ">= 2.6.1", :group => [:development, :test]
 gem "factory_girl_rails", ">= 1.2.0", :group => :test
@@ -35,9 +34,11 @@ gem "capybara", ">= 1.1.2", :group => :test
 gem "database_cleaner", ">= 0.6.7", :group => :test
 gem "launchy", ">= 2.0.5", :group => :test
 gem 'jasmine', :group => [:development, :test]
-gem "devise", ">= 1.4.5"
+
+gem "devise"                                                                                    # Authentication
+gem "devise-encryptable"                                                                        # TODO: Is this required?
 gem "cancan"                                                                                    # Role-based authorization
-# gem "frontend-helpers"
+
 gem 'rails_admin', :git => 'git://github.com/sferik/rails_admin.git'                            # Admin console
 gem 'forem', :git => "git://github.com/radar/forem.git"                                         # Forum engine
 
@@ -71,6 +72,7 @@ gem 'redis', '>=2.2.2'                                                          
 gem 'action_mailer_cache_delivery', git: 'git://github.com/ragaskar/action_mailer_cache_delivery.git' # Used to test email delivery with Cucumber
 gem 'friendly_id'                                                                               # Makes nice IDs for models
 gem 'foreman'                                                                                   # Helps manage multiple processes when running app in development.
+gem 'supermodel', git: 'git://github.com/KonaTeam/supermodel.git'                               # Uses ActiveModel for in-memory storage with redis
 
 group :console do
   gem 'wirble'

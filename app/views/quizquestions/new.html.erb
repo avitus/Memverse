@@ -3,7 +3,16 @@
 	<h1>New Quiz Question</h1>
 	
 	<%= form_for(@question, :as => :quiz_question, :url => { :action => "create" }, :html => { :multipart => true }) do |f| %>
-		<%= f.error_messages %>
+		<% if @question.errors.any? %>
+		  <div id="errorExplanation">
+			<h2><%= pluralize(@question.errors.count, "error") %> prohibited this quiz from being saved:</h2>
+			<ul>
+			<% @question.errors.full_messages.each do |msg| %>
+			  <li><%= msg %></li>
+			<% end %>
+			</ul>
+		  </div>
+		<% end %>
 		<p>
 			<%= f.hidden_field  :quiz_id, :value => @quiz.id %>
 	  	</p>
@@ -27,7 +36,7 @@
 	  	<div id="mcq">
 	  	<p>
 			<%= f.label 		:mc_question, "Question text" %><br />
-			<%= f.text_area 	:mc_question %>
+			<%= f.text_area 	:mc_question, :size => "", :style => "height:40px;width:215px" %>
 		</p>
 
 	  	<p>
@@ -67,8 +76,7 @@ function questionType(qtype) {
 	if (qtype == 'mcq') {
 		$passage.hide();
 		$mcq.show();
-	}
-	else {
+	} else {
 		$passage.show();
 		$mcq.hide();
 	}

@@ -1,7 +1,10 @@
 MemverseApp::Application.routes.draw do
   
+  mount Ckeditor::Engine => '/ckeditor'
+
   mount Forem::Engine, :at => "/forums"
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
+  mount Ckeditor::Engine => "/ckeditor"
 
   devise_for :users
   
