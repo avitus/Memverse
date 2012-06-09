@@ -60,4 +60,36 @@
 			</tr>				
 		</table>
 	</div>
+	
+	<div id="email-stats">
+		<table class="user-stats-table" cellpadding="6" cellspacing="0" border="1">	
+			<th colspan="2">Email Stats</th>
+			<tr>
+				<td>Emails Sent Today</td>
+				<td><%= User.where('last_reminder = ?', Date.today).count %></td>
+			</tr>
+			<tr>
+				<td>Users - Daily Email</td>
+				<td><%= User.where(:reminder_freq => "Daily").count %></td>
+			</tr>			
+			<tr>
+				<td>Users - Weekly Email</td>
+				<td><%= User.where(:reminder_freq => "Weekly").count %></td>
+			</tr>		
+			<tr>
+				<td>Users - Quarterly Email</td>
+				<td><%= User.where(:reminder_freq => "Quarterly").count %></td>
+			</tr>		
+			<tr>
+				<td>Users - Annual Email</td>
+				<td><%= User.where(:reminder_freq => "Annually").count %></td>
+			</tr>
+			<tr>
+				<td>Users - Never</td>
+				<td><%= User.where(:reminder_freq => "Never").count %></td>
+			</tr>								
+		</table>
+	</div>	
+	
+	
 </div>
