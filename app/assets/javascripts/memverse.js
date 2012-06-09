@@ -206,6 +206,10 @@ var totalChecked = 0; // Number of visible checkboxes checked.
     }
 }
 
+mnemonic = function(text) {
+	return text.replace(/([\wáâãàçéêíóôõúüñ])([\wáâãàçéêíóôõúüñ]|[\-'’][\wáâãàçéêíóôõúüñ])*/g,"$1");
+};
+
 // Array Remove - By John Resig (MIT Licensed)
 Array.remove = function(array, from, to) {
   var rest = array.slice((to || from) + 1 || array.length);
@@ -213,60 +217,72 @@ Array.remove = function(array, from, to) {
   return array.push.apply(array, rest);
 };
 
-function versefeedback(correctvs, verseguess, echo) {
+versefeedback = function(correctvs, verseguess, echo, firstletter) {
+	firstletter = (typeof firstletter == "undefined")?false:firstletter;
+	
 	guesstext   = $.trim(verseguess.replace(/\s+/g, " ")); // Remove double spaces from guess and trim
 	correcttext = $.trim(unescape(correctvs.replace(/\s+/g, " "))); // Remove any double spaces - shouldn't be any
 	
-	var correct = false;
+	var correct;
 	var feedback = ""; // find a better way to construct the string
 
 	guess_words = guesstext.split(/\s-\s|\s-|\s/);
 	right_words = correcttext.split(/\s-\s|\s-|\s/);
 
-	if (echo) {
-					
-		for (x in guess_words) {
-			if (x < right_words.length) { // check that guess isn't longer than correct answer
-				if ( guess_words[x].toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "") == right_words[x].toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "") ) {
+	for (x in guess_words) {
+
+		if (x < right_words.length) { // check that guess isn't longer than correct answer
+			if ( guess_words[x].toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "") == right_words[x].toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "") ) {
+				// exact match of words/numbers
+				feedback = feedback + right_words[x] + " ";
+			} else if ( firstletter && guess_words[x].toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "") == right_words[x].toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "").charAt(0) ) {
+				// above validates if firstletter mode is on and letter matches; below checks that there is also whitespace or other punctuation after the last first-letter
+				if ( ( (parseInt(x) + 1 == guess_words.length) && (verseguess.charAt(verseguess.length - 1).match(/\s|[.,:;]/g)) ) || (parseInt(x) + 1 != guess_words.length) ) {
 					feedback = feedback + right_words[x] + " ";
+				} else {
+					correct = false;
 				}
-				else if ( guesstext == "" ) { // This happens when nothing is in the textarea
-					feedback = "Waiting for you to begin typing..."
-				}
-				else if ( guess_words[x] == "") {
-					// Most likely scenario: the last character was a dash ("-") that was used to split, and now this is empty. We don't want to add "... " to feedback.
-					// Only happens to dashes at the end of the text. Other ones are already handled.
-					feedback = feedback;
-				}
-				else {
-					feedback = feedback + "... ";
-				}
-					y = parseInt(x) + 1;
-				if (right_words[y] == "-" || right_words[y] == "—" ) {
-					feedback = feedback + right_words[y] + " ";
-					// Remove the dash from the array
-					Array.remove(right_words, y);
-				}
+			} else if ( guesstext == "" ) { // This happens when nothing is in the textarea
+				feedback = "Waiting for you to begin typing..."
+			} else if ( guess_words[x] == "") {
+				// Most likely scenario: the last character was a dash ("-") that was used to split, and now this is empty. We don't want to add "... " to feedback.
+				// Only happens to dashes at the end of the text. Other ones are already handled.
+				feedback = feedback;
+			} else {
+				feedback = feedback + "... ";
+				correct = false;
 			}
+			
+			y = parseInt(x) + 1;
+			
+			if (right_words[y] == "-" || right_words[y] == "—" ) {
+				feedback = feedback + right_words[y] + " ";
+				// Remove the dash from the array
+				Array.remove(right_words, y);
+			}
+			
 		}
 	}
-	else {
-		feedback = "< Feedback disabled >";
-	}
 	
-	// Check for exact match
-	match = ( $.trim( verseguess.toLowerCase().replace(/[^a-záâãàçéêíóôõúüñ ]|\s-|\s—/g, '').replace(/\s+/g, " ") ) == $.trim( unescape(correctvs).toLowerCase().replace(/[^a-záâãàçéêíóôõúüñ ]|\s-|\s—/g, '').replace(/\s+/g, " ") ) );
-	if (match) {
-		feedback = feedback + '<div id="matchbox"><p>Correct</p></div>';
+	if ( (guess_words.length == right_words.length) && (correct != false) ) { // determine if correct: should be long enough and not have anything incorrect in it
 		correct = true;
+		if (!echo) {
+			feedback = '< Feedback disabled >';
+		}
+		feedback = feedback + '<div id="matchbox"><p>Correct</p></div>';
+	} else { // at this point it must be incorrect; we still need to set correct to false in case user guess has been correct thus far bust still incomplete
+		correct = false;
+		if (!echo) {	// incorrect and feedback disabled
+			feedback = "< Feedback disabled >";
+		}
 	}
 	
 	return {
 		feedtext:		feedback,
 		correct:		correct
 	};
-	
-}
+
+};
 
 function calculate_levenshtein_distance(s, t) {
   var m = s.length + 1, n = t.length + 1;

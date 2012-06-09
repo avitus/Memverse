@@ -981,19 +981,11 @@ class MemversesController < ApplicationController
     
     # Find the 30 hardest (first) verses and pick 10 at random for the test
     if current_user.all_refs
-      refs = Memverse.active.find( :all, 
-                            :conditions => ["user_id = ?", current_user.id], 
-                            :order      => "ref_interval ASC",
-                            :limit      => 30 ).sort_by{ rand }.slice(0...10)
+      refs = Memverse.active.where("user_id = ?", current_user.id).order("ref_interval ASC").limit(30).sort_by{ rand }.slice(0...10)
     else
-      refs = Memverse.active.find( :all, 
-                            :conditions => ["user_id = ? and prev_verse is ?", current_user.id, nil], 
-                            :order      => "ref_interval ASC",
-                            :limit      => 30 ).sort_by{ rand }.slice(0...10)      
+      refs = Memverse.active.where("user_id = ? and prev_verse is ?", current_user.id, nil).order("ref_interval ASC").limit(30).sort_by{ rand }.slice(0...10)
     end
-  
-                          
-    
+
     if refs.length >= 10
     
       # Put verses into session variable
@@ -1231,6 +1223,8 @@ class MemversesController < ApplicationController
     solution      = session[:ref_soln][question_num] if session[:ref_soln]
     
     # We need to check for alternative solutions to account for identical verses
+    # IDEA: Take the reference the user entered, look up that verse, and see if it matches the text shown to the user (less any capitalization or punctuation differences)
+	
     alt_soln      = identical_verses( solution )
         
     if solution && session[:reftest_answered]
@@ -1377,7 +1371,7 @@ class MemversesController < ApplicationController
                           :order      => "test_interval ASC")
  
       if !@mv.nil? # We've found a verse
-                              
+        
         # Are there any verses preceding/succeeding this one? If so, we should test those first    
         if @mv.prev_verse or @mv.next_verse
           # Put verses into session queue and begin with start verse

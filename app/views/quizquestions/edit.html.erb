@@ -3,7 +3,16 @@
 
 <%= form_for(@question, :as => :quiz_question, :url => { :action => "update" }, :html => { :multipart => true }) do |f| %>
 
-	<%= f.error_messages %>
+	<% if @question.errors.any? %>
+	  <div id="errorExplanation">
+		<h2><%= pluralize(@question.errors.count, "error") %> prohibited this quiz from being saved:</h2>
+		<ul>
+		<% @question.errors.full_messages.each do |msg| %>
+		  <li><%= msg %></li>
+		<% end %>
+		</ul>
+	  </div>
+	<% end %>
 
   	<p>
 		<%= f.label 		:question_no, "Question number" %><br />
@@ -25,7 +34,7 @@
   	<div id="mcq">
   	<p>
 		<%= f.label 		:mc_question, "Question text" %><br />
-		<%= f.text_area 	:mc_question %>
+		<%= f.text_area 	:mc_question, :size => "", :style => "height:40px;width:215px" %>
 	</p>
 
   	<p>

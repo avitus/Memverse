@@ -135,14 +135,15 @@
 		ondeck = stageverses(current.id);
 
 		function getversefeedback(guess){
-			live = versefeedback(current.text, guess, current.feedback);
-			
+			allowFirstLetter = (current.mnemonic === null || current.mnemonic == "-");
+
+			live = versefeedback(current.text, guess, current.feedback, allowFirstLetter);
+
 			$feedback.html(live.feedtext);
-			
+
 			if (live.correct) {
 				$togglehint.fadeOut(500);
-			}
-			else if ($togglehint.is(":hidden")) { // Verse is incorrect; if the toggle option was unavailable, make it available now
+			} else if ($togglehint.is(":hidden")) { // Verse is incorrect; if the toggle option was unavailable, make it available now
 				$togglehint.text(I18n.t("memverses.test_verse_quick.show_verse")).fadeIn(500);
 			}
 			if ($completehint.is(":visible") && live.correct) {
@@ -358,4 +359,3 @@
 	<img height="1" width="1" border="0" src="http://www.googleadservices.com/pagead/conversion/1055933402/?value=0.5&amp;label=9GgaCKqlhwEQ2ofB9wM&amp;guid=ON&amp;script=0"/>
 </noscript> 
 <!-- END: Google Code for Memverse - Login Conversion Page -->
-

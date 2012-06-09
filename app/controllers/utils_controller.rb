@@ -4,7 +4,7 @@ class UtilsController < ApplicationController
 
   protect_from_forgery  :except => [:set_verse_text, :verify_verse, :send_reminder] 
   # in_place_edit_for     :verse, :text  # Doesn't seem to work with Rails 3.1
-  before_filter :authenticate_user!, :except => [:dashboard, :user_progression ]
+  before_filter :authenticate_user!, :except => [:dashboard, :user_progression, :send_reminder]
 
   
   # Only needed for scraping last verse data from BibleGateway
@@ -26,6 +26,7 @@ class UtilsController < ApplicationController
     @new_verses_this_week   = Verse.count(    :all,  :conditions => ["created_at > ?", one_week_ago])
     @new_mvs_this_week      = Memverse.count( :all,  :conditions => ["created_at > ?", one_week_ago])
     @active_users_this_week = User.active_this_week.count
+    
     # Daily Activity   
     today = Date.today
     
@@ -33,6 +34,11 @@ class UtilsController < ApplicationController
     @new_verses_today   = Verse.count(    :all,  :conditions => ["created_at > ?", today]) 
     @new_mvs_today      = Memverse.count( :all,  :conditions => ["created_at > ?", today])     
     @active_users_today = User.active_today.count
+    
+    # Pending Verification
+    @checked_by_users = Verse.where(:verified => false).where("memverses_count > ?", 1).where("checked_by IS NOT NULL").count
+    @not_checked_by_users = Verse.where(:verified => false).where("memverses_count > ?", 1).where("checked_by IS NULL").count
+    
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -310,7 +316,7 @@ class UtilsController < ApplicationController
     
 
   # ----------------------------------------------------------------------------------------------------------
-  # Mass Email
+  # Mass Email - NOTE: only used for test purposes
   # ----------------------------------------------------------------------------------------------------------   
   def mass_email
     # Send out an email
@@ -338,6 +344,7 @@ class UtilsController < ApplicationController
   
   # ----------------------------------------------------------------------------------------------------------
   # Send Reminder Emails - sent out hourly
+  # Gmail sending limit is 500 email per day and we need to reserve capacity for new user signups
   # ----------------------------------------------------------------------------------------------------------   
   def send_reminder
   
@@ -355,7 +362,7 @@ class UtilsController < ApplicationController
         # Change reminder frequency (if necessary) to not be annoying
         r.update_reminder_freq
         
-        if r.reminder_freq != "Never" and @emails_sent < 90
+        if r.reminder_freq != "Never" and @emails_sent < 50 
           
           # ==== Users who have added verses but are behind on memorizing ====
           if r.needs_reminder?
@@ -474,10 +481,10 @@ class UtilsController < ApplicationController
     
     @error_reported	= Verse.where(:error_flag => true ) 
      
-    if params[:checked_by_users] == "true"
-      @checked_user = true
-    else
+    if params[:checked_by_users] == "false"
       @checked_user = false
+    else
+      @checked_user = true
     end
 
     if @checked_user 

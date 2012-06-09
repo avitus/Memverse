@@ -35,8 +35,8 @@ FactoryGirl.define do
   
   factory :blog_comment do |bc|
     bc.association :blog_post, :factory => :blog_post
-	bc.association :user, :factory => :user
-	bc.comment 'Nice blog post!'
+  	bc.association :user,      :factory => :user
+  	bc.comment 'Nice blog post!'
   end
   
   factory :final_verse do |f|

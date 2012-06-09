@@ -67,7 +67,8 @@
 </div>
 	
 <script type="text/javascript" charset="utf-8">
-    var jug = new Juggernaut();
+	var jug = new Juggernaut();
+	jug.meta = {user_id: <%= current_user.id %>, user_name: "<%= current_user.name %>"};
 	
 	jug.subscribe("/chats/channel2", function(data){
 		var u  		= $("<li/>");
@@ -112,6 +113,10 @@
 				$('#quiz-answer input').focus();
 				break;
 
+			case 'mcq':
+				// loop through answers
+				break;
+
 			default:
 				$('#quiz-answer').html("<input type='text' class='q-answer-input'" + "name='txt" + questionNum + "' id='" + questionNum + "'</input>");
 				$('#quiz-answer').append("<input type='submit' value='Submit' id='submit-answer' class='button-link'>");        	
@@ -130,60 +135,83 @@
 			}
 		});
 	}	
-	
+
 	jug.subscribe("/live_quiz/quiz_stream", function(data) {
 		var div		= $("<div/>");
 		var q  		= $("<h3/>");
 		var p 		= $("<p/>");
-		
+
 		var q_num;
 		var q_type;
 		var q_text;
 		var q_ref;
 		var q_show;
 		var q_ansr;
-	
+
+		var mc_option_a;
+		var mc_option_b;
+		var mc_option_c;
+		var mc_option_d;
+		var mc_answer;
+
 		q_num  = data.q_num;
 		q_type = data.q_type;
-		q_ref  = data.q_ref
-		q_text = data.q_passages.<%= current_user.translation %>
-		q_time = data.time_alloc
-		
+
+		if (q_type != 'mcq') {
+			q_ref  = data.q_ref;
+			q_text = data.q_passages.<%= current_user.translation %>;
+		} else {
+			q_option_a = data.mc_option_a;
+			q_option_b = data.mc_option_b;
+			q_option_c = data.mc_option_c;
+			q_option_d = data.mc_option_d;
+			mc_answer = data.mc_answer;
+		}
+		q_time = data.time_alloc;
+
 		switch (q_type)
 		{
 			case 'recitation':
 			  q_show = q_ref;
 			  q_ansr = q_text;
 			break;
-			
+
 			case 'reference':
 			  q_show = q_text;
 			  q_ansr = q_ref;
 			break;
-			
+
+			case 'mcq':
+			  q_ansr = mc_answer;
+			break;
+
 			default:
 			  q_show = 'Error'
 		}
-			
+
 		q.text('Question ' + q_num).addClass("quiz-q-num");
 		p.text(q_show).addClass("quiz-q");		
 		div.append(q).append(p);
-		
+
 		$("#quiz-question").html(div);
 		$("#quiz-question").scrollTop($("#quiz-question")[0].scrollHeight);
-		
-		addInputBox(q_type, q_num, q_ansr);
-			
+
+		if(q_type == 'reference' || q_type == 'recitation'){
+			addInputBox(q_type, q_num, q_ansr);
+		} else if (q_type == 'mcq'){
+			setupMCQ(q_option_a, q_option_b, q_option_c, q_option_d, mc_answer);
+		}
+
 		<!-- Countdown clock -->			
 		$('#quiz-timer').countdown('destroy').removeClass('red-highlight')
 		$('#quiz-timer').countdown({until: +q_time, onTick: highlightLast5, onExpiry: disableSubmission, format: 'S'}); 
-				     
+
 		function highlightLast5(periods) { 
 		    if ($.countdown.periodsToSeconds(periods) == 5) { 
 		        $(this).addClass('red-highlight'); 
 		    } 
 		}
-		
+
 		function disableSubmission() { 
 			$('input#submit-answer').hide(); 
 		}		 						
@@ -213,8 +241,28 @@
 			$("#live-quiz-scores").append(li);
 			$("#live-quiz-scores").scrollTop(0);
 		});
-	}); 		
+	});
+
+	user_id = "<%= current_user.id %>";
 	
+	jug.subscribe("/observer/" + user_id, function(msg) {
+		// Somebody joined or left the room
+		// We need to post a little status message in the chat log column
+		// console.log(msg.klass);
+		// ^^ Currently the msg.klass is always Roster. But if we started using the /observer/user_id channel for other things, it might not be.
+		if(msg.klass == "Roster") {
+			switch(msg.type){
+				case 'create':
+					console.log(msg.record.roster.user_name + " entered the room");
+					break;
+				case 'destroy':
+					console.log(msg.record.roster.user_name + " left the room");
+					break;
+			}
+		}
+		console.log(msg.record);
+	});
+
 	function submitmsg() {    
 		if ($("#msg_body").val() == "") {
 			alert("Please put text in your message.");
@@ -223,7 +271,7 @@
 		else {
 			return true;
 		}
-	}	 
+	}
 
 </script>
 
