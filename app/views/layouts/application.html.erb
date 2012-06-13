@@ -215,6 +215,7 @@
 								<li <%= sub(@sub=="dash"		)%>><%= link_to t('profile_menu.Dashboard'), 			main_app.user_path(current_user) %></li>					
 								<li <%= sub(@sub=="prof"		)%>><%= link_to t('profile_menu.Profile'), 				main_app.update_profile_path %></li>
 								<li <%= sub(@sub=="mychurch"	)%>><%= link_to t('profile_menu.My Church'), 			main_app.church_path %></li>
+								<li <%= sub(@sub=="mygroup"		)%>><%= link_to t('profile_menu.My Group'), 			main_app.group_path(current_user.group.id) %></li>
 								<li <%= sub(@sub=="myrefs"		)%>><%= link_to t('profile_menu.Referrals'), 			main_app.referrals_path(current_user) %></li>
 							</ul>
 						</div>
