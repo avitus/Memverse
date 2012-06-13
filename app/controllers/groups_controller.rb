@@ -1,5 +1,7 @@
 class GroupsController < ApplicationController
   
+  before_filter :authenticate_user!
+  
   add_breadcrumb "Home", :root_path
   add_breadcrumb "Group Leaderboard", :groupboard_path
   
