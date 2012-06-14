@@ -42,7 +42,7 @@ TRANSLATIONS = {
   }
 
 MAJORS = { 
-    :NIV => "New International Version",
+    :NIV => "New International Version (1984)",
     :NAS => "New American Standard Bible", 
     :NKJ => "New King James Version", 
     :KJV => "King James Version",                          
