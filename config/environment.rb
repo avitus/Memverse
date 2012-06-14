@@ -6,36 +6,39 @@ require File.expand_path('../application', __FILE__)
 # Initialize the rails application
 MemverseApp::Application.initialize!
 
+# Translation updates must also be reflected on quick_start
+
 TRANSLATIONS = { 
-    :NIV => "New International Version",
-    :NNV => "2011 New International Version",    
-    :NAS => "New American Standard Bible", 
-    :NKJ => "New King James Version", 
-    :KJV => "King James Version",
-    :RSV => "Revised Standard Version",
-    :NRS => "New Revised Standard Version",                          
-    :ESV => "English Standard Version",
-    :NLT => "New Living Translation",
-    :CEV => "Contemporary English Version",
-    :HCS => "Holman Christian Standard Bible",
-    :DTL => "Darby Translation",
-    :MSG => "The Message",
-    :AMP => "Amplified Bible",
-    :IRV => "New International Reader's Version",
-    :UKJ => "Updated King James Version",
-    :GEN => "Geneva Bible",
-    :GRK => "Biblical Greek",
-    :NVI => "Nueva Version Internacional",
-    :RVR => "Reina-Valera 1960",
-    :LSV => "Louis Segond 1910",
-    :LND => "La Nuova Diodati",
-    :AFR => "Afrikaans 1983 Translation",
-    :HSV => "Herziene Statenvertaling",
-    :NBV => "De Nieuwe Bijbelvertaling",
-    :TMB => "Terjemahan Baru",
-    :MBB => "Magandang Balita Biblia",
-    :SPB => "Svenska Folkbibeln",
-    :ACF => "Almeida Corrigida e Fiel"
+    :NIV   => "New International Version (1984)",
+    :NNV   => "New International Version (2011)",
+    :NAS   => "New American Standard Bible",
+    :NKJ   => "New King James Version",
+    :KJV   => "King James Version",
+    :RSV   => "Revised Standard Version",
+    :NRS   => "New Revised Standard Version",
+    :ESV   => "English Standard Version (2011)",
+    :ESV07 => "English Standard Version (2007)",
+    :NLT   => "New Living Translation",
+    :CEV   => "Contemporary English Version",
+    :HCS   => "Holman Christian Standard Bible",
+    :DTL   => "Darby Translation",
+    :MSG   => "The Message",
+    :AMP   => "Amplified Bible",
+    :IRV   => "New International Reader's Version",
+    :UKJ   => "Updated King James Version",
+    :GEN   => "Geneva Bible",
+    :GRK   => "Biblical Greek",
+    :NVI   => "Nueva Version Internacional",
+    :RVR   => "Reina-Valera 1960",
+    :LSV   => "Louis Segond 1910",
+    :LND   => "La Nuova Diodati",
+    :AFR   => "Afrikaans 1983 Translation",
+    :HSV   => "Herziene Statenvertaling",
+    :NBV   => "De Nieuwe Bijbelvertaling",
+    :TMB   => "Terjemahan Baru",
+    :MBB   => "Magandang Balita Biblia",
+    :SPB   => "Svenska Folkbibeln",
+    :ACF   => "Almeida Corrigida e Fiel"
   }
 
 MAJORS = { 
@@ -43,7 +46,7 @@ MAJORS = {
     :NAS => "New American Standard Bible", 
     :NKJ => "New King James Version", 
     :KJV => "King James Version",                          
-    :ESV => "English Standard Version",
+    :ESV => "English Standard Version (2011)",
   }
 
 
