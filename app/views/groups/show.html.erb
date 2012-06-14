@@ -2,7 +2,9 @@
 <div class="white-box-with-margins">
 <h1><%= @group.rank ? @group.rank.to_s + ". " : "" %><%= @group.name %></h1>
 
-<%= best_in_place @group, :description, :type => :textarea, :path => group_path(@group.id), :nil => 'Click to enter a description ...' %>
+<div class="group-description">
+	<%= best_in_place @group, :description, :type => :textarea, :nil => 'Click to enter a description ...' %>
+</div>
 
 <table class="memverse-standard">
 	<%= render :partial => "users/user_headings" %>
