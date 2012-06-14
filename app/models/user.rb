@@ -89,9 +89,10 @@ class User < ActiveRecord::Base
   # Setup accessible (or protected) attributes for your model
   # Prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here
-  attr_accessible :login, :email, :name, :password, :password_confirmation, :identity_url, :remember_me,
-                  :newsletters, :reminder_freq, :last_reminder, :church, :group, :country, :american_state, 
-                  :show_echo, :max_interval, :mnemonic_use, :all_refs, :referred_by, :auto_work_load, :show_email
+  attr_accessible :login, :email, :name, :password, :password_confirmation, :current_password, 
+                  :identity_url, :remember_me, :newsletters, :reminder_freq, :last_reminder, 
+                  :church, :group, :country, :american_state, :show_echo, :max_interval, 
+                  :mnemonic_use, :all_refs, :referred_by, :auto_work_load, :show_email
   
 
   # ----------------------------------------------------------------------------------------------------------

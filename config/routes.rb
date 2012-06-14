@@ -12,9 +12,7 @@ MemverseApp::Application.routes.draw do
   resources :blog_categories
   resources :users, :only => :show
   resources :groups
-#  resource  :session
   resources :uberverses
-# resources :pastors
   resources :sermons
   resources :quests
   resources :quizzes
@@ -106,7 +104,8 @@ MemverseApp::Application.routes.draw do
   match '/news'           => 'info#news'
   match '/stt_setia'      => 'info#stt_setia'
 
-  # match '/group',                  :to => 'group#show',                      :as => 'group'
+  # Route for users who haven't yet joined a group
+  match '/mygroup',                :to => 'groups#show',                     :as => 'mygroup'
  
   match '/update_profile',         :to => 'profile#update_profile',          :as => 'update_profile'
   match '/church',                 :to => 'profile#show_church',             :as => 'church'
