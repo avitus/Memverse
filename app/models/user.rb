@@ -694,6 +694,13 @@ class User < ActiveRecord::Base
     if reminder_freq == "Never" or days_since_active < 45
       return true  # don't change anything
     else
+      
+      if reminder_freq == "Quarterly" and days_since_active > 365
+        logger.info("*** Changing reminder frequency for #{self.login} to an annual schedule. Last activity was #{days_since_active} days ago")
+        self.reminder_freq = "Annually"
+        self.save
+      end 
+      
       if reminder_freq == "weekly" and days_since_active > 10  # focus on users who never set their reminder frequency
         logger.info("*** Changing reminder frequency for #{self.login} to a monthly schedule. Last activity was #{days_since_active} days ago")
         self.reminder_freq = "Never"
@@ -736,6 +743,7 @@ class User < ActiveRecord::Base
     end
     
     mv = Memverse.find(:first, :conditions => ["user_id = ?", self.id], :order => "next_test ASC")
+    
     if mv.nil? or self.reminder_freq == "Never"
       return false # users who don't have any memory verses need more than a reminder!
     elsif last_reminded + reminder_in_days(self.reminder_freq) < Date.today
@@ -854,11 +862,11 @@ class User < ActiveRecord::Base
   #     - Adding a new verse (not yet added)
   # ----------------------------------------------------------------------------------------------------------     
   def init_activity_date
-    mv = Memverse.find(:first, :select => "last_tested", :conditions => ["user_id = ?", self.id], :order => "last_tested DESC")    
+    mv = self.memverses.order("last_tested DESC").first
     if mv
       return mv.last_tested
     else
-      return nil
+      return created_at.to_date # if user hasn't added verses then just use the day they signed up
     end
   end
 
@@ -1086,8 +1094,9 @@ class User < ActiveRecord::Base
       when "Daily"    then 1
       when "Monthly"  then 30
       when "Quarterly"then 90
-      when "Never"    then 365 # shouldn't get here
-      else                 30  # just to be safe, assume monthly reminder interval on erroneous input
+      when "Annually" then 365
+      when "Never"    then 999 # shouldn't get here
+      else                 999  # just to be safe assume lengthy reminder interval on erroneous input
     end
   end
   

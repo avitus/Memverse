@@ -316,7 +316,7 @@ class UtilsController < ApplicationController
     
 
   # ----------------------------------------------------------------------------------------------------------
-  # Mass Email
+  # Mass Email - NOTE: only used for test purposes
   # ----------------------------------------------------------------------------------------------------------   
   def mass_email
     # Send out an email
@@ -344,6 +344,7 @@ class UtilsController < ApplicationController
   
   # ----------------------------------------------------------------------------------------------------------
   # Send Reminder Emails - sent out hourly
+  # Gmail sending limit is 500 email per day and we need to reserve capacity for new user signups
   # ----------------------------------------------------------------------------------------------------------   
   def send_reminder
   
@@ -361,7 +362,7 @@ class UtilsController < ApplicationController
         # Change reminder frequency (if necessary) to not be annoying
         r.update_reminder_freq
         
-        if r.reminder_freq != "Never" and @emails_sent < 90
+        if r.reminder_freq != "Never" and @emails_sent < 50 
           
           # ==== Users who have added verses but are behind on memorizing ====
           if r.needs_reminder?
