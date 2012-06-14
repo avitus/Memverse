@@ -42,8 +42,7 @@ gem "cancan"                                                                    
 gem 'rails_admin', :git => 'git://github.com/sferik/rails_admin.git'                            # Admin console
 gem 'forem', :git => "git://github.com/radar/forem.git"                                         # Forum engine
 
-gem 'fancybox-rails'
-gem 'aasm', '2.2.0',    :require => 'aasm'                                                      # Is this needed now that we aren't using Restful Authentication ? 
+gem 'fancybox-rails'                                                                            # For displaying of video
 gem 'kaminari'                                                                                  # Required for bloggity
 gem 'rinku', :require => 'rails_rinku'                                                          # Supports auto-linking of URL's in blog comments
 gem 'randumb'                                                                                   # Retrieve a random record
@@ -54,7 +53,6 @@ gem 'airbrake'                                                                  
 gem 'ckeditor'                                                                                  # WYSIWYG editing
 gem 'paperclip'                                                                                 # Attachment handling 
 gem 'capistrano', '>=2.9.0'                                                                     # Deploy with Capistrano
-gem 'ruby-openid'
 gem 'nokogiri', '1.4.6'                                                                         # HTML/XML parsing
 gem 'test-unit', '=1.2.3'                                                                       # Required for restful_authentication (?)
 gem 'json'                                                                                      # Javascript Object Notation support
@@ -73,6 +71,7 @@ gem 'action_mailer_cache_delivery', git: 'git://github.com/ragaskar/action_maile
 gem 'friendly_id'                                                                               # Makes nice IDs for models
 gem 'foreman'                                                                                   # Helps manage multiple processes when running app in development.
 gem 'supermodel', git: 'git://github.com/KonaTeam/supermodel.git'                               # Uses ActiveModel for in-memory storage with redis
+gem 'best_in_place'                                                                             # In-place editing support
 
 group :console do
   gem 'wirble'

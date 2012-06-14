@@ -17,17 +17,16 @@ class ProfileController < ApplicationController
     
     if params[:church]
       @church         = Church.find(params[:church])
-      @users          = @church.users
+      @users          = @church.users.order('memorized DESC')
     elsif current_user.church
       @church         = current_user.church
-      @users          = @church.users
+      @users          = @church.users.order('memorized DESC')
     else
       flash[:notice]  = "You have not yet selected a church or organization to belong to. Please update your profile."
       redirect_to update_profile_path
     end
 
   end   
-
  
   # ----------------------------------------------------------------------------------------------------------
   # Unsubscribe user from email

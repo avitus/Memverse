@@ -1,10 +1,8 @@
 MemverseApp::Application.routes.draw do
   
-  mount Ckeditor::Engine => '/ckeditor'
-
   mount Forem::Engine, :at => "/forums"
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
-  mount Ckeditor::Engine => "/ckeditor"
+  mount Ckeditor::Engine   => '/ckeditor'
 
   devise_for :users
   
@@ -13,6 +11,7 @@ MemverseApp::Application.routes.draw do
   
   resources :blog_categories
   resources :users, :only => :show
+  resources :groups
 #  resource  :session
   resources :uberverses
 # resources :pastors
@@ -106,6 +105,8 @@ MemverseApp::Application.routes.draw do
   match '/referralboard'  => 'info#referralboard'
   match '/news'           => 'info#news'
   match '/stt_setia'      => 'info#stt_setia'
+
+  # match '/group',                  :to => 'group#show',                      :as => 'group'
  
   match '/update_profile',         :to => 'profile#update_profile',          :as => 'update_profile'
   match '/church',                 :to => 'profile#show_church',             :as => 'church'

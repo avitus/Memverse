@@ -67,7 +67,6 @@ GEM
   remote: http://rubygems.org/
   specs:
     Ascii85 (1.0.1)
-    aasm (2.2.0)
     actionmailer (3.2.4)
       actionpack (= 3.2.4)
       mail (~> 2.4.4)
@@ -104,6 +103,9 @@ GEM
     arel (3.0.2)
     bbenezech-nested_form (0.0.6)
     bcrypt-ruby (3.0.1)
+    best_in_place (1.1.2)
+      jquery-rails
+      rails (~> 3.1)
     blankslate (2.1.2.4)
     bootstrap-sass (2.0.3)
     breadcrumbs_on_rails (2.2.0)
@@ -302,7 +304,6 @@ GEM
       activesupport (>= 3.0)
       railties (>= 3.0)
       rspec (~> 2.10.0)
-    ruby-openid (2.1.8)
     ruby-rc4 (0.1.5)
     rubypython (0.5.3)
       blankslate (>= 2.1.2.3)
@@ -357,10 +358,10 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  aasm (= 2.2.0)
   action_mailer_cache_delivery!
   acts-as-taggable-on
   airbrake
+  best_in_place
   breadcrumbs_on_rails (>= 2.0.0)
   cancan
   capistrano (>= 2.9.0)
@@ -403,7 +404,6 @@ DEPENDENCIES
   riddle
   rinku
   rspec-rails (>= 2.6.1)
-  ruby-openid
   sass-rails (~> 3.2.3)
   spawn (>= 1.2)!
   sqlite3
