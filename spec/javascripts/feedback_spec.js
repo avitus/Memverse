@@ -89,39 +89,27 @@ describe("Feedback", function() {
 		})
 	});
 	
-	it("should not recognize last first-letter without a subsequent space or punctuation mark", function() {
+	it("should recognize last first-letter without a subsequent space or punctuation mark", function() {
 		expect(versefeedback(
 			'This is a test.',		// correct text
 			'T i a t',				// user guess
 			true,					// feedback
 			true					// allow first-letter
 		)).toEqual({
-			feedtext : 'This is a ',
-			correct  : false
-		})
-	});
-	
-	it("should deal with a mix of first-letters and complete words if mnemonic disabled", function() {
-		expect(versefeedback(
-			'This is simply a test to see whether the first-letter and complete words functionality works',		// correct text
-			'This it s a tesT 2 s w t f a comp. words functionlality works.',										// user guess
-			true,																								// feedback
-			true																								// allow first-letter
-		)).toEqual({
-			feedtext : 'This ... simply a test ... see whether the first-letter and ... words ... works ',
-			correct  : false
-		})
-	});
-	
-	it("should accept as correct a correct mix of first-letters and complete words if mnemonic disabled", function() {
-		expect(versefeedback(
-			'This is simply a test to see whether the first-letter and complete words functionality works',		// correct text
-			'This is s a tesT to s w t f a c words functionality works.',										// user guess
-			true,																								// feedback
-			true																								// allow first-letter
-		)).toEqual({
-			feedtext : 'This is simply a test to see whether the first-letter and complete words functionality works <div id="matchbox"><p>Correct</p></div>',
+			feedtext : 'This is a test. <div id="matchbox"><p>Correct</p></div>',
 			correct  : true
+		})
+	});
+	
+	it("should accept some complete words in text that's primarily first letters", function() {
+		expect(versefeedback(
+			'This is simply a test to see whether the first-letter and complete words functionality works',		// correct text
+			'T i s a tesT 2 s w t f a c words functionlality works.',											// user guess
+			true,																								// feedback
+			true																								// allow first-letter
+		)).toEqual({
+			feedtext : 'This is simply a test ... see whether the first-letter and complete words ... works ',
+			correct  : false
 		})
 	});
 	
@@ -146,6 +134,18 @@ describe("Feedback", function() {
 		)).toEqual({
 			feedtext : '< Feedback disabled ><div id="matchbox"><p>Correct</p></div>',
 			correct  : true
+		})
+	});
+	
+	it("should give ... to an incorrect first first letter even when first letter is disabled", function() {
+		expect(versefeedback(
+			'This is a test',		// correct text
+			'T',					// user guess
+			true,					// feedback
+			true					// allow first-letter
+		)).toEqual({
+			feedtext : '... ',
+			correct  : false
 		})
 	});
 })

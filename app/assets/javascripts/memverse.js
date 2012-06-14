@@ -225,29 +225,28 @@ versefeedback = function(correctvs, verseguess, echo, firstletter) {
 	
 	var correct;
 	var feedback = ""; // find a better way to construct the string
+	var fl_in_use; // first letter probably in use
 
 	guess_words = guesstext.split(/\s-\s|\s-|\s/);
 	right_words = correcttext.split(/\s-\s|\s-|\s/);
+	
+	fl_prob_in_use = ((guess_words.length >= 2) && (guess_words[0].length == 1) && (guess_words[1].length == 1));
 
 	for (x in guess_words) {
-
+	
 		if (x < right_words.length) { // check that guess isn't longer than correct answer
-			if ( guess_words[x].toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "") == right_words[x].toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "") ) {
-				// exact match of words/numbers
-				feedback = feedback + right_words[x] + " ";
-			} else if ( firstletter && guess_words[x].toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "") == right_words[x].toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "").charAt(0) ) {
-				// above validates if firstletter mode is on and letter matches; below checks that there is also whitespace or other punctuation after the last first-letter
-				if ( ( (parseInt(x) + 1 == guess_words.length) && (verseguess.charAt(verseguess.length - 1).match(/\s|[.,:;]/g)) ) || (parseInt(x) + 1 != guess_words.length) ) {
-					feedback = feedback + right_words[x] + " ";
-				} else {
-					correct = false;
-				}
-			} else if ( guesstext == "" ) { // This happens when nothing is in the textarea
-				feedback = "Waiting for you to begin typing..."
+			if ( guesstext == "" ) { // This happens when nothing is in the textarea
+				feedback = "Waiting for you to begin typing...";
 			} else if ( guess_words[x] == "") {
 				// Most likely scenario: the last character was a dash ("-") that was used to split, and now this is empty. We don't want to add "... " to feedback.
 				// Only happens to dashes at the end of the text. Other ones are already handled.
 				feedback = feedback;
+			} else if (guess_words[x].toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "") == right_words[x].toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "") ) {
+				// if the word matches exactly
+				feedback = feedback + right_words[x] + " ";
+			} else if (firstletter && fl_prob_in_use && ( guess_words[x].toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "") == right_words[x].toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "").charAt(0) ) ) {
+				// if first letter enabled and first letter sequence and first letter matches
+				feedback = feedback + right_words[x] + " ";
 			} else {
 				feedback = feedback + "... ";
 				correct = false;
@@ -260,8 +259,7 @@ versefeedback = function(correctvs, verseguess, echo, firstletter) {
 				// Remove the dash from the array
 				Array.remove(right_words, y);
 			}
-			
-		}
+		}	
 	}
 	
 	if ( (guess_words.length == right_words.length) && (correct != false) ) { // determine if correct: should be long enough and not have anything incorrect in it
