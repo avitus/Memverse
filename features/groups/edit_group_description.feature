@@ -10,10 +10,12 @@ Feature: Edit description of my group
      
     @javascript
     Scenario: User edits her group description
-      When I go my group page
-      And I click on description
-      And I type "A group of grapes clinging to the vine for their life"
-      And I click outside the box
+      When I go to my group page
+      Then I should see "VineyardGrapes"
+      And I should see "Click to enter a description"
+      When I click inside "div.group-description"
+      And I fill in "div.group-description textarea" with "A group of grapes clinging to the vine for their life"
+      And I click outside "div.group-description"
       Then I should see "A group of grapes clinging to the vine for their life"
 
       

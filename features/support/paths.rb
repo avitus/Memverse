@@ -16,16 +16,22 @@ module NavigationHelpers
 
     when /the sign in page/
       '/users/sign_in'
+      
     when /(.*)'s referrer page/
       '/?referrer='+$1
+      
     when /the new blog post page for the blog titled "(.*)"/
       blog_id = Blog.find_by_title($1).id.to_s
       '/blog_posts/new?blog_id='+blog_id
+      
     when /the blog/
-      '/blog'     
+      '/blog'  
+         
     when /the page for the memverse with the id of ([0-9]+)/
       '/memory_verse/'+$1
 
+    when /my group page/
+      '/mygroup'
 
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
