@@ -225,16 +225,20 @@ versefeedback = function(correctvs, verseguess, echo, firstletter) {
 	
 	var correct;
 	var feedback = ""; // find a better way to construct the string
-	var fl_in_use; // first letter probably in use
 
 	guess_words = guesstext.split(/\s-\s|\s-|\s/);
 	right_words = correcttext.split(/\s-\s|\s-|\s/);
-	
-	fl_prob_in_use = ((guess_words.length >= 2) && (guess_words[0].length == 1) && (guess_words[1].length == 1));
 
 	for (x in guess_words) {
 	
 		if (x < right_words.length) { // check that guess isn't longer than correct answer
+		
+			y = parseInt(x) + 1;
+			z = parseInt(x) - 1;
+			
+			// first letter probably in use if this word and the word before it or after it are both single characters
+			fl_prob_in_use = ((guess_words.length >= 2) && (guess_words[x].toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "").length == 1) && ((guess_words[z] && guess_words[z].toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "").length == 1) || (guess_words[y] && guess_words[y].toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "").length == 1)));
+			
 			if ( guesstext == "" ) { // This happens when nothing is in the textarea
 				feedback = "Waiting for you to begin typing...";
 			} else if ( guess_words[x] == "") {
@@ -251,8 +255,6 @@ versefeedback = function(correctvs, verseguess, echo, firstletter) {
 				feedback = feedback + "... ";
 				correct = false;
 			}
-			
-			y = parseInt(x) + 1;
 			
 			if (right_words[y] == "-" || right_words[y] == "—" ) {
 				feedback = feedback + right_words[y] + " ";
