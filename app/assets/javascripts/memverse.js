@@ -217,6 +217,10 @@ Array.remove = function(array, from, to) {
   return array.push.apply(array, rest);
 };
 
+scrub_text = function(text) {
+	return text.toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "");
+}
+
 versefeedback = function(correctvs, verseguess, echo, firstletter) {
 	firstletter = (typeof firstletter == "undefined")?false:firstletter;
 	
@@ -237,7 +241,7 @@ versefeedback = function(correctvs, verseguess, echo, firstletter) {
 			z = parseInt(x) - 1;
 			
 			// first letter probably in use if this word and the word before it or after it are both single characters
-			fl_prob_in_use = ((guess_words.length >= 2) && (guess_words[x].toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "").length == 1) && ((guess_words[z] && guess_words[z].toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "").length == 1) || (guess_words[y] && guess_words[y].toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "").length == 1)));
+			fl_prob_in_use = ((guess_words.length >= 2) && ( scrub_text(guess_words[x]).length == 1 ) && ((guess_words[z] && scrub_text(guess_words[z]).length == 1) || (guess_words[y] && scrub_text(guess_words[y]).length == 1)));
 			
 			if ( guesstext == "" ) { // This happens when nothing is in the textarea
 				feedback = "Waiting for you to begin typing...";
@@ -245,10 +249,10 @@ versefeedback = function(correctvs, verseguess, echo, firstletter) {
 				// Most likely scenario: the last character was a dash ("-") that was used to split, and now this is empty. We don't want to add "... " to feedback.
 				// Only happens to dashes at the end of the text. Other ones are already handled.
 				feedback = feedback;
-			} else if (guess_words[x].toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "") == right_words[x].toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "") ) {
+			} else if ( scrub_text(guess_words[x]) == scrub_text(right_words[x]) ) {
 				// if the word matches exactly
 				feedback = feedback + right_words[x] + " ";
-			} else if (firstletter && fl_prob_in_use && ( guess_words[x].toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "") == right_words[x].toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "").charAt(0) ) ) {
+			} else if (firstletter && fl_prob_in_use && ( scrub_text(guess_words[x]) == scrub_text(right_words[x]).charAt(0) ) ) {
 				// if first letter enabled and first letter sequence and first letter matches
 				feedback = feedback + right_words[x] + " ";
 			} else {
