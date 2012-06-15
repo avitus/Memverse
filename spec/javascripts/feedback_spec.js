@@ -92,7 +92,7 @@ describe("Feedback", function() {
 	it("should recognize last first-letter without a subsequent space or punctuation mark", function() {
 		expect(versefeedback(
 			'This is a test.',		// correct text
-			'T i a t',				// user guess
+			'T i a t.',				// user guess
 			true,					// feedback
 			true					// allow first-letter
 		)).toEqual({
@@ -127,7 +127,7 @@ describe("Feedback", function() {
 	
 	it("should not give feedback if disabled but still say if correct", function() {
 		expect(versefeedback(
-			'This is a test',		// correct text
+			'This is a test.',		// correct text
 			'T i a test',			// user guess
 			false,					// feedback
 			true					// allow first-letter
@@ -146,6 +146,18 @@ describe("Feedback", function() {
 		)).toEqual({
 			feedtext : '... ',
 			correct  : false
+		})
+	});
+	
+	it("should detect any two subsequent single letters as first letters", function() {
+		expect(versefeedback(
+			'This is an interesting test.',		// correct text
+			'This is a i test',					// user guess
+			true,					// feedback
+			true					// allow first-letter
+		)).toEqual({
+			feedtext : 'This is an interesting test. <div id="matchbox"><p>Correct</p></div>',
+			correct  : true
 		})
 	});
 })
