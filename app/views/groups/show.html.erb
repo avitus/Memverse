@@ -3,7 +3,7 @@
 <h1><%= @group.rank ? @group.rank.to_s + ". " : "" %><%= @group.name %></h1>
 
 <div class="group-description">
-	<%= best_in_place @group, :description, :type => :textarea, :nil => 'Click to enter a description ...' %>
+	<%= best_in_place @group, :description, :type => :textarea, :nil => 'Click to enter a description ...', :ok_button => 'Save' %>
 </div>
 
 <table class="memverse-standard">
