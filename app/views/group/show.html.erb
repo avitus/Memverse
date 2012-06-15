@@ -1,9 +1,0 @@
-<% page_title @group.name %>
-<div class="white-box-with-margins">
-<h1><%= @group.rank ? @group.rank.to_s + ". " : "" %><%= @group.name %></h1>
-
-<table class="memverse-standard">
-	<%= render :partial => "users/user_headings" %>
-	<%= render :partial => "users/user", :collection => @users %>
-</table>
-</div>

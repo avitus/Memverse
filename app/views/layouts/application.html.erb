@@ -15,7 +15,7 @@
 <meta name="MSSmartTagsPreventParsing" content="true" />
 
 <meta name="description" content="<%= page_description %>" />	
-<meta name="keywords" content="memorize bible, memorize scripture, popular bible verses, memorize bible verses," />	
+<meta name="keywords" content="memory verses, memorize bible, memorize scripture, popular bible verses, memorize bible verses" />	
 
 <!-- Facebook Open Graph tags -->
 <meta property="og:title"		content="<%= page_title || Memverse %>"/>	
@@ -150,7 +150,7 @@
 				</div><!--inner-top-right end-->
 			<% else %>
 				<div class="top-right"><!--top-right start-->
-					<div class="iphone">iPhone / iPad App (coming soon):</div>
+					<!-- <div class="iphone">iPhone / iPad App (coming soon):</div> -->
 
 					<div class="button">
 						<ul>
@@ -215,6 +215,7 @@
 								<li <%= sub(@sub=="dash"		)%>><%= link_to t('profile_menu.Dashboard'), 			main_app.user_path(current_user) %></li>					
 								<li <%= sub(@sub=="prof"		)%>><%= link_to t('profile_menu.Profile'), 				main_app.update_profile_path %></li>
 								<li <%= sub(@sub=="mychurch"	)%>><%= link_to t('profile_menu.My Church'), 			main_app.church_path %></li>
+								<li <%= sub(@sub=="mygroup"		)%>><%= link_to t('profile_menu.My Group'), 			main_app.mygroup_path %></li>
 								<li <%= sub(@sub=="myrefs"		)%>><%= link_to t('profile_menu.Referrals'), 			main_app.referrals_path(current_user) %></li>
 							</ul>
 						</div>
