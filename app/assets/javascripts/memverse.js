@@ -217,6 +217,10 @@ Array.remove = function(array, from, to) {
   return array.push.apply(array, rest);
 };
 
+scrub_text = function(text) {
+	return text.toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "");
+}
+
 versefeedback = function(correctvs, verseguess, echo, firstletter) {
 	firstletter = (typeof firstletter == "undefined")?false:firstletter;
 	
@@ -230,38 +234,38 @@ versefeedback = function(correctvs, verseguess, echo, firstletter) {
 	right_words = correcttext.split(/\s-\s|\s-|\s/);
 
 	for (x in guess_words) {
-
+	
 		if (x < right_words.length) { // check that guess isn't longer than correct answer
-			if ( guess_words[x].toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "") == right_words[x].toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "") ) {
-				// exact match of words/numbers
-				feedback = feedback + right_words[x] + " ";
-			} else if ( firstletter && guess_words[x].toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "") == right_words[x].toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "").charAt(0) ) {
-				// above validates if firstletter mode is on and letter matches; below checks that there is also whitespace or other punctuation after the last first-letter
-				if ( ( (parseInt(x) + 1 == guess_words.length) && (verseguess.charAt(verseguess.length - 1).match(/\s|[.,:;]/g)) ) || (parseInt(x) + 1 != guess_words.length) ) {
-					feedback = feedback + right_words[x] + " ";
-				} else {
-					correct = false;
-				}
-			} else if ( guesstext == "" ) { // This happens when nothing is in the textarea
-				feedback = "Waiting for you to begin typing..."
+		
+			y = parseInt(x) + 1;
+			z = parseInt(x) - 1;
+			
+			// first letter probably in use if this word and the word before it or after it are both single characters
+			fl_prob_in_use = ((guess_words.length >= 2) && ( scrub_text(guess_words[x]).length == 1 ) && ((guess_words[z] && scrub_text(guess_words[z]).length == 1) || (guess_words[y] && scrub_text(guess_words[y]).length == 1)));
+			
+			if ( guesstext == "" ) { // This happens when nothing is in the textarea
+				feedback = "Waiting for you to begin typing...";
 			} else if ( guess_words[x] == "") {
 				// Most likely scenario: the last character was a dash ("-") that was used to split, and now this is empty. We don't want to add "... " to feedback.
 				// Only happens to dashes at the end of the text. Other ones are already handled.
 				feedback = feedback;
+			} else if ( scrub_text(guess_words[x]) == scrub_text(right_words[x]) ) {
+				// if the word matches exactly
+				feedback = feedback + right_words[x] + " ";
+			} else if (firstletter && fl_prob_in_use && ( scrub_text(guess_words[x]) == scrub_text(right_words[x]).charAt(0) ) ) {
+				// if first letter enabled and first letter sequence and first letter matches
+				feedback = feedback + right_words[x] + " ";
 			} else {
 				feedback = feedback + "... ";
 				correct = false;
 			}
-			
-			y = parseInt(x) + 1;
 			
 			if (right_words[y] == "-" || right_words[y] == "—" ) {
 				feedback = feedback + right_words[y] + " ";
 				// Remove the dash from the array
 				Array.remove(right_words, y);
 			}
-			
-		}
+		}	
 	}
 	
 	if ( (guess_words.length == right_words.length) && (correct != false) ) { // determine if correct: should be long enough and not have anything incorrect in it

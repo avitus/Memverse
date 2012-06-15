@@ -222,7 +222,7 @@ font-family:"museo-slab-1",Georgia,"Times New Roman",Times,serif;
 
 .top-right
 {
-	width:490px;
+	width:165px; /* was 490 when iPhone app teaser present */
 	float:right;
 }
 
@@ -2489,6 +2489,11 @@ div#chat-stream-narrow {
 	margin-bottom:0.2em;
 }
 
+.chat-announcement {
+	padding-left:0.2em;
+	margin-bottom:0.2em;
+	text-align:center;
+}
 
 /* === Main Chat Channel ==*/
 div#chat-stream {
@@ -2514,6 +2519,12 @@ div.tweet {
 #leaderboard .current_user {
 	background:#687284
 }
+
+.group-description {
+  width: 60%;
+  padding: 0 0.5em 1em;
+}
+
 
 /* === Error Messages === */
 div#errorExplanation {
