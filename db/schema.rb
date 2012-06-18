@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120614163356) do
+ActiveRecord::Schema.define(:version => 20120617224948) do
 
   create_table "american_states", :force => true do |t|
     t.string  "abbrev",      :limit => 20, :default => "", :null => false
@@ -286,6 +286,7 @@ ActiveRecord::Schema.define(:version => 20120614163356) do
     t.integer  "users_count", :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "leader_id"
   end
 
   create_table "memverses", :force => true do |t|
