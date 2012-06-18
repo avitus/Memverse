@@ -32,7 +32,7 @@ set :scm, 'git'
 set :repository,  "git@github.com:avitus/Memverse.git"        # Your git repository location
 set :branch, 'master'                                         # tell cap the branch to checkout during deployment
 set :scm_verbose, true
-
+set :keep_releases, 5                                         # Keep only five most recent releases
 # set :scm_passphrase, "pa$$word"                             # The deploy user's password
 # set :git_shallow_clone, 1
 
@@ -66,7 +66,7 @@ set :default_stage, "production"
 ##############################################################
 ##  Hooks
 ##############################################################
-before "deploy:symlink_db", "deploy:symlink_bloggity"
+before "deploy:assets:precompile", "deploy:symlink_db", "deploy:symlink_bloggity"
 
 ##############################################################
 ##  Database config and restart
