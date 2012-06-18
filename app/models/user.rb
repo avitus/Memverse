@@ -555,7 +555,7 @@ class User < ActiveRecord::Base
     self.american_state   = AmericanState.find(:first, :conditions => ["name = ?", new_params["american_state"]])
     # If church, group doesn't exist in database we add it
     self.church           = Church.find(:first, :conditions => ["name = ?", new_params["church"]]) || Church.create(:name => new_params["church"])
-    self.group            = Group.find(:first, :conditions => ["name = ?", new_params["group"]]) || Group.create(:name => new_params["group"])
+    self.group            = Group.find(:first, :conditions => ["name = ?", new_params["group"]]) || Group.create(:name => new_params["group"], :leader_id => self.id)
     self.newsletters      = new_params["newsletters"]
     self.language         = new_params["language"]
     self.time_allocation  = new_params["time_allocation"]    

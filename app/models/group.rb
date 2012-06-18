@@ -10,11 +10,13 @@ class Group < ActiveRecord::Base
   has_many    :users
   has_many    :tweets
   
+  belongs_to :leader, :foreign_key => "leader_id", :class_name => "User"
+
   # Validations
   validates_presence_of   :name 
   validates_uniqueness_of :name  
   
-  attr_accessible :name, :description
+  attr_accessible :name, :description, :leader_id
   
   scope :vibrant, where('users_count >= 3') 
   
@@ -38,6 +40,21 @@ class Group < ActiveRecord::Base
       grp[0].save
     }       
     
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Returns group leader. Initially the group leader will be whoever created the group.
+  # If the group leader becomes inactive, the new leader will be whoever has completed the most memorization 
+  # sessions and is a member of the group at the time
+  # ----------------------------------------------------------------------------------------------------------   
+  def get_leader
+    if leader.try(:is_active?)
+      return leader
+    else
+      leader = users.active.sort { |u| u.completed_sessions }.last 
+      save!
+      return leader
+    end
   end   
   
   
