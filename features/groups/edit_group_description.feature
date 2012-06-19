@@ -7,6 +7,7 @@ Feature: Edit description of my group
   	Given I sign in as a normal user
   	And a group called "VineyardGrapes"
   	And the normal user belongs to the group called "VineyardGrapes"
+  	And the normal user is the leader of the group called "VineyardGrapes"
      
     @javascript
     Scenario: User edits her group description
