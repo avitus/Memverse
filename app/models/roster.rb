@@ -73,7 +73,7 @@ class Roster < SuperModel::Base
     end
     return user_ids
   end
-  
+
   def publish_roster(type)
     Juggernaut.publish(
       Array(self.observer_clients).map {|c| "/observer/#{c}" }, 

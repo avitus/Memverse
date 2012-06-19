@@ -250,17 +250,26 @@
 		// We need to post a little status message in the chat log column
 		// console.log(msg.klass);
 		// ^^ Currently the msg.klass is always Roster. But if we started using the /observer/user_id channel for other things, it might not be.
-		if(msg.klass == "Roster") {
+		if(msg.klass == "Roster" && msg.type != "update" && msg.record.roster.user_id != user_id) {
+			
+			var roster_uid   = msg.record.roster.user_id;
+			var roster_uname = msg.record.roster.user_name;
+			
+			var li = $("<li/>").addClass("chat-announcement").append("<a href ='/users/" + roster_uid + "'>" + roster_uname + "</a>");
+			
 			switch(msg.type){
 				case 'create':
-					console.log(msg.record.roster.user_name + " entered the room");
+					li.append(" entered the room");
 					break;
 				case 'destroy':
-					console.log(msg.record.roster.user_name + " left the room");
+					li.append(" left the room");
 					break;
 			}
+			
+			$("#chat-stream-narrow").append(li);
+			
+			// TODO: Need to add logic about scrolling. I should prob. put that in a function... find a way to keep it DRY.
 		}
-		console.log(msg.record);
 	});
 
 	function submitmsg() {    
