@@ -83,8 +83,7 @@ class Memverse < ActiveRecord::Base
   def supermemo(q)
         
     prev_learning = (self.status == "Learning")
-    
-    
+      
     if self.due?
       if q<3 # answer was incorrect
         n_new = 1  # Start from the beginning
