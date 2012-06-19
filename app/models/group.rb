@@ -51,8 +51,8 @@ class Group < ActiveRecord::Base
     if leader.try(:is_active?)
       return leader
     else
-      leader = users.active.sort { |u| u.completed_sessions }.last 
-      save!
+      leader = users.active.sort { |u| u.completed_sessions }.last
+      save! # TODO: this does not save the new leader ... no idea why
       return leader
     end
   end   

@@ -4,9 +4,10 @@ FactoryGirl.define do
 
   factory :user do |u|
     u.name 'Test User'
-	u.sequence(:email) { |n| "user#{n}@test.com" }
+	  u.sequence(:email) { |n| "user#{n}@test.com" }
     u.password 'please'
-    u.password_confirmation { |u| u.password }     
+    u.password_confirmation { |u| u.password } 
+    # u.association :group, :factory => :group    
   end
   
   factory :verse do |v|
@@ -63,5 +64,10 @@ FactoryGirl.define do
     pr.learning   50
     pr.memorized 100
     pr.entry_date Date.today
+  end
+  
+  factory :group do |g|
+    g.name 'Memory Group'
+    g.association :leader, :factory => :user
   end
 end
