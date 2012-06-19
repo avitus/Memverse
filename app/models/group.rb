@@ -47,13 +47,13 @@ class Group < ActiveRecord::Base
   # If the group leader becomes inactive, the new leader will be whoever has completed the most memorization 
   # sessions and is a member of the group at the time
   # ----------------------------------------------------------------------------------------------------------   
-  def get_leader
-    if leader.try(:is_active?)
-      return leader
+  def get_leader!
+    if self.leader.try(:is_active?)
+      return self.leader
     else
-      leader = users.active.sort { |u| u.completed_sessions }.last
+      self.leader = users.active.sort_by { |u| u.completed_sessions }.last
       save! # TODO: this does not save the new leader ... no idea why
-      return leader
+      return self.leader
     end
   end   
   
