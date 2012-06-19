@@ -85,8 +85,9 @@
 		if ( ($("#chat-stream-narrow")[0].scrollHeight - 530) <= $("#chat-stream-narrow").scrollTop()){
 			$("#chat-stream-narrow").append(u).append(m);
 			$("#chat-stream-narrow").scrollTop($("#chat-stream-narrow")[0].scrollHeight);	
+		} else { // don't scroll
+			$("#chat-stream-narrow").append(u).append(m);
 		}
-		else {$("#chat-stream-narrow").append(u).append(m);} // don't scroll
 		
 	}); 
 
@@ -216,47 +217,47 @@
 			$('input#submit-answer').hide(); 
 		}		 						
 	}); 	
-	
+
 	jug.subscribe("/live_quiz/scoreboard", function(data){
 
 		$("#live-quiz-scores").empty();
-		
+
 		$.each(data.scoreboard, function(i, item) {
-			
+
 			var user  	= item.name + " ";
 			var score 	= item.score;
 			var li 		= $("<li/>");
 			var u 		= $("<span/>");
 			var s 		= $("<span/>");
-			
+
 			u.text(user).addClass("scoreboard-username");
 			s.text(score).addClass("scoreboard-score");
-			
+
 			if(item.login == "<%= current_user.login %>"){
 				li.addClass("hilite");
 			}
-			
+
 			li.append(u).append(s);
-			
+
 			$("#live-quiz-scores").append(li);
 			$("#live-quiz-scores").scrollTop(0);
 		});
 	});
 
 	user_id = "<%= current_user.id %>";
-	
+
 	jug.subscribe("/observer/" + user_id, function(msg) {
 		// Somebody joined or left the room
 		// We need to post a little status message in the chat log column
 		// console.log(msg.klass);
 		// ^^ Currently the msg.klass is always Roster. But if we started using the /observer/user_id channel for other things, it might not be.
 		if(msg.klass == "Roster" && msg.type != "update" && msg.record.roster.user_id != user_id) {
-			
+
 			var roster_uid   = msg.record.roster.user_id;
 			var roster_uname = msg.record.roster.user_name;
-			
+
 			var li = $("<li/>").addClass("chat-announcement").append("<a href ='/users/" + roster_uid + "'>" + roster_uname + "</a>");
-			
+
 			switch(msg.type){
 				case 'create':
 					li.append(" entered the room");
@@ -265,10 +266,15 @@
 					li.append(" left the room");
 					break;
 			}
-			
-			$("#chat-stream-narrow").append(li);
-			
-			// TODO: Need to add logic about scrolling. I should prob. put that in a function... find a way to keep it DRY.
+
+			// Check whether user is scrolled down to bottom of stream before keeping them scrolled down 
+			// NOTE: chat-stream-narrow is 520px high; we're checking against 530 to pull them down a tad if they forgot to scroll all the way down
+			if ( ($("#chat-stream-narrow")[0].scrollHeight - 530) <= $("#chat-stream-narrow").scrollTop()){
+				$("#chat-stream-narrow").append(li);
+				$("#chat-stream-narrow").scrollTop($("#chat-stream-narrow")[0].scrollHeight);	
+			} else { // don't scroll
+				$("#chat-stream-narrow").append(li);
+			}
 		}
 	});
 
