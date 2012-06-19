@@ -10,12 +10,12 @@ describe Group do
   end
 
   it "should return the active leader if there is one" do
-    @group.get_leader.name.should == "User1"
+    @group.get_leader!.name.should == "User1"
   end
 
   it "should replace inactive leaders with a new one" do
     @user1.last_activity_date = Date.today - 2.months
-    @group.get_leader.name.should == "User2"
+    @group.get_leader!.name.should == "User2"
   end
 
 end
