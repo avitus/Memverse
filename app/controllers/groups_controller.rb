@@ -15,8 +15,8 @@ class GroupsController < ApplicationController
     
     @can_edit = false
     
-    if params[:group]
-      @group          = Group.find(params[:group])
+    if params[:id]
+      @group          = Group.find(params[:id])
       @users          = @group.users.order('memorized DESC')    
       @can_edit       = (@group.get_leader! == current_user)
       add_breadcrumb @group.name, {:action => "show", :id => params[:id]}
