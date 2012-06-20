@@ -117,7 +117,7 @@ function scoreMCQ(questionAnswer, userAnswer){ // userAnswer will be a, b, c, or
 	if (score == 15) {
 		msg = "Congratulations; that was perfect!";
 	} else {
-		msg = "Sorry, but your choice (" + userAnswer ") was not correct. The correct answer was (" + questionAnswer + ").";
+		msg = "Sorry, but your choice (" + userAnswer + ") was not correct. The correct answer was (" + questionAnswer + ").";
 	}
 	
 	return { score: score, msg: msg };
