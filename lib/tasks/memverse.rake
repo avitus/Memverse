@@ -39,7 +39,7 @@ namespace :utils do
     Verse.find_each { |vs|
       if !vs.end_of_chapter_verse || vs.versenum > vs.end_of_chapter_verse.last_verse
         puts("#{vs.id} : #{vs.ref} [#{vs.created_at.to_date}] - #{vs.text}")
-        vs.destroy
+        # vs.destroy
       end 
     }  
   end
