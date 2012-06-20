@@ -223,7 +223,7 @@ class Verse < ActiveRecord::Base
   # ---------------------------------------------------------------------------------------------------------- 
   def end_of_chapter_verse
   	if self.book == "3 John"
-  		if ["NAS", "NLT", "ESV"].include?(self.translation)
+  		if ["NAS", "NLT", "ESV", "ESV07"].include?(self.translation)
   			FinalVerse.new(:book => "3 John", :chapter => 1, :last_verse => 15)
   		else
   			FinalVerse.new(:book => "3 John", :chapter => 1, :last_verse => 14)
