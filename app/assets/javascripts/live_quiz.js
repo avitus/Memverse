@@ -1,10 +1,11 @@
 setupMCQ = function(q_option_a, q_option_b, q_option_c, q_option_d, mc_answer){
-	return
-	"<input type='radio' name='mcq' value='a' /> " + q_option_a + "<br />" +
-	"<input type='radio' name='mcq' value='b' /> " + q_option_b + "<br />" +
-	"<input type='radio' name='mcq' value='c' /> " + q_option_c + "<br />" +
-	"<input type='radio' name='mcq' value='d' /> " + q_option_d + "<br />" +
-	"<input type='submit' value='Submit' id='submit-answer' class='button-link'>";
+	output = ["<input type='radio' name='mcq' value='a' /> (A) " + q_option_a + "<br />",
+	          "<input type='radio' name='mcq' value='b' /> (B) " + q_option_b + "<br />",
+	          "<input type='radio' name='mcq' value='c' /> (C) " + q_option_c + "<br />",
+	          "<input type='radio' name='mcq' value='d' /> (D) " + q_option_d + "<br />",
+	          "<input type='submit' value='Submit' id='submit-answer' class='button-link'>"]
+	
+	return output.join("");
 }
 
 function calculate_levenshtein_distance(s, t) {
@@ -113,11 +114,11 @@ function scoreReference(verseref, userref) {
 }
 
 function scoreMCQ(questionAnswer, userAnswer){ // userAnswer will be a, b, c, or d, unless it's empty
-	score = (userAnswer == questionAnswer)?15:0;
+	score = (userAnswer.toUpperCase() == questionAnswer.toUpperCase())?15:0;
 	if (score == 15) {
 		msg = "Congratulations; that was perfect!";
 	} else {
-		msg = "Sorry, but your choice (" + userAnswer + ") was not correct. The correct answer was (" + questionAnswer + ").";
+		msg = "Sorry, but your choice (" + userAnswer.toUpperCase() + ") was not correct. The correct answer was (" + questionAnswer.toUpperCase() + ").";
 	}
 	
 	return { score: score, msg: msg };
