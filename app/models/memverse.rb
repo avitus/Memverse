@@ -235,7 +235,7 @@ class Memverse < ActiveRecord::Base
   end
   
   # ----------------------------------------------------------------------------------------------------------
-  # User has entire chapter: i.e. does user have the last first in the chapter and is it linked to the 1st verse
+  # User has entire chapter: i.e. does user have the last verse in the chapter and is it linked to the 1st verse
   # ----------------------------------------------------------------------------------------------------------  
   def part_of_entire_chapter?
     
