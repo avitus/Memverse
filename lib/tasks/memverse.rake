@@ -34,11 +34,11 @@ namespace :utils do
   desc "Locate out of bound verses"
   task :locate_oob_verses => :environment do
   
-    puts "=== Locating out of bound verses ==="
+    puts "=== Locating (and deleting) out of bound verses ==="
   
     Verse.find_each { |vs|
       if !vs.end_of_chapter_verse || vs.versenum > vs.end_of_chapter_verse.last_verse
-        puts("#{vs.id} : #{vs.ref} --- #{vs.text}")
+        puts("#{vs.id} : #{vs.ref} [#{vs.created_at.to_date}] - #{vs.text}")
         vs.destroy
       end 
     }  
