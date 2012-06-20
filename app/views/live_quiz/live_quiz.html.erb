@@ -202,10 +202,10 @@
 		if(q_type == 'reference' || q_type == 'recitation'){
 			addInputBox(q_type, q_num, q_ansr);
 		} else if (q_type == 'mcq'){
-			$("#quiz-question").append(setupMCQ(q_option_a, q_option_b, q_option_c, q_option_d, mc_answer));
+			$("#quiz-answer").html(setupMCQ(q_option_a, q_option_b, q_option_c, q_option_d, mc_answer));
 			$('input#submit-answer').click(function() {			
-				var userAnswer = $('input[name=mcq]:checked', '#quiz-question').val();
-				grade = getScore(questionAnswer, userAnswer, questionType);
+				var userAnswer = $('input[name=mcq]:checked', '#quiz-answer').val();
+				grade = getScore(q_ansr, userAnswer, q_type);
 				if (grade.score != null) {
 					$.post("/record_score", {	usr_id:		<%= current_user.id %>, 
 												usr_name:	'<%= current_user.name_or_login %>', 
@@ -213,6 +213,7 @@
 												score: 		grade.score } );
 					$("#quiz-messages").html("<p>" + grade.msg + "</p>").children("p").effect('highlight', {}, 3000);
 					// $('#quiz-answer').html("<strong>Your answer: </strong>" + userAnswer);
+					$('#quiz-answer').html("");
 				}
 			});
 		}
