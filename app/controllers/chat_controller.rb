@@ -17,7 +17,7 @@ class ChatController < ApplicationController
 	  @msg 		= params[:msg_body]
 	  @usr 		= params[:sender]
 	  channel = params[:channel] || "channel1"
- 	  Juggernaut.publish(select_channel(channel), parse_chat_message(params[:msg_body], params[:sender]))
+ 	  Juggernaut.publish(select_channel(channel), parse_chat_message(params[:msg_body], params[:sender])) unless @msg.blank?
 	  respond_to do |format|
 	    format.js
   	end
