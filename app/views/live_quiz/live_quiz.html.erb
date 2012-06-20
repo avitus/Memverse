@@ -162,6 +162,7 @@
 			q_ref  = data.q_ref;
 			q_text = data.q_passages.<%= current_user.translation %>;
 		} else {
+			q_text    = data.mc_question;
 			q_option_a = data.mc_option_a;
 			q_option_b = data.mc_option_b;
 			q_option_c = data.mc_option_c;
@@ -183,6 +184,7 @@
 			break;
 
 			case 'mcq':
+			  q_show = q_text;
 			  q_ansr = mc_answer;
 			break;
 
