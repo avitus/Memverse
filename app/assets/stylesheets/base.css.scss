@@ -2354,11 +2354,15 @@ div#currentVerse #matchbox .correct {
 }
 
 #roster {
-	width:335px;
+	width:340px;
 	height:200px;
 	float:left;
-	padding:0 10px;
-	overflow-y:scroll;
+	padding-left:10px;
+}
+
+#roster-window {
+	height:140px;
+	overflow-y:auto;
 }
 
 div.roster-item {
