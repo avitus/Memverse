@@ -147,7 +147,7 @@ function getScore(questionAnswer, userAnswer, questionType) {
 }
 
 build_user_link = function(user_id, user_name) {
-	return '<a href="/users/' + user_id + '">' + user_name + '</a>';
+	return '<a href="/users/' + user_id + '" target="_blank">' + user_name + '</a>';
 }
 
 build_gravatar_img = function(gravatar_url){
