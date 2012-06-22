@@ -267,11 +267,15 @@
 	});
 
 	user_id = "<%= current_user.id %>";
+	user_name = "<%= current_user.name %>";
 	
 	$.getJSON('/live_quiz/roster.json', function(data) {
 		var roster_items = [];
 
 		$.each(data, function(key, val) {
+			if (val.roster.user_name == user_name) {
+				val.roster.user_name = "Me";
+			}
 			roster_items.push(build_roster_item(val.roster.user_id, val.roster.user_name, val.roster.gravatar_url));
 		});
 
