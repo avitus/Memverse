@@ -295,7 +295,7 @@
 			switch(msg.type){
 				case 'create':
 					li.append(" entered the room.");
-					var div = build_roster_item(roster_uid, roster_uname, gravatar_url);
+					var div = $(build_roster_item(roster_uid, roster_uname, gravatar_url));
 					$("#roster-window").scrollTop($("#roster-window")[0].scrollHeight).append(div);
 					div.effect('highlight', {}, 3000);
 					break;
