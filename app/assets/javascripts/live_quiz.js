@@ -145,3 +145,15 @@ function getScore(questionAnswer, userAnswer, questionType) {
 	}	
 	
 }
+
+build_user_link = function(user_id, user_name) {
+	return '<a href="/users/' + user_id + '">' + user_name + '</a>';
+}
+
+build_gravatar_img = function(gravatar_url){
+	return '<img src="' + gravatar_url + '" />';
+}
+
+build_roster_item = function(user_id, user_name, gravatar_url) {
+	return '<div class="roster-item" id="'+user_id+'">'+build_gravatar_img(gravatar_url) + " " + build_user_link(user_id,user_name)+'</div>';
+}

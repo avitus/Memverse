@@ -26,13 +26,14 @@ class Roster < SuperModel::Base
     def subscribe
       Juggernaut.subscribe do |event, data|
         data.default = {}
-        user_id = data["meta"]["user_id"]
-		user_name = data["meta"]["user_name"]
+        user_id      = data["meta"]["user_id"]
+		user_name    = data["meta"]["user_name"]
+		gravatar_url = data["meta"]["gravatar_url"]
         next unless user_id
 
         case event
         when :subscribe
-          event_subscribe(user_id, user_name)
+          event_subscribe(user_id, user_name, gravatar_url)
         when :unsubscribe
           event_unsubscribe(user_id)
         end
@@ -40,8 +41,8 @@ class Roster < SuperModel::Base
     end
 
     protected
-      def event_subscribe(user_id, user_name)
-        user = find_by_user_id(user_id) || self.new(:user_id => user_id, :user_name => user_name)
+      def event_subscribe(user_id, user_name, gravatar_url)
+        user = find_by_user_id(user_id) || self.new(:user_id => user_id, :user_name => user_name, :gravatar_url => gravatar_url)
         user.increment!
       end
 
@@ -81,6 +82,10 @@ class Roster < SuperModel::Base
         :type  => type, :id => self.id,
         :klass => self.class.name, :record => self
       })
+  end
+
+  def as_json(options={})
+    super(:only => [:user_id, :user_name, :gravatar_url])
   end
 
 end
