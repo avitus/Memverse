@@ -592,7 +592,14 @@ class MemversesController < ApplicationController
       if current_user.has_verse?(vs.book, vs.chapter, vs.versenum)
         msg = "You already have #{vs.ref} in a different translation"
       else
-        Memverse.create(:user_id => current_user.id, :verse_id => vs.id)
+        # Save verse as a memory verse for user         
+        begin
+          Memverse.create(:user_id => current_user.id, :verse_id => vs.id)  
+        rescue Exception => e  
+          Rails.logger.error("*** [Memverse save error] Exception while saving #{vs.ref} for user #{current_user.id}: #{e}")
+        else
+          msg = "Added"
+        end  
       end
     end
 
