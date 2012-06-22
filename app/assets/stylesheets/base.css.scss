@@ -2382,6 +2382,38 @@ div#currentVerse #matchbox .correct {
 	float:left;
 }
 
+#roster {
+	width:340px;
+	height:200px;
+	float:left;
+	padding-left:10px;
+}
+
+#roster-window {
+	height:140px;
+	overflow-y:auto;
+}
+
+div.roster-item {
+	width:145px;
+	height:35px;
+	padding:3px;
+	overflow:hidden;
+	white-space:nowrap;
+	text-overflow:ellipsis;
+	float:left;
+}
+
+div.roster-item a {
+	padding-left:0.5em;
+	color:#555;
+}
+
+div.roster-item img {
+	vertical-align:middle;
+	@include border-radius(4px, 4px);
+}
+
 #quiz-messages {
 	float:left;
 	width: 380px;
@@ -2407,13 +2439,17 @@ div#currentVerse #matchbox .correct {
 }
 
 #quiz-answer {
-	height:200px;
+	max-height:200px;
 	padding-right:2em; 
 }
 
 #quiz-answer textarea {
 	height:200px;
 	width:400px;
+}
+
+#quiz-answer input[type="radio"] {
+	padding-bottom:6px;
 }
 
 .hidden {display:none}
@@ -2473,10 +2509,10 @@ div#currentVerse #matchbox .correct {
 /* === Scoreboard === */
 #live-scoreboard {
 	width:170px;
-	border-right:1px solid #bfbebe;
+	border-left:1px solid #bfbebe;
 	padding:0 10px;
-	height:600px;
-	float:left;
+	height:200px;
+	float:right;
 	overflow:auto;
 }
 
@@ -2495,14 +2531,15 @@ div#currentVerse #matchbox .correct {
 
 /* === Chat === */
 #chat-window {
-	width:340px;
-	max-height:600px;
+	width:530px;
+	max-height:500px;
 	float:left;
-	padding:0 10px;	
+	padding:0 10px;
+	border-top:1px solid #bfbebe;
 }
 
 div#chat-stream-narrow {
-	height:520px;
+	height:380px;
 	overflow:auto;
 	list-style:none;
 	border-right:5px;

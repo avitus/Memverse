@@ -121,7 +121,15 @@ class LiveQuizController < ApplicationController
 
     return scoreboard.sort { |x, y| y['score'].to_i <=> x['score'].to_i }
   end
-    
+  
+  #-----------------------------------------------------------------------------------------------------------
+  # Return the roster via JSON; used for initial roster loading
+  #-----------------------------------------------------------------------------------------------------------    
+  def roster
+  	@roster = Roster.all
+	render :json => @roster
+  end
+
 end
 
 
