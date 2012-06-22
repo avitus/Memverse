@@ -42,12 +42,19 @@
 		</div>
 	</div>
 	
+	<div id="roster">
+		<h3>Roster</h3>
+		<div id="roster-window">
+			Loading...
+		</div>
+	</div>
+	
 	<div id="live-scoreboard">
-		<h3>Scoreboard</h3>
-		
+		<h3>Mini Stats</h3>
+		<p> TODO: Make this truly "mini stats" and not full-blown scoreboard. </p>
 		<div id="live-quiz-scores"></div>
 	</div>	
-					
+	
 	<div id="chat-window">
 
 		<h3>Chat</h3>
@@ -68,7 +75,7 @@
 	
 <script type="text/javascript" charset="utf-8">
 	var jug = new Juggernaut();
-	jug.meta = {user_id: <%= current_user.id %>, user_name: "<%= current_user.name %>"};
+	jug.meta = {user_id: <%= current_user.id %>, user_name: "<%= current_user.name %>", gravatar_url: "<%= (current_user.blog_avatar_url + "&s=32").html_safe %>"};
 	
 	jug.subscribe("/chats/channel2", function(data){
 		var u  		= $("<li/>");
@@ -81,8 +88,8 @@
 		m.text(message).addClass("chat-message");
 		
 		// Check whether user is scrolled down to bottom of stream before keeping them scrolled down 
-		// NOTE: chat-stream-narrow is 520px high; we're checking against 530 to pull them down a tad if they forgot to scroll all the way down
-		if ( ($("#chat-stream-narrow")[0].scrollHeight - 530) <= $("#chat-stream-narrow").scrollTop()){
+		// NOTE: chat-stream-narrow is 380px high; we're checking against 390 to pull them down a tad if they forgot to scroll all the way down
+		if ( ($("#chat-stream-narrow")[0].scrollHeight - 390) <= $("#chat-stream-narrow").scrollTop()){
 			$("#chat-stream-narrow").append(u).append(m);
 			$("#chat-stream-narrow").scrollTop($("#chat-stream-narrow")[0].scrollHeight);	
 		} else { // don't scroll
@@ -260,6 +267,20 @@
 	});
 
 	user_id = "<%= current_user.id %>";
+	user_name = "<%= current_user.name %>";
+	
+	$.getJSON('/live_quiz/roster.json', function(data) {
+		var roster_items = [];
+
+		$.each(data, function(key, val) {
+			if (val.roster.user_name == user_name) {
+				val.roster.user_name = "Me";
+			}
+			roster_items.push(build_roster_item(val.roster.user_id, val.roster.user_name, val.roster.gravatar_url));
+		});
+
+		$("#roster-window").html(roster_items.join(''));
+	});
 
 	jug.subscribe("/observer/" + user_id, function(msg) {
 		// Somebody joined or left the room
@@ -270,23 +291,29 @@
 
 			var roster_uid   = msg.record.roster.user_id;
 			var roster_uname = msg.record.roster.user_name;
+			var gravatar_url = msg.record.roster.gravatar_url;
 
-			var li = $("<li/>").addClass("chat-announcement").append("<a href ='/users/" + roster_uid + "'>" + roster_uname + "</a>");
+			var user_link   = build_user_link(roster_uid, roster_uname);
+			var li  = $("<li/>").addClass("chat-announcement").append(user_link);
 
 			switch(msg.type){
 				case 'create':
 					li.append(" entered the room.");
+					var div = $(build_roster_item(roster_uid, roster_uname, gravatar_url));
+					$("#roster-window").scrollTop($("#roster-window")[0].scrollHeight).append(div);
+					div.effect('highlight', {}, 3000);
 					break;
 				case 'destroy':
 					li.append(" left the room.");
+					$("div#" + roster_uid).fadeOut().remove();
 					break;
 			}
 
 			// Check whether user is scrolled down to bottom of stream before keeping them scrolled down 
-			// NOTE: chat-stream-narrow is 520px high; we're checking against 530 to pull them down a tad if they forgot to scroll all the way down
-			if ( ($("#chat-stream-narrow")[0].scrollHeight - 530) <= $("#chat-stream-narrow").scrollTop()){
+			// NOTE: chat-stream-narrow is 380px high; we're checking against 390 to pull them down a tad if they forgot to scroll all the way down
+			if ( ($("#chat-stream-narrow")[0].scrollHeight - 390) <= $("#chat-stream-narrow").scrollTop()){
 				$("#chat-stream-narrow").append(li);
-				$("#chat-stream-narrow").scrollTop($("#chat-stream-narrow")[0].scrollHeight);	
+				$("#chat-stream-narrow").scrollTop($("#chat-stream-narrow")[0].scrollHeight);
 			} else { // don't scroll
 				$("#chat-stream-narrow").append(li);
 			}
