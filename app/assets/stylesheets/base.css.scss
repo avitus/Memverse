@@ -2373,6 +2373,10 @@ div.roster-item {
 	white-space:nowrap;
 	text-overflow:ellipsis;
 	float:left;
+}
+
+div.roster-item a {
+	padding-left:0.5em;
 	color:#555;
 }
 
@@ -2406,7 +2410,7 @@ div.roster-item img {
 }
 
 #quiz-answer {
-	height:200px;
+	max-height:200px;
 	padding-right:2em; 
 }
 
