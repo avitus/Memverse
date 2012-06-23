@@ -89,7 +89,7 @@
 		        <%=@devotion.html_safe%>
 			</div>
 
-			<div id="verse" class="tab_content">
+			<div id="daily-activity" class="tab_content">
 				<h3>Activities for Today</h3>
 				<p>You have <span class="due-today"><%=@due_today%></span> verses due for review today (including <span class="overdue"><%= @overdue %></span> overdue verses).</p>
 				<p>You have <%= link_to "#{@quests_to_next_level} to complete", current_user %> to reach level <%= current_user.level+1 %>.</p>
