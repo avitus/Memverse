@@ -14,7 +14,7 @@ class LiveQuizController < ApplicationController
     @quiz = Quiz.find(params[:quiz] || 1 )
     @quiz_master = @quiz.user
     Rails.logger.info("*** Using quiz #{@quiz.name}. The quiz master is #{@quiz.user.name_or_login}.")
-		
+
     quiz_questions = @quiz.quiz_questions.order("question_no ASC")
     @num_questions = quiz_questions.length
   end
@@ -26,7 +26,9 @@ class LiveQuizController < ApplicationController
 
     Rails.logger.info("*** Quiz starting at #{Time.now}")
 
-    $redis.flushall  # Clear all keys from database
+    # Delete participant scores from redis
+    participants = $redis.keys("user-*")
+    participants.each { |p|	$redis.del(p) }
 
     quiz = Quiz.find(params[:quiz] || 1 )
     @quiz_master = quiz.user
