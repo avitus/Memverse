@@ -592,14 +592,20 @@ class MemversesController < ApplicationController
       if current_user.has_verse?(vs.book, vs.chapter, vs.versenum)
         msg = "You already have #{vs.ref} in a different translation"
       else
-        Memverse.create(:user_id => current_user.id, :verse_id => vs.id)
+        # Save verse as a memory verse for user         
+        begin
+          Memverse.create(:user_id => current_user.id, :verse_id => vs.id)  
+        rescue Exception => e  
+          Rails.logger.error("*** [Memverse save error] Exception while saving #{vs.ref} for user #{current_user.id}: #{e}")
+        else
+          msg = "Added"
+        end  
       end
     end
 
     render :json => {:msg => "Added Chapter" }
     
   end  
-
 
   # ----------------------------------------------------------------------------------------------------------
   # Add a new memory verse
@@ -911,38 +917,43 @@ class MemversesController < ApplicationController
     # Find verse
     mv  = Memverse.find(params[:mv])
     q   = params[:q].to_i
-        
-    # Execute Supermemo algorithm
-    newly_memorized = mv.supermemo(q)
-
-    # Give encouragement if verse transitions from "Learning" to "Memorized"
-    if newly_memorized
-      msg = "Congratulations. You have memorized #{mv.verse.ref}."
-      Tweet.create(:news => "#{current_user.name_or_login} memorized #{mv.verse.ref}", :user_id => current_user.id, :importance => 5)
-
-      if current_user.reaching_milestone
-      	milestone = current_user.memorized+1
-      	
-      	importance = case milestone
-	      	when    0..    9 then 4
-	      	when   10..  399 then 3
-	      	when  400..  999 then 2
-	      	when 1000..10000 then 1 
-	      	else                  5
-      	end
-      	
-        msg       << " That was your #{milestone}th memorized verse!"
-        broadcast  = "#{current_user.name_or_login} memorized #{current_user.his_or_her} #{milestone}th verse"
-        Tweet.create(:news => broadcast, :user_id => current_user.id, :importance => importance)
+    
+    if mv.user == current_user    
+      # Execute Supermemo algorithm
+      newly_memorized = mv.supermemo(q)
+  
+      # Give encouragement if verse transitions from "Learning" to "Memorized"
+      if newly_memorized
+        msg = "Congratulations. You have memorized #{mv.verse.ref}."
+        Tweet.create(:news => "#{current_user.name_or_login} memorized #{mv.verse.ref}", :user_id => current_user.id, :importance => 5)
+  
+        if current_user.reaching_milestone
+        	milestone = current_user.memorized+1
+        	
+        	importance = case milestone
+  	      	when    0..    9 then 4
+  	      	when   10..  399 then 3
+  	      	when  400..  999 then 2
+  	      	when 1000..10000 then 1 
+  	      	else                  5
+        	end
+        	
+          msg       << " That was your #{milestone}th memorized verse!"
+          broadcast  = "#{current_user.name_or_login} memorized #{current_user.his_or_her} #{milestone}th verse"
+          Tweet.create(:news => broadcast, :user_id => current_user.id, :importance => importance)
+        end
+  
+        if mv.chapter_memorized?
+          msg << " You have now memorized all of #{mv.verse.book} #{mv.verse.chapter}. Great job!"
+          Tweet.create(:news => "#{current_user.name_or_login} memorized #{mv.verse.book} #{mv.verse.chapter}", :user_id => current_user.id, :importance => 3)          
+        end
+  
       end
-
-      if mv.chapter_memorized?
-        msg << " You have now memorized all of #{mv.verse.book} #{mv.verse.chapter}. Great job!"
-        Tweet.create(:news => "#{current_user.name_or_login} memorized #{mv.verse.book} #{mv.verse.chapter}", :user_id => current_user.id, :importance => 3)          
-      end
-
+    
+    else
+      msg = "You are attempting to modify a memory verse that belongs to another user."
     end
-   
+        
     render :json => {:msg => msg }
       
   end

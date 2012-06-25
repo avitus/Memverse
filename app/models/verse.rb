@@ -200,22 +200,20 @@ class Verse < ActiveRecord::Base
   def verified?
     return self.verified
   end
-
-
+  
   # ----------------------------------------------------------------------------------------------------------
   # Is this the last verse of a chapter?
   # ---------------------------------------------------------------------------------------------------------- 
   def last_in_chapter?
   	if self.book == "3 John"
-	  if ["NAS", "NLT", "ESV"].include?(self.translation)
-		return self.versenum.to_i == 15
-	  else
-		return self.versenum.to_i == 14
-	  end
+  	  if ["NAS", "NLT", "ESV", "ESV07"].include?(self.translation)
+  		  return self.versenum.to_i == 15
+  	  else
+  		  return self.versenum.to_i == 14
+  	  end
   	else
       !FinalVerse.find(:first, :conditions => { :book => self.book, :chapter => self.chapter, :last_verse => self.versenum }).nil?
-    end
-    
+    end   
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -223,7 +221,7 @@ class Verse < ActiveRecord::Base
   # ---------------------------------------------------------------------------------------------------------- 
   def end_of_chapter_verse
   	if self.book == "3 John"
-  		if ["NAS", "NLT", "ESV"].include?(self.translation)
+  		if ["NAS", "NLT", "ESV", "ESV07"].include?(self.translation)
   			FinalVerse.new(:book => "3 John", :chapter => 1, :last_verse => 15)
   		else
   			FinalVerse.new(:book => "3 John", :chapter => 1, :last_verse => 14)

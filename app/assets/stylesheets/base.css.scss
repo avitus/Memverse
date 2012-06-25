@@ -160,6 +160,56 @@ font-family:"museo-slab-1",Georgia,"Times New Roman",Times,serif;
   
 } 
 
+/*========== White Boxes ==========*/
+
+.white-box-bg {
+  width:1080px;
+  background:#FFF;
+  border:1px solid #555;
+  padding:2em 0;
+  -moz-border-radius:10px;
+  -webkit-border-radius:10px;
+  border-radius:10px; 
+}
+
+.white-box-with-margins {
+  width:1056px;
+  background:#FFF;
+  border:1px solid #555;
+  padding:12px;
+  -moz-border-radius:10px;
+  -webkit-border-radius:10px;
+  border-radius:10px;
+  min-height:475px;
+}
+
+.two-thirds-white-box {
+  float: left;
+  width: 55%;
+  min-height: 232px;
+  background: #fff;
+  border:1px solid #555;
+  margin: 0.5em 0.5em;
+  padding:2em 2em;
+  -moz-border-radius:10px;
+  -webkit-border-radius:10px;
+  border-radius:10px; 
+}
+
+.one-third-white-box {
+  float: left;
+  width: 30%;
+  min-height: 232px;
+  background: #fff;
+  border:1px solid #555;
+  margin: 0.5em 0.5em;
+  padding:2em 2em;
+  -moz-border-radius:10px;
+  -webkit-border-radius:10px;
+  border-radius:10px; 
+}
+
+
 /*========== Header ==========*/
 
 #no-js {
@@ -1421,7 +1471,7 @@ div#flash-error {
 	text-decoration:none;
 }
 
-.tab-content #devotion, .tab-content #verse, .tab-content #community
+.tab-content #devotion, .tab-content #daily-activity, .tab-content #community
 {
 	display:none;
 	width:100%;
@@ -1454,27 +1504,6 @@ div#flash-error {
 	margin-left:4%;
 }
 /*========== Test Verse Page ==========*/
-
-.white-box-bg {
-	width:1080px;
-	background:#FFF;
-	border:1px solid #555;
-	padding:2em 0;
-	-moz-border-radius:10px;
-	-webkit-border-radius:10px;
-	border-radius:10px; 
-}
-
-.white-box-with-margins {
-	width:1056px;
-	background:#FFF;
-	border:1px solid #555;
-	padding:12px;
-	-moz-border-radius:10px;
-	-webkit-border-radius:10px;
-	border-radius:10px;
-	min-height:475px;
-}
 
 .test-verse
 {
