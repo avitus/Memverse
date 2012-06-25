@@ -83,8 +83,7 @@ class Memverse < ActiveRecord::Base
   def supermemo(q)
         
     prev_learning = (self.status == "Learning")
-    
-    
+      
     if self.due?
       if q<3 # answer was incorrect
         n_new = 1  # Start from the beginning
@@ -236,7 +235,7 @@ class Memverse < ActiveRecord::Base
   end
   
   # ----------------------------------------------------------------------------------------------------------
-  # User has entire chapter: i.e. does user have the last first in the chapter and is it linked to the 1st verse
+  # User has entire chapter: i.e. does user have the last verse in the chapter and is it linked to the 1st verse
   # ----------------------------------------------------------------------------------------------------------  
   def part_of_entire_chapter?
     
