@@ -12,22 +12,26 @@
 	vertical-align:middle;
 	padding:33px;
 	line-height:0;
-	font-weight:bold;
 	font-size:14px;
 	height:100%;
 }
 
 #quiz-name {
+	padding-right:10px;
+}
+
+#quiz-name, #quiz-timer, #countdown-till {
 	float:left;
 }
 
-#counter {
-	float:left;
+div#countdown-till {
+	padding-left:0;
 }
 
 #quizzers-stats {
 	float:right;
 	cursor:pointer;
+	font-weight:bold;
 }
 
 #quizzers-stats:hover, #quizzers-stats.expanded {
@@ -86,11 +90,13 @@ div.roster-item img {
 	padding-top: 1em;
 }
 
-#quiz-timer {
-	width:50px;
-	height:38px;
-	padding-top: 1em;
-	float:left;
+div#quiz-timer {
+	line-height:normal;
+	padding:12px 3px 12px 30px;
+	border:none;
+	background:none;
+	height:100%;
+	width:100px;
 }
 
 #questions-answers {
