@@ -8,7 +8,7 @@ MemverseApp::Application.configure do
   
   # ALV: Point to a nonexistent memcache to eliminate problems
   # http://blog.hertler.org/2010/10/memcached-undefined-classmodule-in.html
-  config.cache_store   = :mem_cache_store, '127.0.0.1:11211', {:namespace => "dev"}
+  config.cache_store   = :dalli_store, '127.0.0.1:11211', {:namespace => "dev"}
 
   # Log error messages when you accidentally call methods on nil.
   config.whiny_nils = true
