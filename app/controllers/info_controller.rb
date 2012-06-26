@@ -3,7 +3,7 @@
 class InfoController < ApplicationController
   
   # This causes a problem with the menu not showing the active tab
-  #caches_action :leaderboard, :groupboard, :churchboard, :stateboard, :countryboard, :referralboard, :layout => false, :expires_in => 1.hour
+  caches_action :leaderboard, :groupboard, :churchboard, :stateboard, :countryboard, :referralboard, :layout => false, :expires_in => 1.hour
   
   add_breadcrumb "Home", :root_path
   
@@ -124,10 +124,15 @@ class InfoController < ApplicationController
     
     add_breadcrumb I18n.t("menu.leaderboard"), leaderboard_path
     add_breadcrumb I18n.t("leader_menu.Leaderboard"), leaderboard_path
+    
+    @leaderboard = User.top_users
      
-    @leaderboard = Rails.cache.fetch("top_users", :expires_in => 1.hour) do 
-      User.top_users # returns top users sorted by number of verses memorized
-    end
+    # ALV: Unable to get fragment cache working
+    # TODO: http://stackoverflow.com/questions/11199396/rails-cache-fetch-inserting-extra-values
+     
+    # @leaderboard = Rails.cache.fetch("top_users", :expires_in => 1.hour) do 
+    #   User.top_users 
+    # end
     
   end
 
@@ -142,9 +147,11 @@ class InfoController < ApplicationController
     add_breadcrumb I18n.t("menu.leaderboard"), leaderboard_path
     add_breadcrumb I18n.t("leader_menu.Church Leaderboard"), churchboard_path
 
-    @churchboard = Rails.cache.fetch("top_churches", :expires_in => 1.hour) do     
-      Church.top_churches  # returns top churches sorted by number of verses memorized
-    end
+    @churchboard = Church.top_churches
+
+    # @churchboard = Rails.cache.fetch("top_churches", :expires_in => 1.hour) do     
+    #   Church.top_churches
+    # end
     
   end    
 
@@ -159,9 +166,11 @@ class InfoController < ApplicationController
     add_breadcrumb I18n.t("menu.leaderboard"), leaderboard_path
     add_breadcrumb I18n.t("leader_menu.Group Leaderboard"), groupboard_path
     
-    @groupboard = Rails.cache.fetch("top_groups", :expires_in => 1.hour) do  
-      Group.top_groups  # returns top groups sorted by number of verses memorized
-    end
+    @groupboard = Group.top_groups 
+    
+    # @groupboard = Rails.cache.fetch("top_groups", :expires_in => 1.hour) do  
+    #   Group.top_groups 
+    # end
     
   end  
 
@@ -176,9 +185,11 @@ class InfoController < ApplicationController
     add_breadcrumb I18n.t("menu.leaderboard"), leaderboard_path
     add_breadcrumb I18n.t("leader_menu.State Leaderboard"), stateboard_path
     
-    @stateboard = Rails.cache.fetch("top_states", :expires_in => 1.hour) do  
-      AmericanState.top_states  # returns top states sorted by number of verses memorized
-    end
+    @stateboard = AmericanState.top_states
+    
+    # @stateboard = Rails.cache.fetch("top_states", :expires_in => 1.hour) do  
+    #   AmericanState.top_states  
+    # end
     
   end       
     
@@ -193,9 +204,11 @@ class InfoController < ApplicationController
     add_breadcrumb I18n.t("menu.leaderboard"), leaderboard_path
     add_breadcrumb I18n.t("leader_menu.Country Leaderboard"), countryboard_path
     
-    @countryboard = Rails.cache.fetch("top_countries", :expires_in => 1.hour) do  
-      Country.top_countries  # returns top users sorted by number of verses memorized
-    end
+    @countryboard = Country.top_countries
+    
+    # @countryboard = Rails.cache.fetch("top_countries", :expires_in => 1.hour) do  
+    #   Country.top_countries  
+    # end
     
   end      
 
@@ -209,9 +222,11 @@ class InfoController < ApplicationController
     add_breadcrumb I18n.t("menu.leaderboard"), leaderboard_path
     add_breadcrumb I18n.t("leader_menu.Referralboard"), referralboard_path
     
-    @referralboard = Rails.cache.fetch("top_referrers", :expires_in => 1.hour) do  
-      User.top_referrers
-    end
+    @referralboard = User.top_referrers
+    
+    # @referralboard = Rails.cache.fetch("top_referrers", :expires_in => 1.hour) do  
+    #   User.top_referrers
+    # end
     
   end
   
