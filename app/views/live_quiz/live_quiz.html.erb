@@ -2,9 +2,8 @@
 <div class="white-box-with-margins" style="position:relative">
 	<div id="quiz-header">
 		<h1 id="quiz-name"><%= @quiz.name %></h1>
-		<div id="counter">
-			<!-- Planning to improve timer and put it here. Will start w/ countdown till quiz, then countdown till next question and a scoreboard refresh -->
-		</div>
+		<div id="quiz-timer"></div>
+		<div id="countdown-till"><!-- this will say "till next question" or "till quiz starts" --></div>
 		<div id="quizzers-stats" class="quiz-button">
 			Quizzers <span id="quizzers-count"></span>
 		</div>
@@ -12,7 +11,6 @@
 
 	<div id="live-quiz">
 		<div id="questions-answers">
-			
 			<div id="quiz-messages">
 				<h3>Welcome!</h3>
 				<p id="info">The quiz will begin at <%= @quiz.start_time %>. Your quiz host is <%= @quiz_master.name_or_login %>.</p>
@@ -22,8 +20,6 @@
 					</div>
 				<% end %>
 			</div>
-		
-			<div id="quiz-timer"></div>
 			
 			<div class="clr"></div>
 			
