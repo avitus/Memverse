@@ -23,7 +23,6 @@ class LiveQuizController < ApplicationController
   # This method will push questions to the live quiz channel
   #-----------------------------------------------------------------------------------------------------------
   def start_quiz
-
     Rails.logger.info("*** Quiz starting at #{Time.now}")
 
     # Delete participant scores from redis
@@ -33,6 +32,9 @@ class LiveQuizController < ApplicationController
     quiz = Quiz.find(params[:quiz] || 1 )
     @quiz_master = quiz.user
     Rails.logger.info("*** Using quiz number #{quiz.name}. The quiz master is #{@quiz_master.name_or_login}.")
+
+    # Save status of quiz in redis
+    $redis.hset("quiz-#{quiz.id}", "status", "In progress. Wait for question.")
 
     quiz_questions	= quiz.quiz_questions.order("question_no ASC")
 
@@ -65,7 +67,10 @@ class LiveQuizController < ApplicationController
       Juggernaut.publish( select_channel("/scoreboard"), {:scoreboard => scoreboard} ) 
     }
     end
-        
+
+    # Update quiz status in redis
+    $redis.hset("quiz-#{quiz.id}", "status", "Finished")
+
     respond_to do |format|
       format.all { render :nothing => true, :status => 200 }
     end
@@ -96,21 +101,19 @@ class LiveQuizController < ApplicationController
     score     = params[:score]
     
     if score != "false"
-	    # Store the score in Redis store
-	    $redis.hincrby(usr_id, 'score', score)
-	    $redis.hmset(usr_id, 'name', usr_name, 'login', usr_login)
-	  else
-	    Rails.logger.info("*** Score was submitted as false for #{usr_name}")
-	  end
-	   
-    participants = $redis.keys("user-*")
-    
+      # Store the score in Redis store
+      $redis.hincrby(usr_id, 'score', score)
+      $redis.hmset(usr_id, 'name', usr_name, 'login', usr_login)
+    else
+      Rails.logger.info("*** Score was submitted as false for #{usr_name}")
+    end
+
     respond_to do |format|
       format.all { render :nothing => true, :status => 200 }
     end
-        
-  end  
-  
+
+  end
+
   #-----------------------------------------------------------------------------------------------------------
   # This method publishes the scoreboard 
   # Format: [{"score"=>"11", "name"=>"Andy"}, {"score"=>"14", "name"=>"Alex"} ]
@@ -131,7 +134,22 @@ class LiveQuizController < ApplicationController
   	@roster = Roster.all
 	render :json => @roster
   end
+  
+  #-----------------------------------------------------------------------------------------------------------
+  # Return time till quiz starts
+  #-----------------------------------------------------------------------------------------------------------    
+  def till_start
+    @quiz = Quiz.find(params[:id])
+    @till = Time.now - @quiz.start_time # time till in seconds
 
+    if @till <= 0
+      render :json => @till
+    elsif $redis.exists("quiz-#{@quiz.id}") && status = $redis.hmget("quiz-#{@quiz.id}", "status")
+      render :json => status
+    else
+      render :json => "Finished"
+    end
+  end
 end
 
 
