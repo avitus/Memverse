@@ -159,3 +159,14 @@ build_gravatar_img = function(gravatar_url){
 build_roster_item = function(user_id, user_name, gravatar_url) {
 	return '<div class="roster-item" id="'+user_id+'">'+build_gravatar_img(gravatar_url) + " " + build_user_link(user_id,user_name)+'</div>';
 }
+
+chat_stream_scroll = function(callback){
+	// Check whether user is scrolled down to bottom of stream before keeping them scrolled down 
+	// NOTE: chat-stream-narrow is 520px high; we're checking against 530 to pull them down a tad if they forgot to scroll all the way down
+	if ( ($("#chat-stream-narrow")[0].scrollHeight - 530) <= $("#chat-stream-narrow").scrollTop()){
+		callback();
+		$("#chat-stream-narrow").scrollTop($("#chat-stream-narrow")[0].scrollHeight);
+	} else { // don't scroll
+		callback();
+	}
+}

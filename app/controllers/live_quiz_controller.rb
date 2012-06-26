@@ -167,5 +167,3 @@ class LiveQuizController < ApplicationController
     end
   end
 end
-
-
