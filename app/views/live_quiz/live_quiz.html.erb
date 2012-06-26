@@ -1,7 +1,7 @@
 <% page_title "Live Quiz :: " + @quiz.name %>
 <div class="white-box-with-margins" style="position:relative">
 	<div id="quiz-header">
-		<h1 id="quiz-name"><%= @quiz.name %></h1>
+		<h1 id="quiz-name"><%= @quiz.name %> [<%= link_to @current_user.translation, update_profile_path %>]</h1>
 		<div id="quiz-timer"></div>
 		<div id="countdown-till"><!-- this will say "till next question" or "till quiz starts" --></div>
 		<div id="quizzers-stats" class="quiz-button">

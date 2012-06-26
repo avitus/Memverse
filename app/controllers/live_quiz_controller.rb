@@ -11,6 +11,11 @@ class LiveQuizController < ApplicationController
   # Quiz setup
   #-----------------------------------------------------------------------------------------------------------
   def live_quiz
+    if current_user.translation.nil?
+      flash[:notice] = "Please choose a translation and then return to the quiz."
+      redirect_to update_profile_path
+    end
+
     @quiz = Quiz.find(params[:quiz] || 1 )
     @quiz_master = @quiz.user
     Rails.logger.info("*** Using quiz #{@quiz.name}. The quiz master is #{@quiz.user.name_or_login}.")
