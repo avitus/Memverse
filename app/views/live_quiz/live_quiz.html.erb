@@ -353,7 +353,7 @@
 		if (isNaN(data)) {
 			$("#countdown-till").html("<strong>Quiz Status:</strong> " + data);
 		} else {
-			$('#quiz-timer').countdown({until: +data, format: 'S', significant: 2});
+			$('#quiz-timer').countdown({until: +data, format: 'S', significant: 2}); // TODO: Get this to show days/hours/minutes/seconds, depending
 			$("#countdown-till").text("till quiz starts");
 		}
 	});

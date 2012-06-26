@@ -140,9 +140,9 @@ class LiveQuizController < ApplicationController
   #-----------------------------------------------------------------------------------------------------------    
   def till_start
     @quiz = Quiz.find(params[:id])
-    @till = Time.now - @quiz.start_time # time till in seconds
+    @till = @quiz.start_time - Time.now # time till in seconds
 
-    if @till <= 0
+    if @till >= 0
       render :json => @till
     elsif $redis.exists("quiz-#{@quiz.id}") && status = $redis.hmget("quiz-#{@quiz.id}", "status")
       render :json => status
