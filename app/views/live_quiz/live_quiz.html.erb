@@ -11,14 +11,14 @@
 
 	<div id="live-quiz">
 		<div id="questions-answers">
+			<% if current_user == @quiz_master %>
+				<div class="quiz-button">
+					<%= button_to "Start Quiz", {:action => "start_quiz", :quiz => @quiz.id}, :remote => true, :id => "start-quiz", :class => "button-link" %>
+				</div>
+			<% end %>
 			<div id="quiz-messages">
 				<h3>Welcome!</h3>
 				<p id="info">The quiz will begin at <%= @quiz.start_time %>. Your quiz host is <%= @quiz_master.name_or_login %>.</p>
-				<% if current_user == @quiz_master %>
-					<div class="quiz-button">
-						<%= button_to "Start Quiz", {:action => "start_quiz", :quiz => @quiz.id}, :remote => true, :id => "start-quiz", :class => "button-link" %>
-					</div>
-				<% end %>
 			</div>
 			
 			<div class="clr"></div>
@@ -225,8 +225,9 @@
 		}
 
 		<!-- Countdown clock -->			
-		$('#quiz-timer').countdown('destroy').removeClass('red-highlight')
-		$('#quiz-timer').countdown({until: +q_time, onTick: highlightLast5, onExpiry: disableSubmission, format: 'S'}); 
+		$('#quiz-timer').countdown('destroy').removeClass('red-highlight');
+		$('#quiz-timer').countdown({until: +q_time, onTick: highlightLast5, onExpiry: disableSubmission, format: 'S'});
+		$("#countdown-till").text("till next question");
 
 		function highlightLast5(periods) { 
 		    if ($.countdown.periodsToSeconds(periods) == 5) { 
@@ -236,7 +237,12 @@
 
 		function disableSubmission() { 
 			$('input#submit-answer').hide(); 
-		}		 						
+		}
+		
+		if (q_num == <%= @num_questions %>) {
+			// if last question, setTimeout to put up "Finished" status message when it's done
+			setTimeout(function(){$("#countdown-till").html("<strong>Quiz Status:</strong> Finished").effect('highlight', {}, 3000);$('#quiz-timer').countdown('destroy').removeClass('red-highlight');},q_time*1000);
+		}
 	}); 	
 
 	jug.subscribe("/live_quiz/scoreboard", function(data){
@@ -342,6 +348,15 @@
 			return true;
 		}
 	}
+	
+	$.getJSON('/live_quiz/till_start/<%= @quiz.id %>.json', function(data) {
+		if (isNaN(data)) {
+			$("#countdown-till").html("<strong>Quiz Status:</strong> " + data);
+		} else {
+			$('#quiz-timer').countdown({until: +data, format: 'S', significant: 2});
+			$("#countdown-till").text("till quiz starts");
+		}
+	});
 
 </script>
 
