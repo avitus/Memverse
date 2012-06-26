@@ -496,8 +496,7 @@ class User < ActiveRecord::Base
   # Input: User object
   # ----------------------------------------------------------------------------------------------------------
   def finished_a_mem_session?
-    entries = ProgressReport.find( :first, 
-                                   :conditions => ["user_id = ?", self.id])                          
+    entries = ProgressReport.where("user_id = ?", self.id).first
     return !entries.nil?                             
   end
 
@@ -513,17 +512,16 @@ class User < ActiveRecord::Base
   # TODO: This needs serious optimization ... page load time for user with lots of complete books is 40 secs
   # ----------------------------------------------------------------------------------------------------------
   def complete_chapters
-    
     cc = Array.new
-    
+
     # Get all memory verses for user that are the first verse in a chapter
     start_mv = self.memverses.includes(:verse).where('verses.versenum' => 1)
     start_mv.sort!.each { |smv| 
       if smv.part_of_entire_chapter?
         if smv.chapter_memorized?
-          cc << ["Memorized", smv.verse.book + " " + smv.verse.chapter.to_s]
+          cc << ["Memorized", smv.verse.chapter_name]
         else
-          cc << ["Learning", smv.verse.book + " " + smv.verse.chapter.to_s]
+          cc << ["Learning", smv.verse.chapter_name]
           # TODO: What should we do about "Pending" chapters?
         end
       end

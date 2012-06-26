@@ -112,19 +112,19 @@ class ApplicationController < ActionController::Base
     
     # Check for correct string formatting
     if valid_ref(vsref)
-      
+
       entered_book_name  = vsref.slice!(/([0-3]?\s+)?([a-záéíóúüñ\-]+\s)+/i).rstrip!.titleize
-            
+
       # --- Book name should be translated into English after this point ---
       if I18n.locale == :en
       	book = entered_book_name 
   	  else 
   	  	book = translate_to_english(entered_book_name)
   	  end
-	  	  
+
       book = "Psalms" if book == "Psalm"
       book = "Song of Songs" if book == "Song Of Songs"
-  
+
       if !BIBLEBOOKS.include?(full_book_name(book)) # This is not a book of the bible
       	logger.info("*** Could not find book: #{book} when parsing string #{parse_string}")
         return 2, book # Error code for invalid book of the bible
@@ -142,7 +142,7 @@ class ApplicationController < ActionController::Base
       return 1 # Error code for incorrectly formatted string 
     end   
   end
- 
+
   # ----------------------------------------------------------------------------------------------------------
   # Checks validity of bible book name
   # Input:  'Deuteronomy' or 'Deut' = true
@@ -323,7 +323,7 @@ class ApplicationController < ActionController::Base
   	return false # TODO: not supporting mobile devices for now ... uncomment below and remove this line to add support
     # if session[:mobile_param]  
     #   session[:mobile_param] == "1"  
-    # else  
+    # else
     #   request.user_agent =~ /Mobile|webOS/  
     # end  
   end  
@@ -332,8 +332,8 @@ class ApplicationController < ActionController::Base
   def prepare_for_mobile  
     session[:mobile_param] = params[:mobile] if params[:mobile]  
     request.format = :mobile if mobile_device?  
-  end    
-    
+  end
+
   protected
   
   # Automatically respond with 404 for ActiveRecord::RecordNotFound
@@ -341,4 +341,3 @@ class ApplicationController < ActionController::Base
     render :file => File.join(Rails.root, 'public', '404.html'), :status => 404
   end
 end
-

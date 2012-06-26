@@ -245,6 +245,7 @@ versefeedback = function(correctvs, verseguess, echo, firstletter) {
 			
 			if ( guesstext == "" ) { // This happens when nothing is in the textarea
 				feedback = "Waiting for you to begin typing...";
+				correct = false;
 			} else if ( guess_words[x] == "") {
 				// Most likely scenario: the last character was a dash ("-") that was used to split, and now this is empty. We don't want to add "... " to feedback.
 				// Only happens to dashes at the end of the text. Other ones are already handled.

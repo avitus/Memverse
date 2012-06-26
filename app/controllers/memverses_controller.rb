@@ -944,18 +944,16 @@ class MemversesController < ApplicationController
         end
   
         if mv.chapter_memorized?
-          msg << " You have now memorized all of #{mv.verse.book} #{mv.verse.chapter}. Great job!"
-          Tweet.create(:news => "#{current_user.name_or_login} memorized #{mv.verse.book} #{mv.verse.chapter}", :user_id => current_user.id, :importance => 3)          
+          msg << " You have now memorized all of #{mv.verse.chapter_name}. Great job!"
+          Tweet.create(:news => "#{current_user.name_or_login} memorized #{mv.verse.chapter_name}", :user_id => current_user.id, :importance => 3)
         end
-  
       end
-    
+
     else
       msg = "You are attempting to modify a memory verse that belongs to another user."
     end
-        
+
     render :json => {:msg => msg }
-      
   end
 
   # ----------------------------------------------------------------------------------------------------------
