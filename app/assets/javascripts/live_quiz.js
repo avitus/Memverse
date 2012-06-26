@@ -1,9 +1,11 @@
 setupMCQ = function(q_option_a, q_option_b, q_option_c, q_option_d, mc_answer){
-	output = ["<input type='radio' name='mcq' value='a' id='opt_a' /> <label for='opt_a'>(A) " + q_option_a + "</label><br />",
-	          "<input type='radio' name='mcq' value='b' id='opt_b' /> <label for='opt_b'>(B) " + q_option_b + "</label><br />",
-	          "<input type='radio' name='mcq' value='c' id='opt_c' /> <label for='opt_c'>(C) " + q_option_c + "</label><br />",
-	          "<input type='radio' name='mcq' value='d' id='opt_d' /> <label for='opt_d'>(D) " + q_option_d + "</label><br />",
-	          "<input type='submit' value='Submit' id='submit-answer' class='button-link'>"]
+	output = ["<ul class='mcq'>",
+				"<li><input type='radio' name='mcq' value='a' id='opt_a' /> <label for='opt_a'>(A) " + q_option_a + "</label></li>",
+				"<li><input type='radio' name='mcq' value='b' id='opt_b' /> <label for='opt_b'>(B) " + q_option_b + "</label></li>",
+				"<li><input type='radio' name='mcq' value='c' id='opt_c' /> <label for='opt_c'>(C) " + q_option_c + "</label></li>",
+				"<li><input type='radio' name='mcq' value='d' id='opt_d' /> <label for='opt_d'>(D) " + q_option_d + "</label></li>",
+			"</ul>",
+			"<input type='submit' value='Answer!' id='submit-answer' class='button-link'>"]
 	
 	return output.join("");
 }

@@ -101,13 +101,13 @@
 			case 'recitation':
 				$('#quiz-answer').html("<textarea class='q-answer-input' name='txt" + questionNum + "' id='" + questionNum + "'></textarea>");
 				$('#quiz-answer').append("<br/>")
-				$('#quiz-answer').append("<input type='submit' value='Submit' id='submit-answer' class='button-link'>");
+				$('#quiz-answer').append("<input type='submit' value='Answer!' id='submit-answer' class='button-link'>");
 				$('#quiz-answer textarea').focus();
 				break;
 
 			case 'reference':
 				$('#quiz-answer').html("<input type='text' class='q-answer-input' name='txt" + questionNum + "' id='" + questionNum + "'</input>");
-				$('#quiz-answer').append("<input type='submit' value='Submit' id='submit-answer' class='button-link'>");
+				$('#quiz-answer').append("<input type='submit' value='Answer!' id='submit-answer' class='button-link'>");
 				$('#quiz-answer input').autocomplete({ lookup: ['Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy', 'Joshua', 'Judges', 'Ruth', '1 Samuel', '2 Samuel',
 					'1 Kings', '2 Kings','1 Chronicles', '2 Chronicles', 'Ezra', 'Nehemiah', 'Esther', 'Job', 'Psalm', 'Proverbs',
 					'Ecclesiastes', 'Song of Songs', 'Isaiah', 'Jeremiah', 'Lamentations', 'Ezekiel', 'Daniel', 'Hosea', 'Joel', 
@@ -120,12 +120,11 @@
 				break;
 
 			case 'mcq':
-				// loop through answers
 				break;
 
 			default:
 				$('#quiz-answer').html("<input type='text' class='q-answer-input'" + "name='txt" + questionNum + "' id='" + questionNum + "'</input>");
-				$('#quiz-answer').append("<input type='submit' value='Submit' id='submit-answer' class='button-link'>");        	
+				$('#quiz-answer').append("<input type='submit' value='Answer!' id='submit-answer' class='button-link'>");        	
 	    }	 
 	        
 		$('input#submit-answer').click(function() {			
@@ -140,7 +139,17 @@
 				$('#quiz-answer').html("<strong>Your answer: </strong>" + userAnswer);
 			}
 		});
-	}	
+	}
+	
+	function highlightLast5(periods) { 
+		if ($.countdown.periodsToSeconds(periods) == 5) { 
+			$(this).addClass('red-highlight'); 
+		} 
+	}
+
+	function disableSubmission() { 
+		$('input#submit-answer').hide();
+	}
 
 	jug.subscribe("/live_quiz/quiz_stream", function(data) {
 		var div		= $("<div/>");
@@ -226,21 +235,14 @@
 		<!-- Countdown clock -->			
 		$('#quiz-timer').countdown('destroy').removeClass('red-highlight');
 		$('#quiz-timer').countdown({until: +q_time, onTick: highlightLast5, onExpiry: disableSubmission, format: 'S'});
-		$("#countdown-till").text("till next question");
-
-		function highlightLast5(periods) { 
-		    if ($.countdown.periodsToSeconds(periods) == 5) { 
-		        $(this).addClass('red-highlight'); 
-		    } 
-		}
-
-		function disableSubmission() { 
-			$('input#submit-answer').hide(); 
-		}
 		
-		if (q_num == <%= @num_questions %>) {
-			// if last question, setTimeout to put up "Finished" status message when it's done
-			setTimeout(function(){$("#countdown-till").html("<strong>Quiz Status:</strong> Finished").effect('highlight', {}, 3000);$('#quiz-timer').countdown('destroy').removeClass('red-highlight');},q_time*1000);
+		if (q_num == <%= @num_questions %>) { // if last question
+			// countdown till question and quiz over
+			$("#countdown-till").text("till question and quiz over");
+			// setTimeout to put up "Finished" status message when it's done
+			setTimeout(function(){$("#countdown-till").html("<strong>Quiz Status:</strong> Finished").effect('highlight', {}, 3000);$('#quiz-timer').countdown('destroy').removeClass('red-highlight');disableSubmission();},q_time*1000);
+		} else {
+			$("#countdown-till").text("till next question");
 		}
 	}); 	
 
