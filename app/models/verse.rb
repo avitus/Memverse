@@ -428,10 +428,8 @@ class Verse < ActiveRecord::Base
   end
 
   def chapter_name
-    book    = self.book
-    chapter = self.chapter
-    book = "Psalm" if self.book == "Psalms"
-    return "#{book} #{chapter}"
+    book = (self.book == "Psalms")?"Psalm":self.book;
+    return "#{book} #{self.chapter}"
   end
 
   # ============= Protected below this line ==================================================================
