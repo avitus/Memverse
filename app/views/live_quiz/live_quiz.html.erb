@@ -28,15 +28,8 @@
 					The quiz will have <%= @num_questions %> questions. Each question will be worth a maximum of 15 points.
 				</p>
 				<p>
-					If you have arrived after the quiz start time, wait patiently for the next question to appear. It can take up to 5 minutes
-					if a long question is underway. There is no need to refresh or reload the page.
-				</p>
-				<p>
 					You will answer all the questions on the left side. The middle column will display the scoreboard and the right column is only 
 					used for chatting with the other contestants.
-				</p>
-				<p>
-					Scores are updated at the end of each question.
 				</p>
 			</div>
 			<br/>
@@ -50,12 +43,14 @@
 	
 	<div id="live-scoreboard">
 		<h3>Scoreboard</h3>
-		<div id="live-quiz-scores"></div>
+		<div id="live-quiz-scores">
+			<p>Scores are updated at the end of each question.</p>
+		</div>
 	</div>	
 	
 	<div id="chat-window">
 
-		<h3>Chat</h3>
+		<h3>Chat (<span id="chat_status"><%= @chat_status %></span>) <%= (link_to "Toggle Status", {:controller => "chat", :action => "toggle_channel", :channel => "channel2"}, :remote => true) if current_user == @quiz_master %></h3>
 
 		<div id="chat-stream-narrow">
 		</div>
@@ -78,9 +73,15 @@
 	jug.subscribe("/chats/channel2", function(data){
 		var u  		= $("<li/>");
 		var m 		= $("<li/>");
-		
-		var user    = data.substring(0,parseInt(data.indexOf(':')));
-		var message = data.substring(parseInt(data.indexOf(':'))+1);
+
+		if(data.status) {
+			$("#chat_status").text(data.status);
+			var user    = "Memverse Server"
+			var message = "Chat Channel " + data.status;
+		} else {
+			var user    = data.substring(0,parseInt(data.indexOf(':')));
+			var message = data.substring(parseInt(data.indexOf(':'))+1);
+		}
 		
 		u.text(user).addClass("chat-username");
 		m.text(message).addClass("chat-message");
