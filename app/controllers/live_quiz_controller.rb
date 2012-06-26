@@ -15,6 +15,8 @@ class LiveQuizController < ApplicationController
     @quiz_master = @quiz.user
     Rails.logger.info("*** Using quiz #{@quiz.name}. The quiz master is #{@quiz.user.name_or_login}.")
 
+    @chat_status = ($redis.exists("chat-channel2") && $redis.hmget("chat-channel2", "status").first == "Open")?"Open":"Closed"
+
     quiz_questions = @quiz.quiz_questions.order("question_no ASC")
     @num_questions = quiz_questions.length
   end
@@ -79,9 +81,9 @@ class LiveQuizController < ApplicationController
   #-----------------------------------------------------------------------------------------------------------
   # Parse questions for quiz presentation
   #-----------------------------------------------------------------------------------------------------------
-	def parse_quiz_question(num, type, passage)
+  def parse_quiz_question(num, type, passage)
     return "#{num}: #{passage} (#{type.capitalize})"
-	end
+  end
 
   #-----------------------------------------------------------------------------------------------------------
   # Select channel
