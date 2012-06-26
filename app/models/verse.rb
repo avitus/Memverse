@@ -30,7 +30,8 @@ class Verse < ActiveRecord::Base
   has_many :memverses
   
   # Validations
-  validates_presence_of :translation, :book, :chapter, :versenum, :text
+  validates_presence_of   :translation, :book, :chapter, :versenum, :text
+  validates_uniqueness_of :translation, :scope => [:book, :chapter, :versenum]
 
   scope :old_testament, where(:book_index =>  1..39)
   scope :new_testament, where(:book_index => 40..66)
