@@ -29,7 +29,10 @@ namespace :utils do
         end
 
       }        
-    }  
+    }
+    
+    puts "=== Finished ==="
+    
   end
 
   desc "Locate out of bound verses"
@@ -42,7 +45,10 @@ namespace :utils do
         puts("#{vs.id} : #{vs.ref} [#{vs.created_at.to_date}] - #{vs.text}")
         # vs.destroy
       end 
-    }  
+    } 
+    
+    puts "=== Finished ==="
+ 
   end
   
   desc "Detect duplicate verses"
@@ -56,9 +62,15 @@ namespace :utils do
         if vs.memverses.count == 0
           puts("  ^--- Deleting this verse since it has no associated memory verses.")
           vs.destroy
+        elsif vs.memverses.count == 1
+          puts("  ^--- User: #{vs.memverses.first.user.email} was last active on #{vs.memverses.first.user.last_activity_date}")
+        else
+          # Do nothing
         end
       end
     }
+    
+    puts "=== Finished ==="
     
   end
   
