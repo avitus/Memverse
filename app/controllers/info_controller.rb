@@ -160,7 +160,7 @@ class InfoController < ApplicationController
     add_breadcrumb I18n.t("leader_menu.Group Leaderboard"), groupboard_path
     
     @groupboard = Rails.cache.fetch("top_groups", :expires_in => 1.hour) do  
-      Group.top_groups  # returns top churches sorted by number of verses memorized
+      Group.top_groups  # returns top groups sorted by number of verses memorized
     end
     
   end  
