@@ -143,11 +143,15 @@ class LiveQuizController < ApplicationController
     @till = @quiz.start_time - Time.now # time till in seconds
 
     if @till >= 0
-      render :json => @till
+	  hours = (@till/3600).to_i
+	  minutes = (@till/60 - hours * 60).to_i
+	  seconds = (@till - (minutes * 60 + hours * 3600)).to_i
+
+      render :json => {:time => "+#{hours}h +#{minutes}m +#{seconds}s"}
     elsif $redis.exists("quiz-#{@quiz.id}") && status = $redis.hmget("quiz-#{@quiz.id}", "status")
-      render :json => status
+      render :json => {:status => status}
     else
-      render :json => "Finished"
+      render :json => {:status => "Finished"}
     end
   end
 end

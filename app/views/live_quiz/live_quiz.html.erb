@@ -350,10 +350,10 @@
 	}
 	
 	$.getJSON('/live_quiz/till_start/<%= @quiz.id %>.json', function(data) {
-		if (isNaN(data)) {
-			$("#countdown-till").html("<strong>Quiz Status:</strong> " + data);
+		if (data.status) {
+			$("#countdown-till").html("<strong>Quiz Status:</strong> " + data.status);
 		} else {
-			$('#quiz-timer').countdown({until: +data, format: 'S', significant: 2}); // TODO: Get this to show days/hours/minutes/seconds, depending
+			$('#quiz-timer').countdown({until: data.time, significant: 2});
 			$("#countdown-till").text("till quiz starts");
 		}
 	});
