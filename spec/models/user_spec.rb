@@ -112,7 +112,7 @@ describe User do
         verse = FactoryGirl.create(:verse, :book_index => 19, :book => "Psalms", :chapter => '117', :versenum => i)
         FactoryGirl.create(:memverse, :user_id => @user.id, :verse_id => verse.id)
       end
-      @user.complete_chapters.first.should include("Psalms 117")
+      @user.complete_chapters.first.should include("Psalm 117")
     end
     
     it "should list also Psalm 117 when complete chapter, as well as verse 0, are in account" do
@@ -120,7 +120,7 @@ describe User do
         verse = FactoryGirl.create(:verse, :book_index => 19, :book => "Psalms", :chapter => 117, :versenum => i)
         FactoryGirl.create(:memverse, :user_id => @user.id, :verse_id => verse.id)
       end
-      @user.complete_chapters.first.should include("Psalms 117")
+      @user.complete_chapters.first.should include("Psalm 117")
     end
     
     it "should not list Psalm 117 when only verse 2 is in account" do

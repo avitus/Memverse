@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120617224948) do
+ActiveRecord::Schema.define(:version => 20120626223603) do
 
   create_table "american_states", :force => true do |t|
     t.string  "abbrev",      :limit => 20, :default => "", :null => false
@@ -603,6 +603,7 @@ ActiveRecord::Schema.define(:version => 20120617224948) do
   add_index "verses", ["book_index"], :name => "index_verses_on_book_index"
   add_index "verses", ["chapter"], :name => "index_verses_on_chapter"
   add_index "verses", ["error_flag"], :name => "index_verses_on_error_flag"
+  add_index "verses", ["translation", "book", "chapter", "versenum"], :name => "index_verses_on_translation_and_book_and_chapter_and_versenum", :unique => true
   add_index "verses", ["translation"], :name => "index_verses_on_translation"
   add_index "verses", ["verified"], :name => "index_verses_on_verified"
   add_index "verses", ["versenum"], :name => "index_verses_on_versenum"
