@@ -47,7 +47,7 @@ class LiveQuizController < ApplicationController
 
     spawn_block(:argv => "spawn-quiz-questions") do
       # Spawned process needs to reconnect to redis
-	  require 'redis'
+      require 'redis'
       $redis.client.disconnect
       $redis = Redis.new(:host => 'localhost', :port => 6379)
 

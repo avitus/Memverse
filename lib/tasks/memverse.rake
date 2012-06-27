@@ -1,8 +1,11 @@
 namespace :utils do
+  
   desc "Locate broken links between memory verses"
   task :locate_broken_links => :environment do
 
-    User.find_each { |u|
+    puts("Locating broken links for #{User.active.count} users.")
+
+    User.active.find_each { |u|
 
       Memverse.where(:user_id => u.id).find_each { |mv|
 
@@ -26,11 +29,12 @@ namespace :utils do
         end
 
       }        
-    }  
+    }
+    
+    puts "=== Finished ==="
+    
   end
-end
 
-namespace :utils do
   desc "Locate out of bound verses"
   task :locate_oob_verses => :environment do
 
@@ -41,8 +45,38 @@ namespace :utils do
         puts("#{vs.id} : #{vs.ref} [#{vs.created_at.to_date}] - #{vs.text}")
         # vs.destroy
       end 
-    }  
+    } 
+    
+    puts "=== Finished ==="
+ 
   end
+  
+  desc "Detect duplicate verses"
+  task :find_duplicate_verses => :environment do
+
+    puts "=== Finding duplicate verses ==="
+    
+    Verse.find_each { |vs|
+      if Verse.where(:translation => vs.translation, :book_index => vs.book_index, :chapter => vs.chapter, :versenum => vs.versenum).count > 1
+        puts("[#{vs.id}] #{vs.created_at} -- #{vs.ref} (#{vs.translation}) -- Associated memory verses: #{vs.memverses.count}")
+        if vs.memverses.count == 0
+          puts("  ^--- Deleting this verse since it has no associated memory verses.")
+          vs.destroy
+        elsif vs.memverses.count == 1
+          puts("  ^--- User: #{vs.memverses.first.user.email} was last active on #{vs.memverses.first.user.last_activity_date}")
+        else
+          # Do nothing
+        end
+      end
+    }
+    
+    puts "=== Finished ==="
+    
+  end
+  
+  
 end
+
+
 
 
