@@ -1,7 +1,7 @@
 namespace :roster do
   desc "Start roster"
   task :start => :environment do
+    puts "Starting roster"
     Roster.subscribe
-    puts "Roster started"
   end
 end
