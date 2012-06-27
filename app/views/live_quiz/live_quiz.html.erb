@@ -278,11 +278,12 @@
 		var roster_items = [];
 
 		$.each(data, function(key, val) {
-			if (val.roster.user_name == user_name) {
-				val.roster.user_name = "Me";
+			if (val.roster.user_name != user_name) {
+				roster_items.push(build_roster_item(val.roster.user_id, val.roster.user_name, val.roster.gravatar_url));
 			}
-			roster_items.push(build_roster_item(val.roster.user_id, val.roster.user_name, val.roster.gravatar_url));
 		});
+
+		roster_items.push(build_roster_item(user_id, "Me", "<%= (current_user.blog_avatar_url + "&s=32").html_safe %>")); // last roster_item is self
 
 		$("#roster-window").html(roster_items.join(''));
 		$("#quizzers-count").html("(" + roster_items.length + ")");
