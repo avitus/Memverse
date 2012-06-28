@@ -34,7 +34,6 @@
 			</div>
 			<br/>
 			<div id="quiz-answer"></div>
-			
 		</div>
 	</div>
 
@@ -71,9 +70,6 @@
 	jug.meta = {user_id: <%= current_user.id %>, user_name: "<%= current_user.name %>", gravatar_url: "<%= (current_user.blog_avatar_url + "&s=32").html_safe %>"};
 	
 	jug.subscribe("/chats/channel2", function(data){
-		var u  		= $("<li/>");
-		var m 		= $("<li/>");
-
 		if(data.status) {
 			$("#chat_status").text(data.status);
 			var user    = "Memverse Server"
@@ -83,8 +79,8 @@
 			var message = data.substring(parseInt(data.indexOf(':'))+1);
 		}
 		
-		u.text(user).addClass("chat-username");
-		m.text(message).addClass("chat-message");
+		var u = $("<li/>").text(user).addClass("chat-username");
+		var m = $("<li/>").text(message).addClass("chat-message");
 		
 		if ((u.text() == $("#chat-stream-narrow li.chat-username").last().text()) && ($("#chat-stream-narrow li").last().attr('class') != 'chat-announcement')) {
 			u = "";
@@ -124,15 +120,15 @@
 			default:
 				$('#quiz-answer').html("<input type='text' class='q-answer-input'" + "name='txt" + questionNum + "' id='" + questionNum + "'</input>");
 				$('#quiz-answer').append("<input type='submit' value='Answer!' id='submit-answer' class='button-link'>");        	
-	    }	 
-	        
+	    }
+
 		$('input#submit-answer').click(function() {			
 			var userAnswer = $('.q-answer-input').val();
 			grade = getScore(questionAnswer, userAnswer, questionType);
 			if (grade.score != null) {
-				$.post("/record_score", {	usr_id:		<%= current_user.id %>, 
-											usr_name:	'<%= current_user.name_or_login %>', 
-											usr_login:	'<%= current_user.login %>', 
+				$.post("/record_score", {	usr_id:		<%= current_user.id %>,
+											usr_name:	'<%= current_user.name_or_login %>',
+											usr_login:	'<%= current_user.login %>',
 											score: 		grade.score } );
 				$("#quiz-messages").html("<p>" + grade.msg + "</p>").children("p").effect('highlight', {}, 3000);
 				$('#quiz-answer').html("<strong>Your answer: </strong>" + userAnswer);
@@ -151,12 +147,8 @@
 	}
 
 	jug.subscribe("/live_quiz/quiz_stream", function(data) {
-		var div		= $("<div/>");
-		var q  		= $("<h3/>");
-		var p 		= $("<p/>");
-
-		var q_num;
-		var q_type;
+		var q_num  = data.q_num;
+		var q_type = data.q_type;
 		var q_text;
 		var q_ref;
 		var q_show;
@@ -168,19 +160,16 @@
 		var mc_option_d;
 		var mc_answer;
 
-		q_num  = data.q_num;
-		q_type = data.q_type;
-
 		if (q_type != 'mcq') {
 			q_ref  = data.q_ref;
 			q_text = data.q_passages.<%= current_user.translation %>;
 		} else {
-			q_text    = data.mc_question;
+			q_text     = data.mc_question;
 			q_option_a = data.mc_option_a;
 			q_option_b = data.mc_option_b;
 			q_option_c = data.mc_option_c;
 			q_option_d = data.mc_option_d;
-			mc_answer = data.mc_answer;
+			mc_answer  = data.mc_answer;
 		}
 		q_time = data.time_alloc;
 
@@ -205,9 +194,9 @@
 			  q_show = 'Error'
 		}
 
-		q.text('Question ' + q_num + ' (of <%= @num_questions %>)').addClass("quiz-q-num");
-		p.text(q_show).addClass("quiz-q");
-		div.append(q).append(p);
+		var q   = $("<h3/>").text('Question ' + q_num + ' (of <%= @num_questions %>)').addClass("quiz-q-num");
+		var p   = $("<p/>").text(q_show).addClass("quiz-q");
+		var div = $("<div/>").append(q).append(p);
 
 		$("#quiz-question").html(div);
 		$("#quiz-question").scrollTop($("#quiz-question")[0].scrollHeight);
@@ -216,7 +205,8 @@
 			addInputBox(q_type, q_num, q_ansr);
 		} else if (q_type == 'mcq'){
 			$("#quiz-answer").html(setupMCQ(q_option_a, q_option_b, q_option_c, q_option_d, mc_answer));
-			$('input#submit-answer').click(function() {			
+			$('input#submit-answer').click(function() {
+				$(this).remove();
 				var userAnswer = $('input[name=mcq]:checked', '#quiz-answer').val();
 				grade = getScore(q_ansr, userAnswer, q_type);
 				if (grade.score != null) {
@@ -225,8 +215,9 @@
 												usr_login:	'<%= current_user.login %>', 
 												score: 		grade.score } );
 					$("#quiz-messages").html("<p>" + grade.msg + "</p>").children("p").effect('highlight', {}, 3000);
-					// $('#quiz-answer').html("<strong>Your answer: </strong>" + userAnswer);
-					$('#quiz-answer').html("");
+					$("#quiz-answer input#opt_" + userAnswer).parent().append(" <i>(your answer)</i>");
+					$("#quiz-answer input#opt_" + q_ansr.toLowerCase()).parent().addClass("correct");
+					$("#quiz-answer input").remove();
 				}
 			});
 		}
@@ -354,5 +345,3 @@
 	});
 
 </script>
-
-
