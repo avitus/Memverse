@@ -121,14 +121,20 @@ div#quiz-timer {
 }
 
 ul.mcq {
-	padding-left:1.5em;
 	margin:0;
 	font-size:14px;
 	list-style-type:none;
+	padding-left:0;
 }
 
 ul.mcq li {
-	margin-bottom:14px;
+	padding-left:40px;
+	padding-bottom:20px;
+}
+
+ul.mcq li.correct {
+	background:url("right.png") no-repeat left top;
+	font-weight:bold;
 }
 
 #submit-answer {
