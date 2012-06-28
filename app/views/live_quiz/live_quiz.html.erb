@@ -205,8 +205,8 @@
 			  q_show = 'Error'
 		}
 
-		q.text('Question ' + q_num).addClass("quiz-q-num");
-		p.text(q_show).addClass("quiz-q");		
+		q.text('Question ' + q_num + ' (of <%= @num_questions %>)').addClass("quiz-q-num");
+		p.text(q_show).addClass("quiz-q");
 		div.append(q).append(p);
 
 		$("#quiz-question").html(div);
@@ -292,7 +292,6 @@
 	jug.subscribe("/observer/" + user_id, function(msg) {
 		// Somebody joined or left the room
 		// We need to post a little status message in the chat log column
-		// console.log(msg.klass);
 		// ^^ Currently the msg.klass is always Roster. But if we started using the /observer/user_id channel for other things, it might not be.
 		if(msg.klass == "Roster" && msg.type != "update" && msg.record.roster.user_id != user_id) {
 
