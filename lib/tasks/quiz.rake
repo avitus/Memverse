@@ -1,7 +1,7 @@
 namespace :quiz do
   desc "Start quiz"
   task :start => :environment do
-  # should be called with "bundle exec rake quiz:start quiz_id=ID_HERE"
+  # should be called with "bundle exec rake quiz:start quiz_id=ID_HERE RAILS_ENV=production"
     puts "Starting quiz"
 	
     # Delete participant scores from redis

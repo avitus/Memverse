@@ -215,7 +215,9 @@
 												usr_login:	'<%= current_user.login %>', 
 												score: 		grade.score } );
 					$("#quiz-messages").html("<p>" + grade.msg + "</p>").children("p").effect('highlight', {}, 3000);
-					$("#quiz-answer input#opt_" + userAnswer).parent().addClass("incorrect");
+					if (grade.score != 15) { // if it's wrong
+						$("#quiz-answer input#opt_" + userAnswer).parent().addClass("incorrect");
+					}
 					$("#quiz-answer input#opt_" + q_ansr.toLowerCase()).parent().addClass("correct");
 					$("#quiz-answer input").remove();
 				}
@@ -280,10 +282,10 @@
 		$("#quizzers-count").html("(" + roster_items.length + ")");
 	});
 
-	jug.subscribe("/observer/" + user_id, function(msg) {
+	jug.subscribe("/roster", function(msg) {
 		// Somebody joined or left the room
 		// We need to post a little status message in the chat log column
-		// ^^ Currently the msg.klass is always Roster. But if we started using the /observer/user_id channel for other things, it might not be.
+		// ^^ Currently the msg.klass is always Roster.
 		if(msg.klass == "Roster" && msg.type != "update" && msg.record.roster.user_id != user_id) {
 
 			var roster_uid   = msg.record.roster.user_id;

@@ -8,7 +8,7 @@ class Roster < SuperModel::Base
   validates_presence_of :user_id
 
   after_create 'self.publish_roster(:create)'
-  after_update 'self.publish_roster(:update)' # I don't think we need to publish the roster when a roster record is updated
+#  after_update 'self.publish_roster(:update)' # I don't think we need to publish the roster when a roster record is updated
   after_destroy 'self.publish_roster(:destroy)'
 
   indexes :user_id
@@ -76,8 +76,7 @@ class Roster < SuperModel::Base
   end
 
   def publish_roster(type)
-    Juggernaut.publish(
-      Array(self.observer_clients).map {|c| "/observer/#{c}" }, 
+    Juggernaut.publish("/roster", 
       {
         :type  => type, :id => self.id,
         :klass => self.class.name, :record => self
