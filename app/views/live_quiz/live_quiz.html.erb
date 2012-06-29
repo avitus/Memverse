@@ -215,7 +215,7 @@
 												usr_login:	'<%= current_user.login %>', 
 												score: 		grade.score } );
 					$("#quiz-messages").html("<p>" + grade.msg + "</p>").children("p").effect('highlight', {}, 3000);
-					$("#quiz-answer input#opt_" + userAnswer).parent().append(" <i>(your answer)</i>");
+					$("#quiz-answer input#opt_" + userAnswer).parent().addClass("incorrect");
 					$("#quiz-answer input#opt_" + q_ansr.toLowerCase()).parent().addClass("correct");
 					$("#quiz-answer input").remove();
 				}

@@ -137,6 +137,10 @@ ul.mcq li.correct {
 	font-weight:bold;
 }
 
+ul.mcq li.incorrect {
+	text-decoration:line-through;
+}
+
 #submit-answer {
 	padding:0.5em 1em;
 	font-size:18px;
