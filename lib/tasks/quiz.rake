@@ -1,14 +1,16 @@
 namespace :quiz do
   desc "Start quiz"
   task :start => :environment do
-  # should be called with "bundle exec rake quiz:start quiz_id=ID_HERE RAILS_ENV=production"
+  # should be called with "bundle exec rake quiz:start RAILS_ENV=production"
+    STDOUT.puts "Quiz ID:"
+    quiz_id = STDIN.gets.chomp.to_i
     puts "Starting quiz"
 	
     # Delete participant scores from redis
     participants = $redis.keys("user-*")
     participants.each { |p|    $redis.del(p) }
 
-    quiz = Quiz.find(ENV['quiz_id'])
+    quiz = Quiz.find(quiz_id)
     @quiz_master = quiz.user
 
     # Save status of quiz in redis
