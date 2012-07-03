@@ -732,12 +732,12 @@ class Memverse < ActiveRecord::Base
   # Implement counter caches for number of verses memorized and learning
   # ----------------------------------------------------------------------------------------------------------     
   def update_counter_cache
-    self.user.memorized = Memverse.count(:all, :conditions => ["user_id = ? and status = ?", self.user.id, "Memorized"])
-    self.user.learning  = Memverse.count(:all, :conditions => ["user_id = ? and status = ?", self.user.id, "Learning"])
+    self.user.memorized = Memverse.where(:user_id => self.user.id, :status => "Memorized").count
+    self.user.learning  = Memverse.where(:user_id => self.user.id, :status => "Learning").count
     self.user.last_activity_date = Date.today
     self.user.save
     
-    self.verse.memverses_count = Memverse.count(:all, :conditions => { :verse_id => self.verse.id })
+    self.verse.memverses_count = Memverse.where(:verse_id => self.verse.id).count
     self.verse.save
   end
   

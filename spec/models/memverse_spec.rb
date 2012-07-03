@@ -4,11 +4,11 @@ require 'pp'
 describe Memverse do
   
   before(:each) do    
-    @user  = FactoryGirl.create(:user)
-    @verse = FactoryGirl.create(:verse) 
+    @user  = User.create!(:name => "Test User", :email => "test@memverse.com", :password => "secret", :password_confirmation => "secret")
   end
   
   it "should create a new instance given a valid attribute" do
+    @verse = Verse.create!(:book_index => 1, :book => "Genesis", :chapter => 12, :versenum => 1, :text => "This is a test", :translation => "NIV")
     Memverse.create!(:user => @user, :verse => @verse)
   end
 
@@ -18,11 +18,11 @@ describe Memverse do
 #  ---------------------------------------------------------------------------------------------------------------
 
   describe "Verse Linking" do
-    
+
     before(:each) do
-      
+
       @passage = Array.new
-         
+
       for i in 1..6
         verse       = Verse.create(:book_index => 19, :book => "Psalms", :chapter => 1, :versenum => i, :text => "This is a test")
         @passage[i] = Memverse.create(:user => @user, :verse => verse)
