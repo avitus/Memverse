@@ -27,15 +27,15 @@ class Roster < SuperModel::Base
       Juggernaut.subscribe do |event, data|
         data.default = {}
         user_id      = data["meta"]["user_id"]
-		user_name    = data["meta"]["user_name"]
-		gravatar_url = data["meta"]["gravatar_url"]
+    		user_name    = data["meta"]["user_name"]
+    		gravatar_url = data["meta"]["gravatar_url"]
         next unless user_id
 
         case event
-        when :subscribe
-          event_subscribe(user_id, user_name, gravatar_url)
-        when :unsubscribe
-          event_unsubscribe(user_id)
+          when :subscribe
+            event_subscribe(user_id, user_name, gravatar_url)
+          when :unsubscribe
+            event_unsubscribe(user_id)
         end
       end
     end
