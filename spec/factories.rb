@@ -24,6 +24,9 @@ FactoryGirl.define do
     mv.association :verse, :factory => :verse
     mv.association :user,  :factory => :user
     mv.status 'Learning'
+    mv.last_tested Date.today
+    mv.next_test Date.today
+    mv.efactor 2.0
   end
   
   factory :blog do |f|

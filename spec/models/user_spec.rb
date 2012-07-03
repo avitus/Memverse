@@ -130,4 +130,57 @@ describe User do
     end
   end
 
+  describe "adjust_work_load" do
+    it "should not change the account of an overworked user" do
+      @user = FactoryGirl.create(:user, :time_allocation => 5)
+      @user.work_load.should == 2
+      for i in 1..3
+        verse = FactoryGirl.create(:verse, :book_index => 1, :book => "Genesis", :chapter => 3, :versenum => i)
+        FactoryGirl.create(:memverse, :user => @user, :verse => verse)
+      end
+      @user.work_load.should == 5
+      @user.adjust_work_load.should == false
+    end
+    
+    it "should adjust the work load of an underworked user" do
+      @user = FactoryGirl.create(:user)
+
+      for i in 5..14 # setup learning verses
+        verse = FactoryGirl.create(:verse, :book_index => 2, :book => "Exodus", :chapter => 20, :versenum => i)
+        FactoryGirl.create(:memverse, :user_id => @user.id, :verse_id => verse.id, :test_interval => i, :next_test => Date.today + i)
+      end
+
+      for i in 1..5 # setup pending verses
+        verse = FactoryGirl.create(:verse, :book_index => 19, :book => "Psalms", :chapter => 118, :versenum => i)
+        mv    = FactoryGirl.create(:memverse, :user => @user, :verse => verse)
+        Memverse.update(mv.id, :status => "Pending")
+      end
+
+      Memverse.includes(:verse).where('verses.book_index' => 19, 'user_id' => @user.id).first.status.should == "Pending"
+      @user.work_load.should == 3
+      @user.adjust_work_load.length.should == 2 # should activate 2 memverses
+      @user.work_load.should == 5
+    end
+  end
+
+  describe "reset_memorization_schedule" do
+    it "should space out verses appropriately" do
+      @user = FactoryGirl.create(:user)
+
+      for i in 11..20 # setup learning verses
+        verse = FactoryGirl.create(:verse, :book_index => 2, :book => "Exodus", :chapter => 20, :versenum => i)
+        FactoryGirl.create(:memverse, :user => @user, :verse => verse, :test_interval => i, :next_test => Date.today - i)
+      end
+
+      @user.work_load.should == 3
+      load_for_today = @user.memverses.active.where("next_test <= ?", Date.today).count
+
+      @user.reset_memorization_schedule
+      new_load_for_today = @user.memverses.active.where("next_test <= ?", Date.today).count
+      new_load_for_today.should be < load_for_today
+      load_for_tomorrow  = @user.memverses.active.where("next_test = ?", Date.tomorrow).count
+      load_for_tomorrow.should == new_load_for_today
+    end
+  end
+
 end

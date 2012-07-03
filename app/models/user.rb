@@ -162,19 +162,15 @@ class User < ActiveRecord::Base
   end  
 
   # ----------------------------------------------------------------------------------------------------------
-  # Check whether current user is memorizing a given verse in any translation
   # Input: User object
-  # TODO: This method occasionally returns infinity due to test_interval being zero. This is not the best place
+  # TODO: This method occasionally returned infinity due to test_interval being zero. This is not the best place
   #       to fix the problem but good enough hack for now.
   # ----------------------------------------------------------------------------------------------------------     
   def work_load
     time_per_verse = 1.0 # minutes
     verses_per_day = 2.0 # login, setup time etc
+    self.memverses.active.where(:test_interval => 0).update_all(:test_interval => 1)
     self.memverses.active.find_each { |mv|
-      if mv.test_interval == 0
-        mv.test_interval = 1
-        mv.save
-      end
       verses_per_day += (1 / mv.test_interval.to_f) 
     }
     return (verses_per_day * time_per_verse).round 
@@ -211,37 +207,31 @@ class User < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   # TRUE if user has fallen behind
   # ----------------------------------------------------------------------------------------------------------    
-	def swamped?
-		return due_verses >= 3 * work_load
-	end
+  def swamped?
+    return due_verses >= 3 * work_load
+  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Convert pending verses to active status
   # ----------------------------------------------------------------------------------------------------------  
   def adjust_work_load
-  	
   	if self.auto_work_load
-  		
-	  	time_shortfall = time_allocation - work_load
+      time_shortfall = time_allocation - work_load
 
-	  	if time_shortfall >= 1
-	  		verses_activated = Array.new
-	  		pending_verses = self.memverses.inactive.order("created_at ASC").limit(time_shortfall)
-	  		pending_verses.each { |pv|
-	  			pv.status    = pv.test_interval > 30 ? "Memorized" : "Learning"
-	  			if pv.next_test <= Date.today
-	  			  pv.next_test = Date.today + 1
-	  			end
-	  			pv.save
-	  			verses_activated << pv
-	  		}
-	  		return verses_activated
-	  	end
-	  	
-	  end
-	  
+      if time_shortfall >= 1
+        pending = self.memverses.inactive.order("created_at ASC").limit(time_shortfall).select("id")
+
+        Memverse.where("id in (?) and test_interval > 30", pending).update_all(:status => "Memorized")
+        Memverse.where("id in (?) and test_interval <= 30", pending).update_all(:status => "Learning")
+        Memverse.where("id in (?) and next_test <= ?", pending, Date.today).update_all(:next_test => Date.tomorrow)
+
+        return Memverse.where("id in (?)", pending)
+      end
+    end
+
+    return false
   end
-  
+
   # ----------------------------------------------------------------------------------------------------------
   # User hasn't added verses or picked translation => send to quick start page
   # ----------------------------------------------------------------------------------------------------------    
@@ -569,27 +559,30 @@ class User < ActiveRecord::Base
     end
   end
 
-
   # ----------------------------------------------------------------------------------------------------------
   # Reset the spacing of memory verses
   # ----------------------------------------------------------------------------------------------------------
-	def reset_memorization_schedule
-		
-		load_target		 = self.work_load
-		load_for_today = Memverse.active.where("user_id = ? and next_test <= ?", self.id, Date.today).order("next_test ASC" )
-																		
-		load_for_today.each_with_index { |mv, index|
-			mv.next_test = Date.today + (index / load_target)
-			mv.save
-		}
-		
-		return due_verses
-		
-		# extend future verses if necessary
-		# TODO: call a generic load smoothing function to space out verses evenly. Might not be worth doing given that 
-		# each day's memorization session changes the future load
-		
-	end
+  def reset_memorization_schedule
+    load_target    = self.work_load
+    load_for_today = self.memverses.active.where("next_test <= ?", Date.today).order("next_test ASC").select("id").map(&:id)
+    offset         = 0
+
+    for i in 1..load_for_today.length
+      if (i % load_target == 0) # if divisible by load_target
+        Memverse.where("id in (?)", load_for_today[(offset * load_target)..(i-1)]).update_all(:next_test => Date.today + offset)
+        offset = offset + 1
+      elsif ((i-1) % load_target == 0) && ((i-1) + load_target > load_for_today.length) # if just passed last i divisble by load_target
+        Memverse.where("id in (?)", load_for_today[(offset * load_target)..(load_for_today.length-1)]).update_all(:next_test => Date.today + offset)
+        offset = offset + 1
+      end
+    end
+
+    return due_verses
+
+    # extend future verses if necessary
+    # TODO: call a generic load smoothing function to space out verses evenly. Might not be worth doing given that 
+    # each day's memorization session changes the future load
+  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Returns number of overdue verses (does not include verses that are due today)
