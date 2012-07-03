@@ -11,7 +11,7 @@ class Memverse < ActiveRecord::Base
   scope :memorized,     where(:status => "Memorized")
   scope :learning,      where(:status => "Learning" )
   
-  scope :active, 				where(:status => ["Learning", "Memorized"])
+  scope :active, 			where(:status => ["Learning", "Memorized"])
   scope :inactive, 			where(:status => "Pending")
   
   scope :current,  			lambda { where('next_test >= ?', Date.today) }
