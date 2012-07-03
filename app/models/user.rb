@@ -238,14 +238,14 @@ class User < ActiveRecord::Base
   def needs_quick_start?
     !self.translation && self.memverses.count == 0 
   end
-    
+
   # ----------------------------------------------------------------------------------------------------------
   # Check whether current user is memorizing any verses at all
   # ----------------------------------------------------------------------------------------------------------  
   def has_started?
     return self.memverses.count > 0
   end
-  
+
   # ----------------------------------------------------------------------------------------------------------
   # Check whether current user has any active verses
   # ----------------------------------------------------------------------------------------------------------  
@@ -256,15 +256,15 @@ class User < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   # Completed sessions over various time periods
   # ---------------------------------------------------------------------------------------------------------- 
-	def completed_sessions(time_period = :total)
-	  return case time_period
-	    when :week  then self.progress_reports.where('entry_date > ?', 1.week.ago).count
-	    when :month then self.progress_reports.where('entry_date > ?', 1.month.ago).count
-	    when :year  then self.progress_reports.where('entry_date > ?', 1.year.ago).count
-	    when :total then self.progress_reports.count
-	    else self.progress_reports.count
-	  end  
-	end
+  def completed_sessions(time_period = :total)
+    return case time_period
+      when :week  then self.progress_reports.where('entry_date > ?', 1.week.ago).count
+      when :month then self.progress_reports.where('entry_date > ?', 1.month.ago).count
+      when :year  then self.progress_reports.where('entry_date > ?', 1.year.ago).count
+      when :total then self.progress_reports.count
+      else self.progress_reports.count
+    end  
+  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Return hash of OT Verses memorized and learning
@@ -272,7 +272,7 @@ class User < ActiveRecord::Base
   def ot_verses    
     { "Memorized" => self.memverses.memorized.old_testament.count, "Learning" => self.memverses.learning.old_testament.count }
   end
-  
+
   def ot_perc
     self.has_active? ? (self.memverses.active.old_testament.count.to_f / self.memverses.active.count.to_f * 100).round : 0
   end

@@ -166,4 +166,9 @@ class LiveQuizController < ApplicationController
       render :json => {:status => "Finished"}
     end
   end
+  
+  def test_sign_in_random
+    sign_in(:user, User.find_by_email("student#{rand(50)}@sttsetia.org"))
+    redirect_to "/live_quiz?quiz=16"
+  end
 end
