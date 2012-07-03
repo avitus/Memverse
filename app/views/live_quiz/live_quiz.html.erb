@@ -97,7 +97,9 @@
 				$('#quiz-answer').html("<textarea class='q-answer-input' name='txt" + questionNum + "' id='" + questionNum + "'></textarea>");
 				$('#quiz-answer').append("<br/>")
 				$('#quiz-answer').append("<input type='submit' value='Answer!' id='submit-answer' class='button-link'>");
-				$('#quiz-answer textarea').focus();
+				if (!$('#msg_body').is(':focus')) {
+					$('#quiz-answer textarea').focus();
+				}
 				break;
 
 			case 'reference':
@@ -111,7 +113,9 @@
 					'Colossians', '1 Thessalonians', '2 Thessalonians', '1 Timothy', '2 Timothy', 'Titus', 'Philemon', 'Hebrews', 'James',
 					'1 Peter', '2 Peter', '1 John', '2 John', '3 John', 'Jude', 'Revelation']						
 				});
-				$('#quiz-answer input').focus();
+				if (!$('#msg_body').is(':focus')) {
+					$('#quiz-answer input').focus();
+				}
 				break;
 
 			case 'mcq':
