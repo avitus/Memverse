@@ -8,5 +8,6 @@ User-agent: *
 Disallow: /admin/ 		# Administrators only
 Disallow: /utils/ 		# Administrators only
 Disallow: /images/ 		# Images
-Disallow: /javascripts/		# Javascript directory
+Disallow: /javascripts/	# Javascript directory
 Disallow: /charts/		# Old flash charts
+Disallow: /blogs/9/     # Old blog route that should not exist any more
