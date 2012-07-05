@@ -34,7 +34,7 @@ class BadgesController < ApplicationController
     badges_to_check = current_user.badges_to_strive_for.sort.reverse
         
     badges_to_check.each do |badge|
-      Rails.logger.debug("Checking whether user has earned #{badge.color} #{badge.name} badge")
+      Rails.logger.info("Checking whether user has earned #{badge.color} #{badge.name} badge")
       if badge.achieved?(current_user)
         badge.award_badge(current_user)
         @recently_awarded_badges << badge
