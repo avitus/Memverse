@@ -11,7 +11,7 @@ class Memverse < ActiveRecord::Base
   scope :memorized,     where(:status => "Memorized")
   scope :learning,      where(:status => "Learning" )
   
-  scope :active, 			where(:status => ["Learning", "Memorized"])
+  scope :active, 			  where(:status => ["Learning", "Memorized"])
   scope :inactive, 			where(:status => "Pending")
   
   scope :current,  			lambda { where('next_test >= ?', Date.today) }
@@ -668,16 +668,17 @@ class Memverse < ActiveRecord::Base
   def add_links
     
     # Adding inbound links
-    if self.prev_verse ||= self.get_prev_verse # Attempt to fix race condition
+    if self.prev_verse ||= self.get_prev_verse  # Attempt to fix race condition
       prior_vs             = Memverse.find(self.prev_verse)
       prior_vs.next_verse  = self.id
       prior_vs.save!
       
       self.first_verse ||= self.get_first_verse # Attempt to fix race condition
+      self.save!                                # Attempt to fix race condition
       
     end
       
-    if self.next_verse ||= self.get_next_verse # Attempt to fix race condition
+    if self.next_verse ||= self.get_next_verse  # Attempt to fix race condition
       subs_vs             = Memverse.find(self.next_verse)
       subs_vs.prev_verse  = self.id
       subs_vs.first_verse = self.first_verse || self.id
@@ -685,6 +686,7 @@ class Memverse < ActiveRecord::Base
       
       # Updating starting point for downstream verses
       subs_vs.update_downstream_start_verses
+      self.save!                                # Attempt to fix race condition
     end
     
   end
