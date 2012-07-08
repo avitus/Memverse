@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120626223603) do
+ActiveRecord::Schema.define(:version => 20120708014400) do
 
   create_table "american_states", :force => true do |t|
     t.string  "abbrev",      :limit => 20, :default => "", :null => false
@@ -574,6 +574,7 @@ ActiveRecord::Schema.define(:version => 20120626223603) do
     t.boolean  "forem_admin",                              :default => false
     t.string   "forem_state",                              :default => "pending_review"
     t.boolean  "forem_auto_subscribe",                     :default => false
+    t.string   "unconfirmed_email"
   end
 
   add_index "users", ["american_state_id"], :name => "index_users_on_american_state_id"
