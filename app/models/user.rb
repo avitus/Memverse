@@ -93,8 +93,7 @@ class User < ActiveRecord::Base
                   :identity_url, :remember_me, :newsletters, :reminder_freq, :last_reminder, 
                   :church, :group, :country, :american_state, :show_echo, :max_interval, 
                   :mnemonic_use, :all_refs, :referred_by, :auto_work_load, :show_email
-  
-
+                    
   # ----------------------------------------------------------------------------------------------------------
   # Display name
   # ----------------------------------------------------------------------------------------------------------

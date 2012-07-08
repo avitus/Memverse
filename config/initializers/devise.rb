@@ -45,6 +45,9 @@ Devise.setup do |config|
   # Tell if authentication through request.params is enabled. True by default.
   # config.params_authenticatable = true
 
+  # Require confirmation when changing email address  
+  config.reconfirmable = true
+
   # Tell if authentication through HTTP Basic Auth is enabled. False by default.
   # config.http_authenticatable = false
 
