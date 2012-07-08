@@ -76,10 +76,10 @@ end
 
 Given /^a user with the login of "(.*)"$/ do |login|
   User.new(:name => "Test User",
-            :email => "testemail@test.com",
-            :login => login,
-            :password => "secret",
-            :password_confirmation => "secret").save!
+           :email => "testemail@test.com",
+           :login => login,
+           :password => "secret",
+           :password_confirmation => "secret").save!
 end
 
 Then /^there should be a user with an email of "(.*)" whose referrer's login is "(.*)"$/ do |email, login|
