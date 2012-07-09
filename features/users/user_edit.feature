@@ -17,7 +17,7 @@ Feature: Edit User
       And I fill in "user_email" with "new_email@memverse.com"
       And I press "Update Profile"
       And I go to the homepage
-      Then "user@test.com" should receive an email
+      Then "new_email@memverse.com" should receive an email
       When I open the email
       Then I should see "confirm your account" in the email body
       When I follow "Confirm my account" in the email
