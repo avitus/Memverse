@@ -9,7 +9,8 @@ function flexversesearch(text){
 
 				// Clear search results
 				clearSearchResults();
-				$(".verse-search-results-scroll").hide();
+				$(".verse-search-results-scroll #actions a").hide();
+				$(".verse-search-results-scroll div.scrollable").hide();
 				$("#verse-search-single-result").show();
 				
 				if (typeof(verse) !== 'undefined' && verse != null) {
@@ -67,7 +68,7 @@ function clearSearchResults () {
  * Display scrollable list of results
  ******************************************************************************/
 function displaySearchResults (verses) {
-	$(".verse-search-results-scroll").show();
+	$(".verse-search-results-scroll #actions a, .verse-search-results-scroll div.scrollable, .verse-search-results-scroll").show();
 	$("#verse-search-single-result").hide();
 	$.each (verses, function(i, pv) {
 		// We need to group popular verses		
