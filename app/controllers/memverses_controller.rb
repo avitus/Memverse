@@ -1244,7 +1244,8 @@ class MemversesController < ApplicationController
     
       mv = Memverse.find( session[:ref_id][question_num] )
     
-      if (book==solution[0] and chapter==solution[1].to_i and verse==solution[2].to_i) or (book==alt_soln[0] and chapter==alt_soln[1].to_i and verse==alt_soln[2].to_i)
+      if (book==solution[0] and chapter==solution[1].to_i and verse==solution[2].to_i) or 
+         (book==alt_soln[0] and chapter==alt_soln[1].to_i and verse==alt_soln[2].to_i)
         flash[:notice] = "Perfect!"
         session[:reftest_correct] += 1
         session[:reftest_grade] += 10
@@ -1380,8 +1381,8 @@ class MemversesController < ApplicationController
     else
       # Otherwise, find the verse with the shortest test_interval i.e. a new or difficult verse
       @mv = Memverse.find( :first, 
-                          :conditions => ["user_id = ? and last_tested < ?", current_user.id, Date.today], 
-                          :order      => "test_interval ASC")
+                           :conditions => ["user_id = ? and last_tested < ?", current_user.id, Date.today], 
+                           :order      => "test_interval ASC")
  
       if !@mv.nil? # We've found a verse
         
