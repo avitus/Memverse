@@ -986,9 +986,9 @@ class MemversesController < ApplicationController
   # Prepare for Reference Test
   # ----------------------------------------------------------------------------------------------------------
   def load_test_ref
-    
+
     @tab = "mem" 
-    
+
     ref_quizz         = Array.new
     ref_quizz_answers = Array.new
     ref_id            = Array.new
@@ -1206,13 +1206,13 @@ class MemversesController < ApplicationController
   # Test a Difficult Reference
   # ----------------------------------------------------------------------------------------------------------
   def test_ref
-    
+
     @tab = "mem"
     @sub = "refrec"  
-    
+
     add_breadcrumb I18n.t("memorize_menu.Memorize"), :test_verse_quick_path
     add_breadcrumb I18n.t("memorize_menu.Reference Recall"), :start_ref_test_path
-    
+
     if session[:ref_test_cntr] # The session variables are not set if user comes straight to this page
       @question_num = session[:ref_test_cntr]
       @ref          = session[:ref_test][@question_num]
@@ -1220,9 +1220,8 @@ class MemversesController < ApplicationController
     else
       redirect_to :action => 'index'
     end
-    
-  end
 
+  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Score Reference Test

@@ -29,11 +29,13 @@ function flexversesearch(text){
 		$.get("/lookup_passage.json", { bk: ref.bk, ch: ref.ch, vs_start: ref.vs_start, vs_end: ref.vs_end, tl: tl },
 			function(verses) {
 				
-				// TODO: Potentially insert missing verses with option to create a new verse					
+				// TODO: Potentially insert missing verses with option to create a new verse
+				// TODO: Don't clear search results if search is for the same ref
 				clearSearchResults();         // clear existing search results
 				displaySearchResults(verses); // display new search results
-				checkChapter(ref, tl);
-				
+				if (validChapterRef($.trim(text))) {
+					checkChapter(ref, tl);
+				}
 		}, "json" );
 	
 	// User didn't enter a verse reference ... do a keyword search
