@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'pp'
 
 describe Memverse do
   
@@ -31,14 +30,6 @@ describe Memverse do
     end
     
     it "should link a new verse to the following verse" do
-      
-      pp @passage[1]
-      pp @passage[2]
-      pp @passage[3]
-      pp @passage[4]
-      pp @passage[5]
-      pp @passage[6]
-      
       @passage[2].next_verse.should  == @passage[3].id
     end
 

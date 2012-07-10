@@ -421,10 +421,10 @@ class User < ActiveRecord::Base
     # need to handle gold, silver, bronze issue
     # first generate a list of badges the user would be interested in earning i.e. all badges of higher level
     # or unearned solo badges.
-    
+
     user_badges   = self.badges
     lesser_badges = Array.new
-    
+
     user_badges.each do |user_badge|
       Rails.logger.debug("User already has #{user_badge.color} #{user_badge.name}")
       Badge.where(:name => user_badge.name).each do |badge_in_series|
@@ -436,7 +436,7 @@ class User < ActiveRecord::Base
     end
 
     Rails.logger.debug("Final list of badges to strive for: #{Badge.all - lesser_badges}")
-        
+
     return Badge.all - lesser_badges
   end
 
@@ -444,22 +444,20 @@ class User < ActiveRecord::Base
   # Save Entry in Progress Table
   # ----------------------------------------------------------------------------------------------------------
   def save_progress_report
-    
+
     # Check whether there is already an entry for today
-    pr = ProgressReport.find(:first, :conditions => { :user_id => self.id, :entry_date => Date.today} )    
-    
+    pr = ProgressReport.where(:user_id => self.id, :entry_date => Date.today).first
+
     if pr.nil?
-    
       pr = ProgressReport.new
-      
+
       pr.user_id          = self.id
       pr.entry_date       = Date.today
       pr.memorized        = self.memorized
       pr.learning         = self.learning
       pr.time_allocation  = self.work_load
-      
+
       pr.save
-      
     end
   end
 
@@ -468,9 +466,9 @@ class User < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------  
   def referrals( active = false )
     if active
-      User.active.find(:all, :conditions => { :referred_by => self.id })
+      User.active.where(:referred_by => self.id)
     else
-      User.find(:all, :conditions => { :referred_by => self.id })
+      User.find.where(:referred_by => self.id)
     end
   end
 
