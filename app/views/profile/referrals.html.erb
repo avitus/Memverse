@@ -8,13 +8,13 @@
 				<p>You were referred by <%= @referrer.name_or_login %>.  <%= link_to "[Change this]", :controller => "profile", :action => "set_referrer" %></p>
 			<% else %>
 			<%= link_to "Who referred you?", :controller => "profile", :action => "set_referrer" %>
-			<% end %>	
+			<% end %>
 		<% else %>
 			<% if @referrer %>
 				<p><%= @user.name_or_login %> was referred by <%= @referrer.name_or_login %>.</p>
 			<% else %>
 				<p>No one referred <%= @user.name_or_login %>.</p>
-			<% end %>		
+			<% end %>
 		<% end %>
 	</div>
 
@@ -26,7 +26,7 @@
 				<div class='referrals-section'>
 					<h2>People You Have Referred</h2>
 					<% if @referees.empty? %>
-						<%= render :partial => "profile/refer"%>
+						<%= render :partial => "profile/refer" %>
 					<% else %>
 						<table class="memverse-standard">
 							<%= render :partial => "users/user_headings" %>
@@ -41,12 +41,12 @@
 					<h2>People Your Referees Have Referred</h2>
 					<% if @level_two.empty? %>
 						<p>No referrals yet. You should encourage them.</p>
-					<% else %>	
+					<% else %>
 						<table class="memverse-standard">
 							<%= render :partial => "users/user_headings" %>
 							<%= render :partial => "users/user", :collection => @level_two %>
-						</table>	
-					<% end %>	
+						</table>
+					<% end %>
 				</div>
 
 				<div class='referrals-section'>
