@@ -69,7 +69,7 @@ class LiveQuizController < ApplicationController
           sleep(26)
         when "mcq"
           Juggernaut.publish( select_channel("/quiz_stream"), {:q_num => num, :q_type => "mcq", :mc_question => q.mc_question, :mc_option_a => q.mc_option_a, :mc_option_b => q.mc_option_b, :mc_option_c => q.mc_option_c, :mc_option_d => q.mc_option_d, :mc_answer => q.mc_answer, :time_alloc => 20} )
-		  sleep(21)
+		  sleep(31)
         else
           sleep(20)
         end
