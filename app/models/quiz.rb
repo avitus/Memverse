@@ -27,10 +27,10 @@ class Quiz < ActiveRecord::Base
       when "reference"
         length = length + 25 + 1
       when "mcq"
-        length = lenth + 30 + 1
+        length = length + 30 + 1
       end
       # Note that 1 is added to each of these because we put a 1 second gap between questions
-
+    end
     self.quiz_length = length
 	self.save
   end
