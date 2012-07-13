@@ -5,7 +5,7 @@ namespace :quiz do
     STDOUT.puts "Quiz ID:"
     quiz_id = STDIN.gets.chomp.to_i
     puts "Starting quiz"
-	
+
     # Delete participant scores from redis
     participants = $redis.keys("user-*")
     participants.each { |p|    $redis.del(p) }
@@ -20,7 +20,7 @@ namespace :quiz do
       puts "#{receiver}"
       return "/live_quiz#{receiver}"
     end
-	
+
 	quiz_questions    = quiz.quiz_questions.order("question_no ASC")
 
     quiz_questions.each { |q|
@@ -44,12 +44,12 @@ namespace :quiz do
       end
 
       scoreboard = Array.new
-  	
+
       participants = $redis.keys("user-*")
       participants.each { |p|	scoreboard << $redis.hgetall(p) }
 
       scoreboard = scoreboard.sort { |x, y| y['score'].to_i <=> x['score'].to_i }
-      Juggernaut.publish( select_channel("/scoreboard"), {:scoreboard => scoreboard} ) 
+      Juggernaut.publish( select_channel("/scoreboard"), {:scoreboard => scoreboard} )
     }
     
     # Update quiz status in redis
