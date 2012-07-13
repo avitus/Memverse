@@ -467,7 +467,7 @@ class User < ActiveRecord::Base
     if active
       User.active.where(:referred_by => self.id)
     else
-      User.find.where(:referred_by => self.id)
+      User.where(:referred_by => self.id)
     end
   end
 
@@ -656,7 +656,7 @@ class User < ActiveRecord::Base
 	        if next_verse  
 	          cmv = Memverse.find( next_verse )
 	        end
-	        while (next_verse) and cmv.more_to_memorize_in_sequence?
+	        while (next_verse) && cmv.more_to_memorize_in_sequence?
 	          cmv         = Memverse.find(next_verse)          
 	          upcoming   << cmv unless cmv.prior_in_passage_to?(current_mv)
 	          next_verse  = cmv.next_verse
@@ -665,7 +665,6 @@ class User < ActiveRecord::Base
     end
     
     return upcoming
-       
   end
 
 
@@ -986,7 +985,7 @@ class User < ActiveRecord::Base
         mv.next_verse = mv.get_next_verse unless !repair
       else
         logger.debug("*** #{mv.id} : Next verse link OK") 
-        record['Next'] = '-'        
+        record['Next'] = '-'
       end
 
       # TODO: Need to fix first verse entry as well
@@ -995,23 +994,23 @@ class User < ActiveRecord::Base
         record['First'] = repair ? 'Fixed' : 'Error'
         mv.first_verse = mv.get_first_verse unless !repair
       else
-        logger.debug("*** #{mv.id} : First verse link OK") 
-        record['First'] = '-'        
+        logger.debug("*** #{mv.id} : First verse link OK")
+        record['First'] = '-'
       end
 
       mv.save
       report << record
-    }  
+    }
     return report
   end
-  
+
   # ----------------------------------------------------------------------------------------------------------
   # Bloggity
-  # ----------------------------------------------------------------------------------------------------------  
+  # ----------------------------------------------------------------------------------------------------------
   def display_name
     self.name || self.login
   end
-  
+
   # Whether a user can post to a given blog
   # Implement in your user model
   def can_blog?(blog_id = nil)
