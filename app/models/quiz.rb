@@ -12,11 +12,6 @@ class Quiz < ActiveRecord::Base
   # Validations
   # validates_presence_of :user_id
 
-  
-
-  # ============= Protected below this line ==================================================================
-  protected
-
   def update_length
     length = 0
 
@@ -34,4 +29,8 @@ class Quiz < ActiveRecord::Base
     self.quiz_length = length
 	self.save
   end
+
+  # ============= Protected below this line ==================================================================
+  protected
+
 end

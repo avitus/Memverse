@@ -17,9 +17,9 @@ class QuizQuestion < ActiveRecord::Base
   # Validations
   # validates_presence_of :user_id
 
-  after_create 'self.quiz.compute_length'
-  after_update 'self.quiz.compute_length'
-  after_destroy 'self.quiz.compute_length'
+  after_create 'self.quiz.update_length'
+  after_update 'self.quiz.update_length'
+  after_destroy 'self.quiz.update_length'
 
   
 	def passage_translations

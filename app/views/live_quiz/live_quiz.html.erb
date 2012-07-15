@@ -25,7 +25,7 @@
 			<div id="quiz-question">
 				<h3>Quiz Instructions</h3>
 				<p>
-					The quiz will have <%= @num_questions %> questions. Each question will be worth a maximum of 15 points.
+					The quiz will have <%= @num_questions %> questions and last <%= @minutes.to_s + (@minutes != 1?" minutes":" minute") %> and <%= @seconds.to_s + (@seconds != 1?" seconds":" second") %>. Each question will be worth a maximum of 15 points.
 				</p>
 				<p>
 					You will answer all the questions on the left side. The middle column will display the scoreboard and the right column is only 
@@ -105,7 +105,7 @@
 			case 'reference':
 				$('#quiz-answer').html("<input type='text' class='q-answer-input' name='txt" + questionNum + "' id='" + questionNum + "'</input>");
 				$('#quiz-answer').append("<input type='submit' value='Answer!' id='submit-answer' class='button-link'>");
-				$('#quiz-answer input').autocomplete({ lookup: ['Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy', 'Joshua', 'Judges', 'Ruth', '1 Samuel', '2 Samuel',
+				$('#quiz-answer input[type="text"]').autocomplete({ source: ['Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy', 'Joshua', 'Judges', 'Ruth', '1 Samuel', '2 Samuel',
 					'1 Kings', '2 Kings','1 Chronicles', '2 Chronicles', 'Ezra', 'Nehemiah', 'Esther', 'Job', 'Psalm', 'Proverbs',
 					'Ecclesiastes', 'Song of Songs', 'Isaiah', 'Jeremiah', 'Lamentations', 'Ezekiel', 'Daniel', 'Hosea', 'Joel', 
 					'Amos', 'Obadiah', 'Jonah', 'Micah', 'Nahum', 'Habakkuk', 'Zephaniah', 'Haggai', 'Zechariah', 'Malachi', 'Matthew',
