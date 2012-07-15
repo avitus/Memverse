@@ -418,6 +418,7 @@ ActiveRecord::Schema.define(:version => 20120713194128) do
     t.text     "description"
     t.integer  "quiz_questions_count"
     t.datetime "start_time"
+    t.integer  "quiz_length"
   end
 
   create_table "rails_admin_histories", :force => true do |t|

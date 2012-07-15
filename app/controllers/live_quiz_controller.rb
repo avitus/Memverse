@@ -19,6 +19,9 @@ class LiveQuizController < ApplicationController
     @quiz = Quiz.find(params[:quiz] || 1 )
     @quiz_master = @quiz.user
     Rails.logger.info("*** Using quiz #{@quiz.name}. The quiz master is #{@quiz.user.name_or_login}.")
+	
+	@minutes = @quiz.quiz_length / 60
+	@seconds = @quiz.quiz_length - (@minutes * 60)
 
     @chat_status = ($redis.exists("chat-channel2") && $redis.hmget("chat-channel2", "status").first == "Open")?"Open":"Closed"
 
