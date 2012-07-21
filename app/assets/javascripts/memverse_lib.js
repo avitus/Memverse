@@ -69,9 +69,21 @@ function validVerseRef(verseref) {
  * Rejects: Romans 8:1
  *******************************************************************************/
 function validPassageRef(passage) {
-    return /([0-3]?\s+)?[a-záéíóúüñ]+\s+[0-9]+(((:|(\s?vs\s?))[0-9]+(-)[0-9]+)|:)?$/i.test(passage);	
+    return /([0-3]?\s+)?[a-záéíóúüñ]+\s+[0-9]+(((:|(\s?vs\s?))[0-9]+(-)[0-9]+)|:)?$/i.test(passage);
 }
 
+
+/******************************************************************************
+ * Returns true iff input is a chapter reference
+
+ * Accepts: Romans 8
+ * Accepts: Romans 8:
+ * Rejects: Romans 8:1
+ * Rejects: Romans 8:1-3
+ *******************************************************************************/
+function validChapterRef(passage) {
+    return /([0-3]?\s+)?[a-záéíóúüñ]+\s+[0-9]+(:)?$/i.test(passage);
+}
 
 /******************************************************************************
  * Returns true iff input is a passage reference
@@ -81,7 +93,7 @@ function validPassageRef(passage) {
  * Rejects: Romans 8:1
  *******************************************************************************/
 function validSubChapterPassage(passage) {
-    return /([0-3]?\s+)?[a-záéíóúüñ]+\s+[0-9]+(:|(\s?vs\s?))[0-9]+(-)[0-9]+/i.test(passage);	
+    return /([0-3]?\s+)?[a-záéíóúüñ]+\s+[0-9]+(:|(\s?vs\s?))[0-9]+(-)[0-9]+/i.test(passage);
 }
 
 /******************************************************************************

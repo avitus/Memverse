@@ -29,19 +29,21 @@
 
 	<!-- SEARCH RESULTS: RIGHT COLUMN -->
 	<div id="verse-search-results">
-				
+		<!-- Results of passage or multiple verse retrieval -->
+		<!-- NOTE: The js_bible-version span in the partial is always visible, even when showing/adding a single verse -->
+		<div class="verse-search-results-scroll quick-start-add-section">
+			<%= render "verses/scroll" %>
+		</div>
+
 		<!-- Results of single verse retrieval -->    
 	    <div id="verse-search-single-result">
 
-		    <!-- Translation -->			
-			<h5><span class="js_bible-version" class="bible-version"><%= TRANSLATIONS[@translation.try(:to_sym)] %></span></h5>
-    
 		    <!-- Display existing verse -->
 			<div id="existing-verse-add" class="quick-start-show-verse quick-start-add-section">
 			    <div id="foundVerse"></div>  							    <!-- Text of retrieved verse-->
 			    <div id="add-verse-button" class="add-verse-button"></div>	<!-- Button to add verse -->
 			</div>
-		    
+
 		    <!-- Display box to enter a new verse -->
 			<div id="new-verse-entry" class="create-and-add">
 		    	<label class="tag">Enter Verse Text:</label>
@@ -50,14 +52,8 @@
 			   		<div class="quick-start-add-button"></div>
 			   	</div>
 		    </div>
-		    
+
 	    </div>
-		
-		<!-- Results of passage or multiple verse retrieval -->    		
-		<div class="verse-search-results-scroll quick-start-add-section">
-			<%= render "verses/scroll" %>
-		</div>			
-			
 	</div>
 	
 	<div class="clr"></div><!-- Clear floats -->
@@ -68,33 +64,32 @@
 	
 		// Get user's translation
 		tl = $('#translation').data('tl'); // Get the users translation
-	
+
 		// initialize scrollable module
 		$(".scrollable").scrollable({ vertical: true, mousewheel: true });
-				
+
 		// Setup jEditable for version changing
 		$('.js_bible-version').editable(function(value, settings) { 
 			tl = value; // change tl
 			flexversesearch($("#js_flex-verse-search").val()); // refresh results
 			return(settings.data[value]);
-			// TODO: Can't figure out why after changing the version and clicking on the select again, it still defaults to the original 'selected' value
+			// TODO: Can't figure out why after changing the version and clicking on the select again, it sometimes still defaults to the original 'selected' value
 		}, { 
 			data   : <%= TRANSLATIONS.to_json.html_safe %>,
 			type   : 'select',
 			submit : 'OK'
 		});
-	
+
 		// Verse entry and retrieval
 		$("#js_flex-verse-search").observe_field(0.2, function( ) { 
 			flexversesearch(this.value);
 		});
-		
+
 		// User adds a new verse
 		$('.create-and-add').on("click", ".quick-start-add-button", function() {      // Bind to DIV enclosing button to allow for event delegation
 			$button   = $('.create-and-add .quick-start-add-button');
 			ref       = parseVerseRef( $.trim($("#js_flex-verse-search").val()) );
 			newVerse  = cleanseVerseText( $("#versetext").val() );
-						
 			if ( ref ) { 
 				createVerseAndAdd(ref, tl, newVerse, $button);
 			} else {
@@ -102,14 +97,13 @@
 			};
 		});
 	
-		// User adds entire passage	
+		// User adds entire passage
 		$('.add-chapter').on("click", ".add-chapter-button", function() {
 			ref = parsePassageRef( $.trim( $("#js_flex-verse-search").val() ) );
 			$.post("/add_chapter.json", { bk: ref.bk, ch: ref.ch, tl: tl }, function(response) {
 				$(".add-chapter-button").replaceWith("<div class='verse-added'></div>");
 			});
 		});
-	
 	});
 --></script>
 

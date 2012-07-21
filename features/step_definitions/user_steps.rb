@@ -3,10 +3,10 @@ Given /^no user exists with an email of "(.*)"$/ do |email|
 end
 
 Given /^I am a user named "([^"]*)" with an email "([^"]*)" and password "([^"]*)"$/ do |name, email, password|
-  User.new(:name => name,
-            :email => email,
-            :password => password,
-            :password_confirmation => password).save!
+  FactoryGirl.create(:user, :name => name,
+                     :email => email,
+                     :password => password,
+                     :password_confirmation => password)
 end
 
 Given /^I am a confirmed user named "([^"]*)" with an email "([^"]*)" and password "([^"]*)"$/ do |name, email, password|
@@ -76,10 +76,10 @@ end
 
 Given /^a user with the login of "(.*)"$/ do |login|
   User.new(:name => "Test User",
-            :email => "testemail@test.com",
-            :login => login,
-            :password => "secret",
-            :password_confirmation => "secret").save!
+           :email => "testemail@test.com",
+           :login => login,
+           :password => "secret",
+           :password_confirmation => "secret").save!
 end
 
 Then /^there should be a user with an email of "(.*)" whose referrer's login is "(.*)"$/ do |email, login|

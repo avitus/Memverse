@@ -1,0 +1,1227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<biblebee>
+	<scriptures>
+		<scripture>
+			<translations>
+				<translation name="niv">
+					<memorize name="complete">All Scripture is God-breathed and is useful for teaching, rebuking, correcting and training in righteousness, so that the man of God may be thoroughly equipped for every good work.</memorize>
+					<memorize name="prompted">16 A S i G-b a i u f t, r, c a t i r, 17 s t t m o G m b t e f e g w.</memorize>
+					<memorize name="firstfive"> All Scripture is God-breathed and</memorize>
+				</translation>
+				<translation name="esv">
+					<memorize name="complete">All Scripture is breathed out by God and profitable for teaching, for reproof, for correction, and for training in righteousness, that the man of God may be memorize, equipped for every good work.</memorize>
+					<memorize name="prompted">16 A S i b o b G a p f t, f r, f c, a f t i r, 
+17 t t m o G m b c, e f e g w</memorize>
+					<memorize name="firstfive">All Scripture is breathed out</memorize>
+				</translation>
+				<translation name="kjv">
+					<memorize name="complete">All scripture is given by inspiration of God, and is profitable for doctrine, for reproof, for correction, for instruction in righteousness: That the man of God may be perfect, thoroughly furnished unto all good works.</memorize>
+					<memorize name="prompted">16 A s i g b i o G, a i p f d, f r, f c, f i i r:
+17 T t m o G m b p, t f u a g w.</memorize>
+					<memorize name="prompted">All scripture is given by</memorize>
+				</translation name="nkjv">
+				<translation>
+					<memorize name="complete">All Scripture is given by inspiration of God, and is profitable for doctrine, for reproof, for correction, for instruction in righteousness, that the man of God may be memorize, thoroughly equipped for every good work</memorize>
+					<memorize name="prompted">16.  A S i g b i o G, a i p f d, f r, f c, f i i r, 
+17.  t t m o G m b c, t e f e g w.</memorize>
+					<memorize name="prompted">All Scripture is given by</memorize>
+				</translation>
+				<translation name="nasb">
+					<memorize name="complete">All Scripture is inspired by God and profitable for teaching, for reproof, for correction, for training in righteousness; so that the man of God may be adequate, equipped for every good work</memorize>
+					<memorize name="prompted">16 A S i i b G a p f t, f r, f c, f t i r; 
+17 s t t m o G m b a, e f e g w.</memorize>
+					<memorize name="firstfive">All Scripture is given by</memorize>
+				</translation>
+			</translations>
+			<reference>2 Timothy 3:16-17</reference>
+		</scripture>
+		<scripture>
+			<translations>
+				<translation name="niv">
+					<memorize name="complete">Paul, a servant of God and an apostle of Jesus Christ for the faith of God’s elect and the knowledge of the truth that leads to godliness — a faith and knowledge resting on the hope of eternal life, which God, who does not lie, promised before the beginning of time, and at his appointed season he brought his word to light through the preaching entrusted to me by the command of God our Savior,</memorize>
+					<memorize name="prompted">1. P, a s o G a a a o J C f t f o G’s e a t k o t t t l t g —
+2 a f a k r o t h o e l, w G, w d n l, p b t b o t,
+3 a a h a s h b h w t l t t p e t m b t c o G o S,</memorize>
+					<memorize name="firstfive">Paul, a servant of God</memorize>
+				</translation>
+				<translation name="esv">
+					<memorize name="complete">Paul, a servant of God and an apostle of Jesus Christ, for the sake of the faith of God's elect and their knowledge of the truth, which accords with godliness, in hope of eternal life, which God, who never lies, promised before the ages began and at the proper time manifested in his word through the preaching with which I have been entrusted by the command of God our Savior;</memorize>
+					<memorize name="prompted">1 P, a s o G a a a o J C, f t s o t f o G's e a t k o t t, w a w 
+g, 
+2 i h o e l, w G, w n l, p b t a b 
+3 a a t p t m i h w t t p w w I h b e b t c o G o S;</memorize>
+					<memorize name="firstfive">Paul, a servant of God</memorize>
+				</translation>
+				<translation name="kjv">
+					<memorize name="complete">Paul, a servant of God, and an apostle of Jesus Christ, according to the faith of God's elect, and the acknowledging of the truth which is after godliness; In hope of eternal life, which God, that cannot lie, promised before the world began; But hath in due times manifested his word through preaching, which is committed unto me according to the commandment of God our Saviour;</memorize>
+					<memorize name="prompted">1 P, a s o G, a a a o J C, a t t f o G's e, a t a o t t w i a g;
+2 I h o e l, w G, t c l, p b t w b;
+3 B h i d t m h w t p, w i c u m a t t c o G o S;</memorize>
+					<memorize name="firstfive">Paul, a servant of God</memorize>
+				</translation>
+				<translation name="nkjv">
+					<memorize name="complete">Paul, a bondservant of God and an apostle of Jesus Christ, according to the faith of God’s elect and the acknowledgment of the truth which accords with godliness, in hope of eternal life which God, who cannot lie, promised before time began, but has in due time manifested His word through preaching, which was committed to me according to the commandment of God our Savior;</memorize>
+					<memorize name="prompted">1.  P, a b o G a a a o J C, a t t f o G’s e a t a o t t w a w g, 
+2.  i h o e l w G, w c l, p b t b, 
+3.  b h i d t m H w t p, w w c t m a t t c o G o S;</memorize>
+					<memorize name="firstfive">Paul, a bondservant of God</memorize>
+				</translation>
+				<translation name="nasb">
+					<memorize name="complete">Paul, a bond-servant of God and an apostle of Jesus Christ, for the faith of those chosen of God and the knowledge of the truth which is according to godliness, in the hope of eternal life, which God, who cannot lie, promised long ages ago, but at the proper time manifested, evenHis word, in the proclamation with which I was entrusted according to the commandment of God our Savior,</memorize>
+					<memorize name="prompted">1 P, a b-s o G a a a o J C, f t f o t c o G a t k o t t w i a t g, 
+2 i t h o e l, w G, w c l, p l a a, 
+3 b a t p t m, e H w, i t p w w I w e a t t c o G o S,</memorize>
+					<memorize name="firstfive">Paul, a bond-servant of God</memorize>
+				</translation>
+			</translations>
+			<reference>Titus 1:1-3</reference>
+		</scripture>
+		<scripture>
+			<translations>
+				<translation name="niv">
+					<memorize name="complete">But whatever was to my profit I now consider loss for the sake of Christ. What is more, I consider everything a loss compared to the surpassing greatness of knowing Christ Jesus my Lord, for whose sake I have lost all things. I consider them rubbish, that I may gain Christ</memorize>
+					<memorize name="prompted">7. B w w t m p I n c l f t s o C. 
+8 W i m, I c e a l c t t s g o k C J m L, f w s I h l a t. I c t 
+r, t I m g C</memorize>
+					<memorize name="firstfive">But whatever was to my</memorize>
+				</translation>
+				<translation name="esv">
+					<memorize name="complete">But whatever gain I had, I counted as loss for the sake of Christ. Indeed, I count everything as loss because of the surpassing worth of knowing Christ Jesus my Lord. For his sake I have suffered the loss of all things and count them as rubbish, in order that I may gain Christ </memorize>
+					<memorize name="prompted">7 B w g I h, I c a l f t s o C. 
+8 I, I c e a l b o t s w o k C J m L. F h s I h s t l o a t a c t a 
+r, i o t I m g C</memorize>
+					<memorize name="firstfive">But whatever gain I had,</memorize>
+				</translation>
+				<translation name="kjv">
+					<memorize name="complete">But what things were gain to me, those I counted loss for Christ. Yea doubtless, and I count all things but loss for the excellency of the knowledge of Christ Jesus my Lord: for whom I have suffered the loss of all things, and do count them but dung, that I may win Christ</memorize>
+					<memorize name="prompted">7 B w t w g t m, t I c l f C.
+8 Y d, a I c a t b l f t e o t k o C J m L: f w I h s t l o a t, a 
+d c t b d, t I m w C,</memorize>
+					<memorize name="firstfive">But what things were gain</memorize>
+				</translation>
+				<translation name="nkjv">
+					<memorize name="complete">But what things were gain to me, these I have counted loss for Christ. Yet indeed I also count all things loss for the excellence of the knowledge of Christ Jesus my Lord, for whom I have suffered the loss of all things, and count them as rubbish, that I may gain Christ</memorize>
+					<memorize name="prompted">7.  B w t w g t m, t I h c l f C. 
+8.  Y i I a c a t l f t e o t k o C J m L, f w I h s t l o a t, a c t a r, t I m g C</memorize>
+					<memorize name="firstfive">But what things were gain</memorize>
+				</translation>
+				<translation name="nasb">
+					<memorize name="complete">But whatever things were gain to me, those things I have counted as loss for the sake of Christ. More than that, I count all things to be loss in view of the surpassing value of knowing Christ Jesus my Lord, for whom I have suffered the loss of all things, and count them but rubbish so that I may gain Christ</memorize>
+					<memorize name="prompted">7 B w t w g t m, t t I h c a l f t s o C. 
+8 M t t, I c a t t b l i v o t s v o k C J m L, f w I h s t l o a t, 
+a c t b r s t I m g C,</memorize>
+					<memorize name="firstfive">But whatever things were gain</memorize>
+				</translation>
+			</translations>
+			<reference>Philippians 3:7-8</reference>
+		</scripture>
+		<scripture>
+			<translations>
+				<translation name="niv">
+					<memorize name="complete">Do you not know that in a race all the runners run, but only one gets the prize? Run in such a way as to get the prize. Everyone who competes in the games goes into strict training. They do it to get a crown that will not last; but we do it to get a crown that will last forever. Therefore I do not run like a man running aimlessly; I do not fight like a man beating the air. No, I beat my body and make it my slave so that after I have preached to others, I myself will not be disqualified for the prize</memorize>
+					<memorize name="prompted">24. D y n k t i a r a t r r, b o o g t p? R i s a w a t g t p. 
+25 E w c i t g g i s t. T d i t g a c t w n l; b w d i t g a c t w l f. 
+26 T I d n r l a m r a; I d n f l a m b t a.
+27 N, I b m b a m i m s s t a I h p t o, I m w n b d f t p.</memorize>
+					<memorize name="firstfive">Then he said to them</memorize>
+				</translation>
+				<translation name="esv">
+					<memorize name="complete">Do you not know that in a race all the runners run, but only one receives the prize? So run that you may obtain it. Every athlete exercises self-control in all things. They do it to receive a perishable wreath, but we an imperishable. So I do not run aimlessly; I do not box as one beating the air. But I discipline my body and keep it under control, lest after preaching to others I myself should be disqualified.</memorize>
+					<memorize name="prompted">24. D y n k t i a r a t r r, b o o g t p? R i s a w a t g t p. 
+25 E w c i t g g i s t. T d i t g a c t w n l; b w d i t g a c t  w l f. 
+26 T I d n r l a m r a; I d n f l a m b t a. 
+27 N, I b m b a m i m s s t a I h p t o, I m w n b d f t p.</memorize>
+					<memorize name="firstfive">Do you not know that</memorize>
+				</translation>
+				<translation name="kjv">
+					<memorize name="complete">Know ye not that they which run in a race run all, but one receiveth the prize? So run, that ye may obtain. And every man that striveth for the mastery is temperate in all things. Now they do it to obtain a corruptible crown; but we an incorruptible. I therefore so run, not as uncertainly; so fight I, not as one that beateth the air: But I keep under my body, and bring it into subjection: lest that by any means, when I have preached to others, I myself should be a castaway</memorize>
+					<memorize name="prompted">24 K y n t t w r i a r r a, b o r t p? S r, t y m o.
+25 A e m t s f t m i t i a t. N t d i t o a c c; b w a i.
+26 I t s r, n a u; s f I, n a o t b t a:
+27 B I k u m b, a b i i s: l t b a m, w I h p t o, I m s b a c.</memorize>
+					<memorize name="firstfive">Know ye not that they</memorize>
+				</translation>
+				<translation name="NKJV">
+					<memorize name="complete">Do you not know that those who run in a race all run, but one receives the prize? Run in such a way that you may obtain it. And everyone who competes for the prize is temperate in all things. Now they do it to obtain a perishable crown, but we for an imperishable crown. Therefore I run thus: not with uncertainty. Thus I fight: not as one who beats the air.  But I discipline my body and bring it into subjection, lest, when I have preached to others, I myself should become disqualified</memorize>
+					<memorize name="prompted">24.  D y n k t t w r i a r a r, b o r t p? R i s a w t y m o i. 
+25.  A e w c f t p i t i a t. N t d i t o a p c, b w f a i c. 
+26.  T I r t: n w u. T I f: n a o w b t a. 
+27.  B I d m b a b i i s, l, w I h p t o, I m s b d.</memorize>
+					<memorize name="firstfive">Do you not know that</memorize>
+				</translation>
+				<translation name="NASB">
+					<memorize name="complete">Do you not know that those who run in a race all run, but onlyone receives the prize? Run in such a way that you may win. Everyone who competes in the games exercises self-control in all things. They then do it to receive a perishable wreath, but we an imperishable. Therefore I run in such a way, as not without aim; I box in such a way, as not beating the air; but I discipline my body and make it my slave, so that, after I have preached to others, I myself will not be disqualified.</memorize>
+					<memorize name="firstfive">24 D y n k t t w r i a r a r, b o r t p? R i s a w t y m w. 
+25 E w c i t g e s-c i a t. T t d i t r a p w, b w a i.
+26 T I r i s a w, a n w a; I b i s a w, a n b t a; 
+27 b I d m b a m i m s, s t, a I h p t o, I m w n b d,</memorize>
+					<memorize name="prompted">Do you not know that</memorize>
+				</translation>
+			</translations>
+			<reference>1 Corinthians 9:24-27</reference>
+		</scripture>
+		<scripture>
+			<translations>
+				<translation name="niv">
+					<memorize name="complete">Then he said to them all: “If anyone would come after me, he must deny himself and take up his cross daily and follow me. For whoever wants to save his life will lose it, but whoever loses his life for me will save it. What good is it for a man to gain the whole world, and yet lose or forfeit his very self? If anyone is ashamed of me and my words, the Son of Man will be ashamed of him when he comes in his glory and in the glory of the Father and of the holy angels.</memorize>
+					<memorize name="prompted">23. T h s t t a: “I a w c a m, h m d h a t u h c d a f m.
+24 F w w t s h l w l i, b w l h l f m w s i. 
+25 W g i i f a m t g t w w, a y l o f h v s? 
+26 I a i a o m a m w, t S o M w b a o h w h c i h g a i t g o t F a o t h a.</memorize>
+					<memorize name="firstfive">Do you not know that</memorize>
+				</translation>
+				<translation name="esv">
+					<memorize name="complete">Then he said to them all: “If anyone would come after me, he must deny himself and take up his cross daily and follow me. For whoever wants to save his life will lose it, but whoever loses his life for me will save it. What good is it for a man to gain the whole world, and yet lose or forfeit his very self? If anyone is ashamed of me and my words, the Son of Man will be ashamed of him when he comes in his glory and in the glory of the Father and of the holy angels</memorize>
+					<memorize name="prompted">23 A h s t a, “I a w c a m, l h d h a t u h c d a f m. 
+24 F w w s h l w l i, b w l h l f m s w s i. 
+25 F w d i p a m i h g t w w a l o f h? 
+26 F w i a o m a o m w, o h w t S o M b a w h c i h g a t g o t F a o t h a.</memorize>
+					<memorize name="ffirstfive">Do you not know that</memorize>
+				</translation>
+				<translation name="kjv">
+					<memorize name="complete">And he said to them all, If any man will come after me, let him deny himself, and take up his cross daily, and follow me. For whosoever will save his life shall lose it: but whosoever will lose his life for my sake, the same shall save it. For what is a man advantaged, if he gain the whole world, and lose himself, or be cast away? For whosoever shall be ashamed of me and of my words, of him shall the Son of man be ashamed, when he shall come in his own glory, and in his Father's, and of the holy angels.</memorize>
+					<memorize name="prompted">23 A h s t t a, I a m w c a m, l h d h, a t u h c d, a f m.
+24 F w w s h l s l i: b w w l h l f m s, t s s s i.
+25 F w i a m a, i h g t w w, a l h, o b c a?
+26 F w s b a o m a o m w, o h s t S o m b a, w h s c i h o g, a i h F's, a o t h a.</memorize>
+					<memorize name="firstfive">And he said to them </memorize>
+				</translation>
+				<translation name="nkjv">
+					<memorize name="complete">Then He said to them all, “If anyone desires to come after Me, let him deny himself, and take up his cross daily, and follow Me. For whoever desires to save his life will lose it, but whoever loses his life for My sake will save it. For what profit is it to a man if he gains the whole world, and is himself destroyed or lost? For whoever is ashamed of Me and My words, of him the Son of Man will be ashamed when He comes in His own glory, and in His Father’s, and of the holy angels</memorize>
+					<memorize name="prompted">23.  T H s t t a, “I a d t c a M, l h d h, a t u h c d, a f M. 
+24.  F w d t s h l w l i, b w l h l f M s w s i. 
+25.  w p i i t a m i h g t w w, a i h d o l? 
+26.  F w i a o M a M w, o h t S o M w b a w H c i H o g, a i H F’s, a o t h a.”</memorize>
+					<memorize name="firstfive">Then He said to them</memorize>
+				</translation>
+				<translation name="nasb">
+					<memorize name="complete">And He was saying to them all, “If anyone wishes to come after Me, he must deny himself, and take up his cross daily and follow Me. For whoever wishes to save his life will lose it, but whoever loses his life for My sake, he is the one who will save it. For what is a man profited if he gains the whole world, and loses or forfeits himself? For whoever is ashamed of Me and My words, the Son of Man will be ashamed of him when He comes in His glory, and the gloryof the Father and of the holy angels.</memorize>
+					<memorize name="prompted">23 A H w s t t a, “I a w t c a M, h m d h, a t u h c d a f M. 
+24 F w w t s h l w l i, b w l h l f M s, h i t o w w s i. 
+25 F w i a m p i h g t w w, a l o f h? 
+26 F w i a o M a M w, t S o M w b a o h w H c i H g, a t g 
+o t F a o t h a</memorize>
+					<memorize name="f">And He was saying to</memorize>
+				</translation>
+			</translations>
+			<reference>Luke 9:23-26</reference>
+		</scripture>
+		<scripture>
+			<translations>
+				<translation name="niv">
+					<memorize name="complete">Jesus went throughout Galilee, teaching in their synagogues, preaching the good news of the kingdom, and healing every disease and sickness among the people. News about him spread all over Syria, and people brought to him all who were ill with various diseases, those suffering severe pain, the demon-possessed, those having seizures, and the paralyzed, and he healed them. Large crowds from Galilee, the Decapolis, Jerusalem, Judea and the region across the Jordan followed him.</memorize>
+					<memorize name="prompted">23 J w t G, t i t s, p t g n o t k, a h e d a s a t p. 
+24 N a h s a o S, a p b t h a w w i w v d, t s s p, t d-p, t h s, a t p, a h h t.
+25 L c f G, t D, J, J a t r a t J f h.</memorize>
+					<memorize name="firstfive">Jesus went throughout Galilee, teaching</memorize>
+				</translation>
+				<translation name="esv">
+					<memorize name="complete">And he went throughout all Galilee, teaching in their synagogues and proclaiming the gospel of the kingdom and healing every disease and every affliction among the people. So his fame spread throughout all Syria, and they brought him all the sick, those afflicted with various diseases and pains, those oppressed by demons, epileptics, and paralytics, and he healed them. And great crowds followed him from </memorize>
+					<memorize name="prompted">23 A h w t a G, t i t s a p t g o t k a h e d a e a a t p. 
+24 S h f s t a S, a t b h a t s, t a w v d a p, t o b d, e, a p, a h h t. 
+25 A g c f h f G a t D, a f J a J, a f b t J.</memorize>
+					<memorize name="firstfive">And he went throughout all</memorize>
+				</translation>
+				<translation name="kjv">
+					<memorize name="complete">And Jesus went about all Galilee, teaching in their synagogues, and preaching the gospel of the kingdom, and healing all manner of sickness and all manner of disease among the people. And his fame went throughout all Syria: and they brought unto him all sick people that were taken with divers diseases and torments, and those which were possessed with devils, and those which were lunatick, and those that had the palsy; and he healed them. And there followed him great multitudes of people from Galilee, and from Decapolis, and from Jerusalem, and from Judaea, and from beyond Jordan</memorize>
+					<memorize name="prompted">23 A J w a a G, t i t s, a p t g o t k, a h a m o s a a m o d a t p.
+24 A h f w t a S: a t b u h a s p t w t w d d a t, a t w w p w d, a t w w l, a t t h t p; a h h t.
+25 A t f h g m o p f G, a f D, a f J, a f J, a f b J.</memorize>
+					<memorize name="firstfive">And Jesus went about all</memorize>
+				</translation>
+				<translation name="nkjv">
+					<memorize name="complete">And Jesus went about all Galilee, teaching in their synagogues, preaching the gospel of the kingdom, and healing all kinds of sickness and all kinds of disease among the people. Then His fame went throughout all Syria; and they brought to Him all sick people who were afflicted with various diseases and torments, and those who were demon-possessed, epileptics, and paralytics; and He healed them.  Great multitudes followed Him—from Galilee, and from Decapolis, Jerusalem, Judea, and beyond the Jordan.</memorize>
+					<memorize name="prompted">23.  A J w a a G, t i t s, p t g o t k, a h a k o s a a k o d a t p. 
+24.  T H f w t a S; a t b t H a s p w w a w v d a t, a t w w d-p, e, a p; a H h t. 
+25.  G m f H— f G, a f D, J, J, a b t J.</memorize>
+					<memorize name="firstfive">And Jesus went about all</memorize>
+				</translation>
+				<translation name="nasb">
+					<memorize name="complete">Jesus was going throughout all Galilee, teaching in their synagogues and proclaiming the gospel of the kingdom, and healing every kind of disease and every kind of sickness among the people. The news about Him spread throughout all Syria; and they brought to Him all who were ill, those suffering with various diseases and pains, demoniacs, epileptics, paralytics; and He healed them. Large crowds followed Him from Galilee and the Decapolis and Jerusalem and Judea and from beyond the Jordan</memorize>
+					<memorize name="prompted">23 J w g t a G, t i t s a p t g o t k, a h e k o d a e k o s a t p.
+24 T n a H s t a S; a t b t H a w w i, t s w v d a p, d, e, p; a H h t. 
+25 L c f H f G a t D a J a J a f b t J.</memorize>
+					<memorize name="firstfive">Jesus was going throughout all</memorize>
+				</translation>
+			</translations>
+			<reference>Matthew 4:23-25</reference>
+		</scripture>
+		<scripture>
+			<translations>
+				<translation name="niv">
+					<memorize name="complete">David said about him: “‘I saw the Lord always before me. Because he is at my right hand,I will not be shaken. Therefore my heart is glad and my tongue rejoices; my body also will live in hope, because you will not abandon me to the grave, nor will you let your Holy One see decay. You have made known to me the paths of life; you will fill me with joy in your presence.’</memorize>
+					<memorize name="prompted">25. D s a h: “‘I s t L a b m. B h i a m r h, I w n b s.
+26 T m h i g a m t r; m b a w l i h,
+27 b y w n a m t t g, n w y l y H O s d.
+28 Y h m k t m t p o l; y w f m w j i y p</memorize>
+					<memorize name="firstfive">David said about him: “‘I</memorize>
+				</translation>
+				<translation name="esv">
+					<memorize name="complete">For David says concerning him, “‘I saw the Lord always before me, for he is at my right hand that I may not be shaken; therefore my heart was glad, and my tongue rejoiced; my flesh also will dwell in hope. For you will not abandon my soul to Hades, or let your Holy One see corruption. You have made known to me the paths of life; you will make me full of gladness with your presence.’</memorize>
+					<memorize name="prompted">25 F D s c h, “‘I s t L a b m, f h i a m r h t I m n b s;
+26 t m h w g, a m t r; m f a w d i h. 
+27 F y w n a m s t H, o l y H O s c.
+28 Y h m k t m t p o l; y w m m f o g w y p.’</memorize>
+					<memorize name="firstfive">For David says concerning him,</memorize>
+				</translation>
+				<translation name="kjv">
+					<memorize name="complete">For David speaketh concerning him, I foresaw the Lord always before my face, for he is on my right hand, that I should not be moved: Therefore did my heart rejoice, and my tongue was glad; moreover also my flesh shall rest in hope: Because thou wilt not leave my soul in hell, neither wilt thou suffer thine Holy One to see corruption. Thou hast made known to me the ways of life; thou shalt make me full of joy with thy countenance.</memorize>
+					<memorize name="prompted">25 F D s c h, I f t L a b m f, f h i o m r h, t I s n b m:
+26 T d m h r, a m t w g; m a m f s r i h:
+27 B t w n l m s i h, n w t s t H O t s c.
+28 T h m k t m t w o l; t s m m f o j w t c.</memorize>
+					<memorize name="firstfive">For David speaketh concerning him,</memorize>
+				</translation>
+				<translation name="nkjv">
+					<memorize name="complete">For David says concerning Him: ‘I foresaw the LORD always before my face, For He is at my right hand, that I may not be shaken. Therefore my heart rejoiced, and my tongue was glad; Moreover my flesh also will rest in hope. For You will not leave my soul in Hades, Nor will You allow Your Holy One to see corruption. You have made known to me the ways of life; You will make me full of joy in Your presence.</memorize>
+					<memorize name="prompted">25.  F D s c H: “I f t L a b m f, F H i a m r h, t I m n b s. 
+26.  T m h r, a m t w g; M m f a w r i h. 
+27.  F Y w n l m s i H, N w Y a Y H O t s c. 
+28.  Y h m k t m t w o l; Y w m m f o j i Y p.”</memorize>
+					<memorize name="firstfive">For David says concerning Him:</memorize>
+				</translation>
+				<translation name="nasb">
+					<memorize name="complete">For David says of Him,‘I saw the Lord always in my presence;For He is at my right hand, so that I will not be shaken.‘Therefore my heart was glad and my tongue exulted; Moreover my flesh also will live in hope; Because You will not abandon my soul to Hades, Nor allow Your Holy One to undergo decay. ‘You have made known to me the ways of life; You will make me full of gladness with Your presence.’</memorize>
+					<memorize name="prompted">25 F D s o H, ‘I s t L a i m p; F H i a m r h, s t I w n b s.
+26‘T m h w g a m t e; M m f a w l i h;
+27 B Y w n a m s t H, N a Y H O t u d.
+28 ‘Y h m k t m t w o l; Y w m m f o g w Y p.’</memorize>
+					<memorize name="firstfive">For David says of Him,</memorize>
+				</translation>
+			</translations>
+			<reference>Acts 2:25-28</reference>
+		</scripture>
+		<scripture>
+			<translations>
+				<translation name="niv">
+					<memorize name="complete">Give thanks to the LORD, call on his name; make known among the nations what he has done. Sing to him, sing praise to him; tell of all his wonderful acts. Glory in his holy name; let the hearts of those who seek the LORD rejoice.  Look to the LORD and his strength; seek his face always. Remember the wonders he has done, his miracles, and the judgments he pronounced,</memorize>
+					<memorize name="prompted">8.   G t t t L, c o h n; m k a t n w h h d.
+9 S t h, s p t h; t o a h w a.
+10 G i h h n; l t h o t w s t L r.
+11 L t t L a h s; s h f a.
+12 R t w h h d, h m, a t j h p,</memorize>
+					<memorize name="firstfive">Give thanks to the LORD,</memorize>
+				</translation>
+				<translation name="esv">
+					<memorize name="complete">Oh give thanks to the Lord; call upon his name; make known his deeds among the peoples! Sing to him, sing praises to him; tell of all his wondrous works! Glory in his holy name; let the hearts of those who seek the Lord rejoice! Seek the Lord and his strength; seek his presence continually! Remember the wondrous works that he has done, his miracles and the judgments he uttered,</memorize>
+					<memorize name="prompted">8 O g t t t L; c u h n; m k h d a t p!
+9 S t h, s p t h; t o a h w w!
+10 G i h h n; l t h o t w s t L r!
+11 S t L a h s; s h p c!
+12 R t w w t h h d, h m a t j h u,</memorize>
+					<memorize name="firstfive">Oh give thanks to the</memorize>
+				</translation>
+				<translation name="kjv">
+					<memorize name="complete">Give thanks unto the Lord, call upon his name, make known his deeds among the people.  Sing unto him, sing psalms unto him, talk ye of all his wondrous works. Glory ye in his holy name: let the heart of them rejoice that seek the Lord. Seek the Lord and his strength, seek his face continually. Remember his marvellous works that he hath done, his wonders, and the judgments of his mouth</memorize>
+					<memorize name="prompted">8 G t u t L, c u h n, m k h d a t p.
+9 S u h, s p u h, t y o a h w w.
+10 G y i h h n: l t h o t r t s t L.
+11 S t L a h s, s h f c
+12 R h m w t h h d, h w, a t j o h m</memorize>
+					<memorize name="firstfive">Give thanks unto the Lord,</memorize>
+				</translation>
+				<translation name="nkjv">
+					<memorize name="complete">Oh, give thanks to the LORD! Call upon His name; Make known His deeds among the peoples! Sing to Him, sing psalms to Him; Talk of all His wondrous works! Glory in His holy name; Let the hearts of those rejoice who seek the LORD! Seek the LORD and His strength; Seek His face evermore! Remember His marvelous works which He has done, His wonders, and the judgments of His mouth,</memorize>
+					<memorize name="prompted">8.    O, g t t t L! C u H n; M k H d a t p! 
+9.    S t H, s p t H; T o a H w w! 
+10.  G i H h n; L t h o t r w s t L! 
+11.  S t L a H s; S H f e! 
+12.  R H m w w H h d, H w, a t j o H m,</memorize>
+					<memorize name="firstfive">>Oh, give thanks to the</memorize>
+				</translation>
+				<translation name="nasb">
+					<memorize name="complete">Oh give thanks to the Lord, call upon His name; Make known His deeds among the peoples. Sing to Him, sing praises to Him; Speak of all His wonders. Glory in His holy name; Let the heart of those who seek the Lord be glad. Seek the Lord and His strength; Seek His face continually. Remember His wonderful deeds which He has done, His marvels and the judgments from His mouth,</memorize>
+					<memorize name="prompted">8 O g t t t L, c u H n; M k H d a t p.
+9 S t H, s p t H; S o a H w.
+10 G i H h n; L t h o t w s t L b g.
+11 S t L a H s; S H f c.
+12 R H w d w H h d, H m a t j f H m,</memorize>
+					<memorize name="firstfive"></memorize>
+				</translation>
+			</translations>
+			<reference>1 Chronicles 16:8-12</reference>
+		</scripture>
+		<scripture>
+			<translations>
+				<translation name="niv">
+					<memorize name="complete">Here is a trustworthy saying that deserves full acceptance: Christ Jesus came into the world to save sinners —of whom I am the worst. But for that very reason I was shown mercy so that in me, the worst of sinners, Christ Jesus might display his unlimited patienceas an example for those who would believe on him and receive eternal life. Now to the King eternal, immortal, invisible, the only God, be honor and glory for ever and ever. Amen. Timothy, my son, I give you </memorize>
+					<memorize name="prompted">15. H i a t s t d f a: C J c i t w t s s —o w I a t w.
+16 B f t v r I w s m s t i m, t w o s, C J m d h u p a e f t w w  o h a r e l.
+17 N t t K e, i, i, t o G, b h a g f e a e. A.
+18 T, m s, I g y t i i k w t p o m a y, s t b f t y m f t g f,
+19 h o t f a a g c. S h r t a s h s t f.</memorize>
+					<memorize name="firstfive">Here is a trustworthy saying</memorize>
+				</translation>
+				<translation name="esv">
+					<memorize name="complete">The saying is trustworthy and deserving of full acceptance, that Christ Jesus came into the world to save sinners, of whom I am the foremost. But I received mercy for this reason, that in me, as the  foremost, Jesus Christ might display his perfect patience as an example to those who were to believe in him for eternal life. To the King of the ages, immortal, invisible, the only God, be honor and glory forever and ever. Amen. This charge I entrust to you, Timothy, my child, in accordance with the prophecies previously made about you, that by them you may wage the good warfare, holding faith and a good conscience. By rejecting this, some have made shipwreck of their faith,</memorize>
+					<memorize name="prompted">15 T s i t a d o f a, t C J c i t w t s s, o w I a t f. 
+16 B I r m f t r, t i m, a t f, J C m d h p p a a e t t w w t b i h f e l. 
+17 T t K o t a, i, i, t o G, b h a g f a e. A.
+18 T c I e t y, T, m c, i a w t p p m a y, t b t y m w t g w, 
+19 h f a a g c. B r t, s h m s o t f,</memorize>
+					<memorize name="firstfive">The saying is trustworthy and</memorize>
+				</translation>
+				<translation name="kjv">
+					<memorize name="complete">This is a faithful saying, and worthy of all acceptation, that Christ Jesus came into the world to save sinners; of whom I am chief. Howbeit for this cause I obtained mercy, that in me first Jesus Christ might shew forth all longsuffering, for a pattern to them which should hereafter believe on him to life everlasting. Now unto the King eternal, immortal, invisible, the only wise God, be honour and glory for ever and ever. Amen. This charge I commit unto thee, son Timothy, according to the prophecies which went before on thee, that thou by them mightest war a good warfare; Holding faith, and a good conscience; which some having put away concerning faith have made shipwreck:</memorize>
+					<memorize name="prompted">15 T i a f s, a w o a a, t C J c i t w t s s; o w I a c.
+16 H f t c I o m, t i m f J C m s f a l, f a p t t w s h b o h t l e.
+17 N u t K e, i, i, t o w G, b h a g f e a e. A.
+18 T c I c u t, s T, a t t p w w b o t, t t b t m w a g w;
+19 H f, a a g c; w s h p a c f h m s:</memorize>
+					<memorize name="firstfive">This is a faithful saying, and</memorize>
+				</translation>
+				<translation name="nkjv">
+					<memorize name="complete">This is a faithful saying and worthy of all acceptance, that Christ Jesus came into the world to save sinners, of whom I am chief. However, for this reason I obtained mercy, that in me first Jesus Christ might show all longsuffering, as a pattern to those who are going to believe on Him for everlasting life. Now to the King eternal, immortal, invisible, to God who alone is wise, be honor and glory forever and ever. Amen. This charge I commit to you, son Timothy, according to the prophecies previously made concerning you, that by them you may wage the good warfare, having faith and a good conscience, which some having rejected, concerning the faith have suffered shipwreck,</memorize>
+					<memorize name="prompted">15.  T i a f s a w o a a, t C J c i t w t s s, o w I a c. 
+16.  H, f t r I o m, t i m f J C m s a l, a a p t t w a g t b o H f e l. 
+17.  N t t K e, i, i, t G w a i w, b h a g f a e. A. 
+18.  T c I c t y, s T, a t t p p m c y, t b t y m w t g w, 
+19.  h f a a g c, w s h r, c t f h s s,</memorize>
+					<memorize name="firstfive">This is a faithful saying</memorize>
+				</translation>
+				<translation name="nasb">
+					<memorize name="complete">It is a trustworthy statement, deserving full acceptance, that Christ Jesus came into the world to save sinners, among whom I am foremost of all. Yet for this reason I found mercy, so that in me as the foremost, Jesus Christ might demonstrate His perfect patience as an example for those who would believe in Him for eternal life. Now to the King eternal, immortal, invisible, the only God, be honor and glory forever and ever. Amen. This command I entrust to you, Timothy, my son, in accordance with the prophecies previously made concerning you, that by them you fight the good fight, keeping faith and a good conscience, which some have rejected and suffered shipwreck in regard to their faith.</memorize>
+					<memorize name="prompted">15 I i a t s, d f a, t C J c i t w t s s, a w I a f o a. 
+16 Y f t r I f m, s t i m a t f, J C m d H p p a a e f t w w b i H f e l. 
+17 N t t K e, i, i, t o G, b h a g f a e. A.
+18 T c I e t y, T, m s, i a w t p p m c y, t b t y f t g f, 
+19 k f a a g c, w s h r a s s i r t t f.</memorize>
+					<memorize name="firstfive">It is a trustworthy statement,</memorize>
+				</translation>
+			</translations>
+			<reference>1 Timothy 1:15-19</reference>
+		</scripture>
+		<scripture>
+			<translations>
+				<translation name="niv">
+					<memorize name="complete">Finally, be strong in the Lord and in his mighty power. Put on the full armor of God so that you can take your stand against the devil’s schemes. For our struggle is not against flesh and blood, but against the rulers, against the authorities, against the powers of this dark world and against the spiritual forces of evil in the heavenly realms. Therefore put on the full armor of God, so that when the day of evil comes, you may be able to stand your ground, and after you have done everything, to stand. Stand firm then, with the belt of truth buckled around your waist, with the breastplate of righteousness in place, and with your feet fitted with the readiness that comes from the gospel of peace. In addition to all this, take up the shield of faith, with which you can extinguish all the flaming arrows of the evil one. Take the helmet of salvation and the sword of the Spirit, which is the word of God. And pray in the Spirit on all occasions with all kinds of prayers and requests. With this in mind, be alert and always keep on praying for all the saints</memorize>
+					<memorize name="prompted">10. F, b s i t L a i h m p.
+11 P o t f a o G s t y c t y s a t d’s s. 
+12 F o s i n a f a b, b a t r, a t a, a t p o t d w a a t s f o e i t h r.
+13 T p o t f a o G, s t w t d o e c, y m b a t s y g, a a y h d e, t s.
+14 S f t, w t b o t b a y w, w t b o r i p, 
+15 a w y f f w t r t c f t g o p. 
+16 I a t a t, t u t s o f, w w y c e a t f a o t e o. 
+17 T t h o s a t s o t S, w i t w o G. 
+18 A p i t S o a o w a k o p a r.W t i m, b a a a k o p f a t s.</memorize>
+					<memorize name="firstfive">Finally, be strong in the</memorize>
+				</translation>
+				<translation name="esv">
+					<memorize name="complete">Finally, be strong in the Lord and in the strength of his might. Put on the whole armor of God, that you may be able to stand against the schemes of the devil. For we do not wrestle against flesh and blood, but against the rulers, against the authorities, against the cosmic powers over this present darkness, against the spiritual forces of evil in the heavenly places. Therefore take up the whole armor of God, that you may be able to withstand in the evil day, and having done all, to stand firm. Stand therefore, having fastened on the belt of truth, and having put on the breastplate of righteousness, and, as shoes for your feet, having put on the readiness given by the gospel of peace. In all circumstances take </memorize>
+					<memorize name="prompted">10 F, b s i t L a i t s o h m. 
+11 P o t w a o G, t y m b a t s a t s o t d. 
+12 F w d n w a f a b, b a t r, a t a, a t c p o t p d, a t s f o e i t h p. 
+13 T t u t w a o G, t y m b a t w i t e d, a h d a, t s f. 
+14 S t, h f o t b o t, a h p o t b o r, 
+15 a, a s f y f, h p o t r g b t g o p. 
+16 I a c t u t s o f, w w y c e a t f d o t e o; 
+17 a t t h o s, a t s o t S, w i t w o G, 
+18 p a a t i t S, w a p a s. T t e k a w a p, m s f a t s,</memorize>
+					<memorize name="firstfive">Finally, be strong in the</memorize>
+				</translation>
+				<translation name="kjv">
+					<memorize name="complete">Finally, my brethren, be strong in the Lord, and in the power of his might. Put on the whole armour of God, that ye may be able to stand against the wiles of the devil. For we wrestle not against flesh and blood, but against principalities, against powers, against the rulers of the darkness of this world, against spiritual wickedness in high places. Wherefore take unto you the whole armour of God, that ye may be able to withstand in the evil day, and having done all, to stand. Stand therefore, having your loins girt about with truth, and having on the breastplate of righteousness; And your feet </memorize>
+					<memorize name="prompted">10 F, m b, b s i t L, a i t p o h m.
+11 P o t w a o G, t y m b a t s a t w o t d.
+12 F w w n a f a b, b a p, a p, a t r o t d o t w, a s w i h p.
+13 W t u y t w a o G, t y m b a t w i t e d, a h d a, t s.
+14 S t, h y l g a w t, a h o t b o r;
+15 A y f s w t p o t g o p;
+16 A a, t t s o f, w y s b a t q a t f d o t w.
+17 A t t h o s, a t s o t S, w i t w o G:
+18 P a w a p a s i t S, a w t w a p a s f a s</memorize>
+					<memorize name="firstfive">Finally, my brethren, be strong</memorize>
+				</translation>
+				<translation name="nkjv">
+					<memorize name="complete">Finally, my brethren, be strong in the Lord and in the power of His might. Put on the whole armor of God, that you may be able to stand against the wiles of the devil. For we do not wrestle against flesh and blood, but against principalities, against powers, against the rulers of the darkness of this age, against spiritual hosts of wickedness in the heavenly places. Therefore take up the whole armor of God, that you may be able to withstand in the evil day, and having done all, to stand. Stand therefore, having girded your waist with truth, having put on the breastplate of righteousness, and having shod your feet with the preparation of the gospel of peace; above all, taking the shield of faith with which you will be able to quench all the fiery darts of the wicked one.  And take the helmet of salvation, and the sword of the Spirit, which is the word of God; praying always with all prayer and supplication in the Spirit, being watchful to this end with all perseverance and supplication for all the saints— </memorize>
+					<memorize name="prompted">10.  F, m b, b s i t L a i t p o H m. 
+11.  P o t w a o G, t y m b a t s a t w o t d. 
+12.  F w d n w a f a b, b a p, a p, a t r o t d o t a, a s h o w i t h p. 
+13. T t u t w a o G, t y m b a t w i t e d, a h d a, t s. 
+14.  S t, h g y w w t, h p o t b o r, 
+15.  a h s y f w t p o t g o p; 
+16.  a a, t t s o f w w y w b a t q a t f d o t w o. 
+17.  A t t h o s, a t s o t S, w i t w o G; 
+18.  p a w a p a s i t S, b w t t e w a p a s f a t s—</memorize>
+					<memorize name="firstfive">Finally, my brethren, be strong</memorize>
+				</translation>
+				<translation name="nasb">
+					<memorize name="complete">Finally, be strong in the Lord and in the strength of His might. Put on the full armor of God, so that you will be able to stand firm against the schemes of the devil. For our struggle is not against flesh and blood, but against the rulers, against the powers, against the world forces of this darkness, against the spiritual forces of wickedness in the heavenly places. Therefore, take up the full armor of God, so that you will be able to resist in the evil day, and having done everything, to stand firm. Stand firm therefore, having girded your loins with truth, and having put on the breastplate of righteousness, and having shod your feet with the preparation of the gospel of peace; in addition to all, taking up the shield of faith with which you will be able to extinguish all the flaming arrows of the evil one. And take the helmet of salvation, and the sword of the Spirit, which is the word of God. With all prayer and petition pray at all times in the Spirit, and with this in view, be on the alert with all perseverance and petition for all the saints,</memorize>
+					<memorize name="prompted">10 F, b s i t L a i t s o H m. 
+11 P o t f a o G, s t y w b a t s f a t s o t d. 
+12 F o s i n a f a b, b a t r, a t p, a t w f o t d, a t s f o w i t 
+h p. 
+13 T, t u t f a o G, s t y w b a t r i t e d, a h d e, t s f. 
+14 S f t, h g y l w t, a h p o t b o r, 
+15 a h s y f w t p o t g o p; 
+16 i a t a, t u t s o f w w y w b a t e a t f a o t e o. 
+17 A t t h o s, a t s o t S, w i t w o G.
+18 W a p a p p a a t i t S, a w t i v, b o t a w a p a p f a t s,</memorize>
+					<memorize name="firstfive">Finally, be strong in the</memorize>
+				</translation>
+			</translations>
+			<reference>Ephesians 6:10-18</reference>
+		</scripture>
+		<scripture>
+			<translations>
+				<translation name="niv">
+					<memorize name="complete">Slaves, obey your earthly masters in everything; and do it, not only when their eye is on you and to win their favor, but with sincerity of heart and reverence for the Lord. Whatever you do, work at it with all your heart, as working for the Lord, not for men, since you know that you will receive an inheritance from the Lord as a reward. It is the Lord Christ you are serving.</memorize>
+					<memorize name="prompted">22. S, o y e m i e; a d i, n o w t e i o y a t w t f, b w s o h a r f t L.
+23 W y d, w a i w a y h, a w f t L, n f m,
+24 s y k t y w r a i f t L a a r. I i t L C y a s.</memorize>
+					<memorize name="firstfive">Slaves, obey your earthly masters</memorize>
+				</translation>
+				<translation name="esv">
+					<memorize name="complete">Bondservants, obey in everything those who are your earthly masters, not by way of eyeservice, as people-pleasers, but with sincerity of heart, fearing the Lord. Whatever you do, work heartily, as for the Lord and not for men, knowing that from the Lord you will receive the inheritance as your reward. You are serving the Lord Christ.</memorize>
+					<memorize name="prompted">22 B, o i e t w a y e m, n b w o e-s, a p-p, b w s o h, f t L. 
+23 W y d, w h, a f t L a n f m, 
+24 k t f t L y w r t i a y r. Y a s t L C.</memorize>
+					<memorize name="firstfive">Bondservants, obey in everything 
+those</memorize>
+				</translation>
+				<translation name="kjv">
+					<memorize name="complete">Servants, obey in all things your masters according to the flesh; not with eyeservice, as menpleasers; but in singleness of heart, fearing God; And whatsoever ye do, do it heartily, as to the Lord, and not unto men; Knowing that of the Lord ye shall receive the reward of the inheritance: for ye serve the Lord Christ.</memorize>
+					<memorize name="prompted">22 S, o i a t y m a t t f; n w e, a m; b i s o h, f G;
+23 A w y d, d i h, a t t L, a n u m;
+24 K t o t L y s r t r o t i: f y s t L C.</memorize>
+					<memorize name="firstfive">Servants, obey in all things</memorize>
+				</translation>
+				<translation name="nkjv">
+					<memorize name="complete">Bondservants, obey in all things your masters according to the flesh, not with eyeservice, as men-pleasers, but in sincerity of heart, fearing God. And whatever you do, do it heartily, as to the Lord and not to men, knowing that from the Lord you will receive the reward of the inheritance; for you serve the Lord Christ.</memorize>
+					<memorize name="prompted">22.  B, o i a t y m a t t f, n w e, a m p, b i s o h, f G. 
+23.  A w y d, d i h, a t t L a n t m, 
+24.  k t f t L y w r t r o t i; f y s t L C</memorize>
+					<memorize name="firstfive">Bondservants, obey in all things</memorize>
+				</translation>
+				<translation name="nasb">
+					<memorize name="complete">Slaves, in all things obey those who are your masters on earth, not with external service, as those who merely please men, but with sincerity of heart, fearing the Lord. Whatever you do, do your work heartily, as for the Lord rather than for men, knowing that from the Lord you will receive the reward of the inheritance. It is the Lord Christ whom you serve.</memorize>
+					<memorize name="prompted">22 S, i a t o t w a y m o e, n w e s, a t w m p m, b w s o h, f t L. 
+23 W y d, d y w h, a f t L r t f m, 
+24 k t f t L y w r t r o t i. I i t L C w y s.</memorize>
+					<memorize name="firstfive">Slaves, in all things obey</memorize>
+				</translation>
+			</translations>
+			<reference>Colossians 3:22-24</reference>
+		</scripture>
+		<scripture>
+			<translations>
+				<translation name="niv">
+					<memorize name="complete">Whatever happens, conduct yourselves in a manner worthy of the gospel of Christ. Then, whether I come and see you or only hear about you in my absence, I will know that you stand firm in one spirit, contending as one man for the faith of the gospel without being frightened in any way by those who oppose you. This is a sign to them that they will be destroyed, but that you will be saved—and that by God. For it has been granted to you on behalf of Christ not only to believe on him, but also to suffer for him, since you are going through the same struggle you saw I had, and now hear that I still have.</memorize>
+					<memorize name="prompted">27. W h, c y i a m w o t g o C. T, w I c a s y o o h a y i m a, I w k t y s f i o s, c a o m f t f o t g 
+28 w b f i a w b t w o y. T i a s t t t t w b d, b t y w b s—a t b G.
+29 F i h b g t y o b o C n o t b o h, b a t s f h, 
+30 s y a g t t s s y s I h, a n h t I s h.</memorize>
+					<memorize name="firstfive">Whatever happens, conduct yourselves in</memorize>
+				</translation>
+				<translation name="esv">
+					<memorize name="complete">Only let your manner of life be worthy of the gospel of Christ, so that whether I come and see you or am absent, I may hear of you that you are standing firm in one spirit, with one mind striving side by side for the faith of the gospel, and not frightened in anything by your opponents. This is a clear sign to them of their destruction, but of your salvation, and that from God. For it has been granted to you that for the sake of Christ you should not only believe in him but also suffer for his sake, engaged in the same conflict that you saw I had and now hear that I still have.</memorize>
+					<memorize name="prompted">27 O l y m o l b w o t g o C, s t w I c a s y o a a, I m h o y t y a s f i o s, w o m s s b s f t f o t g, 
+28 a n f i a b y o. T i a c s t t o t d, b o y s, a t f G.
+29 F i h b g t y t f t s o C y s n o b i h b a s f h s, 
+30 e i t s c t y s I h a n h t I s h.</memorize>
+					<memorize name="firstfive">Only let your manner of</memorize>
+				</translation>
+				<translation name="kjv">
+					<memorize name="complete">Only let your conversation be as it becometh the gospel of Christ: that whether I come and see you, or else be absent, I may hear of your affairs, that ye stand fast in one spirit, with one mind striving together for the faith of the gospel; And in nothing terrified by your adversaries: which is to them an evident token of perdition, but to you of salvation, and that of God. For unto you it is given in the behalf of Christ, not only to believe on him, but also to suffer for his sake; Having the same conflict which ye saw in me, and now hear to be in me.</memorize>
+					<memorize name="prompted">27 O l y c b a i b t g o C: t w I c a s y, o e b a, I m h o y a, t y s f i o s, w o m s t f t f o t g;
+28 A i n t b y a: w i t t a e t o p, b t y o s, a t o G.
+29 F u y i i g i t b o C, n o t b o h, b a t s f h s;
+30 H t s c w y s i m, a n h t b i m.</memorize>
+					<memorize name="firstfive">Only let your conversation be</memorize>
+				</translation>
+				<translation name="nkjv">
+					<memorize name="complete">Only let your conduct be worthy of the gospel of Christ, so that whether I come and see you or am absent, I may hear of your affairs, that you stand fast in one spirit, with one mind striving together for the faith of the gospel, and not in any way terrified by your adversaries, which is to them a proof of perdition, but to you of salvation, and that from God. For to you it has been granted on behalf of Christ, not only to believe in Him, but also to suffer for His sake, having the same conflict which you saw in me and now hear is in me.</memorize>
+					<memorize name="prompted">27.   O l y c b w o t g o C, s t w I c a s y o a a, I m h o y a, t y s f i o s, w o m s t f t f o t g, 
+28.   a n i a w t b y a, w i t t a p o p, b t y o s, a t f G. 
+29.   F t y i h b g o b o C, n o t b i H, b a t s f H s, 
+30.   h t s c w y s i m a n h i i m</memorize>
+					<memorize name="firstfive">Only let your conduct be</memorize>
+				</translation>
+				<translation name="nasb">
+					<memorize name="complete">Only conduct yourselves in a manner worthy of the gospel of Christ, so that whether I come and see you or remain absent, I will hear of you that you are standing firm in one spirit, with one mind striving together for the faith of the gospel; in no way alarmed by your opponents—which is a sign of destruction for them, but of salvation for you, and that too, from God. For to you it has been granted for Christ’s sake, not only to believe in Him, but also to suffer for His sake, experiencing the same conflict which you saw in me, and now hear to be in me.</memorize>
+					<memorize name="prompted">27 O c y i a m w o t g o C, s t w I c a s y o r a, I w h o y t 
+y a s f i o s, w o m s t f t f o t g; 
+28 i n w a b y o—w i a s o d f t, b o s f y, a t t, f G. 
+29 F t y i h b g f C’s s, n o t b i H, b a t s f H s, 
+30 e t s c w y s i m, a n h t b i m.</memorize>
+					<memorize name="firstfive">Only conduct yourselves in a</memorize>
+				</translation>
+			</translations>
+			<reference>Philippians 1:27-30</reference>
+		</scripture>
+		<scripture>
+			<translations>
+				<translation name="niv">
+					<memorize name="complete">First of all, you must understand that in the last days scoffers will come, scoffing and following their own evil desires. They will say, “Where is this ‘coming’ he promised? Ever since our fathers died, everything goes on as it has since the beginning of creation.” But they deliberately forget that long ago by God’s word the heavens existed and the earth was formed out of water and by water. By these waters also the world of that time was deluged and destroyed. By the same word the present heavens and earth are reserved for fire, being kept for the day of judgment and destruction of ungodly men. But do not forget this one thing, dear friends: With the Lord a day is like a thousand years, and a thousand years are like a day. The Lord is not slow in keeping his promise, as some understand slowness. He is patient with you, not wanting anyone to perish, but everyone to come to repentance.</memorize>
+					<memorize name="prompted">3. F o a, y m u t i t l d s w c, s a f t o e d.
+4 T w s, “W i t ‘c’ h p? E s o f d, e g o a i h s t b o c.” 
+5 B t d f t l a b G’s w t h e a t e w f o o w a b w. 
+6 B t w a t w o t t w d a d. 
+7 B t s w t p h a e a r f f, b k f t d o j a d o u m.
+8 B d n f t o t, d f: W t L a d i l a t y, a a t y a l a d. 
+9 T L i n s i k h p, a s u s. H i p w y, n w a t p, b e t c t r.</memorize>
+					<memorize name="firstfive">First of all, you must</memorize>
+				</translation>
+				<translation name="esv">
+					<memorize name="complete">knowing this first of all, that scoffers will come in the last days with scoffing, following their own sinful desires. They will say, “Where is the promise of his coming? For ever since the fathers fell asleep, all things are continuing as they were from the beginning of creation.” For they deliberately overlook this fact, that the heavens existed long ago, and the earth was formed out of water and through water by the word of God, and that by means of these the world that then existed was deluged with water and perished. But by the same word the heavens and earth that now exist are stored up for fire, being kept until the day of judgment and destruction of the ungodly. But do not overlook this one fact, beloved, that with the Lord one day is as a thousand years, and a thousand years as one day. The Lord is not slow to fulfill his promise as some count slowness, but is patient toward you, not wishing that any should perish, but that all should reach repentance.</memorize>
+					<memorize name="prompted">3 k t f o a, t s w c i t l d w s, f t o s d. 
+4 T w s, “W i t p o h c? F e s t f f a, a t a c a t w f t b o c.” 
+5 F t d o t f, t t h e l a, a t e w f o o w a t w b t w o G, 
+6 a t b m o t t w t t e w d w w a p.
+7 B b t s w t h a e t n e a s u f f, b k u t d o j a d o t u.
+8 B d n o t o f, b, t w t L o d i a a t y, a a t y a o d. 
+9 T L i n s t f h p a s c s, b i p t y, n w t a s p, b t a s r r.</memorize>
+					<memorize name="firstfive">knowing this first of all,</memorize>
+				</translation>
+				<translation name="kjv">
+					<memorize name="complete">Knowing this first, that there shall come in the last days scoffers, walking after their own lusts, And saying, Where is the promise of his coming? for since the fathers fell asleep, all things continue as they were from the beginning of the creation. For this they willingly are ignorant of, that by the word of God the heavens were of old, and the earth standing out of the water and in the water: Whereby the world that then was, being overflowed with water, perished: But the heavens and the earth, which are now, by the same word are kept in store, reserved unto fire against the day of judgment and perdition of ungodly men. But, beloved, be not ignorant of this one thing, that one day is with the Lord as a thousand years, and a thousand years as one day. The Lord is not slack concerning his promise, as some men count slackness; but is longsuffering to us-ward, not willing that any should perish, but that all should come to repentance.</memorize>
+					<memorize name="prompted">3 K t f, t t s c i t l d s, w a t o l,
+4 A s, W i t p o h c? f s t f f a, a t c a t w f t b o t c.
+5 F t t w a i o, t b t w o G t h w o o, a t e s o o t w a i t w:
+6 W t w t t w, b o w w, p:
+7 B t h a t e, w a n, b t s w a k i s, r u f a t d o j a p o u m.
+8 B, b, b n i o t o t, t o d i w t L a a t y, a a t y a o d.
+9 T L i n s c h p, a s m c s; b i l t u-w, n w t a s p, b t a s c t r.</memorize>
+					<memorize name="firstfive">Knowing this first, that there</memorize>
+				</translation>
+				<translation name="nkjv">
+					<memorize name="complete">knowing this first: that scoffers will come in the last days, walking according to their own lusts, and saying, “Where is the promise of His coming? For since the fathers fell asleep, all things continue as they were from the beginning of creation.” For this they willfully forget: that by the word of God the heavens were ofold, and the earth standing out of water and in the water, by which the world that then existed perished, being flooded with water. But the heavens and the earth which are now preserved by the same word, are reserved for fire until the day of judgment and perdition of ungodly men. But, beloved, do not forget this one thing, that with the Lord one day isas a thousand years, and a thousand years as one day.  The Lord is not slack concerning His promise, as some count slackness, but is longsuffering toward us, not willing that any should perish but that all should come to repentance.</memorize>
+					<memorize name="prompted">3.  k t f: t s w c i t l d, w a t t o l, 
+4.  a s, “W i t p o H c? F s t f f a, a t c a t w f t b o c.” 
+5.  F t t w f: t b t w o G t h w o o, a t e s o o w a i t w, 
+6.  b w t w t t e p, b f w w. 
+7.  B t h a t e w a n p b t s w, a r f f u t d o j a p o u m. 
+8.  B, b, d n f t o t, t w t L o d i a a t y, a a t y a o d. 
+9.  T L i n s c H p, a s c s, b i l t u, n w t a s p b t a s c t r</memorize>
+					<memorize name="firstfive">knowing this first: that scoffers</memorize>
+				</translation>
+				<translation name="nasb">
+					<memorize name="complete">Know this first of all, that in the last days mockers will come with their mocking, following after their own lusts, and saying, “Where is the promise of His coming? For eversince the fathers fell asleep, all continues just as it was from the beginning of creation.” For when they maintain this, it escapes their notice that by the word of God the heavens existed long ago and the earth was formed out of water and by water, through which the world at that time was destroyed, being flooded with water. But by His word the present heavens and earth are being reserved for fire, kept for the day of judgment and destruction of ungodly men. But do not let this one fact escape your notice, beloved, that with the Lord one day is like a thousand years, and a thousand years like one day. The Lord is not slow about His promise, as some count slowness, but is patient toward you, not wishing for any to perish but for all to come to repentance.</memorize>
+					<memorize name="prompted">3 K t f o a, t i t l d m w c w t m, f a t o l, 
+4 a s, “W i t p o H c? F e t f f a, a c j a i w f t b o c.” 
+5 F w t m t, i e t n t b t w o G t h e l a a t e w f o o w a b w, 
+6 t w t w a t t w d, b f w w. 
+7 B b H w t p h a e a b r f f, k f t d o j a d o u m.
+8 B d n l t o f e y n, b, t w t L o d i l a t y, a a t y l o d. 
+9 T L i n s a H p, a s c s, b i p t y, n w f a t p b f a t c t r.</memorize>
+					<memorize name="firstfive">Know this first of all,</memorize>
+				</translation>
+			</translations>
+			<reference>2 Peter 3:3-9</reference>
+		</scripture>
+		<scripture>
+			<translations>
+				<translation name="niv">
+					<memorize name="complete">I will praise you, O LORD, with all my heart; I will tell of all your wonders. I will be glad and rejoice in you; I will sing praise to your name, O Most High. My enemies turn back; they stumble and perish before you. For you have upheld my right and my cause; you have sat on your throne, judging righteously.</memorize>
+					<memorize name="prompted">1. I w p y, O L, w a m h; I w t o a y w. 
+2 I w b g a r i y; I w s p t y n, O M H.
+3 M e t b; t s a p b y.
+4 F y h u m r a m c; y h s o y t, j r.</memorize>
+					<memorize name="firstfive">I will praise you, O</memorize>
+				</translation>
+				<translation name="esv">
+					<memorize name="complete">I will give thanks to the Lord with my whole heart; I will recount all of your wonderful deeds. I will be glad and exult in you; I will sing praise to your name, O Most High. When my enemies turn back, they stumble and perish before your presence. For you have maintained my just cause; you have sat on the throne, giving righteous judgment.</memorize>
+					<memorize name="prompted">1 I w g t t t L w m w h; I w r a o y w d.
+2 I w b g a e i y; I w s p t y n, O M H.
+3 W m e t b, t s a p b y p.
+4 F y h m m j c; y h s o t t, g r j.</memorize>
+					<memorize name="firstfive">I will give thanks to</memorize>
+				</translation>
+				<translation name="kjv">
+					<memorize name="complete">I will praise thee, O Lord, with my whole heart; I will shew forth all thy marvellous works. I will be glad and rejoice in thee: I will sing praise to thy name, O thou most High. When mine enemies are turned back, they shall fall and perish at thy presence. For thou hast maintained my right and my cause; thou satest in the throne judging right.</memorize>
+					<memorize name="prompted">1 I w p t, O L, w m w h; I w s f a t m w.
+2 I w b g a r i t: I w s p t t n, O t m H.
+3 W m e a t b, t s f a p a t p.
+4 F t h m m r a m c; t s i t t j r.</memorize>
+					<memorize name="firstfive">I will praise thee, O</memorize>
+				</translation>
+				<translation name="nkjv">
+					<memorize name="complete">I will praise You, O LORD, with my whole heart; I will tell of all Your marvelous works.  I will be glad and rejoice in You; I will sing praise to Your name, O Most High. When my enemies turn back, They shall fall and perish at Your presence. For You have maintained my right and my cause; You sat on the throne judging in righteousness</memorize>
+					<memorize name="prompted">1.  I w p Y, O L, w m w h; I w t o a Y m w. 
+2.  I w b g a r i Y; I w s p t Y n, O M H. 
+3.  W m e t b, T s f a p a Y p. 
+4.  F Y h m m r a m c; Y s o t t j i r.</memorize>
+					<memorize name="firstfive">I will praise You, O</memorize>
+				</translation>
+				<translation name="nasb">
+					<memorize name="complete">I will give thanks to the Lord with all my heart; I will tell of all Your wonders.  I will be glad and exult in You; I will sing praise to Your name, O Most High. When my enemies turn back, They stumble and perish before You. For You have maintained my just cause; You have sat on the throne judging righteously.</memorize>
+					<memorize name="prompted">1 I w g t t t L w a m h; I w t o a Y w.
+2 I w b g a e i Y; I w s p t Y n, O M H.
+3 W m e t b, T s a p b Y.
+4 F Y h m m j c; Y h s o t t j r.</memorize>
+					<memorize name="firstfive">I will give thanks to</memorize>
+				</translation>
+			</translations>
+			<reference>Psalm 9:1-4 </reference>
+		</scripture>
+		<scripture>
+			<translations>
+				<translation name="niv">
+					<memorize name="complete">I want you to know, brothers, that the gospel I preached is not something that man made up. I did not receive it from any man, nor was I taught it; rather, I received it by revelation from Jesus Christ. For you have heard of my previous way of life in Judaism, how intensely I persecuted the church of God and tried to destroy it. I was advancing in Judaism beyond many Jews of my own age and was extremely zealous for the traditions of my fathers. But when God, who set me apart from birth and called me by his grace, was pleased to reveal his Son in me so that I might preach him among the Gentiles, I did not consult any man, nor did I go up to Jerusalem to see those who were apostles before I was, but I went immediately into Arabia and later returned to Damascus.</memorize>
+					<memorize name="prompted">11.  I w y t k, b, t t g I p i n s t m m u. 
+12.  I d n r i f a m, n w I t i; r, I r i b r f J C.
+13.  F y h h o m p w o l i J, h i I p t c o G a t t d i. 
+14.  I w a i J b m J o m o a a w e z f t t o m f. 
+15.  B w G, w s m a f b a c m b h g, w p 
+16.  t r h S i m s t I m p h a t G, I d n c a m, 
+17.  n d I g u t J t s t w w a b I w, b I w i i A a l r t D.</memorize>
+					<memorize name="firstfive">I want you to know,</memorize>
+				</translation>
+				<translation name="esv">
+					<memorize name="complete">For I would have you know, brothers, that the gospel that was preached by me is not man's gospel. For I did not receive it from any man, nor was I taught it, but I received it through a revelation of Jesus Christ. For you have heard of my former life in Judaism, how I persecuted the church of God violently and tried to destroy it. And I was advancing in Judaism beyond many of my own age among my people, so extremely zealous was I for the traditions of my fathers. But when he who had set me apart before I was born, and who called me by his grace, was pleased to reveal his Son to me, in order that I might preach him among the Gentiles, I did not immediately consult with anyone; nor did I go up to Jerusalem to those who were apostles before me, but I went away into Arabia, and returned again to Damascus.</memorize>
+					<memorize name="prompted">11 F I w h y k, b, t t g t w p b m i n m's g.
+12 F I d n r i f a m, n w I t i, b I r i t a r o J C. 
+13 F y h h o m f l i J, h I p t c o G v a t t d i. 
+14 A I w a i J b m o m o a a m p, s e z w I f t t o m f. 
+15 B w h w h s m a b I w b, a w c m b h g, 
+16 w p t r h S t m, i o t I m p h a t G, I d n i c w a; 17 n d I g u t J t t w w a b m, b I w a i A, a r a t D.</memorize>
+					<memorize name="firstfive">For I would have you</memorize>
+				</translation>
+				<translation name="kjv">
+					<memorize name="complete">But I certify you, brethren, that the gospel which was preached of me is not after man. For I neither received it of man, neither was I taught it, but by the revelation of Jesus Christ. For ye have heard of my conversation in time past in the Jews' religion, how that beyond measure I persecuted the church of God, and wasted it: And profited in the Jews' religion above many my equals in mine own nation, being more exceedingly zealous of the traditions of my fathers. But when it pleased God, who separated me from my mother's womb, and called me by his grace, To reveal his Son in me, that I might preach him among the heathen; immediately I conferred not with flesh and blood: Neither went I up to Jerusalem to them which were apostles before me; but I went into Arabia, and returned again unto Damascus.</memorize>
+					<memorize name="prompted">11 B I c y, b, t t g w w p o m i n a m.
+12 F I n r i o m, n w I t i, b b t r o J C.
+13 F y h h o m c i t p i t J' r, h t b m I p t c o G, a w i:
+14 A p i t J' r a m m e i m o n, b m e z o t t o m f.
+15 B w i p G, w s m f m m's w, a c m b h g,
+16 T r h S i m, t I m p h a t h; i I c n w f a b:
+17 N w I u t J t t w w a b m; b I w i A, a r a u D.</memorize>
+					<memorize name="firstfive">But I certify you, brethren,</memorize>
+				</translation>
+				<translation name="nkjv">
+					<memorize name="complete">But I make known to you, brethren, that the gospel which was preached by me is not according to man. For I neither received it from man, nor was I taught it, but it came through the revelation of Jesus Christ. For you have heard of my former conduct in Judaism, how I persecuted the church of God beyond measure and tried to destroy it. And I advanced in Judaism beyond many of my contemporaries in my own nation, being more exceedingly zealous for the traditions of my fathers. But when it pleased God, who separated me from my mother’s womb and called me through His grace, to reveal His Son in me, that I might preach Him among the Gentiles, I did not immediately confer with flesh and blood, nor did I go up to Jerusalem to those who were apostles before me; but I went to Arabia, and returned again to Damascus</memorize>
+					<memorize name="prompted">1.  I w p Y, O L, w m w h; I w t o a Y m w. 
+2.  I w b g a r i Y; I w s p t Y n, O M H. 
+3.  W m e t b, T s f a p a Y p. 
+4.  F Y h m m r a m c; Y s o t t j i r.</memorize>
+					<memorize name="firstfive">But I make known to you,</memorize>
+				</translation>
+				<translation name="nasb">
+					<memorize name="complete">For I would have you know, brethren, that the gospel which was preached by me is not according to man. For I neither received it from man, nor was I taught it, but I received it through a revelation of Jesus Christ. For you have heard of my former manner of life in Judaism, how I used to persecute the church of God beyond measure and tried to destroy it; and I was advancing in Judaism beyond many of my contemporaries among my countrymen, being more extremely zealous for my ancestral traditions. But when God, who had set me apart even from my mother’s womb and called me through His grace, was pleased to reveal His Son in me so that I might preach Him among the Gentiles, I did not immediately consult with flesh and blood, nor did I go up to Jerusalem to those who were apostles before me; but I went away to Arabia, and returned once more to Damascus.</memorize>
+					<memorize name="prompted">11 F I w h y k, b, t t g w w p b m i n a t m. 
+12 F I n r i f m, n w I t i, b I r i t a r o J C.
+13 F y h h o m f m o l i J, h I u t p t c o G b m a t t d i; 
+14 a I w a i J b m o m c a m c, b m e z f m a t. 
+15 B w G, w h s m a e f m m’s w a c m t H g, w p 
+16 t r H S i m s t I m p H a t G, I d n i c w f a b, 
+17 n d I g u t J t t w w a b m; b I w a t A, a r o m t D.</memorize>
+					<memorize name="firstfive">For I would have you</memorize>
+				</translation>
+			</translations>
+			<reference>Galatians 1:11-17</reference>
+		</scripture>
+		<scripture>
+			<translations>
+				<translation name="niv">
+					<memorize name="complete">Be strong and courageous. Do not be afraid or terrified because of them, for the LORD your God goes with you; he will never leave you nor forsake you.”</memorize>
+					<memorize name="prompted">6. B s a c. D n b a o t b o t, f t L y G g w y; h w n l y n f y.”</memorize>
+					<memorize name="firstfive">Be strong and courageous. Do</memorize>
+				</translation>
+				<translation name="esv">
+					<memorize name="complete">Be strong and courageous. Do not fear or be in dread of them, for it is the Lord your God who goes with you. He will not leave you or forsake you.”</memorize>
+					<memorize name="prompted">6 B s a c. D n f o b i d o t, f i i t L y G w g w y. H w n l y o f y.”</memorize>
+					<memorize name="firstfive">Be strong and courageous. Do</memorize>
+				</translation>
+				<translation name="kjv">
+					<memorize name="complete">Be strong and of a good courage, fear not, nor be afraid of them: for the Lord thy God, he it is that doth go with thee; he will not fail thee, nor forsake thee.</memorize>
+					<memorize name="prompted">6 B s a o a g c, f n, n b a o t: f t L t G, h i i t d g w t; h w n 
+f t, n f t.</memorize>
+					<memorize name="firstfive">Be strong and of a</memorize>
+				</translation>
+				<translation name="nkjv">
+					<memorize name="complete">Be strong and of good courage, do not fear nor be afraid of them; for the LORD your God, He is the One who goes with you. He will not leave you nor forsake you.”</memorize>
+					<memorize name="prompted">B s a o g c, d n g n b a o t; f t L y G, H i t O w g w y. H w n l y n f y."</memorize>
+					<memorize name="firstfive">Be strong and of good</memorize>
+				</translation>
+				<translation name="nasb">
+					<memorize name="complete">Be strong and courageous, do not be afraid or tremble at them, for the Lord your God is the one who goes with you. He will not fail you or forsake 
+you.”</memorize>
+					<memorize name="prompted">6 B s a c, d n b a o t a t, f t L y G i t o w g w y. H w n f y o 
+f y.”</memorize>
+					<memorize name="firstfive">Be strong and courageous, do</memorize>
+				</translation>
+			</translations>
+			<reference>Dueteronomy 31:6</reference>
+		</scripture>
+		<scripture>
+			<translations>
+				<translation name="niv">
+					<memorize name="complete">When they arrived, he said to them: “You know how I lived the whole time I was with you, from the first day I came into the province of Asia. I served the Lord with great humility and with tears, although I was severely tested by the plots of the Jews. You know that I have not hesitated to preach anything that would be helpful to you but have taught you publicly and from house to house. I have declared to both Jews and Greeks that they must turn to God in repentance and have faith in our Lord Jesus. “And now,compelled by the Spirit, I am going to Jerusalem, not knowing what will happen to me there. I only know that in every city the Holy Spirit warns me that prison and hardships are facing me. However, I consider my life worth nothing to me, if only I may finish the race and complete the task the Lord Jesus has given me —the task of testifying to the gospel of God’s grace.</memorize>
+					<memorize name="prompted">18. W t a, h s t t: “Y k h I l t w t I w w y, f t f d I c i t p o A. 
+19.  I s t L w g h a w t, a I w s t b t p o t J. 
+20.  Y k t I h n h t p a t w b h t y b h t y p a f h t h. 
+21. I h d t b J a G t t m t t G i r a h f i o L J.
+22.  “A n, c b t S, I a g t J, n k w w h t m t.
+23. I o k t i e c t H S w m t p a h a f m. 
+24. H, I c m l w n t m, i o I m f t r a c t t t L J h g m —t t o t t t g o G’s g.</memorize>
+					<memorize name="firstfive">When they arrived, he said</memorize>
+				</translation>
+				<translation name="esv">
+					<memorize name="complete">And when they came to him, he said to them: “You yourselves know how I lived among you the whole time from the first day that I set foot in Asia, serving the Lord with all humility and with tears and with trials that happened to me through the plots of the Jews; how I did not shrink from declaring to you anything that was profitable, and teaching you in public and from house to house, testifying both to Jews and to Greeks of repentance toward God and of faith in our Lord Jesus Christ. And now, behold, I am going to Jerusalem, constrained by the Spirit, not knowing what will happen to me there, except that the Holy Spirit testifies to me in every city that imprisonment and afflictions await me.  But I do not account my life of any value nor as precious to myself, if only I may finish my course and the ministry that I received from the Lord Jesus, to testify to the gospel of the grace of God.</memorize>
+					<memorize name="prompted">18 A w t c t h, h s t t: “Y y k h I l a y t w t f t f d t I s f i A, 
+19 s t L w a h a w t a w t t h t m t t p o t J; 
+20 h I d n s f d t y a t w p, a t y i p a f h t h, 
+21 t b t J a t G o r t G a o f i o L J C. 
+22 A n, b, I a g t J, c b t S, n k w w h t m t, 
+23 e t t H S t t m i e c t i a a a m. 
+24 B I d n a m l o a v n a p t m, i o I m f m c a t m t I r f t L J, t t t t g o t g o G.</memorize>
+					<memorize name="firstfive">And when they came to </memorize>
+				</translation>
+				<translation name="kjv">
+					<memorize name="complete">And when they were come to him, he said unto them, Ye know, from the first day that I came into Asia, after what manner I have been with you at all seasons, Serving the Lord with all humility of mind, and with many tears, and temptations, which befell me by the lying in wait of the Jews: And how I kept back nothing that was profitable unto you, but have shewed you, and have taught you publicly, and from house to house, Testifying both to the Jews, and also to the Greeks, repentance toward God, and faith toward our Lord Jesus Christ. And now, behold, I go bound in the spirit unto Jerusalem, not knowing the things that shall befall me there: Save that the Holy Ghost witnesseth in every city, saying that bonds and afflictions abide me. But none of these things move me, neither count I my life dear unto myself, so that I might finish my course with joy, and the ministry, which I have received of the Lord Jesus, to testify the gospel of the grace of God.</memorize>
+					<memorize name="prompted">18 A w t w c t h, h s u t, Y k, f t f d t I c i A, a w m I h b w y a a s,
+19 S t L w a h o m, a w m t, a t, w b m b t l i w o t J:
+20 A h I k b n t w p u y, b h s y, a h t y p, a f h t h,21 T b t t J, a a t t G, r t G, a f t o L J C.
+22 A n, b, I g b i t s u J, n k t t t s b m t:
+23 S t t H G w i e c, s t b a a a m.
+24 B n o t t m m, n c I m l d u m, s t I m f m c w j, a t m, w I h r o t L J, t t t g o t g o G.</memorize>
+					<memorize name="firstfive">And when they were come to</memorize>
+				</translation>
+				<translation name="nkjv">
+					<memorize name="complete">And when they had come to him, he said to them: “You know, from the first day that I came to Asia, in what manner I always lived among you, serving the Lord with all humility, with many tears and trials which happened to me by the plotting of the Jews; how I kept back nothing that was helpful, but proclaimed it to you, and taught you publicly and from house to house, testifying to Jews, and also to Greeks, repentance toward God and faith toward our Lord Jesus Christ. And see, now I go bound in the spirit to Jerusalem, not knowing the things that will happen to me there, except that the Holy Spirit testifies in every city, saying that chains and tribulations await me. But none of these things move me; nor do I count my life dear to myself, so that I may finish my race with joy, and the ministry which I received from the Lord Jesus, to testify to the gospel of the grace of God.</memorize>
+					<memorize name="prompted">18.  A w t h c t h, h s t t: “Y k, f t f d t I c t A, i w m I a l a y, 
+19.  s t L w a h, w m t a t w h t m b t p o t J; 
+20.  h I k b n t w h, b p i t y, a t y p a f h t h, 
+21.  t t J, a a t G, r t G a f t o L J C. 
+22.  A s, n I g b i t s t J, n k t t t w h t m t, 
+23.  e t t H S t i e c, s t c a t a m. 
+24.  B n o t t m m; n d I c m l d t m, s t I m f m r w j, a t m w I r f t L J, t t t t g o t g o G.”</memorize>
+					<memorize name="firstfive">And when they had come</memorize>
+				</translation>
+				<translation name="nasb">
+					<memorize name="complete">And when they had come to him, he said to them, “You yourselves know, from the first day that I set foot in Asia, how I was with you the whole time, serving the Lord with all humility and with tears and with trials which came upon me through the plots of the Jews; how I did not shrink from declaring to you anything that was profitable, and teaching you publicly and from house to house, solemnly testifying to both Jews and Greeks of repentance toward God and faith in our Lord Jesus Christ.  And now, behold, bound by the Spirit, I am on my way to Jerusalem, not knowing what will happen to me there, except that the Holy Spirit solemnly testifies to me in every city, saying that bonds and afflictions await me. But I do not consider my life of any account as dear to myself, so that I may finish my course and the ministry which I received from the Lord Jesus, to testify solemnly of the gospel of the grace of God</memorize>
+					<memorize name="prompted">18 A w t h c t h, h s t t,
+“Y y k, f t f d t I s f i A, h I w w y t w t, 
+19 s t L w a h a w t a w t w c u m t t p o t J; 
+20 h I d n s f d t y a t w p, a t y p a f h t h, 
+21 s t t b J a G o r t G a f i o L J C. 
+22 A n, b, b b t S, I a o m w t J, n k w w h t m t, 
+23 e t t H S s t t m i e c, s t b a a a m. 
+24 B I d n c m l o a a a d t m, s t I m f m c a t m w I r f t L 
+J, t t s o t g o t g o G.</memorize>
+					<memorize name="firstfive">And when they had come</memorize>
+				</translation>
+			</translations>
+			<reference>Acts 20:18-24</reference>
+		</scripture>
+		<scripture>
+			<translations>
+				<translation name="niv">
+					<memorize name="complete">“A despairing man should have the devotion of his friends, even though he forsakes the fear of the Almighty. But my brothers are as undependable as intermittent streams, as the streams that overflow when darkened by thawing ice and swollen with melting snow, but that cease to flow in the dry season and in the heat vanish from their channels. Caravans turn aside from their routes; they go up into the wasteland and perish. The caravans of Tema look for water, the traveling merchants of Sheba look in hope. They are distressed, because they had been confident; they arrive there, only to be disappointed. Now you too have proved to be of no help; you see something dreadful and are afraid.</memorize>
+					<memorize name="prompted">14. “A d m s h t d o h f, e t h f t f o t A.
+15. B m b a a u a i s, a t s t o
+16. w d b t i a s w m s, 
+17. b t c t f i t d s a i t h v f t c.
+18. C t a f t r; t g u i t w a p.
+19. T c o T l f w, t t m o S l i h.
+20. T a d, b t h b c; t a t, o t b d. 
+21. N y t h p t b o n h; y s s d a a a</memorize>
+					<memorize name="firstfive">“A despairing man should have</memorize>
+				</translation>
+				<translation name="esv">
+					<memorize name="complete">“He who withholds kindness from a friend forsakes the fear of the Almighty. My brothers are treacherous as a torrent-bed, as torrential streams that pass away, which are dark with ice, and where the snow hides itself. When they melt, they disappear; when it is hot, they vanish from their place. The caravans turn aside from their course; they go up into the waste and perish. The caravans of Tema look, the travelers of Sheba hope. They are ashamed because they were confident; they come there and are disappointed. For you have now become nothing; you see my calamity and are afraid.</memorize>
+					<memorize name="prompted">14 “H w w k f a f f t f o t A.
+15 M b a t a a t-b, a t s t p a,
+16 w a d w i, a w t s h i.
+17 W t m, t d; w i i h, t v f t p.
+18 T c t a f t c; t g u i t w a p.
+19 T c o T l, t t o S h.
+20 T a a b t w c; t c t a a d.
+21 F y h n b n; y s m c a a a.</memorize>
+					<memorize name="firstfive">“He who withholds kindness from</memorize>
+				</translation>
+				<translation name="kjv">
+					<memorize name="complete">To him that is afflicted pity should be shewed from his friend; but he forsaketh the fear of the Almighty. My brethren have dealt deceitfully as a brook, and as the stream of brooks they pass away; Which are blackish by reason of the ice, and wherein the snow is hid:What time they wax warm, they vanish: when it is hot, they are consumed out of their place. The paths of their way are turned aside; they go to nothing, and perish. The troops of Tema looked, the companies of Sheba waited for them. They were confounded because they had hoped; they came thither, and were ashamed. For now ye are nothing; ye see my casting down, and are afraid.</memorize>
+					<memorize name="prompted">14 T h t i a p s b s f h f; b h f t f o t A.
+15 M b h d d a a b, a a t s o b t p a;
+16 W a b b r o t i, a w t s i h:
+17 W t t w w, t v: w i i h, t a c o o t p.
+18 T p o t w a t a; t g t n, a p.
+19 T t o T l, t c o S w f t.
+20 T w c b t h h; t c t, a w a.
+21 F n y a n; y s m c d, a a a.</memorize>
+					<memorize name="firstfive">To him that is afflicted</memorize>
+				</translation>
+				<translation name="nkjv">
+					<memorize name="complete">“To him who is afflicted, kindness should be shown by his friend, Even though he forsakes the fear of the Almighty. My brothers have dealt deceitfully like a brook, Like the streams of the brooks that pass away, Which are dark because of the ice, And into which the snow vanishes. When it is warm, they cease to flow;When it is hot, they vanish from their place. The paths of their way turn aside,They go nowhere and perish. The caravans of Tema look, The travelers of Sheba hope for them. They are disappointed because they were confident; They come there and are confused. For now you are nothing, You see terror and are afraid.</memorize>
+					<memorize name="prompted">14.  T h w i a, k s b s b h f, E t h f t f o t A. 
+15.  M b h d d l a b, L t s o t b t p a, 
+16.  W a d b o t i, A i w t s v. 
+17.  W i i w, t c t f; W i i h, t v f t p. 
+18.  T p o t w t a, T g n a p. 
+19.  T c o T l, T t o S h f t. 
+20.  T a d b t w c; T c t a a c. 
+21.  F n y a n, Y s t a a a.</memorize>
+					<memorize name="firstfive">“To him who is afflicted,</memorize>
+				</translation>
+				<translation name="nasb">
+					<memorize name="complete">“For the despairing man there should bekindness from his friend; So that he does not forsake the fear of the Almighty. “My brothers have acted deceitfully like a wadi, Like the torrents of wadis which vanish, Which are turbid because of ice And into which the snow elts. “When they become waterless, they are silent, When it is hot, they vanish from their place. “The paths of their course wind along, They go up into nothing and perish. “The caravans of Tema looked, The travelers of Sheba hoped for them. “They were disappointed for they had trusted, They came there and were confounded. “Indeed, you have now become such, You see a terror and are afraid.</memorize>
+					<memorize name="prompted">14 “F t d m t s b f h f; S t h d n f t f o t A.
+15 “M b h a d l a w, L t t o w w v,
+16 W a t b o I A i w t s e.
+17 “W t b w, t a s, W i i h, t v f t p.
+18 “T p o t c w a, T g u i n a p.
+19 “T c o T l, T t o S h f t.
+20 “T w d f t h t, T c t a w c.
+21 “I, y h n b s, Y s a t a a a.</memorize>
+					<memorize name="firstfive">“For the despairing man there</memorize>
+				</translation>
+			</translations>
+			<reference>Job 6:14-21 </reference>
+		</scripture>
+		<scripture>
+			<translations>
+				<translation name="niv">
+					<memorize name="complete">He commanded us to preach to the people and to testify that he is the one whom God appointed as judge of the living and the dead. All the prophets testify about him that everyone who believes in him receives forgiveness of sins through his name.”</memorize>
+					<memorize name="prompted">42. H c u t p t t p a t t t h i t o w G a a j o t l a t d. 
+43  A t p t a h t e w b i h r f o s t h n.”</memorize>
+					<memorize name="firstfive">He commanded us to preach</memorize>
+				</translation>
+				<translation name="esv">
+					<memorize name="complete">And he commanded us to preach to the people and to testify that he is the one appointed by God to be judge of the living and the dead. To him all the prophets bear witness that everyone who believes in him receives forgiveness of sins through his name.”</memorize>
+					<memorize name="prompted">42 A h c u t p t t p a t t t h i t o a b G t b j o t l a t d. 
+43 T h a t p b w t e w b i h r f o s t h n.”</memorize>
+					<memorize name="firstfive">And he commanded us to </memorize>
+				</translation>
+				<translation name="kjv">
+					<memorize name="complete">And he commanded us to preach unto the people, and to testify that it is he which was ordained of God to be the Judge of quick and dead. To him give all the prophets witness, that through his name whosoever believeth in him shall receive remission of sins.</memorize>
+					<memorize name="prompted">42 A h c u t p u t p, a t t t i i h w w o o G t b t J o q a d.
+43 T h g a t p w, t t h n w b i h s r r o s.</memorize>
+					<memorize name="firstfive">And he commanded us to</memorize>
+				</translation>
+				<translation name="nkjv">
+					<memorize name="complete">And He commanded us to preach to the people, and to testify that it is He who was ordained by God to be Judge of the living and the dead. To Him all the prophets witness that, through His name, whoever believes in Him will receive remission of sins.”</memorize>
+					<memorize name="prompted">42.  A H c u t p t t p, a t t t i i H w w o b G t b J o t l a t d. 
+43.  T H a t p w t, t H n, w b i H w r r o s.</memorize>
+					<memorize name="firstfive">And He commanded us to</memorize>
+				</translation>
+				<translation name="nasb">
+					<memorize name="complete">And He ordered us to preach to the people, and solemnly to testify that this is the One who has been appointed by God as Judge of the living and the dead. Of Him all the prophets bear witness that through His name everyone who believes in Him receives forgiveness of sins.”</memorize>
+					<memorize name="prompted">42 A H o u t p t t p, a s t t t t i t O w h b a b G a J o t l a t d. 
+43 O H a t p b w t t H n e w b i H r f o s.”</memorize>
+					<memorize name="firstfive">And He ordered us to</memorize>
+				</translation>
+			</translations>
+			<reference>Acts 10:42-43</reference>
+		</scripture>
+		<scripture>
+			<translations>
+				<translation name="niv">
+					<memorize name="complete">Do not say, “I’ll do to him as he has done to me; I’ll pay that man back for what he did.” I went past the field of the sluggard, past the vineyard of the man who lacks judgment; thorns had come up everywhere, the ground was covered with weeds, and the stone wall was in ruins. I applied my heart to what I observed and learned a lesson from what I saw: A little sleep, a little slumber, a little folding of the hands to rest — and poverty will come on you like a bandit and scarcity like an armed man.</memorize>
+					<memorize name="prompted">29. D n s, “I’l d t h a h h d t m; I’l p t m b f w h d.”
+30. I w p t f o t s, p t v o t m w l j;
+31. t h c u e, t g w c w w, a t s w w i r.
+32. I a m h t w I o a l a l f w I s:
+33. A l s, a l s, a l f o t h t r —
+34. a p w c o y l a b a s l a a m.</memorize>
+					<memorize name="firstfive">Do not say, “I’ll do</memorize>
+				</translation>
+				<translation name="esv">
+					<memorize name="complete">Do not say, “I will do to him as he has done to me; I will pay the man back for what he has done.” I passed by the field of a sluggard, by the vineyard of a man lacking sense, and behold, it was all overgrown with thorns; the ground was covered with nettles, and its stone wall was broken down. Then I saw and considered it; I looked and received instruction. A little sleep, a little slumber, a little folding of the hands to rest, and poverty will come upon you like a robber, and want like an armed man.</memorize>
+					<memorize name="prompted">29 D n s, “I w d t h a h h d t m; I w p t m b f w h h d.”
+30 I p b t f o a s, b t v o a m l s,
+31 a b, i w a o w t; t g w c w n, a i s w w b d.
+32 T I s a c i; I l a r i.
+33 A l s, a l s, a l f o t h t r,
+34 a p w c u y l a r, a w l a a m.</memorize>
+					<memorize name="firstfive">Do not say, “I will</memorize>
+				</translation>
+				<translation name="kjv">
+					<memorize name="complete">Say not, I will do so to him as he hath done to me: I will render to the man according to his work. I went by the field of the slothful, and by the vineyard of the man void of understanding; And, lo, it was all grown over with thorns, and nettles had covered the face thereof, and the stone wall thereof was broken down. Then I saw, and considered it well: I looked upon it, and received instruction. Yet a little sleep, a little slumber, a little folding of the hands to sleep: So shall thy poverty come as one that travelleth; and thy want as an armed man</memorize>
+					<memorize name="prompted">29 S n, I w d s t h a h h d t m: I w r t t m a t h w.
+30 I w b t f o t s, a b t v o t m v o u;31 A, l, i w a g o w t, a n h c t f t, a t s w t w b d.
+32 T I s, a c i w: I l u i, a r i.
+33 Y a l s, a l s, a l f o t h t s:
+34 S s t p c a o t t; a t w a a a m.</memorize>
+					<memorize name="firstfive">Say not, I will do</memorize>
+				</translation>
+				<translation name="nkjv">
+					<memorize name="complete">Do not say, “I will do to him just as he has done to me; I will render to the man according to his work.”  I went by the field of the lazy man, And by the vineyard of the man devoid of understanding; And there it was, all overgrown with thorns; Its surface was covered with nettles; Its stone wall was broken down. When I saw it, I considered it well; I looked on it and received instruction: A little sleep, a little slumber, A little folding of the hands to rest; So shall your poverty come like a prowler, And your need like an armed man.</memorize>
+					<memorize name="prompted">29.  D n s, “I w d t h j a h h d t m; I w r t t m a t h w.” 
+30.  I w b t f o t l m, A b t v o t m d o u; 
+31.  A t i w, a o w t; I s w c w n; I s w w b d. 
+32.  W I s i, I c i w; I l o i a r i: 
+33.  A l s, a l s, A l f o t h t r; 
+34.  S s y p c l a p, A y n l a a m.</memorize>
+					<memorize name="firstfive">Do not say, “I will</memorize>
+				</translation>
+				<translation name="nasb">
+					<memorize name="complete">Do not say, “Thus I shall do to him as he has done to me; I will render to the man according to his work.” I passed by the field of the sluggard And by the vineyard of the man lacking sense, And behold, it was completely overgrown with thistles; Its surface was covered with nettles, And its stone wall was broken down. When I saw, I reflected upon it; I looked, and received instruction. “A little sleep, a little slumber, A little folding of the hands to rest,” Then your poverty will come as a robber And your want like an armed man</memorize>
+					<memorize name="prompted">29 D n s, “T I s d t h a h h d t m; I w r t t m a t h w.”
+30 I p b t f o t s A b t v o t m l s,
+31 A b, i w c o w t; I s w c w n, A i s w w b d.
+32 W I s, I r u i; I l, a r i.
+33“A l s, a l s, A l f o t h t r,”
+34 T y p w c a a r A y w l a a m.</memorize>
+					<memorize name="firstfive">Do not say, “Thus I</memorize>
+				</translation>
+			</translations>
+			<reference>Proverbs 24:29-34</reference>
+		</scripture>
+		<scripture>
+			<translations>
+				<translation name="niv">
+					<memorize name="complete">Yet he did not waver through unbelief regarding the promise of God, but was strengthened in his faith and gave glory to God, being fully persuaded that God had power to do what he had promised. This is why “it was credited to him as righteousness.” The words “it was credited to him” were written not for him alone, but also for us, to whom God will credit righteousness—for us who believe in him who raised Jesus our Lord from the dead. He was delivered over to death for our sins and was raised to life for our justification.</memorize>
+					<memorize name="prompted">20. Y h d n w t u r t p o G, b w s i h f a g g t G, 
+
+21. b f p t G h p t d w h h p. 
+22. T i w “i w c t h a r.”
+23. T w “i w c t h” w w n f h a, 
+24. b a f u, t w G w c r—f u w b i h w r J o L f t d. 
+
+25. H w d o t d f o s a w r t l f o j.</memorize>
+					<memorize name="firstfive">Yet he did not waver</memorize>
+				</translation>
+				<translation name="esv">
+					<memorize name="complete">No unbelief made him waver concerning the promise of God, but he grew strong in his faith as he gave glory to God, fully convinced that God was able to do what he had promised. That is why his faith was “counted to him as righteousness.” But the words “it was counted to him” were not written for his sake alone, but for ours also. It will be counted to us who believe in him who raised from the dead Jesus our Lord, who was delivered up for our trespasses and raised for our justification.</memorize>
+					<memorize name="prompted">20 N u m h w c t p o G, b h g s i h f a h g g t G, 
+21 f c t G w a t d w h h p. 
+22 T i w h f w “c t h a r.”
+23 B t w “i w c t h” w n w f h s a, 
+24 b f o a. I w b c t u w b i h w r f t d J o L, 
+25 w w d u f o t a r f o j.</memorize>
+					<memorize name="firstfive">No unbelief made him waver</memorize>
+				</translation>
+				<translation name="kjv">
+					<memorize name="complete">He staggered not at the promise of God through unbelief; but was strong in faith, giving glory to God; And being fully persuaded that, what he had promised, he was able also to perform. And therefore it was imputed to him for righteousness. Now it was not written for his sake alone, that it was imputed to him; But for us also, to whom it shall be imputed, if we believe on him that raised up Jesus our Lord from the dead; Who was delivered for our offences, and was raised again for </memorize>
+					<memorize name="prompted">20 H s n a t p o G t u; b w s i f, g g t G;
+21 A b f p t, w h h p, h w a a t p.
+22 A t i w i t h f r.
+23 N i w n w f h s a, t i w i t h;
+24 B f u a, t w i s b i, i w b o h t r u J o L f t d;
+25 W w d f o o, a w r a f o j.</memorize>
+					<memorize name="firstfive">He staggered not at the</memorize>
+				</translation>
+				<translation name="nkjv">
+					<memorize name="complete">He did not waver at the promise of God through unbelief, but was strengthened in faith, giving glory to God, and being fully convinced that what He had promised He was also able to perform.  And therefore “it was accounted to him for righteousness.” Now it was not written for his sake alone that it was imputed to him,  but also for us. It shall be imputed to us who believe in Him who raised up Jesus our Lord from the dead, who was delivered up because of our offenses, and was raised because of our justification.</memorize>
+					<memorize name="prompted">20.  H d n w a t p o G t u, b w s i f, g g t G, 
+21.  a b f c t w H h p H w a a t p. 
+22.  A t “i w a t h f r.” 
+23.  N i w n w f h s a t i w i t h, 
+24.  b a f u. I s b i t u w b i H w r u J o L f t d, 
+25.  w w d u b o o o, a w r b o o j.</memorize>
+					<memorize name="firstfive">He did not waver at</memorize>
+				</translation>
+				<translation name="nasb">
+					<memorize name="complete">yet, with respect to the promise of God, he did not waver in unbelief but grew strong in faith, giving glory to God, and being fully assured that what God had promised, He was able also to perform. Therefore it was also credited to him as righteousness. Now not for his sake only was it written that it was credited to him, but for our sake also, to whom it will be credited, as those who believe in Him who raised Jesus our Lord from the dead, He who was delivered over because of our transgressions, and was raised because of our justification.</memorize>
+					<memorize name="prompted">20 y, w r t t p o G, h d n w i u b g s i f, g g t G, 
+21 a b f a t w G h p, H w a a t p. 
+22 T i w a c t h a r. 
+23 N n f h s o w i w t i w c t h, 
+24 b f o s a, t w i w b c, a t w b i H w r J o L f t d, 
+25 H w w d o b o o t, a w r b o o j.</memorize>
+					<memorize name="firstfive">yet, with respect to the</memorize>
+				</translation>
+			</translations>
+			<reference>Romans 4:20-25</reference>
+		</scripture>
+		<scripture>
+			<translations>
+				<translation name="niv">
+					<memorize name="complete">I will show the holiness of my great name, which has been profaned among the nations, the name you have profaned among them. Then the nations will know that I am the LORD,declares the Sovereign LORD, when I show myself holy through you before their eyes. “‘For I will take you out of the nations; I will gather you from all the countries and bring you back into your own land. I will sprinkle clean water on you, and you will be clean; I will cleanse you from all your impurities and from all your idols. I will give you a new heart and put a new spirit in you; I will remove from you your heart of stone and give you a heart of flesh. And I will put my Spirit in you and move you to follow my decrees and be careful to keep my laws.</memorize>
+					<memorize name="prompted">23.  I w s t h o m g n, w h b p a t n, t n y h p a t. T t n w k t I a t L,d t S L, w I s m h t y b t e.
+24. “‘F I w t y o o t n; I w g y f a t c a b y b i y o l. 
+25. I w s c w o y, a y w b c; I w c y f a y i a f a y i. 
+26. I w g y a n h a p a n s i y; I w r f y y h o s a g y a h o f.
+27. A I w p m S i y a m y t f m d a b c t k m l.</memorize>
+					<memorize name="firstfive">I will show the holiness</memorize>
+				</translation>
+				<translation name="esv">
+					<memorize name="complete">And I will vindicate the holiness of my great name, which has been profaned among the nations, and which you have profaned among them. And the nations will know that I am the Lord, declares the Lord God, when through you I vindicate my holiness before their eyes. I will take you from the nations and gather you from all the countries and bring you into your own land. I will sprinkle clean water on you, and you shall be clean from all your uncleannesses, and from all your idols I will cleanse you. And I will give you a new heart, and a new spirit I will put within you. And I will remove the heart of stone from your flesh and give you a heart of flesh. And I will put my Spirit within you, and cause you to walk in my statutes and be careful to obey my rules.</memorize>
+					<memorize name="prompted">23 A I w v t h o m g n, w h b p a t n, a w y h p a t. A t n w k t I a t L, d t L G, w t y I v m h b t e. 
+24 I w t y f t n a g y f a t c a b y i y o l. 
+25 I w s c w o y, a y s b c f a y u, a f a y i I w c y. 
+26 A I w g y a n h, a a n s I w p w y. A I w r t h o s f y f a g y a h o f. 
+27 A I w p m S w y, a c y t w i m s a b c t o m r.</memorize>
+					<memorize name="firstfive">And I will vindicate the</memorize>
+				</translation>
+				<translation name="kjv">
+					<memorize name="complete">And I will sanctify my great name, which was profaned among the heathen, which ye have profaned in the midst of them; and the heathen shall know that I am the Lord, saith the Lord God, when I shall be sanctified in you before their eyes. For I will take you from among the heathen, and gather you out of all countries, and will bring you into your own land. Then will I sprinkle clean water upon you, and ye shall be clean: from all your filthiness, and from all your idols, will I cleanse you. A new heart also will I give you, and a new spirit will I put within you: and I will take away the stony heart out of your flesh, and I will give you an heart of flesh. And I will put my spirit within you, and cause you to walk in my statutes, and ye shall keep my judgments, and do them.</memorize>
+					<memorize name="prompted">23 A I w s m g n, w w p a t h, w y h p i t m o t; a t h s k t I a t L, s t L G, w I s b s i y b t e.
+24 F I w t y f a t h, a g y o o a c, a w b y i y o l.
+25 T w I s c w u y, a y s b c: f a y f, a f a y i, w I c y.
+26 A n h a w I g y, a a n s w I p w y: a I w t a t s h o o y f, a I w g y a h o f.
+27 A I w p m s w y, a c y t w i m s, a y s k m j, a d t.</memorize>
+					<memorize name="firstfive">And I will sanctify my</memorize>
+				</translation>
+				<translation name="nkjv">
+					<memorize name="complete">And I will sanctify My great name, which has been profaned among the nations, which you have profaned in their midst; and the nations shall know that I amthe LORD,” says the Lord GOD, “when I am hallowed in you before their eyes. For I will take you from among the nations, gather you out of all countries, and bring you into your own land. Then I will sprinkle clean water on you, and you shall be clean; I will cleanse you from all your filthiness and from all your idols. I will give you a new heart and put a new spirit within you; I will take the heart of stone out of your flesh and give you a heart of flesh. I will put My Spirit within you and cause you to walk in My statutes, and you will keep My judgments and do them</memorize>
+					<memorize name="prompted">23.  “A I w s M g n, w h b p a t n, w y h p i t m; a t n s k t I a t L,” s t L G, “w I a h i y b t e. 
+24.  F I w t y f a t n, g y o o a c, a b y i y o l. 
+25.  T I w s c w o y, a y s b c; I w c y f a y f a f a y i. 
+26.  I w g y a n h a p a n s w y; I w t t h o s o o y f a g y a h o f. 
+27.  I w p M S w y a c y t w i M s, a y w k M j a d t.</memorize>
+					<memorize name="firstfive">And I will sanctify My</memorize>
+				</translation>
+				<translation name="nasb">
+					<memorize name="complete">I will vindicate the holiness of My great name which has been profaned among the nations, which you have profaned in their midst. Then the nations will know that I am the Lord,” declares the Lord God, “when I prove Myself holy among you in their sight. For I will take you from the nations, gather you from all the lands and bring you into your own land. Then I will sprinkle clean water on you, and you will be clean; I will cleanse you from all your filthiness and from all your idols. Moreover, I will give you a new heart and put a new spirit within you; and I will remove the heart of stone from your flesh and give you a heart of flesh. I will put My Spirit within you and cause you to walk in My statutes, and you will be careful to observe My ordinances.</memorize>
+					<memorize name="prompted">23 I w v t h o M g n w h b p a t n, w y h p i t m. T t n w k t 
+I a t L,” d t L G, “w I p M h a y i t s. 
+24 F I w t y f t n, g y f a t l a b y i y o l. 
+25 T I w s c w o y, a y w b c; I w c y f a y f a f a y i. 
+26 M, I w g y a n h a p a n s w y; a I w r t h o s f y f a g y 
+a h o f. 27 I w p M S w y a c y t w i M s, a y w b c t o M o.</memorize>
+					<memorize name="firstfive">I will vindicate the holiness</memorize>
+				</translation>
+			</translations>
+			<reference>Ezekiel 36:23-27</reference>
+		</scripture>
+		<scripture>
+			<translations>
+				<translation name="niv">
+					<memorize name="complete">It was he who gave some to be apostles, some to be prophets, some to be evangelists, and some to be pastors and teachers, to prepare God’s people for works of service, so that the body of Christ may be built up until we all reach unity in the faith and in the knowledge of the Son of God and become mature, attaining to the whole measure of the fullness of Christ.</memorize>
+					<memorize name="prompted">23.  I w s t h o m g n, w h b p a t n, t n y h p a t. T t n w k t I a t L,d t S L, w I s m h t y b t e.
+24. “‘F I w t y o o t n; I w g y f a t c a b y b i y o l. 
+25. I w s c w o y, a y w b c; I w c y f a y i a f a y i. 
+26. I w g y a n h a p a n s i y; I w r f y y h o s a g y a h o f.
+27. A I w p m S i y a m y t f m d a b c t k m l.</memorize>
+					<memorize name="firstfive">It was he who gave</memorize>
+				</translation>
+				<translation name="esv">
+					<memorize name="complete">And he gave the apostles, the prophets, the evangelists, the shepherds and teachers, to equip the saints for the work of ministry, for building up the body of Christ, until we all attain to the unity of the faith and of the knowledge of the Son of God, to mature manhood, to the measure of the stature of the fullness of Christ,</memorize>
+					<memorize name="prompted">11 A h g t a, t p, t e, t s a t, 
+12 t e t s f t w o m, f b u t b o C, 
+13 u w a a t t u o t f a o t k o t S o G, t m m, t t m o t s o t f o C,</memorize>
+					<memorize name="firstfive">And he gave the apostles,</memorize>
+				</translation>
+				<translation name="kjv">
+					<memorize name="complete">And he gave some, apostles; and some, prophets; and some, evangelists; and some, pastors and teachers; For the perfecting of the saints, for the work of the ministry, for the edifying of the body of Christ: Till we all come in the unity of the faith, and of the knowledge of the Son of God, unto a perfect man, unto the measure of the stature of the fulness of Christ:</memorize>
+					<memorize name="prompted">11 A h g s, a; a s, p; a s, e; a s, p a t;12 F t p o t s, f t w o t m, f t e o t b o C:
+13 T w a c i t u o t f, a o t k o t S o G, u a p m, u t m o t s o 
+t f o C:</memorize>
+					<memorize name="firstfive">And he gave some, apostles;</memorize>
+				</translation>
+				<translation name="nkjv">
+					<memorize name="complete">And He Himself gave some to be apostles, some prophets, some evangelists, and some pastors and teachers, for the equipping of the saints for the work of ministry, for the edifying of the body of Christ, till we all come to the unity of the faith and of the knowledge of the Son of God, to a perfect man, to the measure of the stature of the fullness of Christ;</memorize>
+					<memorize name="prompted">11.  A H H g s t b a, s p, s e, a s p a t, 
+12.  f t e o t s f t w o m, f t e o t b o C, 
+13.  t w a c t t u o t f a o t k o t S o G, t a p m, t t m o t s o t f o C;</memorize>
+					<memorize name="firstfive">And He Himself gave some</memorize>
+				</translation>
+				<translation name="nasb">
+					<memorize name="complete">And He gave some as apostles, and some as prophets, and some as evangelists, and some as pastors and teachers, for the equipping of the saints for the work of service, to the building up of the body of Christ; until we all attain to the unity of the faith, and of the knowledge of the Son of God, to a mature man, to the measure of the stature which belongs to the fullness of Christ.</memorize>
+					<memorize name="prompted">11 A H g s a a, a s a p, a s a e, a s a p a t, 
+12 f t e o t s f t w o s, t t b u o t b o C; 
+13 u w a a t t u o t f, a o t k o t S o G, t a m m, t t m o t s w 
+b t t f o C.</memorize>
+					<memorize name="firstfive">And He gave some as</memorize>
+				</translation>
+			</translations>
+			<reference>Ephesians 4:11-13</reference>
+		</scripture>
+		<scripture>
+			<translations>
+				<translation name="niv">
+					<memorize name="complete">For somewhere he has spoken about the seventh day in these words: “And on the seventh day God rested from all his work.” And again in the passage above he says, “They shall never enter my rest.” It still remains that some will enter that rest, and those who formerly had the gospel preached to them did not go in, because of their disobedience. Therefore God again set a certain day, calling it Today, when a long time later he spoke through David, as was said before: “Today, if you hear his voice, do not harden your hearts.” For if Joshua had given them rest, God would not have spoken later about another day. There remains, then, a Sabbath-rest for the people of God; for anyone who enters God’s rest also rests from his own work, just as God did from his.</memorize>
+					<memorize name="prompted">4. F s h h s a t s d i t w: “A o t s d G r f a h w.” 
+5. A a i t p a h s, “T s n e m r.”6. I s r t s w e t r, a t w f h t g p t t d n g i, b o t d. 
+7. T G a s a c d, c i T, w a l t l h s t D, a w s b: “T, i y h h v, d n h y h.”
+8. F i J h g t r, G w n h s l a a d.
+9. T r, t, a S-r f t p o G; 
+10. f a w e G’s r a r f h o w, j a G d f h.</memorize>
+					<memorize name="firstfive">For somewhere he has spoken</memorize>
+				</translation>
+				<translation name="esv">
+					<memorize name="complete">For he has somewhere spoken of the seventh day in this way: “And God rested on the seventh day from all his works.” And again in this passage he said, “They shall not enter my rest.” Since therefore it remains for some to enter it, and those who formerly received the good news failed to enter because of disobedience, again he appoints a certain day, “Today,” saying through David so long afterward, in the words already quoted, “Today, if you hear his voice,do not harden your hearts.” For if Joshua had given them rest, God would not have spoken of another day later on. So then, there remains a Sabbath rest for the people of God, for whoever has entered God's rest has also rested from his works as God did from his.</memorize>
+					<memorize name="prompted">4 F h h s s o t s d i t w: “A G r o t s d f a h w.” 
+5 A a i t p h s, “T s n e m r.”
+6 S t i r f s t e i, a t w f r t g n f t e b o d, 
+7 a h a a c d, “T,” s t D s l a, i t w a q, “T, i y h h v, d n h y h.”
+8 F i J h g t r, G w n h s o a d l o. 9 S t, t r a S r f t p o G, 
+10 f w h e G's r h a r f h w a G d f h.</memorize>
+					<memorize name="firstfive">For he has somewhere spoken</memorize>
+				</translation>
+				<translation name="kjv">
+					<memorize name="complete">For he spake in a certain place of the seventh day on this wise, And God did rest the seventh day from all his works. And in this place again, If they shall enter into my rest. Seeing therefore it remaineth that some must enter therein, and they to whom it was first preached entered not in because of unbelief: Again, he limiteth a certain day, saying in David, To day, after so long a time; as it is said, To day if ye will hear his voice, harden not your hearts. For if Jesus had given them rest, then would he not afterward have spoken of another day.  There remaineth therefore a rest to the people of God.  For he that is entered into his rest, he also hath ceased from his own works, as God did from his</memorize>
+					<memorize name="prompted">4 F h s i a c p o t s d o t w, A G d r t s d f a h w.
+5 A i t p a, I t s e i m r.
+6 S t i r t s m e t, a t t w i w f p e n i b o u:
+7 A, h l a c d, s i D, T d, a s l a t; a i i s, T d i y w h h v, h n y h.
+8 F i J h g t r, t w h n a h s o a d.
+9 T r t a r t t p o G.
+10 F h t i e i h r, h a h c f h o w, a G d f h.</memorize>
+					<memorize name="firstfive">For he spake in a</memorize>
+				</translation>
+				<translation name="nkjv">
+					<memorize name="complete">For He has spoken in a certain place of the seventh day in this way: “And God rested on the seventh day from all His works”; and again in this place: “They shall not enter My rest.” Since therefore it remains that some must enter it, and those to whom it was first preached did not enter because of disobedience, again He designates a certain day, saying in David, “Today,” after such a long time, as it has been said: “Today, if you will hear His voice, Do not harden your hearts.” For if Joshua had given them rest, then He would not afterward have spoken of another day. There remains therefore a rest for the people of God.  For he who has entered His rest has himself also ceased from his works as God did from His.</memorize>
+					<memorize name="prompted">4.    F H h s i a c p o t s d i t w: “A G r o t s d f a H w”; 
+5.    a a i t p: “T s n e M r.” 
+6.    S t i r t s m e i, a t t w i w f p d n e b o d, 
+7.    a H d a c d, s i D, “T,” a s a l t, a i h b s: “T, i y w h H v, D n h y h.” 
+8.    F i J h g t r, t H w n a h s o a d. 
+9.    T r t a r f t p o G. 
+10.  F h w h e H r h h a c f h w a G d f H.</memorize>
+					<memorize name="firstfive">For He has spoken in</memorize>
+				</translation>
+				<translation name="nasb">
+					<memorize name="complete">For He has said somewhere concerning the seventh day:“And God rested on the seventh day from all His works”; and again in this passage,“They shall not enter My rest.” Therefore, since it remains for some to enter it, and those who formerly had good news preached to them failed to enter because of disobedience, He again fixes a certain day, “Today,” saying through David after so long a time just as has been said before,“Today if you hear His voice, Do not harden your hearts.” For if Joshua had given them rest, He would not have spoken of another day after that. So there remains a Sabbath rest for the people of God. For the one who has entered His rest has himself also rested from his works, as God did from His.</memorize>
+					<memorize name="prompted">4 F H h s s c t s d:“A G r o t s d f a H w”; 
+5 a a i t p,“T s n e M r.”
+6 T, s i r f s t e i, a t w f h g n p t t f t e b o d, 
+7 H a f a c d, “T,” s t D a s l a t j a h b s b, “T i y h H v, D n h y h.”
+8 F i J h g t r, H w n h s o a d a t. 
+9 S t r a S r f t p o G. 
+10 F t o w h e H r h h a r f h w, a G d f H.</memorize>
+					<memorize name="firstfive">For He has said somewhere</memorize>
+				</translation>
+			</translations>
+			<reference>Hebrews 4:4-10</reference>
+		</scripture>
+		<scripture>
+			<translations>
+				<translation name="niv">
+					<memorize name="complete">To Timothy, my dear son: Grace, mercy and peace from God the Father and Christ Jesus our Lord. I thank God, whom I serve, as my forefathers did, with a clear conscience, as night and day I constantly remember you in my prayers. Recalling your tears, I long to see you, so that I may be filled with joy. I have been reminded of your sincere faith, which first lived in your grandmother Lois and in your mother Eunice and, I am persuaded, now lives in you also. For this reason I remind you to fan into flame the gift of God, which is in you through the laying on of my hands. For God did not give us a spirit of timidity, but a spirit of power, of love and of self-discipline.</memorize>
+					<memorize name="prompted">2.  T T, m d s: G, m a p f G t F a C J o L.
+3 I t G, w I s, a m f d, w a c c, a n a d I c r y i m p. 
+4 R y t, I l t s y, s t I m b f w j. 
+5 I h b r o y s f, w f l i y g L a i y m E a, I a p, n l i y a. 
+6 F t r I r y t f i f t g o G, w i i y t t l o o m h. 
+7 F G d n g u a s o t, b a s o p, o l a o s-d.</memorize>
+					<memorize name="firstfive">To Timothy, my dear son:</memorize>
+				</translation>
+				<translation name="esv">
+					<memorize name="complete">To Timothy, my beloved child: Grace, mercy, and peace from God the Father and Christ Jesus our Lord. I thank God whom I serve, as did my ancestors, with a clear conscience, as I remember you constantly in my prayers night and day. As I remember your tears, I long to see you, that I may be filled with joy. I am reminded of your sincere faith, a faith that dwelt first in your grandmother Lois and your mother Eunice and now, I am sure, dwells in you as well. For this reason I remind you to fan into flame the gift of God, which is in you through the laying on of my hands, for God gave us a spirit not of fear but of power and love and self-control.</memorize>
+					<memorize name="prompted">2 T T, m b c:G, m, a p f G t F a C J o L.
+3 I t G w I s, a d m a, w a c c, a I r y c i m p n a d.
+4 A I r y t, I l t s y, t I m b f w j. 
+5 I a r o y s f, a f t d f i y g L a y m E a n, I a s, d i y a w. 
+6 F t r I r y t f i f t g o G, w i i y t t l o o m h, 
+7 f G g u a s n o f b o p a l a s-c.</memorize>
+					<memorize name="firstfive">To Timothy, my beloved child:</memorize>
+				</translation>
+				<translation name="kjv">
+					<memorize name="complete">To Timothy, my dearly beloved son: Grace, mercy, and peace, from God the Father and Christ Jesus our Lord. I thank God, whom I serve from my forefathers with pure conscience, that without ceasing I have remembrance of thee in my prayers night and day; Greatly desiring to see thee, being mindful of thy tears, that I may be filled with joy; When I call to remembrance the unfeigned faith that is in thee, which dwelt first in thy grandmother Lois, and thy mother Eunice; and I am persuaded that in thee also. Wherefore I put thee in remembrance that thou stir up the gift of God, which is in thee by the putting on of my hands. For God hath not given us the spirit of fear; but of power, and of love, and </memorize>
+					<memorize name="prompted">2 T T, m d b s: G, m, a p, f G t F a C J o L.
+3 I t G, w I s f m f w p c, t w c I h r o t i m p n a d;
+4 G d t s t, b m o t t, t I m b f w j;
+5 W I c t r t u f t i i t, w d f i t g L, a t m E; a I a p t i t a.
+6 W I p t i r t t s u t g o G, w i i t b t p o o m h.
+7 F G h n g u t s o f; b o p, a o l, a o a s m.</memorize>
+					<memorize name="firstfive">To Timothy, my dearly beloved</memorize>
+				</translation>
+				<translation name="nkjv">
+					<memorize name="complete">To Timothy, a beloved son: Grace, mercy, and peace from God the Father and Christ Jesus our Lord. I thank God, whom I serve with a pure conscience, as my forefathers did, as without ceasing I remember you in my prayers night and day, greatly desiring to see you, being mindful of your tears, that I may be filled with joy, when I call to remembrance the genuine faith that is in you, which dwelt first in your grandmother Lois and your mother Eunice, and I am persuaded is in you also. Therefore I remind you to stir up the gift of God which is in you through the laying on of my hands. For God has not given us a spirit of fear, but of power and of love and of a sound mind.</memorize>
+					<memorize name="prompted">2.  T T, a b s: G, m, a p f G t F a C J o L. 
+3.  I t G, w I s w a p c, a m f d, a w c I r y i m p n a d, 
+4.  g d t s y, b m o y t, t I m b f w j, 
+5.  w I c t r t g f t i i y, w d f i y g L a y m E, a I a p i i y a. 
+6.  T I r y t s u t g o G w i i y t t l o o m h. 
+7.  F G h n g u a s o f, b o p a o l a o a s m.</memorize>
+					<memorize name="firstfive">To Timothy, a beloved son:</memorize>
+				</translation>
+				<translation name="nasb">
+					<memorize name="complete">To Timothy, my beloved son: Grace, mercy and peace from God the Father and Christ Jesus our Lord. I thank God, whom I serve with a clear conscience he way my forefathers did, as I constantly remember you in my prayers night and day, longing to see you, even as I recall your tears, so that I may be filled with joy. For I am mindful of the sincere faith within you, which first dwelt in your grandmother Lois and your mother Eunice, and I am sure that it is in you as well. For this reason I remind you to kindle afresh the gift of God which is in you through the laying on of my hands. For God has not given us a spirit of timidity, but of power and love and discipline</memorize>
+					<memorize name="prompted">2 T T, m b s: G, m a p f G t F a C J o L.
+3 I t G, w I s w a c c h w m f d, a I c r y i m p n a d, 
+4 l t s y, e a I r y t, s t I m b f w j. 
+5 F I a m o t s f w y, w f d i y g L a y m E, a I a s t i i i y a w. 
+6 F t r I r y t k a t g o G w i i y t t l o o m h. 
+7 F G h n g u a s o t, b o p a l a d.</memorize>
+					<memorize name="firstfive">To Timothy, my beloved son:</memorize>
+				</translation>
+			</translations>
+			<reference>2 Timothy 1:2-7</reference>
+		</scripture>
+	</scriptures>
+</biblebee>
+

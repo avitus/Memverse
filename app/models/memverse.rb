@@ -11,7 +11,7 @@ class Memverse < ActiveRecord::Base
   scope :memorized,     where(:status => "Memorized")
   scope :learning,      where(:status => "Learning" )
   
-  scope :active, 				where(:status => ["Learning", "Memorized"])
+  scope :active, 			  where(:status => ["Learning", "Memorized"])
   scope :inactive, 			where(:status => "Pending")
   
   scope :current,  			lambda { where('next_test >= ?', Date.today) }
@@ -43,7 +43,7 @@ class Memverse < ActiveRecord::Base
   after_destroy :update_counter_cache
 
   # ----------------------------------------------------------------------------------------------------------
-  # Convert to JSON format (for AJAX goodness on main memorization page
+  # Convert to JSON format (for AJAX goodness on main memorization page)
   # ---------------------------------------------------------------------------------------------------------- 
   def as_json(options={})
     { 
@@ -52,7 +52,7 @@ class Memverse < ActiveRecord::Base
       :tl         => self.verse.translation,
       :text       => self.verse.text,
       :versenum   => self.verse.versenum,
-      :skippable  => !self.due?,
+      :skippable  => !self.due? ? (!self.next_verse_due(true).nil? ? self.next_verse_due(true).verse.ref : false) : false,
       :mnemonic   => self.needs_mnemonic? ? self.verse.mnemonic : nil,
       :feedback   => self.show_feedback?
     }
@@ -83,8 +83,7 @@ class Memverse < ActiveRecord::Base
   def supermemo(q)
         
     prev_learning = (self.status == "Learning")
-    
-    
+      
     if self.due?
       if q<3 # answer was incorrect
         n_new = 1  # Start from the beginning
@@ -236,7 +235,7 @@ class Memverse < ActiveRecord::Base
   end
   
   # ----------------------------------------------------------------------------------------------------------
-  # User has entire chapter: i.e. does user have the last first in the chapter and is it linked to the 1st verse
+  # User has entire chapter: i.e. does user have the last verse in the chapter and is it linked to the 1st verse
   # ----------------------------------------------------------------------------------------------------------  
   def part_of_entire_chapter?
     
@@ -669,16 +668,17 @@ class Memverse < ActiveRecord::Base
   def add_links
     
     # Adding inbound links
-    if self.prev_verse ||= self.get_prev_verse # Attempt to fix race condition
+    if self.prev_verse ||= self.get_prev_verse  # Attempt to fix race condition
       prior_vs             = Memverse.find(self.prev_verse)
       prior_vs.next_verse  = self.id
       prior_vs.save!
       
       self.first_verse ||= self.get_first_verse # Attempt to fix race condition
+      self.save!                                # Attempt to fix race condition
       
     end
       
-    if self.next_verse ||= self.get_next_verse # Attempt to fix race condition
+    if self.next_verse ||= self.get_next_verse  # Attempt to fix race condition
       subs_vs             = Memverse.find(self.next_verse)
       subs_vs.prev_verse  = self.id
       subs_vs.first_verse = self.first_verse || self.id
@@ -686,6 +686,7 @@ class Memverse < ActiveRecord::Base
       
       # Updating starting point for downstream verses
       subs_vs.update_downstream_start_verses
+      self.save!                                # Attempt to fix race condition
     end
     
   end
@@ -733,12 +734,12 @@ class Memverse < ActiveRecord::Base
   # Implement counter caches for number of verses memorized and learning
   # ----------------------------------------------------------------------------------------------------------     
   def update_counter_cache
-    self.user.memorized = Memverse.count(:all, :conditions => ["user_id = ? and status = ?", self.user.id, "Memorized"])
-    self.user.learning  = Memverse.count(:all, :conditions => ["user_id = ? and status = ?", self.user.id, "Learning"])
+    self.user.memorized = Memverse.where(:user_id => self.user.id, :status => "Memorized").count
+    self.user.learning  = Memverse.where(:user_id => self.user.id, :status => "Learning").count
     self.user.last_activity_date = Date.today
     self.user.save
     
-    self.verse.memverses_count = Memverse.count(:all, :conditions => { :verse_id => self.verse.id })
+    self.verse.memverses_count = Memverse.where(:verse_id => self.verse.id).count
     self.verse.save
   end
   

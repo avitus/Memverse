@@ -160,6 +160,56 @@ font-family:"museo-slab-1",Georgia,"Times New Roman",Times,serif;
   
 } 
 
+/*========== White Boxes ==========*/
+
+.white-box-bg {
+  width:1080px;
+  background:#FFF;
+  border:1px solid #555;
+  padding:2em 0;
+  -moz-border-radius:10px;
+  -webkit-border-radius:10px;
+  border-radius:10px; 
+}
+
+.white-box-with-margins {
+  width:1056px;
+  background:#FFF;
+  border:1px solid #555;
+  padding:12px;
+  -moz-border-radius:10px;
+  -webkit-border-radius:10px;
+  border-radius:10px;
+  min-height:475px;
+}
+
+.two-thirds-white-box {
+  float: left;
+  width: 55%;
+  min-height: 232px;
+  background: #fff;
+  border:1px solid #555;
+  margin: 0.5em 0.5em;
+  padding:2em 2em;
+  -moz-border-radius:10px;
+  -webkit-border-radius:10px;
+  border-radius:10px; 
+}
+
+.one-third-white-box {
+  float: left;
+  width: 30%;
+  min-height: 232px;
+  background: #fff;
+  border:1px solid #555;
+  margin: 0.5em 0.5em;
+  padding:2em 2em;
+  -moz-border-radius:10px;
+  -webkit-border-radius:10px;
+  border-radius:10px; 
+}
+
+
 /*========== Header ==========*/
 
 #no-js {
@@ -1421,7 +1471,7 @@ div#flash-error {
 	text-decoration:none;
 }
 
-.tab-content #devotion, .tab-content #verse, .tab-content #community
+.tab-content #devotion, .tab-content #daily-activity, .tab-content #community
 {
 	display:none;
 	width:100%;
@@ -1454,27 +1504,6 @@ div#flash-error {
 	margin-left:4%;
 }
 /*========== Test Verse Page ==========*/
-
-.white-box-bg {
-	width:1080px;
-	background:#FFF;
-	border:1px solid #555;
-	padding:2em 0;
-	-moz-border-radius:10px;
-	-webkit-border-radius:10px;
-	border-radius:10px; 
-}
-
-.white-box-with-margins {
-	width:1056px;
-	background:#FFF;
-	border:1px solid #555;
-	padding:12px;
-	-moz-border-radius:10px;
-	-webkit-border-radius:10px;
-	border-radius:10px;
-	min-height:475px;
-}
 
 .test-verse
 {
@@ -2342,157 +2371,6 @@ div#currentVerse #matchbox .correct {
 	margin-top:2%;
 	margin-bottom:2%;
 	margin-left:1em;
-}
-
-/*========== Live Quiz ==========*/
-#live-quiz {
-	width:480px;
-	border-right:1px solid #bfbebe;
-	padding:0 10px;
-	height:600px;
-	float:left;
-}
-
-#quiz-messages {
-	float:left;
-	width: 380px;
-	padding-right: 1em;
-	padding-top: 1em;
-}
-
-#quiz-timer {
-	width:50px;
-	height:38px;
-	padding-top: 1em;
-	float:left;
-}
-
-#questions-answers {
-	height:500px;
-	width:480px;
-	overflow:auto;
-}
-
-#quiz-question {
-	padding-right:2em;
-}
-
-#quiz-answer {
-	height:200px;
-	padding-right:2em; 
-}
-
-#quiz-answer textarea {
-	height:200px;
-	width:400px;
-}
-
-.hidden {display:none}
-
-/* jQuery Countdown styles 1.5.9. */
-.hasCountdown {
-	border:1px solid #ccc;
-	background-color:#eee;
-}
-.countdown_rtl {
-	direction:rtl;
-}
-.countdown_holding span {
-	background-color:#ccc;
-}
-.countdown_row {
-	clear:both;
-	width:100%;
-	padding:0px 2px;
-	text-align:center;
-}
-.countdown_show1 .countdown_section {
-	width:98%;
-}
-.countdown_show2 .countdown_section {
-	width:48%;
-}
-.countdown_show3 .countdown_section {
-	width:32.5%;
-}
-.countdown_show4 .countdown_section {
-	width:24.5%;
-}
-.countdown_show5 .countdown_section {
-	width:19.5%;
-}
-.countdown_show6 .countdown_section {
-	width:16.25%;
-}
-.countdown_show7 .countdown_section {
-	width:14%;
-}
-.countdown_section {
-	display:block;
-	float:left;
-	font-size:75%;
-	text-align:center;
-}
-.countdown_amount {
-	font-size:200%;
-}
-.countdown_descr {
-	display:block;
-	width:100%;
-}
-
-/* === Scoreboard === */
-#live-scoreboard {
-	width:170px;
-	border-right:1px solid #bfbebe;
-	padding:0 10px;
-	height:600px;
-	float:left;
-	overflow:auto;
-}
-
-#live-quiz-scores {
-	list-style:none;	
-}
-
-.scoreboard-username {
-	float:left;
-	min-width:135px
-}
-
-.scoreboard-score {
-	padding-left:0.2em;
-}
-
-/* === Chat === */
-#chat-window {
-	width:340px;
-	max-height:600px;
-	float:left;
-	padding:0 10px;	
-}
-
-div#chat-stream-narrow {
-	height:520px;
-	overflow:auto;
-	list-style:none;
-	border-right:5px;
-}
-
-.chat-username {
-	color:#577a1a;
-	padding-left:0.2em;	
-}
-
-.chat-message {
-	padding-left:0.2em;
-	margin-bottom:0.2em;
-}
-
-.chat-announcement {
-	padding-left:0.2em;
-	margin-bottom:0.2em;
-	text-align:center;
 }
 
 /* === Main Chat Channel ==*/

@@ -21,7 +21,7 @@
 				<% for grp in @groupboard %>
 					<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
 						<td align="center"> <%= @groupboard.index(grp)+1%></td>			
-						<td align="left">   <%= link_to( grp[0].name, { :controller => "group", :action => "show", :id => grp[0] })		%></td>	
+						<td align="left">   <%= link_to( grp[0].name, { :controller => "groups", :action => "show", :id => grp[0] })		%></td>	
 						<td align="center"> <%= number_with_delimiter(grp[0].users_count)	%></td>	
 						<td align="center"> <%= number_with_delimiter(grp[1])				%></td>				
 					</tr>

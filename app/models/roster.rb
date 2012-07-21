@@ -8,7 +8,7 @@ class Roster < SuperModel::Base
   validates_presence_of :user_id
 
   after_create 'self.publish_roster(:create)'
-  after_update 'self.publish_roster(:update)' # I don't think we need to publish the roster when a roster record is updated
+#  after_update 'self.publish_roster(:update)' # I don't think we need to publish the roster when a roster record is updated
   after_destroy 'self.publish_roster(:destroy)'
 
   indexes :user_id
@@ -26,22 +26,23 @@ class Roster < SuperModel::Base
     def subscribe
       Juggernaut.subscribe do |event, data|
         data.default = {}
-        user_id = data["meta"]["user_id"]
-		user_name = data["meta"]["user_name"]
+        user_id      = data["meta"]["user_id"]
+    		user_name    = data["meta"]["user_name"]
+    		gravatar_url = data["meta"]["gravatar_url"]
         next unless user_id
 
         case event
-        when :subscribe
-          event_subscribe(user_id, user_name)
-        when :unsubscribe
-          event_unsubscribe(user_id)
+          when :subscribe
+            event_subscribe(user_id, user_name, gravatar_url)
+          when :unsubscribe
+            event_unsubscribe(user_id)
         end
       end
     end
 
     protected
-      def event_subscribe(user_id, user_name)
-        user = find_by_user_id(user_id) || self.new(:user_id => user_id, :user_name => user_name)
+      def event_subscribe(user_id, user_name, gravatar_url)
+        user = find_by_user_id(user_id) || self.new(:user_id => user_id, :user_name => user_name, :gravatar_url => gravatar_url)
         user.increment!
       end
 
@@ -73,14 +74,17 @@ class Roster < SuperModel::Base
     end
     return user_ids
   end
-  
+
   def publish_roster(type)
-    Juggernaut.publish(
-      Array(self.observer_clients).map {|c| "/observer/#{c}" }, 
+    Juggernaut.publish("/roster", 
       {
         :type  => type, :id => self.id,
         :klass => self.class.name, :record => self
       })
+  end
+
+  def as_json(options={})
+    super(:only => [:user_id, :user_name, :gravatar_url])
   end
 
 end

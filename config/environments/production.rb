@@ -6,7 +6,7 @@ MemverseApp::Application.configure do
   #===============================
   config.cache_classes = true                      # Code is not reloaded between requests
   config.consider_all_requests_local = false       # Full error reports are disabled
-  config.cache_store = :mem_cache_store            # Use MemcacheD for cache
+  config.cache_store = :dalli_store                # Use Memcached for cache
   config.action_controller.perform_caching = true
 
   #===============================

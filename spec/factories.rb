@@ -4,9 +4,11 @@ FactoryGirl.define do
 
   factory :user do |u|
     u.name 'Test User'
-	u.sequence(:email) { |n| "user#{n}@test.com" }
+	  u.sequence(:email) { |n| "user#{n}@test.com" }
     u.password 'please'
-    u.password_confirmation { |u| u.password }     
+    u.password_confirmation { |u| u.password } 
+    # u.association :group, :factory => :group  
+    u.last_activity_date Date.today  
   end
   
   factory :verse do |v|
@@ -22,6 +24,9 @@ FactoryGirl.define do
     mv.association :verse, :factory => :verse
     mv.association :user,  :factory => :user
     mv.status 'Learning'
+    mv.last_tested Date.today
+    mv.next_test Date.today
+    mv.efactor 2.0
   end
   
   factory :blog do |f|
@@ -63,5 +68,10 @@ FactoryGirl.define do
     pr.learning   50
     pr.memorized 100
     pr.entry_date Date.today
+  end
+  
+  factory :group do |g|
+    g.name 'Memory Group'
+    g.association :leader, :factory => :user
   end
 end

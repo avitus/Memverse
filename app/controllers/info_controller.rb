@@ -2,7 +2,9 @@
 
 class InfoController < ApplicationController
   
-  caches_action :leaderboard, :churchboard, :stateboard, :countryboard, :referralboard, :layout => false, :expires_in => 1.hour
+  # This causes a problem with the menu not showing the active tab
+  caches_action :leaderboard, :groupboard, :churchboard, :stateboard, :countryboard, :referralboard, :layout => false, :expires_in => 1.hour
+  caches_action :pop_verses, :cache_path => Proc.new { |c| c.params }, :expires_in => 1.day
   
   add_breadcrumb "Home", :root_path
   
@@ -124,7 +126,15 @@ class InfoController < ApplicationController
     add_breadcrumb I18n.t("menu.leaderboard"), leaderboard_path
     add_breadcrumb I18n.t("leader_menu.Leaderboard"), leaderboard_path
     
-    @leaderboard = User.top_users # returns top users sorted by number of verses memorized
+    @leaderboard = User.top_users
+     
+    # ALV: Unable to get fragment cache working
+    # TODO: http://stackoverflow.com/questions/11199396/rails-cache-fetch-inserting-extra-values
+     
+    # @leaderboard = Rails.cache.fetch("top_users", :expires_in => 1.hour) do 
+    #   User.top_users 
+    # end
+    
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -137,9 +147,13 @@ class InfoController < ApplicationController
     
     add_breadcrumb I18n.t("menu.leaderboard"), leaderboard_path
     add_breadcrumb I18n.t("leader_menu.Church Leaderboard"), churchboard_path
-    
-    @churchboard  = Church.top_churches  # returns top churches sorted by number of verses memorized
 
+    @churchboard = Church.top_churches
+
+    # @churchboard = Rails.cache.fetch("top_churches", :expires_in => 1.hour) do     
+    #   Church.top_churches
+    # end
+    
   end    
 
   # ----------------------------------------------------------------------------------------------------------
@@ -153,8 +167,12 @@ class InfoController < ApplicationController
     add_breadcrumb I18n.t("menu.leaderboard"), leaderboard_path
     add_breadcrumb I18n.t("leader_menu.Group Leaderboard"), groupboard_path
     
-    @groupboard  = Group.top_groups  # returns top churches sorted by number of verses memorized
-
+    @groupboard = Group.top_groups 
+    
+    # @groupboard = Rails.cache.fetch("top_groups", :expires_in => 1.hour) do  
+    #   Group.top_groups 
+    # end
+    
   end  
 
   # ----------------------------------------------------------------------------------------------------------
@@ -168,8 +186,12 @@ class InfoController < ApplicationController
     add_breadcrumb I18n.t("menu.leaderboard"), leaderboard_path
     add_breadcrumb I18n.t("leader_menu.State Leaderboard"), stateboard_path
     
-    @stateboard   = AmericanState.top_states  # returns top states sorted by number of verses memorized
-
+    @stateboard = AmericanState.top_states
+    
+    # @stateboard = Rails.cache.fetch("top_states", :expires_in => 1.hour) do  
+    #   AmericanState.top_states  
+    # end
+    
   end       
     
   # ----------------------------------------------------------------------------------------------------------
@@ -183,8 +205,12 @@ class InfoController < ApplicationController
     add_breadcrumb I18n.t("menu.leaderboard"), leaderboard_path
     add_breadcrumb I18n.t("leader_menu.Country Leaderboard"), countryboard_path
     
-    @countryboard  = Country.top_countries  # returns top users sorted by number of verses memorized
-
+    @countryboard = Country.top_countries
+    
+    # @countryboard = Rails.cache.fetch("top_countries", :expires_in => 1.hour) do  
+    #   Country.top_countries  
+    # end
+    
   end      
 
   # ----------------------------------------------------------------------------------------------------------   
@@ -198,6 +224,11 @@ class InfoController < ApplicationController
     add_breadcrumb I18n.t("leader_menu.Referralboard"), referralboard_path
     
     @referralboard = User.top_referrers
+    
+    # @referralboard = Rails.cache.fetch("top_referrers", :expires_in => 1.hour) do  
+    #   User.top_referrers
+    # end
+    
   end
   
   # ----------------------------------------------------------------------------------------------------------   
@@ -307,8 +338,7 @@ end
   
   # ----------------------------------------------------------------------------------------------------------
   # Check whether email is available / used during registration
-  # ----------------------------------------------------------------------------------------------------------
-  
+  # ----------------------------------------------------------------------------------------------------------  
   def email_available
     @user = User.find_by_email(params[:email])
     if @user
@@ -321,9 +351,14 @@ end
   
   # ----------------------------------------------------------------------------------------------------------
   # STT SETIA page with video and text
-  # ----------------------------------------------------------------------------------------------------------
-  
+  # ---------------------------------------------------------------------------------------------------------- 
   def stt_setia
+  end
+  
+  # ----------------------------------------------------------------------------------------------------------
+  # Bible Bee flash tool designed by Jonathan Peterson
+  # ---------------------------------------------------------------------------------------------------------- 
+  def bible_bee_tool
   end
   
 end

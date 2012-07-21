@@ -69,6 +69,10 @@ When /^(?:|I )fill in "([^"]*)" for "([^"]*)"$/ do |value, field|
   fill_in(field, :with => value)
 end
 
+When /^(?:|I )fill in the textarea with "([^"]*)"$/ do |value|
+  find(:xpath, "//form/textarea").set value
+end
+
 When /^I submit the form$/ do
   page.evaluate_script("document.forms[0].submit()")
 end

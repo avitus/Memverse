@@ -57,7 +57,7 @@ module ApplicationHelper
 
     value = 'inactive'
     value = 'selected' if tab
-    
+
     if include_class_text
       ('class="' << value << '"').html_safe
     else
@@ -72,14 +72,13 @@ module ApplicationHelper
 
     value = 'inactive'
     value = 'active' if sub
-    
+
     if include_class_text
       ('class="' << value << '"').html_safe
     else
       value
     end
   end  
-
 
   # ----------------------------------------------------------------------------------------------------------
   # Support for tag cloud
@@ -125,6 +124,4 @@ module ApplicationHelper
       ''
     end
   end
-  
-  
 end
