@@ -267,16 +267,15 @@ class ProfileController < ApplicationController
   # Referral page
   # ----------------------------------------------------------------------------------------------------------   
   def referrals
-    
     @tab = "profile"
     @sub = "myrefs"  
-     	
+
     @user = User.find(params[:id]) || current_user
-    
+
     add_breadcrumb I18n.t('profile_menu.Referrals'), :referrals_path
-    
+
     @referrer  = User.find(@user.referred_by) if @user.referred_by
-    
+
     # Clean up users who have referred themselves
     # TODO: This section can be removed since we now prevent this from happening
     if @user == @referrer
@@ -285,11 +284,10 @@ class ProfileController < ApplicationController
       @user.save
       @referrer = nil
     end
-    
+
     @referees  = @user.referrals
-    
+
     @level_two = @referees.collect { |r| r.referrals }.flatten
-        
   end
 
   # ----------------------------------------------------------------------------------------------------------

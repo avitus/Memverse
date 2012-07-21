@@ -32,7 +32,7 @@ set :scm, 'git'
 set :repository,  "git@github.com:avitus/Memverse.git"        # Your git repository location
 set :branch, 'master'                                         # tell cap the branch to checkout during deployment
 set :scm_verbose, true
-
+set :keep_releases, 5                                         # Keep only five most recent releases
 # set :scm_passphrase, "pa$$word"                             # The deploy user's password
 # set :git_shallow_clone, 1
 
@@ -49,7 +49,7 @@ set :rails_env, "production"
 ##############################################################
 ##  Authentication
 ##############################################################
-ssh_options[:keys] = %w(/home/avitus/.ssh/id_rsa)
+ssh_options[:keys] = ssh_options[:keys] = [File.join(ENV["HOME"], ".ssh", "id_rsa")]
 ssh_options[:paranoid] = false
 default_run_options[:pty] = true 
 ssh_options[:forward_agent] = true                            # Use agent forwarding to simplify key management in order to use local keys
@@ -66,8 +66,8 @@ set :default_stage, "production"
 ##############################################################
 ##  Hooks
 ##############################################################
-# after "deploy:update_code", "deploy:symlink_db" #, "deploy:set_rails_env"
 before "deploy:assets:precompile", "deploy:symlink_db", "deploy:symlink_bloggity"
+after "deploy", "refresh_sitemaps"
 
 ##############################################################
 ##  Database config and restart
@@ -87,6 +87,11 @@ namespace :deploy do
   task :restart, :roles => :app, :except => { :no_release => true } do
     run "touch #{current_path}/tmp/restart.txt"
   end  
+
+  desc "Generate sitemap"
+  task :refresh_sitemaps do
+    run "cd #{latest_release} && RAILS_ENV=#{rails_env} rake sitemap:refresh"
+  end
  
 end
 

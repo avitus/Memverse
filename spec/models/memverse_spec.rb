@@ -1,14 +1,13 @@
 require 'spec_helper'
-require 'pp'
 
 describe Memverse do
   
   before(:each) do    
-    @user  = FactoryGirl.create(:user)
-    @verse = FactoryGirl.create(:verse) 
+    @user  = User.create!(:name => "Test User", :email => "test@memverse.com", :password => "secret", :password_confirmation => "secret")
   end
   
   it "should create a new instance given a valid attribute" do
+    @verse = Verse.create!(:book_index => 1, :book => "Genesis", :chapter => 12, :versenum => 1, :text => "This is a test", :translation => "NIV")
     Memverse.create!(:user => @user, :verse => @verse)
   end
 
@@ -17,51 +16,43 @@ describe Memverse do
 #  Would prefer to have it at the model level, though  
 #  ---------------------------------------------------------------------------------------------------------------
 
-#  describe "Verse Linking" do
-#    
-#    before(:each) do
-#      
-#      @passage = Array.new
-#         
-#      for i in 1..6
-#        verse       = FactoryGirl.create(:verse, :book_index => 19, :book => "Psalms", :chapter => '1', :versenum => i)
-#        @passage[i] = FactoryGirl.create(:memverse, :user => @user, :verse => verse)
-#      end      
-#      
-#    end
-#    
-#    it "should link a new verse to the following verse" do
-#      
-#      pp @passage[1]
-#      pp @passage[2]
-#      pp @passage[3]
-#      pp @passage[4]
-#      pp @passage[5]
-#      pp @passage[6]
-#      
-#      @passage[2].next_verse.should  == @passage[3].id
-#    end
-#
-#    it "should link a new verse to the previous verse" do
-#      @passage[2].prev_verse.should  == @passage[1].id
-#    end
-#    
-#    it "should link the following verse to the new verse" do
-#      @passage[3].prev_verse.should  == @passage[2].id      
-#    end
-#
-#    it "should link the previous verse to the new verse" do
-#      @passage[1].next_verse.should  == @passage[2].id
-#    end
-#
-#    it "should point the new verse to the first verse" do
-#      @passage[2].first_verse.should == @passage[1].id
-#    end
-#    
-#    it "should not point the first verse to anything" do
-#      @passage[1].first_verse.should be_nil
-#    end    
-#    
-#  end
-  
+  describe "Verse Linking" do
+
+    before(:each) do
+
+      @passage = Array.new
+
+      for i in 1..6
+        verse       = Verse.create(:book_index => 19, :book => "Psalms", :chapter => 1, :versenum => i, :text => "This is a test")
+        @passage[i] = Memverse.create(:user => @user, :verse => verse)
+      end      
+      
+    end
+    
+    it "should link a new verse to the following verse" do
+      @passage[2].next_verse.should  == @passage[3].id
+    end
+
+    it "should link a new verse to the previous verse" do
+      @passage[2].prev_verse.should  == @passage[1].id
+    end
+    
+    it "should link the following verse to the new verse" do
+      @passage[3].prev_verse.should  == @passage[2].id      
+    end
+
+    it "should link the previous verse to the new verse" do
+      @passage[1].next_verse.should  == @passage[2].id
+    end
+
+    it "should point the new verse to the first verse" do
+      @passage[2].first_verse.should == @passage[1].id
+    end
+    
+    it "should not point the first verse to anything" do
+      @passage[1].first_verse.should be_nil
+    end    
+    
+  end
+ 
 end

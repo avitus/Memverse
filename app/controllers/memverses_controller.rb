@@ -560,9 +560,14 @@ class MemversesController < ApplicationController
       elsif current_user.has_verse?(vs.book, vs.chapter, vs.versenum)
         msg = "Added in another translation"
       else
-        # Save verse as a memory verse for user      
-        Memverse.create(:user_id => current_user.id, :verse_id => vs.id)
-        msg = "Added"
+        # Save verse as a memory verse for user         
+        begin
+          Memverse.create(:user_id => current_user.id, :verse_id => vs.id)  
+        rescue Exception => e  
+          Rails.logger.error("*** [Memverse save error] Exception while saving #{vs.ref} for user #{current_user.id}: #{e}")
+        else
+          msg = "Added"
+        end        
       end
     else
       msg = "Error"
@@ -587,14 +592,20 @@ class MemversesController < ApplicationController
       if current_user.has_verse?(vs.book, vs.chapter, vs.versenum)
         msg = "You already have #{vs.ref} in a different translation"
       else
-        Memverse.create(:user_id => current_user.id, :verse_id => vs.id)
+        # Save verse as a memory verse for user         
+        begin
+          Memverse.create(:user_id => current_user.id, :verse_id => vs.id)  
+        rescue Exception => e  
+          Rails.logger.error("*** [Memverse save error] Exception while saving #{vs.ref} for user #{current_user.id}: #{e}")
+        else
+          msg = "Added"
+        end  
       end
     end
 
     render :json => {:msg => "Added Chapter" }
     
   end  
-
 
   # ----------------------------------------------------------------------------------------------------------
   # Add a new memory verse
@@ -906,40 +917,43 @@ class MemversesController < ApplicationController
     # Find verse
     mv  = Memverse.find(params[:mv])
     q   = params[:q].to_i
-        
-    # Execute Supermemo algorithm
-    newly_memorized = mv.supermemo(q)
-
-    # Give encouragement if verse transitions from "Learning" to "Memorized"
-    if newly_memorized
-      msg = "Congratulations. You have memorized #{mv.verse.ref}."
-      Tweet.create(:news => "#{current_user.name_or_login} memorized #{mv.verse.ref}", :user_id => current_user.id, :importance => 5)
-
-      if current_user.reaching_milestone
-      	milestone = current_user.memorized+1
-      	
-      	importance = case milestone
-	      	when    0..    9 then 4
-	      	when   10..  399 then 3
-	      	when  400..  999 then 2
-	      	when 1000..10000 then 1 
-	      	else                  5
-      	end
-      	
-        msg       << " That was your #{milestone}th memorized verse!"
-        broadcast  = "#{current_user.name_or_login} memorized #{current_user.his_or_her} #{milestone}th verse"
-        Tweet.create(:news => broadcast, :user_id => current_user.id, :importance => importance)
+    
+    if mv.user == current_user    
+      # Execute Supermemo algorithm
+      newly_memorized = mv.supermemo(q)
+  
+      # Give encouragement if verse transitions from "Learning" to "Memorized"
+      if newly_memorized
+        msg = "Congratulations. You have memorized #{mv.verse.ref}."
+        Tweet.create(:news => "#{current_user.name_or_login} memorized #{mv.verse.ref}", :user_id => current_user.id, :importance => 5)
+  
+        if current_user.reaching_milestone
+        	milestone = current_user.memorized+1
+        	
+        	importance = case milestone
+  	      	when    0..    9 then 4
+  	      	when   10..  399 then 3
+  	      	when  400..  999 then 2
+  	      	when 1000..10000 then 1 
+  	      	else                  5
+        	end
+        	
+          msg       << " That was your #{milestone}th memorized verse!"
+          broadcast  = "#{current_user.name_or_login} memorized #{current_user.his_or_her} #{milestone}th verse"
+          Tweet.create(:news => broadcast, :user_id => current_user.id, :importance => importance)
+        end
+  
+        if mv.chapter_memorized?
+          msg << " You have now memorized all of #{mv.verse.chapter_name}. Great job!"
+          Tweet.create(:news => "#{current_user.name_or_login} memorized #{mv.verse.chapter_name}", :user_id => current_user.id, :importance => 3)
+        end
       end
 
-      if mv.chapter_memorized?
-        msg << " You have now memorized all of #{mv.verse.book} #{mv.verse.chapter}. Great job!"
-        Tweet.create(:news => "#{current_user.name_or_login} memorized #{mv.verse.book} #{mv.verse.chapter}", :user_id => current_user.id, :importance => 3)          
-      end
-
+    else
+      msg = "You are attempting to modify a memory verse that belongs to another user."
     end
-   
+
     render :json => {:msg => msg }
-      
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -964,17 +978,16 @@ class MemversesController < ApplicationController
     else
       render :json => { :finished => true }
     end
-    
-       
+
   end
 
   # ----------------------------------------------------------------------------------------------------------
   # Prepare for Reference Test
   # ----------------------------------------------------------------------------------------------------------
   def load_test_ref
-    
+
     @tab = "mem" 
-    
+
     ref_quizz         = Array.new
     ref_quizz_answers = Array.new
     ref_id            = Array.new
@@ -1192,13 +1205,13 @@ class MemversesController < ApplicationController
   # Test a Difficult Reference
   # ----------------------------------------------------------------------------------------------------------
   def test_ref
-    
+
     @tab = "mem"
     @sub = "refrec"  
-    
+
     add_breadcrumb I18n.t("memorize_menu.Memorize"), :test_verse_quick_path
     add_breadcrumb I18n.t("memorize_menu.Reference Recall"), :start_ref_test_path
-    
+
     if session[:ref_test_cntr] # The session variables are not set if user comes straight to this page
       @question_num = session[:ref_test_cntr]
       @ref          = session[:ref_test][@question_num]
@@ -1206,9 +1219,8 @@ class MemversesController < ApplicationController
     else
       redirect_to :action => 'index'
     end
-    
-  end
 
+  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Score Reference Test
@@ -1231,7 +1243,8 @@ class MemversesController < ApplicationController
     
       mv = Memverse.find( session[:ref_id][question_num] )
     
-      if (book==solution[0] and chapter==solution[1].to_i and verse==solution[2].to_i) or (book==alt_soln[0] and chapter==alt_soln[1].to_i and verse==alt_soln[2].to_i)
+      if (book==solution[0] and chapter==solution[1].to_i and verse==solution[2].to_i) or 
+         (book==alt_soln[0] and chapter==alt_soln[1].to_i and verse==alt_soln[2].to_i)
         flash[:notice] = "Perfect!"
         session[:reftest_correct] += 1
         session[:reftest_grade] += 10
@@ -1367,8 +1380,8 @@ class MemversesController < ApplicationController
     else
       # Otherwise, find the verse with the shortest test_interval i.e. a new or difficult verse
       @mv = Memverse.find( :first, 
-                          :conditions => ["user_id = ? and last_tested < ?", current_user.id, Date.today], 
-                          :order      => "test_interval ASC")
+                           :conditions => ["user_id = ? and last_tested < ?", current_user.id, Date.today], 
+                           :order      => "test_interval ASC")
  
       if !@mv.nil? # We've found a verse
         

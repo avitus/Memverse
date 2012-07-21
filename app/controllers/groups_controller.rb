@@ -13,15 +13,17 @@ class GroupsController < ApplicationController
     @tab = "profile"
     @sub = "mygroup"
     
-    @is_leader = false
+    @can_edit = false
     
-    if params[:group]
-      @group          = Group.find(params[:group])
+    if params[:id]
+      @group          = Group.find(params[:id])
       @users          = @group.users.order('memorized DESC')    
+      @can_edit       = (@group.get_leader! == current_user)
       add_breadcrumb @group.name, {:action => "show", :id => params[:id]}
     elsif current_user.group
       @group          = current_user.group
       @users          = @group.users.order('memorized DESC')
+      @can_edit       = (@group.get_leader! == current_user)
       add_breadcrumb I18n.t('profile_menu.My Group'), :mygroup_path
     else
       flash[:notice]  = "You have not yet joined a group. Please join a group in your profile."

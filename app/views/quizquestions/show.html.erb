@@ -4,6 +4,7 @@
 
 	<p>
 		<% if @question.question_type == "mcq" %>
+		  <%= @question.mc_question %><br /><br />
 		  A) <%= @question.mc_option_a %><br />
 		  B) <%= @question.mc_option_b %><br />
 		  C) <%= @question.mc_option_c %><br />

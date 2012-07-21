@@ -9,7 +9,8 @@ function flexversesearch(text){
 
 				// Clear search results
 				clearSearchResults();
-				$(".verse-search-results-scroll").hide();
+				$(".verse-search-results-scroll #actions a").hide();
+				$(".verse-search-results-scroll div.scrollable").hide();
 				$("#verse-search-single-result").show();
 				
 				if (typeof(verse) !== 'undefined' && verse != null) {
@@ -29,11 +30,13 @@ function flexversesearch(text){
 		$.get("/lookup_passage.json", { bk: ref.bk, ch: ref.ch, vs_start: ref.vs_start, vs_end: ref.vs_end, tl: tl },
 			function(verses) {
 				
-				// TODO: Potentially insert missing verses with option to create a new verse					
+				// TODO: Potentially insert missing verses with option to create a new verse
+				// TODO: Don't clear search results if search is for the same ref
 				clearSearchResults();         // clear existing search results
 				displaySearchResults(verses); // display new search results
-				checkChapter(ref, tl);
-				
+				if (validChapterRef($.trim(text))) {
+					checkChapter(ref, tl);
+				}
 		}, "json" );
 	
 	// User didn't enter a verse reference ... do a keyword search
@@ -65,7 +68,7 @@ function clearSearchResults () {
  * Display scrollable list of results
  ******************************************************************************/
 function displaySearchResults (verses) {
-	$(".verse-search-results-scroll").show();
+	$(".verse-search-results-scroll #actions a, .verse-search-results-scroll div.scrollable, .verse-search-results-scroll").show();
 	$("#verse-search-single-result").hide();
 	$.each (verses, function(i, pv) {
 		// We need to group popular verses		

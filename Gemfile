@@ -4,7 +4,7 @@ HOST_OS = RbConfig::CONFIG['host_os']
 source 'http://rubygems.org'
 
 group :development do 
-  # gem 'query_reviewer', :git => "git://github.com/nesquena/query_reviewer.git"                  # For finding slow queries ... problems with Rails 3.2 (?)
+  # gem 'query_reviewer', :git => "git://github.com/nesquena/query_reviewer.git"                # For finding slow queries ... problems with Rails 3.2 (?)
 	gem "rails-footnotes", ">= 3.7", :group => :development
   gem 'sqlite3'
 end
@@ -24,7 +24,7 @@ if HOST_OS =~ /linux/i
   gem 'therubyracer', '>= 0.8.2'
 end
 
-gem 'rails', '3.2.4'
+gem 'rails', '3.2.6'
 gem 'jquery-rails', '=1.0.18'
 
 gem "rspec-rails", ">= 2.6.1", :group => [:development, :test]
@@ -65,13 +65,14 @@ gem 'spawn', '>=1.2', :git => 'git://github.com/avitus/spawn.git', :branch => 'e
 gem 'juggernaut', '>=2.1.0', :git => 'git://github.com/maccman/juggernaut.git'                  # Live chat
 gem 'htmldiff'                                                                                  # For showing errors in accuracy test
 gem 'breadcrumbs_on_rails', '>=2.0.0'                                                           # For breadcrumb navigation bar
-gem 'memcache-client'                                                                           # Memcached client
+gem 'dalli'                                                                                     # Memcached client
 gem 'redis', '>=2.2.2'                                                                          # Redis Key-value store
 gem 'action_mailer_cache_delivery', git: 'git://github.com/ragaskar/action_mailer_cache_delivery.git' # Used to test email delivery with Cucumber
 gem 'friendly_id'                                                                               # Makes nice IDs for models
 gem 'foreman'                                                                                   # Helps manage multiple processes when running app in development.
 gem 'supermodel', git: 'git://github.com/KonaTeam/supermodel.git'                               # Uses ActiveModel for in-memory storage with redis
 gem 'best_in_place'                                                                             # In-place editing support
+gem 'sitemap_generator'                                                                         # Sitemap generator
 
 group :console do
   gem 'wirble'

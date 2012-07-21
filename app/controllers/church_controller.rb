@@ -3,7 +3,7 @@ class ChurchController < ApplicationController
   add_breadcrumb "Church Leaderboard", :churchboard_path
   
   def show
-    add_breadcrumb @church.name, {:action => "show", :id => params[:id]}
+    add_breadcrumb @church.try(:name), {:action => "show", :id => params[:id]}
     @church = Church.find(params[:id])
     @users  = @church.users.active.order('memorized DESC')
   end   
