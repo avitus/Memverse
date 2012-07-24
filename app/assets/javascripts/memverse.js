@@ -387,7 +387,11 @@ function insertondeck(ondeck, ondeck_prior) {
 		$('#mtext').text('');									// Clear mnemonic text
 		$('#mnemonic').hide();									// Hide mnemonic box
 	}
-	
+
+	// == Update skip button tooltip
+	next_up = ($('#upcoming-verses li.upcoming-verse-ref:visible').length == 0)?"end (no more verses due)":ondeck.skippable;
+	$('#next-verse-due').text(next_up);
+
 	return true;
 	
 }
