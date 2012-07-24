@@ -168,7 +168,7 @@ class User < ActiveRecord::Base
   def work_load
     time_per_verse = 1.0 # minutes
     verses_per_day = 2.0 # login, setup time etc
-    self.memverses.active.where(:test_interval => 0).update_all(:test_interval => 1)
+    # self.memverses.active.where(:test_interval => 0).update_all(:test_interval => 1)
     self.memverses.active.find_each { |mv|
       verses_per_day += (1 / mv.test_interval.to_f) 
     }
