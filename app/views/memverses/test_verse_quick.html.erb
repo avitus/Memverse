@@ -21,7 +21,7 @@
 					<span class="submit" q="4">4</span> <div class="tooltip"><%= I18n.t "memverses.test_verse_quick.b4" %></div>							
 					<span class="submit" q="5">5</span> <div class="tooltip"><%= I18n.t "memverses.test_verse_quick.b5" %></div>	
 					
-					<span class="test-button" id="ff-button">&gt;&gt;</span> <div class="tooltip">Skip to next verse due</div>
+					<span class="test-button" id="ff-button">&gt;&gt;</span> <div class="tooltip">Skip to <strong id="next-verse-due"><%= @mv.next_verse_due(true).verse.ref unless @mv.due? %></strong></div>
 					
 					<span><%= link_to (image_tag("blue-icon.png", :width=>"16", :height=>"16")), "#info", :id => "inline" %></span> <div class="tooltip">Learn about rating your verses and keyboard shortcuts</div>
 					<div style="display:none">
@@ -122,7 +122,7 @@
 		var user_id				= "<%= current_user.id %>";		
 
 		$("table#upcoming-verses .upcoming-verse-ref:contains('<%=@mv.verse.ref%>')").remove()				
-			 
+		
 		current.id		 = "<%= @mv.id %>";
 		current.text   	 = "<%= escape_javascript(@mv.verse.text.html_safe) %>";
 		current.feedback = <%= @mv.show_feedback? %>;
@@ -169,6 +169,12 @@
 			else {
 				success = insertondeck(ondeck.mv_skip, ondeck.mv_prior_skip);	// Update page with ondeck verses
 				current = ondeck.mv_skip										// Update current verse
+				$("ul#upcoming-verses .upcoming-verse-ref:contains(" + current.ref + ")").fadeOut(500); // remove from upcoming
+				
+				if($("ul#upcoming-verses .upcoming-verse-ref:visible").not(":contains(" + current.ref + ")").length == 0) {
+					$("ul#upcoming-verses").html("<li>(None)</li>");
+				}
+				
 				live = getversefeedback($verseguess.val());						// Update verse feedback
 				ondeck = stageverses(current.id);								// Get new ondeck verses
 			}
@@ -203,9 +209,11 @@
 		
 		// ==== Verse rating function ====		
 		function rateverse() {
-			// == Remove verse from list of upcoming verses
+			// == Remove this verse from list of upcoming verses
+			$("ul#upcoming-verses .upcoming-verse-ref:contains(" + current.ref + ")").fadeOut(500);
+			// == Remove next verse from list of upcoming verses
 			$("ul#upcoming-verses .upcoming-verse-ref:contains(" + ondeck.mv.ref + ")").fadeOut(500);
-				
+			
 			// Check whether we're done for the day
 			if (ondeck.finished) {
 				$.getJSON("/mark_test_quick", { mv: current.id, q: q  }, 			// Score verse
@@ -214,8 +222,7 @@
 						log_progress(user_id);									    // Req successful callback from mark_test_quick: Log progress
 						window.location="./progress";							    // Req successful callback from mark_test_quick: Navigate to progress
 				});
-			}
-			else {
+			} else {
 				success = insertondeck(ondeck.mv, ondeck.mv_prior);					// Update page with Ondeck verse
 				prior   = current;
 				current = ondeck.mv;												// data for the verse we're now testing
