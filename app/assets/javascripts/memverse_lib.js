@@ -72,7 +72,6 @@ function validPassageRef(passage) {
     return /([0-3]?\s+)?[a-záéíóúüñ]+\s+[0-9]+(((:|(\s?vs\s?))[0-9]+(-)[0-9]+)|:)?$/i.test(passage);
 }
 
-
 /******************************************************************************
  * Returns true iff input is a chapter reference
 
@@ -110,6 +109,30 @@ function cleanseVerseText( versetext ) {
 	
 	return versetext;
 }
+
+/******************************************************************************
+ * Blankify a verse
+ ******************************************************************************/
+function blankify(versetext, reduction_percentage) {
+
+    var split_text, sort_by_length;
+    var text_length, words_to_remove;    
+    
+    split_text = versetext.trim().split(/\s/);
+        
+    sort_by_length = split_text.sort(function(a, b) {
+        return (a.length < b.length) ? 1 : 0;
+    });
+    
+    text_length     = sort_by_length.length;
+    words_to_remove = Math.round(text_length * reduction_percentage / 100);
+    
+    sort_by_length.length = words_to_remove // selects the words to remove
+    
+    return split_text.join(" ");
+    
+};
+
 
 /******************************************************************************
  * Parses reference into a book, chapter & verse
