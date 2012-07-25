@@ -43,7 +43,7 @@ class Memverse < ActiveRecord::Base
   after_destroy :update_counter_cache
 
   # ----------------------------------------------------------------------------------------------------------
-  # Convert to JSON format (for AJAX goodness on main memorization page
+  # Convert to JSON format (for AJAX goodness on main memorization page)
   # ---------------------------------------------------------------------------------------------------------- 
   def as_json(options={})
     { 
@@ -52,7 +52,7 @@ class Memverse < ActiveRecord::Base
       :tl         => self.verse.translation,
       :text       => self.verse.text,
       :versenum   => self.verse.versenum,
-      :skippable  => !self.due?,
+      :skippable  => !self.due? ? (!self.next_verse_due(true).nil? ? self.next_verse_due(true).verse.ref : false) : false,
       :mnemonic   => self.needs_mnemonic? ? self.verse.mnemonic : nil,
       :feedback   => self.show_feedback?
     }

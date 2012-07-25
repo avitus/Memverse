@@ -978,8 +978,7 @@ class MemversesController < ApplicationController
     else
       render :json => { :finished => true }
     end
-    
-       
+
   end
 
   # ----------------------------------------------------------------------------------------------------------
