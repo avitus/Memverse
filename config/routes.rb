@@ -103,6 +103,7 @@ MemverseApp::Application.routes.draw do
   match '/referralboard'  => 'info#referralboard'
   match '/news'           => 'info#news'
   match '/stt_setia'      => 'info#stt_setia'
+  match '/bible_bee_tool' => 'info#bible_bee_tool'
 
   # Route for users who haven't yet joined a group
   match '/mygroup',                :to => 'groups#show',                     :as => 'mygroup'
