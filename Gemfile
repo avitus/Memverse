@@ -11,6 +11,7 @@ end
 
 group :production do
   gem 'mysql2', '>= 0.3'
+  gem 'sitemap_generator'                                                                      # Sitemap generator
 end
 
 group :assets do
