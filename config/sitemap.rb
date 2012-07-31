@@ -38,9 +38,9 @@ SitemapGenerator::Sitemap.create do
   add '/forums'    # ALV: not sure how to do this using a route helper
 
   # Add blog posts
-  BlogPost.find_each do |blog_post|
-    add blog_post_path(blog_post), :lastmod => blog_post.updated_at
-  end
+  # BlogPost.find_each do |blog_post|
+  #   add blog_posts_path(blog_post), :lastmod => blog_post.updated_at
+  # end
 
 
 end
