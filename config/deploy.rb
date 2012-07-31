@@ -67,6 +67,7 @@ set :default_stage, "production"
 ##  Hooks
 ##############################################################
 before "deploy:assets:precompile", "deploy:symlink_db", "deploy:symlink_bloggity"
+after "deploy", "refresh_sitemaps"
 
 ##############################################################
 ##  Database config and restart
@@ -86,6 +87,11 @@ namespace :deploy do
   task :restart, :roles => :app, :except => { :no_release => true } do
     run "touch #{current_path}/tmp/restart.txt"
   end  
+
+  desc "Generate sitemap"
+  task :refresh_sitemaps do
+    run "cd #{latest_release} && RAILS_ENV=#{rails_env} rake sitemap:refresh"
+  end
  
 end
 
