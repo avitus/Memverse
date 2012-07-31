@@ -4,14 +4,13 @@ HOST_OS = RbConfig::CONFIG['host_os']
 source 'http://rubygems.org'
 
 group :development do 
-  # gem 'query_reviewer', :git => "git://github.com/nesquena/query_reviewer.git"                  # For finding slow queries ... problems with Rails 3.2 (?)
+  # gem 'query_reviewer', :git => "git://github.com/nesquena/query_reviewer.git"                # For finding slow queries ... problems with Rails 3.2 (?)
 	gem "rails-footnotes", ">= 3.7", :group => :development
   gem 'sqlite3'
 end
 
 group :production do
   gem 'mysql2', '>= 0.3'
-  gem 'sitemap_generator'                                                                      # Sitemap generator
 end
 
 group :assets do
@@ -73,6 +72,7 @@ gem 'friendly_id'                                                               
 gem 'foreman'                                                                                   # Helps manage multiple processes when running app in development.
 gem 'supermodel', git: 'git://github.com/KonaTeam/supermodel.git'                               # Uses ActiveModel for in-memory storage with redis
 gem 'best_in_place'                                                                             # In-place editing support
+gem 'sitemap_generator'                                                                         # Sitemap generator
 
 group :console do
   gem 'wirble'
