@@ -27,10 +27,11 @@ SitemapGenerator::Sitemap.create do
 
   # Add all top level paths
   add root_path
-  add demo_path
+  add demo_path, :priority => 0.8, :changefreq => 'monthly'
   add tutorial_path
   add leaderboard_path
   add faq_path
+  add popular_path                                              # popular verses
   add blog_path, :priority => 0.8, :changefreq => 'weekly'
 
   # Add root path for forem
@@ -40,6 +41,6 @@ SitemapGenerator::Sitemap.create do
   BlogPost.find_each do |blog_post|
     add blog_post_path(blog_post), :lastmod => blog_post.updated_at
   end
-  
+
 
 end
