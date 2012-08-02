@@ -1,4 +1,10 @@
 <div class="white-box-with-margins">
+	<% if @checked_user %>
+		<%= link_to("Show verses not checked by User", :controller => 'utils', :action => 'show_verses_to_be_checked', :checked_by_users => false) %> 
+	<% else %>
+		<%= link_to("Show verses checked by User", :controller => 'utils', :action => 'show_verses_to_be_checked', :checked_by_users => true) %>
+	<% end %>
+	
 	<% if !@error_reported.empty? %>
 		<h1>Verses Reported with an Error</h1>
 		<div class="verse-list">
@@ -61,6 +67,10 @@
 		</table>
 	
 	</div>
+<<<<<<< HEAD
+	
+=======
+>>>>>>> 2c13f4b34b675a1089a5c922c6ffb751e590aaee
 </div>
 
 <!-- http://www.appelsiini.net/projects/jeditable -->
