@@ -70,3 +70,6 @@ dump.rdb
 
 # vim artifacts
 **.swp
+
+# Local sitemap files
+/public/sitemap*

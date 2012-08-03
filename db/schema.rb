@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120713194128) do
+ActiveRecord::Schema.define(:version => 20120803040542) do
 
   create_table "american_states", :force => true do |t|
     t.string  "abbrev",      :limit => 20, :default => "", :null => false
@@ -196,14 +196,20 @@ ActiveRecord::Schema.define(:version => 20120713194128) do
     t.string   "name",       :null => false
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.string   "slug"
   end
+
+  add_index "forem_categories", ["slug"], :name => "index_forem_categories_on_slug", :unique => true
 
   create_table "forem_forums", :force => true do |t|
     t.string  "title"
     t.text    "description"
     t.integer "category_id"
     t.integer "views_count", :default => 0
+    t.string  "slug"
   end
+
+  add_index "forem_forums", ["slug"], :name => "index_forem_forums_on_slug", :unique => true
 
   create_table "forem_groups", :force => true do |t|
     t.string "name"
@@ -258,9 +264,11 @@ ActiveRecord::Schema.define(:version => 20120713194128) do
     t.datetime "last_post_at"
     t.string   "state",        :default => "pending_review"
     t.integer  "views_count",  :default => 0
+    t.string   "slug"
   end
 
   add_index "forem_topics", ["forum_id"], :name => "index_forem_topics_on_forum_id"
+  add_index "forem_topics", ["slug"], :name => "index_forem_topics_on_slug", :unique => true
   add_index "forem_topics", ["state"], :name => "index_forem_topics_on_state"
   add_index "forem_topics", ["user_id"], :name => "index_forem_topics_on_user_id"
 
