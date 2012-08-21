@@ -33,6 +33,7 @@ TRANSLATIONS = {
     :LSV   => "Louis Segond 1910",
     :LND   => "La Nuova Diodati",
     :AFR   => "Afrikaans 1983 Translation",
+    :AFR53 => "Afrikaans 1953 Translation",
     :HSV   => "Herziene Statenvertaling",
     :NBV   => "De Nieuwe Bijbelvertaling",
     :TMB   => "Terjemahan Baru",

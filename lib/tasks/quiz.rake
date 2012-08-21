@@ -4,22 +4,46 @@ namespace :quiz do
   # should be called with "bundle exec rake quiz:start RAILS_ENV=production"
     STDOUT.puts "Quiz ID:"
     quiz_id = STDIN.gets.chomp.to_i
-    puts "Starting quiz"
+
+    quiz = Quiz.find(quiz_id)
+    @quiz_master = quiz.user
+
+    ### Setup select_channel method to publish messages via Juggernaut
+    def select_channel(receiver)
+      puts "#{receiver}"
+      return "/live_quiz#{receiver}"
+    end
+
+    ### Open chat 10 minutes before quiz
+    puts "Setting up 'sleep' to open chat 10 minutes before quiz"
+    sleep_time = quiz.start_time - (10 * 60) - Time.now
+    sleep(sleep_time)
+    puts 'Opening chat'
+    channel = "channel2"
+    if $redis.exists("chat-#{channel}")
+      status = $redis.hmget("chat-#{channel}", "status").first
+    end
+
+    unless status && status == "Open"
+      new_status = "Open"
+      $redis.hset("chat-#{channel}", "status", new_status)
+      Juggernaut.publish(select_channel(channel), {:status => new_status})
+    end
+
+    ### Start quiz on time
+    puts "Setting up 'sleep' to start quiz"
+    sleep_time = quiz.start_time - Time.now
+    puts "Will be sleeping for #{sleep_time}"
+    sleep(sleep_time)
+
+    puts "The time has come. Starting quiz."
 
     # Delete participant scores from redis
     participants = $redis.keys("user-*")
     participants.each { |p|    $redis.del(p) }
 
-    quiz = Quiz.find(quiz_id)
-    @quiz_master = quiz.user
-
     # Save status of quiz in redis
     $redis.hset("quiz-#{quiz.id}", "status", "In progress. Wait for question.")
-
-    def select_channel(receiver)
-      puts "#{receiver}"
-      return "/live_quiz#{receiver}"
-    end
 
 	quiz_questions    = quiz.quiz_questions.order("question_no ASC")
 
@@ -54,5 +78,15 @@ namespace :quiz do
     
     # Update quiz status in redis
     $redis.hset("quiz-#{quiz.id}", "status", "Finished")
+
+    ### Close chat 10 minutes after quiz
+    puts "Quiz now over. Sleeping for 10 minutes, then shutting down chat."
+    sleep(10*60)
+
+    new_status = "Closed"
+    $redis.hset("chat-#{channel}", "status", new_status)
+    Juggernaut.publish(select_channel(channel), {:status => new_status})
+
+    puts "Chat closed and rake task finished."
   end
 end

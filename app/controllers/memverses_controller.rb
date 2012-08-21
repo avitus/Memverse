@@ -1226,12 +1226,12 @@ class MemversesController < ApplicationController
   # Score Reference Test
   # ----------------------------------------------------------------------------------------------------------
   def mark_reftest
-    
+
     # Score Questions
-    answer        = params[:answer]
-    errorcode, book, chapter, verse = parse_verse(answer) 
-    
-    question_num  = session[:ref_test_cntr]  
+    answer = params[:answer]
+    errorcode, book, chapter, verse = parse_verse(answer)
+
+    question_num  = session[:ref_test_cntr]
     solution      = session[:ref_soln][question_num] if session[:ref_soln]
     
     # We need to check for alternative solutions to account for identical verses
