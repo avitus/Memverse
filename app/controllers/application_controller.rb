@@ -105,11 +105,11 @@ class ApplicationController < ActionController::Base
   # TODO: Should this be in application_helper.rb ?
   # ----------------------------------------------------------------------------------------------------------   
   def parse_verse(parse_string)
-    
+
     if parse_string
       vsref = parse_string.strip
     end
-    
+
     # Check for correct string formatting
     if valid_ref(vsref)
 
@@ -117,19 +117,19 @@ class ApplicationController < ActionController::Base
 
       # --- Book name should be translated into English after this point ---
       if I18n.locale == :en
-      	book = entered_book_name 
-  	  else 
+      	book = entered_book_name
+  	  else
   	  	book = translate_to_english(entered_book_name)
   	  end
 
       book = "Psalms" if book == "Psalm"
       book = "Song of Songs" if book == "Song Of Songs"
 
-      if !BIBLEBOOKS.include?(full_book_name(book)) # This is not a book of the bible
+      if !BIBLEBOOKS.include?(full_book_name(book)) # This is not a book of the Bible
       	logger.info("*** Could not find book: #{book} when parsing string #{parse_string}")
-        return 2, book # Error code for invalid book of the bible
+        return 2, book # Error code for invalid book of the Bible
       else
-        chapter, verse  = vsref.split(/:|vs/)
+        chapter, verse = vsref.split(/:|;|vs/)
         if chapter and verse
           return false, full_book_name(book), chapter.slice(/[0-9]+/).to_i, verse.slice(/[0-9]+/).to_i
         else
@@ -310,7 +310,7 @@ class ApplicationController < ActionController::Base
   # Returns true (0) if str is a valid bible reference otherwise nil
   # ----------------------------------------------------------------------------------------------------------  
   def valid_ref(str)
-    return str =~ /([0-3]?\s+)?[a-záéíóúüñ]+\s+[0-9]+(:|(\s?vs\s?))[0-9]+/i
+    return str =~ /([0-3]?\s+)?[a-záéíóúüñ]+\s+[0-9]+(:|;|(\s?vs\s?))[0-9]+/i
   end   
 
   private  
