@@ -39,7 +39,8 @@ TRANSLATIONS = {
     :TMB   => "Terjemahan Baru",
     :MBB   => "Magandang Balita Biblia",
     :SPB   => "Svenska Folkbibeln",
-    :ACF   => "Almeida Corrigida e Fiel"
+    :ACF   => "Almeida Corrigida e Fiel",
+    :ARA   => "Almeida Revista e Atualizada"
   }
 
 MAJORS = { 
