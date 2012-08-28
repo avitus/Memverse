@@ -62,4 +62,11 @@ describe Verse do
     end
   end
   
+describe web_check do
+  it "should say the verse of Genesis 1:1 KJV matches on Bible Gateway" do
+    verse = FactoryGirl.create(:verse, :text => "In the beginning, God created the heavens and the earth.")
+    verse.web_check == true
+  end
+end
+  
 end
