@@ -228,7 +228,10 @@ ul.mcq li.incorrect {
 
 .scoreboard-username {
 	float:left;
-	min-width:135px
+	width:125px;
+	overflow:hidden;
+	white-space:nowrap;
+	text-overflow:ellipsis;
 }
 
 .scoreboard-score {
