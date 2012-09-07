@@ -18,12 +18,14 @@ RailsAdmin.config do |config|
   # By default, the authentication will run via warden if available.
   # and will run on the default user scope.
   # If you use devise, this will authenticate the same as authenticate_user!
+ 
   # Example Devise admin
   # RailsAdmin.config do |config|
   #   config.authenticate_with do
   #     authenticate_admin!
   #   end
   # end
+ 
   # Example Custom Warden
   # RailsAdmin.config do |config|
   #   config.authenticate_with do
@@ -39,7 +41,13 @@ RailsAdmin.config do |config|
   # config.authorize_with do
   #   redirect_to root_path unless warden.user.is_admin?
   # end
-  
+ 
+  RailsAdmin.config do |config|
+    config.authorize_with do |controller|
+      redirect_to main_app.root_path unless current_user.try(:admin?)
+    end
+  end
+
   # Use a specific role for ActiveModel's :attr_acessible :attr_protected
   # Default is :default
   # current_user is accessible in the block if you want to make it user specific.

@@ -33,6 +33,9 @@ module NavigationHelpers
     when /my group page/
       '/mygroup'
 
+    when /the admin dashboard/
+      '/admin'
+
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
     #
