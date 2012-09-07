@@ -8,7 +8,8 @@ FactoryGirl.define do
     u.password 'please'
     u.password_confirmation { |u| u.password } 
     # u.association :group, :factory => :group  
-    u.last_activity_date Date.today  
+    u.last_activity_date Date.today 
+    u.admin false 
   end
   
   factory :verse do |v|
