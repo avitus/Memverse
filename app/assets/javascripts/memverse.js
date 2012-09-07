@@ -207,7 +207,7 @@ var totalChecked = 0; // Number of visible checkboxes checked.
 }
 
 mnemonic = function(text) {
-	return text.replace(/([\wáâãàçéêíóôõúüñ])([\wáâãàçéêíóôõúüñ]|[\-'’][\wáâãàçéêíóôõúüñ])*/g,"$1");
+	return text.replace(/([\wáâãàçéêíóôõúüñαβξδεφγηισκλμνοπθρστυϝωχψζ])([\wáâãàçéêíóôõúüñαβξδεφγηισκλμνοπθρστυϝωχψζ]|[\-'’][\wáâãàçéêíóôõúüñαβξδεφγηισκλμνοπθρστυϝωχψζ])*/g,"$1");
 };
 
 // Array Remove - By John Resig (MIT Licensed)
@@ -218,7 +218,7 @@ Array.remove = function(array, from, to) {
 };
 
 scrub_text = function(text) {
-	return text.toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñ]+/g, "");
+	return text.toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñαβξδεφγηισκλμνοπθρστυϝωχψζ]+/g, "");
 }
 
 versefeedback = function(correctvs, verseguess, echo, firstletter) {
