@@ -3,6 +3,7 @@ MemverseApp::Application.routes.draw do
   mount Forem::Engine, :at => "/forums"
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
   mount Ckeditor::Engine   => '/ckeditor'
+  mount Split::Dashboard, :at => 'split'
 
   devise_for :users
   
@@ -104,6 +105,8 @@ MemverseApp::Application.routes.draw do
   match '/news'           => 'info#news'
   match '/stt_setia'      => 'info#stt_setia'
   match '/bible_bee_tool' => 'info#bible_bee_tool'
+
+  match '/signup_button_test_finished' => 'info#signup_button_finished'
 
   # Route for users who haven't yet joined a group
   match '/mygroup',                :to => 'groups#show',                     :as => 'mygroup'
