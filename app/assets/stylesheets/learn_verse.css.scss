@@ -1,8 +1,10 @@
 .verse-selection {
+    float: left;
     width:20%;
     padding: 0 1em 1em 1em;
     min-height: 600px; 
     border-right:1px solid #bfbebe; 
+    clear: both;
 }
 
 .verse-ref-list
@@ -38,4 +40,40 @@ li.gray2
 li.white2
 {
     background:url('hover-white.png') no-repeat left top;
+}
+
+/* Center Panel */
+.verse-learning {
+    float: left;
+    width: 50%;
+    padding: 1em;
+    min-height: 600px;
+    border-right:1px solid #bfbebe;
+}
+
+.assistance {
+    min-height: 130px;
+    background:#ffc;
+    border:1px solid #ccc;
+    padding:1em;
+    color:#666;
+    position:relative;    
+}
+
+.verse-entry {
+    margin: 1em 0;
+}
+
+.verse-practice-box {
+    width: 100%;
+    min-height: 150px;
+    padding: 1em;
+
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
+}
+
+.progression-control {
+
 }

@@ -42,9 +42,33 @@
 
     </div> 
 
+    <!-- Center Panel -->
     <div class="verse-learning">
+        
+
+        <div class="top-heading">
+            <h2><span><%= t('.verse') %>: </span><span class="verse-ref"><%=@mv.verse.ref%></span><span class="verse-tl"> [<%=@mv.verse.translation %>]</span></h2>
+            <div id="toggle-hint" class="toggle-hint"><%= t('.show_verse') %></div>
+        </div>
+
+        <div class="assistance">
+
+            <div id="mtext"><%= @mv.mnemonic_if_req %></div><div id="mclose">x</div>
+
+        </div>
+
+        <div class="verse-entry">
+            <textarea class="verse-practice-box"></textarea>
+        </div>
+
+        <div class="progression-control">
+        </div>
 
     </div>
 
+    <!-- Right Panel -->
+    <div class="option-selection">
+
+    </div>
 
 </div>

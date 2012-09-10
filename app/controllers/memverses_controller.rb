@@ -1364,6 +1364,7 @@ class MemversesController < ApplicationController
     @sub = "learn"
 
     @verses = current_user.memverses.limit(5)
+    @mv = @verses.first
 
   end
 
