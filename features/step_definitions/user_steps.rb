@@ -9,6 +9,14 @@ Given /^I am a user named "([^"]*)" with an email "([^"]*)" and password "([^"]*
                      :password_confirmation => password)
 end
 
+Given /^I am an admin named "([^"]*)" with an email "([^"]*)" and password "([^"]*)"$/ do |name, email, password|
+  FactoryGirl.create(:user, :name => name,
+                     :email => email,
+                     :password => password,
+                     :password_confirmation => password,
+                     :admin => true )
+end
+
 Given /^I am a confirmed user named "([^"]*)" with an email "([^"]*)" and password "([^"]*)"$/ do |name, email, password|
   User.new(:name => name,
             :email => email,
@@ -114,6 +122,13 @@ Given /^I sign in as an advanced user$/ do
   Then %{I should be signed in}
 end
 
+Given /^I sign in as an admin user$/ do
+  Given %{I am an admin named "admin" with an email "admin@test.com" and password "superuser"}
+  And %{the email address "admin@test.com" is confirmed}
+  When %{I sign in as "admin@test.com/superuser"}
+  Then %{I should be signed in}
+end
+
 Given /^the user with the email of "(.*)" has (\d+) verses in his list$/ do |email, n|
   user = User.find_by_email(email)
   n.to_i.times { |i| 
@@ -121,7 +136,6 @@ Given /^the user with the email of "(.*)" has (\d+) verses in his list$/ do |ema
     FactoryGirl.create(:memverse, :user_id => user.id, :verse_id => vs.id) 
   }
 end
-
 
 Then /^the tag "(.*)" should exist for memverse #([0-9]+)$/ do |tagname, id|
   mv = Memverse.find(id)

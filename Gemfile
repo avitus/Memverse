@@ -73,6 +73,7 @@ gem 'foreman'                                                                   
 gem 'supermodel', git: 'git://github.com/KonaTeam/supermodel.git'                               # Uses ActiveModel for in-memory storage with redis
 gem 'best_in_place'                                                                             # In-place editing support
 gem 'sitemap_generator'                                                                         # Sitemap generator
+gem 'split', :require => 'split/dashboard'                                                      # AB testing framework
 
 group :console do
   gem 'wirble'

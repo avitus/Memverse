@@ -1,8 +1,14 @@
 MemverseApp::Application.routes.draw do
   
-  mount Forem::Engine, :at => "/forums"
+  mount Forem::Engine, :at => '/forums'
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
   mount Ckeditor::Engine   => '/ckeditor'
+  match '/split' => Split::Dashboard, :anchor => false, :constraints => lambda { |request|
+    request.env['warden'].authenticated?    # are we authenticated?
+    request.env['warden'].authenticate!     # authenticate if not already
+    request.env['warden'].user.try(:admin?) # check if admin
+  }
+
 
   devise_for :users
   
@@ -105,6 +111,8 @@ MemverseApp::Application.routes.draw do
   match '/news'           => 'info#news'
   match '/stt_setia'      => 'info#stt_setia'
   match '/bible_bee_tool' => 'info#bible_bee_tool'
+
+  match '/signup_button_test_finished' => 'info#signup_button_finished'
 
   # Route for users who haven't yet joined a group
   match '/mygroup',                :to => 'groups#show',                     :as => 'mygroup'
