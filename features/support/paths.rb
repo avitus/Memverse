@@ -36,6 +36,9 @@ module NavigationHelpers
     when /the admin dashboard/
       '/admin'
 
+    when /the utils dashboard/
+      '/utils/dashboard'
+
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
     #
