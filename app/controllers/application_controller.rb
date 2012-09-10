@@ -20,7 +20,8 @@ class ApplicationController < ActionController::Base
   helper_method :admin?    
   protected  
   def admin?  
-    current_user && current_user.has_role?('admin')  
+    # current_user && current_user.has_role?('admin')  # ALV - use this method when CanCan properly implemented
+    current_user && current_user.admin?
   end    
    
   def authorize  
@@ -30,7 +31,6 @@ class ApplicationController < ActionController::Base
       false  
     end  
   end    
-   
    
   # ----------------------------------------------------------------------------------------------------------
   # Localization
