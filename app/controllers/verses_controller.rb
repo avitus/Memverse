@@ -217,9 +217,11 @@ class VersesController < ApplicationController
   # Verse Search Query page
   # ---------------------------------------------------------------------------------------------------------- 	
   def verse_search
-  	@tab = "home"
+  	
+    @tab = "home"
   	@sub = "searchvs"
     add_breadcrumb I18n.t('home_menu.Search Bible'), :search_verse_path
+
 		@verses = Array.new
 		@verses = Verse.search( params[:searchParams] ) if params[:searchParams]
 		

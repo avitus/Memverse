@@ -64,6 +64,7 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :quests
   has_and_belongs_to_many :badges
   has_many                :memverses,         :dependent => :destroy 
+  has_many                :verses,            :through   => :memverses
   has_many                :progress_reports,  :dependent => :destroy
   has_many                :tweets
   has_many                :sermons

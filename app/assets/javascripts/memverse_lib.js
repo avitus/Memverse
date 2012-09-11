@@ -28,6 +28,42 @@ SPANISHABBREV = [ 'Gén', 'Éxod', 'Lev', 'Núm', 'Deut', 'Jos', 'Jue', 'Rut', '
                   'Heb', 'Sant', '1 Pe', '2 Pe', '1 Jn', '2 Jn', '3 Jn', 'Jds', 'Apoc']  
 
 /******************************************************************************
+ * Verse Search
+ *
+ * Note: use this function in preference to 'flexversesearch' as this function
+ *       does not co-mingle the displaying of the results. In retrospect there
+ *       should be chainable functions so that we can do something like:
+ *           .mv_search().display_verses()
+ ******************************************************************************/
+function mv_search(text) {
+
+    // User is looking for a single verse                       
+    if (ref = parseVerseRef($.trim(text))) {
+        $.get("/lookup_user_verse.json", { bk: ref.bk, ch: ref.ch, vs: ref.vs },
+            function(verse) {   
+
+
+        }, "json" );
+                
+    // User is searching for a passage
+    } else if (ref = parsePassageRef($.trim(text))) {
+        $.get("/lookup_user_passage.json", { bk: ref.bk, ch: ref.ch, vs_start: ref.vs_start, vs_end: ref.vs_end },
+            function(verses) {
+
+
+        }, "json" );
+    
+    // User didn't enter a verse reference ... do a tag search
+    } else {
+        $.get("/mv_search.json", { searchParams: $.trim(text)  },
+            function(verses) {
+
+                 
+        }, "json" );
+    }
+}
+
+/******************************************************************************
  * Capitalize strings: romans -> Romans
  ******************************************************************************/
 String.prototype.capitalize = function() {
