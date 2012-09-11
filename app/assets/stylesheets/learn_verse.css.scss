@@ -75,5 +75,16 @@ li.white2
 }
 
 .progression-control {
+    .cur-level {
+        float: left;
+        width: 80%;
+        margin: auto;
+        text-align: center;
+        font-size: 32px;
+    }
+    .inc-level, .dec-level {
+        float: left;
+    }
+
 
 }

@@ -44,8 +44,11 @@ class Memverse < ActiveRecord::Base
 
   # ----------------------------------------------------------------------------------------------------------
   # Convert to JSON format (for AJAX goodness on main memorization page)
+  #
+  # TODO: Find a way to exclude :skippable when not needed ... too slow otherwise
   # ---------------------------------------------------------------------------------------------------------- 
   def as_json(options={})
+    
     { 
       :id         => self.id, 
       :ref        => self.verse.ref,
