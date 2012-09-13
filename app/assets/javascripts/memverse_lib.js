@@ -34,33 +34,33 @@ SPANISHABBREV = [ 'Gén', 'Éxod', 'Lev', 'Núm', 'Deut', 'Jos', 'Jue', 'Rut', '
  *       does not co-mingle the displaying of the results. In retrospect there
  *       should be chainable functions so that we can do something like:
  *           .mv_search().display_verses()
+ *       but the callback will suffice for now.
  ******************************************************************************/
-function mv_search(text) {
+function mv_search(text, displayResultsFn) {
+
+    // This function definition is necessary to avoid repetition in the different types of
+    // search queries. It handles the custom callback function for mv_search
+    function searchResultsCallback( verses ) {
+        if( $.isFunction(displayResultsFn) ) {
+          displayResultsFn.call(this, verses);
+        }  
+    };
 
     // User is looking for a single verse                       
     if (ref = parseVerseRef($.trim(text))) {
-        $.get("/lookup_user_verse.json", { bk: ref.bk, ch: ref.ch, vs: ref.vs },
-            function(verse) {   
-
-
-        }, "json" );
+        $.get("/lookup_user_verse.json", { bk: ref.bk, ch: ref.ch, vs: ref.vs }, 
+            searchResultsCallback, "json" );
                 
     // User is searching for a passage
     } else if (ref = parsePassageRef($.trim(text))) {
-        $.get("/lookup_user_passage.json", { bk: ref.bk, ch: ref.ch, vs_start: ref.vs_start, vs_end: ref.vs_end },
-            function(verses) {
-
-
-        }, "json" );
+        $.get("/lookup_user_passage.json", { bk: ref.bk, ch: ref.ch, vs_start: ref.vs_start, vs_end: ref.vs_end }, 
+            searchResultsCallback, "json" );
     
     // User didn't enter a verse reference ... do a tag search
     } else {
-        $.get("/mv_search.json", { searchParams: $.trim(text)  },
-            function(verses) {
-
-                 
-        }, "json" );
-    }
+        $.get("/mv_search.json", { searchParams: $.trim(text)  }, 
+            searchResultsCallback, "json" );
+    }  
 }
 
 /******************************************************************************

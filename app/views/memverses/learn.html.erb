@@ -8,7 +8,7 @@
         <div class="verse-field ui-widget">
             <label class="tag">Enter a reference or tag</label>
             <img class="spinner spinner-add-verse" id="ajax_spinner" src="/assets/indicator2.gif" alt="Searching ..." style="display: none" />
-            <%= text_field_tag(:verse, params[:verse], :class => "flex-verse-search", :id => "js_flex-verse-search" )%> 
+            <%= text_field_tag(:verse, params[:verse], :class => "flex-verse-search", :id => "js_flex-verse-search", :placeholder => "e.g. Romans 3:2-5 or 'creation'" )%> 
         </div>        
 
         <!-- List of verses-->
@@ -85,7 +85,7 @@
 
         //------- Searching for a verse----------------
         $("#js_flex-verse-search").observe_field(0.2, function( ) { 
-            mv_search(this.value);
+            mv_search(this.value, displayMvSearchResultsFn );
         });
 
         //------- Selecting a verse -------------------
