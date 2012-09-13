@@ -11,29 +11,11 @@
             <%= text_field_tag(:verse, params[:verse], :class => "flex-verse-search", :id => "js_flex-verse-search", :placeholder => "e.g. Romans 3:2-5 or 'creation'" )%> 
         </div>        
 
-        <!-- List of verses-->
-        <div class="verse-ref-list">
-            <ul id="upcoming-verses">
-                <% if @verses.empty? %>
-
-                    <li>(None)</li>                     
-
-                <% else %>
-                    
-                    <% for mv in @verses[0...14] %>
-                        <li class="upcoming-verse-ref <%= cycle("gray2", "white2") %>">
-                            <%= mv.verse.ref %>         
-                        </li>
-                    <% end %>
-                    
-                    <% if @verses.length >= 15 %>
-                        <li></li>
-                        <li>( ... <%= @verses.length-14 %> more )</li>
-                    <% end %>
-                    
-                <% end %>
-            </ul>   
+        <!-- Search Results -->
+        <div class="mv-search-results-compact">
+            <%= render "verses/scroll" %>
         </div>
+
 
         <!-- Action buttons -->
         <div class="verse-list-actions">
@@ -70,8 +52,29 @@
     </div>
 
     <!-- Right Panel -->
-    <div class="option-selection">
+    <div class="right-panel">
+        <div class="verse-ref-list">
+            <ul id="upcoming-verses">
+                <% if @verses.empty? %>
 
+                    <li>(None)</li>                     
+
+                <% else %>
+                    
+                    <% for mv in @verses[0...14] %>
+                        <li class="upcoming-verse-ref <%= cycle("gray2", "white2") %>">
+                            <%= mv.verse.ref %>         
+                        </li>
+                    <% end %>
+                    
+                    <% if @verses.length >= 15 %>
+                        <li></li>
+                        <li>( ... <%= @verses.length-14 %> more )</li>
+                    <% end %>
+                    
+                <% end %>
+            </ul>   
+        </div>  
     </div>
 
 </div>
@@ -81,10 +84,14 @@
     $(document).ready(function() {
 
         //------- Initial setup -----------------------
-
+        // initialize scrollable module
+        $(".scrollable").scrollable({ vertical: true, mousewheel: true });
 
         //------- Searching for a verse----------------
         $("#js_flex-verse-search").observe_field(0.2, function( ) { 
+            // clear prior search results
+            clearSearchResults();
+            // search and display results with callback function
             mv_search(this.value, displayMvSearchResultsFn );
         });
 
