@@ -572,11 +572,13 @@ class User < ActiveRecord::Base
 
       if (i % load_target == 0) # if divisible by load_target
         Memverse.where("id in (?)", load_for_today[(offset * load_target)..(i-1)]).update_all(:next_test => Date.today + offset)
+        offset = offset + 1
       elsif ((i-1) % load_target == 0) && ((i-1) + load_target > load_for_today.length) # if just passed last i divisible by load_target
         Memverse.where("id in (?)", load_for_today[(offset * load_target)..(load_for_today.length-1)]).update_all(:next_test => Date.today + offset)
+        offset = offset + 1
+      else
+        # do nothing
       end
-
-      offset = offset + 1
 
     end
 
