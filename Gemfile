@@ -24,12 +24,12 @@ if HOST_OS =~ /linux/i
   gem 'therubyracer', '>= 0.8.2'
 end
 
-gem 'rails', '3.2.6'
-gem 'jquery-rails', '=1.0.18'
+gem 'rails', '3.2.8'
+gem 'jquery-rails', '>= 2.0.0'
 
 gem "rspec-rails", ">= 2.6.1", :group => [:development, :test]
 gem "factory_girl_rails", ">= 1.2.0", :group => :test
-gem "cucumber-rails", ">= 1.0.2", :group => :test
+gem "cucumber-rails", ">= 1.1.1", :group => :test
 gem "capybara", ">= 1.1.2", :group => :test
 gem "database_cleaner", ">= 0.6.7", :group => :test
 gem "launchy", ">= 2.0.5", :group => :test
@@ -53,7 +53,7 @@ gem 'airbrake'                                                                  
 gem 'ckeditor'                                                                                  # WYSIWYG editing
 gem 'paperclip'                                                                                 # Attachment handling 
 gem 'capistrano', '>=2.9.0'                                                                     # Deploy with Capistrano
-gem 'nokogiri', '1.4.6'                                                                         # HTML/XML parsing
+gem 'nokogiri', '>=1.5.0'                                                                       # HTML/XML parsing
 gem 'test-unit', '=1.2.3'                                                                       # Required for restful_authentication (?)
 gem 'json'                                                                                      # Javascript Object Notation support
 gem 'mail', '>= 2.2.15'                                                                         # Emails
