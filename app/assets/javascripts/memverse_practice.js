@@ -8,19 +8,29 @@ function displayMvSearchResultsFn( verses ) {
     /*-- $("#verse-search-single-result").hide(); --*/
     
     $.each (verses, function(i, pv) {
-        // We need to group popular verses      
+        
+        // We need to group search results to enable scroll      
         if (i % 10 == 0) {
             // Start new group
-            var $new_vs_group = $('<div/>').addClass('pop-verse-group');
+            var $new_vs_group = $('<div/>').addClass('search-result-group');
             $('.items').append($new_vs_group);
-        } 
-        var $new_pv = $('<div/>').addClass('item quick-start-show-verse')
-            .append($('<div class="verse-and-ref" />')
-                .append($('<h4/>').text(pv.ref))
-                .append($('<p/>').text(pv.text)) )
-            .append('<div class="add-verse-button"><a data-remote="true" href="/add/' + pv.id + '" class="quick-start-add-button" id="quick-start-add"></a></div>');
-        $('.pop-verse-group').filter(':last').append($new_pv);                                                              
+        }
+
+        // Build HTML for each verse
+        var $new_pv = $('<div/>').addClass('item')
+            
+            // verse reference
+            .append( $('<div class="ref-and-first-words" />')
+                .append($('<h4/>').text(pv.ref)) 
+            )
+            
+            // add button
+            .append('<div class="select-verse-button"><a data-remote="true" href="/add/' + pv.id + '" class="compact-add-button" id="quick-start-add"></a></div>');
+
+        $('.search-result-group').filter(':last').append($new_pv);                                                              
     }); 
+
+
     // if we have a single verse
     
 }
