@@ -8,7 +8,31 @@
 }
 
 
-/* Scroll section for add_verse search results */
+/* Single element for verses in search result ... */
+div.ref-and-first-words {
+  float:left;
+  width:75%;
+  padding-right:4%;
+}
+
+/* ... and associated button */
+.select-verse-button {
+  text-align:right;
+  padding-top:10px;
+  float: right;
+  width: 20%;
+}
+
+.compact-add-button {
+  background:url('plus.png') no-repeat left top; /* Image size is 15x16 px */
+  width: 50px;
+  height:20px;
+  padding: 2px;
+  border:0;
+  cursor:pointer;
+}
+
+/* Scroll section for search results */
 .mv-search-results-compact {
   width:100%;
   min-height:500px;
@@ -63,18 +87,19 @@
   .item {
     border-bottom:1px solid #ddd;
     padding:10px 0 0 0;
-    height:133px;
+    height: 3em;
+    width: 100%;
   }
   
   /* elements inside single item */
-  .item img {
+  .item img { /*-- NOT NEEDED -- */
     float:left;
     margin-right:20px;
     height:180px;
     width:240px;
   }
   
-  .item h3 {
+  .item h3 { /*-- NOT NEEDED -- */
     margin:0 0 5px 0;
     font-size:16px;
     /* color:#456; */
