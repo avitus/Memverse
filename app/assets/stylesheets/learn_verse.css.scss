@@ -18,7 +18,7 @@ div.ref-and-first-words {
 /* ... and associated button */
 .select-verse-button {
   text-align:right;
-  padding-top:10px;
+  padding: 1em ;
   float: right;
   width: 20%;
 }
@@ -34,7 +34,7 @@ div.ref-and-first-words {
 
 /* Scroll section for search results */
 .mv-search-results-compact {
-  width:100%;
+  width:15em;
   min-height:500px;
   display: none;
   float:left;
@@ -88,7 +88,7 @@ div.ref-and-first-words {
     border-bottom:1px solid #ddd;
     padding:10px 0 0 0;
     height: 3em;
-    width: 100%;
+    width: 15em;
   }
   
   /* elements inside single item */
