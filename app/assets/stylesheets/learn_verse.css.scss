@@ -11,25 +11,27 @@
 /* Single element for verses in search result ... */
 div.ref-and-first-words {
   float:left;
-  width:75%;
   padding-right:4%;
+  /* Extraction of first few words of verse */
+  p {
+    color: #999999;
+    font-size: smaller;
+  }
 }
 
 /* ... and associated button */
 .select-verse-button {
   text-align:right;
-  padding: 1em ;
   float: right;
-  width: 20%;
 }
 
 .compact-add-button {
-  background:url('plus.png') no-repeat left top; /* Image size is 15x16 px */
-  width: 50px;
-  height:20px;
-  padding: 2px;
-  border:0;
-  cursor:pointer;
+  background: url("plus.png") no-repeat scroll center center transparent;
+  border: 0 none;
+  cursor: pointer;
+  height: 20px;
+  padding: 0 10px;
+  width: 70px;
 }
 
 /* Scroll section for search results */
@@ -87,7 +89,7 @@ div.ref-and-first-words {
   .item {
     border-bottom:1px solid #ddd;
     padding:10px 0 0 0;
-    height: 3em;
+    height: 4em;
     width: 15em;
   }
   
