@@ -28,11 +28,11 @@ function displayMvSearchResultsFn( verses ) {
             
             // verse reference
             .append( $('<div class="ref-and-first-words" />')
-                .append($('<h4/>').text(vs.ref))
-                .append($('<p class="first-words" />').text( shortText   )) 
-                .append($('<p class="full-text"   />').text( vs.text     )) 
-                .append($('<p class="mnemonic"    />').text( vs.mnemonic )) 
-                .append($('<p class="mv-id"       />').text( vs.id       )) 
+                .append($('<h4 class="ref"         />').text( vs.ref      ))
+                .append($('<p  class="first-words" />').text( shortText   )) 
+                .append($('<p  class="full-text"   />').text( vs.text     )) 
+                .append($('<p  class="mnemonic"    />').text( vs.mnemonic )) 
+                .append($('<p  class="mv-id"       />').text( vs.id       )) 
             )
             
             // add button
