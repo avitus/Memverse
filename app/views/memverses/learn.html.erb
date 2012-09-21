@@ -95,7 +95,11 @@
             mv_search(this.value, displayMvSearchResultsFn );
         });
 
-        //------- Selecting a verse -------------------
+        //------- Selecting a verse to practice -------
+        $( ".mv-search-results-compact" ).on( "click", ".select-verse-button", function( e ) {
+            // Move verse from search results to verse queue
+            $("#upcoming-verses").append( $(this).siblings(".ref-and-first-words") );
+        }); 
 
         //------- Typing a verse ----------------------
 

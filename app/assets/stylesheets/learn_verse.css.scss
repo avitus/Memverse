@@ -13,9 +13,12 @@ div.ref-and-first-words {
   float:left;
   padding-right:4%;
   /* Extraction of first few words of verse */
-  p {
+  p.first-words {
     color: #999999;
     font-size: smaller;
+  }
+  p.full-text, p.mnemonic, p.mv-id {
+    display: none;
   }
 }
 
