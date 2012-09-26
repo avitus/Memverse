@@ -2,6 +2,7 @@
 require 'open-uri'
 require 'nokogiri'
 
+
 class BibleGatewayError < StandardError; end
   
 class BibleGateway
@@ -70,8 +71,13 @@ class BibleGateway
     # segment = doc.at('font.woj') -- only works for words of Jesus
     # segment = doc.at('div.result-text-style-normal') -- old Biblegateway layout
     # Need to look for text immediately after superscript
-    verse_number = doc.at('sup.versenum')
     
+      if !(doc.at('sup.versenum'))
+        verse_number = doc.at('span.chapternum')
+      else
+        verse_number = doc.at('sup.versenum')
+      end
+  
  		segment = verse_number.parent unless !verse_number
           
     if segment
@@ -81,9 +87,17 @@ class BibleGateway
 	    segment.search("h5").remove                  # remove headings
 	    segment.search("div.footnotes").remove       # remove footnotes
 	    segment.search("div.crossrefs").remove       # remove cross references
+	    if !(doc.at('sup.versenum'))
+	      #segment to_s
+	      sentance = segment.text.gsub(/<span class='chapternum'>\d/," ")
+	      # remove html tags, comments, non-breaking space, double spaces, and trailing or leading whitespace
+      content = sentance.gsub(/<b.+?<\/b>/," ").gsub(/<\/?[^>]*>/, " ").gsub(/<!--.*?-->/, " ").gsub("\u00A0", " ").gsub(/\s{2,}/, " ").strip
+	    else
+	      # remove html tags, comments, non-breaking space, double spaces, and trailing or leading whitespace
+      content = segment.text.gsub(/<b.+?<\/b>/," ").gsub(/<\/?[^>]*>/, " ").gsub(/<!--.*?-->/, " ").gsub("\u00A0", " ").gsub(/\s{2,}/, " ").strip
+	    end
+	    #<span class='chapternum'>/[0-9]/ <//span>
 	    
-	    # remove html tags, comments, non-breaking space, double spaces, and trailing or leading whitespace
-	    content = segment.text.gsub(/<b.+?<\/b>/," ").gsub(/<\/?[^>]*>/, " ").gsub(/<!--.*?-->/, " ").gsub("\u00A0", " ").gsub(/\s{2,}/, " ").strip
     else
     	{:title => "--", :content => "--" }
     end
