@@ -37,6 +37,22 @@
   margin-top: 0.7em;
 }
 
+#sign-up-button-b {
+	width:315px;
+	padding:10px;
+	background:#6B9620;
+	border-color:#999;
+	@include border-radius(5px, 5px);
+	@include background(linear-gradient(#f2f1f1, #bfbebe));
+	font-size:12px;
+	font-weight:bold;
+}
+
+#sign-up-button-b:hover {
+	border-color:#577a1a;
+	@include background(linear-gradient(#9c3, #5E7D25));
+}
+
 .sign-up-links {
   font-size: 65%;
   float: left;
@@ -65,15 +81,15 @@
 
 
 /* === Registration Page Styling === */
-div.signupform{                 /* TODO: is this used? */
+div.signupform {
   margin:auto 0;
 }
 
-div.signup {                    /* TODO: is this used? */
+div.signup {
   position:relative;
   height:50px;
 }
-div.signup input {              /* TODO: is this used? */
+div.signup input {
   height:25px;
   width:300px;
   padding:5px;
