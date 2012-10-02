@@ -47,7 +47,13 @@ function mv_search(userText, displayResultsFn) {
     };
 
     // Truncate queries of excessive length
-    var text = jQuery.trim(userText).substring(0, 100).split(" ").slice(0, -1).join(" ");
+    if (userText.length > 100) {
+    	var text = jQuery.trim(userText).substring(0, 100).split(" ").slice(0, -1).join(" ");    	
+    }
+    else {
+    	var text = userText;
+    }
+
 
     // User is looking for a single verse                       
     if (ref = parseVerseRef( text )) {

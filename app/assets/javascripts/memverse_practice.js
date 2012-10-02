@@ -27,7 +27,7 @@ function displayMvSearchResultsFn( verses ) {
         var $new_vs = $('<div/>').addClass('item')
             
             // verse reference
-            .append( $('<div class="ref-and-first-words" />')
+            .append( $('<div class="ref-and-details" />')
                 .append($('<h4 class="ref"         />').text( vs.ref      ))
                 .append($('<p  class="first-words" />').text( shortText   )) 
                 .append($('<p  class="full-text"   />').text( vs.text     )) 
