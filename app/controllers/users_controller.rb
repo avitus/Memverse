@@ -45,7 +45,7 @@ class UsersController < ApplicationController
   # Reset memorization schedule
   # ----------------------------------------------------------------------------------------------------------   
   def reset_schedule
-  	due_today = current_user.reset_memorization_schedule
+  	due_today = current_user ? current_user.reset_memorization_schedule : 0
   	render :json => {:due_verses => due_today }
   end
   
