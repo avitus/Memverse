@@ -55,24 +55,7 @@
     <div class="right-panel">
         <div class="verse-ref-list">
             <ul id="upcoming-verses">
-                <% if @verses.empty? %>
 
-                    <li>(None)</li>                     
-
-                <% else %>
-                    
-                    <% for mv in @verses[0...14] %>
-                        <li class="upcoming-verse-ref <%= cycle("gray2", "white2") %>">
-                            <%= mv.verse.ref %>         
-                        </li>
-                    <% end %>
-                    
-                    <% if @verses.length >= 15 %>
-                        <li></li>
-                        <li>( ... <%= @verses.length-14 %> more )</li>
-                    <% end %>
-                    
-                <% end %>
             </ul>   
         </div>  
     </div>
@@ -98,8 +81,11 @@
         //------- Selecting a verse to practice -------
         $( ".mv-search-results-compact" ).on( "click", ".select-verse-button", function( e ) {
 
-            var $verseToAdd    = $(this).siblings(".ref-and-first-words");
+            var $verseToAdd    = $(this).siblings(".ref-and-details");
             var $verseForQueue = $verseToAdd.clone()
+
+            // Hide first words
+            $verseForQueue.find(".first-words").hide();
 
             // Build HTML for each verse
             var $queued_vs = $('<li/>').addClass('upcoming-verse-ref')
@@ -110,6 +96,8 @@
 
             // Move verse from search results to verse queue
             $("#upcoming-verses").append( $queued_vs );
+
+            $verseToAdd.parent().fadeOut();
         }); 
 
         //------- Typing a verse ----------------------
