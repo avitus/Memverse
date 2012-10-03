@@ -54,8 +54,8 @@
     <!-- Right Panel -->
     <div class="right-panel">
         <div class="verse-ref-list">
+            <h3>Practice List</h3>
             <ul id="upcoming-verses">
-
             </ul>   
         </div>  
     </div>
@@ -65,6 +65,31 @@
 <script language="JavaScript" type="text/javascript"><!--
     
     $(document).ready(function() {
+
+        //------- State variables ---------------------
+        var practiceState = {
+            // verse being learned
+            ref: null,
+            // current level
+            level: 1,
+            // update status of current verse
+            startReview: function () {
+
+            },
+            nextVerse: function () {
+
+            },
+            levelUp: function () {
+                this.level = this.level + 1;
+                return this.level;
+            },
+            levelDown: function () {
+                this.level = this.level - 1;
+                return this.level;
+            }
+
+        };
+
 
         //------- Initial setup -----------------------
         // initialize scrollable module
@@ -78,7 +103,7 @@
             mv_search(this.value, displayMvSearchResultsFn );
         });
 
-        //------- Selecting a verse to practice -------
+        //------- Selecting verses to practice -------
         $( ".mv-search-results-compact" ).on( "click", ".select-verse-button", function( e ) {
 
             var $verseToAdd    = $(this).siblings(".ref-and-details");
@@ -97,7 +122,7 @@
             // Move verse from search results to verse queue
             $("#upcoming-verses").append( $queued_vs );
 
-            $verseToAdd.parent().fadeOut();
+            $verseToAdd.parent().fadeOut("fast");
         }); 
 
         //------- Typing a verse ----------------------
