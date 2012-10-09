@@ -161,29 +161,37 @@ function cleanseVerseText( versetext ) {
 function blankifyVerse(versetext, reduction_percentage) {
 
     var split_text, sort_by_length, text_with_blanks;
-    var num_words_to_remove;    
     
-    split_text     = versetext.trim().split(/\s/);
-    sort_by_length = split_text.slice(0);  // make a copy of the original array       
-    
-    sort_by_length.sort(function(a, b) {
-        return (a.length < b.length) ? 1 : 0;
-    });
-    
-    // select the longest words to remove
-    sort_by_length.length = Math.round(split_text.length * reduction_percentage / 100); 
-    
-    text_with_blanks = split_text.map( function(x) {
-        if ( sort_by_length.indexOf(x) < 0 ) {
-            return x;
-        }
-        else {
-            return "<span class='blank-word'>_____</span>";
-        };
-    });
-          
-    return text_with_blanks.join(" ");
-    
+    if  ( reduction_percentage == 0 ) {
+
+    	return versetext;
+    	
+    }
+
+    else {
+
+	    split_text     = versetext.trim().split(/\s/);
+	    sort_by_length = split_text.slice(0);  // make a copy of the original array       
+	    
+	    sort_by_length.sort(function(a, b) {
+	        return (a.length < b.length) ? 1 : 0;
+	    });
+	    
+	    // select the longest words to remove
+	    sort_by_length.length = Math.round(split_text.length * reduction_percentage / 100); 
+	    
+	    text_with_blanks = split_text.map( function(x) {
+	        if ( sort_by_length.indexOf(x) < 0 ) {
+	            return x;
+	        }
+	        else {
+	            return "<span class='blank-word'>_____</span>";
+	        };
+	    });
+	          
+	    return text_with_blanks.join(" ");
+    }
+        
 };
 
 /******************************************************************************

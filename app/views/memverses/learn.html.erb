@@ -46,7 +46,7 @@
 
         <div class="progression-control">
             <div class="dec-level"><%= image_tag( "left_arrow.png",  :width => 48, :height => 48 ) %></div>
-            <div class="cur-level">Level <span class="level-num">4</span></div>        
+            <div class="cur-level">Level <span class="level-num">1</span></div>        
             <div class="inc-level"><%= image_tag( "right_arrow.png", :width => 48, :height => 48 ) %></div>
         </div>
 
@@ -134,7 +134,7 @@
                 $(".verse-ref ").html( replacementVerse.ref );
                 $(".level-num ").html( "1" );
                 $(".mtext     ").html( replacementVerse.mnemonic );
-                $(".blankified").html( blankifyVerse( replacementVerse.fullText, this.level * 10 ) );
+                $(".blankified").html( blankifyVerse( replacementVerse.fullText, (this.level-1) * 10 ) );
 
             },
 
@@ -142,9 +142,11 @@
             levelUp: function () {
                 
                 this.level += 1;
+                this.updateControls();
 
                 $(".level-num ").html( this.level );
-                $(".blankified").html( blankifyVerse( this.fullText, this.level * 10 ) );
+                $(".blankified").html( blankifyVerse( this.fullText, (this.level-1) * 10 ) );
+
 
             },
 
@@ -152,9 +154,27 @@
             levelDown: function () {
 
                 this.level -= 1;
+                this.updateControls();
 
                 $(".level-num ").html( this.level );
-                $(".blankified").html( blankifyVerse( this.fullText, this.level * 10 ) );
+                $(".blankified").html( blankifyVerse( this.fullText, (this.level-1) * 10 ) );
+                
+            },
+
+            updateControls: function () {
+                
+                if ( this.level >= 10) {
+                    $(".inc-level").css('visibility', 'hidden');
+                } 
+
+                else if ( this.level <= 1 ) {
+                    $(".dec-level").css('visibility', 'hidden');
+                }
+
+                else {
+                    $(".inc-level").css('visibility', 'visible');
+                    $(".dec-level").css('visibility', 'visible');                    
+                }
                 
             }
 
