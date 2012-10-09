@@ -35,7 +35,8 @@
 
         <div class="assistance">
 
-            <div id="mtext"><%= @mv.mnemonic_if_req %></div><div id="mclose">x</div>
+            <div class="mtext     "><%= @mv.mnemonic_if_req %></div><div class="mclose">x</div>
+            <div class="blankified"></div>
 
         </div>
 
@@ -45,7 +46,7 @@
 
         <div class="progression-control">
             <div class="dec-level"><%= image_tag( "left_arrow.png",  :width => 48, :height => 48 ) %></div>
-            <div class="cur-level">Level 4</div>        
+            <div class="cur-level">Level <span class="level-num">4</span></div>        
             <div class="inc-level"><%= image_tag( "right_arrow.png", :width => 48, :height => 48 ) %></div>
         </div>
 
@@ -70,8 +71,10 @@
         var practiceState = {
             
             // verse being learned
-            ref: null,
-            text: null,
+            ref:      null,
+            fullText: null,
+            mnemonic: null,
+            mvId:     null,
 
             // verses in practice queue
             queued_verses: 0,
@@ -91,11 +94,18 @@
                     fullText    : $Verse.find(".full-text").html(),
                     mnemonic    : $Verse.find(".mnemonic").html()
                 }
-
+                
                 this.queue.push( queueVerse );
-                this.queued_verses += 1;
+
                 console.log( "Verses in queue: " + this.queued_verses )
                 console.log( this.queue );
+
+                if (this.queued_verses == 0) {
+                    this.nextVerse( )
+                }
+
+                this.queued_verses += 1;
+
             },
 
             // remove verse from the in-memory queue
@@ -112,18 +122,40 @@
             // get next verse
             nextVerse: function () {
 
+                var replacementVerse = this.queue.shift();    // remove first verse from queue
+                this.queued_verses -= 1;                      // update queue count
+
+                this.level    = 1;      
+                this.fullText = replacementVerse.fullText;
+                this.ref      = replacementVerse.ref;
+                this.mnemonic = replacementVerse.mnemonic;
+                this.mvId     = replacementVerse.mvId;
+
+                $(".verse-ref ").html( replacementVerse.ref );
+                $(".level-num ").html( "1" );
+                $(".mtext     ").html( replacementVerse.mnemonic );
+                $(".blankified").html( blankifyVerse( replacementVerse.fullText, this.level * 10 ) );
+
             },
 
             // move verse to next level of difficulty
             levelUp: function () {
-                this.level = this.level + 1;
-                return this.level;
+                
+                this.level += 1;
+
+                $(".level-num ").html( this.level );
+                $(".blankified").html( blankifyVerse( this.fullText, this.level * 10 ) );
+
             },
 
             // move verse to previous level of difficulty
             levelDown: function () {
-                this.level = this.level - 1;
-                return this.level;
+
+                this.level -= 1;
+
+                $(".level-num ").html( this.level );
+                $(".blankified").html( blankifyVerse( this.fullText, this.level * 10 ) );
+                
             }
 
         };
@@ -169,8 +201,13 @@
         //------- Typing a verse ----------------------
 
         //------- Changing a level --------------------
+        $( ".progression-control" ).on( "click", ".inc-level", function( e ) {
+            practiceState.levelUp();
+        });
 
-
+        $( ".progression-control" ).on( "click", ".dec-level", function( e ) {
+            practiceState.levelDown();
+        });
 
     }); // End of jQuery document ready
 
