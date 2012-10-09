@@ -68,21 +68,59 @@
 
         //------- State variables ---------------------
         var practiceState = {
+            
             // verse being learned
             ref: null,
+            text: null,
+
+            // verses in practice queue
+            queued_verses: 0,
+
+            // in memory queue
+            queue: [],
+
             // current level
             level: 1,
+
+            // add verse to the in-memory queue
+            addToQueue: function ( $Verse ) {
+                
+                var queueVerse = {
+                    mvId        : $Verse.find(".mv-id").html(),
+                    ref         : $Verse.find(".ref").html(),
+                    fullText    : $Verse.find(".full-text").html(),
+                    mnemonic    : $Verse.find(".mnemonic").html()
+                }
+
+                this.queue.push( queueVerse );
+                this.queued_verses += 1;
+                console.log( "Verses in queue: " + this.queued_verses )
+                console.log( this.queue );
+            },
+
+            // remove verse from the in-memory queue
+            removeFromQueue: function () {
+
+            },
+
+
             // update status of current verse
             startReview: function () {
 
             },
+            
+            // get next verse
             nextVerse: function () {
 
             },
+
+            // move verse to next level of difficulty
             levelUp: function () {
                 this.level = this.level + 1;
                 return this.level;
             },
+
+            // move verse to previous level of difficulty
             levelDown: function () {
                 this.level = this.level - 1;
                 return this.level;
@@ -108,6 +146,9 @@
 
             var $verseToAdd    = $(this).siblings(".ref-and-details");
             var $verseForQueue = $verseToAdd.clone()
+
+            // Add verse to memory queue
+            practiceState.addToQueue( $verseForQueue );
 
             // Hide first words
             $verseForQueue.find(".first-words").hide();
