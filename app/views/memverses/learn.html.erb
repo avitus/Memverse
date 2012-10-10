@@ -29,13 +29,13 @@
         
 
         <div class="top-heading">
-            <h2><span><%= t('.verse') %>: </span><span class="verse-ref"><%=@mv.verse.ref%></span><span class="verse-tl"> [<%=@mv.verse.translation %>]</span></h2>
+            <h2><span><%= t('.verse') %>: </span><span class="verse-ref"></span><span class="verse-tl"> [<%=@mv.verse.translation %>]</span></h2>
             <div id="toggle-hint" class="toggle-hint"><%= t('.show_verse') %></div>
         </div>
 
         <div class="assistance">
 
-            <div class="mtext     "><%= @mv.mnemonic_if_req %></div><div class="mclose">x</div>
+            <div class="mnemonic  "></div>
             <div class="blankified"></div>
 
         </div>
@@ -97,15 +97,15 @@
                 
                 this.queue.push( queueVerse );
 
-                console.log( "Verses in queue: " + this.queued_verses )
-                console.log( this.queue );
-
                 if (this.queued_verses == 0) {
-                    this.nextVerse( )
+                    this.nextVerse( );
+                    this.queued_verses += 1;
                 }
 
                 this.queued_verses += 1;
 
+                console.log( "Verses in queue: " + this.queued_verses )
+                console.log( this.queue );
             },
 
             // remove verse from the in-memory queue
@@ -131,10 +131,10 @@
                 this.mnemonic = replacementVerse.mnemonic;
                 this.mvId     = replacementVerse.mvId;
 
-                $(".verse-ref ").html( replacementVerse.ref );
+                $(".verse-ref ").html( this.ref );
                 $(".level-num ").html( "1" );
-                $(".mtext     ").html( replacementVerse.mnemonic );
-                $(".blankified").html( blankifyVerse( replacementVerse.fullText, (this.level-1) * 10 ) );
+                $(".mnemonic  ").html( this.mnemonic );
+                $(".blankified").html( blankifyVerse( this.fullText, (this.level-1) * 10 ) );
 
             },
 
@@ -144,10 +144,6 @@
                 this.level += 1;
                 this.updateControls();
 
-                $(".level-num ").html( this.level );
-                $(".blankified").html( blankifyVerse( this.fullText, (this.level-1) * 10 ) );
-
-
             },
 
             // move verse to previous level of difficulty
@@ -155,13 +151,14 @@
 
                 this.level -= 1;
                 this.updateControls();
-
-                $(".level-num ").html( this.level );
-                $(".blankified").html( blankifyVerse( this.fullText, (this.level-1) * 10 ) );
                 
             },
 
             updateControls: function () {
+
+                $(".level-num ").html( this.level );
+                $(".blankified").html( blankifyVerse( this.fullText, (this.level-1) * 10 ) );
+                $("input.blank-word:first").focus();
                 
                 if ( this.level >= 10) {
                     $(".inc-level").css('visibility', 'hidden');

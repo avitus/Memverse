@@ -160,7 +160,7 @@ function cleanseVerseText( versetext ) {
  ******************************************************************************/
 function blankifyVerse(versetext, reduction_percentage) {
 
-    var split_text, sort_by_length, text_with_blanks;
+    var split_text, sort_by_length, text_with_blanks, word_width;
     
     if  ( reduction_percentage == 0 ) {
 
@@ -185,7 +185,9 @@ function blankifyVerse(versetext, reduction_percentage) {
 	            return x;
 	        }
 	        else {
-	            return "<span class='blank-word'>_____</span>";
+	        	// TODO: this line calculates an approximately sized input box for the given word
+	        	word_width = Math.round( x.length * 59) / 100;  // multiply word length by 0.6 and round to one decimal
+	            return "<input class='blank-word' style='width:" + word_width + "em;'>";
 	        };
 	    });
 	          
