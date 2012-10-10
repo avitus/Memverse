@@ -158,6 +158,11 @@ div.ref-and-details {
     border-right:1px solid #bfbebe;
 }
 
+.mnemonic {
+  border: 0;
+  padding: 1em 1em 2em;
+  border-bottom: 1px solid #999;
+}
 .assistance {
     min-height: 130px;
     background:#ffc;
@@ -196,6 +201,43 @@ div.ref-and-details {
         visibility: hidden;
     }
 }
+
+
+/* Make an input blend into its parent */
+input.blank-word{
+  /* Eliminate borders and padding */
+  border: none;
+  padding: 0;
+  margin: 0;
+  border-bottom: 1px solid #BBB;
+
+  /* Inherit the parent element's typography */
+  font: inherit;
+  color: inherit;
+  background-color: #FFC;
+  line-height: inherit;
+  font-size: inherit;
+  text-align: inherit;
+
+  /* Seems to help alignment in headers */
+  vertical-align: top;
+}
+
+/* Add interaction cues on hover and focus */
+input.blank-word:hover,
+input.blank-word:focus{
+  /* Change the background to a light yellow */
+  background-color: #FFD;
+
+  /* A subtle transition never hurts */
+  -webkit-transition: background-color 0.5s;
+     -moz-transition: background-color 0.5s;
+      -ie-transition: background-color 0.5s;
+          transition: background-color 0.5s;
+}
+
+
+
 
 /*=== Right Panel ===*/
 .verse-ref-list
