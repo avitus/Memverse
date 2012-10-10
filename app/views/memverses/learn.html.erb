@@ -216,6 +216,9 @@
         }); 
 
         //------- Typing a verse ----------------------
+        $(".blankified").on( "keyup", "input.blank-word", function () { 
+            console.log("Current guess for this word (" + this.name + ") is " + this.value );
+        });
 
         //------- Changing a level --------------------
         $( ".progression-control" ).on( "click", ".inc-level", function( e ) {
