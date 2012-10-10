@@ -36,12 +36,9 @@
         <div class="assistance">
 
             <div class="mnemonic  "></div>
+
             <div class="blankified"></div>
 
-        </div>
-
-        <div class="verse-entry">
-            <textarea class="verse-practice-box"></textarea>
         </div>
 
         <div class="progression-control">
@@ -218,6 +215,9 @@
         //------- Typing a verse ----------------------
         $(".blankified").on( "keyup", "input.blank-word", function () { 
             console.log("Current guess for this word (" + this.name + ") is " + this.value );
+            if ( this.name === this.value.trim() ) {
+                $(this).next().focus();  // advance cursor to next blank word
+            }
         });
 
         //------- Changing a level --------------------
