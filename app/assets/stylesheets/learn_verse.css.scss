@@ -159,20 +159,21 @@ div.ref-and-details {
 }
 
 .assistance {
-    min-height: 130px;
+    min-height: 180px;
     background:#ffc;
     border:1px solid #ccc;
     padding:1em;
     margin: 2em 0em 3em;
     color:#666;
     position:relative;    
+
+    .mnemonic {
+      border: 0;
+      padding: 1em 1em 1.5em;
+      border-bottom: 1px solid #999;
+    }
 }
 
-.mnemonic {
-  border: 0;
-  padding: 1em 1em 1.5em;
-  border-bottom: 1px solid #999;
-}
 
 .blankified {
   padding: 1em 0.5em;
@@ -195,10 +196,10 @@ div.ref-and-details {
 .progression-control {
     .cur-level {
         float: left;
-        width: 80%;
+        width: 88%;
         margin: auto;
         text-align: center;
-        font-size: 32px;
+        font-size: 24px;
     }
     .inc-level, .dec-level {
         float: left;
