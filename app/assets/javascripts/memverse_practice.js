@@ -36,7 +36,7 @@ function displayMvSearchResultsFn( verses ) {
             )
             
             // add button
-            .append('<div class="select-verse-button"><a data-remote="true" href="/add/' + vs.id + '" class="compact-add-button"></a></div>');
+            .append('<div class="select-verse-button"><a href="#" class="compact-add-button"></a></div>');
 
         $('.search-result-group').filter(':last').append($new_vs);                                                              
     }); 
