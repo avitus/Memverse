@@ -42,9 +42,9 @@
         </div>
 
         <div class="progression-control">
-            <div class="dec-level"><%= image_tag( "left_arrow.png",  :width => 48, :height => 48 ) %></div>
-            <div class="cur-level">Level <span class="level-num">1</span></div>        
-            <div class="inc-level"><%= image_tag( "right_arrow.png", :width => 48, :height => 48 ) %></div>
+            <div class="dec-level"><%= image_tag( "left_arrow_32x32.png",  :width => 32, :height => 32 ) %></div>
+            <div class="cur-level">Level <span class="level-num">0</span></div>        
+            <div class="inc-level"><%= image_tag( "right_arrow_32x32.png", :width => 32, :height => 32 ) %></div>
         </div>
 
     </div>
@@ -80,7 +80,7 @@
             queue: [],
 
             // current level
-            level: 1,
+            level: 0,
 
             // add verse to the in-memory queue
             addToQueue: function ( $Verse ) {
@@ -122,16 +122,16 @@
                 var replacementVerse = this.queue.shift();    // remove first verse from queue
                 this.queued_verses -= 1;                      // update queue count
 
-                this.level    = 1;      
+                this.level    = 0;      
                 this.fullText = replacementVerse.fullText;
                 this.ref      = replacementVerse.ref;
                 this.mnemonic = replacementVerse.mnemonic;
                 this.mvId     = replacementVerse.mvId;
 
                 $(".verse-ref ").html( this.ref );
-                $(".level-num ").html( "1" );
+                $(".level-num ").html( "0" );
                 $(".mnemonic  ").html( this.mnemonic );
-                $(".blankified").html( blankifyVerse( this.fullText, (this.level-1) * 10 ) );
+                $(".blankified").html( blankifyVerse( this.fullText, this.level * 10 ) );
 
             },
 
@@ -154,14 +154,14 @@
             updateControls: function () {
 
                 $(".level-num ").html( this.level );
-                $(".blankified").html( blankifyVerse( this.fullText, (this.level-1) * 10 ) );
+                $(".blankified").html( blankifyVerse( this.fullText, this.level * 10 ) );
                 $("input.blank-word:first").focus();
                 
                 if ( this.level >= 10) {
                     $(".inc-level").css('visibility', 'hidden');
                 } 
 
-                else if ( this.level <= 1 ) {
+                else if ( this.level <= 0 ) {
                     $(".dec-level").css('visibility', 'hidden');
                 }
 
@@ -214,10 +214,13 @@
 
         //------- Typing a verse ----------------------
         $(".blankified").on( "keyup", "input.blank-word", function () { 
+
             console.log("Current guess for this word (" + this.name + ") is " + this.value );
-            if ( this.name === this.value.trim() ) {
+            
+            if ( this.name === this.value.trim() ) {  // TODO: this needs to be more forgiving.
                 $(this).next().focus();  // advance cursor to next blank word
             }
+
         });
 
         //------- Changing a level --------------------
