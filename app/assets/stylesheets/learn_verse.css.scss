@@ -196,7 +196,7 @@ div.ref-and-details {
 .progression-control {
     .cur-level {
         float: left;
-        width: 88%;
+        width: 80%;
         margin: auto;
         text-align: center;
         font-size: 24px;
@@ -205,6 +205,9 @@ div.ref-and-details {
         float: left;
     }
     .dec-level {
+        visibility: hidden;
+    }
+    .nxt-verse {
         visibility: hidden;
     }
 }
