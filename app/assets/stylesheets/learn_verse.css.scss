@@ -154,7 +154,7 @@ div.ref-and-details {
     float: left;
     width: 50%;
     padding: 1em 2em;
-    min-height: 600px;
+    min-height: 500px;
     border-right:1px solid #bfbebe;
 }
 
@@ -194,20 +194,28 @@ div.ref-and-details {
 }
 
 .progression-control {
+
+    .level-controller {
+      width: 50%;
+      margin: auto;
+    }
+
     .cur-level {
-        float: left;
-        width: 80%;
-        margin: auto;
-        text-align: center;
-        font-size: 24px;
+      visibility: hidden;
+      float: left;
+      width: 70%;
+      margin: auto;
+      text-align: center;
+      color: #CCC;
+      font-size: 24px;
     }
     .inc-level, .dec-level {
-        float: left;
-    }
-    .dec-level {
-        visibility: hidden;
+      float: left;
+      visibility: hidden;
+      width: 15%;
     }
     .nxt-verse {
+        float: right;
         visibility: hidden;
     }
 }
