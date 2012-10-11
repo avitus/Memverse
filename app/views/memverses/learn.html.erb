@@ -42,9 +42,11 @@
         </div>
 
         <div class="progression-control">
-            <div class="dec-level"><%= image_tag( "left_arrow_32x32.png",         :width => 32, :height => 32 ) %></div>
-            <div class="cur-level">Level <span class="level-num">0</span></div>        
-            <div class="inc-level"><%= image_tag( "right_arrow_32x32.png",        :width => 32, :height => 32 ) %></div>
+            <div class="level-controller">
+                <div class="dec-level"><%= image_tag( "left_arrow_32x32.png",         :width => 32, :height => 32 ) %></div>
+                <div class="cur-level">Level <span class="level-num">0</span></div>        
+                <div class="inc-level"><%= image_tag( "right_arrow_32x32.png",        :width => 32, :height => 32 ) %></div>            
+            </div>
             <div class="nxt-verse"><%= image_tag( "right_arrow_orange_32x32.png", :width => 32, :height => 32 ) %></div>            
         </div>
 
@@ -134,7 +136,7 @@
                 $(".verse-ref                 ").html( this.ref );
                 $(".level-num                 ").html( "0" );
                 $(".verse-learning .mnemonic  ").html( this.mnemonic );
-                $(".blankified                ").html( blankifyVerse( this.fullText, this.level * 10 ) );
+                // $(".blankified                ").html( blankifyVerse( this.fullText, this.level * 10 ) );
 
                 this.updateControls();
 
@@ -143,7 +145,10 @@
             // move verse to next level of difficulty
             levelUp: function () {
                 
-                this.level += 1;
+                if ( this.level < 10 ) {
+                    this.level += 1;                    
+                }
+
                 this.updateControls();
 
             },
@@ -151,9 +156,12 @@
             // move verse to previous level of difficulty
             levelDown: function () {
 
-                this.level -= 1;
+                if ( this.level > 0 ) {
+                    this.level -= 1;
+                }   
+
                 this.updateControls();
-                
+        
             },
 
             updateControls: function () {
@@ -164,9 +172,11 @@
                 
                 if ( this.level >= 10) {
                     $(".inc-level").css('visibility', 'hidden');
+                    $(".dec-level").css('visibility', 'visible');
                 } 
 
                 else if ( this.level <= 0 ) {
+                    $(".inc-level").css('visibility', 'visible');
                     $(".dec-level").css('visibility', 'hidden');
                 }
 
@@ -175,9 +185,14 @@
                     $(".dec-level").css('visibility', 'visible');                    
                 }
 
-                if ( this.queued_verses <= 1 ) {
+                if ( this.queued_verses === 0 ) {
+                    $(".cur-level").css('visibility', 'hidden');
+                    $(".nxt-verse").css('visibility', 'hidden');
+                } else if ( this.queued_verses === 1 ) {
+                    $(".cur-level").css('visibility', 'visible');
                     $(".nxt-verse").css('visibility', 'hidden');
                 } else {
+                    $(".cur-level").css('visibility', 'visible');
                     $(".nxt-verse").css('visibility', 'visible');
                 }                
                 
@@ -228,11 +243,19 @@
 
             console.log("Current guess for this word (" + this.name + ") is " + this.value );
             
+            // Word correct   ==> next word
             if ( this.name === this.value.trim() ) {  // TODO: this needs to be more forgiving.
+
                 $(this).next().focus();  // advance cursor to next blank word
+
+                // Level complete ==> next level
+                if ( $(this).next().length === 0 ) {  // there are no other words to fill in
+                    practiceState.levelUp();
+                }
+
             }
 
-            // Check whether verse is complete
+            // Verse complete ==> next verse
 
 
         });
