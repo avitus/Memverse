@@ -42,9 +42,10 @@
         </div>
 
         <div class="progression-control">
-            <div class="dec-level"><%= image_tag( "left_arrow_32x32.png",  :width => 32, :height => 32 ) %></div>
+            <div class="dec-level"><%= image_tag( "left_arrow_32x32.png",         :width => 32, :height => 32 ) %></div>
             <div class="cur-level">Level <span class="level-num">0</span></div>        
-            <div class="inc-level"><%= image_tag( "right_arrow_32x32.png", :width => 32, :height => 32 ) %></div>
+            <div class="inc-level"><%= image_tag( "right_arrow_32x32.png",        :width => 32, :height => 32 ) %></div>
+            <div class="nxt-verse"><%= image_tag( "right_arrow_orange_32x32.png", :width => 32, :height => 32 ) %></div>            
         </div>
 
     </div>
@@ -103,6 +104,8 @@
 
                 console.log( "Verses in queue: " + this.queued_verses )
                 console.log( this.queue );
+
+                this.updateControls();
             },
 
             // remove verse from the in-memory queue
@@ -128,10 +131,12 @@
                 this.mnemonic = replacementVerse.mnemonic;
                 this.mvId     = replacementVerse.mvId;
 
-                $(".verse-ref ").html( this.ref );
-                $(".level-num ").html( "0" );
-                $(".mnemonic  ").html( this.mnemonic );
-                $(".blankified").html( blankifyVerse( this.fullText, this.level * 10 ) );
+                $(".verse-ref                 ").html( this.ref );
+                $(".level-num                 ").html( "0" );
+                $(".verse-learning .mnemonic  ").html( this.mnemonic );
+                $(".blankified                ").html( blankifyVerse( this.fullText, this.level * 10 ) );
+
+                this.updateControls();
 
             },
 
@@ -169,6 +174,12 @@
                     $(".inc-level").css('visibility', 'visible');
                     $(".dec-level").css('visibility', 'visible');                    
                 }
+
+                if ( this.queued_verses <= 1 ) {
+                    $(".nxt-verse").css('visibility', 'hidden');
+                } else {
+                    $(".nxt-verse").css('visibility', 'visible');
+                }                
                 
             }
 
@@ -221,6 +232,9 @@
                 $(this).next().focus();  // advance cursor to next blank word
             }
 
+            // Check whether verse is complete
+
+
         });
 
         //------- Changing a level --------------------
@@ -230,6 +244,11 @@
 
         $( ".progression-control" ).on( "click", ".dec-level", function( e ) {
             practiceState.levelDown();
+        });
+
+        //------- Moving to the next verse  -----------
+        $(".nxt-verse").on( "click", function () {
+            practiceState.nextVerse();
         });
 
     }); // End of jQuery document ready
