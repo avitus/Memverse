@@ -5,8 +5,19 @@ source 'http://rubygems.org'
 
 group :development do 
   # gem 'query_reviewer', :git => "git://github.com/nesquena/query_reviewer.git"                # For finding slow queries ... problems with Rails 3.2 (?)
-	gem "rails-footnotes", ">= 3.7", :group => :development
+	gem "rails-footnotes", ">= 3.7"
   gem 'sqlite3'
+end
+
+gem "rspec-rails", ">= 2.6.1", :group => [:development, :test]
+gem 'jasmine', :group => [:development, :test]
+
+group :test do
+  gem "factory_girl_rails", ">= 1.2.0"
+  gem "cucumber-rails", ">= 1.1.1"
+  gem "capybara", ">= 1.1.2"
+  gem "database_cleaner", ">= 0.6.7"
+  gem "launchy", ">= 2.0.5"
 end
 
 group :production do
@@ -26,14 +37,6 @@ end
 
 gem 'rails', '3.2.8'
 gem 'jquery-rails', '>= 2.0.0'
-
-gem "rspec-rails", ">= 2.6.1", :group => [:development, :test]
-gem "factory_girl_rails", ">= 1.2.0", :group => :test
-gem "cucumber-rails", ">= 1.1.1", :group => :test
-gem "capybara", ">= 1.1.2", :group => :test
-gem "database_cleaner", ">= 0.6.7", :group => :test
-gem "launchy", ">= 2.0.5", :group => :test
-gem 'jasmine', :group => [:development, :test]
 
 gem "devise"                                                                                    # Authentication
 gem "devise-encryptable"                                                                        # TODO: Is this required?
