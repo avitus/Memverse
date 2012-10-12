@@ -49,7 +49,7 @@ GIT
 
 GIT
   remote: git://github.com/sferik/rails_admin.git
-  revision: 02c03c15f613970071e97e15ff8d43e26e651b04
+  revision: a927d6c5afd18bf193f6f8b5604270579110a188
   specs:
     rails_admin (0.1.2)
       bootstrap-sass (~> 2.1)
@@ -306,7 +306,7 @@ GEM
       redis (~> 3.0.0)
     remotipart (1.0.2)
     riddle (1.5.3)
-    rinku (1.7.1)
+    rinku (1.7.2)
     rspec (2.11.0)
       rspec-core (~> 2.11.0)
       rspec-expectations (~> 2.11.0)
