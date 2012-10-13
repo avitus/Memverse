@@ -244,7 +244,7 @@
             console.log("Current guess for this word (" + this.name + ") is " + this.value );
             
             // Word correct   ==> next word
-            if ( this.name === this.value.trim() ) {  // TODO: this needs to be more forgiving.
+            if ( scrub_text( this.name ) === scrub_text( this.value.trim() ) ) {  // TODO: this needs to be more forgiving.
 
                 $(this).next().focus();  // advance cursor to next blank word
 
