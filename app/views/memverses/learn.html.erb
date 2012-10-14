@@ -97,7 +97,7 @@
                 
                 this.queue.push( queueVerse );
 
-                if (this.queued_verses == 0) {
+                if (this.queued_verses == 0) {   //j no verses queued up for learning
                     this.nextVerse( );
                     this.queued_verses += 1;
                 }
@@ -111,7 +111,15 @@
             },
 
             // remove verse from the in-memory queue
-            removeFromQueue: function () {
+            removeFromQueue: function ( mvId ) {
+
+                this.queue = $.grep( this.queue, function( mv ) { return mv.mvId != mvId; });
+
+                console.log( "Verses in queue: " + this.queued_verses )
+                console.log( this.queue );
+
+                this.updateControls();
+
 
             },
 
@@ -222,21 +230,34 @@
             // Add verse to memory queue
             practiceState.addToQueue( $verseForQueue );
 
-            // Hide first words
-            $verseForQueue.find(".first-words").hide();
+            if ( practiceState.queued_verses > 1 ) {
 
-            // Build HTML for each verse
-            var $queued_vs = $('<li/>').addClass('upcoming-verse-ref')
-                // verse
-                .append( $verseForQueue )
-                // remove button
-                .append('<div class="remove-verse-button"><a data-remote="true" href="/add/' + '" class="compact-remove-button"></a></div>');
+                // Hide first words
+                $verseForQueue.find(".first-words").hide();
 
-            // Move verse from search results to verse queue
-            $("#upcoming-verses").append( $queued_vs );
+                // Build HTML for each verse
+                var $queued_vs = $('<li/>').addClass('upcoming-verse-ref')
+                    // verse
+                    .append( $verseForQueue )
+                    // remove button
+                    .append('<div class="remove-verse-button"><a href="#" class="compact-minus-button"></a></div>');
 
-            $verseToAdd.parent().fadeOut("fast");
+                // Move verse from search results to verse queue
+                $("#upcoming-verses").append( $queued_vs );
+
+            }
+
+            $verseToAdd.parent().fadeOut();
         }); 
+
+        //------- Removing a verse from queue ---------
+        $(".verse-ref-list").on( "click", ".remove-verse-button", function() {
+            
+            $(this).parent().remove();
+            // displayAlertMessage("Removing memory verse" + $(this).parent().find(".mv-id").html() );
+            practiceState.removeFromQueue( $(this).parent().find(".mv-id").html() );
+
+        });
 
         //------- Typing a verse ----------------------
         $(".blankified").on( "keyup", "input.blank-word", function () { 
@@ -272,6 +293,7 @@
         //------- Moving to the next verse  -----------
         $(".nxt-verse").on( "click", function () {
             practiceState.nextVerse();
+            $("#upcoming-verses").children(":first").remove();
         });
 
     }); // End of jQuery document ready
