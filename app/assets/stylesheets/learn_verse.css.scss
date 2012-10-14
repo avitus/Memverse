@@ -28,6 +28,15 @@ div.ref-and-details {
   float: right;
 }
 
+.compact-minus-button {
+  background: url("minus_16x16.png") no-repeat scroll center center transparent;
+  border: 0 none;
+  cursor: pointer;
+  height: 20px;
+  padding: 0 10px;
+  width: 70px;
+}
+
 .compact-add-button {
   background: url("plus.png") no-repeat scroll center center transparent;
   border: 0 none;
@@ -279,7 +288,7 @@ input.blank-word:focus{
     width:167px;
     height:21px;
     color:#666;
-    line-height:21px;
+    line-height:18px;
     padding-left:25px;
 }
 
