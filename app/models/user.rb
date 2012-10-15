@@ -64,6 +64,7 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :quests
   has_and_belongs_to_many :badges
   has_many                :memverses,         :dependent => :destroy 
+  has_many                :verses,            :through   => :memverses
   has_many                :progress_reports,  :dependent => :destroy
   has_many                :tweets
   has_many                :sermons
@@ -161,13 +162,13 @@ class User < ActiveRecord::Base
   end  
 
   # ----------------------------------------------------------------------------------------------------------
-  # Input: User object
+  # Returns number of minutes required each day
   # TODO: This method occasionally returned infinity due to test_interval being zero. This is not the best place
   #       to fix the problem but good enough hack for now.
   # ----------------------------------------------------------------------------------------------------------     
   def work_load
     time_per_verse = 1.0 # minutes
-    verses_per_day = 2.0 # login, setup time etc
+    verses_per_day = 2.0 # initialize with login, setup time etc
     # self.memverses.active.where(:test_interval => 0).update_all(:test_interval => 1)
     self.memverses.active.find_each { |mv|
       verses_per_day += (1 / mv.test_interval.to_f) 
@@ -560,18 +561,25 @@ class User < ActiveRecord::Base
   # Reset the spacing of memory verses
   # ----------------------------------------------------------------------------------------------------------
   def reset_memorization_schedule
-    load_target    = self.work_load
+    
+    load_target    = self.work_load # number of minutes user is required to do each day to keep up with review
+
+    # get list of id's of memverses that overdue
     load_for_today = self.memverses.active.where("next_test <= ?", Date.today).order("next_test ASC").select("id").map(&:id)
     offset         = 0
 
-    for i in 1..load_for_today.length
+    for i in 1..load_for_today.length # iterate through array of verse ID's
+
       if (i % load_target == 0) # if divisible by load_target
         Memverse.where("id in (?)", load_for_today[(offset * load_target)..(i-1)]).update_all(:next_test => Date.today + offset)
         offset = offset + 1
-      elsif ((i-1) % load_target == 0) && ((i-1) + load_target > load_for_today.length) # if just passed last i divisble by load_target
+      elsif ((i-1) % load_target == 0) && ((i-1) + load_target > load_for_today.length) # if just passed last i divisible by load_target
         Memverse.where("id in (?)", load_for_today[(offset * load_target)..(load_for_today.length-1)]).update_all(:next_test => Date.today + offset)
         offset = offset + 1
+      else
+        # do nothing
       end
+
     end
 
     return due_verses

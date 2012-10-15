@@ -28,6 +28,51 @@ SPANISHABBREV = [ 'Gén', 'Éxod', 'Lev', 'Núm', 'Deut', 'Jos', 'Jue', 'Rut', '
                   'Heb', 'Sant', '1 Pe', '2 Pe', '1 Jn', '2 Jn', '3 Jn', 'Jds', 'Apoc']  
 
 /******************************************************************************
+ * Verse Search
+ *
+ * Note: use this function in preference to 'flexversesearch' as this function
+ *       does not co-mingle the displaying of the results. In retrospect there
+ *       should be chainable functions so that we can do something like:
+ *           .mv_search().display_verses()
+ *       but the callback will suffice for now.
+ ******************************************************************************/
+function mv_search(userText, displayResultsFn) {
+
+    // This function definition is necessary to avoid repetition in the different types of
+    // search queries. It handles the custom callback function for mv_search
+    function searchResultsCallback( verses ) {
+        if( $.isFunction(displayResultsFn) ) {
+          displayResultsFn.call(this, verses);
+        }  
+    };
+
+    // Truncate queries of excessive length
+    if (userText.length > 100) {
+    	var text = jQuery.trim(userText).substring(0, 100).split(" ").slice(0, -1).join(" ");    	
+    }
+    else {
+    	var text = userText;
+    }
+
+
+    // User is looking for a single verse                       
+    if (ref = parseVerseRef( text )) {
+        $.get("/lookup_user_verse.json", { bk: ref.bk, ch: ref.ch, vs: ref.vs }, 
+            searchResultsCallback, "json" );
+                
+    // User is searching for a passage
+    } else if (ref = parsePassageRef( text )) {
+        $.get("/lookup_user_passage.json", { bk: ref.bk, ch: ref.ch, vs_start: ref.vs_start, vs_end: ref.vs_end }, 
+            searchResultsCallback, "json" );
+    
+    // User didn't enter a verse reference ... do a tag search
+    } else {
+        $.get("/mv_search.json", { searchParams: text }, 
+            searchResultsCallback, "json" );
+    }  
+}
+
+/******************************************************************************
  * Capitalize strings: romans -> Romans
  ******************************************************************************/
 String.prototype.capitalize = function() {
@@ -72,7 +117,6 @@ function validPassageRef(passage) {
     return /([0-3]?\s+)?[a-záéíóúüñ]+\s+[0-9]+(((:|(\s?vs\s?))[0-9]+(-)[0-9]+)|:)?$/i.test(passage);
 }
 
-
 /******************************************************************************
  * Returns true iff input is a chapter reference
 
@@ -110,6 +154,47 @@ function cleanseVerseText( versetext ) {
 	
 	return versetext;
 }
+
+/******************************************************************************
+ * Blankify a verse
+ ******************************************************************************/
+function blankifyVerse(versetext, reduction_percentage) {
+
+    var split_text, sort_by_length, text_with_blanks, word_width;
+    
+    if  ( reduction_percentage == 0 ) {
+
+    	return versetext;
+    	
+    }
+
+    else {
+
+	    split_text     = versetext.trim().split(/\s/);
+	    sort_by_length = split_text.slice(0);  // make a copy of the original array       
+	    
+	    sort_by_length.sort(function(a, b) {
+	        return (a.length < b.length) ? 1 : 0;
+	    });
+	    
+	    // select the longest words to remove
+	    sort_by_length.length = Math.round(split_text.length * reduction_percentage / 100); 
+	    
+	    text_with_blanks = split_text.map( function(x) {
+	        if ( sort_by_length.indexOf(x) < 0 ) {
+	            return x;
+	        }
+	        else {
+	        	// TODO: this line calculates an approximately sized input box for the given word
+	        	word_width = Math.round( x.length * 59) / 100;  // multiply word length by 0.6 and round to one decimal
+	            return "<input name='" + x + "' class='blank-word' style='width:" + word_width + "em;'>";
+	        };
+	    });
+	          
+	    return text_with_blanks.join(" ");
+    }
+        
+};
 
 /******************************************************************************
  * Parses reference into a book, chapter & verse

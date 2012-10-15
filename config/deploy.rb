@@ -67,7 +67,7 @@ set :default_stage, "production"
 ##  Hooks
 ##############################################################
 before "deploy:assets:precompile", "deploy:symlink_db", "deploy:symlink_bloggity"
-after "deploy", "deploy:refresh_sitemaps"
+after "deploy", "deploy:refresh_sitemaps", "deploy:cleanup"
 
 ##############################################################
 ##  Database config and restart

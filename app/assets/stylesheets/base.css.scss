@@ -164,6 +164,7 @@ font-family:"museo-slab-1",Georgia,"Times New Roman",Times,serif;
 
 .white-box-bg {
   width:1080px;
+  height: 1%; overflow: hidden;
   background:#FFF;
   border:1px solid #555;
   padding:2em 0;
@@ -1552,11 +1553,11 @@ div#flash-error {
 
 .toggle-hint
 {
-	background:#FFF url('plus.png') no-repeat right center;
+	background:#FFF url('magnifying-glass-small.png') no-repeat right center;
 	height:30px;
 	float:right;
 	text-align:right;
-	padding-right:20px;
+	padding-right:30px;
 	color:#999;
 	line-height:30px;
 	font-size:13px;
