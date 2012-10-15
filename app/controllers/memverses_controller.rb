@@ -182,6 +182,70 @@ class MemversesController < ApplicationController
   end
   
   # ----------------------------------------------------------------------------------------------------------
+  # Search for a single memory verse (by reference) for a given user
+  # ----------------------------------------------------------------------------------------------------------  
+  def mv_lookup
+
+    @mv = current_user.memverses
+              .includes(:verse)
+              .where( 'verses.book'        => params[:bk], 
+                      'verses.chapter'     => params[:ch], 
+                      'verses.versenum'    => params[:vs])
+              .first
+
+    respond_to do |format|
+      format.html # show.html.erb
+      format.xml  { render :xml  => @mv }
+      format.json { render :json => @mv }
+    end  
+
+  end  
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Search for a passage of memory verses (by reference) for a given user
+  # ----------------------------------------------------------------------------------------------------------  
+  def mv_lookup_passage
+   
+    if params[:vs_start] != "null" and params[:vs_end] != "null"
+      @mvs = current_user.memverses
+              .includes(:verse)
+              .where( 'verses.book'        => params[:bk], 
+                      'verses.chapter'     => params[:ch], 
+                      'verses.versenum'    => params[:vs_start]..params[:vs_end])
+              .order( 'verses.versenum')
+    else
+      @mvs = current_user.memverses
+              .includes(:verse)
+              .where( 'verses.book'        => params[:bk], 
+                      'verses.chapter'     => params[:ch])
+              .order( 'verses.versenum')
+    end
+                      
+    respond_to do |format|
+      format.html # show.html.erb
+      format.xml  { render :xml  => @mvs }
+      format.json { render :json => @mvs }
+    end
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Verse Search Query page
+  # ----------------------------------------------------------------------------------------------------------  
+  def mv_search
+
+    @tag    = ActsAsTaggableOn::Tag.find_by_name(params[:searchParams])
+    @verses = Memverse.tagged_with(params[:searchParams])
+   
+    respond_to do |format|
+      format.html # show.html.erb
+      format.xml  { render :xml  => @verses }
+      format.json { render :json => @verses }
+    end   
+    
+  end
+
+
+  # ----------------------------------------------------------------------------------------------------------
   # AJAX: Memorized verses
   # ----------------------------------------------------------------------------------------------------------  
   def memverse_counter
@@ -1354,6 +1418,19 @@ class MemversesController < ApplicationController
     
     add_breadcrumb I18n.t('home_menu.My Progress'), :progress_path
   end  
+
+  # ----------------------------------------------------------------------------------------------------------
+  # For initially committing verses to memory
+  # ----------------------------------------------------------------------------------------------------------     
+  def learn
+    
+    @tab = "mem" 
+    @sub = "learn"
+
+    @verses = current_user.memverses.limit(5)
+    @mv = @verses.first
+
+  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Drilling module

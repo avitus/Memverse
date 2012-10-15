@@ -57,6 +57,7 @@ MemverseApp::Application.routes.draw do
   match '/pre_chapter',            :to => 'memverses#chapter_explanation',   :as => 'pre_chapter'
   match '/test_chapter',           :to => 'memverses#test_chapter',          :as => 'test_chapter'
   match '/drill_verse',            :to => 'memverses#drill_verse',           :as => 'drill_verse'
+  match '/learn',                  :to => 'memverses#learn',                 :as => 'learn'
   match '/mark_test',              :to => 'memverses#mark_test',             :as => 'mark_test'
   match '/mark_drill',             :to => 'memverses#mark_drill',            :as => 'mark_drill'
   match '/manage_verses',          :to => 'memverses#manage_verses',         :as => 'manage_verses'
@@ -70,6 +71,10 @@ MemverseApp::Application.routes.draw do
   match '/memory_verse/:id',       :to => 'memverses#show',                  :as => 'memory_verse'
   match '/toggle_error_flag/:id',  :to => 'memverses#toggle_verse_flag',     :as => 'toggle_error_flag'
   match '/toggle_mv_status/:id',   :to => 'memverses#toggle_mv_status',      :as => 'toggle_mv_status'
+
+  match '/lookup_user_verse',      :to => 'memverses#mv_lookup',             :as => 'lookup_user_verse'
+  match '/lookup_user_passage',    :to => 'memverses#mv_lookup_passage',     :as => 'lookup_user_passage'
+  match '/mv_search',              :to => 'memverses#mv_search',             :as => 'mv_search'
  
   match '/tag_cloud',              :to => 'verses#tag_cloud',                :as => 'tag_cloud'
   match '/check_verses',           :to => 'verses#check_verses',             :as => 'check_verses'

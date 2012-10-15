@@ -364,10 +364,13 @@ class Verse < ActiveRecord::Base
     self.text.gsub(/([\wáâãàçéêíóôõúüñ])([\wáâãàçéêíóôõúüñ]|[\-'’][\wáâãàçéêíóôõúüñ])*/,'\1')
     
     # In simpler language we are matching:
-    # (Any alphanumerical character) followed by (all consecutive alphanumerical characters OR a -'’ character followed by an alphanumerical character)
-    # The star (*) means we repeat the previous item as many times as possible (refers to set of parentheses matching alphanumerical OR -'’ followed by alphanumerical
-    # The '\1' at the end is the value for what we replace these matches with, and it refers to whatever matches the first parentheses (in our case, the first character). Using a '\2' would match the second parentheses, etc.
-    # Adapted from JavaScript found at http://productivity501.com/wp-content/uploads/tools/memorize-first-letter-tool.html
+    # (Any alphanumerical character) followed by (all consecutive alphanumerical characters OR a -'’ character 
+    # followed by an alphanumerical character) The star (*) means we repeat the previous item as many times as 
+    # possible (refers to set of parentheses matching alphanumerical OR -'’ followed by alphanumerical
+    # The '\1' at the end is the value for what we replace these matches with, and it refers to whatever 
+    # matches the first parentheses (in our case, the first character). 
+    # Using a '\2' would match the second parentheses, etc. Adapted from JavaScript found at 
+    #http://productivity501.com/wp-content/uploads/tools/memorize-first-letter-tool.html
   end
 
   # ----------------------------------------------------------------------------------------------------------

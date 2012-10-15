@@ -5,7 +5,7 @@ class UtilsController < ApplicationController
   newrelic_ignore
 
   protect_from_forgery  :except => [:set_verse_text, :verify_verse, :send_reminder] 
-  before_filter :authenticate_user!, :except => [:dashboard, :user_progression, :send_reminder]
+  before_filter :authorize
   
   # Only needed for scraping last verse data from BibleGateway
   #  require 'open-uri'

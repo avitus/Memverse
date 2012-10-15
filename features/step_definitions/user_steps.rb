@@ -25,19 +25,19 @@ Given /^I am a confirmed user named "([^"]*)" with an email "([^"]*)" and passwo
 end
 
 Then /^I should be already signed in$/ do
-  And %{I should see "Logout"}
+  step %{I should see "Logout"}
 end
 
 Given /^I am signed up as "(.*)\/(.*)"$/ do |email, password|
-  Given %{I am not logged in}
-  When %{I go to the sign up page}
-  And %{I fill in "user[name]" with "My Name"}
-  And %{I fill in "user[email]" with "#{email}"}
-  And %{I fill in "user[password]" with "#{password}"}
-  And %{I fill in "user[password_confirmation]" with "#{password}"}
-  And %{I press "signupbutton"}
-  Then %{I should see "You have signed up successfully. If enabled, a confirmation was sent to your e-mail."}
-  And %{I am logout}
+  step %{I am not logged in}
+  step %{I go to the sign up page}
+  step %{I fill in "user[name]" with "My Name"}
+  step %{I fill in "user[email]" with "#{email}"}
+  step %{I fill in "user[password]" with "#{password}"}
+  step %{I fill in "user[password_confirmation]" with "#{password}"}
+  step %{I press "signupbutton"}
+  step %{I should see "You have signed up successfully. If enabled, a confirmation was sent to your e-mail."}
+  step %{I am logout}
 end
 
 Then /^I sign out$/ do
@@ -45,33 +45,33 @@ Then /^I sign out$/ do
 end
 
 Given /^I am logout$/ do
-  Given %{I sign out}
+  step %{I sign out}
 end
 
 Given /^I am not logged in$/ do
-  Given %{I sign out}
+  step %{I sign out}
 end
 
 When /^I sign in as "(.*)\/(.*)"$/ do |email, password|
-  Given %{I am not logged in}
-  When %{I go to the sign in page}
-  And %{I fill in "user[email]" with "#{email}"}
-  And %{I fill in "user[password]" with "#{password}"}
-  And %{I press "signinbutton"}
+  step %{I am not logged in}
+  step %{I go to the sign in page}
+  step %{I fill in "user[email]" with "#{email}"}
+  step %{I fill in "user[password]" with "#{password}"}
+  step %{I press "signinbutton"}
 end
 
 Then /^I should be signed in$/ do
-  Then %{I should see "Logout"}
+  step %{I should see "Logout"}
 end
 
 When /^I return next time$/ do
-  And %{I go to the home page}
+  step %{I go to the home page}
 end
 
 Then /^I should be signed out$/ do
-  And %{I should see "SIGN UP"}
-  And %{I should see "LOG IN"}
-  And %{I should not see "Logout"}
+  step %{I should see "SIGN UP"}
+  step %{I should see "LOG IN"}
+  step %{I should not see "Logout"}
 end
 
 Given /^the email address "(.*)" is confirmed$/ do |email|
@@ -108,31 +108,31 @@ Given /^a blog titled "(.*)"$/ do |title|
 end
 
 Given /^I sign in as a normal user$/ do
-  Given %{I am a user named "normal" with an email "user@test.com" and password "please"}
-  And %{the email address "user@test.com" is confirmed}
-  When %{I sign in as "user@test.com/please"}
-  Then %{I should be signed in}
+  step %{I am a user named "normal" with an email "user@test.com" and password "please"}
+  step %{the email address "user@test.com" is confirmed}
+  step %{I sign in as "user@test.com/please"}
+  step %{I should be signed in}
 end
 
 Given /^I sign in as an advanced user$/ do
-  Given %{I am a user named "advanced" with an email "advanced_user@test.com" and password "please"}
-  And %{the email address "advanced_user@test.com" is confirmed}
-  And %{the user with the email of "advanced_user@test.com" has 10 verses in his list}
-  When %{I sign in as "advanced_user@test.com/please"}
-  Then %{I should be signed in}
+  step %{I am a user named "advanced" with an email "advanced_user@test.com" and password "please"}
+  step %{the email address "advanced_user@test.com" is confirmed}
+  step %{the user with the email of "advanced_user@test.com" has 10 verses in his list}
+  step %{I sign in as "advanced_user@test.com/please"}
+  step %{I should be signed in}
 end
 
 Given /^I sign in as an admin user$/ do
-  Given %{I am an admin named "admin" with an email "admin@test.com" and password "superuser"}
-  And %{the email address "admin@test.com" is confirmed}
-  When %{I sign in as "admin@test.com/superuser"}
-  Then %{I should be signed in}
+  step %{I am an admin named "admin" with an email "admin@test.com" and password "superuser"}
+  step %{the email address "admin@test.com" is confirmed}
+  step %{I sign in as "admin@test.com/superuser"}
+  step %{I should be signed in}
 end
 
 Given /^the user with the email of "(.*)" has (\d+) verses in his list$/ do |email, n|
   user = User.find_by_email(email)
   n.to_i.times { |i| 
-    vs = FactoryGirl.create(:verse, :chapter => 20, :versenum => i)
+    vs = FactoryGirl.create(:verse, :chapter => 21, :versenum => i+1)
     FactoryGirl.create(:memverse, :user_id => user.id, :verse_id => vs.id) 
   }
 end

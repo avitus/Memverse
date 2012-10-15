@@ -1,0 +1,303 @@
+.verse-selection {
+    float: left;
+    width:20%;
+    padding: 0 1em 1em 1em;
+    min-height: 600px; 
+    border-right:1px solid #bfbebe; 
+    clear: both;
+}
+
+
+/* Single element for verses in search result ... */
+div.ref-and-details {
+  float:left;
+  padding-right:4%;
+  /* Extraction of first few words of verse */
+  p.first-words {
+    color: #999999;
+    font-size: smaller;
+  }
+  p.full-text, p.mnemonic, p.mv-id {
+    display: none;
+  }
+}
+
+/* ... and associated button */
+.select-verse-button {
+  text-align:right;
+  float: right;
+}
+
+.compact-minus-button {
+  background: url("minus_16x16.png") no-repeat scroll center center transparent;
+  border: 0 none;
+  cursor: pointer;
+  height: 20px;
+  padding: 0 10px;
+  width: 70px;
+}
+
+.compact-add-button {
+  background: url("plus.png") no-repeat scroll center center transparent;
+  border: 0 none;
+  cursor: pointer;
+  height: 20px;
+  padding: 0 10px;
+  width: 70px;
+}
+
+/* Scroll section for search results */
+.mv-search-results-compact {
+  width:15em;
+  min-height:500px;
+  display: none;
+  float:left;
+  padding-left:0.5em;
+  padding-right:1em;  
+  padding-bottom:1em; 
+  
+  /* root element for scrollable */
+  .scrollable {
+  
+    /* required settings */
+    position:relative;
+    overflow:hidden;
+  
+    /* vertical scrollables have typically larger height than width but not now */
+    height: 430px; // should match height of vertical class ... height should be 3x size of item height + padding
+    width: 100%;   // should match width of vertical class and actions
+  }
+  
+  /* root element for scrollable items */
+  .scrollable .items {
+    position:absolute;
+  
+    /* this time we have very large space for the height */
+    height:20000em;
+  }
+  
+  /* root element for scrollable */
+  .vertical {  
+    
+    /* required settings */
+    position:relative;
+    overflow:hidden;  
+  
+    /* vertical scrollers have typically larger height than width */  
+    height: 430px; // should match height of scrollable class  
+    width: 100%;   // should match width of scrollable class and actions
+    border-top:1px solid #ddd;  
+  }
+  
+  /* root element for scrollable items */
+  .items {  
+    position:absolute;
+    /* this time we have very large space for height */ 
+    height:20000em; 
+    margin: 0px;
+  }
+  
+  /* single scrollable item */
+  .item {
+    border-bottom:1px solid #ddd;
+    padding:10px 0 0 0;
+    height: 4em;
+    width: 15em;
+  }
+  
+  /* elements inside single item */
+  .item img { /*-- NOT NEEDED -- */
+    float:left;
+    margin-right:20px;
+    height:180px;
+    width:240px;
+  }
+  
+  .item h3 { /*-- NOT NEEDED -- */
+    margin:0 0 5px 0;
+    font-size:16px;
+    /* color:#456; */
+    font-weight:normal;
+  }
+  
+  /* the action buttons above the scrollable */
+  #actions {
+    width:100%;   // should match width of vertical and scrollable class
+    margin:30px 0 10px 0;
+    position:relative;
+    font-size:11px;
+  }
+  
+  #actions a {
+    cursor:pointer;
+    color:#666;
+  }
+  
+  #actions a:hover {
+    text-decoration:underline;
+    color:#000;
+  }
+  
+  .disabled {
+    visibility:hidden;    
+  }
+  
+  .next {
+    float:right;
+  }
+  
+  .bible-version {
+    // 60% wide with 20% on either side so that version doesn't overlap left/right navigation
+    left:20%;
+    width:60%;
+    text-align:center;
+    position:absolute;
+    cursor:pointer;
+  }
+} /* end of scroll styles */
+
+
+
+/*=== Center Panel ===*/
+.verse-learning {
+    float: left;
+    width: 50%;
+    padding: 1em 2em;
+    min-height: 500px;
+    border-right:1px solid #bfbebe;
+}
+
+.assistance {
+    min-height: 180px;
+    background:#ffc;
+    border:1px solid #ccc;
+    padding:1em;
+    margin: 2em 0em 3em;
+    color:#666;
+    position:relative;    
+
+    .mnemonic {
+      border: 0;
+      padding: 1em 1em 1.5em;
+      border-bottom: 1px solid #999;
+    }
+}
+
+
+.blankified {
+  padding: 1em 0.5em;
+}
+
+.verse-entry {
+    margin: 1em 0;
+}
+
+.verse-practice-box {
+    width: 100%;
+    min-height: 150px;
+    padding: 1em;
+
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
+}
+
+.progression-control {
+
+    .level-controller {
+      width: 50%;
+      margin: auto;
+    }
+
+    .cur-level {
+      visibility: hidden;
+      float: left;
+      width: 70%;
+      margin: auto;
+      text-align: center;
+      color: #CCC;
+      font-size: 24px;
+    }
+    .inc-level, .dec-level {
+      float: left;
+      visibility: hidden;
+      width: 15%;
+    }
+    .nxt-verse {
+        float: right;
+        visibility: hidden;
+    }
+}
+
+
+/* Make an input blend into its parent */
+input.blank-word{
+  /* Eliminate borders and padding */
+  border: none;
+  padding: 0;
+  margin: 0;
+  border-bottom: 1px solid #BBB;
+
+  /* Inherit the parent element's typography */
+  font: inherit;
+  color: inherit;
+  background-color: #FFC;
+  line-height: inherit;
+  font-size: inherit;
+  text-align: inherit;
+
+  /* Seems to help alignment in headers */
+  vertical-align: top;
+}
+
+/* Add interaction cues on hover and focus */
+input.blank-word:hover,
+input.blank-word:focus{
+  /* Change the background to a light yellow */
+  background-color: #FFD;
+
+  /* A subtle transition never hurts */
+  -webkit-transition: background-color 0.5s;
+     -moz-transition: background-color 0.5s;
+      -ie-transition: background-color 0.5s;
+          transition: background-color 0.5s;
+}
+
+
+
+
+/*=== Right Panel ===*/
+.verse-ref-list
+{
+    width:20%;
+    padding-left:1em;
+    float:left;
+}
+
+.verse-ref-list ul
+{
+    list-style:none;
+    padding:0;
+    margin:0;
+    padding-top:10px;
+}
+
+.verse-ref-list ul li
+{
+    font-size:14px;
+    width:167px;
+    height:21px;
+    color:#666;
+    line-height:18px;
+    padding-left:25px;
+}
+
+li.gray2
+{
+    background:url('hover-gray.png') no-repeat left top;
+}
+
+li.white2
+{
+    background:url('hover-white.png') no-repeat left top;
+}
