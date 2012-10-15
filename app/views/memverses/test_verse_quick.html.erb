@@ -87,8 +87,10 @@
 		$feedback     = $("#feedback");
 		$verseguess   = $("#verseguess");
 	
-		<%= "$('#mnemonic').hide();" if !@mv.needs_mnemonic? %>
-		
+		<% if !@mv.needs_mnemonic? %>
+			$('#mnemonic').hide();
+		<% end %>
+
 		// focus cursor on verse entry box
 		$verseguess.focus();
 		
