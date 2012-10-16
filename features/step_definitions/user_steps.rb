@@ -132,7 +132,7 @@ end
 Given /^the user with the email of "(.*)" has (\d+) verses in his list$/ do |email, n|
   user = User.find_by_email(email)
   n.to_i.times { |i| 
-    vs = FactoryGirl.create(:verse, :chapter => 21, :versenum => i+1)
+    vs = FactoryGirl.create(:verse, :chapter => 2, :versenum => i+1)
     FactoryGirl.create(:memverse, :user_id => user.id, :verse_id => vs.id) 
   }
 end

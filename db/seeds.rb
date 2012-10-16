@@ -272,15 +272,15 @@ end
 # Seed some initial verses
 # ALV: Seeding the database with real verses currently breaks a lot of the Rspec tests.
 # ---------------------------------------------------------------------------------------------------------- 
-# puts "Adding seed verses"
-# config = ActiveRecord::Base.configurations[Rails.env]
-# if config['adapter'] == 'mysql2'
-  # system("mysql --user=#{config['username']} --password=#{config['password']} #{config['database']} < seed_verses.sql")
-# elsif config['adapter'] == 'sqlite3'
-  # system("sqlite3 #{config['database']} < seed_verses.sql")
-# else
-  # puts "WARNING: FinalVerse data could not be seeded for #{config['adapter']}. Please see db/seeds.rb."
-# end
+puts "Adding seed verses"
+config = ActiveRecord::Base.configurations[Rails.env]
+if config['adapter'] == 'mysql2'
+  system("mysql --user=#{config['username']} --password=#{config['password']} #{config['database']} < seed_verses.sql")
+elsif config['adapter'] == 'sqlite3'
+  system("sqlite3 #{config['database']} < seed_verses.sql")
+else
+  puts "WARNING: FinalVerse data could not be seeded for #{config['adapter']}. Please see db/seeds.rb."
+end
 
 # This is the current verse seed data
 # +----+-------------+------------+--------------+---------+----------+-----------------------+-----------------------+------------------------+----------+------------+--------------+------------+-----------------+

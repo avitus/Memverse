@@ -12,13 +12,26 @@ FactoryGirl.define do
     u.admin false 
   end
   
-  factory :verse do |v|
-    v.translation 'NIV'
-    v.book_index 1
-    v.book 'Genesis'
-    v.chapter 1
-    v.versenum 1
-    v.text 'In the beginning, God created the heavens and the earth.'
+  factory :verse do |verse|
+    verse.translation 'NIV'
+    verse.book_index 48
+    verse.book 'Galatians'
+    verse.chapter 5
+    verse.versenum 22
+    verse.text 'But the fruit of the Spirit is love, joy, peace, patience, kindness, goodness, faithfulness,'
+
+    # This ugliness is required to skip the validate_ref callback since the FinalVerse records are often not available during testing
+    # For details see: http://stackoverflow.com/questions/8751175/skip-callbacks-on-factory-girl-and-rspec
+    after(:build) { |verse| verse.class.skip_callback(:create, :before, :validate_ref) }
+
+    # Use this factory for testing out of bound verses
+    # TODO: these tests are not yet passing ... not sure how this works
+    factory :verse_with_validate_ref do
+      
+      before(:save) { |verse| verse.send(:validate_ref) }
+
+    end
+
   end
   
   factory :memverse do |mv|

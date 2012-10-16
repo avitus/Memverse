@@ -139,6 +139,8 @@ class VersesController < ApplicationController
     else
       @verses = Verse.where(:book => params[:bk], :chapter => params[:ch], :translation => tl).order('versenum')
     end
+
+    Rails.logger.debug("====> Retrieved #{@verses.length} verses.")
                       
     respond_to do |format|
       format.html # show.html.erb
