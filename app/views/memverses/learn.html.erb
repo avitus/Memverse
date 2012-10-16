@@ -104,9 +104,6 @@
 
                 this.queued_verses += 1;
 
-                console.log( "Verses in queue: " + this.queued_verses )
-                console.log( this.queue );
-
                 this.updateControls();
             },
 
@@ -115,7 +112,6 @@
 
                 this.queue = $.grep( this.queue, function( mv ) { return mv.mvId != mvId; });
                 this.queued_verses -= 1;
-
                 this.updateControls();
 
             },
@@ -258,8 +254,6 @@
 
         //------- Typing a verse ----------------------
         $(".blankified").on( "keyup", "input.blank-word", function () { 
-
-            console.log("Current guess for this word (" + this.name + ") is " + this.value );
             
             // Word correct   ==> next word
             if ( scrub_text( this.name ) === scrub_text( this.value.trim() ) ) {  // TODO: this needs to be more forgiving.
