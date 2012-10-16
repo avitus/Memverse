@@ -41,8 +41,8 @@ describe Verse do
     end
     
     it "should prevent a duplicate verse" do
-      verse1 = FactoryGirl.build(:verse, :book => "Psalms", :chapter => 117, :versenum => 1)
-      verse2 = FactoryGirl.build(:verse, :book => "Psalms", :chapter => 117, :versenum => 1)
+      verse1 = FactoryGirl.build(:verse_with_validate_ref, :book => "Psalms", :chapter => 117, :versenum => 1)
+      verse2 = FactoryGirl.build(:verse_with_validate_ref, :book => "Psalms", :chapter => 117, :versenum => 1)
       
       verse1.save.should be_true
       verse2.save.should be_false
@@ -50,13 +50,13 @@ describe Verse do
     end
     
     it "should reject an invalid chapter" do
-      verse = FactoryGirl.build(:verse, :book => "Psalms", :chapter => 151, :versenum => 1)
+      verse = FactoryGirl.build(:verse_with_validate_ref, :book => "Psalms", :chapter => 151, :versenum => 1)
       verse.save.should be_false
       verse.errors.full_messages.first.should == "Invalid chapter"
     end
     
     it "should reject an invalid versenum" do
-      verse = FactoryGirl.build(:verse, :book => "Psalms", :chapter => 117, :versenum => 3, :translation => "ESV")
+      verse = FactoryGirl.build(:verse_with_validate_ref, :book => "Psalms", :chapter => 117, :versenum => 3, :translation => "ESV")
       verse.save.should be_false
       verse.errors.full_messages.first.should == "Invalid verse number"
     end
