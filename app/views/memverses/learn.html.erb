@@ -114,12 +114,9 @@
             removeFromQueue: function ( mvId ) {
 
                 this.queue = $.grep( this.queue, function( mv ) { return mv.mvId != mvId; });
-
-                console.log( "Verses in queue: " + this.queued_verses )
-                console.log( this.queue );
+                this.queued_verses -= 1;
 
                 this.updateControls();
-
 
             },
 
