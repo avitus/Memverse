@@ -256,7 +256,7 @@
         $(".blankified").on( "keyup", "input.blank-word", function () { 
             
             // Word correct   ==> next word
-            if ( scrub_text( this.name ) === scrub_text( this.value.trim() ) ) {  // TODO: this needs to be more forgiving.
+            if ( scrub_text( this.name ) === scrub_text( this.value.trim() ) ) { 
 
                 $(this).next().focus();  // advance cursor to next blank word
 
