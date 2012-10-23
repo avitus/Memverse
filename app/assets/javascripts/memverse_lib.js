@@ -186,7 +186,7 @@ function blankifyVerse(versetext, reduction_percentage) {
 	        }
 	        else {
 	        	// TODO: this line calculates an approximately sized input box for the given word
-	        	word_width = Math.round( x.length * 60) / 100;  // multiply word length by 0.6 and round to one decimal
+	        	word_width = Math.round( x.length * 62) / 100;  // multiply word length by 0.6 and round to one decimal
 	            return "<input name='" + x + "' class='blank-word' style='width:" + word_width + "em;'>";
 	        };
 	    });

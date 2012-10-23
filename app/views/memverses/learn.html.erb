@@ -253,8 +253,10 @@
         });
 
         //------- Typing a verse ----------------------
-        $(".blankified").on( "keyup", "input.blank-word", function () { 
+        $(".blankified").on( "keyup", "input.blank-word", function (e) { 
             
+            console.log("Key pressed: " + e.keyCode );
+ 
             // Word correct   ==> next word
             if ( scrub_text( this.name ) === scrub_text( this.value.trim() ) ) { 
 
@@ -264,7 +266,14 @@
                 if ( $(this).next().length === 0 ) {  // there are no other words to fill in
                     practiceState.levelUp();
                 }
+            }
 
+            // check for down arrow keypress
+            else if ( e.keyCode === 40 ) {
+                // show current word
+                $(this).val( this.name ).animate({ color: '#999' }, 1500, function() {
+                    $(this).val('');
+                });;
             }
 
             // Verse complete ==> next verse
