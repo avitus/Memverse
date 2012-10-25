@@ -10,4 +10,9 @@ describe("blankifyVerse", function() {
     .toEqual("In the <span class='blank-word'>_____</span> God <span class='blank-word'>_____</span> the <span class='blank-word'>_____</span> and the <span class='blank-word'>_____</span>");
   }); 
 
+  it("replaces plain apostrophes with fancy ones", function() {
+    expect(blankifyVerse("for his name's sake", 40))
+    .toEqual("for his name’s sake");
+  }); 
+
 });
