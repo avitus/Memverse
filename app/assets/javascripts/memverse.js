@@ -222,7 +222,8 @@ scrub_text = function(text) {
 }
 
 versefeedback = function(correctvs, verseguess, echo, firstletter) {
-	firstletter = (typeof firstletter == "undefined")?false:firstletter;
+
+	firstletter = (typeof firstletter == "undefined") ? false : firstletter;
 	
 	guesstext   = $.trim(verseguess.replace(/\s+/g, " ")); // Remove double spaces from guess and trim
 	correcttext = $.trim(unescape(correctvs.replace(/\s+/g, " "))); // Remove any double spaces - shouldn't be any
