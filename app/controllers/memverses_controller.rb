@@ -1174,7 +1174,7 @@ class MemversesController < ApplicationController
     answer        = params[:answer].gsub(/\s+/," ").strip if params[:answer]    
     solution      = mv.verse.text.gsub(/\s+/," ").strip
     
-    if solution && answer
+    if solution && answer && session[:exam_cntr]
       
       # ---- TODO: Update this for greater leniency --------------
       if answer.downcase.gsub(/[^a-z ]|\s-|\s—/, '') == solution.downcase.gsub(/[^a-z ]|\s-|\s—/, '')
