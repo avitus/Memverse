@@ -909,9 +909,15 @@ class MemversesController < ApplicationController
     logger.info("* Testing chapter: #{bk} #{ch}")
     
     @chapter      = current_user.has_chapter?(bk,ch)
-    @bk_ch        = bk + " " + ch
-    @verse        = 1
-    @final_verse  = @chapter.length if @chapter
+
+    if @chapter
+      @bk_ch        = bk + " " + ch
+      @verse        = 1
+      @final_verse  = @chapter.length
+    else
+      redirect_to pre_chapter_path
+    end
+
             
   end
 
