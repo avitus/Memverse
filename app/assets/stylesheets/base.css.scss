@@ -55,7 +55,8 @@ Blue
 body
 {
 	background:#bfbebe url('body-bg.png') repeat-x left top;
-	font:13px/normal Arial,Helvetica,sans-serif;
+	font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+	font-size: 13px/normal;
 	color:#333;
 	padding:0;
 	margin:0;
@@ -68,7 +69,8 @@ form, input
 }
 
 textarea{
-	font:13px/normal Arial,Helvetica,sans-serif
+	font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+	font-size: 13px/normal;
 }
 
 a
@@ -123,7 +125,7 @@ img a
 }
 
 h1, h2, h3, h4, h5, h6 {
-font-family:"museo-slab-1",Georgia,"Times New Roman",Times,serif;
+	font-family:"museo-slab-1",Georgia,"Times New Roman",Times,serif;
 }
 
 /*========== Wrapper ==========*/
@@ -226,7 +228,7 @@ font-family:"museo-slab-1",Georgia,"Times New Roman",Times,serif;
 
 #no-js p{
 	text-align:center;
-	font:bold 14px/30px Arial,Helvetica,Geneva,sans-serif;
+	font:bold 14px/30px 'Open Sans',Arial,Helvetica,Geneva,sans-serif;
 	margin:0;
 	padding:0;
 	color:#fff;
@@ -2456,7 +2458,7 @@ div#errorExplanation ul li {
 /* === Verse Filtering === */
 #vsfilter {
   padding:10px;
-  font:bold 12px "Lucida Grande",Arial,sans-serif;
+  font:bold 12px "Open Sans",Arial,sans-serif;
   position:absolute;
   right:50px;
   top:100px;
