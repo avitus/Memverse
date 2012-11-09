@@ -56,7 +56,7 @@ body
 {
 	background:#bfbebe url('body-bg.png') repeat-x left top;
 	font-family: 'Open Sans', Arial, Helvetica, sans-serif;
-	font-size: 13px/normal;
+	font-size: 0.8125em;
 	color:#333;
 	padding:0;
 	margin:0;
@@ -70,7 +70,6 @@ form, input
 
 textarea{
 	font-family: 'Open Sans', Arial, Helvetica, sans-serif;
-	font-size: 13px/normal;
 }
 
 a
@@ -189,7 +188,7 @@ h1, h2, h3, h4, h5, h6 {
 .two-thirds-white-box {
   float: left;
   width: 55%;
-  min-height: 232px;
+  min-height: 262px;
   background: #fff;
   border:1px solid #555;
   margin: 0.5em 0.5em;
@@ -201,8 +200,8 @@ h1, h2, h3, h4, h5, h6 {
 
 .one-third-white-box {
   float: left;
-  width: 30%;
-  min-height: 232px;
+  width: 32%;
+  min-height: 262px;
   background: #fff;
   border:1px solid #555;
   margin: 0.5em 0.5em;
@@ -413,7 +412,6 @@ input.large {
 	float:left;
 	height:42px;
 	line-height:42px;
-	font-size:12px;
 	color:#FFF;
 	font-weight:normal;
 	text-transform:uppercase;
@@ -457,7 +455,6 @@ input.large {
 	float:left;
 	height:33px;
 	line-height:33px;
-	font-size:12px;
 	margin-top:5px;
 	color:#9c3;
 	font-weight:normal;
@@ -856,7 +853,6 @@ div#flash-error {
 {
 	width:212px;
 	float:right;
-	font-size:12px;
 	color:#666;
 }
 
@@ -864,7 +860,7 @@ div#flash-error {
 {
 	padding:0;
 	margin:0;
-	font-size:16px;
+	font-size:120%;
 	color:#1f8ec2;
 	font-weight:bold;
 	padding-bottom:5px;
