@@ -1,14 +1,15 @@
 MemverseApp::Application.routes.draw do
   
-  mount Forem::Engine, :at => '/forums'
-  mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
-  mount Ckeditor::Engine   => '/ckeditor'
+  mount Forem::Engine,    :at => '/forums'
+  mount Bloggity::Engine, :at => '/blog'
+  mount RailsAdmin::Engine    => '/admin', :as => 'rails_admin'
+  mount Ckeditor::Engine      => '/ckeditor'
+
   match '/split' => Split::Dashboard, :anchor => false, :constraints => lambda { |request|
     request.env['warden'].authenticated?    # are we authenticated?
     request.env['warden'].authenticate!     # authenticate if not already
     request.env['warden'].user.try(:admin?) # check if admin
   }
-
 
   devise_for :users
   
