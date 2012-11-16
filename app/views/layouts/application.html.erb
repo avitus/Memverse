@@ -172,7 +172,7 @@
 					<li <%= tab(@tab=="profile"		) %> rel="profile">		<%= link_to t('menu.profile'), 		main_app.user_path(current_user) %></li>
 					<li <%= tab(@tab=="contact"		) %> rel="contact">		<%= link_to t('menu.contact'), 		main_app.contact_path %></li>	
 					<li <%= tab(@tab=="leaderboard"	) %> rel="leaderboard">	<%= link_to t('menu.leaderboard'), 	main_app.leaderboard_path %></li>	
-					<li <%= tab(@tab=="blog"		) %> rel="blog">		<%= link_to t('menu.blog'), 		main_app.blog_path %></li>
+					<li <%= tab(@tab=="blog"		) %> rel="blog">		<%= link_to t('menu.blog'), 		bloggity.root_path %></li>
 					<li <%= tab(@tab=="help"		) %> rel="help">        <%= link_to t('menu.help'),         main_app.faq_path %></li>
 					<li>&nbsp;</li>
 				</ul>
@@ -240,9 +240,9 @@
 
 						<div id="blog" class="submenustyle">
 							<ul>
-								<li <%= sub(@sub=="view"		)%>><%= link_to t('blog_menu.View Blog'), 				main_app.blog_path %></li>
-								<li <%= sub(@sub=="comments"	)%>><%= link_to t('blog_menu.Recent Comments'),			main_app.blog_comments_new_path %></li>
-								<li <%= sub(@sub=="blogsearch"	)%>><%= link_to t('blog_menu.Blog Search'),				main_app.blog_search_path %></li>
+								<li <%= sub(@sub=="view"		)%>><%= link_to t('blog_menu.View Blog'), 				bloggity.root_path %></li>
+								<li <%= sub(@sub=="comments"	)%>><%= link_to t('blog_menu.Recent Comments'),			bloggity.blog_comments_new_path %></li>
+								<li <%= sub(@sub=="blogsearch"	)%>><%= link_to t('blog_menu.Blog Search'),				bloggity.blog_search_path %></li>
 								<li <%= sub(@sub=="forums"		)%>><%= link_to t('blog_menu.Forums'),					forem.root_path %></li>
 							</ul>
 						</div>
@@ -299,7 +299,13 @@
 
 	<!--Content Block -->
 	<div class="page-content">
-		<%= content_for?(:content) ? yield(:content) : yield %>
+		<div <%= content_for?(:body_css) ? yield(:body_css) : "id=standard_page" %> >
+
+			<!-- Main Page Content -->
+			<%= content_for?(:content) ? yield(:content) : yield %>
+			<div class="clr"></div><!-- Clear floats -->
+
+		</div>
 	</div>
 
 	<div><%= image_tag "trans.png", :size => "1x10" %>&nbsp;</div>
