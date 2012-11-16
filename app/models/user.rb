@@ -1013,7 +1013,7 @@ class User < ActiveRecord::Base
   end
 
   # ----------------------------------------------------------------------------------------------------------
-  # Bloggity
+  # Bloggity Settings
   # ----------------------------------------------------------------------------------------------------------
   def display_name
     self.name || self.login
@@ -1039,7 +1039,7 @@ class User < ActiveRecord::Base
   # Whether a user can moderate the comments for a given blog
   # Implement in your user model
   def can_moderate_blog_comments?(blog_id = nil)
-    self.id == 2 or self.id == 3486
+    self.id == 1 or self.id == 2 or self.id == 3486
   end
   
   # Whether the comments that a user makes within a given blog are automatically approved (as opposed to being queued until a moderator approves them)
@@ -1055,7 +1055,7 @@ class User < ActiveRecord::Base
   # Whether a user has access to create, edit and destroy blogs
   # Implement in your user model
   def can_modify_blogs?
-    self.id == 2
+    self.id == 1 or self.id == 2
   end
   
   # Implement in your user model 
