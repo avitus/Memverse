@@ -150,7 +150,7 @@ class UtilsController < ApplicationController
    
     # Cohort analysis     
     User.find_each { |u|
-      if u.state=="active" and u.has_started?
+      if u.confirmed_at && u.has_started?  # confirmed_at is nil until user clicks link in email
       	
       	if u.last_activity_date.nil?
       	  Rails.logger.warn("User #{u.name_or_login} has added verses but the last activity date field is not set")
