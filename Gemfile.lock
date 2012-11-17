@@ -6,6 +6,14 @@ GIT
       activemodel (>= 3.0.0)
 
 GIT
+  remote: git://github.com/avitus/bloggity.git
+  revision: 6367b0c4dd728cea073dd4e3bdc9b3d25c4bf6c2
+  specs:
+    bloggity (0.0.1)
+      jquery-rails
+      rails (~> 3.2.8)
+
+GIT
   remote: git://github.com/avitus/spawn.git
   revision: beaf7937cae96985de42081272a95386b8e474a3
   branch: edge
@@ -21,7 +29,7 @@ GIT
 
 GIT
   remote: git://github.com/radar/forem.git
-  revision: 23a82583e417b9ca2e2444749919d183cf6518d0
+  revision: 616ca2dfd7627488a224d400c1686786a47658ea
   specs:
     forem (1.0.0.beta1)
       cancan (= 1.6.7)
@@ -49,7 +57,7 @@ GIT
 
 GIT
   remote: git://github.com/sferik/rails_admin.git
-  revision: 15cb7bc66c2fb22a6e00af8a71c62b5f9d93abf5
+  revision: c4af98be428eb533d410814be877f92ee9afab93
   specs:
     rails_admin (0.2.0)
       bootstrap-sass (~> 2.1)
@@ -65,13 +73,6 @@ GIT
       rails (~> 3.1)
       remotipart (~> 1.0)
       sass-rails (~> 3.1)
-
-PATH
-  remote: ../bloggity
-  specs:
-    bloggity (0.0.1)
-      jquery-rails
-      rails (~> 3.2.8)
 
 GEM
   remote: http://rubygems.org/
@@ -112,7 +113,7 @@ GEM
       girl_friday
     arel (3.0.2)
     bcrypt-ruby (3.0.1)
-    best_in_place (1.1.2)
+    best_in_place (2.0.1)
       jquery-rails
       rails (~> 3.1)
     blankslate (3.1.2)
@@ -251,7 +252,7 @@ GEM
     net-ssh (2.6.1)
     net-ssh-gateway (1.1.0)
       net-ssh (>= 1.99.1)
-    newrelic_rpm (3.5.1.14)
+    newrelic_rpm (3.5.2.17)
     nokogiri (1.5.5)
     orm_adapter (0.4.0)
     paperclip (3.3.1)
