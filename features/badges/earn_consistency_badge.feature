@@ -10,10 +10,10 @@ Feature: Earn badges
     Scenario: User completes final session required to earn silver consistency badge
       Given the user with the email of "advanced_user@test.com" has completed 324 memorization sessions in the past year
       When the user with the email of "advanced_user@test.com" completes a memorization session
-      Then I should see "Congratulations"
+      Then I should see "CONGRATULATIONS"
       When I go to the home page
       When I follow "Dashboard"
       Then I should see "advanced has been awarded a silver Consistency badge"
       When I go to the progress page
-      Then I should not see "Congratulations"
+      Then I should not see "CONGRATULATIONS"
       

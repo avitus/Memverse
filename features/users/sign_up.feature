@@ -46,9 +46,9 @@ Feature: Sign up
       And I fill in the following:
         | user_name                  | Testy McUserton |
         | user_email                 | user@test.com   |
-        | user_password              | please          |
+        | user_password              | please!admit3+  |
         | user_password_confirmation |                 |
-      Then I should see "Passwords do not match"
+      Then I should see "One more time and you're done"
 
     @javascript
     Scenario: User signs up with mismatched password and confirmation

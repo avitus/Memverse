@@ -104,7 +104,7 @@ Given /^the user with the email address "([^"]*)" can blog$/ do |email|
 end
 
 Given /^a blog titled "(.*)"$/ do |title|
-  Blog.new(:title => title, :url_identifier => "main").save!
+  Bloggity::Blog.new(:title => title, :url_identifier => "main").save!
 end
 
 Given /^I sign in as a normal user$/ do
