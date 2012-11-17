@@ -32,7 +32,7 @@ SitemapGenerator::Sitemap.create do
   add leaderboard_path
   add faq_path
   add popular_path                                              # popular verses
-  add blog_path, :priority => 0.8, :changefreq => 'weekly'
+  add bloggity.root_path, :priority => 0.8, :changefreq => 'weekly'
 
   # Add root path for forem
   add '/forums'    # ALV: not sure how to do this using a route helper
