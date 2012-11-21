@@ -7,7 +7,7 @@ GIT
 
 GIT
   remote: git://github.com/avitus/bloggity.git
-  revision: 1d42780b4d6d6e50054dcc732c254d459c7c05e1
+  revision: 8b0d6ad7dc38fbe1d46b18b40a8078358f82b491
   specs:
     bloggity (0.0.1)
       jquery-rails
@@ -117,7 +117,8 @@ GEM
       jquery-rails
       rails (~> 3.1)
     blankslate (3.1.2)
-    bootstrap-sass (2.1.1.0)
+    bootstrap-sass (2.2.1.0)
+      sass (~> 3.2)
     breadcrumbs_on_rails (2.2.0)
     builder (3.0.4)
     cancan (1.6.7)

@@ -413,8 +413,8 @@ class UtilsController < ApplicationController
   # Show unapproved blog comments
   # ----------------------------------------------------------------------------------------------------------   
   def unapproved_comments
-    @comments         = BlogComment.find_all_by_approved(false)
-    @newest_comments  = BlogComment.find_all_by_approved(true, :all, :limit => 50, :order => "updated_at DESC")
+    @comments         = Bloggity::BlogComment.find_all_by_approved(false)
+    @newest_comments  = Bloggity::BlogComment.find_all_by_approved(true, :all, :limit => 50, :order => "updated_at DESC")
     # TODO - figure out what to do with comments from deleted blog posts
   end
     
