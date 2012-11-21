@@ -14,7 +14,6 @@
 src_files:
   # - app/assets/javascripts/**/*.js
   - assets/application.js   # ALV: added this due to some problem with asset pipeline
-  - public/javascripts/jquery-1.7.min.js
 
 # stylesheets
 #
