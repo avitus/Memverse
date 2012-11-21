@@ -87,12 +87,15 @@ String.prototype.capitalize = function() {
  * Substitute abbreviations
  ******************************************************************************/
 function unabbreviate(book_name) {
+	if(!(book_name.split(" ")[0].match('[^I]'))) { // Check if first "word" contains only I's; then Roman numerals to Arabic numbers
+		book_name = book_name.replace("III ", "3 ").replace("II ", "2 ").replace("I ", "1 "); // replace first occurences
+	}
 	book_index = jQuery.inArray( book_name, BIBLEABBREV );
 	if (book_index === -1) {
 		return book_name;
 	} else {
-		return BIBLEBOOKS[book_index];						
-	}	
+		return BIBLEBOOKS[book_index];
+	}
 }
 
 /******************************************************************************
