@@ -34,7 +34,6 @@
 				isFormValid = false;
 			} else { // The form is OK! We update global formSubmitted variable.
 				formSubmitted = true;
-				$.get('/signup_button_test_finished'); // and we finish the button test
 			}
 			
 			return isFormValid;
@@ -45,9 +44,7 @@
 		
 		<%= ('<input type="hidden" name="user[referred_by]" value="' + session[:referrer].to_s + '">').html_safe if session[:referrer] %>
 
-		<% ab_test("signup_button", "button_a", "button_b") do |button| %>
-			<%= render :partial => "devise/registrations/form_#{button}" %>
-		<% end %>
+		<%= render :partial => "devise/registrations/form_button_b" %>
 
 	<% end %>
 
