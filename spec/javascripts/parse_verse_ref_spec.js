@@ -28,9 +28,9 @@ describe("ParseVerse", function() {
 
   it("Handles Roman numerals properly", function() {
     expect(parseVerseRef("III John 1:2")).toEqual({ bk: '3 John', ch: 1, vs: 2, bi: 64 } );
-    expect(parseVerseRef("II Jn 1:4")).toEqual(   { bk: '2 John', ch: 1, vs: 4, bi: 63 } );
+    expect(parseVerseRef("II John 1:4")).toEqual( { bk: '2 John', ch: 1, vs: 4, bi: 63 } );
     expect(parseVerseRef("I John 1:9")).toEqual(  { bk: '1 John', ch: 1, vs: 9, bi: 62 } );
-    expect(parseVerseRef("Malachi 4:6")).toEqual( { bk: 'Malachi', ch: 4, vs: 6, bi: 39 } );
+    expect(parseVerseRef("Malachi 4:6")).toEqual( { bk: 'Malachi', ch: 4, vs: 6, bi: 39 } ); // don't want "i" in Malachi taken for a Roman numeral
   });
 
   it("Handles lowercase book names with leading number", function() {
