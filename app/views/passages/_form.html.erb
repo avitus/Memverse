@@ -1,0 +1,53 @@
+<%= form_for(@passage) do |f| %>
+  <% if @passage.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@passage.errors.count, "error") %> prohibited this passage from being saved:</h2>
+
+      <ul>
+      <% @passage.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :user %><br />
+    <%= f.text_field :user %>
+  </div>
+  <div class="field">
+    <%= f.label :length %><br />
+    <%= f.number_field :length %>
+  </div>
+  <div class="field">
+    <%= f.label :reference %><br />
+    <%= f.text_field :reference %>
+  </div>
+  <div class="field">
+    <%= f.label :efactor %><br />
+    <%= f.text_field :efactor %>
+  </div>
+  <div class="field">
+    <%= f.label :test_interval %><br />
+    <%= f.number_field :test_interval %>
+  </div>
+  <div class="field">
+    <%= f.label :rep_n %><br />
+    <%= f.number_field :rep_n %>
+  </div>
+  <div class="field">
+    <%= f.label :next_test %><br />
+    <%= f.date_select :next_test %>
+  </div>
+  <div class="field">
+    <%= f.label :last_tested %><br />
+    <%= f.date_select :last_tested %>
+  </div>
+  <div class="field">
+    <%= f.label :first_verse %><br />
+    <%= f.number_field :first_verse %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

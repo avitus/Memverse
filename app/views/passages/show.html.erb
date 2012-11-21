@@ -1,0 +1,50 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>User:</b>
+  <%= @passage.user %>
+</p>
+
+<p>
+  <b>Length:</b>
+  <%= @passage.length %>
+</p>
+
+<p>
+  <b>Reference:</b>
+  <%= @passage.reference %>
+</p>
+
+<p>
+  <b>Efactor:</b>
+  <%= @passage.efactor %>
+</p>
+
+<p>
+  <b>Test interval:</b>
+  <%= @passage.test_interval %>
+</p>
+
+<p>
+  <b>Rep n:</b>
+  <%= @passage.rep_n %>
+</p>
+
+<p>
+  <b>Next test:</b>
+  <%= @passage.next_test %>
+</p>
+
+<p>
+  <b>Last tested:</b>
+  <%= @passage.last_tested %>
+</p>
+
+<p>
+  <b>First verse:</b>
+  <%= @passage.first_verse %>
+</p>
+
+
+<%= link_to 'Edit', edit_passage_path(@passage) %> |
+<%= link_to 'Back', passages_path %>
