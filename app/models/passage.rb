@@ -6,4 +6,5 @@ class Passage < ActiveRecord::Base
   has_many   :verses, :through => :memverses
 
   attr_accessible :efactor, :first_verse, :last_tested, :length, :next_test, :reference, :rep_n, :test_interval
+
 end
