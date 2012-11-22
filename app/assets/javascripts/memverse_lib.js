@@ -91,9 +91,21 @@ function unabbreviate(book_name) {
 		book_name = book_name.replace("III ", "3 ").replace("II ", "2 ").replace("I ", "1 "); // replace first occurences
 	}
 	book_index = jQuery.inArray( book_name, BIBLEABBREV );
-	if (book_index === -1) {
-		return book_name;
-	} else {
+
+	if (book_index === -1) { // not a standard abbreviation
+		// since it might be a nonstandard abbreviation, let's see if we can find only one possible match with book names
+		possibilities = [];
+		for (var i = 0; i < BIBLEBOOKS.length; i++) {
+			if(BIBLEBOOKS[i].substring(0, book_name.length) == book_name) {
+				possibilities.push(BIBLEBOOKS[i]);
+			}
+		}
+		if (possibilities.length == 1) { // nonstandard abbreviation, and only one possibility
+			return possibilities[0];
+		} else { // already unabbreviated book name (though it may be incorrect)
+			return book_name;
+		}
+	} else { // was a standard abbreviation; return the unabbreviated book name
 		return BIBLEBOOKS[book_index];
 	}
 }
