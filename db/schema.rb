@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121115010752) do
+ActiveRecord::Schema.define(:version => 20121121223825) do
 
   create_table "american_states", :force => true do |t|
     t.string  "abbrev",      :limit => 20, :default => "", :null => false
@@ -315,6 +315,7 @@ ActiveRecord::Schema.define(:version => 20121115010752) do
     t.integer  "ref_interval",                                :default => 1
     t.date     "next_ref_test"
     t.integer  "uberverse_id"
+    t.integer  "passage_id"
   end
 
   add_index "memverses", ["status"], :name => "index_memverses_on_status"
@@ -336,6 +337,22 @@ ActiveRecord::Schema.define(:version => 20121115010752) do
     t.string  "server_url"
     t.string  "salt",       :null => false
   end
+
+  create_table "passages", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "length"
+    t.string   "reference"
+    t.decimal  "efactor"
+    t.integer  "test_interval"
+    t.integer  "rep_n"
+    t.date     "next_test"
+    t.date     "last_tested"
+    t.integer  "first_verse"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  add_index "passages", ["user_id"], :name => "index_passages_on_user_id"
 
   create_table "passwords", :force => true do |t|
     t.integer  "user_id"
