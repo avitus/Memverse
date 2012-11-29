@@ -62,4 +62,11 @@ describe Verse do
     end
   end
   
+describe "web_check" do
+  it "should say the verse of Psalm 35:1 KJV matches on Bible Gateway" do
+    verse = FactoryGirl.create(:verse, :book => "Psalm", :chapter => 35, :versenum => 1, :text => "Plead my cause, O Lord, with them that strive with me: fight against them that fight against me.", :translation => "KJV")
+    verse.web_check == true
+  end
+end
+  
 end
