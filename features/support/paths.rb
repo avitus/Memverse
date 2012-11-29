@@ -21,8 +21,8 @@ module NavigationHelpers
       '/?referrer='+$1
       
     when /the new blog post page for the blog titled "(.*)"/
-      blog_id = Blog.find_by_title($1).id.to_s
-      '/blog_posts/new?blog_id='+blog_id
+      blog_id = Bloggity::Blog.find_by_title($1).id.to_s
+      'blog/blogs/'+blog_id+'/blog_posts/new'
       
     when /the blog/
       '/blog'  

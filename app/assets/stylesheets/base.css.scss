@@ -55,7 +55,8 @@ Blue
 body
 {
 	background:#bfbebe url('body-bg.png') repeat-x left top;
-	font:13px/normal Arial,Helvetica,sans-serif;
+	font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+	font-size: 0.8125em;
 	color:#333;
 	padding:0;
 	margin:0;
@@ -67,8 +68,8 @@ form, input
 	margin:0;
 }
 
-textarea{
-	font:13px/normal Arial,Helvetica,sans-serif
+textarea, button, input, select {
+	font-family: 'Open Sans', Arial, Helvetica, sans-serif;
 }
 
 a
@@ -123,7 +124,7 @@ img a
 }
 
 h1, h2, h3, h4, h5, h6 {
-font-family:"museo-slab-1",Georgia,"Times New Roman",Times,serif;
+	font-family:"museo-slab-1",Georgia,"Times New Roman",Times,serif;
 }
 
 /*========== Wrapper ==========*/
@@ -187,7 +188,7 @@ font-family:"museo-slab-1",Georgia,"Times New Roman",Times,serif;
 .two-thirds-white-box {
   float: left;
   width: 55%;
-  min-height: 232px;
+  min-height: 262px;
   background: #fff;
   border:1px solid #555;
   margin: 0.5em 0.5em;
@@ -199,8 +200,8 @@ font-family:"museo-slab-1",Georgia,"Times New Roman",Times,serif;
 
 .one-third-white-box {
   float: left;
-  width: 30%;
-  min-height: 232px;
+  width: 32%;
+  min-height: 262px;
   background: #fff;
   border:1px solid #555;
   margin: 0.5em 0.5em;
@@ -226,7 +227,7 @@ font-family:"museo-slab-1",Georgia,"Times New Roman",Times,serif;
 
 #no-js p{
 	text-align:center;
-	font:bold 14px/30px Arial,Helvetica,Geneva,sans-serif;
+	font:bold 14px/30px 'Open Sans',Arial,Helvetica,Geneva,sans-serif;
 	margin:0;
 	padding:0;
 	color:#fff;
@@ -411,7 +412,6 @@ input.large {
 	float:left;
 	height:42px;
 	line-height:42px;
-	font-size:12px;
 	color:#FFF;
 	font-weight:normal;
 	text-transform:uppercase;
@@ -455,7 +455,6 @@ input.large {
 	float:left;
 	height:33px;
 	line-height:33px;
-	font-size:12px;
 	margin-top:5px;
 	color:#9c3;
 	font-weight:normal;
@@ -854,7 +853,6 @@ div#flash-error {
 {
 	width:212px;
 	float:right;
-	font-size:12px;
 	color:#666;
 }
 
@@ -862,7 +860,7 @@ div#flash-error {
 {
 	padding:0;
 	margin:0;
-	font-size:16px;
+	font-size:120%;
 	color:#1f8ec2;
 	font-weight:bold;
 	padding-bottom:5px;
@@ -1606,7 +1604,7 @@ div#flash-error {
 	width:155px;
 	height:21px;
 	float:left;
-	font-size:13px;
+	font-size:12.5px;
 	color:#666;
 	font-weight:bold;
 	line-height:21px;
@@ -2456,7 +2454,7 @@ div#errorExplanation ul li {
 /* === Verse Filtering === */
 #vsfilter {
   padding:10px;
-  font:bold 12px "Lucida Grande",Arial,sans-serif;
+  font:bold 12px "Open Sans",Arial,sans-serif;
   position:absolute;
   right:50px;
   top:100px;

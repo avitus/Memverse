@@ -13,7 +13,7 @@ class HomeController < ApplicationController
     # @blogposts = Rails.cache.fetch(["latest_blog_posts"], :expires_in => 2.hours) do 
       # BlogPost.where(:is_complete => true).order("created_at DESC").limit(2)
     # end
-    @blogposts = BlogPost.where(:is_complete => true).order("created_at DESC").limit(2)     
+    @blogposts = Bloggity::BlogPost.where(:is_complete => true).order("created_at DESC").limit(2)     
 
 
     # @vsillumination = Rails.cache.fetch(["pop_vs_illumination"], :expires_in => 24.hours) do 

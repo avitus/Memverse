@@ -87,12 +87,27 @@ String.prototype.capitalize = function() {
  * Substitute abbreviations
  ******************************************************************************/
 function unabbreviate(book_name) {
+	if(!(book_name.split(" ")[0].match('[^I]'))) { // Check if first "word" contains only I's; then Roman numerals to Arabic numbers
+		book_name = book_name.replace("III ", "3 ").replace("II ", "2 ").replace("I ", "1 "); // replace first occurences
+	}
 	book_index = jQuery.inArray( book_name, BIBLEABBREV );
-	if (book_index === -1) {
-		return book_name;
-	} else {
-		return BIBLEBOOKS[book_index];						
-	}	
+
+	if (book_index === -1) { // not a standard abbreviation
+		// since it might be a nonstandard abbreviation, let's see if we can find only one possible match with book names
+		possibilities = [];
+		for (var i = 0; i < BIBLEBOOKS.length; i++) {
+			if(BIBLEBOOKS[i].substring(0, book_name.length) == book_name) {
+				possibilities.push(BIBLEBOOKS[i]);
+			}
+		}
+		if (possibilities.length == 1) { // nonstandard abbreviation, and only one possibility
+			return possibilities[0];
+		} else { // already unabbreviated book name (though it may be incorrect)
+			return book_name;
+		}
+	} else { // was a standard abbreviation; return the unabbreviated book name
+		return BIBLEBOOKS[book_index];
+	}
 }
 
 /******************************************************************************
@@ -186,8 +201,8 @@ function blankifyVerse(versetext, reduction_percentage) {
 	        }
 	        else {
 	        	// TODO: this line calculates an approximately sized input box for the given word
-	        	word_width = Math.round( x.length * 59) / 100;  // multiply word length by 0.6 and round to one decimal
-	            return "<input name='" + x + "' class='blank-word' style='width:" + word_width + "em;'>";
+	        	word_width = Math.round( x.length * 62) / 100;  // multiply word length by 0.6 and round to one decimal
+	            return "<input name='" + x.replace(/'/, '’') + "' class='blank-word' style='width:" + word_width + "em;'>";
 	        };
 	    });
 	          

@@ -31,11 +31,11 @@ SitemapGenerator::Sitemap.create do
   add tutorial_path
   add leaderboard_path
   add faq_path
-  add popular_path                                              # popular verses
-  add blog_path, :priority => 0.8, :changefreq => 'weekly'
-
-  # Add root path for forem
+  add popular_path    # popular verses
+  
+  # Add root path for forem and blog
   add '/forums'    # ALV: not sure how to do this using a route helper
+  add '/blog'      # bloggity.root_path does not work
 
   # Add blog posts
   # BlogPost.find_each do |blog_post|

@@ -1,10 +1,10 @@
 /******************************************************************************
  * Flexible verse searching
  ******************************************************************************/
-function flexversesearch(user_text){
+function flexversesearch(text){
 
     // Truncate queries of excessive length
-    var text = jQuery.trim(user_text).substring(0, 100).split(" ").slice(0, -1).join(" ");
+    // var text = jQuery.trim(user_text).substring(0, 100).split(" ").slice(0, -1).join(" ");
 
 	// User is looking for a single verse						
 	if (ref = parseVerseRef($.trim(text))) {

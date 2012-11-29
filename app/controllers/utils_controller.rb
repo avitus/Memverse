@@ -150,7 +150,7 @@ class UtilsController < ApplicationController
    
     # Cohort analysis     
     User.find_each { |u|
-      if u.state=="active" and u.has_started?
+      if u.confirmed_at && u.has_started?  # confirmed_at is nil until user clicks link in email
       	
       	if u.last_activity_date.nil?
       	  Rails.logger.warn("User #{u.name_or_login} has added verses but the last activity date field is not set")
@@ -413,8 +413,8 @@ class UtilsController < ApplicationController
   # Show unapproved blog comments
   # ----------------------------------------------------------------------------------------------------------   
   def unapproved_comments
-    @comments         = BlogComment.find_all_by_approved(false)
-    @newest_comments  = BlogComment.find_all_by_approved(true, :all, :limit => 50, :order => "updated_at DESC")
+    @comments         = Bloggity::BlogComment.find_all_by_approved(false)
+    @newest_comments  = Bloggity::BlogComment.find_all_by_approved(true, :all, :limit => 50, :order => "updated_at DESC")
     # TODO - figure out what to do with comments from deleted blog posts
   end
     

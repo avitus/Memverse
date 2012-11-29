@@ -450,6 +450,7 @@ class Verse < ActiveRecord::Base
   # ============= Private below this line - can only be called on self =======================================
   private
   
+  # before_destroy
   def delete_memverses
     Rails.logger.warn("*** Deleting the following verse: #{self.ref} [#{self.translation}]  ")
     Rails.logger.warn("*** Deleting associated memory verses")
@@ -461,10 +462,12 @@ class Verse < ActiveRecord::Base
     self.memverses.destroy_all
   end
   
+  # before_save
   def cleanup_text
     self.text = self.text.gsub(/(\r)?\n/,'').squeeze(" ").strip
   end
   
+  # before_create
   def validate_ref
     bk = self.book
     ch = self.chapter
