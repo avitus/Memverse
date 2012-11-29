@@ -1,21 +1,21 @@
 MemverseApp::Application.routes.draw do
   
-  mount Forem::Engine, :at => '/forums'
-  mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
-  mount Ckeditor::Engine   => '/ckeditor'
+  mount Forem::Engine,    :at => '/forums'
+  mount Bloggity::Engine, :at => '/blog'
+  mount RailsAdmin::Engine    => '/admin', :as => 'rails_admin'
+  mount Ckeditor::Engine      => '/ckeditor'
+
   match '/split' => Split::Dashboard, :anchor => false, :constraints => lambda { |request|
     request.env['warden'].authenticated?    # are we authenticated?
     request.env['warden'].authenticate!     # authenticate if not already
     request.env['warden'].user.try(:admin?) # check if admin
   }
 
-
   devise_for :users
   
   # Should be able to remove this route once Forem allows configurable sign_in path
   match '/users/sign_in', :to => "devise/sessions#new", :as => "sign_in"
   
-  resources :blog_categories
   resources :users, :only => :show
   resources :groups
   resources :uberverses
@@ -141,12 +141,7 @@ MemverseApp::Application.routes.draw do
 
   # Game routes  
   match '/verse_scramble',         :to => 'games#verse_scramble',            :as => 'verse_scramble'  
-  
-  # Blog routes
-  match '/blog',                   :to => 'blog_posts#index', :blog_url_id_or_id => 'main',  :as => 'blog'
-  match '/blog_comments_new',      :to => 'blog_comments#recent_comments',                   :as => 'blog_comments_new'
-  match '/blog_search',            :to => 'blog_posts#blog_search',                          :as => 'blog_search'
-  
+    
   # Routes for graphs
   match '/load_progress/',         :to => 'chart#load_progress',             :as => 'load_progress'
   match '/global_data',            :to => 'chart#global_data',               :as => 'global_data' 

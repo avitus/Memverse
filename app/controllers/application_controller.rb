@@ -7,6 +7,10 @@ class ApplicationController < ActionController::Base
   end
   helper_method :forem_user
 
+  def bloggity_user
+    current_user
+  end
+  helper_method :bloggity_user
 
   helper :all # include all helpers, all the time
   protect_from_forgery

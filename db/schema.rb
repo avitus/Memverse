@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120803040542) do
+ActiveRecord::Schema.define(:version => 20121115010752) do
 
   create_table "american_states", :force => true do |t|
     t.string  "abbrev",      :limit => 20, :default => "", :null => false
@@ -39,7 +39,7 @@ ActiveRecord::Schema.define(:version => 20120803040542) do
     t.integer "user_id"
   end
 
-  create_table "blog_assets", :force => true do |t|
+  create_table "bloggity_blog_assets", :force => true do |t|
     t.integer "blog_post_id"
     t.integer "parent_id"
     t.string  "content_type"
@@ -50,7 +50,7 @@ ActiveRecord::Schema.define(:version => 20120803040542) do
     t.integer "height"
   end
 
-  create_table "blog_categories", :force => true do |t|
+  create_table "bloggity_blog_categories", :force => true do |t|
     t.string   "name"
     t.integer  "parent_id"
     t.integer  "blog_id"
@@ -58,10 +58,10 @@ ActiveRecord::Schema.define(:version => 20120803040542) do
     t.datetime "updated_at"
   end
 
-  add_index "blog_categories", ["blog_id"], :name => "index_blog_categories_on_blog_id"
-  add_index "blog_categories", ["parent_id"], :name => "index_blog_categories_on_parent_id"
+  add_index "bloggity_blog_categories", ["blog_id"], :name => "index_blog_categories_on_blog_id"
+  add_index "bloggity_blog_categories", ["parent_id"], :name => "index_blog_categories_on_parent_id"
 
-  create_table "blog_comments", :force => true do |t|
+  create_table "bloggity_blog_comments", :force => true do |t|
     t.integer  "user_id"
     t.integer  "blog_post_id"
     t.text     "comment"
@@ -70,9 +70,9 @@ ActiveRecord::Schema.define(:version => 20120803040542) do
     t.datetime "updated_at"
   end
 
-  add_index "blog_comments", ["blog_post_id"], :name => "index_blog_comments_on_blog_post_id"
+  add_index "bloggity_blog_comments", ["blog_post_id"], :name => "index_blog_comments_on_blog_post_id"
 
-  create_table "blog_posts", :force => true do |t|
+  create_table "bloggity_blog_posts", :force => true do |t|
     t.string   "title"
     t.text     "body"
     t.string   "tag_string"
@@ -88,20 +88,20 @@ ActiveRecord::Schema.define(:version => 20120803040542) do
     t.boolean  "tweeted",         :default => false
   end
 
-  add_index "blog_posts", ["blog_id"], :name => "index_blog_posts_on_blog_id"
-  add_index "blog_posts", ["category_id"], :name => "index_blog_posts_on_category_id"
-  add_index "blog_posts", ["url_identifier"], :name => "index_blog_posts_on_url_identifier"
+  add_index "bloggity_blog_posts", ["blog_id"], :name => "index_blog_posts_on_blog_id"
+  add_index "bloggity_blog_posts", ["category_id"], :name => "index_blog_posts_on_category_id"
+  add_index "bloggity_blog_posts", ["url_identifier"], :name => "index_blog_posts_on_url_identifier"
 
-  create_table "blog_tags", :force => true do |t|
+  create_table "bloggity_blog_tags", :force => true do |t|
     t.string   "name"
     t.integer  "blog_post_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "blog_tags", ["blog_post_id"], :name => "index_blog_tags_on_blog_post_id"
+  add_index "bloggity_blog_tags", ["blog_post_id"], :name => "index_blog_tags_on_blog_post_id"
 
-  create_table "blogs", :force => true do |t|
+  create_table "bloggity_blogs", :force => true do |t|
     t.string   "title"
     t.string   "subtitle"
     t.string   "url_identifier"
@@ -111,7 +111,7 @@ ActiveRecord::Schema.define(:version => 20120803040542) do
     t.datetime "updated_at"
   end
 
-  add_index "blogs", ["url_identifier"], :name => "index_blogs_on_url_identifier"
+  add_index "bloggity_blogs", ["url_identifier"], :name => "index_blogs_on_url_identifier"
 
   create_table "churches", :force => true do |t|
     t.string   "name",                       :null => false

@@ -139,6 +139,8 @@ class VersesController < ApplicationController
     else
       @verses = Verse.where(:book => params[:bk], :chapter => params[:ch], :translation => tl).order('versenum')
     end
+
+    Rails.logger.debug("====> Retrieved #{@verses.length} verses.")
                       
     respond_to do |format|
       format.html # show.html.erb
@@ -223,7 +225,7 @@ class VersesController < ApplicationController
     add_breadcrumb I18n.t('home_menu.Search Bible'), :search_verse_path
 
 		@verses = Array.new
-		@verses = Verse.search( params[:searchParams] ) if params[:searchParams]
+		@verses = Verse.search( params[:searchParams][0..255] ) if params[:searchParams]
 		
     respond_to do |format|
       format.html # show.html.erb

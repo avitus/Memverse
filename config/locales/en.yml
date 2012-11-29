@@ -244,8 +244,8 @@
       Rev:             "Rev" 
   menu:
     home:         "Home"
-    memorize:     "Memorize"
-    learn:        "Learn"
+    Review:       "Review"
+    Learn:        "Learn"
     profile:      "Account"
     contact:      "Contact"
     leaderboard:  "Leaderboards"
@@ -261,12 +261,15 @@
     Tag Cloud:             "Tag Cloud"
     News:                  "News"
   memorize_menu:
-    Memorize:              "Memorize"
+    Verses:                "Verses"
+    References:            "References"
     Reference Recall:      "Reference Recall"
     Practice:              "Practice"
     Accuracy Test:         "Accuracy Test"
     Chapter Review:        "Chapter Review"
   learn_menu:
+    Learn:                 "Learn"
+    Practice:              "Practice"
     Tutorial:              "Tutorial"
     Video Tutorial:        "Video Tutorial"
     SuperMemo Algorithm:   "Supermemo Algorithm"

@@ -11,7 +11,7 @@
 /* Single element for verses in search result ... */
 div.ref-and-details {
   float:left;
-  padding-right:4%;
+  
   /* Extraction of first few words of verse */
   p.first-words {
     color: #999999;
@@ -173,7 +173,7 @@ div.ref-and-details {
     border:1px solid #ccc;
     padding:1em;
     margin: 2em 0em 3em;
-    color:#666;
+    color:#444;
     position:relative;    
 
     .mnemonic {

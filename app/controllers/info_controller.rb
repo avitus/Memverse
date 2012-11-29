@@ -12,9 +12,10 @@ class InfoController < ApplicationController
   # Memverse tutorial
   # ---------------------------------------------------------------------------------------------------------- 
   def tutorial
-    @tab = "learn" 
+    @tab = "help" 
     @sub = "tutorial"
-    add_breadcrumb I18n.t('menu.learn'), :tutorial_path
+
+    add_breadcrumb I18n.t('menu.help'), :tutorial_path
     
     if current_user
       # Check for quest completion
@@ -32,9 +33,9 @@ class InfoController < ApplicationController
   # Supermemo Algorithm
   # ----------------------------------------------------------------------------------------------------------   
   def sm_description
-    @tab = "learn" 
+    @tab = "help" 
     @sub = "smalg"
-    add_breadcrumb I18n.t('menu.learn'), :tutorial_path
+    add_breadcrumb I18n.t('menu.help'), :tutorial_path
     add_breadcrumb I18n.t('page_titles.supermemo'), :supermemo_path
   end
   
@@ -42,9 +43,9 @@ class InfoController < ApplicationController
   # Video Tutorial
   # ----------------------------------------------------------------------------------------------------------   
   def video_tut
-  	@tab = "learn"
+    @tab = "help" 
   	@sub = "vidtut"
-    add_breadcrumb I18n.t('menu.learn'), :tutorial_path
+    add_breadcrumb I18n.t('menu.help'), :tutorial_path
     add_breadcrumb I18n.t('learn_menu.Video Tutorial'), '/video_tutorial' #currently unused
   end
 

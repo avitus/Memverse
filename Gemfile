@@ -43,7 +43,9 @@ gem "devise-encryptable"                                                        
 gem "cancan"                                                                                    # Role-based authorization
 
 gem 'rails_admin', :git => 'git://github.com/sferik/rails_admin.git'                            # Admin console
-gem 'forem', :git => "git://github.com/radar/forem.git"                                         # Forum engine
+gem 'forem',       :git => "git://github.com/radar/forem.git"                                   # Forum engine
+gem 'bloggity',    :git => "git://github.com/avitus/bloggity.git"                               # Blog engine
+# gem 'bloggity', :path => "../bloggity"                                                        # Blog engine (dev environment)
 
 gem 'fancybox-rails'                                                                            # For displaying of video
 gem 'kaminari'                                                                                  # Required for bloggity
