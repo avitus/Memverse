@@ -342,12 +342,15 @@ ActiveRecord::Schema.define(:version => 20121121223825) do
     t.integer  "user_id"
     t.integer  "length"
     t.string   "reference"
+    t.string   "book"
+    t.integer  "chapter"
+    t.integer  "first_verse"
+    t.integer  "last_verse"
     t.decimal  "efactor"
     t.integer  "test_interval"
     t.integer  "rep_n"
     t.date     "next_test"
     t.date     "last_tested"
-    t.integer  "first_verse"
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false
   end

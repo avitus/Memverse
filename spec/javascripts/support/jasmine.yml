@@ -13,8 +13,21 @@
 
 src_files:
   # - app/assets/javascripts/**/*.js
+  - jquery                  # ACW: src_files only accepts manifests, and this is the proper way to include jquery
   - assets/application.js   # ALV: added this due to some problem with asset pipeline
-  - public/javascripts/jquery-1.7.min.js
+
+# helpers
+#
+# Return an array of filepaths relative to spec_dir to include before jasmine specs.
+# Default: ["helpers/**/*.js"]
+#
+# EXAMPLE:
+#
+# helpers:
+#   - helpers/**/*.js
+#
+helpers:
+  - helpers/**/*.js
 
 # stylesheets
 #
@@ -29,19 +42,6 @@ src_files:
 #
 stylesheets:
   - stylesheets/**/*.css
-
-# helpers
-#
-# Return an array of filepaths relative to spec_dir to include before jasmine specs.
-# Default: ["helpers/**/*.js"]
-#
-# EXAMPLE:
-#
-# helpers:
-#   - helpers/**/*.js
-#
-helpers:
-  - helpers/**/*.js
 
 # spec_files
 #

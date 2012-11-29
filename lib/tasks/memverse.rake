@@ -1,6 +1,6 @@
-include Parser
-
 namespace :utils do
+
+  # include Parser
 
   #--------------------------------------------------------------------------------------------
   # Group user's memory verses into passages. This should be a one time operation.
@@ -34,12 +34,11 @@ namespace :utils do
       }
 
       # Find all other verses and add to existing passage
-      Memverse.where(:user_id => u.id, Memverse.arel_table[:first_verse].not_eq(nil) ).find_each { |mv|
-
+      Memverse.where(:user_id => u.id).arel_table[:first_verse].not_eq(nil).find_each { |mv|
         mv.add_to_passage
-
       }
     }
+
 
     puts "=== Finished ==="
 

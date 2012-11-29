@@ -5,13 +5,18 @@ class CreatePassages < ActiveRecord::Migration
     create_table :passages do |t|
       t.references :user
       t.integer    :length
+
       t.string     :reference
+      t.string     :book
+      t.integer    :chapter
+      t.integer    :first_verse
+      t.integer    :last_verse
+
       t.decimal    :efactor
       t.integer    :test_interval
       t.integer    :rep_n
       t.date       :next_test
       t.date       :last_tested
-      t.integer    :first_verse
 
       t.timestamps
     end

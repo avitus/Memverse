@@ -80,8 +80,9 @@ class User < ActiveRecord::Base
   acts_as_tagger
 
   # Associations for bloggity
-  has_many :blog_posts, :foreign_key => "posted_by_id"
-  has_many :blog_comments, :dependent => :destroy
+
+  has_many :blog_posts, :foreign_key => "posted_by_id", :class_name => 'Bloggity::BlogPost'
+  has_many :blog_comments, :dependent => :destroy, :class_name => 'Bloggity::BlogComment'
 
   # Named Scopes
   scope :active,            lambda { where('last_activity_date >= ?', 1.month.ago) }
