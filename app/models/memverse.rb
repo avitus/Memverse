@@ -272,6 +272,7 @@ class Memverse < ActiveRecord::Base
     end
   end
 
+
   # ----------------------------------------------------------------------------------------------------------
   # Returns array of Memverse objects that form passage
   # ----------------------------------------------------------------------------------------------------------
@@ -279,23 +280,22 @@ class Memverse < ActiveRecord::Base
 
     return nil if self.solo_verse?
 
-    passage     = Array.new
+    # passage     = Array.new
 
-    if self.is_first_verse?
-      passage << self
-    else
-      first_verse = Memverse.find(self.first_verse)
-      passage << first_verse
-    end
+    # if self.is_first_verse?
+    #   passage << self
+    # else
+    #   first_verse = Memverse.find(self.first_verse)
+    #   passage << first_verse
+    # end
 
-    while passage.last.next_verse
-      passage << Memverse.find(passage.last.next_verse)
-    end
+    # while passage.last.next_verse
+    #   passage << Memverse.find(passage.last.next_verse)
+    # end
 
-    return passage
+    return self.passage.memverses
 
   end
-
 
   # ----------------------------------------------------------------------------------------------------------
   # Is a verse memorized?
@@ -650,6 +650,29 @@ class Memverse < ActiveRecord::Base
 
   # ============= Protected below this line ==================================================================
   protected
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Add a memory verse to a passage [hook: after_create]
+  #
+  # Passages cannot straddle chapter boundaries
+  # ----------------------------------------------------------------------------------------------------------
+  def add_to_passage
+    # book | chapter | first_verse | last_verse
+
+    # Case 1 - No existing passage
+    # Case 2 - Verse is new first verse of existing passage
+    # Case 3 - Verse is new last verse of existing passage
+    # Case 4 - Verse is between two passages -> merge passages
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Remove a memory verse from a passage [hook: before_delete]
+  # ----------------------------------------------------------------------------------------------------------
+  def remove_from_passage
+    # Case 1 - Start of passage
+    # Case 2 - End of passage
+    # Case 3 - Middle of passage -> split into two passages
+  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Initialize new memory verse [hook: before_create]
