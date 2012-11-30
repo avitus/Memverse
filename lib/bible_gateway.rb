@@ -78,16 +78,13 @@ class BibleGateway
         verse_number = doc.at('sup.versenum')
       end
 
-    segment = verse_number.parent unless !verse_number
-
- 		#Untested fix for verses that have poetry in them
- 		#if !(doc.at('div.poetry'))
+ 		if !(doc.at('div.poetry'))
  		  #For when the verse is not poetry
- 		  #segment = verse_number.parent unless !verse_number
- 		#else
+ 		  segment = verse_number.parent unless !verse_number
+ 		else
  		  #For when the verse is poetry
- 		  #segment = verse_number.parent.parent unless !verse_number
- 		#end
+ 		  segment = verse_number.parent.parent unless !verse_number
+ 		end
 
     if segment
 
