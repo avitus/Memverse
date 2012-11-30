@@ -3,16 +3,15 @@ require 'factory_girl'
 FactoryGirl.define do
 
   factory :user do |u|
-    u.id 7
     u.name 'Test User'
 	  u.sequence(:email) { |n| "user#{n}@test.com" }
     u.password 'please'
-    u.password_confirmation { |u| u.password } 
-    # u.association :group, :factory => :group  
-    u.last_activity_date Date.today 
-    u.admin false 
+    u.password_confirmation { |u| u.password }
+    # u.association :group, :factory => :group
+    u.last_activity_date Date.today
+    u.admin false
   end
-  
+
   factory :verse do |verse|
     verse.translation 'NIV'
     verse.book_index 48
@@ -28,13 +27,13 @@ FactoryGirl.define do
     # Use this factory for testing out of bound verses
     # TODO: these tests are not yet passing ... not sure how this works
     factory :verse_with_validate_ref do
-      
+
       before(:save) { |verse| verse.send(:validate_ref) }
 
     end
 
   end
-  
+
   factory :memverse do |mv|
     mv.association :verse, :factory => :verse
     mv.association :user,  :factory => :user
@@ -43,34 +42,34 @@ FactoryGirl.define do
     mv.next_test Date.today
     mv.efactor 2.0
   end
-  
+
   factory :blog do |f|
     f.id 1
     f.title 'Memverse Blog'
   end
-  
+
   factory :blog_post do |f|
     f.association :posted_by_id, :factory => :user
   end
-  
+
   factory :blog_comment do |bc|
     bc.association :blog_post, :factory => :blog_post
   	bc.association :user,      :factory => :user
   	bc.comment 'Nice blog post!'
   end
-  
+
   factory :final_verse do |f|
     f.book 'Genesis'
     f.chapter 1
     f.last_verse 31
   end
-  
+
   factory :badge do |b|
     b.name 'Sermon on the Mount'
     b.description 'Memorize the Sermon on the Mount'
     b.color 'solo'
   end
-  
+
   factory :quest do |q|
     q.task 'Memorize Matthew 5'
     q.objective 'Chapters'
@@ -84,7 +83,7 @@ FactoryGirl.define do
     pr.memorized 100
     pr.entry_date Date.today
   end
-  
+
   factory :group do |g|
     g.name 'Memory Group'
     g.association :leader, :factory => :user

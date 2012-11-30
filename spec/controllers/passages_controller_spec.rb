@@ -20,11 +20,24 @@ require 'spec_helper'
 
 describe PassagesController do
 
+  before (:each) do
+    @user = FactoryGirl.create(:user)
+    @user.confirm!
+    sign_in @user
+
+    @mv = FactoryGirl.create(:memverse)
+
+  end
+
   # This should return the minimal set of attributes required to create a valid
   # Passage. As you add validations to Passage, be sure to
   # update the return value of this method accordingly.
   def valid_attributes
-    { "user" => "" }
+    { :user_id => @user, :length => 1, :reference => @mv.verse.ref,
+      :book => @mv.verse.book, :chapter => @mv.verse.chapter,
+      :first_verse => @mv.verse.versenum, :last_verse => @mv.verse.versenum,
+      :efactor => @mv.efactor, :test_interval => @mv.test_interval, :rep_n => 1 }
+
   end
 
   # This should return the minimal set of values that should be in the session
@@ -89,14 +102,14 @@ describe PassagesController do
       it "assigns a newly created but unsaved passage as @passage" do
         # Trigger the behavior that occurs when invalid params are submitted
         Passage.any_instance.stub(:save).and_return(false)
-        post :create, {:passage => { "user" => "invalid value" }}, valid_session
+        post :create, {:passage => { :book => "invalid value" }}, valid_session
         assigns(:passage).should be_a_new(Passage)
       end
 
       it "re-renders the 'new' template" do
         # Trigger the behavior that occurs when invalid params are submitted
         Passage.any_instance.stub(:save).and_return(false)
-        post :create, {:passage => { "user" => "invalid value" }}, valid_session
+        post :create, {:passage => { :book => "invalid value" }}, valid_session
         response.should render_template("new")
       end
     end
@@ -110,8 +123,8 @@ describe PassagesController do
         # specifies that the Passage created on the previous line
         # receives the :update_attributes message with whatever params are
         # submitted in the request.
-        Passage.any_instance.should_receive(:update_attributes).with({ "user" => "" })
-        put :update, {:id => passage.to_param, :passage => { "user" => "" }}, valid_session
+        Passage.any_instance.should_receive(:update_attributes).with({ "last_verse" => "7" })
+        put :update, {:id => passage.to_param, :passage => { :last_verse => "7" }}, valid_session
       end
 
       it "assigns the requested passage as @passage" do
@@ -132,7 +145,7 @@ describe PassagesController do
         passage = Passage.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
         Passage.any_instance.stub(:save).and_return(false)
-        put :update, {:id => passage.to_param, :passage => { "user" => "invalid value" }}, valid_session
+        put :update, {:id => passage.to_param, :passage => { :book => "invalid value" }}, valid_session
         assigns(:passage).should eq(passage)
       end
 
@@ -140,7 +153,7 @@ describe PassagesController do
         passage = Passage.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
         Passage.any_instance.stub(:save).and_return(false)
-        put :update, {:id => passage.to_param, :passage => { "user" => "invalid value" }}, valid_session
+        put :update, {:id => passage.to_param, :passage => { :book => "invalid value" }}, valid_session
         response.should render_template("edit")
       end
     end

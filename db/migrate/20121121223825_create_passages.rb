@@ -3,14 +3,14 @@ class CreatePassages < ActiveRecord::Migration
 
     # Create Passage table
     create_table :passages do |t|
-      t.references :user
-      t.integer    :length
+      t.references :user, :null => false
+      t.integer    :length, :null => false, :default => 1
 
       t.string     :reference
-      t.string     :book
-      t.integer    :chapter
-      t.integer    :first_verse
-      t.integer    :last_verse
+      t.string     :book, :null => false
+      t.integer    :chapter, :null => false
+      t.integer    :first_verse, :null => false
+      t.integer    :last_verse, :null => false
 
       t.decimal    :efactor
       t.integer    :test_interval
