@@ -657,12 +657,29 @@ class Memverse < ActiveRecord::Base
   # Passages cannot straddle chapter boundaries
   # ----------------------------------------------------------------------------------------------------------
   def add_to_passage
+
     # book | chapter | first_verse | last_verse
 
-    # Case 1 - No existing passage
-    # Case 2 - Verse is new first verse of existing passage
-    # Case 3 - Verse is new last verse of existing passage
-    # Case 4 - Verse is between two passages -> merge passages
+    prior_passage = Passage.where(:book => self.book, :chapter => self.chapter, :last_verse  => self.versenum-1)
+    next_passage  = Passage.where(:book => self.book, :chapter => self.chapter, :first_verse => self.versenum+1)
+
+    # Case 1- No existing passage
+    if !prior_passage && !next_passage
+      Passage.create!( self )
+
+    # Case 2 - Verse is between two passages -> merge passages
+    elsif prior_passage && next_passage
+      prior_passage.combine_with( next_passage )
+
+    # Case 3 - Verse is new first verse of existing passage
+    elsif next_passage
+      next_passage.expand( self )
+
+    # Case 4 - Verse is new last verse of existing passage
+    else
+      prior_passage.expand( self )
+    end
+
   end
 
   # ----------------------------------------------------------------------------------------------------------
