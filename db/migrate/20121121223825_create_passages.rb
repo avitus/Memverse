@@ -12,9 +12,9 @@ class CreatePassages < ActiveRecord::Migration
       t.integer    :first_verse, :null => false
       t.integer    :last_verse, :null => false
 
-      t.decimal    :efactor
-      t.integer    :test_interval
-      t.integer    :rep_n
+      t.decimal    :efactor, :default => 2.0
+      t.integer    :test_interval, :default => 1
+      t.integer    :rep_n, :default => 1
       t.date       :next_test
       t.date       :last_tested
 
