@@ -34,9 +34,19 @@ FactoryGirl.define do
 
   end
 
+  factory :passage do |psg|
+    psg.association :user,  :factory => :user
+    psg.book        'Proverbs'
+    psg.chapter     '3'
+    psg.first_verse '2'
+    psg.last_verse  '5'
+    psg.length      '4'
+  end
+
   factory :memverse do |mv|
-    mv.association :verse, :factory => :verse
-    mv.association :user,  :factory => :user
+    mv.association :verse,   :factory => :verse
+    mv.association :passage, :factory => :passage
+    mv.association :user,    :factory => :user
     mv.status 'Learning'
     mv.last_tested Date.today
     mv.next_test Date.today

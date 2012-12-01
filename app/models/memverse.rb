@@ -665,7 +665,8 @@ class Memverse < ActiveRecord::Base
 
     # Case 1- No existing passage
     if !prior_passage && !next_passage
-      Passage.create!( self )
+      Passage.create!( :user_id => self.user.id, :book => @mv.verse.book, :chapter => @mv.verse.chapter,
+                       :first_verse => @mv.verse.versenum, :last_verse => @mv.verse.versenum )
 
     # Case 2 - Verse is between two passages -> merge passages
     elsif prior_passage && next_passage
