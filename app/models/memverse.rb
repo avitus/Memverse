@@ -663,12 +663,13 @@ class Memverse < ActiveRecord::Base
 
     # Case 1- No existing passage
     if !prior_passage && !next_passage
-      Passage.create!( :user_id => self.user.id, :book => self.verse.book, :chapter => self.verse.chapter,
+      psg = Passage.create!( :user_id => self.user.id, :book => self.verse.book, :chapter => self.verse.chapter,
                        :first_verse => self.verse.versenum, :last_verse => self.verse.versenum, :length => 1 )
+      self.update_attribute( :passage_id, psg.id )
 
     # Case 2 - Verse is between two passages -> merge passages
     elsif prior_passage && next_passage
-      prior_passage.combine_with( next_passage )
+      prior_passage.absorb( next_passage, self )
 
     # Case 3 - Verse is new first verse of existing passage
     elsif next_passage

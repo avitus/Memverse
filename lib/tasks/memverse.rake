@@ -12,20 +12,30 @@ namespace :utils do
 
     User.find_each { |u|
 
+      puts "---- #{u.name_or_login}"
+
       # Find all starting (or solo verses) and create a passage
       Memverse.where(:user_id => u.id, :first_verse => nil).find_each { |mv|
-        pp = Passage.create(
+        pp = Passage.create!(
+
           :user_id        => u.id,
-          :length         => 1,
+
           :reference      => mv.verse.ref,
+          :book           => mv.verse.book,
+          :chapter        => mv.verse.chapter,
+          :first_verse    => mv.verse.versenum,
+          :last_verse     => mv.verse.versenum,
+
+          :length         => 1,
+
           :efactor        => mv.efactor,
           :test_interval  => mv.test_interval,
           :rep_n          => 1,
           :next_test      => mv.next_test,
-          :last_tested    => mv.last_tested,
-          :first_verse    => mv.id)
+          :last_tested    => mv.last_tested )
 
         if pp
+          puts("------------ Adding #{mv.verse.ref}")
           mv.passage_id = pp.id
           mv.save
         else
@@ -35,6 +45,7 @@ namespace :utils do
 
       # Find all other verses and add to existing passage
       Memverse.where(:user_id => u.id).where(Memverse.arel_table[:first_verse].not_eq(nil)).find_each { |mv|
+        puts("------------ Adding #{mv.verse.ref}")
         mv.add_to_passage
       }
     }
