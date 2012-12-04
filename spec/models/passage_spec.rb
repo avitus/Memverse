@@ -21,21 +21,39 @@ describe Passage do
   # ==============================================================================================
   describe "combining two passages" do
 
-    before(:each) do
-      # Automatically generates user, memverses and verses through Factory
-      @psg1 = FactoryGirl.create(:passage, :book => 'Luke', :chapter => 2, :first_verse => 2, :last_verse => 4)
-      @psg2 = FactoryGirl.create(:passage, :book => 'Luke', :chapter => 2, :first_verse => 6, :last_verse => 8)
-    end
-
     it "should merge two adjacent passages" do
 
+      # Automatically generates user, memverses and verses through Factory
+      psg1 = FactoryGirl.create(:passage, :book => 'Luke', :chapter => 2, :first_verse => 2, :last_verse => 4)
+      psg2 = FactoryGirl.create(:passage, :book => 'Luke', :chapter => 2, :first_verse => 5, :last_verse => 8)
+
       expect {
-        @psg1.combine_with( @psg2 )
+        psg1.absorb( psg2 )
       }.to change(Passage, :count).by(-1)
 
-      @psg1.first_verse.should == 2
-      @psg1.last_verse.should  == 8
-      @psg2.memverses.first.passage_id.should == @psg1.id # now associated with first passage
+      psg1.first_verse.should == 2
+      psg1.last_verse.should  == 8
+      psg2.memverses.first.passage_id.should == psg1.id # now associated with first passage
+
+    end
+
+    it "should merge two passages if linking verse is inserted" do
+
+      # Automatically generates user, memverses and verses through Factory
+      psg1 = FactoryGirl.create(:passage, :book => 'Mark', :chapter => 2, :first_verse => 2, :last_verse => 4)
+      psg2 = FactoryGirl.create(:passage, :book => 'Mark', :chapter => 2, :first_verse => 6, :last_verse => 8)
+
+      vs = FactoryGirl.create(:verse, book: 'Mark', chapter: 2, versenum: 5)
+      mv = FactoryGirl.create(:memverse, verse: vs)
+
+      expect {
+        psg1.absorb( psg2, mv )
+      }.to change(Passage, :count).by(-1)
+
+      psg1.first_verse.should == 2
+      psg1.last_verse.should  == 8
+      psg2.memverses.first.passage_id.should == psg1.id # now associated with first passage
+      mv.passage_id == psg1.id
 
     end
 

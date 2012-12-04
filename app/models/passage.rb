@@ -11,9 +11,9 @@ class Passage < ActiveRecord::Base
 
 
   # ----------------------------------------------------------------------------------------------------------
-  # Combine two passages into one
+  # Combine two passages into one. Method accepts an optional join (linking) verse
   # ----------------------------------------------------------------------------------------------------------
-  def combine_with( second_passage )
+  def absorb( second_passage, join_mv=nil )
 
     self.first_verse = [self.first_verse, second_passage.first_verse].min
     self.last_verse  = [self.last_verse,  second_passage.last_verse ].max
@@ -23,6 +23,7 @@ class Passage < ActiveRecord::Base
 
     # Associate all memory verses from second passage with this passage
     second_passage.memverses.each { |mv| mv.update_attribute( :passage_id, self.id ) }
+    join_mv.update_attribute( :passage_id, self.id ) unless !join_mv
 
     # Delete second passage
     second_passage.destroy
