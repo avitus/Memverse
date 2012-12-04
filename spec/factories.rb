@@ -2,6 +2,9 @@ require 'factory_girl'
 
 FactoryGirl.define do
 
+  # ==============================================================================================
+  # Users
+  # ==============================================================================================
   factory :user do |u|
     u.name 'Test User'
 	  u.sequence(:email) { |n| "user#{n}@test.com" }
@@ -12,6 +15,9 @@ FactoryGirl.define do
     u.admin false
   end
 
+  # ==============================================================================================
+  # Verses
+  # ==============================================================================================
   factory :verse do |verse|
     verse.translation 'NIV'
     verse.book_index 48
@@ -27,25 +33,38 @@ FactoryGirl.define do
     # Use this factory for testing out of bound verses
     # TODO: these tests are not yet passing ... not sure how this works
     factory :verse_with_validate_ref do
-
       before(:save) { |verse| verse.send(:validate_ref) }
-
     end
 
   end
 
-  factory :passage do |psg|
-    psg.association :user,  :factory => :user
-    psg.book        'Proverbs'
-    psg.chapter     '3'
-    psg.first_verse '2'
-    psg.last_verse  '5'
-    psg.length      '4'
+  # ==============================================================================================
+  # Passages
+  # ==============================================================================================
+  factory :passage do
+    association :user,  :factory => :user
+    book        'Proverbs'
+    chapter     3
+    first_verse 2
+    last_verse  5
+    length      4
+
+    # Create the necessary memverses and verses for the passage
+    after(:create) do |psg, evaluator|
+      for i in evaluator.first_verse..evaluator.last_verse
+        vs = FactoryGirl.create(:verse, book: evaluator.book, chapter: evaluator.chapter, versenum: i)
+        FactoryGirl.create(:memverse, user: evaluator.user, verse: vs, passage: psg)
+      end
+    end
+
   end
 
+  # ==============================================================================================
+  # Memverses
+  # ==============================================================================================
   factory :memverse do |mv|
     mv.association :verse,   :factory => :verse
-    mv.association :passage, :factory => :passage
+    # mv.association :passage, :factory => :passage
     mv.association :user,    :factory => :user
     mv.status 'Learning'
     mv.last_tested Date.today
@@ -53,6 +72,9 @@ FactoryGirl.define do
     mv.efactor 2.0
   end
 
+  # ==============================================================================================
+  # Blog
+  # ==============================================================================================
   factory :blog do |f|
     f.id 1
     f.title 'Memverse Blog'
@@ -68,18 +90,27 @@ FactoryGirl.define do
   	bc.comment 'Nice blog post!'
   end
 
+  # ==============================================================================================
+  # Final Verse
+  # ==============================================================================================
   factory :final_verse do |f|
     f.book 'Genesis'
     f.chapter 1
     f.last_verse 31
   end
 
+  # ==============================================================================================
+  # Badges
+  # ==============================================================================================
   factory :badge do |b|
     b.name 'Sermon on the Mount'
     b.description 'Memorize the Sermon on the Mount'
     b.color 'solo'
   end
 
+  # ==============================================================================================
+  # Quests
+  # ==============================================================================================
   factory :quest do |q|
     q.task 'Memorize Matthew 5'
     q.objective 'Chapters'
@@ -87,6 +118,9 @@ FactoryGirl.define do
     q.association :badge, :factory => :badge
   end
 
+  # ==============================================================================================
+  # Progress Reports
+  # ==============================================================================================
   factory :progress_report do |pr|
     pr.association :user, :factory => :user
     pr.learning   50
@@ -94,6 +128,9 @@ FactoryGirl.define do
     pr.entry_date Date.today
   end
 
+  # ==============================================================================================
+  # Groups
+  # ==============================================================================================
   factory :group do |g|
     g.name 'Memory Group'
     g.association :leader, :factory => :user
