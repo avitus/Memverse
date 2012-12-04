@@ -16,19 +16,15 @@ describe Passage do
                              :efactor => @mv.efactor, :test_interval => @mv.test_interval, :rep_n => 1)
   end
 
-  # ALV: This would be nice to do but not sure exactly what I'm trying to achieve here
-  # it "should create a new instance from a memverse" do
-  #   @verse = Verse.create!(:book_index => 1, :book => "Genesis", :chapter => 12, :versenum => 1, :text => "This is a test", :translation => "NIV")
-  #   @mv    = Memverse.create!(:user => @user, :verse => @verse)
-  #   @psg   = Passage.create!( @mv.attributes, @mv.verse.attributes )
-  # end
-
+  # ==============================================================================================
+  # Merge two passages into one (note: can be triggered by insertion of missing verse)
+  # ==============================================================================================
   describe "combining two passages" do
 
     before(:each) do
       # Automatically generates user, memverses and verses through Factory
       @psg1 = FactoryGirl.create(:passage, :book => 'Luke', :chapter => 2, :first_verse => 2, :last_verse => 4)
-      @psg2 = FactoryGirl.create(:passage, :book => 'Luke', :chapter => 2, :first_verse => 5, :last_verse => 8)
+      @psg2 = FactoryGirl.create(:passage, :book => 'Luke', :chapter => 2, :first_verse => 6, :last_verse => 8)
     end
 
     it "should merge two adjacent passages" do
@@ -41,6 +37,39 @@ describe Passage do
       @psg1.last_verse.should  == 8
       @psg2.memverses.first.passage_id.should == @psg1.id # now associated with first passage
 
+    end
+
+  end
+
+  # ==============================================================================================
+  # Add a memory verse to an existing passage
+  # ==============================================================================================
+  describe "add a new verse to a passage" do
+
+    before(:each) do
+      @psg = FactoryGirl.create(:passage, :book => 'Leviticus', :chapter => 1, :first_verse => 3, :last_verse => 6)
+    end
+
+    it "should correctly add a preceding verse" do
+      vs = FactoryGirl.create(:verse, book: 'Leviticus', chapter: 1, versenum: 2)
+      mv = FactoryGirl.create(:memverse, verse: vs)
+
+      @psg.expand( mv )
+
+      @psg.first_verse.should == 2
+      @psg.last_verse.should == 6
+      mv.passage_id.should == @psg.id
+    end
+
+    it "should correctly add a subsequent verse" do
+      vs = FactoryGirl.create(:verse, book: 'Leviticus', chapter: 1, versenum: 7)
+      mv = FactoryGirl.create(:memverse, verse: vs)
+
+      @psg.expand( mv )
+
+      @psg.first_verse.should == 3
+      @psg.last_verse.should == 7
+      mv.passage_id.should == @psg.id
     end
 
   end

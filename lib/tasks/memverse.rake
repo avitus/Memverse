@@ -17,7 +17,7 @@ namespace :utils do
         pp = Passage.create(
           :user_id        => u.id,
           :length         => 1,
-          :reference      => mv.ref,
+          :reference      => mv.verse.ref,
           :efactor        => mv.efactor,
           :test_interval  => mv.test_interval,
           :rep_n          => 1,
@@ -34,11 +34,10 @@ namespace :utils do
       }
 
       # Find all other verses and add to existing passage
-      Memverse.where(:user_id => u.id).arel_table[:first_verse].not_eq(nil).find_each { |mv|
+      Memverse.where(:user_id => u.id).where(Memverse.arel_table[:first_verse].not_eq(nil)).find_each { |mv|
         mv.add_to_passage
       }
     }
-
 
     puts "=== Finished ==="
 

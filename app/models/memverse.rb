@@ -648,25 +648,23 @@ class Memverse < ActiveRecord::Base
 
   end
 
-  # ============= Protected below this line ==================================================================
-  protected
 
   # ----------------------------------------------------------------------------------------------------------
   # Add a memory verse to a passage [hook: after_create]
-  #
+  # TODO: Temporarily not protected in order to run rake task
   # Passages cannot straddle chapter boundaries
   # ----------------------------------------------------------------------------------------------------------
   def add_to_passage
 
     # book | chapter | first_verse | last_verse
 
-    prior_passage = Passage.where(:book => self.book, :chapter => self.chapter, :last_verse  => self.versenum-1)
-    next_passage  = Passage.where(:book => self.book, :chapter => self.chapter, :first_verse => self.versenum+1)
+    prior_passage = Passage.where(:book => self.verse.book, :chapter => self.verse.chapter, :last_verse  => self.verse.versenum-1).first
+    next_passage  = Passage.where(:book => self.verse.book, :chapter => self.verse.chapter, :first_verse => self.verse.versenum+1).first
 
     # Case 1- No existing passage
     if !prior_passage && !next_passage
-      Passage.create!( :user_id => self.user.id, :book => @mv.verse.book, :chapter => @mv.verse.chapter,
-                       :first_verse => @mv.verse.versenum, :last_verse => @mv.verse.versenum )
+      Passage.create!( :user_id => self.user.id, :book => self.verse.book, :chapter => self.verse.chapter,
+                       :first_verse => self.verse.versenum, :last_verse => self.verse.versenum, :length => 1 )
 
     # Case 2 - Verse is between two passages -> merge passages
     elsif prior_passage && next_passage
@@ -682,6 +680,10 @@ class Memverse < ActiveRecord::Base
     end
 
   end
+
+
+  # ============= Protected below this line ==================================================================
+  protected
 
   # ----------------------------------------------------------------------------------------------------------
   # Remove a memory verse from a passage [hook: before_delete]
