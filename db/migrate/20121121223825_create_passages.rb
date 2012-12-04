@@ -11,7 +11,9 @@ class CreatePassages < ActiveRecord::Migration
       t.integer    :chapter, :null => false
       t.integer    :first_verse, :null => false
       t.integer    :last_verse, :null => false
+
       t.boolean    :complete_chapter, :default => false
+      t.boolean    :synched, :default => false
 
       t.decimal    :efactor, :default => 2.0
       t.integer    :test_interval, :default => 1
