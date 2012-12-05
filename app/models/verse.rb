@@ -219,17 +219,17 @@ class Verse < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   # Find the last verse of the chapter - should no longer be needed now that we have passage model
   # ----------------------------------------------------------------------------------------------------------
-  # def end_of_chapter_verse
-  # 	if self.book == "3 John"
-  # 		if ["NAS", "NLT", "ESV", "ESV07"].include?( self.translation )
-  # 			FinalVerse.new(:book => "3 John", :chapter => 1, :last_verse => 15)
-  # 		else
-  # 			FinalVerse.new(:book => "3 John", :chapter => 1, :last_verse => 14)
-  # 		end
-  # 	else
-  #   	FinalVerse.where(:book => self.book, :chapter => self.chapter).first
-  #   end
-  # end
+  def end_of_chapter_verse
+  	if self.book == "3 John"
+  		if ["NAS", "NLT", "ESV", "ESV07"].include?( self.translation )
+  			FinalVerse.new(:book => "3 John", :chapter => 1, :last_verse => 15)
+  		else
+  			FinalVerse.new(:book => "3 John", :chapter => 1, :last_verse => 14)
+  		end
+  	else
+    	FinalVerse.where(:book => self.book, :chapter => self.chapter).first
+    end
+  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Returns array containing all verses in chapter with 'nil' for missing verses
