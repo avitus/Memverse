@@ -4,10 +4,13 @@ class CreatePassages < ActiveRecord::Migration
     # Create Passage table
     create_table :passages do |t|
       t.references :user, :null => false
+
       t.integer    :length, :null => false, :default => 1
 
-      t.string     :reference
-      t.string     :book, :null => false
+      t.string     :reference,   :limit => 50
+      t.string     :translation, :null => false, :limit => 10
+
+      t.string     :book, :null => false, :limit => 40
       t.integer    :chapter, :null => false
       t.integer    :first_verse, :null => false
       t.integer    :last_verse, :null => false

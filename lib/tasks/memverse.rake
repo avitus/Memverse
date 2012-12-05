@@ -21,6 +21,8 @@ namespace :utils do
           :user_id        => u.id,
 
           :reference      => mv.verse.ref,
+          :translation    => mv.verse.translation,
+
           :book           => mv.verse.book,
           :chapter        => mv.verse.chapter,
           :first_verse    => mv.verse.versenum,

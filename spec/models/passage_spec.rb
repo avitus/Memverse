@@ -17,6 +17,28 @@ describe Passage do
   end
 
   # ==============================================================================================
+  # Capture Supermemo data from underlying memory verses
+  # ==============================================================================================
+  it "should summarize Supermemo data from underlying memory verses" do
+
+    # eFactor of these two verses is 2.0 as per factory
+    # rep_n and interval are 4 and 5 respectively as per factory
+    psg = FactoryGirl.create(:passage, book: 'Nahum', chapter: 1, first_verse: 4, last_verse: 5, length: 2)
+
+    # add an extra memory verse with a different eFactor
+    # rep_n = 2, eFactor = 1.4, interval = 1
+    vs = FactoryGirl.create(:verse, book: 'Nahum', chapter: 1, versenum: 6)
+    mv = FactoryGirl.create(:memverse_without_supermemo_init, :verse => vs, :efactor => 1.4, :rep_n => 2, :test_interval => 3)
+
+    psg.expand( mv )
+
+    psg.test_interval.should == 3
+    psg.rep_n.should         == 2
+    psg.efactor.should       == 1.8
+
+  end
+
+  # ==============================================================================================
   # Merge two passages into one (note: can be triggered by insertion of missing verse)
   # ==============================================================================================
   describe "combining two passages" do
@@ -89,6 +111,64 @@ describe Passage do
       @psg.last_verse.should == 7
       mv.passage_id.should == @psg.id
     end
+
+  end
+
+  # ==============================================================================================
+  # Complete chapters
+  # ==============================================================================================
+  describe "check for complete chapters" do
+
+    it "should set flag when entire chapter has been added" do
+
+      psg = FactoryGirl.create(:passage, book: 'Esther', chapter: 10, first_verse: 1, last_verse: 2)
+      vs = FactoryGirl.create(:verse, book: 'Esther', chapter: 10, versenum: 3)
+      mv = FactoryGirl.create(:memverse, :verse => vs)
+
+      psg.complete_chapter.should be false
+      psg.expand( mv )
+      psg.complete_chapter.should be true
+
+    end
+
+    it "should accept Psalms with a zero verse" do
+
+      psg = FactoryGirl.create(:passage, book: 'Psalms', chapter: 53, first_verse: 0, last_verse: 5)
+      vs = FactoryGirl.create(:verse, book: 'Psalms', chapter: 53, versenum: 6)
+      mv = FactoryGirl.create(:memverse, :verse => vs)
+
+      psg.complete_chapter.should be false
+      psg.expand( mv )
+      psg.complete_chapter.should be true
+
+    end
+
+    describe "should handle corner case of 3 John 1" do
+
+      it "which has 14 verses in NIV" do
+        psg = FactoryGirl.create(:passage, book: '3 John', chapter: 1, first_verse: 1, last_verse: 13, translation: 'NIV')
+        vs = FactoryGirl.create(:verse, book: '3 John', chapter: 1, versenum: 14)
+        mv = FactoryGirl.create(:memverse, :verse => vs)
+
+        psg.complete_chapter.should be false
+        psg.expand( mv )
+        psg.complete_chapter.should be true
+      end
+
+      it "and 15 verses in ESV" do
+        psg = FactoryGirl.create(:passage, book: '3 John', chapter: 1, first_verse: 1, last_verse: 14, translation: 'ESV')
+        vs = FactoryGirl.create(:verse, book: '3 John', chapter: 1, versenum: 15)
+        mv = FactoryGirl.create(:memverse, :verse => vs)
+
+        psg.complete_chapter.should be false
+        psg.expand( mv )
+        psg.complete_chapter.should be true
+      end
+
+    end
+
+
+
 
   end
 

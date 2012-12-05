@@ -43,17 +43,18 @@ FactoryGirl.define do
   # ==============================================================================================
   factory :passage do
     association :user,  :factory => :user
+    translation 'NIV'
+    length      4
     book        'Proverbs'
     chapter     3
     first_verse 2
     last_verse  5
-    length      4
 
     # Create the necessary memverses and verses for the passage
     after(:create) do |psg, evaluator|
       for i in evaluator.first_verse..evaluator.last_verse
         vs = FactoryGirl.create(:verse, book: evaluator.book, chapter: evaluator.chapter, versenum: i)
-        FactoryGirl.create(:memverse, user: evaluator.user, verse: vs, passage: psg)
+        FactoryGirl.create(:memverse, user: evaluator.user, verse: vs, passage: psg, test_interval: i, rep_n: i)
       end
     end
 
@@ -62,14 +63,22 @@ FactoryGirl.define do
   # ==============================================================================================
   # Memverses
   # ==============================================================================================
-  factory :memverse do |mv|
-    mv.association :verse,   :factory => :verse
-    # mv.association :passage, :factory => :passage
-    mv.association :user,    :factory => :user
-    mv.status 'Learning'
-    mv.last_tested Date.today
-    mv.next_test Date.today
-    mv.efactor 2.0
+  factory :memverse do
+    # association :passage, :factory => :passage # this causes problems with infinite recursion
+    association    :verse,   :factory => :verse
+    association    :user,    :factory => :user
+    status         'Learning'
+    last_tested    Date.today
+    next_test      Date.today
+    efactor        2.0
+    rep_n          1
+    test_interval  1
+
+    # This factory allows creation of memory verses with a different efactor
+    factory :memverse_without_supermemo_init do
+      after(:build) { |memverse| memverse.class.skip_callback(:create, :before, :supermemo_init) }
+    end
+
   end
 
   # ==============================================================================================
