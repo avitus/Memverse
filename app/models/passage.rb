@@ -19,16 +19,17 @@ class Passage < ActiveRecord::Base
     self.last_verse  = [self.last_verse,  second_passage.last_verse ].max
     self.length      = self.last_verse - self.first_verse + 1  # uses values calculated in prior two lines
 
-    consolidate_supermemo
-    update_ref
-    save
-
     # Associate all memory verses from second passage with this passage
     second_passage.memverses.each { |mv| mv.update_attribute( :passage_id, self.id ) }
     join_mv.update_attribute( :passage_id, self.id ) unless !join_mv
 
     # Delete second passage
     second_passage.destroy
+
+    consolidate_supermemo
+    update_ref
+    entire_chapter_flag_check
+    save
 
   end
 
@@ -41,12 +42,13 @@ class Passage < ActiveRecord::Base
     self.last_verse  = [ self.last_verse,  mv.verse.versenum ].max
     self.length += 1
 
-    consolidate_supermemo
-    update_ref
-    save
-
     # Associate memory verse with passage
     mv.update_attribute( :passage_id, self.id )
+
+    consolidate_supermemo
+    update_ref
+    entire_chapter_flag_check
+    save
 
   end
 
@@ -75,5 +77,34 @@ class Passage < ActiveRecord::Base
     self.efactor       = self.memverses.average(:efactor)
     save
   end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Set flag if entire chapter has been added to memorization list
+  # ----------------------------------------------------------------------------------------------------------
+  def entire_chapter_flag_check
+
+    # Corner case for 3 John 1. Not elegant but should usually drop through to primary case
+    if book == "3 John" && chapter == 1 && first_verse == 1
+
+      if ["NAS", "NLT", "ESV", "ESV07"].include?( self.translation )
+        update_attribute( :complete_chapter, last_verse == 15 )
+      else
+        update_attribute( :complete_chapter, last_verse == 14 )
+      end
+
+    # All other chapters
+    else
+
+      # Only look up FinalVerse when first_verse is 1 or 0
+      if ( first_verse == 1 || first_verse == 0 ) && last_verse == FinalVerse.where(:book => self.book, :chapter => self.chapter).first.last_verse
+        update_attribute( :complete_chapter, true )
+      else
+        update_attribute( :complete_chapter, false )
+      end
+
+    end
+
+  end
+
 
 end

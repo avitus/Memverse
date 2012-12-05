@@ -272,7 +272,6 @@ class Memverse < ActiveRecord::Base
     end
   end
 
-
   # ----------------------------------------------------------------------------------------------------------
   # Returns array of Memverse objects that form passage
   # ----------------------------------------------------------------------------------------------------------
@@ -396,7 +395,6 @@ class Memverse < ActiveRecord::Base
       return x
     end
   end
-
 
   # ----------------------------------------------------------------------------------------------------------
   # Returns the next verse that is due in a sequence
@@ -663,8 +661,8 @@ class Memverse < ActiveRecord::Base
 
     # Case 1- No existing passage
     if !prior_passage && !next_passage
-      psg = Passage.create!( :user_id => self.user.id, :book => self.verse.book, :chapter => self.verse.chapter,
-                       :first_verse => self.verse.versenum, :last_verse => self.verse.versenum, :length => 1 )
+      psg = Passage.create!( :user_id => self.user.id, :translation => self.verse.translation, :length => 1,
+                             :book => self.verse.book, :chapter => self.verse.chapter, :first_verse => self.verse.versenum, :last_verse => self.verse.versenum )
       self.update_attribute( :passage_id, psg.id )
 
     # Case 2 - Verse is between two passages -> merge passages
