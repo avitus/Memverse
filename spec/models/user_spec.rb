@@ -101,40 +101,6 @@ describe User do
   end
 
   # ==============================================================================================
-  # Check for complete chapters
-  # ==============================================================================================
-  describe "complete chapters" do
-
-    before(:each) do
-      @user = FactoryGirl.create(:user)
-      FactoryGirl.create(:final_verse, :book => "Psalms", :chapter => 117, :last_verse => 2)
-      # TODO: Consider loading all FinalVerses anytime db is created (put in seeds file?)
-    end
-
-    it "should list Psalm 117 when complete chapter is in account" do
-      for i in 1..2
-        vs = FactoryGirl.create(:verse, book: "Psalms", chapter: 117, versenum: i)
-        FactoryGirl.create(:memverse, user: @user, verse: vs)
-      end
-      @user.complete_chapters.first.should include("Psalm 117")
-    end
-
-    it "should list also Psalm 117 when complete chapter, as well as verse 0, are in account" do
-      for i in 0..2
-        vs = FactoryGirl.create(:verse, book: "Psalms", chapter: 117, versenum: i)
-        FactoryGirl.create(:memverse, user: @user, verse: vs)
-      end
-      @user.complete_chapters.first.should include("Psalm 117")
-    end
-
-    it "should not list Psalm 117 when only verse 2 is in account" do
-      vs = FactoryGirl.create(:verse, book: "Psalms", chapter: 117, versenum: 2)
-      FactoryGirl.create(:memverse, user: @user, verse: vs)
-      @user.complete_chapters.first.should be_nil
-    end
-  end
-
-  # ==============================================================================================
   # Adjusting work load
   # ==============================================================================================
   describe "adjust_work_load" do

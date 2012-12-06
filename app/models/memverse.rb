@@ -37,8 +37,14 @@ class Memverse < ActiveRecord::Base
 
   # Set initial values and link verse other verses
   before_create  :supermemo_init
-  after_create   :add_links
-  before_destroy :update_links
+
+  #---- TODO: these should be obsolete now that we have a Passage model.
+    after_create   :add_links
+    before_destroy :update_links
+  #--------------------------------------------------------------------------
+
+  after_create   :add_to_passage
+  before_destroy :remove_from_passage
 
   # Update counter cache
   after_save    :update_counter_cache
@@ -275,26 +281,26 @@ class Memverse < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   # Returns array of Memverse objects that form passage
   # ----------------------------------------------------------------------------------------------------------
-  def passage
+  # def passage
 
-    return nil if self.solo_verse?
+  #   return nil if self.solo_verse?
 
-    # passage     = Array.new
+  #   # passage     = Array.new
 
-    # if self.is_first_verse?
-    #   passage << self
-    # else
-    #   first_verse = Memverse.find(self.first_verse)
-    #   passage << first_verse
-    # end
+  #   # if self.is_first_verse?
+  #   #   passage << self
+  #   # else
+  #   #   first_verse = Memverse.find(self.first_verse)
+  #   #   passage << first_verse
+  #   # end
 
-    # while passage.last.next_verse
-    #   passage << Memverse.find(passage.last.next_verse)
-    # end
+  #   # while passage.last.next_verse
+  #   #   passage << Memverse.find(passage.last.next_verse)
+  #   # end
 
-    return self.passage.memverses
+  #   return self.passage.memverses
 
-  end
+  # end
 
   # ----------------------------------------------------------------------------------------------------------
   # Is a verse memorized?
@@ -656,10 +662,10 @@ class Memverse < ActiveRecord::Base
 
     # book | chapter | first_verse | last_verse
 
-    prior_passage = Passage.where(:book => self.verse.book, :chapter => self.verse.chapter, :last_verse  => self.verse.versenum-1).first
-    next_passage  = Passage.where(:book => self.verse.book, :chapter => self.verse.chapter, :first_verse => self.verse.versenum+1).first
+    prior_passage = Passage.where(:user_id => self.user.id, :book => self.verse.book, :chapter => self.verse.chapter, :last_verse  => self.verse.versenum-1).first
+    next_passage  = Passage.where(:user_id => self.user.id, :book => self.verse.book, :chapter => self.verse.chapter, :first_verse => self.verse.versenum+1).first
 
-    # Case 1- No existing passage
+    # Case 1 - No existing passage
     if !prior_passage && !next_passage
       psg = Passage.create!( :user_id => self.user.id, :translation => self.verse.translation, :length => 1,
                              :book => self.verse.book, :chapter => self.verse.chapter, :first_verse => self.verse.versenum, :last_verse => self.verse.versenum )
@@ -678,6 +684,18 @@ class Memverse < ActiveRecord::Base
       prior_passage.expand( self )
     end
 
+  end
+
+  def remove_from_passage
+    psg = self.passage
+
+    # Case 1 - Single verse passage
+
+    # Case 2 - In middle of passage ... need to split passage into two
+
+    # Case 3 - First verse of passage
+
+    # Case 4 - Last verse of passage
   end
 
 
