@@ -25,7 +25,7 @@ describe PassagesController do
     @user.confirm!
     sign_in @user
 
-    @mv = FactoryGirl.create(:memverse)
+    # @mv = FactoryGirl.create(:memverse)
 
   end
 
@@ -33,10 +33,10 @@ describe PassagesController do
   # Passage. As you add validations to Passage, be sure to
   # update the return value of this method accordingly.
   def valid_attributes
-    { :user_id => @user, :length => 1, :reference => @mv.verse.ref,
-      :book => @mv.verse.book, :chapter => @mv.verse.chapter,
-      :first_verse => @mv.verse.versenum, :last_verse => @mv.verse.versenum,
-      :efactor => @mv.efactor, :test_interval => @mv.test_interval, :rep_n => 1 }
+    { :user_id => @user, :length => 2, :reference => "John 3:16-17",
+      :translation => "NIV", :book => "John", :chapter => 3,
+      :first_verse => 16, :last_verse => 17,
+      :efactor => 2.0, :test_interval => 1, :rep_n => 1 }
 
   end
 

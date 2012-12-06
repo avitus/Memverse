@@ -17,6 +17,13 @@ describe Passage do
   end
 
   # ==============================================================================================
+  # Automatically create new passage when a memory verse is created
+  # ==============================================================================================
+  describe "add new memory verse to a passage" do
+
+  end
+
+  # ==============================================================================================
   # Capture Supermemo data from underlying memory verses
   # ==============================================================================================
   it "should summarize Supermemo data from underlying memory verses" do
@@ -46,8 +53,8 @@ describe Passage do
     it "should merge two adjacent passages" do
 
       # Automatically generates user, memverses and verses through Factory
-      psg1 = FactoryGirl.create(:passage, :book => 'Luke', :chapter => 2, :first_verse => 2, :last_verse => 4)
-      psg2 = FactoryGirl.create(:passage, :book => 'Luke', :chapter => 2, :first_verse => 5, :last_verse => 8)
+      psg1 = FactoryGirl.create(:passage, user: @user, book: 'Luke', chapter: 2, first_verse: 2, last_verse: 4)
+      psg2 = FactoryGirl.create(:passage, user: @user, book: 'Luke', chapter: 2, first_verse: 5, last_verse: 8)
 
       expect {
         psg1.absorb( psg2 )
@@ -62,20 +69,22 @@ describe Passage do
     it "should merge two passages if linking verse is inserted" do
 
       # Automatically generates user, memverses and verses through Factory
-      psg1 = FactoryGirl.create(:passage, :book => 'Mark', :chapter => 2, :first_verse => 2, :last_verse => 4)
-      psg2 = FactoryGirl.create(:passage, :book => 'Mark', :chapter => 2, :first_verse => 6, :last_verse => 8)
+      psg1 = FactoryGirl.create(:passage, user: @user, book: 'Mark', chapter: 2, first_verse: 2, last_verse: 4)
+      psg2 = FactoryGirl.create(:passage, user: @user, book: 'Mark', chapter: 2, first_verse: 6, last_verse: 8)
+
+      mv2 = psg2.memverses.first # need to ensure that this verse is associated with psg1 after combination
 
       vs = FactoryGirl.create(:verse, book: 'Mark', chapter: 2, versenum: 5)
-      mv = FactoryGirl.create(:memverse, verse: vs)
+      mv = FactoryGirl.create(:memverse, user: @user, verse: vs)  # triggers after_create call_back to add memory verse to passage
 
-      expect {
-        psg1.absorb( psg2, mv )
-      }.to change(Passage, :count).by(-1)
+      psg1.reload
+      mv2.reload
 
       psg1.first_verse.should == 2
       psg1.last_verse.should  == 8
-      psg2.memverses.first.passage_id.should == psg1.id # now associated with first passage
-      mv.passage_id == psg1.id
+      psg1.length.should      == 7
+      mv.passage_id           == psg1.id # link mv associated with first passage
+      mv2.passage_id.should   == psg1.id # now associated with first passage
 
     end
 
@@ -166,8 +175,6 @@ describe Passage do
       end
 
     end
-
-
 
 
   end

@@ -7,8 +7,8 @@ class Passage < ActiveRecord::Base
 
   validates_presence_of   :user_id, :length, :book, :chapter, :first_verse, :last_verse
 
-  attr_accessible :user_id, :book, :chapter, :first_verse, :last_verse, :efactor, :last_tested, :length, :next_test, :reference, :rep_n, :test_interval
-
+  attr_accessible :user_id, :translation, :book, :chapter, :first_verse, :last_verse,
+                  :efactor, :last_tested, :length, :next_test, :reference, :rep_n, :test_interval
 
   # ----------------------------------------------------------------------------------------------------------
   # Combine two passages into one. Method accepts an optional join (linking) verse
@@ -29,7 +29,7 @@ class Passage < ActiveRecord::Base
     consolidate_supermemo
     update_ref
     entire_chapter_flag_check
-    save
+    save!
 
   end
 
@@ -96,7 +96,7 @@ class Passage < ActiveRecord::Base
     else
 
       # Only look up FinalVerse when first_verse is 1 or 0
-      if ( first_verse == 1 || first_verse == 0 ) && last_verse == FinalVerse.where(:book => self.book, :chapter => self.chapter).first.last_verse
+      if ( self.first_verse == 1 || self.first_verse == 0 ) && ( self.last_verse == FinalVerse.where(:book => book, :chapter => chapter).first.last_verse )
         update_attribute( :complete_chapter, true )
       else
         update_attribute( :complete_chapter, false )
