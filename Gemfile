@@ -7,6 +7,8 @@ group :development do
   # gem 'query_reviewer', :git => "git://github.com/nesquena/query_reviewer.git"                # For finding slow queries ... problems with Rails 3.2 (?)
 	gem "rails-footnotes", ">= 3.7"
   gem 'sqlite3'
+  gem 'better_errors'
+  gem 'binding_of_caller'
 end
 
 gem "rspec-rails", ">= 2.6.1", :group => [:development, :test]
@@ -32,7 +34,8 @@ group :assets do
 end
 
 if HOST_OS =~ /linux/i
-  gem 'therubyracer', '>= 0.8.2'
+  gem 'libv8', '>= 3.11.8.3'
+  gem 'therubyracer', '>= 0.11.0'
 end
 
 gem 'rails', '3.2.8'
