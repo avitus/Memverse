@@ -10,6 +10,22 @@ class Passage < ActiveRecord::Base
   attr_accessible :user_id, :translation, :book, :chapter, :first_verse, :last_verse,
                   :efactor, :last_tested, :length, :next_test, :reference, :rep_n, :test_interval
 
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Convert to JSON format
+  # ----------------------------------------------------------------------------------------------------------
+  def as_json(options={})
+    {
+      :id   => self.id,
+      # :bk   => self.book,
+      # :ch   => self.chapter,
+      # :vs   => self.versenum,
+      # :tl   => self.translation,
+      # :ref  => self.ref,
+      # :text => self.text
+    }
+  end
+
   # ----------------------------------------------------------------------------------------------------------
   # Combine two passages into one. Method accepts an optional join (linking) verse
   # ----------------------------------------------------------------------------------------------------------

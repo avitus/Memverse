@@ -242,7 +242,7 @@ class Memverse < ActiveRecord::Base
   # Return entire chapter as array
   # ----------------------------------------------------------------------------------------------------------
   def chapter
-    self.part_of_entire_chapter? ? self.passage : nil
+    self.part_of_entire_chapter? ? self.passage.memverses : nil
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -250,15 +250,17 @@ class Memverse < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   def part_of_entire_chapter?
 
-    eocv = self.verse.end_of_chapter_verse
+    return self.passage.complete_chapter
 
-    # Sept 22, 2010 -- eocv occasionally equal to nil ... not sure why
-    if eocv && lv = self.user.has_verse?(eocv.book, eocv.chapter, eocv.last_verse)
-      # check that it's linked to the first verse
-      lv.linked_to_first_verse? # TODO: This is where the versenum 0 gets in trouble. Instead we should check if linked to the first verse, assuming that first verse has versenum 1! That will make it work again :)
-    else
-      false
-    end
+    # eocv = self.verse.end_of_chapter_verse
+
+    # # Sept 22, 2010 -- eocv occasionally equal to nil ... not sure why
+    # if eocv && lv = self.user.has_verse?(eocv.book, eocv.chapter, eocv.last_verse)
+    #   # check that it's linked to the first verse
+    #   lv.linked_to_first_verse? # TODO: This is where the versenum 0 gets in trouble. Instead we should check if linked to the first verse, assuming that first verse has versenum 1! That will make it work again :)
+    # else
+    #   false
+    # end
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -269,8 +271,8 @@ class Memverse < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   def chapter_memorized?
 
-    if self.part_of_entire_chapter?
-      self.passage.map { |vs|
+    if self.passage.complete_chapter
+      self.passage.memverses.map { |vs|
         vs.memorized?
       }.all?
     else
