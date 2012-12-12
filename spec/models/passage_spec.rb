@@ -143,8 +143,8 @@ describe Passage do
     it "should accept Psalms with a zero verse" do
 
       psg = FactoryGirl.create(:passage, book: 'Psalms', chapter: 53, first_verse: 0, last_verse: 5)
-      vs = FactoryGirl.create(:verse, book: 'Psalms', chapter: 53, versenum: 6)
-      mv = FactoryGirl.create(:memverse, :verse => vs)
+      vs  = FactoryGirl.create(:verse, book: 'Psalms', chapter: 53, versenum: 6)
+      mv  = FactoryGirl.create(:memverse, :verse => vs)
 
       psg.complete_chapter.should be false
       psg.expand( mv )
@@ -166,8 +166,8 @@ describe Passage do
 
       it "and 15 verses in ESV" do
         psg = FactoryGirl.create(:passage, book: '3 John', chapter: 1, first_verse: 1, last_verse: 14, translation: 'ESV')
-        vs = FactoryGirl.create(:verse, book: '3 John', chapter: 1, versenum: 15)
-        mv = FactoryGirl.create(:memverse, :verse => vs)
+        vs  = FactoryGirl.create(:verse, book: '3 John', chapter: 1, versenum: 15)
+        mv  = FactoryGirl.create(:memverse, :verse => vs)
 
         psg.complete_chapter.should be false
         psg.expand( mv )
