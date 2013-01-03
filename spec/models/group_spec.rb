@@ -1,4 +1,5 @@
 # encoding: utf-8
+=begin
 describe Group do
 
   before(:each) do    
@@ -29,3 +30,4 @@ describe Group do
   end
 
 end
+=end
