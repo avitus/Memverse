@@ -3,7 +3,7 @@
 <div class="white-box-bg">
 	<div id="instructions">
 		<div id="instr-1">
-			<p>This is a demo of the main memorization section of Memverse. For now, we will use the New International Version of the Bible but 
+			<p>This is a demo of the main memorization section of Memverse. For now, we will use the New International Version of the Bible but
 			you will be able to select one of the many available translations in which to memorize your verses. Type Romans 12:2 into the text box
 			below.</p>
 
@@ -12,8 +12,8 @@
 
 		<div id="instr-2">
 			<p>As you type, the feedback box will echo the verse and will alert you to any errors. Should you get stuck, you can click
-			on "Show Verse" to view the verse. Once you have completed the review, you would grade yourself with one of the 
-			five self-assessment options according to how well you remembered the verse. This determines when next you would review 
+			on "Show Verse" to view the verse. Once you have completed the review, you would grade yourself with one of the
+			five self-assessment options according to how well you remembered the verse. This determines when next you would review
 			that memory verse.</p>
 		</div>
 	</div>
@@ -27,30 +27,30 @@
 		<div class="verse-test-area">
 			<%= form_tag mark_test_quick_path, :id => 'test-verse-quick' do %>
 				<div>
-				<%= text_area_tag(:verseguess, params[:verseguess], :class => "verseguess" )%>	
+				<%= text_area_tag(:verseguess, params[:verseguess], :class => "verseguess" )%>
 				</div>
-				
+
 				<div class="tool-tip-nav">Rate Your Performance:</div>
-				<div id="test-buttons" class="score-test-buttons">				
-					<span class="submit" q="1">1</span> <div class="tooltip"><%= I18n.t "memverses.test_verse_quick.b1" %></div>							
-					<span class="submit" q="2">2</span> <div class="tooltip"><%= I18n.t "memverses.test_verse_quick.b2" %></div>							
-					<span class="submit" q="3">3</span> <div class="tooltip"><%= I18n.t "memverses.test_verse_quick.b3" %></div>							
-					<span class="submit" q="4">4</span> <div class="tooltip"><%= I18n.t "memverses.test_verse_quick.b4" %></div>							
-					<span class="submit" q="5">5</span> <div class="tooltip"><%= I18n.t "memverses.test_verse_quick.b5" %></div>	
-										
+				<div id="test-buttons" class="score-test-buttons">
+					<span class="submit" q="1">1</span> <div class="tooltip"><%= I18n.t "memverses.test_verse_quick.b1" %></div>
+					<span class="submit" q="2">2</span> <div class="tooltip"><%= I18n.t "memverses.test_verse_quick.b2" %></div>
+					<span class="submit" q="3">3</span> <div class="tooltip"><%= I18n.t "memverses.test_verse_quick.b3" %></div>
+					<span class="submit" q="4">4</span> <div class="tooltip"><%= I18n.t "memverses.test_verse_quick.b4" %></div>
+					<span class="submit" q="5">5</span> <div class="tooltip"><%= I18n.t "memverses.test_verse_quick.b5" %></div>
+
 					<span><%= link_to (image_tag("blue-icon.png", :width=>"16", :height=>"16")), "#info", :id => "inline" %></span> <div class="tooltip">Learn about rating your verses and keyboard shortcuts</div>
 					<div style="display:none">
 						<div id="info">
 							<%= render "memverses/rating_explanation" %>
 						</div> <!-- end: info -->
-					</div>	
+					</div>
 				</div>	<!-- end: scoreTestButtons -->
-				
+
 			<% end %> <!-- end: form -->
 		</div> <!-- end: verse-test-area -->
 
 	</div> <!-- end: test-verse -->
-   
+
 	<div class="feedback verse-feedback">
 		<h2><%= t('.feedback') %></h2>
 
@@ -61,16 +61,16 @@
 				<span class="prior-text">					<%=@prior_text if @prior_text%>	</span>
 			</p>
 		</div>
-		
+
 		<!-- Current verse -->
 		<div id="currentVerse">
-			<p>		
+			<p>
 				<span class="current-versenum superscript"><%=@current_versenum if @prior_text%></span>
 				<span id="feedback"></span>
 				<img class="center spinner" id="ajax_spinner" src="/assets/indicator2.gif" alt="Comparing..." style="display: none" />
-			</p>					
+			</p>
 		</div>
-		
+
 		<!-- Current verse answer -->
 		<div id="complete-hint">
 			<p>
@@ -81,7 +81,7 @@
 		</div>
 
 	</div> <!-- end: Feedback -->
-	
+
 	<div class="upcoming">
 		<h2><%= t('.upcoming_verses') %></h2>
 		None
@@ -93,33 +93,33 @@
 
 <script language="JavaScript" type="text/javascript"><!--
 
-		
+
 	$(document).ready(function() {
-		
+
 		// cache frequent DOM objects in variables
 		$completehint = $("#complete-hint");
 		$currentVerse = $("#currentVerse");
 		$togglehint   = $("#toggle-hint");
 		$feedback     = $("#feedback");
 		$verseguess   = $("#verseguess");
-		
+
 		var current				= {};
 		var live				= {};
-		
-		current.text   	 = "<%= @text %>";
+
+		current.text   	 = "<%= @text.html_safe %>";
 		current.feedback = true;
 		current.mnemonic = "<%= @mnemonic %>";
-		
+
 		live.correct     = false; // Can currently toggle verse (show/hide)
 		live.feedtext    = "Waiting for you to begin typing..."; // Live Feedback text
-		
+
 		live = getversefeedback($verseguess.val()); // Run this once when page first loads
-		
+
 		function getversefeedback(guess){
 			live = versefeedback(current.text, guess, current.feedback);
-			
+
 			$feedback.html(live.feedtext);
-			
+
 			if (live.correct) {
 				$togglehint.fadeOut(500);
 			}
@@ -131,17 +131,17 @@
 				$currentVerse.toggle();
 			}
 		}
-		
+
 		// focus cursor on verse entry box
 		$verseguess.focus();
-		
+
 		//fancybox info
 		$("a#inline").fancybox({
 			'autoDimensions' : false,
 			'width'          : '80%',
 			'height'         : '90%'
 		});
-				
+
 		// ==== Show/Hide mnemonic ====
 		function togglemnemonic(){
 			if ( $('#mclose').is(':hidden') ) {
@@ -153,17 +153,17 @@
 				$("#mclose").hide();
 			}
 		}
-		
+
 		$('#mclose').click(function() {
 			togglemnemonic();
 		});
-	
+
 		$('#mtext').click(function() {
 			if ( $('#mclose').is(':hidden') ) {
 				togglemnemonic();
 			}
 		});
-		
+
 		// Toggle verse function
 		function toggleverse() {
 			$completehint.toggle();
@@ -174,33 +174,33 @@
 				$togglehint.text(I18n.t("memverses.test_verse_quick.show_verse"));
 			}
 		}
-		
+
 		// show verse
 		$(".toggle-hint").click( function () {
 			toggleverse();
 		});
-		
-		// Verse feedback	
-		$("#verseguess").observe_field(0.2, function( ) { 
+
+		// Verse feedback
+		$("#verseguess").observe_field(0.2, function( ) {
 			getversefeedback(this.value);
-        });		
-		
+        });
+
 		// ==== Mock "rateverse" function
 		function rateverse(){
 			window.location="./tutorial";
 			return (false);
 		}
-			
-		// ==== User clicks 1-5 button ====			
+
+		// ==== User clicks 1-5 button ====
 		$('.submit').click( function() {
 			rateverse();
 		});
-		
+
 		// Shortcuts
 		isShift = false;
 		isPlus = false;
 		pluskeys = [61, 107, 187];
-		
+
 		$(document).keyup(function (e) {
 			if(e.which == 16) {
 				isShift=false;
@@ -253,7 +253,7 @@
 					return false;
 				}
 			} // end of if(isPlus == true && isShift == true)
-			
+
 		})
 		.keypress(function (e) {
 			if(e.which == 62 || e.which == 43) {
