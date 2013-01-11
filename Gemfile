@@ -3,7 +3,7 @@ require 'rbconfig'
 HOST_OS = RbConfig::CONFIG['host_os']
 source 'http://rubygems.org'
 
-group :development do 
+group :development do
   # gem 'query_reviewer', :git => "git://github.com/nesquena/query_reviewer.git"                # For finding slow queries ... problems with Rails 3.2 (?)
 	gem "rails-footnotes", ">= 3.7"
   gem 'sqlite3'
@@ -35,7 +35,7 @@ if HOST_OS =~ /linux/i
   gem 'therubyracer', '>= 0.8.2'
 end
 
-gem 'rails', '3.2.8'
+gem 'rails', '3.2.11'
 gem 'jquery-rails', '>= 2.0.0'
 
 gem "devise"                                                                                    # Authentication
@@ -53,10 +53,10 @@ gem 'rinku', :require => 'rails_rinku'                                          
 gem 'randumb'                                                                                   # Retrieve a random record
 gem 'prawn', :git => "git://github.com/sandal/prawn", :submodules => true                       # PDF support
 gem "prawnto_2", :require => "prawnto"                                                          # Integrating prawn into Rails
-gem 'acts-as-taggable-on'                                                                       # :source => "http://gemcutter.org", Taggable gem, 
+gem 'acts-as-taggable-on'                                                                       # :source => "http://gemcutter.org", Taggable gem,
 gem 'airbrake'                                                                                  # Error tracking
 gem 'ckeditor'                                                                                  # WYSIWYG editing
-gem 'paperclip'                                                                                 # Attachment handling 
+gem 'paperclip'                                                                                 # Attachment handling
 gem 'capistrano', '>=2.9.0'                                                                     # Deploy with Capistrano
 gem 'nokogiri', '>=1.5.0'                                                                       # HTML/XML parsing
 gem 'test-unit', '=1.2.3'                                                                       # Required for restful_authentication (?)
