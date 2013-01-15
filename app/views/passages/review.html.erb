@@ -22,14 +22,32 @@
 </div>
 
 <script language="JavaScript" type="text/javascript"><!--
+
     $(document).ready(function() {
 
+        // This can be moved to memverse_lib once development is done
         var reviewState = {
-            // update status of current verse
+            // setup
             initialize: function () {
+                $.getJSON('passages/due.json', function (data) {
+                    
+                    var items = [];
 
+                    $.each(data, function( index, mv ) {
+                        items.push('<li id="' + mv.id + '">' + mv.ref + '</li>');
+                    });
+
+                    $('<ul/>', {
+                        'class': 'my-new-list',
+                        html: items.join('')
+                    }).appendTo('.upcoming-passages');
+
+                });
             },
         }
+
+        // Initialize session
+        reviewState.initialize();
 
 
 

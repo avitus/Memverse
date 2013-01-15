@@ -19,6 +19,7 @@ class Passage < ActiveRecord::Base
   def as_json(options={})
     {
       :id   => self.id,
+      :ref  => self.reference
       # :bk   => self.book,
       # :ch   => self.chapter,
       # :vs   => self.versenum,
