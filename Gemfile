@@ -38,7 +38,7 @@ if HOST_OS =~ /linux/i
   gem 'therubyracer', '>= 0.11.0'
 end
 
-gem 'rails', '3.2.8'
+gem 'rails', '3.2.11'
 gem 'jquery-rails', '>= 2.0.0'
 
 gem "devise"                                                                                    # Authentication
