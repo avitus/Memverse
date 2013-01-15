@@ -6,6 +6,14 @@ GIT
       activemodel (>= 3.0.0)
 
 GIT
+  remote: git://github.com/avitus/bloggity.git
+  revision: 8b0d6ad7dc38fbe1d46b18b40a8078358f82b491
+  specs:
+    bloggity (0.0.1)
+      jquery-rails
+      rails (~> 3.2.8)
+
+GIT
   remote: git://github.com/avitus/spawn.git
   revision: beaf7937cae96985de42081272a95386b8e474a3
   branch: edge
@@ -21,7 +29,7 @@ GIT
 
 GIT
   remote: git://github.com/radar/forem.git
-  revision: 03725d78827c235574b0186350316821c880a7e9
+  revision: 4177bc1f3bb4f50e2ca9a2953e6518a6afa331d1
   specs:
     forem (1.0.0.beta1)
       cancan (= 1.6.8)
@@ -49,29 +57,22 @@ GIT
 
 GIT
   remote: git://github.com/sferik/rails_admin.git
-  revision: 9e17443c67f9568e7c409d36794a34aa3d21101c
+  revision: 0183a83d9fc5026f78c50365491ad9970726bb24
   specs:
-    rails_admin (0.3.0)
+    rails_admin (0.4.1)
       bootstrap-sass (~> 2.1)
       builder (~> 3.0)
       coffee-rails (~> 3.1)
-      font-awesome-sass-rails (~> 2.0)
+      font-awesome-sass-rails (~> 3.0, >= 3.0.0.1)
       haml (~> 3.1)
       jquery-rails (~> 2.1)
-      jquery-ui-rails (~> 2.0)
+      jquery-ui-rails (~> 3.0)
       kaminari (~> 0.14)
       nested_form (~> 0.2)
       rack-pjax (~> 0.6)
       rails (~> 3.1)
       remotipart (~> 1.0)
       sass-rails (~> 3.1)
-
-PATH
-  remote: ../bloggity
-  specs:
-    bloggity (0.0.1)
-      jquery-rails
-      rails (~> 3.2.8)
 
 GEM
   remote: http://rubygems.org/
@@ -126,7 +127,7 @@ GEM
     breadcrumbs_on_rails (2.3.0)
     builder (3.0.4)
     cancan (1.6.8)
-    capistrano (2.13.5)
+    capistrano (2.14.1)
       highline
       net-scp (>= 1.0.0)
       net-sftp (>= 2.0.0)
@@ -141,7 +142,7 @@ GEM
       xpath (~> 1.0.0)
     childprocess (0.3.6)
       ffi (~> 1.0, >= 1.0.6)
-    chunky_png (1.2.6)
+    chunky_png (1.2.7)
     ckeditor (3.7.3)
       mime-types
       orm_adapter
@@ -160,7 +161,7 @@ GEM
       sass (~> 3.1)
     compass-rails (1.0.3)
       compass (>= 0.12.2, < 0.14)
-    connection_pool (0.9.3)
+    connection_pool (1.0.0)
     cucumber (1.2.1)
       builder (>= 2.1.2)
       diff-lcs (>= 1.1.3)
@@ -172,7 +173,7 @@ GEM
       nokogiri (>= 1.5.0)
     dalli (2.6.0)
     database_cleaner (0.9.1)
-    devise (2.2.0.rc)
+    devise (2.2.1)
       bcrypt-ruby (~> 3.0)
       orm_adapter (~> 0.1)
       railties (~> 3.1)
@@ -194,29 +195,27 @@ GEM
     fancybox-rails (0.1.4)
       railties (>= 3.1.0)
     ffi (1.0.11)
-    font-awesome-sass-rails (2.0.0.0)
+    font-awesome-sass-rails (3.0.0.1)
       railties (>= 3.1.1)
       sass-rails (>= 3.1.1)
     forem-redcarpet (1.0.0)
       pygments.rb (= 0.2.4)
       redcarpet (= 2.0.1)
-    foreman (0.60.2)
+    foreman (0.61.0)
       thor (>= 0.13.6)
     friendly_id (4.0.9)
     fssm (0.2.9)
     gemoji (1.1.2)
     gherkin (2.11.5)
       json (>= 1.4.6)
-    girl_friday (0.11.1)
-      connection_pool (~> 0.9.0)
+    girl_friday (0.11.2)
+      connection_pool (~> 1.0)
       rubinius-actor
     haml (3.1.7)
     hashery (2.1.0)
     highline (1.6.15)
     hike (1.2.1)
     hirb (0.7.0)
-    hoe (3.4.0)
-      rake (>= 0.8, < 11.0)
     htmldiff (0.0.1)
     i18n (0.6.1)
     i18n-js (2.1.2)
@@ -231,7 +230,7 @@ GEM
     jquery-rails (2.1.4)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
-    jquery-ui-rails (2.0.2)
+    jquery-ui-rails (3.0.1)
       jquery-rails
       railties (>= 3.1.0)
     json (1.7.6)
@@ -240,7 +239,7 @@ GEM
       activesupport (>= 3.0.0)
     launchy (2.1.2)
       addressable (~> 2.3)
-    libv8 (3.11.8.4)
+    libv8 (3.11.8.13)
     libwebsocket (0.1.7.1)
       addressable
       websocket
@@ -256,10 +255,10 @@ GEM
       net-ssh (>= 1.99.1)
     net-sftp (2.0.5)
       net-ssh (>= 2.0.9)
-    net-ssh (2.6.2)
+    net-ssh (2.6.3)
     net-ssh-gateway (1.1.0)
       net-ssh (>= 1.99.1)
-    newrelic_rpm (3.5.4.34)
+    newrelic_rpm (3.5.5.38)
     nokogiri (1.5.6)
     orm_adapter (0.4.0)
     paperclip (3.4.0)
@@ -280,10 +279,10 @@ GEM
       rails (>= 3.1)
     pygments.rb (0.2.4)
       rubypython (~> 0.5.3)
-    rack (1.4.3)
+    rack (1.4.4)
     rack-cache (1.2)
       rack (>= 0.4)
-    rack-pjax (0.6.0)
+    rack-pjax (0.7.0)
       nokogiri (~> 1.5)
       rack (~> 1.3)
     rack-protection (1.3.2)
@@ -332,7 +331,7 @@ GEM
     rspec-expectations (2.12.1)
       diff-lcs (~> 1.1.3)
     rspec-mocks (2.12.1)
-    rspec-rails (2.12.0)
+    rspec-rails (2.12.2)
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       railties (>= 3.0)
@@ -347,8 +346,8 @@ GEM
       blankslate (>= 2.1.2.3)
       ffi (~> 1.0.7)
     rubyzip (0.9.9)
-    sass (3.2.4)
-    sass-rails (3.2.5)
+    sass (3.2.5)
+    sass-rails (3.2.6)
       railties (~> 3.2.0)
       sass (>= 3.1.10)
       tilt (~> 1.3)
@@ -375,10 +374,9 @@ GEM
       multi_json (~> 1.0)
       rack (~> 1.0)
       tilt (~> 1.1, != 1.3.0)
-    sqlite3 (1.3.6)
-    test-unit (1.2.3)
-      hoe (>= 1.5.1)
-    therubyracer (0.11.0)
+    sqlite3 (1.3.7)
+    therubyracer (0.11.2)
+      libv8 (~> 3.11.8.12)
       ref
     thinking-sphinx (2.0.14)
       activerecord (>= 3.0.3)
@@ -462,7 +460,6 @@ DEPENDENCIES
   split
   sqlite3
   supermodel!
-  test-unit (= 1.2.3)
   therubyracer (>= 0.11.0)
   thinking-sphinx (~> 2.0.14)
   uglifier (>= 1.0.3)
