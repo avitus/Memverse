@@ -11,6 +11,8 @@ class Passage < ActiveRecord::Base
                   :efactor, :last_tested, :length, :next_test, :reference, :rep_n, :test_interval
 
 
+  scope :due, lambda { where('next_test  <= ?', Date.today) }
+
   # ----------------------------------------------------------------------------------------------------------
   # Convert to JSON format
   # ----------------------------------------------------------------------------------------------------------

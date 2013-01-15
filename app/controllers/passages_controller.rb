@@ -10,6 +10,17 @@ class PassagesController < ApplicationController
     end
   end
 
+  # All passages due for review
+  def due
+    @passages = current_user.passages.due
+
+    respond_to do |format|
+      format.html # index.html.erb
+      format.json { render json: @passages }
+    end
+  end
+
+
   # GET /passages/1
   # GET /passages/1.json
   def show
