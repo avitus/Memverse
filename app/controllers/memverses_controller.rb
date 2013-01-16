@@ -102,9 +102,9 @@
 # 02/11/11 : ** Converted to Rails 3.0.3 and Ruby 1.9.2 **
 
 class MemversesController < ApplicationController
-  
+
   before_filter :authenticate_user!, :except => [:memverse_counter, :feedback]
-  
+
   # Added 4/7/10 to prevent invalid authenticity token errors
   # http://ryandaigle.com/articles/2007/9/24/what-s-new-in-edge-rails-better-cross-site-request-forging-prevention
   protect_from_forgery :only => [:create, :update, :destroy]
@@ -115,81 +115,93 @@ class MemversesController < ApplicationController
   prawnto :prawn => { :right_margin   => 50 }
 
   respond_to :html, :pdf
-  
+
   add_breadcrumb "Home", :root_path
+
+  def index
+
+    passage = Passage.find(params[:passage_id])
+
+    @memverses = passage ? passage.memverses : current_user.memverses
+
+    respond_to do |format|
+      format.html # index.html.erb
+      format.json { render json: @memverses }
+    end
+  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Home / Start Page
-  # ----------------------------------------------------------------------------------------------------------   
-  def index
-    
+  # ----------------------------------------------------------------------------------------------------------
+  def home
+
     @tab = "home"
 
     if current_user.needs_quick_start?
       redirect_to :controller => "home", :action => "quick_start" and return
     end
- 
+
     @due_today	= current_user.due_verses unless mobile_device?
     @overdue		= current_user.overdue_verses unless mobile_device?
-    
+
     # Level information
     quests_remaining = current_user.current_uncompleted_quests.length
     @quests_to_next_level = quests_remaining==1 ? "one quest" : quests_remaining.to_s + " quests"
-    
+
     # Has this user added any verses?
     @user_has_no_verses           = (current_user.learning == 0) && (current_user.memorized == 0)
     # Does this user need more verses?
     @user_has_too_few_verses      = (current_user.learning + current_user.memorized <= 5)
-    
+
     # Otherwise, show some nice statistics and direct user to memorization page if necessary
-    if (!@user_has_no_verses)      
+    if (!@user_has_no_verses)
       mv = Memverse.find(:first, :conditions => ["user_id = ?", current_user.id], :order => "next_test ASC")
       if !mv.nil?
         @user_has_test_today = (mv.next_test <= Date.today)
       end
-      
+
       unless flash[:error] or flash[:notice] or !current_user.first_verse_today # Show flash with verses due and workload unless another flash or done with review
         flash.now[:notice] = t('messages.today_msg_html', :due_today => current_user.due_verses, :time => current_user.work_load)
       end
 
     end
 
-    # === Get Recent Tweets ===    
+    # === Get Recent Tweets ===
     @tweets1 = Tweet.where(:importance => 1..2).limit(12).order("created_at DESC")  # Most important tweets
     @tweets2 = Tweet.where(:importance => 3..4).limit(12).order("created_at DESC")  # Moderate importance
-            
-    # === RSS Devotional ===    
+
+    # === RSS Devotional ===
     dd = Rails.cache.fetch(["devotion", Date.today.month, Date.today.day], :expires_in => 24.hours) do
       Devotion.where(:name => "Spurgeon Morning", :month => Date.today.month, :day => Date.today.day ).first || Devotion.daily_refresh
     end
 
     @dev_ref  = dd.try(:ref) || ""
-    @devotion = dd.try(:thought) || ""     
-    
-    # === Verse of the Day ===   
+    @devotion = dd.try(:thought) || ""
+
+    # === Verse of the Day ===
     @votd_txt, @votd_ref, @votd_tl, @votd_id  = verse_of_the_day()
-    
+
     # === Check for incomplete profile ===
-    if current_user.country_id == 226 and current_user.american_state.nil?      
+    if current_user.country_id == 226 and current_user.american_state.nil?
       link = "<a href=\"#{update_profile_path}\">Please update your profile to reflect your state.</a>"
-      if flash[:notice] 
-        flash[:notice] << " #{link} " 
+      if flash[:notice]
+        flash[:notice] << " #{link} "
       else
         flash[:notice] = "#{link}"
       end
     end
-                      
+
   end
-  
+
   # ----------------------------------------------------------------------------------------------------------
   # Search for a single memory verse (by reference) for a given user
-  # ----------------------------------------------------------------------------------------------------------  
+  # ----------------------------------------------------------------------------------------------------------
   def mv_lookup
 
     @mv = current_user.memverses
               .includes(:verse)
-              .where( 'verses.book'        => params[:bk], 
-                      'verses.chapter'     => params[:ch], 
+              .where( 'verses.book'        => params[:bk],
+                      'verses.chapter'     => params[:ch],
                       'verses.versenum'    => params[:vs])
               .first
 
@@ -197,30 +209,30 @@ class MemversesController < ApplicationController
       format.html # show.html.erb
       format.xml  { render :xml  => @mv }
       format.json { render :json => @mv }
-    end  
+    end
 
-  end  
+  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Search for a passage of memory verses (by reference) for a given user
-  # ----------------------------------------------------------------------------------------------------------  
+  # ----------------------------------------------------------------------------------------------------------
   def mv_lookup_passage
-   
+
     if params[:vs_start] != "null" and params[:vs_end] != "null"
       @mvs = current_user.memverses
               .includes(:verse)
-              .where( 'verses.book'        => params[:bk], 
-                      'verses.chapter'     => params[:ch], 
+              .where( 'verses.book'        => params[:bk],
+                      'verses.chapter'     => params[:ch],
                       'verses.versenum'    => params[:vs_start]..params[:vs_end])
               .order( 'verses.versenum')
     else
       @mvs = current_user.memverses
               .includes(:verse)
-              .where( 'verses.book'        => params[:bk], 
+              .where( 'verses.book'        => params[:bk],
                       'verses.chapter'     => params[:ch])
               .order( 'verses.versenum')
     end
-                      
+
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml  => @mvs }
@@ -230,212 +242,212 @@ class MemversesController < ApplicationController
 
   # ----------------------------------------------------------------------------------------------------------
   # Verse Search Query page
-  # ----------------------------------------------------------------------------------------------------------  
+  # ----------------------------------------------------------------------------------------------------------
   def mv_search
 
     @tag    = ActsAsTaggableOn::Tag.find_by_name(params[:searchParams])
     @verses = Memverse.tagged_with(params[:searchParams])
-   
+
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml  => @verses }
       format.json { render :json => @verses }
-    end   
-    
+    end
+
   end
 
 
   # ----------------------------------------------------------------------------------------------------------
   # AJAX: Memorized verses
-  # ----------------------------------------------------------------------------------------------------------  
+  # ----------------------------------------------------------------------------------------------------------
   def memverse_counter
     total_verses = Memverse.memorized.count
     render :json => { :total_verses => total_verses }
   end
- 
+
   # ----------------------------------------------------------------------------------------------------------
   # Starter pack - select verses from top ten verses
-  # ----------------------------------------------------------------------------------------------------------  
+  # ----------------------------------------------------------------------------------------------------------
   def starter_pack
     add_breadcrumb I18n.t("page_titles.quickstart"), :starter_pack_path
     @tab = "home"
     @sub = "addvs"
-    
+
     @translation = params[:translation].gsub("/", "")  # remove trailing slash if necessary
-    
+
     # TODO: get rid of the archaic 'IS NOT NULL' syntax
     @suggestions = Popverse.find( :all,
                                   :conditions => ["#{@translation} IS NOT NULL"],
-                                  :select => "pop_ref, #{@translation}_text, #{@translation}", 
+                                  :select => "pop_ref, #{@translation}_text, #{@translation}",
                                   :limit => 12)
 
   end
- 
+
   # ----------------------------------------------------------------------------------------------------------
   # Verse of the day
-  # ----------------------------------------------------------------------------------------------------------  
+  # ----------------------------------------------------------------------------------------------------------
   def verse_of_the_day
-    
+
     # Find a popular verse eg: ['Jn 3:16', [['NIV', id] ['ESV', id]]]
     verse     = popular_verses(100).sample # get 100 most popular verses - pick one at random
-            
+
     # Pick out a translation in user's preferred translation or at random
     if verse  # TODO: Make bootstrapping of DB easier ... would be better to seed DB
-      verse_ref         = verse[0]     
+      verse_ref         = verse[0]
       verse_tl          = verse[1].select{ |tl| tl[0] == current_user.translation }.compact.first || verse[1].sample
       verse_id          = verse_tl[1]
       verse_translation = verse_tl[0]
-      
+
       verse_txt         = Verse.find(verse_id).text
-      
+
       return verse_txt, verse_ref, verse_translation, verse_id
     else
       return "Be joyful always", "1 Thess 5:16", "NIV", nil
     end
-        
+
   end
-  
-  
+
+
   # ----------------------------------------------------------------------------------------------------------
   # User Statistics
-  # ---------------------------------------------------------------------------------------------------------- 
+  # ----------------------------------------------------------------------------------------------------------
   def user_stats
-    
+
     @my_verses    = Array.new
     @status_table = Hash.new(0)
-    
+
     mem_vs = Memverse.find(:all, :conditions => ["user_id = ?", current_user.id])
-  
+
     mem_vs.each { |mv|
-       
+
       vs            = Verse.find(mv.verse_id)
       verse         = db_to_vs(vs.book, vs.chapter, vs.versenum)
- 
+
       @status_table[mv.status]  += 1
 
     }
-    
+
     @pop_verses = Popverse.find(:all, :limit => 15)
-    
+
   end
 
-  # ----------------------------------------------------------------------------------------------------------   
+  # ----------------------------------------------------------------------------------------------------------
   # Show most popular verses
-  # ----------------------------------------------------------------------------------------------------------   
+  # ----------------------------------------------------------------------------------------------------------
   def pop_verses
 
-    @tab = "home" 
+    @tab = "home"
     @sub = "popvs"
-    
+
     add_breadcrumb I18n.t("home_menu.Popular Verses"), :popular_verses_path
-         
+
     @page       = [params[:page].to_i, 99].min     # page number
     @page_size  = 20                               # number of verses per page
-       
-    @vs_list = Popverse.find( :all, :limit => @page_size, :offset => @page*@page_size )    
-  end 
 
-  # ----------------------------------------------------------------------------------------------------------   
+    @vs_list = Popverse.find( :all, :limit => @page_size, :offset => @page*@page_size )
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
   # Display a single memory verse or several verses as POSTed from manage_verses
-  # ----------------------------------------------------------------------------------------------------------  
+  # ----------------------------------------------------------------------------------------------------------
   def show
-  	  	
+
     @tab = "home"
-    @sub = "manage"  	  	
-  	  	
-    mv_ids = params[:mv] 
+    @sub = "manage"
+
+    mv_ids = params[:mv]
 
     # ==== Displaying a single verse ====
     if params[:id]
-    
+
       @mv         = Memverse.find(params[:id])
-      @verse      = @mv.verse    
-    
+      @verse      = @mv.verse
+
       add_breadcrumb I18n.t("home_menu.My Verses"), :manage_verses_path
       add_breadcrumb "#{@verse.book} #{@verse.chapter}:#{@verse.versenum}", {:action => 'show', :id => params[:id] }
-      
+
       @user_tags  = @mv.tags
       @tags       = @verse.tags
       # @other_tags = @verse.all_user_tags  # TODO: this is a very expensive transaction
-      
+
       @next_mv = @mv.next_verse || @mv.next_verse_in_user_list
       @prev_mv = @mv.prev_verse || @mv.prev_verse_in_user_list
 
-    # ==== Displaying multiple verses ====    
+    # ==== Displaying multiple verses ====
     elsif (!mv_ids.blank?) and (params[:Show])
 
       @mv_list = Memverse.find(mv_ids, :include => :verse)
       @mv_list.sort! # Sort by book. TODO: Pass paramaters from manage_verses and sort by that order...
-      
+
       add_breadcrumb I18n.t("home_menu.My Verses"), :manage_verses_path
       add_breadcrumb I18n.t("page_titles.view_vs_s"), "/memverses/show"
-      
-    # Error: verse ID's passed with request to delete  
+
+    # Error: verse ID's passed with request to delete
     elsif (!mv_ids.blank?) and (params[:Delete])
 
       flash[:notice] = "JavaScript is required to delete verses. Please enable, then refresh page and try again."
       redirect_to :action => 'manage_verses' and return
 
     elsif (mv_ids.blank?)
-    	
+
       flash[:notice] = "Please select verses using the checkboxes in the first column."
       redirect_to :action => 'manage_verses' and return
-      
+
     else
-    	
+
       redirect_to :action => 'manage_verses' and return
-      
+
     end
-    
+
     respond_to do |format|
       format.html
       format.pdf { render :layout => false } # if params[:format] == 'pdf'
         prawnto :filename => "Memverse.pdf", :prawn => { }
-    end    
-    
-  end
-  
-  # ----------------------------------------------------------------------------------------------------------   
-  # Display prompterizations/mnemonics for single memory verse or several verses as POSTed from manage_verses
-  # ----------------------------------------------------------------------------------------------------------  
-  def show_prompt
-        
-    @tab = "home"
-    @sub = "manage"       
-        
-    mv_ids = params[:mv] 
+    end
 
-  # ==== Verse IDs were passed from manage_verses or similar form ====    
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Display prompterizations/mnemonics for single memory verse or several verses as POSTed from manage_verses
+  # ----------------------------------------------------------------------------------------------------------
+  def show_prompt
+
+    @tab = "home"
+    @sub = "manage"
+
+    mv_ids = params[:mv]
+
+  # ==== Verse IDs were passed from manage_verses or similar form ====
     if (!mv_ids.blank?) and (params[:Prompt])
 
       @mv_list = Memverse.find(mv_ids, :include => :verse)
       @mv_list.sort! # Sort by book. TODO: Pass paramaters from manage_verses and sort by that order...
-      
+
       add_breadcrumb I18n.t("home_menu.My Verses"), :manage_verses_path
       add_breadcrumb I18n.t("memverses.manage_verses.show_prompt"), {:action => "show_prompt", :controller => "memverses"}
-      
+
     elsif (mv_ids.blank?)
-      
+
       flash[:notice] = "Please select verses using the checkboxes in the first column."
       redirect_to :action => 'manage_verses' and return
-      
+
     else
-      
+
       redirect_to :action => 'manage_verses' and return
-      
+
     end
-    
+
     respond_to do |format|
       format.html
       format.pdf { render :layout => false } # if params[:format] == 'pdf'
         prawnto :filename => "Memverse.pdf", :prawn => { }
-    end    
-    
+    end
+
   end
 
   # ----------------------------------------------------------------------------------------------------------
   # In place editing support for tag addition
-  # ----------------------------------------------------------------------------------------------------------    
+  # ----------------------------------------------------------------------------------------------------------
   def add_verse_tag
     @mv = Memverse.find(params[:id])
     new_tag = params[:value].titleize # need to clean this up with hpricot or equivalent
@@ -445,78 +457,78 @@ class MemversesController < ApplicationController
     #
     # 1. Owned tags and regular tags are handled in two different modules in the library
     # 2. The method 'tag_list' only returns tags without owners. The method 'all_tags_list' returns all tags
-    # 3. user.tag(mv, :with => 'TagA', :on => :tags) *replaces* any prior tags. 
+    # 3. user.tag(mv, :with => 'TagA', :on => :tags) *replaces* any prior tags.
     # 4. mv.tag_list = "tagC, tagD" does not appear to overwrite an existing tag list
-    
+
     if !new_tag.empty?
       tag_list = @mv.all_tags_list.to_s + ", " + new_tag
       current_user.tag(@mv, :with => tag_list, :on => :tags)  # We're doing this for now to track which users are tagging
-      
+
       # Update verse model with most popular tags
       # spawn_block(:argv => "spawn-update-vs-tags") do
         @mv.verse.update_tags
       # end
- 
+
       render :text => new_tag
     else
       render :text => "[Enter tag name here]"
     end
-    
+
   end
-  
+
   # ----------------------------------------------------------------------------------------------------------
   # Autocomplete tag
-  # ---------------------------------------------------------------------------------------------------------- 
- 
+  # ----------------------------------------------------------------------------------------------------------
+
   def tag_autocomplete
     @suggestions = Array.new
 
     query         = params[:term]
     query_length  = query.length
-    
+
     # This has the effect of restricting autocomplete to only :taggable_type => Verse
     all_tags = Verse.tag_counts
-    
+
     all_tags.each { |tag|
       name = tag.name
       if name[0...query_length].downcase == query.downcase
         @suggestions << name
       end
     }
-    
+
     render :json => @suggestions.to_json
   end
 
   # ----------------------------------------------------------------------------------------------------------
   # Remove a verse tag
-  # ---------------------------------------------------------------------------------------------------------- 
-  def remove_verse_tag    
+  # ----------------------------------------------------------------------------------------------------------
+  def remove_verse_tag
     dead_tag = ActsAsTaggableOn::Tagging.find(:first, :conditions => {:tag_id => params[:id], :taggable_id => params[:mv], :taggable_type => 'Memverse' })
-    
-    if dead_tag   	
+
+    if dead_tag
       dead_tag.destroy
 	    # We should remove the tag if it is no longer tagging anything
 	    if ActsAsTaggableOn::Tag.find(params[:id]).taggings.length == 0
 	      ActsAsTaggableOn::Tag.find(params[:id]).destroy
-	    end    
+	    end
     end
 
     redirect_to(:action => 'show', :id => params[:mv])
-    
+
   end
 
   # ----------------------------------------------------------------------------------------------------------
   # Edit a verse
-  # ----------------------------------------------------------------------------------------------------------   
+  # ----------------------------------------------------------------------------------------------------------
   def edit_verse
-    @verse = Memverse.find(params[:id]).verse 
+    @verse = Memverse.find(params[:id]).verse
     add_breadcrumb I18n.t("home_menu.My Verses"), :manage_verses_path
     add_breadcrumb "Edit #{@verse.book} #{@verse.chapter}:#{@verse.versenum}", {:action => 'edit_verse', :id => params[:id] }
-  end 
+  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Update a verse
-  # ----------------------------------------------------------------------------------------------------------   
+  # ----------------------------------------------------------------------------------------------------------
   def update_verse
     @verse = Verse.find(params[:id])
     if @verse.update_attributes(params[:verse])
@@ -525,12 +537,12 @@ class MemversesController < ApplicationController
     else
       render :action => edit_verse
     end
-  end   
+  end
 
 
   # ----------------------------------------------------------------------------------------------------------
   # Verify a verse
-  # ----------------------------------------------------------------------------------------------------------  
+  # ----------------------------------------------------------------------------------------------------------
   def toggle_verse_flag
     @verse = Verse.find(params[:id])
     @verse.error_flag = !@verse.error_flag
@@ -539,32 +551,32 @@ class MemversesController < ApplicationController
     respond_to do |format|
       format.html { render :partial => 'flag_verse', :layout => false }
       format.json { render :json => { :mv_error_flag => @verse.error_flag} }
-    end     
+    end
   end
-  
+
   # ----------------------------------------------------------------------------------------------------------
   # Toggle verse from 'Active' to 'Pending' status
-  # ----------------------------------------------------------------------------------------------------------  
+  # ----------------------------------------------------------------------------------------------------------
   def toggle_mv_status
     @mv = Memverse.find(params[:id])
-    
+
     if @mv && @mv.status == 'Pending'
     	@mv.status = @mv.test_interval > 30 ? "Memorized" : "Learning"
     else
     	@mv.status = 'Pending'
     end
     @mv.save
-    
+
     respond_to do |format|
       format.html { render :partial => 'mv_status_toggle', :layout => false }
       format.json { render :json => { :mv_status => @mv.status} }
-    end      
-    
-  end  
+    end
+
+  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Table of popular verses
-  # 
+  #
   # Returns data structure as follows:
   #  [Verse0, [translation_0, id_0], [translation_1, id_1]]
   #  [Verse1, [tranalation_0, id_0]
@@ -575,126 +587,126 @@ class MemversesController < ApplicationController
   #   - User
   #
   # NB: MIRROR ANY CHANGES HERE TO UTILS_CONTROLLER !!!!!!
-  # ---------------------------------------------------------------------------------------------------------- 
+  # ----------------------------------------------------------------------------------------------------------
   def popular_verses(limit = 8, include_current_user_verses = true)
 
     pop_verses = Array.new
-    
+
     # Changing the number of verses returned doesn't buy anything because you have to access entire memory verse table
-    pop_mv = Popverse.find(:all) 
-    
+    pop_mv = Popverse.find(:all)
+
     pop_mv.each { |vs|
-    
+
       verse    = vs.pop_ref
-         
+
       # Only include verse in list of popular verses if current_user doesn't have it already
-      errorcode, book, chapter, versenum = parse_verse(verse) 
+      errorcode, book, chapter, versenum = parse_verse(verse)
       if include_current_user_verses or !current_user.has_verse?(book, chapter, versenum)
-  
-  
+
+
         avail_translations = [["NIV", vs.niv, vs.niv_text],
                               ["ESV", vs.esv, vs.esv_text],
                               ["NAS", vs.nas, vs.nas_text],
                               ["NKJ", vs.nkj, vs.nkj_text],
                               ["KJV", vs.kjv, vs.kjv_text]]
-        
+
         translations = Array.new
         avail_translations.each { |translation|
           if !translation[1].nil?
             translations << translation
           end
         }
-        
+
         pop_verses << [verse, translations]
       end
     }
-    
+
     return pop_verses[0..limit]
   end
-  
+
   # ----------------------------------------------------------------------------------------------------------
   # AJAX Verse Add (Assumes that verse is already in DB)
-  # ---------------------------------------------------------------------------------------------------------- 
+  # ----------------------------------------------------------------------------------------------------------
   def ajax_add
   	vs = Verse.find(params[:id])
-  	
+
   	if vs and current_user
       if current_user.has_verse_id?(vs)
         msg = "Previously Added"
       elsif current_user.has_verse?(vs.book, vs.chapter, vs.versenum)
         msg = "Added in another translation"
       else
-        # Save verse as a memory verse for user         
+        # Save verse as a memory verse for user
         begin
-          Memverse.create(:user_id => current_user.id, :verse_id => vs.id)  
-        rescue Exception => e  
+          Memverse.create(:user_id => current_user.id, :verse_id => vs.id)
+        rescue Exception => e
           Rails.logger.error("*** [Memverse save error] Exception while saving #{vs.ref} for user #{current_user.id}: #{e}")
         else
           msg = "Added"
-        end        
+        end
       end
     else
       msg = "Error"
     end
-    
+
   	render :json => {:msg => msg }
-  	
+
   end
-  
+
   # ----------------------------------------------------------------------------------------------------------
   # Add an entire chapter
-  # ----------------------------------------------------------------------------------------------------------   
+  # ----------------------------------------------------------------------------------------------------------
   def add_chapter
 
     bk = params[:bk]
     ch = params[:ch]
     tl = params[:tl] || current_user.translation
-    
+
     chapter_verses = Verse.where("book = ? and chapter = ? and translation = ? and versenum not in (?)", bk, ch, tl, 0)
-    
+
     chapter_verses.each do |vs|
       if current_user.has_verse?(vs.book, vs.chapter, vs.versenum)
         msg = "You already have #{vs.ref} in a different translation"
       else
-        # Save verse as a memory verse for user         
+        # Save verse as a memory verse for user
         begin
-          Memverse.create(:user_id => current_user.id, :verse_id => vs.id)  
-        rescue Exception => e  
+          Memverse.create(:user_id => current_user.id, :verse_id => vs.id)
+        rescue Exception => e
           Rails.logger.error("*** [Memverse save error] Exception while saving #{vs.ref} for user #{current_user.id}: #{e}")
         else
           msg = "Added"
-        end  
+        end
       end
     end
 
     render :json => {:msg => "Added Chapter" }
-    
-  end  
+
+  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Add a new memory verse
-  # ----------------------------------------------------------------------------------------------------------   
+  # ----------------------------------------------------------------------------------------------------------
   def add_verse
     @tab = "home"
-    @sub = "addvs"       
-    add_breadcrumb I18n.t("home_menu.Add Verse"), :add_verse_path  
-    
+    @sub = "addvs"
+    add_breadcrumb I18n.t("home_menu.Add Verse"), :add_verse_path
+
     @translation            = current_user.translation? ? current_user.translation : "NIV" # fallback on NIV
     TRANSLATIONS[:selected] = @translation # used for jEditable
   end
-    
+
   # ----------------------------------------------------------------------------------------------------------
   # Delete a memory verse
   # TODO: make this a method of Memverse.rb
-  # ---------------------------------------------------------------------------------------------------------- 
+  # ----------------------------------------------------------------------------------------------------------
   def destroy_mv
-    
+
     # We need to remove inter-verse linkage
     dead_mv   = Memverse.find(params[:id])
-    
+
     # Remove verse from memorization queue
     mem_queue = session[:mv_queue]
-    
+
     # We need to check that there is a verse sequence and also that the array isn't empty
     if !mem_queue.blank?
       # Remove verse from the memorization queue if it is sitting in there
@@ -702,18 +714,18 @@ class MemversesController < ApplicationController
     end
 
     dead_mv.remove_mv  # remove verse and sort out next and previous pointers
-    
-    redirect_to :action => 'manage_verses'   
-  end 
- 
+
+    redirect_to :action => 'manage_verses'
+  end
+
   # ----------------------------------------------------------------------------------------------------------
   # Manage verses - used to display verse management page to user
   # ----------------------------------------------------------------------------------------------------------
   def manage_verses
-    
+
     @tab = "home"
     @sub = "manage"
-    
+
     add_breadcrumb I18n.t("home_menu.My Verses"), :manage_verses_path
 
     # TODO: select only a) verse reference and b) verse translation to speed up this page and use less memory
@@ -723,37 +735,37 @@ class MemversesController < ApplicationController
       @my_verses = current_user.memverses.includes(:verse).order(params[:sort_order])
     else
       # default to canonical sort
-      @my_verses = current_user.memverses.includes(:verse).order('verses.book_index, verses.chapter, verses.versenum')      
-    end      
+      @my_verses = current_user.memverses.includes(:verse).order('verses.book_index, verses.chapter, verses.versenum')
+    end
 
-    respond_to do |format| 
+    respond_to do |format|
       format.html
       format.pdf { render :layout => false } if params[:format] == 'pdf'
         prawnto :filename => "Memverse.pdf", :prawn => { }
     end
-      
-  end 
- 
+
+  end
+
   # ----------------------------------------------------------------------------------------------------------
   # Manage verses - used to handle the manage verses form (delete a lot of verses or show selected)
   # TODO: see above ... should re-use code from above and call a model method
   # ----------------------------------------------------------------------------------------------------------
   def delete_verses
-    
+
     mv_ids = params[:mv]
 
     if (!mv_ids.blank?) and (params['Delete'])
-      mv_ids.each { |mv_id|   
-      
+      mv_ids.each { |mv_id|
+
         # Find verse in DB
         logger.debug("*** Finding mv with id: #{mv_id}")
         mv = Memverse.find(mv_id)
-           
+
         # Remove verse from memorization queue
-        mem_queue = session[:mv_queue]        
+        mem_queue = session[:mv_queue]
         # We need to check that there is a verse sequence and also that the array isn't empty
         if !mem_queue.blank?
-          logger.debug("*** Found session queue with verses")	
+          logger.debug("*** Found session queue with verses")
           # Remove verse from the memorization queue if it is sitting in there
           mem_queue.delete(mv_id)
         end
@@ -769,49 +781,49 @@ class MemversesController < ApplicationController
     else
       redirect_to :action => 'manage_verses'
     end
-      
-  end 
- 
+
+  end
+
   # ----------------------------------------------------------------------------------------------------------
   # Check whether any translations of entered verse are in DB
-  # ----------------------------------------------------------------------------------------------------------    
+  # ----------------------------------------------------------------------------------------------------------
   def avail_translations
-    
+
     ref = params[:verse]
-    
-    errorcode, book, chapter, versenum = parse_verse(ref) 
+
+    errorcode, book, chapter, versenum = parse_verse(ref)
 
     if (!errorcode) # If verse is ok
-      
+
       @avail_chapters = Array.new
-      
+
       # Check whether verse is already in DB
-      @avail_translations = Verse.find( :all, 
-                                        :conditions => ["book = ? and chapter = ? and versenum = ?", 
+      @avail_translations = Verse.find( :all,
+                                        :conditions => ["book = ? and chapter = ? and versenum = ?",
                                                          full_book_name(book), chapter, versenum])
-      # Check whether entire chapter is available                                                   
-      @avail_translations.each { |vs| 
+      # Check whether entire chapter is available
+      @avail_translations.each { |vs|
         if !vs.entire_chapter.include?(nil) # if all verses are in db
-          @avail_chapters << vs.translation    
+          @avail_chapters << vs.translation
         end
-      }                                                               
+      }
     end
-    
+
     respond_to do |format|
       format.html { render :partial=>'avail_translations', :layout=>false }
       format.xml  { render :xml => @avail_translations }
       format.json { render :json => @avail_translations }
     end
-          
+
   end
-  
+
   # ----------------------------------------------------------------------------------------------------------
   # Get Memverse from Queue - returns nil if queue is empty
-  # ----------------------------------------------------------------------------------------------------------   
+  # ----------------------------------------------------------------------------------------------------------
   def get_memverse_from_queue
-    
+
     rest_of_multiverse = session[:mv_queue]
-    
+
     # We need to check that there is a verse sequence and also that the array isn't empty
     if rest_of_multiverse and !rest_of_multiverse.empty?
       # TODO: The problem with removing the verse is that if the user doesn't get tested on the verse then they
@@ -833,13 +845,13 @@ class MemversesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
 
   def put_memverse_cohort_into_queue(mv, mode="test")
-    
+
     mv_queue = Array.new
-    
+
     # Jump to start of memory verse sequence and set return value ie. verse to be tested now
     if mv.prev_verse # this is not the first verse of a seqence -> locate first verse of sequence
-      
-      # if a) verse sequence is longer than 5 AND 
+
+      # if a) verse sequence is longer than 5 AND
       #    b) user doesn't want to repeat memorized verses AND
       #    c) first verse is not due for memorization today AND
       #    d) it's been less than a month since the first verse was memorized AND
@@ -850,64 +862,64 @@ class MemversesController < ApplicationController
       else
         initial_mv = Memverse.find( mv.first_verse )
       end
-          
+
     else # this is the first verse of the sequence
       initial_mv = mv
     end
-    
+
     x = initial_mv
     while x.next_verse and (x.more_to_memorize_in_sequence? or mode == "practice") # stop adding verses if user knows rest of passage
       # Add every subsequent verse
       x = Memverse.find(x.next_verse)
-      mv_queue << x.id     
+      mv_queue << x.id
     end
-    
+
     session[:mv_queue] = mv_queue
     return initial_mv
   end
 
   # ----------------------------------------------------------------------------------------------------------
   # Memorize
-  # ----------------------------------------------------------------------------------------------------------   
+  # ----------------------------------------------------------------------------------------------------------
   def test_verse
- 
+
     redirect_to :action => "test_verse_quick"
-    
+
   end
 
   # ----------------------------------------------------------------------------------------------------------
   # Select chapter to review
-  # ----------------------------------------------------------------------------------------------------------   
+  # ----------------------------------------------------------------------------------------------------------
   def chapter_explanation
-    @tab = "mem"  
-    @sub = "chrev" 
-    
+    @tab = "mem"
+    @sub = "chrev"
+
     add_breadcrumb I18n.t("menu.Review"), :test_verse_quick_path
     add_breadcrumb I18n.t("memorize_menu.Chapter Review"), :pre_chapter_path
   end
 
   # ----------------------------------------------------------------------------------------------------------
   # Review an entire chapter
-  # ----------------------------------------------------------------------------------------------------------   
+  # ----------------------------------------------------------------------------------------------------------
   def test_chapter
- 
-    @tab = "mem"  
-    @sub = "chrev"  
-    
+
+    @tab = "mem"
+    @sub = "chrev"
+
     add_breadcrumb I18n.t("menu.Review"), :test_verse_quick_path
     add_breadcrumb I18n.t("memorize_menu.Chapter Review"), {:action => 'test_chapter', :book_chapter => params[:book_chapter]}
-    
+
     @show_feedback = true
-    
+
     if params[:book_chapter].split.length == 3
       bk_num, bk_name, ch = params[:book_chapter].split
       bk = bk_num + " " + bk_name
     else
-      bk, ch = params[:book_chapter].split      
+      bk, ch = params[:book_chapter].split
     end
 
     logger.info("* Testing chapter: #{bk} #{ch}")
-    
+
     @chapter      = current_user.has_chapter?(bk,ch)
 
     if @chapter
@@ -918,25 +930,25 @@ class MemversesController < ApplicationController
       redirect_to pre_chapter_path
     end
 
-            
+
   end
 
   # ----------------------------------------------------------------------------------------------------------
   # Memorize [AJAX]
-  # ----------------------------------------------------------------------------------------------------------   
+  # ----------------------------------------------------------------------------------------------------------
   def test_verse_quick
- 
-    @tab = "mem"  
-    @sub = "mem"  
+
+    @tab = "mem"
+    @sub = "mem"
     @show_feedback = true
-    
+
     add_breadcrumb I18n.t("menu.Review"), :test_verse_quick_path
     add_breadcrumb I18n.t("memorize_menu.Verses"), :test_verse_quick_path
-    
+
     @mv 			= current_user.first_verse_today
-        
+
     if @mv
-      @show_feedback    = @mv.show_feedback? || true  # default to true in case of nil something in first expression        
+      @show_feedback    = @mv.show_feedback? || true  # default to true in case of nil something in first expression
       # --- Ok to test : Load prior verse if available
       if @mv.prev_verse
         @prev_mv        = Memverse.find(@mv.prev_verse)
@@ -945,7 +957,7 @@ class MemversesController < ApplicationController
       end
     else # this user has no verses due at the moment
       if current_user.has_started?
-      	
+
         if current_user.has_active?
           flash[:notice] = "You have no more verses to memorize today. Your next memory verse is due for review " + current_user.next_verse_due + "."
           redirect_to :action => 'show_progress' and return
@@ -954,66 +966,66 @@ class MemversesController < ApplicationController
           redirect_to test_verse_quick_path and return
         else # User won't allow us to activate verses, so we must tell him to.
           flash[:notice] = "You have no verses due for review today because none of your verses are active. Activate verses by clicking on the 'Pending' status."
-          redirect_to manage_verses_path and return          
+          redirect_to manage_verses_path and return
         end
-               
+
       else
         redirect_to :action => 'add_verse' and return
-        flash[:notice] = "You should first add a few verses."   
+        flash[:notice] = "You should first add a few verses."
       end
     end
-  
+
     # --- Load upcoming verses ---
     @upcoming_verses = current_user.upcoming_verses() unless mobile_device?
-   
+
     # We should never receive a JS request for this URL but this is an attempted fix for the following error
-    
-		# ActionView::MissingTemplate: Missing template memverses/test_verse_quick with 
-		# {:handlers=> [:prawn_xxx, :builder, :prawn, :prawn_dsl, :erb, :rjs, :rhtml, :rxml], 
-		# :locale=>[:en, :en], 
-		# :formats=>[:js, "application/ecmascript", "application/x-ecmascript", "*/*"]} 
-		# in view paths "/app/views",     
+
+		# ActionView::MissingTemplate: Missing template memverses/test_verse_quick with
+		# {:handlers=> [:prawn_xxx, :builder, :prawn, :prawn_dsl, :erb, :rjs, :rhtml, :rxml],
+		# :locale=>[:en, :en],
+		# :formats=>[:js, "application/ecmascript", "application/x-ecmascript", "*/*"]}
+		# in view paths "/app/views",
     respond_to do |format|
       format.html
       format.js { redirect_to test_verse_quick_path }
     end
-    
+
   end
 
   # ----------------------------------------------------------------------------------------------------------
   # Implement Supermemo Algorithm [AJAX]
-  # ----------------------------------------------------------------------------------------------------------     
+  # ----------------------------------------------------------------------------------------------------------
   def mark_test_quick
-    
+
     # Find verse
     mv  = Memverse.find(params[:mv])
     q   = params[:q].to_i
-    
-    if mv.user == current_user    
+
+    if mv.user == current_user
       # Execute Supermemo algorithm
       newly_memorized = mv.supermemo(q)
-  
+
       # Give encouragement if verse transitions from "Learning" to "Memorized"
       if newly_memorized
         msg = "Congratulations. You have memorized #{mv.verse.ref}."
         Tweet.create(:news => "#{current_user.name_or_login} memorized #{mv.verse.ref}", :user_id => current_user.id, :importance => 5)
-  
+
         if current_user.reaching_milestone
         	milestone = current_user.memorized+1
-        	
+
         	importance = case milestone
   	      	when    0..    9 then 4
   	      	when   10..  399 then 3
   	      	when  400..  999 then 2
-  	      	when 1000..10000 then 1 
+  	      	when 1000..10000 then 1
   	      	else                  5
         	end
-        	
+
           msg       << " That was your #{milestone}th memorized verse!"
           broadcast  = "#{current_user.name_or_login} memorized #{current_user.his_or_her} #{milestone}th verse"
           Tweet.create(:news => broadcast, :user_id => current_user.id, :importance => importance)
         end
-  
+
         if mv.chapter_memorized?
           msg << " You have now memorized all of #{mv.verse.chapter_name}. Great job!"
           Tweet.create(:news => "#{current_user.name_or_login} memorized #{mv.verse.chapter_name}", :user_id => current_user.id, :importance => 3)
@@ -1029,22 +1041,22 @@ class MemversesController < ApplicationController
 
   # ----------------------------------------------------------------------------------------------------------
   # Returns the next verse to be tested - this is a service URL for a js routine
-  # ---------------------------------------------------------------------------------------------------------- 
+  # ----------------------------------------------------------------------------------------------------------
   def test_next_verse
 
     current_mv      = Memverse.find(params[:mv])
-    
+
     mv              = current_mv.next_verse_due(false)
     mv_skip         = current_mv.next_verse_due(true)
 
     prior_mv        = mv && mv.prior_mv
     prior_mv_skip   = mv_skip && mv_skip.prior_mv
-     
+
     if mv
-      render :json => { :finished       => false, 
-                        :mv             => mv, 
-                        :mv_skip        => mv_skip, 
-                        :prior_mv       => prior_mv, 
+      render :json => { :finished       => false,
+                        :mv             => mv,
+                        :mv_skip        => mv_skip,
+                        :prior_mv       => prior_mv,
                         :prior_mv_skip  => prior_mv_skip }
     else
       render :json => { :finished => true }
@@ -1057,12 +1069,12 @@ class MemversesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   def load_test_ref
 
-    @tab = "mem" 
+    @tab = "mem"
 
     ref_quizz         = Array.new
     ref_quizz_answers = Array.new
     ref_id            = Array.new
-    
+
     # Find the 30 hardest (first) verses and pick 10 at random for the test
     if current_user.all_refs
       refs = Memverse.active.where("user_id = ?", current_user.id).order("ref_interval ASC").limit(30).sort_by{ rand }.slice(0...10)
@@ -1071,38 +1083,38 @@ class MemversesController < ApplicationController
     end
 
     if refs.length >= 10
-    
+
       # Put verses into session variable
       refs.each { |r|
         ref_quizz         << r.verse.text # TODO: if verse has duplicates we should show prior verse
-        ref_quizz_answers << [r.verse.book, r.verse.chapter.to_i, r.verse.versenum.to_i] 
+        ref_quizz_answers << [r.verse.book, r.verse.chapter.to_i, r.verse.versenum.to_i]
         ref_id            << r.id
       }
-  
+
       # Create session variables
       session[:ref_test]          = ref_quizz
       session[:ref_soln]          = ref_quizz_answers
       session[:ref_id]            = ref_id
       session[:ref_test_cntr]     = 0
-      session[:reftest_correct]   = 0    
-      session[:reftest_grade]     = 0    
+      session[:reftest_correct]   = 0
+      session[:reftest_grade]     = 0
       session[:reftest_answered]  = 0
       session[:reftest_length]    = refs.length
       session[:reftest_incorrect] = Array.new
-      
+
       # Start Test
       redirect_to :action => 'test_ref'
     else
       flash[:notice] = "You must have 10 verse references in your account before you can take the reference recall test."
       redirect_to :action => 'index'
     end
-    
+
   end
 
   def explain_exam
     @tab = "mem"
     @sub = "acctest"
-    
+
     add_breadcrumb I18n.t("menu.Review"), :test_verse_quick_path
     add_breadcrumb I18n.t("memorize_menu.Accuracy Test"), :pre_exam_path
   end
@@ -1111,77 +1123,77 @@ class MemversesController < ApplicationController
   # Prepare for Exam
   # ----------------------------------------------------------------------------------------------------------
   def load_exam
-    
+
     @tab = "mem"
-    @sub = "acctest" 
-    
+    @sub = "acctest"
+
     add_breadcrumb I18n.t("menu.Review"), :test_verse_quick_path
     add_breadcrumb I18n.t("memorize_menu.Accuracy Test"), :pre_exam_path
-    
+
     exam_questions  = Array.new  # reference being tested
     exam_answers    = Array.new	 # exam solution
     exam_submission = Array.new  # users answers
     exam_id         = Array.new  # memverse ID
-    
-    
+
+
     if current_user.memorized >= 10
-      
+
       # Find the memorized verses and pick 10 at random for the test
       exam = Memverse.where(:user_id => current_user.id, :status => "Memorized").random(10)
-        
+
       # Create session variables
       session[:exam_questions]    = exam.map { |mv| mv.id }
       session[:exam_submission]   = exam_submission
       session[:exam_cntr]         = 0
-      session[:exam_correct]      = 0    
+      session[:exam_correct]      = 0
       session[:exam_answered]     = 0
       session[:exam_length]       = exam.length
       session[:exam_incorrect]    = Array.new
-      
+
       # Start Test
       redirect_to test_exam_path
     else
       flash[:notice] = "You need to memorize 10 verses before you can take the test."
       redirect_to :action => 'index'
     end
-    
+
   end
 
   # ----------------------------------------------------------------------------------------------------------
   # Exam Question
   # ----------------------------------------------------------------------------------------------------------
   def test_exam
-    
+
     @tab = "mem"
-    @sub = "acctest"  
-    
+    @sub = "acctest"
+
     add_breadcrumb I18n.t("menu.Review"), :test_verse_quick_path
     add_breadcrumb I18n.t("memorize_menu.Accuracy Test"), :test_exam_path
-    
+
     if session[:exam_cntr] # The session variables are not set if user comes straight to this page
-      
+
       @question_num = session[:exam_cntr]
       @mv           = Memverse.find(session[:exam_questions][@question_num])
-      
+
     else
       redirect_to :action => 'index'
     end
-    
+
   end
 
   # ----------------------------------------------------------------------------------------------------------
   # Score Accuracy Test
   # ----------------------------------------------------------------------------------------------------------
   def mark_exam
-    
+
     question_num  = session[:exam_cntr] || 1  # Set exam question number to 1 if session variable is nil
     mv            = Memverse.find(session[:exam_questions][question_num])
 
-    answer        = params[:answer].gsub(/\s+/," ").strip if params[:answer]    
+    answer        = params[:answer].gsub(/\s+/," ").strip if params[:answer]
     solution      = mv.verse.text.gsub(/\s+/," ").strip
-    
+
     if solution && answer && session[:exam_cntr]
-      
+
       # ---- TODO: Update this for greater leniency --------------
       if answer.downcase.gsub(/[^a-z ]|\s-|\s—/, '') == solution.downcase.gsub(/[^a-z ]|\s-|\s—/, '')
         flash[:notice] = "Correct"
@@ -1195,43 +1207,43 @@ class MemversesController < ApplicationController
       # Update score
       session[:exam_answered] += 1
       session[:exam_submission] << Verse.diff(solution, answer)
-  
+
       # Start Next Question
       session[:exam_cntr] += 1
-      
+
       # Stop after questions are finished or if user quits
-      if session[:exam_answered] >= session[:exam_length] or params[:commit]=="Exit Exam" 
+      if session[:exam_answered] >= session[:exam_length] or params[:commit]=="Exit Exam"
         redirect_to exam_results_path
       else
         redirect_to test_exam_path
       end
-    
+
     else
       # Probably caused by user using the back button after test is finished
       flash[:notice] = "Exam already completed"
       redirect_to :action => 'index'
-    end    
-    
-  end  
+    end
+
+  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Score Accuracy Exam
   # ----------------------------------------------------------------------------------------------------------
   def exam_results
-    
+
     @tab = "mem"
-    @sub = "acctest"    
-    
+    @sub = "acctest"
+
     add_breadcrumb I18n.t("menu.Review"), :test_verse_quick_path
     add_breadcrumb I18n.t("memorize_menu.Accuracy Test"), :exam_results_path
-    
+
     if session[:exam_answered]
       @correct      = session[:exam_correct]
-      @answered     = session[:exam_answered]   
+      @answered     = session[:exam_answered]
       wrong_answers = session[:exam_incorrect]
-      
+
       # Show where user made mistakes
-      @incorrect = Array.new     
+      @incorrect = Array.new
       wrong_answers.each do |q_num|
         mv = Memverse.find(session[:exam_questions][q_num])
         solution_set = Hash.new
@@ -1241,35 +1253,35 @@ class MemversesController < ApplicationController
         solution_set['Answer']    = session[:exam_submission][q_num]
         @incorrect << solution_set
       end
-      
+
       # Update score
       score = (@correct.to_f / @answered.to_f) * 100
       @old_accuracy = current_user.accuracy
       @new_accuracy = ((@old_accuracy.to_f * 0.75) + (score.to_f * 0.25)).ceil.to_i
       @perfect_score = (@correct == @answered)
-          
+
       # Update user's accuracy grade
       current_user.accuracy = @new_accuracy
       current_user.save
-      
+
       # Clear session variables so that user can't hit refresh and bump up score
       session[:exam_answered] = nil
       session[:exam_cntr]     = nil
-     
-      # Check for quest completion 
+
+      # Check for quest completion
       # spawn_block(:argv => "spawn-accuracy-quest") do
-        if q = Quest.where(:url => exam_results_path, :level => current_user.level ).first        
+        if q = Quest.where(:url => exam_results_path, :level => current_user.level ).first
           if score >= q.quantity
             q.check_quest_off(current_user)
             flash.keep[:notice] = "You have completed the accuracy test for this level."
-          end 
+          end
         end
-      # end       
-      
+      # end
+
     else
-      redirect_to :action => 'index'      
+      redirect_to :action => 'index'
     end
-  
+
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -1278,7 +1290,7 @@ class MemversesController < ApplicationController
   def test_ref
 
     @tab = "mem"
-    @sub = "refrec"  
+    @sub = "refrec"
 
     add_breadcrumb I18n.t("menu.Review"), :test_verse_quick_path
     add_breadcrumb I18n.t("memorize_menu.References"), :start_ref_test_path
@@ -1304,17 +1316,17 @@ class MemversesController < ApplicationController
 
     question_num  = session[:ref_test_cntr]
     solution      = session[:ref_soln][question_num] if session[:ref_soln]
-    
+
     # We need to check for alternative solutions to account for identical verses
     # IDEA: Take the reference the user entered, look up that verse, and see if it matches the text shown to the user (less any capitalization or punctuation differences)
-	
+
     alt_soln      = identical_verses( solution )
-        
+
     if solution && session[:reftest_answered]
-    
+
       mv = Memverse.find( session[:ref_id][question_num] )
-    
-      if (book==solution[0] and chapter==solution[1].to_i and verse==solution[2].to_i) or 
+
+      if (book==solution[0] and chapter==solution[1].to_i and verse==solution[2].to_i) or
          (book==alt_soln[0] and chapter==alt_soln[1].to_i and verse==alt_soln[2].to_i)
         flash[:notice] = "Perfect!"
         session[:reftest_correct] += 1
@@ -1325,46 +1337,46 @@ class MemversesController < ApplicationController
         session[:reftest_incorrect] << question_num
         session[:reftest_grade] += 5
         mv.ref_interval = (mv.ref_interval * 0.7).round
-      else 
+      else
         session[:reftest_incorrect] << question_num
         flash[:notice] = "Sorry - Incorrect. The correct reference is " + solution[0].to_s + " " + solution[1].to_s + ":" + solution[2].to_s
         mv.ref_interval = (mv.ref_interval * 0.6).round
       end
-       
+
       # Update date for next ref test
-      mv.next_ref_test  = Date.today + mv.ref_interval        
-      mv.save        
-       
+      mv.next_ref_test  = Date.today + mv.ref_interval
+      mv.save
+
       # Update score
       session[:reftest_answered] += 1 if session[:reftest_answered]
-      
+
       # Start Next Question
       session[:ref_test_cntr] += 1
-      
+
       # Stop after questions are finished or if user quits
       if session[:reftest_answered] >= session[:reftest_length] or params[:commit]=="Exit Test"  # TODO: handle case where session variables are Nil
         redirect_to reftest_results_path
       else
         redirect_to test_ref_path
       end
-    
+
     else
       # Probably caused by user using the back button after test is finished
       logger.info("*** User probably hit the back button or returned next day without session variable set up")
       flash[:notice] = "Reference recall test already completed or not initialized"
       redirect_to :action => 'index'
-    end    
-    
-  end
-  
+    end
 
-  
+  end
+
+
+
   # ----------------------------------------------------------------------------------------------------------
   # Score Reference Test
   # ----------------------------------------------------------------------------------------------------------
   def reftest_results
     @tab = "mem"
-    
+
     add_breadcrumb I18n.t("menu.Review"), :test_verse_quick_path
     add_breadcrumb I18n.t("memorize_menu.Reference Recall"), :reftest_results_path
 
@@ -1373,34 +1385,34 @@ class MemversesController < ApplicationController
       @answered   = session[:reftest_answered]
       @incorrect  = session[:reftest_incorrect]
       @grade      = session[:reftest_grade]
-      
+
       # Update user's accuracy grade
       @old_ref_grade = current_user.ref_grade
-      @new_ref_grade = ((@old_ref_grade.to_f * 0.75) + (@grade.to_f * 0.25)).ceil.to_i       
-      
+      @new_ref_grade = ((@old_ref_grade.to_f * 0.75) + (@grade.to_f * 0.25)).ceil.to_i
+
       current_user.ref_grade = @new_ref_grade
-      current_user.save      
+      current_user.save
 
       # Clear session variables so that user can't hit refresh and bump up score
       session[:reftest_answered] = nil
       session[:reftest_correct]  = nil
-      
-      # Check for quest completion 
+
+      # Check for quest completion
       # spawn_block(:argv => "spawn-reftest-quest") do
         if q = Quest.where(:url => reftest_results_path, :level => current_user.level ).first
-        	if @grade >= q.quantity 
+        	if @grade >= q.quantity
 	          q.check_quest_off(current_user)
 	          flash.keep[:notice] = "You have completed the reference test for this level."
 	        end
         end
-      # end        
-      
+      # end
+
     else
-      redirect_to :action => 'index'      
+      redirect_to :action => 'index'
     end
-  
-  end  
-  
+
+  end
+
 
   # ----------------------------------------------------------------------------------------------------------
   # Save Entry in Progress Table
@@ -1421,18 +1433,18 @@ class MemversesController < ApplicationController
   # Show Progress
   # ----------------------------------------------------------------------------------------------------------
   def show_progress
-    @tab = "home" 
-    @sub = "progress"   
-    
+    @tab = "home"
+    @sub = "progress"
+
     add_breadcrumb I18n.t('home_menu.My Progress'), :progress_path
-  end  
+  end
 
   # ----------------------------------------------------------------------------------------------------------
   # For initially committing verses to memory
-  # ----------------------------------------------------------------------------------------------------------     
+  # ----------------------------------------------------------------------------------------------------------
   def learn
-    
-    @tab = "learn" 
+
+    @tab = "learn"
     @sub = "learn"
 
     add_breadcrumb I18n.t("menu.Learn"), :test_verse_quick_path
@@ -1442,17 +1454,17 @@ class MemversesController < ApplicationController
 
   # ----------------------------------------------------------------------------------------------------------
   # Drilling module
-  # ----------------------------------------------------------------------------------------------------------   
+  # ----------------------------------------------------------------------------------------------------------
   def drill_verse
-    
-    @tab = "learn" 
-    @sub = "practice"  
-    
+
+    @tab = "learn"
+    @sub = "practice"
+
     add_breadcrumb I18n.t("menu.Learn"), :test_verse_quick_path
     add_breadcrumb I18n.t('learn_menu.Practice'), :drill_verse_path
-    
+
     @show_feedback = true
-    
+
     # First check for verses in session queue that need to be tested
     if @mv = get_memverse_from_queue()
       # This verse needs to be memorized
@@ -1461,28 +1473,28 @@ class MemversesController < ApplicationController
       @current_versenum = @mv.verse.versenum
       @show_feedback    = (@mv.test_interval < 60 or current_user.show_echo)
       # Put memory verse into session
-      session[:memverse] = @mv.id  
+      session[:memverse] = @mv.id
     else
       # Otherwise, find the verse with the shortest test_interval i.e. a new or difficult verse
-      @mv = Memverse.find( :first, 
-                           :conditions => ["user_id = ? and last_tested < ?", current_user.id, Date.today], 
+      @mv = Memverse.find( :first,
+                           :conditions => ["user_id = ? and last_tested < ?", current_user.id, Date.today],
                            :order      => "test_interval ASC")
- 
+
       if !@mv.nil? # We've found a verse
-        
-        # Are there any verses preceding/succeeding this one? If so, we should test those first    
+
+        # Are there any verses preceding/succeeding this one? If so, we should test those first
         if @mv.prev_verse or @mv.next_verse
           # Put verses into session queue and begin with start verse
           # Use "practice" mode to ensure that all verses are drilled
           @mv = put_memverse_cohort_into_queue(@mv, "practice")
-        end               
+        end
         # Put memory verse into session
         session[:memverse] = @mv.id
 
         # This verse needs to be memorized
         @verse            = get_memverse(@mv.verse_id)
         @text             = @mv.verse.text
-        @current_versenum = @mv.verse.versenum 
+        @current_versenum = @mv.verse.versenum
         @show_feedback    = (@mv.test_interval < 60 or current_user.show_echo)
       else
         # There are no more verses to be tested today
@@ -1490,47 +1502,47 @@ class MemversesController < ApplicationController
         @mv             = nil # clear out the loaded memory verse
         redirect_to root_path
       end
-       
+
     end
-    
+
     # --- Load prior verse if available
     if @mv and @mv.prev_verse
       prior_verse       = Memverse.find(@mv.prev_verse).verse
       @prior_text       = prior_verse.text
       @prior_versenum   = prior_verse.versenum
     end
-    
+
     # --- Load upcoming verses ---
     @upcoming_verses = current_user.upcoming_verses(limit = 15, mode = "drills" ) unless mobile_device?
-   
+
   end
 
   # ----------------------------------------------------------------------------------------------------------
   # Process verse after drill
-  # ----------------------------------------------------------------------------------------------------------   
+  # ----------------------------------------------------------------------------------------------------------
   def mark_drill
     if session[:memverse]
       # Retrieve verse from DB
-      mv = Memverse.find( session[:memverse] ) 
+      mv = Memverse.find( session[:memverse] )
       # Mark verse as tested and save
       mv.last_tested = Date.today
       mv.save
-      
-      redirect_to :action => 'drill_verse' 
+
+      redirect_to :action => 'drill_verse'
     else
       redirect_to :action => 'index'
-    end        
+    end
   end
 
   # ----------------------------------------------------------------------------------------------------------
   # Check for errors in verse test
-  # Note: we should remove the 'strip' and whitespace substitution 
+  # Note: we should remove the 'strip' and whitespace substitution
   #       on the correct verse once we're sure that all the old verses have been
   #       correctly stripped. Newer verses are stripped when saved
-  # ----------------------------------------------------------------------------------------------------------  
+  # ----------------------------------------------------------------------------------------------------------
   def feedback
 
-    guess   = params[:verseguess] ? url_unescape(params[:verseguess]).gsub(/\s+/," ").strip : ""  # Remove double spaces from guesses    
+    guess   = params[:verseguess] ? url_unescape(params[:verseguess]).gsub(/\s+/," ").strip : ""  # Remove double spaces from guesses
     correct = params[:correct]    ? url_unescape(params[:correct]).gsub(/\s+/," ").strip    : ""  # The correct verse was stripped, cleaned when first saved
     echo    = (params[:echo] == "true")
 
@@ -1542,59 +1554,59 @@ class MemversesController < ApplicationController
 
     @correct  = correct
     @feedback = ""  # find a better way to construct the string
- 
+
     guess_words = guess.split(/\s-\s|\s-|\s/)  # used to include the long dash but there isn't a way you can type a long dash'
     right_words = correct.split
-        
+
     if !right_words.empty?
       # Calculate feedback string
-      if echo    
+      if echo
         guess_words.each_index { |i|
           if i < right_words.length # check that guess isn't longer than correct answer
-            
+
             if guess_words[i].downcase.gsub(/[^a-z ]/, '') == right_words[i].downcase.gsub(/[^a-z ]/, '')
-              @feedback = @feedback + right_words[i] + " "  
+              @feedback = @feedback + right_words[i] + " "
             else
               @feedback = @feedback + "..."
             end
-            
+
             if right_words[i+1] == "-" || right_words[i+1] == "—"
               @feedback = @feedback + right_words[i+1] + " "
               # Remove the dash from the array
               right_words.delete_at(i+1)
             end
-            
-          end          
-        } 
+
+          end
+        }
       else
-        @feedback = "< Feedback disabled >"        
+        @feedback = "< Feedback disabled >"
       end
-      
-      # Check for complete match       
+
+      # Check for complete match
       @match    = (  guess.downcase.gsub(/[^a-z ]|\s-|\s—/, '') == correct.downcase.gsub(/[^a-z ]|\s-|\s—/, '')  )
     end
 
     render :partial=>'feedback', :layout=>false
-    
-  end  
+
+  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Respond to AJAX request for upcoming verses
-  # ----------------------------------------------------------------------------------------------------------  
+  # ----------------------------------------------------------------------------------------------------------
   def upcoming_verses(limit = 20, mode = "test")
-    
+
     current_mv_id = params[:mv_id]
-    
+
     @upcoming_verses = current_user.upcoming_verses(limit, mode, current_mv_id)
-       
+
     respond_to do |format|
       format.html { render :partial=>'upcoming_verses', :layout=>false }
       format.xml  { render :xml => @upcoming_verses }
       format.json { render :json => @upcoming_verses }
     end
-    
+
   end
-  
+
 end
 
 # Books in the Bible: 66

@@ -27,12 +27,13 @@ MemverseApp::Application.routes.draw do
 
   resources :passages do
     get 'due', :on => :collection
+    resources :memverses
   end
 
 # resources :memverses
 
   authenticated do
-    root      :to => 'memverses#index'
+    root      :to => 'memverses#home'
   end
   root        :to => 'home#index'
 
@@ -65,7 +66,7 @@ MemverseApp::Application.routes.draw do
   match '/pre_chapter',            :to => 'memverses#chapter_explanation',   :as => 'pre_chapter'
   match '/test_chapter',           :to => 'memverses#test_chapter',          :as => 'test_chapter'
   match '/drill_verse',            :to => 'memverses#drill_verse',           :as => 'drill_verse'
-  match '/learn',                  :to => 'memverses#learn',                 :as => 'learn'                 
+  match '/learn',                  :to => 'memverses#learn',                 :as => 'learn'
   match '/mark_test',              :to => 'memverses#mark_test',             :as => 'mark_test'
   match '/mark_drill',             :to => 'memverses#mark_drill',            :as => 'mark_drill'
   match '/manage_verses',          :to => 'memverses#manage_verses',         :as => 'manage_verses'

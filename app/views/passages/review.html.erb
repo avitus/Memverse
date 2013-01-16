@@ -7,15 +7,20 @@
 
         <h2 class="passage-title"></h2>
 
-        <!-- Handle each verse as a separate entity -->
-        <div class="verse-not-due"></div>
+        <div class="passage-text">
 
-        <div class="verse-due"></div>
+            <!-- Handle each verse as a separate entity -->
+            <div class="verse-not-due"></div>
+
+            <div class="verse-due"></div>
+
+        </div>
+
 
     </div> <!-- end: passage-entry column -->
 
-    <div class="upcoming-passages">
-
+    <div class="upcoming-passages upcoming">
+        <h2>Upcoming Passages</h2>
     </div> <!-- end: upcoming-passage column -->
 
 </div>
@@ -29,27 +34,40 @@
         var reviewState = {
             // setup
             initialize: function () {
+                // Retrieve passages that are due for review
                 $.getJSON('passages/due.json', function (data) {
-                    
+
                     var items = [];
 
+                    // Build list
                     $.each(data, function( index, mv ) {
-                        items.push('<li id="' + mv.id + '">' + mv.ref + '</li>');
+                        items.push('<li class="upcoming-verse-ref white2" id="' + mv.id + '">' + mv.ref + '</li>');
                     });
 
-                    $('<ul/>', {
-                        'class': 'passage-list',
-                        html: items.join('')
-                    }).appendTo('.upcoming-passages');
+                    // Add entire list
+                    $('<ul/>', { 'class': 'passage-list', html: items.join('') }).appendTo('.upcoming-passages');
 
                 });
+            },
+
+            selectPassage: function ( passageRef, passageID ) {
+                // retrieve memory verses for passage
+                $.getJSON('passages/' + passageID + '/memverses.json', function (data) {
+                    // display passage
+                    mvDisplayPassageForReview( passageRef, data )
+                });
+
             },
         }
 
         // Initialize session
         reviewState.initialize();
 
-
+        // Select passage for review
+        $( ".upcoming-passages" ).on( "click", ".upcoming-verse-ref", function( e ) {
+            $(this).fadeOut();
+            reviewState.selectPassage( $(this).text(), $(this).attr('id') );
+        });
 
     }); // End of jQuery document ready
 --></script>
