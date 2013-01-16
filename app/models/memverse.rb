@@ -54,6 +54,7 @@ class Memverse < ActiveRecord::Base
   # Convert to JSON format (for AJAX goodness on main memorization page)
   #
   # TODO: Find a way to exclude :skippable when not needed ... too slow otherwise
+  #       Actually, with the new passage review we could probably dispense with 'skippable'
   # ----------------------------------------------------------------------------------------------------------
   def as_json(options={})
 
@@ -63,7 +64,8 @@ class Memverse < ActiveRecord::Base
       :tl         => self.verse.translation,
       :text       => self.verse.text,
       :versenum   => self.verse.versenum,
-      :skippable  => !self.due? ? (!self.next_verse_due(true).nil? ? self.next_verse_due(true).verse.ref : false) : false,
+      :next_test  => self.next_test,
+      :skippable  => !self.due? ? ( !self.next_verse_due(true).nil? ? self.next_verse_due(true).verse.ref : false ) : false,
       :mnemonic   => self.needs_mnemonic? ? self.verse.mnemonic : nil,
       :feedback   => self.show_feedback?
     }

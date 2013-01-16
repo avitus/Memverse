@@ -1,0 +1,84 @@
+// ========= Variables ============================
+$left-rating-gutter: 25%;
+
+// Scope styles for page
+.main-verse-review {
+
+    // ========= Top level left column ================
+    .passage-entry {
+        float: left;
+        width: 70%;
+        padding: 0 2em;
+    }
+
+
+    .passage-rating {
+
+        width: $left-rating-gutter;
+        // display: none;
+
+        .tool-tip-nav
+        {
+            background:url('tick.png') no-repeat left top;
+            width:20%;
+            height:21px;
+            float:left;
+            font-size:12.5px;
+            color:#666;
+            font-weight:bold;
+            line-height:21px;
+            padding-left:25px;
+        }
+
+        .score-test-buttons
+        {
+            width: 40%;
+            height:21px;
+            float:left;
+            position:relative;
+            font-size:larger;
+        }
+
+        .score-test-buttons span, .score-test-buttons a span
+        {
+            font-size:22px;
+            color:#999;
+            text-decoration:none;
+            font-weight:bold;
+            line-height:21px;
+            padding:0 4px;
+        }
+
+        .score-test-buttons span:hover, .score-test-buttons a span:hover
+        {
+            font-size:22px;
+            color:#7ca529;
+            text-decoration:none;
+            cursor:pointer;
+        }
+
+    }
+
+
+    h2.passage-title {
+        margin-left: $left-rating-gutter;
+    }
+
+    .ref-and-text {
+        margin-left: $left-rating-gutter;
+        font-size: larger;
+    }
+
+    .mv-id {
+        display: none;
+    }
+
+
+
+    // ========= Top level right column ===============
+    .upcoming-passages {
+        float:left;
+        width: 20%;
+    }
+
+}
