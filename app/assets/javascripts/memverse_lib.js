@@ -249,6 +249,20 @@ function parseVerseRef(verseref) {
 	};
 }
 
+
+/******************************************************************************
+ * Check whether next review date has passed
+ * Note: mv.next_test is a string with format 'yyyy-mm-dd'
+ ******************************************************************************/
+function mvDue( mv ) {
+
+    var today           = new Date();
+    var reviewDateArray = mv.next_test.match(/(\d+)/g);
+    var nextReviewDate  = new Date( reviewDateArray[0], reviewDateArray[1]-1, reviewDateArray[2]); // Jan = 0
+
+    return nextReviewDate < today
+}
+
 /******************************************************************************
  * Parses passage reference into a book, chapter, start verse & end verse
  ******************************************************************************/

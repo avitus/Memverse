@@ -19,7 +19,7 @@ function showsubmenu(masterid, id) {
 
 function hidesubmenus(submenuarray) {
     for (var i=0; i<submenuarray.length; i++) {
-        document.getElementById(submenuarray[i]).style.display    = "none";
+        document.getElementById(submenuarray[i]).style.display = "none";
     }
 }
 
