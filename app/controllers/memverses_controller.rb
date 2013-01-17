@@ -122,7 +122,7 @@ class MemversesController < ApplicationController
 
     passage = Passage.find(params[:passage_id])
 
-    @memverses = passage ? passage.memverses : current_user.memverses
+    @memverses = passage ? passage.memverses.includes(:verse).order('verses.versenum') : current_user.memverses
 
     respond_to do |format|
       format.html # index.html.erb
