@@ -93,6 +93,8 @@ class Passage < ActiveRecord::Base
   def consolidate_supermemo
     self.test_interval = self.memverses.minimum(:test_interval)
     self.rep_n         = self.memverses.minimum(:rep_n)
+    self.last_tested   = self.memverses.maximum(:last_tested)
+    self.next_test     = self.memverses.minimum(:next_test)
     self.efactor       = self.memverses.average(:efactor)
     save
   end

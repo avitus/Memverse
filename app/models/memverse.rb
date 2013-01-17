@@ -50,6 +50,9 @@ class Memverse < ActiveRecord::Base
   after_save    :update_counter_cache
   after_destroy :update_counter_cache
 
+  # Update related passage
+  after_save :update_passage
+
   # ----------------------------------------------------------------------------------------------------------
   # Convert to JSON format (for AJAX goodness on main memorization page)
   #
@@ -810,6 +813,15 @@ class Memverse < ActiveRecord::Base
 
     self.verse.memverses_count = Memverse.where(:verse_id => self.verse.id).count
     self.verse.save
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Update associated passage
+  # Hook: after_save
+  # ----------------------------------------------------------------------------------------------------------
+  def update_passage
+    psg = self.passage
+    psg.consolidate_supermemo unless !psg
   end
 
 end
