@@ -9,11 +9,6 @@
 
         <div class="passage-text">
 
-            <!-- Handle each verse as a separate entity -->
-            <div class="verse-not-due"></div>
-
-            <div class="verse-due"></div>
-
         </div>
 
 
@@ -30,7 +25,7 @@
 
     $(document).ready(function() {
 
-        // This can be moved to memverse_lib once development is done
+        //-------  This can be moved to memverse_lib once development is done
         var reviewState = {
             // setup
             initialize: function () {
@@ -60,14 +55,62 @@
             },
         }
 
-        // Initialize session
+        //------- Initialize session ------------------
         reviewState.initialize();
 
-        // Select passage for review
+        //------- Select passage for review -----------
         $( ".upcoming-passages" ).on( "click", ".upcoming-verse-ref", function( e ) {
             $(this).fadeOut();
             reviewState.selectPassage( $(this).text(), $(this).attr('id') );
         });
+
+        //------- Typing a verse ----------------------
+        $(".passage-text").on( "keyup", "input.blank-word", function (e) {
+
+            // Word correct ==> next word
+            if ( scrub_text( this.name ) === scrub_text( this.value.trim() ) ) {
+
+                $(this).next().focus();  // advance cursor to next blank word
+
+            }
+
+            // check for down arrow keypress
+            else if ( e.keyCode === 40 ) {
+                // show current word
+                $(this).val( this.name ).animate({ color: '#FFD' }, 1100, 'easeInExpo', function() {
+                    $(this).val('');
+                    $(this).css({color:'#444'}); // same color as .assistance
+                });;
+            }
+
+            // Verse complete ==> next verse
+
+        });
+
+        //------- Scoring a verse ----------------------
+        $( ".passage-text" ).on( "click", ".score-test-buttons .submit", function( e ) {
+
+            var q        = $(this).attr("q");
+            var id       = $(this).parent().prev(".mv-id").html();
+            var $nextDue = $(this).closest(".single-verse-in-passage").nextAll(".due-mv").first();
+
+            // Fade out rating buttons
+            $(this).closest(".passage-rating").fadeOut();
+
+            // Scroll to next verse
+            $('html').scrollTo($nextDue, { duration: 2000, offset: -300 } );
+
+            // $.getJSON("/mark_test_quick", { mv: id, q: q  }, function(data) {
+
+            //     if (data.msg) {  setTimeout(function() {alert(data.msg);}, 1); }  // Give user a non-blocking response
+
+            //     // move to next verse and mark this one as complete
+            //     // TODO: << Insert code here >>
+
+            // });
+
+        });
+
 
     }); // End of jQuery document ready
 --></script>

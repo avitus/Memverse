@@ -246,8 +246,8 @@ input.blank-word{
   font-size: inherit;
   text-align: inherit;
 
-  /* Seems to help alignment in headers */
-  vertical-align: top;
+  /* Seems to help alignment in headers. ALV: causes misalignment in passage review. */
+  // vertical-align: top;
 }
 
 /* Add interaction cues on hover and focus */

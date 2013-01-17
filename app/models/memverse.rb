@@ -59,15 +59,16 @@ class Memverse < ActiveRecord::Base
   def as_json(options={})
 
     {
-      :id         => self.id,
-      :ref        => self.verse.ref,
-      :tl         => self.verse.translation,
-      :text       => self.verse.text,
-      :versenum   => self.verse.versenum,
-      :next_test  => self.next_test,
-      :skippable  => !self.due? ? ( !self.next_verse_due(true).nil? ? self.next_verse_due(true).verse.ref : false ) : false,
-      :mnemonic   => self.needs_mnemonic? ? self.verse.mnemonic : nil,
-      :feedback   => self.show_feedback?
+      :id            => self.id,
+      :ref           => self.verse.ref,
+      :tl            => self.verse.translation,
+      :text          => self.verse.text,
+      :versenum      => self.verse.versenum,
+      :next_test     => self.next_test,
+      :test_interval => self.test_interval,
+      :skippable     => !self.due? ? ( !self.next_verse_due(true).nil? ? self.next_verse_due(true).verse.ref : false ) : false,
+      :mnemonic      => self.needs_mnemonic? ? self.verse.mnemonic : nil,
+      :feedback      => self.show_feedback?
     }
   end
 
