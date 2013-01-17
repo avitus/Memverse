@@ -13,6 +13,10 @@ $left-rating-gutter: 25%;
 
     .single-verse-in-passage {
         margin-bottom: 0.5em;
+
+        input.blank-word {
+            background-color: #fff;
+        }
     }
 
     .passage-rating {
@@ -62,7 +66,6 @@ $left-rating-gutter: 25%;
 
     }
 
-
     h2.passage-title {
         margin-left: $left-rating-gutter;
     }
@@ -75,7 +78,6 @@ $left-rating-gutter: 25%;
     .mv-id {
         display: none;
     }
-
 
 
     // ========= Top level right column ===============

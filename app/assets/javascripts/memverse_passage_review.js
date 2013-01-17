@@ -16,15 +16,8 @@ function mvDisplayPassageForReview( passageRef, verses ) {
 
     $.each (verses, function(i, vs) {
 
-        // Check whether verse is due today
-        var vsDue = mvDue(vs);
-
-        if (vsDue) {
-            $new_vs = buildVerseBlank( vs );
-        } else {
-            $new_vs = buildVerseText( vs );
-        }
-
+        // Show full text if verse is not due else build input fields
+        $new_vs = mvDue(vs) ? buildVerseBlank( vs ) : buildVerseText( vs ) ;
         // Display verse on page
         $('.passage-text').append($new_vs);
 
@@ -37,14 +30,16 @@ function mvDisplayPassageForReview( passageRef, verses ) {
  ******************************************************************************/
 function buildVerseBlank( jsonMV ) {
 
-    console.log('Building ' + jsonMV + ' with blanks');
+    var testInterval    = jsonMV.test_interval;
+    var blankPercentage = testInterval * 5 + 25;
 
     // Build HTML for each verse
-    var $new_vs = $('<div/>').addClass('single-verse-in-passage')
+    var $new_vs = $('<div/>').addClass('single-verse-in-passage due-mv')
 
         // add scoring buttons
         .append( $('<div class="passage-rating" />')
             .append('<div class="tool-tip-nav">Rate:</div>')
+            .append($('<div class="mv-id" />').text( jsonMV.id ))
             .append( $('<div class="score-test-buttons" />')
                 .append( $('<span class="submit" q="1" />').text(1))
                 .append( $('<span class="submit" q="2" />').text(2))
@@ -57,7 +52,7 @@ function buildVerseBlank( jsonMV ) {
         // verse reference
         .append( $('<div class="ref-and-text" />')
             .append($('<span class="versenum superscript" />').text( jsonMV.versenum ))
-            .append($('<span class="full-text"            />').html( blankifyVerse(jsonMV.text, 50)))
+            .append($('<span class="full-text"            />').html( blankifyVerse(jsonMV.text, blankPercentage)))
             .append($('<span class="mv-id"                />').text( jsonMV.id       ))
         );
 
@@ -69,17 +64,13 @@ function buildVerseBlank( jsonMV ) {
  ******************************************************************************/
 function buildVerseText( jsonMV ) {
 
-    console.log('Building ' + jsonMV + ' with text');
-
     // Build HTML for each verse
     var $new_vs = $('<div/>').addClass('single-verse-in-passage')
-
 
         // verse reference
         .append( $('<div class="ref-and-text" />')
             .append($('<span class="versenum superscript" />').text( jsonMV.versenum ))
             .append($('<span class="full-text"            />').text( jsonMV.text     ))
-            .append($('<span class="mv-id"                />').text( jsonMV.id       ))
         );
 
     return $new_vs
