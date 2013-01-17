@@ -69,9 +69,7 @@
 
             // Word correct ==> next word
             if ( scrub_text( this.name ) === scrub_text( this.value.trim() ) ) {
-
                 $(this).next().focus();  // advance cursor to next blank word
-
             }
 
             // check for down arrow keypress
@@ -82,8 +80,6 @@
                     $(this).css({color:'#444'}); // same color as .assistance
                 });;
             }
-
-            // Verse complete ==> next verse
 
         });
 
@@ -96,21 +92,23 @@
 
             // Fade out rating buttons
             $(this).closest(".passage-rating").fadeOut();
+            // submit rating
+            $.getJSON("/mark_test_quick", { mv: id, q: q  }, function(data) {
+                if (data.msg) {  setTimeout(function() {alert(data.msg);}, 1); }  // Give user a non-blocking response
+            });
 
-            // Scroll to next verse
-            $('html').scrollTo($nextDue, { duration: 2000, offset: -300 } );
-
-            // $.getJSON("/mark_test_quick", { mv: id, q: q  }, function(data) {
-
-            //     if (data.msg) {  setTimeout(function() {alert(data.msg);}, 1); }  // Give user a non-blocking response
-
-            //     // move to next verse and mark this one as complete
-            //     // TODO: << Insert code here >>
-
-            // });
+            // If there are more verses due in the passage
+            if ($nextDue.length) {
+                // Scroll to next verse
+                $('html').scrollTo($nextDue, { easing: 'easeInOutCubic', duration: 1500, offset: -250 } );
+                // advance cursor to first word of next verse
+                $nextDue.find('.blank-word').first().focus();
+            } else {
+                // what should we do here?
+                alert("End of passage ... select another");
+            }
 
         });
-
 
     }); // End of jQuery document ready
 --></script>
