@@ -129,14 +129,14 @@ describe Passage do
   describe "delete a memory verse from an existing passage" do
 
     before(:each) do
-      @psg = FactoryGirl.create(:passage, :book => 'Job', :chapter => 3, :first_verse => 2, :last_verse => 10)
+      @psg = FactoryGirl.create(:passage, :book => 'Proverbs', :chapter => 3, :first_verse => 2, :last_verse => 10)
     end
 
     it "should correctly delete the first verse of the passage" do
       mv = @psg.memverses.includes(:verse).order('verses.versenum').first
       mv.destroy
 
-      @psg.length.should == 8
+      @psg.reload.length.should == 8
       @psg.first_verse.should == 3
       @psg.last_verse.should == 10
     end
@@ -145,19 +145,19 @@ describe Passage do
       mv = @psg.memverses.includes(:verse).order('verses.versenum').last
       mv.destroy
 
-      @psg.length.should == 8
+      @psg.reload.length.should == 8
       @psg.first_verse.should == 2
       @psg.last_verse.should == 9
     end
 
     it "should correctly delete a verse in the middle of the passage" do
-      mv = @psg.memverses.includes(:verse).where('verses.versenum' => 5)
+      mv = @psg.memverses.includes(:verse).where('verses.versenum' => 5).first
 
       expect {
         mv.destroy
       }.to change(Passage, :count).by(1)
 
-      @psg.length.should == 3
+      @psg.reload.length.should == 3
       @psg.first_verse.should == 2
       @psg.last_verse.should == 4
 
