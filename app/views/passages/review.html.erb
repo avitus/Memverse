@@ -86,12 +86,16 @@
         //------- Scoring a verse ----------------------
         $( ".passage-text" ).on( "click", ".score-test-buttons .submit", function( e ) {
 
-            var q        = $(this).attr("q");
-            var id       = $(this).parent().prev(".mv-id").html();
-            var $nextDue = $(this).closest(".single-verse-in-passage").nextAll(".due-mv").first();
+            var q            = $(this).attr("q");
+            var id           = $(this).parent().prev(".mv-id").html();
+            var $nextDue     = $(this).closest(".single-verse-in-passage").nextAll(".due-mv").first();
+            var $nextPassage = [];
 
+            // Remove verse-due flag
+            $(this).closest(".single-verse-in-passage").removeClass("due-mv");
             // Fade out rating buttons
             $(this).closest(".passage-rating").fadeOut();
+
             // submit rating
             $.getJSON("/mark_test_quick", { mv: id, q: q  }, function(data) {
                 if (data.msg) {  setTimeout(function() {alert(data.msg);}, 1); }  // Give user a non-blocking response
@@ -103,9 +107,25 @@
                 $('html').scrollTo($nextDue, { easing: 'easeInOutCubic', duration: 1500, offset: -250 } );
                 // advance cursor to first word of next verse
                 $nextDue.find('.blank-word').first().focus();
+            } else if ( $(this).closest(".single-verse-in-passage").siblings(".due-mv").length ) {
+                // find first skipped verse
+                $skippedVerse = $(this).closest(".single-verse-in-passage").siblings(".due-mv").first();
+                // Scroll to prior verse
+                $('html').scrollTo($skippedVerse, { easing: 'easeInOutCubic', duration: 1500, offset: -250 } );
+                // advance cursor to first word of next verse
+                $nextDue.find('.blank-word').first().focus();
+
             } else {
-                // what should we do here?
-                alert("End of passage ... select another");
+                // Select next passage from top of list
+                $nextPassage = $( ".upcoming-passages" ).find(".upcoming-verse-ref").first();
+                // console.log('Next passage: ' + $nextPassage);
+                if ($nextPassage.length) {
+                    // console.log('Reference is: ' + $nextPassage.text() );
+                    $nextPassage.fadeOut('slow');
+                    reviewState.selectPassage( $nextPassage.text(), $nextPassage.attr('id') );
+                } else {
+                    alert("No more passages to review.");
+                }
             }
 
         });

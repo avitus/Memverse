@@ -84,6 +84,9 @@ $left-rating-gutter: 25%;
     .upcoming-passages {
         float:left;
         width: 20%;
+        .upcoming-verse-ref {
+            cursor:pointer;
+        }
     }
 
 }

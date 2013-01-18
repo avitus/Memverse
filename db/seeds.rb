@@ -164,17 +164,17 @@ puts '   - Confirming three quests for Sermon on the Mount Badge (Matthew 5-7)'
 q = Quest.where(:level => nil, :objective => 'Chapters', :qualifier => 'Matthew 5').first
 if !q
   puts '      - Added Matthew 5 quest'
-  Quest.create(:badge_id => sotm, :objective => 'Chapters', :qualifier => 'Matthew 5', :task => "Memorize Matthew 5")
+  Quest.create(:badge_id => sotm.id, :objective => 'Chapters', :qualifier => 'Matthew 5', :task => "Memorize Matthew 5")
 end
 q = Quest.where(:level => nil, :objective => 'Chapters', :qualifier => 'Matthew 6').first
 if !q
   puts '      - Added Matthew 6 quest'
-  Quest.create(:badge_id => sotm, :objective => 'Chapters', :qualifier => 'Matthew 6', :task => "Memorize Matthew 6")
+  Quest.create(:badge_id => sotm.id, :objective => 'Chapters', :qualifier => 'Matthew 6', :task => "Memorize Matthew 6")
 end
 q = Quest.where(:level => nil, :objective => 'Chapters', :qualifier => 'Matthew 7').first
 if !q
   puts '      - Added Matthew 7 quest'
-  Quest.create(:badge_id => sotm, :objective => 'Chapters', :qualifier => 'Matthew 7', :task => "Memorize Matthew 7")
+  Quest.create(:badge_id => sotm.id, :objective => 'Chapters', :qualifier => 'Matthew 7', :task => "Memorize Matthew 7")
 end
 
 # ---- Referrer Medals ----------------------------
