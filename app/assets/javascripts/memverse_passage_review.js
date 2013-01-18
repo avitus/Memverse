@@ -23,6 +23,8 @@ function mvDisplayPassageForReview( passageRef, verses ) {
 
     });
 
+    $('.passage-text').find('.blank-word').first().focus();
+
 };
 
 /******************************************************************************

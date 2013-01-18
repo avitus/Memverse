@@ -10,8 +10,8 @@ describe Passage do
   it "should create a new instance given valid attributes" do
     @verse = Verse.create!(:book_index => 1, :book => "Genesis", :chapter => 12, :versenum => 1, :text => "This is a test", :translation => "NIV")
     @mv    = Memverse.create!(:user => @user, :verse => @verse)
-    @psg   = Passage.create!(:user_id => @user, :length => 1, :reference => @mv.verse.ref,
-                             :book => @mv.verse.book, :chapter => @mv.verse.chapter,
+    @psg   = Passage.create!(:user_id => @user.id, :length => 1, :reference => @mv.verse.ref,
+                             :book => @mv.verse.book, :chapter => @mv.verse.chapter, :translation => @mv.verse.translation,
                              :first_verse => @mv.verse.versenum, :last_verse => @mv.verse.versenum,
                              :efactor => @mv.efactor, :test_interval => @mv.test_interval, :rep_n => 1)
   end
@@ -119,6 +119,48 @@ describe Passage do
       @psg.first_verse.should == 3
       @psg.last_verse.should == 7
       mv.passage_id.should == @psg.id
+    end
+
+  end
+
+  # ==============================================================================================
+  # Delete a memory verse
+  # ==============================================================================================
+  describe "delete a memory verse from an existing passage" do
+
+    before(:each) do
+      @psg = FactoryGirl.create(:passage, :book => 'Job', :chapter => 3, :first_verse => 2, :last_verse => 10)
+    end
+
+    it "should correctly delete the first verse of the passage" do
+      mv = @psg.memverses.includes(:verse).order('verses.versenum').first
+      mv.destroy
+
+      @psg.length.should == 8
+      @psg.first_verse.should == 3
+      @psg.last_verse.should == 10
+    end
+
+    it "should correctly delete the last verse of the passage" do
+      mv = @psg.memverses.includes(:verse).order('verses.versenum').last
+      mv.destroy
+
+      @psg.length.should == 8
+      @psg.first_verse.should == 2
+      @psg.last_verse.should == 9
+    end
+
+    it "should correctly delete a verse in the middle of the passage" do
+      mv = @psg.memverses.includes(:verse).where('verses.versenum' => 5)
+
+      expect {
+        mv.destroy
+      }.to change(Passage, :count).by(1)
+
+      @psg.length.should == 3
+      @psg.first_verse.should == 2
+      @psg.last_verse.should == 4
+
     end
 
   end

@@ -694,30 +694,57 @@ class Memverse < ActiveRecord::Base
 
   end
 
+  # ----------------------------------------------------------------------------------------------------------
+  # Remove a memory verse from a passage [hook: before_delete]
+  # ----------------------------------------------------------------------------------------------------------
   def remove_from_passage
     psg = self.passage
 
-    # Case 1 - Single verse passage
+    if psg
 
-    # Case 2 - In middle of passage ... need to split passage into two
+      # Case 1 - Single verse passage
+      if psg.length == 1
 
-    # Case 3 - First verse of passage
+        psg.destroy
 
-    # Case 4 - Last verse of passage
+      else
+
+        # Case 2 - First verse of passage
+        if psg.first_verse == self.verse.versenum
+
+          psg.first_verse += 1
+          psg.length -= 1
+
+        # Case 3 - Last verse of passage
+        elsif psg.last_verse == self.verse.versenum
+
+          psg.last_verse -= 1
+          psg.length -= 1
+
+        # Case 4 - In middle of passage ... need to split passage into two
+        else
+
+          # create new passage for second half of passage
+          new_psg = Passage.create!( :user_id => psg.user_id, :translation => psg.translation,
+                                     :length => self.verse.versenum - psg.last_verse,
+                                     :book => psg.book, :chapter => psg.chapter,
+                                     :first_verse => self.verse.versenum + 1, :last_verse => psg.last_verse )
+
+          # shorten existing passage
+          psg.last_verse = self.verse.versenum - 1
+          psg.length     = psg.last_verse - passage.first_verse + 1
+
+        end
+
+        psg.save
+
+      end
+    end
   end
 
 
   # ============= Protected below this line ==================================================================
   protected
-
-  # ----------------------------------------------------------------------------------------------------------
-  # Remove a memory verse from a passage [hook: before_delete]
-  # ----------------------------------------------------------------------------------------------------------
-  def remove_from_passage
-    # Case 1 - Start of passage
-    # Case 2 - End of passage
-    # Case 3 - Middle of passage -> split into two passages
-  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Initialize new memory verse [hook: before_create]
