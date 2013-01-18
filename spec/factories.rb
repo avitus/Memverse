@@ -44,11 +44,11 @@ FactoryGirl.define do
   factory :passage do
     association :user,  :factory => :user
     translation 'NIV'
-    length      4
+    length      9
     book        'Proverbs'
     chapter     3
     first_verse 2
-    last_verse  5
+    last_verse  10
 
     # Create the necessary memverses and verses for the passage
     after(:create) do |psg, evaluator|
