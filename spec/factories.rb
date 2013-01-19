@@ -33,7 +33,7 @@ FactoryGirl.define do
     # Use this factory for testing out of bound verses
     # TODO: these tests are not yet passing ... not sure how this works
     factory :verse_with_validate_ref do
-      before(:save) { |verse| verse.send(:validate_ref) }
+      before(:create) { |verse| verse.send(:validate_ref) }
     end
 
   end

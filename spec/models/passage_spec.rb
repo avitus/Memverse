@@ -152,15 +152,23 @@ describe Passage do
 
     it "should correctly delete a verse in the middle of the passage" do
       mv = @psg.memverses.includes(:verse).where('verses.versenum' => 5).first
+      last_mv = @psg.memverses.includes(:verse).order('verses.versenum').last
 
       expect {
         mv.destroy
       }.to change(Passage, :count).by(1)
 
+      last_mv.reload
+      psg2 = last_mv.passage
+
       @psg.reload.length.should == 3
       @psg.first_verse.should == 2
       @psg.last_verse.should == 4
 
+      psg2.first_verse.should == 6
+      psg2.last_verse.should == 10
+      psg2.length.should == 5
+      psg2.memverses.count.should == 5
     end
 
   end

@@ -724,15 +724,21 @@ class Memverse < ActiveRecord::Base
         # Case 4 - In middle of passage ... need to split passage into two
         else
 
+          memverses_in_passage   = psg.memverses.includes(:verse).order('verses.versenum')
+
           # create new passage for second half of passage
           new_psg = Passage.create!( :user_id => psg.user_id, :translation => psg.translation,
-                                     :length => self.verse.versenum - psg.last_verse,
+                                     :length =>  psg.last_verse - self.verse.versenum,
                                      :book => psg.book, :chapter => psg.chapter,
                                      :first_verse => self.verse.versenum + 1, :last_verse => psg.last_verse )
 
           # shorten existing passage
           psg.last_verse = self.verse.versenum - 1
           psg.length     = psg.last_verse - passage.first_verse + 1
+
+          # update memverses comprising the new passage
+          second_half_of_passage = memverses_in_passage[(new_psg.length-1)..(-1)]
+          second_half_of_passage.each { |mv| mv.update_attribute( :passage_id, new_psg.id ) }
 
         end
 
