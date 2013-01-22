@@ -174,6 +174,13 @@ function cleanseVerseText( versetext ) {
 }
 
 /******************************************************************************
+ * Remove special characters to compare user input to correct text
+ ******************************************************************************/
+scrub_text = function(text) {
+    return text.toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñαβξδεφγηισκλμνοπθρστυϝωχψζ]+/g, "");
+}
+
+/******************************************************************************
  * Blankify a verse
  ******************************************************************************/
 function blankifyVerse(versetext, reduction_percentage) {
@@ -204,7 +211,8 @@ function blankifyVerse(versetext, reduction_percentage) {
 	        }
 	        else {
 	        	// TODO: this line calculates an approximately sized input box for the given word
-	        	word_width = Math.round( x.length * 62) / 100;  // multiply word length by 0.6 and round to one decimal
+                // It would be preferable to calculate the exact width of the actual word
+	        	word_width = Math.round( x.length * 62) / 100;  // multiply word length by 0.62 and round to one decimal
 	            return "<input name='" + x.replace(/'/, '’') + "' class='blank-word' style='width:" + word_width + "em;'>";
 	        };
 	    });
