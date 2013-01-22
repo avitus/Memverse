@@ -222,10 +222,6 @@ Array.remove = function(array, from, to) {
   return array.push.apply(array, rest);
 };
 
-scrub_text = function(text) {
-	return text.toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñαβξδεφγηισκλμνοπθρστυϝωχψζ]+/g, "");
-}
-
 versefeedback = function(correctvs, verseguess, echo, firstletter) {
 
 	firstletter = (typeof firstletter == "undefined") ? false : firstletter;

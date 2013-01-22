@@ -67,15 +67,19 @@
         //------- Typing a verse ----------------------
         $(".passage-text").on( "keyup", "input.blank-word", function (e) {
 
+            var correctWord = this.name;
+            var userGuess   = this.value.trim();
+
             // Word correct ==> next word
-            if ( scrub_text( this.name ) === scrub_text( this.value.trim() ) ) {
+            if ( scrub_text( correctWord ) === scrub_text( userGuess ) ) {
                 $(this).next().focus();  // advance cursor to next blank word
+                $(this).replaceWith( correctWord );
             }
 
             // check for down arrow keypress
             else if ( e.keyCode === 40 ) {
                 // show current word
-                $(this).val( this.name ).animate({ color: '#FFD' }, 1100, 'easeInExpo', function() {
+                $(this).val( correctWord ).animate({ color: '#FFD' }, 1100, 'easeInExpo', function() {
                     $(this).val('');
                     $(this).css({color:'#444'}); // same color as .assistance
                 });;
