@@ -1,3 +1,101 @@
+var reviewState = {
+    // setup
+    initialize: function () {
+        // Retrieve passages that are due for review
+        $.getJSON('passages/due.json', function (data) {
+
+            var items = [];
+
+            // Build list
+            $.each(data, function( index, mv ) {
+                items.push('<li class="upcoming-verse-ref white2" id="' + mv.id + '">' + mv.ref + '</li>');
+            });
+
+            // Add entire list
+            $('<ul/>', { 'class': 'passage-list', html: items.join('') }).appendTo('.upcoming-passages');
+
+            // Load first passage
+            reviewState.autoAdvancePassage();
+
+        });
+
+    },
+
+    selectPassage: function ( passageRef, passageID ) {
+        // retrieve memory verses for passage
+        $.getJSON('passages/' + passageID + '/memverses.json', function (data) {
+            // display passage
+            mvDisplayPassageForReview( passageRef, passageID, data )
+        });
+    },
+
+    clearCurrentPassage: function () {
+        // check whether user has completed the review of the passage
+        var passageNotReviewed = $(".due-mv").length;
+        var passageID          = $(".passage-id").html();
+
+        if (passageID) {
+            if (passageNotReviewed) {
+                $('.passage-list #' + passageID).fadeIn(); // show passage again
+            } else {
+                $('.passage-list #' + passageID).remove(); // remove from upcoming passages
+            }
+        }
+
+        $(".passage-text").empty();
+        $(".passage-title").empty();
+    },
+
+    autoAdvancePassage: function ( ) {
+
+        var $nextPassage  = [];
+
+        reviewState.clearCurrentPassage();  // Clear current passage
+
+        // Select next passage from top of list
+        $nextPassage = $( ".upcoming-passages" ).find(".upcoming-verse-ref").first();
+
+        if ($nextPassage.length) {
+            $nextPassage.fadeOut('slow');
+            reviewState.selectPassage( $nextPassage.text(), $nextPassage.attr('id') );
+        } else {
+            alert("No more passages to review.");
+        }
+    },
+
+    gotoNextVerseDue: function ( $currentVerse ) {
+
+        var $nextDue      = $currentVerse.nextAll(".due-mv").first();
+        var $firstSkipped
+
+        // If there are more verses due in the passage
+        if ($nextDue.length) {
+            // Scroll to next verse
+            reviewState.scrollToVerse( $nextDue );
+
+        // Check for earlier verses in passage that were skipped
+        } else if ( $currentVerse.siblings(".due-mv").length ) {
+            // find first skipped verse
+            $firstSkipped = $currentVerse.siblings(".due-mv").first();
+            // Scroll to prior verse
+            reviewState.scrollToVerse( $firstSkipped );
+
+        // Get next passage if no more verses on this one
+        } else {
+
+            reviewState.autoAdvancePassage();
+
+        }
+    },
+
+    scrollToVerse: function ( $verse ) {
+        // Scroll to next verse
+        $('html').scrollTo($verse, { easing: 'easeInOutCubic', duration: 1500, offset: -250 } );
+        // advance cursor to first word of next verse
+        $verse.find('.blank-word').first().focus();
+    }
+}
+
 /******************************************************************************
  * Display passage for review
  ******************************************************************************/
@@ -24,7 +122,8 @@ function mvDisplayPassageForReview( passageRef, passageID, verses ) {
 
     });
 
-    $('.passage-text').find('.blank-word').first().focus();
+    // Scroll to first verse due
+    reviewState.scrollToVerse( $('.passage-text').find('.due-mv').first() );
 
 };
 
