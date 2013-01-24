@@ -5,7 +5,9 @@
 
     <div class="passage-entry">
 
-        <h2 class="passage-title"></h2>
+        <div class="passage-id"></div>
+
+        <h2  class="passage-title"></h2>
 
         <div class="passage-text">
 
@@ -49,10 +51,26 @@
                 // retrieve memory verses for passage
                 $.getJSON('passages/' + passageID + '/memverses.json', function (data) {
                     // display passage
-                    mvDisplayPassageForReview( passageRef, data )
+                    mvDisplayPassageForReview( passageRef, passageID, data )
                 });
-
             },
+
+            clearCurrentPassage: function () {
+                // check whether user has completed the review of the passage
+                var passageNotReviewed = $(".due-mv").length;
+                var passageID          = $(".passage-id").html();
+
+                if (passageID) {
+                    if (passageNotReviewed) {
+                        $('.passage-list #' + passageID).fadeIn(); // show passage again
+                    } else {
+                        $('.passage-list #' + passageID).remove(); // remove from upcoming passages
+                    }
+                }
+
+                $(".passage-text").empty();
+                $(".passage-title").empty();
+            }
         }
 
         //------- Initialize session ------------------
@@ -60,6 +78,7 @@
 
         //------- Select passage for review -----------
         $( ".upcoming-passages" ).on( "click", ".upcoming-verse-ref", function( e ) {
+            reviewState.clearCurrentPassage();
             $(this).fadeOut();
             reviewState.selectPassage( $(this).text(), $(this).attr('id') );
         });
