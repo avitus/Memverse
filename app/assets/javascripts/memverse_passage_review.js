@@ -1,15 +1,16 @@
 /******************************************************************************
  * Display passage for review
  ******************************************************************************/
-function mvDisplayPassageForReview( passageRef, verses ) {
+function mvDisplayPassageForReview( passageRef, passageID, verses ) {
 
     var $new_vs
 
     // display reference
     $('.passage-title').html( passageRef );
+    $('.passage-id').html( passageID );
 
     // clear out existing passage
-    $('.passage-text').empty();
+    // $('.passage-text').empty();
 
     // wrap single verse in array
     if( !($.isArray(verses)) ) { verses = [ verses ]; }
