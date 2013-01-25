@@ -59,7 +59,7 @@ var reviewState = {
             $nextPassage.fadeOut('slow');
             reviewState.selectPassage( $nextPassage.text(), $nextPassage.attr('id') );
         } else {
-            alert("No more passages to review.");
+            alert("Congratulations! You are done for today.");
         }
     },
 
