@@ -20,6 +20,7 @@ group :test do
   gem "capybara", ">= 1.1.2"
   gem "database_cleaner", ">= 0.6.7"
   gem "launchy", ">= 2.0.5"
+  gem 'email_spec'
 end
 
 group :production do
@@ -86,8 +87,4 @@ gem 'split', :require => 'split/dashboard'                                      
 group :console do
   gem 'wirble'
   gem 'hirb'
-end
-
-group :test do
-  gem 'email_spec'
 end
