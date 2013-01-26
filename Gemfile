@@ -35,7 +35,7 @@ end
 
 if HOST_OS =~ /linux/i
   gem 'libv8', '>= 3.11.8.13', :platforms => :ruby
-  gem 'therubyracer', '>= 0.11.1'
+  gem 'therubyracer', '>= 0.11.3'
 end
 
 gem 'rails', '3.2.11'
