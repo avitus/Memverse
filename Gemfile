@@ -63,7 +63,6 @@ gem 'ckeditor'                                                                  
 gem 'paperclip'                                                                                 # Attachment handling
 gem 'capistrano', '>=2.9.0'                                                                     # Deploy with Capistrano
 gem 'nokogiri', '>=1.5.0'                                                                       # HTML/XML parsing
-# gem 'test-unit', '=1.2.3'                                                                     # Required for restful_authentication (?)
 gem 'json'                                                                                      # Javascript Object Notation support
 gem 'mail', '>= 2.2.15'                                                                         # Emails
 gem 'newrelic_rpm', '>=3.3.0'                                                                   # Performance monitoring
