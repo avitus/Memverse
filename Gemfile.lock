@@ -438,7 +438,7 @@ DEPENDENCIES
   juggernaut (>= 2.1.0)!
   kaminari
   launchy (>= 2.0.5)
-  libv8 (>= 3.11.8.3)
+  libv8 (>= 3.11.8.13)
   mail (>= 2.2.15)
   mysql2 (>= 0.3)
   newrelic_rpm (>= 3.3.0)
@@ -460,7 +460,7 @@ DEPENDENCIES
   split
   sqlite3
   supermodel!
-  therubyracer (>= 0.11.0)
+  therubyracer (>= 0.11.1)
   thinking-sphinx (~> 2.0.14)
   uglifier (>= 1.0.3)
   wirble
