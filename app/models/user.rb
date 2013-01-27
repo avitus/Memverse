@@ -572,7 +572,7 @@ class User < ActiveRecord::Base
     load_for_today = self.memverses.active.where("next_test <= ?", Date.today).order("next_test ASC").select("id").map(&:id)
     offset         = 0
 
-    for i in 1..load_for_today.length # iterate through array of verse ID's
+    for i in 1..load_for_today.length # iterate through array of memverse ID's
 
       if (i % load_target == 0) # if divisible by load_target
         Memverse.where("id in (?)", load_for_today[(offset * load_target)..(i-1)]).update_all(:next_test => Date.today + offset)
@@ -585,6 +585,12 @@ class User < ActiveRecord::Base
       end
 
     end
+
+    # Update all passages 
+    # TODO: this is currently very inefficient. Using update_all, however, does not trigger the callbacks for the passage model 
+    self.passages.each { |psg|
+      psg.update_next_test_date
+    }
 
     return due_verses
 
