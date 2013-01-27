@@ -35,7 +35,7 @@ group :assets do
 end
 
 if HOST_OS =~ /linux/i
-  gem 'libv8', '>= 3.11.8.13'
+  gem 'libv8', '>= 3.11.8.13', :platforms => :ruby
   gem 'therubyracer', '>= 0.11.3'
 end
 
