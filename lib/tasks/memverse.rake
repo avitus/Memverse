@@ -12,7 +12,7 @@ namespace :utils do
 
     User.find_each { |u|
 
-      puts "---- #{u.name_or_login}"
+      puts "---- #{u.id}: #{u.name_or_login}"
 
       # Find all starting (or solo verses) and create a passage
       Memverse.where(:user_id => u.id, :first_verse => nil).find_each { |mv|
