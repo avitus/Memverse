@@ -1,0 +1,383 @@
+GIT
+  remote: git://github.com/KonaTeam/supermodel.git
+  revision: fc77e8ce188fdfa03b1c2f97d134d81012966862
+  specs:
+    supermodel (0.1.4)
+      activemodel (>= 3.0.0)
+
+GIT
+  remote: git://github.com/avitus/bloggity.git
+  revision: 8b0d6ad7dc38fbe1d46b18b40a8078358f82b491
+  specs:
+    bloggity (0.0.1)
+      jquery-rails
+      rails (~> 3.2.8)
+
+GIT
+  remote: git://github.com/avitus/spawn.git
+  revision: beaf7937cae96985de42081272a95386b8e474a3
+  branch: edge
+  specs:
+    spawn (1.2)
+
+GIT
+  remote: git://github.com/maccman/juggernaut.git
+  revision: 77a21dc7b4d0bedcc421902ae2acae9ae2469f74
+  specs:
+    juggernaut (2.1.1)
+      redis
+
+GIT
+  remote: git://github.com/radar/forem.git
+  revision: 9e23290fb55582ccdd287c87e27da39d40d5e328
+  specs:
+    forem (1.0.0.beta1)
+      cancan (= 1.6.8)
+      decorators (~> 1.0.2)
+      forem-redcarpet (= 1.0.0)
+      friendly_id (~> 4.0, >= 4.0.9)
+      gemoji (= 1.1.2)
+      rails (>= 3.1.10, < 3.3, != 3.2.9, != 3.2.8, != 3.2.7, != 3.2.6, != 3.2.5, != 3.2.4, != 3.2.3, != 3.2.2, != 3.2.10, != 3.2.1, != 3.2.0)
+      simple_form
+      workflow (= 0.8.0)
+
+GIT
+  remote: git://github.com/ragaskar/action_mailer_cache_delivery.git
+  revision: 20a2dd50e54fcb45ff38afa2cdfdc08d5b479c74
+  specs:
+    action_mailer_cache_delivery (0.1.0)
+
+GIT
+  remote: git://github.com/sandal/prawn
+  revision: 857f13e919d1bd7120de1ea9ba0429620329865b
+  submodules: true
+  specs:
+    prawn (1.0.0.rc1)
+      pdf-reader (>= 0.9.0)
+      ttfunk (~> 1.0.3)
+
+GIT
+  remote: git://github.com/sferik/rails_admin.git
+  revision: 5265c9da2cc6a99f12252bf0a5afe778885bca9c
+  specs:
+    rails_admin (0.4.3)
+      bootstrap-sass (~> 2.2)
+      builder (~> 3.0)
+      coffee-rails (~> 3.1)
+      font-awesome-sass-rails (~> 3.0, >= 3.0.0.1)
+      haml (~> 3.1)
+      jquery-rails (~> 2.1)
+      jquery-ui-rails (~> 3.0)
+      kaminari (~> 0.14)
+      nested_form (~> 0.3)
+      rack-pjax (~> 0.6)
+      rails (~> 3.1)
+      remotipart (~> 1.0)
+      sass-rails (~> 3.1)
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    Ascii85 (1.0.2)
+    actionmailer (3.2.11)
+      actionpack (= 3.2.11)
+      mail (~> 2.4.4)
+    actionpack (3.2.11)
+      activemodel (= 3.2.11)
+      activesupport (= 3.2.11)
+      builder (~> 3.0.0)
+      erubis (~> 2.7.0)
+      journey (~> 1.0.4)
+      rack (~> 1.4.0)
+      rack-cache (~> 1.2)
+      rack-test (~> 0.6.1)
+      sprockets (~> 2.2.1)
+    activemodel (3.2.11)
+      activesupport (= 3.2.11)
+      builder (~> 3.0.0)
+    activerecord (3.2.11)
+      activemodel (= 3.2.11)
+      activesupport (= 3.2.11)
+      arel (~> 3.0.2)
+      tzinfo (~> 0.3.29)
+    activeresource (3.2.11)
+      activemodel (= 3.2.11)
+      activesupport (= 3.2.11)
+    activesupport (3.2.11)
+      i18n (~> 0.6)
+      multi_json (~> 1.0)
+    acts-as-taggable-on (2.3.3)
+      rails (~> 3.0)
+    afm (0.2.0)
+    airbrake (3.1.6)
+      builder
+      girl_friday
+    arel (3.0.2)
+    bcrypt-ruby (3.0.1)
+    best_in_place (2.0.3)
+      jquery-rails
+      rails (~> 3.1)
+    blankslate (3.1.2)
+    bootstrap-sass (2.2.2.0)
+      sass (~> 3.2)
+    breadcrumbs_on_rails (2.3.0)
+    builder (3.0.4)
+    cancan (1.6.8)
+    capistrano (2.14.1)
+      highline
+      net-scp (>= 1.0.0)
+      net-sftp (>= 2.0.0)
+      net-ssh (>= 2.0.14)
+      net-ssh-gateway (>= 1.1.0)
+    chunky_png (1.2.7)
+    ckeditor (4.0.0)
+      mime-types
+      orm_adapter
+    cocaine (0.4.2)
+    coffee-rails (3.2.2)
+      coffee-script (>= 2.2.0)
+      railties (~> 3.2.0)
+    coffee-script (2.2.0)
+      coffee-script-source
+      execjs
+    coffee-script-source (1.4.0)
+    compass (0.12.2)
+      chunky_png (~> 1.2)
+      fssm (>= 0.2.7)
+      sass (~> 3.1)
+    compass-rails (1.0.3)
+      compass (>= 0.12.2, < 0.14)
+    connection_pool (1.0.0)
+    dalli (2.6.2)
+    decorators (1.0.2)
+      railties (>= 3.0.19, != 3.2.9, != 3.2.8, != 3.2.7, != 3.2.6, != 3.2.5, != 3.2.4, != 3.2.3, != 3.2.2, != 3.2.10, != 3.2.1, != 3.2.0, != 3.1.9, != 3.1.8, != 3.1.7, != 3.1.6, != 3.1.5, != 3.1.4, != 3.1.3, != 3.1.2, != 3.1.1, != 3.1.0)
+    devise (2.2.2)
+      bcrypt-ruby (~> 3.0)
+      orm_adapter (~> 0.1)
+      railties (~> 3.1)
+      warden (~> 1.2.1)
+    devise-encryptable (0.1.1)
+      devise (>= 2.1.0.rc)
+    erubis (2.7.0)
+    execjs (1.4.0)
+      multi_json (~> 1.0)
+    fancybox-rails (0.1.4)
+      railties (>= 3.1.0)
+    ffi (1.0.11)
+    font-awesome-sass-rails (3.0.0.1)
+      railties (>= 3.1.1)
+      sass-rails (>= 3.1.1)
+    forem-redcarpet (1.0.0)
+      pygments.rb (= 0.2.4)
+      redcarpet (= 2.0.1)
+    foreman (0.61.0)
+      thor (>= 0.13.6)
+    friendly_id (4.0.9)
+    fssm (0.2.10)
+    gemoji (1.1.2)
+    girl_friday (0.11.2)
+      connection_pool (~> 1.0)
+      rubinius-actor
+    haml (3.1.7)
+    hashery (2.1.0)
+    highline (1.6.15)
+    hike (1.2.1)
+    hirb (0.7.1)
+    htmldiff (0.0.1)
+    i18n (0.6.1)
+    i18n-js (2.1.2)
+      i18n
+    journey (1.0.4)
+    jquery-rails (2.2.0)
+      railties (>= 3.0, < 5.0)
+      thor (>= 0.14, < 2.0)
+    jquery-ui-rails (3.0.1)
+      jquery-rails
+      railties (>= 3.1.0)
+    json (1.7.6)
+    kaminari (0.14.1)
+      actionpack (>= 3.0.0)
+      activesupport (>= 3.0.0)
+    libv8 (3.11.8.13)
+    mail (2.4.4)
+      i18n (>= 0.4.0)
+      mime-types (~> 1.16)
+      treetop (~> 1.4.8)
+    mime-types (1.19)
+    multi_json (1.5.0)
+    mysql2 (0.3.11)
+    nested_form (0.3.1)
+    net-scp (1.0.4)
+      net-ssh (>= 1.99.1)
+    net-sftp (2.0.5)
+      net-ssh (>= 2.0.9)
+    net-ssh (2.6.3)
+    net-ssh-gateway (1.1.0)
+      net-ssh (>= 1.99.1)
+    newrelic_rpm (3.5.6.46)
+    nokogiri (1.5.6)
+    orm_adapter (0.4.0)
+    paperclip (3.4.0)
+      activemodel (>= 3.0.0)
+      activerecord (>= 3.0.0)
+      activesupport (>= 3.0.0)
+      cocaine (~> 0.4.0)
+      mime-types
+    pdf-reader (1.3.0)
+      Ascii85 (~> 1.0.0)
+      afm (~> 0.2.0)
+      hashery (~> 2.0)
+      ruby-rc4
+      ttfunk
+    polyglot (0.3.3)
+    prawnto_2 (0.2.5)
+      prawn (>= 0.6.0)
+      rails (>= 3.1)
+    pygments.rb (0.2.4)
+      rubypython (~> 0.5.3)
+    rack (1.4.4)
+    rack-cache (1.2)
+      rack (>= 0.4)
+    rack-pjax (0.7.0)
+      nokogiri (~> 1.5)
+      rack (~> 1.3)
+    rack-protection (1.3.2)
+      rack
+    rack-ssl (1.3.2)
+      rack
+    rack-test (0.6.2)
+      rack (>= 1.0)
+    rails (3.2.11)
+      actionmailer (= 3.2.11)
+      actionpack (= 3.2.11)
+      activerecord (= 3.2.11)
+      activeresource (= 3.2.11)
+      activesupport (= 3.2.11)
+      bundler (~> 1.0)
+      railties (= 3.2.11)
+    railties (3.2.11)
+      actionpack (= 3.2.11)
+      activesupport (= 3.2.11)
+      rack-ssl (~> 1.3.2)
+      rake (>= 0.8.7)
+      rdoc (~> 3.4)
+      thor (>= 0.14.6, < 2.0)
+    rake (10.0.3)
+    randumb (0.3.1)
+      activerecord (>= 3.0.0)
+      activesupport (>= 3.0.0)
+      rake
+    rdoc (3.12)
+      json (~> 1.4)
+    redcarpet (2.0.1)
+    redis (3.0.2)
+    redis-namespace (1.2.1)
+      redis (~> 3.0.0)
+    ref (1.0.2)
+    remotipart (1.0.2)
+    riddle (1.5.4)
+    rinku (1.7.2)
+    rubinius-actor (0.0.2)
+      rubinius-core-api
+    rubinius-core-api (0.0.1)
+    ruby-rc4 (0.1.5)
+    rubypython (0.5.3)
+      blankslate (>= 2.1.2.3)
+      ffi (~> 1.0.7)
+    sass (3.2.5)
+    sass-rails (3.2.6)
+      railties (~> 3.2.0)
+      sass (>= 3.1.10)
+      tilt (~> 1.3)
+    simple_form (2.0.4)
+      actionpack (~> 3.0)
+      activemodel (~> 3.0)
+    sinatra (1.3.4)
+      rack (~> 1.4)
+      rack-protection (~> 1.3)
+      tilt (~> 1.3, >= 1.3.3)
+    sitemap_generator (3.4)
+      builder
+    split (0.4.6)
+      redis (>= 2.1)
+      redis-namespace (>= 1.1.0)
+      sinatra (>= 1.2.6)
+    sprockets (2.2.2)
+      hike (~> 1.2)
+      multi_json (~> 1.0)
+      rack (~> 1.0)
+      tilt (~> 1.1, != 1.3.0)
+    therubyracer (0.11.3)
+      libv8 (~> 3.11.8.12)
+      ref
+    thinking-sphinx (2.0.14)
+      activerecord (>= 3.0.3)
+      builder (>= 2.1.2)
+      riddle (>= 1.5.3)
+    thor (0.17.0)
+    tilt (1.3.3)
+    treetop (1.4.12)
+      polyglot
+      polyglot (>= 0.3.1)
+    ttfunk (1.0.3)
+    tzinfo (0.3.35)
+    uglifier (1.3.0)
+      execjs (>= 0.3.0)
+      multi_json (~> 1.0, >= 1.0.2)
+    warden (1.2.1)
+      rack (>= 1.0)
+    wirble (0.1.3)
+    workflow (0.8.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  action_mailer_cache_delivery!
+  acts-as-taggable-on
+  airbrake
+  best_in_place
+  bloggity!
+  breadcrumbs_on_rails (>= 2.0.0)
+  cancan
+  capistrano (>= 2.9.0)
+  ckeditor
+  coffee-rails (~> 3.2.1)
+  compass-rails
+  dalli
+  devise
+  devise-encryptable
+  fancybox-rails
+  forem!
+  foreman
+  friendly_id
+  hirb
+  htmldiff
+  i18n-js
+  jquery-rails (>= 2.0.0)
+  json
+  juggernaut (>= 2.1.0)!
+  kaminari
+  libv8 (>= 3.11.8.13)
+  mail (>= 2.2.15)
+  mysql2 (>= 0.3)
+  newrelic_rpm (>= 3.3.0)
+  nokogiri (>= 1.5.0)
+  paperclip
+  prawn!
+  prawnto_2
+  rails (= 3.2.11)
+  rails_admin!
+  randumb
+  redis (>= 2.2.2)
+  riddle
+  rinku
+  sass-rails (~> 3.2.3)
+  sitemap_generator
+  spawn (>= 1.2)!
+  split
+  supermodel!
+  therubyracer (>= 0.11.3)
+  thinking-sphinx (~> 2.0.14)
+  uglifier (>= 1.0.3)
+  wirble
