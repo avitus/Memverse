@@ -5,6 +5,24 @@ namespace :utils do
   #--------------------------------------------------------------------------------------------
   # Group user's memory verses into passages. This should be a one time operation.
   #--------------------------------------------------------------------------------------------
+  desc "Clean up tag cloud"
+  task :refresh_tag_cloud => :environment do
+
+    puts "=== Refreshing tag cloud at #{Time.now} ==="
+
+    # Delete all tags on verse model
+    ActsAsTaggableOn::Tagging.where(:taggable_type => 'Verse').delete_all
+
+    # Recreate tags verse by verse
+    Verse.find_each { |vs| vs.update_tags }
+
+    puts "=== Completed refresh at    #{Time.now} ==="
+
+  end
+
+  #--------------------------------------------------------------------------------------------
+  # Group user's memory verses into passages. This should be a one time operation.
+  #--------------------------------------------------------------------------------------------
   desc "Group memory verses for each user into passages"
   task :create_passages => :environment do
 
