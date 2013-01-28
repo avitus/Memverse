@@ -36,7 +36,7 @@ var reviewState = {
 
         if (passageID) {
             if (passageNotReviewed) {
-                $('.passage-list #' + passageID).fadeIn(); // show passage again
+                $('.passage-list #' + passageID).appendTo('.passage-list').fadeIn(); // show passage again at end of list
             } else {
                 $('.passage-list #' + passageID).remove(); // remove from upcoming passages
             }
