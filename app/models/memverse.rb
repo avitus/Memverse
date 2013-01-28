@@ -350,16 +350,13 @@ class Memverse < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   def prior_in_passage_to?(mv)
 
-    passage = self.passage
-
-    if passage and passage.index(mv)
-      return passage.index(self) <= passage.index(mv)
+    if mv && self.passage.id == mv.passage.id  # memory verses are in same passage
+      return self.verse.versenum <= mv.verse.versenum
     else
       return false
     end
 
   end
-
 
   # ----------------------------------------------------------------------------------------------------------
   # Return first  verse in a sequence
