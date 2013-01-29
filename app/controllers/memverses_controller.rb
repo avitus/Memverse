@@ -452,7 +452,6 @@ class MemversesController < ApplicationController
     @mv = Memverse.find(params[:id])
     new_tag = params[:value].titleize # need to clean this up with hpricot or equivalent
 
-
     # Notes on using the acts_as_taggable_on gem
     #
     # 1. Owned tags and regular tags are handled in two different modules in the library
@@ -466,10 +465,7 @@ class MemversesController < ApplicationController
       tag_list = @mv.all_tags_list.to_s + ", " + new_tag
       current_user.tag(@mv, :with => tag_list, :on => :tags)  # We're doing this for now to track which users are tagging
 
-      # Update verse model with most popular tags
-      # spawn_block(:argv => "spawn-update-vs-tags") do
-        @mv.verse.update_tags
-      # end
+      @mv.verse.update_tags # Update verse model with most popular tags
 
       render :text => new_tag
     else
