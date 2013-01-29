@@ -1,4 +1,7 @@
 class PassagesController < ApplicationController
+
+  before_filter :authenticate_user!
+
   # GET /passages
   # GET /passages.json
   def index
