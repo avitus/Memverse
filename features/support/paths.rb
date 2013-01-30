@@ -16,17 +16,17 @@ module NavigationHelpers
 
     when /the sign in page/
       '/users/sign_in'
-      
+
     when /(.*)'s referrer page/
       '/?referrer='+$1
-      
+
     when /the new blog post page for the blog titled "(.*)"/
       blog_id = Bloggity::Blog.find_by_title($1).id.to_s
       'blog/blogs/'+blog_id+'/blog_posts/new'
-      
+
     when /the blog/
-      '/blog'  
-         
+      '/blog'
+
     when /the page for the memverse with the id of ([0-9]+)/
       '/memory_verse/'+$1
 
@@ -41,9 +41,8 @@ module NavigationHelpers
 
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
-    #
-    #   when /^(.*)'s profile page$/i
-    #     user_profile_path(User.find_by_login($1))
+    when /^(.*)'s dashboard$/i
+      user_path(User.find_by_login($1))
 
     else
       begin
