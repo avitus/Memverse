@@ -2,7 +2,7 @@ Feature: Refer
   In order to tell other people about Memverse
   A user
   Should be able to share a referrer link
-    
+
     @javascript @refer
     Scenario: User tries valid referrer link
       Given I am not logged in
@@ -15,5 +15,5 @@ Feature: Refer
         | user_email                 | user@test.com   |
         | user_password              | please          |
         | user_password_confirmation | please          |
-      And I press "submit"
+      And I press "Create my account"
       Then there should be a user with an email of "user@test.com" whose referrer's login is "myfriendslogin"

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121121223825) do
+ActiveRecord::Schema.define(:version => 20130127225306) do
 
   create_table "american_states", :force => true do |t|
     t.string  "abbrev",      :limit => 20, :default => "", :null => false
@@ -202,7 +202,7 @@ ActiveRecord::Schema.define(:version => 20121121223825) do
   add_index "forem_categories", ["slug"], :name => "index_forem_categories_on_slug", :unique => true
 
   create_table "forem_forums", :force => true do |t|
-    t.string  "title"
+    t.string  "name"
     t.text    "description"
     t.integer "category_id"
     t.integer "views_count", :default => 0

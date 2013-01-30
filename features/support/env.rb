@@ -6,8 +6,9 @@
 
 require 'cucumber/rails'
 require 'email_spec/cucumber'
+
 # require 'factory_girl/step_definitions' # Added by ALV
-load "#{Rails.root}/db/seeds.rb"        # Added by ACW
+# load "#{Rails.root}/db/seeds.rb"        # Added by ACW
 
 # Capybara defaults to XPath selectors rather than Webrat's default of CSS3. In
 # order to ease the transition to Capybara we set the default here. If you'd
@@ -31,14 +32,6 @@ Capybara.default_selector = :css
 # recommended as it will mask a lot of errors for you!
 #
 ActionController::Base.allow_rescue = false
-
-# Remove/comment out the lines below if your app doesn't have a database.
-# For some databases (like MongoDB and CouchDB) you may need to use :truncation instead.
-begin
-  DatabaseCleaner.strategy = :transaction
-rescue NameError
-  raise "You need to add database_cleaner to your Gemfile (in the :test group) if you wish to use it."
-end
 
 # You may also want to configure DatabaseCleaner to use different strategies for certain features and scenarios.
 # See the DatabaseCleaner documentation for details. Example:
