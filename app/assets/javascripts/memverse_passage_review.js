@@ -60,6 +60,7 @@ var reviewState = {
             reviewState.selectPassage( $nextPassage.text(), $nextPassage.attr('id') );
         } else {
             alert("Congratulations! You are done for today.");
+            log_progress( memverseUserID );
         }
     },
 
