@@ -25,8 +25,9 @@
 
 <script language="JavaScript" type="text/javascript"><!--
 
-    $(document).ready(function() {
+    var memverseUserID = "<%= current_user.id %>"; // global variable
 
+    $(document).ready(function() {
 
         //------- Initialize session ------------------
         reviewState.initialize();

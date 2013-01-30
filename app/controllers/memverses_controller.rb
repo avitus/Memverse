@@ -1419,9 +1419,7 @@ class MemversesController < ApplicationController
     user_id = params[:user_id]
     u = User.find(user_id)
     unless u.nil?
-    	# spawn_block(:argv => "spawn-adjust-load") do
-		    u.adjust_work_load
-	    # end
+	    u.adjust_work_load
 	    u.save_progress_report
     end
     render :json => { :saved => true } # TODO: sloppy, we should check whether it actually was saved
