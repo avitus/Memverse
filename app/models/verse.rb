@@ -275,14 +275,14 @@ class Verse < ActiveRecord::Base
 
     if same_tl
       self.memverses.each { |mv|
-        mv.tags.each { |tag|
+        mv.tags.select { |t| t.name.length < 30 }.each { |tag|
           all_tags[tag] += 1
         }
       }
     else
       self.alternative_translations.each { |tl|
         tl.memverses.each { |mv|
-          mv.tags.each { |tag|
+          mv.tags.select { |t| t.name.length < 30 }.each { |tag|
             all_tags[tag] += 1
           }
         }
