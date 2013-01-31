@@ -248,7 +248,7 @@ class Memverse < ActiveRecord::Base
   # Return entire chapter as array
   # ----------------------------------------------------------------------------------------------------------
   def chapter
-    self.part_of_entire_chapter? ? self.passage.memverses : nil
+    self.part_of_entire_chapter? ? self.passage.memverses.includes(:verse).order('verses.versenum') : nil
   end
 
   # ----------------------------------------------------------------------------------------------------------
