@@ -62,11 +62,35 @@ describe Verse do
     end
   end
   
-describe "web_check" do
-  it "should say the verse of Psalm 35:1 KJV matches on Bible Gateway" do
-    verse = FactoryGirl.create(:verse, :book => "Psalm", :chapter => 35, :versenum => 1, :text => "Plead my cause, O Lord, with them that strive with me: fight against them that fight against me.", :translation => "KJV")
-    verse.web_check == true
+  describe "web_check" do
+    it "should say normal verses match on Bible Gateway" do
+      verse = FactoryGirl.create(:verse, :book => "John", :chapter => 3, :versenum => 16, :translation => "NIV", :text => "For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life.")
+      verse.web_check.should == false
+    end
+   
+    it "should say the first verses of chapters match on Bible Gateway" do
+      verse = FactoryGirl.create(:verse, :book => "Genesis", :chapter => 1, :versenum => 1, :translation => "KJV", :text => "In the beginning God created the heaven and the earth.")
+      verse.web_check.should be_true
+    end
+   
+    it "should say poetry verses match on Bible Gateway" do
+      verse = FactoryGirl.create(:verse, :book => "Psalms", :chapter => 35, :versenum => 2, :translation => "NIV", :text => "Take up shield and buckler; arise and come to my aid")
+      verse.web_check.should be_true
+    end
+   
+    it "should say verses with 'LORD' in them match on Bible Gateway" do
+      verse = FactoryGirl.create(:verse, :book => "Genesis", :chapter => 15, :versenum => 2, :translation => "NIV", :text => "But Abram said, “O Sovereign LORD, what can you give me since I remain childless and the one who will inherit my estate is Eliezer of Damascus?")
+      verse.web_check.should be_true
+    end
+   
+    it "should say verses with all of the above exceptions together match on Bible Gateway" do
+      verse = FactoryGirl.create(:verse, :book => "Psalms", :chapter => 35, :versenum => 1, :translation => "NIV", :text => "Contend, O LORD, with those who contend with me; fight against those who fight against me.")
+      verse.web_check.should be_true
+    end
+    it "should say incorrect verses are incorrect" do
+      verse = FactoryGirl.create(:verse, :book => "Psalms", :chapter => 35, :versenum => 1, :translation => "NIV", :text => "This is incorrect")
+      verse.web_check.should == true
+    end
   end
-end
-  
+
 end
