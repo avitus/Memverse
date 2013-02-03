@@ -1,31 +1,31 @@
 BIBLEBOOKS = ['Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy', 'Joshua', 'Judges', 'Ruth', '1 Samuel', '2 Samuel',
 	          '1 Kings', '2 Kings','1 Chronicles', '2 Chronicles', 'Ezra', 'Nehemiah', 'Esther', 'Job', 'Psalms', 'Proverbs',
-	           'Ecclesiastes', 'Song of Songs', 'Isaiah', 'Jeremiah', 'Lamentations', 'Ezekiel', 'Daniel', 'Hosea', 'Joel', 
+	           'Ecclesiastes', 'Song of Songs', 'Isaiah', 'Jeremiah', 'Lamentations', 'Ezekiel', 'Daniel', 'Hosea', 'Joel',
 	           'Amos', 'Obadiah', 'Jonah', 'Micah', 'Nahum', 'Habakkuk', 'Zephaniah', 'Haggai', 'Zechariah', 'Malachi', 'Matthew',
 	           'Mark', 'Luke', 'John', 'Acts', 'Romans', '1 Corinthians', '2 Corinthians', 'Galatians', 'Ephesians', 'Philippians',
 	           'Colossians', '1 Thessalonians', '2 Thessalonians', '1 Timothy', '2 Timothy', 'Titus', 'Philemon', 'Hebrews', 'James',
 	           '1 Peter', '2 Peter', '1 John', '2 John', '3 John', 'Jude', 'Revelation']
-	           
+
 BIBLEABBREV = ['Gen', 'Ex', 'Lev', 'Num', 'Deut', 'Josh', 'Judg', 'Ruth', '1 Sam', '2 Sam',
               '1 Kings', '2 Kings','1 Chron', '2 Chron', 'Ezra', 'Neh', 'Es', 'Job', 'Ps', 'Prov',
-              'Eccl', 'Song', 'Isa', 'Jer', 'Lam', 'Ezk', 'Dan', 'Hos', 'Joel', 
+              'Eccl', 'Song', 'Isa', 'Jer', 'Lam', 'Ezk', 'Dan', 'Hos', 'Joel',
               'Amos', 'Obad', 'Jonah', 'Mic', 'Nahum', 'Hab', 'Zeph', 'Hag', 'Zech', 'Mal', 'Matt',
               'Mark', 'Luke', 'Jn', 'Acts', 'Rom', '1 Cor', '2 Cor', 'Gal', 'Eph', 'Phil',
               'Col', '1 Thess', '2 Thess', '1 Tim', '2 Tim', 'Tit', 'Phlm', 'Heb', 'James',
-              '1 Pet', '2 Pet', '1 John', '2 John', '3 John', 'Jude', 'Rev']	
-              
+              '1 Pet', '2 Pet', '1 John', '2 John', '3 John', 'Jude', 'Rev']
+
 SPANISHBOOKS = ['Génesis', 'Éxodo', 'Levitico', 'Números', 'Deuteronomio', 'Josué', 'Jueces', 'Rut', '1 Samuel', '2 Samuel', '1 Reyes',
                 '2 Reyes', '1 Crónicas', '2 Crónicas', 'Esdras', 'Nehemías', 'Ester', 'Job', 'Salmos', 'Proverbios', 'Eclesiastés', 'Cantares',
                 'Isaías', 'Jeremías', 'Lamentaciones', 'Ezequiel', 'Daniel', 'Oseas', 'Joel', 'Amós', 'Abdías', 'Jonás', 'Miqueas', 'Nahún', 'Habacuc',
                 'Sofonías', 'Hageo', 'Zacarías', 'Malaquías', 'Mateo', 'Marcos', 'Lucas', 'Juan', 'Hechos', 'Romanos', '1 Corintios', '2 Corintios',
                 'Gálatas', 'Efesios', 'Filipenses', 'Colosenses', '1 Tesalonicenses', '2 Tesalonicenses', '1 Timoteo', '2 Timoteo', 'Tito', 'Filemón',
                 'Hebreos', 'Santiago', '1 Pedro', '2 Pedro', '1 Juan', '2 Juan', '3 Juan', 'Judas','Apocalipsis']
-                
+
 SPANISHABBREV = [ 'Gén', 'Éxod', 'Lev', 'Núm', 'Deut', 'Jos', 'Jue', 'Rut', '1 Sam', '2 Sam', '1 Re', '2 Re', '1 Cró', '2 Cró', 'Esd',
                   'Neh', 'Est', 'Job', 'Sal', 'Prov', 'Ecl', 'Cant', 'Is', 'Jer', 'Lam',
-                  'Ez', 'Dan', 'Os', 'Jl', 'Am', 'Abd', 'Jon', 'Miq', 'Nah', 'Hab', 'Sof', 'Ag', 'Zac', 'Mal', 'Mt', 'Mc', 'Lc', 
+                  'Ez', 'Dan', 'Os', 'Jl', 'Am', 'Abd', 'Jon', 'Miq', 'Nah', 'Hab', 'Sof', 'Ag', 'Zac', 'Mal', 'Mt', 'Mc', 'Lc',
                   'Jn', 'Hech', 'Rom', '1 Cor', '2 Cor', 'Gál', 'Ef', 'Fil', 'Col', '1 Tes', '2 Tes', '1 Tim', '2 Tim', 'Tit', 'Filem',
-                  'Heb', 'Sant', '1 Pe', '2 Pe', '1 Jn', '2 Jn', '3 Jn', 'Jds', 'Apoc']  
+                  'Heb', 'Sant', '1 Pe', '2 Pe', '1 Jn', '2 Jn', '3 Jn', 'Jds', 'Apoc']
 
 /******************************************************************************
  * Verse Search
@@ -43,43 +43,46 @@ function mv_search(userText, displayResultsFn) {
     function searchResultsCallback( verses ) {
         if( $.isFunction(displayResultsFn) ) {
           displayResultsFn.call(this, verses);
-        }  
+        }
     };
 
     // Truncate queries of excessive length
     if (userText.length > 100) {
-    	var text = jQuery.trim(userText).substring(0, 100).split(" ").slice(0, -1).join(" ");    	
+    	var text = jQuery.trim(userText).substring(0, 100).split(" ").slice(0, -1).join(" ");
     }
     else {
     	var text = userText;
     }
 
-
-    // User is looking for a single verse                       
+    // User is looking for a single verse
     if (ref = parseVerseRef( text )) {
-        $.get("/lookup_user_verse.json", { bk: ref.bk, ch: ref.ch, vs: ref.vs }, 
+        $.get("/lookup_user_verse.json", { bk: ref.bk, ch: ref.ch, vs: ref.vs },
             searchResultsCallback, "json" );
-                
+
     // User is searching for a passage
     } else if (ref = parsePassageRef( text )) {
-        $.get("/lookup_user_passage.json", { bk: ref.bk, ch: ref.ch, vs_start: ref.vs_start, vs_end: ref.vs_end }, 
+        $.get("/lookup_user_passage.json", { bk: ref.bk, ch: ref.ch, vs_start: ref.vs_start, vs_end: ref.vs_end },
             searchResultsCallback, "json" );
-    
+
     // User didn't enter a verse reference ... do a tag search
     } else {
-        $.get("/mv_search.json", { searchParams: text }, 
+        $.get("/mv_search.json", { searchParams: text },
             searchResultsCallback, "json" );
-    }  
+    }
 }
+
+/******************************************************************************
+ * Display a passage
+ ******************************************************************************/
 
 /******************************************************************************
  * Capitalize strings: romans -> Romans
  ******************************************************************************/
 String.prototype.capitalize = function() {
 	if (this.charAt(0).match(/[1-3]/)) {
-      return this.charAt(0) + this.charAt(1) + this.charAt(2).toUpperCase() + this.slice(3);		
+      return this.charAt(0) + this.charAt(1) + this.charAt(2).toUpperCase() + this.slice(3);
 	} else {
-      return this.charAt(0).toUpperCase() + this.slice(1);		
+      return this.charAt(0).toUpperCase() + this.slice(1);
 	}
 }
 
@@ -159,15 +162,22 @@ function validSubChapterPassage(passage) {
  * Clean up user entered verses
  ******************************************************************************/
 function cleanseVerseText( versetext ) {
-	
+
 	versetext = versetext.replace(/—/g, ' — ')    // add spaces around em dash
 	                     .replace(/--/g, ' — ')   // replace double dash with em dash
 	                     .replace(/\[\w\]/g, " ") // remove footnotes
 	                     .replace(/\n/g,' ')      // remove newlines
 	                     .replace(/\s{2,}/g,' '); // remove double space
 	versetext = $.trim(versetext);                // remove trailing and leading whitespace. Using jQuery's trim() to support IE.
-	
+
 	return versetext;
+}
+
+/******************************************************************************
+ * Remove special characters to compare user input to correct text
+ ******************************************************************************/
+scrub_text = function(text) {
+    return text.toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñαβξδεφγηισκλμνοπθρστυϝωχψζ]+/g, "");
 }
 
 /******************************************************************************
@@ -176,114 +186,129 @@ function cleanseVerseText( versetext ) {
 function blankifyVerse(versetext, reduction_percentage) {
 
     var split_text, sort_by_length, text_with_blanks, word_width;
-    
+
     if  ( reduction_percentage == 0 ) {
 
     	return versetext;
-    	
+
     }
 
     else {
 
 	    split_text     = versetext.trim().split(/\s/);
-	    sort_by_length = split_text.slice(0);  // make a copy of the original array       
-	    
+	    sort_by_length = split_text.slice(0);  // make a copy of the original array
+
 	    sort_by_length.sort(function(a, b) {
 	        return (a.length < b.length) ? 1 : 0;
 	    });
-	    
+
 	    // select the longest words to remove
-	    sort_by_length.length = Math.round(split_text.length * reduction_percentage / 100); 
-	    
+	    sort_by_length.length = Math.round(split_text.length * reduction_percentage / 100);
+
 	    text_with_blanks = split_text.map( function(x) {
 	        if ( sort_by_length.indexOf(x) < 0 ) {
 	            return x;
 	        }
 	        else {
 	        	// TODO: this line calculates an approximately sized input box for the given word
-	        	word_width = Math.round( x.length * 62) / 100;  // multiply word length by 0.6 and round to one decimal
+                // It would be preferable to calculate the exact width of the actual word
+	        	word_width = Math.round( x.length * 62) / 100;  // multiply word length by 0.62 and round to one decimal
 	            return "<input name='" + x.replace(/'/, '’') + "' class='blank-word' style='width:" + word_width + "em;'>";
 	        };
 	    });
-	          
+
 	    return text_with_blanks.join(" ");
     }
-        
+
 };
 
 /******************************************************************************
  * Parses reference into a book, chapter & verse
  ******************************************************************************/
 function parseVerseRef(verseref) {
-		
+
 	// ========== TODO ======================================
 	// Handle: abbreviations, foreign language book names
-	// ======================================================	
+	// ======================================================
 
 	var split_text;
 	var ch, bk, bi, vs;
-	
+
 	if (validVerseRef(verseref)) {
-		
+
 		// Handle corner cases
 		verseref = verseref.replace(/(song of songs)/i, "Song of Songs")
 						   .replace(/(psalm )/i,        "Psalms ");
-			
+
 		split_text = verseref.split(/:|\s/);
-		
+
 		vs = parseInt(split_text.pop());
 		ch = parseInt(split_text.pop());
 		bk = unabbreviate( split_text.join(' ').capitalize() );
 		bi = jQuery.inArray( bk, BIBLEBOOKS );
-				
+
 		if (bi === -1) {
-			return false	
+			return false;
 		} else {
-			return { bk: bk, ch: ch, vs: vs, bi: bi+1};						
-		};		
+			return { bk: bk, ch: ch, vs: vs, bi: bi+1};
+		};
 	} else {
 		return false;
 	};
+}
+
+
+/******************************************************************************
+ * Check whether next review date has passed
+ * Note: mv.next_test is a string with format 'yyyy-mm-dd'
+ ******************************************************************************/
+function mvDue( mv ) {
+
+    var today           = new Date();
+    var reviewDateArray = mv.next_test.match(/(\d+)/g);
+    var nextReviewDate  = new Date( reviewDateArray[0], reviewDateArray[1]-1, reviewDateArray[2]); // Jan = 0
+
+    return nextReviewDate < today
 }
 
 /******************************************************************************
  * Parses passage reference into a book, chapter, start verse & end verse
  ******************************************************************************/
 function parsePassageRef(passage) {
-		
+
 	// ========== TODO ======================================
 	// Handle: abbreviations, foreign language book names
-	// ======================================================	
+	// ======================================================
 
 	var split_text;
 	var ch, bk, bi;
 	var vs_start = null;
 	var vs_end   = null;
-	
+
 	if (validPassageRef(passage)) {
-		
+
 		// Handle corner cases
 		passage = passage.replace(/(song of songs)/i, "Song of Songs")
 						 .replace(/(psalm )/i,        "Psalms ")
 						 .replace(/\:$/, ''); // Something like "Romans 8:" -- can happen on Add Verse page as user types
-		
+
 		split_text = passage.split(/:|-|\s/);  /* split on dash, colon or space */
-		
+
 		if (validSubChapterPassage(passage)) {
 			vs_end   = parseInt(split_text.pop());
-			vs_start = parseInt(split_text.pop());	
-		} 
-		
+			vs_start = parseInt(split_text.pop());
+		}
+
 		ch       = parseInt(split_text.pop());
 		bk       = unabbreviate( split_text.join(' ').capitalize() );
 		bi       = jQuery.inArray( bk, BIBLEBOOKS );
-		
+
 		if (bi === -1) {
-			return false	
+			return false;
 		} else {
-			return { bk: bk, ch: ch, vs_start: vs_start, vs_end: vs_end, bi: bi+1};						
-		};									
-	
+			return { bk: bk, ch: ch, vs_start: vs_start, vs_end: vs_end, bi: bi+1};
+		};
+
 	} else {
 		return false;
 	};
@@ -305,7 +330,7 @@ function mvCheckBadgeCompletion() {
 	$.getJSON('/badge_quests_check.json', function(quests) {
 		if ( quests.length !== 0 ) {
 			// Alert user to completion of quests necessary for badges
-			
+
 			// Check for awarded badges
 			$.getJSON('/badge_completion_check.json', function(badges) {
 				// Alert user to completed badges
@@ -316,7 +341,7 @@ function mvCheckBadgeCompletion() {
 				}
 			});
 		};
-	});	
+	});
 }
 
 /******************************************************************************

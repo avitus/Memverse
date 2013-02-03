@@ -63,8 +63,11 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :roles
   has_and_belongs_to_many :quests
   has_and_belongs_to_many :badges
+
+  has_many                :passages,          :dependent => :destroy
   has_many                :memverses,         :dependent => :destroy
   has_many                :verses,            :through   => :memverses
+
   has_many                :progress_reports,  :dependent => :destroy
   has_many                :tweets
   has_many                :sermons
@@ -77,6 +80,7 @@ class User < ActiveRecord::Base
   acts_as_tagger
 
   # Associations for bloggity
+
   has_many :blog_posts, :foreign_key => "posted_by_id", :class_name => 'Bloggity::BlogPost'
   has_many :blog_comments, :dependent => :destroy, :class_name => 'Bloggity::BlogComment'
 
@@ -568,7 +572,7 @@ class User < ActiveRecord::Base
     load_for_today = self.memverses.active.where("next_test <= ?", Date.today).order("next_test ASC").select("id").map(&:id)
     offset         = 0
 
-    for i in 1..load_for_today.length # iterate through array of verse ID's
+    for i in 1..load_for_today.length # iterate through array of memverse ID's
 
       if (i % load_target == 0) # if divisible by load_target
         Memverse.where("id in (?)", load_for_today[(offset * load_target)..(i-1)]).update_all(:next_test => Date.today + offset)
@@ -581,6 +585,12 @@ class User < ActiveRecord::Base
       end
 
     end
+
+    # Update all passages 
+    # TODO: this is currently very inefficient. Using update_all, however, does not trigger the callbacks for the passage model 
+    self.passages.each { |psg|
+      psg.update_next_test_date
+    }
 
     return due_verses
 

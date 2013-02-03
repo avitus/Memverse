@@ -1,0 +1,89 @@
+<% page_title I18n.t :memory_verse_review, :scope => 'page_titles' %>
+
+<div class="white-box-bg">
+<div class="main-verse-review">
+
+    <div class="passage-entry">
+
+        <div class="passage-id"></div>
+
+        <h2  class="passage-title"></h2>
+
+        <div class="passage-text">
+
+        </div>
+
+
+    </div> <!-- end: passage-entry column -->
+
+    <div class="upcoming-passages upcoming">
+        <h2>Upcoming Passages</h2>
+    </div> <!-- end: upcoming-passage column -->
+
+</div>
+</div>
+
+<script language="JavaScript" type="text/javascript"><!--
+
+    var memverseUserID = "<%= current_user.id %>"; // global variable
+
+    $(document).ready(function() {
+
+        //------- Initialize session ------------------
+        reviewState.initialize();
+
+        //------- Select passage for review -----------
+        $( ".upcoming-passages" ).on( "click", ".upcoming-verse-ref", function( e ) {
+            $(this).fadeOut();
+            reviewState.clearCurrentPassage();    // clear current passage
+            reviewState.selectPassage( $(this).text(), $(this).attr('id') );
+        });
+
+        //------- Typing a verse ----------------------
+        $(".passage-text").on( "keyup", "input.blank-word", function (e) {
+
+            var correctWord = this.name;
+            var userGuess   = this.value.trim();
+
+            // Word correct ==> next word
+            if ( scrub_text( correctWord ) === scrub_text( userGuess ) ) {
+                $(this).next().focus();  // advance cursor to next blank word
+                $(this).replaceWith( correctWord );
+            }
+
+            // check for down arrow keypress
+            else if ( e.keyCode === 40 ) {
+                // show current word
+                $(this).val( correctWord ).animate({ color: '#FFD' }, 1100, 'easeInExpo', function() {
+                    $(this).val('');
+                    $(this).css({color:'#444'}); // same color as .assistance
+                });;
+            }
+
+        });
+
+        //------- Scoring a verse ----------------------
+        $( ".passage-text" ).on( "click", ".score-test-buttons .submit", function( e ) {
+
+            var $currentVerse = $(this).closest(".single-verse-in-passage");
+
+            var q             = $(this).attr("q");
+            var id            = $(this).parent().prev(".mv-id").html();
+
+            // Remove verse-due flag
+            $(this).closest(".single-verse-in-passage").removeClass("due-mv");
+            // Fade out rating buttons
+            $(this).closest(".passage-rating").fadeOut();
+
+            // Submit rating
+            $.getJSON("/mark_test_quick", { mv: id, q: q  }, function(data) {
+                if (data.msg) {  setTimeout(function() {alert(data.msg);}, 1); }  // Give user a non-blocking response
+            });
+
+            // Scroll to next verse that is due for review
+            reviewState.gotoNextVerseDue( $currentVerse );
+
+        });
+
+    }); // End of jQuery document ready
+--></script>

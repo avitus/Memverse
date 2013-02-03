@@ -15,14 +15,14 @@ Feature: Sign up
         | user_email                 | user@test.com   |
         | user_password              | please          |
         | user_password_confirmation | please          |
-      And I press "submit"
-      Then I should see "A message with a confirmation link has been sent to your email address. Please open the link to activate your account."
+      And I press "Create my account"
+      Then I should see "A MESSAGE WITH A CONFIRMATION LINK HAS BEEN SENT TO YOUR EMAIL ADDRESS. PLEASE OPEN THE LINK TO ACTIVATE YOUR ACCOUNT."
       And "user@test.com" should receive an email
       When I open the email
       Then I should see "confirm your account" in the email body
       When I follow "Confirm my account" in the email
       Then I should be signed in
-    
+
     @javascript
     Scenario: User signs up with invalid email
       And I fill in the following:
@@ -69,4 +69,3 @@ Feature: Sign up
       Then I should see "Did you mean awfulspeller@gmail.com"
 	  When I click inside "a.email"
 	  Then I should see "We will email you a confirmation"
-	  

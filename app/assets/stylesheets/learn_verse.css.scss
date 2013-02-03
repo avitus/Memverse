@@ -1,9 +1,9 @@
 .verse-selection {
     float: left;
-    width:20%;
+    width:21%;
     padding: 0 1em 1em 1em;
-    min-height: 600px; 
-    border-right:1px solid #bfbebe; 
+    min-height: 600px;
+    border-right:1px solid #bfbebe;
     clear: both;
 }
 
@@ -11,7 +11,7 @@
 /* Single element for verses in search result ... */
 div.ref-and-details {
   float:left;
-  
+
   /* Extraction of first few words of verse */
   p.first-words {
     color: #999999;
@@ -42,69 +42,69 @@ div.ref-and-details {
   border: 0 none;
   cursor: pointer;
   height: 20px;
-  padding: 0 10px;
+  padding: 0 14px;
   width: 70px;
 }
 
 /* Scroll section for search results */
 .mv-search-results-compact {
-  width:15em;
+  width:17em;
   min-height:500px;
   display: none;
   float:left;
   padding-left:0.5em;
-  padding-right:1em;  
-  padding-bottom:1em; 
-  
+  padding-right:1em;
+  padding-bottom:1em;
+
   /* root element for scrollable */
   .scrollable {
-  
+
     /* required settings */
     position:relative;
     overflow:hidden;
-  
+
     /* vertical scrollables have typically larger height than width but not now */
     height: 430px; // should match height of vertical class ... height should be 3x size of item height + padding
     width: 100%;   // should match width of vertical class and actions
   }
-  
+
   /* root element for scrollable items */
   .scrollable .items {
     position:absolute;
-  
+
     /* this time we have very large space for the height */
     height:20000em;
   }
-  
+
   /* root element for scrollable */
-  .vertical {  
-    
+  .vertical {
+
     /* required settings */
     position:relative;
-    overflow:hidden;  
-  
-    /* vertical scrollers have typically larger height than width */  
-    height: 430px; // should match height of scrollable class  
+    overflow:hidden;
+
+    /* vertical scrollers have typically larger height than width */
+    height: 430px; // should match height of scrollable class
     width: 100%;   // should match width of scrollable class and actions
-    border-top:1px solid #ddd;  
+    border-top:1px solid #ddd;
   }
-  
+
   /* root element for scrollable items */
-  .items {  
+  .items {
     position:absolute;
-    /* this time we have very large space for height */ 
-    height:20000em; 
+    /* this time we have very large space for height */
+    height:20000em;
     margin: 0px;
   }
-  
+
   /* single scrollable item */
   .item {
     border-bottom:1px solid #ddd;
     padding:10px 0 0 0;
     height: 4em;
-    width: 15em;
+    width: 17em;
   }
-  
+
   /* elements inside single item */
   .item img { /*-- NOT NEEDED -- */
     float:left;
@@ -112,14 +112,14 @@ div.ref-and-details {
     height:180px;
     width:240px;
   }
-  
+
   .item h3 { /*-- NOT NEEDED -- */
     margin:0 0 5px 0;
     font-size:16px;
     /* color:#456; */
     font-weight:normal;
   }
-  
+
   /* the action buttons above the scrollable */
   #actions {
     width:100%;   // should match width of vertical and scrollable class
@@ -127,25 +127,25 @@ div.ref-and-details {
     position:relative;
     font-size:11px;
   }
-  
+
   #actions a {
     cursor:pointer;
     color:#666;
   }
-  
+
   #actions a:hover {
     text-decoration:underline;
     color:#000;
   }
-  
+
   .disabled {
-    visibility:hidden;    
+    visibility:hidden;
   }
-  
+
   .next {
     float:right;
   }
-  
+
   .bible-version {
     // 60% wide with 20% on either side so that version doesn't overlap left/right navigation
     left:20%;
@@ -174,7 +174,7 @@ div.ref-and-details {
     padding:1em;
     margin: 2em 0em 3em;
     color:#444;
-    position:relative;    
+    position:relative;
 
     .mnemonic {
       border: 0;
@@ -246,8 +246,8 @@ input.blank-word{
   font-size: inherit;
   text-align: inherit;
 
-  /* Seems to help alignment in headers */
-  vertical-align: top;
+  /* Seems to help alignment in headers. ALV: causes misalignment in passage review. */
+  // vertical-align: top;
 }
 
 /* Add interaction cues on hover and focus */

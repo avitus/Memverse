@@ -15,33 +15,33 @@ class ApplicationController < ActionController::Base
   helper :all # include all helpers, all the time
   protect_from_forgery
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
-  
-  before_filter :set_locale, :prepare_for_mobile  
+
+  before_filter :set_locale, :prepare_for_mobile
 
   # ----------------------------------------------------------------------------------------------------------
   # Admin Authorization
-  # ----------------------------------------------------------------------------------------------------------    
-  helper_method :admin?    
-  protected  
-  def admin?  
+  # ----------------------------------------------------------------------------------------------------------
+  helper_method :admin?
+  protected
+  def admin?
     # current_user && current_user.has_role?('admin')  # ALV - use this method when CanCan properly implemented
     current_user && current_user.admin?
-  end    
-   
-  def authorize  
-    unless admin?  
+  end
+
+  def authorize
+    unless admin?
       flash[:error] = "Unauthorized access."
-      redirect_to root_path  
-      false  
-    end  
-  end    
-   
+      redirect_to root_path
+      false
+    end
+  end
+
   # ----------------------------------------------------------------------------------------------------------
   # Localization
-  # ---------------------------------------------------------------------------------------------------------- 
-  def set_locale 
+  # ----------------------------------------------------------------------------------------------------------
+  def set_locale
     # if params[:locale] is nil then I18n.default_locale will be used
-    if current_user  
+    if current_user
       I18n.locale = case current_user.language
         when "English"          then "en"
         when "Spanish"          then "es"
@@ -51,19 +51,19 @@ class ApplicationController < ActionController::Base
     else
       I18n.locale = "en"
     end
-    
+
     # Load support for inverse translation i.e. retrieve English name of a book entered in Spanish
     # This is 'wild hackery'
     # I18n.backend.send(:init_translations)
-  end     
+  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Convert foreign language bible books to English
   # TODO: should also handle the abbreviated form of a book name
-  # ----------------------------------------------------------------------------------------------------------   
+  # ----------------------------------------------------------------------------------------------------------
   def translate_to_english(book)
-   
-    # This would be the preferred way to handle user input in another language. It used to work 
+
+    # This would be the preferred way to handle user input in another language. It used to work
     # but now causes the rack processes to get stuck at 100%
     #--------------------------------------------------------------------------------
     # if I18n.backend.send(:translations)
@@ -72,9 +72,9 @@ class ApplicationController < ActionController::Base
     #   return book
     # end
     #--------------------------------------------------------------------------------
-    
+
     return I18n.t book.to_sym, :scope => [:input, :book]
-    
+
   end
 
 
@@ -96,18 +96,18 @@ class ApplicationController < ActionController::Base
       ["Psalms", 107,  8]   => [["Psalms", 107, 15], ["Psalms", 107, 22], ["Psalms", 107, 31]],
       ["Psalms", 107, 15]   => [["Psalms", 107,  8], ["Psalms", 107, 22], ["Psalms", 107, 31]],
       ["Psalms", 107, 22]   => [["Psalms", 107,  8], ["Psalms", 107, 15], ["Psalms", 107, 31]],
-      ["Psalms", 107, 31]   => [["Psalms", 107,  8], ["Psalms", 107, 15], ["Psalms", 107, 22]]      
+      ["Psalms", 107, 31]   => [["Psalms", 107,  8], ["Psalms", 107, 15], ["Psalms", 107, 22]]
     ]
-    
+
     return iv[ ref ] || []
   end
 
   # ----------------------------------------------------------------------------------------------------------
   # Parse verse reference -- this function is used a lot
-  # Input:    string, eg. "1 John 2:5" or "1 Jn 2:5"   
+  # Input:    string, eg. "1 John 2:5" or "1 Jn 2:5"
   # Outputs:  array,  eg. "[errorcode, '1 John', 2, 5]
   # TODO: Should this be in application_helper.rb ?
-  # ----------------------------------------------------------------------------------------------------------   
+  # ----------------------------------------------------------------------------------------------------------
   def parse_verse(parse_string)
 
     if parse_string
@@ -143,15 +143,15 @@ class ApplicationController < ActionController::Base
     elsif vsref.nil?
       return 3 # Probably no need to return an error here
     else
-      return 1 # Error code for incorrectly formatted string 
-    end   
+      return 1 # Error code for incorrectly formatted string
+    end
   end
 
   # ----------------------------------------------------------------------------------------------------------
   # Checks validity of bible book name
   # Input:  'Deuteronomy' or 'Deut' = true
   # Output: true or false
-  # ----------------------------------------------------------------------------------------------------------  
+  # ----------------------------------------------------------------------------------------------------------
   def valid_bible_book(str)
     return (BIBLEBOOKS.include?(str.titleize) || BIBLEABBREV.include?(str.titleize) || BIBLEBOOKS.include?(str))
   end
@@ -160,8 +160,7 @@ class ApplicationController < ActionController::Base
   # Save verse to database
   # Input:  translation, book, chapter, versenum, text
   # Output: Verse (object)
-  # ---------------------------------------------------------------------------------------------------------- 
-
+  # ----------------------------------------------------------------------------------------------------------
   def save_verse_to_db(tl, book, chapter, verse, txt)
     vs = Verse.new
     vs.translation = tl.to_s
@@ -172,7 +171,7 @@ class ApplicationController < ActionController::Base
     if (tl=='ESV')
       vs.text      = Esv.request(book + ' ' + chapter.to_s + ':' + verse.to_s)
       vs.text      = vs.text.gsub(/-{2,}/, " — ")  # replace double-dash with single dash
-      vs.text      = vs.text.gsub(/\s{2,}/, " ").strip # remove extra white space      
+      vs.text      = vs.text.gsub(/\s{2,}/, " ").strip # remove extra white space
       vs.verified  = true
       if vs.text.include?("ERROR")
         logger.info("*** ESV Query returned an error: #{vs.text}")
@@ -186,14 +185,14 @@ class ApplicationController < ActionController::Base
     vs.save
     return vs
   end
- 
+
   # ----------------------------------------------------------------------------------------------------------
   # Returns bible book index
   # Input:  'Deuteronomy' or 'Deut'
   # Output: 5 or nil if book doesn't exist
   # Note: This breaks if string is not a valid book because you can't add 1 + nil
   # Note: The last check is required to handle 'Song of Songs' because titleizing it becomes "Song Of Songs"
-  # ----------------------------------------------------------------------------------------------------------  
+  # ----------------------------------------------------------------------------------------------------------
   def book_index(str)
     if x = (BIBLEBOOKS.index(str.titleize) || BIBLEABBREV.index(str.titleize) || BIBLEBOOKS.index(str))
       return 1+x
@@ -201,13 +200,13 @@ class ApplicationController < ActionController::Base
       return nil
     end
   end
-  
-  
+
+
   # ----------------------------------------------------------------------------------------------------------
   # Checks for excessively long verses - indication of multiple verse entry
   # Input:  "In the beginning, God created the heavens and the earth"
   # Output: True (if verse too long)
-  # ----------------------------------------------------------------------------------------------------------   
+  # ----------------------------------------------------------------------------------------------------------
   def verse_too_long?(txt)
     return txt.split.length > 91
   end
@@ -216,50 +215,50 @@ class ApplicationController < ActionController::Base
   # Checks whether verse is in DB
   # Input:  Deuteronomy, 3, 6, NIV
   # Output: False (if verse not in DB) otherwise returns ID
-  # ---------------------------------------------------------------------------------------------------------- 
+  # ----------------------------------------------------------------------------------------------------------
   def verse_in_db(book, chapter, versenum, translation)
-    
-    ref =  Verse.find( :first, 
-                       :conditions => ["book = ? and chapter = ? and versenum = ? and translation = ?", 
+
+    ref =  Verse.find( :first,
+                       :conditions => ["book = ? and chapter = ? and versenum = ? and translation = ?",
                                         full_book_name(book), chapter, versenum, translation])
 
     return ref
   end
-   
+
   # ----------------------------------------------------------------------------------------------------------
   # Converts DB format to verse
   # Input:  Deuteronomy, 3, 6
   # Output: Deuteronomy 3:6
-  # ----------------------------------------------------------------------------------------------------------  
+  # ----------------------------------------------------------------------------------------------------------
   def db_to_vs(book, chapter, verse)
     return abbr(book) + ' ' + chapter.to_s + ':' + verse.to_s
-  end 
- 
+  end
+
   # ----------------------------------------------------------------------------------------------------------
   # Abbreviates book names
   # Input:  'Deuteronomy'
   # Output: 'Deut'
-  # ----------------------------------------------------------------------------------------------------------  
+  # ----------------------------------------------------------------------------------------------------------
   def abbr(book)
     return BIBLEABBREV[book_index(book)-1]
   end
-  
+
   # ----------------------------------------------------------------------------------------------------------
   # Lengthens book names
   # Input:  'Deut' or 'Deuteronomy'
   # Output: 'Deuteronomy'
-  # ----------------------------------------------------------------------------------------------------------   
+  # ----------------------------------------------------------------------------------------------------------
   def full_book_name(book)
     if valid_bible_book(book)
       return BIBLEBOOKS[book_index(book)-1] || BIBLEABBREV[book_index(book)-1]
     end
   end
-  
+
   # ----------------------------------------------------------------------------------------------------------
   # Retrieve memory verse
   #   Input: verse_id
   #   Output: "John 3:16"
-  # ----------------------------------------------------------------------------------------------------------  
+  # ----------------------------------------------------------------------------------------------------------
   def get_memverse(verse_id)
     vs    = Verse.find(verse_id)
     if vs
@@ -270,76 +269,76 @@ class ApplicationController < ActionController::Base
       return false
     end
   end
-  
- 
+
+
   # ----------------------------------------------------------------------------------------------------------
   # For URL escaping/unescaping
   #   Input: URL with encoded characters
   #   Output: string
-  # ----------------------------------------------------------------------------------------------------------     
+  # ----------------------------------------------------------------------------------------------------------
   def url_escape(string)
     string.gsub(/([^ a-zA-Z0-9_.-]+)/n) do
     '%' + $1.unpack('H2' * $1.size).join('%').upcase
     end.tr(' ', '+')
   end
-  
+
   def url_unescape(string)
     string.tr('+', ' ').gsub(/((?:%[0-9a-fA-F]{2})+)/n) do
     [$1.delete('%')].pack('H*')
     end
-  end  
-  
+  end
+
   # ----------------------------------------------------------------------------------------------------------
   # Does a verse belong to the current user
   #   Input: verse_id
   #   Output: 'true' if verse is a memory verse (IN ANY TRANSLATION) for current user
-  # ----------------------------------------------------------------------------------------------------------   
+  # ----------------------------------------------------------------------------------------------------------
   def vs_belongs_to_current_user(verse_id)
     vs  = Verse.find(verse_id)
-        
+
     users_of_verse = vs.memverses
     users_of_verse.each { |user|
       if user.user_id == current_user.id
         return true
       end
     }
-    
+
     # Look for other translations
-    # mem_vs = Memverse.find(:all, :conditions => ["user_id = ?", current_user.id])       
-    
+    # mem_vs = Memverse.find(:all, :conditions => ["user_id = ?", current_user.id])
+
     return false
   end
-   
+
   # ----------------------------------------------------------------------------------------------------------
   # Returns true (0) if str is a valid bible reference otherwise nil
-  # ----------------------------------------------------------------------------------------------------------  
+  # ----------------------------------------------------------------------------------------------------------
   def valid_ref(str)
     return str =~ /([0-3]?\s+)?[a-záéíóúüñ]+\s+[0-9]+(:|;|(\s?vs\s?))[0-9]+/i
-  end   
+  end
 
-  private  
-  
+  private
+
   # ----------------------------------------------------------------------------------------------------------
   # Check for mobile devices
-  # ----------------------------------------------------------------------------------------------------------      
-  def mobile_device?  
-  	
+  # ----------------------------------------------------------------------------------------------------------
+  def mobile_device?
+
   	return false # TODO: not supporting mobile devices for now ... uncomment below and remove this line to add support
-    # if session[:mobile_param]  
-    #   session[:mobile_param] == "1"  
+    # if session[:mobile_param]
+    #   session[:mobile_param] == "1"
     # else
-    #   request.user_agent =~ /Mobile|webOS/  
-    # end  
-  end  
-  helper_method :mobile_device?  
-      
-  def prepare_for_mobile  
-    session[:mobile_param] = params[:mobile] if params[:mobile]  
-    request.format = :mobile if mobile_device?  
+    #   request.user_agent =~ /Mobile|webOS/
+    # end
+  end
+  helper_method :mobile_device?
+
+  def prepare_for_mobile
+    session[:mobile_param] = params[:mobile] if params[:mobile]
+    request.format = :mobile if mobile_device?
   end
 
   protected
-  
+
   # Automatically respond with 404 for ActiveRecord::RecordNotFound
   def record_not_found
     render :file => File.join(Rails.root, 'public', '404.html'), :status => 404

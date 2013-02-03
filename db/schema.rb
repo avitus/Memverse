@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121115010752) do
+ActiveRecord::Schema.define(:version => 20130127225306) do
 
   create_table "american_states", :force => true do |t|
     t.string  "abbrev",      :limit => 20, :default => "", :null => false
@@ -202,7 +202,7 @@ ActiveRecord::Schema.define(:version => 20121115010752) do
   add_index "forem_categories", ["slug"], :name => "index_forem_categories_on_slug", :unique => true
 
   create_table "forem_forums", :force => true do |t|
-    t.string  "title"
+    t.string  "name"
     t.text    "description"
     t.integer "category_id"
     t.integer "views_count", :default => 0
@@ -315,8 +315,10 @@ ActiveRecord::Schema.define(:version => 20121115010752) do
     t.integer  "ref_interval",                                :default => 1
     t.date     "next_ref_test"
     t.integer  "uberverse_id"
+    t.integer  "passage_id"
   end
 
+  add_index "memverses", ["passage_id"], :name => "index_memverses_on_passage_id"
   add_index "memverses", ["status"], :name => "index_memverses_on_status"
   add_index "memverses", ["user_id", "verse_id"], :name => "index_memverses_on_user_id_and_verse_id", :unique => true
   add_index "memverses", ["user_id"], :name => "index_memverses_on_user_id"
@@ -336,6 +338,28 @@ ActiveRecord::Schema.define(:version => 20121115010752) do
     t.string  "server_url"
     t.string  "salt",       :null => false
   end
+
+  create_table "passages", :force => true do |t|
+    t.integer  "user_id",                                                                         :null => false
+    t.integer  "length",                                                       :default => 1,     :null => false
+    t.string   "reference",        :limit => 50
+    t.string   "translation",      :limit => 10,                                                  :null => false
+    t.string   "book",             :limit => 40,                                                  :null => false
+    t.integer  "chapter",                                                                         :null => false
+    t.integer  "first_verse",                                                                     :null => false
+    t.integer  "last_verse",                                                                      :null => false
+    t.boolean  "complete_chapter",                                             :default => false
+    t.boolean  "synched",                                                      :default => false
+    t.decimal  "efactor",                        :precision => 4, :scale => 1, :default => 2.0
+    t.integer  "test_interval",                                                :default => 1
+    t.integer  "rep_n",                                                        :default => 1
+    t.date     "next_test"
+    t.date     "last_tested"
+    t.datetime "created_at",                                                                      :null => false
+    t.datetime "updated_at",                                                                      :null => false
+  end
+
+  add_index "passages", ["user_id"], :name => "index_passages_on_user_id"
 
   create_table "passwords", :force => true do |t|
     t.integer  "user_id"

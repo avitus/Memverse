@@ -3,10 +3,12 @@ require 'rbconfig'
 HOST_OS = RbConfig::CONFIG['host_os']
 source 'http://rubygems.org'
 
-group :development do 
+group :development do
   # gem 'query_reviewer', :git => "git://github.com/nesquena/query_reviewer.git"                # For finding slow queries ... problems with Rails 3.2 (?)
 	gem "rails-footnotes", ">= 3.7"
   gem 'sqlite3'
+  gem 'better_errors'
+  gem 'binding_of_caller'
 end
 
 gem "rspec-rails", ">= 2.6.1", :group => [:development, :test]
@@ -14,10 +16,11 @@ gem 'jasmine', :group => [:development, :test]
 
 group :test do
   gem "factory_girl_rails", ">= 1.2.0"
-  gem "cucumber-rails", ">= 1.1.1"
+  gem "cucumber-rails", ">= 1.3.0", require: false
   gem "capybara", ">= 1.1.2"
-  gem "database_cleaner", ">= 0.6.7"
+  gem "database_cleaner", ">= 0.9.1"
   gem "launchy", ">= 2.0.5"
+  gem 'email_spec'
 end
 
 group :production do
@@ -25,17 +28,18 @@ group :production do
 end
 
 group :assets do
-  gem 'sass-rails', "  ~> 3.2.3"
+  gem 'sass-rails', "~> 3.2.3"
   gem 'coffee-rails', "~> 3.2.1"
   gem 'uglifier', '>= 1.0.3'
   gem 'compass-rails'
 end
 
 if HOST_OS =~ /linux/i
-  gem 'therubyracer', '>= 0.8.2'
+  gem 'libv8', '>= 3.11.8.13', :platforms => :ruby
+  gem 'therubyracer', '>= 0.11.3'
 end
 
-gem 'rails', '3.2.8'
+gem 'rails', '3.2.11'
 gem 'jquery-rails', '>= 2.0.0'
 
 gem "devise"                                                                                    # Authentication
@@ -53,17 +57,16 @@ gem 'rinku', :require => 'rails_rinku'                                          
 gem 'randumb'                                                                                   # Retrieve a random record
 gem 'prawn', :git => "git://github.com/sandal/prawn", :submodules => true                       # PDF support
 gem "prawnto_2", :require => "prawnto"                                                          # Integrating prawn into Rails
-gem 'acts-as-taggable-on'                                                                       # :source => "http://gemcutter.org", Taggable gem, 
+gem 'acts-as-taggable-on'                                                                       # :source => "http://gemcutter.org", Taggable gem,
 gem 'airbrake'                                                                                  # Error tracking
 gem 'ckeditor'                                                                                  # WYSIWYG editing
-gem 'paperclip'                                                                                 # Attachment handling 
+gem 'paperclip'                                                                                 # Attachment handling
 gem 'capistrano', '>=2.9.0'                                                                     # Deploy with Capistrano
 gem 'nokogiri', '>=1.5.0'                                                                       # HTML/XML parsing
-gem 'test-unit', '=1.2.3'                                                                       # Required for restful_authentication (?)
 gem 'json'                                                                                      # Javascript Object Notation support
 gem 'mail', '>= 2.2.15'                                                                         # Emails
 gem 'newrelic_rpm', '>=3.3.0'                                                                   # Performance monitoring
-gem 'thinking-sphinx', '>=2.0.10'                                                               # Connector to Sphinx - for global search
+gem 'thinking-sphinx', '~> 2.0.14'                                                              # Connector to Sphinx - for global search
 gem 'riddle'                                                                                    # Seems to be needed for Thinking_Sphinx ... not clear, though
 gem 'i18n-js'                                                                                   # Uses config/locale files to build a JavaScript equivalent of i18n in Rails
 gem 'spawn', '>=1.2', :git => 'git://github.com/avitus/spawn.git', :branch => 'edge'            # Check to see whether master branch ever supports Rails 3 & Ruby 1.92
@@ -83,8 +86,4 @@ gem 'split', :require => 'split/dashboard'                                      
 group :console do
   gem 'wirble'
   gem 'hirb'
-end
-
-group :test do
-  gem 'email_spec'
 end
