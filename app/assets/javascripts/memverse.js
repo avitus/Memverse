@@ -4,7 +4,7 @@
 
 
 // Required for chat channels
-jQuery.ajaxSetup({ 
+jQuery.ajaxSetup({
   'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript")}
 })
 
@@ -25,15 +25,15 @@ function filtersetup(){
 	    timer = setTimeout(callback, ms);
 	  };
 	})(); // source: http://stackoverflow.com/questions/1909441/jquery-keyup-delay
-	var $searchval = ""; 
+	var $searchval = "";
 	$(document).ready(function() {
-			
+
 		//default each row to visible
 		$('tbody tr').addClass('visible');
-		
+
 		var $searchico = $('#searchico');
 		var $filter = $('#filter');
-		
+
 		//overrides CSS display:none property
 		//so only users w/ JS will see the search icon
 		$searchico.show();
@@ -43,22 +43,22 @@ function filtersetup(){
 			return false;
 		});
 	// Thanks to Sam Dunn: http://buildinternet.com/2009/01/changing-form-input-styles-on-focus-with-jquery/
-	     $filter.focus(function() {  
-	         $(this).removeClass("idleField").addClass("focusField");  
-	         if (this.value == this.defaultValue){  
-	             this.value = '';  
-	         }  
-	         if(this.value != this.defaultValue){  
-	             this.select();  
-	         }  
-	     });  
-	     $filter.blur(function() {  
-	         $(this).removeClass("focusField").addClass("idleField");  
+	     $filter.focus(function() {
+	         $(this).removeClass("idleField").addClass("focusField");
+	         if (this.value == this.defaultValue){
+	             this.value = '';
+	         }
+	         if(this.value != this.defaultValue){
+	             this.select();
+	         }
+	     });
+	     $filter.blur(function() {
+	         $(this).removeClass("focusField").addClass("idleField");
 	         if ($.trim(this.value) == ''){
 	           this.value = (this.defaultValue ? this.defaultValue : '');
 	         }
-	     });  
-		
+	     });
+
 		$filter.keyup(function(event) {
 		//if esc is pressed
 	    if (event.keyCode == 27) {
@@ -79,31 +79,31 @@ function filtersetup(){
 				filter('tbody tr', $searchval);
 			}, 300 );
 	    }
-	
+
 		});
 	});
-	
-	
+
+
 	//filter results based on query
 	function filter(selector, query) {
 	//	query	=	$.trim(query); //trim white space
 	//  query = query.replace(/ /gi, '|'); //add OR for regex
-	
+
 	  $(selector).each(function() {
 	    ($(this).text().search(new RegExp(query, "i")) < 0) ? $(this).hide().removeClass('visible') : $(this).show().addClass('visible');
 	  });
 	}
 }
 // Thanks to Dustin for post: http://www.dustindiaz.com/check-one-check-all-javascript/
-function checkAllFields(ref)
-{
-var chkAll = document.getElementById('checkAll');
-var visiblechecks = $('input[name="mv[]"]:visible');
-var invisiblechecked = $('input[name="mv[]"]').not(':visible');
-var visibleboxLength = visiblechecks.length;
-var invisibleboxLength = invisiblechecked.length;
-var allChecked = false;
-var totalChecked = 0; // Number of visible checkboxes checked.
+function checkAllFields(ref) {
+    var chkAll = document.getElementById('checkAll');
+    var visiblechecks = $('input[name="mv[]"]:visible');
+    var invisiblechecked = $('input[name="mv[]"]').not(':visible');
+    var visibleboxLength = visiblechecks.length;
+    var invisibleboxLength = invisiblechecked.length;
+    var allChecked = false;
+    var totalChecked = 0; // Number of visible checkboxes checked.
+
     if ( ref == 1 )  // Selecting all visible verses
     {
         if ( chkAll.checked == true )
@@ -117,6 +117,7 @@ var totalChecked = 0; // Number of visible checkboxes checked.
             visiblechecks[i].checked = false;
         }
     }
+
     if (ref == 2)  // Selecting specific verses
     {
         for ( i=0; i < visibleboxLength; i++ )
@@ -137,11 +138,13 @@ var totalChecked = 0; // Number of visible checkboxes checked.
         else
         chkAll.checked = false;
     }
+
     for ( j=0; j < visibleboxLength; j++ )
     {
         if ( visiblechecks[j].checked == true )
         totalChecked++;
     }
+
     if ( ref == 3 ) // Deleting Verses
     {
         for ( k=0; k < invisibleboxLength; k++ )
@@ -179,6 +182,7 @@ var totalChecked = 0; // Number of visible checkboxes checked.
           return false;
         }
     }
+
     if ( ref == 4 ) // Showing Verses
     {
         for ( k=0; k < invisibleboxLength; k++ )
@@ -191,6 +195,7 @@ var totalChecked = 0; // Number of visible checkboxes checked.
         return true;
         }
     }
+
 	if ( ref == 5 ) // Showing Prompts
     {
         for ( k=0; k < invisibleboxLength; k++ )
@@ -217,17 +222,13 @@ Array.remove = function(array, from, to) {
   return array.push.apply(array, rest);
 };
 
-scrub_text = function(text) {
-	return text.toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñαβξδεφγηισκλμνοπθρστυϝωχψζ]+/g, "");
-}
-
 versefeedback = function(correctvs, verseguess, echo, firstletter) {
 
 	firstletter = (typeof firstletter == "undefined") ? false : firstletter;
-	
+
 	guesstext   = $.trim(verseguess.replace(/\s+/g, " ")); // Remove double spaces from guess and trim
 	correcttext = $.trim(unescape(correctvs.replace(/\s+/g, " "))); // Remove any double spaces - shouldn't be any
-	
+
 	var correct;
 	var feedback = ""; // find a better way to construct the string
 
@@ -235,15 +236,15 @@ versefeedback = function(correctvs, verseguess, echo, firstletter) {
 	right_words = correcttext.split(/\s-\s|\s-|\s/);
 
 	for (x in guess_words) {
-	
+
 		if (x < right_words.length) { // check that guess isn't longer than correct answer
-		
+
 			y = parseInt(x) + 1;
 			z = parseInt(x) - 1;
-			
+
 			// first letter probably in use if this word and the word before it or after it are both single characters
 			fl_prob_in_use = ((guess_words.length >= 2) && ( scrub_text(guess_words[x]).length == 1 ) && ((guess_words[z] && scrub_text(guess_words[z]).length == 1) || (guess_words[y] && scrub_text(guess_words[y]).length == 1)));
-			
+
 			if ( guesstext == "" ) { // This happens when nothing is in the textarea
 				feedback = "Waiting for you to begin typing...";
 				correct = false;
@@ -261,15 +262,15 @@ versefeedback = function(correctvs, verseguess, echo, firstletter) {
 				feedback = feedback + "... ";
 				correct = false;
 			}
-			
+
 			if (right_words[y] == "-" || right_words[y] == "—" ) {
 				feedback = feedback + right_words[y] + " ";
 				// Remove the dash from the array
 				Array.remove(right_words, y);
 			}
-		}	
+		}
 	}
-	
+
 	if ( (guess_words.length == right_words.length) && (correct != false) ) { // determine if correct: should be long enough and not have anything incorrect in it
 		correct = true;
 		if (!echo) {
@@ -282,7 +283,7 @@ versefeedback = function(correctvs, verseguess, echo, firstletter) {
 			feedback = "< Feedback disabled >";
 		}
 	}
-	
+
 	return {
 		feedtext:		feedback,
 		correct:		correct
@@ -300,8 +301,8 @@ function update_upcoming(num_verses, mv_id) {
 			// Insert the refreshed data
 			$("#upcoming-verses").html(data);
 		} // end of success function
-		
-	});	
+
+	});
 }
 
 function log_progress(user_id) {
@@ -311,27 +312,27 @@ function log_progress(user_id) {
 		async:		false,
 		data:		{ user_id: user_id },
 		success:	function(data) {},
-		error: 		function(xhr, status, e) { alert('Sorry, we could not save your progress: ' + status); }			
+		error: 		function(xhr, status, e) { alert('Sorry, we could not save your progress: ' + status); }
 	});
 }
 
 function stageverses(mv_current) {
-	
+
 	var finished;
 	var mv				= {};
 	var mv_skip			= {};
 	var mv_prior		= {};
-	var mv_prior_skip	= {};	
-	
+	var mv_prior_skip	= {};
+
 	$.ajax( {
 		url:		'/test_next_verse',
 		dataType:	'json',
 		async:		false,
 		data:		{ mv: mv_current },
 		success:	function(data) {
-		
+
 			finished = data.finished;
-			
+
 			if (!finished) {
 				mv				= data.mv;
 				mv_skip			= data.mv_skip;
@@ -339,27 +340,27 @@ function stageverses(mv_current) {
 				mv_prior_skip	= data.prior_mv_skip;
 			}
 		}, // end of success function
-		
+
 		error: function(xhr, status, e) {
 			alert('Unable to load next verse: ' + status);
-		}	
+		}
 	});
-	
+
 	return {
 		finished:		finished,
 		mv:				mv,
 		mv_skip:		mv_skip,
 		mv_prior:		mv_prior,
-		mv_prior_skip:	mv_prior_skip	
+		mv_prior_skip:	mv_prior_skip
 	};
 }
 
 function insertondeck(ondeck, ondeck_prior) {
-	
-	$(".verse-ref").text(ondeck.ref);							                    // Update references on testing box					
-	$(".verse-tl").text(' [' + ondeck.tl + ']');				                    // Update translation on testing box					
+
+	$(".verse-ref").text(ondeck.ref);							                    // Update references on testing box
+	$(".verse-tl").text(' [' + ondeck.tl + ']');				                    // Update translation on testing box
 	$("#verseguess").val('').focus();							                    // Clear then place cursor in the input box
-	$("#ajaxWrapper").text('');									                    // Clear the feedback 
+	$("#ajaxWrapper").text('');									                    // Clear the feedback
 	$("#complete-hint").hide();									                    // Hide the hint
 	$("#currentVerse").show();									                    // Show the feedback block
 	$(".toggle-hint").text(I18n.t("memverses.test_verse_quick.show_verse")).show();	// Reset show-hide verse toggle and show it
@@ -368,7 +369,7 @@ function insertondeck(ondeck, ondeck_prior) {
 	$('#ff-button').toggle(ondeck.skippable);					                    // Hide/Show fast forward button
 	$('#waiting').show();										                    // Show the "Waiting for you to begin" span
 
-	// == Update prior verse and reference	
+	// == Update prior verse and reference
 	if (typeof(ondeck_prior) !== 'undefined' && ondeck_prior != null) {
 		$(".priorVerse").show();
 		$(".prior-text").text(ondeck_prior.text);
@@ -377,7 +378,7 @@ function insertondeck(ondeck, ondeck_prior) {
 	else {
 		$(".priorVerse").hide();
 	}
-	
+
 	// == Update mnemonic
 	if (ondeck.mnemonic != null) {
 		$('#mtext').text(ondeck.mnemonic);						// Update the mnemonic text
@@ -394,5 +395,5 @@ function insertondeck(ondeck, ondeck_prior) {
 	$('#next-verse-due').text(next_up);
 
 	return true;
-	
+
 }

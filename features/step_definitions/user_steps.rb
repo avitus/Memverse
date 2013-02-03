@@ -24,6 +24,16 @@ Given /^I am a confirmed user named "([^"]*)" with an email "([^"]*)" and passwo
             :password_confirmation => password).confirm!
 end
 
+Given /^I am an advanced user named "([^"]*)" with an email "([^"]*)" and password "([^"]*)"$/ do |name, email, password|
+  FactoryGirl.create(:user, :name => name,
+                     :email => email,
+                     :password => password,
+                     :password_confirmation => password,
+                     :memorized => 100,
+                     :learning  =>  20)
+end
+
+
 Then /^I should be already signed in$/ do
   step %{I should see "Logout"}
 end
@@ -115,7 +125,7 @@ Given /^I sign in as a normal user$/ do
 end
 
 Given /^I sign in as an advanced user$/ do
-  step %{I am a user named "advanced" with an email "advanced_user@test.com" and password "please"}
+  step %{I am an advanced user named "advanced" with an email "advanced_user@test.com" and password "please"}
   step %{the email address "advanced_user@test.com" is confirmed}
   step %{the user with the email of "advanced_user@test.com" has 10 verses in his list}
   step %{I sign in as "advanced_user@test.com/please"}
@@ -131,9 +141,9 @@ end
 
 Given /^the user with the email of "(.*)" has (\d+) verses in his list$/ do |email, n|
   user = User.find_by_email(email)
-  n.to_i.times { |i| 
+  n.to_i.times { |i|
     vs = FactoryGirl.create(:verse, :chapter => 2, :versenum => i+1)
-    FactoryGirl.create(:memverse, :user_id => user.id, :verse_id => vs.id) 
+    FactoryGirl.create(:memverse, :user_id => user.id, :verse_id => vs.id)
   }
 end
 

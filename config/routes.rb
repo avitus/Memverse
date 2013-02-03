@@ -1,5 +1,5 @@
 MemverseApp::Application.routes.draw do
-  
+
   mount Forem::Engine,    :at => '/forums'
   mount Bloggity::Engine, :at => '/blog'
   mount RailsAdmin::Engine    => '/admin', :as => 'rails_admin'
@@ -12,10 +12,10 @@ MemverseApp::Application.routes.draw do
   }
 
   devise_for :users
-  
+
   # Should be able to remove this route once Forem allows configurable sign_in path
   match '/users/sign_in', :to => "devise/sessions#new", :as => "sign_in"
-  
+
   resources :users, :only => :show
   resources :groups
   resources :uberverses
@@ -24,16 +24,25 @@ MemverseApp::Application.routes.draw do
   resources :quizzes
   resources :quizquestions
   resources :verses
+
+  resources :passages do
+    get 'due', :on => :collection
+    resources :memverses
+  end
+
 # resources :memverses
 
   authenticated do
-    root      :to => 'memverses#index'
-  end  
-  root        :to => 'home#index' 
+    root      :to => 'memverses#home'
+  end
+  root        :to => 'home#index'
+
+  # Core Review Pages
+  match '/review' => 'passages#review', :as => 'passage_review'
 
   # Memverse Mappings
   match '/reset_schedule',         :to => 'users#reset_schedule',            :as => 'reset_schedule'
-  
+
   match '/add_verse',              :to => 'memverses#add_verse',             :as => 'add_verse'
   match '/add_chapter',            :to => 'memverses#add_chapter',           :as => 'add_chapter'
   match '/add/:id',                :to => 'memverses#ajax_add',              :as => 'add'
@@ -75,7 +84,7 @@ MemverseApp::Application.routes.draw do
   match '/lookup_user_verse',      :to => 'memverses#mv_lookup',             :as => 'lookup_user_verse'
   match '/lookup_user_passage',    :to => 'memverses#mv_lookup_passage',     :as => 'lookup_user_passage'
   match '/mv_search',              :to => 'memverses#mv_search',             :as => 'mv_search'
- 
+
   match '/tag_cloud',              :to => 'verses#tag_cloud',                :as => 'tag_cloud'
   match '/check_verses',           :to => 'verses#check_verses',             :as => 'check_verses'
   match '/check_verse/:id',        :to => 'verses#check_verse',              :as => 'check_verse'
@@ -87,14 +96,14 @@ MemverseApp::Application.routes.draw do
   match '/chapter_available',      :to => 'verses#chapter_available',        :as => 'chapter_available'
 
   match '/get_popverses',          :to => 'popverses#index',                 :as => 'get_popverses'
-      
+
   match '/show_user_info',         :to => 'utils#show_user_info',            :as => 'show_user_info'
   match '/show_tags',              :to => 'utils#show_tags',                 :as => 'show_tags'
   match '/admin_search_verse',     :to => 'utils#search_verse',              :as => 'admin_search_verse'
   match '/utils_verify_verse/:id', :to => 'utils#verify_verse',              :as => 'utils_verify_verse'
   match '/utils_dashboard',        :to => 'utils#dashboard',                 :as => 'utils_dashboard'
   match '/progression/(:yr)/(:mo)',:to => 'utils#user_progression',          :as => 'progression'
-    
+
   # Doesn't require a login
   match '/contact'        => 'info#contact'
   match '/faq'            => 'info#faq'
@@ -120,7 +129,7 @@ MemverseApp::Application.routes.draw do
 
   # Route for users who haven't yet joined a group
   match '/mygroup',                :to => 'groups#show',                     :as => 'mygroup'
- 
+
   match '/update_profile',         :to => 'profile#update_profile',          :as => 'update_profile'
   match '/church',                 :to => 'profile#show_church',             :as => 'church'
   match '/referrals/:id',          :to => 'profile#referrals',               :as => 'referrals'
@@ -129,29 +138,29 @@ MemverseApp::Application.routes.draw do
   match '/set_translation/:tl',    :to => 'profile#set_translation',         :as => 'set_translation'
   match '/set_time_alloc/:time',   :to => 'profile#set_time_alloc',          :as => 'set_time_alloc'
 
-  match '/earned_badges/:id',      :to => 'badges#earned_badges',            :as => 'earned_badges'     
+  match '/earned_badges/:id',      :to => 'badges#earned_badges',            :as => 'earned_badges'
   match '/badge_completion_check', :to => 'badges#badge_completion_check',   :as => 'badge_completion_check'
- 
-  match '/badge_quests_check',     :to => 'quests#badge_quests_check',       :as => 'badge_quests_check' 
-  
+
+  match '/badge_quests_check',     :to => 'quests#badge_quests_check',       :as => 'badge_quests_check'
+
   match '/edit_tag/:id',           :to => 'tag#edit_tag',                    :as => 'edit_tag'
 
   # Tweet routes
-  match '/tweets',                 :to => 'tweets#index',                    :as => 'tweets'  
+  match '/tweets',                 :to => 'tweets#index',                    :as => 'tweets'
 
-  # Game routes  
-  match '/verse_scramble',         :to => 'games#verse_scramble',            :as => 'verse_scramble'  
-    
+  # Game routes
+  match '/verse_scramble',         :to => 'games#verse_scramble',            :as => 'verse_scramble'
+
   # Routes for graphs
   match '/load_progress/',         :to => 'chart#load_progress',             :as => 'load_progress'
-  match '/global_data',            :to => 'chart#global_data',               :as => 'global_data' 
-  
-  # Routes for chat channels  
+  match '/global_data',            :to => 'chart#global_data',               :as => 'global_data'
+
+  # Routes for chat channels
   match "/chat/send",              :controller => "chat", :action => "send_message"
   match "/chat/channel1",          :controller => "chat", :action => "channel1"
-  match "/chat/channel2",          :controller => "chat", :action => "channel2"  
+  match "/chat/channel2",          :controller => "chat", :action => "channel2"
 
-  
+
   # Routes for live quiz
   match "/live_quiz/start_quiz",  :controller => "live_quiz", :action => "start_quiz"
   match "/live_quiz",             :controller => "live_quiz", :action => "live_quiz"
@@ -159,7 +168,7 @@ MemverseApp::Application.routes.draw do
   match "/live_quiz/scoreboard",  :controller => "live_quiz", :action => "scoreboard"
   match "/record_score",          :controller => "live_quiz", :action => "record_score"
 
-  # Install the default routes as the lowest priority. 
+  # Install the default routes as the lowest priority.
   match '/:controller(/:action(/:id))'
 
 end

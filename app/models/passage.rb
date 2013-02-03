@@ -1,0 +1,142 @@
+class Passage < ActiveRecord::Base
+
+  belongs_to :user
+
+  has_many   :memverses
+  has_many   :verses, :through => :memverses
+
+  validates_presence_of   :user_id, :length, :book, :chapter, :first_verse, :last_verse
+
+  attr_accessible :user_id, :translation, :book, :chapter, :first_verse, :last_verse,
+                  :efactor, :last_tested, :length, :next_test, :reference, :rep_n, :test_interval
+
+
+  scope :due, lambda { where('next_test  <= ?', Date.today) }
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Convert to JSON format
+  # ----------------------------------------------------------------------------------------------------------
+  def as_json(options={})
+    {
+      :id   => self.id,
+      :ref  => self.reference
+      # :bk   => self.book,
+      # :ch   => self.chapter,
+      # :vs   => self.versenum,
+      # :tl   => self.translation,
+      # :ref  => self.ref,
+      # :text => self.text
+    }
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Combine two passages into one. Method accepts an optional join (linking) verse
+  # ----------------------------------------------------------------------------------------------------------
+  def absorb( second_passage, join_mv=nil )
+
+    self.first_verse = [self.first_verse, second_passage.first_verse].min
+    self.last_verse  = [self.last_verse,  second_passage.last_verse ].max
+    self.length      = self.last_verse - self.first_verse + 1  # uses values calculated in prior two lines
+
+    # Associate all memory verses from second passage with this passage
+    second_passage.memverses.each { |mv| mv.update_attribute( :passage_id, self.id ) }
+    join_mv.update_attribute( :passage_id, self.id ) unless !join_mv
+
+    # Delete second passage
+    second_passage.destroy
+
+    consolidate_supermemo
+    update_ref
+    entire_chapter_flag_check
+    save!
+
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Add a memory verse into a passage
+  # ----------------------------------------------------------------------------------------------------------
+  def expand( mv )
+
+    self.first_verse = [ self.first_verse, mv.verse.versenum ].min
+    self.last_verse  = [ self.last_verse,  mv.verse.versenum ].max
+    self.length += 1
+
+    # Associate memory verse with passage
+    mv.update_attribute( :passage_id, self.id )
+
+    consolidate_supermemo
+    update_ref
+    entire_chapter_flag_check
+    save
+
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Update Reference
+  # ----------------------------------------------------------------------------------------------------------
+  def update_ref
+
+    book = (self.book == "Psalms") ? "Psalm" : self.book;
+
+    if self.length == 1
+      self.reference = book + ' ' + self.chapter.to_s + ':' + self.first_verse.to_s
+    else
+      self.reference = book + ' ' + self.chapter.to_s + ':' + self.first_verse.to_s + '-' + self.last_verse.to_s
+    end
+    save
+    return self.reference
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Combine supermemo information from underlying verses
+  # ----------------------------------------------------------------------------------------------------------
+  def consolidate_supermemo
+    self.test_interval = self.memverses.minimum(:test_interval)
+    self.rep_n         = self.memverses.minimum(:rep_n)
+    self.last_tested   = self.memverses.maximum(:last_tested)
+    self.next_test     = self.memverses.minimum(:next_test)
+    self.efactor       = self.memverses.average(:efactor)
+    save
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Update next_test date
+  # ----------------------------------------------------------------------------------------------------------
+  def update_next_test_date
+    self.next_test     = self.memverses.minimum(:next_test)
+    save
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Set flag if entire chapter has been added to memorization list
+  # ----------------------------------------------------------------------------------------------------------
+  def entire_chapter_flag_check
+
+    # Corner case for 3 John 1. Not elegant but should usually drop through to primary case
+    if book == "3 John" && chapter == 1 && first_verse == 1
+
+      if ["NAS", "NLT", "ESV", "ESV07"].include?( self.translation )
+        update_attribute( :complete_chapter, last_verse == 15 )
+      else
+        update_attribute( :complete_chapter, last_verse == 14 )
+      end
+
+    # All other chapters
+    else
+
+      Rails.logger.debug("~--2-~ Setting entire chapter flag for passage: #{self.book} #{self.chapter}:#{self.first_verse}-#{self.last_verse}")
+      Rails.logger.debug("~--2-~ FinalVerse.count is #{FinalVerse.count}. Final verse for #{book} #{chapter} is #{FinalVerse.where(:book => book, :chapter => chapter).first}")
+
+      # Only look up FinalVerse when first_verse is 1 or 0
+      if ( self.first_verse == 1 || self.first_verse == 0 ) && ( self.last_verse == FinalVerse.where(:book => book, :chapter => chapter).first.last_verse )
+        update_attribute( :complete_chapter, true )
+      else
+        update_attribute( :complete_chapter, false )
+      end
+
+    end
+
+  end
+
+
+end
