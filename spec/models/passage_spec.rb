@@ -164,11 +164,40 @@ describe Passage do
       @psg.reload.length.should == 3
       @psg.first_verse.should == 2
       @psg.last_verse.should == 4
+      @psg.reference.should == "Proverbs 3:2-4"
 
       psg2.first_verse.should == 6
       psg2.last_verse.should == 10
       psg2.length.should == 5
       psg2.memverses.count.should == 5
+      psg2.reference.should == "Proverbs 3:6-10"
+    end
+
+
+    it "should correctly delete two adjacent verses in the middle of the passage" do
+      mv1     = @psg.memverses.includes(:verse).where('verses.versenum' => 5).first
+      mv2     = @psg.memverses.includes(:verse).where('verses.versenum' => 6).first
+      last_mv = @psg.memverses.includes(:verse).order('verses.versenum').last
+
+      # expect {
+        mv1.destroy
+        mv2.destroy
+      # }.to change(Passage, :count).by(1)
+
+      last_mv.reload
+      psg2 = last_mv.passage
+
+      @psg.reload
+      # @psg.length.should == 3
+      @psg.first_verse.should == 2
+      @psg.last_verse.should == 4
+      @psg.reference.should == "Proverbs 3:2-4"
+
+      psg2.first_verse.should == 7
+      psg2.last_verse.should == 10
+      psg2.length.should == 4
+      psg2.memverses.count.should == 2-4
+      psg2.reference.should == "Proverbs 3:7-10"
     end
 
   end
