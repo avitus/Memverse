@@ -5,9 +5,9 @@
 <div class="quick-start">
 
 	<div id="choose-translation">
-	
+
 		<h2>Step 1: Choose your translation</h2>
-		
+
 		<div id="major-translations">
 			<div class="quick-start-selection">
 				<ul>
@@ -20,7 +20,7 @@
 				</ul>
 			</div>
 		</div>
-		
+
 		<div id="minor-translations">
 			<div class="quick-start-selection">
 				<ul>
@@ -42,34 +42,36 @@
 				</ul>
 			</div>
 		</div>
-		
+
 		<div id="foreign-translations">
 			<div class="quick-start-selection">
 				<ul>
-					<li id="GRK" class="tl-set"><%= link_to 'Biblical Greek',                set_translation_path('GRK'), :remote => true %></li>
-					<li id="NVI" class="tl-set"><%= link_to 'Nueva Version Internacional',   set_translation_path('NVI'), :remote => true %></li>
-					<li id="RVR" class="tl-set"><%= link_to 'Reina-Valera 1960',             set_translation_path('RVR'), :remote => true %></li>
-					<li id="LSV" class="tl-set"><%= link_to 'Louis Segond 1910',             set_translation_path('LSV'), :remote => true %></li>
-					<li id="LND" class="tl-set"><%= link_to 'La Nuova Diodati',              set_translation_path('LND'), :remote => true %></li>
-					<li id="AFR" class="tl-set"><%= link_to 'Afrikaans 1983 Translation',    set_translation_path('AFR'), :remote => true %></li>
+					<li id="GRK" class="tl-set"><%= link_to 'Biblical Greek',                set_translation_path('GRK'),   :remote => true %></li>
+					<li id="NVI" class="tl-set"><%= link_to 'Nueva Version Internacional',   set_translation_path('NVI'),   :remote => true %></li>
+					<li id="RVR" class="tl-set"><%= link_to 'Reina-Valera 1960',             set_translation_path('RVR'),   :remote => true %></li>
+					<li id="LSV" class="tl-set"><%= link_to 'Louis Segond 1910',             set_translation_path('LSV'),   :remote => true %></li>
+					<li id="LUT" class="tl-set"><%= link_to 'Luther Bibel 1545',             set_translation_path('LUT'),   :remote => true %></li>
+					<li id="SCH" class="tl-set"><%= link_to 'Schlachter 2000',               set_translation_path('SCH'),   :remote => true %></li>
+					<li id="LND" class="tl-set"><%= link_to 'La Nuova Diodati',              set_translation_path('LND'),   :remote => true %></li>
+					<li id="AFR" class="tl-set"><%= link_to 'Afrikaans 1983 Translation',    set_translation_path('AFR'),   :remote => true %></li>
 					<li id="AFR53" class="tl-set"><%= link_to 'Afrikaans 1953 Translation',  set_translation_path('AFR53'), :remote => true %></li>
-					<li id="HSV" class="tl-set"><%= link_to 'Herziene Statenvertaling',      set_translation_path('HSV'), :remote => true %></li>
-					<li id="NBV" class="tl-set"><%= link_to 'De Nieuwe Bijbelvertaling',     set_translation_path('NBV'), :remote => true %></li>
-					<li id="TMB" class="tl-set"><%= link_to 'Terjemahan Baru',               set_translation_path('TMB'), :remote => true %></li>
-					<li id="MBB" class="tl-set"><%= link_to 'Magandang Balita Biblia',       set_translation_path('MBB'), :remote => true %></li>
-					<li id="SPB" class="tl-set"><%= link_to 'Svenska Folkbibeln',            set_translation_path('SPB'), :remote => true %></li>
-					<li id="ACF" class="tl-set"><%= link_to 'Almeida Corrigida e Fiel',      set_translation_path('ACF'), :remote => true %></li>
-					<li id="ARA" class="tl-set"><%= link_to 'Almeida Revista e Atualizada',  set_translation_path('ARA'), :remote => true %></li>
-					<li class="tl-root">        <%= link_to '« Back',                        nil, :class => 'active',     :remote => true %></li>
+					<li id="HSV" class="tl-set"><%= link_to 'Herziene Statenvertaling',      set_translation_path('HSV'),   :remote => true %></li>
+					<li id="NBV" class="tl-set"><%= link_to 'De Nieuwe Bijbelvertaling',     set_translation_path('NBV'),   :remote => true %></li>
+					<li id="TMB" class="tl-set"><%= link_to 'Terjemahan Baru',               set_translation_path('TMB'),   :remote => true %></li>
+					<li id="MBB" class="tl-set"><%= link_to 'Magandang Balita Biblia',       set_translation_path('MBB'),   :remote => true %></li>
+					<li id="SPB" class="tl-set"><%= link_to 'Svenska Folkbibeln',            set_translation_path('SPB'),   :remote => true %></li>
+					<li id="ACF" class="tl-set"><%= link_to 'Almeida Corrigida e Fiel',      set_translation_path('ACF'),   :remote => true %></li>
+					<li id="ARA" class="tl-set"><%= link_to 'Almeida Revista e Atualizada',  set_translation_path('ARA'),   :remote => true %></li>
+					<li class="tl-root">        <%= link_to '« Back',                        nil, :class => 'active',       :remote => true %></li>
 				</ul>
 			</div>
 		</div>
 	</div>
-	
+
 	<div id="choose-time-alloc">
-		
+
 		<h2>Step 2: Choose your time allocation</h2>
-		
+
 		<div class="quick-start-selection">
 			<ul>
 				<li class="time-set"><%= link_to ' 5 Mins / Day', set_time_alloc_path( 5), :remote => true %></li>
@@ -85,9 +87,9 @@
 		<h2>Step 3: Select 5-10 verses to start memorizing</h2>
 
 		<%= render "verses/add_verse" %>
-		
+
 	</div>
-	
+
 </div>
 </div>
 
