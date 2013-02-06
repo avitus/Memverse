@@ -711,12 +711,18 @@ class Memverse < ActiveRecord::Base
 
           psg.first_verse += 1
           psg.length -= 1
+          psg.update_ref
+          psg.consolidate_supermemo
+          psg.entire_chapter_flag_check
 
         # Case 3 - Last verse of passage
         elsif psg.last_verse == self.verse.versenum
 
           psg.last_verse -= 1
           psg.length -= 1
+          psg.update_ref
+          psg.consolidate_supermemo
+          psg.entire_chapter_flag_check
 
         # Case 4 - In middle of passage ... need to split passage into two
         else
@@ -728,13 +734,20 @@ class Memverse < ActiveRecord::Base
                                      :length =>  psg.last_verse - self.verse.versenum,
                                      :book => psg.book, :chapter => psg.chapter,
                                      :first_verse => self.verse.versenum + 1, :last_verse => psg.last_verse )
+          new_psg.update_ref
+          new_psg.consolidate_supermemo
+          new_psg.entire_chapter_flag_check
+          new_psg.save
 
           # shorten existing passage
           psg.last_verse = self.verse.versenum - 1
           psg.length     = psg.last_verse - passage.first_verse + 1
+          psg.update_ref
+          psg.consolidate_supermemo
+          psg.entire_chapter_flag_check
 
           # update memverses comprising the new passage
-          second_half_of_passage = memverses_in_passage[(new_psg.length-1)..(-1)]
+          second_half_of_passage = memverses_in_passage[-(new_psg.length)..(-1)]
           second_half_of_passage.each { |mv| mv.update_attribute( :passage_id, new_psg.id ) }
 
         end
