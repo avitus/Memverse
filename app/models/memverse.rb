@@ -256,6 +256,12 @@ class Memverse < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   def part_of_entire_chapter?
 
+    # TODO: we should be able to remove this check
+    if !self.passage
+      Rails.logger.info("**** Memory verse #{self.id} is associated with a nonexistent passage. Adding it to a passage.")
+      self.add_to_passage
+    end
+
     return self.passage.complete_chapter
 
     # eocv = self.verse.end_of_chapter_verse
