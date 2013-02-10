@@ -6,9 +6,13 @@ describe("parsePassageRef", function() {
   it("Parses a chapter reference into chapter, book", function() {
     expect(parsePassageRef("Genesis 1")).toEqual( { bk: 'Genesis', ch: 1, vs_start: null, vs_end: null, bi: 1 } );
   });
-  
+
   it("Considers a chapter reference with a colon to still be a chapter and parses properly", function() {
     expect(parsePassageRef("Genesis 1:")).toEqual( { bk: 'Genesis', ch: 1, vs_start: null, vs_end: null, bi: 1 } );
+  });
+
+  it("Accepts a passage reference with a space after the colon and before the verse numbers", function() {
+    expect(parsePassageRef("Genesis 1: 5-8")).toEqual( { bk: 'Genesis', ch: 1, vs_start: 5, vs_end: 8, bi: 1 } );
   });
 
   it("Rejects single verses", function() {
