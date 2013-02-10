@@ -116,11 +116,12 @@ function unabbreviate(book_name) {
 /******************************************************************************
  * Returns true if input is a valid verse reference
  * Accepts: Romans 8:1
+ * Accepts: Romans 8: 1
  * Rejects: Romans 8
  * Rejects: Romans 8:1-3
  ******************************************************************************/
 function validVerseRef(verseref) {
-    return /([0-3]?\s+)?[a-záéíóúüñ]+\s+[0-9]+(:|(\s?vs\s?))[0-9]+$/i.test(verseref);
+    return /([0-3]?\s+)?[a-záéíóúüñ]+\s+[0-9]+(:(\s)?|(\s?vs\s?))[0-9]+$/i.test(verseref);
 }
 
 /******************************************************************************
@@ -129,10 +130,11 @@ function validVerseRef(verseref) {
  * Accepts: Romans 8
  * Accepts: Romans 8:
  * Accepts: Romans 8:1-3
+ * Accepts: Romans 8: 1-3
  * Rejects: Romans 8:1
  *******************************************************************************/
 function validPassageRef(passage) {
-    return /([0-3]?\s+)?[a-záéíóúüñ]+\s+[0-9]+(((:|(\s?vs\s?))[0-9]+(-)[0-9]+)|:)?$/i.test(passage);
+    return /([0-3]?\s+)?[a-záéíóúüñ]+\s+[0-9]+(((:(\s)?|(\s?vs\s?))[0-9]+(-)[0-9]+)|:)?$/i.test(passage);
 }
 
 /******************************************************************************
@@ -228,7 +230,7 @@ function blankifyVerse(versetext, reduction_percentage) {
 function parseVerseRef(verseref) {
 
 	// ========== TODO ======================================
-	// Handle: abbreviations, foreign language book names
+	// Handle foreign language book names
 	// ======================================================
 
 	var split_text;
@@ -240,7 +242,7 @@ function parseVerseRef(verseref) {
 		verseref = verseref.replace(/(song of songs)/i, "Song of Songs")
 						   .replace(/(psalm )/i,        "Psalms ");
 
-		split_text = verseref.split(/:|\s/);
+		split_text = verseref.split(/:\s|:|\s/);
 
 		vs = parseInt(split_text.pop());
 		ch = parseInt(split_text.pop());
@@ -277,7 +279,7 @@ function mvDue( mv ) {
 function parsePassageRef(passage) {
 
 	// ========== TODO ======================================
-	// Handle: abbreviations, foreign language book names
+	// Handle foreign language book names
 	// ======================================================
 
 	var split_text;
@@ -290,7 +292,8 @@ function parsePassageRef(passage) {
 		// Handle corner cases
 		passage = passage.replace(/(song of songs)/i, "Song of Songs")
 						 .replace(/(psalm )/i,        "Psalms ")
-						 .replace(/\:$/, ''); // Something like "Romans 8:" -- can happen on Add Verse page as user types
+                         .replace(/\:\s/, ':') // change colon + space to just a colon
+						 .replace(/\:$/, '');  // Something like "Romans 8:" -- can happen on Add Verse page as user types
 
 		split_text = passage.split(/:|-|\s/);  /* split on dash, colon or space */
 

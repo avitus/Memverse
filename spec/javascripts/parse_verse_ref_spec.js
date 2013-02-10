@@ -6,17 +6,17 @@ describe("ParseVerse", function() {
   it("Handles leading numbers", function() {
     expect(parseVerseRef("2 Corinthians 1:27")).toEqual( { bk: '2 Corinthians', ch: 1, vs: 27, bi: 47 } );
   });
-  
+
   it("Handles book names with spaces", function() {
     expect(parseVerseRef("Song of Songs 2:4")).toEqual( { bk: 'Song of Songs', ch: 2, vs: 4, bi: 22 } );
-  });  
-  
+  });
+
   it("Handles lowercase book names", function() {
     expect(parseVerseRef("romans 8:1")).toEqual( { bk: 'Romans', ch: 8, vs: 1, bi: 45 } );
   });
 
   it("Handles multiword lowercase book names", function() {
-    expect(parseVerseRef("song of songs 2:1")).toEqual( { bk: 'Song of Songs', ch: 2, vs: 1, bi: 22 } );    
+    expect(parseVerseRef("song of songs 2:1")).toEqual( { bk: 'Song of Songs', ch: 2, vs: 1, bi: 22 } );
   });
 
   it("Converts 'Psalm' to 'Psalms'", function() {
@@ -36,9 +36,13 @@ describe("ParseVerse", function() {
   it("Handles lowercase book names with leading number", function() {
     expect(parseVerseRef("1 corinthians 8:1")).toEqual( { bk: '1 Corinthians', ch: 8, vs: 1, bi: 46 } );
   });
-  
+
   it("Handles abbreviations such as rom 8:1", function() {
     expect(parseVerseRef("rom 8:1")).toEqual( { bk: 'Romans', ch: 8, vs: 1, bi: 45 } );
+  });
+
+  it("Handles space between colon and verse", function() {
+    expect(parseVerseRef("Romans 2: 1")).toEqual( { bk: 'Romans', ch: 2, vs: 1, bi: 45 } );
   });
 
   it("Rejects references without a verse", function() {
