@@ -168,7 +168,7 @@
 				<ul id="maintab" class="basictab">
 					<li <%= tab(@tab=="home"		) %> rel="homepage">	<%= link_to t('menu.home'), 		main_app.root_path %> </li>
 					<li <%= tab(@tab=="learn"		) %> rel="learn">		<%= link_to t('menu.learn'), 		main_app.learn_path %></li>
-					<li <%= tab(@tab=="mem"			) %> rel="memory">		<%= link_to t('menu.Review'),	 	main_app.test_verse_quick_path %></li>
+					<li <%= tab(@tab=="mem"			) %> rel="memory">		<%= link_to t('menu.review'),	 	main_app.test_verse_quick_path %></li>
 					<li <%= tab(@tab=="profile"		) %> rel="profile">		<%= link_to t('menu.profile'), 		main_app.user_path(current_user) %></li>
 					<li <%= tab(@tab=="contact"		) %> rel="contact">		<%= link_to t('menu.contact'), 		main_app.contact_path %></li>
 					<li <%= tab(@tab=="leaderboard"	) %> rel="leaderboard">	<%= link_to t('menu.leaderboard'), 	main_app.leaderboard_path %></li>
@@ -195,8 +195,8 @@
 
 						<div id="learn" class="submenustyle">
 							<ul>
-								<li <%= sub(@sub=="learn"		)%>><%= link_to t('memorize_menu.Learn'), 		main_app.learn_path %></li>
-								<li <%= sub(@sub=="practice"	)%>><%= link_to t('memorize_menu.Practice'), 	main_app.drill_verse_path %></li>
+								<li <%= sub(@sub=="learn"		)%>><%= link_to t('learn_menu.Learn'), 		main_app.learn_path %></li>
+								<li <%= sub(@sub=="practice"	)%>><%= link_to t('learn_menu.Practice'), 	main_app.drill_verse_path %></li>
 							</ul>
 						</div>
 

@@ -14,7 +14,7 @@
       - :year
       - :month
       - :day
-  
+
   time:
     formats:
       default: "%a %b %d %H:%M:%S %Z %Y"
@@ -22,14 +22,14 @@
       short: "%d %b %H:%M"
       long: "%B %d, %Y %H:%M"
       only_second: "%S"
-      
+
       datetime:
         formats:
           default: "%Y-%m-%dT%H:%M:%S%Z"
-          
+
     am: 'am'
     pm: 'pm'
-      
+
   datetime:
     distance_in_words:
       half_a_minute: 'half a minute'
@@ -65,7 +65,7 @@
       over_x_years:
         one: 'over 1 year'
         other: '%{count} years'
-      
+
   number:
     format:
       precision: 3
@@ -76,7 +76,7 @@
         unit: '$'
         precision: 2
         format: '%u %n'
-        
+
   active_record:
     error:
       header_message: ["Couldn't save this {{object_name}}: 1 error", "Couldn't save this {{object_name}}: %{count} errors."]
@@ -101,7 +101,7 @@
       less_than_or_equal_to: "must be less than or equal to %{count}"
       odd: "must be odd"
       even: "must be even"
-      
+
   txt:
     main_title: "Memverso"
     app_name: "Memverso"
@@ -174,7 +174,7 @@
       2 John:          "2 Juan"
       3 John:          "3 Juan"
       Jude:            "Judas"
-      Revelation:      "Apocalipsis" 
+      Revelation:      "Apocalipsis"
     abbrev:
       Gen:             "Gén"
       Ex:              "Éxod"
@@ -241,66 +241,69 @@
       2 John:          "2 Jn"
       3 John:          "3 Jn"
       Jude:            "Jds"
-      Rev:             "Apoc"   
+      Rev:             "Apoc"
   menu:
     home:                  "Inicio"
-    memorize:              "Memorizar"
+    review:                "Repasar"
     learn:                 "Aprender"
     profile:               "Cuenta"
     contact:               "Contacto"
     leaderboard:           "Clasificación"
-    blog:                  "Blog"  
+    blog:                  "Blog"
     help:                  "Ayuda"
     demo:                  "Memorice Demo"
-  home_menu:      
+  home_menu:
     My Verses:             "Mis versos"
     Add Verse:             "Añadir Verso"
-    Search Bible:          "Buscar en la Biblia"    
+    Search Bible:          "Buscar en la Biblia"
     My Progress:           "Mi progreso"
     Popular Verses:        "Versos populares"
-    Tag Cloud:             "Nube de tags"    
-    News:                  "Noticias"    
+    Tag Cloud:             "Nube de tags"
+    News:                  "Noticias"
   memorize_menu:
+    Verses:                "Versículos"
     Memorize:              "Memorizar"
-    Reference Recall:      "Referencia Recall"
-    Practice:              "Práctica"
+    References:            "Referencias"
     Accuracy Test:         "Exactitud de la prueba"
+    Passage Review:        "Revisión del pasaje"
     Chapter Review:        "Revisión del capítulo"
   learn_menu:
+    Learn:                 "Aprender"
+    Practice:              "Práctica"
     Tutorial:              "Tutorial"
-    Video Tutorial:        "Video Tutorial"    
+    Video Tutorial:        "Video Tutorial"
     SuperMemo Algorithm:   "SuperMemo Algoritmo"
   profile_menu:
-    Dashboard:             "Tablero de Instrumentos"  
+    Dashboard:             "Tablero de Instrumentos"
     Profile:               "Perfil"
-    Referrals:             "Referls"    
+    Referrals:             "Referls"
     My Church:             "Mi Iglesia"
-    My Group:              "Mi Grupo"    
+    My Group:              "Mi Grupo"
   contact_menu:
     Contact:               "Contacto"
     Volunteer:             "Voluntariado"
   leader_menu:
     Leaderboard:           "Clasificación"
-    Church Leaderboard:    "Iglesia de la Competencia"    
-    Group Leaderboard:     "Grupo de la Competencia"    
+    Church Leaderboard:    "Iglesia de la Competencia"
+    Group Leaderboard:     "Grupo de la Competencia"
     State Leaderboard:     "Estado de la Competencia"
     Country Leaderboard:   "País de Competencia"
     One Church:            "Una Iglesia"
-    Referralboard:         "Referencias"    
+    Referralboard:         "Referencias"
   blog_menu:
     View Blog:             "Ver blog"
     Recent Comments:       "Comentarios recientes"
-    Blog Search:           "Blog Search" 
+    Blog Search:           "Blog Search"
     Forums:                "Forums"
   help_menu:
-    faq:                   "FAQ"       
+    faq:                   "FAQ"
   messages:
-    today_msg_html:        "Usted tiene <span>%{due_today} versos</span> para examinar hoy. Que actualmente necesita unos <span>%{time} minutos</span> por dia."                                  
-  memverses:       
+    today_msg_html:        "Usted tiene <span>%{due_today} versos</span> para examinar hoy. Que actualmente necesita unos <span>%{time} minutos</span> por dia."
+  memverses:
     test_verse_quick:
       verse:           "Verso"
       feedback:        "Reacción en Directo"
-      upcoming_verses: "Próximos Versos"    
+      upcoming_verses: "Próximos Versos"
       show_verse:      "Mostrar Verso"
       hide_verse:      "Ocultar Verso"
       b5:              "Recordar - Perfecto"
@@ -317,7 +320,7 @@
       Name:                     "Nombre"
       Email:                    "Correo"
       Gender:                   "Género"
-      Translation:              "Traducción"      
+      Translation:              "Traducción"
       Country:                  "País"
       State:                    "Estado"
       Church:                   "Iglesia"
@@ -334,9 +337,9 @@
       Show social toolbar:      "Mostrar siempre la barra de herramientas?"
       Show email:               "Mostrar direcciones de correo en el perfil público?"
       Update profile:           "Actualizar perfil"
-      Your profile:             "Su perfil"      
+      Your profile:             "Su perfil"
       Photo Upload A:           "Si quieres subir una foto de sí mismo, por favor visite"
-      Photo Upload B:           "y asociar a la misma dirección de correo electrónico que utiliza en Memverse con la foto o avatar que te gustaría que se vea. La imagen aparecerá junto a sus comentarios en blogs."            
+      Photo Upload B:           "y asociar a la misma dirección de correo electrónico que utiliza en Memverse con la foto o avatar que te gustaría que se vea. La imagen aparecerá junto a sus comentarios en blogs."
   page_titles:
     signup:                     "Registro"
     my_memory_verses:           "Mis Versos de Memoria"
@@ -469,7 +472,7 @@
       2 Juan:           "2 John"
       3 Juan:           "3 John"
       Judas:            "Jude"
-      Apocalipsis:      "Revelation" 
+      Apocalipsis:      "Revelation"
       Gén:              "Genesis"
       Éxod:             "Exodus"
       Lev:              "Leviticus"
@@ -535,4 +538,4 @@
       2 Jn:             "2 John"
       3 Jn:             "3 John"
       Jds:              "Jude"
-      Apoc:             "Revelation"       
+      Apoc:             "Revelation"
