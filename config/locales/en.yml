@@ -14,7 +14,7 @@
       - :year
       - :month
       - :day
-  
+
   time:
     formats:
       default: "%a %b %d %H:%M:%S %Z %Y"
@@ -22,14 +22,14 @@
       short: "%d %b %H:%M"
       long: "%B %d, %Y %H:%M"
       only_second: "%S"
-      
+
       datetime:
         formats:
           default: "%Y-%m-%dT%H:%M:%S%Z"
-          
+
     am: 'am'
     pm: 'pm'
-      
+
   datetime:
     distance_in_words:
       half_a_minute: 'half a minute'
@@ -65,7 +65,7 @@
       over_x_years:
         one: 'over 1 year'
         other: '%{count} years'
-      
+
   number:
     format:
       precision: 3
@@ -76,7 +76,7 @@
         unit: '$'
         precision: 2
         format: '%u %n'
-        
+
   active_record:
     error:
       header_message: ["Couldn't save this {{object_name}}: 1 error", "Couldn't save this {{object_name}}: %{count} errors."]
@@ -101,11 +101,11 @@
       less_than_or_equal_to: "must be less than or equal to %{count}"
       odd: "must be odd"
       even: "must be even"
-      
+
   txt:
     main_title: "Memverse"
     app_name: "Memverse"
-    sub_title: "Memorize the Bible Online"        
+    sub_title: "Memorize the Bible Online"
   book:
     name:
       Genesis:         "Genesis"
@@ -174,7 +174,7 @@
       2 John:          "2 John"
       3 John:          "3 John"
       Jude:            "Jude"
-      Revelation:      "Revelation"     
+      Revelation:      "Revelation"
     abbrev:
       Gen:             "Gen"
       Ex:              "Ex"
@@ -241,18 +241,18 @@
       2 John:          "2 John"
       3 John:          "3 John"
       Jude:            "Jude"
-      Rev:             "Rev" 
+      Rev:             "Rev"
   menu:
     home:         "Home"
-    Review:       "Review"
-    Learn:        "Learn"
+    review:       "Review"
+    learn:        "Learn"
     profile:      "Account"
     contact:      "Contact"
     leaderboard:  "Leaderboards"
     blog:         "Blog"
     help:         "Help"
     demo:         "Memorize Demo"
-  home_menu:      
+  home_menu:
     My Verses:             "My Verses"
     Add Verse:             "Add Verse"
     Search Bible:          "Search Bible"
@@ -266,6 +266,7 @@
     Reference Recall:      "Reference Recall"
     Practice:              "Practice"
     Accuracy Test:         "Accuracy Test"
+    Passage Review:        "Passage Review"
     Chapter Review:        "Chapter Review"
   learn_menu:
     Learn:                 "Learn"
@@ -274,7 +275,7 @@
     Video Tutorial:        "Video Tutorial"
     SuperMemo Algorithm:   "Supermemo Algorithm"
   profile_menu:
-    Dashboard:             "Dashboard"  
+    Dashboard:             "Dashboard"
     Profile:               "Profile"
     Referrals:             "Referrals"
     My Church:             "My Church"
@@ -296,21 +297,21 @@
     Blog Search:           "Blog Search"
     Forums:                "Forums"
   help_menu:
-    faq:                   "FAQ"  
+    faq:                   "FAQ"
   messages:
     today_msg_html:        "You have <span>%{due_today} verses</span> to review today. You currently need about <span>%{time} minutes</span> per day."
   memverses:
     test_verse_quick:
       verse:           "Verse"
       feedback:        "Live Feedback"
-      upcoming_verses: "Upcoming Verses" 
+      upcoming_verses: "Upcoming Verses"
       show_verse:      "Show Verse"
       hide_verse:      "Hide Verse"
       b5:              "Remembered - Perfect"
       b4:              "Remembered - Hesitation"
       b3:              "Remembered - Difficult"
       b2:              "Don't Know - Familiar"
-      b1:              "Don't Know - No Idea"        
+      b1:              "Don't Know - No Idea"
     manage_verses:
       delete_selected:   "Delete Selected"
       show_selected:     "Show Selected"

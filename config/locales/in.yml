@@ -14,7 +14,7 @@
       - :year
       - :month
       - :day
-  
+
   time:
     formats:
       default: "%a %b %d %H:%M:%S %Z %Y"
@@ -22,14 +22,14 @@
       short: "%d %b %H:%M"
       long: "%B %d, %Y %H:%M"
       only_second: "%S"
-      
+
       datetime:
         formats:
           default: "%Y-%m-%dT%H:%M:%S%Z"
-          
+
     am: 'am'
     pm: 'pm'
-      
+
   datetime:
     distance_in_words:
       half_a_minute: 'half a minute'
@@ -65,7 +65,7 @@
       over_x_years:
         one: 'over 1 year'
         other: '%{count} years'
-      
+
   number:
     format:
       precision: 3
@@ -76,7 +76,7 @@
         unit: '$'
         precision: 2
         format: '%u %n'
-        
+
   active_record:
     error:
       header_message: ["Couldn't save this {{object_name}}: 1 error", "Couldn't save this {{object_name}}: %{count} errors."]
@@ -101,11 +101,11 @@
       less_than_or_equal_to: "must be less than or equal to %{count}"
       odd: "must be odd"
       even: "must be even"
-      
+
   txt:
     main_title: "Memverse"
     app_name: "Memverse"
-    sub_title: "Memorize the Bible Online"        
+    sub_title: "Memorize the Bible Online"
   book:
     name:
       Genesis:         "Kejadian"
@@ -174,7 +174,7 @@
       2 John:          "2 Yohanes"
       3 John:          "3 Yohanes"
       Jude:            "Yudas"
-      Revelation:      "Wahyu"     
+      Revelation:      "Wahyu"
     abbrev:
       Gen:             "Kej"
       Ex:              "Kel"
@@ -241,10 +241,10 @@
       2 John:          "2 Yoh"
       3 John:          "3 Yoh"
       Jude:            "Yud"
-      Rev:             "Why" 
+      Rev:             "Why"
   menu:
     home:         "Home"
-    memorize:     "Menghafal"
+    review:       "Tinjau"
     learn:        "Belajar"
     profile:      "Account"
     contact:      "Hubungi"
@@ -252,7 +252,7 @@
     blog:         "Blog"
     help:         "Bantuan"
     demo:         "Hafalkan Demo"
-  home_menu:      
+  home_menu:
     My Verses:             "Ayat Saya"
     Add Verse:             "Tambahkan Ayat"
     Search Bible:          "Cari Alkitab"
@@ -261,28 +261,30 @@
     Tag Cloud:             "Tag Cloud"
     News:                  "Berita"
   memorize_menu:
-    Memorize:              "Hafalkan"
-    Reference Recall:      "Referensi Tantangan"
-    Practice:              "Praktek"
+    Verses:                "Ayat"
+    References:            "Referensi"
     Accuracy Test:         "Tes Akurasi"
+    Passage Review:        "Bagian Ulasan"
     Chapter Review:        "Bab Review"
   learn_menu:
+    Learn:                 "Belajar"
+    Practice:              "Praktek"
     Tutorial:              "Tutorial"
-    Video Tutorial:        "Video Tutorial"    
+    Video Tutorial:        "Video Tutorial"
     SuperMemo Algorithm:   "Algoritma Super Memo"
   profile_menu:
-    Dashboard:             "Dashboard"  
+    Dashboard:             "Dashboard"
     Profile:               "Profil"
     Referrals:             "Pengundang"
     My Church:             "Gereja-Ku"
-    My Group:              "Saya kelompok"    
+    My Group:              "Saya kelompok"
   contact_menu:
     Contact:               "Kontak"
     Volunteer:             "Relawan"
   leader_menu:
     Leaderboard:           "Juara"
-    Church Leaderboard:    "Juara Gereja"    
-    Group Leaderboard:     "Kelompok Leaderboard"    
+    Church Leaderboard:    "Juara Gereja"
+    Group Leaderboard:     "Kelompok Leaderboard"
     State Leaderboard:     "State Leaderboard"
     Country Leaderboard:   "Juara Negara"
     One Church:            "Satu Gereja"
@@ -290,24 +292,24 @@
   blog_menu:
     View Blog:             "Lihat Blog"
     Recent Comments:       "Komentar Akhir"
-    Blog Search:           "Blog Search"  
-    Forums:                "Forums"    
+    Blog Search:           "Blog Search"
+    Forums:                "Forums"
   help_menu:
-    faq:                   "FAQ"                        
+    faq:                   "FAQ"
   messages:
     today_msg_html:        "You have <span>%{due_today} verses</span> to review today. You currently need about <span>%{time} minutes</span> per day."
   memverses:
     test_verse_quick:
       verse:           "Ayat"
       feedback:        "Live Komentar"
-      upcoming_verses: "Ayat Mendatang"  
+      upcoming_verses: "Ayat Mendatang"
       show_verse:      "Tampilkan Ayat"
       hide_verse:      "Sembunyikan Ayat"
       b5:              "Ingat - Sempurna"
       b4:              "Ingat – Ragu-ragu"
       b3:              "Ingat - Sulit"
       b2:              "Tidak tahu – Pernah Dengar"
-      b1:              "Tidak tahu – Sama sekali"        
+      b1:              "Tidak tahu – Sama sekali"
     manage_verses:
       delete_selected: "Hapus yang Dipilih"
       show_selected:   "Tampilkan Dipilih"
@@ -318,7 +320,7 @@
       Email:                    "Email"
       Gender:                   "Jenis Kelamin"
       Male:                     "Laki-Laki"
-      Female:                   "Perempuan"      
+      Female:                   "Perempuan"
       Translation:              "Terjemahan"
       Country:                  "Negara"
       State:                    "State"
@@ -329,14 +331,14 @@
       Daily:                    "Tiap hari"
       Weekly:                   "Tiap minggu"
       Monthly:                  "Tiap bulan"
-      Never:                    "Tidak sama sekali"      
+      Never:                    "Tidak sama sekali"
       Language:                 "Bahasa"
       Target Time:              "Waktu Target"
       Max Repetition Interval:  "Pengulangan Maximim Interval"
       1st Letter Prompts:       "1 Surat Anjuran"
       Test all references:      "Tes semua referensi?"
       Always show feedback:     "Selalu tampilkan umpan balik?"
-      Add verses as needed:     "Tambahkan ayat-ayat yang diperlukan?"      
+      Add verses as needed:     "Tambahkan ayat-ayat yang diperlukan?"
       Show social toolbar:      "Tampilkan sosial toolbar?"
       Show email:               "Tampilkan email di profil umum?"
       Update profile:           "Profil terbaru"
@@ -475,7 +477,7 @@
       2 Yohanes:        "2 John"
       3 Yohanes:        "3 John"
       Yudas:            "Jude"
-      Wahyu:            "Revelation"    
+      Wahyu:            "Revelation"
       Kej:              "Genesis"
       Kel:              "Exodus"
       Im:               "Leviticus"
@@ -541,4 +543,4 @@
       2 Yoh:            "2 John"
       3 Yoh:            "3 John"
       Yud:              "Jude"
-      Why:              "Revelation" 
+      Why:              "Revelation"
