@@ -892,7 +892,7 @@ class MemversesController < ApplicationController
     @tab = "mem"
     @sub = "chrev"
 
-    add_breadcrumb I18n.t("menu.Review"), :test_verse_quick_path
+    add_breadcrumb I18n.t("menu.review"), :test_verse_quick_path
     add_breadcrumb I18n.t("memorize_menu.Chapter Review"), :pre_chapter_path
   end
 
@@ -904,7 +904,7 @@ class MemversesController < ApplicationController
     @tab = "mem"
     @sub = "chrev"
 
-    add_breadcrumb I18n.t("menu.Review"), :test_verse_quick_path
+    add_breadcrumb I18n.t("menu.review"), :test_verse_quick_path
     add_breadcrumb I18n.t("memorize_menu.Chapter Review"), {:action => 'test_chapter', :book_chapter => params[:book_chapter]}
 
     @show_feedback = true
@@ -940,7 +940,7 @@ class MemversesController < ApplicationController
     @sub = "mem"
     @show_feedback = true
 
-    add_breadcrumb I18n.t("menu.Review"), :test_verse_quick_path
+    add_breadcrumb I18n.t("menu.review"), :test_verse_quick_path
     add_breadcrumb I18n.t("memorize_menu.Verses"), :test_verse_quick_path
 
     @mv 			= current_user.first_verse_today
@@ -1113,7 +1113,7 @@ class MemversesController < ApplicationController
     @tab = "mem"
     @sub = "acctest"
 
-    add_breadcrumb I18n.t("menu.Review"), :test_verse_quick_path
+    add_breadcrumb I18n.t("menu.review"), :test_verse_quick_path
     add_breadcrumb I18n.t("memorize_menu.Accuracy Test"), :pre_exam_path
   end
 
@@ -1125,7 +1125,7 @@ class MemversesController < ApplicationController
     @tab = "mem"
     @sub = "acctest"
 
-    add_breadcrumb I18n.t("menu.Review"), :test_verse_quick_path
+    add_breadcrumb I18n.t("menu.review"), :test_verse_quick_path
     add_breadcrumb I18n.t("memorize_menu.Accuracy Test"), :pre_exam_path
 
     exam_questions  = Array.new  # reference being tested
@@ -1165,7 +1165,7 @@ class MemversesController < ApplicationController
     @tab = "mem"
     @sub = "acctest"
 
-    add_breadcrumb I18n.t("menu.Review"), :test_verse_quick_path
+    add_breadcrumb I18n.t("menu.review"), :test_verse_quick_path
     add_breadcrumb I18n.t("memorize_menu.Accuracy Test"), :test_exam_path
 
     if session[:exam_cntr] # The session variables are not set if user comes straight to this page
@@ -1232,7 +1232,7 @@ class MemversesController < ApplicationController
     @tab = "mem"
     @sub = "acctest"
 
-    add_breadcrumb I18n.t("menu.Review"), :test_verse_quick_path
+    add_breadcrumb I18n.t("menu.review"), :test_verse_quick_path
     add_breadcrumb I18n.t("memorize_menu.Accuracy Test"), :exam_results_path
 
     if session[:exam_answered]
@@ -1290,7 +1290,7 @@ class MemversesController < ApplicationController
     @tab = "mem"
     @sub = "refrec"
 
-    add_breadcrumb I18n.t("menu.Review"), :test_verse_quick_path
+    add_breadcrumb I18n.t("menu.review"), :test_verse_quick_path
     add_breadcrumb I18n.t("memorize_menu.References"), :start_ref_test_path
 
     if session[:ref_test_cntr] # The session variables are not set if user comes straight to this page
@@ -1375,7 +1375,7 @@ class MemversesController < ApplicationController
   def reftest_results
     @tab = "mem"
 
-    add_breadcrumb I18n.t("menu.Review"), :test_verse_quick_path
+    add_breadcrumb I18n.t("menu.review"), :test_verse_quick_path
     add_breadcrumb I18n.t("memorize_menu.Reference Recall"), :reftest_results_path
 
     if session[:reftest_answered]
