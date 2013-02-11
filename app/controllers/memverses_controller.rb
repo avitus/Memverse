@@ -1443,7 +1443,7 @@ class MemversesController < ApplicationController
     @tab = "learn"
     @sub = "learn"
 
-    add_breadcrumb I18n.t("menu.Learn"), :test_verse_quick_path
+    add_breadcrumb I18n.t("menu.learn"), :test_verse_quick_path
     add_breadcrumb I18n.t('learn_menu.Learn'), :drill_verse_path
 
   end
@@ -1456,7 +1456,7 @@ class MemversesController < ApplicationController
     @tab = "learn"
     @sub = "practice"
 
-    add_breadcrumb I18n.t("menu.Learn"), :test_verse_quick_path
+    add_breadcrumb I18n.t("menu.learn"), :test_verse_quick_path
     add_breadcrumb I18n.t('learn_menu.Practice'), :drill_verse_path
 
     @show_feedback = true
