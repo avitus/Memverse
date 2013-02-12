@@ -256,9 +256,9 @@ class Memverse < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   def part_of_entire_chapter?
 
-    # TODO: we should be able to remove this check
+    # TODO: This is a problem. We are somehow ending up with memory verses associated with nonexistent passages.
     if !self.passage
-      Rails.logger.info("**** Memory verse #{self.id} is associated with a nonexistent passage. Adding it to a passage.")
+      Rails.logger.warn("**** Memory verse #{self.id} is associated with a nonexistent passage. Adding it to a passage.")
       self.add_to_passage
     end
 
