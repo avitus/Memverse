@@ -586,8 +586,8 @@ class User < ActiveRecord::Base
 
     end
 
-    # Update all passages 
-    # TODO: this is currently very inefficient. Using update_all, however, does not trigger the callbacks for the passage model 
+    # Update all passages
+    # TODO: this is currently very inefficient. Using update_all, however, does not trigger the callbacks for the passage model
     self.passages.each { |psg|
       psg.update_next_test_date
     }
@@ -597,6 +597,51 @@ class User < ActiveRecord::Base
     # extend future verses if necessary
     # TODO: call a generic load smoothing function to space out verses evenly. Might not be worth doing given that
     # each day's memorization session changes the future load
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Reset passages
+  # ----------------------------------------------------------------------------------------------------------
+  def recreate_passages
+
+    # Delete all existing passages
+    self.passages.delete_all
+
+    # Find all starting (or solo verses) and create a passage
+    Memverse.where(:user_id => self.id, :first_verse => nil).find_each { |mv|
+      pp = Passage.create!(
+
+        :user_id        => self.id,
+
+        :reference      => mv.verse.ref,
+        :translation    => mv.verse.translation,
+
+        :book           => mv.verse.book,
+        :chapter        => mv.verse.chapter,
+        :first_verse    => mv.verse.versenum,
+        :last_verse     => mv.verse.versenum,
+
+        :length         => 1,
+
+        :efactor        => mv.efactor,
+        :test_interval  => mv.test_interval,
+        :rep_n          => 1,
+        :next_test      => mv.next_test,
+        :last_tested    => mv.last_tested )
+
+      if pp
+        mv.passage_id = pp.id
+        mv.save
+      else
+        Rails.logger.error("***** Error creating passage for memory verse (#{mv.ref}) for user (#{self.login})")
+      end
+    }
+
+    # Find all other verses and add to existing passage
+    Memverse.where(:user_id => self.id).where(Memverse.arel_table[:first_verse].not_eq(nil)).find_each { |mv|
+      mv.add_to_passage
+    }
+
   end
 
   # ----------------------------------------------------------------------------------------------------------

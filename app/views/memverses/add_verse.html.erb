@@ -1,10 +1,10 @@
 <% page_title I18n.t :add_new_verses, :scope => 'page_titles' %>
 <% page_description I18n.t :add_new_verses, :scope => 'page_descriptions' %>
 <div class="white-box-bg">
-	
+
 	<!-- SEARCH ENTRY: LEFT COLUMN -->
 	<div id="add-verse-enter-ref">
-		
+
 		<div class="top-heading">
 	    	<h3><span>Add a New Memory Verse</span></h3>
 	    </div>
@@ -17,15 +17,15 @@
 		<div class="verse-field ui-widget">
 			<label class="tag">Enter a reference or keyword</label>
 			<img class="spinner spinner-add-verse" id="ajax_spinner" src="/assets/indicator2.gif" alt="Searching ..." style="display: none" />
-			<%= text_field_tag(:verse, params[:verse], :class => "flex-verse-search", :id => "js_flex-verse-search" )%> 
+			<%= text_field_tag(:verse, params[:verse], :class => "flex-verse-search", :id => "js_flex-verse-search" )%>
 		</div>
 
 		<!-- Add entire chapter -->
 		<div class="add-chapter">
-			<%= link_to 'Add Chapter', '#', :class => "add-chapter-button", :id => "add-chapter" %>						
+			<%= link_to 'Add Chapter', '#', :class => "add-chapter-button", :id => "add-chapter" %>
 		</div>
 
-	</div>	  
+	</div>
 
 	<!-- SEARCH RESULTS: RIGHT COLUMN -->
 	<div id="verse-search-results">
@@ -35,7 +35,7 @@
 			<%= render "verses/scroll" %>
 		</div>
 
-		<!-- Results of single verse retrieval -->    
+		<!-- Results of single verse retrieval -->
 	    <div id="verse-search-single-result">
 
 		    <!-- Display existing verse -->
@@ -55,13 +55,13 @@
 
 	    </div>
 	</div>
-	
+
 	<div class="clr"></div><!-- Clear floats -->
 </div> <!-- white-box-bg -->
 
 <script language="JavaScript" type="text/javascript"><!--
 	$(document).ready(function() {
-	
+
 		// Get user's translation
 		tl = $('#translation').data('tl'); // Get the users translation
 
@@ -69,19 +69,19 @@
 		$(".scrollable").scrollable({ vertical: true, mousewheel: true });
 
 		// Setup jEditable for version changing
-		$('.js_bible-version').editable(function(value, settings) { 
+		$('.js_bible-version').editable(function(value, settings) {
 			tl = value; // change tl
 			flexversesearch($("#js_flex-verse-search").val()); // refresh results
 			return(settings.data[value]);
 			// TODO: Can't figure out why after changing the version and clicking on the select again, it sometimes still defaults to the original 'selected' value
-		}, { 
+		}, {
 			data   : <%= TRANSLATIONS.to_json.html_safe %>,
 			type   : 'select',
 			submit : 'OK'
 		});
 
 		// Verse entry and retrieval
-		$("#js_flex-verse-search").observe_field(0.2, function( ) { 
+		$("#js_flex-verse-search").observe_field(0.2, function( ) {
 			flexversesearch(this.value);
 		});
 
@@ -90,13 +90,13 @@
 			$button   = $('.create-and-add .quick-start-add-button');
 			ref       = parseVerseRef( $.trim($("#js_flex-verse-search").val()) );
 			newVerse  = cleanseVerseText( $("#versetext").val() );
-			if ( ref ) { 
+			if ( ref ) {
 				createVerseAndAdd(ref, tl, newVerse, $button);
 			} else {
 				alert("The Bible reference you have entered is not valid.");
 			};
 		});
-	
+
 		// User adds entire passage
 		$('.add-chapter').on("click", ".add-chapter-button", function() {
 			ref = parsePassageRef( $.trim( $("#js_flex-verse-search").val() ) );
@@ -121,10 +121,12 @@
 	}
 	/* ]]> */
 </script>
+
 <script type="text/javascript" src="http://www.googleadservices.com/pagead/conversion.js">
 </script>
+
 <noscript>
-<div style="display:inline;">
-<img height="1" width="1" style="border-style:none;" alt="" src="http://www.googleadservices.com/pagead/conversion/1055933402/?value=0.25&amp;label=sZWTCNjY5wIQ2ofB9wM&amp;guid=ON&amp;script=0"/>
-</div>
+	<div style="display:inline;">
+		<img height="1" width="1" style="border-style:none;" alt="" src="http://www.googleadservices.com/pagead/conversion/1055933402/?value=0.25&amp;label=sZWTCNjY5wIQ2ofB9wM&amp;guid=ON&amp;script=0"/>
+	</div>
 </noscript>
