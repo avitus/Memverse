@@ -638,7 +638,7 @@ class MemversesController < ApplicationController
         begin
           Memverse.create(:user_id => current_user.id, :verse_id => vs.id)
         rescue Exception => e
-          Rails.logger.error("*** [Memverse save error] Exception while saving #{vs.ref} for user #{current_user.id}: #{e}")
+          Rails.logger.error("=====> [Memverse save error] Exception while saving #{vs.ref} for user #{current_user.id}: #{e}")
         else
           msg = "Added"
         end
@@ -670,7 +670,7 @@ class MemversesController < ApplicationController
         begin
           Memverse.create(:user_id => current_user.id, :verse_id => vs.id)
         rescue Exception => e
-          Rails.logger.error("*** [Memverse save error] Exception while saving #{vs.ref} for user #{current_user.id}: #{e}")
+          Rails.logger.error("=====> [Memverse save error] Exception while saving #{vs.ref} for user #{current_user.id}: #{e}")
         else
           msg = "Added"
         end

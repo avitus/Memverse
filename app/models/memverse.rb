@@ -39,16 +39,17 @@ class Memverse < ActiveRecord::Base
   before_create  :supermemo_init
 
   #---- TODO: these should be obsolete now that we have a Passage model.
-    after_create   :add_links
-    before_destroy :update_links
+  after_create   :add_links
+  before_destroy :update_links
   #--------------------------------------------------------------------------
-
-  after_create   :add_to_passage
-  before_destroy :remove_from_passage
 
   # Update counter cache
   after_save    :update_counter_cache
   after_destroy :update_counter_cache
+
+  # Add/remove from passage when creating/deleting memverse
+  after_create   :add_to_passage
+  before_destroy :remove_from_passage
 
   # Update related passage
   after_save :update_passage
@@ -60,7 +61,6 @@ class Memverse < ActiveRecord::Base
   #       Actually, with the new passage review we could probably dispense with 'skippable'
   # ----------------------------------------------------------------------------------------------------------
   def as_json(options={})
-
     {
       :id            => self.id,
       :ref           => self.verse.ref,
@@ -258,21 +258,12 @@ class Memverse < ActiveRecord::Base
 
     # TODO: This is a problem. We are somehow ending up with memory verses associated with nonexistent passages.
     if !self.passage
-      Rails.logger.warn("**** Memory verse #{self.id} is associated with a nonexistent passage. Adding it to a passage.")
+      Rails.logger.warn("=====> Memory verse #{self.id} is associated with a nonexistent passage. Adding it to a passage.")
       self.add_to_passage
     end
 
     return self.passage.complete_chapter
 
-    # eocv = self.verse.end_of_chapter_verse
-
-    # # Sept 22, 2010 -- eocv occasionally equal to nil ... not sure why
-    # if eocv && lv = self.user.has_verse?(eocv.book, eocv.chapter, eocv.last_verse)
-    #   # check that it's linked to the first verse
-    #   lv.linked_to_first_verse? # TODO: This is where the versenum 0 gets in trouble. Instead we should check if linked to the first verse, assuming that first verse has versenum 1! That will make it work again :)
-    # else
-    #   false
-    # end
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -291,30 +282,6 @@ class Memverse < ActiveRecord::Base
       false
     end
   end
-
-  # ----------------------------------------------------------------------------------------------------------
-  # Returns array of Memverse objects that form passage
-  # ----------------------------------------------------------------------------------------------------------
-  # def passage
-
-  #   return nil if self.solo_verse?
-
-  #   # passage     = Array.new
-
-  #   # if self.is_first_verse?
-  #   #   passage << self
-  #   # else
-  #   #   first_verse = Memverse.find(self.first_verse)
-  #   #   passage << first_verse
-  #   # end
-
-  #   # while passage.last.next_verse
-  #   #   passage << Memverse.find(passage.last.next_verse)
-  #   # end
-
-  #   return self.passage.memverses
-
-  # end
 
   # ----------------------------------------------------------------------------------------------------------
   # Is a verse memorized?
@@ -467,7 +434,6 @@ class Memverse < ActiveRecord::Base
     end
   end
 
-
   # ----------------------------------------------------------------------------------------------------------
   # Checks whether verse is locked
   # Input:  A verse ID
@@ -485,7 +451,6 @@ class Memverse < ActiveRecord::Base
   def verified?
     return self.verse.verified?
   end
-
 
   # ----------------------------------------------------------------------------------------------------------
   # Input: memverse_id
@@ -671,15 +636,16 @@ class Memverse < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   def add_to_passage
 
-    # book | chapter | first_verse | last_verse
+    vs = self.verse
 
-    prior_passage = Passage.where(:user_id => self.user.id, :book => self.verse.book, :chapter => self.verse.chapter, :last_verse  => self.verse.versenum-1).first
-    next_passage  = Passage.where(:user_id => self.user.id, :book => self.verse.book, :chapter => self.verse.chapter, :first_verse => self.verse.versenum+1).first
+    # Check for adjacent passages
+    prior_passage = Passage.where(:user_id => self.user.id, :book => vs.book, :chapter => vs.chapter, :last_verse  => vs.versenum-1).first
+    next_passage  = Passage.where(:user_id => self.user.id, :book => vs.book, :chapter => vs.chapter, :first_verse => vs.versenum+1).first
 
     # Case 1 - No existing passage
     if !prior_passage && !next_passage
-      psg = Passage.create!( :user_id => self.user.id, :translation => self.verse.translation, :length => 1,
-                             :book => self.verse.book, :chapter => self.verse.chapter, :first_verse => self.verse.versenum, :last_verse => self.verse.versenum )
+      psg = Passage.create!( :user_id => self.user.id, :translation => vs.translation, :length => 1,
+                             :book => vs.book, :chapter => vs.chapter, :first_verse => vs.versenum, :last_verse => vs.versenum )
       self.update_attribute( :passage_id, psg.id )
 
     # Case 2 - Verse is between two passages -> merge passages

@@ -126,9 +126,6 @@ class Passage < ActiveRecord::Base
     # All other chapters
     else
 
-      Rails.logger.debug("~--2-~ Setting entire chapter flag for passage: #{self.book} #{self.chapter}:#{self.first_verse}-#{self.last_verse}")
-      Rails.logger.debug("~--2-~ FinalVerse.count is #{FinalVerse.count}. Final verse for #{book} #{chapter} is #{FinalVerse.where(:book => book, :chapter => chapter).first}")
-
       # Only look up FinalVerse when first_verse is 1 or 0
       if ( self.first_verse == 1 || self.first_verse == 0 ) && ( self.last_verse == FinalVerse.where(:book => book, :chapter => chapter).first.last_verse )
         update_attribute( :complete_chapter, true )

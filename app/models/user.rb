@@ -633,7 +633,7 @@ class User < ActiveRecord::Base
         mv.passage_id = pp.id
         mv.save
       else
-        Rails.logger.error("***** Error creating passage for memory verse (#{mv.ref}) for user (#{self.login})")
+        Rails.logger.error("=====> Error creating passage for memory verse (#{mv.ref}) for user (#{self.login})")
       end
     }
 
