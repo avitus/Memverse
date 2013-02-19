@@ -333,21 +333,24 @@ class Verse < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   # Check with biblegateway for correctly entered verse
   # ----------------------------------------------------------------------------------------------------------
-  def web_check
-
+  def web_text
     on_bg = BibleGateway.new(self.translation.to_sym).lookup(self.ref)[:content]
+    if on_bg
+      on_bg = on_bg.gsub(/[’‘]/, "\'")
+      on_bg = on_bg.gsub(/[“”]/, '"')
+    end
+  end
+  
+  def database_text
     in_db = self.text
 
     # Ok to differ in style of quotation marks
     in_db = in_db.gsub(/[’‘]/, "\'")
     in_db = in_db.gsub(/[“”]/, '"')
-
-    if on_bg
-		  on_bg = on_bg.gsub(/[’‘]/, "\'")
-		  on_bg = on_bg.gsub(/[“”]/, '"')
-		end
-
-    (on_bg == in_db) ? true : on_bg  # return what we pulled from web if different
+  end
+  
+  def web_check
+    (web_text == database_text) ? true : web_text
   end
 
   # ----------------------------------------------------------------------------------------------------------
