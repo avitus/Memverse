@@ -340,7 +340,7 @@ class Verse < ActiveRecord::Base
       on_bg = on_bg.gsub(/[“”]/, '"')
     end
   end
-  
+
   def database_text
     in_db = self.text
 
@@ -348,7 +348,7 @@ class Verse < ActiveRecord::Base
     in_db = in_db.gsub(/[’‘]/, "\'")
     in_db = in_db.gsub(/[“”]/, '"')
   end
-  
+
   def web_check
     (web_text == database_text) ? true : web_text
   end
@@ -468,6 +468,7 @@ class Verse < ActiveRecord::Base
   # before_save
   def cleanup_text
     self.text = self.text.gsub(/(\r)?\n/,'').squeeze(" ").strip
+    self.text = self.text.gsub(" -"," —").gsub("- ","— ") # use em dashes when appropriate
   end
 
   # before_create

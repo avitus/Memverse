@@ -3,7 +3,7 @@ describe Verse do
 
   it "should return correct mnemonic" do
     verse = FactoryGirl.create(:verse, :text => "This is an (extremely) important - mnemonic 'method' 'test'; don't you think?")
-    verse.mnemonic.should == "T i a (e) i - m 'm' 't'; d y t?"
+    verse.mnemonic.should == "T i a (e) i — m 'm' 't'; d y t?"
   end
 
   it "mnemonic method should support Portuguese" do
@@ -15,6 +15,21 @@ describe Verse do
     verse = FactoryGirl.create(:verse, :text => "This is a \r\n \r\n \n test test   \n   teest. ")
 	  verse.save!
     verse.text.should == "This is a test test teest."
+  end
+
+  it "should use em dashes when appropriate" do
+    verse1 = FactoryGirl.create(:verse, :versenum => 1, :text => "This is a test -")
+    verse1.save!
+    verse1.text.should == "This is a test —"
+
+    verse2 = FactoryGirl.create(:verse, :versenum => 2, :text => "- which was a test")
+    verse2.save!
+    verse2.text.should == "— which was a test"
+
+    verse3 = FactoryGirl.create(:verse, :versenum => 3, :text => "This is a hyphenated-word")
+    verse3.save!
+    verse3.text.should == "This is a hyphenated-word"
+
   end
 
   describe "entire_chapter_available" do
@@ -59,44 +74,44 @@ describe Verse do
       verse.errors.full_messages.first.should == "Invalid verse number"
     end
   end
-  
+
   describe "web_check" do
     it "should say the verse matches in the database" do
       verse = FactoryGirl.create(:verse, :book => "John", :chapter => 3, :versenum => 16, :translation => "NIV", :text => "For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life.")
       verse.database_text.should == "For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life."
     end
-    
+
     it "should say normal verses match on Bible Gateway" do
       verse = FactoryGirl.create(:verse, :book => "John", :chapter => 3, :versenum => 16, :translation => "KJV", :text => "For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.")
       verse.database_text.should == "For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life."
       verse.web_text.should == verse.database_text
     end
-   
+
     it "should say the first verses of chapters match on Bible Gateway" do
       verse = FactoryGirl.create(:verse, :book => "Genesis", :chapter => 1, :versenum => 1, :translation => "KJV", :text => "In the beginning God created the heaven and the earth.")
       verse.database_text == "In the beginning God created the heaven and the earth."
       verse.web_text.should == verse.database_text
     end
-   
+
     it "should say poetry verses match on Bible Gateway" do
       verse = FactoryGirl.create(:verse, :book => "Psalms", :chapter => 35, :versenum => 2, :translation => "NIV", :text => "Take up shield and buckler; arise and come to my aid.")
       verse.database_text.should == "Take up shield and buckler; arise and come to my aid."
       verse.web_text.should == verse.database_text
     end
-   
+
     it "should say verses with 'LORD' in them match on Bible Gateway" do
       verse = FactoryGirl.create(:verse, :book => "Hosea", :chapter => 14, :versenum => 2, :translation => "NNV", :text => 'Take words with you and return to the LORD. Say to him: “Forgive all our sins and receive us graciously, that we may offer the fruit of our lips.')
       verse.database_text.should == 'Take words with you and return to the LORD. Say to him: "Forgive all our sins and receive us graciously, that we may offer the fruit of our lips.'
       verse.web_text.should == verse.database_text
     end
-   
+
     it "should say verses with all of the above exceptions together match on Bible Gateway" do
       verse = FactoryGirl.create(:verse, :book => "Psalms", :chapter => 9, :versenum => 1, :translation => "NNV", :text => "I will give thanks to you, LORD, with all my heart; I will tell of all your wonderful deeds.")
       verse.database_text.should == "I will give thanks to you, LORD, with all my heart; I will tell of all your wonderful deeds."
       verse.web_text.should == verse.database_text
     end
-    
-    
+
+
     it "should say incorrect verses are incorrect" do
       verse = FactoryGirl.create(:verse, :book => "Psalms", :chapter => 35, :versenum => 3, :translation => "NIV", :text => "This is incorrect")
       verse.database_text.should_not == "Brandish spear and javelin against those who pursue me.  Say to my soul, “I am your salvation.”"
