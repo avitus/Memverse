@@ -730,10 +730,10 @@ class MemversesController < ApplicationController
     # TODO: include tags if possible
 
     if params[:sort_order]
-      @my_verses = current_user.memverses.includes(:verse).order(params[:sort_order])
+      @my_verses = current_user.memverses.includes(:verse, :tags).order(params[:sort_order])
     else
       # default to canonical sort
-      @my_verses = current_user.memverses.includes(:verse).order('verses.book_index, verses.chapter, verses.versenum')
+      @my_verses = current_user.memverses.includes(:verse, :tags).order('verses.book_index, verses.chapter, verses.versenum')
     end
 
     respond_to do |format|
