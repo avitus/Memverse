@@ -25,6 +25,7 @@ TRANSLATIONS = {
     :MSG   => "The Message",
     :AMP   => "Amplified Bible",
     :IRV   => "New International Reader's Version",
+    :NCV   => "New Century Version",
     :UKJ   => "Updated King James Version",
     :GEN   => "Geneva Bible",
     :GRK   => "Biblical Greek",
