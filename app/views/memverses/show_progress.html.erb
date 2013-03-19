@@ -36,6 +36,8 @@
 			<span class=text-highlight><%= link_to 'review the references for your memory verses', start_ref_test_path %></span>, 
 			particularly if you know the text of the verse but have difficulty matching verses with the correct reference.</p>
 		</div> 
+		
+		<div id="container" style="width: 100%; height; 500px"></div>
 	
 	<% end %>
 </div>
@@ -183,7 +185,7 @@ $(document).ready(function() {
 		var google_conversion_label = "dcmtCMja5wIQ2ofB9wM";
 		var google_conversion_value = 0;
 		if (1.0) {
-		  google_conversion_value = 1.0;
+	  google_conversion_value = 1.0;
 		}
 		/* ]]> */
 	</script>
@@ -195,5 +197,123 @@ $(document).ready(function() {
 	</div>
 	</noscript>
 <% end %>
+
+<script type="text/javascript">
+
+var chart; // globally available
+
+$(document).ready(function() {
+	
+	Highcharts.setOptions({
+	    colors: ['#6b9620', '#3c5313', '#e17329', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4']
+	});	
+	
+	var options = {
+	    credits: {
+	        text: 'Memverse.com',
+	        href: 'http://www.memverse.com'
+	    },
+		chart: {
+			renderTo: 'container',
+			defaultSeriesType: 'area'
+		},
+		
+		title: {
+			text: 'My Progress',
+	        style: {
+	            color: '#333333',
+	            fontWeight: 'bold'
+	        }			
+		},
+		xAxis: {        
+	        labels: {
+	            enabled: false
+	        }
+		},
+		yAxis: [{
+			title: {
+				text: 'Consistency',
+		        style: {
+		            color: '#333333',
+		            fontWeight: 'bold'
+		        }				
+			},
+		}, {
+			title: {
+				text: 'Time Required [mins]',
+		        style: {
+		            color: '#333333',
+		            fontWeight: 'bold'
+		        }				
+			},
+			opposite: true,
+		}],
+	    legend: {
+	        itemStyle: {
+	            color: '#333333',
+	            fontWeight: 'bold'
+	        }
+	    },		
+		plotOptions: {
+			series: {
+				lineWidth: 2,
+				fillOpacity: 0.1,
+				marker: {
+					enabled: false,
+					states: {
+						hover: {
+							enabled: true,
+							radius: 4
+						}
+					}
+				},
+				shadow: false,
+				states: {
+					hover: {
+						lineWidth: 1,                  
+					}
+				}			
+			},
+		   	area: {
+		    	fillColor: {
+		        	linearGradient: [0, 0, 0, 450],
+		        	stops: [[0, '#6b9620'],
+		            		[1, 'rgba(0,0,0,0)']],
+		    	},
+		    	lineColor: '#6b9620',
+		    },
+			line: {
+			}
+		},		
+		series: []
+	};	
+	
+
+				
+	$.get('/load_consistency_progress.json', function(data) {
+		
+		var consistency_data       = { data: [], type: "line", yAxis: 1 };
+		var dates		   = [];
+        	        
+    	consistency_data.data = data[0];
+    	consistency_data.name = "Consistency"
+
+    	dates = data[1];
+
+		options.series.push(consistency_data);
+		options.xAxis.categories = dates;
+
+	    // Create the chart
+	    var chart = new Highcharts.Chart(options);				
+							 			 
+	}, "json" );
+	
+	
+	// ========== Get badges =========================
+	mvCheckBadgeCompletion();
+
+});
+
+</script>
 
 
