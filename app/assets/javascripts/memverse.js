@@ -268,6 +268,10 @@ versefeedback = function(correctvs, verseguess, echo, firstletter) {
 				// Remove the dash from the array
 				Array.remove(right_words, y);
 			}
+
+            if (right_words[y] == ""){
+                Array.remove(right_words, y);
+            }
 		}
 	}
 

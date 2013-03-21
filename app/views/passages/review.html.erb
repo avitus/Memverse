@@ -60,6 +60,17 @@
                 });;
             }
 
+            // check for up arrow keypress
+            else if ( e.keyCode === 38 ) {
+                // show current words
+                $(this).parent().find("input").each(function() {
+                    $(this).val( this.name ).animate({ color: '#FFD' }, 1100, 'easeInExpo', function() {
+                        $(this).val('');
+                        $(this).css({color:'#444'}); // same color as .assistance
+                    });
+                });
+            }
+
         });
 
         //------- Scoring a verse ----------------------
