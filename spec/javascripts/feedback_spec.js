@@ -9,7 +9,7 @@ describe("Feedback", function() {
 			correct  : true
 		})
 	});
-	
+
 	it("does not give away complete number when only first numeral has been provided", function() {
 		expect(versefeedback(
 			"And after he became the father of Enosh, Seth lived 807 years and had other sons and daughters.",	// correct text
@@ -20,7 +20,7 @@ describe("Feedback", function() {
 			correct  : false
 		})
 	});
-	
+
 	it("does give number when number is correct", function() {
 		expect(versefeedback(
 			"And after he became the father of Enosh, Seth lived 807 years and had other sons and daughters.",	// correct text
@@ -31,7 +31,7 @@ describe("Feedback", function() {
 			correct  : false
 		})
 	});
-	
+
 	it("should show quotation mark", function() {
 		expect(versefeedback(
 			'And he said, "Behold, I am making a covenant. Before all your people I will do marvels, such as have not been created in all the earth or in any nation. And all the people among whom you are shall see the work of the LORD, for it is an awesome thing that I will do with you.',	// correct text
@@ -42,7 +42,7 @@ describe("Feedback", function() {
 			correct  : false
 		})
 	});
-	
+
 	it("should not accept Spanish without special characters", function() {
 		expect(versefeedback(
 			'Por medio de él todas las cosas fueron creadas; sin él, nada de lo creado llegó a existir.',	// correct text
@@ -53,7 +53,7 @@ describe("Feedback", function() {
 			correct  : false
 		})
 	});
-	
+
 	it("should support Portuguese", function() {
 		expect(versefeedback(
 			'E fez Deus a expansão, e fez separação entre as águas que estavam debaixo da expansão e as águas que estavam sobre a expansão; e assim foi.',	// correct text
@@ -64,7 +64,7 @@ describe("Feedback", function() {
 			correct  : false
 		})
 	});
-	
+
 	it("should accept first letter if mnemonic disabled", function() {
 		expect(versefeedback(
 			'For God so loved the world that he gave his one and only Son',		// correct text
@@ -76,7 +76,7 @@ describe("Feedback", function() {
 			correct  : true
 		})
 	});
-	
+
 	it("should accept accented first letters if mnemonic disabled", function() {
 		expect(versefeedback(
 			'En él estaba la vida, y la vida era la luz de los hombres.',		// correct text
@@ -88,7 +88,7 @@ describe("Feedback", function() {
 			correct  : true
 		})
 	});
-	
+
 	it("should recognize last first-letter without a subsequent space or punctuation mark", function() {
 		expect(versefeedback(
 			'This is a test.',		// correct text
@@ -100,7 +100,7 @@ describe("Feedback", function() {
 			correct  : true
 		})
 	});
-	
+
 	it("should accept some complete words in text that's primarily first letters", function() {
 		expect(versefeedback(
 			'This is simply a test to see whether the first-letter and complete words functionality works',		// correct text
@@ -112,7 +112,7 @@ describe("Feedback", function() {
 			correct  : false
 		})
 	});
-	
+
 	it("should not give feedback if disabled", function() {
 		expect(versefeedback(
 			'This is a test',		// correct text
@@ -124,7 +124,7 @@ describe("Feedback", function() {
 			correct  : false
 		})
 	});
-	
+
 	it("should not give feedback if disabled but still say if correct", function() {
 		expect(versefeedback(
 			'This is a test.',		// correct text
@@ -136,7 +136,7 @@ describe("Feedback", function() {
 			correct  : true
 		})
 	});
-	
+
 	it("should give ... to an incorrect first first letter even when first letter is disabled", function() {
 		expect(versefeedback(
 			'This is a test',		// correct text
@@ -148,7 +148,7 @@ describe("Feedback", function() {
 			correct  : false
 		})
 	});
-	
+
 	it("should detect any two subsequent single letters as first letters", function() {
 		expect(versefeedback(
 			'This is an interesting test.',		// correct text
@@ -157,6 +157,28 @@ describe("Feedback", function() {
 			true					// allow first-letter
 		)).toEqual({
 			feedtext : 'This is an interesting test. <div id="matchbox"><p>Correct</p></div>',
+			correct  : true
+		})
+	});
+
+	it("handles hyphens at the end", function() {
+		expect(versefeedback(
+			"This is a verse with a hyphen at the end -",	// correct text
+			"This is a verse with a hyphen at the end",		// user guess
+			true											// feedback enabled
+		)).toEqual({
+			feedtext : 'This is a hyphen at the end <div id="matchbox"><p>Correct</p></div>',
+			correct  : true
+		})
+	});
+
+	it("handles dashes at the end", function() {
+		expect(versefeedback(
+			"This is a verse with a dash at the end —",		// correct text
+			"This is a verse with a dash at the end",		// user guess
+			true											// feedback enabled
+		)).toEqual({
+			feedtext : 'This is a verse with a dash at the end — <div id="matchbox"><p>Correct</p></div>',
 			correct  : true
 		})
 	});

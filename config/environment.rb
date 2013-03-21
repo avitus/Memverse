@@ -25,6 +25,7 @@ TRANSLATIONS = {
     :MSG   => "The Message",
     :AMP   => "Amplified Bible",
     :IRV   => "New International Reader's Version",
+    :NCV   => "New Century Version",
     :UKJ   => "Updated King James Version",
     :GEN   => "Geneva Bible",
     :GRK   => "Biblical Greek",
@@ -42,7 +43,8 @@ TRANSLATIONS = {
     :MBB   => "Magandang Balita Biblia",
     :SPB   => "Svenska Folkbibeln",
     :ACF   => "Almeida Corrigida e Fiel",
-    :ARA   => "Almeida Revista e Atualizada"
+    :ARA   => "Almeida Revista e Atualizada",
+    :HCV   => "Haitian Creole Version"
   }
 
 MAJORS = {

@@ -153,6 +153,7 @@ MemverseApp::Application.routes.draw do
 
   # Routes for graphs
   match '/load_progress/',         :to => 'chart#load_progress',             :as => 'load_progress'
+  match '/load_consistency_progress/', :to => 'chart#load_consistency_progress', :as => 'load_consistency_progress'
   match '/global_data',            :to => 'chart#global_data',               :as => 'global_data'
 
   # Routes for chat channels

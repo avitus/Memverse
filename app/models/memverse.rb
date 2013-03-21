@@ -744,15 +744,20 @@ class Memverse < ActiveRecord::Base
     self.status       = self.user.overworked? ? "Pending" : "Learning"
 
     # Add multi-verse linkage
-    self.prev_verse   = self.get_prev_verse
-    self.next_verse   = self.get_next_verse
-    self.first_verse  = self.get_first_verse
+    # NOTE: ACW commented out to see if this was causing some kind of caching such that add_links wasn't working
+    # self.prev_verse   = self.get_prev_verse
+    # self.next_verse   = self.get_next_verse
+    # self.first_verse  = self.get_first_verse
   end
 
   # ----------------------------------------------------------------------------------------------------------
   # Add links from other verses [hook: after_create]
   # ----------------------------------------------------------------------------------------------------------
   def add_links
+
+    while Memverse.where(:id => self.id).first.nil? # wait for verse to exist in db before proceeding
+      sleep 0.1
+    end
 
     # Adding inbound links
     if self.prev_verse ||= self.get_prev_verse  # Attempt to fix race condition
