@@ -660,11 +660,17 @@ class MemversesController < ApplicationController
     ch = params[:ch]
     tl = params[:tl] || current_user.translation
 
+
+    # Create passage first
+    psg = Passage.create!( :user_id => current_user.id, :translation => tl, :book => bk, :chapter => ch )
+
     chapter_verses = Verse.where("book = ? and chapter = ? and translation = ? and versenum not in (?)", bk, ch, tl, 0)
 
     chapter_verses.each do |vs|
       if current_user.has_verse?(vs.book, vs.chapter, vs.versenum)
         msg = "You already have #{vs.ref} in a different translation"
+        # Need to assign verse to new passage
+        # TODO: either reassign verse or remove all passages in this chapter earlier on
       else
         # Save verse as a memory verse for user
         begin
