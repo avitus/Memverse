@@ -187,8 +187,7 @@ describe Passage do
       last_mv.reload
       psg2 = last_mv.passage
 
-      @psg.reload
-      # @psg.length.should == 3
+      @psg.reload.length.should == 3
       @psg.first_verse.should == 2
       @psg.last_verse.should == 4
       @psg.reference.should == "Proverbs 3:2-4"

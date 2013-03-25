@@ -662,8 +662,9 @@ class MemversesController < ApplicationController
 
 
     # Create passage first
-    psg = Passage.create!( :user_id => current_user.id, :translation => tl, :book => bk, :chapter => ch )
+    # psg = Passage.create!( :user_id => current_user.id, :translation => tl, :book => bk, :chapter => ch )
 
+    # Find all the verses for the chapter
     chapter_verses = Verse.where("book = ? and chapter = ? and translation = ? and versenum not in (?)", bk, ch, tl, 0)
 
     chapter_verses.each do |vs|

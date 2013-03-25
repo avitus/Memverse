@@ -657,8 +657,12 @@ class Memverse < ActiveRecord::Base
       next_passage.expand( self )
 
     # Case 4 - Verse is new last verse of existing passage
-    else
+    elsif prior_passage
       prior_passage.expand( self )
+
+    # Shouldn't ever arrive here
+    else
+
     end
 
   end
