@@ -5,7 +5,7 @@ namespace :utils do
   #--------------------------------------------------------------------------------------------
   # Run backup
   #--------------------------------------------------------------------------------------------
-  desc "Detect duplicate verses"
+  desc "Backup entire site"
   task :backup => :environment do
 
     sh "bundle exec backup perform -t site_backup -c config/backup/site_backup.rb"
