@@ -3,6 +3,16 @@ namespace :utils do
   # include Parser
 
   #--------------------------------------------------------------------------------------------
+  # Run backup
+  #--------------------------------------------------------------------------------------------
+  desc "Detect duplicate verses"
+  task :backup => :environment do
+
+    sh "bundle exec backup perform -t site_backup -c config/backup/site_backup.rb"
+
+  end
+
+  #--------------------------------------------------------------------------------------------
   # Group user's memory verses into passages. This should be a one time operation.
   #--------------------------------------------------------------------------------------------
   desc "Clean up tag cloud"
