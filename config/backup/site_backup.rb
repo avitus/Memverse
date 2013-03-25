@@ -57,7 +57,7 @@ Backup::Model.new(:site_backup, 'Description for site_backup') do
   #
   store_with Local do |local|
     local.path       = "~/memverse.com/auto_backup"
-    local.keep       = 5
+    local.keep       = 10
   end
 
   ##
