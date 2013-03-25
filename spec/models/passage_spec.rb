@@ -179,15 +179,18 @@ describe Passage do
       mv2     = @psg.memverses.includes(:verse).where('verses.versenum' => 6).first
       last_mv = @psg.memverses.includes(:verse).order('verses.versenum').last
 
-      # expect {
+      expect {
         mv1.destroy
+        @psg.reload
+        mv2.reload  # Need to reload mv2 since it now belongs to a different passage
         mv2.destroy
-      # }.to change(Passage, :count).by(1)
+      }.to change(Passage, :count).by(1)
 
       last_mv.reload
       psg2 = last_mv.passage
 
-      @psg.reload.length.should == 3
+      @psg.reload
+      @psg.length.should == 3
       @psg.first_verse.should == 2
       @psg.last_verse.should == 4
       @psg.reference.should == "Proverbs 3:2-4"
@@ -195,7 +198,7 @@ describe Passage do
       psg2.first_verse.should == 7
       psg2.last_verse.should == 10
       psg2.length.should == 4
-      psg2.memverses.count.should == 2-4
+      psg2.memverses.count.should == 4
       psg2.reference.should == "Proverbs 3:7-10"
     end
 
