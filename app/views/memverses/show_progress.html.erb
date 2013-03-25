@@ -37,8 +37,6 @@
 			particularly if you know the text of the verse but have difficulty matching verses with the correct reference.</p>
 		</div>
 
-		<div id="container" style="width: 100%; height; 500px"></div>
-
 	<% end %>
 </div>
 
@@ -131,6 +129,37 @@ $(document).ready(function() {
 		},
 		series: []
 	};
+
+	$.get('/load_progress.json', function(data) {
+
+		var learning_data  = { data: [] };
+		var memorized_data = {	data: [],
+								fillcolor: { stops: [[0, '#3c5313'], [1, 'rgba(0,0,0,0)']] },
+								lineColor: '#3c5313'
+							  };
+		var time_req       = { data: [], type: "line", yAxis: 1 };
+		var dates		   = [];
+
+    	learning_data.data = data[0];
+    	learning_data.name = "Learning"
+
+    	memorized_data.data = data[1];
+    	memorized_data.name = "Memorized";
+
+    	time_req.data = data[2];
+    	time_req.name = "Time Required [mins]";
+
+    	dates = data[3];
+
+		options.series.push(learning_data);
+		options.series.push(memorized_data);
+		options.series.push(time_req);
+		options.xAxis.categories = dates;
+
+	    // Create the chart
+	    var chart = new Highcharts.Chart(options);
+
+	}, "json" );
 
 
 	// ========== Get badges =========================
