@@ -78,7 +78,7 @@ Backup::Model.new(:site_backup, 'Description for site_backup') do
     db.api_secret  = "5y5s5ltv2vyepzg"
     db.access_type = :app_folder
     db.path        = "/"
-    db.keep        = 25
+    db.keep        = 4
   end
 
   ##
