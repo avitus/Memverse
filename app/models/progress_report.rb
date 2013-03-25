@@ -16,4 +16,8 @@ class ProgressReport < ActiveRecord::Base
 
   protected
   
+  def setup_consistency
+    self.consistency = ProgressReport.where("date(created_at) BETWEEN ? AND ? ", self.created_at - 1.year, self.created_at)
+  end
+  
 end

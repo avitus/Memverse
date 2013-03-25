@@ -84,7 +84,7 @@ class ChartController < ApplicationController
     if !entries.empty?
       # Build data series
       entries.each { |entry|
-        y_consistency           << entry.completed_sessions
+        y_consistency           << entry.user.completed_sessions
         x_consistency_date      << entry.entry_date.to_s
       }
     else
