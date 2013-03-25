@@ -3,42 +3,42 @@
 
 <div class="white-box-with-margins">
 	<% if current_user.memverses.length == 0 %>
-	
+
 		<h2>
 			You first need to <%= link_to 'add some memory verses', :action => 'add_verse' %>.
 		</h2>
-	
+
 	<% elsif !current_user.finished_a_mem_session? %>
-	
+
 		You need to complete a <%= link_to 'memorization session', :action => 'test_verse_quick' %> before your progress is monitored.
-	
+
 	<% else %>
-	
+
 		<div>
 			<p>
-				You have completed <%= current_user.completed_sessions(:year) %> memorization sessions over the past year 
+				You have completed <%= current_user.completed_sessions(:year) %> memorization sessions over the past year
 				and have memorized <%= current_user.memorized %> of your <%= current_user.memverses.count %> memory verses.
 			</p>
 		</div>
-	
+
 		<div id="container" style="width: 100%; height: 500px"></div>
-	
+
 		<div>
-			<p>You currently need about <span class=text-highlight><%=current_user.work_load%> minutes per day</span> on average to review your memory verses. If this 
-			is less time than you would like to spend, we recommend 
-			<span class=text-highlight><%= link_to 'adding one or two more verses', add_verse_path %></span>. Remember that 
+			<p>You currently need about <span class=text-highlight><%=current_user.work_load%> minutes per day</span> on average to review your memory verses. If this
+			is less time than you would like to spend, we recommend
+			<span class=text-highlight><%= link_to 'adding one or two more verses', add_verse_path %></span>. Remember that
 			as you memorize your verses, the required time will go down.</p>
-			
-			<p>Verses are classified as "Memorized" once the interval between review has grown to more than 30 days. The interval starts at 1 day 
+
+			<p>Verses are classified as "Memorized" once the interval between review has grown to more than 30 days. The interval starts at 1 day
 			and increases as you correctly recall the verse.</p>
-			
-			<p>If you have extra time, it's a good idea to occasionally 
-			<span class=text-highlight><%= link_to 'review the references for your memory verses', start_ref_test_path %></span>, 
+
+			<p>If you have extra time, it's a good idea to occasionally
+			<span class=text-highlight><%= link_to 'review the references for your memory verses', start_ref_test_path %></span>,
 			particularly if you know the text of the verse but have difficulty matching verses with the correct reference.</p>
-		</div> 
-		
+		</div>
+
 		<div id="container" style="width: 100%; height; 500px"></div>
-	
+
 	<% end %>
 </div>
 
@@ -47,11 +47,11 @@
 var chart; // globally available
 
 $(document).ready(function() {
-	
+
 	Highcharts.setOptions({
 	    colors: ['#6b9620', '#3c5313', '#e17329', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4']
-	});	
-	
+	});
+
 	var options = {
 	    credits: {
 	        text: 'Memverse.com',
@@ -61,15 +61,15 @@ $(document).ready(function() {
 			renderTo: 'container',
 			defaultSeriesType: 'area'
 		},
-		
+
 		title: {
 			text: 'My Progress',
 	        style: {
 	            color: '#333333',
 	            fontWeight: 'bold'
-	        }			
+	        }
 		},
-		xAxis: {        
+		xAxis: {
 	        labels: {
 	            enabled: false
 	        }
@@ -80,7 +80,7 @@ $(document).ready(function() {
 		        style: {
 		            color: '#333333',
 		            fontWeight: 'bold'
-		        }				
+		        }
 			},
 		}, {
 			title: {
@@ -88,7 +88,7 @@ $(document).ready(function() {
 		        style: {
 		            color: '#333333',
 		            fontWeight: 'bold'
-		        }				
+		        }
 			},
 			opposite: true,
 		}],
@@ -97,7 +97,7 @@ $(document).ready(function() {
 	            color: '#333333',
 	            fontWeight: 'bold'
 	        }
-	    },		
+	    },
 		plotOptions: {
 			series: {
 				lineWidth: 2,
@@ -114,9 +114,9 @@ $(document).ready(function() {
 				shadow: false,
 				states: {
 					hover: {
-						lineWidth: 1,                  
+						lineWidth: 1,
 					}
-				}			
+				}
 			},
 		   	area: {
 		    	fillColor: {
@@ -128,44 +128,11 @@ $(document).ready(function() {
 		    },
 			line: {
 			}
-		},		
+		},
 		series: []
-	};	
-	
+	};
 
-				
-	$.get('/load_progress.json', function(data) {
-		
-		var learning_data  = { data: [] };
-		var memorized_data = {	data: [], 
-								fillcolor: { stops: [[0, '#3c5313'], [1, 'rgba(0,0,0,0)']] },
-								lineColor: '#3c5313'														
-							  };
-		var time_req       = { data: [], type: "line", yAxis: 1 };
-		var dates		   = [];
-        	        
-    	learning_data.data = data[0];
-    	learning_data.name = "Learning"
 
-    	memorized_data.data = data[1];
-    	memorized_data.name = "Memorized";
-
-    	time_req.data = data[2];
-    	time_req.name = "Time Required [mins]";
-    	
-    	dates = data[3];
-
-		options.series.push(learning_data);
-		options.series.push(memorized_data);
-		options.series.push(time_req);
-		options.xAxis.categories = dates;
-
-	    // Create the chart
-	    var chart = new Highcharts.Chart(options);				
-							 			 
-	}, "json" );
-	
-	
 	// ========== Get badges =========================
 	mvCheckBadgeCompletion();
 
@@ -197,123 +164,4 @@ $(document).ready(function() {
 	</div>
 	</noscript>
 <% end %>
-
-<script type="text/javascript">
-
-var chart; // globally available
-
-$(document).ready(function() {
-	
-	Highcharts.setOptions({
-	    colors: ['#6b9620', '#3c5313', '#e17329', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4']
-	});	
-	
-	var options = {
-	    credits: {
-	        text: 'Memverse.com',
-	        href: 'http://www.memverse.com'
-	    },
-		chart: {
-			renderTo: 'container',
-			defaultSeriesType: 'area'
-		},
-		
-		title: {
-			text: 'My Progress',
-	        style: {
-	            color: '#333333',
-	            fontWeight: 'bold'
-	        }			
-		},
-		xAxis: {        
-	        labels: {
-	            enabled: false
-	        }
-		},
-		yAxis: [{
-			title: {
-				text: 'Consistency',
-		        style: {
-		            color: '#333333',
-		            fontWeight: 'bold'
-		        }				
-			},
-		}, {
-			title: {
-				text: 'Time Required [mins]',
-		        style: {
-		            color: '#333333',
-		            fontWeight: 'bold'
-		        }				
-			},
-			opposite: true,
-		}],
-	    legend: {
-	        itemStyle: {
-	            color: '#333333',
-	            fontWeight: 'bold'
-	        }
-	    },		
-		plotOptions: {
-			series: {
-				lineWidth: 2,
-				fillOpacity: 0.1,
-				marker: {
-					enabled: false,
-					states: {
-						hover: {
-							enabled: true,
-							radius: 4
-						}
-					}
-				},
-				shadow: false,
-				states: {
-					hover: {
-						lineWidth: 1,                  
-					}
-				}			
-			},
-		   	area: {
-		    	fillColor: {
-		        	linearGradient: [0, 0, 0, 450],
-		        	stops: [[0, '#6b9620'],
-		            		[1, 'rgba(0,0,0,0)']],
-		    	},
-		    	lineColor: '#6b9620',
-		    },
-			line: {
-			}
-		},		
-		series: []
-	};	
-	
-
-				
-	$.get('/load_consistency_progress.json', function(data) {
-		
-		var consistency_data       = { data: [], type: "line", yAxis: 1 };
-		var dates		   = [];
-        	        
-    	consistency_data.data = data[0];
-    	consistency_data.name = "Consistency"
-
-    	dates = data[1];
-
-		options.series.push(consistency_data);
-		options.xAxis.categories = dates;
-
-	    // Create the chart
-	    var chart = new Highcharts.Chart(options);				
-							 			 
-	}, "json" );
-	
-	
-	// ========== Get badges =========================
-	mvCheckBadgeCompletion();
-
-});
-
-</script>
-
 
