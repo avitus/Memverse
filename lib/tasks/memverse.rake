@@ -137,7 +137,19 @@ namespace :utils do
         Passage.where(:user_id => u.id, :translation => psg.translation, :book => psg.book, :chapter => psg.chapter).find_each { |near_psg|
 
           if psg.first_verse == near_psg.last_verse + 1
-            puts( "[#{u.id} - #{u.email}] Passage #{psg.reference} should be joined to passage #{near_psg.reference}")
+            puts("[#{u.id} - #{u.email}] Passage #{psg.reference} should be joined to passage #{near_psg.reference}")
+
+            # display offending memory verses
+            puts("   Passage 1" )
+            psg.memverses.each { |mv|
+              puts("   [#{mv.id} - #{mv.verse.ref} ] was created at #{mv.created_at}")
+            }
+
+            puts("   Passage 2" )
+            near_psg.memverses.each { |mv|
+              puts("   [#{mv.id} - #{mv.verse.ref} ] was created at #{mv.created_at}")
+            }
+
             psg.absorb( near_psg ) # Join the two passages
           end
 
