@@ -124,7 +124,7 @@ describe Passage do
   end
 
   # ==============================================================================================
-  # Delete a memory verse
+  # Deleting memory verses from passage
   # ==============================================================================================
   describe "delete a memory verse from an existing passage" do
 
@@ -200,6 +200,13 @@ describe Passage do
       psg2.length.should == 4
       psg2.memverses.count.should == 4
       psg2.reference.should == "Proverbs 3:7-10"
+    end
+
+    it "should remove passage from database if it has no verses" do
+      expect {
+        @psg.memverses.destroy_all
+      }.to change(Passage, :count).by(-1)
+
     end
 
   end
