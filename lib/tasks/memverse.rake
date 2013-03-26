@@ -123,6 +123,34 @@ namespace :utils do
   end
 
   #--------------------------------------------------------------------------------------------
+  # Locate broken passages
+  #--------------------------------------------------------------------------------------------
+  desc "Locate broken passages"
+  task :locate_broken_passages => :environment do
+
+    puts("Locating broken passages for #{User.active.count} users.")
+
+    User.active.find_each { |u|
+
+      Passage.where(:user_id => u.id).find_each { |psg|
+
+        Passage.where(:user_id => u.id, :translation => psg.translation, :book => psg.book, :chapter => psg.chapter).find_each { |near_psg|
+
+          if psg.first_verse == near_psg.last_verse + 1
+            puts( "[#{u.id} - #{u.email}] Passage #{psg.reference} should be joined to passage #{near_psg.reference}")
+          end
+
+        }
+
+      }
+    }
+
+    puts "=== Finished ==="
+
+  end
+
+
+  #--------------------------------------------------------------------------------------------
   # Locate out of bound verses -- no longer seems to occur. Run occasionally
   #--------------------------------------------------------------------------------------------
   desc "Locate out of bound verses"
