@@ -32,7 +32,7 @@ class Passage < ActiveRecord::Base
   end
 
   # ----------------------------------------------------------------------------------------------------------
-  # Combine two passages into one. Method accepts an optional join (linking) verse
+  # Combine two passages into one. Method accepts an optional join (linking) verse. Order of join doesn't matter
   # ----------------------------------------------------------------------------------------------------------
   def absorb( second_passage, join_mv=nil )
 

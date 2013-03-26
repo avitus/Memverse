@@ -138,6 +138,7 @@ namespace :utils do
 
           if psg.first_verse == near_psg.last_verse + 1
             puts( "[#{u.id} - #{u.email}] Passage #{psg.reference} should be joined to passage #{near_psg.reference}")
+            psg.absorb( near_psg ) # Join the two passages
           end
 
         }
