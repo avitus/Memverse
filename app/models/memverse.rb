@@ -762,10 +762,6 @@ class Memverse < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   def add_links
 
-    while Memverse.where(:id => self.id).first.nil? # wait for verse to exist in db before proceeding
-      sleep 0.1
-    end
-
     # Adding inbound links
     if self.prev_verse ||= self.get_prev_verse  # Attempt to fix race condition
       prior_vs             = Memverse.find(self.prev_verse)
