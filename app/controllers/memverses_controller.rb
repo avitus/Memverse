@@ -417,7 +417,7 @@ class MemversesController < ApplicationController
 
     mv_ids = params[:mv]
 
-  # ==== Verse IDs were passed from manage_verses or similar form ====
+    # ==== Verse IDs were passed from manage_verses or similar form ====
     if (!mv_ids.blank?) and (params[:Prompt])
 
       @mv_list = Memverse.find(mv_ids, :include => :verse)
@@ -536,7 +536,6 @@ class MemversesController < ApplicationController
       render :action => edit_verse
     end
   end
-
 
   # ----------------------------------------------------------------------------------------------------------
   # Verify a verse
@@ -717,29 +716,6 @@ class MemversesController < ApplicationController
   end
 
   # ----------------------------------------------------------------------------------------------------------
-  # Delete a memory verse
-  # TODO: make this a method of Memverse.rb
-  # ----------------------------------------------------------------------------------------------------------
-  def destroy_mv
-
-    # We need to remove inter-verse linkage
-    dead_mv   = Memverse.find(params[:id])
-
-    # Remove verse from memorization queue
-    mem_queue = session[:mv_queue]
-
-    # We need to check that there is a verse sequence and also that the array isn't empty
-    if !mem_queue.blank?
-      # Remove verse from the memorization queue if it is sitting in there
-      mem_queue.delete(dead_mv.id)
-    end
-
-    dead_mv.remove_mv  # remove verse and sort out next and previous pointers
-
-    redirect_to :action => 'manage_verses'
-  end
-
-  # ----------------------------------------------------------------------------------------------------------
   # Manage verses - used to display verse management page to user
   # ----------------------------------------------------------------------------------------------------------
   def manage_verses
@@ -768,39 +744,44 @@ class MemversesController < ApplicationController
   end
 
   # ----------------------------------------------------------------------------------------------------------
-  # Manage verses - used to handle the manage verses form (delete a lot of verses or show selected)
-  # TODO: see above ... should re-use code from above and call a model method
+  # Delete memory verses - used to handle the manage verses form (delete a lot of verses or show selected)
   # ----------------------------------------------------------------------------------------------------------
   def delete_verses
 
     mv_ids = params[:mv]
 
     if (!mv_ids.blank?) and (params['Delete'])
+
       mv_ids.each { |mv_id|
 
-        # Find verse in DB
-        logger.debug("*** Finding mv with id: #{mv_id}")
-        mv = Memverse.find(mv_id)
+        # We need to lock the user in order to prevent a race condition when multiple verses are deleted simultaneously
+        ActiveRecord::Base.transaction do
 
-        # Remove verse from memorization queue
-        mem_queue = session[:mv_queue]
-        # We need to check that there is a verse sequence and also that the array isn't empty
-        if !mem_queue.blank?
-          logger.debug("*** Found session queue with verses")
-          # Remove verse from the memorization queue if it is sitting in there
-          mem_queue.delete(mv_id)
-        end
+          current_user.lock! # hold lock on user for each verse using pessimistic locking at database level
 
-        mv.destroy
+          # Remove verse from memorization queue
+          mem_queue = session[:mv_queue]
+          if !mem_queue.blank?
+            mem_queue.delete( mv_id ) # Remove verse from the memorization queue if it is sitting in there
+          end
+
+          mv = Memverse.find( mv_id )
+          mv.destroy
+
+        end # of transaction
 
       }
+
       flash[:notice] = "Memory verses have been deleted."
       redirect_to :action => 'manage_verses'
+
     elsif (mv_ids.blank?)
-      flash[:notice] = "Action not performed as no verses were selected."
+      flash[:notice] = "You did not select any verses."
       redirect_to :action => 'manage_verses'
+
     else
       redirect_to :action => 'manage_verses'
+
     end
 
   end
