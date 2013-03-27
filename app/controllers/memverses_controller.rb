@@ -636,7 +636,13 @@ class MemversesController < ApplicationController
       else
         # Save verse as a memory verse for user
         begin
-          Memverse.create(:user_id => current_user.id, :verse_id => vs.id)
+          # We need to lock the user in order to prevent a race condition when two memverses are created simultaneously
+          # Without the lock, adding two adjacent verses occasionally results in two separate passages
+          ActiveRecord::Base.transaction do
+            current_user.lock!
+            Memverse.create(:user_id => current_user.id, :verse_id => vs.id)
+          end
+
         rescue Exception => e
           Rails.logger.error("=====> [Memverse save error] Exception while saving #{vs.ref} for user #{current_user.id}: #{e}")
         else
@@ -670,12 +676,17 @@ class MemversesController < ApplicationController
     chapter_verses.each do |vs|
       if current_user.has_verse?(vs.book, vs.chapter, vs.versenum)
         msg = "You already have #{vs.ref} in a different translation"
-        # Need to assign verse to new passage
-        # TODO: either reassign verse or remove all passages in this chapter earlier on
+
       else
         # Save verse as a memory verse for user
         begin
-          Memverse.create(:user_id => current_user.id, :verse_id => vs.id)
+          # We need to lock the user in order to prevent a race condition when two memverses are created simultaneously
+          # Without the lock, adding two adjacent verses occasionally results in two separate passages
+          ActiveRecord::Base.transaction do
+            current_user.lock!
+            Memverse.create(:user_id => current_user.id, :verse_id => vs.id)
+          end
+
         rescue Exception => e
           Rails.logger.error("=====> [Memverse save error] Exception while saving #{vs.ref} for user #{current_user.id}: #{e}")
         else
