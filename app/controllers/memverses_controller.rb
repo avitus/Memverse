@@ -629,26 +629,30 @@ class MemversesController < ApplicationController
   	vs = Verse.find(params[:id])
 
   	if vs and current_user
-      if current_user.has_verse_id?(vs)
-        msg = "Previously Added"
-      elsif current_user.has_verse?(vs.book, vs.chapter, vs.versenum)
-        msg = "Added in another translation"
-      else
-        # Save verse as a memory verse for user
-        begin
-          # We need to lock the user in order to prevent a race condition when two memverses are created simultaneously
-          # Without the lock, adding two adjacent verses occasionally results in two separate passages
-          ActiveRecord::Base.transaction do
-            current_user.lock!
-            Memverse.create(:user_id => current_user.id, :verse_id => vs.id)
-          end
 
-        rescue Exception => e
-          Rails.logger.error("=====> [Memverse save error] Exception while saving #{vs.ref} for user #{current_user.id}: #{e}")
+      # We need to lock the user in order to prevent a race condition when two memverses are created simultaneously
+      # Without the lock, adding two adjacent verses occasionally results in two separate passages
+      ActiveRecord::Base.transaction do
+
+        current_user.lock! # Hold pessimistic user lock until memverse has been created and all hooks have executed
+
+        if current_user.has_verse_id?(vs)
+          msg = "Previously Added"
+        elsif current_user.has_verse?(vs.book, vs.chapter, vs.versenum)
+          msg = "Added in another translation"
         else
-          msg = "Added"
+          # Save verse as a memory verse for user
+          begin
+            Memverse.create(:user_id => current_user.id, :verse_id => vs.id)
+          rescue Exception => e
+            Rails.logger.error("=====> [Memverse save error] Exception while saving #{vs.ref} for user #{current_user.id}: #{e}")
+          else
+            msg = "Added"
+          end
         end
-      end
+
+      end # of transaction
+
     else
       msg = "Error"
     end
@@ -666,33 +670,34 @@ class MemversesController < ApplicationController
     ch = params[:ch]
     tl = params[:tl] || current_user.translation
 
-
-    # Create passage first
-    # psg = Passage.create!( :user_id => current_user.id, :translation => tl, :book => bk, :chapter => ch )
-
     # Find all the verses for the chapter
     chapter_verses = Verse.where("book = ? and chapter = ? and translation = ? and versenum not in (?)", bk, ch, tl, 0)
 
+    # Add verses one at a time
     chapter_verses.each do |vs|
-      if current_user.has_verse?(vs.book, vs.chapter, vs.versenum)
-        msg = "You already have #{vs.ref} in a different translation"
 
-      else
-        # Save verse as a memory verse for user
-        begin
-          # We need to lock the user in order to prevent a race condition when two memverses are created simultaneously
-          # Without the lock, adding two adjacent verses occasionally results in two separate passages
-          ActiveRecord::Base.transaction do
-            current_user.lock!
-            Memverse.create(:user_id => current_user.id, :verse_id => vs.id)
-          end
+      # We need to lock the user in order to prevent a race condition when two memverses are created simultaneously
+      # Without the lock, adding two adjacent verses occasionally results in two separate passages
+      ActiveRecord::Base.transaction do
 
-        rescue Exception => e
-          Rails.logger.error("=====> [Memverse save error] Exception while saving #{vs.ref} for user #{current_user.id}: #{e}")
+        current_user.lock! # hold lock on user for each verse using pessimistic locking at database level
+
+        if current_user.has_verse?(vs.book, vs.chapter, vs.versenum)
+          msg = "You already have #{vs.ref} in a different translation"
+
         else
-          msg = "Added"
+          # Save verse as a memory verse for user
+          begin
+            Memverse.create(:user_id => current_user.id, :verse_id => vs.id)
+          rescue Exception => e
+            Rails.logger.error("=====> [Memverse save error] Exception while saving #{vs.ref} for user #{current_user.id}: #{e}")
+          else
+            msg = "Added"
+          end
         end
-      end
+
+      end # of transaction
+
     end
 
     render :json => {:msg => "Added Chapter" }
