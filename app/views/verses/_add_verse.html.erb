@@ -1,20 +1,20 @@
 <!-- Search for a verse -->
 <div class="quick-start-enter-verse">
-	
+
 	<div class="top-heading">
     	<h3><span>Select a Bible Verse</span></h3>
     </div>
-    
+
     <!-- Reference entry box -->
     <div class="verse-field">
     	<div class="ui-widget">
     		<label class="tag">Verse:</label>
-        	<%= text_field_tag(:verse, params[:verse], :class => "verse-search-by-tl-and-display" )%> 
+        	<%= text_field_tag(:verse, params[:verse], :class => "verse-search-by-tl-and-display", :placeholder => 'e.g. John 3:16' )%>
 			<img class="spinner" id="ajax_spinner" src="/assets/indicator2.gif" alt="Searching ..." style="display: none" />
         </div>
     </div>
-        
-    <!-- Results of verse retrieval -->    
+
+    <!-- Results of verse retrieval -->
     <div id="quick-start-verse-selection">
 	    <!-- Show found verse -->
 		<div id="existing-verse-add" class="quick-start-show-verse quick-start-add-section">
@@ -28,24 +28,24 @@
 		    <div class="quick-start-add-verse">
 		   		<div class="quick-start-add-button"></div>
 		   	</div>
-	    </div>    	  	  	
+	    </div>
     </div>
-	
+
     <!-- Start memorizing button -->
     <div id="start-memorizing" class="quick-start-selection">
 		<ul>
 			<li id="start-memorizing-button"><%= link_to 'Start Memorizing', test_verse_quick_path, :class => 'active' %></li>
-		</ul>    	
-    </div>      
-	
+		</ul>
+    </div>
+
 </div>
 
 
-<!-- Popular verse selection -->	
+<!-- Popular verse selection -->
 <div class="top-heading">
 	<h3><span>Choose from Popular Verses</span></h3>
 </div>
-        
+
 <div class="quick-start-popular-scroll quick-start-add-section">
 	<%= render "verses/scroll" %>
 </div>
