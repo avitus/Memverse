@@ -10,32 +10,32 @@
 		<div class="verse-test-area">
 			<%= form_tag mark_test_quick_path, :id => 'test-verse-quick' do %>
 				<div>
-				<%= text_area_tag(:verseguess, params[:verseguess], :class => "verseguess" )%>	
+				<%= text_area_tag(:verseguess, params[:verseguess], :class => "verseguess" )%>
 				</div>
-				
+
 				<div class="tool-tip-nav">Rate Your Performance:</div>
-				<div id="test-buttons" class="score-test-buttons">				
-					<span class="submit" q="1">1</span> <div class="tooltip"><%= I18n.t "memverses.test_verse_quick.b1" %></div>							
-					<span class="submit" q="2">2</span> <div class="tooltip"><%= I18n.t "memverses.test_verse_quick.b2" %></div>							
-					<span class="submit" q="3">3</span> <div class="tooltip"><%= I18n.t "memverses.test_verse_quick.b3" %></div>							
-					<span class="submit" q="4">4</span> <div class="tooltip"><%= I18n.t "memverses.test_verse_quick.b4" %></div>							
-					<span class="submit" q="5">5</span> <div class="tooltip"><%= I18n.t "memverses.test_verse_quick.b5" %></div>	
-					
+				<div id="test-buttons" class="score-test-buttons">
+					<span class="submit" q="1">1</span> <div class="tooltip"><%= I18n.t "memverses.test_verse_quick.b1" %></div>
+					<span class="submit" q="2">2</span> <div class="tooltip"><%= I18n.t "memverses.test_verse_quick.b2" %></div>
+					<span class="submit" q="3">3</span> <div class="tooltip"><%= I18n.t "memverses.test_verse_quick.b3" %></div>
+					<span class="submit" q="4">4</span> <div class="tooltip"><%= I18n.t "memverses.test_verse_quick.b4" %></div>
+					<span class="submit" q="5">5</span> <div class="tooltip"><%= I18n.t "memverses.test_verse_quick.b5" %></div>
+
 					<span class="test-button" id="ff-button">&gt;&gt;</span> <div class="tooltip">Skip to <strong id="next-verse-due"><%= @mv.next_verse_due(true).verse.ref unless @mv.due? %></strong></div>
-					
+
 					<span><%= link_to (image_tag("blue-icon.png", :width=>"16", :height=>"16")), "#info", :id => "inline" %></span> <div class="tooltip">Learn about rating your verses and keyboard shortcuts</div>
 					<div style="display:none">
 						<div id="info">
 							<%= render "memverses/rating_explanation" %>
 						</div> <!-- end: info -->
-					</div>	
+					</div>
 				</div>	<!-- end: scoreTestButtons -->
-				
+
 			<% end %> <!-- end: form -->
 		</div> <!-- end: verse-test-area -->
 
 	</div> <!-- end: test-verse -->
-   
+
 	<div class="feedback verse-feedback">
 		<h2><%= t('.feedback') %></h2>
 
@@ -46,16 +46,16 @@
 				<span class="prior-text">					<%=@prior_text if @prior_text%>	</span>
 			</p>
 		</div>
-		
+
 		<!-- Current verse -->
 		<div id="currentVerse">
-			<p>		
+			<p>
 				<span class="current-versenum superscript"><%=@mv.verse.versenum if @prior_text%></span>
 				<span id="feedback"></span>
 				<img class="center spinner" id="ajax_spinner" src="/assets/indicator2.gif" alt="Comparing..." style="display: none" />
-			</p>					
+			</p>
 		</div>
-		
+
 		<!-- Current verse answer -->
 		<div id="complete-hint">
 			<p>
@@ -66,7 +66,7 @@
 		</div>
 
 	</div> <!-- end: Feedback -->
-	
+
 	<div class="upcoming">
 		<h2><%= t('.upcoming_verses') %></h2>
 		<%= render :partial => "upcoming_verses" %>
@@ -74,33 +74,62 @@
 	<div class="clr"></div>
 </div> <!-- end: white-box-bg -->
 
+<!-- Each tip is set within this <ol>. -->
+<!--  This creates the order the tips are displayed -->
+<ol id="joyRideTipContent">
+
+	<li data-id="mnemonic"   data-text="Next" data-options="tipLocation:left">
+		<p>Use this mnemonic to help you remember.</p>
+	</li>
+	<li data-id="verseguess" data-text="Next">
+		<p>Enter the verse into this box.</p>
+	</li>
+	<li data-id="feedback"   data-text="Next">
+		<p>Feeback will appear here.</p>
+	</li>
+	<li data-id="test-buttons" data-button="Close">
+		<p>When you're done, rate yourself using these buttons.</p>
+	</li>
+
+</ol>
+
+<!-- Launch joyride when to page is loaded -->
+<script language="JavaScript" type="text/javascript"><!--
+	$(window).load(function() {
+		$('#joyRideTipContent').joyride({
+			autoStart : true,
+			modal     : true,
+			expose    : true           // highlight element, requires modal=true
+		});
+	});
+--></script>
 
 
 <script language="JavaScript" type="text/javascript"><!--
-	
+
 	$(document).ready(function() {
-		
+
 		// cache frequent DOM objects in variables
 		$completehint = $("#complete-hint");
 		$currentVerse = $("#currentVerse");
 		$togglehint   = $("#toggle-hint");
 		$feedback     = $("#feedback");
 		$verseguess   = $("#verseguess");
-	
+
 		<% if !@mv.needs_mnemonic? %>
 			$('#mnemonic').hide();
 		<% end %>
 
 		// focus cursor on verse entry box
 		$verseguess.focus();
-		
+
 		//fancybox info
 		$("a#inline").fancybox({
 			'autoDimensions' : false,
 			'width'		     : '80%',
 			'height'		 : '90%'
 		});
-		
+
 		// Toggle verse function
 		function toggleverse() {
 			$completehint.toggle();
@@ -111,27 +140,27 @@
 				$togglehint.text(I18n.t("memverses.test_verse_quick.show_verse"));
 			}
 		}
-		
+
 		// show verse
 		$togglehint.click( function () {
 			toggleverse();
 		});
-			
+
 		var ondeck 				= {};
 		var prior				= {};
 		var current				= {};
 		var live				= {};
-		var user_id				= "<%= current_user.id %>";		
+		var user_id				= "<%= current_user.id %>";
 
-		$("table#upcoming-verses .upcoming-verse-ref:contains('<%=@mv.verse.ref%>')").remove()				
-		
+		$("table#upcoming-verses .upcoming-verse-ref:contains('<%=@mv.verse.ref%>')").remove()
+
 		current.id		 = "<%= @mv.id %>";
 		current.text   	 = "<%= escape_javascript(@mv.verse.text.html_safe) %>";
 		current.feedback = <%= @mv.show_feedback? %>;
 		current.mnemonic = "<%= escape_javascript(@mv.mnemonic_if_req.html_safe) %>";
 		live.correct     = false; // Can currently toggle verse (show/hide)
 		live.feedtext    = "Waiting for you to begin typing..."; // Live Feedback text
-		
+
 		// Load next verse
 		$('#ff-button').toggle(<%= !@mv.due? %>);					// Hide/Show fast forward button
 		ondeck = stageverses(current.id);
@@ -156,14 +185,14 @@
 
 		live = getversefeedback($verseguess.val()); // Run this once when page first loads
 
-		// Verse feedback	
-		$verseguess.observe_field(0.2, function( ) { 
+		// Verse feedback
+		$verseguess.observe_field(0.2, function( ) {
 			getversefeedback(this.value);
 		});
 
-		// ==== Fastforward function ====		
+		// ==== Fastforward function ====
 		function fastforward() {
-			// Check whether we're done for the day	
+			// Check whether we're done for the day
 			if (ondeck.finished || typeof(ondeck.mv_skip) == 'undefined' || ondeck.mv_skip == null ) {
 				log_progress(user_id)
 				window.location="./progress";
@@ -172,21 +201,21 @@
 				success = insertondeck(ondeck.mv_skip, ondeck.mv_prior_skip);	// Update page with ondeck verses
 				current = ondeck.mv_skip										// Update current verse
 				$("ul#upcoming-verses .upcoming-verse-ref:contains(" + current.ref + ")").fadeOut(500); // remove from upcoming
-				
+
 				if($("ul#upcoming-verses .upcoming-verse-ref:visible").not(":contains(" + current.ref + ")").length == 0) {
 					$("ul#upcoming-verses").html("<li>(None)</li>");
 				}
-				
+
 				live = getversefeedback($verseguess.val());						// Update verse feedback
 				ondeck = stageverses(current.id);								// Get new ondeck verses
 			}
 		}
-		
-		// ==== User clicks on fastforward button ====				
+
+		// ==== User clicks on fastforward button ====
 		$('#ff-button').click(function() {
 			fastforward();
 		});
-		
+
 		// ==== Show/Hide mnemonic ====
 		function togglemnemonic(){
 			if ( $('#mclose').is(':hidden') ) {
@@ -198,24 +227,24 @@
 				$("#mclose").hide();
 			}
 		}
-		
+
 		$('#mclose').click(function() {
 			togglemnemonic();
 		});
-	
+
 		$('#mtext').click(function() {
 			if ( $('#mclose').is(':hidden') ) {
 				togglemnemonic();
 			}
 		});
-		
-		// ==== Verse rating function ====		
+
+		// ==== Verse rating function ====
 		function rateverse() {
 			// == Remove this verse from list of upcoming verses
 			$("ul#upcoming-verses .upcoming-verse-ref:contains(" + current.ref + ")").fadeOut(500);
 			// == Remove next verse from list of upcoming verses
 			$("ul#upcoming-verses .upcoming-verse-ref:contains(" + ondeck.mv.ref + ")").fadeOut(500);
-			
+
 			// Check whether we're done for the day
 			if (ondeck.finished) {
 				$.getJSON("/mark_test_quick", { mv: current.id, q: q  }, 			// Score verse
@@ -231,20 +260,20 @@
 				live = getversefeedback($verseguess.val());							// Update verse feedback
 				$.getJSON("/mark_test_quick", { mv: prior.id, q: q  }, 				// Score verse
 					function(data) {
-						if (data.msg) {  setTimeout(function() {alert(data.msg);}, 1); }  // Give user a nice response that doesn't hinder other requests												
+						if (data.msg) {  setTimeout(function() {alert(data.msg);}, 1); }  // Give user a nice response that doesn't hinder other requests
 						update_upcoming(20, ondeck.mv.id);							// Req successful callback from mark_test_quick: Update upcoming verses
-						ondeck = stageverses(current.id);							// Req successful callback from mark_test_quick: Get next verses				
+						ondeck = stageverses(current.id);							// Req successful callback from mark_test_quick: Get next verses
 				});
 			}
 		}
-		
-		// ==== User clicks 1-5 button ====			
+
+		// ==== User clicks 1-5 button ====
 		$('.submit').click( function() {
-			
+
 			// == Set key press
 			q = $(this).attr("q");
 			rateverse();
-			
+
 		});
 
 		// Shortcuts
@@ -310,7 +339,7 @@
 					return false;
 				}
 			} // end of if(isPlus == true && isShift == true)
-			
+
 		})
 		.keypress(function (e) {
 			if(e.which == 62 || e.which == 43) {
@@ -325,24 +354,24 @@
 			}
 		})
 		;
-		
+
 		// Detect iOS (iPhone, iPod, and iPad)
 		var isiOS = (navigator.userAgent.match(/iPhone|iPod|iPad/i)) != null;
 		if (!isiOS) { // Apply tooltips only if not iOS (iOS doesn't support hover and forces double click on rating numbers when tooltips enabled)
-			$("#test-buttons span").tooltip({ 
+			$("#test-buttons span").tooltip({
 				// place tooltip on the top edge
-				position: ['top', 'center'], 
-				// a little tweaking of the position 
-				offset: [0, -64], 
-				// use a simple show/hide effect 
-				effect: 'toggle', 
+				position: ['top', 'center'],
+				// a little tweaking of the position
+				offset: [0, -64],
+				// use a simple show/hide effect
+				effect: 'toggle',
 				// specify relative to parent element
 				relative: true,
-				// custom opacity setting 
-				opacity: 0.8 
+				// custom opacity setting
+				opacity: 0.8
 			});
 		}
-	
+
 	}); // End of jQuery document ready
 
 --></script>
@@ -366,5 +395,5 @@
 
 <noscript>
 	<img height="1" width="1" border="0" src="http://www.googleadservices.com/pagead/conversion/1055933402/?value=0.5&amp;label=9GgaCKqlhwEQ2ofB9wM&amp;guid=ON&amp;script=0"/>
-</noscript> 
+</noscript>
 <!-- END: Google Code for Memverse - Login Conversion Page -->
