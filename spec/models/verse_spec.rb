@@ -75,9 +75,13 @@ describe Verse do
     end
   end
 
+
+  # ==============================================================================================
+  # Spec for BibleGateway API
+  # ==============================================================================================
   describe "web_check" do
     it "should say the verse matches in the database" do
-      verse = FactoryGirl.create(:verse, :book => "John", :chapter => 3, :versenum => 16, :translation => "NIV", :text => "For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life.")
+      verse = FactoryGirl.create(:verse, :book => "John", :chapter => 3, :versenum => 16, :translation => "NNV", :text => "For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life.")
       verse.database_text.should == "For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life."
     end
 
@@ -94,8 +98,8 @@ describe Verse do
     end
 
     it "should say poetry verses match on Bible Gateway" do
-      verse = FactoryGirl.create(:verse, :book => "Psalms", :chapter => 35, :versenum => 2, :translation => "NIV", :text => "Take up shield and buckler; arise and come to my aid.")
-      verse.database_text.should == "Take up shield and buckler; arise and come to my aid."
+      verse = FactoryGirl.create(:verse, :book => "Psalms", :chapter => 35, :versenum => 2, :translation => "NNV", :text => "Take up shield and armor; arise and come to my aid.")
+      verse.database_text.should == "Take up shield and armor; arise and come to my aid."
       verse.web_text.should == verse.database_text
     end
 
@@ -113,7 +117,7 @@ describe Verse do
 
 
     it "should say incorrect verses are incorrect" do
-      verse = FactoryGirl.create(:verse, :book => "Psalms", :chapter => 35, :versenum => 3, :translation => "NIV", :text => "This is incorrect")
+      verse = FactoryGirl.create(:verse, :book => "Psalms", :chapter => 35, :versenum => 3, :translation => "NNV", :text => "This is incorrect")
       verse.database_text.should_not == "Brandish spear and javelin against those who pursue me.  Say to my soul, “I am your salvation.”"
       verse.web_text.should_not == verse.database_text
     end
