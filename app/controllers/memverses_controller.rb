@@ -957,6 +957,7 @@ class MemversesController < ApplicationController
         @prior_text     = @prev_mv.verse.text
         @prior_versenum = @prev_mv.verse.versenum
       end
+
     else # this user has no verses due at the moment
       if current_user.has_started?
 

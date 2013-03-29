@@ -122,17 +122,18 @@
 
 </ol>
 
-<!-- Launch joyride when to page is loaded -->
-<script language="JavaScript" type="text/javascript"><!--
-	$(window).load(function() {
-		$('#joyRideTipContent').joyride({
-			autoStart : true,
-			modal     : true,
-			expose    : true   // highlight element, requires modal=true
+<% if current_user.progression <= 3 %>
+	<!-- Launch joyride when to page is loaded -->
+	<script language="JavaScript" type="text/javascript"><!--
+		$(window).load(function() {
+			$('#joyRideTipContent').joyride({
+				autoStart : true,
+				modal     : true,
+				expose    : true   // highlight element, requires modal=true
+			});
 		});
-	});
---></script>
-
+	--></script>
+<% end %>
 
 <script language="JavaScript" type="text/javascript"><!--
 
