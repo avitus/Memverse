@@ -13,6 +13,7 @@ class ProgressReport < ActiveRecord::Base
   
   # Validations
   validates_presence_of :user_id, :learning, :memorized, :entry_date
+  before_save :setup_consistency
 
   protected
   
