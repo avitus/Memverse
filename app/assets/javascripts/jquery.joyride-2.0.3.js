@@ -170,7 +170,7 @@
             methods.hide();
             methods.show();
             }
-      }, 
+      },
 
       tip_template : function (opts) {
         var $blank, content, $wrapper;
@@ -297,7 +297,7 @@
 
                 settings.$next_tip.show();
                 $timer.animate({
-                  width: $('.joyride-timer-indicator-wrap', settings.$next_tip).outerWidth()
+                  width: $('.joyride-timer-indicator-wrap', settings.$next_tip).outerWidth( false )
                 }, settings.timer);
 
               } else {
@@ -317,7 +317,7 @@
 
                 settings.$next_tip.show();
                 $timer.animate({
-                  width: $('.joyride-timer-indicator-wrap', settings.$next_tip).outerWidth()
+                  width: $('.joyride-timer-indicator-wrap', settings.$next_tip).outerWidth( false )
                 }, settings.timer);
 
               } else {
@@ -406,7 +406,7 @@
         var window_half, tipOffset;
 
         window_half = settings.$window.height() / 2;
-        tipOffset = Math.ceil(settings.$target.offset().top - window_half + settings.$next_tip.outerHeight());
+        tipOffset = Math.ceil(settings.$target.offset().top - window_half + settings.$next_tip.outerHeight( false ));
 
         $("html, body").stop().animate({
           scrollTop: tipOffset
@@ -425,7 +425,7 @@
         if(!$.isEmptyObject(settings)){
         settings.$document.off('.joyride');
         }
-        
+
         $(window).off('.joyride');
         $('.joyride-close-tip, .joyride-next-tip, .joyride-modal-bg').off('.joyride');
         $('.joyride-tip-guide, .joyride-modal-bg').remove();
@@ -456,8 +456,8 @@
         var half_fold = Math.ceil(settings.$window.height() / 2),
             tip_position = settings.$next_tip.offset(),
             $nub = $('.joyride-nub', settings.$next_tip),
-            nub_width = Math.ceil($nub.outerWidth() / 2),
-            nub_height = Math.ceil($nub.outerHeight() / 2),
+            nub_width = Math.ceil($nub.outerWidth( false ) / 2),
+            nub_height = Math.ceil($nub.outerHeight( false ) / 2),
             toggle = init || false;
 
         // tip must not be "display: none" to calculate position
@@ -470,7 +470,7 @@
 
             if (methods.bottom()) {
               settings.$next_tip.css({
-                top: (settings.$target.offset().top + nub_height + settings.$target.outerHeight()),
+                top: (settings.$target.offset().top + nub_height + settings.$target.outerHeight( false )),
                 left: settings.$target.offset().left});
 
               methods.nub_position($nub, settings.tipSettings.nubPosition, 'top');
@@ -478,7 +478,7 @@
             } else if (methods.top()) {
 
               settings.$next_tip.css({
-                top: (settings.$target.offset().top - settings.$next_tip.outerHeight() - nub_height),
+                top: (settings.$target.offset().top - settings.$next_tip.outerHeight( false ) - nub_height),
                 left: settings.$target.offset().left});
 
               methods.nub_position($nub, settings.tipSettings.nubPosition, 'bottom');
@@ -487,7 +487,7 @@
 
               settings.$next_tip.css({
                 top: settings.$target.offset().top,
-                left: (settings.$target.outerWidth() + settings.$target.offset().left + nub_width)});
+                left: (settings.$target.outerWidth( false ) + settings.$target.offset().left + nub_width)});
 
               methods.nub_position($nub, settings.tipSettings.nubPosition, 'left');
 
@@ -495,7 +495,7 @@
 
               settings.$next_tip.css({
                 top: settings.$target.offset().top,
-                left: (settings.$target.offset().left - settings.$next_tip.outerWidth() - nub_width)});
+                left: (settings.$target.offset().left - settings.$next_tip.outerWidth( false ) - nub_width)});
 
               methods.nub_position($nub, settings.tipSettings.nubPosition, 'right');
 
@@ -530,11 +530,11 @@
       },
 
       pos_phone : function (init) {
-        var tip_height = settings.$next_tip.outerHeight(),
+        var tip_height = settings.$next_tip.outerHeight( false ),
             tip_offset = settings.$next_tip.offset(),
-            target_height = settings.$target.outerHeight(),
+            target_height = settings.$target.outerHeight( false ),
             $nub = $('.joyride-nub', settings.$next_tip),
-            nub_height = Math.ceil($nub.outerHeight() / 2),
+            nub_height = Math.ceil($nub.outerHeight( false ) / 2),
             toggle = init || false;
 
         $nub.removeClass('bottom')
@@ -617,8 +617,8 @@
         expose.css({
           top: el.offset().top,
           left: el.offset().left,
-          width: el.outerWidth(true),
-          height: el.outerHeight(true)
+          width: el.outerWidth(false),
+          height: el.outerHeight(false)
         });
         exposeCover = $(settings.template.exposeCover);
         origCSS = {
@@ -633,8 +633,8 @@
         exposeCover.css({
           top: el.offset().top,
           left: el.offset().left,
-          width: el.outerWidth(true),
-          height: el.outerHeight(true)
+          width: el.outerWidth(false),
+          height: el.outerHeight(false)
         });
         settings.$body.append(exposeCover);
         expose.addClass(randId);
@@ -720,8 +720,8 @@
         var $w = settings.$window;
 
         settings.$next_tip.css({
-          top : ((($w.height() - settings.$next_tip.outerHeight()) / 2) + $w.scrollTop()),
-          left : ((($w.width() - settings.$next_tip.outerWidth()) / 2) + $w.scrollLeft())
+          top : ((($w.height() - settings.$next_tip.outerHeight( false )) / 2) + $w.scrollTop()),
+          left : ((($w.width() - settings.$next_tip.outerWidth( false )) / 2) + $w.scrollLeft())
         });
 
         return true;
@@ -746,7 +746,7 @@
       corners : function (el) {
         var w = settings.$window,
             window_half = w.height() / 2,
-            tipOffset = Math.ceil(settings.$target.offset().top - window_half + settings.$next_tip.outerHeight()),//using this to calculate since scroll may not have finished yet.
+            tipOffset = Math.ceil(settings.$target.offset().top - window_half + settings.$next_tip.outerHeight( false )),//using this to calculate since scroll may not have finished yet.
             right = w.width() + w.scrollLeft(),
             offsetBottom =  w.height() + tipOffset,
             bottom = w.height() + w.scrollTop(),
@@ -766,8 +766,8 @@
 
         return [
           el.offset().top < top,
-          right < el.offset().left + el.outerWidth(),
-          bottom < el.offset().top + el.outerHeight(),
+          right < el.offset().left + el.outerWidth( false ),
+          bottom < el.offset().top + el.outerHeight( false ),
           w.scrollLeft() > el.offset().left
         ];
       },
