@@ -10,7 +10,6 @@ class Passage < ActiveRecord::Base
   attr_accessible :user_id, :translation, :book, :chapter, :first_verse, :last_verse,
                   :efactor, :last_tested, :length, :next_test, :reference, :rep_n, :test_interval
 
-
   scope :due, lambda { where('next_test  <= ?', Date.today) }
 
   after_create   :update_ref
@@ -32,7 +31,8 @@ class Passage < ActiveRecord::Base
   end
 
   # ----------------------------------------------------------------------------------------------------------
-  # Combine two passages into one. Method accepts an optional join (linking) verse
+  # Combine two passages into one. Method accepts an optional join (linking) verse.
+  #   - Order of join doesn't matter
   # ----------------------------------------------------------------------------------------------------------
   def absorb( second_passage, join_mv=nil )
 

@@ -417,7 +417,7 @@ class MemversesController < ApplicationController
 
     mv_ids = params[:mv]
 
-  # ==== Verse IDs were passed from manage_verses or similar form ====
+    # ==== Verse IDs were passed from manage_verses or similar form ====
     if (!mv_ids.blank?) and (params[:Prompt])
 
       @mv_list = Memverse.find(mv_ids, :include => :verse)
@@ -537,7 +537,6 @@ class MemversesController < ApplicationController
     end
   end
 
-
   # ----------------------------------------------------------------------------------------------------------
   # Verify a verse
   # ----------------------------------------------------------------------------------------------------------
@@ -629,20 +628,30 @@ class MemversesController < ApplicationController
   	vs = Verse.find(params[:id])
 
   	if vs and current_user
-      if current_user.has_verse_id?(vs)
-        msg = "Previously Added"
-      elsif current_user.has_verse?(vs.book, vs.chapter, vs.versenum)
-        msg = "Added in another translation"
-      else
-        # Save verse as a memory verse for user
-        begin
-          Memverse.create(:user_id => current_user.id, :verse_id => vs.id)
-        rescue Exception => e
-          Rails.logger.error("=====> [Memverse save error] Exception while saving #{vs.ref} for user #{current_user.id}: #{e}")
+
+      # We need to lock the user in order to prevent a race condition when two memverses are created simultaneously
+      # Without the lock, adding two adjacent verses occasionally results in two separate passages
+      ActiveRecord::Base.transaction do
+
+        current_user.lock! # Hold pessimistic user lock until memverse has been created and all hooks have executed
+
+        if current_user.has_verse_id?(vs)
+          msg = "Previously Added"
+        elsif current_user.has_verse?(vs.book, vs.chapter, vs.versenum)
+          msg = "Added in another translation"
         else
-          msg = "Added"
+          # Save verse as a memory verse for user
+          begin
+            Memverse.create(:user_id => current_user.id, :verse_id => vs.id)
+          rescue Exception => e
+            Rails.logger.error("=====> [Memverse save error] Exception while saving #{vs.ref} for user #{current_user.id}: #{e}")
+          else
+            msg = "Added"
+          end
         end
-      end
+
+      end # of transaction
+
     else
       msg = "Error"
     end
@@ -660,21 +669,34 @@ class MemversesController < ApplicationController
     ch = params[:ch]
     tl = params[:tl] || current_user.translation
 
+    # Find all the verses for the chapter
     chapter_verses = Verse.where("book = ? and chapter = ? and translation = ? and versenum not in (?)", bk, ch, tl, 0)
 
+    # Add verses one at a time
     chapter_verses.each do |vs|
-      if current_user.has_verse?(vs.book, vs.chapter, vs.versenum)
-        msg = "You already have #{vs.ref} in a different translation"
-      else
-        # Save verse as a memory verse for user
-        begin
-          Memverse.create(:user_id => current_user.id, :verse_id => vs.id)
-        rescue Exception => e
-          Rails.logger.error("=====> [Memverse save error] Exception while saving #{vs.ref} for user #{current_user.id}: #{e}")
+
+      # We need to lock the user in order to prevent a race condition when two memverses are created simultaneously
+      # Without the lock, adding two adjacent verses occasionally results in two separate passages
+      ActiveRecord::Base.transaction do
+
+        current_user.lock! # hold lock on user for each verse using pessimistic locking at database level
+
+        if current_user.has_verse?(vs.book, vs.chapter, vs.versenum)
+          msg = "You already have #{vs.ref} in a different translation"
+
         else
-          msg = "Added"
+          # Save verse as a memory verse for user
+          begin
+            Memverse.create(:user_id => current_user.id, :verse_id => vs.id)
+          rescue Exception => e
+            Rails.logger.error("=====> [Memverse save error] Exception while saving #{vs.ref} for user #{current_user.id}: #{e}")
+          else
+            msg = "Added"
+          end
         end
-      end
+
+      end # of transaction
+
     end
 
     render :json => {:msg => "Added Chapter" }
@@ -691,29 +713,6 @@ class MemversesController < ApplicationController
 
     @translation            = current_user.translation? ? current_user.translation : "NIV" # fallback on NIV
     TRANSLATIONS[:selected] = @translation # used for jEditable
-  end
-
-  # ----------------------------------------------------------------------------------------------------------
-  # Delete a memory verse
-  # TODO: make this a method of Memverse.rb
-  # ----------------------------------------------------------------------------------------------------------
-  def destroy_mv
-
-    # We need to remove inter-verse linkage
-    dead_mv   = Memverse.find(params[:id])
-
-    # Remove verse from memorization queue
-    mem_queue = session[:mv_queue]
-
-    # We need to check that there is a verse sequence and also that the array isn't empty
-    if !mem_queue.blank?
-      # Remove verse from the memorization queue if it is sitting in there
-      mem_queue.delete(dead_mv.id)
-    end
-
-    dead_mv.remove_mv  # remove verse and sort out next and previous pointers
-
-    redirect_to :action => 'manage_verses'
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -745,39 +744,44 @@ class MemversesController < ApplicationController
   end
 
   # ----------------------------------------------------------------------------------------------------------
-  # Manage verses - used to handle the manage verses form (delete a lot of verses or show selected)
-  # TODO: see above ... should re-use code from above and call a model method
+  # Delete memory verses - used to handle the manage verses form (delete a lot of verses or show selected)
   # ----------------------------------------------------------------------------------------------------------
   def delete_verses
 
     mv_ids = params[:mv]
 
     if (!mv_ids.blank?) and (params['Delete'])
+
       mv_ids.each { |mv_id|
 
-        # Find verse in DB
-        logger.debug("*** Finding mv with id: #{mv_id}")
-        mv = Memverse.find(mv_id)
+        # We need to lock the user in order to prevent a race condition when multiple verses are deleted simultaneously
+        ActiveRecord::Base.transaction do
 
-        # Remove verse from memorization queue
-        mem_queue = session[:mv_queue]
-        # We need to check that there is a verse sequence and also that the array isn't empty
-        if !mem_queue.blank?
-          logger.debug("*** Found session queue with verses")
-          # Remove verse from the memorization queue if it is sitting in there
-          mem_queue.delete(mv_id)
-        end
+          current_user.lock! # hold lock on user for each verse using pessimistic locking at database level
 
-        mv.destroy
+          # Remove verse from memorization queue
+          mem_queue = session[:mv_queue]
+          if !mem_queue.blank?
+            mem_queue.delete( mv_id ) # Remove verse from the memorization queue if it is sitting in there
+          end
+
+          mv = Memverse.find( mv_id )
+          mv.destroy
+
+        end # of transaction
 
       }
+
       flash[:notice] = "Memory verses have been deleted."
       redirect_to :action => 'manage_verses'
+
     elsif (mv_ids.blank?)
-      flash[:notice] = "Action not performed as no verses were selected."
+      flash[:notice] = "You did not select any verses."
       redirect_to :action => 'manage_verses'
+
     else
       redirect_to :action => 'manage_verses'
+
     end
 
   end
@@ -953,6 +957,7 @@ class MemversesController < ApplicationController
         @prior_text     = @prev_mv.verse.text
         @prior_versenum = @prev_mv.verse.versenum
       end
+
     else # this user has no verses due at the moment
       if current_user.has_started?
 

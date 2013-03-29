@@ -16,7 +16,8 @@
 				<td>Cohort size</td>
 				<td align="center"><%= @cohort_size %></td>
 				<td align="center"><%= @cohort_active %></td>
-				<td align="center"><%= @cohort_inactive %></td>			
+				<td align="center"><%= @cohort_inactive %></td>
+				<td align="right" ><%= number_with_precision( @cohort_inactive.to_f / @cohort_size.to_f * 100, :precision => 1) %>%</td>	
 			</tr>
 			
 			<% @progression_total.keys.sort.each do |level| %>
@@ -25,7 +26,7 @@
 					<td align="center"><%= @progression_total[level] %></td>
 					<td align="center"><%= @progression_active[level] %></td>
 					<td align="center"><%= @progression_inactive[level] %></td>
-					<td align="right"><%= number_with_precision( @progression_inactive[level].to_f / @cohort_size.to_f * 100, :precision => 1) %>%</td>
+					<td align="right" ><%= number_with_precision( @progression_inactive[level].to_f / @cohort_size.to_f * 100, :precision => 1) %>%</td>
 				</tr>	
 			<% end %>	
 		</table>

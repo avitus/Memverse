@@ -80,7 +80,6 @@ class User < ActiveRecord::Base
   acts_as_tagger
 
   # Associations for bloggity
-
   has_many :blog_posts, :foreign_key => "posted_by_id", :class_name => 'Bloggity::BlogPost'
   has_many :blog_comments, :dependent => :destroy, :class_name => 'Bloggity::BlogComment'
 
@@ -181,15 +180,18 @@ class User < ActiveRecord::Base
   end
 
   # ----------------------------------------------------------------------------------------------------------
-  # User progression
+  # User progression - only used for cohort analysis
+  # Todo: We should use method below instead and incorporate into cohort analysis
   # ----------------------------------------------------------------------------------------------------------
-  def progression
+  def cohort_progression
     if completed_sessions >= 3
-      return { :level => '6 - Onwards', :active => is_active? }
+      return { :level => '7 - Onwards', :active => is_active? }
     elsif completed_sessions == 2
-      return { :level => '5 - Returning User', :active => is_active? }
+      return { :level => '6 - Returned Once', :active => is_active? }
     elsif completed_sessions == 1
-      return { :level => '4 - One Session Wonder', :active => is_active? }
+      return { :level => '5 - Completed 1 Session', :active => is_active? }
+    elsif memverses.sum(:attempts) > 0
+      return { :level => '4 - Started a Session', :active => is_active? }
     elsif has_started?
       return { :level => '3 - Added Verses', :active => is_active? }
     elsif confirmed_at
@@ -198,6 +200,29 @@ class User < ActiveRecord::Base
       return { :level => '1 - Registered', :active => is_active? }
     else
       return { :level => 'ERROR', :active => false }
+    end
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # User progression
+  # ----------------------------------------------------------------------------------------------------------
+  def progression
+    if completed_sessions >= 3
+      return 7
+    elsif completed_sessions == 2
+      return 6
+    elsif completed_sessions == 1
+      return 5
+    elsif memverses.sum(:attempts) > 0      # has reviewed at least one verse at some point
+      return 4
+    elsif has_started?
+      return 3
+    elsif confirmed_at
+      return 2
+    elsif !confirmed_at
+      return 1
+    else
+      return 0
     end
   end
 

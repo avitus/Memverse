@@ -657,8 +657,12 @@ class Memverse < ActiveRecord::Base
       next_passage.expand( self )
 
     # Case 4 - Verse is new last verse of existing passage
-    else
+    elsif prior_passage
       prior_passage.expand( self )
+
+    # Shouldn't ever arrive here
+    else
+
     end
 
   end
@@ -667,6 +671,9 @@ class Memverse < ActiveRecord::Base
   # Remove a memory verse from a passage [hook: before_delete]
   # ----------------------------------------------------------------------------------------------------------
   def remove_from_passage
+
+    # Do we need to add a transaction lock here. If both verses in a two verse passage are simultaneously deleted then
+    # passage could be stranded as an empty passage. Not to mention all the other corner cases.
     psg = self.passage
 
     if psg
@@ -755,10 +762,6 @@ class Memverse < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   def add_links
 
-    while Memverse.where(:id => self.id).first.nil? # wait for verse to exist in db before proceeding
-      sleep 0.1
-    end
-
     # Adding inbound links
     if self.prev_verse ||= self.get_prev_verse  # Attempt to fix race condition
       prior_vs             = Memverse.find(self.prev_verse)
@@ -824,15 +827,21 @@ class Memverse < ActiveRecord::Base
 
   # ----------------------------------------------------------------------------------------------------------
   # Implement counter caches for number of verses memorized and learning
+  # Hook: after_save, after_destroy
   # ----------------------------------------------------------------------------------------------------------
   def update_counter_cache
-    self.user.memorized = Memverse.where(:user_id => self.user.id, :status => "Memorized").count
-    self.user.learning  = Memverse.where(:user_id => self.user.id, :status => "Learning").count
-    self.user.last_activity_date = Date.today
-    self.user.save
 
-    self.verse.memverses_count = Memverse.where(:verse_id => self.verse.id).count
-    self.verse.save
+    u  = self.user
+    vs = self.verse
+
+    u.memorized          = Memverse.where(:user_id => u.id, :status => "Memorized").count
+    u.learning           = Memverse.where(:user_id => u.id, :status => "Learning").count
+    u.last_activity_date = Date.today
+    u.save
+
+    vs.memverses_count   = Memverse.where(:verse_id => vs.id).count
+    vs.save
+
   end
 
   # ----------------------------------------------------------------------------------------------------------
