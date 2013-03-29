@@ -22,7 +22,7 @@ class Country < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   # Returns hash of top countries (sorted by number of verses memorized)
   # ---------------------------------------------------------------------------------------------------------- 
-  def self.top_countries(numcountries=20)
+  def self.top_countries(numcountries=25)
 
     countryboard = Hash.new(0)
     

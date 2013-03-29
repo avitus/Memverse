@@ -39,7 +39,7 @@ if HOST_OS =~ /linux/i
   gem 'therubyracer', '>= 0.11.3'
 end
 
-gem 'rails', '3.2.12'
+gem 'rails', '3.2.13'
 gem 'jquery-rails', '>= 2.0.0'
 
 gem "devise"                                                                                    # Authentication
@@ -82,6 +82,8 @@ gem 'supermodel', git: 'git://github.com/KonaTeam/supermodel.git'               
 gem 'best_in_place'                                                                             # In-place editing support
 gem 'sitemap_generator'                                                                         # Sitemap generator
 gem 'split', :require => 'split/dashboard'                                                      # AB testing framework
+gem 'backup'                                                                                    # Used to backup MySQL database and uploaded site assets
+gem 'dropbox-sdk'                                                                               # Used with backup above
 
 group :console do
   gem 'wirble'

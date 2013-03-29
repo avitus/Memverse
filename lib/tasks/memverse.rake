@@ -3,6 +3,16 @@ namespace :utils do
   # include Parser
 
   #--------------------------------------------------------------------------------------------
+  # Run backup
+  #--------------------------------------------------------------------------------------------
+  desc "Backup entire site"
+  task :backup => :environment do
+
+    sh "bundle exec backup perform -t site_backup -c config/backup/site_backup.rb"
+
+  end
+
+  #--------------------------------------------------------------------------------------------
   # Group user's memory verses into passages. This should be a one time operation.
   #--------------------------------------------------------------------------------------------
   desc "Clean up tag cloud"
@@ -111,6 +121,52 @@ namespace :utils do
     puts "=== Finished ==="
 
   end
+
+  #--------------------------------------------------------------------------------------------
+  # Locate broken passages
+  #--------------------------------------------------------------------------------------------
+  desc "Locate broken passages"
+  task :locate_broken_passages => :environment do
+
+    puts("Locating broken passages for #{User.active.count} users.")
+
+    User.active.find_each { |u|
+
+      Passage.where(:user_id => u.id).find_each { |psg|
+
+        Passage.where(:user_id => u.id, :translation => psg.translation, :book => psg.book, :chapter => psg.chapter).find_each { |near_psg|
+
+          if psg.first_verse == near_psg.last_verse + 1
+            puts("[#{u.id} - #{u.email}] Passage #{psg.reference} should be joined to passage #{near_psg.reference}")
+
+            # display offending memory verses
+            puts("   Passage 1" )
+            psg.memverses.each { |mv|
+              puts("   [#{mv.id} - #{mv.verse.ref} ] was created at #{mv.created_at}")
+            }
+
+            puts("   Passage 2" )
+            near_psg.memverses.each { |mv|
+              puts("   [#{mv.id} - #{mv.verse.ref} ] was created at #{mv.created_at}")
+            }
+
+            psg.absorb( near_psg ) # Join the two passages
+          end
+
+        }
+
+      }
+    }
+
+    # Remove all empty passages
+    puts("Removing passages with no associated memory verses")
+    puts("   #{Passage.joins("left join memverses on memverses.passage_id = passages.id").where("memverses.passage_id is null").count} empty passages")
+    Passage.joins("left join memverses on memverses.passage_id = passages.id").where("memverses.passage_id is null").destroy_all
+
+    puts "=== Finished ==="
+
+  end
+
 
   #--------------------------------------------------------------------------------------------
   # Locate out of bound verses -- no longer seems to occur. Run occasionally
