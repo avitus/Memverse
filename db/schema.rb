@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130127225306) do
+ActiveRecord::Schema.define(:version => 20130321110448) do
 
   create_table "american_states", :force => true do |t|
     t.string  "abbrev",      :limit => 20, :default => "", :null => false
@@ -405,6 +405,7 @@ ActiveRecord::Schema.define(:version => 20130127225306) do
     t.integer "learning"
     t.integer "memorized"
     t.integer "time_allocation"
+    t.integer "consistency"
   end
 
   add_index "progress_reports", ["user_id"], :name => "index_progress_reports_on_user_id"

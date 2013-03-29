@@ -1,9 +1,12 @@
 class AddConsistencyToProgressReports < ActiveRecord::Migration
-  def change
+  def up
     add_column :progress_reports, :consistency, :integer
-    ProgressReport.before_save :setup_consistency
     ProgressReport.reset_column_information
-    ProgressReport.all.each.do |pr|
-      pr.save  
+    ProgressReport.all.each {|pr| pr.save! } 
+  end
+
+  def down
+    remove_column :progress_reports, :consistency
   end
 end
+
