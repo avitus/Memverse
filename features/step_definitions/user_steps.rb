@@ -145,6 +145,8 @@ Given /^the user with the email of "(.*)" has (\d+) verses in his list$/ do |ema
     vs = FactoryGirl.create(:verse, :chapter => 2, :versenum => i+1)
     FactoryGirl.create(:memverse, :user_id => user.id, :verse_id => vs.id)
   }
+  user.memorized = 10
+  user.save
 end
 
 Then /^the tag "(.*)" should exist for memverse #([0-9]+)$/ do |tagname, id|
