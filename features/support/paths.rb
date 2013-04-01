@@ -17,6 +17,9 @@ module NavigationHelpers
     when /the sign in page/
       '/users/sign_in'
 
+    when /the main memorization page/
+      '/test_verse_quick'
+
     when /(.*)'s referrer page/
       '/?referrer='+$1
 
