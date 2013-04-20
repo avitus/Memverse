@@ -13,7 +13,8 @@ namespace :utils do
   end
 
   #--------------------------------------------------------------------------------------------
-  # Group user's memory verses into passages. This should be a one time operation.
+  # Delete unused tags, recreate verse tags
+  # Task duration: 
   #--------------------------------------------------------------------------------------------
   desc "Clean up tag cloud"
   task :refresh_tag_cloud => :environment do
