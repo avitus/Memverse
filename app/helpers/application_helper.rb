@@ -89,14 +89,14 @@ module ApplicationHelper
     max, min = 0, 0
     
     tags.each { |t|
-      max = t.count.to_i if t.count.to_i > max
-      min = t.count.to_i if t.count.to_i < min
+      max = Math::log(t.count).to_i if Math::log(t.count).to_i > max
+      min = Math::log(t.count).to_i if Math::log(t.count).to_i < min
     }
   
     divisor = ((max - min) / classes.size) + 1 
   
     tags.each { |t|
-       yield t.name, classes[(t.count.to_i - min) / divisor]
+       yield t.name, classes[(Math::log(t.count).to_i - min) / divisor]
     }
   end
   
