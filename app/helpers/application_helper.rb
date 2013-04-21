@@ -94,7 +94,7 @@ module ApplicationHelper
   
     count_array.sort!
 
-    divisor = ( count_array.count.to_i + 1 ) / ( classes.size - 1 )
+    divisor = ( count_array.count.to_i / classes.size ) + 1
   
     tags.each { |t|
        yield t.name, classes[ count_array.index(t.count).to_i / divisor ]
