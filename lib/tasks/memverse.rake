@@ -14,7 +14,7 @@ namespace :utils do
 
   #--------------------------------------------------------------------------------------------
   # Delete unused tags, recreate verse tags
-  # Task duration: 
+  # Task duration: > 2 hours
   #--------------------------------------------------------------------------------------------
   desc "Clean up tag cloud"
   task :refresh_tag_cloud => :environment do
