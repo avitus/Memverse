@@ -10,7 +10,8 @@ class Passage < ActiveRecord::Base
   attr_accessible :user_id, :translation, :book, :chapter, :first_verse, :last_verse,
                   :efactor, :last_tested, :length, :next_test, :reference, :rep_n, :test_interval
 
-  scope :due, lambda { where('next_test  <= ?', Date.today) }
+  scope :due, lambda { where('passages.next_test  <= ?', Date.today) }
+  scope :active, joins(:memverses).merge(Memverse.active).group(:id).having('count(memverses.id) > 0')
 
   after_create   :update_ref
 
