@@ -1160,7 +1160,7 @@ class MemversesController < ApplicationController
       redirect_to test_exam_path
     else
       flash[:notice] = "You need to memorize 10 verses before you can take the test."
-      redirect_to :action => 'index'
+      redirect_to root_path
     end
 
   end
@@ -1182,7 +1182,7 @@ class MemversesController < ApplicationController
       @mv           = Memverse.find(session[:exam_questions][@question_num])
 
     else
-      redirect_to :action => 'index'
+      redirect_to root_path
     end
 
   end
@@ -1227,7 +1227,7 @@ class MemversesController < ApplicationController
     else
       # Probably caused by user using the back button after test is finished
       flash[:notice] = "Exam already completed"
-      redirect_to :action => 'index'
+      redirect_to root_path
     end
 
   end
@@ -1285,7 +1285,7 @@ class MemversesController < ApplicationController
       # end
 
     else
-      redirect_to :action => 'index'
+      redirect_to root_path
     end
 
   end
@@ -1306,7 +1306,7 @@ class MemversesController < ApplicationController
       @ref          = session[:ref_test][@question_num]
       @soln         = session[:ref_soln][@question_num]
     else
-      redirect_to :action => 'index'
+      redirect_to root_path
     end
 
   end
@@ -1370,7 +1370,7 @@ class MemversesController < ApplicationController
       # Probably caused by user using the back button after test is finished
       logger.info("*** User probably hit the back button or returned next day without session variable set up")
       flash[:notice] = "Reference recall test already completed or not initialized"
-      redirect_to :action => 'index'
+      redirect_to root_path
     end
 
   end
@@ -1414,7 +1414,7 @@ class MemversesController < ApplicationController
       # end
 
     else
-      redirect_to :action => 'index'
+      redirect_to root_path
     end
 
   end
@@ -1534,7 +1534,7 @@ class MemversesController < ApplicationController
 
       redirect_to :action => 'drill_verse'
     else
-      redirect_to :action => 'index'
+      redirect_to root_path
     end
   end
 
