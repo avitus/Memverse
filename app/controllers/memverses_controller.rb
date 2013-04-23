@@ -118,11 +118,14 @@ class MemversesController < ApplicationController
 
   add_breadcrumb "Home", :root_path
 
+  # ----------------------------------------------------------------------------------------------------------
+  # Show memory verses
+  # ----------------------------------------------------------------------------------------------------------
   def index
 
     passage = Passage.find(params[:passage_id])
 
-    @memverses = passage ? passage.memverses.includes(:verse).order('verses.versenum') : current_user.memverses
+    @memverses = passage ? passage.memverses.active.includes(:verse).order('verses.versenum') : current_user.memverses
 
     respond_to do |format|
       format.html # index.html.erb
