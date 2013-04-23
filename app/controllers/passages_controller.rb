@@ -15,7 +15,7 @@ class PassagesController < ApplicationController
 
   # All passages due for review
   def due
-    @passages = current_user.passages.due
+    @passages = current_user.passages.due.active
 
     respond_to do |format|
       format.html # index.html.erb
