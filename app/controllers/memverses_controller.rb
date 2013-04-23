@@ -1112,7 +1112,7 @@ class MemversesController < ApplicationController
       redirect_to :action => 'test_ref'
     else
       flash[:notice] = "You must have 10 verse references in your account before you can take the reference recall test."
-      redirect_to :action => 'index'
+      redirect_to root_path
     end
 
   end
