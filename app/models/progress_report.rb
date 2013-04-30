@@ -13,12 +13,12 @@ class ProgressReport < ActiveRecord::Base
   
   # Validations
   validates_presence_of :user_id, :learning, :memorized, :entry_date
-  before_save :setup_consistency
+  before_save :setup_consistency 
 
   protected
   
   def setup_consistency
-    self.consistency = ProgressReport.where("date(created_at) BETWEEN ? AND ? ", self.created_at - 1.year, self.created_at)
+    self.consistency = ProgressReport.where('entry_date > ?', 1.year.ago).count + 1
   end
   
 end
