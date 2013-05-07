@@ -42,6 +42,7 @@ namespace :utils do
   # > use database_name;
   # > optimize table sessions;
   #
+  # Task duration: 10-20 minutes
   #--------------------------------------------------------------------------------------------
   desc "Clear expired sessions"
   task :clear_expired_sessions => :environment do
