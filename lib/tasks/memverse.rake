@@ -34,6 +34,22 @@ namespace :utils do
   end
 
   #--------------------------------------------------------------------------------------------
+  # Clear out old user sessions
+  #
+  # Best to defragment table after this task
+  #
+  # > mysql -h mysqlserver -u username -p
+  # > use database_name;
+  # > optimize table sessions;
+  #
+  #--------------------------------------------------------------------------------------------
+  desc "Clear expired sessions"
+  task :clear_expired_sessions => :environment do
+    sql = 'DELETE FROM sessions WHERE updated_at < DATE_SUB(NOW(), INTERVAL 1 MONTH);'
+    ActiveRecord::Base.connection.execute(sql)
+  end
+
+  #--------------------------------------------------------------------------------------------
   # Delete unused tags, recreate verse tags
   # Task duration: ~ 4 hours
   #--------------------------------------------------------------------------------------------
