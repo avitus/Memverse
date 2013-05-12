@@ -18,7 +18,7 @@ class ProgressReport < ActiveRecord::Base
   protected
   
   def setup_consistency
-    self.consistency = ProgressReport.where('entry_date > ?', entry_date - 1.year).where('? > entry_date', entry_date + 1.day).count
+    self.consistency = ProgressReport.where('entry_date > ? and entry_date <= ?', entry_date - 1.year, entry_date).count
   end
   
 end
