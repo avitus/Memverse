@@ -5,12 +5,12 @@
 <div class="signupform" id="signup-page-form">
 	<script type="text/javascript">
 		formSubmitted = false; // setup global variable
-		
+
 		checkForm = function(){
 			var isFormValid = true;
 			var emptyFields = false;
 			var invalidFields = false;
-		
+
 			$("div.signup input").each(function(){
 				if ($.trim($(this).val()).length == 0){
 					$(this).parent().find("div.sidetip p.blank").show();
@@ -21,7 +21,7 @@
 					invalidFields = true;
 				}
 			});
-		
+
 			if (!isFormValid) {
 				if (emptyFields && invalidFields) {
 					alert("Please complete any empty fields and correct any invalid fields.")
@@ -34,17 +34,18 @@
 				isFormValid = false;
 			} else { // The form is OK! We update global formSubmitted variable.
 				formSubmitted = true;
+				$.get("/signup_button_finished"); // finish experiment
 			}
-			
+
 			return isFormValid;
 		}
 	</script>
-	
+
 	<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f| %>
-		
+
 		<%= ('<input type="hidden" name="user[referred_by]" value="' + session[:referrer].to_s + '">').html_safe if session[:referrer] %>
 
-		<%= render :partial => "devise/registrations/form_button_b" %>
+		<%= render :partial => "devise/registrations/form_a" %>
 
 	<% end %>
 
@@ -53,36 +54,36 @@
 </div> <!-- end: white-box-with-margins -->
 
 <script type="text/javascript">
-	
+
 	$("div.signup input").val(''); // clear all input values
 	emailtaken = false; // setup emailtaken variable
-	
+
 	$("div.signup input").focus(function() {
 		// Only show the tip if there was nothing showing before
 		if ( !$(this).parent().find("div.sidetip p:visible").length ) {
 			$(this).parent().find("div.sidetip p").hide();
 			$(this).parent().find("div.sidetip p.tip").show();
 		}
-		
+
 	});
-	
+
 	$("#user_name").blur(function() {
 		$(this).parent().find("div.sidetip p").hide(); // First we hide other messages
-		
+
 		if( !$(this).val() ) { // give error if name is blank
 			$(this).parent().find("div.sidetip p.blank").show();
 		} else { // tell user that name is OK
 			$(this).parent().find("div.sidetip p.isaok").show();
 		}
 	});
-	
+
 	$("#user_email").blur(function() {
 		$(this).parent().find("div.sidetip p").hide(); // hide old message
 		if( !$(this).val() ) { // email is empty
-			
+
 			$(this).parent().find("div.sidetip p.blank").show();
 		} else { // email is not empty
-			
+
 			//simple email validation from http://www.w3schools.com/js/js_form_validation.asp
 			var email = $(this).val();
 			var atpos = email.indexOf("@");
@@ -126,23 +127,23 @@
 			}
 		}
 	}); // end email blur
-	
+
 	$("#user_password, #user_password_confirmation").blur(function() { // this blur applies to all inputs. purpose is to display error if left blank
 		if( !$(this).val() ) {
 			$(this).parent().find("div.sidetip p").hide();
 			$(this).parent().find("div.sidetip p.blank").show();
 		}
 	});
-	
+
 	function passwordStrength(){
 		// Password strength script adapted from http://www.marketingtechblog.com/javascript-password-strength/
 		var pwd = $("#user_password").val();
 		var strongRegex = new RegExp("^(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\\W).*$", "g");
 		var mediumRegex = new RegExp("^(?=.{7,})(((?=.*[A-Z])(?=.*[a-z]))|((?=.*[A-Z])(?=.*[0-9]))|((?=.*[a-z])(?=.*[0-9]))).*$", "g");
 		var enoughRegex = new RegExp("(?=.{6,}).*", "g");
-		
+
 		$("#user_password").parent().find("div.sidetip p").hide(); // Hide old message
-		
+
   		if( pwd.length < 6 ) {
 			$("#user_password").parent().find("div.sidetip p.invalid").show();
 		} else if (strongRegex.test(pwd)) {
@@ -153,11 +154,11 @@
 			$("#user_password").parent().find("div.sidetip p.weak").show();
 		}
 	}
-	
+
 	$("#user_password").keyup(function() {
 		$(this).parent().find("div.sidetip p").hide(); // Hide old message
 		passwordStrength();
-		
+
 		if( $("#user_password_confirmation").val() ) // if the user already has something in password confirmation input
 			if ( $("#user_password_confirmation").val() !== $(this).val() ) { // passwords don't match
 				$("div.passwordconfirm div.sidetip p").hide(); // hide old message
@@ -167,7 +168,7 @@
 				$("div.passwordconfirm div.sidetip p.perfect").show(); // tell user
 		}
 	});
-	
+
 	$("#user_password_confirmation").keyup(function() {
 		$(this).parent().find("div.sidetip p").hide(); // Hide old message
 		if ( !$(this).val() ) { // if there is nothing in field, just show tip
@@ -179,10 +180,10 @@
 			$(this).parent().find("div.sidetip p.perfect").show();
 		}
 	});
-	
+
 	// input placeholder fix
 	fauxPlaceholder();
-	
+
 	$("form#new_user").submit(function() {
 		return checkForm(); // call checkForm() when form submitted (no matter how)
 	});

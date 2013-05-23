@@ -125,7 +125,7 @@ MemverseApp::Application.routes.draw do
   match '/stt_setia'      => 'info#stt_setia'
   match '/bible_bee_tool' => 'info#bible_bee_tool'
 
-  match '/signup_button_test_finished' => 'info#signup_button_finished'
+  match '/signup_button_finished' => 'info#signup_button_finished'
 
   # Route for users who haven't yet joined a group
   match '/mygroup',                :to => 'groups#show',                     :as => 'mygroup'
