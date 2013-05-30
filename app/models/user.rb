@@ -1023,7 +1023,7 @@ class User < ActiveRecord::Base
   # Returns top 200 users (sorted by number of verses memorized)
   # ----------------------------------------------------------------------------------------------------------
   def self.top_users
-    User.active.order("memorized DESC").limit(200).select("id, login, name, created_at, church, church_id, country_id, memorized, learning, accuracy, ref_grade, level")
+    User.active.order("memorized DESC").limit(250).select("id, login, name, created_at, church, church_id, country_id, memorized, learning, accuracy, ref_grade, level")
   end
 
   # ----------------------------------------------------------------------------------------------------------

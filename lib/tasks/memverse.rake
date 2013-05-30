@@ -1,3 +1,5 @@
+# coding: utf-8
+
 namespace :utils do
 
   # include Parser
@@ -13,7 +15,8 @@ namespace :utils do
   end
 
   #--------------------------------------------------------------------------------------------
-  # Group user's memory verses into passages. This should be a one time operation.
+  # Delete unused tags, recreate verse tags
+  # Task duration: ~ 4 hours
   #--------------------------------------------------------------------------------------------
   desc "Clean up tag cloud"
   task :refresh_tag_cloud => :environment do
@@ -27,6 +30,76 @@ namespace :utils do
     Verse.find_each { |vs| vs.update_tags }
 
     puts "=== Completed refresh at    #{Time.now} ==="
+
+  end
+
+  #--------------------------------------------------------------------------------------------
+  # Clear out old user sessions
+  #
+  # Best to defragment table after this task
+  #
+  # > mysql -h mysqlserver -u username -p
+  # > use database_name;
+  # > optimize table sessions;
+  #
+  #--------------------------------------------------------------------------------------------
+  desc "Clear expired sessions"
+  task :clear_expired_sessions => :environment do
+    sql = 'DELETE FROM sessions WHERE updated_at < DATE_SUB(NOW(), INTERVAL 1 MONTH);'
+    ActiveRecord::Base.connection.execute(sql)
+  end
+
+  #--------------------------------------------------------------------------------------------
+  # Delete unused tags, recreate verse tags
+  # Task duration: ~ 4 hours
+  #--------------------------------------------------------------------------------------------
+  desc "Input missing NIV 1984 verses"
+  task :input_niv => :environment do
+
+    puts "Opening XML file"
+    niv = Nokogiri::XML(open('niv-1984.xml'))
+
+    puts "Starting verse upload"
+    BIBLEBOOKS.each { |book|
+
+      bi = BIBLEBOOKS.index(book) + 1
+
+      final_chapter = FinalVerse.where(:book => book).order("chapter DESC").first.chapter
+
+      (1..final_chapter).each { |chapter|
+
+        puts "#{bi} #{book} #{chapter}"
+
+        final_verse = FinalVerse.where(:book => book, :chapter => chapter).first.last_verse
+
+        (1..final_verse).each { |verse|
+
+          if !Verse.exists?(:translation => "NIV", :book => book, :chapter => chapter, :versenum => verse)
+
+            text = niv.css("book[name='#{book}'] chapter[name='#{chapter}'] verse[name='#{verse}']").text
+
+            text.gsub!(/—/, ' — ')    # add spaces around em dash
+            text.gsub!(/--/, ' — ')   # replace double dash with em dash
+            text.gsub!(/\n/, ' ')      # remove newlines
+            text.gsub!(/\s{2,}/, ' ')  # remove double space
+            text.strip!
+
+            puts "[#{verse}] " + text
+
+            if !text.blank?
+              Verse.create!(:translation => 'NIV', :book => book, :chapter => chapter, :versenum => verse, :text => text,
+                            :book_index => bi, :verified => true, :checked_by => 'XML Upload')
+            end
+
+          end
+
+        }
+
+      }
+
+    }
+
+    puts "=== Completed NIV 1984 input at #{Time.now} ==="
 
   end
 

@@ -84,23 +84,41 @@ module ApplicationHelper
   # Support for tag cloud
   # ----------------------------------------------------------------------------------------------------------   
   def tag_cloud( tags )
-    classes = %w(cloud1 cloud2 cloud3 cloud4 cloud5 cloud6 cloud7)
   
-    max, min = 0, 0
+    classes = %w(cloud1 cloud2 cloud3 cloud4 cloud5 cloud6 cloud7)
+    count_array = Array.new
     
     tags.each { |t|
-      max = t.count.to_i if t.count.to_i > max
-      min = t.count.to_i if t.count.to_i < min
+      count_array << t.count.to_i
     }
   
-    divisor = ((max - min) / classes.size) + 1 
+    count_array.sort!
+
+    divisor = ( count_array.count.to_i / classes.size ) + 1
   
     tags.each { |t|
-       yield t.name, classes[(t.count.to_i - min) / divisor]
+       yield t.name, classes[ count_array.index(t.count).to_i / divisor ]
     }
   end
   
+  # def tag_cloud( tags )
+  #   classes = %w(cloud1 cloud2 cloud3 cloud4 cloud5 cloud6 cloud7)
   
+  #   max, min, avg = 0, 0, 0
+    
+  #   tags.each { |t|
+  #     max = (t.count).to_i if (t.count).to_i > max
+  #     min = (t.count).to_i if (t.count).to_i < min
+  #   }
+  
+  #   divisor = ((max - min) / classes.size) + 1 
+  
+  #   tags.each { |t|
+  #      yield t.name, classes[((t.count).to_i - min) / divisor]
+  #   }
+  # end
+
+
   # ----------------------------------------------------------------------------------------------------------
   # This function replaces 'escape_javascript' which used to work under Rails 2.2.2 but stopped working in 
   # Rails 2.3.4. For some reason, verses were being truncated on semicolons.
