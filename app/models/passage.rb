@@ -10,7 +10,8 @@ class Passage < ActiveRecord::Base
   attr_accessible :user_id, :translation, :book, :chapter, :first_verse, :last_verse,
                   :efactor, :last_tested, :length, :next_test, :reference, :rep_n, :test_interval
 
-  scope :due, lambda { where('next_test  <= ?', Date.today) }
+  scope :due, lambda { where('passages.next_test  <= ?', Date.today) }
+  scope :active, joins(:memverses).merge(Memverse.active).group(:id).having('count(memverses.id) > 0')
 
   after_create   :update_ref
 
@@ -93,11 +94,11 @@ class Passage < ActiveRecord::Base
   # Combine supermemo information from underlying verses
   # ----------------------------------------------------------------------------------------------------------
   def consolidate_supermemo
-    self.test_interval = self.memverses.minimum(:test_interval)
-    self.rep_n         = self.memverses.minimum(:rep_n)
-    self.last_tested   = self.memverses.maximum(:last_tested)
-    self.next_test     = self.memverses.minimum(:next_test)
-    self.efactor       = self.memverses.average(:efactor)
+    self.test_interval = self.memverses.active.minimum(:test_interval)
+    self.rep_n         = self.memverses.active.minimum(:rep_n)
+    self.last_tested   = self.memverses.active.maximum(:last_tested)
+    self.next_test     = self.memverses.active.minimum(:next_test)
+    self.efactor       = self.memverses.active.average(:efactor)
     save
   end
 
@@ -105,7 +106,7 @@ class Passage < ActiveRecord::Base
   # Update next_test date
   # ----------------------------------------------------------------------------------------------------------
   def update_next_test_date
-    self.next_test     = self.memverses.minimum(:next_test)
+    self.next_test     = self.memverses.active.minimum(:next_test)
     save
   end
 

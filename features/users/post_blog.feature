@@ -2,17 +2,17 @@ Feature: Post on Blog
   In order to publicize information
   As a user
   I want to be able to post on the blog
-  
+
     Background:
       Given a blog titled "Memverse Blog"
-  
+
     @blog
     Scenario: I am not logged in and cannot post
       When I go to the blog
       Then I should not see "New blog post"
       When I go to the new blog post page for the blog titled "Memverse Blog"
       Then I should see "You don't have permission to do that."
-    
+
     @blog
     Scenario: I sign in but am not authorized to blog
       Given I sign in as a normal user
@@ -20,7 +20,7 @@ Feature: Post on Blog
       Then I should not see "New blog post"
       When I go to the new blog post page for the blog titled "Memverse Blog"
       Then I should see "You don't have permission to do that."
-	
+
     # @blog
     # Scenario: User signs in and creates two blog posts with same name
 	#   Given I am a user named "blogger" with an email "user@test.com" and password "please"
@@ -44,5 +44,5 @@ Feature: Post on Blog
     #     | blog_post_is_complete      | true                     |
     #   And I press "Save"
     #   Then I should see "This is the post 2 body"
-	# 
+	#
 	# Wasn't able to get can_blog? to return true for "blogger"....

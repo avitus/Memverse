@@ -118,11 +118,14 @@ class MemversesController < ApplicationController
 
   add_breadcrumb "Home", :root_path
 
+  # ----------------------------------------------------------------------------------------------------------
+  # Show memory verses
+  # ----------------------------------------------------------------------------------------------------------
   def index
 
     passage = Passage.find(params[:passage_id])
 
-    @memverses = passage ? passage.memverses.includes(:verse).order('verses.versenum') : current_user.memverses
+    @memverses = passage ? passage.memverses.active.includes(:verse).order('verses.versenum') : current_user.memverses
 
     respond_to do |format|
       format.html # index.html.erb
@@ -1109,7 +1112,7 @@ class MemversesController < ApplicationController
       redirect_to :action => 'test_ref'
     else
       flash[:notice] = "You must have 10 verse references in your account before you can take the reference recall test."
-      redirect_to :action => 'index'
+      redirect_to root_path
     end
 
   end
@@ -1157,7 +1160,7 @@ class MemversesController < ApplicationController
       redirect_to test_exam_path
     else
       flash[:notice] = "You need to memorize 10 verses before you can take the test."
-      redirect_to :action => 'index'
+      redirect_to root_path
     end
 
   end
@@ -1179,7 +1182,7 @@ class MemversesController < ApplicationController
       @mv           = Memverse.find(session[:exam_questions][@question_num])
 
     else
-      redirect_to :action => 'index'
+      redirect_to root_path
     end
 
   end
@@ -1196,9 +1199,8 @@ class MemversesController < ApplicationController
     solution      = mv.verse.text.gsub(/\s+/," ").strip
 
     if solution && answer && session[:exam_cntr]
-
-      # ---- TODO: Update this for greater leniency --------------
-      if answer.downcase.gsub(/[^a-z ]|\s-|\s—/, '') == solution.downcase.gsub(/[^a-z ]|\s-|\s—/, '')
+      # Lowercase, remove insignificant characters, squeeze out extra spaces, then remove spaces at beginning and end (if present)
+      if answer.downcase.gsub(/[^0-9a-záâãàçéêíóôõúüñαβξδεφγηισκλμνοπθρστυϝωχψζ ]/,'').squeeze(" ").strip == solution.downcase.gsub(/[^0-9a-záâãàçéêíóôõúüñαβξδεφγηισκλμνοπθρστυϝωχψζ ]/,'').squeeze(" ").strip
         flash[:notice] = "Correct"
         session[:exam_correct] += 1
       else
@@ -1224,7 +1226,7 @@ class MemversesController < ApplicationController
     else
       # Probably caused by user using the back button after test is finished
       flash[:notice] = "Exam already completed"
-      redirect_to :action => 'index'
+      redirect_to root_path
     end
 
   end
@@ -1282,7 +1284,7 @@ class MemversesController < ApplicationController
       # end
 
     else
-      redirect_to :action => 'index'
+      redirect_to root_path
     end
 
   end
@@ -1303,7 +1305,7 @@ class MemversesController < ApplicationController
       @ref          = session[:ref_test][@question_num]
       @soln         = session[:ref_soln][@question_num]
     else
-      redirect_to :action => 'index'
+      redirect_to root_path
     end
 
   end
@@ -1367,7 +1369,7 @@ class MemversesController < ApplicationController
       # Probably caused by user using the back button after test is finished
       logger.info("*** User probably hit the back button or returned next day without session variable set up")
       flash[:notice] = "Reference recall test already completed or not initialized"
-      redirect_to :action => 'index'
+      redirect_to root_path
     end
 
   end
@@ -1411,7 +1413,7 @@ class MemversesController < ApplicationController
       # end
 
     else
-      redirect_to :action => 'index'
+      redirect_to root_path
     end
 
   end
@@ -1531,7 +1533,7 @@ class MemversesController < ApplicationController
 
       redirect_to :action => 'drill_verse'
     else
-      redirect_to :action => 'index'
+      redirect_to root_path
     end
   end
 
