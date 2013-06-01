@@ -1199,9 +1199,8 @@ class MemversesController < ApplicationController
     solution      = mv.verse.text.gsub(/\s+/," ").strip
 
     if solution && answer && session[:exam_cntr]
-
-      # ---- TODO: Update this for greater leniency --------------
-      if answer.downcase.gsub(/[^a-z ]|\s-|\s—/, '') == solution.downcase.gsub(/[^a-z ]|\s-|\s—/, '')
+      # Lowercase, remove insignificant characters, squeeze out extra spaces, then remove spaces at beginning and end (if present)
+      if answer.downcase.gsub(/[^0-9a-záâãàçéêíóôõúüñαβξδεφγηισκλμνοπθρστυϝωχψζ ]/,'').squeeze(" ").strip == solution.downcase.gsub(/[^0-9a-záâãàçéêíóôõúüñαβξδεφγηισκλμνοπθρστυϝωχψζ ]/,'').squeeze(" ").strip
         flash[:notice] = "Correct"
         session[:exam_correct] += 1
       else
