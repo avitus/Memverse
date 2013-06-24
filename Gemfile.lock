@@ -111,7 +111,7 @@ GEM
       rails (~> 3.0)
     addressable (2.3.3)
     afm (0.2.0)
-    airbrake (3.1.9)
+    airbrake (3.1.12)
       activesupport
       builder
       json
@@ -246,7 +246,7 @@ GEM
     jquery-ui-rails (3.0.1)
       jquery-rails
       railties (>= 3.1.0)
-    json (1.7.7)
+    json (1.8.0)
     kaminari (0.14.1)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
@@ -258,7 +258,7 @@ GEM
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     mime-types (1.21)
-    multi_json (1.7.2)
+    multi_json (1.7.7)
     mysql2 (0.3.11)
     nested_form (0.3.1)
     net-scp (1.1.0)
