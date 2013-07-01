@@ -160,6 +160,7 @@ MemverseApp::Application.routes.draw do
   match "/chat/send",              :controller => "chat", :action => "send_message"
   match "/chat/channel1",          :controller => "chat", :action => "channel1"
   match "/chat/channel2",          :controller => "chat", :action => "channel2"
+  match "/chat/toggle_ban",        :controller => "chat", :action => "toggle_ban"
 
 
   # Routes for live quiz
