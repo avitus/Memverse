@@ -343,7 +343,7 @@
 		$(".ban").remove(); // remove any previous ban links
 		if($(this).attr("id") && $(this).attr("id").length > 0){ // server announcements don't have user id
 			ban_id = $(this).attr("id");
-			$(this).append(" (<a href='/chat/toggle_ban?user_id='"+ban_id+" data-remote class="ban">toggle ban</a>)");
+			$(this).append(" <a href='/chat/toggle_ban?user_id="+ban_id+"' data-remote class='ban'>(toggle ban)</a>");
 		}
 	});
 
