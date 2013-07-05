@@ -8,8 +8,8 @@
         <div class="verse-field ui-widget">
             <label class="tag">Enter a reference or tag</label>
             <img class="spinner spinner-add-verse" id="ajax_spinner" src="/assets/indicator2.gif" alt="Searching ..." style="display: none" />
-            <%= text_field_tag(:verse, params[:verse], :class => "flex-verse-search", :id => "js_flex-verse-search", :placeholder => "e.g. Romans 3:2-5 or 'creation'" )%> 
-        </div>        
+            <%= text_field_tag(:verse, params[:verse], :class => "flex-verse-search", :id => "js_flex-verse-search", :placeholder => "e.g. Romans 3:2-5 or 'creation'" )%>
+        </div>
 
         <!-- Search Results -->
         <div class="mv-search-results-compact">
@@ -22,11 +22,11 @@
 
         </div>
 
-    </div> 
+    </div>
 
     <!-- Center Panel -->
     <div class="verse-learning">
-        
+
 
         <div class="top-heading">
             <h2><span><%= t('.verse') %>: </span><span class="verse-ref"></span><span class="verse-tl"></span></h2>
@@ -44,10 +44,10 @@
         <div class="progression-control">
             <div class="level-controller">
                 <div class="dec-level"><%= image_tag( "left_arrow_32x32.png",         :width => 32, :height => 32 ) %></div>
-                <div class="cur-level">Level <span class="level-num">0</span></div>        
-                <div class="inc-level"><%= image_tag( "right_arrow_32x32.png",        :width => 32, :height => 32 ) %></div>            
+                <div class="cur-level">Level <span class="level-num">0</span></div>
+                <div class="inc-level"><%= image_tag( "right_arrow_32x32.png",        :width => 32, :height => 32 ) %></div>
             </div>
-            <div class="nxt-verse"><%= image_tag( "right_arrow_orange_32x32.png", :width => 32, :height => 32 ) %></div>            
+            <div class="nxt-verse"><%= image_tag( "right_arrow_orange_32x32.png", :width => 32, :height => 32 ) %></div>
         </div>
 
     </div>
@@ -57,14 +57,14 @@
         <div class="verse-ref-list">
             <h3>Practice List</h3>
             <ul id="upcoming-verses">
-            </ul>   
-        </div>  
+            </ul>
+        </div>
     </div>
 
 </div>
 
 <script language="JavaScript" type="text/javascript"><!--
-    
+
     $(document).ready(function() {
 
         //------- Initial setup -----------------------
@@ -72,7 +72,7 @@
         $(".scrollable").scrollable({ vertical: true, mousewheel: true });
 
         //------- Searching for a verse----------------
-        $("#js_flex-verse-search").observe_field(0.2, function( ) { 
+        $("#js_flex-verse-search").observe_field(0.2, function( ) {
             // clear prior search results
             clearSearchResults();
             // search and display results with callback function
@@ -106,11 +106,11 @@
             }
 
             $verseToAdd.parent().fadeOut();
-        }); 
+        });
 
         //------- Removing a verse from queue ---------
         $(".verse-ref-list").on( "click", ".remove-verse-button", function() {
-            
+
             $(this).parent().remove();
             // displayAlertMessage("Removing memory verse" + $(this).parent().find(".mv-id").html() );
             practiceState.removeFromQueue( $(this).parent().find(".mv-id").html() );
@@ -118,17 +118,22 @@
         });
 
         //------- Typing a verse ----------------------
-        $(".blankified").on( "keyup", "input.blank-word", function (e) { 
-             
-            // Word correct ==> next word
-            if ( scrub_text( this.name ) === scrub_text( this.value.trim() ) ) { 
+        $(".blankified").on( "keyup", "input.blank-word", function (e) {
 
-                $(this).next().focus();  // advance cursor to next blank word
+            var correctWord = this.name;
+            var userGuess   = this.value.trim();
+
+            // Word correct ==> next word
+            if ( scrub_text( correctWord ) === scrub_text( userGuess ) ) {
 
                 // Level complete ==> next level
-                if ( $(this).next().length === 0 ) {  // there are no other words to fill in
+                if ( $(this).parent().find("input").length === 1 ) {  // no more words to fill in (current input hasn't been replaced yet)
                     practiceState.levelUp();
                 }
+
+                $(this).next().focus();  // advance cursor to next blank word
+                $(this).replaceWith( correctWord );
+
             }
 
             // check for down arrow keypress
@@ -162,4 +167,4 @@
 
     }); // End of jQuery document ready
 
---></script>        
+--></script>
