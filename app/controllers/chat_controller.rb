@@ -55,7 +55,7 @@ class ChatController < ApplicationController
     @usr 		= params[:sender]
     @usr_id = params[:user_id]
     channel = params[:channel] || "channel1"
-    if $redis.exists("chat-#{channel}") && $redis.hmget("chat-#{channel}", "status").first == "Open"
+    if $redis.exists("chat-#{channel}") && $redis.hmget("chat-#{channel}", "status").first == "Open" && !$redis.exists("banned-#{@usr_id}")
       Juggernaut.publish(select_channel(channel), parse_chat_message(params[:msg_body], params[:sender], params[:user_id])) unless @msg.blank?
     end
     respond_to do |format|
