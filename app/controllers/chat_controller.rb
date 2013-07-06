@@ -34,7 +34,7 @@ class ChatController < ApplicationController
   def toggle_ban
     user_id = params[:user_id]
 
-    if user_id
+    if user_id && current_user.admin?
       if $redis.exists("banned-#{user_id}")
         $redis.del("banned-#{user_id}")
         status = "Ban revoked"
