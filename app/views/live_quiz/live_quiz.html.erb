@@ -339,6 +339,8 @@
 		}
 	});
 
+	<% if current_user == @quiz_master %>
+
 	$("#chat-stream-narrow").delegate("li.chat-username", "hover", function(){
 		$(".ban").remove(); // remove any previous ban links
 		if($(this).attr("id") && $(this).attr("id").length > 0){ // server announcements don't have user id
@@ -346,6 +348,8 @@
 			$(this).append(" <a href='/chat/toggle_ban?user_id="+ban_id+"' data-remote class='ban'>(toggle ban)</a>");
 		}
 	});
+
+	<% end %>
 
 	function submitmsg() {
 		if ($("#msg_body").val() == "") {
