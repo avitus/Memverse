@@ -130,7 +130,7 @@ namespace :utils do
       tl_max_usage = count_ranges[vs.translation.to_sym][:max]
 
       if tl_max_usage > tl_min_usage
-        normalized_usage = 100 - (( vs.memverses_count - tl_min_usage ) / ( tl_max_usage - tl_min_usage ) * 100)
+        normalized_usage = ( vs.memverses_count - tl_min_usage ) / ( tl_max_usage - tl_min_usage ) * 100
         vs.update_attribute( :popularity, normalized_usage )
       else
         vs.update_attribute( :popularity, 50) # No real data ... should only occur with translations that aren't really used
