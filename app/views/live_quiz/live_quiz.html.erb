@@ -49,7 +49,7 @@
 
 	<div id="chat-window">
 
-		<h3>Chat (<span id="chat_status"><%= @chat_status %></span>) <%= (link_to "Toggle Status", {:controller => "chat", :action => "toggle_channel", :channel => "channel2"}, :remote => true) if current_user == @quiz_master %></h3>
+		<h3>Chat (<span id="chat_status"><%= @chat_status %></span>) <%= (link_to "Toggle Status", {:controller => "chat", :action => "toggle_channel", :channel => "quiz-<%= @quiz.id %>"}, :remote => true) if current_user == @quiz_master %></h3>
 
 		<div id="chat-stream-narrow">
 		</div>
@@ -58,7 +58,7 @@
 			<%= text_field_tag 'msg_body', '', :size => 28 %>
 			<%= hidden_field_tag 'sender',  current_user.name_or_login %>
 			<%= hidden_field_tag 'user_id', current_user.id %>
-			<%= hidden_field_tag 'channel', "channel2" %>
+			<%= hidden_field_tag 'channel', "quiz-<%= @quiz.id %>" %>
 			<%= submit_tag 'Send', {:onclick => "return submitmsg();"} %>
 		<% end %>
 	</div>
@@ -67,6 +67,28 @@
 </div>
 
 <script type="text/javascript" charset="utf-8">
+
+	// Init
+    var pubnub = PUBNUB.init({
+        publish_key   : '<%= PN.publish_key %>',
+        subscribe_key : '<%= PN.subscribe_key %>',
+        uuid          : '<%= current_user.id %>'
+    })
+
+    // LISTEN
+    pubnub.subscribe({
+        channel : "quiz-<%= @quiz.id %>",
+        message : function(m){ alert(m) },
+        connect : publish
+    })
+
+    // SEND
+    function publish() {
+        pubnub.publish({
+            channel : "hello_world",
+            message : "Hi."
+        })
+    }
 	var jug = new Juggernaut();
 	jug.meta = {user_id: <%= current_user.id %>, user_name: "<%= current_user.name %>", gravatar_url: "<%= (current_user.blog_avatar_url + "&s=32").html_safe %>"};
 
