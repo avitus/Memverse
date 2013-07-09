@@ -89,6 +89,60 @@ namespace :utils do
   end
 
   #--------------------------------------------------------------------------------------------
+  # Update popularity for each verse
+  # Task duration: ~ 10 mins
+  #--------------------------------------------------------------------------------------------
+  desc "Update verse popularity"
+  task :update_verse_popularity => :environment do
+
+    puts "=== Updating verse popularity at      #{Time.now} ==="
+
+    # # Calculate average eFactor for each verse
+    # Verse.find_each do |vs|
+
+    #   vs.update_attribute( :popularity, vs.memverses.count )
+
+    # end
+
+    # Create a hash of max and min eFactors by translation
+    count_ranges = Hash.new
+
+    puts "Popularity Ranges for Each Translation"
+    puts "--------------------------------------"
+
+    TRANSLATIONS.keys.each do |tl|
+      count_ranges[tl] =
+        {
+          :max => Verse.where(:translation => tl.to_s).maximum(:memverses_count),
+          :min => Verse.where(:translation => tl.to_s).minimum(:memverses_count)
+        }
+
+      if count_ranges[tl][:max] && count_ranges[tl][:max]
+        printf("%s : %g - %g \n", tl.to_s, count_ranges[tl][:max], count_ranges[tl][:min])
+      end
+
+    end
+
+    # Normalize by translation such that 0 = least popular, 100 = most popular
+    Verse.find_each do |vs|
+
+      tl_max_usage = Math::log10( [count_ranges[vs.translation.to_sym][:max], 1].max )  # ensure we're not taking log of 0
+
+      if tl_max_usage > 0
+        normalized_usage = ( Math::log10( [vs.memverses_count, 1].max )  ) / tl_max_usage * 100
+        vs.update_attribute( :popularity, normalized_usage )
+      else
+        vs.update_attribute( :popularity, 50) # No real data ... should only occur with translations that aren't really used
+      end
+
+    end
+
+    puts "=== Completed verse popularity update #{Time.now} ==="
+
+  end
+
+
+  #--------------------------------------------------------------------------------------------
   # Clear out old user sessions
   #
   # Best to defragment table after this task
