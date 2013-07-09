@@ -1,5 +1,7 @@
 MemverseApp::Application.routes.draw do
+  require 'sidekiq/web'
 
+  mount Sidekiq::Web,     :at => '/sidekiq'
   mount Forem::Engine,    :at => '/forums'
   mount Bloggity::Engine, :at => '/blog'
   mount RailsAdmin::Engine    => '/admin', :as => 'rails_admin'

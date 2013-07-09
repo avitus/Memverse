@@ -84,6 +84,10 @@ gem 'sitemap_generator'                                                         
 gem 'split', :require => 'split/dashboard'                                                      # AB testing framework
 gem 'backup'                                                                                    # Used to backup MySQL database and uploaded site assets
 gem 'dropbox-sdk'                                                                               # Used with backup above
+gem 'sidekiq'                                                                                   # Background jobs; used for quizzes
+gem 'sinatra', require: false                                                                   # sinatra and slim are required for sidekiq
+gem 'slim'
+gem 'pubnub'                                                                                    # evaluating as replacement for juggernaut
 
 group :console do
   gem 'wirble'
