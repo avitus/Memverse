@@ -126,18 +126,16 @@ namespace :utils do
     # Normalize by translation such that 0 = least popular, 100 = most popular
     Verse.find_each do |vs|
 
-      tl_min_usage = count_ranges[vs.translation.to_sym][:min]
-      tl_max_usage = count_ranges[vs.translation.to_sym][:max]
+      tl_max_usage = Math::log10( [count_ranges[vs.translation.to_sym][:max], 1].max )  # ensure we're not taking log of 0
 
-      if tl_max_usage > tl_min_usage
-        normalized_usage = ( vs.memverses_count - tl_min_usage ) / ( tl_max_usage - tl_min_usage ) * 100
+      if tl_max_usage > 0
+        normalized_usage = ( Math::log10( [vs.memverses_count, 1].max )  ) / tl_max_usage * 100
         vs.update_attribute( :popularity, normalized_usage )
       else
         vs.update_attribute( :popularity, 50) # No real data ... should only occur with translations that aren't really used
       end
 
     end
-
 
     puts "=== Completed verse popularity update #{Time.now} ==="
 
