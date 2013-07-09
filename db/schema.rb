@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130709174402) do
+ActiveRecord::Schema.define(:version => 20130709222642) do
 
   create_table "american_states", :force => true do |t|
     t.string  "abbrev",      :limit => 20, :default => "", :null => false
@@ -632,6 +632,7 @@ ActiveRecord::Schema.define(:version => 20130709174402) do
     t.string   "checked_by"
     t.integer  "memverses_count",                               :default => 0
     t.decimal  "difficulty",      :precision => 5, :scale => 2
+    t.decimal  "popularity",      :precision => 5, :scale => 2
   end
 
   add_index "verses", ["book"], :name => "index_verses_on_book"
