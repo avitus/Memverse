@@ -35,7 +35,7 @@ namespace :utils do
 
   #--------------------------------------------------------------------------------------------
   # Update difficulty for each verse
-  # Task duration: ~ 4 hours
+  # Task duration: ~ 10 mins
   #--------------------------------------------------------------------------------------------
   desc "Update verse difficulty"
   task :update_verse_difficulty => :environment do
@@ -78,7 +78,7 @@ namespace :utils do
         tl_min_difficulty = efactor_ranges[vs.translation.to_sym][:min]
         tl_max_difficulty = efactor_ranges[vs.translation.to_sym][:max]
 
-        normalized_difficulty = ( vs.difficulty - tl_min_difficulty ) / ( tl_max_difficulty - tl_min_difficulty ) * 100
+        normalized_difficulty = 100 - (( vs.difficulty - tl_min_difficulty ) / ( tl_max_difficulty - tl_min_difficulty ) * 100)
         vs.update_attribute( :difficulty, normalized_difficulty )
       end
     end
