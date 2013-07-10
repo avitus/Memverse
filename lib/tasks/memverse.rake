@@ -126,6 +126,8 @@ namespace :utils do
     # Normalize by translation such that 0 = least popular, 100 = most popular
     Verse.find_each do |vs|
 
+      # If verses exist with invalid translation then run the following
+      # Verse.where("translation NOT IN (?)", TRANSLATIONS.keys) and destroy_all
       tl_max_usage = Math::log10( [count_ranges[vs.translation.to_sym][:max], 1].max )  # ensure we're not taking log of 0
 
       if tl_max_usage > 0
