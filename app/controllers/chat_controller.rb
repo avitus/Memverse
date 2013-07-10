@@ -24,6 +24,8 @@ class ChatController < ApplicationController
 
     $redis.hset("chat-#{channel}", "status", new_status)
 
+    @my_callback = lambda { |message| puts(message) } # for PubNub
+
     PN.publish(
         :channel  => channel,
         :message  => {

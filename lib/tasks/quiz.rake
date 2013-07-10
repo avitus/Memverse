@@ -32,7 +32,7 @@ namespace :quiz do
       PN.publish(
         :channel  => channel,
         :message  => {
-          :meta => "chat",
+          :meta => "chat_status",
           :status => new_status
         },
         :callback => @my_callback
@@ -156,7 +156,7 @@ namespace :quiz do
     PN.publish(
       :channel  => channel,
       :message  => {
-        :meta => "chat",
+        :meta => "chat_status",
         :status => new_status
       },
       :callback => @my_callback
