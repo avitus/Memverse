@@ -130,14 +130,7 @@ namespace :quiz do
         :channel  => channel,
         :message  => {
           :meta => "scoreboard",
-          :q_type => "mcq",
-          :mc_question => q.mc_question,
-          :mc_option_a => q.mc_option_a,
-          :mc_option_b => q.mc_option_b,
-          :mc_option_c => q.mc_option_c,
-          :mc_option_d => q.mc_option_d,
-          :mc_answer => q.mc_answer,
-          :time_alloc => 30
+          :scoreboard => scoreboard
         },
         :callback => @my_callback
       )
