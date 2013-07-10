@@ -98,23 +98,31 @@
     function handle_message(m){
     	switch(m.meta) {
     		case "chat":
-    			var first_colon  = parseInt(data.indexOf(':'));
-				var sender_id    = data.substring(0,first_colon);
-				var second_colon = parseInt(data.indexOf(':',first_colon+1));
-				var user         = data.substring(first_colon+1,second_colon);
-				var message      = data.substring(second_colon+1);
+    			var first_colon  = parseInt(m.data.indexOf(':'));
+				var sender_id    = m.data.substring(0,first_colon);
+				var second_colon = parseInt(m.data.indexOf(':',first_colon+1));
+				var user         = m.data.substring(first_colon+1,second_colon);
+				var message      = m.data.substring(second_colon+1);
 
 				put_chat(user,message,m.meta,sender_id);
+
+				break;
     		case "chat_status":
-	    		$("#chat_status").text(data.status);
+	    		$("#chat_status").text(m.status);
 				var user    = "Memverse Server"
-				var message = "Chat Channel " + data.status;
+				var message = "Chat Channel " + m.status;
 
 				put_chat(user,message,m.meta);
+
+				break;
     		case "question":
     			handle_question(m);
+
+    			break;
     		case "scoreboard":
     			update_scoreboard(m);
+
+    			break;
     	}
     }
 
