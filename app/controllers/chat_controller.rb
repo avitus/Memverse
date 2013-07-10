@@ -20,10 +20,19 @@ class ChatController < ApplicationController
       status = $redis.hmget("chat-#{channel}", "status").first
     end
 
-    new_status = (status && status == "Open")?"Closed":"Open"
+    new_status = (status && status == "Open") ? "Closed":"Open"
 
     $redis.hset("chat-#{channel}", "status", new_status)
-    Juggernaut.publish(select_channel(channel), {:status => new_status})
+
+    PN.publish(
+        :channel  => channel,
+        :message  => {
+          :meta => "chat_status",
+          :status => new_status
+        },
+        :callback => @my_callback
+      )
+    # Juggernaut.publish(select_channel(channel), {:status => new_status})
 
     render :json => {:status => new_status}
   end
