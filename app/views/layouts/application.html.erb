@@ -58,10 +58,12 @@
 <!-- jeditable          : for in-place tag editing goodness -->
 <!-- jquery.fancybox    : lightbox for tutorial video -->
 <!-- juggernaut		    : needed for chat room -->
+<!-- pubnub             : possible replacement for juggernaut (in evaluation) -->
 <!-- modernizr		    : support for CSS3 and HTML5 in older browsers -->
 <!-- countdown          : used for live quiz -->
 <!-- hoverIntent        : used on popular verses page -->
 <!-- periodicalUpdater  : for home page memorized count -->
+
 
 <!-- jQuery: serve older version of jQuery for IE8 and earlier, try CDN but fallback on local copy -->
 
@@ -80,6 +82,10 @@
 <!-- UI Libraries -->
 <script type="text/javascript" src="http://cdn.jquerytools.org/1.2.7/tiny/jquery.tools.min.js"></script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+
+<!-- PubNub for messaging -->
+<script type="text/javascript" src="http://cdn.pubnub.com/pubnub-3.5.3.min.js"></script>
+
 
 <!-- Main Javascript Manifest -->
 <%= javascript_include_tag "application" %>

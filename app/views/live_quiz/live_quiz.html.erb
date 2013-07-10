@@ -49,7 +49,10 @@
 
 	<div id="chat-window">
 
-		<h3>Chat (<span id="chat_status"><%= @chat_status %></span>) <%= (link_to "Toggle Status", {:controller => "chat", :action => "toggle_channel", :channel => "channel2"}, :remote => true) if current_user == @quiz_master %></h3>
+		<h3>
+			Chat (<span id="chat_status"><%= @chat_status %></span>)
+			<%= (link_to "Toggle Status", {:controller => "chat", :action => "toggle_channel", :channel => "quiz-#{@quiz.id}"}, :remote => true) if current_user == @quiz_master %>
+		</h3>
 
 		<div id="chat-stream-narrow">
 		</div>
@@ -58,7 +61,7 @@
 			<%= text_field_tag 'msg_body', '', :size => 28 %>
 			<%= hidden_field_tag 'sender',  current_user.name_or_login %>
 			<%= hidden_field_tag 'user_id', current_user.id %>
-			<%= hidden_field_tag 'channel', "channel2" %>
+			<%= hidden_field_tag 'channel', "quiz-#{@quiz.id}" %>
 			<%= submit_tag 'Send', {:onclick => "return submitmsg();"} %>
 		<% end %>
 	</div>
@@ -67,28 +70,68 @@
 </div>
 
 <script type="text/javascript" charset="utf-8">
-	var jug = new Juggernaut();
-	jug.meta = {user_id: <%= current_user.id %>, user_name: "<%= current_user.name %>", gravatar_url: "<%= (current_user.blog_avatar_url + "&s=32").html_safe %>"};
+	channel = "quiz-<%= @quiz.id %>";
 
-	jug.subscribe("/chats/channel2", function(data){
-		if(data.status) {
-			$("#chat_status").text(data.status);
-			var user    = "Memverse Server"
-			var message = "Chat Channel " + data.status;
-		} else {
-			var first_colon  = parseInt(data.indexOf(':'));
-			var sender_id    = data.substring(0,first_colon);
-			var second_colon = parseInt(data.indexOf(':',first_colon+1));
-			var user         = data.substring(first_colon+1,second_colon);
-			var message      = data.substring(second_colon+1);
-		}
+	// Init
+    var pubnub = PUBNUB.init({
+        publish_key   : '<%= PN.publish_key %>',
+        subscribe_key : '<%= PN.subscribe_key %>',
+        uuid          : '<%= current_user.id %>'
+    })
+
+    // LISTEN
+    pubnub.subscribe({
+        channel  : channel,
+        message  : function(data) { handle_message(data) },
+        connect  : connect,
+        presence : presence
+    })
+
+    // Get List of Occupants and Occupancy Count.
+    function connect() {
+    	pubnub.here_now({
+    		channel : channel,
+    		callback : presence
+    	});
+    }
+
+    function handle_message(m){
+    	switch(m.meta) {
+    		case "chat":
+    			var first_colon  = parseInt(m.data.indexOf(':'));
+				var sender_id    = m.data.substring(0,first_colon);
+				var second_colon = parseInt(m.data.indexOf(':',first_colon+1));
+				var user         = m.data.substring(first_colon+1,second_colon);
+				var message      = m.data.substring(second_colon+1);
+
+				put_chat(user,message,m.meta,sender_id);
+
+				break;
+    		case "chat_status":
+	    		$("#chat_status").text(m.status);
+				var user    = "Memverse Server"
+				var message = "Chat Channel " + m.status;
+
+				put_chat(user,message,m.meta);
+
+				break;
+    		case "question":
+    			handle_question(m);
+
+    			break;
+    		case "scoreboard":
+    			update_scoreboard(m);
+
+    			break;
+    	}
+    }
+
+    function put_chat(user,message,meta,sender_id){
 
 		var u = $("<li/>").text(user).addClass("chat-username");
 		var m = $("<li/>").text(message).addClass("chat-message");
 
-		if(!data.status){
-			u.attr("id",sender_id); // add sender_id as long as this was not server announcement
-		}
+		u.attr("id",sender_id); // add sender_id if present
 
 		if ((u.text() == $("#chat-stream-narrow li.chat-username").last().text()) && ($("#chat-stream-narrow li").last().attr('class') != 'chat-announcement')) {
 			u = "";
@@ -97,7 +140,15 @@
 		chat_stream_scroll(function(){
 			$("#chat-stream-narrow").append(u).append(m);
 		});
-	});
+
+    }
+
+    function presence(){
+    	// update list of users in room
+    }
+
+	var jug = new Juggernaut();
+	jug.meta = {user_id: <%= current_user.id %>, user_name: "<%= current_user.name %>", gravatar_url: "<%= (current_user.blog_avatar_url + "&s=32").html_safe %>"};
 
 	function addInputBox(questionType, questionNum, questionAnswer)	{
 		switch(questionType) {
@@ -158,7 +209,7 @@
 		$('input#submit-answer').hide();
 	}
 
-	jug.subscribe("/live_quiz/quiz_stream", function(data) {
+	function handle_question(data) {
 		var q_num  = data.q_num;
 		var q_type = data.q_type;
 		var q_text;
@@ -236,7 +287,7 @@
 			});
 		}
 
-		<!-- Countdown clock -->
+		// countdown clock
 		$('#quiz-timer').countdown('destroy').removeClass('red-highlight');
 		$('#quiz-timer').countdown({until: +q_time, onTick: highlightLast5, onExpiry: disableSubmission, format: 'S'});
 
@@ -248,9 +299,9 @@
 		} else {
 			$("#countdown-till").text("till next question");
 		}
-	});
+	}
 
-	jug.subscribe("/live_quiz/scoreboard", function(data){
+	function update_scoreboard(data){
 
 		$("#live-quiz-scores").empty();
 
@@ -274,7 +325,7 @@
 			$("#live-quiz-scores").append(li);
 			$("#live-quiz-scores").scrollTop(0);
 		});
-	});
+	}
 
 	user_id = "<%= current_user.id %>";
 	user_name = "<%= current_user.name %>";
