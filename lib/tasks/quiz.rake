@@ -21,6 +21,7 @@ namespace :quiz do
 
     puts 'Opening chat'
     channel = "quiz-#{quiz_id}"
+    @my_callback = lambda { |message| puts(message) } # for PubNub
 
     if $redis.exists("chat-#{channel}")
       status = $redis.hmget("chat-#{channel}", "status").first
@@ -47,7 +48,6 @@ namespace :quiz do
     sleep(sleep_time)
 
     puts "The time has come. Starting quiz."
-    @my_callback = lambda { |message| puts(message) } # for PubNub
 
     # Delete participant scores from redis
     participants = $redis.keys("user-*")
