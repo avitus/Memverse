@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130127225306) do
+ActiveRecord::Schema.define(:version => 20130709222642) do
 
   create_table "american_states", :force => true do |t|
     t.string  "abbrev",      :limit => 20, :default => "", :null => false
@@ -618,19 +618,21 @@ ActiveRecord::Schema.define(:version => 20130127225306) do
   add_index "users", ["referred_by"], :name => "index_users_on_referred_by"
 
   create_table "verses", :force => true do |t|
-    t.string   "translation",                        :null => false
-    t.integer  "book_index",                         :null => false
-    t.string   "book",                               :null => false
-    t.integer  "chapter",                            :null => false
-    t.integer  "versenum",                           :null => false
+    t.string   "translation",                                                      :null => false
+    t.integer  "book_index",                                                       :null => false
+    t.string   "book",                                                             :null => false
+    t.integer  "chapter",                                                          :null => false
+    t.integer  "versenum",                                                         :null => false
     t.text     "text"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "verified",        :default => false, :null => false
-    t.boolean  "error_flag",      :default => false, :null => false
+    t.boolean  "verified",                                      :default => false, :null => false
+    t.boolean  "error_flag",                                    :default => false, :null => false
     t.integer  "uberverse_id"
     t.string   "checked_by"
-    t.integer  "memverses_count", :default => 0
+    t.integer  "memverses_count",                               :default => 0
+    t.decimal  "difficulty",      :precision => 5, :scale => 2
+    t.decimal  "popularity",      :precision => 5, :scale => 2
   end
 
   add_index "verses", ["book"], :name => "index_verses_on_book"

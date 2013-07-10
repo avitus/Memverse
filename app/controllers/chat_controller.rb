@@ -20,10 +20,19 @@ class ChatController < ApplicationController
       status = $redis.hmget("chat-#{channel}", "status").first
     end
 
-    new_status = (status && status == "Open")?"Closed":"Open"
+    new_status = (status && status == "Open") ? "Closed":"Open"
 
     $redis.hset("chat-#{channel}", "status", new_status)
-    Juggernaut.publish(select_channel(channel), {:status => new_status})
+
+    PN.publish(
+        :channel  => channel,
+        :message  => {
+          :meta => "chat_status",
+          :status => new_status
+        },
+        :callback => @my_callback
+      )
+    # Juggernaut.publish(select_channel(channel), {:status => new_status})
 
     render :json => {:status => new_status}
   end
@@ -55,8 +64,21 @@ class ChatController < ApplicationController
     @usr 		= params[:sender]
     @usr_id = params[:user_id]
     channel = params[:channel] || "channel1"
-    if $redis.exists("chat-#{channel}") && $redis.hmget("chat-#{channel}", "status").first == "Open" && !$redis.exists("banned-#{@usr_id}")
-      Juggernaut.publish(select_channel(channel), parse_chat_message(params[:msg_body], params[:sender], params[:user_id])) unless @msg.blank?
+
+    chat_open  = $redis.exists("chat-#{channel}") ? ($redis.hmget("chat-#{channel}", "status").first == "Open") : true
+    usr_banned = $redis.exists("banned-#{@usr_id}")
+    @my_callback = lambda { |message| puts(message) } # for PubNub
+
+    if chat_open && !usr_banned
+      PN.publish(
+        :channel  => channel,
+        :message  => {
+          :meta => "chat",
+          :data => parse_chat_message(params[:msg_body], params[:sender], params[:user_id])
+        },
+        :callback => @my_callback
+      )
+      # Juggernaut.publish(select_channel(channel), parse_chat_message(params[:msg_body], params[:sender], params[:user_id])) unless @msg.blank?
     end
     respond_to do |format|
       format.js
