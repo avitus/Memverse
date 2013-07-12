@@ -21,6 +21,7 @@ namespace :quiz do
 
     puts 'Opening chat'
     channel = "quiz-#{quiz_id}"
+    @my_callback = lambda { |message| puts(message) } # for PubNub
 
     if $redis.exists("chat-#{channel}")
       status = $redis.hmget("chat-#{channel}", "status").first
@@ -32,7 +33,7 @@ namespace :quiz do
       PN.publish(
         :channel  => channel,
         :message  => {
-          :meta => "chat",
+          :meta => "chat_status",
           :status => new_status
         },
         :callback => @my_callback
@@ -47,7 +48,6 @@ namespace :quiz do
     sleep(sleep_time)
 
     puts "The time has come. Starting quiz."
-    @my_callback = lambda { |message| puts(message) } # for PubNub
 
     # Delete participant scores from redis
     participants = $redis.keys("user-*")
@@ -130,14 +130,7 @@ namespace :quiz do
         :channel  => channel,
         :message  => {
           :meta => "scoreboard",
-          :q_type => "mcq",
-          :mc_question => q.mc_question,
-          :mc_option_a => q.mc_option_a,
-          :mc_option_b => q.mc_option_b,
-          :mc_option_c => q.mc_option_c,
-          :mc_option_d => q.mc_option_d,
-          :mc_answer => q.mc_answer,
-          :time_alloc => 30
+          :scoreboard => scoreboard
         },
         :callback => @my_callback
       )
@@ -156,7 +149,7 @@ namespace :quiz do
     PN.publish(
       :channel  => channel,
       :message  => {
-        :meta => "chat",
+        :meta => "chat_status",
         :status => new_status
       },
       :callback => @my_callback
