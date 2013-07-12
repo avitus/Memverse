@@ -3,10 +3,10 @@
 require "juggernaut"
 
 class LiveQuizController < ApplicationController
-  
+
   before_filter :authenticate_user!, :only => :live_quiz
- 
- 
+
+
   #-----------------------------------------------------------------------------------------------------------
   # Quiz setup
   #-----------------------------------------------------------------------------------------------------------
@@ -19,16 +19,16 @@ class LiveQuizController < ApplicationController
     @quiz = Quiz.find(params[:quiz] || 1 )
     @quiz_master = @quiz.user
     Rails.logger.info("*** Using quiz #{@quiz.name}. The quiz master is #{@quiz.user.name_or_login}.")
-	
-	@minutes = @quiz.quiz_length / 60
-	@seconds = @quiz.quiz_length - (@minutes * 60)
 
-    @chat_status = ($redis.exists("chat-channel2") && $redis.hmget("chat-channel2", "status").first == "Open")?"Open":"Closed"
+	  @minutes = @quiz.quiz_length / 60
+	  @seconds = @quiz.quiz_length - (@minutes * 60)
+
+    @chat_status = ($redis.exists("chat-quiz-#{@quiz.id}") && $redis.hmget("chat-quiz-#{@quiz.id}", "status").first == "Open")?"Open":"Closed"
 
     quiz_questions = @quiz.quiz_questions.order("question_no ASC")
     @num_questions = quiz_questions.length
   end
-  
+
   #-----------------------------------------------------------------------------------------------------------
   # This method will push questions to the live quiz channel
   #-----------------------------------------------------------------------------------------------------------
@@ -66,7 +66,7 @@ class LiveQuizController < ApplicationController
         when "recitation"
           time_alloc = (q.passage_translations.first.last.split(" ").length * 2.5 + 15.0).to_i # 24 WPM typing speed with 15 seconds to think
           Juggernaut.publish( select_channel("/quiz_stream"), {:q_num => num, :q_type => "recitation", :q_ref => ref, :q_passages => passages, :time_alloc => time_alloc} )
-          sleep(time_alloc+1)				
+          sleep(time_alloc+1)
         when "reference"
           Juggernaut.publish( select_channel("/quiz_stream"), {:q_num => num, :q_type => "reference", :q_ref => ref, :q_passages => passages, :time_alloc => 25} )
           sleep(26)
@@ -79,9 +79,9 @@ class LiveQuizController < ApplicationController
 
         scoreboard = publish_scoreboard
         Rails.logger.info("*** Publishing scoreboard after question: #{q.question_no}.")
-        Juggernaut.publish( select_channel("/scoreboard"), {:scoreboard => scoreboard} ) 
+        Juggernaut.publish( select_channel("/scoreboard"), {:scoreboard => scoreboard} )
       }
-	  
+
       # Update quiz status in redis
       $redis.hset("quiz-#{quiz.id}", "status", "Finished")
     end
@@ -105,16 +105,16 @@ class LiveQuizController < ApplicationController
     puts "#{receiver}"
     return "/live_quiz#{receiver}"
   end
-  
+
   #-----------------------------------------------------------------------------------------------------------
   # This method receive scores for each participant
-  #-----------------------------------------------------------------------------------------------------------  
+  #-----------------------------------------------------------------------------------------------------------
   def record_score
     usr_id    = "user-" + params[:usr_id].to_s
     usr_name  = params[:usr_name]
     usr_login = params[:usr_login]
     score     = params[:score]
-    
+
     if score != "false"
       # Store the score in Redis store
       $redis.hincrby(usr_id, 'score', score)
@@ -130,29 +130,29 @@ class LiveQuizController < ApplicationController
   end
 
   #-----------------------------------------------------------------------------------------------------------
-  # This method publishes the scoreboard 
+  # This method publishes the scoreboard
   # Format: [{"score"=>"11", "name"=>"Andy"}, {"score"=>"14", "name"=>"Alex"} ]
-  #-----------------------------------------------------------------------------------------------------------    
+  #-----------------------------------------------------------------------------------------------------------
   def publish_scoreboard
   	scoreboard = Array.new
-  	
+
     participants = $redis.keys("user-*")
     participants.each { |p|	scoreboard << $redis.hgetall(p) }
 
     return scoreboard.sort { |x, y| y['score'].to_i <=> x['score'].to_i }
   end
-  
+
   #-----------------------------------------------------------------------------------------------------------
   # Return the roster via JSON; used for initial roster loading
-  #-----------------------------------------------------------------------------------------------------------    
+  #-----------------------------------------------------------------------------------------------------------
   def roster
   	@roster = Roster.all
 	  render :json => @roster
   end
-  
+
   #-----------------------------------------------------------------------------------------------------------
   # Return time till quiz starts
-  #-----------------------------------------------------------------------------------------------------------    
+  #-----------------------------------------------------------------------------------------------------------
   def till_start
     @quiz = Quiz.find(params[:id])
     @till = @quiz.start_time - Time.now # time till in seconds
@@ -172,7 +172,7 @@ class LiveQuizController < ApplicationController
 
   #-----------------------------------------------------------------------------------------------------------
   # Used for load testing of Juggernaut
-  #-----------------------------------------------------------------------------------------------------------    
+  #-----------------------------------------------------------------------------------------------------------
   def test_sign_in_random
     sign_in(:user, User.find_by_email("student#{rand(50)}@sttsetia.org"))
     redirect_to "/live_quiz?quiz=16"
