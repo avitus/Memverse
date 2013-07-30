@@ -37,7 +37,7 @@
 			particularly if you know the text of the verse but have difficulty matching verses with the correct reference.</p>
 		</div>
 		
-		<div id="consistency" class="container" style="width: 100%; height: 500px"></div>
+		<div id="consistency" class="container" style="width: 100%; height: 250px"></div>
 
 	<% end %>
 </div>
@@ -264,7 +264,9 @@ Highcharts.setOptions({
 
 	$.get('/load_consistency_progress.json', function(data) {
 
-		var consistency_data       = { data: [], type: "line", yAxis: 1 };
+		var consistency_data       = { data: [],
+								fillcolor: { stops: [[0, '#3c5313'], [1, 'rgba(0,0,0,0)']] },
+								lineColor: '#3c5313' };
 		var dates		   = [];
 
     	consistency_data.data = data[0];

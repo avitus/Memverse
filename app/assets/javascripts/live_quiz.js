@@ -6,7 +6,7 @@ setupMCQ = function(q_option_a, q_option_b, q_option_c, q_option_d, mc_answer){
 				"<li><input type='radio' name='mcq' value='d' id='opt_d' /> <label for='opt_d'>(D) " + q_option_d + "</label></li>",
 			"</ul>",
 			"<input type='submit' value='Answer!' id='submit-answer' class='button-link'>"]
-	
+
 	return output.join("");
 }
 
@@ -44,9 +44,9 @@ function calculate_levenshtein_distance(s, t) {
 }
 
 function scoreRecitation(versetext, usertext) {
-	
+
 	var score, msg;
-	
+
 	// Convert to lowercase; remove anything that is not a-z and remove extra spaces
 	// Do I need to use unescape because of quotation marks? Time will tell...
 	user    = $.trim(usertext.toLowerCase().replace(/[^a-z ]|\s-|\s—/g, '').replace(/\s+/g, " "));
@@ -55,8 +55,8 @@ function scoreRecitation(versetext, usertext) {
 	if (user == "") {
 		alert('Please recite the verse. You clicked "Submit" without any words in the box.')
 		return false;
-	}	
-	
+	}
+
 	user_words  = user.split(" ");
 	right_words = correct.split(" ");
 
@@ -78,9 +78,9 @@ function scoreRecitation(versetext, usertext) {
 }
 
 function scoreReference(verseref, userref) {
-	
+
 	var score, msg;
-	
+
 	user    = $.trim(userref.toLowerCase().replace(/\s+/g, " "));
 	correct = $.trim(verseref.toLowerCase().replace(/\s+/g, " "));
 
@@ -122,30 +122,30 @@ function scoreMCQ(questionAnswer, userAnswer){ // userAnswer will be a, b, c, or
 	} else {
 		msg = "Sorry, but your choice (" + userAnswer.toUpperCase() + ") was not correct. The correct answer was (" + questionAnswer.toUpperCase() + ").";
 	}
-	
+
 	return { score: score, msg: msg };
 }
 
 function getScore(questionAnswer, userAnswer, questionType) {
-	
+
 	switch(questionType) {
 		case 'recitation':
 	    	return scoreRecitation(questionAnswer, userAnswer);
 	    break;
-		
+
 		case 'reference':
 	    	return scoreReference(questionAnswer, userAnswer);
 		break;
-		
+
 		case 'mcq':
 			return scoreMCQ(questionAnswer, userAnswer);
 		break;
-		
+
 		default:
 	    	return 0
-	    	
-	}	
-	
+
+	}
+
 }
 
 build_user_link = function(user_id, user_name) {
@@ -161,7 +161,7 @@ build_roster_item = function(user_id, user_name, gravatar_url) {
 }
 
 chat_stream_scroll = function(callback){
-	// Check whether user is scrolled down to bottom of stream before keeping them scrolled down 
+	// Check whether user is scrolled down to bottom of stream before keeping them scrolled down
 	// NOTE: chat-stream-narrow is 520px high; we're checking against 530 to pull them down a tad if they forgot to scroll all the way down
 	if ( ($("#chat-stream-narrow")[0].scrollHeight - 530) <= $("#chat-stream-narrow").scrollTop()){
 		callback();

@@ -3,27 +3,27 @@
 	<h1><%=h @quiz.name %></h1>
 
 	<p>
-	  <b>Created by:</b> <%=h link_to(@quiz.user.name_or_login, @quiz.user) %> 
+	  <b>Created by:</b> <%=h link_to(@quiz.user.name_or_login, @quiz.user) %>
 	</p>
 	<p>
-	  <b>Start time:</b> <%= @quiz.start_time %> 
+	  <b>Start time:</b> <%= @quiz.start_time %>
 	</p>
-	<p><%=h @quiz.description.html_safe %></p>
-	
+	<p><%=h @quiz.description.try(:html_safe) %></p>
+
 	<p>
 		<% if current_user == @quiz.user %>
-			<%= link_to 'Edit', edit_quiz_path(@quiz) %> | 
+			<%= link_to 'Edit', edit_quiz_path(@quiz) %> |
 		<% end %>
 		<%= link_to 'Back to quizzes', quizzes_path %>
 	</p>
-	
+
 	<br />
-	
+
 	<table class="memverse-standard">
 		<%= render :partial => "quizquestions/quizquestion_headings" %>
 		<%= render :partial => "quizquestions/quizquestion", :collection => @quizquestions %>
 	</table>
-	
+
 	<p>
 		<%= link_to 'Add a question', new_quizquestion_path(:quiz => @quiz.id)%>
 	</p>
