@@ -27,7 +27,8 @@ class ChartController < ApplicationController
       user_id = current_user.id
     end
 
-    all_entries = ProgressReport.find( :all, :conditions => { :user_id => user_id }) 
+    ProgressReport.all.each {|pr| pr.save! } 
+    all_entries = ProgressReport.where(:user_id => user_id).order('entry_date')
     
     # TODO: Consider deleting extra entries periodically
     # TODO: Add in last entry so that graph always shows current day
@@ -74,12 +75,14 @@ class ChartController < ApplicationController
     else
       user_id = current_user.id
     end
-
-    all_entries = ProgressReport.find( :all, :conditions => { :user_id => user_id }) 
+    
+    ProgressReport.all.each {|pr| pr.save! } 
+    all_entries = ProgressReport.where(:user_id => user_id).order('entry_date')
     
     # TODO: Consider deleting extra entries periodically
     # TODO: Add in last entry so that graph always shows current day
     entries = all_entries.length > 160 ? all_entries.every( all_entries.length / 80 ) : all_entries
+    
     
     if !entries.empty?
       # Build data series
@@ -89,7 +92,7 @@ class ChartController < ApplicationController
       }
     else
         y_consistency      << 0
-        x_consistency_date << 0
+        x_consistency_date << Date.today.to_s
     end
                
     chart_data << y_consistency
