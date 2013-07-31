@@ -15,7 +15,7 @@
 
 	<h3>Quiz Instructions</h3>
 	<p>
-		The quiz will have <strong><%= @num_questions %> questions</strong> and last <strong><%= "#{@minutes}#{"s" unless @minutes == 1}" %> and <%= "#{@seconds}#{"s" unless @seconds == 1}" %></strong>. Each question will be worth a maximum of 15 points.
+		The quiz will have <strong><%= @num_questions %> questions</strong> and last <strong><%= "#{@minutes}minute#{"s" unless @minutes == 1}" %> and <%= "#{@seconds}second#{"s" unless @seconds == 1}" %></strong>. Each question will be worth a maximum of 15 points.
 	</p>
 	<p>
 		You will answer all the questions on the left side. The middle column will display the scoreboard and the right column is only
