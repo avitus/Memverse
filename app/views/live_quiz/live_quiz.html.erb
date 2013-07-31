@@ -15,7 +15,7 @@
 
 	<h3>Quiz Instructions</h3>
 	<p>
-		The quiz will have <strong><%= @num_questions %> questions</strong> and last <strong><%= @minutes.to_s + (@minutes != 1?" minutes":" minute") %> and <%= @seconds.to_s + (@seconds != 1?" seconds":" second") %></strong>. Each question will be worth a maximum of 15 points.
+		The quiz will have <strong><%= @num_questions %> questions</strong> and last <strong><%= "#{@minutes}#{"s" unless @minutes == 1}" %> and <%= "#{@seconds}#{"s" unless @seconds == 1}" %></strong>. Each question will be worth a maximum of 15 points.
 	</p>
 	<p>
 		You will answer all the questions on the left side. The middle column will display the scoreboard and the right column is only
@@ -23,6 +23,8 @@
 	</p>
 
 	<p>Your version is set to <strong><%= @current_user.translation %></strong>.</p>
+
+	<p><input type="button" class="green-button" onclick="$.fancybox.close()" value="OK, I'm ready!" />
 
 	<% end %>
 </div>
@@ -82,7 +84,7 @@
 		</div>
 
 		<%= form_tag('/chat/send', :id => 'chat_window', :remote => true) do %>
-			<%= text_field_tag 'msg_body', '', :size => 28 %>
+			<%= text_field_tag 'msg_body', '', :size => 28, :html => {:autocomplete => "off"} %>
 			<%= hidden_field_tag 'sender',  current_user.name_or_login %>
 			<%= hidden_field_tag 'user_id', current_user.id %>
 			<%= hidden_field_tag 'channel', "quiz-#{@quiz.id}" %>
