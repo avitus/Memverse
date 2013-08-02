@@ -21,18 +21,21 @@ class UserMailer < ActionMailer::Base
   def encourage_new_user_email(user)
     # @headers = {content_type => 'text/html'}
     setup_email(user)
+    headers['X-MC-Track'] = "reminder, new_user"
     mail(:to => @email_with_name, :subject => "Welcome to Memverse")
   end
 
   def newsletter_email(user)
     # @headers = {content_type => 'text/html'}
     setup_email(user)
+    headers['X-MC-Track'] = "newsletter"
     mail(:to => @email_with_name, :subject => "Memverse Newsletter")
   end
 
   def reminder_email(user)
     # @headers = {content_type => 'text/html'}
     setup_email(user)
+    headers['X-MC-Track'] = "reminder"
     @verse = user.random_verse.verse
     mail(:to => @email_with_name, :subject => "Memverse Reminder")
   end
@@ -40,6 +43,7 @@ class UserMailer < ActionMailer::Base
   def reminder_email_for_inactive(user)
     # @headers = {content_type => 'text/html'}
     setup_email(user)
+    headers['X-MC-Track'] = "reminder, inactive"
     mail(:to => @email_with_name, :subject => "Memverse Reminder")
   end
 
@@ -55,3 +59,4 @@ class UserMailer < ActionMailer::Base
   end
 
 end
+

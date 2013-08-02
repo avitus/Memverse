@@ -345,6 +345,7 @@ class UtilsController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   # Send Reminder Emails - sent out hourly
   # Gmail sending limit is 500 email per day and we need to reserve capacity for new user signups
+  # Mandrill sending limit is 12K per month (400 per day)
   # ----------------------------------------------------------------------------------------------------------
   def send_reminder
 
