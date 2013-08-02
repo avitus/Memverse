@@ -193,20 +193,21 @@ $(document).ready(function() {
 	jug.meta = {user_id: <%= current_user.id %>, user_name: "<%= current_user.name %>", gravatar_url: "<%= (current_user.blog_avatar_url + "&s=32").html_safe %>"};
 
 	function addInputBox(questionType, questionNum, questionAnswer)	{
+		selector = "#question-" + questionNum;
 		switch(questionType) {
 			case 'recitation':
-				$('#q-answer:visible').html("<textarea class='q-answer-input' name='txt" + questionNum + "' id='" + questionNum + "'></textarea>");
-				$('#q-answer:visible').append("<br/>")
-				$('#q-answer:visible').append("<input type='submit' value='Answer!' id='submit-answer' class='button-link'>");
+				$(selector + " #q-answer").html("<textarea class='q-answer-input' name='txt" + questionNum + "' id='" + questionNum + "'></textarea>");
+				$(selector + " #q-answer").append("<br/>")
+				$(selector + " #q-answer").append("<input type='submit' value='Answer!' id='submit-answer' class='button-link'>");
 				if (!$('#msg_body').is(':focus')) {
-					$('#q-answer:visible textarea').focus();
+					$("textarea#" + questionNum).focus();
 				}
 				break;
 
 			case 'reference':
-				$('#q-answer:visible').html("<input type='text' class='q-answer-input' name='txt" + questionNum + "' id='" + questionNum + "'</input>");
-				$('#q-answer:visible').append("<input type='submit' value='Answer!' id='submit-answer' class='button-link'>");
-				$('#q-answer:visible input[type="text"]').autocomplete({ source: ['Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy', 'Joshua', 'Judges', 'Ruth', '1 Samuel', '2 Samuel',
+				$(selector + " #q-answer").html("<input type='text' class='q-answer-input' name='txt" + questionNum + "' id='" + questionNum + "'</input>");
+				$(selector + " #q-answer").append("<input type='submit' value='Answer!' id='submit-answer' class='button-link'>");
+				$(selector + ' #q-answer input[type="text"]').autocomplete({ source: ['Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy', 'Joshua', 'Judges', 'Ruth', '1 Samuel', '2 Samuel',
 					'1 Kings', '2 Kings','1 Chronicles', '2 Chronicles', 'Ezra', 'Nehemiah', 'Esther', 'Job', 'Psalm', 'Proverbs',
 					'Ecclesiastes', 'Song of Songs', 'Isaiah', 'Jeremiah', 'Lamentations', 'Ezekiel', 'Daniel', 'Hosea', 'Joel',
 					'Amos', 'Obadiah', 'Jonah', 'Micah', 'Nahum', 'Habakkuk', 'Zephaniah', 'Haggai', 'Zechariah', 'Malachi', 'Matthew',
@@ -215,7 +216,7 @@ $(document).ready(function() {
 					'1 Peter', '2 Peter', '1 John', '2 John', '3 John', 'Jude', 'Revelation']
 				});
 				if (!$('#msg_body').is(':focus')) {
-					$('#q-answer:visible input').focus();
+					$(selector + ' #q-answer input[type="text"]').focus();
 				}
 				break;
 
@@ -223,8 +224,8 @@ $(document).ready(function() {
 				break;
 
 			default:
-				$('#q-answer:visible').html("<input type='text' class='q-answer-input'" + "name='txt" + questionNum + "' id='" + questionNum + "'</input>");
-				$('#q-answer:visible').append("<input type='submit' value='Answer!' id='submit-answer' class='button-link'>");
+				$(selector + " #q-answer").html("<input type='text' class='q-answer-input'" + "name='txt" + questionNum + "' id='" + questionNum + "'</input>");
+				$(selector + " #q-answer").append("<input type='submit' value='Answer!' id='submit-answer' class='button-link'>");
 	    }
 
 		$('input#submit-answer').click(function() {
@@ -235,8 +236,8 @@ $(document).ready(function() {
 											usr_name:	'<%= current_user.name_or_login %>',
 											usr_login:	'<%= current_user.login %>',
 											score: 		grade.score } );
-				$("#q-msg:visible").html("<p>" + grade.msg + "</p>").children("p").effect('highlight', {}, 3000);
-				$('#q-answer:visible').html("<strong>Your answer: </strong>" + userAnswer);
+				$(selector + " #q-msg").html("<p>" + grade.msg + "</p>").children("p").effect('highlight', {}, 3000);
+				$(selector + " #q-answer").html("<strong>Your answer: </strong>" + userAnswer);
 
 				// make q-dot red or green, depending on score
 				if(grade.score == 15){
@@ -331,15 +332,17 @@ $(document).ready(function() {
 												usr_name:	'<%= current_user.name_or_login %>',
 												usr_login:	'<%= current_user.login %>',
 												score: 		grade.score } );
-					$("#q-msg:visible").html("<p>" + grade.msg + "</p>").children("p").effect('highlight', {}, 3000);
+
+					selector = "#question-" + q_num;
+					$(selector + " #q-msg").html("<p>" + grade.msg + "</p>").children("p").effect('highlight', {}, 3000);
 					if (grade.score != 15) { // if it's wrong
-						$("#q-answer:visible input#opt_" + userAnswer).parent().addClass("incorrect");
+						$(selector + " #q-answer input#opt_" + userAnswer).parent().addClass("incorrect");
 						$(".q-dot.current").addClass("red");
 					} else {
 						$(".q-dot.current").addClass("green");
 					}
-					$("#q-answer:visible input#opt_" + q_ansr.toLowerCase()).parent().addClass("correct");
-					$("#q-answer:visible input").remove();
+					$(selector + " #q-answer:visible input#opt_" + q_ansr.toLowerCase()).parent().addClass("correct");
+					$(selector + " #q-msg q-answer input").remove();
 				}
 			});
 		}
