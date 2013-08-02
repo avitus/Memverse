@@ -26,7 +26,7 @@ MemverseApp::Application.configure do
 
   # Ensure that Ckeditor assets are precompiled
   config.assets.precompile += Ckeditor.assets
-    
+
   # Defaults to Rails.root.join("public/assets")
   # config.assets.manifest = YOUR_PATH
 
@@ -43,40 +43,53 @@ MemverseApp::Application.configure do
   config.logger = Logger.new(config.paths['log'].first, 5, 100.megabytes)  # Let Rails handle log rotation
   config.log_level = :info
   config.active_support.deprecation = :notify     # Send deprecation notices to registered listeners
-  
+
   #===============================
   # Email
   #===============================
   config.action_mailer.default_url_options = { :host => 'memverse.com' }
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = false  # ignore bad email addresses
-  config.action_mailer.default :charset => "utf-8"    
+  config.action_mailer.default :charset => "utf-8"
   config.action_mailer.delivery_method = :smtp
+
+  # Gmail
+  # config.action_mailer.smtp_settings = {
+  #   :address              => "smtp.gmail.com",
+  #   :port                 => 587,
+  #   :domain               => 'memverse.com',
+  #   :user_name            => 'admin@memverse.com',
+  #   :password             => 'Veetle77',
+  #   :authentication       => "plain",
+  #   :enable_starttls_auto => true  }
+
+  # Mandrill
   config.action_mailer.smtp_settings = {
-    :address              => "smtp.gmail.com",
-    :port                 => 587,
-    :domain               => 'memverse.com',
-    :user_name            => 'admin@memverse.com',
-    :password             => 'Veetle77',
-    :authentication       => "plain",
-    :enable_starttls_auto => true  }  
-   
+    :address   => "smtp.mandrillapp.com",
+    :port      => 25,                        # ports 587 and 2525 are also supported with STARTTLS
+    :enable_starttls_auto => true,           # detects and uses STARTTLS
+    :user_name => "admin@memverse.com",
+    :password  => "JztsJPoUBOfo4nCyEKf1MQ",  # SMTP password is any valid API key
+    :authentication => 'login',              # Mandrill supports 'plain' or 'login'
+    :domain => 'memverse.com',               # your domain to identify your server when connecting
+  }
+
   #===============================
   # Miscellaneous
   #===============================
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to the I18n.default_locale when a translation can not be found)
   config.i18n.fallbacks = true
-    
+
   # Configure Paperclip to access ImageMagick - this is the path returned by 'which convert'
-  Paperclip.options[:command_path] = "/usr/local/bin/" 
+  Paperclip.options[:command_path] = "/usr/local/bin/"
 
   # Enable threaded mode
   # config.threadsafe!
-  
+
   # Load dependencies when running a rake task
   config.dependency_loading = true if $rails_rake_task
-  
+
   # https://github.com/ezmobius/redis-rb/wiki/redis-rb-on-Phusion-Passenger
   # if defined?(PhusionPassenger)
     # PhusionPassenger.on_event(:starting_worker_process) do |forked|
@@ -85,13 +98,13 @@ MemverseApp::Application.configure do
         # # Re-establish redis connection
         # require 'redis'
         # redis_config = YAML.load_file("#{Rails.root.to_s}/config/redis.yml")[Rails.env]
-#   
+#
         # # The important two lines
         # $redis.client.disconnect
         # $redis = Redis.new(:host => redis_config["host"], :port => redis_config["port"])
       # end
     # end
-  # end  
-  
+  # end
+
 
 end
