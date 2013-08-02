@@ -1,7 +1,37 @@
 <% page_title "Live Quiz :: " + @quiz.name %>
+
+<div id="welcome-box" style="display:none">
+	<h2>Welcome!</h2>
+
+	<% if !["NAS", "NKJ", "KJV", "ESV"].include?(@current_user.translation) %>
+		<div id="select-trans">
+			<h3>Choose a Version</h3>
+
+			<p><%= @current_user.translation %> is your default version for Memverse. However, it is <strong>not supported by this quiz</strong>.</p>
+			<!--<p>Please select a version to use: <a href="#ESV">ESV 2011</a>, <a href="#NAS">NASB</a>, <a href="#NKJ">NKJV</a>, or <a href="#KJV">KJV</a>. (Note: <%= @current_user.translation %> will remain your default version; your selection now is just for this quiz.)</p>-->
+			<p>The <strong>valid versions</strong> are ESV (2011), NASB, NKJ, and KJV. Please go to your profile by <a href="/update_profile">clicking here</a>, update your version to one of these, and then come back for the quiz. Thanks!</p>
+		</div>
+	<% else %>
+
+	<h3>Quiz Instructions</h3>
+	<p>
+		The quiz will have <strong><%= @num_questions %> questions</strong> and last <strong><%= "#{@minutes}minute#{"s" unless @minutes == 1}" %> and <%= "#{@seconds}second#{"s" unless @seconds == 1}" %></strong>. Each question will be worth a maximum of 15 points.
+	</p>
+	<p>
+		You will answer all the questions on the left side. The middle column will display the scoreboard and the right column is only
+		used for chatting with the other contestants.
+	</p>
+
+	<p>Your version is set to <strong><%= @current_user.translation %></strong>.</p>
+
+	<p><input type="button" class="green-button" onclick="$.fancybox.close()" value="OK, I'm ready!" />
+
+	<% end %>
+</div>
+
 <div class="white-box-with-margins" style="position:relative">
 	<div id="quiz-header">
-		<h1 id="quiz-name"><%= @quiz.name %> [<%= link_to @current_user.translation, update_profile_path %>]</h1>
+		<h1 id="quiz-name"><%= @quiz.name %></h1>
 		<div id="quiz-timer"></div>
 		<div id="countdown-till"><!-- this will say "till next question" or "till quiz starts" --></div>
 		<div id="quizzers-stats" class="quiz-button">
@@ -11,29 +41,25 @@
 
 	<div id="live-quiz">
 		<div id="questions-answers">
-			<% if current_user == @quiz_master %>
-				<div class="quiz-button">
-					<%= button_to "Start Quiz", {:action => "start_quiz", :quiz => @quiz.id}, :remote => true, :id => "start-quiz", :class => "button-link" %>
-				</div>
-			<% end %>
-			<div id="quiz-messages">
-				<h3>Welcome!</h3>
-			</div>
+			<div>
+				<h3>Questions</h3>
+				<% for q in 1..@num_questions %>
+					<span class="q-dot" id="dot-<%= q %>"><%= q %></span>
+				<% end %>
 
-			<div class="clr"></div>
+				<% for q in 1..@num_questions %>
+					<div id="question-<%= q %>" class="question" style="display:none">
+						<div id="q-msg">
+						</div>
 
-			<div id="quiz-question">
-				<h3>Quiz Instructions</h3>
-				<p>
-					The quiz will have <%= @num_questions %> questions and last <%= @minutes.to_s + (@minutes != 1?" minutes":" minute") %> and <%= @seconds.to_s + (@seconds != 1?" seconds":" second") %>. Each question will be worth a maximum of 15 points.
-				</p>
-				<p>
-					You will answer all the questions on the left side. The middle column will display the scoreboard and the right column is only
-					used for chatting with the other contestants.
-				</p>
+						<div id="q-question">
+						</div>
+
+						<div id="q-answer">
+						</div>
+					</div>
+				<% end %>
 			</div>
-			<br/>
-			<div id="quiz-answer"></div>
 		</div>
 	</div>
 
@@ -58,7 +84,7 @@
 		</div>
 
 		<%= form_tag('/chat/send', :id => 'chat_window', :remote => true) do %>
-			<%= text_field_tag 'msg_body', '', :size => 28 %>
+			<%= text_field_tag 'msg_body', '', :size => 28, :html => {:autocomplete => "off"} %>
 			<%= hidden_field_tag 'sender',  current_user.name_or_login %>
 			<%= hidden_field_tag 'user_id', current_user.id %>
 			<%= hidden_field_tag 'channel', "quiz-#{@quiz.id}" %>
@@ -70,6 +96,7 @@
 </div>
 
 <script type="text/javascript" charset="utf-8">
+$(document).ready(function() {
 	channel = "quiz-<%= @quiz.id %>";
 
 	// Init
@@ -94,6 +121,21 @@
     		callback : presence
     	});
     }
+
+    translation = "<%= current_user.translation %>";
+
+    $.fancybox($("#welcome-box").html(), {padding: 20});
+
+    // TODO: Get this working. This is selecting the select-trans that is invisible, not the one in the fancybox.
+    $("#select-trans").delegate("a", "click", function(e){
+    	e.preventDefault();
+
+    	alert("delegate is firing now!");
+		translation = $(this).attr("href").replace("#","");
+		alert("translation is "+translation);
+
+		$("#select-trans").text("Thank you. Your translation is set to "+translation+"for this quiz.").effect('highlight', {}, 3000);
+	});
 
     function handle_message(m){
     	switch(m.meta) {
@@ -153,18 +195,18 @@
 	function addInputBox(questionType, questionNum, questionAnswer)	{
 		switch(questionType) {
 			case 'recitation':
-				$('#quiz-answer').html("<textarea class='q-answer-input' name='txt" + questionNum + "' id='" + questionNum + "'></textarea>");
-				$('#quiz-answer').append("<br/>")
-				$('#quiz-answer').append("<input type='submit' value='Answer!' id='submit-answer' class='button-link'>");
+				$('#q-answer:visible').html("<textarea class='q-answer-input' name='txt" + questionNum + "' id='" + questionNum + "'></textarea>");
+				$('#q-answer:visible').append("<br/>")
+				$('#q-answer:visible').append("<input type='submit' value='Answer!' id='submit-answer' class='button-link'>");
 				if (!$('#msg_body').is(':focus')) {
-					$('#quiz-answer textarea').focus();
+					$('#q-answer:visible textarea').focus();
 				}
 				break;
 
 			case 'reference':
-				$('#quiz-answer').html("<input type='text' class='q-answer-input' name='txt" + questionNum + "' id='" + questionNum + "'</input>");
-				$('#quiz-answer').append("<input type='submit' value='Answer!' id='submit-answer' class='button-link'>");
-				$('#quiz-answer input[type="text"]').autocomplete({ source: ['Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy', 'Joshua', 'Judges', 'Ruth', '1 Samuel', '2 Samuel',
+				$('#q-answer:visible').html("<input type='text' class='q-answer-input' name='txt" + questionNum + "' id='" + questionNum + "'</input>");
+				$('#q-answer:visible').append("<input type='submit' value='Answer!' id='submit-answer' class='button-link'>");
+				$('#q-answer:visible input[type="text"]').autocomplete({ source: ['Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy', 'Joshua', 'Judges', 'Ruth', '1 Samuel', '2 Samuel',
 					'1 Kings', '2 Kings','1 Chronicles', '2 Chronicles', 'Ezra', 'Nehemiah', 'Esther', 'Job', 'Psalm', 'Proverbs',
 					'Ecclesiastes', 'Song of Songs', 'Isaiah', 'Jeremiah', 'Lamentations', 'Ezekiel', 'Daniel', 'Hosea', 'Joel',
 					'Amos', 'Obadiah', 'Jonah', 'Micah', 'Nahum', 'Habakkuk', 'Zephaniah', 'Haggai', 'Zechariah', 'Malachi', 'Matthew',
@@ -173,7 +215,7 @@
 					'1 Peter', '2 Peter', '1 John', '2 John', '3 John', 'Jude', 'Revelation']
 				});
 				if (!$('#msg_body').is(':focus')) {
-					$('#quiz-answer input').focus();
+					$('#q-answer:visible input').focus();
 				}
 				break;
 
@@ -181,8 +223,8 @@
 				break;
 
 			default:
-				$('#quiz-answer').html("<input type='text' class='q-answer-input'" + "name='txt" + questionNum + "' id='" + questionNum + "'</input>");
-				$('#quiz-answer').append("<input type='submit' value='Answer!' id='submit-answer' class='button-link'>");
+				$('#q-answer:visible').html("<input type='text' class='q-answer-input'" + "name='txt" + questionNum + "' id='" + questionNum + "'</input>");
+				$('#q-answer:visible').append("<input type='submit' value='Answer!' id='submit-answer' class='button-link'>");
 	    }
 
 		$('input#submit-answer').click(function() {
@@ -193,8 +235,15 @@
 											usr_name:	'<%= current_user.name_or_login %>',
 											usr_login:	'<%= current_user.login %>',
 											score: 		grade.score } );
-				$("#quiz-messages").html("<p>" + grade.msg + "</p>").children("p").effect('highlight', {}, 3000);
-				$('#quiz-answer').html("<strong>Your answer: </strong>" + userAnswer);
+				$("#q-msg:visible").html("<p>" + grade.msg + "</p>").children("p").effect('highlight', {}, 3000);
+				$('#q-answer:visible').html("<strong>Your answer: </strong>" + userAnswer);
+
+				// make q-dot red or green, depending on score
+				if(grade.score == 15){
+					$(".q-dot.current").addClass("green");
+				} else {
+					$(".q-dot.current").addClass("red");
+				}
 			}
 		});
 	}
@@ -225,7 +274,7 @@
 
 		if (q_type != 'mcq') {
 			q_ref  = data.q_ref;
-			q_text = data.q_passages.<%= current_user.translation %>;
+			q_text = data.q_passages[translation];
 		} else {
 			q_text     = data.mc_question;
 			q_option_a = data.mc_option_a;
@@ -257,32 +306,40 @@
 			  q_show = 'Error'
 		}
 
-		var q   = $("<h3/>").text('Question ' + q_num + ' (of <%= @num_questions %>)').addClass("quiz-q-num");
-		var p   = $("<p/>").text(q_show).addClass("quiz-q");
-		var div = $("<div/>").append(q).append(p);
+		$(".q-dot.current").removeClass("current");
+		$("#dot-"+q_num).addClass("current");
 
-		$("#quiz-question").html(div);
-		$("#quiz-question").scrollTop($("#quiz-question")[0].scrollHeight);
+		var p   = $("<p/>").text(q_show);
+		var q   = "#question-"+q_num;
+
+		$(q+" #q-question").html(p);
+		$(q+" #q-question").scrollTop($(q)[0].scrollHeight);
+
+		$(".question").hide();
+		$(q).show();
 
 		if(q_type == 'reference' || q_type == 'recitation'){
 			addInputBox(q_type, q_num, q_ansr);
 		} else if (q_type == 'mcq'){
-			$("#quiz-answer").html(setupMCQ(q_option_a, q_option_b, q_option_c, q_option_d, mc_answer));
+			$(q+" #q-answer").html(setupMCQ(q_option_a, q_option_b, q_option_c, q_option_d, mc_answer));
 			$('input#submit-answer').click(function() {
 				$(this).remove();
-				var userAnswer = $('input[name=mcq]:checked', '#quiz-answer').val();
+				var userAnswer = $('input[name=mcq]:checked').val();
 				grade = getScore(q_ansr, userAnswer, q_type);
 				if (grade.score != null) {
 					$.post("/record_score", {	usr_id:		<%= current_user.id %>,
 												usr_name:	'<%= current_user.name_or_login %>',
 												usr_login:	'<%= current_user.login %>',
 												score: 		grade.score } );
-					$("#quiz-messages").html("<p>" + grade.msg + "</p>").children("p").effect('highlight', {}, 3000);
+					$("#q-msg:visible").html("<p>" + grade.msg + "</p>").children("p").effect('highlight', {}, 3000);
 					if (grade.score != 15) { // if it's wrong
-						$("#quiz-answer input#opt_" + userAnswer).parent().addClass("incorrect");
+						$("#q-answer:visible input#opt_" + userAnswer).parent().addClass("incorrect");
+						$(".q-dot.current").addClass("red");
+					} else {
+						$(".q-dot.current").addClass("green");
 					}
-					$("#quiz-answer input#opt_" + q_ansr.toLowerCase()).parent().addClass("correct");
-					$("#quiz-answer input").remove();
+					$("#q-answer:visible input#opt_" + q_ansr.toLowerCase()).parent().addClass("correct");
+					$("#q-answer:visible input").remove();
 				}
 			});
 		}
@@ -402,6 +459,19 @@
 
 	<% end %>
 
+	$("#questions-answers").delegate("span.q-dot", "click", function(){
+		active_question = !($(".q-dot.current").hasClass("green") || $(".q-dot.current").hasClass("red"));
+		if(!active_question && ($(this).hasClass("red") || $(this).hasClass("green"))) { // verify clickability
+			$(".q-dot.current").removeClass("current");
+			$(this).addClass("current");
+
+			q_no = $(this).attr("id").replace("dot-","");
+
+			$(".question").hide();
+			$("#question-"+q_no).show();
+		}
+	});
+
 	function submitmsg() {
 		if ($("#msg_body").val() == "") {
 			alert("Please put text in your message.");
@@ -420,5 +490,5 @@
 			$("#countdown-till").text("till quiz starts");
 		}
 	});
-
+});
 </script>

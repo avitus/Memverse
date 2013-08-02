@@ -8,7 +8,7 @@
 
 class QuizQuestion < ActiveRecord::Base
 
-	include Parser
+  include Parser
 
   # Relationships
   belongs_to :quiz
@@ -22,32 +22,33 @@ class QuizQuestion < ActiveRecord::Base
   after_destroy 'self.quiz.update_length'
 
 
-	def passage_translations
+  def passage_translations
 
-		passages = Hash.new
-		quiz_translations = ["NAS", "NKJ", "KJV", "ESV"] # MAJORS.keys.collect { |k| k.to_s }
+    passages = Hash.new
+    quiz_translations = ["NAS", "NKJ", "KJV", "ESV"] # MAJORS.keys.collect { |k| k.to_s }
+    # NOTE: If this is changed, update live_quiz message about choosing a version to reflect
 
-		error_flag, bk, ch, vs_start, vs_end = parse_passage(self.passage)
-		if error_flag
-			return nil
-		else
-			if vs_end
-				verse_variations = Verse.where(:book => bk, :chapter => ch, :versenum => (vs_start..vs_end).to_a, :translation => quiz_translations).order("versenum ASC")
-			else
-				verse_variations = Verse.where(:book => bk, :chapter => ch, :versenum => vs_start, :translation => quiz_translations).order("versenum ASC")
-			end
+    error_flag, bk, ch, vs_start, vs_end = parse_passage(self.passage)
+    if error_flag
+      return nil
+    else
+      if vs_end
+        verse_variations = Verse.where(:book => bk, :chapter => ch, :versenum => (vs_start..vs_end).to_a, :translation => quiz_translations).order("versenum ASC")
+      else
+        verse_variations = Verse.where(:book => bk, :chapter => ch, :versenum => vs_start, :translation => quiz_translations).order("versenum ASC")
+      end
 
-			quiz_translations.each { |tl|
-				verses_for_single_translation = verse_variations.select { |vs| vs.translation == tl }
-				verse_texts = verses_for_single_translation.collect { |vs| vs.text }
-				passages[tl] = verse_texts.join(" ")
-			}
+      quiz_translations.each { |tl|
+        verses_for_single_translation = verse_variations.select { |vs| vs.translation == tl }
+        verse_texts = verses_for_single_translation.collect { |vs| vs.text }
+        passages[tl] = verse_texts.join(" ")
+      }
 
-			return passages
+      return passages
 
-		end
+    end
 
-	end
+  end
 
   # ============= Protected below this line ==================================================================
   protected
