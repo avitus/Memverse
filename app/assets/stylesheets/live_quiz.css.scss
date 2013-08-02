@@ -40,7 +40,7 @@ div#countdown-till {
 
 #quizzers-stats h2 {
 	position:relative;
-	
+
 }
 
 #live-quiz {
@@ -99,6 +99,40 @@ div#quiz-timer {
 	width:100px;
 }
 
+.q-dot {
+    width:26px;
+    height:26px;
+    margin-bottom:5px;
+    border-radius:13px;
+    font-family:Arial;
+    font-weight:bold;
+    font-size:12px;
+    color:#fff;
+    line-height:26px;
+    text-align:center;
+    text-decoration:strong;
+    color:gray;
+    background-color:#e5e5e5;
+    display:inline-block;
+}
+
+.q-dot.current {
+	background-color:#cecece;
+	color:black;
+}
+
+.q-dot.green:hover, .q-dot.green.current {
+	background-color:green;
+	color:white;
+	cursor:pointer;
+}
+
+.q-dot.red:hover, .q-dot.red.current {
+	background-color:red;
+	color:white;
+	cursor:pointer;
+}
+
 #questions-answers {
 	height:500px;
 	width:480px;
@@ -112,7 +146,7 @@ div#quiz-timer {
 
 #quiz-answer {
 	max-height:200px;
-	padding-right:2em; 
+	padding-right:2em;
 }
 
 #quiz-answer textarea {
@@ -141,7 +175,7 @@ ul.mcq li.incorrect {
 	text-decoration:line-through;
 }
 
-#submit-answer {
+#submit-answer, .green-button {
 	padding:0.5em 1em;
 	font-size:18px;
 	margin-top:1em;
@@ -223,7 +257,7 @@ ul.mcq li.incorrect {
 }
 
 #live-quiz-scores {
-	list-style:none;	
+	list-style:none;
 }
 
 .scoreboard-username {
@@ -243,7 +277,7 @@ ul.mcq li.incorrect {
 	width:340px;
 	max-height:600px;
 	float:right;
-	padding:0 10px;	
+	padding:0 10px;
 }
 
 div#chat-stream-narrow {
@@ -255,7 +289,7 @@ div#chat-stream-narrow {
 
 .chat-username {
 	color:#577a1a;
-	padding-left:0.2em;	
+	padding-left:0.2em;
 }
 
 .chat-message {
