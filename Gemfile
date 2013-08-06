@@ -27,27 +27,25 @@ group :production do
   gem 'mysql2', '>= 0.3'
 end
 
-group :assets do
-  gem 'sass-rails', "~> 3.2.3"
-  gem 'coffee-rails', "~> 3.2.1"
-  gem 'uglifier', '>= 1.0.3'
-  gem 'compass-rails'
-end
-
 if HOST_OS =~ /linux/i
   gem 'libv8', '>= 3.11.8.13', :platforms => :ruby
   gem 'therubyracer', '>= 0.11.3'
 end
 
-gem 'rails', '3.2.13'
+gem 'rails', '4.0.0'
 gem 'jquery-rails', '>= 2.0.0'
+
+gem 'sass-rails',   '~> 4.0.0'
+gem 'coffee-rails', '~> 4.0.0'
+gem 'uglifier', '>= 1.3.0'
+# gem 'compass-rails'
 
 gem "devise"                                                                                    # Authentication
 gem "devise-encryptable"                                                                        # TODO: Is this required?
 gem "cancan"                                                                                    # Role-based authorization
 
 gem 'rails_admin', :git => 'git://github.com/sferik/rails_admin.git'                            # Admin console
-gem 'forem',       :git => "git://github.com/radar/forem.git"                                   # Forum engine
+gem 'forem',       :github => "radar/forem", :branch => "rails4"                                # Forum engine
 gem 'bloggity',    :git => "git://github.com/avitus/bloggity.git"                               # Blog engine
 # gem 'bloggity', :path => "../bloggity"                                                        # Blog engine (dev environment)
 
