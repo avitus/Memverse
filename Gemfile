@@ -38,7 +38,7 @@ gem 'jquery-rails', '>= 2.0.0'
 gem 'sass-rails',   '~> 4.0.0'
 gem 'coffee-rails', '~> 4.0.0'
 gem 'uglifier', '>= 1.3.0'
-gem 'compass-rails'
+# gem 'compass-rails'                       # Not supported in Rails 4 ??
 
 # These gems added to ease upgrade to Rails 4
 #####################################################
