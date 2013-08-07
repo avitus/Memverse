@@ -38,7 +38,17 @@ gem 'jquery-rails', '>= 2.0.0'
 gem 'sass-rails',   '~> 4.0.0'
 gem 'coffee-rails', '~> 4.0.0'
 gem 'uglifier', '>= 1.3.0'
-# gem 'compass-rails'
+gem 'compass-rails'
+
+# These gems added to ease upgrade to Rails 4
+#####################################################
+gem 'protected_attributes'
+gem 'rails-observers'
+gem 'actionpack-page_caching'
+gem 'actionpack-action_caching'
+gem 'activerecord-deprecated_finders'
+gem 'activeresource', require: 'active_resource'
+#####################################################
 
 gem "devise"                                                                                    # Authentication
 gem "devise-encryptable"                                                                        # TODO: Is this required?
