@@ -405,6 +405,7 @@ ActiveRecord::Schema.define(:version => 20130709222642) do
     t.integer "learning"
     t.integer "memorized"
     t.integer "time_allocation"
+    t.integer "consistency"
   end
 
   add_index "progress_reports", ["user_id"], :name => "index_progress_reports_on_user_id"
