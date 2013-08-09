@@ -36,7 +36,7 @@
 			<span class=text-highlight><%= link_to 'review the references for your memory verses', start_ref_test_path %></span>,
 			particularly if you know the text of the verse but have difficulty matching verses with the correct reference.</p>
 		</div>
-		
+
 		<div id="consistency" class="container" style="width: 100%; height: 250px"></div>
 
 	<% end %>
@@ -172,12 +172,12 @@ $(document).ready(function() {
 
 	</script>
 
-<script type="text/javascript">	
+<script type="text/javascript">
 var chart; // globally available
 
 $(document).ready(function() {
 
-	
+
 Highcharts.setOptions({
 	    colors: ['#6b9620', '#3c5313', '#e17329', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4']
 	});
@@ -193,7 +193,7 @@ Highcharts.setOptions({
 		},
 
 		title: {
-			text: 'My Consistency Progress',
+			text: 'My Consistency',
 	        style: {
 	            color: '#333333',
 	            fontWeight: 'bold'
@@ -212,15 +212,6 @@ Highcharts.setOptions({
 		            fontWeight: 'bold'
 		        }
 		     },
-		}, {
-			title: {
-				text: 'Time Required [mins]',
-			style: {
-				color: '#333333',
-				fontWeight: 'bold'
-			}
-			},
-			opposite: true,
 		}],
 	    legend: {
 	        itemStyle: {
@@ -271,7 +262,7 @@ Highcharts.setOptions({
 
     	consistency_data.data = data[0];
     	consistency_data.name = "Consistency"
-    	
+
     	dates = data[1];
 
 		options.series.push(consistency_data);
