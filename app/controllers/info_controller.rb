@@ -363,7 +363,7 @@ end
   end
 
   def signup_button_finished # TODO: This is a hack. Find the proper way to finish test after user registers.
-    finished("signup_text")
+    finished("signup_navbar")
 	render :nothing => true
   end
 
