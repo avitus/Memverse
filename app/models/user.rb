@@ -160,7 +160,7 @@ class User < ActiveRecord::Base
   # Returns: TRUE if user has verse in userlist else FALSE
   # ----------------------------------------------------------------------------------------------------------
   def has_verse_id?(vs_id)
-    ref = Memverse.find(:first, :conditions => ["user_id = ? and verse_id = ?", self, vs_id])
+    ref = Memverse.where(:user_id => self.id, :verse_id => vs_id).first
     return ref
   end
 

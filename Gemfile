@@ -41,12 +41,17 @@ gem 'uglifier', '>= 1.3.0'
 # gem 'compass-rails'                       # Not supported in Rails 4 ??
 
 # These gems added to ease upgrade to Rails 4
+# We should remove these over time
 #####################################################
 gem 'protected_attributes'
 gem 'rails-observers'
 gem 'actionpack-page_caching'
 gem 'actionpack-action_caching'
 gem 'activerecord-deprecated_finders'
+
+# This was initially required, iirc, to allow for accuracy test questions to be stored ... need to ajaxify and revert to cookies
+gem 'activerecord-session_store'                                                                # We should store sessions in cookies
+
 gem 'activeresource', require: 'active_resource'
 #####################################################
 
@@ -77,7 +82,7 @@ gem 'newrelic_rpm', '>=3.3.0'                                                   
 gem 'thinking-sphinx', '~> 2.0.14'                                                              # Connector to Sphinx - for global search
 gem 'riddle'                                                                                    # Seems to be needed for Thinking_Sphinx ... not clear, though
 gem 'i18n-js'                                                                                   # Uses config/locale files to build a JavaScript equivalent of i18n in Rails
-gem 'spawn', '>=1.2', :git => 'git://github.com/avitus/spawn.git', :branch => 'edge'            # Check to see whether master branch ever supports Rails 3 & Ruby 1.92
+# gem 'spawn', '>=1.2', :git => 'git://github.com/avitus/spawn.git', :branch => 'edge'            # Check to see whether master branch ever supports Rails 3 & Ruby 1.92
 gem 'juggernaut', '>=2.1.0', :git => 'git://github.com/maccman/juggernaut.git'                  # Live chat
 gem 'htmldiff'                                                                                  # For showing errors in accuracy test
 gem 'breadcrumbs_on_rails', '>=2.0.0'                                                           # For breadcrumb navigation bar

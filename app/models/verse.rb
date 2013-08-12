@@ -170,27 +170,19 @@ class Verse < ActiveRecord::Base
   # Check whether verse exists in DB - Note: checking for verse in database requires full length book name
   # ----------------------------------------------------------------------------------------------------------
   def self.exists_in_db(bk, ch, vs, tl)
-    find(:first, :conditions => { :book => bk, :chapter => ch, :versenum => vs, :translation => tl })
+    Verse.where(:book => bk, :chapter => ch, :versenum => vs, :translation => tl).first
   end
-
 
   # ----------------------------------------------------------------------------------------------------------
   # Return subsequent verse in same translation (if it exists)
   # ----------------------------------------------------------------------------------------------------------
   def following_verse
     if self.last_in_chapter?
-      Verse.find(:first, :conditions => { :book         => self.book,
-                                          :chapter      => self.chapter.to_i+1,
-                                          :versenum     => 1,
-                                          :translation  => self.translation })
+      Verse.where(:book => self.book, :chapter => self.chapter.to_i+1, :versenum => 1, :translation  => self.translation ).first
     else
-      Verse.find(:first, :conditions => { :book         => self.book,
-                                          :chapter      => self.chapter,
-                                          :versenum     => self.versenum.to_i+1,
-                                          :translation  => self.translation })
+      Verse.where(:book => self.book, :chapter => self.chapter, :versenum => self.versenum.to_i+1, :translation => self.translation).first
     end
   end
-
 
   # ----------------------------------------------------------------------------------------------------------
   # Checks whether verse has been verified or not

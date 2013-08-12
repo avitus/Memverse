@@ -9,6 +9,8 @@ MemverseApp::Application.configure do
   config.cache_store = :dalli_store                # Use Memcached for cache
   config.action_controller.perform_caching = true
 
+  config.eager_load = true
+
   #===============================
   # Asset Pipeline
   #===============================
