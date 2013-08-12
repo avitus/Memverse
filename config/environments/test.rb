@@ -7,15 +7,12 @@ MemverseApp::Application.configure do
   # and recreated between test runs.  Don't rely on the data there!
   config.cache_classes = true
 
+  # No need for eager loading in test unless using a tool that requires it
+  config.eager_load = false
+
   # Configure static asset server for tests with Cache-Control for performance
   config.serve_static_assets = true
   config.static_cache_control = "public, max-age=3600"
-
-  # Log error messages when you accidentally call methods on nil
-  config.whiny_nils = true
-
-  # Raise exception on mass assignment protection for Active Record models
-  config.active_record.mass_assignment_sanitizer = :strict
 
   # Show full error reports and disable caching
   config.consider_all_requests_local       = true
@@ -39,5 +36,15 @@ MemverseApp::Application.configure do
 
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
+
+  # Set host URL
+  Rails.application.routes.default_url_options[:host] = 'localhost:3000'
+
+  # ActionMailer Config - A dummy setup for development - no deliveries, but logged
+  config.action_mailer.default_url_options = { :host => 'localhost:3000' }
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.perform_deliveries = false
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.default :charset => "utf-8"
 
 end
