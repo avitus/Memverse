@@ -32,16 +32,16 @@ class Verse < ActiveRecord::Base
   # Validations
   validates_presence_of   :translation, :book, :chapter, :versenum, :text
 
-  scope :old_testament, where(:book_index =>  1..39)
-  scope :new_testament, where(:book_index => 40..66)
+  scope :old_testament, -> { where(:book_index =>  1..39) }
+  scope :new_testament, -> { where(:book_index => 40..66) }
 
-  scope :history,  where(:book_index =>  1..17)
-  scope :wisdom,   where(:book_index => 18..22)
-  scope :prophecy, where("book_index BETWEEN 23 AND 39 OR book_index = 66")
-  scope :gospel,   where(:book_index => 40..43)
-  scope :epistle,  where(:book_index => 45..65)
+  scope :history,  -> { where(:book_index =>  1..17) }
+  scope :wisdom,   -> { where(:book_index => 18..22) }
+  scope :prophecy, -> { where("book_index BETWEEN 23 AND 39 OR book_index = 66") }
+  scope :gospel,   -> { where(:book_index => 40..43) }
+  scope :epistle,  -> { where(:book_index => 45..65) }
 
-  scope :tl, lambda { |tl| where('translation = ?', tl) }
+  scope :tl, ->(tl) { where('translation = ?', tl) }
 
   # ----------------------------------------------------------------------------------------------------------
   # Sphinx Index
