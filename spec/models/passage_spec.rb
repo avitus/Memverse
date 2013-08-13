@@ -37,7 +37,19 @@ describe Passage do
     vs = FactoryGirl.create(:verse, book: 'Nahum', chapter: 1, versenum: 6)
     mv = FactoryGirl.create(:memverse_without_supermemo_init, :verse => vs, :efactor => 1.4, :rep_n => 2, :test_interval => 3)
 
+    # The problem here is that the factory for the Passage model is not creating the associated Memverses
+    pp psg
+    pp psg.memverses
+    pp psg.memverses.active.first
+    pp psg.memverses.active.last
+
     psg.expand( mv )
+
+    pp psg
+
+    pp psg.memverses.active[0]
+    pp psg.memverses.active[1]
+    pp psg.memverses.active[2]
 
     psg.test_interval.should == 3
     psg.rep_n.should         == 2
