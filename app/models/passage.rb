@@ -7,8 +7,7 @@ class Passage < ActiveRecord::Base
 
   validates_presence_of   :user_id, :length, :book, :chapter, :first_verse, :last_verse
 
-  attr_accessible :user_id, :translation, :book, :chapter, :first_verse, :last_verse,
-                  :efactor, :last_tested, :length, :next_test, :reference, :rep_n, :test_interval
+  attr_protected :test_interval
 
   scope :due,    -> { where('passages.next_test  <= ?', Date.today) }
   scope :active, -> { joins(:memverses).merge(Memverse.active).group(:id).having('count(memverses.id) > 0') }
