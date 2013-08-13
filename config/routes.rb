@@ -52,7 +52,7 @@ MemverseApp::Application.routes.draw do
   get '/add_verse',              :to => 'memverses#add_verse',             :as => 'add_verse'
   get '/add_chapter',            :to => 'memverses#add_chapter',           :as => 'add_chapter'
   get '/add/:id',                :to => 'memverses#ajax_add',              :as => 'add'
-  get '/quick_add/:vs',          :to => 'memverses#quick_add',             :as => 'quick_add'
+  match '/quick_add/:vs',          :to => 'memverses#quick_add',             :as => 'quick_add', via: [:get, :post]
   get '/avail_translations',     :to => 'memverses#avail_translations',    :as => 'avail_translations'
   # get '/edit_verse/:id',         :to => 'memverses#edit_verse',            :as => 'edit_verse'  <--- duplicate route ... need to rename
   get '/test_verse',             :to => 'memverses#test_verse',            :as => 'test_verse'
