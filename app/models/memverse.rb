@@ -9,27 +9,31 @@ class Memverse < ActiveRecord::Base
 
   has_one :country, :through => :user
 
+
+# scope :red, where(color: 'red')` should be changed to `scope :red, -> { where(color: 'red') }`
+
+
   # Named Scopes
-  scope :memorized,     where(:status => "Memorized")
-  scope :learning,      where(:status => "Learning" )
+  scope :memorized,     -> { where(:status => "Memorized") }
+  scope :learning,      -> { where(:status => "Learning" ) }
 
-  scope :active, 			  where(:status => ["Learning", "Memorized"])
-  scope :inactive, 			where(:status => "Pending")
+  scope :active, 			  -> { where(:status => ["Learning", "Memorized"]) }
+  scope :inactive, 			-> { where(:status => "Pending") }
 
-  scope :current,  			lambda { where('next_test >= ?', Date.today) }
-  scope :due_today, 		lambda { where('next_test  = ?', Date.today) }
-  scope :overdue,  			lambda { where('next_test  < ?', Date.today) }
+  scope :current,  			-> { where('next_test >= ?', Date.today) }
+  scope :due_today, 		-> { where('next_test  = ?', Date.today) }
+  scope :overdue,  			-> { where('next_test  < ?', Date.today) }
 
-  scope :american, 			joins(:user, :country).where('countries.name' => 'United States')
+  scope :american, 			-> { joins(:user, :country).where('countries.name' => 'United States') }
 
-  scope :old_testament, where('verses.book_index' =>  1..39).includes(:verse)
-  scope :new_testament,	where('verses.book_index' => 40..66).includes(:verse)
+  scope :old_testament, -> {where('verses.book_index' =>  1..39).includes(:verse) }
+  scope :new_testament,	-> {where('verses.book_index' => 40..66).includes(:verse) }
 
-  scope :history,    where('verses.book_index' =>  1..17).includes(:verse)
-  scope :wisdom,     where('verses.book_index' => 18..22).includes(:verse)
-  scope :prophecy,   joins(:verse).where("verses.book_index BETWEEN 23 AND 39 OR verses.book_index = 66").includes(:verse)
-  scope :gospel,     where('verses.book_index' => 40..43).includes(:verse)
-  scope :epistle,    where('verses.book_index' => 45..65).includes(:verse)
+  scope :history,    -> {where('verses.book_index' =>  1..17).includes(:verse) }
+  scope :wisdom,     -> {where('verses.book_index' => 18..22).includes(:verse) }
+  scope :prophecy,   -> {joins(:verse).where("verses.book_index BETWEEN 23 AND 39 OR verses.book_index = 66").includes(:verse) }
+  scope :gospel,     -> {where('verses.book_index' => 40..43).includes(:verse) }
+  scope :epistle,    -> { where('verses.book_index' => 45..65).includes(:verse) }
 
   # Validations
   validates :user_id,  :presence => true
