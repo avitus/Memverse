@@ -89,7 +89,7 @@ gem 'breadcrumbs_on_rails', '>=2.0.0'                                           
 gem 'dalli'                                                                                     # Memcached client
 gem 'redis', '>=2.2.2'                                                                          # Redis Key-value store
 gem 'action_mailer_cache_delivery', git: 'git://github.com/ragaskar/action_mailer_cache_delivery.git' # Used to test email delivery with Cucumber
-gem 'friendly_id'                                                                               # Makes nice IDs for models
+gem 'friendly_id', '>=5.0.0.beta1'                                                              # Makes nice IDs for models !!! TODO: Upgrade !!!
 gem 'foreman'                                                                                   # Helps manage multiple processes when running app in development.
 gem 'supermodel', git: 'git://github.com/KonaTeam/supermodel.git'                               # Uses ActiveModel for in-memory storage with redis
 gem 'best_in_place', github: 'bernat/best_in_place'                                             # In-place editing support ... no Rails 4 release yet

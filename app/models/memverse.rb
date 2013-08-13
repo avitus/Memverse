@@ -9,10 +9,6 @@ class Memverse < ActiveRecord::Base
 
   has_one :country, :through => :user
 
-
-# scope :red, where(color: 'red')` should be changed to `scope :red, -> { where(color: 'red') }`
-
-
   # Named Scopes
   scope :memorized,     -> { where(:status => "Memorized") }
   scope :learning,      -> { where(:status => "Learning" ) }
@@ -38,6 +34,9 @@ class Memverse < ActiveRecord::Base
   # Validations
   validates :user_id,  :presence => true
   validates :verse_id, :presence => true, :uniqueness => {:scope => :user_id}
+
+  # Needed to add this for Rails 4
+  attr_accessible :user_attributes, :verse_attributes, :user_id, :verse_id
 
   # Set initial values and link verse other verses
   before_create  :supermemo_init

@@ -137,6 +137,7 @@ MemverseApp::Application.routes.draw do
   get '/mygroup',                :to => 'groups#show',                     :as => 'mygroup'
 
   get '/update_profile',         :to => 'profile#update_profile',          :as => 'update_profile'
+  patch '/profile/update/:id',   :to => 'profile#update'
   get '/church',                 :to => 'profile#show_church',             :as => 'church'
   get '/referrals/:id',          :to => 'profile#referrals',               :as => 'referrals'
   get '/unsubscribe/*email',     :to => 'profile#unsubscribe',             :as => 'unsubscribe', :format => false
