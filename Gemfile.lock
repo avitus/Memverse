@@ -236,7 +236,7 @@ GEM
     foreman (0.63.0)
       dotenv (>= 0.7)
       thor (>= 0.13.6)
-    friendly_id (4.0.10)
+    friendly_id (5.0.0.beta1)
     fssm (0.2.10)
     gemoji (1.1.2)
     gherkin (2.12.1)
@@ -500,7 +500,7 @@ DEPENDENCIES
   fancybox-rails
   forem!
   foreman
-  friendly_id
+  friendly_id (>= 5.0.0.beta1)
   hirb
   htmldiff
   i18n-js
