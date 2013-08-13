@@ -242,7 +242,7 @@ class InfoController < ApplicationController
     add_breadcrumb I18n.t("menu.leaderboard"), leaderboard_path
     add_breadcrumb I18n.t("leader_menu.One Church"), memverse_clock_path
 
-    last_entry        = DailyStats.global.find(:first, :order => "entry_date DESC")
+    last_entry        = DailyStats.global.order("entry_date DESC").first
 
     @global_users     = last_entry.users_active_in_month
     @last_entry       = last_entry.entry_date
