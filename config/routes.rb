@@ -52,7 +52,7 @@ MemverseApp::Application.routes.draw do
   get '/add_verse',              :to => 'memverses#add_verse',             :as => 'add_verse'
   get '/add_chapter',            :to => 'memverses#add_chapter',           :as => 'add_chapter'
   get '/add/:id',                :to => 'memverses#ajax_add',              :as => 'add'
-  match '/quick_add/:vs',          :to => 'memverses#quick_add',             :as => 'quick_add', via: [:get, :post]
+  get '/quick_add/:vs',          :to => 'memverses#quick_add',             :as => 'quick_add'
   get '/avail_translations',     :to => 'memverses#avail_translations',    :as => 'avail_translations'
   # get '/edit_verse/:id',         :to => 'memverses#edit_verse',            :as => 'edit_verse'  <--- duplicate route ... need to rename
   get '/test_verse',             :to => 'memverses#test_verse',            :as => 'test_verse'
@@ -76,6 +76,7 @@ MemverseApp::Application.routes.draw do
   get '/mark_drill',             :to => 'memverses#mark_drill',            :as => 'mark_drill'
   get '/manage_verses',          :to => 'memverses#manage_verses',         :as => 'manage_verses'
   get '/show_all_my_verses',     :to => 'memverses#manage_verses'        # :as => 'manage_verses'
+  post '/delete_memverses',      :to => 'memverses#delete_verses'
   get '/user_stats',             :to => 'memverses#user_stats',            :as => 'user_stats'
   get '/progress',               :to => 'memverses#show_progress',         :as => 'progress'
   get '/save_progress_report',   :to => 'memverses#save_progress_report',  :as => 'save_progress_report'
