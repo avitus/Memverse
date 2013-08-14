@@ -2,7 +2,7 @@ Feature: Add a verse
   In order to memorize a verse
   A user
   Should be able to locate and add verses
-  
+
   Background:
     Given the following verses exist:
 
@@ -14,11 +14,11 @@ Feature: Add a verse
 
   	And I sign in as a normal user
     And I go to the add verse page
-     
+
     @javascript
     Scenario: User searches for a passage
       When I search for "Psalm 37:1-4"
-      Then I should see "Do not fret" 
+      Then I should see "Do not fret"
       And I should see "Trust in the Lord"
 
     @javascript
@@ -29,7 +29,7 @@ Feature: Add a verse
     @javascript
     Scenario: User searches for a chapter
       When I search for "Psalm 37"
-      Then I should see "Do not fret" 
-      And I should see "Trust in the Lord" 
-      And I should see "Delight yourself in the Lord"
+      Then I should see "Do not fret"
+      And I should see "they will soon wither"
+      And I should see "Trust in the Lord"
 

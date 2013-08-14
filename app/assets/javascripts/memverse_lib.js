@@ -364,17 +364,13 @@ function displayAlertMessage(message) {
  * All DOM attachments that are common to multiple pages should go here
  ******************************************************************************/
 $(document).ready(function() {
-
-	// Add spinners where needed to show activity
-	$('.spinner')
-		.ajaxStart(function() {
-	        $(this).show();
-	    })
-		.ajaxStop(function() {
-	        $(this).hide();
-	});
-
 	$('input#verse').focus().autocomplete({ source: BIBLEBOOKS });
-
 });
 
+$(document).ajaxStart( function () {
+    $('.spinner').show();
+});
+
+$(document).ajaxStop( function () {
+    $('.spinner').hide();
+});

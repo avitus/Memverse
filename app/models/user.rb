@@ -566,11 +566,11 @@ class User < ActiveRecord::Base
     self.gender           = new_params["gender"]
     self.translation      = new_params["translation"]
     self.reminder_freq    = new_params["reminder_freq"]
-    self.country          = Country.find(:first, :conditions => ["printable_name = ?", new_params["country"]])
-    self.american_state   = AmericanState.find(:first, :conditions => ["name = ?", new_params["american_state"]])
+    self.country          = Country.where(:printable_name => new_params["country"]).first
+    self.american_state   = AmericanState.where(:name => new_params["american_state"]).first
     # If church, group doesn't exist in database we add it
-    self.church           = Church.find(:first, :conditions => ["name = ?", new_params["church"]]) || Church.create(:name => new_params["church"])
-    self.group            = Group.find(:first, :conditions => ["name = ?", new_params["group"]]) || Group.create(:name => new_params["group"], :leader_id => self.id)
+    self.church           = Church.where(:name => new_params["church"]).first || Church.create(:name => new_params["church"])
+    self.group            = Group.where(:name => new_params["group"]).first || Group.create(:name => new_params["group"], :leader_id => self.id)
     self.newsletters      = new_params["newsletters"]
     self.language         = new_params["language"]
     self.time_allocation  = new_params["time_allocation"]

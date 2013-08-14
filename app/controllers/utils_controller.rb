@@ -22,17 +22,17 @@ class UtilsController < ApplicationController
     # Weekly Activity
     one_week_ago = Date.today-7
 
-    @new_users_this_week    = User.count(     :all,  :conditions => ["created_at > ?", one_week_ago])
-    @new_verses_this_week   = Verse.count(    :all,  :conditions => ["created_at > ?", one_week_ago])
-    @new_mvs_this_week      = Memverse.count( :all,  :conditions => ["created_at > ?", one_week_ago])
+    @new_users_this_week    = User.where("created_at > ?", one_week_ago).count
+    @new_verses_this_week   = Verse.where("created_at > ?", one_week_ago).count
+    @new_mvs_this_week      = Memverse.where("created_at > ?", one_week_ago).count
     @active_users_this_week = User.active_this_week.count
 
     # Daily Activity
     today = Date.today
 
-    @new_users_today    = User.count(     :all,  :conditions => ["created_at > ?", today])
-    @new_verses_today   = Verse.count(    :all,  :conditions => ["created_at > ?", today])
-    @new_mvs_today      = Memverse.count( :all,  :conditions => ["created_at > ?", today])
+    @new_users_today    = User.where("created_at > ?", today).count
+    @new_verses_today   = Verse.where("created_at > ?", today).count
+    @new_mvs_today      = Memverse.where("created_at > ?", today).count
     @active_users_today = User.active_today.count
 
     # Pending Verification
