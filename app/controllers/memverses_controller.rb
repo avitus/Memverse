@@ -158,7 +158,7 @@ class MemversesController < ApplicationController
 
     # Otherwise, show some nice statistics and direct user to memorization page if necessary
     if (!@user_has_no_verses)
-      mv = Memverse.find(:first, :conditions => ["user_id = ?", current_user.id], :order => "next_test ASC")
+      mv = Memverse.where(:user_id => current_user.id).order("next_test ASC").first
       if !mv.nil?
         @user_has_test_today = (mv.next_test <= Date.today)
       end
@@ -593,7 +593,7 @@ class MemversesController < ApplicationController
     pop_verses = Array.new
 
     # Changing the number of verses returned doesn't buy anything because you have to access entire memory verse table
-    pop_mv = Popverse.find(:all)
+    pop_mv = Popverse.all
 
     pop_mv.each { |vs|
 
