@@ -15,54 +15,61 @@ gem "rspec-rails", ">= 2.6.1", :group => [:development, :test]
 gem 'jasmine', :group => [:development, :test]
 
 group :test do
-  #gem "factory_girl_rails"
+  gem 'factory_girl_rails'                                      # Add to development group for debugging in console
   gem "cucumber-rails", ">= 1.3.0", require: false
   gem "capybara", ">= 1.1.2"
-  gem "database_cleaner", "= 1.0.1"   # !!! Newer version has bug with database adapter ... upgrade when possible
+  gem "database_cleaner", "= 1.0.1"                             # !!! Newer version has bug with database adapter ... upgrade when possible
   gem "launchy", ">= 2.0.5"
-  gem 'email_spec'
-end
-
-group :development, :test do
-  gem 'factory_girl_rails'   # Need this for console debugging
+  gem 'email_spec'                                              # For sending email in cucumber tests
 end
 
 group :production do
   gem 'mysql2', '>= 0.3'
 end
 
+############################################################
+# Javascript Engine
+############################################################
 if HOST_OS =~ /linux/i
   gem 'libv8', '>= 3.11.8.13', :platforms => :ruby
   gem 'therubyracer', '>= 0.11.3'
 end
 
+############################################################
+# Frameworks
+############################################################
 gem 'rails', '4.0.0'
 gem 'jquery-rails', '>= 2.0.0'
 
+############################################################
+# Rails Support Gems
+############################################################
 gem 'sass-rails',   '~> 4.0.0'
 gem 'coffee-rails', '~> 4.0.0'
 gem 'uglifier', '>= 1.3.0'
 gem "compass-rails", "~> 2.0.alpha.0"                       # !!!!!!!! Get final version !!!!!!
 
-# These gems added to ease upgrade to Rails 4
-# We should remove these over time
-#####################################################
+############################################################
+# For Rails 4 Upgrade ... should be removed eventually
+############################################################
 gem 'protected_attributes'
 gem 'rails-observers'
 gem 'actionpack-page_caching'
 gem 'actionpack-action_caching'
 gem 'activerecord-deprecated_finders'
-
-# This was initially required, iirc, to allow for accuracy test questions to be stored ... need to ajaxify and revert to cookies
 gem 'activerecord-session_store'                                                                # We should store sessions in cookies
-
 gem 'activeresource', require: 'active_resource'
-#####################################################
 
+############################################################
+# Authentication and Authorization
+############################################################
 gem "devise"                                                                                    # Authentication
 gem "devise-encryptable"                                                                        # TODO: Is this required?
 gem "cancan"                                                                                    # Role-based authorization
 
+############################################################
+# Major Engines (Admin, Forem, Blog)
+############################################################
 gem 'rails_admin', :git => 'git://github.com/sferik/rails_admin.git'                            # Admin console
 gem 'forem',       :github => "radar/forem", :branch => "rails4"                                # Forum engine
 gem 'bloggity',    :git => "git://github.com/avitus/bloggity.git"                               # Blog engine
@@ -104,7 +111,7 @@ gem 'dropbox-sdk'                                                               
 gem 'sidekiq'                                                                                   # Background jobs; used for quizzes
 gem 'sinatra', require: false                                                                   # sinatra and slim are required for sidekiq
 gem 'slim'
-gem 'pubnub'                                                                                    # evaluating as replacement for juggernaut
+gem 'pubnub'                                                                                    # Real-time messaging service
 
 group :console do
   gem 'wirble'
