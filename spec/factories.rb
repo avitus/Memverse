@@ -33,7 +33,7 @@ FactoryGirl.define do
     # Use this factory for testing out of bound verses
     # TODO: these tests are not yet passing ... not sure how this works
     factory :verse_with_validate_ref do
-      before(:create) { |verse| verse.send(:validate_ref) }
+      after(:build) { |verse| verse.class.set_callback(:create, :before, :validate_ref) }
     end
 
   end
@@ -42,6 +42,7 @@ FactoryGirl.define do
   # Passages
   # ==============================================================================================
   factory :passage do
+
     association :user,  :factory => :user
     translation 'NIV'
     length      9
@@ -51,10 +52,11 @@ FactoryGirl.define do
     last_verse  10
 
     # Create the necessary memverses and verses for the passage
+    # Note: 'evaluator' stores all values from the 'passage' factory_girl
     after(:create) do |psg, evaluator|
       for i in evaluator.first_verse..evaluator.last_verse
-        vs = FactoryGirl.create(:verse, book: evaluator.book, chapter: evaluator.chapter, versenum: i)
-        FactoryGirl.create(:memverse, user: evaluator.user, verse: vs, passage: psg, test_interval: i, rep_n: i)
+        vs = FactoryGirl.create(:verse, book: evaluator.book, chapter: evaluator.chapter, versenum: i, translation: evaluator.translation)
+        FactoryGirl.create(:memverse_without_passage, user: evaluator.user, verse: vs, passage: psg, test_interval: i, rep_n: i)
       end
     end
 
@@ -73,6 +75,16 @@ FactoryGirl.define do
     efactor        2.0
     rep_n          1
     test_interval  1
+
+    # We need to add the callback back to the Memverse class because it is removed from the class by
+    # the :memverse_without_passage callback. See link below for details
+    # http://stackoverflow.com/questions/11409734/why-does-my-factorygirl-callback-run-when-it-shouldnt
+    after(:build) {|memverse| memverse.class.set_callback(:create, :after, :add_to_passage)}
+
+    # This factory is used by the Passage model to avoid a duplicate passage being created
+    factory :memverse_without_passage do
+      after(:build) { |memverse| memverse.class.skip_callback(:create, :after, :add_to_passage) }
+    end
 
     # This factory allows creation of memory verses with a different efactor
     factory :memverse_without_supermemo_init do
