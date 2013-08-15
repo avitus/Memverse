@@ -1016,7 +1016,7 @@ class User < ActiveRecord::Base
   # Number of pending verses for user
   # ----------------------------------------------------------------------------------------------------------
   def pending
-    Memverse.count(:all, :conditions => ["user_id = ? and status = ?", self.id, "Pending"])
+    Memverse.where(:user_id => self.id, :status => "Pending")
   end
 
   # ----------------------------------------------------------------------------------------------------------
