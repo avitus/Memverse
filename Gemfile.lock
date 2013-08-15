@@ -44,12 +44,6 @@ GIT
       workflow (= 0.8.0)
 
 GIT
-  remote: git://github.com/ragaskar/action_mailer_cache_delivery.git
-  revision: 20a2dd50e54fcb45ff38afa2cdfdc08d5b479c74
-  specs:
-    action_mailer_cache_delivery (0.1.0)
-
-GIT
   remote: git://github.com/sandal/prawn
   revision: 857f13e919d1bd7120de1ea9ba0429620329865b
   submodules: true
@@ -82,6 +76,8 @@ GEM
   remote: http://rubygems.org/
   specs:
     Ascii85 (1.0.2)
+    action_mailer_cache_delivery (0.3.5)
+      actionmailer (>= 3.0)
     actionmailer (4.0.0)
       actionpack (= 4.0.0)
       mail (~> 2.5.3)
@@ -469,7 +465,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  action_mailer_cache_delivery!
+  action_mailer_cache_delivery (>= 0.3.5)
   actionpack-action_caching
   actionpack-page_caching
   activerecord-deprecated_finders

@@ -5,8 +5,6 @@
 # files.
 
 require 'cucumber/rails'
-
-## --- Something is wrong with this ----
 require 'email_spec/cucumber'  # Needed for email sending
 
 # Capybara defaults to XPath selectors rather than Webrat's default of CSS3. In
