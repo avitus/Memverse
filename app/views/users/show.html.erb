@@ -6,13 +6,13 @@
 
 <div class="user-dashboard white-box-bg">
 	<div class="user-info-top-box">
-    	
+
     	<div class="user-details">
-    		
+
         	<div class="user-details-img">
             	<span class="avatar"><a href="#"><%= image_tag @user.blog_avatar_url -%></a></span>
             </div>
-            
+
             <div class="user-details-text">
             	<h4><%= @user.name_or_login %></h4>
                 <ul>
@@ -26,15 +26,15 @@
 					<% end %>
                 </ul>
             </div>
-            
+
        </div> <!-- end: user-details -->
-    	
+
 		<div id="user-profile" class="user-settings">
 			<div class="user-settings-text">
 				<ul>
 					<li>
 						<div class="user-option-list"><span>Location: </span>
-							<% if @user.american_state && @user.country %>	
+							<% if @user.american_state && @user.country %>
 								<%= @user.american_state.name + ", " + @user.country.printable_name %>
 							<% else %>
 								<%= @user.country ? @user.country.printable_name : "" %>
@@ -56,19 +56,19 @@
 				<ul>
 					<li>
 						<div class="user-option-list"><span>Memory Time:</span> <%= @user.work_load %> Mins / Day </div>
-					</li>					
+					</li>
 					<li>
-						<div class="user-option-list"><span>Pending Verses:</span> <%= @user.pending %> </div>								
+						<div class="user-option-list"><span>Pending Verses:</span> <%= @user.pending.count %> </div>
 					</li>
 					<li>
 						<div class="user-option-list"><span>Completed Sessions:</span> <%= @user.completed_sessions %> </div>
 					</li>
-				</ul>				
+				</ul>
 			</div>
 		</div>
-	    
+
 	    <div class="clr"></div>
-        
+
     </div> <!-- end: user-info-top-box -->
 </div> <!-- end: user-details -->
 
@@ -79,34 +79,34 @@
 		<div class="left-widget">
 			<div class="left-widget-item pad">
 				<h2>Memorized Verses</h2>
-				<div class="book"><%= @user.memorized %></div> 
-			</div>      		
+				<div class="book"><%= @user.memorized %></div>
+			</div>
 			<div class="left-widget-item pad">
 				<h2>Level</h2>
-				<div class="level-icon"><%= @user.level %></div> 
-			</div>  
+				<div class="level-icon"><%= @user.level %></div>
+			</div>
 	        <div class="left-widget-item">
 				<h2>Ref Recall</h2>
 				<div class="lightbulb">
 					<%= @user.ref_grade %> %
-				</div> 
-	        </div>        
+				</div>
+	        </div>
 	        <div class="left-widget-item">
 				<h2>Accuracy</h2>
 				<div class="bullseye">
 					<%= @user.accuracy %> %
-				</div> 
-			</div>  	             	
+				</div>
+			</div>
 		</div> <!-- end: left-widget -->
-		
+
 		<% if @user == current_user %>
-		<div class="left-widget pad">       	
+		<div class="left-widget pad">
 			<div id="quest-info">
-				<%= render :partial => "quests/current_user_quests", :locals => { :completed => @current_completed_quests, :current_user_quests => @current_user_quests } %> 
+				<%= render :partial => "quests/current_user_quests", :locals => { :completed => @current_completed_quests, :current_user_quests => @current_user_quests } %>
 			</div>
 		</div>
 		<% end %>
-		
+
 	</div><!--main-left end-->
 
 	<div class="main-right">
@@ -115,64 +115,64 @@
 
 	<div class="main-right">
 		<h2>Verse Distribution</h2>
-	    	      
+
 	        <div class="vs-distribution">
-	        	        	
+
 	        	<div class="vs-disti-left">
 					<table>
-						<thead>			
-							<tr> <th></th><th>Memorized</th><th>Learning</th><th>%</th></tr>	
+						<thead>
+							<tr> <th></th><th>Memorized</th><th>Learning</th><th>%</th></tr>
 						</thead>
-						
-						<tbody>			
+
+						<tbody>
 							<tr><th>Old Testament</th><td><%= @user.ot_verses["Memorized"]%></td>	<td><%= @user.ot_verses["Learning"]%></td><td><%= @user.ot_perc %>%</td></tr>
 							<tr><th>New Testament</th><td><%= @user.nt_verses["Memorized"]%></td>	<td><%= @user.nt_verses["Learning"]%></td><td><%= @user.nt_perc %>%</td></tr>
 							<tr><th>All Verses</th><td><%= @user.memorized%></td>	<td><%= @user.learning %></td><td></td></tr>
 							<tr></tr>
-						</tbody>			
+						</tbody>
 					</table>
-				</div>	
-			
+				</div>
+
 				<div class="vs-disti-right">
 					<table>
-						<thead>			
-							<tr> <th></th>						<th>Memorized</th> 							<th>Learning</th><th>%</th>					</tr>	
+						<thead>
+							<tr> <th></th>						<th>Memorized</th> 							<th>Learning</th><th>%</th>					</tr>
 						</thead>
 						<tbody>
 							<tr>
-								<th title="<%= I18n.t("book.name.Genesis") + " - " + I18n.t("book.name.Esther")%>">History</th>		
-								<td><%= @user.history["Memorized"]%></td>	
-								<td><%= @user.history["Learning"]%></td>	
-								<td><%= @user.h_perc %>%</td>	
-							</tr>	
-							<tr>
-								<th title="<%= I18n.t("book.name.Job") + " - " + I18n.t("book.name.Song of Songs")%>">Wisdom</th>	
-								<td><%= @user.wisdom["Memorized"]%></td>	
-								<td><%= @user.wisdom["Learning"]%></td>		
-								<td><%= @user.w_perc %>%</td>	
-							</tr>	
-							<tr>
-								<th title="<%= I18n.t("book.name.Isaiah") + " - " + I18n.t("book.name.Malachi") + " & " + I18n.t("book.name.Revelation") %>">Prophecy</th>	
-								<td><%= @user.prophecy["Memorized"]%></td>	
-								<td><%= @user.prophecy["Learning"]%></td>	
-								<td><%= @user.p_perc %>%</td>	
-							</tr>	
-							<tr>
-								<th title="<%= I18n.t("book.name.Matthew") + " - " + I18n.t("book.name.John")%>">Gospels</th>		
-								<td><%= @user.gospel["Memorized"]%></td>	
-								<td><%= @user.gospel["Learning"]%></td>		
-								<td><%= @user.g_perc %>%</td>	
-							</tr>	
-							<tr>
-								<th title="<%= I18n.t("book.name.Acts") + " - " + I18n.t("book.name.Jude")%>">Epistles</th>	
-								<td><%= @user.epistle["Memorized"]%></td>	
-								<td><%= @user.epistle["Learning"]%></td>	
-								<td><%= @user.e_perc %>%</td>	
+								<th title="<%= I18n.t("book.name.Genesis") + " - " + I18n.t("book.name.Esther")%>">History</th>
+								<td><%= @user.history["Memorized"]%></td>
+								<td><%= @user.history["Learning"]%></td>
+								<td><%= @user.h_perc %>%</td>
 							</tr>
-						</tbody>							
-					</table>        	
+							<tr>
+								<th title="<%= I18n.t("book.name.Job") + " - " + I18n.t("book.name.Song of Songs")%>">Wisdom</th>
+								<td><%= @user.wisdom["Memorized"]%></td>
+								<td><%= @user.wisdom["Learning"]%></td>
+								<td><%= @user.w_perc %>%</td>
+							</tr>
+							<tr>
+								<th title="<%= I18n.t("book.name.Isaiah") + " - " + I18n.t("book.name.Malachi") + " & " + I18n.t("book.name.Revelation") %>">Prophecy</th>
+								<td><%= @user.prophecy["Memorized"]%></td>
+								<td><%= @user.prophecy["Learning"]%></td>
+								<td><%= @user.p_perc %>%</td>
+							</tr>
+							<tr>
+								<th title="<%= I18n.t("book.name.Matthew") + " - " + I18n.t("book.name.John")%>">Gospels</th>
+								<td><%= @user.gospel["Memorized"]%></td>
+								<td><%= @user.gospel["Learning"]%></td>
+								<td><%= @user.g_perc %>%</td>
+							</tr>
+							<tr>
+								<th title="<%= I18n.t("book.name.Acts") + " - " + I18n.t("book.name.Jude")%>">Epistles</th>
+								<td><%= @user.epistle["Memorized"]%></td>
+								<td><%= @user.epistle["Learning"]%></td>
+								<td><%= @user.e_perc %>%</td>
+							</tr>
+						</tbody>
+					</table>
 	        	</div>
-	
+
 				<div class="clr"></div>
 
 			</div> <!-- end: vs-distribution -->
@@ -198,28 +198,28 @@
 
 	    <div class="clr"></div>
     </div>
-    
+
 </div><!--main-content end-->
-    
+
 <div class="clr"></div>
-    
+
 <script type="text/javascript">
 $(document).ready(function() {
-	// select all desired input fields and attach tooltips to them 
-	$(".vs-disti-right table tbody tr th").tooltip({ 
-	 
-	    // place tooltip on the right edge 
-	    position: ['center', 'left'], 
-	 
-	    // a little tweaking of the position 
-	    offset: [-2, -15], 
-	 
-	    // use a simple show/hide effect 
-	    effect: 'toggle', 
-	     
-	    // custom opacity setting 
-	    opacity: 0.8, 
-		
+	// select all desired input fields and attach tooltips to them
+	$(".vs-disti-right table tbody tr th").tooltip({
+
+	    // place tooltip on the right edge
+	    position: ['center', 'left'],
+
+	    // a little tweaking of the position
+	    offset: [-2, -15],
+
+	    // use a simple show/hide effect
+	    effect: 'toggle',
+
+	    // custom opacity setting
+	    opacity: 0.8,
+
 		//tooltip style
 		tipClass: 'tooltip2'
 	});
