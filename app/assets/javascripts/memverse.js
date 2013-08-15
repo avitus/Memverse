@@ -222,7 +222,7 @@ Array.remove = function(array, from, to) {
   return array.push.apply(array, rest);
 };
 
-versefeedback = function(correctvs, verseguess, echo, firstletter) {
+function verseFeedback(correctvs, verseguess, echo, firstletter) {
 
 	firstletter = (typeof firstletter == "undefined") ? false : firstletter;
 

@@ -1,6 +1,6 @@
 describe("Feedback", function() {
 	it("should be correct even with incorrect punctuation", function() {
-		expect(versefeedback(
+		expect(verseFeedback(
 			"And after he became the father of Enosh, Seth lived 807 years and had other sons and daughters.",	// correct text
 			"And after he became the father- of Enosh Seth lived: 807 years and had other sons and. daughters",	// user guess
 			true																								// feedback enabled
@@ -11,7 +11,7 @@ describe("Feedback", function() {
 	});
 
 	it("does not give away complete number when only first numeral has been provided", function() {
-		expect(versefeedback(
+		expect(verseFeedback(
 			"And after he became the father of Enosh, Seth lived 807 years and had other sons and daughters.",	// correct text
 			"And after he became the father of Enosh, Seth lived 8",											// user guess
 			true																								// feedback enabled
@@ -22,7 +22,7 @@ describe("Feedback", function() {
 	});
 
 	it("does give number when number is correct", function() {
-		expect(versefeedback(
+		expect(verseFeedback(
 			"And after he became the father of Enosh, Seth lived 807 years and had other sons and daughters.",	// correct text
 			"And after he became the father of Enosh, Seth lived 807",											// user guess
 			true																								// feedback enabled
@@ -33,7 +33,7 @@ describe("Feedback", function() {
 	});
 
 	it("should show quotation mark", function() {
-		expect(versefeedback(
+		expect(verseFeedback(
 			'And he said, "Behold, I am making a covenant. Before all your people I will do marvels, such as have not been created in all the earth or in any nation. And all the people among whom you are shall see the work of the LORD, for it is an awesome thing that I will do with you.',	// correct text
 			'and he said behold i am making a covenant.',														// user guess
 			true																								// feedback enabled
@@ -44,7 +44,7 @@ describe("Feedback", function() {
 	});
 
 	it("should not accept Spanish without special characters", function() {
-		expect(versefeedback(
+		expect(verseFeedback(
 			'Por medio de él todas las cosas fueron creadas; sin él, nada de lo creado llegó a existir.',	// correct text
 			'Por medio de l todas las cosas fueron creadas; sin él',										// user guess
 			true																							// feedback enabled
@@ -55,7 +55,7 @@ describe("Feedback", function() {
 	});
 
 	it("should support Portuguese", function() {
-		expect(versefeedback(
+		expect(verseFeedback(
 			'E fez Deus a expansão, e fez separação entre as águas que estavam debaixo da expansão e as águas que estavam sobre a expansão; e assim foi.',	// correct text
 			'E fez Deus a expansao, e fez separacão entre as águas que estavam debaixo da expanso',															// user guess
 			true																																			// feedback enabled
@@ -66,7 +66,7 @@ describe("Feedback", function() {
 	});
 
 	it("should accept first letter if mnemonic disabled", function() {
-		expect(versefeedback(
+		expect(verseFeedback(
 			'For God so loved the world that he gave his one and only Son',		// correct text
 			'F G s l t w t h g h o a o s ',										// user guess
 			true,																// feedback
@@ -78,7 +78,7 @@ describe("Feedback", function() {
 	});
 
 	it("should accept accented first letters if mnemonic disabled", function() {
-		expect(versefeedback(
+		expect(verseFeedback(
 			'En él estaba la vida, y la vida era la luz de los hombres.',		// correct text
 			'E é e l v y l v e l l d l h.',										// user guess
 			true,																// feedback
@@ -90,7 +90,7 @@ describe("Feedback", function() {
 	});
 
 	it("should recognize last first-letter without a subsequent space or punctuation mark", function() {
-		expect(versefeedback(
+		expect(verseFeedback(
 			'This is a test.',		// correct text
 			'T i a t.',				// user guess
 			true,					// feedback
@@ -102,7 +102,7 @@ describe("Feedback", function() {
 	});
 
 	it("should accept some complete words in text that's primarily first letters", function() {
-		expect(versefeedback(
+		expect(verseFeedback(
 			'This is simply a test to see whether the first-letter and complete words functionality works',		// correct text
 			'T i s a tesT 2 s w t f a c words functionlality works.',											// user guess
 			true,																								// feedback
@@ -114,7 +114,7 @@ describe("Feedback", function() {
 	});
 
 	it("should not give feedback if disabled", function() {
-		expect(versefeedback(
+		expect(verseFeedback(
 			'This is a test',		// correct text
 			'T i',					// user guess
 			false,					// feedback
@@ -126,7 +126,7 @@ describe("Feedback", function() {
 	});
 
 	it("should not give feedback if disabled but still say if correct", function() {
-		expect(versefeedback(
+		expect(verseFeedback(
 			'This is a test.',		// correct text
 			'T i a test',			// user guess
 			false,					// feedback
@@ -138,7 +138,7 @@ describe("Feedback", function() {
 	});
 
 	it("should give ... to an incorrect first first letter even when first letter is disabled", function() {
-		expect(versefeedback(
+		expect(verseFeedback(
 			'This is a test',		// correct text
 			'T',					// user guess
 			true,					// feedback
@@ -150,7 +150,7 @@ describe("Feedback", function() {
 	});
 
 	it("should detect any two subsequent single letters as first letters", function() {
-		expect(versefeedback(
+		expect(verseFeedback(
 			'This is an interesting test.',		// correct text
 			'This is a i test',					// user guess
 			true,					// feedback
@@ -162,7 +162,7 @@ describe("Feedback", function() {
 	});
 
 	it("handles hyphens at the end", function() {
-		expect(versefeedback(
+		expect(verseFeedback(
 			"This is a verse with a hyphen at the end -",	// correct text
 			"This is a verse with a hyphen at the end",		// user guess
 			true											// feedback enabled
@@ -173,7 +173,7 @@ describe("Feedback", function() {
 	});
 
 	it("handles dashes at the end", function() {
-		expect(versefeedback(
+		expect(verseFeedback(
 			"This is a verse with a dash at the end —",		// correct text
 			"This is a verse with a dash at the end",		// user guess
 			true											// feedback enabled
