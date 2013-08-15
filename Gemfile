@@ -21,6 +21,7 @@ group :test do
   gem "database_cleaner", "= 1.0.1"                             # !!! Newer version has bug with database adapter ... upgrade when possible
   gem "launchy", ">= 2.0.5"
   gem 'email_spec'                                              # For sending email in cucumber tests
+  gem "action_mailer_cache_delivery", ">= 0.3.5"                # Used to test email delivery with Cucumber. Pairs with email_spec
 end
 
 group :production do
@@ -99,7 +100,6 @@ gem 'htmldiff'                                                                  
 gem 'breadcrumbs_on_rails', '>=2.0.0'                                                           # For breadcrumb navigation bar
 gem 'dalli'                                                                                     # Memcached client
 gem 'redis', '>=2.2.2'                                                                          # Redis Key-value store
-gem 'action_mailer_cache_delivery', git: 'git://github.com/ragaskar/action_mailer_cache_delivery.git' # Used to test email delivery with Cucumber
 gem 'friendly_id', '>=5.0.0.beta1'                                                              # Makes nice IDs for models !!! TODO: Upgrade !!!
 gem 'foreman'                                                                                   # Helps manage multiple processes when running app in development.
 gem 'supermodel', git: 'git://github.com/KonaTeam/supermodel.git'                               # Uses ActiveModel for in-memory storage with redis
