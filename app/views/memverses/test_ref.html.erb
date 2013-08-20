@@ -2,64 +2,85 @@
 
 <div class="white-box-with-margins">
 
-	<div id="reftest-question">	
-		
-		<!-- Verse Heading -->		
+	<div id="reftest-question">
+
+		<!-- Verse Heading -->
 		<div class="top-heading">
-	    	<h2><span>Question: </span><span class="verse-ref"><%=@question_num+1%></span></h2>
-	    </div>	
-		
+	    	<h2><span>Question: </span><span class="verse-ref">1</span></h2>
+	    </div>
+
 		<!-- Verse Text -->
 		<div id="reftestVerse">
-			<%= @ref%>
+
 		</div>
 	</div>
-	
+
 	<div id="reftest-answer">
-		
+
 		<div class="top-heading">
 	    	<h2><span>Reference: </span></h2>
-	    </div>	
-	    
+	    </div>
+
 		<%= form_tag :action => 'mark_reftest' do %>
-	
+
 			<%= text_field_tag(:answer, params[:answer], :autocomplete => "off" )%>
-			<%= submit_tag "", 			:class => "submit-button" %>								
+			<%= submit_tag "", 			:class => "submit-button" %>
 			<%= submit_tag "Exit Test", :class => "submit secondary" %>
-	
-		<% end %>					
-	</div>	
+
+		<% end %>
+	</div>
 </div>
 
-<!-- http://www.devbridge.com/projects/autocomplete/jquery/ -->
-<script type="text/javascript">
-	$(document).ready(function() {
-		
-		// focus cursor on verse entry box and autocomplete		
+
+
+<script language="JavaScript" type="text/javascript"><!--
+
+    var memverseUserID = "<%= current_user.id %>"; // global variable
+
+    $(document).ready(function() {
+
+        //------- Initialize session ------------------
+        refTestState.initialize();
+
+        //------- Scoring a verse ----------------------
+        $( ".passage-text" ).on( "click", ".submit-button", function( e ) {
+
+        	// Submit score
+            refTestState.scoreRef();
+
+            // Get next reference for testing
+            refTestState.getRef();
+
+            // Update current score
+
+        });
+
+		//------- Autocomplete and focus ----------------------
 		$('#answer').focus().autocomplete({ source: ['Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy', 'Joshua', 'Judges', 'Ruth', '1 Samuel', '2 Samuel',
 		            '1 Kings', '2 Kings','1 Chronicles', '2 Chronicles', 'Ezra', 'Nehemiah', 'Esther', 'Job', 'Psalm', 'Proverbs',
-		            'Ecclesiastes', 'Song of Songs', 'Isaiah', 'Jeremiah', 'Lamentations', 'Ezekiel', 'Daniel', 'Hosea', 'Joel', 
+		            'Ecclesiastes', 'Song of Songs', 'Isaiah', 'Jeremiah', 'Lamentations', 'Ezekiel', 'Daniel', 'Hosea', 'Joel',
 		            'Amos', 'Obadiah', 'Jonah', 'Micah', 'Nahum', 'Habakkuk', 'Zephaniah', 'Haggai', 'Zechariah', 'Malachi', 'Matthew',
 		            'Mark', 'Luke', 'John', 'Acts', 'Romans', '1 Corinthians', '2 Corinthians', 'Galatians', 'Ephesians', 'Philippians',
 		            'Colossians', '1 Thessalonians', '2 Thessalonians', '1 Timothy', '2 Timothy', 'Titus', 'Philemon', 'Hebrews', 'James',
-		            '1 Peter', '2 Peter', '1 John', '2 John', '3 John', 'Jude', 'Revelation']						
+		            '1 Peter', '2 Peter', '1 John', '2 John', '3 John', 'Jude', 'Revelation']
 		});
-		
-		// Verify verse format	
-		$("#answer").observe_field(0.3, function( ) { 
+
+		//------- Verify Verse Format ----------------------
+		$("#answer").observe_field(0.3, function( ) {
 			$.get('/verify_vs_format', { vs_str: this.value },
-				function(data){	
+				function(data){
 					if (data == true) {
 						$("#answer").css({ borderColor: '#4C586E', backgroundColor: '#AFAEAE' });
 					}
 					else {
 						$("#answer").removeAttr("style");
-					}	
+					}
 			}, "json" );
         });
-				
-   });
-</script>
+
+    }); // End of jQuery document ready
+--></script>
+
 
 
 

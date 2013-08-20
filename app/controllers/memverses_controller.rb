@@ -1071,51 +1071,145 @@ class MemversesController < ApplicationController
   end
 
   # ----------------------------------------------------------------------------------------------------------
-  # Prepare for Reference Test
+  # Test a Difficult Reference
   # ----------------------------------------------------------------------------------------------------------
-  def load_test_ref
+  def test_ref
 
     @tab = "mem"
+    @sub = "refrec"
 
-    ref_quizz         = Array.new
-    ref_quizz_answers = Array.new
-    ref_id            = Array.new
+    add_breadcrumb I18n.t("menu.review"), :test_verse_quick_path
+    add_breadcrumb I18n.t("memorize_menu.References"), :test_ref_path
 
-    # Find the 30 hardest (first) verses and pick 10 at random for the test
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Returns the next reference to be tested - this is a service URL for a js routine
+  # ----------------------------------------------------------------------------------------------------------
+  def test_next_ref
+
     if current_user.all_refs
-      refs = Memverse.active.where("user_id = ?", current_user.id).order("ref_interval ASC").limit(30).sort_by{ rand }.slice(0...10)
+      ref = Memverse.active.where(:user_id => current_user.id).order("ref_interval ASC").limit(30).sort_by{ rand }.first
     else
-      refs = Memverse.active.where("user_id = ? and prev_verse is ?", current_user.id, nil).order("ref_interval ASC").limit(30).sort_by{ rand }.slice(0...10)
+      ref = Memverse.active.where(:user_id => current_user.id, :prev_verse => nil).order("ref_interval ASC").limit(30).sort_by{ rand }.first
     end
 
-    if refs.length >= 10
-
-      # Put verses into session variable
-      refs.each { |r|
-        ref_quizz         << r.verse.text # TODO: if verse has duplicates we should show prior verse
-        ref_quizz_answers << [r.verse.book, r.verse.chapter.to_i, r.verse.versenum.to_i]
-        ref_id            << r.id
-      }
-
-      # Create session variables
-      session[:ref_test]          = ref_quizz
-      session[:ref_soln]          = ref_quizz_answers
-      session[:ref_id]            = ref_id
-      session[:ref_test_cntr]     = 0
-      session[:reftest_correct]   = 0
-      session[:reftest_grade]     = 0
-      session[:reftest_answered]  = 0
-      session[:reftest_length]    = refs.length
-      session[:reftest_incorrect] = Array.new
-
-      # Start Test
-      redirect_to :action => 'test_ref'
+    if ref
+      render :json => { :finished => false, :ref => ref }
     else
-      flash[:notice] = "You must have 10 verse references in your account before you can take the reference recall test."
+      render :json => { :finished => true }
+    end
+
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Score Reference Test
+  # ----------------------------------------------------------------------------------------------------------
+  def mark_reftest
+
+    # Score Questions
+    answer = params[:answer]
+    errorcode, book, chapter, verse = parse_verse(answer)
+
+    question_num  = session[:ref_test_cntr]
+    solution      = session[:ref_soln][question_num] if session[:ref_soln]
+
+    # We need to check for alternative solutions to account for identical verses
+    # IDEA: Take the reference the user entered, look up that verse, and see if it matches the text shown to the user (less any capitalization or punctuation differences)
+
+    alt_soln      = identical_verses( solution )
+
+    if solution && session[:reftest_answered]
+
+      mv = Memverse.find( session[:ref_id][question_num] )
+
+      if (book==solution[0] and chapter==solution[1].to_i and verse==solution[2].to_i) or
+         (book==alt_soln[0] and chapter==alt_soln[1].to_i and verse==alt_soln[2].to_i)
+        flash[:notice] = "Perfect!"
+        session[:reftest_correct] += 1
+        session[:reftest_grade] += 10
+        mv.ref_interval   = [(mv.ref_interval * 1.5), 365].min.round
+      elsif (book==solution[0] and chapter==solution[1].to_i) or (book==alt_soln[0] and chapter==alt_soln[1].to_i)
+        flash[:notice] = "Correct book and chapter. The correct reference is " + solution[0].to_s + " " + solution[1].to_s + ":" + solution[2].to_s
+        session[:reftest_incorrect] << question_num
+        session[:reftest_grade] += 5
+        mv.ref_interval = (mv.ref_interval * 0.7).round
+      else
+        session[:reftest_incorrect] << question_num
+        flash[:notice] = "Sorry - Incorrect. The correct reference is " + solution[0].to_s + " " + solution[1].to_s + ":" + solution[2].to_s
+        mv.ref_interval = (mv.ref_interval * 0.6).round
+      end
+
+      # Update date for next ref test
+      mv.next_ref_test  = Date.today + mv.ref_interval
+      mv.save
+
+      # Update score
+      session[:reftest_answered] += 1 if session[:reftest_answered]
+
+      # Start Next Question
+      session[:ref_test_cntr] += 1
+
+      # Stop after questions are finished or if user quits
+      if session[:reftest_answered] >= session[:reftest_length] or params[:commit]=="Exit Test"  # TODO: handle case where session variables are Nil
+        redirect_to reftest_results_path
+      else
+        redirect_to test_ref_path
+      end
+
+    else
+      # Probably caused by user using the back button after test is finished
+      logger.info("*** User probably hit the back button or returned next day without session variable set up")
+      flash[:notice] = "Reference recall test already completed or not initialized"
       redirect_to root_path
     end
 
   end
+
+
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Score Reference Test
+  # ----------------------------------------------------------------------------------------------------------
+  def reftest_results
+    @tab = "mem"
+
+    add_breadcrumb I18n.t("menu.review"), :test_verse_quick_path
+    add_breadcrumb I18n.t("memorize_menu.Reference Recall"), :reftest_results_path
+
+    if session[:reftest_answered]
+      @correct    = session[:reftest_correct]
+      @answered   = session[:reftest_answered]
+      @incorrect  = session[:reftest_incorrect]
+      @grade      = session[:reftest_grade]
+
+      # Update user's accuracy grade
+      @old_ref_grade = current_user.ref_grade
+      @new_ref_grade = ((@old_ref_grade.to_f * 0.75) + (@grade.to_f * 0.25)).ceil.to_i
+
+      current_user.ref_grade = @new_ref_grade
+      current_user.save
+
+      # Clear session variables so that user can't hit refresh and bump up score
+      session[:reftest_answered] = nil
+      session[:reftest_correct]  = nil
+
+      # Check for quest completion
+      # spawn_block(:argv => "spawn-reftest-quest") do
+        if q = Quest.where(:url => reftest_results_path, :level => current_user.level ).first
+          if @grade >= q.quantity
+            q.check_quest_off(current_user)
+            flash.keep[:notice] = "You have completed the reference test for this level."
+          end
+        end
+      # end
+
+    else
+      redirect_to root_path
+    end
+
+  end
+
 
   def explain_exam
     @tab = "mem"
@@ -1288,136 +1382,6 @@ class MemversesController < ApplicationController
     end
 
   end
-
-  # ----------------------------------------------------------------------------------------------------------
-  # Test a Difficult Reference
-  # ----------------------------------------------------------------------------------------------------------
-  def test_ref
-
-    @tab = "mem"
-    @sub = "refrec"
-
-    add_breadcrumb I18n.t("menu.review"), :test_verse_quick_path
-    add_breadcrumb I18n.t("memorize_menu.References"), :start_ref_test_path
-
-    if session[:ref_test_cntr] # The session variables are not set if user comes straight to this page
-      @question_num = session[:ref_test_cntr]
-      @ref          = session[:ref_test][@question_num]
-      @soln         = session[:ref_soln][@question_num]
-    else
-      redirect_to root_path
-    end
-
-  end
-
-  # ----------------------------------------------------------------------------------------------------------
-  # Score Reference Test
-  # ----------------------------------------------------------------------------------------------------------
-  def mark_reftest
-
-    # Score Questions
-    answer = params[:answer]
-    errorcode, book, chapter, verse = parse_verse(answer)
-
-    question_num  = session[:ref_test_cntr]
-    solution      = session[:ref_soln][question_num] if session[:ref_soln]
-
-    # We need to check for alternative solutions to account for identical verses
-    # IDEA: Take the reference the user entered, look up that verse, and see if it matches the text shown to the user (less any capitalization or punctuation differences)
-
-    alt_soln      = identical_verses( solution )
-
-    if solution && session[:reftest_answered]
-
-      mv = Memverse.find( session[:ref_id][question_num] )
-
-      if (book==solution[0] and chapter==solution[1].to_i and verse==solution[2].to_i) or
-         (book==alt_soln[0] and chapter==alt_soln[1].to_i and verse==alt_soln[2].to_i)
-        flash[:notice] = "Perfect!"
-        session[:reftest_correct] += 1
-        session[:reftest_grade] += 10
-        mv.ref_interval   = [(mv.ref_interval * 1.5), 365].min.round
-      elsif (book==solution[0] and chapter==solution[1].to_i) or (book==alt_soln[0] and chapter==alt_soln[1].to_i)
-        flash[:notice] = "Correct book and chapter. The correct reference is " + solution[0].to_s + " " + solution[1].to_s + ":" + solution[2].to_s
-        session[:reftest_incorrect] << question_num
-        session[:reftest_grade] += 5
-        mv.ref_interval = (mv.ref_interval * 0.7).round
-      else
-        session[:reftest_incorrect] << question_num
-        flash[:notice] = "Sorry - Incorrect. The correct reference is " + solution[0].to_s + " " + solution[1].to_s + ":" + solution[2].to_s
-        mv.ref_interval = (mv.ref_interval * 0.6).round
-      end
-
-      # Update date for next ref test
-      mv.next_ref_test  = Date.today + mv.ref_interval
-      mv.save
-
-      # Update score
-      session[:reftest_answered] += 1 if session[:reftest_answered]
-
-      # Start Next Question
-      session[:ref_test_cntr] += 1
-
-      # Stop after questions are finished or if user quits
-      if session[:reftest_answered] >= session[:reftest_length] or params[:commit]=="Exit Test"  # TODO: handle case where session variables are Nil
-        redirect_to reftest_results_path
-      else
-        redirect_to test_ref_path
-      end
-
-    else
-      # Probably caused by user using the back button after test is finished
-      logger.info("*** User probably hit the back button or returned next day without session variable set up")
-      flash[:notice] = "Reference recall test already completed or not initialized"
-      redirect_to root_path
-    end
-
-  end
-
-
-
-  # ----------------------------------------------------------------------------------------------------------
-  # Score Reference Test
-  # ----------------------------------------------------------------------------------------------------------
-  def reftest_results
-    @tab = "mem"
-
-    add_breadcrumb I18n.t("menu.review"), :test_verse_quick_path
-    add_breadcrumb I18n.t("memorize_menu.Reference Recall"), :reftest_results_path
-
-    if session[:reftest_answered]
-      @correct    = session[:reftest_correct]
-      @answered   = session[:reftest_answered]
-      @incorrect  = session[:reftest_incorrect]
-      @grade      = session[:reftest_grade]
-
-      # Update user's accuracy grade
-      @old_ref_grade = current_user.ref_grade
-      @new_ref_grade = ((@old_ref_grade.to_f * 0.75) + (@grade.to_f * 0.25)).ceil.to_i
-
-      current_user.ref_grade = @new_ref_grade
-      current_user.save
-
-      # Clear session variables so that user can't hit refresh and bump up score
-      session[:reftest_answered] = nil
-      session[:reftest_correct]  = nil
-
-      # Check for quest completion
-      # spawn_block(:argv => "spawn-reftest-quest") do
-        if q = Quest.where(:url => reftest_results_path, :level => current_user.level ).first
-        	if @grade >= q.quantity
-	          q.check_quest_off(current_user)
-	          flash.keep[:notice] = "You have completed the reference test for this level."
-	        end
-        end
-      # end
-
-    else
-      redirect_to root_path
-    end
-
-  end
-
 
   # ----------------------------------------------------------------------------------------------------------
   # Save Entry in Progress Table

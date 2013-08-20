@@ -43,32 +43,45 @@ MemverseApp::Application.routes.draw do
     root to: "home#index"
   end
 
-  # Core Review Pages
-  get '/review' => 'passages#review', :as => 'passage_review'
+
 
   # Memverse Mappings
   get '/reset_schedule',         :to => 'users#reset_schedule',            :as => 'reset_schedule'
 
+  # Adding verses / chapters to user account
   get '/add_verse',              :to => 'memverses#add_verse',             :as => 'add_verse'
   get '/add_chapter',            :to => 'memverses#add_chapter',           :as => 'add_chapter'
   get '/add/:id',                :to => 'memverses#ajax_add',              :as => 'add'
   get '/quick_add/:vs',          :to => 'memverses#quick_add',             :as => 'quick_add'
   get '/avail_translations',     :to => 'memverses#avail_translations',    :as => 'avail_translations'
   # get '/edit_verse/:id',         :to => 'memverses#edit_verse',            :as => 'edit_verse'  <--- duplicate route ... need to rename
+
+  # Core Review Pages
+  get '/review'                  => 'passages#review', :as => 'passage_review'
+
+  # Legacy verse test
   get '/test_verse',             :to => 'memverses#test_verse',            :as => 'test_verse'
-  get '/feedback',               :to => 'memverses#feedback',              :as => 'feedback'
-  get '/upcoming_verses',        :to => 'memverses#upcoming_verses',       :as => 'upcoming_verses'
+  get '/mark_test',              :to => 'memverses#mark_test',             :as => 'mark_test'
+
+  # Current single verse test
   get '/test_verse_quick',       :to => 'memverses#test_verse_quick',      :as => 'test_verse_quick'
   get '/test_next_verse',        :to => 'memverses#test_next_verse',       :as => 'test_next_verse'
-  get '/mark_test',              :to => 'memverses#mark_test',             :as => 'mark_test'
   get '/mark_test_quick',        :to => 'memverses#mark_test_quick',       :as => 'mark_test_quick'
+  get '/feedback',               :to => 'memverses#feedback',              :as => 'feedback'
+  get '/upcoming_verses',        :to => 'memverses#upcoming_verses',       :as => 'upcoming_verses'
+
+  # Reference tests
   get '/test_ref',               :to => 'memverses#test_ref',              :as => 'test_ref'
   get '/reftest_results',        :to => 'memverses#reftest_results',       :as => 'reftest_results'
-  get '/start_ref_test',         :to => 'memverses#load_test_ref',         :as => 'start_ref_test'
+  get '/test_next_ref',          :to => 'memverses#test_next_ref',         :as => 'test_next_ref'
+
+  # Accuracy test
   get '/exam',                   :to => 'memverses#load_exam',             :as => 'exam'
   get '/test_exam',              :to => 'memverses#test_exam',             :as => 'test_exam'
   get '/exam_results',           :to => 'memverses#exam_results',          :as => 'exam_results'
   get '/pre_exam',               :to => 'memverses#explain_exam',          :as => 'pre_exam'
+
+  # Chapter review
   get '/pre_chapter',            :to => 'memverses#chapter_explanation',   :as => 'pre_chapter'
   get '/test_chapter',           :to => 'memverses#test_chapter',          :as => 'test_chapter'
   get '/drill_verse',            :to => 'memverses#drill_verse',           :as => 'drill_verse'
