@@ -47,7 +47,40 @@ var refTestState = {
             }
         }
 
+        this.giveFeedback( answerRef, correctRef, userScore ); 
+
         return userScore;
+
+    },
+
+    giveFeedback: function ( answerRef, correctRef, userScore) {
+
+        var msg;
+        var $feedback
+
+        switch (userScore) {
+            case 10:
+                msg = "Perfect!";
+                break;
+            case 5:
+                msg = "Correct book and chapter.";
+                break;
+            case 1:
+                msg = "Correct book.";
+                break;
+            case 0:
+                msg = "Incorrect.";
+                break;
+            default:
+                msg = "Something weird happened!";
+        }
+
+        $feedback = $('<div/>').addClass('prior-feedback')
+            .append( $('<span class="prior-question"/>').text( correctRef.bk + ' ' + correctRef.ch + ":" + correctRef.vs ) )
+            .append( $('<span class="divider"       />').text( ' - ' ) )
+            .append( $('<span class="prior-feedback"/>').text( msg   ) );
+
+        $("#past-questions").append( $feedback );
 
     },
 
