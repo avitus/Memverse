@@ -43,8 +43,6 @@ MemverseApp::Application.routes.draw do
     root to: "home#index"
   end
 
-
-
   # Memverse Mappings
   get '/reset_schedule',         :to => 'users#reset_schedule',            :as => 'reset_schedule'
 
@@ -74,6 +72,7 @@ MemverseApp::Application.routes.draw do
   get '/test_ref',               :to => 'memverses#test_ref',              :as => 'test_ref'
   get '/reftest_results',        :to => 'memverses#reftest_results',       :as => 'reftest_results'
   get '/test_next_ref',          :to => 'memverses#test_next_ref',         :as => 'test_next_ref'
+  post '/save_ref_grade/:score',  :to => 'users#update_ref_grade'
 
   # Accuracy test
   get '/exam',                   :to => 'memverses#load_exam',             :as => 'exam'

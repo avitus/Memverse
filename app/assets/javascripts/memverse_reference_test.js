@@ -1,9 +1,14 @@
 var refTestState = {
 
+    currentRef: null,
+    refGrade: null,
+
     // setup
-    initialize: function () {
+    initialize: function ( refGrade ) {
 
         refTestState.getRef();
+        this.currentRef = "";
+        this.refGrade = refGrade;
 
     },
 
@@ -12,22 +17,53 @@ var refTestState = {
         // Retrieve a reference for testing
         $.getJSON('test_next_ref.json', function (data) {
 
-            var verseText = data.ref.text;
+            var mvText  = data.mv.text;
+            currentRef  = data.mv.ref;
 
-            // Add entire list
-            $('#reftestVerse').html( verseText );
+            $('#answer').val('').focus();       // Clear entry box
+            $('#reftestVerse').html( mvText );  // Show verse text
 
         });
 
     },
 
-    scoreRef: function () {
 
-        // Submit answer
-        $.getJSON("/mark_reftest", { mv: id, q: q  }, function(data) {
-            if (data.msg) {  setTimeout(function() {alert(data.msg);}, 1); }  // Give user a non-blocking response
+    // perfect                = 10 points
+    // correct book & chapter = 5 points
+    // correct book           = 1 point
+    scoreRef: function ( user_answer ) {
+
+        var answerRef  = parseVerseRef( user_answer );
+        var correctRef = parseVerseRef( currentRef );
+        var userScore  = 0;
+
+        if ( answerRef.bk === correctRef.bk ) {
+            userScore += 1;
+            if ( answerRef.ch === correctRef.ch ) {
+                userScore += 4;
+                if ( answerRef.vs === correctRef.vs ) {
+                    userScore += 5;
+                }
+            }
+        }
+
+        return userScore;
+
+    },
+
+    updateRefGrade: function ( questionScore ) {
+        var newRefGrade;
+
+        newRefGrade = Math.ceil( this.refGrade * 0.95 + questionScore * 0.5 );
+        this.refGrade = newRefGrade;
+        this.saveRefGrade( newRefGrade );   // save to server
+        return newRefGrade;
+    },
+
+    saveRefGrade: function ( refGrade ) {
+        $.post('save_ref_grade/' + refGrade + '.json', function(data) {
+            // Todo: alert user if failure to save score
         });
-
     }
 
 }

@@ -2,6 +2,7 @@
 
 <div class="white-box-with-margins">
 
+	<!-- Left side -->
 	<div id="reftest-question">
 
 		<!-- Verse Heading -->
@@ -13,22 +14,31 @@
 		<div id="reftestVerse">
 
 		</div>
-	</div>
-
-	<div id="reftest-answer">
 
 		<div class="top-heading">
 	    	<h2><span>Reference: </span></h2>
 	    </div>
 
-		<%= form_tag :action => 'mark_reftest' do %>
-
+	    <div>
 			<%= text_field_tag(:answer, params[:answer], :autocomplete => "off" )%>
-			<%= submit_tag "", 			:class => "submit-button" %>
-			<%= submit_tag "Exit Test", :class => "submit secondary" %>
+			<input id="submit-ref" class="submit-button"></input>
+			<%= button_tag "Exit Test", :class => "submit secondary" %>
+		</div>
 
-		<% end %>
+
 	</div>
+
+	<!-- Right side -->
+	<div id="reftest-rightside">
+
+    	<div id="gauge" class="200x160px"></div>
+
+    	<div id="past-questions">
+
+    	</div>
+
+	</div>
+
 </div>
 
 
@@ -37,22 +47,36 @@
 
     var memverseUserID = "<%= current_user.id %>"; // global variable
 
+    // www.justgage.com
+    var g = new JustGage({
+		id: "gauge",
+		value: "<%= current_user.ref_grade %>",
+		min: 0,
+		max: 100,
+		levelColors : ["#993333","#f9c802","#99cc33"],
+		title: "Reference Recall"
+	});
+
     $(document).ready(function() {
 
         //------- Initialize session ------------------
-        refTestState.initialize();
+        refTestState.initialize(<%= current_user.ref_grade %>);
 
         //------- Scoring a verse ----------------------
-        $( ".passage-text" ).on( "click", ".submit-button", function( e ) {
+        $( "#reftest-question" ).on( "click", ".submit-button", function( e ) {
 
-        	// Submit score
-            refTestState.scoreRef();
+        	var questionScore;
+        	var refGrade;
 
             // Get next reference for testing
             refTestState.getRef();
 
-            // Update current score
+        	// Calc score
+            questionScore = refTestState.scoreRef( $("#answer").val() );
 
+            // Update current score
+            refGrade = refTestState.updateRefGrade( questionScore );
+            g.refresh( refGrade );
         });
 
 		//------- Autocomplete and focus ----------------------
@@ -67,16 +91,27 @@
 
 		//------- Verify Verse Format ----------------------
 		$("#answer").observe_field(0.3, function( ) {
-			$.get('/verify_vs_format', { vs_str: this.value },
-				function(data){
-					if (data == true) {
-						$("#answer").css({ borderColor: '#4C586E', backgroundColor: '#AFAEAE' });
-					}
-					else {
-						$("#answer").removeAttr("style");
-					}
-			}, "json" );
+			if ( validVerseRef(this.value) ) {
+				$("#answer").css({ borderColor: '#4C586E', backgroundColor: '#AFAEAE' });
+			}
+			else {
+				$("#answer").removeAttr("style");
+			}
         });
+
+		//------- Handle enter key ----------------------
+        $('#answer').keypress(function (e) {
+			if (e.which == 13) {
+				$('#submit-ref').click();
+				return false;
+			}
+		});
+
+		// $("#id_of_textbox").keyup(function(event){
+		//     if(event.keyCode == 13){
+		//         $("#id_of_button").click();
+		//     }
+		// });
 
     }); // End of jQuery document ready
 --></script>

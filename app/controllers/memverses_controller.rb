@@ -1089,13 +1089,13 @@ class MemversesController < ApplicationController
   def test_next_ref
 
     if current_user.all_refs
-      ref = Memverse.active.where(:user_id => current_user.id).order("ref_interval ASC").limit(30).sort_by{ rand }.first
+      mv = Memverse.active.where(:user_id => current_user.id).order("ref_interval ASC").limit(30).sort_by{ rand }.first
     else
-      ref = Memverse.active.where(:user_id => current_user.id, :prev_verse => nil).order("ref_interval ASC").limit(30).sort_by{ rand }.first
+      mv = Memverse.active.where(:user_id => current_user.id, :prev_verse => nil).order("ref_interval ASC").limit(30).sort_by{ rand }.first
     end
 
-    if ref
-      render :json => { :finished => false, :ref => ref }
+    if mv
+      render :json => { :finished => false, :mv => mv }
     else
       render :json => { :finished => true }
     end
@@ -1122,6 +1122,10 @@ class MemversesController < ApplicationController
     if solution && session[:reftest_answered]
 
       mv = Memverse.find( session[:ref_id][question_num] )
+
+      # perfect                = 10 points
+      # correct book & chapter = 5 points
+      # correct book           = 1 point
 
       if (book==solution[0] and chapter==solution[1].to_i and verse==solution[2].to_i) or
          (book==alt_soln[0] and chapter==alt_soln[1].to_i and verse==alt_soln[2].to_i)
