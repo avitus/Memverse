@@ -3,26 +3,32 @@
 <div class="white-box-with-margins">
 
 	<!-- Left side -->
-	<div id="reftest-question">
+	<div id="reftest-leftside">
 
-		<!-- Verse Heading -->
-		<div class="top-heading">
-	    	<h2><span>Question: </span><span class="verse-ref">1</span></h2>
-	    </div>
+		<div id="reftest-left-top">
+			<!-- Verse Heading -->
+			<div class="top-heading">
+		    	<h2><span>Question: </span><span class="verse-ref">1</span></h2>
+		    </div>
 
-		<!-- Verse Text -->
-		<div id="reftestVerse">
+			<!-- Verse Text -->
+			<div id="reftestVerse">
 
+			</div>
 		</div>
 
-		<div class="top-heading">
-	    	<h2><span>Reference: </span></h2>
-	    </div>
+		<div id="reftest-left-bottom">
 
-	    <div>
-			<%= text_field_tag(:answer, params[:answer], :autocomplete => "off" )%>
-			<input id="submit-ref" class="submit-button"></input>
-			<%= button_tag "Exit Test", :class => "submit secondary" %>
+			<div class="top-heading">
+		    	<h2><span>Reference: </span></h2>
+		    </div>
+
+		    <div>
+				<%= text_field_tag(:answer, params[:answer], :autocomplete => "off" )%>
+				<input id="submit-ref" class="submit-button"></input>
+				<%= button_tag "Exit Test", :class => "submit secondary" %>
+			</div>
+
 		</div>
 
 
@@ -36,8 +42,11 @@
 	    </div>
 
 	    <div id="reftest-feedback">
+
+	    	<h2><span>Prior Questions</span></h2>
+
 	    	<div id="past-questions">
-	    		<h2><span>Prior Questions</span></h2>
+	    		<div class="fadeout"></div>
 	    	</div>
 
 		</div>
@@ -67,7 +76,7 @@
         refTestState.initialize(<%= current_user.ref_grade %>);
 
         //------- Scoring a verse ----------------------
-        $( "#reftest-question" ).on( "click", ".submit-button", function( e ) {
+        $( "#reftest-leftside" ).on( "click", ".submit-button", function( e ) {
 
         	var questionScore;
         	var refGrade;

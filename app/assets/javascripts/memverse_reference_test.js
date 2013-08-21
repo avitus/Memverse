@@ -47,7 +47,7 @@ var refTestState = {
             }
         }
 
-        this.giveFeedback( answerRef, correctRef, userScore ); 
+        this.giveFeedback( answerRef, correctRef, userScore );
 
         return userScore;
 
@@ -78,16 +78,17 @@ var refTestState = {
         $feedback = $('<div/>').addClass('prior-feedback')
             .append( $('<span class="prior-question"/>').text( correctRef.bk + ' ' + correctRef.ch + ":" + correctRef.vs ) )
             .append( $('<span class="divider"       />').text( ' - ' ) )
+            .append( $('<span class="prior-answer"  />').text( '[' + answerRef.bk + ' ' + answerRef.ch + ":" + answerRef.vs + '] ' ) )
             .append( $('<span class="prior-feedback"/>').text( msg   ) );
 
-        $("#past-questions").append( $feedback );
+        $("#past-questions").prepend( $feedback );
 
     },
 
     updateRefGrade: function ( questionScore ) {
         var newRefGrade;
 
-        newRefGrade = Math.ceil( this.refGrade * 0.95 + questionScore * 0.5 );
+        newRefGrade = Math.ceil( this.refGrade * 0.90 + questionScore );
         this.refGrade = newRefGrade;
         this.saveRefGrade( newRefGrade );   // save to server
         return newRefGrade;
