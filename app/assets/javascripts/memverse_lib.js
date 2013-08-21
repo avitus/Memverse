@@ -114,7 +114,7 @@ function unabbreviate(book_name) {
 }
 
 /******************************************************************************
- * Returns true if input is a valid verse reference
+ * Returns true if input is a valid _single_ verse reference
  * Accepts: Romans 8:1
  * Accepts: Romans 8: 1
  * Rejects: Romans 8
@@ -125,7 +125,7 @@ function validVerseRef(verseref) {
 }
 
 /******************************************************************************
- * Returns true if input is a valid verse reference
+ * Returns true if input is a valid passage reference
 
  * Accepts: Romans 8
  * Accepts: Romans 8:
