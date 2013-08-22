@@ -53,6 +53,14 @@
 
 </div> <!-- end: white-box-with-margins -->
 
+<% ab_test("signup_navbar", "show", "hide") do |state| %>
+	<% if state == "hide" %>
+		<style type="text/css">
+			.menu-main-only ul {display:none;}
+		</style>
+	<% end %>
+<% end %>
+
 <script type="text/javascript">
 
 	$("div.signup input").val(''); // clear all input values
