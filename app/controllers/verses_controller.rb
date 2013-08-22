@@ -92,14 +92,19 @@ class VersesController < ApplicationController
     @verse = Verse.find(params[:id])
 
     respond_to do |format|
-      if @verse.update_attributes(params[:verse])
+      if @verse.locked? and !current_user.admin?
+        flash[:notice] = 'This verse has multiple users and can only be edited by a Memverse employee.'
+        format.html { redirect_to( @verse ) }
+        format.xml  { head :ok }
+      elsif @verse.update_attributes(params[:verse])
         flash[:notice] = 'Verse was successfully updated.'
-        format.html { redirect_to(@verse) }
+        format.html { redirect_to( @verse ) }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
         format.xml  { render :xml => @verse.errors, :status => :unprocessable_entity }
       end
+
     end
   end
 
