@@ -519,28 +519,6 @@ class MemversesController < ApplicationController
   end
 
   # ----------------------------------------------------------------------------------------------------------
-  # Edit a verse
-  # ----------------------------------------------------------------------------------------------------------
-  def edit_verse
-    @verse = Memverse.find(params[:id]).verse
-    add_breadcrumb I18n.t("home_menu.My Verses"), :manage_verses_path
-    add_breadcrumb "Edit #{@verse.book} #{@verse.chapter}:#{@verse.versenum}", {:action => 'edit_verse', :id => params[:id] }
-  end
-
-  # ----------------------------------------------------------------------------------------------------------
-  # Update a verse
-  # ----------------------------------------------------------------------------------------------------------
-  def update_verse
-    @verse = Verse.find(params[:id])
-    if @verse.update_attributes(params[:verse])
-      flash[:notice] = "Verse successfully updated"
-      redirect_to :action => 'manage_verses'
-    else
-      render :action => edit_verse
-    end
-  end
-
-  # ----------------------------------------------------------------------------------------------------------
   # Verify a verse
   # ----------------------------------------------------------------------------------------------------------
   def toggle_verse_flag
