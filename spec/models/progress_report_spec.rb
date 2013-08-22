@@ -10,9 +10,10 @@ describe ProgressReport do
     @pr1 = FactoryGirl.create(:progress_report, :entry_date => '2012-12-01', :user => @user)
     @pr2 = FactoryGirl.create(:progress_report, :entry_date => '2012-12-02', :user => @user)
     @pr3 = FactoryGirl.create(:progress_report, :entry_date => '2012-12-04', :user => @user)
-    @pr3.consistency.should == 3
-    @pr2.consistency.should == 2
-    @pr1.consistency.should == 1
+    
+    @pr3.reload.consistency.should == 3
+    @pr2.reload.consistency.should == 2
+    @pr1.reload.consistency.should == 1
   end
   
   it "should only count activity in past 12 months" do
@@ -22,6 +23,7 @@ describe ProgressReport do
     @pr4 = FactoryGirl.create(:progress_report, :entry_date => '2012-12-01', :user => @user)
     @pr5 = FactoryGirl.create(:progress_report, :entry_date => '2012-12-02', :user => @user)
     @pr6 = FactoryGirl.create(:progress_report, :entry_date => '2012-12-04', :user => @user)
+    
     @pr2.consistency.should == 2
     @pr4.consistency.should == 3
     @pr6.consistency.should == 5
@@ -34,6 +36,7 @@ describe ProgressReport do
     @pr4 = FactoryGirl.create(:progress_report, :entry_date => '2013-05-04', :user => @user)
     @pr5 = FactoryGirl.create(:progress_report, :entry_date => '2013-05-18', :user => @user)
     @pr6 = FactoryGirl.create(:progress_report, :entry_date => '2013-05-24', :user => @user) 
+
     @pr1.consistency.should == 1
     @pr2.consistency.should == 2
     @pr3.consistency.should == 3
