@@ -54,7 +54,7 @@ GIT
 
 GIT
   remote: git://github.com/sferik/rails_admin.git
-  revision: 50ad6bd90771717108afca2fa6633b0fa2995c08
+  revision: 0be9e229985e8a6ee7f4e1c97b154c82b8bfb705
   specs:
     rails_admin (0.5.0)
       bootstrap-sass (~> 2.3)
@@ -118,7 +118,7 @@ GEM
       rails (>= 3, < 5)
     addressable (2.3.5)
     afm (0.2.0)
-    airbrake (3.1.13)
+    airbrake (3.1.14)
       builder
       json
     arel (4.0.0)
