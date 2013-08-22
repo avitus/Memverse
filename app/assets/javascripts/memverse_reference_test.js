@@ -56,7 +56,8 @@ var refTestState = {
     giveFeedback: function ( answerRef, correctRef, userScore) {
 
         var msg;
-        var $feedback
+        var $feedback;
+        var answerBk, answerCh, answerVs;
 
         switch (userScore) {
             case 10:
@@ -75,10 +76,16 @@ var refTestState = {
                 msg = "Something weird happened!";
         }
 
+        // answerRef will be false if user did not enter a parseable single verse
+        // Override null values
+        answerBk = (answerRef == false ) ? '- ' : answerRef.bk;
+        answerCh = (answerRef == false ) ? '-'  : answerRef.ch;
+        answerVs = (answerRef == false ) ? '-'  : answerRef.vs;
+
         $feedback = $('<div/>').addClass('prior-feedback')
             .append( $('<span class="prior-question"/>').text( correctRef.bk + ' ' + correctRef.ch + ":" + correctRef.vs ) )
             .append( $('<span class="divider"       />').text( ' - ' ) )
-            .append( $('<span class="prior-answer"  />').text( '[' + answerRef.bk + ' ' + answerRef.ch + ":" + answerRef.vs + '] ' ) )
+            .append( $('<span class="prior-answer"  />').text( '[' + answerBk + ' ' + answerCh + ":" + answerVs + '] ' ) )
             .append( $('<span class="prior-feedback"/>').text( msg   ) );
 
         $("#past-questions").prepend( $feedback );
