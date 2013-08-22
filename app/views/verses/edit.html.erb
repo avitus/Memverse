@@ -1,13 +1,12 @@
-
-<!-- This file no longer used -->
-
 <% page_title I18n.t :edit_verse, :scope => 'page_titles' %>
+
 <div class="white-box-with-margins">
+	
 	<h1>Editing Verse</h1>
 
-	<%= form_tag :action => 'update_verse', :id => @verse do %>
-	  <%= render :partial => 'edit_verse_form' %>
+	<%= form_tag( {:action => 'update', :id => @verse}, method: :put ) do %>
+	  <%= render 'form' %>
 	  <%= submit_tag 'Edit' %>
 	<% end %>
-</div>
 
+</div>

@@ -55,9 +55,13 @@ class VersesController < ApplicationController
   # GET /verses/1/edit
   # ----------------------------------------------------------------------------------------------------------
   def edit
-    @verse = Verse.find(params[:id])
-  end
 
+    @verse = Verse.find(params[:id])
+
+    add_breadcrumb I18n.t("home_menu.My Verses"), :manage_verses_path
+    add_breadcrumb "Edit #{@verse.book} #{@verse.chapter}:#{@verse.versenum}", {:action => 'edit_verse', :id => params[:id] }
+
+  end
 
   # ----------------------------------------------------------------------------------------------------------
   # POST /verses
@@ -98,6 +102,20 @@ class VersesController < ApplicationController
       end
     end
   end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Update a verse (moved over from memverses_controller)
+  # ----------------------------------------------------------------------------------------------------------
+  # def update_verse
+  #   @verse = Verse.find(params[:id])
+  #   if @verse.update_attributes(params[:verse])
+  #     flash[:notice] = "Verse successfully updated"
+  #     redirect_to :action => 'manage_verses'
+  #   else
+  #     render :action => edit_verse
+  #   end
+  # end
+
 
   # ----------------------------------------------------------------------------------------------------------
   # DELETE /verses/1

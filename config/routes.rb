@@ -52,7 +52,6 @@ MemverseApp::Application.routes.draw do
   get '/add/:id',                :to => 'memverses#ajax_add',              :as => 'add'
   get '/quick_add/:vs',          :to => 'memverses#quick_add',             :as => 'quick_add'
   get '/avail_translations',     :to => 'memverses#avail_translations',    :as => 'avail_translations'
-  # get '/edit_verse/:id',         :to => 'memverses#edit_verse',            :as => 'edit_verse'  <--- duplicate route ... need to rename
 
   # Core Review Pages
   get '/review'                  => 'passages#review', :as => 'passage_review'
