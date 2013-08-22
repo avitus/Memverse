@@ -15,7 +15,7 @@ describe ProgressReport do
     @pr1.consistency.should == 1
   end
   
-  it "should not go past the year" do
+  it "should only count activity in past 12 months" do
     @pr1 = FactoryGirl.create(:progress_report, :entry_date => '2011-12-01', :user => @user)
     @pr2 = FactoryGirl.create(:progress_report, :entry_date => '2012-01-04', :user => @user)
     @pr3 = FactoryGirl.create(:progress_report, :entry_date => '2012-03-04', :user => @user)
@@ -27,7 +27,7 @@ describe ProgressReport do
     @pr6.consistency.should == 5
   end  
   
-  it "should give good numbers" do
+  it "should accurately report consistency" do
     @pr1 = FactoryGirl.create(:progress_report, :entry_date => '2013-04-02', :user => @user)
     @pr2 = FactoryGirl.create(:progress_report, :entry_date => '2013-04-19', :user => @user)
     @pr3 = FactoryGirl.create(:progress_report, :entry_date => '2013-04-20', :user => @user)
