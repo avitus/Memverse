@@ -47,11 +47,11 @@ MemverseApp::Application.routes.draw do
   get '/reset_schedule',         :to => 'users#reset_schedule',            :as => 'reset_schedule'
 
   # Adding verses / chapters to user account
-  get '/add_verse',              :to => 'memverses#add_verse',             :as => 'add_verse'
-  get '/add_chapter',            :to => 'memverses#add_chapter',           :as => 'add_chapter'
-  get '/add/:id',                :to => 'memverses#ajax_add',              :as => 'add'
-  get '/quick_add/:vs',          :to => 'memverses#quick_add',             :as => 'quick_add'
-  get '/avail_translations',     :to => 'memverses#avail_translations',    :as => 'avail_translations'
+  get  '/add_verse',             :to => 'memverses#add_verse',             :as => 'add_verse'
+  get  '/add_chapter',           :to => 'memverses#add_chapter',           :as => 'add_chapter'
+  post '/add/:id',               :to => 'memverses#ajax_add',              :as => 'add'
+  get  '/quick_add/:vs',         :to => 'memverses#quick_add',             :as => 'quick_add'
+  get  '/avail_translations',    :to => 'memverses#avail_translations',    :as => 'avail_translations'
 
   # Core Review Pages
   get '/review'                  => 'passages#review', :as => 'passage_review'

@@ -10,9 +10,14 @@ FactoryGirl.define do
 	  u.sequence(:email) { |n| "user#{n}@test.com" }
     u.password 'please'
     u.password_confirmation { |u| u.password }
-    # u.association :group, :factory => :group
     u.last_activity_date Date.today
     u.admin false
+
+    # Admin user
+    # factory :admin do
+    #   u.admin true
+    # end
+
   end
 
   # ==============================================================================================

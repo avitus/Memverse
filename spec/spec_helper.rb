@@ -33,10 +33,16 @@ RSpec.configure do |config|
 
   # Use the specified formatter
   config.formatter = :documentation # :progress, :html, :textmate
+
+  # Configure devise helpers
+  config.include Devise::TestHelpers, :type => :controller
+  config.extend ControllerMacros, :type => :controller
+
 end
 
+# TODO: This might be legacy code ... try removing
 class ActionController::TestCase
   include Devise::TestHelpers
 end
-
+  
 Capybara.default_host = 'localhost:3000'
