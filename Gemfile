@@ -53,7 +53,7 @@ gem "compass-rails", "~> 2.0.alpha.0"                       # !!!!!!!! Get final
 ############################################################
 # For Rails 4 Upgrade ... should be removed eventually
 ############################################################
-gem 'protected_attributes'
+# gem 'protected_attributes'
 gem 'rails-observers'
 gem 'actionpack-page_caching'
 gem 'actionpack-action_caching'
@@ -100,7 +100,7 @@ gem 'htmldiff'                                                                  
 gem 'breadcrumbs_on_rails', '>=2.0.0'                                                           # For breadcrumb navigation bar
 gem 'dalli'                                                                                     # Memcached client
 gem 'redis', '>=2.2.2'                                                                          # Redis Key-value store
-gem 'friendly_id', '>=5.0.0.beta4'                                                              # !!! TODO: Upgrade !!! Makes nice IDs for models
+gem 'friendly_id', github: "FriendlyId/friendly_id"                                             # !!! TODO: Upgrade !!! Makes nice IDs for models
 gem 'foreman'                                                                                   # Helps manage multiple processes when running app in development.
 gem 'supermodel', git: 'git://github.com/KonaTeam/supermodel.git'                               # Uses ActiveModel for in-memory storage with redis
 gem 'best_in_place', github: 'bernat/best_in_place'                                             # In-place editing support ... no Rails 4 release yet
