@@ -686,6 +686,8 @@ class MemversesController < ApplicationController
 
   # ----------------------------------------------------------------------------------------------------------
   # Add a new memory verse
+  #
+  # TODO: This doesn't seem to be used any more
   # ----------------------------------------------------------------------------------------------------------
   def add_verse
     @tab = "home"

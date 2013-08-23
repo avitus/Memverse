@@ -1,7 +1,7 @@
 # coding: utf-8
 class VersesController < ApplicationController
 
-  before_filter :authenticate_user!, :except => :index
+  before_filter :authenticate_user!, :except => [:index, :show] 
   skip_before_filter :verify_authenticity_token, :only => [:set_verse_text, :check_verse]  # ALV: attempt to stop redirects to login page when setting verse text
 
   add_breadcrumb "Home", :root_path
@@ -41,15 +41,17 @@ class VersesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   # GET /verses/new
   # GET /verses/new.xml
+  #
+  # Note: Not used because we never explicitly enter a new verse
   # ----------------------------------------------------------------------------------------------------------
-  def new
-    @verse = Verse.new
+  # def new
+  #   @verse = Verse.new
 
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @verse }
-    end
-  end
+  #   respond_to do |format|
+  #     format.html # new.html.erb
+  #     format.xml  { render :xml => @verse }
+  #   end
+  # end
 
   # ----------------------------------------------------------------------------------------------------------
   # GET /verses/1/edit
