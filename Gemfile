@@ -66,7 +66,7 @@ gem 'activeresource', require: 'active_resource'
 ############################################################
 gem "devise"                                                                                    # Authentication
 gem "devise-encryptable"                                                                        # TODO: Is this required?
-gem "cancan"                                                                                    # Role-based authorization
+gem 'cancan', git: "https://github.com/nukturnal/cancan.git"                                    # Role-based authorization, Forem requires
 
 ############################################################
 # Major Engines (Admin, Forem, Blog)
@@ -100,7 +100,7 @@ gem 'htmldiff'                                                                  
 gem 'breadcrumbs_on_rails', '>=2.0.0'                                                           # For breadcrumb navigation bar
 gem 'dalli'                                                                                     # Memcached client
 gem 'redis', '>=2.2.2'                                                                          # Redis Key-value store
-gem 'friendly_id', '>=5.0.0.beta1'                                                              # Makes nice IDs for models !!! TODO: Upgrade !!!
+gem 'friendly_id', '>=5.0.0.beta4'                                                              # !!! TODO: Upgrade !!! Makes nice IDs for models
 gem 'foreman'                                                                                   # Helps manage multiple processes when running app in development.
 gem 'supermodel', git: 'git://github.com/KonaTeam/supermodel.git'                               # Uses ActiveModel for in-memory storage with redis
 gem 'best_in_place', github: 'bernat/best_in_place'                                             # In-place editing support ... no Rails 4 release yet
