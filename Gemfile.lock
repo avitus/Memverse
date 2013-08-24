@@ -324,6 +324,8 @@ GEM
     prawnto_2 (0.2.6)
       prawn (>= 0.6.0)
       rails (>= 3.1)
+    protected_attributes (1.0.3)
+      activemodel (>= 4.0.0, < 5.0)
     pubnub (3.3.0.7)
       activesupport
       em-http-request
@@ -522,6 +524,7 @@ DEPENDENCIES
   paperclip
   prawn!
   prawnto_2
+  protected_attributes
   pubnub
   rails (= 4.0.0)
   rails-footnotes (>= 3.7)

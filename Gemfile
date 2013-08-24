@@ -53,7 +53,7 @@ gem "compass-rails", "~> 2.0.alpha.0"                       # !!!!!!!! Get final
 ############################################################
 # For Rails 4 Upgrade ... should be removed eventually
 ############################################################
-# gem 'protected_attributes'
+gem 'protected_attributes'
 gem 'rails-observers'
 gem 'actionpack-page_caching'
 gem 'actionpack-action_caching'
