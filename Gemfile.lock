@@ -403,11 +403,11 @@ GEM
       multi_json (~> 1.0)
       rubyzip
       websocket (~> 1.0.4)
-    sidekiq (2.13.1)
+    sidekiq (2.14.0)
       celluloid (>= 0.14.1)
       connection_pool (>= 1.0.0)
       json
-      redis (>= 3.0)
+      redis (>= 3.0.4)
       redis-namespace
     simple-random (0.9.3)
     simple_form (3.0.0.rc)
@@ -456,7 +456,7 @@ GEM
       polyglot (>= 0.3.1)
     ttfunk (1.0.3)
     tzinfo (0.3.37)
-    uglifier (2.1.2)
+    uglifier (2.2.0)
       execjs (>= 0.3.0)
       multi_json (~> 1.0, >= 1.0.2)
     uuid (2.3.7)
