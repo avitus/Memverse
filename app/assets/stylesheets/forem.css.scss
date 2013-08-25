@@ -82,11 +82,13 @@ form.new_topic, form.new_post {
     margin: 1em 0 0 1em;
   }
 
-  menu{
-    width: 35%;
+
+  #forum_topic_links, div#menu {
+    width: 36%;
     float: left;
-    padding-left: 0;
-    a{
+    padding: 1em 0em;
+
+    a {
       background-color: $bar1-midbg;
       padding: .5em;
       display: inline-block;
@@ -147,7 +149,8 @@ form.new_topic, form.new_post {
         display: inline-block;
       }
     }
-    .contents{
+    .contents {
+
       margin-left: 160px;
       min-height: 100px;
       border-left: 1px solid $mid-bg1;
@@ -160,34 +163,35 @@ form.new_topic, form.new_post {
         font-size: .7em;
         line-height: 18px;
       }
+    
       .in_reply_to {
         font-size: 90%;
         font-style: italic;
       }
+    
       .text{
         margin-right: 100px;
       }
-      &:hover .actions{
+    
+      &:hover .btn-group {
         display: block;
       }
-      .actions{
+    
+      .btn-group {
         display: none;
         position: absolute;
         right: 10px;
         bottom: 0;
-        list-style-type: none;
-        li{
-          a{
-            text-align: center;
-            display: block;
-            text-decoration: none;
-            padding: .25em;
-            margin-bottom: .25em;
-            color: $default-text;
-            background-color: $mid-bg1;
-            &:hover{
-              background-color: $mid-bg1-highlight;
-            }
+        a {
+          text-align: center;
+          display: block;
+          text-decoration: none;
+          padding: .25em;
+          margin-bottom: .25em;
+          color: $default-text;
+          background-color: $mid-bg1;
+          &:hover {
+            background-color: $mid-bg1-highlight;
           }
         }
       }
@@ -195,7 +199,7 @@ form.new_topic, form.new_post {
   }
 }
 
-table.subdued{
+table.table-striped {
   width: 100%;
   background:#FFF;
 
