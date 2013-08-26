@@ -97,6 +97,9 @@ MemverseApp::Application.routes.draw do
   get '/toggle_error_flag/:id'    => 'memverses#toggle_verse_flag',     :as => 'toggle_error_flag'
   get '/toggle_mv_status/:id'     => 'memverses#toggle_mv_status',      :as => 'toggle_mv_status'
 
+  post '/add_tag'                 => 'memverses#add_mv_tag'
+  get  '/tag_autocomplete'        => 'memverses#tag_autocomplete'
+
   get '/lookup_user_verse'        => 'memverses#mv_lookup',             :as => 'lookup_user_verse'
   get '/lookup_user_passage'      => 'memverses#mv_lookup_passage',     :as => 'lookup_user_passage'
   get '/mv_search'                => 'memverses#mv_search',             :as => 'mv_search'
@@ -188,6 +191,6 @@ MemverseApp::Application.routes.draw do
   get "/record_score",          :controller => "live_quiz", :action => "record_score"
 
   # Install the default routes as the lowest priority.
-  get '/:controller(/:action(/:id))'
+  match '/:controller(/:action(/:id))', :via => [:get, :post]
 
 end

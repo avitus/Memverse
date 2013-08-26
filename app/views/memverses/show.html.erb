@@ -101,15 +101,44 @@
 	
 	<script type="text/javascript">
 		$(document).ready(function() {
-					
-			$("table").on("focus", "input", function() {
-				a = $('input').focus().autocomplete({ source:'/memverses/tag_autocomplete'
-				});		
+
+			// In-place editing of new tags
+			// http://www.appelsiini.net/projects/jeditable
+			$('.edit_vs').editable('/verses/add_verse_tag', {
+				indicator : 'Saving...',
+				tooltip   : 'Click to edit...',
+				select    : true,
+				data      : function(value){
+				 	if(value == null) return false;
+				}
+			});
+							     
+			$('.edit_mv').editable('/add_tag', {
+				indicator : 'Saving...',
+				tooltip   : 'Click to edit...',
+				select    : true,
+				data      : function(value){
+				 	if(value == null) return false;
+				}
+			});
+		     
+			$('#mv-status a').click( function() {
+					$(this).parent().effect("highlight", {color: "#ffcc00"}, 2000);	
+				})
+
+				.on('ajax:success', function (event, data) { 
+					$(this).html(data.mv_status); 
+				});
+								
+			// Autocomplete tags
+			$(".tag-list").on("focus", "input", function() {
+				a = $('input').focus().autocomplete({ source:'/tag_autocomplete' });		
 			});
 			
+			// TODO: What is this code for?
 			$(document).on("click", "li.ui-menu-item", function() {
 		
-				$.post("/memverses/add_verse_tag", { id: <%= @mv.id %>, value: $(this).find("a").text()} );
+				$.post("/add_tag", { id: <%= @mv.id %>, value: $(this).find("a").text()} );
 				$(".edit_mv").html($(this).find("a").text())
 
 				$("#list-of-user-tags").find('tbody')
@@ -123,12 +152,13 @@
 				    );
 			});
 			
-		$('.add-tag').click(function() {
+			// Adding tags from list of existing Memverse tags
+			$('.add-tag').click(function() {
 
 				TagToAdd = $(this).prev().text();
 				
 				// Add the tag
-				$.post("/memverses/add_verse_tag", { id: <%= @mv.id %>, value: TagToAdd } );
+				$.post("/add_tag", { id: <%= @mv.id %>, value: TagToAdd } );
 				
 				// Insert tag at top of list of user tags						
 				$("#list-of-user-tags").find('tbody')
@@ -140,44 +170,8 @@
 				            )
 				        )			        
 				    );
-	
-				
 			});
-		});
-	</script>
-	
-	
-	<!-- http://www.appelsiini.net/projects/jeditable -->
-	<script type="text/javascript">
-		 $(document).ready(function() {   
-		 	
-			$('.edit_vs').editable('/verses/add_verse_tag', {
-				indicator : 'Saving...',
-				tooltip   : 'Click to edit...',
-				select    : true,
-				data      : function(value){
-				 	if(value == null) return false;
-				}
-			});
-							     
-			$('.edit_mv').editable('/memverses/add_verse_tag', {
-				indicator : 'Saving...',
-				tooltip   : 'Click to edit...',
-				select    : true,
-				data      : function(value){
-				 	if(value == null) return false;
-				}
-			});
-		     
-		$('#mv-status a')	
-			.click( function() {
-				$(this).parent().effect("highlight", {color: "#ffcc00"}, 2000);	
-			})
-		
-			.on('ajax:success', function (event, data) { 
-				$(this).html(data.mv_status); 
-			});
-							
+
 		});
 	</script>
 	
