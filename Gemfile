@@ -32,8 +32,8 @@ end
 # Javascript Engine
 ############################################################
 if HOST_OS =~ /linux/i
-  gem 'libv8', '>= 3.11.8.13', :platforms => :ruby
-  gem 'therubyracer', '>= 0.11.3'
+  gem 'libv8', '= 3.11.8.17', :platforms => :ruby
+  gem 'therubyracer', '= 0.11.4'
 end
 
 ############################################################
