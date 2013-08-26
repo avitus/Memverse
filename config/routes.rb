@@ -43,10 +43,8 @@ MemverseApp::Application.routes.draw do
     root to: "home#index"
   end
 
-  # Memverse Mappings
-  get '/reset_schedule'           => 'users#reset_schedule',            :as => 'reset_schedule'
-
   # Adding verses and chapters to user account
+  get   '/add_verse'              => 'memverses#add_verse',             :as => 'add_verse'
   post  '/add_chapter'            => 'memverses#add_chapter',           :as => 'add_chapter'
   match '/add/:id'                => 'memverses#ajax_add',              :as => 'add', :via => [:get, :post]
   get   '/avail_translations'     => 'memverses#avail_translations',    :as => 'avail_translations'
@@ -85,6 +83,8 @@ MemverseApp::Application.routes.draw do
   get '/manage_verses'            => 'memverses#manage_verses',         :as => 'manage_verses'
   get '/show_all_my_verses'       => 'memverses#manage_verses'        # :as => 'manage_verses'
   post '/delete_memverses'        => 'memverses#delete_verses'
+  get '/reset_schedule'           => 'users#reset_schedule',            :as => 'reset_schedule'
+
 
   get '/user_stats'               => 'memverses#user_stats',            :as => 'user_stats'
   get '/progress'                 => 'memverses#show_progress',         :as => 'progress'
