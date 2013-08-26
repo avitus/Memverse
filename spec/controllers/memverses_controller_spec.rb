@@ -43,7 +43,7 @@ describe MemversesController do
 
   end
 
-  describe "GET 'add_chapter'" do
+  describe "POST 'add_chapter'" do
 
     before (:each) do
       @chapter = Array.new
@@ -52,7 +52,6 @@ describe MemversesController do
         @chapter[i] = FactoryGirl.create(:memverse, :user => @user, :verse => verse)
       end
     end
-
 
     # TODO: these tests aren't really testing the controller functionality since they don't actually call any methods
 

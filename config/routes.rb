@@ -48,7 +48,7 @@ MemverseApp::Application.routes.draw do
 
   # Adding verses and chapters to user account
   get   '/add_verse',             :to => 'memverses#add_verse',             :as => 'add_verse'
-  get   '/add_chapter',           :to => 'memverses#add_chapter',           :as => 'add_chapter'
+  post  '/add_chapter',           :to => 'memverses#add_chapter',           :as => 'add_chapter'
   match '/add/:id',               :to => 'memverses#ajax_add',              :as => 'add', :via => [:get, :post]
   get   '/quick_add/:vs',         :to => 'memverses#quick_add',             :as => 'quick_add'
   get   '/avail_translations',    :to => 'memverses#avail_translations',    :as => 'avail_translations'
