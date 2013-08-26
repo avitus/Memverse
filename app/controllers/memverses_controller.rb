@@ -603,6 +603,18 @@ class MemversesController < ApplicationController
   end
 
   # ----------------------------------------------------------------------------------------------------------
+  # Add a new memory verse
+  # ----------------------------------------------------------------------------------------------------------
+  def add_verse
+    @tab = "home"
+    @sub = "addvs"
+    add_breadcrumb I18n.t("home_menu.Add Verse"), :add_verse_path
+
+    @translation = current_user.translation? ? current_user.translation : "NIV" # fallback on NIV
+    TRANSLATIONS[:selected] = @translation # used for jEditable
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
   # AJAX Verse Add (Assumes that verse is already in DB)
   # ----------------------------------------------------------------------------------------------------------
   def ajax_add
