@@ -603,6 +603,18 @@ class MemversesController < ApplicationController
   end
 
   # ----------------------------------------------------------------------------------------------------------
+  # Add a new memory verse
+  # ----------------------------------------------------------------------------------------------------------
+  def add_verse
+    @tab = "home"
+    @sub = "addvs"
+    add_breadcrumb I18n.t("home_menu.Add Verse"), :add_verse_path
+
+    @translation = current_user.translation? ? current_user.translation : "NIV" # fallback on NIV
+    TRANSLATIONS[:selected] = @translation # used for jEditable
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
   # AJAX Verse Add (Assumes that verse is already in DB)
   # ----------------------------------------------------------------------------------------------------------
   def ajax_add
@@ -682,20 +694,6 @@ class MemversesController < ApplicationController
 
     render :json => {:msg => "Added Chapter" }
 
-  end
-
-  # ----------------------------------------------------------------------------------------------------------
-  # Add a new memory verse
-  #
-  # TODO: This doesn't seem to be used any more
-  # ----------------------------------------------------------------------------------------------------------
-  def add_verse
-    @tab = "home"
-    @sub = "addvs"
-    add_breadcrumb I18n.t("home_menu.Add Verse"), :add_verse_path
-
-    @translation            = current_user.translation? ? current_user.translation : "NIV" # fallback on NIV
-    TRANSLATIONS[:selected] = @translation # used for jEditable
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -863,14 +861,6 @@ class MemversesController < ApplicationController
     return initial_mv
   end
 
-  # ----------------------------------------------------------------------------------------------------------
-  # Memorize
-  # ----------------------------------------------------------------------------------------------------------
-  def test_verse
-
-    redirect_to :action => "test_verse_quick"
-
-  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Select chapter to review

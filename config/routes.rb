@@ -43,22 +43,15 @@ MemverseApp::Application.routes.draw do
     root to: "home#index"
   end
 
-  # Memverse Mappings
-  get '/reset_schedule'           => 'users#reset_schedule',            :as => 'reset_schedule'
-
   # Adding verses and chapters to user account
   get   '/add_verse'              => 'memverses#add_verse',             :as => 'add_verse'
   post  '/add_chapter'            => 'memverses#add_chapter',           :as => 'add_chapter'
   match '/add/:id'                => 'memverses#ajax_add',              :as => 'add', :via => [:get, :post]
-  get   '/quick_add/:vs'          => 'memverses#quick_add',             :as => 'quick_add'
   get   '/avail_translations'     => 'memverses#avail_translations',    :as => 'avail_translations'
 
   # Core Review Pages
+  get '/learn'                    => 'memverses#learn',                 :as => 'learn'
   get '/review'                   => 'passages#review',                 :as => 'passage_review'
-
-  # Legacy verse test
-  get '/test_verse'               => 'memverses#test_verse',            :as => 'test_verse'
-  get '/mark_test'                => 'memverses#mark_test',             :as => 'mark_test'
 
   # Current single verse test
   get '/test_verse_quick'         => 'memverses#test_verse_quick',      :as => 'test_verse_quick'
@@ -81,12 +74,18 @@ MemverseApp::Application.routes.draw do
   # Chapter review
   get '/pre_chapter'              => 'memverses#chapter_explanation',   :as => 'pre_chapter'
   get '/test_chapter'             => 'memverses#test_chapter',          :as => 'test_chapter'
+
+  # Legacy drill page
   get '/drill_verse'              => 'memverses#drill_verse',           :as => 'drill_verse'
-  get '/learn'                    => 'memverses#learn',                 :as => 'learn'
   get '/mark_drill'               => 'memverses#mark_drill',            :as => 'mark_drill'
+
+  # Verse management
   get '/manage_verses'            => 'memverses#manage_verses',         :as => 'manage_verses'
   get '/show_all_my_verses'       => 'memverses#manage_verses'        # :as => 'manage_verses'
   post '/delete_memverses'        => 'memverses#delete_verses'
+  get '/reset_schedule'           => 'users#reset_schedule',            :as => 'reset_schedule'
+
+
   get '/user_stats'               => 'memverses#user_stats',            :as => 'user_stats'
   get '/progress'                 => 'memverses#show_progress',         :as => 'progress'
   get '/save_progress_report'     => 'memverses#save_progress_report',  :as => 'save_progress_report'
@@ -97,6 +96,7 @@ MemverseApp::Application.routes.draw do
   get '/toggle_error_flag/:id'    => 'memverses#toggle_verse_flag',     :as => 'toggle_error_flag'
   get '/toggle_mv_status/:id'     => 'memverses#toggle_mv_status',      :as => 'toggle_mv_status'
 
+  # Tagging verses
   post '/add_tag'                 => 'memverses#add_mv_tag'
   get  '/tag_autocomplete'        => 'memverses#tag_autocomplete'
 
@@ -172,16 +172,15 @@ MemverseApp::Application.routes.draw do
   get '/verse_scramble'           => 'games#verse_scramble',            :as => 'verse_scramble'
 
   # Routes for graphs
-  get '/load_progress/'           => 'chart#load_progress',             :as => 'load_progress'
-  get '/load_consistency_progress/'   => 'chart#load_consistency_progress', :as => 'load_consistency_progress'
-  get '/global_data'              => 'chart#global_data',               :as => 'global_data'
+  get '/load_progress/'             => 'chart#load_progress',             :as => 'load_progress'
+  get '/load_consistency_progress/' => 'chart#load_consistency_progress', :as => 'load_consistency_progress'
+  get '/global_data'                => 'chart#global_data',               :as => 'global_data'
 
   # Routes for chat channels
   get "/chat/send",              :controller => "chat", :action => "send_message"
   get "/chat/channel1",          :controller => "chat", :action => "channel1"
   get "/chat/channel2",          :controller => "chat", :action => "channel2"
   get "/chat/toggle_ban",        :controller => "chat", :action => "toggle_ban"
-
 
   # Routes for live quiz
   get "/live_quiz/start_quiz",  :controller => "live_quiz", :action => "start_quiz"
