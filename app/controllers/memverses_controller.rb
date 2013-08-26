@@ -451,7 +451,7 @@ class MemversesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   # In place editing support for tag addition
   # ----------------------------------------------------------------------------------------------------------
-  def add_verse_tag
+  def add_mv_tag
     @mv = Memverse.find(params[:id])
     new_tag = params[:value].titleize # need to clean this up with hpricot or equivalent
 
