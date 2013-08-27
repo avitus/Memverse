@@ -48,8 +48,12 @@
 <%= stylesheet_link_tag "application" %>
 
 <!-- Javascript -->
-<!-- jquery.tools 		: used for tool tips on main verse test page, scrollable on login page -->
-<!-- jqueryui 			: used for highlight effect on reset-schedule button -->
+
+<!-- If possible, we should get rid of jQuery Tools as it does not seem to be actively maintained. Unfortunately, we need it for
+	 the scrollable functionality we use when retrieving verses -->
+
+<!-- jquery.tools 		: (deprecated) used for tool tips on main verse test page, scrollable on login page and verse selection -->
+<!-- jqueryui 			: (preferred UI library) used for highlight effect on reset-schedule button, autocomplete of tags -->
 <!-- 2leveltab    		: main menu tab system -->
 <!-- jeditable          : for in-place tag editing goodness -->
 <!-- jquery.fancybox    : lightbox for tutorial video -->
@@ -60,12 +64,28 @@
 <!-- hoverIntent        : used on popular verses page -->
 <!-- periodicalUpdater  : for home page memorized count -->
 
-<!-- jQuery: try CDN but fallback on local copy -->
-<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-1.7.min.js"></script>
-<script>window.jQuery || document.write('<script src="/javascripts/jquery-1.7.min.js"><\/script>')</script>
-<script type="text/javascript" src="http://cdn.jquerytools.org/1.2.6/tiny/jquery.tools.min.js"></script>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+
+<!-- jQuery: serve older version of jQuery for IE8 and earlier, try CDN but fallback on local copy -->
+
+<!--[if lt IE 9]>
+	<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-1.9.1.min.js"></script>
+	<script>window.jQuery || document.write('<script src="/javascripts/jquery-1.9.1.min.js"><\/script>')</script>
+<![endif]-->
+<!--[if gte IE 9]><!-->
+	<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-2.0.2.min.js"></script>
+	<script>window.jQuery || document.write('<script src="/javascripts/jquery-2.0.2.min.js"><\/script>')</script>
+<!--<![endif]-->
+
+<!-- Ease migration to jQuery 1.9 -->
+<script src="http://code.jquery.com/jquery-migrate-1.2.1.js"></script>
+
+<!-- UI Libraries -->
+<script type="text/javascript" src="http://cdn.jquerytools.org/1.2.7/tiny/jquery.tools.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+
+<!-- PubNub for messaging -->
 <script type="text/javascript" src="http://cdn.pubnub.com/pubnub-3.5.3.min.js"></script>
+
 
 <!-- Main Javascript Manifest -->
 <%= javascript_include_tag "application" %>
@@ -205,7 +225,7 @@
 						<div id="memory" class="submenustyle">
 							<ul>
 								<li <%= sub(@sub=="mem"			)%>><%= link_to t('memorize_menu.Verses'),			main_app.test_verse_quick_path %></li>
-								<li <%= sub(@sub=="refrec"		)%>><%= link_to t('memorize_menu.References'), 	    main_app.start_ref_test_path %></li>
+								<li <%= sub(@sub=="refrec"		)%>><%= link_to t('memorize_menu.References'), 	    main_app.test_ref_path %></li>
 								<li <%= sub(@sub=="acctest"		)%>><%= link_to t('memorize_menu.Accuracy Test'), 	main_app.pre_exam_path %></li>
 								<li <%= sub(@sub=="passrev"		)%>><%= link_to t('memorize_menu.Passage Review'), 	main_app.passage_review_path %></li>
 								<li <%= sub(@sub=="chrev"		)%>><%= link_to t('memorize_menu.Chapter Review'), 	main_app.pre_chapter_path %></li>

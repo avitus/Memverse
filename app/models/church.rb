@@ -18,7 +18,7 @@ class Church < ActiveRecord::Base
 
   attr_accessible :name, :description
 
-  scope :vibrant, where('users_count >= 3')
+  scope :vibrant, -> { where('users_count >= 3') }
 
   # ----------------------------------------------------------------------------------------------------------
   # Returns *array* of top churches (sorted by number of verses memorized)

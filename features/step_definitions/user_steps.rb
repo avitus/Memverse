@@ -1,5 +1,5 @@
 Given /^no user exists with an email of "(.*)"$/ do |email|
-  User.find(:first, :conditions => { :email => email }).should be_nil
+  User.where(:email => email).first.should be_nil
 end
 
 Given /^I am a user named "([^"]*)" with an email "([^"]*)" and password "([^"]*)"$/ do |name, email, password|
@@ -101,14 +101,14 @@ Given /^a user with the login of "(.*)"$/ do |login|
 end
 
 Then /^there should be a user with an email of "(.*)" whose referrer's login is "(.*)"$/ do |email, login|
-  referring_id = User.find_by_email(email).referred_by
+  referring_id = User.where(:email => email).first.referred_by
   User.find(referring_id).login == login
 end
 
 Given /^the user with the email address "([^"]*)" can blog$/ do |email|
   # class User < ActiveRecord::Base
   #   def can_blog?
-  #     self.id == User.find_by_email(email).id
+  #     self.id == User.where(:email => email).first.id
   #  end
   # end
 end

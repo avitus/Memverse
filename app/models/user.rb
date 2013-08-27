@@ -84,11 +84,11 @@ class User < ActiveRecord::Base
   has_many :blog_comments, :dependent => :destroy, :class_name => 'Bloggity::BlogComment'
 
   # Named Scopes
-  scope :active,            lambda { where('last_activity_date >= ?', 1.month.ago) }
-  scope :active_today,      lambda { where('last_activity_date = ?',  Date.today) }
-  scope :active_this_week,  lambda { where('last_activity_date >= ?', 1.week.ago) }
-  scope :american,          where('countries.printable_name' => 'United States').includes(:country)
-  scope :pending,           where(:confirmed_at => nil)
+  scope :active,            -> { where('last_activity_date >= ?', 1.month.ago) }
+  scope :active_today,      -> { where('last_activity_date = ?',  Date.today) }
+  scope :active_this_week,  -> { where('last_activity_date >= ?', 1.week.ago) }
+  scope :american,          -> { where('countries.printable_name' => 'United States').includes(:country) }
+  scope :pending,           -> { where(:confirmed_at => nil) }
 
   # Setup accessible (or protected) attributes for your model
   # Prevents a user from submitting a crafted form that bypasses activation
@@ -160,7 +160,7 @@ class User < ActiveRecord::Base
   # Returns: TRUE if user has verse in userlist else FALSE
   # ----------------------------------------------------------------------------------------------------------
   def has_verse_id?(vs_id)
-    ref = Memverse.find(:first, :conditions => ["user_id = ? and verse_id = ?", self, vs_id])
+    ref = Memverse.where(:user_id => self.id, :verse_id => vs_id).first
     return ref
   end
 
@@ -566,11 +566,11 @@ class User < ActiveRecord::Base
     self.gender           = new_params["gender"]
     self.translation      = new_params["translation"]
     self.reminder_freq    = new_params["reminder_freq"]
-    self.country          = Country.find(:first, :conditions => ["printable_name = ?", new_params["country"]])
-    self.american_state   = AmericanState.find(:first, :conditions => ["name = ?", new_params["american_state"]])
+    self.country          = Country.where(:printable_name => new_params["country"]).first
+    self.american_state   = AmericanState.where(:name => new_params["american_state"]).first
     # If church, group doesn't exist in database we add it
-    self.church           = Church.find(:first, :conditions => ["name = ?", new_params["church"]]) || Church.create(:name => new_params["church"])
-    self.group            = Group.find(:first, :conditions => ["name = ?", new_params["group"]]) || Group.create(:name => new_params["group"], :leader_id => self.id)
+    self.church           = Church.where(:name => new_params["church"]).first || Church.create(:name => new_params["church"])
+    self.group            = Group.where(:name => new_params["group"]).first || Group.create(:name => new_params["group"], :leader_id => self.id)
     self.newsletters      = new_params["newsletters"]
     self.language         = new_params["language"]
     self.time_allocation  = new_params["time_allocation"]
@@ -1016,7 +1016,7 @@ class User < ActiveRecord::Base
   # Number of pending verses for user
   # ----------------------------------------------------------------------------------------------------------
   def pending
-    Memverse.count(:all, :conditions => ["user_id = ? and status = ?", self.id, "Pending"])
+    Memverse.where(:user_id => self.id, :status => "Pending")
   end
 
   # ----------------------------------------------------------------------------------------------------------

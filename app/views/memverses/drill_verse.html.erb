@@ -2,7 +2,7 @@
 
 <div class="white-box-bg">
 
-	<!-- Question-side : Entry box -->	
+	<!-- Question-side : Entry box -->
 	<div class="test-verse">
     	<div class="top-heading">
         	<h2><span>Verse: </span><span class="verse-ref"><%= @verse %></span><span class="verse-tl"> [<%=@mv.verse.translation %>]</span></h2>
@@ -12,19 +12,19 @@
         <div class="verse-test-area">
         	<%= form_tag mark_drill_path, :id => 'mark_drill' do %>
             	<div>
-            		<%= text_area_tag(:verseguess, params[:verseguess], :class => "verseguess" )%>	
+            		<%= text_area_tag(:verseguess, params[:verseguess], :class => "verseguess" )%>
                 </div>
-                
+
                 <div class="tool-tip-nav"></div>
-                <div id="test-buttons" class="score-test-buttons">								
+                <div id="test-buttons" class="score-test-buttons">
 					<div align="left"><%= submit_tag "Next Verse", :class => "submit" %></div>
 				</div>	<!-- end: scoreTestButtons -->
-                
+
             <% end %> <!-- end: form -->
         </div> <!-- end: verse-test-area -->
 	</div> <!-- end: test-verse -->
 
-	<!-- Comparison section -->		
+	<!-- Comparison section -->
     <div class="feedback verse-feedback">
     	<h2>Feedback</h2>
 
@@ -35,30 +35,30 @@
 				<span class="prior-text">					<%=@prior_text if @prior_text%>	</span>
 			</p>
 		</div>
-		
+
 		<!-- Current verse -->
 		<div id="currentVerse">
-			<p>		
+			<p>
 				<span class="current-versenum superscript"><%=@mv.verse.versenum if @prior_text%></span>
 				<span id="feedback"></span>
 				<img class="center spinner" id="ajax_spinner" src="/assets/indicator2.gif" alt="Comparing..." style="display: none" />
-			</p>					
+			</p>
 		</div>
-		
+
 		<!-- Current verse answer -->
 		<div id="complete-hint">
-			<p>		
+			<p>
 				<span class="current-versenum superscript"><%=@mv.verse.versenum if @prior_text%></span>
 				<span class="current-text"><%= @mv.verse.text %></span>
-			</p>			
+			</p>
 		</div>
 
     </div> <!-- end: Feedback -->
 
-	<!-- Upcoming verses -->	
+	<!-- Upcoming verses -->
     <div class="upcoming">
     	<h2>Upcoming Verses</h2>
-		<%= render :partial => "upcoming_verses" %>						
+		<%= render :partial => "upcoming_verses" %>
     </div>
     <div class="clr"></div>
 
@@ -66,23 +66,23 @@
 
 
 <script language="JavaScript" type="text/javascript"><!--
-	
+
 	$(document).ready(function() {
-	
+
 		// cache frequent DOM objects in variables
 		$completehint = $("#complete-hint");
 		$currentVerse = $("#currentVerse");
 		$togglehint   = $("#toggle-hint");
 		$feedback     = $("#feedback");
 		$verseguess   = $("#verseguess");
-		
+
 		<% if !@mv.needs_mnemonic? %>
 			$('#mnemonic').hide();
 		<% end %>
-		
+
 		// focus cursor on verse entry box
 		$('#verseguess').focus();
-			
+
 		// Toggle verse function
 		function toggleverse() {
 			$completehint.toggle();
@@ -93,26 +93,26 @@
 				$togglehint.text(I18n.t("memverses.test_verse_quick.show_verse"));
 			}
 		}
-		
+
 		// show verse
 		$togglehint.click( function () {
 			toggleverse();
 		});
-		
-		// Verse feedback	
+
+		// Verse feedback
 		var current		= {};
 		var live		= {};
 		current.text	= "<%= escape_javascript(@mv.verse.text.html_safe) %>";
 		current.feedback = <%= @mv.show_feedback? %>;
 		current.mnemonic = "<%= escape_javascript(@mv.mnemonic_if_req.html_safe) %>";
 
-		function getversefeedback(guess){
+		function getverseFeedback(guess){
 			allowFirstLetter = (current.mnemonic == (null || "-"))?true:false;
-			
-			live = versefeedback(current.text, guess, current.feedback, allowFirstLetter);
-			
+
+			live = verseFeedback(current.text, guess, current.feedback, allowFirstLetter);
+
 			$feedback.html(live.feedtext);
-			
+
 			if (live.correct) {
 				$togglehint.fadeOut(500);
 			}
@@ -124,13 +124,13 @@
 				$currentVerse.toggle();
 			}
 		}
-		
-		live = getversefeedback($verseguess.val()); // Run this once when page first loads
-		
-		$("#verseguess").observe_field(0.2, function( ) { 			
-			getversefeedback(this.value);
+
+		live = getverseFeedback($verseguess.val()); // Run this once when page first loads
+
+		$("#verseguess").observe_field(0.2, function( ) {
+			getverseFeedback(this.value);
         });
-    	
+
     	// ==== Show/Hide mnemonic ====
 		function togglemnemonic(){
 			if ( $('#mclose').is(':hidden') ) {
@@ -142,17 +142,17 @@
 				$("#mclose").hide();
 			}
 		}
-		
+
 		$('#mclose').click(function() {
 			togglemnemonic();
 		});
-	
+
 		$('#mtext').click(function() {
 			if ( $('#mclose').is(':hidden') ) {
 				togglemnemonic();
 			}
 		});
-				
+
 	});
 
 --></script>

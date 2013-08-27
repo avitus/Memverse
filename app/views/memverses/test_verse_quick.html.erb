@@ -208,10 +208,10 @@
 		$('#ff-button').toggle(<%= !@mv.due? %>);					// Hide/Show fast forward button
 		ondeck = stageverses(current.id);
 
-		function getversefeedback(guess){
+		function getverseFeedback(guess){
 			allowFirstLetter = (current.mnemonic === null || current.mnemonic == "-");
 
-			live = versefeedback(current.text, guess, current.feedback, allowFirstLetter);
+			live = verseFeedback(current.text, guess, current.feedback, allowFirstLetter);
 
 			$feedback.html(live.feedtext);
 
@@ -226,11 +226,11 @@
 			}
 		}
 
-		live = getversefeedback($verseguess.val()); // Run this once when page first loads
+		live = getverseFeedback($verseguess.val()); // Run this once when page first loads
 
 		// Verse feedback
 		$verseguess.observe_field(0.2, function( ) {
-			getversefeedback(this.value);
+			getverseFeedback(this.value);
 		});
 
 		// ==== Fastforward function ====
@@ -249,7 +249,7 @@
 					$("ul#upcoming-verses").html("<li>(None)</li>");
 				}
 
-				live = getversefeedback($verseguess.val());						// Update verse feedback
+				live = getverseFeedback($verseguess.val());						// Update verse feedback
 				ondeck = stageverses(current.id);								// Get new ondeck verses
 			}
 		}
@@ -300,7 +300,7 @@
 				success = insertondeck(ondeck.mv, ondeck.mv_prior);					// Update page with Ondeck verse
 				prior   = current;
 				current = ondeck.mv;												// data for the verse we're now testing
-				live = getversefeedback($verseguess.val());							// Update verse feedback
+				live = getverseFeedback($verseguess.val());							// Update verse feedback
 				$.getJSON("/mark_test_quick", { mv: prior.id, q: q  }, 				// Score verse
 					function(data) {
 						if (data.msg) {  setTimeout(function() {alert(data.msg);}, 1); }  // Give user a nice response that doesn't hinder other requests

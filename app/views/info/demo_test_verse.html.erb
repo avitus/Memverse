@@ -113,10 +113,10 @@
 		live.correct     = false; // Can currently toggle verse (show/hide)
 		live.feedtext    = "Waiting for you to begin typing..."; // Live Feedback text
 
-		live = getversefeedback($verseguess.val()); // Run this once when page first loads
+		live = getverseFeedback($verseguess.val()); // Run this once when page first loads
 
-		function getversefeedback(guess){
-			live = versefeedback(current.text, guess, current.feedback);
+		function getverseFeedback(guess){
+			live = verseFeedback(current.text, guess, current.feedback);
 
 			$feedback.html(live.feedtext);
 
@@ -182,7 +182,7 @@
 
 		// Verse feedback
 		$("#verseguess").observe_field(0.2, function( ) {
-			getversefeedback(this.value);
+			getverseFeedback(this.value);
         });
 
 		// ==== Mock "rateverse" function

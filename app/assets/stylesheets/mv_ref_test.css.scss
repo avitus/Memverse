@@ -1,0 +1,99 @@
+/* === Reference Test === */
+#reftest-leftside {
+    width: 45%;
+    height: 420px;
+    float: left;
+    padding: 0em 2em 2em 2em;
+    border-right-color:#bfbebe;
+    border-right-style:solid;
+    border-right-width:1px;
+}
+
+#reftest-left-top {
+    height: 40%;  // Should be same as top-dashboard
+}
+
+#reftestVerse {
+    padding:0.75em;
+    font-size:105%;
+    min-height: 8em;
+}
+
+#reftest-leftside #answer {
+    margin-top:2%;
+    margin-bottom:2%;
+    margin-left:1em;
+}
+
+#reftest-rightside {
+    float:left;
+    padding: 0em 2em 2em 2em;
+    width: 45%;
+    height: 420px;
+}
+
+#reftest-feedback {
+    height: 60%;
+}
+
+#top-dashboard {
+    height: 40%;  // Should be same as reftest-left-top
+}
+
+#past-questions {
+    padding: 1em 0em;
+    height: 82%;
+    overflow: hidden;
+    position: relative;
+}
+
+// Feedback on previous ref test questions
+.prior-feedback {
+
+    .prior-question {
+      display: inline-block;
+      width: 27%;
+    }
+
+    .divider {
+      display: inline-block;
+      width: 3%;
+    }
+
+    .prior-answer {
+      display: inline-block;
+      width: 28%;
+    }
+    .prior-feedback {
+      display: inline-block;
+      width: 40%;
+    }
+
+}
+
+.fadeout {
+    position: absolute;
+    bottom: 0em;
+    width:100%;
+    height: 4em;
+    background: -webkit-linear-gradient(
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 1) 100%
+    );
+    background-image: -moz-linear-gradient(
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 1) 100%
+    );
+    background-image: -o-linear-gradient(
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 1) 100%
+    );
+    background-image: linear-gradient(
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 1) 100%
+    );
+    background-image: -ms-linear-gradient(
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 1) 100%
+    );
+}

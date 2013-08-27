@@ -57,6 +57,19 @@ class UsersController < ApplicationController
   	render :json => {:due_verses => due_today }
   end
 
+  # ----------------------------------------------------------------------------------------------------------
+  # Update user's reference recall score
+  # ----------------------------------------------------------------------------------------------------------
+  def update_ref_grade
+
+    current_user.update_attribute(:ref_grade, params[:score] )
+
+    respond_to do |format|
+      format.json { render :json => current_user.ref_grade }
+    end
+
+  end
+
   protected
 
 end
