@@ -44,20 +44,6 @@ class Verse < ActiveRecord::Base
   scope :tl, ->(tl) { where('translation = ?', tl) }
 
   # ----------------------------------------------------------------------------------------------------------
-  # Sphinx Index
-  # ----------------------------------------------------------------------------------------------------------
-  define_index do
-		# fields
-		indexes translation, :sortable => true
-		indexes text
-		indexes [book, chapter, versenum], :as => :reference
-
-		# attributes
-		has created_at
-  end
-
-
-  # ----------------------------------------------------------------------------------------------------------
   # Sort Verse objects according to biblical book order
   # ----------------------------------------------------------------------------------------------------------
   def <=>(o)
