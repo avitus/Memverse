@@ -91,7 +91,7 @@ gem 'nokogiri', '>=1.5.0'                                                       
 gem 'json'                                                                                      # Javascript Object Notation support
 gem 'mail', '>= 2.2.15'                                                                         # Emails
 gem 'newrelic_rpm', '>=3.3.0'                                                                   # Performance monitoring
-gem 'thinking-sphinx', '~> 2.0.14'                                                              # Connector to Sphinx - for global search
+gem 'thinking-sphinx', '~> 3.0.5'                                                               # Connector to Sphinx - for global search
 gem 'riddle'                                                                                    # Seems to be needed for Thinking_Sphinx ... not clear, though
 gem 'i18n-js'                                                                                   # Uses config/locale files to build a JavaScript equivalent of i18n in Rails
 # gem 'spawn', '>=1.2', :git => 'git://github.com/avitus/spawn.git', :branch => 'edge'            # Check to see whether master branch ever supports Rails 3 & Ruby 1.92
