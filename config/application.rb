@@ -1,23 +1,22 @@
 require File.expand_path('../boot', __FILE__)
 
+require 'rails/all'
+
 # Pick the frameworks you want:
-require "active_record/railtie"
-require "action_controller/railtie"
-require "action_mailer/railtie"
-require "active_resource/railtie"
-require "sprockets/railtie"
+
+# These five frameworks were included under Rails 3.2
+# require "active_record/railtie"
+# require "action_controller/railtie"
+# require "action_mailer/railtie"
+# require "active_resource/railtie"
+# require "sprockets/railtie"
+
+# This framework was not required as of Rails 3.2
 # require "rails/test_unit/railtie"
 
-# If you have a Gemfile, require the default gems, the ones in the
-# current environment and also include :assets gems if in development
-# or test environments.
-
-if defined?(Bundler)
-  # If you precompile assets before deploying to production, use this line
-  Bundler.require *Rails.groups(:assets => %w(development test))
-  # If you want your assets lazily compiled in production, use this line
-  # Bundler.require(:default, :assets, Rails.env)
-end
+# Require the gems listed in Gemfile, including any gems
+# you've limited to :test, :development, or :production.
+Bundler.require(:default, Rails.env)
 
 module MemverseApp
   class Application < Rails::Application
@@ -26,7 +25,7 @@ module MemverseApp
     config.generators do |g|
       g.view_specs false
       g.helper_specs false
-      g.stylesheets false      
+      g.stylesheets false
     end
 
     # Settings in config/environments/* take precedence over those specified here.
@@ -63,5 +62,9 @@ module MemverseApp
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
+
+    # Don't require attr_accessible to be defined for every model
+    config.active_record.whitelist_attributes = false
+
   end
 end

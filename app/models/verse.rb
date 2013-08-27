@@ -32,16 +32,16 @@ class Verse < ActiveRecord::Base
   # Validations
   validates_presence_of   :translation, :book, :chapter, :versenum, :text
 
-  scope :old_testament, where(:book_index =>  1..39)
-  scope :new_testament, where(:book_index => 40..66)
+  scope :old_testament, -> { where(:book_index =>  1..39) }
+  scope :new_testament, -> { where(:book_index => 40..66) }
 
-  scope :history,  where(:book_index =>  1..17)
-  scope :wisdom,   where(:book_index => 18..22)
-  scope :prophecy, where("book_index BETWEEN 23 AND 39 OR book_index = 66")
-  scope :gospel,   where(:book_index => 40..43)
-  scope :epistle,  where(:book_index => 45..65)
+  scope :history,  -> { where(:book_index =>  1..17) }
+  scope :wisdom,   -> { where(:book_index => 18..22) }
+  scope :prophecy, -> { where("book_index BETWEEN 23 AND 39 OR book_index = 66") }
+  scope :gospel,   -> { where(:book_index => 40..43) }
+  scope :epistle,  -> { where(:book_index => 45..65) }
 
-  scope :tl, lambda { |tl| where('translation = ?', tl) }
+  scope :tl, ->(tl) { where('translation = ?', tl) }
 
   # ----------------------------------------------------------------------------------------------------------
   # Sphinx Index
@@ -170,27 +170,19 @@ class Verse < ActiveRecord::Base
   # Check whether verse exists in DB - Note: checking for verse in database requires full length book name
   # ----------------------------------------------------------------------------------------------------------
   def self.exists_in_db(bk, ch, vs, tl)
-    find(:first, :conditions => { :book => bk, :chapter => ch, :versenum => vs, :translation => tl })
+    Verse.where(:book => bk, :chapter => ch, :versenum => vs, :translation => tl).first
   end
-
 
   # ----------------------------------------------------------------------------------------------------------
   # Return subsequent verse in same translation (if it exists)
   # ----------------------------------------------------------------------------------------------------------
   def following_verse
     if self.last_in_chapter?
-      Verse.find(:first, :conditions => { :book         => self.book,
-                                          :chapter      => self.chapter.to_i+1,
-                                          :versenum     => 1,
-                                          :translation  => self.translation })
+      Verse.where(:book => self.book, :chapter => self.chapter.to_i+1, :versenum => 1, :translation  => self.translation ).first
     else
-      Verse.find(:first, :conditions => { :book         => self.book,
-                                          :chapter      => self.chapter,
-                                          :versenum     => self.versenum.to_i+1,
-                                          :translation  => self.translation })
+      Verse.where(:book => self.book, :chapter => self.chapter, :versenum => self.versenum.to_i+1, :translation => self.translation).first
     end
   end
-
 
   # ----------------------------------------------------------------------------------------------------------
   # Checks whether verse has been verified or not

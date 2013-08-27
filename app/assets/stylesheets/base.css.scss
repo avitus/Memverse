@@ -377,15 +377,15 @@ input.secondary {
 	border:1px solid;
 	font-size: 100%;
 	height: 1.4em;
-  background-color:#f2f1f1;
+    background-color:#f2f1f1;
 	border-color: #9c3;
 	cursor:pointer;
 }
 
 input.large {
-  height:1.5em;
-  width:15em;
-  font-size:1.5em;
+    height:1.5em;
+    width:15em;
+    font-size:1.5em;
 }
 
 /*========== Top Menu ==========*/
@@ -1401,7 +1401,7 @@ div#flash-error {
 {
 	width:1040px;
 	padding:25px 20px;
-	min-height:200px;
+	min-height:280px;
 }
 
 .tab-content h3
@@ -2341,35 +2341,6 @@ div#currentVerse #matchbox .correct {
 #chapter-text .verse-text {
 	display:none;
 	width:93%;
-}
-
-/* === Reference Test === */
-
-#reftestVerse {
-	padding:0.75em;
-	font-size:105%;
-}
-
-#reftest-question {
-	width: 40%;
-	height: 420px;
-	float: left;
-	padding: 0em 2em 2em 2em;
-	border-right-color:#bfbebe;
-	border-right-style:solid;
-	border-right-width:1px;
-}
-
-#reftest-answer {
-	float:left;
-	padding: 0em 2em 2em 2em;
-	width:430px;
-}
-
-#reftest-answer #answer {
-	margin-top:2%;
-	margin-bottom:2%;
-	margin-left:1em;
 }
 
 /* === Main Chat Channel ==*/

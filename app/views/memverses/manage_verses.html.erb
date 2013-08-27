@@ -54,7 +54,7 @@
 													:confirm => mv.verse.error_flag ? "Cancel reported error?" : "You are reporting an error in this verse. Are you sure?",
 													:remote	=> true
 								elsif !mv.locked?
-									link_to '[Editable]', edit_verse_path(mv)
+									link_to '[Editable]', edit_verse_path(mv.verse)
 								else
 									'Pending Verification'
 								end

@@ -69,17 +69,22 @@ describe Passage do
     it "should merge two passages if linking verse is inserted" do
 
       # Automatically generates user, memverses and verses through Factory
-      psg1 = FactoryGirl.create(:passage, user: @user, book: 'Mark', chapter: 2, first_verse: 2, last_verse: 4)
-      psg2 = FactoryGirl.create(:passage, user: @user, book: 'Mark', chapter: 2, first_verse: 6, last_verse: 8)
+
+      # Mark 2:2-4
+      psg1 = FactoryGirl.create(:passage, user: @user, book: 'Mark', chapter: 2, first_verse: 2, last_verse: 4, length: 3)
+      # Mark 2:6-8
+      psg2 = FactoryGirl.create(:passage, user: @user, book: 'Mark', chapter: 2, first_verse: 6, last_verse: 8, length: 3)
 
       mv2 = psg2.memverses.first # need to ensure that this verse is associated with psg1 after combination
 
+      # Mark 2:5
       vs = FactoryGirl.create(:verse, book: 'Mark', chapter: 2, versenum: 5)
       mv = FactoryGirl.create(:memverse, user: @user, verse: vs)  # triggers after_create call_back to add memory verse to passage
 
       psg1.reload
       mv2.reload
 
+      # Assertions
       psg1.first_verse.should == 2
       psg1.last_verse.should  == 8
       psg1.length.should      == 7

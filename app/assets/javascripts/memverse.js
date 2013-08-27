@@ -152,7 +152,7 @@ function checkAllFields(ref) {
         if ( totalChecked == 1 ) {
         var agree=confirm(I18n.t("js_msgs.delete_one"));
          if (agree) {
-          document.manage_verses.action = '/memverses/delete_verses';
+          document.manage_verses.action = '/delete_memverses';
           return true;
          }
          else {
@@ -166,7 +166,7 @@ function checkAllFields(ref) {
         else if ( totalChecked == visibleboxLength ) {
         var agree=confirm(I18n.t("js_msgs.all_selected", {quantity: totalChecked}));
          if (agree) {
-          document.manage_verses.action = '/memverses/delete_verses';
+          document.manage_verses.action = '/delete_memverses';
           return true;
          }
          else
@@ -175,7 +175,7 @@ function checkAllFields(ref) {
         else { // User is deleting between one and all of their verses. Need to alert them if some of these are invisible. This is not necessary in other cases.
         var agree=confirm(I18n.t("js_msgs.some_selected", {quantity: totalChecked}));
          if (agree) {
-          document.manage_verses.action = '/memverses/delete_verses';
+          document.manage_verses.action = '/delete_memverses';
           return true;
          }
          else
@@ -222,7 +222,7 @@ Array.remove = function(array, from, to) {
   return array.push.apply(array, rest);
 };
 
-versefeedback = function(correctvs, verseguess, echo, firstletter) {
+function verseFeedback(correctvs, verseguess, echo, firstletter) {
 
 	firstletter = (typeof firstletter == "undefined") ? false : firstletter;
 

@@ -24,7 +24,7 @@ RSpec.configure do |config|
   # examples within a transaction, remove the following line or assign false
   # instead of true.
   config.use_transactional_fixtures = true
-  
+
   # Use color in STDOUT
   config.color_enabled = true
 
@@ -32,10 +32,17 @@ RSpec.configure do |config|
   config.tty = true
 
   # Use the specified formatter
-  config.formatter = :documentation # :progress, :html, :textmate    
+  config.formatter = :documentation # :progress, :html, :textmate
+
+  # Configure devise helpers
+  config.include Devise::TestHelpers, :type => :controller
+  config.extend ControllerMacros, :type => :controller
+
 end
 
+# TODO: This might be legacy code ... try removing
 class ActionController::TestCase
   include Devise::TestHelpers
 end
-
+  
+Capybara.default_host = 'localhost:3000'

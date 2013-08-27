@@ -12,7 +12,7 @@
 #
 
 src_files:
-  # - app/assets/javascripts/**/*.js
+  - app/assets/javascripts/**/*.js
   - jquery                  # ACW: src_files only accepts manifests, and this is the proper way to include jquery
   - assets/application.js   # ALV: added this due to some problem with asset pipeline
 

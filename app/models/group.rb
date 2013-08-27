@@ -18,7 +18,7 @@ class Group < ActiveRecord::Base
 
   attr_accessible :name, :description, :leader_id
 
-  scope :vibrant, where('users_count >= 3')
+  scope :vibrant, -> { where('users_count >= 3') }
 
   # ----------------------------------------------------------------------------------------------------------
   # Returns *array* of top groups (sorted by number of verses memorized)

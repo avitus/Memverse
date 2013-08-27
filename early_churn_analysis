@@ -1,0 +1,59 @@
+Analysis of Users Who Added Verses but Never Completed 1st Session (Represents about 40% of Churn)
+March 27th, 2013
+
+Get all users who have added verses but never completed a session
+
+stuck = User.all.select { |u| u.has_started? && u.completed_sessions == 0 }
+
+Divide them into users who have added less than 5, exactly 5, more than 5 verses
+
+stuck_lt_5 = stuck.select { |u| u.memverses.count < 5 }
+
+irb(main):014:0> [stuck.count, stuck_lt_5.count, stuck_eq_5.count, stuck_gt_5.count]
+=> [5373, 2393, 751, 2229]
+
+Hmmm ... doesn't really show anything
+
+How many users actually started a session but didn't complete it?
+
+irb(main):025:0> [attempted.count, attempted_lt_5.count, attempted_eq_5.count, attempted_gt_5.count]
+=> [1626, 286, 293, 1047]
+
+So of the 5373 users who added verses but never completed a session, 1626 of them actually started a session but never finished it. 
+
+Conclusion: the majority of users never actually start a session.
+
+Is this true for more recent users?
+
+stuck = User.all.select { |u| u.has_started? && u.completed_sessions == 0 && u.created_at > 1.year.ago }
+
+irb(main):027:0> stuck.count
+=> 2917
+
+irb(main):029:0> attempted.count
+=> 863
+
+Conclusion: 70% of people never start the first session.
+
+irb(main):035:0> stuck_gt_5.count
+=> 1868 (64% of 2917)
+irb(main):040:0> stuck_lt_5.count
+=> 1049 (36% of 2917)
+
+
+irb(main):037:0> attempted_gt_5.count
+=> 770 (41% of 1868)
+irb(main):042:0> attempted_lt_5.count
+=> 93
+
+
+Since quickstart was added, though, 64% of the users who failed to complete their first session did actually add five or more verses.
+
+
+
+
+
+
+
+
+

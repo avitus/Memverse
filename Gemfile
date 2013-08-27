@@ -15,39 +15,64 @@ gem "rspec-rails", ">= 2.6.1", :group => [:development, :test]
 gem 'jasmine', :group => [:development, :test]
 
 group :test do
-  gem "factory_girl_rails", ">= 1.2.0"
+  gem 'factory_girl_rails'                                      # Add to development group for debugging in console
   gem "cucumber-rails", ">= 1.3.0", require: false
   gem "capybara", ">= 1.1.2"
-  gem "database_cleaner", ">= 0.9.1"
+  gem "database_cleaner", "= 1.0.1"                             # !!! Newer version has bug with database adapter ... upgrade when possible
   gem "launchy", ">= 2.0.5"
-  gem 'email_spec'
+  gem 'email_spec'                                              # For sending email in cucumber tests
+  gem "action_mailer_cache_delivery", ">= 0.3.5"                # Used to test email delivery with Cucumber. Pairs with email_spec
 end
 
 group :production do
   gem 'mysql2', '>= 0.3'
 end
 
-group :assets do
-  gem 'sass-rails', "~> 3.2.3"
-  gem 'coffee-rails', "~> 3.2.1"
-  gem 'uglifier', '>= 1.0.3'
-  gem 'compass-rails'
-end
-
+############################################################
+# Javascript Engine
+############################################################
 if HOST_OS =~ /linux/i
-  gem 'libv8', '>= 3.11.8.13', :platforms => :ruby
-  gem 'therubyracer', '>= 0.11.3'
+  gem 'libv8', '= 3.11.8.17', :platforms => :ruby               # Later versions have no binary support for x86
+  gem 'therubyracer', '= 0.11.4'                                # Can roll to 0.12 once binary support for libv8 3.16
 end
 
-gem 'rails', '3.2.13'
+############################################################
+# Frameworks
+############################################################
+gem 'rails', '4.0.0'
 gem 'jquery-rails', '>= 2.0.0'
 
+############################################################
+# Rails Support Gems
+############################################################
+gem 'sass-rails',   '~> 4.0.0'
+gem 'coffee-rails', '~> 4.0.0'
+gem 'uglifier', '>= 1.3.0'
+gem "compass-rails", "~> 2.0.alpha.0"                       # !!!!!!!! Get final version !!!!!!
+
+############################################################
+# For Rails 4 Upgrade ... should be removed eventually
+############################################################
+gem 'protected_attributes'
+gem 'rails-observers'
+gem 'actionpack-page_caching'
+gem 'actionpack-action_caching'
+gem 'activerecord-deprecated_finders'
+gem 'activerecord-session_store'                                                                # We should store sessions in cookies
+gem 'activeresource', require: 'active_resource'
+
+############################################################
+# Authentication and Authorization
+############################################################
 gem "devise"                                                                                    # Authentication
 gem "devise-encryptable"                                                                        # TODO: Is this required?
-gem "cancan"                                                                                    # Role-based authorization
+gem 'cancan', git: "https://github.com/nukturnal/cancan.git"                                    # Role-based authorization, Forem requires
 
+############################################################
+# Major Engines (Admin, Forem, Blog)
+############################################################
 gem 'rails_admin', :git => 'git://github.com/sferik/rails_admin.git'                            # Admin console
-gem 'forem',       :git => "git://github.com/radar/forem.git"                                   # Forum engine
+gem 'forem',       :github => "radar/forem", :branch => "rails4"                                # Forum engine
 gem 'bloggity',    :git => "git://github.com/avitus/bloggity.git"                               # Blog engine
 # gem 'bloggity', :path => "../bloggity"                                                        # Blog engine (dev environment)
 
@@ -69,17 +94,16 @@ gem 'newrelic_rpm', '>=3.3.0'                                                   
 gem 'thinking-sphinx', '~> 2.0.14'                                                              # Connector to Sphinx - for global search
 gem 'riddle'                                                                                    # Seems to be needed for Thinking_Sphinx ... not clear, though
 gem 'i18n-js'                                                                                   # Uses config/locale files to build a JavaScript equivalent of i18n in Rails
-gem 'spawn', '>=1.2', :git => 'git://github.com/avitus/spawn.git', :branch => 'edge'            # Check to see whether master branch ever supports Rails 3 & Ruby 1.92
+# gem 'spawn', '>=1.2', :git => 'git://github.com/avitus/spawn.git', :branch => 'edge'            # Check to see whether master branch ever supports Rails 3 & Ruby 1.92
 gem 'juggernaut', '>=2.1.0', :git => 'git://github.com/maccman/juggernaut.git'                  # Live chat
 gem 'htmldiff'                                                                                  # For showing errors in accuracy test
 gem 'breadcrumbs_on_rails', '>=2.0.0'                                                           # For breadcrumb navigation bar
 gem 'dalli'                                                                                     # Memcached client
 gem 'redis', '>=2.2.2'                                                                          # Redis Key-value store
-gem 'action_mailer_cache_delivery', git: 'git://github.com/ragaskar/action_mailer_cache_delivery.git' # Used to test email delivery with Cucumber
-gem 'friendly_id'                                                                               # Makes nice IDs for models
+gem 'friendly_id', github: "FriendlyId/friendly_id"                                             # !!! TODO: Upgrade !!! Makes nice IDs for models
 gem 'foreman'                                                                                   # Helps manage multiple processes when running app in development.
 gem 'supermodel', git: 'git://github.com/KonaTeam/supermodel.git'                               # Uses ActiveModel for in-memory storage with redis
-gem 'best_in_place'                                                                             # In-place editing support
+gem 'best_in_place', github: 'bernat/best_in_place'                                             # In-place editing support ... no Rails 4 release yet
 gem 'sitemap_generator'                                                                         # Sitemap generator
 gem 'split', :require => 'split/dashboard'                                                      # AB testing framework
 gem 'backup'                                                                                    # Used to backup MySQL database and uploaded site assets
@@ -87,7 +111,7 @@ gem 'dropbox-sdk'                                                               
 gem 'sidekiq'                                                                                   # Background jobs; used for quizzes
 gem 'sinatra', require: false                                                                   # sinatra and slim are required for sidekiq
 gem 'slim'
-gem 'pubnub'                                                                                    # evaluating as replacement for juggernaut
+gem 'pubnub'                                                                                    # Real-time messaging service
 
 group :console do
   gem 'wirble'

@@ -13,6 +13,9 @@ Feature: Post on Blog
       When I go to the new blog post page for the blog titled "Memverse Blog"
       Then I should see "You don't have permission to do that."
 
+
+    # Currently, blogging privileges are poorly implemented and these tests are unreliable.
+    # Blogging priviliges are tied to user ID for now
     @blog
     Scenario: I sign in but am not authorized to blog
       Given I sign in as a normal user

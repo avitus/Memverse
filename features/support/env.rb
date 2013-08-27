@@ -5,10 +5,7 @@
 # files.
 
 require 'cucumber/rails'
-require 'email_spec/cucumber'
-
-# require 'factory_girl/step_definitions' # Added by ALV
-# load "#{Rails.root}/db/seeds.rb"        # Added by ACW
+require 'email_spec/cucumber'  # Needed for email sending
 
 # Capybara defaults to XPath selectors rather than Webrat's default of CSS3. In
 # order to ease the transition to Capybara we set the default here. If you'd
@@ -33,14 +30,31 @@ Capybara.default_selector = :css
 #
 ActionController::Base.allow_rescue = false
 
+# Remove/comment out the lines below if your app doesn't have a database.
+# For some databases (like MongoDB and CouchDB) you may need to use :truncation instead.
+begin
+  DatabaseCleaner.strategy = :transaction
+rescue NameError
+  raise "You need to add database_cleaner to your Gemfile (in the :test group) if you wish to use it."
+end
+
 # You may also want to configure DatabaseCleaner to use different strategies for certain features and scenarios.
 # See the DatabaseCleaner documentation for details. Example:
 #
 #   Before('@no-txn,@selenium,@culerity,@celerity,@javascript') do
-#     DatabaseCleaner.strategy = :truncation, {:except => %w[widgets]}
+#     # { :except => [:widgets] } may not do what you expect here
+#     # as tCucumber::Rails::Database.javascript_strategy overrides
+#     # this setting.
+#     DatabaseCleaner.strategy = :truncation
 #   end
 #
 #   Before('~@no-txn', '~@selenium', '~@culerity', '~@celerity', '~@javascript') do
 #     DatabaseCleaner.strategy = :transaction
 #   end
 #
+
+# Possible values are :truncation and :transaction
+# The :transaction strategy is faster, but might give you threading problems.
+# See https://github.com/cucumber/cucumber-rails/blob/master/features/choose_javascript_database_strategy.feature
+Cucumber::Rails::Database.javascript_strategy = :truncation
+

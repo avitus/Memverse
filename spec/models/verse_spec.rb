@@ -56,9 +56,10 @@ describe Verse do
     end
 
     it "should prevent a duplicate verse" do
-      verse1 = FactoryGirl.build(:verse, :book => "Psalms", :chapter => 117, :versenum => 1).should be_valid
-      verse2 = FactoryGirl.build(:verse, :book => "Psalms", :chapter => 117, :versenum => 1).should_not be_valid
-
+      verse1 = FactoryGirl.build(:verse_with_validate_ref, :book => "Psalms", :chapter => 117, :versenum => 1)
+      verse2 = FactoryGirl.build(:verse_with_validate_ref, :book => "Psalms", :chapter => 117, :versenum => 1)
+      verse1.save.should be_true
+      verse2.save.should be_false
       verse2.errors.full_messages.first.should == "Verse already exists in NIV"
     end
 
