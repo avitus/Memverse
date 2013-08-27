@@ -40,7 +40,8 @@ MemverseApp::Application.configure do
   #===============================
   # Logging
   #===============================
-  config.logger = Logger.new(config.paths['log'].first, 5, 100.megabytes)  # Let Rails handle log rotation
+  # Log file rotation no longer seems to be possible from within Rails 4
+  # config.logger = Logger.new(config.paths['log'].first, 5, 100.megabytes)  # Let Rails handle log rotation
   config.log_level = :info
   config.active_support.deprecation = :notify     # Send deprecation notices to registered listeners
 
