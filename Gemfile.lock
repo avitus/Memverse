@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/FriendlyId/friendly_id.git
-  revision: 7a2b86664d359658b54da343894a01da5f0ddf68
+  revision: d31327604add1c6f605a8327a4aa10b3ef9c1e70
   specs:
     friendly_id (5.0.0.beta4)
       activerecord (~> 4.0.0)
@@ -228,7 +228,7 @@ GEM
       mail (~> 2.2)
     erubis (2.7.0)
     eventmachine (1.0.3)
-    execjs (2.0.0)
+    execjs (2.0.1)
     factory_girl (4.2.0)
       activesupport (>= 3.0.0)
     factory_girl_rails (4.2.1)
