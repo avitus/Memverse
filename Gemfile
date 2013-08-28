@@ -76,6 +76,15 @@ gem 'forem',       :github => "radar/forem", :branch => "rails4"                
 gem 'bloggity',    :git => "git://github.com/avitus/bloggity.git"                               # Blog engine
 # gem 'bloggity', :path => "../bloggity"                                                        # Blog engine (dev environment)
 
+############################################################
+# Deployment and Monitoring
+############################################################
+gem 'capistrano', '>=2.9.0'                                                                     # Deploy with Capistrano
+gem 'sitemap_generator'                                                                         # Sitemap generator
+gem 'newrelic_rpm', '>=3.3.0'                                                                   # Performance monitoring
+gem 'airbrake'                                                                                  # Error tracking
+
+
 gem 'fancybox-rails'                                                                            # For displaying of video
 gem 'kaminari'                                                                                  # Required for bloggity
 gem 'rinku', :require => 'rails_rinku'                                                          # Supports auto-linking of URL's in blog comments
@@ -83,18 +92,13 @@ gem 'randumb'                                                                   
 gem 'prawn', :git => "git://github.com/sandal/prawn", :submodules => true                       # PDF support
 gem "prawnto_2", :require => "prawnto"                                                          # Integrating prawn into Rails
 gem 'acts-as-taggable-on'                                                                       # :source => "http://gemcutter.org", Taggable gem,
-gem 'airbrake'                                                                                  # Error tracking
 gem 'ckeditor'                                                                                  # WYSIWYG editing
 gem 'paperclip'                                                                                 # Attachment handling
-gem 'capistrano', '>=2.9.0'                                                                     # Deploy with Capistrano
 gem 'nokogiri', '>=1.5.0'                                                                       # HTML/XML parsing
 gem 'json'                                                                                      # Javascript Object Notation support
 gem 'mail', '>= 2.2.15'                                                                         # Emails
-gem 'newrelic_rpm', '>=3.3.0'                                                                   # Performance monitoring
 gem 'thinking-sphinx', '~> 3.0.5'                                                               # Connector to Sphinx - for global search
-gem 'riddle'                                                                                    # Seems to be needed for Thinking_Sphinx ... not clear, though
 gem 'i18n-js'                                                                                   # Uses config/locale files to build a JavaScript equivalent of i18n in Rails
-# gem 'spawn', '>=1.2', :git => 'git://github.com/avitus/spawn.git', :branch => 'edge'            # Check to see whether master branch ever supports Rails 3 & Ruby 1.92
 gem 'juggernaut', '>=2.1.0', :git => 'git://github.com/maccman/juggernaut.git'                  # Live chat
 gem 'htmldiff'                                                                                  # For showing errors in accuracy test
 gem 'breadcrumbs_on_rails', '>=2.0.0'                                                           # For breadcrumb navigation bar
@@ -104,7 +108,6 @@ gem 'friendly_id', github: "FriendlyId/friendly_id"                             
 gem 'foreman'                                                                                   # Helps manage multiple processes when running app in development.
 gem 'supermodel', git: 'git://github.com/KonaTeam/supermodel.git'                               # Uses ActiveModel for in-memory storage with redis
 gem 'best_in_place', github: 'bernat/best_in_place'                                             # In-place editing support ... no Rails 4 release yet
-gem 'sitemap_generator'                                                                         # Sitemap generator
 gem 'split', :require => 'split/dashboard'                                                      # AB testing framework
 gem 'backup'                                                                                    # Used to backup MySQL database and uploaded site assets
 gem 'dropbox-sdk'                                                                               # Used with backup above
@@ -112,6 +115,11 @@ gem 'sidekiq'                                                                   
 gem 'sinatra', require: false                                                                   # sinatra and slim are required for sidekiq
 gem 'slim'
 gem 'pubnub'                                                                                    # Real-time messaging service
+
+# Unused gems
+# gem 'riddle'                                                                                  # Seems to be needed for Thinking_Sphinx ... not clear, though
+# gem 'spawn', '>=1.2', :git => 'git://github.com/avitus/spawn.git', :branch => 'edge'          # Check to see whether master branch ever supports Rails 3 & Ruby 1.92
+
 
 group :console do
   gem 'wirble'

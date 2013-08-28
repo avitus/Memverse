@@ -1,8 +1,8 @@
 GIT
   remote: git://github.com/FriendlyId/friendly_id.git
-  revision: d31327604add1c6f605a8327a4aa10b3ef9c1e70
+  revision: 684c43ea161fa0f43c8c95e75cff1cf437ba51c7
   specs:
-    friendly_id (5.0.0.beta4)
+    friendly_id (5.0.0.rc1)
       activerecord (~> 4.0.0)
 
 GIT
@@ -14,9 +14,9 @@ GIT
 
 GIT
   remote: git://github.com/avitus/bloggity.git
-  revision: cd0db3857136b5bd4a8666ebf909bd5dfefe07c6
+  revision: 790f1f852002d93a42d269fd47c4d80ab0bfbb75
   specs:
-    bloggity (0.0.2)
+    bloggity (0.0.3)
       jquery-rails
       rails (>= 3.2.8)
 
@@ -144,7 +144,7 @@ GEM
       erubis (>= 2.6.6)
     binding_of_caller (0.7.2)
       debug_inspector (>= 0.0.1)
-    bootstrap-sass (2.3.2.1)
+    bootstrap-sass (2.3.2.2)
       sass (~> 3.2)
     breadcrumbs_on_rails (2.3.0)
     builder (3.1.4)
@@ -459,7 +459,7 @@ GEM
       polyglot (>= 0.3.1)
     ttfunk (1.0.3)
     tzinfo (0.3.37)
-    uglifier (2.2.0)
+    uglifier (2.2.1)
       execjs (>= 0.3.0)
       multi_json (~> 1.0, >= 1.0.2)
     uuid (2.3.7)
@@ -535,7 +535,6 @@ DEPENDENCIES
   rails_admin!
   randumb
   redis (>= 2.2.2)
-  riddle
   rinku
   rspec-rails (>= 2.6.1)
   sass-rails (~> 4.0.0)
