@@ -106,6 +106,10 @@
     main_title: "Memverse"
     app_name: "Memverse"
     sub_title: "Memorize the Bible Online"
+
+  label:
+    verse: "Ayat"
+  
   book:
     name:
       Genesis:         "Kejadian"

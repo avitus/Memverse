@@ -73,7 +73,7 @@ class Memverse < ActiveRecord::Base
       :next_test     => self.next_test,
       :test_interval => self.test_interval,
       :skippable     => !self.due? ? ( !self.next_verse_due(true).nil? ? self.next_verse_due(true).verse.ref : false ) : false,
-      :mnemonic      => self.needs_mnemonic? ? self.verse.mnemonic : nil,
+      :mnemonic      => self.needs_mnemonic? ? self.verse.mnemonic : "",
       :feedback      => self.show_feedback?
     }
   end
