@@ -163,20 +163,20 @@ form.new_topic, form.new_post {
         font-size: .7em;
         line-height: 18px;
       }
-    
+
       .in_reply_to {
         font-size: 90%;
         font-style: italic;
       }
-    
+
       .text{
         margin-right: 100px;
       }
-    
+
       &:hover .btn-group {
         display: block;
       }
-    
+
       .btn-group {
         display: none;
         position: absolute;
@@ -276,3 +276,45 @@ table.table-striped {
   background: transparent url('forem/pin_icon.png') 0 0;
   display: inline-block;
 }
+
+// New Topic Creation Form
+#new_topic {
+
+  // Subject
+  input#topic_subject, {
+    width: 45%;  // match text box below
+  }
+
+  // Text
+  #topic_posts_attributes_0_text {
+    width: 45%;  // match topic subject above
+    height: 20em;
+  }
+
+  // Submit button
+  .btn-primary {
+    margin: 1em 35em;
+    padding: 0.2em 0.4em;
+  }
+
+}
+
+// New Post Creation Form
+
+#new_post {
+
+  margin-left: 30em;
+
+  #post_text {
+    width: 70%;
+    height: 20em;
+  }
+
+  // Submit button
+  .btn-primary {
+    margin: 1em 5em;
+    padding: 0.2em 0.4em;
+  }
+
+}
+
