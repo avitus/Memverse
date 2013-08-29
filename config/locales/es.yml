@@ -106,6 +106,10 @@
     main_title: "Memverso"
     app_name: "Memverso"
     sub_title: "Memorize the Bible Online"
+
+  label:
+    verse: "Verso"
+    
   book:
     name:
       Genesis:         "Génesis"

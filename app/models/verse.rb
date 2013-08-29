@@ -351,7 +351,7 @@ class Verse < ActiveRecord::Base
     # The '\1' at the end is the value for what we replace these matches with, and it refers to whatever
     # matches the first parentheses (in our case, the first character).
     # Using a '\2' would match the second parentheses, etc. Adapted from JavaScript found at
-    #http://productivity501.com/wp-content/uploads/tools/memorize-first-letter-tool.html
+    # http://productivity501.com/wp-content/uploads/tools/memorize-first-letter-tool.html
   end
 
   # ----------------------------------------------------------------------------------------------------------
