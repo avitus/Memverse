@@ -118,7 +118,7 @@ form.new_topic, form.new_post {
   }
 }
 
-#posts{
+#posts, .row {
 
   .even{
     background-color: $light-bg1;
@@ -130,7 +130,7 @@ form.new_topic, form.new_post {
     min-height: 75px;
     clear: both;
     position: relative;
-    .user{
+    .user, .span2 {
       float: left;
       font-size: .75em;
       width: 140px;
@@ -149,7 +149,7 @@ form.new_topic, form.new_post {
         display: inline-block;
       }
     }
-    .contents {
+    .contents, .span7 {
 
       margin-left: 160px;
       min-height: 100px;
