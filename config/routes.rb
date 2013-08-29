@@ -66,7 +66,7 @@ MemverseApp::Application.routes.draw do
   post '/save_ref_grade/:score'   => 'users#update_ref_grade'
 
   # Accuracy test
-  get '/exam'                     => 'memverses#load_exam',             :as => 'exam'
+  post '/exam'                    => 'memverses#load_exam',             :as => 'exam'
   get '/test_exam'                => 'memverses#test_exam',             :as => 'test_exam'
   get '/exam_results'             => 'memverses#exam_results',          :as => 'exam_results'
   get '/pre_exam'                 => 'memverses#explain_exam',          :as => 'pre_exam'
@@ -77,7 +77,7 @@ MemverseApp::Application.routes.draw do
 
   # Legacy drill page
   get '/drill_verse'              => 'memverses#drill_verse',           :as => 'drill_verse'
-  get '/mark_drill'               => 'memverses#mark_drill',            :as => 'mark_drill'
+  post '/mark_drill'              => 'memverses#mark_drill',            :as => 'mark_drill'
 
   # Verse management
   get '/manage_verses'            => 'memverses#manage_verses',         :as => 'manage_verses'
