@@ -85,7 +85,7 @@ gem 'newrelic_rpm', '>=3.3.0'                                                   
 gem 'airbrake'                                                                                  # Error tracking
 
 
-gem 'fancybox-rails'                                                                            # For displaying of video
+gem 'fancybox2-rails'                                                                           # For displaying of video, pop-up info box
 gem 'kaminari'                                                                                  # Required for bloggity
 gem 'rinku', :require => 'rails_rinku'                                                          # Supports auto-linking of URL's in blog comments
 gem 'randumb'                                                                                   # Retrieve a random record
