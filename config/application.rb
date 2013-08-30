@@ -61,7 +61,7 @@ module MemverseApp
     config.assets.enabled = true
 
     # Version of your assets, change this if you want to expire all your assets
-    config.assets.version = '1.0'
+    config.assets.version = '1.1'
 
     # Don't require attr_accessible to be defined for every model
     config.active_record.whitelist_attributes = false
