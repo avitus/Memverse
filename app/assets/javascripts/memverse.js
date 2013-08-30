@@ -384,7 +384,7 @@ function insertondeck(ondeck, ondeck_prior) {
 	}
 
 	// == Update mnemonic
-	if (ondeck.mnemonic != null) {
+	if (ondeck.mnemonic != null && ondeck.mnemonic != "") {
 		$('#mtext').text(ondeck.mnemonic);						// Update the mnemonic text
 		$('#mnemonic').show();									// Show mnemonic box
 		$("#mclose").show();									// Show close box
