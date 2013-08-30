@@ -92,7 +92,7 @@ gem 'randumb'                                                                   
 gem 'prawn', :git => "git://github.com/sandal/prawn", :submodules => true                       # PDF support
 gem "prawnto_2", :require => "prawnto"                                                          # Integrating prawn into Rails
 gem 'acts-as-taggable-on'                                                                       # :source => "http://gemcutter.org", Taggable gem,
-gem 'ckeditor'                                                                                  # WYSIWYG editing
+gem 'ckeditor', github: "vladimir-e/ckeditor", branch: "assets_enabled_rails_4"                 # WYSIWYG editing
 gem 'paperclip'                                                                                 # Attachment handling
 gem 'nokogiri', '>=1.5.0'                                                                       # HTML/XML parsing
 gem 'json'                                                                                      # Javascript Object Notation support
