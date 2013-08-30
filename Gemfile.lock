@@ -1,8 +1,8 @@
 GIT
   remote: git://github.com/FriendlyId/friendly_id.git
-  revision: 5e742e7ed489bfb30f922efee1dab1db75785631
+  revision: 939b9ca18381a6e50e18fdf68eb04a7a408ae144
   specs:
-    friendly_id (5.0.0.rc1)
+    friendly_id (5.0.0.rc2)
       activerecord (~> 4.0.0)
 
 GIT
@@ -85,6 +85,15 @@ GIT
       remotipart (~> 1.0)
       safe_yaml (~> 0.9)
       sass-rails (~> 4.0)
+
+GIT
+  remote: git://github.com/vladimir-e/ckeditor.git
+  revision: 5f126715f15c8d40e152cd51687230518e8885ff
+  branch: assets_enabled_rails_4
+  specs:
+    ckeditor (4.0.4)
+      mime-types
+      orm_adapter
 
 GIT
   remote: https://github.com/nukturnal/cancan.git
@@ -173,9 +182,6 @@ GEM
     childprocess (0.3.9)
       ffi (~> 1.0, >= 1.0.11)
     chunky_png (1.2.8)
-    ckeditor (4.0.4)
-      mime-types
-      orm_adapter
     climate_control (0.0.3)
       activesupport (>= 3.0)
     cocaine (0.5.1)
@@ -501,7 +507,7 @@ DEPENDENCIES
   cancan!
   capistrano (>= 2.9.0)
   capybara (>= 1.1.2)
-  ckeditor
+  ckeditor!
   coffee-rails (~> 4.0.0)
   compass-rails (~> 2.0.alpha.0)
   cucumber-rails (>= 1.3.0)
