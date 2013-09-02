@@ -85,7 +85,7 @@ gem 'newrelic_rpm', '>=3.3.0'                                                   
 gem 'airbrake'                                                                                  # Error tracking
 
 # TODO: we should be able to soon revert to master branch for Fancybox 2
-gem 'fancybox2-rails', :github => "kitak/fancybox2-rails", :branch => "rails4-support"          # For displaying of video, pop-up info box
+gem 'fancybox2-rails'                                                                           # For displaying of video, pop-up info box
 gem 'kaminari'                                                                                  # Required for bloggity
 gem 'rinku', :require => 'rails_rinku'                                                          # Supports auto-linking of URL's in blog comments
 gem 'randumb'                                                                                   # Retrieve a random record

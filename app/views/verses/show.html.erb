@@ -9,7 +9,7 @@
 			<br />
 
 			<!-- Link to add verse -->
-			<% if !current_user.has_verse_id?(@verse) %>
+			<% if current_user && !current_user.has_verse_id?(@verse) %>
 				<div class="no-dbl-click">
 					<%= link_to '[Add Verse]', { :controller => 'memverses', :action => 'ajax_add', :id => @verse }, :remote => true, :id => "ajax_add" %>
 				</div>
@@ -26,13 +26,13 @@
 				<% for tag in @tags %>
 					<tr>
 						<td class="verse-tag"><%= tag.name %></td>
-						<% if current_user.has_role?("admin") %>
+						<% if current_user && current_user.has_role?("admin") %>
 							<td>[x]</td>
 						<% end %>
 					</tr>	
 				<% end %>
 				
-				<% if current_user.has_role?("admin") %>
+				<% if current_user && current_user.has_role?("admin") %>
 					<tr>
 						<td class="tag edit" id=<%= @verse.id %>>[New Tag]</td>
 					</tr>
