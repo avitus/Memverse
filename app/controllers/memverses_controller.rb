@@ -1040,10 +1040,20 @@ class MemversesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   def test_next_ref
 
+    # First test references that are due for review
     if current_user.all_refs
-      mv = Memverse.active.where(:user_id => current_user.id).order("ref_interval ASC").limit(30).sort_by{ rand }.first
+      mv = current_user.memverses.active.where('next_ref_test <= ?', Date.today).limit(50).sort_by{ rand }.first
     else
-      mv = Memverse.active.where(:user_id => current_user.id, :prev_verse => nil).order("ref_interval ASC").limit(30).sort_by{ rand }.first
+      mv = current_user.memverses.active.where('prev_verse = ? AND next_ref_test <= ?', nil, Date.today).limit(50).sort_by{ rand }.first
+    end
+
+    # If all references are current, test user on the less well-known references
+    if !mv
+      if current_user.all_refs
+        mv = Memverse.active.where(:user_id => current_user.id).order("ref_interval ASC").limit(50).sort_by{ rand }.first
+      else
+        mv = Memverse.active.where(:user_id => current_user.id, :prev_verse => nil).order("ref_interval ASC").limit(50).sort_by{ rand }.first
+      end
     end
 
     if mv
@@ -1051,6 +1061,29 @@ class MemversesController < ApplicationController
     else
       render :json => { :finished => true }
     end
+
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Update reference test interval and next reference test date - this is a service URL for a js routine
+  # ----------------------------------------------------------------------------------------------------------
+  def score_ref_test
+
+    mv     = Memverse.find( params[:mv] )
+    score  = params[:score].to_i
+
+    # Update interval
+    if score == 10
+      mv.ref_interval = [(mv.ref_interval * 1.5), 365].min.round  # correct answer
+    else
+      mv.ref_interval = [(mv.ref_interval * 0.6),   1].max.round  # incorrect answer
+    end
+
+    # Update date for next ref test
+    mv.next_ref_test = Date.today + mv.ref_interval
+    mv.save
+
+    render :json => {:msg => 'Score recorded' }
 
   end
 

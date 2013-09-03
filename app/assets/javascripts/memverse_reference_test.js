@@ -1,5 +1,6 @@
 var refTestState = {
 
+    currentMvID: null,
     currentRef: null,
     refGrade: null,
 
@@ -19,6 +20,7 @@ var refTestState = {
 
             var mvText  = data.mv.text;
             currentRef  = data.mv.ref;
+            currentMvID = data.mv.id;
 
             $('#answer').val('').focus();       // Clear entry box
             $('#reftestVerse').html( mvText );  // Show verse text
@@ -47,9 +49,18 @@ var refTestState = {
             }
         }
 
+        this.recordScore( userScore );
         this.giveFeedback( answerRef, correctRef, userScore );
 
         return userScore;
+
+    },
+
+    recordScore: function( score ) {
+
+        $.post('score_ref/' + currentMvID + '/' + score + '.json', function(data) {
+            // Todo: alert user if failure to save score
+        });
 
     },
 
