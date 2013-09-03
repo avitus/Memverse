@@ -16,7 +16,7 @@
   }
 }
 
-form.new_topic, form.new_post {
+form.new_topic, form.new_post, form.edit_post {
   label {
     display: block;
     float: left;
@@ -277,7 +277,9 @@ table.table-striped {
   display: inline-block;
 }
 
+// --------------------------------------------------------
 // New Topic Creation Form
+// --------------------------------------------------------
 #new_topic {
 
   // Subject
@@ -299,9 +301,10 @@ table.table-striped {
 
 }
 
-// New Post Creation Form
-
-#new_post {
+// --------------------------------------------------------
+// Post Create/Edit Form. A post belongs to a topic
+// --------------------------------------------------------
+#new_post, .edit_post {
 
   // margin-left: 30em;
   margin-top: 1em;
@@ -312,7 +315,7 @@ table.table-striped {
   }
 
   // Submit button
-  .btn-primary {
+  .btn-primary, input[type="submit"] {
     margin: 1em 5em;
     padding: 0.2em 0.4em;
   }
