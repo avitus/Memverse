@@ -91,7 +91,6 @@ MemverseApp::Application.routes.draw do
   get '/save_progress_report'     => 'memverses#save_progress_report',  :as => 'save_progress_report'
   get '/popular_verses'           => 'memverses#pop_verses',            :as => 'popular_verses'
   get '/home'                     => 'memverses#index',                 :as => 'index'
-  get '/starter_pack'             => 'memverses#starter_pack',          :as => 'starter_pack'
   get '/memory_verse/:id'         => 'memverses#show',                  :as => 'memory_verse'
   get '/toggle_error_flag/:id'    => 'memverses#toggle_verse_flag',     :as => 'toggle_error_flag'
   get '/toggle_mv_status/:id'     => 'memverses#toggle_mv_status',      :as => 'toggle_mv_status'
@@ -188,6 +187,9 @@ MemverseApp::Application.routes.draw do
   get "/live_quiz/channel1",    :controller => "live_quiz", :action => "channel1"
   get "/live_quiz/scoreboard",  :controller => "live_quiz", :action => "scoreboard"
   get "/record_score",          :controller => "live_quiz", :action => "record_score"
+
+  # Legacy routes for pages that no longer exist but have incoming links
+  get '/starter_pack' => 'memverses#home'  # Retired in 2012
 
   # Install the default routes as the lowest priority.
   match '/:controller(/:action(/:id))', :via => [:get, :post]
