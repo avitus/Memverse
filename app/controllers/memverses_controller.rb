@@ -269,24 +269,6 @@ class MemversesController < ApplicationController
   end
 
   # ----------------------------------------------------------------------------------------------------------
-  # Starter pack - select verses from top ten verses
-  # ----------------------------------------------------------------------------------------------------------
-  def starter_pack
-    add_breadcrumb I18n.t("page_titles.quickstart"), :starter_pack_path
-    @tab = "home"
-    @sub = "addvs"
-
-    @translation = params[:translation].gsub("/", "")  # remove trailing slash if necessary
-
-    # TODO: get rid of the archaic 'IS NOT NULL' syntax
-    @suggestions = Popverse.find( :all,
-                                  :conditions => ["#{@translation} IS NOT NULL"],
-                                  :select => "pop_ref, #{@translation}_text, #{@translation}",
-                                  :limit => 12)
-
-  end
-
-  # ----------------------------------------------------------------------------------------------------------
   # Verse of the day
   # ----------------------------------------------------------------------------------------------------------
   def verse_of_the_day
