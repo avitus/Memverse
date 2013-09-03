@@ -61,8 +61,9 @@ MemverseApp::Application.routes.draw do
   get '/upcoming_verses'          => 'memverses#upcoming_verses',       :as => 'upcoming_verses'
 
   # Reference tests
-  get '/test_ref'                 => 'memverses#test_ref',              :as => 'test_ref'
-  get '/test_next_ref'            => 'memverses#test_next_ref',         :as => 'test_next_ref'
+  get  '/test_ref'                => 'memverses#test_ref',              :as => 'test_ref'
+  get  '/test_next_ref'           => 'memverses#test_next_ref',         :as => 'test_next_ref'
+  post '/score_ref/:mv/:score'    => 'memverses#score_ref_test'
   post '/save_ref_grade/:score'   => 'users#update_ref_grade'
 
   # Accuracy test

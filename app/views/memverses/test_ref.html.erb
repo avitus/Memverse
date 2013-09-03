@@ -80,15 +80,16 @@
         	var questionScore;
         	var refGrade;
 
-            // Get next reference for testing
-            refTestState.getRef();
-
         	// Calc score
             questionScore = refTestState.scoreRef( $("#answer").val() );
 
-            // Update current score
+            // Update current reference test grade
             refGrade = refTestState.updateRefGrade( questionScore );
             g.refresh( refGrade );
+
+            // Get next reference for testing
+            refTestState.getRef();
+
         });
 
 		//------- Autocomplete and focus ----------------------
