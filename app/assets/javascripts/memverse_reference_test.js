@@ -22,7 +22,7 @@ var refTestState = {
 
             $('#answer').val('').focus();       // Clear entry box
             $('#reftestVerse').html( mvText );  // Show verse text
-
+            $('.q-num').text( function (i,qNum) { return parseInt(qNum)+1;} ) ; // Increment question number
         });
 
     },
