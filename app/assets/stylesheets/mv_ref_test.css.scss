@@ -1,7 +1,9 @@
-/* === Reference Test === */
+/* ==================================== */
+/* ==  Reference Test : Left Panel   == */
+/* ==================================== */
 #reftest-leftside {
     width: 45%;
-    height: 420px;
+    height: 475px;
     float: left;
     padding: 0em 2em 2em 2em;
     border-right-color:#bfbebe;
@@ -10,7 +12,10 @@
 }
 
 #reftest-left-top {
-    height: 40%;  // Should be same as top-dashboard
+    height: 36%;  // Should be same as top-dashboard
+    margin-bottom: 1em;
+    margin-top: 1em;
+
 }
 
 #reftestVerse {
@@ -25,11 +30,15 @@
     margin-left:1em;
 }
 
+
+/* ==================================== */
+/* ==  Reference Test : Right Panel  == */
+/* ==================================== */
 #reftest-rightside {
     float:left;
     padding: 0em 2em 2em 2em;
     width: 45%;
-    height: 420px;
+    height: 475px;
 }
 
 #reftest-feedback {
@@ -37,7 +46,28 @@
 }
 
 #top-dashboard {
-    height: 40%;  // Should be same as reftest-left-top
+
+    height: 36%;  // Should be same as reftest-left-top
+    margin-bottom: 1em;
+    margin-top: 1em;
+    // background-color: #f5f6f5;
+
+    #gauge {
+        width: 50%;
+        float: left;
+    }
+
+    #overdue-refs {
+        width: 30%;
+        float: left;
+        padding: 3em 1em 1em 3em;
+        #overdue-refs-num {
+            font-size: 200%;
+            color: #AA0101;
+        }
+    }
+
+
 }
 
 #past-questions {

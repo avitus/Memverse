@@ -3,6 +3,7 @@ var refTestState = {
     currentMvID: null,
     currentRef: null,
     refGrade: null,
+    dueRefs: null,
 
     // setup
     initialize: function ( refGrade ) {
@@ -21,9 +22,11 @@ var refTestState = {
             var mvText  = data.mv.text;
             currentRef  = data.mv.ref;
             currentMvID = data.mv.id;
+            dueRefs     = data.due_refs;
 
             $('#answer').val('').focus();       // Clear entry box
             $('#reftestVerse').html( mvText );  // Show verse text
+            $('#overdue-refs-num').html( dueRefs );
             $('.q-num').text( function (i,qNum) { return parseInt(qNum)+1;} ) ; // Increment question number
         });
 
