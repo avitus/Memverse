@@ -1051,6 +1051,7 @@ class MemversesController < ApplicationController
 
     # If all references are current, test user on the less well-known references
     if !mv
+      due_refs = 0
       if current_user.all_refs
         mv = Memverse.active.where(:user_id => current_user.id).order("ref_interval ASC").limit(50).sort_by{ rand }.first
       else
