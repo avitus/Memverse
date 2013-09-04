@@ -684,10 +684,20 @@ class User < ActiveRecord::Base
   end
 
   # ----------------------------------------------------------------------------------------------------------
+  # Returns number of due verses
+  # ----------------------------------------------------------------------------------------------------------
+  def due_refs
+    if self.all_refs
+      return self.memverses.active.ref_due.count
+    else
+      return self.memverses.active.passage_start.ref_due.count
+    end
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
   # Returns first verse that is due today
   # ----------------------------------------------------------------------------------------------------------
   def first_verse_today
-    # mv = Memverse.find( :first, :conditions => {:user_id => self.id}, :order => "next_test ASC")
     mv = Memverse.where(:user_id => self.id).active.order("next_test ASC").first()
 
     if mv && mv.due?

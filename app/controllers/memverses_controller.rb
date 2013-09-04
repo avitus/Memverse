@@ -145,6 +145,7 @@ class MemversesController < ApplicationController
     end
 
     @due_today	= current_user.due_verses unless mobile_device?
+    @due_refs   = current_user.due_refs unless mobile_device?
     @overdue		= current_user.overdue_verses unless mobile_device?
 
     # Level information
@@ -163,8 +164,12 @@ class MemversesController < ApplicationController
         @user_has_test_today = (mv.next_test <= Date.today)
       end
 
+      # Notification of verses and references that are due for review
       unless flash[:error] or flash[:notice] or !current_user.first_verse_today # Show flash with verses due and workload unless another flash or done with review
-        flash.now[:notice] = t('messages.today_msg_html', :due_today => current_user.due_verses, :time => current_user.work_load)
+        flash.now[:notice] = t('messages.today_msg_html',
+                                  :due_today => current_user.due_verses,
+                                  :due_refs  => current_user.due_refs,
+                                  :time      => current_user.work_load )
       end
 
     end
@@ -1042,20 +1047,20 @@ class MemversesController < ApplicationController
 
     # First test references that are due for review
     if current_user.all_refs
-      mv = current_user.memverses.active.ref_due.limit(50).sort_by{ rand }.first
+      mv       = current_user.memverses.active.ref_due.limit(50).sort_by{ rand }.first
       due_refs = current_user.memverses.active.ref_due.count
     else
-      mv = current_user.memverses.active.ref_due.where(:prev_verse => nil).limit(50).sort_by{ rand }.first
-      due_refs = current_user.memverses.active.ref_due.where(:prev_verse => nil).count
+      mv       = current_user.memverses.active.passage_start.ref_due.limit(50).sort_by{ rand }.first
+      due_refs = current_user.memverses.active.passage_start.ref_due.count
     end
 
     # If all references are current, test user on the less well-known references
     if !mv
       due_refs = 0
       if current_user.all_refs
-        mv = Memverse.active.where(:user_id => current_user.id).order("ref_interval ASC").limit(50).sort_by{ rand }.first
+        mv = current_user.memverses.active.order("ref_interval ASC").limit(50).sort_by{ rand }.first
       else
-        mv = Memverse.active.where(:user_id => current_user.id, :prev_verse => nil).order("ref_interval ASC").limit(50).sort_by{ rand }.first
+        mv = current_user.memverses.active.passage_start.order("ref_interval ASC").limit(50).sort_by{ rand }.first
       end
     end
 
