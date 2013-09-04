@@ -1043,8 +1043,10 @@ class MemversesController < ApplicationController
     # First test references that are due for review
     if current_user.all_refs
       mv = current_user.memverses.active.ref_due.limit(50).sort_by{ rand }.first
+      due_refs = current_user.memverses.active.ref_due.count
     else
       mv = current_user.memverses.active.ref_due.where(:prev_verse => nil).limit(50).sort_by{ rand }.first
+      due_refs = current_user.memverses.active.ref_due.where(:prev_verse => nil).count
     end
 
     # If all references are current, test user on the less well-known references
@@ -1056,11 +1058,7 @@ class MemversesController < ApplicationController
       end
     end
 
-    if mv
-      render :json => { :finished => false, :mv => mv }
-    else
-      render :json => { :finished => true }
-    end
+    render :json => { :due_refs => due_refs, :mv => mv }
 
   end
 
