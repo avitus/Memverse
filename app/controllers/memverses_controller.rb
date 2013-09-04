@@ -1042,9 +1042,9 @@ class MemversesController < ApplicationController
 
     # First test references that are due for review
     if current_user.all_refs
-      mv = current_user.memverses.active.where('next_ref_test <= ?', Date.today).limit(50).sort_by{ rand }.first
+      mv = current_user.memverses.active.ref_due.limit(50).sort_by{ rand }.first
     else
-      mv = current_user.memverses.active.where('prev_verse = ? AND next_ref_test <= ?', nil, Date.today).limit(50).sort_by{ rand }.first
+      mv = current_user.memverses.active.ref_due.where(:prev_verse => nil).limit(50).sort_by{ rand }.first
     end
 
     # If all references are current, test user on the less well-known references

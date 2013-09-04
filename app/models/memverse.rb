@@ -20,6 +20,8 @@ class Memverse < ActiveRecord::Base
   scope :due_today, 		-> { where('next_test  = ?', Date.today) }
   scope :overdue,  			-> { where('next_test  < ?', Date.today) }
 
+  scope :ref_due,       -> { where('next_ref_test IS NULL or next_ref_test <= ?', Date.today) }
+
   scope :american, 			-> { joins(:user, :country).where('countries.name' => 'United States') }
 
   scope :old_testament, -> {where('verses.book_index' =>  1..39).includes(:verse) }
