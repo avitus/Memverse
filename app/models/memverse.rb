@@ -20,7 +20,10 @@ class Memverse < ActiveRecord::Base
   scope :due_today, 		-> { where('next_test  = ?', Date.today) }
   scope :overdue,  			-> { where('next_test  < ?', Date.today) }
 
+  # We need to check for nil values because that column has no default value
   scope :ref_due,       -> { where('next_ref_test IS NULL or next_ref_test <= ?', Date.today) }
+
+  scope :passage_start, -> { where(:prev_verse => nil) }
 
   scope :american, 			-> { joins(:user, :country).where('countries.name' => 'United States') }
 

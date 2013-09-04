@@ -109,7 +109,7 @@
 
   label:
     verse: "Verse"
-    
+
   book:
     name:
       Genesis:         "Genesis"
@@ -266,6 +266,7 @@
     News:                  "News"
   memorize_menu:
     Verses:                "Verses"
+    Memorize:              "Memorize"
     References:            "References"
     Reference Recall:      "Reference Recall"
     Practice:              "Practice"
@@ -303,7 +304,7 @@
   help_menu:
     faq:                   "FAQ"
   messages:
-    today_msg_html:        "You have <span>%{due_today} verses</span> to review today. You currently need about <span>%{time} minutes</span> per day."
+    today_msg_html:        "You have <span>%{due_today} verses</span> and <span>%{due_refs} references</span> to review today. You currently need about <span>%{time} minutes</span> per day."
   memverses:
     test_verse_quick:
       verse:           "Verse"

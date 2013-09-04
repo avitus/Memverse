@@ -1,5 +1,5 @@
 <div class="two-box"><!--two-box start-->
-	
+
 	<div class="votm">
     	<div class="yellow-icon"><%= image_tag("icon3.png", :size => "49x49", :alt => "") %></div>
         <div class="votm-text">
@@ -8,7 +8,7 @@
             <span class="verse"><strong><%= @votd_ref %> (<%= @votd_tl %>)</strong></span>
         </div>
     </div>
-    
+
     <div class="progress-info">
        	<div class="yellow-icon"><%= image_tag("icon4.png", :size => "49x49", :alt => "") %></div>
        	<div class="progress-text">
@@ -19,9 +19,9 @@
     </div>
 
 </div><!--two-box end-->
-    
+
 <div><%= image_tag("trans.png", :size => "1x10", :alt => "") %>&nbsp;</div>
-    
+
 <div class="home-page-tabs">
 	<div class="tab-top">
 	   	<div class="tab-nav">
@@ -34,11 +34,11 @@
 	           	<li class="normtab"><a href="#dashboard">Dashboard</a></li>
 	            <li class="normtab"><a href="#daily-activity">Memverse Today</a></li>
 	            <li class="normtab"><a href="#community">Community</a></li>
-	            <li class="widetab"><a href="#devotion">Spurgeon's Daily Devotions</a></li>	        
+	            <li class="widetab"><a href="#devotion">Spurgeon's Daily Devotions</a></li>
 	        </ul>
 	    </div>
 	</div>
-    
+
 	<div class="tab-bottom">
 		<div class="tab-content">
 			<% if @user_has_no_verses %>
@@ -46,19 +46,19 @@
 					<div class="left-start">
 						<h3>Getting Started</h3>
 						<ol>
-							<li><%= link_to 'Read the tutorial', 					tutorial_path 		%></li>				
-							<li><%= link_to 'Watch the video', 						"http://www.youtube.com/watch?v=N8A71DIcr4Y&fs=1&feature=player_embedded", :class => 'tut-video' %></li>				
+							<li><%= link_to 'Read the tutorial', 					tutorial_path 		%></li>
+							<li><%= link_to 'Watch the video', 						"http://www.youtube.com/watch?v=N8A71DIcr4Y&fs=1&feature=player_embedded", :class => 'tut-video' %></li>
 							<li><%= link_to 'Read about the SuperMemo Algorithm',	supermemo_path		%></li>
-							<li><%= link_to 'Update your profile',					update_profile_path	%></li>			
-							<li><%= link_to 'Add your first memory verse', 			add_verse_path		%></li>	
+							<li><%= link_to 'Update your profile',					update_profile_path	%></li>
+							<li><%= link_to 'Add your first memory verse', 			add_verse_path		%></li>
 						</ol>
 					</div>
-		
+
 					<div class="right-start">
 						<h3>In a Rush?</h3>
-			
+
 						<p>Get started quickly by selecting from the most popular verses in the translation of your choice:</p>
-					
+
 						<ul>
 							<li><%= link_to 'New International Version (1984)', :action => 'starter_pack', :translation => 'NIV' %></li>
 							<li><%= link_to 'English Standard Version',			:action => 'starter_pack', :translation => 'ESV' %></li>
@@ -71,42 +71,48 @@
 			<% elsif @user_has_too_few_verses %>
 				<div id="recommendations" class="tab_content"><h3>Recommendations</h3>
 					<ol>
-						<li><%= link_to 'Add another memory verse',				:action => 'add_verse'%></li>	
+						<li><%= link_to 'Add another memory verse',				:action => 'add_verse'%></li>
 						<% if @user_has_test_today %>
-						<li><%= link_to 'Memorize!', 							:action => 'test_verse_quick' %></li>			
+						<li><%= link_to 'Memorize!', 							:action => 'test_verse_quick' %></li>
 						<% end %>
 					</ol>
 				</div>
 			<% end %>
-			
+
 	       	<div id="dashboard" class="tab_content"><h3><%= link_to 'Recently on Memverse', tweets_path %></h3>
 				<%= render "tweets/tweets_for_main" %>
 			</div>
 
 			<div id="daily-activity" class="tab_content">
+
 				<h3>Activities for Today</h3>
-				<p>You have <span class="due-today"><%=@due_today%></span> verses due for review today (including <span class="overdue"><%= @overdue %></span> overdue verses).</p>
+
+				<p>You have <span class="due-today"><%=pluralize(@due_today, 'verse')%></span> due for review today (including <span class="overdue"><%= pluralize(@overdue, 'overdue verse')%></span> ).</p>
+				<p>You have <span class="due-today"><%=pluralize(@due_refs, 'reference')%></span> to review.
 				<p>You have <%= link_to "#{@quests_to_next_level} to complete", current_user %> to reach level <%= current_user.level+1 %>.</p>
-				<p>You need about <%=current_user.work_load%> minutes for your daily review sessions.</p>	
+				<p>You need about <%=current_user.work_load%> minutes for your daily review sessions.</p>
+
+				<!-- Optional schedule reset -->
 				<% if current_user.swamped? %>
 					<div id="user-swamped">
 						<p>You have fallen behind on your review sessions. You should consider resetting your review schedule.</p>
 						<p>
-							<%= link_to 'Reset My Schedule', {}, {:class => "reset-schedule", :id => "reset-schedule", :remote => true} %> 
+							<%= link_to 'Reset My Schedule', {}, {:class => "reset-schedule", :id => "reset-schedule", :remote => true} %>
 						</p>
 					</div>
-				<% end %>			
+				<% end %>
+
 			</div>
-			
+
 	        <div id="community" class="tab_content">
 				<h3>Active Community Discussions</h3>
-				
+
 				<!-- Topic widget -->
 				<div id='gsfn_list_widget'>
 					<div id='gsfn_content'>Loading...</div>
 				</div>
 
-			</div>			
+			</div>
 
 	        <div id="devotion" class="tab_content">
 				<h3>Spurgeon's Devotional</h3>
@@ -140,19 +146,19 @@ $(document).ready(function() {
 		return false;
 	});
 
-	// ==== User clicks on reset schedule link ====				
+	// ==== User clicks on reset schedule link ====
 	$('#reset-schedule').click(function() {
 		$('#user-swamped').fadeOut(2000);
-		$.getJSON("/reset_schedule", {}, 			
+		$.getJSON("/reset_schedule", {},
 			function(data) {
 				if (data.due_verses) {
 					$('.due-today').effect("highlight", {}, 4000).html(data.due_verses);
-					$('.overdue').effect("highlight", {}, 4000).html('0');													
+					$('.overdue').effect("highlight", {}, 4000).html('0');
 				};
-		});	
-		return (false);			
+		});
+		return (false);
 	});
-	
+
 	// ==== Memorized verses counter updater ====
 	function addCommas(nStr) { // http://www.mredkj.com/javascript/numberFormat.html
 		nStr += '';
@@ -166,7 +172,7 @@ $(document).ready(function() {
 		return x1 + x2;
 	}
 
-	
+
 	$.PeriodicalUpdater('/memverses/memverse_counter', {
 	    method: 'get',          // method; get or post
 	    minTimeout: 15*1000,    // starting value for the timeout in milliseconds
