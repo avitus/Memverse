@@ -79,15 +79,6 @@ GIT
       sass-rails (~> 4.0)
 
 GIT
-  remote: git://github.com/vladimir-e/ckeditor.git
-  revision: 5f126715f15c8d40e152cd51687230518e8885ff
-  branch: assets_enabled_rails_4
-  specs:
-    ckeditor (4.0.4)
-      mime-types
-      orm_adapter
-
-GIT
   remote: https://github.com/nukturnal/cancan.git
   revision: a606378912e75d6b62f8257ffa5b4c5f2023760b
   specs:
@@ -169,11 +160,14 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
-    celluloid (0.14.1)
-      timers (>= 1.0.0)
+    celluloid (0.15.0)
+      timers (~> 1.1.0)
     childprocess (0.3.9)
       ffi (~> 1.0, >= 1.0.11)
     chunky_png (1.2.8)
+    ckeditor (4.0.6)
+      mime-types
+      orm_adapter
     climate_control (0.0.3)
       activesupport (>= 3.0)
     cocaine (0.5.1)
@@ -501,7 +495,7 @@ DEPENDENCIES
   cancan!
   capistrano (>= 2.9.0)
   capybara (>= 1.1.2)
-  ckeditor!
+  ckeditor
   coffee-rails (~> 4.0.0)
   compass-rails (~> 2.0.alpha.0)
   cucumber-rails (>= 1.3.0)

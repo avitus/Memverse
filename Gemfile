@@ -48,7 +48,7 @@ gem 'jquery-rails', '>= 2.0.0'
 gem 'sass-rails',   '~> 4.0.0'
 gem 'coffee-rails', '~> 4.0.0'
 gem 'uglifier', '>= 1.3.0'
-gem "compass-rails", "~> 2.0.alpha.0"                       # !!!!!!!! Get final version !!!!!!
+gem "compass-rails", "~> 2.0.alpha.0"                           # !!!!!!!! TODO: Get final version !!!!!!
 
 ############################################################
 # For Rails 4 Upgrade ... should be removed eventually
@@ -92,7 +92,7 @@ gem 'randumb'                                                                   
 gem 'prawn', :git => "git://github.com/sandal/prawn", :submodules => true                       # PDF support
 gem "prawnto_2", :require => "prawnto"                                                          # Integrating prawn into Rails
 gem 'acts-as-taggable-on'                                                                       # :source => "http://gemcutter.org", Taggable gem,
-gem 'ckeditor', github: "vladimir-e/ckeditor", branch: "assets_enabled_rails_4"                 # WYSIWYG editing
+gem 'ckeditor'                                                                                  # WYSIWYG editing
 gem 'paperclip'                                                                                 # Attachment handling
 gem 'nokogiri', '>=1.5.0'                                                                       # HTML/XML parsing
 gem 'json'                                                                                      # Javascript Object Notation support
