@@ -42,7 +42,7 @@ task "assets:precompile" => :environment do
       FileUtils.cp file, nondigest, verbose: true
     else
       # This file's digest doesn't match latest digest, ignore
-      puts 'Latest digest: ' + latest_digest
+      puts('Latest digest: ' + latest_digest) unless !latest_digest
       puts 'This digest: ' + this_digest
       puts 'Non-matching digest, not copying ' + file
     end
