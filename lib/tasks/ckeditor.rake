@@ -27,7 +27,7 @@ task "assets:precompile" => :environment do
     # Fetch the latest digest for this file from assets
     puts 'Getting file with name: ' + filename
 
-    latest_digest = Rails.application.assets.find_asset(filename).digest
+    latest_digest = Rails.application.assets.find_asset(filename).try(:digest)
 
     # Debug information
     puts '---- ' + file + ' ----'
