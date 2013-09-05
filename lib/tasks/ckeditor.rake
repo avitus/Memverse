@@ -25,6 +25,8 @@ task "assets:precompile" => :environment do
     filename = filename.sub /.gz$/, '' # Remove .gz for correct asset checking
 
     # Fetch the latest digest for this file from assets
+    puts 'Getting file with name: ' + filename
+
     latest_digest = Rails.application.assets.find_asset(filename).digest
 
     # Debug information
