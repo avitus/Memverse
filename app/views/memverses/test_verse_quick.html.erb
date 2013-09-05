@@ -156,6 +156,37 @@
 
 <script language="JavaScript" type="text/javascript"><!--
 
+	$(function() {
+		$( document ).tooltip({
+			items: ".submit",
+			content: function() {
+				var element = $( this );
+
+				return element.closest(".tooltip").val();
+
+				if ( element.is( "[data-geo]" ) ) {
+					var text = element.text();
+					return "<img class='map' alt='" + text + "' src='http://maps.google.com/maps/api/staticmap?" +
+					"zoom=11&size=350x350&maptype=terrain&sensor=false&center=" +
+					text + "'>";
+				}
+				if ( element.is( "[title]" ) ) {
+					return element.attr( "title" );
+				}
+				if ( element.is( "img" ) ) {
+					return element.attr( "alt" );
+				}
+				else {
+					return "Hi"
+				}
+			}
+		});
+	});
+
+--></script>
+
+<script language="JavaScript" type="text/javascript"><!--
+
 	$(document).ready(function() {
 
 		// cache frequent DOM objects in variables
@@ -401,23 +432,6 @@
 			}
 		})
 		;
-
-		// Detect iOS (iPhone, iPod, and iPad)
-		var isiOS = (navigator.userAgent.match(/iPhone|iPod|iPad/i)) != null;
-		if (!isiOS) { // Apply tooltips only if not iOS (iOS doesn't support hover and forces double click on rating numbers when tooltips enabled)
-			$("#test-buttons span").tooltip({
-				// place tooltip on the top edge
-				position: ['top', 'center'],
-				// a little tweaking of the position
-				offset: [0, -64],
-				// use a simple show/hide effect
-				effect: 'toggle',
-				// specify relative to parent element
-				relative: true,
-				// custom opacity setting
-				opacity: 0.8
-			});
-		}
 
 	}); // End of jQuery document ready
 
