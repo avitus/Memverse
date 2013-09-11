@@ -86,6 +86,9 @@ Devise.setup do |config|
   # config.pepper = "b84287916453f01d221b4703762fae4ae51f0f3536f6649addf25db2bb7908e883fef897f1483cd1964357ed213401b423c710d6a3c03436e3264a1ac3822f1b"
   config.pepper = "f5945d1c74d3502f8a3de8562e5bf21fe3fec887" # For backwards-compatibility with Restful Authentication
 
+  # ALV: devise secret key required as of Devise 3.1 (Sept 2013)
+  config.secret_key = '4253baff9bf709ffd847b37c545f7735b3713388134432bb9104cf9d63015078ea685e0fbac245aceecd165abedf1fb4f484edafc17fe37c9a45e1d831f2c817'
+
   # ==> Configuration for :confirmable
   # A period that the user is allowed to access the website even without
   # confirming his account. For instance, if set to 2.days, the user will be
