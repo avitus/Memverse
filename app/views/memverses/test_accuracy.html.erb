@@ -1,0 +1,127 @@
+<% page_title I18n.t :accuracy_test, :scope => 'page_titles' %>
+<% page_description I18n.t :accuracy_test, :scope => 'page_descriptions' %>
+
+<div class="white-box-with-margins">
+
+	<!-- Left side -->
+	<div id="reftest-leftside">
+
+		<div id="reftest-left-top">
+			<!-- Verse Heading -->
+			<div class="top-heading">
+		    	<h2><span class="q-num">0</span><span>.  Reference: </span><span class="verse-ref"></span></h2>
+		    </div>
+
+		</div>
+
+		<div id="reftest-left-bottom">
+
+			<div class="top-heading">
+		    	<h2><span>Reference: </span></h2>
+		    </div>
+
+		    <div>
+				<%= text_area_tag(:answer, params[:answer], :autocomplete => "off", :size => "25x10" )%>
+				<input id="submit-ref" class="submit-button"></input>
+			</div>
+
+            <div class="diff-calc">
+                <div class="original">
+                </div>
+
+                <div class="changed">
+                </div>
+
+                <div class="diff">
+                </div>
+            </div>
+
+		</div>
+
+
+	</div>
+
+	<!-- Right side -->
+	<div id="reftest-rightside">
+
+		<div id="top-dashboard">
+
+	    	<div id="gauge" class="200x160px"></div>
+
+	    </div>
+
+	    <div id="reftest-feedback">
+
+	    	<h2><span>Prior Questions</span></h2>
+
+	    	<div id="past-questions">
+	    		<div class="fadeout"></div>
+	    	</div>
+
+		</div>
+
+	</div>
+
+</div>
+
+
+<script language="JavaScript" type="text/javascript"><!--
+
+    var memverseUserID = "<%= current_user.id %>"; // global variable
+
+    // www.justgage.com
+    var g = new JustGage({
+		id: "gauge",
+		value: "<%= current_user.ref_grade %>",
+		min: 0,
+		max: 100,
+		levelColors : ["#993333","#f9c802","#99cc33"],
+		title: "Accuracy %"
+	});
+
+    $(document).ready(function() {
+
+        //------- Initialize session ------------------
+        accTestState.initialize(<%= current_user.accuracy %>);
+
+        //------- Scoring an accuracy test ----------------------
+        $( "#reftest-leftside" ).on( "click", ".submit-button", function( e ) {
+
+            $(".changed").html( $("#answer").val() );
+
+            $(".diff-calc").prettyTextDiff({
+                cleanup: true
+            });
+
+
+        	var questionScore;
+        	var refGrade;
+
+        	// Calc score
+            questionScore = refTestState.scoreRef( $("#answer").val() );
+
+            // Update current reference test grade
+            refGrade = refTestState.updateRefGrade( questionScore );
+            g.refresh( refGrade );
+
+            // Get next reference for testing
+            refTestState.getRef();
+
+        });
+
+		//------- Handle enter key ----------------------
+        $('#answer').keypress(function (e) {
+			if (e.which == 13) {
+				$('#submit-ref').click();
+				return false;
+			}
+		});
+
+
+    }); // End of jQuery document ready
+--></script>
+
+
+
+
+

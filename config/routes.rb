@@ -67,10 +67,8 @@ MemverseApp::Application.routes.draw do
   post '/save_ref_grade/:score'   => 'users#update_ref_grade'
 
   # Accuracy test
-  post '/exam'                    => 'memverses#load_exam',             :as => 'exam'
-  get '/test_exam'                => 'memverses#test_exam',             :as => 'test_exam'
-  get '/exam_results'             => 'memverses#exam_results',          :as => 'exam_results'
-  get '/pre_exam'                 => 'memverses#explain_exam',          :as => 'pre_exam'
+  get '/test_accuracy'            => 'memverses#test_accuracy',         :as => 'test_accuracy'
+  get '/accuracy_test_next'       => 'memverses#accuracy_test_next'
 
   # Chapter review
   get '/pre_chapter'              => 'memverses#chapter_explanation',   :as => 'pre_chapter'
