@@ -13,8 +13,6 @@
 
 class Verse < ActiveRecord::Base
 
-  extend HTMLDiff
-
   acts_as_taggable # Alias for 'acts_as_taggable_on :tags'
 
 #  Rails 2

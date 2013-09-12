@@ -87,8 +87,12 @@
         //------- Scoring an accuracy test ----------------------
         $( "#reftest-leftside" ).on( "click", ".submit-button", function( e ) {
 
-            $(".changed").html( $("#answer").val() );
+        	var user_answer = $("#answer").val() 
 
+        	// Capture answer
+            $(".changed").html( user_answer );
+
+            // Calculate diff
             $(".diff-calc").prettyTextDiff({
                 cleanup: true
             });
@@ -98,7 +102,8 @@
         	var refGrade;
 
         	// Calc score
-            questionScore = refTestState.scoreRef( $("#answer").val() );
+            questionScore = accTestState.scoreRecitation( user_answer, accTestState.currentText );
+            alert( questionScore );
 
             // Update current reference test grade
             refGrade = refTestState.updateRefGrade( questionScore );
