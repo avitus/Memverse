@@ -6,10 +6,11 @@ var accTestState = {
     accuracy: null,
 
     // setup
-    initialize: function ( accuracy ) {
+    initialize: function ( user_accuracy ) {
 
-        this.currentRef = "";
-        this.accuracy = accuracy;
+        this.currentRef  = "";
+        this.currentText = "";
+        this.accuracy = user_accuracy;
         accTestState.getMV();
 
     },
@@ -31,30 +32,50 @@ var accTestState = {
 
     },
 
+    scoreRecitation: function ( user_answer, correct_answer ) {
 
-    // perfect                = 10 points
-    // correct book & chapter = 5 points
-    // correct book           = 1 point
-    scoreRef: function ( user_answer ) {
+        var score;
 
-        var answerRef  = parseVerseRef( user_answer );
-        var correctRef = parseVerseRef( currentRef );
-        var userScore  = 0;
+        // Convert to lowercase; remove anything that is not a-z and remove extra spaces
+        // Do I need to use unescape because of quotation marks? Time will tell...
+        user    = $.trim(    user_answer.toLowerCase().replace(/[^a-z ]|\s-|\s—/g, '').replace(/\s+/g, " ") );
+        correct = $.trim( correct_answer.toLowerCase().replace(/[^a-z ]|\s-|\s—/g, '').replace(/\s+/g, " ") );
 
-        if ( answerRef.bk === correctRef.bk ) {
-            userScore += 1;
-            if ( answerRef.ch === correctRef.ch ) {
-                userScore += 4;
-                if ( answerRef.vs === correctRef.vs ) {
-                    userScore += 5;
-                }
-            }
+        console.log( user );
+        console.log( correct );
+
+        if (user == "") {
+            alert('Please recite the verse. You clicked "Submit" without any words in the box.')
+            return false;
         }
 
-        this.recordScore( userScore );
-        this.giveFeedback( answerRef, correctRef, userScore );
+        user_words  = user.split(" ");
+        right_words = correct.split(" ");
 
-        return userScore;
+        score = 15 - (calculate_levenshtein_distance(right_words, user_words));
+
+        if (score < 0) {score = 0;} // Prevents score from being less than 0.
+
+        return score;
+
+        // var answerRef  = parseVerseRef( user_answer );
+        // var correctRef = parseVerseRef( currentRef );
+        // var userScore  = 0;
+
+        // if ( answerRef.bk === correctRef.bk ) {
+        //     userScore += 1;
+        //     if ( answerRef.ch === correctRef.ch ) {
+        //         userScore += 4;
+        //         if ( answerRef.vs === correctRef.vs ) {
+        //             userScore += 5;
+        //         }
+        //     }
+        // }
+
+        // this.recordScore( userScore );
+        // this.giveFeedback( answerRef, correctRef, userScore );
+
+        // return userScore;
 
     },
 
