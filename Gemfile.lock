@@ -278,7 +278,7 @@ GEM
     launchy (2.3.0)
       addressable (~> 2.3)
     libv8 (3.11.8.17)
-    localeapp (0.6.10)
+    localeapp (0.6.11)
       gli
       i18n
       json
