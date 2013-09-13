@@ -24,7 +24,12 @@ var accTestState = {
             accTestState.currentRef  = data.mv.ref;
             accTestState.currentMvID = data.mv.id;
 
+            // Clear previous verse
             $('#answer').val('').focus();         // Clear entry box
+            $('.diff-calc .original').empty();
+            $('.diff-calc .changed').empty();
+            $('.diff-calc .diff').empty();
+
             $('.verse-ref').html( accTestState.currentRef );   // Show verse reference
             $('.original').html( accTestState.currentText );   // Insert correct text
             $('.q-num').text( function (i,qNum) { return parseInt(qNum)+1;} ) ; // Increment question number
@@ -52,6 +57,8 @@ var accTestState = {
         score = 10 - (calculate_levenshtein_distance(right_words, user_words));
 
         if (score < 0) {score = 0;} // Prevents score from being less than 0.
+
+        // accTestState.giveFeedback( answerRef, correctRef, userScore );
 
         return score;
 
