@@ -7,26 +7,28 @@
 	<div id="reftest-leftside">
 
 		<div id="reftest-left-top">
+
 			<!-- Verse Heading -->
 			<div class="top-heading">
-		    	<h2><span class="q-num">0</span><span>.  Reference: </span><span class="verse-ref"></span></h2>
+		    	<h2><span>Question </span><span class="q-num">0</span></h2>
 		    </div>
 
+            <!-- Prior Verse -->
+            <h5 class="verse-ref prior"></h5>
+            <div class="prior-verse-text"></div>
+
+            <!-- Verse text entry -->
+            <h5 class="verse-ref current"></h5>
+            <div class="verse-text-entry">
+                <%= text_area_tag(:answer, params[:answer], :autocomplete => "off", :size => "45x6" ) %>
+            </div>
+
+            <!-- Submit button -->
+            <div class="submit-accuracy-answer">
+                <input id="submit-ref" class="submit-button"></input>
+            </div>
+
 		</div>
-
-		<div id="reftest-left-bottom">
-
-			<div class="top-heading">
-		    	<h2><span>Reference: </span></h2>
-		    </div>
-
-		    <div>
-				<%= text_area_tag(:answer, params[:answer], :autocomplete => "off", :size => "25x10" )%>
-				<input id="submit-ref" class="submit-button"></input>
-			</div>
-
-		</div>
-
 
 	</div>
 
@@ -52,6 +54,10 @@
 	                <div class="diff"></div>
 
 	            </div>
+
+                <div class="prior-questions">
+
+                </div>
 
 	    		<div class="fadeout"></div>
 
@@ -86,23 +92,17 @@
         //------- Scoring an accuracy test ----------------------
         $( "#reftest-leftside" ).on( "click", ".submit-button", function( e ) {
 
-        	var user_answer = $("#answer").val()
+        	var user_answer = $("#answer").val();
+            var userAccuracy, questionScore;
 
         	// Capture answer
             $(".changed").html( user_answer );
 
             // Calculate diff
-            $(".diff-calc").prettyTextDiff({
-                cleanup: true
-            });
-
-
-        	var questionScore;
-        	var refGrade;
+            $(".diff-calc").prettyTextDiff( { cleanup: true } );
 
         	// Calc score
             questionScore = accTestState.scoreRecitation( user_answer, accTestState.currentText );
-            alert( questionScore );
 
             // Update user's accuracy score
             userAccuracy = accTestState.updateAccuracy( questionScore );
