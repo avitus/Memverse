@@ -17,8 +17,20 @@ var accTestState = {
 
     getMV: function () {
 
-        // Retrieve a reference for testing
+        // Retrieve a verse for testing
         $.getJSON('accuracy_test_next.json', function (data) {
+
+            // Prior verse text if available
+            var priorVerseText, priorVerseRef
+
+            if ( data.prior_mv && data.prior_mv !== "null" && data.prior_mv !== "undefined" ) {
+                priorVerseText = data.prior_mv.text;
+                priorVerseRef  = data.prior_mv.ref;
+            }
+            else {
+                priorVerseText = "";
+                priorVerseRef  = "";
+            }
 
             accTestState.currentText = data.mv.text;
             accTestState.currentRef  = data.mv.ref;
@@ -28,10 +40,15 @@ var accTestState = {
             $('#answer').val('').focus();         // Clear entry box
             $('.diff-calc .original').empty();
             $('.diff-calc .changed').empty();
+            $('.diff-calc .diff').clone().prependTo(".prior-questions");
             $('.diff-calc .diff').empty();
+            $('.prior-verse-text').empty();
 
-            $('.verse-ref').html( accTestState.currentRef );   // Show verse reference
-            $('.original').html( accTestState.currentText );   // Insert correct text
+            // Insert new verse
+            $('.verse-ref.current').html( accTestState.currentRef  );   // Show verse reference
+            $('.verse-ref.prior'  ).html( priorVerseRef            );   // Show verse reference
+            $('.original'         ).html( accTestState.currentText );   // Insert correct text
+            $('.prior-verse-text' ).html( priorVerseText           );   // Text for prior verse
             $('.q-num').text( function (i,qNum) { return parseInt(qNum)+1;} ) ; // Increment question number
         });
 
@@ -58,48 +75,52 @@ var accTestState = {
 
         if (score < 0) {score = 0;} // Prevents score from being less than 0.
 
-        // accTestState.giveFeedback( answerRef, correctRef, userScore );
+        accTestState.showScore( score );
 
         return score;
 
     },
 
-    giveFeedback: function ( answerRef, correctRef, userScore) {
+    showScore: function ( score) {
 
-        var msg;
-        var $feedback;
-        var answerBk, answerCh, answerVs;
+        var $currentDiff = $(".diff-calc > .diff:first");
 
-        switch (userScore) {
-            case 10:
-                msg = "Perfect!";
-                break;
-            case 5:
-                msg = "Correct book and chapter.";
-                break;
-            case 1:
-                msg = "Correct book.";
-                break;
-            case 0:
-                msg = "Incorrect.";
-                break;
-            default:
-                msg = "Something weird happened!";
-        }
+        $currentDiff.prepend( $('<span class="acc-score"/>' ).text('[ ' + score + ' ] ') );
 
-        // answerRef will be false if user did not enter a parseable single verse
-        // Override null values
-        answerBk = (answerRef == false ) ? '- ' : answerRef.bk;
-        answerCh = (answerRef == false ) ? '-'  : answerRef.ch;
-        answerVs = (answerRef == false ) ? '-'  : answerRef.vs;
+        // var msg;
+        // var $feedback;
+        // var answerBk, answerCh, answerVs;
 
-        $feedback = $('<div/>').addClass('prior-feedback')
-            .append( $('<span class="prior-question"/>').text( correctRef.bk + ' ' + correctRef.ch + ":" + correctRef.vs ) )
-            .append( $('<span class="divider"       />').text( ' - ' ) )
-            .append( $('<span class="prior-answer"  />').text( '[' + answerBk + ' ' + answerCh + ":" + answerVs + '] ' ) )
-            .append( $('<span class="prior-feedback"/>').text( msg   ) );
+        // switch (userScore) {
+        //     case 10:
+        //         msg = "Perfect!";
+        //         break;
+        //     case 5:
+        //         msg = "Correct book and chapter.";
+        //         break;
+        //     case 1:
+        //         msg = "Correct book.";
+        //         break;
+        //     case 0:
+        //         msg = "Incorrect.";
+        //         break;
+        //     default:
+        //         msg = "Something weird happened!";
+        // }
 
-        $("#past-questions").prepend( $feedback );
+        // // answerRef will be false if user did not enter a parseable single verse
+        // // Override null values
+        // answerBk = (answerRef == false ) ? '- ' : answerRef.bk;
+        // answerCh = (answerRef == false ) ? '-'  : answerRef.ch;
+        // answerVs = (answerRef == false ) ? '-'  : answerRef.vs;
+
+        // $feedback = $('<div/>').addClass('prior-feedback')
+        //     .append( $('<span class="prior-question"/>').text( correctRef.bk + ' ' + correctRef.ch + ":" + correctRef.vs ) )
+        //     .append( $('<span class="divider"       />').text( ' - ' ) )
+        //     .append( $('<span class="prior-answer"  />').text( '[' + answerBk + ' ' + answerCh + ":" + answerVs + '] ' ) )
+        //     .append( $('<span class="prior-feedback"/>').text( msg   ) );
+
+        // $("#past-questions").prepend( $feedback );
 
     },
 

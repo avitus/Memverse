@@ -1115,7 +1115,9 @@ class MemversesController < ApplicationController
       mv = current_user.memverses.sort_by{ rand }.first
     end
 
-    render :json => { :mv => mv }
+    prior_mv = mv && mv.prior_mv  # get prior verse if available
+
+    render :json => { :mv => mv, :prior_mv => prior_mv }
 
   end
 
