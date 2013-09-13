@@ -8,9 +8,9 @@ var accTestState = {
     // setup
     initialize: function ( user_accuracy ) {
 
-        this.currentRef  = "";
-        this.currentText = "";
-        this.accuracy = user_accuracy;
+        accTestState.currentRef  = "";
+        accTestState.currentText = "";
+        accTestState.accuracy = user_accuracy;
         accTestState.getMV();
 
     },
@@ -20,13 +20,13 @@ var accTestState = {
         // Retrieve a reference for testing
         $.getJSON('accuracy_test_next.json', function (data) {
 
-            currentText = data.mv.text;
-            currentRef  = data.mv.ref;
-            currentMvID = data.mv.id;
+            accTestState.currentText = data.mv.text;
+            accTestState.currentRef  = data.mv.ref;
+            accTestState.currentMvID = data.mv.id;
 
             $('#answer').val('').focus();         // Clear entry box
-            $('.verse-ref').html( currentRef );   // Show verse reference
-            $('.original').html( currentText );   // Insert correct text
+            $('.verse-ref').html( accTestState.currentRef );   // Show verse reference
+            $('.original').html( accTestState.currentText );   // Insert correct text
             $('.q-num').text( function (i,qNum) { return parseInt(qNum)+1;} ) ; // Increment question number
         });
 
@@ -41,9 +41,6 @@ var accTestState = {
         user    = $.trim(    user_answer.toLowerCase().replace(/[^a-z ]|\s-|\s—/g, '').replace(/\s+/g, " ") );
         correct = $.trim( correct_answer.toLowerCase().replace(/[^a-z ]|\s-|\s—/g, '').replace(/\s+/g, " ") );
 
-        console.log( user );
-        console.log( correct );
-
         if (user == "") {
             alert('Please recite the verse. You clicked "Submit" without any words in the box.')
             return false;
@@ -52,38 +49,11 @@ var accTestState = {
         user_words  = user.split(" ");
         right_words = correct.split(" ");
 
-        score = 15 - (calculate_levenshtein_distance(right_words, user_words));
+        score = 10 - (calculate_levenshtein_distance(right_words, user_words));
 
         if (score < 0) {score = 0;} // Prevents score from being less than 0.
 
         return score;
-
-        // var answerRef  = parseVerseRef( user_answer );
-        // var correctRef = parseVerseRef( currentRef );
-        // var userScore  = 0;
-
-        // if ( answerRef.bk === correctRef.bk ) {
-        //     userScore += 1;
-        //     if ( answerRef.ch === correctRef.ch ) {
-        //         userScore += 4;
-        //         if ( answerRef.vs === correctRef.vs ) {
-        //             userScore += 5;
-        //         }
-        //     }
-        // }
-
-        // this.recordScore( userScore );
-        // this.giveFeedback( answerRef, correctRef, userScore );
-
-        // return userScore;
-
-    },
-
-    recordScore: function( score ) {
-
-        $.post('score_ref/' + currentMvID + '/' + score + '.json', function(data) {
-            // Todo: alert user if failure to save score
-        });
 
     },
 
@@ -126,17 +96,18 @@ var accTestState = {
 
     },
 
-    updateRefGrade: function ( questionScore ) {
-        var newRefGrade;
+    updateAccuracy: function ( questionScore ) {
 
-        newRefGrade = Math.ceil( this.refGrade * 0.90 + questionScore );
-        this.refGrade = newRefGrade;
-        this.saveRefGrade( newRefGrade );   // save to server
-        return newRefGrade;
+        var newAccuracy;
+
+        newAccuracy = Math.ceil( accTestState.accuracy * 0.90 + questionScore );
+        accTestState.accuracy = newAccuracy;
+        this.saveAccuracy( newAccuracy );   // save to server
+        return newAccuracy;
     },
 
-    saveRefGrade: function ( refGrade ) {
-        $.post('save_ref_grade/' + refGrade + '.json', function(data) {
+    saveAccuracy: function ( accuracy ) {
+        $.post('save_accuracy/' + accuracy + '.json', function(data) {
             // Todo: alert user if failure to save score
         });
     }

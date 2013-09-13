@@ -70,6 +70,20 @@ class UsersController < ApplicationController
 
   end
 
+  # ----------------------------------------------------------------------------------------------------------
+  # Update user's accuracy score
+  # ----------------------------------------------------------------------------------------------------------
+  def update_accuracy
+
+    current_user.update_attribute(:accuracy, params[:score] )
+
+    respond_to do |format|
+      format.json { render :json => current_user.accuracy }
+    end
+
+  end
+
+
   protected
 
 end

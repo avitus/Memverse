@@ -72,7 +72,7 @@
     // www.justgage.com
     var g = new JustGage({
 		id: "gauge",
-		value: "<%= current_user.ref_grade %>",
+		value: "<%= current_user.accuracy %>",
 		min: 0,
 		max: 100,
 		levelColors : ["#993333","#f9c802","#99cc33"],
@@ -87,7 +87,7 @@
         //------- Scoring an accuracy test ----------------------
         $( "#reftest-leftside" ).on( "click", ".submit-button", function( e ) {
 
-        	var user_answer = $("#answer").val() 
+        	var user_answer = $("#answer").val()
 
         	// Capture answer
             $(".changed").html( user_answer );
@@ -105,12 +105,12 @@
             questionScore = accTestState.scoreRecitation( user_answer, accTestState.currentText );
             alert( questionScore );
 
-            // Update current reference test grade
-            refGrade = refTestState.updateRefGrade( questionScore );
-            g.refresh( refGrade );
+            // Update user's accuracy score
+            userAccuracy = accTestState.updateAccuracy( questionScore );
+            g.refresh( userAccuracy );
 
             // Get next reference for testing
-            refTestState.getRef();
+            accTestState.getMV();
 
         });
 

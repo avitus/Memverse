@@ -69,6 +69,7 @@ MemverseApp::Application.routes.draw do
   # Accuracy test
   get '/test_accuracy'            => 'memverses#test_accuracy',         :as => 'test_accuracy'
   get '/accuracy_test_next'       => 'memverses#accuracy_test_next'
+  post '/save_accuracy/:score'    => 'users#update_accuracy'
 
   # Chapter review
   get '/pre_chapter'              => 'memverses#chapter_explanation',   :as => 'pre_chapter'
