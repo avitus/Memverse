@@ -66,7 +66,7 @@ function mv_search(userText, displayResultsFn) {
 
     // User didn't enter a verse reference ... do a tag search
     } else {
-        $.get("/mv_search.json", { searchParams: text },
+        $.get("/mv_tag_search.json", { searchParams: text },
             searchResultsCallback, "json" );
     }
 }
