@@ -226,7 +226,8 @@ class MemversesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   def mv_lookup_passage
 
-    if params[:vs_start] != "null" and params[:vs_end] != "null"
+    # http://stackoverflow.com/questions/1235863/test-if-a-string-is-basically-an-integer-in-quotes-using-ruby
+    if /^\d+$/ === params[:vs_start] and /^\d+$/ === params[:vs_end]  # e.g. Romans 8:2-4
       @mvs = current_user.memverses
               .includes(:verse)
               .where( 'verses.book'        => params[:bk],
@@ -234,7 +235,7 @@ class MemversesController < ApplicationController
                       'verses.versenum'    => params[:vs_start]..params[:vs_end])
               .order( 'verses.versenum')
     else
-      @mvs = current_user.memverses
+      @mvs = current_user.memverses  # e.g. Romans 8
               .includes(:verse)
               .where( 'verses.book'        => params[:bk],
                       'verses.chapter'     => params[:ch])
