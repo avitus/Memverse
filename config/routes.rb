@@ -102,7 +102,7 @@ MemverseApp::Application.routes.draw do
   # Verse search
   get '/lookup_user_verse'        => 'memverses#mv_lookup',             :as => 'lookup_user_verse'
   get '/lookup_user_passage'      => 'memverses#mv_lookup_passage',     :as => 'lookup_user_passage'
-  get '/mv_search'                => 'memverses#mv_search',             :as => 'mv_search'
+  get '/mv_tag_search'            => 'memverses#mv_tag_search',         :as => 'mv_tag_search'
 
   get '/tag_cloud'                => 'verses#tag_cloud',                :as => 'tag_cloud'
   get '/check_verses'             => 'verses#check_verses',             :as => 'check_verses'

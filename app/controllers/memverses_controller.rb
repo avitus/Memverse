@@ -250,12 +250,11 @@ class MemversesController < ApplicationController
   end
 
   # ----------------------------------------------------------------------------------------------------------
-  # Verse Search Query page
+  # Search for user's tagged verses
   # ----------------------------------------------------------------------------------------------------------
-  def mv_search
+  def mv_tag_search
 
-    @tag    = ActsAsTaggableOn::Tag.find_by_name(params[:searchParams])
-    @verses = Memverse.tagged_with(params[:searchParams])
+    @verses = current_user.memverses.active.tagged_with(params[:searchParams])
 
     respond_to do |format|
       format.html # show.html.erb
