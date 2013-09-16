@@ -143,7 +143,7 @@
   padding:0;
   margin:0;
   font-size:18px;
-  color:#577a1a; 
+  color:#577a1a;
   font-weight:normal;
   padding-bottom:15px;
 }
@@ -156,7 +156,7 @@
 
 @import "user-dashboard/*.png";
 
-.book 
+.book
 {
   @include user-dashboard-sprite(book);
   height:36px;
@@ -227,11 +227,11 @@ ul.thumbs li, ul.custom-bullets li
 }
 
 ul.thumbs li {
-  background:url('thumb.png') no-repeat left top;
+  background: image_url('thumb.png') no-repeat left top;
 }
 
 ul.custom-bullets li {
-  background:url('bloggity/bullet-white.gif') no-repeat left top;
+  background: image_url('bloggity/bullet-white.gif') no-repeat left top;
 }
 
 ul.thumbs li a:hover, ul.custom-bullets li a:hover
@@ -313,7 +313,7 @@ ul.thumbs li a, ul.custom-bullets a
   margin:0;
   font-size:16px;
   color:#983626;
-  font-weight:bold; 
+  font-weight:bold;
 }
 
 .vs-distribution table thead th {
@@ -323,7 +323,7 @@ ul.thumbs li a, ul.custom-bullets a
 .vs-distribution table tbody {
   height:25px;
   line-height:25px;
-  color:#666; 
+  color:#666;
 }
 
 .vs-distribution table tbody th {
@@ -348,5 +348,5 @@ ul.thumbs li a, ul.custom-bullets a
 {
   width:47%;
   float:left;
-  padding-left:1.4em; 
+  padding-left:1.4em;
 }

@@ -54,7 +54,7 @@ Blue
 
 body
 {
-	background:#bfbebe url('body-bg.png') repeat-x left top;
+	background:#bfbebe image_url('body-bg.png') repeat-x left top;
 	font-family: 'Open Sans', Arial, Helvetica, sans-serif;
 	font-size: 0.8125em;
 	color:#333;
@@ -289,7 +289,7 @@ h1, h2, h3, h4, h5, h6 {
 
 #large
 {
-	background:url('resize-big.png') no-repeat left top;
+	background:image_url('resize-big.png') no-repeat left top;
 	width:15px;
 	height:15px;
 	float:left;
@@ -299,7 +299,7 @@ h1, h2, h3, h4, h5, h6 {
 
 #small
 {
-	background:url('resize-small.png') no-repeat left top;
+	background:image_url('resize-small.png') no-repeat left top;
 	width:15px;
 	height:15px;
 	float:left;
@@ -308,7 +308,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .iphone
 {
-	background:url('i-phone.png') no-repeat right center;
+	background:image_url('i-phone.png') no-repeat right center;
 	font:16px/31px "Times New Roman",Times,serif;
 	width:245px;
 	height:31px;
@@ -334,7 +334,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .button ul li
 {
-	background:url('main-buttons.png') no-repeat 0 -225px;
+	background:image_url('main-buttons.png') no-repeat 0 -225px;
 	width:79px;
 	height:25px;
 	text-align:center;
@@ -365,7 +365,7 @@ h1, h2, h3, h4, h5, h6 {
 /*========== Form buttons ==========*/
 .submit-button
 {
-	background:url('main-buttons.png') no-repeat 0 -150px;
+	background:image_url('main-buttons.png') no-repeat 0 -150px;
 	width:69px;
 	height:25px;
 	border:0;
@@ -408,7 +408,7 @@ input.large {
 
 .menu ul li
 {
-	background:url('nav-sepa.png') no-repeat left top;
+	background:image_url('nav-sepa.png') no-repeat left top;
 	float:left;
 	height:42px;
 	line-height:42px;
@@ -499,7 +499,7 @@ input.large {
 /*========== Verse Illumination Ribbon ==========*/
 #news-strip
 {
-	background:url('news-ribbon.png') no-repeat left top;
+	background:image_url('news-ribbon.png') no-repeat left top;
 	width:940px;
 	height:46px;
 
@@ -576,7 +576,7 @@ input.large {
 
 #banner-bg
 {
-	background:url('banner-bg.png') no-repeat left top;
+	background:image_url('banner-bg.png') no-repeat left top;
 	width:1080px;
 	height:309px;
 }
@@ -633,7 +633,7 @@ input.large {
 
 .banner-text ul li
 {
-	background:url('right.png') no-repeat left top;
+	background:image_url('right.png') no-repeat left top;
 	font-size:14px;
 	font-weight:bold;
 	color:#666;
@@ -688,7 +688,7 @@ input.large {
 
 .banner-bottom ul li
 {
-	background:url('main-buttons.png') no-repeat left top;
+	background:image_url('main-buttons.png') no-repeat left top;
 	width:179px;
 	height:25px;
 	float:left;
@@ -712,7 +712,7 @@ input.large {
 
 .banner-bottom ul li a:hover, .banner-bottom ul li a.active
 {
-	background:url('main-buttons.png') no-repeat 0 -75px;
+	background:image_url('main-buttons.png') no-repeat 0 -75px;
 	color:#FFF;
 	text-decoration:none;
 }
@@ -812,7 +812,7 @@ div#flash-error {
 
 .content-box1
 {
-	background:url('box1-mid.png') repeat-y left top;
+	background:image_url('box1-mid.png') repeat-y left top;
 	width:294px;
 	float:left;
 	margin-right:11px;
@@ -820,13 +820,13 @@ div#flash-error {
 
 .content-box1-top
 {
-	background:url('box-tops.png') no-repeat 0 0;
+	background:image_url('box-tops.png') no-repeat 0 0;
 	width:294px;
 }
 
 .content-box1-bottom
 {
-	background:url('box1-bott.png') no-repeat left bottom;
+	background:image_url('box1-bott.png') no-repeat left bottom;
 	width:294px;
 }
 
@@ -894,7 +894,7 @@ div#flash-error {
 
 .content-box2
 {
-	background:url('box2-mid.png') repeat-y left top;
+	background:image_url('box2-mid.png') repeat-y left top;
 	width:354px;
 	float:left;
 	margin-right:12px;
@@ -902,13 +902,13 @@ div#flash-error {
 
 .content-box2-top
 {
-	background:url('box-tops.png') no-repeat -344px 0;
+	background:image_url('box-tops.png') no-repeat -344px 0;
 	width:354px;
 }
 
 .content-box2-bottom
 {
-	background:url('box2-bott.png') no-repeat left bottom;
+	background:image_url('box2-bott.png') no-repeat left bottom;
 	width:354px;
 }
 
@@ -972,7 +972,7 @@ div#flash-error {
 
 .content-box3
 {
-	background:url('box3-mid.png') repeat-y left top;
+	background:image_url('box3-mid.png') repeat-y left top;
 	width:269px;
 	float:left;
 	margin-bottom:10px;
@@ -980,13 +980,13 @@ div#flash-error {
 
 .content-box3-top
 {
-	background:url('box-tops.png') no-repeat -748px 0;
+	background:image_url('box-tops.png') no-repeat -748px 0;
 	width:269px;
 }
 
 .content-box3-bottom
 {
-	background:url('box3-bott.png') no-repeat left bottom;
+	background:image_url('box3-bott.png') no-repeat left bottom;
 	width:269px;
 }
 
@@ -998,7 +998,7 @@ div#flash-error {
 
 .new-field
 {
-	background:url('sign-field.png') no-repeat left top;
+	background:image_url('sign-field.png') no-repeat left top;
 	width:227px;
 	height:18px;
 	border:0;
@@ -1031,7 +1031,7 @@ div#flash-error {
 
 .content-box3-top2
 {
-	background:url('box-tops.png') no-repeat -1067px 0;
+	background:image_url('box-tops.png') no-repeat -1067px 0;
 	width:269px;
 }
 
@@ -1109,12 +1109,12 @@ div#flash-error {
 
 #inner1-body
 {
-	background:#bfbebe url('body-bg2.png') repeat-x left top;
+	background:#bfbebe image_url('body-bg2.png') repeat-x left top;
 }
 
 .inner-top-right
 {
-	background:url('user-icon.png') no-repeat left top;
+	background:image_url('user-icon.png') no-repeat left top;
 	min-width:220px;
 	height:18px;
 	line-height:18px;
@@ -1347,7 +1347,7 @@ div#flash-error {
 
 .tab-nav ul li.normtab
 {
-	background:url('tabs.png') no-repeat 0 -255px;
+	background:image_url('tabs.png') no-repeat 0 -255px;
 	width:158px;
 	height:29px;
 	text-align:center;
@@ -1366,14 +1366,14 @@ div#flash-error {
 
 .tab-nav ul li.normtab a:hover, .tab-nav ul li.active a
 {
-	background:url('tabs.png') no-repeat 0 0;
+	background:image_url('tabs.png') no-repeat 0 0;
 	color:#983626;
 	text-decoration:none;
 }
 
 .tab-nav ul li.widetab
 {
-	background:url('tabs.png') no-repeat 0 -176px;
+	background:image_url('tabs.png') no-repeat 0 -176px;
 	width:206px;
 	height:29px;
 	text-align:center;
@@ -1392,7 +1392,7 @@ div#flash-error {
 
 .tab-nav ul li.widetab a:hover, .tab-nav ul li.widetab.active a
 {
-	background:url('tabs.png') no-repeat 0 -88px;
+	background:image_url('tabs.png') no-repeat 0 -88px;
 	color:#983626;
 	text-decoration:none;
 }
@@ -1447,7 +1447,7 @@ div#flash-error {
 
 .tab-content ul li
 {
-	background:url('tab-list-icon.png') no-repeat left 2px;
+	background:image_url('tab-list-icon.png') no-repeat left 2px;
 	font-size:12px;
 	color:#666;
 	padding:0 0 15px 17px;
@@ -1551,7 +1551,7 @@ div#flash-error {
 
 .toggle-hint
 {
-	background:#FFF url('magnifying-glass-small.png') no-repeat right center;
+	background:#FFF image_url('magnifying-glass-small.png') no-repeat right center;
 	height:30px;
 	float:right;
 	text-align:right;
@@ -1600,7 +1600,7 @@ div#flash-error {
 
 .tool-tip-nav
 {
-	background:url('tick.png') no-repeat left top;
+	background:image_url('tick.png') no-repeat left top;
 	width:155px;
 	height:21px;
 	float:left;
@@ -1649,7 +1649,7 @@ div#flash-error {
 /* START - tooltip styling */
 .tooltip {
 	display:none;
-	background:url('tool-tip-box.png') no-repeat left top;	height:163px;
+	background:image_url('tool-tip-box.png') no-repeat left top;	height:163px;
 	width:309px;
 	height:28px;
 	line-height:23px;
@@ -1672,7 +1672,7 @@ div#flash-error {
 
 .ui-tooltip {
     position: absolute; // ALV: needed to stop tooltip jumping around
-    background:url('tool-tip-box.png') no-repeat left top;  height:163px;
+    background:image_url('tool-tip-box.png') no-repeat left top;  height:163px;
     width:309px;
     height:28px;
     line-height:23px;
@@ -1776,12 +1776,12 @@ div#flash-error {
 
 .upcoming ul li.gray2
 {
-	background:url('hover-gray.png') no-repeat left top;
+	background:image_url('hover-gray.png') no-repeat left top;
 }
 
 .upcoming ul li.white2
 {
-	background:url('hover-white.png') no-repeat left top;
+	background:image_url('hover-white.png') no-repeat left top;
 }
 
 /*========== Add Verse ==========*/
@@ -1826,7 +1826,7 @@ div#flash-error {
 
 .verse-search
 {
-	background:url('verse-field.png') no-repeat left top;
+	background:image_url('verse-field.png') no-repeat left top;
 	width:308px;
 	height:19px;
 	border:0;
@@ -1864,7 +1864,7 @@ div#flash-error {
 
 .add-verse
 {
-	background:url('add-verse.png') no-repeat left top;
+	background:image_url('add-verse.png') no-repeat left top;
 	width:122px;
 	height:25px;
 	border:0;
@@ -1886,7 +1886,7 @@ div#flash-error {
     border:1px solid #577a1a; /* sets new color for border of the field */
 }
 #searchSubmit{
-    background:transparent url('search_button.png') no-repeat;
+    background:transparent image_url('search_button.png') no-repeat;
     width:20px;
     height:20px;
     border:0;
