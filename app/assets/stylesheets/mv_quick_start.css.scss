@@ -23,7 +23,7 @@
 
 .quick-start-selection ul li
 {
-  background:url('main-buttons.png') no-repeat left top;
+  background: image_url('main-buttons.png') no-repeat left top;
   width:179px;
   height:25px;
   float:left;
@@ -48,7 +48,7 @@
 
 .quick-start-selection ul li a:hover, .quick-start-selection ul li a.active
 {
-  background:url('main-buttons.png') no-repeat 0 -75px;
+  background: image_url('main-buttons.png') no-repeat 0 -75px;
   color:#FFF;
   text-decoration:none;
 }
@@ -76,7 +76,7 @@
 }
 
 .quick-start-add-button {
-  background:url('add-verse.png') no-repeat left top;
+  background: image_url('add-verse.png') no-repeat left top;
   width:122px;
   height:25px;
   padding:5px 125px 10px 0px;
@@ -97,7 +97,7 @@
 
 .verse-added
 {
-  background:#FFF url('tick.png') no-repeat right center;
+  background:#FFF image_url('tick.png') no-repeat right center;
   height:30px;
   float:right;
   text-align:right;
@@ -112,7 +112,7 @@
 #start-memorizing {
   display:none;
   padding-left:2em;
-  width: 100%;  
+  width: 100%;
 }
 
 /* Popular verses scroll */
@@ -121,57 +121,57 @@
   min-height:500px;
   float:left;
   padding-left:0.5em;
-  padding-right:1em;  
-  padding-bottom:1em; 
-  
+  padding-right:1em;
+  padding-bottom:1em;
+
   /* root element for scrollable */
   .scrollable {
-  
+
     /* required settings */
     position:relative;
     overflow:hidden;
-  
+
     /* vertical scrollables have typically larger height than width but not now */
     height: 430px; // should match height of vertical class ... height should be 3x size of item height + padding
     width: 420px;  // should match width of vertical class and actions
   }
-  
+
   /* root element for scrollable items */
   .scrollable .items {
     position:absolute;
-  
+
     /* this time we have very large space for the height */
     height:20000em;
   }
-  
+
   /* root element for scrollable */
-  .vertical {  
-    
+  .vertical {
+
     /* required settings */
     position:relative;
-    overflow:hidden;  
-  
-    /* vertical scrollers have typically larger height than width */  
-    height: 430px; // should match height of scrollable class  
+    overflow:hidden;
+
+    /* vertical scrollers have typically larger height than width */
+    height: 430px; // should match height of scrollable class
     width: 420px;  // should match width of scrollable class and actions
-    border-top:1px solid #ddd;  
+    border-top:1px solid #ddd;
   }
-  
+
   /* root element for scrollable items */
-  .items {  
+  .items {
     position:absolute;
-    /* this time we have very large space for height */ 
-    height:20000em; 
+    /* this time we have very large space for height */
+    height:20000em;
     margin: 0px;
   }
-  
+
   /* single scrollable item */
   .item {
     border-bottom:1px solid #ddd;
     padding:10px 0 0 0;
     height:133px;
   }
-  
+
   /* elements inside single item */
   .item img {
     float:left;
@@ -179,38 +179,38 @@
     height:180px;
     width:240px;
   }
-  
+
   .item h3 {
     margin:0 0 5px 0;
     font-size:16px;
     /* color:#456; */
     font-weight:normal;
   }
-  
+
   /* the action buttons above the scrollable */
   #actions {
     width:420px;   // should match width of vertical and scrollable class
-    margin:30px 0 10px 0; 
+    margin:30px 0 10px 0;
   }
-  
+
   #actions a {
-    font-size:11px;   
+    font-size:11px;
     cursor:pointer;
     color:#666;
   }
-  
+
   #actions a:hover {
     text-decoration:underline;
     color:#000;
   }
-  
+
   .disabled {
-    visibility:hidden;    
+    visibility:hidden;
   }
-  
+
   .next {
     float:right;
-  }   
+  }
 } /* end of scroll styles */
 
 
