@@ -98,21 +98,8 @@ MemverseApp::Application.configure do
   # Load dependencies when running a rake task
   config.dependency_loading = true if $rails_rake_task
 
-  # https://github.com/ezmobius/redis-rb/wiki/redis-rb-on-Phusion-Passenger
-  # if defined?(PhusionPassenger)
-    # PhusionPassenger.on_event(:starting_worker_process) do |forked|
-      # # We're in smart spawning mode.
-      # if forked
-        # # Re-establish redis connection
-        # require 'redis'
-        # redis_config = YAML.load_file("#{Rails.root.to_s}/config/redis.yml")[Rails.env]
-#
-        # # The important two lines
-        # $redis.client.disconnect
-        # $redis = Redis.new(:host => redis_config["host"], :port => redis_config["port"])
-      # end
-    # end
-  # end
-
+  # Enable garbage collection in NewRelic
+  # http://technology.customink.com/blog/2012/03/16/simple-garbage-collection-tuning-for-rails/
+  GC.enable_stats if defined?(GC) && GC.respond_to?(:enable_stats)
 
 end
