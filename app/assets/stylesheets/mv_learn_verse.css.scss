@@ -29,7 +29,7 @@ div.ref-and-details {
 }
 
 .compact-minus-button {
-  background: url("minus_16x16.png") no-repeat scroll center center transparent;
+  background: image_url('minus_16x16.png') no-repeat scroll center center transparent;
   border: 0 none;
   cursor: pointer;
   height: 20px;
@@ -38,7 +38,7 @@ div.ref-and-details {
 }
 
 .compact-add-button {
-  background: url("plus.png") no-repeat scroll center center transparent;
+  background: image_url('plus.png') no-repeat scroll center center transparent;
   border: 0 none;
   cursor: pointer;
   height: 20px;
