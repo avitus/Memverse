@@ -5,25 +5,25 @@
 <title><%= page_title %></title>
 
 <meta name="distribution" content="all" />
-<meta name="robots" content="all" />	
+<meta name="robots" content="all" />
 <meta name="resource-type" content="document" />
 <meta name="MSSmartTagsPreventParsing" content="true" />
 
-<meta name="description" content="<%= page_description %>" />	
-<meta name="keywords" content="memorize bible, memorize scripture, popular bible verses, memorize bible verses," />	
+<meta name="description" content="<%= page_description %>" />
+<meta name="keywords" content="memorize bible, memorize scripture, popular bible verses, memorize bible verses," />
 
 <!-- Facebook Open Graph tags -->
-<meta property="og:title"		content="<%= page_title || Memverse %>"/>	
-<meta property="og:type"		content="website"/>	
-<meta property="og:image"		content="http://www.memverse.com/assets/memverse_swords.jpg"/>	
-<meta property="og:url"			content="<%= request.url %>" />	
-<meta property="og:site_name"	content="Memverse"/>	
+<meta property="og:title"		content="<%= page_title || Memverse %>"/>
+<meta property="og:type"		content="website"/>
+<meta property="og:image"		content="http://www.memverse.com/assets/memverse_swords.jpg"/>
+<meta property="og:url"			content="<%= request.url %>" />
+<meta property="og:site_name"	content="Memverse"/>
 <meta property="fb:admins"		content="1799626379, kyrriana"/>
 <meta property="og:description" content="A community of believers memorizing the bible"/>
 
 <!-- Google, Microsoft verification -->
-<meta name="verify-v1" content="IrqDYi2zxAyS8GUAqQcyXvnmcxhtuNITeCIFYLa76LQ=" />	
-<meta name="msvalidate.01" content="A1BB69E880870637C825F612E2FA4034" />				
+<meta name="verify-v1" content="IrqDYi2zxAyS8GUAqQcyXvnmcxhtuNITeCIFYLa76LQ=" />
+<meta name="msvalidate.01" content="A1BB69E880870637C825F612E2FA4034" />
 
 <!-- Identify blog feed -->
 <link rel="alternate" type="application/rss+xml" title="Memverse Blog" href="http://feeds.feedburner.com/MemverseBlog" />
@@ -120,13 +120,14 @@
 			<div id="menu-tabs" class="menu">
 
 				<ul id="maintab" class="basictab">
-					<li <%= tab(@tab=="home"		) %> rel="homepage">	<%= link_to 'Home', 	 		root_path %></li>	
-					<li <%= tab(@tab=="dash"		) %> rel="dashboard">	<%= link_to 'Dashboard', 		:controller => 'utils', :action => 'dashboard' %></li>
-					<li <%= tab(@tab=="users"		) %> rel="users">		<%= link_to 'Users', 	 		:controller => 'utils', :action => 'show_users', :sort_order => 'ID DESC', :period => 'Active' %></li>
-					<li <%= tab(@tab=="verses"		) %> rel="verses">		<%= link_to 'Verses',			:controller => 'utils', :action => 'show_verses_to_be_checked' %></li>
-					<li <%= tab(@tab=="churches"	) %> rel="churches">	<%= link_to 'Churches', 		:controller => 'utils', :action => 'show_churches' %></li>	
-					<li <%= tab(@tab=="countries"	) %> rel="countries">	<%= link_to 'Countries', 		:controller => 'utils', :action => 'show_countries' %></li>
-					<li <%= tab(@tab=="popverses"	) %> rel="popverses">	<%= link_to 'Popular Verses',	:controller => 'utils', :action => 'show_popverses' %></li>						
+					<li <%= tab(@tab=="home"	  ) %> rel="homepage">	<%= link_to 'Home', 	 		root_path %></li>
+					<li <%= tab(@tab=="dash"	  ) %> rel="dashboard">	<%= link_to 'Dashboard', 		utils_dashboard_path %></li>
+					<li <%= tab(@tab=="users"	  ) %> rel="users">		<%= link_to 'Users', 	 		:controller => 'utils', :action => 'show_users', :sort_order => 'ID DESC', :period => 'Active' %></li>
+					<li <%= tab(@tab=="verses"	  ) %> rel="verses">	<%= link_to 'Verses',		    :controller => 'utils', :action => 'show_verses_to_be_checked' %></li>
+					<li <%= tab(@tab=="churches"  ) %> rel="churches">	<%= link_to 'Churches', 		:controller => 'utils', :action => 'show_churches' %></li>
+					<li <%= tab(@tab=="countries" ) %> rel="countries">	<%= link_to 'Countries', 		:controller => 'utils', :action => 'show_countries' %></li>
+					<li <%= tab(@tab=="popverses" ) %> rel="popverses">	<%= link_to 'Popular Verses',	:controller => 'utils', :action => 'show_popverses' %></li>
+					<li <%= tab(@tab=="quizzes"   ) %> rel="quizzes">	<%= link_to 'Quizzes',      	quizzes_path %></li>
 					<li>&nbsp;</li>
 				</ul>
 
@@ -135,74 +136,81 @@
 					<div class="submenu-left">
 
 						<div id="homepage" class="submenustyle">
-							<ul>							
+							<ul>
 								<li <%= sub(@sub=="manage"		)%>><%= link_to t('home_menu.My Verses'),		manage_verses_path %></li>
 								<li <%= sub(@sub=="addvs"		)%>><%= link_to t('home_menu.Add Verse'),		add_verse_path %></li>
 								<li <%= sub(@sub=="searchvs"	)%>><%= link_to t('home_menu.Search Bible'),	search_verse_path %></li>
-								<li <%= sub(@sub=="progress"	)%>><%= link_to t('home_menu.My Progress'),		progress_path %></li>	
-								<li <%= sub(@sub=="popvs"		)%>><%= link_to t('home_menu.Popular Verses'),	popular_verses_path %></li>	
-								<li <%= sub(@sub=="cloud"		)%>><%= link_to t('home_menu.Tag Cloud'),		tag_cloud_path %></li>	
+								<li <%= sub(@sub=="progress"	)%>><%= link_to t('home_menu.My Progress'),		progress_path %></li>
+								<li <%= sub(@sub=="popvs"		)%>><%= link_to t('home_menu.Popular Verses'),	popular_verses_path %></li>
+								<li <%= sub(@sub=="cloud"		)%>><%= link_to t('home_menu.Tag Cloud'),		tag_cloud_path %></li>
 								<li <%= sub(@sub=="news"		)%>><%= link_to t('home_menu.News'),			news_path %></li>
 							</ul>
 						</div>
-		
+
 						<div id="dashboard" class="submenustyle">
-							<ul>							
+							<ul>
 								<li <%= sub(@sub=="manage"		)%>><%= link_to 'Dashboard',		:controller => 'utils',	:action => 'dashboard' %></li>
 								<li <%= sub(@sub=="addvs"		)%>><%= link_to 'Churn',			:controller => 'utils',	:action => 'cohort_analysis' %></li>
 								<li <%= sub(@sub=="searchvs"	)%>><%= link_to 'Leaderboard',		:controller => 'utils',	:action => 'leaderboard' %></li>
-								<li <%= sub(@sub=="progress"	)%>><%= link_to 'Memory Verses',	:controller => 'utils',	:action => 'show_memory_verses', :id => nil, :sort_order => 'ID DESC' %></li>	
-								<li <%= sub(@sub=="popvs"		)%>><%= link_to 'Send Reminder',	:controller => 'utils',	:action => 'send_reminder' %></li>	
-								<li <%= sub(@sub=="cloud"		)%>><%= link_to 'Comments', 		:controller => 'utils', :action => 'unapproved_comments' %></li>	
+								<li <%= sub(@sub=="progress"	)%>><%= link_to 'Memory Verses',	:controller => 'utils',	:action => 'show_memory_verses', :id => nil, :sort_order => 'ID DESC' %></li>
+								<li <%= sub(@sub=="popvs"		)%>><%= link_to 'Send Reminder',	:controller => 'utils',	:action => 'send_reminder' %></li>
+								<li <%= sub(@sub=="cloud"		)%>><%= link_to 'Comments', 		:controller => 'utils', :action => 'unapproved_comments' %></li>
 								<li <%= sub(@sub=="news"		)%>><%= link_to 'De-dupe',	 		:controller => 'utils', :action => 'users_with_problems' %></li>
 							</ul>
 						</div>
-						
-						<div id="users" class="submenustyle">						
-							<ul>							
+
+						<div id="users" class="submenustyle">
+							<ul>
 								<li <%= sub(@sub=="manage"		)%>><%= link_to 'All',				:controller => 'utils',	:action => 'show_users', :sort_order => 'ID DESC', :period => 'All' %></li>
 								<li <%= sub(@sub=="addvs"		)%>><%= link_to 'Today (New)',		:controller => 'utils',	:action => 'show_users', :sort_order => 'ID DESC', :period => 'Today' %></li>
 								<li <%= sub(@sub=="searchvs"	)%>><%= link_to 'Today (Active)',	:controller => 'utils',	:action => 'show_users', :sort_order => 'ID DESC', :period => 'Active' %></li>
-								<li <%= sub(@sub=="progress"	)%>><%= link_to 'Pending',			:controller => 'utils',	:action => 'show_users', :sort_order => 'ID DESC', :period => 'Pending' %></li>	
-								<li <%= sub(@sub=="popvs"		)%>><%= link_to 'Search',			:controller => 'utils',	:action => 'search_users' %></li>	
-								<li <%= sub(@sub=="cohort"  	)%>><%= link_to 'Cohorts',			progression_path %></li>	
-							</ul>						
+								<li <%= sub(@sub=="progress"	)%>><%= link_to 'Pending',			:controller => 'utils',	:action => 'show_users', :sort_order => 'ID DESC', :period => 'Pending' %></li>
+								<li <%= sub(@sub=="popvs"		)%>><%= link_to 'Search',			:controller => 'utils',	:action => 'search_users' %></li>
+								<li <%= sub(@sub=="cohort"  	)%>><%= link_to 'Cohorts',			progression_path %></li>
+							</ul>
 						</div>
-		
+
 						<div id="verses" class="submenustyle">
-							<ul>							
+							<ul>
 								<li <%= sub(@sub=="manage"		)%>><%= link_to 'Verses per User',	:controller => 'utils',	:action => 'verses_per_user' %></li>
 								<li <%= sub(@sub=="addvs"		)%>><%= link_to 'Translation Stats',:controller => 'utils',	:action => 'count_by_translation' %></li>
 								<li <%= sub(@sub=="searchvs"	)%>><%= link_to 'All',				:controller => 'utils',	:action => 'show_verses', :sort_order => 'ID DESC' %></li>
-								<li <%= sub(@sub=="progress"	)%>><%= link_to 'Search',			:controller => 'utils',	:action => 'search_verses' %></li>	
-								<li <%= sub(@sub=="popvs"		)%>><%= link_to 'To Check',			:controller => 'utils',	:action => 'show_verses_to_be_checked' %></li>	
+								<li <%= sub(@sub=="progress"	)%>><%= link_to 'Search',			:controller => 'utils',	:action => 'search_verses' %></li>
+								<li <%= sub(@sub=="popvs"		)%>><%= link_to 'To Check',			:controller => 'utils',	:action => 'show_verses_to_be_checked' %></li>
 							</ul>
 						</div>
-		
+
 						<div id="churches" class="submenustyle">
 							<ul>
 								<li <%= sub(@sub=="manage"		)%>><%= link_to 'All',				:controller => 'utils',	:action => 'show_churches' %></li>
 							</ul>
 						</div>
-		
+
 						<div id="countries" class="submenustyle">
 							<ul>
 								<li <%= sub(@sub=="manage"		)%>><%= link_to 'All',				:controller => 'utils',	:action => 'show_countries' %></li>
 							</ul>
 						</div>
-		
+
 						<div id="popverses" class="submenustyle">
-							<ul>							
+							<ul>
 								<li <%= sub(@sub=="manage"		)%>><%= link_to 'Show',				:controller => 'utils',	:action => 'show_popverses' %></li>
 								<li <%= sub(@sub=="addvs"		)%>><%= link_to 'Update',			:controller => 'utils',	:action => 'update_popular_verses' %></li>
 								<li <%= sub(@sub=="searchvs"	)%>><%= link_to 'Tags',				:controller => 'utils',	:action => 'show_tags' %></li>
-							</ul>						
+							</ul>
+						</div>
+
+						<div id="quizzes" class="submenustyle">
+							<ul>
+								<li <%= sub(@sub=="list"		)%>><%= link_to 'List',	   	        quizzes_path %></li>
+
+							</ul>
 						</div>
 
 					</div><!--submenu-left end-->
 		        	<div class="clr"></div>
 
-				</div><!--submenu end-->				
+				</div><!--submenu end-->
 			</div>  <!-- End of Menu Tabs -->
 
 			<div class="breadcum-area"><!--breadcum start-->
@@ -219,7 +227,7 @@
 			</div><!--breadcum end-->
 
 			<%= flash_messages  %>
-		
+
 		<% else # if not logged in %>
 			<div class="menu menu-main-only"><!--menu start-->
 				<ul>
@@ -258,7 +266,7 @@
 	<script type="text/javascript">
 		//initialize tab menu, by passing in ID of UL
 		initalizetab("maintab")
-	</script>	
+	</script>
 <% end %>
 
 <!-- Start of I18n-js code  -->
@@ -270,7 +278,7 @@
 
 <!-- Tutorial video using fancybox -->
 <script type="text/javascript">
-	$(document).ready(function() {			
+	$(document).ready(function() {
 		$(".tut-video").click(function() {
 			$.fancybox({
 					'padding'		: 0,
@@ -285,13 +293,13 @@
 					'swf'			: {	'wmode'				: 'transparent',
 										'allowfullscreen'	: 'true' }
 				});
-		
+
 			return false;
-		});	
-	});	
+		});
+	});
 </script>
 
-<!-- Start of Get Satisfaction Script  -->		
+<!-- Start of Get Satisfaction Script  -->
 <script type="text/javascript">
   var is_ssl = ("https:" == document.location.protocol);
   var asset_host = is_ssl ? "https://s3.amazonaws.com/getsatisfaction.com/" : "http://s3.amazonaws.com/getsatisfaction.com/";
@@ -301,14 +309,14 @@
 <script type="text/javascript">
   var feedback_widget_options = {};
 
-  feedback_widget_options.display = "overlay";  
+  feedback_widget_options.display = "overlay";
   feedback_widget_options.company = "memverse";
   feedback_widget_options.placement = "right";
   feedback_widget_options.color = "#222";
   feedback_widget_options.style = "idea";
 
   var feedback_widget = new GSFN.feedback_widget(feedback_widget_options);
-</script>	<!-- End: Get Satisfaction Script  -->	
+</script>	<!-- End: Get Satisfaction Script  -->
 
 <!-- Prevent double-clicking links in the flash -->
 <script type="text/javascript">
@@ -321,4 +329,4 @@
 </body>
 </html>
 
-								
+

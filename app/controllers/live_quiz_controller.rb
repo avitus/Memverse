@@ -23,14 +23,14 @@ class LiveQuizController < ApplicationController
 	  @minutes = @quiz.quiz_length / 60
 	  @seconds = @quiz.quiz_length - (@minutes * 60)
 
-    @chat_status = ($redis.exists("chat-quiz-#{@quiz.id}") && $redis.hmget("chat-quiz-#{@quiz.id}", "status").first == "Open")?"Open":"Closed"
+    @chat_status = ($redis.exists("chat-quiz-#{@quiz.id}") && $redis.hmget("chat-quiz-#{@quiz.id}", "status").first == "Open") ? "Open" : "Closed"
 
     quiz_questions = @quiz.quiz_questions.order("question_no ASC")
     @num_questions = quiz_questions.length
   end
 
   #-----------------------------------------------------------------------------------------------------------
-  # This method will push questions to the live quiz channel
+  # TODO: I think this is obsolete ... This method will push questions to the live quiz channel
   #-----------------------------------------------------------------------------------------------------------
   def start_quiz
     Rails.logger.info("*** Quiz starting at #{Time.now}")
@@ -177,4 +177,5 @@ class LiveQuizController < ApplicationController
     sign_in(:user, User.find_by_email("student#{rand(50)}@sttsetia.org"))
     redirect_to "/live_quiz?quiz=16"
   end
+
 end
