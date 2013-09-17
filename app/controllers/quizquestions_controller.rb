@@ -1,22 +1,21 @@
 # coding: utf-8
 
 class QuizquestionsController < ApplicationController
-  
+
   before_filter :authenticate_user!
-  
+
   add_breadcrumb "Home", :root_path
-  
-  # ----------------------------------------------------------------------------------------------------------   
+
+  # ----------------------------------------------------------------------------------------------------------
   # View all questions for a quiz
   # GET /quizquestions?quiz=1
-  # ---------------------------------------------------------------------------------------------------------- 
+  # ----------------------------------------------------------------------------------------------------------
   def index
     if params[:quiz]
       @quiz = Quiz.find(params[:quiz])
     end
-    
   end
-  
+
   # GET /quizquestions/1
   # GET /quizquestions/1.xml
   def show
@@ -50,7 +49,7 @@ class QuizquestionsController < ApplicationController
   # POST /quizquestions?quiz=1.xml
   def create
     @question = QuizQuestion.new(params[:quiz_question])
-    
+
     respond_to do |format|
       if @question.save
         flash[:notice] = 'Quiz question was successfully created.'
@@ -92,7 +91,7 @@ class QuizquestionsController < ApplicationController
       format.html { redirect_to(quizzes_url) }
       format.xml  { head :ok }
     end
-  end  
-  
-  
+  end
+
+
 end
