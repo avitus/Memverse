@@ -1,8 +1,12 @@
-	<tr>
-		<td align="left" 	id='q-name'	><%= quizquestion.quiz.name	%></td>
-		<td align="right" 	id='q-no'	><%= quizquestion.question_no	%></td>
-		<td align="left" 	id='q-type'	><%= quizquestion.question_type	%></td>
-		<td align="left" 	id='q-psg'	><%= quizquestion.passage %></td>
-		<td><%= link_to 'Show', quizquestion_path(quizquestion)%></td>
-		<td><%= link_to 'Edit', edit_quizquestion_path(quizquestion)%></td>
-	</tr>
+<tr>
+
+	<td align="left" 	id='q-name'	><%= quizquestion.quiz.name	%></td>
+	<td align="right" 	id='q-no'	><%= quizquestion.question_no	%></td>
+	<td align="left" 	id='q-type'	><%= quizquestion.question_type	%></td>
+    <td align="left"    id='q-psg'  ><%= quizquestion.passage %></td>
+	<td align="left" 	id='q-psg'	><%= quizquestion.mc_question %></td>
+
+	<td><%= link_to 'Show', quizquestion_path(quizquestion)%></td>
+	<td><%= link_to 'Edit', edit_quizquestion_path(quizquestion)%></td>
+
+</tr>

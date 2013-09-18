@@ -32,7 +32,7 @@ class QuizquestionsController < ApplicationController
   # GET /quizquestions/new.xml
   def new
     @question = QuizQuestion.new
-    @quiz     = Quiz.find(params[:quiz])
+    @quiz     = Quiz.find(params[:quiz] || 1)
 
     respond_to do |format|
       format.html # new.html.erb
