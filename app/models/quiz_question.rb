@@ -12,7 +12,6 @@ class QuizQuestion < ActiveRecord::Base
 
   # Relationships
   belongs_to :quiz
-  has_many :quiz_answers, :through => :livequizzes  # TODO: What does this refer to?
 
   # Validations
   # validates_presence_of :user_id

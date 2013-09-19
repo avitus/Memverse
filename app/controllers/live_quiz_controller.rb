@@ -30,68 +30,6 @@ class LiveQuizController < ApplicationController
   end
 
   #-----------------------------------------------------------------------------------------------------------
-  # TODO: I think this is obsolete ... This method will push questions to the live quiz channel
-  #-----------------------------------------------------------------------------------------------------------
-  def start_quiz
-    Rails.logger.info("*** Quiz starting at #{Time.now}")
-
-    # Delete participant scores from redis
-    participants = $redis.keys("user-*")
-    participants.each { |p|	$redis.del(p) }
-
-    quiz = Quiz.find(params[:quiz] || 1 )
-    @quiz_master = quiz.user
-    Rails.logger.info("*** Using quiz number #{quiz.name}. The quiz master is #{@quiz_master.name_or_login}.")
-
-    # Save status of quiz in redis
-    $redis.hset("quiz-#{quiz.id}", "status", "In progress. Wait for question.")
-
-    quiz_questions	= quiz.quiz_questions.order("question_no ASC")
-
-    spawn_block(:argv => "spawn-quiz-questions") do
-      # Spawned process needs to reconnect to redis
-      require 'redis'
-      $redis.client.disconnect
-      $redis = Redis.new(:host => 'localhost', :port => 6379)
-
-      quiz_questions.each { |q|
-        Rails.logger.info("*** Publishing question #{q.question_no}.")
-        Rails.logger.info("*** Question type is: #{q.question_type}.")
-
-        passages   = q.passage_translations
-        ref        = q.passage
-        num        = q.question_no
-
-        case q.question_type
-        when "recitation"
-          time_alloc = (q.passage_translations.first.last.split(" ").length * 2.5 + 15.0).to_i # 24 WPM typing speed with 15 seconds to think
-          Juggernaut.publish( select_channel("/quiz_stream"), {:q_num => num, :q_type => "recitation", :q_ref => ref, :q_passages => passages, :time_alloc => time_alloc} )
-          sleep(time_alloc+1)
-        when "reference"
-          Juggernaut.publish( select_channel("/quiz_stream"), {:q_num => num, :q_type => "reference", :q_ref => ref, :q_passages => passages, :time_alloc => 25} )
-          sleep(26)
-        when "mcq"
-          Juggernaut.publish( select_channel("/quiz_stream"), {:q_num => num, :q_type => "mcq", :mc_question => q.mc_question, :mc_option_a => q.mc_option_a, :mc_option_b => q.mc_option_b, :mc_option_c => q.mc_option_c, :mc_option_d => q.mc_option_d, :mc_answer => q.mc_answer, :time_alloc => 30} )
-		  sleep(31)
-        else
-          sleep(20)
-        end
-
-        scoreboard = publish_scoreboard
-        Rails.logger.info("*** Publishing scoreboard after question: #{q.question_no}.")
-        Juggernaut.publish( select_channel("/scoreboard"), {:scoreboard => scoreboard} )
-      }
-
-      # Update quiz status in redis
-      $redis.hset("quiz-#{quiz.id}", "status", "Finished")
-    end
-
-    respond_to do |format|
-      format.all { render :nothing => true, :status => 200 }
-    end
-  end
-
-  #-----------------------------------------------------------------------------------------------------------
   # Parse questions for quiz presentation
   #-----------------------------------------------------------------------------------------------------------
   def parse_quiz_question(num, type, passage)
