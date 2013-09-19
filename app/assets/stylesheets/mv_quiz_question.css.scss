@@ -3,3 +3,11 @@
         color: green;
     }
 }
+
+#mcq {
+	.left-question, .right-other-info {
+		width: 45%;
+		padding: 2%;
+		float: left;
+	}
+}
