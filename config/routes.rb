@@ -184,7 +184,6 @@ MemverseApp::Application.routes.draw do
 
   # Routes for live quiz
   get '/live_quiz'              => 'live_quiz#live_quiz'     # Main quiz URL
-  get '/live_quiz/start_quiz'   => 'live_quiz#start_quiz'    # Is this used? Quiz is started with a rake task now
   get '/live_quiz/channel1'     => 'live_quiz#channel1'      # Chat channel
   get '/live_quiz/scoreboard'   => 'live_quiz#scoreboard'    # Scoreboard for quiz
   get '/record_score'           => 'live_quiz#record_score'
