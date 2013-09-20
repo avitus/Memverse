@@ -1,13 +1,43 @@
+.quiz-question-num {
+    float:left;
+    width: 20%;
+    margin-bottom: 1em;
+}
+
+.quiz-question-type {
+    float:left;
+    width: 15%;
+    margin-bottom: 1em;
+}
+
+#mcq {
+
+    background-color: #f0f0f0;
+    margin: 1em 0 0 0;
+    padding: 1em;
+    min-height: 440px;
+    clear: both;
+
+	.left-question {
+		width: 38%;
+		float: left;
+	}
+
+    .right-other-info {
+        width: 55%;
+        float: left;
+    }
+
+}
+
+.quiz-submit {
+    padding-top: 1em;
+    clear: both;
+}
+
+// Quiz Question Show
 .quiz-question {
     p.true {
         color: green;
     }
-}
-
-#mcq {
-	.left-question, .right-other-info {
-		width: 45%;
-		padding: 2%;
-		float: left;
-	}
 }

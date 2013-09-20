@@ -37,13 +37,12 @@ GIT
 
 GIT
   remote: git://github.com/radar/forem.git
-  revision: 2895ac35bbb3ad4f2a3aa264b0907a3c224fc3ee
+  revision: cc7bf3033b0f66c75ada2995101ee63a507991fe
   branch: rails4
   specs:
     forem (1.0.0.beta1)
       decorators (~> 1.0.2)
       gemoji (= 1.1.2)
-      localeapp
       rails (~> 4.0.0)
       select2-rails (= 3.4.3)
       simple_form (~> 3.0.0.rc)
@@ -519,6 +518,7 @@ DEPENDENCIES
   kaminari
   launchy (>= 2.0.5)
   libv8 (= 3.11.8.17)
+  localeapp
   mail (>= 2.2.15)
   mysql2 (>= 0.3)
   newrelic_rpm (>= 3.3.0)

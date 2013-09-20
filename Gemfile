@@ -4,7 +4,6 @@ HOST_OS = RbConfig::CONFIG['host_os']
 source 'http://rubygems.org'
 
 group :development do
-  # gem 'query_reviewer', :git => "git://github.com/nesquena/query_reviewer.git"                # For finding slow queries ... problems with Rails 3.2 (?)
 	gem "rails-footnotes", ">= 3.7"
   gem 'sqlite3'
   gem 'better_errors'
@@ -18,7 +17,7 @@ group :test do
   gem 'factory_girl_rails'                                      # Add to development group for debugging in console
   gem "cucumber-rails", ">= 1.3.0", require: false
   gem "capybara", ">= 1.1.2"
-  gem "database_cleaner", "= 1.0.1"                             # !!! Newer version has bug with database adapter ... upgrade when possible
+  gem "database_cleaner", "= 1.0.1"                             # TODO: Newer version has bug with database adapter ... upgrade when possible
   gem "launchy", ">= 2.0.5"
   gem 'email_spec'                                              # For sending email in cucumber tests
   gem "action_mailer_cache_delivery", ">= 0.3.5"                # Used to test email delivery with Cucumber. Pairs with email_spec
@@ -33,7 +32,7 @@ end
 ############################################################
 if HOST_OS =~ /linux/i
   gem 'libv8', '= 3.11.8.17', :platforms => :ruby               # Later versions have no binary support for x86
-  gem 'therubyracer', '= 0.11.4'                                # Can roll to 0.12 once binary support for libv8 3.16
+  gem 'therubyracer', '= 0.11.4'                                # TODO: Can roll to 0.12 once binary support for libv8 3.16
 end
 
 ############################################################
@@ -98,6 +97,7 @@ gem 'json'                                                                      
 gem 'mail', '>= 2.2.15'                                                                         # Emails
 gem 'thinking-sphinx', '~> 3.0.5'                                                               # Connector to Sphinx - for global search
 gem 'i18n-js'                                                                                   # Uses config/locale files to build a JavaScript equivalent of i18n in Rails
+gem 'localeapp'                                                                                 # Translation service for i18n
 gem 'juggernaut', '>=2.1.0', :git => 'git://github.com/maccman/juggernaut.git'                  # Live chat
 gem 'breadcrumbs_on_rails', '>=2.0.0'                                                           # For breadcrumb navigation bar
 gem 'dalli'                                                                                     # Memcached client
@@ -116,8 +116,6 @@ gem 'pubnub'                                                                    
 
 # Unused gems
 # gem 'riddle'                                                                                  # Seems to be needed for Thinking_Sphinx ... not clear, though
-# gem 'spawn', '>=1.2', :git => 'git://github.com/avitus/spawn.git', :branch => 'edge'          # Check to see whether master branch ever supports Rails 3 & Ruby 1.92
-
 
 group :console do
   gem 'wirble'
