@@ -1,7 +1,7 @@
 # coding: utf-8
 class VersesController < ApplicationController
 
-  before_filter :authenticate_user!, :except => [:index, :show] 
+  before_filter :authenticate_user!, :except => [:index, :show]
   skip_before_filter :verify_authenticity_token, :only => [:set_verse_text, :check_verse]  # ALV: attempt to stop redirects to login page when setting verse text
 
   add_breadcrumb "Home", :root_path
@@ -150,6 +150,21 @@ class VersesController < ApplicationController
       format.html # show.html.erb
       format.xml  { render :xml  => @verse }
       format.json { render :json => @verse }
+    end
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Show major translations for a verse
+  # ----------------------------------------------------------------------------------------------------------
+  def major_tl_lookup
+
+    @verses = Verse.where(:book => params[:bk], :chapter => params[:ch], :versenum => params[:vs],
+                          :translation => ['NIV', 'ESV', 'NAS', 'NKJ', 'KJV'])
+
+    respond_to do |format|
+      format.html # show.html.erb
+      format.xml  { render :xml  => @verses }
+      format.json { render :json => @verses }
     end
   end
 

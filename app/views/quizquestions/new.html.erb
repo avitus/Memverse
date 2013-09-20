@@ -7,14 +7,14 @@
 
 		<!-- Flag any errors -->
 		<% if @question.errors.any? %>
-		  <div id="errorExplanation">
-			<h2><%= pluralize(@question.errors.count, "error") %> prohibited this quiz from being saved:</h2>
-			<ul>
-			<% @question.errors.full_messages.each do |msg| %>
-			  <li><%= msg %></li>
-			<% end %>
-			</ul>
-		  </div>
+			<div id="errorExplanation">
+				<h2><%= pluralize(@question.errors.count, "error") %> prohibited this quiz from being saved:</h2>
+				<ul>
+					<% @question.errors.full_messages.each do |msg| %>
+						<li><%= msg %></li>
+					<% end %>
+				</ul>
+			</div>
 		<% end %>
 
 		<!-- Associate with a quiz -->
@@ -23,19 +23,19 @@
 	  	</p>
 
 	  	<!-- Question number -->
-	  	<p>
+	  	<div class="quiz-question-num">
 			<%= f.label 		:question_no, "Question number" %><br />
 			<%= f.select 		:question_no, (1..20), :selected => params[:qno] %>
-	  	</p>
+	  	</div>
 
 	  	<!-- Question type -->
-	  	<p>
+	  	<div class="quiz-question-type">
 			<%= f.label 		:question_type, "Type of question" %><br />
 			<%= f.select		:question_type, [ ['Multiple Choice', 'mcq'        ],
 												  ['Recite verse',	  'recitation' ],
 												  ['Give reference',  'reference'  ]],
 								{}, {:onchange => "questionType(this.value)"} %>
-	  	</p>
+	  	</div>
 
 	  	<p id="passage">
 			<%= f.label 		:passage, "Passage Reference" %><br />
@@ -50,32 +50,37 @@
 
 			  	<p>
 					<%= f.label 		:mc_question, "Question text" %><br />
-					<%= f.text_area 	:mc_question, :size => "", :style => "height:40px;width:215px" %>
+					<%= f.text_area 	:mc_question, :size => "44x7" %>
 				</p>
 
 			  	<p>
 					<%= f.label 		:mc_option_a, "Answer A" %><br />
-					<%= f.text_field 	:mc_option_a %>
+					<%= f.text_field 	:mc_option_a, :size => 42 %>
 					<%= f.radio_button  :mc_answer, "A" %>
 				</p>
 
 			  	<p>
 					<%= f.label 		:mc_option_b, "Answer B" %><br />
-					<%= f.text_field 	:mc_option_b %>
+					<%= f.text_field 	:mc_option_b, :size => 42 %>
 					<%= f.radio_button  :mc_answer, "B" %>
 				</p>
 
 			  	<p>
 					<%= f.label 		:mc_option_c, "Answer C" %><br />
-					<%= f.text_field 	:mc_option_c %>
+					<%= f.text_field 	:mc_option_c, :size => 42 %>
 					<%= f.radio_button  :mc_answer, "C" %>
 				</p>
 
 			  	<p>
 					<%= f.label 		:mc_option_d, "Answer D" %><br />
-					<%= f.text_field 	:mc_option_d %>
+					<%= f.text_field 	:mc_option_d, :size => 42 %>
 					<%= f.radio_button  :mc_answer, "D" %>
 				</p>
+
+				<!-- Submit button -->
+				<div class="quiz-submit">
+					<%= f.submit 'Create' %>
+				</div>
 
 			</div>
 
@@ -103,22 +108,16 @@
 
 			</div>
 
-			<!-- Submit button -->
-			<div>
-				<%= f.submit 'Create' %>
-			</div>
-
 		</div>
-
-
 
 	<% end %> <!-- Form -->
 
 </div>
 
-<!-- Show either form to enter verse reference or form to enter MCQ -->
-<script type="text/javascript">
 
+<script language="JavaScript" type="text/javascript"><!--
+
+	//------ Show either form to enter verse reference or form to enter MCQ  -------------------
 	$passage = $("p#passage");
 	$mcq = $("div#mcq");
 
@@ -130,8 +129,18 @@
 			$passage.show();
 			$mcq.hide();
 		}
-	}
+	};
 
 	questionType($("select#quiz_question_question_type").val()); // called when the question type is changed
 
-</script>
+	$(document).ready(function() {
+
+	    //------- Show verse in major translations ----------------
+	    $("#quiz_question_supporting_ref").observe_field(0.2, function( ) {
+	        // search and display results with callback function
+	        multiTranslationSearch( this.value, displayMultiTranslationSearchResultsFn );
+	    });
+
+    });
+
+--></script>

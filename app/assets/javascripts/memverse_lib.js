@@ -68,12 +68,37 @@ function mv_search(userText, displayResultsFn) {
     } else {
         $.get("/mv_tag_search.json", { searchParams: text },
             searchResultsCallback, "json" );
-    }
+    };
 }
 
 /******************************************************************************
- * Display a passage
+ * Return verse in all major translations
  ******************************************************************************/
+function multiTranslationSearch(userText, displayResultsFn) {
+
+    // This function definition is necessary to avoid repetition in the different types of
+    // search queries. It handles the custom callback function for mv_search
+    function searchResultsCallback( verses ) {
+        if( $.isFunction(displayResultsFn) ) {
+          displayResultsFn.call(this, verses);
+        }
+    };
+
+    // Truncate queries of excessive length
+    if (userText.length > 100) {
+        var text = jQuery.trim(userText).substring(0, 100).split(" ").slice(0, -1).join(" ");
+    }
+    else {
+        var text = userText;
+    }
+
+    // User is looking for a single verse
+    if (ref = parseVerseRef( text )) {
+        $.get("/major_tl_lookup.json", { bk: ref.bk, ch: ref.ch, vs: ref.vs },
+            searchResultsCallback, "json" );
+    };
+
+}
 
 /******************************************************************************
  * Capitalize strings: romans -> Romans
