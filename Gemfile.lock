@@ -14,7 +14,7 @@ GIT
 
 GIT
   remote: git://github.com/avitus/bloggity.git
-  revision: ef665c0024bf4d171aadf0ccd4bd450bc346f169
+  revision: 31442cd627f2e5d8ad38d777054b90f1dc238e83
   specs:
     bloggity (0.0.4)
       jquery-rails
@@ -257,6 +257,7 @@ GEM
     i18n (0.6.5)
     i18n-js (2.1.2)
       i18n
+    ice_cube (0.11.0)
     innertube (1.1.0)
     jasmine (1.3.2)
       jasmine-core (~> 1.3.1)
@@ -409,6 +410,11 @@ GEM
       json
       redis (>= 3.0.4)
       redis-namespace (>= 1.3.1)
+    sidetiq (0.4.0)
+      celluloid (>= 0.14.1)
+      ice_cube (~> 0.11.0)
+      json
+      sidekiq (~> 2.14.0)
     simple-random (0.9.3)
     simple_form (3.0.0.rc)
       actionpack (>= 4.0.0.rc1, < 4.1)
@@ -538,6 +544,7 @@ DEPENDENCIES
   rspec-rails (>= 2.6.1)
   sass-rails (~> 4.0.0)
   sidekiq
+  sidetiq
   sinatra
   sitemap_generator
   slim
