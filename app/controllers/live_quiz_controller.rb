@@ -27,6 +27,8 @@ class LiveQuizController < ApplicationController
 
     quiz_questions = @quiz.quiz_questions.order("question_no ASC")
     @num_questions = quiz_questions.length
+
+    KnowledgeQuiz.perform_async # ALV - Hack to get quiz started for now
   end
 
   #-----------------------------------------------------------------------------------------------------------
