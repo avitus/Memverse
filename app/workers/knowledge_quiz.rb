@@ -1,13 +1,16 @@
 class KnowledgeQuiz
 
   include Sidekiq::Worker
-  # include Sidetiq::Schedulable
+  include Sidetiq::Schedulable
 
-  # recurrence do
-  #   weekly.day_of_week(2).hour_of_day(9)   # Every Tuesday at 9am
-  # end
+  recurrence do
+     # weekly.day_of_week(2).hour_of_day(9)   # Every Tuesday at 9am
+     minutely(10)                             # For development
+  end
 
   def perform
+
+    puts "===> Starting quiz at " + Time.now
 
     # Clear participant scores from Redis
     participants = $redis.keys("user-*")
@@ -19,11 +22,19 @@ class KnowledgeQuiz
     # Set up number of questions
     q_num_array = Array(1..10)
 
+    # Set up PubNub channel
+    channel = "quiz-1"  # General knowledge quiz will always have ID=1
+
+    # PubNub callback function - From version 3.4 PubNub is fully asynchronous
+    @my_callback = lambda { |message| puts(message) }
+
     # Iterate through questions
     q_num_array.each do |q_num|
 
+      puts "===> Question: " + q_num
+
       # Pick a question at random
-      q = QuizQuestion.where(:question_type => 'MCQ').sort_by{ rand }.first
+      q = QuizQuestion.where(:question_type => 'mcq').sort_by{ rand }.first
 
       # Publish question
       PN.publish( :channel  => channel, :message  => {
@@ -45,6 +56,9 @@ class KnowledgeQuiz
       sleep(30)
 
       # Update scoreboard
+
+      puts "===> Updating scoreboard"
+
       scoreboard = Array.new
       participants = $redis.keys("user-*")
       participants.each { |p| scoreboard << $redis.hgetall(p) }
@@ -62,8 +76,8 @@ class KnowledgeQuiz
 
     # Update quiz status in redis
     $redis.hset("quiz-bible-knowledge", "status", "Finished")
-    puts "Quiz complete"
 
+    puts "===> Finished quiz at " + Time.now
 
   end
 
