@@ -1,9 +1,12 @@
 <% page_title "Live Quiz :: " + @quiz.name %>
 
+<!-- Quiz instructions : Pop-up box -->
 <div id="welcome-box" style="display:none">
+
 	<h2>Welcome!</h2>
 
 	<% if !["NAS", "NKJ", "KJV", "ESV"].include?(@current_user.translation) %>
+	
 		<div id="select-trans">
 			<h3>Choose a Version</h3>
 
@@ -11,22 +14,24 @@
 			<!--<p>Please select a version to use: <a href="#ESV">ESV 2011</a>, <a href="#NAS">NASB</a>, <a href="#NKJ">NKJV</a>, or <a href="#KJV">KJV</a>. (Note: <%= @current_user.translation %> will remain your default version; your selection now is just for this quiz.)</p>-->
 			<p>The <strong>valid versions</strong> are ESV (2011), NASB, NKJ, and KJV. Please go to your profile by <a href="/update_profile">clicking here</a>, update your version to one of these, and then come back for the quiz. Thanks!</p>
 		</div>
+	
 	<% else %>
 
-	<h3>Quiz Instructions</h3>
-	<p>
-		The quiz will have <strong><%= @num_questions %> questions</strong> and last <strong><%= "#{@minutes} minute#{"s" unless @minutes == 1}" %> and <%= "#{@seconds} second#{"s" unless @seconds == 1}" %></strong>. Each question will be worth a maximum of 15 points.
-	</p>
-	<p>
-		You will answer all the questions on the left side. The middle column will display the scoreboard and the right column is only
-		used for chatting with the other contestants.
-	</p>
+		<h3>Quiz Instructions</h3>
+		<p>
+			The quiz will have <strong><%= @num_questions %> questions</strong> and last <strong><%= "#{@minutes} minute#{"s" unless @minutes == 1}" %> and <%= "#{@seconds} second#{"s" unless @seconds == 1}" %></strong>. Each question will be worth a maximum of 15 points.
+		</p>
+		<p>
+			You will answer all the questions on the left side. The middle column will display the scoreboard and the right column is only
+			used for chatting with the other contestants.
+		</p>
 
-	<p>Your version is set to <strong><%= @current_user.translation %></strong>.</p>
+		<p>Your version is set to <strong><%= @current_user.translation %></strong>.</p>
 
-	<p><input type="button" class="green-button" onclick="$.fancybox.close()" value="OK, I'm ready!" />
+		<p><input type="button" class="green-button" onclick="$.fancybox.close()" value="OK, I'm ready!" />
 
 	<% end %>
+
 </div>
 
 <div class="white-box-with-margins" style="position:relative">
@@ -104,7 +109,7 @@ $(document).ready(function() {
         publish_key   : '<%= PN.publish_key %>',
         subscribe_key : '<%= PN.subscribe_key %>',
         uuid          : '<%= current_user.id %>'
-    })
+    });
 
     // LISTEN
     pubnub.subscribe({
@@ -137,53 +142,6 @@ $(document).ready(function() {
 		$("#select-trans").text("Thank you. Your translation is set to "+translation+"for this quiz.").effect('highlight', {}, 3000);
 	});
 
-    function handle_message(m){
-    	switch(m.meta) {
-    		case "chat":
-    			var first_colon  = parseInt(m.data.indexOf(':'));
-				var sender_id    = m.data.substring(0,first_colon);
-				var second_colon = parseInt(m.data.indexOf(':',first_colon+1));
-				var user         = m.data.substring(first_colon+1,second_colon);
-				var message      = m.data.substring(second_colon+1);
-
-				put_chat(user,message,m.meta,sender_id);
-
-				break;
-    		case "chat_status":
-	    		$("#chat_status").text(m.status);
-				var user    = "Memverse Server"
-				var message = "Chat Channel " + m.status;
-
-				put_chat(user,message,m.meta);
-
-				break;
-    		case "question":
-    			handle_question(m);
-
-    			break;
-    		case "scoreboard":
-    			update_scoreboard(m);
-
-    			break;
-    	}
-    }
-
-    function put_chat(user,message,meta,sender_id){
-
-		var u = $("<li/>").text(user).addClass("chat-username");
-		var m = $("<li/>").text(message).addClass("chat-message");
-
-		u.attr("id",sender_id); // add sender_id if present
-
-		if ((u.text() == $("#chat-stream-narrow li.chat-username").last().text()) && ($("#chat-stream-narrow li").last().attr('class') != 'chat-announcement')) {
-			u = "";
-		}
-
-		chat_stream_scroll(function(){
-			$("#chat-stream-narrow").append(u).append(m);
-		});
-
-    }
 
     function presence(){
     	// update list of users in room
@@ -192,199 +150,12 @@ $(document).ready(function() {
 	var jug = new Juggernaut();
 	jug.meta = {user_id: <%= current_user.id %>, user_name: "<%= current_user.name %>", gravatar_url: "<%= (current_user.blog_avatar_url + "&s=32").html_safe %>"};
 
-	function addInputBox(questionType, questionNum, questionAnswer)	{
-		selector = "#question-" + questionNum;
-		switch(questionType) {
-			case 'recitation':
-				$(selector + " #q-answer").html("<textarea class='q-answer-input' name='txt" + questionNum + "' id='" + questionNum + "'></textarea>");
-				$(selector + " #q-answer").append("<br/>")
-				$(selector + " #q-answer").append("<input type='submit' value='Answer!' id='submit-answer' class='button-link'>");
-				if (!$('#msg_body').is(':focus')) {
-					$("textarea#" + questionNum).focus();
-				}
-				break;
 
-			case 'reference':
-				$(selector + " #q-answer").html("<input type='text' class='q-answer-input' name='txt" + questionNum + "' id='" + questionNum + "'</input>");
-				$(selector + " #q-answer").append("<input type='submit' value='Answer!' id='submit-answer' class='button-link'>");
-				$(selector + ' #q-answer input[type="text"]').autocomplete({ source: ['Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy', 'Joshua', 'Judges', 'Ruth', '1 Samuel', '2 Samuel',
-					'1 Kings', '2 Kings','1 Chronicles', '2 Chronicles', 'Ezra', 'Nehemiah', 'Esther', 'Job', 'Psalm', 'Proverbs',
-					'Ecclesiastes', 'Song of Songs', 'Isaiah', 'Jeremiah', 'Lamentations', 'Ezekiel', 'Daniel', 'Hosea', 'Joel',
-					'Amos', 'Obadiah', 'Jonah', 'Micah', 'Nahum', 'Habakkuk', 'Zephaniah', 'Haggai', 'Zechariah', 'Malachi', 'Matthew',
-					'Mark', 'Luke', 'John', 'Acts', 'Romans', '1 Corinthians', '2 Corinthians', 'Galatians', 'Ephesians', 'Philippians',
-					'Colossians', '1 Thessalonians', '2 Thessalonians', '1 Timothy', '2 Timothy', 'Titus', 'Philemon', 'Hebrews', 'James',
-					'1 Peter', '2 Peter', '1 John', '2 John', '3 John', 'Jude', 'Revelation']
-				});
-				if (!$('#msg_body').is(':focus')) {
-					$(selector + ' #q-answer input[type="text"]').focus();
-				}
-				break;
 
-			case 'mcq':
-				break;
 
-			default:
-				$(selector + " #q-answer").html("<input type='text' class='q-answer-input'" + "name='txt" + questionNum + "' id='" + questionNum + "'</input>");
-				$(selector + " #q-answer").append("<input type='submit' value='Answer!' id='submit-answer' class='button-link'>");
-	    }
-
-		$('input#submit-answer').click(function() {
-			var userAnswer = $('.q-answer-input').val();
-			grade = getScore(questionAnswer, userAnswer, questionType);
-			if (grade.score != null) {
-				$.post("/record_score", {	usr_id:		<%= current_user.id %>,
-											usr_name:	'<%= current_user.name_or_login %>',
-											usr_login:	'<%= current_user.login %>',
-											score: 		grade.score } );
-				$(selector + " #q-msg").html("<p>" + grade.msg + "</p>").children("p").effect('highlight', {}, 3000);
-				$(selector + " #q-answer").html("<strong>Your answer: </strong>" + userAnswer);
-
-				// make q-dot red or green, depending on score
-				if(grade.score == 15){
-					$(".q-dot.current").addClass("green");
-				} else {
-					$(".q-dot.current").addClass("red");
-				}
-			}
-		});
-	}
-
-	function highlightLast5(periods) {
-		if ($.countdown.periodsToSeconds(periods) == 5) {
-			$(this).addClass('red-highlight');
-		}
-	}
 
 	function disableSubmission() {
 		$('input#submit-answer').hide();
-	}
-
-	function handle_question(data) {
-		var q_num  = data.q_num;
-		var q_type = data.q_type;
-		var q_text;
-		var q_ref;
-		var q_show;
-		var q_ansr;
-
-		var mc_option_a;
-		var mc_option_b;
-		var mc_option_c;
-		var mc_option_d;
-		var mc_answer;
-
-		if (q_type != 'mcq') {
-			q_ref  = data.q_ref;
-			q_text = data.q_passages[translation];
-		} else {
-			q_text     = data.mc_question;
-			q_option_a = data.mc_option_a;
-			q_option_b = data.mc_option_b;
-			q_option_c = data.mc_option_c;
-			q_option_d = data.mc_option_d;
-			mc_answer  = data.mc_answer;
-		}
-		q_time = data.time_alloc;
-
-		switch (q_type)
-		{
-			case 'recitation':
-			  q_show = q_ref;
-			  q_ansr = q_text;
-			break;
-
-			case 'reference':
-			  q_show = q_text;
-			  q_ansr = q_ref;
-			break;
-
-			case 'mcq':
-			  q_show = q_text;
-			  q_ansr = mc_answer;
-			break;
-
-			default:
-			  q_show = 'Error'
-		}
-
-		$(".q-dot.current").removeClass("current");
-		$("#dot-"+q_num).addClass("current");
-
-		var p   = $("<p/>").text(q_show);
-		var q   = "#question-"+q_num;
-
-		$(q+" #q-question").html(p);
-		$(q+" #q-question").scrollTop($(q)[0].scrollHeight);
-
-		$(".question").hide();
-		$(q).show();
-
-		if(q_type == 'reference' || q_type == 'recitation'){
-			addInputBox(q_type, q_num, q_ansr);
-		} else if (q_type == 'mcq'){
-			$(q+" #q-answer").html(setupMCQ(q_option_a, q_option_b, q_option_c, q_option_d, mc_answer));
-			$('input#submit-answer').click(function() {
-				$(this).remove();
-				var userAnswer = $('input[name=mcq]:checked').val();
-				grade = getScore(q_ansr, userAnswer, q_type);
-				if (grade.score != null) {
-					$.post("/record_score", {	usr_id:		<%= current_user.id %>,
-												usr_name:	'<%= current_user.name_or_login %>',
-												usr_login:	'<%= current_user.login %>',
-												score: 		grade.score } );
-
-					selector = "#question-" + q_num;
-					$(selector + " #q-msg").html("<p>" + grade.msg + "</p>").children("p").effect('highlight', {}, 3000);
-					if (grade.score != 15) { // if it's wrong
-						$(selector + " #q-answer input#opt_" + userAnswer).parent().addClass("incorrect");
-						$(".q-dot.current").addClass("red");
-					} else {
-						$(".q-dot.current").addClass("green");
-					}
-					$(selector + " #q-answer:visible input#opt_" + q_ansr.toLowerCase()).parent().addClass("correct");
-					$(selector + " #q-msg q-answer input").remove();
-				}
-			});
-		}
-
-		// countdown clock
-		$('#quiz-timer').countdown('destroy').removeClass('red-highlight');
-		$('#quiz-timer').countdown({until: +q_time, onTick: highlightLast5, onExpiry: disableSubmission, format: 'S'});
-
-		if (q_num == <%= @num_questions %>) { // if last question
-			// countdown till question and quiz over
-			$("#countdown-till").text("till question and quiz over");
-			// setTimeout to put up "Finished" status message when it's done
-			setTimeout(function(){$("#countdown-till").html("<strong>Quiz Status:</strong> Finished").effect('highlight', {}, 3000);$('#quiz-timer').countdown('destroy').removeClass('red-highlight');disableSubmission();},q_time*1000);
-		} else {
-			$("#countdown-till").text("till next question");
-		}
-	}
-
-	function update_scoreboard(data){
-
-		$("#live-quiz-scores").empty();
-
-		$.each(data.scoreboard, function(i, item) {
-
-			var user  	= item.name + " ";
-			var score 	= item.score;
-			var li 		= $("<li/>");
-			var u 		= $("<span/>");
-			var s 		= $("<span/>");
-
-			u.text(user).addClass("scoreboard-username");
-			s.text(score).addClass("scoreboard-score");
-
-			if(item.login == "<%= current_user.login %>"){
-				li.addClass("hilite");
-			}
-
-			li.append(u).append(s);
-
-			$("#live-quiz-scores").append(li);
-			$("#live-quiz-scores").scrollTop(0);
-		});
 	}
 
 	user_id = "<%= current_user.id %>";
@@ -452,13 +223,13 @@ $(document).ready(function() {
 
 	<% if current_user == @quiz_master %>
 
-	$("#chat-stream-narrow").delegate("li.chat-username", "hover", function(){
-		$(".ban").remove(); // remove any previous ban links
-		if($(this).attr("id") && $(this).attr("id").length > 0){ // server announcements don't have user id
-			ban_id = $(this).attr("id");
-			$(this).append(" <a href='/chat/toggle_ban?user_id="+ban_id+"' data-remote class='ban'>(toggle ban)</a>");
-		}
-	});
+		$("#chat-stream-narrow").delegate("li.chat-username", "hover", function(){
+			$(".ban").remove(); // remove any previous ban links
+			if($(this).attr("id") && $(this).attr("id").length > 0){ // server announcements don't have user id
+				ban_id = $(this).attr("id");
+				$(this).append(" <a href='/chat/toggle_ban?user_id="+ban_id+"' data-remote class='ban'>(toggle ban)</a>");
+			}
+		});
 
 	<% end %>
 
@@ -485,6 +256,7 @@ $(document).ready(function() {
 		}
 	}
 
+	// Set quiz status
 	$.getJSON('/live_quiz/till_start/<%= @quiz.id %>.json', function(data) {
 		if (data.status) {
 			$("#countdown-till").html("<strong>Quiz Status:</strong> " + data.status);

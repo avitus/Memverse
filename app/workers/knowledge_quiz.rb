@@ -10,7 +10,7 @@ class KnowledgeQuiz
 
   def perform
 
-    puts "===> Starting quiz at " + Time.now
+    puts "===> Starting quiz at " + Time.now.to_s
 
     # Clear participant scores from Redis
     participants = $redis.keys("user-*")
@@ -19,14 +19,35 @@ class KnowledgeQuiz
     # Save status of quiz in redis
     $redis.hset("quiz-bible-knowledge", "status", "In progress. Wait for question.")
 
-    # Set up number of questions
-    q_num_array = Array(1..10)
+
 
     # Set up PubNub channel
     channel = "quiz-1"  # General knowledge quiz will always have ID=1
 
     # PubNub callback function - From version 3.4 PubNub is fully asynchronous
     @my_callback = lambda { |message| puts(message) }
+
+    # Open quiz chat channel
+    if $redis.exists("chat-#{channel}")
+      status = $redis.hmget("chat-#{channel}", "status").first
+    end
+
+    unless status && status == "Open"
+      new_status = "Open"
+      $redis.hset("chat-#{channel}", "status", new_status)
+      PN.publish( :channel  => channel, :message  => {
+          :meta => "chat_status",
+          :status => new_status
+        },
+        :callback => @my_callback
+      )
+    end
+
+    # Allow time for chatting
+    sleep(60)  # 1 minute
+
+    # Set up number of questions
+    q_num_array = Array(1..10)
 
     # Iterate through questions
     q_num_array.each do |q_num|
@@ -78,6 +99,22 @@ class KnowledgeQuiz
     $redis.hset("quiz-bible-knowledge", "status", "Finished")
 
     puts "===> Finished quiz at " + Time.now
+
+    ### Close chat 10 minutes after quiz
+    puts "Quiz now over. Sleeping for 10 minutes, then shutting down chat."
+    sleep(60)
+
+    new_status = "Closed"
+    $redis.hset("chat-#{channel}", "status", new_status)
+    PN.publish( :channel  => channel, :message  => {
+        :meta => "chat_status",
+        :status => new_status
+      },
+      :callback => @my_callback
+    )
+
+    puts "Chat closed and rake task finished."
+
 
   end
 

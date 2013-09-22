@@ -6,9 +6,8 @@ class LiveQuizController < ApplicationController
 
   before_filter :authenticate_user!, :only => :live_quiz
 
-
   #-----------------------------------------------------------------------------------------------------------
-  # Quiz setup
+  # Setup quiz room when user arrives
   #-----------------------------------------------------------------------------------------------------------
   def live_quiz
 
@@ -21,16 +20,19 @@ class LiveQuizController < ApplicationController
     @quiz = Quiz.find(params[:quiz] || 1 )
     @quiz_master = @quiz.user
 
-    Rails.logger.info("*** Using quiz #{@quiz.name}. The quiz master is #{@quiz.user.name_or_login}.")
-
-	  @minutes = @quiz.quiz_length / 60
-	  @seconds = @quiz.quiz_length - (@minutes * 60)
-
     # Check status of chat channel
     @chat_status = ($redis.exists("chat-quiz-#{@quiz.id}") && $redis.hmget("chat-quiz-#{@quiz.id}", "status").first == "Open") ? "Open" : "Closed"
 
-    quiz_questions = @quiz.quiz_questions.order("question_no ASC")
-    @num_questions = @quiz.id == 1 ? 10 : quiz_questions.length
+    # Set up quiz time and number of questions - show when user first enters quiz room
+    if @quiz.id == 1
+      @minutes       =  5 
+      @seconds       =  0 
+      @num_questions =  10
+    else
+      @minutes       =  @quiz.quiz_length / 60
+      @seconds       =  @quiz.quiz_length - (@minutes * 60)
+      @num_questions =  @quiz.quiz_questions.length
+    end
 
   end
 
