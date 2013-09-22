@@ -3,6 +3,8 @@ class KnowledgeQuiz
   include Sidekiq::Worker
   include Sidetiq::Schedulable
 
+  sidekiq_options :retry => false # Don't retry quiz if something goes wrong
+
   recurrence do
      # weekly.day_of_week(2).hour_of_day(9)   # Every Tuesday at 9am
      minutely(10)                             # For development
