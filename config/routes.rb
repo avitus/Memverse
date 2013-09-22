@@ -1,11 +1,15 @@
 MemverseApp::Application.routes.draw do
   require 'sidekiq/web'
 
-  mount Sidekiq::Web,     :at => '/sidekiq'
   mount Forem::Engine,    :at => '/forums'
   mount Bloggity::Engine, :at => '/blog'
   mount RailsAdmin::Engine    => '/admin', :as => 'rails_admin'
   mount Ckeditor::Engine      => '/ckeditor'
+
+  # Allow Admin users to monitor Sidekiq - used for quiz schedule
+  authenticate :user, lambda { |u| u.admin? } do
+    mount Sidekiq::Web => '/sidekiq'
+  end
 
   get '/split' => Split::Dashboard, :anchor => false, :constraints => lambda { |request|
     request.env['warden'].authenticated?    # are we authenticated?
@@ -184,10 +188,10 @@ MemverseApp::Application.routes.draw do
   get "/chat/toggle_ban",        :controller => "chat", :action => "toggle_ban"
 
   # Routes for live quiz
-  get '/live_quiz'              => 'live_quiz#live_quiz'     # Main quiz URL
-  get '/live_quiz/channel1'     => 'live_quiz#channel1'      # Chat channel
-  get '/live_quiz/scoreboard'   => 'live_quiz#scoreboard'    # Scoreboard for quiz
-  get '/record_score'           => 'live_quiz#record_score'
+  get  '/live_quiz'              => 'live_quiz#live_quiz'     # Main quiz URL
+  get  '/live_quiz/channel1'     => 'live_quiz#channel1'      # Chat channel
+  get  '/live_quiz/scoreboard'   => 'live_quiz#scoreboard'    # Scoreboard for quiz
+  post '/record_score'           => 'live_quiz#record_score'
 
   # Legacy routes for pages that no longer exist but have incoming links
   get '/starter_pack' => 'memverses#home'  # Retired in 2012

@@ -11,6 +11,8 @@ class LiveQuizController < ApplicationController
   # Quiz setup
   #-----------------------------------------------------------------------------------------------------------
   def live_quiz
+
+    # Redirect users who haven't chosen a translation
     if current_user.translation.nil?
       flash[:notice] = "Please choose a translation and then return to the quiz."
       redirect_to update_profile_path
@@ -18,17 +20,18 @@ class LiveQuizController < ApplicationController
 
     @quiz = Quiz.find(params[:quiz] || 1 )
     @quiz_master = @quiz.user
+
     Rails.logger.info("*** Using quiz #{@quiz.name}. The quiz master is #{@quiz.user.name_or_login}.")
 
 	  @minutes = @quiz.quiz_length / 60
 	  @seconds = @quiz.quiz_length - (@minutes * 60)
 
+    # Check status of chat channel
     @chat_status = ($redis.exists("chat-quiz-#{@quiz.id}") && $redis.hmget("chat-quiz-#{@quiz.id}", "status").first == "Open") ? "Open" : "Closed"
 
     quiz_questions = @quiz.quiz_questions.order("question_no ASC")
-    @num_questions = quiz_questions.length
+    @num_questions = @quiz.id == 1 ? 10 : quiz_questions.length
 
-    KnowledgeQuiz.perform_async # ALV - Hack to get quiz started for now
   end
 
   #-----------------------------------------------------------------------------------------------------------
@@ -94,20 +97,29 @@ class LiveQuizController < ApplicationController
   # Return time till quiz starts
   #-----------------------------------------------------------------------------------------------------------
   def till_start
+
     @quiz = Quiz.find(params[:id])
-    @till = @quiz.start_time - Time.now # time till in seconds
+    @till = @quiz.start_time - Time.now # Remaining time in seconds
 
     if @till >= 0
-	  hours = (@till/3600).to_i
-	  minutes = (@till/60 - hours * 60).to_i
-	  seconds = (@till - (minutes * 60 + hours * 3600)).to_i
+
+      # Calculate time left in HH:MM:SS
+  	  hours   = (@till/3600).to_i
+  	  minutes = (@till/60 - hours * 60).to_i
+  	  seconds = (@till - (minutes * 60 + hours * 3600)).to_i
 
       render :json => {:time => "+#{hours}h +#{minutes}m +#{seconds}s"}
+
     elsif $redis.exists("quiz-#{@quiz.id}") && status = $redis.hmget("quiz-#{@quiz.id}", "status")
+
       render :json => {:status => status}
+
     else
+
       render :json => {:status => "Finished"}
+
     end
+
   end
 
   #-----------------------------------------------------------------------------------------------------------
