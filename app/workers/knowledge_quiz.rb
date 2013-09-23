@@ -54,7 +54,7 @@ class KnowledgeQuiz
     # Iterate through questions
     q_num_array.each do |q_num|
 
-      puts "===> Question: " + q_num
+      puts "===> Question: " + q_num.to_s
 
       # Pick a question at random
       q = QuizQuestion.where(:question_type => 'mcq').sort_by{ rand }.first
