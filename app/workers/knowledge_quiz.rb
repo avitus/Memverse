@@ -69,14 +69,14 @@ class KnowledgeQuiz
           :mc_option_b => q.mc_option_b,
           :mc_option_c => q.mc_option_c,
           :mc_option_d => q.mc_option_d,
-          :mc_answer => q.mc_answer,
-          :time_alloc => 30
+          :mc_answer   => q.mc_answer,
+          :time_alloc  => 20
         },
         :callback => @my_callback
       )
 
       # Time to answer question
-      sleep(30)
+      sleep(20)
 
       # Update scoreboard
 
@@ -100,7 +100,7 @@ class KnowledgeQuiz
     # Update quiz status in redis
     $redis.hset("quiz-bible-knowledge", "status", "Finished")
 
-    puts "===> Finished quiz at " + Time.now
+    puts "===> Finished quiz at " + Time.now.to_s
 
     ### Close chat 10 minutes after quiz
     puts "Quiz now over. Sleeping for 10 minutes, then shutting down chat."

@@ -460,8 +460,7 @@ class UtilsController < ApplicationController
     @page_title = "Memverse Leaderboard"
     @leaderboard = User.top_users  # returns top users sorted by number of verses memorized
 
-    # TODO: move this somewhere else
-    DailyStats.update()
+    DailyStats.update()  # TODO: this now runs as a Sidekiq task ... can remove once we trust Sidetiq scheduler
 
   end
 

@@ -1,16 +1,12 @@
 var quizRoom = {
 
-    currentUserID:    null,
-    currentUserName:  null,
-    currentUserLogin: null,
+    numQuestions:     null,
 
-    initialize: function ( userID, userName, userLogin ) {
+    initialize: function ( numQuestions ) {
 
-        quizRoom.currentUserID    = userID;
-        quizRoom.currentUserName  = userName;
-        quizRoom.currentUserLogin = userLogin;
-    
-    }
+        this.numQuestions     = numQuestions;
+
+    },
 
     /******************************************************************************
      * Handle questions
@@ -78,15 +74,17 @@ var quizRoom = {
         if(q_type == 'reference' || q_type == 'recitation'){
             addInputBox(q_type, q_num, q_ansr);
         } else if (q_type == 'mcq'){
-            $(q+" #q-answer").html(setupMCQ(q_option_a, q_option_b, q_option_c, q_option_d, mc_answer));
+
+            $(q+" #q-answer").html( setupMCQ(q_option_a, q_option_b, q_option_c, q_option_d, mc_answer) );
+
             $('input#submit-answer').click(function() {
                 $(this).remove();
                 var userAnswer = $('input[name=mcq]:checked').val();
                 grade = getScore(q_ansr, userAnswer, q_type);
                 if (grade.score != null) {
-                    $.post("/record_score", {   usr_id:     <%= current_user.id %>,
-                                                usr_name:   '<%= current_user.name_or_login %>',
-                                                usr_login:  '<%= current_user.login %>',
+                    $.post("/record_score", {   usr_id:     memverseUserID,
+                                                usr_name:   memverseUserName,
+                                                usr_login:  memverseUserLogin,
                                                 score:      grade.score } );
 
                     selector = "#question-" + q_num;
@@ -105,13 +103,17 @@ var quizRoom = {
 
         // countdown clock
         $('#quiz-timer').countdown('destroy').removeClass('red-highlight');
-        $('#quiz-timer').countdown({until: +q_time, onTick: highlightLast5, onExpiry: disableSubmission, format: 'S'});
+        $('#quiz-timer').countdown({until: +q_time, onTick: this.highlightLast5, onExpiry: this.disableSubmission, format: 'S'});
 
-        if (q_num == <%= @num_questions %>) { // if last question
+        if (q_num == this.numQuestions ) { // if last question
             // countdown till question and quiz over
             $("#countdown-till").text("till question and quiz over");
             // setTimeout to put up "Finished" status message when it's done
-            setTimeout(function(){$("#countdown-till").html("<strong>Quiz Status:</strong> Finished").effect('highlight', {}, 3000);$('#quiz-timer').countdown('destroy').removeClass('red-highlight');disableSubmission();},q_time*1000);
+            setTimeout( function() {
+                $("#countdown-till").html("<strong>Quiz Status:</strong> Finished").effect('highlight', {}, 3000);
+                $('#quiz-timer').countdown('destroy').removeClass('red-highlight');
+                quizRoom.disableSubmission();
+            },q_time*1000);
         } else {
             $("#countdown-till").text("till next question");
         }
@@ -122,7 +124,7 @@ var quizRoom = {
      ******************************************************************************/
     disableSubmission: function () {
         $('input#submit-answer').hide();
-    }
+    },
 
     /******************************************************************************
      * Handle real-time quiz messages
@@ -136,7 +138,7 @@ var quizRoom = {
                 var user         = m.data.substring(first_colon+1,second_colon);
                 var message      = m.data.substring(second_colon+1);
 
-                put_chat(user,message,m.meta,sender_id);
+                this.put_chat(user,message,m.meta,sender_id);
 
                 break;
             case "chat_status":
@@ -144,26 +146,20 @@ var quizRoom = {
                 var user    = "Memverse Server"
                 var message = "Chat Channel " + m.status;
 
-                put_chat(user,message,m.meta);
+                this.put_chat(user,message,m.meta);
 
                 break;
             case "question":
-                handle_question(m);
+                this.handle_question(m);
 
                 break;
             case "scoreboard":
-                update_scoreboard(m);
+                this.update_scoreboard(m);
 
                 break;
         }
     },
 
-    /******************************************************************************
-     * List of users in room - TODO: do we need this?
-     ******************************************************************************/
-    presence: function (){
-        // update list of users in room
-    }
 
     /******************************************************************************
      * Add correct question input form
@@ -208,9 +204,9 @@ var quizRoom = {
             var userAnswer = $('.q-answer-input').val();
             grade = getScore(questionAnswer, userAnswer, questionType);
             if (grade.score != null) {
-                $.post("/record_score", { usr_id:     currentUserID,
-                                          usr_name:   currentUserName,
-                                          usr_login:  currentUserLogin,
+                $.post("/record_score", { usr_id:     memverseUserID,
+                                          usr_name:   memverseUserName,
+                                          usr_login:  memverseUserLogin,
                                           score:      grade.score } );
                 $(selector + " #q-msg").html("<p>" + grade.msg + "</p>").children("p").effect('highlight', {}, 3000);
                 $(selector + " #q-answer").html("<strong>Your answer: </strong>" + userAnswer);
@@ -281,7 +277,20 @@ var quizRoom = {
         if ($.countdown.periodsToSeconds(periods) == 5) {
             $(this).addClass('red-highlight');
         }
-    } // last function
+    },
+
+    /******************************************************************************
+     * Show quizzers
+     ******************************************************************************/
+    toggleQuizzersWindow: function () {
+        if( $('#roster-window').is(':visible') ) {
+            $('#roster-window').slideUp();
+            $(this).removeClass('expanded');
+        } else {
+            $('#roster-window').slideDown();
+            $(this).addClass('expanded');
+        }
+    }
 
 } // end of quizRoom scope
 
@@ -329,5 +338,7 @@ function mvSubmitQuizChat() {
         return true;
     }
 }
+
+
 
 

@@ -6,7 +6,7 @@
 	<h2>Welcome!</h2>
 
 	<% if !["NAS", "NKJ", "KJV", "ESV"].include?(@current_user.translation) %>
-	
+
 		<div id="select-trans">
 			<h3>Choose a Version</h3>
 
@@ -14,7 +14,7 @@
 			<!--<p>Please select a version to use: <a href="#ESV">ESV 2011</a>, <a href="#NAS">NASB</a>, <a href="#NKJ">NKJV</a>, or <a href="#KJV">KJV</a>. (Note: <%= @current_user.translation %> will remain your default version; your selection now is just for this quiz.)</p>-->
 			<p>The <strong>valid versions</strong> are ESV (2011), NASB, NKJ, and KJV. Please go to your profile by <a href="/update_profile">clicking here</a>, update your version to one of these, and then come back for the quiz. Thanks!</p>
 		</div>
-	
+
 	<% else %>
 
 		<h3>Quiz Instructions</h3>
@@ -35,6 +35,8 @@
 </div>
 
 <div class="white-box-with-margins" style="position:relative">
+
+	<!-- TOP QUIZ HEADER -->
 	<div id="quiz-header">
 		<h1 id="quiz-name"><%= @quiz.name %></h1>
 		<div id="quiz-timer"></div>
@@ -44,6 +46,7 @@
 		</div>
 	</div>
 
+	<!-- QUIZ QUESTIONS -->
 	<div id="live-quiz">
 		<div id="questions-answers">
 			<div>
@@ -54,23 +57,20 @@
 
 				<% for q in 1..@num_questions %>
 					<div id="question-<%= q %>" class="question" style="display:none">
-						<div id="q-msg">
-						</div>
-
-						<div id="q-question">
-						</div>
-
-						<div id="q-answer">
-						</div>
+						<div id="q-msg"></div>
+						<div id="q-question"></div>
+						<div id="q-answer"></div>
 					</div>
 				<% end %>
 			</div>
 		</div>
 	</div>
 
+	<!-- ROSTER -->
 	<div id="roster-window">
 	</div>
 
+	<!-- SCOREBOARD -->
 	<div id="live-scoreboard">
 		<h3>Scoreboard</h3>
 		<div id="live-quiz-scores">
@@ -78,6 +78,7 @@
 		</div>
 	</div>
 
+	<!-- CHAT WINDOW -->
 	<div id="chat-window">
 
 		<h3>
@@ -101,15 +102,18 @@
 </div>
 
 <script type="text/javascript" charset="utf-8">
+
+var memverseUserID    = "<%= current_user.id %>";            // global variable
+var memverseUserName  = "<%= current_user.name_or_login %>"; // global variable
+var memverseUserLogin = "<%= current_user.login %>";         // global variable
+
 $(document).ready(function() {
 
 	// Set up quiz room for user
-	quizRoom.initialize( '<%= current_user.id %>', 
-						 '<%= current_user.name_or_login %>', 
-						 '<%= current_user.login %>' );
+	quizRoom.initialize( '<%= @num_questions %>' );
 
 	// maybe move this into initialize function above ??
-	channel = "quiz-<%= @quiz.id %>";
+	channel     = "quiz-<%= @quiz.id %>";
     translation = "<%= current_user.translation %>";
 
 	// Init
@@ -122,10 +126,10 @@ $(document).ready(function() {
     // LISTEN
     pubnub.subscribe({
         channel  : channel,
-        message  : function(data) { handle_message(data) },
+        message  : function(data) { quizRoom.handle_message(data) },
         connect  : connect,
         presence : presence
-    })
+    });
 
     // Get List of Occupants and Occupancy Count.
     function connect() {
@@ -133,7 +137,12 @@ $(document).ready(function() {
     		channel : channel,
     		callback : presence
     	});
-    }
+    };
+
+    // Used to subscribe to PubNub channel
+    function presence (){
+        // update list of users in room
+    };
 
     $.fancybox($("#welcome-box").html(), {padding: 20});
 
@@ -206,16 +215,10 @@ $(document).ready(function() {
 		}
 	});
 
-	$("#quizzers-stats").click(function() {
-		if( $('#roster-window').is(':visible') ) {
-			$('#roster-window').slideUp();
-			$(this).removeClass('expanded');
-		} else {
-			$('#roster-window').slideDown();
-			$(this).addClass('expanded');
-		}
-	});
+	// Show window with quizzers
+	$("#quizzers-stats").click( quizRoom.toggleQuizzersWindow );
 
+	// Allow quiz master to unban users
 	<% if current_user == @quiz_master %>
 
 		$("#chat-stream-narrow").delegate("li.chat-username", "hover", function(){
@@ -228,6 +231,7 @@ $(document).ready(function() {
 
 	<% end %>
 
+	// Show previous questions
 	$("#questions-answers").delegate("span.q-dot", "click", function(){
 		active_question = !($(".q-dot.current").hasClass("green") || $(".q-dot.current").hasClass("red"));
 		if(!active_question && ($(this).hasClass("red") || $(this).hasClass("green"))) { // verify clickability
@@ -241,8 +245,6 @@ $(document).ready(function() {
 		}
 	});
 
-
-
 	// Set quiz status
 	$.getJSON('/live_quiz/till_start/<%= @quiz.id %>.json', function(data) {
 		if (data.status) {
@@ -252,5 +254,6 @@ $(document).ready(function() {
 			$("#countdown-till").text("till quiz starts");
 		}
 	});
+
 });
 </script>
