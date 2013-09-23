@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/FriendlyId/friendly_id.git
-  revision: 46e4c18fe819f8748e1fbf6b86443c2365cd3a32
+  revision: 637ec7d62a56fc81dcc141ce2d1c287fa4b40055
   specs:
     friendly_id (5.0.0.rc2)
       activerecord (~> 4.0.0)
@@ -37,7 +37,7 @@ GIT
 
 GIT
   remote: git://github.com/radar/forem.git
-  revision: cc7bf3033b0f66c75ada2995101ee63a507991fe
+  revision: dba2e783d48e03e7ded04c0653e4b2a6842807de
   branch: rails4
   specs:
     forem (1.0.0.beta1)
@@ -268,8 +268,7 @@ GEM
     jquery-rails (3.0.4)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
-    jquery-ui-rails (4.0.4)
-      jquery-rails
+    jquery-ui-rails (4.0.5)
       railties (>= 3.1.0)
     json (1.8.0)
     kaminari (0.14.1)
@@ -378,7 +377,7 @@ GEM
       rspec-expectations (~> 2.14.0)
       rspec-mocks (~> 2.14.0)
     rspec-core (2.14.5)
-    rspec-expectations (2.14.2)
+    rspec-expectations (2.14.3)
       diff-lcs (>= 1.1.3, < 2.0)
     rspec-mocks (2.14.3)
     rspec-rails (2.14.0)
