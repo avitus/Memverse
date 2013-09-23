@@ -93,7 +93,7 @@
 			<%= hidden_field_tag 'sender',  current_user.name_or_login %>
 			<%= hidden_field_tag 'user_id', current_user.id %>
 			<%= hidden_field_tag 'channel', "quiz-#{@quiz.id}" %>
-			<%= submit_tag 'Send', {:onclick => "return submitmsg();"} %>
+			<%= submit_tag 'Send', {:onclick => "return mvSubmitQuizChat();"} %>
 		<% end %>
 	</div>
 
@@ -110,6 +110,7 @@ $(document).ready(function() {
 
 	// maybe move this into initialize function above ??
 	channel = "quiz-<%= @quiz.id %>";
+    translation = "<%= current_user.translation %>";
 
 	// Init
     var pubnub = PUBNUB.init({
@@ -134,8 +135,6 @@ $(document).ready(function() {
     	});
     }
 
-    translation = "<%= current_user.translation %>";
-
     $.fancybox($("#welcome-box").html(), {padding: 20});
 
     // TODO: Get this working. This is selecting the select-trans that is invisible, not the one in the fancybox.
@@ -150,20 +149,9 @@ $(document).ready(function() {
 	});
 
 
-    function presence(){
-    	// update list of users in room
-    }
-
 	var jug = new Juggernaut();
 	jug.meta = {user_id: <%= current_user.id %>, user_name: "<%= current_user.name %>", gravatar_url: "<%= (current_user.blog_avatar_url + "&s=32").html_safe %>"};
 
-
-
-
-
-	function disableSubmission() {
-		$('input#submit-answer').hide();
-	}
 
 	user_id = "<%= current_user.id %>";
 	user_name = "<%= current_user.name %>";
@@ -253,15 +241,7 @@ $(document).ready(function() {
 		}
 	});
 
-	function submitmsg() {
-		if ($("#msg_body").val() == "") {
-			alert("Please put text in your message.");
-			return false;
-		}
-		else {
-			return true;
-		}
-	}
+
 
 	// Set quiz status
 	$.getJSON('/live_quiz/till_start/<%= @quiz.id %>.json', function(data) {
