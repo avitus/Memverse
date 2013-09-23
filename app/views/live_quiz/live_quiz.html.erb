@@ -102,6 +102,13 @@
 
 <script type="text/javascript" charset="utf-8">
 $(document).ready(function() {
+
+	// Set up quiz room for user
+	quizRoom.initialize( '<%= current_user.id %>', 
+						 '<%= current_user.name_or_login %>', 
+						 '<%= current_user.login %>' );
+
+	// maybe move this into initialize function above ??
 	channel = "quiz-<%= @quiz.id %>";
 
 	// Init
