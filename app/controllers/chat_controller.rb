@@ -5,16 +5,10 @@ class ChatController < ApplicationController
   before_filter :authenticate_user!, :only => :channel1
 
   # ----------------------------------------------------------------------------------------------------------
-  # View chat channel 1
-  # ----------------------------------------------------------------------------------------------------------
-  def channel1
-  end
-
-  # ----------------------------------------------------------------------------------------------------------
   # Open/close chat channel
   # ----------------------------------------------------------------------------------------------------------
-
   def toggle_channel
+
     channel = params[:channel] || "channel1"
     if $redis.exists("chat-#{channel}")
       status = $redis.hmget("chat-#{channel}", "status").first
@@ -59,9 +53,10 @@ class ChatController < ApplicationController
   end
 
   # ----------------------------------------------------------------------------------------------------------
-  # Push message to node.js server via Juggernaut
+  # Publish message to PubNub
   # ----------------------------------------------------------------------------------------------------------
   def send_message
+
     @msg 		= params[:msg_body]
     @usr 		= params[:sender]
     @usr_id = params[:user_id]
@@ -69,28 +64,33 @@ class ChatController < ApplicationController
 
     chat_open  = $redis.exists("chat-#{channel}") ? ($redis.hmget("chat-#{channel}", "status").first == "Open") : true
     usr_banned = $redis.exists("banned-#{@usr_id}")
+
     @my_callback = lambda { |message| puts(message) } # for PubNub
 
-    if chat_open && !usr_banned
-      PN.publish(
-        :channel  => channel,
-        :message  => {
+    if chat_open && !usr_banned # Check that chat is open and user is not banned
+      PN.publish( :channel  => channel, :message  => {
           :meta => "chat",
           :data => parse_chat_message(params[:msg_body], params[:sender], params[:user_id])
         },
         :callback => @my_callback
       )
-      # Juggernaut.publish(select_channel(channel), parse_chat_message(params[:msg_body], params[:sender], params[:user_id])) unless @msg.blank?
     end
+
     respond_to do |format|
       format.js
    end
   end
 
+  # ----------------------------------------------------------------------------------------------------------
+  # Split message into user id, name, and message
+  # ----------------------------------------------------------------------------------------------------------
   def parse_chat_message(msg, user, user_id=nil) # user_id may be nil if annnouncement is from server
     return "#{user_id}:#{user}: #{msg}"
   end
 
+  # ----------------------------------------------------------------------------------------------------------
+  # Select Juggernaut channel ... can be removed once roster is switched to PubNub
+  # ----------------------------------------------------------------------------------------------------------
   def select_channel(receiver)
     puts "#{receiver}"
     return "/chats/#{receiver}"
