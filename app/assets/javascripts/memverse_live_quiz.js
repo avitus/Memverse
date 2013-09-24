@@ -1,6 +1,7 @@
 var quizRoom = {
 
-    numQuestions:     null,
+    numQuestions: null,
+    userIDArray:  [],
 
     initialize: function ( numQuestions ) {
 

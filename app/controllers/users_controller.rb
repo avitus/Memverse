@@ -39,6 +39,11 @@ class UsersController < ApplicationController
       add_breadcrumb I18n.t( :user_profile, :scope => 'page_titles', :name => @user.name_or_login), @user_path
     end
 
+    respond_to do |format|
+      format.html # show.html.erb
+      format.json { render json: @user }
+    end
+
   end
 
   # ----------------------------------------------------------------------------------------------------------

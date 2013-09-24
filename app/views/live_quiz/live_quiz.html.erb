@@ -127,21 +127,35 @@ $(document).ready(function() {
     pubnub.subscribe({
         channel  : channel,
         message  : function(data) { quizRoom.handle_message(data) },
-        connect  : connect,
-        presence : presence
+        connect  : connect,     // Callback when connection is established
+        presence : presence     // Callback when users join/leave channel
     });
 
     // Get List of Occupants and Occupancy Count.
     function connect() {
     	pubnub.here_now({
-    		channel : channel,
+    		channel  : channel,
     		callback : presence
     	});
     };
 
-    // Used to subscribe to PubNub channel
-    function presence (){
-        // update list of users in room
+    // Callback when users join/leave channel
+    function presence ( message, env, channel ) {
+
+		if (message.action == "join") {
+
+			$.getJSON('/users/'+ message.uuid +'.json', function( data ) {
+				quizRoom.userIDArray.push({ id: data.id, name: data.name, avatarURL: data.avatar_url });
+				// userList.append("<li data-username='" + message.uuid + "'>" + message.uuid + "</li>");
+			});
+
+		} else if (message.action == "leave") {
+			quizRoom.userIDArray.splice( quizRoom.userIDArray.indexOf(message.uuid), 1 );
+			// userList.find('[data-username="' + message.uuid + '"]').remove();
+		}
+
+		//userList.listview('refresh');
+
     };
 
     $.fancybox($("#welcome-box").html(), {padding: 20});

@@ -98,6 +98,18 @@ class User < ActiveRecord::Base
                   :church, :group, :country, :american_state, :show_echo, :max_interval,
                   :mnemonic_use, :all_refs, :referred_by, :auto_work_load, :show_email
 
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Convert to JSON format
+  # ----------------------------------------------------------------------------------------------------------
+  def as_json(options={})
+    {
+      :id            => self.id,
+      :name          => self.name_or_login,
+      :avatar_url    => self.blog_avatar_url
+    }
+  end
+
   # ----------------------------------------------------------------------------------------------------------
   # Display name
   # ----------------------------------------------------------------------------------------------------------
