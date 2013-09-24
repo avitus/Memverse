@@ -182,16 +182,16 @@ MemverseApp::Application.routes.draw do
   get '/global_data'                => 'chart#global_data',               :as => 'global_data'
 
   # Routes for chat channels
-  get "/chat/send",              :controller => "chat", :action => "send_message"
-  get "/chat/channel1",          :controller => "chat", :action => "channel1"
-  get "/chat/channel2",          :controller => "chat", :action => "channel2"
-  get "/chat/toggle_ban",        :controller => "chat", :action => "toggle_ban"
+  post '/chat/send'                 => 'chat#send_message'
+  get "/chat/toggle_ban"            => 'chat#toggle_ban'
+  # get "/chat/channel1",          :controller => "chat", :action => "channel1"    # For old chat room (?)
+  # get "/chat/channel2",          :controller => "chat", :action => "channel2"    # For old chat room (?)
 
   # Routes for live quiz
-  get  '/live_quiz'              => 'live_quiz#live_quiz'     # Main quiz URL
-  get  '/live_quiz/channel1'     => 'live_quiz#channel1'      # Chat channel
-  get  '/live_quiz/scoreboard'   => 'live_quiz#scoreboard'    # Scoreboard for quiz
-  post '/record_score'           => 'live_quiz#record_score'
+  get  '/live_quiz'                 => 'live_quiz#live_quiz'     # Main quiz URL
+  get  '/live_quiz/channel1'        => 'live_quiz#channel1'      # Chat channel
+  get  '/live_quiz/scoreboard'      => 'live_quiz#scoreboard'    # Scoreboard for quiz
+  post '/record_score'              => 'live_quiz#record_score'
 
   # Legacy routes for pages that no longer exist but have incoming links
   get '/starter_pack' => 'memverses#home'  # Retired in 2012

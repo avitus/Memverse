@@ -162,9 +162,10 @@ $(document).ready(function() {
 	jug.meta = {user_id: <%= current_user.id %>, user_name: "<%= current_user.name %>", gravatar_url: "<%= (current_user.blog_avatar_url + "&s=32").html_safe %>"};
 
 
-	user_id = "<%= current_user.id %>";
+	user_id   = "<%= current_user.id %>";
 	user_name = "<%= current_user.name %>";
 
+	// Maintain a roster of users
 	$.getJSON('/live_quiz/roster.json', function(data) {
 		var roster_items = [];
 
@@ -180,6 +181,7 @@ $(document).ready(function() {
 		$("#quizzers-count").html("(" + roster_items.length + ")");
 	});
 
+	// Subscribe to roster updates
 	jug.subscribe("/roster", function(msg) {
 		// Somebody joined or left the room
 		// We need to post a little status message in the chat log column
