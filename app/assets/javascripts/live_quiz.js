@@ -153,7 +153,7 @@ build_user_link = function(user_id, user_name) {
 }
 
 build_gravatar_img = function(gravatar_url){
-	return '<img src="' + gravatar_url + '" />';
+	return '<img src="' + gravatar_url + '&s=32" />'; //set size of gravatar to 32x32 pixels
 }
 
 build_roster_item = function(user_id, user_name, gravatar_url) {

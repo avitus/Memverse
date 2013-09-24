@@ -88,11 +88,4 @@ class ChatController < ApplicationController
     return "#{user_id}:#{user}: #{msg}"
   end
 
-  # ----------------------------------------------------------------------------------------------------------
-  # Select Juggernaut channel ... can be removed once roster is switched to PubNub
-  # ----------------------------------------------------------------------------------------------------------
-  def select_channel(receiver)
-    puts "#{receiver}"
-    return "/chats/#{receiver}"
-  end
 end
