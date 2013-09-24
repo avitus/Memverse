@@ -142,19 +142,44 @@ $(document).ready(function() {
     // Callback when users join/leave channel
     function presence ( message, env, channel ) {
 
+		var roster_uid   = message.uuid;
+
+		// --- User joins quiz ---
 		if (message.action == "join") {
 
 			$.getJSON('/users/'+ message.uuid +'.json', function( data ) {
+
+				var roster_uname = data.name;
+				var gravatar_url = data.avatar_url;
+				var user_link   = build_user_link(roster_uid, roster_uname);
+				var li  = $("<li/>").addClass("chat-announcement").append(user_link);
+
 				quizRoom.userIDArray.push({ id: data.id, name: data.name, avatarURL: data.avatar_url });
-				// userList.append("<li data-username='" + message.uuid + "'>" + message.uuid + "</li>");
+
+				// copied from Juggernaut code ... optimize me
+				li.append(" entered the room.");
+				var div = $(build_roster_item( roster_uid, roster_uname, gravatar_url ));
+				$("#roster-window").scrollTop($("#roster-window")[0].scrollHeight).append(div);
+				div.effect('highlight', {}, 3000);
+				$("#quizzers-stats").effect('highlight', {}, 3000);
+				$("#quizzers-count").html("(" + $("div.roster-item").length + ")");
+
+				chat_stream_scroll( function () {
+					$("#chat-stream-narrow").append(li);
+				});
 			});
 
+		// --- User leaves quiz ---
 		} else if (message.action == "leave") {
-			quizRoom.userIDArray.splice( quizRoom.userIDArray.indexOf(message.uuid), 1 );
-			// userList.find('[data-username="' + message.uuid + '"]').remove();
-		}
 
-		//userList.listview('refresh');
+			quizRoom.userIDArray.splice( quizRoom.userIDArray.indexOf(message.uuid), 1 );
+
+			// copied from Juggernaut code ... optimize me
+			// li.append(" left the room.");
+			$("div#" + roster_uid).remove();
+			$("#quizzers-count").html("(" + $("div.roster-item").length + ")");
+
+		}
 
     };
 
@@ -172,64 +197,64 @@ $(document).ready(function() {
 	});
 
 
-	var jug = new Juggernaut();
-	jug.meta = {user_id: <%= current_user.id %>, user_name: "<%= current_user.name %>", gravatar_url: "<%= (current_user.blog_avatar_url + "&s=32").html_safe %>"};
+	// var jug = new Juggernaut();
+	// jug.meta = {user_id: <%= current_user.id %>, user_name: "<%= current_user.name %>", gravatar_url: "<%= (current_user.blog_avatar_url + "&s=32").html_safe %>"};
 
 
-	user_id   = "<%= current_user.id %>";
-	user_name = "<%= current_user.name %>";
+	// user_id   = "<%= current_user.id %>";
+	// user_name = "<%= current_user.name %>";
 
-	// Maintain a roster of users
-	$.getJSON('/live_quiz/roster.json', function(data) {
-		var roster_items = [];
+	// // Maintain a roster of users
+	// $.getJSON('/live_quiz/roster.json', function(data) {
+	// 	var roster_items = [];
 
-		$.each(data, function(key, val) {
-			if (val.roster.user_name != user_name) {
-				roster_items.push(build_roster_item(val.roster.user_id, val.roster.user_name, val.roster.gravatar_url));
-			}
-		});
+	// 	$.each(data, function(key, val) {
+	// 		if (val.roster.user_name != user_name) {
+	// 			roster_items.push(build_roster_item(val.roster.user_id, val.roster.user_name, val.roster.gravatar_url));
+	// 		}
+	// 	});
 
-		roster_items.push(build_roster_item(user_id, "Me", "<%= (current_user.blog_avatar_url + "&s=32").html_safe %>")); // last roster_item is self
+	// 	roster_items.push(build_roster_item(user_id, "Me", "<%= (current_user.blog_avatar_url + "&s=32").html_safe %>")); // last roster_item is self
 
-		$("#roster-window").html(roster_items.join(''));
-		$("#quizzers-count").html("(" + roster_items.length + ")");
-	});
+	// 	$("#roster-window").html(roster_items.join(''));
+	// 	$("#quizzers-count").html("(" + roster_items.length + ")");
+	// });
 
-	// Subscribe to roster updates
-	jug.subscribe("/roster", function(msg) {
-		// Somebody joined or left the room
-		// We need to post a little status message in the chat log column
-		// ^^ Currently the msg.klass is always Roster.
-		if(msg.klass == "Roster" && msg.type != "update" && msg.record.roster.user_id != user_id) {
+	// // Subscribe to roster updates
+	// jug.subscribe("/roster", function(msg) {
+	// 	// Somebody joined or left the room
+	// 	// We need to post a little status message in the chat log column
+	// 	// ^^ Currently the msg.klass is always Roster.
+	// 	if(msg.klass == "Roster" && msg.type != "update" && msg.record.roster.user_id != user_id) {
 
-			var roster_uid   = msg.record.roster.user_id;
-			var roster_uname = msg.record.roster.user_name;
-			var gravatar_url = msg.record.roster.gravatar_url;
+	// 		var roster_uid   = msg.record.roster.user_id;
+	// 		var roster_uname = msg.record.roster.user_name;
+	// 		var gravatar_url = msg.record.roster.gravatar_url;
 
-			var user_link   = build_user_link(roster_uid, roster_uname);
-			var li  = $("<li/>").addClass("chat-announcement").append(user_link);
+	// 		var user_link   = build_user_link(roster_uid, roster_uname);
+	// 		var li  = $("<li/>").addClass("chat-announcement").append(user_link);
 
-			switch(msg.type){
-				case 'create':
-					li.append(" entered the room.");
-					var div = $(build_roster_item(roster_uid, roster_uname, gravatar_url));
-					$("#roster-window").scrollTop($("#roster-window")[0].scrollHeight).append(div);
-					div.effect('highlight', {}, 3000);
-					$("#quizzers-stats").effect('highlight', {}, 3000);
-					$("#quizzers-count").html("(" + $("div.roster-item").length + ")");
-					break;
-				case 'destroy':
-					li.append(" left the room.");
-					$("div#" + roster_uid).remove();
-					$("#quizzers-count").html("(" + $("div.roster-item").length + ")");
-					break;
-			}
+	// 		switch(msg.type){
+	// 			case 'create':
+	// 				li.append(" entered the room.");
+	// 				var div = $(build_roster_item(roster_uid, roster_uname, gravatar_url));
+	// 				$("#roster-window").scrollTop($("#roster-window")[0].scrollHeight).append(div);
+	// 				div.effect('highlight', {}, 3000);
+	// 				$("#quizzers-stats").effect('highlight', {}, 3000);
+	// 				$("#quizzers-count").html("(" + $("div.roster-item").length + ")");
+	// 				break;
+	// 			case 'destroy':
+	// 				li.append(" left the room.");
+	// 				$("div#" + roster_uid).remove();
+	// 				$("#quizzers-count").html("(" + $("div.roster-item").length + ")");
+	// 				break;
+	// 		}
 
-			chat_stream_scroll(function(){
-				$("#chat-stream-narrow").append(li);
-			});
-		}
-	});
+	// 		chat_stream_scroll(function(){
+	// 			$("#chat-stream-narrow").append(li);
+	// 		});
+	// 	}
+	// });
 
 	// Show window with quizzers
 	$("#quizzers-stats").click( quizRoom.toggleQuizzersWindow );
