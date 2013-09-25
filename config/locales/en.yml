@@ -307,20 +307,20 @@
     today_msg_html:        "You have <span>%{due_today} verses</span> and <span>%{due_refs} references</span> to review today. You currently need about <span>%{time} minutes</span> per day."
   memverses:
     test_verse_quick:
-      verse:           "Verse"
-      feedback:        "Live Feedback"
-      upcoming_verses: "Upcoming Verses"
-      show_verse:      "Show Verse"
-      hide_verse:      "Hide Verse"
-      b5:              "Remembered - Perfect"
-      b4:              "Remembered - Hesitation"
-      b3:              "Remembered - Difficult"
-      b2:              "Don't Know - Familiar"
-      b1:              "Don't Know - No Idea"
+      verse:               "Verse"
+      feedback:            "Live Feedback"
+      upcoming_verses:     "Upcoming Verses"
+      show_verse:          "Show Verse"
+      hide_verse:          "Hide Verse"
+      b5:                  "Remembered - Perfect"
+      b4:                  "Remembered - Hesitation"
+      b3:                  "Remembered - Difficult"
+      b2:                  "Don't Know - Familiar"
+      b1:                  "Don't Know - No Idea"
     manage_verses:
-      delete_selected:   "Delete Selected"
-      show_selected:     "Show Selected"
-      show_prompt:       "Show Prompt"
+      delete_selected:     "Delete Selected"
+      show_selected:       "Show Selected"
+      show_prompt:         "Show Prompt"
   profile:
     update_profile:
       Name:                     "Name"
