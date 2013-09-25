@@ -28,7 +28,6 @@ class ChatController < ApplicationController
         },
         :callback => @my_callback
       )
-    # Juggernaut.publish(select_channel(channel), {:status => new_status})
 
     render :json => {:status => new_status}
   end
