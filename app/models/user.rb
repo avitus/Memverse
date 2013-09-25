@@ -533,7 +533,7 @@ class User < ActiveRecord::Base
   # Number of tags a user has applied
   # ----------------------------------------------------------------------------------------------------------
   def num_taggings
-    ActsAsTaggableOn::Tagging.find(:all, :conditions => {:tagger_type => "user", :tagger_id => self.id}).length
+    ActsAsTaggableOn::Tagging.where(:tagger_type => "user", :tagger_id => self.id).length
   end
 
   # ----------------------------------------------------------------------------------------------------------
