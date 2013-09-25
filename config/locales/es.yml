@@ -307,20 +307,20 @@
     today_msg_html:        "Usted tiene <span>%{due_today} versos</span> y <span>%{due_refs} referencias</span> para examinar hoy. Que actualmente necesita unos <span>%{time} minutos</span> por dia."
   memverses:
     test_verse_quick:
-      verse:           "Verso"
-      feedback:        "Reacción en Directo"
-      upcoming_verses: "Próximos Versos"
-      show_verse:      "Mostrar Verso"
-      hide_verse:      "Ocultar Verso"
-      b5:              "Recordar - Perfecto"
-      b4:              "Recordar - Vacilación"
-      b3:              "Recordar - Difícil"
-      b2:              "No Sabe  - Familiar"
-      b1:              "No Sabe  - Ni Idea"
+      verse:               "Verso"
+      feedback:            "Reacción en Directo"
+      upcoming_verses:     "Próximos Versos"
+      show_verse:          "Mostrar Verso"
+      hide_verse:          "Ocultar Verso"
+      b5:                  "Recordar - Perfecto"
+      b4:                  "Recordar - Vacilación"
+      b3:                  "Recordar - Difícil"
+      b2:                  "No Sabe  - Familiar"
+      b1:                  "No Sabe  - Ni Idea"
     manage_verses:
-      delete_selected: "Borrar selección"
-      show_selected:   "Mostrar la selección"
-      show_prompt:     "Mostrar Sistema"
+      delete_selected:     "Borrar selección"
+      show_selected:       "Mostrar la selección"
+      show_prompt:         "Mostrar Sistema"
   profile:
     update_profile:
       Name:                     "Nombre"
