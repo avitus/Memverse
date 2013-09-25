@@ -307,20 +307,20 @@
     today_msg_html:        "You have <span>%{due_today} verses</span> and <span>%{due_refs} references</span> to review today. You currently need about <span>%{time} minutes</span> per day."
   memverses:
     test_verse_quick:
-      verse:           "Ayat"
-      feedback:        "Live Komentar"
-      upcoming_verses: "Ayat Mendatang"
-      show_verse:      "Tampilkan Ayat"
-      hide_verse:      "Sembunyikan Ayat"
-      b5:              "Ingat - Sempurna"
-      b4:              "Ingat – Ragu-ragu"
-      b3:              "Ingat - Sulit"
-      b2:              "Tidak tahu – Pernah Dengar"
-      b1:              "Tidak tahu – Sama sekali"
+      verse:               "Ayat"
+      feedback:            "Live Komentar"
+      upcoming_verses:     "Ayat Mendatang"
+      show_verse:          "Tampilkan Ayat"
+      hide_verse:          "Sembunyikan Ayat"
+      b5:                  "Ingat - Sempurna"
+      b4:                  "Ingat – Ragu-ragu"
+      b3:                  "Ingat - Sulit"
+      b2:                  "Tidak tahu – Pernah Dengar"
+      b1:                  "Tidak tahu – Sama sekali"
     manage_verses:
-      delete_selected: "Hapus yang Dipilih"
-      show_selected:   "Tampilkan Dipilih"
-      show_prompt:     "Tampilkan Prompt"
+      delete_selected:     "Hapus yang Dipilih"
+      show_selected:       "Tampilkan Dipilih"
+      show_prompt:         "Tampilkan Prompt"
   profile:
     update_profile:
       Name:                     "Nama"
