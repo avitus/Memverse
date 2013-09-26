@@ -516,6 +516,7 @@ DEPENDENCIES
   friendly_id!
   hirb
   i18n-js
+  ice_cube
   jasmine
   jquery-rails (>= 2.0.0)
   json

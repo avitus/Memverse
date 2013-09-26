@@ -2,16 +2,23 @@ class KnowledgeQuiz
 
   include Sidekiq::Worker
   include Sidetiq::Schedulable
+  include IceCube
 
   sidekiq_options :retry => false # Don't retry quiz if something goes wrong
 
   recurrence do
      # weekly.day_of_week(2).hour_of_day(9)   # Every Tuesday at 9am
-     minutely(10)                             # For development
+     hourly                                   # For development
   end
 
   def perform
 
+    # Update start time for next quiz
+    schedule = IceCube::Schedule.new( Time.now )
+    schedule.add_recurrence_rule( IceCube::Rule.hourly )
+    next_quiz_time = schedule.next_occurrence
+
+    # Start quiz
     puts "===> Starting quiz at " + Time.now.to_s
 
     # Clear participant scores from Redis
@@ -21,7 +28,8 @@ class KnowledgeQuiz
     # Save status of quiz in redis
     $redis.hset("quiz-bible-knowledge", "status", "In progress. Wait for question.")
 
-    # Set up PubNub channel
+    # Select quiz and set up PubNub channel
+    quiz    = Quiz.find(1)
     channel = "quiz-1"  # General knowledge quiz will always have ID=1
 
     # PubNub callback function - From version 3.4 PubNub is fully asynchronous
@@ -104,8 +112,11 @@ class KnowledgeQuiz
 
     # Update quiz status in redis
     $redis.hset("quiz-bible-knowledge", "status", "Finished")
-
     puts "===> Finished quiz at " + Time.now.to_s
+
+    # Update start time for next quiz
+    quiz.update_attribute(:start_time, next_quiz_time)
+    puts "Next knowledge quiz will start at " + next_quiz_time
 
     ### Close chat 10 minutes after quiz
     puts "Quiz now over. Sleeping for 10 minutes, then shutting down chat."
@@ -121,6 +132,7 @@ class KnowledgeQuiz
     )
 
     puts "Chat closed and rake task finished."
+
 
 
   end
