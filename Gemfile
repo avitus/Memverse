@@ -111,6 +111,7 @@ gem 'backup'                                                                    
 gem 'dropbox-sdk'                                                                               # Used with backup above
 gem 'sidekiq'                                                                                   # Background jobs; used for quizzes
 gem 'sidetiq'                                                                                   # Scheduled Sidekiq jobs
+gem 'ice_cube'                                                                                  # For calculating next quiz
 gem 'sinatra', require: false                                                                   # sinatra and slim are required for sidekiq
 gem 'slim'
 gem 'pubnub'                                                                                    # Real-time messaging service
