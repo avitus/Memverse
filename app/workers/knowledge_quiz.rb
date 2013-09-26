@@ -92,7 +92,6 @@ class KnowledgeQuiz
       sleep(20)
 
       # Update scoreboard
-
       puts "===> Updating scoreboard"
 
       scoreboard = Array.new
@@ -116,7 +115,7 @@ class KnowledgeQuiz
 
     # Update start time for next quiz
     quiz.update_attribute(:start_time, next_quiz_time)
-    puts "Next knowledge quiz will start at " + next_quiz_time
+    puts "Next knowledge quiz will start at " + next_quiz_time.to_s
 
     ### Close chat 10 minutes after quiz
     puts "Quiz now over. Sleeping for 10 minutes, then shutting down chat."
