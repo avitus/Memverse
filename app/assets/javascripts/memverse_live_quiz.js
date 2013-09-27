@@ -83,6 +83,11 @@ var quizRoom = {
                 var userAnswer = $('input[name=mcq]:checked').val();
                 grade = getScore(q_ansr, userAnswer, q_type);
                 if (grade.score != null) {
+
+                    // Update question difficulty
+                    //  < Code >
+
+                    // Record score
                     $.post("/record_score", {   usr_id:     memverseUserID,
                                                 usr_name:   memverseUserName,
                                                 usr_login:  memverseUserLogin,
