@@ -90,12 +90,9 @@
         	// Calc score
             questionScore = refTestState.scoreRef( $("#answer").val() );
 
-            // Update current reference test grade
+            // Update current reference test grade and get next reference
             refGrade = refTestState.updateRefGrade( questionScore );
             g.refresh( refGrade );
-
-            // Get next reference for testing
-            refTestState.getRef();
 
         });
 
