@@ -16,6 +16,9 @@ var refTestState = {
 
     getRef: function () {
 
+        $('#reftestVerse').fadeOut();       // Clear prior verse
+        $('#answer').val('').focus();       // Clear entry box
+
         // Retrieve a reference for testing
         $.getJSON('test_next_ref.json', function (data) {
 
@@ -24,8 +27,8 @@ var refTestState = {
             currentMvID = data.mv.id;
             dueRefs     = data.due_refs;
 
-            $('#answer').val('').focus();       // Clear entry box
-            $('#reftestVerse').html( mvText );  // Show verse text
+
+            $('#reftestVerse').html( mvText ).fadeIn();  // Show verse text
             $('#overdue-refs-num').html( dueRefs );
             $('.q-num').text( function (i,qNum) { return parseInt(qNum)+1;} ) ; // Increment question number
         });
@@ -37,6 +40,9 @@ var refTestState = {
     // correct book & chapter = 5 points
     // correct book           = 1 point
     scoreRef: function ( user_answer ) {
+
+        $('#reftestVerse').fadeOut();       // Clear prior verse
+        $('#answer').val('').focus();       // Clear entry box
 
         var answerRef  = parseVerseRef( user_answer );
         var correctRef = parseVerseRef( currentRef );
@@ -118,6 +124,9 @@ var refTestState = {
     saveRefGrade: function ( refGrade ) {
         $.post('save_ref_grade/' + refGrade + '.json', function(data) {
             // Todo: alert user if failure to save score
+
+            // Get next reference for testing
+            refTestState.getRef();
         });
     }
 
