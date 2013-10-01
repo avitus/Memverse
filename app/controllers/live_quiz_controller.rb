@@ -55,6 +55,7 @@ class LiveQuizController < ApplicationController
   # This method receive scores for each participant
   #-----------------------------------------------------------------------------------------------------------
   def record_score
+
     usr_id    = "user-" + params[:usr_id].to_s
     usr_name  = params[:usr_name]
     usr_login = params[:usr_login]
