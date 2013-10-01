@@ -10,61 +10,89 @@ var quizRoom = {
     },
 
     /******************************************************************************
+     * Handle real-time quiz messages
+     ******************************************************************************/
+    handleMessage: function (m) {
+        switch(m.meta) {
+            case "chat":
+                var first_colon  = parseInt(m.data.indexOf(':'));
+                var sender_id    = m.data.substring(0,first_colon);
+                var second_colon = parseInt(m.data.indexOf(':',first_colon+1));
+                var user         = m.data.substring(first_colon+1,second_colon);
+                var message      = m.data.substring(second_colon+1);
+
+                this.putChat(user,message,m.meta,sender_id);
+
+                break;
+            case "chat_status":
+                $("#chat_status").text(m.status);
+                var user    = "Memverse Server"
+                var message = "Chat Channel " + m.status;
+
+                this.putChat(user,message,m.meta);
+
+                break;
+            case "question":
+                this.handleQuestion(m);
+
+                break;
+            case "scoreboard":
+                this.updateScoreboard(m);
+
+                break;
+        }
+    },
+
+    /******************************************************************************
      * Handle questions
      ******************************************************************************/
-    handle_question: function (data) {
-        var q_num  = data.q_num;
-        var q_type = data.q_type;
-        var q_text;
-        var q_ref;
-        var q_show;
-        var q_ansr;
+    handleQuestion: function (data) {
 
-        var mc_option_a;
-        var mc_option_b;
-        var mc_option_c;
-        var mc_option_d;
-        var mc_answer;
+        var qNum   = data.q_num;
+        var qType  = data.q_type;
+        var qTime  = data.time_alloc;
+        var qID    = data.q_id;
 
-        if (q_type != 'mcq') {
-            q_ref  = data.q_ref;
-            q_text = data.q_passages[translation];
-        } else {
-            q_text     = data.mc_question;
-            q_option_a = data.mc_option_a;
-            q_option_b = data.mc_option_b;
-            q_option_c = data.mc_option_c;
-            q_option_d = data.mc_option_d;
-            mc_answer  = data.mc_answer;
-        }
-        q_time = data.time_alloc;
+        var qText, qRef, qShow, qAnswer;
+        var qOptionA, qOptionB, qOptionC, qOptionD, mcAnswer;
 
-        switch (q_type)
+        // Set what should be displayed (question) and hidden (answer)
+        switch (qType)
         {
             case 'recitation':
-              q_show = q_ref;
-              q_ansr = q_text;
+                qRef    = data.q_ref;
+                qText   = data.q_passages[translation];
+                qShow   = qRef;
+                qAnswer = qText;
             break;
 
             case 'reference':
-              q_show = q_text;
-              q_ansr = q_ref;
+                qRef    = data.q_ref;
+                qText   = data.q_passages[translation];
+                qShow   = qText;
+                qAnswer = qRef;
             break;
 
             case 'mcq':
-              q_show = q_text;
-              q_ansr = mc_answer;
+                qText    = data.mc_question;
+                qOptionA = data.mc_option_a;
+                qOptionB = data.mc_option_b;
+                qOptionC = data.mc_option_c;
+                qOptionD = data.mc_option_d;
+                mcAnswer = data.mc_answer;
+                qShow    = qText;
+                qAnswer  = data.mc_answer;
             break;
 
             default:
-              q_show = 'Error'
+                qShow = 'Error'
         }
 
         $(".q-dot.current").removeClass("current");
-        $("#dot-"+q_num).addClass("current");
+        $("#dot-"+qNum).addClass("current");
 
-        var p   = $("<p/>").text(q_show);
-        var q   = "#question-"+q_num;
+        var p   = $("<p/>").text(qShow);
+        var q   = "#question-"+qNum;
 
         $(q+" #q-question").html(p);
         $(q+" #q-question").scrollTop($(q)[0].scrollHeight);
@@ -72,56 +100,78 @@ var quizRoom = {
         $(".question").hide();
         $(q).show();
 
-        if(q_type == 'reference' || q_type == 'recitation'){
-            addInputBox(q_type, q_num, q_ansr);
-        } else if (q_type == 'mcq'){
+        // Set up question depending on type
+        if (qType == 'reference' || qType == 'recitation') {
 
-            $(q+" #q-answer").html( setupMCQ(q_option_a, q_option_b, q_option_c, q_option_d, mc_answer) );
+            quizRoom.addInputBox( qType, qNum, qAnswer);
 
-            $('input#submit-answer').click(function() {
-                $(this).remove();
-                var userAnswer = $('input[name=mcq]:checked').val();
-                grade = getScore(q_ansr, userAnswer, q_type);
-                if (grade.score != null) {
+        } else if (qType == 'mcq'){
 
-                    // Update question difficulty
-                    //  < Code >
+            $(q+" #q-answer").html( setupMCQ( qOptionA, qOptionB, qOptionC, qOptionD, mcAnswer ) );
+            $('input#submit-answer').on( "click", function() { quizRoom.scoreUserAnswer( qAnswer, qType, qNum, qID ); } );
 
-                    // Record score
-                    $.post("/record_score", {   usr_id:     memverseUserID,
-                                                usr_name:   memverseUserName,
-                                                usr_login:  memverseUserLogin,
-                                                score:      grade.score } );
+        };
 
-                    selector = "#question-" + q_num;
-                    $(selector + " #q-msg").html("<p>" + grade.msg + "</p>").children("p").effect('highlight', {}, 3000);
-                    if (grade.score != 15) { // if it's wrong
-                        $(selector + " #q-answer input#opt_" + userAnswer).parent().addClass("incorrect");
-                        $(".q-dot.current").addClass("red");
-                    } else {
-                        $(".q-dot.current").addClass("green");
-                    }
-                    $(selector + " #q-answer:visible input#opt_" + q_ansr.toLowerCase()).parent().addClass("correct");
-                    $(selector + " #q-msg q-answer input").remove();
-                }
-            });
-        }
+        // Start countdown clock
+        quizRoom.setCountdownClock( qTime, qNum );
 
+    },
+
+    setCountdownClock: function( questionDuration, questionNum ) {
         // countdown clock
         $('#quiz-timer').countdown('destroy').removeClass('red-highlight');
-        $('#quiz-timer').countdown({until: +q_time, onTick: this.highlightLast5, onExpiry: this.disableSubmission, format: 'S'});
+        $('#quiz-timer').countdown({until: +questionDuration, onTick: this.highlightLast5, onExpiry: this.disableSubmission, format: 'S'});
 
-        if (q_num == this.numQuestions ) { // if last question
+        if (questionNum == this.numQuestions ) { // if last question
+
             // countdown till question and quiz over
             $("#countdown-till").text("till question and quiz over");
+
             // setTimeout to put up "Finished" status message when it's done
             setTimeout( function() {
                 $("#countdown-till").html("<strong>Quiz Status:</strong> Finished").effect('highlight', {}, 3000);
                 $('#quiz-timer').countdown('destroy').removeClass('red-highlight');
                 quizRoom.disableSubmission();
-            },q_time*1000);
+            }, questionDuration * 1000);
+
         } else {
             $("#countdown-till").text("till next question");
+        }
+    },
+
+    /******************************************************************************
+     * Score and record answer
+     ******************************************************************************/
+    scoreUserAnswer: function( questionAnswer, questionType, questionNum, questionID ) {
+
+        var userAnswer = $('input[name=mcq]:checked').val();
+
+        $('input#submit-answer').remove();  // remove answer submission button
+
+        grade = getScore( questionAnswer, userAnswer, questionType );
+
+        if (grade.score != null) {
+
+            // Update question difficulty
+            //  < Code >
+
+            // Record score
+            $.post("/record_score", {   usr_id:      memverseUserID,
+                                        usr_name:    memverseUserName,
+                                        usr_login:   memverseUserLogin,
+                                        question_id: questionID,
+                                        score:       grade.score } );
+
+            selector = "#question-" + questionNum;
+            $(selector + " #q-msg").html("<p>" + grade.msg + "</p>").children("p").effect('highlight', {}, 3000);
+            if (grade.score != 10) { // if it's wrong
+                $(selector + " #q-answer input#opt_" + userAnswer).parent().addClass("incorrect");
+                $(".q-dot.current").addClass("red");
+            } else {
+                $(".q-dot.current").addClass("green");
+            }
+            $(selector + " #q-answer:visible input#opt_" + questionAnswer.toLowerCase()).parent().addClass("correct");
+            $(selector + " #q-msg q-answer input").remove();
         }
     },
 
@@ -131,41 +181,6 @@ var quizRoom = {
     disableSubmission: function () {
         $('input#submit-answer').hide();
     },
-
-    /******************************************************************************
-     * Handle real-time quiz messages
-     ******************************************************************************/
-    handle_message: function (m) {
-        switch(m.meta) {
-            case "chat":
-                var first_colon  = parseInt(m.data.indexOf(':'));
-                var sender_id    = m.data.substring(0,first_colon);
-                var second_colon = parseInt(m.data.indexOf(':',first_colon+1));
-                var user         = m.data.substring(first_colon+1,second_colon);
-                var message      = m.data.substring(second_colon+1);
-
-                this.put_chat(user,message,m.meta,sender_id);
-
-                break;
-            case "chat_status":
-                $("#chat_status").text(m.status);
-                var user    = "Memverse Server"
-                var message = "Chat Channel " + m.status;
-
-                this.put_chat(user,message,m.meta);
-
-                break;
-            case "question":
-                this.handle_question(m);
-
-                break;
-            case "scoreboard":
-                this.update_scoreboard(m);
-
-                break;
-        }
-    },
-
 
     /******************************************************************************
      * Add correct question input form
@@ -206,6 +221,7 @@ var quizRoom = {
                 $(selector + " #q-answer").append("<input type='submit' value='Answer!' id='submit-answer' class='button-link'>");
         }
 
+        // TODO: This duplicates a lot of code above
         $('input#submit-answer').click(function() {
             var userAnswer = $('.q-answer-input').val();
             grade = getScore(questionAnswer, userAnswer, questionType);
@@ -218,7 +234,7 @@ var quizRoom = {
                 $(selector + " #q-answer").html("<strong>Your answer: </strong>" + userAnswer);
 
                 // make q-dot red or green, depending on score
-                if(grade.score == 15){
+                if(grade.score == 10){
                     $(".q-dot.current").addClass("green");
                 } else {
                     $(".q-dot.current").addClass("red");
@@ -230,7 +246,7 @@ var quizRoom = {
     /******************************************************************************
      * Add message to chat window
      ******************************************************************************/
-    put_chat: function (user,message,meta,sender_id){
+    putChat: function (user,message,meta,sender_id){
 
         var u = $("<li/>").text(user).addClass("chat-username");
         var m = $("<li/>").text(message).addClass("chat-message");
@@ -250,7 +266,7 @@ var quizRoom = {
     /******************************************************************************
      * Update quiz scoreboard
      ******************************************************************************/
-    update_scoreboard: function (data){
+    updateScoreboard: function (data){
 
         $("#live-quiz-scores").empty();
 

@@ -10,6 +10,9 @@ setupMCQ = function(q_option_a, q_option_b, q_option_c, q_option_d, mc_answer){
 	return output.join("");
 }
 
+/******************************************************************************
+ * Calculate Levenshtein distance
+ ******************************************************************************/
 function calculate_levenshtein_distance(s, t) {
   var m = s.length + 1, n = t.length + 1;
   var i, j;
@@ -43,6 +46,9 @@ function calculate_levenshtein_distance(s, t) {
   return d[m - 1][n - 1];
 }
 
+/******************************************************************************
+ * Score a recitation [Max 10 points]
+ ******************************************************************************/
 function scoreRecitation(versetext, usertext) {
 
 	var score, msg;
@@ -60,11 +66,11 @@ function scoreRecitation(versetext, usertext) {
 	user_words  = user.split(" ");
 	right_words = correct.split(" ");
 
-	score = 15 - (calculate_levenshtein_distance(right_words, user_words));
+	score = 10 - (calculate_levenshtein_distance(right_words, user_words));
 
 	if (score < 0) {score = 0;} // Prevents score from being less than 0.
 
-	if (score == 15) {
+	if (score == 10) {
 		msg = "You answered perfectly and scored 15 points! Good job.";
 	}
 	else if (score >= 1) {
@@ -77,6 +83,9 @@ function scoreRecitation(versetext, usertext) {
 	return { score: score, msg: msg };
 }
 
+/******************************************************************************
+ * Score a reference recall [Max = 10 points]
+ ******************************************************************************/
 function scoreReference(verseref, userref) {
 
 	var score, msg;
@@ -87,7 +96,7 @@ function scoreReference(verseref, userref) {
 	user_book  = user.substring(0,parseInt(user.lastIndexOf(' '))+1);
 	right_book = correct.substring(0,parseInt(correct.lastIndexOf(' '))+1);
 
-	user_chapter = user.substring(parseInt(user.lastIndexOf(' '))+1,user.indexOf(':'));
+	user_chapter  = user.substring(parseInt(user.lastIndexOf(' '))+1,user.indexOf(':'));
 	right_chapter = correct.substring(parseInt(correct.lastIndexOf(' '))+1,correct.indexOf(':'));
 
 	user_verse  = user.substring(parseInt(user.indexOf(':'))+1);
@@ -100,11 +109,11 @@ function scoreReference(verseref, userref) {
 
 	score = 0;
 
-	if (user_book == right_book) {score = score + 5;}
-	if (user_chapter == right_chapter) {score = score + 5;}
-	if (user_verse == right_verse) {score = score + 5;}
+	if (user_book    == right_book)    {score = score + 2;}
+	if (user_chapter == right_chapter) {score = score + 3;}
+	if (user_verse   == right_verse)   {score = score + 5;}
 
-	if (score == 15) {
+	if (score == 10) {
 		msg = "You answered perfectly and scored 15 points! Good job.";
 	} else if (score >= 1) {
 		msg = "Although that wasn't perfect, you still received " + score + " points. Keep trying! The correct reference was " + verseref + " (you entered " + userref + ").";
@@ -115,9 +124,12 @@ function scoreReference(verseref, userref) {
 	return { score: score, msg: msg };
 }
 
+/******************************************************************************
+ * Score a multiple choice question [Max = 10 points]
+ ******************************************************************************/
 function scoreMCQ(questionAnswer, userAnswer){ // userAnswer will be a, b, c, or d, unless it's empty
-	score = (userAnswer.toUpperCase() == questionAnswer.toUpperCase())?15:0;
-	if (score == 15) {
+	score = ( userAnswer.toUpperCase() == questionAnswer.toUpperCase() ) ? 10 : 0;
+	if ( score == 10 ) {
 		msg = "Congratulations; that was perfect!";
 	} else {
 		msg = "Sorry, but your choice (" + userAnswer.toUpperCase() + ") was not correct. The correct answer was (" + questionAnswer.toUpperCase() + ").";
@@ -126,6 +138,9 @@ function scoreMCQ(questionAnswer, userAnswer){ // userAnswer will be a, b, c, or
 	return { score: score, msg: msg };
 }
 
+/******************************************************************************
+ * Score based on question type
+ ******************************************************************************/
 function getScore(questionAnswer, userAnswer, questionType) {
 
 	switch(questionType) {
