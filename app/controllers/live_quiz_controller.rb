@@ -69,7 +69,7 @@ class LiveQuizController < ApplicationController
 
       # Update user scores. Store the score in Redis store
       $redis.hincrby(usr_id, 'score', score)
-      $redis.hsetnx(usr_id, 'name', usr_name, 'login', usr_login)  # Capture user's name and login if we don't have them
+      $redis.hmset(usr_id, 'name', usr_name, 'login', usr_login)  # Capture user's name and login if we don't have them
 
       # Update question difficulty
       $redis.hincrby(q_num, 'total_score', score)  # Add user's score to combined score for that question
