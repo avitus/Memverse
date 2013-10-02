@@ -776,7 +776,7 @@ class UtilsController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   def show_users
 
-    period = params[:period] || 'All'
+    period = params[:period] || 'Today'
     case period
       when 'Today' then
         @user_list = User.where("created_at > ?", Date.today).order(params[:sort_order])
@@ -786,6 +786,8 @@ class UtilsController < ApplicationController
         @user_list = User.where(:confirmed_at => nil).order(params[:sort_order])
       when 'All' then
         @user_list = User.order(params[:sort_order])
+      else
+        @user_list = User.where("created_at > ?", Date.today).order(params[:sort_order])
     end
   end
 

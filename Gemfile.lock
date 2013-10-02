@@ -1,8 +1,8 @@
 GIT
   remote: git://github.com/FriendlyId/friendly_id.git
-  revision: 637ec7d62a56fc81dcc141ce2d1c287fa4b40055
+  revision: ba3fd42b6d9fbd5e3d8681f8218e19b9904d5937
   specs:
-    friendly_id (5.0.0.rc2)
+    friendly_id (5.0.0.rc3)
       activerecord (~> 4.0.0)
 
 GIT
@@ -14,7 +14,7 @@ GIT
 
 GIT
   remote: git://github.com/avitus/bloggity.git
-  revision: 31442cd627f2e5d8ad38d777054b90f1dc238e83
+  revision: 5d4a5bd82ebcdf803fc0605db924b51f79dac30d
   specs:
     bloggity (0.0.4)
       jquery-rails
@@ -37,7 +37,7 @@ GIT
 
 GIT
   remote: git://github.com/radar/forem.git
-  revision: dba2e783d48e03e7ded04c0653e4b2a6842807de
+  revision: b8e7448e0180009c5aaf473a8ab53040cdfeb86c
   branch: rails4
   specs:
     forem (1.0.0.beta1)
@@ -87,7 +87,7 @@ GEM
   remote: http://rubygems.org/
   specs:
     Ascii85 (1.0.2)
-    action_mailer_cache_delivery (0.3.5)
+    action_mailer_cache_delivery (0.3.7)
       actionmailer (>= 3.0)
     actionmailer (4.0.0)
       actionpack (= 4.0.0)
@@ -169,7 +169,7 @@ GEM
       orm_adapter
     climate_control (0.0.3)
       activesupport (>= 3.0)
-    cocaine (0.5.1)
+    cocaine (0.5.2)
       climate_control (>= 0.0.3, < 1.0)
     coderay (1.1.0)
     coffee-rails (4.0.0)
@@ -203,7 +203,7 @@ GEM
     debug_inspector (0.0.2)
     decorators (1.0.3)
       railties (>= 3.0.19, != 3.2.9, != 3.2.8, != 3.2.7, != 3.2.6, != 3.2.5, != 3.2.4, != 3.2.3, != 3.2.2, != 3.2.10, != 3.2.1, != 3.2.0, != 3.1.9, != 3.1.8, != 3.1.7, != 3.1.6, != 3.1.5, != 3.1.4, != 3.1.3, != 3.1.2, != 3.1.1, != 3.1.0)
-    devise (3.1.0)
+    devise (3.1.1)
       bcrypt-ruby (~> 3.0)
       orm_adapter (~> 0.1)
       railties (>= 3.2.6, < 5)
@@ -215,7 +215,7 @@ GEM
     dotenv (0.9.0)
     dropbox-sdk (1.6.1)
       json
-    em-http-request (1.1.0)
+    em-http-request (1.1.1)
       addressable (>= 2.3.4)
       cookiejar
       em-socksify (>= 0.3)
@@ -228,7 +228,7 @@ GEM
       mail (~> 2.2)
     erubis (2.7.0)
     eventmachine (1.0.3)
-    execjs (2.0.1)
+    execjs (2.0.2)
     factory_girl (4.2.0)
       activesupport (>= 3.0.0)
     factory_girl_rails (4.2.1)
@@ -304,7 +304,7 @@ GEM
     net-ssh (2.7.0)
     net-ssh-gateway (1.2.0)
       net-ssh (>= 2.6.5)
-    newrelic_rpm (3.6.7.152)
+    newrelic_rpm (3.6.7.159)
     nokogiri (1.6.0)
       mini_portile (~> 0.5.0)
     open4 (1.3.0)
@@ -390,7 +390,7 @@ GEM
     ruby-rc4 (0.1.5)
     rubyzip (0.9.9)
     safe_yaml (0.9.7)
-    sass (3.2.10)
+    sass (3.2.11)
     sass-rails (4.0.0)
       railties (>= 4.0.0.beta, < 5.0)
       sass (>= 3.1.10)
@@ -403,17 +403,16 @@ GEM
       multi_json (~> 1.0)
       rubyzip (< 1.0.0)
       websocket (~> 1.0.4)
-    sidekiq (2.14.1)
-      celluloid (>= 0.14.1)
+    sidekiq (2.15.0)
+      celluloid (>= 0.15.1)
       connection_pool (>= 1.0.0)
       json
       redis (>= 3.0.4)
       redis-namespace (>= 1.3.1)
-    sidetiq (0.4.0)
+    sidetiq (0.4.1)
       celluloid (>= 0.14.1)
       ice_cube (~> 0.11.0)
-      json
-      sidekiq (~> 2.14.0)
+      sidekiq (~> 2.15.0)
     simple-random (0.9.3)
     simple_form (3.0.0)
       actionpack (>= 4.0.0, < 4.1)
@@ -443,7 +442,7 @@ GEM
       sprockets (~> 2.8)
     sqlite3 (1.3.8)
     systemu (2.5.2)
-    temple (0.6.6)
+    temple (0.6.7)
     therubyracer (0.11.4)
       libv8 (~> 3.11.8.12)
       ref
