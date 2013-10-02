@@ -56,18 +56,33 @@ class LiveQuizController < ApplicationController
   #-----------------------------------------------------------------------------------------------------------
   def record_score
 
-    usr_id    = "user-" + params[:usr_id].to_s
-    usr_name  = params[:usr_name]
-    usr_login = params[:usr_login]
-    score     = params[:score]
+    # Redis keys
+    usr_id      = "user-" + params[:usr_id].to_s
+    q_num       = "qnum-" + params[:question_num].to_s # Question number in Quiz
+
+    usr_name    = params[:usr_name]
+    usr_login   = params[:usr_login]
+    qq_id       = params[:question_id]  # ID of Quiz Question
+    score       = params[:score]        # Score out of 10
 
     if score != "false"
-      # Store the score in Redis store
+
+      # Update user scores. Store the score in Redis store
       $redis.hincrby(usr_id, 'score', score)
-      $redis.hmset(usr_id, 'name', usr_name, 'login', usr_login)
+      $redis.hsetnx(usr_id, 'name', usr_name, 'login', usr_login)  # Capture user's name and login if we don't have them
+
+      # Update question difficulty
+      $redis.hincrby(q_num, 'total_score', score)  # Add user's score to combined score for that question
+      $redis.hincrby(q_num, 'answered', 1)         # Increment count for that quiz
+      $redis.hsetnx(q_num, 'qq_id', qq_id)         # Store QuizQuestion ID if we don't have it yet
+
     else
       Rails.logger.info("*** Score was submitted as false for #{usr_name}")
     end
+
+
+
+
 
     respond_to do |format|
       format.all { render :nothing => true, :status => 200 }
@@ -79,22 +94,22 @@ class LiveQuizController < ApplicationController
   # This method publishes the scoreboard
   # Format: [{"score"=>"11", "name"=>"Andy"}, {"score"=>"14", "name"=>"Alex"} ]
   #-----------------------------------------------------------------------------------------------------------
-  def publish_scoreboard
-  	scoreboard = Array.new
+  # def publish_scoreboard
+  # 	scoreboard = Array.new
 
-    participants = $redis.keys("user-*")
-    participants.each { |p|	scoreboard << $redis.hgetall(p) }
+  #   participants = $redis.keys("user-*")
+  #   participants.each { |p|	scoreboard << $redis.hgetall(p) }
 
-    return scoreboard.sort { |x, y| y['score'].to_i <=> x['score'].to_i }
-  end
+  #   return scoreboard.sort { |x, y| y['score'].to_i <=> x['score'].to_i }
+  # end
 
   #-----------------------------------------------------------------------------------------------------------
   # Return the roster via JSON; used for initial roster loading
   #-----------------------------------------------------------------------------------------------------------
-  def roster
-  	@roster = Roster.all
-	  render :json => @roster
-  end
+  # def roster
+  # 	@roster = Roster.all
+	 #  render :json => @roster
+  # end
 
   #-----------------------------------------------------------------------------------------------------------
   # Return time till quiz starts

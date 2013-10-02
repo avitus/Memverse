@@ -152,10 +152,7 @@ var quizRoom = {
 
         if (grade.score != null) {
 
-            // Update question difficulty
-            //  < Code >
-
-            // Record score
+            // Record score and update question difficulty
             $.post("/record_score", {   usr_id:      memverseUserID,
                                         usr_name:    memverseUserName,
                                         usr_login:   memverseUserLogin,
