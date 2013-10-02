@@ -75,7 +75,6 @@ class ChartController < ApplicationController
       user_id = current_user.id
     end
     
-    # ProgressReport.all.each {|pr| pr.save! } 
     all_entries = ProgressReport.where(:user_id => user_id).order('entry_date')
     
     # TODO: Consider deleting extra entries periodically
