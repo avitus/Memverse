@@ -118,6 +118,17 @@ class KnowledgeQuiz
     quiz.update_attribute(:start_time, next_quiz_time)
     puts "Next knowledge quiz will start at " + next_quiz_time.to_s
 
+    # Update difficulty for all questions
+    quiz_table = Array.new
+    quiz_questions = $redis.keys("qnum-*")
+    quiz_questions.each do |qq|
+      quiz_table << $redis.hgetall(qq)
+    end
+
+    quiz_table.each do |qq|
+      puts qq['qq_id'] + " - Answered: " + qq['answered'] + " Total Score: " + qq['total_score']
+    end
+
     ### Close chat 10 minutes after quiz
     puts "Quiz now over. Sleeping for 10 minutes, then shutting down chat."
     sleep(60)
