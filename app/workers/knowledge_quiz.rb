@@ -21,9 +21,11 @@ class KnowledgeQuiz
     # Start quiz
     puts "===> Starting quiz at " + Time.now.to_s
 
-    # Clear participant scores from Redis
-    participants = $redis.keys("user-*")
+    # Clear participant and question scores from Redis
+    participants = $redis.keys("user-*")       # user ID's
+    questions    = $redis.keys("qnum-*")       # question numbers
     participants.each { |p| $redis.del(p) }
+    questions.each    { |q| $redis.del(q) }
 
     # Save status of quiz in redis
     $redis.hset("quiz-bible-knowledge", "status", "In progress. Wait for question.")
@@ -125,8 +127,11 @@ class KnowledgeQuiz
       quiz_table << $redis.hgetall(qq)
     end
 
-    quiz_table.each do |qq|
-      puts qq['qq_id'] + " - Answered: " + qq['answered'] + " Total Score: " + qq['total_score']
+    puts '----------------------------------------------------------------------------------------'
+    puts '#  |  ID  |  Answers Submitted  |  Total Score'
+    puts '----------------------------------------------------------------------------------------'
+    quiz_table.each_with_index do |qq, index|
+      puts index.to_s + "    " + qq['qq_id'] + "         " + qq['answered'] + "             " + qq['total_score']
     end
 
     ### Close chat 10 minutes after quiz
