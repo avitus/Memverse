@@ -153,11 +153,12 @@ var quizRoom = {
         if (grade.score != null) {
 
             // Record score and update question difficulty
-            $.post("/record_score", {   usr_id:      memverseUserID,
-                                        usr_name:    memverseUserName,
-                                        usr_login:   memverseUserLogin,
-                                        question_id: questionID,
-                                        score:       grade.score } );
+            $.post("/record_score", {   usr_id:       memverseUserID,
+                                        usr_name:     memverseUserName,
+                                        usr_login:    memverseUserLogin,
+                                        question_id:  questionID,
+                                        question_num: questionNum,
+                                        score:        grade.score } );
 
             selector = "#question-" + questionNum;
             $(selector + " #q-msg").html("<p>" + grade.msg + "</p>").children("p").effect('highlight', {}, 3000);
