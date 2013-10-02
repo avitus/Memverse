@@ -1,8 +1,8 @@
-<% page_title @tag.name + " - Tag" %>
+<% page_title (@tag.try(:name) || "") + " - Tag" %>
 <div class="white-box-with-margins">
 	<div class="verse-list">
 	
-		<h2>Verses tagged '<%= @tag.name %>' by Users</h2>
+		<h2>Verses tagged '<%= @tag.try(:name) %>' by Users</h2>
 	
 		<% unless @verses.empty? %>
 			<div id="search_results">	
