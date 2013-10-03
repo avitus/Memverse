@@ -49,6 +49,16 @@ class QuizQuestion < ActiveRecord::Base
 
   end
 
+  # ----------------------------------------------------------------------------------------------------------
+  # Update difficulty of quiz question based on number of users getting question correct
+  # ----------------------------------------------------------------------------------------------------------
+  def update_difficulty( answer_count, percentage_correct )
+    new_total_answers   = answer_count + self.times_answered
+    self.perc_correct   = ((answer_count * percentage_correct ) + (self.times_answered * self.perc_correct )) / new_total_answers
+    self.times_answered = new_total_answers
+    self.save
+  end
+
   # ============= Protected below this line ==================================================================
   protected
 

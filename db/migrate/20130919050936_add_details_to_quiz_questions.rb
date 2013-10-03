@@ -1,8 +1,8 @@
 class AddDetailsToQuizQuestions < ActiveRecord::Migration
   def change
     
-    add_column :quiz_questions, :times_answered, :integer
-    add_column :quiz_questions, :perc_correct,   :decimal
+    add_column :quiz_questions, :times_answered, :integer, :default => 0
+    add_column :quiz_questions, :perc_correct,   :decimal, :default => 50  # default to medium difficulty
     add_column :quiz_questions, :mcq_category,   :string,  index: true
 
     # Foreign key for Uberverse model
