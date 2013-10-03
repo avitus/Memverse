@@ -59,7 +59,7 @@ GIT
 
 GIT
   remote: git://github.com/sferik/rails_admin.git
-  revision: 6aed4e4d85cccd8a575b14ecbc03b467c3d05a5c
+  revision: 31619ed36e32a883c24d6821b3a381459ced58a2
   specs:
     rails_admin (0.5.0)
       bootstrap-sass (~> 2.3)
@@ -363,7 +363,7 @@ GEM
       activerecord (>= 3.0.0)
       activesupport (>= 3.0.0)
       rake
-    redis (3.0.4)
+    redis (3.0.5)
     redis-namespace (1.3.1)
       redis (~> 3.0.0)
     ref (1.0.5)
