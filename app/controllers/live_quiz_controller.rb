@@ -80,10 +80,6 @@ class LiveQuizController < ApplicationController
       Rails.logger.info("*** Score was submitted as false for #{usr_name}")
     end
 
-
-
-
-
     respond_to do |format|
       format.all { render :nothing => true, :status => 200 }
     end

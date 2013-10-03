@@ -161,4 +161,22 @@ FactoryGirl.define do
     g.name 'Memory Group'
     g.association :leader, :factory => :user
   end
+
+  # ==============================================================================================
+  # Quiz
+  # ==============================================================================================
+  factory :quiz do |q|
+    q.association :user, :factory => :user
+    q.name    'Weekly Bible Knowledge'
+  end
+
+  # ==============================================================================================
+  # Quiz Questions
+  # ==============================================================================================
+  factory :quiz_question do |qq|
+    qq.association :quiz, :factory => :quiz
+    qq.times_answered  10
+    qq.perc_correct    50
+  end
+
 end

@@ -131,7 +131,18 @@ class KnowledgeQuiz
     puts '#  |  ID  |  Answers Submitted  |  Total Score'
     puts '----------------------------------------------------------------------------------------'
     quiz_table.each_with_index do |qq, index|
+
+      q_id           = qq['qq_id'].to_i             # Quiz question ID
+      q_count        = qq['answered']               # Number of people who answered this question
+      q_total        = qq['total_score']            # Total score, 10 = max
+      q_perc_correct = q_total.to_f / q_count * 10  # Calculate score as a %
+
       puts index.to_s + "    " + qq['qq_id'] + "         " + qq['answered'] + "             " + qq['total_score']
+
+      # Update quiz question difficulty in database
+      question = QuizQuestion.find( q_id )
+      question.update_difficulty( q_count, q_perc_correct )
+
     end
 
     ### Close chat 10 minutes after quiz
@@ -148,8 +159,6 @@ class KnowledgeQuiz
     )
 
     puts "Chat closed and rake task finished."
-
-
 
   end
 
