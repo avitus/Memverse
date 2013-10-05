@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/FriendlyId/friendly_id.git
-  revision: ba3fd42b6d9fbd5e3d8681f8218e19b9904d5937
+  revision: 495b5cd0b395a2eabb8b00bd244e589d99de105a
   specs:
     friendly_id (5.0.0.rc3)
       activerecord (~> 4.0.0)
@@ -59,7 +59,7 @@ GIT
 
 GIT
   remote: git://github.com/sferik/rails_admin.git
-  revision: 31619ed36e32a883c24d6821b3a381459ced58a2
+  revision: 9a4d1ba9b8eef7a02e1b28266028b5977dc08a5f
   specs:
     rails_admin (0.5.0)
       bootstrap-sass (~> 2.3)
@@ -234,7 +234,7 @@ GEM
     factory_girl_rails (4.2.1)
       factory_girl (~> 4.2.0)
       railties (>= 3.0.0)
-    fancybox2-rails (0.2.4)
+    fancybox2-rails (0.2.5)
       railties (>= 3.1.0)
     ffi (1.9.0)
     font-awesome-rails (3.2.1.3)
@@ -277,7 +277,7 @@ GEM
     launchy (2.3.0)
       addressable (~> 2.3)
     libv8 (3.11.8.17)
-    localeapp (0.6.12)
+    localeapp (0.6.13)
       gli
       i18n
       json
@@ -293,7 +293,7 @@ GEM
     mime-types (1.25)
     mini_portile (0.5.1)
     minitest (4.7.5)
-    multi_json (1.8.0)
+    multi_json (1.8.1)
     multi_test (0.0.2)
     mysql2 (0.3.13)
     nested_form (0.3.2)
@@ -390,7 +390,7 @@ GEM
     ruby-rc4 (0.1.5)
     rubyzip (0.9.9)
     safe_yaml (0.9.7)
-    sass (3.2.11)
+    sass (3.2.12)
     sass-rails (4.0.0)
       railties (>= 4.0.0.beta, < 5.0)
       sass (>= 3.1.10)
@@ -403,7 +403,7 @@ GEM
       multi_json (~> 1.0)
       rubyzip (< 1.0.0)
       websocket (~> 1.0.4)
-    sidekiq (2.15.0)
+    sidekiq (2.15.1)
       celluloid (>= 0.15.1)
       connection_pool (>= 1.0.0)
       json
