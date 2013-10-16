@@ -1109,10 +1109,10 @@ class MemversesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   def accuracy_test_next
 
-    mv = current_user.memverses.memorized.sort_by{ rand }.first
+    mv = current_user.memverses.memorized.sort_by{ rand }.first  # memorized scope excludes pending verses
 
     if !mv
-      mv = current_user.memverses.sort_by{ rand }.first
+      mv = current_user.memverses.active.sort_by{ rand }.first
     end
 
     prior_mv = mv && mv.prior_mv  # get prior verse if available
