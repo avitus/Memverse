@@ -323,8 +323,8 @@
 				$.getJSON("/mark_test_quick", { mv: current.id, q: q  }, 			// Score verse
 					function(data) {
 						if (data.msg) {	alert(data.msg); }							// Give user a nice response
-						log_progress(user_id);									    // Req successful callback from mark_test_quick: Log progress
-						window.location="./progress";							    // Req successful callback from mark_test_quick: Navigate to progress
+						log_progress(user_id);									    // Log progress 
+						window.location="/progress";							    // Navigate to progress 
 				});
 			} else {
 				success = insertondeck(ondeck.mv, ondeck.mv_prior);					// Update page with Ondeck verse
