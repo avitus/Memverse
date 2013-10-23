@@ -20,11 +20,11 @@
 	<br />
 
 	<table class="memverse-standard">
-		<%= render :partial => "quizquestions/quizquestion_headings" %>
-		<%= render :partial => "quizquestions/quizquestion", :collection => @quizquestions %>
+		<%= render :partial => "quiz_questions/quizquestion_headings" %>
+		<%= render :partial => "quiz_questions/quizquestion", :collection => @quizquestions %>
 	</table>
 
 	<p>
-		<%= link_to 'Add a question', new_quizquestion_path(:quiz => @quiz.id)%>
+		<%= link_to 'Add a question', new_quiz_question_path(:quiz => @quiz.id)%>
 	</p>
 </div>

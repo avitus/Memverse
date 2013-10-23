@@ -1,0 +1,37 @@
+<% page_title @quiz_name %>
+<div class="white-box-with-margins">
+
+	<h1>Question <%= @quiz_question.question_no %> for <%= link_to @quiz.name, quiz_path(@quiz) %></h1>
+
+	<div class="quiz-question">
+
+		<% if @quiz_question.question_type == "mcq" %>
+
+			<h3><%= @quiz_question.mc_question %></h3>
+
+			<p class="<%= @quiz_question.mc_answer == 'A' %>"> A) <%= @quiz_question.mc_option_a %> </p>
+			<p class="<%= @quiz_question.mc_answer == 'B' %>"> B) <%= @quiz_question.mc_option_b %> </p>
+			<p class="<%= @quiz_question.mc_answer == 'C' %>"> C) <%= @quiz_question.mc_option_c %> </p>
+			<p class="<%= @quiz_question.mc_answer == 'D' %>"> D) <%= @quiz_question.mc_option_d %> </p>
+
+			Correct: <%= @quiz_question.mc_answer %>
+
+		<% else %>
+
+			<%= @quiz_question.question_type %>: <%= @quiz_question.passage %>
+
+		<% end %>
+
+	</div>
+
+	<br />
+
+	<div>
+		<% if current_user == @quiz_question.quiz.user %>
+			<%= link_to 'Edit', edit_quiz_question_path(@quiz_question) %> |
+		<% end %>
+
+		<%= link_to 'Back', quiz_path(@quiz) %>
+	</div>
+
+</div>
