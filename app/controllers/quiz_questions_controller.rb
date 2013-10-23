@@ -1,6 +1,6 @@
 # coding: utf-8
 
-class QuizquestionsController < ApplicationController
+class QuizQuestionsController < ApplicationController
 
   before_filter :authenticate_user!
 
@@ -19,47 +19,48 @@ class QuizquestionsController < ApplicationController
   # GET /quizquestions/1
   # GET /quizquestions/1.xml
   def show
-    @question  = QuizQuestion.find(params[:id])
-    @quiz      = @question.quiz
+    @quiz_question  = QuizQuestion.find(params[:id])
+    @quiz           = @quiz_question.quiz
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @question }
+      format.xml  { render :xml => @quiz_question }
     end
   end
 
   # GET /quizquestions/new
   # GET /quizquestions/new.xml
   def new
-    @question = QuizQuestion.new
-    @quiz     = Quiz.find(params[:quiz] || 1)
+    @quiz_question = QuizQuestion.new
+    @quiz          = Quiz.find(params[:quiz] || 1)
 
     respond_to do |format|
       format.html # new.html.erb
-      format.xml  { render :xml => @question }
+      format.xml  { render :xml => @quiz_question }
     end
   end
 
   # GET /quizquestions/1/edit
   def edit
-    @question = QuizQuestion.find(params[:id])
+    @quiz_question = QuizQuestion.find(params[:id])
+    @quiz          = @quiz_question.quiz
   end
 
   # POST /quizquestions?quiz=1
   # POST /quizquestions?quiz=1.xml
   def create
-    @question = QuizQuestion.new(params[:quiz_question])
+    @quiz_question = QuizQuestion.new(params[:quiz_question])
 
     respond_to do |format|
-      if @question.save
+      if @quiz_question.save
         flash[:notice] = 'Quiz question was successfully created.'
-        link = "<a href=\"#{url_for(:action => 'new', :quiz => @question.quiz_id, :qno => @question.question_no + 1)}\">[Add another question]</a>"
+        link = "<a href=\"#{url_for(:action => 'new', :quiz => @quiz_question.quiz_id, :qno => @quiz_question.question_no + 1)}\">[Add another question]</a>"
         flash.now[:notice] << " #{link} "
-        format.html { redirect_to quizquestion_path(@question) }
-        format.xml  { render :xml => @question, :status => :created, :location => @question }
+        format.html { redirect_to quiz_question_path(@quiz_question) }
+        format.xml  { render :xml => @quiz_question, :status => :created, :location => @quiz_question }
       else
         format.html { render :action => "new" }
-        format.xml  { render :xml => @question.errors, :status => :unprocessable_entity }
+        format.xml  { render :xml => @quiz_question.errors, :status => :unprocessable_entity }
       end
     end
   end
@@ -67,16 +68,16 @@ class QuizquestionsController < ApplicationController
   # PUT /quizquestions/1
   # PUT /quizquestions/1.xml
   def update
-    @question = QuizQuestion.find(params[:id])
+    @quiz_question = QuizQuestion.find(params[:id])
 
     respond_to do |format|
-      if @question.update_attributes(params[:quiz_question])
+      if @quiz_question.update_attributes(params[:quiz_question])
         flash[:notice] = 'Quiz question was successfully updated.'
-        format.html { redirect_to quizquestion_path(@question) }
+        format.html { redirect_to quiz_question_path(@quiz_question) }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
-        format.xml  { render :xml => @question.errors, :status => :unprocessable_entity }
+        format.xml  { render :xml => @quiz_question.errors, :status => :unprocessable_entity }
       end
     end
   end
@@ -84,8 +85,8 @@ class QuizquestionsController < ApplicationController
   # DELETE /quizquestions/1
   # DELETE /quizquestions/1.xml
   def destroy
-    @question = QuizQuestion.find(params[:id])
-    @question.destroy
+    @quiz_question = QuizQuestion.find(params[:id])
+    @quiz_question.destroy
 
     respond_to do |format|
       format.html { redirect_to(quizzes_url) }

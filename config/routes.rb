@@ -28,7 +28,7 @@ MemverseApp::Application.routes.draw do
   resources :sermons
   resources :quests
   resources :quizzes
-  resources :quizquestions
+  resources :quiz_questions
   resources :verses
 
   resources :passages do

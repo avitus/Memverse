@@ -6,7 +6,8 @@
     <td align="left"    id='q-psg'  ><%= quizquestion.passage %></td>
 	<td align="left" 	id='q-psg'	><%= quizquestion.mc_question %></td>
 
-	<td><%= link_to 'Show', quizquestion_path(quizquestion)%></td>
-	<td><%= link_to 'Edit', edit_quizquestion_path(quizquestion)%></td>
+	<td><%= link_to 'Show', quiz_question_path(quizquestion)%></td>
+    <td><%= link_to 'Edit', edit_quiz_question_path(quizquestion)%></td>
+	<td><%= link_to '[x]',  quiz_question_path(quizquestion), method: :delete, data: { confirm: 'Are you sure?' } %></td>
 
 </tr>
