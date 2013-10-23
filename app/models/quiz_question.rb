@@ -13,13 +13,23 @@ class QuizQuestion < ActiveRecord::Base
   # Relationships
   belongs_to :quiz
 
+  # Query scopes
+  scope :mcq,         -> { where( :question_type => "mcq"        ) }
+  scope :recitation,  -> { where( :question_type => "recitation" ) }
+  scope :reference,   -> { where( :question_type => "reference"  ) }
+
+  scope :fresh,       -> { where( 'last_asked < ?', Date.today   ) }
+
+  scope :easy,        -> { where( :perc_correct => 66..100       ) }
+  scope :medium,      -> { where( :perc_correct => 34..65        ) }
+  scope :hard,        -> { where( :perc_correct =>  0..33        ) }
+
   # Validations
   # validates_presence_of :user_id
 
-  after_create 'self.quiz.update_length'
-  after_update 'self.quiz.update_length'
+  after_create  'self.quiz.update_length'
+  after_update  'self.quiz.update_length'
   after_destroy 'self.quiz.update_length'
-
 
   def passage_translations
 
@@ -58,6 +68,22 @@ class QuizQuestion < ActiveRecord::Base
     self.times_answered = new_total_answers
     self.save
   end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Estimate time required (in seconds) for question
+  # ----------------------------------------------------------------------------------------------------------
+  def time_allocation
+    case self.question_type
+      when 'mcq'
+        reading_required = [ mc_question, mc_option_a, mc_option_b, mc_option_c, mc_option_d ].join(" ")
+        reading_required.split(" ").length
+      when 'recitation'
+        (self.passage_translations.first.last.split(" ").length * 2.5 + 15.0).to_i # 24 WPM typing speed with 15 seconds to think
+      when 'reference'
+        25
+    end
+  end
+
 
   # ============= Protected below this line ==================================================================
   protected
