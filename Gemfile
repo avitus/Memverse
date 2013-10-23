@@ -78,7 +78,7 @@ gem 'bloggity',    :git => "git://github.com/avitus/bloggity.git"               
 ############################################################
 # Deployment and Monitoring
 ############################################################
-gem 'capistrano', '>=2.9.0'                                                                     # Deploy with Capistrano
+gem 'capistrano', '=2.15.5'                                                                     # Deploy with Capistrano
 gem 'sitemap_generator'                                                                         # Sitemap generator
 gem 'newrelic_rpm', '>=3.3.0'                                                                   # Performance monitoring
 gem 'airbrake'                                                                                  # Error tracking
