@@ -8,7 +8,8 @@ class KnowledgeQuiz
 
   recurrence do
      # weekly.day_of_week(2).hour_of_day(9)   # Every Tuesday at 9am
-     minutely(10)                             # For development
+     hourly(9,11,15,18,21)                    # 9am, 11am, 3pm, 6pm, 9pm each day
+     # minutely(10)                           # For development
   end
 
   def perform
@@ -19,7 +20,7 @@ class KnowledgeQuiz
     next_quiz_time = schedule.next_occurrence
 
     # Start quiz
-    puts "===> Starting quiz at " + Time.now.to_s
+    puts "===> Opening quiz room at " + Time.now.to_s
 
     # Clear participant and question scores from Redis
     participants = $redis.keys("user-*")       # user ID's
@@ -45,6 +46,7 @@ class KnowledgeQuiz
     }
 
     # Open quiz chat channel
+    puts "===> Opening chat at " + Time.now.to_s
     if $redis.exists("chat-#{channel}")
       status = $redis.hmget("chat-#{channel}", "status").first
     end
@@ -66,13 +68,14 @@ class KnowledgeQuiz
     # Set up number of questions
     q_num_array = Array(1..10)
 
+    puts "===> Starting quiz at " + Time.now.to_s
     # Iterate through questions
     q_num_array.each do |q_num|
 
       puts "===> Question: " + q_num.to_s
 
       # Pick a question at random
-      q = QuizQuestion.where(:question_type => 'mcq').sort_by{ rand }.first
+      q = QuizQuestion.mcq.fresh.sort_by{ rand }.first
 
       # Publish question
       PN.publish( :channel  => channel, :message  => {
@@ -86,13 +89,13 @@ class KnowledgeQuiz
           :mc_option_c => q.mc_option_c,
           :mc_option_d => q.mc_option_d,
           :mc_answer   => q.mc_answer,
-          :time_alloc  => 20
+          :time_alloc  => q.time_allocation
         },
         :callback => @my_callback
       )
 
       # Time to answer question
-      sleep(20)
+      sleep( q.time_allocation )
 
       # Update scoreboard
       puts "===> Updating scoreboard"
@@ -133,11 +136,11 @@ class KnowledgeQuiz
     quiz_table.each_with_index do |qq, index|
 
       q_id           = qq['qq_id'].to_i             # Quiz question ID
-      q_count        = qq['answered']               # Number of people who answered this question
-      q_total        = qq['total_score']            # Total score, 10 = max
+      q_count        = qq['answered'].to_i          # Number of people who answered this question
+      q_total        = qq['total_score'].to_i       # Total score, 10 = max
       q_perc_correct = q_total.to_f / q_count * 10  # Calculate score as a %
 
-      puts index.to_s + "    " + qq['qq_id'] + "         " + qq['answered'] + "             " + qq['total_score']
+      puts index.to_s + "      " + qq['qq_id'] + "         " + qq['answered'] + "                  " + qq['total_score']
 
       # Update quiz question difficulty in database
       question = QuizQuestion.find( q_id )

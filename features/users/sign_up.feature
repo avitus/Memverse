@@ -13,8 +13,8 @@ Feature: Sign up
       And I fill in the following:
         | user_name                  | Testy McUserton |
         | user_email                 | user@test.com   |
-        | user_password              | please          |
-        | user_password_confirmation | please          |
+        | user_password              | please!123      |
+        | user_password_confirmation | please!123      |
       And I press "Create my account"
       Then I should see "A MESSAGE WITH A CONFIRMATION LINK HAS BEEN SENT TO YOUR EMAIL ADDRESS. PLEASE OPEN THE LINK TO ACTIVATE YOUR ACCOUNT."
       And "user@test.com" should receive an email
@@ -28,8 +28,8 @@ Feature: Sign up
       And I fill in the following:
         | user_name                  | Testy McUserton |
         | user_email                 | invalidemail    |
-        | user_password              | please          |
-        | user_password_confirmation | please          |
+        | user_password              | please!123+     |
+        | user_password_confirmation | please!123+     |
       Then I should see "Doesn't look like a valid email"
 
     @javascript
@@ -38,7 +38,7 @@ Feature: Sign up
         | user_name                  | Testy McUserton |
         | user_email                 | user@test.com   |
         | user_password              |                 |
-        | user_password_confirmation | please          |
+        | user_password_confirmation | please!123+     |
       Then I should see "Password cannot be blank"
 
     @javascript
@@ -55,8 +55,8 @@ Feature: Sign up
       And I fill in the following:
         | user_name                  | Testy McUserton |
         | user_email                 | user@test.com   |
-        | user_password              | please          |
-        | user_password_confirmation | please1         |
+        | user_password              | please!123+     |
+        | user_password_confirmation | please!122+     |
       Then I should see "Passwords do not match"
 
     @javascript
@@ -64,8 +64,8 @@ Feature: Sign up
       And I fill in the following:
         | user_name                  | Testy McUsrton        |
         | user_email                 | awfulspeller@gmil.com |
-        | user_password              | pleese                |
-        | user_password_confirmation | pleese                |
+        | user_password              | pleese!123+           |
+        | user_password_confirmation | pleese!123+           |
       Then I should see "Did you mean awfulspeller@gmail.com"
 	  When I click inside "a.email"
 	  Then I should see "We will email you a confirmation"
