@@ -8,7 +8,8 @@ class KnowledgeQuiz
 
   recurrence do
      # weekly.day_of_week(2).hour_of_day(9)   # Every Tuesday at 9am
-     minutely(10)                             # For development
+     hourly(9,11,15,18,21)                    # 9am, 11am, 3pm, 6pm, 9pm each day
+     # minutely(10)                           # For development
   end
 
   def perform

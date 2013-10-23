@@ -31,8 +31,6 @@ class QuizQuestion < ActiveRecord::Base
   after_update  'self.quiz.update_length'
   after_destroy 'self.quiz.update_length'
 
-
-
   def passage_translations
 
     passages = Hash.new
