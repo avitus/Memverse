@@ -77,6 +77,9 @@ class KnowledgeQuiz
       # Pick a question at random
       q = QuizQuestion.mcq.fresh.sort_by{ rand }.first
 
+      # Update question to show that it was asked today
+      q.update_attribute( :last_asked, Date.today )
+
       # Publish question
       PN.publish( :channel  => channel, :message  => {
           :meta        => "question",
