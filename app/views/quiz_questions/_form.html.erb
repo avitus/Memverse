@@ -98,7 +98,7 @@
             <!-- Supporting reference -->
             <p>
                 <%= f.label         :supporting_ref, "Supporting Reference" %><br />
-                <%= f.text_field    :supporting_ref %>
+                <%= f.text_field    :supporting_ref, :value => @quiz_question.supporting_ref.try(:long_ref) %>
             </p>
 
             <!-- Display supporting references -->
