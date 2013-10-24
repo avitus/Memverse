@@ -1,5 +1,3 @@
-require "juggernaut"
-
 class ChatController < ApplicationController
 
   before_filter :authenticate_user!, :only => :channel1
