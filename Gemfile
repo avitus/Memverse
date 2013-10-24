@@ -98,7 +98,6 @@ gem 'mail', '>= 2.2.15'                                                         
 gem 'thinking-sphinx', '~> 3.0.5'                                                               # Connector to Sphinx - for global search
 gem 'i18n-js'                                                                                   # Uses config/locale files to build a JavaScript equivalent of i18n in Rails
 gem 'localeapp'                                                                                 # Translation service for i18n
-gem 'juggernaut', '>=2.1.0', :git => 'git://github.com/maccman/juggernaut.git'                  # Live chat
 gem 'breadcrumbs_on_rails', '>=2.0.0'                                                           # For breadcrumb navigation bar
 gem 'dalli'                                                                                     # Memcached client
 gem 'redis', '>=2.2.2'                                                                          # Redis Key-value store
