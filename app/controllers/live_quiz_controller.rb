@@ -1,7 +1,5 @@
 # coding: utf-8
 
-require "juggernaut"
-
 class LiveQuizController < ApplicationController
 
   before_filter :authenticate_user!, :only => :live_quiz
@@ -137,7 +135,7 @@ class LiveQuizController < ApplicationController
   end
 
   #-----------------------------------------------------------------------------------------------------------
-  # Used for load testing of Juggernaut
+  # Used for load testing
   #-----------------------------------------------------------------------------------------------------------
   def test_sign_in_random
     sign_in(:user, User.find_by_email("student#{rand(50)}@sttsetia.org"))
