@@ -42,14 +42,27 @@ class QuizQuestionsController < ApplicationController
 
   # GET /quizquestions/1/edit
   def edit
-    @quiz_question = QuizQuestion.find(params[:id])
+    @quiz_question = QuizQuestion.find( params[:id] )
     @quiz          = @quiz_question.quiz
   end
 
   # POST /quizquestions?quiz=1
   # POST /quizquestions?quiz=1.xml
   def create
-    @quiz_question = QuizQuestion.new(params[:quiz_question])
+
+    # Remove supporting reference string from list of params
+    supporting_ref = params[:quiz_question].delete(:supporting_ref)
+
+    @quiz_question = QuizQuestion.new( params[:quiz_question] )
+
+    Rails.logger.debug(" ==> Parsing: #{supporting_ref}")
+
+    # Associate supporting verse with question
+    errorcode, bk, ch, vs = parse_verse( supporting_ref )
+
+    Rails.logger.debug(" ==> Supporting reference: #{bk} #{ch}:#{vs}")
+
+    @quiz_question.supporting_ref = Uberverse.where(:book => bk, :chapter => ch, :versenum => vs).first
 
     respond_to do |format|
       if @quiz_question.save
@@ -68,7 +81,15 @@ class QuizQuestionsController < ApplicationController
   # PUT /quizquestions/1
   # PUT /quizquestions/1.xml
   def update
+
+    # Remove supporting reference string from list of params
+    supporting_ref = params[:quiz_question].delete(:supporting_ref)
+
     @quiz_question = QuizQuestion.find(params[:id])
+
+    # Associate supporting verse with question
+    errorcode, bk, ch, vs = parse_verse( supporting_ref )
+    @quiz_question.supporting_ref = Uberverse.where(:book => bk, :chapter => ch, :versenum => vs).first
 
     respond_to do |format|
       if @quiz_question.update_attributes(params[:quiz_question])

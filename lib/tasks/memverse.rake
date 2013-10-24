@@ -162,8 +162,7 @@ namespace :utils do
   end
 
   #--------------------------------------------------------------------------------------------
-  # Delete unused tags, recreate verse tags
-  # Task duration: ~ 4 hours
+  # Input missing NIV 1984 verses
   #--------------------------------------------------------------------------------------------
   desc "Input missing NIV 1984 verses"
   task :input_niv => :environment do
@@ -212,6 +211,44 @@ namespace :utils do
     }
 
     puts "=== Completed NIV 1984 input at #{Time.now} ==="
+
+  end
+
+  #--------------------------------------------------------------------------------------------
+  # Delete unused tags, recreate verse tags
+  # Task duration: ~ 4 hours
+  #--------------------------------------------------------------------------------------------
+  desc "Create complete list of Bible reference verses"
+  task :create_uberverses => :environment do
+
+    puts "Starting reference verse creation"
+    BIBLEBOOKS.each { |book|
+
+      bi = BIBLEBOOKS.index(book) + 1
+
+      final_chapter = FinalVerse.where(:book => book).order("chapter DESC").first.chapter
+
+      (1..final_chapter).each { |chapter|
+
+        puts "#{bi} #{book} #{chapter}"
+
+        final_verse = FinalVerse.where(:book => book, :chapter => chapter).first.last_verse
+
+        (1..final_verse).each { |verse|
+
+          if !Uberverse.exists?(:book => book, :chapter => chapter, :versenum => verse, :book_index => bi)
+
+            Uberverse.create!(:book => book, :chapter => chapter, :versenum => verse, :book_index => bi)
+
+          end
+
+        }
+
+      }
+
+    }
+
+    puts "=== Created Uberverse table at #{Time.now} ==="
 
   end
 

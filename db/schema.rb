@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130919050936) do
+ActiveRecord::Schema.define(version: 20131024202018) do
 
   create_table "american_states", force: true do |t|
     t.string  "abbrev",      limit: 20, default: "", null: false
@@ -433,7 +433,7 @@ ActiveRecord::Schema.define(version: 20130919050936) do
   end
 
   create_table "quiz_questions", force: true do |t|
-    t.integer "quiz_id",                                                        null: false
+    t.integer "quiz_id",                                 null: false
     t.integer "question_no"
     t.string  "question_type"
     t.string  "passage"
@@ -443,10 +443,9 @@ ActiveRecord::Schema.define(version: 20130919050936) do
     t.string  "mc_option_c"
     t.string  "mc_option_d"
     t.string  "mc_answer"
-    t.integer "times_answered",                          default: 0
-    t.decimal "perc_correct",   precision: 10, scale: 0, default: 50
+    t.integer "times_answered"
+    t.decimal "perc_correct",   precision: 10, scale: 0
     t.string  "mcq_category"
-    t.date    "last_asked",                              default: '2012-10-22'
     t.integer "supporting_ref"
     t.integer "submitted_by"
   end
@@ -549,14 +548,14 @@ ActiveRecord::Schema.define(version: 20130919050936) do
   add_index "tweets", ["user_id"], name: "index_tweets_on_user_id", using: :btree
 
   create_table "uberverses", force: true do |t|
-    t.string   "book",       null: false
-    t.integer  "chapter",    null: false
-    t.integer  "versenum",   null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.string  "book",       null: false
+    t.integer "chapter",    null: false
+    t.integer "versenum",   null: false
+    t.integer "book_index"
   end
 
   add_index "uberverses", ["book"], name: "index_uberverses_on_book", using: :btree
+  add_index "uberverses", ["book_index"], name: "index_uberverses_on_book_index", using: :btree
   add_index "uberverses", ["chapter"], name: "index_uberverses_on_chapter", using: :btree
   add_index "uberverses", ["versenum"], name: "index_uberverses_on_versenum", using: :btree
 

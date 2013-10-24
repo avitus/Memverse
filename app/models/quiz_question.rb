@@ -12,6 +12,7 @@ class QuizQuestion < ActiveRecord::Base
 
   # Relationships
   belongs_to :quiz
+  belongs_to :supporting_ref, :foreign_key => "supporting_ref", :class_name => "Uberverse"
 
   # Query scopes
   scope :mcq,         -> { where( :question_type => "mcq"        ) }

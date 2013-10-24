@@ -29,13 +29,6 @@ GIT
       rails (>= 3.1)
 
 GIT
-  remote: git://github.com/maccman/juggernaut.git
-  revision: 77a21dc7b4d0bedcc421902ae2acae9ae2469f74
-  specs:
-    juggernaut (2.1.1)
-      redis
-
-GIT
   remote: git://github.com/radar/forem.git
   revision: f34fb3d655833e28d241fbc6a761e49564d35a24
   branch: rails4
@@ -519,7 +512,6 @@ DEPENDENCIES
   jasmine
   jquery-rails (>= 2.0.0)
   json
-  juggernaut (>= 2.1.0)!
   kaminari
   launchy (>= 2.0.5)
   libv8 (= 3.11.8.17)
