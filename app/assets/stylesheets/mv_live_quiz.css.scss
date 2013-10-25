@@ -137,15 +137,17 @@ div#quiz-timer {
 
 #q-msg {  /* Feedback on answers */
 	float:left;
-	width: 380px;
+	min-height: 3em;
 	padding-right: 1em;
 	padding-top: 1em;
 }
 
 #q-question {
-	padding-right:2em;
-	font-size:1em;
+	padding: 2em 0.5em;
+	font-size: 1em;
 	background-color: #f0f0f0;
+	clear: both;
+	margin-bottom: 1em;
 }
 
 #q-answer {
