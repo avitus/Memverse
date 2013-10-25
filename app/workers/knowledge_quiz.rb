@@ -16,7 +16,7 @@ class KnowledgeQuiz
 
     # Update start time for next quiz
     schedule = IceCube::Schedule.new( Time.now )
-    schedule.add_recurrence_rule( IceCube::Rule.hourly )
+    schedule.add_recurrence_rule( IceCube::Rule.daily.hour_of_day(9,11,15,18,21) )
     next_quiz_time = schedule.next_occurrence
 
     # Start quiz
