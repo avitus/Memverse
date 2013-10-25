@@ -66,7 +66,7 @@ class KnowledgeQuiz
     sleep(300)  # 5 minutes
 
     # Set up number of questions
-    q_num_array = Array(1..20)
+    q_num_array = Array(1..25)
 
     puts "===> Starting quiz at " + Time.now.to_s
     # Iterate through questions

@@ -23,9 +23,9 @@ class LiveQuizController < ApplicationController
 
     # Set up quiz time and number of questions - show when user first enters quiz room
     if @quiz.id == 1
-      @minutes       =  5
+      @minutes       =  10
       @seconds       =  0
-      @num_questions =  10
+      @num_questions =  25
     else
       @minutes       =  @quiz.quiz_length / 60
       @seconds       =  @quiz.quiz_length - (@minutes * 60)
