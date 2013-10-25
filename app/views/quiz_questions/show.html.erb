@@ -3,6 +3,7 @@
 
 	<h1>Question <%= @quiz_question.question_no %> for <%= link_to @quiz.name, quiz_path(@quiz) %></h1>
 
+	<!-- Quiz Question -->
 	<div class="quiz-question">
 
 		<% if @quiz_question.question_type == "mcq" %>
@@ -14,7 +15,7 @@
 			<p class="<%= @quiz_question.mc_answer == 'C' %>"> C) <%= @quiz_question.mc_option_c %> </p>
 			<p class="<%= @quiz_question.mc_answer == 'D' %>"> D) <%= @quiz_question.mc_option_d %> </p>
 
-			Correct: <%= @quiz_question.mc_answer %>
+			Answer: <%= @quiz_question.mc_answer %>
 
 		<% else %>
 
@@ -24,10 +25,25 @@
 
 	</div>
 
+	<div class="quiz-question-stats">
+		<table>
+			<thead></thead>
+			<tbody>
+				<tr><th>Category</th>       <td><%= @quiz_question.mcq_category                  %></td></tr>
+				<tr><th>% Correct</th>      <td><%= @quiz_question.perc_correct                  %></td></tr>
+				<tr><th>Answered</th>       <td><%= @quiz_question.times_answered                %></td></tr>
+				<tr><th>Last Asked</th>     <td><%= @quiz_question.last_asked                    %></td></tr>
+				<tr><th>Supporting Ref</th> <td><%= @quiz_question.supporting_ref.try(:long_ref) %></td></tr>
+				<tr><th>Submitted By</th>   <td><%= @quiz_question.submitted_by                  %></td></tr>
+			</tbody>
+		</table>
+	</div>
+
 	<br />
 
-	<div>
-		<% if current_user == @quiz_question.quiz.user %>
+	<div class="quiz-question-navigation">
+
+		<% if current_user == @quiz_question.quiz.user or current_user.admin? %>
 			<%= link_to 'Edit', edit_quiz_question_path(@quiz_question) %> |
 		<% end %>
 

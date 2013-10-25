@@ -1,3 +1,12 @@
+/* === Quiz Question (Left panel) === */
+.quiz-question {
+    float: left;
+    width: 40%;
+    p.true {
+        color: green;
+    }
+}
+
 .quiz-question-num {
     float:left;
     width: 20%;
@@ -35,9 +44,52 @@
     clear: both;
 }
 
-// Quiz Question Show
-.quiz-question {
-    p.true {
-        color: green;
-    }
+/* === Quiz Question Stats (Right panel) === */
+.quiz-question-stats
+{
+    float: left;
+    padding: 2em 1em;
+    margin:0 auto;
+}
+
+.quiz-question-stats table {
+  border-spacing:0;
+  text-align:center;
+}
+
+.quiz-question-stats table thead {
+  height:27px;
+  line-height:27px;
+  padding:5px;
+  margin:0;
+  font-size:16px;
+  color:#983626;
+  font-weight:bold;
+}
+
+.quiz-question-stats table thead th {
+  padding:5px;
+}
+
+.quiz-question-stats table tbody {
+  height:25px;
+  line-height:25px;
+  color:#666;
+}
+
+.quiz-question-stats table tbody th {
+  border-top:1px solid #afaeae;
+  border-collapse:collapse;
+  text-align:left;
+}
+
+.quiz-question-stats table tbody td {
+  border-top:1px solid #afaeae;
+  border-collapse:collapse;
+}
+
+/* === Quiz Question Nav (Bottom) === */
+.quiz-question-navigation {
+    padding-top: 2em;
+    clear: both;
 }
