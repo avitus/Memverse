@@ -63,7 +63,7 @@ class KnowledgeQuiz
     end
 
     # Allow time for chatting
-    sleep(60)  # 1 minute
+    sleep(300)  # 5 minutes
 
     # Set up number of questions
     q_num_array = Array(1..20)
@@ -153,7 +153,7 @@ class KnowledgeQuiz
 
     ### Close chat 10 minutes after quiz
     puts "Quiz now over. Sleeping for 10 minutes, then shutting down chat."
-    sleep(60)
+    sleep(600)
 
     new_status = "Closed"
     $redis.hset("chat-#{channel}", "status", new_status)
