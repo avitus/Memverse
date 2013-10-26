@@ -138,12 +138,11 @@ div#quiz-timer {
 #q-msg {  /* Feedback on answers */
 	float:left;
 	min-height: 3em;
-	padding-right: 1em;
-	padding-top: 1em;
+	padding: 0.1em 0.8em;
 }
 
 #q-question {
-	padding: 2em 0.5em;
+	padding: 0.1em 0.8em;
 	font-size: 1em;
 	background-color: #f0f0f0;
 	clear: both;
