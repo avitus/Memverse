@@ -7,7 +7,7 @@ class KnowledgeQuiz
   sidekiq_options :retry => false # Don't retry quiz if something goes wrong
 
   recurrence do
-     day_of_week(3).hour_of_day(9)            # Every Tuesday at 9am
+     weekly.day(:wednesday).hour_of_day(9)    # Every Tuesday at 9am
      # daily.hour_of_day(9,11,15,21)          # 9am, 11am, 3pm, 9pm each day
      # minutely(10)                           # For development
   end
@@ -16,7 +16,7 @@ class KnowledgeQuiz
 
     # Update start time for next quiz
     schedule = IceCube::Schedule.new( Time.now )
-    schedule.add_recurrence_rule( IceCube::Rule.day_of_week(3).hour_of_day(9) )
+    schedule.add_recurrence_rule( IceCube::Rule.weekly.day(:wednesday).hour_of_day(9) )
     next_quiz_time = schedule.next_occurrence
 
     # Start quiz
