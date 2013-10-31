@@ -28,6 +28,26 @@ class QuizQuestionsController < ApplicationController
     end
   end
 
+  def search
+    supporting_ref = params[:supporting_ref]
+    # Associate supporting verse with question
+    errorcode, bk, ch, vs = parse_verse( supporting_ref )
+
+    uv = Uberverse.where(:book => bk, :chapter => ch, :versenum => vs)
+
+    if uv
+      related_questions = uv.quizquestions
+    else
+      related_questions = nil
+    end
+
+    respond_to do |format|
+      format.html # show.html.erb
+      format.js  { render :json => {:related_questions => related_questions} }
+    end
+
+  end
+
   # GET /quizquestions/new
   # GET /quizquestions/new.xml
   def new
@@ -55,12 +75,8 @@ class QuizQuestionsController < ApplicationController
 
     @quiz_question = QuizQuestion.new( params[:quiz_question] )
 
-    Rails.logger.debug(" ==> Parsing: #{supporting_ref}")
-
     # Associate supporting verse with question
     errorcode, bk, ch, vs = parse_verse( supporting_ref )
-
-    Rails.logger.debug(" ==> Supporting reference: #{bk} #{ch}:#{vs}")
 
     @quiz_question.supporting_ref = Uberverse.where(:book => bk, :chapter => ch, :versenum => vs).first
 
