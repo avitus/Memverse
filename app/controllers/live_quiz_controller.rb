@@ -23,7 +23,7 @@ class LiveQuizController < ApplicationController
 
     # Set up quiz time and number of questions - show when user first enters quiz room
     if @quiz.id == 1
-      @minutes       =  10
+      @minutes       =  15
       @seconds       =  0
       @num_questions =  25
     else
@@ -111,7 +111,7 @@ class LiveQuizController < ApplicationController
   def till_start
 
     @quiz = Quiz.find(params[:id] || 1)
-    @till = @quiz.start_time - Time.now # Remaining time in seconds
+    @till = @quiz.start_time - Time.now + 300 # Remaining time in seconds, including chat time
 
     if @till >= 0
 

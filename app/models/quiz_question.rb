@@ -15,15 +15,15 @@ class QuizQuestion < ActiveRecord::Base
   belongs_to :supporting_ref, :foreign_key => "supporting_ref", :class_name => "Uberverse"
 
   # Query scopes
-  scope :mcq,         -> { where( :question_type => "mcq"        ) }
-  scope :recitation,  -> { where( :question_type => "recitation" ) }
-  scope :reference,   -> { where( :question_type => "reference"  ) }
+  scope :mcq,         -> { where( :question_type => "mcq"                 ) }
+  scope :recitation,  -> { where( :question_type => "recitation"          ) }
+  scope :reference,   -> { where( :question_type => "reference"           ) }
 
-  scope :fresh,       -> { where( 'last_asked < ?', Date.today   ) }
+  scope :fresh,       -> { where( 'last_asked < ?', Date.today - 2.months ) }
 
-  scope :easy,        -> { where( :perc_correct => 66..100       ) }
-  scope :medium,      -> { where( :perc_correct => 34..65        ) }
-  scope :hard,        -> { where( :perc_correct =>  0..33        ) }
+  scope :easy,        -> { where( :perc_correct => 66..100                ) }
+  scope :medium,      -> { where( :perc_correct => 34..65                 ) }
+  scope :hard,        -> { where( :perc_correct =>  0..33                 ) }
 
   # Validations
   # validates_presence_of :user_id
@@ -77,7 +77,7 @@ class QuizQuestion < ActiveRecord::Base
     case self.question_type
       when 'mcq'
         reading_required = [ mc_question, mc_option_a, mc_option_b, mc_option_c, mc_option_d ].join(" ")
-        reading_required.split(" ").length
+        reading_required.split(" ").length + 3
       when 'recitation'
         (self.passage_translations.first.last.split(" ").length * 2.5 + 15.0).to_i # 24 WPM typing speed with 15 seconds to think
       when 'reference'

@@ -7,8 +7,8 @@ class KnowledgeQuiz
   sidekiq_options :retry => false # Don't retry quiz if something goes wrong
 
   recurrence do
-     # weekly.day_of_week(2).hour_of_day(9)   # Every Tuesday at 9am
-     daily.hour_of_day(9,11,15,18,21)         # 9am, 11am, 3pm, 6pm, 9pm each day
+     weekly.day(:wednesday).hour_of_day(9)    # Every Tuesday at 9am
+     # daily.hour_of_day(9,11,15,21)          # 9am, 11am, 3pm, 9pm each day
      # minutely(10)                           # For development
   end
 
@@ -16,7 +16,7 @@ class KnowledgeQuiz
 
     # Update start time for next quiz
     schedule = IceCube::Schedule.new( Time.now )
-    schedule.add_recurrence_rule( IceCube::Rule.daily.hour_of_day(9,11,15,18,21) )
+    schedule.add_recurrence_rule( IceCube::Rule.weekly.day(:wednesday).hour_of_day(9) )
     next_quiz_time = schedule.next_occurrence
 
     # Start quiz
@@ -38,7 +38,7 @@ class KnowledgeQuiz
     # PubNub callback function - From version 3.4 PubNub is fully asynchronous
     @my_callback = lambda { |message|
         if message[0]  # Return codes are of form [1,"Sent","136074940..."]
-            puts("Successfully Sent Message!");
+            # puts("Successfully Sent Message!");
         else
             # If message is not sent we should probably try to send it again
             puts("!!!!! Failed to send message !!!!!!")
