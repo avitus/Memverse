@@ -50,25 +50,25 @@
 
             <p>
                 <%= f.label         :mc_option_a, "Answer A" %><br />
-                <%= f.text_field    :mc_option_a, :size => 42 %>
+                <%= f.text_field    :mc_option_a, :size => 44 %>
                 <%= f.radio_button  :mc_answer, "A" %>
             </p>
 
             <p>
                 <%= f.label         :mc_option_b, "Answer B" %><br />
-                <%= f.text_field    :mc_option_b, :size => 42 %>
+                <%= f.text_field    :mc_option_b, :size => 44 %>
                 <%= f.radio_button  :mc_answer, "B" %>
             </p>
 
             <p>
                 <%= f.label         :mc_option_c, "Answer C" %><br />
-                <%= f.text_field    :mc_option_c, :size => 42 %>
+                <%= f.text_field    :mc_option_c, :size => 44 %>
                 <%= f.radio_button  :mc_answer, "C" %>
             </p>
 
             <p>
                 <%= f.label         :mc_option_d, "Answer D" %><br />
-                <%= f.text_field    :mc_option_d, :size => 42 %>
+                <%= f.text_field    :mc_option_d, :size => 44 %>
                 <%= f.radio_button  :mc_answer, "D" %>
             </p>
 
@@ -84,29 +84,34 @@
 
             <!-- MCQ category -->
             <p>
-                <%= f.label         :mcq_category, "Type of question" %><br />
-                <%= f.select        :mcq_category, [ ['History',          'History'          ],
-                                                     ['Quotations',       'Quotations'       ],
-                                                     ['Miracles',         'Miracles'         ],
-                                                     ['People',           'People'           ],
-                                                     ['Plants & Animals', 'Plants & Animals' ],
-                                                     ['Geography',        'Geography'        ],
-                                                     ['Life of Christ',   'Life of Christ'   ],
-                                                     ['Theology',         'Theology'         ],
-                                                     ['Life in Christ',   'Life in Christ'   ],
-                                                     ['Greek Words',      'Greek Words'      ],
-                                                     ['Prophecy',         'Prophecy'         ]] %>
+                <%= f.label     :mcq_category, "Type of question" %><br />
+                <%= f.select    :mcq_category, [ ['History',              'History'              ],
+                                                 ['Prophecy',             'Prophecy'             ],
+                                                 ['People',               'People'               ],
+                                                 ['Plants & Animals',     'Plants & Animals'     ],
+                                                 ['Geography',            'Geography'            ],
+                                                 ['Life of Christ',       'Life of Christ'       ],
+                                                 ['Miracles',             'Miracles'             ],
+                                                 ['Parables',             'Parables'             ],
+                                                 ['Disciples & Apostles', 'Disciples & Apostles' ],
+                                                 ['Theology',             'Theology'             ],
+                                                 ['Life in Christ',       'Life in Christ'       ],
+                                                 ['Quotations',           'Quotations'           ],
+                                                 ['Greek Words',          'Greek Words'          ] ] %>
             </p>
 
             <!-- Supporting reference -->
             <p>
-                <%= f.label         :supporting_ref, "Supporting Reference" %><br />
-                <%= f.text_field    :supporting_ref, :value => @quiz_question.supporting_ref.try(:long_ref) %>
+                <%= f.label      :supporting_ref, "Supporting Reference" %><br />
+                <%= f.text_field :supporting_ref, :value => @quiz_question.supporting_ref.try(:long_ref) %>
             </p>
 
             <!-- Display supporting references -->
-            <div class="supporting-ref-display">
+            <div class="related-quiz-questions">
+            </div>
 
+            <!-- Display supporting references -->
+            <div class="supporting-ref-display">
             </div>
 
         </div>

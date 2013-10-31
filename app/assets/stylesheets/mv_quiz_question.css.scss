@@ -88,6 +88,12 @@
   border-collapse:collapse;
 }
 
+
+
+.supporting-ref-display .item {
+  clear: both;  // needed for short verses
+}
+
 /* === Quiz Question Nav (Bottom) === */
 .quiz-question-navigation {
     padding-top: 2em;

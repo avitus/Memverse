@@ -28,8 +28,11 @@ MemverseApp::Application.routes.draw do
   resources :sermons
   resources :quests
   resources :quizzes
-  resources :quiz_questions
   resources :verses
+
+  resources :quiz_questions do
+    get 'search'
+  end
 
   resources :passages do
     get 'due', :on => :collection
