@@ -19,6 +19,7 @@ vendor/cache/libv8-3.3.10.4-x86_64-linux.gem
 # minimal Rails specific artifacts
 db/*.sqlite3
 /log/*
+pubnub.log
 tmp/*
 dump.rdb
 
