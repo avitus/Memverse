@@ -30,22 +30,19 @@ class QuizQuestionsController < ApplicationController
 
   def search
     supporting_ref = params[:supporting_ref]
-    # Associate supporting verse with question
     errorcode, bk, ch, vs = parse_verse( supporting_ref )
-
-    uv = Uberverse.where(:book => bk, :chapter => ch, :versenum => vs)
+    uv = Uberverse.where(:book => bk, :chapter => ch, :versenum => vs).first
 
     if uv
-      related_questions = uv.quizquestions
+      related_questions = uv.quiz_questions
     else
       related_questions = nil
     end
 
     respond_to do |format|
       format.html # show.html.erb
-      format.js  { render :json => {:related_questions => related_questions} }
+      format.js  { render :json => related_questions }
     end
-
   end
 
   # GET /quizquestions/new

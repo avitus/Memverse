@@ -88,8 +88,6 @@
   border-collapse:collapse;
 }
 
-
-
 .supporting-ref-display .item {
   clear: both;  // needed for short verses
 }
@@ -98,4 +96,29 @@
 .quiz-question-navigation {
     padding-top: 2em;
     clear: both;
+}
+
+/* === Related Quiz Questions === */
+
+div.related-quiz-questions {
+  padding-bottom: 1em;
+}
+
+/* Single element in search result ... */
+div.related-q {
+
+  clear: both;
+
+  /* question */
+  span.difficulty {
+    color: #888888;
+    font-size: smaller;
+  }
+
+  /* question */
+  span.mcq-question {
+    color: #999999;
+    font-size: smaller;
+  }
+
 }

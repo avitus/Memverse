@@ -31,6 +31,8 @@
         $("#quiz_question_supporting_ref").observe_field(0.2, function( ) {
             // search and display results with callback function
             multiTranslationSearch( this.value, displayMultiTranslationSearchResultsFn );
+            // show other questions associated with this verse
+            relatedQuestionsSearch( this.value, displayRelatedQuestionsSearchResultsFn );
         });
 
     });
