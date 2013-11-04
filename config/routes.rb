@@ -31,7 +31,7 @@ MemverseApp::Application.routes.draw do
   resources :verses
 
   resources :quiz_questions do
-    get 'search'
+    get 'search', on: :collection
   end
 
   resources :passages do

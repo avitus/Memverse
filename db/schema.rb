@@ -433,7 +433,7 @@ ActiveRecord::Schema.define(version: 20131024202018) do
   end
 
   create_table "quiz_questions", force: true do |t|
-    t.integer "quiz_id",                                 null: false
+    t.integer "quiz_id",                                                        null: false
     t.integer "question_no"
     t.string  "question_type"
     t.string  "passage"
@@ -443,9 +443,10 @@ ActiveRecord::Schema.define(version: 20131024202018) do
     t.string  "mc_option_c"
     t.string  "mc_option_d"
     t.string  "mc_answer"
-    t.integer "times_answered"
-    t.decimal "perc_correct",   precision: 10, scale: 0
+    t.integer "times_answered",                          default: 0
+    t.decimal "perc_correct",   precision: 10, scale: 0, default: 50
     t.string  "mcq_category"
+    t.date    "last_asked",                              default: '2012-10-22'
     t.integer "supporting_ref"
     t.integer "submitted_by"
   end

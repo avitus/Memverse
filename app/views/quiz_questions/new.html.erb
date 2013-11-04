@@ -33,8 +33,7 @@
 	        // search and display results with callback function
 	        multiTranslationSearch( this.value, displayMultiTranslationSearchResultsFn );
 	        // show other questions associated with this verse
-	        $.getJSON('quizquestions/search?supporting_ref=' + this.value, function (data) {
-	        });
+	        relatedQuestionsSearch( this.value, displayRelatedQuestionsSearchResultsFn );
 	    });
 
     });

@@ -100,6 +100,22 @@ function multiTranslationSearch(userText, displayResultsFn) {
 
 }
 
+
+/******************************************************************************
+ * Search and display quiz questions associated with a verse reference
+ ******************************************************************************/
+function relatedQuestionsSearch(verseRef, displayResultsFn) {
+
+    function searchResultsCallback( quiz_questions ) {
+        if( $.isFunction(displayResultsFn) ) {
+          displayResultsFn.call(this, quiz_questions);
+        }
+    };
+
+    $.getJSON('/quiz_questions/search', { supporting_ref: verseRef }, searchResultsCallback, "json" );
+
+}
+
 /******************************************************************************
  * Capitalize strings: romans -> Romans
  ******************************************************************************/
