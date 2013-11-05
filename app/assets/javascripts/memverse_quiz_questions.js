@@ -6,7 +6,7 @@ function displayRelatedQuestionsSearchResultsFn( quiz_questions ) {
 
     $('.related-quiz-questions').empty(); // Clear prior results
 
-    if (typeof quiz_questions === 'undefined' || quiz_questions.length === 0) return;
+    if (typeof quiz_questions === 'undefined' || quiz_questions === null || quiz_questions.length === 0) return;
 
     $('.related-quiz-questions').append( $('<h5/>').text("Related Questions") );
 
