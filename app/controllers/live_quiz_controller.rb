@@ -6,6 +6,8 @@ class LiveQuizController < ApplicationController
 
   #-----------------------------------------------------------------------------------------------------------
   # Setup quiz room when user arrives
+  #
+  # Weekly Wednesday quiz will use ID=1
   #-----------------------------------------------------------------------------------------------------------
   def live_quiz
 
