@@ -102,9 +102,9 @@
 
 <script type="text/javascript" charset="utf-8">
 
-var memverseUserID    = "<%= current_user.id %>";            // global variable
-var memverseUserName  = "<%= current_user.name_or_login %>"; // global variable
-var memverseUserLogin = "<%= current_user.login %>";         // global variable
+var memverseUserID    = "<%= current_user.id %>";                      // global variable
+var memverseUserName  = "<%= current_user.name_or_login.html_safe %>"; // global variable
+var memverseUserLogin = "<%= current_user.login.html_safe %>";         // global variable
 
 $(document).ready(function() {
 
@@ -153,6 +153,7 @@ $(document).ready(function() {
 				var user_link   = build_user_link(roster_uid, roster_uname);
 				var li  = $("<li/>").addClass("chat-announcement").append(user_link);
 
+				// Add user to roster array
 				quizRoom.userIDArray.push({ id: data.id, name: data.name, avatarURL: data.avatar_url, userLink: user_link });
 				console.log("New user joining: " + data.name );
 				console.log("Roster is now: " + quizRoom.userIDArray );
