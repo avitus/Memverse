@@ -359,6 +359,78 @@ function mvSubmitQuizChat() {
     }
 }
 
+/******************************************************************************
+ * Callback function to handle initial connection when subscribing to PubNub
+ ******************************************************************************/
+function mvConnect() {
+    pubnub.here_now({
+        channel  : channel,
+        callback : mvPresence
+    });
+};
+
+/******************************************************************************
+ * Callback function to handle users joining/leaving channel and on connection
+ ******************************************************************************/
+function mvPresence ( message, env, channel ) {
+
+    var roster_uid   = message.uuid;
+
+    // --- User joins quiz ---
+    if (message.action == "join") {
+
+        $.getJSON('/users/'+ message.uuid +'.json', function( data ) {
+
+            var roster_uname = data.name;
+            var gravatar_url = data.avatar_url;
+            var user_link   = build_user_link(roster_uid, roster_uname);
+            var li  = $("<li/>").addClass("chat-announcement").append(user_link);
+
+            // Add user to roster array
+            quizRoom.userIDArray.push({ id: data.id, name: data.name, avatarURL: data.avatar_url, userLink: user_link });
+
+            // copied from Juggernaut code ... optimize this
+            li.append(" entered the room.");
+            var div = $(build_roster_item( roster_uid, roster_uname, gravatar_url ));
+            $("#roster-window").scrollTop($("#roster-window")[0].scrollHeight).append(div);
+            div.effect('highlight', {}, 3000);
+            $("#quizzers-stats").effect('highlight', {}, 3000);
+            $("#quizzers-count").html("(" + $("div.roster-item").length + ")");
+
+            chat_stream_scroll( function () {
+                $("#chat-stream-narrow").append(li);
+            });
+        });
+
+    // --- User leaves quiz ---
+    } else if (message.action == "leave") {
+
+        var departedUser = quizRoom.userIDArray.splice( quizRoom.userIDArray.indexOf( roster_uid ), 1 );
+        var li           = $("<li/>").addClass("chat-announcement").append(departedUser[0].userLink);
+
+        // copied from Juggernaut code ... optimize me
+        li.append(" left the room.");
+        $("div#" + roster_uid).remove();
+        $("#quizzers-count").html("(" + $("div.roster-item").length + ")");
+
+        chat_stream_scroll( function () {
+            $("#chat-stream-narrow").append(li);
+        });
+
+    } else if (message.action == "timeout" ) {
+
+        // Need to handle timeouts ... not sure how
+
+    // --- Create roster when joining ---
+    } else {
+        // quizRoom.userIDArray = message.uuids;
+        console.log("Joining quiz room: " + quizRoom.userIDArray );
+        console.log("Event            : " + env );
+        console.log("Channel          : " + channel );
+    }
+
+};
+
 
 
 
