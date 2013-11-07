@@ -127,7 +127,8 @@ $(document).ready(function() {
         channel  : channel,
         message  : function(data) { quizRoom.handleMessage(data) },
         connect  : mvConnect,     // Callback when connection is established
-        presence : mvPresence     // Callback when users join/leave channel
+        presence : mvPresence,    // Callback when users join/leave channel
+        restore  : true
     });
 
 
