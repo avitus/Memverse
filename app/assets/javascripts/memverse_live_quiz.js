@@ -362,7 +362,7 @@ function mvSubmitQuizChat() {
 /******************************************************************************
  * Callback function to handle initial connection when subscribing to PubNub
  ******************************************************************************/
-function mvConnect() {
+function mvConnect( ) {
     pubnub.here_now({
         channel  : channel,
         callback : mvPresence
@@ -383,22 +383,22 @@ function mvPresence ( message, env, channel ) {
 
             var roster_uname = data.name;
             var gravatar_url = data.avatar_url;
-            var user_link   = build_user_link(roster_uid, roster_uname);
-            var li  = $("<li/>").addClass("chat-announcement").append(user_link);
+            var user_link    = build_user_link(roster_uid, roster_uname);
+            var joinMsg      = $("<li/>").addClass("chat-announcement").append(user_link + " joined the quiz.");
 
             // Add user to roster array
             quizRoom.userIDArray.push({ id: data.id, name: data.name, avatarURL: data.avatar_url, userLink: user_link });
 
             // copied from Juggernaut code ... optimize this
-            li.append(" entered the room.");
             var div = $(build_roster_item( roster_uid, roster_uname, gravatar_url ));
             $("#roster-window").scrollTop($("#roster-window")[0].scrollHeight).append(div);
             div.effect('highlight', {}, 3000);
             $("#quizzers-stats").effect('highlight', {}, 3000);
             $("#quizzers-count").html("(" + $("div.roster-item").length + ")");
 
+            // Add user joins message to chat window
             chat_stream_scroll( function () {
-                $("#chat-stream-narrow").append(li);
+                $("#chat-stream-narrow").append( joinMsg );
             });
         });
 
@@ -406,10 +406,9 @@ function mvPresence ( message, env, channel ) {
     } else if (message.action == "leave") {
 
         var departedUser = quizRoom.userIDArray.splice( quizRoom.userIDArray.indexOf( roster_uid ), 1 );
-        var li           = $("<li/>").addClass("chat-announcement").append(departedUser[0].userLink);
+        var li           = $("<li/>").addClass("chat-announcement").append(departedUser[0].userLink + " left the room.");
 
         // copied from Juggernaut code ... optimize me
-        li.append(" left the room.");
         $("div#" + roster_uid).remove();
         $("#quizzers-count").html("(" + $("div.roster-item").length + ")");
 
