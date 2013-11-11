@@ -126,11 +126,10 @@ $(document).ready(function() {
     pubnub.subscribe({
         channel  : channel,
         message  : function(data) { quizRoom.handleMessage(data) },
-        connect  : mvConnect,     // Callback when connection is established
-        presence : mvPresence,    // Callback when users join/leave channel
+        connect  : mvConnect( pubnub ),   // Callback when connection is established
+        presence : mvPresence(),  // Callback when users join/leave channel
         restore  : true
     });
-
 
     $.fancybox($("#welcome-box").html(), {padding: 20});
 

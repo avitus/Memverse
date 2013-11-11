@@ -362,7 +362,7 @@ function mvSubmitQuizChat() {
 /******************************************************************************
  * Callback function to handle initial connection when subscribing to PubNub
  ******************************************************************************/
-function mvConnect( ) {
+function mvConnect( pubnub ) {
     pubnub.here_now({
         channel  : channel,
         callback : mvPresence
@@ -375,6 +375,8 @@ function mvConnect( ) {
 function mvPresence ( message, env, channel ) {
 
     var roster_uid   = message.uuid;
+
+    console.log('===> Presence callback: ')
 
     // --- User joins quiz ---
     if (message.action == "join") {
