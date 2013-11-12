@@ -396,13 +396,14 @@ function mvPresence ( message, env, channel ) {
             quizRoom.userIDArray.push({ id: data.id, name: userName, avatarURL: gravatarURL, userLink: userLink });
 
             // Add user to visual roster
-            addUserToRoster( roster_uid, userName, gravatarURL );
+            addUserToRoster( roster_uid, userName, gravatarURL, message.occupancy );
 
             // Add "[user] joins" message to chat window
             chat_stream_scroll( function () { $("#chat-stream-narrow").append( joinMsg ) });
 
             // Log to console
-            console.log("===> Presence callback: " + userName + " has joined the quiz.");
+            console.log("===> | Presence callback: " + userName + " has joined the quiz.");
+            console.log("     | Occupancy        : ", message.occupancy    );
         });
 
     // --- User leaves quiz ---
@@ -414,7 +415,7 @@ function mvPresence ( message, env, channel ) {
 
         // Remove user from visual roster
         $("div#" + roster_uid).remove();
-        $("#quizzers-count").html("(" + $("div.roster-item").length + ")");
+        $("#quizzers-count").html("(" + message.occupancy + ")");
 
         // Add "[user] leavs" message to chat window
         chat_stream_scroll( function () { $("#chat-stream-narrow").append(li) } );
@@ -433,7 +434,7 @@ function mvPresence ( message, env, channel ) {
         console.log("Join/Leave/Timeout : ", message.action       );
         console.log("Occupancy          : ", message.occupancy    );
         console.log("User ID            : ", message.uuid         );
-        console.log("User ID            : ", message.uuids        );
+        console.log("User ID's Here Now : ", message.uuids        );
         console.log("Event              : ", env                  );
         console.log("Channel            : ", channel              );
         console.log('================================================')
@@ -456,7 +457,7 @@ function buildRosterItem( user_id, user_name, gravatarURL ) {
     return '<div class="roster-item" id="'+user_id+'">'+buildGravatarImage(gravatarURL) + " " + buildUserLink(user_id,user_name)+'</div>';
 }
 
-function addUserToRoster( userID, userName, gravatarURL ) {
+function addUserToRoster( userID, userName, gravatarURL, userCount ) {
 
     // Build div and add user to roster
     var userDiv = $( buildRosterItem( userID, userName, gravatarURL ) );
@@ -465,7 +466,7 @@ function addUserToRoster( userID, userName, gravatarURL ) {
 
     // Increase number of quizzers
     $("#quizzers-stats").effect('highlight', {}, 3000);
-    $("#quizzers-count").html("(" + $("div.roster-item").length + ")");
+    $("#quizzers-count").html("(" + userCount + ")");
 }
 
 /******************************************************************************
