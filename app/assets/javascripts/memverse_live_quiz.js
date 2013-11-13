@@ -107,7 +107,7 @@ var quizRoom = {
 
         } else if (qType == 'mcq'){
 
-            $(q+" #q-answer").html( setupMCQ( qOptionA, qOptionB, qOptionC, qOptionD, mcAnswer ) );
+            $(q+" #q-answer").html( setupMCQ( qOptionA, qOptionB, qOptionC, qOptionD, mcAnswer, qNum ) );
             $('input#submit-answer').on( "click", function() { quizRoom.scoreUserAnswer( qAnswer, qType, qNum, qID ); } );
 
         };
