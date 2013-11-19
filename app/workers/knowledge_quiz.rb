@@ -14,12 +14,22 @@ class KnowledgeQuiz
 
   def perform
 
-    # Update start time for next quiz
+    # ========================================================================
+    # Announce quiz
+    # ========================================================================
+    broadcast  = "The weekly Bible knowledge quiz is starting. <a href=\"live_quiz\">Join now!</a>"
+    Tweet.create(:news => broadcast, :user_id => 1, :importance => 2)  # Admin tweet => user_id = 1
+
+    # ========================================================================
+    # Calculate start time for next quiz
+    # ========================================================================
     schedule = IceCube::Schedule.new( Time.now )
     schedule.add_recurrence_rule( IceCube::Rule.weekly.day(:wednesday).hour_of_day(9) )
     next_quiz_time = schedule.next_occurrence
 
-    # Start quiz
+    # ========================================================================
+    # Setup quiz, clear old scores
+    # ========================================================================
     puts "===> Opening quiz room at " + Time.now.to_s
 
     # Clear participant and question scores from Redis
@@ -45,7 +55,9 @@ class KnowledgeQuiz
         end
     }
 
-    # Open quiz chat channel
+    # ========================================================================
+    # Open quiz chat channel 5 minutes prior to start
+    # ========================================================================
     puts "===> Opening chat at " + Time.now.to_s
     if $redis.exists("chat-#{channel}")
       status = $redis.hmget("chat-#{channel}", "status").first
@@ -62,14 +74,14 @@ class KnowledgeQuiz
       )
     end
 
-    # Allow time for chatting
-    sleep(300)  # 5 minutes
+    sleep(300)  # 5 minutes for chatting
 
-    # Set up number of questions
-    q_num_array = Array(1..25)
-
+    # ========================================================================
+    # Main question loop
+    # ========================================================================
+    q_num_array = Array(1..25) # Set up number of questions
     puts "===> Starting quiz at " + Time.now.to_s
-    # Iterate through questions
+
     q_num_array.each do |q_num|
 
       puts "===> Question: " + q_num.to_s
@@ -100,7 +112,7 @@ class KnowledgeQuiz
       # Time to answer question
       sleep( q.time_allocation )
 
-      # Update scoreboard
+      # Update final
       puts "===> Updating scoreboard"
 
       scoreboard = Array.new
@@ -118,15 +130,18 @@ class KnowledgeQuiz
 
     end # of question loop
 
-    # Update quiz status in redis
-    $redis.hset("quiz-bible-knowledge", "status", "Finished")
+    # ========================================================================
+    # Update quiz status, set start time for next quiz
+    # ========================================================================
+    $redis.hset("quiz-bible-knowledge", "status", "Finished") # Update quiz status in redis
     puts "===> Finished quiz at " + Time.now.to_s
 
-    # Update start time for next quiz
-    quiz.update_attribute(:start_time, next_quiz_time)
+    quiz.update_attribute(:start_time, next_quiz_time) # Update start time for next quiz
     puts "Next knowledge quiz will start at " + next_quiz_time.to_s
 
+    # ========================================================================
     # Update difficulty for all questions
+    # ========================================================================
     quiz_table = Array.new
     quiz_questions = $redis.keys("qnum-*")
     quiz_questions.each do |qq|
@@ -151,7 +166,34 @@ class KnowledgeQuiz
 
     end
 
-    ### Close chat 10 minutes after quiz
+    # ========================================================================
+    # Record final scoreboard in log file
+    # ========================================================================
+    final_scoreboard = Array.new
+    participants     = $redis.keys("user-*")
+    participants.each { |p| final_scoreboard << $redis.hgetall(p) }
+    final_scoreboard = final_scoreboard.sort { |x, y| y['score'].to_i <=> x['score'].to_i }
+
+    puts "Final Quiz Scores"
+    puts "==================="
+    final_scoreboard.each do |usr|
+      puts "[" + usr['score'] + "] - " + usr['name']
+    end
+
+    gold_ribbon_name   = final_scoreboard[0]['name']
+    # silver_ribbon_name = final_scoreboard[1]['name']
+    # bronze_ribbon_name = final_scoreboard[2]['name']  # Need to check that we have at least 3 participants
+
+    gold_ribbon_id     = final_scoreboard[0]['id']
+    # silver_ribbon_id   = final_scoreboard[1]['id']
+    # bronze_ribbon_id   = final_scoreboard[2]['id']
+
+    broadcast  = "#{gold_ribbon_name} won the weekly Bible knowledge quiz"
+    Tweet.create(:news => broadcast, :user_id => gold_ribbon_id, :importance => 2)
+
+    # ========================================================================
+    # Close chat after ten minutes
+    # ========================================================================
     puts "Quiz now over. Sleeping for 10 minutes, then shutting down chat."
     sleep(600)
 
