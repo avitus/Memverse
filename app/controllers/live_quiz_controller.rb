@@ -69,7 +69,8 @@ class LiveQuizController < ApplicationController
 
       # Update user scores. Store the score in Redis store
       $redis.hincrby(usr_id, 'score', score)
-      $redis.hmset(usr_id, 'name', usr_name, 'login', usr_login)  # Capture user's name and login if we don't have them
+      # Capture user's name and login if we don't have them
+      $redis.hmset(usr_id, 'name', usr_name, 'login', usr_login, 'id', params[:usr_id].to_s)
 
       # Update question difficulty
       $redis.hincrby(q_num, 'total_score', score)  # Add user's score to combined score for that question
@@ -77,7 +78,9 @@ class LiveQuizController < ApplicationController
       $redis.hsetnx(q_num, 'qq_id', qq_id)         # Store QuizQuestion ID if we don't have it yet
 
     else
+
       Rails.logger.info("*** Score was submitted as false for #{usr_name}")
+
     end
 
     respond_to do |format|
