@@ -14,7 +14,9 @@ var quizRoom = {
      ******************************************************************************/
     handleMessage: function (m) {
         switch(m.meta) {
+
             case "chat":
+
                 var first_colon  = parseInt(m.data.indexOf(':'));
                 var sender_id    = m.data.substring(0,first_colon);
                 var second_colon = parseInt(m.data.indexOf(':',first_colon+1));
@@ -22,24 +24,26 @@ var quizRoom = {
                 var message      = m.data.substring(second_colon+1);
 
                 this.putChat(user,message,m.meta,sender_id);
-
                 break;
+
             case "chat_status":
                 $("#chat_status").text(m.status);
                 var user    = "Memverse Server"
                 var message = "Chat Channel " + m.status;
 
                 this.putChat(user,message,m.meta);
-
                 break;
+
             case "question":
+
                 this.handleQuestion(m);
-
                 break;
+
             case "scoreboard":
-                this.updateScoreboard(m);
 
+                this.updateScoreboard(m);
                 break;
+
         }
     },
 
