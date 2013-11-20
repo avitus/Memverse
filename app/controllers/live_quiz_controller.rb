@@ -1,13 +1,13 @@
 # coding: utf-8
 
-require "juggernaut"
-
 class LiveQuizController < ApplicationController
 
   before_filter :authenticate_user!, :only => :live_quiz
 
   #-----------------------------------------------------------------------------------------------------------
   # Setup quiz room when user arrives
+  #
+  # Weekly Wednesday quiz will use ID=1
   #-----------------------------------------------------------------------------------------------------------
   def live_quiz
 
@@ -25,9 +25,9 @@ class LiveQuizController < ApplicationController
 
     # Set up quiz time and number of questions - show when user first enters quiz room
     if @quiz.id == 1
-      @minutes       =  5
+      @minutes       =  20
       @seconds       =  0
-      @num_questions =  10
+      @num_questions =  25
     else
       @minutes       =  @quiz.quiz_length / 60
       @seconds       =  @quiz.quiz_length - (@minutes * 60)
@@ -69,7 +69,8 @@ class LiveQuizController < ApplicationController
 
       # Update user scores. Store the score in Redis store
       $redis.hincrby(usr_id, 'score', score)
-      $redis.hmset(usr_id, 'name', usr_name, 'login', usr_login)  # Capture user's name and login if we don't have them
+      # Capture user's name and login if we don't have them
+      $redis.hmset(usr_id, 'name', usr_name, 'login', usr_login, 'id', params[:usr_id].to_s)
 
       # Update question difficulty
       $redis.hincrby(q_num, 'total_score', score)  # Add user's score to combined score for that question
@@ -77,7 +78,9 @@ class LiveQuizController < ApplicationController
       $redis.hsetnx(q_num, 'qq_id', qq_id)         # Store QuizQuestion ID if we don't have it yet
 
     else
+
       Rails.logger.info("*** Score was submitted as false for #{usr_name}")
+
     end
 
     respond_to do |format|
@@ -113,7 +116,7 @@ class LiveQuizController < ApplicationController
   def till_start
 
     @quiz = Quiz.find(params[:id] || 1)
-    @till = @quiz.start_time - Time.now # Remaining time in seconds
+    @till = @quiz.start_time - Time.now + 300 # Remaining time in seconds, including chat time
 
     if @till >= 0
 
@@ -137,7 +140,7 @@ class LiveQuizController < ApplicationController
   end
 
   #-----------------------------------------------------------------------------------------------------------
-  # Used for load testing of Juggernaut
+  # Used for load testing
   #-----------------------------------------------------------------------------------------------------------
   def test_sign_in_random
     sign_in(:user, User.find_by_email("student#{rand(50)}@sttsetia.org"))

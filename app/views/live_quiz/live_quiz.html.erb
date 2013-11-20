@@ -5,11 +5,10 @@
 
 	<h2>Welcome!</h2>
 
-	<% if !["NAS", "NKJ", "KJV", "ESV", "NIV"].include?(@current_user.translation) %>
+	<% if @quiz.id != 1 and !["NAS", "NKJ", "KJV", "ESV"].include?(@current_user.translation) %>
 
 		<div id="select-trans">
 			<h3>Choose a Version</h3>
-
 			<p><%= @current_user.translation %> is your default version for Memverse. However, it is <strong>not supported by this quiz</strong>.</p>
 			<!--<p>Please select a version to use: <a href="#ESV">ESV 2011</a>, <a href="#NAS">NASB</a>, <a href="#NKJ">NKJV</a>, or <a href="#KJV">KJV</a>. (Note: <%= @current_user.translation %> will remain your default version; your selection now is just for this quiz.)</p>-->
 			<p>The <strong>valid versions</strong> are ESV (2011), NASB, NKJ, and KJV. Please go to your profile by <a href="/update_profile">clicking here</a>, update your version to one of these, and then come back for the quiz. Thanks!</p>
@@ -19,7 +18,7 @@
 
 		<h3>Quiz Instructions</h3>
 		<p>
-			The quiz will have <strong><%= @num_questions %> questions</strong> and last <strong><%= "#{@minutes} minute#{"s" unless @minutes == 1}" %> and <%= "#{@seconds} second#{"s" unless @seconds == 1}" %></strong>. Each question will be worth a maximum of 15 points.
+			The quiz will have <strong><%= @num_questions %> questions</strong> and last <strong><%= "#{@minutes} minute#{"s" unless @minutes == 1}" %></strong>. Each question will be worth a maximum of 15 points. Multiple choice questions are worth 10 points and <strong>2 points will be deducted for incorrect answers.</strong>
 		</p>
 		<p>
 			You will answer all the questions on the left side. The middle column will display the scoreboard and the right column is only
@@ -103,9 +102,9 @@
 
 <script type="text/javascript" charset="utf-8">
 
-var memverseUserID    = "<%= current_user.id %>";            // global variable
-var memverseUserName  = "<%= current_user.name_or_login %>"; // global variable
-var memverseUserLogin = "<%= current_user.login %>";         // global variable
+var memverseUserID    = "<%= current_user.id %>";                      // global variable
+var memverseUserName  = "<%= current_user.name_or_login.html_safe %>"; // global variable
+var memverseUserLogin = "<%= current_user.login.html_safe %>";         // global variable
 
 $(document).ready(function() {
 
@@ -127,82 +126,10 @@ $(document).ready(function() {
     pubnub.subscribe({
         channel  : channel,
         message  : function(data) { quizRoom.handleMessage(data) },
-        connect  : connect,     // Callback when connection is established
-        presence : presence     // Callback when users join/leave channel
+        connect  : mvConnect( pubnub ),   // Callback when connection is established
+        presence : mvPresence,            // Callback when users join/leave channel
+        restore  : true
     });
-
-    // Get List of Occupants and Occupancy Count.
-    function connect() {
-    	pubnub.here_now({
-    		channel  : channel,
-    		callback : presence
-    	});
-    };
-
-    // Callback when users join/leave channel and on connection
-    function presence ( message, env, channel ) {
-
-		var roster_uid   = message.uuid;
-
-		// --- User joins quiz ---
-		if (message.action == "join") {
-
-			$.getJSON('/users/'+ message.uuid +'.json', function( data ) {
-
-				var roster_uname = data.name;
-				var gravatar_url = data.avatar_url;
-				var user_link   = build_user_link(roster_uid, roster_uname);
-				var li  = $("<li/>").addClass("chat-announcement").append(user_link);
-
-				quizRoom.userIDArray.push({ id: data.id, name: data.name, avatarURL: data.avatar_url, userLink: user_link });
-				console.log("New user joining: " + data.name );
-				console.log("Roster is now: " + quizRoom.userIDArray );
-
-				// copied from Juggernaut code ... optimize this
-				li.append(" entered the room.");
-				var div = $(build_roster_item( roster_uid, roster_uname, gravatar_url ));
-				$("#roster-window").scrollTop($("#roster-window")[0].scrollHeight).append(div);
-				div.effect('highlight', {}, 3000);
-				$("#quizzers-stats").effect('highlight', {}, 3000);
-				$("#quizzers-count").html("(" + $("div.roster-item").length + ")");
-
-				chat_stream_scroll( function () {
-					$("#chat-stream-narrow").append(li);
-				});
-			});
-
-		// --- User leaves quiz ---
-		} else if (message.action == "leave") {
-
-			var departedUser = quizRoom.userIDArray.splice( quizRoom.userIDArray.indexOf( roster_uid ), 1 );
-			console.log("User leaving:  " + departedUser[0].name );
-			console.log("Roster is now: " + quizRoom.userIDArray );
-
-
-			var li  = $("<li/>").addClass("chat-announcement").append(departedUser[0].userLink);
-
-			// copied from Juggernaut code ... optimize me
-			li.append(" left the room.");
-			$("div#" + roster_uid).remove();
-			$("#quizzers-count").html("(" + $("div.roster-item").length + ")");
-
-			chat_stream_scroll( function () {
-				$("#chat-stream-narrow").append(li);
-			});
-
-		} else if (message.action == "timeout" ) {
-
-			// Need to handle timeouts ... not sure how
-
-		// --- Create roster when joining ---
-		} else {
-			// quizRoom.userIDArray = message.uuids;
-			console.log("Joining quiz room: " + quizRoom.userIDArray );
-			console.log("Event            : " + env );
-			console.log("Channel          : " + channel );
-		}
-
-    };
 
     $.fancybox($("#welcome-box").html(), {padding: 20});
 

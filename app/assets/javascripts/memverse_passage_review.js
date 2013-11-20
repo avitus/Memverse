@@ -59,9 +59,11 @@ var reviewState = {
             $nextPassage.fadeOut('slow');
             reviewState.selectPassage( $nextPassage.text(), $nextPassage.attr('id') );
         } else {
-            alert("Congratulations! You are done for today.");
             log_progress( memverseUserID );
+            window.location="./progress";
         }
+
+        return false;  // prevent default behavior
     },
 
     gotoNextVerseDue: function ( $currentVerse ) {

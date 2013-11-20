@@ -11,7 +11,7 @@ MemverseApp::Application.routes.draw do
     mount Sidekiq::Web => '/sidekiq'
   end
 
-  get '/split' => Split::Dashboard, :anchor => false, :constraints => lambda { |request|
+  match "/split" => Split::Dashboard, via: [:get, :post, :delete], :anchor => false, :constraints => lambda { |request|
     request.env['warden'].authenticated?    # are we authenticated?
     request.env['warden'].authenticate!     # authenticate if not already
     request.env['warden'].user.try(:admin?) # check if admin
@@ -28,8 +28,11 @@ MemverseApp::Application.routes.draw do
   resources :sermons
   resources :quests
   resources :quizzes
-  resources :quizquestions
   resources :verses
+
+  resources :quiz_questions do
+    get 'search', on: :collection
+  end
 
   resources :passages do
     get 'due', :on => :collection
@@ -149,7 +152,7 @@ MemverseApp::Application.routes.draw do
   get '/stt_setia'                => 'info#stt_setia'
   get '/bible_bee_tool'           => 'info#bible_bee_tool'
 
-  get '/signup_button_finished'   => 'info#signup_button_finished'
+  get '/finish_experiment'        => 'experiment#finish'
 
   # Route for users who haven't yet joined a group
   get '/mygroup'                  => 'groups#show',                     :as => 'mygroup'

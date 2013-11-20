@@ -1,8 +1,8 @@
 GIT
   remote: git://github.com/FriendlyId/friendly_id.git
-  revision: 2764077e3af32a88114d68c75e20ef738e4fa829
+  revision: 59dbe5e8326af74093e215ec62411e8d6e83d948
   specs:
-    friendly_id (5.0.0)
+    friendly_id (5.0.1)
       activerecord (~> 4.0.0)
 
 GIT
@@ -29,13 +29,6 @@ GIT
       rails (>= 3.1)
 
 GIT
-  remote: git://github.com/maccman/juggernaut.git
-  revision: 77a21dc7b4d0bedcc421902ae2acae9ae2469f74
-  specs:
-    juggernaut (2.1.1)
-      redis
-
-GIT
   remote: git://github.com/radar/forem.git
   revision: f34fb3d655833e28d241fbc6a761e49564d35a24
   branch: rails4
@@ -59,7 +52,7 @@ GIT
 
 GIT
   remote: git://github.com/sferik/rails_admin.git
-  revision: a0d04db0ff53146496f7356ee18d2de28bed71e5
+  revision: f1d31a39fa39e260d581af714c550cfdaf959ec4
   specs:
     rails_admin (0.5.0)
       bootstrap-sass (~> 2.3)
@@ -98,10 +91,10 @@ GEM
       erubis (~> 2.7.0)
       rack (~> 1.5.2)
       rack-test (~> 0.6.2)
-    actionpack-action_caching (1.0.0)
-      actionpack (>= 4.0.0.beta, < 5.0)
-    actionpack-page_caching (1.0.0)
-      actionpack (>= 4.0.0.beta, < 5.0)
+    actionpack-action_caching (1.1.0)
+      actionpack (>= 4.0.0, < 5.0)
+    actionpack-page_caching (1.0.1)
+      actionpack (>= 4.0.0, < 5)
     activemodel (4.0.0)
       activesupport (= 4.0.0)
       builder (~> 3.1.0)
@@ -111,10 +104,10 @@ GEM
       activesupport (= 4.0.0)
       arel (~> 4.0.0)
     activerecord-deprecated_finders (1.0.3)
-    activerecord-session_store (0.0.1)
-      actionpack (>= 4.0.0.beta, < 5)
-      activerecord (>= 4.0.0.beta, < 5)
-      railties (>= 4.0.0.beta, < 5)
+    activerecord-session_store (0.1.0)
+      actionpack (>= 4.0.0, < 5)
+      activerecord (>= 4.0.0, < 5)
+      railties (>= 4.0.0, < 5)
     activeresource (4.0.0)
       activemodel (~> 4.0)
       activesupport (~> 4.0)
@@ -132,7 +125,7 @@ GEM
     airbrake (3.1.14)
       builder
       json
-    arel (4.0.0)
+    arel (4.0.1)
     atomic (1.1.14)
     backup (3.4.0)
       open4 (~> 1.3.0)
@@ -147,10 +140,12 @@ GEM
       sass (~> 3.2)
     breadcrumbs_on_rails (2.3.0)
     builder (3.1.4)
-    capistrano (3.0.0)
-      i18n
-      rake (>= 10.0.0)
-      sshkit (>= 0.0.23)
+    capistrano (2.15.5)
+      highline
+      net-scp (>= 1.0.0)
+      net-sftp (>= 2.0.0)
+      net-ssh (>= 2.0.14)
+      net-ssh-gateway (>= 1.1.0)
     capybara (2.1.0)
       mime-types (>= 1.16)
       nokogiri (>= 1.3.3)
@@ -167,7 +162,7 @@ GEM
       orm_adapter
     climate_control (0.0.3)
       activesupport (>= 3.0)
-    cocaine (0.5.2)
+    cocaine (0.5.3)
       climate_control (>= 0.0.3, < 1.0)
     coderay (1.1.0)
     coffee-rails (4.0.1)
@@ -185,10 +180,10 @@ GEM
       compass (>= 0.12.2, < 0.14)
     connection_pool (1.1.0)
     cookiejar (0.3.0)
-    cucumber (1.3.8)
+    cucumber (1.3.9)
       builder (>= 2.1.2)
       diff-lcs (>= 1.1.3)
-      gherkin (~> 2.12.1)
+      gherkin (~> 2.12)
       multi_json (>= 1.7.5, < 2.0)
       multi_test (>= 0.0.2)
     cucumber-rails (1.4.0)
@@ -227,14 +222,14 @@ GEM
     erubis (2.7.0)
     eventmachine (1.0.3)
     execjs (2.0.2)
-    factory_girl (4.2.0)
+    factory_girl (4.3.0)
       activesupport (>= 3.0.0)
-    factory_girl_rails (4.2.1)
-      factory_girl (~> 4.2.0)
+    factory_girl_rails (4.3.0)
+      factory_girl (~> 4.3.0)
       railties (>= 3.0.0)
     fancybox2-rails (0.2.5)
       railties (>= 3.1.0)
-    ffi (1.9.0)
+    ffi (1.9.3)
     font-awesome-rails (3.2.1.3)
       railties (>= 3.2, < 5.0)
     foreman (0.63.0)
@@ -242,19 +237,24 @@ GEM
       thor (>= 0.13.6)
     fssm (0.2.10)
     gemoji (1.1.2)
+    gene_pool (1.3.0)
     gherkin (2.12.2)
       multi_json (~> 1.3)
     gli (2.8.1)
-    haml (4.0.3)
+    haml (4.0.4)
       tilt
     hashery (2.1.1)
+    highline (1.6.20)
     hike (1.2.3)
     hirb (0.7.1)
     http_parser.rb (0.6.0.beta.2)
+    httparty (0.12.0)
+      json (~> 1.8)
+      multi_xml (>= 0.5.2)
     i18n (0.6.5)
     i18n-js (2.1.2)
       i18n
-    ice_cube (0.11.0)
+    ice_cube (0.11.1)
     innertube (1.1.0)
     jasmine (1.3.2)
       jasmine-core (~> 1.3.1)
@@ -265,7 +265,7 @@ GEM
     jquery-rails (3.0.4)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
-    jquery-ui-rails (4.0.5)
+    jquery-ui-rails (4.1.0)
       railties (>= 3.1.0)
     json (1.8.1)
     kaminari (0.14.1)
@@ -288,24 +288,29 @@ GEM
       treetop (~> 1.4.8)
     middleware (0.1.0)
     mime-types (1.25)
-    mini_portile (0.5.1)
+    mini_portile (0.5.2)
     minitest (4.7.5)
     multi_json (1.8.2)
     multi_test (0.0.2)
+    multi_xml (0.5.5)
     mysql2 (0.3.13)
     nested_form (0.3.2)
     net-scp (1.1.2)
       net-ssh (>= 2.6.5)
+    net-sftp (2.1.2)
+      net-ssh (>= 2.6.5)
     net-ssh (2.7.0)
+    net-ssh-gateway (1.2.0)
+      net-ssh (>= 2.6.5)
     newrelic_rpm (3.6.8.168)
     nokogiri (1.6.0)
       mini_portile (~> 0.5.0)
     open4 (1.3.0)
     orm_adapter (0.4.0)
-    paperclip (3.5.1)
+    paperclip (3.5.2)
       activemodel (>= 3.0.0)
       activesupport (>= 3.0.0)
-      cocaine (~> 0.5.0)
+      cocaine (~> 0.5.3)
       mime-types
     pdf-reader (1.3.3)
       Ascii85 (~> 1.0.0)
@@ -313,19 +318,24 @@ GEM
       hashery (~> 2.0)
       ruby-rc4
       ttfunk
+    persistent_http (1.0.6)
+      gene_pool (>= 1.3)
+    persistent_httparty (0.1.1)
+      httparty (~> 0.9)
+      persistent_http
     polyglot (0.3.3)
     prawnto_2 (0.2.6)
       prawn (>= 0.6.0)
       rails (>= 3.1)
     protected_attributes (1.0.3)
       activemodel (>= 4.0.0, < 5.0)
-    pubnub (3.3.0.7)
-      activesupport
+    pubnub (3.4)
       em-http-request
       eventmachine
+      httparty
       json
+      persistent_httparty
       uuid (~> 2.3.5)
-      yajl-ruby
     rack (1.5.2)
     rack-pjax (0.7.0)
       nokogiri (~> 1.5)
@@ -357,8 +367,8 @@ GEM
       activesupport (>= 3.0.0)
       rake
     redis (3.0.5)
-    redis-namespace (1.3.1)
-      redis (~> 3.0.0)
+    redis-namespace (1.3.2)
+      redis (~> 3.0.4)
     ref (1.0.5)
     remotipart (1.2.1)
     rest-client (1.6.7)
@@ -369,7 +379,7 @@ GEM
       rspec-core (~> 2.14.0)
       rspec-expectations (~> 2.14.0)
       rspec-mocks (~> 2.14.0)
-    rspec-core (2.14.6)
+    rspec-core (2.14.7)
     rspec-expectations (2.14.3)
       diff-lcs (>= 1.1.3, < 2.0)
     rspec-mocks (2.14.4)
@@ -416,7 +426,7 @@ GEM
       tilt (~> 1.3, >= 1.3.4)
     sitemap_generator (4.2.0)
       builder
-    slim (2.0.1)
+    slim (2.0.2)
       temple (~> 0.6.6)
       tilt (>= 1.3.3, < 2.1)
     split (0.6.6)
@@ -434,14 +444,8 @@ GEM
       activesupport (>= 3.0)
       sprockets (~> 2.8)
     sqlite3 (1.3.8)
-    sshkit (1.1.0)
-      net-scp
-      net-ssh
-      term-ansicolor
     systemu (2.5.2)
     temple (0.6.7)
-    term-ansicolor (1.2.2)
-      tins (~> 0.8)
     therubyracer (0.11.4)
       libv8 (~> 3.11.8.12)
       ref
@@ -456,15 +460,14 @@ GEM
       atomic
     tilt (1.4.1)
     timers (1.1.0)
-    tins (0.12.0)
     treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
     ttfunk (1.0.3)
     tzinfo (0.3.38)
-    uglifier (2.2.1)
+    uglifier (2.3.0)
       execjs (>= 0.3.0)
-      multi_json (~> 1.0, >= 1.0.2)
+      json (>= 1.8.0)
     uuid (2.3.7)
       macaddr (~> 1.0)
     warden (1.2.3)
@@ -475,7 +478,6 @@ GEM
     xpath (2.0.0)
       nokogiri (~> 1.3)
     ya2yaml (0.31)
-    yajl-ruby (1.1.0)
 
 PLATFORMS
   ruby
@@ -496,7 +498,7 @@ DEPENDENCIES
   bloggity!
   breadcrumbs_on_rails (>= 2.0.0)
   cancan!
-  capistrano (>= 2.9.0)
+  capistrano (= 2.15.5)
   capybara (>= 1.1.2)
   ckeditor
   coffee-rails (~> 4.0.0)
@@ -519,7 +521,6 @@ DEPENDENCIES
   jasmine
   jquery-rails (>= 2.0.0)
   json
-  juggernaut (>= 2.1.0)!
   kaminari
   launchy (>= 2.0.5)
   libv8 (= 3.11.8.17)

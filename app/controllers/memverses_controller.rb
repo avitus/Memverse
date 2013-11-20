@@ -978,8 +978,8 @@ class MemversesController < ApplicationController
 
         	importance = case milestone
   	      	when    0..    9 then 4
-  	      	when   10..  399 then 3
-  	      	when  400..  999 then 2
+  	      	when   10..  499 then 3
+  	      	when  500..  999 then 2
   	      	when 1000..10000 then 1
   	      	else                  5
         	end

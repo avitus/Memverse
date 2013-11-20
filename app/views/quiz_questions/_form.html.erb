@@ -1,0 +1,121 @@
+<%= form_for( @quiz_question ) do |f| %>
+
+    <!-- Flag any errors -->
+    <% if @quiz_question.errors.any? %>
+        <div id="errorExplanation">
+            <h2><%= pluralize(@quiz_question.errors.count, "error") %> prohibited this quiz from being saved:</h2>
+            <ul>
+                <% @quiz_question.errors.full_messages.each do |msg| %>
+                    <li><%= msg %></li>
+                <% end %>
+            </ul>
+        </div>
+    <% end %>
+
+    <!-- Associate with a quiz -->
+    <p>
+        <%= f.hidden_field  :quiz_id, :value => @quiz.id %>
+    </p>
+
+    <!-- Question number -->
+    <div class="quiz-question-num">
+        <%= f.label         :question_no, "Question number" %><br />
+        <%= f.select        :question_no, (1..20), :selected => params[:qno] %>
+    </div>
+
+    <!-- Question type -->
+    <div class="quiz-question-type">
+        <%= f.label         :question_type, "Type of question" %><br />
+        <%= f.select        :question_type, [ ['Multiple Choice', 'mcq'        ],
+                                              ['Recite verse',    'recitation' ],
+                                              ['Give reference',  'reference'  ]],
+                            {}, {:onchange => "questionType(this.value)"} %>
+    </div>
+
+    <p id="passage">
+        <%= f.label         :passage, "Passage Reference" %><br />
+        <%= f.text_field    :passage %>
+    </p>
+
+    <!-- Entry form for MCQ -->
+    <div id="mcq">
+
+        <!-- Left side : Question and answers -->
+        <div class="left-question">
+
+            <p>
+                <%= f.label         :mc_question, "Question text" %><br />
+                <%= f.text_area     :mc_question, :size => "44x7" %>
+            </p>
+
+            <p>
+                <%= f.label         :mc_option_a, "Answer A" %><br />
+                <%= f.text_field    :mc_option_a, :size => 44 %>
+                <%= f.radio_button  :mc_answer, "A" %>
+            </p>
+
+            <p>
+                <%= f.label         :mc_option_b, "Answer B" %><br />
+                <%= f.text_field    :mc_option_b, :size => 44 %>
+                <%= f.radio_button  :mc_answer, "B" %>
+            </p>
+
+            <p>
+                <%= f.label         :mc_option_c, "Answer C" %><br />
+                <%= f.text_field    :mc_option_c, :size => 44 %>
+                <%= f.radio_button  :mc_answer, "C" %>
+            </p>
+
+            <p>
+                <%= f.label         :mc_option_d, "Answer D" %><br />
+                <%= f.text_field    :mc_option_d, :size => 44 %>
+                <%= f.radio_button  :mc_answer, "D" %>
+            </p>
+
+            <!-- Submit button -->
+            <div class="quiz-submit">
+                <%= f.submit 'Create' %>
+            </div>
+
+        </div>
+
+        <!-- Right side : Other information -->
+        <div class="right-other-info">
+
+            <!-- MCQ category -->
+            <p>
+                <%= f.label     :mcq_category, "Type of question" %><br />
+                <%= f.select    :mcq_category, [ ['History',              'History'              ],
+                                                 ['Prophecy',             'Prophecy'             ],
+                                                 ['People',               'People'               ],
+                                                 ['Plants & Animals',     'Plants & Animals'     ],
+                                                 ['Geography',            'Geography'            ],
+                                                 ['Life of Christ',       'Life of Christ'       ],
+                                                 ['Miracles',             'Miracles'             ],
+                                                 ['Parables',             'Parables'             ],
+                                                 ['Disciples & Apostles', 'Disciples & Apostles' ],
+                                                 ['Theology',             'Theology'             ],
+                                                 ['Life in Christ',       'Life in Christ'       ],
+                                                 ['Quotations',           'Quotations'           ],
+                                                 ['Greek Words',          'Greek Words'          ] ] %>
+            </p>
+
+            <!-- Supporting reference -->
+            <p>
+                <%= f.label      :supporting_ref, "Supporting Reference" %><br />
+                <%= f.text_field :supporting_ref, :value => @quiz_question.supporting_ref.try(:long_ref) %>
+            </p>
+
+            <!-- Display supporting references -->
+            <div class="related-quiz-questions">
+            </div>
+
+            <!-- Display supporting references -->
+            <div class="supporting-ref-display">
+            </div>
+
+        </div>
+
+    </div>
+
+<% end %> <!-- Form -->
