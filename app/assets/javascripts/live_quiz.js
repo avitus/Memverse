@@ -1,9 +1,10 @@
-setupMCQ = function(q_option_a, q_option_b, q_option_c, q_option_d, mc_answer){
+setupMCQ = function(q_option_a, q_option_b, q_option_c, q_option_d, mc_answer, q_num){
+	var q = "q" + q_num + "_";
 	output = ["<ul class='mcq'>",
-				"<li><input type='radio' name='mcq' value='a' id='opt_a' /> <label for='opt_a'>(A) " + q_option_a + "</label></li>",
-				"<li><input type='radio' name='mcq' value='b' id='opt_b' /> <label for='opt_b'>(B) " + q_option_b + "</label></li>",
-				"<li><input type='radio' name='mcq' value='c' id='opt_c' /> <label for='opt_c'>(C) " + q_option_c + "</label></li>",
-				"<li><input type='radio' name='mcq' value='d' id='opt_d' /> <label for='opt_d'>(D) " + q_option_d + "</label></li>",
+				"<li><input type='radio' name='mcq' value='a' id='"+q+"opt_a' /> <label for='"+q+"opt_a'>(A) " + q_option_a + "</label></li>",
+				"<li><input type='radio' name='mcq' value='b' id='"+q+"opt_b' /> <label for='"+q+"opt_b'>(B) " + q_option_b + "</label></li>",
+				"<li><input type='radio' name='mcq' value='c' id='"+q+"opt_c' /> <label for='"+q+"opt_c'>(C) " + q_option_c + "</label></li>",
+				"<li><input type='radio' name='mcq' value='d' id='"+q+"opt_d' /> <label for='"+q+"opt_d'>(D) " + q_option_d + "</label></li>",
 			"</ul>",
 			"<input type='submit' value='Answer!' id='submit-answer' class='button-link'>"]
 
@@ -23,24 +24,24 @@ function calculate_levenshtein_distance(s, t) {
   var d = [];
 
   for (i = 0; i < m; i++) {
-    d[i] = [i]; // the distance of any first array to an empty second array
+	d[i] = [i]; // the distance of any first array to an empty second array
   }
   for (j = 0; j < n; j++) {
-    d[0][j] = j; // the distance of any second array to an empty first array
+	d[0][j] = j; // the distance of any second array to an empty first array
   }
 
   for (j = 1; j < n; j++) {
-    for (i = 1; i < m; i++) {
-      if (s[i - 1] === t[j - 1]) {
-        d[i][j] = d[i-1][j-1];           // no operation required
-      } else {
-        d[i][j] = Math.min(
-                    d[i - 1][j] + 1,     // a deletion
-                    d[i][j - 1] + 1,     // an insertion
-                    d[i - 1][j - 1] + 1  // a substitution
-                  );
-      }
-    }
+	for (i = 1; i < m; i++) {
+	  if (s[i - 1] === t[j - 1]) {
+		d[i][j] = d[i-1][j-1];           // no operation required
+	  } else {
+		d[i][j] = Math.min(
+					d[i - 1][j] + 1,     // a deletion
+					d[i][j - 1] + 1,     // an insertion
+					d[i - 1][j - 1] + 1  // a substitution
+				  );
+	  }
+	}
   }
 
   return d[m - 1][n - 1];
@@ -128,7 +129,7 @@ function scoreReference(verseref, userref) {
  * Score a multiple choice question [Max = 10 points]
  ******************************************************************************/
 function scoreMCQ(questionAnswer, userAnswer){ // userAnswer will be a, b, c, or d, unless it's empty
-	score = ( userAnswer.toUpperCase() == questionAnswer.toUpperCase() ) ? 10 : 0;
+	score = ( userAnswer.toUpperCase() == questionAnswer.toUpperCase() ) ? 10 : -2;
 	if ( score == 10 ) {
 		msg = "Congratulations; that was perfect!";
 	} else {
@@ -145,11 +146,11 @@ function getScore(questionAnswer, userAnswer, questionType) {
 
 	switch(questionType) {
 		case 'recitation':
-	    	return scoreRecitation(questionAnswer, userAnswer);
-	    break;
+			return scoreRecitation(questionAnswer, userAnswer);
+		break;
 
 		case 'reference':
-	    	return scoreReference(questionAnswer, userAnswer);
+			return scoreReference(questionAnswer, userAnswer);
 		break;
 
 		case 'mcq':
@@ -157,31 +158,10 @@ function getScore(questionAnswer, userAnswer, questionType) {
 		break;
 
 		default:
-	    	return 0
+			return 0
 
 	}
 
 }
 
-build_user_link = function(user_id, user_name) {
-	return '<a href="/users/' + user_id + '" target="_blank">' + user_name + '</a>';
-}
 
-build_gravatar_img = function(gravatar_url){
-	return '<img src="' + gravatar_url + '&s=32" />'; //set size of gravatar to 32x32 pixels
-}
-
-build_roster_item = function(user_id, user_name, gravatar_url) {
-	return '<div class="roster-item" id="'+user_id+'">'+build_gravatar_img(gravatar_url) + " " + build_user_link(user_id,user_name)+'</div>';
-}
-
-chat_stream_scroll = function(callback){
-	// Check whether user is scrolled down to bottom of stream before keeping them scrolled down
-	// NOTE: chat-stream-narrow is 520px high; we're checking against 530 to pull them down a tad if they forgot to scroll all the way down
-	if ( ($("#chat-stream-narrow")[0].scrollHeight - 530) <= $("#chat-stream-narrow").scrollTop()){
-		callback();
-		$("#chat-stream-narrow").scrollTop($("#chat-stream-narrow")[0].scrollHeight);
-	} else { // don't scroll
-		callback();
-	}
-}

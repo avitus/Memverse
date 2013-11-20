@@ -35,7 +35,7 @@ module MemverseApp
     # Custom directories with classes and modules you want to be autoloadable.
     # config.autoload_paths += %W(#{config.root}/extras)
     config.autoload_paths << "#{Rails.root}/lib"  # ALV - added to load library files
-    config.autoload_paths += %W(#{config.root}/app/models/ckeditor)
+    # config.autoload_paths += %W(#{config.root}/app/models/ckeditor) # ALV - already loaded by Rails_admin ... this is redundant
 
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
@@ -62,7 +62,7 @@ module MemverseApp
     config.assets.enabled = true
 
     # Version of your assets, change this if you want to expire all your assets
-    config.assets.version = '1.2'
+    config.assets.version = '1.3'
 
     # Don't require attr_accessible to be defined for every model
     config.active_record.whitelist_attributes = false

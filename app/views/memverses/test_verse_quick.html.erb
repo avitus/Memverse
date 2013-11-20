@@ -267,7 +267,7 @@
 		function fastforward() {
 			// Check whether we're done for the day
 			if (ondeck.finished || typeof(ondeck.mv_skip) == 'undefined' || ondeck.mv_skip == null ) {
-				log_progress(user_id)
+				log_progress(user_id);
 				window.location="./progress";
 			}
 			else {

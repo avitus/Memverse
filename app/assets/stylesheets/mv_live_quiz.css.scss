@@ -83,12 +83,6 @@ div.roster-item img {
 	@include border-radius(4px, 4px);
 }
 
-#quiz-messages {
-	float:left;
-	width: 380px;
-	padding-right: 1em;
-	padding-top: 1em;
-}
 
 div#quiz-timer {
 	line-height:normal;
@@ -133,20 +127,32 @@ div#quiz-timer {
 	cursor:pointer;
 }
 
+/* === Quiz Questions and Answers === */
+
 #questions-answers {
 	height:500px;
 	width:480px;
 	overflow:auto;
 }
 
-#quiz-question {
-	padding-right:2em;
-	font-size:14px;
+#q-msg {  /* Feedback on answers */
+	float:left;
+	min-height: 3.4em;
+	padding: 0.1em 0.8em;
 }
 
-#quiz-answer {
+#q-question {
+	padding: 0.1em 0.8em;
+	font-size: 1em;
+	background-color: #f0f0f0;
+	clear: both;
+	margin-bottom: 1em;
+}
+
+#q-answer {
 	max-height:200px;
 	padding-right:2em;
+	font-size:1em;
 }
 
 textarea.q-answer-input {
@@ -156,7 +162,7 @@ textarea.q-answer-input {
 
 ul.mcq {
 	margin:0;
-	font-size:14px;
+	font-size:1em;
 	list-style-type:none;
 	padding-left:0;
 }
@@ -192,7 +198,7 @@ ul.mcq li.incorrect {
 	color:white;
 }
 
-.hidden {display:none}
+/* === Countdown Timer === */
 
 /* jQuery Countdown styles 1.5.9. */
 .hasCountdown {

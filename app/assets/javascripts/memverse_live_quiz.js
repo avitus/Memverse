@@ -14,7 +14,9 @@ var quizRoom = {
      ******************************************************************************/
     handleMessage: function (m) {
         switch(m.meta) {
+
             case "chat":
+
                 var first_colon  = parseInt(m.data.indexOf(':'));
                 var sender_id    = m.data.substring(0,first_colon);
                 var second_colon = parseInt(m.data.indexOf(':',first_colon+1));
@@ -22,24 +24,26 @@ var quizRoom = {
                 var message      = m.data.substring(second_colon+1);
 
                 this.putChat(user,message,m.meta,sender_id);
-
                 break;
+
             case "chat_status":
                 $("#chat_status").text(m.status);
                 var user    = "Memverse Server"
                 var message = "Chat Channel " + m.status;
 
                 this.putChat(user,message,m.meta);
-
                 break;
+
             case "question":
+
                 this.handleQuestion(m);
-
                 break;
+
             case "scoreboard":
-                this.updateScoreboard(m);
 
+                this.updateScoreboard(m);
                 break;
+
         }
     },
 
@@ -107,7 +111,7 @@ var quizRoom = {
 
         } else if (qType == 'mcq'){
 
-            $(q+" #q-answer").html( setupMCQ( qOptionA, qOptionB, qOptionC, qOptionD, mcAnswer ) );
+            $(q+" #q-answer").html( setupMCQ( qOptionA, qOptionB, qOptionC, qOptionD, mcAnswer, qNum ) );
             $('input#submit-answer').on( "click", function() { quizRoom.scoreUserAnswer( qAnswer, qType, qNum, qID ); } );
 
         };
@@ -359,6 +363,127 @@ function mvSubmitQuizChat() {
     }
 }
 
+/******************************************************************************
+ * Callback function to handle initial connection when subscribing to PubNub
+ ******************************************************************************/
+function mvConnect( pubnub ) {
 
+    console.log('=======> Checking quiz occupancy')
 
+    pubnub.here_now({  // returns message: { "uuids": ["1","2","3"], "occupancy": 3 }
+        channel  : channel,
+        callback : mvPresence
+    });
+};
+
+/******************************************************************************
+ * Callback function to handle users joining/leaving channel and on connection
+ *
+ * message format: {"action": "join", "timestamp": 123432432, "uuid": "memverse-id", "occupancy": 3}
+ *
+ ******************************************************************************/
+function mvPresence ( message, env, channel ) {
+
+    var roster_uid   = message.uuid;
+
+    // --- User joins quiz ---
+    if (message.action == "join") {
+
+        $.getJSON('/users/'+ message.uuid +'.json', function( data ) {
+
+            var userName    = data.name;
+            var gravatarURL = data.avatar_url;
+            var userLink    = buildUserLink( roster_uid, userName );
+            var joinMsg     = $("<li/>").addClass("chat-announcement").append(userLink + " joined the quiz.");
+
+            // Add user to roster array
+            quizRoom.userIDArray.push({ id: data.id, name: userName, avatarURL: gravatarURL, userLink: userLink });
+
+            // Add user to visual roster
+            addUserToRoster( roster_uid, userName, gravatarURL, message.occupancy );
+
+            // Add "[user] joins" message to chat window
+            chat_stream_scroll( function () { $("#chat-stream-narrow").append( joinMsg ) });
+
+            // Log to console
+            console.log("===> | Presence callback: " + userName + " has joined the quiz.");
+            console.log("     | Occupancy        : ", message.occupancy    );
+        });
+
+    // --- User leaves quiz ---
+    } else if (message.action == "leave") {
+
+        // Remove user from roster array
+        var departedUser = quizRoom.userIDArray.splice( quizRoom.userIDArray.indexOf( roster_uid ), 1 );
+        var li           = $("<li/>").addClass("chat-announcement").append(departedUser[0].userLink + " left the room.");
+
+        // Remove user from visual roster
+        $("div#" + roster_uid).remove();
+        $("#quizzers-count").html("(" + message.occupancy + ")");
+
+        // Add "[user] leavs" message to chat window
+        chat_stream_scroll( function () { $("#chat-stream-narrow").append(li) } );
+
+        // Log to console
+        console.log("===> Presence callback: " + departedUser + " has left the quiz.");
+
+    } else if (message.action == "timeout" ) {
+
+        // Need to handle timeouts ... not sure how
+
+    // --- Create roster when joining ---
+    } else {
+        // quizRoom.userIDArray = message.uuids;
+        console.log('============ Unknown message type ==============')
+        console.log("Join/Leave/Timeout : ", message.action       );
+        console.log("Occupancy          : ", message.occupancy    );
+        console.log("User ID            : ", message.uuid         );
+        console.log("User ID's Here Now : ", message.uuids        );
+        console.log("Event              : ", env                  );
+        console.log("Channel            : ", channel              );
+        console.log('================================================')
+    }
+
+};
+
+/******************************************************************************
+ * Functions for building Roster
+ ******************************************************************************/
+function buildUserLink( user_id, user_name ) {
+    return '<a href="/users/' + user_id + '" target="_blank">' + user_name + '</a>';
+}
+
+function buildGravatarImage( gravatarURL ){
+    return '<img src="' + gravatarURL + '&s=32" />'; //set size of gravatar to 32x32 pixels
+}
+
+function buildRosterItem( user_id, user_name, gravatarURL ) {
+    return '<div class="roster-item" id="'+user_id+'">'+buildGravatarImage(gravatarURL) + " " + buildUserLink(user_id,user_name)+'</div>';
+}
+
+function addUserToRoster( userID, userName, gravatarURL, userCount ) {
+
+    // Build div and add user to roster
+    var userDiv = $( buildRosterItem( userID, userName, gravatarURL ) );
+    $("#roster-window").scrollTop( $("#roster-window")[0].scrollHeight ).append( userDiv );
+    userDiv.effect('highlight', {}, 3000);
+
+    // Increase number of quizzers
+    $("#quizzers-stats").effect('highlight', {}, 3000);
+    $("#quizzers-count").html("(" + userCount + ")");
+}
+
+/******************************************************************************
+ * Scroll chat
+ ******************************************************************************/
+function chat_stream_scroll( callback ){
+    // Check whether user is scrolled down to bottom of stream before keeping them scrolled down
+    // NOTE: chat-stream-narrow is 520px high; we're checking against 530 to pull them down a tad if they forgot to scroll all the way down
+    if ( ($("#chat-stream-narrow")[0].scrollHeight - 530) <= $("#chat-stream-narrow").scrollTop()){
+        callback();
+        $("#chat-stream-narrow").scrollTop($("#chat-stream-narrow")[0].scrollHeight);
+    } else { // don't scroll
+        callback();
+    }
+}
 

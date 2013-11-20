@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130919050936) do
+ActiveRecord::Schema.define(version: 20131024202018) do
 
   create_table "american_states", force: true do |t|
     t.string  "abbrev",      limit: 20, default: "", null: false
@@ -549,14 +549,14 @@ ActiveRecord::Schema.define(version: 20130919050936) do
   add_index "tweets", ["user_id"], name: "index_tweets_on_user_id", using: :btree
 
   create_table "uberverses", force: true do |t|
-    t.string   "book",       null: false
-    t.integer  "chapter",    null: false
-    t.integer  "versenum",   null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.string  "book",       null: false
+    t.integer "chapter",    null: false
+    t.integer "versenum",   null: false
+    t.integer "book_index"
   end
 
   add_index "uberverses", ["book"], name: "index_uberverses_on_book", using: :btree
+  add_index "uberverses", ["book_index"], name: "index_uberverses_on_book_index", using: :btree
   add_index "uberverses", ["chapter"], name: "index_uberverses_on_chapter", using: :btree
   add_index "uberverses", ["versenum"], name: "index_uberverses_on_versenum", using: :btree
 

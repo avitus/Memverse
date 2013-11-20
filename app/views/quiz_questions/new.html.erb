@@ -1,0 +1,41 @@
+<% page_title "New Quiz Question" %>
+<div class="white-box-with-margins">
+
+	<h1>New Quiz Question</h1>
+
+	<%= render :partial => "form" %>
+
+</div>
+
+
+<script language="JavaScript" type="text/javascript"><!--
+
+	//------ Show either form to enter verse reference or form to enter MCQ  -------------------
+	$passage = $("p#passage");
+	$mcq = $("div#mcq");
+
+	function questionType(qtype) {
+		if (qtype == 'mcq') {
+			$passage.hide();
+			$mcq.show();
+		} else {
+			$passage.show();
+			$mcq.hide();
+		}
+	};
+
+	questionType($("select#quiz_question_question_type").val()); // called when the question type is changed
+
+	$(document).ready(function() {
+
+	    //------- Show verse in major translations ----------------
+	    $("#quiz_question_supporting_ref").observe_field(0.2, function( ) {
+	        // search and display results with callback function
+	        multiTranslationSearch( this.value, displayMultiTranslationSearchResultsFn );
+	        // show other questions associated with this verse
+	        relatedQuestionsSearch( this.value, displayRelatedQuestionsSearchResultsFn );
+	    });
+
+    });
+
+--></script>
