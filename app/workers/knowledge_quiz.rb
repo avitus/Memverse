@@ -7,9 +7,12 @@ class KnowledgeQuiz
   sidekiq_options :retry => false # Don't retry quiz if something goes wrong
 
   recurrence do
-     weekly.day(:wednesday).hour_of_day(9)    # Every Tuesday at 9am
-     # daily.hour_of_day(9,11,15,21)          # 9am, 11am, 3pm, 9pm each day
-     # minutely(10)                           # For development
+    if Rails.env.production?
+      weekly.day(:wednesday).hour_of_day(9)    # Every Tuesday at 9am
+    else
+      # daily.hour_of_day(9,11,15,21)          # 9am, 11am, 3pm, 9pm each day
+      minutely(10)                             # For development
+    end
   end
 
   def perform
@@ -74,12 +77,17 @@ class KnowledgeQuiz
       )
     end
 
-    sleep(300)  # 5 minutes for chatting
+    Rails.env.production? ? sleep(300) : sleep(30)  # 5 minutes for chatting
 
     # ========================================================================
     # Main question loop
     # ========================================================================
-    q_num_array = Array(1..25) # Set up number of questions
+    if Rails.env.production?
+      q_num_array = Array(1..25) # Set up number of questions
+    else
+      q_num_array = Array(1..3)
+    end
+
     puts "===> Starting quiz at " + Time.now.to_s
 
     q_num_array.each do |q_num|
@@ -195,7 +203,7 @@ class KnowledgeQuiz
     # Close chat after ten minutes
     # ========================================================================
     puts "Quiz now over. Sleeping for 10 minutes, then shutting down chat."
-    sleep(600)
+    Rails.env.production? ? sleep(600) : sleep(30)
 
     new_status = "Closed"
     $redis.hset("chat-#{channel}", "status", new_status)

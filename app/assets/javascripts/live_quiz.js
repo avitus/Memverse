@@ -129,7 +129,7 @@ function scoreReference(verseref, userref) {
  * Score a multiple choice question [Max = 10 points]
  ******************************************************************************/
 function scoreMCQ(questionAnswer, userAnswer){ // userAnswer will be a, b, c, or d, unless it's empty
-	score = ( userAnswer.toUpperCase() == questionAnswer.toUpperCase() ) ? 10 : 0;
+	score = ( userAnswer.toUpperCase() == questionAnswer.toUpperCase() ) ? 10 : -2;
 	if ( score == 10 ) {
 		msg = "Congratulations; that was perfect!";
 	} else {
