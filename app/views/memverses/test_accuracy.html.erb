@@ -10,23 +10,23 @@
 
 			<!-- Verse Heading -->
 			<div class="top-heading">
-		    	<h2><span>Question </span><span class="q-num">0</span></h2>
-		    </div>
+				<h2><span>Question </span><span class="q-num">0</span></h2>
+			</div>
 
-            <!-- Prior Verse -->
-            <h5 class="verse-ref prior"></h5>
-            <div class="prior-verse-text"></div>
+			<!-- Prior Verse -->
+			<h5 class="verse-ref prior"></h5>
+			<div class="prior-verse-text"></div>
 
-            <!-- Verse text entry -->
-            <h5 class="verse-ref current"></h5>
-            <div class="verse-text-entry">
-                <%= text_area_tag(:answer, params[:answer], :autocomplete => "off", :size => "45x6" ) %>
-            </div>
+			<!-- Verse text entry -->
+			<h5 class="verse-ref current"></h5>
+			<div class="verse-text-entry">
+				<%= text_area_tag(:answer, params[:answer], :autocomplete => "off", :size => "45x6" ) %>
+			</div>
 
-            <!-- Submit button -->
-            <div class="submit-accuracy-answer">
-                <input id="submit-ref" class="submit-button"></input>
-            </div>
+			<!-- Submit button -->
+			<div class="submit-accuracy-answer">
+				<input id="submit-ref" class="submit-button" type="submit" value="">
+			</div>
 
 		</div>
 
@@ -37,31 +37,31 @@
 
 		<div id="top-dashboard">
 
-	    	<div id="gauge" class="200x160px"></div>
+			<div id="gauge" class="200x160px"></div>
 
-	    </div>
+		</div>
 
-	    <div id="reftest-feedback">
+		<div id="reftest-feedback">
 
-	    	<h2><span>Prior Questions</span></h2>
+			<h2><span>Prior Questions</span></h2>
 
-	    	<div id="past-questions">
+			<div id="past-questions">
 
-	            <div class="diff-calc">
+				<div class="diff-calc">
 
-	                <div class="original"></div>
-	                <div class="changed"></div>
-	                <div class="diff"></div>
+					<div class="original"></div>
+					<div class="changed"></div>
+					<div class="diff"></div>
 
-	            </div>
+				</div>
 
-                <div class="prior-questions">
+				<div class="prior-questions">
 
-                </div>
+				</div>
 
-	    		<div class="fadeout"></div>
+				<div class="fadeout"></div>
 
-	    	</div>
+			</div>
 
 		</div>
 
@@ -72,10 +72,10 @@
 
 <script language="JavaScript" type="text/javascript"><!--
 
-    var memverseUserID = "<%= current_user.id %>"; // global variable
+	var memverseUserID = "<%= current_user.id %>"; // global variable
 
-    // www.justgage.com
-    var g = new JustGage({
+	// www.justgage.com
+	var g = new JustGage({
 		id: "gauge",
 		value: "<%= current_user.accuracy %>",
 		min: 0,
@@ -84,37 +84,37 @@
 		title: "Accuracy %"
 	});
 
-    $(document).ready(function() {
+	$(document).ready(function() {
 
-        //------- Initialize session ------------------
-        accTestState.initialize(<%= current_user.accuracy %>);
+		//------- Initialize session ------------------
+		accTestState.initialize(<%= current_user.accuracy %>);
 
-        //------- Scoring an accuracy test ----------------------
-        $( "#reftest-leftside" ).on( "click", ".submit-button", function( e ) {
+		//------- Scoring an accuracy test ----------------------
+		$( "#reftest-leftside" ).on( "click", ".submit-button", function( e ) {
 
-        	var user_answer = $("#answer").val();
-            var userAccuracy, questionScore;
+			var user_answer = $("#answer").val();
+			var userAccuracy, questionScore;
 
-        	// Capture answer
-            $(".changed").html( user_answer );
+			// Capture answer
+			$(".changed").html( user_answer );
 
-            // Calculate diff
-            $(".diff-calc").prettyTextDiff( { cleanup: true } );
+			// Calculate diff
+			$(".diff-calc").prettyTextDiff( { cleanup: true } );
 
-        	// Calc score
-            questionScore = accTestState.scoreRecitation( user_answer, accTestState.currentText );
+			// Calc score
+			questionScore = accTestState.scoreRecitation( user_answer, accTestState.currentText );
 
-            // Update user's accuracy score
-            userAccuracy = accTestState.updateAccuracy( questionScore );
-            g.refresh( userAccuracy );
+			// Update user's accuracy score
+			userAccuracy = accTestState.updateAccuracy( questionScore );
+			g.refresh( userAccuracy );
 
-            // Get next reference for testing
-            accTestState.getMV();
+			// Get next reference for testing
+			accTestState.getMV();
 
-        });
+		});
 
 		//------- Handle enter key ----------------------
-        $('#answer').keypress(function (e) {
+		$('#answer').keypress(function (e) {
 			if (e.which == 13) {
 				$('#submit-ref').click();
 				return false;
@@ -122,7 +122,7 @@
 		});
 
 
-    }); // End of jQuery document ready
+	}); // End of jQuery document ready
 --></script>
 
 
