@@ -1,39 +1,12 @@
-<h1>Listing passages</h1>
+<% page_title I18n.t :my_memory_verses, :scope => 'page_titles' %>
 
-<table>
-  <tr>
-    <th>User</th>
-    <th>Length</th>
-    <th>Reference</th>
-    <th>Efactor</th>
-    <th>Test interval</th>
-    <th>Rep n</th>
-    <th>Next test</th>
-    <th>Last tested</th>
-    <th>First verse</th>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+<div class="white-box-with-margins">
 
-<% @passages.each do |passage| %>
-  <tr>
-    <td><%= passage.user %></td>
-    <td><%= passage.length %></td>
-    <td><%= passage.reference %></td>
-    <td><%= passage.efactor %></td>
-    <td><%= passage.test_interval %></td>
-    <td><%= passage.rep_n %></td>
-    <td><%= passage.next_test %></td>
-    <td><%= passage.last_tested %></td>
-    <td><%= passage.first_verse %></td>
-    <td><%= link_to 'Show', passage %></td>
-    <td><%= link_to 'Edit', edit_passage_path(passage) %></td>
-    <td><%= link_to 'Destroy', passage, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
+    <div class="passage-list">
 
-<br />
+        <%= render partial: "passage_headings" %>
+        <%= render partial: "passage", collection: @passages %>
 
-<%= link_to 'New Passage', new_passage_path %>
+    </div>
+
+</div>

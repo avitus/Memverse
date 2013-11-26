@@ -2,10 +2,17 @@ class PassagesController < ApplicationController
 
   before_filter :authenticate_user!
 
+  add_breadcrumb "Home", :root_path
+
   # GET /passages
   # GET /passages.json
   def index
-    @passages = current_user.passages
+
+    @tab = "home"
+    @sub = "manage"
+    add_breadcrumb I18n.t("home_menu.My Verses"), :manage_verses_path
+
+    @passages = current_user.passages.order(:book_index, :chapter, :first_verse)
 
     respond_to do |format|
       format.html # index.html.erb

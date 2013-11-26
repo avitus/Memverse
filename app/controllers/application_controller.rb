@@ -203,7 +203,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-
   # ----------------------------------------------------------------------------------------------------------
   # Checks for excessively long verses - indication of multiple verse entry
   # Input:  "In the beginning, God created the heavens and the earth"

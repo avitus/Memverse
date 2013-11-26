@@ -1,7 +1,44 @@
 // ========= Variables ============================
-$left-rating-gutter: 25%;
+$left-rating-gutter: 25%;   // Passage review page
 
-// Scope styles for page
+// Scope styles for passage list
+.passage-list {
+
+    .passage-list-headings {
+        font-weight: bold;
+    }
+
+    .single-line-passage {  // one line in the display of all passages
+        padding: 0.5em 1em;
+        clear: both;
+    }
+
+    .psg-line-item {  // components that make up a single passage line
+        float: left;
+        margin: 0 1em;
+    }
+
+    .psg-ref {
+        min-width: 12%;
+    }
+
+    .psg-interval {
+        min-width: 4%;
+        text-align: right;
+        .data-pt { padding-right: 1em; }   // TODO: Why doesn't this style get applied?
+    }
+
+    .psg-next-date {
+        min-width: 10%;
+    }
+
+    .psg-progress {
+        min-width: 30%;
+    }
+}
+
+
+// Scope styles for passage review page
 .main-verse-review {
 
     // ========= Top level left column ================
