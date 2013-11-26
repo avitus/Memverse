@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131024202018) do
+ActiveRecord::Schema.define(version: 20131126205919) do
 
   create_table "american_states", force: true do |t|
     t.string  "abbrev",      limit: 20, default: "", null: false
@@ -357,8 +357,10 @@ ActiveRecord::Schema.define(version: 20131024202018) do
     t.date     "last_tested"
     t.datetime "created_at",                                                          null: false
     t.datetime "updated_at",                                                          null: false
+    t.integer  "book_index"
   end
 
+  add_index "passages", ["book_index"], name: "index_passages_on_book_index", using: :btree
   add_index "passages", ["user_id"], name: "index_passages_on_user_id", using: :btree
 
   create_table "passwords", force: true do |t|
