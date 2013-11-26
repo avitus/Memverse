@@ -19,7 +19,7 @@ class QuizQuestion < ActiveRecord::Base
   scope :recitation,  -> { where( :question_type => "recitation"          ) }
   scope :reference,   -> { where( :question_type => "reference"           ) }
 
-  scope :fresh,       -> { where( 'last_asked < ?', Date.today - 3.months ) }
+  scope :fresh,       -> { where( 'last_asked < ?', Date.today - 6.months ) }
 
   scope :easy,        -> { where( :perc_correct => 66..100                ) }
   scope :medium,      -> { where( :perc_correct => 34..65                 ) }
