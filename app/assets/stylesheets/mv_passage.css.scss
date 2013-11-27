@@ -18,6 +18,10 @@ $left-rating-gutter: 25%;   // Passage review page
         margin: 0 1em;
     }
 
+    .psg-id {
+        display: none;
+    }
+
     .psg-ref {
         min-width: 12%;
     }
@@ -34,7 +38,19 @@ $left-rating-gutter: 25%;   // Passage review page
 
     .psg-progress {
         min-width: 30%;
+
+        .mv-interval {
+            float: left;
+            margin-left: 0.2em;
+        }
     }
+
+    .getting-started  { background-color: #af2b11; }
+    .learning         { background-color: #c37510; }
+    .almost-memorized { background-color: #bed011; }
+    .memorized        { background-color: #40d011; }
+    .well-known       { background-color: #277c0b; }
+    .perfected        { background-color: #277c0b; }
 }
 
 
