@@ -23,17 +23,17 @@ $left-rating-gutter: 25%;   // Passage review page
     }
 
     .psg-ref {
-        min-width: 12%;
+        min-width: 15%;
     }
 
     .psg-interval {
-        min-width: 4%;
+        min-width: 2%;
         text-align: right;
         .data-pt { padding-right: 1em; }   // TODO: Why doesn't this style get applied?
     }
 
     .psg-next-date {
-        min-width: 10%;
+        min-width: 6%;
     }
 
     .psg-progress {
@@ -51,12 +51,19 @@ $left-rating-gutter: 25%;   // Passage review page
         }
     }
 
-    .getting-started  { background-color: #1e6823; }
-    .learning         { background-color: #44a340; }
-    .almost-memorized { background-color: #8cc665; }
-    .memorized        { background-color: #d6e685; }
-    .well-known       { background-color: #eeeeee; }
-    .perfected        { background-color: #99ccff; }
+    .getting-started  { background-color: #1e6823; color: #1e6823;}
+    .learning         { background-color: #44a340; color: #44a340;}
+    .almost-memorized { background-color: #8cc665; color: #8cc665;}
+    .memorized        { background-color: #d6e685; color: #d6e685;}
+    .well-known       { background-color: #eeeeee; color: #eeeeee;}
+    .perfected        { background-color: #99ccff; color: #99ccff;}
+
+    .getting-started:hover  { background-color: #1e6823; color: #000;}
+    .learning:hover         { background-color: #44a340; color: #000;}
+    .almost-memorized:hover { background-color: #8cc665; color: #000;}
+    .memorized:hover        { background-color: #d6e685; color: #000;}
+    .well-known:hover       { background-color: #eeeeee; color: #000;}
+    .perfected:hover        { background-color: #99ccff; color: #000;}
 }
 
 
