@@ -10,3 +10,20 @@
     </div>
 
 </div>
+
+<script language="JavaScript" type="text/javascript"><!--
+
+    var memverseUserID = "<%= current_user.id %>"; // global variable
+
+    $(document).ready(function() {
+
+        //------- Initialize session ------------------------------
+        passageListState.initialize( <%= @passages.pluck(:id).to_json %> );
+
+        //------- Show progress for each passage ------------------
+        passageListState.showPassagesProgress();
+
+    }); // End of jQuery document ready
+
+
+--></script>

@@ -19,15 +19,17 @@ class Passage < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   def as_json(options={})
     {
-      :id   => self.id,
-      :ref  => self.reference
-      # :bk   => self.book,
-      # :ch   => self.chapter,
-      # :vs   => self.versenum,
-      # :tl   => self.translation,
-      # :ref  => self.ref,
-      # :text => self.text
+      :id              => self.id,
+      :ref             => self.reference,       # TODO: It was a bad idea to rename the attribute
+      :interval_array  => self.interval_array
     }
+
+    # It would probably be preferable to handle all 'as_json' using super as far as possible
+    # as this would preserve flexibility for the future. That would require using 'reference'
+    # rather than 'ref' as we did above. (Only code using ref is in reviewState.Initialize)
+    # For now, a complete override as above is ok since we aren't using too many attributes.
+    #
+    # super(options.reverse_merge(:methods => :interval_array, :only => [:id, :reference]))
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -137,5 +139,11 @@ class Passage < ActiveRecord::Base
 
   end
 
+  # ----------------------------------------------------------------------------------------------------------
+  # Return array containing the memorization interval of each memverse in passage
+  # ----------------------------------------------------------------------------------------------------------
+  def interval_array
+    self.memverses.pluck(:test_interval)
+  end
 
 end
