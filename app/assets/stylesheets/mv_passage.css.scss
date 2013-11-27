@@ -37,20 +37,26 @@ $left-rating-gutter: 25%;   // Passage review page
     }
 
     .psg-progress {
-        min-width: 30%;
+        min-width: 62%;
 
         .mv-interval {
             float: left;
             margin-left: 0.2em;
+            min-width: 1.8em;
+            min-height: 1.8em;
+            font-size: smaller;
+            text-align: center;
+            display: table-cell;
+            vertical-align: middle;
         }
     }
 
-    .getting-started  { background-color: #af2b11; }
-    .learning         { background-color: #c37510; }
-    .almost-memorized { background-color: #bed011; }
-    .memorized        { background-color: #40d011; }
-    .well-known       { background-color: #277c0b; }
-    .perfected        { background-color: #277c0b; }
+    .getting-started  { background-color: #1e6823; }
+    .learning         { background-color: #44a340; }
+    .almost-memorized { background-color: #8cc665; }
+    .memorized        { background-color: #d6e685; }
+    .well-known       { background-color: #eeeeee; }
+    .perfected        { background-color: #99ccff; }
 }
 
 
