@@ -23,7 +23,7 @@ $left-rating-gutter: 25%;   // Passage review page
     }
 
     .psg-ref {
-        min-width: 15%;
+        min-width: 13%;
     }
 
     .psg-interval {
@@ -33,16 +33,19 @@ $left-rating-gutter: 25%;   // Passage review page
     }
 
     .psg-next-date {
-        min-width: 6%;
+        min-width: 6.7%;
+        text-align: center;
     }
 
     .psg-progress {
-        min-width: 62%;
+        min-width: 50%;
+        max-width: 68%;
 
         .mv-interval {
             float: left;
-            margin-left: 0.2em;
-            min-width: 1.8em;
+            margin: 0.1em 0.1em;
+            min-width: 1.1em;
+            max-width: 1.1em;
             min-height: 1.8em;
             font-size: smaller;
             text-align: center;
@@ -51,15 +54,15 @@ $left-rating-gutter: 25%;   // Passage review page
         }
     }
 
-    .getting-started  { background-color: #1e6823; color: #1e6823;}
-    .learning         { background-color: #44a340; color: #44a340;}
-    .almost-memorized { background-color: #8cc665; color: #8cc665;}
-    .memorized        { background-color: #d6e685; color: #d6e685;}
-    .well-known       { background-color: #eeeeee; color: #eeeeee;}
-    .perfected        { background-color: #99ccff; color: #99ccff;}
+    .getting-started  { background-color: #1e6823; color: rgba(0, 0, 0, 0); }
+    .learning         { background-color: #44a340; color: rgba(0, 0, 0, 0); }
+    .almost-memorized { background-color: #8cc665; color: rgba(0, 0, 0, 0); }
+    .memorized        { background-color: #d6e685; color: rgba(0, 0, 0, 0); }
+    .well-known       { background-color: #eeeeee; color: rgba(0, 0, 0, 0); }
+    .perfected        { background-color: #99ccff; color: rgba(0, 0, 0, 0); }
 
-    .getting-started:hover  { background-color: #1e6823; color: #000;}
-    .learning:hover         { background-color: #44a340; color: #000;}
+    .getting-started:hover  { background-color: #1e6823; color: #eee;}
+    .learning:hover         { background-color: #44a340; color: #fff;}
     .almost-memorized:hover { background-color: #8cc665; color: #000;}
     .memorized:hover        { background-color: #d6e685; color: #000;}
     .well-known:hover       { background-color: #eeeeee; color: #000;}

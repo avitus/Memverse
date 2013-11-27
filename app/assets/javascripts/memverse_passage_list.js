@@ -15,8 +15,6 @@ var passageListState = {
 
             $.getJSON('/passages/' + passageID + '.json', function (data) {
 
-                console.log(passageID + ': ' + data.ref + ' - ' + data.interval_array );
-
                 var $passageProgress = $("#" + "id-" + passageID );
 
                 // Insert <div> for each memory verse in passage
