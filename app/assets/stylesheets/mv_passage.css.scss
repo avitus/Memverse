@@ -9,7 +9,7 @@ $left-rating-gutter: 25%;   // Passage review page
     }
 
     .single-line-passage {  // one line in the display of all passages
-        padding: 0.5em 1em;
+        padding: 0.5em 0em;
         clear: both;
     }
 
@@ -23,11 +23,11 @@ $left-rating-gutter: 25%;   // Passage review page
     }
 
     .psg-ref {
-        min-width: 13%;
+        min-width: 13.5%;
     }
 
     .psg-interval {
-        min-width: 2%;
+        min-width: 2.1%;
         text-align: right;
         .data-pt { padding-right: 1em; }   // TODO: Why doesn't this style get applied?
     }
@@ -58,15 +58,15 @@ $left-rating-gutter: 25%;   // Passage review page
     .learning         { background-color: #44a340; color: rgba(0, 0, 0, 0); }
     .almost-memorized { background-color: #8cc665; color: rgba(0, 0, 0, 0); }
     .memorized        { background-color: #d6e685; color: rgba(0, 0, 0, 0); }
-    .well-known       { background-color: #eeeeee; color: rgba(0, 0, 0, 0); }
-    .perfected        { background-color: #99ccff; color: rgba(0, 0, 0, 0); }
+    .well-known       { background-color: #e7e7e7; color: rgba(0, 0, 0, 0); }
+    .perfected        { background-color: #f1f1f1; color: rgba(0, 0, 0, 0); }
 
     .getting-started:hover  { background-color: #1e6823; color: #eee;}
     .learning:hover         { background-color: #44a340; color: #fff;}
     .almost-memorized:hover { background-color: #8cc665; color: #000;}
     .memorized:hover        { background-color: #d6e685; color: #000;}
-    .well-known:hover       { background-color: #eeeeee; color: #000;}
-    .perfected:hover        { background-color: #99ccff; color: #000;}
+    .well-known:hover       { background-color: #e7e7e7; color: #000;}
+    .perfected:hover        { background-color: #f1f1f1; color: #000;}
 }
 
 
