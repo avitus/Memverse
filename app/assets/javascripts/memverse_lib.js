@@ -372,6 +372,11 @@ function resetScrollable() {
  ******************************************************************************/
 function mvCheckBadgeCompletion() {
 	$.getJSON('/badge_quests_check.json', function(quests) {
+
+		// There appear to be instances of the quest for a given badge being completed but the 
+		// badge itself is not awarded. We could potentially remove the check for any completed 
+		// quests below and always check for completed badges at the end of every session.
+
 		if ( quests.length !== 0 ) {
 			// Alert user to completion of quests necessary for badges
 
