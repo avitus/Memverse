@@ -49,10 +49,9 @@ class User < ActiveRecord::Base
 
   # Include default devise modules. Others available are:
   # :token_authenticatable, :lockable, trackable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable,
+  devise :database_authenticatable, :registerable, :omniauthable,
          :recoverable, :rememberable, :confirmable, :validatable,
          :encryptable, :encryptor => :restful_authentication_sha1
-
 
   validates :name,  :length     => { :maximum => 100 },
                     :allow_nil  => true
@@ -98,6 +97,23 @@ class User < ActiveRecord::Base
                   :church, :group, :country, :american_state, :show_echo, :max_interval,
                   :mnemonic_use, :all_refs, :referred_by, :auto_work_load, :show_email
 
+  # ----------------------------------------------------------------------------------------------------------
+  # Single Sign On support
+  # ----------------------------------------------------------------------------------------------------------
+  def self.find_for_windowslive_oauth2(access_token, signed_in_resource=nil)
+    data = access_token.extra.raw_info
+    byebug
+    user = User.where(:email => data.emails.account).first
+    # Create new user from data here:?
+    #<OmniAuth::AuthHash emails=#<OmniAuth::AuthHash account="kayle.hinkle@live.com" business=nil personal=nil preferred="kayle.hinkle@live.com"> first_name="Kayle" gender=nil id="cfd5745452f3201b" last_name=nil locale="en_US" name="Kayle">
+    unless user
+  #      user = User.create(name: data.name,
+  #           email: data.emails.account,
+  #           password: Devise.friendly_token[0,20]
+  #          )
+    end
+    user
+  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Convert to JSON format
