@@ -95,7 +95,8 @@ class User < ActiveRecord::Base
   attr_accessible :login, :email, :name, :password, :password_confirmation, :current_password,
                   :identity_url, :remember_me, :newsletters, :reminder_freq, :last_reminder,
                   :church, :group, :country, :american_state, :show_echo, :max_interval,
-                  :mnemonic_use, :all_refs, :referred_by, :auto_work_load, :show_email
+                  :mnemonic_use, :all_refs, :referred_by, :auto_work_load, :show_email,
+                  :provider, :uid
 
   # ----------------------------------------------------------------------------------------------------------
   # Single Sign On support
