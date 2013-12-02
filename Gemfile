@@ -8,6 +8,9 @@ group :development do
   gem 'sqlite3'
   gem 'better_errors'
   gem 'binding_of_caller'
+  gem 'omniauth'
+  gem 'omniauth-windowslive'
+  gem 'byebug'
 end
 
 gem "rspec-rails", ">= 2.6.1", :group => [:development, :test]

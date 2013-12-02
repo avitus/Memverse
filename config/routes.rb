@@ -17,7 +17,7 @@ MemverseApp::Application.routes.draw do
     request.env['warden'].user.try(:admin?) # check if admin
   }
 
-  devise_for :users
+  devise_for :users, :controllers => { :omniauth_callbacks => "omniauth_callbacks" }
 
   # Should be able to remove this route once Forem allows configurable sign_in path
   get '/users/sign_in', :to => "devise/sessions#new", :as => "sign_in"
