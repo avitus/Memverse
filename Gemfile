@@ -8,8 +8,6 @@ group :development do
   gem 'sqlite3'
   gem 'better_errors'
   gem 'binding_of_caller'
-  gem 'omniauth'
-  gem 'omniauth-windowslive'
   gem 'byebug'
 end
 
@@ -68,6 +66,8 @@ gem 'activeresource', require: 'active_resource'
 ############################################################
 gem "devise"                                                                                    # Authentication
 gem "devise-encryptable"                                                                        # TODO: Is this required?
+gem 'omniauth'                                                                                  # Multi-provider authentication
+gem 'omniauth-windowslive'                                                                      #   - strategy for Windows live
 gem 'cancan', git: "https://github.com/nukturnal/cancan.git"                                    # Role-based authorization, Forem requires
 
 ############################################################
