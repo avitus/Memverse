@@ -19,7 +19,6 @@
     color: black;
   }
 }
-  
 
 #signup-page-form label {
   width:10em;
@@ -59,10 +58,22 @@
   padding-left: 6%;
 }
 
+
+/* === Sign-in Page Styling === */
+
+#signup-page-form .sign-in-buttons .submit-button {
+  margin-left: 3%;
+}
+
 .remember-me {
   float:left;
-  margin-left: 1em;
+  margin-left: 0.2em;
   font-size: 80%;
+}
+
+#user_remember_me  {
+  float: right;  // neeeded to float checkbox right in Chrome
+  margin-top: 0.25em;
 }
 
 .tooltip2 {

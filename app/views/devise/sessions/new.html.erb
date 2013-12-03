@@ -2,40 +2,44 @@
 
 <div class="white-box-with-margins">
 <div class="entry-form" id="signup-page-form">
-	
+
 	<%= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
 		<div>
 			<h2>Sign in</h2>
-			
+
 			<ul>
 				<li>
-					<%= f.email_field		:email, :placeholder => "Email address" %>					
+					<%= f.email_field		:email, :placeholder => "Email address" %>
 				</li>
 				<li>
 					<%= f.password_field 	:password, :placeholder => "Password" %>
-				</li>			
+				</li>
 			</ul>
-				
-			<% if devise_mapping.rememberable? -%>
-			<div class="remember-me"><%= f.check_box :remember_me %> <%= f.label :remember_me %></div>
-			<% end -%>			
 
-			<div>
-				<%= f.submit "", :class => "submit-button", :id => "signinbutton" %>
-			</div>	
-			
+			<div class="sign-in-buttons">
+
+				<% if devise_mapping.rememberable? -%>
+					<div class="remember-me"><%= f.check_box :remember_me %> <%= f.label :remember_me %></div>
+				<% end -%>
+
+				<div>
+					<%= f.submit "", :class => "submit-button", :id => "signinbutton" %>
+				</div>
+
+			</div>
+
 		</div>
-	
+
 		<br />
-	
-		<div class="sign-up-links">
-			<%= render :partial => "devise/shared/links" %>	
-		</div>
-		
 
-	  
+		<div class="sign-up-links">
+			<%= render :partial => "devise/shared/links" %>
+		</div>
+
+
+
 	<% end %>
-	
+
 </div>
 </div>
 <script type="text/javascript">
