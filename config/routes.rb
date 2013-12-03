@@ -1,4 +1,9 @@
 MemverseApp::Application.routes.draw do
+
+  # Authentication for API
+  use_doorkeeper
+
+  # Background jobs
   require 'sidekiq/web'
 
   mount Forem::Engine,    :at => '/forums'
@@ -11,17 +16,20 @@ MemverseApp::Application.routes.draw do
     mount Sidekiq::Web => '/sidekiq'
   end
 
+  # Routes for A/B testing
   match "/split" => Split::Dashboard, via: [:get, :post, :delete], :anchor => false, :constraints => lambda { |request|
     request.env['warden'].authenticated?    # are we authenticated?
     request.env['warden'].authenticate!     # authenticate if not already
     request.env['warden'].user.try(:admin?) # check if admin
   }
 
+  # Oauth
   devise_for :users, :controllers => { :omniauth_callbacks => "omniauth_callbacks" }
 
   # Should be able to remove this route once Forem allows configurable sign_in path
   get '/users/sign_in', :to => "devise/sessions#new", :as => "sign_in"
 
+  # Primary resource routes
   resources :users, :only => :show
   resources :groups
   resources :uberverses
@@ -39,8 +47,6 @@ MemverseApp::Application.routes.draw do
     resources :memverses
   end
 
-  # resources :memverses
-
   # Use a different home page for authenticated users
   authenticated :user do
     root to: "memverses#home", as: :authenticated_root
@@ -48,6 +54,18 @@ MemverseApp::Application.routes.draw do
 
   unauthenticated do
     root to: "home#index"
+  end
+
+  # API
+  api versions: 1, module: "api/v1" do
+    resources :users
+    resources :verses
+    resources :memverses
+    resources :passages do
+      get 'due', :on => :collection
+      resources :memverses
+    end
+    get '/me' => "credentials#me"
   end
 
   # Adding verses and chapters to user account
@@ -187,8 +205,6 @@ MemverseApp::Application.routes.draw do
   # Routes for chat channels
   post '/chat/send'                 => 'chat#send_message'
   get "/chat/toggle_ban"            => 'chat#toggle_ban'
-  # get "/chat/channel1",          :controller => "chat", :action => "channel1"    # For old chat room (?)
-  # get "/chat/channel2",          :controller => "chat", :action => "channel2"    # For old chat room (?)
 
   # Routes for live quiz
   get  '/live_quiz'                 => 'live_quiz#live_quiz'     # Main quiz URL
