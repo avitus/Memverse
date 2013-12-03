@@ -69,12 +69,15 @@
   float:left;
   margin-left: 0.2em;
   font-size: 80%;
+
+  #user_remember_me {
+    float: right;  // neeeded to float checkbox right in Chrome
+    margin-top: 0.25em;
+  }
+
 }
 
-#user_remember_me  {
-  float: right;  // neeeded to float checkbox right in Chrome
-  margin-top: 0.25em;
-}
+
 
 .tooltip2 {
   background-color:#000;
