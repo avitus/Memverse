@@ -13,6 +13,8 @@
 
 class Verse < ActiveRecord::Base
 
+  include RocketPants::Cacheable   # Allow for access via API
+
   acts_as_taggable # Alias for 'acts_as_taggable_on :tags'
 
 #  Rails 2

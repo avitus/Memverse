@@ -62,6 +62,12 @@ gem 'activerecord-session_store'                                                
 gem 'activeresource', require: 'active_resource'
 
 ############################################################
+# API
+############################################################
+gem 'rocket_pants', '~> 1.0'                                                                    # API goodness
+gem 'doorkeeper', '~> 0.7.0'                                                                    # Oauth for API
+
+############################################################
 # Authentication and Authorization
 ############################################################
 gem "devise"                                                                                    # Authentication
