@@ -132,7 +132,7 @@ Devise.setup do |config|
   # If true, expires auth token on session timeout.
   # config.expire_auth_token_on_timeout = false
 
-  # Devise 3.1 no longer signs the user automatically in after confirmation. 
+  # Devise 3.1 no longer signs the user automatically in after confirmation.
   # Temporarily bring the old behavior back
   # Added by ALV Sept 2013
   config.allow_insecure_sign_in_after_confirmation = true
@@ -217,7 +217,8 @@ Devise.setup do |config|
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', :scope => 'user,public_repo'
   require "omniauth-windowslive"
-  config.omniauth :windowslive, '000000004410AE0F', 'kCh4eoFdNmmNCqnwE7-3pztTYpSu90wD', :scope => 'wl.signin,wl.emails'
+  # config.omniauth :windowslive, '000000004410AE0F', 'kCh4eoFdNmmNCqnwE7-3pztTYpSu90wD', :scope => 'wl.signin,wl.emails'
+  config.omniauth :windowslive, '000000004410A83C', 'NHb8c7WCjmVSj--k2fi5OWB8ud4g4SiN', :scope => 'wl.signin,wl.emails'
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
