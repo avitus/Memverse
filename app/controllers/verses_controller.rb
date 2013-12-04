@@ -111,20 +111,6 @@ class VersesController < ApplicationController
   end
 
   # ----------------------------------------------------------------------------------------------------------
-  # Update a verse (moved over from memverses_controller)
-  # ----------------------------------------------------------------------------------------------------------
-  # def update_verse
-  #   @verse = Verse.find(params[:id])
-  #   if @verse.update_attributes(params[:verse])
-  #     flash[:notice] = "Verse successfully updated"
-  #     redirect_to :action => 'manage_verses'
-  #   else
-  #     render :action => edit_verse
-  #   end
-  # end
-
-
-  # ----------------------------------------------------------------------------------------------------------
   # DELETE /verses/1
   # DELETE /verses/1.xml
   # ----------------------------------------------------------------------------------------------------------
@@ -179,8 +165,6 @@ class VersesController < ApplicationController
     else
       @verses = Verse.where(:book => params[:bk], :chapter => params[:ch], :translation => tl).order('versenum')
     end
-
-    Rails.logger.debug("====> Retrieved #{@verses.length} verses.")
 
     respond_to do |format|
       format.html # show.html.erb

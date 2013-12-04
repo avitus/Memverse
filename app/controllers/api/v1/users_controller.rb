@@ -4,12 +4,8 @@ class Api::V1::UsersController < Api::V1::ApiController
 
   version 1
 
-  def index
-    expose User.all # Not what we'd actually do, of course.
-  end
-
   def show
-    expose User.find(params[:id])
+    expose User.find( params[:id] ) || current_resource_owner
   end
 
 end

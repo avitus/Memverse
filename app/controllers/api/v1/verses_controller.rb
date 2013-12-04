@@ -11,7 +11,7 @@ class Api::V1::VersesController < Api::V1::ApiController
   end
 
   def show
-    expose Verse.find(params[:id])
+    expose Verse.find( params[:id] )
   end
 
 end
