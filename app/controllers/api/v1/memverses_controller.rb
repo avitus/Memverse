@@ -9,11 +9,11 @@ class Api::V1::MemversesController < Api::V1::ApiController
   caches :index, :show, :caches_for => 5.minutes
 
   def index
-    expose Memverse.page( params[:page] )
+    expose current_resource_owner.memverses.page( params[:page] )
   end
 
   def show
-    expose Memverse.find(params[:id])
+    expose current_resource_owner.memverses.find( params[:id] )
   end
 
 end

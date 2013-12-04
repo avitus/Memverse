@@ -58,7 +58,7 @@ MemverseApp::Application.routes.draw do
 
   # API
   api versions: 1, module: "api/v1" do
-    resources :users
+    resources :users, :only => :show
     resources :verses
     resources :memverses
     resources :passages do

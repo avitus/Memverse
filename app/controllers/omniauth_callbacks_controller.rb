@@ -1,4 +1,5 @@
 class OmniauthCallbacksController < Devise::OmniauthCallbacksController
+
   def windowslive
 
       @user = User.find_for_windowslive_oauth2( request.env["omniauth.auth"], current_user )
@@ -12,4 +13,5 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
       end
 
   end
+
 end

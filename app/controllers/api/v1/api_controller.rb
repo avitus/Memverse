@@ -5,6 +5,9 @@ class Api::V1::ApiController < RocketPants::Base
   include ActionController::Head
   include Doorkeeper::Helpers::Filter
 
+  #------------- Private below this line -------------------------------------------------------------------------------------
+  private
+
   # Returns the current resource owner, based on the token
   def current_resource_owner
     User.find(doorkeeper_token.resource_owner_id) if doorkeeper_token
