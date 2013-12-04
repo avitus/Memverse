@@ -1,15 +1,13 @@
-module Api::V1
+# module Api::V1
 
-  class CredentialsController < ApiController
+  class Api::V1::CredentialsController < Api::V1::ApiController
 
     doorkeeper_for :all
 
-    # respond_to :json
-
     def me
-      respond_with current_resource_owner
+      expose current_resource_owner
     end
 
   end # of class
 
-end # of module
+# end # of module
