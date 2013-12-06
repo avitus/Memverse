@@ -16,7 +16,7 @@ describe Api::V1::MemversesController do
 
     it 'returns user memory verses as json' do
       get :index, :version => 1, :format => :json, :access_token => token.token
-      response.body.should == [].to_json
+      response.body["response"]["count"].should == 1
     end
 
     it 'responds with 401 when unauthorized' do
