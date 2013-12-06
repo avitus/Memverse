@@ -33,8 +33,8 @@ describe Api::V1::CredentialsController do
   end
 
   describe 'GET #me (stubbed)' do
-    let(:token) { stub(:token => "some-token", :accessible? => true) }
-    let(:user)  { stub(:to_json => "{}") }
+    let(:token) { double :accessible? => true }
+    let(:user)  { double :to_json => "{}" }
 
     before do
       controller.stub(:doorkeeper_token) { token }
