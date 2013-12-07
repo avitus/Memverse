@@ -180,14 +180,8 @@ class MemversesController < ApplicationController
 
     # === RSS Devotional ===
     @dd = Rails.cache.fetch(["devotion", Date.today.month, Date.today.day], :expires_in => 24.hours) do
-      Rails.logger.info("====> Devotion not in cache")
       Devotion.where(:name => "Spurgeon Morning", :month => Date.today.month, :day => Date.today.day ).first || Devotion.daily_refresh
     end
-
-    Rails.logger.info("====> Retrieved devotion: " + @dd.inspect )
-
-    # @dev_ref  = dd ? dd.ref : ""
-    # @devotion = dd ? dd.thought : ""
 
     # === Verse of the Day ===
     @votd_txt, @votd_ref, @votd_tl, @votd_id  = verse_of_the_day()
