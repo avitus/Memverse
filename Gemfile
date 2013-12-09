@@ -39,7 +39,7 @@ end
 ############################################################
 # Frameworks
 ############################################################
-gem 'rails', '4.0.2'
+gem 'rails', '4.0.0'
 gem 'jquery-rails', '>= 2.0.0'
 
 ############################################################
@@ -53,7 +53,7 @@ gem "compass-rails", "~> 2.0.alpha.0"                           # !!!!!!!! TODO:
 ############################################################
 # For Rails 4 Upgrade ... should be removed eventually
 ############################################################
-gem 'protected_attributes'
+gem 'protected_attributes', '=1.0.3'                            # This version matches Rails 4.0.0. Can unlock version when Rails >= 4.0.2
 gem 'rails-observers'
 gem 'actionpack-page_caching'
 gem 'actionpack-action_caching'
@@ -123,9 +123,6 @@ gem 'ice_cube'                                                                  
 gem 'sinatra', require: false                                                                   # sinatra and slim are required for sidekiq
 gem 'slim'
 gem 'pubnub'                                                                                    # Real-time messaging service
-
-# Unused gems
-# gem 'riddle'                                                                                  # Seems to be needed for Thinking_Sphinx ... not clear, though
 
 group :console do
   gem 'wirble'
