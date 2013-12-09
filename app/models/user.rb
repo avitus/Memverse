@@ -286,21 +286,28 @@ class User < ActiveRecord::Base
   # Convert pending verses to active status
   # ----------------------------------------------------------------------------------------------------------
   def adjust_work_load
+
   	if self.auto_work_load
       time_shortfall = time_allocation - work_load
 
       if time_shortfall >= 1
-        pending = self.memverses.inactive.order("created_at ASC").limit(time_shortfall).select("id")
 
+        # We need to convert the ActiveRecord relation to an array otherwise the following update_all
+        # operations throw a MySQL error.
+        pending = self.memverses.inactive.order("created_at ASC").limit(time_shortfall).select("id").to_a
+
+        # We need to handle memory verses that have been set to 'Pending' but were already memorized
         Memverse.where("id in (?) and test_interval > 30", pending).update_all(:status => "Memorized")
         Memverse.where("id in (?) and test_interval <= 30", pending).update_all(:status => "Learning")
         Memverse.where("id in (?) and next_test <= ?", pending, Date.today).update_all(:next_test => Date.tomorrow)
 
         return Memverse.where("id in (?)", pending)
       end
+
     end
 
     return false
+
   end
 
   # ----------------------------------------------------------------------------------------------------------
