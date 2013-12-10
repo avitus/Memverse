@@ -1,8 +1,8 @@
 GIT
   remote: git://github.com/FriendlyId/friendly_id.git
-  revision: 0732bdf36557945186c088656b160155858fa87f
+  revision: 23cbef2bbe71189e4a91f07b3479844f33c836fa
   specs:
-    friendly_id (5.0.1)
+    friendly_id (5.0.2)
       activerecord (~> 4.0.0)
 
 GIT
@@ -14,9 +14,9 @@ GIT
 
 GIT
   remote: git://github.com/avitus/bloggity.git
-  revision: 508a14811780c5771d5670b418f44423c97eaffd
+  revision: 552e5ec908006124c0562d86b3b062cd8cb46c01
   specs:
-    bloggity (0.0.5)
+    bloggity (0.0.6)
       jquery-rails
       rails (>= 3.2.8)
 
@@ -30,7 +30,7 @@ GIT
 
 GIT
   remote: git://github.com/radar/forem.git
-  revision: 19a0c50428bb2221a743067b5f2ed51a9ff17762
+  revision: ef6a4679928c38335265efd01e9b9120452c0060
   branch: rails4
   specs:
     forem (1.0.0.beta1)
@@ -53,7 +53,7 @@ GIT
 
 GIT
   remote: git://github.com/sferik/rails_admin.git
-  revision: a079a195b94466205edb72ba97aba62b40484d0d
+  revision: af03f7406dea255884a526236619ac2103d61fd5
   specs:
     rails_admin (0.6.0)
       builder (~> 3.1)
@@ -465,7 +465,7 @@ GEM
       rack (~> 1.4)
       rack-protection (~> 1.4)
       tilt (~> 1.3, >= 1.3.4)
-    sitemap_generator (4.3.0)
+    sitemap_generator (4.3.1)
       builder
     slim (2.0.2)
       temple (~> 0.6.6)
