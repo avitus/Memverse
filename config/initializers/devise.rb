@@ -132,6 +132,11 @@ Devise.setup do |config|
   # If true, expires auth token on session timeout.
   # config.expire_auth_token_on_timeout = false
 
+  # Devise 3.1 no longer signs the user automatically in after confirmation.
+  # Temporarily bring the old behavior back
+  # Added by ALV Sept 2013
+  config.allow_insecure_sign_in_after_confirmation = true
+
   # ==> Configuration for :lockable
   # Defines which strategy will be used to lock an account.
   # :failed_attempts = Locks an account after a number of failed attempts to sign in.
