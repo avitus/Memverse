@@ -21,7 +21,7 @@ Feature: Sign up
       When I open the email
       Then I should see "confirm your account" in the email body
       When I follow "Confirm my account" in the email
-      Then I should be signed in
+      Then I should see "YOUR ACCOUNT WAS SUCCESSFULLY CONFIRMED."
 
     @javascript
     Scenario: User signs up with invalid email
