@@ -558,6 +558,22 @@ class User < ActiveRecord::Base
   end
 
   # ----------------------------------------------------------------------------------------------------------
+  # Referral score - used for calculating referral board and for quests
+  # ----------------------------------------------------------------------------------------------------------
+  def referral_score
+
+    score  = self.num_referrals( active=false ) / 2.to_f  # + 1/2 for every referral
+    score += self.num_referrals( active=true  ) / 2.to_f  # + 1/2 for every active referral
+
+    self.referrals( active=false ).find_each { |r|        # + 1/4 for referrals of referrals
+      score += r.num_referrals( active=false ) / 4.to_f
+    }
+
+    return score
+
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
   # Has user ever finished a day of memorization
   # Input: User object
   # ----------------------------------------------------------------------------------------------------------
@@ -1091,15 +1107,7 @@ class User < ActiveRecord::Base
   def self.top_referrers(numusers=50)
     leaderboard = Hash.new(0)
 
-    active.find_each { |u|
-
-      referral_score = u.num_referrals(active=true).to_f
-      u.referrals(active=true).each { |r|
-        referral_score += r.num_referrals(active=true)/2.to_f
-      }
-
-      leaderboard[ u ] = referral_score
-    }
+    active.find_each { |u| leaderboard[ u ] = u.referral_score }
 
     return leaderboard.sort{|a,b| a[1]<=>b[1]}.reverse[0...numusers]
   end
