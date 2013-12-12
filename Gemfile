@@ -58,72 +58,72 @@ gem 'rails-observers'
 gem 'actionpack-page_caching'
 gem 'actionpack-action_caching'
 gem 'activerecord-deprecated_finders'
-gem 'activerecord-session_store'                                                                # We should store sessions in cookies
+gem 'activerecord-session_store'                                               # We should store sessions in cookies
 gem 'activeresource', require: 'active_resource'
 
 ############################################################
 # API
 ############################################################
-gem 'rocket_pants', '~> 1.0'                                                                    # API goodness
-gem 'doorkeeper', '~> 0.7.0'                                                                    # Oauth for API
+gem 'rocket_pants', '~> 1.0'                                                   # API goodness
+gem 'doorkeeper', '~> 0.7.0'                                                   # Oauth for API
 
 ############################################################
 # Authentication and Authorization
 ############################################################
-gem "devise"                                                                                    # Authentication
-gem "devise-encryptable"                                                                        # TODO: Is this required?
-gem 'omniauth'                                                                                  # Multi-provider authentication
-gem 'omniauth-windowslive'                                                                      #   - strategy for Windows live
-gem 'cancan', git: "https://github.com/nukturnal/cancan.git"                                    # Role-based authorization, Forem requires
+gem "devise"                                                                   # Authentication
+gem "devise-encryptable"                                                       # TODO: Is this required?
+gem 'omniauth'                                                                 # Multi-provider authentication
+gem 'omniauth-windowslive'                                                     #   - strategy for Windows live
+gem 'cancan', git: "https://github.com/nukturnal/cancan.git"                   # Role-based authorization, Forem requires
 
 ############################################################
 # Major Engines (Admin, Forem, Blog)
 ############################################################
-gem 'rails_admin', :git => 'git://github.com/sferik/rails_admin.git'                            # Admin console
-gem 'forem',       :github => "radar/forem", :branch => "rails4"                                # Forum engine
-gem 'forem-textile_formatter'                                                                   # Forum formatting
-gem 'bloggity',    :git => "git://github.com/avitus/bloggity.git"                               # Blog engine
-# gem 'bloggity', :path => "../bloggity"                                                        # Blog engine (dev environment)
+gem 'rails_admin', '>= 0.6.0'                                                  # Admin console
+gem 'forem',       :github => "radar/forem", :branch => "rails4"               # Forum engine
+gem 'forem-textile_formatter'                                                  # Forum formatting
+gem 'bloggity',    :git => "git://github.com/avitus/bloggity.git"              # Blog engine
+# gem 'bloggity', :path => "../bloggity"                                       # Blog engine (dev environment)
 
 ############################################################
 # Deployment and Monitoring
 ############################################################
-gem 'capistrano', '=2.15.5'                                                                     # Deploy with Capistrano
-gem 'sitemap_generator'                                                                         # Sitemap generator
-gem 'newrelic_rpm', '>=3.3.0'                                                                   # Performance monitoring
-gem 'airbrake'                                                                                  # Error tracking
+gem 'capistrano', '=2.15.5'                                                    # Deploy with Capistrano
+gem 'sitemap_generator'                                                        # Sitemap generator
+gem 'newrelic_rpm', '>=3.3.0'                                                  # Performance monitoring
+gem 'airbrake'                                                                 # Error tracking
 
-gem 'fancybox2-rails'                                                                           # For displaying of video, pop-up info box
-gem 'kaminari'                                                                                  # Required for bloggity
-gem 'rinku', :require => 'rails_rinku'                                                          # Supports auto-linking of URL's in blog comments
-gem 'randumb'                                                                                   # Retrieve a random record
-gem 'prawn', :git => "git://github.com/sandal/prawn", :submodules => true                       # PDF support
-gem "prawnto_2", :require => "prawnto"                                                          # Integrating prawn into Rails
-gem 'acts-as-taggable-on'                                                                       # :source => "http://gemcutter.org", Taggable gem,
-gem 'ckeditor'                                                                                  # WYSIWYG editing
-gem 'paperclip'                                                                                 # Attachment handling
-gem 'nokogiri', '>=1.5.0'                                                                       # HTML/XML parsing
-gem 'json'                                                                                      # Javascript Object Notation support
-gem 'mail', '>= 2.2.15'                                                                         # Emails
-gem 'thinking-sphinx', '~> 3.0.5'                                                               # Connector to Sphinx - for global search
-gem 'i18n-js'                                                                                   # Uses config/locale files to build a JavaScript equivalent of i18n in Rails
-gem 'localeapp'                                                                                 # Translation service for i18n
-gem 'breadcrumbs_on_rails', '>=2.0.0'                                                           # For breadcrumb navigation bar
-gem 'dalli'                                                                                     # Memcached client
-gem 'redis', '>=2.2.2'                                                                          # Redis Key-value store
-gem 'friendly_id', github: "FriendlyId/friendly_id"                                             # !!! TODO: Upgrade !!! Makes nice IDs for models
-gem 'foreman'                                                                                   # Helps manage multiple processes when running app in development.
-gem 'supermodel', git: 'git://github.com/KonaTeam/supermodel.git'                               # Uses ActiveModel for in-memory storage with redis
-gem 'best_in_place', github: 'bernat/best_in_place'                                             # In-place editing support ... no Rails 4 release yet
-gem 'split', :require => 'split/dashboard'                                                      # AB testing framework
-gem 'backup'                                                                                    # Used to backup MySQL database and uploaded site assets
-gem 'dropbox-sdk'                                                                               # Used with backup above
-gem 'sidekiq'                                                                                   # Background jobs; used for quizzes
-gem 'sidetiq'                                                                                   # Scheduled Sidekiq jobs
-gem 'ice_cube'                                                                                  # For calculating next quiz
-gem 'sinatra', require: false                                                                   # sinatra and slim are required for sidekiq
+gem 'fancybox2-rails'                                                          # For displaying of video, pop-up info box
+gem 'kaminari'                                                                 # Required for bloggity
+gem 'rinku', :require => 'rails_rinku'                                         # Supports auto-linking of URL's in blog comments
+gem 'randumb'                                                                  # Retrieve a random record
+gem 'prawn', :git => "git://github.com/sandal/prawn", :submodules => true      # PDF support
+gem "prawnto_2", :require => "prawnto"                                         # Integrating prawn into Rails
+gem 'acts-as-taggable-on'                                                      # :source => "http://gemcutter.org", Taggable gem,
+gem 'ckeditor'                                                                 # WYSIWYG editing
+gem 'paperclip'                                                                # Attachment handling
+gem 'nokogiri', '>=1.5.0'                                                      # HTML/XML parsing
+gem 'json'                                                                     # Javascript Object Notation support
+gem 'mail', '>= 2.2.15'                                                        # Emails
+gem 'thinking-sphinx', '~> 3.0.5'                                              # Connector to Sphinx - for global search
+gem 'i18n-js'                                                                  # Uses config/locale files to build a JavaScript equivalent of i18n in Rails
+gem 'localeapp'                                                                # Translation service for i18n
+gem 'breadcrumbs_on_rails', '>=2.0.0'                                          # For breadcrumb navigation bar
+gem 'dalli'                                                                    # Memcached client
+gem 'redis', '>=2.2.2'                                                         # Redis Key-value store
+gem 'friendly_id', github: "FriendlyId/friendly_id"                            # !!! TODO: Upgrade !!! Makes nice IDs for models
+gem 'foreman'                                                                  # Helps manage multiple processes when running app in development.
+gem 'supermodel', git: 'git://github.com/KonaTeam/supermodel.git'              # Uses ActiveModel for in-memory storage with redis
+gem 'best_in_place', github: 'bernat/best_in_place'                            # In-place editing support ... no Rails 4 release yet
+gem 'split', :require => 'split/dashboard'                                     # AB testing framework
+gem 'backup'                                                                   # Used to backup MySQL database and uploaded site assets
+gem 'dropbox-sdk'                                                              # Used with backup above
+gem 'sidekiq'                                                                  # Background jobs; used for quizzes
+gem 'sidetiq'                                                                  # Scheduled Sidekiq jobs
+gem 'ice_cube'                                                                 # For calculating next quiz
+gem 'sinatra', require: false                                                  # sinatra and slim are required for sidekiq
 gem 'slim'
-gem 'pubnub'                                                                                    # Real-time messaging service
+gem 'pubnub'                                                                   # Real-time messaging service
 
 group :console do
   gem 'wirble'
