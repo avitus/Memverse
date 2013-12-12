@@ -1,3 +1,7 @@
+/*
+*= require select2
+*/
+
 @import "variables";
 
 #forums_container {
@@ -320,5 +324,20 @@ table.table-striped {
     padding: 0.2em 0.4em;
   }
 
+}
+
+// --------------------------------------------------------
+// Group Admin
+// --------------------------------------------------------
+#groups thead th {
+  background: #666666;
+  color: white;
+  padding: 10px;
+  border-bottom: 3px solid #232323;
+  font-size: 110%;
+}
+
+.select2-drop, .select2-choice {
+  min-width: 240px;
 }
 
