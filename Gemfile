@@ -46,9 +46,9 @@ gem 'jquery-rails', '>= 2.0.0'
 # Rails Support Gems
 ############################################################
 gem 'sass-rails',   '~> 4.0.0'
+gem 'compass-rails'                                             # Now has Rails 4 support
 gem 'coffee-rails', '~> 4.0.0'
 gem 'uglifier', '>= 1.3.0'
-gem "compass-rails", "~> 2.0.alpha.0"                           # !!!!!!!! TODO: Get final version !!!!!!
 
 ############################################################
 # For Rails 4 Upgrade ... should be removed eventually
