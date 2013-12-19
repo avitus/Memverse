@@ -23,6 +23,10 @@
         //------- Show progress for each passage ------------------
         passageListState.showPassagesProgress();
 
+        //------- Enable passage expansion ----- ------------------
+        $(.passage).on("click", passageListState.expandPassage() );
+
+
     }); // End of jQuery document ready
 
 

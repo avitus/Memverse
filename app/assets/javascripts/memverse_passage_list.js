@@ -55,13 +55,64 @@ var passageListState = {
         }
     },
 
-    retrieveMemverses: function ( passageRef, passageID ) {
+    expandPassage: function ( passageID ) {
+        // collapse any other expanded passages
+
+        // check whether we have already downloaded the memory verses for this passage
+
         // retrieve memory verses for passage
         $.getJSON('passages/' + passageID + '/memverses.json', function (data) {
-            // display passage
-            mvDisplayPassageForReview( passageRef, passageID, data )
+            passageListState.insertMemoryVerses( data )
         });
+    },
+
+    insertMemoryVerses: function ( $passageLocation, memoryVerseArray ) {
+
+        // build HTML for list of memory verses
+        var $mvList = buildHTMLforMvList( memoryVerseArray );
+
+        // insert entire list into page
+        $passageLocation.append( $mvList );
+
     }
 
+}
+
+
+/******************************************************************************
+ * Returns a div with a list of all memory verses and their details
+ * Note: this is a core function for building lists of memory verses
+ ******************************************************************************/
+function buildHTMLforMvList ( mv_array ) {
+
+    var $mvList = $('<div/>').addClass("mv-list-details");
+
+    $.each( mv_array, function( index, mv ) {
+        $mvDiv = buildHTMLforMvDetails( mv );
+        $mvList.append( $mvDiv );
+    })
+
+    return $mvList;
+
+}
+
+/******************************************************************************
+ * Returns a div containing all memverse details for display in a list of
+ * memory verses
+ * Note: this is a core function for displaying a memory verses in a list
+ ******************************************************************************/
+function buildHTMLforMvDetails ( mv ) {
+
+    // Show start of verse
+    var shortText = jQuery.trim(mv.text).substring(0, 35).split(" ").slice(0, -1).join(" ") + "...";
+
+    // Build HTML for memory verse
+    var $mvDiv = $('<div/>').addClass("mv-details ")
+        .append( $('<span class="mv-reference" />').text( mv.ref           ))
+        .append( $('<span class="mv-text"      />').text( shortText        ))
+        .append( $('<span class="mv-interval"  />').text( mv.test_interval ))
+        .append( $('<span class="mv-next_date" />').text( mv.next_test     ));
+
+    return $mvDiv;
 
 }
