@@ -286,21 +286,28 @@ class User < ActiveRecord::Base
   # Convert pending verses to active status
   # ----------------------------------------------------------------------------------------------------------
   def adjust_work_load
+
   	if self.auto_work_load
       time_shortfall = time_allocation - work_load
 
       if time_shortfall >= 1
-        pending = self.memverses.inactive.order("created_at ASC").limit(time_shortfall).select("id")
 
+        # We need to convert the ActiveRecord relation to an array otherwise the following update_all
+        # operations throw a MySQL error.
+        pending = self.memverses.inactive.order("created_at ASC").limit(time_shortfall).select("id").to_a
+
+        # We need to handle memory verses that have been set to 'Pending' but were already memorized
         Memverse.where("id in (?) and test_interval > 30", pending).update_all(:status => "Memorized")
         Memverse.where("id in (?) and test_interval <= 30", pending).update_all(:status => "Learning")
         Memverse.where("id in (?) and next_test <= ?", pending, Date.today).update_all(:next_test => Date.tomorrow)
 
         return Memverse.where("id in (?)", pending)
       end
+
     end
 
     return false
+
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -548,6 +555,22 @@ class User < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   def num_referrals( active = false )
     self.referrals(active).length
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Referral score - used for calculating referral board and for quests
+  # ----------------------------------------------------------------------------------------------------------
+  def referral_score
+
+    score  = self.num_referrals( active=false ) / 2.to_f  # + 1/2 for every referral
+    score += self.num_referrals( active=true  ) / 2.to_f  # + 1/2 for every active referral
+
+    self.referrals( active=false ).find_each { |r|        # + 1/4 for referrals of referrals
+      score += r.num_referrals( active=false ) / 4.to_f
+    }
+
+    return score
+
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -1084,15 +1107,7 @@ class User < ActiveRecord::Base
   def self.top_referrers(numusers=50)
     leaderboard = Hash.new(0)
 
-    active.find_each { |u|
-
-      referral_score = u.num_referrals(active=true).to_f
-      u.referrals(active=true).each { |r|
-        referral_score += r.num_referrals(active=true)/2.to_f
-      }
-
-      leaderboard[ u ] = referral_score
-    }
+    active.find_each { |u| leaderboard[ u ] = u.referral_score }
 
     return leaderboard.sort{|a,b| a[1]<=>b[1]}.reverse[0...numusers]
   end

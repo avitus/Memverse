@@ -20,7 +20,9 @@ require 'spec_helper'
 
 describe VersesController do
 
-  login_user
+  before(:each) do
+    login_user
+  end
 
   # This should return the minimal set of attributes required to create a valid
   # Verse. As you add validations to Verse, be sure to

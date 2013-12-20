@@ -346,6 +346,8 @@
       Your profile:             "Profil Anda"
       Photo Upload A:           "If you'd like to upload a photo of yourself, please visit"
       Photo Upload B:           "and associate the same email address you use on Memverse with the photo or avatar that you'd like to display. The photo will appear next to your blog comments."
+      Confirm Email Flash:      "Your new email address won't take effect until you click on the confirmation link sent to your new email address. "
+      Profile Saved Flash:      "Profile successfully updated. "
   page_titles:
     signup:                     "Register"
     my_memory_verses:           "My Memory Verses"
