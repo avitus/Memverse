@@ -39,7 +39,7 @@ $left-rating-gutter: 25%;   // Passage review page
 
     .psg-progress {
         min-width: 50%;
-        max-width: 68%;
+        max-width: 67.7%;
 
         .mv-interval {
             float: left;
@@ -67,6 +67,24 @@ $left-rating-gutter: 25%;   // Passage review page
     .memorized:hover        { background-color: #d6e685; color: #000;}
     .well-known:hover       { background-color: #e7e7e7; color: #000;}
     .perfected:hover        { background-color: #f1f1f1; color: #000;}
+
+    // ========= Styles for memverses in expanded passages =======
+
+    // container for all memory verses in expanded passage
+    .mv-list-details {
+        padding: 3em 1em 1em 3em;
+    }
+
+    // singe line for each memory verse
+    .mv-details {
+        clear: both;
+        padding-bottom: 0.2em;
+
+        .mv-reference { display: inline-block; width: 10%; }
+        .mv-text      { display: inline-block; width: 30%; }
+        .mv-interval  { display: inline-block; width: 10%; }
+        .mv-next-date { display: inline-block; width: 12%; }
+    }
 }
 
 
