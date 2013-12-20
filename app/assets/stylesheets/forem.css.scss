@@ -1,3 +1,4 @@
+@import "select2";
 @import "variables";
 
 #forums_container {
@@ -154,7 +155,7 @@ form.new_topic, form.new_post, form.edit_post {
       margin-left: 160px;
       min-height: 100px;
       border-left: 1px solid $mid-bg1;
-      padding: .1em 1em;
+      padding: 1em;
 
       time{
         padding: 5px;
@@ -320,5 +321,20 @@ table.table-striped {
     padding: 0.2em 0.4em;
   }
 
+}
+
+// --------------------------------------------------------
+// Group Admin
+// --------------------------------------------------------
+#groups thead th {
+  background: #666666;
+  color: white;
+  padding: 10px;
+  border-bottom: 3px solid #232323;
+  font-size: 110%;
+}
+
+.select2-drop, .select2-choice {
+  min-width: 240px;
 }
 

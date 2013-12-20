@@ -36,13 +36,9 @@ RSpec.configure do |config|
 
   # Configure devise helpers
   config.include Devise::TestHelpers, :type => :controller
-  config.extend ControllerMacros, :type => :controller
+  config.include ControllerMacros, :type => :controller  # ALV: need to use 'include' and not 'extend' as indicated in Devise Wiki
 
 end
 
-# TODO: This might be legacy code ... try removing
-class ActionController::TestCase
-  include Devise::TestHelpers
-end
-  
 Capybara.default_host = 'localhost:3000'
+

@@ -346,6 +346,8 @@
       Your profile:             "Su perfil"
       Photo Upload A:           "Si quieres subir una foto de sí mismo, por favor visite"
       Photo Upload B:           "y asociar a la misma dirección de correo electrónico que utiliza en Memverse con la foto o avatar que te gustaría que se vea. La imagen aparecerá junto a sus comentarios en blogs."
+      Confirm Email Flash:      "Tu nueva dirección de correo electrónico no será efectiva hasta que haga clic en el enlace de confirmación enviado a su nueva dirección de correo electrónico. "
+      Profile Saved Flash:      "Perfil actualizado con éxito. "
   page_titles:
     signup:                     "Registro"
     my_memory_verses:           "Mis Versos de Memoria"

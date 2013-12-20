@@ -77,20 +77,27 @@ class ProfileController < ApplicationController
   # Input: params[:user]
   # Output: JSON object
   # ----------------------------------------------------------------------------------------------------------
-
   def update
     @user = User.find(current_user)
 
-    if @user.update_profile(params[:user]) # successful update
-      flash[:notice] = "Profile successfully updated. "
-      # spawn_block(:argv => "spawn-profile-quest") do
-        q = Quest.find_by_url(url_for(:action => 'update_profile', :controller => 'profile', :only_path => false))
-        if q && current_user.quests.where(:id => q.id).empty?
-          q.check_quest_off(current_user)
-          flash.keep[:notice] = "You have completed the task: #{q.task}"
-        end
-      # end
+    if @user.update_profile( params[:user] ) # successful update
+
+      # Alert user to email change if necessary
+      if @user.unconfirmed_email   # user has requested email change but hasn't yet confirmed it
+        flash[:notice] = I18n.t("profile.update_profile.Confirm Email Flash")
+      else
+        flash[:notice] = I18n.t("profile.update_profile.Profile Saved Flash")
+      end
+
+      # Complete quest. This should really be refactored at some point.
+      q = Quest.find_by_url(url_for(:action => 'update_profile', :controller => 'profile', :only_path => false))
+      if q && current_user.quests.where(:id => q.id).empty?
+        q.check_quest_off(current_user)
+        flash.keep[:notice] = "You have completed the task: #{q.task}"
+      end
+
       redirect_to root_path
+
     else # errors
       flash[:notice] = "Could not update profile: " + @user.errors.full_messages.to_sentence
       redirect_to :action => "update_profile"
