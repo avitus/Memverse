@@ -55,14 +55,14 @@ var passageListState = {
         }
     },
 
-    expandPassage: function ( passageID ) {
+    expandPassage: function ( $passageLocation, passageID ) {
         // collapse any other expanded passages
 
         // check whether we have already downloaded the memory verses for this passage
 
         // retrieve memory verses for passage
         $.getJSON('passages/' + passageID + '/memverses.json', function (data) {
-            passageListState.insertMemoryVerses( data )
+            passageListState.insertMemoryVerses( $passageLocation, data )
         });
     },
 
@@ -88,6 +88,8 @@ function buildHTMLforMvList ( mv_array ) {
     var $mvList = $('<div/>').addClass("mv-list-details");
 
     $.each( mv_array, function( index, mv ) {
+        console.log( index );
+        console.log( mv );
         $mvDiv = buildHTMLforMvDetails( mv );
         $mvList.append( $mvDiv );
     })

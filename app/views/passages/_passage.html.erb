@@ -1,8 +1,9 @@
 <div class="single-line-passage">
 
-    <div class="psg-line-item data-pt psg-ref"                               ><%= passage.reference      %></div>
-    <div class="psg-line-item data-pt psg-interval"                          ><%= passage.test_interval || "-"  %></div>
-    <div class="psg-line-item data-pt psg-next-date"                         ><%= passage.next_test || "Pending"      %></div>
-    <div class="psg-line-item data-pt psg-progress" id="id-<%= passage.id %>">                             </div>
+    <div class="psg-line-item data-pt psg-id"                                ><%= passage.id                     %></div>
+    <div class="psg-line-item data-pt psg-ref"                               ><%= passage.reference              %></div>
+    <div class="psg-line-item data-pt psg-interval"                          ><%= passage.test_interval || "-"   %></div>
+    <div class="psg-line-item data-pt psg-next-date"                         ><%= passage.next_test || "Pending" %></div>
+    <div class="psg-line-item data-pt psg-progress" id="id-<%= passage.id %>">                                     </div>
 
 </div>

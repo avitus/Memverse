@@ -24,7 +24,9 @@
         passageListState.showPassagesProgress();
 
         //------- Enable passage expansion ----- ------------------
-        $(.passage).on("click", passageListState.expandPassage() );
+        $('.single-line-passage').on("click", function () {
+            passageListState.expandPassage( $(this), $(this).find(".psg-id").text() );
+        });
 
 
     }); // End of jQuery document ready
