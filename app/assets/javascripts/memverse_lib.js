@@ -224,11 +224,41 @@ scrub_text = function(text) {
 }
 
 /******************************************************************************
+ * Return width of word for blankify (hackish - would like a better way)
+ * TODO: Should accept array of words and perform operations in bulk
+ ******************************************************************************/
+word_width = function(word) {
+
+    if($("#word_width").length == 0) {
+
+        // style the span
+        styling = {
+            "font-size":"larger",   // note: based on current CSS settings for font-size
+            "position":"absolute",
+            "visibility":"hidden",
+            "height":"auto",
+            "width":"auto"
+        };
+
+        span = $("<span/>").attr("id","word_width").css(styling);
+
+        // make the span
+        $("body").append(span);
+    }
+
+    // add the word
+    $("#word_width").text(word);
+
+    return $("#word_width").width();
+
+}
+
+/******************************************************************************
  * Blankify a verse
  ******************************************************************************/
 function blankifyVerse(versetext, reduction_percentage) {
 
-    var split_text, sort_by_length, text_with_blanks, word_width;
+    var split_text, sort_by_length, text_with_blanks;
 
     if  ( reduction_percentage == 0 ) {
 
@@ -253,10 +283,7 @@ function blankifyVerse(versetext, reduction_percentage) {
 	            return x;
 	        }
 	        else {
-	        	// TODO: this line calculates an approximately sized input box for the given word
-                // It would be preferable to calculate the exact width of the actual word
-	        	word_width = Math.round( x.length * 62) / 100;  // multiply word length by 0.62 and round to one decimal
-	            return "<input name='" + x.replace(/'/, '’') + "' class='blank-word' style='width:" + word_width + "em;'>";
+	            return "<input name='" + x.replace(/'/, '’') + "' class='blank-word' style='width:" + word_width(x) + "px'>";
 	        };
 	    });
 
@@ -373,8 +400,8 @@ function resetScrollable() {
 function mvCheckBadgeCompletion() {
 	$.getJSON('/badge_quests_check.json', function(quests) {
 
-		// There appear to be instances of the quest for a given badge being completed but the 
-		// badge itself is not awarded. We could potentially remove the check for any completed 
+		// There appear to be instances of the quest for a given badge being completed but the
+		// badge itself is not awarded. We could potentially remove the check for any completed
 		// quests below and always check for completed badges at the end of every session.
 
 		if ( quests.length !== 0 ) {
