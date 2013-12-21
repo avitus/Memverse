@@ -56,7 +56,9 @@ var passageListState = {
     },
 
     expandPassage: function ( $passageLocation, passageID ) {
+
         // collapse any other expanded passages
+        $('.mv-list-details').fadeOut();
 
         // check whether we have already downloaded the memory verses for this passage
 
@@ -88,8 +90,6 @@ function buildHTMLforMvList ( mv_array ) {
     var $mvList = $('<div/>').addClass("mv-list-details");
 
     $.each( mv_array, function( index, mv ) {
-        console.log( index );
-        console.log( mv );
         $mvDiv = buildHTMLforMvDetails( mv );
         $mvList.append( $mvDiv );
     })
