@@ -60,7 +60,7 @@ var passageListState = {
         // collapse any other expanded passages
         $('.mv-list-details').fadeOut();
 
-        // check whether we have already downloaded the memory verses for this passage
+        // TODO: check whether we have already downloaded the memory verses for this passage
 
         // retrieve memory verses for passage
         $.getJSON('passages/' + passageID + '/memverses.json', function (data) {
