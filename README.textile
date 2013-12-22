@@ -24,4 +24,8 @@ If you make improvements to this application, please share with others.
 
 If you add functionality to this application, create an alternative implementation, or build an application that is similar, please contact me and I'll add a note to the README so that others can find your work.
 
+h2. Deploying with Capistrano
+
+* `cap deploy`
+* or to rollback: `cap deploy:rollback`
 
