@@ -47,8 +47,22 @@
 
             // Word correct ==> next word
             if ( scrub_text( correctWord ) === scrub_text( userGuess ) ) {
-                $(this).next().focus();  // advance cursor to next blank word
-                $(this).replaceWith( correctWord );
+
+                $(this).before( correctWord + " " );
+
+                if ( $(this).next().is("input") ) {
+                    // to support iOS, we update the current input to mirror the next input
+                    $(this).attr("name", $(this).next().attr("name"));
+                    $(this).css ("width", $(this).next().css("width"));
+                    $(this).val( $(this).next().val() );
+
+                    // and then we remove the next input
+                    $(this).next().remove();
+                } else {
+                    // remove this input... because there are no more inputs
+                    $(this).remove();
+                }
+
             }
 
             // check for down arrow keypress
