@@ -35,7 +35,7 @@ namespace :utils do
 
   #--------------------------------------------------------------------------------------------
   # Update difficulty for each verse
-  # Task duration: ~ 10 mins
+  # Task duration: ~ 6 mins
   #--------------------------------------------------------------------------------------------
   desc "Update verse difficulty"
   task :update_verse_difficulty => :environment do
@@ -96,13 +96,6 @@ namespace :utils do
   task :update_verse_popularity => :environment do
 
     puts "=== Updating verse popularity at      #{Time.now} ==="
-
-    # # Calculate average eFactor for each verse
-    # Verse.find_each do |vs|
-
-    #   vs.update_attribute( :popularity, vs.memverses.count )
-
-    # end
 
     # Create a hash of max and min eFactors by translation
     count_ranges = Hash.new
