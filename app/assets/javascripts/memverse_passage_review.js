@@ -181,3 +181,72 @@ function buildVerseText( jsonMV ) {
     return $new_vs
 
 }
+
+/******************************************************************************
+ * Handle user input for Passage Review
+ *
+ * TODO: Since iOS does not allow focus to be moved around the DOM, we have to
+ *       keep focus on a single input box and slide the verse around instead.
+ *
+ ******************************************************************************/
+function mvMirrorNextInput( $inputCell ) {
+
+    // to support iOS, we update the current input to mirror the next input
+    $inputCell.attr("name", $inputCell.next().attr("name"));
+    $inputCell.css ("width", $inputCell.next().css("width"));
+    $inputCell.val( $inputCell.next().val() );
+
+    // and then we remove the next input
+    $inputCell.next().remove();
+
+}
+
+function mvPassageReviewHandleInput( $inputCell, correctWord, userGuess, e ) {
+
+    // Word correct ==> next word
+    if ( scrub_text( correctWord ) === scrub_text( userGuess ) ) {
+
+        $inputCell.before( correctWord + " " ); // insert the correct word into the verse
+
+        // a) The next cell is an input cell
+        if ( $inputCell.next().is("input") ) {
+
+            mvMirrorNextInput( $inputCell );
+
+        // b) The next cell contains a revealed word
+        } else if ( $inputCell.next().is("span") ) {
+
+            // Move all revealed words ahead of input box
+            $inputCell.before( $inputCell.nextUntil("input") );
+            $inputCell.before( " " );
+
+            mvMirrorNextInput( $inputCell );
+
+        } else {
+            // remove this input... because there are no more inputs
+            $inputCell.remove();
+        }
+
+    }
+
+    // check for down arrow keypress
+    else if ( e.keyCode === 40 ) {
+        // reveal current word
+        $inputCell.val( correctWord ).animate({ color: '#FFD' }, 1100, 'easeInExpo', function() {
+            $inputCell.val('');
+            $inputCell.css({color:'#444'}); // same color as .assistance
+        });;
+    }
+
+    // check for up arrow keypress
+    else if ( e.keyCode === 38 ) {
+        // reveal entire verse
+        $inputCell.parent().find("input").each( function() {
+            $inputCell.val( this.name ).animate({ color: '#FFD' }, 1100, 'easeInExpo', function() {
+                $inputCell.val('');
+                $inputCell.css({color:'#444'}); // same color as .assistance
+            });
+        });
+    }
+
+}
