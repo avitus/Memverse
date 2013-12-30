@@ -191,14 +191,21 @@ function buildVerseText( jsonMV ) {
  ******************************************************************************/
 function mvMirrorNextInput( $inputCell ) {
 
-    // to support iOS, we update the current input to mirror the next input
-    $inputCell.attr("name", $inputCell.next().attr("name"));
-    $inputCell.css ("width", $inputCell.next().css("width"));
-    $inputCell.val( $inputCell.next().val() );
+    if ( $inputCell.next().is("input") ) {
 
-    // and then we remove the next input
-    $inputCell.next().remove();
+        // to support iOS, we update the current input to mirror the next input
+        $inputCell.attr("name", $inputCell.next().attr("name"));
+        $inputCell.css ("width", $inputCell.next().css("width"));
+        $inputCell.val( $inputCell.next().val() );
 
+        // and then we remove the next input
+        $inputCell.next().remove();
+
+    } else {
+
+        // remove this input... because there are no more inputs
+        $inputCell.remove();
+    }
 }
 
 function mvPassageReviewHandleInput( $inputCell, correctWord, userGuess, e ) {
@@ -206,26 +213,9 @@ function mvPassageReviewHandleInput( $inputCell, correctWord, userGuess, e ) {
     // Word correct ==> next word
     if ( scrub_text( correctWord ) === scrub_text( userGuess ) ) {
 
-        $inputCell.before( correctWord + " " ); // insert the correct word into the verse
-
-        // a) The next cell is an input cell
-        if ( $inputCell.next().is("input") ) {
-
-            mvMirrorNextInput( $inputCell );
-
-        // b) The next cell contains a revealed word
-        } else if ( $inputCell.next().is("span") ) {
-
-            // Move all revealed words ahead of input box
-            $inputCell.before( $inputCell.nextUntil("input") );
-            $inputCell.before( " " );
-
-            mvMirrorNextInput( $inputCell );
-
-        } else {
-            // remove this input... because there are no more inputs
-            $inputCell.remove();
-        }
+        $inputCell.before( correctWord + " " );              // insert the correct word into the verse
+        $inputCell.before( $inputCell.nextUntil("input") );  // move subsequent revealed words ahead of input
+        mvMirrorNextInput( $inputCell );                     // update the input box
 
     }
 
@@ -242,9 +232,9 @@ function mvPassageReviewHandleInput( $inputCell, correctWord, userGuess, e ) {
     else if ( e.keyCode === 38 ) {
         // reveal entire verse
         $inputCell.parent().find("input").each( function() {
-            $inputCell.val( this.name ).animate({ color: '#FFD' }, 1100, 'easeInExpo', function() {
-                $inputCell.val('');
-                $inputCell.css({color:'#444'}); // same color as .assistance
+            $(this).val( this.name ).animate({ color: '#FFD' }, 2000, 'easeInExpo', function() {
+                $(this).val('');
+                $(this).css({color:'#444'}); // same color as .assistance
             });
         });
     }

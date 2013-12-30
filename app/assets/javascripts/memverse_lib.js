@@ -280,7 +280,7 @@ function blankifyVerse(versetext, reduction_percentage) {
 
 	    text_with_blanks = split_text.map( function(x) {
 	        if ( sort_by_length.indexOf(x) < 0 ) {
-	            return "<span>" + x + "</span>";
+	            return "<span>" + x + " " + "</span>";
 	        }
 	        else {
 	            return "<input name='" + x.replace(/'/, '’') + "' class='blank-word' style='width:" + word_width(x) + "px'>";
