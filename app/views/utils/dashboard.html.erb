@@ -1,6 +1,6 @@
 <div class="white-box-with-margins">
 	<div id="weekly-activity">
-		<table class="user-stats-table" cellpadding="6" cellspacing="0" border="1">	
+		<table class="user-stats-table" cellpadding="6" cellspacing="0" border="1">
 			<th colspan="2">Weekly Activity</th>
 			<tr>
 				<td>New Verses</td>
@@ -17,12 +17,12 @@
 			<tr>
 				<td>Active Users</td>
 				<td><%= @active_users_this_week %></td>
-			</tr>				
+			</tr>
 		</table>
 	</div>
-	
+
 	<div id="daily-activity">
-		<table class="user-stats-table" cellpadding="6" cellspacing="0" border="1">	
+		<table class="user-stats-table" cellpadding="6" cellspacing="0" border="1">
 			<th colspan="2">Activity Today</th>
 			<tr>
 				<td>New Verses</td>
@@ -39,12 +39,12 @@
 			<tr>
 				<td>Active Users</td>
 				<td><%= @active_users_today %></td>
-			</tr>				
+			</tr>
 		</table>
 	</div>
-	
+
 	<div id="verification-stats">
-		<table class="user-stats-table" cellpadding="6" cellspacing="0" border="1">	
+		<table class="user-stats-table" cellpadding="6" cellspacing="0" border="1">
 			<th colspan="2">Pending Verification</th>
 			<tr>
 				<td>Checked by users</td>
@@ -57,12 +57,12 @@
 			<tr>
 				<td>Total</td>
 				<td><%= @checked_by_users + @not_checked_by_users %></td>
-			</tr>				
+			</tr>
 		</table>
 	</div>
-	
+
 	<div id="email-stats">
-		<table class="user-stats-table" cellpadding="6" cellspacing="0" border="1">	
+		<table class="user-stats-table" cellpadding="6" cellspacing="0" border="1">
 			<th colspan="2">Email Stats</th>
 			<tr>
 				<td>Emails Sent Today</td>
@@ -71,15 +71,15 @@
 			<tr>
 				<td>Users - Daily Email</td>
 				<td><%= User.where(:reminder_freq => "Daily").count %></td>
-			</tr>			
+			</tr>
 			<tr>
 				<td>Users - Weekly Email</td>
 				<td><%= User.where(:reminder_freq => "Weekly").count %></td>
-			</tr>		
+			</tr>
 			<tr>
 				<td>Users - Quarterly Email</td>
 				<td><%= User.where(:reminder_freq => "Quarterly").count %></td>
-			</tr>		
+			</tr>
 			<tr>
 				<td>Users - Annual Email</td>
 				<td><%= User.where(:reminder_freq => "Annually").count %></td>
@@ -87,9 +87,22 @@
 			<tr>
 				<td>Users - Never</td>
 				<td><%= User.where(:reminder_freq => "Never").count %></td>
-			</tr>								
+			</tr>
 		</table>
-	</div>	
-	
-	
+	</div>
+
+	<div id="quiz-stats">
+		<table class="user-stats-table" cellpadding="6" cellspacing="0" border="1">
+			<th colspan="2">Quiz Questions</th>
+			<tr>
+				<td>New MCQ Questions</td>
+				<td><%= QuizQuestion.mcq.fresh.count %></td>
+			</tr>
+			<tr>
+				<td>Total MCQ Questions</td>
+				<td><%= QuizQuestion.mcq.count %></td>
+			</tr>
+		</table>
+	</div>
+
 </div>
