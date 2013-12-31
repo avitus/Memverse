@@ -156,9 +156,9 @@ function buildVerseBlank( jsonMV ) {
 
         // verse reference
         .append( $('<div class="ref-and-text" />')
-            .append($('<span class="versenum superscript" />').text( jsonMV.versenum ))
-            .append($('<span class="full-text"            />').html( blankifyVerse(jsonMV.text, blankPercentage)))
-            .append($('<span class="mv-id"                />').text( jsonMV.id       ))
+            .append($('<span class="versenum superscript"/>').text( jsonMV.versenum ))
+            .append($('<span class="full-text"           />').html( blankifyVerse(jsonMV.text, blankPercentage)))
+            .append($('<span class="mv-id"               />').text( jsonMV.id       ))
         );
 
     return $new_vs
