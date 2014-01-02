@@ -20,6 +20,9 @@ module NavigationHelpers
     when /the main memorization page/
       '/test_verse_quick'
 
+    when /the learn verse page/
+      '/learn'
+
     when /(.*)'s referrer page/
       '/?referrer='+$1
 

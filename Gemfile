@@ -4,24 +4,25 @@ HOST_OS = RbConfig::CONFIG['host_os']
 source 'http://rubygems.org'
 
 group :development do
-	gem "rails-footnotes", ">= 3.7"
+	gem 'rails-footnotes', '>= 3.7'
   gem 'sqlite3'
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'byebug'
 end
 
-gem "rspec-rails", ">= 2.6.1", :group => [:development, :test]
+gem 'rspec-rails', '>= 2.6.1', :group => [:development, :test]
 gem 'jasmine', :group => [:development, :test]
 
 group :test do
   gem 'factory_girl_rails'                                      # Add to development group for debugging in console
-  gem "cucumber-rails", ">= 1.3.0", require: false
-  gem "capybara", ">= 1.1.2"
-  gem "database_cleaner", "= 1.0.1"                             # TODO: Newer version has bug with database adapter ... upgrade when possible
-  gem "launchy", ">= 2.0.5"
+  gem 'cucumber-rails', '>= 1.3.0', require: false
+  gem "capybara", '>= 1.1.2'
+  gem 'selenium-webdriver'                                      # Optional extension for Capybara
+  gem 'database_cleaner', '= 1.0.1'                             # TODO: Newer version has bug with database adapter ... upgrade when possible
+  gem 'launchy', '>= 2.0.5'
   gem 'email_spec'                                              # For sending email in cucumber tests
-  gem "action_mailer_cache_delivery", ">= 0.3.5"                # Used to test email delivery with Cucumber. Pairs with email_spec
+  gem 'action_mailer_cache_delivery', '>= 0.3.5'                # Used to test email delivery with Cucumber. Pairs with email_spec
 end
 
 group :production do
@@ -70,19 +71,19 @@ gem 'doorkeeper', '~> 0.7.0'                                                   #
 ############################################################
 # Authentication and Authorization
 ############################################################
-gem "devise"                                                                   # Authentication
-gem "devise-encryptable"                                                       # TODO: Is this required?
+gem 'devise'                                                                   # Authentication
+gem 'devise-encryptable'                                                       # TODO: Is this required?
 gem 'omniauth'                                                                 # Multi-provider authentication
 gem 'omniauth-windowslive'                                                     #   - strategy for Windows live
-gem 'cancan', git: "https://github.com/nukturnal/cancan.git"                   # Role-based authorization, Forem requires
+gem 'cancan', git: 'https://github.com/nukturnal/cancan.git'                   # Role-based authorization, Forem requires
 
 ############################################################
 # Major Engines (Admin, Forem, Blog)
 ############################################################
 gem 'rails_admin', '>= 0.6.0'                                                  # Admin console
-gem 'forem',       :github => "radar/forem", :branch => "rails4"               # Forum engine
+gem 'forem',       :github => 'radar/forem', :branch => 'rails4'               # Forum engine
 gem 'forem-textile_formatter'                                                  # Forum formatting
-gem 'bloggity',    :git => "git://github.com/avitus/bloggity.git"              # Blog engine
+gem 'bloggity',    :git => 'git://github.com/avitus/bloggity.git'              # Blog engine
 # gem 'bloggity', :path => "../bloggity"                                       # Blog engine (dev environment)
 
 ############################################################
