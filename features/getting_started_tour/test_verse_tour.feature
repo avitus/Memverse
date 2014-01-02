@@ -11,6 +11,6 @@ Feature: Test Verse Tour
       When I go to the main memorization page
       Then I should see "Welcome to Your 1st Review Session"
       # Capybara 2.0 finds invisible links ... add this next section when we hit 2.1
-      # When I click inside "a.joyride-next-tip"
-      # Then I should see "The Mnemonic"
+      When I click inside "a.joyride-next-tip"
+      Then I should see "The Mnemonic"
 
