@@ -131,7 +131,7 @@
                     practiceState.levelUp();
                 }
 
-                $(this).next().focus();  // advance cursor to next blank word
+                $(this).nextAll('input.blank-word:first').focus();  // advance cursor to next blank word
                 $(this).replaceWith( correctWord );
 
             }
