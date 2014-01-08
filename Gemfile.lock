@@ -30,7 +30,7 @@ GIT
 
 GIT
   remote: git://github.com/radar/forem.git
-  revision: 2db7bc505a734b7036ad33d5f889b0a60646bd0c
+  revision: 3d4b4f19653bc24ccd74559695e1b509d5585061
   branch: rails4
   specs:
     forem (1.0.0.beta1)
