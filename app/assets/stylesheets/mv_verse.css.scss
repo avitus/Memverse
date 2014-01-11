@@ -19,7 +19,7 @@
 .verse-text #show-verse {
   background-color:#EEE;
   padding:0.5em;
-  margin-top:1em; 
+  margin-top:1em;
 }
 
 .verse-text #nav {
@@ -30,6 +30,18 @@
 .verse-tag {
   background-color:#EEE;
   padding:0.2em 1em;
+
+  // tag name too long causes problems, so force linebreak
+  -ms-word-break: break-all;
+    word-break: break-all;
+
+ /* Non standard for webkit */
+     word-break: break-word;
+
+    -webkit-hyphens: auto;
+       -moz-hyphens: auto;
+        -ms-hyphens: auto;
+            hyphens: auto;
 }
 
 .tag-list {
