@@ -159,4 +159,19 @@ describe User do
     end
   end
 
+  describe ".can_blog?" do
+    it "is true for Josiah" do
+      user = FactoryGirl.create(:user, id: 2336)
+
+      [user.can_blog?].should == [true]
+    end
+
+    it "is false for non-bloggers" do
+      user = FactoryGirl.create(:user, id: 80000)
+
+      [user.can_blog?].should == [false]
+    end
+  end
+
 end
+
