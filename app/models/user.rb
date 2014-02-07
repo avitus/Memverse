@@ -1183,8 +1183,7 @@ class User < ActiveRecord::Base
  
     # Bloggers: Andy, Heather-Kate Taylor, Phil Walker, Dakota Lynch, River La Belle, Alex Watt, Nathan Burkhalter, and Josiah DeGraaf
     bloggers = [1, 2, 366, 1138, 3113, 4024, 3486, 4565, 2336]
-    return true
-    # return bloggers.include?(self.id)
+    return bloggers.include?(self.id)
   end
 
   # Whether a user can moderate the comments for a given blog
