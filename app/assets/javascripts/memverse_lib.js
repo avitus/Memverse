@@ -131,6 +131,9 @@ String.prototype.capitalize = function() {
  * Substitute abbreviations
  ******************************************************************************/
 function unabbreviate(book_name) {
+	// capitalize only first letter of each word of book_name
+	book_name = book_name.toLowerCase().capitalize();
+
 	if(!(book_name.split(" ")[0].match('[^I]'))) { // Check if first "word" contains only I's; then Roman numerals to Arabic numbers
 		book_name = book_name.replace("III ", "3 ").replace("II ", "2 ").replace("I ", "1 "); // replace first occurences
 	}
@@ -314,7 +317,7 @@ function parseVerseRef(verseref) {
 
 		vs = parseInt(split_text.pop());
 		ch = parseInt(split_text.pop());
-		bk = unabbreviate( split_text.join(' ').capitalize() );
+		bk = unabbreviate( split_text.join(' ') );
 		bi = jQuery.inArray( bk, BIBLEBOOKS );
 
 		if (bi === -1) {
@@ -371,7 +374,7 @@ function parsePassageRef(passage) {
 		}
 
 		ch       = parseInt(split_text.pop());
-		bk       = unabbreviate( split_text.join(' ').capitalize() );
+		bk       = unabbreviate( split_text.join(' ') );
 		bi       = jQuery.inArray( bk, BIBLEBOOKS );
 
 		if (bi === -1) {
