@@ -310,7 +310,7 @@ function parseVerseRef(verseref) {
 	if (validVerseRef(verseref)) {
 
 		// Handle corner cases
-		verseref = verseref.replace(/(song of songs)/i, "Song of Songs")
+		verseref = verseref.replace(/(song of songs)/i, "Song Of Songs")
 						   .replace(/(psalm )/i,        "Psalms ");
 
 		split_text = verseref.split(/:\s|:|\s/);
@@ -361,7 +361,7 @@ function parsePassageRef(passage) {
 	if (validPassageRef(passage)) {
 
 		// Handle corner cases
-		passage = passage.replace(/(song of songs)/i, "Song of Songs")
+		passage = passage.replace(/(song of songs)/i, "Song Of Songs")
 						 .replace(/(psalm )/i,        "Psalms ")
                          .replace(/\:\s/, ':') // change colon + space to just a colon
 						 .replace(/\:$/, '');  // Something like "Romans 8:" -- can happen on Add Verse page as user types
