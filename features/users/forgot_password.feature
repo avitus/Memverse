@@ -15,7 +15,7 @@ Feature: Forgot password
       And I fill in the following:
         | user_email   | amnesiac@test.com    |
       And I press "Send me reset password instructions"
-      Then I should see "You will receive an email with instructions about how to reset your password in a few minutes."
+      Then I should see "You will receive an email with instructions on how to reset your password in a few minutes."
       And "amnesiac@test.com" should receive an email with subject "Reset password instructions"
       When I open the email
       Then I should see "Someone has requested a link to change your password, and you can do this through the link below." in the email body
