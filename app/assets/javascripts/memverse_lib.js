@@ -131,11 +131,9 @@ String.prototype.capitalize = function() {
  * Substitute abbreviations
  ******************************************************************************/
 function unabbreviate(book_name) {
-	// capitalize only first letter of each word of book_name
-	book_name = book_name.toLowerCase().capitalize();
 
-	if(!(book_name.split(" ")[0].match('[^I]'))) { // Check if first "word" contains only I's; then Roman numerals to Arabic numbers
-		book_name = book_name.replace("III ", "3 ").replace("II ", "2 ").replace("I ", "1 "); // replace first occurences
+	if(!(book_name.split(" ")[0].match('[^Ii]'))) { // Check if first "word" contains only I's; then Roman numerals to Arabic numbers
+		book_name = book_name.replace(/III /i, "3 ").replace(/II /i, "2 ").replace(/I /i, "1 "); // replace first occurences
 	}
 	book_index = jQuery.inArray( book_name, BIBLEABBREV );
 
@@ -143,7 +141,7 @@ function unabbreviate(book_name) {
 		// since it might be a nonstandard abbreviation, let's see if we can find only one possible match with book names
 		possibilities = [];
 		for (var i = 0; i < BIBLEBOOKS.length; i++) {
-			if(BIBLEBOOKS[i].substring(0, book_name.length) == book_name) {
+			if(BIBLEBOOKS[i].substring(0, book_name.length).toLowerCase() == book_name.toLowerCase()) {
 				possibilities.push(BIBLEBOOKS[i]);
 			}
 		}
