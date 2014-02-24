@@ -1,18 +1,18 @@
 describe("blankifyVerse", function() {
-  
+
   it("replaces 10% of words in a verse with blanks", function() {
     expect(blankifyVerse("In the beginning God created the heavens and the earth", 10))
-    .toEqual("In the <input name='beginning' class='blank-word' style='width:5.58em;'> God created the heavens and the earth");
-  });  
+    .toEqual("<span>In </span> <span>the </span> <input name='beginning' class='blank-word' style='width:78px'> <span>God </span> <span>created </span> <span>the </span> <span>heavens </span> <span>and </span> <span>the </span> <span>earth </span>");
+  });
 
   it("replaces 40% of words in a verse with blanks", function() {
     expect(blankifyVerse("In the beginning God created the heavens and the earth", 40))
-    .toEqual("In the <input name='beginning' class='blank-word' style='width:5.58em;'> God <input name='created' class='blank-word' style='width:4.34em;'> the <input name='heavens' class='blank-word' style='width:4.34em;'> and the <input name='earth' class='blank-word' style='width:3.1em;'>");
-  }); 
+    .toEqual("<span>In </span> <span>the </span> <input name='beginning' class='blank-word' style='width:78px'> <span>God </span> <input name='created' class='blank-word' style='width:53px'> <span>the </span> <input name='heavens' class='blank-word' style='width:61px'> <span>and </span> <span>the </span> <input name='earth' class='blank-word' style='width:37px'>");
+  });
 
   it("replaces plain apostrophes with fancy ones", function() {
     expect(blankifyVerse("for his name's sake", 40))
-    .toEqual("for his <input name='name’s' class='blank-word' style='width:3.72em;'> <input name='sake' class='blank-word' style='width:2.48em;'>");
-  }); 
+    .toEqual("<span>for </span> <span>his </span> <input name='name’s' class='blank-word' style='width:51px'> <input name='sake' class='blank-word' style='width:33px'>");
+  });
 
 });
