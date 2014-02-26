@@ -40,7 +40,7 @@ end
 ############################################################
 # Frameworks
 ############################################################
-gem 'rails', '4.0.2'
+gem 'rails', '4.0.3'
 gem 'jquery-rails', '>= 2.0.0'
 
 ############################################################
@@ -112,7 +112,7 @@ gem 'localeapp'                                                                #
 gem 'breadcrumbs_on_rails', '>=2.0.0'                                          # For breadcrumb navigation bar
 gem 'dalli'                                                                    # Memcached client
 gem 'redis', '>=2.2.2'                                                         # Redis Key-value store
-gem 'friendly_id', github: "FriendlyId/friendly_id"                            # !!! TODO: Upgrade !!! Makes nice IDs for models
+gem 'friendly_id'                                                              # Makes nice IDs for models
 gem 'foreman'                                                                  # Helps manage multiple processes when running app in development.
 gem 'supermodel', git: 'git://github.com/KonaTeam/supermodel.git'              # Uses ActiveModel for in-memory storage with redis
 gem 'best_in_place', github: 'bernat/best_in_place'                            # In-place editing support ... no Rails 4 release yet

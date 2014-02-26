@@ -9,7 +9,6 @@ class BibleGateway
   GATEWAY_URL = "http://www.biblegateway.com"
 
   VERSIONS = {
-    :NIV => "NIV1984",  # No longer available on BibleGateway
     :NNV => "NIV",
     :NAS => "NASB",
     :NKJ => "NKJV",
@@ -43,7 +42,7 @@ class BibleGateway
 
   attr_accessor :version
 
-  def initialize(version = :NIV)
+  def initialize(version = :NNV)
     self.version = version
   end
 
