@@ -167,7 +167,7 @@ describe("Feedback", function() {
 			"This is a verse with a hyphen at the end",		// user guess
 			true											// feedback enabled
 		)).toEqual({
-			feedtext : 'This is a hyphen at the end <div id="matchbox"><p>Correct</p></div>',
+			feedtext : 'This is a verse with a hyphen at the end <div id="matchbox"><p>Correct</p></div>',
 			correct  : true
 		})
 	});

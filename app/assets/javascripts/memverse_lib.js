@@ -131,8 +131,9 @@ String.prototype.capitalize = function() {
  * Substitute abbreviations
  ******************************************************************************/
 function unabbreviate(book_name) {
-	if(!(book_name.split(" ")[0].match('[^I]'))) { // Check if first "word" contains only I's; then Roman numerals to Arabic numbers
-		book_name = book_name.replace("III ", "3 ").replace("II ", "2 ").replace("I ", "1 "); // replace first occurences
+
+	if(!(book_name.split(" ")[0].match('[^Ii]'))) { // Check if first "word" contains only I's; then Roman numerals to Arabic numbers
+		book_name = book_name.replace(/III /i, "3 ").replace(/II /i, "2 ").replace(/I /i, "1 "); // replace first occurences
 	}
 	book_index = jQuery.inArray( book_name, BIBLEABBREV );
 
@@ -140,7 +141,7 @@ function unabbreviate(book_name) {
 		// since it might be a nonstandard abbreviation, let's see if we can find only one possible match with book names
 		possibilities = [];
 		for (var i = 0; i < BIBLEBOOKS.length; i++) {
-			if(BIBLEBOOKS[i].substring(0, book_name.length) == book_name) {
+			if(BIBLEBOOKS[i].substring(0, book_name.length).toLowerCase() == book_name.toLowerCase()) {
 				possibilities.push(BIBLEBOOKS[i]);
 			}
 		}
@@ -307,14 +308,14 @@ function parseVerseRef(verseref) {
 	if (validVerseRef(verseref)) {
 
 		// Handle corner cases
-		verseref = verseref.replace(/(song of songs)/i, "Song of Songs")
+		verseref = verseref.replace(/(song of songs)/i, "Song Of Songs")
 						   .replace(/(psalm )/i,        "Psalms ");
 
 		split_text = verseref.split(/:\s|:|\s/);
 
 		vs = parseInt(split_text.pop());
 		ch = parseInt(split_text.pop());
-		bk = unabbreviate( split_text.join(' ').capitalize() );
+		bk = unabbreviate( split_text.join(' ') );
 		bi = jQuery.inArray( bk, BIBLEBOOKS );
 
 		if (bi === -1) {
@@ -358,7 +359,7 @@ function parsePassageRef(passage) {
 	if (validPassageRef(passage)) {
 
 		// Handle corner cases
-		passage = passage.replace(/(song of songs)/i, "Song of Songs")
+		passage = passage.replace(/(song of songs)/i, "Song Of Songs")
 						 .replace(/(psalm )/i,        "Psalms ")
                          .replace(/\:\s/, ':') // change colon + space to just a colon
 						 .replace(/\:$/, '');  // Something like "Romans 8:" -- can happen on Add Verse page as user types
@@ -371,7 +372,7 @@ function parsePassageRef(passage) {
 		}
 
 		ch       = parseInt(split_text.pop());
-		bk       = unabbreviate( split_text.join(' ').capitalize() );
+		bk       = unabbreviate( split_text.join(' ') );
 		bi       = jQuery.inArray( bk, BIBLEBOOKS );
 
 		if (bi === -1) {
