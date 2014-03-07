@@ -57,6 +57,17 @@ class QuizQuestionsController < ApplicationController
     end
   end
 
+  # GET /quizquestions/submit
+  def submit
+
+    @quiz_question = QuizQuestion.new
+    @quiz          = Quiz.find(params[:quiz] || 1)
+
+    respond_to do |format|
+      format.html # submit.html.erb
+    end
+  end
+
   # GET /quizquestions/1/edit
   def edit
     @quiz_question = QuizQuestion.find( params[:id] )
