@@ -41,6 +41,7 @@ MemverseApp::Application.routes.draw do
   resources :quiz_questions do
     get 'search', on: :collection
   end
+  get 'submit_question' => "quiz_questions#submit"  # for users to submit quiz questions
 
   resources :passages do
     get 'due', :on => :collection
@@ -204,7 +205,7 @@ MemverseApp::Application.routes.draw do
 
   # Routes for chat channels
   post '/chat/send'                 => 'chat#send_message'
-  get "/chat/toggle_ban"            => 'chat#toggle_ban'
+  get '/chat/toggle_ban'            => 'chat#toggle_ban'
 
   # Routes for live quiz
   get  '/live_quiz'                 => 'live_quiz#live_quiz'     # Main quiz URL
