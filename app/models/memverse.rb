@@ -1,6 +1,7 @@
 class Memverse < ActiveRecord::Base
 
   acts_as_taggable # Alias for acts_as_taggable_on :tags
+  acts_as_paranoid # soft-deletion
 
   # Relationships
   belongs_to :user

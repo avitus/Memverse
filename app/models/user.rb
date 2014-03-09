@@ -98,6 +98,8 @@ class User < ActiveRecord::Base
                   :mnemonic_use, :all_refs, :referred_by, :auto_work_load, :show_email,
                   :provider, :uid
 
+  acts_as_paranoid # soft-deletion
+
   # ----------------------------------------------------------------------------------------------------------
   # Single Sign On support
   # ----------------------------------------------------------------------------------------------------------
