@@ -75,15 +75,15 @@ gem 'devise'                                                                   #
 gem 'devise-encryptable'                                                       # TODO: Is this required?
 gem 'omniauth'                                                                 # Multi-provider authentication
 gem 'omniauth-windowslive'                                                     #   - strategy for Windows live
-gem 'cancan', git: 'https://github.com/nukturnal/cancan.git'                   # Role-based authorization, Forem requires
+gem 'cancan', github: 'nukturnal/cancan'                                       # Role-based authorization, Forem requires
 
 ############################################################
 # Major Engines (Admin, Forem, Blog)
 ############################################################
 gem 'rails_admin', '>= 0.6.0'                                                  # Admin console
-gem 'forem',       :github => 'radar/forem', :branch => 'rails4'               # Forum engine
+gem 'forem',       github: 'radar/forem', branch: 'rails4'                     # Forum engine
 gem 'forem-textile_formatter'                                                  # Forum formatting
-gem 'bloggity',    :git => 'git://github.com/avitus/bloggity.git'              # Blog engine
+gem 'bloggity',    github: 'avitus/bloggity'                                   # Blog engine
 # gem 'bloggity', :path => "../bloggity"                                       # Blog engine (dev environment)
 
 ############################################################
@@ -98,7 +98,7 @@ gem 'fancybox2-rails'                                                          #
 gem 'kaminari'                                                                 # Required for bloggity
 gem 'rinku', :require => 'rails_rinku'                                         # Supports auto-linking of URL's in blog comments
 gem 'randumb'                                                                  # Retrieve a random record
-gem 'prawn', :git => "git://github.com/sandal/prawn", :submodules => true      # PDF support
+gem 'prawn', github: 'sandal/prawn', :submodules => true                       # PDF support
 gem "prawnto_2", :require => "prawnto"                                         # Integrating prawn into Rails
 gem 'acts-as-taggable-on'                                                      # :source => "http://gemcutter.org", Taggable gem,
 gem 'ckeditor'                                                                 # WYSIWYG editing
@@ -112,9 +112,9 @@ gem 'localeapp'                                                                #
 gem 'breadcrumbs_on_rails', '>=2.0.0'                                          # For breadcrumb navigation bar
 gem 'dalli'                                                                    # Memcached client
 gem 'redis', '>=2.2.2'                                                         # Redis Key-value store
-gem 'friendly_id', github: "FriendlyId/friendly_id"                            # !!! TODO: Upgrade !!! Makes nice IDs for models
+gem 'friendly_id', '5.0.2'                                                     # !!! TODO: Upgrade !!! Makes nice IDs for models
 gem 'foreman'                                                                  # Helps manage multiple processes when running app in development.
-gem 'supermodel', git: 'git://github.com/KonaTeam/supermodel.git'              # Uses ActiveModel for in-memory storage with redis
+gem 'supermodel', github: 'KonaTeam/supermodel'                                # Uses ActiveModel for in-memory storage with redis
 gem 'best_in_place', github: 'bernat/best_in_place'                            # In-place editing support ... no Rails 4 release yet
 gem 'split', :require => 'split/dashboard'                                     # AB testing framework
 gem 'backup'                                                                   # Used to backup MySQL database and uploaded site assets
@@ -125,6 +125,7 @@ gem 'ice_cube'                                                                 #
 gem 'sinatra', require: false                                                  # sinatra and slim are required for sidekiq
 gem 'slim'
 gem 'pubnub'                                                                   # Real-time messaging service
+gem 'paranoia'                                                                 # destroy on selected models doesn't actually remove from database ... soft-deletion
 
 group :console do
   gem 'wirble'
