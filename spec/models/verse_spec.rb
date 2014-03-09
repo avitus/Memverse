@@ -1,5 +1,77 @@
 # encoding: utf-8
+require 'spec_helper'
+
 describe Verse do
+
+  describe "category scope" do
+    # verse    - Verse object
+    # category - The Symbol for the category that the verse is supposed to
+    #            exclusively belong to.
+    def test_category(verse, category)
+
+      categories = [:history, :wisdom, :prophecy, :gospel, :epistle]
+
+      # verse should be in given category scope
+      Verse.public_send(category).should include(verse)
+
+      # verse should not be in any other category scope
+      for category in categories - [category]
+        Verse.public_send(category).should_not include(verse)
+      end
+
+    end
+
+    describe "history" do
+      it "includes Acts" do
+        verse = FactoryGirl.create(:verse, book: "Acts", book_index: 44)
+
+        test_category(verse, :history)
+      end
+
+      it "includes Genesis" do
+        verse = FactoryGirl.create(:verse, book: "Genesis", book_index: 1)
+
+        test_category(verse, :history)
+      end
+    end
+
+    describe "wisdom" do
+      it "includes Proverbs" do
+        verse = FactoryGirl.create(:verse, book: "Proverbs", book_index: 20)
+
+        test_category(verse, :wisdom)
+      end
+    end
+
+    describe "prophecy" do
+      it "includes Isaiah" do
+        verse = FactoryGirl.create(:verse, book: "Isaiah", book_index: 23)
+
+        test_category(verse, :prophecy)
+      end
+      it "includes Revelation" do
+        verse = FactoryGirl.create(:verse, book: "Revelation", book_index: 66)
+
+        test_category(verse, :prophecy)
+      end
+    end
+
+    describe "gospel" do
+      it "includes Mark" do
+        verse = FactoryGirl.create(:verse, book: "Mark", book_index: 41)
+
+        test_category(verse, :gospel)
+      end
+    end
+
+    describe "epistle" do
+      it "includes Ephesians" do
+        verse = FactoryGirl.create(:verse, book: "Ephesians", book_index: 49)
+
+        test_category(verse, :epistle)
+      end
+    end
+  end
 
   it "should return correct mnemonic" do
     verse = FactoryGirl.create(:verse, :text => "This is an (extremely) important - mnemonic 'method' 'test'; don't you think?")
