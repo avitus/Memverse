@@ -35,7 +35,7 @@ class Verse < ActiveRecord::Base
   scope :old_testament, -> { where(:book_index =>  1..39) }
   scope :new_testament, -> { where(:book_index => 40..66) }
 
-  scope :history,  -> { where(:book_index =>  1..17) }
+  scope :history,  -> { where("book_index BETWEEN 1  AND 17 OR book_index = 44") }
   scope :wisdom,   -> { where(:book_index => 18..22) }
   scope :prophecy, -> { where("book_index BETWEEN 23 AND 39 OR book_index = 66") }
   scope :gospel,   -> { where(:book_index => 40..43) }
