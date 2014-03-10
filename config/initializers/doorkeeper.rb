@@ -15,6 +15,14 @@ Doorkeeper.configure do
     current_user || warden.authenticate!(:scope => :user)
   end
 
+  # ALV added this section
+  # In this flow, a token is requested in exchange for the resource owner credentials (username and password)
+  resource_owner_from_credentials do |routes|
+    request.params[:user] = {:email => request.params[:username], :password => request.params[:password]}
+    request.env["devise.allow_params_authentication"] = true
+    request.env["warden"].authenticate!(:scope => :user)
+  end
+
   # If you want to restrict access to the web interface for adding oauth authorized applications, you need to declare the block below.
   # admin_authenticator do
   #   # Put your admin authentication logic here.
