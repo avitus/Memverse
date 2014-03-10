@@ -93,6 +93,7 @@ gem 'capistrano', '=2.15.5'                                                    #
 gem 'sitemap_generator'                                                        # Sitemap generator
 gem 'newrelic_rpm', '>=3.3.0'                                                  # Performance monitoring
 gem 'airbrake'                                                                 # Error tracking
+gem 'skylight'                                                                 # Rails app monitoring
 
 gem 'fancybox2-rails'                                                          # For displaying of video, pop-up info box
 gem 'kaminari'                                                                 # Required for bloggity
