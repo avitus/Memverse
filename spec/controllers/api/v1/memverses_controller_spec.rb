@@ -37,7 +37,8 @@ describe Api::V1::MemversesController do
 
     it 'creates the memverse' do
       Memverse.should_receive(:create!) { stub_model( Memverse ) }
-      post :create, :format => :json, :access_token => token.token
+      post :create, :id => verse.id, :version => 1, :format => :json, :access_token => token.token
+      puts JSON.parse(response.body)
       response.status.should eq(201)
     end
   end

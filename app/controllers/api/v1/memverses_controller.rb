@@ -45,6 +45,7 @@ class Api::V1::MemversesController < Api::V1::ApiController
             Rails.logger.error("=====> [Memverse save error (API)] Exception while saving #{vs.ref} for user #{current_resource_owner.id}: #{e}")
           else
             msg = "Added"
+            expose mv, status: :created
           end
         end
 
@@ -53,8 +54,6 @@ class Api::V1::MemversesController < Api::V1::ApiController
     else
       error! :bad_request, metadata: {reason: 'Could not find verse or user'}
     end
-
-    expose mv, status: :created
 
   end
 
