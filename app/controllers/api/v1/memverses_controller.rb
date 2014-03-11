@@ -13,7 +13,60 @@ class Api::V1::MemversesController < Api::V1::ApiController
   end
 
   def show
-    expose current_resource_owner.memverses.find( params[:id] )
+    expose memverse
+  end
+
+  def update
+    memverse.update_attributes! params[:memverse]
+    expose memverse
+  end
+
+  def create
+
+    vs = Verse.find(params[:id])
+
+    if vs and current_resource_owner
+
+      # We need to lock the user in order to prevent a race condition when two memverses are created simultaneously
+      # Without the lock, adding two adjacent verses occasionally results in two separate passages
+      ActiveRecord::Base.transaction do
+
+        current_resource_owner.lock! # Hold pessimistic user lock until memverse has been created and all hooks have executed
+
+        if current_resource_owner.has_verse_id?(vs)
+          error! :bad_request, metadata: {reason: 'Already added previously'}
+        elsif current_resource_owner.has_verse?(vs.book, vs.chapter, vs.versenum)
+          error! :bad_request, metadata: {reason: 'Already exists in different translation'}
+        else
+          # Save verse as a memory verse for user
+          begin
+            mv = Memverse.create( :user_id => current_resource_owner.id, :verse_id => vs.id )
+          rescue Exception => e
+            Rails.logger.error("=====> [Memverse save error (API)] Exception while saving #{vs.ref} for user #{current_resource_owner.id}: #{e}")
+          else
+            msg = "Added"
+          end
+        end
+
+      end # of transaction
+
+    else
+      error! :bad_request, metadata: {reason: 'Could not find verse or user'}
+    end
+
+    expose mv, status: :created
+
+  end
+
+  def destroy
+    memverse.destroy
+    redirect_to memverses_path( version: 1 )
+  end
+
+  private
+
+  def memverse
+    @memverse ||= current_resource_owner.memverses.find( params[:id] )
   end
 
 end
