@@ -17,7 +17,7 @@ class Api::V1::MemversesController < Api::V1::ApiController
   end
 
   def update
-    memverse.update_attributes! params[:memverse]
+    memverse.supermemo( params[:q].to_i )
     expose memverse
   end
 
@@ -44,8 +44,7 @@ class Api::V1::MemversesController < Api::V1::ApiController
           rescue Exception => e
             Rails.logger.error("=====> [Memverse save error (API)] Exception while saving #{vs.ref} for user #{current_resource_owner.id}: #{e}")
           else
-            msg = "Added"
-            expose mv, status: :created
+            expose mv, status: :created  # added a new verse
           end
         end
 
