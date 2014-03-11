@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe Api::V1::MemversesController do
+
   describe 'GET #index' do
 
     let!(:application) { Doorkeeper::Application.create!(:name => "MyApp", :redirect_uri => "http://app.com") } # OAuth application
@@ -27,22 +28,18 @@ describe Api::V1::MemversesController do
     end
   end
 
-  # Need below tests once updates/creates are implemented
+  describe 'POST #create (with scopes)' do
 
-  # describe 'POST #create (with scopes)' do
-  #   let(:token) do
-  #     stub :accessible? => true, :scopes => [:write]
-  #   end
+    let!(:application) { Doorkeeper::Application.create!(:name => "MyApp", :redirect_uri => "http://app.com") } # OAuth application
+    let!(:user)        { FactoryGirl.create(:user) }
+    let!(:token)       { Doorkeeper::AccessToken.create! :application_id => application.id, :resource_owner_id => user.id }
+    let!(:verse)       { FactoryGirl.create(:verse)}
 
-  #   before do
-  #     controller.stub(:doorkeeper_token) { token }
-  #   end
-
-  #   it 'creates the profile' do
-  #     Profile.should_receive(:create!) { stub_model(Profile) }
-  #     post :create, :format => :json
-  #     response.status.should eq(201)
-  #   end
-  # end
+    it 'creates the memverse' do
+      Memverse.should_receive(:create!) { stub_model( Memverse ) }
+      post :create, :format => :json, :access_token => token.token
+      response.status.should eq(201)
+    end
+  end
 
 end
