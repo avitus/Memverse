@@ -12,15 +12,17 @@
         </div>
     <% end %>
 
-    <!-- Associate with a quiz -->
+    <!-- Associate with a quiz and user -->
     <p>
-        <%= f.hidden_field  :quiz_id, :value => @quiz.id %>
+        <%= f.hidden_field  :quiz_id,         :value => @quiz.id %>
+        <%= f.hidden_field  :submitted_by,    :value => current_user.id %>
+        <%= f.hidden_field  :approval_status, :value => current_user.admin? "Approved" : "Pending" %>
     </p>
 
     <!-- Question number -->
     <div class="quiz-question-num">
         <%= f.label         :question_no, "Question number" %><br />
-        <%= f.select        :question_no, (1..20), :selected => params[:qno] %>
+        <%= f.select        :question_no, (1..25), :selected => params[:qno] %>
     </div>
 
     <!-- Question type -->

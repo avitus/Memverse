@@ -3,6 +3,7 @@
 class QuizQuestionsController < ApplicationController
 
   before_filter :authenticate_user!
+  before_filter :authorize, :except => [:submit]
 
   add_breadcrumb "Home", :root_path
 
@@ -76,6 +77,7 @@ class QuizQuestionsController < ApplicationController
 
   # POST /quizquestions?quiz=1
   # POST /quizquestions?quiz=1.xml
+  # This method handles questions submitted by users as well as the questions created by admins
   def create
 
     # Remove supporting reference string from list of params
@@ -85,19 +87,23 @@ class QuizQuestionsController < ApplicationController
 
     # Associate supporting verse with question
     errorcode, bk, ch, vs = parse_verse( supporting_ref )
-
     @quiz_question.supporting_ref = Uberverse.where(:book => bk, :chapter => ch, :versenum => vs).first
 
     respond_to do |format|
       if @quiz_question.save
         flash[:notice] = 'Quiz question was successfully created.'
-        link = "<a href=\"#{url_for(:action => 'new', :quiz => @quiz_question.quiz_id, :qno => @quiz_question.question_no + 1)}\">[Add another question]</a>"
+
+        if URI(request.referer).path == '/submit_question'
+          link = "<a href=\"#{submit_question_path}\">[Add another question]</a>"
+        else
+          link = "<a href=\"#{url_for(:action => 'new', :quiz => @quiz_question.quiz_id, :qno => @quiz_question.question_no + 1)}\">[Add another question]</a>"
+        end
+
         flash.now[:notice] << " #{link} "
         format.html { redirect_to quiz_question_path(@quiz_question) }
-        format.xml  { render :xml => @quiz_question, :status => :created, :location => @quiz_question }
+
       else
         format.html { render :action => "new" }
-        format.xml  { render :xml => @quiz_question.errors, :status => :unprocessable_entity }
       end
     end
   end

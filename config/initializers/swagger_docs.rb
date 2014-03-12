@@ -1,3 +1,5 @@
+# ALV - Unable to get Swagger-Docs gem to generate documentation.
+
 # class Swagger::Docs::Config
 #   def self.base_api_controller; RocketPants::Base end
 # end

@@ -491,11 +491,9 @@ ActiveRecord::Schema.define(version: 20140306234657) do
     t.integer "supporting_ref"
     t.integer "submitted_by"
     t.string  "approval_status",                          default: "Pending"
-    t.integer "user_id"
   end
 
   add_index "quiz_questions", ["approval_status"], name: "index_quiz_questions_on_approval_status", using: :btree
-  add_index "quiz_questions", ["user_id"], name: "index_quiz_questions_on_user_id", using: :btree
 
   create_table "quizzes", force: true do |t|
     t.integer  "user_id",              null: false
