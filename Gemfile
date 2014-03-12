@@ -67,6 +67,7 @@ gem 'activeresource', require: 'active_resource'
 ############################################################
 gem 'rocket_pants', '~> 1.0'                                                   # API goodness
 gem 'doorkeeper', '~> 0.7.0'                                                   # Oauth for API
+gem 'swagger-docs'                                                             # Generates swagger-ui json files
 
 ############################################################
 # Authentication and Authorization

@@ -480,6 +480,7 @@ GEM
       activesupport (>= 3.0)
       sprockets (~> 2.8)
     sqlite3 (1.3.9)
+    swagger-docs (0.1.1)
     temple (0.6.7)
     therubyracer (0.11.4)
       libv8 (~> 3.11.8.12)
@@ -593,6 +594,7 @@ DEPENDENCIES
   split
   sqlite3
   supermodel!
+  swagger-docs
   therubyracer (= 0.11.4)
   thinking-sphinx (~> 3.0.5)
   uglifier (>= 1.3.0)
