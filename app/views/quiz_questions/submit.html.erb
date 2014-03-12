@@ -18,6 +18,15 @@
             </div>
         <% end %>
 
+        <!-- Associate with a quiz and user -->
+        <p>
+            <%= f.hidden_field  :quiz_id,         :value => @quiz.id %>
+            <%= f.hidden_field  :question_no,     :value => 1 %>
+            <%= f.hidden_field  :question_type,   :value => 'mcq' %>
+            <%= f.hidden_field  :submitted_by,    :value => current_user.id %>
+            <%= f.hidden_field  :approval_status, :value => current_user.admin? ? "Approved" : "Pending" %>
+        </p>
+
         <!-- Entry form for MCQ -->
         <%= render :partial => "form_mcq", :locals=>{ :f => f } %>
 
