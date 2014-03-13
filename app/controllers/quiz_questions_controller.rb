@@ -3,7 +3,7 @@
 class QuizQuestionsController < ApplicationController
 
   before_filter :authenticate_user!
-  before_filter :authorize, :except => [:submit]
+  before_filter :access_permission, :except => [:submit, :search, :create]
 
   add_breadcrumb "Home", :root_path
 
@@ -20,7 +20,6 @@ class QuizQuestionsController < ApplicationController
   # GET /quizquestions/1
   # GET /quizquestions/1.xml
   def show
-    @quiz_question  = QuizQuestion.find(params[:id])
     @quiz           = @quiz_question.quiz
 
     respond_to do |format|
@@ -29,6 +28,9 @@ class QuizQuestionsController < ApplicationController
     end
   end
 
+  # ----------------------------------------------------------------------------------------------------------
+  # Search for related questions based on the supporting reference
+  # ----------------------------------------------------------------------------------------------------------
   def search
     supporting_ref = params[:supporting_ref]
     errorcode, bk, ch, vs = parse_verse( supporting_ref )
@@ -71,7 +73,6 @@ class QuizQuestionsController < ApplicationController
 
   # GET /quizquestions/1/edit
   def edit
-    @quiz_question = QuizQuestion.find( params[:id] )
     @quiz          = @quiz_question.quiz
   end
 
@@ -115,8 +116,6 @@ class QuizQuestionsController < ApplicationController
     # Remove supporting reference string from list of params
     supporting_ref = params[:quiz_question].delete(:supporting_ref)
 
-    @quiz_question = QuizQuestion.find(params[:id])
-
     # Associate supporting verse with question
     errorcode, bk, ch, vs = parse_verse( supporting_ref )
     @quiz_question.supporting_ref = Uberverse.where(:book => bk, :chapter => ch, :versenum => vs).first
@@ -136,7 +135,6 @@ class QuizQuestionsController < ApplicationController
   # DELETE /quizquestions/1
   # DELETE /quizquestions/1.xml
   def destroy
-    @quiz_question = QuizQuestion.find(params[:id])
     @quiz_question.destroy
 
     respond_to do |format|
@@ -145,5 +143,26 @@ class QuizQuestionsController < ApplicationController
     end
   end
 
+  private
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Check whether user owns quiz question or is an admin
+  # ----------------------------------------------------------------------------------------------------------
+  def access_permission
+    if current_user.admin?
+      @quiz_question = QuizQuestion.find( params[:id] )
+    else
+      @quiz_question = QuizQuestion.find_by_id( params[:id] )
+      if !@quiz_question
+        flash[:error] = "No question exists with that ID"
+        redirect_to root_path
+        false
+      elsif @quiz_question.user != current_user
+        flash[:error] = "You may only access quiz questions that you created."
+        redirect_to root_path
+        false
+      end
+    end
+  end
 
 end
