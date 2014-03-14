@@ -12,6 +12,7 @@ class QuizQuestion < ActiveRecord::Base
 
   # Relationships
   belongs_to :quiz
+  belongs_to :user,           :foreign_key => "submitted_by",   :class_name => "User"
   belongs_to :supporting_ref, :foreign_key => "supporting_ref", :class_name => "Uberverse"
 
   # Query scopes

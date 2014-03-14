@@ -21,11 +21,11 @@
 		<ul>
 			<li>
 				<%= f.label 			:name, t('.Name') %>
-				<%= f.text_field 		:name %>
+				<%= f.text_field 		:name, :class => "profile-wide-text-field" %>
 			</li>
 			<li>
 				<%= f.label 			:email, t('.Email') %>
-				<%= f.text_field 		:email %>
+				<%= f.text_field 		:email, :class => "profile-wide-text-field" %>
 			</li>
 			<li>
 				<%= f.label 			:gender, t('.Gender') %>
@@ -34,88 +34,85 @@
 			<li>
 				<%= f.label 			:translation, t('.Translation') %>
 				<%= f.select			:translation, TRANSLATIONS.invert %>
-			</li>					
+			</li>
 
 			<li>
 				<div class="ui-widget">
 					<%= f.label 			:country, t('.Country') %>
-					<%= f.text_field 		:country, :value => @user_country %>
-				</div>			
+					<%= f.text_field 		:country, :value => @user_country, :class => "profile-wide-text-field" %>
+				</div>
 			</li>
-			
-	
+
+
 			<li id="state-entry">
-				<div class="ui-widget">	
+				<div class="ui-widget">
 					<%= f.label 			:american_state, t('.State') %>
-					<%= f.text_field 		:american_state, :value => @user_state %>
+					<%= f.text_field 		:american_state, :value => @user_state, :class => "profile-wide-text-field" %>
 				</div>
 			</li>
 
 			<li>
 				<div class="ui-widget">
 					<%= f.label 			:church, t('.Church') %>
-					<%= f.text_field 		:church, :value => @user_church %>
+					<%= f.text_field 		:church, :value => @user_church, :class => "profile-wide-text-field" %>
 				</div>
-			</li>		
+			</li>
 
 			<li>
 				<div class="ui-widget">
 					<%= f.label 			:group, t('.Group') %>
-					<%= f.text_field 		:group, :value => @user_group %>
+					<%= f.text_field 		:group, :value => @user_group, :class => "profile-wide-text-field" %>
 				</div>
-			</li>	
-
-			<li>
-				<%= f.label 			:newsletters, t('.Receive newsletters') %>
-				<%= f.check_box 		:newsletters %>
 			</li>
+
 			<li>
 				<%= f.label 			:reminder_freq, t('.Reminder frequency') %>
 				<%= f.select			:reminder_freq,
 							[["Daily", 		'Daily'		],
-							["Weekly",		'Weekly'	], 
-							["Monthly", 	'Monthly'	], 
+							["Weekly",		'Weekly'	],
+							["Monthly", 	'Monthly'	],
 							["Quarterly", 	'Quarterly'	],
 							["Annually", 	'Annually'	],
-							["Never", 		'Never'		]]      
+							["Never", 		'Never'		]]
 							 %>
 			</li>
 			<li>
 				<%= f.label 			:language, t('.Language') %>
 				<%= f.select			:language,
 							   [["English", 	      	'English'			],
-								["Spanish",           	'Spanish' 			], 
-								["French",           	'French' 			], 
-								["Bahasa Indonesia",  	'Bahasa Indonesia'	], 
-								["Dutch",		      	'Dutch'				], 
-								["Swedish",				'Swedish'			], 
-								["Afrikaans", 	       	'Afrikaans'			]]      
+								["Spanish",           	'Spanish' 			],
+								["French",           	'French' 			],
+								["Bahasa Indonesia",  	'Bahasa Indonesia'	],
+								["Dutch",		      	'Dutch'				],
+								["Swedish",				'Swedish'			],
+								["Afrikaans", 	       	'Afrikaans'			]]
 							 %>
-			</li>	
+			</li>
 			<li>
 				<%= f.label 			:time_allocation, t('.Target Time') %>
 				<%= f.select			:time_allocation,
 							[[" 3 Minutes per Day",  3	],
 							 [" 5 Minutes per Day",  5	],
 							 [" 7 Minutes per Day",  7	],
-							 ["10 Minutes per Day", 10	], 
+							 ["10 Minutes per Day", 10	],
 							 ["15 Minutes per Day", 15	],
 							 ["20 Minutes per Day", 20	],
 							 ["30 Minutes per Day", 30	],
 							 ["45 Minutes per Day", 45	],
-							 ["60 Minutes per Day", 60	]]      
+							 ["60 Minutes per Day", 60	]]
 							 %>
-			</li>														
+			</li>
 			<li>
 				<%= f.label 			:max_interval, t('.Max Repetition Interval') %>
 				<%= f.select			:max_interval,
 							[["1 Month", 	 31	],
 							 ["3 Months", 	 91	],
-							 ["6 Months",	183	], 
+							 ["6 Months",	183	],
 							 ["9 Months", 	273	],
-							 ["1 Year",		366 ]]     
+							 ["1 Year",		366 ]]
 							 %>
 			</li>
+
 			<li>
 				<%= f.label 			:mnemonic_use, t('.1st Letter Prompts') %>
 				<%= f.select			:mnemonic_use,
@@ -124,28 +121,38 @@
 							 ["Never", 		'Never'		]]
 							 %>
 			</li>
+
 			<li>
 				<%= f.label 			:auto_work_load, t('.Add verses as needed') %>
 				<%= f.check_box 		:auto_work_load %>
 			</li>
+
 			<li>
 				<%= f.label 			:all_refs, t('.Test all references') %>
 				<%= f.check_box 		:all_refs %>
 			</li>
+
 			<li>
 				<%= f.label 			:show_echo, t('.Always show feedback') %>
 				<%= f.check_box 		:show_echo %>
 			</li>
+
 			<li>
 				<%= f.label 			:show_email, t('.Show email') %>
 				<%= f.check_box 		:show_email %>
 			</li>
+
+			<li>
+				<%= f.label 			:newsletters, t('.Receive newsletters') %>
+				<%= f.check_box 		:newsletters %>
+			</li>
+
 		</ul>
-		
-		<div class="buttons">				
-			<%= submit_tag t('.Update profile') %>	
+
+		<div class="buttons">
+			<%= submit_tag t('.Update profile') %>
 		</div>
-	
+
 	<% end %> <!-- End: User form -->
 
 </div>
@@ -160,33 +167,33 @@
 <script type="text/javascript">
 
 	$(document).ready(function() {
-		
+
 		$country = $('#user_country');
-		$state = $('#state-entry'); 
-		
+		$state = $('#state-entry');
+
 		var togglestate = function(){
 			if ($country.val() == "United States") {
-				$state.show();		
+				$state.show();
 			} else {
 				$state.hide();
 			}
 		}
-		
+
 		togglestate(); // run on page load
-		
+
 		$country.keyup(function() {
 			togglestate();
 		});
-		
+
 		a = $('#user_country').focus().autocomplete({ source:'profile/country_autocomplete', change: function(event, ui) { togglestate(); }
 		});
 
 		c = $('#user_american_state').focus().autocomplete({ source:'profile/state_autocomplete'
 		});
-	
+
 		b = $('#user_church').focus().autocomplete({ source:'profile/church_autocomplete'
 		});
-			
+
 		d = $('#user_group').focus().autocomplete({ source:'profile/group_autocomplete'
 		});
 	});
