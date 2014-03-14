@@ -15,15 +15,17 @@ class QuizQuestion < ActiveRecord::Base
   belongs_to :supporting_ref, :foreign_key => "supporting_ref", :class_name => "Uberverse"
 
   # Query scopes
-  scope :mcq,         -> { where( :question_type => "mcq"                 ) }
-  scope :recitation,  -> { where( :question_type => "recitation"          ) }
-  scope :reference,   -> { where( :question_type => "reference"           ) }
+  scope :mcq,         -> { where( :question_type   => "mcq"                 ) }
+  scope :recitation,  -> { where( :question_type   => "recitation"          ) }
+  scope :reference,   -> { where( :question_type   => "reference"           ) }
 
-  scope :fresh,       -> { where( 'last_asked < ?', Date.today - 6.months ) }
+  scope :fresh,       -> { where( 'last_asked < ?', Date.today - 6.months   ) }
+  scope :approved,    -> { where( :approval_status => "Approved"            ) }
+  scope :pending,     -> { where( :approval_status => "Pending"             ) }
 
-  scope :easy,        -> { where( :perc_correct => 66..100                ) }
-  scope :medium,      -> { where( :perc_correct => 34..65                 ) }
-  scope :hard,        -> { where( :perc_correct =>  0..33                 ) }
+  scope :easy,        -> { where( :perc_correct    => 66..100               ) }
+  scope :medium,      -> { where( :perc_correct    => 34..65                ) }
+  scope :hard,        -> { where( :perc_correct    =>  0..33                ) }
 
   # Validations
   # validates_presence_of :user_id
