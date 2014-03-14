@@ -35,8 +35,9 @@ RSpec.configure do |config|
   config.formatter = :documentation # :progress, :html, :textmate
 
   # Configure devise helpers
-  config.include Devise::TestHelpers, :type => :controller
-  config.include ControllerMacros, :type => :controller  # ALV: need to use 'include' and not 'extend' as indicated in Devise Wiki
+  config.include Devise::TestHelpers,   type: :controller
+  config.include ControllerMacros,      type: :controller  # ALV: need to use 'include' and not 'extend' as indicated in Devise Wiki
+  config.include Requests::JsonHelpers, type: :controller  # ALV: helpers for testing API
 
 end
 

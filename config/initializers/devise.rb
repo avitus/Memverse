@@ -218,8 +218,13 @@ Devise.setup do |config|
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', :scope => 'user,public_repo'
   require "omniauth-windowslive"
-  # config.omniauth :windowslive, '000000004410AE0F', 'kCh4eoFdNmmNCqnwE7-3pztTYpSu90wD', :scope => 'wl.signin,wl.emails'
-  config.omniauth :windowslive, '000000004410A83C', 'NHb8c7WCjmVSj--k2fi5OWB8ud4g4SiN', :scope => 'wl.signin,wl.emails'
+
+  case Rails.env
+    when "development"
+      config.omniauth :windowslive, '000000004410A83C', 'NHb8c7WCjmVSj--k2fi5OWB8ud4g4SiN', :scope => 'wl.signin,wl.emails'
+    when "production"
+      config.omniauth :windowslive, '000000004410AE0F', 'kCh4eoFdNmmNCqnwE7-3pztTYpSu90wD', :scope => 'wl.signin,wl.emails'
+  end
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
