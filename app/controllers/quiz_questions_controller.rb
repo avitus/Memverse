@@ -12,7 +12,7 @@ class QuizQuestionsController < ApplicationController
   # GET /quizquestions?quiz=1
   # ----------------------------------------------------------------------------------------------------------
   def index
-    if params[:quiz]
+    if current_user.admin? && params[:quiz]
       @quiz = Quiz.find(params[:quiz])
     end
   end
@@ -51,7 +51,6 @@ class QuizQuestionsController < ApplicationController
   # GET /quizquestions/new
   # GET /quizquestions/new.xml
   def new
-    @quiz_question = QuizQuestion.new
     @quiz          = Quiz.find(params[:quiz] || 1)
 
     respond_to do |format|
@@ -150,7 +149,7 @@ class QuizQuestionsController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   def access_permission
     if current_user.admin?
-      @quiz_question = QuizQuestion.find( params[:id] )
+      @quiz_question = QuizQuestion.find_by_id( params[:id] ) || QuizQuestion.new
     else
       @quiz_question = QuizQuestion.find_by_id( params[:id] )
       if !@quiz_question
