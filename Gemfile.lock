@@ -23,7 +23,7 @@ GIT
 
 GIT
   remote: git://github.com/radar/forem.git
-  revision: 06d222b16bd7d12eee4b4f1590341bb71f856c21
+  revision: 1e4089a001fa3bba1f26af1b15af5a8f25c5f445
   branch: rails4
   specs:
     forem (1.0.0.beta1)
@@ -31,10 +31,10 @@ GIT
       friendly_id (= 5.0.2)
       friendly_id (~> 5.0.0)
       gemoji (= 1.1.2)
-      rails (~> 4.0.0)
+      rails (~> 4.0.3)
       sanitize (= 2.0.6)
       select2-rails (~> 3.5.4)
-      simple_form (~> 3.0.0.rc)
+      simple_form (~> 3.0.1)
       workflow (= 1.0.0)
 
 GIT
@@ -95,11 +95,11 @@ GEM
       multi_json (~> 1.3)
       thread_safe (~> 0.1)
       tzinfo (~> 0.3.37)
-    acts-as-taggable-on (3.0.1)
+    acts-as-taggable-on (3.0.2)
       rails (>= 3, < 5)
     addressable (2.3.5)
     afm (0.2.0)
-    airbrake (3.1.15)
+    airbrake (3.1.16)
       builder
       multi_json
     api_smith (1.3.0)
@@ -160,10 +160,10 @@ GEM
       chunky_png (~> 1.2)
       fssm (>= 0.2.7)
       sass (= 3.2.14)
-    compass-rails (1.1.3)
+    compass-rails (1.1.6)
       compass (>= 0.12.2)
     connection_pool (1.2.0)
-    cookiejar (0.3.1)
+    cookiejar (0.3.2)
     cucumber (1.3.11)
       builder (>= 2.1.2)
       diff-lcs (>= 1.1.3)
@@ -300,7 +300,7 @@ GEM
     net-ssh (2.8.0)
     net-ssh-gateway (1.2.0)
       net-ssh (>= 2.6.5)
-    newrelic_rpm (3.7.2.195)
+    newrelic_rpm (3.7.3.204)
     nokogiri (1.6.1)
       mini_portile (~> 0.5.0)
     oauth2 (0.9.3)
@@ -343,7 +343,7 @@ GEM
     prawnto_2 (0.2.6)
       prawn (>= 0.6.0)
       rails (>= 3.1)
-    protected_attributes (1.0.5)
+    protected_attributes (1.0.7)
       activemodel (>= 4.0.1, < 5.0)
     pubnub (3.4.1)
       em-http-request
@@ -429,9 +429,10 @@ GEM
     sanitize (2.0.6)
       nokogiri (>= 1.4.4)
     sass (3.2.14)
-    sass-rails (4.0.1)
+    sass-rails (4.0.2)
       railties (>= 4.0.0, < 5.0)
-      sass (>= 3.1.10)
+      sass (~> 3.2.0)
+      sprockets (~> 2.8, <= 2.11.0)
       sprockets-rails (~> 2.0.0)
     select2-rails (3.5.4)
       thor (~> 0.14)
@@ -460,7 +461,7 @@ GEM
       tilt (~> 1.3, >= 1.3.4)
     sitemap_generator (5.0.1)
       builder
-    skylight (0.3.1)
+    skylight (0.3.4)
       activesupport (>= 3.0.0)
     slim (2.0.2)
       temple (~> 0.6.6)
@@ -500,7 +501,7 @@ GEM
       polyglot
       polyglot (>= 0.3.1)
     ttfunk (1.0.3)
-    tzinfo (0.3.38)
+    tzinfo (0.3.39)
     uglifier (2.4.0)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
