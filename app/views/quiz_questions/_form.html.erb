@@ -16,7 +16,7 @@
     <p>
         <%= f.hidden_field  :quiz_id,         :value => @quiz.id %>
         <%= f.hidden_field  :submitted_by,    :value => current_user.id %>
-        <%= f.hidden_field  :approval_status, :value => current_user.admin? "Approved" : "Pending" %>
+        <%= f.hidden_field  :approval_status, :value => current_user.admin? ? "Approved" : "Pending" %>
     </p>
 
     <!-- Question number -->
