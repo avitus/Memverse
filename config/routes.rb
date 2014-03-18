@@ -41,7 +41,8 @@ MemverseApp::Application.routes.draw do
   resources :quiz_questions do
     get 'search', on: :collection
   end
-  get 'submit_question' => "quiz_questions#submit", as: :submit_question  # for users to submit quiz questions
+  get 'submit_question'        => "quiz_questions#submit",    as: :submit_question         # for users to submit quiz questions
+  get 'quiz_question_approval' => 'quiz_questions#approvals', as: :quiz_question_approval  # for admins to approve quiz questions
 
   resources :passages do
     get 'due', :on => :collection
