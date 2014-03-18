@@ -17,6 +17,17 @@ class QuizQuestionsController < ApplicationController
     end
   end
 
+  # ----------------------------------------------------------------------------------------------------------
+  # Show pending questions that require approval/rejection
+  # GET /quiz_question_approval
+  # ----------------------------------------------------------------------------------------------------------
+  def approvals
+    if current_user.admin?
+      @quiz = Quiz.find(params[:quiz] || 1)
+      @quiz_questions = @quiz.quiz_questions.mcq.pending
+    end
+  end
+
   # GET /quizquestions/1
   # GET /quizquestions/1.xml
   def show

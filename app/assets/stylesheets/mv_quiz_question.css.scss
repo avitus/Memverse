@@ -1,7 +1,15 @@
 /* === Quiz Question (Left panel) === */
 .quiz-question {
     float: left;
-    width: 40%;
+    width: 38%;
+    p.true {
+        color: green;
+    }
+}
+
+.quiz-question-answers {
+    float: left;
+    width: 38%;
     p.true {
         color: green;
     }
