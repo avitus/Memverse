@@ -75,7 +75,8 @@ gem 'swagger-docs'                                                             #
 gem 'devise'                                                                   # Authentication
 gem 'devise-encryptable'                                                       # TODO: Is this required?
 gem 'omniauth'                                                                 # Multi-provider authentication
-gem 'omniauth-windowslive'                                                     #   - strategy for Windows live
+#   - strategy for Windows live
+gem 'omniauth-windowslive', :git => 'git://github.com/kayle/omniauth-windowslive'  
 gem 'cancan', git: 'https://github.com/nukturnal/cancan.git'                   # Role-based authorization, Forem requires
 
 ############################################################
