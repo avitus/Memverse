@@ -257,7 +257,12 @@ namespace :utils do
     Verse.find_each { |vs|
 
       uv = Uberverse.where(:book => vs.book, :chapter => vs.chapter, :versenum => vs.versenum).first
-      vs.update_attribute(:uberverse_id, uv.id)
+
+      if uv
+        vs.update_attribute(:uberverse_id, uv.id)
+      else
+        puts " -- no Uberverse for: #{vs.ref} (#{vs.translation})"
+      end
 
     }
 
