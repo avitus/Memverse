@@ -54,7 +54,7 @@ class QuizQuestionsController < ApplicationController
     end
 
     respond_to do |format|
-      format.html # show.html.erb
+      format.html
       format.js  { render :json => related_questions }
     end
   end
@@ -126,18 +126,20 @@ class QuizQuestionsController < ApplicationController
     # Remove supporting reference string from list of params
     supporting_ref = params[:quiz_question].delete(:supporting_ref)
 
-    # Associate supporting verse with question
-    errorcode, bk, ch, vs = parse_verse( supporting_ref )
-    @quiz_question.supporting_ref = Uberverse.where(:book => bk, :chapter => ch, :versenum => vs).first
+    if supporting_ref
+      # Associate supporting verse with question
+      errorcode, bk, ch, vs = parse_verse( supporting_ref )
+      @quiz_question.supporting_ref = Uberverse.where(:book => bk, :chapter => ch, :versenum => vs).first
+    end
 
     respond_to do |format|
       if @quiz_question.update_attributes(params[:quiz_question])
         flash[:notice] = 'Quiz question was successfully updated.'
         format.html { redirect_to quiz_question_path(@quiz_question) }
-        format.xml  { head :ok }
+        format.json { head :no_content }
       else
         format.html { render :action => "edit" }
-        format.xml  { render :xml => @quiz_question.errors, :status => :unprocessable_entity }
+        format.json { render json: @passage.errors, status: :unprocessable_entity }
       end
     end
   end
