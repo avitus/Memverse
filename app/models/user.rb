@@ -106,8 +106,6 @@ class User < ActiveRecord::Base
 
     data = access_token.extra.raw_info
 
-    Rails.logger.debug( access_token.inspect )
-
     user = User.where( :email => data.emails.account ).first
 
     # Create new user if one doesn't exist
@@ -124,6 +122,8 @@ class User < ActiveRecord::Base
     unless user
       user = User.create(name: data.name, login: data.name, email: data.emails.account, password: Devise.friendly_token[0,20],
                          provider: access_token.provider, uid: access_token.uid )
+
+      user.confirm! # we can confirm the user since we can rely on a valid email address
     end
 
     user
