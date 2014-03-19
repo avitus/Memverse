@@ -222,7 +222,7 @@ Devise.setup do |config|
     when "development"
       config.omniauth :windowslive, '000000004410A83C', 'NHb8c7WCjmVSj--k2fi5OWB8ud4g4SiN', :scope => 'wl.signin,wl.emails'
     when "production"
-      config.omniauth :windowslive, '000000004C11227C', '2sPIbycml8Hh3Q0BoaS0Jj4uc2gTsAR',  :scope => 'wl.signin,wl.emails'
+      config.omniauth :windowslive, '000000004C11227C', '2sPIbycml8Hh3Q0BoaS0Jj4uc2gTsAR-', :scope => 'wl.signin,wl.emails'
   end
 
   # ==> Warden configuration
