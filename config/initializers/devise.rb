@@ -223,7 +223,7 @@ Devise.setup do |config|
   require "omniauth-windowslive"
   case Rails.env
     when "development"
-      # The callback URL isn't working for the dev environment
+      # Callback URL: http://www.memversedev.com:3000/users/auth/windowslive/callback
       config.omniauth :windowslive, '000000004410A83C', 'NHb8c7WCjmVSj--k2fi5OWB8ud4g4SiN', :scope => 'wl.signin,wl.emails'
     when "production"
       # Callback URL: http://www.memverse.com/users/auth/windowslive/callback
