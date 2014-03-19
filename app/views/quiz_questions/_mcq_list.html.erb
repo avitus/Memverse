@@ -1,33 +1,53 @@
-<!-- Quiz Question -->
-<div class="quiz-question">
+<div class="complete-quiz-question">
 
-    <p><%= quiz_question.mc_question %></hp>
+    <!-- Quiz Question -->
+    <div class="quiz-question">
 
-</div>
+        <p><%= quiz_question.mc_question %></hp>
 
-<div class="quiz-question-answers">
+    </div>
 
-    <p class="<%= quiz_question.mc_answer == 'A' %>"> A) <%= quiz_question.mc_option_a %> </p>
-    <p class="<%= quiz_question.mc_answer == 'B' %>"> B) <%= quiz_question.mc_option_b %> </p>
-    <p class="<%= quiz_question.mc_answer == 'C' %>"> C) <%= quiz_question.mc_option_c %> </p>
-    <p class="<%= quiz_question.mc_answer == 'D' %>"> D) <%= quiz_question.mc_option_d %> </p>
+    <div class="quiz-question-answers">
 
-</div>
+        <p class="<%= quiz_question.mc_answer == 'A' %>"> A) <%= quiz_question.mc_option_a %> </p>
+        <p class="<%= quiz_question.mc_answer == 'B' %>"> B) <%= quiz_question.mc_option_b %> </p>
+        <p class="<%= quiz_question.mc_answer == 'C' %>"> C) <%= quiz_question.mc_option_c %> </p>
+        <p class="<%= quiz_question.mc_answer == 'D' %>"> D) <%= quiz_question.mc_option_d %> </p>
 
-<div class="quiz-question-stats">
-    <table>
-        <thead></thead>
-        <tbody>
-            <tr><th>Category:       </th> <td><%= quiz_question.mcq_category                  %></td></tr>
-            <tr><th>Supporting Ref: </th> <td><%= quiz_question.supporting_ref.try(:long_ref) %></td></tr>
-            <tr><th>Submitted By:   </th> <td><%= quiz_question.user.try(:name_or_login)      %></td></tr>
-        </tbody>
-    </table>
-</div>
+    </div>
 
-<br />
+    <div class="quiz-question-stats">
+        <table>
+            <thead></thead>
+            <tbody>
+                <tr><th>Category:       </th> <td><%= quiz_question.mcq_category                  %></td></tr>
+                <tr><th>Supporting Ref: </th> <td class="quiz-question-supporting-ref"><%= quiz_question.supporting_ref.try(:long_ref) %></td></tr>
+                <tr><th>Submitted By:   </th> <td><%= quiz_question.user.try(:name_or_login)      %></td></tr>
+            </tbody>
+        </table>
+    </div>
 
-<div class="quiz-question-navigation">
+    <!-- Display supporting references -->
+    <div class="related-quiz-questions">
+    </div>
 
+    <!-- Display supporting references -->
+    <div class="supporting-ref-display">
+    </div>
+
+    <br />
+
+    <div class="quiz-question-navigation">
+
+        <span class="approve">
+            <%= link_to 'Approve', quiz_question_path(quiz_question.id, :quiz_question => {:approval_status => 'Approved'}),
+                { :method => :put, :remote => true, "data-type" => "json" } %>
+        </span> |
+        <span class="reject ">
+            <%= link_to 'Reject',  quiz_question_path(quiz_question.id, :quiz_question => {:approval_status => 'Rejected'}),
+                { :method => :put, :remote => true, "data-type" => "json" } %>
+        </span>
+
+    </div>
 
 </div>
