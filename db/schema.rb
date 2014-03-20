@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140306234657) do
+ActiveRecord::Schema.define(version: 20140320233440) do
 
   create_table "american_states", force: true do |t|
     t.string  "abbrev",      limit: 20, default: "", null: false
@@ -491,6 +491,7 @@ ActiveRecord::Schema.define(version: 20140306234657) do
     t.integer "supporting_ref"
     t.integer "submitted_by"
     t.string  "approval_status",                          default: "Pending"
+    t.string  "rejection_code"
   end
 
   add_index "quiz_questions", ["approval_status"], name: "index_quiz_questions_on_approval_status", using: :btree

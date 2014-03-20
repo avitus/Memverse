@@ -9,7 +9,7 @@ group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'byebug'
-  gem 'brakeman', :require => false
+  gem 'brakeman', :require => false                             # Scan for security vulnerabilities
 end
 
 gem 'rspec-rails', '>= 2.6.1', :group => [:development, :test]
