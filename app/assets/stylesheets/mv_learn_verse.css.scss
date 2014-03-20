@@ -13,7 +13,7 @@ div.ref-and-details {
   float:left;
 
   /* Extraction of first few words of verse */
-  p.first-words {
+  p.first-words, span.first-words {
     color: #999999;
     font-size: smaller;
   }
