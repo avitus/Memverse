@@ -88,6 +88,30 @@ class QuizQuestion < ActiveRecord::Base
     end
   end
 
+  # ----------------------------------------------------------------------------------------------------------
+  # Related Quiz Questions (that share the same supporting reference)
+  # TODO: would be nice to expand with a clever search by keyword in the question text
+  # ----------------------------------------------------------------------------------------------------------
+  def related_questions
+    if self.supporting_ref
+      return self.supporting_ref.quiz_questions
+    else
+      return []
+    end
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Related Quiz Questions (that share the same supporting reference)
+  # TODO: would be nice to expand with a clever search by keyword in the question text
+  # ----------------------------------------------------------------------------------------------------------
+  def supporting_verses
+    if self.supporting_ref
+      return self.supporting_ref.verses.where(:translation => ['NIV', 'ESV', 'NAS', 'NKJ', 'KJV'])
+    else
+      return []
+    end
+  end
+
 
   # ============= Protected below this line ==================================================================
   protected

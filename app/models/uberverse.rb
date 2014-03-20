@@ -1,5 +1,7 @@
 class Uberverse < ActiveRecord::Base
+
   has_many :sermons
+  has_many :verses
   has_many :quiz_questions, :foreign_key => "supporting_ref"
 
   # ----------------------------------------------------------------------------------------------------------
@@ -16,6 +18,11 @@ class Uberverse < ActiveRecord::Base
   def long_ref
     book_tl = I18n.t book.to_sym, :scope => [:book, :name]
     return book_tl + ' ' + chapter.to_s + ':' + versenum.to_s
+  end
+
+  def major_translations
+    return self.verses.where(:book => self.book, :chapter => self.chapter, :versenum => self.versenum,
+                          :translation => ['NIV', 'ESV', 'NAS', 'NKJ', 'KJV'])
   end
 
   # ============= Protected below this line ==================================================================

@@ -27,12 +27,28 @@
         </table>
     </div>
 
-    <!-- Display supporting references -->
+    <!-- Display related questions -->
     <div class="related-quiz-questions">
+        <% quiz_question.related_questions.each do |qq| %>
+            <div class="item">
+                <div class="related-q">
+                    <span class="difficulty"><%= qq.perc_correct %>: </span>
+                    <span  class="mcq-question"><%= qq.mc_question %></span>
+                </div>
+            </div>
+        <% end %>
     </div>
 
     <!-- Display supporting references -->
     <div class="supporting-ref-display">
+        <% quiz_question.supporting_verses.each do |vs| %>
+            <div class="item">
+                <div class="ref-and-details">
+                    <span class="ref"><%= vs.translation %>: </span>
+                    <span  class="first-words"><%= vs.text %></span>
+                </div>
+            </div>
+        <% end %>
     </div>
 
     <br />

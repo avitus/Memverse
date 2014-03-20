@@ -219,6 +219,7 @@ Devise.setup do |config|
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', :scope => 'user,public_repo'
 
   # This is to use Windows Live for authorizing users on Memverse.com
+  # Configure settings here: https://account.live.com/developers/applications/index (User: kyr*****@live.com)
   require "omniauth-windowslive"
   case Rails.env
     when "development"

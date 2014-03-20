@@ -208,7 +208,7 @@ namespace :utils do
   end
 
   #--------------------------------------------------------------------------------------------
-  # Delete unused tags, recreate verse tags
+  # Create complete table of Bible reference verses
   # Task duration: ~ 4 hours
   #--------------------------------------------------------------------------------------------
   desc "Create complete list of Bible reference verses"
@@ -244,6 +244,27 @@ namespace :utils do
     puts "=== Created Uberverse table at #{Time.now} ==="
 
   end
+
+  #--------------------------------------------------------------------------------------------
+  # Associate verses with uberverses
+  # Task duration: ~ 4 hours
+  #--------------------------------------------------------------------------------------------
+  desc "Associate Verses with Uberverses"
+  task :associate_verses_with_uberverses => :environment do
+
+    puts "=== Starting associating Verses with Uberverses at #{Time.now} ==="
+
+    Verse.find_each { |vs|
+
+      uv = Uberverse.where(:book => vs.book, :chapter => vs.chapter, :versenum => vs.versenum).first
+      vs.update_attribute(:uberverse_id, uv.id)
+
+    }
+
+    puts "=== Finished associating Verses with Uberverses at #{Time.now} ==="
+
+  end
+
 
   #--------------------------------------------------------------------------------------------
   # Group user's memory verses into passages. This should be a one time operation.

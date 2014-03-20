@@ -1,7 +1,14 @@
 /* === Quiz Question (Left panel) === */
+.complete-quiz-question {
+  margin-bottom: 2em;
+  padding: 1em;
+  background-color: #ececec;
+}
+
 .quiz-question {
     float: left;
-    width: 38%;
+    width: 34%;
+    padding-right: 0 1em;
     p.true {
         color: green;
     }
@@ -9,7 +16,15 @@
 
 .quiz-question-answers {
     float: left;
-    width: 38%;
+    width: 35%;
+    p.true {
+        color: green;
+    }
+}
+
+.quiz-question-stats {
+    float: left;
+    width: 27%;
     p.true {
         color: green;
     }
