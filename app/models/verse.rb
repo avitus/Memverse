@@ -471,7 +471,7 @@ class Verse < ActiveRecord::Base
   # after_create
   def associate_with_uberverse
     uv = Uberverse.where(:book => self.book, :chapter => self.chapter, :versenum => self.versenum).first
-    self.uberverse_id = uv.id
+    self.uberverse_id = uv.id  unless !uv
   end
 
 end
