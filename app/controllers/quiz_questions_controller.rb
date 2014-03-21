@@ -3,7 +3,7 @@
 class QuizQuestionsController < ApplicationController
 
   before_filter :authenticate_user!
-  before_filter :access_permission, :except => [:submit, :search, :create]
+  before_filter :access_permission, :except => [:submit, :search, :create, :index]
 
   add_breadcrumb "Home", :root_path
 
@@ -12,8 +12,15 @@ class QuizQuestionsController < ApplicationController
   # GET /quizquestions?quiz=1
   # ----------------------------------------------------------------------------------------------------------
   def index
+    # we don't have an admin view currently
     if current_user.admin? && params[:quiz]
-      @quiz = Quiz.find(params[:quiz])
+      Rails.logger.debug("Showing admin view of quiz questions")
+      @quiz           = Quiz.find(params[:quiz])
+      @quiz_questions = @quiz.quiz_questions
+    else
+      Rails.logger.debug("Looking for quiz questions submitted by " + current_user.inspect )
+      @quiz           = Quiz.find(params[:quiz] || 1)
+      @quiz_questions = current_user.quiz_questions
     end
   end
 
