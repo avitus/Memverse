@@ -94,7 +94,7 @@ class QuizQuestion < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   def related_questions
     if self.supporting_ref
-      return self.supporting_ref.quiz_questions
+      return self.supporting_ref.quiz_questions.where("id != ?", self.id)
     else
       return []
     end
