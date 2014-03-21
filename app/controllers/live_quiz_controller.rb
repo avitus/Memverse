@@ -11,6 +11,9 @@ class LiveQuizController < ApplicationController
   #-----------------------------------------------------------------------------------------------------------
   def live_quiz
 
+    @tab = "quiz"
+    @sub = "livequiz"
+
     # Redirect users who haven't chosen a translation
     if current_user.translation.nil?
       flash[:notice] = "Please choose a translation and then return to the quiz."

@@ -17,14 +17,13 @@
 		<%= link_to 'Back to quizzes', quizzes_path %>
 	</p>
 
-	<br />
+	<p><%= link_to 'Add a question', new_quiz_question_path(:quiz => @quiz.id)%></p>
 
 	<table class="memverse-standard">
 		<%= render :partial => "quiz_questions/quizquestion_headings" %>
 		<%= render :partial => "quiz_questions/quizquestion", :collection => @quizquestions %>
 	</table>
 
-	<p>
-		<%= link_to 'Add a question', new_quiz_question_path(:quiz => @quiz.id)%>
-	</p>
+	<p><%= link_to 'Add a question', new_quiz_question_path(:quiz => @quiz.id)%></p>
+
 </div>

@@ -3,7 +3,7 @@
 class QuizQuestionsController < ApplicationController
 
   before_filter :authenticate_user!
-  before_filter :access_permission, :except => [:submit, :search, :create]
+  before_filter :access_permission, :except => [:submit, :search, :create, :index]
 
   add_breadcrumb "Home", :root_path
 
@@ -12,8 +12,19 @@ class QuizQuestionsController < ApplicationController
   # GET /quizquestions?quiz=1
   # ----------------------------------------------------------------------------------------------------------
   def index
+
+    @tab = "quiz"
+    @sub = "questions"
+
+    # we don't have an admin view currently
     if current_user.admin? && params[:quiz]
-      @quiz = Quiz.find(params[:quiz])
+      Rails.logger.debug("Showing admin view of quiz questions")
+      @quiz           = Quiz.find(params[:quiz])
+      @quiz_questions = @quiz.quiz_questions
+    else
+      Rails.logger.debug("Looking for quiz questions submitted by " + current_user.inspect )
+      @quiz           = Quiz.find(params[:quiz] || 1)
+      @quiz_questions = current_user.quiz_questions
     end
   end
 
@@ -72,6 +83,9 @@ class QuizQuestionsController < ApplicationController
 
   # GET /quizquestions/submit
   def submit
+
+    @tab = "quiz"
+    @sub = "submit"
 
     @quiz_question = QuizQuestion.new
     @quiz          = Quiz.find(params[:quiz] || 1)
@@ -139,7 +153,7 @@ class QuizQuestionsController < ApplicationController
         format.json { head :no_content }
       else
         format.html { render :action => "edit" }
-        format.json { render json: @passage.errors, status: :unprocessable_entity }
+        format.json { render json: @quiz_question.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -150,8 +164,8 @@ class QuizQuestionsController < ApplicationController
     @quiz_question.destroy
 
     respond_to do |format|
-      format.html { redirect_to(quizzes_url) }
-      format.xml  { head :ok }
+      format.html { redirect_to( quiz_questions_url ) }
+      format.json { head :ok }
     end
   end
 
@@ -165,8 +179,9 @@ class QuizQuestionsController < ApplicationController
       @quiz_question = QuizQuestion.find_by_id( params[:id] ) || QuizQuestion.new
     else
       @quiz_question = QuizQuestion.find_by_id( params[:id] )
-      if !@quiz_question
-        flash[:error] = "No question exists with that ID"
+      Rails.logger.debug (@quiz_question.inspect)
+      if @quiz_question.nil?
+        flash[:error] = "No question with that ID exists in our database."
         redirect_to root_path
         false
       elsif @quiz_question.user != current_user
