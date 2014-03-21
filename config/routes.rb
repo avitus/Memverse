@@ -209,9 +209,9 @@ MemverseApp::Application.routes.draw do
   get '/chat/toggle_ban'            => 'chat#toggle_ban'
 
   # Routes for live quiz
-  get  '/live_quiz'                 => 'live_quiz#live_quiz'     # Main quiz URL
-  get  '/live_quiz/channel1'        => 'live_quiz#channel1'      # Chat channel
-  get  '/live_quiz/scoreboard'      => 'live_quiz#scoreboard'    # Scoreboard for quiz
+  get  '/live_quiz'                 => 'live_quiz#live_quiz',             :as => 'live_quiz'     # Main quiz URL
+  get  '/live_quiz/channel1'        => 'live_quiz#channel1'                                      # Chat channel
+  get  '/live_quiz/scoreboard'      => 'live_quiz#scoreboard'                                    # Scoreboard for quiz
   post '/record_score'              => 'live_quiz#record_score'
 
   # Legacy routes for pages that no longer exist but have incoming links

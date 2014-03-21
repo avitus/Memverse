@@ -20,9 +20,22 @@
         <table>
             <thead></thead>
             <tbody>
-                <tr><th>Category:       </th> <td><%= quiz_question.mcq_category                  %></td></tr>
-                <tr><th>Supporting Ref: </th> <td class="quiz-question-supporting-ref"><%= quiz_question.supporting_ref.try(:long_ref) %></td></tr>
-                <tr><th>Submitted By:   </th> <td><%= quiz_question.user.try(:name_or_login)      %></td></tr>
+                <tr>
+                    <th>Category:       </th>
+                    <td><%= quiz_question.mcq_category                  %></td>
+                </tr>
+                <tr>
+                    <th>Supporting Ref: </th>
+                    <td class="quiz-question-supporting-ref"><%= quiz_question.supporting_ref.try(:long_ref) %></td>
+                </tr>
+                <tr>
+                    <th>Submitted By:   </th>
+                    <td><%= quiz_question.user.try(:name_or_login)      %></td>
+                </tr>
+                <tr>
+                    <th>Status:         </th>
+                    <td><%= quiz_question.approval_status=="Rejected" ? quiz_question.rejection_code : quiz_question.approval_status %></td>
+                </tr>
             </tbody>
         </table>
     </div>
@@ -53,7 +66,7 @@
 
     <br />
 
-    <%= render partial: "quiz_question_nav", collection: @quiz_questions, as: :quiz_question %>
+    <%= render partial: "quiz_question_nav", object: quiz_question, as: :quiz_question %>
 
 
 </div>

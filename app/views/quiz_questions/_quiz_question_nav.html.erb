@@ -51,9 +51,14 @@
 
     <% end %>
 
-    <span class="edit">
-        <%= link_to 'Edit', edit_quiz_question_path(quiz_question) %>
-    </span>
+    <% unless quiz_question.is_approved? %>
+        <span class="edit">
+            <%= link_to 'Edit', edit_quiz_question_path(quiz_question) %>
+        </span> |
+        <span class="delete">
+            <%= link_to 'Delete', quiz_question_path(quiz_question), :confirm=>"Are you sure?", :method=>:delete %>
+        </span>
+    <% end %>
 
 
 </div>
