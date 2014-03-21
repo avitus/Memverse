@@ -112,6 +112,10 @@ class QuizQuestion < ActiveRecord::Base
     end
   end
 
+  def is_approved?
+    return self.approval_status == "Approved"
+  end
+
 
   # ============= Protected below this line ==================================================================
   protected

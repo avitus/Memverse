@@ -193,6 +193,7 @@
 					<li <%= tab(@tab=="contact"		) %> rel="contact">		<%= link_to t('menu.contact'), 		main_app.contact_path %></li>
 					<li <%= tab(@tab=="leaderboard"	) %> rel="leaderboard">	<%= link_to t('menu.leaderboard'), 	main_app.leaderboard_path %></li>
 					<li <%= tab(@tab=="blog"		) %> rel="blog">		<%= link_to t('menu.blog'), 		bloggity.root_path %></li>
+					<li <%= tab(@tab=="quiz"		) %> rel="quiz">		<%= link_to t('menu.quiz'), 		main_app.live_quiz_path %></li>
 					<li <%= tab(@tab=="help"		) %> rel="help">        <%= link_to t('menu.help'),         main_app.faq_path %></li>
 					<li>&nbsp;</li>
 				</ul>
@@ -265,6 +266,14 @@
 								<li <%= sub(@sub=="comments"	)%>><%= link_to t('blog_menu.Recent Comments'),			bloggity.blog_comments_new_path %></li>
 								<li <%= sub(@sub=="blogsearch"	)%>><%= link_to t('blog_menu.Blog Search'),				bloggity.blog_search_path %></li>
 								<li <%= sub(@sub=="forums"		)%>><%= link_to t('blog_menu.Forums'),					forem.root_path %></li>
+							</ul>
+						</div>
+
+						<div id="quiz" class="submenustyle">
+							<ul>
+								<li <%= sub(@sub=="livequiz"	)%>><%= link_to t('quiz_menu.Live Quiz'),  				main_app.live_quiz_path %></li>
+								<li <%= sub(@sub=="questions"	)%>><%= link_to t('quiz_menu.My Questions'), 			main_app.quiz_questions_path %></li>
+								<li <%= sub(@sub=="submit"	    )%>><%= link_to t('quiz_menu.Submit Question'), 		main_app.submit_question_path %></li>
 							</ul>
 						</div>
 

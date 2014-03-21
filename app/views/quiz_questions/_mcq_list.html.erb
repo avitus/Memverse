@@ -20,9 +20,22 @@
         <table>
             <thead></thead>
             <tbody>
-                <tr><th>Category:       </th> <td><%= quiz_question.mcq_category                  %></td></tr>
-                <tr><th>Supporting Ref: </th> <td class="quiz-question-supporting-ref"><%= quiz_question.supporting_ref.try(:long_ref) %></td></tr>
-                <tr><th>Submitted By:   </th> <td><%= quiz_question.user.try(:name_or_login)      %></td></tr>
+                <tr>
+                    <th>Category:       </th>
+                    <td><%= quiz_question.mcq_category                  %></td>
+                </tr>
+                <tr>
+                    <th>Supporting Ref: </th>
+                    <td class="quiz-question-supporting-ref"><%= quiz_question.supporting_ref.try(:long_ref) %></td>
+                </tr>
+                <tr>
+                    <th>Submitted By:   </th>
+                    <td><%= quiz_question.user.try(:name_or_login)      %></td>
+                </tr>
+                <tr>
+                    <th>Status:         </th>
+                    <td><%= quiz_question.approval_status=="Rejected" ? quiz_question.rejection_code : quiz_question.approval_status %></td>
+                </tr>
             </tbody>
         </table>
     </div>
@@ -53,73 +66,6 @@
 
     <br />
 
-    <div class="quiz-question-navigation">
-
-        <span class="approve">
-            <%= link_to 'Approve', quiz_question_path(quiz_question.id, :quiz_question => {:approval_status => 'Approved'}),
-                { :method => :put, :remote => true, "data-type" => "json" } %>
-        </span> |
-
-        <span class="reject ">
-            <%= link_to 'Spelling',
-                quiz_question_path(quiz_question.id, :quiz_question => {:approval_status => 'Rejected', :rejection_code => 'Spelling'}),
-                { :method => :put, :remote => true, "data-type" => "json" } %>
-        </span> |
-
-        <span class="reject ">
-            <%= link_to 'Grammar',
-                quiz_question_path(quiz_question.id, :quiz_question => {:approval_status => 'Rejected', :rejection_code => 'Grammar'}),
-                { :method => :put, :remote => true, "data-type" => "json" } %>
-        </span> |
-
-        <span class="reject ">
-            <%= link_to 'No Answer',
-                quiz_question_path(quiz_question.id, :quiz_question => {:approval_status => 'Rejected', :rejection_code => 'No Answer'}),
-                { :method => :put, :remote => true, "data-type" => "json" } %>
-        </span> |
-
-        <span class="reject ">
-            <%= link_to 'No Reference',
-                quiz_question_path(quiz_question.id, :quiz_question => {:approval_status => 'Rejected', :rejection_code => 'No Reference'}),
-                { :method => :put, :remote => true, "data-type" => "json" } %>
-        </span> |
-
-        <span class="reject ">
-            <%= link_to 'Trivia',
-                quiz_question_path(quiz_question.id, :quiz_question => {:approval_status => 'Rejected', :rejection_code => 'Trivia'}),
-                { :method => :put, :remote => true, "data-type" => "json" } %>
-        </span> |
-
-        <span class="reject ">
-            <%= link_to 'Duplicate',
-                quiz_question_path(quiz_question.id, :quiz_question => {:approval_status => 'Rejected', :rejection_code => 'Duplicate'}),
-                { :method => :put, :remote => true, "data-type" => "json" } %>
-        </span> |
-
-        <span class="reject ">
-            <%= link_to 'Translation Dependent',
-                quiz_question_path(quiz_question.id, :quiz_question => {:approval_status => 'Rejected', :rejection_code => 'Translation Dependent'}),
-                { :method => :put, :remote => true, "data-type" => "json" } %>
-        </span> |
-
-        <span class="reject ">
-            <%= link_to 'Ambiguous',
-                quiz_question_path(quiz_question.id, :quiz_question => {:approval_status => 'Rejected', :rejection_code => 'Ambiguous'}),
-                { :method => :put, :remote => true, "data-type" => "json" } %>
-        </span> |
-
-        <span class="reject ">
-            <%= link_to 'Implausible Answer',
-                quiz_question_path(quiz_question.id, :quiz_question => {:approval_status => 'Rejected', :rejection_code => 'Implausible Answer'}),
-                { :method => :put, :remote => true, "data-type" => "json" } %>
-        </span> |
-
-        <span class="reject ">
-            <%= link_to 'Other',
-                quiz_question_path(quiz_question.id, :quiz_question => {:approval_status => 'Rejected', :rejection_code => 'Other'}),
-                { :method => :put, :remote => true, "data-type" => "json" } %>
-        </span>
-
-    </div>
+    <%= render partial: "quiz_question_nav", object: quiz_question, as: :quiz_question %>
 
 </div>
