@@ -14,8 +14,20 @@
         </span> |
 
         <span class="reject ">
+            <%= link_to 'Grammar',
+                quiz_question_path(quiz_question.id, :quiz_question => {:approval_status => 'Rejected', :rejection_code => 'Grammar'}),
+                { :method => :put, :remote => true, "data-type" => "json" } %>
+        </span> |
+
+        <span class="reject ">
             <%= link_to 'No Answer',
                 quiz_question_path(quiz_question.id, :quiz_question => {:approval_status => 'Rejected', :rejection_code => 'No Answer'}),
+                { :method => :put, :remote => true, "data-type" => "json" } %>
+        </span> |
+
+        <span class="reject ">
+            <%= link_to 'No Reference',
+                quiz_question_path(quiz_question.id, :quiz_question => {:approval_status => 'Rejected', :rejection_code => 'No Reference'}),
                 { :method => :put, :remote => true, "data-type" => "json" } %>
         </span> |
 
@@ -38,8 +50,14 @@
         </span> |
 
         <span class="reject ">
-            <%= link_to 'Implausible Answer',
-                quiz_question_path(quiz_question.id, :quiz_question => {:approval_status => 'Rejected', :rejection_code => 'Implausible Answer'}),
+            <%= link_to 'Ambiguous',
+                quiz_question_path(quiz_question.id, :quiz_question => {:approval_status => 'Rejected', :rejection_code => 'Ambiguous'}),
+                { :method => :put, :remote => true, "data-type" => "json" } %>
+        </span> |
+
+        <span class="reject ">
+            <%= link_to 'Implausible Answers',
+                quiz_question_path(quiz_question.id, :quiz_question => {:approval_status => 'Rejected', :rejection_code => 'Implausible Answers'}),
                 { :method => :put, :remote => true, "data-type" => "json" } %>
         </span> |
 
