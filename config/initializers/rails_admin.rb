@@ -13,13 +13,6 @@ RailsAdmin.config do |config|
 
   config.current_user_method { current_user } #auto-generated
 
-  config.model 'User' do
-    list do
-      include_all_fields
-      exclude_fields :church # still have church_id; for church problem, see #212
-    end
-  end
-
   #  ==> Authentication (before_filter)
   # This is run inside the controller instance so you can setup any authentication you need to.
   # By default, the authentication will run via warden if available.
