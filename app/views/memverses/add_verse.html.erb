@@ -75,7 +75,7 @@
 			return(settings.data[value]);
 			// TODO: Can't figure out why after changing the version and clicking on the select again, it sometimes still defaults to the original 'selected' value
 		}, {
-			data   : <%= TRANSLATIONS.to_json.html_safe %>,
+			data   : <%= @translations.to_json.html_safe %>,
 			type   : 'select',
 			submit : 'OK'
 		});
