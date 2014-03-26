@@ -23,6 +23,7 @@ class QuizQuestion < ActiveRecord::Base
   scope :fresh,       -> { where( 'last_asked < ?', Date.today - 6.months   ) }
   scope :approved,    -> { where( :approval_status => "Approved"            ) }
   scope :pending,     -> { where( :approval_status => "Pending"             ) }
+  scope :rejected,    -> { where( :approval_status => "Rejected"            ) }
 
   scope :easy,        -> { where( :perc_correct    => 66..100               ) }
   scope :medium,      -> { where( :perc_correct    => 34..65                ) }
