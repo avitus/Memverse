@@ -7,6 +7,10 @@
     <p><%= link_to 'Submit a New Quiz Question', submit_question_path %></p>
 
     <h2>Questions that Need Attention</h2>
+    <p>
+        These questions did not meet one or more of the criteria for approval. Consider either deleting them, or amending
+        them to correct the problem identified under the 'Status' section.
+    </p>
     <div class="mcq-list"><%= render partial: "mcq_list", collection: @quiz_questions.rejected, as: :quiz_question %></div>
 
     <h2>Questions in Approval Queue</h2>
