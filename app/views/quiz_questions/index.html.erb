@@ -6,11 +6,14 @@
 
     <p><%= link_to 'Submit a New Quiz Question', submit_question_path %></p>
 
-    <div class="mcq-list">
+    <h2>Questions that Need Attention</h2>
+    <div class="mcq-list"><%= render partial: "mcq_list", collection: @quiz_questions.rejected, as: :quiz_question %></div>
 
-        <%= render partial: "mcq_list", collection: @quiz_questions, as: :quiz_question %>
+    <h2>Questions in Approval Queue</h2>
+    <div class="mcq-list"><%= render partial: "mcq_list", collection: @quiz_questions.pending, as: :quiz_question %></div>
 
-    </div>
+    <h2>Approved Questions</h2>
+    <div class="mcq-list"><%= render partial: "mcq_list", collection: @quiz_questions.approved, as: :quiz_question %></div>
 
 </div>
 
