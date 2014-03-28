@@ -10,7 +10,7 @@ class ForumReviewNotifier
   end
 
   def perform
-    # Write code here
+    AdminMailer.forum_review.deliver
   end
 
 end
