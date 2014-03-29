@@ -47,7 +47,7 @@ var accTestState = {
             // Insert new verse
             $('.verse-ref.current').html( accTestState.currentRef  );   // Show verse reference
             $('.verse-ref.prior'  ).html( priorVerseRef            );   // Show verse reference
-            $('.original'         ).html( accTestState.currentText );   // Insert correct text
+            $('.changed'          ).html( accTestState.currentText );   // Insert correct text
             $('.prior-verse-text' ).html( priorVerseText           );   // Text for prior verse
             $('.q-num').text( function (i,qNum) { return parseInt(qNum)+1;} ) ; // Increment question number
         });
