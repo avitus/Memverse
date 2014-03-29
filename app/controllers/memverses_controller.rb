@@ -1275,7 +1275,7 @@ class MemversesController < ApplicationController
       @verse            = get_memverse(@mv.verse_id)
       @text             = @mv.verse.text
       @current_versenum = @mv.verse.versenum
-      @show_feedback    = (@mv.test_interval < 60 or current_user.show_echo)
+      @show_feedback    = @mv.show_feedback?
       # Put memory verse into session
       session[:memverse] = @mv.id
     else
