@@ -1275,14 +1275,13 @@ class MemversesController < ApplicationController
       @verse            = get_memverse(@mv.verse_id)
       @text             = @mv.verse.text
       @current_versenum = @mv.verse.versenum
-      @show_feedback    = (@mv.test_interval < 60 or current_user.show_echo)
+      @show_feedback    = @mv.show_feedback?
       # Put memory verse into session
       session[:memverse] = @mv.id
     else
       # Otherwise, find the verse with the shortest test_interval i.e. a new or difficult verse
-      @mv = Memverse.find( :first,
-                           :conditions => ["user_id = ? and last_tested < ?", current_user.id, Date.today],
-                           :order      => "test_interval ASC")
+      @mv = current_user.memverses.active.where("last_tested < ?", Date.today).
+              order("test_interval ASC").first
 
       if !@mv.nil? # We've found a verse
 
