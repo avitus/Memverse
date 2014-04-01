@@ -49,8 +49,8 @@
 
 				<div class="diff-calc">
 
-					<div class="original"></div>
-					<div class="changed"></div>
+					<div class="original"></div>	<!-- user's answer here -->
+					<div class="changed"></div>		<!-- correct text here -->
 					<div class="diff"></div>
 
 				</div>
@@ -96,7 +96,7 @@
 			var userAccuracy, questionScore;
 
 			// Capture answer
-			$(".changed").html( user_answer );
+			$(".original").html( user_answer );
 
 			// Calculate diff
 			$(".diff-calc").prettyTextDiff( { cleanup: true } );
