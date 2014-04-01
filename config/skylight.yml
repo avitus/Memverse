@@ -1,5 +1,6 @@
 ---
 # The Skylight ID for the application.
+# ALV - no longer using this monitoring application
 application: OtS0PLSUh5xD
 
 # The authentication token for the application.

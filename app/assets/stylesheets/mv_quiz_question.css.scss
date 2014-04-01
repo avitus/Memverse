@@ -2,7 +2,7 @@
 .complete-quiz-question {
   margin-bottom: 2em;
   padding: 1em;
-  background-color: #ececec;
+  background-color: #eee;
 }
 
 .quiz-question {
@@ -25,9 +25,8 @@
 .quiz-question-stats {
     float: left;
     width: 27%;
-    p.true {
-        color: green;
-    }
+    padding: 1em;
+    margin:0 auto;
 }
 
 .quiz-question-num {
@@ -68,13 +67,6 @@
 }
 
 /* === Quiz Question Stats (Right panel) === */
-.quiz-question-stats
-{
-    float: left;
-    padding: 2em 1em;
-    margin:0 auto;
-}
-
 .quiz-question-stats table {
   border-spacing:0;
   text-align:center;
@@ -125,6 +117,7 @@
 
 div.related-quiz-questions {
   padding-bottom: 1em;
+  clear: left;
 }
 
 /* Single element in search result ... */

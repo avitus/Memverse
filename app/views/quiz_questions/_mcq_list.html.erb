@@ -25,8 +25,12 @@
                     <td><%= quiz_question.mcq_category                  %></td>
                 </tr>
                 <tr>
-                    <th>Supporting Ref: </th>
+                    <th>Reference: </th>
                     <td class="quiz-question-supporting-ref"><%= quiz_question.supporting_ref.try(:long_ref) %></td>
+                </tr>
+                <tr>
+                    <th>Easiness:       </th>
+                    <td><%= quiz_question.perc_correct %>%</td>
                 </tr>
                 <tr>
                     <th>Submitted By:   </th>
