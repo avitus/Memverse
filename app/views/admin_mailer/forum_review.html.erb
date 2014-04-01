@@ -1,0 +1,25 @@
+<% if @posts.present? %>
+
+    <h2>Posts to review</h2>
+
+    <% for post in @posts %>
+
+        <%= link_to "Post on #{post.topic}", forem.topic_post_path(post, id: post.topic.id) %>
+        by <%= post.user.name %>
+
+    <% end %>
+
+<% end %>
+
+<% if @topics.present? %>
+
+    <h2>Topics to review</h2>
+
+    <% for topic in @topics %>
+
+        <%= link_to topic, forem.topic_path(topic) %>
+        by <%= post.user.name %>
+
+    <% end %>
+
+<% end %>
