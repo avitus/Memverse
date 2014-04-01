@@ -99,6 +99,12 @@ class User < ActiveRecord::Base
                   :mnemonic_use, :all_refs, :referred_by, :auto_work_load, :show_email,
                   :provider, :uid
 
+  rails_admin do
+    include_all_fields
+
+    exclude_fields :church # still have church_id; fixes issue #212
+  end
+
   # ----------------------------------------------------------------------------------------------------------
   # Single Sign On support
   # ----------------------------------------------------------------------------------------------------------
