@@ -18,11 +18,10 @@ class QuizQuestionsController < ApplicationController
 
     # we don't have an admin view currently
     if current_user.admin? && params[:quiz]
-      Rails.logger.debug("Showing admin view of quiz questions")
       @quiz           = Quiz.find(params[:quiz])
       @quiz_questions = @quiz.quiz_questions
+    # show quiz questions submitted by current user
     else
-      Rails.logger.debug("Looking for quiz questions submitted by " + current_user.inspect )
       @quiz           = Quiz.find(params[:quiz] || 1)
       @quiz_questions = current_user.quiz_questions
     end
