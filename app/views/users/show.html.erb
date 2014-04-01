@@ -136,35 +136,40 @@
 				<div class="vs-disti-right">
 					<table>
 						<thead>
-							<tr> <th></th>						<th>Memorized</th> 							<th>Learning</th><th>%</th>					</tr>
+							<tr>
+								<th></th>
+								<th>Memorized</th>
+								<th>Learning</th>
+								<th>%</th>
+							</tr>
 						</thead>
 						<tbody>
 							<tr>
-								<th title="<%= I18n.t("book.name.Genesis") + " - " + I18n.t("book.name.Esther")%>">History</th>
+								<th title="<%= t("book.name.Genesis") %> - <%= t("book.name.Esther")%> &amp; <%= t("book.name.Acts")%>">History</th>
 								<td><%= @user.history["Memorized"]%></td>
 								<td><%= @user.history["Learning"]%></td>
 								<td><%= @user.h_perc %>%</td>
 							</tr>
 							<tr>
-								<th title="<%= I18n.t("book.name.Job") + " - " + I18n.t("book.name.Song of Songs")%>">Wisdom</th>
+								<th title="<%= t("book.name.Job") %> - <%= t("book.name.Song of Songs")%>">Wisdom</th>
 								<td><%= @user.wisdom["Memorized"]%></td>
 								<td><%= @user.wisdom["Learning"]%></td>
 								<td><%= @user.w_perc %>%</td>
 							</tr>
 							<tr>
-								<th title="<%= I18n.t("book.name.Isaiah") + " - " + I18n.t("book.name.Malachi") + " & " + I18n.t("book.name.Revelation") %>">Prophecy</th>
+								<th title="<%= t("book.name.Isaiah") %> - <%= t("book.name.Malachi") %> &amp; <%= t("book.name.Revelation") %>">Prophecy</th>
 								<td><%= @user.prophecy["Memorized"]%></td>
 								<td><%= @user.prophecy["Learning"]%></td>
 								<td><%= @user.p_perc %>%</td>
 							</tr>
 							<tr>
-								<th title="<%= I18n.t("book.name.Matthew") + " - " + I18n.t("book.name.John")%>">Gospels</th>
+								<th title="<%= t("book.name.Matthew") %> - <%= I18n.t("book.name.John")%>">Gospels</th>
 								<td><%= @user.gospel["Memorized"]%></td>
 								<td><%= @user.gospel["Learning"]%></td>
 								<td><%= @user.g_perc %>%</td>
 							</tr>
 							<tr>
-								<th title="<%= I18n.t("book.name.Acts") + " - " + I18n.t("book.name.Jude")%>">Epistles</th>
+								<th title="<%= t("book.name.Romans") %> - <%= t("book.name.Jude")%>">Epistles</th>
 								<td><%= @user.epistle["Memorized"]%></td>
 								<td><%= @user.epistle["Learning"]%></td>
 								<td><%= @user.e_perc %>%</td>
@@ -207,12 +212,6 @@
 $(document).ready(function() {
 	// select all desired input fields and attach tooltips to them
 	$(".vs-disti-right table tbody tr th").tooltip({
-
-	    // place tooltip on the right edge
-	    position: ['center', 'left'],
-
-	    // a little tweaking of the position
-	    offset: [-2, -15],
 
 	    // use a simple show/hide effect
 	    effect: 'toggle',
