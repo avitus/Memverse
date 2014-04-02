@@ -95,7 +95,8 @@ class KnowledgeQuiz
       puts "===> Question: " + q_num.to_s
 
       # Pick a question at random
-      q = QuizQuestion.mcq.approved.fresh.sort_by{ rand }.first
+      # q = QuizQuestion.mcq.approved.fresh.sort_by{ rand }.first
+      q = QuizQuestion.mcq.approved.order(:last_asked).first
 
       # Update question to show that it was asked today
       q.update_attribute( :last_asked, Date.today )
