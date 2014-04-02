@@ -1,0 +1,45 @@
+<!-- Quiz instructions : Pop-up box -->
+<div id="welcome-box" style="display:none">
+
+    <h2>Welcome!</h2>
+
+    <% if @quiz.id != 1 and !["NAS", "NKJ", "KJV", "ESV"].include?(@current_user.translation) %>
+
+        <div id="select-trans">
+            <h3>Choose a Version</h3>
+            <p><%= @current_user.translation %> is your default version for Memverse. However, it is <strong>not supported by this quiz</strong>.</p>
+            <!--<p>Please select a version to use: <a href="#ESV">ESV 2011</a>, <a href="#NAS">NASB</a>, <a href="#NKJ">NKJV</a>, or <a href="#KJV">KJV</a>. (Note: <%= @current_user.translation %> will remain your default version; your selection now is just for this quiz.)</p>-->
+            <p>The <strong>valid versions</strong> are ESV (2011), NASB, NKJ, and KJV. Please go to your profile by <a href="/update_profile">clicking here</a>, update your version to one of these, and then come back for the quiz. Thanks!</p>
+        </div>
+
+    <% elsif @quiz.hours_till_start > 1 %>
+
+        <h3>Quiz Schedule</h3>
+        <p>The quiz currently runs on the following weekly schedule:</p>
+        <ul>
+            <li>Wednesdays at 9am (Pacific Time)</li>
+            <li>Saturdays at 3pm (Pacific Time)</li>
+        </ul>
+
+        <p>The next quiz starts in <strong><%=h distance_of_time_in_words(Time.now, @quiz.start_time) %></strong>
+
+        <p><input type="button" class="green-button" onclick="$.fancybox.close()" value="OK" />
+
+    <% else %>
+
+        <h3>Quiz Instructions</h3>
+        <p>
+            The quiz will have <strong><%= @num_questions %> questions</strong> and last <strong><%= "#{@minutes} minute#{"s" unless @minutes == 1}" %></strong>. Each question will be worth a maximum of 15 points. Multiple choice questions are worth 10 points and <strong>2 points will be deducted for incorrect answers.</strong>
+        </p>
+        <p>
+            You will answer all the questions on the left side. The middle column will display the scoreboard and the right column is only
+            used for chatting with the other contestants.
+        </p>
+
+        <p>Your version is set to <strong><%= @current_user.translation %></strong>.</p>
+
+        <p><input type="button" class="green-button" onclick="$.fancybox.close()" value="OK, I'm ready!" />
+
+    <% end %>
+
+</div> <!-- End of Quiz Instructions -->
