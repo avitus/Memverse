@@ -34,7 +34,7 @@
 				<tr><th>Answered</th>       <td><%= @quiz_question.times_answered                %></td></tr>
 				<tr><th>Last Asked</th>     <td><%= @quiz_question.last_asked                    %></td></tr>
 				<tr><th>Supporting Ref</th> <td><%= @quiz_question.supporting_ref.try(:long_ref) %></td></tr>
-				<tr><th>Submitted By</th>   <td><%= @quiz_question.submitted_by                  %></td></tr>
+				<tr><th>Submitted By</th>   <td><%= @quiz_question.user.try(:name_or_login)      %></td></tr>
 			</tbody>
 		</table>
 	</div>
