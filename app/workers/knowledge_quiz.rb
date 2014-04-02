@@ -9,6 +9,7 @@ class KnowledgeQuiz
   recurrence do
     if Rails.env.production?
       weekly.day(:wednesday).hour_of_day(9)    # Every Tuesday at 9am
+      weekly.day(:saturday).hour_of_day(15)    # Every Saturday at 3pm
     else
       # daily.hour_of_day(9,11,15,21)          # 9am, 11am, 3pm, 9pm each day
       minutely(10)                             # For development
