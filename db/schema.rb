@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140320233440) do
+ActiveRecord::Schema.define(version: 20140402190648) do
 
   create_table "american_states", force: true do |t|
     t.string  "abbrev",      limit: 20, default: "", null: false
@@ -474,24 +474,26 @@ ActiveRecord::Schema.define(version: 20140320233440) do
   end
 
   create_table "quiz_questions", force: true do |t|
-    t.integer "quiz_id",                                                         null: false
-    t.integer "question_no"
-    t.string  "question_type"
-    t.string  "passage"
-    t.text    "mc_question"
-    t.string  "mc_option_a"
-    t.string  "mc_option_b"
-    t.string  "mc_option_c"
-    t.string  "mc_option_d"
-    t.string  "mc_answer"
-    t.integer "times_answered",                           default: 0
-    t.decimal "perc_correct",    precision: 10, scale: 0, default: 50
-    t.string  "mcq_category"
-    t.date    "last_asked",                               default: '2012-10-22'
-    t.integer "supporting_ref"
-    t.integer "submitted_by"
-    t.string  "approval_status",                          default: "Pending"
-    t.string  "rejection_code"
+    t.integer  "quiz_id",                                                         null: false
+    t.integer  "question_no"
+    t.string   "question_type"
+    t.string   "passage"
+    t.text     "mc_question"
+    t.string   "mc_option_a"
+    t.string   "mc_option_b"
+    t.string   "mc_option_c"
+    t.string   "mc_option_d"
+    t.string   "mc_answer"
+    t.integer  "times_answered",                           default: 0
+    t.decimal  "perc_correct",    precision: 10, scale: 0, default: 50
+    t.string   "mcq_category"
+    t.date     "last_asked",                               default: '2012-10-22'
+    t.integer  "supporting_ref"
+    t.integer  "submitted_by"
+    t.string   "approval_status",                          default: "Pending"
+    t.string   "rejection_code"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "quiz_questions", ["approval_status"], name: "index_quiz_questions_on_approval_status", using: :btree
