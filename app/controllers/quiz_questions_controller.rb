@@ -34,7 +34,7 @@ class QuizQuestionsController < ApplicationController
   def approvals
     if current_user.admin?
       @quiz = Quiz.find(params[:quiz] || 1)
-      @quiz_questions = @quiz.quiz_questions.mcq.pending
+      @quiz_questions = @quiz.quiz_questions.mcq.pending.order("updated_at DESC")
     end
   end
 
