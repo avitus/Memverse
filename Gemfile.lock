@@ -48,9 +48,9 @@ GIT
 
 GIT
   remote: git://github.com/richhollis/swagger-docs
-  revision: 203e393b0bc4dcbede74b8b93ea657efc2d6b72c
+  revision: 8ded501fc4a5a46436f2ca6bcb4eb13028d63648
   specs:
-    swagger-docs (0.1.2)
+    swagger-docs (0.1.3)
 
 GIT
   remote: git://github.com/sandal/prawn
@@ -456,9 +456,9 @@ GEM
       rubyzip (~> 1.0)
       websocket (~> 1.0.4)
     sexp_processor (4.4.3)
-    sidekiq (3.0.0)
+    sidekiq (2.17.7)
       celluloid (>= 0.15.2)
-      connection_pool (>= 2.0.0)
+      connection_pool (>= 1.0.0)
       json
       redis (>= 3.0.6)
       redis-namespace (>= 1.3.1)
@@ -600,7 +600,7 @@ DEPENDENCIES
   rspec-rails (>= 2.6.1)
   sass-rails (~> 4.0.0)
   selenium-webdriver
-  sidekiq
+  sidekiq (< 3)
   sidetiq
   sinatra
   sitemap_generator

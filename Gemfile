@@ -121,7 +121,7 @@ gem 'best_in_place', github: 'bernat/best_in_place'                            #
 gem 'split', :require => 'split/dashboard'                                     # AB testing framework
 gem 'backup'                                                                   # Used to backup MySQL database and uploaded site assets
 gem 'dropbox-sdk'                                                              # Used with backup above
-gem 'sidekiq'                                                                  # Background jobs; used for quizzes
+gem 'sidekiq', '< 3'                                                           # Background jobs; used for quizzes TODO: v 3 not yet working with sidetiq
 gem 'sidetiq'                                                                  # Scheduled Sidekiq jobs
 gem 'ice_cube'                                                                 # For calculating next quiz
 gem 'sinatra', require: false                                                  # sinatra and slim are required for sidekiq
