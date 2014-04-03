@@ -8,8 +8,12 @@ class KnowledgeQuiz
 
   recurrence do
     if Rails.env.production?
+
+      # NOTE: Any changes to schedule need to be replicated in the section below.
+      #       This is needed to set the start time for the next quiz
       weekly.day(:wednesday).hour_of_day(9)    # Every Tuesday at 9am
       weekly.day(:saturday).hour_of_day(15)    # Every Saturday at 3pm
+
     else
       # daily.hour_of_day(9,11,15,21)          # 9am, 11am, 3pm, 9pm each day
       minutely(10)                             # For development
@@ -28,7 +32,8 @@ class KnowledgeQuiz
     # Calculate start time for next quiz
     # ========================================================================
     schedule = IceCube::Schedule.new( Time.now )
-    schedule.add_recurrence_rule( IceCube::Rule.weekly.day(:wednesday).hour_of_day(9) )
+    schedule.add_recurrence_rule( IceCube::Rule.weekly.day(:wednesday).hour_of_day(9 ).minute_of_hour(0).second_of_minute(0) )
+    schedule.add_recurrence_rule( IceCube::Rule.weekly.day(:saturday ).hour_of_day(15).minute_of_hour(0).second_of_minute(0) )
     next_quiz_time = schedule.next_occurrence
 
     # ========================================================================
