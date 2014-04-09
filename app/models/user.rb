@@ -1188,8 +1188,10 @@ class User < ActiveRecord::Base
     # Of course, you could also create a join table to join users to blogs they can blog in.  But do you want to do
     # that with blog comments and ability to moderate comments as well?
 
-    # Bloggers: Andy, Heather-Kate Taylor, Phil Walker, Dakota Lynch, River La Belle, Alex Watt, Nathan Burkhalter, and Josiah DeGraaf
-    bloggers = [1, 2, 366, 1138, 3113, 4024, 3486, 4565, 2336]
+    # Bloggers: Andy, Heather-Kate Taylor, Phil Walker, Dakota Lynch,
+    # River La Belle, Alex Watt, Nathan Burkhalter, Josiah DeGraaf,
+    # Bethany Meckle
+    bloggers = [1, 2, 366, 1138, 3113, 4024, 3486, 4565, 2336, 15021]
     return bloggers.include?(self.id)
   end
 
