@@ -9,7 +9,7 @@ class AdminMailer < ActionMailer::Base
     @topics = Forem::Topic.all # Forem::Topic.pending_review
 
     if @posts.present? || @topics.present? # don't send if nothing to review
-      emails = %(admin@memverse.com alexcwatt@memverse.com)
+      emails = %w(admin@memverse.com alexcwatt@memverse.com)
 
       mail(to: emails, subject: "Forum: Posts and topics to review")
     end
