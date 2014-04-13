@@ -25,7 +25,7 @@ class KnowledgeQuiz
     # ========================================================================
     # Announce quiz
     # ========================================================================
-    broadcast  = "The weekly Bible knowledge quiz is starting. <a href=\"live_quiz\">Join now!</a>"
+    broadcast  = "The Bible knowledge quiz is starting. <a href=\"live_quiz\">Join now!</a>"
     Tweet.create(:news => broadcast, :user_id => 1, :importance => 2)  # Admin tweet => user_id = 1
 
     # ========================================================================
@@ -203,7 +203,7 @@ class KnowledgeQuiz
     # silver_ribbon_id   = final_scoreboard[1]['id']
     # bronze_ribbon_id   = final_scoreboard[2]['id']
 
-    broadcast  = "#{gold_ribbon_name} won the weekly Bible knowledge quiz"
+    broadcast  = "#{gold_ribbon_name} won the Bible knowledge quiz"
     Tweet.create(:news => broadcast, :user_id => gold_ribbon_id, :importance => 2)
 
     # ========================================================================
