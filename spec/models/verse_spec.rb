@@ -89,6 +89,12 @@ describe Verse do
     verse.text.should == "This is a test test teest."
   end
 
+  it "should remove HTML tags (XSS prevention)" do
+    verse = FactoryGirl.create(:verse, :text => "<script>test();</script>")
+    verse.save!
+    verse.text.should == "scripttest();/script"
+  end
+
   it "should use em dashes when appropriate" do
     verse1 = FactoryGirl.create(:verse, :versenum => 1, :text => "This is a test -")
     verse1.save!
