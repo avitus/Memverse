@@ -399,6 +399,8 @@ function resetScrollable() {
  * Check for completed badges
  ******************************************************************************/
 function mvCheckBadgeCompletion() {
+
+    // First check whether any quests related to badges have been completed
 	$.getJSON('/badge_quests_check.json', function(quests) {
 
 		// There appear to be instances of the quest for a given badge being completed but the
