@@ -403,23 +403,21 @@ function mvCheckBadgeCompletion() {
     // First check whether any quests related to badges have been completed
 	$.getJSON('/badge_quests_check.json', function(quests) {
 
-		// There appear to be instances of the quest for a given badge being completed but the
-		// badge itself is not awarded. We could potentially remove the check for any completed
-		// quests below and always check for completed badges at the end of every session.
+		// There were instances of the quest for a given badge being completed but the
+		// badge itself is not awarded. We removed the check for any completed
+		// quests below and now always check for completed badges at the end of every session.
+        // We used to check if ( quests.length !== 0 )
 
-		if ( quests.length !== 0 ) {
-			// Alert user to completion of quests necessary for badges
-
-			// Check for awarded badges
-			$.getJSON('/badge_completion_check.json', function(badges) {
-				// Alert user to completed badges
-				if ( badges.length !== 0 ) {
-					for (var i = 0; i < badges.length; i++) {
-    					displayAlertMessage("Congratulations! You have been awarded a " + badges[i]["color"] + " " + badges[i]["name"] + " badge.");
-					}
+		// Check for awarded badges
+		$.getJSON('/badge_completion_check.json', function(badges) {
+			// Alert user to completed badges
+			if ( badges.length !== 0 ) {
+				for (var i = 0; i < badges.length; i++) {
+					displayAlertMessage("Congratulations! You have been awarded a " + badges[i]["color"] + " " + badges[i]["name"] + " badge.");
 				}
-			});
-		};
+			}
+		});
+
 	});
 }
 
