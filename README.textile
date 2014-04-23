@@ -2,6 +2,8 @@ h1. Memverse
 
 A Bible memorization application
 
+"!https://app.wercker.com/status/a6bf54c9eb901816e1f6aee1ae3ad20a/m/(wercker status)!":https://app.wercker.com/project/bykey/a6bf54c9eb901816e1f6aee1ae3ad20a
+
 h2. Dependencies
 
 To use this application, you will need:
