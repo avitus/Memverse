@@ -1,10 +1,10 @@
-box: wercker/rvm
+box: fliplingo/ubuntu12.04-ruby2.1.0@0.0.1
 # Build definition
 # See the Rails section on the wercker devcenter:
 # http://devcenter.wercker.com/articles/languages/ruby/settingup-rails4.html
 # You will want to define your database as follows:
-# services:
-#   - wercker/postgresql
+services:
+  - wercker/mysql
 # See more about services on our devcenter:
 # http://devcenter.wercker.com/articles/services/
 build:
@@ -13,11 +13,33 @@ build:
         # - rvm-use:
         #       version: 2.1.0
 
+        # Install required packages for jasmine-headless-webkit gem and for running cucumber tests
+        # If these packages are already available on the machine the installation
+        # will be skipped.
+        - install-packages:
+            packages: libqt4-dev qt4-qmake
+
         # A step that executes `bundle install` command
         - bundle-install
 
+        # Use jasmine-headless-webkit for the execution of the tests
+        - script:
+            name: Install jasmine-headless-webkit
+            code: |
+              sudo gem install jasmine-headless-webkit --no-ri --no-rdoc
+
         # A step that prepares the database.yml using the database in services
-        # - rails-database-yml
+        - rails-database-yml
+
+        - script:
+            name: load schema
+            code: bundle exec rake db:schema:load RAILS_ENV=test
+        - script:
+            name: rake db:migrate
+            code: bundle exec rake db:migrate RAILS_ENV=test
+        - script:
+            name: seed database
+            code: bundle exec rake db:seed RAILS_ENV=test
 
         # A custom script step, name value is used in the UI
         # and the code value contains the command that get executed
@@ -27,8 +49,23 @@ build:
                 echo "ruby version $(ruby --version) running"
                 echo "from location $(which ruby)"
                 echo -p "gem list: $(gem list)"
-
         # Add more steps here:
-        # - script:
-        #        name: rspec
-        #        code: bundle exec rspec
+        - script:
+            name: rspec tests
+            code: bundle exec rspec
+        #- script:
+        #    name: jasmine tests
+        #    code: |
+        #      sudo xvfb-run jasmine-headless-webkit -c
+        - script:
+            name: Enable virtual display
+            code: |-
+              # Start xvfb which gives the context an virtual display
+              # which is required for tests that require an GUI
+              export DISPLAY=:99.0
+              start-stop-daemon --start --quiet --pidfile /tmp/xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -screen 0 1024x768x24 -ac +extension GLX +render -noreset
+              # Give xvfb time to start. 3 seconds is the default for all xvfb-run commands.
+              sleep 3
+        - script:
+            name: cucumber tests
+            code: bundle exec cucumber features RAILS_ENV=test
