@@ -59,7 +59,7 @@ build:
         #       sleep 3
         - script:
             name: jasmine tests
-            code: sudo xvfb-run jasmine-headless-webkit -c
+            code: sudo xvfb-run bundle exec jasmine-headless-webkit -c RAILS_ENV=test
         - script:
             name: cucumber tests
             code: bundle exec cucumber features
