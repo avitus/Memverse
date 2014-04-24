@@ -24,6 +24,7 @@ group :test do
   gem 'launchy', '>= 2.0.5'
   gem 'email_spec'                                              # For sending email in cucumber tests
   gem 'action_mailer_cache_delivery', '>= 0.3.5'                # Used to test email delivery with Cucumber. Pairs with email_spec
+  gem 'jasmine-headless-webkit', github: 'asok/jasmine-headless-webkit' # Used for headless jasmine with wercker CI
 end
 
 group :production do
