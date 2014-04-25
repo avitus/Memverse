@@ -443,6 +443,7 @@ class Verse < ActiveRecord::Base
   def cleanup_text
     self.text = self.text.gsub(/(\r)?\n/,'').squeeze(" ").strip
     self.text = self.text.gsub(" -"," —").gsub("- ","— ") # use em dashes when appropriate
+    self.text = self.text.gsub(/[<>]/,'')
   end
 
   # before_create
