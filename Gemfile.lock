@@ -6,8 +6,8 @@ GIT
       activemodel (>= 3.0.0)
 
 GIT
-  remote: git://github.com/avitus/bloggity.git
-  revision: 552e5ec908006124c0562d86b3b062cd8cb46c01
+  remote: git://github.com/alexcwatt/bloggity.git
+  revision: 71070a8ea2a82d8ac123702d9ed384379bae3b67
   specs:
     bloggity (0.0.6)
       jquery-rails
@@ -254,7 +254,7 @@ GEM
     gemoji (1.1.2)
     gherkin (2.12.2)
       multi_json (~> 1.3)
-    gli (2.9.0)
+    gli (2.10.0)
     haml (4.0.5)
       tilt
     hashery (2.1.1)
@@ -290,7 +290,7 @@ GEM
     launchy (2.4.2)
       addressable (~> 2.3)
     libv8 (3.11.8.17)
-    localeapp (0.7.1)
+    localeapp (0.7.2)
       gli
       i18n
       json
