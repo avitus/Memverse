@@ -74,7 +74,15 @@ Doorkeeper.configure do
   # Under some circumstances you might want to have applications auto-approved,
   # so that the user skips the authorization step.
   # For example if dealing with a trusted application.
-  # skip_authorization do |resource_owner, client|
-  #   client.superapp? or resource_owner.admin?
-  # end
+  skip_authorization do |resource_owner, client|
+
+    # client.superapp? or resource_owner.admin?
+
+    true # ALV - for now it is ok to skip authorization since all apps are trusted
+
+    # This commit appears to allow for trusted apps
+    # https://github.com/doorkeeper-gem/doorkeeper/commit/0dda6d2325322aade7560ecb8419df4f319873df
+
+  end
+
 end
