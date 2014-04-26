@@ -127,6 +127,7 @@ gem 'ice_cube'                                                                 #
 gem 'sinatra', require: false                                                  # sinatra and slim are required for sidekiq
 gem 'slim'
 gem 'pubnub'                                                                   # Real-time messaging service
+gem 'net-ssh', '2.7.0'                                                         # Used by capistrano among other gems. 2.8.0 had significant bug.
 
 group :console do
   gem 'wirble'
