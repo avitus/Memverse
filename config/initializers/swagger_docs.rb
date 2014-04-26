@@ -9,7 +9,7 @@ Swagger::Docs::Config.register_apis({
     # the output location where your .json files are written to
     :api_file_path => "public/",
     # the URL base path to your API
-    :base_path => "http://www.memverse.com",
+    :base_path => "https://www.memverse.com",
     # if you want to delete all .json files at each generation
     :clean_directory => true
   }
