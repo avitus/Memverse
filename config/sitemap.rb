@@ -1,5 +1,5 @@
 # Set the host name for URL creation
-SitemapGenerator::Sitemap.default_host = "http://www.memverse.com"
+SitemapGenerator::Sitemap.default_host = "https://www.memverse.com"
 
 SitemapGenerator::Sitemap.create do
   # Put links creation logic here.
@@ -32,7 +32,7 @@ SitemapGenerator::Sitemap.create do
   add leaderboard_path
   add faq_path
   add popular_path    # popular verses
-  
+
   # Add root path for forem and blog
   add '/forums'    # ALV: not sure how to do this using a route helper
   add '/blog'      # bloggity.root_path does not work
