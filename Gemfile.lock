@@ -7,7 +7,7 @@ GIT
 
 GIT
   remote: git://github.com/alexcwatt/bloggity.git
-  revision: 71070a8ea2a82d8ac123702d9ed384379bae3b67
+  revision: 35827dde089bb737042fda755d5c1c60ec6f7da7
   specs:
     bloggity (0.0.6)
       jquery-rails
