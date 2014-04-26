@@ -5,6 +5,7 @@
 // the compiled file.
 //
 //= require jquery_ujs
+//= require jquery.tools.min
 //= require fancybox
 //= require i18n
 //= require i18n/translations
