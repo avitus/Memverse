@@ -1,6 +1,11 @@
 # This migration comes from acts_as_taggable_on_engine (originally 2)
 
 # ALV: This migration results in terrible performance on tag_list queries. Don't use for now.
+# Use the following queries in irb to find duplicate tags and taggings. Do this before running migration.
+#
+# ActsAsTaggableOn::Tagging.select("id, count(id) as quantity").group([:tagger_id, :tag_id, :taggable_id, :context, :tagger_type]).having("quantity > 1")
+# ActsAsTaggableOn::Tag.select("id, count(id) as quantity").group(:name).having("quantity > 1")
+#
 
 class AddMissingUniqueIndices < ActiveRecord::Migration
 
