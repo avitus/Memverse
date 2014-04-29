@@ -1,16 +1,4 @@
-src_dir: app/assets/javascripts
-
-asset_paths:
-  - vendor/assets/javascripts
-
-src_files:
-  - spec/javascripts/support/jquery-2.0.2.min.js
-  - assets/application.js
-
 spec_files:
   - "**/*[Ss]pec.{js,coffee}"
-
-helpers:
-  - "helpers/**/*.{js,coffee}"
 
 spec_dir: spec/javascripts

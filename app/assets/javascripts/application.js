@@ -14,3 +14,4 @@
 //= require best_in_place
 //= require forem
 //= require_tree .
+//= stub jquery.tools.min
