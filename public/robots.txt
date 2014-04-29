@@ -2,7 +2,7 @@
 #
 # To ban all spiders from the entire site uncomment the next two lines:
 
-Sitemap: http://www.memverse.com/sitemap.xml
+Sitemap: https://www.memverse.com/sitemap.xml
 
 User-agent: *
 Disallow: /admin/ 		# Administrators only

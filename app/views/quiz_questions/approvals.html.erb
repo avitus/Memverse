@@ -1,0 +1,39 @@
+<% page_title 'Quiz Question Approval' %>
+
+<div class="white-box-with-margins">
+
+    <div class="mcq-list">
+
+        <%= render partial: "mcq_list", collection: @quiz_questions, as: :quiz_question %>
+
+    </div>
+
+</div>
+
+<script language="JavaScript" type="text/javascript"><!--
+
+    $(document).ready(function() {
+
+        // //------- Show verse in major translations ----------------
+        // $(".quiz-question-supporting-ref").each( function( index ) {
+        //     // search and display results with callback function
+        //     multiTranslationSearch( $(this).html(), displayMultiTranslationSearchResultsForApprovalFn );
+        //     // show other questions associated with this verse
+        //     relatedQuestionsSearch( $(this).html(), displayRelatedQuestionsSearchResultsForApprovalFn );
+        // });
+
+        //------- FadeOut approved/rejected questions ------------------
+        $('.quiz-question-navigation').click(function () {
+          $(this).closest('.complete-quiz-question').fadeOut("fast");
+        });
+
+        //------- Highlight verse to be verified ------------------
+        $('.quiz-question-navigation').hover(function () {
+          $(this).closest('.complete-quiz-question').addClass("hilite");
+        }, function () {
+          $(this).closest('.complete-quiz-question').removeClass("hilite");
+        });
+
+    });
+
+--></script>

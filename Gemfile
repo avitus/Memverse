@@ -15,6 +15,7 @@ group :development do
   gem 'guard-rspec'
   gem 'guard-cucumber'
   gem 'guard-jasmine'
+  gem 'brakeman', :require => false                             # Scan for security vulnerabilities
 end
 
 gem 'rspec-rails', '>= 2.6.1', group: [:development, :test]
@@ -46,7 +47,7 @@ end
 ############################################################
 # Frameworks
 ############################################################
-gem 'rails', '4.0.2'
+gem 'rails', '4.0.3'
 gem 'jquery-rails', '>= 2.0.0'
 
 ############################################################
@@ -73,6 +74,7 @@ gem 'activeresource', require: 'active_resource'
 ############################################################
 gem 'rocket_pants', '~> 1.0'                                                   # API goodness
 gem 'doorkeeper', '~> 0.7.0'                                                   # Oauth for API
+gem 'swagger-docs', git: 'git://github.com/richhollis/swagger-docs'            # Generates swagger-ui json files
 
 ############################################################
 # Authentication and Authorization
@@ -80,7 +82,7 @@ gem 'doorkeeper', '~> 0.7.0'                                                   #
 gem 'devise'                                                                   # Authentication
 gem 'devise-encryptable'                                                       # TODO: Is this required?
 gem 'omniauth'                                                                 # Multi-provider authentication
-gem 'omniauth-windowslive'                                                     #   - strategy for Windows live
+gem 'omniauth-windowslive', git: 'git://github.com/kayle/omniauth-windowslive' # Windows Live strategy
 gem 'cancan', git: 'https://github.com/nukturnal/cancan.git'                   # Role-based authorization, Forem requires
 
 ############################################################
@@ -89,7 +91,7 @@ gem 'cancan', git: 'https://github.com/nukturnal/cancan.git'                   #
 gem 'rails_admin', '>= 0.6.0'                                                  # Admin console
 gem 'forem',       github: 'radar/forem', branch: 'rails4'                     # Forum engine
 gem 'forem-textile_formatter'                                                  # Forum formatting
-gem 'bloggity',    git: 'git://github.com/avitus/bloggity.git'                 # Blog engine
+gem 'bloggity',    :git => 'git://github.com/alexcwatt/bloggity.git'           # Blog engine
 # gem 'bloggity', :path => "../bloggity"                                       # Blog engine (dev environment)
 
 ############################################################
@@ -118,19 +120,20 @@ gem 'localeapp'                                                                #
 gem 'breadcrumbs_on_rails', '>=2.0.0'                                          # For breadcrumb navigation bar
 gem 'dalli'                                                                    # Memcached client
 gem 'redis', '>=2.2.2'                                                         # Redis Key-value store
-gem 'friendly_id', github: "FriendlyId/friendly_id"                            # !!! TODO: Upgrade !!! Makes nice IDs for models
+gem 'friendly_id'                                                              # Makes nice IDs for models
 gem 'foreman'                                                                  # Helps manage multiple processes when running app in development.
 gem 'supermodel', git: 'git://github.com/KonaTeam/supermodel.git'              # Uses ActiveModel for in-memory storage with redis
 gem 'best_in_place', github: 'bernat/best_in_place'                            # In-place editing support ... no Rails 4 release yet
 gem 'split', require: 'split/dashboard'                                        # AB testing framework
 gem 'backup'                                                                   # Used to backup MySQL database and uploaded site assets
 gem 'dropbox-sdk'                                                              # Used with backup above
-gem 'sidekiq'                                                                  # Background jobs; used for quizzes
+gem 'sidekiq', '< 3'                                                           # Background jobs; used for quizzes TODO: v 3 not yet working with sidetiq
 gem 'sidetiq'                                                                  # Scheduled Sidekiq jobs
 gem 'ice_cube'                                                                 # For calculating next quiz
 gem 'sinatra', require: false                                                  # sinatra and slim are required for sidekiq
 gem 'slim'
 gem 'pubnub'                                                                   # Real-time messaging service
+gem 'net-ssh', '2.7.0'                                                         # Used by capistrano among other gems. 2.8.0 had significant bug.
 
 group :console do
   gem 'wirble'

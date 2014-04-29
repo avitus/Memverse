@@ -2,19 +2,20 @@
 
 class QuizzesController < ApplicationController
   before_filter :authenticate_user!
-  
+  before_filter :authorize
+
   add_breadcrumb "Home", :root_path
 
-  # ----------------------------------------------------------------------------------------------------------   
+  # ----------------------------------------------------------------------------------------------------------
   # /quizzes Main quizzes page
-  # ---------------------------------------------------------------------------------------------------------- 
+  # ----------------------------------------------------------------------------------------------------------
   def index
     @quizzes = Quiz.all
   end
 
-  # ----------------------------------------------------------------------------------------------------------   
+  # ----------------------------------------------------------------------------------------------------------
   # Participate in live quiz
-  # ----------------------------------------------------------------------------------------------------------   
+  # ----------------------------------------------------------------------------------------------------------
   def live
     @quiz = Quiz.find(params[:id])
     unless @quiz.open
@@ -23,7 +24,7 @@ class QuizzesController < ApplicationController
       return false
     end
   end
-  
+
   # GET /quizzes/1
   # GET /quizzes/1.xml
   def show
@@ -35,15 +36,15 @@ class QuizzesController < ApplicationController
       format.html # show.html.erb
       format.xml  { render :xml => @quiz }
     end
-  end  
-  
-  # ----------------------------------------------------------------------------------------------------------   
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
   # Create new quiz
   # ----------------------------------------------------------------------------------------------------------
   def new
     @quiz = Quiz.new
   end
-  
+
   # GET /quizzes/1/edit
   def edit
     @quiz = Quiz.find(params[:id])
@@ -53,7 +54,7 @@ class QuizzesController < ApplicationController
   # POST /quizzes.xml
   def create
     @quiz = Quiz.new(params[:quiz])
-    
+
     @quiz.user        = current_user
 
     respond_to do |format|
@@ -97,6 +98,6 @@ class QuizzesController < ApplicationController
       format.html { redirect_to(quizzes_url) }
       format.xml  { head :ok }
     end
-  end  
-  
+  end
+
 end

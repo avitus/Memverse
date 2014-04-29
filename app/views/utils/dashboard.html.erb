@@ -94,14 +94,22 @@
 	<div id="quiz-stats">
 		<table class="user-stats-table" cellpadding="6" cellspacing="0" border="1">
 			<th colspan="2">Quiz Questions</th>
+
 			<tr>
 				<td>New MCQ Questions</td>
-				<td><%= QuizQuestion.mcq.fresh.count %></td>
+				<td><%= QuizQuestion.mcq.approved.fresh.count %></td>
 			</tr>
+
+			<tr>
+				<td>Pending MCQ Questions</td>
+				<td><%= QuizQuestion.mcq.pending.count %></td>
+			</tr>
+
 			<tr>
 				<td>Total MCQ Questions</td>
 				<td><%= QuizQuestion.mcq.count %></td>
 			</tr>
+
 		</table>
 	</div>
 

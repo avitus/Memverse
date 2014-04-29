@@ -129,11 +129,12 @@
 
                 // Level complete ==> next level
                 if ( $(this).parent().find('input').length === 1 ) {  // no more words to fill in (current input hasn't been replaced yet)
+                    $(this).blur(); // IE compatibility
                     practiceState.levelUp();
+                } else {
+                    $(this).nextAll('input.blank-word:first').focus();  // advance cursor to next blank word
+                    $(this).replaceWith( correctWord );
                 }
-
-                $(this).nextAll('input.blank-word:first').focus();  // advance cursor to next blank word
-                $(this).replaceWith( correctWord );
 
             }
 

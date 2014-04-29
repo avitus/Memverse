@@ -12,18 +12,22 @@ class QuizQuestion < ActiveRecord::Base
 
   # Relationships
   belongs_to :quiz
+  belongs_to :user,           :foreign_key => "submitted_by",   :class_name => "User"
   belongs_to :supporting_ref, :foreign_key => "supporting_ref", :class_name => "Uberverse"
 
   # Query scopes
-  scope :mcq,         -> { where( :question_type => "mcq"                 ) }
-  scope :recitation,  -> { where( :question_type => "recitation"          ) }
-  scope :reference,   -> { where( :question_type => "reference"           ) }
+  scope :mcq,         -> { where( :question_type   => "mcq"                 ) }
+  scope :recitation,  -> { where( :question_type   => "recitation"          ) }
+  scope :reference,   -> { where( :question_type   => "reference"           ) }
 
-  scope :fresh,       -> { where( 'last_asked < ?', Date.today - 6.months ) }
+  scope :fresh,       -> { where( 'last_asked < ?', Date.today - 6.months   ) }
+  scope :approved,    -> { where( :approval_status => "Approved"            ) }
+  scope :pending,     -> { where( :approval_status => "Pending"             ) }
+  scope :rejected,    -> { where( :approval_status => "Rejected"            ) }
 
-  scope :easy,        -> { where( :perc_correct => 66..100                ) }
-  scope :medium,      -> { where( :perc_correct => 34..65                 ) }
-  scope :hard,        -> { where( :perc_correct =>  0..33                 ) }
+  scope :easy,        -> { where( :perc_correct    => 66..100               ) }
+  scope :medium,      -> { where( :perc_correct    => 34..65                ) }
+  scope :hard,        -> { where( :perc_correct    =>  0..33                ) }
 
   # Validations
   # validates_presence_of :user_id
@@ -83,6 +87,34 @@ class QuizQuestion < ActiveRecord::Base
       when 'reference'
         25
     end
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Related Quiz Questions (that share the same supporting reference)
+  # TODO: would be nice to expand with a clever search by keyword in the question text
+  # ----------------------------------------------------------------------------------------------------------
+  def related_questions
+    if self.supporting_ref
+      return self.supporting_ref.quiz_questions.where("id != ?", self.id)
+    else
+      return []
+    end
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Related Quiz Questions (that share the same supporting reference)
+  # TODO: would be nice to expand with a clever search by keyword in the question text
+  # ----------------------------------------------------------------------------------------------------------
+  def supporting_verses
+    if self.supporting_ref
+      return self.supporting_ref.verses.where(:translation => ['NIV', 'ESV', 'NAS', 'NKJ', 'KJV'])
+    else
+      return []
+    end
+  end
+
+  def is_approved?
+    return self.approval_status == "Approved"
   end
 
 

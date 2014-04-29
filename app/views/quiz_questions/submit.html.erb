@@ -1,0 +1,52 @@
+<% page_title "Submit a Quiz Question" %>
+
+<div class="white-box-with-margins">
+
+    <h1>New Quiz Question</h1>
+
+    <%= form_for( @quiz_question ) do |f| %>
+
+        <!-- Flag any errors -->
+        <% if @quiz_question.errors.any? %>
+            <div id="errorExplanation">
+                <h2><%= pluralize(@quiz_question.errors.count, "error") %> prohibited this quiz from being saved:</h2>
+                <ul>
+                    <% @quiz_question.errors.full_messages.each do |msg| %>
+                        <li><%= msg %></li>
+                    <% end %>
+                </ul>
+            </div>
+        <% end %>
+
+        <!-- Associate with a quiz and user -->
+        <p>
+            <%= f.hidden_field  :quiz_id,         :value => @quiz.id %>
+            <%= f.hidden_field  :question_no,     :value => 1 %>
+            <%= f.hidden_field  :question_type,   :value => 'mcq' %>
+            <%= f.hidden_field  :submitted_by,    :value => current_user.id %>
+            <%= f.hidden_field  :approval_status, :value => current_user.admin? ? "Approved" : "Pending" %>
+        </p>
+
+        <!-- Entry form for MCQ -->
+        <%= render :partial => "form_mcq", :locals=>{ :f => f } %>
+
+    <% end %> <!-- Form -->
+
+</div>
+
+
+<script language="JavaScript" type="text/javascript"><!--
+
+    $(document).ready(function() {
+
+        //------- Show verse in major translations ----------------
+        $("#quiz_question_supporting_ref").observe_field(0.2, function( ) {
+            // search and display results with callback function
+            multiTranslationSearch( this.value, displayMultiTranslationSearchResultsFn );
+            // show other questions associated with this verse
+            relatedQuestionsSearch( this.value, displayRelatedQuestionsSearchResultsFn );
+        });
+
+    });
+
+--></script>

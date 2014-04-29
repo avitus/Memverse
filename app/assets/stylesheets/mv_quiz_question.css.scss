@@ -1,10 +1,32 @@
 /* === Quiz Question (Left panel) === */
+.complete-quiz-question {
+  margin-bottom: 2em;
+  padding: 1em;
+  background-color: #eee;
+}
+
 .quiz-question {
     float: left;
-    width: 40%;
+    width: 34%;
+    padding-right: 0 1em;
     p.true {
         color: green;
     }
+}
+
+.quiz-question-answers {
+    float: left;
+    width: 35%;
+    p.true {
+        color: green;
+    }
+}
+
+.quiz-question-stats {
+    float: left;
+    width: 27%;
+    padding: 1em;
+    margin:0 auto;
 }
 
 .quiz-question-num {
@@ -24,7 +46,7 @@
     background-color: #f0f0f0;
     margin: 1em 0 0 0;
     padding: 1em;
-    min-height: 440px;
+    min-height: 460px;
     clear: both;
 
 	.left-question {
@@ -45,13 +67,6 @@
 }
 
 /* === Quiz Question Stats (Right panel) === */
-.quiz-question-stats
-{
-    float: left;
-    padding: 2em 1em;
-    margin:0 auto;
-}
-
 .quiz-question-stats table {
   border-spacing:0;
   text-align:center;
@@ -102,6 +117,7 @@
 
 div.related-quiz-questions {
   padding-bottom: 1em;
+  clear: left;
 }
 
 /* Single element in search result ... */
