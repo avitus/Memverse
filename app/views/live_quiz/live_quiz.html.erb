@@ -87,9 +87,11 @@ $(document).ready(function() {
 
 	// Init
     var pubnub = PUBNUB.init({
-        publish_key   : '<%= PN.publish_key %>',
-        subscribe_key : '<%= PN.subscribe_key %>',
-        uuid          : memverseUserID
+        publish_key   : '<%= PN.env[:publish_key] %>',
+        subscribe_key : '<%= PN.env[:subscribe_key] %>',
+        uuid          : memverseUserID,
+        origin        : 'pubsub.pubnub.com',
+        ssl           : true
     });
 
     // LISTEN

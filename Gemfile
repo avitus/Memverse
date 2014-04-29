@@ -69,7 +69,7 @@ gem 'activeresource', require: 'active_resource'
 ############################################################
 gem 'rocket_pants', '~> 1.0'                                                   # API goodness
 gem 'doorkeeper', '~> 0.7.0'                                                   # Oauth for API
-gem 'swagger-docs'                                                             # Generates swagger-ui json files
+gem 'swagger-docs', git: 'git://github.com/richhollis/swagger-docs'            # Generates swagger-ui json files
 
 ############################################################
 # Authentication and Authorization
@@ -122,12 +122,13 @@ gem 'best_in_place', github: 'bernat/best_in_place'                            #
 gem 'split', :require => 'split/dashboard'                                     # AB testing framework
 gem 'backup'                                                                   # Used to backup MySQL database and uploaded site assets
 gem 'dropbox-sdk'                                                              # Used with backup above
-gem 'sidekiq'                                                                  # Background jobs; used for quizzes
+gem 'sidekiq', '< 3'                                                           # Background jobs; used for quizzes TODO: v 3 not yet working with sidetiq
 gem 'sidetiq'                                                                  # Scheduled Sidekiq jobs
 gem 'ice_cube'                                                                 # For calculating next quiz
 gem 'sinatra', require: false                                                  # sinatra and slim are required for sidekiq
 gem 'slim'
 gem 'pubnub'                                                                   # Real-time messaging service
+gem 'net-ssh', '2.7.0'                                                         # Used by capistrano among other gems. 2.8.0 had significant bug.
 
 group :console do
   gem 'wirble'

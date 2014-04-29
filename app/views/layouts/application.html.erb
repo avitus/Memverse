@@ -5,7 +5,7 @@
 <title><%= page_title %></title>
 
 <!–[if IE]>
-<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js">
+<script src="https://html5shiv.googlecode.com/svn/trunk/html5.js">
 </script>
 <![endif]–>
 
@@ -20,7 +20,7 @@
 <!-- Facebook Open Graph tags -->
 <meta property="og:title"		content="<%= page_title || Memverse %>"/>
 <meta property="og:type"		content="website"/>
-<meta property="og:image"		content="http://www.memverse.com/assets/memverse_swords.jpg"/>
+<meta property="og:image"		content="https://www.memverse.com/assets/memverse_swords.jpg"/>
 <meta property="og:url"			content="<%= request.url %>" />
 <meta property="og:site_name"	content="Memverse"/>
 <meta property="fb:admins"		content="1799626379, kyrriana"/>
@@ -37,9 +37,9 @@
 <!-- airbrake_javascript_notifier -->
 
 <!-- Load fonts: Open Sans from Google Web Fonts and Museo Slab from TypeKit -->
-<script type="text/javascript" src="http://use.typekit.com/wxl5kyc.js"></script>
+<script type="text/javascript" src="//use.typekit.net/acm5rxh.js"></script>
 <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
-<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,400italic,700,700italic&subset=latin,greek' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,700,700italic&subset=latin,greek' rel='stylesheet' type='text/css'>
 
 <!-- Rails 3 XSS protection -->
 <%= csrf_meta_tag %>
@@ -67,23 +67,22 @@
 <!-- jQuery: serve older version of jQuery for IE8 and earlier, try CDN but fallback on local copy -->
 
 <!--[if lt IE 9]>
-	<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-1.9.1.min.js"></script>
+	<script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-1.9.1.min.js"></script>
 	<script>window.jQuery || document.write('<script src="/javascripts/jquery-1.9.1.min.js"><\/script>')</script>
 <![endif]-->
 <!--[if gte IE 9]><!-->
-	<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-2.0.2.min.js"></script>
+	<script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.0.2.min.js"></script>
 	<script>window.jQuery || document.write('<script src="/javascripts/jquery-2.0.2.min.js"><\/script>')</script>
 <!--<![endif]-->
 
 <!-- Ease migration to jQuery 1.9 -->
-<script src="http://code.jquery.com/jquery-migrate-1.2.1.js"></script>
+<script src="https://code.jquery.com/jquery-migrate-1.2.1.js"></script>
 
-<!-- UI Libraries : jQuery UI is preferred library, would like to get rid of jQuery Tools -->
-<script type="text/javascript" src="http://cdn.jquerytools.org/1.2.7/tiny/jquery.tools.min.js"></script>
+<%= javascript_include_tag "jquery.tools.min" %>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 
 <!-- PubNub for messaging -->
-<script type="text/javascript" src="http://cdn.pubnub.com/pubnub.min.js"></script>
+<script type="text/javascript" src="https://pubnub.a.ssl.fastly.net/pubnub-3.6.1.min.js"></script>
 
 <!-- Main Javascript Manifest -->
 <%= javascript_include_tag "application" %>
@@ -143,18 +142,6 @@
 <% else %>
 <body>
 <% end %>
-
-<!-- Beacon Ads Ad Code -->
-<script type="text/javascript">
-(function(){
-  var bsa = document.createElement('script');
-     bsa.type = 'text/javascript';
-     bsa.async = true;
-     bsa.src = 'http://cdn.beaconads.com/ac/beaconads.js';
-  (document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(bsa);
-})();
-</script>
-<!-- End Beacon Ads Ad Code -->
 
 <noscript><div id="no-js"><p>Memverse requires Javascript, but you&rsquo;ve got Javascript disabled. <a href="http://www.google.com/search?btnI=1&amp;q=how+to+enable+javascript+in+my+browser">Fix that problem!</a></p></div></noscript>
 <div id="wrapper"><!--wrapper start-->

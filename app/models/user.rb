@@ -1228,9 +1228,9 @@ class User < ActiveRecord::Base
     if(self.respond_to?(:email))
       downcased_email_address = self.email.downcase
       hash = Digest::MD5::hexdigest(downcased_email_address)
-      "http://www.gravatar.com/avatar/#{hash}?d=wavatar"
+      "https://www.gravatar.com/avatar/#{hash}?d=wavatar"
     else
-      "http://www.pistonsforum.com/images/avatars/avatar22.gif"
+      "https://www.pistonsforum.com/images/avatars/avatar22.gif"
     end
   end
 
