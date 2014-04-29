@@ -9,11 +9,17 @@ group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'byebug'
+  gem 'guard', '>= 0.6.2'
+  gem 'guard-minitest'
+  gem 'guard-spork'
+  gem 'guard-rspec'
+  gem 'guard-cucumber'
+  gem 'guard-jasmine'
   gem 'brakeman', :require => false                             # Scan for security vulnerabilities
 end
 
-gem 'rspec-rails', '>= 2.6.1', :group => [:development, :test]
-gem 'jasmine', :group => [:development, :test]
+gem 'rspec-rails', '>= 2.6.1', group: [:development, :test]
+gem 'jasmine', group: [:development, :test]
 
 group :test do
   gem 'factory_girl_rails'                                      # Add to development group for debugging in console
@@ -35,7 +41,7 @@ end
 # Javascript Engine
 ############################################################
 if HOST_OS =~ /linux/i
-  gem 'libv8', '= 3.11.8.17', :platforms => :ruby               # Later versions have no binary support for x86
+  gem 'libv8', '= 3.11.8.17', platforms: :ruby                  # Later versions have no binary support for x86
   gem 'therubyracer', '= 0.11.4'                                # TODO: Can roll to 0.12 once binary support for libv8 3.16
 end
 
@@ -84,7 +90,7 @@ gem 'cancan', git: 'https://github.com/nukturnal/cancan.git'                   #
 # Major Engines (Admin, Forem, Blog)
 ############################################################
 gem 'rails_admin', '>= 0.6.0'                                                  # Admin console
-gem 'forem',       :github => 'radar/forem', :branch => 'rails4'               # Forum engine
+gem 'forem',       github: 'radar/forem', branch: 'rails4'                     # Forum engine
 gem 'forem-textile_formatter'                                                  # Forum formatting
 gem 'bloggity',    :git => 'git://github.com/alexcwatt/bloggity.git'           # Blog engine
 # gem 'bloggity', :path => "../bloggity"                                       # Blog engine (dev environment)
@@ -99,10 +105,10 @@ gem 'airbrake'                                                                 #
 
 gem 'fancybox2-rails'                                                          # For displaying of video, pop-up info box
 gem 'kaminari'                                                                 # Required for bloggity
-gem 'rinku', :require => 'rails_rinku'                                         # Supports auto-linking of URL's in blog comments
+gem 'rinku', require: 'rails_rinku'                                            # Supports auto-linking of URL's in blog comments
 gem 'randumb'                                                                  # Retrieve a random record
-gem 'prawn', :git => "git://github.com/sandal/prawn", :submodules => true      # PDF support
-gem "prawnto_2", :require => "prawnto"                                         # Integrating prawn into Rails
+gem 'prawn', git: "git://github.com/sandal/prawn", submodules: true            # PDF support
+gem "prawnto_2", require: "prawnto"                                            # Integrating prawn into Rails
 gem 'acts-as-taggable-on'                                                      # :source => "http://gemcutter.org", Taggable gem,
 gem 'ckeditor'                                                                 # WYSIWYG editing
 gem 'paperclip'                                                                # Attachment handling
@@ -119,7 +125,7 @@ gem 'friendly_id'                                                              #
 gem 'foreman'                                                                  # Helps manage multiple processes when running app in development.
 gem 'supermodel', git: 'git://github.com/KonaTeam/supermodel.git'              # Uses ActiveModel for in-memory storage with redis
 gem 'best_in_place', github: 'bernat/best_in_place'                            # In-place editing support ... no Rails 4 release yet
-gem 'split', :require => 'split/dashboard'                                     # AB testing framework
+gem 'split', require: 'split/dashboard'                                        # AB testing framework
 gem 'backup'                                                                   # Used to backup MySQL database and uploaded site assets
 gem 'dropbox-sdk'                                                              # Used with backup above
 gem 'sidekiq', '< 3'                                                           # Background jobs; used for quizzes TODO: v 3 not yet working with sidetiq
