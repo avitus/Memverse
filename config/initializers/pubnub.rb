@@ -5,7 +5,7 @@ if Rails.env.development?
       :subscribe_key => 'sub-c-88c2a812-47e6-11e3-8c4f-02ee2ddab7fe', # required
       :secret_key    => nil,    # optional, if used, message signing is enabled
       :cipher_key    => nil,    # optional, if used, encryption is enabled
-      :ssl           => nil     # true or default is false
+      :ssl           => true    # true or default is false
   )
 
 else
@@ -16,7 +16,7 @@ else
       :subscribe_key => 'sub-c-bcc87aee-e8b7-11e2-acbe-02ee2ddab7fe', # required
       :secret_key    => nil,    # optional, if used, message signing is enabled
       :cipher_key    => nil,    # optional, if used, encryption is enabled
-      :ssl           => nil     # true or default is false
+      :ssl           => true    # true or default is false
   )
 
 end
