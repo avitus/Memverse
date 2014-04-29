@@ -3,26 +3,26 @@ class Api::V1::VersesController < Api::V1::ApiController
   # ----------------------------------------------------------------------------------------------------------
   # Swagger-Docs DSL (ALV -- Unable to get Swagger-Docs gem to generate documentation)
   # ----------------------------------------------------------------------------------------------------------
-  # swagger_controller :verses, "Verses"
+  swagger_controller :verses, "Verses"
 
-  # swagger_api :show do
-  #   summary "Show a Verse (based on ID)"
-  #   param :path, :id, :integer, :required, "Verse Id"
-  #   response :unauthorized
-  #   response :not_acceptable
-  #   response :not_found
-  # end
+  swagger_api :show do
+    summary "Show a Verse (based on ID)"
+    param :path, :id, :integer, :required, "Verse Id"
+    response :unauthorized
+    response :not_acceptable
+    response :not_found
+  end
 
-  # swagger_api :lookup do
-  #   summary "Lookup a Verse (based on reference)"
-  #   param :form, :tl, :string,  :required, "Translation"
-  #   param :form, :bk, :string,  :required, "Book"
-  #   param :form, :ch, :integer, :required, "Chapter"
-  #   param :form, :vs, :integer, :required, "Verse"
-  #   response :unauthorized
-  #   response :not_acceptable
-  #   response :not_found
-  # end
+  swagger_api :lookup do
+    summary "Lookup a Verse (based on reference)"
+    param :form, :tl, :string,  :required, "Translation"
+    param :form, :bk, :string,  :required, "Book"
+    param :form, :ch, :integer, :required, "Chapter"
+    param :form, :vs, :integer, :required, "Verse"
+    response :unauthorized
+    response :not_acceptable
+    response :not_found
+  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Swagger-Docs DSL [END]
