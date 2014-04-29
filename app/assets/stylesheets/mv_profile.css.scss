@@ -3,19 +3,33 @@
   width:600px;
 }
 
-#edit-profile-form label {
-  width:15em;  /* changed from 12em on March 6 2010 */
-  padding-right:0.5em;
+#edit-profile-form li {
+  padding: 0.2em 0;
+  width: 570px;
+  list-style: none;
+  clear: both;
+
+  div.ui-widget {
+    font-size: 100%;
+  }
+
 }
 
-#edit-profile-form li {
-  padding:0.12em 0; 
-  width:570px;
-  list-style:none;
-  
-  div.ui-widget {
-    font-size: 100%
-  }
+#edit-profile-form label {
+  width:15em;
+  padding-right:0.5em;
+  vertical-align: center;
+  font-size: 110%;
+}
+
+/* Set size of text input fields */
+.profile-wide-text-field {
+  width: 18em;
+  height: 1.5em;
+}
+
+input[type="checkbox"] {
+  margin-top: 0.25em;
 }
 
 #edit-profile-form .buttons {

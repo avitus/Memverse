@@ -254,6 +254,7 @@
     contact:               "Contacto"
     leaderboard:           "Clasificación"
     blog:                  "Blog"
+    quiz:                  "Quiz"
     help:                  "Ayuda"
     demo:                  "Memorice Demo"
   home_menu:
@@ -301,6 +302,10 @@
     Recent Comments:       "Comentarios recientes"
     Blog Search:           "Blog Search"
     Forums:                "Forums"
+  quiz_menu:
+    Live Quiz:             "Live Quiz"
+    My Questions:          "My Questions"
+    Submit Question:       "Submit Question"
   help_menu:
     faq:                   "FAQ"
   messages:

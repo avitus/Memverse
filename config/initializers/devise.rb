@@ -217,9 +217,18 @@ Devise.setup do |config|
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', :scope => 'user,public_repo'
+
+  # This is to use Windows Live for authorizing users on Memverse.com
+  # Configure settings here: https://account.live.com/developers/applications/index (User: kyr*****@live.com)
   require "omniauth-windowslive"
-  # config.omniauth :windowslive, '000000004410AE0F', 'kCh4eoFdNmmNCqnwE7-3pztTYpSu90wD', :scope => 'wl.signin,wl.emails'
-  config.omniauth :windowslive, '000000004410A83C', 'NHb8c7WCjmVSj--k2fi5OWB8ud4g4SiN', :scope => 'wl.signin,wl.emails'
+  case Rails.env
+    when "development"
+      # Callback URL: http://www.memversedev.com:3000/users/auth/windowslive/callback
+      config.omniauth :windowslive, '000000004410A83C', 'NHb8c7WCjmVSj--k2fi5OWB8ud4g4SiN', :scope => 'wl.signin,wl.emails'
+    when "production"
+      # Callback URL: http://www.memverse.com/users/auth/windowslive/callback
+      config.omniauth :windowslive, '000000004C11227C', '2sPIbycml8Hh3Q0BoaS0Jj4uc2gTsAR-', :scope => 'wl.signin,wl.emails'
+  end
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or

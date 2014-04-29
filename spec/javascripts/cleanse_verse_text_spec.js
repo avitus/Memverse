@@ -2,7 +2,7 @@ describe("CleanseVerseText", function() {
   it("removes trailing and leading whitespace", function() {
     expect(cleanseVerseText("    in the beginning   ")).toEqual("in the beginning");
   });
-  
+
   it("collapses unnecessary whitespace", function() {
     expect(cleanseVerseText("in    the   beginning")).toEqual("in the beginning");
   });
@@ -21,6 +21,6 @@ describe("CleanseVerseText", function() {
 
   it("removes footnotes", function() {
     expect(cleanseVerseText("that[i] the creation[j] itself")).toEqual("that the creation itself");
-  });  
-  
+  });
+
 });

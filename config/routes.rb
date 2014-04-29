@@ -41,6 +41,8 @@ MemverseApp::Application.routes.draw do
   resources :quiz_questions do
     get 'search', on: :collection
   end
+  get 'submit_question'        => "quiz_questions#submit",    as: :submit_question         # for users to submit quiz questions
+  get 'quiz_question_approval' => 'quiz_questions#approvals', as: :quiz_question_approval  # for admins to approve quiz questions
 
   resources :passages do
     get 'due', :on => :collection
@@ -204,12 +206,12 @@ MemverseApp::Application.routes.draw do
 
   # Routes for chat channels
   post '/chat/send'                 => 'chat#send_message'
-  get "/chat/toggle_ban"            => 'chat#toggle_ban'
+  get '/chat/toggle_ban'            => 'chat#toggle_ban'
 
   # Routes for live quiz
-  get  '/live_quiz'                 => 'live_quiz#live_quiz'     # Main quiz URL
-  get  '/live_quiz/channel1'        => 'live_quiz#channel1'      # Chat channel
-  get  '/live_quiz/scoreboard'      => 'live_quiz#scoreboard'    # Scoreboard for quiz
+  get  '/live_quiz'                 => 'live_quiz#live_quiz',             :as => 'live_quiz'     # Main quiz URL
+  get  '/live_quiz/channel1'        => 'live_quiz#channel1'                                      # Chat channel
+  get  '/live_quiz/scoreboard'      => 'live_quiz#scoreboard'                                    # Scoreboard for quiz
   post '/record_score'              => 'live_quiz#record_score'
 
   # Legacy routes for pages that no longer exist but have incoming links

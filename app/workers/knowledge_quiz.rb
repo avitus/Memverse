@@ -8,7 +8,12 @@ class KnowledgeQuiz
 
   recurrence do
     if Rails.env.production?
+
+      # NOTE: Any changes to schedule need to be replicated in the section below.
+      #       This is needed to set the start time for the next quiz
       weekly.day(:wednesday).hour_of_day(9)    # Every Tuesday at 9am
+      weekly.day(:saturday).hour_of_day(15)    # Every Saturday at 3pm
+
     else
       # daily.hour_of_day(9,11,15,21)          # 9am, 11am, 3pm, 9pm each day
       minutely(10)                             # For development
@@ -20,14 +25,15 @@ class KnowledgeQuiz
     # ========================================================================
     # Announce quiz
     # ========================================================================
-    broadcast  = "The weekly Bible knowledge quiz is starting. <a href=\"live_quiz\">Join now!</a>"
+    broadcast  = "The Bible knowledge quiz is starting. <a href=\"live_quiz\">Join now!</a>"
     Tweet.create(:news => broadcast, :user_id => 1, :importance => 2)  # Admin tweet => user_id = 1
 
     # ========================================================================
     # Calculate start time for next quiz
     # ========================================================================
     schedule = IceCube::Schedule.new( Time.now )
-    schedule.add_recurrence_rule( IceCube::Rule.weekly.day(:wednesday).hour_of_day(9) )
+    schedule.add_recurrence_rule( IceCube::Rule.weekly.day(:wednesday).hour_of_day(9 ).minute_of_hour(0).second_of_minute(0) )
+    schedule.add_recurrence_rule( IceCube::Rule.weekly.day(:saturday ).hour_of_day(15).minute_of_hour(0).second_of_minute(0) )
     next_quiz_time = schedule.next_occurrence
 
     # ========================================================================
@@ -95,7 +101,8 @@ class KnowledgeQuiz
       puts "===> Question: " + q_num.to_s
 
       # Pick a question at random
-      q = QuizQuestion.mcq.fresh.sort_by{ rand }.first
+      # q = QuizQuestion.mcq.approved.fresh.sort_by{ rand }.first
+      q = QuizQuestion.mcq.approved.order(:last_asked).first
 
       # Update question to show that it was asked today
       q.update_attribute( :last_asked, Date.today )
@@ -196,7 +203,7 @@ class KnowledgeQuiz
     # silver_ribbon_id   = final_scoreboard[1]['id']
     # bronze_ribbon_id   = final_scoreboard[2]['id']
 
-    broadcast  = "#{gold_ribbon_name} won the weekly Bible knowledge quiz"
+    broadcast  = "#{gold_ribbon_name} won the Bible knowledge quiz"
     Tweet.create(:news => broadcast, :user_id => gold_ribbon_id, :importance => 2)
 
     # ========================================================================

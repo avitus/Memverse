@@ -7,4 +7,9 @@ require 'localeapp/rails'
 
 Localeapp.configure do |config|
   config.api_key = 'hydwsckJ8pQAuHIcG9FNcVFm8np2mrtIKdiKUP84sv1ex4hfrk'
+
+  # ALV: Added to prevent polling in dev environment
+  config.polling_environments = []
+  config.reloading_environments = []
+
 end

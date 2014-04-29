@@ -380,7 +380,7 @@ class Memverse < ActiveRecord::Base
 
       # Find the first verse that is overdue or hasn't been tested within the minimum test frequency window
       # TODO: do we want to return a verse that was tested today as 'due' ?
-      while ((x.status == 'Pending') or ((x.next_test > Date.today + slack) and (Date.today - x.last_tested < min_test_freq))) and x.next_verse
+      while ((x.status == 'Pending') || ((x.next_test > Date.today + slack) && (Date.today - x.last_tested < min_test_freq))) and x.next_verse
         x = Memverse.find(x.next_verse)
       end
 
@@ -395,16 +395,16 @@ class Memverse < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   def next_verse_due_in_sequence
 
-    if self.solo_verse? or self.next_verse.nil?
+    if self.solo_verse? || self.next_verse.nil?
       return nil
     else
       x = Memverse.find(self.next_verse)
 
-      while ((x.status == 'Pending') or (x.next_test > Date.today)) and x.next_verse
+      while ((x.status == 'Pending') || (x.next_test > Date.today)) and x.next_verse
         x = Memverse.find(x.next_verse)
       end
 
-      if (x.next_test <= Date.today) and (x.status != 'Pending')
+      if (x.next_test <= Date.today) && (x.status != 'Pending')
         return x
       else
         return nil
@@ -422,13 +422,13 @@ class Memverse < ActiveRecord::Base
     slack         =  7 # Add some slack to avoid having to review the entire sequence too soon afterwards
     min_test_freq = self.user.max_interval || 120 # Minimum test frequency in days for entire sequence
 
-    if self.solo_verse? or self.next_verse.nil?
+    if self.solo_verse? || self.next_verse.nil?
       return false
     else
 
       x = Memverse.find(self.next_verse)
 
-      while ((x.status == 'Pending') or ((x.next_test > Date.today + slack) and (Date.today - x.last_tested < min_test_freq))) and x.next_verse
+      while ((x.status == 'Pending') || ((x.next_test > Date.today + slack) && (Date.today - x.last_tested < min_test_freq))) and x.next_verse
         x = Memverse.find(x.next_verse)
       end
 
@@ -437,7 +437,7 @@ class Memverse < ActiveRecord::Base
       # 1st condition: verse is pending
       # 2nd condition: verse is overdue and needs testing
       # 3rd condition: verse hasn't been tested recently enough and needs testing
-      return !(((x.status == 'Pending') or ((x.next_test > Date.today + slack) and (Date.today - x.last_tested < min_test_freq))))
+      return !(((x.status == 'Pending') || ((x.next_test > Date.today + slack) && (Date.today - x.last_tested < min_test_freq))))
 
     end
   end
@@ -491,7 +491,7 @@ class Memverse < ActiveRecord::Base
   # Should we show feedback for this verse?
   # ----------------------------------------------------------------------------------------------------------
   def show_feedback?
-  	self.test_interval < 90 or self.user.show_echo?
+    test_interval < 90 || self.user.show_echo?
   end
 
   # ----------------------------------------------------------------------------------------------------------
