@@ -18,8 +18,11 @@ group :development do
   gem 'brakeman', :require => false                             # Scan for security vulnerabilities
 end
 
-gem 'rspec-rails', '>= 2.6.1', group: [:development, :test]
-gem 'jasmine', group: [:development, :test]
+group :development, :test do
+  gem 'rspec-rails'
+  gem 'jasmine'
+  gem 'jasmine-rails'
+end
 
 group :test do
   gem 'factory_girl_rails'                                      # Add to development group for debugging in console

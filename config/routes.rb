@@ -1,5 +1,6 @@
 MemverseApp::Application.routes.draw do
 
+  mount JasmineRails::Engine => '/specs' if defined?(JasmineRails)
   # Authentication for API
   use_doorkeeper
 
