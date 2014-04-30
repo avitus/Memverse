@@ -66,6 +66,7 @@ class ChatController < ApplicationController
 
     if chat_open && !usr_banned # Check that chat is open and user is not banned
       puts "Chat is open and user not banned"
+      Rails.logger.info("====> Publishing message to PubNub: #{parse_chat_message(params[:msg_body], params[:sender], params[:user_id]}")
       PN.publish( :channel  => channel, :message  => {
           :meta => "chat",
           :data => parse_chat_message(params[:msg_body], params[:sender], params[:user_id])
