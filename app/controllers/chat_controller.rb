@@ -65,12 +65,15 @@ class ChatController < ApplicationController
     @my_callback = lambda { |message| puts(message) } # for PubNub
 
     if chat_open && !usr_banned # Check that chat is open and user is not banned
+      puts "Chat is open and user not banned"
       PN.publish( :channel  => channel, :message  => {
           :meta => "chat",
           :data => parse_chat_message(params[:msg_body], params[:sender], params[:user_id])
         },
         :callback => @my_callback
       )
+    else
+      puts "Chat is closed and/or user banned"
     end
 
     respond_to do |format|
