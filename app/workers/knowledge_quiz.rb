@@ -80,6 +80,7 @@ class KnowledgeQuiz
           :meta => "chat_status",
           :status => new_status
         },
+        :http_sync => true,
         :callback => @my_callback
       )
     end
@@ -122,6 +123,7 @@ class KnowledgeQuiz
           :mc_answer   => q.mc_answer,
           :time_alloc  => q.time_allocation
         },
+        :http_sync => true,
         :callback => @my_callback
       )
 
@@ -141,6 +143,7 @@ class KnowledgeQuiz
           :meta => "scoreboard",
           :scoreboard => scoreboard
         },
+        :http_sync => true,
         :callback => @my_callback
       )
 
@@ -219,10 +222,11 @@ class KnowledgeQuiz
         :meta => "chat_status",
         :status => new_status
       },
+      :http_sync => true,
       :callback => @my_callback
     )
 
-    puts "Chat closed and rake task finished."
+    puts "Chat closed and sidetiq job finished."
 
   end
 

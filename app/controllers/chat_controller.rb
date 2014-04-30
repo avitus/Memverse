@@ -24,6 +24,7 @@ class ChatController < ApplicationController
           :meta => "chat_status",
           :status => new_status
         },
+        :http_sync => true,
         :callback => @my_callback
       )
 
@@ -71,6 +72,7 @@ class ChatController < ApplicationController
           :meta => "chat",
           :data => parse_chat_message(params[:msg_body], params[:sender], params[:user_id])
         },
+        :http_sync => true,
         :callback => @my_callback
       )
     else
