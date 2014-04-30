@@ -85,7 +85,7 @@ $(document).ready(function() {
 	channel     = "quiz-<%= @quiz.id %>";
     translation = "<%= current_user.translation %>";
 
-	// Init
+	// Initialize PubNub
     var pubnub = PUBNUB.init({
         publish_key   : '<%= PN.env[:publish_key] %>',
         subscribe_key : '<%= PN.env[:subscribe_key] %>',
