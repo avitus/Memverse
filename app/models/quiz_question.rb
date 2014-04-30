@@ -76,12 +76,13 @@ class QuizQuestion < ActiveRecord::Base
 
   # ----------------------------------------------------------------------------------------------------------
   # Estimate time required (in seconds) for question
+  # 0.5 * word count + 7 seconds  => felt too quick on short questions and too slow on long questions
   # ----------------------------------------------------------------------------------------------------------
   def time_allocation
     case self.question_type
       when 'mcq'
         reading_required = [ mc_question, mc_option_a, mc_option_b, mc_option_c, mc_option_d ].join(" ")
-        ( reading_required.split(" ").length * 0.5 ).to_i + 7  # 0.5 second for each word + 7 seconds
+        ( reading_required.split(" ").length * 0.4 ).to_i + 10  # 0.4 second for each word + 10 seconds
       when 'recitation'
         ( self.passage_translations.first.last.split(" ").length * 2.5 + 15.0 ).to_i # 24 WPM typing speed with 15 seconds to think
       when 'reference'
