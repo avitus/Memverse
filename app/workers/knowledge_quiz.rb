@@ -55,12 +55,13 @@ class KnowledgeQuiz
     channel = "quiz-1"  # General knowledge quiz will always have ID=1
 
     # PubNub callback function - From version 3.4 PubNub is fully asynchronous
-    @my_callback = lambda { |message|
-        if message[0]  # Return codes are of form [1,"Sent","136074940..."]
+    @my_callback = lambda { |envelope|
+        if envelope.status_code == 1  # Return codes are of form [1,"Sent","136074940..."]
             # puts("Successfully Sent Message!");
         else
             # If message is not sent we should probably try to send it again
             puts("!!!!! Failed to send message !!!!!!")
+            puts( envelope.inspect )
         end
     }
 
