@@ -29,8 +29,8 @@ build:
             name: Create secret_token.rb file
             filename: config/initializers/secret_token.rb
             content: |
-                MemverseApp::Application.config.secret_token    = '9&-9UmoAl?wmgp)~?TDZ#w|uq={aY=Qer3Z<^uB/;B,g+ VuI;V)Cx@bR{_>->r2L-NM.*<R}x))Q1z$WRmqUU:GshQ&5y%[N@6+G9H|*r<m=dSw>A2]@b-4!aj{Zo|C'
-                MemverseApp::Application.config.secret_key_base = 'UvrfrC|Qz215,b5z2b2eFIUpDC?:tTC=_)2jiUu|%ql;b_tLH3 (g)|Li^@a HPS;YyR*i w,ySjLV/J2@yh:Lh|*;P!<T{+nEZigb&m(`Z&Mr:ui+Y[Il-p-f-@b|K.'
+                MemverseApp::Application.config.secret_token    = "9&-9UmoAl?wmgp)~?TDZ#w|uq={aY=Qer3Z<^uB/;B,g+ VuI;V)Cx@bR{_>->r2L-NM.*<R}x))Q1z$WRmqUU:GshQ&5y%[N@6+G9H|*r<m=dSw>A2]@b-4!aj{Zo|C"
+                MemverseApp::Application.config.secret_key_base = "UvrfrC|Qz215,b5z2b2eFIUpDC?:tTC=_)2jiUu|%ql;b_tLH3 (g)|Li^@a HPS;YyR*i w,ySjLV/J2@yh:Lh|*;P!<T{+nEZigb&m(`Z&Mr:ui+Y[Il-p-f-@b|K."
 
         - script:
             name: load schema
