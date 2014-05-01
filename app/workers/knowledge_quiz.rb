@@ -54,15 +54,45 @@ class KnowledgeQuiz
     quiz    = Quiz.find(1)
     channel = "quiz-1"  # General knowledge quiz will always have ID=1
 
-    # PubNub callback function - From version 3.4 PubNub is fully asynchronous
-    @my_callback = lambda { |message|
-        if message[0]  # Return codes are of form [1,"Sent","136074940..."]
-            # puts("Successfully Sent Message!");
-        else
-            # If message is not sent we should probably try to send it again
-            puts("!!!!! Failed to send message !!!!!!")
-        end
+    # ========================================================================
+    # PubNub callback function
+    # ========================================================================
+    @my_callback = lambda { |envelope|
+      if envelope.error
+        # If message is not sent we should probably try to send it again
+        puts("==== ! Failed to send message ! ==========")
+        puts( envelope.inspect )
+      end
     }
+
+    # #<Pubnub::Envelope:0x007fdf869c67c0
+    #  @channel="quiz-1",
+    #  @error=nil,
+    #  @error_message=nil,
+    #  @first=true,
+    #  @history_end=nil,
+    #  @history_start=nil,
+    #  @last=true,
+    #  @message={
+    #    :meta=>"question",
+    #    :q_id=>615,
+    #    :q_num=>24,
+    #    :q_type=>"mcq",
+    #    :mc_question=>"In Paul's farewell to the Ephesians he says: ... He knew that after he left ______ .",
+    #    :mc_option_a=>"There would be conflict within the Ephesian church.",
+    #    :mc_option_b=>"The sheep would go astray.",
+    #    :mc_option_c=>"Wolves would enter and attack the flock.",
+    #    :mc_option_d=>"He would be arrested in Jerusalem.",
+    #    :mc_answer=>"C",
+    #    :time_alloc=>35},
+    #  @object=#<Net::HTTPOK 200 OK readbody=true>,
+    #    @payload=nil,
+    #    @response="[1,\"Sent\",\"13988747805988965\"]",
+    #  @response_message="Sent",
+    #  @service=nil,
+    #  @status=200,
+    #  @timetoken="13988747805988965",
+    #  @timetoken_update=nil>
 
     # ========================================================================
     # Open quiz chat channel 5 minutes prior to start
@@ -79,6 +109,7 @@ class KnowledgeQuiz
           :meta => "chat_status",
           :status => new_status
         },
+        :http_sync => true,
         :callback => @my_callback
       )
     end
@@ -121,6 +152,7 @@ class KnowledgeQuiz
           :mc_answer   => q.mc_answer,
           :time_alloc  => q.time_allocation
         },
+        :http_sync => true,
         :callback => @my_callback
       )
 
@@ -140,6 +172,7 @@ class KnowledgeQuiz
           :meta => "scoreboard",
           :scoreboard => scoreboard
         },
+        :http_sync => true,
         :callback => @my_callback
       )
 
@@ -218,10 +251,11 @@ class KnowledgeQuiz
         :meta => "chat_status",
         :status => new_status
       },
+      :http_sync => true,
       :callback => @my_callback
     )
 
-    puts "Chat closed and rake task finished."
+    puts "Chat closed and sidetiq job finished."
 
   end
 
