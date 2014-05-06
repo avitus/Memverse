@@ -2,7 +2,7 @@
 //= require support/jquery-ui.min.js
 //= require application
 
-describe("blankifyVerse", function() {
+/* describe("blankifyVerse", function() {
 
   it("replaces 10% of words in a verse with blanks", function() {
     expect(blankifyVerse("In the beginning God created the heavens and the earth", 10))
@@ -20,3 +20,5 @@ describe("blankifyVerse", function() {
   });
 
 });
+
+*/
