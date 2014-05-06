@@ -7,7 +7,7 @@ GIT
 
 GIT
   remote: git://github.com/alexcwatt/bloggity.git
-  revision: feabbb523cb4a64acd80d35695aac7fdb597db4c
+  revision: 6c0cdc78d7ab49509bf10b7ba8ad8f6836dfcec1
   specs:
     bloggity (0.0.6)
       jquery-rails
@@ -303,7 +303,7 @@ GEM
     mini_portile (0.5.3)
     minitest (4.7.5)
     moneta (0.7.20)
-    multi_json (1.9.2)
+    multi_json (1.10.0)
     multi_test (0.1.1)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
