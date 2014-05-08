@@ -5,6 +5,7 @@ box: fliplingo/ubuntu12.04-ruby2.1.0@0.0.1
 # You will want to define your database as follows:
 services:
   - wercker/mysql
+  - wercker/redis
 # See more about services on our devcenter:
 # http://devcenter.wercker.com/articles/services/
 build:
