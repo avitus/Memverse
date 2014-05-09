@@ -1,12 +1,12 @@
 defaults: &defaults
-  host: redis.yml.host
+  host: <%= ENV['WERCKER_REDIS_HOST'] %>
   port: 6379
 
 development:
   <<: *defaults
 
 test:
-  host: redis.yml.host
+  host: <%= ENV['WERCKER_REDIS_HOST'] %>
   port: 6379
 
 staging:
