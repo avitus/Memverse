@@ -27,6 +27,10 @@ build:
         - rails-database-yml
 
         - script:
+            name: show environment variables
+            code: export
+
+        - script:
             name: load schema
             code: bundle exec rake db:schema:load RAILS_ENV=test
         - script:
