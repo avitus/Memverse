@@ -126,7 +126,9 @@ end
 
 Given /^I sign in as a non-blogging user$/ do
   step %{I am a user named "blognot" with an email "blognot@test.com" and password "please"}
-  User.find_by_email("blognot@test.com").update_attribute(id: 1000)
+  @u = User.find_by_email("blognot@test.com")
+  @u.id = 1000
+  @u.save
   step %{the email address "blognot@test.com" is confirmed}
   step %{I sign in as "blognot@test.com/please"}
   step %{I should be signed in}
