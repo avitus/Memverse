@@ -18,7 +18,7 @@ Feature: Post on Blog
     # Blogging priviliges are tied to user ID for now
     @blog
     Scenario: I sign in but am not authorized to blog
-      Given I sign in as a normal user
+      Given I sign in as a non-blogging user
       When I go to the blog
       Then I should not see "New blog post"
       When I go to the new blog post page for the blog titled "Memverse Blog"

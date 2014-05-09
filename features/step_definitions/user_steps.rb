@@ -124,6 +124,14 @@ Given /^I sign in as a normal user$/ do
   step %{I should be signed in}
 end
 
+Given /^I sign in as a non-blogging user$/ do
+  step %{I am a user named "blognot" with an email "blognot@test.com" and password "please"}
+  User.find_by_email("blognot@test.com").update_attribute(id: 1000)
+  step %{the email address "blognot@test.com" is confirmed}
+  step %{I sign in as "blognot@test.com/please"}
+  step %{I should be signed in}
+end
+
 Given /^I sign in as an advanced user$/ do
   step %{I am an advanced user named "advanced" with an email "advanced_user@test.com" and password "please"}
   step %{the email address "advanced_user@test.com" is confirmed}
