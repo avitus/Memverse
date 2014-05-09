@@ -1,3 +1,1 @@
-host = ENV['WERCKER_REDIS_HOST'] || 'localhost'
-
-$redis = Redis.new(:host => host, :port => 6379)
+$redis = Redis.new(:host => redis.rb.host, :port => 6379)
