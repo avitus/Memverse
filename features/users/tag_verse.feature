@@ -8,9 +8,7 @@ Feature: Tag Verse
     Given the following verses exist:
       |id | translation | book_index | book    | chapter | versenum | text                                                    |
       | 1 | NIV         | 1          | Genesis | 1       | 1        | In the beginning God created the heavens and the earth  |
-    And the following user exists:
-	  | name    | email               | password |
-      | Old Dog | olddog@test.com     | please   |
+    And I am a confirmed user named "Old Dog" with an email "olddog@test.com" and password "please"
     And the following memverses exist:
       | id | User           | Verse |
       | 1  | name: Old Dog  | id: 1 |
