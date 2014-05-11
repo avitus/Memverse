@@ -1,8 +1,4 @@
-Given /^the following memverses exist:$/ do |table|
-
-  # table is a Cucumber::Ast::Table
-	table.hashes.each do |hash|  
-		FactoryGirl.create(:memverse, hash)
-	end
-
+Given /^the user named "(.*?)" has a memverse with the id of ([0-9]+)$/ do |name, id|
+  user = User.where(name: name).first
+  FactoryGirl.create(:memverse, id: id, user: user)
 end
