@@ -1,3 +1,9 @@
+def wait_for_input
+  Timeout.timeout(Capybara.default_wait_time) do
+    loop until page.has_css?("td.edit_mv input")
+  end
+end
+
 Given /^no user exists with an email of "(.*)"$/ do |email|
   User.where(:email => email).first.should be_nil
 end
@@ -164,12 +170,18 @@ Then /^the tag "(.*)" should exist for memverse #([0-9]+)$/ do |tagname, id|
   mv.tags.include? tagname
 end
 
-When /^I type in "([^\"]*)" into autocomplete list "([^\"]*)" and I choose "([^\"]*)"$/ do |typed, input_name,should_select|
-   page.driver.browser.execute_script %Q{ $('input[data-autocomplete]').trigger("focus") }
-   fill_in("#{input_name}",:with => typed)
-   page.driver.browser.execute_script %Q{ $('input[data-autocomplete]').trigger("keydown") }
-   sleep 1
-   page.driver.browser.execute_script %Q{ $('.ui-menu-item a:contains("#{should_select}")').trigger("mouseenter").trigger("click"); }
+When /^I type in "([^\"]*)" and I choose "([^\"]*)"$/ do |typed, should_select|
+  wait_for_input
+  input = find("td.edit_mv input")
+  input.native.send_keys typed
+  sleep 2
+  page.driver.browser.execute_script %Q{ $('.ui-menu-item a:contains("#{should_select}")').trigger("mouseenter").trigger("click"); }
+end
+
+When /^I type "([^\"]*)"$/ do |typed|
+  wait_for_input
+  input = find("td.edit_mv input")
+  input.native.send_keys typed
 end
 
 When /^I sleep for ([0-9]+)$/ do |time|
