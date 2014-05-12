@@ -171,3 +171,7 @@ When /^I type in "([^\"]*)" into autocomplete list "([^\"]*)" and I choose "([^\
    sleep 1
    page.driver.browser.execute_script %Q{ $('.ui-menu-item a:contains("#{should_select}")').trigger("mouseenter").trigger("click"); }
 end
+
+When /^I sleep for ([0-9]+)$/ do |time|
+   sleep time.to_i
+end
