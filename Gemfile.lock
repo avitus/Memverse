@@ -388,9 +388,6 @@ GEM
       ruby-rc4
       ttfunk
     phantomjs (1.9.7.0)
-    pickle (0.4.10)
-      cucumber (>= 0.8)
-      rake
     polyglot (0.3.4)
     prawnto_2 (0.2.6)
       prawn (>= 0.6.0)
@@ -643,7 +640,6 @@ DEPENDENCIES
   omniauth
   omniauth-windowslive!
   paperclip
-  pickle
   prawn!
   prawnto_2
   protected_attributes (>= 1.0.5)
