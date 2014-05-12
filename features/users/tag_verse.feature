@@ -17,9 +17,9 @@ Feature: Tag Verse
       And I go to the page for the memverse with the id of 1
 	  Then I should see "But the fruit of the Spirit"
 	  When I click inside "td.edit_mv"
-      And I sleep for 2
-      And I fill in "input" with "Fruit of the Spirit"
+      And I type "Fruit of the Spirit"
       And I submit the form
+      And I sleep for 2
       Then I should see "Fruit of the Spirit" within "#user-tags"
 
     # @javascript
@@ -41,7 +41,7 @@ Feature: Tag Verse
       When I go to the page for the memverse with the id of 1
       Then I should see "Old Dog"
       When I click inside "td.tag"
+      And I type in "Frui" and I choose "Fruit of the Spirit"
       And I sleep for 2
-      And I type in "Frui" into autocomplete list "input" and I choose "Fruit of the Spirit"
       Then the tag "Fruit of the Spirit" should exist for memverse #1
       And I should see "Fruit of the Spirit" within "#user-tags"
