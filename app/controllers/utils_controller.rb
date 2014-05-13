@@ -381,8 +381,7 @@ class UtilsController < ApplicationController
                 UserMailer.reminder_email(r).deliver
               end
               @emails_sent += 1
-              r.last_reminder = Date.today
-              r.save
+              r.update_attribute(:last_reminder, Date.today)
               @email_list << r
             end
           end
