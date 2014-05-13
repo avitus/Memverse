@@ -22,7 +22,6 @@ db/*.sqlite3
 pubnub.log
 tmp/*
 dump.rdb
-config/initializers/secret_token.rb
 
 # various artifacts
 **.war

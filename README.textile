@@ -2,12 +2,18 @@ h1. Memverse
 
 A Bible memorization application
 
+"!https://app.wercker.com/status/a6bf54c9eb901816e1f6aee1ae3ad20a/m/(wercker status)!":https://app.wercker.com/project/bykey/a6bf54c9eb901816e1f6aee1ae3ad20a
+
 h2. Dependencies
 
 To use this application, you will need:
 
 * The Ruby language (version 2.0.0)
 * Rails (version 4.0.0 or newer)
+
+h2. Running tests
+
+Use `bundle exec guard`.
 
 h2. Documentation and Support
 

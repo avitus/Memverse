@@ -1,7 +1,7 @@
 Given /^the following verses exist:$/ do |table|
 
   # table is a Cucumber::Ast::Table
-	table.hashes.each do |hash|  
+	table.hashes.each do |hash|
 		FactoryGirl.create(:verse, hash)
 	end
 

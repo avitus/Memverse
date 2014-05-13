@@ -1,5 +1,4 @@
 MemverseApp::Application.routes.draw do
-
   # Authentication for API
   use_doorkeeper
 
@@ -10,6 +9,7 @@ MemverseApp::Application.routes.draw do
   mount Bloggity::Engine, :at => '/blog'
   mount RailsAdmin::Engine    => '/admin', :as => 'rails_admin'
   mount Ckeditor::Engine      => '/ckeditor'
+  mount JasmineRails::Engine  => '/specs' if defined?(JasmineRails)
 
   # Allow Admin users to monitor Sidekiq - used for quiz schedule
   authenticate :user, lambda { |u| u.admin? } do

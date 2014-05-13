@@ -261,7 +261,7 @@ end
 puts "Adding final verse data"
 config = ActiveRecord::Base.configurations[Rails.env]
 if config['adapter'] == 'mysql2'
-  system("mysql --user=#{config['username']} --password=#{config['password']} #{config['database']} < iso_final_verses.sql")
+  system("mysql --user=#{config['username']} --password=#{config['password']} --host=#{config['host']} #{config['database']} < iso_final_verses.sql")
 elsif config['adapter'] == 'sqlite3'
   system("sqlite3 #{config['database']} < iso_final_verses.sql")
 else

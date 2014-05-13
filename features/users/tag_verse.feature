@@ -3,40 +3,45 @@ Feature: Tag Verse
  In order to share thoughts on the verses
  As a user
  I want to tag verse
-	
+
   Background:
     Given the following verses exist:
       |id | translation | book_index | book    | chapter | versenum | text                                                    |
       | 1 | NIV         | 1          | Genesis | 1       | 1        | In the beginning God created the heavens and the earth  |
-    And the following user exists:
-	  | name    | email               | password |
-      | Old Dog | olddog@test.com     | please   |
-    And the following memverses exist:
-      | id | User           | Verse |
-      | 1  | name: Old Dog  | id: 1 |
-    And Old Dog is signed in
-    And I go to the page for the memverse with the id of 1
-    
-    @javascript
+    And I am a confirmed user named "Old Dog" with an email "olddog@test.com" and password "please"
+    And the user named "Old Dog" has a memverse with the id of 1
+
+    @javascript @tag
     Scenario: User tags with valid tag
-	  I should see "In the beginning God"
-	  When I click inside "td.tag"
-      And I fill in "td.tag form input" with "Creation"
+    Given I sign in as "olddog@test.com/please"
+      And I go to the page for the memverse with the id of 1
+	  Then I should see "But the fruit of the Spirit"
+	  When I click inside "td.edit_mv"
+      And I type "Fruit of the Spirit"
       And I submit the form
-      Then I should see "Creation" in "#user-tags"
+      And I sleep for 5
+      Then I should see "Fruit of the Spirit" within "#user-tags"
 
-    @javascript
-    Scenario: User tags with duplicate tag
-      Given I have tag: Creation
-      When I click inside "td.tag"
-	  And I type in "Crea" into autocomplete list "input" and I choose "Creation"
-      Then I should get an error
+    # @javascript
+    # Scenario: User tags with duplicate tag
+    # Given I sign in as "olddog@test.com/please"
+    #   And I go to the page for the memverse with the id of 1
+    #   And I have tag: Fruit of the Spirit
+    # When I click inside ".edit_mv"
+	  #   And I type in "Crea" into autocomplete list "input" and I choose "Fruit of the Spirit"
+    # Then I should get an error
 
-    @javascript 
+    @javascript @tag
     Scenario: User tags with autocomplete tag
-      Given the following tag exists:
-        | name     |
-        | Creation |
-      And I type in "Crea" into autocomplete list "new_tag" and I choose "Creation"
-      Then the tag "Creation" should exist for memverse #1
-      And I should see "Creation" in "#user-tags"
+      Given I sign in as "olddog@test.com/please"
+        And I go to the page for the memverse with the id of 1
+        And the following tags exist:
+        | name                |
+        | Fruit of the Spirit |
+      When I go to the page for the memverse with the id of 1
+      Then I should see "Old Dog"
+      When I click inside "td.tag"
+      And I type in "Frui" and I choose "Fruit of the Spirit"
+      And I sleep for 5
+      Then the tag "Fruit of the Spirit" should exist for memverse #1
+      And I should see "Fruit of the Spirit" within "#user-tags"
