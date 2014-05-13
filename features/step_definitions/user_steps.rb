@@ -174,7 +174,7 @@ When /^I type in "([^\"]*)" and I choose "([^\"]*)"$/ do |typed, should_select|
   wait_for_input
   input = find("td.edit_mv input")
   input.native.send_keys typed
-  sleep 2
+  sleep 5
   page.driver.browser.execute_script %Q{ $('.ui-menu-item a:contains("#{should_select}")').trigger("mouseenter").trigger("click"); }
 end
 
