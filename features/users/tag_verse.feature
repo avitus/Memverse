@@ -11,7 +11,7 @@ Feature: Tag Verse
     And I am a confirmed user named "Old Dog" with an email "olddog@test.com" and password "please"
     And the user named "Old Dog" has a memverse with the id of 1
 
-    @javascript
+    @javascript @tag
     Scenario: User tags with valid tag
     Given I sign in as "olddog@test.com/please"
       And I go to the page for the memverse with the id of 1
@@ -19,7 +19,7 @@ Feature: Tag Verse
 	  When I click inside "td.edit_mv"
       And I type "Fruit of the Spirit"
       And I submit the form
-      And I sleep for 2
+      And I sleep for 5
       Then I should see "Fruit of the Spirit" within "#user-tags"
 
     # @javascript
@@ -31,7 +31,7 @@ Feature: Tag Verse
 	  #   And I type in "Crea" into autocomplete list "input" and I choose "Fruit of the Spirit"
     # Then I should get an error
 
-    @javascript
+    @javascript @tag
     Scenario: User tags with autocomplete tag
       Given I sign in as "olddog@test.com/please"
         And I go to the page for the memverse with the id of 1
@@ -42,6 +42,6 @@ Feature: Tag Verse
       Then I should see "Old Dog"
       When I click inside "td.tag"
       And I type in "Frui" and I choose "Fruit of the Spirit"
-      And I sleep for 2
+      And I sleep for 5
       Then the tag "Fruit of the Spirit" should exist for memverse #1
       And I should see "Fruit of the Spirit" within "#user-tags"
