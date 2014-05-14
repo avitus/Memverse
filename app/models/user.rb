@@ -63,9 +63,10 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :quests
   has_and_belongs_to_many :badges
 
-  has_many                :passages,          :dependent => :destroy
-  has_many                :memverses,         :dependent => :destroy
-  has_many                :verses,            :through   => :memverses
+  has_many                :passages,          :dependent   => :destroy
+  has_many                :memverses,         :dependent   => :destroy
+  has_many                :verses,            :through     => :memverses
+  has_many                :quiz_questions,    :foreign_key => :submitted_by
 
   has_many                :progress_reports,  :dependent => :destroy
   has_many                :tweets
@@ -100,14 +101,19 @@ class User < ActiveRecord::Base
 
   acts_as_paranoid # soft-deletion
 
+  rails_admin do
+    include_all_fields
+
+    exclude_fields :church # still have church_id; fixes issue #212
+  end
+
+
   # ----------------------------------------------------------------------------------------------------------
   # Single Sign On support
   # ----------------------------------------------------------------------------------------------------------
   def self.find_for_windowslive_oauth2( access_token, signed_in_resource=nil )
 
     data = access_token.extra.raw_info
-
-    Rails.logger.debug( access_token.inspect )
 
     user = User.where( :email => data.emails.account ).first
 
@@ -125,6 +131,8 @@ class User < ActiveRecord::Base
     unless user
       user = User.create(name: data.name, login: data.name, email: data.emails.account, password: Devise.friendly_token[0,20],
                          provider: access_token.provider, uid: access_token.uid )
+
+      user.confirm! # we can confirm the user since we can rely on a valid email address
     end
 
     user
@@ -1183,8 +1191,11 @@ class User < ActiveRecord::Base
     # Of course, you could also create a join table to join users to blogs they can blog in.  But do you want to do
     # that with blog comments and ability to moderate comments as well?
 
-    # Bloggers: Andy, Heather-Kate Taylor, Phil Walker, Dakota Lynch, River La Belle, Alex Watt, Nathan Burkhalter, and Josiah DeGraaf
-    bloggers = [1, 2, 366, 1138, 3113, 4024, 3486, 4565, 2336]
+    # Bloggers: Andy, Heather-Kate Taylor, Phil Walker, Dakota Lynch,
+    # River La Belle, Alex Watt, Nathan Burkhalter, Josiah DeGraaf,
+    # Bethany Meckle
+    bloggers = [1, 2, 366, 1138, 3113, 4024, 3486, 4565, 2336, 15021]
+
     return bloggers.include?(self.id)
   end
 
@@ -1221,9 +1232,9 @@ class User < ActiveRecord::Base
     if(self.respond_to?(:email))
       downcased_email_address = self.email.downcase
       hash = Digest::MD5::hexdigest(downcased_email_address)
-      "http://www.gravatar.com/avatar/#{hash}?d=wavatar"
+      "https://www.gravatar.com/avatar/#{hash}?d=wavatar"
     else
-      "http://www.pistonsforum.com/images/avatars/avatar22.gif"
+      "https://www.pistonsforum.com/images/avatars/avatar22.gif"
     end
   end
 

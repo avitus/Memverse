@@ -1,0 +1,79 @@
+<div class="complete-quiz-question">
+
+    <!-- Quiz Question -->
+    <div class="quiz-question">
+
+        <p><%= quiz_question.mc_question %></hp>
+
+    </div>
+
+    <div class="quiz-question-answers">
+
+        <p class="<%= quiz_question.mc_answer == 'A' %>"> A) <%= quiz_question.mc_option_a %> </p>
+        <p class="<%= quiz_question.mc_answer == 'B' %>"> B) <%= quiz_question.mc_option_b %> </p>
+        <p class="<%= quiz_question.mc_answer == 'C' %>"> C) <%= quiz_question.mc_option_c %> </p>
+        <p class="<%= quiz_question.mc_answer == 'D' %>"> D) <%= quiz_question.mc_option_d %> </p>
+
+    </div>
+
+    <div class="quiz-question-stats">
+        <table>
+            <thead></thead>
+            <tbody>
+                <tr>
+                    <th>Category:       </th>
+                    <td><%= quiz_question.mcq_category                  %></td>
+                </tr>
+                <tr>
+                    <th>Reference: </th>
+                    <td class="quiz-question-supporting-ref"><%= quiz_question.supporting_ref.try(:long_ref) %></td>
+                </tr>
+                <tr>
+                    <th>Easiness:       </th>
+                    <td><%= quiz_question.perc_correct %>%</td>
+                </tr>
+                <tr>
+                    <th>Submitted By:   </th>
+                    <td><%= quiz_question.user.try(:name_or_login)      %></td>
+                </tr>
+                <tr>
+                    <th>Status:         </th>
+                    <td><%= quiz_question.approval_status=="Rejected" ? quiz_question.rejection_code : quiz_question.approval_status %></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Display related questions -->
+    <div class="related-quiz-questions">
+        <% if !quiz_question.related_questions.empty? %>
+            <h5>Related Questions</h5>
+            <% quiz_question.related_questions.each do |qq| %>
+                <div class="item">
+                    <div class="related-q">
+                        <span class="difficulty"><%= qq.perc_correct %>: </span>
+                        <span  class="mcq-question"><%= qq.mc_question %></span>
+                    </div>
+                </div>
+            <% end %>
+        <% end %>
+    </div>
+
+    <!-- Display supporting references -->
+    <div class="supporting-ref-display">
+        <h5>Supporting Reference</h5>
+        <% quiz_question.supporting_verses.each do |vs| %>
+            <div class="item">
+                <div class="ref-and-details">
+                    <span class="ref"><%= vs.translation %>: </span>
+                    <span  class="first-words"><%= vs.text %></span>
+                </div>
+            </div>
+        <% end %>
+    </div>
+
+    <br />
+
+    <%= render partial: "quiz_question_nav", object: quiz_question, as: :quiz_question %>
+
+</div>

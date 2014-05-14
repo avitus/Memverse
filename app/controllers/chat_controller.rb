@@ -16,7 +16,13 @@ class ChatController < ApplicationController
 
     $redis.hset("chat-#{channel}", "status", new_status)
 
-    @my_callback = lambda { |message| puts(message) } # for PubNub
+    @my_callback = lambda { |envelope|
+      if envelope.error
+        # If message is not sent we should probably try to send it again
+        puts("==== ! Failed to send message ! ==========")
+        puts( envelope.inspect )
+      end
+    }
 
     PN.publish(
         :channel  => channel,
@@ -24,6 +30,7 @@ class ChatController < ApplicationController
           :meta => "chat_status",
           :status => new_status
         },
+        :http_sync => true,
         :callback => @my_callback
       )
 
@@ -62,15 +69,26 @@ class ChatController < ApplicationController
     chat_open  = $redis.exists("chat-#{channel}") ? ($redis.hmget("chat-#{channel}", "status").first == "Open") : true
     usr_banned = $redis.exists("banned-#{@usr_id}")
 
-    @my_callback = lambda { |message| puts(message) } # for PubNub
+    @my_callback = lambda { |envelope|
+      if envelope.error
+        # If message is not sent we should probably try to send it again
+        puts("==== ! Failed to send message ! ==========")
+        puts( envelope.inspect )
+      end
+    }
 
     if chat_open && !usr_banned # Check that chat is open and user is not banned
+      puts "Chat is open and user not banned"
+      Rails.logger.info("====> Publishing message to PubNub: #{parse_chat_message(params[:msg_body], params[:sender], params[:user_id])}")
       PN.publish( :channel  => channel, :message  => {
           :meta => "chat",
           :data => parse_chat_message(params[:msg_body], params[:sender], params[:user_id])
         },
+        :http_sync => true,
         :callback => @my_callback
       )
+    else
+      puts "Chat is closed and/or user banned"
     end
 
     respond_to do |format|

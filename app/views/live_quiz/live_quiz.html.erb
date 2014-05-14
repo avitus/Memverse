@@ -1,37 +1,7 @@
 <% page_title "Live Quiz :: " + @quiz.name %>
 
 <!-- Quiz instructions : Pop-up box -->
-<div id="welcome-box" style="display:none">
-
-	<h2>Welcome!</h2>
-
-	<% if @quiz.id != 1 and !["NAS", "NKJ", "KJV", "ESV"].include?(@current_user.translation) %>
-
-		<div id="select-trans">
-			<h3>Choose a Version</h3>
-			<p><%= @current_user.translation %> is your default version for Memverse. However, it is <strong>not supported by this quiz</strong>.</p>
-			<!--<p>Please select a version to use: <a href="#ESV">ESV 2011</a>, <a href="#NAS">NASB</a>, <a href="#NKJ">NKJV</a>, or <a href="#KJV">KJV</a>. (Note: <%= @current_user.translation %> will remain your default version; your selection now is just for this quiz.)</p>-->
-			<p>The <strong>valid versions</strong> are ESV (2011), NASB, NKJ, and KJV. Please go to your profile by <a href="/update_profile">clicking here</a>, update your version to one of these, and then come back for the quiz. Thanks!</p>
-		</div>
-
-	<% else %>
-
-		<h3>Quiz Instructions</h3>
-		<p>
-			The quiz will have <strong><%= @num_questions %> questions</strong> and last <strong><%= "#{@minutes} minute#{"s" unless @minutes == 1}" %></strong>. Each question will be worth a maximum of 15 points. Multiple choice questions are worth 10 points and <strong>2 points will be deducted for incorrect answers.</strong>
-		</p>
-		<p>
-			You will answer all the questions on the left side. The middle column will display the scoreboard and the right column is only
-			used for chatting with the other contestants.
-		</p>
-
-		<p>Your version is set to <strong><%= @current_user.translation %></strong>.</p>
-
-		<p><input type="button" class="green-button" onclick="$.fancybox.close()" value="OK, I'm ready!" />
-
-	<% end %>
-
-</div> <!-- End of Quiz Instructions -->
+<%= render partial: "instructions" %>
 
 <div class="white-box-with-margins" style="position:relative">
 
@@ -89,7 +59,7 @@
 		</div>
 
 		<%= form_tag('/chat/send', :id => 'chat_window', :remote => true) do %>
-			<%= text_field_tag 'msg_body', '', :size => 28, :html => {:autocomplete => "off"} %>
+			<%= text_field_tag 'msg_body', '', size: 28, autocomplete: "off" %>
 			<%= hidden_field_tag 'sender',  current_user.name_or_login %>
 			<%= hidden_field_tag 'user_id', current_user.id %>
 			<%= hidden_field_tag 'channel', "quiz-#{@quiz.id}" %>
@@ -115,11 +85,13 @@ $(document).ready(function() {
 	channel     = "quiz-<%= @quiz.id %>";
     translation = "<%= current_user.translation %>";
 
-	// Init
+	// Initialize PubNub
     var pubnub = PUBNUB.init({
-        publish_key   : '<%= PN.publish_key %>',
-        subscribe_key : '<%= PN.subscribe_key %>',
-        uuid          : memverseUserID
+        publish_key   : '<%= PN.env[:publish_key] %>',
+        subscribe_key : '<%= PN.env[:subscribe_key] %>',
+        uuid          : memverseUserID,
+        origin        : 'pubsub.pubnub.com',
+        ssl           : true
     });
 
     // LISTEN
@@ -131,6 +103,7 @@ $(document).ready(function() {
         restore  : true
     });
 
+    // Display welcome and quiz instructions
     $.fancybox($("#welcome-box").html(), {padding: 20});
 
     // TODO: Get this working. This is selecting the select-trans that is invisible, not the one in the fancybox.

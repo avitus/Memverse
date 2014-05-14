@@ -8,7 +8,12 @@ class KnowledgeQuiz
 
   recurrence do
     if Rails.env.production?
+
+      # NOTE: Any changes to schedule need to be replicated in the section below.
+      #       This is needed to set the start time for the next quiz
       weekly.day(:wednesday).hour_of_day(9)    # Every Tuesday at 9am
+      weekly.day(:saturday).hour_of_day(15)    # Every Saturday at 3pm
+
     else
       # daily.hour_of_day(9,11,15,21)          # 9am, 11am, 3pm, 9pm each day
       minutely(10)                             # For development
@@ -20,14 +25,15 @@ class KnowledgeQuiz
     # ========================================================================
     # Announce quiz
     # ========================================================================
-    broadcast  = "The weekly Bible knowledge quiz is starting. <a href=\"live_quiz\">Join now!</a>"
+    broadcast  = "The Bible knowledge quiz is starting. <a href=\"live_quiz\">Join now!</a>"
     Tweet.create(:news => broadcast, :user_id => 1, :importance => 2)  # Admin tweet => user_id = 1
 
     # ========================================================================
     # Calculate start time for next quiz
     # ========================================================================
     schedule = IceCube::Schedule.new( Time.now )
-    schedule.add_recurrence_rule( IceCube::Rule.weekly.day(:wednesday).hour_of_day(9) )
+    schedule.add_recurrence_rule( IceCube::Rule.weekly.day(:wednesday).hour_of_day(9 ).minute_of_hour(0).second_of_minute(0) )
+    schedule.add_recurrence_rule( IceCube::Rule.weekly.day(:saturday ).hour_of_day(15).minute_of_hour(0).second_of_minute(0) )
     next_quiz_time = schedule.next_occurrence
 
     # ========================================================================
@@ -48,15 +54,45 @@ class KnowledgeQuiz
     quiz    = Quiz.find(1)
     channel = "quiz-1"  # General knowledge quiz will always have ID=1
 
-    # PubNub callback function - From version 3.4 PubNub is fully asynchronous
-    @my_callback = lambda { |message|
-        if message[0]  # Return codes are of form [1,"Sent","136074940..."]
-            # puts("Successfully Sent Message!");
-        else
-            # If message is not sent we should probably try to send it again
-            puts("!!!!! Failed to send message !!!!!!")
-        end
+    # ========================================================================
+    # PubNub callback function
+    # ========================================================================
+    @my_callback = lambda { |envelope|
+      if envelope.error
+        # If message is not sent we should probably try to send it again
+        puts("==== ! Failed to send message ! ==========")
+        puts( envelope.inspect )
+      end
     }
+
+    # #<Pubnub::Envelope:0x007fdf869c67c0
+    #  @channel="quiz-1",
+    #  @error=nil,
+    #  @error_message=nil,
+    #  @first=true,
+    #  @history_end=nil,
+    #  @history_start=nil,
+    #  @last=true,
+    #  @message={
+    #    :meta=>"question",
+    #    :q_id=>615,
+    #    :q_num=>24,
+    #    :q_type=>"mcq",
+    #    :mc_question=>"In Paul's farewell to the Ephesians he says: ... He knew that after he left ______ .",
+    #    :mc_option_a=>"There would be conflict within the Ephesian church.",
+    #    :mc_option_b=>"The sheep would go astray.",
+    #    :mc_option_c=>"Wolves would enter and attack the flock.",
+    #    :mc_option_d=>"He would be arrested in Jerusalem.",
+    #    :mc_answer=>"C",
+    #    :time_alloc=>35},
+    #  @object=#<Net::HTTPOK 200 OK readbody=true>,
+    #    @payload=nil,
+    #    @response="[1,\"Sent\",\"13988747805988965\"]",
+    #  @response_message="Sent",
+    #  @service=nil,
+    #  @status=200,
+    #  @timetoken="13988747805988965",
+    #  @timetoken_update=nil>
 
     # ========================================================================
     # Open quiz chat channel 5 minutes prior to start
@@ -73,6 +109,7 @@ class KnowledgeQuiz
           :meta => "chat_status",
           :status => new_status
         },
+        :http_sync => true,
         :callback => @my_callback
       )
     end
@@ -95,7 +132,8 @@ class KnowledgeQuiz
       puts "===> Question: " + q_num.to_s
 
       # Pick a question at random
-      q = QuizQuestion.mcq.fresh.sort_by{ rand }.first
+      # q = QuizQuestion.mcq.approved.fresh.sort_by{ rand }.first
+      q = QuizQuestion.mcq.approved.order(:last_asked).first
 
       # Update question to show that it was asked today
       q.update_attribute( :last_asked, Date.today )
@@ -114,6 +152,7 @@ class KnowledgeQuiz
           :mc_answer   => q.mc_answer,
           :time_alloc  => q.time_allocation
         },
+        :http_sync => true,
         :callback => @my_callback
       )
 
@@ -133,6 +172,7 @@ class KnowledgeQuiz
           :meta => "scoreboard",
           :scoreboard => scoreboard
         },
+        :http_sync => true,
         :callback => @my_callback
       )
 
@@ -196,7 +236,7 @@ class KnowledgeQuiz
     # silver_ribbon_id   = final_scoreboard[1]['id']
     # bronze_ribbon_id   = final_scoreboard[2]['id']
 
-    broadcast  = "#{gold_ribbon_name} won the weekly Bible knowledge quiz"
+    broadcast  = "#{gold_ribbon_name} won the Bible knowledge quiz"
     Tweet.create(:news => broadcast, :user_id => gold_ribbon_id, :importance => 2)
 
     # ========================================================================
@@ -211,10 +251,11 @@ class KnowledgeQuiz
         :meta => "chat_status",
         :status => new_status
       },
+      :http_sync => true,
       :callback => @my_callback
     )
 
-    puts "Chat closed and rake task finished."
+    puts "Chat closed and sidetiq job finished."
 
   end
 

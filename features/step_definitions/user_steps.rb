@@ -1,3 +1,9 @@
+def wait_for_input
+  Timeout.timeout(Capybara.default_wait_time) do
+    loop until page.has_css?("td.edit_mv input")
+  end
+end
+
 Given /^no user exists with an email of "(.*)"$/ do |email|
   User.where(:email => email).first.should be_nil
 end
@@ -124,6 +130,16 @@ Given /^I sign in as a normal user$/ do
   step %{I should be signed in}
 end
 
+Given /^I sign in as a non-blogging user$/ do
+  step %{I am a user named "blognot" with an email "blognot@test.com" and password "please"}
+  @u = User.find_by_email("blognot@test.com")
+  @u.id = 1000
+  @u.save
+  step %{the email address "blognot@test.com" is confirmed}
+  step %{I sign in as "blognot@test.com/please"}
+  step %{I should be signed in}
+end
+
 Given /^I sign in as an advanced user$/ do
   step %{I am an advanced user named "advanced" with an email "advanced_user@test.com" and password "please"}
   step %{the email address "advanced_user@test.com" is confirmed}
@@ -154,10 +170,20 @@ Then /^the tag "(.*)" should exist for memverse #([0-9]+)$/ do |tagname, id|
   mv.tags.include? tagname
 end
 
-When /^I type in "([^\"]*)" into autocomplete list "([^\"]*)" and I choose "([^\"]*)"$/ do |typed, input_name,should_select|
-   page.driver.browser.execute_script %Q{ $('input[data-autocomplete]').trigger("focus") }
-   fill_in("#{input_name}",:with => typed)
-   page.driver.browser.execute_script %Q{ $('input[data-autocomplete]').trigger("keydown") }
-   sleep 1
-   page.driver.browser.execute_script %Q{ $('.ui-menu-item a:contains("#{should_select}")').trigger("mouseenter").trigger("click"); }
+When /^I type in "([^\"]*)" and I choose "([^\"]*)"$/ do |typed, should_select|
+  wait_for_input
+  input = find("td.edit_mv input")
+  input.native.send_keys typed
+  sleep 5
+  page.driver.browser.execute_script %Q{ $('.ui-menu-item a:contains("#{should_select}")').trigger("mouseenter").trigger("click"); }
+end
+
+When /^I type "([^\"]*)"$/ do |typed|
+  wait_for_input
+  input = find("td.edit_mv input")
+  input.native.send_keys typed
+end
+
+When /^I sleep for ([0-9]+)$/ do |time|
+   sleep time.to_i
 end

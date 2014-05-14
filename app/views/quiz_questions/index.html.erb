@@ -1,26 +1,29 @@
 <% page_title "Quiz Questions" %>
+
 <div class="white-box-with-margins">
-<% if params[:quiz] %>
-<h1>Quiz Questions</h1>
 
-<table class="memverse-standard">
-  <tr>
-    <th>Question number</th>
-    <th>Variation</th>
-  </tr>
+    <h1>Quiz Questions</h1>
 
-	<% @quiz.quiz_questions.each do |question| %>
-	  <tr>
-	    <td><%=h link_to("Question #" + question.number, question) %></td>
-	    <td><%=h question.variation %></td>
-	  </tr>
-	<% end %>
-</table>
+    <p><%= link_to 'Submit a New Quiz Question', submit_question_path %></p>
 
-<br />
+    <% if !@quiz_questions.rejected.empty? %>
+        <h2>Questions that Need Attention</h2>
+        <p>
+            These questions did not meet one or more of the criteria for approval. Consider either deleting them, or amending
+            them to correct the problem identified under the 'Status' section.
+        </p>
+        <div class="mcq-list"><%= render partial: "mcq_list", collection: @quiz_questions.rejected, as: :quiz_question %></div>
+    <% end %>
 
-<%= link_to 'New question', new_quizquestion_path(:quiz => @quiz.id) %>
+    <% if !@quiz_questions.pending.empty? %>
+        <h2>Questions in Approval Queue</h2>
+        <div class="mcq-list"><%= render partial: "mcq_list", collection: @quiz_questions.pending, as: :quiz_question %></div>
+    <% end %>
+
+    <% if !@quiz_questions.approved.empty? %>
+        <h2>Approved Questions</h2>
+        <div class="mcq-list"><%= render partial: "mcq_list", collection: @quiz_questions.approved, as: :quiz_question %></div>
+    <% end %>
+
 </div>
-<% else %>
-	<p>You need to specify a quiz in the parameters to view its questions.</p>
-<% end %>
+

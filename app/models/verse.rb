@@ -17,17 +17,13 @@ class Verse < ActiveRecord::Base
 
   acts_as_taggable # Alias for 'acts_as_taggable_on :tags'
 
-#  Rails 2
-#  require 'cgi'
-#  require 'open-uri'
-#  require 'nokogiri'
-
   before_destroy :delete_memverses
-  before_save :cleanup_text
-  before_create :validate_ref
+  before_create  :validate_ref
+  before_save    :cleanup_text, :associate_with_uberverse
 
   # Relationships
   has_many :memverses
+  belongs_to :uberverse
 
   # Validations
   validates_presence_of   :translation, :book, :chapter, :versenum, :text
@@ -35,7 +31,7 @@ class Verse < ActiveRecord::Base
   scope :old_testament, -> { where(:book_index =>  1..39) }
   scope :new_testament, -> { where(:book_index => 40..66) }
 
-  scope :history,  -> { where(:book_index =>  1..17) }
+  scope :history,  -> { where("book_index BETWEEN 1  AND 17 OR book_index = 44") }
   scope :wisdom,   -> { where(:book_index => 18..22) }
   scope :prophecy, -> { where("book_index BETWEEN 23 AND 39 OR book_index = 66") }
   scope :gospel,   -> { where(:book_index => 40..43) }
@@ -447,6 +443,7 @@ class Verse < ActiveRecord::Base
   def cleanup_text
     self.text = self.text.gsub(/(\r)?\n/,'').squeeze(" ").strip
     self.text = self.text.gsub(" -"," —").gsub("- ","— ") # use em dashes when appropriate
+    self.text = self.text.gsub(/[<>]/,'')
   end
 
   # before_create
@@ -470,6 +467,12 @@ class Verse < ActiveRecord::Base
     else
       return true
     end
+  end
+
+  # after_create
+  def associate_with_uberverse
+    uv = Uberverse.where(:book => self.book, :chapter => self.chapter, :versenum => self.versenum).first
+    self.uberverse_id = uv.id  unless !uv
   end
 
 end

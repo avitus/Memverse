@@ -27,6 +27,10 @@ MemverseApp::Application.configure do
   # config.assets.precompile += %w( search.js )
   # config.assets.precompile += %w(rails_admin/rails_admin.js rails_admin/rails_admin.css) # This is a temporary workaround until Rails 3.1.1 Should be able to remove
 
+  # Add jQuery tools to precompiled assets
+  # jQuery Tools is temperamental and seems to like being loaded after jQuery itself but before the rest of the JS manifest in application.js
+  config.assets.precompile += %w( jquery.tools.min.js )
+
   # http://stackoverflow.com/questions/14194752/rails-4-asset-pipeline-vendor-assets-images-are-not-being-precompiled
   config.assets.precompile += %w(*.png *.jpg *.jpeg *.gif)  # Need to support compilation of fancybox images ... shouldn't be necessary
 
@@ -40,7 +44,7 @@ MemverseApp::Application.configure do
   #===============================
   # Content Delivery Network
   #===============================
-  config.action_controller.asset_host = "http://d1r0kpcohdg1bn.cloudfront.net"  # Amazon Cloudfront
+  config.action_controller.asset_host = "https://d1r0kpcohdg1bn.cloudfront.net"  # Amazon Cloudfront
   config.static_cache_control = "public, max-age=86400"
   config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # Header that Nginx uses for sending files
 

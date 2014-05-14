@@ -69,16 +69,17 @@ set :default_stage, "production"
 ##############################################################
 ##  Hooks
 ##############################################################
-before "deploy:assets:precompile", "deploy:symlink_db", "deploy:symlink_bloggity"
+before "deploy:assets:precompile", "deploy:symlink_config", "deploy:symlink_bloggity"
 after "deploy", "deploy:refresh_sitemaps", "deploy:cleanup"
 
 ##############################################################
 ##  Database config and restart
 ##############################################################
 namespace :deploy do
-  desc "Symlinks the database.yml"                            # Link in the database config
-  task :symlink_db, :roles => :app do
+  desc "Symlinks database.yml and secret_token.rb"            # Link in the database and secret config
+  task :symlink_config, :roles => :app do
     run "ln -nfs #{deploy_to}/shared/config/database.yml #{latest_release}/config/database.yml"
+    run "ln -nfs #{deploy_to}/shared/config/initializers/secret_token.rb #{latest_release}/config/initializers/secret_token.rb"
   end
 
   desc "Symlinks the bloggity uploads"                        # Link in the bloggity uploads

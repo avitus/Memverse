@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140309170902) do
+ActiveRecord::Schema.define(version: 20140424183304) do
 
   create_table "american_states", force: true do |t|
     t.string  "abbrev",      limit: 20, default: "", null: false
@@ -476,23 +476,29 @@ ActiveRecord::Schema.define(version: 20140309170902) do
   end
 
   create_table "quiz_questions", force: true do |t|
-    t.integer "quiz_id",                                                        null: false
-    t.integer "question_no"
-    t.string  "question_type"
-    t.string  "passage"
-    t.text    "mc_question"
-    t.string  "mc_option_a"
-    t.string  "mc_option_b"
-    t.string  "mc_option_c"
-    t.string  "mc_option_d"
-    t.string  "mc_answer"
-    t.integer "times_answered",                          default: 0
-    t.decimal "perc_correct",   precision: 10, scale: 0, default: 50
-    t.string  "mcq_category"
-    t.date    "last_asked",                              default: '2013-02-23'
-    t.integer "supporting_ref"
-    t.integer "submitted_by"
+    t.integer  "quiz_id",                                                         null: false
+    t.integer  "question_no"
+    t.string   "question_type"
+    t.string   "passage"
+    t.text     "mc_question"
+    t.string   "mc_option_a"
+    t.string   "mc_option_b"
+    t.string   "mc_option_c"
+    t.string   "mc_option_d"
+    t.string   "mc_answer"
+    t.integer  "times_answered",                           default: 0
+    t.decimal  "perc_correct",    precision: 10, scale: 0, default: 50
+    t.string   "mcq_category"
+    t.date     "last_asked",                               default: '2013-02-23'
+    t.integer  "supporting_ref"
+    t.integer  "submitted_by"
+    t.string   "approval_status",                          default: "Pending"
+    t.string   "rejection_code"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
+
+  add_index "quiz_questions", ["approval_status"], name: "index_quiz_questions_on_approval_status", using: :btree
 
   create_table "quizzes", force: true do |t|
     t.integer  "user_id",              null: false
@@ -566,12 +572,14 @@ ActiveRecord::Schema.define(version: 20140309170902) do
     t.datetime "created_at"
   end
 
-  add_index "taggings", ["tag_id"], name: "index_taggings_on_tag_id", using: :btree
-  add_index "taggings", ["taggable_id", "taggable_type", "context"], name: "index_taggings_on_taggable_id_and_taggable_type_and_context", using: :btree
+  add_index "taggings", ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true, using: :btree
 
   create_table "tags", force: true do |t|
-    t.string "name"
+    t.string  "name"
+    t.integer "taggings_count", default: 0
   end
+
+  add_index "tags", ["name"], name: "index_tags_on_name", unique: true, using: :btree
 
   create_table "tweets", force: true do |t|
     t.integer  "importance",        default: 5

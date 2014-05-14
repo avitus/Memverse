@@ -12,18 +12,22 @@ class QuizQuestion < ActiveRecord::Base
 
   # Relationships
   belongs_to :quiz
+  belongs_to :user,           :foreign_key => "submitted_by",   :class_name => "User"
   belongs_to :supporting_ref, :foreign_key => "supporting_ref", :class_name => "Uberverse"
 
   # Query scopes
-  scope :mcq,         -> { where( :question_type => "mcq"                 ) }
-  scope :recitation,  -> { where( :question_type => "recitation"          ) }
-  scope :reference,   -> { where( :question_type => "reference"           ) }
+  scope :mcq,         -> { where( :question_type   => "mcq"                 ) }
+  scope :recitation,  -> { where( :question_type   => "recitation"          ) }
+  scope :reference,   -> { where( :question_type   => "reference"           ) }
 
-  scope :fresh,       -> { where( 'last_asked < ?', Date.today - 6.months ) }
+  scope :fresh,       -> { where( 'last_asked < ?', Date.today - 6.months   ) }
+  scope :approved,    -> { where( :approval_status => "Approved"            ) }
+  scope :pending,     -> { where( :approval_status => "Pending"             ) }
+  scope :rejected,    -> { where( :approval_status => "Rejected"            ) }
 
-  scope :easy,        -> { where( :perc_correct => 66..100                ) }
-  scope :medium,      -> { where( :perc_correct => 34..65                 ) }
-  scope :hard,        -> { where( :perc_correct =>  0..33                 ) }
+  scope :easy,        -> { where( :perc_correct    => 66..100               ) }
+  scope :medium,      -> { where( :perc_correct    => 34..65                ) }
+  scope :hard,        -> { where( :perc_correct    =>  0..33                ) }
 
   # Validations
   # validates_presence_of :user_id
@@ -72,17 +76,46 @@ class QuizQuestion < ActiveRecord::Base
 
   # ----------------------------------------------------------------------------------------------------------
   # Estimate time required (in seconds) for question
+  # 0.5 * word count + 7 seconds  => felt too quick on short questions and too slow on long questions
   # ----------------------------------------------------------------------------------------------------------
   def time_allocation
     case self.question_type
       when 'mcq'
         reading_required = [ mc_question, mc_option_a, mc_option_b, mc_option_c, mc_option_d ].join(" ")
-        ( reading_required.split(" ").length * 0.5 ).to_i + 7  # 0.5 second for each word + 7 seconds
+        ( reading_required.split(" ").length * 0.4 ).to_i + 10  # 0.4 second for each word + 10 seconds
       when 'recitation'
         ( self.passage_translations.first.last.split(" ").length * 2.5 + 15.0 ).to_i # 24 WPM typing speed with 15 seconds to think
       when 'reference'
         25
     end
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Related Quiz Questions (that share the same supporting reference)
+  # TODO: would be nice to expand with a clever search by keyword in the question text
+  # ----------------------------------------------------------------------------------------------------------
+  def related_questions
+    if self.supporting_ref
+      return self.supporting_ref.quiz_questions.where("id != ?", self.id)
+    else
+      return []
+    end
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Related Quiz Questions (that share the same supporting reference)
+  # TODO: would be nice to expand with a clever search by keyword in the question text
+  # ----------------------------------------------------------------------------------------------------------
+  def supporting_verses
+    if self.supporting_ref
+      return self.supporting_ref.verses.where(:translation => ['NIV', 'ESV', 'NAS', 'NKJ', 'KJV'])
+    else
+      return []
+    end
+  end
+
+  def is_approved?
+    return self.approval_status == "Approved"
   end
 
 
