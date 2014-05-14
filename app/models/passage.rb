@@ -1,5 +1,7 @@
 class Passage < ActiveRecord::Base
 
+  acts_as_paranoid # soft-deletion
+
   belongs_to :user
 
   has_many   :memverses

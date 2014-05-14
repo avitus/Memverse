@@ -24,22 +24,22 @@ class Ability
     #   can :update, Article, :published => true
     #
     # See the wiki for details: https://github.com/ryanb/cancan/wiki/Defining-Abilities
-    
+
     user ||= User.new # guest user
- 
+
     if user.role? :admin
       can :manage, :all
-      
+
     elsif user.role? :blogger
       can :manage, [ BlogPost ]
-      
+
     elsif user.role? :moderator
       can :manage, [ BlogComment ]
-      
+
       can :manage, BlogComment do |comment|
         comment.try(:user) == user
-      end      
-    
+      end
+
     elsif user.role? :scribe
       can :manage, [ Verse ]
 
