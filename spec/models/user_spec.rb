@@ -173,5 +173,22 @@ describe User do
     end
   end
 
+  describe ".destroy" do
+    it "makes user seem to disappear" do
+      user = FactoryGirl.create(:user)
+
+      user.destroy
+
+      User.where(id: user.id).count.should == 0
+      User.unscoped.where(id: user.id).count.should == 1
+    end
+
+    it "is not undoable" do
+      # also, this should restore memverses and passages too
+      User.only_deleted.count.should == 1
+      User.restore(User.unscoped.last.id).should be_true
+    end
+  end
+
 end
 
