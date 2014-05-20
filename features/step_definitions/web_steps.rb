@@ -263,3 +263,8 @@ end
 Then /^show me the page$/ do
   save_and_open_page
 end
+
+Then /^I press return$/ do
+  input = find("td.edit_mv input")
+  input.native.send_keys:return
+end
