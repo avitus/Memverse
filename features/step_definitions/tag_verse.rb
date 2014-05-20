@@ -1,11 +1,16 @@
 #Background info
 
-Given /^the following tags exist:$/ do |table|
+Given /^the tag "([^"]*)" exists$/ do |tag|
 
-  # table is a Cucumber::Ast::Table
-  table.hashes.each do |hash|
-    ActsAsTaggableOn::Tag.create(hash)
-  end
+  # Attach tag to a memverse => taggable_count 1
+  # Then it appears in autocomplete on memverses/show
+
+  vs = FactoryGirl.create(:verse, translation: "ESV")
+  mv = FactoryGirl.create(:memverse, verse: vs)
+
+  mv.tag_list.add(tag)
+
+  mv.verse.update_tags # Update verse model with most popular tags
 
 end
 

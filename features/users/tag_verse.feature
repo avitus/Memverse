@@ -18,9 +18,9 @@ Feature: Tag Verse
 	  Then I should see "But the fruit of the Spirit"
 	  When I click inside "td.edit_mv"
       And I type "Fruit of the Spirit"
-      And I submit the form
+      And I press return
       And I sleep for 5
-      Then I should see "Fruit of the Spirit" within "#user-tags"
+      Then I should see "Fruit Of The Spirit" within "#user-tags"
 
     # @javascript
     # Scenario: User tags with duplicate tag
@@ -35,13 +35,12 @@ Feature: Tag Verse
     Scenario: User tags with autocomplete tag
       Given I sign in as "olddog@test.com/please"
         And I go to the page for the memverse with the id of 1
-        And the following tags exist:
-        | name                |
-        | Fruit of the Spirit |
+        And the tag "Fruit Of The Spirit" exists
       When I go to the page for the memverse with the id of 1
       Then I should see "Old Dog"
       When I click inside "td.tag"
-      And I type in "Frui" and I choose "Fruit of the Spirit"
+      And I type in "Frui" and I choose "Fruit Of The Spirit"
+      # Unfortunately, it's not popping up ...
       And I sleep for 5
       Then the tag "Fruit of the Spirit" should exist for memverse #1
       And I should see "Fruit of the Spirit" within "#user-tags"
