@@ -8,10 +8,9 @@
 //= require fancybox
 //= require i18n
 //= require i18n/translations
-//= require ckeditor/override
-//= require ckeditor/init
 //= require jquery.purr
 //= require best_in_place
 //= require forem
 //= require_tree .
 //= stub jquery.tools.min
+//= stub ckeditor
