@@ -85,6 +85,7 @@
 <script type="text/javascript" src="https://cdn.pubnub.com/pubnub-3.6.2.min.js"></script>
 
 <!-- Main Javascript Manifest -->
+<%= javascript_include_tag "ckeditor" if current_user && current_user.can_blog? %>
 <%= javascript_include_tag "application" %>
 
 <!-- Auxiliary stylesheets, scripts, etc -->
