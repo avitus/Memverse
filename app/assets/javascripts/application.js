@@ -11,5 +11,7 @@
 //= require jquery.purr
 //= require best_in_place
 //= require forem
+//= require ckeditor/override
+//= require ckeditor/init
 //= stub jquery.tools.min
 //= require_tree .

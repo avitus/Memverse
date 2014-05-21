@@ -14,8 +14,8 @@ MemverseApp::Application.configure do
   #===============================
   # Asset Pipeline
   #===============================
-  config.assets.compress = true               # Compress Javascript and CSS
-  config.assets.js_compressor  = :uglifier    # Javascript compression
+  config.assets.compress = false              # Compress Javascript and CSS
+  # config.assets.js_compressor  = :uglifier    # Javascript compression
   config.assets.digest = true                 # Generate digests for assets URLs
   config.serve_static_assets = false          # Disable Rails's static asset server (Apache or nginx will already do this)
 
