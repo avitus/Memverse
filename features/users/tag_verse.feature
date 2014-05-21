@@ -19,7 +19,6 @@ Feature: Tag Verse
 	  When I click inside "td.edit_mv"
       And I type "Fruit of the Spirit"
       And I press return
-      And I sleep for 5
       Then I should see "Fruit Of The Spirit" within "#user-tags"
 
     # @javascript
@@ -40,7 +39,5 @@ Feature: Tag Verse
       Then I should see "Old Dog"
       When I click inside "td.tag"
       And I type in "Frui" and I choose "Fruit Of The Spirit"
-      # Unfortunately, it's not popping up ...
-      And I sleep for 5
       Then the tag "Fruit of the Spirit" should exist for memverse #1
-      And I should see "Fruit of the Spirit" within "#user-tags"
+      And I should see "Fruit Of The Spirit" within "#user-tags"
