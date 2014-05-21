@@ -12,5 +12,4 @@
 //= require best_in_place
 //= require forem
 //= stub jquery.tools.min
-//= stub ckeditor
 //= require_tree .
