@@ -4,20 +4,20 @@
 <div class="white-box-with-margins">
 	<h1>Most Popular Memory Verses for Each Bible Book</h1>
 	<div class="details-form">
-			
+
 		<h2>Enter Book</h2>
-		
+
 			<%= form_tag( {}, {:disabled => true, :id => 'advanced_search' } ) do %>
 			  <p>
-				<%= text_field_tag( :search_param, 	params[:search_param],  :size =>  40 )%>	
+				<%= text_field_tag( :search_param, 	params[:search_param],  :size =>  40 )%>
 			  </p>
-			  							
+
 			<% end %>
-						
-	</div>	
-	
+
+	</div>
+
 	<br>
-	
+
 	<div id="search_results">
 		<%= render :partial=>'pop_verses' %>
 	</div>
@@ -27,9 +27,9 @@
 <script type="text/javascript">
 $(document).ready(function(){
 
-	$("#search_param").observe_field(0.5, function( ) { 
+	$("#search_param").observe_field(0.5, function( ) {
 		$.get("/info/pop_verse_search", { search_param: this.value },
-			function(data){	
+			function(data){
 				$("#search_results").html(data);
 		}, "html" );
     });
@@ -47,14 +47,14 @@ $(document).ready(function(){
 <!-- http://www.devbridge.com/projects/autocomplete/jquery/ -->
 <script type="text/javascript">
 	$(document).ready(function(){
-		
+
 	  $('#search_param').autocomplete({ lookup: ['Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy', 'Joshua', 'Judges', 'Ruth', '1 Samuel', '2 Samuel',
 	                '1 Kings', '2 Kings','1 Chronicles', '2 Chronicles', 'Ezra', 'Nehemiah', 'Esther', 'Job', 'Psalm', 'Proverbs',
-	                'Ecclesiastes', 'Song of Songs', 'Isaiah', 'Jeremiah', 'Lamentations', 'Ezekiel', 'Daniel', 'Hosea', 'Joel', 
+	                'Ecclesiastes', 'Song of Songs', 'Isaiah', 'Jeremiah', 'Lamentations', 'Ezekiel', 'Daniel', 'Hosea', 'Joel',
 	                'Amos', 'Obadiah', 'Jonah', 'Micah', 'Nahum', 'Habakkuk', 'Zephaniah', 'Haggai', 'Zechariah', 'Malachi', 'Matthew',
 	                'Mark', 'Luke', 'John', 'Acts', 'Romans', '1 Corinthians', '2 Corinthians', 'Galatians', 'Ephesians', 'Philippians',
 	                'Colossians', '1 Thessalonians', '2 Thessalonians', '1 Timothy', '2 Timothy', 'Titus', 'Philemon', 'Hebrews', 'James',
-	                '1 Peter', '2 Peter', '1 John', '2 John', '3 John', 'Jude', 'Revelation']						
-	   });	   
+	                '1 Peter', '2 Peter', '1 John', '2 John', '3 John', 'Jude', 'Revelation']
+	   });
 	});
 </script>
