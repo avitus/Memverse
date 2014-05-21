@@ -11,6 +11,6 @@
 //= require jquery.purr
 //= require best_in_place
 //= require forem
-//= require_tree .
 //= stub jquery.tools.min
 //= stub ckeditor
+//= require_tree .
