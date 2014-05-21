@@ -8,9 +8,12 @@ Given /^the tag "([^"]*)" exists$/ do |tag|
   vs = FactoryGirl.create(:verse, translation: "ESV")
   mv = FactoryGirl.create(:memverse, verse: vs)
 
-  mv.tag_list.add(tag)
+  tag_list = mv.all_tags_list.to_s + ", " + tag
+  User.first.tag(mv, :with => tag_list, :on => :tags)
 
   mv.verse.update_tags # Update verse model with most popular tags
+
+  Verse.tag_counts.last.name.should == tag
 
 end
 
