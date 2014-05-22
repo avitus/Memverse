@@ -134,7 +134,7 @@ class Verse < ActiveRecord::Base
     vs_popularity = Hash.new(0)
 
     if book
-      find(:all, :conditions => { :book => book}).each { |vs| vs_popularity[vs.ref] += vs.memverses_count }
+      where(book: book).each { |vs| vs_popularity[vs.ref] += vs.memverses_count }
     else
     	# Don't cache records in memory
 	    ActiveRecord::Base.uncached do
@@ -356,7 +356,7 @@ class Verse < ActiveRecord::Base
   # Output: Array of all translations of a given verse
   # ----------------------------------------------------------------------------------------------------------
   def alternative_translations
-    Verse.find( :all, :conditions => { :book => self.book, :chapter => self.chapter, :versenum => self.versenum } )
+    Verse.where(book: self.book, chapter: self.chapter, versenum: self.versenum)
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -365,7 +365,7 @@ class Verse < ActiveRecord::Base
   # Output: verse in different translation or nil
   # ----------------------------------------------------------------------------------------------------------
   def switch_tl(tl)
-    Verse.find( :first, :conditions => { :translation => tl, :book => self.book, :chapter => self.chapter, :versenum => self.versenum } )
+    alternative_translations.where(translation: tl).first
   end
 
   # ----------------------------------------------------------------------------------------------------------
