@@ -73,6 +73,24 @@ describe Verse do
     end
   end
 
+  describe ".alternative_translations" do
+    it "should include an alternative verse" do
+      vs1 = FactoryGirl.create(:verse, book: "Philippians", book_index: 50, translation: "NKJV")
+      vs2 = FactoryGirl.create(:verse, book: "Philippians", book_index: 50, translation: "ESV")
+
+      vs1.alternative_translations.include?(vs2).should == true
+    end
+  end
+
+  describe ".switch_tl" do
+    it "should return correct verse" do
+      vs1 = FactoryGirl.create(:verse, book: "Colossians", book_index: 51, translation: "NKJV")
+      vs2 = FactoryGirl.create(:verse, book: "Colossians", book_index: 51, translation: "ESV")
+
+      vs1.switch_tl("ESV").should == vs2
+    end
+  end
+
   it "should return correct mnemonic" do
     verse = FactoryGirl.create(:verse, :text => "This is an (extremely) important - mnemonic 'method' 'test'; don't you think?")
     verse.mnemonic.should == "T i a (e) i — m 'm' 't'; d y t?"
