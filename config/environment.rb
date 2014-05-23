@@ -47,7 +47,9 @@ TRANSLATIONS = {
     :HCV   => "Haitian Creole Version",
     :NBLH  => "Nueva Biblia Latinoamericana de Hoy",
     :LBLA  => "La Biblia de las Américas",
-    :ICE   => "Icelandic Bible (2007)"
+    :ICE   => "Icelandic Bible (2007)",
+    :SMP   => "Scottish Metrical Psalter",
+    :AKJ   => "Authorized King James Version"
   }
 
 MAJORS = {
