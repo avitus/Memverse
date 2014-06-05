@@ -7,9 +7,60 @@
         };
     </script>
 
-
 <% end %>
 
-<p><div data-role="spritzer" data-url="https://www.memverse.com/supermemo"></div><p>
+<h3 id="selectionTitle"></h3>
+
+<div id="spritzer" data-role="spritzer" data-url="http://sdk.spritzinc.com/sampleText/HelloWorld.html"></div>
+
+<!-- Reference entry box -->
+<div class="verse-field ui-widget">
+    <label class="tag">Enter a chapter reference</label>
+    <img class="spinner spinner-add-verse" id="ajax_spinner" src="/assets/indicator2.gif" alt="Searching ..." style="display: none" />
+    <%= text_field_tag(:verse, params[:verse], :class => "flex-verse-search", :id => "js_flex-verse-search", :placeholder => "e.g. Matthew 5" ) %>
+</div>
+
+
+<script language="JavaScript" type="text/javascript"><!--
+
+    function onTextSelected( chapter_string ) {
+
+        console.log("User has requested chapter:" + chapter_string);
+
+        var ref = $.trim( chapter_string )
+        var url;
+        var name;
+
+        if ( validChapterRef( ref ) ) {
+
+            console.log("Found valid chapter reference:" + ref )
+
+            // We should check whether we have entire chapter in database but skipping that for now
+            if ( ch_ref = parsePassageRef( ref ) ) {
+
+http://localhost:3000/read/NIV/Psalms/1
+
+                url  = 'http://localhost:3000/read/' + 'NIV' + '/' + ch_ref.bk + '/' + ch_ref.ch;
+                name = ref;
+
+                console.log("Getting text from:" + url);
+
+                $('#selectionTitle').text(name);
+                $('#spritzer').data('controller').setUrl(url);
+            }
+        }
+
+    }
+
+    $(document).ready(function() {
+
+        $("#js_flex-verse-search").focus();
+        // Add selection handler
+        $("#js_flex-verse-search").observe_field(0.5, function () {
+            onTextSelected( this.value )
+        });
+    });
+
+--></script>
 
 

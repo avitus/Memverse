@@ -126,6 +126,9 @@ MemverseApp::Application.routes.draw do
   post '/add_tag'                 => 'memverses#add_mv_tag'
   get  '/tag_autocomplete'        => 'memverses#tag_autocomplete'
 
+  # Bible Reading
+  get  '/read/:tl/:bk/:ch'        => 'reading#chapter'
+
   # Verse search
   get '/lookup_user_verse'        => 'memverses#mv_lookup',             :as => 'lookup_user_verse'
   get '/lookup_user_passage'      => 'memverses#mv_lookup_passage',     :as => 'lookup_user_passage'
