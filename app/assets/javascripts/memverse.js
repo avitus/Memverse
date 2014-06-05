@@ -4,17 +4,19 @@
 
 
 // Required for chat channels
-jQuery.ajaxSetup({
-  'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript")}
-})
+// ALV: I think this was required only for Juggernaut
 
-jQuery.fn.submitWithAjax = function() {
-  this.submit(function() {
-    $.post(this.action, $(this).serialize(), null, "script");
-    return false;
-  })
-  return this;
-};
+// jQuery.ajaxSetup({
+//   'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript")}
+// })
+
+// jQuery.fn.submitWithAjax = function() {
+//   this.submit(function() {
+//     $.post(this.action, $(this).serialize(), null, "script");
+//     return false;
+//   })
+//   return this;
+// };
 
 // Verse filtering; used and tweaked script from http://net.tutsplus.com/tutorials/javascript-ajax/using-jquery-to-manipulate-and-filter-data/
 function filtersetup(){
