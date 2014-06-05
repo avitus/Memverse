@@ -9,15 +9,35 @@
 
 <% end %>
 
-<h3 id="selectionTitle"></h3>
+<!-- Page content -->
+<div class="white-box-bg">
 
-<div id="spritzer" data-role="spritzer" data-url="http://sdk.spritzinc.com/sampleText/HelloWorld.html"></div>
+    <div class="spritz-container">
 
-<!-- Reference entry box -->
-<div class="verse-field ui-widget">
-    <label class="tag">Enter a chapter reference</label>
-    <img class="spinner spinner-add-verse" id="ajax_spinner" src="/assets/indicator2.gif" alt="Searching ..." style="display: none" />
-    <%= text_field_tag(:verse, params[:verse], :class => "flex-verse-search", :id => "js_flex-verse-search", :placeholder => "e.g. Matthew 5" ) %>
+        <div class="spritz-chapter-heading">
+            <h3 id="selectionTitle"></h3>
+        </div>
+
+        <!-- Main Spritz Div -->
+        <div    id="spritzer" class="memverse-spritz-pane"
+                data-role="spritzer"
+                data-options='{
+                    "redicleWidth": 250,
+                    "redicleHeight": 70,
+                    "speedItems": [250, 300, 350, 400, 450, 500, 550, 600],
+                    "defaultSpeed": 450
+                }'
+                data-url="http://sdk.spritzinc.com/sampleText/HelloWorld.html"></div>
+
+        <!-- Reference entry box -->
+        <div class="spritz-selection verse-field ui-widget">
+            <label class="tag">Enter a chapter reference</label>
+            <img class="spinner spinner-add-verse" id="ajax_spinner" src="/assets/indicator2.gif" alt="Searching ..." style="display: none" />
+            <%= text_field_tag(:chref, params[:chref], :class => "chref", :id => "chref", :placeholder => "e.g. Matthew 5", :size => "20" ) %>
+        </div>
+
+    </div>
+
 </div>
 
 
@@ -38,7 +58,7 @@
             // We should check whether we have entire chapter in database but skipping that for now
             if ( ch_ref = parsePassageRef( ref ) ) {
 
-                url  = 'http://www.memverse.com/read/' + 'NIV' + '/' + ch_ref.bk + '/' + ch_ref.ch;
+                url  = 'https://www.memverse.com/read/' + 'NIV' + '/' + ch_ref.bk + '/' + ch_ref.ch;
                 name = ref;
 
                 console.log("Getting text from:" + url);
@@ -52,9 +72,9 @@
 
     $(document).ready(function() {
 
-        $("#js_flex-verse-search").focus();
+        $("#chref").focus();
         // Add selection handler
-        $("#js_flex-verse-search").observe_field(0.5, function () {
+        $("#chref").observe_field(0.5, function () {
             onTextSelected( this.value )
         });
     });
