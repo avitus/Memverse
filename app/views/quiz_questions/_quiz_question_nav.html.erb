@@ -56,6 +56,12 @@
         </span> |
 
         <span class="reject ">
+            <%= link_to 'Needs Context',
+                quiz_question_path(quiz_question.id, :quiz_question => {:approval_status => 'Rejected', :rejection_code => 'Needs Context'}),
+                { :method => :put, :remote => true, "data-type" => "json" } %>
+        </span> |
+
+        <span class="reject ">
             <%= link_to 'Implausible Answers',
                 quiz_question_path(quiz_question.id, :quiz_question => {:approval_status => 'Rejected', :rejection_code => 'Implausible Answers'}),
                 { :method => :put, :remote => true, "data-type" => "json" } %>
