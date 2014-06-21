@@ -269,7 +269,7 @@
 								<li <%= sub(@sub=="faq"		     )%>><%= link_to t('help_menu.faq'),                    main_app.faq_path %></li>
 								<li <%= sub(@sub=="tutorial"	)%>><%= link_to t('learn_menu.Tutorial'), 				main_app.tutorial_path %></li>
 								<li <%= sub(@sub=="smalg"		)%>><%= link_to t('learn_menu.SuperMemo Algorithm'), 	main_app.supermemo_path %></li>
-								<li <%= sub(@sub=="vidtut"		)%>><%= link_to t('learn_menu.Video Tutorial'), 		"http://www.youtube.com/watch?v=N8A71DIcr4Y&fs=1&feature=player_embedded", :class => 'tut-video' %></li>
+								<li <%= sub(@sub=="vidtut"		)%>><%= link_to t('learn_menu.Video Tutorial'), 		"https://www.youtube.com/watch?v=N8A71DIcr4Y&fs=1&feature=player_embedded".html_safe, :class => 'tut-video' %></li>
 							</ul>
 						</div>
 					</div><!--submenu-left end-->
@@ -284,7 +284,7 @@
 					<li><%= link_to t('menu.home').html_safe, main_app.root_path %></li>
 					<li><%= link_to t('menu.demo').html_safe, main_app.demo_path %></li>
 					<li><%= link_to t('menu.learn').html_safe, main_app.tutorial_path %></li>
-					<li><%= link_to t('learn_menu.Video Tutorial').html_safe, "http://www.youtube.com/watch?v=N8A71DIcr4Y&fs=1&feature=player_embedded", :class => 'tut-video' %></li>
+					<li><%= link_to t('learn_menu.Video Tutorial').html_safe, "https://www.youtube.com/watch?v=N8A71DIcr4Y&fs=1&feature=player_embedded".html_safe, :class => 'tut-video' %></li>
 					<li><%= link_to t('menu.leaderboard').html_safe, main_app.leaderboard_path %></li>
 					<li><%= link_to t('menu.help'), main_app.faq_path %></li>
 					<li><%= link_to t('menu.blog').html_safe, bloggity.root_path %></li>
