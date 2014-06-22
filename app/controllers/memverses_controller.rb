@@ -104,6 +104,7 @@
 class MemversesController < ApplicationController
 
   before_filter :authenticate_user!, except: [:memverse_counter, :feedback]
+  before_action :set_mv, only: [:add_mv_tag, :toggle_mv_status]
 
   # Added 4/7/10 to prevent invalid authenticity token errors
   # http://ryandaigle.com/articles/2007/9/24/what-s-new-in-edge-rails-better-cross-site-request-forging-prevention
@@ -144,9 +145,9 @@ class MemversesController < ApplicationController
       redirect_to controller: "home", action: "quick_start" and return
     end
 
-    @due_today	= current_user.due_verses unless mobile_device?
+    @due_today  = current_user.due_verses unless mobile_device?
     @due_refs   = current_user.due_refs unless mobile_device?
-    @overdue		= current_user.overdue_verses unless mobile_device?
+    @overdue    = current_user.overdue_verses unless mobile_device?
 
     # Level information
     quests_remaining = current_user.current_uncompleted_quests.length
@@ -347,7 +348,7 @@ class MemversesController < ApplicationController
     # ==== Displaying a single verse ====
     if params[:id]
 
-      @mv         = Memverse.find(params[:id])
+      set_mv
       @verse      = @mv.verse
 
       add_breadcrumb I18n.t("home_menu.My Verses"), :manage_verses_path
@@ -436,7 +437,7 @@ class MemversesController < ApplicationController
   # In place editing support for tag addition
   # ----------------------------------------------------------------------------------------------------------
   def add_mv_tag
-    @mv = Memverse.find(params[:id])
+    set_mv
     new_tag = params[:value].titleize # need to clean this up with hpricot or equivalent
 
     # Notes on using the acts_as_taggable_on gem
@@ -492,10 +493,10 @@ class MemversesController < ApplicationController
 
     if dead_tag
       dead_tag.destroy
-	    # We should remove the tag if it is no longer tagging anything
-	    if ActsAsTaggableOn::Tag.find(params[:id]).taggings.length == 0
-	      ActsAsTaggableOn::Tag.find(params[:id]).destroy
-	    end
+      # We should remove the tag if it is no longer tagging anything
+      if ActsAsTaggableOn::Tag.find(params[:id]).taggings.length == 0
+        ActsAsTaggableOn::Tag.find(params[:id]).destroy
+      end
     end
 
     redirect_to(action: 'show', id: params[:mv])
@@ -520,12 +521,12 @@ class MemversesController < ApplicationController
   # Toggle verse from 'Active' to 'Pending' status
   # ----------------------------------------------------------------------------------------------------------
   def toggle_mv_status
-    @mv = Memverse.find(params[:id])
+    set_mv
 
     if @mv && @mv.status == 'Pending'
-    	@mv.status = @mv.test_interval > 30 ? "Memorized" : "Learning"
+      @mv.status = @mv.test_interval > 30 ? "Memorized" : "Learning"
     else
-    	@mv.status = 'Pending'
+      @mv.status = 'Pending'
     end
     @mv.save
 
@@ -603,9 +604,9 @@ class MemversesController < ApplicationController
   # AJAX Verse Add (Assumes that verse is already in DB)
   # ----------------------------------------------------------------------------------------------------------
   def ajax_add
-  	vs = Verse.find(params[:id])
+    vs = Verse.find(params[:id])
 
-  	if vs and current_user
+    if vs and current_user
 
       # We need to lock the user in order to prevent a race condition when two memverses are created simultaneously
       # Without the lock, adding two adjacent verses occasionally results in two separate passages
@@ -634,7 +635,7 @@ class MemversesController < ApplicationController
       msg = "Error"
     end
 
-  	render json: {msg: msg }
+    render json: {msg: msg }
 
   end
 
@@ -905,7 +906,7 @@ class MemversesController < ApplicationController
     add_breadcrumb I18n.t("menu.review"), :test_verse_quick_path
     add_breadcrumb I18n.t("memorize_menu.Verses"), :test_verse_quick_path
 
-    @mv 			= current_user.first_verse_today
+    @mv       = current_user.first_verse_today
 
     if @mv
       @show_feedback    = @mv.show_feedback? || true  # default to true in case of nil something in first expression
@@ -941,11 +942,11 @@ class MemversesController < ApplicationController
 
     # We should never receive a JS request for this URL but this is an attempted fix for the following error
 
-		# ActionView::MissingTemplate: Missing template memverses/test_verse_quick with
-		# {handlers: [:prawn_xxx, :builder, :prawn, :prawn_dsl, :erb, :rjs, :rhtml, :rxml],
-		# locale:[:en, :en],
-		# formats:[:js, "application/ecmascript", "application/x-ecmascript", "*/*"]}
-		# in view paths "/app/views",
+    # ActionView::MissingTemplate: Missing template memverses/test_verse_quick with
+    # {handlers: [:prawn_xxx, :builder, :prawn, :prawn_dsl, :erb, :rjs, :rhtml, :rxml],
+    # locale:[:en, :en],
+    # formats:[:js, "application/ecmascript", "application/x-ecmascript", "*/*"]}
+    # in view paths "/app/views",
     respond_to do |format|
       format.html
       format.js { redirect_to test_verse_quick_path }
@@ -972,15 +973,15 @@ class MemversesController < ApplicationController
         Tweet.create(news: "#{current_user.name_or_login} memorized #{mv.verse.ref}", user_id: current_user.id, importance: 5)
 
         if current_user.reaching_milestone
-        	milestone = current_user.memorized+1
+          milestone = current_user.memorized+1
 
-        	importance = case milestone
-  	      	when    0..    9 then 4
-  	      	when   10..  499 then 3
-  	      	when  500..  999 then 2
-  	      	when 1000..10000 then 1
-  	      	else                  5
-        	end
+          importance = case milestone
+            when    0..    9 then 4
+            when   10..  499 then 3
+            when  500..  999 then 2
+            when 1000..10000 then 1
+            else                  5
+          end
 
           msg       << " That was your #{milestone}th memorized verse!"
           broadcast  = "#{current_user.name_or_login} memorized #{current_user.his_or_her} #{milestone}th verse"
@@ -1228,8 +1229,8 @@ class MemversesController < ApplicationController
     user_id = params[:user_id]
     u = User.find(user_id)
     unless u.nil?
-	    u.adjust_work_load
-	    u.save_progress_report
+      u.adjust_work_load
+      u.save_progress_report
     end
     render json: { saved: true } # TODO: sloppy, we should check whether it actually was saved
   end
@@ -1351,10 +1352,10 @@ class MemversesController < ApplicationController
     echo    = (params[:echo] == "true")
 
     logger.debug("Echo (give feedback) is set to: #{echo}")
-    logger.debug("Guess   			: #{guess}")
-    logger.debug("Correct 			: #{correct}")
-    # logger.debug("Guess encoding 	: #{guess.encoding.name}")  # encoding method only available in Ruby 1.9
-    # logger.debug("Correct encoding	: #{correct.encoding.name}")
+    logger.debug("Guess         : #{guess}")
+    logger.debug("Correct       : #{correct}")
+    # logger.debug("Guess encoding  : #{guess.encoding.name}")  # encoding method only available in Ruby 1.9
+    # logger.debug("Correct encoding  : #{correct.encoding.name}")
 
     @correct  = correct
     @feedback = ""  # find a better way to construct the string
@@ -1411,6 +1412,12 @@ class MemversesController < ApplicationController
 
   end
 
+  private
+
+    def set_mv
+      @mv = Memverse.find(params[:id])
+    end
+
 end
 
 # Books in the Bible: 66
@@ -1432,6 +1439,3 @@ end
 # Words in the Bible: 773,692
 # Words in the Old Testament: 592,439
 # Words in the New Testament: 181,253
-
-
-
