@@ -14,22 +14,22 @@ class PopversesController < ApplicationController
       # All needed fields are included in Popverse table
       popverses.each do |pv|
         if pv.send(translation.downcase)  # we have the text for that verse in the required translation
-          @pop_verses << {:ref => pv.pop_ref, :id => pv.send(translation.downcase), :text => pv.send(translation.downcase + "_text")}
+          @pop_verses << {ref: pv.pop_ref, id: pv.send(translation.downcase), text: pv.send(translation.downcase + "_text")}
         end
       end
     else
       # Need to build from Verse model
       popverses.each do |pv|
-        vs = Verse.where(:book => pv.book, :chapter => pv.chapter, :versenum => pv.versenum, :translation => translation.upcase).first
+        vs = Verse.where(book: pv.book, chapter: pv.chapter, versenum: pv.versenum, translation: translation.upcase).first
         if vs
-          @pop_verses << {:ref => vs.ref, :id => vs.id, :text => vs.text}
+          @pop_verses << {ref: vs.ref, id: vs.id, text: vs.text}
         end
       end
     end
     
     respond_to do |format|
       format.html
-      format.json { render :json => @pop_verses }
+      format.json { render json: @pop_verses }
     end    
 
   end

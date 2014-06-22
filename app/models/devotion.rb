@@ -16,10 +16,10 @@ class Devotion < ActiveRecord::Base
       @dev_ref  = dd.at_css("a").child.to_s.capitalize
       @devotion = dailydev.description.split("<P></P></div>")[0].split("<h4>Thought</h4><P>")[1].split("</div>")[0]
         
-      create!( :name => "Spurgeon Morning", 
-               :month => Date.today.month, :day => Date.today.day,
-               :thought => @devotion,
-               :ref => @dev_ref ) unless Devotion.exists?(:name => "Spurgeon Morning", :month => Date.today.month, :day => Date.today.day)
+      create!( name: "Spurgeon Morning", 
+               month: Date.today.month, day: Date.today.day,
+               thought: @devotion,
+               ref: @dev_ref ) unless Devotion.exists?(name: "Spurgeon Morning", month: Date.today.month, day: Date.today.day)
     end  
   end
     

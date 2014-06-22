@@ -29,7 +29,7 @@ RailsAdmin.config do |config|
   # Example Custom Warden
   # RailsAdmin.config do |config|
   #   config.authenticate_with do
-  #     warden.authenticate! :scope => :paranoid
+  #     warden.authenticate! scope: :paranoid
   #   end
   # end
 

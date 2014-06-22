@@ -3,8 +3,8 @@
 class InfoController < ApplicationController
 
   # This causes a problem with the menu not showing the active tab
-  caches_action :leaderboard, :groupboard, :churchboard, :stateboard, :countryboard, :referralboard, :layout => false, :expires_in => 1.hour
-  caches_action :pop_verses, :cache_path => Proc.new { |c| c.params }, :expires_in => 1.day
+  caches_action :leaderboard, :groupboard, :churchboard, :stateboard, :countryboard, :referralboard, layout: false, expires_in: 1.hour
+  caches_action :pop_verses, cache_path: Proc.new { |c| c.params }, expires_in: 1.day
 
   add_breadcrumb "Home", :root_path
 
@@ -19,9 +19,9 @@ class InfoController < ApplicationController
 
     if current_user
       # Check for quest completion
-      # spawn_block(:argv => "spawn-tutorial-quest") do
-        q = Quest.find_by_url(url_for(:action => 'tutorial', :controller => 'info', :only_path => false))
-        if q && current_user.quests.where(:id => q.id).empty?
+      # spawn_block(argv: "spawn-tutorial-quest") do
+        q = Quest.find_by_url(url_for(action: 'tutorial', controller: 'info', only_path: false))
+        if q && current_user.quests.where(id: q.id).empty?
   		    q.check_quest_off(current_user)
   		    flash.keep[:notice] = "You have completed the task: #{q.task}"
         end
@@ -88,7 +88,7 @@ class InfoController < ApplicationController
     @page       = params[:page].to_i    # page number
     @page_size  = 10                    # number of verses per page
 
-    @vs_list = Popverse.find( :all, :limit => @page_size, :offset => @page*@page_size )
+    @vs_list = Popverse.find( :all, limit: @page_size, offset: @page*@page_size )
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -97,14 +97,14 @@ class InfoController < ApplicationController
   # Outputs:
   # ----------------------------------------------------------------------------------------------------------
   def pop_verses_by_book
-    add_breadcrumb I18n.t("page_titles.pop_verses_by_book"), {:action => "pop_verses_by_book"}
+    add_breadcrumb I18n.t("page_titles.pop_verses_by_book"), {action: "pop_verses_by_book"}
     @vs_list = Array.new
   end
 
   def pop_verse_search
     book = params[:search_param]
     @vs_list =  Verse.rank_verse_popularity(limit=9, book)
-    render :partial => 'pop_verses', :layout=>false
+    render partial: 'pop_verses', layout:false
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -113,7 +113,7 @@ class InfoController < ApplicationController
   def show_vs
     @verse = Verse.find(params[:vs])
     add_breadcrumb I18n.t("home_menu.Popular Verses"), :popular_path
-    add_breadcrumb "#{@verse.ref_long}", {:action => "show_vs"}
+    add_breadcrumb "#{@verse.ref_long}", {action: "show_vs"}
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -132,7 +132,7 @@ class InfoController < ApplicationController
     # ALV: Unable to get fragment cache working
     # TODO: http://stackoverflow.com/questions/11199396/rails-cache-fetch-inserting-extra-values
 
-    # @leaderboard = Rails.cache.fetch("top_users", :expires_in => 1.hour) do
+    # @leaderboard = Rails.cache.fetch("top_users", expires_in: 1.hour) do
     #   User.top_users
     # end
 
@@ -151,7 +151,7 @@ class InfoController < ApplicationController
 
     @churchboard = Church.top_churches
 
-    # @churchboard = Rails.cache.fetch("top_churches", :expires_in => 1.hour) do
+    # @churchboard = Rails.cache.fetch("top_churches", expires_in: 1.hour) do
     #   Church.top_churches
     # end
 
@@ -170,7 +170,7 @@ class InfoController < ApplicationController
 
     @groupboard = Group.top_groups
 
-    # @groupboard = Rails.cache.fetch("top_groups", :expires_in => 1.hour) do
+    # @groupboard = Rails.cache.fetch("top_groups", expires_in: 1.hour) do
     #   Group.top_groups
     # end
 
@@ -189,7 +189,7 @@ class InfoController < ApplicationController
 
     @stateboard = AmericanState.top_states
 
-    # @stateboard = Rails.cache.fetch("top_states", :expires_in => 1.hour) do
+    # @stateboard = Rails.cache.fetch("top_states", expires_in: 1.hour) do
     #   AmericanState.top_states
     # end
 
@@ -208,7 +208,7 @@ class InfoController < ApplicationController
 
     @countryboard = Country.top_countries
 
-    # @countryboard = Rails.cache.fetch("top_countries", :expires_in => 1.hour) do
+    # @countryboard = Rails.cache.fetch("top_countries", expires_in: 1.hour) do
     #   Country.top_countries
     # end
 
@@ -226,7 +226,7 @@ class InfoController < ApplicationController
 
     @referralboard = User.top_referrers
 
-    # @referralboard = Rails.cache.fetch("top_referrers", :expires_in => 1.hour) do
+    # @referralboard = Rails.cache.fetch("top_referrers", expires_in: 1.hour) do
     #   User.top_referrers
     # end
 
@@ -333,7 +333,7 @@ end
 
       end
 
-    render :partial=>'feedback', :layout=>false
+    render partial:'feedback', layout:false
 
   end
 
@@ -343,9 +343,9 @@ end
   def email_available
     @user = User.find_by_email(params[:email])
     if @user
-      render :json => {:available => 'false'}
+      render json: {available: 'false'}
     else
-      render :json => {:available => 'true'}
+      render json: {available: 'true'}
     end
 
   end

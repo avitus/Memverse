@@ -19,7 +19,7 @@ class GroupsController < ApplicationController
       @group          = Group.find(params[:id])
       @users          = @group.users.order('memorized DESC')    
       @can_edit       = (@group.get_leader! == current_user)
-      add_breadcrumb @group.name, {:action => "show", :id => params[:id]}
+      add_breadcrumb @group.name, {action: "show", id: params[:id]}
     elsif current_user.group
       @group          = current_user.group
       @users          = @group.users.order('memorized DESC')
@@ -44,7 +44,7 @@ class GroupsController < ApplicationController
         format.html { redirect_to(@group) }
         format.json { respond_with_bip(@group) }
       else
-        format.html { render :action => "edit" }
+        format.html { render action: "edit" }
         format.json { respond_with_bip(@group) }
       end
     end

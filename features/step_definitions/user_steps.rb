@@ -5,38 +5,38 @@ def wait_for_input
 end
 
 Given /^no user exists with an email of "(.*)"$/ do |email|
-  User.where(:email => email).first.should be_nil
+  User.where(email: email).first.should be_nil
 end
 
 Given /^I am a user named "([^"]*)" with an email "([^"]*)" and password "([^"]*)"$/ do |name, email, password|
-  FactoryGirl.create(:user, :name => name,
-                     :email => email,
-                     :password => password,
-                     :password_confirmation => password)
+  FactoryGirl.create(:user, name: name,
+                     email: email,
+                     password: password,
+                     password_confirmation: password)
 end
 
 Given /^I am an admin named "([^"]*)" with an email "([^"]*)" and password "([^"]*)"$/ do |name, email, password|
-  FactoryGirl.create(:user, :name => name,
-                     :email => email,
-                     :password => password,
-                     :password_confirmation => password,
-                     :admin => true )
+  FactoryGirl.create(:user, name: name,
+                     email: email,
+                     password: password,
+                     password_confirmation: password,
+                     admin: true )
 end
 
 Given /^I am a confirmed user named "([^"]*)" with an email "([^"]*)" and password "([^"]*)"$/ do |name, email, password|
-  User.new(:name => name,
-            :email => email,
-            :password => password,
-            :password_confirmation => password).confirm!
+  User.new(name: name,
+            email: email,
+            password: password,
+            password_confirmation: password).confirm!
 end
 
 Given /^I am an advanced user named "([^"]*)" with an email "([^"]*)" and password "([^"]*)"$/ do |name, email, password|
-  FactoryGirl.create(:user, :name => name,
-                     :email => email,
-                     :password => password,
-                     :password_confirmation => password,
-                     :memorized => 100,
-                     :learning  =>  20)
+  FactoryGirl.create(:user, name: name,
+                     email: email,
+                     password: password,
+                     password_confirmation: password,
+                     memorized: 100,
+                     learning:  20)
 end
 
 
@@ -99,28 +99,28 @@ Given /^the email address "(.*)" is not confirmed$/ do |email|
 end
 
 Given /^a user with the login of "(.*)"$/ do |login|
-  User.new(:name => "Test User",
-           :email => "testemail@test.com",
-           :login => login,
-           :password => "secret",
-           :password_confirmation => "secret").save!
+  User.new(name: "Test User",
+           email: "testemail@test.com",
+           login: login,
+           password: "secret",
+           password_confirmation: "secret").save!
 end
 
 Then /^there should be a user with an email of "(.*)" whose referrer's login is "(.*)"$/ do |email, login|
-  referring_id = User.where(:email => email).first.referred_by
+  referring_id = User.where(email: email).first.referred_by
   User.find(referring_id).login == login
 end
 
 Given /^the user with the email address "([^"]*)" can blog$/ do |email|
   # class User < ActiveRecord::Base
   #   def can_blog?
-  #     self.id == User.where(:email => email).first.id
+  #     self.id == User.where(email: email).first.id
   #  end
   # end
 end
 
 Given /^a blog titled "(.*)"$/ do |title|
-  Bloggity::Blog.new(:title => title, :url_identifier => "main").save!
+  Bloggity::Blog.new(title: title, url_identifier: "main").save!
 end
 
 Given /^I sign in as a normal user$/ do
@@ -158,8 +158,8 @@ end
 Given /^the user with the email of "(.*)" has (\d+) verses in his list$/ do |email, n|
   user = User.find_by_email(email)
   n.to_i.times { |i|
-    vs = FactoryGirl.create(:verse, :chapter => 2, :versenum => i+1)
-    FactoryGirl.create(:memverse, :user_id => user.id, :verse_id => vs.id)
+    vs = FactoryGirl.create(:verse, chapter: 2, versenum: i+1)
+    FactoryGirl.create(:memverse, user_id: user.id, verse_id: vs.id)
   }
   user.memorized = 10
   user.save

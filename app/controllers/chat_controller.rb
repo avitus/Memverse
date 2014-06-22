@@ -1,6 +1,6 @@
 class ChatController < ApplicationController
 
-  before_filter :authenticate_user!, :only => :channel1
+  before_filter :authenticate_user!, only: :channel1
 
   # ----------------------------------------------------------------------------------------------------------
   # Open/close chat channel
@@ -25,16 +25,16 @@ class ChatController < ApplicationController
     }
 
     PN.publish(
-        :channel  => channel,
-        :message  => {
-          :meta => "chat_status",
-          :status => new_status
+        channel: channel,
+        message: {
+          meta: "chat_status",
+          status: new_status
         },
-        :http_sync => true,
-        :callback => @my_callback
+        http_sync: true,
+        callback: @my_callback
       )
 
-    render :json => {:status => new_status}
+    render json: {status: new_status}
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -53,7 +53,7 @@ class ChatController < ApplicationController
       end
     end
 
-    render :json => {:status => status}
+    render json: {status: status}
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -80,12 +80,12 @@ class ChatController < ApplicationController
     if chat_open && !usr_banned # Check that chat is open and user is not banned
       puts "Chat is open and user not banned"
       Rails.logger.info("====> Publishing message to PubNub: #{parse_chat_message(params[:msg_body], params[:sender], params[:user_id])}")
-      PN.publish( :channel  => channel, :message  => {
-          :meta => "chat",
-          :data => parse_chat_message(params[:msg_body], params[:sender], params[:user_id])
+      PN.publish( channel: channel, message: {
+          meta: "chat",
+          data: parse_chat_message(params[:msg_body], params[:sender], params[:user_id])
         },
-        :http_sync => true,
-        :callback => @my_callback
+        http_sync: true,
+        callback: @my_callback
       )
     else
       puts "Chat is closed and/or user banned"

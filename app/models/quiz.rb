@@ -1,7 +1,7 @@
-  #    t.integer   :user_id, :null => false
+  #    t.integer   :user_id, null: false
   #    t.string    :name
   #    t.text      :description
-  #    t.integer   :no_questions, :default => "0"
+  #    t.integer   :no_questions, default: "0"
 
 class Quiz < ActiveRecord::Base
 

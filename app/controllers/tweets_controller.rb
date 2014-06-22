@@ -6,7 +6,7 @@ class TweetsController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------  
   def index
     add_breadcrumb "Recently on Memverse", :tweets_path
-    @tweets = Tweet.all(:limit => 100, :order => "created_at DESC")
+    @tweets = Tweet.all(limit: 100, order: "created_at DESC")
     respond_to do |format|
       format.html
     end
@@ -16,7 +16,7 @@ class TweetsController < ApplicationController
   # Create a new tweet
   # ----------------------------------------------------------------------------------------------------------   
   def create
-    @tweet = Tweet.create(:message => params[:message])
+    @tweet = Tweet.create(message: params[:message])
     respond_to do |format|
       if @tweet.save
         format.html { redirect_to posts_path }
@@ -40,10 +40,10 @@ class TweetsController < ApplicationController
       importance = 5
     end
         
-    # @tweets = Tweet.all(:order => "created_at DESC", :conditions => ["importance <= ? and id > ?", importance, lastid])
+    # @tweets = Tweet.all(order: "created_at DESC", conditions: ["importance <= ? and id > ?", importance, lastid])
     @tweets = Tweet.where("importance <= ? and id > ?", importance, lastid).limit(5).order("created_at DESC")
     
-    render :partial=> 'tweets/tweet', :locals => { :tweets => @tweets }, :layout=>false
+    render partial: 'tweets/tweet', locals: { tweets: @tweets }, layout:false
     
   end 
 

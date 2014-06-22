@@ -48,7 +48,7 @@ FactoryGirl.define do
   # ==============================================================================================
   factory :passage do
 
-    association :user,  :factory => :user
+    association :user,  factory: :user
     translation 'NIV'
     length      9
     book        'Proverbs'
@@ -71,9 +71,9 @@ FactoryGirl.define do
   # Memverses
   # ==============================================================================================
   factory :memverse do
-    # association :passage, :factory => :passage # this causes problems with infinite recursion
-    association    :verse,   :factory => :verse
-    association    :user,    :factory => :user
+    # association :passage, factory: :passage # this causes problems with infinite recursion
+    association    :verse,   factory: :verse
+    association    :user,    factory: :user
     status         'Learning'
     last_tested    Date.today
     next_test      Date.today
@@ -107,12 +107,12 @@ FactoryGirl.define do
   end
 
   factory :blog_post do |f|
-    f.association :posted_by_id, :factory => :user
+    f.association :posted_by_id, factory: :user
   end
 
   factory :blog_comment do |bc|
-    bc.association :blog_post, :factory => :blog_post
-  	bc.association :user,      :factory => :user
+    bc.association :blog_post, factory: :blog_post
+  	bc.association :user,      factory: :user
   	bc.comment 'Nice blog post!'
   end
 
@@ -141,14 +141,14 @@ FactoryGirl.define do
     q.task 'Memorize Matthew 5'
     q.objective 'Chapters'
     q.qualifier 'Matthew 5'
-    q.association :badge, :factory => :badge
+    q.association :badge, factory: :badge
   end
 
   # ==============================================================================================
   # Progress Reports
   # ==============================================================================================
   factory :progress_report do |pr|
-    pr.association :user, :factory => :user
+    pr.association :user, factory: :user
     pr.learning   50
     pr.memorized 100
     pr.entry_date Date.today
@@ -159,14 +159,14 @@ FactoryGirl.define do
   # ==============================================================================================
   factory :group do |g|
     g.name 'Memory Group'
-    g.association :leader, :factory => :user
+    g.association :leader, factory: :user
   end
 
   # ==============================================================================================
   # Quiz
   # ==============================================================================================
   factory :quiz do |q|
-    q.association :user, :factory => :user
+    q.association :user, factory: :user
     q.name    'Weekly Bible Knowledge'
   end
 
@@ -174,7 +174,7 @@ FactoryGirl.define do
   # Quiz Questions
   # ==============================================================================================
   factory :quiz_question do |qq|
-    qq.association :quiz, :factory => :quiz
+    qq.association :quiz, factory: :quiz
     qq.times_answered  10
     qq.perc_correct    50
   end

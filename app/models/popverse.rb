@@ -2,11 +2,11 @@ class Popverse < ActiveRecord::Base
 
   
   # Structure  
-  #      t.string    :pop_ref,     :null => false
-  #      t.integer   :num_users,   :null => false
-  #      t.string    :book,        :null => false
-  #      t.string    :chapter,     :null => false
-  #      t.string    :versenum,    :null => false      
+  #      t.string    :pop_ref,     null: false
+  #      t.integer   :num_users,   null: false
+  #      t.string    :book,        null: false
+  #      t.string    :chapter,     null: false
+  #      t.string    :versenum,    null: false      
   #      t.integer   :niv
   #      t.integer   :esv
   #      t.integer   :nas

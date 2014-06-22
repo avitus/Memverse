@@ -2,13 +2,13 @@ class Uberverse < ActiveRecord::Base
 
   has_many :sermons
   has_many :verses
-  has_many :quiz_questions, :foreign_key => "supporting_ref"
+  has_many :quiz_questions, foreign_key: "supporting_ref"
 
   # ----------------------------------------------------------------------------------------------------------
   # Outputs friendly verse reference: eg. "Jn 3:16"
   # ----------------------------------------------------------------------------------------------------------
   def ref
-    book_tl = I18n.t abbr(book).to_sym, :scope => [:book, :abbrev]
+    book_tl = I18n.t abbr(book).to_sym, scope: [:book, :abbrev]
     return book_tl + ' ' + chapter.to_s + ':' + versenum.to_s
   end
 
@@ -16,13 +16,13 @@ class Uberverse < ActiveRecord::Base
   # Outputs friendly verse reference: eg. "John 3:16"
   # ----------------------------------------------------------------------------------------------------------
   def long_ref
-    book_tl = I18n.t book.to_sym, :scope => [:book, :name]
+    book_tl = I18n.t book.to_sym, scope: [:book, :name]
     return book_tl + ' ' + chapter.to_s + ':' + versenum.to_s
   end
 
   def major_translations
-    return self.verses.where(:book => self.book, :chapter => self.chapter, :versenum => self.versenum,
-                          :translation => ['NIV', 'ESV', 'NAS', 'NKJ', 'KJV'])
+    return self.verses.where(book: self.book, chapter: self.chapter, versenum: self.versenum,
+                          translation: ['NIV', 'ESV', 'NAS', 'NKJ', 'KJV'])
   end
 
   # ============= Protected below this line ==================================================================

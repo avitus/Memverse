@@ -3,9 +3,9 @@ class ConvertRaToDevise < ActiveRecord::Migration
 
     #encrypting passwords and authentication related fields
     rename_column :users, "crypted_password", "encrypted_password"
-    change_column :users, "encrypted_password", :string, :limit => 128, :default => "", :null => false
+    change_column :users, "encrypted_password", :string, limit: 128, default: "", null: false
     rename_column :users, "salt", "password_salt"
-    change_column :users, "password_salt", :string, :default => "", :null => false
+    change_column :users, "password_salt", :string, default: "", null: false
 
     #confirmation related fields
     rename_column :users, "activation_code", "confirmation_token"
@@ -37,9 +37,9 @@ class ConvertRaToDevise < ActiveRecord::Migration
 
     #encrypting passwords and authentication related fields
     rename_column :users, "encrypted_password", "crypted_password"
-    change_column :users, "crypted_password", :string, :limit => 40
+    change_column :users, "crypted_password", :string, limit: 40
     rename_column :users, "password_salt", "salt" 
-    change_column :users, "salt", :string, :limit => 40
+    change_column :users, "salt", :string, limit: 40
 
   end
 end

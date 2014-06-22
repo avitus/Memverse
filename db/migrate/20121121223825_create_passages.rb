@@ -3,24 +3,24 @@ class CreatePassages < ActiveRecord::Migration
 
     # Create Passage table
     create_table :passages do |t|
-      t.references :user,               :null => false
+      t.references :user,               null: false
 
-      t.integer    :length,             :null => false, :default => 1
+      t.integer    :length,             null: false, default: 1
 
-      t.string     :reference,          :limit => 50
-      t.string     :translation,        :null => false, :limit => 10
+      t.string     :reference,          limit: 50
+      t.string     :translation,        null: false, limit: 10
 
-      t.string     :book,               :null => false, :limit => 40
-      t.integer    :chapter,            :null => false
-      t.integer    :first_verse,        :null => false
-      t.integer    :last_verse,         :null => false
+      t.string     :book,               null: false, limit: 40
+      t.integer    :chapter,            null: false
+      t.integer    :first_verse,        null: false
+      t.integer    :last_verse,         null: false
 
-      t.boolean    :complete_chapter,   :default => false
-      t.boolean    :synched,            :default => false
+      t.boolean    :complete_chapter,   default: false
+      t.boolean    :synched,            default: false
 
-      t.decimal    :efactor,            :default => 2.0, :precision => 4, :scale =>1
-      t.integer    :test_interval,      :default => 1
-      t.integer    :rep_n,              :default => 1
+      t.decimal    :efactor,            default: 2.0, precision: 4, scale:1
+      t.integer    :test_interval,      default: 1
+      t.integer    :rep_n,              default: 1
       t.date       :next_test
       t.date       :last_tested
 

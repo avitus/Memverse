@@ -3,7 +3,7 @@
 class QuizQuestionsController < ApplicationController
 
   before_filter :authenticate_user!
-  before_filter :access_permission, :except => [:submit, :search, :create, :index]
+  before_filter :access_permission, except: [:submit, :search, :create, :index]
 
   add_breadcrumb "Home", :root_path
 
@@ -45,7 +45,7 @@ class QuizQuestionsController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @quiz_question }
+      format.xml  { render xml: @quiz_question }
     end
   end
 
@@ -55,7 +55,7 @@ class QuizQuestionsController < ApplicationController
   def search
     supporting_ref = params[:supporting_ref]
     errorcode, bk, ch, vs = parse_verse( supporting_ref )
-    uv = Uberverse.where(:book => bk, :chapter => ch, :versenum => vs).first
+    uv = Uberverse.where(book: bk, chapter: ch, versenum: vs).first
 
     if uv
       related_questions = uv.quiz_questions
@@ -65,7 +65,7 @@ class QuizQuestionsController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.js  { render :json => related_questions }
+      format.js  { render json: related_questions }
     end
   end
 
@@ -76,7 +76,7 @@ class QuizQuestionsController < ApplicationController
 
     respond_to do |format|
       format.html # new.html.erb
-      format.xml  { render :xml => @quiz_question }
+      format.xml  { render xml: @quiz_question }
     end
   end
 
@@ -111,7 +111,7 @@ class QuizQuestionsController < ApplicationController
 
     # Associate supporting verse with question
     errorcode, bk, ch, vs = parse_verse( supporting_ref )
-    @quiz_question.supporting_ref = Uberverse.where(:book => bk, :chapter => ch, :versenum => vs).first
+    @quiz_question.supporting_ref = Uberverse.where(book: bk, chapter: ch, versenum: vs).first
 
     respond_to do |format|
       if @quiz_question.save
@@ -120,14 +120,14 @@ class QuizQuestionsController < ApplicationController
         if URI(request.referer).path == '/submit_question'
           link = "<a href=\"#{submit_question_path}\">[Add another question]</a>"
         else
-          link = "<a href=\"#{url_for(:action => 'new', :quiz => @quiz_question.quiz_id, :qno => @quiz_question.question_no + 1)}\">[Add another question]</a>"
+          link = "<a href=\"#{url_for(action: 'new', quiz: @quiz_question.quiz_id, qno: @quiz_question.question_no + 1)}\">[Add another question]</a>"
         end
 
         flash.now[:notice] << " #{link} "
         format.html { redirect_to quiz_question_path(@quiz_question) }
 
       else
-        format.html { render :action => "new" }
+        format.html { render action: "new" }
       end
     end
   end
@@ -142,7 +142,7 @@ class QuizQuestionsController < ApplicationController
     if supporting_ref
       # Associate supporting verse with question
       errorcode, bk, ch, vs = parse_verse( supporting_ref )
-      @quiz_question.supporting_ref = Uberverse.where(:book => bk, :chapter => ch, :versenum => vs).first
+      @quiz_question.supporting_ref = Uberverse.where(book: bk, chapter: ch, versenum: vs).first
     end
 
     respond_to do |format|
@@ -151,7 +151,7 @@ class QuizQuestionsController < ApplicationController
         format.html { redirect_to quiz_question_path(@quiz_question) }
         format.json { head :no_content }
       else
-        format.html { render :action => "edit" }
+        format.html { render action: "edit" }
         format.json { render json: @quiz_question.errors, status: :unprocessable_entity }
       end
     end

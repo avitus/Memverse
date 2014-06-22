@@ -34,7 +34,7 @@ class QuizzesController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @quiz }
+      format.xml  { render xml: @quiz }
     end
   end
 
@@ -61,10 +61,10 @@ class QuizzesController < ApplicationController
       if @quiz.save
         flash[:notice] = 'Quiz was successfully created.'
         format.html { redirect_to(@quiz) }
-        format.xml  { render :xml => @quiz, :status => :created, :location => @quiz }
+        format.xml  { render xml: @quiz, status: :created, location: @quiz }
       else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @quiz.errors, :status => :unprocessable_entity }
+        format.html { render action: "new" }
+        format.xml  { render xml: @quiz.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -82,8 +82,8 @@ class QuizzesController < ApplicationController
         format.html { redirect_to(@quiz) }
         format.xml  { head :ok }
       else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @quiz.errors, :status => :unprocessable_entity }
+        format.html { render action: "edit" }
+        format.xml  { render xml: @quiz.errors, status: :unprocessable_entity }
       end
     end
   end

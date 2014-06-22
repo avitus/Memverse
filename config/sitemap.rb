@@ -10,24 +10,24 @@ SitemapGenerator::Sitemap.create do
   # Usage: add(path, options={})
   #        (default options are used if you don't specify)
   #
-  # Defaults: :priority => 0.5, :changefreq => 'weekly',
-  #           :lastmod => Time.now, :host => default_host
+  # Defaults: priority: 0.5, changefreq: 'weekly',
+  #           lastmod: Time.now, host: default_host
   #
   # Examples:
   #
   # Add '/articles'
   #
-  #   add articles_path, :priority => 0.7, :changefreq => 'daily'
+  #   add articles_path, priority: 0.7, changefreq: 'daily'
   #
   # Add all articles:
   #
   #   Article.find_each do |article|
-  #     add article_path(article), :lastmod => article.updated_at
+  #     add article_path(article), lastmod: article.updated_at
   #   end
 
   # Add all top level paths
   add root_path
-  add demo_path, :priority => 0.8, :changefreq => 'monthly'
+  add demo_path, priority: 0.8, changefreq: 'monthly'
   add tutorial_path
   add leaderboard_path
   add faq_path
@@ -39,7 +39,7 @@ SitemapGenerator::Sitemap.create do
 
   # Add blog posts
   # BlogPost.find_each do |blog_post|
-  #   add blog_posts_path(blog_post), :lastmod => blog_post.updated_at
+  #   add blog_posts_path(blog_post), lastmod: blog_post.updated_at
   # end
 
 

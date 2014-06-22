@@ -9,31 +9,31 @@ class BibleGateway
   GATEWAY_URL = "http://www.biblegateway.com"
 
   VERSIONS = {
-    :NNV => "NIV",
-    :NAS => "NASB",
-    :NKJ => "NKJV",
-    :KJV => "KJV",
-    :RSV => "Revised Standard Version",
-    :NRS => "New Revised Standard Version",
-    :ESV => "ESV",
-    :NLT => "NLT",
-    :CEV => "CEV",
-    :HCS => "HCSB",
-    :DTL => "DARBY",
-    :MSG => "MSG",
-    :AMP => "AMP",
-    :IRV => "NIRV",
-    :UKJ => "KJ21",
-    :GRK => "Biblical Greek",
-    :NVI => "Nueva Version Internacional",
-    :RVR => "Reina-Valera 1960",
-    :LSV => "Louis Segond 1910",
-    :LND => "La Nuova Diodati",
-    :AFR => "Afrikaans 1983 Translation",
-    :HSV => "Herziene Statenvertaling",
-    :NBV => "De Nieuwe Bijbelvertaling",
-    :TMB => "Terjemahan Baru",
-    :SPB => "Svenska Folkbibeln"
+    NNV: "NIV",
+    NAS: "NASB",
+    NKJ: "NKJV",
+    KJV: "KJV",
+    RSV: "Revised Standard Version",
+    NRS: "New Revised Standard Version",
+    ESV: "ESV",
+    NLT: "NLT",
+    CEV: "CEV",
+    HCS: "HCSB",
+    DTL: "DARBY",
+    MSG: "MSG",
+    AMP: "AMP",
+    IRV: "NIRV",
+    UKJ: "KJ21",
+    GRK: "Biblical Greek",
+    NVI: "Nueva Version Internacional",
+    RVR: "Reina-Valera 1960",
+    LSV: "Louis Segond 1910",
+    LND: "La Nuova Diodati",
+    AFR: "Afrikaans 1983 Translation",
+    HSV: "Herziene Statenvertaling",
+    NBV: "De Nieuwe Bijbelvertaling",
+    TMB: "Terjemahan Baru",
+    SPB: "Svenska Folkbibeln"
   }
 
   def self.versions
@@ -56,7 +56,7 @@ class BibleGateway
 		  doc = Nokogiri::HTML(open(passage_url(passage)))
 		  scrape_passage(doc)
 		else
-		  {:title => "--", :content => "--" }
+		  {title: "--", content: "--" }
 		end
   end
 
@@ -100,8 +100,8 @@ class BibleGateway
       content = segment.gsub(/<b.+?<\/b>/," ").gsub(/<\/?[^>]*>/, " ").gsub(/<!--.*?-->/, " ").gsub("\u00A0", " ").gsub(/\s{2,}/, " ").strip
       content = content.gsub(/^\d{1,3}/," ").strip # remove chapter numbers (if present)
     else
-      {:title => "--", :content => "--" }
+      {title: "--", content: "--" }
     end
-    {:title => title, :content => content }
+    {title: title, content: content }
   end
 end

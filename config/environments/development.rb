@@ -8,7 +8,7 @@ MemverseApp::Application.configure do
 
   # ALV: Point to a nonexistent memcache to eliminate problems
   # http://blog.hertler.org/2010/10/memcached-undefined-classmodule-in.html
-  config.cache_store   = :dalli_store, '127.0.0.1:11211', {:namespace => "dev"}
+  config.cache_store   = :dalli_store, '127.0.0.1:11211', {namespace: "dev"}
 
   # No need for eager loading in dev
   config.eager_load = false
@@ -18,12 +18,12 @@ MemverseApp::Application.configure do
   config.action_controller.perform_caching = false
 
   # ActionMailer Config
-  config.action_mailer.default_url_options = { :host => 'localhost:3000' }
+  config.action_mailer.default_url_options = { host: 'localhost:3000' }
   # A dummy setup for development - no deliveries, but logged
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.perform_deliveries = false
   config.action_mailer.raise_delivery_errors = true
-  config.action_mailer.default :charset => "utf-8"
+  config.action_mailer.default charset: "utf-8"
 
   # Print deprecation notices to the Rails logger
   config.active_support.deprecation = :log

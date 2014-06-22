@@ -3,7 +3,7 @@ class ForumReviewNotifier
   include Sidekiq::Worker
   include Sidetiq::Schedulable
 
-  sidekiq_options :retry => false # ALV - setting to false for now since this job is flooding log file
+  sidekiq_options retry: false # ALV - setting to false for now since this job is flooding log file
 
   recurrence do
      daily.hour_of_day(8)

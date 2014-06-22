@@ -6,7 +6,7 @@ end
 
 class ChartController < ApplicationController
 
-  before_filter :authenticate_user!, :except => :load_memverse_clock
+  before_filter :authenticate_user!, except: :load_memverse_clock
 
   # ----------------------------------------------------------------------------------------------------------
   # Stacked bar chart to show user progress
@@ -27,7 +27,7 @@ class ChartController < ApplicationController
       user_id = current_user.id
     end
 
-    all_entries = ProgressReport.where(:user_id => user_id).order('entry_date')
+    all_entries = ProgressReport.where(user_id: user_id).order('entry_date')
     
     # TODO: Consider deleting extra entries periodically
     # TODO: Add in last entry so that graph always shows current day
@@ -75,7 +75,7 @@ class ChartController < ApplicationController
       user_id = current_user.id
     end
     
-    all_entries = ProgressReport.where(:user_id => user_id).order('entry_date')
+    all_entries = ProgressReport.where(user_id: user_id).order('entry_date')
     
     # TODO: Consider deleting extra entries periodically
     # TODO: Add in last entry so that graph always shows current day
@@ -114,7 +114,7 @@ class ChartController < ApplicationController
     x_date      = Array.new
 
     # Get daily statistics and build data series
-    all_entries = DailyStats.where(:segment => "Global")
+    all_entries = DailyStats.where(segment: "Global")
 
     # TODO: Consider deleting extra entries periodically
     # TODO: Add in last entry so that graph always shows current day

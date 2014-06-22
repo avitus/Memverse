@@ -103,16 +103,16 @@
 
 class MemversesController < ApplicationController
 
-  before_filter :authenticate_user!, :except => [:memverse_counter, :feedback]
+  before_filter :authenticate_user!, except: [:memverse_counter, :feedback]
 
   # Added 4/7/10 to prevent invalid authenticity token errors
   # http://ryandaigle.com/articles/2007/9/24/what-s-new-in-edge-rails-better-cross-site-request-forging-prevention
-  protect_from_forgery :only => [:create, :update, :destroy]
+  protect_from_forgery only: [:create, :update, :destroy]
 
-  prawnto :prawn => { :top_margin     => 50 }
-  prawnto :prawn => { :bottom_margin  => 50 }
-  prawnto :prawn => { :left_margin    => 50 }
-  prawnto :prawn => { :right_margin   => 50 }
+  prawnto prawn: { top_margin: 50 }
+  prawnto prawn: { bottom_margin: 50 }
+  prawnto prawn: { left_margin: 50 }
+  prawnto prawn: { right_margin: 50 }
 
   respond_to :html, :pdf
 
@@ -141,7 +141,7 @@ class MemversesController < ApplicationController
     @tab = "home"
 
     if current_user.needs_quick_start?
-      redirect_to :controller => "home", :action => "quick_start" and return
+      redirect_to controller: "home", action: "quick_start" and return
     end
 
     @due_today	= current_user.due_verses unless mobile_device?
@@ -159,7 +159,7 @@ class MemversesController < ApplicationController
 
     # Otherwise, show some nice statistics and direct user to memorization page if necessary
     if (!@user_has_no_verses)
-      mv = Memverse.where(:user_id => current_user.id).order("next_test ASC").first
+      mv = Memverse.where(user_id: current_user.id).order("next_test ASC").first
       if !mv.nil?
         @user_has_test_today = (mv.next_test <= Date.today)
       end
@@ -167,20 +167,20 @@ class MemversesController < ApplicationController
       # Notification of verses and references that are due for review
       unless flash[:error] or flash[:notice] or !current_user.first_verse_today # Show flash with verses due and workload unless another flash or done with review
         flash.now[:notice] = t('messages.today_msg_html',
-                                  :due_today => current_user.due_verses,
-                                  :due_refs  => current_user.due_refs,
-                                  :time      => current_user.work_load )
+                                  due_today: current_user.due_verses,
+                                  due_refs: current_user.due_refs,
+                                  time: current_user.work_load )
       end
 
     end
 
     # === Get Recent Tweets ===
-    @tweets1 = Tweet.where(:importance => 1..2).limit(12).order("created_at DESC")  # Most important tweets
-    @tweets2 = Tweet.where(:importance => 3..4).limit(12).order("created_at DESC")  # Moderate importance
+    @tweets1 = Tweet.where(importance: 1..2).limit(12).order("created_at DESC")  # Most important tweets
+    @tweets2 = Tweet.where(importance: 3..4).limit(12).order("created_at DESC")  # Moderate importance
 
     # === RSS Devotional ===
-    @dd = Rails.cache.fetch(["devotion", Date.today.month, Date.today.day], :expires_in => 24.hours) do
-      Devotion.where(:name => "Spurgeon Morning", :month => Date.today.month, :day => Date.today.day ).first || Devotion.daily_refresh
+    @dd = Rails.cache.fetch(["devotion", Date.today.month, Date.today.day], expires_in: 24.hours) do
+      Devotion.where(name: "Spurgeon Morning", month: Date.today.month, day: Date.today.day ).first || Devotion.daily_refresh
     end
 
     # === Verse of the Day ===
@@ -212,8 +212,8 @@ class MemversesController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml  => @mv }
-      format.json { render :json => @mv }
+      format.xml  { render xml: @mv }
+      format.json { render json: @mv }
     end
 
   end
@@ -241,8 +241,8 @@ class MemversesController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml  => @mvs }
-      format.json { render :json => @mvs }
+      format.xml  { render xml: @mvs }
+      format.json { render json: @mvs }
     end
   end
 
@@ -255,8 +255,8 @@ class MemversesController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml  => @verses }
-      format.json { render :json => @verses }
+      format.xml  { render xml: @verses }
+      format.json { render json: @verses }
     end
 
   end
@@ -267,7 +267,7 @@ class MemversesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   def memverse_counter
     total_verses = Memverse.memorized.count
-    render :json => { :total_verses => total_verses }
+    render json: { total_verses: total_verses }
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -303,7 +303,7 @@ class MemversesController < ApplicationController
     @my_verses    = Array.new
     @status_table = Hash.new(0)
 
-    mem_vs = Memverse.find(:all, :conditions => ["user_id = ?", current_user.id])
+    mem_vs = Memverse.find(:all, conditions: ["user_id = ?", current_user.id])
 
     mem_vs.each { |mv|
 
@@ -314,7 +314,7 @@ class MemversesController < ApplicationController
 
     }
 
-    @pop_verses = Popverse.find(:all, :limit => 15)
+    @pop_verses = Popverse.find(:all, limit: 15)
 
   end
 
@@ -331,7 +331,7 @@ class MemversesController < ApplicationController
     @page       = [params[:page].to_i, 99].min     # page number
     @page_size  = 20                               # number of verses per page
 
-    @vs_list = Popverse.find( :all, :limit => @page_size, :offset => @page*@page_size )
+    @vs_list = Popverse.find( :all, limit: @page_size, offset: @page*@page_size )
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -351,7 +351,7 @@ class MemversesController < ApplicationController
       @verse      = @mv.verse
 
       add_breadcrumb I18n.t("home_menu.My Verses"), :manage_verses_path
-      add_breadcrumb "#{@verse.book} #{@verse.chapter}:#{@verse.versenum}", {:action => 'show', :id => params[:id] }
+      add_breadcrumb "#{@verse.book} #{@verse.chapter}:#{@verse.versenum}", {action: 'show', id: params[:id] }
 
       @user_tags  = @mv.tags
       @tags       = @verse.tags
@@ -363,7 +363,7 @@ class MemversesController < ApplicationController
     # ==== Displaying multiple verses ====
     elsif (!mv_ids.blank?) and (params[:Show])
 
-      @mv_list = Memverse.find(mv_ids, :include => :verse)
+      @mv_list = Memverse.find(mv_ids, include: :verse)
       @mv_list.sort! # Sort by book. TODO: Pass paramaters from manage_verses and sort by that order...
 
       add_breadcrumb I18n.t("home_menu.My Verses"), :manage_verses_path
@@ -373,23 +373,23 @@ class MemversesController < ApplicationController
     elsif (!mv_ids.blank?) and (params[:Delete])
 
       flash[:notice] = "JavaScript is required to delete verses. Please enable, then refresh page and try again."
-      redirect_to :action => 'manage_verses' and return
+      redirect_to action: 'manage_verses' and return
 
     elsif (mv_ids.blank?)
 
       flash[:notice] = "Please select verses using the checkboxes in the first column."
-      redirect_to :action => 'manage_verses' and return
+      redirect_to action: 'manage_verses' and return
 
     else
 
-      redirect_to :action => 'manage_verses' and return
+      redirect_to action: 'manage_verses' and return
 
     end
 
     respond_to do |format|
       format.html
-      format.pdf { render :layout => false } # if params[:format] == 'pdf'
-        prawnto :filename => "Memverse.pdf", :prawn => { }
+      format.pdf { render layout: false } # if params[:format] == 'pdf'
+        prawnto filename: "Memverse.pdf", prawn: { }
     end
 
   end
@@ -407,27 +407,27 @@ class MemversesController < ApplicationController
     # ==== Verse IDs were passed from manage_verses or similar form ====
     if (!mv_ids.blank?) and (params[:Prompt])
 
-      @mv_list = Memverse.find(mv_ids, :include => :verse)
+      @mv_list = Memverse.find(mv_ids, include: :verse)
       @mv_list.sort! # Sort by book. TODO: Pass paramaters from manage_verses and sort by that order...
 
       add_breadcrumb I18n.t("home_menu.My Verses"), :manage_verses_path
-      add_breadcrumb I18n.t("memverses.manage_verses.show_prompt"), {:action => "show_prompt", :controller => "memverses"}
+      add_breadcrumb I18n.t("memverses.manage_verses.show_prompt"), {action: "show_prompt", controller: "memverses"}
 
     elsif (mv_ids.blank?)
 
       flash[:notice] = "Please select verses using the checkboxes in the first column."
-      redirect_to :action => 'manage_verses' and return
+      redirect_to action: 'manage_verses' and return
 
     else
 
-      redirect_to :action => 'manage_verses' and return
+      redirect_to action: 'manage_verses' and return
 
     end
 
     respond_to do |format|
       format.html
-      format.pdf { render :layout => false } # if params[:format] == 'pdf'
-        prawnto :filename => "Memverse.pdf", :prawn => { }
+      format.pdf { render layout: false } # if params[:format] == 'pdf'
+        prawnto filename: "Memverse.pdf", prawn: { }
     end
 
   end
@@ -443,20 +443,20 @@ class MemversesController < ApplicationController
     #
     # 1. Owned tags and regular tags are handled in two different modules in the library
     # 2. The method 'tag_list' only returns tags without owners. The method 'all_tags_list' returns all tags
-    # 3. user.tag(mv, :with => 'TagA', :on => :tags) *replaces* any prior tags.
+    # 3. user.tag(mv, with: 'TagA', on: :tags) *replaces* any prior tags.
     # 4. mv.tag_list = "tagC, tagD" does not appear to overwrite an existing tag list
     #
-    # To clean up tag cloud:  ActsAsTaggableOn::Tagging.where(:taggable_type => 'Verse').delete_all
+    # To clean up tag cloud:  ActsAsTaggableOn::Tagging.where(taggable_type: 'Verse').delete_all
 
     if !new_tag.empty?
       tag_list = @mv.all_tags_list.to_s + ", " + new_tag
-      current_user.tag(@mv, :with => tag_list, :on => :tags)  # We're doing this for now to track which users are tagging
+      current_user.tag(@mv, with: tag_list, on: :tags)  # We're doing this for now to track which users are tagging
 
       @mv.verse.update_tags # Update verse model with most popular tags
 
-      render :text => new_tag
+      render text: new_tag
     else
-      render :text => "[Enter tag name here]"
+      render text: "[Enter tag name here]"
     end
 
   end
@@ -471,7 +471,7 @@ class MemversesController < ApplicationController
     query         = params[:term]
     query_length  = query.length
 
-    # This has the effect of restricting autocomplete to only :taggable_type => Verse
+    # This has the effect of restricting autocomplete to only taggable_type: Verse
     all_tags = Verse.tag_counts
 
     all_tags.each { |tag|
@@ -481,14 +481,14 @@ class MemversesController < ApplicationController
       end
     }
 
-    render :json => @suggestions.to_json
+    render json: @suggestions.to_json
   end
 
   # ----------------------------------------------------------------------------------------------------------
   # Remove a verse tag
   # ----------------------------------------------------------------------------------------------------------
   def remove_verse_tag
-    dead_tag = ActsAsTaggableOn::Tagging.find(:first, :conditions => {:tag_id => params[:id], :taggable_id => params[:mv], :taggable_type => 'Memverse' })
+    dead_tag = ActsAsTaggableOn::Tagging.find(:first, conditions: {tag_id: params[:id], taggable_id: params[:mv], taggable_type: 'Memverse' })
 
     if dead_tag
       dead_tag.destroy
@@ -498,7 +498,7 @@ class MemversesController < ApplicationController
 	    end
     end
 
-    redirect_to(:action => 'show', :id => params[:mv])
+    redirect_to(action: 'show', id: params[:mv])
 
   end
 
@@ -511,8 +511,8 @@ class MemversesController < ApplicationController
     @verse.save
 
     respond_to do |format|
-      format.html { render :partial => 'flag_verse', :layout => false }
-      format.json { render :json => { :mv_error_flag => @verse.error_flag} }
+      format.html { render partial: 'flag_verse', layout: false }
+      format.json { render json: { mv_error_flag: @verse.error_flag} }
     end
   end
 
@@ -530,8 +530,8 @@ class MemversesController < ApplicationController
     @mv.save
 
     respond_to do |format|
-      format.html { render :partial => 'mv_status_toggle', :layout => false }
-      format.json { render :json => { :mv_status => @mv.status} }
+      format.html { render partial: 'mv_status_toggle', layout: false }
+      format.json { render json: { mv_status: @mv.status} }
     end
 
   end
@@ -620,7 +620,7 @@ class MemversesController < ApplicationController
         else
           # Save verse as a memory verse for user
           begin
-            Memverse.create(:user_id => current_user.id, :verse_id => vs.id)
+            Memverse.create(user_id: current_user.id, verse_id: vs.id)
           rescue Exception => e
             Rails.logger.error("=====> [Memverse save error] Exception while saving #{vs.ref} for user #{current_user.id}: #{e}")
           else
@@ -634,7 +634,7 @@ class MemversesController < ApplicationController
       msg = "Error"
     end
 
-  	render :json => {:msg => msg }
+  	render json: {msg: msg }
 
   end
 
@@ -665,7 +665,7 @@ class MemversesController < ApplicationController
         else
           # Save verse as a memory verse for user
           begin
-            Memverse.create(:user_id => current_user.id, :verse_id => vs.id)
+            Memverse.create(user_id: current_user.id, verse_id: vs.id)
           rescue Exception => e
             Rails.logger.error("=====> [Memverse save error] Exception while saving #{vs.ref} for user #{current_user.id}: #{e}")
           else
@@ -677,7 +677,7 @@ class MemversesController < ApplicationController
 
     end
 
-    render :json => {:msg => "Added Chapter" }
+    render json: {msg: "Added Chapter" }
 
   end
 
@@ -703,8 +703,8 @@ class MemversesController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.pdf { render :layout => false } if params[:format] == 'pdf'
-        prawnto :filename => "Memverse.pdf", :prawn => { }
+      format.pdf { render layout: false } if params[:format] == 'pdf'
+        prawnto filename: "Memverse.pdf", prawn: { }
     end
 
   end
@@ -739,14 +739,14 @@ class MemversesController < ApplicationController
       }
 
       flash[:notice] = "Memory verses have been deleted."
-      redirect_to :action => 'manage_verses'
+      redirect_to action: 'manage_verses'
 
     elsif (mv_ids.blank?)
       flash[:notice] = "You did not select any verses."
-      redirect_to :action => 'manage_verses'
+      redirect_to action: 'manage_verses'
 
     else
-      redirect_to :action => 'manage_verses'
+      redirect_to action: 'manage_verses'
 
     end
 
@@ -767,7 +767,7 @@ class MemversesController < ApplicationController
 
       # Check whether verse is already in DB
       @avail_translations = Verse.find( :all,
-                                        :conditions => ["book = ? and chapter = ? and versenum = ?",
+                                        conditions: ["book = ? and chapter = ? and versenum = ?",
                                                          full_book_name(book), chapter, versenum])
       # Check whether entire chapter is available
       @avail_translations.each { |vs|
@@ -778,9 +778,9 @@ class MemversesController < ApplicationController
     end
 
     respond_to do |format|
-      format.html { render :partial=>'avail_translations', :layout=>false }
-      format.xml  { render :xml => @avail_translations }
-      format.json { render :json => @avail_translations }
+      format.html { render partial:'avail_translations', layout:false }
+      format.xml  { render xml: @avail_translations }
+      format.json { render json: @avail_translations }
     end
 
   end
@@ -867,7 +867,7 @@ class MemversesController < ApplicationController
     @sub = "chrev"
 
     add_breadcrumb I18n.t("menu.review"), :test_verse_quick_path
-    add_breadcrumb I18n.t("memorize_menu.Chapter Review"), {:action => 'test_chapter', :book_chapter => params[:book_chapter]}
+    add_breadcrumb I18n.t("memorize_menu.Chapter Review"), {action: 'test_chapter', book_chapter: params[:book_chapter]}
 
     @show_feedback = true
 
@@ -921,7 +921,7 @@ class MemversesController < ApplicationController
 
         if current_user.has_active?
           flash[:notice] = "You have no more verses to memorize today. Your next memory verse is due for review " + current_user.next_verse_due + "."
-          redirect_to :action => 'show_progress' and return
+          redirect_to action: 'show_progress' and return
         elsif current_user.auto_work_load # User will allow us to adjust work load and needs it
           current_user.adjust_work_load
           redirect_to test_verse_quick_path and return
@@ -931,7 +931,7 @@ class MemversesController < ApplicationController
         end
 
       else
-        redirect_to :action => 'add_verse' and return
+        redirect_to action: 'add_verse' and return
         flash[:notice] = "You should first add a few verses."
       end
     end
@@ -942,9 +942,9 @@ class MemversesController < ApplicationController
     # We should never receive a JS request for this URL but this is an attempted fix for the following error
 
 		# ActionView::MissingTemplate: Missing template memverses/test_verse_quick with
-		# {:handlers=> [:prawn_xxx, :builder, :prawn, :prawn_dsl, :erb, :rjs, :rhtml, :rxml],
-		# :locale=>[:en, :en],
-		# :formats=>[:js, "application/ecmascript", "application/x-ecmascript", "*/*"]}
+		# {handlers: [:prawn_xxx, :builder, :prawn, :prawn_dsl, :erb, :rjs, :rhtml, :rxml],
+		# locale:[:en, :en],
+		# formats:[:js, "application/ecmascript", "application/x-ecmascript", "*/*"]}
 		# in view paths "/app/views",
     respond_to do |format|
       format.html
@@ -969,7 +969,7 @@ class MemversesController < ApplicationController
       # Give encouragement if verse transitions from "Learning" to "Memorized"
       if newly_memorized
         msg = "Congratulations. You have memorized #{mv.verse.ref}."
-        Tweet.create(:news => "#{current_user.name_or_login} memorized #{mv.verse.ref}", :user_id => current_user.id, :importance => 5)
+        Tweet.create(news: "#{current_user.name_or_login} memorized #{mv.verse.ref}", user_id: current_user.id, importance: 5)
 
         if current_user.reaching_milestone
         	milestone = current_user.memorized+1
@@ -984,12 +984,12 @@ class MemversesController < ApplicationController
 
           msg       << " That was your #{milestone}th memorized verse!"
           broadcast  = "#{current_user.name_or_login} memorized #{current_user.his_or_her} #{milestone}th verse"
-          Tweet.create(:news => broadcast, :user_id => current_user.id, :importance => importance)
+          Tweet.create(news: broadcast, user_id: current_user.id, importance: importance)
         end
 
         if mv.chapter_memorized?
           msg << " You have now memorized all of #{mv.verse.chapter_name}. Great job!"
-          Tweet.create(:news => "#{current_user.name_or_login} memorized #{mv.verse.chapter_name}", :user_id => current_user.id, :importance => 3)
+          Tweet.create(news: "#{current_user.name_or_login} memorized #{mv.verse.chapter_name}", user_id: current_user.id, importance: 3)
         end
       end
 
@@ -997,7 +997,7 @@ class MemversesController < ApplicationController
       msg = "You are attempting to modify a memory verse that belongs to another user."
     end
 
-    render :json => {:msg => msg }
+    render json: {msg: msg }
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -1014,13 +1014,13 @@ class MemversesController < ApplicationController
     prior_mv_skip   = mv_skip && mv_skip.prior_mv
 
     if mv
-      render :json => { :finished       => false,
-                        :mv             => mv,
-                        :mv_skip        => mv_skip,
-                        :prior_mv       => prior_mv,
-                        :prior_mv_skip  => prior_mv_skip }
+      render json: { finished: false,
+                        mv: mv,
+                        mv_skip: mv_skip,
+                        prior_mv: prior_mv,
+                        prior_mv_skip: prior_mv_skip }
     else
-      render :json => { :finished => true }
+      render json: { finished: true }
     end
 
   end
@@ -1062,7 +1062,7 @@ class MemversesController < ApplicationController
       end
     end
 
-    render :json => { :due_refs => due_refs, :mv => mv }
+    render json: { due_refs: due_refs, mv: mv }
 
   end
 
@@ -1085,7 +1085,7 @@ class MemversesController < ApplicationController
     mv.next_ref_test = Date.today + mv.ref_interval
     mv.save
 
-    render :json => {:msg => 'Score recorded' }
+    render json: {msg: 'Score recorded' }
 
   end
 
@@ -1115,7 +1115,7 @@ class MemversesController < ApplicationController
 
     prior_mv = mv && mv.prior_mv  # get prior verse if available
 
-    render :json => { :mv => mv, :prior_mv => prior_mv }
+    render json: { mv: mv, prior_mv: prior_mv }
 
   end
 
@@ -1206,8 +1206,8 @@ class MemversesController < ApplicationController
   #     session[:exam_cntr]     = nil
 
   #     # Check for quest completion
-  #     # spawn_block(:argv => "spawn-accuracy-quest") do
-  #       if q = Quest.where(:url => exam_results_path, :level => current_user.level ).first
+  #     # spawn_block(argv: "spawn-accuracy-quest") do
+  #       if q = Quest.where(url: exam_results_path, level: current_user.level ).first
   #         if score >= q.quantity
   #           q.check_quest_off(current_user)
   #           flash.keep[:notice] = "You have completed the accuracy test for this level."
@@ -1231,7 +1231,7 @@ class MemversesController < ApplicationController
 	    u.adjust_work_load
 	    u.save_progress_report
     end
-    render :json => { :saved => true } # TODO: sloppy, we should check whether it actually was saved
+    render json: { saved: true } # TODO: sloppy, we should check whether it actually was saved
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -1332,7 +1332,7 @@ class MemversesController < ApplicationController
       mv.last_tested = Date.today
       mv.save
 
-      redirect_to :action => 'drill_verse'
+      redirect_to action: 'drill_verse'
     else
       redirect_to root_path
     end
@@ -1390,7 +1390,7 @@ class MemversesController < ApplicationController
       @match    = (  guess.downcase.gsub(/[^a-z ]|\s-|\s—/, '') == correct.downcase.gsub(/[^a-z ]|\s-|\s—/, '')  )
     end
 
-    render :partial=>'feedback', :layout=>false
+    render partial:'feedback', layout:false
 
   end
 
@@ -1404,9 +1404,9 @@ class MemversesController < ApplicationController
     @upcoming_verses = current_user.upcoming_verses(limit, mode, current_mv_id)
 
     respond_to do |format|
-      format.html { render :partial=>'upcoming_verses', :layout=>false }
-      format.xml  { render :xml => @upcoming_verses }
-      format.json { render :json => @upcoming_verses }
+      format.html { render partial:'upcoming_verses', layout:false }
+      format.xml  { render xml: @upcoming_verses }
+      format.json { render json: @upcoming_verses }
     end
 
   end

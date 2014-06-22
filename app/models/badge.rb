@@ -20,10 +20,10 @@ class Badge < ActiveRecord::Base
   # ---------------------------------------------------------------------------------------------------------- 
   def as_json(options={})
     { 
-      :id          => self.id, 
-      :name        => self.name,
-      :description => self.description,
-      :color       => self.color,
+      id: self.id, 
+      name: self.name,
+      description: self.description,
+      color: self.color,
     }
   end 
   
@@ -32,7 +32,7 @@ class Badge < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------   
   def achieved?(user)
     # Only check if more valuable badge has not already been awarded
-    user_badge_in_series = user.badges.where(:name => self.name).sort.last
+    user_badge_in_series = user.badges.where(name: self.name).sort.last
     
     if user_badge_in_series && user_badge_in_series >= self
       return false
@@ -52,7 +52,7 @@ class Badge < ActiveRecord::Base
   def award_badge(user)
     if !user.badges.include?(self)  # can only be awarded a badge once
       # First remove all lower level badges
-      user.badges.delete( Badge.where(:name => self.name) )
+      user.badges.delete( Badge.where(name: self.name) )
       # Award new badge
       user.badges << self      
     end    

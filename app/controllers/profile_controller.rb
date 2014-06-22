@@ -3,7 +3,7 @@ class ProfileController < ApplicationController
   add_breadcrumb "Home", :root_path
   add_breadcrumb "Account", :current_user
 
-  before_filter :authenticate_user!, :except => :unsubscribe
+  before_filter :authenticate_user!, except: :unsubscribe
 
   # ----------------------------------------------------------------------------------------------------------
   # Show Church Members
@@ -90,8 +90,8 @@ class ProfileController < ApplicationController
       end
 
       # Complete quest. This should really be refactored at some point.
-      q = Quest.find_by_url(url_for(:action => 'update_profile', :controller => 'profile', :only_path => false))
-      if q && current_user.quests.where(:id => q.id).empty?
+      q = Quest.find_by_url(url_for(action: 'update_profile', controller: 'profile', only_path: false))
+      if q && current_user.quests.where(id: q.id).empty?
         q.check_quest_off(current_user)
         flash.keep[:notice] = "You have completed the task: #{q.task}"
       end
@@ -100,7 +100,7 @@ class ProfileController < ApplicationController
 
     else # errors
       flash[:notice] = "Could not update profile: " + @user.errors.full_messages.to_sentence
-      redirect_to :action => "update_profile"
+      redirect_to action: "update_profile"
     end
   end
 
@@ -123,7 +123,7 @@ class ProfileController < ApplicationController
     query         = params[:term]
     query_length  = query.length
 
-    all_countries = Country.find(:all, :select => 'printable_name')
+    all_countries = Country.find(:all, select: 'printable_name')
 
     all_countries.each { |country|
       name = country.printable_name
@@ -132,7 +132,7 @@ class ProfileController < ApplicationController
       end
     }
 
-    render :json => @suggestions.to_json
+    render json: @suggestions.to_json
 
   end
 
@@ -155,7 +155,7 @@ class ProfileController < ApplicationController
     query         = params[:term]
     query_length  = query.length
 
-    all_states = AmericanState.find(:all, :select => 'name')
+    all_states = AmericanState.find(:all, select: 'name')
 
     all_states.each { |state|
       name = state.name
@@ -164,7 +164,7 @@ class ProfileController < ApplicationController
       end
     }
 
-    render :json => @suggestions.to_json
+    render json: @suggestions.to_json
 
   end
 
@@ -187,7 +187,7 @@ class ProfileController < ApplicationController
     query         = params[:term]
     query_length  = query.length
 
-    all_churches = Church.find(:all, :select => 'name')
+    all_churches = Church.find(:all, select: 'name')
 
     all_churches.each { |church|
       name = church.name
@@ -196,7 +196,7 @@ class ProfileController < ApplicationController
       end
     }
 
-    render :json => @suggestions.to_json
+    render json: @suggestions.to_json
 
   end
 
@@ -218,7 +218,7 @@ class ProfileController < ApplicationController
     query         = params[:term]
     query_length  = query.length
 
-    all_groups = Group.find(:all, :select => 'name')
+    all_groups = Group.find(:all, select: 'name')
 
     all_groups.each { |group|
       name = group.name
@@ -227,7 +227,7 @@ class ProfileController < ApplicationController
       end
     }
 
-    render :json => @suggestions.to_json
+    render json: @suggestions.to_json
 
   end
 
@@ -238,7 +238,7 @@ class ProfileController < ApplicationController
     tl = params[:tl]
     current_user.translation = tl
     current_user.save
-    render :nothing => true
+    render nothing: true
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -248,7 +248,7 @@ class ProfileController < ApplicationController
     time_allocation = params[:time]
     current_user.time_allocation = time_allocation
     current_user.save
-    render :nothing => true
+    render nothing: true
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -310,18 +310,18 @@ class ProfileController < ApplicationController
     # TODO: Is there a better way to do this search?
 
     if !search_param.empty?
-      @user_list =  User.find(:all, :conditions => {:name => search_param }, :limit => 5)
+      @user_list =  User.find(:all, conditions: {name: search_param }, limit: 5)
 
       if @user_list.empty?
-        @user_list = User.find(:all, :conditions => {:email => search_param }, :limit => 5)
+        @user_list = User.find(:all, conditions: {email: search_param }, limit: 5)
       end
 
       if @user_list.empty?
-        @user_list = User.find(:all, :conditions => {:login  => search_param }, :limit => 5)
+        @user_list = User.find(:all, conditions: {login: search_param }, limit: 5)
       end
     end
 
-    render :partial => 'search_user', :layout=>false
+    render partial: 'search_user', layout:false
   end
 
   # ----------------------------------------------------------------------------------------------------------

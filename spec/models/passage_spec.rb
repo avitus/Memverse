@@ -4,16 +4,16 @@ require 'spec_helper'
 describe Passage do
 
   before(:each) do
-    @user  = User.create!(:name => "Test User", :email => "test@memverse.com", :password => "secret", :password_confirmation => "secret")
+    @user  = User.create!(name: "Test User", email: "test@memverse.com", password: "secret", password_confirmation: "secret")
   end
 
   it "should create a new instance given valid attributes" do
-    @verse = Verse.create!(:book_index => 1, :book => "Genesis", :chapter => 12, :versenum => 1, :text => "This is a test", :translation => "NIV")
-    @mv    = Memverse.create!(:user => @user, :verse => @verse)
-    @psg   = Passage.create!(:user_id => @user.id, :length => 1, :reference => @mv.verse.ref,
-                             :book => @mv.verse.book, :chapter => @mv.verse.chapter, :translation => @mv.verse.translation,
-                             :first_verse => @mv.verse.versenum, :last_verse => @mv.verse.versenum,
-                             :efactor => @mv.efactor, :test_interval => @mv.test_interval, :rep_n => 1)
+    @verse = Verse.create!(book_index: 1, book: "Genesis", chapter: 12, versenum: 1, text: "This is a test", translation: "NIV")
+    @mv    = Memverse.create!(user: @user, verse: @verse)
+    @psg   = Passage.create!(user_id: @user.id, length: 1, reference: @mv.verse.ref,
+                             book: @mv.verse.book, chapter: @mv.verse.chapter, translation: @mv.verse.translation,
+                             first_verse: @mv.verse.versenum, last_verse: @mv.verse.versenum,
+                             efactor: @mv.efactor, test_interval: @mv.test_interval, rep_n: 1)
   end
 
   # ==============================================================================================
@@ -35,7 +35,7 @@ describe Passage do
     # add an extra memory verse with a different eFactor
     # rep_n = 2, eFactor = 1.4, interval = 1
     vs = FactoryGirl.create(:verse, book: 'Nahum', chapter: 1, versenum: 6)
-    mv = FactoryGirl.create(:memverse_without_supermemo_init, :verse => vs, :efactor => 1.4, :rep_n => 2, :test_interval => 3)
+    mv = FactoryGirl.create(:memverse_without_supermemo_init, verse: vs, efactor: 1.4, rep_n: 2, test_interval: 3)
 
     psg.expand( mv )
 
@@ -101,7 +101,7 @@ describe Passage do
   describe "add a new verse to a passage" do
 
     before(:each) do
-      @psg = FactoryGirl.create(:passage, :book => 'Leviticus', :chapter => 1, :first_verse => 3, :last_verse => 6)
+      @psg = FactoryGirl.create(:passage, book: 'Leviticus', chapter: 1, first_verse: 3, last_verse: 6)
     end
 
     it "should correctly add a preceding verse" do
@@ -134,7 +134,7 @@ describe Passage do
   describe "delete a memory verse from an existing passage" do
 
     before(:each) do
-      @psg = FactoryGirl.create(:passage, :book => 'Proverbs', :chapter => 3, :first_verse => 2, :last_verse => 10)
+      @psg = FactoryGirl.create(:passage, book: 'Proverbs', chapter: 3, first_verse: 2, last_verse: 10)
     end
 
     it "should correctly delete the first verse of the passage" do
@@ -225,7 +225,7 @@ describe Passage do
 
       psg = FactoryGirl.create(:passage, book: 'Esther', chapter: 10, first_verse: 1, last_verse: 2)
       vs = FactoryGirl.create(:verse, book: 'Esther', chapter: 10, versenum: 3)
-      mv = FactoryGirl.create(:memverse, :verse => vs)
+      mv = FactoryGirl.create(:memverse, verse: vs)
 
       psg.complete_chapter.should be false
       psg.expand( mv )
@@ -237,7 +237,7 @@ describe Passage do
 
       psg = FactoryGirl.create(:passage, book: 'Psalms', chapter: 53, first_verse: 0, last_verse: 5)
       vs  = FactoryGirl.create(:verse, book: 'Psalms', chapter: 53, versenum: 6)
-      mv  = FactoryGirl.create(:memverse, :verse => vs)
+      mv  = FactoryGirl.create(:memverse, verse: vs)
 
       psg.complete_chapter.should be false
       psg.expand( mv )
@@ -250,7 +250,7 @@ describe Passage do
       it "which has 14 verses in NIV" do
         psg = FactoryGirl.create(:passage, book: '3 John', chapter: 1, first_verse: 1, last_verse: 13, translation: 'NIV')
         vs = FactoryGirl.create(:verse, book: '3 John', chapter: 1, versenum: 14)
-        mv = FactoryGirl.create(:memverse, :verse => vs)
+        mv = FactoryGirl.create(:memverse, verse: vs)
 
         psg.complete_chapter.should be false
         psg.expand( mv )
@@ -260,7 +260,7 @@ describe Passage do
       it "and 15 verses in ESV" do
         psg = FactoryGirl.create(:passage, book: '3 John', chapter: 1, first_verse: 1, last_verse: 14, translation: 'ESV')
         vs  = FactoryGirl.create(:verse, book: '3 John', chapter: 1, versenum: 15)
-        mv  = FactoryGirl.create(:memverse, :verse => vs)
+        mv  = FactoryGirl.create(:memverse, verse: vs)
 
         psg.complete_chapter.should be false
         psg.expand( mv )

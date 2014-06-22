@@ -28,8 +28,8 @@ describe VersesController do
   # Verse. As you add validations to Verse, be sure to
   # update the return value of this method accordingly.
   def valid_attributes
-    { :translation => "NIV", :book_index => 43, :book => "John", :chapter => 11, :versenum => 35,
-      :text => "Jesus wept." }
+    { translation: "NIV", book_index: 43, book: "John", chapter: 11, versenum: 35,
+      text: "Jesus wept." }
   end
 
   # This should return the minimal set of values that should be in the session
@@ -51,7 +51,7 @@ describe VersesController do
   describe "GET show" do
     it "assigns the requested Verse as @Verse" do
       verse = Verse.create! valid_attributes
-      get :show, {:id => verse.to_param}, valid_session
+      get :show, {id: verse.to_param}, valid_session
       assigns(:verse).should eq(verse)
     end
   end
@@ -66,7 +66,7 @@ describe VersesController do
   describe "GET edit" do
     it "assigns the requested Verse as @Verse" do
       verse = Verse.create! valid_attributes
-      get :edit, {:id => verse.to_param}, valid_session
+      get :edit, {id: verse.to_param}, valid_session
       assigns(:verse).should eq(verse)
     end
   end
@@ -75,18 +75,18 @@ describe VersesController do
     describe "with valid params" do
       it "creates a new Verse" do
         expect {
-          post :create, {:verse => valid_attributes}, valid_session
+          post :create, {verse: valid_attributes}, valid_session
         }.to change(Verse, :count).by(1)
       end
 
       it "assigns a newly created Verse as @Verse" do
-        post :create, {:verse => valid_attributes}, valid_session
+        post :create, {verse: valid_attributes}, valid_session
         assigns(:verse).should be_a(Verse)
         assigns(:verse).should be_persisted
       end
 
       it "redirects to the created Verse" do
-        post :create, {:verse => valid_attributes}, valid_session
+        post :create, {verse: valid_attributes}, valid_session
         response.should redirect_to(Verse.last)
       end
     end
@@ -95,14 +95,14 @@ describe VersesController do
     #   it "assigns a newly created but unsaved Verse as @Verse" do
     #     # Trigger the behavior that occurs when invalid params are submitted
     #     Verse.any_instance.stub(:save).and_return(false)
-    #     post :create, {:verse => { :book => "invalid value" }}, valid_session
+    #     post :create, {verse: { book: "invalid value" }}, valid_session
     #     assigns(:verse).should be_a_new(verse)
     #   end
 
     #   it "re-renders the 'new' template" do
     #     # Trigger the behavior that occurs when invalid params are submitted
     #     Verse.any_instance.stub(:save).and_return(false)
-    #     post :create, {:verse => { :book => "invalid value" }}, valid_session
+    #     post :create, {verse: { book: "invalid value" }}, valid_session
     #     response.should render_template("new")
     #   end
     # end
@@ -117,7 +117,7 @@ describe VersesController do
         # receives the :update_attributes message with whatever params are
         # submitted in the request.
         Verse.any_instance.should_receive(:update_attributes).with({ "last_verse" => "7" })
-        put :update, {:id => verse.to_param, :verse => { :last_verse => "7" }}, valid_session
+        put :update, {id: verse.to_param, verse: { last_verse: "7" }}, valid_session
       end
 
       #==============================================================================================
@@ -127,19 +127,19 @@ describe VersesController do
 
       # it "assigns the requested Verse as @Verse -- admin making change" do
       #   verse = Verse.create! valid_attributes
-      #   patch :update, {:id => Verse.to_param, :verse => valid_attributes}, {}
+      #   patch :update, {id: Verse.to_param, verse: valid_attributes}, {}
       #   assigns(:verse).should eq(verse)
       # end
 
       # it "assigns the requested Verse as @Verse -- user making change" do
       #   verse = Verse.create! valid_attributes
-      #   patch :update, {:id => Verse.to_param, :verse => valid_attributes}, valid_session
+      #   patch :update, {id: Verse.to_param, verse: valid_attributes}, valid_session
       #   assigns(:verse).should_not eq(verse)
       # end
 
       it "redirects to the Verse" do
         verse = Verse.create! valid_attributes
-        put :update, {:id => verse.to_param, :verse => valid_attributes}, valid_session
+        put :update, {id: verse.to_param, verse: valid_attributes}, valid_session
         response.should redirect_to(verse)
       end
     end
@@ -149,7 +149,7 @@ describe VersesController do
         verse = Verse.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
         Verse.any_instance.stub(:save).and_return(false)
-        put :update, {:id => verse.to_param, :Verse => { :book => "invalid value" }}, valid_session
+        put :update, {id: verse.to_param, Verse: { book: "invalid value" }}, valid_session
         assigns(:verse).should eq(verse)
       end
 
@@ -157,7 +157,7 @@ describe VersesController do
         verse = Verse.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
         Verse.any_instance.stub(:save).and_return(false)
-        put :update, {:id => verse.to_param, :verse => { :book => "invalid value" }}, valid_session
+        put :update, {id: verse.to_param, verse: { book: "invalid value" }}, valid_session
         response.should render_template("edit")
       end
     end
@@ -167,13 +167,13 @@ describe VersesController do
     it "destroys the requested Verse" do
       verse = Verse.create! valid_attributes
       expect {
-        delete :destroy, {:id => verse.to_param}, valid_session
+        delete :destroy, {id: verse.to_param}, valid_session
       }.to change(Verse, :count).by(-1)
     end
 
     it "redirects to the Verses list" do
       verse = Verse.create! valid_attributes
-      delete :destroy, {:id => verse.to_param}, valid_session
+      delete :destroy, {id: verse.to_param}, valid_session
       response.should redirect_to(verses_url)
     end
   end

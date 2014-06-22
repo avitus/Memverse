@@ -26,7 +26,7 @@ set :applicationdir, "/home/#{user}/#{application}"           # App location
 ##############################################################
 role :web, domain
 role :app, domain
-role :db,  domain, :primary => true
+role :db,  domain, primary: true
 
 ##############################################################
 ##  Git
@@ -77,18 +77,18 @@ after "deploy", "deploy:refresh_sitemaps", "deploy:cleanup"
 ##############################################################
 namespace :deploy do
   desc "Symlinks database.yml and secret_token.rb"            # Link in the database and secret config
-  task :symlink_config, :roles => :app do
+  task :symlink_config, roles: :app do
     run "ln -nfs #{deploy_to}/shared/config/database.yml #{latest_release}/config/database.yml"
     run "ln -nfs #{deploy_to}/shared/config/initializers/secret_token.rb #{latest_release}/config/initializers/secret_token.rb"
   end
 
   desc "Symlinks the bloggity uploads"                        # Link in the bloggity uploads
-  task :symlink_bloggity, :roles => :app do
+  task :symlink_bloggity, roles: :app do
     run "ln -nfs #{deploy_to}/shared/public/ckeditor_assets #{latest_release}/public/ckeditor_assets"
   end
 
   desc "Restarting mod_rails with restart.txt"                # Restart passenger on deploy
-  task :restart, :roles => :app, :except => { :no_release => true } do
+  task :restart, roles: :app, except: { no_release: true } do
     run "touch #{current_path}/tmp/restart.txt"
   end
 
@@ -104,13 +104,13 @@ end
 ##############################################################
 namespace :db do
   desc 'Dumps the production database to db/production_data.sql on the remote server'
-  task :remote_db_dump, :roles => :db, :only => { :primary => true } do
+  task :remote_db_dump, roles: :db, only: { primary: true } do
     run "cd #{deploy_to}/#{current_dir} && " +
       "rake RAILS_ENV=#{rails_env} db:database_dump --trace"
   end
 
   desc 'Downloads db/production_data.sql from the remote production environment to your local machine'
-  task :remote_db_download, :roles => :db, :only => { :primary => true } do
+  task :remote_db_download, roles: :db, only: { primary: true } do
     execute_on_servers(options) do |servers|
       self.sessions[servers.first].sftp.connect do |tsftp|
         tsftp.download!("#{deploy_to}/#{current_dir}/db/production_data.sql", "db/production_data.sql")
@@ -119,7 +119,7 @@ namespace :db do
   end
 
   desc 'Cleans up data dump file'
-  task :remote_db_cleanup, :roles => :db, :only => { :primary => true } do
+  task :remote_db_cleanup, roles: :db, only: { primary: true } do
     execute_on_servers(options) do |servers|
       self.sessions[servers.first].sftp.connect do |tsftp|
         tsftp.remove! "#{deploy_to}/#{current_dir}/db/production_data.sql"

@@ -1,7 +1,7 @@
 class ProgressReport < ActiveRecord::Base
 
   #  Structure
-  #  t.integer   :user_id,     :null => false
+  #  t.integer   :user_id,     null: false
   #  t.date      :entry_date
   #  t.integer   :learning      
   #  t.integer   :memorized
@@ -19,7 +19,7 @@ class ProgressReport < ActiveRecord::Base
   
   def capture_consistency
     # Need to add 1 to consistency count because current progress report hasn't yet been saved
-    self.consistency = ProgressReport.where(:user_id => user_id).where(:entry_date => (entry_date - 1.year + 1)..entry_date).count + 1
+    self.consistency = ProgressReport.where(user_id: user_id).where(entry_date: (entry_date - 1.year + 1)..entry_date).count + 1
   end
   
 end

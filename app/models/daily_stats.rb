@@ -18,8 +18,8 @@ class DailyStats < ActiveRecord::Base
   validates_presence_of :entry_date
 
   # Named scopes
-  scope :global,    -> { where(:segment => "Global") }
-  scope :american,  -> { where(:segment => "United States") }
+  scope :global,    -> { where(segment: "Global") }
+  scope :american,  -> { where(segment: "United States") }
 
   # ----------------------------------------------------------------------------------------------------------
   # Capture Daily Stats
@@ -39,7 +39,7 @@ class DailyStats < ActiveRecord::Base
     #     - Learning and active in month [memverses_learning_active_in_month]
 
     # Check whether there is already an entry for today
-    ds = find( :first, :conditions => ["entry_date = ?", Date.today])
+    ds = find( :first, conditions: ["entry_date = ?", Date.today])
 
     if ds.nil?
 

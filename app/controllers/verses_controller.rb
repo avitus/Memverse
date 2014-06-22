@@ -1,8 +1,8 @@
 # coding: utf-8
 class VersesController < ApplicationController
 
-  before_filter :authenticate_user!, :except => [:index, :show]
-  skip_before_filter :verify_authenticity_token, :only => [:set_verse_text, :check_verse]  # ALV: attempt to stop redirects to login page when setting verse text
+  before_filter :authenticate_user!, except: [:index, :show]
+  skip_before_filter :verify_authenticity_token, only: [:set_verse_text, :check_verse]  # ALV: attempt to stop redirects to login page when setting verse text
 
   add_breadcrumb "Home", :root_path
 
@@ -15,7 +15,7 @@ class VersesController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @verses }
+      format.xml  { render xml: @verses }
     end
   end
 
@@ -27,14 +27,14 @@ class VersesController < ApplicationController
     @verse = Verse.find(params[:id])
 
     if @verse
-      add_breadcrumb "#{@verse.book} #{@verse.chapter}:#{@verse.versenum}", {:action => 'show', :id => params[:id] }
+      add_breadcrumb "#{@verse.book} #{@verse.chapter}:#{@verse.versenum}", {action: 'show', id: params[:id] }
       @tags      = @verse.tags
     end
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml  => @verse }
-      format.json { render :json => @verse }
+      format.xml  { render xml: @verse }
+      format.json { render json: @verse }
     end
   end
 
@@ -49,7 +49,7 @@ class VersesController < ApplicationController
 
   #   respond_to do |format|
   #     format.html # new.html.erb
-  #     format.xml  { render :xml => @verse }
+  #     format.xml  { render xml: @verse }
   #   end
   # end
 
@@ -61,7 +61,7 @@ class VersesController < ApplicationController
     @verse = Verse.find(params[:id])
 
     add_breadcrumb I18n.t("home_menu.My Verses"), :manage_verses_path
-    add_breadcrumb "Edit #{@verse.book} #{@verse.chapter}:#{@verse.versenum}", {:action => 'edit_verse', :id => params[:id] }
+    add_breadcrumb "Edit #{@verse.book} #{@verse.chapter}:#{@verse.versenum}", {action: 'edit_verse', id: params[:id] }
 
   end
 
@@ -76,12 +76,12 @@ class VersesController < ApplicationController
       if @verse.save
         flash[:notice] = 'Verse was successfully created.'
         format.html { redirect_to(@verse) }
-        format.xml  { render :xml => @verse, :status => :created, :location => @verse }
-        format.json { render :json => { msg: "Success", verse_id: @verse.id } }
+        format.xml  { render xml: @verse, status: :created, location: @verse }
+        format.json { render json: { msg: "Success", verse_id: @verse.id } }
       else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @verse.errors, :status => :unprocessable_entity }
-        format.json { render :json => { msg: "Failure", errors: @verse.errors.full_messages } }
+        format.html { render action: "new" }
+        format.xml  { render xml: @verse.errors, status: :unprocessable_entity }
+        format.json { render json: { msg: "Failure", errors: @verse.errors.full_messages } }
       end
     end
   end
@@ -103,8 +103,8 @@ class VersesController < ApplicationController
         format.html { redirect_to( @verse ) }
         format.xml  { head :ok }
       else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @verse.errors, :status => :unprocessable_entity }
+        format.html { render action: "edit" }
+        format.xml  { render xml: @verse.errors, status: :unprocessable_entity }
       end
 
     end
@@ -129,13 +129,13 @@ class VersesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   def lookup
     tl = params[:tl] ? params[:tl] : current_user.translation
-    @verse = Verse.where(:book => params[:bk], :chapter => params[:ch], :versenum => params[:vs],
-                         :translation => tl).first
+    @verse = Verse.where(book: params[:bk], chapter: params[:ch], versenum: params[:vs],
+                         translation: tl).first
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml  => @verse }
-      format.json { render :json => @verse }
+      format.xml  { render xml: @verse }
+      format.json { render json: @verse }
     end
   end
 
@@ -144,13 +144,13 @@ class VersesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   def major_tl_lookup
 
-    @verses = Verse.where(:book => params[:bk], :chapter => params[:ch], :versenum => params[:vs],
-                          :translation => ['NIV', 'ESV', 'NAS', 'NKJ', 'KJV'])
+    @verses = Verse.where(book: params[:bk], chapter: params[:ch], versenum: params[:vs],
+                          translation: ['NIV', 'ESV', 'NAS', 'NKJ', 'KJV'])
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml  => @verses }
-      format.json { render :json => @verses }
+      format.xml  { render xml: @verses }
+      format.json { render json: @verses }
     end
   end
 
@@ -161,15 +161,15 @@ class VersesController < ApplicationController
     tl = params[:tl]
 
     if params[:vs_start] != "" and params[:vs_end] != ""
-      @verses = Verse.where(:book => params[:bk], :chapter => params[:ch], :versenum => params[:vs_start]..params[:vs_end], :translation => tl).order('versenum')
+      @verses = Verse.where(book: params[:bk], chapter: params[:ch], versenum: params[:vs_start]..params[:vs_end], translation: tl).order('versenum')
     else
-      @verses = Verse.where(:book => params[:bk], :chapter => params[:ch], :translation => tl).order('versenum')
+      @verses = Verse.where(book: params[:bk], chapter: params[:ch], translation: tl).order('versenum')
     end
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml  => @verses }
-      format.json { render :json => @verses }
+      format.xml  { render xml: @verses }
+      format.json { render json: @verses }
     end
   end
 
@@ -179,7 +179,7 @@ class VersesController < ApplicationController
   def chapter_available
     tl = params[:tl]
 
-    verse = Verse.where(:book => params[:bk], :chapter => params[:ch], :versenum => 1, :translation => tl).first
+    verse = Verse.where(book: params[:bk], chapter: params[:ch], versenum: 1, translation: tl).first
 
     if verse && verse.entire_chapter_available
       response = true
@@ -189,8 +189,8 @@ class VersesController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml  => response }
-      format.json { render :json => response }
+      format.xml  { render xml: response }
+      format.json { render json: response }
     end
 
   end
@@ -203,7 +203,7 @@ class VersesController < ApplicationController
 
   	error_code, bk, ch, vs = parse_verse(vs_str)
     verse_ok = (error_code == false)
-  	render :json => verse_ok
+  	render json: verse_ok
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -214,7 +214,7 @@ class VersesController < ApplicationController
     new_tag = params[:value] # need to clean this up with hpricot or equivalent
     @verse.tag_list << new_tag
     @verse.save
-    render :text => new_tag
+    render text: new_tag
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -224,7 +224,7 @@ class VersesController < ApplicationController
     @tab = "home"
     @sub = "cloud"
     add_breadcrumb I18n.t('page_titles.tag_cloud'), :tag_cloud_path
-    @tags = Verse.tag_counts( :order => "name" )
+    @tags = Verse.tag_counts( order: "name" )
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -234,7 +234,7 @@ class VersesController < ApplicationController
     @tab = "home"
     @sub = "cloud"
     add_breadcrumb I18n.t('page_titles.tag_cloud'), :tag_cloud_path
-    add_breadcrumb params[:tag], show_verses_with_tag_path(:tag => params[:tag])
+    add_breadcrumb params[:tag], show_verses_with_tag_path(tag: params[:tag])
     @tag    = ActsAsTaggableOn::Tag.find_by_name(params[:tag])
     @verses = Memverse.tagged_with(params[:tag]).map{ |mv| mv.verse.switch_tl(current_user.translation) || mv.verse}.uniq.sort!
   end
@@ -253,8 +253,8 @@ class VersesController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml  => @verses }
-      format.json { render :json => @verses }
+      format.xml  { render xml: @verses }
+      format.json { render json: @verses }
     end
 
   end
@@ -268,7 +268,7 @@ class VersesController < ApplicationController
     tl = current_user.translation
     add_breadcrumb "Check Verses", :check_verses_path
 
-    unverified_verses = Verse.where(:verified => false, :translation => tl, :checked_by => nil).where("memverses_count > ?", 1).limit(60)
+    unverified_verses = Verse.where(verified: false, translation: tl, checked_by: nil).where("memverses_count > ?", 1).limit(60)
     unverified_verses.each { |vs|
       if vs.web_check != true
         @need_verification << vs
@@ -288,7 +288,7 @@ class VersesController < ApplicationController
     @verse.text = new_text
     @verse.checked_by = current_user.login
     @verse.save
-    render :text => @verse.text
+    render text: @verse.text
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -298,7 +298,7 @@ class VersesController < ApplicationController
     @verse = Verse.find(params[:id])
     @verse.checked_by = current_user.login
     @verse.save
-    render :text => "Checked"
+    render text: "Checked"
   end
 
 end

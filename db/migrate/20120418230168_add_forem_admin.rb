@@ -1,6 +1,6 @@
 class AddForemAdmin < ActiveRecord::Migration
 
   def change
-    add_column :users, :forem_admin, :boolean, :default => false
+    add_column :users, :forem_admin, :boolean, default: false
   end
 end

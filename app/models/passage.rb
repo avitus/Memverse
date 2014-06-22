@@ -3,7 +3,7 @@ class Passage < ActiveRecord::Base
   belongs_to :user
 
   has_many   :memverses
-  has_many   :verses, :through => :memverses
+  has_many   :verses, through: :memverses
 
   validates_presence_of   :user_id, :length, :book, :chapter, :first_verse, :last_verse
 
@@ -19,9 +19,9 @@ class Passage < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   def as_json(options={})
     {
-      :id              => self.id,
-      :ref             => self.reference,       # TODO: It was a bad idea to rename the attribute
-      :interval_array  => self.interval_array
+      id: self.id,
+      ref: self.reference,       # TODO: It was a bad idea to rename the attribute
+      interval_array: self.interval_array
     }
 
     # It would probably be preferable to handle all 'as_json' using super as far as possible
@@ -29,7 +29,7 @@ class Passage < ActiveRecord::Base
     # rather than 'ref' as we did above. (Only code using ref is in reviewState.Initialize)
     # For now, a complete override as above is ok since we aren't using too many attributes.
     #
-    # super(options.reverse_merge(:methods => :interval_array, :only => [:id, :reference]))
+    # super(options.reverse_merge(methods: :interval_array, only: [:id, :reference]))
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -129,7 +129,7 @@ class Passage < ActiveRecord::Base
     else
 
       # Only look up FinalVerse when first_verse is 1 or 0
-      if ( self.first_verse == 1 || self.first_verse == 0 ) && ( self.last_verse == FinalVerse.where(:book => book, :chapter => chapter).first.last_verse )
+      if ( self.first_verse == 1 || self.first_verse == 0 ) && ( self.last_verse == FinalVerse.where(book: book, chapter: chapter).first.last_verse )
         update_attribute( :complete_chapter, true )
       else
         update_attribute( :complete_chapter, false )

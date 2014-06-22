@@ -1,6 +1,6 @@
 class Tweet < ActiveRecord::Base
 
-#    t.integer  "importance", :default => 5
+#    t.integer  "importance", default: 5
 #    t.integer  "user_id"
 #    t.integer  "church_id"
 #    t.integer  "state_id"

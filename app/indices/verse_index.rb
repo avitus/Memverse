@@ -1,11 +1,11 @@
 # ----------------------------------------------------------------------------------------------------------
 # Sphinx Index
 # ----------------------------------------------------------------------------------------------------------
-ThinkingSphinx::Index.define :verse, :with => :active_record do
+ThinkingSphinx::Index.define :verse, with: :active_record do
   # fields
-  indexes translation, :sortable => true
+  indexes translation, sortable: true
   indexes text
-  indexes [book, chapter, versenum], :as => :reference
+  indexes [book, chapter, versenum], as: :reference
 
   # attributes
   has created_at

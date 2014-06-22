@@ -2,7 +2,7 @@
 
 class LiveQuizController < ApplicationController
 
-  before_filter :authenticate_user!, :only => :live_quiz
+  before_filter :authenticate_user!, only: :live_quiz
 
   #-----------------------------------------------------------------------------------------------------------
   # Setup quiz room when user arrives
@@ -87,7 +87,7 @@ class LiveQuizController < ApplicationController
     end
 
     respond_to do |format|
-      format.all { render :nothing => true, :status => 200 }
+      format.all { render nothing: true, status: 200 }
     end
 
   end
@@ -110,7 +110,7 @@ class LiveQuizController < ApplicationController
   #-----------------------------------------------------------------------------------------------------------
   # def roster
   # 	@roster = Roster.all
-	 #  render :json => @roster
+	 #  render json: @roster
   # end
 
   #-----------------------------------------------------------------------------------------------------------
@@ -128,15 +128,15 @@ class LiveQuizController < ApplicationController
   	  minutes = (@till/60 - hours * 60).to_i
   	  seconds = (@till - (minutes * 60 + hours * 3600)).to_i
 
-      render :json => {:time => "+#{hours}h +#{minutes}m +#{seconds}s"}
+      render json: {time: "+#{hours}h +#{minutes}m +#{seconds}s"}
 
     elsif $redis.exists("quiz-#{@quiz.id}") && status = $redis.hmget("quiz-#{@quiz.id}", "status")
 
-      render :json => {:status => status}
+      render json: {status: status}
 
     else
 
-      render :json => {:status => "Finished"}
+      render json: {status: "Finished"}
 
     end
 

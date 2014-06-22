@@ -1,4 +1,4 @@
-  #    t.integer   :quiz_id, :null => false
+  #    t.integer   :quiz_id, null: false
   #    t.integer   :variation_id
   #    t.integer   :question_no
   #    t.string    :question_type
@@ -12,22 +12,22 @@ class QuizQuestion < ActiveRecord::Base
 
   # Relationships
   belongs_to :quiz
-  belongs_to :user,           :foreign_key => "submitted_by",   :class_name => "User"
-  belongs_to :supporting_ref, :foreign_key => "supporting_ref", :class_name => "Uberverse"
+  belongs_to :user,           foreign_key: "submitted_by",   class_name: "User"
+  belongs_to :supporting_ref, foreign_key: "supporting_ref", class_name: "Uberverse"
 
   # Query scopes
-  scope :mcq,         -> { where( :question_type   => "mcq"                 ) }
-  scope :recitation,  -> { where( :question_type   => "recitation"          ) }
-  scope :reference,   -> { where( :question_type   => "reference"           ) }
+  scope :mcq,         -> { where( question_type: "mcq"                 ) }
+  scope :recitation,  -> { where( question_type: "recitation"          ) }
+  scope :reference,   -> { where( question_type: "reference"           ) }
 
   scope :fresh,       -> { where( 'last_asked < ?', Date.today - 6.months   ) }
-  scope :approved,    -> { where( :approval_status => "Approved"            ) }
-  scope :pending,     -> { where( :approval_status => "Pending"             ) }
-  scope :rejected,    -> { where( :approval_status => "Rejected"            ) }
+  scope :approved,    -> { where( approval_status: "Approved"            ) }
+  scope :pending,     -> { where( approval_status: "Pending"             ) }
+  scope :rejected,    -> { where( approval_status: "Rejected"            ) }
 
-  scope :easy,        -> { where( :perc_correct    => 66..100               ) }
-  scope :medium,      -> { where( :perc_correct    => 34..65                ) }
-  scope :hard,        -> { where( :perc_correct    =>  0..33                ) }
+  scope :easy,        -> { where( perc_correct: 66..100               ) }
+  scope :medium,      -> { where( perc_correct: 34..65                ) }
+  scope :hard,        -> { where( perc_correct:  0..33                ) }
 
   # Validations
   # validates_presence_of :user_id
@@ -47,9 +47,9 @@ class QuizQuestion < ActiveRecord::Base
       return nil
     else
       if vs_end
-        verse_variations = Verse.where(:book => bk, :chapter => ch, :versenum => (vs_start..vs_end).to_a, :translation => quiz_translations).order("versenum ASC")
+        verse_variations = Verse.where(book: bk, chapter: ch, versenum: (vs_start..vs_end).to_a, translation: quiz_translations).order("versenum ASC")
       else
-        verse_variations = Verse.where(:book => bk, :chapter => ch, :versenum => vs_start, :translation => quiz_translations).order("versenum ASC")
+        verse_variations = Verse.where(book: bk, chapter: ch, versenum: vs_start, translation: quiz_translations).order("versenum ASC")
       end
 
       quiz_translations.each { |tl|
@@ -108,7 +108,7 @@ class QuizQuestion < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   def supporting_verses
     if self.supporting_ref
-      return self.supporting_ref.verses.where(:translation => ['NIV', 'ESV', 'NAS', 'NKJ', 'KJV'])
+      return self.supporting_ref.verses.where(translation: ['NIV', 'ESV', 'NAS', 'NKJ', 'KJV'])
     else
       return []
     end

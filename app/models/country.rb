@@ -1,7 +1,7 @@
 class Country < ActiveRecord::Base
 
-  #  t.string    :name            VARCHAR(80) :null => false
-  #  t.string    :printable_name  VARCHAR(80) :null => false
+  #  t.string    :name            VARCHAR(80) null: false
+  #  t.string    :printable_name  VARCHAR(80) null: false
   #  t.string    :iso3            CHAR(3)
   #  t.string    :numcode         SMALLINT
 
@@ -30,10 +30,10 @@ class Country < ActiveRecord::Base
 
     countryboard.sort{|a,b| a[1]<=>b[1]}.reverse[0...numcountries].each_with_index { |grp, index|
       if grp[0].rank.nil?
-        Tweet.create(:news => "#{grp[0].printable_name} joined the country leaderboard at position ##{index+1}", :country_id => grp[0].id, :importance => 4)
+        Tweet.create(news: "#{grp[0].printable_name} joined the country leaderboard at position ##{index+1}", country_id: grp[0].id, importance: 4)
       elsif (index+1 < grp[0].rank)
       	importance = [index + 1, 4].min
-        Tweet.create(:news => "#{grp[0].printable_name} is now ##{index+1} on the country leaderboard", :country_id => grp[0].id, :importance => importance)
+        Tweet.create(news: "#{grp[0].printable_name} is now ##{index+1} on the country leaderboard", country_id: grp[0].id, importance: importance)
       end
       grp[0].rank = index+1
       grp[0].save

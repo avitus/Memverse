@@ -4,7 +4,7 @@ class UtilsController < ApplicationController
 
   newrelic_ignore
 
-  protect_from_forgery  :except => [:set_verse_text, :verify_verse]
+  protect_from_forgery  except: [:set_verse_text, :verify_verse]
   before_filter :authorize
 
   # Only needed for scraping last verse data from BibleGateway
@@ -36,8 +36,8 @@ class UtilsController < ApplicationController
     @active_users_today = User.active_today.count
 
     # Pending Verification
-    @checked_by_users = Verse.where(:verified => false).where("memverses_count > ?", 1).where("checked_by IS NOT NULL").count
-    @not_checked_by_users = Verse.where(:verified => false).where("memverses_count > ?", 1).where("checked_by IS NULL").count
+    @checked_by_users = Verse.where(verified: false).where("memverses_count > ?", 1).where("checked_by IS NOT NULL").count
+    @not_checked_by_users = Verse.where(verified: false).where("memverses_count > ?", 1).where("checked_by IS NULL").count
 
   end
 
@@ -45,7 +45,7 @@ class UtilsController < ApplicationController
   # Show recent tweets
   # ----------------------------------------------------------------------------------------------------------
   def tweets
-    @tweets = Tweet.all(:limit => 100, :order => "created_at DESC")
+    @tweets = Tweet.all(limit: 100, order: "created_at DESC")
     respond_to do |format|
       format.html
     end
@@ -57,7 +57,7 @@ class UtilsController < ApplicationController
   def destroy_tweet
     @tweet = Tweet.find(params[:id])
     @tweet.destroy
-    redirect_to :action => 'tweets'
+    redirect_to action: 'tweets'
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -130,13 +130,13 @@ class UtilsController < ApplicationController
           ch = CGI.escape(ch).gsub("%C2%A0","").to_i  # handle nbsp characters in a few chapters in Psalms
         end
 
-        FinalVerse.create(:book => bk, :chapter => ch.to_i, :last_verse => vs.to_i )
+        FinalVerse.create(book: bk, chapter: ch.to_i, last_verse: vs.to_i )
 
       }
 
     }
 
-    redirect_to :action => 'dashboard'
+    redirect_to action: 'dashboard'
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -194,13 +194,13 @@ class UtilsController < ApplicationController
     start_date = Date.new(@year, @month,  1)
     end_date   = Date.new(@year, @month, -1)
 
-    cohort = User.where(:created_at => start_date..end_date)
+    cohort = User.where(created_at: start_date..end_date)
 
     @cohort_size = cohort.count
 
     cohort.each do |u|
 
-      progression = u.cohort_progression  # syntax [:level => '3 - Started', :active => true]
+      progression = u.cohort_progression  # syntax [level: '3 - Started', active: true]
 
       if progression[:active]
         @progression_total[    progression[:level] ] += 1
@@ -285,7 +285,7 @@ class UtilsController < ApplicationController
 
 
       avail_translations = Verse.find( :all,
-                                       :conditions => ["book = ? and chapter = ? and versenum = ?",
+                                       conditions: ["book = ? and chapter = ? and versenum = ?",
                                                         pv.book, pv.chapter, pv.versenum])
 
       avail_translations.each { |vs|
@@ -311,7 +311,7 @@ class UtilsController < ApplicationController
 
     }
 
-    redirect_to :action => 'show_popverses'
+    redirect_to action: 'show_popverses'
   end
 
 
@@ -321,7 +321,7 @@ class UtilsController < ApplicationController
   def mass_email
     # Send out an email
     UserMailer.encourage_new_user_email(current_user).deliver
-    redirect_to :action => 'leaderboard'
+    redirect_to action: 'leaderboard'
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -332,22 +332,22 @@ class UtilsController < ApplicationController
     start_with_user = 1
 
     # Send out an email
-    recipients = User.find(:all, :conditions => ["id >= ?", start_with_user])
+    recipients = User.find(:all, conditions: ["id >= ?", start_with_user])
     logger.info("*** Sending newsletter to #{recipients.length} users")
     recipients.each { |r|
       if r.id >= start_with_user
         UserMailer.newsletter_email(r).deliver
       end
     }
-    redirect_to :action => 'leaderboard'
+    redirect_to action: 'leaderboard'
   end
 
   # ----------------------------------------------------------------------------------------------------------
   # Show unapproved blog comments
   # ----------------------------------------------------------------------------------------------------------
   def unapproved_comments
-    @comments         = Bloggity::BlogComment.where(:approved => false)
-    @newest_comments  = Bloggity::BlogComment.where(:approved => true).order("updated_at DESC").limit(10)
+    @comments         = Bloggity::BlogComment.where(approved: false)
+    @newest_comments  = Bloggity::BlogComment.where(approved: true).order("updated_at DESC").limit(10)
     # TODO - figure out what to do with comments from deleted blog posts
   end
 
@@ -381,7 +381,7 @@ class UtilsController < ApplicationController
 
     UserMailer.reminder_email(recipient).deliver
 
-    redirect_to :action => 'show_verses'
+    redirect_to action: 'show_verses'
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -401,7 +401,7 @@ class UtilsController < ApplicationController
   # Show all verses
   # ----------------------------------------------------------------------------------------------------------
   def show_verses
-    @vs_list = Verse.find(:all, :order => params[:sort_order])
+    @vs_list = Verse.find(:all, order: params[:sort_order])
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -411,7 +411,7 @@ class UtilsController < ApplicationController
 
     @need_verification = Array.new
 
-    @error_reported	= Verse.where(:error_flag => true )
+    @error_reported	= Verse.where(error_flag: true )
 
     if params[:checked_by_users] == "false"
       @checked_user = false
@@ -420,9 +420,9 @@ class UtilsController < ApplicationController
     end
 
     if @checked_user
-      unverified			= Verse.where(:verified => false).where("memverses_count > ?", 1).where("checked_by IS NOT NULL").limit(60)
+      unverified			= Verse.where(verified: false).where("memverses_count > ?", 1).where("checked_by IS NOT NULL").limit(60)
     else
-      unverified      = Verse.where(:verified => false).where("memverses_count > ?", 1).where("checked_by IS NULL").limit(60)
+      unverified      = Verse.where(verified: false).where("memverses_count > ?", 1).where("checked_by IS NULL").limit(60)
     end
 
     unverified.each { |vs|
@@ -486,9 +486,9 @@ class UtilsController < ApplicationController
     logger.debug("Ch: #{chapter}")
     logger.debug("Vs: #{verse}")
 
-    @vs_list = Verse.find(:all, :conditions => {:book => book, :chapter => chapter.to_i, :versenum => verse.to_i})
+    @vs_list = Verse.find(:all, conditions: {book: book, chapter: chapter.to_i, versenum: verse.to_i})
 
-    render :partial => 'search_verse', :layout=>false
+    render partial: 'search_verse', layout:false
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -511,17 +511,17 @@ class UtilsController < ApplicationController
 
     # TODO: Is there a better way to do this search?
 
-    @user_list =  User.find(:all, :conditions => {:login => search_param }, :limit => 5)
+    @user_list =  User.find(:all, conditions: {login: search_param }, limit: 5)
 
     if @user_list.empty?
-      @user_list = User.find(:all, :conditions => {:email => search_param }, :limit => 5)
+      @user_list = User.find(:all, conditions: {email: search_param }, limit: 5)
     end
 
     if @user_list.empty?
-      @user_list = User.find(:all, :conditions => {:name  => search_param }, :limit => 5)
+      @user_list = User.find(:all, conditions: {name: search_param }, limit: 5)
     end
 
-    render :partial => 'search_user', :layout=>false
+    render partial: 'search_user', layout:false
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -530,7 +530,7 @@ class UtilsController < ApplicationController
   def show_user_info
     @user = User.find(params[:id])
 
-    @mv_list = Memverse.find(:all, :conditions => ["user_id = ?", @user.id]).sort!
+    @mv_list = Memverse.find(:all, conditions: ["user_id = ?", @user.id]).sort!
 
   end
 
@@ -541,9 +541,9 @@ class UtilsController < ApplicationController
     @church = Church.find(params[:id])
     if @church.update_attributes(params[:church])
       flash[:notice] = "Church successfully updated"
-      redirect_to :action => 'show_churches'
+      redirect_to action: 'show_churches'
     else
-      render :action => edit_church
+      render action: edit_church
     end
   end
 
@@ -577,7 +577,7 @@ class UtilsController < ApplicationController
     new_text = params[:value] # need to clean this up with hpricot or equivalent
     @verse.text = new_text
     @verse.save
-    render :text => @verse.text
+    render text: @verse.text
   end
 
 
@@ -589,7 +589,7 @@ class UtilsController < ApplicationController
     @verse.verified   = true
     @verse.error_flag = false
     @verse.save
-    render :text => "Verified"
+    render text: "Verified"
   end
 
 
@@ -602,9 +602,9 @@ class UtilsController < ApplicationController
     @verse = Verse.find(params[:id])
     if @verse.update_attributes(params[:verse])
       flash[:notice] = "Verse successfully updated"
-      redirect_to :action => 'search_verses'
+      redirect_to action: 'search_verses'
     else
-      render :action => "edit_verse"
+      render action: "edit_verse"
     end
   end
 
@@ -615,7 +615,7 @@ class UtilsController < ApplicationController
     Verse.find(params[:id]).destroy
 
     # Related memory verses are deleted in before_destroy callback in verse model.
-    redirect_to :action => 'search_verses'
+    redirect_to action: 'search_verses'
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -634,7 +634,7 @@ class UtilsController < ApplicationController
       @report = User.find(params[:id]).fix_verse_linkage(repair = true)
     else
       flash[:notice] = "No user selected"
-      redirect_to :action => 'search_users'
+      redirect_to action: 'search_users'
     end
   end
 
@@ -647,9 +647,9 @@ class UtilsController < ApplicationController
     @mv_list = Array.new
 
     if (user_id)
-      mem_vs = Memverse.find(:all, :conditions => ["user_id = ?", user_id], :order => "next_test ASC")
+      mem_vs = Memverse.find(:all, conditions: ["user_id = ?", user_id], order: "next_test ASC")
     else
-      mem_vs = Memverse.find(:all, :include => :verse, :order => params[:sort_order])
+      mem_vs = Memverse.find(:all, include: :verse, order: params[:sort_order])
     end
 
     # TODO: Get rid of this hash ... we can get everything we need from a single DB call
@@ -715,7 +715,7 @@ class UtilsController < ApplicationController
       when 'Active' then
         @user_list = User.where("last_activity_date = ?", Date.today)
       when 'Pending' then
-        @user_list = User.where(:confirmed_at => nil).order(params[:sort_order])
+        @user_list = User.where(confirmed_at: nil).order(params[:sort_order])
       when 'All' then
         @user_list = User.order(params[:sort_order])
       else
@@ -743,7 +743,7 @@ class UtilsController < ApplicationController
       @church_members = @church.users
     else
       flash[:notice]  = "No church selected"
-      redirect_to :action => 'show_churches'
+      redirect_to action: 'show_churches'
     end
 
   end
@@ -757,7 +757,7 @@ class UtilsController < ApplicationController
     Church.find_each do |c|
       Church.reset_counters( c.id, :users )
     end
-    redirect_to :action => 'show_churches'
+    redirect_to action: 'show_churches'
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -769,7 +769,7 @@ class UtilsController < ApplicationController
     Country.find_each do |c|
       Country.reset_counters( c.id, :users )
     end
-    redirect_to :action => 'show_countries'
+    redirect_to action: 'show_countries'
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -778,7 +778,7 @@ class UtilsController < ApplicationController
   def update_country_user_count
     c = Country.find(params[:id])
     Country.reset_counters( c.id, :users )
-    redirect_to :action => 'show_countries'
+    redirect_to action: 'show_countries'
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -787,7 +787,7 @@ class UtilsController < ApplicationController
   def update_state_user_count
     c = AmericanState.find(params[:id])
     AmericanState.reset_counters( c.id, :users )
-    redirect_to :action => 'show_states'
+    redirect_to action: 'show_states'
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -796,7 +796,7 @@ class UtilsController < ApplicationController
   def update_church_user_count
     c = Church.find(params[:id])
     Church.reset_counters( c.id, :users )
-    redirect_to :action => 'show_churches'
+    redirect_to action: 'show_churches'
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -849,10 +849,10 @@ class UtilsController < ApplicationController
     if request.put? # For some reason this is a 'put' not a 'post'
       if @user.update_profile(params[:user])
         flash[:notice] = "Profile successfully updated"
-        redirect_to :action => 'search_users'
+        redirect_to action: 'search_users'
       else
         flash[:notice] = "Couldn't update user. Possible duplicate email or username."
-        render :action => edit_user
+        render action: edit_user
       end
     end
 
@@ -866,9 +866,9 @@ class UtilsController < ApplicationController
     @user = User.find(params[:id])
     if @user.update_attributes(params[:user])
       flash[:notice] = "User successfully updated"
-      redirect_to :action => 'show_users'
+      redirect_to action: 'show_users'
     else
-      render :action => edit_user
+      render action: edit_user
     end
   end
 
@@ -881,7 +881,7 @@ class UtilsController < ApplicationController
 
     dead_user.delete_account
 
-    redirect_to :action => 'search_users'
+    redirect_to action: 'search_users'
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -895,7 +895,7 @@ class UtilsController < ApplicationController
     # -- TODO: Insert code here --
 
     dead_church.destroy
-    redirect_to :action => 'show_churches'
+    redirect_to action: 'show_churches'
   end
 
   def become_user

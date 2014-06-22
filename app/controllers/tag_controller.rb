@@ -17,8 +17,8 @@ class TagController < ApplicationController
         format.xml  { head :ok }
       else
         # TODO: If the name has been taken we'd like to merge with the existing tag
-        format.html { render :action => "edit_tag" }
-        format.xml  { render :xml => @tag.errors, :status => :unprocessable_entity }
+        format.html { render action: "edit_tag" }
+        format.xml  { render xml: @tag.errors, status: :unprocessable_entity }
       end
     end
   end  

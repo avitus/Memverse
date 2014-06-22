@@ -1,15 +1,15 @@
 # coding: utf-8
 
-#    t.string   "translation",                    :null => false
-#    t.integer  "book_index",                     :null => false
-#    t.string   "book",                           :null => false
-#    t.string   "chapter",                        :null => false
-#    t.string   "versenum",                       :null => false
+#    t.string   "translation",                    null: false
+#    t.integer  "book_index",                     null: false
+#    t.string   "book",                           null: false
+#    t.string   "chapter",                        null: false
+#    t.string   "versenum",                       null: false
 #    t.text     "text"
 #    t.datetime "created_at"
 #    t.datetime "updated_at"
-#    t.boolean  "verified",    :default => false, :null => false
-#    t.boolean  "error_flag",  :default => false, :null => false
+#    t.boolean  "verified",    default: false, null: false
+#    t.boolean  "error_flag",  default: false, null: false
 
 class Verse < ActiveRecord::Base
 
@@ -28,14 +28,14 @@ class Verse < ActiveRecord::Base
   # Validations
   validates_presence_of   :translation, :book, :chapter, :versenum, :text
 
-  scope :old_testament, -> { where(:book_index =>  1..39) }
-  scope :new_testament, -> { where(:book_index => 40..66) }
+  scope :old_testament, -> { where(book_index:  1..39) }
+  scope :new_testament, -> { where(book_index: 40..66) }
 
   scope :history,  -> { where("book_index BETWEEN 1  AND 17 OR book_index = 44") }
-  scope :wisdom,   -> { where(:book_index => 18..22) }
+  scope :wisdom,   -> { where(book_index: 18..22) }
   scope :prophecy, -> { where("book_index BETWEEN 23 AND 39 OR book_index = 66") }
-  scope :gospel,   -> { where(:book_index => 40..43) }
-  scope :epistle,  -> { where(:book_index => 45..65) }
+  scope :gospel,   -> { where(book_index: 40..43) }
+  scope :epistle,  -> { where(book_index: 45..65) }
 
   scope :tl, ->(tl) { where('translation = ?', tl) }
 
@@ -65,13 +65,13 @@ class Verse < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   def as_json(options={})
     {
-      :id   => self.id,
-      :bk   => self.book,
-      :ch   => self.chapter,
-      :vs   => self.versenum,
-      :tl   => self.translation,
-      :ref  => self.ref,
-      :text => self.text
+      id: self.id,
+      bk: self.book,
+      ch: self.chapter,
+      vs: self.versenum,
+      tl: self.translation,
+      ref: self.ref,
+      text: self.text
     }
   end
 
@@ -79,7 +79,7 @@ class Verse < ActiveRecord::Base
   # Outputs friendly verse reference: eg. "Jn 3:16"
   # ----------------------------------------------------------------------------------------------------------
   def ref
-    book_tl = I18n.t abbr(book).to_sym, :scope => [:book, :abbrev]
+    book_tl = I18n.t abbr(book).to_sym, scope: [:book, :abbrev]
     return book_tl + ' ' + chapter.to_s + ':' + versenum.to_s
   end
 
@@ -87,7 +87,7 @@ class Verse < ActiveRecord::Base
   # Outputs friendly verse reference: eg. "John 3:16"
   # ----------------------------------------------------------------------------------------------------------
   def ref_long
-    book_tl = I18n.t book.to_sym, :scope => [:book, :name]
+    book_tl = I18n.t book.to_sym, scope: [:book, :name]
     return book_tl + ' ' + chapter.to_s + ':' + versenum.to_s
   end
 
@@ -152,7 +152,7 @@ class Verse < ActiveRecord::Base
   # Check whether verse exists in DB - Note: checking for verse in database requires full length book name
   # ----------------------------------------------------------------------------------------------------------
   def self.exists_in_db(bk, ch, vs, tl)
-    Verse.where(:book => bk, :chapter => ch, :versenum => vs, :translation => tl).first
+    Verse.where(book: bk, chapter: ch, versenum: vs, translation: tl).first
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -160,9 +160,9 @@ class Verse < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   def following_verse
     if self.last_in_chapter?
-      Verse.where(:book => self.book, :chapter => self.chapter.to_i+1, :versenum => 1, :translation  => self.translation ).first
+      Verse.where(book: self.book, chapter: self.chapter.to_i+1, versenum: 1, translation: self.translation ).first
     else
-      Verse.where(:book => self.book, :chapter => self.chapter, :versenum => self.versenum.to_i+1, :translation => self.translation).first
+      Verse.where(book: self.book, chapter: self.chapter, versenum: self.versenum.to_i+1, translation: self.translation).first
     end
   end
 
@@ -186,7 +186,7 @@ class Verse < ActiveRecord::Base
   		  return self.versenum.to_i == 14
   	  end
   	else
-      !FinalVerse.find(:first, :conditions => { :book => self.book, :chapter => self.chapter, :last_verse => self.versenum }).nil?
+      !FinalVerse.find(:first, conditions: { book: self.book, chapter: self.chapter, last_verse: self.versenum }).nil?
     end
   end
 
@@ -196,12 +196,12 @@ class Verse < ActiveRecord::Base
   def end_of_chapter_verse
   	if self.book == "3 John"
   		if ["NAS", "NLT", "ESV", "ESV07"].include?( self.translation )
-  			FinalVerse.new(:book => "3 John", :chapter => 1, :last_verse => 15)
+  			FinalVerse.new(book: "3 John", chapter: 1, last_verse: 15)
   		else
-  			FinalVerse.new(:book => "3 John", :chapter => 1, :last_verse => 14)
+  			FinalVerse.new(book: "3 John", chapter: 1, last_verse: 14)
   		end
   	else
-    	FinalVerse.where(:book => self.book, :chapter => self.chapter).first
+    	FinalVerse.where(book: self.book, chapter: self.chapter).first
     end
   end
 
@@ -452,8 +452,8 @@ class Verse < ActiveRecord::Base
     ch = self.chapter
     vs = self.versenum
 
-    verse = Verse.where(:book => bk, :chapter => ch, :versenum => vs, :translation => self.translation).first
-    final_verse = FinalVerse.where(:book => bk, :chapter => ch).first
+    verse = Verse.where(book: bk, chapter: ch, versenum: vs, translation: self.translation).first
+    final_verse = FinalVerse.where(book: bk, chapter: ch).first
 
     if verse
       errors.add(:base, "Verse already exists in #{self.translation}")
@@ -471,7 +471,7 @@ class Verse < ActiveRecord::Base
 
   # after_create
   def associate_with_uberverse
-    uv = Uberverse.where(:book => self.book, :chapter => self.chapter, :versenum => self.versenum).first
+    uv = Uberverse.where(book: self.book, chapter: self.chapter, versenum: self.versenum).first
     self.uberverse_id = uv.id  unless !uv
   end
 

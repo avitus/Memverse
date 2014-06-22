@@ -5,9 +5,9 @@ MemverseApp::Application.routes.draw do
   # Background jobs
   require 'sidekiq/web'
 
-  mount Forem::Engine,    :at => '/forums'
-  mount Bloggity::Engine, :at => '/blog'
-  mount RailsAdmin::Engine    => '/admin', :as => 'rails_admin'
+  mount Forem::Engine,    at: '/forums'
+  mount Bloggity::Engine, at: '/blog'
+  mount RailsAdmin::Engine    => '/admin', as: 'rails_admin'
   mount Ckeditor::Engine      => '/ckeditor'
   mount JasmineRails::Engine  => '/specs' if defined?(JasmineRails)
 
@@ -17,20 +17,20 @@ MemverseApp::Application.routes.draw do
   end
 
   # Routes for A/B testing
-  match "/split" => Split::Dashboard, via: [:get, :post, :delete], :anchor => false, :constraints => lambda { |request|
+  match "/split" => Split::Dashboard, via: [:get, :post, :delete], anchor: false, constraints: lambda { |request|
     request.env['warden'].authenticated?    # are we authenticated?
     request.env['warden'].authenticate!     # authenticate if not already
     request.env['warden'].user.try(:admin?) # check if admin
   }
 
   # Oauth
-  devise_for :users, :controllers => { :omniauth_callbacks => "omniauth_callbacks" }
+  devise_for :users, controllers: { omniauth_callbacks: "omniauth_callbacks" }
 
   # Should be able to remove this route once Forem allows configurable sign_in path
-  get '/users/sign_in', :to => "devise/sessions#new", :as => "sign_in"
+  get '/users/sign_in', to: "devise/sessions#new", as: "sign_in"
 
   # Primary resource routes
-  resources :users, :only => :show
+  resources :users, only: :show
   resources :groups
   resources :uberverses
   resources :sermons
@@ -45,7 +45,7 @@ MemverseApp::Application.routes.draw do
   get 'quiz_question_approval' => 'quiz_questions#approvals', as: :quiz_question_approval  # for admins to approve quiz questions
 
   resources :passages do
-    get 'due', :on => :collection
+    get 'due', on: :collection
     resources :memverses
   end
 
@@ -60,67 +60,67 @@ MemverseApp::Application.routes.draw do
 
   # API
   api versions: 1, module: "api/v1" do
-    resources :users, :only => :show
+    resources :users, only: :show
     resources :verses
     resources :memverses
     resources :passages do
-      get 'due', :on => :collection
+      get 'due', on: :collection
       resources :memverses
     end
     get '/me' => "credentials#me"
   end
 
   # Adding verses and chapters to user account
-  get   '/add_verse'              => 'memverses#add_verse',             :as => 'add_verse'
-  post  '/add_chapter'            => 'memverses#add_chapter',           :as => 'add_chapter'
-  match '/add/:id'                => 'memverses#ajax_add',              :as => 'add', :via => [:get, :post]
-  get   '/avail_translations'     => 'memverses#avail_translations',    :as => 'avail_translations'
+  get   '/add_verse'              => 'memverses#add_verse',             as: 'add_verse'
+  post  '/add_chapter'            => 'memverses#add_chapter',           as: 'add_chapter'
+  match '/add/:id'                => 'memverses#ajax_add',              as: 'add', via: [:get, :post]
+  get   '/avail_translations'     => 'memverses#avail_translations',    as: 'avail_translations'
 
   # Core Review Pages
-  get '/learn'                    => 'memverses#learn',                 :as => 'learn'
-  get '/review'                   => 'passages#review',                 :as => 'passage_review'
+  get '/learn'                    => 'memverses#learn',                 as: 'learn'
+  get '/review'                   => 'passages#review',                 as: 'passage_review'
 
   # Current single verse test
-  get '/test_verse_quick'         => 'memverses#test_verse_quick',      :as => 'test_verse_quick'
-  get '/test_next_verse'          => 'memverses#test_next_verse',       :as => 'test_next_verse'
-  get '/mark_test_quick'          => 'memverses#mark_test_quick',       :as => 'mark_test_quick'
-  get '/feedback'                 => 'memverses#feedback',              :as => 'feedback'
-  get '/upcoming_verses'          => 'memverses#upcoming_verses',       :as => 'upcoming_verses'
+  get '/test_verse_quick'         => 'memverses#test_verse_quick',      as: 'test_verse_quick'
+  get '/test_next_verse'          => 'memverses#test_next_verse',       as: 'test_next_verse'
+  get '/mark_test_quick'          => 'memverses#mark_test_quick',       as: 'mark_test_quick'
+  get '/feedback'                 => 'memverses#feedback',              as: 'feedback'
+  get '/upcoming_verses'          => 'memverses#upcoming_verses',       as: 'upcoming_verses'
 
   # Reference tests
-  get  '/test_ref'                => 'memverses#test_ref',              :as => 'test_ref'
-  get  '/test_next_ref'           => 'memverses#test_next_ref',         :as => 'test_next_ref'
+  get  '/test_ref'                => 'memverses#test_ref',              as: 'test_ref'
+  get  '/test_next_ref'           => 'memverses#test_next_ref',         as: 'test_next_ref'
   post '/score_ref/:mv/:score'    => 'memverses#score_ref_test'
   post '/save_ref_grade/:score'   => 'users#update_ref_grade'
 
   # Accuracy test
-  get '/test_accuracy'            => 'memverses#test_accuracy',         :as => 'test_accuracy'
+  get '/test_accuracy'            => 'memverses#test_accuracy',         as: 'test_accuracy'
   get '/accuracy_test_next'       => 'memverses#accuracy_test_next'
   post '/save_accuracy/:score'    => 'users#update_accuracy'
 
   # Chapter review
-  get '/pre_chapter'              => 'memverses#chapter_explanation',   :as => 'pre_chapter'
-  get '/test_chapter'             => 'memverses#test_chapter',          :as => 'test_chapter'
+  get '/pre_chapter'              => 'memverses#chapter_explanation',   as: 'pre_chapter'
+  get '/test_chapter'             => 'memverses#test_chapter',          as: 'test_chapter'
 
   # Legacy drill page
-  get '/drill_verse'              => 'memverses#drill_verse',           :as => 'drill_verse'
-  post '/mark_drill'              => 'memverses#mark_drill',            :as => 'mark_drill'
+  get '/drill_verse'              => 'memverses#drill_verse',           as: 'drill_verse'
+  post '/mark_drill'              => 'memverses#mark_drill',            as: 'mark_drill'
 
   # Verse management
-  get '/manage_verses'            => 'memverses#manage_verses',         :as => 'manage_verses'
-  get '/show_all_my_verses'       => 'memverses#manage_verses'        # :as => 'manage_verses'
+  get '/manage_verses'            => 'memverses#manage_verses',         as: 'manage_verses'
+  get '/show_all_my_verses'       => 'memverses#manage_verses'        # as: 'manage_verses'
   post '/delete_memverses'        => 'memverses#delete_verses'
-  get '/reset_schedule'           => 'users#reset_schedule',            :as => 'reset_schedule'
+  get '/reset_schedule'           => 'users#reset_schedule',            as: 'reset_schedule'
 
 
-  get '/user_stats'               => 'memverses#user_stats',            :as => 'user_stats'
-  get '/progress'                 => 'memverses#show_progress',         :as => 'progress'
-  get '/save_progress_report'     => 'memverses#save_progress_report',  :as => 'save_progress_report'
-  get '/popular_verses'           => 'memverses#pop_verses',            :as => 'popular_verses'
-  get '/home'                     => 'memverses#index',                 :as => 'index'
-  get '/memory_verse/:id'         => 'memverses#show',                  :as => 'memory_verse'
-  get '/toggle_error_flag/:id'    => 'memverses#toggle_verse_flag',     :as => 'toggle_error_flag'
-  get '/toggle_mv_status/:id'     => 'memverses#toggle_mv_status',      :as => 'toggle_mv_status'
+  get '/user_stats'               => 'memverses#user_stats',            as: 'user_stats'
+  get '/progress'                 => 'memverses#show_progress',         as: 'progress'
+  get '/save_progress_report'     => 'memverses#save_progress_report',  as: 'save_progress_report'
+  get '/popular_verses'           => 'memverses#pop_verses',            as: 'popular_verses'
+  get '/home'                     => 'memverses#index',                 as: 'index'
+  get '/memory_verse/:id'         => 'memverses#show',                  as: 'memory_verse'
+  get '/toggle_error_flag/:id'    => 'memverses#toggle_verse_flag',     as: 'toggle_error_flag'
+  get '/toggle_mv_status/:id'     => 'memverses#toggle_mv_status',      as: 'toggle_mv_status'
 
   # Tagging verses
   post '/add_tag'                 => 'memverses#add_mv_tag'
@@ -130,29 +130,29 @@ MemverseApp::Application.routes.draw do
   get  '/read/:tl/:bk/:ch'        => 'reading#chapter'
 
   # Verse search
-  get '/lookup_user_verse'        => 'memverses#mv_lookup',             :as => 'lookup_user_verse'
-  get '/lookup_user_passage'      => 'memverses#mv_lookup_passage',     :as => 'lookup_user_passage'
-  get '/mv_tag_search'            => 'memverses#mv_tag_search',         :as => 'mv_tag_search'
+  get '/lookup_user_verse'        => 'memverses#mv_lookup',             as: 'lookup_user_verse'
+  get '/lookup_user_passage'      => 'memverses#mv_lookup_passage',     as: 'lookup_user_passage'
+  get '/mv_tag_search'            => 'memverses#mv_tag_search',         as: 'mv_tag_search'
 
-  get '/tag_cloud'                => 'verses#tag_cloud',                :as => 'tag_cloud'
-  get '/check_verses'             => 'verses#check_verses',             :as => 'check_verses'
-  get '/check_verse/:id'          => 'verses#check_verse',              :as => 'check_verse'
-  get '/verify_vs_format'         => 'verses#verify_format',            :as => 'verify_vs_format'
-  get '/show_verses_with_tag'     => 'verses#show_verses_with_tag',     :as => 'show_verses_with_tag'
-  get '/search_verse'             => 'verses#verse_search',             :as => 'search_verse'
-  get '/lookup_verse'             => 'verses#lookup',                   :as => 'lookup_verse'
-  get '/lookup_passage'           => 'verses#lookup_passage',           :as => 'lookup_passage'
+  get '/tag_cloud'                => 'verses#tag_cloud',                as: 'tag_cloud'
+  get '/check_verses'             => 'verses#check_verses',             as: 'check_verses'
+  get '/check_verse/:id'          => 'verses#check_verse',              as: 'check_verse'
+  get '/verify_vs_format'         => 'verses#verify_format',            as: 'verify_vs_format'
+  get '/show_verses_with_tag'     => 'verses#show_verses_with_tag',     as: 'show_verses_with_tag'
+  get '/search_verse'             => 'verses#verse_search',             as: 'search_verse'
+  get '/lookup_verse'             => 'verses#lookup',                   as: 'lookup_verse'
+  get '/lookup_passage'           => 'verses#lookup_passage',           as: 'lookup_passage'
   get '/major_tl_lookup'          => 'verses#major_tl_lookup'
-  get '/chapter_available'        => 'verses#chapter_available',        :as => 'chapter_available'
+  get '/chapter_available'        => 'verses#chapter_available',        as: 'chapter_available'
 
-  get '/get_popverses'            => 'popverses#index',                 :as => 'get_popverses'
+  get '/get_popverses'            => 'popverses#index',                 as: 'get_popverses'
 
-  get '/show_user_info'           => 'utils#show_user_info',            :as => 'show_user_info'
-  get '/show_tags'                => 'utils#show_tags',                 :as => 'show_tags'
-  get '/admin_search_verse'       => 'utils#search_verse',              :as => 'admin_search_verse'
-  get '/utils_verify_verse/:id'   => 'utils#verify_verse',              :as => 'utils_verify_verse'
-  get '/utils_dashboard'          => 'utils#dashboard',                 :as => 'utils_dashboard'
-  get '/progression/(:yr)/(:mo)'  => 'utils#user_progression',          :as => 'progression'
+  get '/show_user_info'           => 'utils#show_user_info',            as: 'show_user_info'
+  get '/show_tags'                => 'utils#show_tags',                 as: 'show_tags'
+  get '/admin_search_verse'       => 'utils#search_verse',              as: 'admin_search_verse'
+  get '/utils_verify_verse/:id'   => 'utils#verify_verse',              as: 'utils_verify_verse'
+  get '/utils_dashboard'          => 'utils#dashboard',                 as: 'utils_dashboard'
+  get '/progression/(:yr)/(:mo)'  => 'utils#user_progression',          as: 'progression'
 
   # Doesn't require a login
   get '/contact'                  => 'info#contact'
@@ -178,41 +178,41 @@ MemverseApp::Application.routes.draw do
   get '/finish_experiment'        => 'experiment#finish'
 
   # Route for users who haven't yet joined a group
-  get '/mygroup'                  => 'groups#show',                     :as => 'mygroup'
+  get '/mygroup'                  => 'groups#show',                     as: 'mygroup'
 
-  get '/update_profile'           => 'profile#update_profile',          :as => 'update_profile'
+  get '/update_profile'           => 'profile#update_profile',          as: 'update_profile'
   patch '/profile/update/:id'     => 'profile#update'
-  get '/church'                   => 'profile#show_church',             :as => 'church'
-  get '/referrals/:id'            => 'profile#referrals',               :as => 'referrals'
-  get '/unsubscribe/*email'       => 'profile#unsubscribe',             :as => 'unsubscribe', :format => false
-  get '/search_user'              => 'profile#search_user',             :as => 'search_user'
-  get '/set_translation/:tl'      => 'profile#set_translation',         :as => 'set_translation'
-  get '/set_time_alloc/:time'     => 'profile#set_time_alloc',          :as => 'set_time_alloc'
+  get '/church'                   => 'profile#show_church',             as: 'church'
+  get '/referrals/:id'            => 'profile#referrals',               as: 'referrals'
+  get '/unsubscribe/*email'       => 'profile#unsubscribe',             as: 'unsubscribe', format: false
+  get '/search_user'              => 'profile#search_user',             as: 'search_user'
+  get '/set_translation/:tl'      => 'profile#set_translation',         as: 'set_translation'
+  get '/set_time_alloc/:time'     => 'profile#set_time_alloc',          as: 'set_time_alloc'
 
-  get '/earned_badges/:id'        => 'badges#earned_badges',            :as => 'earned_badges'
-  get '/badge_completion_check'   => 'badges#badge_completion_check',   :as => 'badge_completion_check'
+  get '/earned_badges/:id'        => 'badges#earned_badges',            as: 'earned_badges'
+  get '/badge_completion_check'   => 'badges#badge_completion_check',   as: 'badge_completion_check'
 
-  get '/badge_quests_check'       => 'quests#badge_quests_check',       :as => 'badge_quests_check'
+  get '/badge_quests_check'       => 'quests#badge_quests_check',       as: 'badge_quests_check'
 
-  get '/edit_tag/:id'             => 'tag#edit_tag',                    :as => 'edit_tag'
+  get '/edit_tag/:id'             => 'tag#edit_tag',                    as: 'edit_tag'
 
   # Tweet routes
-  get '/tweets'                   => 'tweets#index',                    :as => 'tweets'
+  get '/tweets'                   => 'tweets#index',                    as: 'tweets'
 
   # Game routes
-  get '/verse_scramble'           => 'games#verse_scramble',            :as => 'verse_scramble'
+  get '/verse_scramble'           => 'games#verse_scramble',            as: 'verse_scramble'
 
   # Routes for graphs
-  get '/load_progress/'             => 'chart#load_progress',             :as => 'load_progress'
-  get '/load_consistency_progress/' => 'chart#load_consistency_progress', :as => 'load_consistency_progress'
-  get '/global_data'                => 'chart#global_data',               :as => 'global_data'
+  get '/load_progress/'             => 'chart#load_progress',             as: 'load_progress'
+  get '/load_consistency_progress/' => 'chart#load_consistency_progress', as: 'load_consistency_progress'
+  get '/global_data'                => 'chart#global_data',               as: 'global_data'
 
   # Routes for chat channels
   post '/chat/send'                 => 'chat#send_message'
   get '/chat/toggle_ban'            => 'chat#toggle_ban'
 
   # Routes for live quiz
-  get  '/live_quiz'                 => 'live_quiz#live_quiz',             :as => 'live_quiz'     # Main quiz URL
+  get  '/live_quiz'                 => 'live_quiz#live_quiz',             as: 'live_quiz'     # Main quiz URL
   get  '/live_quiz/channel1'        => 'live_quiz#channel1'                                      # Chat channel
   get  '/live_quiz/scoreboard'      => 'live_quiz#scoreboard'                                    # Scoreboard for quiz
   post '/record_score'              => 'live_quiz#record_score'
@@ -221,6 +221,6 @@ MemverseApp::Application.routes.draw do
   get '/starter_pack' => 'memverses#home'  # Retired in 2012
 
   # Install the default routes as the lowest priority.
-  match '/:controller(/:action(/:id))', :via => [:get, :post]
+  match '/:controller(/:action(/:id))', via: [:get, :post]
 
 end

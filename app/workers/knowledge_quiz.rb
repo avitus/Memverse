@@ -4,7 +4,7 @@ class KnowledgeQuiz
   include Sidetiq::Schedulable
   include IceCube
 
-  sidekiq_options :retry => false # Don't retry quiz if something goes wrong
+  sidekiq_options retry: false # Don't retry quiz if something goes wrong
 
   recurrence do
     if Rails.env.production?
@@ -26,7 +26,7 @@ class KnowledgeQuiz
     # Announce quiz
     # ========================================================================
     broadcast  = "The Bible knowledge quiz is starting. <a href=\"live_quiz\">Join now!</a>"
-    Tweet.create(:news => broadcast, :user_id => 1, :importance => 2)  # Admin tweet => user_id = 1
+    Tweet.create(news: broadcast, user_id: 1, importance: 2)  # Admin tweet => user_id = 1
 
     # ========================================================================
     # Calculate start time for next quiz
@@ -74,17 +74,17 @@ class KnowledgeQuiz
     #  @history_start=nil,
     #  @last=true,
     #  @message={
-    #    :meta=>"question",
-    #    :q_id=>615,
-    #    :q_num=>24,
-    #    :q_type=>"mcq",
-    #    :mc_question=>"In Paul's farewell to the Ephesians he says: ... He knew that after he left ______ .",
-    #    :mc_option_a=>"There would be conflict within the Ephesian church.",
-    #    :mc_option_b=>"The sheep would go astray.",
-    #    :mc_option_c=>"Wolves would enter and attack the flock.",
-    #    :mc_option_d=>"He would be arrested in Jerusalem.",
-    #    :mc_answer=>"C",
-    #    :time_alloc=>35},
+    #    meta:"question",
+    #    q_id:615,
+    #    q_num:24,
+    #    q_type:"mcq",
+    #    mc_question:"In Paul's farewell to the Ephesians he says: ... He knew that after he left ______ .",
+    #    mc_option_a:"There would be conflict within the Ephesian church.",
+    #    mc_option_b:"The sheep would go astray.",
+    #    mc_option_c:"Wolves would enter and attack the flock.",
+    #    mc_option_d:"He would be arrested in Jerusalem.",
+    #    mc_answer:"C",
+    #    time_alloc:35},
     #  @object=#<Net::HTTPOK 200 OK readbody=true>,
     #    @payload=nil,
     #    @response="[1,\"Sent\",\"13988747805988965\"]",
@@ -105,12 +105,12 @@ class KnowledgeQuiz
     unless status && status == "Open"
       new_status = "Open"
       $redis.hset("chat-#{channel}", "status", new_status)
-      PN.publish( :channel  => channel, :message  => {
-          :meta => "chat_status",
-          :status => new_status
+      PN.publish( channel: channel, message: {
+          meta: "chat_status",
+          status: new_status
         },
-        :http_sync => true,
-        :callback => @my_callback
+        http_sync: true,
+        callback: @my_callback
       )
     end
 
@@ -139,21 +139,21 @@ class KnowledgeQuiz
       q.update_attribute( :last_asked, Date.today )
 
       # Publish question
-      PN.publish( :channel  => channel, :message  => {
-          :meta        => "question",
-          :q_id        => q.id,
-          :q_num       => q_num,
-          :q_type      => "mcq",
-          :mc_question => q.mc_question,
-          :mc_option_a => q.mc_option_a,
-          :mc_option_b => q.mc_option_b,
-          :mc_option_c => q.mc_option_c,
-          :mc_option_d => q.mc_option_d,
-          :mc_answer   => q.mc_answer,
-          :time_alloc  => q.time_allocation
+      PN.publish( channel: channel, message: {
+          meta: "question",
+          q_id: q.id,
+          q_num: q_num,
+          q_type: "mcq",
+          mc_question: q.mc_question,
+          mc_option_a: q.mc_option_a,
+          mc_option_b: q.mc_option_b,
+          mc_option_c: q.mc_option_c,
+          mc_option_d: q.mc_option_d,
+          mc_answer: q.mc_answer,
+          time_alloc: q.time_allocation
         },
-        :http_sync => true,
-        :callback => @my_callback
+        http_sync: true,
+        callback: @my_callback
       )
 
       # Time to answer question
@@ -168,12 +168,12 @@ class KnowledgeQuiz
       scoreboard = scoreboard.sort { |x, y| y['score'].to_i <=> x['score'].to_i }
 
       # Publish scoreboard
-      PN.publish( :channel  => channel, :message  => {
-          :meta => "scoreboard",
-          :scoreboard => scoreboard
+      PN.publish( channel: channel, message: {
+          meta: "scoreboard",
+          scoreboard: scoreboard
         },
-        :http_sync => true,
-        :callback => @my_callback
+        http_sync: true,
+        callback: @my_callback
       )
 
     end # of question loop
@@ -237,7 +237,7 @@ class KnowledgeQuiz
     # bronze_ribbon_id   = final_scoreboard[2]['id']
 
     broadcast  = "#{gold_ribbon_name} won the Bible knowledge quiz"
-    Tweet.create(:news => broadcast, :user_id => gold_ribbon_id, :importance => 2)
+    Tweet.create(news: broadcast, user_id: gold_ribbon_id, importance: 2)
 
     # ========================================================================
     # Close chat after ten minutes
@@ -247,12 +247,12 @@ class KnowledgeQuiz
 
     new_status = "Closed"
     $redis.hset("chat-#{channel}", "status", new_status)
-    PN.publish( :channel  => channel, :message  => {
-        :meta => "chat_status",
-        :status => new_status
+    PN.publish( channel: channel, message: {
+        meta: "chat_status",
+        status: new_status
       },
-      :http_sync => true,
-      :callback => @my_callback
+      http_sync: true,
+      callback: @my_callback
     )
 
     puts "Chat closed and sidetiq job finished."

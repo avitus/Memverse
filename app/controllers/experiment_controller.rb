@@ -2,6 +2,6 @@ class ExperimentController < ApplicationController
   def finish
     experiment = params[:experiment]
     finished(experiment)
-    render :nothing => true
+    render nothing: true
   end
 end

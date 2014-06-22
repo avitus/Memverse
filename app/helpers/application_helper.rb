@@ -20,7 +20,7 @@ module ApplicationHelper
     if description
       content_for(:page_description) { description }
     else
-      content_for?(:page_description) ? content_for(:page_description) : t(:default, :scope => 'page_descriptions')
+      content_for?(:page_description) ? content_for(:page_description) : t(:default, scope: 'page_descriptions')
     end
   end
       
@@ -28,7 +28,7 @@ module ApplicationHelper
     messages = ''.html_safe
     [:error, :notice, :alert].each do |t|
       if flash[t]
-        messages << content_tag(:div, flash[t].html_safe, :id => "flash-#{t}", :class => "flash gray-box-bg" )
+        messages << content_tag(:div, flash[t].html_safe, id: "flash-#{t}", class: "flash gray-box-bg" )
       end
     end
     unless messages.blank?

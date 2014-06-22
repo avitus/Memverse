@@ -7,14 +7,14 @@ class Memverse < ActiveRecord::Base
   belongs_to :verse
   belongs_to :passage
 
-  has_one :country, :through => :user
+  has_one :country, through: :user
 
   # Named Scopes
-  scope :memorized,     -> { where(:status => "Memorized") }
-  scope :learning,      -> { where(:status => "Learning" ) }
+  scope :memorized,     -> { where(status: "Memorized") }
+  scope :learning,      -> { where(status: "Learning" ) }
 
-  scope :active, 			  -> { where(:status => ["Learning", "Memorized"]) }
-  scope :inactive, 			-> { where(:status => "Pending") }
+  scope :active, 			  -> { where(status: ["Learning", "Memorized"]) }
+  scope :inactive, 			-> { where(status: "Pending") }
 
   scope :current,  			-> { where('next_test >= ?', Date.today) }
   scope :due_today, 		-> { where('next_test  = ?', Date.today) }
@@ -23,7 +23,7 @@ class Memverse < ActiveRecord::Base
   # We need to check for nil values because that column has no default value
   scope :ref_due,       -> { where('next_ref_test IS NULL or next_ref_test <= ?', Date.today) }
 
-  scope :passage_start, -> { where(:prev_verse => nil) }
+  scope :passage_start, -> { where(prev_verse: nil) }
 
   scope :american, 			-> { joins(:user, :country).where('countries.name' => 'United States') }
 
@@ -37,8 +37,8 @@ class Memverse < ActiveRecord::Base
   scope :epistle,    -> { where('verses.book_index' => 45..65).includes(:verse) }
 
   # Validations
-  validates :user_id,  :presence => true
-  validates :verse_id, :presence => true, :uniqueness => {:scope => :user_id}
+  validates :user_id,  presence: true
+  validates :verse_id, presence: true, uniqueness: {scope: :user_id}
 
   # Needed to add this for Rails 4
   attr_protected :test_interval
@@ -70,16 +70,16 @@ class Memverse < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   def as_json(options={})
     {
-      :id            => self.id,
-      :ref           => self.verse.ref,
-      :tl            => self.verse.translation,
-      :text          => self.verse.text,
-      :versenum      => self.verse.versenum,
-      :next_test     => self.next_test,
-      :test_interval => self.test_interval,
-      :skippable     => !self.due? ? ( !self.next_verse_due(true).nil? ? self.next_verse_due(true).verse.ref : false ) : false,
-      :mnemonic      => self.needs_mnemonic? ? self.verse.mnemonic : "",
-      :feedback      => self.show_feedback?
+      id: self.id,
+      ref: self.verse.ref,
+      tl: self.verse.translation,
+      text: self.verse.text,
+      versenum: self.verse.versenum,
+      next_test: self.next_test,
+      test_interval: self.test_interval,
+      skippable: !self.due? ? ( !self.next_verse_due(true).nil? ? self.next_verse_due(true).verse.ref : false ) : false,
+      mnemonic: self.needs_mnemonic? ? self.verse.mnemonic : "",
+      feedback: self.show_feedback?
     }
   end
 
@@ -175,7 +175,7 @@ class Memverse < ActiveRecord::Base
   # Delete accounts of users that never added any verses TODO: Is this method ever used?
   # ----------------------------------------------------------------------------------------------------------
   def self.delete_unstarted_memory_verses
-    find(:all, :conditions => [ "created_at < ? and attempts = ?", 6.months.ago, 0 ]).each { |mv|
+    find(:all, conditions: [ "created_at < ? and attempts = ?", 6.months.ago, 0 ]).each { |mv|
       # mv.destroy
       logger.info("Removing memory verse #{mv.verse.ref} belong to #{mv.user.login}")
     }
@@ -210,10 +210,10 @@ class Memverse < ActiveRecord::Base
     logger.info("Number of memory verses to check: #{all_mv}")
 
     while mv_num < all_mv
-      to_check = find(:first, :conditions => {:id => mv_num})
+      to_check = find(:first, conditions: {id: mv_num})
       if to_check
         # get the next verse in the database
-        the_next_mv = find(:first, :conditions => {:id => mv_num+1})
+        the_next_mv = find(:first, conditions: {id: mv_num+1})
         if the_next_mv
           # check for same verse_id and user_id
           if (to_check.verse_id == the_next_mv.verse_id) and (to_check.user_id == the_next_mv.user_id)
@@ -528,8 +528,8 @@ class Memverse < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   def another_due_verse
 
-    # mv = Memverse.find( :first, :conditions => ["user_id = ? and id != ?", self.user.id, self.id],
-                        # :order => "next_test ASC")
+    # mv = Memverse.find( :first, conditions: ["user_id = ? and id != ?", self.user.id, self.id],
+                        # order: "next_test ASC")
 
     mv = Memverse.where("user_id = ? and id != ?", self.user.id, self.id).active.order("next_test ASC").first
 
@@ -647,13 +647,13 @@ class Memverse < ActiveRecord::Base
     vs = self.verse
 
     # Check for adjacent passages
-    prior_passage = Passage.where(:user_id => self.user.id, :book => vs.book, :chapter => vs.chapter, :last_verse  => vs.versenum-1).first
-    next_passage  = Passage.where(:user_id => self.user.id, :book => vs.book, :chapter => vs.chapter, :first_verse => vs.versenum+1).first
+    prior_passage = Passage.where(user_id: self.user.id, book: vs.book, chapter: vs.chapter, last_verse: vs.versenum-1).first
+    next_passage  = Passage.where(user_id: self.user.id, book: vs.book, chapter: vs.chapter, first_verse: vs.versenum+1).first
 
     # Case 1 - No existing passage
     if !prior_passage && !next_passage
-      psg = Passage.create!( :user_id => self.user.id, :translation => vs.translation, :length => 1,
-                             :book => vs.book, :chapter => vs.chapter, :first_verse => vs.versenum, :last_verse => vs.versenum )
+      psg = Passage.create!( user_id: self.user.id, translation: vs.translation, length: 1,
+                             book: vs.book, chapter: vs.chapter, first_verse: vs.versenum, last_verse: vs.versenum )
       self.update_attribute( :passage_id, psg.id )
 
     # Case 2 - Verse is between two passages -> merge passages
@@ -717,10 +717,10 @@ class Memverse < ActiveRecord::Base
           memverses_in_passage   = psg.memverses.includes(:verse).order('verses.versenum')
 
           # create new passage for second half of passage
-          new_psg = Passage.create!( :user_id => psg.user_id, :translation => psg.translation,
-                                     :length =>  psg.last_verse - self.verse.versenum,
-                                     :book => psg.book, :chapter => psg.chapter,
-                                     :first_verse => self.verse.versenum + 1, :last_verse => psg.last_verse )
+          new_psg = Passage.create!( user_id: psg.user_id, translation: psg.translation,
+                                     length:  psg.last_verse - self.verse.versenum,
+                                     book: psg.book, chapter: psg.chapter,
+                                     first_verse: self.verse.versenum + 1, last_verse: psg.last_verse )
           new_psg.update_ref
           new_psg.consolidate_supermemo
           new_psg.entire_chapter_flag_check
@@ -806,7 +806,7 @@ class Memverse < ActiveRecord::Base
     if prev_ptr
       # TODO: This find method is necesary rather than .find(prev_ptr) for the case (which shouldn't ever happen)
       # when the next/prev pointers aren't valid
-      prev_vs = Memverse.where(:id => prev_ptr).first
+      prev_vs = Memverse.where(id: prev_ptr).first
       if prev_vs
         prev_vs.next_verse = nil
         prev_vs.save
@@ -820,7 +820,7 @@ class Memverse < ActiveRecord::Base
     # If there is a next verse
     # => Find next verse and make it the first verse in the sequence
     if next_ptr
-      next_vs = Memverse.where(:id => next_ptr).first
+      next_vs = Memverse.where(id: next_ptr).first
       if next_vs
         next_vs.first_verse = nil # Starting verses in a sequence to not reference themselves as the first verse
         next_vs.prev_verse  = nil
@@ -842,12 +842,12 @@ class Memverse < ActiveRecord::Base
     u  = self.user
     vs = self.verse
 
-    u.memorized          = Memverse.where(:user_id => u.id, :status => "Memorized").count
-    u.learning           = Memverse.where(:user_id => u.id, :status => "Learning").count
+    u.memorized          = Memverse.where(user_id: u.id, status: "Memorized").count
+    u.learning           = Memverse.where(user_id: u.id, status: "Learning").count
     u.last_activity_date = Date.today
     u.save
 
-    vs.memverses_count   = Memverse.where(:verse_id => vs.id).count
+    vs.memverses_count   = Memverse.where(verse_id: vs.id).count
     vs.save
 
   end

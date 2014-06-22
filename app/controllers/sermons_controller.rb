@@ -1,6 +1,6 @@
 class SermonsController < ApplicationController
   
-  before_filter :authorize, :except => [:index, :show ]
+  before_filter :authorize, except: [:index, :show ]
   
   # GET /sermons
   # GET /sermons.xml
@@ -9,7 +9,7 @@ class SermonsController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @sermons }
+      format.xml  { render xml: @sermons }
     end
   end
 
@@ -20,7 +20,7 @@ class SermonsController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @sermon }
+      format.xml  { render xml: @sermon }
     end
   end
 
@@ -31,7 +31,7 @@ class SermonsController < ApplicationController
 
     respond_to do |format|
       format.html # new.html.erb
-      format.xml  { render :xml => @sermon }
+      format.xml  { render xml: @sermon }
     end
   end
 
@@ -46,20 +46,20 @@ class SermonsController < ApplicationController
     @sermon = Sermon.new(params[:sermon])
     
     errorcode, bk, ch, vs = parse_verse(params[:sermon][:uberverse_id])
-    @sermon.uberverse = Uberverse.first(:conditions => {:book => bk, :chapter => ch, :versenum => vs}) || Uberverse.create(:book => bk, :chapter => ch, :versenum => vs)
+    @sermon.uberverse = Uberverse.first(conditions: {book: bk, chapter: ch, versenum: vs}) || Uberverse.create(book: bk, chapter: ch, versenum: vs)
     
-    @sermon.church    = Church.find_by_name(params[:sermon][:church_id]) || Church.create(:name => params[:sermon][:church_id].titleize )
-    @sermon.pastor    = Pastor.find_by_name(params[:sermon][:pastor_id]) || Pastor.create(:name => params[:sermon][:pastor_id].titleize )
+    @sermon.church    = Church.find_by_name(params[:sermon][:church_id]) || Church.create(name: params[:sermon][:church_id].titleize )
+    @sermon.pastor    = Pastor.find_by_name(params[:sermon][:pastor_id]) || Pastor.create(name: params[:sermon][:pastor_id].titleize )
     @sermon.user      = current_user
 
     respond_to do |format|
       if @sermon.save
         flash[:notice] = 'Sermon was successfully created.'
         format.html { redirect_to(@sermon) }
-        format.xml  { render :xml => @sermon, :status => :created, :location => @sermon }
+        format.xml  { render xml: @sermon, status: :created, location: @sermon }
       else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @sermon.errors, :status => :unprocessable_entity }
+        format.html { render action: "new" }
+        format.xml  { render xml: @sermon.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -77,8 +77,8 @@ class SermonsController < ApplicationController
         format.html { redirect_to(@sermon) }
         format.xml  { head :ok }
       else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @sermon.errors, :status => :unprocessable_entity }
+        format.html { render action: "edit" }
+        format.xml  { render xml: @sermon.errors, status: :unprocessable_entity }
       end
     end
   end

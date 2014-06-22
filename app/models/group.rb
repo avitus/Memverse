@@ -1,6 +1,6 @@
 class Group < ActiveRecord::Base
 
-  #  t.string    :name,          :null => false
+  #  t.string    :name,          null: false
   #  t.text      :description
   #  t.text      :url   --- not yet implemented
   #  t.integer   :country_id
@@ -10,7 +10,7 @@ class Group < ActiveRecord::Base
   has_many    :users
   has_many    :tweets
 
-  belongs_to :leader, :foreign_key => "leader_id", :class_name => "User"
+  belongs_to :leader, foreign_key: "leader_id", class_name: "User"
 
   # Validations
   validates_presence_of   :name
@@ -31,10 +31,10 @@ class Group < ActiveRecord::Base
 
     groupboard.sort{|a,b| a[1]<=>b[1]}.reverse[0...numgroups].each_with_index { |grp, index|
       if grp[0].rank.nil?
-        Tweet.create(:news => "#{grp[0].name} joined the group leaderboard at position ##{index+1}", :group_id => grp[0].id, :importance => 4)
+        Tweet.create(news: "#{grp[0].name} joined the group leaderboard at position ##{index+1}", group_id: grp[0].id, importance: 4)
       elsif (index+1 < grp[0].rank) and (grp[0].rank <= 20)
       	importance = [index + 1, 4].min
-        Tweet.create(:news => "#{grp[0].name} is now ##{index+1} on the group leaderboard", :group_id => grp[0].id, :importance => importance)
+        Tweet.create(news: "#{grp[0].name} is now ##{index+1} on the group leaderboard", group_id: grp[0].id, importance: importance)
       end
       grp[0].rank = index+1
       grp[0].save

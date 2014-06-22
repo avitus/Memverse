@@ -18,7 +18,7 @@ class BadgesController < ApplicationController
 
     respond_to do |format|
       format.html  # earned_badges.html.erb
-      format.json  { render :json => @earned_badges }
+      format.json  { render json: @earned_badges }
     end
 
   end
@@ -44,14 +44,14 @@ class BadgesController < ApplicationController
         else
           broadcast  = "#{current_user.name_or_login} has been awarded a #{badge.color} #{badge.name} badge"
         end
-        Tweet.create(:news => broadcast, :user_id => current_user.id, :importance => 2)
+        Tweet.create(news: broadcast, user_id: current_user.id, importance: 2)
 
       end
     end
 
     respond_to do |format|
       format.html
-      format.json  { render :json => @recently_awarded_badges }
+      format.json  { render json: @recently_awarded_badges }
     end
 
   end

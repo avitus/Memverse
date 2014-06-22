@@ -1,42 +1,42 @@
-# t.string   "login",                     :limit => 40
+# t.string   "login",                     limit: 40
 # t.string   "identity_url"
-# t.string   "name",                      :limit => 100, :default => ""
-# t.string   "email",                     :limit => 100
-# t.string   "crypted_password",          :limit => 40
-# t.string   "salt",                      :limit => 40
-# t.string   "remember_token",            :limit => 40
-# t.string   "activation_code",           :limit => 40
-# t.string   "state",                     :default => "passive",  :null => false
+# t.string   "name",                      limit: 100, default: ""
+# t.string   "email",                     limit: 100
+# t.string   "crypted_password",          limit: 40
+# t.string   "salt",                      limit: 40
+# t.string   "remember_token",            limit: 40
+# t.string   "activation_code",           limit: 40
+# t.string   "state",                     default: "passive",  null: false
 # t.datetime "remember_token_expires_at"
 # t.datetime "activated_at"
 # t.datetime "deleted_at"
 # t.datetime "created_at"
 # t.datetime "updated_at"
 # t.date     "last_reminder"
-# t.string   "reminder_freq",                            :default => "weekly"
-# t.boolean  "newsletters",                              :default => true
+# t.string   "reminder_freq",                            default: "weekly"
+# t.boolean  "newsletters",                              default: true
 # t.string   "church"
 # t.integer  "church_id"
 # t.integer  "country_id"
-# t.string   "language",                                 :default => "English"
-# t.integer  "time_allocation",                          :default => 5
-# t.integer  "memorized",                                :default => 0
-# t.integer  "learning",                                 :default => 0
+# t.string   "language",                                 default: "English"
+# t.integer  "time_allocation",                          default: 5
+# t.integer  "memorized",                                default: 0
+# t.integer  "learning",                                 default: 0
 # t.date     "last_activity_date"
-# t.boolean  "show_echo",                                :default => true
-# t.integer  "max_interval",                             :default => 366
-# t.string   "mnemonic_use",                             :default => "Learning"
+# t.boolean  "show_echo",                                default: true
+# t.integer  "max_interval",                             default: 366
+# t.string   "mnemonic_use",                             default: "Learning"
 # t.integer  "american_state_id"
-# t.integer  "accuracy",                                 :default => 10
-# t.boolean  "all_refs",                                 :default => true
+# t.integer  "accuracy",                                 default: 10
+# t.boolean  "all_refs",                                 default: true
 # t.integer  "rank"
-# t.integer  "ref_grade",                                :default => 10
+# t.integer  "ref_grade",                                default: 10
 # t.string   "gender"
-# t.string   "translation",                              :default => "NIV"
-# t.integer  "level",                                    :default => 0,          :null => false
+# t.string   "translation",                              default: "NIV"
+# t.integer  "level",                                    default: 0,          null: false
 # t.integer  "referred_by"
-# t.boolean  "show_email",                               :default => false
-# t.boolean  "auto_work_load",                           :default => true
+# t.boolean  "show_email",                               default: false
+# t.boolean  "auto_work_load",                           default: true
 
 require 'digest/sha1'
 require 'digest/md5' # required for Gravatar support in Bloggity
@@ -51,10 +51,10 @@ class User < ActiveRecord::Base
   # :token_authenticatable, :lockable, trackable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable, :omniauthable,
          :recoverable, :rememberable, :confirmable, :validatable,
-         :encryptable, :encryptor => :restful_authentication_sha1
+         :encryptable, encryptor: :restful_authentication_sha1
 
-  validates :name,  :length     => { :maximum => 100 },
-                    :allow_nil  => true
+  validates :name,  length: { maximum: 100 },
+                    allow_nil: true
 
   # "validatable" module of devise already handles email validation
 
@@ -63,32 +63,32 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :quests
   has_and_belongs_to_many :badges
 
-  has_many                :passages,          :dependent   => :destroy
-  has_many                :memverses,         :dependent   => :destroy
-  has_many                :verses,            :through     => :memverses
-  has_many                :quiz_questions,    :foreign_key => :submitted_by
+  has_many                :passages,          dependent: :destroy
+  has_many                :memverses,         dependent: :destroy
+  has_many                :verses,            through: :memverses
+  has_many                :quiz_questions,    foreign_key: :submitted_by
 
-  has_many                :progress_reports,  :dependent => :destroy
+  has_many                :progress_reports,  dependent: :destroy
   has_many                :tweets
   has_many                :sermons
-  belongs_to              :country,         :counter_cache => true
-  belongs_to              :church,          :counter_cache => true
-  belongs_to              :group,           :counter_cache => true
-  belongs_to              :american_state,  :counter_cache => true
+  belongs_to              :country,         counter_cache: true
+  belongs_to              :church,          counter_cache: true
+  belongs_to              :group,           counter_cache: true
+  belongs_to              :american_state,  counter_cache: true
 
   # Record who tagged which verse - not working at the moment
   acts_as_tagger
 
   # Associations for bloggity
-  has_many :blog_posts, :foreign_key => "posted_by_id", :class_name => 'Bloggity::BlogPost'
-  has_many :blog_comments, :dependent => :destroy, :class_name => 'Bloggity::BlogComment'
+  has_many :blog_posts, foreign_key: "posted_by_id", class_name: 'Bloggity::BlogPost'
+  has_many :blog_comments, dependent: :destroy, class_name: 'Bloggity::BlogComment'
 
   # Named Scopes
   scope :active,            -> { where('last_activity_date >= ?', 1.month.ago) }
   scope :active_today,      -> { where('last_activity_date = ?',  Date.today) }
   scope :active_this_week,  -> { where('last_activity_date >= ?', 1.week.ago) }
   scope :american,          -> { where('countries.printable_name' => 'United States').includes(:country) }
-  scope :pending,           -> { where(:confirmed_at => nil) }
+  scope :pending,           -> { where(confirmed_at: nil) }
 
   # Setup accessible (or protected) attributes for your model
   # Prevents a user from submitting a crafted form that bypasses activation
@@ -112,7 +112,7 @@ class User < ActiveRecord::Base
 
     data = access_token.extra.raw_info
 
-    user = User.where( :email => data.emails.account ).first
+    user = User.where( email: data.emails.account ).first
 
     # Create new user if one doesn't exist
     #<OmniAuth::AuthHash
@@ -141,9 +141,9 @@ class User < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   def as_json(options={})
     {
-      :id            => self.id,
-      :name          => self.name_or_login,
-      :avatar_url    => self.blog_avatar_url
+      id: self.id,
+      name: self.name_or_login,
+      avatar_url: self.blog_avatar_url
     }
   end
 
@@ -209,7 +209,7 @@ class User < ActiveRecord::Base
   # Returns: TRUE if user has verse in userlist else FALSE
   # ----------------------------------------------------------------------------------------------------------
   def has_verse_id?(vs_id)
-    ref = Memverse.where(:user_id => self.id, :verse_id => vs_id).first
+    ref = Memverse.where(user_id: self.id, verse_id: vs_id).first
     return ref
   end
 
@@ -221,7 +221,7 @@ class User < ActiveRecord::Base
   def work_load
     time_per_verse = 1.0 # minutes
     verses_per_day = 2.0 # initialize with login, setup time etc
-    # self.memverses.active.where(:test_interval => 0).update_all(:test_interval => 1)
+    # self.memverses.active.where(test_interval: 0).update_all(test_interval: 1)
     self.memverses.active.find_each { |mv|
       verses_per_day += (1 / mv.test_interval.to_f)
     }
@@ -234,21 +234,21 @@ class User < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   def cohort_progression
     if completed_sessions >= 3
-      return { :level => '7 - Onwards', :active => is_active? }
+      return { level: '7 - Onwards', active: is_active? }
     elsif completed_sessions == 2
-      return { :level => '6 - Returned Once', :active => is_active? }
+      return { level: '6 - Returned Once', active: is_active? }
     elsif completed_sessions == 1
-      return { :level => '5 - Completed 1 Session', :active => is_active? }
+      return { level: '5 - Completed 1 Session', active: is_active? }
     elsif memverses.sum(:attempts) > 0
-      return { :level => '4 - Started a Session', :active => is_active? }
+      return { level: '4 - Started a Session', active: is_active? }
     elsif has_started?
-      return { :level => '3 - Added Verses', :active => is_active? }
+      return { level: '3 - Added Verses', active: is_active? }
     elsif confirmed_at
-      return { :level => '2 - Activated', :active =>  is_active? }
+      return { level: '2 - Activated', active:  is_active? }
     elsif !confirmed_at
-      return { :level => '1 - Registered', :active => is_active? }
+      return { level: '1 - Registered', active: is_active? }
     else
-      return { :level => 'ERROR', :active => false }
+      return { level: 'ERROR', active: false }
     end
   end
 
@@ -304,9 +304,9 @@ class User < ActiveRecord::Base
         pending = self.memverses.inactive.order("created_at ASC").limit(time_shortfall).select("id").to_a
 
         # We need to handle memory verses that have been set to 'Pending' but were already memorized
-        Memverse.where("id in (?) and test_interval > 30", pending).update_all(:status => "Memorized")
-        Memverse.where("id in (?) and test_interval <= 30", pending).update_all(:status => "Learning")
-        Memverse.where("id in (?) and next_test <= ?", pending, Date.today).update_all(:next_test => Date.tomorrow)
+        Memverse.where("id in (?) and test_interval > 30", pending).update_all(status: "Memorized")
+        Memverse.where("id in (?) and test_interval <= 30", pending).update_all(status: "Learning")
+        Memverse.where("id in (?) and next_test <= ?", pending, Date.today).update_all(next_test: Date.tomorrow)
 
         return Memverse.where("id in (?)", pending)
       end
@@ -432,14 +432,14 @@ class User < ActiveRecord::Base
   # Returns all quests still needed for user's current level
   # ----------------------------------------------------------------------------------------------------------
   def current_uncompleted_quests
-    Quest.where(:level => self.level+1) - self.current_completed_quests
+    Quest.where(level: self.level+1) - self.current_completed_quests
   end
 
   # ----------------------------------------------------------------------------------------------------------
   # Returns all quests completed for user's current level (Quests 'belong' to a user once completed)
   # ----------------------------------------------------------------------------------------------------------
   def current_completed_quests
-    self.quests.where(:level => self.level+1)
+    self.quests.where(level: self.level+1)
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -512,7 +512,7 @@ class User < ActiveRecord::Base
 
     user_badges.each do |user_badge|
       Rails.logger.debug("User already has #{user_badge.color} #{user_badge.name}")
-      Badge.where(:name => user_badge.name).each do |badge_in_series|
+      Badge.where(name: user_badge.name).each do |badge_in_series|
         if badge_in_series <= user_badge
           Rails.logger.debug("Removing #{user_badge.color} #{user_badge.name} from list of badges to strive for.")
           lesser_badges << badge_in_series
@@ -531,7 +531,7 @@ class User < ActiveRecord::Base
   def save_progress_report
 
     # Check whether there is already an entry for today
-    pr = ProgressReport.where(:user_id => self.id, :entry_date => Date.today).first
+    pr = ProgressReport.where(user_id: self.id, entry_date: Date.today).first
 
     if pr.nil?
       pr = ProgressReport.new
@@ -551,9 +551,9 @@ class User < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   def referrals( active = false )
     if active
-      User.active.where(:referred_by => self.id)
+      User.active.where(referred_by: self.id)
     else
-      User.where(:referred_by => self.id)
+      User.where(referred_by: self.id)
     end
   end
 
@@ -593,7 +593,7 @@ class User < ActiveRecord::Base
   # Number of tags a user has applied
   # ----------------------------------------------------------------------------------------------------------
   def num_taggings
-    ActsAsTaggableOn::Tagging.where(:tagger_type => "user", :tagger_id => self.id).length
+    ActsAsTaggableOn::Tagging.where(tagger_type: "user", tagger_id: self.id).length
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -638,11 +638,11 @@ class User < ActiveRecord::Base
     self.gender           = new_params["gender"]
     self.translation      = new_params["translation"]
     self.reminder_freq    = new_params["reminder_freq"]
-    self.country          = Country.where(:printable_name => new_params["country"]).first
-    self.american_state   = AmericanState.where(:name => new_params["american_state"]).first
+    self.country          = Country.where(printable_name: new_params["country"]).first
+    self.american_state   = AmericanState.where(name: new_params["american_state"]).first
     # If church, group doesn't exist in database we add it
-    self.church           = Church.where(:name => new_params["church"]).first || Church.create(:name => new_params["church"])
-    self.group            = Group.where(:name => new_params["group"]).first || Group.create(:name => new_params["group"], :leader_id => self.id)
+    self.church           = Church.where(name: new_params["church"]).first || Church.create(name: new_params["church"])
+    self.group            = Group.where(name: new_params["group"]).first || Group.create(name: new_params["group"], leader_id: self.id)
     self.newsletters      = new_params["newsletters"]
     self.language         = new_params["language"]
     self.time_allocation  = new_params["time_allocation"]
@@ -672,10 +672,10 @@ class User < ActiveRecord::Base
     for i in 1..load_for_today.length # iterate through array of memverse ID's
 
       if (i % load_target == 0) # if divisible by load_target
-        Memverse.where("id in (?)", load_for_today[(offset * load_target)..(i-1)]).update_all(:next_test => Date.today + offset)
+        Memverse.where("id in (?)", load_for_today[(offset * load_target)..(i-1)]).update_all(next_test: Date.today + offset)
         offset = offset + 1
       elsif ((i-1) % load_target == 0) && ((i-1) + load_target > load_for_today.length) # if just passed last i divisible by load_target
-        Memverse.where("id in (?)", load_for_today[(offset * load_target)..(load_for_today.length-1)]).update_all(:next_test => Date.today + offset)
+        Memverse.where("id in (?)", load_for_today[(offset * load_target)..(load_for_today.length-1)]).update_all(next_test: Date.today + offset)
         offset = offset + 1
       else
         # do nothing
@@ -705,26 +705,26 @@ class User < ActiveRecord::Base
     self.passages.delete_all
 
     # Find all starting (or solo verses) and create a passage
-    Memverse.where(:user_id => self.id, :first_verse => nil).find_each { |mv|
+    Memverse.where(user_id: self.id, first_verse: nil).find_each { |mv|
       pp = Passage.create!(
 
-        :user_id        => self.id,
+        user_id: self.id,
 
-        :reference      => mv.verse.ref,
-        :translation    => mv.verse.translation,
+        reference: mv.verse.ref,
+        translation: mv.verse.translation,
 
-        :book           => mv.verse.book,
-        :chapter        => mv.verse.chapter,
-        :first_verse    => mv.verse.versenum,
-        :last_verse     => mv.verse.versenum,
+        book: mv.verse.book,
+        chapter: mv.verse.chapter,
+        first_verse: mv.verse.versenum,
+        last_verse: mv.verse.versenum,
 
-        :length         => 1,
+        length: 1,
 
-        :efactor        => mv.efactor,
-        :test_interval  => mv.test_interval,
-        :rep_n          => 1,
-        :next_test      => mv.next_test,
-        :last_tested    => mv.last_tested )
+        efactor: mv.efactor,
+        test_interval: mv.test_interval,
+        rep_n: 1,
+        next_test: mv.next_test,
+        last_tested: mv.last_tested )
 
       if pp
         mv.passage_id = pp.id
@@ -735,7 +735,7 @@ class User < ActiveRecord::Base
     }
 
     # Find all other verses and add to existing passage
-    Memverse.where(:user_id => self.id).where(Memverse.arel_table[:first_verse].not_eq(nil)).find_each { |mv|
+    Memverse.where(user_id: self.id).where(Memverse.arel_table[:first_verse].not_eq(nil)).find_each { |mv|
       mv.add_to_passage
     }
 
@@ -770,7 +770,7 @@ class User < ActiveRecord::Base
   # Returns first verse that is due today
   # ----------------------------------------------------------------------------------------------------------
   def first_verse_today
-    mv = Memverse.where(:user_id => self.id).active.order("next_test ASC").first()
+    mv = Memverse.where(user_id: self.id).active.order("next_test ASC").first()
 
     if mv && mv.due?
       return mv.first_verse_due_in_sequence
@@ -790,10 +790,10 @@ class User < ActiveRecord::Base
   	upcoming = Array.new
 
   	if strict and mode == 'test'
-  		# upcoming = Memverse.find(:all, :conditions => ["user_id = ? and next_test <= ?", self, Date.today], :order => "next_test ASC" )
+  		# upcoming = Memverse.find(:all, conditions: ["user_id = ? and next_test <= ?", self, Date.today], order: "next_test ASC" )
   		upcoming = Memverse.active.where("user_id = ? and next_test <= ?", self, Date.today).order("next_test ASC")
   	else
-	    # mvs = Memverse.find(:all, :conditions => ["user_id = ? and next_test <= ?", self, Date.today], :order => "next_test ASC", :limit => limit)
+	    # mvs = Memverse.find(:all, conditions: ["user_id = ? and next_test <= ?", self, Date.today], order: "next_test ASC", limit: limit)
 	    mvs = Memverse.active.where("user_id = ? and next_test <= ?", self, Date.today).order("next_test ASC").limit(limit)
 	    current_mv = Memverse.find(mv_id) unless mv_id.nil?
 
@@ -900,7 +900,7 @@ class User < ActiveRecord::Base
       last_reminded = self.last_activity_date
     end
 
-    mv = Memverse.find(:first, :conditions => ["user_id = ?", self.id], :order => "next_test ASC")
+    mv = Memverse.find(:first, conditions: ["user_id = ?", self.id], order: "next_test ASC")
 
     if mv.nil? or self.reminder_freq == "Never"
       return false # users who don't have any memory verses need more than a reminder!
@@ -917,7 +917,7 @@ class User < ActiveRecord::Base
   def delete_account
 
     # Remove user's memory verses
-    user_mv = Memverse.find(:all, :conditions => ["user_id = ?", self.id])
+    user_mv = Memverse.find(:all, conditions: ["user_id = ?", self.id])
     Rails.logger.info("===== Removing user #{self.login} and his/her #{user_mv.length} memory verses =========")
     user_mv.each { |mv|
       logger.info("|  -- Deleting memory verse #{mv.id}")
@@ -935,7 +935,7 @@ class User < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   def self.delete_users_who_never_started
 
-    find(:all, :conditions => [ "created_at < ? and learning = ? and memorized = ?", 3.months.ago, 0, 0 ]).each { |u|
+    find(:all, conditions: [ "created_at < ? and learning = ? and memorized = ?", 3.months.ago, 0, 0 ]).each { |u|
       # u.destroy
       Rails.logger.info("We should remove user #{u.login} - they haven't got started in over three months")
     }
@@ -965,7 +965,7 @@ class User < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   def most_difficult_vs
 
-    mv = Memverse.find(:first, :conditions => ["user_id = ?", self.id], :order => "efactor ASC")
+    mv = Memverse.find(:first, conditions: ["user_id = ?", self.id], order: "efactor ASC")
     if mv.nil?
       return nil # users who don't have any memory verses
     else
@@ -980,7 +980,7 @@ class User < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   def random_verse
 
-    mv = Memverse.find(:all, :conditions => ["user_id = ?", self.id], :order => "efactor ASC", :limit => 10).sample
+    mv = Memverse.find(:all, conditions: ["user_id = ?", self.id], order: "efactor ASC", limit: 10).sample
     if mv.nil?
       return nil # users who don't have any memory verses
     else
@@ -996,7 +996,7 @@ class User < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   def next_verse_due
 
-    mv = Memverse.find(:first, :conditions => ["user_id = ? AND status != ?", self.id, "Pending"], :order => "next_test ASC")
+    mv = Memverse.find(:first, conditions: ["user_id = ? AND status != ?", self.id, "Pending"], order: "next_test ASC")
     if mv.nil?
       return nil # users who don't have any memory verses
     else
@@ -1098,7 +1098,7 @@ class User < ActiveRecord::Base
   # Number of pending verses for user
   # ----------------------------------------------------------------------------------------------------------
   def pending
-    Memverse.where(:user_id => self.id, :status => "Pending")
+    Memverse.where(user_id: self.id, status: "Pending")
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -1126,7 +1126,7 @@ class User < ActiveRecord::Base
 
     report = Array.new
 
-    Memverse.where(:user_id => self.id).find_each { |mv|
+    Memverse.where(user_id: self.id).find_each { |mv|
 
       record            = Hash.new
       record['mvID']    = mv.id

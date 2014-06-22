@@ -6,7 +6,7 @@ class Api::V1::MemversesController < Api::V1::ApiController
 
   # The list of verses is paginated for 5 minutes, the verse itself is cached
   # until it's modified (using Efficient Validation)
-  caches :index, :show, :caches_for => 5.minutes
+  caches :index, :show, caches_for: 5.minutes
 
   def index
     expose current_resource_owner.memverses.page( params[:page] )
@@ -40,7 +40,7 @@ class Api::V1::MemversesController < Api::V1::ApiController
         else
           # Save verse as a memory verse for user
           begin
-            mv = Memverse.create( :user_id => current_resource_owner.id, :verse_id => vs.id )
+            mv = Memverse.create( user_id: current_resource_owner.id, verse_id: vs.id )
           rescue Exception => e
             Rails.logger.error("=====> [Memverse save error (API)] Exception while saving #{vs.ref} for user #{current_resource_owner.id}: #{e}")
           else

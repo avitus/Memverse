@@ -1,16 +1,16 @@
 class QuestsController < ApplicationController
   
   before_filter :authenticate_user!
-  before_filter :authorize, :except => [:index, :show, :badge_quests_check ]
+  before_filter :authorize, except: [:index, :show, :badge_quests_check ]
   
   # GET /quests
   # GET /quests.xml
   def index
-    @quests = Quest.all(:order => 'level')
+    @quests = Quest.all(order: 'level')
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @quests }
+      format.xml  { render xml: @quests }
     end
   end
 
@@ -21,7 +21,7 @@ class QuestsController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @quest }
+      format.xml  { render xml: @quest }
     end
   end
 
@@ -32,7 +32,7 @@ class QuestsController < ApplicationController
 
     respond_to do |format|
       format.html # new.html.erb
-      format.xml  { render :xml => @quest }
+      format.xml  { render xml: @quest }
     end
   end
 
@@ -50,10 +50,10 @@ class QuestsController < ApplicationController
       if @quest.save
         flash[:notice] = 'Quest was successfully created.'
         format.html { redirect_to(@quest) }
-        format.xml  { render :xml => @quest, :status => :created, :location => @quest }
+        format.xml  { render xml: @quest, status: :created, location: @quest }
       else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @quest.errors, :status => :unprocessable_entity }
+        format.html { render action: "new" }
+        format.xml  { render xml: @quest.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -69,8 +69,8 @@ class QuestsController < ApplicationController
         format.html { redirect_to(@quest) }
         format.xml  { head :ok }
       else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @quest.errors, :status => :unprocessable_entity }
+        format.html { render action: "edit" }
+        format.xml  { render xml: @quest.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -92,7 +92,7 @@ class QuestsController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------     
   def current_user_quests
     @current_user_quests = current_user.quests    
-    render :partial=>'current_user_quests', :layout=>false
+    render partial:'current_user_quests', layout:false
   end
 
   # ----------------------------------------------------------------------------------------------------------   
@@ -102,7 +102,7 @@ class QuestsController < ApplicationController
     
     @completed_badge_quests = Array.new
     
-    badge_quests = Quest.where(:level => nil)  # Get all quests not associated with levels
+    badge_quests = Quest.where(level: nil)  # Get all quests not associated with levels
     badge_quests.each do |q|
 
       if q.complete?(current_user) && !current_user.quests.include?(q)
@@ -114,7 +114,7 @@ class QuestsController < ApplicationController
     
     respond_to do |format|
       format.html
-      format.json  { render :json => @completed_badge_quests }
+      format.json  { render json: @completed_badge_quests }
     end    
     
   end

@@ -1,5 +1,5 @@
 Given /^a group called "([^"]*)"$/ do |group_name|
-  Group.new(:name => group_name).save!
+  Group.new(name: group_name).save!
 end
 
 Given /^the normal user belongs to the group called "([^"]*)"$/ do |group_name|

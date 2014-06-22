@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
 
   helper :all # include all helpers, all the time
   protect_from_forgery
-  rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
+  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   before_filter :set_locale, :prepare_for_mobile
 
@@ -75,7 +75,7 @@ class ApplicationController < ActionController::Base
     # end
     #--------------------------------------------------------------------------------
 
-    return I18n.t book.to_sym, :scope => [:input, :book]
+    return I18n.t book.to_sym, scope: [:input, :book]
 
   end
 
@@ -220,7 +220,7 @@ class ApplicationController < ActionController::Base
   def verse_in_db(book, chapter, versenum, translation)
 
     ref =  Verse.find( :first,
-                       :conditions => ["book = ? and chapter = ? and versenum = ? and translation = ?",
+                       conditions: ["book = ? and chapter = ? and versenum = ? and translation = ?",
                                         full_book_name(book), chapter, versenum, translation])
 
     return ref
@@ -305,7 +305,7 @@ class ApplicationController < ActionController::Base
     }
 
     # Look for other translations
-    # mem_vs = Memverse.find(:all, :conditions => ["user_id = ?", current_user.id])
+    # mem_vs = Memverse.find(:all, conditions: ["user_id = ?", current_user.id])
 
     return false
   end
@@ -347,6 +347,6 @@ class ApplicationController < ActionController::Base
 
   # Automatically respond with 404 for ActiveRecord::RecordNotFound
   def record_not_found
-    render :file => File.join(Rails.root, 'public', '404.html'), :status => 404
+    render file: File.join(Rails.root, 'public', '404.html'), status: 404
   end
 end

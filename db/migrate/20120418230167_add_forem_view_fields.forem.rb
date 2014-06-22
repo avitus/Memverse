@@ -3,8 +3,8 @@ class AddForemViewFields < ActiveRecord::Migration
   def up
     add_column :forem_views, :current_viewed_at, :datetime
     add_column :forem_views, :past_viewed_at, :datetime
-    add_column :forem_topics, :views_count, :integer, :default=>0
-    add_column :forem_forums, :views_count, :integer, :default=>0
+    add_column :forem_topics, :views_count, :integer, default:0
+    add_column :forem_forums, :views_count, :integer, default:0
 
     Forem::Topic.find_each do |topic|
       topic.update_column(:views_count, topic.views.sum(:count))
@@ -18,7 +18,7 @@ class AddForemViewFields < ActiveRecord::Migration
   def down
     remove_column :forem_views, :current_viewed_at, :datetime
     remove_column :forem_views, :past_viewed_at, :datetime
-    remove_column :forem_topics, :views_count, :integer, :default=>0
-    remove_column :forem_forums, :views_count, :integer, :default=>0
+    remove_column :forem_topics, :views_count, :integer, default:0
+    remove_column :forem_forums, :views_count, :integer, default:0
   end
 end
