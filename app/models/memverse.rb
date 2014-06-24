@@ -175,7 +175,7 @@ class Memverse < ActiveRecord::Base
   # Delete accounts of users that never added any verses TODO: Is this method ever used?
   # ----------------------------------------------------------------------------------------------------------
   def self.delete_unstarted_memory_verses
-    find(:all, conditions: [ "created_at < ? and attempts = ?", 6.months.ago, 0 ]).each { |mv|
+    where("created_at < ? and attempts = ?", 6.months.ago, 0).each { |mv|
       # mv.destroy
       logger.info("Removing memory verse #{mv.verse.ref} belong to #{mv.user.login}")
     }
@@ -311,11 +311,11 @@ class Memverse < ActiveRecord::Base
   # TODO: what should we return if this is the first verse?
   def linked_to_first_verse?
     if self.solo_verse?
-      return false
+      false
     elsif self.first_verse
       Memverse.find(self.first_verse).verse.versenum.to_i <= 1  # Handles Psalm x:0 case where title is in verse 0
     else
-      return false
+      false
     end
   end
 
@@ -323,7 +323,7 @@ class Memverse < ActiveRecord::Base
   # Is a verse due for memorization?
   # ----------------------------------------------------------------------------------------------------------
   def due?
-    return self.next_test <= Date.today
+    self.next_test <= Date.today
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -332,15 +332,15 @@ class Memverse < ActiveRecord::Base
   def prior_in_passage_to?(mv)
 
     if mv && self.passage.id == mv.passage.id  # memory verses are in same passage
-      return self.verse.versenum <= mv.verse.versenum
+      self.verse.versenum <= mv.verse.versenum
     else
-      return false
+      false
     end
 
   end
 
   # ----------------------------------------------------------------------------------------------------------
-  # Return first  verse in a sequence
+  # Return first verse in a sequence
   # ----------------------------------------------------------------------------------------------------------
   def first_verse_in_sequence
     if self.first_verse
@@ -349,7 +349,7 @@ class Memverse < ActiveRecord::Base
       initial_mv = self
     end
 
-    return initial_mv
+    initial_mv
 
   end
 
@@ -448,7 +448,7 @@ class Memverse < ActiveRecord::Base
   # Output: True/False depending on whether verse is/isn't locked
   # ----------------------------------------------------------------------------------------------------------
   def locked?
-    return self.verse.locked?
+    self.verse.locked?
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -457,7 +457,7 @@ class Memverse < ActiveRecord::Base
   # Output: True/False depending on whether verse is/isn't locked
   # ----------------------------------------------------------------------------------------------------------
   def verified?
-    return self.verse.verified?
+    self.verse.verified?
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -476,7 +476,7 @@ class Memverse < ActiveRecord::Base
   # Returns: TRUE/FALSE depending on whether wants Mnemonic support, verse is memorized etc.
   # ----------------------------------------------------------------------------------------------------------
   def needs_mnemonic?
-    return case self.user.mnemonic_use
+    case self.user.mnemonic_use
       when "Never"  then false
       when "Always" then true
       when "Learning" then self.test_interval < 7
@@ -528,15 +528,12 @@ class Memverse < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   def another_due_verse
 
-    # mv = Memverse.find( :first, conditions: ["user_id = ? and id != ?", self.user.id, self.id],
-                        # order: "next_test ASC")
-
     mv = Memverse.where("user_id = ? and id != ?", self.user.id, self.id).active.order("next_test ASC").first
 
     if mv && mv.due?
-      return mv.first_verse_due_in_sequence
+      mv.first_verse_due_in_sequence
     else
-      return nil
+      nil
     end
 
   end

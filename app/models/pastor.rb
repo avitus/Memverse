@@ -1,5 +1,5 @@
 class Pastor < ActiveRecord::Base
-  
-  has_many  :sermons  
-  
+
+  has_many  :sermons
+
 end
