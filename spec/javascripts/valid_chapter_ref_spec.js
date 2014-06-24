@@ -1,4 +1,4 @@
-describe("validVerseRef", function() {  
+describe("validVerseRef", function() {
   it("accepts chapters", function() {
     expect(validChapterRef("Genesis 1")).toEqual( true );
   });
