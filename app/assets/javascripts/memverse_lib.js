@@ -221,7 +221,7 @@ function cleanseVerseText( versetext ) {
  * Remove special characters to compare user input to correct text
  ******************************************************************************/
 scrub_text = function(text) {
-    return text.toLowerCase().replace(/[^0-9a-záâãàçéêíóôõúüñαβξδεφγηισκλμνοπθρστυϝωχψζÞþÐð]+/g, "");
+    return text.toLowerCase().replace(/[^0-9a-z\u00BF-\u1FFF\u2C00-\uD7FF]+/g, "");
 }
 
 /******************************************************************************
