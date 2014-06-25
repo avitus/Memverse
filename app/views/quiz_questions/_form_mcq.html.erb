@@ -5,30 +5,30 @@
 
         <p>
             <%= f.label         :mc_question, "Question text" %><br />
-            <%= f.text_area     :mc_question, :size => "44x7" %>
+            <%= f.text_area     :mc_question, size: "44x7" %>
         </p>
 
         <p>
             <%= f.label         :mc_option_a, "Answer A" %><br />
-            <%= f.text_field    :mc_option_a, :size => 44 %>
+            <%= f.text_field    :mc_option_a, size: 44, autocomplete: "off" %>
             <%= f.radio_button  :mc_answer, "A" %>
         </p>
 
         <p>
             <%= f.label         :mc_option_b, "Answer B" %><br />
-            <%= f.text_field    :mc_option_b, :size => 44 %>
+            <%= f.text_field    :mc_option_b, size: 44, autocomplete: "off" %>
             <%= f.radio_button  :mc_answer, "B" %>
         </p>
 
         <p>
             <%= f.label         :mc_option_c, "Answer C" %><br />
-            <%= f.text_field    :mc_option_c, :size => 44 %>
+            <%= f.text_field    :mc_option_c, size: 44, autocomplete: "off" %>
             <%= f.radio_button  :mc_answer, "C" %>
         </p>
 
         <p>
             <%= f.label         :mc_option_d, "Answer D" %><br />
-            <%= f.text_field    :mc_option_d, :size => 44 %>
+            <%= f.text_field    :mc_option_d, size: 44, autocomplete: "off" %>
             <%= f.radio_button  :mc_answer, "D" %>
         </p>
 
