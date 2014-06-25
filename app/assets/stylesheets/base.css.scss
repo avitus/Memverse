@@ -139,26 +139,26 @@ h1, h2, h3, h4, h5, h6 {
 
 .page-content{
   h2 {
-    padding:0;
-    margin:0;
-    min-height:30px;
-    font-size:17px;
-    line-height:30px;
-    color:#7ca529;
+	padding:0;
+	margin:0;
+	min-height:30px;
+	font-size:17px;
+	line-height:30px;
+	color:#7ca529;
   }
 
   h4 {
-    padding:0;
-    margin:0;
-    font-size:13px;
-    line-height:16px;
+	padding:0;
+	margin:0;
+	font-size:13px;
+	line-height:16px;
   }
 
   h5 {
-    padding:0;
-    margin:0 0 1em 0;
-    font-size: 11px;
-    line-height: 16px;
+	padding:0;
+	margin:0 0 1em 0;
+	font-size: 11px;
+	line-height: 16px;
   }
 
 }
@@ -379,15 +379,15 @@ input.secondary {
 	border:1px solid;
 	font-size: 100%;
 	height: 1.4em;
-    background-color:#f2f1f1;
+	background-color:#f2f1f1;
 	border-color: #9c3;
 	cursor:pointer;
 }
 
 input.large {
-    height:1.5em;
-    width:15em;
-    font-size:1.5em;
+	height:1.5em;
+	width:15em;
+	font-size:1.5em;
 }
 
 /*========== Top Menu ==========*/
@@ -506,71 +506,71 @@ input.large {
 	height:46px;
 
   .scrollable {
-    /* required settings */
-    position:absolute;
-    overflow:hidden;
-    left:35px;
-    width:650px;
-    height:90px;
+	/* required settings */
+	position:absolute;
+	overflow:hidden;
+	left:35px;
+	width:650px;
+	height:90px;
   }
 
   .scrollable .items {
-    /* this cannot be too large */
-    width:20000em;
-    position:absolute;
+	/* this cannot be too large */
+	width:20000em;
+	position:absolute;
   }
 
   .items div {
-    float:left;
-    width:650px;
+	float:left;
+	width:650px;
   }
 
   .strip-left
   {
-    width:171px;
-    height:46px;
-    float:left;
-    font:15px/46px "Times New Roman",Times,serif;
-    color:#FFF;
-    padding-left:50px;
+	width:171px;
+	height:46px;
+	float:left;
+	font:15px/46px "Times New Roman",Times,serif;
+	color:#FFF;
+	padding-left:50px;
   }
 
   .strip-right
   {
-    width:719px;
-    height:46px;
-    float:right;
-    text-align:center;
-    line-height:46px;
-    font-style:italic;
-    color:#666;
-    position:relative;
+	width:719px;
+	height:46px;
+	float:right;
+	text-align:center;
+	line-height:46px;
+	font-style:italic;
+	color:#666;
+	position:relative;
   }
 
   .strip-right span
   {
-    color:#000;
-    font-weight:bold;
+	color:#000;
+	font-weight:bold;
   }
 
   .arrow-left
   {
-    width:15px;
-    height:26px;
-    position:absolute;
-    left:20px;
-    top:8px;
-    cursor:pointer;
+	width:15px;
+	height:26px;
+	position:absolute;
+	left:20px;
+	top:8px;
+	cursor:pointer;
   }
 
   .arrow-right
   {
-    width:15px;
-    height:26px;
-    position:absolute;
-    right:20px;
-    top:8px;
-    cursor:pointer;
+	width:15px;
+	height:26px;
+	position:absolute;
+	right:20px;
+	top:8px;
+	cursor:pointer;
   }
 }
 
@@ -1190,7 +1190,6 @@ div#flash-error {
 .two-box
 {
 	width:1080px;
-	height:105px;
 	font-size:12px;
 	color:#666;
 }
@@ -1217,7 +1216,7 @@ div#flash-error {
 .votm
 {
 	width:60%;
-	height:91px;
+	min-height:91px;
 	float:left;
 	padding:14px 14px 0;
 	background:#FFF;
@@ -1230,7 +1229,7 @@ div#flash-error {
 .progress-info
 {
 	width:33%;
-	height:91px;
+	min-height:91px;
 	float:right;
 	padding:14px 14px 0;
 	background:#FFF;
@@ -1244,6 +1243,7 @@ div#flash-error {
 {
 	width:90%;
 	float:right;
+	padding-bottom:14px;
 }
 
 .yellow-icon
@@ -1408,8 +1408,8 @@ div#flash-error {
 
 .tab-content h3
 {
-    margin:0 0 15px;
-    padding:0 0 10px;
+	margin:0 0 15px;
+	padding:0 0 10px;
 	font-size:18px;
 	color:#6b9620;
 	font-weight:bold;
@@ -1673,27 +1673,27 @@ div#flash-error {
 }
 
 .ui-tooltip {
-    position: absolute; // ALV: needed to stop tooltip jumping around
-    background:image_url('tool-tip-box.png') no-repeat left top;  height:163px;
-    width:309px;
-    height:28px;
-    line-height:23px;
-    padding-left:10px;
-    font-size:11px;
-    color:#693;
-    border: none;
+	position: absolute; // ALV: needed to stop tooltip jumping around
+	background:image_url('tool-tip-box.png') no-repeat left top;  height:163px;
+	width:309px;
+	height:28px;
+	line-height:23px;
+	padding-left:10px;
+	font-size:11px;
+	color:#693;
+	border: none;
 }
 
 /* a .label element inside tooltip */
 .ui-tooltip .label {
-    color:yellow;
-    width:35px;
+	color:yellow;
+	width:35px;
 }
 
 .ui-tooltip a {
-    color:#ad4;
-    font-size:11px;
-    font-weight:bold;
+	color:#ad4;
+	font-size:11px;
+	font-weight:bold;
 }
 /* END - tooltip styling */
 
@@ -1881,20 +1881,20 @@ div#flash-error {
 /*========== Bible Search ==========*/
 
 #searchParams {
-    width:500px;
-    height:27px;
-    padding-right:25px; /* puts padding on the right side, so text doesn't go under the button. NOTE:TOTAL WIDTH IS 240 + 25 = 265px */
-    float:left; /* some browsers display correctly without this, but better to leave it for cross browser compatibility */
-    border:1px solid #577a1a; /* sets new color for border of the field */
+	width:500px;
+	height:27px;
+	padding-right:25px; /* puts padding on the right side, so text doesn't go under the button. NOTE:TOTAL WIDTH IS 240 + 25 = 265px */
+	float:left; /* some browsers display correctly without this, but better to leave it for cross browser compatibility */
+	border:1px solid #577a1a; /* sets new color for border of the field */
 }
 #searchSubmit{
-    background:transparent image_url('search_button.png') no-repeat;
-    width:20px;
-    height:20px;
-    border:0;
-    cursor:pointer;
-    margin-left:-24px; /* image is 20x20px, so leave little extra */
-    margin-top:4px; /* leave some space from the top, so button looks in the middle */
+	background:transparent image_url('search_button.png') no-repeat;
+	width:20px;
+	height:20px;
+	border:0;
+	cursor:pointer;
+	margin-left:-24px; /* image is 20x20px, so leave little extra */
+	margin-top:4px; /* leave some space from the top, so button looks in the middle */
 }
 
 
@@ -1979,30 +1979,30 @@ table.memverse-standard {
 }
 
 table.memverse-standard thead th {
-    padding:10px;
-    color:#fff;
-    border:1px solid #93CE37;
-    border-bottom:3px solid #9ED929;
-    background-color:#9DD929;
-    background: -webkit-gradient(
-        linear,
-        left bottom,
-        left top,
-        color-stop(0.02, rgb(108,144,36)),
-        color-stop(0.51, rgb(129,172,43)),
-        color-stop(0.87, rgb(153,204,51))
-        );
-    background: -moz-linear-gradient(
-        center bottom,
-        rgb(108,144,36) 2%,
-        rgb(129,172,43) 51%,
-        rgb(153,204,51) 87%
-        );
+	padding:10px;
+	color:#fff;
+	border:1px solid #93CE37;
+	border-bottom:3px solid #9ED929;
+	background-color:#9DD929;
+	background: -webkit-gradient(
+		linear,
+		left bottom,
+		left top,
+		color-stop(0.02, rgb(108,144,36)),
+		color-stop(0.51, rgb(129,172,43)),
+		color-stop(0.87, rgb(153,204,51))
+		);
+	background: -moz-linear-gradient(
+		center bottom,
+		rgb(108,144,36) 2%,
+		rgb(129,172,43) 51%,
+		rgb(153,204,51) 87%
+		);
 }
 
 table.memverse-standard thead th:empty{
-    background:transparent;
-    border:0;
+	background:transparent;
+	border:0;
 }
 
 table.memverse-standard thead th a
@@ -2018,25 +2018,25 @@ table.memverse-standard td {
 }
 
 table.memverse-standard tbody th {
-    padding:15px;
-    color:#fff;
-    border:1px solid #93CE37;
-    border-right:3px solid #9ED929;
-    background-color:#9DD929;
-    background: -webkit-gradient(
-        linear,
-        left bottom,
-        left top,
-        color-stop(0.02, rgb(108,144,36)),
-        color-stop(0.51, rgb(129,172,43)),
-        color-stop(0.87, rgb(153,204,51))
-        );
-    background: -moz-linear-gradient(
-        center right,
-        rgb(108,144,36) 2%,
-        rgb(129,172,43) 51%,
-        rgb(153,204,51) 87%
-        );
+	padding:15px;
+	color:#fff;
+	border:1px solid #93CE37;
+	border-right:3px solid #9ED929;
+	background-color:#9DD929;
+	background: -webkit-gradient(
+		linear,
+		left bottom,
+		left top,
+		color-stop(0.02, rgb(108,144,36)),
+		color-stop(0.51, rgb(129,172,43)),
+		color-stop(0.87, rgb(153,204,51))
+		);
+	background: -moz-linear-gradient(
+		center right,
+		rgb(108,144,36) 2%,
+		rgb(129,172,43) 51%,
+		rgb(153,204,51) 87%
+		);
 }
 
 table.memverse-standard td a
@@ -2250,12 +2250,12 @@ table.user-list {
 	left:32em;
 	text-align:left;
 	width:250px;
-    background-color:#1F2229;
-    outline:1px solid #669;
-    border:2px solid #fff;
-    padding:10px 15px;
-    color:#fff;
-    font-size:100%;
+	background-color:#1F2229;
+	outline:1px solid #669;
+	border:2px solid #fff;
+	padding:10px 15px;
+	color:#fff;
+	font-size:100%;
 }
 
 /* === User stats === */
@@ -2291,7 +2291,7 @@ div#currentVerse div#matchbox {
 
 div#currentVerse #matchbox p {
 	font-size:130%;
-   	text-align:center;
+	text-align:center;
 	color:#9c3;  /* light green */
 	background:#404040; /* dark gray */
 	padding:0.2em 1em;
@@ -2468,14 +2468,14 @@ div#errorExplanation ul li {
 }
 
 .focusField{
-    border:solid 2px #3c5313;
-    background:#EFF5FF;
-    color:#000;
+	border:solid 2px #3c5313;
+	background:#EFF5FF;
+	color:#000;
 }
 .idleField{
-    background:#EEE;
-    color:#6F6F6F;
-    border:solid 2px #DFDFDF;
+	background:#EEE;
+	color:#6F6F6F;
+	border:solid 2px #DFDFDF;
 }
 
 /* === Referrals Page === */
