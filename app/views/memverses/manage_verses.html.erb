@@ -39,7 +39,7 @@
 					<td align="center"><%= number_with_precision( mv.efactor, :precision => 1 ) %></td>
 					<td align="center" class="mv-status"><%= link_to mv.status, toggle_mv_status_path(mv.id, :format => 'json'), :remote => true %></td>
 					<td align="center"><%= mv.last_tested		%></td>
-					<td align="center"><%= mv.next_test			%></td>
+					<td align="center"><%= mv.status == "Pending" ? "N/A" : mv.next_test %></td>
 					<td align="center"><%= mv.test_interval		%></td>
 					<td align="center"><%= mv.attempts			%></td>
 					<td align="center"><%= mv.ref_interval		%></td>
