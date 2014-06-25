@@ -83,6 +83,30 @@
 
 </div> <!-- End: white-box-with-margins -->
 
+<!-- Handling of tooltips -->
+<script type="text/javascript">
+
+	$(function() {
+		$( document ).tooltip({
+			items: ".submit, #ff-button, .info-button",
+			content: function() {
+				var element = $( this );
+				return element.next(".tooltip").html();
+			},
+			position: {
+				my: "center-20% bottom+15%",
+				at: "center top",
+				using: function( position, feedback ) {
+					$( this ).css( position );
+					$( "<div>" )
+					.appendTo( this );
+				}
+			}
+		});
+	});
+
+</script>
+
 <!-- Script for updating current verse, clearing input etc -->
 <script language="JavaScript" type="text/javascript">
 
