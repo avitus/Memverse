@@ -55,7 +55,7 @@ build:
 
         - script:
             name: jasmine tests
-            code: ./node_modules/karma/bin/karma start spec/karma/config/unit.js
+            code: bundle exec rake spec:jasmine RAILS_ENV=test
 
         - script:
             name: Enable virtual display
