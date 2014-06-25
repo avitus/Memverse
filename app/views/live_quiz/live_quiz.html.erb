@@ -52,7 +52,7 @@
 
 		<h3>
 			Chat (<span id="chat_status"><%= @chat_status %></span>)
-			<%= (link_to "Toggle Status", {:controller => "chat", :action => "toggle_channel", :channel => "quiz-#{@quiz.id}"}, :remote => true) if current_user == @quiz_master %>
+			<%= (link_to "Toggle Status", {:controller => "chat", :action => "toggle_channel", :channel => "quiz-#{@quiz.id}"}, :remote => true) if current_user.admin? %>
 		</h3>
 
 		<div id="chat-stream-narrow">
@@ -121,8 +121,8 @@ $(document).ready(function() {
 	// Show window with quizzers
 	$("#quizzers-stats").click( quizRoom.toggleQuizzersWindow );
 
-	// Allow quiz master to unban users
-	<% if current_user == @quiz_master %>
+	// Allow admins to ban/unban users
+	<% if current_user.admin? %>
 
 		$("#chat-stream-narrow").delegate("li.chat-username", "hover", function(){
 			$(".ban").remove(); // remove any previous ban links

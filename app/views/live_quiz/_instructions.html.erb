@@ -12,10 +12,10 @@
             <p>The <strong>valid versions</strong> are ESV (2011), NASB, NKJ, and KJV. Please go to your profile by <a href="/update_profile">clicking here</a>, update your version to one of these, and then come back for the quiz. Thanks!</p>
         </div>
 
-    <% elsif @quiz.hours_till_start > 1 %>
+    <% elsif @quiz.hours_till_start > 1 && @quiz.id == 1 %>
 
         <h3>Quiz Schedule</h3>
-        <p>The quiz currently runs on the following weekly schedule:</p>
+        <p>The Bible knowledge quiz currently runs on the following weekly schedule:</p>
         <ul>
             <li>Wednesdays at 9am (Pacific Time)</li>
             <li>Saturdays at 3pm (Pacific Time)</li>
