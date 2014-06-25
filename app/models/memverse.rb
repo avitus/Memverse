@@ -253,6 +253,28 @@ class Memverse < ActiveRecord::Base
   end
 
   # ----------------------------------------------------------------------------------------------------------
+  # User sort options, used in MemversesController#manage_verses view
+  # * nil                              : sort not supported
+  # * ["sort_order", "title for link"] : sort is supported
+  # ----------------------------------------------------------------------------------------------------------
+  def self.sort_options
+    {
+      "Verse"        => [nil, "Click to sort by verse reference"],
+      "Version"      => nil,
+      "eFactor"      => ["efactor", "Click to sort by eFactor"],
+      "Status"       => ["status", "Click to sort by status"],
+      "Last Tested"  => ["last_tested", "Click to sort by last test date"],
+      "Next Test"    => ["next_test", "Click to sort by next test date"],
+      "Interval"     => ["test_interval", "Click to sort by test interval"],
+      "Attempts"     => ["attempts", "Click to sort by attempts"],
+      "Ref Int"      => ["ref_interval", "Click to sort by reference test interval"],
+      "Ref Test"     => ["next_ref_test", "Click to sort by next reference test date"],
+      "Tags"         => nil,
+      "Verse Status" => nil
+    }
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
   # Return entire chapter as array
   # ----------------------------------------------------------------------------------------------------------
   def chapter
