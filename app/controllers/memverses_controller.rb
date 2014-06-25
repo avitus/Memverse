@@ -695,11 +695,16 @@ class MemversesController < ApplicationController
     # TODO: select only a) verse reference and b) verse translation to speed up this page and use less memory
     # TODO: include tags if possible
 
-    if params[:sort_order]
-      @my_verses = current_user.memverses.includes(:verse, :tags).order(params[:sort_order])
+    @my_verses = current_user.memverses.includes(:verse, :tags)
+
+    if params[:sort_order] == 'next_test'
+      # Order: Learning, Memorized, Pending
+      @my_verses = @my_verses.order('status, next_test')
+    elsif params[:sort_order]
+      @my_verses = @my_verses.order(params[:sort_order])
     else
       # default to canonical sort
-      @my_verses = current_user.memverses.includes(:verse, :tags).order('verses.book_index, verses.chapter, verses.versenum')
+      @my_verses = @my_verses.order('verses.book_index, verses.chapter, verses.versenum')
     end
 
     respond_to do |format|

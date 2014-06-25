@@ -214,7 +214,7 @@ function checkAllFields(ref) {
 }
 
 mnemonic = function(text) {
-	return text.replace(/([\wáâãàçéêíóôõúüñαβξδεφγηισκλμνοπθρστυϝωχψζ])([\wáâãàçéêíóôõúüñαβξδεφγηισκλμνοπθρστυϝωχψζ]|[\-'’][\wáâãàçéêíóôõúüñαβξδεφγηισκλμνοπθρστυϝωχψζ])*/g,"$1");
+	return text.replace(/([\u00BF-\u1FFF\u2C00-\uD7FF\w])([\u00BF-\u1FFF\u2C00-\uD7FF\w]|[\-'’][\u00BF-\u1FFF\u2C00-\uD7FF\w])*/g,"$1");
 };
 
 // Array Remove - By John Resig (MIT Licensed)

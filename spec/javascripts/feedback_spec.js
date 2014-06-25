@@ -65,6 +65,17 @@ describe("Feedback", function() {
 		})
 	});
 
+	it("should support all sorts of languages", function() {
+		expect(verseFeedback(
+			"구결口訣 향찰鄕札 이두吏讀",	// correct text
+			"구결口訣 향찰鄕札 이讀",		// user guess
+			true						// feedback enabled
+		)).toEqual({
+			feedtext : '구결口訣 향찰鄕札 ... ',
+			correct  : false
+		})
+	});
+
 	it("should accept first letter if mnemonic disabled", function() {
 		expect(verseFeedback(
 			'For God so loved the world that he gave his one and only Son',		// correct text
