@@ -1,12 +1,12 @@
 <div class="white-box-with-margins">
 
 	<table cellpadding="6" cellspacing="4">
-	  <tr> 
-		  <th>mvID</th>		  
+	  <tr>
+		  <th>mvID</th>
 		  <th>Ref</th>
 		  <th>First</th>
 		  <th>Prev</th>
-		  <th>Next</th>		  
+		  <th>Next</th>
 	  </tr>
 	<% for record in @report %>
 		<tr>
@@ -14,7 +14,7 @@
 			<td align="left"> 	<%= record['Ref']	%></td>
 			<td align="center"> <%= record['First']	%></td>
 			<td align="center"> <%= record['Prev']	%></td>
-			<td align="center"> <%= record['Next']	%></td>										
+			<td align="center"> <%= record['Next']	%></td>
 	  	</tr>
 	<% end %>
 
