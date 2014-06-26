@@ -28,7 +28,7 @@ class ScheduledQuiz
     # Select PubNub channel
     channel = "quiz-#{quiz.id}"
 
-    if status = $redis.hmget(channel, "status").try(:first) && !status.nil?
+    if (status = $redis.hmget(channel, "status").try(:first)) && !status.nil?
       return false if status.include? "In progress"
     end
 
@@ -218,18 +218,18 @@ class ScheduledQuiz
     puts '----------------------------------------------------------------------------------------'
     puts '#  |  ID  |  Answers Submitted  |  Total Score'
     puts '----------------------------------------------------------------------------------------'
-    quiz_table.each_with_index do |qq, index|
+    # quiz_table.each_with_index do |qq, index|
 
-      q_id           = qq['qq_id'].to_i             # Quiz question ID
-      q_count        = qq['answered'].to_i          # Number of people who answered this question
-      q_total        = qq['total_score'].to_i       # Total score, 10 = max
-      q_perc_correct = q_total.to_f / q_count * 10  # Calculate score as a %
+    #   q_id           = qq['qq_id'].to_i             # Quiz question ID
+    #   q_count        = qq['answered'].to_i          # Number of people who answered this question
+    #   q_total        = qq['total_score'].to_i       # Total score, 10 = max
+    #   q_perc_correct = q_total.to_f / q_count * 10  # Calculate score as a %
 
-      puts index.to_s + "      " + qq['qq_id'] + "         " + qq['answered'] + "                  " + qq['total_score']
+    #   puts index.to_s + "      " + qq['qq_id'] + "         " + qq['answered'] + "                  " + qq['total_score']
 
-      # Update quiz question difficulty in database
-      question = QuizQuestion.find( q_id )
-      question.update_difficulty( q_count, q_perc_correct )
+    #   # Update quiz question difficulty in database
+    #   question = QuizQuestion.find( q_id )
+    #   question.update_difficulty( q_count, q_perc_correct )
 
     end
 
