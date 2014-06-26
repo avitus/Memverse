@@ -90,6 +90,25 @@ class UsersController < ApplicationController
 
   end
 
+  # ----------------------------------------------------------------------------------------------------------
+  # Get verse text from user's account, or user's default version
+  # ----------------------------------------------------------------------------------------------------------
+  def get_verse
+    bk = params[:bk]
+    ch = params[:ch]
+    vs = params[:vs]
+
+    if current_user.has_verse?(bk, ch, vs)
+      text = current_user.has_verse?(bk, ch, vs).verse.text
+    else
+      tl = current_user.translation
+      text = Verse.where(book: bk, chapter: ch, versenum: vs).
+                   where(translation: tl).try(:first).try(:text)
+    end
+
+    render text: text
+
+  end
 
   protected
 
