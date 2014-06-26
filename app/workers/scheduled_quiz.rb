@@ -20,6 +20,7 @@ class ScheduledQuiz
                         Time.now, Time.now + 1.minute).first
 
     return false if quiz.nil?
+    return false if quiz.quiz_questions.count == 0
 
     # ========================================================================
     # Verify that quiz has not been started by another worker
@@ -32,16 +33,27 @@ class ScheduledQuiz
       return false if status.include? "In progress"
     end
 
+    puts "===> Quiz ##{quiz.id} : Grabbed by ScheduledQuiz worker"
+
+    # Save status of quiz in redis
+    $redis.hset(channel, "status", "In progress. Chat opening soon.")
+
+    if (sleep_time = quiz.start_time - Time.now) && sleep_time > 0
+      puts "===> Quiz ##{quiz.id} : Sleeping #{sleep_time} till chat opens"
+      sleep sleep_time
+      $redis.hset(channel, "status", "In progress. Chat open. Wait for question.")
+    end
+
     # ========================================================================
     # Announce quiz
     # ========================================================================
-    broadcast = "#{quiz.name} is starting. <a href=\"live_quiz\">Join now!</a>"
+    broadcast = "#{quiz.name} is starting. <a href=\"live_quiz/#{quiz.id}\">Join now!</a>"
     Tweet.create(:news => broadcast, :user_id => 1, :importance => 2)  # Admin tweet => user_id = 1
 
     # ========================================================================
     # Setup quiz, clear old scores
     # ========================================================================
-    puts "===> Opening quiz room at " + Time.now.to_s
+    puts "===> Quiz ##{quiz.id} : Opening quiz room at " + Time.now.to_s
 
     # TODO: Allow concurrent quizzes
 
@@ -97,7 +109,7 @@ class ScheduledQuiz
     # ========================================================================
     # Open quiz chat channel 5 minutes prior to start
     # ========================================================================
-    puts "===> Opening chat at " + Time.now.to_s
+    puts "===> Quiz ##{quiz.id} : Opening chat at " + Time.now.to_s
     if $redis.exists("chat-#{channel}")
       status = $redis.hmget("chat-#{channel}", "status").first
     end
@@ -120,7 +132,7 @@ class ScheduledQuiz
     # Main question loop
     # ========================================================================
 
-    puts "===> Starting quiz at " + Time.now.to_s
+    puts "===> Quiz ##{quiz.id} : Starting quiz at " + Time.now.to_s
 
     quiz_questions    = quiz.quiz_questions.order("question_no ASC")
 
@@ -143,6 +155,7 @@ class ScheduledQuiz
             :q_passages => passages,
             :time_alloc => time_alloc
           },
+          :http_sync => true,
           :callback => @my_callback
         )
         sleep(time_alloc+1)
@@ -157,6 +170,7 @@ class ScheduledQuiz
             :q_passages => passages,
             :time_alloc => 25
           },
+          :http_sync => true,
           :callback => @my_callback
         )
         sleep(26)
@@ -175,6 +189,7 @@ class ScheduledQuiz
             :mc_answer => q.mc_answer,
             :time_alloc => 30
           },
+          :http_sync => true,
           :callback => @my_callback
         )
         sleep(31)
@@ -195,6 +210,7 @@ class ScheduledQuiz
           :meta => "scoreboard",
           :scoreboard => scoreboard
         },
+        :http_sync => true,
         :callback => @my_callback
       )
     } # end of question loop
@@ -204,22 +220,21 @@ class ScheduledQuiz
     # ========================================================================
 
     $redis.hset(channel, "status", "Finished") # Update quiz status in redis
-    puts "===> Finished quiz #{quiz.id} at " + Time.now.to_s
+    puts "===> Quiz ##{quiz.id} : Finished quiz #{quiz.id} at " + Time.now.to_s
 
     # ========================================================================
     # Update difficulty for all questions
     # ========================================================================
-    quiz_table = Array.new
-    quiz_questions = $redis.keys("qnum-*")
-    quiz_questions.each do |qq|
-      quiz_table << $redis.hgetall(qq)
-    end
+    # quiz_table = Array.new
+    # quiz_questions = $redis.keys("qnum-*")
+    # quiz_questions.each do |qq|
+    #   quiz_table << $redis.hgetall(qq)
+    # end
 
-    puts '----------------------------------------------------------------------------------------'
-    puts '#  |  ID  |  Answers Submitted  |  Total Score'
-    puts '----------------------------------------------------------------------------------------'
+    # puts '----------------------------------------------------------------------------------------'
+    # puts '#  |  ID  |  Answers Submitted  |  Total Score'
+    # puts '----------------------------------------------------------------------------------------'
     # quiz_table.each_with_index do |qq, index|
-
     #   q_id           = qq['qq_id'].to_i             # Quiz question ID
     #   q_count        = qq['answered'].to_i          # Number of people who answered this question
     #   q_total        = qq['total_score'].to_i       # Total score, 10 = max
@@ -231,7 +246,7 @@ class ScheduledQuiz
     #   question = QuizQuestion.find( q_id )
     #   question.update_difficulty( q_count, q_perc_correct )
 
-    end
+    # end
 
     # ========================================================================
     # Record final scoreboard in log file
@@ -241,7 +256,7 @@ class ScheduledQuiz
     participants.each { |p| final_scoreboard << $redis.hgetall(p) }
     final_scoreboard = final_scoreboard.sort { |x, y| y['score'].to_i <=> x['score'].to_i }
 
-    puts "Final Quiz Scores"
+    puts "===> Quiz ##{quiz.id} : Final Quiz Scores"
     puts "==================="
     final_scoreboard.each do |usr|
       puts "[" + usr['score'] + "] - " + usr['name']
@@ -261,7 +276,7 @@ class ScheduledQuiz
     # ========================================================================
     # Close chat after ten minutes
     # ========================================================================
-    puts "Quiz now over. Sleeping for 10 minutes, then shutting down chat."
+    puts "===> Quiz ##{quiz.id} : Quiz over. Sleeping for 10 minutes, then shutting down chat."
     Rails.env.production? ? sleep(600) : sleep(30)
 
     new_status = "Closed"
@@ -274,7 +289,7 @@ class ScheduledQuiz
       :callback => @my_callback
     )
 
-    puts "Chat closed and sidetiq job finished."
+    puts "===> Quiz ##{quiz.id} : Chat closed and sidetiq job finished."
 
   end
 
