@@ -70,6 +70,10 @@ class ProfileController < ApplicationController
     @user_group     = @user.group ?           @user.group.name              : ""
     @user_state     = @user.american_state ?  @user.american_state.name     : ""
 
+    # Load translations, without SMPB and SMPC
+    @translations   = TRANSLATIONS.dup
+    @translations.except!(:SMPB, :SMPC)
+
   end # method: update_profile
 
   # ----------------------------------------------------------------------------------------------------------
