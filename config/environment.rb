@@ -49,6 +49,8 @@ TRANSLATIONS = {
     :LBLA  => "La Biblia de las Américas",
     :ICE   => "Icelandic Bible (2007)",
     :SMP   => "Scottish Metrical Psalter",
+    :SMPB  => "Scottish Metrical Psalter: B",
+    :SMPC  => "Scottish Metrical Psalter: C",
     :AKJ   => "Authorized King James Version",
     :GW    => "God's Word Translation"
   }
