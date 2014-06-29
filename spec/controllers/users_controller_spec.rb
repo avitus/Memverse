@@ -76,8 +76,8 @@ describe UsersController do
 
         FactoryGirl.create(:memverse, verse: @vs, user: @user)
 
-        get :get_verse, bk: "John", vs: 1, ch: 1
-        response.should == "In the beginning!"
+        get :get_verse, {bk: "John", vs: 1, ch: 1}
+        response.body.should == "In the beginning!"
       end
 
       it "should fall back to verse in user's translation" do
@@ -90,16 +90,16 @@ describe UsersController do
 
         @user.has_verse?("John", 1, 1).should == nil
 
-        get :get_verse, bk: "John", vs: 1, ch: 1
-        response.should == "In the beginning..."
+        get :get_verse, {bk: "John", vs: 1, ch: 1}
+        response.body.should == "In the beginning..."
       end
 
       it "should gracefully fail" do
         Verse.where(book: "John", chapter: 1, versenum: 1).count.should == 0
 
-        get :get_verse, bk: "John", vs: 1, ch: 1
+        get :get_verse, {bk: "John", vs: 1, ch: 1}
 
-        response.should == ""
+        response.body.should == " "
         expect(response.status).to eq(200)
       end
     end
@@ -108,7 +108,7 @@ describe UsersController do
       it "should redirect user" do
         sign_out @user
         get :get_verse
-        expect(response.status).to eq(401)
+        expect(response.status).to eq(302)
       end
     end
 
