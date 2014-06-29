@@ -33,6 +33,7 @@ TRANSLATIONS = {
     :RVR   => "Reina-Valera 1960",
     :LSV   => "Louis Segond 1910",
     :LND   => "La Nuova Diodati",
+    :LUT84 => "Luther Bibel 1984",
     :LUT   => "Luther Bibel 1545",
     :SCH   => "Schlachter 2000",
     :AFR   => "Afrikaans 1983 Translation",
