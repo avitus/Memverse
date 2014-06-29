@@ -33,6 +33,7 @@ TRANSLATIONS = {
     :RVR   => "Reina-Valera 1960",
     :LSV   => "Louis Segond 1910",
     :LND   => "La Nuova Diodati",
+    :LUT84 => "Luther Bibel 1984",
     :LUT   => "Luther Bibel 1545",
     :SCH   => "Schlachter 2000",
     :AFR   => "Afrikaans 1983 Translation",
@@ -49,6 +50,8 @@ TRANSLATIONS = {
     :LBLA  => "La Biblia de las Américas",
     :ICE   => "Icelandic Bible (2007)",
     :SMP   => "Scottish Metrical Psalter",
+    :SMPB  => "Scottish Metrical Psalter: B",
+    :SMPC  => "Scottish Metrical Psalter: C",
     :AKJ   => "Authorized King James Version",
     :GW    => "God's Word Translation"
   }
