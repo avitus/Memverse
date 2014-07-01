@@ -53,7 +53,8 @@ TRANSLATIONS = {
     :SMPB  => "Scottish Metrical Psalter: B",
     :SMPC  => "Scottish Metrical Psalter: C",
     :AKJ   => "Authorized King James Version",
-    :GW    => "God's Word Translation"
+    :GW    => "God's Word Translation",
+    :GNT   => "Good News Translation"
   }
 
 MAJORS = {
