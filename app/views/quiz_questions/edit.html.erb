@@ -7,19 +7,23 @@
     <%= link_to 'Back', quizzes_path %>
 </div>
 
-<script language="JavaScript" type="text/javascript"><!--
+<script type="text/javascript">
 
     //------ Show either form to enter verse reference or form to enter MCQ  -------------------
     $passage = $("p#passage");
-    $mcq = $("div#mcq");
+    $mcq     = $("div#mcq");
+    $submit  = $("#non-mcq-submit"); // MCQ form has its own submit
+
 
     function questionType(qtype) {
         if (qtype == 'mcq') {
             $passage.hide();
             $mcq.show();
+            $submit.hide();
         } else {
             $passage.show();
             $mcq.hide();
+            $submit.show();
         }
     };
 
@@ -37,4 +41,4 @@
 
     });
 
---></script>
+</script>
