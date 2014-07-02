@@ -9,21 +9,25 @@
 </div>
 
 
-<script language="JavaScript" type="text/javascript"><!--
+<script type="text/javascript">
 
 	//------ Show either form to enter verse reference or form to enter MCQ  -------------------
-	$passage = $("p#passage");
-	$mcq = $("div#mcq");
+    $passage = $("p#passage");
+    $mcq     = $("div#mcq");
+    $submit  = $("#non-mcq-submit"); // MCQ form has its own submit
 
-	function questionType(qtype) {
-		if (qtype == 'mcq') {
-			$passage.hide();
-			$mcq.show();
-		} else {
-			$passage.show();
-			$mcq.hide();
-		}
-	};
+
+    function questionType(qtype) {
+        if (qtype == 'mcq') {
+            $passage.hide();
+            $mcq.show();
+            $submit.hide();
+        } else {
+            $passage.show();
+            $mcq.hide();
+            $submit.show();
+        }
+    };
 
 	questionType($("select#quiz_question_question_type").val()); // called when the question type is changed
 
@@ -39,4 +43,4 @@
 
     });
 
---></script>
+</script>

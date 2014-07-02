@@ -39,6 +39,8 @@
         <%= f.text_field    :passage %>
     </p>
 
+    <%= f.submit 'Submit', id: "non-mcq-submit" %>
+
     <!-- Entry form for MCQ -->
     <%= render :partial => "form_mcq", :locals=>{ :f => f } %>
 
