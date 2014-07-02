@@ -273,7 +273,7 @@ function blankifyVerse(versetext, reduction_percentage) {
 	    sort_by_length = split_text.slice(0);  // make a copy of the original array
 
 	    sort_by_length.sort(function(a, b) {
-	        return (a.length < b.length) ? 1 : 0;
+	        return b.length - a.length;
 	    });
 
 	    // select the longest words to remove
