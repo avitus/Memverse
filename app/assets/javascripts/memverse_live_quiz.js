@@ -149,7 +149,13 @@ var quizRoom = {
      ******************************************************************************/
     scoreUserAnswer: function( questionAnswer, questionType, questionNum, questionID ) {
 
-        var userAnswer = $('input[name=mcq]:checked').val();
+        if (questionType == 'mcq'){
+            var userAnswer = $('input[name=mcq]:checked').val();
+        } else if (questionType == 'recitation') {
+            var userAnswer = $('textarea#'+questionNum).val();
+        } else if (questionType == 'reference') {
+            var userAnswer = $('input#'+questionNum).val();
+        }
 
         $('input#submit-answer').remove();  // remove answer submission button
 
@@ -173,8 +179,12 @@ var quizRoom = {
             } else {
                 $(".q-dot.current").addClass("green");
             }
-            $(selector + " #q-answer:visible input#opt_" + questionAnswer.toLowerCase()).parent().addClass("correct");
-            $(selector + " #q-msg q-answer input").remove();
+
+            if(questionType == "mcq"){
+                $(selector + " #q-answer:visible input#opt_" + questionAnswer.toLowerCase()).parent().addClass("correct");
+                // TODO: Is this to remove submit button? Then it can be removed.
+                $(selector + " #q-msg q-answer input").remove();
+            }
         }
     },
 
@@ -228,7 +238,7 @@ var quizRoom = {
                 }
                 $(selector + ' #q-answer input[type="text"]').keypress(function(e) {
                     if(e.which == 13) {
-                        submitAnswer();
+                        quizRoom.scoreUserAnswer( qAnswer, qType, qNum, qID ); }
                     }
                 });
                 break;
