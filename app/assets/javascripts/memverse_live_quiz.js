@@ -238,7 +238,7 @@ var quizRoom = {
                 }
                 $(selector + ' #q-answer input[type="text"]').keypress(function(e) {
                     if(e.which == 13) {
-                        quizRoom.scoreUserAnswer( qAnswer, qType, qNum, qID ); }
+                        quizRoom.scoreUserAnswer( qAnswer, qType, qNum, qID );
                     }
                 });
                 break;
