@@ -108,6 +108,7 @@ var quizRoom = {
         if (qType == 'reference' || qType == 'recitation') {
 
             quizRoom.addInputBox( qType, qNum, qAnswer);
+            $('input#submit-answer').on( "click", function() { quizRoom.scoreUserAnswer( qAnswer, qType, qNum, qID ); } );
 
         } else if (qType == 'mcq'){
 
@@ -188,7 +189,26 @@ var quizRoom = {
      * Add correct question input form
      ******************************************************************************/
     addInputBox: function (questionType, questionNum, questionAnswer) {
+
+        /* submitAnswer = function() {
+            var userAnswer = $('.q-answer-input').val();
+            grade = getScore(questionAnswer, userAnswer, questionType);
+            if (grade.score != null) {
+                $.post("/record_score", { usr_id:     memverseUserID,
+                                          usr_name:   memverseUserName,
+                                          usr_login:  memverseUserLogin,
+                                          score:      grade.score } );
+                $(selector + " #q-msg").html("<p>" + grade.msg + "</p>").children("p").effect('highlight', {}, 3000);
+                $(selector + " #q-answer").html("<strong>Your answer: </strong>" + userAnswer);
+
+                // make q-dot red or green, depending on score
+                // needs testing
+                $(".q-dot.current").addClass((grade.score == 10) ? "green" : "red");
+            }
+        } */
+
         selector = "#question-" + questionNum;
+
         switch(questionType) {
             case 'recitation':
                 $(selector + " #q-answer").html("<textarea class='q-answer-input' name='txt" + questionNum + "' id='" + questionNum + "'></textarea>");
@@ -202,17 +222,15 @@ var quizRoom = {
             case 'reference':
                 $(selector + " #q-answer").html("<input type='text' class='q-answer-input' name='txt" + questionNum + "' id='" + questionNum + "'</input>");
                 $(selector + " #q-answer").append("<input type='submit' value='Answer!' id='submit-answer' class='button-link'>");
-                $(selector + ' #q-answer input[type="text"]').autocomplete({ source: ['Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy', 'Joshua', 'Judges', 'Ruth', '1 Samuel', '2 Samuel',
-                    '1 Kings', '2 Kings','1 Chronicles', '2 Chronicles', 'Ezra', 'Nehemiah', 'Esther', 'Job', 'Psalm', 'Proverbs',
-                    'Ecclesiastes', 'Song of Songs', 'Isaiah', 'Jeremiah', 'Lamentations', 'Ezekiel', 'Daniel', 'Hosea', 'Joel',
-                    'Amos', 'Obadiah', 'Jonah', 'Micah', 'Nahum', 'Habakkuk', 'Zephaniah', 'Haggai', 'Zechariah', 'Malachi', 'Matthew',
-                    'Mark', 'Luke', 'John', 'Acts', 'Romans', '1 Corinthians', '2 Corinthians', 'Galatians', 'Ephesians', 'Philippians',
-                    'Colossians', '1 Thessalonians', '2 Thessalonians', '1 Timothy', '2 Timothy', 'Titus', 'Philemon', 'Hebrews', 'James',
-                    '1 Peter', '2 Peter', '1 John', '2 John', '3 John', 'Jude', 'Revelation']
-                });
+                $(selector + ' #q-answer input[type="text"]').autocomplete({ source: BIBLEBOOKS });
                 if (!$('#msg_body').is(':focus')) {
                     $(selector + ' #q-answer input[type="text"]').focus();
                 }
+                $(selector + ' #q-answer input[type="text"]').keypress(function(e) {
+                    if(e.which == 13) {
+                        submitAnswer();
+                    }
+                });
                 break;
 
             case 'mcq':
@@ -222,27 +240,6 @@ var quizRoom = {
                 $(selector + " #q-answer").html("<input type='text' class='q-answer-input'" + "name='txt" + questionNum + "' id='" + questionNum + "'</input>");
                 $(selector + " #q-answer").append("<input type='submit' value='Answer!' id='submit-answer' class='button-link'>");
         }
-
-        // TODO: This duplicates a lot of code above
-        $('input#submit-answer').click(function() {
-            var userAnswer = $('.q-answer-input').val();
-            grade = getScore(questionAnswer, userAnswer, questionType);
-            if (grade.score != null) {
-                $.post("/record_score", { usr_id:     memverseUserID,
-                                          usr_name:   memverseUserName,
-                                          usr_login:  memverseUserLogin,
-                                          score:      grade.score } );
-                $(selector + " #q-msg").html("<p>" + grade.msg + "</p>").children("p").effect('highlight', {}, 3000);
-                $(selector + " #q-answer").html("<strong>Your answer: </strong>" + userAnswer);
-
-                // make q-dot red or green, depending on score
-                if(grade.score == 10){
-                    $(".q-dot.current").addClass("green");
-                } else {
-                    $(".q-dot.current").addClass("red");
-                }
-            }
-        });
     },
 
     /******************************************************************************
@@ -314,7 +311,19 @@ var quizRoom = {
             $('#roster-window').slideDown();
             $(this).addClass('expanded');
         }
-    }
+    },
+
+    /******************************************************************************
+     * Check if user present
+     ******************************************************************************/
+
+     userPresent: function(uuid) {
+        for(x = 0; x < quizRoom.userIDArray; x++){
+            if (quizRoom.userIDArray[x].id == uuid) return true;
+        }
+
+        return false;
+     },
 
 } // end of quizRoom scope
 
@@ -372,9 +381,41 @@ function mvConnect( pubnub ) {
 
     pubnub.here_now({  // returns message: { "uuids": ["1","2","3"], "occupancy": 3 }
         channel  : channel,
-        callback : mvPresence
+        callback : mvInitRoster
     });
 };
+
+/******************************************************************************
+ * Callback function to handle users present on connection
+ *
+ * message format: {"action": "join", "timestamp": 123432432, "uuid": "memverse-id", "occupancy": 3}
+ *
+ ******************************************************************************/
+function mvInitRoster ( message, env, channel ) {
+
+    console.log("===> | Initialize roster, PubNub connection message: " + message);
+
+    for(x = 0; x < message.uuids.length; x++){
+        var roster_uid = message.uuids[x];
+
+        $.getJSON('/users/'+ roster_uid +'.json', function( data ) {
+
+            var userName    = data.name;
+            var gravatarURL = data.avatar_url;
+            var userLink    = buildUserLink( roster_uid, userName );
+
+            // Add user to roster array
+            quizRoom.userIDArray.push({ id: data.id, name: userName, avatarURL: gravatarURL, userLink: userLink });
+
+            // Add user to visual roster
+            addUserToRoster( roster_uid, userName, gravatarURL, message.occupancy );
+        });
+    }
+
+    // Log to console
+    console.log("===> | Initial roster occupancy: " + message.occupancy);
+
+}
 
 /******************************************************************************
  * Callback function to handle users joining/leaving channel and on connection
@@ -388,6 +429,8 @@ function mvPresence ( message, env, channel ) {
 
     // --- User joins quiz ---
     if (message.action == "join") {
+
+        if(!quizRoom.userPresent(message.uuid)) return;
 
         $.getJSON('/users/'+ message.uuid +'.json', function( data ) {
 
@@ -431,17 +474,6 @@ function mvPresence ( message, env, channel ) {
 
         // Need to handle timeouts ... not sure how
 
-    // --- Create roster when joining ---
-    } else {
-        // quizRoom.userIDArray = message.uuids;
-        console.log('============ Unknown message type ==============')
-        console.log("Join/Leave/Timeout : ", message.action       );
-        console.log("Occupancy          : ", message.occupancy    );
-        console.log("User ID            : ", message.uuid         );
-        console.log("User ID's Here Now : ", message.uuids        );
-        console.log("Event              : ", env                  );
-        console.log("Channel            : ", channel              );
-        console.log('================================================')
     }
 
 };
