@@ -43,7 +43,7 @@
 					<td align="center"><%= mv.test_interval		%></td>
 					<td align="center"><%= mv.attempts			%></td>
 					<td align="center"><%= mv.ref_interval		%></td>
-					<td align="center"><%= mv.next_ref_test		%></td>
+					<td align="center"><%= mv.status == "Pending" ? "N/A" : mv.next_ref_test %></td>
 					<td align="left">  <%= mv.all_tags_list     %></td>
 
 					<td align="center" class="flag_verse" id="<%= mv.verse.id %>"><%=
