@@ -1,7 +1,7 @@
 <div class="white-box-with-margins">
 	<div class="verse-list">
 		<table class="sortable" id="usertable" cellpadding="6" cellspacing="0">
-			
+
 			<tr>
 				<th>ID</th>
 				<th align="left">Name</th>
@@ -14,70 +14,70 @@
 				<th colspan="2">Memverses</th>
 				<th>Newsletter</th>
 			</tr>
-	
+
 			<tr>
-				<td> <%= @user.id				%></td>	
-				<td> <%= @user.name				%></td>				
-				<td> <%= link_to @user.login, :controller => 'utils', :action => 'show_memory_verses', :id => @user.id %></td>		 
+				<td> <%= @user.id				%></td>
+				<td> <%= @user.name				%></td>
+				<td> <%= link_to @user.login, :controller => 'utils', :action => 'show_memory_verses', :id => @user.id %></td>
 				<td> <%= @user.email				%> </td>
 				<td> <%= @user.church ? @user.church.name : ""	%> </td>
-				<td align = center> <%= @user.last_activity_date %> </td>	
-				<td align = center> <%= @user.last_reminder		%> </td>	
-				<td align = center> <%= @user.reminder_freq		%> </td>									
+				<td align = center> <%= @user.last_activity_date %> </td>
+				<td align = center> <%= @user.last_reminder		%> </td>
+				<td align = center> <%= @user.reminder_freq		%> </td>
 				<td align = right> <%= @user.memverses.length	%> </td>
-				<td align = right>[<%= @user.memorized			%>]</td>			
-				<td align = center> <%= @user.newsletters		%> </td>	
-							
+				<td align = right>[<%= @user.memorized			%>]</td>
+				<td align = center> <%= @user.newsletters		%> </td>
+
 				<td><%= link_to 'Edit',   :controller => 'utils', :action => 'edit_user', :id => @user %></td>
-				<td><%= link_to 'X', { :action => 'destroy_user',  :id => @user }, :confirm => 'Are you sure?', :method => :post %></td>					
-				
+				<td><%= link_to 'X', { :action => 'destroy_user',  :id => @user }, :confirm => 'Are you sure?', :method => :post %></td>
+
 			</tr>
 		</table>
 	</div>
-	
+
 	<%= button_to 'Repair Links',   :controller => 'utils', :action => 'fix_verse_linkage', 	:id => @user %>
-	
+
 	<div class="verse-list">
-	
+
 		<table cellpadding="8" cellspacing="6">
-		  <tr> 
-			  <th>MV ID</th>		  
-			  <td><b>Ref</b></td>			  
+		  <tr>
+			  <th>MV ID</th>
+			  <td><b>Ref</b></td>
 			  <td><b><%= link_to 'eFactor',		:action => 'manage_verses', :sort_order => 'efactor'		%></b></td>
-			  <td><b><%= link_to 'Status', 		:action => 'manage_verses', :sort_order => 'status'		%></b></td>		  				  	  		  		  		  
-			  <td><b><%= link_to 'Last Tested',	:action => 'manage_verses', :sort_order => 'last_tested'	%></b></td>	
+			  <td><b><%= link_to 'Status', 		:action => 'manage_verses', :sort_order => 'status'		%></b></td>
+			  <td><b><%= link_to 'Last Tested',	:action => 'manage_verses', :sort_order => 'last_tested'	%></b></td>
 			  <td><b><%= link_to 'Next Test',	:action => 'manage_verses', :sort_order => 'next_test'		%></b></td>
 			  <td><b><%= link_to 'N', 			:action => 'manage_verses', :sort_order => 'rep_n'			%></b></td>
 			  <td><b><%= link_to 'Interval', 	:action => 'manage_verses', :sort_order => 'test_interval'	%></b></td>
-			  <td><b><%= link_to 'Attempts', 	:action => 'manage_verses', :sort_order => 'attempts'		%></b></td>		  
+			  <td><b><%= link_to 'Attempts', 	:action => 'manage_verses', :sort_order => 'attempts'		%></b></td>
 			  <td><b><%= link_to 'Started', 	:action => 'manage_verses', :sort_order => 'started'		%></b></td>
 			  <th>First</th>
 			  <th>Prev</th>
-			  <th>Next</th>		  
-	
+			  <th>Next</th>
+
 		  </tr>
 		<% for mv in @mv_list %>
-			<td> <%= mv.id			%></td>	
-			<td> <%= link_to mv.verse.ref, :action => 'edit_verse', :id => mv.verse %></td>				 
-		 	<td> <%= mv.efactor				%></td>	
-		 	<td> <%= mv.status				%></td>			
+			<td> <%= mv.id			%></td>
+			<td> <%= link_to mv.verse.ref, rails_admin.edit_path(model_name: 'verse', id: mv.verse.id) %></td>
+		 	<td> <%= mv.efactor				%></td>
+		 	<td> <%= mv.status				%></td>
 		 	<td> <%= mv.last_tested			%></td>
-		 	<td> <%= mv.next_test			%></td>	
-		 	<td> <%= mv.rep_n				%></td>			
-		 	<td> <%= mv.test_interval		%></td>	
-		 	<td> <%= mv.attempts			%></td>		
+		 	<td> <%= mv.next_test			%></td>
+		 	<td> <%= mv.rep_n				%></td>
+		 	<td> <%= mv.test_interval		%></td>
+		 	<td> <%= mv.attempts			%></td>
 		 	<td> <%= mv.created_at.to_date	%></td>
 		 	<td> <%= mv.first_verse			%></td>
 		 	<td> <%= mv.prev_verse			%></td>
 			<td> <%= mv.next_verse			%></td>
-				
-			<td><%= link_to 'Edit',   :action => 'edit_mv', :id => mv %></td>
-			<td><%= link_to 'X', { :action => 'destroy_mv', :id => mv }, :confirm => 'Are you sure?', :method => :post %></td>	
-					
+
+			<td><%= link_to 'Edit', rails_admin.edit_path(model_name: 'memverse', id: mv.id) %></td>
+			<td><%= link_to 'X', { :action => 'destroy_mv', :id => mv }, :confirm => 'Are you sure?', :method => :post %></td>
+
 		  </tr>
 		<% end %>
-	
+
 		</table>
-	
+
 	</div>
 </div>
