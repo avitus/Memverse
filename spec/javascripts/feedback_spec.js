@@ -194,7 +194,7 @@ describe("Feedback", function() {
 		})
 	});
 
-	it("ignores Greek diacriticals", function() {
+	it("ignores Greek diacritics", function() {
 		expect(verseFeedback(
 			"In the beginning",			// correct text
 			"I´`͂῾᾿n the beginning",	// user guess
