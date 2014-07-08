@@ -88,7 +88,7 @@ class BibleGateway
     if text.present?
       {:title => "--", :content => text }
     else
-      {:title => "--", :content => content }
+      {:title => "--", :content => "--" }
     end
 
   end
