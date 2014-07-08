@@ -697,8 +697,8 @@ class MemversesController < ApplicationController
     @my_verses = current_user.memverses.includes(:verse, :tags)
 
     if params[:sort_order].present? && ['next_test', 'next_ref_test'].include?(params[:sort_order])
-      # Order: Learning, Memorized, Pending
-      @my_verses = @my_verses.order("status, #{params[:sort_order]}")
+      # Order: active verses at the top, inactive (pending) at the bottom
+      @my_verses = @my_verses.order("status!='Pending' DESC, #{params[:sort_order]}")
     elsif params[:sort_order]
       @my_verses = @my_verses.order(params[:sort_order])
     else
