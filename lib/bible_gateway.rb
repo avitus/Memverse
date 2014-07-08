@@ -74,10 +74,15 @@ class BibleGateway
     # Example description with section heading from Hebrews 10:1
     # "Christ’s Sacrifice Once for All - The law is only a shadow ..."
 
-    headings = doc.css("h3 span")
+    headings = doc.css("h3 span, h4 span")
 
     for heading in headings
-      text = text.sub("#{heading.text} - ", "")
+      heading.search("sup").remove # remove superscripts
+
+      heading_text = heading.text.strip
+
+      text = text.sub("#{heading_text} - ", "")
+      text = text.sub("#{heading_text} ", "")
     end
 
     if text.present?
