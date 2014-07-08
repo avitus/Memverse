@@ -65,43 +65,26 @@ class BibleGateway
   end
 
   def scrape_passage(doc)
-    title = doc.css('h2')[0] ? doc.css('h2')[0].content : "No title"
+    ### Get text from Facebook description
+    fb_desc = doc.css("meta[property='og:description']").first
+    text = fb_desc['content']
 
-    # segment = doc.at('font.woj') -- only works for words of Jesus
-    # segment = doc.at('div.result-text-style-normal') -- old Biblegateway layout
-    # Need to look for text immediately after superscript
+    ### Remove any section heading that may be in description
 
-    if !(doc.at('sup.versenum')) # if verse is first verse of chapter
-      verse_number = doc.at('span.chapternum')
-    else
-      verse_number = doc.at('sup.versenum')
+    # Example description with section heading from Hebrews 10:1
+    # "Christ’s Sacrifice Once for All - The law is only a shadow ..."
+
+    headings = doc.css("h3 span")
+
+    for heading in headings
+      text = text.sub("#{heading.text} - ", "")
     end
 
-    if !(doc.at('div.poetry'))
-      # For when the verse is not poetry
-      segment = verse_number.parent unless !verse_number
+    if text.present?
+      {:title => "--", :content => text }
     else
-      # For when the verse is poetry
-      segment = verse_number.parent.parent unless !verse_number
+      {:title => "--", :content => content }
     end
 
-    if segment
-
-      segment.search("sup").remove                 # remove superscripts (verse numbering, footnotes, etc.)
-      segment.search("h4").remove                  # remove headings
-      segment.search("h5").remove                  # remove headings
-      segment.search("div.footnotes").remove       # remove footnotes
-      segment.search("div.crossrefs").remove       # remove cross references
-
-      # Converts the special font that BibleGateway uses for 'LORD' and 'God' into 'LORD' and 'GOD'
-      segment = segment.to_s.gsub("<span style=\"font-variant: small-caps\" class=\"small-caps\">Lord</span>", "LORD").gsub("<span style=\"font-variant: small-caps\" class=\"small-caps\">God</span>", "GOD")
-
-      # remove html tags, comments, non-breaking space, double spaces, and trailing or leading whitespace
-      content = segment.gsub(/<b.+?<\/b>/," ").gsub(/<\/?[^>]*>/, " ").gsub(/<!--.*?-->/, " ").gsub("\u00A0", " ").gsub(/\s{2,}/, " ").strip
-      content = content.gsub(/^\d{1,3}/," ").strip # remove chapter numbers (if present)
-    else
-      {:title => "--", :content => "--" }
-    end
-    {:title => title, :content => content }
   end
 end
