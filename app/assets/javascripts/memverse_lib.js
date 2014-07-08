@@ -219,9 +219,14 @@ function cleanseVerseText( versetext ) {
 
 /******************************************************************************
  * Remove special characters to compare user input to correct text
+ * We remove anything that is not in the set of...
+ 	* alphanumerical characters
+ 	* specified sets of UTF-8 characters
+ * Then we also remove Greek diacriticals
  ******************************************************************************/
 scrub_text = function(text) {
-    return text.toLowerCase().replace(/[^0-9a-z\u00BF-\u1FFF\u2C00-\uD7FF]+/g, "");
+    return text.toLowerCase().replace(/[^0-9a-z\u00BF-\u1FFF\u2C00-\uD7FF]+/g, "").
+    replace(/[´`͂῾᾿]+/g, "");
 }
 
 /******************************************************************************
