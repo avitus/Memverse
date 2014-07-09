@@ -67,25 +67,28 @@ class BibleGateway
   def scrape_passage(doc)
     ### Get text from Facebook description
     fb_desc = doc.css("meta[property='og:description']").first
-    text = fb_desc['content']
 
-    ### Remove any section heading that may be in description
+    if fb_desc.present?
+      text = fb_desc['content']
 
-    # Example description with section heading from Hebrews 10:1
-    # "Christ’s Sacrifice Once for All - The law is only a shadow ..."
+      ### Remove any section heading that may be in description
 
-    headings = doc.css("h3 span, h4 span")
+      # Example description with section heading from Hebrews 10:1
+      # "Christ’s Sacrifice Once for All - The law is only a shadow ..."
 
-    for heading in headings
-      heading.search("sup").remove # remove superscripts
+      headings = doc.css("h3 span, h4 span")
 
-      heading_text = heading.text.strip
+      for heading in headings
+        heading.search("sup").remove # remove superscripts
 
-      text = text.sub("#{heading_text} - ", "")
-      text = text.sub("#{heading_text} ", "")
+        heading_text = heading.text.strip
+
+        text = text.sub("#{heading_text} - ", "")
+        text = text.sub("#{heading_text} ", "")
+      end
     end
 
-    if text.present?
+    if text && text.present?
       {:title => "--", :content => text }
     else
       {:title => "--", :content => "--" }
