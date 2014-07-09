@@ -86,6 +86,9 @@ class BibleGateway
         text = text.sub("#{heading_text} - ", "")
         text = text.sub("#{heading_text} ", "")
       end
+
+      # Consistent spacing around em dashes
+      text = text.gsub("—", " — ").squeeze(" ").strip
     end
 
     if text && text.present?
