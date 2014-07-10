@@ -469,7 +469,7 @@ function mvPresence ( message, env, channel ) {
         // Remove user from roster array
         var departedUser = quizRoom.userIDArray.splice( quizRoom.userIDArray.indexOf( roster_uid ), 1 );
 
-        if(departedUser[0]){
+        if(typeof departedUser[0] !== 'undefined'){
             var li           = $("<li/>").addClass("chat-announcement").append(departedUser[0].userLink + " left the room.");
 
             // Remove user from visual roster
@@ -482,7 +482,7 @@ function mvPresence ( message, env, channel ) {
             // Log to console
             console.log("===> Presence callback: " + departedUser + " has left the quiz.");
         } else {
-            console.log("departedUser[0] false");
+            console.log("departedUser[0] undefined");
         }
 
     } else if (message.action == "timeout" ) {
