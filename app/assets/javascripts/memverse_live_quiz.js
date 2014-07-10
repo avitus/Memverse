@@ -173,17 +173,20 @@ var quizRoom = {
 
             selector = "#question-" + questionNum;
             $(selector + " #q-msg").html("<p>" + grade.msg + "</p>").children("p").effect('highlight', {}, 3000);
-            if (grade.score != 10) { // if it's wrong
-                $(selector + " #q-answer input#opt_" + userAnswer).parent().addClass("incorrect");
+
+            if (grade.score != 10){ // if it's wrong
                 $(".q-dot.current").addClass("red");
             } else {
                 $(".q-dot.current").addClass("green");
             }
 
             if(questionType == "mcq"){
-                $(selector + " #q-answer:visible input#opt_" + questionAnswer.toLowerCase()).parent().addClass("correct");
-                // TODO: Is this to remove submit button? Then it can be removed.
-                $(selector + " #q-msg q-answer input").remove();
+                // note correct answer
+                $("#q" + questionNum + "_opt_" + questionAnswer.toLowerCase()).parent().addClass("correct");
+                // if user was wrong, strike out user answer
+                if (grade.score != 10) {
+                    $("#q" + questionNum + "_opt_" + userAnswer).parent().addClass("incorrect");
+                }
             }
         }
     },
