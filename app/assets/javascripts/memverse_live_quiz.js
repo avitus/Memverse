@@ -468,17 +468,22 @@ function mvPresence ( message, env, channel ) {
 
         // Remove user from roster array
         var departedUser = quizRoom.userIDArray.splice( quizRoom.userIDArray.indexOf( roster_uid ), 1 );
-        var li           = $("<li/>").addClass("chat-announcement").append(departedUser[0].userLink + " left the room.");
 
-        // Remove user from visual roster
-        $("div#" + roster_uid).remove();
-        $("#quizzers-count").html("(" + message.occupancy + ")");
+        if(departedUser[0]){
+            var li           = $("<li/>").addClass("chat-announcement").append(departedUser[0].userLink + " left the room.");
 
-        // Add "[user] leavs" message to chat window
-        chat_stream_scroll( function () { $("#chat-stream-narrow").append(li) } );
+            // Remove user from visual roster
+            $("div#" + roster_uid).remove();
+            $("#quizzers-count").html("(" + message.occupancy + ")");
 
-        // Log to console
-        console.log("===> Presence callback: " + departedUser + " has left the quiz.");
+            // Add "[user] leavs" message to chat window
+            chat_stream_scroll( function () { $("#chat-stream-narrow").append(li) } );
+
+            // Log to console
+            console.log("===> Presence callback: " + departedUser + " has left the quiz.");
+        } else {
+            console.log("departedUser[0] false");
+        }
 
     } else if (message.action == "timeout" ) {
 
