@@ -27,7 +27,10 @@ class VersesController < ApplicationController
     @verse = Verse.find(params[:id])
 
     if @verse
+      add_breadcrumb I18n.t("home_menu.My Verses"), :manage_verses_path
+
       add_breadcrumb "#{@verse.book} #{@verse.chapter}:#{@verse.versenum}", {:action => 'show', :id => params[:id] }
+
       @tags      = @verse.tags
     end
 
@@ -263,20 +266,22 @@ class VersesController < ApplicationController
   # Show verses that need verification ie. more than one user and have never been modified
   # ----------------------------------------------------------------------------------------------------------
   def check_verses
-
-    @need_verification  = Array.new
     tl = current_user.translation
     add_breadcrumb "Check Verses", :check_verses_path
 
-    unverified_verses = Verse.where(:verified => false, :translation => tl, :checked_by => nil).where("memverses_count > ?", 1).limit(60)
-    unverified_verses.each { |vs|
-      if vs.web_check != true
-        @need_verification << vs
-      else
-        vs.verified = true
-        vs.save
-      end
-    }
+    @need_verification = Verse.where(verified: false, translation: tl, checked_by: nil).where("memverses_count > ?", 1).limit(60)
+
+    # @need_verification  = Array.new
+
+    # unverified_verses = Verse.where(:verified => false, :translation => tl, :checked_by => nil).where("memverses_count > ?", 1).limit(60)
+    # unverified_verses.each { |vs|
+    #   if vs.web_check != true
+    #     @need_verification << vs
+    #   else
+    #     vs.verified = true
+    #     vs.save
+    #   end
+    # }
   end
 
   # ----------------------------------------------------------------------------------------------------------

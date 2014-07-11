@@ -21,6 +21,8 @@ class Verse < ActiveRecord::Base
   before_create  :validate_ref
   before_save    :cleanup_text, :associate_with_uberverse
 
+  after_save :schedule_web_check
+
   # Relationships
   has_many :memverses
   belongs_to :uberverse
@@ -444,6 +446,13 @@ class Verse < ActiveRecord::Base
     self.text = self.text.gsub(/(\r)?\n/,'').squeeze(" ").strip
     self.text = self.text.gsub(" -"," —").gsub("- ","— ") # use em dashes when appropriate
     self.text = self.text.gsub(/[<>]/,'')
+  end
+
+  # after_save
+  def schedule_web_check
+    if !self.verified
+      VerseWebCheck.perform_async(self.id)
+    end
   end
 
   # before_create
