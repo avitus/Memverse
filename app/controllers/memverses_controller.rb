@@ -291,30 +291,6 @@ class MemversesController < ApplicationController
 
   end
 
-
-  # ----------------------------------------------------------------------------------------------------------
-  # User Statistics
-  # ----------------------------------------------------------------------------------------------------------
-  def user_stats
-
-    @my_verses    = Array.new
-    @status_table = Hash.new(0)
-
-    mem_vs = Memverse.find(:all, :conditions => ["user_id = ?", current_user.id])
-
-    mem_vs.each { |mv|
-
-      vs            = Verse.find(mv.verse_id)
-      verse         = db_to_vs(vs.book, vs.chapter, vs.versenum)
-
-      @status_table[mv.status]  += 1
-
-    }
-
-    @pop_verses = Popverse.find(:all, :limit => 15)
-
-  end
-
   # ----------------------------------------------------------------------------------------------------------
   # Show most popular verses
   # ----------------------------------------------------------------------------------------------------------
