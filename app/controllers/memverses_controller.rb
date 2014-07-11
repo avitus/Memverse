@@ -476,20 +476,6 @@ class MemversesController < ApplicationController
   end
 
   # ----------------------------------------------------------------------------------------------------------
-  # Verify a verse
-  # ----------------------------------------------------------------------------------------------------------
-  def toggle_verse_flag
-    @verse = Verse.find(params[:id])
-    @verse.error_flag = !@verse.error_flag
-    @verse.save
-
-    respond_to do |format|
-      format.html { render :partial => 'flag_verse', :layout => false }
-      format.json { render :json => { :mv_error_flag => @verse.error_flag} }
-    end
-  end
-
-  # ----------------------------------------------------------------------------------------------------------
   # Toggle verse from 'Active' to 'Pending' status
   # ----------------------------------------------------------------------------------------------------------
   def toggle_mv_status

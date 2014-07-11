@@ -116,7 +116,7 @@ MemverseApp::Application.routes.draw do
   get '/popular_verses'           => 'memverses#pop_verses',            :as => 'popular_verses'
   get '/home'                     => 'memverses#index',                 :as => 'index'
   get '/memory_verse/:id'         => 'memverses#show',                  :as => 'memory_verse'
-  get '/toggle_error_flag/:id'    => 'memverses#toggle_verse_flag',     :as => 'toggle_error_flag'
+  get '/toggle_error_flag/:id'    => 'verses#toggle_flag',              :as => 'toggle_error_flag'
   get '/toggle_mv_status/:id'     => 'memverses#toggle_mv_status',      :as => 'toggle_mv_status'
 
   # Tagging verses

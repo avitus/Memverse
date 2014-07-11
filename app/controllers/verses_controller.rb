@@ -128,6 +128,20 @@ class VersesController < ApplicationController
   end
 
   # ----------------------------------------------------------------------------------------------------------
+  # Verify a verse
+  # ----------------------------------------------------------------------------------------------------------
+  def toggle_flag
+    @verse = Verse.find(params[:id])
+    @verse.error_flag = !@verse.error_flag
+    @verse.save
+
+    respond_to do |format|
+      format.html { render :partial => 'flag_verse', :layout => false }
+      format.json { render :json => { :mv_error_flag => @verse.error_flag} }
+    end
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
   # Find a verse for a user
   # ----------------------------------------------------------------------------------------------------------
   def lookup
