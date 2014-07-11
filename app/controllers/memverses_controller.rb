@@ -1,11 +1,8 @@
 # coding: utf-8
 
-# * Add client side verse memorization feedback
 # - Add moderators for different translations
 # - Add nice, explanatory pop-up boxes using jQuery
-# - Allow for idle verses
 # - Add better verse search - allow for missing search parameters to return, for instance, all translations of a given verse
-# ? Allow users to enter first letter of each word when memorizing
 # ? Allow for multiple groups
 
 # --- Change Log -------------------------------------------------------------------------------------------
@@ -103,7 +100,7 @@
 
 class MemversesController < ApplicationController
 
-  before_filter :authenticate_user!, :except => [:memverse_counter, :feedback]
+  before_filter :authenticate_user!, :except => [:memverse_counter]
 
   # Added 4/7/10 to prevent invalid authenticity token errors
   # http://ryandaigle.com/articles/2007/9/24/what-s-new-in-edge-rails-better-cross-site-request-forging-prevention
@@ -1242,62 +1239,6 @@ class MemversesController < ApplicationController
     else
       redirect_to root_path
     end
-  end
-
-  # ----------------------------------------------------------------------------------------------------------
-  # Check for errors in verse test
-  # Note: we should remove the 'strip' and whitespace substitution
-  #       on the correct verse once we're sure that all the old verses have been
-  #       correctly stripped. Newer verses are stripped when saved
-  # ----------------------------------------------------------------------------------------------------------
-  def feedback
-
-    guess   = params[:verseguess] ? url_unescape(params[:verseguess]).gsub(/\s+/," ").strip : ""  # Remove double spaces from guesses
-    correct = params[:correct]    ? url_unescape(params[:correct]).gsub(/\s+/," ").strip    : ""  # The correct verse was stripped, cleaned when first saved
-    echo    = (params[:echo] == "true")
-
-    logger.debug("Echo (give feedback) is set to: #{echo}")
-    logger.debug("Guess   			: #{guess}")
-    logger.debug("Correct 			: #{correct}")
-    # logger.debug("Guess encoding 	: #{guess.encoding.name}")  # encoding method only available in Ruby 1.9
-    # logger.debug("Correct encoding	: #{correct.encoding.name}")
-
-    @correct  = correct
-    @feedback = ""  # find a better way to construct the string
-
-    guess_words = guess.split(/\s-\s|\s-|\s/)  # used to include the long dash but there isn't a way you can type a long dash'
-    right_words = correct.split
-
-    if !right_words.empty?
-      # Calculate feedback string
-      if echo
-        guess_words.each_index { |i|
-          if i < right_words.length # check that guess isn't longer than correct answer
-
-            if guess_words[i].downcase.gsub(/[^a-z ]/, '') == right_words[i].downcase.gsub(/[^a-z ]/, '')
-              @feedback = @feedback + right_words[i] + " "
-            else
-              @feedback = @feedback + "..."
-            end
-
-            if right_words[i+1] == "-" || right_words[i+1] == "—"
-              @feedback = @feedback + right_words[i+1] + " "
-              # Remove the dash from the array
-              right_words.delete_at(i+1)
-            end
-
-          end
-        }
-      else
-        @feedback = "< Feedback disabled >"
-      end
-
-      # Check for complete match
-      @match    = (  guess.downcase.gsub(/[^a-z ]|\s-|\s—/, '') == correct.downcase.gsub(/[^a-z ]|\s-|\s—/, '')  )
-    end
-
-    render :partial=>'feedback', :layout=>false
-
   end
 
   # ----------------------------------------------------------------------------------------------------------
