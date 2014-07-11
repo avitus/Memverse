@@ -1072,7 +1072,8 @@ class MemversesController < ApplicationController
   end
 
   # ----------------------------------------------------------------------------------------------------------
-  # Update reference test interval and next reference test date - this is a service URL for a js routine
+  # Update reference test interval and next reference test date
+  # Service URL for a JS routine
   # ----------------------------------------------------------------------------------------------------------
   def score_ref_test
 
@@ -1080,10 +1081,12 @@ class MemversesController < ApplicationController
     score  = params[:score].to_i
 
     # Update interval
-    if score == 10
-      mv.ref_interval = [(mv.ref_interval * 1.5), 365].min.round  # correct answer
-    else
-      mv.ref_interval = [(mv.ref_interval * 0.6),   1].max.round  # incorrect answer
+
+    if score == 10    # correct
+      mv.ref_interval = [(mv.ref_interval * 1.5),
+                         mv.user.max_interval.to_i].min.round
+    else              # incorrect
+      mv.ref_interval = [(mv.ref_interval * 0.6), 1].max.round
     end
 
     # Update date for next ref test
