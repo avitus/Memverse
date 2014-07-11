@@ -84,7 +84,6 @@ MemverseApp::Application.routes.draw do
   get '/test_verse_quick'         => 'memverses#test_verse_quick',      :as => 'test_verse_quick'
   get '/test_next_verse'          => 'memverses#test_next_verse',       :as => 'test_next_verse'
   get '/mark_test_quick'          => 'memverses#mark_test_quick',       :as => 'mark_test_quick'
-  get '/feedback'                 => 'memverses#feedback',              :as => 'feedback'
   get '/upcoming_verses'          => 'memverses#upcoming_verses',       :as => 'upcoming_verses'
 
   # Reference tests
@@ -112,8 +111,6 @@ MemverseApp::Application.routes.draw do
   post '/delete_memverses'        => 'memverses#delete_verses'
   get '/reset_schedule'           => 'users#reset_schedule',            :as => 'reset_schedule'
 
-
-  get '/user_stats'               => 'memverses#user_stats',            :as => 'user_stats'
   get '/progress'                 => 'memverses#show_progress',         :as => 'progress'
   get '/save_progress_report'     => 'memverses#save_progress_report',  :as => 'save_progress_report'
   get '/popular_verses'           => 'memverses#pop_verses',            :as => 'popular_verses'
