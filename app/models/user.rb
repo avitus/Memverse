@@ -608,9 +608,7 @@ class User < ActiveRecord::Base
       if smv.part_of_entire_chapter?
         if smv.chapter_memorized?
           cc << ["Memorized", smv.verse.chapter_name]
-        elsif smv.chapter_pending?
-          cc << ["Pending",   smv.verse.chapter_name]
-        else
+        elsif !smv.chapter_pending?
           cc << ["Learning",  smv.verse.chapter_name]
         end
       end
