@@ -16,25 +16,27 @@ class Memverse < ActiveRecord::Base
   scope :active, 			  -> { where(:status => ["Learning", "Memorized"]) }
   scope :inactive, 			-> { where(:status => "Pending") }
 
-  scope :current,  			-> { where('next_test >= ?', Date.today) }
-  scope :due_today, 		-> { where('next_test  = ?', Date.today) }
-  scope :overdue,  			-> { where('next_test  < ?', Date.today) }
+  scope :current,  			-> { where("next_test >= ?", Date.today) }
+  scope :due_today, 		-> { where("next_test  = ?", Date.today) }
+  scope :overdue,  			-> { where("next_test  < ?", Date.today) }
 
   # We need to check for nil values because that column has no default value
-  scope :ref_due,       -> { where('next_ref_test IS NULL or next_ref_test <= ?', Date.today) }
+  scope :ref_due,       -> { where("next_ref_test IS NULL or next_ref_test <= ?", Date.today) }
 
   scope :passage_start, -> { where(:prev_verse => nil) }
 
-  scope :american, 			-> { joins(:user, :country).where('countries.name' => 'United States') }
+  scope :american, 			-> { joins(:user, :country).where("countries.name" => "United States") }
 
-  scope :old_testament, -> {where('verses.book_index' =>  1..39).includes(:verse) }
-  scope :new_testament,	-> {where('verses.book_index' => 40..66).includes(:verse) }
+  scope :old_testament, -> { where("verses.book_index" =>  1..39).includes(:verse) }
+  scope :new_testament,	-> { where("verses.book_index" => 40..66).includes(:verse) }
 
-  scope :history,    -> {where('verses.book_index' =>  1..17).includes(:verse) }
-  scope :wisdom,     -> {where('verses.book_index' => 18..22).includes(:verse) }
-  scope :prophecy,   -> {joins(:verse).where("verses.book_index BETWEEN 23 AND 39 OR verses.book_index = 66").includes(:verse) }
-  scope :gospel,     -> {where('verses.book_index' => 40..43).includes(:verse) }
-  scope :epistle,    -> { where('verses.book_index' => 45..65).includes(:verse) }
+  scope :history,  -> { where("verses.book_index" =>  1..17).includes(:verse) }
+  scope :wisdom,   -> { where("verses.book_index" => 18..22).includes(:verse) }
+  scope :prophecy, -> { joins(:verse).where("verses.book_index BETWEEN 23 AND 39 OR verses.book_index = 66").includes(:verse) }
+  scope :gospel,   -> { where("verses.book_index" => 40..43).includes(:verse) }
+  scope :epistle,  -> { where("verses.book_index" => 45..65).includes(:verse) }
+
+  scope :canonical_sort, -> { includes(:verse).order('verses.book_index, verses.chapter, verses.versenum') }
 
   # Validations
   validates :user_id,  :presence => true
@@ -172,7 +174,8 @@ class Memverse < ActiveRecord::Base
   end
 
   # ----------------------------------------------------------------------------------------------------------
-  # Delete accounts of users that never added any verses TODO: Is this method ever used?
+  # Delete accounts of users that never added any verses
+  # TODO: Is this method ever used?
   # ----------------------------------------------------------------------------------------------------------
   def self.delete_unstarted_memory_verses
     find(:all, :conditions => [ "created_at < ? and attempts = ?", 6.months.ago, 0 ]).each { |mv|
@@ -281,11 +284,25 @@ class Memverse < ActiveRecord::Base
   #          [true, false, false ... ]  - if user hasn't memorized entire passage (not implemented)
   # ----------------------------------------------------------------------------------------------------------
   def chapter_memorized?
+    mvs = self.passage.memverses
 
     if self.passage.complete_chapter
-      self.passage.memverses.map { |vs|
-        vs.memorized?
-      }.all?
+      mvs.count == mvs.where(status: "Memorized").count
+    else
+      false
+    end
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # User has entire chapter pending
+  # Returns: true                       - if entire passage is pending
+  #          false                      - if entire passage is not pending
+  # ----------------------------------------------------------------------------------------------------------
+  def chapter_pending?
+    mvs = self.passage.memverses
+
+    if self.passage.complete_chapter
+      mvs.count == mvs.where(status: "Pending").count
     else
       false
     end
@@ -508,7 +525,7 @@ class Memverse < ActiveRecord::Base
   def next_verse_in_user_list
 
     u           = self.user
-    all_verses  = u.memverses.includes(:verse).order('verses.book_index, verses.chapter, verses.versenum')
+    all_verses  = u.memverses.canonical_sort
 
     position    = all_verses.index(self)
     return all_verses[position+1] || all_verses[0]
@@ -517,7 +534,7 @@ class Memverse < ActiveRecord::Base
   def prev_verse_in_user_list
 
     u           = self.user
-    all_verses  = u.memverses.includes(:verse).order('verses.book_index, verses.chapter, verses.versenum')
+    all_verses  = u.memverses.canonical_sort
 
     position    = all_verses.index(self)
     return all_verses[position-1]
@@ -527,9 +544,6 @@ class Memverse < ActiveRecord::Base
   # Find a verse that is due but not this one
   # ----------------------------------------------------------------------------------------------------------
   def another_due_verse
-
-    # mv = Memverse.find( :first, :conditions => ["user_id = ? and id != ?", self.user.id, self.id],
-                        # :order => "next_test ASC")
 
     mv = Memverse.where("user_id = ? and id != ?", self.user.id, self.id).active.order("next_test ASC").first
 

@@ -41,8 +41,11 @@ class Verse < ActiveRecord::Base
 
   scope :tl, ->(tl) { where('translation = ?', tl) }
 
+  scope :canonical_sort, -> { order("book_index, chapter, versenum") }
+
   # ----------------------------------------------------------------------------------------------------------
   # Sort Verse objects according to biblical book order
+  # canonical_sort scope preferred
   # ----------------------------------------------------------------------------------------------------------
   def <=>(o)
 

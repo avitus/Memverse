@@ -101,6 +101,7 @@
 class MemversesController < ApplicationController
 
   before_filter :authenticate_user!, :except => [:memverse_counter]
+  before_action :set_mv, only: [:add_mv_tag, :toggle_mv_status]
 
   # Added 4/7/10 to prevent invalid authenticity token errors
   # http://ryandaigle.com/articles/2007/9/24/what-s-new-in-edge-rails-better-cross-site-request-forging-prevention
@@ -409,7 +410,6 @@ class MemversesController < ApplicationController
   # In place editing support for tag addition
   # ----------------------------------------------------------------------------------------------------------
   def add_mv_tag
-    @mv = Memverse.find(params[:id])
     new_tag = params[:value].titleize # need to clean this up with hpricot or equivalent
 
     # Notes on using the acts_as_taggable_on gem
@@ -437,21 +437,13 @@ class MemversesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   # Autocomplete tag
   # ----------------------------------------------------------------------------------------------------------
-
   def tag_autocomplete
+    query = params[:term]
     @suggestions = Array.new
 
-    query         = params[:term]
-    query_length  = query.length
-
-    # This has the effect of restricting autocomplete to only :taggable_type => Verse
-    all_tags = Verse.tag_counts
-
-    all_tags.each { |tag|
-      name = tag.name
-      if name[0...query_length].downcase == query.downcase
-        @suggestions << name
-      end
+    # loop through Verse tags
+    Verse.tag_counts.map(&:name).each { |tag|
+      @suggestions << tag if tag[0...query.length].downcase == query.downcase
     }
 
     render :json => @suggestions.to_json
@@ -479,14 +471,11 @@ class MemversesController < ApplicationController
   # Toggle verse from 'Active' to 'Pending' status
   # ----------------------------------------------------------------------------------------------------------
   def toggle_mv_status
-    @mv = Memverse.find(params[:id])
-
-    if @mv && @mv.status == 'Pending'
-    	@mv.status = @mv.test_interval > 30 ? "Memorized" : "Learning"
+    if @mv.status == "Pending"
+      @mv.update(status: (@mv.test_interval > 30) ? "Memorized" : "Learning")
     else
-    	@mv.status = 'Pending'
+      @mv.update(status: "Pending")
     end
-    @mv.save
 
     respond_to do |format|
       format.html { render :partial => 'mv_status_toggle', :layout => false }
@@ -725,14 +714,16 @@ class MemversesController < ApplicationController
 
     errorcode, book, chapter, versenum = parse_verse(ref)
 
+    book = full_book_name(book)
+
     if (!errorcode) # If verse is ok
 
       @avail_chapters = Array.new
 
       # Check whether verse is already in DB
-      @avail_translations = Verse.find( :all,
-                                        :conditions => ["book = ? and chapter = ? and versenum = ?",
-                                                         full_book_name(book), chapter, versenum])
+      @avail_translations = Verse.where(book: book, chapter: chapter,
+                                          versenum: versenum).all
+
       # Check whether entire chapter is available
       @avail_translations.each { |vs|
         if !vs.entire_chapter.include?(nil) # if all verses are in db
@@ -933,27 +924,19 @@ class MemversesController < ApplicationController
       # Give encouragement if verse transitions from "Learning" to "Memorized"
       if newly_memorized
         msg = "Congratulations. You have memorized #{mv.verse.ref}."
-        Tweet.create(:news => "#{current_user.name_or_login} memorized #{mv.verse.ref}", :user_id => current_user.id, :importance => 5)
+        current_user.broadcast("memorized #{mv.verse.ref}", 5)
 
         if current_user.reaching_milestone
-        	milestone = current_user.memorized+1
+          current_user.tweet_milestone
 
-        	importance = case milestone
-  	      	when    0..    9 then 4
-  	      	when   10..  499 then 3
-  	      	when  500..  999 then 2
-  	      	when 1000..10000 then 1
-  	      	else                  5
-        	end
+          milestone = current_user.memorized+1
 
-          msg       << " That was your #{milestone}th memorized verse!"
-          broadcast  = "#{current_user.name_or_login} memorized #{current_user.his_or_her} #{milestone}th verse"
-          Tweet.create(:news => broadcast, :user_id => current_user.id, :importance => importance)
+          msg << " That was your #{milestone}th memorized verse!"
         end
 
         if mv.chapter_memorized?
           msg << " You have now memorized all of #{mv.verse.chapter_name}. Great job!"
-          Tweet.create(:news => "#{current_user.name_or_login} memorized #{mv.verse.chapter_name}", :user_id => current_user.id, :importance => 3)
+          current_user.broadcast("memorized #{mv.verse.chapter_name}", 3)
         end
       end
 
@@ -1218,6 +1201,12 @@ class MemversesController < ApplicationController
       format.json { render :json => @upcoming_verses }
     end
 
+  end
+
+  private
+
+  def set_mv
+    @mv = Memverse.find(params[:id])
   end
 
 end

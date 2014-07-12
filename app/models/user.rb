@@ -151,7 +151,7 @@ class User < ActiveRecord::Base
   # Display name
   # ----------------------------------------------------------------------------------------------------------
   def to_s
-    name
+    name_or_login
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -209,7 +209,7 @@ class User < ActiveRecord::Base
   # Returns: TRUE if user has verse in userlist else FALSE
   # ----------------------------------------------------------------------------------------------------------
   def has_verse_id?(vs_id)
-    ref = Memverse.where(:user_id => self.id, :verse_id => vs_id).first
+    ref = self.memverses.where(verse_id: vs_id).first
     return ref
   end
 
@@ -299,16 +299,14 @@ class User < ActiveRecord::Base
 
       if time_shortfall >= 1
 
-        # We need to convert the ActiveRecord relation to an array otherwise the following update_all
-        # operations throw a MySQL error.
-        pending = self.memverses.inactive.order("created_at ASC").limit(time_shortfall).select("id").to_a
+        pending = self.memverses.inactive.order("created_at ASC").limit(time_shortfall)
 
         # We need to handle memory verses that have been set to 'Pending' but were already memorized
-        Memverse.where("id in (?) and test_interval > 30", pending).update_all(:status => "Memorized")
-        Memverse.where("id in (?) and test_interval <= 30", pending).update_all(:status => "Learning")
-        Memverse.where("id in (?) and next_test <= ?", pending, Date.today).update_all(:next_test => Date.tomorrow)
+        pending.where("test_interval > 30").update_all(status: "Memorized")
+        pending.where("test_interval <= 30").update_all(status: "Learning")
+        pending.where("next_test <= ?", Date.today).update_all(next_test: Date.tomorrow)
 
-        return Memverse.where("id in (?)", pending)
+        return pending
       end
 
     end
@@ -342,12 +340,14 @@ class User < ActiveRecord::Base
   # Completed sessions over various time periods
   # ----------------------------------------------------------------------------------------------------------
   def completed_sessions(time_period = :total)
+    sessions = self.progress_reports
+
     return case time_period
-      when :week  then self.progress_reports.where('entry_date > ?', 1.week.ago).count
-      when :month then self.progress_reports.where('entry_date > ?', 1.month.ago).count
-      when :year  then self.progress_reports.where('entry_date > ?', 1.year.ago).count
-      when :total then self.progress_reports.count
-      else self.progress_reports.count
+      when :week  then sessions.where('entry_date > ?', 1.week.ago).count
+      when :month then sessions.where('entry_date > ?', 1.month.ago).count
+      when :year  then sessions.where('entry_date > ?', 1.year.ago).count
+      when :total then sessions.count
+      else sessions.count
     end
   end
 
@@ -355,7 +355,8 @@ class User < ActiveRecord::Base
   # Return hash of OT Verses memorized and learning
   # ----------------------------------------------------------------------------------------------------------
   def ot_verses
-    { "Memorized" => self.memverses.memorized.old_testament.count, "Learning" => self.memverses.learning.old_testament.count }
+    { "Memorized" => self.memverses.memorized.old_testament.count,
+      "Learning"  => self.memverses.learning.old_testament.count }
   end
 
   def ot_perc
@@ -366,7 +367,8 @@ class User < ActiveRecord::Base
   # Return hash of NT Verses memorized and learning
   # ----------------------------------------------------------------------------------------------------------
   def nt_verses
-    { "Memorized" => self.memverses.memorized.new_testament.count, "Learning" => self.memverses.learning.new_testament.count }
+    { "Memorized" => self.memverses.memorized.new_testament.count,
+      "Learning"  => self.memverses.learning.new_testament.count }
   end
 
   def nt_perc
@@ -377,7 +379,8 @@ class User < ActiveRecord::Base
   # Return hash of Histroy Verses memorized and learning
   # ----------------------------------------------------------------------------------------------------------
   def history
-    { "Memorized" => self.memverses.memorized.history.count, "Learning" => self.memverses.learning.history.count }
+    { "Memorized" => self.memverses.memorized.history.count,
+      "Learning" => self.memverses.learning.history.count }
   end
 
   def h_perc
@@ -388,7 +391,8 @@ class User < ActiveRecord::Base
   # Return hash of Wisdom Verses memorized and learning
   # ----------------------------------------------------------------------------------------------------------
   def wisdom
-    { "Memorized" => self.memverses.memorized.wisdom.count, "Learning" => self.memverses.learning.wisdom.count }
+    { "Memorized" => self.memverses.memorized.wisdom.count,
+      "Learning" => self.memverses.learning.wisdom.count }
   end
 
   def w_perc
@@ -399,7 +403,8 @@ class User < ActiveRecord::Base
   # Return hash of Prophecy Verses memorized and learning
   # ----------------------------------------------------------------------------------------------------------
   def prophecy
-    { "Memorized" => self.memverses.memorized.prophecy.count, "Learning" => self.memverses.learning.prophecy.count }
+    { "Memorized" => self.memverses.memorized.prophecy.count,
+      "Learning" => self.memverses.learning.prophecy.count }
   end
 
   def p_perc
@@ -410,7 +415,8 @@ class User < ActiveRecord::Base
   # Return hash of Gospel Verses memorized and learning
   # ----------------------------------------------------------------------------------------------------------
   def gospel
-    { "Memorized" => self.memverses.memorized.gospel.count, "Learning" => self.memverses.learning.gospel.count }
+    { "Memorized" => self.memverses.memorized.gospel.count,
+      "Learning" => self.memverses.learning.gospel.count }
   end
 
   def g_perc
@@ -421,7 +427,8 @@ class User < ActiveRecord::Base
   # Return hash of Epistle Verses memorized and learning
   # ----------------------------------------------------------------------------------------------------------
   def epistle
-    { "Memorized" => self.memverses.memorized.epistle.count, "Learning" => self.memverses.learning.epistle.count }
+    { "Memorized" => self.memverses.memorized.epistle.count,
+      "Learning" => self.memverses.learning.epistle.count }
   end
 
   def e_perc
@@ -432,14 +439,14 @@ class User < ActiveRecord::Base
   # Returns all quests still needed for user's current level
   # ----------------------------------------------------------------------------------------------------------
   def current_uncompleted_quests
-    Quest.where(:level => self.level+1) - self.current_completed_quests
+    Quest.where(level: self.level+1) - self.current_completed_quests
   end
 
   # ----------------------------------------------------------------------------------------------------------
   # Returns all quests completed for user's current level (Quests 'belong' to a user once completed)
   # ----------------------------------------------------------------------------------------------------------
   def current_completed_quests
-    self.quests.where(:level => self.level+1)
+    self.quests.where(level: self.level+1)
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -465,11 +472,6 @@ class User < ActiveRecord::Base
   # Level up user
   # ----------------------------------------------------------------------------------------------------------
   def level_up
-
-    # TODO: Can remove this if sure that no users have a nil level field
-    if self.level.nil?
-      self.level = 0
-    end
 
     self.level += 1
     self.save
@@ -526,24 +528,23 @@ class User < ActiveRecord::Base
   end
 
   # ----------------------------------------------------------------------------------------------------------
-  # Save Entry in Progress Table
+  # Create progress report or update existing
   # ----------------------------------------------------------------------------------------------------------
   def save_progress_report
 
     # Check whether there is already an entry for today
-    pr = ProgressReport.where(:user_id => self.id, :entry_date => Date.today).first
+    pr = self.progress_report.where(entry_date: Date.today).first
 
     if pr.nil?
-      pr = ProgressReport.new
-
-      pr.user_id          = self.id
-      pr.entry_date       = Date.today
-      pr.memorized        = self.memorized
-      pr.learning         = self.learning
-      pr.time_allocation  = self.work_load
-
-      pr.save
+      pr = ProgressReport.new(user: self, entry_date: Date.today)
     end
+
+    pr.memorized        = self.memorized
+    pr.learning         = self.learning
+    pr.time_allocation  = self.work_load
+
+    pr.save
+
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -551,9 +552,9 @@ class User < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   def referrals( active = false )
     if active
-      User.active.where(:referred_by => self.id)
+      User.active.where(referred_by: self.id)
     else
-      User.where(:referred_by => self.id)
+      User.where(referred_by: self.id)
     end
   end
 
@@ -561,7 +562,7 @@ class User < ActiveRecord::Base
   # Return number of people a user has referred
   # ----------------------------------------------------------------------------------------------------------
   def num_referrals( active = false )
-    self.referrals(active).length
+    self.referrals(active).count
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -582,36 +583,35 @@ class User < ActiveRecord::Base
 
   # ----------------------------------------------------------------------------------------------------------
   # Has user ever finished a day of memorization
-  # Input: User object
   # ----------------------------------------------------------------------------------------------------------
   def finished_a_mem_session?
-    entries = ProgressReport.where("user_id = ?", self.id).first
-    return !entries.nil?
+    return self.progress_reports.count > 0
   end
 
   # ----------------------------------------------------------------------------------------------------------
   # Number of tags a user has applied
   # ----------------------------------------------------------------------------------------------------------
   def num_taggings
-    ActsAsTaggableOn::Tagging.where(:tagger_type => "user", :tagger_id => self.id).length
+    ActsAsTaggableOn::Tagging.where(tagger_type: "user", tagger: self).count
   end
 
   # ----------------------------------------------------------------------------------------------------------
   # Returns list of complete chapters that user is memorizing
-  # TODO: This needs serious optimization ... page load time for user with lots of complete books is 40 secs
+  # TODO: Is more optimization required? Page load time for user with lots of complete books was 40 secs.
   # ----------------------------------------------------------------------------------------------------------
   def complete_chapters
     cc = Array.new
 
     # Get all memory verses for user that are the first verse in a chapter
-    start_mv = self.memverses.includes(:verse).where('verses.versenum' => 1)
-    start_mv.sort!.each { |smv|
+    start_mv = self.memverses.canonical_sort.where('verses.versenum' => 1)
+    start_mv.each { |smv|
       if smv.part_of_entire_chapter?
         if smv.chapter_memorized?
           cc << ["Memorized", smv.verse.chapter_name]
+        elsif smv.chapter_pending?
+          cc << ["Pending",   smv.verse.chapter_name]
         else
-          cc << ["Learning", smv.verse.chapter_name]
-          # TODO: What should we do about "Pending" chapters?
+          cc << ["Learning",  smv.verse.chapter_name]
         end
       end
     }
@@ -660,6 +660,7 @@ class User < ActiveRecord::Base
 
   # ----------------------------------------------------------------------------------------------------------
   # Reset the spacing of memory verses
+  # TODO: Refactor
   # ----------------------------------------------------------------------------------------------------------
   def reset_memorization_schedule
 
@@ -705,10 +706,10 @@ class User < ActiveRecord::Base
     self.passages.delete_all
 
     # Find all starting (or solo verses) and create a passage
-    Memverse.where(:user_id => self.id, :first_verse => nil).find_each { |mv|
+    self.memverses.where(first_verse: nil).find_each { |mv|
       pp = Passage.create!(
 
-        :user_id        => self.id,
+        :user           => self,
 
         :reference      => mv.verse.ref,
         :translation    => mv.verse.translation,
@@ -735,7 +736,7 @@ class User < ActiveRecord::Base
     }
 
     # Find all other verses and add to existing passage
-    Memverse.where(:user_id => self.id).where(Memverse.arel_table[:first_verse].not_eq(nil)).find_each { |mv|
+    self.memverses.where(Memverse.arel_table[:first_verse].not_eq(nil)).find_each { |mv|
       mv.add_to_passage
     }
 
@@ -745,18 +746,18 @@ class User < ActiveRecord::Base
   # Returns number of overdue verses (does not include verses that are due today)
   # ----------------------------------------------------------------------------------------------------------
   def overdue_verses
-    Memverse.active.where("user_id = ? and next_test < ?", self.id, Date.today).count
+    self.memverses.active.where("next_test < ?", Date.today).count
   end
 
   # ----------------------------------------------------------------------------------------------------------
   # Returns number of due verses
   # ----------------------------------------------------------------------------------------------------------
   def due_verses
-    Memverse.active.where("user_id = ? and next_test <= ?", self.id, Date.today).count
+    self.memverses.active.where("next_test <= ?", Date.today).count
   end
 
   # ----------------------------------------------------------------------------------------------------------
-  # Returns number of due verses
+  # Returns number of due verse references
   # ----------------------------------------------------------------------------------------------------------
   def due_refs
     if self.all_refs
@@ -770,7 +771,7 @@ class User < ActiveRecord::Base
   # Returns first verse that is due today
   # ----------------------------------------------------------------------------------------------------------
   def first_verse_today
-    mv = Memverse.where(:user_id => self.id).active.order("next_test ASC").first()
+    mv = self.memverses.active.order("next_test ASC").first
 
     if mv && mv.due?
       return mv.first_verse_due_in_sequence
@@ -790,11 +791,9 @@ class User < ActiveRecord::Base
   	upcoming = Array.new
 
   	if strict and mode == 'test'
-  		# upcoming = Memverse.find(:all, :conditions => ["user_id = ? and next_test <= ?", self, Date.today], :order => "next_test ASC" )
-  		upcoming = Memverse.active.where("user_id = ? and next_test <= ?", self, Date.today).order("next_test ASC")
+  		upcoming = self.memverses.active.where("next_test <= ?", Date.today).order("next_test ASC")
   	else
-	    # mvs = Memverse.find(:all, :conditions => ["user_id = ? and next_test <= ?", self, Date.today], :order => "next_test ASC", :limit => limit)
-	    mvs = Memverse.active.where("user_id = ? and next_test <= ?", self, Date.today).order("next_test ASC").limit(limit)
+	    mvs = self.memverses.active.where("next_test <= ?", Date.today).order("next_test ASC").limit(limit)
 	    current_mv = Memverse.find(mv_id) unless mv_id.nil?
 
 	    mvs.collect! { |mv|
@@ -855,32 +854,27 @@ class User < ActiveRecord::Base
 
       if reminder_freq == "Quarterly" and days_since_active > 365
         logger.info("*** Changing reminder frequency for #{self.login} to an annual schedule. Last activity was #{days_since_active} days ago")
-        self.reminder_freq = "Annually"
-        self.save
+        self.update_column(:reminder_freq, "Annually")
       end
 
       if reminder_freq == "weekly" and days_since_active > 10  # focus on users who never set their reminder frequency
         logger.info("*** Changing reminder frequency for #{self.login} to a monthly schedule. Last activity was #{days_since_active} days ago")
-        self.reminder_freq = "Never"
-        self.save
+        self.update_column(:reminder_freq, "Never")
       end
 
       if reminder_freq == "Weekly" and days_since_active > 40
         logger.info("*** Changing reminder frequency for #{self.login} to a monthly schedule. Last activity was #{days_since_active} days ago")
-        self.reminder_freq = "Monthly"
-        self.save
+        self.update_column(:reminder_freq, "Monthly")
       end
 
       if reminder_freq == "Monthly" and days_since_active > 65
         logger.info("*** Changing reminder frequency for #{self.login} to a quarterly schedule. Last activity was #{days_since_active} days ago")
-        self.reminder_freq = "Quarterly"
-        self.save
+        self.update_column(:reminder_freq, "Quarterly")
       end
 
       if reminder_freq == "Daily" and days_since_active > 25
         logger.info("*** Changing reminder frequency for #{self.login} to a weekly schedule. Last activity was #{days_since_active} days ago")
-        self.reminder_freq = "Weekly"
-        self.save
+        self.update_column(:reminder_freq, "Weekly")
       end
     end
 
@@ -917,7 +911,7 @@ class User < ActiveRecord::Base
   def delete_account
 
     # Remove user's memory verses
-    user_mv = Memverse.find(:all, :conditions => ["user_id = ?", self.id])
+    user_mv = self.memverses
     Rails.logger.info("===== Removing user #{self.login} and his/her #{user_mv.length} memory verses =========")
     user_mv.each { |mv|
       logger.info("|  -- Deleting memory verse #{mv.id}")
@@ -935,7 +929,9 @@ class User < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   def self.delete_users_who_never_started
 
-    find(:all, :conditions => [ "created_at < ? and learning = ? and memorized = ?", 3.months.ago, 0, 0 ]).each { |u|
+    # TODO: What about pending verses? Is this method used?
+
+    where("created_at < ?", 3.months.ago).where(learning: 0, memorized: 0).each { |u|
       # u.destroy
       Rails.logger.info("We should remove user #{u.login} - they haven't got started in over three months")
     }
@@ -952,10 +948,36 @@ class User < ActiveRecord::Base
   end
 
   # ----------------------------------------------------------------------------------------------------------
+  # Tweet about user
+  # ----------------------------------------------------------------------------------------------------------
+  def broadcast(news, importance)
+    Tweet.create(news: "#{self} #{news}", user: self, importance: importance)
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
   # User about to reach a milestone
   # ----------------------------------------------------------------------------------------------------------
   def reaching_milestone
-    [9, 24, 49, 99, 199, 299, 499, 999, 1499, 1999, 2999, 3999, 4999, 9999].include?(self.memorized)
+    [9, 24, 49, 99, 199, 299, 499, 999, 1499, 1999, 2999, 3999, 4999, 9999].
+    include?(self.memorized)
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Tweet about user reaching milestone
+  # ----------------------------------------------------------------------------------------------------------
+  def tweet_milestone
+    milestone = self.memorized+1
+
+    importance = case milestone
+      when    0..    9 then 4
+      when   10..  499 then 3
+      when  500..  999 then 2
+      when 1000..10000 then 1
+      else                  5
+    end
+
+    news = "memorized #{self.his_or_her} #{milestone}th verse"
+    self.broadcast(news, importance)
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -965,27 +987,25 @@ class User < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   def most_difficult_vs
 
-    mv = Memverse.find(:first, :conditions => ["user_id = ?", self.id], :order => "efactor ASC")
-    if mv.nil?
-      return nil # users who don't have any memory verses
-    else
-      return mv
-    end
+    mv = self.memverses.order("efactor ASC").first
+
+    return nil if mv.nil? # user has no memory verses
+
+    return mv
   end
 
   # ----------------------------------------------------------------------------------------------------------
   # Return random difficult verse
   # Input: User object
-  # Return: Verse object
+  # Return: Memverse object
   # ----------------------------------------------------------------------------------------------------------
   def random_verse
 
-    mv = Memverse.find(:all, :conditions => ["user_id = ?", self.id], :order => "efactor ASC", :limit => 10).sample
-    if mv.nil?
-      return nil # users who don't have any memory verses
-    else
-      return mv
-    end
+    mv = self.memverses.order("efactor ASC").limit(10).sample
+
+    return nil if mv.nil? # user has no memory verses
+
+    return mv
   end
 
 
@@ -996,9 +1016,10 @@ class User < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   def next_verse_due
 
-    mv = Memverse.find(:first, :conditions => ["user_id = ? AND status != ?", self.id, "Pending"], :order => "next_test ASC")
+    mv = self.memverses.active.order("next_test ASC").first
+
     if mv.nil?
-      return nil # users who don't have any memory verses
+      return nil # users who have no active memory verses
     else
       days_to_next_review = (mv.next_test - Date.today).to_i
 
@@ -1032,14 +1053,14 @@ class User < ActiveRecord::Base
   # User status
   # ----------------------------------------------------------------------------------------------------------
   def status
-    return self.is_active? ? "Active" : "Inactive"
+    self.is_active? ? "Active" : "Inactive"
   end
 
   # ----------------------------------------------------------------------------------------------------------
   # User has been active in last month
   # ----------------------------------------------------------------------------------------------------------
   def is_active?
-    return self.last_activity_date && self.last_activity_date > 1.month.ago.to_date
+    self.last_activity_date && self.last_activity_date > 1.month.ago.to_date
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -1047,7 +1068,7 @@ class User < ActiveRecord::Base
   # (remember, nil evaluates to false => a user who never activated will never be 'inactive')
   # ----------------------------------------------------------------------------------------------------------
   def is_inactive?
-    return self.last_activity_date && self.last_activity_date < 3.months.ago.to_date
+    self.last_activity_date && self.last_activity_date < 3.months.ago.to_date
   end
   # ----------------------------------------------------------------------------------------------------------
   # Check whether user needs reminder
@@ -1096,9 +1117,10 @@ class User < ActiveRecord::Base
 
   # ----------------------------------------------------------------------------------------------------------
   # Number of pending verses for user
+  # TODO: Should this return a count (number) or all the Memverse objects?
   # ----------------------------------------------------------------------------------------------------------
   def pending
-    Memverse.where(:user_id => self.id, :status => "Pending")
+    self.memverses.inactive
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -1126,7 +1148,7 @@ class User < ActiveRecord::Base
 
     report = Array.new
 
-    Memverse.where(:user_id => self.id).find_each { |mv|
+    self.memverses.find_each { |mv|
 
       record            = Hash.new
       record['mvID']    = mv.id
@@ -1264,7 +1286,7 @@ class User < ActiveRecord::Base
   def generate_login
     if !self.login?
       login = self.name.parameterize
-	  x = 0
+	  x = 1
 	  while User.find_by_login(login) do
 	    x += 1
 	    login = self.name.parameterize + "--" + x.to_s
