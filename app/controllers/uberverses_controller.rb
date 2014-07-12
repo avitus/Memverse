@@ -1,4 +1,7 @@
 class UberversesController < ApplicationController
+
+  before_filter :authenticate_user!
+
   # GET /uberverses
   # GET /uberverses.xml
   def index
