@@ -533,7 +533,7 @@ class User < ActiveRecord::Base
   def save_progress_report
 
     # Check whether there is already an entry for today
-    pr = self.progress_report.where(entry_date: Date.today).first
+    pr = self.progress_reports.where(entry_date: Date.today).first
 
     if pr.nil?
       pr = ProgressReport.new(user: self, entry_date: Date.today)
