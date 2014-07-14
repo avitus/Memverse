@@ -465,7 +465,7 @@ class Memverse < ActiveRecord::Base
   # Output: True/False depending on whether verse is/isn't locked
   # ----------------------------------------------------------------------------------------------------------
   def locked?
-    return self.verse.locked?
+    verse.locked?
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -474,7 +474,14 @@ class Memverse < ActiveRecord::Base
   # Output: True/False depending on whether verse is/isn't locked
   # ----------------------------------------------------------------------------------------------------------
   def verified?
-    return self.verse.verified?
+    verse.verified?
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Checks whether verse is inactive (status: "Pending")
+  # ----------------------------------------------------------------------------------------------------------
+  def inactive?
+    status == "Pending"
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -482,20 +489,16 @@ class Memverse < ActiveRecord::Base
   # Returns: TRUE if verse is not part of a sequence
   # ----------------------------------------------------------------------------------------------------------
   def solo_verse?
-    if !self.prev_verse and !self.next_verse
-      return true
-    else
-      return false
-    end
+    return !prev_verse && !next_verse
   end
 
   # ----------------------------------------------------------------------------------------------------------
   # Returns: TRUE/FALSE depending on whether wants Mnemonic support, verse is memorized etc.
   # ----------------------------------------------------------------------------------------------------------
   def needs_mnemonic?
-    return case self.user.mnemonic_use
-      when "Never"  then false
-      when "Always" then true
+    return case user.mnemonic_use
+      when "Never"    then false
+      when "Always"   then true
       when "Learning" then self.test_interval < 7
     end
   end
