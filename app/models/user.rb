@@ -810,7 +810,7 @@ class User < ActiveRecord::Base
 	    # At this point, mvs array contains all the starting verses due today. Now we add the downstream verses
 	    mvs.each { |mv|
 
-	        upcoming << mv unless mv.prior_in_passage_to?(current_mv)
+	        upcoming << mv unless mv.prior_in_passage_to?(current_mv) || mv.inactive?
 
 	        # Add any subsequent verses in the chain
 	        next_verse = mv.next_verse
@@ -819,7 +819,7 @@ class User < ActiveRecord::Base
 	        end
 	        while (next_verse) && cmv.more_to_memorize_in_sequence?
 	          cmv         = Memverse.find(next_verse)
-	          upcoming   << cmv unless cmv.prior_in_passage_to?(current_mv)
+	          upcoming   << cmv unless cmv.prior_in_passage_to?(current_mv) || cmv.inactive?
 	          next_verse  = cmv.next_verse
 	        end
 	    }

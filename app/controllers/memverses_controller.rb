@@ -182,7 +182,7 @@ class MemversesController < ApplicationController
     end
 
     # === Verse of the Day ===
-    @votd_txt, @votd_ref, @votd_tl, @votd_id  = verse_of_the_day()
+    @votd_txt, @votd_ref, @votd_tl, @votd_id  = verse_of_the_day
 
     # === Check for incomplete profile ===
     if current_user.country_id == 226 and current_user.american_state.nil?
@@ -892,7 +892,7 @@ class MemversesController < ApplicationController
     end
 
     # --- Load upcoming verses ---
-    @upcoming_verses = current_user.upcoming_verses() unless mobile_device?
+    @upcoming_verses = current_user.upcoming_verses unless mobile_device?
 
     # We should never receive a JS request for this URL but this is an attempted fix for the following error
 
@@ -1119,7 +1119,7 @@ class MemversesController < ApplicationController
     @show_feedback = true
 
     # First check for verses in session queue that need to be tested
-    if @mv = get_memverse_from_queue()
+    if @mv = get_memverse_from_queue
       # This verse needs to be memorized
       @verse            = get_memverse(@mv.verse_id)
       @text             = @mv.verse.text
