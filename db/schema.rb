@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140424183304) do
+ActiveRecord::Schema.define(version: 20140714001748) do
 
   create_table "american_states", force: true do |t|
     t.string  "abbrev",      limit: 20, default: "", null: false
@@ -399,9 +399,11 @@ ActiveRecord::Schema.define(version: 20140424183304) do
     t.datetime "created_at",                                                          null: false
     t.datetime "updated_at",                                                          null: false
     t.integer  "book_index"
+    t.datetime "deleted_at"
   end
 
   add_index "passages", ["book_index"], name: "index_passages_on_book_index", using: :btree
+  add_index "passages", ["deleted_at"], name: "index_passages_on_deleted_at", using: :btree
   add_index "passages", ["user_id"], name: "index_passages_on_user_id", using: :btree
 
   create_table "passwords", force: true do |t|
@@ -633,7 +635,6 @@ ActiveRecord::Schema.define(version: 20140424183304) do
     t.date     "last_reminder"
     t.string   "reminder_freq",                         default: "weekly"
     t.boolean  "newsletters",                           default: true
-    t.string   "church"
     t.integer  "church_id"
     t.integer  "country_id"
     t.string   "language",                              default: "English"
