@@ -9,8 +9,6 @@
 		        <div class="toggle-hint">Show Hint</div>
 		    </div>
 
-			<div class="mnemonic"></div>
-
 			<!-- Question-side : Entry box -->
 			<div class="verse-test-area">
 				<%= form_tag test_chapter_path do %>
@@ -111,8 +109,8 @@
 <!-- Script for updating current verse, clearing input etc -->
 <script language="JavaScript" type="text/javascript">
 
-	var current_verse 	= 1;
-	var final_verse	  	= '<%= @final_verse %>';
+	var current_verse 	= <%= @verse %>;
+	var final_verse	  	= <%= @final_verse %>;
 	var current_text  	= $("#" + current_verse).html();
 	var mv_id			= '<%= @chapter.first.id %>';
 
