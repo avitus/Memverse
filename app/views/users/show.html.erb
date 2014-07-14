@@ -212,15 +212,8 @@
 $(document).ready(function() {
 	// select all desired input fields and attach tooltips to them
 	$(".vs-disti-right table tbody tr th").tooltip({
-
-	    // use a simple show/hide effect
-	    effect: 'toggle',
-
-	    // custom opacity setting
-	    opacity: 0.8,
-
-		//tooltip style
-		tipClass: 'tooltip2'
+		tooltipClass: "tooltip2",
+		position: { my: "right-10 center", at: "left center" }
 	});
 });
 </script>
