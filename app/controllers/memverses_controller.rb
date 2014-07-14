@@ -839,8 +839,15 @@ class MemversesController < ApplicationController
 
     if @chapter
       @bk_ch        = bk + " " + ch
-      @verse        = 1
+
+      bk = "Psalms" if bk == "Psalm"
+
+      # verse could be 0 or 1
+      @verse        = current_user.memverses.joins(:verse).
+                      where("verses.book = ? and verses.chapter = ?", bk, ch).
+                      order("verses.versenum").first.verse.versenum
       @final_verse  = @chapter.length
+      @final_verse -= 1 if @verse == 0
     else
       redirect_to pre_chapter_path
     end
