@@ -99,12 +99,6 @@ class User < ActiveRecord::Base
                   :mnemonic_use, :all_refs, :referred_by, :auto_work_load, :show_email,
                   :provider, :uid
 
-  rails_admin do
-    include_all_fields
-
-    exclude_fields :church # still have church_id; fixes issue #212
-  end
-
   # ----------------------------------------------------------------------------------------------------------
   # Single Sign On support
   # ----------------------------------------------------------------------------------------------------------
@@ -1125,7 +1119,7 @@ class User < ActiveRecord::Base
   # Returns top 200 users (sorted by number of verses memorized)
   # ----------------------------------------------------------------------------------------------------------
   def self.top_users
-    User.active.order("memorized DESC").limit(250).select("id, login, name, created_at, church, church_id, country_id, memorized, learning, accuracy, ref_grade, level")
+    User.active.order("memorized DESC").limit(250).select("id, login, name, created_at, church_id, country_id, memorized, learning, accuracy, ref_grade, level")
   end
 
   # ----------------------------------------------------------------------------------------------------------
