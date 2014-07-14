@@ -1,27 +1,23 @@
 <% page_title I18n.t :chapter_review, :scope => 'page_titles' %>
 <div class="white-box-with-margins">
 	<h2>Chapter Review</h2>
-	
-	<p>If you'd like to review an entire chapter, rather than just the sections that are due today, you can select one of your chapters below. Any
-	verses that are covered in this review will be omitted from your regular memorization session today.</p>
-		
-	<table class="memverse-standard">
-		<thead>
-			<tr>		  	   	  		  
-				<th>Status</th>
-				<th>Chapter</th>
-			</tr>
-		</thead>
-		
-		<tbody>
-			<% for cc in current_user.complete_chapters %>
-				<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
-					<td align="center">	<%= cc[0] %></td>		
-					<td align="left">	<%= link_to cc[1], :action => 'test_chapter', :book_chapter => cc[1]	%></td>	
-				</tr>
-			<% end %>
-		</tbody>
-	</table>
-	
-</div>
 
+	<% if current_user.complete_chapters.length > 0 %>
+
+		<p>If you'd like to review an entire chapter, rather than just the sections that are due today, you can select one of your chapters below. Any
+		verses that are covered in this review will be omitted from your regular memorization session today.</p>
+
+		<% for cc in current_user.complete_chapters %>
+			<a href="<%= url_for test_chapter_path(book_chapter: cc[1]) %>" class="chapter-tile">
+				<span class="chapter"><%= cc[1] %></span>
+				<span class="status"><%= cc[0] %></span>
+			</a>
+		<% end %>
+
+	<% else %>
+
+		<p>Chapter Review allows you to review an entire chapter, but you do not have any in your account yet. <a href="/add_verse">Add more verses here.</a></p>
+
+	<% end %>
+
+</div>

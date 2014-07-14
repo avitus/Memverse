@@ -1674,13 +1674,9 @@ div#flash-error {
 
 .ui-tooltip {
 	position: absolute; // ALV: needed to stop tooltip jumping around
-	background:image_url('tool-tip-box.png') no-repeat left top;  height:163px;
-	width:309px;
-	height:28px;
-	line-height:23px;
-	padding-left:10px;
-	font-size:11px;
-	color:#693;
+	padding-left: 10px;
+	font-size: 11px;
+	color: #693;
 	border: none;
 }
 
@@ -1694,6 +1690,16 @@ div#flash-error {
 	color:#ad4;
 	font-size:11px;
 	font-weight:bold;
+}
+
+.mv-rating {
+	background: image_url('tool-tip-box.png') no-repeat left top;
+	width: 309px;
+	height: 28px;
+	line-height: 23px;
+	padding-left: 10px;
+	font-size: 11px;
+	color: #693;
 }
 /* END - tooltip styling */
 

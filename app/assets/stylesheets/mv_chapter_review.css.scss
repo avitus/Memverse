@@ -1,0 +1,31 @@
+.chapter-tile {
+    float: left;
+    width: 200px;
+    height: 50px;
+    text-align: center;
+    border: 2px solid #3c5313;
+    padding-bottom: 1em;
+    margin-bottom: 1em;
+    margin-right: 1em;
+
+    @include border-radius(10px);
+
+    &:hover {
+        text-decoration: none;
+        background: #cfcfcf;
+
+        .chapter {
+            text-decoration: underline;
+        }
+    }
+
+    .chapter {
+        font-size: 150%;
+        display: block;
+        font-weight: bold;
+    }
+
+    .status {
+        color: #4f4f4f;
+    }
+}
