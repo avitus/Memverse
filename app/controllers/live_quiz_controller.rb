@@ -24,7 +24,7 @@ class LiveQuizController < ApplicationController
     @quiz_master = @quiz.user
 
     # Check status of chat channel
-    @chat_status = ($redis.exists("chat-quiz-#{@quiz.id}") && $redis.hmget("chat-quiz-#{@quiz.id}", "status").first == "Open") ? "Open" : "Closed"
+    @channel = ChatChannel.find("quiz-#{@quiz.id}")
 
     # Set up quiz time and number of questions - show when user first enters quiz room
     if @quiz.id == 1

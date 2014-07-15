@@ -7,32 +7,9 @@ class ChatController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   def toggle_channel
 
-    channel = params[:channel] || "channel1"
-    if $redis.exists("chat-#{channel}")
-      status = $redis.hmget("chat-#{channel}", "status").first
-    end
+    channel = ChatChannel.find(params[:channel])
 
-    new_status = (status && status == "Open") ? "Closed":"Open"
-
-    $redis.hset("chat-#{channel}", "status", new_status)
-
-    @my_callback = lambda { |envelope|
-      if envelope.error
-        # If message is not sent we should probably try to send it again
-        puts("==== ! Failed to send message ! ==========")
-        puts( envelope.inspect )
-      end
-    }
-
-    PN.publish(
-        :channel  => channel,
-        :message  => {
-          :meta => "chat_status",
-          :status => new_status
-        },
-        :http_sync => true,
-        :callback => @my_callback
-      )
+    new_status = channel.toggle_status
 
     render :json => {:status => new_status}
   end
@@ -64,31 +41,14 @@ class ChatController < ApplicationController
     @msg 		= params[:msg_body]
     @usr 		= params[:sender]
     @usr_id = params[:user_id]
-    channel = params[:channel] || "channel1"
+    channel = ChatChannel.find(params[:channel])
 
-    open    = $redis.hmget("chat-#{channel}", "status").try(:first) == "Open"
     banned  = $redis.exists("banned-#{@usr_id}")
 
-    @my_callback = lambda { |envelope|
-      if envelope.error
-        # If message is not sent we should probably try to send it again
-        puts("==== ! Failed to send message ! ==========")
-        puts( envelope.inspect )
-      end
-    }
-
-    if open && !banned # Check that chat is open and user is not banned
-      puts "Chat is open and user not banned"
-      Rails.logger.info("====> Publishing message to PubNub: #{parse_chat_message(params[:msg_body], params[:sender], params[:user_id])}")
-      PN.publish( :channel  => channel, :message  => {
-          :meta => "chat",
-          :data => parse_chat_message(params[:msg_body], params[:sender], params[:user_id])
-        },
-        :http_sync => true,
-        :callback => @my_callback
-      )
+    if !banned
+      channel.send_message(parse_chat_message(@msg, @usr, @usr_id))
     else
-      puts "Chat is closed and/or user banned"
+      puts "Could not send message. User #{@usr_id} is banned."
     end
 
     respond_to do |format|
