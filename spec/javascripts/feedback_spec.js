@@ -196,11 +196,11 @@ describe("Feedback", function() {
 
 	it("ignores Greek diacritics", function() {
 		expect(verseFeedback(
-			"In the beginning",			// correct text
-			"I´`͂῾᾿n the beginning",	// user guess
+			"In the beginning άόό ό ῖἱ ῖ ἱ",		// correct text
+			"I´`͂῾᾿n the beginning αοο ο ιι ι ι",	// user guess
 			true											// feedback enabled
 		)).toEqual({
-			feedtext : 'In the beginning <div id="matchbox"><p>Correct</p></div>',
+			feedtext : 'In the beginning άόό ό ῖἱ ῖ ἱ <div id="matchbox"><p>Correct</p></div>',
 			correct  : true
 		})
 	});
