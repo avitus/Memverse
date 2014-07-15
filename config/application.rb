@@ -67,5 +67,17 @@ module MemverseApp
     # Don't require attr_accessible to be defined for every model
     config.active_record.whitelist_attributes = false
 
+    ### BEGIN: Fix EasouSpider invalid UTF-8 byte sequences
+
+    require "#{Rails.root}/lib/handle_invalid_percent_encoding.rb"
+
+    # NOTE: These must be in this order relative to each other.
+    # HandleInvalidPercentEncoding just raises for encoding errors it doesn't cover,
+    # so it must run after (= be inserted before) Rack::UTF8Sanitizer.
+    config.middleware.insert 0, HandleInvalidPercentEncoding
+    config.middleware.insert 0, Rack::UTF8Sanitizer  # from a gem
+
+    ### END: Fix EasouSpider invalid UTF-8 byte sequences
+
   end
 end

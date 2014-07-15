@@ -394,6 +394,8 @@ GEM
       rack
     rack-test (0.6.2)
       rack (>= 1.0)
+    rack-utf8_sanitizer (1.2.2)
+      rack (~> 1.0)
     rails (4.0.5)
       actionmailer (= 4.0.5)
       actionpack (= 4.0.5)
@@ -629,6 +631,7 @@ DEPENDENCIES
   prawnto_2
   protected_attributes (>= 1.0.5)
   pubnub
+  rack-utf8_sanitizer
   rails (= 4.0.5)
   rails-footnotes (>= 3.7)
   rails-observers

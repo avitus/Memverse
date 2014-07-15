@@ -138,6 +138,7 @@ gem 'sinatra', require: false                                                  #
 gem 'slim'
 gem 'pubnub'                                                                   # Real-time messaging service
 gem 'net-ssh', '2.7.0'                                                         # Used by capistrano among other gems. 2.8.0 had significant bug.
+gem 'rack-utf8_sanitizer'                                                      # Used to fix EasouSpider invalid UTF-8 byte sequences
 
 group :console do
   gem 'wirble'
