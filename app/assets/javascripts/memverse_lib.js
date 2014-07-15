@@ -222,11 +222,16 @@ function cleanseVerseText( versetext ) {
  * We remove anything that is not in the set of...
  	* alphanumerical characters
  	* specified sets of UTF-8 characters
+ * This includes spaces
  * Then we also remove Greek diacritics
  ******************************************************************************/
 scrub_text = function(text) {
     return text.toLowerCase().replace(/[^0-9a-z\u00BF-\u1FFF\u2C00-\uD7FF]+/g, "").
-    replace(/[´`͂῾᾿·]+/g, "");
+    replace(/[´`͂῾᾿·]+/g, "").
+    replace(/ό/g, "ο").
+    replace(/ά/g, "α").
+    replace(/ἐ/g, "ε").
+    replace(/[ῖἱ]/g,"ι");
 }
 
 /******************************************************************************
