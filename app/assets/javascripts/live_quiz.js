@@ -94,6 +94,14 @@ function scoreReference(verseref, userref) {
 	user    = $.trim(userref.toLowerCase().replace(/\s+/g, " "));
 	correct = $.trim(verseref.toLowerCase().replace(/\s+/g, " "));
 
+	// handle corner cases
+	// note: lowercase
+	user = user.replace(/(song of songs)/i, "song of songs")
+			   .replace(/(psalm )/i,        "psalms ");
+
+	correct = correct.replace(/(song of songs)/i, "song of songs")
+					 .replace(/(psalm )/i,        "psalms ");
+
 	user_book  = user.substring(0,parseInt(user.lastIndexOf(' '))+1);
 	right_book = correct.substring(0,parseInt(correct.lastIndexOf(' '))+1);
 
@@ -115,7 +123,7 @@ function scoreReference(verseref, userref) {
 	if (user_verse   == right_verse)   {score = score + 5;}
 
 	if (score == 10) {
-		msg = "You answered perfectly and scored 15 points! Good job.";
+		msg = "You answered perfectly and scored 10 points! Good job.";
 	} else if (score >= 1) {
 		msg = "Although that wasn't perfect, you still received " + score + " points. Keep trying! The correct reference was " + verseref + " (you entered " + userref + ").";
 	} else {
