@@ -51,8 +51,8 @@
 	<div id="chat-window">
 
 		<h3>
-			Chat (<span id="chat_status"><%= @chat_status %></span>)
-			<%= (link_to "Toggle Status", {:controller => "chat", :action => "toggle_channel", :channel => "quiz-#{@quiz.id}"}, :remote => true) if current_user.admin? %>
+			Chat (<span id="chat_status"><%= @channel.status %></span>)
+			<%= (link_to "Toggle Status", {controller: "chat", action: "toggle_channel", channel: @channel.channel}, remote: true) if current_user.admin? %>
 		</h3>
 
 		<div id="chat-stream-narrow">
@@ -63,7 +63,7 @@
 			<%= hidden_field_tag 'sender',  current_user.name_or_login %>
 			<%= hidden_field_tag 'user_id', current_user.id %>
 			<%= hidden_field_tag 'channel', "quiz-#{@quiz.id}" %>
-			<%= submit_tag 'Send', {:onclick => "return mvSubmitQuizChat();"} %>
+			<%= submit_tag 'Send', {onclick: "return mvSubmitQuizChat();"} %>
 		<% end %>
 	</div>
 
