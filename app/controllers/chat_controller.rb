@@ -66,8 +66,8 @@ class ChatController < ApplicationController
     @usr_id = params[:user_id]
     channel = params[:channel] || "channel1"
 
-    chat_open  = $redis.exists("chat-#{channel}") ? ($redis.hmget("chat-#{channel}", "status").first == "Open") : true
-    usr_banned = $redis.exists("banned-#{@usr_id}")
+    open    = $redis.hmget("chat-#{channel}", "status").try(:first) == "Open"
+    banned  = $redis.exists("banned-#{@usr_id}")
 
     @my_callback = lambda { |envelope|
       if envelope.error
@@ -77,7 +77,7 @@ class ChatController < ApplicationController
       end
     }
 
-    if chat_open && !usr_banned # Check that chat is open and user is not banned
+    if open && !banned # Check that chat is open and user is not banned
       puts "Chat is open and user not banned"
       Rails.logger.info("====> Publishing message to PubNub: #{parse_chat_message(params[:msg_body], params[:sender], params[:user_id])}")
       PN.publish( :channel  => channel, :message  => {
