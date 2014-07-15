@@ -203,23 +203,6 @@ var quizRoom = {
      ******************************************************************************/
     addInputBox: function (questionType, questionNum, questionAnswer) {
 
-        /* submitAnswer = function() {
-            var userAnswer = $('.q-answer-input').val();
-            grade = getScore(questionAnswer, userAnswer, questionType);
-            if (grade.score != null) {
-                $.post("/record_score", { usr_id:     memverseUserID,
-                                          usr_name:   memverseUserName,
-                                          usr_login:  memverseUserLogin,
-                                          score:      grade.score } );
-                $(selector + " #q-msg").html("<p>" + grade.msg + "</p>").children("p").effect('highlight', {}, 3000);
-                $(selector + " #q-answer").html("<strong>Your answer: </strong>" + userAnswer);
-
-                // make q-dot red or green, depending on score
-                // needs testing
-                $(".q-dot.current").addClass((grade.score == 10) ? "green" : "red");
-            }
-        } */
-
         selector = "#question-" + questionNum;
 
         switch(questionType) {
