@@ -10,6 +10,7 @@ Feature: Earn badges
     Scenario: User completes final session required to earn silver consistency badge
       Given the user with the email of "advanced_user@test.com" has completed 324 memorization sessions in the past year
       When the user with the email of "advanced_user@test.com" completes a memorization session
+      And I sleep for 2
       Then I should see "CONGRATULATIONS"
       When I go to advanced's dashboard
       When I go to the home page
