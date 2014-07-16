@@ -471,15 +471,11 @@ class MemversesController < ApplicationController
   # Toggle verse from 'Active' to 'Pending' status
   # ----------------------------------------------------------------------------------------------------------
   def toggle_mv_status
-    if @mv.status == "Pending"
-      @mv.update(status: (@mv.test_interval > 30) ? "Memorized" : "Learning")
-    else
-      @mv.update(status: "Pending")
-    end
+    new_status = @mv.toggle_status
 
     respond_to do |format|
       format.html { render :partial => 'mv_status_toggle', :layout => false }
-      format.json { render :json => { :mv_status => @mv.status} }
+      format.json { render :json => { :mv_status => new_status} }
     end
 
   end

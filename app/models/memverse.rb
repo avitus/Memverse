@@ -316,6 +316,19 @@ class Memverse < ActiveRecord::Base
   end
 
   # ----------------------------------------------------------------------------------------------------------
+  # Toggle memverse: active/inactive
+  # ----------------------------------------------------------------------------------------------------------
+  def toggle_status
+    if status == "Pending"
+      self.update(status: (self.test_interval > 30) ? "Memorized" : "Learning")
+    else
+      self.update(status: "Pending")
+    end
+
+    return status
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
   # Is this the first verse in a sequence or a solo verse ?
   # ----------------------------------------------------------------------------------------------------------
   def is_first_verse?
