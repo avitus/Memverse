@@ -296,9 +296,9 @@ class User < ActiveRecord::Base
         pending = self.memverses.inactive.order("created_at ASC").limit(time_shortfall)
 
         # We need to handle memory verses that have been set to 'Pending' but were already memorized
+        pending.where("next_test <= ?", Date.today).update_all(next_test: Date.tomorrow)
         pending.where("test_interval > 30").update_all(status: "Memorized")
         pending.where("test_interval <= 30").update_all(status: "Learning")
-        pending.where("next_test <= ?", Date.today).update_all(next_test: Date.tomorrow)
 
         return pending
       end
@@ -370,7 +370,7 @@ class User < ActiveRecord::Base
   end
 
   # ----------------------------------------------------------------------------------------------------------
-  # Return hash of Histroy Verses memorized and learning
+  # Return hash of History Verses memorized and learning
   # ----------------------------------------------------------------------------------------------------------
   def history
     { "Memorized" => self.memverses.memorized.history.count,

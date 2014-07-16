@@ -198,7 +198,7 @@ describe("Feedback", function() {
 		expect(verseFeedback(
 			"In the beginning άόό ό ῖἱ ῖ ἱ",		// correct text
 			"I´`͂῾᾿n the beginning αοο ο ιι ι ι",	// user guess
-			true											// feedback enabled
+			true									// feedback enabled
 		)).toEqual({
 			feedtext : 'In the beginning άόό ό ῖἱ ῖ ἱ <div id="matchbox"><p>Correct</p></div>',
 			correct  : true
