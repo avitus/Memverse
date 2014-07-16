@@ -129,10 +129,14 @@ describe User do
         Memverse.update(mv.id, :status => "Pending")
       end
 
+      @user.due_verses.should == 0
+
       Memverse.includes(:verse).where('verses.book_index' => 19, 'user_id' => @user.id).first.status.should == "Pending"
       @user.work_load.should == 3
       @user.adjust_work_load.length.should == 2 # should activate 2 memverses
       @user.work_load.should == 5
+
+      @user.due_verses.should == 0
     end
   end
 
