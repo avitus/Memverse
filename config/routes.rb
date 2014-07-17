@@ -89,6 +89,7 @@ MemverseApp::Application.routes.draw do
   # Reference tests
   get  '/test_ref'                => 'memverses#test_ref',              :as => 'test_ref'
   get  '/test_next_ref'           => 'memverses#test_next_ref',         :as => 'test_next_ref'
+  get  '/user/get_verse'          => 'users#get_verse'
   post '/score_ref/:mv/:score'    => 'memverses#score_ref_test'
   post '/save_ref_grade/:score'   => 'users#update_ref_grade'
 
