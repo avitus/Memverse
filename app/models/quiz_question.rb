@@ -1,10 +1,23 @@
-  #    t.integer   :quiz_id, :null => false
-  #    t.integer   :variation_id
-  #    t.integer   :question_no
-  #    t.string    :question_type
-  #    t.text      :text
-  #    t.text      :correct_answer
-  #    t.integer   :time
+  #    t.integer  :quiz_id,          null: false
+  #    t.integer  :question_no
+  #    t.string   :question_type
+  #    t.string   :passage
+  #    t.text     :mc_question
+  #    t.string   :mc_option_a
+  #    t.string   :mc_option_b
+  #    t.string   :mc_option_c
+  #    t.string   :mc_option_d
+  #    t.string   :mc_answer
+  #    t.integer  :times_answered,  default: 0
+  #    t.decimal  :perc_correct,    precision: 10, scale: 0, default: 50
+  #    t.string   :mcq_category:
+  #    t.date     :last_asked,      default: '2013-02-23'
+  #    t.integer  :supporting_ref
+  #    t.integer  :submitted_by
+  #    t.string   :approval_status, default: "Pending"
+  #    t.string   :rejection_code
+  #    t.datetime :created_at
+  #    t.datetime :updated_at
 
 class QuizQuestion < ActiveRecord::Base
 
@@ -31,6 +44,8 @@ class QuizQuestion < ActiveRecord::Base
 
   # Validations
   # validates_presence_of :user_id
+
+  validates :mc_answer, presence: true, if: "question_type == 'mcq'"
 
   after_create  'self.quiz.update_length'
   after_update  'self.quiz.update_length'
