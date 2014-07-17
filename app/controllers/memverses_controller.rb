@@ -1003,12 +1003,13 @@ class MemversesController < ApplicationController
     end
 
     # If all references are current, test user on the less well-known references
+    # Prefer verses touched less recently (older updated_at)
     if !mv
       due_refs = 0
       if current_user.all_refs
-        mv = current_user.memverses.active.order("ref_interval ASC").limit(50).sort_by{ rand }.first
+        mv = current_user.memverses.active.order("ref_interval ASC, updated_at ASC").limit(50).sort_by{ rand }.first
       else
-        mv = current_user.memverses.active.passage_start.order("ref_interval ASC").limit(50).sort_by{ rand }.first
+        mv = current_user.memverses.active.passage_start.order("ref_interval ASC, updated_at ASC").limit(50).sort_by{ rand }.first
       end
     end
 
