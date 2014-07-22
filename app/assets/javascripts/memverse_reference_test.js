@@ -22,7 +22,7 @@ var refTestState = {
         // Retrieve a reference for testing
         $.getJSON('test_next_ref.json', function (data) {
 
-            mvText  = data.mv.text;
+            var mvText  = data.mv.text;
             currentRef  = data.mv.ref;
             currentMvID = data.mv.id;
             dueRefs     = data.due_refs;
@@ -34,6 +34,7 @@ var refTestState = {
         });
 
     },
+
 
     // perfect                = 10 points
     // correct book & chapter = 5 points
@@ -54,26 +55,6 @@ var refTestState = {
                 if ( answerRef.vs === correctRef.vs ) {
                     userScore += 5;
                 }
-            }
-        }
-
-        // if imperfect, see if user was thinking of a different reference
-        if ( userScore < 10 ){
-            perfect = $.get("/user/get_verse",
-                {bk: answerRef.bk, ch: answerRef.ch, vs: answerRef.vs},
-                function(data){
-
-                    // user's chosen verse was exactly right
-                    if ( scrub_text(data) == scrub_text(mvText) ){
-                        return true;
-                    }
-                }
-            );
-
-            if (perfect) {
-                userScore = 10;
-                // update correctRef for giveFeedback
-                correctRef = answerRef;
             }
         }
 
