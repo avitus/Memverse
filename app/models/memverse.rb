@@ -410,7 +410,7 @@ class Memverse < ActiveRecord::Base
 
       # Find the first verse that is overdue or hasn't been tested within the minimum test frequency window
       # TODO: do we want to return a verse that was tested today as 'due' ?
-      while ((x.status == 'Pending') || ((x.next_test > Date.today + slack) && (Date.today - x.last_tested < min_test_freq))) and x.next_verse
+      while ((x.inactive?) || ((x.next_test > Date.today + slack) && (Date.today - x.last_tested < min_test_freq))) and x.next_verse
         x = Memverse.find(x.next_verse)
       end
 
@@ -430,11 +430,35 @@ class Memverse < ActiveRecord::Base
     else
       x = Memverse.find(self.next_verse)
 
-      while ((x.status == 'Pending') || (x.next_test > Date.today)) and x.next_verse
+      while ((x.inactive?) || (x.next_test > Date.today)) and x.next_verse
         x = Memverse.find(x.next_verse)
       end
 
       if (x.next_test <= Date.today) && (x.status != 'Pending')
+        return x
+      else
+        return nil
+      end
+    end
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Returns the next verse that is active due in a sequence
+  # Input: memverse_id (can be a single verse or any verse in a sequence)
+  # Returns: the next memory verse active in the passage or nil
+  # ----------------------------------------------------------------------------------------------------------
+  def next_verse_active_in_sequence
+
+    if self.solo_verse? || self.next_verse.nil?
+      return nil
+    else
+      x = Memverse.find(self.next_verse)
+
+      while x.inactive? && x.next_verse
+        x = Memverse.find(x.next_verse)
+      end
+
+      if x.active?
         return x
       else
         return nil
@@ -488,6 +512,13 @@ class Memverse < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   def verified?
     verse.verified?
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Checks whether verse is active (status not "Pending")
+  # ----------------------------------------------------------------------------------------------------------
+  def active?
+    status != "Pending"
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -576,21 +607,22 @@ class Memverse < ActiveRecord::Base
   # See companion method in user model for 'first verse due'
   # ----------------------------------------------------------------------------------------------------------
   def next_verse_due(skip = false)
-    # Check whether this verse is part of a passage. If it is, and there is a verse further down in the passage
-    # then return the next verse in the passage or (if user requests) skip to the next verse that is due
+    # If part of passage, and there is an active verse downstream
+    # then return next verse in passage
+    # unless user wants to skip to the next verse that is due
     if self.next_verse && self.more_to_memorize_in_sequence?
 
       if skip
-        # Jump to the next verse that is due in this passage or if there isn't one just get another verse that is due
+        # try next verse due in passage, else return another verse due
         return self.next_verse_due_in_sequence || self.another_due_verse
       else
-        # Just return the next verse
-        return Memverse.find(self.next_verse)
+        # return next active verse in passage, else return another verse due
+        return self.next_verse_active_in_sequence || self.another_due_verse
       end
 
-    else
-      return self.another_due_verse
     end
+
+    return self.another_due_verse
 
   end
 
