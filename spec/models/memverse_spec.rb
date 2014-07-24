@@ -55,4 +55,66 @@ describe Memverse do
 
   end
 
+  describe ".next_verse_due" do
+    before(:each) do
+
+      @passage = Array.new
+
+      for i in 1..6
+        verse       = FactoryGirl.create(:verse, book_index: 20, book: "Proverbs", chapter: 1, versenum: i, text: "This is a test")
+        @passage[i] = FactoryGirl.create(:memverse, user: @user, verse: verse)
+      end
+
+      @passage[1].next_test = Date.tomorrow
+      @passage[1].save
+
+      for i in 1..6
+        @passage[i].reload # due to after_create verse linkage
+      end
+    end
+
+    describe "(skip=false)" do
+      it "should return next verse in passage" do
+        @passage[1].next_verse_due(false).should == @passage[2]
+      end
+
+      it "should ignore subsequent due pending verse" do
+        @passage[2].update_column(:status, "Pending")
+
+        @passage[1].next_verse_due(false).should == @passage[3]
+      end
+
+      it "should ignore subsequent undue pending verse" do
+        @passage[2].update_column(:status, "Pending")
+        @passage[2].update_column(:next_test, Date.tomorrow)
+
+        @passage[1].next_verse_due(false).should == @passage[3]
+      end
+
+      it "should return next due verse (no passage)" do
+        @passage[6].next_verse_due(false).should == @passage[1]
+      end
+    end
+
+    describe "(skip=true)" do
+      it "should return next due verse in passage" do
+        @passage[2].update_column(:next_test, Date.tomorrow)
+
+        @passage[2].status.should == "Learning" # sanity check
+        @passage[1].next_verse_due(true).should == @passage[3]
+      end
+
+      it "should ignore pending verse" do
+        @passage[2].update_column(:status, "Pending")
+
+        @passage[2].next_test.should == Date.today # sanity check
+        @passage[1].next_verse_due(true).should == @passage[3]
+      end
+
+      it "should return next due verse (no passage)" do
+        @passage[6].next_verse_due(true).should == @passage[1]
+      end
+    end
+  end
+
 end
