@@ -72,7 +72,7 @@ function scoreRecitation(versetext, usertext) {
 	if (score < 0) {score = 0;} // Prevents score from being less than 0.
 
 	if (score == 10) {
-		msg = "You answered perfectly and scored 15 points! Good job.";
+		msg = "You answered perfectly and scored 10 points! Good job.";
 	}
 	else if (score >= 1) {
 		msg = "Although that wasn't perfect, you still received " + score + " points. Keep trying!";
