@@ -102,6 +102,22 @@
       odd: "must be odd"
       even: "must be even"
 
+  language:
+    af: "Afrikaans"
+    de: "German"
+    en: "English"
+    es: "Spanish"
+    fr: "French"
+    ht: "Haitian Creole"
+    id: "Indonesian"
+    is: "Icelandic"
+    it: "Italian"
+    nl: "Dutch"
+    tl: "Tagalog"
+    pt: "Portuguese"
+    sv: "Swedish"
+
+
   txt:
     main_title: "Memverse"
     app_name: "Memverse"
