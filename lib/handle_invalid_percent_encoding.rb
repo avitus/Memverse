@@ -1,5 +1,5 @@
 # To address problems with EasouSpider submitting invalid UTF-8 byte sequences
-# Added July 2014
+# ACW added July 2014
 # http://stackoverflow.com/questions/24648206#24727310
 
 require 'rack'

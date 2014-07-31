@@ -102,6 +102,19 @@
       odd: "must be odd"
       even: "must be even"
 
+  language:
+    af: "Africaans"
+    de: "Alemán"
+    en: "Inglés"
+    es: "Español"
+    fr: "Francés"
+    is: "Islandés"
+    it: "Italiano"
+    nl: "Holandés"
+    tl: "Tagalog"
+    pt: "Portugués"
+    sv: "Sueco"
+
   txt:
     main_title: "Memverso"
     app_name: "Memverso"
