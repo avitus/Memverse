@@ -66,6 +66,8 @@ gem 'uglifier', '>= 1.3.0'
 # For Rails 4 Upgrade ... should be removed eventually
 ############################################################
 gem 'protected_attributes', '>=1.0.5'
+gem 'rails-observers'
+gem 'actionpack-page_caching'
 gem 'actionpack-action_caching'
 gem 'activerecord-deprecated_finders'
 gem 'activerecord-session_store'                                               # We should store sessions in cookies
