@@ -84,6 +84,8 @@ GEM
       rack-test (~> 0.6.2)
     actionpack-action_caching (1.1.1)
       actionpack (>= 4.0.0, < 5.0)
+    actionpack-page_caching (1.0.2)
+      actionpack (>= 4.0.0, < 5)
     activemodel (4.0.5)
       activesupport (= 4.0.5)
       builder (~> 3.1.0)
@@ -566,6 +568,7 @@ PLATFORMS
 DEPENDENCIES
   action_mailer_cache_delivery (>= 0.3.5)
   actionpack-action_caching
+  actionpack-page_caching
   activerecord-deprecated_finders
   activerecord-session_store
   activeresource
@@ -631,6 +634,7 @@ DEPENDENCIES
   rack-utf8_sanitizer
   rails (= 4.0.5)
   rails-footnotes (>= 3.7)
+  rails-observers
   rails_admin (>= 0.6.0)
   randumb
   redis (>= 2.2.2)
