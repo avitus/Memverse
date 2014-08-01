@@ -14,22 +14,6 @@ GIT
       rails (>= 3.2.8)
 
 GIT
-  remote: git://github.com/alexcwatt/forem.git
-  revision: 37120ff9d80ee60c3689ea5df65bf74a3e8e218f
-  branch: rails4
-  specs:
-    forem (1.0.0.beta1)
-      cancancan (~> 1.7)
-      decorators (~> 1.0.2)
-      friendly_id (~> 5.0.0)
-      gemoji (= 1.1.2)
-      rails (>= 4.0.3, <= 4.1.1)
-      sanitize (= 2.0.6)
-      select2-rails (~> 3.5.4)
-      simple_form (~> 3.0.1)
-      workflow (= 1.0.0)
-
-GIT
   remote: git://github.com/bernat/best_in_place.git
   revision: df178520bf9ba405baee9528d5dbb630d6ff760c
   specs:
@@ -44,6 +28,22 @@ GIT
     omniauth-windowslive (0.0.8.1)
       multi_json (>= 1.0.3)
       omniauth-oauth2 (~> 1.0)
+
+GIT
+  remote: git://github.com/radar/forem.git
+  revision: b752c8ef3ac8d5a3129da92442ef3a1fd3541941
+  branch: rails4
+  specs:
+    forem (1.0.0.beta1)
+      cancancan (~> 1.7)
+      decorators (~> 1.0.2)
+      friendly_id (~> 5.0.0)
+      gemoji (= 1.1.2)
+      rails (>= 4.0.3, <= 4.1.4)
+      sanitize (= 2.0.6)
+      select2-rails (~> 3.5.4)
+      simple_form (~> 3.0.1)
+      workflow (= 1.0.0)
 
 GIT
   remote: git://github.com/richhollis/swagger-docs
@@ -84,8 +84,6 @@ GEM
       rack-test (~> 0.6.2)
     actionpack-action_caching (1.1.1)
       actionpack (>= 4.0.0, < 5.0)
-    actionpack-page_caching (1.0.2)
-      actionpack (>= 4.0.0, < 5)
     activemodel (4.0.5)
       activesupport (= 4.0.5)
       builder (~> 3.1.0)
@@ -147,7 +145,7 @@ GEM
     byebug (3.1.2)
       columnize (~> 0.8)
       debugger-linecache (~> 1.2)
-    cancancan (1.8.4)
+    cancancan (1.9.1)
     capistrano (2.15.5)
       highline
       net-scp (>= 1.0.0)
@@ -568,7 +566,6 @@ PLATFORMS
 DEPENDENCIES
   action_mailer_cache_delivery (>= 0.3.5)
   actionpack-action_caching
-  actionpack-page_caching
   activerecord-deprecated_finders
   activerecord-session_store
   activeresource
@@ -634,7 +631,6 @@ DEPENDENCIES
   rack-utf8_sanitizer
   rails (= 4.0.5)
   rails-footnotes (>= 3.7)
-  rails-observers
   rails_admin (>= 0.6.0)
   randumb
   redis (>= 2.2.2)

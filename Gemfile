@@ -66,8 +66,6 @@ gem 'uglifier', '>= 1.3.0'
 # For Rails 4 Upgrade ... should be removed eventually
 ############################################################
 gem 'protected_attributes', '>=1.0.5'
-gem 'rails-observers'
-gem 'actionpack-page_caching'
 gem 'actionpack-action_caching'
 gem 'activerecord-deprecated_finders'
 gem 'activerecord-session_store'                                               # We should store sessions in cookies
@@ -93,7 +91,7 @@ gem 'cancan', git: 'https://github.com/nukturnal/cancan.git'                   #
 # Major Engines (Admin, Forem, Blog)
 ############################################################
 gem 'rails_admin', '>= 0.6.0'                                                  # Admin console
-gem 'forem',       github: 'alexcwatt/forem', branch: 'rails4'                 # Forum engine
+gem 'forem',       github: 'radar/forem', branch: 'rails4'                     # Forum engine
 gem 'forem-textile_formatter'                                                  # Forum formatting
 gem 'bloggity',    github: 'alexcwatt/bloggity'                                # Blog engine
 # gem 'bloggity', :path => "../bloggity"                                       # Blog engine (dev environment)
