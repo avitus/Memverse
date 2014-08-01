@@ -69,15 +69,9 @@
 		$(".scrollable").scrollable({ vertical: true, mousewheel: true });
 
 		// Setup jEditable for version changing
-		$('.js_bible-version').editable(function(value, settings) {
-			tl = value; // change tl
+		$('.js_bible-version select').change(function() {
+			tl = $( this ).val(); // change tl
 			flexversesearch($("#js_flex-verse-search").val()); // refresh results
-			return(settings.data[value]);
-			// TODO: Can't figure out why after changing the version and clicking on the select again, it sometimes still defaults to the original 'selected' value
-		}, {
-			data   : <%= @translations.to_json.html_safe %>,
-			type   : 'select',
-			submit : 'OK'
 		});
 
 		// Verse entry and retrieval
