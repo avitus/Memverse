@@ -53,9 +53,9 @@ build:
             name: rspec tests
             code: bundle exec rspec
 
-        - script:
-            name: jasmine tests
-            code: bundle exec rake spec:javascript RAILS_ENV=test
+        #- script:
+        #    name: jasmine tests
+        #    code: bundle exec rake spec:javascript RAILS_ENV=test
 
         - script:
             name: Enable virtual display
