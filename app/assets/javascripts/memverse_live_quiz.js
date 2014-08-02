@@ -1,10 +1,13 @@
 var quizRoom = {
 
+    id: null,
     numQuestions: null,
-    userIDArray:  [],
+    roster: new Object(),
+    rosterSize: null,
 
-    initialize: function ( numQuestions ) {
+    initialize: function ( quizID, numQuestions ) {
 
+        this.id               = quizID;
         this.numQuestions     = numQuestions;
 
     },
@@ -167,6 +170,7 @@ var quizRoom = {
             $.post("/record_score", {   usr_id:       memverseUserID,
                                         usr_name:     memverseUserName,
                                         usr_login:    memverseUserLogin,
+                                        quiz_id:      this.quizID,
                                         question_id:  questionID,
                                         question_num: questionNum,
                                         score:        grade.score } );
@@ -314,11 +318,78 @@ var quizRoom = {
      ******************************************************************************/
 
      userPresent: function(uuid) {
-        for(x = 0; x < quizRoom.userIDArray; x++){
-            if (quizRoom.userIDArray[x].id == uuid) return true;
-        }
+        if(quizRoom.roster["user" + uuid]) return true;
 
         return false;
+     },
+
+
+     /******************************************************************************
+     * Add user to roster
+     ******************************************************************************/
+
+     rosterAdd: function(uuid, user) {
+        // if user is already here, increment session_count
+        if (quizRoom.userPresent(uuid)){
+            quizRoom.roster["user" + uuid].session_count++;
+            return;
+        }
+
+        // current user cannot leave
+        if(uuid == memverseUserID){
+            return;
+        }
+
+        quizRoom.roster["user" + uuid] = user;
+        quizRoom.rosterSize++;
+
+        // Add user to DOM roster
+        addUserToRoster( uuid, user.name, user.avatarURL, quizRoom.rosterSize );
+
+        // Then announce
+        var userLink    = buildUserLink( uuid, user.name );
+        var joinMsg     = $("<li/>").addClass("chat-announcement").append(userLink + " joined the quiz.");
+
+        // Add "[user] joins" message to chat window
+        chat_stream_scroll( function () { $("#chat-stream-narrow").append( joinMsg ) });
+
+        // Log to console
+        console.log("===> | Presence callback: " + user.name + " has joined the quiz.");
+     },
+
+     /******************************************************************************
+     * Remove user from roster
+     ******************************************************************************/
+
+     rosterRemove: function(uuid) {
+        if(typeof uuid == 'undefined'){
+            console.log("rosterRemove uuid undefined");
+            return;
+        }
+
+
+        // if user has multiple sessions
+        if(userPresent(uuid) && quizRoom.roster["user" + uuid].session_count > 1){
+            quizRoom.roster["user" + uuid].session_count--;
+            return;
+        }
+
+        var departedUser = quizRoom.roster["user" + uuid];
+
+        delete quizRoom.roster["user" + uuid];
+        quizRoom.rosterSize--;
+
+        var li           = $("<li/>").addClass("chat-announcement").append(departedUser.userLink + " left the room.");
+
+        // Remove user from visual roster
+        $("div#" + uuid).remove();
+        $("#quizzers-count").html("(" + quizRoom.rosterSize + ")");
+
+        // Add "[user] leavs" message to chat window
+        chat_stream_scroll( function () { $("#chat-stream-narrow").append(li) } );
+
+        // Log to console
+        console.log("===> Presence callback: " + departedUser + " has left the quiz.");
      },
 
 } // end of quizRoom scope
@@ -391,25 +462,35 @@ function mvInitRoster ( message, env, channel ) {
 
     console.log("===> | Initialize roster, PubNub connection message: " + message);
 
+    // message.uuids.push(memverseUserID); // user is not present yet
+
     for(x = 0; x < message.uuids.length; x++){
-        var roster_uid = message.uuids[x];
 
-        $.getJSON('/users/'+ roster_uid +'.json', function( data ) {
+        // the following is necessary to protect data from being overwritten
+        (function(x) {
+            var roster_uid = message.uuids[x];
 
-            var userName    = data.name;
-            var gravatarURL = data.avatar_url;
-            var userLink    = buildUserLink( roster_uid, userName );
+            // Note: getJSON is asynchronous
+            $.getJSON('/users/'+ roster_uid +'.json', function( data ) {
 
-            // Add user to roster array
-            quizRoom.userIDArray.push({ id: data.id, name: userName, avatarURL: gravatarURL, userLink: userLink });
+                var userName    = data.name;
+                var gravatarURL = data.avatar_url;
+                var userLink    = buildUserLink( roster_uid, userName );
 
-            // Add user to visual roster
-            addUserToRoster( roster_uid, userName, gravatarURL, message.occupancy );
-        });
+                // Add user to roster
+                quizRoom.rosterAdd(roster_uid, { name: userName, avatarURL: gravatarURL, userLink: userLink, time: message.timestamp, session_count: 1 });
+
+                if(x+1 == message.uuids.length){ // last user
+                    // Log to console
+                    console.log("===> | Initial roster occupancy: " + message.occupancy);
+                    console.log("===> | Roster: " + quizRoom.roster);
+                }
+            });
+        })
+
+        // Highlight quizzer count after all updates complete
+        $("#quizzers-stats").effect('highlight', {}, 3000);
     }
-
-    // Log to console
-    console.log("===> | Initial roster occupancy: " + message.occupancy);
 
 }
 
@@ -426,56 +507,33 @@ function mvPresence ( message, env, channel ) {
     // --- User joins quiz ---
     if (message.action == "join") {
 
-        if(!quizRoom.userPresent(message.uuid)) return;
+        if(quizRoom.userPresent(message.uuid)) return;
 
         $.getJSON('/users/'+ message.uuid +'.json', function( data ) {
 
             var userName    = data.name;
             var gravatarURL = data.avatar_url;
             var userLink    = buildUserLink( roster_uid, userName );
-            var joinMsg     = $("<li/>").addClass("chat-announcement").append(userLink + " joined the quiz.");
 
-            // Add user to roster array
-            quizRoom.userIDArray.push({ id: data.id, name: userName, avatarURL: gravatarURL, userLink: userLink });
-
-            // Add user to visual roster
-            addUserToRoster( roster_uid, userName, gravatarURL, message.occupancy );
-
-            // Add "[user] joins" message to chat window
-            chat_stream_scroll( function () { $("#chat-stream-narrow").append( joinMsg ) });
-
-            // Log to console
-            console.log("===> | Presence callback: " + userName + " has joined the quiz.");
-            console.log("     | Occupancy        : ", message.occupancy    );
+            // Add user to roster
+            quizRoom.rosterAdd(roster_uid, { name: userName, avatarURL: gravatarURL, userLink: userLink, time: message.timestamp, session_count: 1 });
         });
 
     // --- User leaves quiz ---
     } else if (message.action == "leave") {
 
-        // Remove user from roster array
-        var departedUser = quizRoom.userIDArray.splice( quizRoom.userIDArray.indexOf( roster_uid ), 1 );
-
-        if(typeof departedUser[0] !== 'undefined'){
-            var li           = $("<li/>").addClass("chat-announcement").append(departedUser[0].userLink + " left the room.");
-
-            // Remove user from visual roster
-            $("div#" + roster_uid).remove();
-            $("#quizzers-count").html("(" + message.occupancy + ")");
-
-            // Add "[user] leavs" message to chat window
-            chat_stream_scroll( function () { $("#chat-stream-narrow").append(li) } );
-
-            // Log to console
-            console.log("===> Presence callback: " + departedUser + " has left the quiz.");
-        } else {
-            console.log("departedUser[0] undefined");
-        }
+        quizRoom.rosterRemove(roster_uid);
 
     } else if (message.action == "timeout" ) {
 
         // Need to handle timeouts ... not sure how
 
+        return;
+
     }
+
+    // Highlight quizzer count after all updates complete
+    $("#quizzers-stats").effect('highlight', {}, 3000);
 
 };
 
@@ -502,7 +560,6 @@ function addUserToRoster( userID, userName, gravatarURL, userCount ) {
     userDiv.effect('highlight', {}, 3000);
 
     // Increase number of quizzers
-    $("#quizzers-stats").effect('highlight', {}, 3000);
     $("#quizzers-count").html("(" + userCount + ")");
 }
 

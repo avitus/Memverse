@@ -22,11 +22,14 @@ class KnowledgeQuiz
 
   def perform
 
+    # Select quiz and set up PubNub channel
+    quiz    = Quiz.find(1)
+    channel = quiz.channel
+
     # ========================================================================
     # Announce quiz
     # ========================================================================
-    broadcast  = "The Bible knowledge quiz is starting. <a href=\"live_quiz\">Join now!</a>"
-    Tweet.create(:news => broadcast, :user_id => 1, :importance => 2)  # Admin tweet => user_id = 1
+    quiz.announce
 
     # ========================================================================
     # Calculate start time for next quiz
@@ -50,10 +53,6 @@ class KnowledgeQuiz
     # Save status of quiz in redis
     $redis.hset("quiz-bible-knowledge", "status", "In progress. Wait for question.")
 
-    # Select quiz and set up PubNub channel
-    quiz    = Quiz.find(1)
-    channel = "quiz-1"  # General knowledge quiz will always have ID=1
-
     # ========================================================================
     # PubNub callback function
     # ========================================================================
@@ -66,7 +65,7 @@ class KnowledgeQuiz
     }
 
     # #<Pubnub::Envelope:0x007fdf869c67c0
-    #  @channel="quiz-1",
+    #  @channel="quiz1",
     #  @error=nil,
     #  @error_message=nil,
     #  @first=true,
@@ -98,21 +97,9 @@ class KnowledgeQuiz
     # Open quiz chat channel 5 minutes prior to start
     # ========================================================================
     puts "===> Opening chat at " + Time.now.to_s
-    if $redis.exists("chat-#{channel}")
-      status = $redis.hmget("chat-#{channel}", "status").first
-    end
 
-    unless status && status == "Open"
-      new_status = "Open"
-      $redis.hset("chat-#{channel}", "status", new_status)
-      PN.publish( :channel  => channel, :message  => {
-          :meta => "chat_status",
-          :status => new_status
-        },
-        :http_sync => true,
-        :callback => @my_callback
-      )
-    end
+    chat_channel = ChatChannel.find(channel)
+    chat_channel.status = "Open"
 
     Rails.env.production? ? sleep(300) : sleep(30)  # 5 minutes for chatting
 
@@ -245,15 +232,7 @@ class KnowledgeQuiz
     puts "Quiz now over. Sleeping for 10 minutes, then shutting down chat."
     Rails.env.production? ? sleep(600) : sleep(30)
 
-    new_status = "Closed"
-    $redis.hset("chat-#{channel}", "status", new_status)
-    PN.publish( :channel  => channel, :message  => {
-        :meta => "chat_status",
-        :status => new_status
-      },
-      :http_sync => true,
-      :callback => @my_callback
-    )
+    chat_channel.status = "Closed"
 
     puts "Chat closed and sidetiq job finished."
 

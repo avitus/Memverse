@@ -24,7 +24,7 @@ class LiveQuizController < ApplicationController
     @quiz_master = @quiz.user
 
     # Check status of chat channel
-    @channel = ChatChannel.find("quiz-#{@quiz.id}")
+    @channel = ChatChannel.find(@quiz.channel)
 
     # Set up quiz time and number of questions - show when user first enters quiz room
     if @quiz.id == 1
@@ -59,9 +59,11 @@ class LiveQuizController < ApplicationController
   #-----------------------------------------------------------------------------------------------------------
   def record_score
 
+    quiz_id     = params[:quiz_id]
+
     # Redis keys
-    usr_id      = "user-" + params[:usr_id].to_s
-    q_num       = "qnum-" + params[:question_num].to_s # Question number in Quiz
+    usr_id      = "quiz#{quiz_id}_user#{params[:usr_id]}"
+    q_num       = "quiz#{quiz_id}_qnum#{params[:question_num]}" # Question number in Quiz
 
     usr_name    = params[:usr_name]
     usr_login   = params[:usr_login]

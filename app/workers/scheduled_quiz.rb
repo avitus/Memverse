@@ -27,44 +27,38 @@ class ScheduledQuiz
     # ========================================================================
 
     # Select PubNub channel
-    channel = "quiz-#{quiz.id}"
+    channel = quiz.channel
 
-    if (status = $redis.hmget(channel, "status").try(:first)) && !status.nil?
-      return false if status.include? "In progress"
+    if quiz.status
+      return false if quiz.status.include? "In progress"
     end
 
     puts "===> Quiz ##{quiz.id} : Grabbed by ScheduledQuiz worker"
 
     # Save status of quiz in redis
-    $redis.hset(channel, "status", "In progress. Chat opening soon.")
+    quiz.status = "In progress. Chat opening soon."
 
     if (sleep_time = quiz.start_time - Time.now) && sleep_time > 0
       puts "===> Quiz ##{quiz.id} : Sleeping #{sleep_time} till chat opens"
       sleep sleep_time
-      $redis.hset(channel, "status", "In progress. Chat open. Wait for question.")
+      quiz.status = "In progress. Chat open. Wait for question."
     end
 
     # ========================================================================
     # Announce quiz
     # ========================================================================
-    broadcast = "#{quiz.name} is starting. <a href=\"live_quiz/#{quiz.id}\">Join now!</a>"
-    Tweet.create(:news => broadcast, :user_id => 1, :importance => 2)  # Admin tweet => user_id = 1
+    quiz.announce
 
     # ========================================================================
     # Setup quiz, clear old scores
     # ========================================================================
     puts "===> Quiz ##{quiz.id} : Opening quiz room at " + Time.now.to_s
 
-    # TODO: Allow concurrent quizzes
-
     # Clear participant and question scores from Redis
-    participants = $redis.keys("user-*")       # user ID's
-    questions    = $redis.keys("qnum-*")       # question numbers
-    participants.each { |p| $redis.del(p) }
-    questions.each    { |q| $redis.del(q) }
+    quiz.redis_clear_data
 
     # Save status of quiz in redis
-    $redis.hset(channel, "status", "In progress. Wait for question.")
+    quiz.status = "In progress. Wait for question."
 
     # ========================================================================
     # PubNub callback function
@@ -78,7 +72,7 @@ class ScheduledQuiz
     }
 
     # #<Pubnub::Envelope:0x007fdf869c67c0
-    #  @channel="quiz-1",
+    #  @channel="quiz1",
     #  @error=nil,
     #  @error_message=nil,
     #  @first=true,
@@ -110,21 +104,9 @@ class ScheduledQuiz
     # Open quiz chat channel 5 minutes prior to start
     # ========================================================================
     puts "===> Quiz ##{quiz.id} : Opening chat at " + Time.now.to_s
-    if $redis.exists("chat-#{channel}")
-      status = $redis.hmget("chat-#{channel}", "status").first
-    end
 
-    unless status && status == "Open"
-      new_status = "Open"
-      $redis.hset("chat-#{channel}", "status", new_status)
-      PN.publish( :channel  => channel, :message  => {
-          :meta => "chat_status",
-          :status => new_status
-        },
-        :http_sync => true,
-        :callback => @my_callback
-      )
-    end
+    chat_channel = ChatChannel.find(channel)
+    chat_channel.status = "Open"
 
     Rails.env.production? ? sleep(300) : sleep(30)  # 5 minutes for chatting
 
@@ -137,97 +119,24 @@ class ScheduledQuiz
     quiz_questions    = quiz.quiz_questions.order("question_no ASC")
 
     quiz_questions.each { |q|
-      passages   = q.passage_translations
-      ref        = q.passage
-      num        = q.question_no
+      q.push_to_channel
+      sleep(q.time_alloc + 1)
 
-      case q.question_type
-      when "recitation"
-        time_alloc = (q.passage_translations.first.last.split(" ").length * 2.5 + 15.0).to_i # 24 WPM typing speed with 15 seconds to think
-
-        PN.publish(
-          :channel  => channel,
-          :message  => {
-            :meta => "question",
-            :q_num => num,
-            :q_type => "recitation",
-            :q_ref => ref,
-            :q_passages => passages,
-            :time_alloc => time_alloc
-          },
-          :http_sync => true,
-          :callback => @my_callback
-        )
-        sleep(time_alloc+1)
-      when "reference"
-        PN.publish(
-          :channel  => channel,
-          :message  => {
-            :meta => "question",
-            :q_num => num,
-            :q_type => "reference",
-            :q_ref => ref,
-            :q_passages => passages,
-            :time_alloc => 25
-          },
-          :http_sync => true,
-          :callback => @my_callback
-        )
-        sleep(26)
-      when "mcq"
-        PN.publish(
-          :channel  => channel,
-          :message  => {
-            :meta => "question",
-            :q_num => num,
-            :q_type => "mcq",
-            :mc_question => q.mc_question,
-            :mc_option_a => q.mc_option_a,
-            :mc_option_b => q.mc_option_b,
-            :mc_option_c => q.mc_option_c,
-            :mc_option_d => q.mc_option_d,
-            :mc_answer => q.mc_answer,
-            :time_alloc => 30
-          },
-          :http_sync => true,
-          :callback => @my_callback
-        )
-        sleep(31)
-      else
-        sleep(20)
-      end
-
-      scoreboard = Array.new
-
-      participants = $redis.keys("user-*")
-      participants.each { |p| scoreboard << $redis.hgetall(p) }
-
-      scoreboard = scoreboard.sort { |x, y| y['score'].to_i <=> x['score'].to_i }
-
-      PN.publish(
-        :channel  => channel,
-        :message  => {
-          :meta => "scoreboard",
-          :scoreboard => scoreboard
-        },
-        :http_sync => true,
-        :callback => @my_callback
-      )
+      quiz.publish_scoreboard
     } # end of question loop
 
     # ========================================================================
     # Update quiz status
     # ========================================================================
 
-    $redis.hset(channel, "status", "Finished") # Update quiz status in redis
+    quiz.status = "Finished"
     puts "===> Quiz ##{quiz.id} : Finished quiz #{quiz.id} at " + Time.now.to_s
 
     # ========================================================================
     # Update difficulty for all questions
     # ========================================================================
     # quiz_table = Array.new
-    # quiz_questions = $redis.keys("qnum-*")
-    # quiz_questions.each do |qq|
+    # quiz.redis_questions.each do |qq|
     #   quiz_table << $redis.hgetall(qq)
     # end
 
@@ -252,9 +161,9 @@ class ScheduledQuiz
     # Record final scoreboard in log file
     # ========================================================================
     final_scoreboard = Array.new
-    participants     = $redis.keys("user-*")
-    participants.each { |p| final_scoreboard << $redis.hgetall(p) }
-    final_scoreboard = final_scoreboard.sort { |x, y| y['score'].to_i <=> x['score'].to_i }
+    quiz.redis_participants.each { |p| final_scoreboard << $redis.hgetall(p) }
+    final_scoreboard.map {|x| x.merge(score: x[:score].to_i) }
+    final_scoreboard = final_scoreboard.sort { |x, y| y[:score] <=> x[:score] }
 
     puts "===> Quiz ##{quiz.id} : Final Quiz Scores"
     puts "==================="
@@ -262,16 +171,24 @@ class ScheduledQuiz
       puts "[" + usr['score'] + "] - " + usr['name']
     end
 
-    gold_ribbon_name   = final_scoreboard[0]['name']
-    # silver_ribbon_name = final_scoreboard[1]['name']
-    # bronze_ribbon_name = final_scoreboard[2]['name']  # Need to check that we have at least 3 participants
+    top_score = final_scoreboard[0][:score]
 
-    gold_ribbon_id     = final_scoreboard[0]['id']
-    # silver_ribbon_id   = final_scoreboard[1]['id']
-    # bronze_ribbon_id   = final_scoreboard[2]['id']
+    gold_ribbon = Array.new
 
-    broadcast  = "#{gold_ribbon_name} won #{quiz.name}"
-    Tweet.create(:news => broadcast, :user_id => gold_ribbon_id, :importance => 2)
+    for user in final_scoreboard
+      break if user[:score] != top_score
+      gold_ribbon << User.find(user[:id])
+    end
+
+    # Need to check that we have at least 3 participants
+    # silver_ribbon   = final_scoreboard[1]['id']
+    # bronze_ribbon   = final_scoreboard[2]['id']
+
+    Tweet.create(
+      news: "#{gold_ribbon.to_sentence} won #{quiz.name}",
+      user: gold_ribbon[0],
+      importance: 2
+    )
 
     # ========================================================================
     # Close chat after ten minutes
@@ -279,15 +196,7 @@ class ScheduledQuiz
     puts "===> Quiz ##{quiz.id} : Quiz over. Sleeping for 10 minutes, then shutting down chat."
     Rails.env.production? ? sleep(600) : sleep(30)
 
-    new_status = "Closed"
-    $redis.hset("chat-#{channel}", "status", new_status)
-    PN.publish( :channel  => channel, :message  => {
-        :meta => "chat_status",
-        :status => new_status
-      },
-      :http_sync => true,
-      :callback => @my_callback
-    )
+    chat_channel.status = "Closed"
 
     puts "===> Quiz ##{quiz.id} : Chat closed and sidetiq job finished."
 
