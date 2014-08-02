@@ -19,6 +19,10 @@
         <%= f.hidden_field  :approval_status, :value => current_user.admin? ? "Approved" : "Pending" %>
     </p>
 
+    <% if can? :manage, Quiz %>
+        <%= text_field_tag :quiz, @quiz.name, id: "quiz_search" %>
+    <% end %>
+
     <!-- Question number -->
     <div class="quiz-question-num">
         <%= f.label         :question_no, "Question number" %><br />
@@ -45,3 +49,24 @@
     <%= render :partial => "form_mcq", :locals=>{ :f => f } %>
 
 <% end %> <!-- Form -->
+
+<script type="text/javascript">
+    $("#quiz_search").autocomplete({
+        minLength: 2,
+        source: function(query, process) {
+            return $.post('/quizzes/search.json', { query: query.term }, function(data) {
+                var suggestions = [];
+                $.each(data, function(i, val) {
+                    suggestions.push({
+                        label: val.name,
+                        id:    val.id
+                    });
+                });
+                process(suggestions);
+            });
+        },
+        select: function(e, ui) {
+            $("#quiz_question_quiz_id").val(ui.item.id);
+        }
+    });
+</script>

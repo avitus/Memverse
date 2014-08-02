@@ -1,0 +1,24 @@
+<div class="white-box-with-margins">
+
+    <h1>Unused Bible Bee Quiz Questions</h1>
+
+    <table class="memverse-standard">
+        <thead>
+            <th></th>
+            <th>Question</th>
+            <th>Submitted by</th>
+        </thead>
+
+        <tbody>
+            <% for q in @questions %>
+                <tr>
+                    <td><%= link_to "Edit", edit_quiz_question_path(q) %></td>
+                    <td><%= q.mc_question %></td>
+                    <td><%= q.user.try(:name) %></td>
+                </tr>
+            <% end %>
+        </tbody>
+    </table>
+
+    <%= paginate @questions %>
+</div>

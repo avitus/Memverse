@@ -35,7 +35,9 @@ MemverseApp::Application.routes.draw do
   resources :uberverses
   resources :sermons
   resources :quests
-  resources :quizzes
+  resources :quizzes do
+    get 'search', on: :collection
+  end
   resources :verses
 
   resources :quiz_questions do
