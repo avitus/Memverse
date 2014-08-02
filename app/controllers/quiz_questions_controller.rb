@@ -3,7 +3,7 @@
 class QuizQuestionsController < ApplicationController
 
   before_filter :authenticate_user!
-  before_filter :access_permission, :except => [:submit, :search, :create, :index]
+  before_filter :access_permission, :except => [:submit, :search, :create, :index, :new]
 
   add_breadcrumb "Home", :root_path
 
@@ -46,6 +46,7 @@ class QuizQuestionsController < ApplicationController
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @quiz_question }
+      format.json { render json: @quiz_question }
     end
   end
 
@@ -66,6 +67,23 @@ class QuizQuestionsController < ApplicationController
     respond_to do |format|
       format.html
       format.js  { render :json => related_questions }
+    end
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Find Bible Bee questions
+  # ----------------------------------------------------------------------------------------------------------
+  def bible_bee
+    page     = params[:page] || 1
+    per_page = 10
+    offset   = (page - 1) * per_page
+
+    questions = QuizQuestion.where(question_type: "mcq").where(quiz_id: 1).
+                             where("mc_question LIKE ?", "%Bible Bee%").
+                             order("created_at").limit(per_page).offset(offset)
+
+    respond_to do |format|
+      format.json { render json: questions }
     end
   end
 
@@ -175,20 +193,14 @@ class QuizQuestionsController < ApplicationController
   # Check whether user owns quiz question or is an admin
   # ----------------------------------------------------------------------------------------------------------
   def access_permission
-    if current_user.admin?
-      @quiz_question = QuizQuestion.find_by_id( params[:id] ) || QuizQuestion.new
-    else
-      @quiz_question = QuizQuestion.find_by_id( params[:id] )
-      Rails.logger.debug (@quiz_question.inspect)
-      if @quiz_question.nil?
+    @quiz_question = QuizQuestion.find_by_id( params[:id] ) || QuizQuestion.new(user: current_user)
+
+    if @quiz_question.nil?
         flash[:error] = "No question with that ID exists in our database."
-        redirect_to root_path
-        false
-      elsif @quiz_question.user != current_user
-        flash[:error] = "You may only access quiz questions that you created."
-        redirect_to root_path
-        false
-      end
+        redirect_to root_path and return
+    elsif cannot? :manage, @quiz_question
+      flash[:error] = "You may only access quiz questions that you created."
+      redirect_to root_path and return
     end
   end
 

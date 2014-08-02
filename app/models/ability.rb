@@ -24,25 +24,26 @@ class Ability
     #   can :update, Article, :published => true
     #
     # See the wiki for details: https://github.com/ryanb/cancan/wiki/Defining-Abilities
-    
-    user ||= User.new # guest user
- 
-    if user.role? :admin
-      can :manage, :all
-      
-    elsif user.role? :blogger
-      can :manage, [ BlogPost ]
-      
-    elsif user.role? :moderator
-      can :manage, [ BlogComment ]
-      
-      can :manage, BlogComment do |comment|
-        comment.try(:user) == user
-      end      
-    
-    elsif user.role? :scribe
-      can :manage, [ Verse ]
 
+    user ||= User.new # guest user
+
+    can :manage, :all                 if user.has_role?("admin")
+
+    can :manage, Bloggity::BlogPost   if user.has_role?("blogger")
+    can :manage, Verse                if user.has_role?("scribe")
+
+    can :manage, [Quiz, QuizQuestion] if user.has_role?("quizmaster")
+
+    can :manage, QuizQuestion, submitted_by: user.id
+
+    can :create, QuizQuestion # anyone can
+
+    if user.has_role?("moderator")
+      can :manage, Bloggity::BlogComment
+
+      can :manage, Bloggity::BlogComment do |comment|
+        comment.try(:user) == user
+      end
     end
 
   end # initialize
