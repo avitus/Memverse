@@ -74,16 +74,13 @@ class QuizQuestionsController < ApplicationController
   # Find Bible Bee questions
   # ----------------------------------------------------------------------------------------------------------
   def bible_bee
-    page     = params[:page] || 1
-    per_page = 10
-    offset   = (page - 1) * per_page
-
-    questions = QuizQuestion.where(question_type: "mcq").where(quiz_id: 1).
+    @questions = QuizQuestion.where(question_type: "mcq").where(quiz_id: 1).
                              where("mc_question LIKE ?", "%Bible Bee%").
-                             order("created_at").limit(per_page).offset(offset)
+                             order("created_at").page(params[:page])
 
     respond_to do |format|
-      format.json { render json: questions }
+      format.html
+      format.json { render json: @questions }
     end
   end
 

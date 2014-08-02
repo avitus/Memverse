@@ -100,4 +100,22 @@ class QuizzesController < ApplicationController
     end
   end
 
+  # GET /quizzes/search.json
+  def search
+    query     = params[:query]
+
+    quizzes   = Quiz.where("name LIKE ?", "%#{query}%").limit(20).select("id", "name")
+
+    render json: quizzes
+  end
+
+  private
+
+  def authorize
+    if cannot? :manage, Quiz
+      flash[:alert] = "You do not have permission to do that."
+      redirect_to root_path and return
+    end
+  end
+
 end
