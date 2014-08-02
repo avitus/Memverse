@@ -20,3 +20,11 @@ else
   )
 
 end
+
+PN_CALLBACK = lambda { |envelope|
+  if envelope.error
+    # if message is not sent we should probably try to send it again
+    puts("==== ! Failed to send message ! ==========")
+    puts( envelope.inspect )
+  end
+}
