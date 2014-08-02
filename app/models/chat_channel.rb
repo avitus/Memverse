@@ -14,10 +14,12 @@ class ChatChannel
     $redis.hmget("chat-#{channel}", "status").try(:first) || "Closed"
   end
 
-  def status=(str)
-    $redis.hset("chat-#{channel}", "status", str)
+  def status=(new_status)
+    return if new_status == status
 
-    publish(meta: "chat_status", status: str)
+    $redis.hset("chat-#{channel}", "status", new_status)
+
+    publish(meta: "chat_status", status: new_status)
   end
 
   def open?
