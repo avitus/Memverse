@@ -18,7 +18,7 @@ build:
         # If these packages are already available on the machine the installation
         # will be skipped.
         - install-packages:
-            packages: libqt4-dev qt4-qmake nodejs phantom-js
+            packages: libqt4-dev qt4-qmake nodejs phantomjs
 
         # A step that executes `bundle install` command
         - bundle-install
