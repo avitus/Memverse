@@ -42,6 +42,56 @@ class Quiz < ActiveRecord::Base
     return (start_time - Time.now)/3600
   end
 
+  def redis_participants
+    $redis.keys("quiz#{self.id}_user*")
+  end
+
+  def redis_questions
+    $redis.keys("quiz#{self.id}_qnum*")
+  end
+
+  def redis_clear_data
+    redis_participants.each { |p| $redis.del(p) }
+    redis_questions.each    { |q| $redis.del(q) }
+  end
+
+  def publish_scoreboard
+    scoreboard = Array.new
+
+    self.redis_participants.each { |p| scoreboard << $redis.hgetall(p) }
+
+    scoreboard = scoreboard.sort { |x, y| y['score'].to_i <=> x['score'].to_i }
+
+    PN.publish(
+      channel: self.channel,
+      message: {
+        meta: "scoreboard",
+        scoreboard: scoreboard
+      },
+      http_sync: true,
+      callback: PN_CALLBACK
+    )
+  end
+
+  def channel
+    "quiz#{self.id}"
+  end
+
+  def status
+    $redis.hmget(channel, "status").try(:first) || nil
+  end
+
+  def status=(new_status)
+    return if new_status == status
+
+    $redis.hset(channel, "status", new_status)
+  end
+
+  def announce
+    broadcast = "#{self.name} is starting. <a href=\"live_quiz/#{self.id}\">Join now!</a>"
+    Tweet.create(news: broadcast, user_id: 1, importance: 2)  # Admin tweet => user_id = 1
+  end
+
   # ============= Protected below this line ==================================================================
   protected
 

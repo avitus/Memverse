@@ -133,6 +133,50 @@ class QuizQuestion < ActiveRecord::Base
     return self.approval_status == "Approved"
   end
 
+  def time_alloc
+    case self.question_type
+    when "recitation"
+       # 24 WPM typing speed with 15 seconds to think
+      (self.passage_translations.first.last.split.length * 2.5 + 15.0).to_i
+    when "reference"
+      25
+    when "mcq"
+      30
+    else
+      20
+    end
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Push quiz question to quiz channel (PubNub)
+  # ----------------------------------------------------------------------------------------------------------
+  def push_to_channel
+    message = {
+      meta:       "question",
+      q_num:      self.question_no,
+      q_type:     self.question_type,
+      time_alloc: self.time_alloc
+    }
+
+    if question_type == "recitation" || question_type == "reference"
+      message[:q_ref]       = self.passage
+      message[:q_passages]  = self.passage_translations
+    elsif question_type == "mcq"
+      for mc_part in [:question, :option_a, :option_b, :option_c, :option_d, :answer]
+        # message[:mc_question] = self.mc_question ... etc.
+        message["mc_#{mc_part}".to_sym] = self.send("mc_#{mc_part}")
+      end
+    else
+      return false
+    end
+
+    PN.publish(
+      channel:   self.quiz.channel,
+      message:   message,
+      http_sync: true,
+      callback:  PN_CALLBACK
+    )
+  end
 
   # ============= Protected below this line ==================================================================
   protected
