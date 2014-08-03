@@ -164,14 +164,16 @@ describe User do
   end
 
   describe ".can_blog?" do
-    it "is true for Josiah" do
-      user = FactoryGirl.create(:user, id: 2336)
+    it "is true for user with blogger role" do
+      user = FactoryGirl.create(:user)
+      blogger = FactoryGirl.create(:role, name: "blogger")
+      blogger.users << user
 
       [user.can_blog?].should == [true]
     end
 
     it "is false for non-bloggers" do
-      user = FactoryGirl.create(:user, id: 80000)
+      user = FactoryGirl.create(:user)
 
       [user.can_blog?].should == [false]
     end
