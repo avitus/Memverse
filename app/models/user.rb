@@ -1190,29 +1190,13 @@ class User < ActiveRecord::Base
   # Whether a user can post to a given blog
   # Implement in your user model
   def can_blog?(blog_id = nil)
-    # This can be implemented however you want, but here's how I would do it, if I were you and I had multiple blogs,
-    # where some users were allowed to write in one set of blogs and other users were allowed to write in a different
-    # set:
-    # Create a string field in your user called something like "blog_permissions", and keep a Marshaled array of blogs
-    # that this user is allowed to contribute to.  Ezra gives some details on how to save Marshaled data in Mysql here:
-    # http://www.ruby-forum.com/topic/164786
-    # To determine if the user is allowed to blog here, call up the array, and see if the blog_set_id
-    # is contained in their list of allowable blogs.
-    #
-    # Of course, you could also create a join table to join users to blogs they can blog in.  But do you want to do
-    # that with blog comments and ability to moderate comments as well?
-
-    # Bloggers: Andy, Heather-Kate Taylor, Phil Walker, Dakota Lynch,
-    # River La Belle, Alex Watt, Nathan Burkhalter, Josiah DeGraaf,
-    # Bethany Meckle
-    bloggers = [1, 2, 366, 1138, 3113, 4024, 3486, 4565, 2336, 15021]
-    return bloggers.include?(self.id)
+    self.has_role?("blogger")
   end
 
   # Whether a user can moderate the comments for a given blog
   # Implement in your user model
   def can_moderate_blog_comments?(blog_id = nil)
-    self.id == 1 or self.id == 2 or self.id == 3486
+    self.admin?
   end
 
   # Whether the comments that a user makes within a given blog are automatically approved (as opposed to being queued until a moderator approves them)
@@ -1228,7 +1212,7 @@ class User < ActiveRecord::Base
   # Whether a user has access to create, edit and destroy blogs
   # Implement in your user model
   def can_modify_blogs?
-    self.id == 1 or self.id == 2
+    self.admin?
   end
 
   # Implement in your user model
