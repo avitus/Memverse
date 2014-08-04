@@ -53,7 +53,10 @@ class ScribeController < ApplicationController
   private
 
   def access_permission
-    current_user.has_role?("scribe")
+    unless can? :manage, Verse
+      flash[:alert] = "You do not have permission to do that."
+      redirect_to root_path and return
+    end
   end
 
 end
