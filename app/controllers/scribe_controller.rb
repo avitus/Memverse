@@ -28,7 +28,10 @@ class ScribeController < ApplicationController
     @stats = []
 
     for trans in TRANSLATIONS.keys
-      @stats << [trans.to_s, Verse.where("memverses_count > 1 and verified = false and translation = ?", trans).count]
+      count = Verse.where("memverses_count > 1").
+                    where(verified: false, translation: trans).count
+
+      @stats << [trans.to_s, count] if count > 0
     end
 
     @stats.sort! {|a, b| b[1] <=> a[1]}
