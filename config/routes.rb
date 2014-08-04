@@ -218,6 +218,10 @@ MemverseApp::Application.routes.draw do
   get  '/live_quiz/:quiz'           => 'live_quiz#live_quiz'
   post '/record_score'              => 'live_quiz#record_score'
 
+  # Routes for scribe
+  get  '/scribe(/:check)'          => 'scribe#index',        :as => 'scribe'
+  get  '/scribe/verify/:id'        => 'scribe#verify_verse', :as => 'scribe_verify'
+
   # Legacy routes for pages that no longer exist but have incoming links
   get '/starter_pack' => 'memverses#home'  # Retired in 2012
 
