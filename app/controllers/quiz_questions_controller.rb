@@ -32,8 +32,13 @@ class QuizQuestionsController < ApplicationController
   # GET /quiz_question_approval
   # ----------------------------------------------------------------------------------------------------------
   def approvals
-    @quiz = Quiz.find(params[:quiz] || 1)
-    @quiz_questions = QuizQuestion.mcq.pending.order("updated_at DESC")
+    if current_user.has_role?("quizmaster")
+      @quiz = Quiz.find(params[:quiz] || 1)
+      @quiz_questions = QuizQuestion.mcq.pending.order("updated_at DESC")
+    else
+      flash[:alert] = "You do not have permission to do that."
+      redirect_to root_path and return
+    end
   end
 
   # GET /quizquestions/1
