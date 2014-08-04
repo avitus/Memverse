@@ -17,7 +17,7 @@ class QuizQuestionsController < ApplicationController
     @sub = "questions"
 
     # we don't have an admin view currently
-    if current_user.admin? && params[:quiz]
+    if current_user.has_role?("quizmaster") && params[:quiz]
       @quiz           = Quiz.find(params[:quiz])
       @quiz_questions = @quiz.quiz_questions
     # show quiz questions submitted by current user
@@ -32,10 +32,8 @@ class QuizQuestionsController < ApplicationController
   # GET /quiz_question_approval
   # ----------------------------------------------------------------------------------------------------------
   def approvals
-    if current_user.admin?
-      @quiz = Quiz.find(params[:quiz] || 1)
-      @quiz_questions = QuizQuestion.mcq.pending.order("updated_at DESC")
-    end
+    @quiz = Quiz.find(params[:quiz] || 1)
+    @quiz_questions = QuizQuestion.mcq.pending.order("updated_at DESC")
   end
 
   # GET /quizquestions/1
@@ -87,8 +85,13 @@ class QuizQuestionsController < ApplicationController
   # GET /quizquestions/new
   # GET /quizquestions/new.xml
   def new
-    @quiz          = Quiz.find(params[:quiz] || 1)
-    @quiz_question = QuizQuestion.new(quiz: @quiz, question_no: params[:qno])
+    if params[:quiz_question]
+      @quiz          = Quiz.find(params[:quiz_question][:quiz_id] || 1)
+      @quiz_question = QuizQuestion.new(params[:quiz_question])
+    else
+      @quiz          = Quiz.find(params[:quiz] || 1)
+      @quiz_question = QuizQuestion.new(quiz: @quiz, question_no: params[:qno])
+    end
 
     respond_to do |format|
       format.html # new.html.erb
