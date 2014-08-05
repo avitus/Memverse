@@ -1,6 +1,6 @@
 <div class="quiz-question-navigation">
 
-    <% if current_user.admin? && !quiz_question.is_approved? %>
+    <% if current_user.has_role?("quizmaster") && !quiz_question.is_approved? %>
 
         <span class="approve">
             <%= link_to 'Approve', quiz_question_path(quiz_question.id, :quiz_question => {:approval_status => 'Approved'}),
