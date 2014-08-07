@@ -627,6 +627,7 @@ DEPENDENCIES
   omniauth
   omniauth-windowslive!
   paperclip
+  phantomjs
   prawn!
   prawnto_2
   protected_attributes (>= 1.0.5)
