@@ -304,6 +304,9 @@ namespace :utils do
           # Show output
           puts "#{book} #{chapter} : #{subsection_end}"
 
+          # Save to DB
+
+
         end
 
       }
