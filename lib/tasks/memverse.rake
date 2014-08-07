@@ -288,14 +288,14 @@ namespace :utils do
           padded_end_prob = [0,0,0] + end_prob + [0,0,0]
 
           # Extract peaks as most likely passage breaks
-          for i in 0..end_prob.length-1 do
-            subsection_end[i] = - padded_end_prob[i  ] / 6
-                                - padded_end_prob[i+1] / 4
-                                - padded_end_prob[i+2] / 2
-                                + padded_end_prob[i+3]
-                                - padded_end_prob[i+4] / 2
-                                - padded_end_prob[i+5] / 4
-                                - padded_end_prob[i+6] / 6
+          for i in 0..end_prob.length-1
+            subsection_end[i] = -padded_end_prob[i  ]/6 \
+                                -padded_end_prob[i+1]/4 \
+                                -padded_end_prob[i+2]/2 \
+                                +padded_end_prob[i+3]   \
+                                -padded_end_prob[i+4]/2 \
+                                -padded_end_prob[i+5]/4 \
+                                -padded_end_prob[i+6]/6
           end
 
           # Remove negative values
