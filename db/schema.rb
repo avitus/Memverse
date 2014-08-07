@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140714001748) do
+ActiveRecord::Schema.define(version: 20140806223124) do
 
   create_table "american_states", force: true do |t|
     t.string  "abbrev",      limit: 20, default: "", null: false
@@ -316,10 +316,8 @@ ActiveRecord::Schema.define(version: 20140714001748) do
     t.date     "next_ref_test"
     t.integer  "uberverse_id"
     t.integer  "passage_id"
-    t.datetime "deleted_at"
   end
 
-  add_index "memverses", ["deleted_at"], name: "index_memverses_on_deleted_at", using: :btree
   add_index "memverses", ["passage_id"], name: "index_memverses_on_passage_id", using: :btree
   add_index "memverses", ["status"], name: "index_memverses_on_status", using: :btree
   add_index "memverses", ["user_id", "verse_id"], name: "index_memverses_on_user_id_and_verse_id", unique: true, using: :btree
@@ -399,11 +397,9 @@ ActiveRecord::Schema.define(version: 20140714001748) do
     t.datetime "created_at",                                                          null: false
     t.datetime "updated_at",                                                          null: false
     t.integer  "book_index"
-    t.datetime "deleted_at"
   end
 
   add_index "passages", ["book_index"], name: "index_passages_on_book_index", using: :btree
-  add_index "passages", ["deleted_at"], name: "index_passages_on_deleted_at", using: :btree
   add_index "passages", ["user_id"], name: "index_passages_on_user_id", using: :btree
 
   create_table "passwords", force: true do |t|
@@ -491,7 +487,7 @@ ActiveRecord::Schema.define(version: 20140714001748) do
     t.integer  "times_answered",                           default: 0
     t.decimal  "perc_correct",    precision: 10, scale: 0, default: 50
     t.string   "mcq_category"
-    t.date     "last_asked",                               default: '2013-02-23'
+    t.date     "last_asked",                               default: '2012-10-22'
     t.integer  "supporting_ref"
     t.integer  "submitted_by"
     t.string   "approval_status",                          default: "Pending"
@@ -574,14 +570,13 @@ ActiveRecord::Schema.define(version: 20140714001748) do
     t.datetime "created_at"
   end
 
-  add_index "taggings", ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true, using: :btree
+  add_index "taggings", ["tag_id"], name: "index_taggings_on_tag_id", using: :btree
+  add_index "taggings", ["taggable_id", "taggable_type", "context"], name: "index_taggings_on_taggable_id_and_taggable_type_and_context", using: :btree
 
   create_table "tags", force: true do |t|
     t.string  "name"
     t.integer "taggings_count", default: 0
   end
-
-  add_index "tags", ["name"], name: "index_tags_on_name", unique: true, using: :btree
 
   create_table "tweets", force: true do |t|
     t.integer  "importance",        default: 5
@@ -602,10 +597,11 @@ ActiveRecord::Schema.define(version: 20140714001748) do
   add_index "tweets", ["user_id"], name: "index_tweets_on_user_id", using: :btree
 
   create_table "uberverses", force: true do |t|
-    t.string  "book",       null: false
-    t.integer "chapter",    null: false
-    t.integer "versenum",   null: false
+    t.string  "book",           null: false
+    t.integer "chapter",        null: false
+    t.integer "versenum",       null: false
     t.integer "book_index"
+    t.integer "subsection_end"
   end
 
   add_index "uberverses", ["book"], name: "index_uberverses_on_book", using: :btree
@@ -630,6 +626,7 @@ ActiveRecord::Schema.define(version: 20140714001748) do
     t.string   "confirmation_token"
     t.datetime "remember_token_expires_at"
     t.datetime "confirmed_at"
+    t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.date     "last_reminder"
@@ -668,7 +665,6 @@ ActiveRecord::Schema.define(version: 20140714001748) do
     t.string   "unconfirmed_email"
     t.string   "provider"
     t.string   "uid"
-    t.datetime "deleted_at"
   end
 
   add_index "users", ["american_state_id"], name: "index_users_on_american_state_id", using: :btree
