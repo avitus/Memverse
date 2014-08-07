@@ -292,11 +292,11 @@ GEM
       phantomjs
       rack (>= 1.2.1)
       rake
-    jasmine-core (2.0.0)
-    jasmine-rails (0.7.1)
+    jasmine-core (2.0.1)
+    jasmine-rails (0.10.0)
       jasmine-core (>= 1.3, < 3.0)
       phantomjs
-      rails (>= 3.1.0)
+      railties (>= 3.1.0)
       sprockets-rails
     jquery-rails (3.1.0)
       railties (>= 3.0, < 5.0)
@@ -375,7 +375,7 @@ GEM
       hashery (~> 2.0)
       ruby-rc4
       ttfunk
-    phantomjs (1.9.7.0)
+    phantomjs (1.9.7.1)
     polyglot (0.3.5)
     prawnto_2 (0.2.6)
       prawn (>= 0.6.0)
