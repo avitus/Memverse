@@ -219,7 +219,11 @@ MemverseApp::Application.routes.draw do
   post '/record_score'              => 'live_quiz#record_score'
 
   # Routes for scribe
-  get  '/scribe(/:check)'          => 'scribe#index',        :as => 'scribe'
+  get  '/scribe/search'            => 'scribe#search',       :as => 'scribe_search'
+  get  '/scribe/search_verse'      => 'scribe#search_verse'
+  post '/scribe/edit_verse'        => 'scribe#edit_verse'
+  get  '/scribe'                   => 'scribe#index',        :as => 'scribe'
+  get  '/scribe/:check'            => 'scribe#check',        :as => 'scribe_check'
   get  '/scribe/verify/:id'        => 'scribe#verify_verse', :as => 'scribe_verify'
 
   # Legacy routes for pages that no longer exist but have incoming links
