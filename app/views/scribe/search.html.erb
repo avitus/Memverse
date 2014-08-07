@@ -1,0 +1,22 @@
+<div class="details-form">
+    Verse: <%= text_field_tag( :verse, params[:verse],  :size =>  16 )%>
+</div>
+
+<br>
+
+<div id="search_results">
+    <%= render "scribe/search_verse" %>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+
+        $("#verse").observe_field(0.3, function( ) {
+            $.get("/scribe/search_verse", {  verse: this.value },
+                function(data){
+                    $("#search_results").html(data);
+            }, "html" );
+        });
+
+    });
+</script>

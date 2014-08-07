@@ -1,0 +1,47 @@
+<p>Please edit verses carefully. To make changes, click on the text of the verse you'd like to correct and then make any changes in the edit box. After you click "OK," the verse will be saved and marked as verified (since you are a scribe).</p>
+
+<div class="verse-list">
+
+	<table cellpadding="6" cellspacing="0">
+		<thead>
+			<tr>
+				<td><b>Ver</b></td>
+				<td><b>Book</b></td>
+				<td><b>Chapter</b></td>
+				<td><b>Verse</b></td>
+				<td><b>Users</b></td>
+				<td><b>Verified</b></td>
+				<td><b>Text</b></td>
+			</tr>
+		</thead>
+
+		<tbody>
+			<% for vs in @verses %>
+			<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
+				<td><%= vs.translation		%></td>
+				<td><%= vs.book				%></td>
+				<td><%= vs.chapter			%></td>
+				<td><%= vs.versenum			%></td>
+				<td><%= vs.memverses.length	%></td>
+				<td><%= vs.verified			%></td>
+				<td id="<%= vs.id %>" class="edit_area"><%= vs.text				%></td>
+			</tr>
+			<% end %>
+		</tbody>
+
+	</table>
+
+</div>
+
+<!-- http://www.appelsiini.net/projects/jeditable -->
+<script type="text/javascript">
+	 $(document).ready(function() {
+	     $('.edit_area').editable('/scribe/edit_verse', {
+	         type      : 'textarea',
+	         cancel    : 'Cancel',
+	         submit    : 'OK',
+	         indicator : 'Saving...',
+	         tooltip   : 'Click to edit...'
+	     });
+	 });
+</script>

@@ -1,0 +1,31 @@
+<% content_for :content do %>
+
+    <div class="white-box-with-margins">
+        <h1>Scribe Center</h1>
+
+        <div class="left-nav" style="width:20%">
+            <%= link_to "Instructions", scribe_path, class: ("current" if action_name == "index") %>
+            <%= link_to "Search", scribe_search_path, class: ("current" if action_name == "search") %>
+            <%= link_to "Errors Reported #{"<span class='count'>#{@errors}</span>" if @errors > 0}".html_safe,
+            scribe_check_path(check: "errors"), class: ("current" if @check == "errors") %>
+
+            <% for version in @stats %>
+                <%= link_to "#{version[0]} #{"<span class='count'>#{version[1]}</span>" if version[1] > 0}".html_safe,
+                scribe_check_path(check: version[0]), title: version[2],
+                class: ("current" if @check == version[0]) %>
+            <% end %>
+        </div>
+
+        <div class="flt_rht" style="width:70%">
+
+            <%= yield %>
+
+        </div>
+
+        <div class="clr"></div>
+
+    </div> <!-- end: white-box-with-margins -->
+
+<% end %>
+
+<%= render template: "layouts/application" %>

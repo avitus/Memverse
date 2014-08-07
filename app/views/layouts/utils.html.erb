@@ -1,331 +1,101 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8" />
-<title><%= page_title %></title>
+<% content_for :top_nav do %>
 
-<meta name="distribution" content="all" />
-<meta name="robots" content="all" />
-<meta name="resource-type" content="document" />
-<meta name="MSSmartTagsPreventParsing" content="true" />
+	<div id="menu-tabs" class="menu">
 
-<meta name="description" content="<%= page_description %>" />
-<meta name="keywords" content="memorize bible, memorize scripture, popular bible verses, memorize bible verses," />
+		<ul id="maintab" class="basictab">
+			<li <%= tab(@tab=="home"	  ) %> rel="homepage">	<%= link_to 'Home', 	 		root_path %></li>
+			<li <%= tab(@tab=="dash"	  ) %> rel="dashboard">	<%= link_to 'Dashboard', 		utils_dashboard_path %></li>
+			<li <%= tab(@tab=="users"	  ) %> rel="users">		<%= link_to 'Users', 	 		:controller => 'utils', :action => 'show_users', :sort_order => 'ID DESC', :period => 'Active' %></li>
+			<li <%= tab(@tab=="verses"	  ) %> rel="verses">	<%= link_to 'Verses',		    :controller => 'utils', :action => 'show_verses_to_be_checked' %></li>
+			<li <%= tab(@tab=="churches"  ) %> rel="churches">	<%= link_to 'Churches', 		:controller => 'utils', :action => 'show_churches' %></li>
+			<li <%= tab(@tab=="countries" ) %> rel="countries">	<%= link_to 'Countries', 		:controller => 'utils', :action => 'show_countries' %></li>
+			<li <%= tab(@tab=="popverses" ) %> rel="popverses">	<%= link_to 'Popular Verses',	:controller => 'utils', :action => 'show_popverses' %></li>
+			<li <%= tab(@tab=="quizzes"   ) %> rel="quizzes">	<%= link_to 'Quizzes',      	quizzes_path %></li>
+			<li>&nbsp;</li>
+		</ul>
 
-<!-- Facebook Open Graph tags -->
-<meta property="og:title"		content="<%= page_title || Memverse %>"/>
-<meta property="og:type"		content="website"/>
-<meta property="og:image"		content="https://www.memverse.com/assets/memverse_swords.jpg"/>
-<meta property="og:url"			content="<%= request.url %>" />
-<meta property="og:site_name"	content="Memverse"/>
-<meta property="fb:admins"		content="1799626379, kyrriana"/>
-<meta property="og:description" content="A community of believers memorizing the bible"/>
+		<div class="submenu"><!--submenu start-->
 
-<!-- Google, Microsoft verification -->
-<meta name="verify-v1" content="IrqDYi2zxAyS8GUAqQcyXvnmcxhtuNITeCIFYLa76LQ=" />
-<meta name="msvalidate.01" content="A1BB69E880870637C825F612E2FA4034" />
+			<div class="submenu-left">
 
-<!-- Identify blog feed -->
-<link rel="alternate" type="application/rss+xml" title="Memverse Blog" href="http://feeds.feedburner.com/MemverseBlog" />
-
-<!-- Load fonts -->
-<script type="text/javascript" src="//use.typekit.net/acm5rxh.js"></script>
-<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
-
-<!-- Rails 3 XSS protection -->
-<%= csrf_meta_tag %>
-
-<!-- Main Stylesheet Manifest -->
-<%= stylesheet_link_tag "application" %>
-
-<!-- Auxiliary stylesheets, etc -->
-<%= yield(:head) %>
-
-<!-- Javascript -->
-<!-- NOTE: not using asset packager at the moment -->
-<!-- jquery.tools 		: used for tool tips on main verse test page, scrollable on login page -->
-<!-- jqueryui 			: used for highlight effect on reset-schedule button -->
-<!-- 2leveltab    		: main menu tab system -->
-<!-- jquery.fancybox    : lightbox for tutorial video -->
-<!-- modernizr		    : support for CSS3 and HTML5 in older browsers -->
-<script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
-<%= javascript_include_tag "jquery.tools.min" %>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js"></script>
-
-<!-- Main Javascript Manifest -->
-<%= javascript_include_tag "application" %>
-
-<!--[if IE 6]>
-<style type="text/css">
-	.learn-area
-	{
-		padding-top:16px;
-	}
-</style>
-<![endif]-->
-
-<style type="text/css">
-.left-widget
-{
-	-moz-border-radius:8px;
-	-webkit-border-radius:8px;
-	-o-border-radius:8px;
-	border-radius:8px;
-	behavior:url(PIE.htc);
-}
-
-.main-right
-{
-	-moz-border-radius:8px;
-	-webkit-border-radius:8px;
-	-o-border-radius:8px;
-	border-radius:8px;
-	behavior:url(PIE.htc);
-}
-</style>
-
-</head>
-
-<% if user_signed_in? %>
-<body id="inner1-body">
-<% else %>
-<body>
-<% end %>
-<noscript><div id="no-js"><p>Memverse requires Javascript, but you&rsquo;ve got Javascript disabled. <a href="http://www.google.com/search?btnI=1&amp;q=how+to+enable+javascript+in+my+browser">Fix that problem!</a></p></div></noscript>
-<div id="wrapper"><!--wrapper start-->
-	<div id="header"><!--header start-->
-		<div class="header-top"><!--header-top start-->
-			<div id="logo"><a href="/" title="<%= I18n.t :mainpage, :scope => 'page_titles' %> - Memverse"><%= image_tag("logo.png", :size => "253x31", :alt => "") %></a></div>
-			<% if user_signed_in? %>
-				<div class="inner-top-right"><!--inner-top-right start-->
-					<strong>Welcome:</strong> <%= current_user.name_or_login %> <strong><%= link_to "(Logout)", destroy_user_session_path, :method => :delete %></strong>
-				</div><!--inner-top-right end-->
-			<% else %>
-				<div class="top-right"><!--top-right start-->
-					<div class="iphone">iPhone / iPad App (coming soon):</div>
-
-					<div class="button">
-						<ul>
-							<li><%= link_to 'SIGN UP', new_user_registration_path %></li>
-							<li><%= link_to 'LOG IN', new_user_session_path %></li>
-						</ul>
-					</div>
-				</div><!--top-right end-->
-			<% end %>
-		</div><!--header-top end-->
-
-		<% if user_signed_in? %>
-
-			<div id="menu-tabs" class="menu">
-
-				<ul id="maintab" class="basictab">
-					<li <%= tab(@tab=="home"	  ) %> rel="homepage">	<%= link_to 'Home', 	 		root_path %></li>
-					<li <%= tab(@tab=="dash"	  ) %> rel="dashboard">	<%= link_to 'Dashboard', 		utils_dashboard_path %></li>
-					<li <%= tab(@tab=="users"	  ) %> rel="users">		<%= link_to 'Users', 	 		:controller => 'utils', :action => 'show_users', :sort_order => 'ID DESC', :period => 'Active' %></li>
-					<li <%= tab(@tab=="verses"	  ) %> rel="verses">	<%= link_to 'Verses',		    :controller => 'utils', :action => 'show_verses_to_be_checked' %></li>
-					<li <%= tab(@tab=="churches"  ) %> rel="churches">	<%= link_to 'Churches', 		:controller => 'utils', :action => 'show_churches' %></li>
-					<li <%= tab(@tab=="countries" ) %> rel="countries">	<%= link_to 'Countries', 		:controller => 'utils', :action => 'show_countries' %></li>
-					<li <%= tab(@tab=="popverses" ) %> rel="popverses">	<%= link_to 'Popular Verses',	:controller => 'utils', :action => 'show_popverses' %></li>
-					<li <%= tab(@tab=="quizzes"   ) %> rel="quizzes">	<%= link_to 'Quizzes',      	quizzes_path %></li>
-					<li>&nbsp;</li>
-				</ul>
-
-				<div class="submenu"><!--submenu start-->
-
-					<div class="submenu-left">
-
-						<div id="homepage" class="submenustyle">
-							<ul>
-								<li <%= sub(@sub=="manage"		)%>><%= link_to t('home_menu.My Verses'),		manage_verses_path %></li>
-								<li <%= sub(@sub=="addvs"		)%>><%= link_to t('home_menu.Add Verse'),		add_verse_path %></li>
-								<li <%= sub(@sub=="searchvs"	)%>><%= link_to t('home_menu.Search Bible'),	search_verse_path %></li>
-								<li <%= sub(@sub=="progress"	)%>><%= link_to t('home_menu.My Progress'),		progress_path %></li>
-								<li <%= sub(@sub=="popvs"		)%>><%= link_to t('home_menu.Popular Verses'),	popular_verses_path %></li>
-								<li <%= sub(@sub=="cloud"		)%>><%= link_to t('home_menu.Tag Cloud'),		tag_cloud_path %></li>
-								<li <%= sub(@sub=="news"		)%>><%= link_to t('home_menu.News'),			news_path %></li>
-							</ul>
-						</div>
-
-						<div id="dashboard" class="submenustyle">
-							<ul>
-								<li <%= sub(@sub=="manage"		)%>><%= link_to 'Dashboard',		:controller => 'utils',	:action => 'dashboard' %></li>
-								<li <%= sub(@sub=="addvs"		)%>><%= link_to 'Churn',			:controller => 'utils',	:action => 'cohort_analysis' %></li>
-								<li <%= sub(@sub=="searchvs"	)%>><%= link_to 'Leaderboard',		:controller => 'utils',	:action => 'leaderboard' %></li>
-								<li <%= sub(@sub=="progress"	)%>><%= link_to 'Memory Verses',	:controller => 'utils',	:action => 'show_memory_verses', :id => nil, :sort_order => 'ID DESC' %></li>
-								<li <%= sub(@sub=="popvs"		)%>><%= link_to 'Send Reminder',	:controller => 'utils',	:action => 'send_reminder' %></li>
-								<li <%= sub(@sub=="cloud"		)%>><%= link_to 'Comments', 		:controller => 'utils', :action => 'unapproved_comments' %></li>
-								<li <%= sub(@sub=="news"		)%>><%= link_to 'De-dupe',	 		:controller => 'utils', :action => 'users_with_problems' %></li>
-							</ul>
-						</div>
-
-						<div id="users" class="submenustyle">
-							<ul>
-								<li <%= sub(@sub=="manage"		)%>><%= link_to 'All',				:controller => 'utils',	:action => 'show_users', :sort_order => 'ID DESC', :period => 'All' %></li>
-								<li <%= sub(@sub=="addvs"		)%>><%= link_to 'Today (New)',		:controller => 'utils',	:action => 'show_users', :sort_order => 'ID DESC', :period => 'Today' %></li>
-								<li <%= sub(@sub=="searchvs"	)%>><%= link_to 'Today (Active)',	:controller => 'utils',	:action => 'show_users', :sort_order => 'ID DESC', :period => 'Active' %></li>
-								<li <%= sub(@sub=="progress"	)%>><%= link_to 'Pending',			:controller => 'utils',	:action => 'show_users', :sort_order => 'ID DESC', :period => 'Pending' %></li>
-								<li <%= sub(@sub=="popvs"		)%>><%= link_to 'Search',			:controller => 'utils',	:action => 'search_users' %></li>
-								<li <%= sub(@sub=="cohort"  	)%>><%= link_to 'Cohorts',			progression_path %></li>
-							</ul>
-						</div>
-
-						<div id="verses" class="submenustyle">
-							<ul>
-								<li <%= sub(@sub=="manage"		)%>><%= link_to 'Verses per User',	:controller => 'utils',	:action => 'verses_per_user' %></li>
-								<li <%= sub(@sub=="addvs"		)%>><%= link_to 'Translation Stats',:controller => 'utils',	:action => 'count_by_translation' %></li>
-								<li <%= sub(@sub=="searchvs"	)%>><%= link_to 'All',				:controller => 'utils',	:action => 'show_verses', :sort_order => 'ID DESC' %></li>
-								<li <%= sub(@sub=="progress"	)%>><%= link_to 'Search',			:controller => 'utils',	:action => 'search_verses' %></li>
-								<li <%= sub(@sub=="popvs"		)%>><%= link_to 'To Check',			:controller => 'utils',	:action => 'show_verses_to_be_checked' %></li>
-							</ul>
-						</div>
-
-						<div id="churches" class="submenustyle">
-							<ul>
-								<li <%= sub(@sub=="manage"		)%>><%= link_to 'All',				:controller => 'utils',	:action => 'show_churches' %></li>
-							</ul>
-						</div>
-
-						<div id="countries" class="submenustyle">
-							<ul>
-								<li <%= sub(@sub=="manage"		)%>><%= link_to 'All',				:controller => 'utils',	:action => 'show_countries' %></li>
-							</ul>
-						</div>
-
-						<div id="popverses" class="submenustyle">
-							<ul>
-								<li <%= sub(@sub=="manage"		)%>><%= link_to 'Show',				:controller => 'utils',	:action => 'show_popverses' %></li>
-								<li <%= sub(@sub=="addvs"		)%>><%= link_to 'Update',			:controller => 'utils',	:action => 'update_popular_verses' %></li>
-								<li <%= sub(@sub=="searchvs"	)%>><%= link_to 'Tags',				:controller => 'utils',	:action => 'show_tags' %></li>
-							</ul>
-						</div>
-
-						<div id="quizzes" class="submenustyle">
-							<ul>
-								<li <%= sub(@sub=="list"		)%>><%= link_to 'List',	   	        quizzes_path %></li>
-								<li <%= sub(@sub=="approve"		)%>><%= link_to 'Approve',	   	    quiz_question_approval_path %></li>
-							</ul>
-						</div>
-
-					</div><!--submenu-left end-->
-		        	<div class="clr"></div>
-
-				</div><!--submenu end-->
-			</div>  <!-- End of Menu Tabs -->
-
-			<div class="breadcum-area"><!--breadcum start-->
-				<div class="breadcum-left">
-					<span class="home-icon"><a href="/"><%= image_tag("home-icon.png", :size => "25x23", :alt => "") %></a></span>
-					<div class="breadcum-link">
-						/ <%= (render_breadcrumbs :separator => ' / ').html_safe %>
-					</div>
+				<div id="homepage" class="submenustyle">
+					<ul>
+						<li <%= sub(@sub=="manage"		)%>><%= link_to t('home_menu.My Verses'),		manage_verses_path %></li>
+						<li <%= sub(@sub=="addvs"		)%>><%= link_to t('home_menu.Add Verse'),		add_verse_path %></li>
+						<li <%= sub(@sub=="searchvs"	)%>><%= link_to t('home_menu.Search Bible'),	search_verse_path %></li>
+						<li <%= sub(@sub=="progress"	)%>><%= link_to t('home_menu.My Progress'),		progress_path %></li>
+						<li <%= sub(@sub=="popvs"		)%>><%= link_to t('home_menu.Popular Verses'),	popular_verses_path %></li>
+						<li <%= sub(@sub=="cloud"		)%>><%= link_to t('home_menu.Tag Cloud'),		tag_cloud_path %></li>
+						<li <%= sub(@sub=="news"		)%>><%= link_to t('home_menu.News'),			news_path %></li>
+					</ul>
 				</div>
-				<div class="breadcum-right">
-					<%= link_to image_tag("your-verses.png", :width=>"172", :height=>"25", :alt=>"Your Verses"), manage_verses_path %>
-					<%= link_to image_tag("more-verses.png", :width=>"192", :height=>"25", :alt=>"Add More Verses"), add_verse_path %>
+
+				<div id="dashboard" class="submenustyle">
+					<ul>
+						<li <%= sub(@sub=="manage"		)%>><%= link_to 'Dashboard',		:controller => 'utils',	:action => 'dashboard' %></li>
+						<li <%= sub(@sub=="addvs"		)%>><%= link_to 'Churn',			:controller => 'utils',	:action => 'cohort_analysis' %></li>
+						<li <%= sub(@sub=="searchvs"	)%>><%= link_to 'Leaderboard',		:controller => 'utils',	:action => 'leaderboard' %></li>
+						<li <%= sub(@sub=="progress"	)%>><%= link_to 'Memory Verses',	:controller => 'utils',	:action => 'show_memory_verses', :id => nil, :sort_order => 'ID DESC' %></li>
+						<li <%= sub(@sub=="popvs"		)%>><%= link_to 'Send Reminder',	:controller => 'utils',	:action => 'send_reminder' %></li>
+						<li <%= sub(@sub=="cloud"		)%>><%= link_to 'Comments', 		:controller => 'utils', :action => 'unapproved_comments' %></li>
+						<li <%= sub(@sub=="news"		)%>><%= link_to 'De-dupe',	 		:controller => 'utils', :action => 'users_with_problems' %></li>
+					</ul>
 				</div>
-			</div><!--breadcum end-->
 
-			<%= flash_messages  %>
+				<div id="users" class="submenustyle">
+					<ul>
+						<li <%= sub(@sub=="manage"		)%>><%= link_to 'All',				:controller => 'utils',	:action => 'show_users', :sort_order => 'ID DESC', :period => 'All' %></li>
+						<li <%= sub(@sub=="addvs"		)%>><%= link_to 'Today (New)',		:controller => 'utils',	:action => 'show_users', :sort_order => 'ID DESC', :period => 'Today' %></li>
+						<li <%= sub(@sub=="searchvs"	)%>><%= link_to 'Today (Active)',	:controller => 'utils',	:action => 'show_users', :sort_order => 'ID DESC', :period => 'Active' %></li>
+						<li <%= sub(@sub=="progress"	)%>><%= link_to 'Pending',			:controller => 'utils',	:action => 'show_users', :sort_order => 'ID DESC', :period => 'Pending' %></li>
+						<li <%= sub(@sub=="popvs"		)%>><%= link_to 'Search',			:controller => 'utils',	:action => 'search_users' %></li>
+						<li <%= sub(@sub=="cohort"  	)%>><%= link_to 'Cohorts',			progression_path %></li>
+					</ul>
+				</div>
 
-		<% else # if not logged in %>
-			<div class="menu menu-main-only"><!--menu start-->
-				<ul>
-					<li><%= link_to t('menu.home').html_safe, root_path %></li>
-					<li><%= link_to t('menu.memorize').html_safe, test_verse_quick_path %></li>
-					<li><%= link_to t('menu.learn').html_safe, tutorial_path %></li>
-					<li><%= link_to t('menu.profile').html_safe, current_user %></li>
-					<li><%= link_to t('menu.leaderboard').html_safe, leaderboard_path %></li>
-					<li><%= link_to t('contact_menu.Help'), faq_path %></li>
-					<li><%= link_to t('menu.blog').html_safe, bloggity.root_path %></li>
-					<li><%= link_to t('menu.contact').html_safe, contact_path %></li>
-					<li>&nbsp;</li>
-				</ul>
-			</div><!--menu end-->
-			<div><%= image_tag "trans.png", :size => "1x10" %></div>
-		<% end %><!-- if user_signed_in? -->
-	</div> <!--header end-->
+				<div id="verses" class="submenustyle">
+					<ul>
+						<li <%= sub(@sub=="manage"		)%>><%= link_to 'Verses per User',	:controller => 'utils',	:action => 'verses_per_user' %></li>
+						<li <%= sub(@sub=="addvs"		)%>><%= link_to 'Translation Stats',:controller => 'utils',	:action => 'count_by_translation' %></li>
+						<li <%= sub(@sub=="searchvs"	)%>><%= link_to 'All',				:controller => 'utils',	:action => 'show_verses', :sort_order => 'ID DESC' %></li>
+						<li <%= sub(@sub=="progress"	)%>><%= link_to 'Search',			:controller => 'utils',	:action => 'search_verses' %></li>
+						<li <%= sub(@sub=="popvs"		)%>><%= link_to 'To Check',			:controller => 'utils',	:action => 'show_verses_to_be_checked' %></li>
+					</ul>
+				</div>
 
-	<!--Content Block -->
-	<div class="page-content">
-		<%= content_for?(:content) ? yield(:content) : yield %>
-	</div>
+				<div id="churches" class="submenustyle">
+					<ul>
+						<li <%= sub(@sub=="manage"		)%>><%= link_to 'All',				:controller => 'utils',	:action => 'show_churches' %></li>
+					</ul>
+				</div>
 
-	<div><%= image_tag "trans.png", :size => "1x10" %>&nbsp;</div>
+				<div id="countries" class="submenustyle">
+					<ul>
+						<li <%= sub(@sub=="manage"		)%>><%= link_to 'All',				:controller => 'utils',	:action => 'show_countries' %></li>
+					</ul>
+				</div>
 
-	<div class="clr"></div>
+				<div id="popverses" class="submenustyle">
+					<ul>
+						<li <%= sub(@sub=="manage"		)%>><%= link_to 'Show',				:controller => 'utils',	:action => 'show_popverses' %></li>
+						<li <%= sub(@sub=="addvs"		)%>><%= link_to 'Update',			:controller => 'utils',	:action => 'update_popular_verses' %></li>
+						<li <%= sub(@sub=="searchvs"	)%>><%= link_to 'Tags',				:controller => 'utils',	:action => 'show_tags' %></li>
+					</ul>
+				</div>
 
-	<div id="footer"><!--footer start-->
-		&copy; <%= Date.today.year %> Memverse  <span><a href="mailto:info@memverse.com">info@memverse.com</a></span>
-	</div><!--footer end-->
+				<div id="quizzes" class="submenustyle">
+					<ul>
+						<li <%= sub(@sub=="list"		)%>><%= link_to 'List',	   	        quizzes_path %></li>
+						<li <%= sub(@sub=="approve"		)%>><%= link_to 'Approve',	   	    quiz_question_approval_path %></li>
+					</ul>
+				</div>
 
-</div><!--wrapper end-->
+			</div><!--submenu-left end-->
+        	<div class="clr"></div>
 
-<!-- Start of Menu Tab Code  -->
-<% if user_signed_in? %>
-	<script type="text/javascript">
-		//initialize tab menu, by passing in ID of UL
-		initalizetab("maintab")
-	</script>
+		</div><!--submenu end-->
+	</div>  <!-- End of Menu Tabs -->
+
 <% end %>
 
-<!-- Start of I18n-js code  -->
-<script type="text/javascript">
-  I18n.defaultLocale = "<%= I18n.default_locale %>";
-  I18n.locale = "<%= I18n.locale %>";
-</script>
-<!-- End of I18n-js code  -->
-
-<!-- Tutorial video using fancybox -->
-<script type="text/javascript">
-	$(document).ready(function() {
-		$(".tut-video").click(function() {
-			$.fancybox({
-					'padding'		: 0,
-					'autoScale'		: false,
-					'transitionIn'	: 'none',
-					'transitionOut'	: 'none',
-					'title'			: this.title,
-					'width'			: 1020,
-					'height'		: 600,
-					'href'			: this.href.replace(new RegExp("watch\\?v=", "i"), 'v/'),
-					'type'			: 'swf',
-					'swf'			: {	'wmode'				: 'transparent',
-										'allowfullscreen'	: 'true' }
-				});
-
-			return false;
-		});
-	});
-</script>
-
-<!-- Start of Get Satisfaction Script  -->
-<script type="text/javascript">
-  var is_ssl = ("https:" == document.location.protocol);
-  var asset_host = is_ssl ? "https://s3.amazonaws.com/getsatisfaction.com/" : "http://s3.amazonaws.com/getsatisfaction.com/";
-  document.write(unescape("%3Cscript src='" + asset_host + "javascripts/feedback-v2.js' type='text/javascript'%3E%3C/script%3E"));
-</script>
-
-<script type="text/javascript">
-  var feedback_widget_options = {};
-
-  feedback_widget_options.display = "overlay";
-  feedback_widget_options.company = "memverse";
-  feedback_widget_options.placement = "right";
-  feedback_widget_options.color = "#222";
-  feedback_widget_options.style = "idea";
-
-  var feedback_widget = new GSFN.feedback_widget(feedback_widget_options);
-</script>	<!-- End: Get Satisfaction Script  -->
-
-<!-- Prevent double-clicking links in the flash -->
-<script type="text/javascript">
-	$(document).ready(function(){
-		$('#flash').click( function() {
-			$(this).children('a').hide();
-		});
-	});
-</script>
-</body>
-</html>
-
-
+<%= render template: "layouts/application" %>

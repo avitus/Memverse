@@ -1,8 +1,8 @@
 <div class="white-box-with-margins">
 	<div class="verse-list">
-	
+
 		<table class="sortable" id="usertable" cellpadding="6" cellspacing="0">
-			
+
 			<tr>
 				<th>ID</th>
 				<th align="left">Name</th>
@@ -14,31 +14,31 @@
 				<th colspan="2">Memverses</th>
 				<th>Newsletter</th>
 			</tr>
-			
+
 			<% for user in @user_list %>
 			<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
-				<td> <%= user.id				%></td>	
-				<td> <%= user.name				%></td>				
+				<td> <%= user.id				%></td>
+				<td> <%= user.name				%></td>
 				<td> <%= user.email				%> </td>
 				<td> <%= user.church ? user.church.name : ""	%> </td>
-				<td align = center> <%= user.last_activity_date %> </td>	
-				<td align = center> <%= user.last_reminder		%> </td>	
-				<td align = center> <%= user.reminder_freq		%> </td>									
+				<td align = center> <%= user.last_activity_date %> </td>
+				<td align = center> <%= user.last_reminder		%> </td>
+				<td align = center> <%= user.reminder_freq		%> </td>
 				<td align = right> <%= user.memverses.length	%> </td>
-				<td align = right>[<%= user.memorized			%>]</td>			
+				<td align = right>[<%= user.memorized			%>]</td>
 				<td align = center> <%= user.newsletters		%> </td>
-				<% if user.confirmed_at.nil? %>	
-					<td><%= link_to 'Activate', confirmation_url(user, :confirmation_token => user.confirmation_token) %> </td>					
+				<% if user.confirmed_at.nil? %>
+					<td><%= link_to 'Activate', confirmation_url(user, :confirmation_token => user.confirmation_token) %> </td>
 				<% end %>
-					
-							
+
+
 				<td><%= link_to 'Edit',   :controller => 'utils', :action => 'edit_user', :id => user %></td>
-				<td><%= link_to 'X', { :action => 'destroy_user',  :id => user }, :confirm => 'Are you sure?', :method => :post %></td>					
-				
+				<td><%= link_to 'X', { :action => 'destroy_user',  :id => user }, :confirm => 'Are you sure?', :method => :post %></td>
+
 			</tr>
 			<% end %>
-		
+
 		</table>
-	
+
 	</div>
 </div>
