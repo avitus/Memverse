@@ -1,4 +1,4 @@
-box: fliplingo/ubuntu12.04-ruby2.1.0@0.0.1
+box: mipearson/exchangegroup@0.0.14
 # Build definition
 # See the Rails section on the wercker devcenter:
 # http://devcenter.wercker.com/articles/languages/ruby/settingup-rails4.html
@@ -19,14 +19,6 @@ build:
         # will be skipped.
         - install-packages:
             packages: libqt4-dev qt4-qmake nodejs build-essential chrpath git-core libssl-dev libfontconfig1-dev
-
-        - script:
-            name: install phantomjs
-            code: |
-                git clone git://github.com/ariya/phantomjs.git
-                cd phantomjs
-                git checkout 1.9
-                ./build.sh
 
         # A step that executes `bundle install` command
         - bundle-install
