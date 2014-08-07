@@ -171,113 +171,11 @@
 		</div><!--header-top end-->
 
 		<% if user_signed_in? %>
-			<div id="menu-tabs" class="menu">
-				<ul id="maintab" class="basictab">
-					<li <%= tab(@tab=="home"		) %> rel="homepage">	<%= link_to t('menu.home'), 		main_app.root_path %> </li>
-					<li <%= tab(@tab=="learn"		) %> rel="learn">		<%= link_to t('menu.learn'), 		main_app.learn_path %></li>
-					<li <%= tab(@tab=="mem"			) %> rel="memory">		<%= link_to t('menu.review'),	 	main_app.test_verse_quick_path %></li>
-					<li <%= tab(@tab=="profile"		) %> rel="profile">		<%= link_to t('menu.profile'), 		main_app.user_path(current_user) %></li>
-					<li <%= tab(@tab=="contact"		) %> rel="contact">		<%= link_to t('menu.contact'), 		main_app.contact_path %></li>
-					<li <%= tab(@tab=="leaderboard"	) %> rel="leaderboard">	<%= link_to t('menu.leaderboard'), 	main_app.leaderboard_path %></li>
-					<li <%= tab(@tab=="blog"		) %> rel="blog">		<%= link_to t('menu.blog'), 		bloggity.root_path %></li>
-					<li <%= tab(@tab=="quiz"		) %> rel="quiz">		<%= link_to t('menu.quiz'), 		main_app.live_quiz_path %></li>
-					<li <%= tab(@tab=="help"		) %> rel="help">        <%= link_to t('menu.help'),         main_app.faq_path %></li>
-					<li>&nbsp;</li>
-				</ul>
-
-				<div class="submenu"><!--submenu start-->
-
-					<div class="submenu-left">
-
-						<div id="homepage" class="submenustyle">
-							<ul>
-								<li <%= sub(@sub=="manage"		)%>><%= link_to t('home_menu.My Verses'),		main_app.manage_verses_path %></li>
-								<li <%= sub(@sub=="addvs"		)%>><%= link_to t('home_menu.Add Verse'),		main_app.add_verse_path %></li>
-								<li <%= sub(@sub=="searchvs"	)%>><%= link_to t('home_menu.Search Bible'),	main_app.search_verse_path %></li>
-								<li <%= sub(@sub=="progress"	)%>><%= link_to t('home_menu.My Progress'),		main_app.progress_path %></li>
-								<li <%= sub(@sub=="popvs"		)%>><%= link_to t('home_menu.Popular Verses'),	main_app.popular_verses_path %></li>
-								<li <%= sub(@sub=="cloud"		)%>><%= link_to t('home_menu.Tag Cloud'),		main_app.tag_cloud_path %></li>
-								<li <%= sub(@sub=="news"		)%>><%= link_to t('home_menu.News'),			main_app.news_path %></li>
-							</ul>
-						</div>
-
-						<div id="learn" class="submenustyle">
-							<ul>
-								<li <%= sub(@sub=="learn"		)%>><%= link_to t('learn_menu.Learn'), 		main_app.learn_path %></li>
-								<li <%= sub(@sub=="practice"	)%>><%= link_to t('learn_menu.Practice'), 	main_app.drill_verse_path %></li>
-							</ul>
-						</div>
-
-						<div id="memory" class="submenustyle">
-							<ul>
-								<li <%= sub(@sub=="mem"			)%>><%= link_to t('memorize_menu.Verses'),			main_app.test_verse_quick_path %></li>
-								<li <%= sub(@sub=="refrec"		)%>><%= link_to t('memorize_menu.References'), 	    main_app.test_ref_path %></li>
-								<li <%= sub(@sub=="acctest"		)%>><%= link_to t('memorize_menu.Accuracy Test'), 	main_app.test_accuracy_path %></li>
-								<li <%= sub(@sub=="passrev"		)%>><%= link_to t('memorize_menu.Passage Review'), 	main_app.passage_review_path %></li>
-								<li <%= sub(@sub=="chrev"		)%>><%= link_to t('memorize_menu.Chapter Review'), 	main_app.pre_chapter_path %></li>
-							</ul>
-						</div>
-
-						<div id="profile" class="submenustyle">
-							<ul>
-								<li <%= sub(@sub=="dash"		)%>><%= link_to t('profile_menu.Dashboard'), 			main_app.user_path(current_user) %></li>
-								<li <%= sub(@sub=="prof"		)%>><%= link_to t('profile_menu.Profile'), 				main_app.update_profile_path %></li>
-								<li <%= sub(@sub=="mychurch"	)%>><%= link_to t('profile_menu.My Church'), 			main_app.church_path %></li>
-								<li <%= sub(@sub=="mygroup"		)%>><%= link_to t('profile_menu.My Group'), 			main_app.mygroup_path %></li>
-								<li <%= sub(@sub=="myrefs"		)%>><%= link_to t('profile_menu.Referrals'), 			main_app.referrals_path(current_user) %></li>
-							</ul>
-						</div>
-
-						<div id="contact" class="submenustyle">
-							<ul>
-								<li <%= sub(@sub=="contact"		)%>><%= link_to t('contact_menu.Contact'), 				main_app.contact_path %></li>
-								<li <%= sub(@sub=="volunteer"	)%>><%= link_to t('contact_menu.Volunteer'), 			main_app.volunteer_path %></li>
-							</ul>
-						</div>
-
-						<div id="leaderboard" class="submenustyle">
-							<ul>
-								<li <%= sub(@sub=="solo"		)%>><%= link_to t('leader_menu.Leaderboard'), 			main_app.leaderboard_path %></li>
-								<li <%= sub(@sub=="church"		)%>><%= link_to t('leader_menu.Church Leaderboard'), 	main_app.churchboard_path %></li>
-								<li <%= sub(@sub=="group"		)%>><%= link_to t('leader_menu.Group Leaderboard'), 	main_app.groupboard_path %></li>
-								<li <%= sub(@sub=="us-state"	)%>><%= link_to t('leader_menu.State Leaderboard'), 	main_app.stateboard_path %></li>
-								<li <%= sub(@sub=="country"		)%>><%= link_to t('leader_menu.Country Leaderboard'), 	main_app.countryboard_path %></li>
-								<li <%= sub(@sub=="referrals"	)%>><%= link_to t('leader_menu.Referralboard'), 		main_app.referralboard_path %></li>
-								<li <%= sub(@sub=="global"		)%>><%= link_to t('leader_menu.One Church'), 			main_app.memverse_clock_path %></li>
-							</ul>
-						</div>
-
-						<div id="blog" class="submenustyle">
-							<ul>
-								<li <%= sub(@sub=="view"		)%>><%= link_to t('blog_menu.View Blog'), 				bloggity.root_path %></li>
-								<li <%= sub(@sub=="comments"	)%>><%= link_to t('blog_menu.Recent Comments'),			bloggity.blog_comments_new_path %></li>
-								<li <%= sub(@sub=="blogsearch"	)%>><%= link_to t('blog_menu.Blog Search'),				bloggity.blog_search_path %></li>
-								<li <%= sub(@sub=="forums"		)%>><%= link_to t('blog_menu.Forums'),					forem.root_path %></li>
-							</ul>
-						</div>
-
-						<div id="quiz" class="submenustyle">
-							<ul>
-								<li <%= sub(@sub=="livequiz"	)%>><%= link_to t('quiz_menu.Live Quiz'),  				main_app.live_quiz_path %></li>
-								<li <%= sub(@sub=="questions"	)%>><%= link_to t('quiz_menu.My Questions'), 			main_app.quiz_questions_path %></li>
-								<li <%= sub(@sub=="submit"	    )%>><%= link_to t('quiz_menu.Submit Question'), 		main_app.submit_question_path %></li>
-							</ul>
-						</div>
-
-						<div id="help" class="submenustyle">
-							<ul>
-								<li <%= sub(@sub=="faq"		     )%>><%= link_to t('help_menu.faq'),                    main_app.faq_path %></li>
-								<li <%= sub(@sub=="tutorial"	)%>><%= link_to t('learn_menu.Tutorial'), 				main_app.tutorial_path %></li>
-								<li <%= sub(@sub=="smalg"		)%>><%= link_to t('learn_menu.SuperMemo Algorithm'), 	main_app.supermemo_path %></li>
-								<li <%= sub(@sub=="vidtut"		)%>><%= link_to t('learn_menu.Video Tutorial'), 		"https://www.youtube.com/watch?v=N8A71DIcr4Y&fs=1&feature=player_embedded".html_safe, :class => 'tut-video' %></li>
-							</ul>
-						</div>
-					</div><!--submenu-left end-->
-		        	<div class="clr"></div>
-
-				</div><!--submenu end-->
-			</div>  <!-- End of Menu Tabs -->
-
+			<% if content_for?(:top_nav) %>
+				<%= yield(:top_nav) %>
+			<% else %>
+				<%= render partial: "/layouts/top_nav" %>
+			<% end %>
 		<% else # if not logged in %>
 			<div class="menu menu-main-only"><!--menu start-->
 				<ul>

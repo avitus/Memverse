@@ -2,15 +2,12 @@
 
 class ScribeController < ApplicationController
 
-  before_filter :authenticate_user!
-  before_filter :access_permission
+  before_filter :authenticate_user!, :access_permission, :sidenav
 
   # ----------------------------------------------------------------------------------------------------------
   # Scribe Dashboard
   # ----------------------------------------------------------------------------------------------------------
   def index
-
-    # TODO: Only load 20 verses at a time. Tell users to refresh to get more.
 
     @check = params[:check]
 
@@ -21,23 +18,59 @@ class ScribeController < ApplicationController
                       where("memverses_count > ?", 1).limit(30).canonical_sort
     end
 
-    # Error reported stat -- coming soon!
-    @errors = Verse.where(error_flag: true).count
+  end
 
-    # Verification stats
-    @stats = []
+  # ----------------------------------------------------------------------------------------------------------
+  # Show verses needing checked
+  # ----------------------------------------------------------------------------------------------------------
+  def check
 
-    for trans in TRANSLATIONS.keys
-      count = Verse.where("memverses_count > 1").
-                    where(verified: false, translation: trans).count
+    @check = params[:check]
 
-      @stats << [trans.to_s, count] if count > 0
+    if @check == 'errors'
+      @verses = Verse.where(error_flag: true).limit(30).canonical_sort
+    elsif TRANSLATIONS.keys.include? @check.try(:to_sym)
+      @verses = Verse.where(translation: @check, verified: false).
+                      where("memverses_count > ?", 1).limit(30).canonical_sort
     end
 
-    @stats.sort! {|a, b| b[1] <=> a[1]}
+  end
 
-    @total = Verse.where("memverses_count > 1 and verified = false").count
+  # ----------------------------------------------------------------------------------------------------------
+  # Scribe in place power editing (used on scribe verse search page)
+  # ----------------------------------------------------------------------------------------------------------
+  def edit_verse
+    @verse = Verse.find(params[:id])
 
+    @verse.text = params[:value]
+    @verse.verified = true
+    @verse.error_flag = false
+    @verse.checked_by = current_user.login
+    @verse.save
+
+    render text: @verse.text
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Search verses
+  # ----------------------------------------------------------------------------------------------------------
+  def search
+    @verses = Array.new
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Search for verse
+  # ----------------------------------------------------------------------------------------------------------
+  def search_verse
+    errorcode, book, chapter, verse = parse_verse(params[:verse])
+
+    logger.debug("Bk: #{book}")
+    logger.debug("Ch: #{chapter}")
+    logger.debug("Vs: #{verse}")
+
+    @verses = Verse.where(book: book, chapter: chapter, versenum: verse)
+
+    render :partial => 'search_verse', layout: false
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -57,6 +90,25 @@ class ScribeController < ApplicationController
       flash[:alert] = "You do not have permission to do that."
       redirect_to root_path and return
     end
+  end
+
+  def sidenav
+    # Error reported count
+    @errors = Verse.where(error_flag: true).count
+
+    # Verification stats
+    @stats = []
+
+    for trans in TRANSLATIONS.keys
+      count = Verse.where("memverses_count > 1").
+                    where(verified: false, translation: trans).count
+
+      @stats << [trans.to_s, count, TRANSLATIONS[trans][:name]] if count > 0
+    end
+
+    @stats.sort! {|a, b| b[1] <=> a[1]}
+
+    @total = Verse.where("memverses_count > 1 and verified = false").count
   end
 
 end

@@ -1,0 +1,66 @@
+<% if @check == "errors" %>
+	<h2>Errors Reported</h2>
+<% elsif TRANSLATIONS[@check.to_sym] %>
+	<h2>Verses to Check for <%= TRANSLATIONS[@check.to_sym][:name] %></h2>
+<% end %>
+
+<%= "No verses to verify here!" if @verses.length == 0 %>
+
+<div class="verse-list">
+
+	<table cellpadding="6" cellspacing="0">
+		<tr>
+			<% if @check == "errors" %>
+				<th>Ver</th>
+			<% end %>
+			<th>Ref</th>
+			<th>Text</th>
+		</tr>
+		<% for vs in @verses %>
+		<tr valign="top" class="<%= cycle('list-line-odd', 'list-line-even') %>">
+			<% if @check == "errors" %>
+				<td align="center"><%= vs.translation		%></td>
+			<% end %>
+			<td align="left"><%= vs.ref				%></td>
+			<td class="edit_area" id=<%= vs.id %>><%= vs.text %></td>
+			<td class="verify"><%= link_to 'OK', scribe_verify_path(vs), remote: true %></td>
+		</tr>
+		<% end %>
+	</table>
+
+</div>
+
+
+<!-- http://www.appelsiini.net/projects/jeditable -->
+<script type="text/javascript">
+	 $(document).ready(function() {
+	     $('.edit').editable('/verses/set_verse_text', {
+	         indicator : 'Saving...',
+	         tooltip   : 'Click to edit...'
+	     });
+	     $('.edit_area').editable('/verses/set_verse_text', {
+	         type      : 'textarea',
+	         cancel    : 'Cancel',
+	         submit    : 'OK',
+	         indicator : 'Saving...',
+	         tooltip   : 'Click to edit...'
+	     });
+	 });
+</script>
+
+<!-- Highlight verse to be verified, remove after verification -->
+<script>
+  $(document).ready(function(){
+
+    $('.verify').click(function () {
+      $(this).closest('tr').fadeOut("slow");
+    });
+    $('.verify').hover(function () {
+      $(this).closest('tr').addClass("hilite");
+    }, function () {
+      $(this).closest('tr').removeClass("hilite");
+    });
+
+  });
+</script>
+
