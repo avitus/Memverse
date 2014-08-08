@@ -247,7 +247,7 @@ namespace :utils do
 
   #--------------------------------------------------------------------------------------------
   # Calculate subsection ending probabilities
-  # Task duration: ~ ?? hours
+  # Task duration: ~ 2 hours
   #--------------------------------------------------------------------------------------------
   desc "Calculate probability that any verse ends a subsection"
   task :calc_subsection_probabilities => :environment do
@@ -300,12 +300,15 @@ namespace :utils do
 
           # Remove negative values
           subsection_end.map! { |p| [p,0].max }
+          subsection_end.push(100)    # Add final verse
 
           # Show output
           puts "#{book} #{chapter} : #{subsection_end}"
 
           # Save to DB
-
+          subsection_end.each_with_index { |p, vs|
+            Uberverse.where(:book => book, :chapter => chapter, :versenum => vs+1).first.update_attribute(:subsection_end, p)
+          }
 
         end
 
