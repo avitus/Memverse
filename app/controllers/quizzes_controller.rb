@@ -32,8 +32,11 @@ class QuizzesController < ApplicationController
     @quiz           = Quiz.find(params[:id])
     @quizquestions  = @quiz.quiz_questions.order('question_no ASC')
 
+    @mcquestions    = @quizquestions.where(question_type: "mcq")
+
     respond_to do |format|
       format.html # show.html.erb
+      format.pdf  # show.pdf.prawn
       format.xml  { render :xml => @quiz }
     end
   end
