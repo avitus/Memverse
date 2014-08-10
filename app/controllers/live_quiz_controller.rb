@@ -31,6 +31,9 @@ class LiveQuizController < ApplicationController
       @minutes       =  20
       @seconds       =  0
       @num_questions =  25
+    elsif @quiz.quiz_length.nil?
+      flash[:notice] = "That quiz is not ready yet."
+      redirect_to root_path and return
     else
       @minutes       =  @quiz.quiz_length / 60
       @seconds       =  @quiz.quiz_length - (@minutes * 60)
