@@ -151,6 +151,7 @@ class QuizQuestionsController < ApplicationController
         format.html { redirect_to quiz_question_path(@quiz_question) }
 
       else
+        @quiz = Quiz.find(params[:quiz_question][:quiz_id] || 1)
         format.html { render :action => "new" }
       end
     end
