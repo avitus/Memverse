@@ -1,6 +1,6 @@
 pdf.font "Helvetica"
 
-pdf.text @quiz.name, size: 20, align: :center, style: :bold
+pdf.text "Memverse: #{@quiz.name}", size: 20, align: :center, style: :bold
 pdf.text "Multiple Choice", size: 16, align: :center
 
 pdf.move_down(30)
