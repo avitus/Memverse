@@ -14,6 +14,22 @@ GIT
       rails (>= 3.2.8)
 
 GIT
+  remote: git://github.com/alexcwatt/forem.git
+  revision: c2a40c3e57b0a5fe905b4c4ac8bb5ae826cfebd0
+  branch: niluser
+  specs:
+    forem (1.0.0.beta1)
+      cancancan (~> 1.7)
+      decorators (~> 1.0.2)
+      friendly_id (~> 5.0.0)
+      gemoji (= 1.1.2)
+      rails (>= 4.0.3, <= 4.1.4)
+      sanitize (= 2.0.6)
+      select2-rails (~> 3.5.4)
+      simple_form (~> 3.0.1)
+      workflow (= 1.0.0)
+
+GIT
   remote: git://github.com/bernat/best_in_place.git
   revision: df178520bf9ba405baee9528d5dbb630d6ff760c
   specs:
@@ -28,22 +44,6 @@ GIT
     omniauth-windowslive (0.0.8.1)
       multi_json (>= 1.0.3)
       omniauth-oauth2 (~> 1.0)
-
-GIT
-  remote: git://github.com/radar/forem.git
-  revision: b752c8ef3ac8d5a3129da92442ef3a1fd3541941
-  branch: rails4
-  specs:
-    forem (1.0.0.beta1)
-      cancancan (~> 1.7)
-      decorators (~> 1.0.2)
-      friendly_id (~> 5.0.0)
-      gemoji (= 1.1.2)
-      rails (>= 4.0.3, <= 4.1.4)
-      sanitize (= 2.0.6)
-      select2-rails (~> 3.5.4)
-      simple_form (~> 3.0.1)
-      workflow (= 1.0.0)
 
 GIT
   remote: git://github.com/richhollis/swagger-docs
@@ -147,7 +147,7 @@ GEM
     byebug (3.1.2)
       columnize (~> 0.8)
       debugger-linecache (~> 1.2)
-    cancancan (1.9.1)
+    cancancan (1.9.2)
     capistrano (2.15.5)
       highline
       net-scp (>= 1.0.0)
