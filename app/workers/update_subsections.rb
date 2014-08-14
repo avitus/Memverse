@@ -1,4 +1,4 @@
-class KnowledgeQuiz
+class UpdateSubsections
 
   include Sidekiq::Worker
   include Sidetiq::Schedulable
