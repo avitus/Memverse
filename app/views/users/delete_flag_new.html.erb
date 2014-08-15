@@ -14,54 +14,54 @@
 					<%= f.label 			:login, 'Username' %>
 					<%= f.text_field 		:login %>
 					<div class="tooltip2">You'll use this username to login to Memverse. No spaces please.</div>
-					<span id="error"></span>					
+					<span id="error"></span>
 				</li>
 				<li>
 					<%= f.label 			:email %>
 					<%= f.text_field 		:email %>
 					<div class="tooltip2">Check this carefully. You will receive an activation email at this email address. We highly recommend adding
-										 admin@memverse.com to your email address book to ensure delivery of the activation email.</div>					
+										 admin@memverse.com to your email address book to ensure delivery of the activation email.</div>
 				</li>
 				<li>
 					<%= f.label 			:password %>
 					<%= f.password_field 	:password %>
-					<div class="tooltip2">Use one you'll remember. We use the highest level of encryption.</div>					
+					<div class="tooltip2">Use one you'll remember. We use the highest level of encryption.</div>
 				</li>
 				<li>
 					<%= f.label 			:password_confirmation, 'Confirm Password' %>
 					<%= f.password_field 	:password_confirmation %>
-					<div class="tooltip2">One more time and you're done!</div>						
+					<div class="tooltip2">One more time and you're done!</div>
 				</li>
 			</ul>
 		</div>
-		
+
 		<br />
-		
+
 		<div class="buttons">
 			<%= submit_tag 'Sign up', :id => 'register_submit', :class => "no-dbl-click", :onsubmit => "document.getElementById('register_submit').disabled = true;" %>
 			<img class="spinner" id="ajax_spinner" src="/assets/indicator2.gif" alt="Submitting ..." style="display: none" />
-		</div>			
-					
+		</div>
+
 	<% end %>
 </div> <!-- end: signup-page-form -->
 </div> <!-- end: white-box-with-margins -->
 
 <script type="text/javascript">
-	// select all desired input fields and attach tooltips to them 
-	$("#new_user :input").tooltip({ 
-	 
-	    // place tooltip on the right edge 
-	    position: ['center', 'right'], 
-	 
-	    // a little tweaking of the position 
-	    offset: [-2, 70], 
-	 
-	    // use a simple show/hide effect 
-	    effect: 'toggle', 
-	     
-	    // custom opacity setting 
-	    opacity: 0.7, 
-		
+	// select all desired input fields and attach tooltips to them
+	$("#new_user :input").tooltip({
+
+	    // place tooltip on the right edge
+	    position: ['center', 'right'],
+
+	    // a little tweaking of the position
+	    offset: [-2, 70],
+
+	    // use a simple show/hide effect
+	    effect: 'toggle',
+
+	    // custom opacity setting
+	    opacity: 0.7,
+
 		//tooltip style
 		tipClass: 'tooltip2'
 	});
