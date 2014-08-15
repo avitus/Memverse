@@ -31,6 +31,7 @@ MemverseApp::Application.routes.draw do
 
   # Primary resource routes
   resources :users, :only => :show
+  resources :american_state, :only => :show
   resources :groups
   resources :uberverses
   resources :sermons
