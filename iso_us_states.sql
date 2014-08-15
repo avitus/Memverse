@@ -1,16 +1,8 @@
 # [ALV] mysql -u [username] -p[password] -hmysql.[domainname].com [database_name] < iso_country_list.sql
 
-DROP TABLE IF EXISTS american_states;
-
-CREATE TABLE `american_states` (
-  `id` SMALLINT NOT NULL PRIMARY KEY,
-  `abbrev` varchar(20) NOT NULL default '',
-  `name` varchar(50) NOT NULL default ''
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- 
+--
 -- Dumping data for table `state_abbreviations`
--- 
+--
 
 INSERT INTO `american_states` (`id`, `abbrev`, `name`) VALUES ('0', 'AL', 'Alabama'),
 ('1', 'AK', 'Alaska'),
