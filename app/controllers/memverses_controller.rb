@@ -1101,6 +1101,8 @@ class MemversesController < ApplicationController
     @tab = "learn"
     @sub = "learn"
 
+    @hide_select = true # hide translation dropdown
+
     add_breadcrumb I18n.t("menu.learn"), :test_verse_quick_path
     add_breadcrumb I18n.t('learn_menu.Learn'), :drill_verse_path
 
