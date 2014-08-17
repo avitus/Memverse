@@ -25,7 +25,7 @@ class HomeController < ApplicationController
   end
 
   def quick_start
-
+    @hide_select = true # hide translation dropdown
   end
 
 end
