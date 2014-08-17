@@ -184,6 +184,25 @@ FactoryGirl.define do
     qq.association :quiz, :factory => :quiz
     qq.times_answered  10
     qq.perc_correct    50
+    qq.question_type   "reference"
+    qq.mc_question     nil
+    qq.mc_option_a     nil
+    qq.mc_option_b     nil
+    qq.mc_option_c     nil
+    qq.mc_option_d     nil
+    qq.mc_answer       nil
+    qq.association :supporting_ref, :factory => :uberverse
+  end
+
+  # ==============================================================================================
+  # Uberverses
+  # ==============================================================================================
+  factory :uberverse do
+    book "Genesis"
+    chapter 1
+    versenum 1
+    book_index 1
+    subsection_end 31
   end
 
 end
