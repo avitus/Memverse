@@ -4,6 +4,7 @@ class QuizQuestionsController < ApplicationController
 
   before_filter :authenticate_user!
   before_filter :access_permission, :except => [:submit, :search, :create, :index, :new]
+  before_filter :set_quiz_question, only: [:show, :edit, :update, :destroy]
 
   add_breadcrumb "Home", :root_path
 
@@ -199,15 +200,19 @@ class QuizQuestionsController < ApplicationController
   # Check whether user owns quiz question or is an admin
   # ----------------------------------------------------------------------------------------------------------
   def access_permission
-    @quiz_question = QuizQuestion.find_by_id( params[:id] ) || QuizQuestion.new(user: current_user)
+    quiz_question = QuizQuestion.find( params[:id] ) || QuizQuestion.new(user: current_user)
 
-    if @quiz_question.nil?
-        flash[:error] = "No question with that ID exists in our database."
-        redirect_to root_path and return
-    elsif cannot? :manage, @quiz_question
+    if quiz_question.nil?
+      flash[:error] = "No question with that ID exists in our database."
+      redirect_to root_path and return
+    elsif cannot? :manage, quiz_question
       flash[:error] = "You may only access quiz questions that you created."
       redirect_to root_path and return
     end
+  end
+
+  def set_quiz_question
+    @quiz_question = QuizQuestion.find( params[:id] )
   end
 
 end
