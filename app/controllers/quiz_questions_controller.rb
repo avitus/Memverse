@@ -213,6 +213,11 @@ class QuizQuestionsController < ApplicationController
 
   def set_quiz_question
     @quiz_question = QuizQuestion.find( params[:id] )
+
+    if @quiz_question.nil?
+      flash[:error] = "No question with that ID exists in our database."
+      redirect_to root_path and return
+    end
   end
 
 end
