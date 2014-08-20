@@ -11,6 +11,8 @@ class AmericanState < ActiveRecord::Base
 
   # Validations
   validates_presence_of :name, :abbrev
+  validates :name,   uniqueness: true
+  validates :abbrev, uniqueness: true
 
   scope :vibrant, -> { where('users_count >= 3') }
 

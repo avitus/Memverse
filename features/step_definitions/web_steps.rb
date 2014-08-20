@@ -57,7 +57,11 @@ When /^(?:|I )follow "([^"]*)"$/ do |link|
 end
 
 When /^(?:|I )click inside "([^"]*)"$/ do |selector|
-  find(selector).click
+  find(:css, selector).click
+end
+
+When /^(?:|I )click inside the first "([^"]*)"$/ do |selector|
+  first(:css, selector).click
 end
 
 When /^(?:|I )fill in "([^"]*)" with "([^"]*)"$/ do |field, value|

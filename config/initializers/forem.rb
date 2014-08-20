@@ -5,4 +5,7 @@ Forem.per_page           = 20
 Forem.user_profile_links = true
 Forem.layout             = 'application'
 
-
+Forem::NilUser.class_eval do
+  # NilUser#blog_avatar_url calls #email instead of #forem_email
+  alias_method :email, :forem_email
+end
