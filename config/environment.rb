@@ -38,7 +38,6 @@ TRANSLATIONS = {
   SMP:    {name: "Scottish Metrical Psalter", language: "en"},
   SMPB:   {name: "Scottish Metrical Psalter: B", language: "en"},
   SMPC:   {name: "Scottish Metrical Psalter: C", language: "en"},
-  AKJ:    {name: "Authorized King James Version", language: "en"},
   GW:     {name: "God's Word Translation", language: "en"},
   GNT:    {name: "Good News Translation", language: "en"},
   NVI:    {name: "Nueva Version Internacional", language: "es"},
