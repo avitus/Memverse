@@ -19,7 +19,7 @@ TRANSLATIONS = {
   NNV:    {name: "New International Version (2011)", language: "en"},
   NAS:    {name: "New American Standard Bible", language: "en"},
   NKJ:    {name: "New King James Version", language: "en"},
-  KJV:    {name: "King James Version", language: "en"},
+  KJV:    {name: "King James Version (Authorized)", language: "en"},
   RSV:    {name: "Revised Standard Version", language: "en"},
   NRS:    {name: "New Revised Standard Version", language: "en"},
   ESV:    {name: "English Standard Version (2011)", language: "en"},
@@ -62,7 +62,7 @@ MAJORS = {
     :NIV => "New International Version (1984)",
     :NAS => "New American Standard Bible",
     :NKJ => "New King James Version",
-    :KJV => "King James Version",
+    :KJV => "King James Version (Authorized)",
     :ESV => "English Standard Version (2011)",
   }
 
