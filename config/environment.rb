@@ -52,6 +52,7 @@ TRANSLATIONS = {
   HSV:    {name: "Herziene Statenvertaling", language: "nl"},
   NBV:    {name: "De Nieuwe Bijbelvertaling", language: "nl"},
   MBB:    {name: "Magandang Balita Biblia", language: "tl"},
+  TAB:    {name: "Tagalog Ang Biblia", language: "tl"},
   ACF:    {name: "Almeida Corrigida e Fiel", language: "pt"},
   ARA:    {name: "Almeida Revista e Atualizada", language: "pt"},
   SPB:    {name: "Svenska Folkbibeln", language: "sv"},
