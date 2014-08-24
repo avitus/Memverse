@@ -282,7 +282,7 @@ function verseFeedback(correctvs, verseguess, echo, firstletter) {
 		if (!echo) {
 			feedback = '< Feedback disabled >';
 		}
-		feedback = feedback + '<div id="matchbox"><p>Correct</p></div>';
+		feedback = feedback + '<div id="matchbox"><span>Correct</span></div>';
 	} else { // at this point it must be incorrect; we still need to set correct to false in case user guess has been correct thus far bust still incomplete
 		correct = false;
 		if (!echo) {	// incorrect and feedback disabled
