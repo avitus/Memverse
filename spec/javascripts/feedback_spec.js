@@ -5,7 +5,7 @@ describe("Feedback", function() {
 			"And after he became the father- of Enosh Seth lived: 807 years and had other sons and. daughters",	// user guess
 			true																								// feedback enabled
 		)).toEqual({
-			feedtext : 'And after he became the father of Enosh, Seth lived 807 years and had other sons and daughters. <div id="matchbox"><p>Correct</p></div>',
+			feedtext : 'And after he became the father of Enosh, Seth lived 807 years and had other sons and daughters. <div id="matchbox"><span>Correct</span></div>',
 			correct  : true
 		})
 	});
@@ -189,7 +189,7 @@ describe("Feedback", function() {
 			"This is a verse with a dash at the end",		// user guess
 			true											// feedback enabled
 		)).toEqual({
-			feedtext : 'This is a verse with a dash at the end — <div id="matchbox"><p>Correct</p></div>',
+			feedtext : 'This is a verse with a dash at the end — <div id="matchbox"><span>Correct</span></div>',
 			correct  : true
 		})
 	});
@@ -200,7 +200,7 @@ describe("Feedback", function() {
 			"I´`͂῾᾿n the beginning αοο ο ιι ι ι",	// user guess
 			true									// feedback enabled
 		)).toEqual({
-			feedtext : 'In the beginning άόό ό ῖἱ ῖ ἱ <div id="matchbox"><p>Correct</p></div>',
+			feedtext : 'In the beginning άόό ό ῖἱ ῖ ἱ <div id="matchbox"><span>Correct</span></div>',
 			correct  : true
 		})
 	});
