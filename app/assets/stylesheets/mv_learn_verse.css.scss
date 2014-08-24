@@ -24,8 +24,8 @@ div.ref-and-details {
 
 /* ... and associated button */
 .select-verse-button {
-  text-align:right;
-  float: right;
+  position: absolute;
+  right: 0;
 }
 
 .compact-minus-button {
