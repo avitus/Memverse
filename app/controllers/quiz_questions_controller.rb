@@ -161,6 +161,7 @@ class QuizQuestionsController < ApplicationController
   # PUT /quizquestions/1
   # PUT /quizquestions/1.xml
   def update
+    @quiz          = @quiz_question.quiz
 
     # Remove supporting reference string from list of params
     supporting_ref = params[:quiz_question].delete(:supporting_ref)
