@@ -51,6 +51,7 @@ TRANSLATIONS = {
   LND:    {name: "La Nuova Diodati", language: "it"},
   HSV:    {name: "Herziene Statenvertaling", language: "nl"},
   NBV:    {name: "De Nieuwe Bijbelvertaling", language: "nl"},
+  RDC:    {name: "Romanian Dumitru Cornilescu Translation", language: "ro"},
   MBB:    {name: "Magandang Balita Biblia", language: "tl"},
   TAB:    {name: "Tagalog Ang Biblia", language: "tl"},
   ACF:    {name: "Almeida Corrigida e Fiel", language: "pt"},
