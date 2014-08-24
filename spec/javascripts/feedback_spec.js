@@ -83,7 +83,7 @@ describe("Feedback", function() {
 			true,																// feedback
 			true																// allow first-letter
 		)).toEqual({
-			feedtext : 'For God so loved the world that he gave his one and only Son <div id="matchbox"><p>Correct</p></div>',
+			feedtext : 'For God so loved the world that he gave his one and only Son <div id="matchbox"><span>Correct</span></div>',
 			correct  : true
 		})
 	});
@@ -95,7 +95,7 @@ describe("Feedback", function() {
 			true,																// feedback
 			true																// allow first-letter
 		)).toEqual({
-			feedtext : 'En él estaba la vida, y la vida era la luz de los hombres. <div id="matchbox"><p>Correct</p></div>',
+			feedtext : 'En él estaba la vida, y la vida era la luz de los hombres. <div id="matchbox"><span>Correct</span></div>',
 			correct  : true
 		})
 	});
@@ -107,7 +107,7 @@ describe("Feedback", function() {
 			true,					// feedback
 			true					// allow first-letter
 		)).toEqual({
-			feedtext : 'This is a test. <div id="matchbox"><p>Correct</p></div>',
+			feedtext : 'This is a test. <div id="matchbox"><span>Correct</span></div>',
 			correct  : true
 		})
 	});
@@ -143,7 +143,7 @@ describe("Feedback", function() {
 			false,					// feedback
 			true					// allow first-letter
 		)).toEqual({
-			feedtext : '< Feedback disabled ><div id="matchbox"><p>Correct</p></div>',
+			feedtext : '< Feedback disabled ><div id="matchbox"><span>Correct</span></div>',
 			correct  : true
 		})
 	});
@@ -167,7 +167,7 @@ describe("Feedback", function() {
 			true,					// feedback
 			true					// allow first-letter
 		)).toEqual({
-			feedtext : 'This is an interesting test. <div id="matchbox"><p>Correct</p></div>',
+			feedtext : 'This is an interesting test. <div id="matchbox"><span>Correct</span></div>',
 			correct  : true
 		})
 	});
@@ -178,7 +178,7 @@ describe("Feedback", function() {
 			"This is a verse with a hyphen at the end",		// user guess
 			true											// feedback enabled
 		)).toEqual({
-			feedtext : 'This is a verse with a hyphen at the end <div id="matchbox"><p>Correct</p></div>',
+			feedtext : 'This is a verse with a hyphen at the end <div id="matchbox"><span>Correct</span></div>',
 			correct  : true
 		})
 	});
