@@ -37,7 +37,7 @@ class QuizQuestionsController < ApplicationController
       @quiz = Quiz.find(params[:quiz] || 1)
       @quiz_questions = QuizQuestion.mcq.pending.order("updated_at DESC")
     else
-      flash[:alert] = "You do not have permission to do that."
+      flash[:alert] = "You do not have permission to approve quiz questions."
       redirect_to root_path and return
     end
   end
@@ -201,7 +201,7 @@ class QuizQuestionsController < ApplicationController
   # Check whether user owns quiz question or is an admin
   # ----------------------------------------------------------------------------------------------------------
   def access_permission
-    quiz_question = QuizQuestion.find( params[:id] ) || QuizQuestion.new(user: current_user)
+    quiz_question = QuizQuestion.find_by_id( params[:id] ) || QuizQuestion.new(user: current_user)
 
     if quiz_question.nil?
       flash[:error] = "No question with that ID exists in our database."
