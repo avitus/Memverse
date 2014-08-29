@@ -145,7 +145,7 @@ class Memverse < ActiveRecord::Base
     self.attempts      += 1
     self.save!
 
-    return (prev_learning and (self.status == "Memorized"))
+    return (prev_learning and (self.status == "Memorized"))  # TRUE if this memory verse is newly memorized
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -697,7 +697,6 @@ class Memverse < ActiveRecord::Base
     return first_verse ? first_verse.id : nil
 
   end
-
 
   # ----------------------------------------------------------------------------------------------------------
   # Add a memory verse to a passage [hook: after_create]
