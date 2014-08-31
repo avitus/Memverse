@@ -78,8 +78,10 @@ class QuizQuestionsController < ApplicationController
   # Find Bible Bee questions
   # ----------------------------------------------------------------------------------------------------------
   def bible_bee
+    query = params[:nationals] ? "%Nationals%" : "%Bible Bee%"
+
     @questions = QuizQuestion.where(question_type: "mcq").where(quiz_id: 1).
-                             where("mc_question LIKE ?", "%Bible Bee%").
+                             where("mc_question LIKE ?", query).
                              order("created_at").page(params[:page])
 
     respond_to do |format|
