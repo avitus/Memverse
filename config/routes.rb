@@ -76,6 +76,7 @@ MemverseApp::Application.routes.draw do
       get 'due', :on => :collection
       resources :memverses
     end
+    resources :translations, :only => [:index, :show]
     get '/me' => "credentials#me"
   end
 
