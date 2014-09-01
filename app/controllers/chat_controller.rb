@@ -59,8 +59,8 @@ class ChatController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   # Split message into user id, name, and message
   # ----------------------------------------------------------------------------------------------------------
-  def parse_chat_message(msg, user, user_id=nil) # user_id may be nil if annnouncement is from server
-    return "#{user_id}:#{user}: #{msg}"
+  def parse_chat_message(msg, user, user_id=nil) # user_id may be nil if announcement is from server
+    {user: user, user_id: user_id, msg: msg}
   end
 
 end
