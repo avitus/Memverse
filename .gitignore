@@ -23,6 +23,10 @@ pubnub.log
 tmp/*
 dump.rdb
 
+# YARD documentation
+.yardoc/*
+doc/*
+
 # various artifacts
 **.war
 *.rbc

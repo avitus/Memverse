@@ -43,9 +43,13 @@ MemverseApp::Application.routes.draw do
   resources :verses
 
   resources :quiz_questions do
-    get 'search', on: :collection
-    get 'bible_bee', on: :collection
+    collection do
+      get 'search'
+      get 'bible_bee'
+      get 'nationals' => 'quiz_questions#bible_bee', nationals: true
+    end
   end
+
   get 'submit_question'        => "quiz_questions#submit",    as: :submit_question         # for users to submit quiz questions
   get 'quiz_question_approval' => 'quiz_questions#approvals', as: :quiz_question_approval  # for admins to approve quiz questions
 
@@ -72,6 +76,7 @@ MemverseApp::Application.routes.draw do
       get 'due', :on => :collection
       resources :memverses
     end
+    resources :translations, :only => [:index, :show]
     get '/me' => "credentials#me"
   end
 
