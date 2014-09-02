@@ -17,13 +17,7 @@ var quizRoom = {
 
             case "chat":
 
-                var first_colon  = parseInt(m.data.indexOf(':'));
-                var sender_id    = m.data.substring(0,first_colon);
-                var second_colon = parseInt(m.data.indexOf(':',first_colon+1));
-                var user         = m.data.substring(first_colon+1,second_colon);
-                var message      = m.data.substring(second_colon+1);
-
-                this.putChat(user,message,m.meta,sender_id);
+                this.putChat(m.data.user,m.data.msg,m.meta,m.data.user_id);
                 break;
 
             case "chat_status":
