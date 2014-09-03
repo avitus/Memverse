@@ -35,15 +35,28 @@ class Passage < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   # Automatically create subsections for passage
   # ----------------------------------------------------------------------------------------------------------
-  def auto_subsection( threshold=0 )
+  def auto_subsection( subsection_length = 5 )
     auto_ss = self.memverses.joins(verse: :uberverse)
                             .select(['uberverses.subsection_end, verses.versenum, memverses.id'])
                             .order('verses.versenum')
 
     section_dividers = auto_ss.pluck(:subsection_end)
 
+    puts ("Section dividers: #{section_dividers.inspect}")
+
+    # Calculate the desired number of subsections
+    num_sections = (self.length / subsection_length).to_i
+
+    puts ("Number of sections: #{num_sections}")
+
+    # Set threshold based on number of subsections needed
+    threshold = section_dividers.sort[-num_sections]
+
+    puts ("Sorted section dividers: #{section_dividers.sort}")
+    puts ("Setting threshold: #{threshold}")
+
     auto_ss.each_with_index { |mv, index|
-      Memverse.find(mv.id).update_attribute(:subsection, section_dividers[0...index].select{ |div| div>threshold }.count)
+      Memverse.find(mv.id).update_attribute(:subsection, section_dividers[0...index].select{ |div| div>=threshold }.count)
     }
   end
 
