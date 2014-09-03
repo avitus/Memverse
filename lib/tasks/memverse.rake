@@ -17,6 +17,7 @@ namespace :utils do
   #--------------------------------------------------------------------------------------------
   # Delete unused tags, recreate verse tags
   # Task duration: ~ 4 hours
+  # Note: Run twice a year as a scheduled Sidekiq job
   #--------------------------------------------------------------------------------------------
   desc "Clean up tag cloud"
   task :refresh_tag_cloud => :environment do
