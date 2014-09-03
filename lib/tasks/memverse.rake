@@ -477,7 +477,7 @@ namespace :utils do
     # Remove all empty passages
     puts("Removing passages with no associated memory verses")
     puts("   #{Passage.joins("left join memverses on memverses.passage_id = passages.id").where("memverses.passage_id is null").count} empty passages")
-    Passage.joins("left join memverses on memverses.passage_id = passages.id").where("memverses.passage_id is null").destroy_all
+    Passage.joins("left join memverses on memverses.passage_id = passages.id").readonly(false).where("memverses.passage_id is null").destroy_all
 
     puts "=== Finished ==="
 
