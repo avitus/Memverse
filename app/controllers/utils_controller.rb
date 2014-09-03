@@ -289,18 +289,6 @@ class UtilsController < ApplicationController
     # TODO - figure out what to do with comments from deleted blog posts
   end
 
-  # ----------------------------------------------------------------------------------------------------------
-  # Remove dormant accounts and memory verses that haven't been started
-  # TODO: This method is not currently being used
-  # ----------------------------------------------------------------------------------------------------------
-  def housecleaning
-    # Delete accounts of users with a) no verses and b) no activity for three months
-    User.delete_users_who_never_got_started
-    # Delete memory verses which have never been started and are a year old
-    Memverse.delete_unstarted_memory_verses
-    # Delete user accounts which have been inactive for two years
-  end
-
   def mv_stats
     # TODO: Save statistics on deleted memory verses
     @never_started  = Memverse.never_started  # No attempts ever
