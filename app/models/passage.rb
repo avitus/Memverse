@@ -33,10 +33,18 @@ class Passage < ActiveRecord::Base
   end
 
   # ----------------------------------------------------------------------------------------------------------
-  # Break passage into subpassages
+  # Automatically create subsections for passage
   # ----------------------------------------------------------------------------------------------------------
-  def subpassage(max_length = 5)
+  def auto_subsection( threshold=0 )
+    auto_ss = self.memverses.joins(verse: :uberverse)
+                            .select(['uberverses.subsection_end, verses.versenum, memverses.id'])
+                            .order('verses.versenum')
 
+    section_dividers = auto_ss.pluck(:subsection_end)
+
+    auto_ss.each_with_index { |mv, index|
+      Memverse.find(mv.id).update_attribute(:subsection, section_dividers[0...index].select{ |div| div>threshold }.count)
+    }
   end
 
   # ----------------------------------------------------------------------------------------------------------
