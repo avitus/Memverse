@@ -42,18 +42,16 @@ class Passage < ActiveRecord::Base
 
     section_dividers = auto_ss.pluck(:subsection_end)
 
-    puts ("Section dividers: #{section_dividers.inspect}")
-
     # Calculate the desired number of subsections
     num_sections = (self.length / subsection_length).to_i
-
-    puts ("Number of sections: #{num_sections}")
 
     # Set threshold based on number of subsections needed
     threshold = section_dividers.sort[-num_sections]
 
-    puts ("Sorted section dividers: #{section_dividers.sort}")
-    puts ("Setting threshold: #{threshold}")
+    # puts ("Section dividers: #{section_dividers.inspect}")
+    # puts ("Number of sections: #{num_sections}")
+    # puts ("Sorted section dividers: #{section_dividers.sort}")
+    # puts ("Setting threshold: #{threshold}")
 
     auto_ss.each_with_index { |mv, index|
       Memverse.find(mv.id).update_attribute(:subsection, section_dividers[0...index].select{ |div| div>=threshold }.count)
