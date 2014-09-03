@@ -24,6 +24,28 @@ describe Passage do
   end
 
   # ==============================================================================================
+  # Automatically create subsections in a passage
+  # ==============================================================================================
+  describe "automatically handle subsections" do
+
+    before(:each) do
+      FactoryGirl.create(:uberverse, :book => 'Psalms', :chapter => 5, :book_index => 19, :versenum => 1, :subsection_end =>   0)
+      FactoryGirl.create(:uberverse, :book => 'Psalms', :chapter => 5, :book_index => 19, :versenum => 2, :subsection_end =>   0)
+      FactoryGirl.create(:uberverse, :book => 'Psalms', :chapter => 5, :book_index => 19, :versenum => 3, :subsection_end =>  50)
+      FactoryGirl.create(:uberverse, :book => 'Psalms', :chapter => 5, :book_index => 19, :versenum => 4, :subsection_end =>   0)
+      FactoryGirl.create(:uberverse, :book => 'Psalms', :chapter => 5, :book_index => 19, :versenum => 5, :subsection_end =>   0)
+      FactoryGirl.create(:uberverse, :book => 'Psalms', :chapter => 5, :book_index => 19, :versenum => 6, :subsection_end =>   0)
+    end
+
+    it "should divide passages into subsections automagically" do
+      psg = FactoryGirl.create(:passage, book: 'Psalms', chapter: 5, first_verse: 1, last_verse: 6, length: 6)
+      psg.auto_subsection
+      psg.memverses.first.subsection.should == 0
+      psg.memverses.last.subsection.should  == 1
+    end
+  end
+
+  # ==============================================================================================
   # Capture Supermemo data from underlying memory verses
   # ==============================================================================================
   it "should summarize Supermemo data from underlying memory verses" do
