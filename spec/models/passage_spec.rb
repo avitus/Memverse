@@ -42,6 +42,15 @@ describe Passage do
       FactoryGirl.create(:uberverse, :book => 'Psalms', :chapter => 5, :book_index => 19, :versenum => 11, :subsection_end =>   0)
       FactoryGirl.create(:uberverse, :book => 'Psalms', :chapter => 5, :book_index => 19, :versenum => 12, :subsection_end =>   3)
       FactoryGirl.create(:uberverse, :book => 'Psalms', :chapter => 5, :book_index => 19, :versenum => 13, :subsection_end =>   0)
+      FactoryGirl.create(:uberverse, :book => 'Psalms', :chapter => 5, :book_index => 19, :versenum => 14, :subsection_end =>   0)
+      FactoryGirl.create(:uberverse, :book => 'Psalms', :chapter => 5, :book_index => 19, :versenum => 15, :subsection_end =>   0)
+      FactoryGirl.create(:uberverse, :book => 'Psalms', :chapter => 5, :book_index => 19, :versenum => 16, :subsection_end =>   0)
+      FactoryGirl.create(:uberverse, :book => 'Psalms', :chapter => 5, :book_index => 19, :versenum => 17, :subsection_end =>   0)
+      FactoryGirl.create(:uberverse, :book => 'Psalms', :chapter => 5, :book_index => 19, :versenum => 18, :subsection_end =>   0)
+      FactoryGirl.create(:uberverse, :book => 'Psalms', :chapter => 5, :book_index => 19, :versenum => 19, :subsection_end =>   0)
+      FactoryGirl.create(:uberverse, :book => 'Psalms', :chapter => 5, :book_index => 19, :versenum => 20, :subsection_end =>   0)
+      FactoryGirl.create(:uberverse, :book => 'Psalms', :chapter => 5, :book_index => 19, :versenum => 21, :subsection_end =>   0)
+      FactoryGirl.create(:uberverse, :book => 'Psalms', :chapter => 5, :book_index => 19, :versenum => 22, :subsection_end =>   0)
     end
 
     it "should divide passages into subsections automagically" do
@@ -61,11 +70,18 @@ describe Passage do
 
     it "should limit the number of subsections in a passage" do
       psg = FactoryGirl.create(:passage, book: 'Psalms', chapter: 5, first_verse: 1, last_verse: 13, length: 13)
-      psg.auto_subsection
+      psg.auto_subsection(5)
       psg.memverses.first.subsection.should == 0
       psg.memverses.last.subsection.should  == 2
       psg.memverses.where(:subsection => 1).first.verse.versenum.should ==  4
       psg.memverses.where(:subsection => 2).first.verse.versenum.should == 11
+    end
+
+    it "should not subsection passages which have no information about ending verses" do
+      psg = FactoryGirl.create(:passage, book: 'Psalms', chapter: 5, first_verse: 13, last_verse: 22, length: 10)
+      psg.auto_subsection
+      psg.memverses.first.subsection.should == 0
+      psg.memverses.last.subsection.should  == 0
     end
 
   end

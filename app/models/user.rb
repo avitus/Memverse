@@ -640,8 +640,9 @@ class User < ActiveRecord::Base
     self.time_allocation  = new_params["time_allocation"]
     self.show_echo        = new_params["show_echo"]
     self.mnemonic_use     = new_params["mnemonic_use"]
-    self.all_refs         = new_params["all_refs"]
     self.auto_work_load   = new_params["auto_work_load"]
+    self.sync_subsections = new_params["sync_subsections"]
+    self.all_refs         = new_params["all_refs"]
     self.max_interval     = new_params["max_interval"]
     self.show_email       = new_params["show_email"]
 
