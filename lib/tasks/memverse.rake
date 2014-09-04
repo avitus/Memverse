@@ -312,7 +312,7 @@ namespace :utils do
   #--------------------------------------------------------------------------------------------
   desc "Create subsections for active users' passages"
   task :subsection_passages => :environment do
-    puts "Creating subsections for active users' passages."
+    puts "=== Creating subsections for active users' passages at #{Time.now} ==="
 
     User.active.find_each { |u|
       u.passages.find_each { |psg|
