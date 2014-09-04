@@ -35,27 +35,33 @@ class Passage < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   # Automatically create subsections for passage
   # ----------------------------------------------------------------------------------------------------------
-  def auto_subsection( subsection_length = 5 )
-    auto_ss = self.memverses.joins(verse: :uberverse)
-                            .select(['uberverses.subsection_end, verses.versenum, memverses.id'])
-                            .order('verses.versenum')
+  def auto_subsection( subsection_length = 4, max_subsection_length = 10 )
 
-    section_dividers = auto_ss.pluck(:subsection_end)
+    if self.length > subsection_length
+      # Create an array of object with the following structure
+      # [ memverse_id, verse_num, subsection_end_probability ]
+      auto_ss = self.memverses.joins(verse: :uberverse)
+                              .select(['uberverses.subsection_end, verses.versenum, memverses.id'])
+                              .order('verses.versenum')
 
-    # Calculate the desired number of subsections
-    num_sections = (self.length / subsection_length).to_i
+      section_dividers = auto_ss.pluck(:subsection_end) # Array of probabilities that each verse ends a section
 
-    # Set threshold based on number of subsections needed
-    threshold = section_dividers.sort[-num_sections]
+      # Calculate the desired number of subsections
+      num_sections = (self.length / subsection_length).to_i
 
-    # puts ("Section dividers: #{section_dividers.inspect}")
-    # puts ("Number of sections: #{num_sections}")
-    # puts ("Sorted section dividers: #{section_dividers.sort}")
-    # puts ("Setting threshold: #{threshold}")
+      # Set threshold based on number of subsections needed. Don't set threshold below 1.
+      threshold = [ section_dividers.sort[-num_sections], 1].max
 
-    auto_ss.each_with_index { |mv, index|
-      Memverse.find(mv.id).update_attribute(:subsection, section_dividers[0...index].select{ |div| div>=threshold }.count)
-    }
+      # puts ("Section dividers: #{section_dividers.inspect}")
+      # puts ("Number of sections: #{num_sections}")
+      # puts ("Sorted section dividers: #{section_dividers.sort}")
+      # puts ("Setting threshold: #{threshold}")
+
+      auto_ss.each_with_index { |mv, index|
+        Memverse.find(mv.id).update_attribute(:subsection, section_dividers[0...index].select{ |div| div>=threshold }.count)
+      }
+    end
+
   end
 
   # ----------------------------------------------------------------------------------------------------------

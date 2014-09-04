@@ -307,6 +307,23 @@ namespace :utils do
   end
 
   #--------------------------------------------------------------------------------------------
+  # Calculate subsections for passages of active users
+  # Task duration: ~ ? hours
+  #--------------------------------------------------------------------------------------------
+  desc "Create subsections for active users' passages"
+  task :subsection_passages => :environment do
+    puts "Creating subsections for active users' passages."
+
+    User.active.find_each { |u|
+      u.passages.find_each { |psg|
+        psg.auto_subsection
+      }
+    }
+
+    puts "=== Finished updating passage subsections at #{Time.now} ==="
+  end
+
+  #--------------------------------------------------------------------------------------------
   # Associate verses with uberverses
   # Task duration: ~ 4 hours
   #--------------------------------------------------------------------------------------------
