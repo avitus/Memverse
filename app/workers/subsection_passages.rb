@@ -1,4 +1,4 @@
-class UpdateSubsections
+class SubsectionPassages
 
   include Sidekiq::Worker
   include Sidetiq::Schedulable
