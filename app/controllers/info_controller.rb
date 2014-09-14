@@ -222,7 +222,7 @@ class InfoController < ApplicationController
     @sub = "referrals"
 
     add_breadcrumb I18n.t("menu.leaderboard"), leaderboard_path
-    add_breadcrumb I18n.t("leader_menu.Referralboard"), referralboard_path
+    add_breadcrumb I18n.t("leader_menu.Referral Leaderboard"), referralboard_path
 
     @referralboard = User.top_referrers
 
