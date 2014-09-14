@@ -33,6 +33,38 @@ class Passage < ActiveRecord::Base
   end
 
   # ----------------------------------------------------------------------------------------------------------
+  # Automatically create subsections for passage
+  # ----------------------------------------------------------------------------------------------------------
+  def auto_subsection( subsection_length = 4, max_subsection_length = 10 )
+
+    if self.length > subsection_length
+      # Create an array of object with the following structure
+      # [ memverse_id, verse_num, subsection_end_probability ]
+      auto_ss = self.memverses.joins(verse: :uberverse)
+                              .select(['uberverses.subsection_end, verses.versenum, memverses.id'])
+                              .order('verses.versenum')
+
+      section_dividers = auto_ss.pluck(:subsection_end) # Array of probabilities that each verse ends a section
+
+      # Calculate the desired number of subsections
+      num_sections = (self.length / subsection_length).to_i
+
+      # Set threshold based on number of subsections needed. Don't set threshold below 1.
+      threshold = [ section_dividers.sort[-num_sections], 1].max
+
+      # puts ("Section dividers: #{section_dividers.inspect}")
+      # puts ("Number of sections: #{num_sections}")
+      # puts ("Sorted section dividers: #{section_dividers.sort}")
+      # puts ("Setting threshold: #{threshold}")
+
+      auto_ss.each_with_index { |mv, index|
+        Memverse.find(mv.id).update_attribute(:subsection, section_dividers[0...index].select{ |div| div>=threshold }.count)
+      }
+    end
+
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
   # Combine two passages into one. Method accepts an optional join (linking) verse.
   #   - Order of join doesn't matter
   # ----------------------------------------------------------------------------------------------------------
