@@ -17,6 +17,7 @@ namespace :utils do
   #--------------------------------------------------------------------------------------------
   # Delete unused tags, recreate verse tags
   # Task duration: ~ 4 hours
+  # Note: Run twice a year as a scheduled Sidekiq job
   #--------------------------------------------------------------------------------------------
   desc "Clean up tag cloud"
   task :refresh_tag_cloud => :environment do
@@ -83,7 +84,6 @@ namespace :utils do
       end
     end
 
-
     puts "=== Completed verse difficulty update #{Time.now} ==="
 
   end
@@ -136,7 +136,6 @@ namespace :utils do
 
   end
 
-
   #--------------------------------------------------------------------------------------------
   # Clear out old user sessions
   #
@@ -162,49 +161,36 @@ namespace :utils do
 
     puts "Opening XML file"
     niv = Nokogiri::XML(open('niv-1984.xml'))
-
     puts "Starting verse upload"
+
     BIBLEBOOKS.each { |book|
 
       bi = BIBLEBOOKS.index(book) + 1
-
       final_chapter = FinalVerse.where(:book => book).order("chapter DESC").first.chapter
 
       (1..final_chapter).each { |chapter|
 
         puts "#{bi} #{book} #{chapter}"
-
         final_verse = FinalVerse.where(:book => book, :chapter => chapter).first.last_verse
 
         (1..final_verse).each { |verse|
-
           if !Verse.exists?(:translation => "NIV", :book => book, :chapter => chapter, :versenum => verse)
-
             text = niv.css("book[name='#{book}'] chapter[name='#{chapter}'] verse[name='#{verse}']").text
-
-            text.gsub!(/—/, ' — ')    # add spaces around em dash
-            text.gsub!(/--/, ' — ')   # replace double dash with em dash
+            text.gsub!(/—/, ' — ')     # add spaces around em dash
+            text.gsub!(/--/, ' — ')    # replace double dash with em dash
             text.gsub!(/\n/, ' ')      # remove newlines
             text.gsub!(/\s{2,}/, ' ')  # remove double space
             text.strip!
-
             puts "[#{verse}] " + text
-
             if !text.blank?
               Verse.create!(:translation => 'NIV', :book => book, :chapter => chapter, :versenum => verse, :text => text,
                             :book_index => bi, :verified => true, :checked_by => 'XML Upload')
             end
-
           end
-
         }
-
       }
-
     }
-
     puts "=== Completed NIV 1984 input at #{Time.now} ==="
-
   end
 
   #--------------------------------------------------------------------------------------------
@@ -318,6 +304,23 @@ namespace :utils do
 
     puts "=== Finished calculating subsection probabilities at #{Time.now} ==="
 
+  end
+
+  #--------------------------------------------------------------------------------------------
+  # Calculate subsections for passages of active users
+  # Task duration: ~ ? hours
+  #--------------------------------------------------------------------------------------------
+  desc "Create subsections for active users' passages"
+  task :subsection_passages => :environment do
+    puts "=== Creating subsections for active users' passages at #{Time.now} ==="
+
+    User.active.find_each { |u|
+      u.passages.find_each { |psg|
+        psg.auto_subsection
+      }
+    }
+
+    puts "=== Finished updating passage subsections at #{Time.now} ==="
   end
 
   #--------------------------------------------------------------------------------------------
@@ -477,7 +480,7 @@ namespace :utils do
     # Remove all empty passages
     puts("Removing passages with no associated memory verses")
     puts("   #{Passage.joins("left join memverses on memverses.passage_id = passages.id").where("memverses.passage_id is null").count} empty passages")
-    Passage.joins("left join memverses on memverses.passage_id = passages.id").where("memverses.passage_id is null").destroy_all
+    Passage.joins("left join memverses on memverses.passage_id = passages.id").readonly(false).where("memverses.passage_id is null").destroy_all
 
     puts "=== Finished ==="
 

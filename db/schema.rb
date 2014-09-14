@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140806223124) do
+ActiveRecord::Schema.define(version: 20140904181927) do
 
   create_table "american_states", force: true do |t|
     t.string  "abbrev",      limit: 20, default: "", null: false
@@ -316,6 +316,7 @@ ActiveRecord::Schema.define(version: 20140806223124) do
     t.date     "next_ref_test"
     t.integer  "uberverse_id"
     t.integer  "passage_id"
+    t.integer  "subsection"
   end
 
   add_index "memverses", ["passage_id"], name: "index_memverses_on_passage_id", using: :btree
@@ -665,6 +666,7 @@ ActiveRecord::Schema.define(version: 20140806223124) do
     t.string   "unconfirmed_email"
     t.string   "provider"
     t.string   "uid"
+    t.boolean  "sync_subsections",                      default: false
   end
 
   add_index "users", ["american_state_id"], name: "index_users_on_american_state_id", using: :btree
