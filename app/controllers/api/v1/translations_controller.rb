@@ -5,7 +5,7 @@ class Api::V1::TranslationsController < Api::V1::ApiController
   version 1
 
   def index
-    expose Translation.select_options
+    expose Translation.for_api
   end
 
   # def show

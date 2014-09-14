@@ -50,6 +50,28 @@ class Translation
     return trans_.sort
   end
 
+  # Get and sort translations with given language.
+  #
+  # @param lang [String] the language abbreviation (e.g., "en")
+  # @param trans [Hash] translations to filter (default: TRANSLATIONS)
+  #
+  # @return [Array] hashes of translations (name and abbreviation)
+  #
+  # @example Get Spanish ("es") translations
+  #    Translation.with_lang_for_api("es") #=> [{:Name=>"La Biblia de las Américas", :Abbreviation=>"LBLA"},
+  #                                        #    {:Name=>"Nueva Biblia Latinoamericana de Hoy", :Abbreviation=>"NBLH"},
+  #                                        #    {:Name=>"Nueva Version Internacional", :Abbreviation=>"NVI"},
+  #                                        #    {:Name=>"Reina-Valera 1960", :Abbreviation=>"RVR"}]
+  def self.with_lang_for_api(lang, trans = TRANSLATIONS)
+    trans_ = Array.new
+
+    trans.each {|key, val|
+      trans_ << {Name: val[:name], Abbreviation: key.to_s} if val[:language] == lang
+    }
+
+    return trans_.sort_by {|hash| hash[:Name]}
+  end
+
   # Returns translations ready for Rails grouped_options_for_select
   #
   # @param opts [Hash] options
@@ -76,6 +98,34 @@ class Translation
     end
 
     select
+  end
+
+  # Returns translations ready for API TranslationsController index action
+  #
+  # @return [Array] languages in user's language, with the translations
+  #   for each language. Languages are sorted by key (e.g., EN, ES, etc.) with
+  #   user's language first, and translations sorted within the languages.
+  def self.for_api(opts = {})
+    translations = Translation.exclude(opts[:except] || nil)
+    languages = []; output = []
+
+    # Get language name -- in user's language, if possible
+    lang_name = lambda { |abbrev| I18n.t abbrev.to_s, scope: [:language]  }
+
+    # get array of all languages
+    translations.each_value {|value| languages << value[:language]}
+    # sort languages, put user's first, and remove duplicates
+    languages = languages.sort.unshift(I18n.locale).uniq
+
+    for lang in languages
+      trans = Translation.with_lang_for_api(lang.to_s, translations)
+
+      output << { Name: lang_name.call(lang),
+                  Abbreviation: lang.upcase.to_s,
+                  Translations: trans }
+    end
+
+    output
   end
 
 end
