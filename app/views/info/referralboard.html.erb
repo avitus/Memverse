@@ -2,34 +2,38 @@
 <% page_description I18n.t :referralboard, :scope => 'page_descriptions' %>
 <div class="white-box-with-margins">
 	<h2>Referral Leaderboard</h2>
-	
-	<p>The following table shows the users who have referred the most new users to Memverse. Every active user you refer to Memverse counts for one point,
-	   and every active user they refer counts for an extra half point.</p>
-	
+
+	<p>
+		The following table shows the top 50 users who have referred the most
+		new users to Memverse. Every active user you refer to Memverse
+		counts for one point, and every active user they refer counts for an
+		extra half point.
+	</p>
+
 	<div class="user-list">
-		<table id="leaderboard" class="memverse-standard"> 
-			<thead>	
+		<table id="leaderboard" class="memverse-standard">
+			<thead>
 				<tr>
 					<th>Rank</th>
 					<th>Level</th>
-					<th>Name</th>	
+					<th>Name</th>
 					<th>Referrals</th>
 					<th>Affiliation</th>
 					<th>Country</th>
 					<th>Joined</th>
 				</tr>
-			</thead> 
-			
+			</thead>
+
 			<tbody>
 				<% for user in @referralboard %>
 					<tr valign="top" <%=css_current_user_check(user[0])%> >
 						<td align="center"> <%= @referralboard.index(user)+1%></td>
 						<td align="center"> <%= user[0].level ? user[0].level : "" %></td>
 						<td align="left">   <%= link_to user[0].name.empty? ? "[" + user[0].login + "]" : user[0].name, referrals_path(user[0].id)	%></td>
-						<td align="center"> <%= user[1]				%></td>	
+						<td align="center"> <%= user[1]				%></td>
 						<td align="left"> 	<%= user[0].church ? link_to(user[0].church.name, { :controller => "profile", :action => "show_church", :church => user[0].church.id }) : "" %></td>
 						<td align="left"> 	<%= user[0].country ? user[0].country.printable_name : "" %></td>
-						<td align="center"> <%= user[0].created_at.to_date %></td>				
+						<td align="center"> <%= user[0].created_at.to_date %></td>
 					</tr>
 				<% end %>
 			</tbody>
