@@ -15,7 +15,7 @@ describe Api::V1::TranslationsController do
 
     it 'returns translations as json' do
       get :index, :version => 1, :format => :json, :access_token => token.token
-      json.should == JSON.parse(Translation.select_options.to_json)
+      json.should == JSON.parse(Translation.for_api.to_json)
     end
 
     it 'responds with 401 when unauthorized' do
