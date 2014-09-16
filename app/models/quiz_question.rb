@@ -48,14 +48,14 @@ class QuizQuestion < ActiveRecord::Base
 
   # Validate length of MC options
   mc_val = {length: {minimum: 3, maximum: 120}, allow_blank: false, if: :mcq?}
-
   validates :mc_option_a, mc_val
   validates :mc_option_b, mc_val
   validates :mc_option_c, mc_val
   validates :mc_option_d, mc_val
 
-  # Validate length of MC question and answer
-  validates :mc_question, mc_val
+  # Validate length of MC question
+  validates :mc_question, length: {minimum: 10, maximum: 300}, allow_blank: false, if: :mcq?
+  # Check that correct answer has been flagged for MCQ questions
   validates :mc_answer, length: {is: 1}, allow_blank: false, if: :mcq?
 
   ## Validate presence of supporting_ref for reference and recitation questions
