@@ -47,14 +47,14 @@ class QuizQuestion < ActiveRecord::Base
   validates_presence_of :quiz_id
 
   # Validate length of MC options
-  mc_val = {length: {minimum: 3, maximum: 120}, allow_blank: false, if: :mcq?}
+  mc_val = {length: {minimum: 1, maximum: 120}, allow_blank: false, if: :mcq?}
   validates :mc_option_a, mc_val
   validates :mc_option_b, mc_val
   validates :mc_option_c, mc_val
   validates :mc_option_d, mc_val
 
   # Validate length of MC question
-  validates :mc_question, length: {minimum: 10, maximum: 300}, allow_blank: false, if: :mcq?
+  validates :mc_question, length: {minimum: 8, maximum: 300}, allow_blank: false, if: :mcq?
   # Check that correct answer has been flagged for MCQ questions
   validates :mc_answer, length: {is: 1}, allow_blank: false, if: :mcq?
 
