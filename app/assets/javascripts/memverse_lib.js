@@ -279,7 +279,7 @@ function blankifyVerse(versetext, reduction_percentage) {
 
     else {
 
-	    split_text     = versetext.trim().split(/\s/);
+	    split_text     = versetext.match(/\s*(?:-{0,2}\s*)?(?:[^\u1100-\u11ff\uAC00-\uD7A3\s]+|[\u1100-\u11ff\uAC00-\uD7A3][^a-zA-Z\u1100-\u11ff\uAC00-\uD7A3\s]*)\s*(?:-{0,2}\s*$)?/g);
 	    sort_by_length = split_text.slice(0);  // make a copy of the original array
 
 	    sort_by_length.sort(function(a, b) {
