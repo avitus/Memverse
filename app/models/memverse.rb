@@ -135,6 +135,17 @@ class Memverse < ActiveRecord::Base
       efactor_new   = self.efactor
     end
 
+    ########################
+    # TODO
+    #
+    # - need to update entire subsection here if subsections are synchronized
+    #       - next_test
+    #       - test_interval
+    #       - status
+    # - ideally this would be implemented with a
+    #       self.synch_subsection method
+    ########################
+
     # Update memory verse parameters
     self.rep_n          = n_new
     self.efactor        = efactor_new
@@ -146,6 +157,24 @@ class Memverse < ActiveRecord::Base
     self.save!
 
     return (prev_learning and (self.status == "Memorized"))  # TRUE if this memory verse is newly memorized
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Return all verses in subsection
+  # ----------------------------------------------------------------------------------------------------------
+  def entire_subsection
+    if self.subsection
+      Memverse.where(:passage_id => self.passage_id, :subsection => self.subsection)
+    else
+      nil
+    end
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Is this memory verse part of a subsection (a smaller unit than a passage)?
+  # ----------------------------------------------------------------------------------------------------------
+  def part_of_subsection?
+    !!self.subsection && Memverse.where(:passage_id => self.passage_id, :subsection => self.subsection).length > 1
   end
 
   # ----------------------------------------------------------------------------------------------------------
