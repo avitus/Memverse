@@ -135,17 +135,6 @@ class Memverse < ActiveRecord::Base
       efactor_new   = self.efactor
     end
 
-    ########################
-    # TODO
-    #
-    # - need to update entire subsection here if subsections are synchronized
-    #       - next_test
-    #       - test_interval
-    #       - status
-    # - ideally this would be implemented with a
-    #       self.synch_subsection method
-    ########################
-
     # Update memory verse parameters
     self.rep_n          = n_new
     self.efactor        = efactor_new
@@ -156,6 +145,8 @@ class Memverse < ActiveRecord::Base
     self.attempts      += 1
     self.save!
 
+    self.sync_subsection  # Sync with rest of subsection
+
     return (prev_learning and (self.status == "Memorized"))  # TRUE if this memory verse is newly memorized
   end
 
@@ -163,8 +154,16 @@ class Memverse < ActiveRecord::Base
   # Return all verses in subsection
   # ----------------------------------------------------------------------------------------------------------
   def entire_subsection
-    if self.subsection
+    if self.subsection  # subsection is nil if the passage has not yet been subsectioned
       Memverse.where(:passage_id => self.passage_id, :subsection => self.subsection)
+    else
+      nil
+    end
+  end
+
+  def already_reviewed_subsection
+    if self.subsection  # subsection is nil if the passage has not yet been subsectioned
+      Memverse.where(passage_id: self.passage_id, subsection: self.subsection, last_tested: Date.today)
     else
       nil
     end
@@ -175,6 +174,30 @@ class Memverse < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   def part_of_subsection?
     !!self.subsection && Memverse.where(:passage_id => self.passage_id, :subsection => self.subsection).length > 1
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Synchronize review of memory verses that are grouped in a subsection
+  # ----------------------------------------------------------------------------------------------------------
+  def sync_subsection
+
+    if self.user.sync_subsections && self.part_of_subsection?
+
+      subsection_array = self.already_reviewed_subsection
+
+      min_test_interval   = subsection_array.minimum(:test_interval)
+      earliest_next_test  = subsection_array.minimum(:next_test)
+      subsection_status   = min_test_interval > 30 ? "Memorized" : "Learning"
+
+      subsection_array.each do |mv|
+        mv.test_interval = [min_test_interval,1].max
+        mv.next_test     = Date.today + min_test_interval
+        mv.status        = subsection_status
+        mv.save!
+      end
+
+    end
+
   end
 
   # ----------------------------------------------------------------------------------------------------------
