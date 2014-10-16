@@ -31,34 +31,50 @@ describe Memverse do
         # Create two subsections a) 1-6 and b) 7-10
         if i<=6
           @passage[i] = FactoryGirl.create(:memverse_without_supermemo_init, user: @sync_u, verse: verse, subsection: 0,
-                                            test_interval: i, next_test: Date.today + i, last_tested: Date.today - 2.weeks)
-          puts @passage[i].inspect
+                                            test_interval: i, next_test: Date.today - i, last_tested: Date.today - 2.weeks)
+          # puts @passage[i].inspect
         else
           @passage[i] = FactoryGirl.create(:memverse_without_supermemo_init, user: @sync_u, verse: verse, subsection: 1,
-                                            test_interval: i, next_test: Date.today + i, last_tested: Date.today - 2.weeks)
+                                            test_interval: i, next_test: Date.today - i, last_tested: Date.today - 2.weeks)
         end
 
       end
 
     end
 
-    it "should set the next test date to be the same for all verses in a subsection" do
+    it "should set the next test date to be the same for all verses in a subsection that were tested today" do
       @passage[1].supermemo(5)
       @passage[2].supermemo(4)
       @passage[3].supermemo(3)
 
       for i in 1..6
-        puts @passage[i].reload.inspect
+        @passage[i].reload
       end
 
-      @passage[3].next_test.should == @passage[1].next_test
-      @passage[3].next_test.should == @passage[2].next_test
-      @passage[3].next_test.should == @passage[3].next_test
+      @passage[3].next_test.should         == @passage[1].next_test
+      @passage[3].next_test.should         == @passage[2].next_test
+      @passage[3].next_test.should         == @passage[3].next_test
+      @passage[3].next_test.should_not     == @passage[5].next_test # Don't synchronize with verses that have not yet been tested
+      @passage[3].next_test.should_not     == @passage[6].next_test # Don't synchronize with verses that have not yet been tested
 
-      @passage[3].test_interval.should == @passage[1].test_interval
-      @passage[3].test_interval.should == @passage[2].test_interval
-      @passage[3].test_interval.should == @passage[3].test_interval
     end
+
+     it "should set the interval to be the same for all verses in a subsection that were tested today" do
+      @passage[1].supermemo(5)
+      @passage[2].supermemo(4)
+      @passage[3].supermemo(3)
+
+      for i in 1..6
+        @passage[i].reload
+      end
+
+      @passage[3].test_interval.should     == @passage[1].test_interval
+      @passage[3].test_interval.should     == @passage[2].test_interval
+      @passage[3].test_interval.should     == @passage[3].test_interval
+      @passage[3].test_interval.should_not == @passage[5].test_interval # Don't synchronize with verses that have not yet been tested
+      @passage[3].test_interval.should_not == @passage[6].test_interval # Don't synchronize with verses that have not yet been tested
+    end
+
   end
 
   #  --------------------------------------------------------------------------------------------------------------
