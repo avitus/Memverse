@@ -161,6 +161,9 @@ class Memverse < ActiveRecord::Base
     end
   end
 
+  # ----------------------------------------------------------------------------------------------------------
+  # Memory verses from the same subsection that have already been tested today
+  # ----------------------------------------------------------------------------------------------------------
   def already_reviewed_subsection
     if self.subsection  # subsection is nil if the passage has not yet been subsectioned
       Memverse.where(passage_id: self.passage_id, subsection: self.subsection, last_tested: Date.today)
