@@ -18,7 +18,12 @@
 			</div>
 		<% end %> <!-- End: Error Messages -->
 
+
+
+
 		<ul>
+
+		<div class="profile-section"><h2>Personal Information</h2>
 			<li>
 				<%= f.label 		:name, t('.Name') %>
 				<%= f.text_field 	:name, :class => "profile-wide-text-field" %>
@@ -37,6 +42,21 @@
 													@trans, @user.translation
 												  ) %>
 			</li>
+			<li>
+				<%= f.label 		:language, t('.Language') %>
+				<%= f.select		:language,
+							   [["English", 	      	'English'			],
+								["Spanish",           	'Spanish' 			],
+								["French",           	'French' 			],
+								["Bahasa Indonesia",  	'Bahasa Indonesia'	],
+								["Dutch",		      	'Dutch'				],
+								["Swedish",				'Swedish'			],
+								["Afrikaans", 	       	'Afrikaans'			]]
+							 %>
+			</li>
+		</div>
+
+		<div class="profile-section"><h2>Affiliations</h2>
 
 			<li>
 				<div class="ui-widget">
@@ -66,6 +86,10 @@
 					<%= f.text_field 	:group, :value => @user_group, :class => "profile-wide-text-field" %>
 				</div>
 			</li>
+		</div>
+
+		<div class="profile-section"><h2>Application Settings</h2>
+
 
 			<li>
 				<%= f.label 			:reminder_freq, t('.Reminder frequency') %>
@@ -78,18 +102,7 @@
 							["Never", 		'Never'		]]
 							 %>
 			</li>
-			<li>
-				<%= f.label 			:language, t('.Language') %>
-				<%= f.select			:language,
-							   [["English", 	      	'English'			],
-								["Spanish",           	'Spanish' 			],
-								["French",           	'French' 			],
-								["Bahasa Indonesia",  	'Bahasa Indonesia'	],
-								["Dutch",		      	'Dutch'				],
-								["Swedish",				'Swedish'			],
-								["Afrikaans", 	       	'Afrikaans'			]]
-							 %>
-			</li>
+
 			<li>
 				<%= f.label 			:time_allocation, t('.Target Time') %>
 				<%= f.select			:time_allocation,
@@ -153,6 +166,7 @@
 				<%= f.label 			:newsletters, t('.Receive newsletters') %>
 				<%= f.check_box 		:newsletters %>
 			</li>
+		</div>
 
 		</ul>
 
