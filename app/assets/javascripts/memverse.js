@@ -214,7 +214,7 @@ function checkAllFields(ref) {
 }
 
 mnemonic = function(text) {
-    if(/[\uAC00-\uD7A3]/g.test(text)){
+    if(/[\uAC00-\uD7A3]/.test(text)){
         return text.replace(/([\uAC00-\uD7A3])/g, function(s, m){
             return String.fromCharCode(4352 + Math.floor(((m.charCodeAt(0) - 44032) / 588)));}
         );
@@ -230,6 +230,15 @@ Array.remove = function(array, from, to) {
   return array.push.apply(array, rest);
 };
 
+// Splits a verse into words
+function splitByWords(text){
+	// matches optional mixture of whitespace and hyphens/dashes: \s*(?:[-—\s]+)?
+	// followed by non non-Korean non-whitespace characters: [^\u1100-\u11ff\uAC00-\uD7A3\s]+
+	// or one Korean character and any number of non-Korean, non-aphabetic non-whitespace characters: [\u1100-\u11ff\uAC00-\uD7A3][^a-zA-Z\u1100-\u11ff\uAC00-\uD7A3\s]*
+	// ending with optional mixture of whitespace and hyphens/dashes only if at the end of text: \s*(?:[-—\s]+$)?
+	return text.match(/\s*(?:[-—\s]+)?(?:[^\u1100-\u11ff\uAC00-\uD7A3\s]+|[\u1100-\u11ff\uAC00-\uD7A3][^a-zA-Z\u1100-\u11ff\uAC00-\uD7A3\s]*)\s*(?:[-—\s]+$)?/g) || [];
+}
+
 function verseFeedback(correctvs, verseguess, echo, firstletter) {
 
 	firstletter = (typeof firstletter == "undefined") ? false : firstletter;
@@ -237,11 +246,13 @@ function verseFeedback(correctvs, verseguess, echo, firstletter) {
 	var correct;
 	var feedback = ""; // find a better way to construct the string
 
-	var guess_words = verseguess.match(/\s*(?:-{0,2}\s*)?(?:[^\u1100-\u11ff\uAC00-\uD7A3\s]+|[\u1100-\u11ff\uAC00-\uD7A3][^a-zA-Z\u1100-\u11ff\uAC00-\uD7A3\s]*)\s*(?:-{0,2}\s*$)?/g) || [];
+	var guess_words = splitByWords(verseguess);
 	guess_words.forEach(function(e, i){
 		guess_words[i] = scrub_text(e);
 	});
-	var right_words = correctvs.match(/\s*(?:-{0,2}\s*)?(?:[^\u1100-\u11ff\uAC00-\uD7A3\s]+|[\u1100-\u11ff\uAC00-\uD7A3][^a-zA-Z\u1100-\u11ff\uAC00-\uD7A3\s]*)\s*(?:-{0,2}\s*$)?/g);
+	
+	var right_words = splitByWords(correctvs);
+	
 	var s_right_words = [];
 	right_words.forEach(function(e, i){
 		 s_right_words[i] = scrub_text(e);
@@ -264,7 +275,7 @@ function verseFeedback(correctvs, verseguess, echo, firstletter) {
 				correct = false;
 			} else if ( guess_words[x] == s_right_words[x] ) {
 				// if the word matches exactly
-				feedback = feedback + right_words[x] + " ";
+				feedback = feedback + right_words[x];
 			} else if (firstletter && fl_prob_in_use && ( guess_words[x] == right_first_letter ) ) {
 				// if first letter enabled and first letter sequence and first letter matches
 				feedback += right_words[x];
@@ -274,7 +285,7 @@ function verseFeedback(correctvs, verseguess, echo, firstletter) {
 			}
 		}
 	}
-
+	
 	if ( (guess_words.length == right_words.length) && (correct != false) ) { // determine if correct: should be long enough and not have anything incorrect in it
 		correct = true;
 		if (!echo) {

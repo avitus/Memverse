@@ -100,6 +100,11 @@ describe Verse do
     verse = FactoryGirl.create(:verse, :text => "Á têst for mnémonic support of thé íncredíbly speciâl Portuguese çharacters.")
     verse.mnemonic.should == "Á t f m s o t í s P ç."
   end
+  
+  it "mnemonic method should support Korean" do
+    verse = FactoryGirl.create(:verse, :text => "모든 사람이 죄를 범하였으매 하나님의 영광에 이르지 못하더니")
+    verse.mnemonic.should == "ᄆᄃ ᄉᄅᄋ ᄌᄅ ᄇᄒᄋᄋᄆ ᄒᄂᄂᄋ ᄋᄀᄋ ᄋᄅᄌ ᄆᄒᄃᄂ"
+  end
 
   it "should clean up the verse text" do
     verse = FactoryGirl.create(:verse, :text => "This is a \r\n \r\n \n test test   \n   teest. ")
