@@ -280,6 +280,9 @@ function blankifyVerse(versetext, reduction_percentage) {
     else {
 
 	    split_text     = splitByWords(versetext);
+	    split_text.forEach(function (e, i){
+	    	split_text[i] = e.trim();
+	    });
 	    sort_by_length = split_text.slice(0);  // make a copy of the original array
 
 	    sort_by_length.sort(function(a, b) {
