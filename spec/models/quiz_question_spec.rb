@@ -36,13 +36,6 @@ describe QuizQuestion do
         end
       end
 
-      it "rejects mc_options too short" do
-        for option in [:mc_option_a=, :mc_option_b=, :mc_option_c=, :mc_option_d=]
-          qq.send(option, "TT")
-          qq.save.should be_false
-        end
-      end
-
       it "accepts mc_options of reasonable length" do
         for option in [:mc_option_a=, :mc_option_b=, :mc_option_c=, :mc_option_d=]
           qq.send(option, "Answer choice")
