@@ -6,7 +6,7 @@ if Rails.env.development?
       :secret_key    => nil,                                          # optional, if used, message signing is enabled
       :cipher_key    => nil,                                          # optional, if used, encryption is enabled
       :ssl           => true,                                         # true or default is false
-      :logger        => Logger.new(STDOUT)                            # use the standard logger
+      :logger        => Logger.new('log/pubnub.log', 'monthly')       # use the standard logger
   )
 
 else
@@ -18,7 +18,7 @@ else
       :secret_key    => nil,                                          # optional, if used, message signing is enabled
       :cipher_key    => nil,                                          # optional, if used, encryption is enabled
       :ssl           => true,                                         # true or default is false
-      :logger        => Logger.new(STDOUT)                            # use the standard logger
+      :logger        => Logger.new('log/pubnub.log', 'monthly')       # use the standard logger
   )
 
 end
