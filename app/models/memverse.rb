@@ -73,6 +73,7 @@ class Memverse < ActiveRecord::Base
   def as_json(options={})
     {
       :id            => self.id,
+      :verse_id      => self.verse.id
       :ref           => self.verse.ref,
       :tl            => self.verse.translation,
       :text          => self.verse.text,
