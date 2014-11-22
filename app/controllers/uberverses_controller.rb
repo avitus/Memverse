@@ -1,6 +1,6 @@
 class UberversesController < ApplicationController
 
-  before_filter :authenticate_user!
+  before_filter :authorize
 
   # GET /uberverses
   # GET /uberverses.xml
