@@ -1,0 +1,12 @@
+development:
+  apikey: 5349/f9d9a4a713d853398b0f49a9866361844b3463a0
+  database: memverse_development
+  debug_mode: true  # enable debug mode
+
+production:
+  apikey: 5349/f9d9a4a713d853398b0f49a9866361844b3463a0
+  database: memverse_production
+  debug_mode: false
+
+# disable logging
+test:
