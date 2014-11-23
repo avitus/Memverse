@@ -227,16 +227,20 @@ class User < ActiveRecord::Base
   # Todo: We should use method below instead and incorporate into cohort analysis
   # ----------------------------------------------------------------------------------------------------------
   def cohort_progression
-    if completed_sessions >= 3
-      return { :level => '7 - Onwards', :active => is_active? }
+    if memverses.memorized.count >= 1
+      return { :level => '9 - Verse memorized', :active => is_active? }
+    elsif completed_sessions >= 3
+      return { :level => '8 - Onwards', :active => is_active? }
     elsif completed_sessions == 2
-      return { :level => '6 - Returned Once', :active => is_active? }
+      return { :level => '7 - Returned Once', :active => is_active? }
     elsif completed_sessions == 1
-      return { :level => '5 - Completed 1 Session', :active => is_active? }
+      return { :level => '6 - Completed 1 Session', :active => is_active? }
     elsif memverses.sum(:attempts) > 0
-      return { :level => '4 - Started a Session', :active => is_active? }
-    elsif has_started?
-      return { :level => '3 - Added Verses', :active => is_active? }
+      return { :level => '5 - Started a Session', :active => is_active? }
+    elsif memverses.count >= 5
+      return { :level => '4 - Added 5+ Verses', :active => is_active? }
+    elsif memverses.count > 0
+      return { :level => '3 - Added 1-4 Verses', :active => is_active? }
     elsif confirmed_at
       return { :level => '2 - Activated', :active =>  is_active? }
     elsif !confirmed_at
@@ -250,15 +254,19 @@ class User < ActiveRecord::Base
   # User progression
   # ----------------------------------------------------------------------------------------------------------
   def progression
-    if completed_sessions >= 3
+    if memverses.memorized.count >= 1       # has memorized one or more verses
+      return 9
+    elsif completed_sessions >= 3
+      return 8
+    elsif completed_sessions == 2           # returning user
       return 7
-    elsif completed_sessions == 2
+    elsif completed_sessions == 1           # completed one session
       return 6
-    elsif completed_sessions == 1
-      return 5
     elsif memverses.sum(:attempts) > 0      # has reviewed at least one verse at some point
+      return 5
+    elsif memverses.count >= 5              # has added 5 or more verses
       return 4
-    elsif has_started?
+    elsif memverses.count > 0               # has added a memory verse
       return 3
     elsif confirmed_at
       return 2

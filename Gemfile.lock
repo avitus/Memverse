@@ -238,6 +238,9 @@ GEM
       multipart-post (>= 1.2, < 3)
     fastercsv (1.5.5)
     ffi (1.9.3)
+    fluent-logger (0.4.9)
+      msgpack (>= 0.4.4, < 0.6.0, != 0.5.3, != 0.5.2, != 0.5.1, != 0.5.0)
+      yajl-ruby (~> 1.0)
     font-awesome-rails (4.0.3.2)
       railties (>= 3.2, < 5.0)
     forem-textile_formatter (0.1.0)
@@ -282,6 +285,7 @@ GEM
     httparty (0.13.1)
       json (~> 1.8)
       multi_xml (>= 0.5.2)
+    httpclient (2.4.0)
     i18n (0.6.11)
     i18n-js (2.1.2)
       i18n
@@ -331,6 +335,7 @@ GEM
     mini_portile (0.6.0)
     minitest (4.7.5)
     moneta (0.7.20)
+    msgpack (0.4.7)
     multi_json (1.10.1)
     multi_test (0.1.1)
     multi_xml (0.5.5)
@@ -369,6 +374,7 @@ GEM
       activesupport (>= 3.0.0)
       cocaine (~> 0.5.3)
       mime-types
+    parallel (0.5.21)
     pdf-reader (1.3.3)
       Ascii85 (~> 1.0.0)
       afm (~> 0.2.0)
@@ -528,6 +534,21 @@ GEM
       activesupport (>= 3.0)
       sprockets (~> 2.8)
     sqlite3 (1.3.9)
+    td (0.10.75)
+      hirb (>= 0.4.5)
+      msgpack (~> 0.4.4)
+      parallel (~> 0.5.19)
+      td-client (~> 0.8.46)
+      td-logger (~> 0.3.16)
+      yajl-ruby (~> 1.1.0)
+    td-client (0.8.66)
+      httpclient (~> 2.4.0)
+      json (>= 1.7.6)
+      msgpack (>= 0.4.4, < 0.6.0, != 0.5.3, != 0.5.2, != 0.5.1, != 0.5.0)
+    td-logger (0.3.23)
+      fluent-logger (~> 0.4.6)
+      msgpack (>= 0.4.4, < 0.6.0, != 0.5.3, != 0.5.2, != 0.5.1, != 0.5.0)
+      td-client (~> 0.8.51)
     temple (0.6.7)
     terminal-table (1.4.5)
     therubyracer (0.11.4)
@@ -560,6 +581,7 @@ GEM
     xpath (2.0.0)
       nokogiri (~> 1.3)
     ya2yaml (0.31)
+    yajl-ruby (1.1.0)
     yui-compressor (0.12.0)
 
 PLATFORMS
@@ -653,6 +675,7 @@ DEPENDENCIES
   sqlite3
   supermodel!
   swagger-docs!
+  td
   therubyracer (= 0.11.4)
   thinking-sphinx (~> 3.0.5)
   uglifier (>= 1.3.0)
