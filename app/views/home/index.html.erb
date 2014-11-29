@@ -100,7 +100,7 @@
 				<li><%= link_to t('menu.home'), root_path %></li>
 				<li><%= link_to t('menu.demo').html_safe, demo_path %></li>
 				<li><%= link_to t('menu.learn').html_safe, tutorial_path %></li>
-				<li><%= link_to t('learn_menu.Video Tutorial').html_safe, "http://www.youtube.com/watch?v=N8A71DIcr4Y&fs=1&feature=player_embedded", :class => 'tut-video' %></li>
+				<li><%= link_to t('learn_menu.Video Tutorial').html_safe, "https://www.youtube.com/watch?v=MAWn3qfkGrA&fs=1&feature=player_embedded&rel=0", :class => 'tut-video' %></li>
 				<li><%= link_to t('menu.leaderboard'), leaderboard_path %></li>
 				<li><%= link_to t('menu.help'), faq_path %></li>
 				<li><%= link_to t('menu.blog'), bloggity.root_path %></li>
@@ -243,6 +243,28 @@
 		fauxPlaceholder();
 		// initialize scrollable
 		$(".scrollable").scrollable();
+	});
+</script>
+<!-- Tutorial video using fancybox -->
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(".tut-video").click(function() {
+			$.fancybox({
+					'padding'		: 0,
+					'autoScale'		: false,
+					'transitionIn'	: 'none',
+					'transitionOut'	: 'none',
+					'title'			: this.title,
+					'width'			: 1020,
+					'height'		: 600,
+					'href'			: this.href.replace(new RegExp("watch\\?v=", "i"), 'v/'),
+					'type'			: 'swf',
+					'swf'			: {	'wmode'				: 'transparent',
+										'allowfullscreen'	: 'true' }
+				});
+
+			return false;
+		});
 	});
 </script>
 </body>
