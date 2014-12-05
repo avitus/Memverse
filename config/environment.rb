@@ -34,7 +34,7 @@ TRANSLATIONS = {
   NCV:    {name: "New Century Version", language: "en"},
   UKJ:    {name: "Updated King James Version", language: "en"},
   GEN:    {name: "Geneva Bible", language: "en"},
-  GRK:    {name: "Biblical Greek", language: "en"},
+  GRK:    {name: "Biblical Greek (SBLGNT)", language: "en"},
   SMP:    {name: "Scottish Metrical Psalter", language: "en"},
   SMPB:   {name: "Scottish Metrical Psalter: B", language: "en"},
   SMPC:   {name: "Scottish Metrical Psalter: C", language: "en"},
