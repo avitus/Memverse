@@ -5,7 +5,7 @@ describe("Feedback", function() {
 			"And after he became the father- of Enosh Seth lived: 807 years and had other sons and. daughters",	// user guess
 			true																								// feedback enabled
 		)).toEqual({
-			feedtext : 'And after he became the father of Enosh, Seth lived 807 years and had other sons and daughters. <div id="matchbox"><span>Correct</span></div>',
+			feedtext : 'And after he became the father of Enosh, Seth lived 807 years and had other sons and daughters.<div id="matchbox"><span>Correct</span></div>',
 			correct  : true
 		})
 	});
@@ -83,7 +83,7 @@ describe("Feedback", function() {
 			true,																// feedback
 			true																// allow first-letter
 		)).toEqual({
-			feedtext : 'For God so loved the world that he gave his one and only Son <div id="matchbox"><span>Correct</span></div>',
+			feedtext : 'For God so loved the world that he gave his one and only Son<div id="matchbox"><span>Correct</span></div>',
 			correct  : true
 		})
 	});
@@ -95,8 +95,8 @@ describe("Feedback", function() {
 			true,																// feedback
 			true																// allow first-letter
 		)).toEqual({
-			feedtext : 'En él estaba la vida, y la vida era la luz de los hombres. <div id="matchbox"><span>Correct</span></div>',
-			correct  : true
+			correct  : true,
+			feedtext : 'En él estaba la vida, y la vida era la luz de los hombres.<div id="matchbox"><span>Correct</span></div>',
 		})
 	});
 
@@ -107,7 +107,7 @@ describe("Feedback", function() {
 			true,					// feedback
 			true					// allow first-letter
 		)).toEqual({
-			feedtext : 'This is a test. <div id="matchbox"><span>Correct</span></div>',
+			feedtext : 'This is a test.<div id="matchbox"><span>Correct</span></div>',
 			correct  : true
 		})
 	});
@@ -119,7 +119,7 @@ describe("Feedback", function() {
 			true,																								// feedback
 			true																								// allow first-letter
 		)).toEqual({
-			feedtext : 'This is simply a test ... see whether the first-letter and complete words ... works ',
+			feedtext : 'This is simply a test ... see whether the first-letter and complete words ... works',
 			correct  : false
 		})
 	});
@@ -167,7 +167,7 @@ describe("Feedback", function() {
 			true,					// feedback
 			true					// allow first-letter
 		)).toEqual({
-			feedtext : 'This is an interesting test. <div id="matchbox"><span>Correct</span></div>',
+			feedtext : 'This is an interesting test.<div id="matchbox"><span>Correct</span></div>',
 			correct  : true
 		})
 	});
@@ -178,7 +178,7 @@ describe("Feedback", function() {
 			"This is a verse with a hyphen at the end",		// user guess
 			true											// feedback enabled
 		)).toEqual({
-			feedtext : 'This is a verse with a hyphen at the end <div id="matchbox"><span>Correct</span></div>',
+			feedtext : 'This is a verse with a hyphen at the end -<div id="matchbox"><span>Correct</span></div>',
 			correct  : true
 		})
 	});
@@ -189,7 +189,7 @@ describe("Feedback", function() {
 			"This is a verse with a dash at the end",		// user guess
 			true											// feedback enabled
 		)).toEqual({
-			feedtext : 'This is a verse with a dash at the end — <div id="matchbox"><span>Correct</span></div>',
+			feedtext : 'This is a verse with a dash at the end —<div id="matchbox"><span>Correct</span></div>',
 			correct  : true
 		})
 	});
@@ -200,8 +200,31 @@ describe("Feedback", function() {
 			"I´`͂῾᾿n the beginning αοο ο ιι ι ι",	// user guess
 			true									// feedback enabled
 		)).toEqual({
-			feedtext : 'In the beginning άόό ό ῖἱ ῖ ἱ <div id="matchbox"><span>Correct</span></div>',
+			feedtext : 'In the beginning άόό ό ῖἱ ῖ ἱ<div id="matchbox"><span>Correct</span></div>',
 			correct  : true
+		})
+	});
+	
+	it("accepts Korean input", function() {
+		expect(verseFeedback(
+			"그가 태초에 하나님과 함께 계셨고",			// correct text
+			"그가 태초에 하가님과 함께 계셨고",			// user guess
+			true									//feedback enabled
+		)).toEqual({
+			feedtext : '그가 태초에 하... 님과 함께 계셨고',
+			correct: false
+		})
+	});
+	
+	it('accepts Korean "first letters"', function() {
+		expect(verseFeedback(
+			"모든 사람이 죄를 범하였으매 하나님의 영광에 이르지 못하더니",// correct text
+			"모든 ᄉᄅ이 죄를 범하ᄋᄋᄆᄒ나님의 영광에 ᄋᄅᄌᄆᄒᄃᄂ",	// user guess
+			true,													//feedback enabled
+			true													//allow first letter
+		)).toEqual({
+			feedtext : '모든 사람이 죄를 범하였으매 하나님의 영광에 이르지 못하더니<div id="matchbox"><span>Correct</span></div>',
+			correct: true
 		})
 	});
 
