@@ -343,9 +343,21 @@ class Verse < ActiveRecord::Base
   # Create mnemonic for verse text
   # ----------------------------------------------------------------------------------------------------------
   def mnemonic
-    self.text.gsub(/([\wáâãàçéêíóôõúüñ])([\wáâãàçéêíóôõúüñ]|[\-'’][\wáâãàçéêíóôõúüñ])*/,'\1')
 
-    # In simpler language we are matching:
+    # Matches Korean Hangul
+    if self.text.match /[\uAC00-\uD7A3]/
+      self.text.gsub(/([\uAC00-\uD7A3])/) do |m|
+        # Calculating lead Jamo of a given Hangul 
+        # see http://gernot-katzers-spice-pages.com/var/korean_hangul_unicode.html
+        [4352 + (($1.ord - 44032) / 588).floor].pack("U")
+      end
+
+    # default to Western text
+    else
+      self.text.gsub(/([\wáâãàçéêíóôõúüñ])([\wáâãàçéêíóôõúüñ]|[\-'’][\wáâãàçéêíóôõúüñ])*/,'\1')
+    end
+
+    # In simpler language, the longest regex is matching:
     # (Any alphanumerical character) followed by (all consecutive alphanumerical characters OR a -'’ character
     # followed by an alphanumerical character) The star (*) means we repeat the previous item as many times as
     # possible (refers to set of parentheses matching alphanumerical OR -'’ followed by alphanumerical

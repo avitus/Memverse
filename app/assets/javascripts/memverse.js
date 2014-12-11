@@ -214,7 +214,13 @@ function checkAllFields(ref) {
 }
 
 mnemonic = function(text) {
-	return text.replace(/([\u00BF-\u1FFF\u2C00-\uD7FF\w])([\u00BF-\u1FFF\u2C00-\uD7FF\w]|[\-'’][\u00BF-\u1FFF\u2C00-\uD7FF\w])*/g,"$1");
+    if(/[\uAC00-\uD7A3]/.test(text)){
+        return text.replace(/([\uAC00-\uD7A3])/g, function(s, m){
+            return String.fromCharCode(4352 + Math.floor(((m.charCodeAt(0) - 44032) / 588)));}
+        );
+    }else{
+        return text.replace(/([\u00BF-\u1FFF\u2C00-\uD7FF\w])([\u00BF-\u1FFF\u2C00-\uD7FF\w]|[\-'’][\u00BF-\u1FFF\u2C00-\uD7FF\w])*/g,"$1");
+    }
 };
 
 // Array Remove - By John Resig (MIT Licensed)
@@ -224,65 +230,68 @@ Array.remove = function(array, from, to) {
   return array.push.apply(array, rest);
 };
 
+// Splits a verse into words
+function splitByWords(text){
+	// matches optional mixture of whitespace and hyphens/dashes: \s*(?:[-—\s]+)?
+	// followed by non non-Korean non-whitespace characters: [^\u1100-\u11ff\uAC00-\uD7A3\s]+
+	// or one Korean character and any number of non-Korean, non-aphabetic non-whitespace characters: [\u1100-\u11ff\uAC00-\uD7A3][^a-zA-Z\u1100-\u11ff\uAC00-\uD7A3\s]*
+	// ending with optional mixture of whitespace and hyphens/dashes only if at the end of text: \s*(?:[-—\s]+$)?
+	return text.match(/\s*(?:[-—\s]+)?(?:[^\u1100-\u11ff\uAC00-\uD7A3\s]+|[\u1100-\u11ff\uAC00-\uD7A3][^a-zA-Z\u1100-\u11ff\uAC00-\uD7A3\s]*)\s*(?:[-—\s]+$)?/g) || [];
+}
+
 function verseFeedback(correctvs, verseguess, echo, firstletter) {
 
 	firstletter = (typeof firstletter == "undefined") ? false : firstletter;
 
-	guesstext   = $.trim(verseguess.replace(/\s+/g, " ")); // Remove double spaces from guess and trim
-	correcttext = $.trim(unescape(correctvs.replace(/\s+/g, " "))); // Remove any double spaces - shouldn't be any
-
 	var correct;
 	var feedback = ""; // find a better way to construct the string
 
-	guess_words = guesstext.split(/\s-\s|\s-|\s/);
-	right_words = correcttext.split(/\s-\s|\s-|\s/);
+	var guess_words = splitByWords(verseguess);
+	guess_words.forEach(function(e, i){
+		guess_words[i] = scrub_text(e);
+	});
+	
+	var right_words = splitByWords(correctvs);
+	
+	var s_right_words = [];
+	right_words.forEach(function(e, i){
+		 s_right_words[i] = scrub_text(e);
+	});
 
-	for (x in guess_words) {
+	for (var x in guess_words) {
 
-		if (x < right_words.length) { // check that guess isn't longer than correct answer
+		if (x < s_right_words.length) { // check that guess isn't longer than correct answer
 
-			y = parseInt(x) + 1;
-			z = parseInt(x) - 1;
+			var y = parseInt(x) + 1;
+			var z = parseInt(x) - 1;
+			
+			var right_first_letter = /[\uAC00-\uD7A3]/.test(s_right_words[x].charAt(0)) ? String.fromCharCode(4352 + Math.floor((s_right_words[x].charCodeAt(0)) - 44032) / 588) : s_right_words[x].charAt(0);
 
 			// first letter probably in use if this word and the word before it or after it are both single characters
-			fl_prob_in_use = ((guess_words.length >= 2) && ( scrub_text(guess_words[x]).length == 1 ) && ((guess_words[z] && scrub_text(guess_words[z]).length == 1) || (guess_words[y] && scrub_text(guess_words[y]).length == 1)));
+			var fl_prob_in_use = ((guess_words.length >= 2) && (guess_words[x].length == 1 ) && ((guess_words[z] && guess_words[z].length == 1) || (guess_words[y] && guess_words[y].length == 1)));
 
-			if ( guesstext == "" ) { // This happens when nothing is in the textarea
+			if ( /^\s*$/.test(verseguess) ) { // This happens when nothing or only whitespace is in the textarea
 				feedback = "Waiting for you to begin typing...";
 				correct = false;
-			} else if ( guess_words[x] == "") {
-				// Most likely scenario: the last character was a dash ("-") that was used to split, and now this is empty. We don't want to add "... " to feedback.
-				// Only happens to dashes at the end of the text. Other ones are already handled.
-				feedback = feedback;
-			} else if ( scrub_text(guess_words[x]) == scrub_text(right_words[x]) ) {
+			} else if ( guess_words[x] == s_right_words[x] ) {
 				// if the word matches exactly
-				feedback = feedback + right_words[x] + " ";
-			} else if (firstletter && fl_prob_in_use && ( scrub_text(guess_words[x]) == scrub_text(right_words[x]).charAt(0) ) ) {
+				feedback = feedback + right_words[x];
+			} else if (firstletter && fl_prob_in_use && ( guess_words[x] == right_first_letter ) ) {
 				// if first letter enabled and first letter sequence and first letter matches
-				feedback = feedback + right_words[x] + " ";
+				feedback += right_words[x];
 			} else {
-				feedback = feedback + "... ";
+				feedback += "... ";
 				correct = false;
 			}
-
-			if (right_words[y] == "-" || right_words[y] == "—" ) {
-				feedback = feedback + right_words[y] + " ";
-				// Remove the dash from the array
-				Array.remove(right_words, y);
-			}
-
-            if (right_words[y] == ""){
-                Array.remove(right_words, y);
-            }
 		}
 	}
-
+	
 	if ( (guess_words.length == right_words.length) && (correct != false) ) { // determine if correct: should be long enough and not have anything incorrect in it
 		correct = true;
 		if (!echo) {
 			feedback = '< Feedback disabled >';
 		}
-		feedback = feedback + '<div id="matchbox"><span>Correct</span></div>';
+		feedback += '<div id="matchbox"><span>Correct</span></div>';
 	} else { // at this point it must be incorrect; we still need to set correct to false in case user guess has been correct thus far bust still incomplete
 		correct = false;
 		if (!echo) {	// incorrect and feedback disabled
@@ -295,7 +304,7 @@ function verseFeedback(correctvs, verseguess, echo, firstletter) {
 		correct:		correct
 	};
 
-};
+}
 
 function update_upcoming(num_verses, mv_id) {
 	$.ajax( {
