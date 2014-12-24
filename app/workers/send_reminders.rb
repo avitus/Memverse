@@ -67,7 +67,7 @@ class SendReminders
 
     }
 
-    Rails.logger.info(" *** Sent #{@emails_sent} reminder emails")
+    Rails.logger.info(" *** Email reminder: Sent #{@emails_sent} reminder emails at #{Time.now}")
   end
 
 end
