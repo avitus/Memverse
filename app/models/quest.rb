@@ -16,105 +16,73 @@
 
 class Quest < ActiveRecord::Base
   has_and_belongs_to_many :users
+  belongs_to :badge
 
-  # ----------------------------------------------------------------------------------------------------------
-  # Returns true if a task has been completed
-  # ----------------------------------------------------------------------------------------------------------
+  # Is task complete?
+  # @return [Boolean]
   def complete?(user)
-    case self.objective
+    categories = {'Gospels' => :gospel,
+                  'Epistles' => :epistle,
+                  'Wisdom' => :wisdom,
+                  'History' => :history,
+                  'Prophecy' => :prophecy}
+
+    case objective
+
+      # Quest is to be learning or have memorized so many verses from category
+      when *categories.keys
+        mvs = user.memverses.try(categories[objective])
+
+        if qualifier == 'Learning'
+          mvs.length >= quantity
+        elsif qualifier == 'Memorized'
+          mvs.memorized.length >= quantity
+        else
+          false
+        end
 
       when 'Verses'
-
-        case self.qualifier
+        case qualifier
           when 'Learning'
-            user.learning + user.memorized >= self.quantity
+            user.learning + user.memorized >= quantity
           when 'Memorized'
-            user.memorized >= self.quantity
-          else
-            false
-        end
-
-      when 'Gospels'
-        case self.qualifier
-          when 'Learning'
-            user.memverses.gospel.length >= self.quantity
-          when 'Memorized'
-            user.memverses.gospel.memorized.length >= self.quantity
-          else
-            false
-        end
-
-
-      when 'Epistles'
-        case self.qualifier
-          when 'Learning'
-            user.memverses.epistle.length >= self.quantity
-          when 'Memorized'
-            user.memverses.epistle.memorized.length >= self.quantity
-          else
-            false
-        end
-
-      when 'Wisdom'
-        case self.qualifier
-          when 'Learning'
-            user.memverses.wisdom.length >= self.quantity
-          when 'Memorized'
-            user.memverses.wisdom.memorized.length >= self.quantity
-          else
-            false
-        end
-
-      when 'History'
-        case self.qualifier
-          when 'Learning'
-            user.memverses.history.length >= self.quantity
-          when 'Memorized'
-            user.memverses.history.memorized.length >= self.quantity
-          else
-            false
-        end
-
-      when 'Prophecy'
-        case self.qualifier
-          when 'Learning'
-            user.memverses.prophecy.length >= self.quantity
-          when 'Memorized'
-            user.memverses.prophecy.memorized.length >= self.quantity
+            user.memorized >= quantity
           else
             false
         end
 
       when 'Chapters'
-        case self.qualifier
+        chapters = user.complete_chapters
+
+        case qualifier
           when 'Learning'
-            user.complete_chapters.length >= self.quantity
+            chapters.length >= quantity
           when 'Memorized'
-            user.complete_chapters.select { |ch| ch[0] == "Memorized" }.length >= self.quantity
+            chapters.select { |ch| ch[0] == "Memorized" }.length >= quantity
           else
-            user.complete_chapters.select { |ch| ch[0] == "Memorized" && ch[1] == self.qualifier }.length >= 1
+            chapters.select { |ch| ch == ["Memorized", qualifier] }.length >= 1
         end
 
       when 'Books'
         false
 
       when 'Accuracy'
-        user.accuracy >= self.quantity
+        user.accuracy >= quantity
 
       when 'References'
-        user.ref_grade >= self.quantity
+        user.ref_grade >= quantity
 
       when 'Sessions'
-        user.completed_sessions >= self.quantity
+        user.completed_sessions >= quantity
 
       when 'Annual Sessions'
-        user.completed_sessions(:year) >= self.quantity
+        user.completed_sessions(:year) >= quantity
 
       when 'Referrals'
-        user.referral_score >= self.quantity
+        user.referral_score >= quantity
 
       when 'Tags'
-        user.num_taggings >= self.quantity
+        user.num_taggings >= quantity
 
       when 'Url'
         false # Quest is flagged as complete when user visits URL
@@ -125,9 +93,8 @@ class Quest < ActiveRecord::Base
     end
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Adds task to list of completed tasks (if not already completed)
-  # ----------------------------------------------------------------------------------------------------------
+  # @return [void]
   def check_quest_off(user)
     if !user.quests.include?(self)  # can only complete a quest once
       user.quests << self
