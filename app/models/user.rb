@@ -827,7 +827,7 @@ class User < ActiveRecord::Base
 
   # Check whether user needs reminder
   #
-  # @return [true, false]
+  # @return [Boolean]
   def needs_reminder?
 
     last_reminded = self.last_reminder || (Date.today - 100) # handles case where user has never been reminded
