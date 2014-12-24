@@ -19,11 +19,9 @@ class Country < ActiveRecord::Base
   extend FriendlyId
   friendly_id :printable_name, use: :slugged
 
-  # ----------------------------------------------------------------------------------------------------------
-  # Returns hash of top countries (sorted by number of verses memorized)
-  # ----------------------------------------------------------------------------------------------------------
+  # Hash of top countries (sorted by number of verses memorized)
+  # @return [Hash] Country name and verses memorized
   def self.top_countries(numcountries=25)
-
     countryboard = Hash.new(0)
 
     vibrant.find_each { |grp| countryboard[ grp ] = grp.users.active.sum('memorized') }
@@ -38,7 +36,6 @@ class Country < ActiveRecord::Base
       grp[0].rank = index+1
       grp[0].save
     }
-
   end
 
 end

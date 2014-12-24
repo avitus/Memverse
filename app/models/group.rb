@@ -20,9 +20,10 @@ class Group < ActiveRecord::Base
 
   scope :vibrant, -> { where('users_count >= 3') }
 
-  # ----------------------------------------------------------------------------------------------------------
-  # Returns *array* of top groups (sorted by number of verses memorized)
-  # ----------------------------------------------------------------------------------------------------------
+  # Top groups, sorted by number of verses memorized
+  #
+  # @param numgroups [Fixnum]
+  # @return [Array<Group>]
   def self.top_groups(numgroups=70)
 
     groupboard = Hash.new(0)
@@ -39,14 +40,15 @@ class Group < ActiveRecord::Base
       grp[0].rank = index+1
       grp[0].save
     }
-
   end
 
-  # ----------------------------------------------------------------------------------------------------------
-  # Returns group leader. Initially the group leader will be whoever created the group.
+  # Group leader
+  #
+  # Initially the group leader will be whoever created the group.
   # If the group leader becomes inactive, the new leader will be whoever has completed the most memorization
   # sessions and is a member of the group at the time
-  # ----------------------------------------------------------------------------------------------------------
+  #
+  # @return [User] group leader
   def get_leader!
     if self.leader.try(:is_active?)
       return self.leader
@@ -56,6 +58,5 @@ class Group < ActiveRecord::Base
       return self.leader
     end
   end
-
 
 end
