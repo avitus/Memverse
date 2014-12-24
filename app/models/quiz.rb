@@ -12,36 +12,28 @@ class Quiz < ActiveRecord::Base
   # Validations
   # validates_presence_of :user_id
 
+  # Update length for quiz
+  # Uses {QuizQuestion#time_alloc} to determine length of each question.
+  # @return [void]
   def update_length
-
     length = 0
 
     for question in self.quiz_questions
-
-      # Note that 1 is added to each of these because we put a 1 second gap between questions
-      case question.question_type
-
-        when "recitation"
-          length = length + (question.passage_translations.first.last.split(" ").length * 2.5 + 15.0).to_i + 1 # 24 WPM typing speed with 15 seconds to think
-
-        when "reference"
-          length = length + 25 + 1
-
-        when "mcq"
-          length = length + 30 + 1
-        end
-
+      # We put a 1 second gap between questions
+      length += question.time_alloc + 1
     end
 
     self.quiz_length = length
   	self.save
-
   end
 
+  # Hours till quiz starts
+  # @return [Fixnum]
   def hours_till_start
     return (start_time - Time.now)/3600
   end
 
+  # Quiz participants from redis
   def redis_participants
     $redis.keys("quiz#{self.id}_user*")
   end
@@ -50,11 +42,14 @@ class Quiz < ActiveRecord::Base
     $redis.keys("quiz#{self.id}_qnum*")
   end
 
+  # Clear quiz data from redis
   def redis_clear_data
     redis_participants.each { |p| $redis.del(p) }
     redis_questions.each    { |q| $redis.del(q) }
   end
 
+  # Publish scoreboard via PubNub
+  # @return [void]
   def publish_scoreboard
     scoreboard = Array.new
 
@@ -73,20 +68,28 @@ class Quiz < ActiveRecord::Base
     )
   end
 
+  # PubNub channel for quiz
+  # @return [String]
   def channel
     "quiz#{self.id}"
   end
 
+  # Quiz status
+  # @return [String, nil]
   def status
     $redis.hmget(channel, "status").try(:first) || nil
   end
 
+  # Update quiz status
+  # @return [void]
   def status=(new_status)
     return if new_status == status
 
     $redis.hset(channel, "status", new_status)
   end
 
+  # Announce quiz start with a Tweet
+  # @return [void]
   def announce
     broadcast = "#{self.name} is starting. <a href=\"live_quiz/#{self.id}\">Join now!</a>"
     Tweet.create(news: broadcast, user_id: 1, importance: 2)  # Admin tweet => user_id = 1

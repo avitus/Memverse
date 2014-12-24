@@ -66,6 +66,7 @@ class QuizQuestion < ActiveRecord::Base
   after_update  'self.quiz.update_length'
   after_destroy 'self.quiz.update_length'
 
+  # @return [Hash] Hash with passage text for each major translation
   def passage_translations
 
     passages = Hash.new
@@ -94,9 +95,9 @@ class QuizQuestion < ActiveRecord::Base
 
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Update difficulty of quiz question based on number of users getting question correct
-  # ----------------------------------------------------------------------------------------------------------
+  # @param answer_count [Fixnum] Number of times question answered during quiz
+  # @param percentage_correct
   def update_difficulty( answer_count, percentage_correct )
     new_total_answers   = answer_count + self.times_answered
     self.perc_correct   = ((answer_count * percentage_correct ) + (self.times_answered * self.perc_correct )) / new_total_answers
@@ -104,26 +105,26 @@ class QuizQuestion < ActiveRecord::Base
     self.save
   end
 
-  # ----------------------------------------------------------------------------------------------------------
-  # Estimate time required (in seconds) for question
-  # 0.5 * word count + 7 seconds  => felt too quick on short questions and too slow on long questions
-  # ----------------------------------------------------------------------------------------------------------
+  # Time allocated for question (KnowledgeQuiz)
+  # * Multiple choice: 0.4 seconds per word + 10 seconds
+  # * Recitation: 2.5 seconds per word (24 WPM) + 15 seconds
+  # * Reference: 25 seconds
+  # @return [Fixnum]
   def time_allocation
     case self.question_type
       when 'mcq'
         reading_required = [ mc_question, mc_option_a, mc_option_b, mc_option_c, mc_option_d ].join(" ")
         ( reading_required.split(" ").length * 0.4 ).to_i + 10  # 0.4 second for each word + 10 seconds
       when 'recitation'
-        ( self.passage_translations.first.last.split(" ").length * 2.5 + 15.0 ).to_i # 24 WPM typing speed with 15 seconds to think
+        # 24 WPM typing speed with 15 seconds to think
+        ( self.passage_translations.first.last.split(" ").length * 2.5 + 15.0 ).to_i
       when 'reference'
         25
     end
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Related Quiz Questions (that share the same supporting reference)
-  # TODO: would be nice to expand with a clever search by keyword in the question text
-  # ----------------------------------------------------------------------------------------------------------
+  # @todo Would be nice to expand with a clever search by keyword in the question text
   def related_questions
     if self.supporting_ref
       return self.supporting_ref.quiz_questions.where("id != ?", self.id)
@@ -132,10 +133,8 @@ class QuizQuestion < ActiveRecord::Base
     end
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Related Quiz Questions (that share the same supporting reference)
-  # TODO: would be nice to expand with a clever search by keyword in the question text
-  # ----------------------------------------------------------------------------------------------------------
+  # @todo Would be nice to expand with a clever search by keyword in the question text
   def supporting_verses
     if self.supporting_ref
       return self.supporting_ref.verses.where(:translation => ['NIV', 'ESV', 'NAS', 'NKJ', 'KJV'])
@@ -144,10 +143,18 @@ class QuizQuestion < ActiveRecord::Base
     end
   end
 
+  # Is quiz question approved?
+  # @return [Boolean]
   def is_approved?
     return self.approval_status == "Approved"
   end
 
+  # Time allocated for question (ScheduledQuiz)
+  # * Multiple choice: 30 seconds
+  # * Recitation: 2.5 seconds per word (24 WPM) + 15 seconds
+  # * Reference: 25 seconds
+  # * Other: 20 seconds
+  # @return [Fixnum]
   def time_alloc
     case self.question_type
     when "recitation"
@@ -162,9 +169,7 @@ class QuizQuestion < ActiveRecord::Base
     end
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Push quiz question to quiz channel (PubNub)
-  # ----------------------------------------------------------------------------------------------------------
   def push_to_channel
     message = {
       meta:       "question",
@@ -193,23 +198,20 @@ class QuizQuestion < ActiveRecord::Base
     )
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Check if mcq
-  # ----------------------------------------------------------------------------------------------------------
+  # @return [Boolean]
   def mcq?
     question_type == "mcq"
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Check if reference
-  # ----------------------------------------------------------------------------------------------------------
+  # @return [Boolean]
   def reference?
     question_type == "reference"
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Check if recitation
-  # ----------------------------------------------------------------------------------------------------------
+  # @return [Boolean]
   def recitation?
     question_type == "recitation"
   end
