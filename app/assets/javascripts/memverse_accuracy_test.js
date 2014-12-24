@@ -58,10 +58,10 @@ var accTestState = {
 
         var score;
 
-        // Convert to lowercase; remove anything that is not a-z and remove extra spaces
+        // Convert to lowercase; remove anything that is not a-z or Korean Hangul and remove extra spaces
         // Do I need to use unescape because of quotation marks? Time will tell...
-        user    = $.trim(    user_answer.toLowerCase().replace(/[^a-z0-9 ]|\s-|\s—/g, '').replace(/\s+/g, " ") );
-        correct = $.trim( correct_answer.toLowerCase().replace(/[^a-z0-9 ]|\s-|\s—/g, '').replace(/\s+/g, " ") );
+        user    = $.trim(    user_answer.toLowerCase().replace(/[^a-z0-9\uAC00-\uD7A3 ]|\s-|\s—/g, '').replace(/\s+/g, " ") );
+        correct = $.trim( correct_answer.toLowerCase().replace(/[^a-z0-9\uAC00-\uD7A3 ]|\s-|\s—/g, '').replace(/\s+/g, " ") );
 
         if (user == "") {
             alert('Please recite the verse. You clicked "Submit" without any words in the box.')
