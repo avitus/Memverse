@@ -12,6 +12,7 @@ FactoryGirl.define do
     u.password_confirmation { |u| u.password }
     u.last_activity_date Date.today
     u.admin false
+    u.referred_by 0
 
     # Admin user
     # factory :admin do
@@ -148,6 +149,10 @@ FactoryGirl.define do
     q.task 'Memorize Matthew 5'
     q.objective 'Chapters'
     q.qualifier 'Matthew 5'
+    q.quantity nil
+    q.description nil
+    q.level 1
+    q.url nil
     q.association :badge, :factory => :badge
   end
 
