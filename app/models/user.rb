@@ -818,9 +818,9 @@ class User < ActiveRecord::Base
     ]
 
     for case_ in policy
-      if reminder_freq == case_.freq && days_since_active > case_.days
-        logger.info("*** Changing reminder frequency for #{self.login} to #{case_.schedule} schedule. Last activity was #{days_since_active} days ago")
-        self.update_column(:reminder_freq, case_.new_freq)
+      if reminder_freq == case_[:freq] && days_since_active > case_[:days]
+        logger.info("*** Changing reminder frequency for #{self.login} to #{case_[:schedule]} schedule. Last activity was #{days_since_active} days ago")
+        self.update_column(:reminder_freq, case_[:new_freq])
       end
     end
   end
