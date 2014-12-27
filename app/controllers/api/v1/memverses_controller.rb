@@ -9,7 +9,10 @@ class Api::V1::MemversesController < Api::V1::ApiController
   caches :index, :show, :caches_for => 5.minutes
 
   def index
-    expose current_resource_owner.memverses.page( params[:page] )
+    mvs = current_resource_owner.memverses
+    mvs = params[:sort] ? mvs.order(params[:sort]) : mv.canonical_sort
+
+    expose mvs.page( params[:page] )
   end
 
   def show
