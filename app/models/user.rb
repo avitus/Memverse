@@ -388,7 +388,7 @@ class User < ActiveRecord::Base
   #
   # @return [Fixnum] Percentage of verses in category
   def category_perc(cat)
-    0 if !self.has_active?
+    return 0 if !self.has_active?
 
     (category_verses(cat).values.sum.to_f / memverses.active.count.to_f * 100).round
   end
