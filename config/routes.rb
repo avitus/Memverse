@@ -69,7 +69,7 @@ MemverseApp::Application.routes.draw do
 
   # API
   api versions: 1, module: "api/v1" do
-    resources :users, :only => :show
+    resources :users, :only => [:show, :update]
     resources :verses do
       get 'lookup', :on => :collection
     end
