@@ -8,4 +8,18 @@ class Api::V1::UsersController < Api::V1::ApiController
     expose User.find( params[:id] ) || current_resource_owner
   end
 
+  def update
+    @user = User.find(params[:id])
+
+    if @user.nil?
+      error! :bad_request, metadata: {reason: 'User could not be found'}
+    elsif @user != current_resource_owner
+      error! :bad_request, metadata: {reason: 'User is not the signed-in user'}
+    elsif @user.update_attributes(params[:user])
+      expose @user
+    else
+      error! :bad_request, metadata: {reason: 'User could not be updated'}
+    end
+  end
+
 end
