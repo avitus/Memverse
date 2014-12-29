@@ -22,4 +22,11 @@ class Api::V1::UsersController < Api::V1::ApiController
     end
   end
 
+  private
+
+  def user_params
+     params.require(:user).permit(:name, :reminder_freq, :language, :show_echo,
+      :time_allocation, :max_interval, :gender, :translation)
+  end
+
 end
