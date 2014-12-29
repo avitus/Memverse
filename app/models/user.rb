@@ -98,7 +98,7 @@ class User < ActiveRecord::Base
                   :identity_url, :remember_me, :newsletters, :reminder_freq, :last_reminder,
                   :church, :group, :country, :american_state, :show_echo, :max_interval,
                   :mnemonic_use, :all_refs, :referred_by, :auto_work_load, :show_email,
-                  :provider, :uid
+                  :provider, :uid, :translation, :time_allocation
 
   # Single Sign On support
   def self.find_for_windowslive_oauth2( access_token, signed_in_resource=nil )
