@@ -12,7 +12,7 @@ describe Quest do
     last = FinalVerse.where(book: book, chapter: chapter).first.last_verse
 
     for i in 1..last
-      vs = FactoryGirl.create(:verse, book: book, book_index: BIBLEBOOKS.index(book)+1, chapter: chapter, versenum: i)
+      vs = FactoryGirl.create(:verse, book: book, book_index: BIBLEBOOKS[:en].values.index(book)+1, chapter: chapter, versenum: i)
       mv = FactoryGirl.create(:memverse, verse: vs, user: user)
       mv.update_attribute(:status, status)
     end

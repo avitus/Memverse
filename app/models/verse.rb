@@ -78,25 +78,23 @@ class Verse < ActiveRecord::Base
   #
   # @return [String] translated abbreviated verse reference
   def ref
-    book_tl = I18n.t abbr(book).to_sym, :scope => [:book, :abbrev]
-    return "#{book_tl} #{chapter}:#{versenum}"
+    "#{Book.find(book_index).abbrev} #{chapter}:#{versenum}"
   end
 
   # Long friendly verse reference: eg. "John 3:16"
   #
   # @return [String] translated long verse reference
   def ref_long
-    book_tl = I18n.t book.to_sym, :scope => [:book, :name]
-    return "#{book_tl} #{chapter}:#{versenum}"
+    "#{Book.find(book_index).name} #{chapter}:#{versenum}"
   end
 
   # Return data about testament
   def old_testament?
-    return book_index < 40
+    book_index < 40
   end
 
   def new_testament?
-    return book_index >= 40
+    book_index >= 40
   end
 
   def testament
@@ -380,18 +378,13 @@ class Verse < ActiveRecord::Base
     return self.memverses.length > 1
   end
 
-  # Returns Bible book index
-  # @param str [String] Example: 'Deuteronomy' or 'Deut'
+  # Returns Bible book index; case insensitive input
+  # @param str [String] Example: 'Deuteronomy' or 'Deut' or 'DEUT'
   # @return [Fixnum, nil] index or nil, if not found
   # @note This breaks if string is not a valid book because you can't add 1 + nil
-  # @note The last check is required to handle 'Song of Songs' because titleizing it becomes "Song Of Songs"
   # @todo This should not be an instance method, and maybe should not be in this class at all.
   def book_index(str=self.book)
-    if x = (BIBLEBOOKS.index(str.titleize) || BIBLEABBREV.index(str.titleize) || BIBLEBOOKS.index(str))
-      return 1+x
-    else
-      return nil
-    end
+    Book.find_by_name(str).try(:book_index)
   end
 
   def chapter_name
