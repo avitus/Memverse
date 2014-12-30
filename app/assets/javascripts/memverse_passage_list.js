@@ -63,7 +63,7 @@ var passageListState = {
         // TODO: check whether we have already downloaded the memory verses for this passage
 
         // retrieve memory verses for passage
-        $.getJSON('passages/' + passageID + '/memverses.json', function (data) {
+        $.getJSON('/passages/' + passageID + '/memverses.json', function (data) {
             passageListState.insertMemoryVerses( $passageLocation, data )
         });
     },
