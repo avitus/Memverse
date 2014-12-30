@@ -50,7 +50,7 @@ class Book
   # @return [Book]
   def to_lang(lang)
     if BIBLEBOOKS.keys.include?(lang)
-      new(book_index, lang)
+      Book.new(book_index, lang)
     else
       raise ArgumentError, 'specified lang is not supported for Book'
       self
