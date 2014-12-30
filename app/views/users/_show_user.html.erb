@@ -45,21 +45,61 @@
 			</thead>
 
 			<tbody>
-				<tr><td width=200>Old Testament</td><td><%= @user.ot_verses["Memorized"]%></td>	<td><%= @user.ot_verses["Learning"]%></td><td><%= @user.ot_perc %>%</td></tr>
-				<tr><td>New Testament</td>			<td><%= @user.nt_verses["Memorized"]%></td>	<td><%= @user.nt_verses["Learning"]%></td><td><%= @user.nt_perc %>%</td></tr>
+				<tr>
+					<td width=200>Old Testament</td>
+					<td><%= @user.category_verses(:ot)["Memorized"] %></td>
+					<td><%= @user.category_verses(:ot)["Learning"]%></td>
+					<td><%= @user.category_perc(:ot) %>%</td>
+				</tr>
+				<tr>
+					<td>New Testament</td>
+					<td><%= @user.category_verses(:nt)["Memorized"]%></td>
+					<td><%= @user.category_verses(:nt)["Learning"]%></td>
+					<td><%= @user.category_perc(:nt) %>%</td>
+				</tr>
 			</tbody>
 		</table>
 
 		<table class="memverse-standard">
 			<thead>
-				<tr> <th></th>						<th>Memorized</th> 							<th>Learning</th><th>%</th>					</tr>
+				<tr>
+					<th></th>
+					<th>Memorized</th>
+					<th>Learning</th>
+					<th>%</th>
+				</tr>
 			</thead>
 			<tbody>
-				<tr><td width="200">History</td>	<td><%= @user.history["Memorized"]%></td>	<td><%= @user.history["Learning"]%></td>	<td><%= @user.h_perc %>%</td>	</tr>
-				<tr><td>Wisdom</td>					<td><%= @user.wisdom["Memorized"]%></td>	<td><%= @user.wisdom["Learning"]%></td>		<td><%= @user.w_perc %>%</td>	</tr>
-				<tr><td>Prophecy</td>				<td><%= @user.prophecy["Memorized"]%></td>	<td><%= @user.prophecy["Learning"]%></td>	<td><%= @user.p_perc %>%</td>	</tr>
-				<tr><td>Gospels</td>				<td><%= @user.gospel["Memorized"]%></td>	<td><%= @user.gospel["Learning"]%></td>		<td><%= @user.g_perc %>%</td>	</tr>
-				<tr><td>Epistles</td>				<td><%= @user.epistle["Memorized"]%></td>	<td><%= @user.epistle["Learning"]%></td>	<td><%= @user.e_perc %>%</td>	</tr>
+				<tr>
+					<td width="200">History</td>
+					<td><%= @user.category_verses(:history)["Memorized"]%></td>
+					<td><%= @user.category_verses(:history)["Learning"]%></td>
+					<td><%= @user.category_perc(:history) %>%</td>
+				</tr>
+				<tr>
+					<td>Wisdom</td>
+					<td><%= @user.category_verses(:wisdom)["Memorized"]%></td>
+					<td><%= @user.category_verses(:wisdom)["Learning"]%></td>
+					<td><%= @user.category_perc(:wisdom) %>%</td>
+				</tr>
+				<tr>
+					<td>Prophecy</td>
+					<td><%= @user.category_verses(:prophecy)["Memorized"]%></td>
+					<td><%= @user.category_verses(:prophecy)["Learning"]%></td>
+					<td><%= @user.category_perc(:prophecy) %>%</td>
+				</tr>
+				<tr>
+					<td>Gospels</td>
+					<td><%= @user.category_verses(:gospel)["Memorized"]%></td>
+					<td><%= @user.category_verses(:gospel)["Learning"]%></td>
+					<td><%= @user.category_perc(:gospel) %>%</td>
+				</tr>
+				<tr>
+					<td>Epistles</td>
+					<td><%= @user.category_verses(:epistle)["Memorized"]%></td>
+					<td><%= @user.category_verses(:epistle)["Learning"]%></td>
+					<td><%= @user.category_perc(:epistle) %>%</td>
+				</tr>
 			</tbody>
 		</table>
 	</div>	<!-- end: verse-distribution -->

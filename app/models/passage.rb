@@ -14,9 +14,7 @@ class Passage < ActiveRecord::Base
 
   after_create   :update_ref
 
-  # ----------------------------------------------------------------------------------------------------------
   # Convert to JSON format
-  # ----------------------------------------------------------------------------------------------------------
   def as_json(options={})
     {
       :id              => self.id,
@@ -32,9 +30,7 @@ class Passage < ActiveRecord::Base
     # super(options.reverse_merge(:methods => :interval_array, :only => [:id, :reference]))
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Automatically create subsections for passage
-  # ----------------------------------------------------------------------------------------------------------
   def auto_subsection( subsection_length = 4, max_subsection_length = 10 )
 
     if self.length > subsection_length
@@ -64,10 +60,8 @@ class Passage < ActiveRecord::Base
 
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Combine two passages into one. Method accepts an optional join (linking) verse.
-  #   - Order of join doesn't matter
-  # ----------------------------------------------------------------------------------------------------------
+  # @note Order of join doesn't matter
   def absorb( second_passage, join_mv=nil )
 
     self.first_verse = [self.first_verse, second_passage.first_verse].min
@@ -88,9 +82,7 @@ class Passage < ActiveRecord::Base
 
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Add a memory verse into a passage
-  # ----------------------------------------------------------------------------------------------------------
   def expand( mv )
 
     self.first_verse = [ self.first_verse, mv.verse.versenum ].min
@@ -107,9 +99,7 @@ class Passage < ActiveRecord::Base
 
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Update Reference
-  # ----------------------------------------------------------------------------------------------------------
   def update_ref
 
     book = (self.book == "Psalms") ? "Psalm" : self.book;
@@ -123,9 +113,7 @@ class Passage < ActiveRecord::Base
     return self.reference
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Combine supermemo information from underlying verses
-  # ----------------------------------------------------------------------------------------------------------
   def consolidate_supermemo
     self.test_interval = self.memverses.active.minimum(:test_interval)
     self.rep_n         = self.memverses.active.minimum(:rep_n)
@@ -135,17 +123,13 @@ class Passage < ActiveRecord::Base
     save
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Update next_test date
-  # ----------------------------------------------------------------------------------------------------------
   def update_next_test_date
     self.next_test     = self.memverses.active.minimum(:next_test)
     save
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Set flag if entire chapter has been added to memorization list
-  # ----------------------------------------------------------------------------------------------------------
   def entire_chapter_flag_check
 
     # Corner case for 3 John 1. Not elegant but should usually drop through to primary case
@@ -171,9 +155,8 @@ class Passage < ActiveRecord::Base
 
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Return array containing the memorization interval of each memverse in passage
-  # ----------------------------------------------------------------------------------------------------------
+  # @return [Array<Fixnum>]
   def interval_array
     self.memverses.pluck(:test_interval)
   end

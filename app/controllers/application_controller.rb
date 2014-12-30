@@ -20,9 +20,7 @@ class ApplicationController < ActionController::Base
 
   before_filter :set_locale, :prepare_for_mobile
 
-  # ----------------------------------------------------------------------------------------------------------
   # Admin Authorization
-  # ----------------------------------------------------------------------------------------------------------
   helper_method :admin?
   protected
   def admin?
@@ -38,51 +36,30 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Localization
-  # ----------------------------------------------------------------------------------------------------------
   def set_locale
     # if params[:locale] is nil then I18n.default_locale will be used
     if current_user
       I18n.locale = case current_user.language
-        when "English"          then "en"
-        when "Spanish"          then "es"
-        when "Bahasa Indonesia" then "in"
+        when "English"           then "en"
+        when "Spanish"           then "es"
+        when "Bahasa Indonesia"  then "in"
+        when "Chinese"           then "zh"
+
         else "en"
       end
     else
       I18n.locale = "en"
     end
-
-    # Load support for inverse translation i.e. retrieve English name of a book entered in Spanish
-    # This is 'wild hackery'
-    # I18n.backend.send(:init_translations)
   end
 
-  # ----------------------------------------------------------------------------------------------------------
-  # Convert foreign language bible books to English
-  # TODO: should also handle the abbreviated form of a book name
-  # ----------------------------------------------------------------------------------------------------------
+  # Convert foreign language Bible books to English
   def translate_to_english(book)
-
-    # This would be the preferred way to handle user input in another language. It used to work
-    # but now causes the rack processes to get stuck at 100%
-    #--------------------------------------------------------------------------------
-    # if I18n.backend.send(:translations)
-    #   return I18n.backend.send(:translations)[I18n.locale.to_sym][:book][:name].key(book).to_s
-    # else
-    #   return book
-    # end
-    #--------------------------------------------------------------------------------
-
-    return I18n.t book.to_sym, :scope => [:input, :book]
-
+    Book.find_by_name(book).to_lang(:en).try(:name)
   end
 
 
-  # ----------------------------------------------------------------------------------------------------------
   # Returns list of identical verses
-  # ----------------------------------------------------------------------------------------------------------
   def identical_verses( ref )
     iv = Hash[
       ["Luke", 12, 34]      => ["Matthew", 6, 21],
@@ -131,7 +108,7 @@ class ApplicationController < ActionController::Base
       book = "Psalms" if book == "Psalm"
       book = "Song of Songs" if book == "Song Of Songs"
 
-      if !BIBLEBOOKS.include?(full_book_name(book)) # This is not a book of the Bible
+      if !full_book_name(book) # not a valid book of the Bible
       	logger.info("*** Could not find book: #{book} when parsing string #{parse_string}")
         return 2, book # Error code for invalid book of the Bible
       else
@@ -213,45 +190,22 @@ class ApplicationController < ActionController::Base
   end
 
   # ----------------------------------------------------------------------------------------------------------
-  # Checks whether verse is in DB
-  # Input:  Deuteronomy, 3, 6, NIV
-  # Output: False (if verse not in DB) otherwise returns ID
-  # ----------------------------------------------------------------------------------------------------------
-  def verse_in_db(book, chapter, versenum, translation)
-
-    ref =  Verse.find( :first,
-                       :conditions => ["book = ? and chapter = ? and versenum = ? and translation = ?",
-                                        full_book_name(book), chapter, versenum, translation])
-
-    return ref
-  end
-
-  # ----------------------------------------------------------------------------------------------------------
   # Converts DB format to verse
   # Input:  Deuteronomy, 3, 6
   # Output: Deuteronomy 3:6
   # ----------------------------------------------------------------------------------------------------------
   def db_to_vs(book, chapter, verse)
-    return abbr(book) + ' ' + chapter.to_s + ':' + verse.to_s
+    "#{Book.find_by_name(book).abbrev} #{chapter}:#{verse}"
   end
 
-  # ----------------------------------------------------------------------------------------------------------
-  # Abbreviates book names
-  # Input:  'Deuteronomy'
-  # Output: 'Deut'
-  # ----------------------------------------------------------------------------------------------------------
-  def abbr(book)
-    return BIBLEABBREV[book_index(book)-1]
-  end
-
-  # ----------------------------------------------------------------------------------------------------------
-  # Lengthens book names
+  # Lengthens book names in English
   # Input:  'Deut' or 'Deuteronomy'
   # Output: 'Deuteronomy'
-  # ----------------------------------------------------------------------------------------------------------
   def full_book_name(book)
-    if valid_bible_book(book)
-      return BIBLEBOOKS[book_index(book)-1] || BIBLEABBREV[book_index(book)-1]
+    if Book.find_by_name(book)
+      return Book.find_by_name(book).to_lang(:en).name
+    else
+      return false
     end
   end
 
@@ -310,18 +264,16 @@ class ApplicationController < ActionController::Base
     return false
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Returns true (0) if str is a valid bible reference otherwise nil
-  # ----------------------------------------------------------------------------------------------------------
+  # @todo This should not be duplicated here and in parser.rb
+  # @todo Support Chinese and other languages
   def valid_ref(str)
-    return str =~ /([0-3]?\s+)?[a-záéíóúüñ]+\s+[0-9]+(:|;|(\s?vs\s?))[0-9]+/i
+    return str =~ /([0-3]?\s+)?[a-záéíóúüñ]+\s+[0-9]+(:|(\s?vs\s?))[0-9]+/i
   end
 
   private
 
-  # ----------------------------------------------------------------------------------------------------------
   # Check for mobile devices
-  # ----------------------------------------------------------------------------------------------------------
   def mobile_device?
 
   	return false # TODO: not supporting mobile devices for now ... uncomment below and remove this line to add support

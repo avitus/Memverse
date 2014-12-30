@@ -34,7 +34,7 @@ TRANSLATIONS = {
   NCV:    {name: "New Century Version", language: "en"},
   UKJ:    {name: "Updated King James Version", language: "en"},
   GEN:    {name: "Geneva Bible", language: "en"},
-  GRK:    {name: "Biblical Greek", language: "en"},
+  GRK:    {name: "Biblical Greek (SBLGNT)", language: "en"},
   SMP:    {name: "Scottish Metrical Psalter", language: "en"},
   SMPB:   {name: "Scottish Metrical Psalter: B", language: "en"},
   SMPC:   {name: "Scottish Metrical Psalter: C", language: "en"},
@@ -58,6 +58,7 @@ TRANSLATIONS = {
   ACF:    {name: "Almeida Corrigida e Fiel", language: "pt"},
   ARA:    {name: "Almeida Revista e Atualizada", language: "pt"},
   SPB:    {name: "Svenska Folkbibeln", language: "sv"},
+  CCB:    {name: "Chinese Contemporary Bible", language: "zh"},
 }
 
 MAJORS = {
@@ -68,35 +69,66 @@ MAJORS = {
     :ESV => "English Standard Version (2011)",
   }
 
+# Because hashes retain the order in which elements were inserted,
+# calling BIBLEBOOKS[:en].values[i-1] will return ith English book name.
 
-BIBLEBOOKS = ['Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy', 'Joshua', 'Judges', 'Ruth', '1 Samuel', '2 Samuel',
-              '1 Kings', '2 Kings','1 Chronicles', '2 Chronicles', 'Ezra', 'Nehemiah', 'Esther', 'Job', 'Psalms', 'Proverbs',
-              'Ecclesiastes', 'Song of Songs', 'Isaiah', 'Jeremiah', 'Lamentations', 'Ezekiel', 'Daniel', 'Hosea', 'Joel',
-              'Amos', 'Obadiah', 'Jonah', 'Micah', 'Nahum', 'Habakkuk', 'Zephaniah', 'Haggai', 'Zechariah', 'Malachi', 'Matthew',
-              'Mark', 'Luke', 'John', 'Acts', 'Romans', '1 Corinthians', '2 Corinthians', 'Galatians', 'Ephesians', 'Philippians',
-              'Colossians', '1 Thessalonians', '2 Thessalonians', '1 Timothy', '2 Timothy', 'Titus', 'Philemon', 'Hebrews', 'James',
-              '1 Peter', '2 Peter', '1 John', '2 John', '3 John', 'Jude', 'Revelation']
+BIBLEBOOKS = Hash.new
 
-BIBLEABBREV = ['Gen', 'Ex', 'Lev', 'Num', 'Deut', 'Josh', 'Judg', 'Ruth', '1 Sam', '2 Sam',
-              '1 Kings', '2 Kings','1 Chron', '2 Chron', 'Ezra', 'Neh', 'Es', 'Job', 'Ps', 'Prov',
-              'Eccl', 'Song', 'Isa', 'Jer', 'Lam', 'Ezk', 'Dan', 'Hos', 'Joel',
-              'Amos', 'Obad', 'Jonah', 'Mic', 'Nahum', 'Hab', 'Zeph', 'Hag', 'Zech', 'Mal', 'Matt',
-              'Mark', 'Luke', 'Jn', 'Acts', 'Rom', '1 Cor', '2 Cor', 'Gal', 'Eph', 'Phil',
-              'Col', '1 Thess', '2 Thess', '1 Tim', '2 Tim', 'Tit', 'Phlm', 'Heb', 'James',
-              '1 Pet', '2 Pet', '1 John', '2 John', '3 John', 'Jude', 'Rev']
+BIBLEBOOKS[:en] = {"Gen"=>"Genesis", "Ex"=>"Exodus", "Lev"=>"Leviticus",
+  "Num"=>"Numbers", "Deut"=>"Deuteronomy", "Josh"=>"Joshua", "Judg"=>"Judges",
+  "Ruth"=>"Ruth", "1 Sam"=>"1 Samuel", "2 Sam"=>"2 Samuel",
+  "1 Kings"=>"1 Kings", "2 Kings"=>"2 Kings", "1 Chron"=>"1 Chronicles",
+  "2 Chron"=>"2 Chronicles", "Ezra"=>"Ezra", "Neh"=>"Nehemiah", "Es"=>"Esther",
+  "Job"=>"Job", "Ps"=>"Psalms", "Prov"=>"Proverbs", "Eccl"=>"Ecclesiastes",
+  "Song"=>"Song of Songs", "Isa"=>"Isaiah", "Jer"=>"Jeremiah",
+  "Lam"=>"Lamentations", "Ezk"=>"Ezekiel", "Dan"=>"Daniel", "Hos"=>"Hosea",
+  "Joel"=>"Joel", "Amos"=>"Amos", "Obad"=>"Obadiah", "Jonah"=>"Jonah",
+  "Mic"=>"Micah", "Nahum"=>"Nahum", "Hab"=>"Habakkuk", "Zeph"=>"Zephaniah",
+  "Hag"=>"Haggai", "Zech"=>"Zechariah", "Mal"=>"Malachi", "Matt"=>"Matthew",
+  "Mark"=>"Mark", "Luke"=>"Luke", "Jn"=>"John", "Acts"=>"Acts",
+  "Rom"=>"Romans", "1 Cor"=>"1 Corinthians", "2 Cor"=>"2 Corinthians",
+  "Gal"=>"Galatians", "Eph"=>"Ephesians", "Phil"=>"Philippians",
+  "Col"=>"Colossians", "1 Thess"=>"1 Thessalonians", "2 Thess"=>"2 Thessalonians",
+  "1 Tim"=>"1 Timothy", "2 Tim"=>"2 Timothy", "Tit"=>"Titus", "Phlm"=>"Philemon",
+  "Heb"=>"Hebrews", "James"=>"James", "1 Pet"=>"1 Peter", "2 Pet"=>"2 Peter",
+  "1 John"=>"1 John", "2 John"=>"2 John", "3 John"=>"3 John", "Jude"=>"Jude", "Rev"=>"Revelation"}
 
-SPANISHBOOKS = ['Génesis', 'Éxodo', 'Levitico', 'Números', 'Deuteronomio', 'Josué', 'Jueces', 'Rut', '1 Samuel', '2 Samuel', '1 Reyes',
-                '2 Reyes', '1 Crónicas', '2 Crónicas', 'Esdras', 'Nehemías', 'Ester', 'Job', 'Salmos', 'Proverbios', 'Eclesiastés', 'Cantares',
-                'Isaías', 'Jeremías', 'Lamentaciones', 'Ezequiel', 'Daniel', 'Oseas', 'Joel', 'Amós', 'Abdías', 'Jonás', 'Miqueas', 'Nahún', 'Habacuc',
-                'Sofonías', 'Hageo', 'Zacarías', 'Malaquías', 'Mateo', 'Marcos', 'Lucas', 'Juan', 'Hechos', 'Romanos', '1 Corintios', '2 Corintios',
-                'Gálatas', 'Efesios', 'Filipenses', 'Colosenses', '1 Tesalonicenses', '2 Tesalonicenses', '1 Timoteo', '2 Timoteo', 'Tito', 'Filemón',
-                'Hebreos', 'Santiago', '1 Pedro', '2 Pedro', '1 Juan', '2 Juan', '3 Juan', 'Judas','Apocalipsis']
+BIBLEBOOKS[:es] = {"Gén"=>"Génesis", "Éxod"=>"Éxodo", "Lev"=>"Levitico",
+  "Núm"=>"Números", "Deut"=>"Deuteronomio", "Jos"=>"Josué", "Jue"=>"Jueces",
+  "Rut"=>"Rut", "1 Sam"=>"1 Samuel", "2 Sam"=>"2 Samuel", "1 Re"=>"1 Reyes",
+  "2 Re"=>"2 Reyes", "1 Cró"=>"1 Crónicas", "2 Cró"=>"2 Crónicas",
+  "Esd"=>"Esdras", "Neh"=>"Nehemías", "Est"=>"Ester", "Job"=>"Job",
+  "Sal"=>"Salmos", "Prov"=>"Proverbios", "Ecl"=>"Eclesiastés",
+  "Cant"=>"Cantares", "Is"=>"Isaías", "Jer"=>"Jeremías",
+  "Lam"=>"Lamentaciones", "Ez"=>"Ezequiel", "Dan"=>"Daniel", "Os"=>"Oseas",
+  "Jl"=>"Joel", "Am"=>"Amós", "Abd"=>"Abdías", "Jon"=>"Jonás",
+  "Miq"=>"Miqueas", "Nah"=>"Nahún", "Hab"=>"Habacuc", "Sof"=>"Sofonías",
+  "Ag"=>"Hageo", "Zac"=>"Zacarías", "Mal"=>"Malaquías", "Mt"=>"Mateo",
+  "Mc"=>"Marcos", "Lc"=>"Lucas", "Jn"=>"Juan", "Hech"=>"Hechos",
+  "Rom"=>"Romanos", "1 Cor"=>"1 Corintios", "2 Cor"=>"2 Corintios",
+  "Gál"=>"Gálatas", "Ef"=>"Efesios", "Fil"=>"Filipenses", "Col"=>"Colosenses",
+  "1 Tes"=>"1 Tesalonicenses", "2 Tes"=>"2 Tesalonicenses",
+  "1 Tim"=>"1 Timoteo", "2 Tim"=>"2 Timoteo", "Tit"=>"Tito",
+  "Filem"=>"Filemón", "Heb"=>"Hebreos", "Sant"=>"Santiago", "1 Pe"=>"1 Pedro",
+  "2 Pe"=>"2 Pedro", "1 Jn"=>"1 Juan", "2 Jn"=>"2 Juan", "3 Jn"=>"3 Juan",
+  "Jds"=>"Judas", "Apoc"=>"Apocalipsis"}
 
-SPANISHABBREV = [ 'Gén', 'Éxod', 'Lev', 'Núm', 'Deut', 'Jos', 'Jue', 'Rut', '1 Sam', '2 Sam', '1 Re', '2 Re', '1 Cró', '2 Cró', 'Esd',
-                  'Neh', 'Est', 'Job', 'Sal', 'Prov', 'Ecl', 'Cant', 'Is', 'Jer', 'Lam',
-                  'Ez', 'Dan', 'Os', 'Jl', 'Am', 'Abd', 'Jon', 'Miq', 'Nah', 'Hab', 'Sof', 'Ag', 'Zac', 'Mal', 'Mt', 'Mc', 'Lc',
-                  'Jn', 'Hech', 'Rom', '1 Cor', '2 Cor', 'Gál', 'Ef', 'Fil', 'Col', '1 Tes', '2 Tes', '1 Tim', '2 Tim', 'Tit', 'Filem',
-                  'Heb', 'Sant', '1 Pe', '2 Pe', '1 Jn', '2 Jn', '3 Jn', 'Jds', 'Apoc']
+# Mapping name to itself; can add Chinese abbreviations later, if they exist.
+BIBLEBOOKS[:zh] = {"创世记"=>"创世记", "出埃及"=>"出埃及", "利未记"=>"利未记", "民数记"=>"民数记",
+  "申命记"=>"申命记", "约书亚记"=>"约书亚记", "士师记"=>"士师记", "路得记"=>"路得记", "撒母耳记上"=>"撒母耳记上",
+  "撒母耳记下"=>"撒母耳记下", "列王纪上"=>"列王纪上", "列王纪下"=>"列王纪下", "历代志上"=>"历代志上",
+  "历代志下"=>"历代志下", "以斯拉记"=>"以斯拉记", "尼希米记"=>"尼希米记", "以斯帖记"=>"以斯帖记", "约伯记"=>"约伯记",
+  "诗篇"=>"诗篇", "箴言"=>"箴言", "传道书"=>"传道书", "雅歌"=>"雅歌", "以赛亚书"=>"以赛亚书",
+  "耶利米书"=>"耶利米书", "耶利米哀歌"=>"耶利米哀歌", "以西结书"=>"以西结书", "但以理书"=>"但以理书",
+  "何西阿书"=>"何西阿书", "约珥书"=>"约珥书", "阿摩司书"=>"阿摩司书", "俄巴底亚书"=>"俄巴底亚书", "约拿书"=>"约拿书",
+  "弥迦书"=>"弥迦书", "那鸿书"=>"那鸿书", "哈巴谷书"=>"哈巴谷书", "西番雅书"=>"西番雅书", "哈该书"=>"哈该书",
+  "撒迦利亚书"=>"撒迦利亚书", "玛拉基书"=>"玛拉基书", "马太福音"=>"马太福音", "马可福音"=>"马可福音",
+  "路加福音"=>"路加福音", "约翰福音"=>"约翰福音", "使徒行传"=>"使徒行传", "罗马书"=>"罗马书",
+  "哥林多前书"=>"哥林多前书", "哥林多后书"=>"哥林多后书", "加拉太书"=>"加拉太书", "以弗所书"=>"以弗所书",
+  "腓立比书"=>"腓立比书", "歌罗西书"=>"歌罗西书", "帖撒罗尼迦前书"=>"帖撒罗尼迦前书", "帖撒罗尼迦后书"=>"帖撒罗尼迦后书",
+  "提摩太前书"=>"提摩太前书", "提摩太后书"=>"提摩太后书", "提多书"=>"提多书", "腓利门书"=>"腓利门书",
+  "希伯来书"=>"希伯来书", "雅各书"=>"雅各书", "彼得前书"=>"彼得前书", "彼得后书"=>"彼得后书", "约翰一书"=>"约翰一书",
+  "约翰二书"=>"约翰二书", "约翰三书"=>"约翰三书", "犹大书"=>"犹大书", "启示录"=>"启示录"}
 
 MEDALS = {
   :gold   => 3,

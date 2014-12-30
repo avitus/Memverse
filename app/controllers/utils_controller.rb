@@ -156,7 +156,6 @@ class UtilsController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   # User progress
   # ----------------------------------------------------------------------------------------------------------
-
   def user_progress
     @user = User.find(params[:id])
   end
@@ -172,7 +171,6 @@ class UtilsController < ApplicationController
 
     return year + "-" + month
   end
-
 
   # ----------------------------------------------------------------------------------------------------------
   # Quantize Memory Verse per User

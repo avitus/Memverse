@@ -239,6 +239,10 @@ class KnowledgeQuiz
     broadcast  = "#{gold_ribbon_name} won the Bible knowledge quiz"
     Tweet.create(:news => broadcast, :user_id => gold_ribbon_id, :importance => 2)
 
+    # Log event to Treasure Data
+    TD.event.post('knowledge_quiz', {:gold_ribbon_name => gold_ribbon_name, :gold_ribbon_id => gold_ribbon_id, :gold_ribbon_score => final_scoreboard[0]['score'],
+                                     :participants => final_scoreboard.length })
+
     # ========================================================================
     # Close chat after ten minutes
     # ========================================================================

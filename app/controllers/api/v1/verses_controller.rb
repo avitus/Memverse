@@ -41,8 +41,8 @@ class Api::V1::VersesController < Api::V1::ApiController
   end
 
   def lookup
-    tl = params[:tl] ? params[:tl] : current_user.translation
-    expose Verse.where(:book => params[:bk], :chapter => params[:ch], :versenum => params[:vs], :translation => tl).first
+    tl = params[:tl] ? params[:tl] : current_resource_owner.translation
+    expose Verse.exists_in_db(params[:bk], params[:ch], params[:vs], tl)
   end
 
 end

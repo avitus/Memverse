@@ -13,9 +13,9 @@ class UpdateSubsections
   def perform
 
     puts "Starting calculation of subsection probabilities"
-    BIBLEBOOKS.each { |book|
+    BIBLEBOOKS[:en].values.each { |book|
 
-      bi = BIBLEBOOKS.index(book) + 1
+      bi = BIBLEBOOKS[:en].values.index(book) + 1
 
       final_chapter = FinalVerse.where(:book => book).order("chapter DESC").first.chapter
 

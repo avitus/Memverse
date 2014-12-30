@@ -104,6 +104,20 @@
 			</li>
 
 			<li>
+				<%= f.label 			:language, t('.Language') %>
+				<%= f.select			:language,
+							   [["English", 	      	'English'			],
+								["Spanish",           	'Spanish' 			],
+								["French",           	'French' 			],
+								["Bahasa Indonesia",  	'Bahasa Indonesia'	],
+								["Dutch",		      	'Dutch'				],
+								["Swedish",				'Swedish'			],
+								["Afrikaans", 	       	'Afrikaans'			],
+								["Chinese",				'Chinese'			]].sort
+							 %>
+			</li>
+
+			<li>
 				<%= f.label 			:time_allocation, t('.Target Time') %>
 				<%= f.select			:time_allocation,
 							[[" 3 Minutes per Day",  3	],

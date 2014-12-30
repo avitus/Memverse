@@ -10,25 +10,25 @@ class Memverse < ActiveRecord::Base
   has_one :country, :through => :user
 
   # Named Scopes
-  scope :memorized,     -> { where(:status => "Memorized") }
-  scope :learning,      -> { where(:status => "Learning" ) }
+  scope :memorized,     -> { where(status: "Memorized") }
+  scope :learning,      -> { where(status: "Learning" ) }
 
-  scope :active, 			  -> { where(:status => ["Learning", "Memorized"]) }
-  scope :inactive, 			-> { where(:status => "Pending") }
+  scope :active,        -> { where(status: ["Learning", "Memorized"]) }
+  scope :inactive,      -> { where(status: "Pending") }
 
-  scope :current,  			-> { where("next_test >= ?", Date.today) }
-  scope :due_today, 		-> { where("next_test  = ?", Date.today) }
-  scope :overdue,  			-> { where("next_test  < ?", Date.today) }
+  scope :current,       -> { where("next_test >= ?", Date.today) }
+  scope :due_today,     -> { where("next_test  = ?", Date.today) }
+  scope :overdue,       -> { where("next_test  < ?", Date.today) }
 
   # We need to check for nil values because that column has no default value
   scope :ref_due,       -> { where("next_ref_test IS NULL or next_ref_test <= ?", Date.today) }
 
-  scope :passage_start, -> { where(:prev_verse => nil) }
+  scope :passage_start, -> { where(prev_verse: nil) }
 
-  scope :american, 			-> { joins(:user, :country).where("countries.name" => "United States") }
+  scope :american,      -> { joins(:user, :country).where("countries.name" => "United States") }
 
   scope :old_testament, -> { where("verses.book_index" =>  1..39).includes(:verse) }
-  scope :new_testament,	-> { where("verses.book_index" => 40..66).includes(:verse) }
+  scope :new_testament, -> { where("verses.book_index" => 40..66).includes(:verse) }
 
   scope :history,  -> { where("verses.book_index" =>  1..17).includes(:verse) }
   scope :wisdom,   -> { where("verses.book_index" => 18..22).includes(:verse) }
@@ -48,10 +48,9 @@ class Memverse < ActiveRecord::Base
   # Set initial values and link verse other verses
   before_create  :supermemo_init
 
-  #---- TODO: these should be obsolete now that we have a Passage model.
+  # TODO: these should be obsolete now that we have a Passage model.
   after_create   :add_links
   before_destroy :update_links
-  #--------------------------------------------------------------------------
 
   # Update counter cache
   after_save    :update_counter_cache
@@ -64,15 +63,14 @@ class Memverse < ActiveRecord::Base
   # Update related passage
   after_save :update_passage
 
-  # ----------------------------------------------------------------------------------------------------------
   # Convert to JSON format (for AJAX goodness on main memorization page)
   #
-  # TODO: Find a way to exclude :skippable when not needed ... too slow otherwise
+  # @todo Find a way to exclude :skippable when not needed ... too slow otherwise
   #       Actually, with the new passage review we could probably dispense with 'skippable'
-  # ----------------------------------------------------------------------------------------------------------
   def as_json(options={})
     {
       :id            => self.id,
+      :verse_id      => self.verse.id,
       :ref           => self.verse.ref,
       :tl            => self.verse.translation,
       :text          => self.verse.text,
@@ -81,22 +79,18 @@ class Memverse < ActiveRecord::Base
       :test_interval => self.test_interval,
       :skippable     => !self.due? ? ( !self.next_verse_due(true).nil? ? self.next_verse_due(true).verse.ref : false ) : false,
       :mnemonic      => self.needs_mnemonic? ? self.verse.mnemonic : "",
-      :feedback      => self.show_feedback?
+      :feedback      => self.show_feedback?,
+      :status        => self.status
     }
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Implementation of SM-2 algorithm
-  # Inputs:
+  #
+  # Depends on the following:
   #     q             - result of test
   #     n             - current iteration in learning sequence
   #     interval      - interval in days before next test
   #     efactor       - easiness factor
-  #
-  # Outputs:
-  #     n_new         - increment by 1 unless answer was incorrect
-  #     efactor_new   - updated efactor
-  #     interval_new  - new interval
   #
   #   Q  Change in EF
   #   ~~~~~~~~~~~~~~~~
@@ -106,7 +100,11 @@ class Memverse < ActiveRecord::Base
   #   3     -0.14
   #   4     +0.00
   #   5     +0.10
-  # ----------------------------------------------------------------------------------------------------------
+  #
+  # Changes interval and eFactor.
+  #
+  # @param q [Fixnum] result of test
+  # @return [Boolean] true if Memverse changes to "Memorized"
   def supermemo(q)
 
     prev_learning = (self.status == "Learning")
@@ -205,43 +203,23 @@ class Memverse < ActiveRecord::Base
 
   # ----------------------------------------------------------------------------------------------------------
   # Return length of verse sequence
-  # Input: memverse_id
-  # Returns: length of memory verse sequence
-  # ----------------------------------------------------------------------------------------------------------
+  # @return [Fixnum] length of memory verse sequence
   def sequence_length
-    if self.solo_verse? # not part of a sequence
-      return 1
-    else
-      length = 1
-      if self.first_verse
-        initial_mv = Memverse.find( self.first_verse )
-      else
-        initial_mv = self
-      end
+    return 1 if self.solo_verse? # not part of a sequence
 
-      x = initial_mv
-      while x.next_verse
-        x = Memverse.find(x.next_verse)
-        length += 1
-      end
-      return length
+    length = 1
+
+    initial_mv = self.first_verse? ? Memverse.find(self.first_verse) : self
+    x = initial_mv
+
+    while x.next_verse && x = Memverse.find(x.next_verse)
+      length += 1
     end
+
+    return length
   end
 
-  # ----------------------------------------------------------------------------------------------------------
-  # Delete accounts of users that never added any verses
-  # TODO: Is this method ever used?
-  # ----------------------------------------------------------------------------------------------------------
-  def self.delete_unstarted_memory_verses
-    find(:all, :conditions => [ "created_at < ? and attempts = ?", 6.months.ago, 0 ]).each { |mv|
-      # mv.destroy
-      logger.info("Removing memory verse #{mv.verse.ref} belong to #{mv.user.login}")
-    }
-  end
-
-  # ----------------------------------------------------------------------------------------------------------
   # Update the starting verse for downstream verses -- mostly used when a verse is deleted
-  # ----------------------------------------------------------------------------------------------------------
   def update_downstream_start_verses
     # If mv is pointing to a start verse, use that as the first verse, otherwise set mv as the first verse
     new_starting_verse = self.first_verse || self.id # || returns first operator that satisfies condition
@@ -255,9 +233,9 @@ class Memverse < ActiveRecord::Base
     end
   end
 
-  # ----------------------------------------------------------------------------------------------------------
-  # Check for users with duplicates TODO: Is this method ever used?
-  # ----------------------------------------------------------------------------------------------------------
+  # Check for users with duplicates
+  # @return [Array<User>]
+  # @todo Is this method ever used?
   def self.check_for_duplicates
 
     users_with_problems = Array.new
@@ -287,42 +265,26 @@ class Memverse < ActiveRecord::Base
     return users_with_problems
   end
 
-
-  # ----------------------------------------------------------------------------------------------------------
   # Sort Memory Verse objects according to biblical book order
-  # TODO: seems to be very slow ... rather use DB sort
-  # ----------------------------------------------------------------------------------------------------------
+  # @see Verse#<=>
+  # @todo This is slow; DB sort is faster.
   def <=>(o)
-
-   # Compare book
-   book_cmp = self.verse.book_index.to_i <=> o.verse.book_index.to_i
-   return book_cmp unless book_cmp == 0
-
-   # Compare chapter
-   chapter_cmp = self.verse.chapter.to_i <=> o.verse.chapter.to_i
-   return chapter_cmp unless chapter_cmp == 0
-
-   # Compare verse
-   verse_cmp = self.verse.versenum.to_i <=> o.verse.versenum.to_i
-   return verse_cmp unless verse_cmp == 0
-
-   # Otherwise, compare IDs
-   return self.id <=> o.id
+    self.verse <=> o.verse
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Return entire chapter as array
-  # ----------------------------------------------------------------------------------------------------------
+  #
+  # @return [Array<Memverse>] Memverses from chapter, sorted by versenum.
   def chapter
     self.part_of_entire_chapter? ? self.passage.memverses.includes(:verse).order('verses.versenum') : nil
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # User has entire chapter: i.e. does user have the last verse in the chapter and is it linked to the 1st verse
-  # ----------------------------------------------------------------------------------------------------------
+  #
+  # @return [Boolean]
   def part_of_entire_chapter?
 
-    # TODO: This is a problem. We are somehow ending up with memory verses associated with nonexistent passages.
+    # @todo This is a problem. We are somehow ending up with memory verses associated with nonexistent passages.
     if !self.passage
       Rails.logger.warn("=====> Memory verse #{self.id} is associated with a nonexistent passage. Adding it to a passage.")
       self.add_to_passage
@@ -332,12 +294,13 @@ class Memverse < ActiveRecord::Base
 
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # User has entire chapter memorized
-  # Returns: true                       - if entire passage is memorized
-  #          false                      - if user isn't learning entire passage
-  #          [true, false, false ... ]  - if user hasn't memorized entire passage (not implemented)
-  # ----------------------------------------------------------------------------------------------------------
+  #
+  # @return [Boolean] True if entire passage memorized; false otherwise
+  # (including if user does not have entire chapter in account).
+  #
+  # @todo Consider returning Array of Boolean values [true, false, false ... ]
+  #   if user hasn't memorized entire passage
   def chapter_memorized?
     mvs = self.passage.memverses # ALV 2014-09-03 Occasionally finding memverse record that points to a nonexistent passage
 
@@ -348,11 +311,9 @@ class Memverse < ActiveRecord::Base
     end
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # User has entire chapter pending
-  # Returns: true                       - if entire passage is pending
-  #          false                      - if entire passage is not pending
-  # ----------------------------------------------------------------------------------------------------------
+  #
+  # @return [Boolean] True iff user has entire chapter in account, and every verse pending.
   def chapter_pending?
     mvs = self.passage.memverses
 
@@ -363,16 +324,14 @@ class Memverse < ActiveRecord::Base
     end
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Is a verse memorized?
-  # ----------------------------------------------------------------------------------------------------------
   def memorized?
-    self.status == "Memorized"
+    status == "Memorized"
   end
 
-  # ----------------------------------------------------------------------------------------------------------
-  # Toggle memverse: active/inactive
-  # ----------------------------------------------------------------------------------------------------------
+  # Toggle Memverse: active/inactive
+  #
+  # @return [String] New status ("Memorized", "Learning", or "Pending")
   def toggle_status
     if status == "Pending"
       self.update(status: (self.test_interval > 30) ? "Memorized" : "Learning")
@@ -383,17 +342,13 @@ class Memverse < ActiveRecord::Base
     return status
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Is this the first verse in a sequence or a solo verse ?
-  # ----------------------------------------------------------------------------------------------------------
   def is_first_verse?
     return !self.prev_verse
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Is this verse linked to the first verse of a chapter?
-  # ----------------------------------------------------------------------------------------------------------
-  # TODO: what should we return if this is the first verse?
+  # @todo what should we return if this is the first verse?
   def linked_to_first_verse?
     if self.solo_verse?
       return false
@@ -404,16 +359,16 @@ class Memverse < ActiveRecord::Base
     end
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Is a verse due for memorization?
-  # ----------------------------------------------------------------------------------------------------------
+  #
+  # @return [Boolean]
   def due?
     return self.next_test <= Date.today
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Is this verse a prior verse in the same passage
-  # ----------------------------------------------------------------------------------------------------------
+  #
+  # @return [Boolean]
   def prior_in_passage_to?(mv)
 
     if mv && self.passage.id == mv.passage.id  # memory verses are in same passage
@@ -424,9 +379,9 @@ class Memverse < ActiveRecord::Base
 
   end
 
-  # ----------------------------------------------------------------------------------------------------------
-  # Return first  verse in a sequence
-  # ----------------------------------------------------------------------------------------------------------
+  # Return first verse in a sequence
+  #
+  # @return [Memverse]
   def first_verse_in_sequence
     if self.first_verse
       initial_mv = find( self.first_verse )
@@ -438,12 +393,10 @@ class Memverse < ActiveRecord::Base
 
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Return first overdue verse in a sequence
-  # Input: memverse_id (can be a single verse or any verse in a sequence)
-  # Returns: first overdue verse (will return the last verse if no verses are due. That's acceptable for now
-  #          since we're only likely to call this function when we know one of the verses needs review.
-  # ----------------------------------------------------------------------------------------------------------
+  #
+  # @return [Memverse] First overdue verse (or last verse if no verses are due -- that's acceptable for now
+  #          since we're only likely to call this function when we know one of the verses needs review).
   def first_verse_due_in_sequence
 
     slack         =   7 # Add some slack to avoid having to review the entire sequence too soon afterwards
@@ -454,7 +407,7 @@ class Memverse < ActiveRecord::Base
     else
 
       # find the first verse - we don't know whether this is the first verse so need to check
-      # TODO: Can replace with first_verse_in_sequence method above (once thoroughly tested)
+      # @todo Can replace with #first_verse_in_sequence method above (once thoroughly tested)
       if self.first_verse
         initial_mv = Memverse.find( self.first_verse )
       else
@@ -473,11 +426,9 @@ class Memverse < ActiveRecord::Base
     end
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Returns the next verse that is due in a sequence
-  # Input: memverse_id (can be a single verse or any verse in a sequence)
-  # Returns: the next memory verse due in the passage or nil
-  # ----------------------------------------------------------------------------------------------------------
+  #
+  # @return [Memverse, nil] next memory verse due in the passage or nil
   def next_verse_due_in_sequence
 
     if self.solo_verse? || self.next_verse.nil?
@@ -497,11 +448,8 @@ class Memverse < ActiveRecord::Base
     end
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Returns the next verse that is active due in a sequence
-  # Input: memverse_id (can be a single verse or any verse in a sequence)
-  # Returns: the next memory verse active in the passage or nil
-  # ----------------------------------------------------------------------------------------------------------
+  # @return [Memverse, nil] the next memory verse active in the passage or nil
   def next_verse_active_in_sequence
 
     if self.solo_verse? || self.next_verse.nil?
@@ -521,11 +469,9 @@ class Memverse < ActiveRecord::Base
     end
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Is there anything else to memorize in this sequence or can we move on
-  # Input: memverse_id (can be a single verse or any verse in a sequence)
-  # Returns: true if there are more verses to memorize downstream in a sequence
-  # ----------------------------------------------------------------------------------------------------------
+  #
+  # @return [Boolean] true if there are more verses to memorize downstream in a sequence
   def more_to_memorize_in_sequence?
 
     slack         =  7 # Add some slack to avoid having to review the entire sequence too soon afterwards
@@ -551,49 +497,44 @@ class Memverse < ActiveRecord::Base
     end
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Checks whether verse is locked
-  # Input:  A verse ID
-  # Output: True/False depending on whether verse is/isn't locked
-  # ----------------------------------------------------------------------------------------------------------
+  #
+  # @return [Boolean]
   def locked?
     verse.locked?
   end
 
-  # ----------------------------------------------------------------------------------------------------------
-  # Checks whether verse is locked
-  # Input:  A verse ID
-  # Output: True/False depending on whether verse is/isn't locked
-  # ----------------------------------------------------------------------------------------------------------
+  # Checks whether verse is verified
+  #
+  # @return [Boolean]
   def verified?
     verse.verified?
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Checks whether verse is active (status not "Pending")
-  # ----------------------------------------------------------------------------------------------------------
+  #
+  # @return [Boolean]
   def active?
     status != "Pending"
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Checks whether verse is inactive (status: "Pending")
-  # ----------------------------------------------------------------------------------------------------------
+  #
+  # @return [Boolean]
   def inactive?
     status == "Pending"
   end
 
-  # ----------------------------------------------------------------------------------------------------------
-  # Input: memverse_id
-  # Returns: TRUE if verse is not part of a sequence
-  # ----------------------------------------------------------------------------------------------------------
+  # Not part of sequence?
+  #
+  # @return [Boolean] true if memory verse is not part of a sequence
   def solo_verse?
     return !prev_verse && !next_verse
   end
 
-  # ----------------------------------------------------------------------------------------------------------
-  # Returns: TRUE/FALSE depending on whether wants Mnemonic support, verse is memorized etc.
-  # ----------------------------------------------------------------------------------------------------------
+  # Should mnemonic display?
+  #
+  # @return [Boolean] depending on whether user wants Mnemonic support, verse is memorized etc.
   def needs_mnemonic?
     return case user.mnemonic_use
       when "Never"    then false
@@ -602,28 +543,30 @@ class Memverse < ActiveRecord::Base
     end
   end
 
+  # Show mnemonic if required
+  #
+  # @return [String] Either mnemonic or "-" (when not required)
   def mnemonic_if_req
     self.needs_mnemonic? ? self.verse.mnemonic : "-"
   end
 
-  # ----------------------------------------------------------------------------------------------------------
-  # Should we show feedback for this verse?
-  # ----------------------------------------------------------------------------------------------------------
+  # Show feedback for memory verse?
+  #
+  # @return [Boolean]
   def show_feedback?
     test_interval < 90 || self.user.show_echo?
   end
 
-  # ----------------------------------------------------------------------------------------------------------
-  # Returns: list of all the tags for that verse
-  # ----------------------------------------------------------------------------------------------------------
+  # List of all the tags for the associated verse
+  #
+  # @return [Array<ActsAsTaggableOn::Tag>]
   def all_user_tags
     self.verse.all_user_tags
   end
 
-  # ----------------------------------------------------------------------------------------------------------
-  # Find the next/prev verse in the users list ... used to step through verses when tagging
-  # TODO: Optimize these queries to only return the essential columns from Verse table.
-  # ----------------------------------------------------------------------------------------------------------
+  # Find the next verse in the user's list
+  # Used to step through verses when tagging
+  # @todo Optimize queries (this and #prev_verse_in_user_list); should be able to do it without selecting all of user's verses.
   def next_verse_in_user_list
 
     u           = self.user
@@ -633,6 +576,8 @@ class Memverse < ActiveRecord::Base
     return all_verses[position+1] || all_verses[0]
   end
 
+  # Find the prev verse in the user's list
+  # Used to step through verses when tagging
   def prev_verse_in_user_list
 
     u           = self.user
@@ -642,25 +587,19 @@ class Memverse < ActiveRecord::Base
     return all_verses[position-1]
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Find a verse that is due but not this one
-  # ----------------------------------------------------------------------------------------------------------
   def another_due_verse
-
-    mv = Memverse.where("user_id = ? and id != ?", self.user.id, self.id).active.order("next_test ASC").first
+    mv = user.memverses.where("id != ?", self.id).active.order("next_test ASC").first
 
     if mv && mv.due?
       return mv.first_verse_due_in_sequence
     else
       return nil
     end
-
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Return the next verse that needs to be memorized today [AJAX]
-  # See companion method in user model for 'first verse due'
-  # ----------------------------------------------------------------------------------------------------------
+  # @see User#first_verse_today `User` companion method (`first_verse_today`)
   def next_verse_due(skip = false)
     # If part of passage, and there is an active verse downstream
     # then return next verse in passage
@@ -681,10 +620,9 @@ class Memverse < ActiveRecord::Base
 
   end
 
-  # ----------------------------------------------------------------------------------------------------------
-  # Retrieve previous/next memory verse NOTE: Replacement for method in application_controller.rb
-  #   Output: mv_id
-  # ----------------------------------------------------------------------------------------------------------
+  # Retrieve previous memory verse
+  # @note Replacement for method in application_controller.rb
+  # @return [Fixnum] Memverse ID
   def get_prev_verse
 
     book    = self.verse.book
@@ -695,13 +633,16 @@ class Memverse < ActiveRecord::Base
     # Check for 2 conditions
     #   previous verse is in db
     #   and prev_verse is in user's list of memory verses
-    if (prev_vs = Verse.exists_in_db(book, chapter, verse-1, transl)) and prev_mv = self.user.has_verse_id?(prev_vs)
+    if (prev_vs = Verse.exists_in_db(book, chapter, verse-1, transl)) && prev_mv = self.user.has_verse_id?(prev_vs)
       return prev_mv.id
     else
       return nil
     end
   end
 
+  # Retrieve next memory verse
+  # @note Replacement for method in application_controller.rb
+  # @return [Fixnum] Memverse ID
   def get_next_verse
 
     book    = self.verse.book
@@ -712,30 +653,22 @@ class Memverse < ActiveRecord::Base
     # Check for 2 conditions
     #   next verse is in db
     #   and next verse is in user's list of memory verses
-    if (next_vs = Verse.exists_in_db(book, chapter, verse+1, transl)) and next_mv = self.user.has_verse_id?(next_vs)
+    if (next_vs = Verse.exists_in_db(book, chapter, verse+1, transl)) && next_mv = self.user.has_verse_id?(next_vs)
       return next_mv.id
     else
       return nil
     end
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Return previous memory verse
-  # ----------------------------------------------------------------------------------------------------------
+  # @return [Memverse]
   def prior_mv
-    # --- Load prior verse if available
-    if self.prev_verse
-      @next_prior_vs = Memverse.find(self.prev_verse)
-    else
-      return nil
-    end
+    self.prev_verse ? Memverse.find(self.prev_verse) : nil
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Return first verse in a series but does not use any of the linkage stored in the DB
-  #   Input:  mv_id
-  #   Output: mv_id or nil if no first verse
-  # ----------------------------------------------------------------------------------------------------------
+  #
+  # @return [Fixnum] Memverse ID or `nil` (if no first verse)
   def get_first_verse
 
     book    = self.verse.book
@@ -753,13 +686,10 @@ class Memverse < ActiveRecord::Base
 
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Add a memory verse to a passage [hook: after_create]
-  # TODO: Temporarily not protected in order to run rake task
+  # @todo Temporarily not protected in order to run rake task
   # Passages cannot straddle chapter boundaries
-  # ----------------------------------------------------------------------------------------------------------
   def add_to_passage
-
     vs = self.verse
 
     # Check for adjacent passages
@@ -791,9 +721,7 @@ class Memverse < ActiveRecord::Base
 
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Remove a memory verse from a passage [hook: before_delete]
-  # ----------------------------------------------------------------------------------------------------------
   def remove_from_passage
 
     # Do we need to add a transaction lock here. If both verses in a two verse passage are simultaneously deleted then
@@ -865,9 +793,7 @@ class Memverse < ActiveRecord::Base
   # ============= Protected below this line ==================================================================
   protected
 
-  # ----------------------------------------------------------------------------------------------------------
   # Initialize new memory verse [hook: before_create]
-  # ----------------------------------------------------------------------------------------------------------
   def supermemo_init
     self.efactor      = 2.0
     self.last_tested  = Date.today
@@ -881,9 +807,7 @@ class Memverse < ActiveRecord::Base
     # self.first_verse  = self.get_first_verse
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Add links from other verses [hook: after_create]
-  # ----------------------------------------------------------------------------------------------------------
   def add_links
 
     # Adding inbound links
@@ -910,9 +834,7 @@ class Memverse < ActiveRecord::Base
 
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Update surrounding links before destroying a memory verse [hook: before_destroy]
-  # ----------------------------------------------------------------------------------------------------------
   def update_links
     next_ptr  = self.next_verse
     prev_ptr  = self.prev_verse
@@ -949,29 +871,23 @@ class Memverse < ActiveRecord::Base
     end
   end
 
-  # ----------------------------------------------------------------------------------------------------------
-  # Implement counter caches for number of verses memorized and learning
-  # Hook: after_save, after_destroy
-  # ----------------------------------------------------------------------------------------------------------
+  # Implement counter caches for number of verses memorized and learning [hook: after_save, after_destroy]
   def update_counter_cache
 
     u  = self.user
     vs = self.verse
 
-    u.memorized          = Memverse.where(:user_id => u.id, :status => "Memorized").count
-    u.learning           = Memverse.where(:user_id => u.id, :status => "Learning").count
+    u.memorized          = u.memverses.memorized.count
+    u.learning           = u.memverses.learning.count
     u.last_activity_date = Date.today
     u.save
 
-    vs.memverses_count   = Memverse.where(:verse_id => vs.id).count
+    vs.memverses_count   = vs.memverses.count
     vs.save
 
   end
 
-  # ----------------------------------------------------------------------------------------------------------
-  # Update associated passage
-  # Hook: after_save
-  # ----------------------------------------------------------------------------------------------------------
+  # Update associated passage [hook: after_save]
   def update_passage
     psg = self.passage
     psg.consolidate_supermemo unless !psg

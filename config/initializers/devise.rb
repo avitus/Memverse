@@ -224,10 +224,10 @@ Devise.setup do |config|
   case Rails.env
     when "development"
       # Callback URL: https://www.memversedev.com:3000/users/auth/windowslive/callback
-      config.omniauth :windowslive, '000000004410A83C', 'NHb8c7WCjmVSj--k2fi5OWB8ud4g4SiN', :scope => 'wl.signin,wl.emails'
+      config.omniauth :windowslive, '000000004410A83C', 'NHb8c7WCjmVSj--k2fi5OWB8ud4g4SiN', scope: 'wl.offline_access,wl.emails'
     when "production"
       # Callback URL: https://www.memverse.com/users/auth/windowslive/callback
-      config.omniauth :windowslive, '000000004C11227C', '2sPIbycml8Hh3Q0BoaS0Jj4uc2gTsAR-', :scope => 'wl.signin,wl.emails'
+      config.omniauth :windowslive, '000000004C11227C', '2sPIbycml8Hh3Q0BoaS0Jj4uc2gTsAR-', scope: 'wl.offline_access,wl.emails'
   end
 
   # ==> Warden configuration
