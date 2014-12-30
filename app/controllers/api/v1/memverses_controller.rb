@@ -9,7 +9,10 @@ class Api::V1::MemversesController < Api::V1::ApiController
   caches :index, :show, :caches_for => 5.minutes
 
   def index
-    expose current_resource_owner.memverses.page( params[:page] )
+    mvs = current_resource_owner.memverses
+    mvs = params[:sort] ? mvs.order(params[:sort]) : mvs.canonical_sort
+
+    expose mvs.page( params[:page] )
   end
 
   def show
@@ -40,7 +43,7 @@ class Api::V1::MemversesController < Api::V1::ApiController
         else
           # Save verse as a memory verse for user
           begin
-            mv = Memverse.create( :user_id => current_resource_owner.id, :verse_id => vs.id )
+            mv = Memverse.create(user: current_resource_owner, verse: vs)
           rescue Exception => e
             Rails.logger.error("=====> [Memverse save error (API)] Exception while saving #{vs.ref} for user #{current_resource_owner.id}: #{e}")
           else

@@ -73,6 +73,26 @@ describe Verse do
     end
   end
 
+  describe "category methods" do
+    describe ".prophecy?" do
+      it "excludes non-prophecy" do
+        genesis = FactoryGirl.create(:verse, book: "Genesis", book_index: 1)
+        matthew = FactoryGirl.create(:verse, book: "Matthew", book_index: 40)
+
+        genesis.prophecy? == false
+        matthew.prophecy? == false
+      end
+
+      it "includes Isaiah to Malachi, and Revelation" do
+        isaiah = FactoryGirl.create(:verse, book: "Isaiah", book_index: 23)
+        revelation = FactoryGirl.create(:verse, book: "Revelation", book_index: 66)
+
+        isaiah.prophecy? == true
+        revelation.prophecy? == true
+      end
+    end
+  end
+
   describe ".alternative_translations" do
     it "should include an alternative verse" do
       vs1 = FactoryGirl.create(:verse, book: "Philippians", book_index: 50, translation: "NKJV")
@@ -99,6 +119,11 @@ describe Verse do
   it "mnemonic method should support Portuguese" do
     verse = FactoryGirl.create(:verse, :text => "Á têst for mnémonic support of thé íncredíbly speciâl Portuguese çharacters.")
     verse.mnemonic.should == "Á t f m s o t í s P ç."
+  end
+  
+  it "mnemonic method should support Korean" do
+    verse = FactoryGirl.create(:verse, :text => "모든 사람이 죄를 범하였으매 하나님의 영광에 이르지 못하더니")
+    verse.mnemonic.should == "ᄆᄃ ᄉᄅᄋ ᄌᄅ ᄇᄒᄋᄋᄆ ᄒᄂᄂᄋ ᄋᄀᄋ ᄋᄅᄌ ᄆᄒᄃᄂ"
   end
 
   it "should clean up the verse text" do
@@ -172,6 +197,39 @@ describe Verse do
     end
   end
 
+  describe "<=>" do
+    it "should compare book first" do
+      # if anything else is considered first, verse1 would precede verse2
+      verse1 = FactoryGirl.create(:verse, book: "John", book_index: 43, chapter: 1, versenum: 1)
+      verse2 = FactoryGirl.create(:verse, book: "Matthew", book_index: 40, chapter: 10, versenum: 10)
+
+      (verse1 <=> verse2).should == 1
+    end
+
+    it "should compare chapter second" do
+      # if versenum considered second, verse1 would precede verse2
+      verse1 = FactoryGirl.create(:verse, book: "Matthew", book_index: 40, chapter: 11, versenum: 1)
+      verse2 = FactoryGirl.create(:verse, book: "Matthew", book_index: 40, chapter: 10, versenum: 10)
+
+      (verse1 <=> verse2).should == 1
+    end
+
+    it "should consider versenum third" do
+      verse1 = FactoryGirl.create(:verse, book: "Matthew", book_index: 40, chapter: 10, versenum: 1)
+      verse2 = FactoryGirl.create(:verse, book: "Matthew", book_index: 40, chapter: 10, versenum: 2)
+
+      (verse1 <=> verse2).should == -1
+    end
+
+    it "should fall back on ID when all else identical" do
+      verse1 = FactoryGirl.create(:verse, book: "Matthew", book_index: 40, chapter: 10, versenum: 1)
+      verse2 = FactoryGirl.create(:verse, book: "Matthew", book_index: 40, chapter: 10, versenum: 0)
+
+      verse2.stub(:versenum) { 1 } # two identical verses can't pass validations
+
+      (verse1 <=> verse2).should == -1
+    end
+  end
 
   # ==============================================================================================
   # Spec for BibleGateway API

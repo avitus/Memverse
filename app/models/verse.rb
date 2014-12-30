@@ -43,31 +43,25 @@ class Verse < ActiveRecord::Base
 
   scope :canonical_sort, -> { order("book_index, chapter, versenum") }
 
-  # ----------------------------------------------------------------------------------------------------------
   # Sort Verse objects according to biblical book order
+  # 
   # canonical_sort scope preferred
-  # ----------------------------------------------------------------------------------------------------------
+  #
+  # @param o [Verse] The verse to sort in relation with.
   def <=>(o)
+    # Compare book, then chapter, then verse
+    order = [:book_index, :chapter, :versenum]
 
-   # Compare book
-   book_cmp = self.book_index.to_i <=> o.book_index.to_i
-   return book_cmp unless book_cmp == 0
+    for method in order
+      compare = self.try(method).to_i <=> o.try(method).to_i
+      return compare unless compare == 0
+    end
 
-   # Compare chapter
-   chapter_cmp = self.chapter.to_i <=> o.chapter.to_i
-   return chapter_cmp unless chapter_cmp == 0
-
-   # Compare verse
-   verse_cmp = self.versenum.to_i <=> o.versenum.to_i
-   return verse_cmp unless verse_cmp == 0
-
-   # Otherwise, compare IDs
-   return self.id <=> o.id
+    # Otherwise, compare IDs
+    return self.id <=> o.id
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Convert to JSON format
-  # ----------------------------------------------------------------------------------------------------------
   def as_json(options={})
     {
       :id   => self.id,
@@ -80,31 +74,27 @@ class Verse < ActiveRecord::Base
     }
   end
 
-  # ----------------------------------------------------------------------------------------------------------
-  # Outputs friendly verse reference: eg. "Jn 3:16"
-  # ----------------------------------------------------------------------------------------------------------
+  # Abbreviated friendly verse reference: eg. "Jn 3:16"
+  #
+  # @return [String] translated abbreviated verse reference
   def ref
-    book_tl = I18n.t abbr(book).to_sym, :scope => [:book, :abbrev]
-    return book_tl + ' ' + chapter.to_s + ':' + versenum.to_s
+    "#{Book.find(book_index).abbrev} #{chapter}:#{versenum}"
   end
 
-  # ----------------------------------------------------------------------------------------------------------
-  # Outputs friendly verse reference: eg. "John 3:16"
-  # ----------------------------------------------------------------------------------------------------------
+  # Long friendly verse reference: eg. "John 3:16"
+  #
+  # @return [String] translated long verse reference
   def ref_long
-    book_tl = I18n.t book.to_sym, :scope => [:book, :name]
-    return book_tl + ' ' + chapter.to_s + ':' + versenum.to_s
+    "#{Book.find(book_index).name} #{chapter}:#{versenum}"
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Return data about testament
-  # ----------------------------------------------------------------------------------------------------------
   def old_testament?
-    return book_index < 40
+    book_index < 40
   end
 
   def new_testament?
-    return book_index >= 40
+    book_index >= 40
   end
 
   def testament
@@ -120,7 +110,7 @@ class Verse < ActiveRecord::Base
   end
 
   def prophecy?
-    (23..39).include?(book_index)
+    (23..39).include?(book_index) || book_index == 66
   end
 
   def gospel?
@@ -131,11 +121,11 @@ class Verse < ActiveRecord::Base
     (45..65).include?(book_index)
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Returns hash of verses and number of users for each verse
-  # ----------------------------------------------------------------------------------------------------------
+  # @param limit [Fixnum]
+  # @param book [Fixnum]
+  # @return [Hash]
   def self.rank_verse_popularity(limit=25, book=nil)
-
     vs_popularity = Hash.new(0)
 
     if book
@@ -150,39 +140,37 @@ class Verse < ActiveRecord::Base
     end
 
     return vs_popularity.sort{|a,b| a[1]<=>b[1]}.reverse[0..limit]
-
   end
 
-  # ----------------------------------------------------------------------------------------------------------
-  # Check whether verse exists in DB - Note: checking for verse in database requires full length book name
-  # ----------------------------------------------------------------------------------------------------------
+  # Check whether verse exists in DB
+  # @note Checking for verse in database requires full length book name
+  # @param bk [String] Must be full length book name
+  # @param ch [Fixnum]
+  # @param vs [Fixnum]
+  # @param tl [String] Abbreviation of translation (e.g., "NIV")
+  # @return [Verse]
   def self.exists_in_db(bk, ch, vs, tl)
-    Verse.where(:book => bk, :chapter => ch, :versenum => vs, :translation => tl).first
+    Verse.where(book: bk, chapter: ch, versenum: vs, translation: tl).first
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Return subsequent verse in same translation (if it exists)
-  # ----------------------------------------------------------------------------------------------------------
+  # @return [Verse]
   def following_verse
     if self.last_in_chapter?
-      Verse.where(:book => self.book, :chapter => self.chapter.to_i+1, :versenum => 1, :translation  => self.translation ).first
+      Verse.exists_in_db(book, chapter.to_i+1, 1, translation)
     else
-      Verse.where(:book => self.book, :chapter => self.chapter, :versenum => self.versenum.to_i+1, :translation => self.translation).first
+      Verse.exists_in_db(book, chapter, versenum.to_i+1, translation)
     end
   end
 
-  # ----------------------------------------------------------------------------------------------------------
-  # Checks whether verse has been verified or not
-  # Input:  A verse ID
-  # Output: True/False depending on whether verse is/isn't verified
-  # ----------------------------------------------------------------------------------------------------------
+  # Has verse been verified?
+  # @return [Boolean]
   def verified?
     return self.verified
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Is this the last verse of a chapter?
-  # ----------------------------------------------------------------------------------------------------------
+  # @return [Boolean]
   def last_in_chapter?
   	if self.book == "3 John"
   	  if ["NAS", "NLT", "ESV", "ESV07"].include?(self.translation)
@@ -191,34 +179,31 @@ class Verse < ActiveRecord::Base
   		  return self.versenum.to_i == 14
   	  end
   	else
-      !FinalVerse.find(:first, :conditions => { :book => self.book, :chapter => self.chapter, :last_verse => self.versenum }).nil?
+      FinalVerse.where(book: book, chapter: chapter, last_verse: versenum).count == 1
     end
   end
 
-  # ----------------------------------------------------------------------------------------------------------
-  # Find the last verse of the chapter - should no longer be needed now that we have passage model
-  # ----------------------------------------------------------------------------------------------------------
+  # Find the last verse of the chapter
+  # @todo Should no longer be needed now that we have passage model
+  # @return [FinalVerse]
   def end_of_chapter_verse
   	if self.book == "3 John"
   		if ["NAS", "NLT", "ESV", "ESV07"].include?( self.translation )
-  			FinalVerse.new(:book => "3 John", :chapter => 1, :last_verse => 15)
+  			FinalVerse.new(book: "3 John", chapter: 1, last_verse: 15)
   		else
-  			FinalVerse.new(:book => "3 John", :chapter => 1, :last_verse => 14)
+  			FinalVerse.new(book: "3 John", chapter: 1, last_verse: 14)
   		end
   	else
-    	FinalVerse.where(:book => self.book, :chapter => self.chapter).first
+    	FinalVerse.where(book: book, chapter: chapter).first
     end
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Returns array containing all verses in chapter with 'nil' for missing verses
-  # ----------------------------------------------------------------------------------------------------------
+  # @return [Array<Verse>]
   def entire_chapter
 
     full_chapter  = Array.new
-    bk            = self.book
-    ch            = self.chapter
-    tl            = self.translation
+    bk, ch, tl    = book, chapter, translation
 
     if self.end_of_chapter_verse
       num_verses = self.end_of_chapter_verse.last_verse
@@ -229,25 +214,23 @@ class Verse < ActiveRecord::Base
     end
 
     return full_chapter
-
   end
 
-  # ----------------------------------------------------------------------------------------------------------
-  # Return true if entire chapter is in database
-  # ----------------------------------------------------------------------------------------------------------
+  # Entire chapter in database in this translation?
+  # @return [Boolean]
   def entire_chapter_available
     if self.end_of_chapter_verse
-      return Verse.where("book = ? and chapter = ? and translation = ? and versenum not in (?)", self.book, self.chapter, self.translation, 0).count == self.end_of_chapter_verse.last_verse
+      return Verse.where(book: book, chapter: chapter, translation: translation).
+                   where("versenum != 0").count == end_of_chapter_verse.last_verse
     else
       return false
     end
   end
 
-  # ----------------------------------------------------------------------------------------------------------
-  # Returns all tags associated with a given verse
+  # All tags associated with a given verse
   #  - Gets all tags for all memverses
   #  - Returns most popular tags across all memory verses
-  # ----------------------------------------------------------------------------------------------------------
+  # @return [Hash]
   def all_user_tags(same_tl = false, numtags = 5)
 
     all_tags = Hash.new(0)
@@ -271,13 +254,11 @@ class Verse < ActiveRecord::Base
     return all_tags.sort{|a,b| a[1]<=>b[1]}.reverse[0...numtags]
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Tag verse with most popular user tags
   #  - when we have millions of users we can restrict tags by translation.
   #  - for now we need the critical mass across translations and can only use top 3 tags
   #  - With settings (true, 5) the tag cloud had 2852 tags as of 3/19/2012.
   #  - Current problem: this doesn't remove old Taggings on Verse model
-  # ----------------------------------------------------------------------------------------------------------
   def update_tags
     user_tags = self.all_user_tags(false, 3).map { |t| t.first.name }.join(', ') # false = get tags for all translations
     self.tag_list = []
@@ -285,9 +266,7 @@ class Verse < ActiveRecord::Base
     self.save
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Return list of duplicate verses (if any)
-  # ----------------------------------------------------------------------------------------------------------
   def has_duplicates?
     iv = Hash[
       ["Luke", 12, 34]      => ["Matthew", 6, 21],
@@ -309,9 +288,8 @@ class Verse < ActiveRecord::Base
     return iv[ [self.book, self.chapter.to_i, self.versenum.to_i] ] || []
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Check with biblegateway for correctly entered verse
-  # ----------------------------------------------------------------------------------------------------------
+  # @return [String, nil]
   def web_text
     on_bg = BibleGateway.new(self.translation.to_sym).lookup(self.ref)[:content]
     if on_bg
@@ -320,6 +298,8 @@ class Verse < ActiveRecord::Base
     end
   end
 
+  # Database text, with normalized quotation marks for comparing with #web_text
+  # @return [String]
   def database_text
     in_db = self.text
 
@@ -328,24 +308,37 @@ class Verse < ActiveRecord::Base
     in_db = in_db.gsub(/[“”]/, '"')
   end
 
+  # Compare #web_text and #database_text
+  # @return [true, String] true if #web_text and #database_text same, else
+  # web_text
   def web_check
     (web_text == database_text) ? true : web_text
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Link to BibleGateway
-  # ----------------------------------------------------------------------------------------------------------
+  # @return [String]
 	def bg_link
 		BibleGateway.new(self.translation.to_sym).passage_url(self.ref)
 	end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Create mnemonic for verse text
-  # ----------------------------------------------------------------------------------------------------------
+  # @return [String]
   def mnemonic
-    self.text.gsub(/([\wáâãàçéêíóôõúüñ])([\wáâãàçéêíóôõúüñ]|[\-'’][\wáâãàçéêíóôõúüñ])*/,'\1')
 
-    # In simpler language we are matching:
+    # Matches Korean Hangul
+    if self.text.match /[\uAC00-\uD7A3]/
+      self.text.gsub(/([\uAC00-\uD7A3])/) do |m|
+        # Calculating lead Jamo of a given Hangul 
+        # see http://gernot-katzers-spice-pages.com/var/korean_hangul_unicode.html
+        [4352 + (($1.ord - 44032) / 588).floor].pack("U")
+      end
+
+    # default to Western text
+    else
+      self.text.gsub(/([\wáâãàçéêíóôõúüñ])([\wáâãàçéêíóôõúüñ]|[\-'’][\wáâãàçéêíóôõúüñ])*/,'\1')
+    end
+
+    # In simpler language, the longest regex is matching:
     # (Any alphanumerical character) followed by (all consecutive alphanumerical characters OR a -'’ character
     # followed by an alphanumerical character) The star (*) means we repeat the previous item as many times as
     # possible (refers to set of parentheses matching alphanumerical OR -'’ followed by alphanumerical
@@ -355,29 +348,20 @@ class Verse < ActiveRecord::Base
     # http://productivity501.com/wp-content/uploads/tools/memorize-first-letter-tool.html
   end
 
-  # ----------------------------------------------------------------------------------------------------------
-  # Returns array of all translations for a given verse
-  # Input:  A verse ID
-  # Output: Array of all translations of a given verse
-  # ----------------------------------------------------------------------------------------------------------
+  # All translations of this verse
+  # @return [Array<Verse>] 
   def alternative_translations
     Verse.where(book: self.book, chapter: self.chapter, versenum: self.versenum)
   end
 
-  # ----------------------------------------------------------------------------------------------------------
-  # Returns same verse in a different translation
-  # Input:  A verse ID
-  # Output: verse in different translation or nil
-  # ----------------------------------------------------------------------------------------------------------
+  # Same verse in different translation
+  # @return [Verse, nil]
   def switch_tl(tl)
     alternative_translations.where(translation: tl).first
   end
 
-  # ----------------------------------------------------------------------------------------------------------
   # Returns array of all memory verses for a given reference, irrespective of translation
-  # Input:  A verse ID
-  # Output: Array of mv
-  # ----------------------------------------------------------------------------------------------------------
+  # @return [Array<Memverse>]
   def all_memory_verses
     all_mv = Array.new
 
@@ -388,28 +372,19 @@ class Verse < ActiveRecord::Base
     return all_mv.flatten
   end
 
-  # ----------------------------------------------------------------------------------------------------------
-  # Checks whether verse is locked
-  # Input:  A verse ID
-  # Output: True/False depending on whether verse is/isn't locked
-  # ----------------------------------------------------------------------------------------------------------
+  # Is verse locked?
+  # @return [Boolean]
   def locked?
     return self.memverses.length > 1
   end
 
-  # ----------------------------------------------------------------------------------------------------------
-  # Returns bible book index
-  # Input:  'Deuteronomy' or 'Deut'
-  # Output: 5 or nil if book doesn't exist
-  # Note: This breaks if string is not a valid book because you can't add 1 + nil
-  # Note: The last check is required to handle 'Song of Songs' because titleizing it becomes "Song Of Songs"
-  # ----------------------------------------------------------------------------------------------------------
+  # Returns Bible book index; case insensitive input
+  # @param str [String] Example: 'Deuteronomy' or 'Deut' or 'DEUT'
+  # @return [Fixnum, nil] index or nil, if not found
+  # @note This breaks if string is not a valid book because you can't add 1 + nil
+  # @todo This should not be an instance method, and maybe should not be in this class at all.
   def book_index(str=self.book)
-    if x = (BIBLEBOOKS.index(str.titleize) || BIBLEABBREV.index(str.titleize) || BIBLEBOOKS.index(str))
-      return 1+x
-    else
-      return nil
-    end
+    Book.find_by_name(str).try(:book_index)
   end
 
   def chapter_name
@@ -420,11 +395,9 @@ class Verse < ActiveRecord::Base
   # ============= Protected below this line ==================================================================
   protected
 
-  # ----------------------------------------------------------------------------------------------------------
   # Abbreviates book names
-  # Input:  'Deuteronomy'
-  # Output: 'Deut'
-  # ----------------------------------------------------------------------------------------------------------
+  # @param book [String] (e.g., 'Deuteronomy')
+  # @return [String] abbreviation (e.g., 'Deut')
   def abbr(book)
     return BIBLEABBREV[book_index(book)-1]
   end
@@ -432,9 +405,9 @@ class Verse < ActiveRecord::Base
   # ============= Private below this line - can only be called on self =======================================
   private
 
-  # before_destroy
+  # Delete associated memverses to prevent orphaning [hook: before_destroy]
   def delete_memverses
-    Rails.logger.warn("*** Deleting the following verse: #{self.ref} [#{self.translation}]  ")
+    Rails.logger.warn("*** Deleting the following verse: #{self.ref} [#{self.translation}]")
     Rails.logger.warn("*** Deleting associated memory verses")
     Rails.logger.warn("*** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     self.memverses.each { |mv|
@@ -444,36 +417,32 @@ class Verse < ActiveRecord::Base
     self.memverses.destroy_all
   end
 
-  # before_save
+  # Clean up text [hook: before_save]
   def cleanup_text
     self.text = self.text.gsub(/(\r)?\n/,'').squeeze(" ").strip
-    self.text = self.text.gsub(" -"," —").gsub("- ","— ") # use em dashes when appropriate
+    self.text = self.text.gsub(" -"," —").gsub("- ","— ") # prefer em dashes
     self.text = self.text.gsub(/[<>]/,'')
   end
 
-  # after_save
+  # Schedule [VerseWebCheck] [hook: after_save]
+  # @return [void]
   def schedule_web_check
-    if !self.verified
-      VerseWebCheck.perform_async(self.id)
-    end
+    VerseWebCheck.perform_async(self.id) unless verified?
   end
 
-  # before_create
+  # Validate reference [hook: before_create]
+  # @return [Boolean]
   def validate_ref
-    bk = self.book
-    ch = self.chapter
-    vs = self.versenum
-
-    verse = Verse.where(:book => bk, :chapter => ch, :versenum => vs, :translation => self.translation).first
-    final_verse = FinalVerse.where(:book => bk, :chapter => ch).first
+    verse = Verse.exists_in_db(book, chapter, versenum, translation)
+    final_verse = FinalVerse.where(book: book, chapter: chapter).first
 
     if verse
-      errors.add(:base, "Verse already exists in #{self.translation}")
+      errors.add(:base, "Verse already exists in #{translation}")
       return false
     elsif !final_verse
       errors.add(:base, "Invalid chapter")
       return false
-    elsif vs > final_verse.last_verse
+    elsif versenum > final_verse.last_verse
       errors.add(:base, "Invalid verse number")
       return false
     else
@@ -481,10 +450,10 @@ class Verse < ActiveRecord::Base
     end
   end
 
-  # after_create
+  # Link to [Uberverse] [hook: after_create]
   def associate_with_uberverse
-    uv = Uberverse.where(:book => self.book, :chapter => self.chapter, :versenum => self.versenum).first
-    self.uberverse_id = uv.id  unless !uv
+    uv = Uberverse.where(book: book, chapter: chapter, versenum: versenum).first
+    self.uberverse_id = uv.id unless !uv
   end
 
 end

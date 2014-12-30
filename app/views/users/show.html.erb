@@ -125,9 +125,24 @@
 						</thead>
 
 						<tbody>
-							<tr><th>Old Testament</th><td><%= @user.ot_verses["Memorized"]%></td>	<td><%= @user.ot_verses["Learning"]%></td><td><%= @user.ot_perc %>%</td></tr>
-							<tr><th>New Testament</th><td><%= @user.nt_verses["Memorized"]%></td>	<td><%= @user.nt_verses["Learning"]%></td><td><%= @user.nt_perc %>%</td></tr>
-							<tr><th>All Verses</th><td><%= @user.memorized%></td>	<td><%= @user.learning %></td><td></td></tr>
+							<tr>
+								<th>Old Testament</th>
+								<td><%= @user.category_verses(:ot)["Memorized"] %></td>
+								<td><%= @user.category_verses(:ot)["Learning"]%></td>
+								<td><%= @user.category_perc(:ot) %>%</td>
+							</tr>
+							<tr>
+								<th>New Testament</th>
+								<td><%= @user.category_verses(:nt)["Memorized"]%></td>
+								<td><%= @user.category_verses(:nt)["Learning"]%></td>
+								<td><%= @user.category_perc(:nt) %>%</td>
+							</tr>
+							<tr>
+								<th>All Verses</th>
+								<td><%= @user.memorized%></td>
+								<td><%= @user.learning %></td>
+								<td></td>
+							</tr>
 							<tr></tr>
 						</tbody>
 					</table>
@@ -146,33 +161,33 @@
 						<tbody>
 							<tr>
 								<th title="<%= t("book.name.Genesis") %> - <%= t("book.name.Esther")%> &amp; <%= t("book.name.Acts")%>">History</th>
-								<td><%= @user.history["Memorized"]%></td>
-								<td><%= @user.history["Learning"]%></td>
-								<td><%= @user.h_perc %>%</td>
+								<td><%= @user.category_verses(:history)["Memorized"]%></td>
+								<td><%= @user.category_verses(:history)["Learning"]%></td>
+								<td><%= @user.category_perc(:history) %>%</td>
 							</tr>
 							<tr>
 								<th title="<%= t("book.name.Job") %> - <%= t("book.name.Song of Songs")%>">Wisdom</th>
-								<td><%= @user.wisdom["Memorized"]%></td>
-								<td><%= @user.wisdom["Learning"]%></td>
-								<td><%= @user.w_perc %>%</td>
+								<td><%= @user.category_verses(:wisdom)["Memorized"]%></td>
+								<td><%= @user.category_verses(:wisdom)["Learning"]%></td>
+								<td><%= @user.category_perc(:wisdom) %>%</td>
 							</tr>
 							<tr>
 								<th title="<%= t("book.name.Isaiah") %> - <%= t("book.name.Malachi") %> &amp; <%= t("book.name.Revelation") %>">Prophecy</th>
-								<td><%= @user.prophecy["Memorized"]%></td>
-								<td><%= @user.prophecy["Learning"]%></td>
-								<td><%= @user.p_perc %>%</td>
+								<td><%= @user.category_verses(:prophecy)["Memorized"]%></td>
+								<td><%= @user.category_verses(:prophecy)["Learning"]%></td>
+								<td><%= @user.category_perc(:prophecy) %>%</td>
 							</tr>
 							<tr>
 								<th title="<%= t("book.name.Matthew") %> - <%= I18n.t("book.name.John")%>">Gospels</th>
-								<td><%= @user.gospel["Memorized"]%></td>
-								<td><%= @user.gospel["Learning"]%></td>
-								<td><%= @user.g_perc %>%</td>
+								<td><%= @user.category_verses(:gospel)["Memorized"]%></td>
+								<td><%= @user.category_verses(:gospel)["Learning"]%></td>
+								<td><%= @user.category_perc(:gospel) %>%</td>
 							</tr>
 							<tr>
 								<th title="<%= t("book.name.Romans") %> - <%= t("book.name.Jude")%>">Epistles</th>
-								<td><%= @user.epistle["Memorized"]%></td>
-								<td><%= @user.epistle["Learning"]%></td>
-								<td><%= @user.e_perc %>%</td>
+								<td><%= @user.category_verses(:epistle)["Memorized"]%></td>
+								<td><%= @user.category_verses(:epistle)["Learning"]%></td>
+								<td><%= @user.category_perc(:epistle) %>%</td>
 							</tr>
 						</tbody>
 					</table>

@@ -163,9 +163,9 @@ namespace :utils do
     niv = Nokogiri::XML(open('niv-1984.xml'))
     puts "Starting verse upload"
 
-    BIBLEBOOKS.each { |book|
+    BIBLEBOOKS[:en].values.each { |book|
 
-      bi = BIBLEBOOKS.index(book) + 1
+      bi = BIBLEBOOKS[:en].values.index(book) + 1
       final_chapter = FinalVerse.where(:book => book).order("chapter DESC").first.chapter
 
       (1..final_chapter).each { |chapter|
@@ -201,9 +201,9 @@ namespace :utils do
   task :create_uberverses => :environment do
 
     puts "Starting reference verse creation"
-    BIBLEBOOKS.each { |book|
+    BIBLEBOOKS[:en].values.each { |book|
 
-      bi = BIBLEBOOKS.index(book) + 1
+      bi = BIBLEBOOKS[:en].values.index(book) + 1
 
       final_chapter = FinalVerse.where(:book => book).order("chapter DESC").first.chapter
 
@@ -239,9 +239,9 @@ namespace :utils do
   task :calc_subsection_probabilities => :environment do
 
     puts "Starting calculation of subsection probabilities"
-    BIBLEBOOKS.each { |book|
+    BIBLEBOOKS[:en].values.each { |book|
 
-      bi = BIBLEBOOKS.index(book) + 1
+      bi = BIBLEBOOKS[:en].values.index(book) + 1
 
       final_chapter = FinalVerse.where(:book => book).order("chapter DESC").first.chapter
 

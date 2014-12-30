@@ -77,8 +77,6 @@ class QuizzesController < ApplicationController
   def update
     @quiz = Quiz.find(params[:id])
 
-    # TODO - need to enable update of church/pastor/verse when editing sermon
-
     respond_to do |format|
       if @quiz.update_attributes(params[:quiz])
         flash[:notice] = 'Quiz was successfully updated.'

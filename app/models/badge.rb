@@ -10,14 +10,13 @@ class Badge < ActiveRecord::Base
   
   has_and_belongs_to_many :users
   has_many :quests
-    
+  
+  # Compare Badges
   def <=> (other)
     MEDALS[self.color.to_sym] <=> MEDALS[other.color.to_sym]
   end
   
-  # ----------------------------------------------------------------------------------------------------------
   # Convert to JSON format
-  # ---------------------------------------------------------------------------------------------------------- 
   def as_json(options={})
     { 
       :id          => self.id, 
@@ -27,28 +26,26 @@ class Badge < ActiveRecord::Base
     }
   end 
   
-  # ----------------------------------------------------------------------------------------------------------
-  # Check whether badge requirements have been achieved NOTE: does not award badge
-  # ----------------------------------------------------------------------------------------------------------   
+  # Check whether badge requirements have been achieved
+  # @note Does not award badge
+  # @param user [User]
+  # @return [Boolean]
   def achieved?(user)
     # Only check if more valuable badge has not already been awarded
-    user_badge_in_series = user.badges.where(:name => self.name).sort.last
+    user_badge_in_series = user.badges.where(name: self.name).sort.last
     
     if user_badge_in_series && user_badge_in_series >= self
       return false
     else
       self.quests.each do |q|
-          if !user.quests.include?(q)
-            return false
-          end
+          return false if !user.quests.include?(q)
       end
       return true
     end
   end
  
-  # ----------------------------------------------------------------------------------------------------------
   # Adds badge to list of awards (only if not already awarded)
-  # ---------------------------------------------------------------------------------------------------------- 
+  # @param user [User]
   def award_badge(user)
     if !user.badges.include?(self)  # can only be awarded a badge once
       # First remove all lower level badges

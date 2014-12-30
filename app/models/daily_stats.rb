@@ -21,9 +21,7 @@ class DailyStats < ActiveRecord::Base
   scope :global,    -> { where(:segment => "Global") }
   scope :american,  -> { where(:segment => "United States") }
 
-  # ----------------------------------------------------------------------------------------------------------
   # Capture Daily Stats
-  # ----------------------------------------------------------------------------------------------------------
   def self.update
     # What do we want to save?
     # - Date [entry_date]
@@ -81,8 +79,6 @@ class DailyStats < ActiveRecord::Base
       ds_us.memverses_learning_active_in_month = Memverse.american.learning.current.count
 
       ds_us.save
-
-
 
     end
 
