@@ -337,7 +337,7 @@ function parseVerseRef(verseref) {
 		bk = unabbreviate( split_text.join(' ') );
 
         $.each( BIBLEBOOKS, function( lang, books ) {
-            bi = $.inArray ( bk, Object.keys(books) );
+            bi = $.inArray ( bk, Object.values(books) );
             lang_ = lang;
 
             // break if match found
@@ -403,7 +403,7 @@ function parsePassageRef(passage) {
 		bk       = unabbreviate( split_text.join(' ') );
 		
 		$.each( BIBLEBOOKS, function( lang, books ) {
-			bi = $.inArray ( bk, Object.keys(books) );
+			bi = $.inArray ( bk, Object.values(books) );
 			lang_ = lang;
 
 			// break if match found
