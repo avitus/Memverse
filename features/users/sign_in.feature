@@ -2,7 +2,7 @@ Feature: Sign in
   In order to get access to protected sections of the site
   A user
   Should be able to sign in
-  
+
     Background:
       Given I am not logged in
 
@@ -24,17 +24,17 @@ Feature: Sign in
 
     Scenario: User signs in successfully with email
       Given I sign in as a normal user
-      Then I should see "Choose your translation"
+      Then I should see "Get started quickly"
       And I should be signed in
       When I return next time
       Then I should be already signed in
-           
+
     Scenario: User who has already added verses signs in
     Given I sign in as an advanced user
     Then I should see "Verses Memorized"
     When I return next time
-    Then I should be already signed in    
-      
+    Then I should be already signed in
+
     Scenario: User account is not confirmed
       Given I am a user named "unconfirmed" with an email "user@test.com" and password "please"
       And the email address "user@test.com" is not confirmed
