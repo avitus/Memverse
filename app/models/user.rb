@@ -593,7 +593,9 @@ class User < ActiveRecord::Base
   # Update user profile
   # 
   # @param new_params Params from 'update_profile' form
+  # @return [Boolean] successful or not
   def update_profile(new_params)
+    return false if new_params.nil?
 
     self.name             = new_params["name"]
     self.email            = new_params["email"]
