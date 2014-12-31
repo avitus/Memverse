@@ -85,7 +85,9 @@ class Verse < ActiveRecord::Base
   #
   # @return [String] translated long verse reference
   def ref_long
-    "#{Book.find(book_index).name} #{chapter}:#{versenum}"
+    bk = Book.find(book_index).name
+    bk = "Psalm" if bk == "Psalms"
+    "#{bk} #{chapter}:#{versenum}"
   end
 
   # Return data about testament

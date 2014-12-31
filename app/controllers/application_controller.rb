@@ -46,6 +46,7 @@ class ApplicationController < ActionController::Base
         when "Bahasa Indonesia"  then "in"
         when "Chinese"           then "zh"
         when "Korean"            then "ko"
+        when "Turkish"           then "tr"
 
         else "en"
       end
