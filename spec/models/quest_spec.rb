@@ -63,20 +63,20 @@ describe Quest do
       it "for 'Learning'" do
         quest = FactoryGirl.create(:quest, objective: 'Chapters', qualifier: 'Learning', quantity: 2)
 
-        create_chapter("Psalms", 1, @user, "Learning")
+        create_chapter("Psalms", 11, @user, "Learning")
         quest.complete?(@user).should == false
 
-        create_chapter("Psalms", 2, @user, "Learning")
+        create_chapter("Psalms", 12, @user, "Learning")
         quest.complete?(@user).should == true
       end
 
       it "for 'Memorized'" do
         quest = FactoryGirl.create(:quest, objective: 'Chapters', qualifier: 'Memorized', quantity: 2)
 
-        create_chapter("Psalms", 3, @user, "Memorized")
+        create_chapter("Psalms", 13, @user, "Memorized")
         quest.complete?(@user).should == false
 
-        create_chapter("Psalms", 4, @user, "Memorized")
+        create_chapter("Psalms", 14, @user, "Memorized")
         quest.complete?(@user).should == true
       end
 

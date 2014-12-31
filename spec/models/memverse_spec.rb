@@ -95,7 +95,7 @@ describe Memverse do
       @passage = Array.new
 
       for i in 1..6
-        verse       = Verse.create(:book_index => 19, :book => "Psalms", :chapter => 1, :versenum => i, :text => "This is a test")
+        verse       = Verse.create(:book_index => 19, :book => "Psalms", :chapter => 8, :versenum => i, :text => "This is a test")
         @passage[i] = Memverse.create(:user => @user, :verse => verse)
       end
 
