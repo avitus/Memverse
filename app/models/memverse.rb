@@ -80,7 +80,8 @@ class Memverse < ActiveRecord::Base
       :skippable     => !self.due? ? ( !self.next_verse_due(true).nil? ? self.next_verse_due(true).verse.ref : false ) : false,
       :mnemonic      => self.needs_mnemonic? ? self.verse.mnemonic : "",
       :feedback      => self.show_feedback?,
-      :status        => self.status
+      :status        => self.status,
+      :subsection    => self.subsection
     }
   end
 
