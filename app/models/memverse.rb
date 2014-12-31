@@ -16,6 +16,7 @@ class Memverse < ActiveRecord::Base
   scope :active,        -> { where(status: ["Learning", "Memorized"]) }
   scope :inactive,      -> { where(status: "Pending") }
 
+  scope :not_due,       -> { where("next_test  > ?", Date.today) }
   scope :current,       -> { where("next_test >= ?", Date.today) }
   scope :due_today,     -> { where("next_test  = ?", Date.today) }
   scope :overdue,       -> { where("next_test  < ?", Date.today) }
@@ -154,18 +155,18 @@ class Memverse < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   def entire_subsection
     if self.subsection  # subsection is nil if the passage has not yet been subsectioned
-      Memverse.where(:passage_id => self.passage_id, :subsection => self.subsection)
+      Memverse.where(passage_id: self.passage_id, subsection: self.subsection)
     else
       nil
     end
   end
 
   # ----------------------------------------------------------------------------------------------------------
-  # Memory verses from the same subsection that have already been tested today
+  # Memory verses from the same subsection that are not due for review today or have already been reviewd
   # ----------------------------------------------------------------------------------------------------------
-  def already_reviewed_subsection
+  def not_due_today_subsection
     if self.subsection  # subsection is nil if the passage has not yet been subsectioned
-      Memverse.where(passage_id: self.passage_id, subsection: self.subsection, last_tested: Date.today)
+      Memverse.where(passage_id: self.passage_id, subsection: self.subsection).not_due
     else
       nil
     end
@@ -175,7 +176,7 @@ class Memverse < ActiveRecord::Base
   # Is this memory verse part of a subsection (a smaller unit than a passage)?
   # ----------------------------------------------------------------------------------------------------------
   def part_of_subsection?
-    !!self.subsection && Memverse.where(:passage_id => self.passage_id, :subsection => self.subsection).length > 1
+    !!self.subsection && Memverse.where(passage_id: self.passage_id, subsection: self.subsection).length > 1
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -185,7 +186,7 @@ class Memverse < ActiveRecord::Base
 
     if self.user.sync_subsections && self.part_of_subsection?
 
-      subsection_array = self.already_reviewed_subsection
+      subsection_array = self.not_due_today_subsection
 
       min_test_interval   = subsection_array.minimum(:test_interval)
       earliest_next_test  = subsection_array.minimum(:next_test)
