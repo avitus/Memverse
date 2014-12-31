@@ -149,9 +149,12 @@ function unabbreviate(book_name) {
 					possibilities.push(book);
 				}
 			});
+
+            // break if one English match found; otherwise there might be other Spanish matches
+            if(possibilities.length == 1 && lang == "en") return false;
 		});
 
-		if (possibilities.length > 0) { // nonstandard abbreviation, return first possibility
+		if (possibilities.length == 1) { // nonstandard abbreviation, one possibility
 			return possibilities[0];
 		} else { // already unabbreviated book name (though it may be incorrect)
 			return book_name;
