@@ -212,7 +212,7 @@ var quizRoom = {
             case 'reference':
                 $(selector + " #q-answer").html("<input type='text' class='q-answer-input' name='txt" + questionNum + "' id='" + questionNum + "'</input>");
                 $(selector + " #q-answer").append("<input type='submit' value='Answer!' id='submit-answer' class='button-link'>");
-                $(selector + ' #q-answer input[type="text"]').autocomplete({ source: BIBLEBOOKS });
+                $(selector + ' #q-answer input[type="text"]').autocomplete({ source: Object.values(BIBLEBOOKS.en) });
                 if (!$('#msg_body').is(':focus')) {
                     $(selector + ' #q-answer input[type="text"]').focus();
                 }

@@ -60,8 +60,11 @@ class Api::V1::MemversesController < Api::V1::ApiController
   end
 
   def destroy
-    memverse.destroy
-    redirect_to memverses_path( version: 1 )
+    if !memverse
+      error! :bad_request, metadata: {reason: 'Could not find memverse'}
+    elsif !memverse.destroy
+      error! :bad_request, metadata: {reason: 'Memverse could not be destroyed'}
+    end
   end
 
   private

@@ -75,7 +75,7 @@ describe Api::V1::MemversesController do
       expect {
         delete :destroy, :id => mv.id, :version => 1, :format => :json, :access_token => token.token
       }.to change(Memverse, :count).by(-1)
-      response.status.should eq (302)  # respond with a redirect (is this the best option?)
+      response.status.should eq (200)
     end
   end
 

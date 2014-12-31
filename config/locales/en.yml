@@ -108,17 +108,19 @@
     en: "English"
     es: "Spanish"
     fr: "French"
+    gk: "Greek"
     ht: "Haitian Creole"
     id: "Indonesian"
     is: "Icelandic"
     it: "Italian"
+    ko: "Korean"
     nl: "Dutch"
     ro: "Romanian"
     tl: "Tagalog"
     pt: "Portuguese"
     sv: "Swedish"
+    tr: "Turkish"
     zh: "Chinese"
-
 
   txt:
     main_title: "Memverse"
