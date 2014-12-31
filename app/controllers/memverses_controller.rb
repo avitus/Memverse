@@ -325,7 +325,7 @@ class MemversesController < ApplicationController
       @verse      = @mv.verse
 
       add_breadcrumb I18n.t("home_menu.My Verses"), :manage_verses_path
-      add_breadcrumb "#{@verse.book} #{@verse.chapter}:#{@verse.versenum}", {:action => 'show', :id => params[:id] }
+      add_breadcrumb @mv.verse.ref_long, {:action => 'show', :id => params[:id] }
 
       @user_tags  = @mv.tags
       @tags       = @verse.tags

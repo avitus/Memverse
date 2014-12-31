@@ -1,31 +1,23 @@
-BIBLEBOOKS = ['Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy', 'Joshua', 'Judges', 'Ruth', '1 Samuel', '2 Samuel',
-	          '1 Kings', '2 Kings','1 Chronicles', '2 Chronicles', 'Ezra', 'Nehemiah', 'Esther', 'Job', 'Psalms', 'Proverbs',
-	           'Ecclesiastes', 'Song of Songs', 'Isaiah', 'Jeremiah', 'Lamentations', 'Ezekiel', 'Daniel', 'Hosea', 'Joel',
-	           'Amos', 'Obadiah', 'Jonah', 'Micah', 'Nahum', 'Habakkuk', 'Zephaniah', 'Haggai', 'Zechariah', 'Malachi', 'Matthew',
-	           'Mark', 'Luke', 'John', 'Acts', 'Romans', '1 Corinthians', '2 Corinthians', 'Galatians', 'Ephesians', 'Philippians',
-	           'Colossians', '1 Thessalonians', '2 Thessalonians', '1 Timothy', '2 Timothy', 'Titus', 'Philemon', 'Hebrews', 'James',
-	           '1 Peter', '2 Peter', '1 John', '2 John', '3 John', 'Jude', 'Revelation']
+// Call `BIBLEBOOKS.to_json` to obtain...
+BIBLEBOOKS = "{\"en\":{\"Gen\":\"Genesis\",\"Ex\":\"Exodus\",\"Lev\":\"Leviticus\",\"Num\":\"Numbers\",\"Deut\":\"Deuteronomy\",\"Josh\":\"Joshua\",\"Judg\":\"Judges\",\"Ruth\":\"Ruth\",\"1 Sam\":\"1 Samuel\",\"2 Sam\":\"2 Samuel\",\"1 Kings\":\"1 Kings\",\"2 Kings\":\"2 Kings\",\"1 Chron\":\"1 Chronicles\",\"2 Chron\":\"2 Chronicles\",\"Ezra\":\"Ezra\",\"Neh\":\"Nehemiah\",\"Es\":\"Esther\",\"Job\":\"Job\",\"Ps\":\"Psalms\",\"Prov\":\"Proverbs\",\"Eccl\":\"Ecclesiastes\",\"Song\":\"Song of Songs\",\"Isa\":\"Isaiah\",\"Jer\":\"Jeremiah\",\"Lam\":\"Lamentations\",\"Ezk\":\"Ezekiel\",\"Dan\":\"Daniel\",\"Hos\":\"Hosea\",\"Joel\":\"Joel\",\"Amos\":\"Amos\",\"Obad\":\"Obadiah\",\"Jonah\":\"Jonah\",\"Mic\":\"Micah\",\"Nahum\":\"Nahum\",\"Hab\":\"Habakkuk\",\"Zeph\":\"Zephaniah\",\"Hag\":\"Haggai\",\"Zech\":\"Zechariah\",\"Mal\":\"Malachi\",\"Matt\":\"Matthew\",\"Mark\":\"Mark\",\"Luke\":\"Luke\",\"Jn\":\"John\",\"Acts\":\"Acts\",\"Rom\":\"Romans\",\"1 Cor\":\"1 Corinthians\",\"2 Cor\":\"2 Corinthians\",\"Gal\":\"Galatians\",\"Eph\":\"Ephesians\",\"Phil\":\"Philippians\",\"Col\":\"Colossians\",\"1 Thess\":\"1 Thessalonians\",\"2 Thess\":\"2 Thessalonians\",\"1 Tim\":\"1 Timothy\",\"2 Tim\":\"2 Timothy\",\"Tit\":\"Titus\",\"Phlm\":\"Philemon\",\"Heb\":\"Hebrews\",\"James\":\"James\",\"1 Pet\":\"1 Peter\",\"2 Pet\":\"2 Peter\",\"1 John\":\"1 John\",\"2 John\":\"2 John\",\"3 John\":\"3 John\",\"Jude\":\"Jude\",\"Rev\":\"Revelation\"},\"es\":{\"Gén\":\"Génesis\",\"Éxod\":\"Éxodo\",\"Lev\":\"Levitico\",\"Núm\":\"Números\",\"Deut\":\"Deuteronomio\",\"Jos\":\"Josué\",\"Jue\":\"Jueces\",\"Rut\":\"Rut\",\"1 Sam\":\"1 Samuel\",\"2 Sam\":\"2 Samuel\",\"1 Re\":\"1 Reyes\",\"2 Re\":\"2 Reyes\",\"1 Cró\":\"1 Crónicas\",\"2 Cró\":\"2 Crónicas\",\"Esd\":\"Esdras\",\"Neh\":\"Nehemías\",\"Est\":\"Ester\",\"Job\":\"Job\",\"Sal\":\"Salmos\",\"Prov\":\"Proverbios\",\"Ecl\":\"Eclesiastés\",\"Cant\":\"Cantares\",\"Is\":\"Isaías\",\"Jer\":\"Jeremías\",\"Lam\":\"Lamentaciones\",\"Ez\":\"Ezequiel\",\"Dan\":\"Daniel\",\"Os\":\"Oseas\",\"Jl\":\"Joel\",\"Am\":\"Amós\",\"Abd\":\"Abdías\",\"Jon\":\"Jonás\",\"Miq\":\"Miqueas\",\"Nah\":\"Nahún\",\"Hab\":\"Habacuc\",\"Sof\":\"Sofonías\",\"Ag\":\"Hageo\",\"Zac\":\"Zacarías\",\"Mal\":\"Malaquías\",\"Mt\":\"Mateo\",\"Mc\":\"Marcos\",\"Lc\":\"Lucas\",\"Jn\":\"Juan\",\"Hech\":\"Hechos\",\"Rom\":\"Romanos\",\"1 Cor\":\"1 Corintios\",\"2 Cor\":\"2 Corintios\",\"Gál\":\"Gálatas\",\"Ef\":\"Efesios\",\"Fil\":\"Filipenses\",\"Col\":\"Colosenses\",\"1 Tes\":\"1 Tesalonicenses\",\"2 Tes\":\"2 Tesalonicenses\",\"1 Tim\":\"1 Timoteo\",\"2 Tim\":\"2 Timoteo\",\"Tit\":\"Tito\",\"Filem\":\"Filemón\",\"Heb\":\"Hebreos\",\"Sant\":\"Santiago\",\"1 Pe\":\"1 Pedro\",\"2 Pe\":\"2 Pedro\",\"1 Jn\":\"1 Juan\",\"2 Jn\":\"2 Juan\",\"3 Jn\":\"3 Juan\",\"Jds\":\"Judas\",\"Apoc\":\"Apocalipsis\"},\"zh\":{\"创世记\":\"创世记\",\"出埃及\":\"出埃及\",\"利未记\":\"利未记\",\"民数记\":\"民数记\",\"申命记\":\"申命记\",\"约书亚记\":\"约书亚记\",\"士师记\":\"士师记\",\"路得记\":\"路得记\",\"撒母耳记上\":\"撒母耳记上\",\"撒母耳记下\":\"撒母耳记下\",\"列王纪上\":\"列王纪上\",\"列王纪下\":\"列王纪下\",\"历代志上\":\"历代志上\",\"历代志下\":\"历代志下\",\"以斯拉记\":\"以斯拉记\",\"尼希米记\":\"尼希米记\",\"以斯帖记\":\"以斯帖记\",\"约伯记\":\"约伯记\",\"诗篇\":\"诗篇\",\"箴言\":\"箴言\",\"传道书\":\"传道书\",\"雅歌\":\"雅歌\",\"以赛亚书\":\"以赛亚书\",\"耶利米书\":\"耶利米书\",\"耶利米哀歌\":\"耶利米哀歌\",\"以西结书\":\"以西结书\",\"但以理书\":\"但以理书\",\"何西阿书\":\"何西阿书\",\"约珥书\":\"约珥书\",\"阿摩司书\":\"阿摩司书\",\"俄巴底亚书\":\"俄巴底亚书\",\"约拿书\":\"约拿书\",\"弥迦书\":\"弥迦书\",\"那鸿书\":\"那鸿书\",\"哈巴谷书\":\"哈巴谷书\",\"西番雅书\":\"西番雅书\",\"哈该书\":\"哈该书\",\"撒迦利亚书\":\"撒迦利亚书\",\"玛拉基书\":\"玛拉基书\",\"马太福音\":\"马太福音\",\"马可福音\":\"马可福音\",\"路加福音\":\"路加福音\",\"约翰福音\":\"约翰福音\",\"使徒行传\":\"使徒行传\",\"罗马书\":\"罗马书\",\"哥林多前书\":\"哥林多前书\",\"哥林多后书\":\"哥林多后书\",\"加拉太书\":\"加拉太书\",\"以弗所书\":\"以弗所书\",\"腓立比书\":\"腓立比书\",\"歌罗西书\":\"歌罗西书\",\"帖撒罗尼迦前书\":\"帖撒罗尼迦前书\",\"帖撒罗尼迦后书\":\"帖撒罗尼迦后书\",\"提摩太前书\":\"提摩太前书\",\"提摩太后书\":\"提摩太后书\",\"提多书\":\"提多书\",\"腓利门书\":\"腓利门书\",\"希伯来书\":\"希伯来书\",\"雅各书\":\"雅各书\",\"彼得前书\":\"彼得前书\",\"彼得后书\":\"彼得后书\",\"约翰一书\":\"约翰一书\",\"约翰二书\":\"约翰二书\",\"约翰三书\":\"约翰三书\",\"犹大书\":\"犹大书\",\"启示录\":\"启示录\"},\"ko\":{\"창세기\":\"창세기\",\"출애굽기\":\"출애굽기\",\"레위기\":\"레위기\",\"민수기\":\"민수기\",\"신명기\":\"신명기\",\"여호수아\":\"여호수아\",\"사사기\":\"사사기\",\"룻기\":\"룻기\",\"사무엘상\":\"사무엘상\",\"사무엘하\":\"사무엘하\",\"열왕기상\":\"열왕기상\",\"열왕기하\":\"열왕기하\",\"역대상\":\"역대상\",\"역대하\":\"역대하\",\"에스라\":\"에스라\",\"느헤미야\":\"느헤미야\",\"에스더\":\"에스더\",\"욥기\":\"욥기\",\"시편\":\"시편\",\"잠언\":\"잠언\",\"전도서\":\"전도서\",\"아가\":\"아가\",\"이사야\":\"이사야\",\"예레미야\":\"예레미야\",\"예레미야애가\":\"예레미야애가\",\"에스겔\":\"에스겔\",\"다니엘\":\"다니엘\",\"호세아\":\"호세아\",\"요엘\":\"요엘\",\"아모스\":\"아모스\",\"오바댜\":\"오바댜\",\"요나\":\"요나\",\"미가\":\"미가\",\"나훔\":\"나훔\",\"하박국\":\"하박국\",\"스바냐\":\"스바냐\",\"학개\":\"학개\",\"스가랴\":\"스가랴\",\"말라기\":\"말라기\",\"마태복음\":\"마태복음\",\"마가복음\":\"마가복음\",\"누가복음\":\"누가복음\",\"요한복음\":\"요한복음\",\"사도행전\":\"사도행전\",\"로마서\":\"로마서\",\"고린도전서\":\"고린도전서\",\"고린도후서\":\"고린도후서\",\"갈라디아서\":\"갈라디아서\",\"에베소서\":\"에베소서\",\"빌립보서\":\"빌립보서\",\"골로새서\":\"골로새서\",\"데살로니가전서\":\"데살로니가전서\",\"데살로니가후서\":\"데살로니가후서\",\"디모데전서\":\"디모데전서\",\"디모데후서\":\"디모데후서\",\"디도서\":\"디도서\",\"빌레몬서\":\"빌레몬서\",\"히브리서\":\"히브리서\",\"야고보서\":\"야고보서\",\"베드로전서\":\"베드로전서\",\"베드로후서\":\"베드로후서\",\"요한일서\":\"요한일서\",\"요한2서\":\"요한2서\",\"요한3서\":\"요한3서\",\"유다서\":\"유다서\",\"요한계시록\":\"요한계시록\"}}";
 
-BIBLEABBREV = ['Gen', 'Ex', 'Lev', 'Num', 'Deut', 'Josh', 'Judg', 'Ruth', '1 Sam', '2 Sam',
-              '1 Kings', '2 Kings','1 Chron', '2 Chron', 'Ezra', 'Neh', 'Es', 'Job', 'Ps', 'Prov',
-              'Eccl', 'Song', 'Isa', 'Jer', 'Lam', 'Ezk', 'Dan', 'Hos', 'Joel',
-              'Amos', 'Obad', 'Jonah', 'Mic', 'Nahum', 'Hab', 'Zeph', 'Hag', 'Zech', 'Mal', 'Matt',
-              'Mark', 'Luke', 'Jn', 'Acts', 'Rom', '1 Cor', '2 Cor', 'Gal', 'Eph', 'Phil',
-              'Col', '1 Thess', '2 Thess', '1 Tim', '2 Tim', 'Tit', 'Phlm', 'Heb', 'James',
-              '1 Pet', '2 Pet', '1 John', '2 John', '3 John', 'Jude', 'Rev']
+BIBLEBOOKS = $.parseJSON(BIBLEBOOKS);
 
-SPANISHBOOKS = ['Génesis', 'Éxodo', 'Levitico', 'Números', 'Deuteronomio', 'Josué', 'Jueces', 'Rut', '1 Samuel', '2 Samuel', '1 Reyes',
-                '2 Reyes', '1 Crónicas', '2 Crónicas', 'Esdras', 'Nehemías', 'Ester', 'Job', 'Salmos', 'Proverbios', 'Eclesiastés', 'Cantares',
-                'Isaías', 'Jeremías', 'Lamentaciones', 'Ezequiel', 'Daniel', 'Oseas', 'Joel', 'Amós', 'Abdías', 'Jonás', 'Miqueas', 'Nahún', 'Habacuc',
-                'Sofonías', 'Hageo', 'Zacarías', 'Malaquías', 'Mateo', 'Marcos', 'Lucas', 'Juan', 'Hechos', 'Romanos', '1 Corintios', '2 Corintios',
-                'Gálatas', 'Efesios', 'Filipenses', 'Colosenses', '1 Tesalonicenses', '2 Tesalonicenses', '1 Timoteo', '2 Timoteo', 'Tito', 'Filemón',
-                'Hebreos', 'Santiago', '1 Pedro', '2 Pedro', '1 Juan', '2 Juan', '3 Juan', 'Judas','Apocalipsis']
+Object.keys = function(object) {
+  var keys = [];
+  for(var property in object) {
+    keys.push(property);
+  }
+  return keys;
+}
 
-SPANISHABBREV = [ 'Gén', 'Éxod', 'Lev', 'Núm', 'Deut', 'Jos', 'Jue', 'Rut', '1 Sam', '2 Sam', '1 Re', '2 Re', '1 Cró', '2 Cró', 'Esd',
-                  'Neh', 'Est', 'Job', 'Sal', 'Prov', 'Ecl', 'Cant', 'Is', 'Jer', 'Lam',
-                  'Ez', 'Dan', 'Os', 'Jl', 'Am', 'Abd', 'Jon', 'Miq', 'Nah', 'Hab', 'Sof', 'Ag', 'Zac', 'Mal', 'Mt', 'Mc', 'Lc',
-                  'Jn', 'Hech', 'Rom', '1 Cor', '2 Cor', 'Gál', 'Ef', 'Fil', 'Col', '1 Tes', '2 Tes', '1 Tim', '2 Tim', 'Tit', 'Filem',
-                  'Heb', 'Sant', '1 Pe', '2 Pe', '1 Jn', '2 Jn', '3 Jn', 'Jds', 'Apoc']
+Object.values = function(object) {
+  var arr = [];
+  for(var property in object) {
+    arr.push(object[property]);
+  }
+  return arr;
+}
 
 /******************************************************************************
  * Verse Search
@@ -135,23 +127,40 @@ function unabbreviate(book_name) {
 	if(!(book_name.split(" ")[0].match('[^Ii]'))) { // Check if first "word" contains only I's; then Roman numerals to Arabic numbers
 		book_name = book_name.replace(/III /i, "3 ").replace(/II /i, "2 ").replace(/I /i, "1 "); // replace first occurences
 	}
-	book_index = jQuery.inArray( book_name, BIBLEABBREV );
+
+	lang_ = null;
+
+	$.each( BIBLEBOOKS, function( lang, books ) {
+		book_index = $.inArray ( book_name, Object.keys(books) );
+		lang_ = lang;
+
+		// break if match found
+		if (book_index !== -1) return false;
+	});
 
 	if (book_index === -1) { // not a standard abbreviation
 		// since it might be a nonstandard abbreviation, let's see if we can find only one possible match with book names
 		possibilities = [];
-		for (var i = 0; i < BIBLEBOOKS.length; i++) {
-			if(BIBLEBOOKS[i].substring(0, book_name.length).toLowerCase() == book_name.toLowerCase()) {
-				possibilities.push(BIBLEBOOKS[i]);
-			}
-		}
-		if (possibilities.length == 1) { // nonstandard abbreviation, and only one possibility
+
+		$.each( BIBLEBOOKS, function( lang, books ) {
+			$.each( BIBLEBOOKS[lang], function( abbrev, book ) {
+				if (book.substring(0, book_name.length).toLowerCase() == book_name.toLowerCase())
+				{
+					possibilities.push(book);
+				}
+			});
+
+            // break if one English match found; otherwise there might be other Spanish matches
+            if(possibilities.length == 1 && lang == "en") return false;
+		});
+
+		if (possibilities.length == 1) { // nonstandard abbreviation, one possibility
 			return possibilities[0];
 		} else { // already unabbreviated book name (though it may be incorrect)
 			return book_name;
 		}
 	} else { // was a standard abbreviation; return the unabbreviated book name
-		return BIBLEBOOKS[book_index];
+		return Object.values(BIBLEBOOKS[lang_])[book_index];
 	}
 }
 
@@ -163,7 +172,7 @@ function unabbreviate(book_name) {
  * Rejects: Romans 8:1-3
  ******************************************************************************/
 function validVerseRef(verseref) {
-    return /([0-3]?\s+)?[a-záéíóúüñ]+\s+[0-9]+(:(\s)?|(\s?vs\s?))[0-9]+$/i.test(verseref);
+    return /([0-3]?\s+)?[a-záéíóúüñ\uAC00-\uD7A3]+\s+[0-9]+(:(\s)?|(\s?vs\s?))[0-9]+$/i.test(verseref);
 }
 
 /******************************************************************************
@@ -176,7 +185,7 @@ function validVerseRef(verseref) {
  * Rejects: Romans 8:1
  *******************************************************************************/
 function validPassageRef(passage) {
-    return /([0-3]?\s+)?[a-záéíóúüñ]+\s+[0-9]+(((:(\s)?|(\s?vs\s?))[0-9]+(-)[0-9]+)|:)?$/i.test(passage);
+    return /([0-3]?\s+)?[a-záéíóúüñ\uAC00-\uD7A3]+\s+[0-9]+(((:(\s)?|(\s?vs\s?))[0-9]+(-)[0-9]+)|:)?$/i.test(passage);
 }
 
 /******************************************************************************
@@ -188,7 +197,7 @@ function validPassageRef(passage) {
  * Rejects: Romans 8:1-3
  *******************************************************************************/
 function validChapterRef(passage) {
-    return /([0-3]?\s+)?[a-záéíóúüñ]+\s+[0-9]+(:)?$/i.test(passage);
+    return /([0-3]?\s+)?[a-záéíóúüñ\uAC00-\uD7A3]+\s+[0-9]+(:)?$/i.test(passage);
 }
 
 /******************************************************************************
@@ -199,7 +208,7 @@ function validChapterRef(passage) {
  * Rejects: Romans 8:1
  *******************************************************************************/
 function validSubChapterPassage(passage) {
-    return /([0-3]?\s+)?[a-záéíóúüñ]+\s+[0-9]+(:|(\s?vs\s?))[0-9]+(-)[0-9]+/i.test(passage);
+    return /([0-3]?\s+)?[a-záéíóúüñ\uAC00-\uD7A3]+\s+[0-9]+(:|(\s?vs\s?))[0-9]+(-)[0-9]+/i.test(passage);
 }
 
 /******************************************************************************
@@ -308,12 +317,9 @@ function blankifyVerse(versetext, reduction_percentage) {
 
 /******************************************************************************
  * Parses reference into a book, chapter & verse
+ * Always uses English book name
  ******************************************************************************/
 function parseVerseRef(verseref) {
-
-	// ========== TODO ======================================
-	// Handle foreign language book names
-	// ======================================================
 
 	var split_text;
 	var ch, bk, bi, vs;
@@ -329,13 +335,25 @@ function parseVerseRef(verseref) {
 		vs = parseInt(split_text.pop());
 		ch = parseInt(split_text.pop());
 		bk = unabbreviate( split_text.join(' ') );
-		bi = jQuery.inArray( bk, BIBLEBOOKS );
+
+        $.each( BIBLEBOOKS, function( lang, books ) {
+            bi = $.inArray ( bk, Object.values(books) );
+            lang_ = lang;
+
+            // break if match found
+            if (bi !== -1) return false;
+        });
 
 		if (bi === -1) {
 			return false;
-		} else {
-			return { bk: bk, ch: ch, vs: vs, bi: bi+1};
-		};
+		}
+
+        if (lang_ != "en")
+        {
+            bk = Object.values(BIBLEBOOKS.en)[bi];
+        }
+
+		return { bk: bk, ch: ch, vs: vs, bi: bi+1};
 	} else {
 		return false;
 	};
@@ -357,12 +375,9 @@ function mvDue( mv ) {
 
 /******************************************************************************
  * Parses passage reference into a book, chapter, start verse & end verse
+ * Always uses English book name
  ******************************************************************************/
 function parsePassageRef(passage) {
-
-	// ========== TODO ======================================
-	// Handle foreign language book names
-	// ======================================================
 
 	var split_text;
 	var ch, bk, bi;
@@ -386,13 +401,25 @@ function parsePassageRef(passage) {
 
 		ch       = parseInt(split_text.pop());
 		bk       = unabbreviate( split_text.join(' ') );
-		bi       = jQuery.inArray( bk, BIBLEBOOKS );
+		
+		$.each( BIBLEBOOKS, function( lang, books ) {
+			bi = $.inArray ( bk, Object.values(books) );
+			lang_ = lang;
 
-		if (bi === -1) {
+			// break if match found
+			if (bi !== -1) return false;
+		});
+
+		if (bi === -1)
+		{
 			return false;
-		} else {
-			return { bk: bk, ch: ch, vs_start: vs_start, vs_end: vs_end, bi: bi+1};
-		};
+		}
+
+		if (lang_ != "en") {
+			bk = Object.values(BIBLEBOOKS.en)[bi];
+		}
+
+		return { bk: bk, ch: ch, vs_start: vs_start, vs_end: vs_end, bi: bi+1};
 
 	} else {
 		return false;
@@ -451,7 +478,7 @@ function displayAlertMessage(message) {
  * All DOM attachments that are common to multiple pages should go here
  ******************************************************************************/
 $(document).ready(function() {
-	$('input#verse').focus().autocomplete({ source: BIBLEBOOKS });
+	$('input#verse').focus().autocomplete({ source: Object.values(BIBLEBOOKS.en) });
 });
 
 $(document).ajaxStart( function () {
