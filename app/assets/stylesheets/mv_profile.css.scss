@@ -4,7 +4,7 @@
 }
 
 #edit-profile-form li {
-  padding: 0.2em 0;
+  padding: 0.3em 0;
   width: 570px;
   list-style: none;
   clear: both;
@@ -13,6 +13,14 @@
     font-size: 100%;
   }
 
+}
+
+#edit-profile-form div.profile-section {
+  padding: 1em 2em;
+  width: 900px;
+  margin-bottom: 2em;
+  background-color: #eee;
+  h2 { padding-bottom: 1em; }
 }
 
 #edit-profile-form label {
@@ -33,7 +41,11 @@ input[type="checkbox"] {
 }
 
 #edit-profile-form .buttons {
-  margin-left:12em;
-  padding-top:0.25em;
-  margin-bottom:0.7em;
+  margin-left: 22.5em;
+}
+
+.warning {
+  font-weight: bold;
+  color: #b95c2e;
+  padding-left: 1em;
 }

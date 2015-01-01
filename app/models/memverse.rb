@@ -16,6 +16,7 @@ class Memverse < ActiveRecord::Base
   scope :active,        -> { where(status: ["Learning", "Memorized"]) }
   scope :inactive,      -> { where(status: "Pending") }
 
+  scope :not_due,       -> { where("next_test  > ?", Date.today) }
   scope :current,       -> { where("next_test >= ?", Date.today) }
   scope :due_today,     -> { where("next_test  = ?", Date.today) }
   scope :overdue,       -> { where("next_test  < ?", Date.today) }
@@ -80,12 +81,13 @@ class Memverse < ActiveRecord::Base
       :skippable     => !self.due? ? ( !self.next_verse_due(true).nil? ? self.next_verse_due(true).verse.ref : false ) : false,
       :mnemonic      => self.needs_mnemonic? ? self.verse.mnemonic : "",
       :feedback      => self.show_feedback?,
-      :status        => self.status
+      :status        => self.status,
+      :subsection    => self.subsection
     }
   end
 
   # Implementation of SM-2 algorithm
-  # 
+  #
   # Depends on the following:
   #     q             - result of test
   #     n             - current iteration in learning sequence
@@ -100,7 +102,7 @@ class Memverse < ActiveRecord::Base
   #   3     -0.14
   #   4     +0.00
   #   5     +0.10
-  # 
+  #
   # Changes interval and eFactor.
   #
   # @param q [Fixnum] result of test
@@ -143,9 +145,65 @@ class Memverse < ActiveRecord::Base
     self.attempts      += 1
     self.save!
 
+    self.sync_subsection  # Sync with rest of subsection
+
     return (prev_learning and (self.status == "Memorized"))  # TRUE if this memory verse is newly memorized
   end
 
+  # ----------------------------------------------------------------------------------------------------------
+  # Return all verses in subsection
+  # ----------------------------------------------------------------------------------------------------------
+  def entire_subsection
+    if self.subsection  # subsection is nil if the passage has not yet been subsectioned
+      Memverse.where(passage_id: self.passage_id, subsection: self.subsection)
+    else
+      nil
+    end
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Memory verses from the same subsection that are not due for review today or have already been reviewd
+  # ----------------------------------------------------------------------------------------------------------
+  def not_due_today_subsection
+    if self.subsection  # subsection is nil if the passage has not yet been subsectioned
+      Memverse.where(passage_id: self.passage_id, subsection: self.subsection).not_due
+    else
+      nil
+    end
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Is this memory verse part of a subsection (a smaller unit than a passage)?
+  # ----------------------------------------------------------------------------------------------------------
+  def part_of_subsection?
+    !!self.subsection && Memverse.where(passage_id: self.passage_id, subsection: self.subsection).length > 1
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Synchronize review of memory verses that are grouped in a subsection
+  # ----------------------------------------------------------------------------------------------------------
+  def sync_subsection
+
+    if self.user.sync_subsections && self.part_of_subsection?
+
+      subsection_array = self.not_due_today_subsection
+
+      min_test_interval   = subsection_array.minimum(:test_interval)
+      earliest_next_test  = subsection_array.minimum(:next_test)
+      subsection_status   = min_test_interval > 30 ? "Memorized" : "Learning"
+
+      subsection_array.each do |mv|
+        mv.test_interval = [min_test_interval,1].max
+        mv.next_test     = Date.today + min_test_interval
+        mv.status        = subsection_status
+        mv.save!
+      end
+
+    end
+
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
   # Return length of verse sequence
   # @return [Fixnum] length of memory verse sequence
   def sequence_length
@@ -239,7 +297,7 @@ class Memverse < ActiveRecord::Base
   end
 
   # User has entire chapter memorized
-  # 
+  #
   # @return [Boolean] True if entire passage memorized; false otherwise
   # (including if user does not have entire chapter in account).
   #
@@ -256,7 +314,7 @@ class Memverse < ActiveRecord::Base
   end
 
   # User has entire chapter pending
-  # 
+  #
   # @return [Boolean] True iff user has entire chapter in account, and every verse pending.
   def chapter_pending?
     mvs = self.passage.memverses
@@ -338,7 +396,7 @@ class Memverse < ActiveRecord::Base
   end
 
   # Return first overdue verse in a sequence
-  # 
+  #
   # @return [Memverse] First overdue verse (or last verse if no verses are due -- that's acceptable for now
   #          since we're only likely to call this function when we know one of the verses needs review).
   def first_verse_due_in_sequence
