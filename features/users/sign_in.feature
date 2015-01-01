@@ -24,7 +24,7 @@ Feature: Sign in
 
     Scenario: User signs in successfully with email
       Given I sign in as a normal user
-      Then I should see "Get started quickly"
+      Then I should see "Choose your translation"
       And I should be signed in
       When I return next time
       Then I should be already signed in
