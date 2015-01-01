@@ -63,7 +63,7 @@ var passageListState = {
         // TODO: check whether we have already downloaded the memory verses for this passage
 
         // retrieve memory verses for passage
-        $.getJSON('passages/' + passageID + '/memverses.json', function (data) {
+        $.getJSON('/passages/' + passageID + '/memverses.json', function (data) {
             passageListState.insertMemoryVerses( $passageLocation, data )
         });
     },
@@ -110,10 +110,11 @@ function buildHTMLforMvDetails ( mv ) {
 
     // Build HTML for memory verse
     var $mvDiv = $('<div/>').addClass("mv-details ")
-        .append( $('<span class="mv-reference" />').text( mv.ref           ))
-        .append( $('<span class="mv-text"      />').text( shortText        ))
-        .append( $('<span class="mv-interval"  />').text( mv.test_interval ))
-        .append( $('<span class="mv-next_date" />').text( mv.next_test     ));
+        .append( $('<span class="mv-reference"  />').text( mv.ref           ))
+        .append( $('<span class="mv-text"       />').text( shortText        ))
+        .append( $('<span class="mv-interval"   />').text( mv.test_interval ))
+        .append( $('<span class="mv-next_date"  />').text( mv.next_test     ))
+        .append( $('<span class="mv-subsection" />').text( mv.subsection    ));
 
     return $mvDiv;
 
