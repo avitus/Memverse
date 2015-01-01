@@ -13,7 +13,7 @@ FactoryGirl.define do
     u.last_activity_date Date.today
     u.admin false
     u.referred_by 0
-    u.translation 'NIV'
+    u.translation nil
 
     # Admin user
     # factory :admin do
