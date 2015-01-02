@@ -18,9 +18,6 @@
 			</div>
 		<% end %> <!-- End: Error Messages -->
 
-
-
-
 		<ul>
 
 		<div class="profile-section"><h2>Personal Information</h2>
@@ -42,7 +39,6 @@
 													@trans, @user.translation
 												  ) %>
 			</li>
-
 			<li>
 				<%= f.label 			:language, t('.Language') %>
 				<%= f.select			:language,
@@ -93,7 +89,6 @@
 
 		<div class="profile-section"><h2>Application Settings</h2>
 
-
 			<li>
 				<%= f.label 			:reminder_freq, t('.Reminder frequency') %>
 				<%= f.select			:reminder_freq,
@@ -134,7 +129,6 @@
 					</p>
 				</div>
 			</div>
-
 
 			<li>
 				<%= f.label 			:max_interval do %>
@@ -191,7 +185,6 @@
 					</p>
 				</div>
 			</div>
-
 
 			<li>
 				<%= f.label 			:auto_work_load do %>
@@ -270,7 +263,6 @@
 						By default, Memverse will stop showing feedback as you type once a verse is memorized. Select this option if you would like to continue getting
 						realtime feedback even after you have memorized a verse.
 					</p>
-
 					<p>
 						This is a good option to turn on temporarily if you ever fall behind in your memorization schedule as it facilitates recall and speeds up your
 						review session.
