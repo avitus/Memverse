@@ -42,16 +42,19 @@
 													@trans, @user.translation
 												  ) %>
 			</li>
+
 			<li>
-				<%= f.label 		:language, t('.Language') %>
-				<%= f.select		:language,
+				<%= f.label 			:language, t('.Language') %>
+				<%= f.select			:language,
 							   [["English", 	      	'English'			],
 								["Spanish",           	'Spanish' 			],
 								["French",           	'French' 			],
 								["Bahasa Indonesia",  	'Bahasa Indonesia'	],
 								["Dutch",		      	'Dutch'				],
 								["Swedish",				'Swedish'			],
-								["Afrikaans", 	       	'Afrikaans'			]]
+								["Afrikaans", 	       	'Afrikaans'			],
+								["Chinese",				'Chinese'			],
+								["Korean",				'Korean'			]].sort
 							 %>
 			</li>
 		</div>
@@ -104,22 +107,10 @@
 			</li>
 
 			<li>
-				<%= f.label 			:language, t('.Language') %>
-				<%= f.select			:language,
-							   [["English", 	      	'English'			],
-								["Spanish",           	'Spanish' 			],
-								["French",           	'French' 			],
-								["Bahasa Indonesia",  	'Bahasa Indonesia'	],
-								["Dutch",		      	'Dutch'				],
-								["Swedish",				'Swedish'			],
-								["Afrikaans", 	       	'Afrikaans'			],
-								["Chinese",				'Chinese'			],
-								["Korean",				'Korean'			]].sort
-							 %>
-			</li>
-
-			<li>
-				<%= f.label 			:time_allocation, t('.Target Time') %>
+				<%= f.label 			:time_allocation do %>
+					<%= t('.Target Time') %>
+					<span><%= link_to (image_tag("blue-icon.png", :width=>"16", :height=>"16")), "#time-alloc-explanation", :id => "inline" %></span>
+				<% end %>
 				<%= f.select			:time_allocation,
 							[[" 3 Minutes per Day",  3	],
 							 [" 5 Minutes per Day",  5	],
@@ -132,8 +123,24 @@
 							 ["60 Minutes per Day", 60	]]
 							 %>
 			</li>
+
+			<!-- Explanation for Time Allocation setting -->
+			<div style="display:none">
+				<div id="time-alloc-explanation" class="setting-explanation">
+					<h3>Time Allocation</h3>
+					<p>
+						This is the amount of time that you would like to spend memorizing each day. We recommend that you set it at about half the time you think
+						you will be able to spend. Experience has shown that setting realistic goals is vital to successfully implementing a lifetime of memorization.
+					</p>
+				</div>
+			</div>
+
+
 			<li>
-				<%= f.label 			:max_interval, t('.Max Repetition Interval') %>
+				<%= f.label 			:max_interval do %>
+					<%= t('.Max Repetition Interval') %>
+					<span><%= link_to (image_tag("blue-icon.png", :width=>"16", :height=>"16")), "#max-rep-explanation", :id => "inline" %></span>
+				<% end %>
 				<%= f.select			:max_interval,
 							[["1 Month", 	 31	],
 							 ["3 Months", 	 91	],
@@ -143,8 +150,26 @@
 							 %>
 			</li>
 
+			<!-- Explanation for Max Repetition Interval setting -->
+			<div style="display:none">
+				<div id="max-rep-explanation" class="setting-explanation">
+					<h3>Maximum Repetition Interval</h3>
+					<p>
+						As you memorize verses, the interval between review will gradually increase until eventually you should only need to refresh your memory
+						once a year.
+					</p>
+					<p>
+						We recommend that you leave this setting at 1 year. Memverse is designed to enable you to memorize hundreds of verses with a minimum of
+						repetition. If you really want to review memorized verses more frequently, you can lower this setting.
+					</p>
+				</div>
+			</div>
+
 			<li>
-				<%= f.label 			:mnemonic_use, t('.1st Letter Prompts') %>
+				<%= f.label 			:mnemonic_use  do %>
+					<%= t('.1st Letter Prompts') %>
+					<span><%= link_to (image_tag("blue-icon.png", :width=>"16", :height=>"16")), "#first-letter-explanation", :id => "inline" %></span>
+				<% end %>
 				<%= f.select			:mnemonic_use,
 							[["Always", 	'Always'	],
 							 ["Learning",	'Learning'	],
@@ -152,26 +177,106 @@
 							 %>
 			</li>
 
+			<!-- Explanation for 1st Letter Prompts setting -->
+			<div style="display:none">
+				<div id="first-letter-explanation" class="setting-explanation">
+					<h3>Mnemonic Prompts</h3>
+					<p>
+						Memverse allows for the display of the first letter of each word in a verse (the mnemonic). This can greatly facilitate the learning of new
+						verses and also allows one to find patterns in a verse which can later aid in recall.
+					</p>
+					<p>
+						We recommend that you only use this when a verse is being learned. It can also be useful to set this to 'Always' in the event that you have
+						fallen far behind in your memorization schedule as it makes recall a lot easier.
+					</p>
+				</div>
+			</div>
+
+
 			<li>
-				<%= f.label 			:auto_work_load, t('.Add verses as needed') %>
+				<%= f.label 			:auto_work_load do %>
+					<%=  t('.Add verses as needed') %>
+					<span><%= link_to (image_tag("blue-icon.png", :width=>"16", :height=>"16")), "#auto-work-load-explanation", :id => "inline" %></span>
+				<% end %>
 				<%= f.check_box 		:auto_work_load %>
 			</li>
 
+			<!-- Explanation for Auto Work Load -->
+			<div style="display:none">
+				<div id="auto-work-load-explanation" class="setting-explanation">
+					<h3>Add Verses As Needed</h3>
+					<p>
+						If you add more verses than you are able to incorporate into your memorization schedule, Memverse will set the verse status to 'Pending'.
+						You can also set verses to 'Pending' yourself.
+					</p>
+					<p>
+						Select this option if you would like Memverse to automatically start reviewing the new verses as your existing ones become memorized.
+					</p>
+				</div>
+			</div>
+
 			<li>
-				<%= f.label 			:sync_subsections, t('.Synchronize subsections') %>
+				<%= f.label 			:sync_subsections do %>
+					<%= t('.Synchronize subsections') %>
+					<span><%= link_to (image_tag("blue-icon.png", :width=>"16", :height=>"16")), "#sync-subsections-explanation", :id => "inline" %></span>
+				<% end %>
 				<%= f.check_box 		:sync_subsections %>
 				<span class="warning">Experimental - Use with Caution!</span>
 			</li>
 
+			<!-- Explanation for Supsection Sync -->
+			<div style="display:none">
+				<div id="sync-subsections-explanation" class="setting-explanation">
+					<h3>Synchronize Review of Subsections</h3>
+					<p>
+						Setting this option allows verses in subsections of longer passages to be automatically grouped together so that they are reviewed
+						on the same day. Verses in subsections will all have the same interval.
+					</p>
+				</div>
+			</div>
+
 			<li>
-				<%= f.label 			:all_refs, t('.Test all references') %>
+				<%= f.label 			:all_refs do %>
+					<%=  t('.Test all references') %>
+					<span><%= link_to (image_tag("blue-icon.png", :width=>"16", :height=>"16")), "#test-refs-explanation", :id => "inline" %></span>
+				<% end %>
 				<%= f.check_box 		:all_refs %>
 			</li>
 
+			<!-- Explanation for Reference Testing -->
+			<div style="display:none">
+				<div id="test-refs-explanation" class="setting-explanation">
+					<h3>Reference Testing</h3>
+					<p>
+						By default, Memverse only reviews the reference for the first verse of each passage. Select this option if you would like to
+						review the references for all your memory verses.
+					</p>
+				</div>
+			</div>
+
 			<li>
-				<%= f.label 			:show_echo, t('.Always show feedback') %>
+				<%= f.label 			:show_echo do %>
+					<%= t('.Always show feedback') %>
+					<span><%= link_to (image_tag("blue-icon.png", :width=>"16", :height=>"16")), "#show-echo-explanation", :id => "inline" %></span>
+				<% end %>
 				<%= f.check_box 		:show_echo %>
 			</li>
+
+			<!-- Explanation for Feeback -->
+			<div style="display:none">
+				<div id="show-echo-explanation" class="setting-explanation">
+					<h3>Review Feedback</h3>
+					<p>
+						By default, Memverse will stop showing feedback as you type once a verse is memorized. Select this option if you would like to continue getting
+						realtime feedback even after you have memorized a verse.
+					</p>
+
+					<p>
+						This is a good option to turn on temporarily if you ever fall behind in your memorization schedule as it facilitates recall and speeds up your
+						review session.
+					</p>
+				</div>
+			</div>
 
 			<li>
 				<%= f.label 			:show_email, t('.Show email') %>
@@ -200,16 +305,18 @@
 
 </div>
 
-
-
 </div> <!-- End: White Box with Margins -->
-
 
 
 <!-- http://www.devbridge.com/projects/autocomplete/jquery/ -->
 <script type="text/javascript">
 
 	$(document).ready(function() {
+
+		//fancybox info -- for explanations of settings
+		$("a#inline").fancybox({
+			'padding' : 20
+		});
 
 		$country = $('#user_country');
 		$state = $('#state-entry');
