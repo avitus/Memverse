@@ -78,8 +78,12 @@ $left-rating-gutter: 25%;   // Passage review page
         padding: 0.5em 1em 0.5em 1em;
     }
 
+    .mv-headings {
+        font-weight: bold;
+    }
+
     // singe line for each memory verse
-    .mv-details {
+    .mv-details, .mv-headings {
         clear: both;
         padding-bottom: 0.2em;
 
