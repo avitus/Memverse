@@ -132,7 +132,7 @@ gem 'dalli'                                                                    #
 gem 'redis', '>=2.2.2'                                                         # Redis Key-value store
 gem 'friendly_id'                                                              # Makes nice IDs for models
 gem 'foreman'                                                                  # Helps manage multiple processes when running app in development.
-gem 'supermodel', git: 'git://github.com/KonaTeam/supermodel.git'              # Uses ActiveModel for in-memory storage with redis
+# gem 'supermodel', git: 'git://github.com/KonaTeam/supermodel.git'              # Uses ActiveModel for in-memory storage with redis
 gem 'best_in_place', github: 'bernat/best_in_place'                            # In-place editing support ... no Rails 4 release yet
 gem 'split', require: 'split/dashboard'                                        # AB testing framework
 gem 'backup'                                                                   # Used to backup MySQL database and uploaded site assets

@@ -1,11 +1,4 @@
 GIT
-  remote: git://github.com/KonaTeam/supermodel.git
-  revision: fc77e8ce188fdfa03b1c2f97d134d81012966862
-  specs:
-    supermodel (0.1.4)
-      activemodel (>= 3.0.0)
-
-GIT
   remote: git://github.com/alexcwatt/bloggity.git
   revision: e21cf6b6c7f3c05aa7738377554bf3eac0c47f83
   specs:
@@ -673,7 +666,6 @@ DEPENDENCIES
   slim
   split
   sqlite3
-  supermodel!
   swagger-docs!
   td
   therubyracer (= 0.11.4)
