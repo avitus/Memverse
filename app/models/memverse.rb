@@ -82,6 +82,7 @@ class Memverse < ActiveRecord::Base
       :mnemonic      => self.needs_mnemonic? ? self.verse.mnemonic : "",
       :feedback      => self.show_feedback?,
       :status        => self.status,
+      :rep_n         => self.rep_n,
       :subsection    => self.subsection
     }
   end
