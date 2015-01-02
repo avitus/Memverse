@@ -87,8 +87,20 @@ var passageListState = {
  ******************************************************************************/
 function buildHTMLforMvList ( mv_array ) {
 
-    var $mvList = $('<div/>').addClass("mv-list-details");
+    var $mvList         = $('<div/>').addClass("mv-list-details");
 
+    // Build HTML for memory verse
+    var $mvListHeadings = $('<div/>').addClass("mv-headings ")
+        .append( $('<span class="mv-reference"  />').text( "Ref"        ))
+        .append( $('<span class="mv-text"       />').text( "Text"       ))
+        .append( $('<span class="mv-interval"   />').text( "Interval"   ))
+        .append( $('<span class="mv-next_date"  />').text( "Next Test"  ))
+        .append( $('<span class="mv-subsection" />').text( "Subsection" ));
+
+    // Add headings
+    $mvList.append( $mvListHeadings );
+
+    // Add each verse in passage
     $.each( mv_array, function( index, mv ) {
         $mvDiv = buildHTMLforMvDetails( mv );
         $mvList.append( $mvDiv );
