@@ -6,7 +6,7 @@
 
 		    <div class="top-heading">
 				<h2><span class="current-ref"><%=@bk_ch%>:<span class="current_verse"><%=@verse.to_s%></span></span></h2>
-		        <div class="toggle-hint">Show Hint</div>
+		        <div class="toggle-hint">Show Verse</div>
 		    </div>
 
 			<!-- Question-side : Entry box -->
@@ -135,15 +135,15 @@
 		// show verse
 		$(".toggle-hint").click( function () {
 
-			if ($(this).text() == "Show Hint") {
+			if ($(this).text() == "Show Verse") {
 				$("#chapter-text > .verse-text:hidden:first").fadeIn(800);
-				$(".toggle-hint").text("Hide Hint");
+				$(".toggle-hint").text("Hide Verse");
 				// Scroll to bottom of chapter
 				nDiv = document.getElementById('chapter-text');
 				setTimeout("nDiv.scrollTop = nDiv.scrollHeight",1);
 			} else {
 				$("#chapter-text > .verse-text:visible:last").fadeOut(400);
-				$(".toggle-hint").text("Show Hint");
+				$(".toggle-hint").text("Show Verse");
 			}
 
 		});
@@ -180,10 +180,10 @@
 			else {
 
 				// Display the next verse unless it is already displayed as a hint
-				if ($(".toggle-hint").text() == "Show Hint") {
+				if ($(".toggle-hint").text() == "Show Verse") {
 					$("#chapter-text > .verse-text:hidden:first").fadeIn(800);
 				} else {
-					$(".toggle-hint").text("Show Hint");
+					$(".toggle-hint").text("Show Verse");
 				}
 
 				// Get ID of next verse to be reviewed
