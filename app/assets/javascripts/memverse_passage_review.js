@@ -213,9 +213,9 @@ function mvPassageReviewHandleInput( $inputCell, correctWord, userGuess, e ) {
     // Word correct ==> next word
     if ( scrub_text( correctWord ) === scrub_text( userGuess ) ) {
 
-        $inputCell.before( correctWord + " " );              // insert the correct word into the verse
-        $inputCell.before( $inputCell.nextUntil("input") );  // move subsequent revealed words ahead of input
-        mvMirrorNextInput( $inputCell );                     // update the input box
+        $inputCell.before( "<span>" + correctWord + " </span>" ); // insert the correct word into the verse
+        $inputCell.before( $inputCell.nextUntil("input") );       // move subsequent revealed words ahead of input
+        mvMirrorNextInput( $inputCell );                          // update the input box
 
     }
 
