@@ -28,6 +28,9 @@
 
 
 <script type="text/javascript">
+  $(document).ready(function (){
+      $("#searchParams").focus();
+    });
   $(".add")
   	.live("ajax:success", function(evt, data, status, xhr) { $(this).html(data.msg) })
 	.live("ajax:beforeSend", function(evt, xhr, settings) { $(this).find("a").html("Adding...") });
