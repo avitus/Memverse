@@ -12,6 +12,7 @@ MemverseApp::Application.initialize!
 TRANSLATIONS = {
   AFR:    {name: "Afrikaans 1983 Translation", language: "af"},
   AFR53:  {name: "Afrikaans 1953 Translation", language: "af"},
+  NLV:    {name: "Afrikaans Nuwe Lewende Vertaling", language: "af"},
   LUT84:  {name: "Luther Bibel 1984", language: "de"},
   LUT:    {name: "Luther Bibel 1545", language: "de"},
   SCH:    {name: "Schlachter 2000", language: "de"},
