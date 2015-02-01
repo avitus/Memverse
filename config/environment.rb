@@ -62,6 +62,7 @@ TRANSLATIONS = {
   ACF:    {name: "Almeida Corrigida e Fiel", language: "pt"},
   ARA:    {name: "Almeida Revista e Atualizada", language: "pt"},
   SPB:    {name: "Svenska Folkbibeln", language: "sv"},
+  YCE:    {name: "Yoruba Bible", language: "yo"},
   CCB:    {name: "Chinese Contemporary Bible", language: "zh"},
 }
 
