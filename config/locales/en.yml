@@ -120,6 +120,7 @@
     pt: "Portuguese"
     sv: "Swedish"
     tr: "Turkish"
+    yo: "Yoruba"
     zh: "Chinese"
 
   txt:
@@ -357,7 +358,7 @@
       Church:                   "Church"
       Group:                    "Group"
       Receive newsletters:      "Receive newsletters"
-      Reminder frequency:       "Reminder frequency"
+      Reminder frequency:       "Email reminder frequency"
       Language:                 "Language"
       Target Time:              "Target Time"
       Max Repetition Interval:  "Max. repetition interval"
