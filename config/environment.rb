@@ -151,6 +151,30 @@ BIBLEBOOKS[:ko] = {"창"=>"창세기", "출"=>"출애굽기", "레"=>"레위기"
   "벧후"=>"베드로후서", "요일"=>"요한일서", "요이"=>"요한2서", "요삼"=>"요한3서",
   "유"=>"유다서", "계"=>"요한계시록"}
 
+BIBLEBOOKS[:yo] = {"Gẹn"=>"Genesisi", "Eks"=>"Eksodu", "Lef"=>"Lefitiku",
+  "Num"=>"Numeri", "Deu"=>"Deuteronomi", "Joṣ"=>"Ìwé Joṣua",
+  "A. Oni"=>"Onidajọ", "Rut"=>"Rutu", "I. Sam"=>"I. Samueli",
+  "II. Sam"=>"II. Samueli", "I. A. Ọba"=>"I. Awọn Ọba",
+  "II. A. Ọba"=>"II. Awọn Ọba", "I. Kro"=>"I. Kronika",
+  "II. Kro"=>"II. Kronika", "Esr"=>"Esra", "Neh"=>"Nehemiah", "Est"=>"Esteri",
+  "Job"=>"Jobu", "O. Daf"=>"Orin Dafidi", "Owe"=>"Ìwé Owe",
+  "Oni"=>"Ìwé Oniwasu", "O. Sol"=>"Orin Solomoni", "Isa"=>"Isaiah",
+  "Jer"=>"Jeremiah", "Ẹk. Jer"=>"Ẹkún Jeremiah", "Esek"=>"Esekieli",
+  "Dan"=>"Danieli", "Hos"=>"Hosea", "Joel"=>"Joeli", "Amo"=>"Amosi",
+  "Oba"=>"Obadiah", "Jon"=>"Jona", "Mik"=>"Mika", "Nah"=>"Nahumu",
+  "Hab"=>"Habakkuku", "Sef"=>"Sefaniah", "Hag"=>"Haggai", "Sek"=>"Sekariah",
+  "Mal"=>"Malaki", "Mat"=>"Matteu", "Mak"=>"Marku", "Luk"=>"Luku",
+  "Joh"=>"Johannu", "Iṣe Apo"=>"Iṣe Awọn Aposteli", "Rom"=>"Awọn Ara Romu",
+  "I. Kor"=>"I. Awọn Ara Korinti", "II. Kor"=>"II. Awọn Ara Korinti",
+  "Gal"=>"Awọn Ara Galatia", "Efe"=>"Awọn Ara Efesu",
+  "Filp"=>"Awọn Ara Filippi", "Kol"=>"Awọn Ara Kolosse",
+  "I. Tes"=>"I. Awọn Ara Tessalonika", "II. Tes"=>"II. Awọn Ara Tessalonika",
+  "I. Tim"=>"I. Timoteu", "II. Tim"=>"II. Timoteu", "Tit"=>"Titu",
+  "File"=>"Filemoni", "Heb"=>"Awọn Heberu", "Jak"=>"Jakọbu",
+  "I. Pet"=>"I. Peteru", "II. Pet"=>"II. Peteru", "I. Joh"=>"I. Johannu",
+  "II. Joh"=>"II. Johannu", "III. Joh"=>"III. Johannu", "Jud"=>"Juda",
+  "Ifi."=>"Ifihàn Ti Johannu"}
+
 MEDALS = {
   :gold   => 3,
   :silver => 2,
