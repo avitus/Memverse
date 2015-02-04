@@ -8,7 +8,7 @@
 
 		<%= form_tag search_verse_path, :method => :get do %>
 
-		    <%= text_field_tag( :searchParams ) %>
+		    <%= text_field_tag :searchParams, @search_text %>
 		    <%= submit_tag "", :name => nil, :id => 'searchSubmit' %>
 
 		<% end %>
@@ -16,7 +16,9 @@
 	
 	<br>
 	
-	<% unless @verses.empty? %>
+	<% if @verses.empty? %>
+		<h2>No results found.</h2>
+	<% else %>
 		<div id="search_results">	
 			<table class="memverse-standard">
 				<%= render :partial => "verses/verse_headings" %>
