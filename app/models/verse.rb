@@ -104,7 +104,7 @@ class Verse < ActiveRecord::Base
   end
 
   def history?
-    (1..17).include?(book_index)
+    (1..17).include?(book_index) || book_index == 44
   end
 
   def wisdom?
