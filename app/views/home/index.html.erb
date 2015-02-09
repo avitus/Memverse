@@ -88,7 +88,7 @@
 				<div class="auth-button">
 					<ul>
 						<li><%= link_to 'SIGN UP', new_user_registration_path %></li>
-						<li><a href="#login">LOG IN</a></li>
+						<li><a href="#login" id="login-link">LOG IN</a></li>
 					</ul>
 				</div>
 
@@ -196,7 +196,7 @@
 		<div class="sign-field">
 			<%= form_for :user, :url => user_session_path(@user) do |f| %>
 				<div>
-					<%= f.email_field :email, :class => "new-field", :placeholder => "Your email address" %>
+					<%= f.email_field :email, :class => "new-field", :id => :login_email, :placeholder => "Your email address" %>
 					<%= f.password_field :password, :class => "new-field", :placeholder => "Your password" %>
 				</div>
 				<div class="button-area">
@@ -264,6 +264,12 @@
 				});
 
 			return false;
+		});
+		
+		$("#login-link").click(function (e) {
+			e.preventDefault();
+			location.href = "#login";
+			document.getElementById("login_email").focus();
 		});
 	});
 </script>
