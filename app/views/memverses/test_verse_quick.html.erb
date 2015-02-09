@@ -274,7 +274,9 @@
 			else {
 				success = insertondeck(ondeck.mv_skip, ondeck.mv_prior_skip);	// Update page with ondeck verses
 				current = ondeck.mv_skip										// Update current verse
-				$("ul#upcoming-verses .upcoming-verse-ref:contains(" + current.ref + ")").fadeOut(500); // remove from upcoming
+				var upcomingRef = $("ul#upcoming-verses .upcoming-verse-ref:contains(" + current.ref + ")");
+					upcomingRef.fadeOut(500);		// fade out reference (makes invisible) 
+					upcomingRef.remove();			// completely remove reference
 
 				if($("ul#upcoming-verses .upcoming-verse-ref:visible").not(":contains(" + current.ref + ")").length == 0) {
 					$("ul#upcoming-verses").html("<li>(None)</li>");
