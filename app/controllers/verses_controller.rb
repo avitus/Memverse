@@ -264,10 +264,11 @@ class VersesController < ApplicationController
     @tab = "home"
   	@sub = "searchvs"
     add_breadcrumb I18n.t('home_menu.Search Bible'), :search_verse_path
-
+		
+		@search_text = params[:searchParams]
 		@verses = Array.new
-		@verses = Verse.search( Riddle::Query.escape(params[:searchParams][0..255]) ) if params[:searchParams]
-
+		@verses = Verse.search( Riddle::Query.escape(@search_text[0..255]) ) if @search_text
+	
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml  => @verses }
