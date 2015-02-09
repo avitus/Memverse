@@ -9,7 +9,9 @@
 <h1>Verses Requiring Checking</h1>
 
 <div class="verse-list">
-
+<% if @need_verification.empty? %>
+	<h2>There are no <%= @current_user.translation %> verses to be checked.</h2>
+<% else %>
 	<table cellpadding="6" cellspacing="0">
 		<tr>
 			<th>Ver</th>
@@ -25,6 +27,7 @@
 		</tr>
 		<% end %>
 	</table>
+<% end %>
 
 </div>
 </div> <!-- end: white-box-with-margins -->
