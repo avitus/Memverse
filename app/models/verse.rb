@@ -337,7 +337,7 @@ class Verse < ActiveRecord::Base
 
     # default to Western text
     else
-      self.text.gsub(/([\wáâãàçéêíóôõúüñäõ])([\wáâãàçéêíóôõúüñäõ]|[\-'’][\wáâãàçéêíóôõúüñäõ])*/,'\1')
+      self.text.gsub(/([\wáâãàçéêíóôõúüñäõÄÕö])([\wáâãàçéêíóôõúüñäõÄÕö]|[\-'’][\wáâãàçéêíóôõúüñäõÄÕö])*/,'\1')
     end
 
     # In simpler language, the longest regex is matching:
