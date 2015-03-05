@@ -1,3 +1,0 @@
-class Hardcover < Book
-  #
-end

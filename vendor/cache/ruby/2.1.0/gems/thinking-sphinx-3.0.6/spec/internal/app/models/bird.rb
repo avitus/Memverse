@@ -1,2 +1,0 @@
-class Bird < Animal
-end

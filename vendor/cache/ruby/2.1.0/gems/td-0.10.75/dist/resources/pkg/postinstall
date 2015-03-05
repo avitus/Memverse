@@ -1,7 +1,0 @@
-#!/bin/sh
-ln -sf /usr/local/td/bin/td /usr/bin/td
-osascript -e '
-tell application "Terminal"
-    activate
-    do script "td"
-end tell'
