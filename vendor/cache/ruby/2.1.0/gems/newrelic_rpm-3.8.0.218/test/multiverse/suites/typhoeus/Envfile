@@ -1,0 +1,45 @@
+suite_condition("Typhoeus not supported in 1.8.6 and excluded on 1.8.7 non-REE") do
+
+  # Under Ruby 1.8.7 (but not REE), there are persistent segfaults with Typhoeus
+  # and the Ruby agent. This predated our Typhoeus instrumentation, but given
+  # usage levels and obscurity of the issue, it isn't worth deeper digging.
+  # Just use REE, or better yet >= 1.9
+
+  (RUBY_VERSION != '1.8.6') &&
+  (RUBY_VERSION != '1.8.7' || RUBY_DESCRIPTION =~ /Enterprise/)
+end
+
+gemfile <<-RB
+  gem 'typhoeus', '~> 0.6.5'
+  gem 'rack'
+  gem 'json', :platforms => [:rbx, :mri_18]
+RB
+
+gemfile <<-RB
+  # Compatibility issues with ethon 0.5.12 https://github.com/typhoeus/ethon/issues/51
+  gem 'ethon', '0.5.11'
+
+  gem 'typhoeus', '~> 0.5.4'
+  gem 'rack'
+  gem 'json', :platforms => [:rbx, :mri_18]
+RB
+
+# Earliest supported version
+gemfile <<-RB
+  # Compatibility issues with ethon 0.5.12 https://github.com/typhoeus/ethon/issues/51
+  gem 'ethon', '0.5.11'
+
+  gem 'typhoeus', '0.5.3'
+  gem 'rack'
+  gem 'json', :platforms => [:rbx, :mri_18]
+RB
+
+# Prior to supported versions
+gemfile <<-RB
+  # Compatibility issues with ethon 0.5.12 https://github.com/typhoeus/ethon/issues/51
+  gem 'ethon', '0.5.11'
+
+  gem 'typhoeus', '0.5.2'
+  gem 'rack'
+  gem 'json', :platforms => [:rbx, :mri_18]
+RB

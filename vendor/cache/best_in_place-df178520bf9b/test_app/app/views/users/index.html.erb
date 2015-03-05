@@ -1,0 +1,25 @@
+<h1>Listing users</h1>
+
+<table>
+  <tr>
+    <th colspan="2">Name</th>
+    <th>Last name</th>
+    <th>Country</th>
+  </tr>
+
+<% @users.each do |user| %>
+  <tr id="user_<%= user.id %>">
+    <td class="name">
+      <%= best_in_place user, :name,
+                        activator: "#edit_#{user.id}",
+                        display_with: :link_to, 
+                        helper_options: user_path(user) %>
+    </td>
+    <td><small><a href="#" id="edit_<%= user.id %>">edit</a></small></td>
+    <td><%= user.last_name %></td>
+    <td><%= COUNTRIES[user.country.to_i] %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />

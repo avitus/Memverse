@@ -1,0 +1,12 @@
+/usr/local/bin/ruby -r ./siteconf20150305-49733-1hxrwrt.rb extconf.rb 
+creating Makefile
+
+make "DESTDIR=" clean
+
+make "DESTDIR="
+compiling debug_inspector.c
+linking shared-object debug_inspector.so
+
+make "DESTDIR=" install
+/usr/bin/install -c -m 0755 debug_inspector.so ./.gem.20150305-49733-jp7x2c
+installing default debug_inspector libraries

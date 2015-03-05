@@ -1,0 +1,22 @@
+<table class="workers table table-hover table-bordered table-striped table-white">
+  <thead>
+    <th><%= t('Worker') %></th>
+    <th><%= t('Queue') %></th>
+    <th><%= t('Class') %></th>
+    <th><%= t('Arguments') %></th>
+    <th><%= t('Started') %></th>
+  </thead>
+  <% workers.each_with_index do |(worker, msg, run_at), index| %>
+    <tr>
+      <td><%= worker %></td>
+      <td>
+        <a href="<%= root_path %>queues/<%= msg['queue'] %>"><%= msg['queue'] %></a>
+      </td>
+      <td><%= msg['payload']['class'] %></td>
+      <td>
+        <div class="args"><%= display_args(msg['payload']['args']) %></div>
+      </td>
+      <td><%= relative_time(run_at.is_a?(String) ? DateTime.parse(run_at) : run_at) %></td>
+    </tr>
+  <% end %>
+</table>

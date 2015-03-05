@@ -1,0 +1,17 @@
+language: ruby
+rvm:
+  - 1.9.3
+  - 2.0.0
+env:
+  - rails=3.1.8
+  - rails=3.2.8
+  - rails=3.2.13
+  - rails=4.0.0
+  - orm=mongoid2
+  - orm=mongoid3
+  - orm=mongo_mapper
+services:
+  - mongodb
+matrix:
+  allow_failures:
+    - env: orm=mongoid2

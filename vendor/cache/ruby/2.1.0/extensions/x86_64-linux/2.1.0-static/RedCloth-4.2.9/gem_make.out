@@ -1,0 +1,127 @@
+/usr/local/bin/ruby -r ./siteconf20150305-49733-l2qraf.rb extconf.rb 
+checking for main() in -lc... yes
+creating Makefile
+
+make "DESTDIR=" clean
+
+make "DESTDIR="
+compiling redcloth_inline.c
+ragel/redcloth_inline.c.rl: In function ‘red_parse_title’:
+ragel/redcloth_inline.c.rl:69:7: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+ragel/redcloth_inline.c.rl: In function ‘red_block’:
+ragel/redcloth_inline.c.rl:100:3: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+ragel/redcloth_inline.c.rl:100:9: warning: variable ‘attr_regs’ set but not used [-Wunused-but-set-variable]
+compiling redcloth_attributes.c
+ragel/redcloth_attributes.c.rl: In function ‘redcloth_attribute_parser’:
+ragel/redcloth_attributes.c.rl:27:11: warning: variable ‘act’ set but not used [-Wunused-but-set-variable]
+ragel/redcloth_attributes.c.rl: In function ‘redcloth_attributes’:
+ragel/redcloth_attributes.c.rl:46:3: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+ragel/redcloth_attributes.c.rl: In function ‘redcloth_link_attributes’:
+ragel/redcloth_attributes.c.rl:55:3: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+compiling redcloth_scan.c
+ragel/redcloth_scan.c.rl: In function ‘redcloth_transform’:
+ragel/redcloth_scan.c.rl:43:3: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+ragel/redcloth_scan.c.rl:47:3: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+In file included from ragel/redcloth_scan.c.rl:10:0:
+redcloth.h:163:5: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+     int aint = 0; \
+     ^
+ragel/redcloth_scan.rl:138:43: note: in expansion of macro ‘LIST_LAYOUT’
+redcloth.h:210:7: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+       VALUE end_list = rb_ary_pop(list_layout); \
+       ^
+redcloth.h:198:5: note: in expansion of macro ‘LIST_CLOSE’
+     LIST_CLOSE(); \
+     ^
+ragel/redcloth_scan.rl:138:43: note: in expansion of macro ‘LIST_LAYOUT’
+redcloth.h:163:5: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+     int aint = 0; \
+     ^
+NONE:9:46: note: in expansion of macro ‘LIST_LAYOUT’
+redcloth.h:210:7: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+       VALUE end_list = rb_ary_pop(list_layout); \
+       ^
+redcloth.h:198:5: note: in expansion of macro ‘LIST_CLOSE’
+     LIST_CLOSE(); \
+     ^
+NONE:9:46: note: in expansion of macro ‘LIST_LAYOUT’
+redcloth.h:163:5: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+     int aint = 0; \
+     ^
+ragel/redcloth_scan.rl:154:41: note: in expansion of macro ‘LIST_LAYOUT’
+redcloth.h:210:7: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+       VALUE end_list = rb_ary_pop(list_layout); \
+       ^
+redcloth.h:198:5: note: in expansion of macro ‘LIST_CLOSE’
+     LIST_CLOSE(); \
+     ^
+ragel/redcloth_scan.rl:154:41: note: in expansion of macro ‘LIST_LAYOUT’
+redcloth.h:163:5: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+     int aint = 0; \
+     ^
+ragel/redcloth_scan.rl:153:29: note: in expansion of macro ‘LIST_LAYOUT’
+redcloth.h:210:7: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+       VALUE end_list = rb_ary_pop(list_layout); \
+       ^
+redcloth.h:198:5: note: in expansion of macro ‘LIST_CLOSE’
+     LIST_CLOSE(); \
+     ^
+ragel/redcloth_scan.rl:153:29: note: in expansion of macro ‘LIST_LAYOUT’
+redcloth.h:163:5: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+     int aint = 0; \
+     ^
+ragel/redcloth_scan.rl:154:43: note: in expansion of macro ‘LIST_LAYOUT’
+redcloth.h:210:7: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+       VALUE end_list = rb_ary_pop(list_layout); \
+       ^
+redcloth.h:198:5: note: in expansion of macro ‘LIST_CLOSE’
+     LIST_CLOSE(); \
+     ^
+ragel/redcloth_scan.rl:154:43: note: in expansion of macro ‘LIST_LAYOUT’
+redcloth.h:163:5: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+     int aint = 0; \
+     ^
+NONE:3:32: note: in expansion of macro ‘LIST_LAYOUT’
+redcloth.h:210:7: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+       VALUE end_list = rb_ary_pop(list_layout); \
+       ^
+redcloth.h:198:5: note: in expansion of macro ‘LIST_CLOSE’
+     LIST_CLOSE(); \
+     ^
+NONE:3:32: note: in expansion of macro ‘LIST_LAYOUT’
+In file included from ragel/redcloth_scan.c.rl:10:0:
+redcloth.h:163:5: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+     int aint = 0; \
+     ^
+ragel/redcloth_scan.rl:180:30: note: in expansion of macro ‘LIST_LAYOUT’
+redcloth.h:210:7: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+       VALUE end_list = rb_ary_pop(list_layout); \
+       ^
+redcloth.h:198:5: note: in expansion of macro ‘LIST_CLOSE’
+     LIST_CLOSE(); \
+     ^
+ragel/redcloth_scan.rl:180:30: note: in expansion of macro ‘LIST_LAYOUT’
+redcloth.h:163:5: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+     int aint = 0; \
+     ^
+NONE:21:33: note: in expansion of macro ‘LIST_LAYOUT’
+redcloth.h:210:7: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+       VALUE end_list = rb_ary_pop(list_layout); \
+       ^
+redcloth.h:198:5: note: in expansion of macro ‘LIST_CLOSE’
+     LIST_CLOSE(); \
+     ^
+NONE:21:33: note: in expansion of macro ‘LIST_LAYOUT’
+ragel/redcloth_scan.c.rl: In function ‘redcloth_html_esc’:
+ragel/redcloth_scan.c.rl:87:3: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+ragel/redcloth_scan.c.rl:96:3: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+ragel/redcloth_scan.c.rl: In function ‘redcloth_latex_esc’:
+ragel/redcloth_scan.c.rl:156:3: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+ragel/redcloth_scan.c.rl:185:7: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+ragel/redcloth_scan.c.rl: In function ‘redcloth_to’:
+ragel/redcloth_scan.c.rl:207:3: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+linking shared-object redcloth_scan.so
+
+make "DESTDIR=" install
+/usr/bin/install -c -m 0755 redcloth_scan.so ./.gem.20150305-49733-15ce2k1
+installing default redcloth_scan libraries

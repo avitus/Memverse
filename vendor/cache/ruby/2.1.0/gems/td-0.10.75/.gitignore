@@ -1,0 +1,5 @@
+.bundle
+build/td-bulk-import-java
+Gemfile.lock
+vendor/*
+*~
