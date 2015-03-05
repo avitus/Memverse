@@ -15,6 +15,7 @@
 
 # Ignore development environmment-specific gems
 vendor/cache/libv8-3.3.10.4-x86_64-linux.gem
+vendor/cache/ruby
 
 # minimal Rails specific artifacts
 db/*.sqlite3
