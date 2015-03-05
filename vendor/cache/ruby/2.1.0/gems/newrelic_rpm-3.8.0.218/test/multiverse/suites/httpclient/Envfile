@@ -1,0 +1,13 @@
+suite_condition("HTTPClient not supported in 1.8.6") do
+  RUBY_VERSION != '1.8.6'
+end
+
+httpclient_versions = %w(2.3.3 2.2.0)
+
+httpclient_versions.each do |httpclient_version|
+  gemfile <<-RB
+    gem 'httpclient', '~> #{httpclient_version}'
+    gem 'rack'
+    gem 'json', :platforms => [:rbx, :mri_18]
+  RB
+end

@@ -1,0 +1,87 @@
+module Guard
+  class Cucumber
+
+    # The Cucumber runner handles the execution of the cucumber binary.
+    #
+    module Runner
+      class << self
+
+        # Run the supplied features.
+        #
+        # @param [Array<String>] paths the feature files or directories
+        # @param [Hash] options the options for the execution
+        # @option options [Array<String>] :feature_sets a list of non-standard feature directory/ies
+        # @option options [Boolean] :bundler use bundler or not
+        # @option options [Array<String>] :rvm a list of rvm version to use for the test
+        # @option options [Boolean] :notification show notifications
+        # @option options [String] :command_prefix allows adding an additional prefix to the cucumber command. Ideal for running xvfb-run for terminal only cucumber tests.
+        # @return [Boolean] the status of the execution
+        #
+        def run(paths, options = { })
+          return false if paths.empty?
+
+          message = options[:message] || (paths == ['features'] ? "Running all Cucumber features: #{ cucumber_command(paths, options) }" : "Running Cucumber features: #{ cucumber_command(paths, options) }")
+          UI.info message, :reset => true
+
+          system(cucumber_command(paths, options))
+        end
+
+        private
+
+        # Assembles the Cucumber command from the passed options.
+        #
+        # @param [Array<String>] paths the feature files or directories
+        # @param [Hash] options the options for the execution
+        # @option options [Boolean] :bundler use bundler or not
+        # @option options [Array<String>] :rvm a list of rvm version to use for the test
+        # @option options [Boolean] :notification show notifications
+        # @option options [String] :command_prefix allows adding an additional prefix to the cucumber command. Ideal for running xvfb-run for terminal only cucumber tests.
+        # @return [String] the Cucumber command
+        #
+        def cucumber_command(paths, options)
+          cmd = []
+          cmd << options[:command_prefix] if options[:command_prefix]
+          cmd << "rvm #{options[:rvm].join(',')} exec" if options[:rvm].is_a?(Array)
+          cmd << 'bundle exec' if (bundler? && options[:bundler] != false) || (bundler? && options[:binstubs].is_a?(TrueClass))
+          cmd << cucumber_exec(options)
+          cmd << options[:cli] if options[:cli]
+
+          if options[:notification] != false
+            notification_formatter_path = File.expand_path(File.join(File.dirname(__FILE__), 'notification_formatter.rb'))
+            cmd << "--require #{ notification_formatter_path }"
+            cmd << "--format Guard::Cucumber::NotificationFormatter"
+            cmd << "--out #{ null_device }"
+            cmd << (options[:feature_sets] || ['features']).map {|path| "--require #{path}"}.join(' ')
+          end
+
+          (cmd + paths).join(' ')
+        end
+
+        # Simple test if binstubs prefix should be used.
+        #
+        # @return [String] Cucumber executable
+        #
+        def cucumber_exec(options = {})
+            options[:binstubs] == true && ( bundler? || options[:bundler] != false ) ? "bin/cucumber" : "cucumber"
+        end
+
+        # Simple test if bundler should be used. it just checks for the `Gemfile`.
+        #
+        # @return [Boolean] bundler exists
+        #
+        def bundler?
+          @bundler ||= File.exist?("#{Dir.pwd}/Gemfile")
+        end
+
+        # Returns a null device for all OS.
+        #
+        # @return [String] the name of the null device
+        #
+        def null_device
+          RUBY_PLATFORM.index('mswin') ? 'NUL' : '/dev/null'
+        end
+
+      end
+    end
+  end
+end

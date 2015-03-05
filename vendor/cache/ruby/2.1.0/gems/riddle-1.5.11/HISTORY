@@ -1,0 +1,130 @@
+1.5.11 - April 19th 2014
+- Riddle::Query.escape covers = and & characters.
+- Hold onto address and port settings when crafting the equivalent listen setting, but don't render them.
+- Allow for Sphinx's common settings section (Trevor Smith). Optional and initially disabled.
+- Allow for multiple attributes in GROUP BY clauses (J. Garcia).
+- Riddle::Query.escape covers < and > characters.
+- The parser should not presume indexer and searchd sections exist.
+
+1.5.10 - January 11th 2014
+- SELECT values can be prepended as well as the existing append support.
+- New settings for Sphinx 2.2.1.
+- Template index type for Sphinx 2.2.1.
+- TSV source types for Sphinx 2.2.1.
+- Support for HAVING, GROUP-n-BEST in SELECT statements.
+- Dates in filters are converted to (UTC) timestamp integers.
+- Default to * in SELECT queries only if nothing else is supplied.
+- Fix licence, URL in gemspec (Ken Dreyer).
+- Handle empty arrays for filter elegantly (Bryan Ricker).
+- Add a contributing section to the README (Ken Dreyer).
+- Don't automatically escape function references in SphinxQL ORDER clauses.
+
+1.5.9 - October 20th 2013
+- Adding all known Sphinx settings to configuration classes as of Sphinx 2.1.2, including JSON settings.
+- Convert date objects in INSERT/REPLACE queries to timestamps, just like time objects.
+- Don't escape references to id in SphinxQL INSERT/REPLACE queries.
+
+1.5.8 - August 26th 2013
+- Reworked escaping to be consistent and always query-safe (Demian Ferreiro).
+- Escape column names in SphinxQL WHERE, INSERT, ORDER BY and GROUP BY clauses and statements (Jason Rust).
+
+1.5.7 - July 9th 2013
+- Respect Riddle::OutOfBoundsError instances, instead of wrapping them in ResponseError.
+- Handle boolean values for snippets options.
+- Don't modify snippets parameters (Demian Ferreiro).
+- rt_attr_multi and rt_attr_multi_64 settings for real-time indices.
+- Arrays in INSERT/REPLACE statements are wrapped in parentheses with values separated by commas. Required for MVA values in real-time indices.
+- Clear out the query queue before running a single query.
+
+1.5.6 - May 7th 2013
+- Wrap underlying parse errors within Riddle::ResponseError instances when parsing responses.
+- Add lemmatization options (Kirill Lazarev).
+- Ignore configuration lines that are only comments when parsing configurations.
+- Construct GROUP ORDER and ORDER in SphinxQL in the correct order (Grzegorz Derebecki).
+
+1.5.5 - February 23rd 2013
+- Added Riddle::Query.escape for SphinxQL queries.
+- Fixed failover handling (Ngan Pham).
+- Improved encoding default check (Darcy Brown).
+- Removing REE support (as it is no longer supported either).
+- Client key is used for binary protocol persistent connections (if set).
+- Escaping single quotes in SphinxQL snippets calls.
+- Regex fix for matching {'s (Rob Golkosky).
+
+1.5.4 - January 2nd 2013
+- RT indices get most of the same settings as SQL indices.
+- Escape single quotes in SphinxQL match queries, given we're wrapping them in single quotes.
+- Remove unnecessary characters from string values for SphinxQL inserts.
+- Convert time objects to integers for SphinxQL inserts.
+- Include 'orphan' sources (which aren't used directly by indices, but could be parents of sources that are used) when generating configuration files.
+- Use parent source type if child source has no type supplied.
+- Ignore comments when parsing Sphinx configuration files.
+
+1.5.3 - August 10th 2012
+- Sphinx 2.0.5 support.
+- :with_all and :without_all support for SphinxQL.
+- Allow setting of prefix and infix fields directly.
+- Configuration parser
+- Adding rotate command to the controller.
+
+1.5.2 - May 14th 2012
+- Fixing 64-bit MVA support.
+- Grouped searches now sort by weight instead of by group as a default. You can change this setting via Riddle::Client#group_clause.
+- Use a local array of servers - don't clear the main set (S. Christoffer Eliesen).
+- Fixing VersionError reference for Sphinx 0.9.9 or better (S. Christoffer Eliesen).
+- Consistent documentation for default port: 9312 (Aleksey Morozov).
+- Sphinx 2.0.4 support (Ilia Lobsanov).
+- Handle single-value float filters (by translating them to a range) (Steven Bristol).
+- Sphinx 2.0.2-dev handled as Sphinx 2.0.1.
+- Sphinx 2.0.3 support.
+- String options handled appropriately for SphinxQL excerpts calls.
+
+1.5.1 - January 2nd 2012
+- If no known servers work, raise an appropriate error.
+- Sphinx 2.1.0-dev support.
+
+1.5.0 - November 4th 2011
+- Handle exclusive filters in SphinxQL SELECT commands.
+- Allow for native Ruby objects in SphinxQL UPDATE commands.
+- Handle options of hashes in SphinxQL SELECT commands.
+- Allow for SphinxQL select clauses.
+- Improving SphinxQL filter handling of native Ruby objects.
+- Switch plural index references from indexes to indices, to distinguish beside indexes (the action).
+- Rescue against timeouts and connection resets.
+- Fixing reference to TCPSocket.
+- Handle port numbers as integers for listen setting (Ngan Pham).
+- Provide the option to start searchd with the nodetach flag (Aaron Gilbralter).
+- Don't shuffle servers (if there's more than one) - let developers (or Thinking Sphinx) manage that (Ngan Pham).
+
+1.4.0 - August 2nd 2011
+- Checking against both Windows platforms for Ruby (Paul Gibler)
+- Encoding improvements (Alexey Artamonov)
+- More Rubyish syntax (James Cook)
+- Handling Ruby encodings (James Cook)
+- Coreseek support (saberma)
+- Section restructure for better inheritance (Alexey Artamonov)
+- MySQL41 connection support
+- requiring 'thread' for Mutex use
+
+1.3.3 - May 25th 2011
+- Using MySQL2 library for SphinxQL interface
+- Adding Sphinx 2.0.x settings
+- SphinxQL support
+- Speed improvements for hash lookups (Enrico Thierbach)
+- Handle race conditions of segfaults while returning responses (Jason Lambert)
+- 2.0.x support
+
+1.3.2 - May 12th 2011
+- client_key support
+
+1.3.1 - May 9th 2011
+- Don't output warnings or exit when version isn't detected - presume Thinking Sphinx will handle that.
+- Confirm configuration file exists before attempting to start/stop Sphinx.
+- Use a Mutex instead of the current Thread.
+
+1.3.0 - May 7th 2011
+- Attempts at untested 2.0.x and client_key support
+- Using Bundler, MySQL2 and Ruby 1.9.2 in development
+- Allow for Sphinx versions compiled from source and SVN (Greg Weber)
+
+1.2.2 - December 22nd 2011

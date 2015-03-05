@@ -1,0 +1,18 @@
+source 'https://rubygems.org'
+
+gem 'rake', '~>10.1.1'
+
+gem 'minitest', '~>4.7.5'
+gem 'mocha', :require => false
+gem 'rack'
+gem 'rack-test'
+
+platforms :rbx do
+  gem "rubysl"
+  gem "rubysl-test-unit"
+  gem "json"
+  gem "psych"
+  gem "racc"  # https://github.com/rubinius/rubinius/issues/2632
+end
+
+gem "newrelic_rpm", :path => "../../.."

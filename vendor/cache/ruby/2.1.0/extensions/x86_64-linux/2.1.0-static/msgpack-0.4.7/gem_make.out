@@ -1,0 +1,100 @@
+/usr/local/bin/ruby -r ./siteconf20150305-49733-jkql0e.rb extconf.rb 
+checking for ruby/st.h... yes
+checking for st.h... yes
+creating Makefile
+
+make "DESTDIR=" clean
+
+make "DESTDIR="
+compiling pack.c
+In file included from pack.c:40:0:
+../msgpack/pack_template.h: In function ‘msgpack_pack_float’:
+../msgpack/pack_template.h:639:2: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+  unsigned char buf[5];
+  ^
+../msgpack/pack_template.h: In function ‘msgpack_pack_double’:
+../msgpack/pack_template.h:648:2: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+  unsigned char buf[9];
+  ^
+pack.c: In function ‘MessagePack_String_to_msgpack’:
+pack.c:176:2: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+  int enc = ENCODING_GET(self);
+  ^
+pack.c: In function ‘MessagePack_Array_to_msgpack’:
+pack.c:225:2: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+  unsigned int ary_length = (unsigned int)RARRAY_LEN(self);
+  ^
+compiling rbinit.c
+compiling unpack.c
+In file included from unpack.c:143:0:
+../msgpack/unpack_template.h: In function ‘template_execute’:
+../msgpack/unpack_template.h:101:2: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+  const unsigned char* p = (unsigned char*)data + *off;
+  ^
+unpack.c: In function ‘template_execute_wrap’:
+unpack.c:195:2: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+  int ret = (int)rb_rescue(template_execute_do, (VALUE)args,
+  ^
+unpack.c: In function ‘template_execute_wrap_each’:
+unpack.c:218:2: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+  int ret = (int)rb_rescue(template_execute_do, (VALUE)args,
+  ^
+unpack.c: In function ‘MessagePack_Unpacker_initialize’:
+unpack.c:147:2: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+  msgpack_unpack_t *name = NULL; \
+  ^
+unpack.c:332:2: note: in expansion of macro ‘UNPACKER’
+  UNPACKER(self, mp);
+  ^
+unpack.c: In function ‘reserve_buffer’:
+unpack.c:384:3: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+   size_t nsize = buffer->free == 0 ?
+   ^
+unpack.c:389:3: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+   char* tmp = REALLOC_N(buffer->ptr, char, nsize);
+   ^
+unpack.c:407:2: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+  size_t nsize = (buffer->used + buffer->free) * 2;
+  ^
+unpack.c:414:3: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+   char* tmp = REALLOC_N(buffer->ptr, char, nsize);
+   ^
+unpack.c:424:3: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+   char* tmp = REALLOC_N(buffer->ptr, char, nsize);
+   ^
+unpack.c: In function ‘try_free_buffer’:
+unpack.c:439:2: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+  struct unpack_buffer* buffer = &mp->user.buffer;
+  ^
+unpack.c:461:3: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+   char* tmp;
+   ^
+unpack.c: In function ‘MessagePack_Unpacker_fill’:
+unpack.c:537:2: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+  size_t len = RSTRING_LEN(mp->user.streambuf);
+  ^
+unpack.c: In function ‘MessagePack_Unpacker_each’:
+unpack.c:558:2: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+  int ret;
+  ^
+unpack.c: In function ‘feed_each_impl’:
+unpack.c:604:2: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+  int ret;
+  ^
+unpack.c: In function ‘MessagePack_Unpacker_feed_each’:
+unpack.c:708:2: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+  VALUE args[3];
+  ^
+unpack.c: In function ‘MessagePack_unpack_impl’:
+unpack.c:725:2: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+  size_t from = 0;
+  ^
+unpack.c: In function ‘MessagePack_Unpacker_execute_impl’:
+unpack.c:786:2: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+  int ret = template_execute_wrap(mp, data, limit, &from);
+  ^
+linking shared-object msgpack.so
+
+make "DESTDIR=" install
+/usr/bin/install -c -m 0755 msgpack.so ./.gem.20150305-49733-jgld01
+installing default msgpack libraries

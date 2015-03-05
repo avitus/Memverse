@@ -1,0 +1,59 @@
+<%= File.read(File.join(File.dirname(__FILE__), 'views', 'assets', 'styles.css')) %>
+
+<header class="row">
+  <div class="col-md-5">
+    <h3>Recurring Job: <%= @worker.name %></h3>
+  </div>
+</header>
+
+<div class="container">
+  <div class="row">
+    <%= erb File.read(File.join(File.dirname(__FILE__), 'views', '_worker_nav.erb')) %>
+
+    <div class="col-md-9">
+      <% if (recurrences = @schedule.recurrence_rules).length > 0 %>
+      <table class="table table-striped table-bordered table-hover table-white" style="width: 100%; margin: 0; table-layout:fixed;">
+        <thead>
+          <th>Recurrences</th>
+        </thead>
+        <% recurrences.each do |rule| %>
+        <tr>
+          <td><%= rule.to_s %></td>
+        </tr>
+        <% end %>
+      </table>
+      <% end %>
+
+      <br />
+
+      <% if (exceptions = @schedule.exception_rules).length > 0 %>
+      <table class="table table-striped table-bordered table-hover table-white" style="width: 100%; margin: 0; table-layout:fixed;">
+        <thead>
+          <th>Exceptions</th>
+        </thead>
+        <% exceptions.each do |rule| %>
+        <tr>
+          <td><%= rule.to_s %></td>
+        </tr>
+        <% end %>
+      </table>
+      <% end %>
+
+      <br />
+
+      <table class="table table-striped table-bordered table-hover table-white" style="width: 100%; margin: 0; table-layout:fixed;">
+        <thead>
+          <th style="width: 25%">Next 10 runs</th>
+          <th style="width: 75%" />
+          <% @schedule.next_occurrences(10, @time).each do |time| %>
+          <tr>
+            <td><time><%= time.getutc %></time></td>
+            <td><%= relative_time(time) %></td>
+          </tr>
+          <% end %>
+      </table>
+    </div>
+  </div>
+</div>
+
+<br />

@@ -1,0 +1,15 @@
+<% if !@blog_search_results.empty? %>
+	<div id="main_content">
+		<table id="pending_blog_list"><tr id="header"><td>Blog Title</td><td>Author</td><td>Created on</td></tr>
+		<% @blog_search_results.each do |blog_post| %>
+			<tr>
+				<td><%= link_to blog_post.title, blog_named_link(blog_post, :show) %></td>
+				<td><%= blog_post.posted_by.display_name -%></td>
+				<td><%= blog_post.created_at.strftime("%x") -%></td>
+			</tr>
+		<% end %>
+		</table>
+	</div>
+<% else %>
+	<h2>No blog posts that match your search were found</h2>
+<% end %>
