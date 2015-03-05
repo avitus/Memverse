@@ -1,4 +1,0 @@
-  ##
-  # Gzip [Compressor]
-  #
-  compress_with Gzip

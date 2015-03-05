@@ -1,2 +1,0 @@
-class Mammal < Animal
-end

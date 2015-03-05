@@ -1,3 +1,0 @@
-#!/usr/bin/env ruby
-require 'guard/jasmine/cli'
-Guard::Jasmine::CLI.start
