@@ -232,11 +232,12 @@ Array.remove = function(array, from, to) {
 
 // Splits a verse into words
 function splitByWords(text){
-	// matches optional mixture of whitespace and hyphens/dashes: \s*(?:[-—\s]+)?
-	// followed by non non-Korean non-whitespace characters: [^\u1100-\u11ff\uAC00-\uD7A3\s]+
-	// or one Korean character and any number of non-Korean, non-aphabetic non-whitespace characters: [\u1100-\u11ff\uAC00-\uD7A3][^a-zA-Z\u1100-\u11ff\uAC00-\uD7A3\s]*
+	// matches optional mixture of hyphens & whitespace: [-—\s]*
+	// followed by one or more non-CJK (Chinese/Japanese/Korean) characters: [^\s\u4E00-\u9FFF\u1100-\u11ff\uAC00-\uD7A3]+
+	// or one CJK character: [\u4E00-\u9FFF\u1100-\u11ff\uAC00-\uD7A3]
+	// followed by optional non-CJK non-word non-whitespace characters (for punctuation): [^\u4E00-\u9FFF\u1100-\u11ff\uAC00-\uD7A3\s]*
 	// ending with optional mixture of whitespace and hyphens/dashes only if at the end of text: \s*(?:[-—\s]+$)?
-	return text.match(/\s*(?:[-—\s]+)?(?:[^\u1100-\u11ff\uAC00-\uD7A3\s]+|[\u1100-\u11ff\uAC00-\uD7A3][^a-zA-Z\u1100-\u11ff\uAC00-\uD7A3\s]*)\s*(?:[-—\s]+$)?/g) || [];
+	return text.match(/[-—\s]*(?:[^\u4E00-\u9FFF\u1100-\u11ff\uAC00-\uD7A3\s]+|[\u4E00-\u9FFF\u1100-\u11ff\uAC00-\uD7A3][^\u4E00-\u9FFF\u1100-\u11ff\uAC00-\uD7A3\s]*)\s*(?:[-—\s]+$)?/g) || [];
 }
 
 function verseFeedback(correctvs, verseguess, echo, firstletter) {
