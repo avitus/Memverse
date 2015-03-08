@@ -236,6 +236,7 @@ function cleanseVerseText( versetext ) {
  ******************************************************************************/
 scrub_text = function(text) {
     return text.toLowerCase().replace(/[^0-9a-z\u00BF-\u1FFF\u2C00-\uD7FF]+/g, "").
+    replace(/[，一。！？：；（）]+/g, "").
     replace(/[´`͂῾᾿·]+/g, "").
     replace(/ό/g, "ο").
     replace(/ά/g, "α").
