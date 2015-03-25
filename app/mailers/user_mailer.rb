@@ -2,7 +2,8 @@ class UserMailer < ActionMailer::Base
 
   default_url_options[:host] = "memverse.com"
 
-  default :from => "admin@memverse.com"
+  # default :from => "admin@memverse.com"
+  default :from => '"Memverse" <admin@memverse.com>'
 
   # The keys of the hash passed to body become instance variables in the view.
 
