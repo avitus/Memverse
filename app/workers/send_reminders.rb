@@ -10,57 +10,58 @@ class SendReminders
   end
 
   def perform
-    @emails_sent        = 0
-    @email_list         = Array.new
-    @encourage_list     = Array.new
-    @bounce_list        = Array.new
 
+    @emails_sent        = 0
     @throttle           = 50 # email send limit per recurrence period
 
     # Delete users who never activated
     User.pending.where('created_at < ?', 2.days.ago ).delete_all
 
     # Retrieve records for all users - find_each does it in batches of 1000
-    User.find_each { |r|
-      # Change reminder frequency (if necessary) to not be annoying
-      r.update_reminder_freq
+    User.find_each { |u|
 
-      if r.reminder_freq != "Never" and @emails_sent < @throttle
+      # Change reminder frequency (if necessary) to not be annoying
+      u.update_reminder_freq
+
+      if u.reminder_freq != "Never" and @emails_sent < @throttle
 
         # ==== Users who have added verses but are behind on memorizing ====
-        if r.needs_reminder?
-          if r.email.nil?
-            Rails.logger.info("** Error: Unable to email user with id: #{r.id}")
-            @bounce_list << r
-          else
-            if r.is_inactive?
-              # Reminder for inactive users
-              Rails.logger.info("* Sending reminder email to #{r.name_or_login} - they've been inactive for two months")
-              UserMailer.reminder_email_for_inactive(r).deliver
-            else
-              # Standard reminder email
-              Rails.logger.info("* Sending reminder email to #{r.name_or_login}")
-              UserMailer.reminder_email(r).deliver
-            end
-            @emails_sent += 1
-            r.update_attribute(:last_reminder, Date.today)
-            @email_list << r
-          end
-        end
+        if u.needs_reminder?
 
-        # ==== Users who have activated but haven't ever added a verse ====
-        if r.needs_kick_in_pants?
-          if r.email.nil?
-            Rails.logger.info("** Error: Unable to email user with id: #{r.id}")
-            @bounce_list << r
+          # Check for invalid email field
+          if u.email.blank?
+            Rails.logger.info("** Error: Unable to email user with id: #{u.id}")
+          
           else
-            Rails.logger.info("* Sending kick in the pants to #{r.name_or_login}")
-            UserMailer.encourage_new_user_email(r).deliver
+            
+            Rails.logger.info("* Sending progression email to #{u.name_or_login}. They are at progression level #{u.progression}.")
+            
+            # We need to send an email that is customized for every level of user progression
+            case u.progression
+              when 9
+                UserMailer.progression_email_9(u).deliver
+              when 8
+                UserMailer.progression_email_8(u).deliver
+              when 7
+                UserMailer.progression_email_7(u).deliver
+              when 6
+                UserMailer.progression_email_6(u).deliver
+              when 5
+                UserMailer.progression_email_5(u).deliver
+              when 4
+                UserMailer.progression_email_4(u).deliver
+              when 3
+                UserMailer.progression_email_3(u).deliver
+              when 2
+                UserMailer.progression_email_2(u).deliver
+              when 1
+                UserMailer.progression_email_1(u).deliver
+            end
+
             @emails_sent += 1
-            r.last_reminder = Date.today
-            r.save
-            @encourage_list << r
+            u.update_attribute(:last_reminder, Date.today)
           end
+
         end
 
       end # block for users who want reminders
@@ -68,6 +69,7 @@ class SendReminders
     }
 
     Rails.logger.info(" *** Email reminder: Sent #{@emails_sent} reminder emails at #{Time.now}")
+
   end
 
 end
