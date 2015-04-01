@@ -7,18 +7,6 @@ class UserMailer < ActionMailer::Base
 
   # The keys of the hash passed to body become instance variables in the view.
 
-  # Can probably delete this - now handled by Devise
-  # def signup_notification(user)
-  	# setup_email(user)
-  	# @url = "#{APP_CONFIG[:site_url]}/activate/#{user.activation_code}"
-  	# mail(:to => user.email, :subject => "Please activate your Memverse account")
-  # end
-
-  # def activation(user)
-    # setup_email(user)
-    # mail(:to => user.email, :subject => "Your Memverse account is activated")
-  # end
-
   def encourage_new_user_email(user)
     # @headers = {content_type => 'text/html'}
     setup_email(user)
