@@ -35,27 +35,27 @@ class SendReminders
           else
             
             Rails.logger.info("* Sending progression email to #{u.name_or_login}. They are at progression level #{u.progression}.")
-            
+
             # We need to send an email that is customized for every level of user progression
             case u.progression
               when 9
-                UserMailer.progression_email_9(u).deliver
+                UserMailer.progression_email_9(u).deliver # has memorized one or more verses
               when 8
-                UserMailer.progression_email_8(u).deliver
+                UserMailer.progression_email_8(u).deliver # has completed 3 or more sessions
               when 7
-                UserMailer.progression_email_7(u).deliver
+                UserMailer.progression_email_7(u).deliver # has completed 2 sessions
               when 6
-                UserMailer.progression_email_6(u).deliver
+                UserMailer.progression_email_6(u).deliver # has completed 1 session
               when 5
-                UserMailer.progression_email_5(u).deliver
+                UserMailer.progression_email_5(u).deliver # has reviewed at least one verse at some point
               when 4
-                UserMailer.progression_email_4(u).deliver
+                UserMailer.progression_email_4(u).deliver # has added > 5 verses
               when 3
-                UserMailer.progression_email_3(u).deliver
+                UserMailer.progression_email_3(u).deliver # has added 1-5 verses
               when 2
-                UserMailer.progression_email_2(u).deliver
+                UserMailer.progression_email_2(u).deliver # has confirmed account but added no verses
               when 1
-                UserMailer.progression_email_1(u).deliver
+                                                          # User has not confirmed email account
             end
 
             @emails_sent += 1

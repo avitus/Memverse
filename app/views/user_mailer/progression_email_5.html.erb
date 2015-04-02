@@ -1,0 +1,49 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>Reminder</title>
+	</head>
+	<body>
+		<!--[Greeting]-->
+		<% if @user.name.empty? %>
+			<p>Hi,</p>
+		<% else %>
+			<p>Hi <%= @user.name %>,</p>
+		<% end %>
+
+		<!--[Encouragement / Guidance]-->
+		<p>Every journey begins with the first step and it looks as though you began a memorization session but didn't get all the way
+		through your verses. It's a good idea to review all the verses that are due on any given day as that will keep the memory of 
+		the verse fresh.<p>
+	
+		<p>If you found that you had too many verses to review in one session, we highly recommend deleting some of your memory verses. Five
+		to ten verses is a good number to start with. More than that can rapidly become discouraging.<p>
+
+		<!--[Reminder]-->
+		<% if @user.overdue_verses == 1 %>
+			<p>Today you have only one memory verse that is overdue for memorization.</p>
+		<% else %>
+			<p>Today you have <%= @user.overdue_verses %> memory verses that are overdue for memorization.</p>			
+		<% end %>
+
+		<!--[URL]-->	
+		<p>You can login at <%= @url %>. Your login is <b><%= @user.email %></b>.</p>
+		
+		<!-- For those short on time -->
+		<p>We realize that time is often scarce so we've included one of your most difficult verses for your review:</p>
+		
+		<h4><%= @verse.book %> <%= @verse.chapter %>:<%= @verse.versenum %> [<%=@verse.translation%>] </h4>
+
+		<p class="verse-text" id="show-verse"> <%=@verse.text%> </p>
+		
+		<!--[Unsubscribe]-->
+		<p>Remember, you can update the frequency with which you receive reminders on the 'Update Profile' page. If
+		   you never want to receive an email reminder again, set the 'Reminder Frequency' option to 'Never'.</p>
+		
+		<p>Your Memverse Server</p>
+		
+		<p><%= link_to '[ Instant Unsubscribe ]', @unsubscribe_url,  :class => "unsubscribe-link"%></p>
+
+	</body>
+</html>

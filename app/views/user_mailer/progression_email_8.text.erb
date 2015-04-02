@@ -5,11 +5,16 @@
 	Hi <%= @user.name %>,
 <% end %>
 
+<!--[Encouragement / Guidance]-->
+Congratulations! You have completed three or more memorization sessions and are well on your way to establishing a habit of memorizing God's word.
+
+You may be wondering why none of your verses are classified yet as 'Memorized'. The Memverse system will gradually increase the time period between reviewing your verses. Once you can retain a verse for a month, the verse will be classified as 'Memorized'.
+
 <!--[Reminder]-->
 <% if @user.overdue_verses == 1 %>
-	You have a memory verse that is overdue for memorization.
+	Today you have only have one memory verse that is overdue for memorization.
 <% else %>
-	You have <%= @user.overdue_verses %> memory verses that are overdue for memorization.			
+	Today you have <%= @user.overdue_verses %> memory verses that are overdue for memorization.			
 <% end %>
 	
 <!--[URL]-->	
@@ -28,4 +33,3 @@ Remember, you can update the frequency with which you receive reminders on the '
 Your Memverse Server
 
 <%= link_to '[ Instant Unsubscribe ]', @unsubscribe_url,  :class => "unsubscribe-link"%>
-
