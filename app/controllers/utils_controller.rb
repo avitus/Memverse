@@ -256,7 +256,7 @@ class UtilsController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   def mass_email
     # Send out an email
-    UserMailer.encourage_new_user_email(current_user).deliver
+    UserMailer.newsletter_email(current_user).deliver
     redirect_to :action => 'leaderboard'
   end
 
@@ -299,12 +299,8 @@ class UtilsController < ApplicationController
   # Send Reminder Emails
   # ----------------------------------------------------------------------------------------------------------
   def send_reminder_test
-
-    # Retrieve records for all users
-    recipient = User.find(2) # This is me
-
-    UserMailer.reminder_email(recipient).deliver
-
+    u = User.find(2) # This is me
+    UserMailer.progression_email_9( u ).deliver
     redirect_to :action => 'show_verses'
   end
 

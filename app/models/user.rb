@@ -840,12 +840,13 @@ class User < ActiveRecord::Base
       last_reminded = self.last_activity_date
     end
 
-    mv = Memverse.find(:first, :conditions => ["user_id = ?", self.id], :order => "next_test ASC")
+    mv           = self.memverses.order("next_test ASC").first
+    days_overdue = mv ? (Date.today - mv.next_test).to_i : 30                   # If user hasn't added verses then regard them as 1 month overdue
 
-    if mv.nil? or self.reminder_freq == "Never"
-      return false # users who don't have any memory verses need more than a reminder!
-    elsif last_reminded + reminder_in_days(self.reminder_freq) < Date.today
-      return ( mv.next_test + reminder_in_days(self.reminder_freq) < Date.today )
+    if self.reminder_freq == "Never"
+      return false
+    elsif last_reminded + reminder_in_days(self.reminder_freq) < Date.today     # Check for emailing users too frequently ...
+      return ( days_overdue > reminder_in_days(self.reminder_freq) )            # ... then check whether user needs to be reminded
     else
       return false
     end
@@ -1002,22 +1003,22 @@ class User < ActiveRecord::Base
   # Check whether user needs encouragement
   #
   # @return [Boolean]
-  def needs_kick_in_pants?
+  # def needs_kick_in_pants?
 
-    if self.has_started? or !self.confirmed_at  # user already has verses or never activated their account
-      return false
-    else
-      if self.last_reminder.nil? and  days_since_contact_or_login > 1 # user has never been reminded
-        Rails.logger.debug("*** #{self.login} has never been encouraged and two days have elapsed since registration")
-        return true
-      elsif days_since_contact_or_login > 31 # space reminders out by one month
-        Rails.logger.debug("*** #{self.login} was last encouraged a month ago but still hasn't added a verse")
-        return true
-      else
-        return false
-      end
-    end
-  end
+  #   if self.has_started? or !self.confirmed_at  # user already has verses or never activated their account
+  #     return false
+  #   else
+  #     if self.last_reminder.nil? and  days_since_contact_or_login > 1 # user has never been reminded
+  #       Rails.logger.debug("*** #{self.login} has never been encouraged and two days have elapsed since registration")
+  #       return true
+  #     elsif days_since_contact_or_login > 31 # space reminders out by one month
+  #       Rails.logger.debug("*** #{self.login} was last encouraged a month ago but still hasn't added a verse")
+  #       return true
+  #     else
+  #       return false
+  #     end
+  #   end
+  # end
 
   # Has it been a week since the last reminder?
   # 

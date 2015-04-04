@@ -1,0 +1,45 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>Reminder</title>
+	</head>
+	<body>
+		<!--[Greeting]-->
+		<% if @user.name.empty? %>
+			<p>Hi,</p>
+		<% else %>
+			<p>Hi <%= @user.name %>,</p>
+		<% end %>
+
+		<!--[Encouragement / Guidance]-->
+		<p>Great! You've added enough memory verses to get started. The next step is to review the verses regularly. Over time, Memverse will 
+		keep track of which verses you need to review and will remind you to review them at the optimal time.<p>
+	
+		<!--[Reminder]-->
+		<% if @user.overdue_verses == 1 %>
+			<p>Today you have only one memory verse to review.</p>
+		<% else %>
+			<p>Today you have <%= @user.overdue_verses %> memory verses that are ready to be reviewed for the first time.</p>			
+		<% end %>
+
+		<!--[URL]-->	
+		<p>You can login at <%= @url %>. Your login is <b><%= @user.email %></b>.</p>
+		
+		<!-- For those short on time -->
+		<p>We realize that time is often scarce so we've included one of your most difficult verses for your review:</p>
+		
+		<h4><%= @verse.book %> <%= @verse.chapter %>:<%= @verse.versenum %> [<%=@verse.translation%>] </h4>
+
+		<p class="verse-text" id="show-verse"> <%=@verse.text%> </p>
+		
+		<!--[Unsubscribe]-->
+		<p>Remember, you can update the frequency with which you receive reminders on the 'Update Profile' page. If
+		   you never want to receive an email reminder again, set the 'Reminder Frequency' option to 'Never'.</p>
+		
+		<p>Your Memverse Server</p>
+		
+		<p><%= link_to '[ Instant Unsubscribe ]', @unsubscribe_url,  :class => "unsubscribe-link"%></p>
+
+	</body>
+</html>
