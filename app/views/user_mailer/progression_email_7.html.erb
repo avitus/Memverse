@@ -11,15 +11,28 @@
 		<% else %>
 			<p>Hi <%= @user.name %>,</p>
 		<% end %>
-		
+
+		<!--[Encouragement / Guidance]-->
+		<p>Congratulations! You have completed two memorization sessions and have taken another step toward creating a habit
+		of regular Bible memorization. Don't stop now!<p>
+	
 		<!--[Reminder]-->
-		<p>We've noticed that you haven't visited Memverse for a while. We will be sending you reminder emails
-		less frequently in future but we would love to have you back memorizing the Bible. We know that life often
-		intrudes on our best intentions so we'll keep your account active for now.</p>
-			
+		<% if @user.overdue_verses == 1 %>
+			<p>Today you have only one memory verse that is overdue for memorization.</p>
+		<% else %>
+			<p>Today you have <%= @user.overdue_verses %> memory verses that are overdue for memorization.</p>			
+		<% end %>
+
 		<!--[URL]-->	
 		<p>You can login at <%= @url %>. Your login is <b><%= @user.email %></b>.</p>
-				
+		
+		<!-- For those short on time -->
+		<p>We realize that time is often scarce so we've included one of your most difficult verses for your review:</p>
+		
+		<h4><%= @verse.book %> <%= @verse.chapter %>:<%= @verse.versenum %> [<%=@verse.translation%>] </h4>
+
+		<p class="verse-text" id="show-verse"> <%=@verse.text%> </p>
+		
 		<!--[Unsubscribe]-->
 		<p>Remember, you can update the frequency with which you receive reminders on the 'Update Profile' page. If
 		   you never want to receive an email reminder again, set the 'Reminder Frequency' option to 'Never'.</p>
@@ -27,5 +40,6 @@
 		<p>Your Memverse Server</p>
 		
 		<p><%= link_to '[ Instant Unsubscribe ]', @unsubscribe_url,  :class => "unsubscribe-link"%></p>
+
 	</body>
 </html>

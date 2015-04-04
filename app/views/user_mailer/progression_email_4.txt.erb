@@ -1,0 +1,33 @@
+<!--[Greeting]-->
+<% if @user.name.empty? %>
+	Hi,
+<% else %>
+	Hi <%= @user.name %>,
+<% end %>
+
+<!--[Encouragement / Guidance]-->
+Great! You've added enough memory verses to get started. The next step is to review the verses regularly. Over time, Memverse will keep track of which verses you need to review and will remind you to review them at the optimal time.
+
+<!--[Reminder]-->
+<% if @user.overdue_verses == 1 %>
+	Today you have only have one memory verse to review.
+<% else %>
+	Today you have <%= @user.overdue_verses %> memory verses that are ready to be reviewed.			
+<% end %>
+	
+<!--[URL]-->	
+You can login at <%= @url %>. Your login is <%= @user.email %>.
+
+<!-- For those short on time -->
+We realize that time is often scarce so we've included one of your most difficult verses for your review:
+
+<%= @verse.book %> <%= @verse.chapter %>:<%= @verse.versenum %> [<%=@verse.translation%>]
+
+<%=@verse.text%>
+
+<!--[Unsubscribe]-->
+Remember, you can update the frequency with which you receive reminders on the 'Update Profile' page. If you never want to receive an email reminder again, set the 'Reminder Frequency' option to 'Never'.
+
+Your Memverse Server
+
+<%= link_to '[ Instant Unsubscribe ]', @unsubscribe_url,  :class => "unsubscribe-link"%>

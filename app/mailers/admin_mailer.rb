@@ -1,5 +1,6 @@
 class AdminMailer < ActionMailer::Base
-  default from: "admin@memverse.com"
+
+  default :from => '"Memverse" <admin@memverse.com>'
 
   require 'mail'
 
