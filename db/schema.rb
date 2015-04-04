@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140904181927) do
+ActiveRecord::Schema.define(version: 20150404153358) do
 
   create_table "american_states", force: true do |t|
     t.string  "abbrev",      limit: 20, default: "", null: false
@@ -193,10 +193,11 @@ ActiveRecord::Schema.define(version: 20140904181927) do
   add_index "final_verses", ["book", "chapter"], name: "index_final_verses_on_book_and_chapter", using: :btree
 
   create_table "forem_categories", force: true do |t|
-    t.string   "name",       null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string   "name",                   null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
     t.string   "slug"
+    t.integer  "position",   default: 0
   end
 
   add_index "forem_categories", ["slug"], name: "index_forem_categories_on_slug", unique: true, using: :btree
@@ -207,6 +208,7 @@ ActiveRecord::Schema.define(version: 20140904181927) do
     t.integer "category_id"
     t.integer "views_count", default: 0
     t.string  "slug"
+    t.integer "position",    default: 0
   end
 
   add_index "forem_forums", ["slug"], name: "index_forem_forums_on_slug", unique: true, using: :btree
