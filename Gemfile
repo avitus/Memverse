@@ -1,11 +1,12 @@
 # encoding: utf-8
 require 'rbconfig'
+
 HOST_OS = RbConfig::CONFIG['host_os']
 source 'http://rubygems.org'
 
 group :development do
   gem 'rails-footnotes', '>= 3.7'
-  gem 'sqlite3'
+#  gem 'sqlite3'
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'byebug'
