@@ -887,8 +887,8 @@ class MemversesController < ApplicationController
         end
 
       else
-        redirect_to :action => 'add_verse' and return
         flash[:notice] = "You should first add a few verses."
+        redirect_to :action => 'add_verse' and return
       end
     end
 
