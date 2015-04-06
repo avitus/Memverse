@@ -231,15 +231,18 @@ class User < ActiveRecord::Base
   #
   # @todo We should use {#progression} method instead and incorporate into cohort analysis
   def cohort_progression
+
+    has_reviewed_one = memverses.sum(:attempts) > 0         # TRUE if user has reviewed one verse
+
     if memverses.memorized.count >= 1
       return { :level => '9 - Verse memorized', :active => is_active? }
-    elsif completed_sessions >= 3
+    elsif completed_sessions >= 3 and has_reviewed_one
       return { :level => '8 - Onwards', :active => is_active? }
-    elsif completed_sessions == 2
+    elsif completed_sessions == 2 and has_reviewed_one
       return { :level => '7 - Returned Once', :active => is_active? }
-    elsif completed_sessions == 1
+    elsif completed_sessions == 1 and has_reviewed_one
       return { :level => '6 - Completed 1 Session', :active => is_active? }
-    elsif memverses.sum(:attempts) > 0
+    elsif has_reviewed_one
       return { :level => '5 - Started a Session', :active => is_active? }
     elsif memverses.count >= 5
       return { :level => '4 - Added 5+ Verses', :active => is_active? }
@@ -258,19 +261,22 @@ class User < ActiveRecord::Base
   #
   # @return [Fixnum] Scale of 0 to 9 representing user progression.
   def progression
-    if memverses.memorized.count >= 1       # has memorized one or more verses
+
+    has_reviewed_one = memverses.sum(:attempts) > 0         # TRUE if user has reviewed one verse
+
+    if memverses.memorized.count >= 1                       # has memorized one or more verses
       return 9
-    elsif completed_sessions >= 3
+    elsif completed_sessions >= 3 and has_reviewed_one      # regular user who hasn't yet memorized a verse
       return 8
-    elsif completed_sessions == 2           # returning user
+    elsif completed_sessions == 2 and has_reviewed_one      # returning user
       return 7
-    elsif completed_sessions == 1           # completed one session
+    elsif completed_sessions == 1 and has_reviewed_one      # completed one session
       return 6
-    elsif memverses.sum(:attempts) > 0      # has reviewed at least one verse at some point
+    elsif has_reviewed_one                                  # has reviewed at least one verse at some point
       return 5
-    elsif memverses.count >= 5              # has added 5 or more verses
+    elsif memverses.count >= 5                              # has added 5 or more verses
       return 4
-    elsif memverses.count > 0               # has added a memory verse
+    elsif memverses.count > 0                               # has added a memory verse
       return 3
     elsif confirmed_at
       return 2
@@ -485,22 +491,31 @@ class User < ActiveRecord::Base
     return Badge.all - lesser_badges
   end
 
-  # Create progress report or update existing
+  # Create progress report or update existing.
   #
   # @return [void]
-  def save_progress_report
-    # check whether there is already a ProgressReport for today
-    pr = self.progress_reports.where(entry_date: Date.today).first
+  def save_progress_report # usually called via AJAX as log_progress
 
-    if pr.nil?
-      pr = ProgressReport.new(user: self, entry_date: Date.today)
+    has_reviewed_one = memverses.sum(:attempts) > 0  # TRUE if user has reviewed one verse
+
+    if has_reviewed_one # only save a progress report if the user has reviewed a verse
+      
+      # check whether there is already a ProgressReport for today
+      pr = self.progress_reports.where(entry_date: Date.today).first
+
+      # create a progress report if one doesn't exist for today
+      if pr.nil?
+        pr = ProgressReport.new(user: self, entry_date: Date.today)
+      end
+
+      # if there is already a ProgressReport for today, update it
+      pr.memorized        = self.memorized
+      pr.learning         = self.learning
+      pr.time_allocation  = self.work_load
+
+      pr.save
     end
 
-    pr.memorized        = self.memorized
-    pr.learning         = self.learning
-    pr.time_allocation  = self.work_load
-
-    pr.save
   end
 
   # List of referrals
