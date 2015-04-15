@@ -39,12 +39,6 @@ GIT
       workflow (= 1.0.0)
 
 GIT
-  remote: git://github.com/richhollis/swagger-docs
-  revision: 838e45157b747687ce3af4547c90df5730491cf2
-  specs:
-    swagger-docs (0.1.4)
-
-GIT
   remote: git://github.com/sandal/prawn
   revision: 857f13e919d1bd7120de1ea9ba0429620329865b
   submodules: true
@@ -525,6 +519,7 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (~> 2.8)
+    swagger-blocks (1.1.1)
     td (0.10.75)
       hirb (>= 0.4.5)
       msgpack (~> 0.4.4)
@@ -663,7 +658,7 @@ DEPENDENCIES
   sitemap_generator
   slim
   split
-  swagger-docs!
+  swagger-blocks
   td
   therubyracer (= 0.11.4)
   thinking-sphinx (~> 3.0.5)

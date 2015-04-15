@@ -1,27 +1,43 @@
 class Api::V1::VersesController < Api::V1::ApiController
 
   # ----------------------------------------------------------------------------------------------------------
-  # Swagger-Docs DSL (ALV -- Unable to get Swagger-Docs gem to generate documentation)
+  # Swagger-Blocks DSL [START]
   # ----------------------------------------------------------------------------------------------------------
-  swagger_controller :verses, "Verses"
+  include Swagger::Blocks
 
-  swagger_api :show do
-    summary "Show a Verse (based on ID)"
-    param :path, :id, :integer, :required, "Verse Id"
-    response :unauthorized
-    response :not_acceptable
-    response :not_found
-  end
+  swagger_path '/verses/{id}' do
+    operation :get do
+      key :description, 'Returns a single verse'
+      key :operationId, 'findVerseById'
+      key :tags, ['verse']
+      parameter do
+        key :name, :id
+        key :in, :path
+        key :description, 'ID of verse to fetch'
+        key :required, true
+        key :type, :integer
+        key :format, :int64
+      end
+      response 200 do
+        key :description, 'verse response'
+        schema do
+          key :'$ref', :Verse
+        end
+      end
+      response 401 do
+        key :description, 'unauthorized response'
+        schema do
+          key :'$ref', :Verse
+        end
+      end
 
-  swagger_api :lookup do
-    summary "Lookup a Verse (based on reference)"
-    param :form, :tl, :string,  :required, "Translation"
-    param :form, :bk, :string,  :required, "Book"
-    param :form, :ch, :integer, :required, "Chapter"
-    param :form, :vs, :integer, :required, "Verse"
-    response :unauthorized
-    response :not_acceptable
-    response :not_found
+      response :default do
+        key :description, 'unexpected error'
+        schema do
+          key :'$ref', :ErrorModel
+        end
+      end
+    end
   end
 
   # ----------------------------------------------------------------------------------------------------------
