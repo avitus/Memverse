@@ -276,7 +276,7 @@ class User < ActiveRecord::Base
       return 5
     elsif memverses.count >= 5                              # has added 5 or more verses
       return 4
-    elsif memverses.count > 0                               # has added a memory verse
+    elsif memverses.count > 0                               # has added 1-5 memory verses
       return 3
     elsif confirmed_at
       return 2
