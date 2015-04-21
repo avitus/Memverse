@@ -15,6 +15,77 @@ class Verse < ActiveRecord::Base
 
   include RocketPants::Cacheable   # Allow for access via API
 
+  # ----------------------------------------------------------------------------------------------------------
+  # Swagger-Blocks DSL [START]
+  # ----------------------------------------------------------------------------------------------------------
+  include Swagger::Blocks
+
+  swagger_schema :Verse do
+    key :required, [:translation, :book_index, :book, :chapter, :versenum]
+    property :id do
+      key :type, :integer
+      key :format, :int64
+    end
+    property :translation do
+      key :type, :string
+    end 
+    property :book_index do
+      key :type, :integer
+      key :format, :int64
+    end 
+    property :book do
+      key :type, :string
+    end 
+    property :chapter do
+      key :type, :string
+    end 
+    property :versenum do
+      key :type, :string
+    end
+    property :text do
+      key :type, :string
+    end     
+    property :created_at do
+      key :type, :string
+      key :format, :dateTime
+    end 
+    property :updated_at do
+      key :type, :string
+      key :format, :dateTime
+    end 
+    property :verified do
+      key :type, :boolean
+    end  
+    property :verified do
+      key :type, :boolean
+    end  
+    property :error_flag do
+      key :type, :boolean
+    end   
+    property :uberverse_id do
+      key :type, :integer
+      key :format, :int64
+    end  
+    property :checked_by do
+      key :type, :string
+    end  
+    property :memverses_count do
+      key :type, :integer
+      key :format, :int64
+    end  
+    property :difficulty do
+      key :type, :float
+      key :format, :float
+    end 
+    property :popularity do
+      key :type, :float
+      key :format, :float
+    end            
+  end
+  # ----------------------------------------------------------------------------------------------------------
+  # Swagger-Blocks DSL [END]
+  # ----------------------------------------------------------------------------------------------------------
+
   acts_as_taggable # Alias for 'acts_as_taggable_on :tags'
 
   before_destroy :delete_memverses
