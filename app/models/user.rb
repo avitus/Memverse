@@ -42,6 +42,177 @@ require 'digest/sha1'
 require 'digest/md5' # required for Gravatar support in Bloggity
 
 class User < ActiveRecord::Base
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Swagger-Blocks DSL [START]
+  # ----------------------------------------------------------------------------------------------------------
+  include Swagger::Blocks
+
+  swagger_schema :User do
+    key :required, [:id, :login, :email]
+    property :id do
+      key :type, :integer
+      key :format, :int64
+    end
+    property :login do
+      key :type, :string
+    end 
+    property :identity_url do
+      key :type, :string
+    end 
+    property :name do
+      key :type, :string
+    end 
+    property :email do
+      key :type, :string
+    end 
+    property :remember_token_expires_at do
+      key :type, :string
+    end
+    property :deleted_at do
+      key :type, :dateTime
+    end     
+    property :created_at do
+      key :type, :string
+      key :format, :dateTime
+    end 
+    property :updated_at do
+      key :type, :string
+      key :format, :dateTime
+    end 
+    property :last_reminder do
+      key :type, :string
+      key :format, :date
+    end  
+    property :reminder_freq do
+      key :type, :string
+    end  
+    property :newsletters do
+      key :type, :boolean
+    end   
+    property :church_id do
+      key :type, :integer
+      key :format, :int64
+    end 
+    property :country_id do
+      key :type, :integer
+      key :format, :int64
+    end 
+    property :language do
+      key :type, :string
+    end  
+    property :time_allocation do
+      key :type, :integer
+      key :format, :int64
+    end
+    property :memorized do
+      key :type, :integer
+      key :format, :int64
+    end
+    property :learning do
+      key :type, :integer
+      key :format, :int64
+    end  
+    property :last_activity_date do
+      key :type, :string
+      key :format, :date
+    end 
+    property :show_echo do
+      key :type, :boolean
+    end 
+    property :max_interval do
+      key :type, :integer
+      key :format, :int64
+    end 
+    property :mnemonic_use do
+      key :type, :string
+      key :format, :date
+    end 
+    property :american_state_id do
+      key :type, :integer
+      key :format, :int64
+    end 
+    property :accuracy do
+      key :type, :integer
+      key :format, :int64
+    end
+    property :all_refs do
+      key :type, :boolean
+    end
+    property :rank do
+      key :type, :integer
+      key :format, :int64
+    end 
+      property :ref_grade do
+      key :type, :integer
+      key :format, :int64
+    end
+    property :gender do
+      key :type, :string
+    end
+    property :translation do
+      key :type, :string
+    end
+    property :level do
+      key :type, :integer
+      key :format, :int64
+    end   
+    property :referred_by do
+      key :type, :integer
+      key :format, :int64
+    end
+    property :show_email do
+      key :type, :boolean
+    end
+    property :auto_work_load do
+      key :type, :boolean
+    end
+    property :admin do
+      key :type, :boolean
+    end
+    property :group_id do
+      key :type, :integer
+      key :format, :int64
+    end 
+    property :forem_admin do
+      key :type, :boolean
+    end
+    property :forem_state do
+      key :type, :string
+    end
+    property :forem_auto_subscribe do
+      key :type, :boolean
+    end
+    property :provider do
+      key :type, :string
+    end
+    property :uid do
+      key :type, :string
+    end
+    property :sync_subsections do
+      key :type, :boolean
+    end
+  end
+
+  swagger_schema :UserInput do
+    allOf do
+      schema do
+        key :'$ref', :User
+      end
+      schema do
+        key :required, [:id]
+        property :id do
+          key :type, :integer
+          key :format, :int64
+        end
+      end
+    end
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Swagger-Blocks DSL [END]
+  # ----------------------------------------------------------------------------------------------------------
+
   # extend FriendlyId
   # friendly_id :login
 
