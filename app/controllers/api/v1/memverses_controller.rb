@@ -183,7 +183,7 @@ class Api::V1::MemversesController < Api::V1::ApiController
   # Swagger-Docs DSL [END]
   # ----------------------------------------------------------------------------------------------------------
 
-  # doorkeeper_for :all  # Require access token for all actions
+  doorkeeper_for :all  # Require access token for all actions
 
   version 1
 

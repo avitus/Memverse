@@ -34,13 +34,11 @@
         supportedSubmitMethods: ['get', 'post', 'put', 'delete', 'patch'],
         onComplete: function(swaggerApi, swaggerUi){
           if(typeof initOAuth == "function") {
-            /*
             initOAuth({
-              clientId: "your-client-id",
-              realm: "your-realms",
-              appName: "your-app-name"
+              clientId: "SwaggerDocs", // Set at: /oauth/applications
+              // realm: "your-realms",
+              appName: "Memverse"
             });
-            */
           }
           $('pre code').each(function(i, e) {
             hljs.highlightBlock(e)

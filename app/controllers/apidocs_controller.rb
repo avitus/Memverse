@@ -22,6 +22,7 @@ class ApidocsController < ActionController::Base
 
   swagger_root do
     key :swagger, '2.0'
+
     info do
       key :version, '1.0.0'
       key :title, 'Swagger Memverse'
@@ -34,6 +35,7 @@ class ApidocsController < ActionController::Base
         key :name, 'MIT'
       end
     end
+
     tags do
       key :name, 'Memverse'
       key :description, 'Memverse operations'
@@ -42,6 +44,16 @@ class ApidocsController < ActionController::Base
         key :url, 'https://swagger.io'
       end
     end
+
+    security_definition :api_key do
+      key :type, 'oauth2'
+      key :flow, 'implicit'
+      key :authorizationUrl, 'http://localhost:3000/oauth/authorize'
+      # scopes do
+      #   # Need to insert scopes here (?)
+      # end
+    end    
+
     key :host, Rails.env.production? ? 'www.memverse.com' : 'localhost:3000'
     key :basePath, '/1'
     key :consumes, ['application/json']
