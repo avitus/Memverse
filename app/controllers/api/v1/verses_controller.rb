@@ -105,6 +105,7 @@ class Api::V1::VersesController < Api::V1::ApiController
   # ----------------------------------------------------------------------------------------------------------
   # Swagger-Docs DSL [END]
   # ----------------------------------------------------------------------------------------------------------
+  
   doorkeeper_for :all  # Require access token for all actions
 
   version 1

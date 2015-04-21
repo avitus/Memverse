@@ -1,6 +1,86 @@
 class Api::V1::UsersController < Api::V1::ApiController
 
-  doorkeeper_for :all  # Require access token for all actions
+  # ----------------------------------------------------------------------------------------------------------
+  # Swagger-Blocks DSL [START]
+  # ----------------------------------------------------------------------------------------------------------
+  include Swagger::Blocks
+
+  swagger_path '/users/{id}' do
+
+    operation :get do
+      key :description, 'Returns a single user'
+      key :operationId, 'findUserById'
+      key :tags, ['user']
+      parameter do
+        key :name, :id
+        key :in, :path
+        key :description, 'ID of user to fetch'
+        key :required, true
+        key :type, :integer
+        key :format, :int64
+      end
+      response 200 do
+        key :description, 'User response'
+        schema do
+          key :'$ref', :User
+        end
+      end
+      response 401 do
+        key :description, 'Unauthorized response'
+        schema do
+          key :'$ref', :User
+        end
+      end
+      response :default do
+        key :description, 'Unexpected error'
+        schema do
+          key :'$ref', :ErrorModel
+        end
+      end
+    end
+
+    operation :put do
+      key :description, 'Partial updates to a user'
+      key :operationId, 'updateUserById'
+      key :tags, ['user']
+      parameter do
+        key :name, :id
+        key :in, :path
+        key :description, 'ID of user to update'
+        key :required, true
+        key :type, :integer
+        key :format, :int64
+        schema do
+          key :'$ref', :UserInput
+        end
+      end
+      response 200 do
+        key :description, 'User response'
+        schema do
+          key :'$ref', :User
+        end
+      end
+      response 401 do
+        key :description, 'Unauthorized response'
+        schema do
+          key :'$ref', :User
+        end
+      end
+      response :default do
+        key :description, 'Unexpected error'
+        schema do
+          key :'$ref', :ErrorModel
+        end
+      end
+    end
+
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Swagger-Docs DSL [END]
+  # ----------------------------------------------------------------------------------------------------------
+
+  # doorkeeper_for :all  # Require access token for all actions
 
   version 1
 

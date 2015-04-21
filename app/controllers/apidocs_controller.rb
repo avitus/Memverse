@@ -35,7 +35,7 @@ class ApidocsController < ActionController::Base
       end
     end
     tags do
-      key :name, 'memverse'
+      key :name, 'Memverse'
       key :description, 'Memverse operations'
       externalDocs do
         key :description, 'Find more info here'
@@ -51,7 +51,9 @@ class ApidocsController < ActionController::Base
   # A list of all classes that have swagger_* declarations.
   SWAGGERED_CLASSES = [
     Api::V1::VersesController,
+    Api::V1::UsersController,
     Verse,
+    User,
     ErrorModel,
     self,
   ].freeze
@@ -60,7 +62,4 @@ class ApidocsController < ActionController::Base
     render json: Swagger::Blocks.build_root_json(SWAGGERED_CLASSES)
   end
   
-
-
-
 end
