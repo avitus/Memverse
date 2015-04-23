@@ -49,9 +49,7 @@ class ApidocsController < ActionController::Base
       key :type, 'oauth2'
       key :flow, 'implicit'
       key :authorizationUrl, 'http://localhost:3000/oauth/authorize'
-      # scopes do
-      #   # Need to insert scopes here (?)
-      # end
+      key :scopes, 'public'
     end    
 
     key :host, Rails.env.production? ? 'www.memverse.com' : 'localhost:3000'
