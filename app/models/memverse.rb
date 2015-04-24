@@ -20,7 +20,7 @@ class Memverse < ActiveRecord::Base
       key :format, :int64
     end    
     property :efactor do
-      key :type, :float
+      key :type, :number
     end 
     property :test_interval do
       key :type, :integer

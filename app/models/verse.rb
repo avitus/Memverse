@@ -74,12 +74,10 @@ class Verse < ActiveRecord::Base
       key :format, :int64
     end  
     property :difficulty do
-      key :type, :float
-      key :format, :float
+      key :type, :number
     end 
     property :popularity do
-      key :type, :float
-      key :format, :float
+      key :type, :number
     end            
   end
   # ----------------------------------------------------------------------------------------------------------
