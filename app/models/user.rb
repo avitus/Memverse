@@ -70,7 +70,8 @@ class User < ActiveRecord::Base
       key :type, :string
     end
     property :deleted_at do
-      key :type, :dateTime
+      key :type, :string
+      key :format, :dateTime
     end     
     property :created_at do
       key :type, :string
