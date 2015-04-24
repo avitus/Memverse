@@ -47,11 +47,11 @@ class Memverse < ActiveRecord::Base
     end    
     property :created_at do
       key :type, :string
-      key :format, :dateTime
+      key :format, :date-time
     end 
     property :updated_at do
       key :type, :string
-      key :format, :dateTime
+      key :format, :date-time
     end 
     property :first_verse do
       key :type, :integer
