@@ -50,9 +50,9 @@ class Api::V1::UsersController < Api::V1::ApiController
         key :required, true
         key :type, :integer
         key :format, :int64
-        schema do
-          key :'$ref', :UserInput
-        end
+        # schema do
+        #   key :'$ref', :UserInput
+        # end
       end
       response 200 do
         key :description, 'User response'

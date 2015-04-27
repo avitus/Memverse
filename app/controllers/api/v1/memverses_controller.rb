@@ -29,7 +29,6 @@ class Api::V1::MemversesController < Api::V1::ApiController
           key :'$ref', :Memverse
         end
       end
-
       response :default do
         key :description, 'Unexpected error'
         schema do
@@ -122,9 +121,9 @@ class Api::V1::MemversesController < Api::V1::ApiController
         key :required, true
         key :type, :integer
         key :format, :int64
-        schema do
-          key :'$ref', :MemverseInput
-        end
+        # schema do
+        #   key :'$ref', :MemverseInput
+        # end
       end
       response 200 do
         key :description, 'Memverse response'
