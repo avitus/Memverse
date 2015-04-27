@@ -519,7 +519,7 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (~> 2.8)
-    swagger-blocks (1.1.1)
+    swagger-blocks (1.1.2)
     td (0.10.75)
       hirb (>= 0.4.5)
       msgpack (~> 0.4.4)
