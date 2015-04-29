@@ -182,8 +182,6 @@ class Api::V1::MemversesController < Api::V1::ApiController
   # Swagger-Docs DSL [END]
   # ----------------------------------------------------------------------------------------------------------
 
-  doorkeeper_for :all  # Require access token for all actions
-
   # Scopes
   # before_action -> { doorkeeper_authorize! :public }, only: :index
   before_action only: [:index, :show] do
@@ -193,6 +191,8 @@ class Api::V1::MemversesController < Api::V1::ApiController
   before_action only: [:update, :create, :destroy] do
     doorkeeper_authorize! :admin, :write
   end
+
+  doorkeeper_for :all  # Require access token for all actions
 
   version 1
 
