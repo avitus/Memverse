@@ -106,7 +106,7 @@ class Api::V1::VersesController < Api::V1::ApiController
   # Swagger-Docs DSL [END]
   # ----------------------------------------------------------------------------------------------------------
   
-  doorkeeper_for :all  # Require access token for all actions
+  # doorkeeper_for :all  # Require access token for all actions
 
   # Scopes
   before_action -> { doorkeeper_authorize! :public }, only: [:show, :lookup]
