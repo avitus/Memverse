@@ -8,6 +8,7 @@ class Api::V1::UsersController < Api::V1::ApiController
   swagger_path '/users/{id}' do
 
     operation :get do
+      
       key :description, 'Returns a single user'
       key :operationId, 'findUserById'
       key :tags, ['user']
@@ -18,6 +19,9 @@ class Api::V1::UsersController < Api::V1::ApiController
         key :required, true
         key :type, :integer
         key :format, :int64
+      end
+      security do
+        key :oauth2, ['read']
       end
       response 200 do
         key :description, 'User response'
@@ -79,6 +83,12 @@ class Api::V1::UsersController < Api::V1::ApiController
   # ----------------------------------------------------------------------------------------------------------
   # Swagger-Docs DSL [END]
   # ----------------------------------------------------------------------------------------------------------
+
+  # Scopes
+  # before_action -> { doorkeeper_authorize! :public }, only: :index
+  before_action only: [:update, :show] do
+    doorkeeper_authorize! :admin, :write, :read
+  end
 
   doorkeeper_for :all  # Require access token for all actions
 

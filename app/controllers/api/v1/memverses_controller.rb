@@ -184,6 +184,16 @@ class Api::V1::MemversesController < Api::V1::ApiController
 
   doorkeeper_for :all  # Require access token for all actions
 
+  # Scopes
+  # before_action -> { doorkeeper_authorize! :public }, only: :index
+  before_action only: [:index, :show] do
+    doorkeeper_authorize! :admin, :write, :read
+  end
+
+  before_action only: [:update, :create, :destroy] do
+    doorkeeper_authorize! :admin, :write
+  end
+
   version 1
 
   # The list of verses is paginated for 5 minutes, the verse itself is cached

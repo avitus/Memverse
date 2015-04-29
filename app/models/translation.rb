@@ -1,5 +1,37 @@
 class Translation
 
+  # ----------------------------------------------------------------------------------------------------------
+  # Swagger-Blocks DSL [START]
+  # ----------------------------------------------------------------------------------------------------------
+  include Swagger::Blocks
+
+  swagger_schema :Translation do
+    key :required, [:name, :abbreviation]
+    property :name do
+      key :type, :string
+    end
+    property :abbreviation do
+      key :type, :string
+    end 
+    property :translations do
+      key :type, :array
+
+      # TODO Not sure how to specify contents of array here. The swagger-blocks documentation isn't clear
+      
+      # items do
+      #   property :name do
+      #     key :type, :string
+      #   end
+      #   property :abbreviation do
+      #     key :type, :string
+      #   end
+      # end
+    end           
+  end
+  # ----------------------------------------------------------------------------------------------------------
+  # Swagger-Blocks DSL [END]
+  # ----------------------------------------------------------------------------------------------------------
+
   # Returns TRANSLATIONS without given translation(s).
   #
   # @param trans [Symbol, Array<Symbol>] translation or translations to exclude

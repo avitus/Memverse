@@ -19,6 +19,7 @@
   <script src='swagger-ui/swagger-ui.js' type='text/javascript'></script>
   <script src='swagger-ui/lib/highlight.7.3.pack.js' type='text/javascript'></script>
   <script src='swagger-ui/lib/marked.js' type='text/javascript'></script>
+  <script src='swagger-ui/lib/swagger-oauth.js' type='text/javascript'></script>
 
   <script type="text/javascript">
     $(function () {
@@ -35,7 +36,7 @@
         onComplete: function(swaggerApi, swaggerUi){
           if(typeof initOAuth == "function") {
             initOAuth({
-              clientId: "SwaggerDocs", // Set at: /oauth/applications
+              clientId: "4de48df25daf2e1b144f56e2e567cb3a46435aa471d0fdac95b4013b5b94c9bf", // Set at: /oauth/applications
               realm: "/",
               appName: "Memverse"
             });
