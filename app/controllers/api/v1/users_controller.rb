@@ -84,13 +84,13 @@ class Api::V1::UsersController < Api::V1::ApiController
   # Swagger-Docs DSL [END]
   # ----------------------------------------------------------------------------------------------------------
 
-  doorkeeper_for :all  # Require access token for all actions
+  # doorkeeper_for :all  # Require access token for all actions
 
   # Scopes -- this is the new way which replaces doorkeeper_for 
-  # before_action -> { doorkeeper_authorize! :public }, only: :index
-  # before_action only: [:update, :show] do
-  #   doorkeeper_authorize! :admin, :write, :read
-  # end
+  before_action -> { doorkeeper_authorize! :public }, only: :index
+  before_action only: [:update, :show] do
+    doorkeeper_authorize! :admin, :write, :read
+  end
 
 
   version 1

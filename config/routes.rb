@@ -1,4 +1,5 @@
 MemverseApp::Application.routes.draw do
+  
   # Authentication for API
   use_doorkeeper
 
