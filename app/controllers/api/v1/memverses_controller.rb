@@ -17,6 +17,9 @@ class Api::V1::MemversesController < Api::V1::ApiController
         key :required, false
         key :type, :string
       end
+      security do
+        key :oauth2, ['read']
+      end
       response 200 do
         key :description, 'Memverse response'
         schema do
@@ -42,7 +45,6 @@ class Api::V1::MemversesController < Api::V1::ApiController
       key :operationId, 'createMemverse'
       key :produces, ['application/json']
       key :tags, ['memverse']
-
       parameter do
         key :name, :memverse
         key :in, :body
@@ -52,7 +54,9 @@ class Api::V1::MemversesController < Api::V1::ApiController
           key :'$ref', :MemverseInput
         end
       end
-      
+      security do
+        key :oauth2, ['write admin']
+      end
       response 200 do
         key :description, 'Memverse response'
         schema do
@@ -83,6 +87,9 @@ class Api::V1::MemversesController < Api::V1::ApiController
         key :required, true
         key :type, :integer
         key :format, :int64
+      end
+      security do
+        key :oauth2, ['read']
       end
       response 200 do
         key :description, 'Memverse response'
@@ -125,6 +132,9 @@ class Api::V1::MemversesController < Api::V1::ApiController
         #   key :'$ref', :MemverseInput
         # end
       end
+      security do
+        key :oauth2, ['write admin']
+      end
       response 200 do
         key :description, 'Memverse response'
         schema do
@@ -156,6 +166,9 @@ class Api::V1::MemversesController < Api::V1::ApiController
         key :required, true
         key :type, :integer
         key :format, :int64
+      end
+      security do
+        key :oauth2, ['write admin']
       end
       response 200 do
         key :description, 'Memverse response'

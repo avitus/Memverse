@@ -58,6 +58,9 @@ class Api::V1::UsersController < Api::V1::ApiController
         #   key :'$ref', :UserInput
         # end
       end
+      security do
+        key :oauth2, ['write admin']
+      end
       response 200 do
         key :description, 'User response'
         schema do
