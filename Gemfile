@@ -79,7 +79,7 @@ gem 'activeresource', require: 'active_resource'
 # API
 ############################################################
 gem 'rocket_pants', '~> 1.0'                                                   # API goodness
-gem 'doorkeeper', '~> 0.7.0'                                                   # Oauth for API
+gem 'doorkeeper', '~> 2.2.0'                                                   # Oauth for API
 gem 'swagger-blocks'                                                           # Generates swagger-ui json files
 
 ############################################################
