@@ -27,7 +27,7 @@ class ApidocsController < ActionController::Base
       key :version, '1.0.0'
       key :title, 'Swagger Memverse'
       key :description, 'Memverse API'
-      key :termsOfService, 'http://memverse.com/terms/'
+      key :termsOfService, 'https://memverse.com/terms/'
       contact do
         key :name, 'Memverse API Team'
       end
@@ -47,14 +47,13 @@ class ApidocsController < ActionController::Base
 
     security_definition :oauth2 do
       key :type, :oauth2
-      key :authorizationUrl, 'http://localhost:3000/oauth/authorize'
+      key :authorizationUrl, Rails.env.production? ? 'www.memverse.com/oauth/authorize' : 'http://localhost:3000/oauth/authorize'
       # key :authorizationUrl, 'http://swagger.io/api/oauth/dialog'
       key :flow, :implicit
       scopes do
-        key 'write:memverses', 'modify your own memory verses'
-        key 'read:memverses',  'read your own memverses'
-        key 'read:verses',     'read any verse'
-        key 'read:users',      'read your own user data'
+        key 'read',  'read information'
+        key 'write', 'modify your memory verses'
+        key 'admin', 'change settings'
       end
     end
 

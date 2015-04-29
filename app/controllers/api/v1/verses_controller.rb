@@ -108,6 +108,12 @@ class Api::V1::VersesController < Api::V1::ApiController
   
   doorkeeper_for :all  # Require access token for all actions
 
+  # Scopes
+  before_action -> { doorkeeper_authorize! :public }, only: [:show, :lookup]
+  # before_action only: [:update, :show] do
+  #   doorkeeper_authorize! :admin, :write, :read
+  # end
+
   version 1
 
   # The list of verses is paginated for 5 minutes, the verse itself is cached

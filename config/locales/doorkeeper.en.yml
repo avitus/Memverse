@@ -66,3 +66,9 @@ en:
       authorized_applications:
         destroy:
           notice: 'Application revoked.'
+          en:
+    scopes:
+      public: 'Access your public data'
+      read: 'Read your information'
+      write: 'Update your information'
+      admin: 'Change your preferences'
