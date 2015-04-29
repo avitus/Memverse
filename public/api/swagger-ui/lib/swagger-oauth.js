@@ -187,7 +187,7 @@ function initOAuth(opts) {
   realm = (o.realm||errors.push('missing realm'));
 
   if(errors.length > 0){
-    console.log('auth unable initialize oauth: ' + errors);
+    log('auth unable initialize oauth: ' + errors);
     return;
   }
 
@@ -277,7 +277,7 @@ window.onOAuthComplete = function onOAuthComplete(token) {
             }
           }
         });
-        window.authorizations.add(oauth2KeyName, new ApiKeyAuthorization('Authorization', 'Bearer ' + b, 'header'));
+        window.swaggerUi.api.clientAuthorizations.add(oauth2KeyName, new SwaggerClient.ApiKeyAuthorization('Authorization', 'Bearer ' + b, 'header'));
       }
     }
   }
