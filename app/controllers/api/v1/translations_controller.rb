@@ -11,6 +11,9 @@ class Api::V1::TranslationsController < Api::V1::ApiController
       key :description, 'Returns available Bible translations'
       key :operationId, 'showTranslations'
       key :tags, ['translations']
+      security do
+        key :oauth2, ['admin write read public']
+      end
       response 200 do
         key :description, 'User response'
         schema do
@@ -32,21 +35,18 @@ class Api::V1::TranslationsController < Api::V1::ApiController
     end
 
   end
-
   # ----------------------------------------------------------------------------------------------------------
   # Swagger-Docs DSL [END]
   # ----------------------------------------------------------------------------------------------------------
 
-  # doorkeeper_for :all  # Require access token for all actions
+  before_action only: [:index] do
+    doorkeeper_authorize! :admin, :write, :read, :public # allow any of these scopes access (logical OR)
+  end
 
   version 1
 
   def index
     expose Translation.for_api
   end
-
-  # def show
-  #   expose Translation.find(params[:id])
-  # end
 
 end

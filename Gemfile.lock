@@ -518,6 +518,7 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (~> 2.8)
+    sqlite3 (1.3.9)
     swagger-blocks (1.1.2)
     td (0.10.75)
       hirb (>= 0.4.5)
@@ -657,6 +658,7 @@ DEPENDENCIES
   sitemap_generator
   slim
   split
+  sqlite3
   swagger-blocks
   td
   therubyracer (= 0.11.4)

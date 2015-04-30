@@ -133,7 +133,7 @@ class Api::V1::MemversesController < Api::V1::ApiController
         # end
       end
       security do
-        key :oauth2, ['write admin']
+        key :oauth2, ['admin write read public']
       end
       response 200 do
         key :description, 'Memverse response'
@@ -168,7 +168,7 @@ class Api::V1::MemversesController < Api::V1::ApiController
         key :format, :int64
       end
       security do
-        key :oauth2, ['write admin']
+        key :oauth2, ['admin write read public']
       end
       response 200 do
         key :description, 'Memverse response'
@@ -195,18 +195,10 @@ class Api::V1::MemversesController < Api::V1::ApiController
   # Swagger-Docs DSL [END]
   # ----------------------------------------------------------------------------------------------------------
   
-  # doorkeeper_for :all  # Require access token for all actions
-
   # Scopes
-  # before_action -> { doorkeeper_authorize! :public }, only: :index
-  before_action only: [:index, :show] do
-    doorkeeper_authorize! :admin, :write, :read
+  before_action only: [:index, :show, :update, :create, :destroy] do
+    doorkeeper_authorize! :admin, :write, :read, :public  # Allow all scopes access for now
   end
-
-  before_action only: [:update, :create, :destroy] do
-    doorkeeper_authorize! :admin, :write
-  end
-
 
   version 1
 

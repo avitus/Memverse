@@ -51,9 +51,10 @@ class ApidocsController < ActionController::Base
       # key :authorizationUrl, 'http://swagger.io/api/oauth/dialog'
       key :flow, :implicit
       scopes do
-        key 'read',  'read information'
-        key 'write', 'modify your memory verses'
-        key 'admin', 'change settings'
+        key 'public', 'Read public information'
+        key 'read',   'Read your information'
+        key 'write',  'Modify your memory verses'
+        key 'admin',  'Change settings'
       end
     end
 
@@ -66,6 +67,7 @@ class ApidocsController < ActionController::Base
   # A list of all classes that have swagger_* declarations.
   SWAGGERED_CLASSES = [
     Api::V1::UsersController,
+    Api::V1::CredentialsController,
     Api::V1::MemversesController,
     Api::V1::VersesController,
     Api::V1::TranslationsController,
