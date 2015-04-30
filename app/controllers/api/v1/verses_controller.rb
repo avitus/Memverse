@@ -18,6 +18,9 @@ class Api::V1::VersesController < Api::V1::ApiController
         key :type, :integer
         key :format, :int64
       end
+      security do
+        key :oauth2, ['admin write read public']
+      end
       response 200 do
         key :description, 'verse response'
         schema do
@@ -106,13 +109,10 @@ class Api::V1::VersesController < Api::V1::ApiController
   # Swagger-Docs DSL [END]
   # ----------------------------------------------------------------------------------------------------------
   
-  # doorkeeper_for :all  # Require access token for all actions
-
   # Scopes
-  before_action -> { doorkeeper_authorize! :public }, only: [:show, :lookup]
-  # before_action only: [:update, :show] do
-  #   doorkeeper_authorize! :admin, :write, :read
-  # end
+  before_action only: [:show, :lookup] do
+    doorkeeper_authorize! :admin, :write, :read, :public  # Allow all scopes access for now
+  end
 
   version 1
 

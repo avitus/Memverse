@@ -1,56 +1,56 @@
 require 'spec_helper'
 
 describe Api::V1::CredentialsController do
-  describe 'GET #me (integrated)' do
+  
+  let(:user)        { FactoryGirl.create(:user) }
 
-    let!(:application) { Doorkeeper::Application.create!(:name => "MyApp", :redirect_uri => "http://app.com") }
-    let!(:user)        { User.create!(:email => "ax@b.com", :password => "abc123", :password_confirmation => "abc123") }
-    let!(:token)       { Doorkeeper::AccessToken.create! :application_id => application.id, :resource_owner_id => user.id }
+  describe 'GET #me' do
 
-    it 'responds with 200' do
-      get :me, :format => :json, :access_token => token.token
-      response.status.should eq(200)
+    context 'authenticated with valid token' do
+
+      before do
+        allow(controller).to receive(:doorkeeper_token) {token}
+      end
+
+      let(:token) { double :acceptable? => true, :resource_owner_id => user.id }
+
+      it 'responds with 200' do
+        get :me, :version => 1, :format => :json
+        response.status.should eq(200)
+      end
+
+      it 'returns the user as json' do
+        get :me, :version => 1, :format => :json
+
+        # Would be nice to use this instead but user.to_json has an override in model
+        # response.body.should == user.to_json
+
+        api_response = JSON.parse( response.body )
+        user_json    = { "response" => user.serializable_hash }
+
+        # Remove date fields. Formats are different and we don't really care
+        api_response["response"].delete("created_at")
+        api_response["response"].delete("updated_at")
+        api_response["response"].delete("last_activity_date")
+
+        user_json["response"].delete("created_at")
+        user_json["response"].delete("updated_at")
+        user_json["response"].delete("last_activity_date")
+
+        api_response.should == user_json
+      end
+
     end
 
-    it 'returns the user as json' do
-      get :me, :format => :json, :access_token => token.token
+    context 'no valid access token' do
 
-      # Would be nice to use this instead but user.to_json has an override in model
-      # response.body.should == user.to_json
+      it 'responds with 401 when unauthorized' do
+        get :me, :format => :json
+        response.status.should eq(401)
+      end
 
-      api_response = JSON.parse( response.body )
-      user_json    = { "response" => user.serializable_hash }
-
-      # Remove date fields. Formats are different and we don't really care
-      api_response["response"].delete("created_at")
-      api_response["response"].delete("updated_at")
-
-      user_json["response"].delete("created_at")
-      user_json["response"].delete("updated_at")
-
-      api_response.should == user_json
     end
+
   end
 
-  describe 'GET #me (stubbed)' do
-    let(:token) { double :accessible? => true }
-    let(:user)  { double :to_json => "{}" }
-
-    before do
-      controller.stub(:doorkeeper_token) { token }
-      controller.stub(:current_resource_owner) { user }
-    end
-
-    it 'responds with 200' do
-      get :me, :format => :json
-      response.status.should eq(200)
-    end
-
-    it 'responds with 401 when unauthorized' do
-      token.stub :accessible? => false
-      get :me, :format => :json
-      response.status.should eq(401)
-    end
-
-  end
 end
