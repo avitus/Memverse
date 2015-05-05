@@ -47,7 +47,8 @@ class ApidocsController < ActionController::Base
 
     security_definition :oauth2 do
       key :type, :oauth2
-      key :authorizationUrl, Rails.env.production? ? 'www.memverse.com/oauth/authorize' : 'http://localhost:3000/oauth/authorize'
+      # key :authorizationUrl, Rails.env.production? ? 'www.memverse.com/oauth/authorize' : 'http://localhost:3000/oauth/authorize'
+      key :authorizationUrl, '/oauth/authorize'
       # key :authorizationUrl, 'http://swagger.io/api/oauth/dialog'
       key :flow, :implicit
       scopes do
