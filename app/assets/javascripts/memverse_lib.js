@@ -121,6 +121,7 @@ String.prototype.capitalize = function() {
 
 /******************************************************************************
  * Substitute abbreviations
+ * Returns English book name
  ******************************************************************************/
 function unabbreviate(book_name) {
 
@@ -128,11 +129,8 @@ function unabbreviate(book_name) {
 		book_name = book_name.replace(/III /i, "3 ").replace(/II /i, "2 ").replace(/I /i, "1 "); // replace first occurences
 	}
 
-	lang_ = null;
-
 	$.each( BIBLEBOOKS, function( lang, books ) {
 		book_index = $.inArray ( book_name, Object.keys(books) );
-		lang_ = lang;
 
 		// break if match found
 		if (book_index !== -1) return false;
@@ -143,11 +141,13 @@ function unabbreviate(book_name) {
 		possibilities = [];
 
 		$.each( BIBLEBOOKS, function( lang, books ) {
+			i = 0;
 			$.each( BIBLEBOOKS[lang], function( abbrev, book ) {
 				if (book.substring(0, book_name.length).toLowerCase() == book_name.toLowerCase())
 				{
-					possibilities.push(book);
+					possibilities.push(i);
 				}
+				i++;
 			});
 
             // break if one English match found; otherwise there might be other Spanish matches
@@ -155,12 +155,12 @@ function unabbreviate(book_name) {
 		});
 
 		if (possibilities.length == 1) { // nonstandard abbreviation, one possibility
-			return possibilities[0];
+			return Object.values(BIBLEBOOKS['en'])[possibilities[0]];
 		} else { // already unabbreviated book name (though it may be incorrect)
 			return book_name;
 		}
 	} else { // was a standard abbreviation; return the unabbreviated book name
-		return Object.values(BIBLEBOOKS[lang_])[book_index];
+		return Object.values(BIBLEBOOKS['en'])[book_index];
 	}
 }
 
