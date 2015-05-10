@@ -6,7 +6,6 @@ source 'http://rubygems.org'
 
 group :development do
   gem 'rails-footnotes', '>= 3.7'
-#  gem 'sqlite3'
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'byebug'
@@ -26,6 +25,7 @@ group :development, :test do
 end
 
 group :test do
+  gem 'sqlite3'
   gem 'factory_girl_rails'                                      # Add to development group for debugging in console
   gem 'cucumber-rails', '>= 1.3.0', require: false
   gem "capybara", '>= 1.1.2'
@@ -79,8 +79,8 @@ gem 'activeresource', require: 'active_resource'
 # API
 ############################################################
 gem 'rocket_pants', '~> 1.0'                                                   # API goodness
-gem 'doorkeeper', '~> 0.7.0'                                                   # Oauth for API
-gem 'swagger-docs', git: 'git://github.com/richhollis/swagger-docs'            # Generates swagger-ui json files
+gem 'doorkeeper', '~> 2.2.0'                                                   # Oauth for API
+gem 'swagger-blocks'                                                           # Generates swagger-ui json files
 
 ############################################################
 # Authentication and Authorization

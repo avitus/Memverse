@@ -1,4 +1,5 @@
 MemverseApp::Application.routes.draw do
+  
   # Authentication for API
   use_doorkeeper
 
@@ -68,6 +69,8 @@ MemverseApp::Application.routes.draw do
   end
 
   # API
+  resources :apidocs, only: [:index]    # for Swagger UI documentation
+
   api versions: 1, module: "api/v1" do
     resources :users, :only => [:show, :update]
     resources :verses do

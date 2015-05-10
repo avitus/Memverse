@@ -1,6 +1,204 @@
 class Api::V1::MemversesController < Api::V1::ApiController
 
-  doorkeeper_for :all  # Require access token for all actions
+  # ----------------------------------------------------------------------------------------------------------
+  # Swagger-Blocks DSL [START]
+  # ----------------------------------------------------------------------------------------------------------
+  include Swagger::Blocks
+
+  swagger_path '/memverses' do
+    operation :get do
+      key :description, 'Returns memory verses for current user'
+      key :operationId, 'showMemverses'
+      key :tags, ['memverse']
+      parameter do
+        key :name, :sort
+        key :in, :query
+        key :description, 'Field to specify sort order'
+        key :required, false
+        key :type, :string
+      end
+      security do
+        key :oauth2, ['read']
+      end
+      response 200 do
+        key :description, 'Memverse response'
+        schema do
+          key :'$ref', :Memverse
+        end
+      end
+      response 401 do
+        key :description, 'Unauthorized response'
+        schema do
+          key :'$ref', :Memverse
+        end
+      end
+      response :default do
+        key :description, 'Unexpected error'
+        schema do
+          key :'$ref', :ErrorModel
+        end
+      end
+    end
+
+    operation :post do
+      key :description, 'Creates a new memory verse'
+      key :operationId, 'createMemverse'
+      key :produces, ['application/json']
+      key :tags, ['memverse']
+      parameter do
+        key :name, :memverse
+        key :in, :body
+        key :description, 'Memory verse to add to user'
+        key :required, true
+        schema do
+          key :'$ref', :MemverseInput
+        end
+      end
+      security do
+        key :oauth2, ['write admin']
+      end
+      response 200 do
+        key :description, 'Memverse response'
+        schema do
+          key :'$ref', :Memverse
+        end
+      end
+      response :default do
+        key :description, 'Unexpected error'
+        schema do
+          key :'$ref', :ErrorModel
+        end
+      end
+    end
+
+  end
+
+
+  swagger_path '/memverses/{id}' do
+
+    operation :get do
+      key :description, 'Returns a single memory verse'
+      key :operationId, 'findMemverseById'
+      key :tags, ['memverse']
+      parameter do
+        key :name, :id
+        key :in, :path
+        key :description, 'ID of memory verse to fetch'
+        key :required, true
+        key :type, :integer
+        key :format, :int64
+      end
+      security do
+        key :oauth2, ['read']
+      end
+      response 200 do
+        key :description, 'Memverse response'
+        schema do
+          key :'$ref', :Memverse
+        end
+      end
+      response 401 do
+        key :description, 'Unauthorized response'
+        schema do
+          key :'$ref', :Memverse
+        end
+      end
+      response 400 do
+        key :description, 'Incorrectly formed API request'
+        schema do
+          key :'$ref', :Memverse
+        end
+      end
+      response :default do
+        key :description, 'Unexpected error'
+        schema do
+          key :'$ref', :ErrorModel
+        end
+      end
+    end
+
+    operation :put do
+      key :description, 'Partial updates to a memory verse'
+      key :operationId, 'updateMemverseById'
+      key :tags, ['memverse']
+      parameter do
+        key :name, :id
+        key :in, :path
+        key :description, 'ID of memory verse to update'
+        key :required, true
+        key :type, :integer
+        key :format, :int64
+        # schema do
+        #   key :'$ref', :MemverseInput
+        # end
+      end
+      security do
+        key :oauth2, ['admin write read public']
+      end
+      response 200 do
+        key :description, 'Memverse response'
+        schema do
+          key :'$ref', :Memverse
+        end
+      end
+      response 401 do
+        key :description, 'Unauthorized response'
+        schema do
+          key :'$ref', :Memverse
+        end
+      end
+      response :default do
+        key :description, 'Unexpected error'
+        schema do
+          key :'$ref', :ErrorModel
+        end
+      end
+    end
+
+    operation :delete do
+      key :description, 'Delete a memory verse'
+      key :operationId, 'deleteMemverseById'
+      key :tags, ['memverse']
+      parameter do
+        key :name, :id
+        key :in, :path
+        key :description, 'ID of memory verse to delete'
+        key :required, true
+        key :type, :integer
+        key :format, :int64
+      end
+      security do
+        key :oauth2, ['admin write read public']
+      end
+      response 200 do
+        key :description, 'Memverse response'
+        schema do
+          key :'$ref', :Memverse
+        end
+      end
+      response 401 do
+        key :description, 'Unauthorized response'
+        schema do
+          key :'$ref', :Memverse
+        end
+      end
+      response :default do
+        key :description, 'Unexpected error'
+        schema do
+          key :'$ref', :ErrorModel
+        end
+      end
+    end
+
+  end
+  # ----------------------------------------------------------------------------------------------------------
+  # Swagger-Docs DSL [END]
+  # ----------------------------------------------------------------------------------------------------------
+  
+  # Scopes
+  before_action only: [:index, :show, :update, :create, :destroy] do
+    doorkeeper_authorize! :admin, :write, :read, :public  # Allow all scopes access for now
+  end
 
   version 1
 
@@ -70,7 +268,11 @@ class Api::V1::MemversesController < Api::V1::ApiController
   private
 
   def memverse
-    @memverse ||= current_resource_owner.memverses.find( params[:id] )
+    if current_resource_owner
+      @memverse ||= current_resource_owner.memverses.find( params[:id] )
+    else
+      error! :bad_request, metadata: {reason: 'No current resource owner has been authenticated'}
+    end
   end
 
 end
