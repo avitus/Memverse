@@ -17,6 +17,14 @@ class Api::V1::MemversesController < Api::V1::ApiController
         key :required, false
         key :type, :string
       end
+      parameter do
+        key :name, :page
+        key :in, :query
+        key :description, 'Page number requested'
+        key :required, false
+        key :type, :integer
+        key :format, :int64
+      end
       security do
         key :oauth2, ['read']
       end
