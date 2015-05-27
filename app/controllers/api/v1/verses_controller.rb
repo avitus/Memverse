@@ -172,7 +172,7 @@ class Api::V1::VersesController < Api::V1::ApiController
   def search
     search_text = params[:searchParams]
     verses = Array.new
-    verses = Verse.search( Riddle::Query.escape(@search_text[0..255]) ) if search_text
+    verses = Verse.search( Riddle::Query.escape(search_text[0..255]) ) if search_text
     expose verses
   end
 
