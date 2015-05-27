@@ -105,12 +105,49 @@ class Api::V1::VersesController < Api::V1::ApiController
     end
   end
 
+  swagger_path '/verses/search' do
+    operation :get do
+      key :description, 'Search for a verse'
+      key :operationId, 'findVerseBySearchTerm'
+      key :tags, ['verse']
+
+      parameter do
+        key :name, :searchParams
+        key :in, :query
+        key :description, 'Search term expected in text of verse'
+        key :required, true
+        key :type, :string
+      end
+
+      response 200 do
+        key :description, 'verse response'
+        schema do
+          key :'$ref', :Verse
+        end
+      end
+      response 401 do
+        key :description, 'unauthorized response'
+        schema do
+          key :'$ref', :Verse
+        end
+      end
+
+      response :default do
+        key :description, 'unexpected error'
+        schema do
+          key :'$ref', :ErrorModel
+        end
+      end
+    end
+  end
+
+
   # ----------------------------------------------------------------------------------------------------------
   # Swagger-Docs DSL [END]
   # ----------------------------------------------------------------------------------------------------------
   
   # Scopes
-  before_action only: [:show, :lookup] do
+  before_action only: [:show, :lookup, :search] do
     doorkeeper_authorize! :admin, :write, :read, :public  # Allow all scopes access for now
   end
 
@@ -129,6 +166,14 @@ class Api::V1::VersesController < Api::V1::ApiController
   def lookup
     tl = params[:tl] ? params[:tl] : current_resource_owner.translation
     expose Verse.exists_in_db(params[:bk], params[:ch], params[:vs], tl)
+  end
+
+  # GET /verses/search
+  def search
+    search_text = params[:searchParams]
+    verses = Array.new
+    verses = Verse.search( Riddle::Query.escape(@search_text[0..255]) ) if search_text
+    expose verses
   end
 
 end
