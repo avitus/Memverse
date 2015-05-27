@@ -82,6 +82,9 @@ class Api::V1::VersesController < Api::V1::ApiController
         key :type, :string
       end
 
+      security do
+        key :oauth2, ['admin write read public']
+      end
 
       response 200 do
         key :description, 'verse response'
@@ -119,6 +122,10 @@ class Api::V1::VersesController < Api::V1::ApiController
         key :type, :string
       end
 
+      security do
+        key :oauth2, ['admin write read public']
+      end
+      
       response 200 do
         key :description, 'verse response'
         schema do
