@@ -75,6 +75,7 @@ MemverseApp::Application.routes.draw do
     resources :users, :only => [:show, :update]
     resources :verses do
       get 'lookup', :on => :collection
+      get 'search', :on => :collection
     end
     resources :memverses
     resources :passages do
