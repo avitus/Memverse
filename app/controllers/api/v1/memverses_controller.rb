@@ -126,7 +126,7 @@ class Api::V1::MemversesController < Api::V1::ApiController
     end
 
     operation :put do
-      key :description, 'Partial updates to a memory verse'
+      key :description, 'Record a rating for a memory verse'
       key :operationId, 'updateMemverseById'
       key :tags, ['memverse']
       parameter do
