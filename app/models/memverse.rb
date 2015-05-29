@@ -15,10 +15,10 @@ class Memverse < ActiveRecord::Base
       key :type, :integer
       key :format, :int64
     end
-    property :user_id do
-      key :type, :integer
-      key :format, :int64
-    end    
+    # property :user_id do
+    #   key :type, :integer
+    #   key :format, :int64
+    # end    
     property :efactor do
       key :type, :number
     end 
@@ -34,49 +34,49 @@ class Memverse < ActiveRecord::Base
       key :type, :string
       key :format, :date
     end 
-    property :last_tested do
-      key :type, :string
-      key :format, :date
-    end 
+    # property :last_tested do
+    #   key :type, :string
+    #   key :format, :date
+    # end 
     property :status do
       key :type, :string
     end 
-    property :attempts do
-      key :type, :integer
-      key :format, :int64
-    end    
-    property :created_at do
-      key :type, :string
-      key :format, :dateTime
-    end 
-    property :updated_at do
-      key :type, :string
-      key :format, :dateTime
-    end 
-    property :first_verse do
-      key :type, :integer
-      key :format, :int64
-    end  
-    property :prev_verse do
-      key :type, :integer
-      key :format, :int64
-    end  
-    property :next_verse do
-      key :type, :integer
-      key :format, :int64
-    end
-    property :ref_interval do
-      key :type, :integer
-      key :format, :int64
-    end    
-    property :next_ref_test do
-      key :type, :string
-      key :format, :date
-    end
-    property :uberverse_id do
-      key :type, :integer
-      key :format, :int64
-    end
+    # property :attempts do
+    #   key :type, :integer
+    #   key :format, :int64
+    # end    
+    # property :created_at do
+    #   key :type, :string
+    #   key :format, :dateTime
+    # end 
+    # property :updated_at do
+    #   key :type, :string
+    #   key :format, :dateTime
+    # end 
+    # property :first_verse do
+    #   key :type, :integer
+    #   key :format, :int64
+    # end  
+    # property :prev_verse do
+    #   key :type, :integer
+    #   key :format, :int64
+    # end  
+    # property :next_verse do
+    #   key :type, :integer
+    #   key :format, :int64
+    # end
+    # property :ref_interval do
+    #   key :type, :integer
+    #   key :format, :int64
+    # end    
+    # property :next_ref_test do
+    #   key :type, :string
+    #   key :format, :date
+    # end
+    # property :uberverse_id do
+    #   key :type, :integer
+    #   key :format, :int64
+    # end
     property :passage_id do
       key :type, :integer
       key :format, :int64
@@ -105,7 +105,6 @@ class Memverse < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------------
   # Swagger-Blocks DSL [END]
   # ----------------------------------------------------------------------------------------------------------
-
 
   acts_as_taggable # Alias for acts_as_taggable_on :tags
 
@@ -179,6 +178,7 @@ class Memverse < ActiveRecord::Base
     {
       :id            => self.id,
       :verse_id      => self.verse.id,
+      :passage_id    => self.passage.id,
       :ref           => self.verse.ref,
       :tl            => self.verse.translation,
       :text          => self.verse.text,
@@ -190,6 +190,7 @@ class Memverse < ActiveRecord::Base
       :feedback      => self.show_feedback?,
       :status        => self.status,
       :rep_n         => self.rep_n,
+      :efactor       => self.efactor,
       :subsection    => self.subsection
     }
   end
