@@ -136,9 +136,14 @@ class Api::V1::MemversesController < Api::V1::ApiController
         key :required, true
         key :type, :integer
         key :format, :int64
-        # schema do
-        #   key :'$ref', :MemverseInput
-        # end
+      end
+      parameter do
+        key :name, :q
+        key :in, :query
+        key :description, 'Rating of verse recall'
+        key :required, true
+        key :type, :integer
+        key :format, :int64
       end
       security do
         key :oauth2, ['admin write read public']
