@@ -57,10 +57,10 @@ class Memverse < ActiveRecord::Base
     #   key :type, :integer
     #   key :format, :int64
     # end  
-    # property :prev_verse do
-    #   key :type, :integer
-    #   key :format, :int64
-    # end  
+    property :prev_verse do
+      key :type, :integer
+      key :format, :int64
+    end  
     # property :next_verse do
     #   key :type, :integer
     #   key :format, :int64
@@ -191,7 +191,8 @@ class Memverse < ActiveRecord::Base
       :status        => self.status,
       :rep_n         => self.rep_n,
       :efactor       => self.efactor,
-      :subsection    => self.subsection
+      :subsection    => self.subsection,
+      :prev_verse    => self.prev_verse    # needed for iOS app
     }
   end
 
