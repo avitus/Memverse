@@ -69,10 +69,12 @@ class ApidocsController < ActionController::Base
   SWAGGERED_CLASSES = [
     Api::V1::UsersController,
     Api::V1::CredentialsController,
+    Api::V1::PassagesController,
     Api::V1::MemversesController,
     Api::V1::VersesController,
     Api::V1::TranslationsController,
     User,
+    Passage,
     Memverse,
     Verse,
     ErrorModel,

@@ -1,5 +1,40 @@
 class Passage < ActiveRecord::Base
 
+  # ----------------------------------------------------------------------------------------------------------
+  # Swagger-Blocks DSL [START]
+  # ----------------------------------------------------------------------------------------------------------
+  include Swagger::Blocks
+
+  swagger_schema :Passage do
+    key :required, [:id, :ref]
+    property :id do
+      key :type, :integer
+      key :format, :int64
+    end   
+    property :ref do
+      key :type, :string
+    end          
+  end
+
+  swagger_schema :Passage do
+    allOf do
+      schema do
+        key :'$ref', :Passage
+      end
+      schema do
+        key :required, [:id]
+        property :id do
+          key :type, :integer
+          key :format, :int64
+        end
+      end
+    end
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Swagger-Blocks DSL [END]
+  # ----------------------------------------------------------------------------------------------------------
+
   belongs_to :user
 
   has_many   :memverses
