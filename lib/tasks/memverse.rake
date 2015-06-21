@@ -324,6 +324,21 @@ namespace :utils do
   end
 
   #--------------------------------------------------------------------------------------------
+  # Insert missing book_index values for Passages
+  # Task duration: ~ ? hours
+  #--------------------------------------------------------------------------------------------
+  desc "Insert missing book_index values for passage model"
+  task :insert_missing_book_index => :environment do
+    puts "=== Inserting missing book_index values for passage model at #{Time.now} ==="
+
+    Passage.where(:book_index => nil).find_each { |psg|
+      psg.update_attribute(:book_index, Book.find_by_name(psg.book).try(:book_index))
+    }
+
+    puts "=== Finished inserting missing book_index values at #{Time.now} ==="
+  end
+
+  #--------------------------------------------------------------------------------------------
   # Associate verses with uberverses
   # Task duration: ~ 4 hours
   #--------------------------------------------------------------------------------------------
