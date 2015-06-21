@@ -70,6 +70,7 @@ class Passage < ActiveRecord::Base
   scope :active, -> { joins(:memverses).merge(Memverse.active).group(:id).having('count(memverses.id) > 0') }
 
   after_create   :update_ref
+  after_create   :update_book_index
 
   # Convert to JSON format
   def as_json(options={})
@@ -173,6 +174,11 @@ class Passage < ActiveRecord::Base
     end
     save
     return self.reference
+  end
+
+  def update_book_index
+    self.book_index = Book.find_by_name(self.book).try(:book_index)
+    save
   end
 
   # Combine supermemo information from underlying verses
