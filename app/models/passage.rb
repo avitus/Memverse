@@ -17,11 +17,13 @@ class Passage < ActiveRecord::Base
     property :book do
       key :type, :string
     end 
-    property :chapter do
-      key :type, :string
+    property :book_index do
+      key :type, :integer
+      key :format, :int64
     end 
-    property :book do
-      key :type, :string
+    property :chapter do
+      key :type, :integer
+      key :format, :int64
     end 
     property :chapter do
       key :type, :string
@@ -75,6 +77,7 @@ class Passage < ActiveRecord::Base
       :id              => self.id,
       :ref             => self.reference,       # TODO: It was a bad idea to rename the attribute
       :book            => self.book,
+      :book_index      => self.book_index,
       :chapter         => self.chapter,
       :first_verse     => self.first_verse,
       :last_verse      => self.last_verse,
