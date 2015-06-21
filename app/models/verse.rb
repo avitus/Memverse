@@ -40,7 +40,8 @@ class Verse < ActiveRecord::Base
       key :type, :string
     end 
     property :versenum do
-      key :type, :string
+      key :type, :integer
+      key :format, :int64
     end
     property :text do
       key :type, :string

@@ -6,14 +6,34 @@ class Passage < ActiveRecord::Base
   include Swagger::Blocks
 
   swagger_schema :Passage do
-    key :required, [:id, :ref]
+    key :required, [:id, :ref, :book, :chapter, :first_verse, :last_verse]
     property :id do
       key :type, :integer
       key :format, :int64
     end   
     property :ref do
       key :type, :string
-    end          
+    end 
+    property :book do
+      key :type, :string
+    end 
+    property :chapter do
+      key :type, :string
+    end 
+    property :book do
+      key :type, :string
+    end 
+    property :chapter do
+      key :type, :string
+    end 
+    property :first_verse do
+      key :type, :integer
+      key :format, :int64
+    end
+    property :last_verse do
+      key :type, :integer
+      key :format, :int64
+    end           
   end
 
   swagger_schema :Passage do
@@ -22,7 +42,7 @@ class Passage < ActiveRecord::Base
         key :'$ref', :Passage
       end
       schema do
-        key :required, [:id]
+        key :required, [:id, :ref, :book, :chapter, :first_verse, :last_verse]
         property :id do
           key :type, :integer
           key :format, :int64
@@ -54,6 +74,10 @@ class Passage < ActiveRecord::Base
     {
       :id              => self.id,
       :ref             => self.reference,       # TODO: It was a bad idea to rename the attribute
+      :book            => self.book,
+      :chapter         => self.chapter,
+      :first_verse     => self.first_verse,
+      :last_verse      => self.last_verse,
       :interval_array  => self.interval_array
     }
 
