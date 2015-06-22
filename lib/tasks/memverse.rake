@@ -325,7 +325,7 @@ namespace :utils do
 
   #--------------------------------------------------------------------------------------------
   # Insert missing book_index values for Passages
-  # Task duration: ~ ? hours
+  # Task duration: ~ 5 mins
   #--------------------------------------------------------------------------------------------
   desc "Insert missing book_index values for passage model"
   task :insert_missing_book_index => :environment do
