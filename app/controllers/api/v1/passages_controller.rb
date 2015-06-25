@@ -19,7 +19,7 @@ class Api::V1::PassagesController < Api::V1::ApiController
         key :format, :int64
       end
       security do
-        key :oauth2, ['admin read']
+        key :oauth2, ['admin read write public']
       end
       response 200 do
         key :description, 'Passage response'
@@ -43,6 +43,55 @@ class Api::V1::PassagesController < Api::V1::ApiController
 
   end
 
+  swagger_path '/passages/{id}' do
+
+    operation :get do
+      
+      key :description, 'Returns a single passage by primary key (ID)'
+      key :operationId, 'findPassageById'
+      key :tags, ['passage']
+      parameter do
+        key :name, :id
+        key :in, :path
+        key :description, 'ID of passage to fetch'
+        key :required, true
+        key :type, :integer
+        key :format, :int64
+      end
+      
+      security do
+        key :oauth2, ['public read write admin']
+      end
+
+      response 200 do
+        key :description, 'Passage response'
+        schema do
+          key :'$ref', :Passage
+        end
+      end
+      response 401 do
+        key :description, 'Unauthorized response'
+        schema do
+          key :'$ref', :Passage
+        end
+      end
+      response 400 do
+        key :description, 'Incorrectly formed API request'
+        schema do
+          key :'$ref', :Passage
+        end
+      end
+      response :default do
+        key :description, 'Unexpected error'
+        schema do
+          key :'$ref', :ErrorModel
+        end
+      end
+
+    end
+
+  end
+
   # ----------------------------------------------------------------------------------------------------------
   # Swagger-Docs DSL [END]
   # ----------------------------------------------------------------------------------------------------------
@@ -61,6 +110,10 @@ class Api::V1::PassagesController < Api::V1::ApiController
   def index
     passages = current_resource_owner.passages.order(:book_index, :chapter, :first_verse)
     expose passages.page( params[:page] )
+  end
+
+  def show
+    expose passage
   end
 
   private
