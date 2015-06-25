@@ -6,6 +6,9 @@ class Api::V1::ApiController < RocketPants::Base
   include ActionController::Head
   include Doorkeeper::Rails::Helpers
 
+  # Airbrake support
+  use_named_exception_notifier :airbrake
+
   #------------- Private below this line -------------------------------------------------------------------------------------
   private
 
