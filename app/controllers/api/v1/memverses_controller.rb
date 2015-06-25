@@ -54,9 +54,9 @@ class Api::V1::MemversesController < Api::V1::ApiController
       key :produces, ['application/json']
       key :tags, ['memverse']
       parameter do
-        key :name, :memverse
+        key :name, :verse_id
         key :in, :body
-        key :description, 'Memory verse to add to user'
+        key :description, 'ID of verse to add as a new memory verse for current user'
         key :required, true
         schema do
           key :'$ref', :MemverseInput
