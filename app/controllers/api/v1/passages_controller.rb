@@ -46,7 +46,7 @@ class Api::V1::PassagesController < Api::V1::ApiController
   swagger_path '/passages/{id}' do
 
     operation :get do
-      
+
       key :description, 'Returns a single passage by primary key (ID)'
       key :operationId, 'findPassageById'
       key :tags, ['passage']
