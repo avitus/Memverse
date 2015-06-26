@@ -227,7 +227,7 @@ class Api::V1::MemversesController < Api::V1::ApiController
   end
 
   def show
-    expose memverse
+    expose memverse.as_json
   end
 
   def update
