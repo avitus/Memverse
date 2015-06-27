@@ -170,6 +170,15 @@ class Memverse < ActiveRecord::Base
   # Update related passage
   after_save :update_passage
 
+
+  # class Memverse < ::Memverse 
+    def serializable_hash(options = {})
+      super only: [:id, :next_test, :test_interval, :status, :rep_n, :efactor, :subsection, :prev_verse, :passage_id],
+            methods: [:ref],
+            include: [verse: {only: [:id, :translation, :text, :versenum]}]
+    end
+  # end
+
   # Convert to JSON format (for AJAX goodness on main memorization page)
   #
   # @todo Find a way to exclude :skippable when not needed ... too slow otherwise
@@ -194,6 +203,14 @@ class Memverse < ActiveRecord::Base
       :subsection    => self.subsection,
       :prev_verse    => self.prev_verse    # needed for iOS app
     }
+  end
+
+  def ref
+    self.verse.ref
+  end
+
+  def text
+    self.verse.text
   end
 
   # Implementation of SM-2 algorithm
