@@ -223,11 +223,11 @@ class Api::V1::MemversesController < Api::V1::ApiController
     mvs = current_resource_owner.memverses
     mvs = params[:sort] ? mvs.order(params[:sort]) : mvs.canonical_sort
 
-    expose mvs.page( params[:page] ).as_json
+    expose mvs.page( params[:page] )
   end
 
   def show
-    expose memverse.as_json
+    expose memverse
   end
 
   def update
