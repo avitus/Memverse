@@ -81,6 +81,44 @@ class Api::V1::MemversesController < Api::V1::ApiController
 
   end
 
+  swagger_path '/passages/{passage_id}/memverses' do
+    operation :get do
+      key :description, 'Returns memory verses for a given passage'
+      key :operationId, 'showMemversesForPassage'
+      key :tags, ['memverse', 'passage']
+      parameter do
+        key :name, :page
+        key :in, :query
+        key :description, 'Page number requested'
+        key :required, false
+        key :type, :integer
+        key :format, :int64
+      end
+      security do
+        key :oauth2, ['read']
+      end
+      response 200 do
+        key :description, 'Memverse response'
+        schema do
+          key :'$ref', :Memverse
+        end
+      end
+      response 401 do
+        key :description, 'Unauthorized response'
+        schema do
+          key :'$ref', :Memverse
+        end
+      end
+      response :default do
+        key :description, 'Unexpected error'
+        schema do
+          key :'$ref', :ErrorModel
+        end
+      end
+    end
+
+  end
+
 
   swagger_path '/memverses/{id}' do
 
@@ -220,7 +258,10 @@ class Api::V1::MemversesController < Api::V1::ApiController
   caches :index, :show, :caches_for => 5.minutes
 
   def index
-    mvs = current_resource_owner.memverses
+
+    passage = Passage.find(params[:passage_id])
+
+    mvs = passage ? passage.memverses : current_resource_owner.memverses
     mvs = params[:sort] ? mvs.order(params[:sort]) : mvs.canonical_sort
 
     expose mvs.page( params[:page] )
