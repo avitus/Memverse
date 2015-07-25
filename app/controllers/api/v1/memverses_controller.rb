@@ -267,12 +267,16 @@ class Api::V1::MemversesController < Api::V1::ApiController
 
   def index
 
-    passage = Passage.find(params[:passage_id])
+    if params[:passage_id].blank? # GET /memverses
+      mvs = current_resource_owner.memverses
+    else                          # GET /passages/{passage_id}/memverses
+      passage = Passage.find(params[:passage_id])
+      mvs = passage.memverses    
+    end
 
-    mvs = passage ? passage.memverses : current_resource_owner.memverses
     mvs = params[:sort] ? mvs.order(params[:sort]) : mvs.canonical_sort
-
     expose mvs.page( params[:page] )
+  
   end
 
   def show
