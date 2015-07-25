@@ -94,6 +94,14 @@ class Api::V1::MemversesController < Api::V1::ApiController
         key :type, :integer
         key :format, :int64
       end
+      parameter do
+        key :name, :passage_id
+        key :in, :path
+        key :description, 'ID of passage'
+        key :required, true
+        key :type, :integer
+        key :format, :int64
+      end
       security do
         key :oauth2, ['read']
       end
