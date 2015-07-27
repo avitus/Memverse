@@ -94,6 +94,16 @@ class Api::V1::UsersController < Api::V1::ApiController
 
   version 1
 
+  def create
+    user = User.new( params[:user] )
+    if user.save
+      expose user
+    else
+      warden.custom_failure!
+      render :json=> user.errors, :status=>422
+    end
+  end
+
   def show
     expose User.find( params[:id] ) || current_resource_owner
   end
