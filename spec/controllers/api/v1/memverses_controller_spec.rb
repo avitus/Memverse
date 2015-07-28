@@ -21,7 +21,7 @@ describe Api::V1::MemversesController do
 
     it 'returns user memory verses as json' do
       get :index, :version => 1, :format => :json
-      json.should == JSON.parse([mv].to_json)
+      json.should == ([mv.serializable_hash])
     end
 
   end
@@ -36,8 +36,7 @@ describe Api::V1::MemversesController do
         post :create, :id => verse.id, :version => 1, :format => :json
       }.to change(Memverse, :count).by(1)
       response.status.should eq(201)
-      json["verse_id"].should == verse.id
-      json["user_id"].should  == user.id
+      json["verse"]["id"].should == verse.id
     end
   end
 
@@ -53,7 +52,6 @@ describe Api::V1::MemversesController do
       json["test_interval"].should         == 4
       json["efactor"].to_f.should          == 2.1
       json["rep_n"].should                 == 2
-      json["attempts"].should              == 1
       Date.parse(json["next_test"]).should == Date.today + 4
     end
   end
