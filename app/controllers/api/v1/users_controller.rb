@@ -99,7 +99,7 @@ class Api::V1::UsersController < Api::V1::ApiController
     if user.save
       expose user
     else
-      warden.custom_failure!
+      warden.mobile_failure!
       render :json=> user.errors, :status=>422
     end
   end
