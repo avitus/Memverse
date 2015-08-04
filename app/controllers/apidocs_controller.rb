@@ -73,10 +73,12 @@ class ApidocsController < ActionController::Base
     Api::V1::MemversesController,
     Api::V1::VersesController,
     Api::V1::TranslationsController,
+    Api::V1::QuizzesController,
     User,
     Passage,
     Memverse,
     Verse,
+    Quiz,
     ErrorModel,
     self,
   ].freeze

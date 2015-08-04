@@ -68,7 +68,9 @@ MemverseApp::Application.routes.draw do
     root to: "home#index"
   end
 
+  # ---------------------------------------------------------------------------------------------------------
   # API
+  # ---------------------------------------------------------------------------------------------------------
   resources :apidocs, only: [:index]    # for Swagger UI documentation
 
   api versions: 1, module: "api/v1" do
@@ -82,9 +84,16 @@ MemverseApp::Application.routes.draw do
       get 'due', :on => :collection
       resources :memverses
     end
+    resources :quizzes do
+      get 'upcoming', :on => :collection
+    end
     resources :translations, :only => [:index, :show]
     get '/me' => "credentials#me"
   end
+  # ---------------------------------------------------------------------------------------------------------
+  # END: API
+  # ---------------------------------------------------------------------------------------------------------
+
 
   # Adding verses and chapters to user account
   get   '/add_verse'              => 'memverses#add_verse',             :as => 'add_verse'
