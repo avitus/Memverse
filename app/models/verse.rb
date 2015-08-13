@@ -341,20 +341,22 @@ class Verse < ActiveRecord::Base
   # Return list of duplicate verses (if any)
   def has_duplicates?
     iv = Hash[
-      ["Luke", 12, 34]      => ["Matthew", 6, 21],
-      ["Matthew", 6, 21]    => ["Luke", 12, 34],
-      ["Proverbs", 14, 12]  => ["Proverbs", 16, 25],
-      ["Proverbs", 16, 25]  => ["Proverbs", 14, 12],
-      ["Judges", 21, 25]    => ["Judges", 17, 6],
-      ["Judges", 17, 6]     => ["Judges", 21, 25],
-      ["Matthew", 25, 21]   => ["Matthew", 25, 23],
-      ["Matthew", 25, 23]   => ["Matthew", 25, 21],
-      ["Leviticus", 19, 30] => ["Leviticus", 26, 2],
-      ["Leviticus", 26, 2]  => ["Leviticus", 19, 30],
-      ["Psalms", 107,  8]   => [["Psalms", 107, 15], ["Psalms", 107, 22], ["Psalms", 107, 31]],
-      ["Psalms", 107, 15]   => [["Psalms", 107,  8], ["Psalms", 107, 22], ["Psalms", 107, 31]],
-      ["Psalms", 107, 22]   => [["Psalms", 107,  8], ["Psalms", 107, 15], ["Psalms", 107, 31]],
-      ["Psalms", 107, 31]   => [["Psalms", 107,  8], ["Psalms", 107, 15], ["Psalms", 107, 22]]
+      ["Luke", 12, 34]        => ["Matthew", 6, 21],
+      ["Matthew", 6, 21]      => ["Luke", 12, 34],
+      ["Proverbs", 14, 12]    => ["Proverbs", 16, 25],
+      ["Proverbs", 16, 25]    => ["Proverbs", 14, 12],
+      ["Judges", 21, 25]      => ["Judges", 17, 6],
+      ["Judges", 17, 6]       => ["Judges", 21, 25],
+      ["Matthew", 25, 21]     => ["Matthew", 25, 23],
+      ["Matthew", 25, 23]     => ["Matthew", 25, 21],
+      ["1 Corinthians", 1, 3] => ["2 Corinthians", 1, 2],      
+      ["2 Corinthians", 1, 2] => ["1 Corinthians", 1, 3],      
+      ["Leviticus", 19, 30]   => ["Leviticus", 26, 2],
+      ["Leviticus", 26, 2]    => ["Leviticus", 19, 30],
+      ["Psalms", 107,  8]     => [["Psalms", 107, 15], ["Psalms", 107, 22], ["Psalms", 107, 31]],
+      ["Psalms", 107, 15]     => [["Psalms", 107,  8], ["Psalms", 107, 22], ["Psalms", 107, 31]],
+      ["Psalms", 107, 22]     => [["Psalms", 107,  8], ["Psalms", 107, 15], ["Psalms", 107, 31]],
+      ["Psalms", 107, 31]     => [["Psalms", 107,  8], ["Psalms", 107, 15], ["Psalms", 107, 22]]
     ]
 
     return iv[ [self.book, self.chapter.to_i, self.versenum.to_i] ] || []
