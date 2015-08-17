@@ -549,20 +549,31 @@ namespace :utils do
 
   #--------------------------------------------------------------------------------------------
   # Locate memverses that have a passage_id of a nonexistent passage
+  # Note: this is an ongoing problem as of Aug 2015
   #--------------------------------------------------------------------------------------------
   desc "Locate memverses that have a passage_id of a nonexistent passage"
   task :locate_nil_passage_pointers => :environment do
 
-    puts "=== Locating nil passage pointers ==="
+    puts "=== Locating nil passage pointers at #{Time.now} ==="
+
+    broken_passage_count = 0
 
     Memverse.find_each { |mv|
       if mv.passage.nil?
-        puts("Memverse with ID #{mv.id}")
-        puts("                              ... has nonexistent passage_id: #{mv.passage_id}")
+        
+        puts("Memverse with ID #{mv.id} for user #{mv.user.email} has nonexistent passage_id: #{mv.passage_id}")
+        
+        broken_passage_count = broken_passage_count + 1
+
+        # Fix the problem
+        mv.add_to_passage
+
+
       end
     }
 
-    puts "=== Finished ==="
+    puts "=== Located #{broken_passage_count} memverses with a bad passage_id ==="
+    puts "=== Finished at #{Time.now} ==="
 
   end
 
