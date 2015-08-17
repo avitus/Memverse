@@ -1084,7 +1084,7 @@ class MemversesController < ApplicationController
     # Alert user if they have too few verses to be tested on
     # Note: the accuracy test will focus exclusively on memorized verses if the user has at least one verse memorized
     if current_user.memverses.memorized.count >=1
-      total_verse_pool = current_user.memverses.memverses.count
+      total_verse_pool = current_user.memverses.memorized.count
       memorized_focus  = true
     else
       total_verse_pool = current_user.memverses.active.count
