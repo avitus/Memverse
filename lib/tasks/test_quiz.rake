@@ -64,7 +64,7 @@ namespace :quiz do
     # Main question loop
     # ========================================================================
 
-    q_num_array = Array(1..3)
+    q_num_array = Array(1..5)
 
     puts "===> Starting quiz at " + Time.now.to_s
 
@@ -73,8 +73,8 @@ namespace :quiz do
       puts "===> Question: " + q_num.to_s
 
       # Pick a question at random
-      # q = QuizQuestion.mcq.approved.fresh.sort_by{ rand }.first
-      q = QuizQuestion.mcq.approved.order(:last_asked).first
+      q = QuizQuestion.mcq.approved.fresh.sort_by{ rand }.first
+      # q = QuizQuestion.mcq.approved.order(:last_asked).first
 
       # Update question to show that it was asked today
       # q.update_attribute( :last_asked, Date.today )
