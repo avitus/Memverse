@@ -165,6 +165,7 @@ var quizRoom = {
                                         question_num: questionNum,
                                         score:        grade.score } );
 
+            // Color result and give feedback on question
             selector = "#question-" + questionNum;
             $(selector + " #q-msg").html("<p>" + grade.msg + "</p>").children("p").effect('highlight', {}, 3000);
 

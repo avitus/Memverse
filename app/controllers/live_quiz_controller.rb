@@ -96,27 +96,6 @@ class LiveQuizController < ApplicationController
   end
 
   #-----------------------------------------------------------------------------------------------------------
-  # This method publishes the scoreboard
-  # Format: [{"score"=>"11", "name"=>"Andy"}, {"score"=>"14", "name"=>"Alex"} ]
-  #-----------------------------------------------------------------------------------------------------------
-  # def publish_scoreboard
-  # 	scoreboard = Array.new
-
-  #   participants = $redis.keys("user-*")
-  #   participants.each { |p|	scoreboard << $redis.hgetall(p) }
-
-  #   return scoreboard.sort { |x, y| y['score'].to_i <=> x['score'].to_i }
-  # end
-
-  #-----------------------------------------------------------------------------------------------------------
-  # Return the roster via JSON; used for initial roster loading
-  #-----------------------------------------------------------------------------------------------------------
-  # def roster
-  # 	@roster = Roster.all
-	 #  render :json => @roster
-  # end
-
-  #-----------------------------------------------------------------------------------------------------------
   # Return time till quiz starts
   #-----------------------------------------------------------------------------------------------------------
   def till_start
