@@ -88,7 +88,9 @@ MemverseApp::Application.routes.draw do
       get 'upcoming', :on => :collection
     end
     resources :translations, :only => [:index, :show]
-    get '/me' => "credentials#me"
+
+    get '/me'            => "credentials#me"
+    post '/record_score' => 'live_quiz#record_score' # Record user score for quiz question
   end
   # ---------------------------------------------------------------------------------------------------------
   # END: API
