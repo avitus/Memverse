@@ -76,21 +76,12 @@ class Api::V1::LiveQuizController < Api::V1::ApiController
 
       response 200 do
         key :description, 'Quiz response'
-        schema do
-          key :'$ref', :Quiz
-        end
       end
       response 401 do
         key :description, 'Unauthorized response'
-        schema do
-          key :'$ref', :Quiz
-        end
       end
       response 400 do
         key :description, 'Incorrectly formed API request'
-        schema do
-          key :'$ref', :Quiz
-        end
       end
       response :default do
         key :description, 'Unexpected error'
