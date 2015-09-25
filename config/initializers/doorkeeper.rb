@@ -20,7 +20,9 @@ Doorkeeper.configure do
   resource_owner_from_credentials do |routes|
     request.params[:user] = {:email => request.params[:username], :password => request.params[:password]}
     request.env["devise.allow_params_authentication"] = true
-    request.env["warden"].authenticate!(:scope => :user)
+    user = request.env["warden"].authenticate!(:scope => :user)
+    request.env["warden"].logout
+    user
   end
 
   # If you want to restrict access to the web interface for adding oauth authorized applications, you need to declare the block below.
