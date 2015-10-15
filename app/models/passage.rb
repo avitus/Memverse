@@ -10,7 +10,11 @@ class Passage < ActiveRecord::Base
     property :id do
       key :type, :integer
       key :format, :int64
-    end   
+    end  
+    property :user_id do
+      key :type, :integer
+      key :format, :int64
+    end  
     property :ref do
       key :type, :string
     end 
@@ -76,6 +80,7 @@ class Passage < ActiveRecord::Base
   def as_json(options={})
     {
       :id              => self.id,
+      :user_id         => self.user_id,
       :ref             => self.reference,       # TODO: It was a bad idea to rename the attribute
       :book            => self.book,
       :book_index      => self.book_index,
