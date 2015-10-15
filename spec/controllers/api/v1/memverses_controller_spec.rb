@@ -21,7 +21,7 @@ describe Api::V1::MemversesController do
 
     it 'returns user memory verses as json' do
       get :index, :version => 1, :format => :json
-      json.should == ([mv.serializable_hash])
+      response.should have_exposed [mv]
     end
 
   end
