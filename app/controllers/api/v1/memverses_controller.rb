@@ -263,7 +263,8 @@ class Api::V1::MemversesController < Api::V1::ApiController
 
   # The list of verses is paginated for 5 minutes, the verse itself is cached
   # until it's modified (using Efficient Validation)
-  caches :index, :show, :caches_for => 5.minutes
+  # ALV: We can't cache because all users access the same URL
+  # caches :index, :show, :caches_for => 5.minutes
 
   def index
 
