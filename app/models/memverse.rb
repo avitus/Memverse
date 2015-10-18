@@ -858,8 +858,9 @@ class Memverse < ActiveRecord::Base
 
     if psg
 
-      # Case 1 - Single verse passage
-      if psg.length == 1
+      # Case 1 - Single verse passage (Note: the second condition accounts for cases where the passage length
+      #          is incorrect but this is the last remaining verse)
+      if psg.length == 1 or psg.memverses.count == 1
 
         psg.destroy
 
@@ -886,7 +887,7 @@ class Memverse < ActiveRecord::Base
         # Case 4 - In middle of passage ... need to split passage into two
         else
 
-          memverses_in_passage   = psg.memverses.includes(:verse).order('verses.versenum')
+          memverses_in_passage = psg.memverses.includes(:verse).order('verses.versenum')
 
           # create new passage for second half of passage
           new_psg = Passage.create!( :user_id => psg.user_id, :translation => psg.translation,
