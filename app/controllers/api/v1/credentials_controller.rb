@@ -45,7 +45,7 @@ class Api::V1::CredentialsController < Api::V1::ApiController
 	end
 
 	def me
-		expose current_resource_owner
+		expose current_resource_owner # equivalent to current user
 	end
 
 end # of class
