@@ -5,6 +5,57 @@
 
 class Quiz < ActiveRecord::Base
 
+  # ----------------------------------------------------------------------------------------------------------
+  # Swagger-Blocks DSL [START]
+  # ----------------------------------------------------------------------------------------------------------
+  include Swagger::Blocks
+
+  swagger_schema :Quiz do
+    key :required, [:id, :name, :description, :start_time, :quiz_length, :quiz_questions_count]
+    property :id do
+      key :type, :integer
+      key :format, :int64
+    end   
+    property :name do
+      key :type, :string
+    end 
+    property :description do
+      key :type, :string
+    end 
+    property :quiz_questions_count do
+      key :type, :integer
+      key :format, :int64
+    end 
+    property :quiz_length do
+      key :type, :integer
+      key :format, :int64
+    end 
+    property :start_time do
+      key :type, :string
+      key :format, :dateTime
+    end           
+  end
+
+  swagger_schema :Quiz do
+    allOf do
+      schema do
+        key :'$ref', :Quiz
+      end
+      schema do
+        key :required, [:id, :name, :description, :start_time, :quiz_length, :quiz_questions_count]
+        property :id do
+          key :type, :integer
+          key :format, :int64
+        end
+      end
+    end
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Swagger-Blocks DSL [END]
+  # ----------------------------------------------------------------------------------------------------------
+
+
   # Relationships
   belongs_to :user
   has_many :quiz_questions

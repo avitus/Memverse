@@ -887,8 +887,8 @@ class MemversesController < ApplicationController
         end
 
       else
-        redirect_to :action => 'add_verse' and return
         flash[:notice] = "You should first add a few verses."
+        redirect_to :action => 'add_verse' and return
       end
     end
 
@@ -988,6 +988,32 @@ class MemversesController < ApplicationController
     add_breadcrumb I18n.t("menu.review"), :test_verse_quick_path
     add_breadcrumb I18n.t("memorize_menu.References"), :test_ref_path
 
+    # Alert user if they have too few references to be tested on
+    if current_user.all_refs # User is being tested on all references
+      total_reference_pool = current_user.memverses.active.count
+    else # User is only being tested on the first verse of a passage
+      total_reference_pool = current_user.memverses.active.passage_start.count
+    end
+
+    if total_reference_pool == 0
+      flash[:notice] = "You have not yet added any verses."
+      redirect_to :action => 'add_verse'
+
+    elsif total_reference_pool == 1
+      if current_user.all_refs
+        flash[:notice] = "You only have 1 reference to be tested on."
+      else
+        flash[:notice] = "You only have 1 reference to be tested on because you are only being tested on the first verse of each passage."
+      end
+
+    elsif total_reference_pool <= 5
+      if current_user.all_refs
+        flash[:notice] = "You only have #{total_reference_pool} references to be tested on. There will be a lot of repetition."
+      else
+        flash[:notice] = "You only have #{total_reference_pool} references to be tested on because you are only reviewing the first verse of each passage."
+      end
+    end
+
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -1055,6 +1081,35 @@ class MemversesController < ApplicationController
     add_breadcrumb I18n.t("menu.review"), :test_verse_quick_path
     add_breadcrumb I18n.t("memorize_menu.Accuracy Test"), :test_accuracy_path
 
+    # Alert user if they have too few verses to be tested on
+    # Note: the accuracy test will focus exclusively on memorized verses if the user has at least one verse memorized
+    if current_user.memverses.memorized.count >=1
+      total_verse_pool = current_user.memverses.memorized.count
+      memorized_focus  = true
+    else
+      total_verse_pool = current_user.memverses.active.count
+      memorized_focus  = false
+    end
+
+    if total_verse_pool == 0
+      flash[:notice] = "You have not yet added any verses."
+      redirect_to :action => 'add_verse'
+
+    elsif total_verse_pool == 1
+      if memorized_focus
+        flash[:notice] = "You only have 1 memorized verse to be tested on."
+      else
+        flash[:notice] = "You only have 1 verse to be tested on."
+      end
+
+    elsif total_verse_pool <= 5
+      if memorized_focus
+        flash[:notice] = "You only have #{total_verse_pool} memorized verses to be tested on. There will be a lot of repetition."
+      else
+        flash[:notice] = "You only have #{total_verse_pool} verses to be tested on. There will be a lot of repetition."
+      end
+    end
+
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -1062,8 +1117,10 @@ class MemversesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   def accuracy_test_next
 
+    # The accuracy test will exclusively focus on memorized verses 
     mv = current_user.memverses.memorized.sort_by{ rand }.first  # memorized scope excludes pending verses
 
+    # However, if the user has no memorized verses then the accuracy test will run on the learning verses.
     if !mv
       mv = current_user.memverses.active.sort_by{ rand }.first
     end

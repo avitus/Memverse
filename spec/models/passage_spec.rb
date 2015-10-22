@@ -125,6 +125,7 @@ describe Passage do
 
       psg1.first_verse.should == 2
       psg1.last_verse.should  == 8
+      psg1.book_index.should == 42
       psg2.memverses.first.passage_id.should == psg1.id # now associated with first passage
 
     end
@@ -151,6 +152,7 @@ describe Passage do
       psg1.first_verse.should == 2
       psg1.last_verse.should  == 8
       psg1.length.should      == 7
+      psg1.book_index.should  == 41
       mv.passage_id           == psg1.id # link mv associated with first passage
       mv2.passage_id.should   == psg1.id # now associated with first passage
 
@@ -175,6 +177,7 @@ describe Passage do
 
       @psg.first_verse.should == 2
       @psg.last_verse.should == 6
+      @psg.book_index.should == 3
       mv.passage_id.should == @psg.id
     end
 
@@ -186,6 +189,7 @@ describe Passage do
 
       @psg.first_verse.should == 3
       @psg.last_verse.should == 7
+      @psg.book_index.should == 3
       mv.passage_id.should == @psg.id
     end
 

@@ -2,8 +2,12 @@
 class Api::V1::ApiController < RocketPants::Base
 
   # See http://stackoverflow.com/questions/11383111/how-to-use-both-rocket-pants-and-doorkeeper-in-the-same-rails-application
+  # ... and also https://github.com/doorkeeper-gem/doorkeeper/wiki/ActionController::Metal-with-doorkeeper
   include ActionController::Head
-  include Doorkeeper::Helpers::Filter
+  include Doorkeeper::Rails::Helpers
+
+  # Airbrake support
+  use_named_exception_notifier :airbrake
 
   #------------- Private below this line -------------------------------------------------------------------------------------
   private

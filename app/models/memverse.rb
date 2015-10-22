@@ -1,5 +1,111 @@
 class Memverse < ActiveRecord::Base
 
+  # ----------------------------------------------------------------------------------------------------------
+  # Swagger-Blocks DSL [START]
+  # ----------------------------------------------------------------------------------------------------------
+  include Swagger::Blocks
+
+  swagger_schema :Memverse do
+    key :required, [:verse_id, :user_id ]
+    property :id do
+      key :type, :integer
+      key :format, :int64
+    end
+    property :verse_id do
+      key :type, :integer
+      key :format, :int64
+    end
+    property :user_id do
+      key :type, :integer
+      key :format, :int64
+    end    
+    property :efactor do
+      key :type, :number
+    end 
+    property :test_interval do
+      key :type, :integer
+      key :format, :int64
+    end 
+    property :rep_n do
+      key :type, :integer
+      key :format, :int64
+    end 
+    property :next_test do
+      key :type, :string
+      key :format, :date
+    end 
+    # property :last_tested do
+    #   key :type, :string
+    #   key :format, :date
+    # end 
+    property :status do
+      key :type, :string
+    end 
+    # property :attempts do
+    #   key :type, :integer
+    #   key :format, :int64
+    # end    
+    # property :created_at do
+    #   key :type, :string
+    #   key :format, :dateTime
+    # end 
+    # property :updated_at do
+    #   key :type, :string
+    #   key :format, :dateTime
+    # end 
+    # property :first_verse do
+    #   key :type, :integer
+    #   key :format, :int64
+    # end  
+    property :prev_verse do
+      key :type, :integer
+      key :format, :int64
+    end  
+    # property :next_verse do
+    #   key :type, :integer
+    #   key :format, :int64
+    # end
+    # property :ref_interval do
+    #   key :type, :integer
+    #   key :format, :int64
+    # end    
+    # property :next_ref_test do
+    #   key :type, :string
+    #   key :format, :date
+    # end
+    # property :uberverse_id do
+    #   key :type, :integer
+    #   key :format, :int64
+    # end
+    property :passage_id do
+      key :type, :integer
+      key :format, :int64
+    end
+    property :subsection do
+      key :type, :integer
+      key :format, :int64
+    end          
+  end
+
+  swagger_schema :MemverseInput do
+    allOf do
+      schema do
+        key :'$ref', :Memverse
+      end
+      schema do
+        key :required, [:id]
+        property :id do
+          key :type, :integer
+          key :format, :int64
+        end
+      end
+    end
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Swagger-Blocks DSL [END]
+  # ----------------------------------------------------------------------------------------------------------
+
   acts_as_taggable # Alias for acts_as_taggable_on :tags
 
   # Relationships
@@ -64,6 +170,14 @@ class Memverse < ActiveRecord::Base
   # Update related passage
   after_save :update_passage
 
+
+  # Exposed via API
+  def serializable_hash(options = {})
+    super only: [:id, :user_id, :next_test, :test_interval, :status, :rep_n, :efactor, :subsection, :prev_verse, :passage_id],
+          methods: [:ref],
+          include: [verse: {only: [:id, :translation, :text, :versenum]}]
+  end
+
   # Convert to JSON format (for AJAX goodness on main memorization page)
   #
   # @todo Find a way to exclude :skippable when not needed ... too slow otherwise
@@ -72,6 +186,7 @@ class Memverse < ActiveRecord::Base
     {
       :id            => self.id,
       :verse_id      => self.verse.id,
+      :passage_id    => self.passage.id,
       :ref           => self.verse.ref,
       :tl            => self.verse.translation,
       :text          => self.verse.text,
@@ -83,8 +198,18 @@ class Memverse < ActiveRecord::Base
       :feedback      => self.show_feedback?,
       :status        => self.status,
       :rep_n         => self.rep_n,
-      :subsection    => self.subsection
+      :efactor       => self.efactor,
+      :subsection    => self.subsection,
+      :prev_verse    => self.prev_verse    # needed for iOS app
     }
+  end
+
+  def ref
+    self.verse.ref
+  end
+
+  def text
+    self.verse.text
   end
 
   # Implementation of SM-2 algorithm
@@ -733,8 +858,9 @@ class Memverse < ActiveRecord::Base
 
     if psg
 
-      # Case 1 - Single verse passage
-      if psg.length == 1
+      # Case 1 - Single verse passage (Note: the second condition accounts for cases where the passage length
+      #          is incorrect but this is the last remaining verse)
+      if psg.length == 1 or psg.memverses.count == 1
 
         psg.destroy
 
@@ -761,7 +887,7 @@ class Memverse < ActiveRecord::Base
         # Case 4 - In middle of passage ... need to split passage into two
         else
 
-          memverses_in_passage   = psg.memverses.includes(:verse).order('verses.versenum')
+          memverses_in_passage = psg.memverses.includes(:verse).order('verses.versenum')
 
           # create new passage for second half of passage
           new_psg = Passage.create!( :user_id => psg.user_id, :translation => psg.translation,

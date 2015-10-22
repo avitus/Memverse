@@ -7,22 +7,6 @@ GIT
       rails (>= 3.2.8)
 
 GIT
-  remote: git://github.com/alexcwatt/forem.git
-  revision: c2a40c3e57b0a5fe905b4c4ac8bb5ae826cfebd0
-  branch: niluser
-  specs:
-    forem (1.0.0.beta1)
-      cancancan (~> 1.7)
-      decorators (~> 1.0.2)
-      friendly_id (~> 5.0.0)
-      gemoji (= 1.1.2)
-      rails (>= 4.0.3, <= 4.1.4)
-      sanitize (= 2.0.6)
-      select2-rails (~> 3.5.4)
-      simple_form (~> 3.0.1)
-      workflow (= 1.0.0)
-
-GIT
   remote: git://github.com/bernat/best_in_place.git
   revision: df178520bf9ba405baee9528d5dbb630d6ff760c
   specs:
@@ -39,10 +23,20 @@ GIT
       omniauth-oauth2 (~> 1.0)
 
 GIT
-  remote: git://github.com/richhollis/swagger-docs
-  revision: 838e45157b747687ce3af4547c90df5730491cf2
+  remote: git://github.com/radar/forem.git
+  revision: e6273a8f15fb6573a743c7a71284a184647988fa
+  branch: rails4
   specs:
-    swagger-docs (0.1.4)
+    forem (1.0.0.beta1)
+      cancancan (~> 1.7)
+      decorators (~> 1.0.2)
+      friendly_id (~> 5.0.0)
+      gemoji (= 2.1.0)
+      rails (~> 4.0, <= 4.2)
+      sanitize (= 2.0.6)
+      select2-rails (~> 3.5.4)
+      simple_form (~> 3.0)
+      workflow (= 1.0.0)
 
 GIT
   remote: git://github.com/sandal/prawn
@@ -140,7 +134,7 @@ GEM
     byebug (3.1.2)
       columnize (~> 0.8)
       debugger-linecache (~> 1.2)
-    cancancan (1.9.2)
+    cancancan (1.10.1)
     capistrano (2.15.5)
       highline
       net-scp (>= 1.0.0)
@@ -208,9 +202,8 @@ GEM
     devise-encryptable (0.1.2)
       devise (>= 2.1.0)
     diff-lcs (1.2.5)
-    doorkeeper (0.7.4)
-      jquery-rails (>= 2.0.2)
-      railties (>= 3.1)
+    doorkeeper (2.2.0)
+      railties (>= 3.2)
     dotenv (0.7.0)
     dropbox-sdk (1.6.4)
       json
@@ -227,7 +220,7 @@ GEM
       railties (>= 3.0.0)
     fancybox2-rails (0.2.8)
       railties (>= 3.1.0, < 5.0)
-    faraday (0.9.0)
+    faraday (0.9.1)
       multipart-post (>= 1.2, < 3)
     fastercsv (1.5.5)
     ffi (1.9.3)
@@ -245,7 +238,7 @@ GEM
     friendly_id (5.0.4)
       activerecord (>= 4.0.0)
     fssm (0.2.10)
-    gemoji (1.1.2)
+    gemoji (2.1.0)
     gherkin (2.12.2)
       multi_json (~> 1.3)
     gli (2.10.0)
@@ -271,11 +264,11 @@ GEM
     haml (4.0.5)
       tilt
     hashery (2.1.1)
-    hashie (2.1.1)
+    hashie (2.1.2)
     highline (1.6.21)
     hike (1.2.3)
     hirb (0.7.1)
-    httparty (0.13.1)
+    httparty (0.13.5)
       json (~> 1.8)
       multi_xml (>= 0.5.2)
     httpclient (2.4.0)
@@ -301,8 +294,7 @@ GEM
     jquery-ui-rails (4.2.1)
       railties (>= 3.2.16)
     json (1.8.1)
-    jwt (0.1.11)
-      multi_json (>= 1.5)
+    jwt (1.3.0)
     kaminari (0.15.1)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
@@ -327,9 +319,9 @@ GEM
     mime-types (1.25.1)
     mini_portile (0.6.0)
     minitest (4.7.5)
-    moneta (0.7.20)
+    moneta (0.8.0)
     msgpack (0.4.7)
-    multi_json (1.10.1)
+    multi_json (1.11.0)
     multi_test (0.1.1)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
@@ -346,19 +338,19 @@ GEM
     newrelic_rpm (3.8.0.218)
     nokogiri (1.6.3.1)
       mini_portile (= 0.6.0)
-    oauth2 (0.9.3)
+    oauth2 (1.0.0)
       faraday (>= 0.8, < 0.10)
-      jwt (~> 0.1.8)
+      jwt (~> 1.0)
       multi_json (~> 1.3)
       multi_xml (~> 0.5)
       rack (~> 1.2)
-    omniauth (1.2.1)
-      hashie (>= 1.2, < 3)
+    omniauth (1.2.2)
+      hashie (>= 1.2, < 4)
       rack (~> 1.0)
-    omniauth-oauth2 (1.1.2)
+    omniauth-oauth2 (1.2.0)
       faraday (>= 0.8, < 0.10)
       multi_json (~> 1.3)
-      oauth2 (~> 0.9.3)
+      oauth2 (~> 1.0)
       omniauth (~> 1.2)
     open4 (1.3.3)
     orm_adapter (0.5.0)
@@ -445,7 +437,7 @@ GEM
       mime-types (>= 1.16)
     riddle (1.5.11)
     rinku (1.7.3)
-    rocket_pants (1.9.1)
+    rocket_pants (1.13.0)
       actionpack (>= 3.0, < 5.0)
       api_smith
       hashie (>= 1.0, < 3)
@@ -480,7 +472,7 @@ GEM
       sass (~> 3.2.0)
       sprockets (~> 2.8, <= 2.11.0)
       sprockets-rails (~> 2.0)
-    select2-rails (3.5.9)
+    select2-rails (3.5.9.3)
       thor (~> 0.14)
     selenium-webdriver (2.41.0)
       childprocess (>= 0.5.0)
@@ -499,7 +491,7 @@ GEM
       ice_cube (~> 0.11.0)
       sidekiq (>= 2.16.0)
     simple-random (0.10.0)
-    simple_form (3.0.2)
+    simple_form (3.1.0)
       actionpack (~> 4.0)
       activemodel (~> 4.0)
     sinatra (1.4.5)
@@ -527,6 +519,7 @@ GEM
       activesupport (>= 3.0)
       sprockets (~> 2.8)
     sqlite3 (1.3.9)
+    swagger-blocks (1.1.2)
     td (0.10.75)
       hirb (>= 0.4.5)
       msgpack (~> 0.4.4)
@@ -568,7 +561,7 @@ GEM
     warden (1.2.3)
       rack (>= 1.0)
     websocket (1.0.7)
-    will_paginate (3.0.5)
+    will_paginate (3.0.7)
     wirble (0.1.3)
     workflow (1.0.0)
     xpath (2.0.0)
@@ -608,7 +601,7 @@ DEPENDENCIES
   database_cleaner (= 1.0.1)
   devise
   devise-encryptable
-  doorkeeper (~> 0.7.0)
+  doorkeeper (~> 2.2.0)
   dropbox-sdk
   email_spec
   factory_girl_rails
@@ -666,7 +659,7 @@ DEPENDENCIES
   slim
   split
   sqlite3
-  swagger-docs!
+  swagger-blocks
   td
   therubyracer (= 0.11.4)
   thinking-sphinx (~> 3.0.5)

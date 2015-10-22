@@ -1,0 +1,21 @@
+<div class="white-box-with-margins">
+	<div id="cohort-analysis">
+		<table class="user-stats-table" cellpadding="6" cellspacing="0" border="1">	
+			<tr>
+				<th>Version</th>
+				<th>All Users</th>
+				<th>Active Users</th>
+			</tr>
+			<% @translations.each do |tl| %>
+				<tr>
+					<td><%= tl[1][:name] %></td>
+					<td align="center"><%= User.where(:translation => tl[0]).count %></td>
+					<td align="center"><%= User.active.where(:translation => tl[0]).count %></td>
+				</tr>	
+			<% end %>	
+		</table>
+	</div>
+	
+	<div class="clr"></div>
+	
+</div>

@@ -1,5 +1,66 @@
 class Passage < ActiveRecord::Base
 
+  # ----------------------------------------------------------------------------------------------------------
+  # Swagger-Blocks DSL [START]
+  # ----------------------------------------------------------------------------------------------------------
+  include Swagger::Blocks
+
+  swagger_schema :Passage do
+    key :required, [:id, :ref, :book, :chapter, :first_verse, :last_verse]
+    property :id do
+      key :type, :integer
+      key :format, :int64
+    end  
+    property :user_id do
+      key :type, :integer
+      key :format, :int64
+    end  
+    property :ref do
+      key :type, :string
+    end 
+    property :book do
+      key :type, :string
+    end 
+    property :book_index do
+      key :type, :integer
+      key :format, :int64
+    end 
+    property :chapter do
+      key :type, :integer
+      key :format, :int64
+    end 
+    property :chapter do
+      key :type, :string
+    end 
+    property :first_verse do
+      key :type, :integer
+      key :format, :int64
+    end
+    property :last_verse do
+      key :type, :integer
+      key :format, :int64
+    end           
+  end
+
+  swagger_schema :Passage do
+    allOf do
+      schema do
+        key :'$ref', :Passage
+      end
+      schema do
+        key :required, [:id, :ref, :book, :chapter, :first_verse, :last_verse]
+        property :id do
+          key :type, :integer
+          key :format, :int64
+        end
+      end
+    end
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Swagger-Blocks DSL [END]
+  # ----------------------------------------------------------------------------------------------------------
+
   belongs_to :user
 
   has_many   :memverses
@@ -13,12 +74,19 @@ class Passage < ActiveRecord::Base
   scope :active, -> { joins(:memverses).merge(Memverse.active).group(:id).having('count(memverses.id) > 0') }
 
   after_create   :update_ref
+  after_create   :update_book_index
 
   # Convert to JSON format
   def as_json(options={})
     {
       :id              => self.id,
+      :user_id         => self.user_id,
       :ref             => self.reference,       # TODO: It was a bad idea to rename the attribute
+      :book            => self.book,
+      :book_index      => self.book_index,
+      :chapter         => self.chapter,
+      :first_verse     => self.first_verse,
+      :last_verse      => self.last_verse,
       :interval_array  => self.interval_array
     }
 
@@ -111,6 +179,11 @@ class Passage < ActiveRecord::Base
     end
     save
     return self.reference
+  end
+
+  def update_book_index
+    self.book_index = Book.find_by_name(self.book).try(:book_index)
+    save
   end
 
   # Combine supermemo information from underlying verses

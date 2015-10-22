@@ -15,6 +15,76 @@ class Verse < ActiveRecord::Base
 
   include RocketPants::Cacheable   # Allow for access via API
 
+  # ----------------------------------------------------------------------------------------------------------
+  # Swagger-Blocks DSL [START]
+  # ----------------------------------------------------------------------------------------------------------
+  include Swagger::Blocks
+
+  swagger_schema :Verse do
+    key :required, [:translation, :book_index, :book, :chapter, :versenum]
+    property :id do
+      key :type, :integer
+      key :format, :int64
+    end
+    property :translation do
+      key :type, :string
+    end 
+    property :book_index do
+      key :type, :integer
+      key :format, :int64
+    end 
+    property :book do
+      key :type, :string
+    end 
+    property :chapter do
+      key :type, :string
+    end 
+    property :versenum do
+      key :type, :integer
+      key :format, :int64
+    end
+    property :text do
+      key :type, :string
+    end     
+    property :created_at do
+      key :type, :string
+      key :format, :dateTime
+    end 
+    property :updated_at do
+      key :type, :string
+      key :format, :dateTime
+    end 
+    property :verified do
+      key :type, :boolean
+    end  
+    property :verified do
+      key :type, :boolean
+    end  
+    property :error_flag do
+      key :type, :boolean
+    end   
+    property :uberverse_id do
+      key :type, :integer
+      key :format, :int64
+    end  
+    property :checked_by do
+      key :type, :string
+    end  
+    property :memverses_count do
+      key :type, :integer
+      key :format, :int64
+    end  
+    property :difficulty do
+      key :type, :number
+    end 
+    property :popularity do
+      key :type, :number
+    end            
+  end
+  # ----------------------------------------------------------------------------------------------------------
+  # Swagger-Blocks DSL [END]
+  # ----------------------------------------------------------------------------------------------------------
+
   acts_as_taggable # Alias for 'acts_as_taggable_on :tags'
 
   before_destroy :delete_memverses
@@ -271,20 +341,22 @@ class Verse < ActiveRecord::Base
   # Return list of duplicate verses (if any)
   def has_duplicates?
     iv = Hash[
-      ["Luke", 12, 34]      => ["Matthew", 6, 21],
-      ["Matthew", 6, 21]    => ["Luke", 12, 34],
-      ["Proverbs", 14, 12]  => ["Proverbs", 16, 25],
-      ["Proverbs", 16, 25]  => ["Proverbs", 14, 12],
-      ["Judges", 21, 25]    => ["Judges", 17, 6],
-      ["Judges", 17, 6]     => ["Judges", 21, 25],
-      ["Matthew", 25, 21]   => ["Matthew", 25, 23],
-      ["Matthew", 25, 23]   => ["Matthew", 25, 21],
-      ["Leviticus", 19, 30] => ["Leviticus", 26, 2],
-      ["Leviticus", 26, 2]  => ["Leviticus", 19, 30],
-      ["Psalms", 107,  8]   => [["Psalms", 107, 15], ["Psalms", 107, 22], ["Psalms", 107, 31]],
-      ["Psalms", 107, 15]   => [["Psalms", 107,  8], ["Psalms", 107, 22], ["Psalms", 107, 31]],
-      ["Psalms", 107, 22]   => [["Psalms", 107,  8], ["Psalms", 107, 15], ["Psalms", 107, 31]],
-      ["Psalms", 107, 31]   => [["Psalms", 107,  8], ["Psalms", 107, 15], ["Psalms", 107, 22]]
+      ["Luke", 12, 34]        => ["Matthew", 6, 21],
+      ["Matthew", 6, 21]      => ["Luke", 12, 34],
+      ["Proverbs", 14, 12]    => ["Proverbs", 16, 25],
+      ["Proverbs", 16, 25]    => ["Proverbs", 14, 12],
+      ["Judges", 21, 25]      => ["Judges", 17, 6],
+      ["Judges", 17, 6]       => ["Judges", 21, 25],
+      ["Matthew", 25, 21]     => ["Matthew", 25, 23],
+      ["Matthew", 25, 23]     => ["Matthew", 25, 21],
+      ["1 Corinthians", 1, 3] => ["2 Corinthians", 1, 2],      
+      ["2 Corinthians", 1, 2] => ["1 Corinthians", 1, 3],      
+      ["Leviticus", 19, 30]   => ["Leviticus", 26, 2],
+      ["Leviticus", 26, 2]    => ["Leviticus", 19, 30],
+      ["Psalms", 107,  8]     => [["Psalms", 107, 15], ["Psalms", 107, 22], ["Psalms", 107, 31]],
+      ["Psalms", 107, 15]     => [["Psalms", 107,  8], ["Psalms", 107, 22], ["Psalms", 107, 31]],
+      ["Psalms", 107, 22]     => [["Psalms", 107,  8], ["Psalms", 107, 15], ["Psalms", 107, 31]],
+      ["Psalms", 107, 31]     => [["Psalms", 107,  8], ["Psalms", 107, 15], ["Psalms", 107, 22]]
     ]
 
     return iv[ [self.book, self.chapter.to_i, self.versenum.to_i] ] || []
