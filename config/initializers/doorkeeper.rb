@@ -1,17 +1,17 @@
 Doorkeeper.configure do
   # Change the ORM that doorkeeper will use.
-  # Currently supported options are :active_record, :mongoid2, :mongoid3, :mongo_mapper
+  # Currently supported options are :active_record, :mongoid2, :mongoid3,
+  # :mongoid4, :mongo_mapper
   orm :active_record
 
   # This block will be called to check whether the resource owner is authenticated or not.
   resource_owner_authenticator do
-    # raise "Please configure doorkeeper resource_owner_authenticator block located in #{__FILE__}"
+    # fail "Please configure doorkeeper resource_owner_authenticator block located in #{__FILE__}"
     # Put your resource owner authentication logic here.
-
     # Example implementation:
-    # User.find_by_id( session[:user_id] ) || redirect_to( new_user_session_url )
+    #   User.find_by_id(session[:user_id]) || redirect_to(new_user_session_url)
 
-    # Recommended approach if using Devise
+    # Recommended approach if using Devise (ALV)
     current_user || warden.authenticate!(:scope => :user)
   end
 
@@ -20,14 +20,16 @@ Doorkeeper.configure do
   resource_owner_from_credentials do |routes|
     request.params[:user] = {:email => request.params[:username], :password => request.params[:password]}
     request.env["devise.allow_params_authentication"] = true
-    request.env["warden"].authenticate!(:scope => :user)
+    user = request.env["warden"].authenticate!(:scope => :user)
+    request.env["warden"].logout
+    user
   end
 
   # If you want to restrict access to the web interface for adding oauth authorized applications, you need to declare the block below.
   admin_authenticator do
-    # Put your admin authentication logic here.
-    # Example implementation:
-    # Admin.find_by_id(session[:admin_id]) || redirect_to(new_admin_session_url)
+    #   # Put your admin authentication logic here.
+    #   # Example implementation:
+    #   Admin.find_by_id(session[:admin_id]) || redirect_to(new_admin_session_url)
     ( current_user && current_user.admin? ) || redirect_to( root_url )
   end
 
@@ -36,7 +38,21 @@ Doorkeeper.configure do
 
   # Access token expiration time (default 2 hours).
   # If you want to disable expiration, set this to nil.
-  # access_token_expires_in 2.hours
+  # access_token_expires_in 2.hours (ALV - this is the default)
+  access_token_expires_in nil
+
+  # Assign a custom TTL for implicit grants.
+  # custom_access_token_expires_in do |oauth_client|
+  #   oauth_client.application.additional_settings.implicit_oauth_expiration
+  # end
+
+  # Use a custom class for generating the access token.
+  # https://github.com/doorkeeper-gem/doorkeeper#custom-access-token-generator
+  # access_token_generator "::Doorkeeper::JWT"
+
+  # Reuse access token for the same resource owner within an application (disabled by default)
+  # Rationale: https://github.com/doorkeeper-gem/doorkeeper/issues/383
+  # reuse_access_token
 
   # Issue access tokens with refresh token (disabled by default)
   # use_refresh_token
@@ -48,9 +64,10 @@ Doorkeeper.configure do
   # enable_application_owner :confirmation => false
 
   # Define access token scopes for your provider
-  # For more information go to https://github.com/applicake/doorkeeper/wiki/Using-Scopes
-  # default_scopes  :public
-  # optional_scopes :write, :update
+  # For more information go to
+  # https://github.com/doorkeeper-gem/doorkeeper/wiki/Using-Scopes
+  default_scopes  :public
+  optional_scopes :read, :write, :admin
 
   # Change the way client credentials are retrieved from the request object.
   # By default it retrieves first from the `HTTP_AUTHORIZATION` header, then
@@ -64,25 +81,45 @@ Doorkeeper.configure do
   # Check out the wiki for more information on customization
   # access_token_methods :from_bearer_authorization, :from_access_token_param, :from_bearer_param
 
-  # Change the test redirect uri for client apps
+  # Change the native redirect uri for client apps
   # When clients register with the following redirect uri, they won't be redirected to any server and the authorization code will be displayed within the provider
   # The value can be any string. Use nil to disable this feature. When disabled, clients must provide a valid URL
   # (Similar behaviour: https://developers.google.com/accounts/docs/OAuth2InstalledApp#choosingredirecturi)
   #
-  # test_redirect_uri 'urn:ietf:wg:oauth:2.0:oob'
+  # native_redirect_uri 'urn:ietf:wg:oauth:2.0:oob'
+
+  # Forces the usage of the HTTPS protocol in non-native redirect uris (enabled
+  # by default in non-development environments). OAuth2 delegates security in
+  # communication to the HTTPS protocol so it is wise to keep this enabled.
+  #
+  # force_ssl_in_redirect_uri !Rails.env.development?
+
+  # Specify what grant flows are enabled in array of Strings. The valid
+  # strings and the flows they enable are:
+  #
+  # "authorization_code" => Authorization Code Grant Flow
+  # "implicit"           => Implicit Grant Flow
+  # "password"           => Resource Owner Password Credentials Grant Flow
+  # "client_credentials" => Client Credentials Grant Flow
+  #
+  # If not specified, Doorkeeper enables authorization_code and
+  # client_credentials.
+  #
+  # implicit and password grant flows have risks that you should understand
+  # before enabling:
+  #   http://tools.ietf.org/html/rfc6819#section-4.4.2
+  #   http://tools.ietf.org/html/rfc6819#section-4.4.3
+  #
+  grant_flows %w(authorization_code implicit password client_credentials)  # ALV - enable all flows for now
 
   # Under some circumstances you might want to have applications auto-approved,
   # so that the user skips the authorization step.
   # For example if dealing with a trusted application.
   skip_authorization do |resource_owner, client|
-
     # client.superapp? or resource_owner.admin?
-
-    true # ALV - for now it is ok to skip authorization since all apps are trusted
-
-    # This commit appears to allow for trusted apps
-    # https://github.com/doorkeeper-gem/doorkeeper/commit/0dda6d2325322aade7560ecb8419df4f319873df
-
+    true # ALV - this is ok for now since apps are all trusted
   end
 
+  # WWW-Authenticate Realm (default "Doorkeeper").
+  # realm "Doorkeeper"
 end

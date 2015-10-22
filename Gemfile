@@ -1,11 +1,11 @@
 # encoding: utf-8
 require 'rbconfig'
+
 HOST_OS = RbConfig::CONFIG['host_os']
 source 'http://rubygems.org'
 
 group :development do
   gem 'rails-footnotes', '>= 3.7'
-  gem 'sqlite3'
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'byebug'
@@ -25,6 +25,7 @@ group :development, :test do
 end
 
 group :test do
+  gem 'sqlite3'
   gem 'factory_girl_rails'                                      # Add to development group for debugging in console
   gem 'cucumber-rails', '>= 1.3.0', require: false
   gem "capybara", '>= 1.1.2'
@@ -78,8 +79,8 @@ gem 'activeresource', require: 'active_resource'
 # API
 ############################################################
 gem 'rocket_pants', '~> 1.0'                                                   # API goodness
-gem 'doorkeeper', '~> 0.7.0'                                                   # Oauth for API
-gem 'swagger-docs', git: 'git://github.com/richhollis/swagger-docs'            # Generates swagger-ui json files
+gem 'doorkeeper', '~> 2.2.0'                                                   # Oauth for API
+gem 'swagger-blocks'                                                           # Generates swagger-ui json files
 
 ############################################################
 # Authentication and Authorization
@@ -94,8 +95,7 @@ gem 'cancan', git: 'https://github.com/nukturnal/cancan.git'                   #
 # Major Engines (Admin, Forem, Blog)
 ############################################################
 gem 'rails_admin', '>= 0.6.0'                                                  # Admin console
-gem 'forem',       github: 'alexcwatt/forem', branch: 'niluser'                # Forum engine
-# gem 'forem',       github: 'radar/forem', branch: 'rails4'
+gem 'forem',       github: 'radar/forem', branch: 'rails4'                     # Forum engine
 gem 'forem-textile_formatter'                                                  # Forum formatting
 gem 'bloggity',    github: 'alexcwatt/bloggity'                                # Blog engine
 # gem 'bloggity', :path => "../bloggity"                                       # Blog engine (dev environment)
@@ -132,7 +132,6 @@ gem 'dalli'                                                                    #
 gem 'redis', '>=2.2.2'                                                         # Redis Key-value store
 gem 'friendly_id'                                                              # Makes nice IDs for models
 gem 'foreman'                                                                  # Helps manage multiple processes when running app in development.
-# gem 'supermodel', git: 'git://github.com/KonaTeam/supermodel.git'              # Uses ActiveModel for in-memory storage with redis
 gem 'best_in_place', github: 'bernat/best_in_place'                            # In-place editing support ... no Rails 4 release yet
 gem 'split', require: 'split/dashboard'                                        # AB testing framework
 gem 'backup'                                                                   # Used to backup MySQL database and uploaded site assets

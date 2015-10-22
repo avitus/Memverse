@@ -1,3 +1,6 @@
+#-----------------------------------------------------------------------------------------------------------
+# This task has been migrated to a Sidekiq worker and is no longer used
+#-----------------------------------------------------------------------------------------------------------
 namespace :quiz do
   desc "Start quiz"
   task :start => :environment do

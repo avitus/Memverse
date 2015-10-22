@@ -2,29 +2,14 @@ class UserMailer < ActionMailer::Base
 
   default_url_options[:host] = "memverse.com"
 
-  default :from => "admin@memverse.com"
+  # default :from => "admin@memverse.com"
+  default :from => '"Memverse" <admin@memverse.com>'
 
   # The keys of the hash passed to body become instance variables in the view.
 
-  # Can probably delete this - now handled by Devise
-  # def signup_notification(user)
-  	# setup_email(user)
-  	# @url = "#{APP_CONFIG[:site_url]}/activate/#{user.activation_code}"
-  	# mail(:to => user.email, :subject => "Please activate your Memverse account")
-  # end
-
-  # def activation(user)
-    # setup_email(user)
-    # mail(:to => user.email, :subject => "Your Memverse account is activated")
-  # end
-
-  def encourage_new_user_email(user)
-    # @headers = {content_type => 'text/html'}
-    setup_email(user)
-    headers['X-MC-Tags'] = "reminder, new_user"
-    mail(:to => @email_with_name, :subject => "Welcome to Memverse")
-  end
-
+  # ----------------------------------------------------------------------------------------------------------
+  # Newsletter Email
+  # ----------------------------------------------------------------------------------------------------------
   def newsletter_email(user)
     # @headers = {content_type => 'text/html'}
     setup_email(user)
@@ -32,21 +17,70 @@ class UserMailer < ActionMailer::Base
     mail(:to => @email_with_name, :subject => "Memverse Newsletter")
   end
 
-  def reminder_email(user)
-    # @headers = {content_type => 'text/html'}
+  # ----------------------------------------------------------------------------------------------------------
+  # User Progression Emails
+  # ----------------------------------------------------------------------------------------------------------
+  def progression_email_9(user)
     setup_email(user)
-    headers['X-MC-Tags'] = "reminder"
+    headers['X-MC-Tags'] = "progression-9"
     @verse = user.random_verse.verse
     mail(:to => @email_with_name, :subject => "Memverse Reminder")
   end
 
-  def reminder_email_for_inactive(user)
-    # @headers = {content_type => 'text/html'}
+
+  def progression_email_8(user)
     setup_email(user)
-    headers['X-MC-Tags'] = "reminder, inactive"
+    headers['X-MC-Tags'] = "progression-8"
+    @verse = user.random_verse.verse
     mail(:to => @email_with_name, :subject => "Memverse Reminder")
   end
 
+
+  def progression_email_7(user)
+    setup_email(user)
+    headers['X-MC-Tags'] = "progression-7"
+    @verse = user.random_verse.verse
+    mail(:to => @email_with_name, :subject => "Memverse Reminder")
+  end
+
+
+  def progression_email_6(user)
+    setup_email(user)
+    headers['X-MC-Tags'] = "progression-6"
+    @verse = user.random_verse.verse
+    mail(:to => @email_with_name, :subject => "Memverse Reminder")
+  end
+
+  def progression_email_5(user)
+    setup_email(user)
+    headers['X-MC-Tags'] = "progression-5"
+    @verse = user.random_verse.verse
+    mail(:to => @email_with_name, :subject => "Memverse Reminder")
+  end
+
+  def progression_email_4(user)
+    setup_email(user)
+    headers['X-MC-Tags'] = "progression-4"
+    @verse = user.random_verse.verse
+    mail(:to => @email_with_name, :subject => "Memverse Reminder")
+  end
+
+  def progression_email_3(user)
+    setup_email(user)
+    headers['X-MC-Tags'] = "progression-3"
+    @verse = user.random_verse.verse
+    mail(:to => @email_with_name, :subject => "Memverse Reminder")
+  end
+
+  def progression_email_2(user)
+    setup_email(user)
+    headers['X-MC-Tags'] = "progression-2"
+    mail(:to => @email_with_name, :subject => "Memverse Reminder")
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Protected
+  # ----------------------------------------------------------------------------------------------------------
   protected
 
   def setup_email(user)

@@ -324,6 +324,21 @@ namespace :utils do
   end
 
   #--------------------------------------------------------------------------------------------
+  # Insert missing book_index values for Passages
+  # Task duration: ~ 5 mins
+  #--------------------------------------------------------------------------------------------
+  desc "Insert missing book_index values for passage model"
+  task :insert_missing_book_index => :environment do
+    puts "=== Inserting missing book_index values for passage model at #{Time.now} ==="
+
+    Passage.where(:book_index => nil).find_each { |psg|
+      psg.update_attribute(:book_index, Book.find_by_name(psg.book).try(:book_index))
+    }
+
+    puts "=== Finished inserting missing book_index values at #{Time.now} ==="
+  end
+
+  #--------------------------------------------------------------------------------------------
   # Associate verses with uberverses
   # Task duration: ~ 4 hours
   #--------------------------------------------------------------------------------------------
@@ -529,6 +544,36 @@ namespace :utils do
     }
 
     puts "=== Finished ==="
+
+  end
+
+  #--------------------------------------------------------------------------------------------
+  # Locate memverses that have a passage_id of a nonexistent passage
+  # Note: this is an ongoing problem as of Aug 2015
+  #--------------------------------------------------------------------------------------------
+  desc "Locate memverses that have a passage_id of a nonexistent passage"
+  task :locate_nil_passage_pointers => :environment do
+
+    puts "=== Locating nil passage pointers at #{Time.now} ==="
+
+    broken_passage_count = 0
+
+    Memverse.find_each { |mv|
+      if mv.passage.nil?
+        
+        puts("Memverse with ID #{mv.id} for user #{mv.user.email} has nonexistent passage_id: #{mv.passage_id}")
+        
+        broken_passage_count = broken_passage_count + 1
+
+        # Fix the problem
+        mv.add_to_passage
+
+
+      end
+    }
+
+    puts "=== Located #{broken_passage_count} memverses with a bad passage_id ==="
+    puts "=== Finished at #{Time.now} ==="
 
   end
 

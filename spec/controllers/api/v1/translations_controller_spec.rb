@@ -2,45 +2,45 @@ require 'spec_helper'
 
 describe Api::V1::TranslationsController do
 
-  let!(:application) { Doorkeeper::Application.create!(:name => "MyApp", :redirect_uri => "http://app.com") } # OAuth application
-  let!(:user)        { FactoryGirl.create(:user) }
-  let!(:token)       { Doorkeeper::AccessToken.create! :application_id => application.id, :resource_owner_id => user.id }
+  # These are only used for testing with the controller integrated into app
+  # It would be nice to do a full integration test but can't get it to work with scopes
+
+  # let!(:application) { Doorkeeper::Application.create!(:name => "MyApp", :redirect_uri => "https://app.com") } # OAuth application
+  # let!(:user)        { FactoryGirl.create(:user) }
+  # let!(:token)       { Doorkeeper::AccessToken.create! :application_id => application.id, :resource_owner_id => user.id, :scope => 'public' }
 
   describe 'GET #index' do
 
-    it 'responds with 200' do
-      get :index, :version => 1, :format => :json, :access_token => token.token
-      response.status.should eq(200)
+    context 'authenticated with valid token' do
+
+      before do
+        allow(controller).to receive(:doorkeeper_token) {token}
+      end
+
+      let(:token) { double :acceptable? => true }
+
+      it 'responds with 200' do
+        get :index, :version => 1, :format => :json
+        response.status.should eq(200)
+      end
+
+      it 'returns translations as json' do
+        get :index, :version => 1, :format => :json
+        json.should == JSON.parse(Translation.for_api.to_json)
+      end
+
     end
 
-    it 'returns translations as json' do
-      get :index, :version => 1, :format => :json, :access_token => token.token
-      json.should == JSON.parse(Translation.for_api.to_json)
+    context 'no valid access token' do
+
+      it 'responds with 401' do
+        get :index, :version => 1, :format => :json
+        response.status.should eq(401)
+      end
+
     end
 
-    it 'responds with 401 when unauthorized' do
-      token.stub :accessible? => false
-      get :index, :version => 1, :format => :json
-      response.status.should eq(401)
-    end
   end
 
-  # describe 'GET #show' do
-
-  #   it 'provides the translation name' do
-  #     get :show, :id => "ESV", :version => 1, :format => :json, :access_token => token.token
-  #     #get :show, :id => "ESV", :version => 1, :format => :json, :access_token => token.token
-
-  #     response.status.should eq(200)
-  #     response.should == JSON.parse(TRANSLATIONS[:ESV].to_json)
-  #   end
-
-  #   it 'returns nil for invalid translation abbreviation' do
-  #     get :show, :id => "ESV", :version => 1, :format => :json, :access_token => token.token
-
-  #     response.status.should eq(200)
-  #     response.should == nil.to_s
-  #   end
-  # end
-
 end
+

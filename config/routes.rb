@@ -1,4 +1,5 @@
 MemverseApp::Application.routes.draw do
+  
   # Authentication for API
   use_doorkeeper
 
@@ -67,20 +68,34 @@ MemverseApp::Application.routes.draw do
     root to: "home#index"
   end
 
+  # ---------------------------------------------------------------------------------------------------------
   # API
+  # ---------------------------------------------------------------------------------------------------------
+  resources :apidocs, only: [:index]    # for Swagger UI documentation
+
   api versions: 1, module: "api/v1" do
-    resources :users, :only => [:show, :update]
+    resources :users, :only => [:show, :update, :create]
     resources :verses do
       get 'lookup', :on => :collection
+      get 'search', :on => :collection
     end
     resources :memverses
     resources :passages do
       get 'due', :on => :collection
       resources :memverses
     end
+    resources :quizzes do
+      get 'upcoming', :on => :collection
+    end
     resources :translations, :only => [:index, :show]
-    get '/me' => "credentials#me"
+
+    get '/me'            => "credentials#me"
+    post '/record_score' => 'live_quiz#record_score' # Record user score for quiz question
   end
+  # ---------------------------------------------------------------------------------------------------------
+  # END: API
+  # ---------------------------------------------------------------------------------------------------------
+
 
   # Adding verses and chapters to user account
   get   '/add_verse'              => 'memverses#add_verse',             :as => 'add_verse'

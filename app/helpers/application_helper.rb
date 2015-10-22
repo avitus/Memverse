@@ -43,11 +43,7 @@ module ApplicationHelper
   # Note: This breaks if string is not a valid book because you can't add 1 + nil
   # ----------------------------------------------------------------------------------------------------------  
   def book_index(str)
-    if x = (BIBLEBOOKS.index(str.titleize) || BIBLEABBREV.index(str.titleize))
-      return 1+x
-    else
-      return nil
-    end
+    Book.find_by_name(str).try(:book_index)
   end  
 
   # ----------------------------------------------------------------------------------------------------------

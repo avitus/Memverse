@@ -10,7 +10,7 @@
 				<li>
 					<%= link_to post.title, post.link %>
 					<br>
-					<div class="post-description"><%=post.description%></div>
+					<div class="post-description"><%=sanitize post.description%></div>
 				</li>
 			<% end %>
 		<% end %>
@@ -25,7 +25,7 @@
 				<li>
 					<%= link_to post.title, post.link %>
 					<br>
-					<div class="post-description"><%=post.description%></div>
+					<div class="post-description"><%= sanitize post.description%></div>
 				</li>
 			<% end %>
 		<% end %>
@@ -42,7 +42,7 @@
 				<li>
 					<%= link_to post.title, post.link %>
 					<br>
-					<div class="post-description"><%=post.description%></div>
+					<div class="post-description"><%=sanitize post.description%></div>
 				</li>
 			<% end %>
 		<% end %>
@@ -57,7 +57,7 @@
 				<li>
 					<%= link_to post.title, post.link %>
 					<br>
-					<div class="post-description"><%=post.description%></div>
+					<div class="post-description"><%=sanitize post.description%></div>
 				</li>
 			<% end %>
 		<% end %>

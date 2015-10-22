@@ -42,6 +42,178 @@ require 'digest/sha1'
 require 'digest/md5' # required for Gravatar support in Bloggity
 
 class User < ActiveRecord::Base
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Swagger-Blocks DSL [START]
+  # ----------------------------------------------------------------------------------------------------------
+  include Swagger::Blocks
+
+  swagger_schema :User do
+    key :required, [:id, :login, :email]
+    property :id do
+      key :type, :integer
+      key :format, :int64
+    end
+    property :login do
+      key :type, :string
+    end 
+    property :identity_url do
+      key :type, :string
+    end 
+    property :name do
+      key :type, :string
+    end 
+    property :email do
+      key :type, :string
+    end 
+    property :remember_token_expires_at do
+      key :type, :string
+    end
+    property :deleted_at do
+      key :type, :string
+      key :format, :dateTime
+    end     
+    property :created_at do
+      key :type, :string
+      key :format, :dateTime
+    end 
+    property :updated_at do
+      key :type, :string
+      key :format, :dateTime
+    end 
+    property :last_reminder do
+      key :type, :string
+      key :format, :date
+    end  
+    property :reminder_freq do
+      key :type, :string
+    end  
+    property :newsletters do
+      key :type, :boolean
+    end   
+    property :church_id do
+      key :type, :integer
+      key :format, :int64
+    end 
+    property :country_id do
+      key :type, :integer
+      key :format, :int64
+    end 
+    property :language do
+      key :type, :string
+    end  
+    property :time_allocation do
+      key :type, :integer
+      key :format, :int64
+    end
+    property :memorized do
+      key :type, :integer
+      key :format, :int64
+    end
+    property :learning do
+      key :type, :integer
+      key :format, :int64
+    end  
+    property :last_activity_date do
+      key :type, :string
+      key :format, :date
+    end 
+    property :show_echo do
+      key :type, :boolean
+    end 
+    property :max_interval do
+      key :type, :integer
+      key :format, :int64
+    end 
+    property :mnemonic_use do
+      key :type, :string
+      key :format, :date
+    end 
+    property :american_state_id do
+      key :type, :integer
+      key :format, :int64
+    end 
+    property :accuracy do
+      key :type, :integer
+      key :format, :int64
+    end
+    property :all_refs do
+      key :type, :boolean
+    end
+    property :rank do
+      key :type, :integer
+      key :format, :int64
+    end 
+      property :ref_grade do
+      key :type, :integer
+      key :format, :int64
+    end
+    property :gender do
+      key :type, :string
+    end
+    property :translation do
+      key :type, :string
+    end
+    property :level do
+      key :type, :integer
+      key :format, :int64
+    end   
+    property :referred_by do
+      key :type, :integer
+      key :format, :int64
+    end
+    property :show_email do
+      key :type, :boolean
+    end
+    property :auto_work_load do
+      key :type, :boolean
+    end
+    property :admin do
+      key :type, :boolean
+    end
+    property :group_id do
+      key :type, :integer
+      key :format, :int64
+    end 
+    property :forem_admin do
+      key :type, :boolean
+    end
+    property :forem_state do
+      key :type, :string
+    end
+    property :forem_auto_subscribe do
+      key :type, :boolean
+    end
+    property :provider do
+      key :type, :string
+    end
+    property :uid do
+      key :type, :string
+    end
+    property :sync_subsections do
+      key :type, :boolean
+    end
+  end
+
+  swagger_schema :UserInput do
+    allOf do
+      schema do
+        key :'$ref', :User
+      end
+      schema do
+        key :required, [:id]
+        property :id do
+          key :type, :integer
+          key :format, :int64
+        end
+      end
+    end
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Swagger-Blocks DSL [END]
+  # ----------------------------------------------------------------------------------------------------------
+
   # extend FriendlyId
   # friendly_id :login
 
@@ -231,15 +403,18 @@ class User < ActiveRecord::Base
   #
   # @todo We should use {#progression} method instead and incorporate into cohort analysis
   def cohort_progression
+
+    has_reviewed_one = memverses.sum(:attempts) > 0         # TRUE if user has reviewed one verse
+
     if memverses.memorized.count >= 1
       return { :level => '9 - Verse memorized', :active => is_active? }
-    elsif completed_sessions >= 3
+    elsif completed_sessions >= 3 and has_reviewed_one
       return { :level => '8 - Onwards', :active => is_active? }
-    elsif completed_sessions == 2
+    elsif completed_sessions == 2 and has_reviewed_one
       return { :level => '7 - Returned Once', :active => is_active? }
-    elsif completed_sessions == 1
+    elsif completed_sessions == 1 and has_reviewed_one
       return { :level => '6 - Completed 1 Session', :active => is_active? }
-    elsif memverses.sum(:attempts) > 0
+    elsif has_reviewed_one
       return { :level => '5 - Started a Session', :active => is_active? }
     elsif memverses.count >= 5
       return { :level => '4 - Added 5+ Verses', :active => is_active? }
@@ -258,19 +433,22 @@ class User < ActiveRecord::Base
   #
   # @return [Fixnum] Scale of 0 to 9 representing user progression.
   def progression
-    if memverses.memorized.count >= 1       # has memorized one or more verses
+
+    has_reviewed_one = memverses.sum(:attempts) > 0         # TRUE if user has reviewed one verse
+
+    if memverses.memorized.count >= 1                       # has memorized one or more verses
       return 9
-    elsif completed_sessions >= 3
+    elsif completed_sessions >= 3 and has_reviewed_one      # regular user who hasn't yet memorized a verse
       return 8
-    elsif completed_sessions == 2           # returning user
+    elsif completed_sessions == 2 and has_reviewed_one      # returning user
       return 7
-    elsif completed_sessions == 1           # completed one session
+    elsif completed_sessions == 1 and has_reviewed_one      # completed one session
       return 6
-    elsif memverses.sum(:attempts) > 0      # has reviewed at least one verse at some point
+    elsif has_reviewed_one                                  # has reviewed at least one verse at some point
       return 5
-    elsif memverses.count >= 5              # has added 5 or more verses
+    elsif memverses.count >= 5                              # has added 5 or more verses
       return 4
-    elsif memverses.count > 0               # has added a memory verse
+    elsif memverses.count > 0                               # has added 1-5 memory verses
       return 3
     elsif confirmed_at
       return 2
@@ -485,22 +663,31 @@ class User < ActiveRecord::Base
     return Badge.all - lesser_badges
   end
 
-  # Create progress report or update existing
+  # Create progress report or update existing.
   #
   # @return [void]
-  def save_progress_report
-    # check whether there is already a ProgressReport for today
-    pr = self.progress_reports.where(entry_date: Date.today).first
+  def save_progress_report # usually called via AJAX as log_progress
 
-    if pr.nil?
-      pr = ProgressReport.new(user: self, entry_date: Date.today)
+    has_reviewed_one = memverses.sum(:attempts) > 0  # TRUE if user has reviewed one verse
+
+    if has_reviewed_one # only save a progress report if the user has reviewed a verse
+      
+      # check whether there is already a ProgressReport for today
+      pr = self.progress_reports.where(entry_date: Date.today).first
+
+      # create a progress report if one doesn't exist for today
+      if pr.nil?
+        pr = ProgressReport.new(user: self, entry_date: Date.today)
+      end
+
+      # if there is already a ProgressReport for today, update it
+      pr.memorized        = self.memorized
+      pr.learning         = self.learning
+      pr.time_allocation  = self.work_load
+
+      pr.save
     end
 
-    pr.memorized        = self.memorized
-    pr.learning         = self.learning
-    pr.time_allocation  = self.work_load
-
-    pr.save
   end
 
   # List of referrals
@@ -840,12 +1027,13 @@ class User < ActiveRecord::Base
       last_reminded = self.last_activity_date
     end
 
-    mv = Memverse.find(:first, :conditions => ["user_id = ?", self.id], :order => "next_test ASC")
+    mv           = self.memverses.order("next_test ASC").first
+    days_overdue = mv ? (Date.today - mv.next_test).to_i : 30                   # If user hasn't added verses then regard them as 1 month overdue
 
-    if mv.nil? or self.reminder_freq == "Never"
-      return false # users who don't have any memory verses need more than a reminder!
-    elsif last_reminded + reminder_in_days(self.reminder_freq) < Date.today
-      return ( mv.next_test + reminder_in_days(self.reminder_freq) < Date.today )
+    if self.reminder_freq == "Never"
+      return false
+    elsif last_reminded + reminder_in_days(self.reminder_freq) < Date.today     # Check for emailing users too frequently ...
+      return ( days_overdue > reminder_in_days(self.reminder_freq) )            # ... then check whether user needs to be reminded
     else
       return false
     end
@@ -1002,22 +1190,22 @@ class User < ActiveRecord::Base
   # Check whether user needs encouragement
   #
   # @return [Boolean]
-  def needs_kick_in_pants?
+  # def needs_kick_in_pants?
 
-    if self.has_started? or !self.confirmed_at  # user already has verses or never activated their account
-      return false
-    else
-      if self.last_reminder.nil? and  days_since_contact_or_login > 1 # user has never been reminded
-        Rails.logger.debug("*** #{self.login} has never been encouraged and two days have elapsed since registration")
-        return true
-      elsif days_since_contact_or_login > 31 # space reminders out by one month
-        Rails.logger.debug("*** #{self.login} was last encouraged a month ago but still hasn't added a verse")
-        return true
-      else
-        return false
-      end
-    end
-  end
+  #   if self.has_started? or !self.confirmed_at  # user already has verses or never activated their account
+  #     return false
+  #   else
+  #     if self.last_reminder.nil? and  days_since_contact_or_login > 1 # user has never been reminded
+  #       Rails.logger.debug("*** #{self.login} has never been encouraged and two days have elapsed since registration")
+  #       return true
+  #     elsif days_since_contact_or_login > 31 # space reminders out by one month
+  #       Rails.logger.debug("*** #{self.login} was last encouraged a month ago but still hasn't added a verse")
+  #       return true
+  #     else
+  #       return false
+  #     end
+  #   end
+  # end
 
   # Has it been a week since the last reminder?
   # 
