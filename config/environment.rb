@@ -64,7 +64,9 @@ TRANSLATIONS = {
   ARA:    {name: "Almeida Revista e Atualizada", language: "pt"},
   SPB:    {name: "Svenska Folkbibeln", language: "sv"},
   YCE:    {name: "Yoruba Bible", language: "yo"},
-  CCB:    {name: "Chinese Contemporary Bible", language: "zh"},
+  CCB:    {name: "Chinese Contemporary Bible", language: "zh-CN"},
+  CUVS:   {name: "Chinese Union Version (Simplified)", language: "zh-CN"},
+  CUV:    {name: "Chinese Union Version (Traditional)", language: "zh-TW"},
 }
 
 MAJORS = {
