@@ -123,6 +123,8 @@
     tr: "Turkish"
     yo: "Yoruba"
     zh: "Chinese"
+    zh-CN: "Simplified Chinese"
+    zh-TW: "Traditional Chinese"
 
   txt:
     main_title: "Memverse"
