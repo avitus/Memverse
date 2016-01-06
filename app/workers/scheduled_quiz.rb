@@ -21,6 +21,7 @@ class ScheduledQuiz
 
     return false if quiz.nil?
     return false if quiz.quiz_questions.count == 0
+    return false if quiz.id == 1 # This is the Wed/Sat quiz which is started with a different worker
 
     # ========================================================================
     # Verify that quiz has not been started by another worker
