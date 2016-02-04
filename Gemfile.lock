@@ -105,6 +105,7 @@ GEM
     airbrake (4.1.0)
       builder
       multi_json
+    ansi (1.5.0)
     api_smith (1.3.0)
       hashie (>= 1.0, < 3.0)
       httparty
@@ -444,6 +445,13 @@ GEM
       moneta
       railties (>= 3.0, < 5.0)
       will_paginate (~> 3.0)
+    rpush (2.6.0)
+      activesupport
+      ansi
+      multi_json (~> 1.0)
+      net-http-persistent
+      railties
+      thor (>= 0.18.1, < 2.0)
     rspec-core (2.14.8)
     rspec-expectations (2.14.5)
       diff-lcs (>= 1.1.3, < 2.0)
@@ -649,6 +657,7 @@ DEPENDENCIES
   redis (>= 2.2.2)
   rinku
   rocket_pants (~> 1.0)
+  rpush
   rspec-rails
   sass-rails (~> 4.0.0)
   selenium-webdriver

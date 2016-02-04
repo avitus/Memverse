@@ -60,7 +60,7 @@ gem 'jquery-rails', '>= 2.0.0'
 # Rails Support Gems
 ############################################################
 gem 'sass-rails',   '~> 4.0.0'
-gem 'compass-rails'                                             # Now has Rails 4 support
+gem 'compass-rails'                                                             # Now has Rails 4 support
 gem 'coffee-rails', '~> 4.0.0'
 gem 'uglifier', '>= 1.3.0'
 
@@ -110,6 +110,26 @@ gem 'airbrake'                                                                 #
 gem 'td'                                                                       # Event logging to Treasure Data service
 
 ############################################################
+# Messaging
+############################################################
+gem 'pubnub'                                                                   # Real-time messaging service
+gem 'rpush'                                                                    # Push notification service
+gem 'mail', '>= 2.2.15'                                                        # Emails
+
+############################################################
+# Scheduled Tasks
+############################################################
+gem 'sidekiq', '< 3'                                                           # Background jobs; used for quizzes TODO: v 3 not yet working with sidetiq
+gem 'sidetiq'                                                                  # Scheduled Sidekiq jobs
+gem 'ice_cube'                                                                 # For calculating next quiz
+
+############################################################
+# Blog
+############################################################
+gem 'ckeditor'                                                                 # WYSIWYG editing
+gem 'paperclip'                                                                # Attachment handling
+
+############################################################
 # Other Gems -- should be grouped better
 ############################################################
 gem 'fancybox2-rails'                                                          # For displaying of video, pop-up info box
@@ -119,11 +139,8 @@ gem 'randumb'                                                                  #
 gem 'prawn', git: "git://github.com/sandal/prawn", submodules: true            # PDF support
 gem "prawnto_2", require: "prawnto"                                            # Integrating prawn into Rails
 gem 'acts-as-taggable-on'                                                      # :source => "http://gemcutter.org", Taggable gem,
-gem 'ckeditor'                                                                 # WYSIWYG editing
-gem 'paperclip'                                                                # Attachment handling
 gem 'nokogiri', '>=1.5.0'                                                      # HTML/XML parsing
 gem 'json'                                                                     # Javascript Object Notation support
-gem 'mail', '>= 2.2.15'                                                        # Emails
 gem 'thinking-sphinx', '~> 3.0.5'                                              # Connector to Sphinx - for global search
 gem 'i18n-js'                                                                  # Uses config/locale files to build a JavaScript equivalent of i18n in Rails
 gem 'localeapp'                                                                # Translation service for i18n
@@ -136,12 +153,8 @@ gem 'best_in_place', github: 'bernat/best_in_place'                            #
 gem 'split', require: 'split/dashboard'                                        # AB testing framework
 gem 'backup'                                                                   # Used to backup MySQL database and uploaded site assets
 gem 'dropbox-sdk'                                                              # Used with backup above
-gem 'sidekiq', '< 3'                                                           # Background jobs; used for quizzes TODO: v 3 not yet working with sidetiq
-gem 'sidetiq'                                                                  # Scheduled Sidekiq jobs
-gem 'ice_cube'                                                                 # For calculating next quiz
 gem 'sinatra', require: false                                                  # sinatra and slim are required for sidekiq
 gem 'slim'
-gem 'pubnub'                                                                   # Real-time messaging service
 gem 'net-ssh', '2.7.0'                                                         # Used by capistrano among other gems. 2.8.0 had significant bug.
 gem 'rack-utf8_sanitizer'                                                      # Used to fix EasouSpider invalid UTF-8 byte sequences
 
