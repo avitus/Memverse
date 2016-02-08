@@ -2,7 +2,7 @@
    <a class="prev">&laquo; Back</a>
    <a class="next">More verses &raquo;</a>
    <span class="js_bible-version bible-version">
-    <%= select_tag grouped_options_for_select(Translation.select_options, @translation) unless @hide_select %>
+    <%= select_tag "translations", grouped_options_for_select(Translation.select_options, @translation) unless @hide_select %>
    </span>
 </div>
 

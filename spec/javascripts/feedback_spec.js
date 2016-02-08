@@ -71,7 +71,7 @@ describe("Feedback", function() {
 			"구결口訣 향찰鄕札 이讀",		// user guess
 			true						// feedback enabled
 		)).toEqual({
-			feedtext : '구결口訣 향찰鄕札 ... ',
+			feedtext : '구결口訣 향찰鄕札 이... ',
 			correct  : false
 		})
 	});

@@ -406,7 +406,10 @@ class Verse < ActiveRecord::Base
         # see http://gernot-katzers-spice-pages.com/var/korean_hangul_unicode.html
         [4352 + (($1.ord - 44032) / 588).floor].pack("U")
       end
-
+    # Matches Chinese characters    
+    elsif self.text.match /[\u4E00-\u9FFF]/
+      return '-'
+    
     # default to Western text
     else
       self.text.gsub(/([\wáâãàçéêíóôõúüñäõÄÕö])([\wáâãàçéêíóôõúüñäõÄÕö]|[\-'’][\wáâãàçéêíóôõúüñäõÄÕö])*/,'\1')
