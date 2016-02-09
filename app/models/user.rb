@@ -193,6 +193,18 @@ class User < ActiveRecord::Base
     property :sync_subsections do
       key :type, :boolean
     end
+    property :quiz_alert do
+      key :type, :boolean
+    end
+    property :device_token do
+      key :type, :string
+      key :description, 'iOS device token'
+    end
+    property :device_type do
+      key :type, :string
+      key :description, 'Options: iOS, android, windows'
+    end
+
   end
 
   swagger_schema :UserInput do
@@ -270,7 +282,7 @@ class User < ActiveRecord::Base
                   :identity_url, :remember_me, :newsletters, :reminder_freq, :last_reminder,
                   :church, :group, :country, :american_state, :show_echo, :max_interval,
                   :mnemonic_use, :all_refs, :referred_by, :auto_work_load, :show_email,
-                  :provider, :uid, :translation, :time_allocation
+                  :provider, :uid, :translation, :time_allocation, :quiz_alert
 
   # Single Sign On support
   def self.find_for_windowslive_oauth2( access_token, signed_in_resource=nil )
