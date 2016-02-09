@@ -28,7 +28,7 @@ class KnowledgeQuiz
     # ========================================================================
     broadcast  = "The Bible knowledge quiz is starting. <a href=\"live_quiz\">Join now!</a>"
     Tweet.create(:news => broadcast, :user_id => 1, :importance => 2)  # Admin tweet => user_id = 1
-    ios_push("The Memverse general knowledge quiz is starting.")
+    ios_push("The Bible trivia quiz is starting now.")
 
     # ========================================================================
     # Calculate start time for next quiz
