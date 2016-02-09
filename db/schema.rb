@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160203213806) do
+ActiveRecord::Schema.define(version: 20160209180521) do
 
   create_table "american_states", force: true do |t|
     t.string  "abbrev",      limit: 20, default: "", null: false
@@ -731,6 +731,9 @@ ActiveRecord::Schema.define(version: 20160203213806) do
     t.string   "provider"
     t.string   "uid"
     t.boolean  "sync_subsections",                      default: false
+    t.boolean  "quiz_alert",                            default: false
+    t.string   "device_token"
+    t.string   "device_type"
   end
 
   add_index "users", ["american_state_id"], name: "index_users_on_american_state_id", using: :btree
@@ -738,6 +741,7 @@ ActiveRecord::Schema.define(version: 20160203213806) do
   add_index "users", ["country_id"], name: "index_users_on_country_id", using: :btree
   add_index "users", ["last_activity_date"], name: "index_users_on_last_activity_date", using: :btree
   add_index "users", ["login"], name: "index_users_on_login", unique: true, using: :btree
+  add_index "users", ["quiz_alert"], name: "index_users_on_quiz_alert", using: :btree
   add_index "users", ["referred_by"], name: "index_users_on_referred_by", using: :btree
 
   create_table "verses", force: true do |t|

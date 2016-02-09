@@ -210,6 +210,8 @@ puts 'CREATING ROLES'
 Role.create(name: "admin")
 Role.create(name: "blogger")
 Role.create(name: "quizmaster")
+Role.create(name: "scribe")
+Role.create(name: "moderator")
 
 # ----------------------------------------------------------------------------------------------------------
 # Create Badges
