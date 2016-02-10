@@ -1,5 +1,7 @@
 class Api::V1::UsersController < Api::V1::ApiController
 
+  include Devise::Controllers::Helpers  # Needed to support custom failure_app for Warden
+
   # ----------------------------------------------------------------------------------------------------------
   # Swagger-Blocks DSL [START]
   # ----------------------------------------------------------------------------------------------------------
