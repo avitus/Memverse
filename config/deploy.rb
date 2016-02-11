@@ -139,4 +139,4 @@ end
 ##  Error Notification
 ##############################################################
 require './config/boot'
-require 'airbrake/capistrano'
+require 'airbrake/capistrano/tasks'
