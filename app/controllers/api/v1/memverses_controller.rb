@@ -285,7 +285,15 @@ class Api::V1::MemversesController < Api::V1::ApiController
   end
 
   def update
-    memverse.supermemo( params[:q].to_i )
+
+    if !params[:q].blank?
+      memverse.supermemo( params[:q].to_i )                        # change memory verse interval
+    end
+
+    if !params[:ref_recalled].blank?
+      memverse.change_ref_interval( params[:ref_recalled] == "true" )  # change reference interval
+    end
+
     expose memverse
   end
 

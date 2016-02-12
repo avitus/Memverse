@@ -11,9 +11,9 @@ class Api::V1::CredentialsController < Api::V1::ApiController
 		  key :description, 'Returns credential for current user'
 		  key :operationId, 'findCurrentUser'
 		  key :tags, ['current_user']
-      security do
-        key :oauth2, ['admin write read public']
-      end
+	      security do
+	        key :oauth2, ['admin write read public']
+	      end
 		  response 200 do
 		    key :description, 'User response'
 		    schema do
@@ -33,6 +33,50 @@ class Api::V1::CredentialsController < Api::V1::ApiController
 		    end
 		  end
 		end
+
+	end
+
+	swagger_path '/oauth/token' do 
+
+		operation :post do
+		  key :description, 'Request an API access token. This access token should be used for all future requests as per the Oauth2 Password Flow.'
+      	  key :operationId, 'requestAccessToken'
+          key :tags, ['authorization']
+          parameter do
+            key :name, :grant_type
+            key :in, :path
+            key :description, 'Password flow is best option for supporting a mobile app'
+            key :required, true
+            key :type, :string
+          end
+          parameter do
+            key :name, :username
+            key :in, :path
+            key :description, 'User name on Memverse.com (email address)'
+            key :required, true
+            key :type, :string
+          end
+          parameter do
+            key :name, :password
+            key :in, :path
+            key :description, 'User password on Memverse.com'
+            key :required, true
+            key :type, :string
+          end
+          parameter do
+            key :name, :client_id
+            key :in, :path
+            key :description, 'Contact admin@memverse.com to get a client_id'
+            key :required, true
+            key :type, :string
+          end           
+		  response 200 do
+		    key :description, 'API access token'
+		    schema do
+		      key :'$ref', :User
+		    end
+		  end
+		end		
 
 	end
 

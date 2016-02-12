@@ -81,14 +81,16 @@ FactoryGirl.define do
   # ==============================================================================================
   factory :memverse do
     # association :passage, :factory => :passage # this causes problems with infinite recursion
-    association    :verse,   :factory => :verse
-    association    :user,    :factory => :user
-    status         'Learning'
-    last_tested    Date.today
-    next_test      Date.today
-    efactor        2.0
-    rep_n          1
-    test_interval  1
+    association     :verse,   :factory => :verse
+    association     :user,    :factory => :user
+    status          'Learning'
+    last_tested     Date.today
+    next_test       Date.today
+    efactor         2.0
+    rep_n           1
+    test_interval   1
+    ref_interval    6
+    next_ref_test   Date.today
 
     # We need to add the callback back to the Memverse class because it is removed from the class by
     # the :memverse_without_passage callback. See link below for details

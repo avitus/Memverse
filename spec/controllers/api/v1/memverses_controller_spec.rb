@@ -52,7 +52,24 @@ describe Api::V1::MemversesController do
       json["test_interval"].should         == 4
       json["efactor"].to_f.should          == 2.1
       json["rep_n"].should                 == 2
+      json["ref_interval"].should          == 6      # Don't make changes to the reference interval 
       Date.parse(json["next_test"]).should == Date.today + 4
+    end
+
+    it 'increases the reference interval correctly' do
+      put :update, :id => mv.id, :ref_recalled => "true", :version => 1, :format => :json
+      response.status.should eq(200)
+      json["ref_interval"].should              == 9
+      json["test_interval"].should             == 1   # Don't make changes to the test_interval
+      Date.parse(json["next_ref_test"]).should == Date.today + 9
+    end
+
+    it 'decreases the reference interval correctly' do
+      put :update, :id => mv.id, :ref_recalled => "false", :version => 1, :format => :json
+      response.status.should eq(200)
+      json["ref_interval"].should              == 4
+      json["test_interval"].should             == 1   # Don't make changes to the test_interval
+      Date.parse(json["next_ref_test"]).should == Date.today + 4
     end
   end
 

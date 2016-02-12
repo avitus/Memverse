@@ -65,14 +65,14 @@ class Memverse < ActiveRecord::Base
     #   key :type, :integer
     #   key :format, :int64
     # end
-    # property :ref_interval do
-    #   key :type, :integer
-    #   key :format, :int64
-    # end    
-    # property :next_ref_test do
-    #   key :type, :string
-    #   key :format, :date
-    # end
+    property :ref_interval do
+      key :type, :integer
+      key :format, :int64
+    end    
+    property :next_ref_test do
+      key :type, :string
+      key :format, :date
+    end
     # property :uberverse_id do
     #   key :type, :integer
     #   key :format, :int64
@@ -173,7 +173,7 @@ class Memverse < ActiveRecord::Base
 
   # Exposed via API
   def serializable_hash(options = {})
-    super only: [:id, :user_id, :next_test, :test_interval, :status, :rep_n, :efactor, :subsection, :prev_verse, :passage_id],
+    super only: [:id, :user_id, :next_test, :test_interval, :status, :rep_n, :efactor, :subsection, :prev_verse, :passage_id, :next_ref_test, :ref_interval],
           methods: [:ref],
           include: [verse: {only: [:id, :translation, :text, :versenum]}]
   end
@@ -274,6 +274,22 @@ class Memverse < ActiveRecord::Base
     self.sync_subsection  # Sync with rest of subsection
 
     return (prev_learning and (self.status == "Memorized"))  # TRUE if this memory verse is newly memorized
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
+  # Update reference interval
+  # ----------------------------------------------------------------------------------------------------------
+  def change_ref_interval(recalled)
+
+    if recalled
+      self.ref_interval = [ (self.ref_interval * 1.5), self.user.max_interval.to_i ].min.round
+    else
+      self.ref_interval = [ (self.ref_interval * 0.6), 1 ].max.round
+    end
+
+    self.next_ref_test = Date.today + self.ref_interval
+    self.save
+
   end
 
   # ----------------------------------------------------------------------------------------------------------
