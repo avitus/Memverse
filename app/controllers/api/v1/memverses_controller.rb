@@ -337,7 +337,8 @@ class Api::V1::MemversesController < Api::V1::ApiController
       error! :bad_request, metadata: {reason: 'Could not find memverse'}
     elsif !memverse.destroy
       error! :bad_request, metadata: {reason: 'Memverse could not be destroyed'}
-    end
+    else
+      response "Deleted successfully"
   end
 
   private
