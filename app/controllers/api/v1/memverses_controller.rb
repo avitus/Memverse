@@ -339,6 +339,7 @@ class Api::V1::MemversesController < Api::V1::ApiController
       error! :bad_request, metadata: {reason: 'Memverse could not be destroyed'}
     else
       response "Deleted successfully"
+    end
   end
 
   private
