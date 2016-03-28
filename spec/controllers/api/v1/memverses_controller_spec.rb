@@ -83,7 +83,7 @@ describe Api::V1::MemversesController do
       expect {
         delete :destroy, :id => mv.id, :version => 1, :format => :json
       }.to change(Memverse, :count).by(-1)
-      response.status.should eq (200)
+      response.status.should eq (204)  # server executed the request but body of response contains no data
     end
   end
 
