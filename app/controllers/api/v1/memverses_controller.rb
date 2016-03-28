@@ -338,7 +338,7 @@ class Api::V1::MemversesController < Api::V1::ApiController
     elsif !memverse.destroy
       error! :bad_request, metadata: {reason: 'Memverse could not be destroyed'}
     else
-      expose {}, status: :no_content
+      head :no_content
     end
   end
 
