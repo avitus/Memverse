@@ -90,6 +90,41 @@ class Api::V1::PassagesController < Api::V1::ApiController
 
     end
 
+    operation :delete do
+      key :description, 'Delete a passage'
+      key :operationId, 'deletePassageById'
+      key :tags, ['passage']
+      parameter do
+        key :name, :id
+        key :in, :path
+        key :description, 'ID of passage to delete'
+        key :required, true
+        key :type, :integer
+        key :format, :int64
+      end
+      security do
+        key :oauth2, ['admin write read public']
+      end
+      response 200 do
+        key :description, 'Passage response'
+        schema do
+          key :'$ref', :Passage
+        end
+      end
+      response 401 do
+        key :description, 'Unauthorized response'
+        schema do
+          key :'$ref', :Passage
+        end
+      end
+      response :default do
+        key :description, 'Unexpected error'
+        schema do
+          key :'$ref', :ErrorModel
+        end
+      end
+    end    
+
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -115,6 +150,20 @@ class Api::V1::PassagesController < Api::V1::ApiController
 
   def show
     expose passage
+  end
+
+  # DELETE /passages/1
+  # DELETE /passages/1.json
+  def destroy
+
+    if !passage
+      error! :bad_request, metadata: {reason: 'Could not find passage'}
+    elsif !passage.remove
+      error! :bad_request, metadata: {reason: 'Passage could not be destroyed'}
+    else
+      head :no_content
+    end
+
   end
 
   private

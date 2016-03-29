@@ -94,7 +94,7 @@ class PassagesController < ApplicationController
   # DELETE /passages/1.json
   def destroy
     @passage = Passage.find(params[:id])
-    @passage.destroy
+    @passage.destroy  # Note: this shouldn't be used because it doesn't remove the associated memverses
 
     respond_to do |format|
       format.html { redirect_to passages_url }

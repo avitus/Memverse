@@ -63,10 +63,15 @@ class Passage < ActiveRecord::Base
 
   belongs_to :user
 
+  # We would like to be able to destroy a passage and have all the accompanying memverses be destroyed.
+  # This will not work because destroying a memverse results in the entire passage being reformulated and 
+  # causes infinite loops. See the .remove() method below
+  # has_many   :memverses , :dependent => :destroy  
+
   has_many   :memverses
   has_many   :verses, :through => :memverses
 
-  validates_presence_of   :user_id, :length, :book, :chapter, :first_verse, :last_verse
+  validates_presence_of :user_id, :length, :book, :chapter, :first_verse, :last_verse
 
   attr_protected :test_interval
 
@@ -148,6 +153,11 @@ class Passage < ActiveRecord::Base
     entire_chapter_flag_check
     save!
 
+  end
+
+  # Removing all the memory verses for a given passages ensures that the passage itself will be deleted
+  def remove
+    self.memverses.destroy_all
   end
 
   # Add a memory verse into a passage

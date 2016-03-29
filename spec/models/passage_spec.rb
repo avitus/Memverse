@@ -24,6 +24,27 @@ describe Passage do
   end
 
   # ==============================================================================================
+  # Remove a passage and associated memverses
+  # ==============================================================================================
+  describe "remove (destroy) a passage" do
+
+    it "should remove the passage" do
+      psg = FactoryGirl.create(:passage, book: 'Psalms', chapter: 30, first_verse: 7, last_verse: 13, length: 7)
+      expect {
+        psg.remove
+      }.to change(Passage, :count).by(-1)  
+    end
+
+    it "should remove the associated memverses" do
+      psg = FactoryGirl.create(:passage, book: 'Psalms', chapter: 30, first_verse: 7, last_verse: 13, length: 7)
+      expect {
+        psg.remove
+      }.to change(Memverse, :count).by(-7)  
+    end
+
+  end
+
+  # ==============================================================================================
   # Automatically create subsections in a passage
   # ==============================================================================================
   describe "automatically handle subsections" do
