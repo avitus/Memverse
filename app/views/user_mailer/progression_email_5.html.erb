@@ -29,6 +29,13 @@
 
 		<!--[URL]-->	
 		<p>You can login at <%= @url %>. Your login is <b><%= @user.email %></b>.</p>
+
+		<!-- Mobile Applications -->	
+		<p>You can also try one of our mobile applications:</p>
+
+		<p><%= link_to 'Apple iOS',     'https://itunes.apple.com/us/app/memverse/id1014752213',             :class => "mobile-app-link"%></p>
+		<p><%= link_to 'Windows Phone', 'https://www.microsoft.com/en-us/store/apps/memverse/9nblgggzh6nm',  :class => "mobile-app-link"%></p>
+
 		
 		<!-- For those short on time -->
 		<p>We realize that time is often scarce so we've included one of your most difficult verses for your review:</p>
