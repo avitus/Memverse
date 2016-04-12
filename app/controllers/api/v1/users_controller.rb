@@ -7,6 +7,57 @@ class Api::V1::UsersController < Api::V1::ApiController
   # ----------------------------------------------------------------------------------------------------------
   include Swagger::Blocks
 
+  swagger path '/users' do
+
+    operation :post do
+      key :description, 'Creates a new user'
+      key :operationId, 'createUser'
+      key :produces, ['application/json']
+      key :tags, ['user']
+      parameter do
+        
+        key :name, :name
+        key :in, :query
+        key :description, 'User name'
+        key :required, true
+        key :type, :string
+
+        key :name, :email
+        key :in, :query
+        key :description, 'User email'
+        key :required, true
+        key :type, :string
+
+        key :name, :password
+        key :in, :query
+        key :description, 'User password'
+        key :required, true
+        key :type, :string
+
+        schema do
+          key :'$ref', :UserInput
+        end
+        
+      end
+      security do
+        key :oauth2, ['write admin']
+      end
+      response 200 do
+        key :description, 'User response'
+        schema do
+          key :'$ref', :User
+        end
+      end
+      response :default do
+        key :description, 'Unexpected error'
+        schema do
+          key :'$ref', :ErrorModel
+        end
+      end
+    end
+
+  end
+
   swagger_path '/users/{id}' do
 
     operation :get do
