@@ -4,6 +4,24 @@ describe Api::V1::UsersController do
 
   let(:user)        { FactoryGirl.create(:user) }
 
+  describe 'POST #create' do 
+    it 'creates a new user' do 
+      expect {
+        post :create, :user => {:name => 'Test User', :email => 'test@memverse.com', :password => 'password123' }, :version => 1, :format => :json
+      }.to change(User, :count).by(1)
+      response.status.should eq(200)
+    end
+
+    it 'should not allow duplicate emails' do 
+      expect {
+        post :create, :user => {:name => 'Test User', :email => 'test@memverse.com', :password => 'password123' }, :version => 1, :format => :json
+        post :create, :user => {:name => 'Test User', :email => 'test@memverse.com', :password => 'password123' }, :version => 1, :format => :json
+      }.to change(User, :count).by(1)
+      response.status.should eq(401)
+    end
+
+  end
+
   describe 'GET #show' do
 
     context 'authenticated with valid token' do
