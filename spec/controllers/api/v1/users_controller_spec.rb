@@ -18,7 +18,7 @@ describe Api::V1::UsersController do
         post :create, :user => {:name => 'Duplicate User 1', :email => 'duplicate@memverse.com', :password => 'password123' }, :version => 1, :format => :json
         post :create, :user => {:name => 'Duplicate User 2', :email => 'duplicate@memverse.com', :password => 'password123' }, :version => 1, :format => :json        
       }.to change(User, :count).by(1)
-      response.status.should eq(401)
+      response.status.should eq(403)  # 403 = this operation is forbidden by server
     end
 
   end

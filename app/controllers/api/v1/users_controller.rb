@@ -150,7 +150,8 @@ class Api::V1::UsersController < Api::V1::ApiController
     else
       Rails.logger.warn("==> Unable to save user")
       warden.custom_failure! # TODO: warden is undefined
-      responds :json => user.errors, :status => 422
+      error! :forbidden, metadata: {reason: 'User could not be created. Possibly due to duplicate email address.', error: user.errors}
+      # responds :json => user.errors, :status => 422
     end
   end
 
