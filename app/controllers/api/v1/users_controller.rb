@@ -101,8 +101,9 @@ class Api::V1::UsersController < Api::V1::ApiController
     if user.save
       expose user
     else
-      warden.mobile_failure! # TODO: warden is undefined
-      render :json=> user.errors, :status=>422
+      Rails.logger.warn("==> Unable to save user")
+      warden.custom_failure! # TODO: warden is undefined
+      responds :json => user.errors, :status => 422
     end
   end
 
