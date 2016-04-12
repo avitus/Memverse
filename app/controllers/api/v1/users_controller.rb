@@ -7,7 +7,7 @@ class Api::V1::UsersController < Api::V1::ApiController
   # ----------------------------------------------------------------------------------------------------------
   include Swagger::Blocks
 
-  swagger path '/users' do
+  swagger_path '/users' do
 
     operation :post do
       key :description, 'Creates a new user'
@@ -37,7 +37,7 @@ class Api::V1::UsersController < Api::V1::ApiController
         schema do
           key :'$ref', :UserInput
         end
-        
+
       end
       security do
         key :oauth2, ['write admin']
