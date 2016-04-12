@@ -15,28 +15,29 @@ class Api::V1::UsersController < Api::V1::ApiController
       key :produces, ['application/json']
       key :tags, ['user']
       parameter do
-        
         key :name, :name
         key :in, :query
         key :description, 'User name'
         key :required, true
         key :type, :string
-
+      end
+      parameter do
         key :name, :email
         key :in, :query
         key :description, 'User email'
         key :required, true
         key :type, :string
-
+      end
+      parameter do
         key :name, :password
         key :in, :query
         key :description, 'User password'
         key :required, true
         key :type, :string
-
-        schema do
-          key :'$ref', :UserInput
-        end
+      end      
+      schema do
+        key :'$ref', :UserInput
+      end
 
       end
       security do
