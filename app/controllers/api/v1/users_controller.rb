@@ -35,11 +35,6 @@ class Api::V1::UsersController < Api::V1::ApiController
         key :required, true
         key :type, :string
       end      
-      schema do
-        key :'$ref', :UserInput
-      end
-
-      end
       security do
         key :oauth2, ['write admin']
       end
