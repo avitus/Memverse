@@ -81,6 +81,8 @@ class Passage < ActiveRecord::Base
   after_create   :update_ref
   after_create   :update_book_index
 
+  paginates_per 50 # number of passages per page via API
+
   # Convert to JSON format
   def as_json(options={})
     {

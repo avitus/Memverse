@@ -170,6 +170,8 @@ class Memverse < ActiveRecord::Base
   # Update related passage
   after_save :update_passage
 
+  # Set number of memverses sent per page via API
+  paginates_per 100
 
   # Exposed via API
   def serializable_hash(options = {})
