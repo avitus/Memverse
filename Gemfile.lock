@@ -445,7 +445,7 @@ GEM
       moneta
       railties (>= 3.0, < 5.0)
       will_paginate (~> 3.0)
-    rpush (2.6.0)
+    rpush (2.7.0)
       activesupport
       ansi
       multi_json (~> 1.0)
@@ -561,7 +561,7 @@ GEM
       polyglot
       polyglot (>= 0.3.1)
     ttfunk (1.0.3)
-    tzinfo (0.3.48)
+    tzinfo (0.3.49)
     uglifier (2.5.0)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
