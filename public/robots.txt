@@ -12,3 +12,4 @@ Disallow: /javascripts/						# Javascript directory
 Disallow: /charts/							# Old flash charts
 Disallow: /blogs/9/     					# Old blog route that should not exist any more
 Disallow: /memverses/show_all_my_verses     # Old URL that no longer exists
+Disallow: /chat/channel1                    # Old URL that no longer exists
