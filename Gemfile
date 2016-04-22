@@ -103,7 +103,7 @@ gem 'bloggity',    github: 'alexcwatt/bloggity'                                #
 ############################################################
 # Deployment and Monitoring
 ############################################################
-gem 'capistrano', '=2.15.5'                                                    # Deploy with Capistrano
+gem 'capistrano', '~> 3.4'                                                    # Deploy with Capistrano
 gem 'sitemap_generator'                                                        # Sitemap generator
 gem 'newrelic_rpm', '>=3.3.0'                                                  # Performance monitoring
 gem 'airbrake'                                                                 # Error tracking
