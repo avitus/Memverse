@@ -1,6 +1,6 @@
 require 'bundler/capistrano'
 require 'thinking_sphinx/capistrano'                            # Support for search index
-require 'sidekiq/capistrano'                                    # Delayed jobs
+require 'capistrano/sidekiq'
 
 load 'deploy/assets'                                            # Precompile assets
 
