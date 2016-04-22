@@ -119,7 +119,7 @@ gem 'mail', '>= 2.2.15'                                                        #
 ############################################################
 # Scheduled Tasks
 ############################################################
-gem 'sidekiq', '< 3'                                                           # Background jobs; used for quizzes TODO: v 3 not yet working with sidetiq
+gem 'sidekiq', '< 4'                                                           # Background jobs; used for quizzes. TODO: Version 4 might be incompatible with Sidetiq
 gem 'sidetiq'                                                                  # Scheduled Sidekiq jobs
 gem 'ice_cube'                                                                 # For calculating next quiz
 
