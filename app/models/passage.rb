@@ -156,6 +156,7 @@ class Passage < ActiveRecord::Base
   end
 
   # Removing all the memory verses for a given passages ensures that the passage itself will be deleted
+  # This is causing a problem ... somehow multiple empty passages are being created.
   def remove
     self.memverses.destroy_all
   end
