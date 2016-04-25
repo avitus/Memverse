@@ -264,8 +264,9 @@ class InfoController < ApplicationController
     feed_urls << 'http://feeds.christianitytoday.com/christianitytoday/ctmag'
     feed_urls << 'http://feeds.christianitytoday.com/christianitytoday/mostreads'
     feed_urls << 'http://feeds.feedburner.com/tgcblog'
+    feed_urls << 'https://www.christianpost.com/services/rss/feed/church-ministries/'
     # feed_urls << 'http://www.christianpost.com/services/rss/feed/most-popular'
-    feed_urls << 'http://rss.feedsportal.com/c/32752/f/517092/index.rss'
+    # feed_urls << 'http://rss.feedsportal.com/c/32752/f/517092/index.rss'  <-- times out
 
     feed_urls.each { |fd_url|
 	  @feeds[ feed_urls.index(fd_url) ]  = RssReader.posts_for(fd_url, length=5, perform_validation=false)

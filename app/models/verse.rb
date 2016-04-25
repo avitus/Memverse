@@ -91,7 +91,7 @@ class Verse < ActiveRecord::Base
   before_create  :validate_ref
   before_save    :cleanup_text, :associate_with_uberverse
 
-  after_save :schedule_web_check
+  after_commit :schedule_web_check
 
   # Relationships
   has_many :memverses
@@ -501,7 +501,7 @@ class Verse < ActiveRecord::Base
     self.text = self.text.gsub(/[<>]/,'')
   end
 
-  # Schedule [VerseWebCheck] [hook: after_save]
+  # Schedule [VerseWebCheck] [hook: after_commit]
   # @return [void]
   def schedule_web_check
     VerseWebCheck.perform_async(self.id) unless verified?

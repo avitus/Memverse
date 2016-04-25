@@ -10,7 +10,7 @@
 				<li>
 					<%= link_to post.title, post.link %>
 					<br>
-					<div class="post-description"><%=sanitize post.description%></div>
+					<div class="post-description"><%= sanitize truncate( post.description, :length => 500, escape: false, :omission => '... (continued)') %></div>
 				</li>
 			<% end %>
 		<% end %>
@@ -25,7 +25,7 @@
 				<li>
 					<%= link_to post.title, post.link %>
 					<br>
-					<div class="post-description"><%= sanitize post.description%></div>
+					<div class="post-description"><%= sanitize truncate( post.description, :length => 500, escape: false, :omission => '... (continued)') %></div>
 				</li>
 			<% end %>
 		<% end %>
@@ -42,7 +42,7 @@
 				<li>
 					<%= link_to post.title, post.link %>
 					<br>
-					<div class="post-description"><%=sanitize post.description%></div>
+					<div class="post-description"><%= sanitize truncate( post.description, :length => 500, escape: false, :omission => '... (continued)') %></div>
 				</li>
 			<% end %>
 		<% end %>
@@ -50,14 +50,14 @@
 </div>
 
 <div class="news-feed">
-	<h2>Christian Today</h2>
+	<h2>Christian Post</h2>
 	<ul>
 		<% if @feeds[3] %>
 			<% @feeds[3].each do |post| %>
 				<li>
 					<%= link_to post.title, post.link %>
 					<br>
-					<div class="post-description"><%=sanitize post.description%></div>
+					<div class="post-description"><%= sanitize truncate( post.description, :length => 500, escape: false, :omission => '... (continued)') %></div>
 				</li>
 			<% end %>
 		<% end %>
