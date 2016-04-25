@@ -458,6 +458,9 @@ namespace :utils do
 
   #--------------------------------------------------------------------------------------------
   # Locate broken passages
+  # Task duration: 4 minutes
+  # Last detected problem: 4-30-2016
+  # Last ran task:         4-30-2016
   #--------------------------------------------------------------------------------------------
   desc "Locate broken passages"
   task :locate_broken_passages => :environment do
@@ -501,9 +504,11 @@ namespace :utils do
 
   end
 
-
   #--------------------------------------------------------------------------------------------
   # Locate out of bound verses -- no longer seems to occur. Run occasionally
+  # Task duration: 4 minutes
+  # Last detected problem: (A long time ago)
+  # Last ran task:         4-30-2016
   #--------------------------------------------------------------------------------------------
   desc "Locate out of bound verses"
   task :locate_oob_verses => :environment do
@@ -550,6 +555,9 @@ namespace :utils do
   #--------------------------------------------------------------------------------------------
   # Locate memverses that have a passage_id of a nonexistent passage
   # Note: this is an ongoing problem as of Aug 2015
+  # Task duration: 30 minutes
+  # Last detected problem: 4-30-2016 (1 memverse)
+  # Last ran task:         4-30-2016
   #--------------------------------------------------------------------------------------------
   desc "Locate memverses that have a passage_id of a nonexistent passage"
   task :locate_nil_passage_pointers => :environment do
@@ -567,7 +575,6 @@ namespace :utils do
 
         # Fix the problem
         mv.add_to_passage
-
 
       end
     }
