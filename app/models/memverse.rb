@@ -879,6 +879,7 @@ class Memverse < ActiveRecord::Base
       if psg
 
         psg.lock!
+        psg.memverses.lock!
 
         # Case 1 - Single verse passage (Note: the second condition accounts for cases where the passage length
         #          is incorrect but this is the last remaining verse)
@@ -916,8 +917,6 @@ class Memverse < ActiveRecord::Base
                                        :length =>  psg.last_verse - self.verse.versenum,
                                        :book => psg.book, :chapter => psg.chapter,
                                        :first_verse => self.verse.versenum + 1, :last_verse => psg.last_verse )
-
-            new_psg.lock!
 
             new_psg.update_ref
             new_psg.consolidate_supermemo
