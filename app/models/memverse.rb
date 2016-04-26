@@ -870,70 +870,78 @@ class Memverse < ActiveRecord::Base
   # Remove a memory verse from a passage [hook: before_delete]
   def remove_from_passage
 
-    # Do we need to add a transaction lock here. If both verses in a two verse passage are simultaneously deleted then
-    # passage could be stranded as an empty passage. Not to mention all the other corner cases.
-    psg = self.passage
+    ActiveRecord::Base.transaction do
 
-    if psg
+      # Do we need to add a transaction lock here. If both verses in a two verse passage are simultaneously deleted then
+      # passage could be stranded as an empty passage. Not to mention all the other corner cases.
+      psg = self.passage
+      
+      if psg
 
-      # Case 1 - Single verse passage (Note: the second condition accounts for cases where the passage length
-      #          is incorrect but this is the last remaining verse)
-      if psg.length == 1 or psg.memverses.count == 1
+        psg.lock!
 
-        psg.destroy
+        # Case 1 - Single verse passage (Note: the second condition accounts for cases where the passage length
+        #          is incorrect but this is the last remaining verse)
+        if psg.length == 1 or psg.memverses.count == 1
 
-      else
+          psg.destroy
 
-        # Case 2 - First verse of passage
-        if psg.first_verse == self.verse.versenum
-
-          psg.first_verse += 1
-          psg.length -= 1
-          psg.update_ref
-          psg.consolidate_supermemo
-          psg.entire_chapter_flag_check
-
-        # Case 3 - Last verse of passage
-        elsif psg.last_verse == self.verse.versenum
-
-          psg.last_verse -= 1
-          psg.length -= 1
-          psg.update_ref
-          psg.consolidate_supermemo
-          psg.entire_chapter_flag_check
-
-        # Case 4 - In middle of passage ... need to split passage into two
         else
 
-          memverses_in_passage = psg.memverses.includes(:verse).order('verses.versenum')
+          # Case 2 - First verse of passage
+          if psg.first_verse == self.verse.versenum
 
-          # create new passage for second half of passage
-          new_psg = Passage.create!( :user_id => psg.user_id, :translation => psg.translation,
-                                     :length =>  psg.last_verse - self.verse.versenum,
-                                     :book => psg.book, :chapter => psg.chapter,
-                                     :first_verse => self.verse.versenum + 1, :last_verse => psg.last_verse )
-          new_psg.update_ref
-          new_psg.consolidate_supermemo
-          new_psg.entire_chapter_flag_check
-          new_psg.save
+            psg.first_verse += 1
+            psg.length -= 1
+            psg.update_ref
+            psg.consolidate_supermemo
+            psg.entire_chapter_flag_check
 
-          # shorten existing passage
-          psg.last_verse = self.verse.versenum - 1
-          psg.length     = psg.last_verse - passage.first_verse + 1
-          psg.update_ref
-          psg.consolidate_supermemo
-          psg.entire_chapter_flag_check
+          # Case 3 - Last verse of passage
+          elsif psg.last_verse == self.verse.versenum
 
-          # update memverses comprising the new passage
-          second_half_of_passage = memverses_in_passage[-(new_psg.length)..(-1)]
-          second_half_of_passage.each { |mv| mv.update_attribute( :passage_id, new_psg.id ) }
+            psg.last_verse -= 1
+            psg.length -= 1
+            psg.update_ref
+            psg.consolidate_supermemo
+            psg.entire_chapter_flag_check
+
+          # Case 4 - In middle of passage ... need to split passage into two
+          else
+
+            memverses_in_passage = psg.memverses.includes(:verse).order('verses.versenum')
+
+            # create new passage for second half of passage
+            new_psg = Passage.create!( :user_id => psg.user_id, :translation => psg.translation,
+                                       :length =>  psg.last_verse - self.verse.versenum,
+                                       :book => psg.book, :chapter => psg.chapter,
+                                       :first_verse => self.verse.versenum + 1, :last_verse => psg.last_verse )
+            new_psg.update_ref
+            new_psg.consolidate_supermemo
+            new_psg.entire_chapter_flag_check
+            new_psg.save
+
+            # shorten existing passage
+            psg.last_verse = self.verse.versenum - 1
+            psg.length     = psg.last_verse - passage.first_verse + 1
+            psg.update_ref
+            psg.consolidate_supermemo
+            psg.entire_chapter_flag_check
+
+            # update memverses comprising the new passage
+            second_half_of_passage = memverses_in_passage[-(new_psg.length)..(-1)]
+            second_half_of_passage.each { |mv| mv.update_attribute( :passage_id, new_psg.id ) }
+
+          end
+
+          psg.save
 
         end
 
-        psg.save
-
       end
-    end
+
+    end # of transaction
+
   end
 
 
