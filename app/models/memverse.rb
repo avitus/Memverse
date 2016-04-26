@@ -916,6 +916,9 @@ class Memverse < ActiveRecord::Base
                                        :length =>  psg.last_verse - self.verse.versenum,
                                        :book => psg.book, :chapter => psg.chapter,
                                        :first_verse => self.verse.versenum + 1, :last_verse => psg.last_verse )
+
+            new_psg.lock!
+
             new_psg.update_ref
             new_psg.consolidate_supermemo
             new_psg.entire_chapter_flag_check
