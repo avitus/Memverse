@@ -872,12 +872,12 @@ class Memverse < ActiveRecord::Base
 
     ActiveRecord::Base.transaction do
 
-      # Do we need to add a transaction lock here. If both verses in a two verse passage are simultaneously deleted then
-      # passage could be stranded as an empty passage. Not to mention all the other corner cases.
       psg = self.passage
       
       if psg
 
+        # We need a pessimistic transaction lock. If both verses in a two verse passage are simultaneously deleted then
+        # passage could be stranded as an empty passage. Not to mention all the other corner cases.
         psg.lock!
         psg.memverses.lock!
 
