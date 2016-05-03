@@ -251,7 +251,9 @@ MemverseApp::Application.routes.draw do
   get  '/scribe/verify/:id'        => 'scribe#verify_verse', :as => 'scribe_verify'
 
   # Legacy routes for pages that no longer exist but have incoming links
-  get '/starter_pack' => 'memverses#home'  # Retired in 2012
+  get '/starter_pack'               => 'memverses#home'     # Retired in 2012
+  get '/memverses/starter_pack'     => 'memverses#home'     # Visit from search bot causing errors
+  get '/chat/channel1'              => 'live_quiz#channel1' # Old chat route
 
   # Install the default routes as the lowest priority.
   match '/:controller(/:action(/:id))', :via => [:get, :post]
