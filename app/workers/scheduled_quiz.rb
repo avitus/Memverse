@@ -149,25 +149,27 @@ class ScheduledQuiz
         PN.publish(
           :channel  => channel,
           :message  => {
-            :meta => "question",
-            :q_num => num,
-            :q_type => "recitation",
-            :q_ref => ref,
+            :meta       => "question",
+            :q_num      => num,
+            :q_id       => q.id,
+            :q_type     => "recitation",
+            :q_ref      => ref,
             :q_passages => passages,
             :time_alloc => time_alloc
           },
           :http_sync => true,
-          :callback => @my_callback
+          :callback  => @my_callback
         )
         sleep(time_alloc+1)
       when "reference"
         PN.publish(
           :channel  => channel,
           :message  => {
-            :meta => "question",
-            :q_num => num,
-            :q_type => "reference",
-            :q_ref => ref,
+            :meta       => "question",
+            :q_num      => num,
+            :q_id       => q.id,
+            :q_type     => "reference",
+            :q_ref      => ref,
             :q_passages => passages,
             :time_alloc => 25
           },
@@ -179,16 +181,17 @@ class ScheduledQuiz
         PN.publish(
           :channel  => channel,
           :message  => {
-            :meta => "question",
-            :q_num => num,
-            :q_type => "mcq",
-            :mc_question => q.mc_question,
-            :mc_option_a => q.mc_option_a,
-            :mc_option_b => q.mc_option_b,
-            :mc_option_c => q.mc_option_c,
-            :mc_option_d => q.mc_option_d,
-            :mc_answer => q.mc_answer,
-            :time_alloc => 30
+            :meta         => "question",
+            :q_num        => num,
+            :q_id         => q.id,
+            :q_type       => "mcq",
+            :mc_question  => q.mc_question,
+            :mc_option_a  => q.mc_option_a,
+            :mc_option_b  => q.mc_option_b,
+            :mc_option_c  => q.mc_option_c,
+            :mc_option_d  => q.mc_option_d,
+            :mc_answer    => q.mc_answer,
+            :time_alloc   => 30
           },
           :http_sync => true,
           :callback => @my_callback
