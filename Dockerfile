@@ -8,43 +8,27 @@ FROM alpine:3.3
 
 MAINTAINER Memverse "admin@memverse.com"
 
+ENV BUILD_PACKAGES bash git curl-dev ruby-dev build-base
+ENV RUBY_PACKAGES ruby ruby-io-console ruby-bundler ruby-irb ruby-json
+
 RUN apk add --no-cache mysql-client
 ENTRYPOINT ["mysql"]
 
-RUN apk update && apk --update add \
-	bash \
-	ruby \
-	ruby-irb \
-	ruby-json \ 
-	ruby-rake \  
-    ruby-bigdecimal \
-    ruby-io-console \
-    libstdc++ tzdata \
-    nodejs
+# Update and install all of the required packages.
+# At the end, remove the apk cache
+RUN apk update && \
+    apk upgrade && \
+    apk add $BUILD_PACKAGES && \
+    apk add $RUBY_PACKAGES && \
+    rm -rf /var/cache/apk/*
 
+RUN mkdir /usr/app
+WORKDIR /usr/app
 
-# Set correct environment variables.
-# ENV HOME /root
+COPY Gemfile /usr/app/
+COPY Gemfile.lock /usr/app/
+RUN bundle install
 
-ADD Gemfile ./Gemfile
-ADD Gemfile.lock ./Gemfile.lock 
-
-RUN apk --update add --virtual \
-	build-dependencies \
-	build-base \
-	ruby-dev \
-	openssl-dev \  
-    libc-dev \
-    linux-headers && \
-    gem install bundler && \
-    cd /app ; bundle install --without development test && \
-    apk del build-dependencies
-
-ADD . /app  
-RUN chown -R nobody:nogroup /app  
-USER nobody
-
-ENV RAILS_ENV production  
-WORKDIR /app
+COPY . /usr/app
 
 CMD ["bundle", "exec", "unicorn", "-p", "8080", "-c", "./config/unicorn.rb"]
