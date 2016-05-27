@@ -18,7 +18,7 @@ ENV BUILD_PACKAGES	bash git curl-dev git-perl ruby-dev build-base openssl-dev \
 					g++ musl-dev make
 ENV RUBY_PACKAGES	ruby ruby-io-console ruby-bundler ruby-irb ruby-json
 
-RUN apk add --no-cache mysql-client
+RUN apk add --no-cache mysql-client mysql-dev sqlite-libs sqlite-dev
 ENTRYPOINT ["mysql"]
 
 # Update and install all of the required packages. At the end, remove the apk cache
@@ -35,7 +35,7 @@ COPY Gemfile /usr/app/
 COPY Gemfile.lock /usr/app/
 
 RUN bundle config build.nokogiri --use-system-libraries && \
-    bundle install --path vendor/bundle && \
+    bundle install --path vendor/bundle
 
 COPY . /usr/app
 
