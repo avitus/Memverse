@@ -38,7 +38,7 @@ group :test do
 end
 
 group :production do
-  gem 'mysql2', '>= 0.3'
+  gem 'mysql2', '>= 0.4'
   gem 'yui-compressor'
 end
 
