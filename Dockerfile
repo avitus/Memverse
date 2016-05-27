@@ -8,17 +8,26 @@ FROM alpine:3.3
 
 MAINTAINER Memverse "admin@memverse.com"
 
-# === Dependencies ==================================================
-# Eventmachine	mysql2		g++ musl-dev make
-# nokogiri 					libxml2-dev and libxslt-dev
+# === Dependencies ===================================================================
+#
+# Gem           RequiredBy  Alpine Libraries 
+# ~~~~~~~~~~~~  ~~~~~~~~~~  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Eventmachine	[mysql2]	g++ musl-dev make
+# nokogiri 		[rails]		libxml2-dev and libxslt-dev
 # ffi						libffi-dev
-# ===================================================================
+#
+# To check on a gem dependency use 
+#      gem dependency nokogiri --reverse-dependencies
+#
+# ====================================================================================
+
 ENV BUILD_PACKAGES	bash git curl-dev git-perl ruby-dev build-base openssl-dev \
 					libxml2-dev libxslt-dev libffi-dev \
 					g++ musl-dev make
 ENV RUBY_PACKAGES	ruby ruby-io-console ruby-bundler ruby-irb ruby-json
 
 RUN apk add --no-cache mysql-client mysql-dev sqlite-libs sqlite-dev
+
 ENTRYPOINT ["mysql"]
 
 # Update and install all of the required packages. At the end, remove the apk cache
