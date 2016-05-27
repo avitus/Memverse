@@ -1,0 +1,14 @@
+.DS_Store
+.bundle
+.idea
+pkg/*
+
+*.lock
+spec/internal/.bundle
+spec/internal/db/*.sqlite3
+spec/internal/log/*.log
+spec/internal/tmp/**/*
+
+.rvmrc
+coverage
+tmp

@@ -7,14 +7,6 @@ GIT
       rails (>= 3.2.8)
 
 GIT
-  remote: git://github.com/bernat/best_in_place.git
-  revision: df178520bf9ba405baee9528d5dbb630d6ff760c
-  specs:
-    best_in_place (2.1.0)
-      jquery-rails
-      rails (>= 3.1)
-
-GIT
   remote: git://github.com/kayle/omniauth-windowslive
   revision: 505aa60147ce548a5c21cc03cc323bfd37361d71
   specs:
@@ -46,6 +38,14 @@ GIT
     prawn (1.0.0.rc1)
       pdf-reader (>= 0.9.0)
       ttfunk (~> 1.0.3)
+
+GIT
+  remote: https://github.com/bernat/best_in_place
+  revision: 57b525e487cd6ba10467b47d8bf8907c645f6917
+  specs:
+    best_in_place (3.1.0)
+      actionpack (>= 3.2)
+      railties (>= 3.2)
 
 GIT
   remote: https://github.com/nukturnal/cancan.git
@@ -231,7 +231,7 @@ GEM
       launchy (~> 2.1)
       mail (~> 2.2)
     erubis (2.7.0)
-    eventmachine (1.0.3)
+    eventmachine (1.2.0.1)
     execjs (2.0.2)
     factory_girl (4.4.0)
       activesupport (>= 3.0.0)
@@ -394,10 +394,10 @@ GEM
       rails (>= 3.1)
     protected_attributes (1.0.7)
       activemodel (>= 4.0.1, < 5.0)
-    pubnub (3.5.3)
-      eventmachine
-      json
-      net-http-persistent
+    pubnub (3.7.10)
+      eventmachine (~> 1.0)
+      json (~> 1.8)
+      net-http-persistent (~> 2.9)
     rack (1.5.5)
     rack-pjax (0.7.0)
       nokogiri (~> 1.5)

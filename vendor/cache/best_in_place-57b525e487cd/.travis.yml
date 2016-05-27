@@ -1,0 +1,21 @@
+language: ruby
+sudo: false
+cache: bundler
+rvm:
+  - 2.1
+  - 1.9.3
+  - 2.2
+  - rbx-2
+
+env: "RAILS_ENV=test DISPLAY=:99.0"
+gemfile:
+  - gemfiles/rails_3.2.gemfile
+  - gemfiles/rails_4.0.gemfile
+  - gemfiles/rails_4.1.gemfile
+  - gemfiles/rails_4.2.gemfile
+  - gemfiles/rails_edge.gemfile
+
+matrix:
+  allow_failures:
+    - gemfile: gemfiles/rails_edge.gemfile
+    - rvm: rbx-2
