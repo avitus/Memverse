@@ -655,7 +655,7 @@ DEPENDENCIES
   libv8 (= 3.11.8.17)
   localeapp
   mail (>= 2.2.15)
-  mysql2 (>= 0.3)
+  mysql2 (>= 0.4)
   net-ssh (= 2.7.0)
   newrelic_rpm (>= 3.3.0)
   nokogiri (>= 1.5.0)

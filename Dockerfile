@@ -9,9 +9,9 @@ FROM alpine:3.3
 MAINTAINER Memverse "admin@memverse.com"
 
 # === Dependencies ==================================================
-# Eventmachine	g++ musl-dev make
-# nokogiri 		libxml2-dev and libxslt-dev
-# ffi			libffi-dev
+# Eventmachine	mysql2		g++ musl-dev make
+# nokogiri 					libxml2-dev and libxslt-dev
+# ffi						libffi-dev
 # ===================================================================
 ENV BUILD_PACKAGES	bash git curl-dev git-perl ruby-dev build-base openssl-dev \
 					libxml2-dev libxslt-dev libffi-dev \
@@ -34,8 +34,9 @@ WORKDIR /usr/app
 COPY Gemfile /usr/app/
 COPY Gemfile.lock /usr/app/
 
+# Install gems in vendor/cache ( this is specified in .bundle/config )
 RUN bundle config build.nokogiri --use-system-libraries && \
-    bundle install --path vendor/bundle
+    bundle install --path vendor/cache
 
 COPY . /usr/app
 
