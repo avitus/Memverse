@@ -43,12 +43,16 @@ group :production do
 end
 
 ############################################################
-# Javascript Engine
+# Javascript Rutime
 ############################################################
-if HOST_OS =~ /linux/i
-  gem 'libv8', '= 3.11.8.17', platforms: :ruby                  # Later versions have no binary support for x86
-  gem 'therubyracer', '= 0.11.4'                                # TODO: Can roll to 0.12 once binary support for libv8 3.16
-end
+
+# Use Node.js as the Javascript Runtime
+# No need to install these gems any more.
+
+# if HOST_OS =~ /linux/i
+#   gem 'libv8', '= 3.11.8.17', platforms: :ruby                  # Later versions have no binary support for x86
+#   gem 'therubyracer', '= 0.11.4'                                # TODO: Can roll to 0.12 once binary support for libv8 3.16
+# end
 
 ############################################################
 # Frameworks
@@ -94,7 +98,7 @@ gem 'cancan', git: 'https://github.com/nukturnal/cancan.git'                   #
 ############################################################
 # Major Engines (Admin, Forem, Blog)
 ############################################################
-gem 'rails_admin', '>= 0.6.0'                                                  # Admin console
+gem 'rails_admin'                                                              # Admin console
 gem 'forem',       github: 'radar/forem', branch: 'rails4'                     # Forum engine
 gem 'forem-textile_formatter'                                                  # Forum formatting
 gem 'bloggity',    github: 'alexcwatt/bloggity'                                # Blog engine
