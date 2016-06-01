@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 1.3.6") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Gregory Brown", "Brad Ediger", "Daniel Nelson", "Jonathan Greenberg", "James Healy"]
-  s.date = "2015-03-05"
+  s.date = "2016-06-01"
   s.description = "  Prawn is a fast, tiny, and nimble PDF generator for Ruby\n"
   s.email = ["gregory.t.brown@gmail.com", "brad@bradediger.com", "dnelson@bluejade.com", "greenberg@entryway.net", "jimmy@deefa.com"]
   s.extra_rdoc_files = ["README.md", "LICENSE", "COPYING", "GPLv2", "GPLv3"]
@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--title", "Prawn Documentation", "--main", "README.md", "-q"]
   s.required_ruby_version = Gem::Requirement.new(">= 1.8.7")
   s.rubyforge_project = "prawn"
-  s.rubygems_version = "2.4.6"
+  s.rubygems_version = "2.5.1"
   s.summary = "A fast and nimble PDF generator for Ruby"
   s.test_files = ["spec/snapshot_spec.rb", "spec/text_box_spec.rb", "spec/stroke_styles_spec.rb", "spec/png_spec.rb", "spec/template_spec.rb", "spec/security_spec.rb", "spec/font_spec.rb", "spec/text_at_spec.rb", "spec/inline_formatted_text_parser_spec.rb", "spec/formatted_text_arranger_spec.rb", "spec/images_spec.rb", "spec/graphics_spec.rb", "spec/jpg_spec.rb", "spec/reference_spec.rb", "spec/bounding_box_spec.rb", "spec/line_wrap_spec.rb", "spec/stamp_spec.rb", "spec/text_rendering_mode_spec.rb", "spec/object_store_spec.rb", "spec/name_tree_spec.rb", "spec/table_spec.rb", "spec/text_spacing_spec.rb", "spec/formatted_text_box_spec.rb", "spec/cell_spec.rb", "spec/span_spec.rb", "spec/formatted_text_fragment_spec.rb", "spec/text_with_inline_formatting_spec.rb", "spec/repeater_spec.rb", "spec/text_spec.rb", "spec/column_box_spec.rb", "spec/measurement_units_spec.rb", "spec/transparency_spec.rb", "spec/destinations_spec.rb", "spec/grid_spec.rb", "spec/document_spec.rb", "spec/outline_spec.rb", "spec/annotations_spec.rb", "spec/pdf_object_spec.rb"]
 

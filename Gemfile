@@ -30,7 +30,7 @@ group :test do
   gem 'cucumber-rails', '>= 1.3.0', require: false
   gem "capybara", '>= 1.1.2'
   gem 'selenium-webdriver'                                      # Optional extension for Capybara
-  gem 'database_cleaner', '= 1.0.1'                             # TODO: Newer version has bug with database adapter ... upgrade when possible
+  gem 'database_cleaner'                                        # Clean database between tests
   gem 'launchy', '>= 2.0.5'
   gem 'email_spec'                                              # For sending email in cucumber tests
   gem 'action_mailer_cache_delivery', '>= 0.3.5'                # Used to test email delivery with Cucumber. Pairs with email_spec
@@ -38,9 +38,14 @@ group :test do
 end
 
 group :production do
-  gem 'mysql2', '>= 0.4'
   gem 'yui-compressor'
 end
+
+############################################################
+# Database
+############################################################
+gem 'mysql2', '>= 0.4'
+gem 'redis', '>=2.2.2'                                                          # Redis Key-value store
 
 ############################################################
 # Javascript Rutime
@@ -50,23 +55,23 @@ end
 # No need to install these gems any more.
 
 # if HOST_OS =~ /linux/i
-#   gem 'libv8', '= 3.11.8.17', platforms: :ruby                  # Later versions have no binary support for x86
-#   gem 'therubyracer', '= 0.11.4'                                # TODO: Can roll to 0.12 once binary support for libv8 3.16
+#   gem 'libv8', '= 3.11.8.17', platforms: :ruby                                # Later versions have no binary support for x86
+#   gem 'therubyracer', '= 0.11.4'                                              # TODO: Can roll to 0.12 once binary support for libv8 3.16
 # end
 
 ############################################################
 # Frameworks
 ############################################################
-gem 'rails', '4.0.9'
+gem 'rails', '4.2.6'                                                            # Last stable version was 4.0.9
 gem 'jquery-rails', '>= 2.0.0'
 
 ############################################################
 # Rails Support Gems
 ############################################################
-gem 'sass-rails',   '~> 4.0.0'
+gem 'sass-rails'
 gem 'compass-rails'                                                             # Now has Rails 4 support
-gem 'coffee-rails', '~> 4.0.0'
-gem 'uglifier', '>= 1.3.0'
+gem 'coffee-rails'
+gem 'uglifier'
 
 ############################################################
 # For Rails 4 Upgrade ... should be removed eventually
@@ -151,7 +156,6 @@ gem 'i18n-js'                                                                  #
 gem 'localeapp'                                                                # Translation service for i18n
 gem 'breadcrumbs_on_rails', '>=2.0.0'                                          # For breadcrumb navigation bar
 gem 'dalli'                                                                    # Memcached client
-gem 'redis', '>=2.2.2'                                                         # Redis Key-value store
 gem 'friendly_id'                                                              # Makes nice IDs for models
 gem 'foreman'                                                                  # Helps manage multiple processes when running app in development.
 gem 'best_in_place', git: "https://github.com/bernat/best_in_place"            # In-place editing support ... no Rails 4 release yet

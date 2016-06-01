@@ -1,9 +1,3 @@
-# Use phusion/passenger-full as base image. To make your builds reproducible, make
-# sure you lock down to a specific version, not to `latest`!
-# See https://github.com/phusion/passenger-docker/blob/master/Changelog.md for
-# a list of version numbers.
-# FROM phusion/passenger-full:0.9.18
-
 FROM alpine:3.3
 
 MAINTAINER Memverse "admin@memverse.com"
@@ -25,15 +19,26 @@ ENV BUILD_PACKAGES	bash git curl-dev git-perl ruby-dev build-base openssl-dev \
 					libxml2-dev libxslt-dev libffi-dev \
 					g++ musl-dev make \ 
 					nodejs
+
 ENV RUBY_PACKAGES	ruby ruby-io-console ruby-bundler ruby-irb ruby-json ruby-bigdecimal
 
-RUN apk add --no-cache mysql-client mysql-dev sqlite-libs sqlite-dev
+ENV MYSQL_PACKAGES	mysql-client mysql-dev
+
+ENV SQLITE_PACKAGES	sqlite-libs sqlite-dev
 
 # ENTRYPOINT ["mysql"]
 
-# Update and install all of the required packages. At the end, remove the apk cache
+# === Install Packages================================================================
+#
+# update: 	get latest list of packages
+# upgrade:	upgrade all packages of running system
+# add:		--no-cache flag will remove cache
+#
+# ====================================================================================
 RUN apk update && \
     apk upgrade && \
+    apk --update add $MYSQL_PACKAGES && \
+    apk --update add $SQLITE_PACKAGES && \
     apk --update add $BUILD_PACKAGES && \
     apk --update add $RUBY_PACKAGES 
 #   rm -rf /var/cache/apk/*     <-- Don't remove packages for now.
