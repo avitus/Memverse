@@ -5,6 +5,7 @@ HOST_OS = RbConfig::CONFIG['host_os']
 source 'http://rubygems.org'
 
 group :development do
+  gem 'web-console', '~> 2.0'
   gem 'rails-footnotes', '>= 3.7'
   gem 'better_errors'
   gem 'binding_of_caller'
@@ -166,6 +167,7 @@ gem 'sinatra', require: false                                                  #
 gem 'slim'
 gem 'net-ssh', '2.7.0'                                                         # Used by capistrano among other gems. 2.8.0 had significant bug.
 gem 'rack-utf8_sanitizer'                                                      # Used to fix EasouSpider invalid UTF-8 byte sequences
+gem 'responders', '~> 2.0'                                                     # Support for respond_to and respond_with in Rails 4.2
 
 group :console do
   gem 'wirble'
