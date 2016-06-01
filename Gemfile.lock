@@ -325,8 +325,8 @@ GEM
       multi_xml (>= 0.5.2)
     httpclient (2.8.0)
     i18n (0.7.0)
-    i18n-js (2.1.2)
-      i18n
+    i18n-js (3.0.0.rc12)
+      i18n (~> 0.6, >= 0.6.6)
     ice_cube (0.13.3)
     innertube (1.1.0)
     jasmine (2.4.0)
@@ -710,7 +710,7 @@ DEPENDENCIES
   guard-rspec
   guard-spork
   hirb
-  i18n-js
+  i18n-js (>= 3.0.0.rc11)
   ice_cube
   jasmine
   jasmine-rails
@@ -739,6 +739,7 @@ DEPENDENCIES
   rails_admin
   randumb
   redis (>= 2.2.2)
+  responders (~> 2.0)
   rinku
   rocket_pants (~> 1.0)
   rpush
