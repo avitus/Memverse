@@ -137,7 +137,7 @@ gem 'capistrano-sidekiq', group: :development
 ############################################################
 # Blog
 ############################################################
-gem 'ckeditor'                                                                 # WYSIWYG editing
+gem 'ckeditor', github: 'galetahub/ckeditor'                                   # WYSIWYG editing
 gem 'paperclip'                                                                # Attachment handling
 
 ############################################################

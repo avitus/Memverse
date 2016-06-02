@@ -7,6 +7,14 @@ GIT
       rails (>= 3.2.8)
 
 GIT
+  remote: git://github.com/galetahub/ckeditor.git
+  revision: 64d85e5cfb5a5ff494157e4e6222fae167778130
+  specs:
+    ckeditor (4.1.6)
+      cocaine
+      orm_adapter (~> 0.5.0)
+
+GIT
   remote: git://github.com/kayle/omniauth-windowslive
   revision: 505aa60147ce548a5c21cc03cc323bfd37361d71
   specs:
@@ -173,9 +181,6 @@ GEM
     childprocess (0.5.9)
       ffi (~> 1.0, >= 1.0.11)
     chunky_png (1.3.5)
-    ckeditor (4.1.6)
-      cocaine
-      orm_adapter (~> 0.5.0)
     climate_control (0.0.3)
       activesupport (>= 3.0)
     cocaine (0.5.8)
@@ -689,7 +694,7 @@ DEPENDENCIES
   capistrano (= 2.15.5)
   capistrano-sidekiq
   capybara (>= 1.1.2)
-  ckeditor
+  ckeditor!
   coffee-rails
   compass-rails
   cucumber-rails (>= 1.3.0)
