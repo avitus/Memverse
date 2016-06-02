@@ -693,7 +693,7 @@ DEPENDENCIES
   cancan!
   capistrano (= 2.15.5)
   capistrano-sidekiq
-  capybara (>= 1.1.2)
+  capybara
   ckeditor!
   coffee-rails
   compass-rails

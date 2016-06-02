@@ -29,7 +29,7 @@ group :test do
   gem 'sqlite3'
   gem 'factory_girl_rails'                                      # Add to development group for debugging in console
   gem 'cucumber-rails', require: false                          # Rails Generators for Cucumber with special support for Capybara and DatabaseCleaner
-  gem "capybara", '>= 1.1.2'
+  gem "capybara"                                                # Helps test web applications by simulating how a real user would interact with your app
   gem 'selenium-webdriver'                                      # Optional extension for Capybara
   gem 'database_cleaner'                                        # Clean database between tests
   gem 'launchy', '>= 2.0.5'
@@ -159,7 +159,7 @@ gem 'breadcrumbs_on_rails', '>=2.0.0'                                          #
 gem 'dalli'                                                                    # Memcached client
 gem 'friendly_id'                                                              # Makes nice IDs for models
 gem 'foreman'                                                                  # Helps manage multiple processes when running app in development.
-gem 'best_in_place', git: "https://github.com/bernat/best_in_place"            # In-place editing support ... no Rails 4 release yet
+gem 'best_in_place', git: "https://github.com/bernat/best_in_place"            # In-place editing support
 gem 'split', require: 'split/dashboard'                                        # AB testing framework
 gem 'backup'                                                                   # Used to backup MySQL database and uploaded site assets
 gem 'dropbox-sdk'                                                              # Used with backup above
