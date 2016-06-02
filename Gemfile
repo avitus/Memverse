@@ -152,7 +152,7 @@ gem "prawnto_2", require: "prawnto"                                            #
 gem 'acts-as-taggable-on'                                                      # :source => "http://gemcutter.org", Taggable gem,
 gem 'nokogiri', '>=1.5.0'                                                      # HTML/XML parsing
 gem 'json'                                                                     # Javascript Object Notation support
-gem 'thinking-sphinx', '~> 3.0.5'                                              # Connector to Sphinx - for global search
+gem 'thinking-sphinx'                                                          # Connector to Sphinx - for global search
 gem "i18n-js", ">= 3.0.0.rc11"                                                 # Uses config/locale files to build a JavaScript equivalent of i18n in Rails
 gem 'localeapp'                                                                # Translation service for i18n
 gem 'breadcrumbs_on_rails', '>=2.0.0'                                          # For breadcrumb navigation bar
