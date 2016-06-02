@@ -137,9 +137,9 @@ class Memverse < ActiveRecord::Base
   scope :old_testament, -> { where("verses.book_index" =>  1..39).includes(:verse) }
   scope :new_testament, -> { where("verses.book_index" => 40..66).includes(:verse) }
 
-  scope :history,  -> { where("verses.book_index BETWEEN 1 AND 17 OR verses.book_index = 44").includes(:verse) }
-  scope :wisdom,   -> { where("verses.book_index" => 18..22).includes(:verse) }
+  scope :history,  -> { joins(:verse).where("verses.book_index BETWEEN  1 AND 17 OR verses.book_index = 44").includes(:verse) }
   scope :prophecy, -> { joins(:verse).where("verses.book_index BETWEEN 23 AND 39 OR verses.book_index = 66").includes(:verse) }
+  scope :wisdom,   -> { where("verses.book_index" => 18..22).includes(:verse) }
   scope :gospel,   -> { where("verses.book_index" => 40..43).includes(:verse) }
   scope :epistle,  -> { where("verses.book_index" => 45..65).includes(:verse) }
 
