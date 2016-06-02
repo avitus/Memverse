@@ -189,12 +189,6 @@ describe Quest do
       end
     end
 
-    describe "for tag goals" do
-      it "is a pending example"
-    end
   end
 
-  describe '.check_quest_off' do
-    it "is a pending example"
-  end
 end

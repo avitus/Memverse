@@ -4,7 +4,7 @@ describe MemversesController do
 
   before (:each) do
     @user = FactoryGirl.create(:user)
-    @user.confirm!
+    @user.confirm
     sign_in @user
 
     @verse = FactoryGirl.create(:verse)

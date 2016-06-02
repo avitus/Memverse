@@ -91,7 +91,7 @@ Then /^I should be signed out$/ do
 end
 
 Given /^the email address "(.*)" is confirmed$/ do |email|
-  User.find_by_email(email).confirm!
+  User.find_by_email(email).confirm
 end
 
 Given /^the email address "(.*)" is not confirmed$/ do |email|

@@ -16,7 +16,7 @@ describe Api::V1::CredentialsController do
 
       it 'responds with 200' do
         get :me, :version => 1, :format => :json
-        response.status.should eq(200)
+        expect(response.status).to eq(200)
       end
 
       it 'returns the user as json' do

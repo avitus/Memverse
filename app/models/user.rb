@@ -237,7 +237,7 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :confirmable, :validatable,
          :encryptable, :encryptor => :restful_authentication_sha1
 
-  validates :name,  :length     => { :maximum => 100 },
+  validates :name,  :length     => { :maximum => 60 },
                     :allow_nil  => true
 
   # "validatable" module of devise already handles email validation

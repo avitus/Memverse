@@ -22,7 +22,7 @@ describe PassagesController do
 
   before (:each) do
     @user = FactoryGirl.create(:user)
-    @user.confirm!
+    @user.confirm
     sign_in @user
 
     # @mv = FactoryGirl.create(:memverse)

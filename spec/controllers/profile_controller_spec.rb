@@ -4,7 +4,7 @@ describe ProfileController do
 
   before (:each) do
     @user = FactoryGirl.create(:user)
-    @user.confirm!
+    @user.confirm
     sign_in @user
   end
 
@@ -13,7 +13,7 @@ describe ProfileController do
     it "should unsubsribe user from all emails" do
       get :unsubscribe, :email => @user.email
       response.should be_success
-      @user.reload.newsletters.should be_false
+      @user.reload.newsletters.should be false
       @user.reminder_freq.should == "Never"
     end
 

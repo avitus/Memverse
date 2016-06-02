@@ -20,26 +20,26 @@ describe QuizQuestion do
         qq.question_type = "mcq"
         qq.mc_answer = ""
 
-        qq.save.should be_false
+        qq.save.should be false
 
         qq.mc_answer = "A"
-        qq.save.should be_true
+        qq.save.should be true
 
         qq.mc_answer = "AA"
-        qq.save.should be_false
+        qq.save.should be false
       end
 
       it "rejects mc_options too long" do
         for option in [:mc_option_a=, :mc_option_b=, :mc_option_c=, :mc_option_d=]
           qq.send(option, "X" * 160)
-          qq.save.should be_false
+          qq.save.should be false
         end
       end
 
       it "accepts mc_options of reasonable length" do
         for option in [:mc_option_a=, :mc_option_b=, :mc_option_c=, :mc_option_d=]
           qq.send(option, "Answer choice")
-          qq.save.should be_true
+          qq.save.should be true
         end
       end
     end

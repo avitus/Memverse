@@ -158,7 +158,7 @@ describe Verse do
       final_verse = FactoryGirl.create(:final_verse, :book => "Psalms", :chapter => 117, :last_verse => 2)
       verse1 = FactoryGirl.create(:verse, :book => "Psalms", :chapter => 117, :versenum => 1)
 
-      verse1.entire_chapter_available.should be_false
+      verse1.entire_chapter_available.should be false
     end
 
     it "should think a complete chapter is available" do
@@ -166,7 +166,7 @@ describe Verse do
       verse1 = FactoryGirl.create(:verse, :book => "Psalms", :chapter => 117, :versenum => 1)
       verse2 = FactoryGirl.create(:verse, :book => "Psalms", :chapter => 117, :versenum => 2)
 
-      verse1.entire_chapter_available.should be_true
+      verse1.entire_chapter_available.should be true
     end
   end
 
@@ -179,20 +179,20 @@ describe Verse do
     it "should prevent a duplicate verse" do
       verse1 = FactoryGirl.build(:verse_with_validate_ref, :book => "Psalms", :chapter => 117, :versenum => 1)
       verse2 = FactoryGirl.build(:verse_with_validate_ref, :book => "Psalms", :chapter => 117, :versenum => 1)
-      verse1.save.should be_true
-      verse2.save.should be_false
+      verse1.save.should be true
+      verse2.save.should be false
       verse2.errors.full_messages.first.should == "Verse already exists in NIV"
     end
 
     it "should reject an invalid chapter" do
       verse = FactoryGirl.build(:verse_with_validate_ref, :book => "Psalms", :chapter => 151, :versenum => 1)
-      verse.save.should be_false
+      verse.save.should be false
       verse.errors.full_messages.first.should == "Invalid chapter"
     end
 
     it "should reject an invalid versenum" do
       verse = FactoryGirl.build(:verse_with_validate_ref, :book => "Psalms", :chapter => 117, :versenum => 3, :translation => "ESV")
-      verse.save.should be_false
+      verse.save.should be false
       verse.errors.full_messages.first.should == "Invalid verse number"
     end
   end

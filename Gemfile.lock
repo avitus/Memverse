@@ -733,7 +733,7 @@ DEPENDENCIES
   phantomjs
   prawn!
   prawnto_2
-  protected_attributes (>= 1.0.5)
+  protected_attributes
   pubnub
   rack-utf8_sanitizer
   rails (= 4.2.6)
