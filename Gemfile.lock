@@ -697,7 +697,7 @@ DEPENDENCIES
   ckeditor!
   coffee-rails
   compass-rails
-  cucumber-rails (>= 1.3.0)
+  cucumber-rails
   dalli
   database_cleaner
   devise
