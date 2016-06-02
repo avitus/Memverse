@@ -28,7 +28,7 @@ end
 group :test do
   gem 'sqlite3'
   gem 'factory_girl_rails'                                      # Add to development group for debugging in console
-  gem 'cucumber-rails', '>= 1.3.0', require: false
+  gem 'cucumber-rails', require: false                          # Rails Generators for Cucumber with special support for Capybara and DatabaseCleaner
   gem "capybara", '>= 1.1.2'
   gem 'selenium-webdriver'                                      # Optional extension for Capybara
   gem 'database_cleaner'                                        # Clean database between tests

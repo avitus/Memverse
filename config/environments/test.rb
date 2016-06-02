@@ -39,6 +39,10 @@ MemverseApp::Application.configure do
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
 
+  # Add jQuery tools to precompiled assets
+  # jQuery Tools is temperamental and seems to like being loaded after jQuery itself but before the rest of the JS manifest in application.js
+  config.assets.precompile += %w( jquery.tools.min.js )
+
   # Set host URL
   Rails.application.routes.default_url_options[:host] = 'localhost:3000'
 
