@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Igor Galeta"]
-  s.date = "2016-06-02"
+  s.date = "2016-06-03"
   s.description = "CKEditor is a WYSIWYG editor to be used inside web pages"
   s.email = "galeta.igor@gmail.com"
   s.extra_rdoc_files = ["README.md"]

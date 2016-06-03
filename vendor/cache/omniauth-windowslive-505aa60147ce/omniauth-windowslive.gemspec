@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Joel AZEMAR"]
-  s.date = "2016-06-01"
+  s.date = "2016-06-03"
   s.email = ["joel.azemar@gmail.com"]
   s.files = [".gitignore", ".rvmrc", "Gemfile", "LICENSE", "README.md", "Rakefile", "lib/omniauth-windowslive.rb", "lib/omniauth/strategies/windowslive.rb", "lib/omniauth/windowslive.rb", "lib/omniauth/windowslive/version.rb", "omniauth-windowslive.gemspec", "spec/omniauth/strategies/windowslive_spec.rb", "spec/spec_helper.rb", "spec/support/shared_examples.rb"]
   s.homepage = "https://github.com/joel/omniauth-windowslive"

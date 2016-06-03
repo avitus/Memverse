@@ -1,18 +1,18 @@
-db:
-  image: mysql:5
+version: '2'
 
-web:
-  build: .
-  links:
-    - db
-  ports:
-    - "3001:3000"
-  volumes:
-    - .:/usr/app
-  volumes_from:
-    - gems
-
-gems:
-  image: busybox
-  volumes:
-    - /vendor/cache
+services:
+  db:
+    image: mysql:5
+    environment:
+      - "MYSQL_ROOT_PASSWORD=demo"
+  web:
+    build: .
+    depends_on:
+      - db
+    environment:
+      RAILS_ENV: $RAILS_ENV
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/usr/app
+    command: bundle exec rails s -p 3000 -b '0.0.0.0'
