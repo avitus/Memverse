@@ -1,0 +1,18 @@
+db:
+  image: mysql:5
+
+web:
+  build: .
+  links:
+    - db
+  ports:
+    - "3001:3000"
+  volumes:
+    - .:/usr/app
+  volumes_from:
+    - gems
+
+gems:
+  image: busybox
+  volumes:
+    - /vendor/cache

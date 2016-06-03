@@ -1,4 +1,4 @@
-FROM alpine:3.3
+FROM alpine:3.4
 
 MAINTAINER Memverse "admin@memverse.com"
 
@@ -18,7 +18,8 @@ MAINTAINER Memverse "admin@memverse.com"
 ENV BUILD_PACKAGES	bash git curl-dev git-perl ruby-dev build-base openssl-dev \
 					libxml2-dev libxslt-dev libffi-dev \
 					g++ musl-dev make \ 
-					nodejs
+					nodejs \ 
+					tzdata
 
 ENV RUBY_PACKAGES	ruby ruby-io-console ruby-bundler ruby-irb ruby-json ruby-bigdecimal
 
@@ -43,8 +44,9 @@ RUN apk update && \
     apk --update add $RUBY_PACKAGES 
 #   rm -rf /var/cache/apk/*     <-- Don't remove packages for now.
 
-RUN mkdir /usr/app
-WORKDIR /usr/app
+ENV APP_HOME /usr/app
+RUN mkdir -p $APP_HOME
+WORKDIR $APP_HOME
 
 COPY Gemfile /usr/app/
 COPY Gemfile.lock /usr/app/
