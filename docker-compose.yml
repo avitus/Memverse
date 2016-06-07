@@ -1,3 +1,9 @@
+# Run these commands after machine is running
+#
+# docker-compose run web rake db:create
+# docker-compose run web rake db:schema:load
+# docker-compose run web rake db:seed
+
 version: '2'
 
 services:
