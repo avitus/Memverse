@@ -5,9 +5,10 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
-# puts 'SETTING UP DEFAULT USER LOGIN'
-# user = User.create :name => 'First User', :email => 'user@test.com', :password => 'please', :password_confirmation => 'please'
-# puts '  New user created: ' << user.name
+
+# puts 'SETTING UP ADMIN USER'
+user = User.create :name => 'Admin', :email => 'admin@test.com', :password => 'please', :password_confirmation => 'please'
+puts '  New user created: ' << user.name
 
 # TODO: Add popular verses
 
@@ -73,8 +74,6 @@ AmericanState.create(abbrev: 'WY', name: 'Wyoming')
 # Add 50 quest levels
 puts 'SETTING UP QUESTS'
 for i in 19..50
-
-  puts "  Creating quests for level #{i}"
 
   learning_verses   = (i-6)*25 + 50
   memorized_verses  = learning_verses - 50
@@ -204,7 +203,7 @@ for i in 19..50
 end
 
 # ----------------------------------------------------------------------------------------------------------
-# Create Badges
+# Create Roles
 # ----------------------------------------------------------------------------------------------------------
 puts 'CREATING ROLES'
 Role.create(name: "admin")

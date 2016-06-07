@@ -53,7 +53,7 @@ COPY Gemfile.lock /usr/app/
 
 # Install gems in vendor/cache ( this is specified in .bundle/config )
 RUN bundle config build.nokogiri --use-system-libraries && \
-    bundle install --path vendor/cache
+    bundle install
 
 COPY . /usr/app
 
