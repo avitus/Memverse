@@ -46,7 +46,7 @@ end
 # Database
 ############################################################
 gem 'mysql2', '>= 0.4'
-gem 'redis', '>=2.2.2'                                                          # Redis Key-value store
+gem 'redis', '~> 3.2'                                                          # Redis Key-value store
 
 ############################################################
 # Javascript Rutime

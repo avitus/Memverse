@@ -6,24 +6,58 @@
 
 version: '2'
 
+#============================================================
+# Services
+#============================================================
 services:
+
   db:
     image: mysql:5
     environment:
       - "MYSQL_ROOT_PASSWORD=demo"
+    volumes:
+      - memverse-mysql:/var/lib/memverse/data
+    networks:
+      - back-tier
+
   redis:
-    image: redis:3.2
-    ports:
-      - "6379:6379"
+    image: redis:alpine
+    ports: ["6379"]
+    networks:
+      - back-tier
+
+  memcache:
+    image: memcached:1.4
+    networks:
+      - back-tier
+
   web:
     build: .
-    depends_on:
-      - db
     environment:
-      RAILS_ENV: development
+      - RAILS_ENV=development
     ports:
       - "3000:3000"
     volumes:
-      - .:/usr/app
+      - .:/usr/app    
+    links:
+      - redis
+      - db
+      - memcache
+    networks:
+      - front-tier
+      - back-tier
     command: bundle exec rails s -p 3000 -b '0.0.0.0'
+
+#============================================================
+# Volumes
+#============================================================
+volumes:
+  memverse-mysql:
+
+#============================================================
+# Networks
+#============================================================
+networks:
+  front-tier:
+  back-tier:
 

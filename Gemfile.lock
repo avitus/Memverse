@@ -746,7 +746,7 @@ DEPENDENCIES
   rails-observers
   rails_admin
   randumb
-  redis (>= 2.2.2)
+  redis (~> 3.2)
   responders (~> 2.0)
   rinku
   rocket_pants (~> 1.0)

@@ -307,7 +307,7 @@ class User < ActiveRecord::Base
       user = User.create(name: data.name, login: data.name, email: data.emails.account, password: Devise.friendly_token[0,20],
                          provider: access_token.provider, uid: access_token.uid )
 
-      user.confirm! # we can confirm the user since we can rely on a valid email address
+      user.confirm # we can confirm the user since we can rely on a valid email address
     end
 
     user
