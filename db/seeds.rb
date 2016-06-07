@@ -8,6 +8,8 @@
 
 # puts 'SETTING UP ADMIN USER'
 user = User.create :name => 'Admin', :email => 'admin@test.com', :password => 'please', :password_confirmation => 'please'
+user.admin = true
+user.save
 puts '  New user created: ' << user.name
 
 # TODO: Add popular verses

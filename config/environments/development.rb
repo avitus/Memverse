@@ -31,6 +31,10 @@ MemverseApp::Application.configure do
   # Do not compress assets
   config.assets.compress = false
 
+  # Whitelist IP addresses
+  config.web_console.whitelisted_ips = '192.168.99.1/16'
+
+
   # Expands the lines which load the assets
   config.assets.debug = true
 
