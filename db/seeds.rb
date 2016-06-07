@@ -339,11 +339,13 @@ end
 # Seed some initial verses
 # ALV: Seeding the database with real verses currently breaks a lot of the Rspec tests.
 # ----------------------------------------------------------------------------------------------------------
-puts "Adding seed verses"
+puts "Adding seed verses for #{Rails.env} environment"
 config = ActiveRecord::Base.configurations[Rails.env]
 if config['adapter'] == 'mysql2'
-  system("mysql --user=#{config['username']} --password=#{config['password']} #{config['database']} < seed_verses.sql")
+  puts "  ... Using MySQL database"
+  system("mysql --user=#{config['username']} --password=\"#{config['password']}\" --host=#{config['host']} #{config['database']} < seed_verses.sql")
 elsif config['adapter'] == 'sqlite3'
+  puts "  ... Using Sqlite database"
   system("sqlite3 #{config['database']} < seed_verses.sql")
 else
   puts "WARNING: FinalVerse data could not be seeded for #{config['adapter']}. Please see db/seeds.rb."
