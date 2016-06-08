@@ -31,6 +31,11 @@ services:
     networks:
       - back-tier
 
+  search:
+    build: https://github.com/jamesrwhite/sphinx-alpine-docker.git
+    networks:
+      - back-tier
+
   web:
     build: .
     environment:
