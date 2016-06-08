@@ -41,8 +41,8 @@ RUN apk update && \
     apk --update add $MYSQL_PACKAGES && \
     apk --update add $SQLITE_PACKAGES && \
     apk --update add $BUILD_PACKAGES && \
-    apk --update add $RUBY_PACKAGES 
-#   rm -rf /var/cache/apk/*     <-- Don't remove packages for now.
+    apk --update add $RUBY_PACKAGES && \ 
+    rm -rf /var/cache/apk/*     
 
 ENV APP_HOME /usr/app
 RUN mkdir -p $APP_HOME
@@ -53,7 +53,8 @@ COPY Gemfile.lock /usr/app/
 
 # Install gems in vendor/cache ( this is specified in .bundle/config )
 RUN bundle config build.nokogiri --use-system-libraries && \
-    bundle install
+    bundle install && \ 
+    rm -rf /var/cache/apk/*     
 
 COPY . /usr/app
 
