@@ -33,6 +33,7 @@ services:
 
   search:
     build: https://github.com/avitus/sphinx-alpine-docker.git
+    ports: ["6379"]
     networks:
       - back-tier
 
