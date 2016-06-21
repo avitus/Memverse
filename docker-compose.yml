@@ -14,7 +14,8 @@ services:
   db:
     image: mysql:5
     environment:
-      - "MYSQL_ROOT_PASSWORD=demo"
+      - MYSQL_ROOT_PASSWORD=demo
+      - DB_NAME=memverse_development
     volumes:
       - memverse-mysql:/var/lib/memverse/data
     networks:
@@ -33,7 +34,9 @@ services:
 
   search:
     build: https://github.com/avitus/sphinx-alpine-docker.git
-    ports: ["6379"]
+    ports: ["9306"]
+    links:
+      - db
     networks:
       - back-tier
 
@@ -48,6 +51,7 @@ services:
     links:
       - redis
       - db
+      - search
       - memcache
     networks:
       - front-tier
