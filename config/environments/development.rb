@@ -34,6 +34,11 @@ MemverseApp::Application.configure do
   # Whitelist IP addresses
   config.web_console.whitelisted_ips = '192.168.99.1/16'
 
+  # Check if we use Docker to allow docker ip through web-console
+  if ENV['DOCKERIZED'] == 'true'
+    config.web_console.whitelisted_ips = ENV['DOCKER_HOST_IP']
+  end
+
 
   # Expands the lines which load the assets
   config.assets.debug = true

@@ -20,6 +20,7 @@ services:
       - memverse-mysql:/var/lib/memverse/data
     networks:
       - back-tier
+    ports: ["9306"]
 
   redis:
     image: redis:alpine
@@ -34,7 +35,9 @@ services:
 
   search:
     build: https://github.com/avitus/sphinx-alpine-docker.git
-    ports: ["9306"]
+    ports: 
+      - "9306"
+      - "9312"
     links:
       - db
     networks:
@@ -44,6 +47,9 @@ services:
     build: .
     environment:
       - RAILS_ENV=development
+      - DOCKERIZED=true
+    env_file: 
+      - .env
     ports:
       - "3000:3000"
     volumes:

@@ -1,0 +1,9 @@
+development:
+  address: search
+  mysql41: 9312
+test:
+  address: search
+  mysql41: 9312
+production:
+  address: search
+  mysql41: 9312
