@@ -4,16 +4,23 @@ A Bible memorization application
 
 "!https://app.wercker.com/status/a6bf54c9eb901816e1f6aee1ae3ad20a/m/(wercker status)!":https://app.wercker.com/project/bykey/a6bf54c9eb901816e1f6aee1ae3ad20a
 
+h2. Getting Started
+
+* Clone this repository.
+* Start the containers: @docker-compose up@
+* Create and seed the database: @docker-compose run web bundle exec rake db:setup@
+
 h2. Dependencies
 
 To use this application, you will need:
 
-* The Ruby language (version 2.0.0)
-* Rails (version 4.0.0 or newer)
+* Docker Compose
 
 h2. Running tests
 
-Use `bundle exec guard`.
+Unit tests: @bundle exec rspec@
+Integration tests: @bundle exec cucumber features@
+Javascript tests: @bundle exec rake spec:javascript RAILS_ENV=test@
 
 h2. Documentation and Support
 
@@ -26,12 +33,6 @@ If you make improvements to this application, please share with others.
 * Fork the project on GitHub.
 * Make your feature addition or bug fix.
 * Commit with Git.
-* Send the author a pull request.
+* Send a pull request.
 
-If you add functionality to this application, create an alternative implementation, or build an application that is similar, please contact me and I'll add a note to the README so that others can find your work.
-
-h2. Deploying with Capistrano
-
-* `cap deploy`
-* or to rollback: `cap deploy:rollback`
 
