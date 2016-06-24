@@ -3,6 +3,10 @@
 # docker-compose run web rake db:create
 # docker-compose run web rake db:schema:load
 # docker-compose run web rake db:seed
+#
+# OR
+#
+# docker-compose run web bundle exec rake db:setup 
 
 version: '2'
 
@@ -20,11 +24,13 @@ services:
       - memverse-mysql:/var/lib/memverse/data
     networks:
       - back-tier
-    ports: ["9306"]
+    ports:
+      - "3306"
 
   redis:
     image: redis:alpine
-    ports: ["6379"]
+    ports: 
+      - "6379"
     networks:
       - back-tier
 
