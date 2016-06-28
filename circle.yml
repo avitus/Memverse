@@ -1,6 +1,6 @@
 ## Adjust the VM to your preferences and requirements
 machine: 
- 
+
 ## Checking out and cloning your git repo
 checkout: 
 
@@ -17,7 +17,7 @@ database:
 ## Running your tests
 test: 
 
-#Deploying your code to your web servers
+## Deploying your code to your web servers
 deployment: 
 
 
