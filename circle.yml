@@ -1,14 +1,6 @@
 ## Adjust the VM to your preferences and requirements
 machine: 
-
-  timezone:
-    America/Los_Angeles # Set the timezone
-
-  # Version of ruby to use
-  ruby:
-    version:
-      2.3
-
+ 
 ## Checking out and cloning your git repo
 checkout: 
 
