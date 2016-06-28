@@ -1,5 +1,31 @@
-database:
+## Adjust the VM to your preferences and requirements
+machine: 
+
+  timezone:
+    America/Los_Angeles # Set the timezone
+
+  # Version of ruby to use
+  ruby:
+    version:
+      2.3
+
+## Checking out and cloning your git repo
+checkout: 
+
+## Setting up your project’s language-specific dependencies
+dependencies:
+
+## Preparing the databases for your tests 
+database: 
   post:
     - sudo cp ./config/environments/sphinx.conf /etc/sphinxsearch/sphinx.conf
     - sudo sed -i -e 's,START=no,START=yes,' /etc/default/sphinxsearch
     - service sphinxsearch start
+
+## Running your tests
+test: 
+
+#Deploying your code to your web servers
+deployment: 
+
+
