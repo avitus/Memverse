@@ -2,7 +2,7 @@
 require 'rbconfig'
 
 # Set Ruby version
-ruby "~> 2.3"
+ruby "2.3.1"
 
 HOST_OS = RbConfig::CONFIG['host_os']
 source 'http://rubygems.org'
