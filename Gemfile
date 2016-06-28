@@ -10,12 +10,12 @@ group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'byebug'
-  gem 'guard', '>= 0.6.2'
-  gem 'guard-minitest'
-  gem 'guard-spork'
-  gem 'guard-rspec'
-  gem 'guard-cucumber'
-  gem 'guard-jasmine'
+  # gem 'guard', '>= 0.6.2'
+  # gem 'guard-minitest'
+  # gem 'guard-spork'
+  # gem 'guard-rspec'
+  # gem 'guard-cucumber'
+  # gem 'guard-jasmine'
   gem 'brakeman', :require => false                             # Scan for security vulnerabilities
 end
 
