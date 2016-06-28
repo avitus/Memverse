@@ -1,6 +1,9 @@
 # encoding: utf-8
 require 'rbconfig'
 
+# Set Ruby version
+ruby "~> 2.3"
+
 HOST_OS = RbConfig::CONFIG['host_os']
 source 'http://rubygems.org'
 
@@ -10,6 +13,7 @@ group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'byebug'
+  # Guard is having problems with detecting the correct Ruby version
   # gem 'guard', '>= 0.6.2'
   # gem 'guard-minitest'
   # gem 'guard-spork'
@@ -26,6 +30,7 @@ group :development, :test do
 end
 
 group :test do
+  gem 'rspec_junit_formatter', '0.2.2'                          # Automatic test metadata collection for CirclCI
   gem 'sqlite3'
   gem 'factory_girl_rails'                                      # Add to development group for debugging in console
   gem 'cucumber-rails', require: false                          # Rails Generators for Cucumber with special support for Capybara and DatabaseCleaner
