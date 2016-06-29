@@ -7,6 +7,7 @@ A Bible memorization application
 h2. Getting Started
 
 * Clone this repository.
+* Build the containers: @docker-compose build .@
 * Start the containers: @docker-compose up@
 * Create and seed the database: @docker-compose run web bundle exec rake db:setup@
 * Admin user: 'admin@test.com', Password: 'please'

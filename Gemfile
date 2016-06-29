@@ -13,13 +13,6 @@ group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'byebug'
-  # Guard is having problems with detecting the correct Ruby version
-  # gem 'guard', '>= 0.6.2'
-  # gem 'guard-minitest'
-  # gem 'guard-spork'
-  # gem 'guard-rspec'
-  # gem 'guard-cucumber'
-  # gem 'guard-jasmine'
   gem 'brakeman', :require => false                             # Scan for security vulnerabilities
 end
 
@@ -28,9 +21,6 @@ group :development, :test do
   gem 'rspec_junit_formatter'                                   # Automatic test metadata collection for CirclCI
   gem 'jasmine'
   gem 'jasmine-rails'
-end
-
-group :test do
   gem 'sqlite3'
   gem 'factory_girl_rails'                                      # Add to development group for debugging in console
   gem 'cucumber-rails', require: false                          # Rails Generators for Cucumber with special support for Capybara and DatabaseCleaner
@@ -41,6 +31,12 @@ group :test do
   gem 'email_spec'                                              # For sending email in cucumber tests
   gem 'action_mailer_cache_delivery', '>= 0.3.5'                # Used to test email delivery with Cucumber. Pairs with email_spec
   gem 'phantomjs'                                               # For wercker jasmine specs
+  gem 'guard', '>= 0.6.2'
+  gem 'guard-minitest'
+  gem 'guard-spork'
+  gem 'guard-rspec'
+  gem 'guard-cucumber'
+  gem 'guard-jasmine'
 end
 
 group :production do
