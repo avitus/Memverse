@@ -153,7 +153,13 @@ GEM
       i18n
       rake (>= 10.0.0)
       sshkit (>= 1.9.0)
+    capistrano-bundler (1.1.4)
+      capistrano (~> 3.1)
+      sshkit (~> 1.2)
     capistrano-harrow (0.5.2)
+    capistrano-rails (1.1.7)
+      capistrano (~> 3.1)
+      capistrano-bundler (~> 1.1)
     capistrano-sidekiq (0.5.4)
       capistrano
       sidekiq (>= 3.4)
@@ -726,6 +732,7 @@ DEPENDENCIES
   byebug
   cancan!
   capistrano (~> 3.5)
+  capistrano-rails
   capistrano-sidekiq
   capybara
   ckeditor!

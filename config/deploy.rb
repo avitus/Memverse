@@ -3,7 +3,9 @@ lock '3.5.0'
 
 set :user, 'avitus'
 set :application, 'memverse.com'
+
 set :repo_url, 'git@github.com:avitus/Memverse.git'
+set :branch, 'docker'
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
@@ -25,10 +27,11 @@ set :deploy_to, '/home/#{fetch(:user)}/#{fetch(:application)}'
 # set :pty, true
 
 # Default value for :linked_files is []
-# set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/secrets.yml')
+set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/secrets.yml')
 
 # Default value for linked_dirs is []
 # set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'public/system')
+set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'public/ckeditor_assets')
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
@@ -39,11 +42,24 @@ set :deploy_to, '/home/#{fetch(:user)}/#{fetch(:application)}'
 namespace :deploy do
 
   after :restart, :clear_cache do
-    on roles(:web), in: :groups, limit: 3, wait: 10 do
+    on roles(:all), in: :groups, limit: 3, wait: 10 do
+
       # Here we can do anything such as:
       # within release_path do
       #   execute :rake, 'cache:clear'
       # end
+
+	  desc "Restarting mod_rails with restart.txt"                # Restart passenger on deploy
+	  task :restart, :roles => :app, :except => { :no_release => true } do
+	    run "touch #{current_path}/tmp/restart.txt"
+	  end
+
+	  desc "Generate sitemap"
+	  task :refresh_sitemaps do
+	    run "cd #{latest_release} && RAILS_ENV=#{rails_env} bundle exec rake sitemap:refresh"
+	  end
+
+
     end
   end
 
