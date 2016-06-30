@@ -114,7 +114,7 @@ gem 'bloggity',    github: 'alexcwatt/bloggity'                                #
 ############################################################
 # Deployment and Monitoring
 ############################################################
-gem 'capistrano', '=2.15.5'                                                    # Deploy with Capistrano
+gem 'capistrano', "~> 3.5"                                                     # Deploy with Capistrano
 gem 'sitemap_generator'                                                        # Sitemap generator
 gem 'newrelic_rpm', '>=3.3.0'                                                  # Performance monitoring
 gem 'airbrake'                                                                 # Error tracking
@@ -166,7 +166,7 @@ gem 'backup'                                                                   #
 gem 'dropbox-sdk'                                                              # Used with backup above
 gem 'sinatra', require: false                                                  # sinatra and slim are required for sidekiq
 gem 'slim'
-gem 'net-ssh', '2.7.0'                                                         # Used by capistrano among other gems. 2.8.0 had significant bug.
+# gem 'net-ssh', '2.7.0'                                                         # Used by capistrano among other gems. 2.8.0 had significant bug.
 gem 'rack-utf8_sanitizer'                                                      # Used to fix EasouSpider invalid UTF-8 byte sequences
 gem 'responders', '~> 2.0'                                                     # Support for respond_to and respond_with in Rails 4.2
 
