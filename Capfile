@@ -8,6 +8,12 @@ require 'capistrano/bundler'
 require 'capistrano/rails/assets'
 require 'capistrano/rails/migrations'
 
+# Config for RVM
+require 'capistrano/rvm'
+set :rvm_type, :user
+set :rvm_ruby_version, '2.3.1-p112'
+
+
 # Include tasks from other gems included in your Gemfile
 #
 # For documentation on these, see for example:

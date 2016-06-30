@@ -11,7 +11,7 @@ set :branch, 'docker'
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 
 # Default deploy_to directory is /var/www/my_app_name
-set :deploy_to, '/home/#{fetch(:user)}/#{fetch(:application)}'
+set :deploy_to, '/home/avitus/memverse.com'
 
 # Default value for :scm is :git
 # set :scm, :git
@@ -49,18 +49,19 @@ namespace :deploy do
       #   execute :rake, 'cache:clear'
       # end
 
-	  desc "Restarting mod_rails with restart.txt"                # Restart passenger on deploy
-	  task :restart, :roles => :app, :except => { :no_release => true } do
-	    run "touch #{current_path}/tmp/restart.txt"
+	  desc 'Restart application'
+	  task :restart do
+	    on roles(:app), in: :sequence, wait: 5 do
+	      execute :touch, release_path.join('tmp/restart.txt')
+	    end
 	  end
 
-	  desc "Generate sitemap"
-	  task :refresh_sitemaps do
-	    run "cd #{latest_release} && RAILS_ENV=#{rails_env} bundle exec rake sitemap:refresh"
-	  end
-
+	  # TODO: Add task to refresh sitemaps
 
     end
   end
+
+  after :publishing, 'deploy:restart'
+  after :finishing, 'deploy:cleanup'
 
 end
