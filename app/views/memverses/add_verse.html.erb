@@ -16,7 +16,7 @@
 		<!-- Reference entry box -->
 		<div class="verse-field ui-widget">
 			<label class="tag">Enter a reference or keyword</label>
-			<%= image_tag("indicator2.gif", :alt => "Searching...", :style => "display: none", :class => "spinner spnner-add-verse", :id => "ajax_spinner") %>
+			<%= image_tag("indicator2.gif", alt: "Searching...", style: "display: none", class: "spinner spinner-add-verse", id: "ajax_spinner") %>
 			<%= text_field_tag(:verse, params[:verse], :class => "flex-verse-search", :id => "js_flex-verse-search" )%>
 		</div>
 
