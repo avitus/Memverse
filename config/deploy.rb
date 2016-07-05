@@ -49,12 +49,16 @@ namespace :deploy do
       #   execute :rake, 'cache:clear'
       # end
 
-	  desc 'Restart application'
-	  task :restart do
-	    on roles(:app), in: :sequence, wait: 5 do
-	      execute :touch, release_path.join('tmp/restart.txt')
-	    end
-	  end
+      within release_path do
+        execute :touch, release_path.join('tmp/restart.txt')
+      end
+
+	  # desc 'Restart application'
+	  # task :restart do
+	  #   on roles(:app), in: :sequence, wait: 5 do
+	  #     execute :touch, release_path.join('tmp/restart.txt')
+	  #   end
+	  # end
 
 	  # TODO: Add task to refresh sitemaps
 

@@ -44,7 +44,7 @@ MemverseApp::Application.configure do
   #===============================
   # Content Delivery Network
   #===============================
-  config.action_controller.asset_host = "https://d1r0kpcohdg1bn.cloudfront.net"  # Amazon Cloudfront
+  config.action_controller.asset_host = "https://d1yutulwhnvs0u.cloudfront.net"  # Amazon Cloudfront
   config.static_cache_control = "public, max-age=86400"
   config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # Header that Nginx uses for sending files
 
