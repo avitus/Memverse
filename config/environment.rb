@@ -54,6 +54,7 @@ TRANSLATIONS = {
   ICE:    {name: "Icelandic Bible (2007)", language: "is"},
   LND:    {name: "La Nuova Diodati", language: "it"},
   KRV:    {name: "Korean Revised Version", language: "ko"},
+  DSV:    {name: "Statenvertaling", language: "nl"},
   HSV:    {name: "Herziene Statenvertaling", language: "nl"},
   NBV:    {name: "De Nieuwe Bijbelvertaling", language: "nl"},
   RDC:    {name: "Romanian Dumitru Cornilescu Translation", language: "ro"},
