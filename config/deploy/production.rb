@@ -6,7 +6,7 @@ set :rails_env, "production"
 # You can define all roles on a single server, or split them:
 
 # server 'memverse.com', user: 'avitus', roles: %w{app db web}
-server 'staging.memverse.com', user: 'avitus', roles: %w{app db web}
+server 'memverse.com', user: 'avitus', roles: %w{app db web}
 # server 'memverse.com', user: 'avitus', roles: %w{app db web}, my_property: :my_value
 # server 'example.com', user: 'deploy', roles: %w{app web}, other_property: :other_value
 # server 'db.example.com', user: 'deploy', roles: %w{db}
