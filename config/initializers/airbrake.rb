@@ -5,7 +5,7 @@ Airbrake.configure do |config|
   config.project_id = 16073
   config.environment = Rails.env
   config.ignore_environments = %w(development test cucumber)
-  config.root_directory = '/home/avitus/memverse.com/current'
+  config.root_directory = '/home/avitus/memverse.com'
 end
 
 
