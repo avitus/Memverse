@@ -8,6 +8,7 @@ require 'capistrano/bundler'
 require 'capistrano/rails/assets'
 require 'capistrano/rails/migrations'
 require 'capistrano/sidekiq'
+require 'airbrake/capistrano/tasks'
 
 # Config for RVM
 require 'capistrano/rvm'
