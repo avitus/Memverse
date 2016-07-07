@@ -108,7 +108,7 @@ gem 'cancan', git: 'https://github.com/nukturnal/cancan.git'                   #
 gem 'rails_admin'                                                              # Admin console
 gem 'forem',       github: 'radar/forem', branch: 'rails4'                     # Forum engine
 gem 'forem-textile_formatter'                                                  # Forum formatting
-gem 'bloggity',    github: 'alexcwatt/bloggity'                                # Blog engine
+gem 'bloggity',    github: 'avitus/bloggity'                                   # Blog engine
 # gem 'bloggity', :path => "../bloggity"                                       # Blog engine (dev environment)
 
 ############################################################

@@ -12,7 +12,7 @@ module BloggityUser
   # @param blog_id [Fixnum, nil]
   # @return [Boolean]
   def can_blog?(blog_id = nil)
-    self.has_role?("blogger")
+    self.has_role?("blogger") or self.admin?
   end
 
   # Can user moderate the comments for a given blog?

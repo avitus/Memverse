@@ -216,6 +216,19 @@ Role.create(name: "scribe")
 Role.create(name: "moderator")
 
 # ----------------------------------------------------------------------------------------------------------
+# Create Blog and First Post
+# ----------------------------------------------------------------------------------------------------------
+blog = Bloggity::Blog.new(title: "Memverse Blog")
+blog.save
+
+post = Bloggity::BlogPost.new(title: "Welcome to Memverse", 
+                              body: "Thanks for joining our team of developers.",
+                              blog_id: blog.id,
+                              posted_by: user.id
+                              )
+post.save
+
+# ----------------------------------------------------------------------------------------------------------
 # Create Badges
 # ----------------------------------------------------------------------------------------------------------
 puts 'CREATING BADGES'
