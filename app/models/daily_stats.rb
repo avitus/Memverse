@@ -37,9 +37,7 @@ class DailyStats < ActiveRecord::Base
     #     - Learning and active in month [memverses_learning_active_in_month]
 
     # Check whether there is already an entry for today
-    ds = find( :first, :conditions => ["entry_date = ?", Date.today])
-
-    if ds.nil?
+    if DailyStats.where("entry_date = ?", Date.today).exists?
 
       ds = DailyStats.new
 
