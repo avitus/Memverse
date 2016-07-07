@@ -52,8 +52,7 @@ COPY Gemfile /usr/app/
 COPY Gemfile.lock /usr/app/
 
 # Install gems in vendor/cache ( this is specified in .bundle/config )
-RUN bundle config build.nokogiri --use-system-libraries && \
-    bundle install && \ 
+RUN bundle install && \ 
     rm -rf /var/cache/apk/*     
 
 COPY . /usr/app
