@@ -129,13 +129,6 @@ class InfoController < ApplicationController
 
     @leaderboard = User.top_users
 
-    # ALV: Unable to get fragment cache working
-    # TODO: http://stackoverflow.com/questions/11199396/rails-cache-fetch-inserting-extra-values
-
-    # @leaderboard = Rails.cache.fetch("top_users", :expires_in => 1.hour) do
-    #   User.top_users
-    # end
-
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -150,10 +143,6 @@ class InfoController < ApplicationController
     add_breadcrumb I18n.t("leader_menu.Church Leaderboard"), churchboard_path
 
     @churchboard = Church.top_churches
-
-    # @churchboard = Rails.cache.fetch("top_churches", :expires_in => 1.hour) do
-    #   Church.top_churches
-    # end
 
   end
 
@@ -170,10 +159,6 @@ class InfoController < ApplicationController
 
     @groupboard = Group.top_groups
 
-    # @groupboard = Rails.cache.fetch("top_groups", :expires_in => 1.hour) do
-    #   Group.top_groups
-    # end
-
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -189,10 +174,6 @@ class InfoController < ApplicationController
 
     @stateboard = AmericanState.top_states
 
-    # @stateboard = Rails.cache.fetch("top_states", :expires_in => 1.hour) do
-    #   AmericanState.top_states
-    # end
-
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -207,10 +188,6 @@ class InfoController < ApplicationController
     add_breadcrumb I18n.t("leader_menu.Country Leaderboard"), countryboard_path
 
     @countryboard = Country.top_countries
-
-    # @countryboard = Rails.cache.fetch("top_countries", :expires_in => 1.hour) do
-    #   Country.top_countries
-    # end
 
   end
 
