@@ -45,6 +45,9 @@ set :ssh_options, {
 	auth_methods: %w(password)
 }
 
+# Handle some weird issues with Sidekiq and Capistrano
+# https://github.com/seuros/capistrano-sidekiq/issues/124
+set :rvm1_map_bins, fetch(:rvm1_map_bins).to_a.concat(%w(sidekiq sidekiqctl))
 
 # The server-based syntax can be used to override options:
 # ------------------------------------
