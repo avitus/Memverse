@@ -225,7 +225,7 @@ Role.create(name: "moderator")
 # ----------------------------------------------------------------------------------------------------------
 puts 'Creating blog'
 blog = Bloggity::Blog.new(id: 9, title: "Memverse Blog")
-blog.save
+blog.save unless Bloggity::Blog.exists?(9)
 puts '   - first post'
 post = Bloggity::BlogPost.new(title: "Welcome to Memverse", 
                               body: "Thanks for joining our team of developers.",
