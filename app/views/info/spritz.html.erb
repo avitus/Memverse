@@ -31,7 +31,7 @@
         <!-- Reference entry box -->
         <div class="spritz-selection verse-field ui-widget">
             <label class="tag">Enter a chapter reference</label>
-            <img class="spinner spinner-add-verse" id="ajax_spinner" src="/assets/indicator2.gif" alt="Searching ..." style="display: none" />
+            <%= image_tag("indicator2.gif", alt: "Searching...", style: "display: none", class: "spinner spinner-add-verse", id: "ajax_spinner") %>
             <%= text_field_tag(:chref, params[:chref], :class => "chref", :id => "chref", :placeholder => "e.g. Matthew 5", :size => "20" ) %>
         </div>
 

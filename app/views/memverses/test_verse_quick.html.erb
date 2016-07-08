@@ -60,7 +60,7 @@
 			<p>
 				<span class="current-versenum superscript"><%=@mv.verse.versenum if @prior_text%></span>
 				<span id="feedback"></span>
-				<img class="center spinner" id="ajax_spinner" src="/assets/indicator2.gif" alt="Comparing..." style="display: none" />
+				<%= image_tag("indicator2.gif", alt: "Comparing...", style: "display: none", class: "center spinner", id: "ajax_spinner") %>
 			</p>
 		</div>
 
@@ -69,7 +69,7 @@
 			<p>
 				<span class="current-versenum superscript"><%=@mv.verse.versenum if @prior_text%></span>
 				<span class="current-text"><%= @mv.verse.text %></span>
-				<img class="center spinner" id="ajax_spinner" src="/assets/indicator2.gif" alt="Comparing..." style="display: none" />
+				<%= image_tag("indicator2.gif", alt: "Comparing...", style: "display: none", class: "center spinner", id: "ajax_spinner") %>
 			</p>
 		</div>
 

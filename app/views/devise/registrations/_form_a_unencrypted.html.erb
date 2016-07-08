@@ -15,7 +15,7 @@
 				<p class="tip">What's your email address?</p>
 				<p class="ok suggestion">Did you mean <a class="email"><span class="address">asf</span>@<span class="domain">gmail.com</span></a>?</p>
 				<p class="ok isaok">We will email you a confirmation.</p>
-				<p class="checking"><img src="/assets/indicator2.gif" /> Checking...</p>
+				<p class="checking"><%= image_tag("indicator2.gif") %> Checking...</p>
 				<p class="invalid error">Doesn't look like a valid email.</p>
 				<p class="blank error">An email is required!</p>
 				<p class="taken error">This email is already registered. Want to <%= link_to 'login', new_user_session_path %> or <%= link_to "reset your password", new_password_path(resource_name) %>?</p>

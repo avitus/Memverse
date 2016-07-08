@@ -42,7 +42,7 @@
 					<span id="ajaxWrapper">
 						<%= render :partial=>'feedback', :locals => {:show_feedback => @show_feedback} %>
 					</span>
-					<img class="center spinner" id="ajax_spinner" src="/assets/indicator2.gif" alt="Comparing..." style="display: none" />
+					<%= image_tag("indicator2.gif", alt: "Comparing...", style: "display: none", class: "spinner center", id: "ajax_spinner") %>
 				</div>
 
 				<!-- Current verse answer -->

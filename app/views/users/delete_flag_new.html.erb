@@ -39,7 +39,7 @@
 
 		<div class="buttons">
 			<%= submit_tag 'Sign up', :id => 'register_submit', :class => "no-dbl-click", :onsubmit => "document.getElementById('register_submit').disabled = true;" %>
-			<img class="spinner" id="ajax_spinner" src="/assets/indicator2.gif" alt="Submitting ..." style="display: none" />
+			<%= image_tag("indicator2.gif", alt: "Submitting...", style: "display: none", class: "spinner", id: "ajax_spinner") %>
 		</div>
 
 	<% end %>

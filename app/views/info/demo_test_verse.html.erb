@@ -67,7 +67,7 @@
 			<p>
 				<span class="current-versenum superscript"><%=@current_versenum if @prior_text%></span>
 				<span id="feedback"></span>
-				<img class="center spinner" id="ajax_spinner" src="/assets/indicator2.gif" alt="Comparing..." style="display: none" />
+				<%= image_tag("indicator2.gif", alt: "Comparing...", style: "display: none", class: "center spinner", id: "ajax_spinner") %>
 			</p>
 		</div>
 
