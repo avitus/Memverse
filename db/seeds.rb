@@ -7,11 +7,11 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 # puts 'SETTING UP ADMIN USER'
-user = User.create :name => 'Admin', :email => 'admin@test.com', :password => 'please', :password_confirmation => 'please'
+user = User.create :name => 'Andy', :email => 'admin@test.com', :password => 'please', :password_confirmation => 'please'
 user.confirm
 user.admin = true
 user.save
-puts '  New user created: ' << user.name
+puts 'Creating admin user: ' << user.name
 
 # TODO: Add popular verses
 
@@ -75,7 +75,7 @@ AmericanState.create(abbrev: 'WI', name: 'Wisconsin')
 AmericanState.create(abbrev: 'WY', name: 'Wyoming')
 
 # Add 50 quest levels
-puts 'SETTING UP QUESTS'
+puts 'Setting up quests'
 for i in 19..50
 
   learning_verses   = (i-6)*25 + 50
@@ -208,30 +208,38 @@ end
 # ----------------------------------------------------------------------------------------------------------
 # Create Roles
 # ----------------------------------------------------------------------------------------------------------
-puts 'CREATING ROLES'
+puts 'Creating roles'
+puts '   - admin'
 Role.create(name: "admin")
+puts '   - blogger'
 Role.create(name: "blogger")
+puts '   - quizmaster'
 Role.create(name: "quizmaster")
+puts '   - scribe'
 Role.create(name: "scribe")
+puts '   - moderator'
 Role.create(name: "moderator")
 
 # ----------------------------------------------------------------------------------------------------------
 # Create Blog and First Post
 # ----------------------------------------------------------------------------------------------------------
-blog = Bloggity::Blog.new(title: "Memverse Blog")
+puts 'Creating blog'
+blog = Bloggity::Blog.new(id: 9, title: "Memverse Blog")
 blog.save
-
+puts '   - first post'
 post = Bloggity::BlogPost.new(title: "Welcome to Memverse", 
                               body: "Thanks for joining our team of developers.",
                               blog_id: blog.id,
-                              posted_by: user.id
+                              posted_by: user,
+                              tag_string: "welcome",
+                              is_complete: true
                               )
 post.save
 
 # ----------------------------------------------------------------------------------------------------------
 # Create Badges
 # ----------------------------------------------------------------------------------------------------------
-puts 'CREATING BADGES'
+puts 'Creating badges'
 
 # ---- Sermon on the Mount Badge ------------------
 sotm = Badge.where(:name => 'Sermon on the Mount').first
@@ -338,7 +346,7 @@ end
 # ----------------------------------------------------------------------------------------------------------
 # Create Final Verse data table
 # ----------------------------------------------------------------------------------------------------------
-puts "Adding final verse data"
+puts "Adding final verse data (last verse of each chapter of the Bible)"
 config = ActiveRecord::Base.configurations[Rails.env]
 if config['adapter'] == 'mysql2'
   system("mysql --user=#{config['username']} --password=\"#{config['password']}\" --host=#{config['host']} #{config['database']} < iso_final_verses.sql")
@@ -363,6 +371,8 @@ elsif config['adapter'] == 'sqlite3'
 else
   puts "WARNING: FinalVerse data could not be seeded for #{config['adapter']}. Please see db/seeds.rb."
 end
+
+puts "--- Done -----------------"
 
 # This is the current verse seed data
 # +----+-------------+------------+--------------+---------+----------+-----------------------+-----------------------+------------------------+----------+------------+--------------+------------+-----------------+
