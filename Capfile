@@ -9,6 +9,7 @@ require 'capistrano/rails/assets'
 require 'capistrano/rails/migrations'
 require 'capistrano/sidekiq'
 require 'airbrake/capistrano/tasks'
+require 'thinking_sphinx/capistrano'
 
 # Config for RVM
 require 'capistrano/rvm'

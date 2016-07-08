@@ -6,3 +6,7 @@ test:
   mysql41: 9312
 production:
   mysql41: 9312
+  pid_file:           /home/avitus/memverse.com/shared/tmp/searchd.pid
+  indices_location:   /home/avitus/memverse.com/shared/db/sphinx
+  configuration_file: /home/avitus/memverse.com/shared/production.sphinx.conf
+  binlog_path:        /home/avitus/memverse.com/shared/binlog
