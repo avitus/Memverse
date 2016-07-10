@@ -381,7 +381,7 @@ class MemversesController < ApplicationController
     # ==== Verse IDs were passed from manage_verses or similar form ====
     if (!mv_ids.blank?) and (params[:Prompt])
 
-      @mv_list = Memverse.find(mv_ids, :include => :verse)
+      @mv_list = Memverse.includes(:verse).find(mv_ids)
       @mv_list.sort! # Sort by book. TODO: Pass paramaters from manage_verses and sort by that order...
 
       add_breadcrumb I18n.t("home_menu.My Verses"), :manage_verses_path
