@@ -5,7 +5,7 @@ set :user, 'avitus'
 set :application, 'memverse.com'
 
 set :repo_url, 'git@github.com:avitus/Memverse.git'
-set :branch, 'docker'
+set :branch, 'master'
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
