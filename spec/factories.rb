@@ -1,4 +1,5 @@
 require 'factory_girl'
+require 'faker'
 
 FactoryGirl.define do
 
@@ -6,7 +7,10 @@ FactoryGirl.define do
   # Users
   # ==============================================================================================
   factory :user do |u|
-    u.name 'Test User'
+
+    u.name { Faker::Name.name }
+
+    # u.name 'Test User'
 	  u.sequence(:email) { |n| "user#{n}@test.com" }
     u.password 'please'
     u.password_confirmation { |u| u.password }
@@ -14,6 +18,12 @@ FactoryGirl.define do
     u.admin false
     u.referred_by 0
     u.translation nil
+
+    trait :approved do
+      after(:create) do |user, _|
+        user.thredded_user_detail.update!(moderation_state: :approved)
+      end
+    end
 
     # Admin user
     # factory :admin do
@@ -211,6 +221,84 @@ FactoryGirl.define do
     versenum 1
     book_index 1
     subsection_end 31
+  end
+
+  # ==============================================================================================
+  # Used to seed Thredded Forum
+  # ==============================================================================================
+  sequence(:topic_hash) { |n| "hash#{n}" }
+
+  factory :messageboard, class: Thredded::Messageboard do
+    sequence(:name) { |n| "messageboard#{n}" }
+    description 'This is a description of the messageboard'
+    closed false
+  end
+
+  factory :post, class: Thredded::Post do
+    user
+    postable { association :topic, user: user }
+    messageboard
+
+    content { Faker::Hacker.say_something_smart }
+    ip '127.0.0.1'
+  end
+
+  factory :private_post, class: Thredded::PrivatePost do
+    user
+    postable { association :private_topic, user: user }
+
+    content { Faker::Hacker.say_something_smart }
+    ip '127.0.0.1'
+  end
+
+  factory :topic, class: Thredded::Topic do
+    transient do
+      with_posts 0
+      with_categories 0
+    end
+
+    title { Faker::StarWars.quote }
+    hash_id { generate(:topic_hash) }
+
+    user
+    messageboard
+    association :last_user, factory: :user
+
+    after(:create) do |topic, evaluator|
+      if evaluator.with_posts
+        evaluator.with_posts.times do
+          create(:post, postable: topic, user: topic.user, messageboard: topic.messageboard)
+        end
+
+        topic.posts_count = evaluator.with_posts
+        topic.save
+      end
+
+      evaluator.with_categories.times do
+        topic.categories << create(:category)
+      end
+    end
+
+    trait :locked do
+      locked true
+    end
+
+    trait :pinned do
+      sticky true
+    end
+
+    trait :sticky do
+      sticky true
+    end
+  end
+
+  factory :private_topic, class: Thredded::PrivateTopic do
+    user
+    users { build_list :user, 1 }
+    association :last_user, factory: :user
+
+    title { Faker::Lorem.sentence[0..-2] }
+    hash_id { generate(:topic_hash) }
   end
 
 end

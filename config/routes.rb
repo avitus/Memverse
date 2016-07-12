@@ -6,7 +6,8 @@ MemverseApp::Application.routes.draw do
   # Background jobs
   require 'sidekiq/web'
 
-  mount Forem::Engine,    :at => '/forums'
+  # mount Forem::Engine,    :at => '/forums'
+  mount Thredded::Engine      => '/forum'
   mount Bloggity::Engine, :at => '/blog'
   mount RailsAdmin::Engine    => '/admin', :as => 'rails_admin'
   mount Ckeditor::Engine      => '/ckeditor'

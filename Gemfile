@@ -37,6 +37,7 @@ group :development, :test do
   gem 'guard-rspec'
   gem 'guard-cucumber'
   gem 'guard-jasmine'
+  gem 'faker'                                                   # Generates fake test data
 end
 
 group :production do
@@ -106,8 +107,9 @@ gem 'cancan', git: 'https://github.com/nukturnal/cancan.git'                   #
 # Major Engines (Admin, Forem, Blog)
 ############################################################
 gem 'rails_admin'                                                              # Admin console
-gem 'forem',       github: 'radar/forem', branch: 'rails4'                     # Forum engine
-gem 'forem-textile_formatter'                                                  # Forum formatting
+# gem 'forem',       github: 'radar/forem', branch: 'rails4'                     # Forum engine
+# gem 'forem-textile_formatter'                                                  # Forum formatting
+gem 'thredded', '~> 0.6.1'                                                     # Forum engine
 gem 'bloggity',    github: 'avitus/bloggity'                                   # Blog engine
 # gem 'bloggity', :path => "../bloggity"                                       # Blog engine (dev environment)
 

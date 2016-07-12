@@ -10,7 +10,7 @@
 //= require i18n/translations
 //= require jquery.purr
 //= require best_in_place
-//= require forem
+//= require thredded
 //= require ckeditor/init
 //= stub jquery.tools.min
 //= require_tree .

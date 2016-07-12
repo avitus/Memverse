@@ -4,10 +4,10 @@ class ApplicationController < ActionController::Base
 
   before_filter :configure_permitted_parameters, if: :devise_controller?
 
-  def forem_user
-    current_user
-  end
-  helper_method :forem_user
+  # def forem_user
+  #   current_user
+  # end
+  # helper_method :forem_user
 
   def bloggity_user
     current_user
@@ -296,7 +296,7 @@ class ApplicationController < ActionController::Base
 
   # https://github.com/plataformatec/devise#strong-parameters
   def configure_permitted_parameters
-     devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(:name, :email, :password, :password_confirmation, :referred_by) }
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :email, :password, :password_confirmation, :referred_by])
   end
 
   # Automatically respond with 404 for ActiveRecord::RecordNotFound

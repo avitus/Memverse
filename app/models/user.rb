@@ -175,15 +175,15 @@ class User < ActiveRecord::Base
       key :type, :integer
       key :format, :int64
     end 
-    property :forem_admin do
-      key :type, :boolean
-    end
-    property :forem_state do
-      key :type, :string
-    end
-    property :forem_auto_subscribe do
-      key :type, :boolean
-    end
+    # property :forem_admin do
+    #   key :type, :boolean
+    # end
+    # property :forem_state do
+    #   key :type, :string
+    # end
+    # property :forem_auto_subscribe do
+    #   key :type, :boolean
+    # end
     property :provider do
       key :type, :string
     end

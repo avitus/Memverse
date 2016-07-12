@@ -1,0 +1,39 @@
+/* -- Memverse overrides -- */
+
+/*========== Theme Overrides ==========*/
+
+// Named colors
+$thredded-brand: #99cc33 !default;
+
+
+/*========== List of Message Boards ==========*/
+
+.thredded--main-container {
+  max-width: 60rem;
+}
+
+.thredded--messageboard {
+  background-color: white;
+}
+
+ul.thredded--user-navigation {
+  background-color: white;
+  padding: 0 1em;
+}
+
+h2.thredded--messageboard--title {
+  line-height: 24px;
+  margin-right: .4em;
+  font-size: 20px;
+}
+
+
+/*========== List of Topics in a Message Board ==========*/
+
+section.thredded--main-section {
+  background-color: white;
+  padding: 1em 4em;
+}
+
+
+
