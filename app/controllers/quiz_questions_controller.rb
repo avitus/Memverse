@@ -134,7 +134,7 @@ class QuizQuestionsController < ApplicationController
     # Remove supporting reference string from list of params
     supporting_ref = params[:quiz_question].delete(:supporting_ref)
 
-    @quiz_question = QuizQuestion.new( params[:quiz_question] )
+    @quiz_question = QuizQuestion.new( quiz_question_params )
 
     # Associate supporting verse with question
     errorcode, bk, ch, vs = parse_verse( supporting_ref )
@@ -142,9 +142,14 @@ class QuizQuestionsController < ApplicationController
 
     respond_to do |format|
       if @quiz_question.save
+
         flash[:notice] = 'Quiz question was successfully created.'
 
-        if URI(request.referer).path == '/submit_question'
+        # We set the referer to nil to account of cases where the user navigates directly to the page
+        # or, in the case of testing, there is no referer.
+        referer = request.referer ? URI(request.referer).path : nil
+
+        if referer == '/submit_question'
           link = "<a href=\"#{submit_question_path}\">[Add another question]</a>"
         else
           link = "<a href=\"#{url_for(:action => 'new', :quiz => @quiz_question.quiz_id, :qno => @quiz_question.question_no + 1)}\">[Add another question]</a>"
@@ -154,8 +159,10 @@ class QuizQuestionsController < ApplicationController
         format.html { redirect_to quiz_question_path(@quiz_question) }
 
       else
+
         @quiz = Quiz.find(params[:quiz_question][:quiz_id] || 1)
         format.html { render :action => "new" }
+        
       end
     end
   end
@@ -222,5 +229,17 @@ class QuizQuestionsController < ApplicationController
       redirect_to root_path and return
     end
   end
+
+  def quiz_question_params
+    params.require(:quiz_question).permit(:approval_status, :mc_answer, 
+                                          :mc_option_a, :mc_option_b, :mc_option_c, :mc_option_d, :mc_question,
+                                          :mcq_category, :question_no, :question_type, 
+                                          :quiz_id, :submitted_by, :supporting_ref)
+  end
+    
+
+
+
+
 
 end
