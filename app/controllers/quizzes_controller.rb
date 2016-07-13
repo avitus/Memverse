@@ -105,9 +105,7 @@ class QuizzesController < ApplicationController
   # GET /quizzes/search.json
   def search
     query     = params[:query]
-
     quizzes   = Quiz.where("name LIKE ?", "%#{query}%").limit(20).select("id", "name")
-
     render json: quizzes
   end
 
