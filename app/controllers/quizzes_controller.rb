@@ -2,8 +2,8 @@
 
 class QuizzesController < ApplicationController
   before_filter :authenticate_user!
-  # before_filter :authorize
-  # load_and_authorize_resource param_method: :quiz_params
+  before_filter :authorize
+  load_and_authorize_resource param_method: :quiz_params
 
   add_breadcrumb "Home", :root_path
 
@@ -121,7 +121,7 @@ class QuizzesController < ApplicationController
   end
 
   def quiz_params
-    params.require(:quiz).permit(:name, :description, :start_time, :user_id, :quiz_questions_count, :quiz_length)
+    params.require(:quiz).permit(:name, :description, :start_time)
   end
 
 end
