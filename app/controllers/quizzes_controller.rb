@@ -3,6 +3,7 @@
 class QuizzesController < ApplicationController
   before_filter :authenticate_user!
   before_filter :authorize
+  load_and_authorize_resource param_method: :quiz_params
 
   add_breadcrumb "Home", :root_path
 
