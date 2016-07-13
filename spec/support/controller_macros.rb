@@ -33,4 +33,16 @@ module ControllerMacros
     sign_in @user    
   end
 
+  def login_quizmaster
+    @request.env["devise.mapping"] = Devise.mappings[:user]
+
+    @user = FactoryGirl.create(:user)
+    @user.confirm # or set a confirmed_at inside the factory. Only necessary if you are using the confirmable module
+
+    quizmaster = FactoryGirl.create(:role, name: "quizmaster")
+    quizmaster.users << @user
+    
+    sign_in @user    
+  end    
+
 end

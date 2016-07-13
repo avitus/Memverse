@@ -56,9 +56,9 @@ class QuizzesController < ApplicationController
   # POST /quizzes
   # POST /quizzes.xml
   def create
-    @quiz = Quiz.new(params[:quiz])
 
-    @quiz.user        = current_user
+    @quiz       = Quiz.new( quiz_params )
+    @quiz.user  = current_user
 
     respond_to do |format|
       if @quiz.save
@@ -78,7 +78,7 @@ class QuizzesController < ApplicationController
     @quiz = Quiz.find(params[:id])
 
     respond_to do |format|
-      if @quiz.update_attributes(params[:quiz])
+      if @quiz.update_attributes( quiz_params )
         flash[:notice] = 'Quiz was successfully updated.'
         format.html { redirect_to(@quiz) }
         format.xml  { head :ok }
@@ -110,6 +110,8 @@ class QuizzesController < ApplicationController
     render json: quizzes
   end
 
+  #----- PRIVATE -------------------------------------
+  
   private
 
   def authorize
@@ -117,6 +119,10 @@ class QuizzesController < ApplicationController
       flash[:alert] = "You do not have permission to do that."
       redirect_to root_path and return
     end
+  end
+
+  def quiz_params
+    params.require(:quiz).permit(:name, :description, :start_time)
   end
 
 end
