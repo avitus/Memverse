@@ -237,9 +237,4 @@ class QuizQuestionsController < ApplicationController
                                           :quiz_id, :submitted_by, :supporting_ref)
   end
     
-
-
-
-
-
 end

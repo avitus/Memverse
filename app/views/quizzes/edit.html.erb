@@ -13,17 +13,17 @@
   </div>
   <% end %>
   <p>
-    <%= f.label :name %><br />
-    <%= f.text_field :name %>
+    <%= f.label       :name %><br />
+    <%= f.text_field  :name %>
   </p>
   <p>
-    <%= f.label :description %><br />
+    <%= f.label     :description %><br />
     <%= f.text_area :description %>
   </p>
   
   <p>
-	<%= f.label 			:start_time, "Start time" %><br />  	
-  	<%= f.datetime_select	:start_time %>
+    <%= f.label 			    :start_time, "Start time" %><br />  	
+    <%= f.datetime_select	:start_time %>
   <p>  
   
   <p>
@@ -33,4 +33,5 @@
 
 <%= link_to 'Show', @quiz %> |
 <%= link_to 'Back', quizzes_path %>
+
 </div>

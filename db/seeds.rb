@@ -222,6 +222,16 @@ Role.create(name: "scribe")
 puts '   - moderator'
 Role.create(name: "moderator")
 
+puts 'Giving admin user all roles and priviliges'
+admin_user = User.where(email: 'admin@test.com').first
+
+Role.where(name: "admin"     ).first.users << admin_user
+Role.where(name: "blogger"   ).first.users << admin_user
+Role.where(name: "quizmaster").first.users << admin_user
+Role.where(name: "scribe"    ).first.users << admin_user
+Role.where(name: "moderator" ).first.users << admin_user
+
+
 # ----------------------------------------------------------------------------------------------------------
 # Create Blog and First Post
 # ----------------------------------------------------------------------------------------------------------
