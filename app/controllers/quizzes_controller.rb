@@ -123,7 +123,7 @@ class QuizzesController < ApplicationController
   end
 
   def quiz_params
-    params.require(:quiz).permit(:name, :description, :start_time)
+    params.require(:quiz).permit(:name, :description, :start_time, :user_id, :quiz_questions_count, :quiz_length)
   end
 
 end
