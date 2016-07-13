@@ -78,7 +78,7 @@ class QuizzesController < ApplicationController
     @quiz = Quiz.find(params[:id])
 
     respond_to do |format|
-      if @quiz.update_attributes( quiz_params )
+      if @quiz.update( quiz_params )
         flash[:notice] = 'Quiz was successfully updated.'
         format.html { redirect_to(@quiz) }
         format.xml  { head :ok }
