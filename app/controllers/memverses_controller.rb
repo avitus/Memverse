@@ -305,7 +305,7 @@ class MemversesController < ApplicationController
     @page       = [params[:page].to_i, 99].min     # page number
     @page_size  = 20                               # number of verses per page
 
-    @vs_list = Popverse.find( :all, :limit => @page_size, :offset => @page*@page_size )
+    @vs_list = Popverse.limit( @page_size ).offset( @page*@page_size )
   end
 
   # ----------------------------------------------------------------------------------------------------------

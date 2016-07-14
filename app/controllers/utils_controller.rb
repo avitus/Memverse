@@ -219,10 +219,7 @@ class UtilsController < ApplicationController
       pv.num_users  = x[1]
       errorcode, pv.book, pv.chapter, pv.versenum = parse_verse(pv.pop_ref)
 
-
-      avail_translations = Verse.find( :all,
-                                       :conditions => ["book = ? and chapter = ? and versenum = ?",
-                                                        pv.book, pv.chapter, pv.versenum])
+      avail_translations = Verse.where("book = ? and chapter = ? and versenum = ?", pv.book, pv.chapter, pv.versenum)
 
       avail_translations.each { |vs|
 
@@ -361,7 +358,7 @@ class UtilsController < ApplicationController
   # Show most popular verses
   # ----------------------------------------------------------------------------------------------------------
   def show_popverses
-    @vs_list = Popverse.find(:all)
+    @vs_list = Popverse.all
   end
 
   # ----------------------------------------------------------------------------------------------------------
