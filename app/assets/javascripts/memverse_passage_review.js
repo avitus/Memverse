@@ -97,7 +97,7 @@ var reviewState = {
         // advance cursor to first word of next verse
         $verse.find('.blank-word').first().focus();
     }
-}
+};
 
 /******************************************************************************
  * Display passage for review

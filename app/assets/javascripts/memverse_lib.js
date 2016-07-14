@@ -9,7 +9,7 @@ Object.keys = function(object) {
     keys.push(property);
   }
   return keys;
-}
+};
 
 Object.values = function(object) {
   var arr = [];
@@ -17,7 +17,7 @@ Object.values = function(object) {
     arr.push(object[property]);
   }
   return arr;
-}
+};
 
 /******************************************************************************
  * Verse Search
@@ -117,7 +117,7 @@ String.prototype.capitalize = function() {
 	} else {
       return this.charAt(0).toUpperCase() + this.slice(1);
 	}
-}
+};
 
 /******************************************************************************
  * Substitute abbreviations
@@ -242,7 +242,7 @@ scrub_text = function(text) {
     replace(/ά/g, "α").
     replace(/ἐ/g, "ε").
     replace(/[ῖἱ]/g,"ι");
-}
+};
 
 /******************************************************************************
  * Return width of word for blankify (hackish - would like a better way)
@@ -272,7 +272,7 @@ word_width = function(word) {
 
     return $("#word_width").width();
 
-}
+};
 
 /******************************************************************************
  * Blankify a verse
@@ -478,7 +478,7 @@ function displayAlertMessage(message) {
 /******************************************************************************
  * All DOM attachments that are common to multiple pages should go here
  ******************************************************************************/
-$(document).ready(function() {
+$(document).ready( function() {
 	$('input#verse').focus().autocomplete({ source: Object.values(BIBLEBOOKS.en) });
 });
 

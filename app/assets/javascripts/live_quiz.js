@@ -9,7 +9,7 @@ setupMCQ = function(q_option_a, q_option_b, q_option_c, q_option_d, mc_answer, q
 			"<input type='submit' value='Answer!' id='submit-answer' class='button-link'>"]
 
 	return output.join("");
-}
+};
 
 /******************************************************************************
  * Calculate Levenshtein distance

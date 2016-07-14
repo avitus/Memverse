@@ -4,13 +4,13 @@
 // It's not advisable to add code directly here, but if you do, it'll appear at the bottom of the
 // the compiled file.
 //
+//= require thredded
 //= require jquery_ujs
 //= require fancybox
 //= require i18n
 //= require i18n/translations
 //= require jquery.purr
 //= require best_in_place
-//= require thredded
 //= require ckeditor/init
 //= stub jquery.tools.min
 //= require_tree .

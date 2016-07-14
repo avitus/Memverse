@@ -101,14 +101,12 @@ gem 'devise'                                                                   #
 gem 'devise-encryptable'                                                       # TODO: Is this required?
 gem 'omniauth'                                                                 # Multi-provider authentication
 gem 'omniauth-windowslive', git: 'git://github.com/kayle/omniauth-windowslive' # Windows Live strategy
-gem 'cancan', git: 'https://github.com/nukturnal/cancan.git'                   # Role-based authorization, Forem requires
+gem 'cancancan', '~> 1.10'                                                     # Role-based authorization
 
 ############################################################
 # Major Engines (Admin, Forem, Blog)
 ############################################################
 gem 'rails_admin'                                                              # Admin console
-# gem 'forem',       github: 'radar/forem', branch: 'rails4'                     # Forum engine
-# gem 'forem-textile_formatter'                                                  # Forum formatting
 gem 'thredded', '~> 0.6.1'                                                     # Forum engine
 gem 'bloggity',    github: 'avitus/bloggity'                                   # Blog engine
 # gem 'bloggity', :path => "../bloggity"                                       # Blog engine (dev environment)

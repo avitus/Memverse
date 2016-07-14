@@ -316,7 +316,7 @@ var quizRoom = {
         return false;
      },
 
-} // end of quizRoom scope
+}; // end of quizRoom scope
 
 
 /******************************************************************************
