@@ -4,14 +4,14 @@
 
 // Named colors
 $thredded-brand: #99cc33 !default;
-
-
-/*========== List of Message Boards ==========*/
+$thredded-grid-container-max-width: 67rem !default;
+$thredded-grid-breakpoint-max-widths: (mobile: 34rem, tablet: 48rem) !default;
 
 .thredded--main-container {
-  max-width: 1080px;
-  padding: 1rem 0;
+  padding: 0.5rem 0 1rem 0 !important;
 }
+
+/*========== List of Message Boards ==========*/
 
 .thredded--messageboard {
   background-color: white;
@@ -35,6 +35,7 @@ section.thredded--main-section {
   background-color: white;
   padding: 1em 4em;
 }
+
 
 
 
