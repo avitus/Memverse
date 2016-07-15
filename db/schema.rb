@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160712042256) do
+ActiveRecord::Schema.define(version: 20160714181726) do
 
   create_table "american_states", force: :cascade do |t|
     t.string  "abbrev",      limit: 20,  default: "", null: false
@@ -447,12 +447,12 @@ ActiveRecord::Schema.define(version: 20160712042256) do
     t.integer  "nkj",        limit: 4
     t.integer  "kjv",        limit: 4
     t.integer  "rsv",        limit: 4
-    t.string   "niv_text",   limit: 255
-    t.string   "esv_text",   limit: 255
-    t.string   "nas_text",   limit: 255
-    t.string   "nkj_text",   limit: 255
-    t.string   "kjv_text",   limit: 255
-    t.string   "rsv_text",   limit: 255
+    t.string   "niv_text",   limit: 300
+    t.string   "esv_text",   limit: 300
+    t.string   "nas_text",   limit: 300
+    t.string   "nkj_text",   limit: 300
+    t.string   "kjv_text",   limit: 300
+    t.string   "rsv_text",   limit: 300
     t.datetime "created_at"
     t.datetime "updated_at"
   end
