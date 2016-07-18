@@ -12,5 +12,4 @@
 //= require jquery.purr
 //= require best_in_place
 //= require ckeditor/init
-//= stub jquery.tools.min
 //= require_tree .

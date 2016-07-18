@@ -428,13 +428,33 @@ function parsePassageRef(passage) {
 }
 
 /******************************************************************************
- * Reset scrollable list of verses to the beginning
+ * Scroll functionality
  ******************************************************************************/
-function resetScrollable() {
-	var api = $(".scrollable").data("scrollable"); 	// get handle to scrollable API
-	api.begin(); 									// use API to move back to the beginning
+function mvScrollNext() {
+    if ($(".scrollable .pop-verse-group:visible").next().length != 0)
+        $(".scrollable .pop-verse-group:visible").fadeOut(function(){
+            $(this).next().fadeIn();
+        });
+    else {
+        $(".scrollable .pop-verse-group:visible").fadeOut(function(){
+            $(".scrollable .pop-verse-group:first").fadeIn();
+        });
+    }
+    return false;
 }
 
+function mvScrollPrev() {
+    if ($(".scrollable .pop-verse-group:visible").prev().length != 0)
+        $(".scrollable .pop-verse-group:visible").fadeOut(function(){
+            $(this).prev().fadeIn();
+        });
+    else {
+        $(".scrollable .pop-verse-group:visible").fadeOut(function(){
+            $(".scrollable .pop-verse-group:last").fadeIn();
+        });
+    }
+    return false;
+}
 
 /******************************************************************************
  * Check for completed badges
@@ -478,14 +498,14 @@ function displayAlertMessage(message) {
 /******************************************************************************
  * All DOM attachments that are common to multiple pages should go here
  ******************************************************************************/
-$(document).ready( function() {
-	$('input#verse').focus().autocomplete({ source: Object.values(BIBLEBOOKS.en) });
-});
+// $(document).ready( function() {
+// 	$('input#verse').focus().autocomplete({ source: Object.values(BIBLEBOOKS.en) });
+// });
 
-$(document).ajaxStart( function () {
-    $('.spinner').show();
-});
+// $(document).ajaxStart( function () {
+//     $('.spinner').show();
+// });
 
-$(document).ajaxStop( function () {
-    $('.spinner').hide();
-});
+// $(document).ajaxStop( function () {
+//     $('.spinner').hide();
+// });

@@ -59,7 +59,6 @@ function flexversesearch(text){
  * Remove prior search results anywhere on page
  ******************************************************************************/
 function clearSearchResults () {
-	resetScrollable();
 	$('.scrollable .items').empty();
 	$("#foundVerse").empty();
 	$("#add-verse-button").empty();

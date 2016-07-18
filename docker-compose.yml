@@ -7,6 +7,7 @@
 # OR
 #
 # docker-compose run web bundle exec rake db:setup 
+# docker-compose run web bundle exec rake ts:index
 
 version: '2'
 

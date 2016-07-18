@@ -65,8 +65,19 @@
 		// Get user's translation
 		tl = $('#translation').data('tl'); // Get the users translation
 
-		// initialize scrollable module
-		$(".scrollable").scrollable({ vertical: true, mousewheel: true });
+		// Set up scrollable functionality
+		$(".scrollable .pop-verse-group").each(function(e) {
+	        if (e != 0)
+	            $(this).hide();
+	    });
+	    
+	    $(".next").click(function(){ 
+	    	mvScrollNext();
+	    });
+
+	    $(".prev").click(function(){
+	    	mvScrollPrev();
+	    });
 
 		// Setup jEditable for version changing
 		$('.js_bible-version select').change(function() {

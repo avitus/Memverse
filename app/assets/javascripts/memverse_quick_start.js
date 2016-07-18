@@ -22,13 +22,23 @@ $(document).ready(function() {
 	});
 
 	$(".tl-set").click(function() {
+
 		tl = this.id;
 		$("#choose-translation").hide();
 		$("#choose-time-alloc").show();
 
+		$(".scrollable .pop-verse-group").each(function(e) {
+	        if (e != 0)
+	            $(this).hide();
+	    });
+	    
+	    $(".next").click(function(){ 
+	    	mvScrollNext();
+	    });
 
-		// initialize scrollable without mousewheel support
-		$(".scrollable").scrollable({ vertical: true, mousewheel: true });
+	    $(".prev").click(function(){
+	    	mvScrollPrev();
+	    });
 
 		// Load popular verses in chosen translation
 		$.getJSON("/popverses/index.json", { tl: tl }, function(pop_verses) {
@@ -46,7 +56,6 @@ $(document).ready(function() {
 				$('.pop-verse-group').filter(':last').append($new_pv);
 			});
 
-			resetScrollable(); // reset to start of list
 		});
 
 	});
