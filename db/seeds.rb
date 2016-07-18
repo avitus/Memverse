@@ -358,15 +358,19 @@ end
 # ----------------------------------------------------------------------------------------------------------
 # Create Final Verse data table
 # ----------------------------------------------------------------------------------------------------------
-puts "Adding final verse data (last verse of each chapter of the Bible)"
+puts "Adding final verse data (last verse of each chapter of the Bible) for #{Rails.env} environment"
 config = ActiveRecord::Base.configurations[Rails.env]
 if config['adapter'] == 'mysql2'
+  puts "  Configuration:"
+  puts "    mysql --user=#{config['username']} --password=\"#{config['password']}\" --host=#{config['host']} #{config['database']} < iso_final_verses.sql" 
   system("mysql --user=#{config['username']} --password=\"#{config['password']}\" --host=#{config['host']} #{config['database']} < iso_final_verses.sql")
 elsif config['adapter'] == 'sqlite3'
   system("sqlite3 #{config['database']} < iso_final_verses.sql")
 else
   puts "WARNING: FinalVerse data could not be seeded for #{config['adapter']}. Please see db/seeds.rb."
 end
+
+puts "Created #{FinalVerse.count} entries"
 
 # ----------------------------------------------------------------------------------------------------------
 # Seed some initial verses
