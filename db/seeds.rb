@@ -8,6 +8,8 @@ require 'factory_girl_rails'
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
+puts "====> Seeding #{Rails.env} environment"
+
 # puts 'SETTING UP ADMIN USER'
 user = User.create :name => 'Andy', :email => 'admin@test.com', :password => 'please', :password_confirmation => 'please'
 user.confirm
@@ -16,9 +18,6 @@ user.save
 puts 'Creating admin user: ' << user.name
 
 # TODO: Add popular verses
-
-puts 'Seeding database'
-
 # TODO Add countries
 
 puts "Seeding states"
