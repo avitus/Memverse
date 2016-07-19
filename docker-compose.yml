@@ -56,6 +56,7 @@ services:
     build: .
     environment:
       - RAILS_ENV=development
+      - RACK_ENV=development
       - DOCKERIZED=true
     env_file: 
       - .env

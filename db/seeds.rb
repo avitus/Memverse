@@ -360,6 +360,7 @@ end
 # ----------------------------------------------------------------------------------------------------------
 puts "Adding final verse data (last verse of each chapter of the Bible) for #{Rails.env} environment"
 config = ActiveRecord::Base.configurations[Rails.env]
+puts config
 if config['adapter'] == 'mysql2'
   puts "  Configuration:"
   puts "    mysql --user=#{config['username']} --password=\"#{config['password']}\" --host=#{config['host']} #{config['database']} < iso_final_verses.sql" 

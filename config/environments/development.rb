@@ -39,13 +39,8 @@ MemverseApp::Application.configure do
     config.web_console.whitelisted_ips = ENV['DOCKER_HOST_IP']
   end
 
-
   # Expands the lines which load the assets
   config.assets.debug = true
-
-  # Add jQuery tools to precompiled assets
-  # jQuery Tools is temperamental and seems to like being loaded after jQuery itself but before the rest of the JS manifest in application.js
-  config.assets.precompile += %w( jquery.tools.min.js )
 
   # Configure Paperclip to access ImageMagick - this is the path returned by 'which convert'
   Paperclip.options[:command_path] = "/usr/local/bin/"
