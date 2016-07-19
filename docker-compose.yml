@@ -8,6 +8,8 @@
 #
 # docker-compose run web bundle exec rake db:setup 
 # docker-compose run web bundle exec rake ts:index
+#
+# Generate list of popular verses: /utils/update_popular_verses
 
 version: '2'
 
