@@ -44,6 +44,7 @@ RUN apk update && \
     apk --update add $RUBY_PACKAGES && \ 
     rm -rf /var/cache/apk/*     
 
+ENV RAILS_ENV development
 ENV APP_HOME /usr/app
 RUN mkdir -p $APP_HOME
 WORKDIR $APP_HOME
@@ -62,4 +63,4 @@ EXPOSE 3000
 # The main command to run when the container starts. Also 
 # tell the Rails dev server to bind to all interfaces by 
 # default.
-CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0"]
+CMD ["bundle", "exec", "rails", "server", "-e", "development", "-b", "0.0.0.0"]

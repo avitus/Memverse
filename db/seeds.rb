@@ -9,6 +9,9 @@ require 'factory_girl_rails'
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 puts "====> Seeding #{Rails.env} environment"
+puts "============================================================"
+puts ActiveRecord::Base.configurations
+puts "============================================================"
 
 # puts 'SETTING UP ADMIN USER'
 user = User.create :name => 'Andy', :email => 'admin@test.com', :password => 'please', :password_confirmation => 'please'
@@ -359,7 +362,6 @@ end
 # ----------------------------------------------------------------------------------------------------------
 puts "Adding final verse data (last verse of each chapter of the Bible) for #{Rails.env} environment"
 config = ActiveRecord::Base.configurations[Rails.env]
-puts config
 if config['adapter'] == 'mysql2'
   puts "  Configuration:"
   puts "    mysql --user=#{config['username']} --password=\"#{config['password']}\" --host=#{config['host']} #{config['database']} < iso_final_verses.sql" 
@@ -411,7 +413,7 @@ module Thredded
       [Thredded::PrivatePost, :commit, :after, :notify_users],
     ].freeze
 
-    def self.run(users: 200, topics: 55, posts: (1..60))
+    def self.run(users: 10, topics: 15, posts: (1..25))
       STDERR.puts 'Seeding the forum'
       # Disable callbacks to avoid creating notifications and performing unnecessary updates
       SKIP_CALLBACKS.each { |(klass, *args)| klass.skip_callback(*args) }
@@ -490,7 +492,7 @@ module Thredded
       )
     end
 
-    def create_posts(count: (1..30))
+    def create_posts(count: (1..25))
       log "Creating #{count} additional posts in each topic..."
       @posts = topics.flat_map do |topic|
         (count.min + rand(count.max + 1)).times do
@@ -499,7 +501,7 @@ module Thredded
       end
     end
 
-    def create_private_posts(count: (1..30))
+    def create_private_posts(count: (1..15))
       log "Creating #{count} additional posts in each private topic..."
       @private_posts = private_topics.flat_map do |topic|
         (count.min + rand(count.max + 1)).times do

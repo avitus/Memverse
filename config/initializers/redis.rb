@@ -1,4 +1,4 @@
-if Rails.env = 'production'
+if Rails.env.production?
 
 	# In production Redis is on localhost listening on port 6379
 	$redis = Redis.new(:host => 'localhost', :port => 6379)

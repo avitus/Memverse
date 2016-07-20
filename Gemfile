@@ -13,6 +13,7 @@ group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'byebug'
+  gem 'spring'
   gem 'brakeman', :require => false                             # Scan for security vulnerabilities
 end
 
@@ -55,12 +56,7 @@ gem 'redis', '~> 3.2'                                                          #
 ############################################################
 
 # Use Node.js as the Javascript Runtime
-# No need to install these gems any more.
-
-# if HOST_OS =~ /linux/i
-#   gem 'libv8', '= 3.11.8.17', platforms: :ruby                                # Later versions have no binary support for x86
-#   gem 'therubyracer', '= 0.11.4'                                              # TODO: Can roll to 0.12 once binary support for libv8 3.16
-# end
+# No need to install libv8 or rubyracer gems any more.
 
 ############################################################
 # Frameworks
