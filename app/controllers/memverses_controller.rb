@@ -337,8 +337,8 @@ class MemversesController < ApplicationController
     # ==== Displaying multiple verses ====
     elsif (!mv_ids.blank?) and (params[:Show])
 
-      @mv_list = Memverse.find(mv_ids, :include => :verse)
-      @mv_list.sort! # Sort by book. TODO: Pass paramaters from manage_verses and sort by that order...
+      @mv_list = Memverse.includes(:verse).find(mv_ids)
+      @mv_list.sort! # Sort by book. TODO: Pass parameters from manage_verses and sort by that order...
 
       add_breadcrumb I18n.t("home_menu.My Verses"), :manage_verses_path
       add_breadcrumb I18n.t("page_titles.view_vs_s"), "/memverses/show"

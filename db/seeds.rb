@@ -238,7 +238,7 @@ Role.where(name: "moderator" ).first.users << admin_user
 # Create Blog and First Post
 # ----------------------------------------------------------------------------------------------------------
 puts 'Creating blog'
-blog = Bloggity::Blog.new(id: 9, title: "Memverse Blog")
+blog = Bloggity::Blog.new(id: 9, title: "Memverse Blog", url_identifier: "main")
 blog.save unless Bloggity::Blog.exists?(9)
 puts '   - first post'
 post = Bloggity::BlogPost.new(title: "Welcome to Memverse", 
