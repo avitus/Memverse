@@ -37,7 +37,7 @@ module BloggityUser
   # @param blog_id [Fixnum, nil]
   # @return [Boolean]
   def can_comment?(blog_id = nil)
-  	self.completed_sessions >= 2 # We need this to control the spammers
+  	self.completed_sessions >= 2 or self.admin? # We need this to control the spammers
   end
 
   # Can user create, edit and destroy blogs?
