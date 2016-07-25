@@ -182,7 +182,7 @@ class QuizQuestionsController < ApplicationController
     end
 
     respond_to do |format|
-      if @quiz_question.update_attributes(params[:quiz_question])
+      if @quiz_question.update_attributes( quiz_question_params )
         flash[:notice] = 'Quiz question was successfully updated.'
         format.html { redirect_to quiz_question_path(@quiz_question) }
         format.json { head :no_content }
