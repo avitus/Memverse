@@ -1,12 +1,4 @@
 GIT
-  remote: git://github.com/avitus/bloggity.git
-  revision: dcb92abc890685abfe24cb4622e443826eb48d89
-  specs:
-    bloggity (0.0.6)
-      jquery-rails
-      rails (>= 3.2.8)
-
-GIT
   remote: git://github.com/galetahub/ckeditor.git
   revision: 93c1b19ddb745c5bcad3a239438c229fab0b6e57
   specs:
@@ -60,6 +52,13 @@ GIT
   revision: a606378912e75d6b62f8257ffa5b4c5f2023760b
   specs:
     cancan (1.6.10)
+
+PATH
+  remote: ../bloggity
+  specs:
+    bloggity (0.0.9)
+      jquery-rails
+      rails (>= 3.2.8)
 
 GEM
   remote: http://rubygems.org/
