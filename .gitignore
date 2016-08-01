@@ -20,6 +20,8 @@ vendor/cache/ruby/
 
 # minimal Rails specific artifacts
 db/*.sqlite3
+db/memverse_development
+db/memverse_test
 /log/*
 pubnub.log
 tmp/*
@@ -46,6 +48,8 @@ doc/*
 /db/*.javadb/
 /db/*.sqlite3-journal
 /db/sphinx/
+/db/memverse_development
+/db/memverse_test
 /doc/api/
 /doc/app/
 /doc/features.html
