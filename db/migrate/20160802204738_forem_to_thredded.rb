@@ -116,17 +116,21 @@ class ForemToThredded < ActiveRecord::Migration
     say 'Copying Posts...'
     posts = forem_data[:posts].inject({}) { |h, p|
       topic = topics[p['topic_id']]
-      h.update(
-          p['id'] => Thredded::Post.create!(
-              user_id:          p['user_id'],
-              messageboard_id:  topic.messageboard_id,
-              postable_id:      topic.id,
-              created_at:       p['created_at'],
-              updated_at:       p['updated_at'],
-              content:          p['text'],
-              moderation_state: thredded_moderation_state(p['state'])
-          )
-      )
+      if topic
+	      h.update(
+	          p['id'] => Thredded::Post.create!(
+	              user_id:          p['user_id'],
+	              messageboard_id:  topic.messageboard_id,
+	              postable_id:      topic.id,
+	              created_at:       p['created_at'],
+	              updated_at:       p['updated_at'],
+	              content:          p['text'],
+	              moderation_state: thredded_moderation_state(p['state'])
+	          )
+	      )
+  	  else
+  	  	say "  - Error: Topic with ID #{p['topic_id']} is nil."
+  	  end
     }
     say "Created #{posts.size} Posts"
 
