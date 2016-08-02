@@ -146,7 +146,7 @@ gem 'fancybox2-rails'                                                          #
 gem 'kaminari'                                                                 # Required for bloggity
 gem 'rinku', require: 'rails_rinku'                                            # Supports auto-linking of URL's in blog comments
 gem 'randumb'                                                                  # Retrieve a random record
-gem 'prawn', git: "git://github.com/sandal/prawn", submodules: true            # PDF support
+gem 'prawn'                                                                    # PDF support
 gem "prawnto_2", require: "prawnto"                                            # Integrating prawn into Rails
 gem 'acts-as-taggable-on'                                                      # :source => "http://gemcutter.org", Taggable gem,
 gem 'nokogiri', '>=1.5.0'                                                      # HTML/XML parsing
