@@ -255,6 +255,7 @@ MemverseApp::Application.routes.draw do
   get '/starter_pack'               => 'memverses#home'     # Retired in 2012
   get '/memverses/starter_pack'     => 'memverses#home'     # Visit from search bot causing errors
   get '/chat/channel1'              => 'live_quiz#channel1' # Old chat route
+  get '/forums/:messageboard/topics/:topic' => redirect('/forum/%{messageboard}/%{topic}')
 
   # Install the default routes as the lowest priority.
   match '/:controller(/:action(/:id))', :via => [:get, :post]

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160714181726) do
+ActiveRecord::Schema.define(version: 20160802204738) do
 
   create_table "american_states", force: :cascade do |t|
     t.string  "abbrev",      limit: 20,  default: "", null: false
@@ -952,7 +952,7 @@ ActiveRecord::Schema.define(version: 20160714181726) do
     t.boolean  "admin",                                 default: false
     t.integer  "group_id",                  limit: 4
     t.datetime "reset_password_sent_at"
-    t.boolean  "forem_admin",                           default: false
+    t.boolean  "thredded_admin",                        default: false
     t.string   "forem_state",               limit: 255, default: "pending_review"
     t.boolean  "forem_auto_subscribe",                  default: false
     t.string   "unconfirmed_email",         limit: 255

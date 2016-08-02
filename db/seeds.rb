@@ -413,7 +413,7 @@ module Thredded
       [Thredded::PrivatePost, :commit, :after, :notify_users],
     ].freeze
 
-    def self.run(users: 10, topics: 15, posts: (1..25))
+    def self.run(users: 50, topics: 15, posts: (1..25))
       STDERR.puts 'Seeding the forum'
       # Disable callbacks to avoid creating notifications and performing unnecessary updates
       SKIP_CALLBACKS.each { |(klass, *args)| klass.skip_callback(*args) }
