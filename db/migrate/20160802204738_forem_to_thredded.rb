@@ -1,6 +1,10 @@
 # Copy Forem data to Thredded
 class ForemToThredded < ActiveRecord::Migration
+
   def up
+
+    change_column(:friendly_id_slugs, :created_at, :datetime, :null => true)
+
     skip_callbacks = [
         [Thredded::Post, :create, :after, :update_parent_last_user_and_timestamp],
         [Thredded::PrivatePost, :create, :after, :update_parent_last_user_and_timestamp],
@@ -26,6 +30,9 @@ class ForemToThredded < ActiveRecord::Migration
   end
 
   def down
+	
+	change_column(:friendly_id_slugs, :created_at, :datetime, :null => false)
+
     rename_column Thredded.user_class.table_name, :thredded_admin, :forem_admin
     [Thredded::Messageboard, Thredded::MessageboardGroup, Thredded::Topic, Thredded::Post,
      Thredded::UserTopicFollow, Thredded::UserDetail].each do |klass|
@@ -105,6 +112,7 @@ class ForemToThredded < ActiveRecord::Migration
       )
     }
     say "Created #{topics.size} Topics"
+
     say 'Copying Posts...'
     posts = forem_data[:posts].inject({}) { |h, p|
       topic = topics[p['topic_id']]
