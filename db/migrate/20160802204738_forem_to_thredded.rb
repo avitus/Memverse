@@ -114,11 +114,16 @@ class ForemToThredded < ActiveRecord::Migration
     say "Created #{topics.size} Topics"
 
     say 'Copying Posts...'
+    post_count = 0
     posts = forem_data[:posts].inject({}) { |h, p|
       topic = topics[p['topic_id']]
       if topic
       	  if h
-		      h.update(
+            post_count = post_count + 1
+            if post_count % 1000 == 0
+              say "#{post_count} posts have been copied to Thredded format"
+            end
+		        h.update(
 		          p['id'] => Thredded::Post.create!(
 		              user_id:          p['user_id'],
 		              messageboard_id:  topic.messageboard_id,
@@ -127,7 +132,7 @@ class ForemToThredded < ActiveRecord::Migration
 		              updated_at:       p['updated_at'],
 		              content:          p['text'],
 		              moderation_state: thredded_moderation_state(p['state'])
-		          )
+		        )
 		      ) 
 		  else
 		  	say "  - Error: Encountered a nil h topic"
