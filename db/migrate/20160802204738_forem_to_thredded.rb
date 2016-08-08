@@ -44,6 +44,10 @@ class ForemToThredded < ActiveRecord::Migration
   private
 
   def copy_data
+
+    #-----------------------------------------------------------------------------
+    # Setup migrations
+    #-----------------------------------------------------------------------------
     forem_data = %i(
         groups memberships moderator_groups
         posts subscriptions topics views
@@ -55,6 +59,9 @@ class ForemToThredded < ActiveRecord::Migration
     }
     now = Time.zone.now
 
+    #-----------------------------------------------------------------------------
+    # Migrate user details
+    #-----------------------------------------------------------------------------
     say 'Creating UserDetails...'
     moderation_states = Hash[Thredded.user_class.pluck(:id, :forem_state)]
     user_details = forem_data[:posts].group_by { |p| p['user_id'] }.map do |user_id, user_posts|
@@ -67,6 +74,9 @@ class ForemToThredded < ActiveRecord::Migration
     end
     say "Created #{user_details.length} UserDetails"
 
+    #-----------------------------------------------------------------------------
+    # Migrate categories
+    #-----------------------------------------------------------------------------
     say 'Copying Forem Categories to Messageboard Groups'
     messageboard_groups = forem_data[:categories].inject({}) { |h, c|
       h.update(
@@ -77,6 +87,10 @@ class ForemToThredded < ActiveRecord::Migration
           )
       )
     }
+
+    #-----------------------------------------------------------------------------
+    # Migrate message boards
+    #-----------------------------------------------------------------------------
     say 'Copying Messageboards...'
     boards = forem_data[:forums].inject({}) { |h, f|
       h.update(
@@ -92,6 +106,9 @@ class ForemToThredded < ActiveRecord::Migration
     }
     say "Created #{boards.size} Messageboards"
 
+    #-----------------------------------------------------------------------------
+    # Migrate topics
+    #-----------------------------------------------------------------------------
     say 'Copying Topics...'
     forem_posts_by_topic = forem_data[:posts].group_by { |p| p['topic_id'] }
     topics = forem_data[:topics].inject({}) { |h, t|
@@ -113,18 +130,15 @@ class ForemToThredded < ActiveRecord::Migration
     }
     say "Created #{topics.size} Topics"
 
+    #-----------------------------------------------------------------------------
+    # Migrate posts
+    #-----------------------------------------------------------------------------
     say 'Copying Posts...'
     post_count = 0
-    posts = forem_data[:posts].inject({}) { |h, p|
+    forem_data[:posts].each do |p|
       topic = topics[p['topic_id']]
-      if topic
-      	  if h
-            post_count = post_count + 1
-            if post_count % 1000 == 0
-              say "#{post_count} posts have been copied to Thredded format"
-            end
-		        h.update(
-		          p['id'] => Thredded::Post.create!(
+      next unless topic
+      Thredded::Post.create!(
 		              user_id:          p['user_id'],
 		              messageboard_id:  topic.messageboard_id,
 		              postable_id:      topic.id,
@@ -132,17 +146,17 @@ class ForemToThredded < ActiveRecord::Migration
 		              updated_at:       p['updated_at'],
 		              content:          p['text'],
 		              moderation_state: thredded_moderation_state(p['state'])
-		        )
-		      ) 
-		  else
-		  	say "  - Error: Encountered a nil h topic"
-		  end
-  	  else
-  	  	say "  - Error: Topic with ID #{p['topic_id']} is nil."
-  	  end
-    }
-    say "Created #{posts.size} Posts"
+		            )
+      post_count = post_count + 1
+      if post_count % 1000 == 0
+        say "#{post_count} posts have been copied to Thredded format"
+      end
+    end
+    say "Created #{post_count} Posts"
 
+    #-----------------------------------------------------------------------------
+    # Migrate subscriptions
+    #-----------------------------------------------------------------------------
     say 'Creating Forem Subscriptions to UserTopicFollows...'
     subs_count = 0
     forem_data[:subscriptions].each do |sub|
@@ -158,6 +172,9 @@ class ForemToThredded < ActiveRecord::Migration
     end
     say "Created #{subs_count} UserTopicFollows..."
 
+    #-----------------------------------------------------------------------------
+    # Update counters
+    #-----------------------------------------------------------------------------
     say 'Updating counters'
     boards.each { |_k, v| Thredded::Messageboard.reset_counters(v.id, :topics, :posts) }
     topics.each { |_k, v| Thredded::Topic.reset_counters(v.id, :posts) }
@@ -175,4 +192,5 @@ class ForemToThredded < ActiveRecord::Migration
   def thredded_moderation_state(forem_moderation_state)
     THREDDED_MODERATION_STATES[forem_moderation_state] || :pending_moderation
   end
+
 end
