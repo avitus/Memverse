@@ -17,9 +17,9 @@ class ForemToThredded < ActiveRecord::Migration
       # Disable callbacks to avoid creating notifications and performing unnecessary updates
       skip_callbacks.each { |(klass, *args)| klass.skip_callback(*args) }
       ActiveRecord::Base.no_touching do
-        transaction do
+        # transaction do
           copy_data
-        end
+        # end
       end
     ensure
       # Re-enable timestamp handling
@@ -31,7 +31,7 @@ class ForemToThredded < ActiveRecord::Migration
 
   def down
 	
-	change_column(:friendly_id_slugs, :created_at, :datetime, :null => false)
+	  change_column(:friendly_id_slugs, :created_at, :datetime, :null => false)
 
     rename_column Thredded.user_class.table_name, :thredded_admin, :forem_admin
     [Thredded::Messageboard, Thredded::MessageboardGroup, Thredded::Topic, Thredded::Post,
