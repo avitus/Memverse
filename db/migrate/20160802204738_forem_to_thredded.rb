@@ -46,6 +46,15 @@ class ForemToThredded < ActiveRecord::Migration
   def copy_data
 
     #-----------------------------------------------------------------------------
+    # Start with a blank slate
+    #-----------------------------------------------------------------------------
+    [Thredded::Messageboard, Thredded::MessageboardGroup, Thredded::Topic, Thredded::Post,
+     Thredded::UserTopicFollow, Thredded::UserDetail].each do |klass|
+      say "Deleting #{klass.name}..."
+      klass.delete_all
+    end
+
+    #-----------------------------------------------------------------------------
     # Setup migrations
     #-----------------------------------------------------------------------------
     forem_data = %i(
