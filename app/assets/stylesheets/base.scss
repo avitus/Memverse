@@ -1941,10 +1941,6 @@ div#gsfn_list_widget div#gsfn_content p.gsfn_summary { margin-top:2px }
 
 /* === Global Styles === */
 
-.inline-footnote {
-	font-size:smaller;
-}
-
 .action-link {
 	font-style:italic;
 	color:#577a1a; /* green */
@@ -1961,10 +1957,6 @@ div#gsfn_list_widget div#gsfn_content p.gsfn_summary { margin-top:2px }
 	font-size:70%;
 }
 
-.footnote {
-	font-size:78%;
-	margin-top:1em;
-}
 
 .text-highlight {
 	color:#577a1a;
@@ -2380,16 +2372,6 @@ div#currentVerse #matchbox .correct {
 	width:93%;
 }
 
-/* === Main Chat Channel ==*/
-div#chat-stream {
-	height:600px;
-	width:1260px;
-	margin:0 auto;
-	overflow:auto;
-	list-style:none;
-}
-
-
 /* === Tweets === */
 div.tweet {
 	padding:0.2em 0
@@ -2437,9 +2419,6 @@ div#errorExplanation p {
   padding:5px;
 }
 
-/* div#errorExplanation ul {
-
-} */
 
 div#errorExplanation ul li {
   font-size:12px;
