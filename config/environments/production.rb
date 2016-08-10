@@ -21,21 +21,18 @@ MemverseApp::Application.configure do
 
   # Don't fallback to assets pipeline if a precompiled asset is missed
   # http://stackoverflow.com/questions/8821864/config-assets-compile-true-in-rails-production-why-not
-  config.assets.compile = false # This should be false but seems to be a problem with Rails Admin ... try again with Rails 3.1.3
+  config.assets.compile         = false
 
   # Precompile additional assets (application.js, application.css, and all non-JS/CSS are already added)
-  # config.assets.precompile += %w( search.js )
-  # config.assets.precompile += %w(rails_admin/rails_admin.js rails_admin/rails_admin.css) # This is a temporary workaround until Rails 3.1.1 Should be able to remove
-
   # http://stackoverflow.com/questions/14194752/rails-4-asset-pipeline-vendor-assets-images-are-not-being-precompiled
-  config.assets.precompile += %w(*.png *.jpg *.jpeg *.gif)  # Need to support compilation of fancybox images ... shouldn't be necessary
+  config.assets.precompile     += %w(*.png *.jpg *.jpeg *.gif)  # Need to support compilation of fancybox images ... shouldn't be necessary
 
   # Ensure that Ckeditor assets are precompiled
-  config.assets.precompile += Ckeditor.assets
-  config.assets.precompile += %w(ckeditor/*)
+  config.assets.precompile     += Ckeditor.assets
+  config.assets.precompile     += %w(ckeditor/*)
 
   # Defaults to Rails.root.join("public/assets")
-  # config.assets.manifest = YOUR_PATH
+  # config.assets.manifest      = YOUR_PATH
 
   #===============================
   # Content Delivery Network

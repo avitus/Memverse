@@ -7,6 +7,8 @@
  * @version 1.0
  *
  * http://www.justgage.com
+ *
+ * Memverse note: used for gauges on accuracy and reference test pages
  */
 
 JustGage = function(config) { 
