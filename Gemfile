@@ -62,7 +62,8 @@ gem 'redis', '~> 3.2'                                                          #
 # Frameworks
 ############################################################
 gem 'rails', '4.2.6'                                                            # Last stable version was 4.0.9
-gem 'jquery-rails', '>= 2.0.0'
+gem 'jquery-rails'
+gem 'jquery-ui-rails'
 
 ############################################################
 # Rails Support Gems

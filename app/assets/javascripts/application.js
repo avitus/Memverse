@@ -4,8 +4,10 @@
 // It's not advisable to add code directly here, but if you do, it'll appear at the bottom of the
 // the compiled file.
 //
-//= require thredded
+//= require jquery
+//= require jquery-ui
 //= require jquery_ujs
+//= require thredded
 //= require fancybox
 //= require i18n
 //= require i18n/translations

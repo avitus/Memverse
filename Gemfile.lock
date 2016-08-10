@@ -790,7 +790,8 @@ DEPENDENCIES
   ice_cube
   jasmine
   jasmine-rails
-  jquery-rails (>= 2.0.0)
+  jquery-rails
+  jquery-ui-rails
   json
   kaminari
   launchy (>= 2.0.5)
