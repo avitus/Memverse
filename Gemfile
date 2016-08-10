@@ -41,10 +41,6 @@ group :development, :test do
   gem 'faker'                                                   # Generates fake test data
 end
 
-group :production do
-  gem 'yui-compressor'
-end
-
 ############################################################
 # Database
 ############################################################
@@ -71,7 +67,7 @@ gem 'jquery-ui-rails'
 gem 'sass-rails'
 gem 'compass-rails'                                                             # Now has Rails 4 support
 gem 'coffee-rails'
-gem 'uglifier'
+gem 'uglifier'                                                                  # JS compression
 
 ############################################################
 # For Rails 4 Upgrade ... should be removed eventually
@@ -165,7 +161,6 @@ gem 'backup'                                                                   #
 gem 'dropbox-sdk'                                                              # Used with backup above
 gem 'sinatra', require: false                                                  # sinatra and slim are required for sidekiq
 gem 'slim'
-# gem 'net-ssh', '2.7.0'                                                         # Used by capistrano among other gems. 2.8.0 had significant bug.
 gem 'rack-utf8_sanitizer'                                                      # Used to fix EasouSpider invalid UTF-8 byte sequences
 gem 'responders', '~> 2.0'                                                     # Support for respond_to and respond_with in Rails 4.2
 
