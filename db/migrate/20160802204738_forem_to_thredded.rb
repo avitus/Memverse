@@ -48,11 +48,11 @@ class ForemToThredded < ActiveRecord::Migration
     #-----------------------------------------------------------------------------
     # Start with a blank slate
     #-----------------------------------------------------------------------------
-    # [Thredded::Messageboard, Thredded::MessageboardGroup, Thredded::Topic, Thredded::Post,
-    #  Thredded::UserTopicFollow, Thredded::UserDetail].each do |klass|
-    #   say "Deleting #{klass.name}..."
-    #   klass.delete_all
-    # end
+    [Thredded::Messageboard, Thredded::MessageboardGroup, Thredded::Topic, Thredded::Post,
+     Thredded::UserTopicFollow, Thredded::UserDetail].each do |klass|
+      say "Deleting #{klass.name}..."
+      klass.delete_all
+    end
 
     #-----------------------------------------------------------------------------
     # Setup migrations
@@ -71,123 +71,123 @@ class ForemToThredded < ActiveRecord::Migration
     #-----------------------------------------------------------------------------
     # Migrate user details
     #-----------------------------------------------------------------------------
-    # say 'Creating UserDetails...'
-    # moderation_states = Hash[Thredded.user_class.pluck(:id, :forem_state)]
-    # user_details = forem_data[:posts].group_by { |p| p['user_id'] }.map do |user_id, user_posts|
-    #   Thredded::UserDetail.create!(
-    #       user_id:            user_id,
-    #       latest_activity_at: user_posts.max_by { |p| p['created_at'] }['created_at'],
-    #       created_at:         now,
-    #       updated_at:         now,
-    #       moderation_state:   thredded_moderation_state(moderation_states[user_id]))
-    # end
-    # say "Created #{user_details.length} UserDetails"
+    say 'Creating UserDetails...'
+    moderation_states = Hash[Thredded.user_class.pluck(:id, :forem_state)]
+    user_details = forem_data[:posts].group_by { |p| p['user_id'] }.map do |user_id, user_posts|
+      Thredded::UserDetail.create!(
+          user_id:            user_id,
+          latest_activity_at: user_posts.max_by { |p| p['created_at'] }['created_at'],
+          created_at:         now,
+          updated_at:         now,
+          moderation_state:   thredded_moderation_state(moderation_states[user_id]))
+    end
+    say "Created #{user_details.length} UserDetails"
 
     #-----------------------------------------------------------------------------
     # Migrate categories
     #-----------------------------------------------------------------------------
-    # say 'Copying Forem Categories to Messageboard Groups'
-    # messageboard_groups = forem_data[:categories].inject({}) { |h, c|
-    #   h.update(
-    #       c['id'] => Thredded::MessageboardGroup.create!(
-    #           name: c['name'],
-    #           created_at: now,
-    #           updated_at: now
-    #       )
-    #   )
-    # }
+    say 'Copying Forem Categories to Messageboard Groups'
+    messageboard_groups = forem_data[:categories].inject({}) { |h, c|
+      h.update(
+          c['id'] => Thredded::MessageboardGroup.create!(
+              name: c['name'],
+              created_at: now,
+              updated_at: now
+          )
+      )
+    }
 
     #-----------------------------------------------------------------------------
     # Migrate message boards
     #-----------------------------------------------------------------------------
-    # say 'Copying Messageboards...'
-    # boards = forem_data[:forums].inject({}) { |h, f|
-    #   h.update(
-    #       f['id'] => Thredded::Messageboard.create!(
-    #           name:        f['name'],
-    #           description: f['description'],
-    #           slug:        f['slug'],
-    #           messageboard_group_id: messageboard_groups[f['category_id']].try(:id),
-    #           created_at:  now,
-    #           updated_at:  now
-    #       )
-    #   )
-    # }
-    # say "Created #{boards.size} Messageboards"
+    say 'Copying Messageboards...'
+    boards = forem_data[:forums].inject({}) { |h, f|
+      h.update(
+          f['id'] => Thredded::Messageboard.create!(
+              name:        f['name'],
+              description: f['description'],
+              slug:        f['slug'],
+              messageboard_group_id: messageboard_groups[f['category_id']].try(:id),
+              created_at:  now,
+              updated_at:  now
+          )
+      )
+    }
+    say "Created #{boards.size} Messageboards"
 
     #-----------------------------------------------------------------------------
     # Migrate topics
     #-----------------------------------------------------------------------------
-    # say 'Copying Topics...'
-    # forem_posts_by_topic = forem_data[:posts].group_by { |p| p['topic_id'] }
-    # topics = forem_data[:topics].inject({}) { |h, t|
-    #   last_post = forem_posts_by_topic[t['id']].max_by { |p| p['created_at'] }
-    #   h.update(
-    #       t['id'] => Thredded::Topic.create!(
-    #           messageboard_id:  boards[t['forum_id']].id,
-    #           user_id:          t['user_id'],
-    #           title:            t['subject'],
-    #           slug:             t['slug'],
-    #           sticky:           t['pinned'],
-    #           locked:           t['locked'],
-    #           created_at:       t['created_at'],
-    #           updated_at:       last_post['created_at'],
-    #           last_user_id:     last_post['user_id'],
-    #           moderation_state: thredded_moderation_state(t['state'])
-    #       )
-    #   )
-    # }
-    # say "Created #{topics.size} Topics"
+    say 'Copying Topics...'
+    forem_posts_by_topic = forem_data[:posts].group_by { |p| p['topic_id'] }
+    topics = forem_data[:topics].inject({}) { |h, t|
+      last_post = forem_posts_by_topic[t['id']].max_by { |p| p['created_at'] }
+      h.update(
+          t['id'] => Thredded::Topic.create!(
+              messageboard_id:  boards[t['forum_id']].id,
+              user_id:          t['user_id'],
+              title:            t['subject'],
+              slug:             t['slug'],
+              sticky:           t['pinned'],
+              locked:           t['locked'],
+              created_at:       t['created_at'],
+              updated_at:       last_post['created_at'],
+              last_user_id:     last_post['user_id'],
+              moderation_state: thredded_moderation_state(t['state'])
+          )
+      )
+    }
+    say "Created #{topics.size} Topics"
 
     #-----------------------------------------------------------------------------
     # Migrate posts
     #-----------------------------------------------------------------------------
-    # say 'Copying Posts...'
-    # post_count = 0
-    # forem_data[:posts].each do |p|
-    #   topic = topics[p['topic_id']]
-    #   next unless topic
-    #   Thredded::Post.create!(
-		  #             user_id:          p['user_id'],
-		  #             messageboard_id:  topic.messageboard_id,
-		  #             postable_id:      topic.id,
-		  #             created_at:       p['created_at'],
-		  #             updated_at:       p['updated_at'],
-		  #             content:          p['text'],
-		  #             moderation_state: thredded_moderation_state(p['state'])
-		  #           )
-    #   post_count = post_count + 1
-    #   if post_count % 1000 == 0
-    #     say "#{post_count} posts have been copied to Thredded format"
-    #   end
-    # end
-    # say "Created #{post_count} Posts"
+    say 'Copying Posts...'
+    post_count = 0
+    forem_data[:posts].each do |p|
+      topic = topics[p['topic_id']]
+      next unless topic
+      Thredded::Post.create!(
+		              user_id:          p['user_id'],
+		              messageboard_id:  topic.messageboard_id,
+		              postable_id:      topic.id,
+		              created_at:       p['created_at'],
+		              updated_at:       p['updated_at'],
+		              content:          p['text'],
+		              moderation_state: thredded_moderation_state(p['state'])
+		            )
+      post_count = post_count + 1
+      if post_count % 1000 == 0
+        say "#{post_count} posts have been copied to Thredded format"
+      end
+    end
+    say "Created #{post_count} Posts"
 
     #-----------------------------------------------------------------------------
     # Migrate subscriptions
     #-----------------------------------------------------------------------------
-    # say 'Creating Forem Subscriptions to UserTopicFollows...'
-    # subs_count = 0
-    # forem_data[:subscriptions].each do |sub|
-    #   topic = topics[sub['topic_id']]
-    #   next unless topic
-    #   Thredded::UserTopicFollow.create!(
-    #       user_id:  sub['subscriber_id'],
-    #       topic_id: topic.id,
-    #       reason: :manual,
-    #       created_at: now
-    #   )
-    #   subs_count += 1
-    # end
-    # say "Created #{subs_count} UserTopicFollows..."
+    say 'Creating Forem Subscriptions to UserTopicFollows...'
+    subs_count = 0
+    forem_data[:subscriptions].each do |sub|
+      topic = topics[sub['topic_id']]
+      next unless topic
+      Thredded::UserTopicFollow.create!(
+          user_id:  sub['subscriber_id'],
+          topic_id: topic.id,
+          reason: :manual,
+          created_at: now
+      )
+      subs_count += 1
+    end
+    say "Created #{subs_count} UserTopicFollows..."
 
     #-----------------------------------------------------------------------------
     # Update counters
     #-----------------------------------------------------------------------------
-    # say 'Updating counters'
-    # boards.each { |_k, v| Thredded::Messageboard.reset_counters(v.id, :topics, :posts) }
-    # topics.each { |_k, v| Thredded::Topic.reset_counters(v.id, :posts) }
-    # user_details.each { |v| Thredded::UserDetail.reset_counters(v.id, :topics, :posts) }
+    say 'Updating counters'
+    boards.each { |_k, v| Thredded::Messageboard.reset_counters(v.id, :topics, :posts) }
+    topics.each { |_k, v| Thredded::Topic.reset_counters(v.id, :posts) }
+    user_details.each { |v| Thredded::UserDetail.reset_counters(v.id, :topics, :posts) }
 
     rename_column Thredded.user_class.table_name, :forem_admin, :thredded_admin
   end
