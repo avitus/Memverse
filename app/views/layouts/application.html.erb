@@ -107,9 +107,9 @@
 </head>
 
 <% if user_signed_in? %>
-<body id="inner1-body">
+<body id="inner1-body" class="<%= controller_name %> <%= action_name %>" >
 <% else %>
-<body>
+<body class="<%= controller_name %> <%= action_name %>">
 <% end %>
 
 <noscript><div id="no-js"><p>Memverse requires Javascript, but you&rsquo;ve got Javascript disabled. <a href="http://www.google.com/search?btnI=1&amp;q=how+to+enable+javascript+in+my+browser">Fix that problem!</a></p></div></noscript>
