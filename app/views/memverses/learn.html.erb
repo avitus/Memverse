@@ -68,8 +68,22 @@
     $(document).ready(function() {
 
         //------- Initial setup -----------------------
-        // initialize scrollable module
-        $(".scrollable").scrollable({ vertical: true, mousewheel: true });
+
+        // Scroll functionality
+        $(".scrollable").each( function(e) {
+            if (e != 0)
+                $(this).hide();
+        });
+        
+        $(".next").click(function(){ 
+            mvScrollNext();
+        });
+
+        $(".prev").click(function(){
+            mvScrollPrev();
+        });
+
+
         $(".flex-verse-search").focus();
 
         //------- Searching for a verse----------------
