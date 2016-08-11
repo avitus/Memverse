@@ -153,7 +153,7 @@ function displayMvSearchResultsFn( verses ) {
         // We need to group search results to enable scroll
         if (i % 7 == 0) {
             // Start new group
-            var $new_vs_group = $('<div/>').addClass('search-result-group');
+            var $new_vs_group = $('<div/>').addClass('search-result-group pop-verse-group');
             $('.items').append($new_vs_group);
         }
 
