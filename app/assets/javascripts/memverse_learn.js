@@ -141,8 +141,6 @@ function displayMvSearchResultsFn( verses ) {
 
     if (!verses) return;  // nothing to display
 
-    resetScrollable();
-
     $(".mv-search-results-compact #actions a, .mv-search-results-compact div.scrollable, .mv-search-results-compact").show();
 
     // wrap single verse in array
