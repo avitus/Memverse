@@ -1,6 +1,7 @@
-//= require vendor
-//= require fancybox
-//= require jquery-ui
+/*
+ *= require fancybox
+ *= require jquery-ui
+ */
 
 @import "compass";
 @import "normalize";
@@ -13,6 +14,7 @@
 @import "mv_thredded";
 @import "thredded";
 @import "mv_add_verse";
+@import "mv_test_verse_quick";
 @import "mv_chapter_review";
 @import "mv_ref_test";
 @import "mv_accuracy_test";

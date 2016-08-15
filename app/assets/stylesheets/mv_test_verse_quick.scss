@@ -1,0 +1,298 @@
+/*========== Test Verse Page ==========*/
+
+.test-verse
+{
+	width:35%;
+	float:left;
+	padding-left:3em;
+	padding-right:2em;
+}
+
+.test-chapter
+{
+	width:100%;
+	float:left;
+}
+
+.top-heading
+{
+	height:30px;
+	margin-bottom:5px;
+	width:100%;
+}
+
+.top-heading h2
+{
+	padding:0;
+	margin:0;
+	height:30px;
+	font-size:17px;
+	line-height:30px;
+	color:#999;
+	float:left;
+}
+
+.top-heading h2 span
+{
+	color:#7ca529;
+}
+
+.top-heading h2 span.verse-ref, .top-heading h2 span.verse-tl
+{
+	color:#999;
+}
+
+.toggle-hint
+{
+	background:#FFF image_url('magnifying-glass-small.png') no-repeat right center;
+	height:30px;
+	float:right;
+	text-align:right;
+	padding-right:30px;
+	color:#999;
+	line-height:30px;
+	font-size:13px;
+	font-weight:bold;
+	cursor:pointer;
+}
+
+.toggle-hint:hover {
+	color:#333;
+}
+
+.verse-test-area
+{
+	margin-bottom:8px;
+}
+
+@mixin verse-entry-box {
+  width: 100%;
+  background: #f2f1f1;
+  border: 1px solid #ccc;
+  overflow: auto;
+  margin-bottom: 34px;
+  -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
+}
+
+.verseguess {
+  height:205px;
+  @include verse-entry-box;
+}
+
+.chapter-guess {
+  height:110px;
+  @include verse-entry-box;
+}
+
+#exam-answer-box {
+	width:50%;
+}
+
+#exam-question-side {
+	padding-left:1em;
+}
+
+.tool-tip-nav
+{
+	background:image_url('tick.png') no-repeat left top;
+	width:155px;
+	height:21px;
+	float:left;
+	font-size:12.5px;
+	color:#666;
+	font-weight:bold;
+	line-height:21px;
+	padding-left:25px;
+}
+
+.score-test-buttons
+{
+	width:192px;
+	height:21px;
+	float:left;
+	position:relative;
+	font-size:larger;
+}
+
+.score-test-buttons span, .score-test-buttons a span
+{
+	font-size:22px;
+	color:#999;
+	text-decoration:none;
+	font-weight:bold;
+	line-height:21px;
+	padding:0 4px;
+}
+
+.score-test-buttons span:hover, .score-test-buttons a span:hover
+{
+	font-size:22px;
+	color:#7ca529;
+	text-decoration:none;
+	cursor:pointer;
+}
+
+#shortcuts {
+	float:right;
+	width:270px;
+	margin:0 15px;
+	padding:0 15px;
+	background:#f2f1f1;
+}
+
+/* START - tooltip styling */
+.tooltip {
+	display:none;
+	background:image_url('tool-tip-box.png') no-repeat left top;	height:163px;
+	width:309px;
+	height:28px;
+	line-height:23px;
+	padding-left:10px;
+	font-size:11px;
+	color:#693;
+}
+
+/* a .label element inside tooltip */
+.tooltip .label {
+	color:yellow;
+	width:35px;
+}
+
+.tooltip a {
+	color:#ad4;
+	font-size:11px;
+	font-weight:bold;
+}
+
+/* Overwrite the defaults for jQuery UI Tooltip */
+.ui-tooltip {
+	position: absolute; // ALV: needed to stop tooltip jumping around
+	padding-left: 10px;
+	font-size: 11px;
+	color: #693;
+	border: none;
+}
+
+/* a .label element inside tooltip */
+.ui-tooltip .label {
+	color:yellow;
+	width:35px;
+}
+
+.ui-tooltip a {
+	color:#ad4;
+	font-size:11px;
+	font-weight:bold;
+}
+
+.mv-rating {
+	background: image_url('tool-tip-box.png') no-repeat left top;
+	width: 309px;
+	height: 28px;
+	line-height: 23px;
+	font-size: 11px;
+	color: #693;
+	padding: 0 0 0 10px;
+	position: absolute;
+	z-index: 9999;
+	max-width: 309px;
+	box-shadow: 0 0 0px #aaa;
+}
+
+body .mv-rating {
+	border-width: 2px;
+}
+/* END - tooltip styling */
+
+
+.score-test-buttons a:hover span, a span:hover
+{
+	display:block;
+}
+
+.feedback
+{
+	min-height: 362px;
+	float: left;
+	color: #666;
+	padding: 0 2em;
+	border-left: 1px solid #bfbebe;
+	border-right: 1px solid #bfbebe;
+}
+
+.chapter-feedback {
+	width:100%;
+	color:#666;
+	padding:2em 0em 2em 0em;
+}
+
+#flashcard-back-text {
+	display:none;
+}
+
+.verse-feedback {
+	width:28%;
+}
+
+.feedback p
+{
+	padding:10px 0;
+	margin:0;
+}
+
+.feedback h2
+{
+	padding:0;
+	margin:0;
+	height:30px;
+	font-size:17px;
+	line-height:30px;
+	color:#7ca529;
+}
+
+.upcoming
+{
+	width:20%;
+	padding-left:2em;
+	float:left;
+}
+
+.upcoming h2
+{
+	padding:0;
+	margin:0;
+	height:30px;
+	font-size:17px;
+	line-height:30px;
+	color:#7ca529;
+}
+
+.upcoming ul
+{
+	list-style:none;
+	padding:0;
+	margin:0;
+	padding-top:10px;
+}
+
+.upcoming ul li
+{
+	font-size:14px;
+	width:167px;
+	height:21px;
+	color:#666;
+	line-height:21px;
+	padding-left:25px;
+}
+
+.upcoming ul li.gray2
+{
+	background:image_url('hover-gray.png') no-repeat left top;
+}
+
+.upcoming ul li.white2
+{
+	background:image_url('hover-white.png') no-repeat left top;
+}
