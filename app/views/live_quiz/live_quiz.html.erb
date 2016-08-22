@@ -97,15 +97,15 @@ $(document).ready(function() {
 
     // Listen
 	pubnub.addListener({
-	    message: function(message) {
+	    message: function( message ) {
 	        // handle incoming messages
 	        quizRoom.handleMessage( message )
 	    },
-	    presence: function(presence) {
+	    presence: function( presenceEvent ) {
 	        // handle incoming presence events.
-	        mvPresence( message, env, channel )
+	        mvPresence( presenceEvent )
 	    },
-	    status: function(status) {
+	    status: function( status ) {
 	        // handle incoming status events.
 	    }
 	});

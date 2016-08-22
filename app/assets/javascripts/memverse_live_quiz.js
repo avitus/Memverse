@@ -414,7 +414,7 @@ function mvInitRoster ( message, env, channel ) {
  * message format: {"action": "join", "timestamp": 123432432, "uuid": "memverse-id", "occupancy": 3}
  *
  ******************************************************************************/
-function mvPresence ( message, env, channel ) {
+function mvPresence ( message ) {
 
     var roster_uid   = message.uuid;
 
