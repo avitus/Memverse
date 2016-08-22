@@ -9,7 +9,11 @@ class ChatController < ApplicationController
 
     channel = ChatChannel.find(params[:channel])
 
+    Rails.logger.info("Located chat channel: #{channel}")
+
     new_status = channel.toggle_status
+
+    Rails.logger.info("Channel is now #{new_status}")
 
     render :json => {:status => new_status}
   end
