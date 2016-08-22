@@ -86,21 +86,34 @@ $(document).ready(function() {
     translation = "<%= current_user.translation %>";
 
 	// Initialize PubNub
-    var pubnub = PUBNUB.init({
-        publish_key   : '<%= PN.env[:publish_key] %>',
-        subscribe_key : '<%= PN.env[:subscribe_key] %>',
-        uuid          : memverseUserID,
-        origin        : 'pubsub.pubnub.com',
-        ssl           : true
-    });
+    var pubnub = new PubNub({
+	    subscribeKey: 		'<%= PN.env[:subscribe_key] %>',
+	    publishKey: 		'<%= PN.env[:publish_key] %>',
+	    logVerbosity: 		true,
+	    uuid: 				memverseUserID,
+	    ssl: 				true,
+	    presenceTimeout: 	130
+	});
 
-    // LISTEN
+    // Listen
+	pubnub.addListener({
+	    message: function(message) {
+	        // handle incoming messages
+	        quizRoom.handleMessage( message )
+	    },
+	    presence: function(presence) {
+	        // handle incoming presence events.
+	        mvPresence( message, env, channel )
+	    },
+	    status: function(status) {
+	        // handle incoming status events.
+	    }
+	});
+
+    // Subscribe
     pubnub.subscribe({
-        channel  : channel,
-        message  : function(data) { quizRoom.handleMessage(data) },
-        connect  : mvConnect( pubnub ),   // Callback when connection is established
-        presence : mvPresence,            // Callback when users join/leave channel
-        restore  : true
+        channels: 		[channel],
+        withPresence: 	true
     });
 
     // Display welcome and quiz instructions
