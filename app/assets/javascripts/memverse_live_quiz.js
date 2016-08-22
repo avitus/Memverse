@@ -13,29 +13,32 @@ var quizRoom = {
      * Handle real-time quiz messages
      ******************************************************************************/
     handleMessage: function (m) {
-        switch(m.d.meta) {
+
+        console.log(m)
+
+        switch(m.meta) {
 
             case "chat":
 
-                this.putChat(m.d.data.user,m.d.data.msg,m.d.meta,m.d.data.user_id);
+                this.putChat( m.data.user, m.data.msg, m.meta, m.data.user_id);
                 break;
 
             case "chat_status":
-                $("#chat_status").text(m.d.status);
+                $("#chat_status").text(m.status);
                 var user    = "Memverse Server"
-                var message = "Chat Channel " + m.d.status;
+                var message = "Chat Channel " + m.status;
 
-                this.putChat(user,message,m.d.meta);
+                this.putChat(user,message,m.meta);
                 break;
 
             case "question":
 
-                this.handleQuestion(m.d);
+                this.handleQuestion(m);
                 break;
 
             case "scoreboard":
 
-                this.updateScoreboard(m.d);
+                this.updateScoreboard(m);
                 break;
 
         }
