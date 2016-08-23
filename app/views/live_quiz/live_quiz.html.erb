@@ -90,7 +90,7 @@ $(document).ready(function() {
     var pubnub = new PubNub({
 	    subscribeKey: 		'<%= PN.env[:subscribe_key] %>',
 	    publishKey: 		'<%= PN.env[:publish_key] %>',
-	    logVerbosity: 		true,
+	    logVerbosity: 		false,
 	    uuid: 				memverseUserID,
 	    ssl: 				true,
 	    presenceTimeout: 	130
