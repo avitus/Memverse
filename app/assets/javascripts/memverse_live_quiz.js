@@ -14,9 +14,11 @@ var quizRoom = {
      ******************************************************************************/
     handleMessage: function (m) {
 
+        console.log("Message received")
         console.log(m)
+        console.log(m.meta)
 
-        switch(m.meta) {
+        switch( m.meta ) {
 
             case "chat":
 
