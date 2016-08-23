@@ -14,37 +14,28 @@ var quizRoom = {
      ******************************************************************************/
     handleMessage: function (m) {
 
-        console.log("===> Message received")
-        console.log(m)
-        console.log(m.message)
-        console.log(m.message.meta)
-
-        switch( m.message.meta ) {
+        switch( m.meta ) {
 
             case "chat":
-
-                console.log("Received a chat message")
-                console.log(m.message.data.user)
-                console.log(m.message.data.msg)
-                this.putChat( m.message.data.user, m.message.data.msg, m.message.meta, m.message.data.user_id);
+                this.putChat( m.data.user, m.data.msg, m.meta, m.data.user_id);
                 break;
 
             case "chat_status":
-                $("#chat_status").text(m.message.status);
+                $("#chat_status").text(m.status);
                 var user    = "Memverse Server"
-                var message = "Chat Channel " + m.message.status;
+                var message = "Chat Channel " + m.status;
 
-                this.putChat(user,message,m.message.meta);
+                this.putChat(user,message,m.meta);
                 break;
 
             case "question":
 
-                this.handleQuestion(m.message);
+                this.handleQuestion(m);
                 break;
 
             case "scoreboard":
 
-                this.updateScoreboard(m.message);
+                this.updateScoreboard(m);
                 break;
 
         }

@@ -65,7 +65,7 @@
 			<%= hidden_field_tag 'channel', "quiz-#{@quiz.id}" %>
 			<%= submit_tag 'Send', {onclick: "return mvSubmitQuizChat();"} %>
 		<% end %>
-		
+
 	</div>
 
 	<div class="clr"></div>
@@ -98,9 +98,9 @@ $(document).ready(function() {
 
     // Listen
 	pubnub.addListener({
-	    message: function( message ) {
+	    message: function( msg ) {
 	        // handle incoming messages
-	        quizRoom.handleMessage( message )
+	        quizRoom.handleMessage( msg.message )
 	    },
 	    presence: function( presenceEvent ) {
 	        // handle incoming presence events.
