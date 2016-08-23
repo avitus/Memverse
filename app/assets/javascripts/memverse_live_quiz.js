@@ -20,6 +20,9 @@ var quizRoom = {
 
             case "chat":
 
+                console.log("Received a chat message")
+                console.log(m.data.user)
+                console.log(m.data.msg)
                 this.putChat( m.data.user, m.data.msg, m.meta, m.data.user_id);
                 break;
 
