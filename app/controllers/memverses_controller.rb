@@ -223,6 +223,10 @@ class MemversesController < ApplicationController
 
     # http://stackoverflow.com/questions/1235863/test-if-a-string-is-basically-an-integer-in-quotes-using-ruby
     if /^\d+$/ === params[:vs_start] and /^\d+$/ === params[:vs_end]  # e.g. Romans 8:2-4
+
+      # check that both vs numbers are < ?? and start < end
+      # check that chapter <= 150
+
       @mvs = current_user.memverses
               .includes(:verse)
               .where( 'verses.book'        => params[:bk],
@@ -242,6 +246,7 @@ class MemversesController < ApplicationController
       format.xml  { render :xml  => @mvs }
       format.json { render :json => @mvs }
     end
+
   end
 
   # ----------------------------------------------------------------------------------------------------------
