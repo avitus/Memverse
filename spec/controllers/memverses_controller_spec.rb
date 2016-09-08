@@ -99,6 +99,11 @@ describe MemversesController do
       response.should be_success
     end
 
+    it "should gracefully handle wildly out of range verse numbers" do
+      get :mv_lookup_passage, :bk => "Psalms", :ch => 1, :vs_start => 1, :vs_end => 99999999999999, valid_session
+      response.should be_success      
+    end
+
   end
 
 end
