@@ -14,7 +14,7 @@
 		</div>
 
 		<%= form_tag('/chat/send', :id => 'chat_window', :remote => true) do %>
-			<%= text_field_tag 'msg_body', '', size: 28, autocomplete: "off" %>
+			<%= text_field_tag 'msg_body', '', autocomplete: "off" %>
 			<%= hidden_field_tag 'sender',  current_user.name_or_login %>
 			<%= hidden_field_tag 'user_id', current_user.id %>
 			<%= hidden_field_tag 'channel', "#{@channel.channel}" %>
