@@ -1,6 +1,20 @@
 class ChatController < ApplicationController
 
-  before_filter :authenticate_user!, :only => [:channel1, :toggle_ban]
+  before_filter :authenticate_user!, :only => [:channel1, :toggle_ban, :index]
+
+  #-----------------------------------------------------------------------------------------------------------
+  # Main chat room
+  #-----------------------------------------------------------------------------------------------------------
+  def index
+
+    @tab = "blog"
+    @sub = "chat"
+
+    channel_num = params[:channel] || 7
+    @channel    = ChatChannel.find("chat-#{channel_num}")
+
+  end
+
 
   # ----------------------------------------------------------------------------------------------------------
   # Open/close chat channel
