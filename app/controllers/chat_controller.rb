@@ -12,6 +12,8 @@ class ChatController < ApplicationController
 
     channel_num = params[:channel] || 7
     @channel    = ChatChannel.find("chat-#{channel_num}")
+    puts @channel
+    puts channel_num
 
   end
 
