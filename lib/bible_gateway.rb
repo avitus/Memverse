@@ -6,7 +6,7 @@ require 'nokogiri'
 class BibleGatewayError < StandardError; end
 
 class BibleGateway
-  GATEWAY_URL = "https://new.biblegateway.com"
+  GATEWAY_URL = "https://www.biblegateway.com"
 
   VERSIONS = {
     :NNV => "NIV",
