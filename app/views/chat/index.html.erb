@@ -65,6 +65,8 @@ $(document).ready(function() {
 	        mvPresence( presenceEvent )
 	    },
 	    status: function( status ) {
+	    	console.log("===> Received a presence event")
+	        console.log( status )
 	        // handle incoming status events.
 	    }
 	});
