@@ -46,7 +46,7 @@ $(document).ready(function() {
     var pubnub = new PubNub({
 	    subscribeKey: 		'<%= PN.env[:subscribe_key] %>',
 	    publishKey: 		'<%= PN.env[:publish_key] %>',
-	    logVerbosity: 		false,
+	    logVerbosity: 		true,
 	    uuid: 				memverseUserID,
 	    ssl: 				true,
 	    presenceTimeout: 	130
@@ -60,6 +60,8 @@ $(document).ready(function() {
 	    },
 	    presence: function( presenceEvent ) {
 	        // handle incoming presence events.
+	        console.log("===> Received a presence event")
+	        console.log( presenceEvent )
 	        mvPresence( presenceEvent )
 	    },
 	    status: function( status ) {
