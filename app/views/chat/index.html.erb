@@ -60,12 +60,12 @@ $(document).ready(function() {
 	    },
 	    presence: function( presenceEvent ) {
 	        // handle incoming presence events.
-	        console.log("===> Received a presence event")
+	        console.log("====== Received a PRESENCE event =========================")
 	        console.log( presenceEvent )
 	        mvPresence( presenceEvent )
 	    },
 	    status: function( status ) {
-	    	console.log("===> Received a presence event")
+	    	console.log("====== Received a STATUS event ===========================")
 	        console.log( status )
 	        // handle incoming status events.
 	    }
