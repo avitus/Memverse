@@ -112,7 +112,7 @@ class MemversesController < ApplicationController
   prawnto :prawn => { :left_margin    => 50 }
   prawnto :prawn => { :right_margin   => 50 }
 
-  respond_to :html, :pdf
+  respond_to :html, :pdf, :js, :json
 
   add_breadcrumb "Home", :root_path
 
@@ -587,6 +587,8 @@ class MemversesController < ApplicationController
             Rails.logger.error("=====> [Memverse save error] Exception while saving #{vs.ref} for user #{current_user.id}: #{e}")
           else
             msg = "Added"
+            render :json => { msg: msg }
+            return
           end
         end
 
@@ -596,7 +598,7 @@ class MemversesController < ApplicationController
       msg = "Error"
     end
 
-  	render :json => {:msg => msg }
+  	render :json => { msg: msg }
 
   end
 
