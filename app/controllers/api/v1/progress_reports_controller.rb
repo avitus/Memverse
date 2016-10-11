@@ -10,7 +10,7 @@ class Api::V1::ProgressReportsController < Api::V1::ApiController
     operation :get do
       key :description, 'Returns progress data for user'
       key :operationId, 'showUserProgress'
-      key :tags, ['progress']
+      key :tags, ['progress_reports']
       security do
         key :oauth2, ['admin write read public']
       end
