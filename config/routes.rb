@@ -91,6 +91,7 @@ MemverseApp::Application.routes.draw do
     resources :translations, :only => [:index, :show]
 
     get '/me'            => "credentials#me"
+    get '/progress'      => "progress#index"
     post '/record_score' => 'live_quiz#record_score' # Record user score for quiz question
   end
   # ---------------------------------------------------------------------------------------------------------
