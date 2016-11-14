@@ -10,11 +10,11 @@ Thredded.user_class = 'User'
 # User name column, used in @mention syntax and should be unique.
 # This is the column used to search for users' names if/when someone is @ mentioned.
 Thredded.user_name_column = :name
-Thredded.user_display_name_method = :name_or_login
 
 # User display name method, by default thredded uses the user_name_column defined above
 # You may want to use :to_s or some more elaborate method
 # Thredded.user_display_name_method = :to_s
+Thredded.user_display_name_method = :name_for_forum
 
 # The path (or URL) you will use to link to your users' profiles.
 # When linking to a user, Thredded will use this lambda to spit out

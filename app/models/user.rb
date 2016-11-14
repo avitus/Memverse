@@ -790,6 +790,18 @@ class User < ActiveRecord::Base
     self.name.empty? ? self.login : self.name
   end
 
+  def name_for_forum
+    if self.name.empty?
+      if self.login.empty?
+        return "Mysterious user"
+      else
+        return self.login
+      end
+    else
+      return self.name
+    end
+  end
+
   # Update user profile
   # 
   # @param new_params Params from 'update_profile' form
