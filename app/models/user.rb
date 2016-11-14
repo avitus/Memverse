@@ -791,15 +791,7 @@ class User < ActiveRecord::Base
   end
 
   def name_for_forum
-    if self.name.empty?
-      if self.login.empty?
-        return "Mysterious user"
-      else
-        return self.login
-      end
-    else
-      return self.name
-    end
+    "Mysterious user"
   end
 
   # Update user profile
