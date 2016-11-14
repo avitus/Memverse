@@ -799,6 +799,7 @@ class User < ActiveRecord::Base
       end
     else
       return self.name
+    end
   end
 
   # Update user profile
