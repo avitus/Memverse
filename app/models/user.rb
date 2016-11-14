@@ -791,8 +791,8 @@ class User < ActiveRecord::Base
   end
 
   def name_for_forum
-    if self.name.presence?
-      if self.login.presence?
+    if !self.name.presence
+      if !self.login.presence
         return "Mysterious user"
       else
         return self.login
