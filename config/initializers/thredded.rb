@@ -10,6 +10,11 @@ Thredded.user_class = 'User'
 # User name column, used in @mention syntax and should be unique.
 # This is the column used to search for users' names if/when someone is @ mentioned.
 Thredded.user_name_column = :name
+Thredded.user_display_name_method = :name_or_login
+
+# User display name method, by default thredded uses the user_name_column defined above
+# You may want to use :to_s or some more elaborate method
+# Thredded.user_display_name_method = :to_s
 
 # The path (or URL) you will use to link to your users' profiles.
 # When linking to a user, Thredded will use this lambda to spit out
@@ -37,21 +42,26 @@ Thredded.admin_column = :admin
 # Whether posts and topics pending moderation are visible to regular users.
 Thredded.content_visible_while_pending_moderation = true
 
+# Whether users that are following a topic are listed on topic page.
+Thredded.show_topic_followers = false
+
 # This model can be customized further by overriding a handful of methods on the User model.
 # For more information, see app/models/thredded/user_extender.rb.
+
+# ==> Ordering configuration
+
+# How to calculate the position of messageboards in a list:
+# :position            (default) set the position manually (new messageboards go to the bottom, by creation timestamp)
+# :last_post_at_desc   most recent post first
+# :topics_count_desc   most topics first
+Thredded.messageboards_order = :position
 
 # ==> Email Configuration
 # Email "From:" field will use the following
 # Thredded.email_from = 'no-reply@example.com'
 
-# Incoming email will be directed to this host
-# Thredded.email_incoming_host = 'example.com'
-
 # Emails going out will prefix the "Subject:" with the following string
 # Thredded.email_outgoing_prefix = '[My Forum] '
-
-# Reply to field for email notifications
-# Thredded.email_reply_to = -> postable { "#{postable.hash_id}@#{Thredded.email_incoming_host}" }
 
 # ==> View Configuration
 # Set the layout for rendering the thredded views.
@@ -61,13 +71,17 @@ Thredded.layout = '/application'
 # Customize the way Thredded handles post formatting.
 
 # Change the default html-pipeline filters used by thredded.
-# E.g. to remove BBCode support:
-# Thredded::ContentFormatter.pipeline_filters -= [HTML::Pipeline::BbcodeFilter]
+# E.g. to replace default emoji filter with your own:
+# Thredded::ContentFormatter.after_markup_filters[
+#   Thredded::ContentFormatter.after_markup_filters.index(HTML::Pipeline::EmojiFilter)] = MyEmojiFilter
 
 # Change the HTML sanitization settings used by Thredded.
 # See the Sanitize docs for more information on the underlying library: https://github.com/rgrove/sanitize/#readme
 # E.g. to allow a custom element <custom-element>:
 # Thredded::ContentFormatter.whitelist[:elements] += %w(custom-element)
+
+# ==> User autocompletion (Private messages and @-mentions)
+# Thredded.autocomplete_min_length = 2 lower to 1 if have 1-letter names -- increase if you want
 
 # ==> Error Handling
 # By default Thredded just renders a flash alert on errors such as Topic not found, or Login required.
@@ -79,5 +93,19 @@ Thredded.layout = '/application'
 #       @message = exception.message
 #       render template: 'sessions/new', status: :forbidden
 #     end
+#   end
+# end
+
+# ==> View hooks
+#
+# Customize the UI before/after/replacing individual components.
+# See the full list of view hooks and their arguments by running:
+#
+#     $ grep view_hooks -R --include '*.html.erb' "$(bundle show thredded)"
+#
+# Rails.application.config.to_prepare do
+#   Thredded.view_hooks.post_form.content_text_area.config.before do |form:, **args|
+#     # This is called in the Thredded view context, so all Thredded helpers and URLs are accessible here directly.
+#     'hi'
 #   end
 # end
