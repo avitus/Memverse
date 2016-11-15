@@ -56,9 +56,13 @@ gem 'redis', '~> 3.2'                                                          #
 
 ############################################################
 # Frameworks
+#
+# Currently using jQuery 1.12.4 (upgrading to 3.0 will require work)
+# Thredded specifies jQuery version in javascripts/threddeded/dependencies
+#
 ############################################################
-gem 'rails', '4.2.6'                                                            # Last stable version was 4.0.9
-gem 'jquery-rails'
+gem 'rails', '4.2.6'                                                            
+gem 'jquery-rails'                                                              # Currently using jQuery 1.12.4
 gem 'jquery-ui-rails'
 
 ############################################################
