@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161114183340) do
+ActiveRecord::Schema.define(version: 20161115192854) do
 
   create_table "american_states", force: :cascade do |t|
     t.string  "abbrev",      limit: 20,  default: "", null: false
@@ -458,12 +458,14 @@ ActiveRecord::Schema.define(version: 20161114183340) do
   end
 
   create_table "progress_reports", force: :cascade do |t|
-    t.integer "user_id",         limit: 4, null: false
+    t.integer "user_id",          limit: 4, null: false
     t.date    "entry_date"
-    t.integer "learning",        limit: 4
-    t.integer "memorized",       limit: 4
-    t.integer "time_allocation", limit: 4
-    t.integer "consistency",     limit: 4
+    t.integer "learning",         limit: 4
+    t.integer "memorized",        limit: 4
+    t.integer "time_allocation",  limit: 4
+    t.integer "consistency",      limit: 4
+    t.integer "reviewed"
+    t.boolean "session_complete"
   end
 
   add_index "progress_reports", ["user_id"], name: "index_progress_reports_on_user_id"

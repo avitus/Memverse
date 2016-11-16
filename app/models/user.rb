@@ -697,6 +697,8 @@ class User < ActiveRecord::Base
       pr.memorized        = self.memorized
       pr.learning         = self.learning
       pr.time_allocation  = self.work_load
+      pr.reviewed         = self.memverses.reviewed_today.count # Added Nov 30, 2016
+      pr.session_complete = self.memverses.overdue.count + self.memverses.due_today.count == 0
 
       pr.save
     end
