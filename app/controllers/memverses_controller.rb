@@ -473,7 +473,9 @@ class MemversesController < ApplicationController
   # Remove a verse tag
   # ----------------------------------------------------------------------------------------------------------
   def remove_verse_tag
-    dead_tag = ActsAsTaggableOn::Tagging.find(:first, :conditions => {:tag_id => params[:id], :taggable_id => params[:mv], :taggable_type => 'Memverse' })
+    dead_tag = ActsAsTaggableOn::Tagging
+      .where(tag_id: params[:id], taggable_id: params[:mv], taggable_type: 'Memverse')
+      .first
 
     if dead_tag
       dead_tag.destroy
