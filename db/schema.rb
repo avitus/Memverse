@@ -680,6 +680,15 @@ ActiveRecord::Schema.define(version: 20161115192854) do
 
   add_index "thredded_messageboard_groups", ["name"], name: "index_thredded_messageboard_group_on_name", unique: true
 
+  create_table "thredded_messageboard_notifications_for_followed_topics", force: :cascade do |t|
+    t.integer "user_id",                                   null: false
+    t.integer "messageboard_id",                           null: false
+    t.string  "notifier_key",    limit: 90,                null: false
+    t.boolean "enabled",                    default: true, null: false
+  end
+
+  add_index "thredded_messageboard_notifications_for_followed_topics", ["user_id", "messageboard_id", "notifier_key"], name: "thredded_messageboard_notifications_for_followed_topics_unique", unique: true
+
   create_table "thredded_messageboard_users", force: :cascade do |t|
     t.integer  "thredded_user_detail_id",  limit: 4, null: false
     t.integer  "thredded_messageboard_id", limit: 4, null: false
@@ -705,6 +714,22 @@ ActiveRecord::Schema.define(version: 20161115192854) do
 
   add_index "thredded_messageboards", ["messageboard_group_id"], name: "index_thredded_messageboards_on_messageboard_group_id"
   add_index "thredded_messageboards", ["slug"], name: "index_thredded_messageboards_on_slug"
+
+  create_table "thredded_notifications_for_followed_topics", force: :cascade do |t|
+    t.integer "user_id",                                null: false
+    t.string  "notifier_key", limit: 90,                null: false
+    t.boolean "enabled",                 default: true, null: false
+  end
+
+  add_index "thredded_notifications_for_followed_topics", ["user_id", "notifier_key"], name: "thredded_notifications_for_followed_topics_unique", unique: true
+
+  create_table "thredded_notifications_for_private_topics", force: :cascade do |t|
+    t.integer "user_id",                                null: false
+    t.string  "notifier_key", limit: 90,                null: false
+    t.boolean "enabled",                 default: true, null: false
+  end
+
+  add_index "thredded_notifications_for_private_topics", ["user_id", "notifier_key"], name: "thredded_notifications_for_private_topics_unique", unique: true
 
   create_table "thredded_post_moderation_records", force: :cascade do |t|
     t.integer  "post_id",                   limit: 4
@@ -829,7 +854,6 @@ ActiveRecord::Schema.define(version: 20161115192854) do
     t.boolean  "follow_topics_on_mention", default: true, null: false
     t.datetime "created_at",                              null: false
     t.datetime "updated_at",                              null: false
-    t.boolean  "followed_topic_emails",    default: true, null: false
   end
 
   add_index "thredded_user_messageboard_preferences", ["user_id", "messageboard_id"], name: "thredded_user_messageboard_preferences_user_id_messageboard_id", unique: true
@@ -837,10 +861,8 @@ ActiveRecord::Schema.define(version: 20161115192854) do
   create_table "thredded_user_preferences", force: :cascade do |t|
     t.integer  "user_id",                                 null: false
     t.boolean  "follow_topics_on_mention", default: true, null: false
-    t.boolean  "notify_on_message",        default: true, null: false
     t.datetime "created_at",                              null: false
     t.datetime "updated_at",                              null: false
-    t.boolean  "followed_topic_emails",    default: true, null: false
   end
 
   add_index "thredded_user_preferences", ["user_id"], name: "index_thredded_user_preferences_on_user_id"
