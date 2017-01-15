@@ -697,6 +697,8 @@ class User < ActiveRecord::Base
       pr.memorized        = self.memorized
       pr.learning         = self.learning
       pr.time_allocation  = self.work_load
+      pr.reviewed         = self.memverses.reviewed_today.count # Added Nov 30, 2016
+      pr.session_complete = self.memverses.overdue.count + self.memverses.due_today.count == 0
 
       pr.save
     end
@@ -788,6 +790,18 @@ class User < ActiveRecord::Base
   # @return [String] name or login
   def name_or_login
     self.name.empty? ? self.login : self.name
+  end
+
+  def name_for_forum
+    if !self.name.presence
+      if !self.login.presence
+        return "Mysterious user"
+      else
+        return self.login
+      end
+    else
+      return self.name
+    end
   end
 
   # Update user profile

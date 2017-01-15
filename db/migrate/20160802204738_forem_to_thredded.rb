@@ -17,9 +17,9 @@ class ForemToThredded < ActiveRecord::Migration
       # Disable callbacks to avoid creating notifications and performing unnecessary updates
       skip_callbacks.each { |(klass, *args)| klass.skip_callback(*args) }
       ActiveRecord::Base.no_touching do
-        # transaction do
+        transaction do
           copy_data
-        # end
+        end
       end
     ensure
       # Re-enable timestamp handling

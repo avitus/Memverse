@@ -1,0 +1,55 @@
+.main-chat {
+
+	/* === Chat ======================= */
+
+	#main-chat-window {
+		width:48%;
+		padding: 1em;
+		max-height:600px;
+		background-color: #eee;
+		float: left;
+	}
+
+
+	input#msg_body {
+	    width: 89%;
+	}
+
+	/* === Participant Window ========= */
+
+	#roster-window {
+		background-color: #f2f1f1;
+		max-height:520px;
+		padding:10px;
+		width:45%;
+		margin-left: 2em;
+		overflow-y:auto;
+		float:left;
+		display:block;
+		position: relative;
+	}
+
+	div.roster-item {
+		width:155px;
+		height:35px;
+		padding:3px;
+		overflow:hidden;
+		white-space:nowrap;
+		text-overflow:ellipsis;
+		float:left;
+	}
+
+	div.roster-item a {
+		padding-left:0.5em;
+		color:#555;
+	}
+
+	div.roster-item img {
+		vertical-align:middle;
+		@include border-radius(4px, 4px);
+	}
+
+}
+
+
+

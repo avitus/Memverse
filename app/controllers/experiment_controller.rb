@@ -1,7 +1,7 @@
 class ExperimentController < ApplicationController
   def finish
     experiment = params[:experiment]
-    finished(experiment)
+    ab_finished(experiment)
     render :nothing => true
   end
 end

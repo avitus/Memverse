@@ -56,9 +56,13 @@ gem 'redis', '~> 3.2'                                                          #
 
 ############################################################
 # Frameworks
+#
+# Currently using jQuery 1.12.4 (upgrading to 3.0 will require work)
+# Thredded specifies jQuery version in javascripts/threddeded/dependencies
+#
 ############################################################
-gem 'rails', '4.2.6'                                                            # Last stable version was 4.0.9
-gem 'jquery-rails'
+gem 'rails', '4.2.6'                                                            
+gem 'jquery-rails'                                                              # Currently using jQuery 1.12.4
 gem 'jquery-ui-rails'
 
 ############################################################
@@ -100,7 +104,7 @@ gem 'cancancan', '~> 1.10'                                                     #
 # Major Engines (Admin, Forem, Blog)
 ############################################################
 gem 'rails_admin'                                                              # Admin console
-gem 'thredded', '~> 0.6.1'                                                     # Forum engine
+gem 'thredded', '~> 0.9'                                                       # Forum engine
 gem 'bloggity',    github: 'avitus/bloggity'                                   # Blog engine
 # gem 'bloggity', :path => "../bloggity"                                       # Blog engine (dev environment)
 

@@ -122,10 +122,12 @@ class Memverse < ActiveRecord::Base
   scope :active,        -> { where(status: ["Learning", "Memorized"]) }
   scope :inactive,      -> { where(status: "Pending") }
 
-  scope :not_due,       -> { where("next_test  > ?", Date.today) }
-  scope :current,       -> { where("next_test >= ?", Date.today) }
-  scope :due_today,     -> { where("next_test  = ?", Date.today) }
-  scope :overdue,       -> { where("next_test  < ?", Date.today) }
+  scope :not_due,       -> { where("next_test   > ?", Date.today) }
+  scope :current,       -> { where("next_test  >= ?", Date.today) }
+  scope :due_today,     -> { where("next_test   = ?", Date.today) }
+  scope :overdue,       -> { where("next_test   < ?", Date.today) }
+
+  scope :reviewed_today, -> { where("last_tested = ?", Date.today) }
 
   # We need to check for nil values because that column has no default value
   scope :ref_due,       -> { where("next_ref_test IS NULL or next_ref_test <= ?", Date.today) }
@@ -273,7 +275,8 @@ class Memverse < ActiveRecord::Base
     self.attempts      += 1
     self.save!
 
-    self.sync_subsection  # Sync with rest of subsection
+    self.sync_subsection            # Sync with rest of subsection
+    self.user.save_progress_report  # Update user's progress report
 
     return (prev_learning and (self.status == "Memorized"))  # TRUE if this memory verse is newly memorized
   end

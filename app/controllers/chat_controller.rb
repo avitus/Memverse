@@ -1,6 +1,22 @@
 class ChatController < ApplicationController
 
-  before_filter :authenticate_user!, :only => [:channel1, :toggle_ban]
+  before_filter :authenticate_user!, :only => [:channel1, :toggle_ban, :index]
+
+  #-----------------------------------------------------------------------------------------------------------
+  # Main chat room
+  #-----------------------------------------------------------------------------------------------------------
+  def index
+
+    @tab = "blog"
+    @sub = "chat"
+
+    channel_num = params[:channel] || 7
+    @channel    = ChatChannel.find("chat-#{channel_num}")
+    puts @channel
+    puts channel_num
+
+  end
+
 
   # ----------------------------------------------------------------------------------------------------------
   # Open/close chat channel
@@ -9,7 +25,11 @@ class ChatController < ApplicationController
 
     channel = ChatChannel.find(params[:channel])
 
+    Rails.logger.info("Located chat channel: #{channel}")
+
     new_status = channel.toggle_status
+
+    Rails.logger.info("Channel is now #{new_status}")
 
     render :json => {:status => new_status}
   end

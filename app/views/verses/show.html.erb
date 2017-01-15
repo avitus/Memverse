@@ -11,7 +11,7 @@
 			<!-- Link to add verse -->
 			<% if current_user && !current_user.has_verse_id?(@verse) %>
 				<div class="no-dbl-click">
-					<%= link_to '[Add Verse]', { :controller => 'memverses', :action => 'ajax_add', :id => @verse }, :remote => true, :id => "ajax_add" %>
+					<%= link_to '[Add Verse]', add_path(@verse.id, format: 'json'), remote: true, id: "ajax_add", method: 'post' %>
 				</div>
 			<% end %>
 
@@ -48,11 +48,13 @@
 
 <script type="text/javascript">
 	 $(document).ready(function() {
+
 		 // http://www.appelsiini.net/projects/jeditable
 	     $('.edit').editable('/verses/add_verse_tag', {
 	         indicator : 'Saving...',
 	         tooltip   : 'Click to edit...'
 	     });
+
 	     $('.edit_area').editable('/verses/add_verse_tag', { 
 	         type      : 'textarea',
 	         cancel    : 'Cancel',
@@ -60,13 +62,15 @@
 	         indicator : 'Saving...',
 	         tooltip   : 'Click to edit...'
 	     });
-		// Prevent double-clicking of links to add verses
-		$('a#ajax_add').click( function() {
-			$(this).attr('disabled', 'disabled').hide();
-		})
-		// Give user msg returned from ajax add call
-		.bind('ajax:success', function(evt, data, status, xhr){
-			$(this).parent().html(data.msg);
-		});
+
+		$('a#ajax_add')
+			// Prevent double-clicking of links to add verses
+			.click( function() {
+				$(this).attr('disabled', 'disabled').hide();
+			})
+			// Give user msg returned from ajax add call
+			.on('ajax:success', function(evt, data, status, xhr){
+				$(this).parent().html(data.msg);
+			});
 	 });
 </script>

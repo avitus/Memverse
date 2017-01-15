@@ -1,0 +1,98 @@
+<% page_title "Chat Room :: " + @channel.channel %>
+
+<div class="white-box-with-margins main-chat" id="main-chat" style="position:relative">
+
+	<!-- CHAT WINDOW -->
+	<div id="main-chat-window">
+
+		<h3>
+			Chat (<span id="chat_status"><%= @channel.status %></span>)
+			<%= (link_to "Toggle Status", {controller: "chat", action: "toggle_channel", channel: @channel.channel}, remote: true) if can? :manage, ChatChannel %>
+		</h3>
+
+		<div id="chat-stream-narrow">
+		</div>
+
+		<%= form_tag('/chat/send', :id => 'chat_window', :remote => true) do %>
+			<%= text_field_tag 'msg_body', '', autocomplete: "off" %>
+			<%= hidden_field_tag 'sender',  current_user.name_or_login %>
+			<%= hidden_field_tag 'user_id', current_user.id %>
+			<%= hidden_field_tag 'channel', "#{@channel.channel}" %>
+			<%= submit_tag 'Send', {onclick: "return mvSubmitQuizChat();"} %>
+		<% end %>
+
+	</div>
+
+	<!-- ROSTER -->
+	<div id="roster-window">
+		<h3>Participants</h3>
+	</div>
+
+	<div class="clr"></div>
+</div>
+
+<script type="text/javascript" charset="utf-8">
+
+var memverseUserID    = "<%= current_user.id %>";                      // global variable
+var memverseUserName  = "<%= current_user.name_or_login.html_safe %>"; // global variable
+var memverseUserLogin = "<%= current_user.login.html_safe %>";         // global variable
+
+$(document).ready(function() {
+
+	// maybe move this into initialize function above ??
+	channel     = "<%= @channel.channel %>";
+    translation = "<%= current_user.translation %>";
+
+	// Initialize PubNub
+    var pubnub = new PubNub({
+	    subscribeKey: 		'<%= PN.env[:subscribe_key] %>',
+	    publishKey: 		'<%= PN.env[:publish_key] %>',
+	    logVerbosity: 		true,
+	    uuid: 				memverseUserID,
+	    ssl: 				true,
+	    presenceTimeout: 	130
+	});
+
+    // Listen
+	pubnub.addListener({
+	    message: function( msg ) {
+	        // handle incoming messages
+	        quizRoom.handleMessage( msg.message )
+	    },
+	    presence: function( presenceEvent ) {
+	        // handle incoming presence events.
+	        console.log("====== Received a PRESENCE event =========================")
+	        console.log( presenceEvent )
+	        mvPresence( presenceEvent )
+	    },
+	    status: function( status ) {
+	    	console.log("====== Received a STATUS event ===========================")
+	        console.log( status )
+	        // handle incoming status events.
+	    }
+	});
+
+    // Subscribe
+    pubnub.subscribe({
+        channels: 		[channel],
+        withPresence: 	true
+    });
+
+	// Show window with participants
+	$("#quizzers-stats").click( quizRoom.toggleQuizzersWindow );
+
+	// Allow quiz managers to ban/unban users
+	<% if can? :manage, ChatChannel %>
+
+		$("#chat-stream-narrow").delegate("li.chat-username", "hover", function(){
+			$(".ban").remove(); // remove any previous ban links
+			if($(this).attr("id") && $(this).attr("id").length > 0){ // server announcements don't have user id
+				ban_id = $(this).attr("id");
+				$(this).append(" <a href='/chat/toggle_ban?user_id="+ban_id+"' data-remote='true' class='ban' data-confirm='Are you sure you want to toggle the ban on this user?'>(toggle ban)</a>");
+			}
+		});
+
+	<% end %>
+
+});
+</script>

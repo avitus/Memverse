@@ -312,15 +312,17 @@ class ProfileController < ApplicationController
     # TODO: Is there a better way to do this search?
 
     if !search_param.empty?
-      @user_list =  User.find(:all, :conditions => {:name => search_param }, :limit => 5)
+
+      @user_list =  User.where(name: search_param).limit(5)
 
       if @user_list.empty?
-        @user_list = User.find(:all, :conditions => {:email => search_param }, :limit => 5)
+        @user_list =  User.where(email: search_param).limit(5)
       end
 
       if @user_list.empty?
-        @user_list = User.find(:all, :conditions => {:login  => search_param }, :limit => 5)
+        @user_list =  User.where(login: search_param).limit(5)
       end
+
     end
 
     render :partial => 'search_user', :layout=>false

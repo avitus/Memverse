@@ -112,7 +112,7 @@ class MemversesController < ApplicationController
   prawnto :prawn => { :left_margin    => 50 }
   prawnto :prawn => { :right_margin   => 50 }
 
-  respond_to :html, :pdf
+  respond_to :html, :pdf, :js, :json
 
   add_breadcrumb "Home", :root_path
 
@@ -201,11 +201,17 @@ class MemversesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   def mv_lookup
 
+    # check that both vs numbers are <= 176 and start < end
+    # check that chapter <= 150
+
+    query_chapter = [ params[:ch].to_i, 176].min
+    query_vs      = [ params[:vs].to_i, 150].min
+
     @mv = current_user.memverses
               .includes(:verse)
               .where( 'verses.book'        => params[:bk],
-                      'verses.chapter'     => params[:ch],
-                      'verses.versenum'    => params[:vs])
+                      'verses.chapter'     => query_chapter,
+                      'verses.versenum'    => query_vs )
               .first
 
     respond_to do |format|
@@ -218,23 +224,36 @@ class MemversesController < ApplicationController
 
   # ----------------------------------------------------------------------------------------------------------
   # Search for a passage of memory verses (by reference) for a given user
+  # Note: this method only handles true *passages* i.e. not Psalm 1:2 for instance
   # ----------------------------------------------------------------------------------------------------------
   def mv_lookup_passage
 
     # http://stackoverflow.com/questions/1235863/test-if-a-string-is-basically-an-integer-in-quotes-using-ruby
     if /^\d+$/ === params[:vs_start] and /^\d+$/ === params[:vs_end]  # e.g. Romans 8:2-4
+
+      # check that both vs numbers are <= 176 and start < end
+      # check that chapter <= 150
+
+      query_chapter  = [ params[:ch].to_i,       176].min
+      query_vs_start = [ params[:vs_start].to_i, 150].min
+      query_vs_end   = [ params[:vs_end].to_i,   150].min
+
       @mvs = current_user.memverses
               .includes(:verse)
               .where( 'verses.book'        => params[:bk],
-                      'verses.chapter'     => params[:ch],
-                      'verses.versenum'    => params[:vs_start]..params[:vs_end])
+                      'verses.chapter'     => query_chapter,
+                      'verses.versenum'    => query_vs_start..query_vs_end )
               .order( 'verses.versenum')
     else
+
+      query_chapter  = [ params[:ch].to_i,       176].min
+
       @mvs = current_user.memverses  # e.g. Romans 8
               .includes(:verse)
               .where( 'verses.book'        => params[:bk],
-                      'verses.chapter'     => params[:ch])
+                      'verses.chapter'     => query_chapter )
               .order( 'verses.versenum')
+
     end
 
     respond_to do |format|
@@ -242,6 +261,7 @@ class MemversesController < ApplicationController
       format.xml  { render :xml  => @mvs }
       format.json { render :json => @mvs }
     end
+
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -453,7 +473,9 @@ class MemversesController < ApplicationController
   # Remove a verse tag
   # ----------------------------------------------------------------------------------------------------------
   def remove_verse_tag
-    dead_tag = ActsAsTaggableOn::Tagging.find(:first, :conditions => {:tag_id => params[:id], :taggable_id => params[:mv], :taggable_type => 'Memverse' })
+    dead_tag = ActsAsTaggableOn::Tagging
+      .where(tag_id: params[:id], taggable_id: params[:mv], taggable_type: 'Memverse')
+      .first
 
     if dead_tag
       dead_tag.destroy
@@ -567,6 +589,8 @@ class MemversesController < ApplicationController
             Rails.logger.error("=====> [Memverse save error] Exception while saving #{vs.ref} for user #{current_user.id}: #{e}")
           else
             msg = "Added"
+            render :json => { msg: msg }
+            return
           end
         end
 
@@ -576,7 +600,7 @@ class MemversesController < ApplicationController
       msg = "Error"
     end
 
-  	render :json => {:msg => msg }
+  	render :json => { msg: msg }
 
   end
 

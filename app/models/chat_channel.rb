@@ -79,7 +79,7 @@ class ChatChannel
       Rails.logger.info("====> Publishing message to PubNub: #{msg}")
       publish(meta: "chat", data: msg)
     else
-      puts "Could not send message. Channel #{channel} closed."
+      Rails.logger.info("Could not send message. Channel #{channel} closed.")
       return false
     end
   end

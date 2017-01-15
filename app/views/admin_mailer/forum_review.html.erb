@@ -4,7 +4,7 @@
 
     <% for post in @posts %>
 
-        <%= link_to "Post on #{post.topic}", forem.forum_topic_post_url(post.forum, post.topic, post) %>
+        <%= link_to "Post on #{post.postable.title}", post_url(post, post.user) %>
         by <%= post.user.name %><br />
 
     <% end %>
@@ -17,7 +17,7 @@
 
     <% for topic in @topics %>
 
-        <%= link_to topic, forem.forum_topic_url(topic.forum, topic) %>
+        <%= link_to topic, topic_url(topic) %>
         by <%= topic.user.name %><br />
 
     <% end %>

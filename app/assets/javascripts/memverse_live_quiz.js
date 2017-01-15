@@ -11,13 +11,17 @@ var quizRoom = {
 
     /******************************************************************************
      * Handle real-time quiz messages
+     {  
+        "meta":"chat",
+        "data": {"user":"Andy","user_id":"1","msg":"hello"},
+     }
      ******************************************************************************/
     handleMessage: function (m) {
-        switch(m.meta) {
+
+        switch( m.meta ) {
 
             case "chat":
-
-                this.putChat(m.data.user,m.data.msg,m.meta,m.data.user_id);
+                this.putChat( m.data.user, m.data.msg, m.meta, m.data.user_id);
                 break;
 
             case "chat_status":
@@ -309,6 +313,7 @@ var quizRoom = {
      ******************************************************************************/
 
      userPresent: function(uuid) {
+
         for(x = 0; x < quizRoom.userIDArray; x++){
             if (quizRoom.userIDArray[x].id == uuid) return true;
         }
@@ -414,21 +419,24 @@ function mvInitRoster ( message, env, channel ) {
  * message format: {"action": "join", "timestamp": 123432432, "uuid": "memverse-id", "occupancy": 3}
  *
  ******************************************************************************/
-function mvPresence ( message, env, channel ) {
+function mvPresence ( message ) {
 
     var roster_uid   = message.uuid;
 
     // --- User joins quiz ---
     if (message.action == "join") {
 
-        if(!quizRoom.userPresent(message.uuid)) return;
+        console.log("     --> A user has joined")
+
+        // Don't add user if they are already in the array
+        if( quizRoom.userPresent(message.uuid) ) return;
 
         $.getJSON('/users/'+ message.uuid +'.json', function( data ) {
 
             var userName    = data.name;
             var gravatarURL = data.avatar_url;
             var userLink    = buildUserLink( roster_uid, userName );
-            var joinMsg     = $("<li/>").addClass("chat-announcement").append(userLink + " joined the quiz.");
+            var joinMsg     = $("<li/>").addClass("chat-announcement").append(userLink + " has arrived.");
 
             // Add user to roster array
             quizRoom.userIDArray.push({ id: data.id, name: userName, avatarURL: gravatarURL, userLink: userLink });
@@ -451,7 +459,7 @@ function mvPresence ( message, env, channel ) {
         var departedUser = quizRoom.userIDArray.splice( quizRoom.userIDArray.indexOf( roster_uid ), 1 );
 
         if(typeof departedUser[0] !== 'undefined'){
-            var li           = $("<li/>").addClass("chat-announcement").append(departedUser[0].userLink + " left the room.");
+            var li           = $("<li/>").addClass("chat-announcement").append(departedUser[0].userLink + " has left.");
 
             // Remove user from visual roster
             $("div#" + roster_uid).remove();
@@ -461,7 +469,7 @@ function mvPresence ( message, env, channel ) {
             chat_stream_scroll( function () { $("#chat-stream-narrow").append(li) } );
 
             // Log to console
-            console.log("===> Presence callback: " + departedUser + " has left the quiz.");
+            console.log("===> Presence callback: " + departedUser + " has left.");
         } else {
             console.log("departedUser[0] undefined");
         }

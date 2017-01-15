@@ -24,10 +24,15 @@ class Ability
     #   can :update, Article, :published => true
     #
     # See the wiki for details: https://github.com/ryanb/cancan/wiki/Defining-Abilities
+    #
+    # Note: all available roles are in Role table.
+    #
 
     user ||= User.new # guest user
 
     can :manage, :all                 if user.has_role?("admin")
+
+    can :manage, ChatChannel          if user.has_role?("admin")
 
     can :manage, Bloggity::BlogPost   if user.has_role?("blogger")
     can :manage, Verse                if user.has_role?("scribe")

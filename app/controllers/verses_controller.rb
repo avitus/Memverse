@@ -175,12 +175,33 @@ class VersesController < ApplicationController
   # Find a passage
   # ----------------------------------------------------------------------------------------------------------
   def lookup_passage
+
     tl = params[:tl]
 
-    if params[:vs_start] != "" and params[:vs_end] != ""
-      @verses = Verse.where(:book => params[:bk], :chapter => params[:ch], :versenum => params[:vs_start]..params[:vs_end], :translation => tl).order('versenum')
+    # http://stackoverflow.com/questions/1235863/test-if-a-string-is-basically-an-integer-in-quotes-using-ruby
+    if /^\d+$/ === params[:vs_start] and /^\d+$/ === params[:vs_end]  # e.g. Romans 8:2-4
+
+      # check that both vs numbers are <= 176 and start < end
+      # check that chapter <= 150
+
+      query_chapter  = [ params[:ch].to_i,       176].min
+      query_vs_start = [ params[:vs_start].to_i, 150].min
+      query_vs_end   = [ params[:vs_end].to_i,   150].min
+
+      @verses = Verse.where( book:        params[:bk], 
+                             chapter:     query_chapter, 
+                             versenum:    query_vs_start..query_vs_end, 
+                             translation: tl)
+                     .order('versenum')
     else
-      @verses = Verse.where(:book => params[:bk], :chapter => params[:ch], :translation => tl).order('versenum')
+
+      query_chapter  = [ params[:ch].to_i, 176].min
+
+      @verses = Verse.where( book:    params[:bk], 
+                             chapter: query_chapter, 
+                             translation: tl)
+                     .order('versenum')
+    
     end
 
     respond_to do |format|
@@ -188,15 +209,23 @@ class VersesController < ApplicationController
       format.xml  { render :xml  => @verses }
       format.json { render :json => @verses }
     end
+
   end
 
   # ----------------------------------------------------------------------------------------------------------
   # Check whether entire chapter is in DB
   # ----------------------------------------------------------------------------------------------------------
   def chapter_available
+
     tl = params[:tl]
 
-    verse = Verse.where(:book => params[:bk], :chapter => params[:ch], :versenum => 1, :translation => tl).first
+    query_chapter  = [ params[:ch].to_i, 176].min
+
+    verse = Verse.where(book: params[:bk], 
+                        chapter: query_chapter, 
+                        versenum: 1, 
+                        translation: tl)
+                 .first
 
     if verse && verse.entire_chapter_available
       response = true
