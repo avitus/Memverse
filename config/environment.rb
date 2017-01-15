@@ -30,7 +30,7 @@ TRANSLATIONS = {
   HCS:    {name: "Holman Christian Standard Bible", language: "en"},
   DTL:    {name: "Darby Translation", language: "en"},
   MSG:    {name: "The Message", language: "en"},
-  AMP:    {name: "Amplified Bible", language: "en"},
+  AMP:    {name: "Amplified Bible (Classic Edition)", language: "en"},
   IRV:    {name: "New International Reader's Version (1998)", language: "en"},
   NCV:    {name: "New Century Version", language: "en"},
   UKJ:    {name: "Updated King James Version", language: "en"},
