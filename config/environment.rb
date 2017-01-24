@@ -23,6 +23,7 @@ TRANSLATIONS = {
   KJV:    {name: "King James Version (Modernized/1987)", language: "en"},
   RSV:    {name: "Revised Standard Version (1971)", language: "en"},
   NRS:    {name: "New Revised Standard Version (1989)", language: "en"},
+  ERV:    {name: "Easy-to-Read Version (2006)", language: "en"},
   ESV:    {name: "English Standard Version (2011)", language: "en"},
   ESV07:  {name: "English Standard Version (2007)", language: "en"},
   NLT:    {name: "New Living Translation (2007)", language: "en"},
