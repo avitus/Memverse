@@ -42,7 +42,7 @@ server 'www.memverse.com', user: 'avitus', roles: %w{app db web}
 set :ssh_options, {
 	keys: [File.join(ENV["HOME"], ".ssh", "id_rsa")],
 	forward_agent: true,
-	auth_methods: %w(password)
+	auth_methods: %w(publickey password)
 }
 
 # Handle some weird issues with Sidekiq and Capistrano
