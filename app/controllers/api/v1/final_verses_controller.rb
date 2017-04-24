@@ -46,7 +46,8 @@ class Api::V1::FinalVersesController < Api::V1::ApiController
   version 1
 
   def index
-    expose FinalVerse.for_api
+    final_verses = FinalVerse.all
+    expose final_verses.page( params[:page] )
   end
 
 end
