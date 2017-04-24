@@ -89,6 +89,7 @@ MemverseApp::Application.routes.draw do
       get 'upcoming', :on => :collection
     end
     resources :translations, :only => [:index, :show]
+    resources :final_verses, :only => [:index]
     resources :progress_reports, :only => [:index]
 
     get '/me'            => "credentials#me"
