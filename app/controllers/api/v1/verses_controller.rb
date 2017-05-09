@@ -209,7 +209,7 @@ class Api::V1::VersesController < Api::V1::ApiController
   # ----------------------------------------------------------------------------------------------------------
   
   # Scopes
-  before_action only: [:show, :lookup, :search] do
+  before_action only: [:show, :lookup, :chapter, :search] do
     doorkeeper_authorize! :admin, :write, :read, :public  # Allow all scopes access for now
   end
 
@@ -233,7 +233,7 @@ class Api::V1::VersesController < Api::V1::ApiController
   # GET /verses/chapter
   def chapter
     tl = params[:tl] ? params[:tl] : current_resource_owner.translation
-    expose Verse.where(book: params[:bk], chapter: params[:ch], translation: params[:tl]).page( params[:page] )
+    expose Verse.where(book: params[:bk], chapter: params[:ch], translation: tl).page( params[:page] )
   end  
 
   # GET /verses/search
