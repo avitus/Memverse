@@ -233,7 +233,7 @@ class Api::V1::VersesController < Api::V1::ApiController
   # GET /verses/chapter
   def chapter
     tl = params[:tl] ? params[:tl] : current_resource_owner.translation
-    expose Verse.where(book: params[:bk], chapter: params[:ch], translation: params[:vs]).page( params[:page] )
+    expose Verse.where(book: params[:bk], chapter: params[:ch], translation: params[:tl]).page( params[:page] )
   end  
 
   # GET /verses/search
