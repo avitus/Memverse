@@ -43,7 +43,6 @@ class Api::V1::VersesController < Api::V1::ApiController
     end
   end
 
-
   swagger_path '/verses/lookup' do
     operation :get do
       key :description, 'Lookup a verse by translation, book, chapter, and verse number'
@@ -88,6 +87,62 @@ class Api::V1::VersesController < Api::V1::ApiController
 
       response 200 do
         key :description, 'verse response'
+        schema do
+          key :'$ref', :Verse
+        end
+      end
+      response 401 do
+        key :description, 'unauthorized response'
+        schema do
+          key :'$ref', :Verse
+        end
+      end
+
+      response :default do
+        key :description, 'unexpected error'
+        schema do
+          key :'$ref', :ErrorModel
+        end
+      end
+    end
+  end
+
+  swagger_path '/verses/chapter' do
+    operation :get do
+      key :description, 'Lookup a chapter by translation, book, and chapter number'
+      key :operationId, 'findChapter'
+      key :tags, ['verse']
+
+      parameter do
+        key :name, :tl
+        key :in, :query
+        key :description, 'Bible translation of required verse'
+        key :required, true
+        key :type, :string
+      end
+
+      parameter do
+        key :name, :bk
+        key :in, :query
+        key :description, 'Book'
+        key :required, true
+        key :type, :string
+      end
+
+      parameter do
+        key :name, :ch
+        key :in, :query
+        key :description, 'Chapter'
+        key :required, true
+        key :type, :string
+      end
+
+      security do
+        key :oauth2, ['admin write read public']
+      end
+
+      response 200 do
+        key :description, 'chapter response'
         schema do
           key :'$ref', :Verse
         end
@@ -174,6 +229,12 @@ class Api::V1::VersesController < Api::V1::ApiController
     tl = params[:tl] ? params[:tl] : current_resource_owner.translation
     expose Verse.exists_in_db(params[:bk], params[:ch], params[:vs], tl)
   end
+
+  # GET /verses/chapter
+  def chapter
+    tl = params[:tl] ? params[:tl] : current_resource_owner.translation
+    expose Verse.where(book: bk, chapter: ch, translation: tl).page( params[:page] )
+  end  
 
   # GET /verses/search
   def search
