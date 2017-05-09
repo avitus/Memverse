@@ -78,6 +78,7 @@ MemverseApp::Application.routes.draw do
     resources :users, :only => [:show, :update, :create]
     resources :verses do
       get 'lookup', :on => :collection
+      get 'chapter', :on => :collection
       get 'search', :on => :collection
     end
     resources :memverses
