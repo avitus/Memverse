@@ -31,7 +31,7 @@ TRANSLATIONS = {
   HCS:    {name: "Holman Christian Standard Bible (2009)", language: "en"},
   DTL:    {name: "Darby Translation", language: "en"},
   MSG:    {name: "The Message (2002)", language: "en"},
-  AMP:    {name: "Amplified Bible (Classic Edition) (1965)", language: "en"},
+  AMP:    {name: "Amplified Bible (Classic Edition) (1987)", language: "en"},
   IRV:    {name: "New International Reader's Version (1998)", language: "en"},
   NCV:    {name: "New Century Version (2005)", language: "en"},
   UKJ:    {name: "Updated King James Version", language: "en"},
