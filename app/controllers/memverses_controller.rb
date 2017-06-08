@@ -216,7 +216,6 @@ class MemversesController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml  => @mv }
       format.json { render :json => @mv }
     end
 
@@ -258,7 +257,6 @@ class MemversesController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml  => @mvs }
       format.json { render :json => @mvs }
     end
 
@@ -273,7 +271,6 @@ class MemversesController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml  => @verses }
       format.json { render :json => @verses }
     end
 
@@ -752,7 +749,6 @@ class MemversesController < ApplicationController
 
     respond_to do |format|
       format.html { render :partial=>'avail_translations', :layout=>false }
-      format.xml  { render :xml => @avail_translations }
       format.json { render :json => @avail_translations }
     end
 
@@ -1285,7 +1281,6 @@ class MemversesController < ApplicationController
 
     respond_to do |format|
       format.html { render :partial=>'upcoming_verses', :layout=>false }
-      format.xml  { render :xml => @upcoming_verses }
       format.json { render :json => @upcoming_verses }
     end
 

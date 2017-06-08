@@ -27,7 +27,7 @@ describe Translation do
   describe ".select_options" do
     it "should return Rails-style options_for_select" do
       Translation.select_options["English (EN)"].class.should == Array
-      Translation.select_options["English (EN)"].first.should == ["Amplified Bible (AMP)", "AMP"]
+      Translation.select_options["English (EN)"].first.should == ["Amplified Bible (Classic Edition) (1987) (AMP)", "AMP"]
     end
   end
 

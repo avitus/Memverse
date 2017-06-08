@@ -58,7 +58,7 @@ class ProgressReport < ActiveRecord::Base
   # Max of 366 (leap year).
   # @return [void]
   def capture_consistency
-    self.consistency = user.progress_reports.where(entry_date: (entry_date - 1.year + 1)..entry_date).count
+    self.consistency = user.progress_reports.where(entry_date: (entry_date - 1.year + 1.day)..entry_date).count
   end
   
 end
