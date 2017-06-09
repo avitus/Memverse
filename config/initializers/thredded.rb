@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # Thredded configuration
 
 # ==> User Configuration
@@ -7,28 +8,34 @@
 # for your user class - change it here.
 Thredded.user_class = 'User'
 
-# User name column, used in @mention syntax and should be unique.
+# User name column, used in @mention syntax and *must* be unique.
 # This is the column used to search for users' names if/when someone is @ mentioned.
 Thredded.user_name_column = :name
 
 # User display name method, by default thredded uses the user_name_column defined above
 # You may want to use :to_s or some more elaborate method
 # Thredded.user_display_name_method = :to_s
-Thredded.user_display_name_method = :name_for_forum
 
 # The path (or URL) you will use to link to your users' profiles.
 # When linking to a user, Thredded will use this lambda to spit out
 # the path or url to your user. This lambda is evaluated in the view context.
 Thredded.user_path = lambda do |user|
-  user_path = :"#{Thredded.user_class.name.underscore}_path"
+  user_path = :"#{Thredded.user_class_name.underscore}_path"
   main_app.respond_to?(user_path) ? main_app.send(user_path, user) : "/users/#{user.to_param}"
 end
 
 # This method is used by Thredded controllers and views to fetch the currently signed-in user
-Thredded.current_user_method = :"current_#{Thredded.user_class.name.underscore}"
+Thredded.current_user_method = :"current_#{Thredded.user_class_name.underscore}"
 
 # User avatar URL. rb-gravatar gem is used by default:
 Thredded.avatar_url = ->(user) { Gravatar.src(user.email, 128, 'mm') }
+
+# ==> Database Configuration
+# By default, thredded uses integers for record ID route constraints.
+# For integer based IDs (default):
+# Thredded.routes_id_constraint = /[1-9]\d*/
+# For UUID based IDs (example):
+# Thredded.routes_id_constraint = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/
 
 # ==> Permissions Configuration
 # By default, thredded uses a simple permission model, where all the users can post to all message boards,
@@ -62,10 +69,22 @@ Thredded.messageboards_order = :position
 
 # Emails going out will prefix the "Subject:" with the following string
 # Thredded.email_outgoing_prefix = '[My Forum] '
+#
+# The parent mailer for all Thredded mailers
+# Thredded.parent_mailer = 'ActionMailer::Base'
 
 # ==> View Configuration
 # Set the layout for rendering the thredded views.
-Thredded.layout = '/application'
+Thredded.layout = '/application'  # This is needed to use Memverse styling. Don't remove
+
+# ==> URLs
+# How Thredded generates URL slugs from text.
+
+# Default:
+# Thredded.slugifier = ->(input) { input.parameterize }
+
+# If your forum is in a language other than English, you might want to use the babosa gem instead
+# Thredded.slugifier = ->(input) { Babosa::Identifier.new(input).normalize.transliterate(:russian).to_s }
 
 # ==> Post Content Formatting
 # Customize the way Thredded handles post formatting.
@@ -109,3 +128,31 @@ Thredded.layout = '/application'
 #     'hi'
 #   end
 # end
+
+# ==> Topic following
+#
+# By default, a user will be subscribed to a topic they've created. Uncomment this to not subscribe them:
+#
+# Thredded.auto_follow_when_creating_topic = false
+#
+# By default, a user will be subscribed to (follow) a topic they post in. Uncomment this to not subscribe them:
+#
+# Thredded.auto_follow_when_posting_in_topic = false
+#
+# By default, a user will be subscribed to the topic they get @-mentioned in.
+# Individual users can disable this in the Notification Settings.
+# To change the default for all users, simply change the default value of the `follow_topics_on_mention` column
+# of the `thredded_user_preferences` and `thredded_user_messageboard_preferences` tables.
+
+# ==> Notifiers
+#
+# Change how users can choose to be notified, by adding notifiers here, or removing the initializer altogether
+#
+# default:
+# Thredded.notifiers = [Thredded::EmailNotifier.new]
+#
+# none:
+# Thredded.notifiers = []
+#
+# add in (must install separate gem (under development) as well):
+# Thredded.notifiers = [Thredded::EmailNotifier.new, Thredded::PushoverNotifier.new(ENV['PUSHOVER_APP_ID'])]
