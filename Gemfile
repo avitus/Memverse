@@ -111,7 +111,7 @@ gem 'bloggity',    github: 'avitus/bloggity'                                   #
 ############################################################
 # Deployment and Monitoring
 ############################################################
-gem 'capistrano', "~> 3.5"                                                     # Deploy with Capistrano
+gem 'capistrano', "~> 3.8"                                                     # Deploy with Capistrano
 gem 'capistrano-rails'                                                         # Rails-specific tasks for Capistrano
 gem 'capistrano-rvm'                                                           # RVM-specific config for Capistrano
 gem 'sitemap_generator'                                                        # Sitemap generator

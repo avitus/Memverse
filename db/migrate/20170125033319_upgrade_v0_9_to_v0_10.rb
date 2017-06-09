@@ -4,9 +4,9 @@ require 'thredded/base_migration'
 
 class UpgradeV09ToV010 < Thredded::BaseMigration
   def up
-    # remove_foreign_key :thredded_messageboard_users, :thredded_messageboards
+    remove_foreign_key :thredded_messageboard_users, :thredded_messageboards
     add_foreign_key :thredded_messageboard_users, :thredded_messageboards, on_delete: :cascade
-    # remove_foreign_key :thredded_messageboard_users, :thredded_user_details
+    remove_foreign_key :thredded_messageboard_users, :thredded_user_details
     add_foreign_key :thredded_messageboard_users, :thredded_user_details, on_delete: :cascade
 
     create_table :thredded_user_post_notifications do |t|
