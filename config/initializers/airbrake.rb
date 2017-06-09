@@ -1,4 +1,4 @@
-require 'airbrake/sidekiq/error_handler'
+require 'airbrake/sidekiq'
 
 Airbrake.configure do |config|
   config.project_key = 'ff93297e3cf047ed49d1468851347641'
