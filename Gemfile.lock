@@ -835,7 +835,7 @@ DEPENDENCIES
   swagger-blocks
   td
   thinking-sphinx
-  thredded (~> 0.9)
+  thredded (~> 0.12.4)
   uglifier
   web-console (~> 2.0)
   wirble
