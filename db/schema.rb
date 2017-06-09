@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170117030323) do
+ActiveRecord::Schema.define(version: 20170420163138) do
 
   create_table "american_states", force: :cascade do |t|
     t.string  "abbrev",      limit: 20,  default: "", null: false
@@ -745,16 +745,6 @@ ActiveRecord::Schema.define(version: 20170117030323) do
 
   add_index "thredded_post_moderation_records", ["messageboard_id", "created_at"], name: "index_thredded_moderation_records_for_display", using: :btree
 
-  create_table "thredded_post_notifications", force: :cascade do |t|
-    t.string   "email",      limit: 191, null: false
-    t.integer  "post_id",    limit: 4,   null: false
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-    t.string   "post_type",  limit: 191
-  end
-
-  add_index "thredded_post_notifications", ["post_id", "post_type"], name: "index_thredded_post_notifications_on_post", using: :btree
-
   create_table "thredded_posts", force: :cascade do |t|
     t.integer  "user_id",          limit: 4
     t.text     "content",          limit: 65535
@@ -827,9 +817,9 @@ ActiveRecord::Schema.define(version: 20170117030323) do
   end
 
   add_index "thredded_topics", ["hash_id"], name: "index_thredded_topics_on_hash_id", using: :btree
-  add_index "thredded_topics", ["messageboard_id", "slug"], name: "index_thredded_topics_on_messageboard_id_and_slug", unique: true, using: :btree
   add_index "thredded_topics", ["messageboard_id"], name: "index_thredded_topics_on_messageboard_id", using: :btree
   add_index "thredded_topics", ["moderation_state", "sticky", "updated_at"], name: "index_thredded_topics_for_display", using: :btree
+  add_index "thredded_topics", ["slug"], name: "index_thredded_topics_on_slug", unique: true, using: :btree
   add_index "thredded_topics", ["user_id"], name: "index_thredded_topics_on_user_id", using: :btree
 
   create_table "thredded_user_details", force: :cascade do |t|
@@ -849,20 +839,31 @@ ActiveRecord::Schema.define(version: 20170117030323) do
   add_index "thredded_user_details", ["user_id"], name: "index_thredded_user_details_on_user_id", using: :btree
 
   create_table "thredded_user_messageboard_preferences", force: :cascade do |t|
-    t.integer  "user_id",                  limit: 4,                null: false
-    t.integer  "messageboard_id",          limit: 4,                null: false
-    t.boolean  "follow_topics_on_mention",           default: true, null: false
-    t.datetime "created_at",                                        null: false
-    t.datetime "updated_at",                                        null: false
+    t.integer  "user_id",                  limit: 4,                 null: false
+    t.integer  "messageboard_id",          limit: 4,                 null: false
+    t.boolean  "follow_topics_on_mention",           default: true,  null: false
+    t.datetime "created_at",                                         null: false
+    t.datetime "updated_at",                                         null: false
+    t.boolean  "auto_follow_topics",                 default: false, null: false
   end
 
   add_index "thredded_user_messageboard_preferences", ["user_id", "messageboard_id"], name: "thredded_user_messageboard_preferences_user_id_messageboard_id", unique: true, using: :btree
 
+  create_table "thredded_user_post_notifications", force: :cascade do |t|
+    t.integer  "user_id",     limit: 4, null: false
+    t.integer  "post_id",     limit: 4, null: false
+    t.datetime "notified_at",           null: false
+  end
+
+  add_index "thredded_user_post_notifications", ["post_id"], name: "index_thredded_user_post_notifications_on_post_id", using: :btree
+  add_index "thredded_user_post_notifications", ["user_id", "post_id"], name: "index_thredded_user_post_notifications_on_user_id_and_post_id", unique: true, using: :btree
+
   create_table "thredded_user_preferences", force: :cascade do |t|
-    t.integer  "user_id",                  limit: 4,                null: false
-    t.boolean  "follow_topics_on_mention",           default: true, null: false
-    t.datetime "created_at",                                        null: false
-    t.datetime "updated_at",                                        null: false
+    t.integer  "user_id",                  limit: 4,                 null: false
+    t.boolean  "follow_topics_on_mention",           default: true,  null: false
+    t.datetime "created_at",                                         null: false
+    t.datetime "updated_at",                                         null: false
+    t.boolean  "auto_follow_topics",                 default: false, null: false
   end
 
   add_index "thredded_user_preferences", ["user_id"], name: "index_thredded_user_preferences_on_user_id", using: :btree
@@ -1023,4 +1024,8 @@ ActiveRecord::Schema.define(version: 20170117030323) do
   add_index "verses", ["verified"], name: "index_verses_on_verified", using: :btree
   add_index "verses", ["versenum"], name: "index_verses_on_versenum", using: :btree
 
+  add_foreign_key "thredded_messageboard_users", "thredded_messageboards", on_delete: :cascade
+  add_foreign_key "thredded_messageboard_users", "thredded_user_details", on_delete: :cascade
+  add_foreign_key "thredded_user_post_notifications", "thredded_posts", column: "post_id", on_delete: :cascade
+  add_foreign_key "thredded_user_post_notifications", "users", on_delete: :cascade
 end
