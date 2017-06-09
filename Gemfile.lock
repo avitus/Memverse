@@ -759,7 +759,7 @@ DEPENDENCIES
   breadcrumbs_on_rails (>= 2.0.0)
   byebug
   cancancan (~> 1.10)
-  capistrano (~> 3.5)
+  capistrano (~> 3.8)
   capistrano-rails
   capistrano-rvm
   capistrano-sidekiq
@@ -844,4 +844,4 @@ RUBY VERSION
    ruby 2.3.1p112
 
 BUNDLED WITH
-   1.12.5
+   1.15.1
