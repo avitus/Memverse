@@ -215,7 +215,7 @@ GEM
     cucumber-wire (0.0.1)
     dalli (2.7.6)
     database_cleaner (1.6.1)
-    db_text_search (0.2.1)
+    db_text_search (0.2.2)
       activerecord (>= 4.1.15, < 6.0)
     debug_inspector (0.0.3)
     devise (4.3.0)
