@@ -10,7 +10,7 @@ Thredded.user_class = 'User'
 
 # User name column, used in @mention syntax and *must* be unique.
 # This is the column used to search for users' names if/when someone is @ mentioned.
-Thredded.user_name_column = :name_or_login
+Thredded.user_name_column = :name
 
 # User display name method, by default thredded uses the user_name_column defined above
 # You may want to use :to_s or some more elaborate method
@@ -43,6 +43,7 @@ Thredded.avatar_url = ->(user) { Gravatar.src(user.email, 128, 'mm') }
 
 # The name of the moderator flag column on the users table.
 Thredded.moderator_column = :admin
+
 # The name of the admin flag column on the users table.
 Thredded.admin_column = :admin
 
