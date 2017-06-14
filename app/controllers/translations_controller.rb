@@ -2,8 +2,8 @@
 
 class TranslationsController < ApplicationController
   
-  before_filter :authenticate_user!
-  before_filter :authorize, :except => [:index]
+  before_action :authenticate_user!
+  before_action :authorize, :except => [:index]
 
   # GET /translations
   def index

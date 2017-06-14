@@ -2,9 +2,9 @@
 
 class QuizQuestionsController < ApplicationController
 
-  before_filter :authenticate_user!
-  before_filter :access_permission, :except => [:submit, :search, :create, :index, :new]
-  before_filter :set_quiz_question, only: [:show, :edit, :update, :destroy]
+  before_action :authenticate_user!
+  before_action :access_permission, :except => [:submit, :search, :create, :index, :new]
+  before_action :set_quiz_question, only: [:show, :edit, :update, :destroy]
 
   add_breadcrumb "Home", :root_path
 

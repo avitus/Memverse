@@ -3,7 +3,7 @@ class ProfileController < ApplicationController
   add_breadcrumb "Home", :root_path
   add_breadcrumb "Account", :current_user
 
-  before_filter :authenticate_user!, :except => :unsubscribe
+  before_action :authenticate_user!, :except => :unsubscribe
 
   # ----------------------------------------------------------------------------------------------------------
   # Show Church Members

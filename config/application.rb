@@ -66,14 +66,11 @@ module MemverseApp
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.6'
 
-    # Don't require attr_accessible to be defined for every model
-    config.active_record.whitelist_attributes = false
-
     # Currently, Active Record suppresses errors raised within after_rollback or after_commit callbacks and only prints them to the logs. 
     # In the next version, these errors will no longer be suppressed. Instead, the errors will propagate normally just like in other Active Record callbacks.
     # When you define an after_rollback or after_commit callback, you will receive a deprecation warning about this upcoming change. 
     # When you are ready, you can opt into the new behavior and remove the deprecation warning by adding following configuration to your config/application.rb:
-    config.active_record.raise_in_transactional_callbacks = true
+    # config.active_record.raise_in_transactional_callbacks = true
 
     ### BEGIN: Fix EasouSpider invalid UTF-8 byte sequences
 

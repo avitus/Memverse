@@ -100,7 +100,7 @@
 
 class MemversesController < ApplicationController
 
-  before_filter :authenticate_user!, :except => [:memverse_counter]
+  before_action :authenticate_user!, :except => [:memverse_counter]
   before_action :set_mv, only: [:add_mv_tag, :toggle_mv_status]
 
   # Added 4/7/10 to prevent invalid authenticity token errors

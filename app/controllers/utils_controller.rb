@@ -5,7 +5,7 @@ class UtilsController < ApplicationController
   newrelic_ignore
 
   protect_from_forgery  :except => [:set_verse_text, :verify_verse]
-  before_filter :authorize
+  before_action :authorize
 
   # ----------------------------------------------------------------------------------------------------------
   # Admin Dashboard

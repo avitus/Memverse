@@ -1,6 +1,6 @@
 class GroupsController < ApplicationController
   
-  before_filter :authenticate_user!
+  before_action :authenticate_user!
   
   add_breadcrumb "Home", :root_path
   add_breadcrumb "Group Leaderboard", :groupboard_path
@@ -48,6 +48,10 @@ class GroupsController < ApplicationController
         format.json { respond_with_bip(@group) }
       end
     end
-  end  
-  
+  end 
+
+  def group_params
+    params.require(:user).permit(:name, :description, :leader_id)
+  end
+   
 end

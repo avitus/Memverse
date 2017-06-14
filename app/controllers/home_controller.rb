@@ -1,6 +1,6 @@
 class HomeController < ApplicationController
 
-  before_filter :authenticate_user!, :except => :index
+  before_action :authenticate_user!, :except => :index
 
   def index
     redirect_to :controller => "memverses", :action => "index" and return if user_signed_in?

@@ -1,6 +1,6 @@
 class TweetsController < ApplicationController
 
-  before_filter :authenticate_user!, except: :update
+  before_action :authenticate_user!, except: :update
 
   add_breadcrumb "Home", :root_path
   # ----------------------------------------------------------------------------------------------------------

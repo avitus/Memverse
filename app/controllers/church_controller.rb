@@ -8,4 +8,8 @@ class ChurchController < ApplicationController
     @users  = @church.users.active.order('memorized DESC')
   end
 
+	def church_params
+		params.require(:user).permit(:name, :description)
+	end
+
 end

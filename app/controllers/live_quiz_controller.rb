@@ -2,7 +2,7 @@
 
 class LiveQuizController < ApplicationController
 
-  before_filter :authenticate_user!, :only => :live_quiz
+  before_action :authenticate_user!, :only => :live_quiz
 
   #-----------------------------------------------------------------------------------------------------------
   # Setup quiz room when user arrives

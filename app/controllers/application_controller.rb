@@ -2,12 +2,8 @@
 
 class ApplicationController < ActionController::Base
 
-  before_filter :configure_permitted_parameters, if: :devise_controller?
-
-  # def forem_user
-  #   current_user
-  # end
-  # helper_method :forem_user
+  before_action :configure_permitted_parameters, if: :devise_controller?
+  before_action :set_locale, :prepare_for_mobile
 
   def bloggity_user
     current_user
@@ -17,8 +13,6 @@ class ApplicationController < ActionController::Base
   helper :all # include all helpers, all the time
   protect_from_forgery
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
-
-  before_filter :set_locale, :prepare_for_mobile
 
   # Admin Authorization
   helper_method :admin?

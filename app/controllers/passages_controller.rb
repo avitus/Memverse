@@ -1,6 +1,6 @@
 class PassagesController < ApplicationController
 
-  before_filter :authenticate_user!
+  before_action :authenticate_user!
 
   add_breadcrumb "Home", :root_path
 

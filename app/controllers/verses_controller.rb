@@ -1,8 +1,8 @@
 # coding: utf-8
 class VersesController < ApplicationController
 
-  before_filter :authenticate_user!, :except => [:index, :show]
-  skip_before_filter :verify_authenticity_token, :only => [:set_verse_text, :check_verse]  # ALV: attempt to stop redirects to login page when setting verse text
+  before_action :authenticate_user!, :except => [:index, :show]
+  skip_before_action :verify_authenticity_token, :only => [:set_verse_text, :check_verse]  # ALV: attempt to stop redirects to login page when setting verse text
 
   add_breadcrumb "Home", :root_path
 
@@ -349,5 +349,10 @@ class VersesController < ApplicationController
     @verse.save
     render :text => "Checked"
   end
+
+  def verse_params
+    params.require(:user).permit(:book, :book_index, :chapter, :versenum, :translation, :text, :verified, :error_flag)
+  end
+  
 
 end

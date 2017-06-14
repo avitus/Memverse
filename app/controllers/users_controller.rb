@@ -1,8 +1,8 @@
 class UsersController < ApplicationController
 
-  skip_before_filter :verify_authenticity_token, :only => :create
+  skip_before_action :verify_authenticity_token, :only => :create
 
-  before_filter :authenticate_user!
+  before_action :authenticate_user!
 
   add_breadcrumb "Home", :root_path
 
@@ -90,6 +90,16 @@ class UsersController < ApplicationController
 
   end
 
+
+  def user_params
+    params.require(:user)
+      .permit(:login, :email, :name, :password, :password_confirmation, :current_password,
+              :identity_url, :remember_me, :newsletters, :reminder_freq, :last_reminder,
+              :church, :group, :country, :american_state, :show_echo, :max_interval,
+              :mnemonic_use, :all_refs, :referred_by, :auto_work_load, :show_email,
+              :provider, :uid, :translation, :time_allocation, :quiz_alert,
+              :device_token, :device_type)
+  end
 
   protected
 

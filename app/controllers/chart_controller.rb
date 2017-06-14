@@ -6,7 +6,7 @@ end
 
 class ChartController < ApplicationController
 
-  before_filter :authenticate_user!, :except => :load_memverse_clock
+  before_action :authenticate_user!, :except => :load_memverse_clock
 
   # ----------------------------------------------------------------------------------------------------------
   # Stacked bar chart to show user progress

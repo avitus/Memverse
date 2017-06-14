@@ -1,8 +1,8 @@
 # coding: utf-8
 
 class QuizzesController < ApplicationController
-  before_filter :authenticate_user!
-  before_filter :authorize
+  before_action :authenticate_user!
+  before_action :authorize
   load_and_authorize_resource param_method: :quiz_params
 
   add_breadcrumb "Home", :root_path

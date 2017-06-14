@@ -1,7 +1,7 @@
 class QuestsController < ApplicationController
   
-  before_filter :authenticate_user!
-  before_filter :authorize, :except => [:index, :show, :badge_quests_check ]
+  before_action :authenticate_user!
+  before_action :authorize, :except => [:index, :show, :badge_quests_check ]
   
   # GET /quests
   # GET /quests.xml

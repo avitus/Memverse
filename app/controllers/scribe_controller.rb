@@ -2,7 +2,7 @@
 
 class ScribeController < ApplicationController
 
-  before_filter :authenticate_user!, :access_permission, :sidenav
+  before_action :authenticate_user!, :access_permission, :sidenav
 
   # ----------------------------------------------------------------------------------------------------------
   # Scribe Dashboard

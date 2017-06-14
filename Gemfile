@@ -8,7 +8,7 @@ HOST_OS = RbConfig::CONFIG['host_os']
 source 'http://rubygems.org'
 
 group :development do
-  gem 'web-console', '~> 2.0'
+  gem 'web-console'
   gem 'rails-footnotes', '>= 3.7'
   gem 'better_errors'
   gem 'binding_of_caller'
@@ -61,7 +61,7 @@ gem 'redis', '~> 3.2'                                                          #
 # Thredded specifies jQuery version in javascripts/threddeded/dependencies
 #
 ############################################################
-gem 'rails', '4.2.6'                                                            
+gem 'rails', '5.1'                                                            
 gem 'jquery-rails'                                                              # Currently using jQuery 1.12.4
 gem 'jquery-ui-rails'
 
@@ -76,19 +76,19 @@ gem 'uglifier'                                                                  
 ############################################################
 # For Rails 4 Upgrade ... should be removed eventually
 ############################################################
-gem 'protected_attributes'                                                     # Only officially supported until Rails 5
-gem 'rails-observers'
-gem 'actionpack-page_caching'
-gem 'actionpack-action_caching'
-gem 'activerecord-deprecated_finders'
-gem 'activerecord-session_store'                                               # We should store sessions in cookies
-gem 'activeresource', require: 'active_resource'
+# gem 'protected_attributes'                                                   # Only officially supported until Rails 5
+# gem 'rails-observers' 
+# gem 'actionpack-page_caching'
+# gem 'actionpack-action_caching'
+# gem 'activerecord-deprecated_finders'
+# gem 'activerecord-session_store'                                               # We should store sessions in cookies
+# gem 'activeresource', require: 'active_resource'
 
 ############################################################
 # API
 ############################################################
-gem 'rocket_pants', '~> 1.0'                                                   # API goodness
-gem 'doorkeeper', '~> 2.2.0'                                                   # Oauth for API
+# gem 'rocket_pants', '~> 1.0'                                                 # API goodness (no support for Rails 5)
+gem 'doorkeeper'                                                               # Oauth for API
 gem 'swagger-blocks'                                                           # Generates swagger-ui json files
 
 ############################################################
@@ -143,7 +143,7 @@ gem 'paperclip'                                                                #
 ############################################################
 # Other Gems -- should be grouped better
 ############################################################
-gem 'fancybox2-rails'                                                          # For displaying of video, pop-up info box
+# gem 'fancybox2-rails'                                                        # For displaying of video, pop-up info box
 gem 'kaminari'                                                                 # Required for bloggity
 gem 'rinku', require: 'rails_rinku'                                            # Supports auto-linking of URL's in blog comments
 gem 'randumb'                                                                  # Retrieve a random record
@@ -159,12 +159,11 @@ gem 'breadcrumbs_on_rails', '>=2.0.0'                                          #
 gem 'dalli'                                                                    # Memcached client
 gem 'friendly_id'                                                              # Makes nice IDs for models
 gem 'foreman'                                                                  # Helps manage multiple processes when running app in development.
-gem 'best_in_place', git: "https://github.com/bernat/best_in_place"            # In-place editing support
-gem 'split', require: 'split/dashboard'                                        # AB testing framework
+gem 'best_in_place'                                                            # In-place editing support
+# gem 'best_in_place', git: "https://github.com/bernat/best_in_place"            # In-place editing support
+# gem 'split', require: 'split/dashboard'                                        # AB testing framework
 gem 'backup'                                                                   # Used to backup MySQL database and uploaded site assets
 gem 'dropbox-sdk'                                                              # Used with backup above
-gem 'sinatra', require: false                                                  # sinatra and slim are required for sidekiq
-gem 'slim'
 gem 'rack-utf8_sanitizer'                                                      # Used to fix EasouSpider invalid UTF-8 byte sequences
 gem 'responders', '~> 2.0'                                                     # Support for respond_to and respond_with in Rails 4.2
 
@@ -172,3 +171,8 @@ group :console do
   gem 'wirble'
   gem 'hirb'
 end
+
+
+# TODO
+
+# rake acts_as_taggable_on_engine:install:migration  <-- this fails

@@ -19,11 +19,11 @@ MemverseApp::Application.routes.draw do
   end
 
   # Routes for A/B testing
-  match "/split" => Split::Dashboard, via: [:get, :post, :delete], :anchor => false, :constraints => lambda { |request|
-    request.env['warden'].authenticated?    # are we authenticated?
-    request.env['warden'].authenticate!     # authenticate if not already
-    request.env['warden'].user.try(:admin?) # check if admin
-  }
+  # match "/split" => Split::Dashboard, via: [:get, :post, :delete], :anchor => false, :constraints => lambda { |request|
+  #   request.env['warden'].authenticated?    # are we authenticated?
+  #   request.env['warden'].authenticate!     # authenticate if not already
+  #   request.env['warden'].user.try(:admin?) # check if admin
+  # }
 
   # Oauth
   devise_for :users, :controllers => { :omniauth_callbacks => "omniauth_callbacks" }

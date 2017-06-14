@@ -100,7 +100,7 @@ class Verse < ActiveRecord::Base
   # Validations
   validates_presence_of   :translation, :book, :chapter, :versenum, :text
 
-  attr_accessible :book, :book_index, :chapter, :versenum, :translation, :text, :verified, :error_flag
+  # attr_accessible :book, :book_index, :chapter, :versenum, :translation, :text, :verified, :error_flag
 
   scope :old_testament, -> { where(:book_index =>  1..39) }
   scope :new_testament, -> { where(:book_index => 40..66) }
