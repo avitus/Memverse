@@ -87,7 +87,8 @@ gem 'uglifier'                                                                  
 ############################################################
 # API
 ############################################################
-# gem 'rocket_pants', '~> 1.0'                                                 # API goodness (no support for Rails 5)
+# Use this version only until Rails 5 support in master branch
+gem 'rocket_pants', github: 'parse/rocket_pants'                               # API goodness (no support for Rails 5)
 gem 'doorkeeper'                                                               # Oauth for API
 gem 'swagger-blocks'                                                           # Generates swagger-ui json files
 
@@ -97,7 +98,7 @@ gem 'swagger-blocks'                                                           #
 gem 'devise'                                                                   # Authentication
 gem 'devise-encryptable'                                                       # TODO: Is this required?
 gem 'omniauth'                                                                 # Multi-provider authentication
-gem 'omniauth-windowslive', git: 'git://github.com/kayle/omniauth-windowslive' # Windows Live strategy
+gem 'omniauth-windowslive', github: 'kayle/omniauth-windowslive'               # Windows Live strategy (repo fork)
 gem 'cancancan', '~> 1.10'                                                     # Role-based authorization
 
 ############################################################
@@ -105,7 +106,7 @@ gem 'cancancan', '~> 1.10'                                                     #
 ############################################################
 gem 'rails_admin'                                                              # Admin console
 gem 'thredded', '~> 0.12.4'                                                    # Forum engine
-gem 'bloggity',    github: 'avitus/bloggity'                                   # Blog engine
+gem 'bloggity', github: 'avitus/bloggity'                                      # Blog engine
 # gem 'bloggity', :path => "../bloggity"                                       # Blog engine (dev environment)
 
 ############################################################
@@ -176,3 +177,4 @@ end
 # TODO
 
 # rake acts_as_taggable_on_engine:install:migration  <-- this fails
+# find replacement for best_in_place gem
