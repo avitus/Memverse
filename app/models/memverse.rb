@@ -152,7 +152,7 @@ class Memverse < ActiveRecord::Base
   validates :verse_id, :presence => true, :uniqueness => {:scope => :user_id}
 
   # Needed to add this for Rails 4
-  attr_protected :test_interval
+  # attr_protected :test_interval
 
   # Set initial values and link verse other verses
   before_create  :supermemo_init

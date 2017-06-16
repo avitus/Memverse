@@ -35,6 +35,8 @@ ActionController::Base.allow_rescue = false
 # For some databases (like MongoDB and CouchDB) you may need to use :truncation instead.
 begin
   DatabaseCleaner.strategy = :transaction
+  #https://github.com/DatabaseCleaner/database_cleaner/issues/445
+  DatabaseCleaner.clean_with :truncation, except: %w(ar_internal_metadata)
 rescue NameError
   raise "You need to add database_cleaner to your Gemfile (in the :test group) if you wish to use it."
 end

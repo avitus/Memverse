@@ -89,6 +89,7 @@ gem 'uglifier'                                                                  
 ############################################################
 # Use this version only until Rails 5 support in master branch
 gem 'rocket_pants', github: 'parse/rocket_pants'                               # API goodness (no support for Rails 5)
+gem 'api_smith', '~> 1.3', github: 'youroute/api_smith'                        # Dependency of rocket_pant
 gem 'doorkeeper'                                                               # Oauth for API
 gem 'swagger-blocks'                                                           # Generates swagger-ui json files
 
@@ -106,8 +107,8 @@ gem 'cancancan', '~> 1.10'                                                     #
 ############################################################
 gem 'rails_admin'                                                              # Admin console
 gem 'thredded', '~> 0.12.4'                                                    # Forum engine
-gem 'bloggity', github: 'avitus/bloggity'                                      # Blog engine
-# gem 'bloggity', :path => "../bloggity"                                       # Blog engine (dev environment)
+# gem 'bloggity', github: 'avitus/bloggity'                                      # Blog engine
+gem 'bloggity', :path => "../bloggity"                                       # Blog engine (dev environment)
 
 ############################################################
 # Deployment and Monitoring
@@ -145,6 +146,7 @@ gem 'paperclip'                                                                #
 # Other Gems -- should be grouped better
 ############################################################
 # gem 'fancybox2-rails'                                                        # For displaying of video, pop-up info box
+gem 'fancybox2-rails', '~> 0.3.0', github: 'ChallahuAkbar/fancybox2-rails'     # For displaying of video, pop-up info box
 gem 'kaminari'                                                                 # Required for bloggity
 gem 'rinku', require: 'rails_rinku'                                            # Supports auto-linking of URL's in blog comments
 gem 'randumb'                                                                  # Retrieve a random record
@@ -163,7 +165,7 @@ gem 'foreman'                                                                  #
 gem 'best_in_place'                                                            # In-place editing support
 # gem 'best_in_place', git: "https://github.com/bernat/best_in_place"            # In-place editing support
 # gem 'split', require: 'split/dashboard'                                        # AB testing framework
-gem 'backup'                                                                   # Used to backup MySQL database and uploaded site assets
+# gem 'backup'                                                                 # Used to backup MySQL database and uploaded site assets
 gem 'dropbox-sdk'                                                              # Used with backup above
 gem 'rack-utf8_sanitizer'                                                      # Used to fix EasouSpider invalid UTF-8 byte sequences
 gem 'responders', '~> 2.0'                                                     # Support for respond_to and respond_with in Rails 4.2
@@ -178,3 +180,4 @@ end
 
 # rake acts_as_taggable_on_engine:install:migration  <-- this fails
 # find replacement for best_in_place gem
+# Add backup gem back in ... couldn't resolve nokogiri dependency to match that of Thredded
