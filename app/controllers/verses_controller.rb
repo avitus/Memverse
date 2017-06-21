@@ -73,7 +73,7 @@ class VersesController < ApplicationController
   # POST /verses.xml
   # ----------------------------------------------------------------------------------------------------------
   def create
-    @verse = Verse.new(params[:verse])
+    @verse = Verse.new(verse_params)
 
     respond_to do |format|
       if @verse.save
@@ -101,7 +101,7 @@ class VersesController < ApplicationController
         flash[:notice] = 'This verse has multiple users and can only be edited by a Memverse employee.'
         format.html { redirect_to( @verse ) }
         format.xml  { head :ok }
-      elsif @verse.update_attributes(params[:verse])
+      elsif @verse.update_attributes(verse_params)
         flash[:notice] = 'Verse was successfully updated.'
         format.html { redirect_to( @verse ) }
         format.xml  { head :ok }
@@ -351,7 +351,7 @@ class VersesController < ApplicationController
   end
 
   def verse_params
-    params.require(:user).permit(:book, :book_index, :chapter, :versenum, :translation, :text, :verified, :error_flag)
+    params.require(:verse).permit(:book, :book_index, :chapter, :versenum, :translation, :text, :verified, :error_flag)
   end
   
 

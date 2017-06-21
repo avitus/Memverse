@@ -28,8 +28,8 @@ describe VersesController do
   # Verse. As you add validations to Verse, be sure to
   # update the return value of this method accordingly.
   def valid_attributes
-    { :translation => "NIV", :book_index => 43, :book => "John", :chapter => 11, :versenum => 35,
-      :text => "Jesus wept." }
+    { translation: "NIV", book_index: 43, book: "John", chapter: 11, versenum: 35,
+      text: "Jesus wept." }
   end
 
   # This should return the minimal set of values that should be in the session
@@ -51,7 +51,7 @@ describe VersesController do
   describe "GET show" do
     it "assigns the requested Verse as @Verse" do
       verse = Verse.create! valid_attributes
-      get :show, {:id => verse.to_param}, valid_session
+      get :show, params: {id: verse.to_param}, session: valid_session
       assigns(:verse).should eq(verse)
     end
   end
@@ -66,7 +66,7 @@ describe VersesController do
   describe "GET edit" do
     it "assigns the requested Verse as @Verse" do
       verse = Verse.create! valid_attributes
-      get :edit, {:id => verse.to_param}, valid_session
+      get :edit, params: {id: verse.to_param}, session: valid_session
       assigns(:verse).should eq(verse)
     end
   end
@@ -75,18 +75,18 @@ describe VersesController do
     describe "with valid params" do
       it "creates a new Verse" do
         expect {
-          post :create, {:verse => valid_attributes}, valid_session
+          post :create, params: {verse: valid_attributes}, session: valid_session
         }.to change(Verse, :count).by(1)
       end
 
       it "assigns a newly created Verse as @Verse" do
-        post :create, {:verse => valid_attributes}, valid_session
+        post :create, params: {verse: valid_attributes}, session: valid_session
         assigns(:verse).should be_a(Verse)
         assigns(:verse).should be_persisted
       end
 
       it "redirects to the created Verse" do
-        post :create, {:verse => valid_attributes}, valid_session
+        post :create, params: {verse: valid_attributes}, session: valid_session
         response.should redirect_to(Verse.last)
       end
     end
@@ -110,14 +110,18 @@ describe VersesController do
 
   describe "PUT update" do
     describe "with valid params" do
-      it "updates the requested Verse" do
+
+      let(:new_attributes) {
+        { text: "Be fruitful and multiply" }
+      }
+
+      it "updates the requested verse" do
         verse = Verse.create! valid_attributes
-        # Assuming there are no other Verses in the database, this
-        # specifies that the Verse created on the previous line
-        # receives the :update_attributes message with whatever params are
-        # submitted in the request.
-        Verse.any_instance.should_receive(:update_attributes).with({ "last_verse" => "7" })
-        put :update, {:id => verse.to_param, :verse => { :last_verse => "7" }}, valid_session
+        put :update, params: {id: verse.to_param, verse: new_attributes }, session: valid_session
+        verse.reload
+        new_attributes.each_pair do |key, value|
+          expect(verse[key]).to eq(value)
+        end
       end
 
       #==============================================================================================
@@ -139,9 +143,10 @@ describe VersesController do
 
       it "redirects to the Verse" do
         verse = Verse.create! valid_attributes
-        put :update, {:id => verse.to_param, :verse => valid_attributes}, valid_session
+        put :update, params: {id: verse.to_param, verse: valid_attributes}, session: valid_session
         response.should redirect_to(verse)
       end
+      
     end
 
     describe "with invalid params" do
@@ -149,7 +154,7 @@ describe VersesController do
         verse = Verse.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
         Verse.any_instance.stub(:save).and_return(false)
-        put :update, {:id => verse.to_param, :Verse => { :book => "invalid value" }}, valid_session
+        put :update, params: {id: verse.to_param, verse: { book: "invalid value" }}, session: valid_session
         assigns(:verse).should eq(verse)
       end
 
@@ -157,7 +162,7 @@ describe VersesController do
         verse = Verse.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
         Verse.any_instance.stub(:save).and_return(false)
-        put :update, {:id => verse.to_param, :verse => { :book => "invalid value" }}, valid_session
+        put :update, params: {id: verse.to_param, verse: { book: "invalid value" }}, session: valid_session
         response.should render_template("edit")
       end
     end
@@ -167,13 +172,13 @@ describe VersesController do
     it "destroys the requested Verse" do
       verse = Verse.create! valid_attributes
       expect {
-        delete :destroy, {:id => verse.to_param}, valid_session
+        delete :destroy, params: {id: verse.to_param}, session: valid_session
       }.to change(Verse, :count).by(-1)
     end
 
     it "redirects to the Verses list" do
       verse = Verse.create! valid_attributes
-      delete :destroy, {:id => verse.to_param}, valid_session
+      delete :destroy, params: {id: verse.to_param}, session: valid_session
       response.should redirect_to(verses_url)
     end
   end

@@ -70,6 +70,10 @@ GEM
       rack-test (~> 0.6.3)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.0.2)
+    actionpack-action_caching (1.2.0)
+      actionpack (>= 4.0.0, < 6)
+    actionpack-page_caching (1.1.0)
+      actionpack (>= 4.0.0, < 6)
     actionview (5.1.0)
       activesupport (= 5.1.0)
       builder (~> 3.1)
@@ -506,6 +510,10 @@ GEM
       bundler (>= 1.3.0, < 2.0)
       railties (= 5.1.0)
       sprockets-rails (>= 2.0.0)
+    rails-controller-testing (1.0.2)
+      actionpack (~> 5.x, >= 5.0.1)
+      actionview (~> 5.x, >= 5.0.1)
+      activesupport (~> 5.x)
     rails-dom-testing (2.0.3)
       activesupport (>= 4.2.0)
       nokogiri (>= 1.6)
@@ -721,6 +729,8 @@ PLATFORMS
 
 DEPENDENCIES
   action_mailer_cache_delivery (>= 0.3.5)
+  actionpack-action_caching
+  actionpack-page_caching
   acts-as-taggable-on
   airbrake
   api_smith (~> 1.3)!
@@ -738,7 +748,7 @@ DEPENDENCIES
   capistrano-sidekiq
   capybara
   ckeditor!
-  coffee-rails
+  coffee-rails (~> 4.2)
   compass-rails
   cucumber-rails
   dalli
@@ -783,6 +793,7 @@ DEPENDENCIES
   pubnub
   rack-utf8_sanitizer
   rails (= 5.1)
+  rails-controller-testing
   rails-footnotes (>= 3.7)
   rails_admin
   randumb
@@ -793,7 +804,7 @@ DEPENDENCIES
   rpush
   rspec-rails
   rspec_junit_formatter
-  sass-rails
+  sass-rails (~> 5.0)
   selenium-webdriver
   sidekiq
   sidetiq
@@ -804,7 +815,7 @@ DEPENDENCIES
   td
   thinking-sphinx
   thredded (~> 0.12.4)
-  uglifier
+  uglifier (>= 1.3.0)
   web-console
   wirble
 

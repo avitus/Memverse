@@ -20,6 +20,7 @@ end
 group :development, :test do
   gem 'rspec-rails'
   gem 'rspec_junit_formatter'                                   # Automatic test metadata collection for CirclCI
+  gem 'rails-controller-testing'                                # To use 'assigns' in controller tests
   gem 'jasmine'
   gem 'jasmine-rails'
   gem 'sqlite3'
@@ -68,18 +69,18 @@ gem 'jquery-ui-rails'
 ############################################################
 # Rails Support Gems
 ############################################################
-gem 'sass-rails'
 gem 'compass-rails'                                                             # Now has Rails 4 support
-gem 'coffee-rails'
-gem 'uglifier'                                                                  # JS compression
+gem 'sass-rails', '~> 5.0'
+gem 'uglifier', '>= 1.3.0'                                                      # Compressor for JS assets
+gem 'coffee-rails', '~> 4.2'                      
 
 ############################################################
 # For Rails 4 Upgrade ... should be removed eventually
 ############################################################
 # gem 'protected_attributes'                                                   # Only officially supported until Rails 5
 # gem 'rails-observers' 
-# gem 'actionpack-page_caching'
-# gem 'actionpack-action_caching'
+gem 'actionpack-page_caching'
+gem 'actionpack-action_caching'
 # gem 'activerecord-deprecated_finders'
 # gem 'activerecord-session_store'                                               # We should store sessions in cookies
 # gem 'activeresource', require: 'active_resource'

@@ -52,7 +52,7 @@ FactoryGirl.define do
 
     # This ugliness is required to skip the validate_ref callback since the FinalVerse records are often not available during testing
     # For details see: http://stackoverflow.com/questions/8751175/skip-callbacks-on-factory-girl-and-rspec
-    after(:build) { |verse| verse.class.skip_callback(:create, :before, :validate_ref) }
+    after(:build) { |verse| verse.class.skip_callback(:create, :before, :validate_ref, raise: false) }
 
     # Use this factory for testing out of bound verses
     # TODO: these tests are not yet passing ... not sure how this works

@@ -62,9 +62,9 @@ class QuizQuestion < ActiveRecord::Base
   validates :supporting_ref, presence: true, if: :reference?
   validates :supporting_ref, presence: true, if: :recitation?
 
-  after_create  'self.quiz.update_length'
-  after_update  'self.quiz.update_length'
-  after_destroy 'self.quiz.update_length'
+  after_create  { |quiz_question| quiz_question.quiz.update_length }
+  after_update  { |quiz_question| quiz_question.quiz.update_length }
+  after_destroy { |quiz_question| quiz_question.quiz.update_length }
 
   # @return [Hash] Hash with passage text for each major translation
   def passage_translations

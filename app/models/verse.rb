@@ -98,7 +98,7 @@ class Verse < ActiveRecord::Base
   belongs_to :uberverse
 
   # Validations
-  validates_presence_of   :translation, :book, :chapter, :versenum, :text
+  validates_presence_of :translation, :book, :chapter, :versenum, :text
 
   # attr_accessible :book, :book_index, :chapter, :versenum, :translation, :text, :verified, :error_flag
 
