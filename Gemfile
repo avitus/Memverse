@@ -144,7 +144,8 @@ gem 'paperclip'                                                                #
 # Other Gems -- should be grouped better
 ############################################################
 gem 'fancybox2-rails'                                                          # For displaying of video, pop-up info box
-gem 'kaminari'                                                                 # Required for bloggity
+# Kaminari is locked to v 0.17 due to lack of support for later version from rocket_pants
+gem 'kaminari', '=0.17'                                                        # Required for bloggity and rocket_pants
 gem 'rinku', require: 'rails_rinku'                                            # Supports auto-linking of URL's in blog comments
 gem 'randumb'                                                                  # Retrieve a random record
 gem 'prawn'                                                                    # PDF support
