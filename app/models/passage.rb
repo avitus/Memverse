@@ -191,7 +191,7 @@ class Passage < ActiveRecord::Base
       self.reference = book + ' ' + self.chapter.to_s + ':' + self.first_verse.to_s + '-' + self.last_verse.to_s
     end
     save
-    return self.reference
+    # return self.reference
   end
 
   def update_book_index

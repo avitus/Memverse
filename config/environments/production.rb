@@ -17,7 +17,7 @@ MemverseApp::Application.configure do
   config.assets.js_compressor   = :uglifier           # Javascript compression
   config.assets.css_compressor  = :sass               # CSS compression
   config.assets.digests         = true                # Generate digests for assets URLs
-  config.serve_static_files     = false               # Disable Rails's static asset server (Apache or nginx will already do this)
+  config.public_file_server.enabled = false           # Disable Rails's static asset server (Apache or nginx will already do this)
 
   # Don't fallback to assets pipeline if a precompiled asset is missed
   # http://stackoverflow.com/questions/8821864/config-assets-compile-true-in-rails-production-why-not
@@ -38,7 +38,7 @@ MemverseApp::Application.configure do
   # Content Delivery Network
   #===============================
   config.action_controller.asset_host = "https://d1r0kpcohdg1bn.cloudfront.net"  # Amazon Cloudfront
-  config.static_cache_control = "public, max-age=86400"
+  config.public_file_server.headers = { 'Cache-Control' => 'public, max-age=3600' }
   config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # Header that Nginx uses for sending files
 
   #===============================
