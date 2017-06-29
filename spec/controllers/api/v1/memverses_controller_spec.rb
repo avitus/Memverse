@@ -24,6 +24,17 @@ describe Api::V1::MemversesController do
       response.should have_exposed [mv]
     end
 
+    it 'returns the number of pages to be requested' do
+      get :index, :version => 1, :format => :json
+      response.should be_paginated_resource 
+
+      # body = JSON.parse(response.body)
+      # puts body
+      # body[:response].should include(:pagination)
+      # body[:response][:pagination][:pages].should == 1
+      # body[:response][:pagination][:count].should == 1
+    end
+
   end
 
   describe 'POST #create (with scopes)' do
