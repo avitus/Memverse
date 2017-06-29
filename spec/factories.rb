@@ -52,13 +52,13 @@ FactoryGirl.define do
 
     # This ugliness is required to skip the validate_ref callback since the FinalVerse records are often not available during testing
     # For details see: http://stackoverflow.com/questions/8751175/skip-callbacks-on-factory-girl-and-rspec
-    after(:build) { |verse| verse.class.skip_callback(:create, :before, :validate_ref, raise: false) }
+    # after(:build) { |verse| verse.class.skip_callback(:create, :before, :validate_ref, raise: false) }
 
-    # Use this factory for testing out of bound verses
-    # TODO: these tests are not yet passing ... not sure how this works
-    factory :verse_with_validate_ref do
-      after(:build) { |verse| verse.class.set_callback(:create, :before, :validate_ref) }
-    end
+    # # Use this factory for testing out of bound verses
+    # # TODO: these tests are not yet passing ... not sure how this works
+    # factory :verse_with_validate_ref do
+    #   after(:build) { |verse| verse.class.set_callback(:create, :before, :validate_ref) }
+    # end
 
   end
 
@@ -114,7 +114,7 @@ FactoryGirl.define do
 
     # This factory allows creation of memory verses with a different efactor
     factory :memverse_without_supermemo_init do
-      after(:build) { |memverse| memverse.class.skip_callback(:create, :before, :supermemo_init) }
+      after(:build) { |memverse| memverse.class.skip_callback(:create, :before, :supermemo_init, raise: false) }
     end
 
   end

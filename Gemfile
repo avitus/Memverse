@@ -93,6 +93,7 @@ gem 'rocket_pants', github: 'parse/rocket_pants'                               #
 gem 'api_smith', '~> 1.3', github: 'youroute/api_smith'                        # Dependency of rocket_pant
 gem 'doorkeeper'                                                               # Oauth for API
 gem 'swagger-blocks'                                                           # Generates swagger-ui json files
+gem 'jbuilder'
 
 ############################################################
 # Authentication and Authorization

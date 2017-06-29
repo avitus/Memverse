@@ -15,12 +15,12 @@ describe Api::V1::MemversesController do
     let!(:mv)          { FactoryGirl.create(:memverse, :user => user, :verse => verse)}
 
     it 'responds with 200' do
-      get :index, :version => 1, :format => :json
+      get :index, params: {version: 1}, format: :json
       response.status.should eq(200)
     end
 
     it 'returns user memory verses as json' do
-      get :index, :version => 1, :format => :json
+      get :index, params: {version: 1}, format: :json
       response.should have_exposed [mv]
     end
 
@@ -33,7 +33,7 @@ describe Api::V1::MemversesController do
 
     it 'creates the memverse' do
       expect {
-        post :create, :id => verse.id, :version => 1, :format => :json
+        post :create, params: {id: verse.id, version: 1}, format: :json
       }.to change(Memverse, :count).by(1)
       response.status.should eq(201)
       json["verse"]["id"].should == verse.id
@@ -47,7 +47,7 @@ describe Api::V1::MemversesController do
     let!(:mv)          { FactoryGirl.create(:memverse, :user => user, :verse => verse)}
 
     it 'updates the memverse' do
-      put :update, :id => mv.id, :q => 5, :version => 1, :format => :json
+      put :update, params: {id: mv.id, q: 5, version: 1}, format: :json
       response.status.should eq(200)
       json["test_interval"].should         == 4
       json["efactor"].to_f.should          == 2.1
@@ -57,7 +57,7 @@ describe Api::V1::MemversesController do
     end
 
     it 'increases the reference interval correctly' do
-      put :update, :id => mv.id, :ref_recalled => "true", :version => 1, :format => :json
+      put :update, params: {id: mv.id, ref_recalled: "true", version: 1}, format: :json
       response.status.should eq(200)
       json["ref_interval"].should              == 9
       json["test_interval"].should             == 1   # Don't make changes to the test_interval
@@ -65,7 +65,7 @@ describe Api::V1::MemversesController do
     end
 
     it 'decreases the reference interval correctly' do
-      put :update, :id => mv.id, :ref_recalled => "false", :version => 1, :format => :json
+      put :update, params: {id: mv.id, ref_recalled: "false", version: 1}, format: :json
       response.status.should eq(200)
       json["ref_interval"].should              == 4
       json["test_interval"].should             == 1   # Don't make changes to the test_interval
@@ -81,7 +81,7 @@ describe Api::V1::MemversesController do
 
     it 'deletes the memverse' do
       expect {
-        delete :destroy, :id => mv.id, :version => 1, :format => :json
+        delete :destroy, params: {id: mv.id, version: 1}, format: :json
       }.to change(Memverse, :count).by(-1)
       response.status.should eq (204)  # server executed the request but body of response contains no data
     end

@@ -144,7 +144,7 @@ class Api::V1::UsersController < Api::V1::ApiController
   version 1
 
   def create
-    user = User.new( params[:user] )
+    user = User.new( user_params )
     if user.save
       expose user
     else
@@ -166,7 +166,7 @@ class Api::V1::UsersController < Api::V1::ApiController
       error! :bad_request, metadata: {reason: 'User could not be found'}
     elsif @user != current_resource_owner
       error! :bad_request, metadata: {reason: 'User is not the signed-in user'}
-    elsif @user.update_attributes(params[:user])
+    elsif @user.update_attributes( user_params )
       expose @user
     else
       error! :bad_request, metadata: {reason: 'User could not be updated'}
@@ -176,8 +176,13 @@ class Api::V1::UsersController < Api::V1::ApiController
   private
 
   def user_params
-     params.require(:user).permit(:name, :reminder_freq, :language, :show_echo,
-      :time_allocation, :max_interval, :gender, :translation)
+    params.require(:user)
+      .permit(:login, :email, :name, :password, :password_confirmation, :current_password,
+              :identity_url, :remember_me, :newsletters, :reminder_freq, :last_reminder,
+              :church, :group, :country, :american_state, :show_echo, :max_interval,
+              :mnemonic_use, :all_refs, :referred_by, :auto_work_load, :show_email,
+              :provider, :uid, :translation, :time_allocation, :quiz_alert,
+              :device_token, :device_type)
   end
 
 end

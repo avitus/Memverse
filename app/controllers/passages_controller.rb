@@ -61,7 +61,7 @@ class PassagesController < ApplicationController
   # POST /passages
   # POST /passages.json
   def create
-    @passage = Passage.new(params[:passage])
+    @passage = Passage.new( passage_params )
 
     respond_to do |format|
       if @passage.save
@@ -80,7 +80,7 @@ class PassagesController < ApplicationController
     @passage = Passage.find(params[:id])
 
     respond_to do |format|
-      if @passage.update_attributes(params[:passage])
+      if @passage.update_attributes( passage_params )
         format.html { redirect_to @passage, notice: 'Passage was successfully updated.' }
         format.json { head :no_content }
       else
@@ -100,5 +100,11 @@ class PassagesController < ApplicationController
       format.html { redirect_to passages_url }
       format.json { head :no_content }
     end
+  end
+
+  private
+
+  def passage_params
+    params.require(:passage).permit(:user_id, :length, :ref, :translation, :book, :chapter, :first_verse, :last_verse)
   end
 end

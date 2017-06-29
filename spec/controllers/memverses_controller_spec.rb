@@ -23,21 +23,21 @@ describe MemversesController do
   describe "GET 'ajax_add'" do
 
     it "should allow a user to add a verse" do
-      get :ajax_add, { :id => @verse }, valid_session
+      get :ajax_add, params: {id: @verse}, session: valid_session
       @user.memverses.first.verse.should == @verse
     end
 
     it "should not allow the identical verse to be added twice" do
-      get :ajax_add, { :id => @verse }, valid_session
-      get :ajax_add, { :id => @verse }, valid_session
+      get :ajax_add, params: {id: @verse}, session: valid_session
+      get :ajax_add, params: {id: @verse}, session: valid_session
       @user.memverses.count.should == 1
     end
 
     it "should not allow the same verse in two different translations" do
       @verse_kjv = FactoryGirl.create(:verse, :translation => 'KJV')
       @verse_esv = FactoryGirl.create(:verse, :translation => 'ESV')
-      get :ajax_add, { :id => @verse_kjv }, valid_session
-      get :ajax_add, { :id => @verse_esv }, valid_session
+      get :ajax_add, params: { id: @verse_kjv }, session: valid_session
+      get :ajax_add, params: { id: @verse_esv }, session: valid_session
       @user.memverses.count.should == 1
     end
 
@@ -85,22 +85,22 @@ describe MemversesController do
 
   describe "GET 'mv_lookup_passage'" do 
     it "should retrieve verses in a given passage" do
-      get :mv_lookup_passage, {:bk => "Psalms", :ch => 1, format: :json}, valid_session
+      get :mv_lookup_passage, params: {bk: "Psalms", ch: 1}, format: :json, session: valid_session
       response.should be_success
     end
 
     it "should reject out of range chapters" do
-      get :mv_lookup_passage, {:bk => "Psalms", :ch => 200, format: :json}, valid_session
+      get :mv_lookup_passage, params: {bk: "Psalms", ch: 200}, format: :json, session: valid_session
       response.should be_success
     end
 
     it "should reject out of range verse numbers" do
-      get :mv_lookup_passage, {:bk => "Psalms", :ch => 1, :vs_start => 1, :vs_end => 100, format: :json}, valid_session
+      get :mv_lookup_passage, params: {bk: "Psalms", ch: 1, vs_start: 1, vs_end: 100}, format: :json, session: valid_session
       response.should be_success
     end
 
     it "should gracefully handle wildly out of range verse numbers" do
-      get :mv_lookup_passage, {:bk => "Psalms", :ch => 1, :vs_start => 1, :vs_end => 99999999999999, format: :json}, valid_session
+      get :mv_lookup_passage, params: {bk: "Psalms", ch: 1, vs_start: 1, vs_end: 99999999999999}, format: :json, session: valid_session
       response.should be_success      
     end
 

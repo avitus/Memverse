@@ -177,24 +177,37 @@ describe Verse do
     end
 
     it "should prevent a duplicate verse" do
-      verse1 = FactoryGirl.build(:verse_with_validate_ref, :book => "Psalms", :chapter => 117, :versenum => 1)
-      verse2 = FactoryGirl.build(:verse_with_validate_ref, :book => "Psalms", :chapter => 117, :versenum => 1)
-      verse1.save.should be true
-      verse2.save.should be false
-      verse2.errors.full_messages.first.should == "Verse already exists in NIV"
+
+      expect { 
+        FactoryGirl.create(:verse, book: "Psalms", book_index: 23, chapter: 117, versenum: 1, translation: "ESV")
+        FactoryGirl.create(:verse, book: "Psalms", book_index: 23, chapter: 117, versenum: 1, translation: "ESV")
+      }.to change { Verse.count }.by(1)
+
+      # verse1 = FactoryGirl.build(:verse, :book => "Psalms", :chapter => 117, :versenum => 1)
+      # verse2 = FactoryGirl.build(:verse, :book => "Psalms", :chapter => 117, :versenum => 1)
+      # verse1.save.should be true
+      # verse2.save.should be false
+      # verse2.errors.full_messages.first.should == "Verse already exists in NIV"
     end
 
     it "should reject an invalid chapter" do
-      verse = FactoryGirl.build(:verse_with_validate_ref, :book => "Psalms", :chapter => 151, :versenum => 1)
-      verse.save.should be false
-      verse.errors.full_messages.first.should == "Invalid chapter"
+
+      expect { 
+        Verse.create(book: "Psalms", chapter: 151, versenum: 1, translation: "ESV")
+      }.not_to change { Verse.count }
+
+      # verse = FactoryGirl.create(:verse, :book => "Psalms", :chapter => 151, :versenum => 1)
+      # verse.save.should be false
+      # verse.errors.full_messages.first.should == "Invalid chapter"
     end
 
     it "should reject an invalid versenum" do
-      verse = FactoryGirl.build(:verse_with_validate_ref, :book => "Psalms", :chapter => 117, :versenum => 3, :translation => "ESV")
-      verse.save.should be false
-      verse.errors.full_messages.first.should == "Invalid verse number"
+      expect { 
+        Verse.create(book: "Psalms", chapter: 117, versenum: 3, translation: "ESV")
+      }.not_to change { Verse.count }
     end
+
+      # verse = FactoryGirl.create(:verse, :book => "Psalms", :chapter => 117, :versenum => 3, :translation => "ESV")
   end
 
   describe "<=>" do

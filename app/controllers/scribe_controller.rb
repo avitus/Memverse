@@ -80,7 +80,10 @@ class ScribeController < ApplicationController
     @verse = Verse.find(params[:id])
     @verse.update_attributes(verified: true, error_flag: false)
 
-    render :text => "Verified"
+    # render :text => "Verified"
+
+    render plain: {text: 'Verified'}.to_json, status: 422, content_type: 'application/json'
+
   end
 
   private

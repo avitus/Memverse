@@ -18,12 +18,12 @@ describe Api::V1::VersesController do
       let(:token) { double :acceptable? => true }
 
       it 'responds with 200' do
-        get :show, :id => verse.id, :version => 1, :format => :json
+        get :show, params: {id: verse.id, version: 1}, format: :json
         response.status.should eq(200)
       end
 
       it 'returns a verse in JSON format' do
-        get :show, :id => verse.id, :version => 1, :format => :json
+        get :show, params: {id: verse.id, version: 1}, format: :json
         json["text"].should == JSON.parse(verse.to_json)["text"]
       end
 
@@ -33,7 +33,7 @@ describe Api::V1::VersesController do
     context 'no valid access token' do
 
       it 'responds with 401 when unauthorized' do
-        get :show, :id => verse.id, :version => 1, :format => :json
+        get :show, params: {id: verse.id, version: 1}, format: :json
         response.status.should eq(401)
       end
     
@@ -52,7 +52,7 @@ describe Api::V1::VersesController do
       let(:token) { double :acceptable? => true }
 
       it 'lookups a verse' do
-        get :lookup, :tl => 'NIV', :bk => 'Galatians', :ch => 5, :vs => 22,:version => 1, :format => :json
+        get :lookup, params: {tl: 'NIV', bk: 'Galatians', ch: 5, vs: 22, version: 1}, format: :json
         response.status.should eq(200)
         json["text"].should == 'But the fruit of the Spirit is love, joy, peace, patience, kindness, goodness, faithfulness,'
       end

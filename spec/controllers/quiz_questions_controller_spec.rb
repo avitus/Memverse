@@ -37,18 +37,18 @@ describe QuizQuestionsController do
     describe "with valid params" do
       it "creates a new QuizQuestion" do
         expect {
-          post :create, {:quiz_question => valid_attributes}, valid_session
+          post :create, params: {quiz_question: valid_attributes}, session: valid_session
         }.to change(QuizQuestion, :count).by(1)
       end
 
       it "assigns a newly created QuizQuestions as @QuizQuestion" do
-        post :create, {:quiz_question => valid_attributes}, valid_session
+        post :create, params: {quiz_question: valid_attributes}, session: valid_session
         expect( assigns(:quiz_question) ).to be_a(QuizQuestion)
         expect( assigns(:quiz_question) ).to be_persisted
       end
 
       it "redirects to the created Verse" do
-        post :create, {:quiz_question => valid_attributes}, valid_session
+        post :create, params: {quiz_question: valid_attributes}, session: valid_session
         expect( response ).to redirect_to(QuizQuestion.last)
       end
     end

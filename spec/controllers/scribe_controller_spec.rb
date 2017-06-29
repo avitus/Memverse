@@ -26,7 +26,7 @@ describe ScribeController do
     it "verifies a verse" do
       verse1 = Verse.create! valid_attributes
       expect {
- 	  	get :verify_verse, {:id => verse1.to_param}, valid_session
+ 	  	get :verify_verse, params: {id: verse1.to_param}, format: :json, session: valid_session
  	  	verse1.reload
       }.to change{verse1.verified}.from(false).to(true)
     end
@@ -34,7 +34,7 @@ describe ScribeController do
     it "removes the error flag" do
       verse2 = Verse.create! valid_attributes
       expect {
- 	  	get :verify_verse, {:id => verse2.to_param}, valid_session 
+      get :verify_verse, params: {id: verse2.to_param}, format: :json, session: valid_session
  	  	verse2.reload   	
       }.to change{verse2.error_flag}.from(true).to(false)
     end

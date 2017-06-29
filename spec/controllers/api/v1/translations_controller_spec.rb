@@ -20,12 +20,12 @@ describe Api::V1::TranslationsController do
       let(:token) { double :acceptable? => true }
 
       it 'responds with 200' do
-        get :index, :version => 1, :format => :json
+        get :index, params: {version: 1}, :format => :json
         response.status.should eq(200)
       end
 
       it 'returns translations as json' do
-        get :index, :version => 1, :format => :json
+        get :index, params: {version: 1}, :format => :json
         json.should == JSON.parse(Translation.for_api.to_json)
       end
 
@@ -34,7 +34,7 @@ describe Api::V1::TranslationsController do
     context 'no valid access token' do
 
       it 'responds with 401' do
-        get :index, :version => 1, :format => :json
+        get :index, params: {version: 1}, :format => :json
         response.status.should eq(401)
       end
 

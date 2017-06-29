@@ -15,12 +15,12 @@ describe Api::V1::CredentialsController do
       let(:token) { double :acceptable? => true, :resource_owner_id => user.id }
 
       it 'responds with 200' do
-        get :me, :version => 1, :format => :json
+        get :me, params: {version: 1}, format: :json
         expect(response.status).to eq(200)
       end
 
       it 'returns the user as json' do
-        get :me, :version => 1, :format => :json
+        get :me, params: {version: 1}, format: :json
 
         # Would be nice to use this instead but user.to_json has an override in model
         # response.body.should == user.to_json
@@ -43,9 +43,8 @@ describe Api::V1::CredentialsController do
     end
 
     context 'no valid access token' do
-
       it 'responds with 401 when unauthorized' do
-        get :me, :format => :json
+        get :me, params: {}, format: :json
         response.status.should eq(401)
       end
 
