@@ -88,7 +88,7 @@ class Verse < ActiveRecord::Base
   acts_as_taggable # Alias for 'acts_as_taggable_on :tags'
 
   before_destroy :delete_memverses
-  before_create  :validate_ref
+  validate       :validate_ref
   before_save    :cleanup_text, :associate_with_uberverse
 
   after_commit :schedule_web_check

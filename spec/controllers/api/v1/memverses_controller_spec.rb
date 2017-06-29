@@ -19,20 +19,30 @@ describe Api::V1::MemversesController do
       response.status.should eq(200)
     end
 
+    # The API uses serializable_hash to create the response. It does not use to_json
     it 'returns user memory verses as json' do
       get :index, params: {version: 1}, format: :json
-      response.should have_exposed [mv]
-    end
+      expect(            json.first["id"           ]        ).to eq(mv.id)
+      expect(            json.first["passage_id"   ]        ).to eq(mv.passage_id)
+      expect(            json.first["ref"          ]        ).to eq(mv.ref)
+      expect(            json.first["user_id"      ]        ).to eq(mv.user_id)
+      expect(            json.first["efactor"      ].to_f   ).to eq(mv.efactor)
+      expect(            json.first["test_interval"]        ).to eq(mv.test_interval)
+      expect(            json.first["ref_interval" ]        ).to eq(mv.ref_interval)
+      expect(            json.first["rep_n"        ]        ).to eq(mv.rep_n)
+      expect( Date.parse(json.first["next_test"    ])       ).to eq(mv.next_test)
+      expect( Date.parse(json.first["next_ref_test"])       ).to eq(mv.next_ref_test)
+      expect(            json.first["verse"]["id"         ] ).to eq(mv.verse.id)
+      expect(            json.first["verse"]["translation"] ).to eq(mv.verse.translation)
+      expect(            json.first["verse"]["book_index" ] ).to eq(mv.verse.book_index)
+      expect(            json.first["verse"]["book"       ] ).to eq(mv.verse.book)
+      expect(            json.first["verse"]["chapter"    ] ).to eq(mv.verse.chapter)
+      expect(            json.first["verse"]["versenum"   ] ).to eq(mv.verse.versenum)
+      expect(            json.first["verse"]["text"       ] ).to eq(mv.verse.text)
 
-    it 'returns the number of pages to be requested' do
-      get :index, :version => 1, :format => :json
-      response.should be_paginated_resource 
+      # This doesn't work as the API returns a different date format than calling serializable hash directly
+      # expect( json.first).to eq(mv.serializable_hash)
 
-      # body = JSON.parse(response.body)
-      # puts body
-      # body[:response].should include(:pagination)
-      # body[:response][:pagination][:pages].should == 1
-      # body[:response][:pagination][:count].should == 1
     end
 
   end
