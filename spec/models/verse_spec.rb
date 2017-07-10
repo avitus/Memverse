@@ -50,7 +50,7 @@ describe Verse do
         test_category(verse, :prophecy)
       end
       it "includes Revelation" do
-        verse = FactoryGirl.create(:verse, book: "Revelation", book_index: 66)
+        verse = FactoryGirl.create(:verse, book: "Revelation", book_index: 66, versenum: 5)
 
         test_category(verse, :prophecy)
       end
@@ -84,8 +84,8 @@ describe Verse do
       end
 
       it "includes Isaiah to Malachi, and Revelation" do
-        isaiah = FactoryGirl.create(:verse, book: "Isaiah", book_index: 23)
-        revelation = FactoryGirl.create(:verse, book: "Revelation", book_index: 66)
+        isaiah = FactoryGirl.create(:verse, book: "Isaiah", book_index: 23, versenum: 5 )
+        revelation = FactoryGirl.create(:verse, book: "Revelation", book_index: 66, versenum: 5)
 
         isaiah.prophecy? == true
         revelation.prophecy? == true
@@ -95,8 +95,8 @@ describe Verse do
 
   describe ".alternative_translations" do
     it "should include an alternative verse" do
-      vs1 = FactoryGirl.create(:verse, book: "Philippians", book_index: 50, translation: "NKJV")
-      vs2 = FactoryGirl.create(:verse, book: "Philippians", book_index: 50, translation: "ESV")
+      vs1 = FactoryGirl.create(:verse, book: "Philippians", book_index: 50, chapter: 2, versenum: 3, translation: "NKJV")
+      vs2 = FactoryGirl.create(:verse, book: "Philippians", book_index: 50, chapter: 2, versenum: 3, translation: "ESV")
 
       vs1.alternative_translations.include?(vs2).should == true
     end
@@ -104,8 +104,8 @@ describe Verse do
 
   describe ".switch_tl" do
     it "should return correct verse" do
-      vs1 = FactoryGirl.create(:verse, book: "Colossians", book_index: 51, translation: "NKJV")
-      vs2 = FactoryGirl.create(:verse, book: "Colossians", book_index: 51, translation: "ESV")
+      vs1 = FactoryGirl.create(:verse, book: "Colossians", book_index: 51, chapter: 2, versenum: 3, translation: "NKJV")
+      vs2 = FactoryGirl.create(:verse, book: "Colossians", book_index: 51, chapter: 2, versenum: 3, translation: "ESV")
 
       vs1.switch_tl("ESV").should == vs2
     end
@@ -127,36 +127,31 @@ describe Verse do
   end
 
   it "should clean up the verse text" do
-    verse = FactoryGirl.create(:verse, :text => "This is a \r\n \r\n \n test test   \n   teest. ")
-	  verse.save!
+    verse = FactoryGirl.create(:verse, versenum: 10, text: "This is a \r\n \r\n \n test test   \n   teest. ")
     verse.text.should == "This is a test test teest."
   end
 
   it "should remove HTML tags (XSS prevention)" do
-    verse = FactoryGirl.create(:verse, :text => "<script>test();</script>")
-    verse.save!
+    verse = FactoryGirl.create(:verse, versenum: 11, text: "<script>test();</script>")
     verse.text.should == "scripttest();/script"
   end
 
   it "should use em dashes when appropriate" do
-    verse1 = FactoryGirl.create(:verse, :versenum => 1, :text => "This is a test -")
-    verse1.save!
+    verse1 = FactoryGirl.create(:verse, versenum: 12, text: "This is a test -")
     verse1.text.should == "This is a test —"
 
-    verse2 = FactoryGirl.create(:verse, :versenum => 2, :text => "- which was a test")
-    verse2.save!
+    verse2 = FactoryGirl.create(:verse, versenum: 13, text: "- which was a test")
     verse2.text.should == "— which was a test"
 
-    verse3 = FactoryGirl.create(:verse, :versenum => 3, :text => "This is a hyphenated-word")
-    verse3.save!
+    verse3 = FactoryGirl.create(:verse, versenum: 14, text: "This is a hyphenated-word")
     verse3.text.should == "This is a hyphenated-word"
 
   end
 
   describe "entire_chapter_available" do
     it "should not think an incomplete chapter is available" do
-      final_verse = FactoryGirl.create(:final_verse, :book => "Psalms", :chapter => 117, :last_verse => 2)
-      verse1 = FactoryGirl.create(:verse, :book => "Psalms", :chapter => 117, :versenum => 1)
+      final_verse = FactoryGirl.create(:final_verse, book: "Psalms", chapter: 117, last_verse: 2)
+      verse1 = FactoryGirl.create(:verse, book: "Psalms", chapter: 117, versenum: 1)
 
       verse1.entire_chapter_available.should be false
     end
