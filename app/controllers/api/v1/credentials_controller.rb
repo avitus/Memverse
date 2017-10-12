@@ -36,6 +36,9 @@ class Api::V1::CredentialsController < Api::V1::ApiController
 
 	end
 
+	# TODO: This incorrectly resolves to /1/oauth/token when it should be /oauth/token i.e. no version number
+	# In reality, this probably shouldn't be listed as an API endpoint, but rather should be included in the auth
+	# dialog box as per the Petstore example on Swagger.io
 	swagger_path '/oauth/token' do 
 
 		operation :post do
