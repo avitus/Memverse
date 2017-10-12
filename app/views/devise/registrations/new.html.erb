@@ -50,25 +50,6 @@
 
 	</div> <!-- end: signup-page-form -->
 
-	<% ab_test("signupform", "old", "new") do |form| %>
-		<% if form == "new" %>
-			<div style="float:left; width:325px">
-				<h1>Join Memverse</h1>
-
-				<blockquote style="font-size:1.3em">
-					<p><em>Before Memverse, I struggled to keep 30 verses memorized...
-					But now, I have over 1,200 memorized and retained!</em></p>
-					<p>- Leah</p>
-				</blockquote>
-			</div>
-
-			<style type="text/css">
-				#signup-page-form {float:right; width: 650px;}
-				h2 {display:none;} /* "Join Memverse" not "Register for Memverse" in this iteration. */
-			</style>
-		<% end %>
-	<% end %>
-
 </div> <!-- end: white-box-with-margins -->
 
 <script type="text/javascript">

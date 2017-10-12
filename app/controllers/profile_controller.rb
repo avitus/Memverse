@@ -64,7 +64,7 @@ class ProfileController < ApplicationController
     add_breadcrumb I18n.t('profile_menu.Profile'), :update_profile_path
 
     # -- Display Form --
-    @user           = User.find(current_user)
+    @user           = current_user
     @user_country   = @user.country ?         @user.country.printable_name  : ""
     @user_church    = @user.church ?          @user.church.name             : ""
     @user_group     = @user.group ?           @user.group.name              : ""
@@ -80,7 +80,7 @@ class ProfileController < ApplicationController
   # Output: JSON object
   # ----------------------------------------------------------------------------------------------------------
   def update
-    @user = User.find(current_user)
+    @user = current_user
 
     if @user.update_profile( params[:user] ) # successful update
 

@@ -4,7 +4,7 @@ class UtilsController < ApplicationController
 
   newrelic_ignore
 
-  protect_from_forgery  :except => [:set_verse_text, :verify_verse]
+  protect_from_forgery prepend: true, except: [:set_verse_text, :verify_verse]
   before_action :authorize
 
   # ----------------------------------------------------------------------------------------------------------

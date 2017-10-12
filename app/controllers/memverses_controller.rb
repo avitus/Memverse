@@ -105,7 +105,7 @@ class MemversesController < ApplicationController
 
   # Added 4/7/10 to prevent invalid authenticity token errors
   # http://ryandaigle.com/articles/2007/9/24/what-s-new-in-edge-rails-better-cross-site-request-forging-prevention
-  protect_from_forgery :only => [:create, :update, :destroy]
+  protect_from_forgery prepend: true, only:[:create, :update, :destroy]
 
   prawnto :prawn => { :top_margin     => 50 }
   prawnto :prawn => { :bottom_margin  => 50 }

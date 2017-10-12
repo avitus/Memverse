@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
   helper_method :bloggity_user
 
   helper :all # include all helpers, all the time
-  protect_from_forgery
+  protect_from_forgery prepend: true
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   # Admin Authorization
