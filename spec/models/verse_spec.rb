@@ -171,20 +171,6 @@ describe Verse do
       # For these tests, Psalm 117 is the only valid chapter, and verse 2 is the last verse.
     end
 
-    it "should prevent a duplicate verse" do
-
-      expect { 
-        FactoryGirl.create(:verse, book: "Psalms", book_index: 23, chapter: 117, versenum: 1, translation: "ESV")
-        FactoryGirl.create(:verse, book: "Psalms", book_index: 23, chapter: 117, versenum: 1, translation: "ESV")
-      }.to change { Verse.count }.by(1)
-
-      # verse1 = FactoryGirl.build(:verse, :book => "Psalms", :chapter => 117, :versenum => 1)
-      # verse2 = FactoryGirl.build(:verse, :book => "Psalms", :chapter => 117, :versenum => 1)
-      # verse1.save.should be true
-      # verse2.save.should be false
-      # verse2.errors.full_messages.first.should == "Verse already exists in NIV"
-    end
-
     it "should reject an invalid chapter" do
 
       expect { 

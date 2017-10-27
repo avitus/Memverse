@@ -90,8 +90,7 @@ class Verse < ActiveRecord::Base
   before_destroy :delete_memverses
   validate       :validate_ref
   before_save    :cleanup_text, :associate_with_uberverse
-
-  after_commit :schedule_web_check
+  after_commit   :schedule_web_check
 
   # Relationships
   has_many :memverses
@@ -509,16 +508,13 @@ class Verse < ActiveRecord::Base
     VerseWebCheck.perform_async(self.id) unless verified?
   end
 
-  # Validate reference [hook: before_create]
+  # Validate reference [hook: validate]
   # @return [Boolean]
   def validate_ref
     verse = Verse.exists_in_db(book, chapter, versenum, translation)
     final_verse = FinalVerse.where(book: book, chapter: chapter).first
 
-    if verse
-      errors.add(:base, "Verse already exists in #{translation}")
-      return false
-    elsif !final_verse
+    if !final_verse
       errors.add(:base, "Invalid chapter")
       return false
     elsif versenum > final_verse.last_verse
