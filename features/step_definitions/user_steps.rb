@@ -27,7 +27,7 @@ Given /^I am a confirmed user named "([^"]*)" with an email "([^"]*)" and passwo
   User.new(:name => name,
             :email => email,
             :password => password,
-            :password_confirmation => password).confirm!
+            :password_confirmation => password).confirm
 end
 
 Given /^I am an advanced user named "([^"]*)" with an email "([^"]*)" and password "([^"]*)"$/ do |name, email, password|
