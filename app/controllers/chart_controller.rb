@@ -1,9 +1,3 @@
-class Array
-  def every(n)
-    select {|x| index(x) % n == 0}
-  end
-end
-
 class ChartController < ApplicationController
 
   before_action :authenticate_user!, :except => :load_memverse_clock
@@ -31,7 +25,10 @@ class ChartController < ApplicationController
     
     # TODO: Consider deleting extra entries periodically
     # TODO: Add in last entry so that graph always shows current day
+    # 'every' method is defined in /config/intializers/activerecord_extensions
     entries = all_entries.length > 160 ? all_entries.every( all_entries.length / 80 ) : all_entries
+
+
 
     if !entries.empty?
       # Build data series
