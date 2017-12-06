@@ -19,7 +19,8 @@ Feature: Tag Verse
 	  When I click inside "td.edit_mv"
       And I type "Fruit of the Spirit"
       And I press return
-      Then I should see "Fruit Of The Spirit" within "#user-tags"
+      Then the tag "Fruit of the Spirit" should exist for memverse #1
+      Then the user tag table should contain "Fruit Of The Spirit"
 
     # @javascript
     # Scenario: User tags with duplicate tag
@@ -40,4 +41,4 @@ Feature: Tag Verse
       When I click inside "td.tag"
       And I type in "Frui" and I choose "Fruit Of The Spirit"
       Then the tag "Fruit of the Spirit" should exist for memverse #1
-      And I should see "Fruit Of The Spirit" within "#user-tags"
+      Then the user tag table should contain "Fruit Of The Spirit"

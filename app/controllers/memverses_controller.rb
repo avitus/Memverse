@@ -444,9 +444,9 @@ class MemversesController < ApplicationController
 
       @mv.verse.update_tags # Update verse model with most popular tags
 
-      render :text => new_tag
+      render :json => new_tag
     else
-      render :text => "[Enter tag name here]"
+      render :json => "[Enter tag name here]"
     end
 
   end
