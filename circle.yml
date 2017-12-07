@@ -1,6 +1,0 @@
-database: 
-  post:
-    - sudo cp ./config/environments/sphinx.conf /etc/sphinxsearch/sphinx.conf
-    - sudo sed -i -e 's,START=no,START=yes,' /etc/default/sphinxsearch
-    - service sphinxsearch start
-
