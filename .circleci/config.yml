@@ -41,10 +41,10 @@ jobs:
             - vendor/bundle
 
       # Only necessary if app uses webpacker or yarn in some other way
-      - restore_cache:
-          keys:
-            - rails-demo-yarn-{{ checksum "yarn.lock" }}
-            - rails-demo-yarn-
+      # - restore_cache:
+      #     keys:
+      #       - rails-demo-yarn-{{ checksum "yarn.lock" }}
+      #       - rails-demo-yarn-
 
       - run:
           name: Yarn Install
