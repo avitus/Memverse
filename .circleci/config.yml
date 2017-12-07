@@ -10,10 +10,8 @@ jobs:
           BUNDLE_JOBS: 3
           BUNDLE_RETRY: 3
           BUNDLE_PATH: vendor/bundle
-          MYSQL_ROOT_HOST: "%"
+          # MYSQL_ROOT_HOST: "%"
           REDIS_HOST: 127.0.0.1
-          # PGHOST: 127.0.0.1
-          # PGUSER: circleci-demo-ruby
           RAILS_ENV: test
 
       # Database
@@ -22,7 +20,7 @@ jobs:
           MYSQL_ROOT_PASSWORD: demo
           MYSQL_DATABASE: memverse_test
           MYSQL_ALLOW_EMPTY_PASSWORD: true
-          MYSQL_ROOT_HOST: "%"
+          # MYSQL_ROOT_HOST: "%"
         ports:
           - 3306:3306
 
