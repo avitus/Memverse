@@ -39,7 +39,6 @@ doc/*
 .redcar/
 .sass-cache
 /config/config.yml
-/config/database.yml
 /config/development.sphinx.conf
 /config/initializers/setup_mail.rb
 /config/initializers/site_keys.rb
@@ -84,3 +83,6 @@ doc/*
 
 # Local sitemap files
 /public/sitemap*
+
+# Ignore encrypted secrets key file.
+config/secrets.yml.key

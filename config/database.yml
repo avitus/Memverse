@@ -1,0 +1,64 @@
+# == Docker ===========
+# development: &default
+
+#   database: memverse_development
+#   adapter: mysql2
+#   encoding: utf8
+#   pool: 5
+#   username: root
+#   password: demo
+#   host: db
+#   socket: /run/mysqld/mysqld.sock
+
+# test:
+#   <<: *default
+#   database: memverse_development
+
+# production:
+#   <<: *default
+
+# == Rails ===========
+development: &default
+
+  database: memverse_development
+  adapter: mysql2
+  encoding: utf8
+  pool: 5
+  username: root
+  password: demo
+  host: 127.0.0.1
+  socket: /run/mysqld/mysqld.sock
+
+test:
+  <<: *default
+  database: memverse_test
+
+production:
+   adapter: mysql2
+   database: memverse_production
+   username: root
+   password: <%= Rails.application.secrets[:mysql] %>
+   host: localhost
+   socket: /var/run/mysqld/mysqld.sock
+   pool: 30 # ACW increased 08-13-2014
+   reconnect: true
+   encoding: utf8
+   collation: utf8_general_ci
+
+
+# == Rails ===========
+# 2017-06-8 ALV: Tests don't seem to run well with sqlite
+
+# development: &default
+
+#   adapter: sqlite3
+#   encoding: utf8
+#   database: db/memverse_development
+#   pool: 5
+
+# test:
+#   <<: *default
+#   database: db/memverse_test
+
+# production:
+#   <<: *default

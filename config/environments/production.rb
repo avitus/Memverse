@@ -1,5 +1,11 @@
 MemverseApp::Application.configure do
+
   # Settings specified here will take precedence over those in config/application.rb
+
+  #===============================
+  # Secrets
+  #===============================
+  config.read_encrypted_secrets = true
 
   #===============================
   # Caching
@@ -58,31 +64,10 @@ MemverseApp::Application.configure do
   config.action_mailer.default :charset => "utf-8"
   config.action_mailer.delivery_method = :smtp
 
-  # Gmail
-  # config.action_mailer.smtp_settings = {
-  #   :address              => "smtp.gmail.com",
-  #   :port                 => 587,
-  #   :domain               => 'memverse.com',
-  #   :user_name            => 'admin@memverse.com',
-  #   :password             => 'Veetle77',
-  #   :authentication       => "plain",
-  #   :enable_starttls_auto => true  }
-
-  # Mandrill
-  # config.action_mailer.smtp_settings = {
-  #   :address   => "smtp.mandrillapp.com",
-  #   :port      => 25,                        # ports 587 and 2525 are also supported with STARTTLS
-  #   :enable_starttls_auto => true,           # detects and uses STARTTLS
-  #   :user_name => "admin@memverse.com",
-  #   :password  => "JztsJPoUBOfo4nCyEKf1MQ",  # SMTP password is any valid API key
-  #   :authentication => 'login',              # Mandrill supports 'plain' or 'login'
-  #   :domain => 'memverse.com',               # your domain to identify your server when connecting
-  # }
-
   # Sendgrid
   config.action_mailer.smtp_settings = {
     :user_name => 'memverse',
-    :password => 'veetle77',
+    :password => Rails.application.secrets[:sendgrid],
     :domain => 'www.memverse.com',
     :address => 'smtp.sendgrid.net',
     :port => 587,
