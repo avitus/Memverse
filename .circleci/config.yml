@@ -46,15 +46,18 @@ jobs:
       #       - rails-demo-yarn-{{ checksum "yarn.lock" }}
       #       - rails-demo-yarn-
 
-      - run:
-          name: Yarn Install
-          command: yarn install
+      # ALV: For now we are going to stick with the old school asset pipeline
+      # Eventually, we should switch to Yarn (and/or webpacker)
+
+      # - run:
+      #     name: Yarn Install
+      #     command: yarn install
 
       # Store yarn / webpacker cache
-      - save_cache:
-          key: rails-demo-yarn-{{ checksum "yarn.lock" }}
-          paths:
-            - ~/.yarn-cache
+      # - save_cache:
+      #     key: rails-demo-yarn-{{ checksum "yarn.lock" }}
+      #     paths:
+      #       - ~/.yarn-cache
 
       - run:
           name: Wait for DB
