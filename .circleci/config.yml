@@ -92,6 +92,12 @@ jobs:
                             --format progress \
                             $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
 
+      - run:
+          name: Cucumber tests 
+          command: |
+            mkdir -p ~/cucumber 
+            bundle exec cucumber --format junit --out ~/cucumber/junit.xml
+          when: always
 
       # Save test results for timing analysis
       - store_test_results:
