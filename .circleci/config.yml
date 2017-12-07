@@ -3,20 +3,28 @@ jobs:
   build:
     parallelism: 1
     docker:
+
+      # App Server
       - image: circleci/ruby:2.4-node
         environment:
           BUNDLE_JOBS: 3
           BUNDLE_RETRY: 3
           BUNDLE_PATH: vendor/bundle
-          PGHOST: 127.0.0.1
-          PGUSER: circleci-demo-ruby
+          MYSQL_ROOT_HOST: "%"
+          # PGHOST: 127.0.0.1
+          # PGUSER: circleci-demo-ruby
           RAILS_ENV: test
+
+      # Database
       - image: library/mysql:5.6
         environment:
           MYSQL_ROOT_PASSWORD: demo
           MYSQL_DATABASE: memverse_test
+          MYSQL_ALLOW_EMPTY_PASSWORD: true
+          MYSQL_ROOT_HOST: "%"
         ports:
           - 3306:3306
+
     steps:
       - checkout
 
