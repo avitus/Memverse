@@ -68,6 +68,7 @@ jobs:
           name: Database setup
           command: RAILS_ENV=test bundle exec rake db:create
           command: RAILS_ENV=test bundle exec rake db:schema:load
+          command: RAILS_ENV=test bundle exec rake db:test:prepare
 
       # Run rspec in parallel
       - type: shell
