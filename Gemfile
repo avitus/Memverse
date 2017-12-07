@@ -1,8 +1,8 @@
 # encoding: utf-8
 require 'rbconfig'
 
-# Set Ruby version
-ruby "2.3.1"
+# Set Ruby version (we are using RVM)
+ruby "2.4.2"
 
 HOST_OS = RbConfig::CONFIG['host_os']
 source 'http://rubygems.org'
