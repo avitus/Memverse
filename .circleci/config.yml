@@ -29,8 +29,8 @@ jobs:
       - checkout
 
       - run: 
-        name: Install MySQL client
-        command: sudo apt install mysql-client
+          name: Install MySQL client
+          command: sudo apt install mysql-client
 
       # Which version of bundler?
       - run:
