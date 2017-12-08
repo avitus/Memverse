@@ -39,8 +39,7 @@ jobs:
       # Restore bundle cache
       - restore_cache:
           keys:
-            - rails-demo-bundle-v2-{{ checksum "Gemfile.lock" }}
-            - rails-demo-bundle-v2-
+            - memverse-{{ checksum "Gemfile.lock" }}
 
       - run:
           name: Bundle Install
@@ -48,7 +47,7 @@ jobs:
 
       # Store bundle cache
       - save_cache:
-          key: rails-demo-bundle-v2-{{ checksum "Gemfile.lock" }}
+          key: memverse-{{ checksum "Gemfile.lock" }}
           paths:
             - vendor/bundle
 
@@ -77,8 +76,6 @@ jobs:
           command: |
             curl -L https://github.com/mozilla/geckodriver/releases/download/v0.19.1/geckodriver-v0.19.1-linux64.tar.gz | tar xz
             chmod +x geckodriver
-            pwd
-            echo $PATH
             sudo mv geckodriver /usr/local/bin
 
       - run:
