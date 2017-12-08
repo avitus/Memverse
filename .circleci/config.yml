@@ -12,6 +12,7 @@ jobs:
           BUNDLE_PATH: vendor/bundle
           REDIS_HOST: 127.0.0.1
           RAILS_ENV: test
+          PATH: "${PATH}:${HOME}/${CIRCLE_PROJECT_REPONAME}/drivers"
 
       # Database
       - image: library/mysql:5.6
