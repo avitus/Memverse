@@ -98,4 +98,5 @@ RSpec.configure do |config|
 end
 
 Capybara.default_host = 'localhost:3000'
+Capybara.server = :puma
 
