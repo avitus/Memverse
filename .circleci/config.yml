@@ -106,7 +106,7 @@ jobs:
       - run:
           name: Jasmine tests 
           command: |
-            bundle exec rake spec:javascript
+            bundle exec rake spec:javascript --format progress --format junit --out test_results/jasmine.xml
           when: always
 
       # Run cucumber in parallel
@@ -114,7 +114,7 @@ jobs:
           name: Cucumber tests 
           command: |
             mkdir -p ~/cucumber 
-            bundle exec cucumber --format junit --out ~/cucumber/junit.xml
+            bundle exec cucumber --format progress --format junit --out test_results/cucumber.xml
           when: always
 
       # Save test results for timing analysis
