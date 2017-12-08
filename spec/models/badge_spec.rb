@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Badge do
   
   before(:each) do
-    @user   = FactoryGirl.create(:user)     
+    @user   = FactoryBot.create(:user)     
   end
   
   it "should create a new instance given a valid attribute" do
@@ -16,9 +16,9 @@ describe Badge do
   describe "should understand badge hierarchy" do
     
     before(:each) do
-      @gold_badge   = FactoryGirl.create(:badge, :color => "gold")
-      @silver_badge = FactoryGirl.create(:badge, :color => "silver")
-      @bronze_badge = FactoryGirl.create(:badge, :color => "bronze")
+      @gold_badge   = FactoryBot.create(:badge, :color => "gold")
+      @silver_badge = FactoryBot.create(:badge, :color => "silver")
+      @bronze_badge = FactoryBot.create(:badge, :color => "bronze")
     end
     
     it "should value a gold medal more than a silver medal" do

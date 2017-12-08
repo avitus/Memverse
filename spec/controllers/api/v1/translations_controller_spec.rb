@@ -6,7 +6,7 @@ describe Api::V1::TranslationsController do
   # It would be nice to do a full integration test but can't get it to work with scopes
 
   # let!(:application) { Doorkeeper::Application.create!(:name => "MyApp", :redirect_uri => "https://app.com") } # OAuth application
-  # let!(:user)        { FactoryGirl.create(:user) }
+  # let!(:user)        { FactoryBot.create(:user) }
   # let!(:token)       { Doorkeeper::AccessToken.create! :application_id => application.id, :resource_owner_id => user.id, :scope => 'public' }
 
   describe 'GET #index' do

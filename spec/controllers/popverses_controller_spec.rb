@@ -3,7 +3,7 @@ require 'spec_helper'
 describe PopversesController do
 
   before (:each) do
-    @user = FactoryGirl.create(:user)
+    @user = FactoryBot.create(:user)
     @user.confirm
     sign_in @user
   end

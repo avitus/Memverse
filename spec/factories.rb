@@ -1,7 +1,7 @@
-require 'factory_girl'
+require 'factory_bot'
 require 'faker'
 
-FactoryGirl.define do
+FactoryBot.define do
 
   # ==============================================================================================
   # Users
@@ -79,8 +79,8 @@ FactoryGirl.define do
     # Note: 'evaluator' stores all values from the 'passage' factory_girl
     after(:create) do |psg, evaluator|
       for i in evaluator.first_verse..evaluator.last_verse
-        vs = FactoryGirl.create(:verse, book: evaluator.book, chapter: evaluator.chapter, versenum: i, translation: evaluator.translation)
-        FactoryGirl.create(:memverse_without_passage, user: evaluator.user, verse: vs, passage: psg, test_interval: i, rep_n: i)
+        vs = FactoryBot.create(:verse, book: evaluator.book, chapter: evaluator.chapter, versenum: i, translation: evaluator.translation)
+        FactoryBot.create(:memverse_without_passage, user: evaluator.user, verse: vs, passage: psg, test_interval: i, rep_n: i)
       end
     end
 
@@ -104,7 +104,7 @@ FactoryGirl.define do
 
     # We need to add the callback back to the Memverse class because it is removed from the class by
     # the :memverse_without_passage callback. See link below for details
-    # http://stackoverflow.com/questions/11409734/why-does-my-factorygirl-callback-run-when-it-shouldnt
+    # http://stackoverflow.com/questions/11409734/why-does-my-FactoryBot-callback-run-when-it-shouldnt
     after(:build) {|memverse| memverse.class.set_callback(:create, :after, :add_to_passage)}
 
     # This factory is used by the Passage model to avoid a duplicate passage being created

@@ -3,12 +3,12 @@
 describe Group do
 
   before(:each) do    
-    @user1 = FactoryGirl.create(:user, :name => "User1")
-    @user2 = FactoryGirl.create(:user, :name => "User2", :last_activity_date => Date.today-2.months)  # an inactive user
-    @user3 = FactoryGirl.create(:user, :name => "User3")
+    @user1 = FactoryBot.create(:user, :name => "User1")
+    @user2 = FactoryBot.create(:user, :name => "User2", :last_activity_date => Date.today-2.months)  # an inactive user
+    @user3 = FactoryBot.create(:user, :name => "User3")
     
     # User1 creates a new group
-    @group = FactoryGirl.create(:group, :name => 'Band of Memorizers', :leader => @user1)
+    @group = FactoryBot.create(:group, :name => 'Band of Memorizers', :leader => @user1)
     
     # 3 users join new group
     @user1.group = @group

@@ -3,9 +3,9 @@ require 'spec_helper'
 describe Api::V1::VersesController do
 
   # let!(:application) { Doorkeeper::Application.create!(:name => "MyApp", :redirect_uri => "https://app.com") } # OAuth application
-  # let!(:user)        { FactoryGirl.create(:user) }
+  # let!(:user)        { FactoryBot.create(:user) }
   # let!(:token)       { Doorkeeper::AccessToken.create! :application_id => application.id, :resource_owner_id => user.id }
-  let!(:verse)       { FactoryGirl.create(:verse)}
+  let!(:verse)       { FactoryBot.create(:verse)}
 
   describe 'GET #show' do
 

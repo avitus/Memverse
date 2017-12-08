@@ -29,14 +29,14 @@ describe Passage do
   describe "remove (destroy) a passage" do
 
     it "should remove the passage" do
-      psg = FactoryGirl.create(:passage, book: 'Psalms', chapter: 30, first_verse: 6, last_verse: 12, length: 7)
+      psg = FactoryBot.create(:passage, book: 'Psalms', chapter: 30, first_verse: 6, last_verse: 12, length: 7)
       expect {
         psg.remove
       }.to change(Passage, :count).by(-1)  
     end
 
     it "should remove the associated memverses" do
-      psg = FactoryGirl.create(:passage, book: 'Psalms', chapter: 30, first_verse: 6, last_verse: 12, length: 7)
+      psg = FactoryBot.create(:passage, book: 'Psalms', chapter: 30, first_verse: 6, last_verse: 12, length: 7)
       expect {
         psg.remove
       }.to change(Memverse, :count).by(-7)  
@@ -50,39 +50,39 @@ describe Passage do
   describe "automatically handle subsections" do
 
     before(:each) do
-      FactoryGirl.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum =>  1, :subsection_end =>   0)
-      FactoryGirl.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum =>  2, :subsection_end =>   0)
-      FactoryGirl.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum =>  3, :subsection_end =>  50)
-      FactoryGirl.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum =>  4, :subsection_end =>   0)
-      FactoryGirl.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum =>  5, :subsection_end =>   0)
-      FactoryGirl.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum =>  6, :subsection_end =>   0)
-      FactoryGirl.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum =>  7, :subsection_end =>   0)
-      FactoryGirl.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum =>  8, :subsection_end =>   2)
-      FactoryGirl.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum =>  9, :subsection_end =>   0)
-      FactoryGirl.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum => 10, :subsection_end =>  20)
-      FactoryGirl.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum => 11, :subsection_end =>   0)
-      FactoryGirl.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum => 12, :subsection_end =>   3)
-      FactoryGirl.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum => 13, :subsection_end =>   0)
-      FactoryGirl.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum => 14, :subsection_end =>   0)
-      FactoryGirl.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum => 15, :subsection_end =>   0)
-      FactoryGirl.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum => 16, :subsection_end =>   0)
-      FactoryGirl.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum => 17, :subsection_end =>   0)
-      FactoryGirl.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum => 18, :subsection_end =>   0)
-      FactoryGirl.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum => 19, :subsection_end =>   0)
-      FactoryGirl.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum => 20, :subsection_end =>   0)
-      FactoryGirl.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum => 21, :subsection_end =>   0)
-      FactoryGirl.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum => 22, :subsection_end =>   0)
+      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum =>  1, :subsection_end =>   0)
+      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum =>  2, :subsection_end =>   0)
+      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum =>  3, :subsection_end =>  50)
+      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum =>  4, :subsection_end =>   0)
+      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum =>  5, :subsection_end =>   0)
+      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum =>  6, :subsection_end =>   0)
+      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum =>  7, :subsection_end =>   0)
+      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum =>  8, :subsection_end =>   2)
+      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum =>  9, :subsection_end =>   0)
+      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum => 10, :subsection_end =>  20)
+      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum => 11, :subsection_end =>   0)
+      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum => 12, :subsection_end =>   3)
+      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum => 13, :subsection_end =>   0)
+      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum => 14, :subsection_end =>   0)
+      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum => 15, :subsection_end =>   0)
+      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum => 16, :subsection_end =>   0)
+      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum => 17, :subsection_end =>   0)
+      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum => 18, :subsection_end =>   0)
+      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum => 19, :subsection_end =>   0)
+      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum => 20, :subsection_end =>   0)
+      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum => 21, :subsection_end =>   0)
+      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum => 22, :subsection_end =>   0)
     end
 
     it "should divide passages into subsections automagically" do
-      psg = FactoryGirl.create(:passage, book: 'Psalms', chapter: 22, first_verse: 1, last_verse: 6, length: 6)
+      psg = FactoryBot.create(:passage, book: 'Psalms', chapter: 22, first_verse: 1, last_verse: 6, length: 6)
       psg.auto_subsection
       psg.memverses.first.subsection.should == 0
       psg.memverses.last.subsection.should  == 1
     end
 
     it "should find the most likely breakpoint in the passage" do
-      psg = FactoryGirl.create(:passage, book: 'Psalms', chapter: 22, first_verse: 7, last_verse: 13, length: 7)
+      psg = FactoryBot.create(:passage, book: 'Psalms', chapter: 22, first_verse: 7, last_verse: 13, length: 7)
       psg.auto_subsection # Should create only two subsections with verse 10 at end of 1st subsection
       psg.memverses.first.subsection.should == 0
       psg.memverses.last.subsection.should  == 1
@@ -90,7 +90,7 @@ describe Passage do
     end
 
     it "should limit the number of subsections in a passage" do
-      psg = FactoryGirl.create(:passage, book: 'Psalms', chapter: 22, first_verse: 1, last_verse: 13, length: 13)
+      psg = FactoryBot.create(:passage, book: 'Psalms', chapter: 22, first_verse: 1, last_verse: 13, length: 13)
       psg.auto_subsection(5)
       psg.memverses.first.subsection.should == 0
       psg.memverses.last.subsection.should  == 2
@@ -99,7 +99,7 @@ describe Passage do
     end
 
     it "should not subsection passages which have no information about ending verses" do
-      psg = FactoryGirl.create(:passage, book: 'Psalms', chapter: 22, first_verse: 13, last_verse: 22, length: 10)
+      psg = FactoryBot.create(:passage, book: 'Psalms', chapter: 22, first_verse: 13, last_verse: 22, length: 10)
       psg.auto_subsection
       psg.memverses.first.subsection.should == 0
       psg.memverses.last.subsection.should  == 0
@@ -114,12 +114,12 @@ describe Passage do
 
     # eFactor of these two verses is 2.0 as per factory
     # rep_n and interval are 4 and 5 respectively as per factory
-    psg = FactoryGirl.create(:passage, book: 'Nahum', chapter: 1, first_verse: 4, last_verse: 5, length: 2)
+    psg = FactoryBot.create(:passage, book: 'Nahum', chapter: 1, first_verse: 4, last_verse: 5, length: 2)
 
     # add an extra memory verse with a different eFactor
     # rep_n = 2, eFactor = 1.4, interval = 1
-    vs = FactoryGirl.create(:verse, book: 'Nahum', chapter: 1, versenum: 6)
-    mv = FactoryGirl.create(:memverse_without_supermemo_init, :verse => vs, :efactor => 1.4, :rep_n => 2, :test_interval => 3)
+    vs = FactoryBot.create(:verse, book: 'Nahum', chapter: 1, versenum: 6)
+    mv = FactoryBot.create(:memverse_without_supermemo_init, :verse => vs, :efactor => 1.4, :rep_n => 2, :test_interval => 3)
 
     psg.expand( mv )
 
@@ -137,8 +137,8 @@ describe Passage do
     it "should merge two adjacent passages" do
 
       # Automatically generates user, memverses and verses through Factory
-      psg1 = FactoryGirl.create(:passage, user: @user, book: 'Luke', chapter: 2, first_verse: 2, last_verse: 4)
-      psg2 = FactoryGirl.create(:passage, user: @user, book: 'Luke', chapter: 2, first_verse: 5, last_verse: 8)
+      psg1 = FactoryBot.create(:passage, user: @user, book: 'Luke', chapter: 2, first_verse: 2, last_verse: 4)
+      psg2 = FactoryBot.create(:passage, user: @user, book: 'Luke', chapter: 2, first_verse: 5, last_verse: 8)
 
       expect {
         psg1.absorb( psg2 )
@@ -156,15 +156,15 @@ describe Passage do
       # Automatically generates user, memverses and verses through Factory
 
       # Mark 2:2-4
-      psg1 = FactoryGirl.create(:passage, user: @user, book: 'Mark', chapter: 2, first_verse: 2, last_verse: 4, length: 3)
+      psg1 = FactoryBot.create(:passage, user: @user, book: 'Mark', chapter: 2, first_verse: 2, last_verse: 4, length: 3)
       # Mark 2:6-8
-      psg2 = FactoryGirl.create(:passage, user: @user, book: 'Mark', chapter: 2, first_verse: 6, last_verse: 8, length: 3)
+      psg2 = FactoryBot.create(:passage, user: @user, book: 'Mark', chapter: 2, first_verse: 6, last_verse: 8, length: 3)
 
       mv2 = psg2.memverses.first # need to ensure that this verse is associated with psg1 after combination
 
       # Mark 2:5
-      vs = FactoryGirl.create(:verse, book: 'Mark', chapter: 2, versenum: 5)
-      mv = FactoryGirl.create(:memverse, user: @user, verse: vs)  # triggers after_create call_back to add memory verse to passage
+      vs = FactoryBot.create(:verse, book: 'Mark', chapter: 2, versenum: 5)
+      mv = FactoryBot.create(:memverse, user: @user, verse: vs)  # triggers after_create call_back to add memory verse to passage
 
       psg1.reload
       mv2.reload
@@ -187,12 +187,12 @@ describe Passage do
   describe "add a new verse to a passage" do
 
     before(:each) do
-      @psg = FactoryGirl.create(:passage, :book => 'Leviticus', :chapter => 1, :first_verse => 3, :last_verse => 6)
+      @psg = FactoryBot.create(:passage, :book => 'Leviticus', :chapter => 1, :first_verse => 3, :last_verse => 6)
     end
 
     it "should correctly add a preceding verse" do
-      vs = FactoryGirl.create(:verse, book: 'Leviticus', chapter: 1, versenum: 2)
-      mv = FactoryGirl.create(:memverse, verse: vs)
+      vs = FactoryBot.create(:verse, book: 'Leviticus', chapter: 1, versenum: 2)
+      mv = FactoryBot.create(:memverse, verse: vs)
 
       @psg.expand( mv )
 
@@ -203,8 +203,8 @@ describe Passage do
     end
 
     it "should correctly add a subsequent verse" do
-      vs = FactoryGirl.create(:verse, book: 'Leviticus', chapter: 1, versenum: 7)
-      mv = FactoryGirl.create(:memverse, verse: vs)
+      vs = FactoryBot.create(:verse, book: 'Leviticus', chapter: 1, versenum: 7)
+      mv = FactoryBot.create(:memverse, verse: vs)
 
       @psg.expand( mv )
 
@@ -222,7 +222,7 @@ describe Passage do
   describe "delete a memory verse from an existing passage" do
 
     before(:each) do
-      @psg = FactoryGirl.create(:passage, :book => 'Proverbs', :chapter => 3, :first_verse => 2, :last_verse => 10)
+      @psg = FactoryBot.create(:passage, :book => 'Proverbs', :chapter => 3, :first_verse => 2, :last_verse => 10)
     end
 
     it "should correctly delete the first verse of the passage" do
@@ -311,9 +311,9 @@ describe Passage do
 
     it "should set flag when entire chapter has been added" do
 
-      psg = FactoryGirl.create(:passage, book: 'Esther', chapter: 10, first_verse: 1, last_verse: 2)
-      vs = FactoryGirl.create(:verse, book: 'Esther', chapter: 10, versenum: 3)
-      mv = FactoryGirl.create(:memverse, :verse => vs)
+      psg = FactoryBot.create(:passage, book: 'Esther', chapter: 10, first_verse: 1, last_verse: 2)
+      vs = FactoryBot.create(:verse, book: 'Esther', chapter: 10, versenum: 3)
+      mv = FactoryBot.create(:memverse, :verse => vs)
 
       psg.complete_chapter.should be false
       psg.expand( mv )
@@ -323,9 +323,9 @@ describe Passage do
 
     it "should accept Psalms with a zero verse" do
 
-      psg = FactoryGirl.create(:passage, book: 'Psalms', chapter: 53, first_verse: 0, last_verse: 5)
-      vs  = FactoryGirl.create(:verse, book: 'Psalms', chapter: 53, versenum: 6)
-      mv  = FactoryGirl.create(:memverse, :verse => vs)
+      psg = FactoryBot.create(:passage, book: 'Psalms', chapter: 53, first_verse: 0, last_verse: 5)
+      vs  = FactoryBot.create(:verse, book: 'Psalms', chapter: 53, versenum: 6)
+      mv  = FactoryBot.create(:memverse, :verse => vs)
 
       psg.complete_chapter.should be false
       psg.expand( mv )
@@ -336,9 +336,9 @@ describe Passage do
     describe "should handle corner case of 3 John 1" do
 
       it "which has 14 verses in NIV" do
-        psg = FactoryGirl.create(:passage, book: '3 John', chapter: 1, first_verse: 1, last_verse: 13, translation: 'NIV')
-        vs = FactoryGirl.create(:verse, book: '3 John', chapter: 1, versenum: 14)
-        mv = FactoryGirl.create(:memverse, :verse => vs)
+        psg = FactoryBot.create(:passage, book: '3 John', chapter: 1, first_verse: 1, last_verse: 13, translation: 'NIV')
+        vs = FactoryBot.create(:verse, book: '3 John', chapter: 1, versenum: 14)
+        mv = FactoryBot.create(:memverse, :verse => vs)
 
         psg.complete_chapter.should be false
         psg.expand( mv )
@@ -346,9 +346,9 @@ describe Passage do
       end
 
       it "and 15 verses in ESV" do
-        psg = FactoryGirl.create(:passage, book: '3 John', chapter: 1, first_verse: 1, last_verse: 14, translation: 'ESV')
-        vs  = FactoryGirl.create(:verse, book: '3 John', chapter: 1, versenum: 15)
-        mv  = FactoryGirl.create(:memverse, :verse => vs)
+        psg = FactoryBot.create(:passage, book: '3 John', chapter: 1, first_verse: 1, last_verse: 14, translation: 'ESV')
+        vs  = FactoryBot.create(:verse, book: '3 John', chapter: 1, versenum: 15)
+        mv  = FactoryBot.create(:memverse, :verse => vs)
 
         psg.complete_chapter.should be false
         psg.expand( mv )

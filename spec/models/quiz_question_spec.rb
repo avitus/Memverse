@@ -1,7 +1,7 @@
 # encoding: utf-8
 describe QuizQuestion do
   it "should update the difficulty after a quiz" do
-    qq = FactoryGirl.create(:quiz_question, :times_answered => 10, :perc_correct => 50)
+    qq = FactoryBot.create(:quiz_question, :times_answered => 10, :perc_correct => 50)
     qq.update_difficulty(10, 100)  # answer count, percentage_correct
     qq.reload
     qq.times_answered.should == 20
@@ -11,7 +11,7 @@ describe QuizQuestion do
   describe "validations" do
 
     describe "MCQ's" do
-      let(:qq) { FactoryGirl.create(:quiz_question, question_type: "mcq",
+      let(:qq) { FactoryBot.create(:quiz_question, question_type: "mcq",
                 mc_question: "What is the answer", mc_option_a: "Wrong",
                 mc_option_b: "Right", mc_option_c: "Wrong",
                 mc_option_d: "Wrong", mc_answer: "B") }
@@ -45,8 +45,8 @@ describe QuizQuestion do
     end
 
     describe "references" do
-      let(:uv) { FactoryGirl.create(:uberverse) }
-      let(:qq) { FactoryGirl.create(:quiz_question, question_type: "reference", supporting_ref: uv) }
+      let(:uv) { FactoryBot.create(:uberverse) }
+      let(:qq) { FactoryBot.create(:quiz_question, question_type: "reference", supporting_ref: uv) }
 
       it "does not need MC options or answer" do
         qq.question_type.should == "reference"

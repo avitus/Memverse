@@ -4,7 +4,7 @@ describe QuizQuestionsController do
 
   before(:each) do
     login_user
-    @quiz = FactoryGirl.create(:quiz, id: 1)
+    @quiz = FactoryBot.create(:quiz, id: 1)
   end
 
   # This should return the minimal set of attributes required to create a valid

@@ -9,14 +9,14 @@ Given /^no user exists with an email of "(.*)"$/ do |email|
 end
 
 Given /^I am a user named "([^"]*)" with an email "([^"]*)" and password "([^"]*)"$/ do |name, email, password|
-  FactoryGirl.create(:user, :name => name,
+  FactoryBot.create(:user, :name => name,
                      :email => email,
                      :password => password,
                      :password_confirmation => password)
 end
 
 Given /^I am an admin named "([^"]*)" with an email "([^"]*)" and password "([^"]*)"$/ do |name, email, password|
-  FactoryGirl.create(:user, :name => name,
+  FactoryBot.create(:user, :name => name,
                      :email => email,
                      :password => password,
                      :password_confirmation => password,
@@ -31,7 +31,7 @@ Given /^I am a confirmed user named "([^"]*)" with an email "([^"]*)" and passwo
 end
 
 Given /^I am an advanced user named "([^"]*)" with an email "([^"]*)" and password "([^"]*)"$/ do |name, email, password|
-  FactoryGirl.create(:user, :name => name,
+  FactoryBot.create(:user, :name => name,
                      :email => email,
                      :password => password,
                      :password_confirmation => password,
@@ -158,8 +158,8 @@ end
 Given /^the user with the email of "(.*)" has (\d+) verses in his list$/ do |email, n|
   user = User.find_by_email(email)
   n.to_i.times { |i|
-    vs = FactoryGirl.create(:verse, :chapter => 2, :versenum => i+1)
-    FactoryGirl.create(:memverse, :user_id => user.id, :verse_id => vs.id)
+    vs = FactoryBot.create(:verse, :chapter => 2, :versenum => i+1)
+    FactoryBot.create(:memverse, :user_id => user.id, :verse_id => vs.id)
   }
   user.memorized = 10
   user.save

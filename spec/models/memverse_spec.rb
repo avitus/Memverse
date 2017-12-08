@@ -24,23 +24,23 @@ describe Memverse do
     before(:each) do
 
       @passage = Array.new
-      @sync_u  = FactoryGirl.create(:user, sync_subsections: true)
+      @sync_u  = FactoryBot.create(:user, sync_subsections: true)
 
       for i in 1..10
-        verse       = FactoryGirl.create(:verse, book_index: 19, book: "Psalms", chapter: 24, versenum: i, text: "This is a test")
+        verse       = FactoryBot.create(:verse, book_index: 19, book: "Psalms", chapter: 24, versenum: i, text: "This is a test")
 
         # Create two subsections a) 1-6 and b) 7-10
         if i<=6
           if i<=1 # Verse 1 is not due
-            @passage[i] = FactoryGirl.create(:memverse_without_supermemo_init, user: @sync_u, verse: verse, subsection: 0,
+            @passage[i] = FactoryBot.create(:memverse_without_supermemo_init, user: @sync_u, verse: verse, subsection: 0,
                                               test_interval: i, next_test: Date.today + i, last_tested: Date.today - 2.weeks)
           else    # Verses 2-6 are due
-            @passage[i] = FactoryGirl.create(:memverse_without_supermemo_init, user: @sync_u, verse: verse, subsection: 0,
+            @passage[i] = FactoryBot.create(:memverse_without_supermemo_init, user: @sync_u, verse: verse, subsection: 0,
                                               test_interval: i, next_test: Date.today - i, last_tested: Date.today - 2.weeks)
           end
           # puts @passage[i].inspect
         else
-          @passage[i] = FactoryGirl.create(:memverse_without_supermemo_init, user: @sync_u, verse: verse, subsection: 1,
+          @passage[i] = FactoryBot.create(:memverse_without_supermemo_init, user: @sync_u, verse: verse, subsection: 1,
                                             test_interval: i, next_test: Date.today - i, last_tested: Date.today - 2.weeks)
         end
 
@@ -133,8 +133,8 @@ describe Memverse do
       @passage = Array.new
 
       for i in 1..6
-        verse       = FactoryGirl.create(:verse, book_index: 20, book: "Proverbs", chapter: 1, versenum: i, text: "This is a test")
-        @passage[i] = FactoryGirl.create(:memverse, user: @user, verse: verse)
+        verse       = FactoryBot.create(:verse, book_index: 20, book: "Proverbs", chapter: 1, versenum: i, text: "This is a test")
+        @passage[i] = FactoryBot.create(:memverse, user: @user, verse: verse)
       end
 
       @passage[1].next_test = Date.tomorrow

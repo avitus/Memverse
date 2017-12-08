@@ -3,11 +3,11 @@ require 'spec_helper'
 describe MemversesController do
 
   before (:each) do
-    @user = FactoryGirl.create(:user)
+    @user = FactoryBot.create(:user)
     @user.confirm
     sign_in @user
 
-    @verse = FactoryGirl.create(:verse)
+    @verse = FactoryBot.create(:verse)
 
   end
 
@@ -34,8 +34,8 @@ describe MemversesController do
     end
 
     it "should not allow the same verse in two different translations" do
-      @verse_kjv = FactoryGirl.create(:verse, :translation => 'KJV')
-      @verse_esv = FactoryGirl.create(:verse, :translation => 'ESV')
+      @verse_kjv = FactoryBot.create(:verse, :translation => 'KJV')
+      @verse_esv = FactoryBot.create(:verse, :translation => 'ESV')
       get :ajax_add, params: { id: @verse_kjv }, session: valid_session
       get :ajax_add, params: { id: @verse_esv }, session: valid_session
       @user.memverses.count.should == 1
@@ -48,8 +48,8 @@ describe MemversesController do
     before (:each) do
       @chapter = Array.new
       for i in 1..5
-        verse       = FactoryGirl.create(:verse, :book_index => 19, :book => "Psalms", :chapter => '15', :versenum => i, :translation => "NIV")
-        @chapter[i] = FactoryGirl.create(:memverse, :user => @user, :verse => verse)
+        verse       = FactoryBot.create(:verse, :book_index => 19, :book => "Psalms", :chapter => '15', :versenum => i, :translation => "NIV")
+        @chapter[i] = FactoryBot.create(:memverse, :user => @user, :verse => verse)
       end
     end
 

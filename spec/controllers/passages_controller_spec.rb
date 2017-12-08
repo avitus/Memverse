@@ -21,11 +21,11 @@ require 'spec_helper'
 describe PassagesController do
 
   before (:each) do
-    @user = FactoryGirl.create(:user)
+    @user = FactoryBot.create(:user)
     @user.confirm
     sign_in @user
 
-    # @mv = FactoryGirl.create(:memverse)
+    # @mv = FactoryBot.create(:memverse)
 
   end
 

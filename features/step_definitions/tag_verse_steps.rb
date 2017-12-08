@@ -1,8 +1,8 @@
 Given /^the tag "([^"]*)" exists$/ do |tag|
   # Attach tag to a memverse => taggable_count 1
   # Then it appears in autocomplete on memverses/show
-  vs = FactoryGirl.create(:verse, translation: "ESV")
-  mv = FactoryGirl.create(:memverse, verse: vs)
+  vs = FactoryBot.create(:verse, translation: "ESV")
+  mv = FactoryBot.create(:memverse, verse: vs)
   tag_list = mv.all_tags_list.to_s + ", " + tag
   User.first.tag(mv, :with => tag_list, :on => :tags)
   mv.verse.update_tags # Update verse model with most popular tags

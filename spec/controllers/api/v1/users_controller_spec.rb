@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Api::V1::UsersController do
 
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { FactoryBot.create(:user) }
 
   describe 'POST #create' do 
 

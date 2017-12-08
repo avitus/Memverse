@@ -4,7 +4,7 @@ module ControllerMacros
 
   def login_user
     @request.env["devise.mapping"] = Devise.mappings[:user]
-    @user = FactoryGirl.create(:user)
+    @user = FactoryBot.create(:user)
     @user.confirm # or set a confirmed_at inside the factory. Only necessary if you are using the confirmable module
     sign_in @user
   end
@@ -12,10 +12,10 @@ module ControllerMacros
   def login_admin
     @request.env["devise.mapping"] = Devise.mappings[:user]
 
-    @user = FactoryGirl.create(:user)
+    @user = FactoryBot.create(:user)
     @user.confirm # or set a confirmed_at inside the factory. Only necessary if you are using the confirmable module
 
-    admin = FactoryGirl.create(:role, name: "admin")
+    admin = FactoryBot.create(:role, name: "admin")
     admin.users << @user
     
     sign_in @user 
@@ -24,10 +24,10 @@ module ControllerMacros
   def login_scribe
     @request.env["devise.mapping"] = Devise.mappings[:user]
 
-    @user = FactoryGirl.create(:user)
+    @user = FactoryBot.create(:user)
     @user.confirm # or set a confirmed_at inside the factory. Only necessary if you are using the confirmable module
 
-    scribe = FactoryGirl.create(:role, name: "scribe")
+    scribe = FactoryBot.create(:role, name: "scribe")
     scribe.users << @user
     
     sign_in @user    
@@ -36,10 +36,10 @@ module ControllerMacros
   def login_quizmaster
     @request.env["devise.mapping"] = Devise.mappings[:user]
 
-    @user = FactoryGirl.create(:user)
+    @user = FactoryBot.create(:user)
     @user.confirm # or set a confirmed_at inside the factory. Only necessary if you are using the confirmable module
 
-    quizmaster = FactoryGirl.create(:role, name: "quizmaster")
+    quizmaster = FactoryBot.create(:role, name: "quizmaster")
     quizmaster.users << @user
     
     sign_in @user    

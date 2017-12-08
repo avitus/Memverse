@@ -1,4 +1,4 @@
-require 'factory_girl_rails'
+require 'factory_bot_rails'
 
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
@@ -397,7 +397,7 @@ end
 
 # rubocop:disable HandleExceptions
 begin
-  if FactoryGirl.factories.instance_variable_get(:@items).none?
+  if FactoryBot.factories.instance_variable_get(:@items).none?
     require_relative '../spec/factories'
   end
 rescue NameError
@@ -438,7 +438,7 @@ module Thredded
     end
 
     def create_first_user
-      # @user ||= ::User.first || FactoryGirl.create(:user, :approved, :admin, name: 'Joe', email: 'joe@example.com')
+      # @user ||= ::User.first || FactoryBot.create(:user, :approved, :admin, name: 'Joe', email: 'joe@example.com')
       @user = ::User.first   
     end
 
@@ -446,13 +446,13 @@ module Thredded
       log "Creating #{count} users..."
       approved_users_count = (count * 0.97).round
       @users = [user] +
-               FactoryGirl.create_list(:user, approved_users_count, :approved) +
-               FactoryGirl.create_list(:user, count - approved_users_count)
+               FactoryBot.create_list(:user, approved_users_count, :approved) +
+               FactoryBot.create_list(:user, count - approved_users_count)
     end
 
     def create_messageboard
       log 'Creating a messageboard...'
-      @messageboard = FactoryGirl.create(
+      @messageboard = FactoryBot.create(
         :messageboard,
         name:        'Main Board',
         slug:        'main-board',
@@ -471,20 +471,20 @@ module Thredded
       log "Creating #{additional_messageboards.length} additional messageboards..."
       additional_messageboards.each do |(name, description, group_id)|
         messageboard = Messageboard.create!(name: name, description: description, messageboard_group_id: group_id)
-        FactoryGirl.create_list(:topic, 1 + rand(3), messageboard: messageboard, with_posts: 1)
+        FactoryBot.create_list(:topic, 1 + rand(3), messageboard: messageboard, with_posts: 1)
       end
     end
 
     def create_topics(count: 26, messageboard: self.messageboard)
       log "Creating #{count} topics in #{messageboard.name}..."
-      @topics = FactoryGirl.create_list(
+      @topics = FactoryBot.create_list(
         :topic, count,
         messageboard: messageboard,
         user:         users.sample,
         last_user:    users.sample
       )
 
-      @private_topics = FactoryGirl.create_list(
+      @private_topics = FactoryBot.create_list(
         :private_topic, count,
         user:      users.sample,
         last_user: users.sample,
@@ -496,7 +496,7 @@ module Thredded
       log "Creating #{count} additional posts in each topic..."
       @posts = topics.flat_map do |topic|
         (count.min + rand(count.max + 1)).times do
-          FactoryGirl.create(:post, postable: topic, messageboard: messageboard, user: users.sample)
+          FactoryBot.create(:post, postable: topic, messageboard: messageboard, user: users.sample)
         end
       end
     end
@@ -505,7 +505,7 @@ module Thredded
       log "Creating #{count} additional posts in each private topic..."
       @private_posts = private_topics.flat_map do |topic|
         (count.min + rand(count.max + 1)).times do
-          FactoryGirl.create(:private_post, postable: topic, user: users.sample)
+          FactoryBot.create(:private_post, postable: topic, user: users.sample)
         end
       end
     end

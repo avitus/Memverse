@@ -10,9 +10,9 @@ describe Api::V1::MemversesController do
 
   describe 'GET #index' do
 
-    let!(:user)        { FactoryGirl.create(:user) }
-    let!(:verse)       { FactoryGirl.create(:verse)}
-    let!(:mv)          { FactoryGirl.create(:memverse, :user => user, :verse => verse)}
+    let!(:user)        { FactoryBot.create(:user) }
+    let!(:verse)       { FactoryBot.create(:verse)}
+    let!(:mv)          { FactoryBot.create(:memverse, :user => user, :verse => verse)}
 
     it 'responds with 200' do
       get :index, params: {version: 1}, format: :json
@@ -49,8 +49,8 @@ describe Api::V1::MemversesController do
 
   describe 'POST #create (with scopes)' do
 
-    let!(:user)        { FactoryGirl.create(:user) }
-    let!(:verse)       { FactoryGirl.create(:verse)}
+    let!(:user)        { FactoryBot.create(:user) }
+    let!(:verse)       { FactoryBot.create(:verse)}
 
     it 'creates the memverse' do
       expect {
@@ -63,9 +63,9 @@ describe Api::V1::MemversesController do
 
   describe 'PUT #update' do
 
-    let!(:user)        { FactoryGirl.create(:user) }
-    let!(:verse)       { FactoryGirl.create(:verse)}
-    let!(:mv)          { FactoryGirl.create(:memverse, :user => user, :verse => verse)}
+    let!(:user)        { FactoryBot.create(:user) }
+    let!(:verse)       { FactoryBot.create(:verse)}
+    let!(:mv)          { FactoryBot.create(:memverse, :user => user, :verse => verse)}
 
     it 'updates the memverse' do
       put :update, params: {id: mv.id, q: 5, version: 1}, format: :json
@@ -96,9 +96,9 @@ describe Api::V1::MemversesController do
 
   describe 'DELETE #destroy' do
 
-    let!(:user)        { FactoryGirl.create(:user) }
-    let!(:verse)       { FactoryGirl.create(:verse)}
-    let!(:mv)          { FactoryGirl.create(:memverse, :user => user, :verse => verse)}
+    let!(:user)        { FactoryBot.create(:user) }
+    let!(:verse)       { FactoryBot.create(:verse)}
+    let!(:mv)          { FactoryBot.create(:memverse, :user => user, :verse => verse)}
 
     it 'deletes the memverse' do
       expect {

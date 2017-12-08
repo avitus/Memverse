@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Api::V1::CredentialsController do
   
-  let(:user)        { FactoryGirl.create(:user) }
+  let(:user)        { FactoryBot.create(:user) }
 
   describe 'GET #me' do
 
