@@ -159,7 +159,7 @@ gem 'nokogiri', '>=1.5.0'                                                      #
 gem 'json'                                                                     # Javascript Object Notation support
 gem 'thinking-sphinx'                                                          # Connector to Sphinx - for global search
 gem "i18n-js", ">= 3.0.0.rc11"                                                 # Uses config/locale files to build a JavaScript equivalent of i18n in Rails
-gem 'localeapp'                                                                # Translation service for i18n
+# gem 'localeapp'                                                                # Translation service for i18n
 gem 'breadcrumbs_on_rails', '>=2.0.0'                                          # For breadcrumb navigation bar
 gem 'dalli'                                                                    # Memcached client
 gem 'friendly_id'                                                              # Makes nice IDs for models
