@@ -71,7 +71,7 @@ jobs:
       #     paths:
       #       - ~/.yarn-cache
 
-      # We can probably remove the next two run commands once the Gecko driver is more widely available
+      # We can probably remove the next three run commands once the Gecko driver is more widely available
       - run:
           name: Download Selenium and geckodriver
           command: |
@@ -84,6 +84,15 @@ jobs:
             java -jar -Dwebdriver.gecko.driver=./geckodriver selenium-server-standalone-3.0.1.jar -log selenium.log
           background: true
 
+
+      - run:
+          name: Install Gecko Gemfile
+          command: |
+            gem install selenium-webdriver
+
+      - run:
+          name: Test geckodriver
+          command: node test_geckodriver.js
 
       - run:
           name: Wait for DB
