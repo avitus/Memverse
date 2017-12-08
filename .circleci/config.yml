@@ -10,7 +10,6 @@ jobs:
           BUNDLE_JOBS: 3
           BUNDLE_RETRY: 3
           BUNDLE_PATH: vendor/bundle
-          # MYSQL_ROOT_HOST: "%"
           REDIS_HOST: 127.0.0.1
           RAILS_ENV: test
 
@@ -20,7 +19,6 @@ jobs:
           MYSQL_ROOT_PASSWORD: demo
           MYSQL_DATABASE: memverse_test
           MYSQL_ALLOW_EMPTY_PASSWORD: true
-          # MYSQL_ROOT_HOST: "%"
         ports:
           - 3306:3306
 
@@ -92,6 +90,14 @@ jobs:
                             --format progress \
                             $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
 
+      # Run Jasmine tests in parallel
+      - run:
+          name: Jasmine tests 
+          command: |
+            bundle exec rake spec:javascript
+          when: always
+
+      # Run cucumber in parallel
       - run:
           name: Cucumber tests 
           command: |
