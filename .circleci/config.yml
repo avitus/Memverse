@@ -71,6 +71,20 @@ jobs:
       #     paths:
       #       - ~/.yarn-cache
 
+      # We can probably remove the next two run commands once the Gecko driver is more widely available
+      - run:
+          name: Download Selenium and geckodriver
+          command: |
+            curl -O http://selenium-release.storage.googleapis.com/3.0/selenium-server-standalone-3.0.1.jar
+            curl -L https://github.com/mozilla/geckodriver/releases/download/v0.11.1/geckodriver-v0.11.1-linux64.tar.gz | tar xz
+            chmod +x geckodriver
+      - run:
+          name: Start Selenium
+          command: |
+            java -jar -Dwebdriver.gecko.driver=./geckodriver selenium-server-standalone-3.0.1.jar -log selenium.log
+          background: true
+
+
       - run:
           name: Wait for DB
           command: dockerize -wait tcp://localhost:3306 -timeout 1m
