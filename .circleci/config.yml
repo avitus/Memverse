@@ -79,7 +79,7 @@ jobs:
             chmod +x geckodriver
             pwd
             echo $PATH
-            mv geckodriver /usr/local/bin
+            sudo mv geckodriver /usr/local/bin
 
       - run:
           name: Install Gecko Gemfile
