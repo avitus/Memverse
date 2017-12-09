@@ -29,7 +29,7 @@ development: &default
   host: 127.0.0.1
   socket: /run/mysqld/mysqld.sock
 
-test:
+test: &test
   <<: *default
   database: memverse_test
 
@@ -62,3 +62,5 @@ production:
 
 # production:
 #   <<: *default
+cucumber:
+  <<: *test

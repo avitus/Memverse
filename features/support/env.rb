@@ -6,13 +6,11 @@
 
 require 'cucumber/rails'
 require 'email_spec/cucumber'
-require 'capybara/rails'
 
 # Capybara defaults to CSS3 selectors rather than XPath.
 # If you'd prefer to use XPath, just uncomment this line and adjust any
 # selectors in your step definitions to use the XPath syntax.
 # Capybara.default_selector = :xpath
-Capybara.default_selector = :css
 
 # By default, any exception happening in your Rails application will bubble up
 # to Cucumber so that your scenario will fail. This is a different from how
@@ -35,8 +33,6 @@ ActionController::Base.allow_rescue = false
 # For some databases (like MongoDB and CouchDB) you may need to use :truncation instead.
 begin
   DatabaseCleaner.strategy = :transaction
-  #https://github.com/DatabaseCleaner/database_cleaner/issues/445
-  DatabaseCleaner.clean_with :truncation, except: %w(ar_internal_metadata)
 rescue NameError
   raise "You need to add database_cleaner to your Gemfile (in the :test group) if you wish to use it."
 end
