@@ -101,10 +101,17 @@ Capybara.default_host = 'localhost:3000'
 Capybara.server = :puma
 
 # ALV: Added this in an attempt to solve Net::ReadTimeout errors that only occur on CircleCI
-Capybara.register_driver :selenium do |app|
-  profile = Selenium::WebDriver::Firefox::Profile.new
+# Capybara.register_driver :selenium do |app|
+#   profile = Selenium::WebDriver::Firefox::Profile.new
+#   client = Selenium::WebDriver::Remote::Http::Default.new
+#   client.timeout = 120 # instead of the default 60
+#   Capybara::Selenium::Driver.new(app, browser: :firefox, profile: profile, http_client: client)
+# end
+
+Capybara.register_driver :chrome do |app|
   client = Selenium::WebDriver::Remote::Http::Default.new
-  client.timeout = 600 # instead of the default 60
-  Capybara::Selenium::Driver.new(app, browser: :firefox, profile: profile, http_client: client)
+  client.read_timeout = 120
+
+  Capybara::Selenium::Driver.new(app, {browser: :chrome, http_client: client})
 end
 
