@@ -108,10 +108,22 @@ Capybara.server = :puma
 #   Capybara::Selenium::Driver.new(app, browser: :firefox, profile: profile, http_client: client)
 # end
 
-Capybara.register_driver :chrome do |app|
-  client = Selenium::WebDriver::Remote::Http::Default.new
-  client.read_timeout = 120
+# Capybara.register_driver :chrome do |app|
+#   client = Selenium::WebDriver::Remote::Http::Default.new
+#   client.read_timeout = 120
 
-  Capybara::Selenium::Driver.new(app, {browser: :chrome, http_client: client})
+#   Capybara::Selenium::Driver.new(app, {browser: :chrome, http_client: client})
+# end
+
+Capybara.register_driver :custom_chrome_headless do |app|
+  browser_options = ::Selenium::WebDriver::Chrome::Options.new()
+  browser_options.args << '--headless'
+  browser_options.args << '--no-sandbox'
+  browser_options.args << '--disable-gpu'
+  browser_options.args << '--window-size=1920,1080'
+  Capybara::Selenium::Driver.new(app,
+    browser: :chrome,
+    options: browser_options
+  )
 end
 
