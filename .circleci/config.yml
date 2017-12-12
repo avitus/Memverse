@@ -106,7 +106,7 @@ jobs:
       - run:
           name: Jasmine tests 
           command: |
-            bundle exec rake spec:javascript --out test_results/jasmine.xml
+            bundle exec rake spec:javascript
           when: always
 
       # Run cucumber in parallel
