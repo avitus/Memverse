@@ -1,6 +1,9 @@
 # encoding: utf-8
 require 'rbconfig'
 
+# Use secure version (can remove once using Bundler 2.0)
+git_source(:github) { |name| "https://github.com/#{name}.git" }
+
 # Set Ruby version (we are using RVM)
 ruby "2.4.2"
 

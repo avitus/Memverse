@@ -1,12 +1,12 @@
 GIT
-  remote: git://github.com/ChallahuAkbar/fancybox2-rails.git
+  remote: https://github.com/ChallahuAkbar/fancybox2-rails.git
   revision: 34a70fa57148bc74bedc896df8e37fb56d136e5b
   specs:
     fancybox2-rails (0.3.0)
       railties (>= 4.2.0, < 6.0)
 
 GIT
-  remote: git://github.com/avitus/bloggity.git
+  remote: https://github.com/avitus/bloggity.git
   revision: e889cf02b62ee5f4804403e27ae090aa7410fc0e
   specs:
     bloggity (0.2.0)
@@ -14,7 +14,7 @@ GIT
       rails (>= 4.0)
 
 GIT
-  remote: git://github.com/galetahub/ckeditor.git
+  remote: https://github.com/galetahub/ckeditor.git
   revision: 32bc0c6702388549cb4b3f00f82afbc3798d6891
   specs:
     ckeditor (4.2.4)
@@ -22,7 +22,7 @@ GIT
       orm_adapter (~> 0.5.0)
 
 GIT
-  remote: git://github.com/kayle/omniauth-windowslive.git
+  remote: https://github.com/kayle/omniauth-windowslive.git
   revision: 505aa60147ce548a5c21cc03cc323bfd37361d71
   specs:
     omniauth-windowslive (0.0.8.1)
@@ -30,7 +30,7 @@ GIT
       omniauth-oauth2 (~> 1.0)
 
 GIT
-  remote: git://github.com/parse/rocket_pants.git
+  remote: https://github.com/parse/rocket_pants.git
   revision: c45753ffee085d725724bf007e1c8fae2f44149d
   specs:
     rocket_pants (1.13.1)
@@ -42,7 +42,7 @@ GIT
       will_paginate (~> 3.0)
 
 GIT
-  remote: git://github.com/youroute/api_smith.git
+  remote: https://github.com/youroute/api_smith.git
   revision: 1fb428cebc17b9afab25ac9f809bde87b0ec315b
   specs:
     api_smith (1.3.0)
