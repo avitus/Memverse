@@ -1,6 +1,6 @@
 # config valid only for current version of Capistrano
 # Last working version: 3.6.0
-lock '3.8.1'
+lock '3.10.1'
 
 set :user, 'avitus'
 set :application, 'memverse.com'
