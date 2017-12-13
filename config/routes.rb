@@ -5,6 +5,7 @@ MemverseApp::Application.routes.draw do
 
   # Background jobs
   require 'sidekiq/web'
+  require 'sidekiq/cron/web'
 
   # mount Forem::Engine,    :at => '/forums'
   mount Thredded::Engine      => '/forum'
