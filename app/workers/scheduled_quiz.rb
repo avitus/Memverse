@@ -1,14 +1,9 @@
 class ScheduledQuiz
 
   include Sidekiq::Worker
-  include Sidetiq::Schedulable
-  include IceCube
+#  include IceCube
 
   sidekiq_options :retry => false # Don't retry quiz if something goes wrong
-
-  recurrence do
-    secondly(30)
-  end
 
   def perform
 

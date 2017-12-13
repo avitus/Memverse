@@ -1,13 +1,8 @@
 class SendReminders
 
   include Sidekiq::Worker
-  include Sidetiq::Schedulable
 
   sidekiq_options :retry => true
-
-  recurrence do
-    hourly(1)
-  end
 
   def perform
 

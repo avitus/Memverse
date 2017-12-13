@@ -1,0 +1,60 @@
+# https://crontab.guru
+
+# This is the main twice-weekly quiz
+# Runs Tuesday at 9am and Saturday at 3pm
+schedule_knowledge_quiz_tuesday:
+  cron: "0 9 * * 2"
+  class: "KnowledgeQuiz"
+  queue: default
+  active_job: true 
+
+schedule_knowledge_quiz_saturday:
+  cron: "0 15 * * 6"
+  class: "KnowledgeQuiz"
+  queue: default
+  active_job: true 
+
+schedule_quiz:  
+  cron: "*/1 * * * *"  # check every minute
+  class: "ScheduledQuiz"
+  queue: default
+  active_job: true
+
+schedule_forum_review_notifier:
+  cron: "0 8 * * *"   # 8am every day
+  class: "ForumReviewNotifier"
+  queue: default
+  active_job: true 
+
+schedule_refresh_tag_cloud:
+  cron: "5 1 1 3,9 *"   # 1:05am on the 1st of March and Sept
+  class: "RefreshTagCloud"
+  queue: default
+  active_job: true 
+
+schedule_send_reminders:
+  cron: "0 * * * *"   # Every hour
+  class: "SendReminders"
+  queue: default
+  active_job: true 
+
+schedule_update_metrics:
+  cron: "0 12 * * *"   # noon every day
+  class: "UpdateMetrics"
+  queue: default
+  active_job: true 
+
+# Run twice per year the day before passages are subsectioned
+schedule_update_subsections:
+  cron: "5 1 1 3,9 *"   # 1:05am on the 2nd of March and Sept
+  class: "UpdateSubsections"
+  queue: default
+  active_job: true 
+
+# Run twice per year the day after verse end probabilities are updated
+schedule_subsection_passages:
+  cron: "5 1 2 3,9 *"   # 1:05am on the 2nd of March and Sept
+  class: "SubsectionPassages"
+  queue: default
+  active_job: true 
+

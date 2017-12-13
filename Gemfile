@@ -46,7 +46,7 @@ end
 # Database
 ############################################################
 gem 'mysql2', '>= 0.4'
-gem 'redis', '~> 3.2'                                                          # Redis Key-value store
+gem 'redis', '~> 4.0'                                                          # Redis Key-value store
 
 ############################################################
 # Javascript Rutime
@@ -134,7 +134,7 @@ gem 'mail', '>= 2.2.15'                                                        #
 # Scheduled Tasks
 ############################################################
 gem 'sidekiq'                                                                  # Background jobs; used for quizzes. TODO: Version 4 might be incompatible with Sidetiq
-gem 'sidetiq'                                                                  # Scheduled Sidekiq jobs
+gem "sidekiq-cron", "~> 0.6.3"                                                 # Scheduler for Sidekiq
 gem 'ice_cube'                                                                 # For calculating next quiz
 gem 'capistrano-sidekiq', group: :development
 

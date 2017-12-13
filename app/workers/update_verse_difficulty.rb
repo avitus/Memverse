@@ -4,14 +4,9 @@ class UpdateVerseDifficulty
   # Note: This is all commented out as not sure whether it was ever tested and shown to be working (Dec 2017)
 
   # include Sidekiq::Worker
-  # include Sidetiq::Schedulable
   # include IceCube
 
   # sidekiq_options :retry => false
-
-  # recurrence do
-  #   monthly(6).day_of_month(11).hour_of_day(3)    # Run twice per year
-  # end
 
   # def perform
 

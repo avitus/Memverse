@@ -1,25 +1,10 @@
 class KnowledgeQuiz
 
   include Sidekiq::Worker
-  include Sidetiq::Schedulable
   include IceCube
   include PushNotification
 
   sidekiq_options :retry => false # Don't retry quiz if something goes wrong
-
-  recurrence do
-    if Rails.env.production?
-
-      # NOTE: Any changes to schedule need to be replicated in the section below.
-      #       This is needed to set the start time for the next quiz
-      weekly.day(:wednesday).hour_of_day(9)    # Every Tuesday at 9am
-      weekly.day(:saturday).hour_of_day(15)    # Every Saturday at 3pm
-
-    else
-      # daily.hour_of_day(9,11,15,21)          # 9am, 11am, 3pm, 9pm each day
-      minutely(10)                             # For development
-    end
-  end
 
   def perform
 
@@ -261,7 +246,7 @@ class KnowledgeQuiz
       :callback => @my_callback
     )
 
-    puts "Chat closed and sidetiq job finished."
+    puts "Chat closed and sidekiq job finished."
 
   end
 

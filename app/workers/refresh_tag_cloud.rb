@@ -1,14 +1,9 @@
 class RefreshTagCloud
 
   include Sidekiq::Worker
-  include Sidetiq::Schedulable
   include IceCube
 
   sidekiq_options :retry => false
-
-  recurrence do
-    monthly(6).day_of_month(6).hour_of_day(1)    # Run twice per year
-  end
 
   def perform
 
