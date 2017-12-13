@@ -35,7 +35,7 @@ group :development, :test do
   gem 'launchy', '>= 2.0.5'
   gem 'email_spec'                                              # For sending email in cucumber tests
   gem 'action_mailer_cache_delivery', '>= 0.3.5'                # Used to test email delivery with Cucumber. Pairs with email_spec
-  gem 'phantomjs'                                               # For wercker jasmine specs
+  # gem 'phantomjs'                                             # For wercker jasmine specs
   gem 'guard', '>= 0.6.2'
   gem 'guard-minitest'
   gem 'guard-spork'

@@ -2,7 +2,7 @@ h1. Memverse
 
 A Bible memorization application
 
-"!https://app.wercker.com/status/a6bf54c9eb901816e1f6aee1ae3ad20a/m/(wercker status)!":https://app.wercker.com/project/bykey/a6bf54c9eb901816e1f6aee1ae3ad20a
+!https://circleci.com/gh/avitus/Memverse.svg?style=svg&circle-token=2db30e0430b8289e66bf5ca51df6c2135c0d1d27!:https://circleci.com/gh/avitus/Memverse
 
 h2. Getting Started
 
