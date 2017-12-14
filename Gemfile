@@ -111,7 +111,7 @@ gem 'cancancan', '~> 1.10'                                                     #
 # Major Engines (Admin, Forem, Blog)
 ############################################################
 gem 'rails_admin'                                                              # Admin console
-gem 'thredded', '~> 0.12.4'                                                    # Forum engine
+gem 'thredded', '~> 0.14.0'                                                    # Forum engine
 gem 'bloggity', github: 'avitus/bloggity'                                      # Blog engine
 # gem 'bloggity', :path => "../bloggity"                                       # Blog engine (dev environment)
 

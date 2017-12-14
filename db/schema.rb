@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170420163138) do
+ActiveRecord::Schema.define(version: 20170811090735) do
 
   create_table "american_states", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string "abbrev", limit: 20, default: "", null: false
@@ -669,6 +669,7 @@ ActiveRecord::Schema.define(version: 20170420163138) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "position", null: false
+    t.boolean "locked", default: false, null: false
     t.index ["messageboard_group_id"], name: "index_thredded_messageboards_on_messageboard_group_id"
     t.index ["slug"], name: "index_thredded_messageboards_on_slug"
   end
@@ -785,7 +786,7 @@ ActiveRecord::Schema.define(version: 20170420163138) do
     t.datetime "updated_at", null: false
     t.index ["latest_activity_at"], name: "index_thredded_user_details_on_latest_activity_at"
     t.index ["moderation_state", "moderation_state_changed_at"], name: "index_thredded_user_details_for_moderations"
-    t.index ["user_id"], name: "index_thredded_user_details_on_user_id"
+    t.index ["user_id"], name: "index_thredded_user_details_on_user_id", unique: true
   end
 
   create_table "thredded_user_messageboard_preferences", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
@@ -812,7 +813,7 @@ ActiveRecord::Schema.define(version: 20170420163138) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "auto_follow_topics", default: false, null: false
-    t.index ["user_id"], name: "index_thredded_user_preferences_on_user_id"
+    t.index ["user_id"], name: "index_thredded_user_preferences_on_user_id", unique: true
   end
 
   create_table "thredded_user_private_topic_read_states", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|

@@ -4,6 +4,7 @@ lock '3.10.1'
 
 set :user, 'avitus'
 set :application, 'memverse.com'
+set :app_version, '2017.12.31'
 
 set :repo_url, 'git@github.com:avitus/Memverse.git'
 set :branch, 'master'
