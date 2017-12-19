@@ -970,7 +970,7 @@ class User < ActiveRecord::Base
 	    mvs = self.memverses.active.where("next_test <= ?", Date.today).order("next_test ASC").limit(limit)
 	    current_mv = Memverse.find(mv_id) unless mv_id.nil?
 
-	    mvs.collect! { |mv|
+	    mvs.collect { |mv|
 
 	        # First handle the case where this is not a starting verse
 	        if mv.first_verse? # i.e. there is an earlier verse in the sequence
