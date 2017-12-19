@@ -520,6 +520,8 @@ GEM
       rails (>= 3.2)
     rails-html-sanitizer (1.0.3)
       loofah (~> 2.0)
+    rails-observers (0.1.5)
+      activemodel (>= 4.0)
     rails_admin (1.2.0)
       builder (~> 3.1)
       coffee-rails (~> 4.0)
@@ -780,6 +782,7 @@ DEPENDENCIES
   rails (~> 5.1)
   rails-controller-testing
   rails-footnotes (>= 3.7)
+  rails-observers
   rails_admin
   randumb
   redis (~> 4.0)
