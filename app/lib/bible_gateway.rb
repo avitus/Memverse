@@ -2,7 +2,6 @@
 require 'open-uri'
 require 'nokogiri'
 
-
 class BibleGatewayError < StandardError; end
 
 class BibleGateway
