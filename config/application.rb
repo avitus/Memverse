@@ -2,18 +2,6 @@ require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
 
-# Pick the frameworks you want:
-
-# These five frameworks were included under Rails 3.2
-# require "active_record/railtie"
-# require "action_controller/railtie"
-# require "action_mailer/railtie"
-# require "active_resource/railtie"
-# require "sprockets/railtie"
-
-# This framework was not required as of Rails 3.2
-# require "rails/test_unit/railtie"
-
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(:default, Rails.env)
@@ -36,7 +24,7 @@ module MemverseApp
 
     # Custom directories with classes and modules you want to be autoloadable.
     # config.autoload_paths += %W(#{config.root}/extras)
-    config.autoload_paths << "#{Rails.root}/lib"  # ALV - added to load library files
+    # config.autoload_paths << "#{Rails.root}/lib"  # ALV - added to load library files
     
     # config.autoload_paths += %W(#{config.root}/app/models/ckeditor) # ALV - already loaded by Rails_admin ... this is redundant
 
@@ -75,8 +63,7 @@ module MemverseApp
     # config.active_record.raise_in_transactional_callbacks = true
 
     ### BEGIN: Fix EasouSpider invalid UTF-8 byte sequences
-
-    require "#{Rails.root}/app/lib/handle_invalid_percent_encoding.rb"
+    # require "#{Rails.root}/app/lib/handle_invalid_percent_encoding.rb" -- now automatically loaded
 
     # NOTE: These must be in this order relative to each other.
     # HandleInvalidPercentEncoding just raises for encoding errors it doesn't cover,

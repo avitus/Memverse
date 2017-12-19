@@ -8,5 +8,5 @@
 #
 # and have it return our config option...
 
-require "#{Dir.pwd}/lib/application_settings.rb"
+# require "#{Dir.pwd}/lib/application_settings.rb"
 ApplicationSettings.config = YAML.load_file("config/application_settings.yml")[Rails.env]
