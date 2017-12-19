@@ -1,6 +1,6 @@
 class ChatController < ApplicationController
 
-  before_actino :authenticate_user!, :only => [:channel1, :toggle_ban, :index]
+  before_action :authenticate_user!, :only => [:channel1, :toggle_ban, :index]
 
   #-----------------------------------------------------------------------------------------------------------
   # Main chat room
