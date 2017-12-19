@@ -76,7 +76,7 @@ module MemverseApp
 
     ### BEGIN: Fix EasouSpider invalid UTF-8 byte sequences
 
-    require "#{Rails.root}/lib/handle_invalid_percent_encoding.rb"
+    require "#{Rails.root}/app/lib/handle_invalid_percent_encoding.rb"
 
     # NOTE: These must be in this order relative to each other.
     # HandleInvalidPercentEncoding just raises for encoding errors it doesn't cover,
