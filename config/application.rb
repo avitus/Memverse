@@ -63,7 +63,7 @@ module MemverseApp
     # config.active_record.raise_in_transactional_callbacks = true
 
     ### BEGIN: Fix EasouSpider invalid UTF-8 byte sequences
-    # require "#{Rails.root}/app/lib/handle_invalid_percent_encoding.rb" -- now automatically loaded
+    require "#{Rails.root}/app/lib/handle_invalid_percent_encoding.rb"
 
     # NOTE: These must be in this order relative to each other.
     # HandleInvalidPercentEncoding just raises for encoding errors it doesn't cover,
