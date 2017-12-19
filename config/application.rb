@@ -22,12 +22,6 @@ module MemverseApp
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
 
-    # Custom directories with classes and modules you want to be autoloadable.
-    # config.autoload_paths += %W(#{config.root}/extras)
-    # config.autoload_paths << "#{Rails.root}/lib"  # ALV - added to load library files
-    
-    # config.autoload_paths += %W(#{config.root}/app/models/ckeditor) # ALV - already loaded by Rails_admin ... this is redundant
-
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
     # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
@@ -63,7 +57,7 @@ module MemverseApp
     # config.active_record.raise_in_transactional_callbacks = true
 
     ### BEGIN: Fix EasouSpider invalid UTF-8 byte sequences
-    require "#{Rails.root}/app/lib/handle_invalid_percent_encoding.rb"
+    require "#{Rails.root}/lib/handle_invalid_percent_encoding.rb"
 
     # NOTE: These must be in this order relative to each other.
     # HandleInvalidPercentEncoding just raises for encoding errors it doesn't cover,
