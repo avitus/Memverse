@@ -4,7 +4,7 @@ class InfoController < ApplicationController
 
   # This causes a problem with the menu not showing the active tab
   caches_action :leaderboard, :groupboard, :churchboard, :stateboard, :countryboard, :referralboard, :layout => false, :expires_in => 1.hour
-  caches_action :pop_verses, :cache_path => Proc.new { |c| c.params }, :expires_in => 1.day
+  # caches_action :pop_verses, :cache_path => Proc.new { |c| c.params }, :expires_in => 1.day
 
   add_breadcrumb "Home", :root_path
 
