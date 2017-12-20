@@ -85,7 +85,9 @@ class InfoController < ApplicationController
 
     add_breadcrumb I18n.t("home_menu.Popular Verses"), :popular_path
 
-    @page       = [params[:page].to_i, 99].min    # page number
+    parameters = params.permit(params.keys).to_h
+
+    @page       =   parameters[:page].to_i        # page number
     @page_size  = 10                              # number of verses per page
 
     @vs_list = Popverse.limit( @page_size ).offset( @page*@page_size )
@@ -338,6 +340,12 @@ end
   # Bible Bee flash tool designed by Jonathan Peterson
   # ----------------------------------------------------------------------------------------------------------
   def bible_bee_tool
+  end
+
+  private
+
+  def info_params
+    params.permit(:page)
   end
 
 end
