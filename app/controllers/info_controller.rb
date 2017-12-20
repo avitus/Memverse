@@ -340,10 +340,4 @@ end
   def bible_bee_tool
   end
 
-  private
-
-  def info_params
-    params.permit(:page)
-  end
-
 end
