@@ -2,10 +2,6 @@
 
 class InfoController < ApplicationController
 
-  # This causes a problem with the menu not showing the active tab
-  caches_action :leaderboard, :groupboard, :churchboard, :stateboard, :countryboard, :referralboard, :layout => true, :expires_in => 1.hour
-  caches_action :pop_verses, :cache_path => Proc.new { |c| c.params.permit }, :expires_in => 1.day
-
   add_breadcrumb "Home", :root_path
 
   # ----------------------------------------------------------------------------------------------------------
@@ -85,8 +81,8 @@ class InfoController < ApplicationController
 
     add_breadcrumb I18n.t("home_menu.Popular Verses"), :popular_path
 
-    @page       =   params[:page].to_i        # page number
-    @page_size  = 10                              # number of verses per page
+    @page       = params[:page].to_i     # page number
+    @page_size  = 10                     # number of verses per page
 
     @vs_list = Popverse.limit( @page_size ).offset( @page*@page_size )
   end
