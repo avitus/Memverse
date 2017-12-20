@@ -83,12 +83,14 @@ class InfoController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   def pop_verses
 
+    @tab = "home"
+
     add_breadcrumb I18n.t("home_menu.Popular Verses"), :popular_path
 
-    @page       = params[:page].to_i    # page number
-    @page_size  = 10                    # number of verses per page
+    @page       = [params[:page].to_i, 99].min    # page number
+    @page_size  = 10                              # number of verses per page
 
-    @vs_list = Popverse.find( :all, :limit => @page_size, :offset => @page*@page_size )
+    @vs_list = Popverse.limit( @page_size ).offset( @page*@page_size )
   end
 
   # ----------------------------------------------------------------------------------------------------------
