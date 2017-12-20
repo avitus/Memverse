@@ -197,11 +197,11 @@ class InfoController < ApplicationController
     add_breadcrumb I18n.t("menu.leaderboard"), leaderboard_path
     add_breadcrumb I18n.t("leader_menu.Referral Leaderboard"), referralboard_path
 
-    @referralboard = User.top_referrers
+    # @referralboard = User.top_referrers
 
-    # @referralboard = Rails.cache.fetch("top_referrers", :expires_in => 1.hour) do
-    #   User.top_referrers
-    # end
+    @referralboard = Rails.cache.fetch("top_referrers", :expires_in => 1.day) do
+      User.top_referrers
+    end
 
   end
 
