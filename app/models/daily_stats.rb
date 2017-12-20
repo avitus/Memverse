@@ -80,8 +80,6 @@ class DailyStats < ActiveRecord::Base
 
     end
 
-    return ds
-
   end
 
   protected
