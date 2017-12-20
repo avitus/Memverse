@@ -123,7 +123,11 @@ class InfoController < ApplicationController
     add_breadcrumb I18n.t("menu.leaderboard"), leaderboard_path
     add_breadcrumb I18n.t("leader_menu.Leaderboard"), leaderboard_path
 
-    @leaderboard = User.top_users
+    # @leaderboard = User.top_users
+
+    @leaderboard = Rails.cache.fetch("top_users", :expires_in => 1.day) do
+      User.top_users
+    end
 
   end
 
@@ -138,7 +142,11 @@ class InfoController < ApplicationController
     add_breadcrumb I18n.t("menu.leaderboard"), leaderboard_path
     add_breadcrumb I18n.t("leader_menu.Church Leaderboard"), churchboard_path
 
-    @churchboard = Church.top_churches
+    # @churchboard = Church.top_churches
+
+    @churchboard = Rails.cache.fetch("top_churches", :expires_in => 1.day) do
+      Church.top_churches
+    end
 
   end
 
@@ -153,7 +161,11 @@ class InfoController < ApplicationController
     add_breadcrumb I18n.t("menu.leaderboard"), leaderboard_path
     add_breadcrumb I18n.t("leader_menu.Group Leaderboard"), groupboard_path
 
-    @groupboard = Group.top_groups
+    # @groupboard = Group.top_groups
+
+    @groupboard = Rails.cache.fetch("top_groups", :expires_in => 1.day) do
+      Group.top_groups
+    end
 
   end
 
@@ -168,7 +180,11 @@ class InfoController < ApplicationController
     add_breadcrumb I18n.t("menu.leaderboard"), leaderboard_path
     add_breadcrumb I18n.t("leader_menu.State Leaderboard"), stateboard_path
 
-    @stateboard = AmericanState.top_states
+    # @stateboard = AmericanState.top_states
+
+    @stateboard = Rails.cache.fetch("top_states", :expires_in => 1.day) do
+      AmericanState.top_states
+    end
 
   end
 
@@ -183,7 +199,11 @@ class InfoController < ApplicationController
     add_breadcrumb I18n.t("menu.leaderboard"), leaderboard_path
     add_breadcrumb I18n.t("leader_menu.Country Leaderboard"), countryboard_path
 
-    @countryboard = Country.top_countries
+    # @countryboard = Country.top_countries
+
+    @countryboard = Rails.cache.fetch("top_countries", :expires_in => 1.day) do
+      Country.top_countries
+    end
 
   end
 
