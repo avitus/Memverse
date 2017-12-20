@@ -92,7 +92,7 @@
 		<table cellpadding="6" cellspacing="1" border="0"><tr>
 			<td>
 				<% if @page > 0 %>
-					<%= link_to '<<', { controller: 'info', action: 'pop_verses', page: @page-1 } %>
+					<%= link_to '<<', popular_path( page: @page-1 )%>
 				<% end %>
 			</td>
 
@@ -101,7 +101,7 @@
 			</td>
 			<td>
 				<% if @page < 9 %>
-					<%= link_to '>>', { controller: 'info', action: 'pop_verses', page: @page+1} %>
+					<%= link_to '>>', popular_path( page: @page+1 )%>
 				<% end %>
 			</td>
 		</tr></table>
