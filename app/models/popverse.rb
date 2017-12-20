@@ -1,6 +1,5 @@
 class Popverse < ActiveRecord::Base
-
-  
+ 
   # Structure  
   #      t.string    :pop_ref,     :null => false
   #      t.integer   :num_users,   :null => false
@@ -19,15 +18,9 @@ class Popverse < ActiveRecord::Base
   #      t.string    :nkj_text
   #      t.string    :kjv_text
   #      t.string    :rsv_text       
-  
-  
-  # Relationships
 
-  
   # Validations
   validates_presence_of :pop_ref, :num_users, :book, :chapter, :versenum
-
-
 
   protected
   
