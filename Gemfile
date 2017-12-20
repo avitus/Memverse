@@ -83,8 +83,8 @@ gem 'rails-observers'                                                           
 ############################################################
 # gem 'protected_attributes'                                                   # Only officially supported until Rails 5
 # gem 'rails-observers' 
-gem 'actionpack-page_caching'
-gem 'actionpack-action_caching'
+# gem 'actionpack-page_caching'
+# gem 'actionpack-action_caching'
 # gem 'activerecord-deprecated_finders'
 # gem 'activerecord-session_store'                                               # We should store sessions in cookies
 # gem 'activeresource', require: 'active_resource'
