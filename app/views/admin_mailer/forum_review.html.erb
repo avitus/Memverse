@@ -11,7 +11,7 @@
                 <figcaption class="thredded--email-post--author">
                   <%= t 'thredded.emails.post_notification.html.post_lead_html',
                         user: post.user.thredded_display_name,
-                        post_url: post_permalink_url(post.id),
+                        post_url: app.thredded.post_permalink_url(post.id),
                         topic_title: post.postable.title %>
                 </figcaption>
                 <% cache [post, 'content-onebox-placeholders'] do %>
@@ -32,7 +32,7 @@
 
         <% for topic in @topics %>
 
-            <%= link_to topic, topic_url(topic) %>
+            <%= link_to topic, app.thredded.topic_url(topic) %>
             by <%= topic.user.name %><br />
 
         <% end %>
