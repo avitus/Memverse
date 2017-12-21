@@ -25,18 +25,4 @@
 
     <% end %>
 
-    <!-- Moderate Topics -->
-    <% if @topics.present? %>
-
-        <h2>Topics to review</h2>
-
-        <% for topic in @topics %>
-
-            <%= link_to topic, thredded.topic_url(topic) %>
-            by <%= topic.user.name %><br />
-
-        <% end %>
-
-    <% end %>
-
 </div>
