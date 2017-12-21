@@ -1,25 +1,43 @@
-<% if @posts.present? %>
+<div class="thredded--email">
 
-    <h2>Posts to review</h2>
+    <!-- Moderate Posts -->
+    <% if @posts.present? %>
 
-    <% for post in @posts %>
+        <h2>Posts to review</h2>
 
-        <%= link_to "Post on #{post.postable.title}", post_url(post, post.user) %>
-        by <%= post.user.name %><br />
+        <% for post in @posts %>
+
+
+            <figure class="thredded--email-post">
+                <figcaption class="thredded--email-post--author">
+                  <%= t 'thredded.emails.post_notification.html.post_lead_html',
+                        user: @post.user.thredded_display_name,
+                        post_url: post_permalink_url(@post.id),
+                        topic_title: @post.postable.title %>
+                </figcaption>
+                <% cache [@post, 'content-onebox-placeholders'] do %>
+                  <%= render partial: 'thredded/posts/content',
+                             locals: { post: @post, options: {onebox_placeholders: true} } %>
+                <% end %>
+            </figure>
+            <hr/>
+
+        <% end %>
 
     <% end %>
 
-<% end %>
+    <!-- Moderate Topics -->
+    <% if @topics.present? %>
 
-<% if @topics.present? %>
+        <h2>Topics to review</h2>
 
-    <h2>Topics to review</h2>
+        <% for topic in @topics %>
 
-    <% for topic in @topics %>
+            <%= link_to topic, topic_url(topic) %>
+            by <%= topic.user.name %><br />
 
-        <%= link_to topic, topic_url(topic) %>
-        by <%= topic.user.name %><br />
+        <% end %>
 
     <% end %>
 
-<% end %>
+</div>
