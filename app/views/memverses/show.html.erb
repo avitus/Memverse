@@ -126,7 +126,8 @@
 					$(this).parent().effect("highlight", {color: "#ffcc00"}, 2000);
 				})
 
-				.on('ajax:success', function (event, data) {
+				.on('ajax:success', function (event) {
+					var data = event.detail[0]
 					$(this).html(data.mv_status);
 				});
 
