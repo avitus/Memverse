@@ -69,7 +69,8 @@
 				$(this).attr('disabled', 'disabled').hide();
 			})
 			// Give user msg returned from ajax add call
-			.on('ajax:success', function(evt, data, status, xhr){
+			.on('ajax:success', function(event) {
+				var data = event.detail[0]
 				$(this).parent().html(data.msg);
 			});
 	 });

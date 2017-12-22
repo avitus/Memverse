@@ -490,7 +490,10 @@ class MemversesController < ApplicationController
   # Toggle verse from 'Active' to 'Pending' status
   # ----------------------------------------------------------------------------------------------------------
   def toggle_mv_status
+
     new_status = @mv.toggle_status
+
+    Rails.logger.debug("====> Toggle status to #{new_status}")
 
     respond_to do |format|
       format.html { render :partial => 'mv_status_toggle', :layout => false }
