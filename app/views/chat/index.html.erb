@@ -19,9 +19,9 @@
         <div class="chat">
 
             <div class="chat-header clearfix">
-                <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_01_green.jpg" alt="avatar" />
+                <%= image_tag("MemverseIcon.PNG", :size => "40x35", :alt => "MemverseIcon") %>
                 <div class="chat-about">
-                    <div class="chat-with">ChatEngine Demo Chat</div>
+                    <div class="chat-with">Memverse Chat</div>
                 </div>
             </div>
 
@@ -87,7 +87,9 @@
 <script src='https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.0/handlebars.min.js'></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/list.js/1.1.1/list.min.js'></script>
 <script src='https://dogaan.github.io/chat-engine.js'></script>
+<!-- 
 <script src='https://dogaan.github.io/generateperson.js'></script>
+-->
 
 <script type="text/javascript" charset="utf-8">
 
@@ -97,12 +99,12 @@ var memverseUserLogin = "<%= current_user.login.html_safe %>";         // global
 
 // create a new instance of ChatEngine
 ChatEngine = ChatEngineCore.create({
-    publishKey: '<%= PN.env[:subscribe_key] %>',
-    subscribeKey: '<%= PN.env[:publish_key] %>'
+    publishKey: 'pub-c-816b4160-11c9-43fa-a1ea-4a1ca6cde79d',
+    subscribeKey: 'sub-c-0e83b538-e6a1-11e7-a7db-e6c6e9cd0a3f'
 });
 
 // use a helper function to generate a new profile
-let newPerson = generatePerson(true);
+// let newPerson = generatePerson(true);
 
 // create a bucket to store our ChatEngine Chat object
 let myChat;
@@ -118,14 +120,16 @@ let userTemplate = Handlebars.compile($("#message-response-template").html());
 // this is our main function that starts our chat app
 const init = () => {
   
-  // connect to ChatEngine with our generated user
-  ChatEngine.connect(newPerson.uuid, newPerson);
+  // connect to ChatEngine with current user
+  console.log("Connecting to PubNub Chat Engine with current user")
+  ChatEngine.connect(memverseUserID);
 
   // when ChatEngine is booted, it returns your new User as `data.me`
   ChatEngine.on('$.ready', function(data) {
 
       // store my new user as `me`
       me = data.me;
+      console.log(me)
 
       // create a new ChatEngine Chat
       myChat = new ChatEngine.Chat('chatengine-demo-chat');
