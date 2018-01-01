@@ -13,7 +13,7 @@ class RenderSpecController < ApplicationController
   end
   
   def text_action
-    render :text => "this is the text for this action"
+    render plain: "this is the text for this action"
   end
   
   def action_with_partial
@@ -21,7 +21,7 @@ class RenderSpecController < ApplicationController
   end
   
   def action_that_renders_nothing
-    render :nothing => true
+    head :ok
   end
   
   def action_with_alternate_layout

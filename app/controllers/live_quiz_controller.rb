@@ -90,7 +90,7 @@ class LiveQuizController < ApplicationController
     end
 
     respond_to do |format|
-      format.all { render :nothing => true, :status => 200 }
+      format.all { head :ok }
     end
 
   end
