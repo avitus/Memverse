@@ -260,7 +260,7 @@ class VersesController < ApplicationController
     new_tag = params[:value] # need to clean this up with hpricot or equivalent
     @verse.tag_list << new_tag
     @verse.save
-    render :text => new_tag
+    render plain: new_tag
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -337,7 +337,7 @@ class VersesController < ApplicationController
     @verse.text = new_text
     @verse.checked_by = current_user.login
     @verse.save
-    render :text => @verse.text
+    render plain: @verse.text
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -347,7 +347,7 @@ class VersesController < ApplicationController
     @verse = Verse.find(params[:id])
     @verse.checked_by = current_user.login
     @verse.save
-    render :text => "Checked"
+    render plain: "Checked"
   end
 
   def verse_params
