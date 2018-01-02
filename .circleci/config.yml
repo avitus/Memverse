@@ -17,8 +17,6 @@ jobs:
       # Database
       - image: library/mysql:5.6
         environment:
-          MYSQL_ROOT_HOST: % 
-          MYSQL_PASSWORD: demo
           MYSQL_ROOT_PASSWORD: demo
           MYSQL_DATABASE: memverse_test
           MYSQL_ALLOW_EMPTY_PASSWORD: true
