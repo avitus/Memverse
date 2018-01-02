@@ -5,7 +5,7 @@ require 'rbconfig'
 git_source(:github) { |name| "https://github.com/#{name}.git" }
 
 # Set Ruby version (we are using RVM)
-ruby "2.4.2"
+ruby "2.4.3"
 
 HOST_OS = RbConfig::CONFIG['host_os']
 source 'http://rubygems.org'
