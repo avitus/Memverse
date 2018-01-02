@@ -17,7 +17,6 @@ jobs:
       # Database
       - image: library/mysql:5.6
         environment:
-          MYSQL_USER: root
           MYSQL_ROOT_HOST: % 
           MYSQL_PASSWORD: demo
           MYSQL_ROOT_PASSWORD: demo
