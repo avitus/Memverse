@@ -10,7 +10,7 @@ jobs:
           BUNDLE_JOBS: 3
           BUNDLE_RETRY: 3
           BUNDLE_PATH: vendor/bundle
-          REDIS_HOST: localhost
+          REDIS_HOST: 127.0.0.1
           REDIS_PORT: 6379
           DB_HOST: 127.0.0.1
           RAILS_ENV: test
@@ -25,8 +25,6 @@ jobs:
           - 3306:3306
 
       - image: redis:3.2
-        ports:
-          - 6379:6379
 
     steps:
       - checkout
