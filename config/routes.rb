@@ -266,6 +266,7 @@ MemverseApp::Application.routes.draw do
   get '/forums/:messageboard/topics/:topic' => redirect('/forum/%{messageboard}/%{topic}')
 
   # Install the default routes as the lowest priority.
-  # match '/:controller(/:action(/:id))', :via => [:get, :post]
+  # Note: The default route is used a lot at the moment. Need to fix before Rails 5.2
+  match '/:controller(/:action(/:id))', :via => [:get, :post]
 
 end
