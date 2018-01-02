@@ -11,11 +11,15 @@ jobs:
           BUNDLE_RETRY: 3
           BUNDLE_PATH: vendor/bundle
           REDIS_HOST: 127.0.0.1
+          DB_HOST: 127.0.0.1
           RAILS_ENV: test
 
       # Database
       - image: library/mysql:5.6
         environment:
+          MYSQL_USER: root
+          MYSQL_ROOT_HOST: % 
+          MYSQL_PASSWORD: demo
           MYSQL_ROOT_PASSWORD: demo
           MYSQL_DATABASE: memverse_test
           MYSQL_ALLOW_EMPTY_PASSWORD: true

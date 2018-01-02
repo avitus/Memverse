@@ -1,8 +1,5 @@
 MemverseApp::Application.routes.draw do
   
-  # Authentication for API
-  use_doorkeeper
-
   # Background jobs
   require 'sidekiq/web'
   require 'sidekiq/cron/web'
@@ -72,6 +69,13 @@ MemverseApp::Application.routes.draw do
   # ---------------------------------------------------------------------------------------------------------
   # API
   # ---------------------------------------------------------------------------------------------------------
+  
+  # To version we would do this instead
+  # scope '1' do
+  #   use_doorkeeper
+  # end
+  use_doorkeeper                        # Authentication for API
+  
   resources :apidocs, only: [:index]    # for Swagger UI documentation
 
   api versions: 1, module: "api/v1" do
@@ -94,7 +98,7 @@ MemverseApp::Application.routes.draw do
     resources :progress_reports, :only => [:index]
 
     get '/me'            => "credentials#me"
-    post '/record_score' => 'live_quiz#record_score' # Record user score for quiz question
+    post '/record_score' => 'live_quiz#record_score'
   end
   # ---------------------------------------------------------------------------------------------------------
   # END: API
