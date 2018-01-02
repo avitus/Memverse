@@ -88,13 +88,20 @@ jobs:
           command: dockerize -wait tcp://localhost:3306 -timeout 1m
 
       - run:
-          name: Database setup
+          name: Database (Create)
           command: RAILS_ENV=test bundle exec rake db:create
+
+      - run:
+          name: Database (Load Schema)
           command: RAILS_ENV=test bundle exec rake db:schema:load
+
+      - run:
+          name: Database (Prepare)
           command: RAILS_ENV=test bundle exec rake db:test:prepare
 
       # Run rspec in parallel
       - type: shell
+        name: Rspec tests
         command: |
           bundle exec rspec --profile 10 \
                             --format RspecJunitFormatter \
