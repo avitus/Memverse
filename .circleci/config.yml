@@ -1,7 +1,9 @@
 version: 2
 jobs:
   build:
+    
     parallelism: 1
+    
     docker:
 
       # App Server
@@ -10,7 +12,7 @@ jobs:
           BUNDLE_JOBS: 3
           BUNDLE_RETRY: 3
           BUNDLE_PATH: vendor/bundle
-          REDIS_HOST: 127.0.0.1
+          REDIS_HOST: localhost
           REDIS_PORT: 6379
           DB_HOST: 127.0.0.1
           RAILS_ENV: test
@@ -100,6 +102,10 @@ jobs:
       - run:
           name: Database (Prepare)
           command: RAILS_ENV=test bundle exec rake db:test:prepare
+
+      - run:
+          name: Wait for Redis
+          command: dockerize -wait tcp://localhost:6379 -timeout 1m
 
       # Run rspec in parallel
       - type: shell
