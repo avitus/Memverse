@@ -68,6 +68,7 @@ class ApplicationController < ActionController::Base
       ["Matthew", 25, 23]   => ["Matthew", 25, 21],
       ["Leviticus", 19, 30] => ["Leviticus", 26, 2],
       ["Leviticus", 26, 2]  => ["Leviticus", 19, 30],
+      ["Psalms", 46, 7]     => ["Psalms", 46, 11], # Psalm 46:7 and 46:11
       ["Psalms", 107,  8]   => [["Psalms", 107, 15], ["Psalms", 107, 22], ["Psalms", 107, 31]],
       ["Psalms", 107, 15]   => [["Psalms", 107,  8], ["Psalms", 107, 22], ["Psalms", 107, 31]],
       ["Psalms", 107, 22]   => [["Psalms", 107,  8], ["Psalms", 107, 15], ["Psalms", 107, 31]],
