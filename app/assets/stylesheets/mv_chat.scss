@@ -13,7 +13,7 @@ $gray: #92959E;
 
   .container {
     margin: 0 auto;
-    width: 750px;
+    // width: 750px;
     background: #444753;
     border-radius: 5px;
   }
@@ -44,11 +44,7 @@ $gray: #92959E;
     
     ul {
       padding: 20px;
-      height: 500px;
-   
-      
-      
-      
+      height: 500px;   
       li {
         padding-bottom: 20px;
       }
@@ -74,12 +70,11 @@ $gray: #92959E;
   }
 
   .chat {
-    width: 490px;
+    width: 796px; // was originally 490px
     float:left;
     background: #F2F5F8;
     border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
-    
+    border-bottom-right-radius: 5px;  
     color: #434651;
     
     .chat-header {
