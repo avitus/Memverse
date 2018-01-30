@@ -6,8 +6,8 @@ if Rails.env.production?
 else
 
 	# In dev/test we will be using a docker container called 'redis'
-	# $redis = Redis.new(:host => (ENV['WERCKER_REDIS_HOST'] || 'redis'), :port => 6379)
-	$redis = Redis.new(:host => 'localhost', :port => 6379)
+	# $redis = Redis.new(:host => (ENV['REDIS_HOST'] || 'redis'), :port => 6379)
+	$redis = Redis.new(:host => '127.0.0.1', :port => 6379)
 
 
 end

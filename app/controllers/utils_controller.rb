@@ -483,7 +483,7 @@ class UtilsController < ApplicationController
     new_text = params[:value] # need to clean this up with hpricot or equivalent
     @verse.text = new_text
     @verse.save
-    render :text => @verse.text
+    render plain: @verse.text
   end
 
 
@@ -495,7 +495,7 @@ class UtilsController < ApplicationController
     @verse.verified   = true
     @verse.error_flag = false
     @verse.save
-    render :text => "Verified"
+    render plain: "Verified"
   end
 
 

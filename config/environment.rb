@@ -27,6 +27,7 @@ TRANSLATIONS = {
   ESV:    {name: "English Standard Version (2011)", language: "en"},
   ESV07:  {name: "English Standard Version (2007)", language: "en"},
   NLT:    {name: "New Living Translation (2007)", language: "en"},
+  NLT15:  {name: "New Living Translation (2015)", language: "en"},
   CEV:    {name: "Contemporary English Version (1995)", language: "en"},
   HCS:    {name: "Holman Christian Standard Bible (2009)", language: "en"},
   DTL:    {name: "Darby Translation", language: "en"},

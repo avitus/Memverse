@@ -240,7 +240,7 @@ class ProfileController < ApplicationController
     tl = params[:tl]
     current_user.translation = tl
     current_user.save
-    render :nothing => true
+    head :ok
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -250,7 +250,7 @@ class ProfileController < ApplicationController
     time_allocation = params[:time]
     current_user.time_allocation = time_allocation
     current_user.save
-    render :nothing => true
+    head :ok
   end
 
   # ----------------------------------------------------------------------------------------------------------
