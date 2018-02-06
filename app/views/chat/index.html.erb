@@ -1,35 +1,95 @@
 <% page_title "Chat Room :: " + @channel.channel %>
 
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.0/handlebars.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.1.1/list.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chat-engine@0.8.4/dist/chat-engine.min.js" type="text/javascript"></script>
+</head>
+
 <div class="white-box-with-margins main-chat" id="main-chat" style="position:relative">
 
-	<!-- CHAT WINDOW -->
-	<div id="main-chat-window">
+    <div class="container clearfix">
 
-		<h3>
-			Chat (<span id="chat_status"><%= @channel.status %></span>)
-			<%= (link_to "Toggle Status", {controller: "chat", action: "toggle_channel", channel: @channel.channel}, remote: true) if can? :manage, ChatChannel %>
-		</h3>
+        <div class="people-list" id="people-list">
+            <ul class="list">
+            </ul>
+        </div>
 
-		<div id="chat-stream-narrow">
-		</div>
+        <div class="chat">
 
-		<%= form_tag('/chat/send', :id => 'chat_window', :remote => true) do %>
-			<%= text_field_tag 'msg_body', '', autocomplete: "off" %>
-			<%= hidden_field_tag 'sender',  current_user.name_or_login %>
-			<%= hidden_field_tag 'user_id', current_user.id %>
-			<%= hidden_field_tag 'channel', "#{@channel.channel}" %>
-			<%= submit_tag 'Send', {onclick: "return mvSubmitQuizChat();"} %>
-		<% end %>
+            <div class="chat-header clearfix">
+                <%= image_tag("MemverseIcon.PNG", :size => "40x35", :alt => "MemverseIcon") %>
+                <div class="chat-about">
+                    <div class="chat-with">Memverse Chat</div>
+                </div>
+            </div>
 
-	</div>
+            <div class="chat-history">
+                <ul></ul>
+            </div>
 
-	<!-- ROSTER -->
-	<div id="roster-window">
-		<h3>Participants</h3>
-	</div>
+            <form id="sendMessage" class="chat-message clearfix">
+                <input type="text" name="message-to-send" id="message-to-send" placeholder="Type your message" rows="1"></input>
+                <input type="submit" value="Send"></input>
+            </form><!-- end chat-message -->
 
-	<div class="clr"></div>
+        </div><!-- end chat -->
+
+    </div><!-- end container -->
+
 </div>
+    
+
+
+<script id="message-template" type="text/x-handlebars-template">
+    <li class="clearfix">
+        <div class="message-data align-right">
+            <span class="message-data-time">{{time}}, Today</span> &nbsp; &nbsp;
+            <span class="message-data-name">{{user.first}}</span> <i class="fa fa-circle me"></i>
+        </div>
+        <div class="message other-message float-right">
+            {{messageOutput}}
+        </div>
+    </li>
+</script>
+
+
+<script id="message-response-template" type="text/x-handlebars-template">
+    <li>
+        <div class="message-data">
+            <span class="message-data-name"><i class="fa fa-circle online"></i> {{user.first}}</span>
+            <span class="message-data-time">{{time}}, Today</span>
+        </div>
+        <div class="message my-message">
+            {{messageOutput}}
+        </div>
+    </li>
+</script>
+
+
+<script id="person-template" type="text/x-handlebars-template">
+    {{#if state.full}}
+    <li class="clearfix" id="{{uuid}}">
+        <img src="{{state.avatar}}" alt="avatar" />
+        <div class="about">
+            <div class="name">{{state.full}}</div>
+            <div class="status">
+                <i class="fa fa-circle online"></i> online
+            </div>
+        </div>
+    </li>
+    {{/if}}
+</script>
+  
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.0/handlebars.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/list.js/1.1.1/list.min.js'></script>
+<script src='https://dogaan.github.io/chat-engine.js'></script>
+<!-- 
+<script src='https://dogaan.github.io/generateperson.js'></script>
+-->
 
 <script type="text/javascript" charset="utf-8">
 
@@ -37,62 +97,209 @@ var memverseUserID    = "<%= current_user.id %>";                      // global
 var memverseUserName  = "<%= current_user.name_or_login.html_safe %>"; // global variable
 var memverseUserLogin = "<%= current_user.login.html_safe %>";         // global variable
 
-$(document).ready(function() {
-
-	// maybe move this into initialize function above ??
-	channel     = "<%= @channel.channel %>";
-    translation = "<%= current_user.translation %>";
-
-	// Initialize PubNub
-    var pubnub = new PubNub({
-	    subscribeKey: 		'<%= PN.env[:subscribe_key] %>',
-	    publishKey: 		'<%= PN.env[:publish_key] %>',
-	    logVerbosity: 		true,
-	    uuid: 				memverseUserID,
-	    ssl: 				true,
-	    presenceTimeout: 	130
-	});
-
-    // Listen
-	pubnub.addListener({
-	    message: function( msg ) {
-	        // handle incoming messages
-	        quizRoom.handleMessage( msg.message )
-	    },
-	    presence: function( presenceEvent ) {
-	        // handle incoming presence events.
-	        console.log("====== Received a PRESENCE event =========================")
-	        console.log( presenceEvent )
-	        mvPresence( presenceEvent )
-	    },
-	    status: function( status ) {
-	    	console.log("====== Received a STATUS event ===========================")
-	        console.log( status )
-	        // handle incoming status events.
-	    }
-	});
-
-    // Subscribe
-    pubnub.subscribe({
-        channels: 		[channel],
-        withPresence: 	true
-    });
-
-	// Show window with participants
-	$("#quizzers-stats").click( quizRoom.toggleQuizzersWindow );
-
-	// Allow quiz managers to ban/unban users
-	<% if can? :manage, ChatChannel %>
-
-		$("#chat-stream-narrow").delegate("li.chat-username", "hover", function(){
-			$(".ban").remove(); // remove any previous ban links
-			if($(this).attr("id") && $(this).attr("id").length > 0){ // server announcements don't have user id
-				ban_id = $(this).attr("id");
-				$(this).append(" <a href='/chat/toggle_ban?user_id="+ban_id+"' data-remote='true' class='ban' data-confirm='Are you sure you want to toggle the ban on this user?'>(toggle ban)</a>");
-			}
-		});
-
-	<% end %>
-
+// create a new instance of ChatEngine
+ChatEngine = ChatEngineCore.create({
+    publishKey: 'pub-c-816b4160-11c9-43fa-a1ea-4a1ca6cde79d',
+    subscribeKey: 'sub-c-0e83b538-e6a1-11e7-a7db-e6c6e9cd0a3f'
 });
+
+// use a helper function to generate a new profile
+// let newPerson = generatePerson(true);
+
+// create a bucket to store our ChatEngine Chat object
+let myChat;
+
+// create a bucket to store 
+let me;
+
+// compile handlebars templates and store them for use later
+let peopleTemplate = Handlebars.compile($("#person-template").html());
+let meTemplate = Handlebars.compile($("#message-template").html());
+let userTemplate = Handlebars.compile($("#message-response-template").html());
+
+// this is our main function that starts our chat app
+const init = () => {
+  
+  // connect to ChatEngine with current user
+  console.log("Connecting to PubNub Chat Engine with current user")
+  ChatEngine.connect(memverseUserID);
+
+  // when ChatEngine is booted, it returns your new User as `data.me`
+  ChatEngine.on('$.ready', function(data) {
+
+      // store my new user as `me`
+      me = data.me;
+      console.log(me)
+
+      // create a new ChatEngine Chat
+      myChat = new ChatEngine.Chat('chatengine-demo-chat');
+
+      // when we recieve messages in this chat, render them
+      myChat.on('message', (message) => {
+          renderMessage(message);
+      });
+
+      // when a user comes online, render them in the online list
+      myChat.on('$.online.*', (data) => {   
+        $('#people-list ul').append(peopleTemplate(data.user));
+      });
+
+      // when a user goes offline, remove them from the online list
+      myChat.on('$.offline.*', (data) => {
+        $('#people-list ul').find('#' + data.user.uuid).remove();
+      });
+
+      // wait for our chat to be connected to the internet
+      myChat.on('$.connected', () => {
+
+          // search for 50 old `message` events
+          myChat.search({
+            event: 'message',
+            limit: 50
+          }).on('message', (data) => {
+            
+            // when messages are returned, render them like normal messages
+            renderMessage(data, true);
+            
+          });
+        
+      });
+
+      // bind our "send" button and return key to send message
+      $('#sendMessage').on('submit', sendMessage)
+
+  });
+
+};
+
+// send a message to the Chat
+const sendMessage = () => {
+
+    // get the message text from the text input
+    let message = $('#message-to-send').val().trim();
+  
+    // if the message isn't empty
+    if (message.length) {
+      
+        // emit the `message` event to everyone in the Chat
+        myChat.emit('message', {
+            text: message
+        });
+
+        // clear out the text input
+        $('#message-to-send').val('');
+    }
+    
+    // stop form submit from bubbling
+    return false;
+
+};
+
+// render messages in the list
+const renderMessage = (message, isHistory = false) => {
+
+    // use the generic user template by default
+    let template = userTemplate;
+
+    // if I happened to send the message, use the special template for myself
+    if (message.sender.uuid == me.uuid) {
+        template = meTemplate;
+    }
+
+    let el = template({
+        messageOutput: message.data.text,
+        time: getCurrentTime(),
+        user: message.sender.state
+    });
+  
+    // render the message
+    if(isHistory) {
+      $('.chat-history ul').prepend(el); 
+    } else {
+      $('.chat-history ul').append(el); 
+    }
+  
+    // scroll to the bottom of the chat
+    scrollToBottom();
+
+};
+
+// scroll to the bottom of the window
+const scrollToBottom = () => {
+    $('.chat-history').scrollTop($('.chat-history')[0].scrollHeight);
+};
+
+// get the current time in a nice format
+const getCurrentTime = () => {
+    return new Date().toLocaleTimeString().replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, "$1$3");
+};
+
+// boot the app
+init();
+
+
+//----------------- old code below -------------
+
+// var memverseUserID    = "<%= current_user.id %>";                      // global variable
+// var memverseUserName  = "<%= current_user.name_or_login.html_safe %>"; // global variable
+// var memverseUserLogin = "<%= current_user.login.html_safe %>";         // global variable
+
+// $(document).ready(function() {
+
+// 	// maybe move this into initialize function above ??
+// 	channel     = "<%= @channel.channel %>";
+//     translation = "<%= current_user.translation %>";
+
+// 	// Initialize PubNub
+//     var pubnub = new PubNub({
+// 	    subscribeKey: 		'<%= PN.env[:subscribe_key] %>',
+// 	    publishKey: 		'<%= PN.env[:publish_key] %>',
+// 	    logVerbosity: 		true,
+// 	    uuid: 				memverseUserID,
+// 	    ssl: 				true,
+// 	    presenceTimeout: 	130
+// 	});
+
+//     // Listen
+// 	pubnub.addListener({
+// 	    message: function( msg ) {
+// 	        // handle incoming messages
+// 	        quizRoom.handleMessage( msg.message )
+// 	    },
+// 	    presence: function( presenceEvent ) {
+// 	        // handle incoming presence events.
+// 	        console.log("====== Received a PRESENCE event =========================")
+// 	        console.log( presenceEvent )
+// 	        mvPresence( presenceEvent )
+// 	    },
+// 	    status: function( status ) {
+// 	    	console.log("====== Received a STATUS event ===========================")
+// 	        console.log( status )
+// 	        // handle incoming status events.
+// 	    }
+// 	});
+
+//     // Subscribe
+//     pubnub.subscribe({
+//         channels: 		[channel],
+//         withPresence: 	true
+//     });
+
+// 	// Show window with participants
+// 	$("#quizzers-stats").click( quizRoom.toggleQuizzersWindow );
+
+// 	// Allow quiz managers to ban/unban users
+// 	<% if can? :manage, ChatChannel %>
+
+// 		$("#chat-stream-narrow").delegate("li.chat-username", "hover", function(){
+// 			$(".ban").remove(); // remove any previous ban links
+// 			if($(this).attr("id") && $(this).attr("id").length > 0){ // server announcements don't have user id
+// 				ban_id = $(this).attr("id");
+// 				$(this).append(" <a href='/chat/toggle_ban?user_id="+ban_id+"' data-remote='true' class='ban' data-confirm='Are you sure you want to toggle the ban on this user?'>(toggle ban)</a>");
+// 			}
+// 		});
+
+// 	<% end %>
+
+// });
 </script>
