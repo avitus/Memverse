@@ -11,6 +11,12 @@ $gray: #92959E;
     box-sizing: border-box;
   }
 
+
+  // background: #C5DDEB;
+  font: 14px/20px "Lato", Arial, sans-serif;
+  // padding: 20px 0;
+  color: white;
+
   .container {
     margin: 0 auto;
     // width: 750px;
@@ -47,6 +53,7 @@ $gray: #92959E;
       height: 500px;   
       li {
         padding-bottom: 20px;
+        list-style-type: none;
       }
     }
     
@@ -112,10 +119,20 @@ $gray: #92959E;
       padding: 30px 30px 20px;
       border-bottom: 2px solid white;
       overflow-y: scroll;
-      height: 300px;
-      
+      height: 300px;      
+
+      ul {
+        // padding: 20px;
+        // height: 500px;   
+        li {
+          // padding-bottom: 20px;
+          list-style-type: none;
+        }
+      }
+
       .message-data {
         margin-bottom: 15px;
+        color: black;
       }
       
       .message-data-time {

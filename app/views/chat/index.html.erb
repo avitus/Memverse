@@ -1,6 +1,7 @@
 <% page_title "Chat Room :: " + @channel.channel %>
 
 <head>
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"></link>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.0/handlebars.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.1.1/list.min.js"></script>
@@ -44,11 +45,11 @@
 
 <script id="message-template" type="text/x-handlebars-template">
     <li class="clearfix">
-        <div class="message-data align-right">
+        <div class="main-chat message-data align-right">
             <span class="message-data-time">{{time}}, Today</span> &nbsp; &nbsp;
-            <span class="message-data-name">{{user.first}}</span> <i class="fa fa-circle me"></i>
+            <span class="message-data-name">{{user.full}}</span> <i class="fa fa-circle me"></i>
         </div>
-        <div class="message other-message float-right">
+        <div class="main-chat message other-message float-right">
             {{messageOutput}}
         </div>
     </li>
@@ -57,11 +58,11 @@
 
 <script id="message-response-template" type="text/x-handlebars-template">
     <li>
-        <div class="message-data">
+        <div class="main-chat message-data">
             <span class="message-data-name"><i class="fa fa-circle online"></i> {{user.first}}</span>
             <span class="message-data-time">{{time}}, Today</span>
         </div>
-        <div class="message my-message">
+        <div class="main-chat message my-message">
             {{messageOutput}}
         </div>
     </li>
@@ -72,8 +73,8 @@
     {{#if state.full}}
     <li class="clearfix" id="{{uuid}}">
         <img src="{{state.avatar}}" alt="avatar" />
-        <div class="about">
-            <div class="name">{{state.full}}</div>
+        <div class="main-chat about">
+            <div class="main-chat name">{{state.full}}</div>
             <div class="status">
                 <i class="fa fa-circle online"></i> online
             </div>
@@ -96,6 +97,7 @@
 var memverseUserID    = "<%= current_user.id %>";                      // global variable
 var memverseUserName  = "<%= current_user.name_or_login.html_safe %>"; // global variable
 var memverseUserLogin = "<%= current_user.login.html_safe %>";         // global variable
+var memverseAvatar    = "<%= current_user.blog_avatar_url %>";         // global variable
 
 // create a new instance of ChatEngine
 ChatEngine = ChatEngineCore.create({
@@ -122,13 +124,15 @@ const init = () => {
   
   // connect to ChatEngine with current user
   console.log("Connecting to PubNub Chat Engine with current user")
-  ChatEngine.connect(memverseUserID);
+  ChatEngine.connect(memverseUserID, {username: memverseUserName});
 
   // when ChatEngine is booted, it returns your new User as `data.me`
   ChatEngine.on('$.ready', function(data) {
 
       // store my new user as `me`
       me = data.me;
+      me.update({full: memverseUserName});
+      me.update({avatar: memverseAvatar});
       console.log(me)
 
       // create a new ChatEngine Chat
@@ -142,6 +146,8 @@ const init = () => {
       // when a user comes online, render them in the online list
       myChat.on('$.online.*', (data) => {   
         $('#people-list ul').append(peopleTemplate(data.user));
+        console.log(data.user)
+        console.log(" has joined the room.")
       });
 
       // when a user goes offline, remove them from the online list
