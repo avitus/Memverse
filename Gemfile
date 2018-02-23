@@ -174,7 +174,7 @@ gem 'best_in_place'                                                            #
 # gem 'backup'                                                                 # Used to backup MySQL database and uploaded site assets
 gem 'dropbox-sdk'                                                              # Used with backup above
 gem 'rack-utf8_sanitizer'                                                      # Used to fix EasouSpider invalid UTF-8 byte sequences
-gem 'responders', '~> 2.0'                                                     # Support for respond_to and respond_with in Rails 4.2
+gem 'responders', '~> 2.4'                                                     # Support for respond_to and respond_with in Rails 4.2
 
 group :console do
   gem 'wirble'
