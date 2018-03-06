@@ -15,7 +15,7 @@ GIT
 
 GIT
   remote: https://github.com/avitus/rocket_pants.git
-  revision: ef4fc0bd3dbba07e45970f09854f5a510ca02b71
+  revision: 3a24da0977024b7377a92c1a0f0a733e677ee635
   specs:
     rocket_pants (1.13.1)
       actionpack (>= 3.0, < 6.0)
