@@ -46,7 +46,7 @@ describe Api::V1::MemversesController do
     end
 
     it 'returns the number of pages to be requested' do
-      get :index, :version => 1, :format => :json
+      get :index, params: {version: 1}, format: :json
       response.should be_paginated_resource 
 
       # body = JSON.parse(response.body)

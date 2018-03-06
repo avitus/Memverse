@@ -14,6 +14,18 @@ GIT
       rails (>= 5.0)
 
 GIT
+  remote: https://github.com/avitus/rocket_pants.git
+  revision: ef4fc0bd3dbba07e45970f09854f5a510ca02b71
+  specs:
+    rocket_pants (1.13.1)
+      actionpack (>= 3.0, < 6.0)
+      api_smith
+      hashie (>= 1.0, < 4)
+      moneta
+      railties (>= 3.0, < 6.0)
+      will_paginate (~> 3.0)
+
+GIT
   remote: https://github.com/galetahub/ckeditor.git
   revision: 115a50628baceeac5cc37363db082e3f5ba03c76
   specs:
@@ -28,18 +40,6 @@ GIT
     omniauth-windowslive (0.0.8.1)
       multi_json (>= 1.0.3)
       omniauth-oauth2 (~> 1.0)
-
-GIT
-  remote: https://github.com/parse/rocket_pants.git
-  revision: c45753ffee085d725724bf007e1c8fae2f44149d
-  specs:
-    rocket_pants (1.13.1)
-      actionpack (>= 3.0, < 6.0)
-      api_smith
-      hashie (>= 1.0, < 4)
-      moneta
-      railties (>= 3.0, < 6.0)
-      will_paginate (~> 3.0)
 
 GIT
   remote: https://github.com/youroute/api_smith.git
