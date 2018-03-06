@@ -11,7 +11,7 @@ require 'capistrano/bundler'
 require 'capistrano/rails/assets'
 require 'capistrano/rails/migrations'
 require 'capistrano/sidekiq'
-require 'airbrake/capistrano'
+# require 'airbrake/capistrano'
 require 'thinking_sphinx/capistrano'
 
 # Config for RVM

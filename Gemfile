@@ -25,7 +25,7 @@ group :development, :test do
   gem 'rspec_junit_formatter'                                   # Automatic test metadata collection for CirclCI
   gem 'rails-controller-testing'                                # To use 'assigns' in controller tests
   gem 'jasmine'
-  gem 'jasmine-rails'
+  # gem 'jasmine-rails'
   gem 'sqlite3'
   gem 'factory_bot_rails'                                       # Add to development group for debugging in console
   gem 'cucumber-rails', require: false                          # Rails Generators for Cucumber with special support for Capybara and DatabaseCleaner
@@ -124,7 +124,7 @@ gem 'capistrano-rails'                                                         #
 gem 'capistrano-rvm'                                                           # RVM-specific config for Capistrano
 gem 'sitemap_generator'                                                        # Sitemap generator
 gem 'newrelic_rpm', '>=3.3.0'                                                  # Performance monitoring
-gem 'airbrake'                                                                 # Error tracking
+# gem 'airbrake'                                                               # Error tracking
 gem 'td'                                                                       # Event logging to Treasure Data service
 
 ############################################################

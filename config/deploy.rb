@@ -61,6 +61,6 @@ namespace :deploy do
   after :finishing,   'thinking_sphinx:index'
   after :finishing,   'thinking_sphinx:restart'
   after :finishing,   'deploy:cleanup'
-  after :finished,    'airbrake:deploy'
+  # after :finished,    'airbrake:deploy'
 
 end
