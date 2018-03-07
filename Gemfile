@@ -124,7 +124,7 @@ gem 'capistrano-rails'                                                         #
 gem 'capistrano-rvm'                                                           # RVM-specific config for Capistrano
 gem 'sitemap_generator'                                                        # Sitemap generator
 gem 'newrelic_rpm', '>=3.3.0'                                                  # Performance monitoring
-# gem 'airbrake'                                                               # Error tracking
+gem "sentry-raven"                                                             # Error tracking
 gem 'td'                                                                       # Event logging to Treasure Data service
 
 ############################################################
