@@ -70,22 +70,26 @@ class VersesController < ApplicationController
 
   # ----------------------------------------------------------------------------------------------------------
   # POST /verses
-  # POST /verses.xml
   # ----------------------------------------------------------------------------------------------------------
   def create
     @verse = Verse.new(verse_params)
 
     respond_to do |format|
+
       if @verse.save
         flash[:notice] = 'Verse was successfully created.'
         format.html { redirect_to(@verse) }
-        format.xml  { render :xml => @verse, :status => :created, :location => @verse }
         format.json { render :json => { msg: "Success", verse_id: @verse.id } }
       else
         format.html { render :action => "new" }
-        format.xml  { render :xml => @verse.errors, :status => :unprocessable_entity }
         format.json { render :json => { msg: "Failure", errors: @verse.errors.full_messages } }
       end
+
+      rescue ActiveRecord::RecordNotUnique 
+        flash[:notice] = 'This verse already exists in our database' 
+        format.html { render :action => "new" }
+        format.json { render :json => { msg: "Failure", errors: @verse.errors.full_messages } }
+
     end
   end
 
