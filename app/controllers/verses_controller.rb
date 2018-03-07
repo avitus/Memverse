@@ -76,19 +76,23 @@ class VersesController < ApplicationController
 
     respond_to do |format|
 
-      if @verse.save
-        flash[:notice] = 'Verse was successfully created.'
-        format.html { redirect_to(@verse) }
-        format.json { render :json => { msg: "Success", verse_id: @verse.id } }
-      else
-        format.html { render :action => "new" }
-        format.json { render :json => { msg: "Failure", errors: @verse.errors.full_messages } }
-      end
+      begin
+
+        if @verse.save
+          flash[:notice] = 'Verse was successfully created.'
+          format.html { redirect_to(@verse) }
+          format.json { render :json => { msg: "Success", verse_id: @verse.id } }
+        else
+          format.html { render :action => "new" }
+          format.json { render :json => { msg: "Failure", errors: @verse.errors.full_messages } }
+        end
 
       rescue ActiveRecord::RecordNotUnique 
         flash[:notice] = 'This verse already exists in our database' 
         format.html { render :action => "new" }
         format.json { render :json => { msg: "Failure", errors: @verse.errors.full_messages } }
+
+      end
 
     end
   end
