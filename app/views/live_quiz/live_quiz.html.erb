@@ -85,6 +85,7 @@ $(document).ready(function() {
 	// maybe move this into initialize function above ??
 	channel     = "quiz-<%= @quiz.id %>";
     translation = "<%= current_user.translation %>";
+    console.log("==> Connected to channel " + channel);
 
 	// Initialize PubNub
     var pubnub = new PubNub({

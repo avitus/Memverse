@@ -1,7 +1,6 @@
 class ScheduledQuiz
 
   include Sidekiq::Worker
-#  include IceCube
 
   sidekiq_options :retry => false # Don't retry quiz if something goes wrong
 
@@ -11,8 +10,9 @@ class ScheduledQuiz
     # Try to find quiz starting in next minute, else return false
     # ========================================================================
 
-    quiz = Quiz.where("start_time > ? and start_time < ?",
-                        Time.now, Time.now + 1.minute).first
+    Sidekiq.logger.info "===> Looking for a scheduled quiz"
+
+    quiz = Quiz.where("start_time > ? and start_time < ?", Time.now, Time.now + 1.minute).first
 
     return false if quiz.nil?
     return false if quiz.quiz_questions.count == 0
@@ -29,13 +29,16 @@ class ScheduledQuiz
       return false if status.include? "In progress"
     end
 
-    puts "===> Quiz ##{quiz.id} : Grabbed by ScheduledQuiz worker"
+    Sidekiq.logger.info "===> Quiz ##{quiz.id} : Grabbed by ScheduledQuiz worker"
+    Sidekiq.logger.info "===> Quiz ##{quiz.id} : Using channel #{channel}"
 
     # Save status of quiz in redis
     $redis.hset(channel, "status", "In progress. Chat opening soon.")
 
     if (sleep_time = quiz.start_time - Time.now) && sleep_time > 0
-      puts "===> Quiz ##{quiz.id} : Sleeping #{sleep_time} till chat opens"
+      # puts "===> Quiz ##{quiz.id} : Sleeping #{sleep_time} till chat opens"
+      Sidekiq.logger.info("===> Quiz ##{quiz.id} : Sleeping #{sleep_time} till chat opens")
+
       sleep sleep_time
       $redis.hset(channel, "status", "In progress. Chat open. Wait for question.")
     end
@@ -49,7 +52,8 @@ class ScheduledQuiz
     # ========================================================================
     # Setup quiz, clear old scores
     # ========================================================================
-    puts "===> Quiz ##{quiz.id} : Opening quiz room at " + Time.now.to_s
+    # puts "===> Quiz ##{quiz.id} : Opening quiz room at " + Time.now.to_s
+    Sidekiq.logger.info "===> Quiz ##{quiz.id} : Opening quiz room at " + Time.now.to_s
 
     # TODO: Allow concurrent quizzes
 
@@ -68,8 +72,8 @@ class ScheduledQuiz
     @my_callback = lambda { |envelope|
       if envelope.error
         # If message is not sent we should probably try to send it again
-        puts("==== ! Failed to send message ! ==========")
-        puts( envelope.inspect )
+        Sidekiq.logger.info "==== ! Failed to send message ! =========="
+        Sidekiq.logger.info envelope.inspect
       end
     }
 
@@ -105,7 +109,8 @@ class ScheduledQuiz
     # ========================================================================
     # Open quiz chat channel 5 minutes prior to start
     # ========================================================================
-    puts "===> Quiz ##{quiz.id} : Opening chat at " + Time.now.to_s
+    Sidekiq.logger.info "===> Quiz ##{quiz.id} : Opening chat at " + Time.now.to_s
+
     if $redis.exists("chat-#{channel}")
       status = $redis.hmget("chat-#{channel}", "status").first
     end
@@ -113,12 +118,14 @@ class ScheduledQuiz
     unless status && status == "Open"
       new_status = "Open"
       $redis.hset("chat-#{channel}", "status", new_status)
-      PN.publish( :channel  => channel, :message  => {
-          :meta => "chat_status",
-          :status => new_status
+      PN.publish( 
+        channel: channel, 
+        message: {
+          meta: "chat_status",
+          status: new_status
         },
-        :http_sync => true,
-        :callback => @my_callback
+        http_sync: true,
+        callback: @my_callback
       )
     end
 
@@ -127,69 +134,71 @@ class ScheduledQuiz
     # ========================================================================
     # Main question loop
     # ========================================================================
+    Sidekiq.logger.info("===> Quiz ##{quiz.id} : Starting quiz at " + Time.now.to_s)
 
-    puts "===> Quiz ##{quiz.id} : Starting quiz at " + Time.now.to_s
-
-    quiz_questions    = quiz.quiz_questions.order("question_no ASC")
+    quiz_questions = quiz.quiz_questions.order("question_no ASC")
+    Sidekiq.logger.info("===> Quiz ##{quiz.id} : has #{quiz_questions.count} questions.")
 
     quiz_questions.each { |q|
       passages   = q.passage_translations
       ref        = q.passage
       num        = q.question_no
 
+      Sidekiq.logger.info "===> Quiz ##{quiz.id} : Question ##{num} [#{q.question_type}]"
+
       case q.question_type
       when "recitation"
         time_alloc = (q.passage_translations.first.last.split(" ").length * 2.5 + 15.0).to_i # 24 WPM typing speed with 15 seconds to think
 
         PN.publish(
-          :channel  => channel,
-          :message  => {
-            :meta       => "question",
-            :q_num      => num,
-            :q_id       => q.id,
-            :q_type     => "recitation",
-            :q_ref      => ref,
-            :q_passages => passages,
-            :time_alloc => time_alloc
+          channel:  channel,
+          message: {
+            meta:       "question",
+            q_num:      num,
+            q_id:       q.id,
+            q_type:     "recitation",
+            q_ref:      ref,
+            q_passages: passages,
+            time_alloc: time_alloc
           },
-          :http_sync => true,
-          :callback  => @my_callback
+          http_sync: true,
+          callback: @my_callback
         )
         sleep(time_alloc+1)
       when "reference"
         PN.publish(
-          :channel  => channel,
-          :message  => {
-            :meta       => "question",
-            :q_num      => num,
-            :q_id       => q.id,
-            :q_type     => "reference",
-            :q_ref      => ref,
-            :q_passages => passages,
-            :time_alloc => 25
+          channel: channel,
+          message: {
+            meta:       "question",
+            q_num:      num,
+            q_id:       q.id,
+            q_type:     "reference",
+            q_ref:      ref,
+            q_passages: passages,
+            time_alloc: 25
           },
-          :http_sync => true,
-          :callback => @my_callback
+          http_sync: true,
+          callback: @my_callback
         )
         sleep(26)
       when "mcq"
         PN.publish(
-          :channel  => channel,
-          :message  => {
-            :meta         => "question",
-            :q_num        => num,
-            :q_id         => q.id,
-            :q_type       => "mcq",
-            :mc_question  => q.mc_question,
-            :mc_option_a  => q.mc_option_a,
-            :mc_option_b  => q.mc_option_b,
-            :mc_option_c  => q.mc_option_c,
-            :mc_option_d  => q.mc_option_d,
-            :mc_answer    => q.mc_answer,
-            :time_alloc   => 30
+          channels: channel,
+          message: {
+            meta:         "question",
+            q_num:        num,
+            q_id:         q.id,
+            q_type:       "mcq",
+            mc_question:  q.mc_question,
+            mc_option_a:  q.mc_option_a,
+            mc_option_b:  q.mc_option_b,
+            mc_option_c:  q.mc_option_c,
+            mc_option_d:  q.mc_option_d,
+            mc_answer:    q.mc_answer,
+            time_alloc:   30
           },
-          :http_sync => true,
-          :callback => @my_callback
+          http_sync: true,
+          callback: @my_callback
         )
         sleep(31)
       else
@@ -204,13 +213,13 @@ class ScheduledQuiz
       scoreboard = scoreboard.sort { |x, y| y['score'].to_i <=> x['score'].to_i }
 
       PN.publish(
-        :channel  => channel,
-        :message  => {
-          :meta => "scoreboard",
-          :scoreboard => scoreboard
+        channel: channel,
+        message: {
+          meta: "scoreboard",
+          scoreboard: scoreboard
         },
-        :http_sync => true,
-        :callback => @my_callback
+        http_sync: true,
+        callback:  @my_callback
       )
     } # end of question loop
 
@@ -219,7 +228,7 @@ class ScheduledQuiz
     # ========================================================================
 
     $redis.hset(channel, "status", "Finished") # Update quiz status in redis
-    puts "===> Quiz ##{quiz.id} : Finished quiz #{quiz.id} at " + Time.now.to_s
+    Sidekiq.logger.info("===> Quiz ##{quiz.id} : Finished quiz #{quiz.id} at " + Time.now.to_s)
 
     # ========================================================================
     # Update difficulty for all questions
@@ -255,41 +264,44 @@ class ScheduledQuiz
     participants.each { |p| final_scoreboard << $redis.hgetall(p) }
     final_scoreboard = final_scoreboard.sort { |x, y| y['score'].to_i <=> x['score'].to_i }
 
-    puts "===> Quiz ##{quiz.id} : Final Quiz Scores"
-    puts "==================="
+    Sidekiq.logger.info "===> Quiz ##{quiz.id} : Final Quiz Scores"
+    Sidekiq.logger.info "==================="
     final_scoreboard.each do |usr|
-      puts "[" + usr['score'] + "] - " + usr['name']
+      Sidekiq.logger.info "[" + usr['score'] + "] - " + usr['name']
     end
 
-    gold_ribbon_name   = final_scoreboard[0]['name']
+    gold_ribbon_name   = final_scoreboard[0]['name'] unless final_scoreboard.empty?
     # silver_ribbon_name = final_scoreboard[1]['name']
     # bronze_ribbon_name = final_scoreboard[2]['name']  # Need to check that we have at least 3 participants
 
-    gold_ribbon_id     = final_scoreboard[0]['id']
+    gold_ribbon_id     = final_scoreboard[0]['id'] unless final_scoreboard.empty?
     # silver_ribbon_id   = final_scoreboard[1]['id']
     # bronze_ribbon_id   = final_scoreboard[2]['id']
 
-    broadcast  = "#{gold_ribbon_name} won #{quiz.name}"
+    broadcast = "#{gold_ribbon_name} won #{quiz.name}"
     Tweet.create(:news => broadcast, :user_id => gold_ribbon_id, :importance => 2)
 
     # ========================================================================
     # Close chat after ten minutes
     # ========================================================================
-    puts "===> Quiz ##{quiz.id} : Quiz over. Sleeping for 10 minutes, then shutting down chat."
+    Sidekiq.logger.info "===> Quiz ##{quiz.id} : Quiz over. Sleeping for 10 minutes, then shutting down chat."
     Rails.env.production? ? sleep(600) : sleep(30)
 
     new_status = "Closed"
     $redis.hset("chat-#{channel}", "status", new_status)
-    PN.publish( :channel  => channel, :message  => {
-        :meta => "chat_status",
-        :status => new_status
+    
+    PN.publish( 
+      channel: channel, 
+      message: {
+        meta: "chat_status",
+        status: new_status
       },
-      :http_sync => true,
-      :callback => @my_callback
+      http_sync: true,
+      callback: @my_callback
     )
 
-    puts "===> Quiz ##{quiz.id} : Chat closed and sidetiq job finished."
+    Sidekiq.logger.info "===> Quiz ##{quiz.id} : Chat closed and sidekiq job finished."
 
-  end
+  end # perform
 
-end
+end # class

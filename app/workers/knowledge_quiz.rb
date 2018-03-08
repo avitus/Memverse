@@ -26,7 +26,7 @@ class KnowledgeQuiz
     # ========================================================================
     # Setup quiz, clear old scores
     # ========================================================================
-    puts "===> Opening quiz room at " + Time.now.to_s
+    Sidekiq.logger.info "===> Opening quiz room at " + Time.now.to_s
 
     # Clear participant and question scores from Redis
     participants = $redis.keys("user-*")       # user ID's
@@ -47,8 +47,8 @@ class KnowledgeQuiz
     @my_callback = lambda { |envelope|
       if envelope.error
         # If message is not sent we should probably try to send it again
-        puts("==== ! Failed to send message ! ==========")
-        puts( envelope.inspect )
+        Sidekiq.logger.info("==== ! Failed to send message ! ==========")
+        Sidekiq.logger.info( envelope.inspect )
       end
     }
 
@@ -84,7 +84,7 @@ class KnowledgeQuiz
     # ========================================================================
     # Open quiz chat channel 5 minutes prior to start
     # ========================================================================
-    puts "===> Opening chat at " + Time.now.to_s
+    Sidekiq.logger.info "===> Opening chat at " + Time.now.to_s
     if $redis.exists("chat-#{channel}")
       status = $redis.hmget("chat-#{channel}", "status").first
     end
@@ -112,11 +112,11 @@ class KnowledgeQuiz
       q_num_array = Array(1..3)
     end
 
-    puts "===> Starting quiz at " + Time.now.to_s
+    Sidekiq.logger.info "===> Starting quiz at " + Time.now.to_s
 
     q_num_array.each do |q_num|
 
-      puts "===> Question: " + q_num.to_s
+      Sidekiq.logger.info "===> Question: " + q_num.to_s
 
       # Pick a question at random
       # q = QuizQuestion.mcq.approved.fresh.sort_by{ rand }.first
@@ -126,28 +126,30 @@ class KnowledgeQuiz
       q.update_attribute( :last_asked, Date.today )
 
       # Publish question
-      PN.publish( :channel  => channel, :message  => {
-          :meta        => "question",
-          :q_id        => q.id,
-          :q_num       => q_num,
-          :q_type      => "mcq",
-          :mc_question => q.mc_question,
-          :mc_option_a => q.mc_option_a,
-          :mc_option_b => q.mc_option_b,
-          :mc_option_c => q.mc_option_c,
-          :mc_option_d => q.mc_option_d,
-          :mc_answer   => q.mc_answer,
-          :time_alloc  => q.time_allocation
+      PN.publish( 
+        channel: channel, 
+        message: {
+          meta:        "question",
+          q_id:        q.id,
+          q_num:       q_num,
+          q_type:      "mcq",
+          mc_question: q.mc_question,
+          mc_option_a: q.mc_option_a,
+          mc_option_b: q.mc_option_b,
+          mc_option_c: q.mc_option_c,
+          mc_option_d: q.mc_option_d,
+          mc_answer:   q.mc_answer,
+          time_alloc:  q.time_allocation
         },
-        :http_sync => true,
-        :callback => @my_callback
+        http_sync: true,
+        callback:  @my_callback
       )
 
       # Time to answer question
       sleep( q.time_allocation )
 
       # Update final
-      puts "===> Updating scoreboard"
+      Sidekiq.logger.info "===> Updating scoreboard"
 
       scoreboard = Array.new
       participants = $redis.keys("user-*")
@@ -155,12 +157,12 @@ class KnowledgeQuiz
       scoreboard = scoreboard.sort { |x, y| y['score'].to_i <=> x['score'].to_i }
 
       # Publish scoreboard
-      PN.publish( :channel  => channel, :message  => {
-          :meta => "scoreboard",
-          :scoreboard => scoreboard
+      PN.publish( channel: channel, message: {
+          meta: "scoreboard",
+          scoreboard: scoreboard
         },
-        :http_sync => true,
-        :callback => @my_callback
+        http_sync: true,
+        callback:  @my_callback
       )
 
     end # of question loop
@@ -169,10 +171,10 @@ class KnowledgeQuiz
     # Update quiz status, set start time for next quiz
     # ========================================================================
     $redis.hset("quiz-bible-knowledge", "status", "Finished") # Update quiz status in redis
-    puts "===> Finished quiz at " + Time.now.to_s
+    Sidekiq.logger.info "===> Finished quiz at " + Time.now.to_s
 
     quiz.update_attribute(:start_time, next_quiz_time) # Update start time for next quiz
-    puts "Next knowledge quiz will start at " + next_quiz_time.to_s
+    Sidekiq.logger.info "Next knowledge quiz will start at " + next_quiz_time.to_s
 
     # ========================================================================
     # Update difficulty for all questions
@@ -183,9 +185,9 @@ class KnowledgeQuiz
       quiz_table << $redis.hgetall(qq)
     end
 
-    puts '----------------------------------------------------------------------------------------'
-    puts '#  |  ID  |  Answers Submitted  |  Total Score'
-    puts '----------------------------------------------------------------------------------------'
+    Sidekiq.logger.info '----------------------------------------------------------------------------------------'
+    Sidekiq.logger.info '#  |  ID  |  Answers Submitted  |  Total Score'
+    Sidekiq.logger.info '----------------------------------------------------------------------------------------'
     quiz_table.each_with_index do |qq, index|
 
       q_id           = qq['qq_id'].to_i             # Quiz question ID
@@ -193,7 +195,7 @@ class KnowledgeQuiz
       q_total        = qq['total_score'].to_i       # Total score, 10 = max
       q_perc_correct = q_total.to_f / q_count * 10  # Calculate score as a %
 
-      puts index.to_s + "      " + qq['qq_id'] + "         " + qq['answered'] + "                  " + qq['total_score']
+      Sidekiq.logger.info index.to_s + "      " + qq['qq_id'] + "         " + qq['answered'] + "                  " + qq['total_score']
 
       # Update quiz question difficulty in database
       question = QuizQuestion.find( q_id )
@@ -209,10 +211,10 @@ class KnowledgeQuiz
     participants.each { |p| final_scoreboard << $redis.hgetall(p) }
     final_scoreboard = final_scoreboard.sort { |x, y| y['score'].to_i <=> x['score'].to_i }
 
-    puts "Final Quiz Scores"
-    puts "==================="
+    Sidekiq.logger.info "Final Quiz Scores"
+    Sidekiq.logger.info "==================="
     final_scoreboard.each do |usr|
-      puts "[" + usr['score'] + "] - " + usr['name']
+      Sidekiq.logger.info "[" + usr['score'] + "] - " + usr['name']
     end
 
     gold_ribbon_name   = final_scoreboard[0]['name']
@@ -233,20 +235,20 @@ class KnowledgeQuiz
     # ========================================================================
     # Close chat after ten minutes
     # ========================================================================
-    puts "Quiz now over. Sleeping for 10 minutes, then shutting down chat."
+    Sidekiq.logger.info "Quiz now over. Sleeping for 10 minutes, then shutting down chat."
     Rails.env.production? ? sleep(600) : sleep(30)
 
     new_status = "Closed"
     $redis.hset("chat-#{channel}", "status", new_status)
-    PN.publish( :channel  => channel, :message  => {
-        :meta => "chat_status",
-        :status => new_status
+    PN.publish( channel: channel, message: {
+        meta: "chat_status",
+        status: new_status
       },
-      :http_sync => true,
-      :callback => @my_callback
+      http_sync: true,
+      callback: @my_callback
     )
 
-    puts "Chat closed and sidekiq job finished."
+    Sidekiq.logger.info "Chat closed and sidekiq job finished."
 
   end
 

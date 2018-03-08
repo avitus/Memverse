@@ -21,6 +21,7 @@ var quizRoom = {
         switch( m.meta ) {
 
             case "chat":
+                console.log("==> Incoming chat");
                 this.putChat( m.data.user, m.data.msg, m.meta, m.data.user_id);
                 break;
 
@@ -33,12 +34,12 @@ var quizRoom = {
                 break;
 
             case "question":
-
+                console.log("==> Incoming question");
                 this.handleQuestion(m);
                 break;
 
             case "scoreboard":
-
+                console.log("==> Incoming scoreboard update");
                 this.updateScoreboard(m);
                 break;
 
