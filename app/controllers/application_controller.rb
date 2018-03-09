@@ -13,6 +13,7 @@ class ApplicationController < ActionController::Base
   helper :all # include all helpers, all the time
   protect_from_forgery prepend: true
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
+  rescue_from ActionController::UnknownFormat, :with => :raise_not_found
 
   # Admin Authorization
   helper_method :admin?
@@ -298,4 +299,10 @@ class ApplicationController < ActionController::Base
   def record_not_found
     render :file => File.join(Rails.root, 'public', '404.html'), :status => 404
   end
+
+  # Automatically respond with 415 for ActionController::UnknownFormat
+  def raise_not_found
+    render text: 'Not Found', status: :unsupported_media_type
+  end
+
 end
