@@ -3,13 +3,13 @@
 # This is the main twice-weekly quiz
 # Runs Tuesday at 9am and Saturday at 3pm
 schedule_knowledge_quiz_tuesday:
-  cron: "0 9 * * 2"
+  cron: "0 17 * * 2"
   class: "KnowledgeQuiz"
   queue: default
   active_job: true 
 
 schedule_knowledge_quiz_saturday:
-  cron: "0 15 * * 6"
+  cron: "0 23 * * 6"
   class: "KnowledgeQuiz"
   queue: default
   active_job: true 
