@@ -217,11 +217,11 @@ class KnowledgeQuiz
       Sidekiq.logger.info "[" + usr['score'] + "] - " + usr['name']
     end
 
-    gold_ribbon_name   = final_scoreboard[0]['name']
+    gold_ribbon_name   = final_scoreboard[0]['name'] unless final_scoreboard.empty?
     # silver_ribbon_name = final_scoreboard[1]['name']
     # bronze_ribbon_name = final_scoreboard[2]['name']  # Need to check that we have at least 3 participants
 
-    gold_ribbon_id     = final_scoreboard[0]['id']
+    gold_ribbon_id     = final_scoreboard[0]['id'] unless final_scoreboard.empty?
     # silver_ribbon_id   = final_scoreboard[1]['id']
     # bronze_ribbon_id   = final_scoreboard[2]['id']
 
