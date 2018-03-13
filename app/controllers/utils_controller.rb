@@ -41,7 +41,7 @@ class UtilsController < ApplicationController
   # Show recent tweets
   # ----------------------------------------------------------------------------------------------------------
   def tweets
-    @tweets = Tweet.all(:limit => 100, :order => "created_at DESC")
+    @tweets = Tweet.order("created_at DESC").limit(100)
     respond_to do |format|
       format.html
     end
