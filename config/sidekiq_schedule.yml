@@ -1,7 +1,7 @@
 # https://crontab.guru
 
 # This is the main twice-weekly quiz
-# Runs Tuesday at 9am and Saturday at 3pm
+# Runs Tuesday at 9am and Saturday at 3pm. Use UTC time
 schedule_knowledge_quiz_tuesday:
   cron: "0 17 * * 2"
   class: "KnowledgeQuiz"

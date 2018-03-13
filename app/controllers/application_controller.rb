@@ -14,6 +14,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery prepend: true
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
   rescue_from ActionController::UnknownFormat, :with => :raise_not_found
+  # rescue_from ActionController::UnfilteredParameters, :with => :show_params
 
   # Admin Authorization
   helper_method :admin?
@@ -304,5 +305,11 @@ class ApplicationController < ActionController::Base
   def raise_not_found
     render text: 'Not Found', status: :unsupported_media_type
   end
+
+  # ALV (Mar 2018) Was being used to debug problems with strong parameters.
+  # def show_params
+  #   puts "======> Rescue from ActionController::UnfilteredParameters"
+  #   puts params.inspect
+  # end
 
 end
