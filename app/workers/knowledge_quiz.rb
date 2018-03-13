@@ -230,7 +230,7 @@ class KnowledgeQuiz
 
     # Log event to Treasure Data
     TD.event.post('knowledge_quiz', {:gold_ribbon_name => gold_ribbon_name, :gold_ribbon_id => gold_ribbon_id, :gold_ribbon_score => final_scoreboard[0]['score'],
-                                     :participants => final_scoreboard.length })
+                                     :participants => final_scoreboard.length }) unless final_scoreboard.empty?
 
     # ========================================================================
     # Close chat after ten minutes
