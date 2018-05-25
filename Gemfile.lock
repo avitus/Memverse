@@ -7,9 +7,9 @@ GIT
 
 GIT
   remote: https://github.com/avitus/bloggity.git
-  revision: bce0aafa167de48de8c81b3dc7ad51fa7c0db21f
+  revision: 0d40daf7df16683f4975f535b3c0a5e735e76b29
   specs:
-    bloggity (0.2.25)
+    bloggity (0.2.27)
       jquery-rails
       rails (>= 5.0)
 
