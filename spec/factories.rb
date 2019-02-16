@@ -8,10 +8,12 @@ FactoryBot.define do
   # ==============================================================================================
   factory :user do |u|
 
-    u.name { Faker::Name.name }
+    u.name  { Faker::Name.unique.name }
+    u.email { Faker::Internet.unique.email }
 
     # u.name 'Test User'
-	  u.sequence(:email) { |n| "user#{n}@test.com" }
+	  # u.sequence(:email) { |n| "user#{n}@test.com" }
+    
     u.password 'please'
     u.password_confirmation { |u| u.password }
     u.last_activity_date Date.today

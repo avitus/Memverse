@@ -13,6 +13,9 @@ puts "============================================================"
 puts ActiveRecord::Base.configurations
 puts "============================================================"
 
+DatabaseCleaner.clean
+
+
 # puts 'SETTING UP ADMIN USER'
 user = User.create :name => 'Andy', :email => 'admin@test.com', :password => 'please', :password_confirmation => 'please'
 user.confirm
