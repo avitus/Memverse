@@ -1,0 +1,30 @@
+/* --- News Page --- */
+
+.news-feed {
+	float: left;
+	width: 94%;
+	min-height: 200px;
+	background: #FFF;
+	border: 1px solid #555;
+	padding-left: 3%;
+	padding-right: 3%;
+	margin: 1%;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
+}
+
+.news-feed h2 {
+	font-weight:bold;
+	padding-top: 1em;
+}
+
+.news-feed .news-feed-post {
+	padding-bottom: 2em;
+}
+
+#video-feed {
+	float:left;
+	width:60%;
+	border-style:none;
+}
