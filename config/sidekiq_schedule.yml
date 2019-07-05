@@ -1,3 +1,5 @@
+# NOTE: Check the Cron tab in the Sidekiq UI to find the scheduled jobs
+
 # https://crontab.guru
 
 # This is the main twice-weekly quiz
