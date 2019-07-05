@@ -255,26 +255,23 @@ class InfoController < ApplicationController
     # === RSS News feed ===
     # Poached from http://www.robbyonrails.com/articles/2005/05/11/parsing-a-rss-feed
     feed_urls << 'http://feeds.christianitytoday.com/christianitytoday/ctmag'
-    feed_urls << 'http://feeds.christianitytoday.com/christianitytoday/mostreads'
     feed_urls << 'http://feeds.feedburner.com/tgcblog'
-    feed_urls << 'http://www.christianpost.com/rss/feed/church-ministries/'
-    # feed_urls << 'http://www.christianpost.com/services/rss/feed/most-popular'
-    # feed_urls << 'http://rss.feedsportal.com/c/32752/f/517092/index.rss'  <-- times out
+    feed_urls << 'https://blog.truthforlife.org/rss.xml'
 
     feed_urls.each { |fd_url|
-	  @feeds[ feed_urls.index(fd_url) ]  = RssReader.posts_for(fd_url, length=5, perform_validation=false)
+	   @feeds[ feed_urls.index(fd_url) ] = RssReader.posts_for(fd_url, length=5, perform_validation=false)
     }
 
-    @feeds.each { |feed|
-      if feed
-        feed.each { |post|
-          # Strip out links to Digg, StumbleUpon etc.
-          post.description = post.description.split("<div")[0]  unless !post.description
-          post.description = post.description.split("<img")[0]  unless !post.description
-          post.description = post.description.split("<p><a")[0] unless !post.description # Remove links for Gospel Coalition
-        }
-      end
-    }
+    # @feeds.each { |feed|
+    #   if feed
+    #     feed.each { |post|
+    #       # Strip out links to Digg, StumbleUpon etc.
+    #       post.description = post.description.split("<div")[0]  unless !post.description
+    #       post.description = post.description.split("<img")[0]  unless !post.description
+    #       post.description = post.description.split("<p><a")[0] unless !post.description # Remove links for Gospel Coalition
+    #     }
+    #   end
+    # }
   end
 
   # ----------------------------------------------------------------------------------------------------------

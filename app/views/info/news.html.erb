@@ -1,70 +1,50 @@
 <% page_title I18n.t :news_network, :scope => 'page_titles' %>
 
 <% cache 'news', :expires_in => 6.hours do  %>
-<div class="white-box-with-margins">
-<div class="news-feed">
-	<h2>Christianity Today</h2>
-	<ul>
-		<% if @feeds[0] %>
-			<% @feeds[0].each do |post| %>
-				<li>
-					<%= link_to post.title, post.link %>
-					<br>
-					<div class="post-description"><%= sanitize truncate( post.description, :length => 500, escape: false, :omission => '... (continued)') %></div>
-				</li>
-			<% end %>
-		<% end %>
-	</ul>	
-</div>
 
 <div class="news-feed">
-	<h2>Most Read</h2>
-	<ul>
-		<% if @feeds[1] %>
-			<% @feeds[1].each do |post| %>
-				<li>
-					<%= link_to post.title, post.link %>
-					<br>
-					<div class="post-description"><%= sanitize truncate( post.description, :length => 500, escape: false, :omission => '... (continued)') %></div>
-				</li>
-			<% end %>
-		<% end %>
-	</ul>	
-</div>
+	<% if @feeds[0] %>
+		<% @feeds[0].each do |post| %>
 
+			<div class="news-feed-post">
+				<h2><%= link_to post.title, post.link %></h2>
+				<div class="post-description"><%= sanitize truncate( post.description, :length => 2000, escape: false, :omission => '... (continued)') %></div>
+			</div>
+		
+		<% end %>
+	<% end %>
+</div>
 <div class='clr'></div>
 
-<div class="news-feed">
-	<h2>Gospel Coalition</h2>
-	<ul>
-		<% if @feeds[2] %>
-			<% @feeds[2].each do |post| %>
-				<li>
-					<%= link_to post.title, post.link %>
-					<br>
-					<div class="post-description"><%= sanitize truncate( post.description, :length => 500, escape: false, :omission => '... (continued)') %></div>
-				</li>
-			<% end %>
-		<% end %>
-	</ul>	
-</div>
 
 <div class="news-feed">
-	<h2>Christian Post</h2>
-	<ul>
-		<% if @feeds[3] %>
-			<% @feeds[3].each do |post| %>
-				<li>
-					<%= link_to post.title, post.link %>
-					<br>
-					<div class="post-description"><%= sanitize truncate( post.description, :length => 500, escape: false, :omission => '... (continued)') %></div>
-				</li>
-			<% end %>
+	<% if @feeds[1] %>
+		<% @feeds[1].each do |post| %>
+
+			<div class="news-feed-post">
+				<h2><%= link_to post.title, post.link %></h2>
+				<div class="post-description"><%= sanitize truncate( post.description, :length => 2000, escape: false, :omission => '... (continued)') %></div>
+			</div>
+
 		<% end %>
-	</ul>	
+	<% end %>
 </div>
+<div class='clr'></div>
 
-<div class="clr"></div>
 
-</div> <!-- end: white-page-with-margins -->
+<div class="news-feed">
+	<% if @feeds[2] %>
+		<% @feeds[2].each do |post| %>
+
+			<div class="news-feed-post">
+				<h2><%= link_to post.title, post.link %></h2>
+				<div class="post-description"><%= sanitize truncate( post.description, :length => 2000, escape: false, :omission => '... (continued)') %></div>
+			</div>
+
+		<% end %>
+	<% end %>
+</div>
+<div class='clr'></div>
+
+
 <% end %>
