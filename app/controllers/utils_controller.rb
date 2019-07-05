@@ -391,7 +391,7 @@ class UtilsController < ApplicationController
     logger.debug("Ch: #{chapter}")
     logger.debug("Vs: #{verse}")
 
-    @vs_list = Verse.find(:all, :conditions => {:book => book, :chapter => chapter.to_i, :versenum => verse.to_i})
+    @vs_list = Verse.where(book: book, chapter: chapter.to_i, versenum: verse.to_i)
 
     render :partial => 'search_verse', :layout=>false
   end
