@@ -14,12 +14,12 @@ FactoryBot.define do
     # u.name 'Test User'
 	  # u.sequence(:email) { |n| "user#{n}@test.com" }
     
-    u.password 'please'
+    u.password { 'please' }
     u.password_confirmation { |u| u.password }
-    u.last_activity_date Date.today
-    u.admin false
-    u.referred_by 0
-    u.translation nil
+    u.last_activity_date { Date.today }
+    u.admin { false }
+    u.referred_by { 0 }
+    u.translation { nil }
 
     trait :approved do
       after(:create) do |user, _|
@@ -45,12 +45,12 @@ FactoryBot.define do
   # Verses
   # ==============================================================================================
   factory :verse do |verse|
-    verse.translation 'NIV'
-    verse.book_index 48
-    verse.book 'Galatians'
-    verse.chapter 5
-    verse.versenum 22
-    verse.text 'But the fruit of the Spirit is love, joy, peace, patience, kindness, goodness, faithfulness,'
+    verse.translation { 'NIV' }
+    verse.book_index { 48 }
+    verse.book { 'Galatians' }
+    verse.chapter { 5 }
+    verse.versenum { 22 }
+    verse.text { 'But the fruit of the Spirit is love, joy, peace, patience, kindness, goodness, faithfulness,' }
 
     # This ugliness is required to skip the validate_ref callback since the FinalVerse records are often not available during testing
     # For details see: http://stackoverflow.com/questions/8751175/skip-callbacks-on-factory-girl-and-rspec
@@ -70,12 +70,12 @@ FactoryBot.define do
   factory :passage do
 
     association :user,  :factory => :user
-    translation 'NIV'
-    length      9
-    book        'Proverbs'
-    chapter     3
-    first_verse 2
-    last_verse  10
+    translation { 'NIV' }
+    length      { 9 }
+    book        { 'Proverbs' }
+    chapter     { 3 }
+    first_verse { 2 }
+    last_verse  { 10 }
 
     # Create the necessary memverses and verses for the passage
     # Note: 'evaluator' stores all values from the 'passage' factory_girl
@@ -95,14 +95,14 @@ FactoryBot.define do
     # association :passage, :factory => :passage # this causes problems with infinite recursion
     association     :verse,   :factory => :verse
     association     :user,    :factory => :user
-    status          'Learning'
-    last_tested     Date.today
-    next_test       Date.today
-    efactor         2.0
-    rep_n           1
-    test_interval   1
-    ref_interval    6
-    next_ref_test   Date.today
+    status          { 'Learning' }
+    last_tested     { Date.today }
+    next_test       { Date.today }
+    efactor         { 2.0 }
+    rep_n           { 1 }
+    test_interval   { 1 }
+    ref_interval    { 6 }
+    next_ref_test   { Date.today }
 
     # We need to add the callback back to the Memverse class because it is removed from the class by
     # the :memverse_without_passage callback. See link below for details
@@ -125,8 +125,8 @@ FactoryBot.define do
   # Blog
   # ==============================================================================================
   factory :blog do |f|
-    f.id 1
-    f.title 'Memverse Blog'
+    f.id { 1 }
+    f.title { 'Memverse Blog' }
   end
 
   factory :blog_post do |f|
@@ -136,38 +136,38 @@ FactoryBot.define do
   factory :blog_comment do |bc|
     bc.association :blog_post, :factory => :blog_post
   	bc.association :user,      :factory => :user
-  	bc.comment 'Nice blog post!'
+  	bc.comment { 'Nice blog post!' }
   end
 
   # ==============================================================================================
   # Final Verse
   # ==============================================================================================
   factory :final_verse do |f|
-    f.book 'Genesis'
-    f.chapter 1
-    f.last_verse 31
+    f.book { 'Genesis' }
+    f.chapter { 1 }
+    f.last_verse { 31 }
   end
 
   # ==============================================================================================
   # Badges
   # ==============================================================================================
   factory :badge do |b|
-    b.name 'Sermon on the Mount'
-    b.description 'Memorize the Sermon on the Mount'
-    b.color 'solo'
+    b.name { 'Sermon on the Mount' }
+    b.description { 'Memorize the Sermon on the Mount' }
+    b.color { 'solo' }
   end
 
   # ==============================================================================================
   # Quests
   # ==============================================================================================
   factory :quest do |q|
-    q.task 'Memorize Matthew 5'
-    q.objective 'Chapters'
-    q.qualifier 'Matthew 5'
-    q.quantity nil
-    q.description nil
-    q.level 1
-    q.url nil
+    q.task { 'Memorize Matthew 5' }
+    q.objective { 'Chapters' }
+    q.qualifier { 'Matthew 5' }
+    q.quantity { nil }
+    q.description { nil }
+    q.level { 1 }
+    q.url { nil }
     q.association :badge, :factory => :badge
   end
 
@@ -176,16 +176,16 @@ FactoryBot.define do
   # ==============================================================================================
   factory :progress_report do |pr|
     pr.association :user, :factory => :user
-    pr.learning   50
-    pr.memorized 100
-    pr.entry_date Date.today
+    pr.learning   { 50 }
+    pr.memorized { 100 }
+    pr.entry_date { Date.today }
   end
 
   # ==============================================================================================
   # Groups
   # ==============================================================================================
   factory :group do |g|
-    g.name 'Memory Group'
+    g.name { 'Memory Group' }
     g.association :leader, :factory => :user
   end
 
@@ -194,7 +194,7 @@ FactoryBot.define do
   # ==============================================================================================
   factory :quiz do |q|
     q.association :user, :factory => :user
-    q.name    'Weekly Bible Knowledge'
+    q.name    { 'Weekly Bible Knowledge' }
   end
 
   # ==============================================================================================
@@ -202,15 +202,15 @@ FactoryBot.define do
   # ==============================================================================================
   factory :quiz_question do |qq|
     qq.association :quiz, :factory => :quiz
-    qq.times_answered  10
-    qq.perc_correct    50
-    qq.question_type   "reference"
-    qq.mc_question     nil
-    qq.mc_option_a     nil
-    qq.mc_option_b     nil
-    qq.mc_option_c     nil
-    qq.mc_option_d     nil
-    qq.mc_answer       nil
+    qq.times_answered  { 10 }
+    qq.perc_correct    { 50 }
+    qq.question_type   { "reference" }
+    qq.mc_question     { nil }
+    qq.mc_option_a     { nil }
+    qq.mc_option_b     { nil }
+    qq.mc_option_c     { nil }
+    qq.mc_option_d     { nil }
+    qq.mc_answer       { nil }
     qq.association :supporting_ref, :factory => :uberverse
   end
 
@@ -218,11 +218,11 @@ FactoryBot.define do
   # Uberverses
   # ==============================================================================================
   factory :uberverse do
-    book "Genesis"
-    chapter 1
-    versenum 1
-    book_index 1
-    subsection_end 31
+    book { "Genesis" }
+    chapter { 1 }
+    versenum { 1 }
+    book_index { 1 }
+    subsection_end { 31 }
   end
 
   # ==============================================================================================
@@ -232,7 +232,7 @@ FactoryBot.define do
 
   factory :messageboard, class: Thredded::Messageboard do
     sequence(:name) { |n| "messageboard#{n}" }
-    description 'This is a description of the messageboard'
+    description { 'This is a description of the messageboard' }
     # closed false
   end
 
@@ -242,7 +242,7 @@ FactoryBot.define do
     messageboard
 
     content { Faker::Hacker.say_something_smart }
-    ip '127.0.0.1'
+    ip { '127.0.0.1' }
   end
 
   factory :private_post, class: Thredded::PrivatePost do
@@ -250,13 +250,13 @@ FactoryBot.define do
     postable { association :private_topic, user: user }
 
     content { Faker::Hacker.say_something_smart }
-    ip '127.0.0.1'
+    ip { '127.0.0.1' }
   end
 
   factory :topic, class: Thredded::Topic do
     transient do
-      with_posts 0
-      with_categories 0
+      with_posts { 0 }
+      with_categories { 0 }
     end
 
     title { Faker::StarWars.quote }
@@ -282,15 +282,15 @@ FactoryBot.define do
     end
 
     trait :locked do
-      locked true
+      locked { true }
     end
 
     trait :pinned do
-      sticky true
+      sticky { true }
     end
 
     trait :sticky do
-      sticky true
+      sticky { true }
     end
   end
 
