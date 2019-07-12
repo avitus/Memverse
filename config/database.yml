@@ -25,7 +25,7 @@ development: &default
   encoding: utf8
   pool: 5
   username: root
-  password: 
+  password: demo
   host: 127.0.0.1
   socket: /run/mysqld/mysqld.sock
 

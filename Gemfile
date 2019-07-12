@@ -12,7 +12,6 @@ source 'http://rubygems.org'
 
 group :development do
   gem 'web-console'
-  gem 'rails-footnotes', '>= 3.7'
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'byebug'
@@ -44,7 +43,7 @@ group :development, :test do
   gem 'guard-rspec'
   gem 'guard-cucumber'
   gem 'guard-jasmine'
-  gem 'faker'                                                   # Generates fake test data
+  gem 'faker', :git => 'https://github.com/stympy/faker.git', :branch => 'master'   # Generates fake test data
 end
 
 ############################################################

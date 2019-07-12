@@ -12,5 +12,5 @@
 //= require i18n/translations
 //= require jquery.purr
 //= require best_in_place
-//= require ckeditor/init
+//= require ckeditor/config
 //= require_tree .

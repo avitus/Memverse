@@ -41,6 +41,14 @@ GIT
       omniauth-oauth2 (~> 1.0)
 
 GIT
+  remote: https://github.com/stympy/faker.git
+  revision: 7683fc681649972a0bc6413accd8b1c78b17588f
+  branch: master
+  specs:
+    faker (1.9.6)
+      i18n (>= 0.7)
+
+GIT
   remote: https://github.com/youroute/api_smith.git
   revision: 1fb428cebc17b9afab25ac9f809bde87b0ec315b
   specs:
@@ -265,8 +273,6 @@ GEM
     factory_bot_rails (5.0.2)
       factory_bot (~> 5.0.2)
       railties (>= 4.2.0)
-    faker (1.9.6)
-      i18n (>= 0.7)
     faraday (0.15.4)
       multipart-post (>= 1.2, < 3)
     ffi (1.11.1)
@@ -507,8 +513,6 @@ GEM
     rails-dom-testing (2.0.3)
       activesupport (>= 4.2.0)
       nokogiri (>= 1.6)
-    rails-footnotes (4.1.8)
-      rails (>= 3.2)
     rails-html-sanitizer (1.0.4)
       loofah (~> 2.2, >= 2.2.2)
     rails-observers (0.1.5)
@@ -750,7 +754,7 @@ DEPENDENCIES
   dropbox-sdk
   email_spec
   factory_bot_rails
-  faker
+  faker!
   fancybox2-rails (~> 0.3.0)!
   foreman
   friendly_id
@@ -784,7 +788,6 @@ DEPENDENCIES
   rack-utf8_sanitizer
   rails (~> 5.1)
   rails-controller-testing
-  rails-footnotes (>= 3.7)
   rails-observers
   rails_admin
   randumb
