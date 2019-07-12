@@ -112,6 +112,13 @@ Capybara.server = :puma
 #   Capybara::Selenium::Driver.new(app, {browser: :chrome, http_client: client})
 # end
 
+# ALV - this doesn't work either
+# Capybara.register_driver :chrome do |app|
+#   Capybara::Selenium::Driver.new(app, :browser => :chrome)
+# end
+
+# Capybara.javascript_driver = :chrome
+
 Capybara.register_driver :custom_chrome_headless do |app|
   browser_options = ::Selenium::WebDriver::Chrome::Options.new()
   browser_options.args << '--headless'

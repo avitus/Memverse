@@ -29,7 +29,8 @@ group :development, :test do
   gem 'sqlite3'
   gem 'factory_bot_rails'                                       # Add to development group for debugging in console
   gem 'cucumber-rails', require: false                          # Rails Generators for Cucumber with special support for Capybara and DatabaseCleaner
-  gem "capybara"                                                # Helps test web applications by simulating how a real user would interact with your app
+  gem 'capybara'                                                # Helps test web applications by simulating how a real user would interact with your app
+  gem 'puma'
   gem 'selenium-webdriver'                                      # Optional extension for Capybara
   gem 'database_cleaner'                                        # Clean database between tests
   gem 'launchy', '>= 2.0.5'
@@ -93,7 +94,7 @@ gem 'rails-observers'                                                           
 # API
 ############################################################
 # Use this version only until Rails 5 support in master branch
-gem 'rocket_pants', github: 'avitus/rocket_pants'                              # API goodness
+gem 'rocket_pants', github: 'NBuhinicek/rocket_pants'                              # API goodness
 gem 'api_smith', '~> 1.3', github: 'youroute/api_smith'                        # Dependency of rocket_pant
 gem 'doorkeeper'                                                               # Oauth for API
 gem 'swagger-blocks'                                                           # Generates swagger-ui json files
