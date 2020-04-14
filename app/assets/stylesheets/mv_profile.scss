@@ -58,3 +58,51 @@ input[type="checkbox"] {
 .setting-explanation {
   width: 500px;
 }
+
+/* === Delete account button === */
+
+.delete-button ul
+{
+  list-style:none;
+  margin:0;
+  padding:5px 0 40px;
+}
+
+.delete-button ul li
+{
+
+  background:
+     url('main-buttons.png')    /* image */
+     top left                   /* position / size */
+     no-repeat                  /* repeat */
+     content-box                /* origin */
+     content-box;               /* clip */
+
+  width:179px;
+  height:25px;
+  float:left;
+  text-align:center;
+  vertical-align: center;
+  line-height:25px;
+  font-size:11px;
+  font-weight:bold;
+  color:#FFF;
+  text-transform:uppercase;
+  margin-right:35px;
+}
+
+.delete-button ul li a
+{
+  width:179px;
+  height:25px;
+  display:block;
+  color:#FFF;
+  text-decoration:none;
+}
+
+.delete-button ul li a:hover, .delete-button ul li a.active
+{
+  background:image_url('main-buttons.png') no-repeat 0 -75px;
+  color:#FFF;
+  text-decoration:none;
+}

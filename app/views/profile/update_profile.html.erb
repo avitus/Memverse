@@ -279,6 +279,23 @@
 				<%= f.label 			:newsletters, t('.Receive newsletters') %>
 				<%= f.check_box 		:newsletters %>
 			</li>
+
+			<div class="clr"></div>
+
+		</div>
+
+		<div class="clr"></div>
+
+		<div class="profile-section" id="delete-my-account"><h2>Delete Account</h2>
+			
+			<p>Click the button below to permanently delete your account.</p>
+
+			<div class="delete-button"><!--banner-bottom start-->
+				<ul>
+					<li><%= link_to "Delete my account", registration_path(current_user), data: { confirm: "Are you sure?" }, method: :delete %></li>
+				</ul>
+			</div><!--banner-bottom end-->
+
 		</div>
 
 		<div class="profile-section">
