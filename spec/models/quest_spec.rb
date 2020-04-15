@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Quest do
   before(:each) do
     @user = FactoryBot.create(:user)

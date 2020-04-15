@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Api::V1::TranslationsController do
 
   # These are only used for testing with the controller integrated into app

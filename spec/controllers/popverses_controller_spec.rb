@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe PopversesController do
 
   before (:each) do

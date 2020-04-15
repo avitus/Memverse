@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Memverse do
 
   before(:each) do

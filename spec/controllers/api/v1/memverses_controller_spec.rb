@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Api::V1::MemversesController do
 
   before do

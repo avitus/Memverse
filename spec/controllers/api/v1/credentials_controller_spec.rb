@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Api::V1::CredentialsController do
   
   let(:user)        { FactoryBot.create(:user) }

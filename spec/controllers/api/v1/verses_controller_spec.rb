@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Api::V1::VersesController do
 
   # let!(:application) { Doorkeeper::Application.create!(:name => "MyApp", :redirect_uri => "https://app.com") } # OAuth application

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe "Routing to memverses" do
 
   it "route to add a chapter" do

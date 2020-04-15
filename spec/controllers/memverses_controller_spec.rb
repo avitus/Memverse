@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe MemversesController do
 
   before (:each) do
