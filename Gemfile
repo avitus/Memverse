@@ -25,18 +25,17 @@ group :development, :test do
   gem 'rspec_junit_formatter'                                   # Automatic test metadata collection for CirclCI
   gem 'rails-controller-testing'                                # To use 'assigns' in controller tests
   gem 'jasmine'
-  # gem 'jasmine-rails'
   gem 'sqlite3'
   gem 'factory_bot_rails'                                       # Add to development group for debugging in console
   gem 'cucumber-rails', require: false                          # Rails Generators for Cucumber with special support for Capybara and DatabaseCleaner
   gem 'capybara'                                                # Helps test web applications by simulating how a real user would interact with your app
   gem 'puma'
+  gem 'webdrivers', '~> 4.0'                                    # Keep Selenium web drivers up to date
   gem 'selenium-webdriver'                                      # Optional extension for Capybara
   gem 'database_cleaner'                                        # Clean database between tests
   gem 'launchy', '>= 2.0.5'
   gem 'email_spec'                                              # For sending email in cucumber tests
   gem 'action_mailer_cache_delivery', '>= 0.3.5'                # Used to test email delivery with Cucumber. Pairs with email_spec
-  # gem 'phantomjs'                                             # For wercker jasmine specs
   gem 'guard', '>= 0.6.2'
   gem 'guard-minitest'
   gem 'guard-spork'

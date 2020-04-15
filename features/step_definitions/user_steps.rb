@@ -1,5 +1,5 @@
 def wait_for_input
-  Timeout.timeout(Capybara.default_wait_time) do
+  Timeout.timeout(Capybara.default_max_wait_time) do
     loop until page.has_css?("td.edit_mv input")
   end
 end
