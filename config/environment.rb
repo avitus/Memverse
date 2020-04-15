@@ -1,10 +1,12 @@
 # coding: utf-8
 
-# Load the rails application
-require File.expand_path('../application', __FILE__)
+# Load the Rails application.
+require_relative 'application'
 
-# Initialize the rails application
-MemverseApp::Application.initialize!
+# Initialize the Rails application.
+Rails.application.initialize!
+
+MemverseApp::Application.initialize
 
 # Translation updates must also be reflected on quick_start
 # New language codes must be defined in en.yml at least

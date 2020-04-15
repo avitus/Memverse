@@ -74,6 +74,7 @@ gem 'redis', '~> 4.0'                                                          #
 gem 'rails', '~> 5.1'                                                            
 gem 'jquery-rails'                                                              # Currently using jQuery 1.12.4
 gem 'jquery-ui-rails'
+gem 'bootsnap', require: false                                                  # Accelerates boot time
 
 ############################################################
 # Rails Support Gems

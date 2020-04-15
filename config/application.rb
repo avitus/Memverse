@@ -1,15 +1,20 @@
-require File.expand_path('../boot', __FILE__)
+# require File.expand_path('../boot', __FILE__)
+require_relative 'boot'
 
 require 'rails/all'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
-Bundler.require(:default, Rails.env)
+# Bundler.require(:default, Rails.env)
+Bundler.require(*Rails.groups)
 
 # ActiveSupport::Deprecation.debug = true
 
 module MemverseApp
   class Application < Rails::Application
+    
+    # Initialize configuration defaults for originally generated Rails version.
+    config.load_defaults 5.0
 
     # don't generate RSpec tests for views and helpers
     config.generators do |g|
@@ -46,9 +51,6 @@ module MemverseApp
 
     # Enable the asset pipeline
     config.assets.enabled = true
-
-    # Version of your assets, change this if you want to expire all your assets
-    config.assets.version = '1.6'
 
     # Currently, Active Record suppresses errors raised within after_rollback or after_commit callbacks and only prints them to the logs. 
     # In the next version, these errors will no longer be suppressed. Instead, the errors will propagate normally just like in other Active Record callbacks.

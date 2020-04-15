@@ -126,6 +126,8 @@ GEM
     bindex (0.8.1)
     binding_of_caller (0.8.0)
       debug_inspector (>= 0.0.1)
+    bootsnap (1.4.6)
+      msgpack (~> 1.0)
     brakeman (4.8.1)
     breadcrumbs_on_rails (4.0.0)
       rails (>= 5.0)
@@ -734,6 +736,7 @@ DEPENDENCIES
   bigdecimal (= 1.4.2)
   binding_of_caller
   bloggity!
+  bootsnap
   brakeman
   breadcrumbs_on_rails (>= 2.0.0)
   byebug
