@@ -1,3 +1,10 @@
+############################################################
+# TODO
+############################################################
+# rake acts_as_taggable_on_engine:install:migration  <-- this fails
+# find replacement for best_in_place gem
+# Add backup gem back in ... couldn't resolve nokogiri dependency to match that of Thredded
+
 # encoding: utf-8
 require 'rbconfig'
 
@@ -5,14 +12,13 @@ require 'rbconfig'
 git_source(:github) { |name| "https://github.com/#{name}.git" }
 
 # Set Ruby version (we are using RVM)
-ruby "2.4.3"
+ruby "2.7.1"
 
 HOST_OS = RbConfig::CONFIG['host_os']
 source 'http://rubygems.org'
 
 group :development do
   gem 'web-console'
-  gem 'rails-footnotes', '>= 3.7'
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'byebug'
@@ -72,10 +78,10 @@ gem 'jquery-ui-rails'
 ############################################################
 # Rails Support Gems
 ############################################################
-gem 'compass-rails'                                                             # Now has Rails 4 support
+gem 'compass-rails'                                                             # NO LONGER SUPPORTED
+gem 'coffee-rails'                                                              # NO LONGER SUPPORTED
 gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'                                                      # Compressor for JS assets
-gem 'coffee-rails', '~> 4.2' 
 gem 'rails-observers'                                                           # Needed as of Rails 5.1 to observe user model                     
 
 ############################################################
@@ -175,15 +181,14 @@ gem 'best_in_place'                                                            #
 gem 'dropbox-sdk'                                                              # Used with backup above
 gem 'rack-utf8_sanitizer'                                                      # Used to fix EasouSpider invalid UTF-8 byte sequences
 gem 'responders', '~> 2.4'                                                     # Support for respond_to and respond_with in Rails 4.2
+gem 'bigdecimal', '1.4.2'                                                      # 2020-04 - temporary fix needed after upgrading to Ruby 2.7.1
 
+############################################################
+# Console
+############################################################
 group :console do
   gem 'wirble'
   gem 'hirb'
 end
 
 
-# TODO
-
-# rake acts_as_taggable_on_engine:install:migration  <-- this fails
-# find replacement for best_in_place gem
-# Add backup gem back in ... couldn't resolve nokogiri dependency to match that of Thredded
