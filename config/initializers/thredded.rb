@@ -133,8 +133,7 @@ Thredded.layout = '/application'  # This is needed to use Memverse styling. Don'
 # ==> Topic following
 #
 # By default, a user will be subscribed to a topic they've created. Uncomment this to not subscribe them:
-#
-# Thredded.auto_follow_when_creating_topic = false
+Thredded.auto_follow_when_creating_topic = false
 #
 # By default, a user will be subscribed to (follow) a topic they post in. Uncomment this to not subscribe them:
 Thredded.auto_follow_when_posting_in_topic = false
