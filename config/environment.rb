@@ -6,7 +6,7 @@ require_relative 'application'
 # Initialize the Rails application.
 Rails.application.initialize!
 
-MemverseApp::Application.initialize
+# MemverseApp::Application.initialize
 
 # Translation updates must also be reflected on quick_start
 # New language codes must be defined in en.yml at least

@@ -255,10 +255,10 @@ class User < ActiveRecord::Base
   has_many                :progress_reports,  :dependent => :destroy
   has_many                :tweets
   has_many                :sermons
-  belongs_to              :country,         :counter_cache => true
-  belongs_to              :church,          :counter_cache => true
-  belongs_to              :group,           :counter_cache => true
-  belongs_to              :american_state,  :counter_cache => true
+  belongs_to              :country,         counter_cache: true, optional: true
+  belongs_to              :church,          counter_cache: true, optional: true
+  belongs_to              :group,           counter_cache: true, optional: true
+  belongs_to              :american_state,  counter_cache: true, optional: true
 
   # Record who tagged which verse - not working at the moment
   acts_as_tagger

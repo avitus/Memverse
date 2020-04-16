@@ -41,15 +41,15 @@
 	padding:10px;
 	background:#6B9620;
 	border-color:#999;
-	@include border-radius(5px, 5px);
-	@include background(linear-gradient(#f2f1f1, #bfbebe));
+	border-radius: 5px, 5px;
+	background: linear-gradient(#f2f1f1, #bfbebe);
 	font-size:12px;
 	font-weight:bold;
 }
 
 #sign-up-button-b:hover {
 	border-color:#577a1a;
-	@include background(linear-gradient(#9c3, #5E7D25));
+	background: linear-gradient(#9c3, #5E7D25);
 }
 
 .sign-up-links {

@@ -9,7 +9,7 @@
 require 'rbconfig'
 
 # Use secure version (can remove once using Bundler 2.0)
-git_source(:github) { |name| "https://github.com/#{name}.git" }
+# git_source(:github) { |name| "https://github.com/#{name}.git" }
 
 # Set Ruby version (we are using RVM)
 ruby "2.7.1"
@@ -71,7 +71,7 @@ gem 'redis', '~> 4.0'                                                          #
 # Thredded specifies jQuery version in javascripts/threddeded/dependencies
 #
 ############################################################
-gem 'rails', '~> 5.1'                                                            
+gem 'rails', '~> 5.2'                                                            
 gem 'jquery-rails'                                                              # Currently using jQuery 1.12.4
 gem 'jquery-ui-rails'
 gem 'bootsnap', require: false                                                  # Accelerates boot time
@@ -79,28 +79,21 @@ gem 'bootsnap', require: false                                                  
 ############################################################
 # Rails Support Gems
 ############################################################
-gem 'compass-rails'                                                             # NO LONGER SUPPORTED
-gem 'coffee-rails'                                                              # NO LONGER SUPPORTED
+gem 'coffee-rails'                                                             # NO LONGER SUPPORTED
 gem 'sass-rails', '~> 5.0'
-gem 'uglifier', '>= 1.3.0'                                                      # Compressor for JS assets
-gem 'rails-observers'                                                           # Needed as of Rails 5.1 to observe user model                     
+gem 'uglifier', '>= 1.3.0'                                                     # Compressor for JS assets
+gem 'rails-observers'                                                          # Needed as of Rails 5.1 to observe user model                     
 
 ############################################################
-# For Rails 4 Upgrade ... should be removed eventually
+# SCSS and Stylesheets
 ############################################################
-# gem 'protected_attributes'                                                   # Only officially supported until Rails 5
-# gem 'rails-observers' 
-# gem 'actionpack-page_caching'
-# gem 'actionpack-action_caching'
-# gem 'activerecord-deprecated_finders'
-# gem 'activerecord-session_store'                                               # We should store sessions in cookies
-# gem 'activeresource', require: 'active_resource'
+gem 'bourbon'                                                                  # Support for SCSS
 
 ############################################################
 # API
 ############################################################
 # Use this version only until Rails 5 support in master branch
-gem 'rocket_pants', github: 'NBuhinicek/rocket_pants'                              # API goodness
+gem 'rocket_pants', github: 'NBuhinicek/rocket_pants'                          # API goodness
 gem 'api_smith', '~> 1.3', github: 'youroute/api_smith'                        # Dependency of rocket_pant
 gem 'doorkeeper'                                                               # Oauth for API
 gem 'swagger-blocks'                                                           # Generates swagger-ui json files
@@ -152,7 +145,7 @@ gem 'capistrano-sidekiq', group: :development
 ############################################################
 # Blog
 ############################################################
-gem 'ckeditor', github: 'galetahub/ckeditor'                                   # WYSIWYG editing
+gem 'ckeditor'                                                                 # WYSIWYG editing
 gem 'paperclip'                                                                # Attachment handling
 
 ############################################################

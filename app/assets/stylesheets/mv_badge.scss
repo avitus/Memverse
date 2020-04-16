@@ -6,62 +6,56 @@
   margin: 0 1em;  
 }
 
-@import "badges/Sermon-on-the-Mount/*.png";
-
 .sermon-on-the-mount {
   @include badge-properties;
-  @include Sermon-on-the-Mount-sprite(teaser);
-    &:hover      { @include Sermon-on-the-Mount-sprite(hover); };
+  background: image_url('Sermon-on-the-Mount/teaser.png');
+  &:hover { url: image_url('Sermon-on-the-Mount/hover.png'); };
 }
 
 .sermon-on-the-mount.earned {
-  @include Sermon-on-the-Mount-sprite(badge);
+  background: image_url('Sermon-on-the-Mount/badge.png');
 }
-
-@import "badges/Referrer/*.png";
 
 .referrer.unearned {
   @include badge-properties;         
-  @include Referrer-sprite(teaser);
-  &:hover { @include Referrer-sprite(hover); };
+  background: image_url('Referrer/teaser.png');
+  &:hover { url: image_url('Referrer/hover.png'); };
 }
 
 .referrer.earned-gold {
   @include badge-properties;         
-  @include Referrer-sprite(gold);
+  background: image_url('Referrer/gold.png');
 }
 
 .referrer.earned-silver {
   @include badge-properties;         
-  @include Referrer-sprite(silver);
+  background: image_url('Referrer/silver.png');
 }
 
 .referrer.earned-bronze {
   @include badge-properties;         
-  @include Referrer-sprite(bronze);
+  background: image_url('Referrer/bronze.png');
 }
-
-@import "badges/Consistency/*.png";
 
 .consistency.unearned {
   @include badge-properties;         
-  @include Consistency-sprite(teaser);
-  &:hover { @include Consistency-sprite(hover); };
+  background: image_url('Consistency/teaser.png');
+  &:hover { url: image_url('Consistency/hover.png'); };
 }
 
 .consistency.earned-gold {
   @include badge-properties;         
-  @include Consistency-sprite(gold);
+  background: image_url('Consistency/bronze.png');
 }
 
 .consistency.earned-silver {
   @include badge-properties;         
-  @include Consistency-sprite(silver);
+  background: image_url('Consistency/bronze.png');
 }
 
 .consistency.earned-bronze {
   @include badge-properties;         
-  @include Consistency-sprite(bronze);
+  background: image_url('Consistency/bronze.png');
 }
 
 /*========== End: Badges ==========*/

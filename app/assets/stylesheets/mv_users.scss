@@ -150,11 +150,9 @@
   float:left;
 }
 
-@import "user-dashboard/*.png";
-
 .book
 {
-  @include user-dashboard-sprite(book);
+  background-image: user-dashboard-sprite(book);
   height:36px;
   font:39px Georgia,"Times New Roman",Times,serif;
   color:#666;
@@ -165,7 +163,7 @@
 
 .lightbulb
 {
-  @include user-dashboard-sprite(light-bulb);
+  background-image: user-dashboard-sprite(light-bulb);
   height:55px;
   font:39px Georgia,"Times New Roman",Times,serif;
   color:#666;
@@ -176,7 +174,7 @@
 
 .bullseye
 {
-  @include user-dashboard-sprite(bulls-eye);
+  background-image: user-dashboard-sprite(bulls-eye);
   height:52px;
   font:39px Georgia,"Times New Roman",Times,serif;
   color:#666;
@@ -187,7 +185,7 @@
 
 .level-icon
 {
-  @include user-dashboard-sprite(medal-icon);
+  background-image: user-dashboard-sprite(medal-icon);
   height:50px;
   font:39px Georgia,"Times New Roman",Times,serif;
   color:#666;
