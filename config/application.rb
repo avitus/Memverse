@@ -39,6 +39,18 @@ module MemverseApp
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
 
+    # Require by Grape. Only need for Rails 5.2 and below. See inflections.rb for Rails 6 solution
+    config.paths.add File.join('app', 'api'), glob: File.join('**', '*.rb')
+    config.autoload_paths += Dir[Rails.root.join('app', 'api', '*')]
+
+    # CORS support for Grape API
+    config.middleware.insert_before 0, Rack::Cors do
+      allow do
+        origins '*'
+        resource '*', headers: :any, methods: [:get, :post, :put, :delete, :options]
+      end
+    end
+
     # Fallback on en if translation missing
     config.i18n.fallbacks = true
     config.i18n.fallbacks = [:en]

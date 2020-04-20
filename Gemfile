@@ -92,9 +92,9 @@ gem 'bourbon'                                                                  #
 ############################################################
 # API
 ############################################################
-# Use this version only until Rails 5 support in master branch
-gem 'rocket_pants', github: 'NBuhinicek/rocket_pants'                          # API goodness
-gem 'api_smith', '~> 1.3', github: 'youroute/api_smith'                        # Dependency of rocket_pant
+gem 'grape'                                                                    # Primary gem supporting API
+gem 'rack-cors'                                                                # Rack Middleware for handling CORS, which makes cross-origin AJAX possible. 
+gem 'grape-active_model_serializers'                                           # Serializes data for API
 gem 'doorkeeper'                                                               # Oauth for API
 gem 'swagger-blocks'                                                           # Generates swagger-ui json files
 gem 'jbuilder'

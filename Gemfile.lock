@@ -6,18 +6,6 @@ GIT
       railties (>= 4.2.0, < 6.0)
 
 GIT
-  remote: https://github.com/NBuhinicek/rocket_pants.git
-  revision: 57928bd083badc27b2c1690868bf47469e419fe9
-  specs:
-    rocket_pants (1.13.1)
-      actionpack (>= 3.0, < 6.0)
-      api_smith
-      hashie (>= 1.0, < 4)
-      moneta
-      railties (>= 3.0, < 6.0)
-      will_paginate (~> 3.0)
-
-GIT
   remote: https://github.com/avitus/bloggity.git
   revision: 0d40daf7df16683f4975f535b3c0a5e735e76b29
   specs:
@@ -32,14 +20,6 @@ GIT
     omniauth-windowslive (0.0.8.1)
       multi_json (>= 1.0.3)
       omniauth-oauth2 (~> 1.0)
-
-GIT
-  remote: https://github.com/youroute/api_smith.git
-  revision: 1fb428cebc17b9afab25ac9f809bde87b0ec315b
-  specs:
-    api_smith (1.3.0)
-      hashie (>= 1.0, < 4.0)
-      httparty
 
 GEM
   remote: http://rubygems.org/
@@ -69,6 +49,11 @@ GEM
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.0.3)
+    active_model_serializers (0.10.10)
+      actionpack (>= 4.1, < 6.1)
+      activemodel (>= 4.1, < 6.1)
+      case_transform (>= 0.2)
+      jsonapi-renderer (>= 0.1.1.beta1, < 0.3)
     active_record_union (1.3.0)
       activerecord (>= 4.0)
     activejob (5.2.4.2)
@@ -153,6 +138,8 @@ GEM
       rack-test (>= 0.6.3)
       regexp_parser (~> 1.5)
       xpath (~> 3.2)
+    case_transform (0.2)
+      activesupport
     childprocess (3.0.0)
     ckeditor (5.1.0)
       orm_adapter (~> 0.5.0)
@@ -279,6 +266,16 @@ GEM
     gherkin (5.1.0)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
+    grape (1.3.2)
+      activesupport
+      builder
+      dry-types (>= 1.1)
+      mustermann-grape (~> 1.0.0)
+      rack (>= 1.3.0)
+      rack-accept
+    grape-active_model_serializers (1.5.2)
+      active_model_serializers (>= 0.10.0)
+      grape (>= 0.8.0)
     guard (2.16.2)
       formatador (>= 0.2.4)
       listen (>= 2.7, < 4.0)
@@ -320,9 +317,6 @@ GEM
       nokogiri (>= 1.4)
     htmlentities (4.3.4)
     http-2 (0.10.1)
-    httparty (0.18.0)
-      mime-types (~> 3.0)
-      multi_xml (>= 0.5.2)
     httpclient (2.8.3)
     i18n (1.8.2)
       concurrent-ruby (~> 1.0)
@@ -350,6 +344,7 @@ GEM
     jquery-ui-rails (6.0.1)
       railties (>= 3.2.16)
     json (2.3.0)
+    jsonapi-renderer (0.2.2)
     jwt (2.2.1)
     kaminari (1.2.0)
       activesupport (>= 4.1.0)
@@ -386,13 +381,16 @@ GEM
     mini_mime (1.0.2)
     mini_portile2 (2.4.0)
     minitest (5.14.0)
-    moneta (1.2.1)
     msgpack (1.3.3)
     multi_json (1.14.1)
     multi_test (0.1.2)
     multi_xml (0.6.0)
     multipart-post (2.1.1)
     mustache (1.1.1)
+    mustermann (1.1.1)
+      ruby2_keywords (~> 0.0.1)
+    mustermann-grape (1.0.1)
+      mustermann (>= 1.0.0)
     mysql2 (0.5.3)
     nenv (0.3.0)
     nested_form (0.3.2)
@@ -464,6 +462,10 @@ GEM
       activesupport (>= 3.0.0)
     raabro (1.1.6)
     rack (2.2.2)
+    rack-accept (0.4.5)
+      rack (>= 0.4)
+    rack-cors (1.1.1)
+      rack (>= 2.0.0)
     rack-pjax (1.1.0)
       nokogiri (~> 1.5)
       rack (>= 1.1)
@@ -566,6 +568,7 @@ GEM
     rspec_junit_formatter (0.4.1)
       rspec-core (>= 2, < 4, != 2.12.0)
     ruby-progressbar (1.10.1)
+    ruby2_keywords (0.0.2)
     rubyzip (1.3.0)
     rufus-scheduler (3.6.0)
       fugit (~> 1.1, >= 1.1.6)
@@ -698,7 +701,6 @@ GEM
     websocket-driver (0.7.1)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.4)
-    will_paginate (3.3.0)
     wirble (0.1.3)
     xpath (3.2.0)
       nokogiri (~> 1.8)
@@ -712,7 +714,6 @@ PLATFORMS
 DEPENDENCIES
   action_mailer_cache_delivery (>= 0.3.5)
   acts-as-taggable-on
-  api_smith (~> 1.3)!
   best_in_place
   better_errors
   bigdecimal (= 1.4.2)
@@ -744,6 +745,8 @@ DEPENDENCIES
   fancybox2-rails (~> 0.3.0)!
   foreman
   friendly_id
+  grape
+  grape-active_model_serializers
   guard (>= 0.6.2)
   guard-cucumber
   guard-jasmine
@@ -771,6 +774,7 @@ DEPENDENCIES
   prawnto_2
   pubnub
   puma
+  rack-cors
   rack-utf8_sanitizer
   rails (~> 5.2)
   rails-controller-testing
@@ -780,7 +784,6 @@ DEPENDENCIES
   redis (~> 4.0)
   responders (~> 2.4)
   rinku
-  rocket_pants!
   rpush
   rspec-rails
   rspec_junit_formatter

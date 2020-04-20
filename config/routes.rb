@@ -4,23 +4,17 @@ MemverseApp::Application.routes.draw do
   require 'sidekiq/web'
   require 'sidekiq/cron/web'
 
-  mount Thredded::Engine      => '/forum'
-  mount Bloggity::Engine, :at => '/blog'
-  mount RailsAdmin::Engine    => '/admin', :as => 'rails_admin'
-  mount Ckeditor::Engine      => '/ckeditor'
-  mount JasmineRails::Engine  => '/specs' if defined?(JasmineRails)
+  mount Thredded::Engine,     at: '/forum'
+  mount Bloggity::Engine,     at: '/blog'
+  mount RailsAdmin::Engine,   at: '/admin', :as => 'rails_admin'
+  mount Ckeditor::Engine,     at: '/ckeditor'
+  mount JasmineRails::Engine, at: '/specs' if defined?(JasmineRails)
+  mount API::Base,            at: '/'
 
   # Allow Admin users to monitor Sidekiq - used for quiz schedule
   authenticate :user, lambda { |u| u.admin? } do
     mount Sidekiq::Web => '/sidekiq'
   end
-
-  # Routes for A/B testing
-  # match "/split" => Split::Dashboard, via: [:get, :post, :delete], :anchor => false, :constraints => lambda { |request|
-  #   request.env['warden'].authenticated?    # are we authenticated?
-  #   request.env['warden'].authenticate!     # authenticate if not already
-  #   request.env['warden'].user.try(:admin?) # check if admin
-  # }
 
   # Oauth
   devise_for :users, :controllers => { :omniauth_callbacks => "omniauth_callbacks" }
@@ -78,28 +72,30 @@ MemverseApp::Application.routes.draw do
   
   resources :apidocs, only: [:index]    # for Swagger UI documentation
 
-  api versions: 1, module: "api/v1" do
-    resources :users, :only => [:show, :update, :create]
-    resources :verses do
-      get 'lookup', :on => :collection
-      get 'chapter', :on => :collection
-      get 'search', :on => :collection
-    end
-    resources :memverses
-    resources :passages do
-      get 'due', :on => :collection
-      resources :memverses
-    end
-    resources :quizzes do
-      get 'upcoming', :on => :collection
-    end
-    resources :translations, :only => [:index, :show]
-    resources :final_verses, :only => [:index]
-    resources :progress_reports, :only => [:index]
+  # === Routes for Old RocketPants API =======================
+  # api versions: 1, module: "api/v1" do
+  #   resources :users, :only => [:show, :update, :create]
+  #   resources :verses do
+  #     get 'lookup', :on => :collection
+  #     get 'chapter', :on => :collection
+  #     get 'search', :on => :collection
+  #   end
+  #   resources :memverses
+  #   resources :passages do
+  #     get 'due', :on => :collection
+  #     resources :memverses
+  #   end
+  #   resources :quizzes do
+  #     get 'upcoming', :on => :collection
+  #   end
+  #   resources :translations, :only => [:index, :show]
+  #   resources :final_verses, :only => [:index]
+  #   resources :progress_reports, :only => [:index]
 
-    get '/me'            => "credentials#me"
-    post '/record_score' => 'live_quiz#record_score'
-  end
+  #   get '/me'            => "credentials#me"
+  #   post '/record_score' => 'live_quiz#record_score'
+  # end
+
   # ---------------------------------------------------------------------------------------------------------
   # END: API
   # ---------------------------------------------------------------------------------------------------------
