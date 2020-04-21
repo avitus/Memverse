@@ -4,20 +4,6 @@ A Bible memorization application
 
 !https://circleci.com/gh/avitus/Memverse.svg?style=svg&circle-token=2db30e0430b8289e66bf5ca51df6c2135c0d1d27!:https://circleci.com/gh/avitus/Memverse
 
-h2. Getting Started
-
-* Clone this repository.
-* Build the containers: @docker-compose build .@
-* Start the containers: @docker-compose up@
-* Create and seed the database: @docker-compose run web bundle exec rake db:setup@
-* Admin user: 'admin@test.com', Password: 'please'
-
-h2. Dependencies
-
-To use this application, you will need:
-
-* Docker Compose
-
 h2. Running tests
 
 Unit tests: @bundle exec rspec@
