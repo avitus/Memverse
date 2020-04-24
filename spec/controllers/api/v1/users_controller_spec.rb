@@ -1,4 +1,4 @@
-describe Api::V1::UsersController do
+describe API::V1::Users do
 
   let(:user) { FactoryBot.create(:user) }
 

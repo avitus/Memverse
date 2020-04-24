@@ -89,8 +89,8 @@ RSpec.configure do |config|
   config.include Requests::JsonHelpers,           type: :controller  # ALV: helpers for testing API
 
   # Add support for RocketPants test helpers
-  config.include RocketPants::TestHelper,    :type => :controller
-  config.include RocketPants::RSpecMatchers, :type => :controller
+  # config.include RocketPants::TestHelper,    :type => :controller
+  # config.include RocketPants::RSpecMatchers, :type => :controller
 
 end
 

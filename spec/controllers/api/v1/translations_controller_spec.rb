@@ -1,4 +1,4 @@
-describe Api::V1::TranslationsController do
+describe API::V1::Translation do
 
   # These are only used for testing with the controller integrated into app
   # It would be nice to do a full integration test but can't get it to work with scopes

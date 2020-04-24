@@ -1,4 +1,4 @@
-describe Api::V1::MemversesController do
+describe API::V1::Memverse do
 
   before do
     allow(controller).to receive(:doorkeeper_token) {token}

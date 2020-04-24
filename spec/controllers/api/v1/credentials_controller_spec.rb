@@ -1,6 +1,6 @@
-describe Api::V1::CredentialsController do
+describe API::V1::Credentials do
   
-  let(:user)        { FactoryBot.create(:user) }
+  let(:user) { FactoryBot.create(:user) }
 
   describe 'GET #me' do
 

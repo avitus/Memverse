@@ -1,4 +1,4 @@
-describe Api::V1::VersesController do
+describe API::V1::Verse do
 
   # let!(:application) { Doorkeeper::Application.create!(:name => "MyApp", :redirect_uri => "https://app.com") } # OAuth application
   # let!(:user)        { FactoryBot.create(:user) }
