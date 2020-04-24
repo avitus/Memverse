@@ -78,9 +78,9 @@ class QuizQuestion < ActiveRecord::Base
       return nil
     else
       if vs_end
-        verse_variations = Verse.where(:book => bk, :chapter => ch, :versenum => (vs_start..vs_end).to_a, :translation => quiz_translations).order("versenum ASC")
+        verse_variations = Verse.where(book: bk, chapter: ch, versenum: (vs_start..vs_end).to_a, translation: quiz_translations).order("versenum ASC")
       else
-        verse_variations = Verse.where(:book => bk, :chapter => ch, :versenum => vs_start, :translation => quiz_translations).order("versenum ASC")
+        verse_variations = Verse.where(book: bk, chapter: ch, versenum: vs_start, translation: quiz_translations).order("versenum ASC")
       end
 
       quiz_translations.each { |tl|
@@ -137,7 +137,7 @@ class QuizQuestion < ActiveRecord::Base
   # @todo Would be nice to expand with a clever search by keyword in the question text
   def supporting_verses
     if self.supporting_ref
-      return self.supporting_ref.verses.where(:translation => ['NIV', 'ESV', 'NAS', 'NKJ', 'KJV'])
+      return self.supporting_ref.verses.where(translation: ['NIV', 'ESV', 'NAS', 'NKJ', 'KJV'])
     else
       return []
     end

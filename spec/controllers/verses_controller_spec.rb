@@ -93,14 +93,14 @@ describe VersesController do
     #   it "assigns a newly created but unsaved Verse as @Verse" do
     #     # Trigger the behavior that occurs when invalid params are submitted
     #     Verse.any_instance.stub(:save).and_return(false)
-    #     post :create, {:verse => { :book => "invalid value" }}, valid_session
+    #     post :create, {:verse => { book: "invalid value" }}, valid_session
     #     assigns(:verse).should be_a_new(verse)
     #   end
 
     #   it "re-renders the 'new' template" do
     #     # Trigger the behavior that occurs when invalid params are submitted
     #     Verse.any_instance.stub(:save).and_return(false)
-    #     post :create, {:verse => { :book => "invalid value" }}, valid_session
+    #     post :create, {:verse => { book: "invalid value" }}, valid_session
     #     response.should render_template("new")
     #   end
     # end

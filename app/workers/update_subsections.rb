@@ -12,13 +12,13 @@ class UpdateSubsections
 
       bi = BIBLEBOOKS[:en].values.index(book) + 1
 
-      final_chapter = FinalVerse.where(:book => book).order("chapter DESC").first.chapter
+      final_chapter = FinalVerse.where(book: book).order("chapter DESC").first.chapter
 
       (1..final_chapter).each { |chapter|
 
         subsection_end = Array.new
 
-        final_verse   = FinalVerse.where(:book => book, :chapter => chapter).first.last_verse
+        final_verse   = FinalVerse.where(book: book, chapter: chapter).first.last_verse
         passage_count = Passage.where("length > 2 AND book = ? AND chapter = ?", book, chapter).count
 
         if passage_count > 0
@@ -62,7 +62,7 @@ class UpdateSubsections
 
           # Save to DB
           subsection_end.each_with_index { |p, vs|
-            Uberverse.where(:book => book, :chapter => chapter, :versenum => vs+1).first.update_attribute(:subsection_end, p)
+            Uberverse.where(book: book, chapter: chapter, versenum: vs+1).first.update_attribute(:subsection_end, p)
           }
 
         end

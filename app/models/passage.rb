@@ -231,7 +231,7 @@ class Passage < ActiveRecord::Base
     else
 
       # Only look up FinalVerse when first_verse is 1 or 0
-      if ( self.first_verse == 1 || self.first_verse == 0 ) && ( self.last_verse == FinalVerse.where(:book => book, :chapter => chapter).first.last_verse )
+      if ( self.first_verse == 1 || self.first_verse == 0 ) && ( self.last_verse == FinalVerse.where(book: book, chapter: chapter).first.last_verse )
         update_attribute( :complete_chapter, true )
       else
         update_attribute( :complete_chapter, false )

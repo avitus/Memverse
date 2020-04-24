@@ -9,7 +9,7 @@ describe Memverse do
   #  Would prefer to have it at the model level, though
   #  --------------------------------------------------------------------------------------------------------------
   it "should create a new instance given a valid attribute" do
-    @verse = Verse.create!(:book_index => 1, :book => "Genesis", :chapter => 12, :versenum => 1, :text => "This is a test", :translation => "NIV")
+    @verse = Verse.create!(book_index: 1, book: "Genesis", chapter: 12, versenum: 1, text: "This is a test", translation: "NIV")
     Memverse.create!(:user => @user, :verse => @verse)
   end
 
@@ -93,7 +93,7 @@ describe Memverse do
       @passage = Array.new
 
       for i in 1..6
-        verse       = Verse.create(:book_index => 19, :book => "Psalms", :chapter => 8, :versenum => i, :text => "This is a test")
+        verse       = Verse.create(book_index: 19, book: "Psalms", chapter: 8, versenum: i, text: "This is a test")
         @passage[i] = Memverse.create(:user => @user, :verse => verse)
       end
 

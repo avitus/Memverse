@@ -9,8 +9,8 @@
 			<% @translations.each do |tl| %>
 				<tr>
 					<td><%= tl[1][:name] %></td>
-					<td align="center"><%= User.where(:translation => tl[0]).count %></td>
-					<td align="center"><%= User.active.where(:translation => tl[0]).count %></td>
+					<td align="center"><%= User.where(translation: tl[0]).count %></td>
+					<td align="center"><%= User.active.where(translation: tl[0]).count %></td>
 				</tr>	
 			<% end %>	
 		</table>

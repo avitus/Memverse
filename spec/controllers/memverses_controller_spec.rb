@@ -32,8 +32,8 @@ describe MemversesController do
     end
 
     it "should not allow the same verse in two different translations" do
-      @verse_kjv = FactoryBot.create(:verse, :translation => 'KJV')
-      @verse_esv = FactoryBot.create(:verse, :translation => 'ESV')
+      @verse_kjv = FactoryBot.create(:verse, translation: 'KJV')
+      @verse_esv = FactoryBot.create(:verse, translation: 'ESV')
       get :ajax_add, params: { id: @verse_kjv }, session: valid_session
       get :ajax_add, params: { id: @verse_esv }, session: valid_session
       @user.memverses.count.should == 1
@@ -46,7 +46,7 @@ describe MemversesController do
     before (:each) do
       @chapter = Array.new
       for i in 1..5
-        verse       = FactoryBot.create(:verse, :book_index => 19, :book => "Psalms", :chapter => '15', :versenum => i, :translation => "NIV")
+        verse       = FactoryBot.create(:verse, book_index: 19, book: "Psalms", chapter: '15', versenum: i, translation: "NIV")
         @chapter[i] = FactoryBot.create(:memverse, :user => @user, :verse => verse)
       end
     end

@@ -107,7 +107,7 @@ describe User do
       @user = FactoryBot.create(:user, :time_allocation => 5)
       @user.work_load.should == 2
       for i in 1..3
-        verse = FactoryBot.create(:verse, :book_index => 1, :book => "Genesis", :chapter => 3, :versenum => i)
+        verse = FactoryBot.create(:verse, book_index: 1, book: "Genesis", chapter: 3, versenum: i)
         FactoryBot.create(:memverse, :user => @user, :verse => verse)
       end
       @user.work_load.should == 5
@@ -118,12 +118,12 @@ describe User do
       @user = FactoryBot.create(:user)
 
       for i in 5..14 # setup learning verses
-        verse = FactoryBot.create(:verse, :book_index => 2, :book => "Exodus", :chapter => 20, :versenum => i)
+        verse = FactoryBot.create(:verse, book_index: 2, book: "Exodus", chapter: 20, versenum: i)
         FactoryBot.create(:memverse, :user_id => @user.id, :verse_id => verse.id, :test_interval => i, :next_test => Date.today + i)
       end
 
       for i in 1..5 # setup pending verses
-        verse = FactoryBot.create(:verse, :book_index => 19, :book => "Psalms", :chapter => 118, :versenum => i)
+        verse = FactoryBot.create(:verse, book_index: 19, book: "Psalms", chapter: 118, versenum: i)
         mv    = FactoryBot.create(:memverse, :user => @user, :verse => verse)
         Memverse.update(mv.id, :status => "Pending")
       end
@@ -147,7 +147,7 @@ describe User do
       @user = FactoryBot.create(:user)
 
       for i in 11..20 # setup learning verses
-        verse = FactoryBot.create(:verse, :book_index => 2, :book => "Exodus", :chapter => 20, :versenum => i)
+        verse = FactoryBot.create(:verse, book_index: 2, book: "Exodus", chapter: 20, versenum: i)
         FactoryBot.create(:memverse, :user => @user, :verse => verse, :test_interval => i, :next_test => Date.today - i)
       end
 

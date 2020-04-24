@@ -15,11 +15,8 @@ class Uberverse < ActiveRecord::Base
   end
 
   def major_translations
-    return self.verses.where(:book => self.book, :chapter => self.chapter, :versenum => self.versenum,
-                          :translation => ['NIV', 'ESV', 'NAS', 'NKJ', 'KJV'])
+    return self.verses.where(book: self.book, chapter: self.chapter, versenum: self.versenum,
+                          translation: ['NIV', 'ESV', 'NAS', 'NKJ', 'KJV'])
   end
-
-  # ============= Protected below this line ==================================================================
-  protected
 
 end

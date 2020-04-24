@@ -30,8 +30,8 @@ class UpdateVerseDifficulty
   #   TRANSLATIONS.keys.each do |tl|
   #     efactor_ranges[tl] =
   #       {
-  #         :max => Verse.where(:translation => tl.to_s).maximum(:difficulty),
-  #         :min => Verse.where(:translation => tl.to_s).minimum(:difficulty)
+  #         :max => Verse.where(translation: tl.to_s).maximum(:difficulty),
+  #         :min => Verse.where(translation: tl.to_s).minimum(:difficulty)
   #       }
 
   #     if efactor_ranges[tl][:max] && efactor_ranges[tl][:max]

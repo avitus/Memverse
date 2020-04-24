@@ -43,15 +43,29 @@ FactoryBot.define do
   end
 
   # ==============================================================================================
+  # Uberverses
+  # ==============================================================================================
+  factory :uberverse do
+    book            { "Genesis" }
+    chapter         { 1 }
+    versenum        { 1 }
+    book_index      { 1 }
+    subsection_end  { 31 }
+  end
+
+  # ==============================================================================================
   # Verses
   # ==============================================================================================
-  factory :verse do |verse|
-    verse.translation { 'NIV' }
-    verse.book_index { 48 }
-    verse.book { 'Galatians' }
-    verse.chapter { 5 }
-    verse.versenum { 22 }
-    verse.text { 'But the fruit of the Spirit is love, joy, peace, patience, kindness, goodness, faithfulness,' }
+  factory :verse do
+    translation { 'NIV' }
+    book_index { 48 }
+    book { 'Galatians' }
+    chapter { 5 }
+    versenum { 22 }
+    text { 'But the fruit of the Spirit is love, joy, peace, patience, kindness, goodness, faithfulness,' }
+
+    uberverse
+    initialize_with { new(uberverse: uberverse) }
 
     # This ugliness is required to skip the validate_ref callback since the FinalVerse records are often not available during testing
     # For details see: http://stackoverflow.com/questions/8751175/skip-callbacks-on-factory-girl-and-rspec
@@ -61,6 +75,15 @@ FactoryBot.define do
     # # TODO: these tests are not yet passing ... not sure how this works
     # factory :verse_with_validate_ref do
     #   after(:build) { |verse| verse.class.set_callback(:create, :before, :validate_ref) }
+    # end
+
+    # after(:build) do |verse|
+    #   verse.uberverse << Factorybot.create(:uberverse, 
+    #       book: verse.book, 
+    #       chapter: verse.chapter, 
+    #       versenum: verse.versenum, 
+    #       book_index: verse.book_index
+    #       )
     # end
 
   end
@@ -105,6 +128,9 @@ FactoryBot.define do
     ref_interval    { 6 }
     next_ref_test   { Date.today }
 
+    # passage
+    # initialize_with { new(passage: passage) }
+
     # We need to add the callback back to the Memverse class because it is removed from the class by
     # the :memverse_without_passage callback. See link below for details
     # http://stackoverflow.com/questions/11409734/why-does-my-FactoryBot-callback-run-when-it-shouldnt
@@ -123,6 +149,15 @@ FactoryBot.define do
   end
 
   # ==============================================================================================
+  # Final Verse
+  # ==============================================================================================
+  factory :final_verse do
+    book       { 'Genesis' }
+    chapter    { 1 }
+    last_verse { 31 }
+  end
+
+  # ==============================================================================================
   # Blog
   # ==============================================================================================
   factory :blog do |f|
@@ -138,15 +173,6 @@ FactoryBot.define do
     bc.association :blog_post, :factory => :blog_post
   	bc.association :user,      :factory => :user
   	bc.comment { 'Nice blog post!' }
-  end
-
-  # ==============================================================================================
-  # Final Verse
-  # ==============================================================================================
-  factory :final_verse do |f|
-    f.book        { 'Genesis' }
-    f.Chapters    { 1 }
-    f.last_verse  { 31 }
   end
 
   # ==============================================================================================
@@ -213,17 +239,6 @@ FactoryBot.define do
     qq.mc_option_d     { nil }
     qq.mc_answer       { nil }
     qq.association :supporting_ref, :factory => :uberverse
-  end
-
-  # ==============================================================================================
-  # Uberverses
-  # ==============================================================================================
-  factory :uberverse do
-    book            { "Genesis" }
-    chapter         { 1 }
-    versenum        { 1 }
-    book_index      { 1 }
-    subsection_end  { 31 }
   end
 
   # ==============================================================================================

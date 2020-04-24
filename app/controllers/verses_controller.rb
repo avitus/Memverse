@@ -154,8 +154,8 @@ class VersesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   def lookup
     tl = params[:tl] ? params[:tl] : current_user.translation
-    @verse = Verse.where(:book => params[:bk], :chapter => params[:ch], :versenum => params[:vs],
-                         :translation => tl).first
+    @verse = Verse.where(book: params[:bk], chapter: params[:ch], versenum: params[:vs],
+                         translation: tl).first
 
     respond_to do |format|
       format.html # show.html.erb
@@ -169,8 +169,8 @@ class VersesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   def major_tl_lookup
 
-    @verses = Verse.where(:book => params[:bk], :chapter => params[:ch], :versenum => params[:vs],
-                          :translation => ['NIV', 'ESV', 'NAS', 'NKJ', 'KJV'])
+    @verses = Verse.where(book: params[:bk], chapter: params[:ch], versenum: params[:vs],
+                          translation: ['NIV', 'ESV', 'NAS', 'NKJ', 'KJV'])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -325,7 +325,7 @@ class VersesController < ApplicationController
 
     # @need_verification  = Array.new
 
-    # unverified_verses = Verse.where(:verified => false, :translation => tl, :checked_by => nil).where("memverses_count > ?", 1).limit(60)
+    # unverified_verses = Verse.where(:verified => false, translation: tl, :checked_by => nil).where("memverses_count > ?", 1).limit(60)
     # unverified_verses.each { |vs|
     #   if vs.web_check != true
     #     @need_verification << vs

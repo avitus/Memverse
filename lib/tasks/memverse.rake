@@ -61,8 +61,8 @@ namespace :utils do
     TRANSLATIONS.keys.each do |tl|
       efactor_ranges[tl] =
         {
-          :max => Verse.where(:translation => tl.to_s).maximum(:difficulty),
-          :min => Verse.where(:translation => tl.to_s).minimum(:difficulty)
+          :max => Verse.where(translation: tl.to_s).maximum(:difficulty),
+          :min => Verse.where(translation: tl.to_s).minimum(:difficulty)
         }
 
       if efactor_ranges[tl][:max] && efactor_ranges[tl][:max]
@@ -106,8 +106,8 @@ namespace :utils do
     TRANSLATIONS.keys.each do |tl|
       count_ranges[tl] =
         {
-          :max => Verse.where(:translation => tl.to_s).maximum(:memverses_count),
-          :min => Verse.where(:translation => tl.to_s).minimum(:memverses_count)
+          :max => Verse.where(translation: tl.to_s).maximum(:memverses_count),
+          :min => Verse.where(translation: tl.to_s).minimum(:memverses_count)
         }
 
       if count_ranges[tl][:max] && count_ranges[tl][:max]
@@ -166,15 +166,15 @@ namespace :utils do
     BIBLEBOOKS[:en].values.each { |book|
 
       bi = BIBLEBOOKS[:en].values.index(book) + 1
-      final_chapter = FinalVerse.where(:book => book).order("chapter DESC").first.chapter
+      final_chapter = FinalVerse.where(book: book).order("chapter DESC").first.chapter
 
       (1..final_chapter).each { |chapter|
 
         puts "#{bi} #{book} #{chapter}"
-        final_verse = FinalVerse.where(:book => book, :chapter => chapter).first.last_verse
+        final_verse = FinalVerse.where(book: book, chapter: chapter).first.last_verse
 
         (1..final_verse).each { |verse|
-          if !Verse.exists?(:translation => "NIV", :book => book, :chapter => chapter, :versenum => verse)
+          if !Verse.exists?(translation: "NIV", book: book, chapter: chapter, versenum: verse)
             text = niv.css("book[name='#{book}'] chapter[name='#{chapter}'] verse[name='#{verse}']").text
             text.gsub!(/—/, ' — ')     # add spaces around em dash
             text.gsub!(/--/, ' — ')    # replace double dash with em dash
@@ -183,8 +183,8 @@ namespace :utils do
             text.strip!
             puts "[#{verse}] " + text
             if !text.blank?
-              Verse.create!(:translation => 'NIV', :book => book, :chapter => chapter, :versenum => verse, :text => text,
-                            :book_index => bi, :verified => true, :checked_by => 'XML Upload')
+              Verse.create!(translation: 'NIV', book: book, chapter: chapter, versenum: verse, text: text,
+                            book_index: bi, :verified => true, :checked_by => 'XML Upload')
             end
           end
         }
@@ -205,19 +205,19 @@ namespace :utils do
 
       bi = BIBLEBOOKS[:en].values.index(book) + 1
 
-      final_chapter = FinalVerse.where(:book => book).order("chapter DESC").first.chapter
+      final_chapter = FinalVerse.where(book: book).order("chapter DESC").first.chapter
 
       (1..final_chapter).each { |chapter|
 
         puts "#{bi} #{book} #{chapter}"
 
-        final_verse = FinalVerse.where(:book => book, :chapter => chapter).first.last_verse
+        final_verse = FinalVerse.where(book: book, chapter: chapter).first.last_verse
 
         (1..final_verse).each { |verse|
 
-          if !Uberverse.exists?(:book => book, :chapter => chapter, :versenum => verse, :book_index => bi)
+          if !Uberverse.exists?(book: book, chapter: chapter, versenum: verse, book_index: bi)
 
-            Uberverse.create!(:book => book, :chapter => chapter, :versenum => verse, :book_index => bi)
+            Uberverse.create!(book: book, chapter: chapter, versenum: verse, book_index: bi)
 
           end
 
@@ -243,13 +243,13 @@ namespace :utils do
 
       bi = BIBLEBOOKS[:en].values.index(book) + 1
 
-      final_chapter = FinalVerse.where(:book => book).order("chapter DESC").first.chapter
+      final_chapter = FinalVerse.where(book: book).order("chapter DESC").first.chapter
 
       (1..final_chapter).each { |chapter|
 
         subsection_end = Array.new
 
-        final_verse   = FinalVerse.where(:book => book, :chapter => chapter).first.last_verse
+        final_verse   = FinalVerse.where(book: book, chapter: chapter).first.last_verse
         passage_count = Passage.where("length > 2 AND book = ? AND chapter = ?", book, chapter).count
 
         if passage_count > 0
@@ -293,7 +293,7 @@ namespace :utils do
 
           # Save to DB
           subsection_end.each_with_index { |p, vs|
-            Uberverse.where(:book => book, :chapter => chapter, :versenum => vs+1).first.update_attribute(:subsection_end, p)
+            Uberverse.where(book: book, chapter: chapter, versenum: vs+1).first.update_attribute(:subsection_end, p)
           }
 
         end
@@ -331,7 +331,7 @@ namespace :utils do
   task :insert_missing_book_index => :environment do
     puts "=== Inserting missing book_index values for passage model at #{Time.now} ==="
 
-    Passage.where(:book_index => nil).find_each { |psg|
+    Passage.where(book_index: nil).find_each { |psg|
       psg.update_attribute(:book_index, Book.find_by_name(psg.book).try(:book_index))
     }
 
@@ -349,7 +349,7 @@ namespace :utils do
 
     Verse.find_each { |vs|
 
-      uv = Uberverse.where(:book => vs.book, :chapter => vs.chapter, :versenum => vs.versenum).first
+      uv = Uberverse.where(book: vs.book, chapter: vs.chapter, versenum: vs.versenum).first
 
       if uv
         vs.update_attribute(:uberverse_id, uv.id)
@@ -471,7 +471,7 @@ namespace :utils do
 
       Passage.where(:user_id => u.id).find_each { |psg|
 
-        Passage.where(:user_id => u.id, :translation => psg.translation, :book => psg.book, :chapter => psg.chapter).find_each { |near_psg|
+        Passage.where(:user_id => u.id, translation: psg.translation, book: psg.book, chapter: psg.chapter).find_each { |near_psg|
 
           if psg.first_verse == near_psg.last_verse + 1
             puts("[#{u.id} - #{u.email}] Passage #{psg.reference} should be joined to passage #{near_psg.reference}")
@@ -535,7 +535,7 @@ namespace :utils do
     puts "=== Finding duplicate verses ==="
 
     Verse.find_each { |vs|
-      if Verse.where(:translation => vs.translation, :book_index => vs.book_index, :chapter => vs.chapter, :versenum => vs.versenum).count > 1
+      if Verse.where(translation: vs.translation, book_index: vs.book_index, chapter: vs.chapter, versenum: vs.versenum).count > 1
         puts("[#{vs.id}] #{vs.created_at} -- #{vs.ref} (#{vs.translation}) -- Associated memory verses: #{vs.memverses.count}")
         if vs.memverses.count == 0
           puts("  ^--- Deleting this verse since it has no associated memory verses.")

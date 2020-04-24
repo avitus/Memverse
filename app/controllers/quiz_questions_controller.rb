@@ -60,7 +60,7 @@ class QuizQuestionsController < ApplicationController
   def search
     supporting_ref = params[:supporting_ref]
     errorcode, bk, ch, vs = parse_verse( supporting_ref )
-    uv = Uberverse.where(:book => bk, :chapter => ch, :versenum => vs).first
+    uv = Uberverse.where(book: bk, chapter: ch, versenum: vs).first
 
     if uv
       related_questions = uv.quiz_questions
@@ -138,7 +138,7 @@ class QuizQuestionsController < ApplicationController
 
     # Associate supporting verse with question
     errorcode, bk, ch, vs = parse_verse( supporting_ref )
-    @quiz_question.supporting_ref = Uberverse.where(:book => bk, :chapter => ch, :versenum => vs).first
+    @quiz_question.supporting_ref = Uberverse.where(book: bk, chapter: ch, versenum: vs).first
 
     respond_to do |format|
       if @quiz_question.save
@@ -178,7 +178,7 @@ class QuizQuestionsController < ApplicationController
     if supporting_ref
       # Associate supporting verse with question
       errorcode, bk, ch, vs = parse_verse( supporting_ref )
-      @quiz_question.supporting_ref = Uberverse.where(:book => bk, :chapter => ch, :versenum => vs).first
+      @quiz_question.supporting_ref = Uberverse.where(book: bk, chapter: ch, versenum: vs).first
     end
 
     respond_to do |format|

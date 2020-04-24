@@ -6,10 +6,10 @@ describe Passage do
   end
 
   it "should create a new instance given valid attributes" do
-    @verse = Verse.create!(:book_index => 1, :book => "Genesis", :chapter => 12, :versenum => 1, :text => "This is a test", :translation => "NIV")
+    @verse = Verse.create!(book_index: 1, book: "Genesis", chapter: 12, versenum: 1, text: "This is a test", translation: "NIV")
     @mv    = Memverse.create!(:user => @user, :verse => @verse)
     @psg   = Passage.create!(:user_id => @user.id, :length => 1, :reference => @mv.verse.ref,
-                             :book => @mv.verse.book, :chapter => @mv.verse.chapter, :translation => @mv.verse.translation,
+                             book: @mv.verse.book, chapter: @mv.verse.chapter, translation: @mv.verse.translation,
                              :first_verse => @mv.verse.versenum, :last_verse => @mv.verse.versenum,
                              :efactor => @mv.efactor, :test_interval => @mv.test_interval, :rep_n => 1)
   end
@@ -48,28 +48,28 @@ describe Passage do
   describe "automatically handle subsections" do
 
     before(:each) do
-      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum =>  1, :subsection_end =>   0)
-      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum =>  2, :subsection_end =>   0)
-      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum =>  3, :subsection_end =>  50)
-      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum =>  4, :subsection_end =>   0)
-      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum =>  5, :subsection_end =>   0)
-      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum =>  6, :subsection_end =>   0)
-      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum =>  7, :subsection_end =>   0)
-      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum =>  8, :subsection_end =>   2)
-      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum =>  9, :subsection_end =>   0)
-      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum => 10, :subsection_end =>  20)
-      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum => 11, :subsection_end =>   0)
-      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum => 12, :subsection_end =>   3)
-      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum => 13, :subsection_end =>   0)
-      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum => 14, :subsection_end =>   0)
-      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum => 15, :subsection_end =>   0)
-      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum => 16, :subsection_end =>   0)
-      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum => 17, :subsection_end =>   0)
-      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum => 18, :subsection_end =>   0)
-      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum => 19, :subsection_end =>   0)
-      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum => 20, :subsection_end =>   0)
-      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum => 21, :subsection_end =>   0)
-      FactoryBot.create(:uberverse, :book => 'Psalms', :chapter => 22, :book_index => 19, :versenum => 22, :subsection_end =>   0)
+      FactoryBot.create(:uberverse, book: 'Psalms', chapter: 22, book_index: 19, versenum:  1, :subsection_end =>   0)
+      FactoryBot.create(:uberverse, book: 'Psalms', chapter: 22, book_index: 19, versenum:  2, :subsection_end =>   0)
+      FactoryBot.create(:uberverse, book: 'Psalms', chapter: 22, book_index: 19, versenum:  3, :subsection_end =>  50)
+      FactoryBot.create(:uberverse, book: 'Psalms', chapter: 22, book_index: 19, versenum:  4, :subsection_end =>   0)
+      FactoryBot.create(:uberverse, book: 'Psalms', chapter: 22, book_index: 19, versenum:  5, :subsection_end =>   0)
+      FactoryBot.create(:uberverse, book: 'Psalms', chapter: 22, book_index: 19, versenum:  6, :subsection_end =>   0)
+      FactoryBot.create(:uberverse, book: 'Psalms', chapter: 22, book_index: 19, versenum:  7, :subsection_end =>   0)
+      FactoryBot.create(:uberverse, book: 'Psalms', chapter: 22, book_index: 19, versenum:  8, :subsection_end =>   2)
+      FactoryBot.create(:uberverse, book: 'Psalms', chapter: 22, book_index: 19, versenum:  9, :subsection_end =>   0)
+      FactoryBot.create(:uberverse, book: 'Psalms', chapter: 22, book_index: 19, versenum: 10, :subsection_end =>  20)
+      FactoryBot.create(:uberverse, book: 'Psalms', chapter: 22, book_index: 19, versenum: 11, :subsection_end =>   0)
+      FactoryBot.create(:uberverse, book: 'Psalms', chapter: 22, book_index: 19, versenum: 12, :subsection_end =>   3)
+      FactoryBot.create(:uberverse, book: 'Psalms', chapter: 22, book_index: 19, versenum: 13, :subsection_end =>   0)
+      FactoryBot.create(:uberverse, book: 'Psalms', chapter: 22, book_index: 19, versenum: 14, :subsection_end =>   0)
+      FactoryBot.create(:uberverse, book: 'Psalms', chapter: 22, book_index: 19, versenum: 15, :subsection_end =>   0)
+      FactoryBot.create(:uberverse, book: 'Psalms', chapter: 22, book_index: 19, versenum: 16, :subsection_end =>   0)
+      FactoryBot.create(:uberverse, book: 'Psalms', chapter: 22, book_index: 19, versenum: 17, :subsection_end =>   0)
+      FactoryBot.create(:uberverse, book: 'Psalms', chapter: 22, book_index: 19, versenum: 18, :subsection_end =>   0)
+      FactoryBot.create(:uberverse, book: 'Psalms', chapter: 22, book_index: 19, versenum: 19, :subsection_end =>   0)
+      FactoryBot.create(:uberverse, book: 'Psalms', chapter: 22, book_index: 19, versenum: 20, :subsection_end =>   0)
+      FactoryBot.create(:uberverse, book: 'Psalms', chapter: 22, book_index: 19, versenum: 21, :subsection_end =>   0)
+      FactoryBot.create(:uberverse, book: 'Psalms', chapter: 22, book_index: 19, versenum: 22, :subsection_end =>   0)
     end
 
     it "should divide passages into subsections automagically" do
@@ -185,7 +185,7 @@ describe Passage do
   describe "add a new verse to a passage" do
 
     before(:each) do
-      @psg = FactoryBot.create(:passage, :book => 'Leviticus', :chapter => 1, :first_verse => 3, :last_verse => 6)
+      @psg = FactoryBot.create(:passage, book: 'Leviticus', chapter: 1, :first_verse => 3, :last_verse => 6)
     end
 
     it "should correctly add a preceding verse" do
@@ -220,7 +220,7 @@ describe Passage do
   describe "delete a memory verse from an existing passage" do
 
     before(:each) do
-      @psg = FactoryBot.create(:passage, :book => 'Proverbs', :chapter => 3, :first_verse => 2, :last_verse => 10)
+      @psg = FactoryBot.create(:passage, book: 'Proverbs', chapter: 3, :first_verse => 2, :last_verse => 10)
     end
 
     it "should correctly delete the first verse of the passage" do

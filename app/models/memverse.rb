@@ -842,13 +842,13 @@ class Memverse < ActiveRecord::Base
     vs = self.verse
 
     # Check for adjacent passages
-    prior_passage = Passage.where(:user_id => self.user.id, :book => vs.book, :chapter => vs.chapter, :last_verse  => vs.versenum-1).first
-    next_passage  = Passage.where(:user_id => self.user.id, :book => vs.book, :chapter => vs.chapter, :first_verse => vs.versenum+1).first
+    prior_passage = Passage.where(:user_id => self.user.id, book: vs.book, chapter: vs.chapter, :last_verse  => vs.versenum-1).first
+    next_passage  = Passage.where(:user_id => self.user.id, book: vs.book, chapter: vs.chapter, :first_verse => vs.versenum+1).first
 
     # Case 1 - No existing passage
     if !prior_passage && !next_passage
-      psg = Passage.create!( :user_id => self.user.id, :translation => vs.translation, :length => 1,
-                             :book => vs.book, :chapter => vs.chapter, :first_verse => vs.versenum, :last_verse => vs.versenum )
+      psg = Passage.create!( :user_id => self.user.id, translation: vs.translation, :length => 1,
+                             book: vs.book, chapter: vs.chapter, :first_verse => vs.versenum, :last_verse => vs.versenum )
       self.update_attribute( :passage_id, psg.id )
 
     # Case 2 - Verse is between two passages -> merge passages
@@ -916,9 +916,9 @@ class Memverse < ActiveRecord::Base
             memverses_in_passage = psg.memverses.includes(:verse).order('verses.versenum')
 
             # create new passage for second half of passage
-            new_psg = Passage.create!( :user_id => psg.user_id, :translation => psg.translation,
+            new_psg = Passage.create!( :user_id => psg.user_id, translation: psg.translation,
                                        :length =>  psg.last_verse - self.verse.versenum,
-                                       :book => psg.book, :chapter => psg.chapter,
+                                       book: psg.book, chapter: psg.chapter,
                                        :first_verse => self.verse.versenum + 1, :last_verse => psg.last_verse )
 
             new_psg.update_ref

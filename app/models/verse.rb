@@ -99,14 +99,14 @@ class Verse < ActiveRecord::Base
 
   # attr_accessible :book, :book_index, :chapter, :versenum, :translation, :text, :verified, :error_flag
 
-  scope :old_testament, -> { where(:book_index =>  1..39) }
-  scope :new_testament, -> { where(:book_index => 40..66) }
+  scope :old_testament, -> { where(book_index:  1..39) }
+  scope :new_testament, -> { where(book_index: 40..66) }
 
   scope :history,  -> { where("book_index BETWEEN 1  AND 17 OR book_index = 44") }
-  scope :wisdom,   -> { where(:book_index => 18..22) }
+  scope :wisdom,   -> { where(book_index: 18..22) }
   scope :prophecy, -> { where("book_index BETWEEN 23 AND 39 OR book_index = 66") }
-  scope :gospel,   -> { where(:book_index => 40..43) }
-  scope :epistle,  -> { where(:book_index => 45..65) }
+  scope :gospel,   -> { where(book_index: 40..43) }
+  scope :epistle,  -> { where(book_index: 45..65) }
 
   scope :tl, ->(tl) { where('translation = ?', tl) }
 
@@ -139,7 +139,7 @@ class Verse < ActiveRecord::Base
       :vs   => self.versenum,
       :tl   => self.translation,
       :ref  => self.ref,
-      :text => self.text
+      text: self.text
     }
   end
 

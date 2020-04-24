@@ -15,6 +15,6 @@ class AddBookIndexToPassages < ActiveRecord::Migration
     add_column :passages, :book_index, :integer
     add_index :passages, :book_index
     Passage.reset_column_information
-    Passage.find_each { |p| p.update_attributes!( :book_index => book_index(p.book) ) }
+    Passage.find_each { |p| p.update_attributes!( book_index: book_index(p.book) ) }
   end
 end

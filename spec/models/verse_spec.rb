@@ -111,17 +111,17 @@ describe Verse do
   end
 
   it "should return correct mnemonic" do
-    verse = FactoryBot.create(:verse, :text => "This is an (extremely) important - mnemonic 'method' 'test'; don't you think?")
+    verse = FactoryBot.create(:verse, text: "This is an (extremely) important - mnemonic 'method' 'test'; don't you think?")
     verse.mnemonic.should == "T i a (e) i — m 'm' 't'; d y t?"
   end
 
   it "mnemonic method should support Portuguese" do
-    verse = FactoryBot.create(:verse, :text => "Á têst for mnémonic support of thé íncredíbly speciâl Portuguese çharacters.")
+    verse = FactoryBot.create(:verse, text: "Á têst for mnémonic support of thé íncredíbly speciâl Portuguese çharacters.")
     verse.mnemonic.should == "Á t f m s o t í s P ç."
   end
   
   it "mnemonic method should support Korean" do
-    verse = FactoryBot.create(:verse, :text => "모든 사람이 죄를 범하였으매 하나님의 영광에 이르지 못하더니")
+    verse = FactoryBot.create(:verse, text: "모든 사람이 죄를 범하였으매 하나님의 영광에 이르지 못하더니")
     verse.mnemonic.should == "ᄆᄃ ᄉᄅᄋ ᄌᄅ ᄇᄒᄋᄋᄆ ᄒᄂᄂᄋ ᄋᄀᄋ ᄋᄅᄌ ᄆᄒᄃᄂ"
   end
 
@@ -156,9 +156,9 @@ describe Verse do
     end
 
     it "should think a complete chapter is available" do
-      final_verse = FactoryBot.create(:final_verse, :book => "Psalms", :chapter => 117, :last_verse => 2)
-      verse1 = FactoryBot.create(:verse, :book => "Psalms", :chapter => 117, :versenum => 1)
-      verse2 = FactoryBot.create(:verse, :book => "Psalms", :chapter => 117, :versenum => 2)
+      final_verse = FactoryBot.create(:final_verse, book: "Psalms", chapter: 117, last_verse: 2)
+      verse1 = FactoryBot.create(:verse, book: "Psalms", chapter:  117, versenum: 1)
+      verse2 = FactoryBot.create(:verse, book: "Psalms", chapter: 117, versenum: 2)
 
       verse1.entire_chapter_available.should be true
     end
@@ -166,7 +166,7 @@ describe Verse do
 
   describe "validate ref" do
     before(:each) do
-      @finalverse = FactoryBot.create(:final_verse, :book => "Psalms", :chapter => 117, :last_verse => 2)
+      @finalverse = FactoryBot.create(:final_verse, book: "Psalms", chapter: 117, last_verse: 2)
       # For these tests, Psalm 117 is the only valid chapter, and verse 2 is the last verse.
     end
 
@@ -176,7 +176,7 @@ describe Verse do
         Verse.create(book: "Psalms", chapter: 151, versenum: 1, translation: "ESV")
       }.not_to change { Verse.count }
 
-      # verse = FactoryBot.create(:verse, :book => "Psalms", :chapter => 151, :versenum => 1)
+      # verse = FactoryBot.create(:verse, book: "Psalms", chapter: 151, versenum: 1)
       # verse.save.should be false
       # verse.errors.full_messages.first.should == "Invalid chapter"
     end
@@ -187,7 +187,7 @@ describe Verse do
       }.not_to change { Verse.count }
     end
 
-      # verse = FactoryBot.create(:verse, :book => "Psalms", :chapter => 117, :versenum => 3, :translation => "ESV")
+      # verse = FactoryBot.create(:verse, book: "Psalms", chapter: 117, versenum: 3, translation: "ESV")
   end
 
   describe "<=>" do
@@ -229,43 +229,43 @@ describe Verse do
   # ==============================================================================================
   describe "web_check" do
     it "should say the verse matches in the database" do
-      verse = FactoryBot.create(:verse, :book => "John", :chapter => 3, :versenum => 16, :translation => "NNV", :text => "For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life.")
+      verse = FactoryBot.create(:verse, book: "John", chapter: 3, versenum: 16, translation: "NNV", text: "For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life.")
       verse.database_text.should == "For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life."
     end
 
     it "should say normal verses match on Bible Gateway" do
-      verse = FactoryBot.create(:verse, :book => "John", :chapter => 3, :versenum => 16, :translation => "KJV", :text => "For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.")
+      verse = FactoryBot.create(:verse, book: "John", chapter: 3, versenum: 16, translation: "KJV", text: "For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.")
       verse.database_text.should == "For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life."
       verse.web_text.should == verse.database_text
     end
 
     it "should say the first verses of chapters match on Bible Gateway" do
-      verse = FactoryBot.create(:verse, :book => "Genesis", :chapter => 1, :versenum => 1, :translation => "KJV", :text => "In the beginning God created the heaven and the earth.")
+      verse = FactoryBot.create(:verse, book: "Genesis", chapter: 1, versenum: 1, translation: "KJV", text: "In the beginning God created the heaven and the earth.")
       verse.database_text == "In the beginning God created the heaven and the earth."
       verse.web_text.should == verse.database_text
     end
 
     it "should say poetry verses match on Bible Gateway" do
-      verse = FactoryBot.create(:verse, :book => "Psalms", :chapter => 35, :versenum => 2, :translation => "NNV", :text => "Take up shield and armor; arise and come to my aid.")
+      verse = FactoryBot.create(:verse, book: "Psalms", chapter: 35, versenum: 2, translation: "NNV", text: "Take up shield and armor; arise and come to my aid.")
       verse.database_text.should == "Take up shield and armor; arise and come to my aid."
       verse.web_text.should == verse.database_text
     end
 
     it "should say verses with 'LORD' in them match on Bible Gateway" do
-      verse = FactoryBot.create(:verse, :book => "Hosea", :chapter => 14, :versenum => 2, :translation => "NNV", :text => 'Take words with you and return to the LORD. Say to him: “Forgive all our sins and receive us graciously, that we may offer the fruit of our lips.')
+      verse = FactoryBot.create(:verse, book: "Hosea", chapter: 14, versenum: 2, translation: "NNV", text: 'Take words with you and return to the LORD. Say to him: “Forgive all our sins and receive us graciously, that we may offer the fruit of our lips.')
       verse.database_text.should == 'Take words with you and return to the LORD. Say to him: "Forgive all our sins and receive us graciously, that we may offer the fruit of our lips.'
       verse.web_text.should == verse.database_text
     end
 
     it "should say verses with all of the above exceptions together match on Bible Gateway" do
-      verse = FactoryBot.create(:verse, :book => "Psalms", :chapter => 9, :versenum => 1, :translation => "NNV", :text => "I will give thanks to you, LORD, with all my heart; I will tell of all your wonderful deeds.")
+      verse = FactoryBot.create(:verse, book: "Psalms", chapter: 9, versenum: 1, translation: "NNV", text: "I will give thanks to you, LORD, with all my heart; I will tell of all your wonderful deeds.")
       verse.database_text.should == "I will give thanks to you, LORD, with all my heart; I will tell of all your wonderful deeds."
       verse.web_text.should == verse.database_text
     end
 
 
     it "should say incorrect verses are incorrect" do
-      verse = FactoryBot.create(:verse, :book => "Psalms", :chapter => 35, :versenum => 3, :translation => "NNV", :text => "This is incorrect")
+      verse = FactoryBot.create(:verse, book: "Psalms", chapter: 35, versenum: 3, translation: "NNV", text: "This is incorrect")
       verse.database_text.should_not == "Brandish spear and javelin against those who pursue me.  Say to my soul, “I am your salvation.”"
       verse.web_text.should_not == verse.database_text
     end
