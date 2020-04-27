@@ -1,4 +1,6 @@
-describe QuizQuestionsController do
+# require "rails_helper"
+
+describe "Quiz Question Controller", type: :request do
 
   before(:each) do
     login_user
@@ -31,27 +33,23 @@ describe QuizQuestionsController do
     {"warden.user.user.key" => session["warden.user.user.key"]}
   end
 
-  describe "POST create" do
-    describe "with valid params" do
-      it "creates a new QuizQuestion" do
-        expect {
-          post :create, params: {quiz_question: valid_attributes}, session: valid_session
-        }.to change(QuizQuestion, :count).by(1)
-      end
 
-      it "assigns a newly created QuizQuestions as @QuizQuestion" do
-        post :create, params: {quiz_question: valid_attributes}, session: valid_session
-        expect( assigns(:quiz_question) ).to be_a(QuizQuestion)
-        expect( assigns(:quiz_question) ).to be_persisted
-      end
+  it "creates a new Quiz Question and redirects to the Question's page" do
+    get "/quiz_question/new"
+    expect(response).to render_template(:new)
 
-      it "redirects to the created Verse" do
-        post :create, params: {quiz_question: valid_attributes}, session: valid_session
-        expect( response ).to redirect_to(QuizQuestion.last)
-      end
-    end
+    # post "/widgets", :params => { :widget => {:name => "My Widget"} }
+    post :create, params: {quiz_question: valid_attributes}, session: valid_session
 
+    expect(response).to redirect_to(assigns(:quiz_question))
+    follow_redirect!
+
+    expect(response).to render_template(:show)
+    expect(response.body).to include("Quiz question was successfully created.")
   end
 
-
+  it "does not render a different template" do
+    get "/widgets/new"
+    expect(response).to_not render_template(:show)
+  end
 end

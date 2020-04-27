@@ -90,6 +90,9 @@ FactoryBot.define do
 
   # ==============================================================================================
   # Passages
+  #
+  # Note: Passages are never created directly. They come into existence with the creation of the 
+  #       first memory verse.
   # ==============================================================================================
   factory :passage do
 
@@ -103,12 +106,12 @@ FactoryBot.define do
 
     # Create the necessary memverses and verses for the passage
     # Note: 'evaluator' stores all values from the 'passage' factory_girl
-    after(:create) do |psg, evaluator|
-      for i in evaluator.first_verse..evaluator.last_verse
-        vs = FactoryBot.create(:verse, book: evaluator.book, chapter: evaluator.chapter, versenum: i, translation: evaluator.translation)
-        FactoryBot.create(:memverse_without_passage, user: evaluator.user, verse: vs, passage: psg, test_interval: i, rep_n: i)
-      end
-    end
+    # after(:create) do |psg, evaluator|
+    #   for i in evaluator.first_verse..evaluator.last_verse
+    #     vs = FactoryBot.create(:verse, book: evaluator.book, chapter: evaluator.chapter, versenum: i, translation: evaluator.translation)
+    #     FactoryBot.create(:memverse_without_passage, user: evaluator.user, verse: vs, passage: psg, test_interval: i, rep_n: i)
+    #   end
+    # end
 
   end
 
@@ -116,7 +119,7 @@ FactoryBot.define do
   # Memverses
   # ==============================================================================================
   factory :memverse do
-    # association :passage, :factory => :passage # this causes problems with infinite recursion
+    association :passage, :factory => :passage # this causes problems with infinite recursion
     association     :verse,   :factory => :verse
     association     :user,    :factory => :user
     status          { 'Learning' }
@@ -219,26 +222,27 @@ FactoryBot.define do
   # ==============================================================================================
   # Quiz
   # ==============================================================================================
-  factory :quiz do |q|
-    q.association :user, :factory => :user
-    q.name    { 'Weekly Bible Knowledge' }
+  factory :quiz do
+    user
+    name    { 'Weekly Bible Knowledge' }
   end
 
   # ==============================================================================================
   # Quiz Questions
   # ==============================================================================================
-  factory :quiz_question do |qq|
-    qq.association :quiz, :factory => :quiz
-    qq.times_answered  { 10 }
-    qq.perc_correct    { 50 }
-    qq.question_type   { "reference" }
-    qq.mc_question     { nil }
-    qq.mc_option_a     { nil }
-    qq.mc_option_b     { nil }
-    qq.mc_option_c     { nil }
-    qq.mc_option_d     { nil }
-    qq.mc_answer       { nil }
-    qq.association :supporting_ref, :factory => :uberverse
+  factory :quiz_question do
+    quiz
+    user
+    association :supporting_ref, factory: :uberverse
+    times_answered  { 10 }
+    perc_correct    { 50 }
+    question_type   { "reference" }
+    mc_question     { nil }
+    mc_option_a     { nil }
+    mc_option_b     { nil }
+    mc_option_c     { nil }
+    mc_option_d     { nil }
+    mc_answer       { nil }
   end
 
   # ==============================================================================================
