@@ -66,7 +66,7 @@ MemverseApp::Application.configure do
 
   # Sendgrid
   config.action_mailer.smtp_settings = {
-    :user_name => 'memverse',
+    :user_name => 'apikey',
     :password => Rails.application.secrets[:sendgrid],
     :domain => 'www.memverse.com',
     :address => 'smtp.sendgrid.net',
