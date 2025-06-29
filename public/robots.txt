@@ -13,3 +13,57 @@ Disallow: /charts/							# Old flash charts
 Disallow: /blogs/9/     					# Old blog route that should not exist any more
 Disallow: /memverses/show_all_my_verses     # Old URL that no longer exists
 Disallow: /chat/channel1                    # Old URL that no longer exists
+
+# Block OpenAI
+User-agent: GPTBot
+Disallow: /
+
+# Block Anthropic (Claude)
+User-agent: ClaudeBot
+Disallow: /
+
+# Block Google AI crawler (Bard/Gemini)
+User-agent: Google-Extended
+Disallow: /
+
+# Block Common Crawl
+User-agent: CCBot
+Disallow: /
+
+# Block Facebook/Meta AI
+User-agent: FacebookBot
+Disallow: /
+
+# Block Amazon's bot (used for Alexa and potentially Titan training)
+User-agent: Amazonbot
+Disallow: /
+
+# Block Perplexity AI
+User-agent: PerplexityBot
+Disallow: /
+
+# Block DuckDuckGo AI research
+User-agent: DuckDuckBot
+Disallow: /
+
+# Block Apple AI research
+User-agent: Applebot
+Disallow: /
+
+# Block You.com
+User-agent: YouBot
+Disallow: /
+
+# Block Baidu (used in Ernie Bot)
+User-agent: Baiduspider
+Disallow: /
+
+# Block Ahrefs (often used in data scraping)
+User-agent: AhrefsBot
+Disallow: /
+
+# Block Bytespider (associated with TikTok/ByteDance AI training)
+User-agent: Bytespider
+Disallow: /
+
+
