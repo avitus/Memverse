@@ -31,7 +31,7 @@ group :development, :test do
   gem 'cucumber-rails', require: false                          # Rails Generators for Cucumber with special support for Capybara and DatabaseCleaner
   gem 'capybara'                                                # Helps test web applications by simulating how a real user would interact with your app
   gem 'puma'
-  gem 'selenium-webdriver'                                      # Optional extension for Capybara
+  gem 'selenium-webdriver', '~> 3.142.3'                        # Optional extension for Capybara
   gem 'database_cleaner'                                        # Clean database between tests
   gem 'launchy', '>= 2.0.5'
   gem 'email_spec'                                              # For sending email in cucumber tests

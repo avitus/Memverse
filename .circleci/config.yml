@@ -91,7 +91,7 @@ jobs:
       - run:
           name: Install Gecko Gemfile
           command: |
-            gem install selenium-webdriver
+            gem install selenium-webdriver -v '~> 3.142.3'
 
       - run:
           name: Wait for DB

@@ -784,7 +784,7 @@ DEPENDENCIES
   rspec-rails
   rspec_junit_formatter
   sass-rails (~> 5.0)
-  selenium-webdriver
+  selenium-webdriver (~> 3.142.3)
   sentry-raven
   sidekiq
   sidekiq-cron (~> 0.6.3)
