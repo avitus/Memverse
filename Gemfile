@@ -5,7 +5,7 @@ require 'rbconfig'
 git_source(:github) { |name| "https://github.com/#{name}.git" }
 
 # Set Ruby version (we are using RVM)
-ruby "2.4.3"
+ruby "2.4.10"
 
 HOST_OS = RbConfig::CONFIG['host_os']
 source 'http://rubygems.org'
@@ -78,6 +78,7 @@ gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'                                                      # Compressor for JS assets
 gem 'coffee-rails', '~> 4.2' 
 gem 'rails-observers'                                                           # Needed as of Rails 5.1 to observe user model                     
+gem "mimemagic", "~> 0.3.10"                                                    # For mime type detection. Prev version yanked      
 
 ############################################################
 # For Rails 4 Upgrade ... should be removed eventually

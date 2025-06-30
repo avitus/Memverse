@@ -277,9 +277,10 @@ word_width = function(word) {
 /******************************************************************************
  * Blankify a verse
  ******************************************************************************/
-function blankifyVerse(versetext, reduction_percentage) {
+function blankifyVerse(versetext, reduction_percentage, customWordWidth) {
 
     var split_text, sort_by_length, text_with_blanks;
+    var getWordWidth = customWordWidth || word_width;
 
     if  ( reduction_percentage == 0 ) {
 
@@ -307,8 +308,8 @@ function blankifyVerse(versetext, reduction_percentage) {
 	            return "<span>" + x + " " + "</span>";
 	        }
 	        else {
-	            return "<input name='" + x.replace(/'/, '’') + "' class='blank-word' style='width:" + word_width(x) + "px' autocomplete='off'>";
-	        };
+                return "<input name='" + x + "' class='blank-word' style='width:" + getWordWidth(x) + "px' autocomplete='off'>";
+            };
 	    });
 
 	    return text_with_blanks.join(" ");
