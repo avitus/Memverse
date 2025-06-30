@@ -30,7 +30,13 @@ development: &default
   socket: /run/mysqld/mysqld.sock
 
 test: &test
-  <<: *default
+  adapter: mysql2
+  encoding: utf8
+  pool: 5
+  username: root
+  password: demo
+  host: 127.0.0.1
+  port: 3306
   database: memverse_test
 
 production:
@@ -64,3 +70,4 @@ production:
 #   <<: *default
 cucumber:
   <<: *test
+  # Cucumber uses the same configuration as test

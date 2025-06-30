@@ -18,7 +18,7 @@ jobs:
           RAILS_ENV: test
 
       # Database
-      - image: library/mysql:5.6
+      - image: library/mysql:5.7
         environment:
           MYSQL_ROOT_PASSWORD: demo
           MYSQL_DATABASE: memverse_test
@@ -39,7 +39,7 @@ jobs:
           name: Install MySQL client
           command: |
             sudo apt update
-            sudo apt install -y default-mysql-client
+            sudo apt install -y mysql-client
 
       # Which version of bundler?
       - run:
@@ -95,7 +95,17 @@ jobs:
 
       - run:
           name: Wait for DB
-          command: dockerize -wait tcp://localhost:3306 -timeout 1m
+          command: |
+            until mysql -h 127.0.0.1 -P 3306 -u root -pdemo -e "SELECT 1" >/dev/null 2>&1; do
+              echo "Waiting for MySQL to be ready..."
+              sleep 2
+            done
+
+      - run:
+          name: Verify Database Configuration
+          command: |
+            echo "Testing database connection..."
+            mysql -h 127.0.0.1 -P 3306 -u root -pdemo -e "SHOW DATABASES;"
 
       - run:
           name: Database (Create)
