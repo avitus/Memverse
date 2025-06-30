@@ -48,13 +48,10 @@ describe Api::V1::MemversesController do
     it 'returns the number of pages to be requested' do
       get :index, params: {version: 1}, format: :json
 
-      # body = JSON.parse(response.body)
-      # puts body
-      # body[:response].should include(:pagination)
-      # body[:response][:pagination][:pages].should == 1
-      # body[:response][:pagination][:count].should == 1
-
-      response.should be_paginated_resource 
+      body = JSON.parse(response.body)
+      body["response"].should include("pagination")
+      body["response"]["pagination"]["pages"].should == 1
+      body["response"]["pagination"]["count"].should == 1
 
     end
 

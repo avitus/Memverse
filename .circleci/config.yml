@@ -29,6 +29,10 @@ jobs:
       - image: redis:3.2
 
     steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "SHA256:UMuaEcfwEEAc5T38Fdx7qxeB3dMyR0TJIZCzStQkp3s circleci@memverse.com"
+
       - checkout
 
       - run: 

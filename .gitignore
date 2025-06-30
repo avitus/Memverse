@@ -87,3 +87,7 @@ doc/*
 # Ignore encrypted secrets key file.
 config/secrets.yml.key
 config/master.key
+
+# CircleCI deploy key
+circleci_deploy_key
+circleci_deploy_key.pub
