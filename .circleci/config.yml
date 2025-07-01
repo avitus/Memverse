@@ -16,6 +16,7 @@ jobs:
           REDIS_PORT: 6379
           DB_HOST: 127.0.0.1
           RAILS_ENV: test
+          MYSQL_ROOT_PASSWORD: demo
 
       # Database
       - image: library/mysql:5.7

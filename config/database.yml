@@ -34,7 +34,7 @@ test: &test
   encoding: utf8
   pool: 5
   username: root
-  password: 
+  password: <%= ENV['MYSQL_ROOT_PASSWORD'] || '' %>
   host: 127.0.0.1
   port: 3306
   database: memverse_test
