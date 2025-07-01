@@ -34,7 +34,7 @@ test: &test
   encoding: utf8
   pool: 5
   username: root
-  password: demo
+  password: 
   host: 127.0.0.1
   port: 3306
   database: memverse_test
