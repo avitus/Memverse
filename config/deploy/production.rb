@@ -7,6 +7,9 @@ set :rails_env, "production"
 
 # server 'memverse.com', user: 'avitus', roles: %w{app db web}
 server 'www.memverse.com', user: 'avitus', roles: %w{app db web}
+
+# Deploy from the upgrade branch instead of master
+set :branch, 'upgrade-2026'
 # server 'memverse.com', user: 'avitus', roles: %w{app db web}, my_property: :my_value
 # server 'example.com', user: 'deploy', roles: %w{app web}, other_property: :other_value
 # server 'db.example.com', user: 'deploy', roles: %w{db}

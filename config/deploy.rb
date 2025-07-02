@@ -1,5 +1,5 @@
 # config valid only for current version of Capistrano
-lock '3.10.1'
+lock '3.19.2'
 
 set :user, 'avitus'
 set :application, 'memverse.com'
@@ -36,6 +36,13 @@ set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', '
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
+
+# Ensure we use the correct bundler version
+set :bundle_flags, '--deployment'
+set :bundle_jobs, 4
+set :bundle_path, -> { shared_path.join('bundle') }
+set :bundle_without, %w{development test}.join(' ')
+set :bundle_binstubs, -> { shared_path.join('bin') }
 
 # Default value for keep_releases is 5
 # set :keep_releases, 5

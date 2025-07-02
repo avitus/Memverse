@@ -17,7 +17,7 @@ require 'thinking_sphinx/capistrano'
 # Config for RVM
 require 'capistrano/rvm'
 set :rvm_type, :user
-set :rvm_ruby_version, '2.4.3'
+set :rvm_ruby_version, '2.7.8'
 
 # Include tasks from other gems included in your Gemfile
 #
