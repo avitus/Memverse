@@ -3,7 +3,7 @@ namespace :bundler do
   task :upgrade do
     on roles(:app) do
       within release_path do
-        execute :gem, "install bundler -v 2.1.4
+        execute :gem, "install bundler -v 2.1.4"
       end
     end
   end
