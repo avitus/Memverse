@@ -11,14 +11,14 @@ namespace :bundler do
         
         # Check and update RubyGems if needed
         puts "Checking RubyGems version..."
-        gem_version_output = capture(:gem, "--version")
+        gem_version_output = capture("~/.rvm/bin/rvm default do gem --version")
         current_gem_version = gem_version_output.strip
         puts "Current RubyGems version: #{current_gem_version}"
         
         # Check if RubyGems needs updating (ffi requires >= 3.3.22)
         if Gem::Version.new(current_gem_version) < Gem::Version.new("3.3.22")
           puts "RubyGems version #{current_gem_version} is too old. Updating to latest version..."
-          execute :gem, "update --system"
+          execute "~/.rvm/bin/rvm default do gem update --system"
           puts "RubyGems updated successfully"
         else
           puts "RubyGems version is compatible"
@@ -142,17 +142,17 @@ namespace :bundler do
         
         # Check current RubyGems version
         puts "Checking current RubyGems version..."
-        gem_version_output = capture(:gem, "--version")
+        gem_version_output = capture("~/.rvm/bin/rvm default do gem --version")
         current_gem_version = gem_version_output.strip
         puts "Current RubyGems version: #{current_gem_version}"
         
         # Update RubyGems
         puts "Updating RubyGems to latest version..."
-        execute :gem, "update --system"
+        execute "~/.rvm/bin/rvm default do gem update --system"
         
         # Verify the update
         puts "Verifying RubyGems update..."
-        new_gem_version_output = capture(:gem, "--version")
+        new_gem_version_output = capture("~/.rvm/bin/rvm default do gem --version")
         new_gem_version = new_gem_version_output.strip
         puts "New RubyGems version: #{new_gem_version}"
         
