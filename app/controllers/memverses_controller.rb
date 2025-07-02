@@ -945,9 +945,6 @@ class MemversesController < ApplicationController
 
       # Execute Supermemo algorithm
       newly_memorized = mv.supermemo(q)
-      # Log event to Treasure Data
-      TD.event.post('memorize_verse', {:user_login => current_user.login, :user_id => current_user.id, :verse_id => mv.verse.id,
-                                       :mv_id => mv.id, :mv_interval => mv.test_interval, :q => q, :attempts => mv.attempts })
 
       # Give encouragement if verse transitions from "Learning" to "Memorized"
       if newly_memorized
