@@ -7,7 +7,7 @@ jobs:
     docker:
 
       # App Server
-      - image: cimg/ruby:2.7-node-browsers
+      - image: circleci/ruby:2.7.8-node-browsers
         environment:
           BUNDLE_JOBS: 3
           BUNDLE_RETRY: 3
