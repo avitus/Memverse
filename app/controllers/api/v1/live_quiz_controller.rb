@@ -103,8 +103,6 @@ class Api::V1::LiveQuizController < Api::V1::ApiController
     doorkeeper_authorize! :admin, :write, :read, :public  # Allow all scopes access for now
   end
 
-  version 1
-
   # Nothing to cache in this controller
   # caches :index, :show, :caches_for => 5.minutes
 

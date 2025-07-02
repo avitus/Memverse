@@ -269,7 +269,7 @@
 
 #bloggity_container .comment-img img {
 	float:left;
-	@include border-radius(5px, 5px);
+	border-radius: 5px;
 }
 
 #bloggity_container .comment-head {
@@ -277,7 +277,7 @@
 	margin-left:90px;
 	background-color:#eee;
 	text-overflow:ellipsis;
-	@include border-radius(5px, 5px);
+	border-radius: 5px;
 }
 
 #bloggity_container .comment-head a.commenter, time {

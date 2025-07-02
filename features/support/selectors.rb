@@ -27,7 +27,7 @@ module HtmlSelectorsHelpers
     # for "within" steps as was previously the default for the
     # web steps:
     when /^"(.+)"$/
-      $1
+      $1.dup
 
     else
       raise "Can't find mapping from \"#{locator}\" to a selector.\n" +

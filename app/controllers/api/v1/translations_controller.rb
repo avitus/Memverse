@@ -43,8 +43,6 @@ class Api::V1::TranslationsController < Api::V1::ApiController
     doorkeeper_authorize! :admin, :write, :read, :public # allow any of these scopes access (logical OR)
   end
 
-  version 1
-
   def index
     expose Translation.for_api
   end

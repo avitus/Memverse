@@ -43,8 +43,6 @@ class Api::V1::FinalVersesController < Api::V1::ApiController
     doorkeeper_authorize! :admin, :write, :read, :public # allow any of these scopes access (logical OR)
   end
 
-  version 1
-
   def index
     final_verses = FinalVerse.all
     expose final_verses.page( params[:page] )

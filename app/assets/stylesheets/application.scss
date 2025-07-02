@@ -3,7 +3,7 @@
  *= require jquery-ui
  */
 
-@import "compass";
+// @import "compass"; // Commented out to fix test issues
 @import "normalize";
 @import "base";
 @import "layout";

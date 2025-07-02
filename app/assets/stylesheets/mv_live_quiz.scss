@@ -80,7 +80,7 @@ div.roster-item a {
 
 div.roster-item img {
 	vertical-align:middle;
-	@include border-radius(4px, 4px);
+	border-radius: 4px;
 }
 
 
@@ -185,7 +185,7 @@ ul.mcq li.incorrect {
 	padding:0.5em 1em;
 	font-size:18px;
 	margin-top:1em;
-	@include border-radius(4px, 4px);
+	border-radius: 4px;
 	background-color:#6B9620;
 	text-shadow:0 -1px 1px rgba(0, 0, 0, 0.25);
 	line-height:1;

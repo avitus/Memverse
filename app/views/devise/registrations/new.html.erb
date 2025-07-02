@@ -44,7 +44,7 @@
 
 			<%= ('<input type="hidden" name="user[referred_by]" value="' + session[:referrer].to_s + '">').html_safe if session[:referrer] %>
 
-			<%= render :partial => "devise/registrations/form_a" %>
+			<%= render :partial => "devise/registrations/form_a_unencrypted", locals: { f: f } %>
 
 		<% end %>
 

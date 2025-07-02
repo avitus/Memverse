@@ -5,6 +5,8 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_locale, :prepare_for_mobile
 
+  layout :layout_by_resource
+
   def bloggity_user
     current_user
   end
@@ -311,5 +313,9 @@ class ApplicationController < ActionController::Base
   #   puts "======> Rescue from ActionController::UnfilteredParameters"
   #   puts params.inspect
   # end
+
+  def layout_by_resource
+    "application"
+  end
 
 end

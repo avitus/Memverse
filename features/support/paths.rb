@@ -9,41 +9,41 @@ module NavigationHelpers
     case page_name
 
     when /the home\s?page/
-      '/'
+      '/'.dup
 
     when /the sign up page/
-      '/users/sign_up'
+      '/users/sign_up'.dup
 
     when /the sign in page/
-      '/users/sign_in'
+      '/users/sign_in'.dup
 
     when /the main memorization page/
-      '/test_verse_quick'
+      '/test_verse_quick'.dup
 
     when /the learn verse page/
-      '/learn'
+      '/learn'.dup
 
     when /(.*)'s referrer page/
-      '/?referrer='+$1
+      "/?referrer=#{$1}".dup
 
     when /the new blog post page for the blog titled "(.*)"/
       blog_id = Bloggity::Blog.where(:title => $1).first.id.to_s
-      '/blog/blogs/'+blog_id+'/blog_posts/new'
+      "/blog/blogs/#{blog_id}/blog_posts/new".dup
 
     when /the blog/
-      '/blog'
+      '/blog'.dup
 
     when /the page for the memverse with the id of ([0-9]+)/
-      '/memory_verse/'+$1
+      "/memory_verse/#{$1}".dup
 
     when /my group page/
-      '/mygroup'
+      '/mygroup'.dup
 
     when /the admin dashboard/
-      '/admin'
+      '/admin'.dup
 
     when /the utils dashboard/
-      '/utils/dashboard'
+      '/utils/dashboard'.dup
 
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
@@ -54,7 +54,8 @@ module NavigationHelpers
       begin
         page_name =~ /the (.*) page/
         path_components = $1.split(/\s+/)
-        self.send(path_components.push('path').join('_').to_sym)
+        result = path_components.push('path').join('_').to_sym
+        self.send(result)
       rescue Object => e
         raise "Can't find mapping from \"#{page_name}\" to a path.\n" +
           "Now, go and add a mapping in #{__FILE__}"

@@ -213,8 +213,6 @@ class Api::V1::VersesController < Api::V1::ApiController
     doorkeeper_authorize! :admin, :write, :read, :public  # Allow all scopes access for now
   end
 
-  version 1
-
   # The list of verses is paginated for 5 minutes, the verse itself is cached
   # until it's modified (using Efficient Validation)
   caches :index, :show, :caches_for => 15.minutes

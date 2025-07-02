@@ -37,7 +37,17 @@ describe Badge do
   describe "should correctly report which badges a user has earned" do
     
     before(:each) do
-      @badge  = Badge.where(:name => "Consistency", :color => "silver").first
+      # Create the Consistency badges that would normally be created in seeds
+      @consistency_gold = FactoryBot.create(:badge, name: "Consistency", color: "gold", description: "Complete 350 sessions in a year")
+      @consistency_silver = FactoryBot.create(:badge, name: "Consistency", color: "silver", description: "Complete 325 sessions in a year")
+      @consistency_bronze = FactoryBot.create(:badge, name: "Consistency", color: "bronze", description: "Complete 300 sessions in a year")
+      
+      # Create the associated quests for each badge
+      @gold_quest = FactoryBot.create(:quest, badge: @consistency_gold, objective: 'Annual Sessions', quantity: 350, task: "Complete 350 sessions in a year")
+      @silver_quest = FactoryBot.create(:quest, badge: @consistency_silver, objective: 'Annual Sessions', quantity: 325, task: "Complete 325 sessions in a year")
+      @bronze_quest = FactoryBot.create(:quest, badge: @consistency_bronze, objective: 'Annual Sessions', quantity: 300, task: "Complete 300 sessions in a year")
+      
+      @badge  = @consistency_silver
       @quests = @badge.quests        
     end
         
@@ -53,7 +63,7 @@ describe Badge do
     it "should not show a badge as earned if user already has a higher level badge" do
       @user.badges << @badge
       
-      bronze_badge  = Badge.where(:name => "Consistency", :color => "bronze").first
+      bronze_badge  = @consistency_bronze
       bronze_quests = bronze_badge.quests      
       bronze_quests.each { |q| @user.quests << q }
       
@@ -65,7 +75,7 @@ describe Badge do
       @user.badges << @badge 
       
       # award gold badge to user
-      gold_badge = Badge.where(:name => "Consistency", :color => "gold").first
+      gold_badge = @consistency_gold
       gold_badge.award_badge(@user) 
       
       # user should no longer have the silver badge ...
@@ -77,8 +87,13 @@ describe Badge do
   end
   
   it "should only allow a user to have one badge in a series" do
-    @gold   = Badge.where(:name => "Consistency", :color => "gold").first
-    @bronze = Badge.where(:name => "Consistency", :color => "bronze").first
+    # Create the Consistency badges that would normally be created in seeds
+    @gold   = FactoryBot.create(:badge, name: "Consistency", color: "gold", description: "Complete 350 sessions in a year")
+    @bronze = FactoryBot.create(:badge, name: "Consistency", color: "bronze", description: "Complete 300 sessions in a year")
+    
+    # Create the associated quests for each badge
+    FactoryBot.create(:quest, badge: @gold, objective: 'Annual Sessions', quantity: 350, task: "Complete 350 sessions in a year")
+    FactoryBot.create(:quest, badge: @bronze, objective: 'Annual Sessions', quantity: 300, task: "Complete 300 sessions in a year")
     
     @bronze.award_badge(@user)
     @gold.award_badge(@user)

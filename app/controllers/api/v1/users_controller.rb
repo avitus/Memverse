@@ -141,8 +141,6 @@ class Api::V1::UsersController < Api::V1::ApiController
     doorkeeper_authorize! :admin, :write, :read, :public  # Allow all scopes access for now
   end
 
-  version 1
-
   def create
     user = User.new( user_params )
     if user.save

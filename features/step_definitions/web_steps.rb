@@ -45,7 +45,9 @@ Given /^(?:|I )am on (.+)$/ do |page_name|
 end
 
 When /^(?:|I )go to (.+)$/ do |page_name|
-  visit path_to(page_name)
+  path = path_to(page_name)
+  duped_path = path.dup
+  visit duped_path
 end
 
 When /^(?:|I )press "([^"]*)"$/ do |button|
@@ -271,4 +273,77 @@ end
 Then /^I press return$/ do
   input = find("td.edit_mv input")
   input.native.send_keys:return
+end
+
+Given(/^I wait (\d+) second(?:s)?$/) do |seconds|
+  sleep seconds.to_i
+end
+
+Then /^I should see debug page content$/ do
+  puts "=== DEBUG: Current page content ==="
+  puts page.html
+  puts "=== END DEBUG ==="
+end
+
+When /^I visit the memverse page with id <memverse_id>$/ do
+  visit "/memory_verse/#{@memverse_id}"
+end
+
+When /^I visit the memverse page with id (\d+)$/ do |id|
+  visit "/memory_verse/#{id}"
+end
+
+Then /^I should see the verse text$/ do
+  # Check if we're on the sign-in page (user was logged out due to database truncation)
+  if page.has_content?("YOU NEED TO SIGN IN OR SIGN UP BEFORE CONTINUING.")
+    # User was logged out, sign in again
+    if @current_user_email
+      # Ensure the user exists and is confirmed
+      user = User.find_by_email(@current_user_email)
+      if user.nil?
+        user = User.create!(
+          name: "Old Dog",
+          email: @current_user_email,
+          password: "please",
+          password_confirmation: "please"
+        )
+        user.confirm
+        user.save!
+      end
+      # Go to sign in page
+      visit "/users/sign_in"
+      # Print CSRF token meta tag for debugging
+      if page.has_selector?('meta[name="csrf-token"]', visible: false)
+        puts "CSRF token: #{page.find('meta[name="csrf-token"]', visible: false)[:content]}"
+      else
+        puts "No CSRF token meta tag found!"
+      end
+      # Use within form for robustness
+      within('form') do
+        fill_in "user[email]", with: @current_user_email
+        fill_in "user[password]", with: "please"
+        find("#signinbutton", visible: :all).click
+      end
+      sleep 1 # Wait for the session to be established
+      # Fallback: try click_button by id if still on sign-in page
+      if page.has_content?("YOU NEED TO SIGN IN OR SIGN UP BEFORE CONTINUING.")
+        begin
+          click_button("signinbutton")
+          sleep 1
+        rescue => e
+          puts "click_button fallback failed: #{e}"
+        end
+      end
+      # If still on sign-in page, print the page HTML for debugging
+      if page.has_content?("YOU NEED TO SIGN IN OR SIGN UP BEFORE CONTINUING.")
+        puts "=== DEBUG: Still on sign-in page after sign-in attempt ==="
+        puts page.html
+      end
+      # Visit the memverse page again
+      visit "/memory_verse/#{@memverse_id}"
+    end
+  end
+  
+  verse = Memverse.find(@memverse_id).verse
+  expect(page).to have_content(verse.text)
 end

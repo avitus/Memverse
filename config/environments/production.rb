@@ -10,8 +10,15 @@ MemverseApp::Application.configure do
   #===============================
   # Caching
   #===============================
-  # Dalli is the client for MemcacheD
-  config.cache_store = :dalli_store, { :namespace => Memverse, :expires_in => 1.day, :compress => true }
+  if Rails.env.production?
+    # Use Dalli for Memcached only if the gem is loaded
+    if defined?(Dalli)
+      config.cache_store = :dalli_store, { :namespace => 'Memverse', :expires_in => 1.day, :compress => true }
+    else
+      # Fallback to memory store if dalli is not available
+      config.cache_store = :memory_store
+    end
+  end
   config.cache_classes = true                      # Code is not reloaded between requests
   config.consider_all_requests_local = false       # Full error reports are disabled
   config.action_controller.perform_caching = true

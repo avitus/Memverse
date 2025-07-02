@@ -171,8 +171,6 @@ h1, h2, h3, h4, h5, h6 {
   background:#FFF;
   border:1px solid #555;
   padding:2em 0;
-  -moz-border-radius:10px;
-  -webkit-border-radius:10px;
   border-radius:10px;
 }
 
@@ -181,8 +179,6 @@ h1, h2, h3, h4, h5, h6 {
   background:#FFF;
   border:1px solid #555;
   padding:12px;
-  -moz-border-radius:10px;
-  -webkit-border-radius:10px;
   border-radius:10px;
   min-height: 500px;
 }
@@ -195,8 +191,6 @@ h1, h2, h3, h4, h5, h6 {
   border:1px solid #555;
   margin: 0.5em 0.5em;
   padding:2em 2em;
-  -moz-border-radius:10px;
-  -webkit-border-radius:10px;
   border-radius:10px;
 }
 
@@ -208,8 +202,6 @@ h1, h2, h3, h4, h5, h6 {
   border:1px solid #555;
   margin: 0.5em 0.5em;
   padding:2em 2em;
-  -moz-border-radius:10px;
-  -webkit-border-radius:10px;
   border-radius:10px;
 }
 
@@ -239,8 +231,7 @@ h1, h2, h3, h4, h5, h6 {
 	color:#f7cb47;
 	text-decoration:underline;
 	padding:1px 4px 3px;
-	-webkit-border-radius:3px;
-	-moz-border-radius:3px;
+	border-radius:3px;
 }
 
 #no-js p a:hover{
@@ -733,8 +724,6 @@ input.large {
 	background:#717171;
 	border:1px solid #717171;
 	padding:0 25px;
-	-moz-border-radius:10px;
-	-webkit-border-radius:10px;
 	border-radius:10px;
 }
 
@@ -1227,8 +1216,6 @@ div#flash-error {
 	padding:14px 14px 0;
 	background:#FFF;
 	border:1px solid #555;
-	-moz-border-radius:10px;
-	-webkit-border-radius:10px;
 	border-radius:10px;
 }
 
@@ -1240,8 +1227,6 @@ div#flash-error {
 	padding:14px 14px 0;
 	background:#FFF;
 	border:1px solid #555;
-	-moz-border-radius:10px;
-	-webkit-border-radius:10px;
 	border-radius:10px;
 }
 

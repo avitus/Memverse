@@ -6,9 +6,15 @@ MemverseApp::Application.configure do
   # since you don't have to restart the web server when you make code changes.
   config.cache_classes = false
 
-  # ALV: Point to a nonexistent memcache to eliminate problems
-  # http://blog.hertler.org/2010/10/memcached-undefined-classmodule-in.html
-  config.cache_store   = :dalli_store, '127.0.0.1:11211', {:namespace => "dev"}
+  if Rails.env.development?
+    # Use Dalli for Memcached only if the gem is loaded
+    if defined?(Dalli)
+      config.cache_store = :dalli_store, '127.0.0.1:11211', {:namespace => "dev"}
+    else
+      # Fallback to memory store if dalli is not available
+      config.cache_store = :memory_store
+    end
+  end
 
   # No need for eager loading in dev
   config.eager_load = false

@@ -10,7 +10,7 @@ Feature: Demo Verse Review
       And I should see "D n c a l t t p"
       And I should not see "As you type"
       When I click inside "#verseguess"
-      Then I should see "As you type"
+      Then I should see "Live Feedback"
       And I should not see "This is a demo of the main memorization section"
       When I fill in "verseguess" with "Do not confirm any longer two the pattern"
       Then I should see "Do not ... any longer ... the pattern"

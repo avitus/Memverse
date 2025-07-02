@@ -6,62 +6,62 @@
   margin: 0 1em;  
 }
 
-@import "badges/Sermon-on-the-Mount/*.png";
+// @import "badges/Sermon-on-the-Mount/*.png";
 
 .sermon-on-the-mount {
   @include badge-properties;
-  @include Sermon-on-the-Mount-sprite(teaser);
-    &:hover      { @include Sermon-on-the-Mount-sprite(hover); };
+  // @include Sermon-on-the-Mount-sprite(teaser);
+  //   &:hover      { @include Sermon-on-the-Mount-sprite(hover); };
 }
 
 .sermon-on-the-mount.earned {
-  @include Sermon-on-the-Mount-sprite(badge);
+  // @include Sermon-on-the-Mount-sprite(badge);
 }
 
-@import "badges/Referrer/*.png";
+// @import "badges/Referrer/*.png";
 
 .referrer.unearned {
   @include badge-properties;         
-  @include Referrer-sprite(teaser);
-  &:hover { @include Referrer-sprite(hover); };
+  // @include Referrer-sprite(teaser);
+  // &:hover { @include Referrer-sprite(hover); };
 }
 
 .referrer.earned-gold {
   @include badge-properties;         
-  @include Referrer-sprite(gold);
+  // @include Referrer-sprite(gold);
 }
 
 .referrer.earned-silver {
   @include badge-properties;         
-  @include Referrer-sprite(silver);
+  // @include Referrer-sprite(silver);
 }
 
 .referrer.earned-bronze {
   @include badge-properties;         
-  @include Referrer-sprite(bronze);
+  // @include Referrer-sprite(bronze);
 }
 
-@import "badges/Consistency/*.png";
+// @import "badges/Consistency/*.png";
 
 .consistency.unearned {
   @include badge-properties;         
-  @include Consistency-sprite(teaser);
-  &:hover { @include Consistency-sprite(hover); };
+  // @include Consistency-sprite(teaser);
+  // &:hover { @include Consistency-sprite(hover); };
 }
 
 .consistency.earned-gold {
   @include badge-properties;         
-  @include Consistency-sprite(gold);
+  // @include Consistency-sprite(gold);
 }
 
 .consistency.earned-silver {
   @include badge-properties;         
-  @include Consistency-sprite(silver);
+  // @include Consistency-sprite(silver);
 }
 
 .consistency.earned-bronze {
   @include badge-properties;         
-  @include Consistency-sprite(bronze);
+  // @include Consistency-sprite(bronze);
 }
 
 /*========== End: Badges ==========*/

@@ -37,6 +37,22 @@ rescue NameError
   raise "You need to add database_cleaner to your Gemfile (in the :test group) if you wish to use it."
 end
 
+Before('@javascript') do
+  DatabaseCleaner.strategy = :truncation
+end
+
+Before('not @javascript') do
+  DatabaseCleaner.strategy = :transaction
+end
+
+Before('@tag_verse') do
+  DatabaseCleaner.strategy = :truncation
+end
+
+After('@tag_verse') do
+  DatabaseCleaner.strategy = :transaction
+end
+
 # You may also want to configure DatabaseCleaner to use different strategies for certain features and scenarios.
 # See the DatabaseCleaner documentation for details. Example:
 #
@@ -56,4 +72,11 @@ end
 # The :transaction strategy is faster, but might give you threading problems.
 # See https://github.com/cucumber/cucumber-rails/blob/master/features/choose_javascript_database_strategy.feature
 Cucumber::Rails::Database.javascript_strategy = :truncation
+
+# Use rack_test for faster tests, selenium for JavaScript tests
+Capybara.default_driver = :rack_test
+Capybara.javascript_driver = :selenium_chrome_headless
+
+# Configure webdrivers to automatically manage driver versions
+require 'webdrivers'
 

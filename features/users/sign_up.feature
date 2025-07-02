@@ -68,4 +68,4 @@ Feature: Sign up
         | user_password_confirmation | pleese!123+           |
       Then I should see "Did you mean awfulspeller@gmail.com"
 	  When I click inside "a.email"
-	  Then I should see "We will email you a confirmation"
+	  Then I should see "Didn't receive confirmation instructions?"

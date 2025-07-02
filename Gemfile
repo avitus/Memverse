@@ -5,14 +5,14 @@ require 'rbconfig'
 git_source(:github) { |name| "https://github.com/#{name}.git" }
 
 # Set Ruby version (we are using RVM)
-ruby "2.4.10"
+ruby "2.7.8"
 
 HOST_OS = RbConfig::CONFIG['host_os']
 source 'http://rubygems.org'
 
 group :development do
   gem 'web-console'
-  gem 'rails-footnotes', '>= 3.7'
+  # gem 'rails-footnotes', '>= 3.7'  # Commented out due to Rails 5.1 compatibility issues
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'byebug'
@@ -26,12 +26,13 @@ group :development, :test do
   gem 'rails-controller-testing'                                # To use 'assigns' in controller tests
   gem 'jasmine'
   # gem 'jasmine-rails'
-  gem 'sqlite3'
+  # gem 'sqlite3', '~> 1.4.2'  # Not used - project uses MySQL
   gem 'factory_bot_rails'                                       # Add to development group for debugging in console
   gem 'cucumber-rails', require: false                          # Rails Generators for Cucumber with special support for Capybara and DatabaseCleaner
   gem 'capybara'                                                # Helps test web applications by simulating how a real user would interact with your app
   gem 'puma'
-  gem 'selenium-webdriver', '~> 3.142.3'                        # Optional extension for Capybara
+  gem 'selenium-webdriver'                        # Optional extension for Capybara
+  gem 'webdrivers'                                               # Automatically downloads and manages webdriver versions
   gem 'database_cleaner'                                        # Clean database between tests
   gem 'launchy', '>= 2.0.5'
   gem 'email_spec'                                              # For sending email in cucumber tests
@@ -114,7 +115,7 @@ gem 'cancancan', '~> 1.10'                                                     #
 # Major Engines (Admin, Forem, Blog)
 ############################################################
 gem 'rails_admin'                                                              # Admin console
-gem 'thredded', '~> 0.14.0'                                                    # Forum engine
+gem 'thredded', '~> 1.0.1'                                                    # Forum engine
 gem 'bloggity', github: 'avitus/bloggity'                                      # Blog engine
 # gem 'bloggity', :path => "../bloggity"                                       # Blog engine (dev environment)
 
@@ -139,8 +140,8 @@ gem 'mail', '>= 2.2.15'                                                        #
 ############################################################
 # Scheduled Tasks
 ############################################################
-gem 'sidekiq'                                                                  # Background jobs; used for quizzes. TODO: Version 4 might be incompatible with Sidetiq
-gem "sidekiq-cron", "~> 0.6.3"                                                 # Scheduler for Sidekiq
+gem 'sidekiq', '~> 6.5'                                                                  # Background jobs; used for quizzes. TODO: Version 4 might be incompatible with Sidetiq
+gem "sidekiq-cron", "~> 1.12.0"                                                 # Scheduler for Sidekiq
 gem 'ice_cube'                                                                 # For calculating next quiz
 gem 'capistrano-sidekiq', group: :development
 
@@ -167,7 +168,7 @@ gem 'thinking-sphinx'                                                          #
 gem "i18n-js", ">= 3.0.0.rc11"                                                 # Uses config/locale files to build a JavaScript equivalent of i18n in Rails
 # gem 'localeapp'                                                                # Translation service for i18n
 gem 'breadcrumbs_on_rails', '>=2.0.0'                                          # For breadcrumb navigation bar
-gem 'dalli'                                                                    # Memcached client
+gem 'dalli', '~> 2.7'
 gem 'friendly_id'                                                              # Makes nice IDs for models
 gem 'foreman'                                                                  # Helps manage multiple processes when running app in development.
 gem 'best_in_place'                                                            # In-place editing support

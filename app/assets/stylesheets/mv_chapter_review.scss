@@ -7,8 +7,7 @@
     padding-bottom: 1em;
     margin-bottom: 1em;
     margin-right: 1em;
-
-    @include border-radius(10px);
+    border-radius: 10px;
 
     &:hover {
         text-decoration: none;

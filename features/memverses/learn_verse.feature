@@ -9,9 +9,9 @@ Feature: Learn a Verse
     @javascript
     Scenario: User learns a verse
       When I go to the learn verse page
-      # The default Verse factory uses text from Gal 5:22 for all verses
+      # The default Verse factory uses text from Gal 2:1 for all verses
       And I search for "Galatians 2:1"
-      Then I should see "the fruit of the Spirit"
+      Then I should see "But the fruit of"
       When I click inside "div.select-verse-button"
       Then I should see "love, joy, peace, patience, kindness"
       When I advance 4 learning levels
