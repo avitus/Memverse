@@ -9,6 +9,21 @@ namespace :bundler do
         puts "Checking Ruby version..."
         execute :ruby, "--version"
         
+        # Check and update RubyGems if needed
+        puts "Checking RubyGems version..."
+        gem_version_output = capture(:gem, "--version")
+        current_gem_version = gem_version_output.strip
+        puts "Current RubyGems version: #{current_gem_version}"
+        
+        # Check if RubyGems needs updating (ffi requires >= 3.3.22)
+        if Gem::Version.new(current_gem_version) < Gem::Version.new("3.3.22")
+          puts "RubyGems version #{current_gem_version} is too old. Updating to latest version..."
+          execute :gem, "update --system"
+          puts "RubyGems updated successfully"
+        else
+          puts "RubyGems version is compatible"
+        end
+        
         # Check if bundler is available and at the correct version
         puts "Checking bundler availability..."
         begin
@@ -115,6 +130,38 @@ namespace :bundler do
         execute :bundle, "install"
         
         puts "Deployment environment should now be fixed!"
+      end
+    end
+  end
+  
+  desc "Update RubyGems to resolve gem compatibility issues"
+  task :update_rubygems do
+    on roles(:app) do
+      within release_path do
+        puts "=== Updating RubyGems ==="
+        
+        # Check current RubyGems version
+        puts "Checking current RubyGems version..."
+        gem_version_output = capture(:gem, "--version")
+        current_gem_version = gem_version_output.strip
+        puts "Current RubyGems version: #{current_gem_version}"
+        
+        # Update RubyGems
+        puts "Updating RubyGems to latest version..."
+        execute :gem, "update --system"
+        
+        # Verify the update
+        puts "Verifying RubyGems update..."
+        new_gem_version_output = capture(:gem, "--version")
+        new_gem_version = new_gem_version_output.strip
+        puts "New RubyGems version: #{new_gem_version}"
+        
+        if Gem::Version.new(new_gem_version) >= Gem::Version.new("3.3.22")
+          puts "RubyGems successfully updated to version #{new_gem_version}"
+          puts "This should resolve the ffi gem compatibility issue"
+        else
+          puts "Warning: RubyGems version #{new_gem_version} may still be too old for some gems"
+        end
       end
     end
   end
