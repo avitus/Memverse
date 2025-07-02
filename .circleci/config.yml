@@ -7,7 +7,7 @@ jobs:
     docker:
 
       # App Server
-      - image: circleci/ruby:2.4-node-browsers
+      - image: cimg/ruby:2.7-node-browsers
         environment:
           BUNDLE_JOBS: 3
           BUNDLE_RETRY: 3
@@ -36,6 +36,12 @@ jobs:
 
       - checkout
 
+      - run:
+          name: Install/Update Bundler
+          command: |
+            gem install bundler -v '~> 2.0'
+            bundle config set --local deployment 'false'
+
       - run: 
           name: Install MySQL client
           command: |
@@ -45,7 +51,11 @@ jobs:
       # Which version of bundler?
       - run:
           name: Which bundler?
-          command: bundle -v
+          command: |
+            echo "Bundler version:"
+            bundle -v
+            echo "Ruby version:"
+            ruby -v
 
       # Restore bundle cache
       - restore_cache:
@@ -54,7 +64,8 @@ jobs:
 
       - run:
           name: Bundle Install
-          command: bundle check || bundle install
+          command: |
+            bundle check || bundle install --jobs=3 --retry=3
 
       # Store bundle cache
       - save_cache:
@@ -122,7 +133,11 @@ jobs:
 
       - run:
           name: Wait for Redis
-          command: dockerize -wait tcp://localhost:6379 -timeout 1m
+          command: |
+            until redis-cli -h localhost -p 6379 ping >/dev/null 2>&1; do
+              echo "Waiting for Redis to be ready..."
+              sleep 2
+            done
 
       # Run rspec in parallel
       - type: shell
