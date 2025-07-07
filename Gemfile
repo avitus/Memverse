@@ -83,7 +83,6 @@ gem "mimemagic", "~> 0.3.10"                                                    
 gem 'ffi', '~> 1.15.5'                                                          # Use older version compatible with older GLIBC
 
 
-
 ############################################################
 # For Rails 4 Upgrade ... should be removed eventually
 ############################################################
