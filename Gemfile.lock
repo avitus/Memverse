@@ -298,7 +298,7 @@ GEM
       faraday-net_http (>= 2.0, < 3.1)
       ruby2_keywords (>= 0.0.4)
     faraday-net_http (3.0.2)
-    ffi (1.17.2)
+    ffi (1.15.5)
     foreman (0.88.1)
     formatador (1.1.0)
     friendly_id (5.5.1)
@@ -822,6 +822,7 @@ DEPENDENCIES
   factory_bot_rails
   faker
   fancybox2-rails (~> 0.3.0)!
+  ffi (~> 1.15.5)
   foreman
   friendly_id
   guard (>= 0.6.2)
