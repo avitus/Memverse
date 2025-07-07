@@ -80,6 +80,9 @@ gem 'uglifier', '>= 1.3.0'                                                      
 gem 'coffee-rails', '~> 4.2' 
 gem 'rails-observers'                                                           # Needed as of Rails 5.1 to observe user model                     
 gem "mimemagic", "~> 0.3.10"                                                    # For mime type detection. Prev version yanked      
+gem 'ffi', '~> 1.15.5'                                                          # Use older version compatible with older GLIBC
+
+
 
 ############################################################
 # For Rails 4 Upgrade ... should be removed eventually
