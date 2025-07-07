@@ -27,8 +27,16 @@ end
 # This method is used by Thredded controllers and views to fetch the currently signed-in user
 Thredded.current_user_method = :"current_#{Thredded.user_class_name.underscore}"
 
-# User avatar URL. rb-gravatar gem is used by default:
-Thredded.avatar_url = ->(user) { Gravatar.src(user.email, 128, 'mm') }
+# User avatar URL. Using custom Gravatar implementation:
+Thredded.avatar_url = ->(user) { 
+  if user.respond_to?(:email) && user.email.present?
+    downcased_email_address = user.email.downcase
+    hash = Digest::MD5.hexdigest(downcased_email_address)
+    "https://www.gravatar.com/avatar/#{hash}?d=mm&s=128"
+  else
+    "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mm&s=128"
+  end
+}
 
 # ==> Database Configuration
 # By default, thredded uses integers for record ID route constraints.
