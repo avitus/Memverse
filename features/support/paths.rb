@@ -45,6 +45,9 @@ module NavigationHelpers
     when /the utils dashboard/
       '/utils/dashboard'.dup
 
+    when /the forum home page/
+      '/forum'.dup
+
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
     when /^(.*)'s dashboard$/i
