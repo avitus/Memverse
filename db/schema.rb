@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_30_063614) do
+ActiveRecord::Schema.define(version: 2025_07_07_213038) do
 
   create_table "american_states", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "abbrev", limit: 20, default: "", null: false
@@ -351,6 +351,7 @@ ActiveRecord::Schema.define(version: 2018_09_30_063614) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string "scopes", default: "", null: false
+    t.boolean "confidential", default: true, null: false
     t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
   end
 
