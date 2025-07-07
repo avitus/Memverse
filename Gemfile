@@ -74,7 +74,7 @@ gem 'jquery-ui-rails'
 ############################################################
 # Rails Support Gems
 ############################################################
-gem 'compass-rails'                                                             # Now has Rails 4 support
+# gem 'compass-rails'                                                             # Now has Rails 4 support - removed as not needed
 gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'                                                      # Compressor for JS assets
 gem 'coffee-rails', '~> 4.2' 
