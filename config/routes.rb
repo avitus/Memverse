@@ -79,7 +79,7 @@ MemverseApp::Application.routes.draw do
   resources :apidocs, only: [:index]    # for Swagger UI documentation
 
   api versions: 1, module: "api/v1" do
-    resources :users, :only => [:show, :update, :create]
+    resources :users, :only => [:show, :update, :create, :destroy]
     resources :verses do
       get 'lookup', :on => :collection
       get 'chapter', :on => :collection
