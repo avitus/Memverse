@@ -103,9 +103,6 @@ class Api::V1::UsersController < Api::V1::ApiController
         key :required, true
         key :type, :integer
         key :format, :int64
-        # schema do
-        #   key :'$ref', :UserInput
-        # end
       end
       security do
         key :oauth2, ['admin write read public']
@@ -164,6 +161,8 @@ class Api::V1::UsersController < Api::V1::ApiController
         end
       end
     end
+
+  end
 
   # ----------------------------------------------------------------------------------------------------------
   # Swagger-Docs DSL [END]
