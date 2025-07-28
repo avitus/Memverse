@@ -9,18 +9,24 @@ Given /^no user exists with an email of "(.*)"$/ do |email|
 end
 
 Given /^I am a user named "([^"]*)" with an email "([^"]*)" and password "([^"]*)"$/ do |name, email, password|
-  FactoryBot.create(:user, :name => name,
+  user = FactoryBot.create(:user, :name => name,
                      :email => email,
                      :password => password,
                      :password_confirmation => password)
+  user.confirm
+  user.save!
+  @current_user_email = email
 end
 
 Given /^I am an admin named "([^"]*)" with an email "([^"]*)" and password "([^"]*)"$/ do |name, email, password|
-  FactoryBot.create(:user, :name => name,
+  user = FactoryBot.create(:user, :name => name,
                      :email => email,
                      :password => password,
                      :password_confirmation => password,
                      :admin => true )
+  user.confirm
+  user.save!
+  @current_user_email = email
 end
 
 # Helper method to generate unique user data
@@ -50,12 +56,15 @@ Given /^I am a confirmed user named "([^"]*)" with an email "([^"]*)" and passwo
 end
 
 Given /^I am an advanced user named "([^"]*)" with an email "([^"]*)" and password "([^"]*)"$/ do |name, email, password|
-  FactoryBot.create(:user, :name => name,
+  user = FactoryBot.create(:user, :name => name,
                      :email => email,
                      :password => password,
                      :password_confirmation => password,
                      :memorized => 100,
                      :learning  =>  20)
+  user.confirm
+  user.save!
+  @current_user_email = email
 end
 
 
@@ -100,6 +109,9 @@ Given /^I am not logged in$/ do
 end
 
 When /^I sign in as "(.*)\/(.*)"$/ do |email, password|
+  # Check if user exists, but don't auto-confirm (let the scenario handle confirmation)
+  user = User.find_by_email(email)
+  
   if Capybara.current_driver == :rack_test
     step %{I am not logged in}
     step %{I go to the sign in page}
@@ -135,7 +147,14 @@ Given /^the email address "(.*)" is confirmed$/ do |email|
 end
 
 Given /^the email address "(.*)" is not confirmed$/ do |email|
-  !User.find_by_email(email).confirmed?
+  user = User.find_by_email(email)
+  if user.nil?
+    raise "User with email #{email} does not exist"
+  end
+  # Make sure the user is not confirmed
+  user.confirmed_at = nil
+  user.save!
+  expect(user.confirmed?).to be false
 end
 
 Given /^a user with the login of "(.*)"$/ do |login|
@@ -186,10 +205,16 @@ Given /^a blog titled "(.*)"$/ do |title|
 end
 
 Given /^I sign in as a normal user$/ do
-  step %{I am a user named "normal" with an email "user@test.com" and password "please"}
-  step %{the email address "user@test.com" is confirmed}
-  step %{I sign in as "user@test.com/please"}
+  # Generate unique email to avoid conflicts between tests
+  timestamp = Time.now.to_i
+  email = "user_#{timestamp}@test.com"
+  
+  step %{I am a user named "normal" with an email "#{email}" and password "please"}
+  step %{the email address "#{email}" is confirmed}
+  step %{I sign in as "#{email}/please"}
   step %{I should be signed in}
+  
+  @current_user_email = email
 end
 
 Given /^I sign in as a non-blogging user$/ do
@@ -203,18 +228,30 @@ Given /^I sign in as a non-blogging user$/ do
 end
 
 Given /^I sign in as an advanced user$/ do
-  step %{I am an advanced user named "advanced" with an email "advanced_user@test.com" and password "please"}
-  step %{the email address "advanced_user@test.com" is confirmed}
-  step %{the user with the email of "advanced_user@test.com" has 10 verses in his list}
-  step %{I sign in as "advanced_user@test.com/please"}
+  # Generate unique email to avoid conflicts between tests
+  timestamp = Time.now.to_i
+  email = "advanced_user_#{timestamp}@test.com"
+  
+  step %{I am an advanced user named "advanced" with an email "#{email}" and password "please"}
+  step %{the email address "#{email}" is confirmed}
+  step %{the user with the email of "#{email}" has 10 verses in his list}
+  step %{I sign in as "#{email}/please"}
   step %{I should be signed in}
+  
+  @current_user_email = email
 end
 
 Given /^I sign in as an admin user$/ do
-  step %{I am an admin named "admin" with an email "admin@test.com" and password "superuser"}
-  step %{the email address "admin@test.com" is confirmed}
-  step %{I sign in as "admin@test.com/superuser"}
+  # Generate unique email to avoid conflicts between tests  
+  timestamp = Time.now.to_i
+  email = "admin_#{timestamp}@test.com"
+  
+  step %{I am an admin named "admin" with an email "#{email}" and password "superuser"}
+  step %{the email address "#{email}" is confirmed}
+  step %{I sign in as "#{email}/superuser"}
   step %{I should be signed in}
+  
+  @current_user_email = email
 end
 
 Given /^the user with the email of "(.*)" has (\d+) verses in his list$/ do |email, n|

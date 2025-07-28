@@ -11,8 +11,7 @@ rescue NameError
 end
 
 Before do
-
-  DatabaseCleaner.start
+  # Database cleaning is now handled in env.rb Around hook
 
   # ----------------------------------------------------------------------------------------------------------
   # Create Final Verse data table. Probably not necessary to load Final Verse data for every chapter
@@ -272,7 +271,5 @@ Before('@badges') do
 
 end
 
-After do |scenario|
-  DatabaseCleaner.clean
-end
+# Database cleaning is now handled in env.rb Around hook
 

@@ -53,6 +53,18 @@ After('@tag_verse') do
   DatabaseCleaner.strategy = :transaction
 end
 
+# Force transaction strategy for all features to avoid data persistence issues
+Around do |scenario, block|
+  if scenario.tags.any? { |tag| tag.name == '@javascript' || tag.name == '@tag_verse' }
+    DatabaseCleaner.strategy = :truncation
+  else
+    DatabaseCleaner.strategy = :transaction
+  end
+  DatabaseCleaner.start
+  block.call
+  DatabaseCleaner.clean
+end
+
 # You may also want to configure DatabaseCleaner to use different strategies for certain features and scenarios.
 # See the DatabaseCleaner documentation for details. Example:
 #
