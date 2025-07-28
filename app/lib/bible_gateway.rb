@@ -52,7 +52,7 @@ class BibleGateway
 
   def lookup(passage)
   	if VERSIONS.keys.include?(version)
-		  doc = Nokogiri::HTML(open(passage_url(passage)))
+		  doc = Nokogiri::HTML(URI.open(passage_url(passage)))
 		  scrape_passage(doc)
 		else
 		  {:title => "--", :content => "--" }
@@ -60,7 +60,7 @@ class BibleGateway
   end
 
   def passage_url(passage)
-    URI.escape "#{GATEWAY_URL}/passage/?search=#{passage}&version=#{VERSIONS[version]}"
+    "#{GATEWAY_URL}/passage/?search=#{URI.encode_www_form_component(passage)}&version=#{URI.encode_www_form_component(VERSIONS[version])}"
   end
 
   def scrape_passage(doc)

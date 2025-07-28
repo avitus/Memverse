@@ -204,7 +204,7 @@ class Api::V1::UsersController < Api::V1::ApiController
   end
 
   def destroy
-    @user = User.find(params[:id])
+    @user = User.find_by(id: params[:id])
 
     if @user.nil?
       error! :bad_request, metadata: {reason: 'User could not be found'}
