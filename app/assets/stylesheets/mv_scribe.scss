@@ -31,3 +31,58 @@ div.left-nav {
     float: right;
   }
 }
+
+// Table styling for scribe check view
+.verse-list {
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 1px;
+    margin: 20px 0;
+    background-color: white;
+    
+    th {
+      padding: 10px;
+      color: #fff;
+      border: 1px solid #93CE37;
+      border-bottom: 3px solid #9ED929;
+      background-color: #9DD929;
+      background: -webkit-gradient(
+        linear,
+        left bottom,
+        left top,
+        color-stop(0.02, rgb(108,144,36)),
+        color-stop(0.51, rgb(129,172,43)),
+        color-stop(0.87, rgb(153,204,51))
+      );
+      background: -moz-linear-gradient(
+        center bottom,
+        rgb(108,144,36) 2%,
+        rgb(129,172,43) 51%,
+        rgb(153,204,51) 87%
+      );
+      font-weight: bold;
+      text-align: left;
+    }
+    
+    td {
+      border: thin solid #f2f1f1;
+      background-color: #f2f1f1;
+      color: #232323;
+      padding: 3px;
+      vertical-align: top;
+    }
+    
+    tr:hover {
+      background-color: #f0f0f0;
+    }
+    
+    .list-line-odd {
+      background-color: #f2f1f1;
+    }
+    
+    .list-line-even {
+      background-color: #ffffff;
+    }
+  }
+}
