@@ -1800,29 +1800,29 @@ div.center {
 }
 
 /* === Styling for list of verses and users === */
-#verse-list .list-title, #user-list .list-title {
+.verse-list .list-title, .user-list .list-title {
 	color:#244;
 	font-weight:bold;
 	font-size:medium;
 }
 
-#verse-list .list-image, #user-list .list-image {
+.verse-list .list-image, .user-list .list-image {
   width:60px;
   height:70px;
 }
 
-#verse-list .list-actions, #user-list .list-actions {
+.verse-list .list-actions, .user-list .list-actions {
   font-size:x-small;
   text-align:right;
   padding-left:1em;
 }
 
-#verse-list .list-line-even, #user-list .list-line-even {
-  background:#586900;
+.verse-list .list-line-even, .user-list .list-line-even {
+  background:#f8f9fc;
 }
 
-#verse-list .list-line-odd, #user-list .list-line-odd {
-  background:#B99500;
+.verse-list .list-line-odd, .user-list .list-line-odd {
+  background:#ffffff;
 }
 
 /* === Styling for user list table === */
