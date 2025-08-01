@@ -13,6 +13,7 @@ MemverseApp::Application.routes.draw do
   # Allow Admin users to monitor Sidekiq - used for quiz schedule
   authenticate :user, lambda { |u| u.admin? } do
     mount Sidekiq::Web => '/sidekiq'
+    get '/volunteers' => 'volunteer#index', as: 'volunteers'
   end
 
   # Routes for A/B testing

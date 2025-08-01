@@ -1,0 +1,123 @@
+// Volunteer page styling
+.volunteer-page {
+  .role-section {
+    margin-bottom: 50px;
+  }
+
+  .role-heading {
+    color: #577a1a;
+    border-bottom: 2px solid #99cc33;
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+    margin-top: 0;
+    font-size: 1.5em;
+    font-weight: bold;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    
+    .count {
+      color: #666;
+      font-size: 0.7em;
+      font-weight: normal;
+      margin-left: 10px;
+    }
+  }
+
+  .volunteer-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    table-layout: fixed;
+
+    th {
+      padding: 12px 20px;
+      text-align: left;
+      border: 1px solid #bfbebe;
+      background-color: #f2f1f1;
+      font-weight: bold;
+      vertical-align: top;
+      color: #333;
+    }
+
+    td {
+      padding: 12px 20px;
+      border: 1px solid #bfbebe;
+      border-bottom: 1px solid #bfbebe;
+      vertical-align: top;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+
+    .col-login { width: 10%; }
+    .col-name { width: 15%; }
+    .col-email { width: 40%; }
+    .col-member-since { width: 12%; }
+    .col-last-active { width: 12%; }
+    .col-actions { width: 11%; }
+
+    .user-login {
+      font-weight: bold;
+      color: #1F2229;
+    }
+
+    .user-email {
+      color: #577a1a;
+    }
+
+    .member-date {
+      color: #666;
+    }
+
+    .activity-active {
+      color: #99cc33;
+      font-weight: bold;
+    }
+
+    .activity-inactive {
+      color: #f88e00;
+      font-weight: bold;
+    }
+
+    .activity-never {
+      color: #666;
+    }
+
+    .profile-link {
+      color: #577a1a;
+      text-decoration: underline;
+    }
+  }
+
+  .empty-role {
+    padding: 15px;
+    background-color: #f2f1f1;
+    border: 1px solid #bfbebe;
+    border-radius: 4px;
+    color: #666;
+    margin-bottom: 20px;
+  }
+
+  .role-descriptions {
+    margin-top: 40px;
+    
+    h2 {
+      color: #577a1a;
+      border-bottom: 2px solid #99cc33;
+      padding-bottom: 8px;
+      margin-bottom: 20px;
+      margin-top: 0;
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+
+    ul {
+      line-height: 1.8;
+      margin-left: 20px;
+      
+      li {
+        margin-bottom: 10px;
+      }
+    }
+  }
+}

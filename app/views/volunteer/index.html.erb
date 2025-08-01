@@ -1,0 +1,73 @@
+<% page_title "Volunteer Roles" %>
+
+<div class="white-box-with-margins volunteer-page">
+
+  <h1>Users with Specialized Roles</h1>
+  <p>This page lists all users who have been assigned specialized volunteer roles in the system.</p>
+
+  <% @specialized_roles.each do |role_name| %>
+    <div class="role-section">
+      <h2 class="role-heading">
+        <%= role_name.capitalize.pluralize %> 
+        <span class="count">(<%= @users_by_role[role_name].count %>)</span>
+      </h2>
+      
+      <% if @users_by_role[role_name].any? %>
+        <table class="volunteer-table">
+          <tr>
+            <th class="col-login">Login</th>
+            <th class="col-name">Name</th>
+            <th class="col-email">Email</th>
+            <th class="col-member-since">Member Since</th>
+            <th class="col-last-active">Last Active</th>
+            <th class="col-actions">Actions</th>
+          </tr>
+          <% @users_by_role[role_name].each do |user| %>
+            <tr>
+              <td>
+                <%= link_to user.login, user_path(user), class: "user-login" %>
+              </td>
+              <td><%= user.name.present? ? user.name : "—" %></td>
+              <td>
+                <% if user.email.present? %>
+                  <a href="mailto:<%= user.email %>" class="user-email"><%= user.email %></a>
+                <% else %>
+                  —
+                <% end %>
+              </td>
+              <td class="member-date"><%= user.created_at.strftime("%b %d, %Y") %></td>
+              <td>
+                <% if user.last_activity_date %>
+                  <span class="<%= user.last_activity_date > 1.month.ago ? 'activity-active' : 'activity-inactive' %>">
+                    <%= user.last_activity_date.strftime("%b %d, %Y") %>
+                  </span>
+                <% else %>
+                  <span class="activity-never">Never</span>
+                <% end %>
+              </td>
+              <td>
+                <%= link_to "View Profile", user_path(user), class: "profile-link" %>
+              </td>
+            </tr>
+          <% end %>
+        </table>
+      <% else %>
+        <div class="empty-role">
+          <em>No users currently have the <strong><%= role_name %></strong> role.</em>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div class="role-descriptions">
+    <h2>Role Descriptions</h2>
+    <ul>
+      <li><strong>Scribes:</strong> Users who help create and maintain verse content</li>
+      <li><strong>Bloggers:</strong> Users who write blog posts and articles</li>
+      <li><strong>Admins:</strong> Users with administrative privileges</li>
+      <li><strong>Quizmasters:</strong> Users who create and manage quizzes</li>
+      <li><strong>Moderators:</strong> Users who moderate forums and community content</li>
+    </ul>
+  </div>
+
+</div>
