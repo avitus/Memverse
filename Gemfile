@@ -76,7 +76,7 @@ gem 'jquery-ui-rails'
 ############################################################
 # gem 'compass-rails'                                                             # Now has Rails 4 support - removed as not needed
 gem 'sass-rails', '~> 5.0'
-gem 'autoprefixer-rails', '~> 9.8.6'                                           # Force compatible version for Rails 5.2/Sprockets 3.7.5
+gem 'autoprefixer-rails', '~> 8.6.5'                                           # Use older stable version compatible with Rails 5.2
 gem 'uglifier', '>= 1.3.0'                                                      # Compressor for JS assets
 gem 'coffee-rails', '~> 4.2' 
 gem 'rails-observers'                                                           # Needed as of Rails 5.1 to observe user model                     
