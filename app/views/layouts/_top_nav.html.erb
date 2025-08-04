@@ -59,6 +59,9 @@
                 <ul>
                     <li <%= sub(@sub=="contact"     )%>><%= link_to t('contact_menu.Contact'),              main_app.contact_path %></li>
                     <li <%= sub(@sub=="volunteer"   )%>><%= link_to t('contact_menu.Volunteer'),            main_app.volunteer_path %></li>
+                    <% if current_user.has_role?("admin") %>
+                        <li <%= sub(@sub=="volunteers"  )%>><%= link_to "Volunteer Roles",                     main_app.volunteers_path %></li>
+                    <% end %>
                 </ul>
             </div>
 
