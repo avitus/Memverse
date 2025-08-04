@@ -89,3 +89,86 @@ This is a Ruby on Rails 5.1 Bible memorization application with a traditional MV
 - **Jasmine**: JavaScript unit testing
 - **FactoryBot**: Test data generation
 - **Database Cleaner**: Test database management
+
+## Technical Debt Modernization Plan
+
+### 1. Framework & Language Upgrades
+- Upgrade Ruby from 2.7.8 to 3.2+ (current stable)
+- Upgrade Rails from 5.1 to 7.1+ (latest stable)
+- Update all gems to Rails 7 compatible versions
+- Remove deprecated gems (rails-observers, protected_attributes references)
+
+### 2. Frontend Modernization
+- Replace jQuery 1.12.4 with modern JavaScript (ES6+/TypeScript)
+- Migrate from CoffeeScript to modern JavaScript
+- Replace Asset Pipeline with Webpack/Vite/esbuild
+- Implement modern CSS framework (Tailwind/Bootstrap 5)
+- Remove jQuery UI and legacy jQuery plugins
+- Implement modern state management (React/Vue/Stimulus)
+
+### 3. API Modernization
+- Replace RocketPants (unmaintained) with Rails API mode
+- Migrate from Swagger-blocks to modern API documentation (OpenAPI 3.0)
+- Implement GraphQL as alternative to REST
+- Modernize OAuth implementation with current Doorkeeper
+
+### 4. Background Processing
+- Upgrade Sidekiq from 6.5 to latest version
+- Replace sidekiq-cron with native Sidekiq Enterprise/Pro features or solid_queue
+- Consider migrating to Rails 7's built-in Active Job
+
+### 5. Database & Search
+- Upgrade MySQL connector and optimize queries
+- Replace Thinking Sphinx with Elasticsearch/OpenSearch
+- Implement database connection pooling
+- Add database performance monitoring
+
+### 6. Testing Infrastructure
+- Replace Jasmine with Jest/Vitest for JavaScript testing
+- Upgrade RSpec and Cucumber to latest versions
+- Implement proper CI/CD pipeline with automated testing
+- Add code coverage reporting (SimpleCov)
+- Remove deprecated testing gems (guard-*)
+
+### 7. Security Updates
+- Update all gems with known vulnerabilities
+- Implement Content Security Policy
+- Add proper API rate limiting
+- Update authentication gems (Devise, OmniAuth)
+- Implement proper secrets management
+
+### 8. Deployment & Infrastructure
+- Containerize application with Docker
+- Replace Capistrano with modern deployment (Kubernetes/ECS)
+- Implement proper environment configuration (dotenv)
+- Add application performance monitoring (APM)
+- Implement proper logging infrastructure
+
+### 9. Code Quality & Maintenance
+- Remove dead code and unused dependencies
+- Implement proper linting (RuboCop, ESLint)
+- Add type checking (Sorbet/RBS for Ruby)
+- Refactor fat controllers and models
+- Implement service objects pattern
+
+### 10. Third-party Dependencies
+- Replace unmaintained gems (bloggity, fancybox2-rails)
+- Update or replace CKEditor with modern editor
+- Modernize file upload handling (Active Storage vs Paperclip)
+- Update real-time features (Action Cable vs PubNub)
+
+### 11. Performance Optimization
+- Implement proper caching strategy (Redis)
+- Add CDN for static assets
+- Optimize database queries (N+1 queries)
+- Implement lazy loading for images/assets
+- Add proper pagination/infinite scroll
+
+### 12. Development Experience
+- Add proper development environment setup (Docker Compose)
+- Implement hot module replacement
+- Add proper debugging tools
+- Create comprehensive documentation
+- Implement feature flags system
+
+**Note**: This modernization should be done incrementally, starting with security updates and framework upgrades, then moving to frontend modernization while maintaining backward compatibility during the transition period.
