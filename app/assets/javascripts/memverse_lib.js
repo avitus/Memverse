@@ -307,7 +307,7 @@ function blankifyVerse(versetext, reduction_percentage) {
 	            return "<span>" + x + " " + "</span>";
 	        }
 	        else {
-	            return "<input name='" + x.replace(/'/, '’') + "' class='blank-word' style='width:" + word_width(x) + "px' autocomplete='off'>";
+	            return "<input name='" + x.replace(/'/, "'") + "' class='blank-word' style='width:" + word_width(x) + "px' autocomplete='off'>";
 	        };
 	    });
 

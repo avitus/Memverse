@@ -12,9 +12,17 @@ class PopversesController < ApplicationController
         
     if MAJORS.keys.include?(translation.upcase.to_sym)
       # All needed fields are included in Popverse table
-      popverses.each do |pv|
-        if pv.send(translation.downcase)  # we have the text for that verse in the required translation
-          @pop_verses << {:ref => pv.pop_ref, :id => pv.send(translation.downcase), :text => pv.send(translation.downcase + "_text")}
+      # Whitelist allowed methods to prevent dangerous send operations
+      translation_method = translation.downcase
+      text_method = "#{translation_method}_text"
+      
+      # Verify methods exist and are safe column accessors
+      if Popverse.column_names.include?(translation_method) && Popverse.column_names.include?(text_method)
+        popverses.each do |pv|
+          verse_id = pv.public_send(translation_method)
+          if verse_id  # we have the text for that verse in the required translation
+            @pop_verses << {:ref => pv.pop_ref, :id => verse_id, :text => pv.public_send(text_method)}
+          end
         end
       end
     else

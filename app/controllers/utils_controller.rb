@@ -613,19 +613,31 @@ class UtilsController < ApplicationController
   # Show all users
   # ----------------------------------------------------------------------------------------------------------
   def show_users
+    # Define allowed sort columns for User model
+    allowed_user_sort_columns = [
+      'created_at', 'updated_at', 'name', 'email', 'last_activity_date',
+      'memorized', 'learning', 'time_allocation', 'accuracy', 'ref_grade',
+      'username', 'country', 'language', 'translation'
+    ]
 
     period = params[:period] || 'Today'
+    
+    # Sanitize sort order
+    safe_sort_order = params[:sort_order].present? ? 
+      sanitize_sort_param(params[:sort_order], allowed_user_sort_columns) : 
+      'created_at DESC'
+    
     case period
       when 'Today' then
-        @user_list = User.where("created_at > ?", Date.today).order(params[:sort_order])
+        @user_list = User.where("created_at > ?", Date.today).order(safe_sort_order || 'created_at DESC')
       when 'Active' then
         @user_list = User.where("last_activity_date = ?", Date.today)
       when 'Pending' then
-        @user_list = User.where(:confirmed_at => nil).order(params[:sort_order])
+        @user_list = User.where(:confirmed_at => nil).order(safe_sort_order || 'created_at DESC')
       when 'All' then
-        @user_list = User.order(params[:sort_order])
+        @user_list = User.order(safe_sort_order || 'created_at DESC')
       else
-        @user_list = User.where("created_at > ?", Date.today).order(params[:sort_order])
+        @user_list = User.where("created_at > ?", Date.today).order(safe_sort_order || 'created_at DESC')
     end
   end
 

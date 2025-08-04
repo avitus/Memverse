@@ -662,11 +662,30 @@ class MemversesController < ApplicationController
 
     @my_verses = current_user.memverses.includes(:verse, :tags)
 
-    if params[:sort_order].present? && ['next_test', 'next_ref_test'].include?(params[:sort_order])
-      # Order: active verses at the top, inactive (pending) at the bottom
-      @my_verses = @my_verses.order("status!='Pending' DESC, #{params[:sort_order]}")
-    elsif params[:sort_order]
-      @my_verses = @my_verses.order(params[:sort_order])
+    # Define allowed sort columns for security
+    allowed_sort_columns = [
+      'next_test', 'next_ref_test', 'created_at', 'updated_at', 'last_tested', 
+      'rep_n', 'efactor', 'test_interval', 'verses.book_index', 'verses.chapter', 
+      'verses.versenum', 'book_index', 'chapter', 'versenum'
+    ]
+    
+    if params[:sort_order].present?
+      # Sanitize the sort parameter
+      sanitized_sort = sanitize_sort_param(params[:sort_order], allowed_sort_columns)
+      
+      if sanitized_sort
+        if ['next_test', 'next_ref_test'].include?(params[:sort_order])
+          # Order: active verses at the top, inactive (pending) at the bottom
+          # Using sanitize_sql_for_order for the complex SQL
+          status_order = ActiveRecord::Base.sanitize_sql_for_order("status != 'Pending' DESC")
+          @my_verses = @my_verses.order(status_order).order(sanitized_sort)
+        else
+          @my_verses = @my_verses.order(sanitized_sort)
+        end
+      else
+        # Fall back to default sort if invalid parameter
+        @my_verses = @my_verses.order('verses.book_index, verses.chapter, verses.versenum')
+      end
     else
       # default to canonical sort
       @my_verses = @my_verses.order('verses.book_index, verses.chapter, verses.versenum')

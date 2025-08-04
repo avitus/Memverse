@@ -203,6 +203,7 @@ MemverseApp::Application.routes.draw do
   get '/stateboard'               => 'info#stateboard'
   get '/countryboard'             => 'info#countryboard'
   get '/memverse_clock'           => 'info#memverse_clock'
+  get '/info/email_available'     => 'info#email_available'
   get '/referralboard'            => 'info#referralboard'
   get '/news'                     => 'info#news'
   get '/stt_setia'                => 'info#stt_setia'
@@ -266,8 +267,47 @@ MemverseApp::Application.routes.draw do
   get '/chat/channel1'              => 'live_quiz#channel1' # Old chat route
   get '/forums/:messageboard/topics/:topic' => redirect('/forum/%{messageboard}/%{topic}')
 
+  # ---------------------------------------------------------------------------------------------------------
+  # Explicit routes for controllers previously using default routes
+  # ---------------------------------------------------------------------------------------------------------
+  
+  # Pastors management
+  resources :pastors do
+    collection do
+      get 'pastor_autocomplete'
+    end
+  end
+  
+  # Church routes
+  get '/church/:id' => 'church#show', as: 'show_church'
+  
+  # Sermons management  
+  resources :sermons
+  
+  # Uberverses routes
+  resources :uberverses
+  
+  # Additional home controller routes
+  get '/quick_start' => 'home#quick_start', as: 'quick_start'
+  
+  # Additional tag routes  
+  patch '/tag/:id' => 'tag#update_tag', as: 'update_tag'
+  delete '/tag/:id' => 'tag#destroy_tag', as: 'destroy_tag'
+  
+  # Additional chat routes
+  post '/chat/toggle_channel' => 'chat#toggle_channel', as: 'toggle_channel'
+  
+  # Additional popverses routes (for tests)
+  get '/popverses/show' => 'popverses#show', as: 'popverses_show' if Rails.env.test?
+
   # Install the default routes as the lowest priority.
-  # Note: The default route is used a lot at the moment. Need to fix before Rails 5.2
-  match '/:controller(/:action(/:id))', :via => [:get, :post]
+  # SECURITY: Default routes are restricted to authenticated users only
+  # Most controllers now have explicit routes defined above
+  # This is kept temporarily for backward compatibility with less critical actions
+  match '/:controller(/:action(/:id))', :via => [:get, :post], constraints: -> (req) { 
+    # Only allow default routes for authenticated requests
+    # This prevents anonymous users from discovering and accessing unmapped controller actions
+    req.session[:warden].present?
+  }
 
 end

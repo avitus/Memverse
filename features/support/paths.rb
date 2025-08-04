@@ -43,7 +43,7 @@ module NavigationHelpers
       '/admin'.dup
 
     when /the utils dashboard/
-      '/utils/dashboard'.dup
+      '/utils_dashboard'.dup
 
     when /the forum home page/
       '/forum'.dup

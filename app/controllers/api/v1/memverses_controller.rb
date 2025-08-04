@@ -273,7 +273,19 @@ class Api::V1::MemversesController < Api::V1::ApiController
       mvs = passage.memverses    
     end
 
-    mvs = params[:sort] ? mvs.order(params[:sort]) : mvs.canonical_sort
+    # Define allowed sort columns for API
+    allowed_api_sort_columns = [
+      'created_at', 'updated_at', 'last_tested', 'next_test', 'next_ref_test',
+      'rep_n', 'efactor', 'test_interval', 'verses.book_index', 'verses.chapter',
+      'verses.versenum', 'book_index', 'chapter', 'versenum', 'status'
+    ]
+    
+    if params[:sort]
+      sanitized_sort = sanitize_sort_param(params[:sort], allowed_api_sort_columns)
+      mvs = sanitized_sort ? mvs.order(sanitized_sort) : mvs.canonical_sort
+    else
+      mvs = mvs.canonical_sort
+    end
     expose mvs.page( params[:page] )
   
   end

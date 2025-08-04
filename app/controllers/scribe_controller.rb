@@ -48,7 +48,7 @@ class ScribeController < ApplicationController
     @verse.checked_by = current_user.login
     @verse.save
 
-    render text: @verse.text
+    render plain: @verse.text
   end
 
   # ----------------------------------------------------------------------------------------------------------
