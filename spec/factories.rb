@@ -214,28 +214,44 @@ FactoryBot.define do
   # ==============================================================================================
   sequence(:topic_hash) { |n| "hash#{n}" }
 
-  factory :messageboard do
+  factory :messageboard, class: 'Thredded::Messageboard' do
     name { 'General Discussion' }
     description { 'This is a description of the messageboard' }
   end
 
-  factory :post do
-    ip { '127.0.0.1' }
-    # ... add other attributes here as needed ...
+  factory :topic, class: 'Thredded::Topic' do
+    title { "Sample Topic" }
+    association :messageboard, factory: :messageboard
+    association :user, factory: :user
+    transient do
+      with_posts { 0 }
+    end
+    after(:create) do |topic, evaluator|
+      if evaluator.with_posts > 0
+        create_list(:post, evaluator.with_posts, postable: topic, messageboard: topic.messageboard)
+      end
+    end
   end
 
-  factory :private_post do
-    ip { '127.0.0.1' }
-    # ... add other attributes here as needed ...
+  factory :post, class: 'Thredded::Post' do
+    content { "This is a sample post content." }
+    association :user, factory: :user
+    association :postable, factory: :topic
+    association :messageboard, factory: :messageboard
   end
 
-  factory :private_topic, class: Thredded::PrivateTopic do
-    user
-    users { build_list :user, 1 }
-    association :last_user, factory: :user
+  factory :private_post, class: 'Thredded::PrivatePost' do
+    content { "This is a private post content." }
+    association :user, factory: :user
+    association :postable, factory: :private_topic
+  end
 
+  factory :private_topic, class: 'Thredded::PrivateTopic' do
     title { Faker::Lorem.sentence[0..-2] }
     hash_id { generate(:topic_hash) }
+    association :user, factory: :user
+    association :last_user, factory: :user
+    users { build_list :user, 1 }
   end
 
 end

@@ -238,6 +238,18 @@ Role.where(name: "moderator" ).first.users << admin_user
 
 
 # ----------------------------------------------------------------------------------------------------------
+# Create Quiz for Live Quiz functionality
+# ----------------------------------------------------------------------------------------------------------
+puts 'Creating quiz for live quiz functionality'
+quiz = Quiz.find_or_create_by(id: 1) do |q|
+  q.name = "Weekly Bible Knowledge Quiz"
+  q.user_id = admin_user.id
+  q.quiz_length = 1200  # 20 minutes in seconds
+  q.start_time = Time.now + 1.hour
+end
+puts "   - Quiz created with ID=#{quiz.id}"
+
+# ----------------------------------------------------------------------------------------------------------
 # Create Blog and First Post
 # ----------------------------------------------------------------------------------------------------------
 puts 'Creating blog'
@@ -421,7 +433,7 @@ module Thredded
       # Disable callbacks to avoid creating notifications and performing unnecessary updates
       SKIP_CALLBACKS.each { |(klass, *args)| klass.skip_callback(*args) }
       s = new
-      Messageboard.transaction do
+      Thredded::Messageboard.transaction do
         s.create_first_user
         s.create_users(count: users)
         s.create_messageboard
@@ -455,16 +467,14 @@ module Thredded
 
     def create_messageboard
       log 'Creating a messageboard...'
-      @messageboard = FactoryBot.create(
-        :messageboard,
-        name:        'Main Board',
-        slug:        'main-board',
-        description: 'A board is not a board without some posts'
-      )
+      @messageboard = Thredded::Messageboard.find_or_create_by(name: 'Main Board') do |mb|
+        mb.slug = 'main-board'
+        mb.description = 'A board is not a board without some posts'
+      end
     end
 
     def create_additional_messageboards
-      meta_group_id = MessageboardGroup.create!(name: 'Meta').id
+      meta_group_id = Thredded::MessageboardGroup.find_or_create_by(name: 'Meta').id
       additional_messageboards = [
         ['Off-Topic', "Talk about whatever here, it's all good."],
         ['Help, Bugs, and Suggestions',
@@ -473,7 +483,10 @@ module Thredded
       ]
       log "Creating #{additional_messageboards.length} additional messageboards..."
       additional_messageboards.each do |(name, description, group_id)|
-        messageboard = Messageboard.create!(name: name, description: description, messageboard_group_id: group_id)
+        messageboard = Thredded::Messageboard.find_or_create_by(name: name) do |mb|
+          mb.description = description
+          mb.messageboard_group_id = group_id
+        end
         FactoryBot.create_list(:topic, 1 + rand(3), messageboard: messageboard, with_posts: 1)
       end
     end

@@ -199,9 +199,14 @@
 		// focus cursor on verse entry box
 		$verseguess.focus();
 
-		//fancybox info
-		$("a#inline").fancybox({
-			padding        : 20
+		// MicroModal info
+		$("a#inline").click(function(e) {
+			e.preventDefault();
+			var href = $(this).attr('href');
+			if (href && href.charAt(0) === '#') {
+				var content = $(href).html();
+				openContentModal(content, "Information");
+			}
 		});
 
 		// Toggle verse function

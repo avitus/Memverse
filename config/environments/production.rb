@@ -38,7 +38,7 @@ MemverseApp::Application.configure do
 
   # Precompile additional assets (application.js, application.css, and all non-JS/CSS are already added)
   # http://stackoverflow.com/questions/14194752/rails-4-asset-pipeline-vendor-assets-images-are-not-being-precompiled
-  config.assets.precompile     += %w(*.png *.jpg *.jpeg *.gif)  # Need to support compilation of fancybox images ... shouldn't be necessary
+  config.assets.precompile     += %w(*.png *.jpg *.jpeg *.gif)  # Support compilation of images for various UI components
 
   # Ensure that Ckeditor assets are precompiled
   config.assets.precompile     += Ckeditor.assets

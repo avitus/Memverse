@@ -45,7 +45,7 @@
 <!-- jqueryui 			: (preferred UI) highlight effect on reset-schedule button, tag autocomplete, tooltips on main review page -->
 <!-- 2leveltab    		: main menu tab system -->
 <!-- jeditable          : for in-place tag editing goodness -->
-<!-- jquery.fancybox    : lightbox for tutorial video -->
+<!-- micromodal        : modern lightweight modal library -->
 <!-- pubnub             : real-time messaging platform -->
 <!-- modernizr		    : support for CSS3 and HTML5 in older browsers -->
 <!-- countdown          : used for live quiz -->
@@ -214,24 +214,30 @@
 </script>
 <!-- End of I18n-js code  -->
 
-<!-- Tutorial video using fancybox -->
+<!-- Tutorial video using MicroModal -->
 <script type="text/javascript">
 	$(document).ready(function() {
-		$(".tut-video").click(function() {
-			$.fancybox({
-					'padding'		: 0,
-					'autoScale'		: false,
-					'transitionIn'	: 'none',
-					'transitionOut'	: 'none',
-					'title'			: this.title,
-					'width'			: 1020,
-					'height'		: 600,
-					'href'			: this.href.replace(new RegExp("watch\\?v=", "i"), 'v/'),
-					'type'			: 'swf',
-					'swf'			: {	'wmode'				: 'transparent',
-										'allowfullscreen'	: 'true' }
-				});
-
+		$(".tut-video").click(function(e) {
+			e.preventDefault();
+			
+			// Get the original href
+			var originalUrl = $(this).attr('href');
+			console.log('Original URL:', originalUrl);
+			
+			// Convert YouTube watch URL to embed URL
+			var videoUrl = originalUrl.replace("watch?v=", "embed/");
+			
+			// Remove any extra parameters from the original URL first
+			if (videoUrl.indexOf('&') > -1) {
+				videoUrl = videoUrl.substring(0, videoUrl.indexOf('&'));
+			}
+			
+			// Add embed parameters
+			videoUrl += "?autoplay=1&rel=0";
+			
+			console.log('Converted URL:', videoUrl);
+			
+			openVideoModal(videoUrl, this.title || 'Memverse Tutorial');
 			return false;
 		});
 	});

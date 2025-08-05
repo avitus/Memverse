@@ -2,21 +2,27 @@
 
 <script>
 	$(document).ready(function() {			
-		$("#inline").click(function() {
-			$.fancybox({
-					'padding'		: 0,
-					'autoScale'		: false,
-					'transitionIn'	: 'none',
-					'transitionOut'	: 'none',
-					'title'			: this.title,
-					'width'			: 1280,
-					'height'		: 750,
-					'href'			: this.href.replace(new RegExp("watch\\?v=", "i"), 'v/'),
-					'type'			: 'swf',
-					'swf'			: {	'wmode'				: 'transparent',
-										'allowfullscreen'	: 'true' }
-				});
-		
+		$("#inline").click(function(e) {
+			e.preventDefault();
+			
+			// Get the original href
+			var originalUrl = $(this).attr('href');
+			console.log('Original URL:', originalUrl);
+			
+			// Convert YouTube watch URL to embed URL
+			var videoUrl = originalUrl.replace("watch?v=", "embed/");
+			
+			// Remove any extra parameters from the original URL first
+			if (videoUrl.indexOf('&') > -1) {
+				videoUrl = videoUrl.substring(0, videoUrl.indexOf('&'));
+			}
+			
+			// Add embed parameters
+			videoUrl += "?autoplay=1&rel=0";
+			
+			console.log('Converted URL:', videoUrl);
+			
+			openVideoModal(videoUrl, this.title || 'Memverse Tutorial');
 			return false;
 		});	
 	});	

@@ -23,7 +23,7 @@
 
         <p>The next quiz starts in <strong><%=h distance_of_time_in_words(Time.now, @quiz.start_time) %></strong>
 
-        <p><input type="button" class="green-button" onclick="$.fancybox.close()" value="OK" />
+        <p><input type="button" class="green-button" onclick="closeModal()" value="OK" />
 
     <% else %>
 
@@ -38,7 +38,7 @@
 
         <p>Your version is set to <strong><%= @current_user.translation %></strong>.</p>
 
-        <p><input type="button" class="green-button" onclick="$.fancybox.close()" value="OK, I'm ready!" />
+        <p><input type="button" class="green-button" onclick="closeModal()" value="OK, I'm ready!" />
 
     <% end %>
 

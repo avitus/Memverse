@@ -1,13 +1,14 @@
 /* === Edit Profile Page === */
 #edit-profile-form {
-  width:600px;
+  width:750px; /* Increased to accommodate larger fields */
 }
 
 #edit-profile-form li {
   padding: 0.3em 0;
-  width: 570px;
+  width: 720px; /* Increased to match form width */
   list-style: none;
   clear: both;
+  overflow: hidden; /* clearfix */
 
   div.ui-widget {
     font-size: 100%;
@@ -26,14 +27,27 @@
 #edit-profile-form label {
   width:15em;
   padding-right:0.5em;
-  vertical-align: center;
+  vertical-align: middle;
   font-size: 110%;
+  float: left;
+  text-align: right;
+  display: block;
 }
 
 /* Set size of text input fields */
 .profile-wide-text-field {
-  width: 18em;
+  width: 20em; /* Adjusted for better fit */
   height: 1.5em;
+  padding-left: 0.5em; /* Modest left padding */
+  box-sizing: border-box; /* Include padding in width calculation */
+}
+
+/* Set size of select dropdowns to match text fields */
+#edit-profile-form select {
+  width: 20.5em; /* Adjusted for better fit */
+  height: 2em;
+  padding-left: 0.5em; /* Modest left padding */
+  box-sizing: border-box;
 }
 
 input[type="checkbox"] {

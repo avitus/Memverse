@@ -157,8 +157,7 @@ gem 'paperclip'                                                                #
 ############################################################
 # Other Gems -- should be grouped better
 ############################################################
-# gem 'fancybox2-rails'                                                        # For displaying of video, pop-up info box
-gem 'fancybox2-rails', '~> 0.3.0', github: 'ChallahuAkbar/fancybox2-rails'     # For displaying of video, pop-up info box
+# gem 'fancybox2-rails'                                                        # REMOVED: Replaced with MicroModal for video/modal displays
 gem 'kaminari'                                                                 # Required for bloggity
 gem 'rinku', require: 'rails_rinku'                                            # Supports auto-linking of URL's in blog comments
 gem 'randumb'                                                                  # Retrieve a random record

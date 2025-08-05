@@ -1,11 +1,4 @@
 GIT
-  remote: https://github.com/ChallahuAkbar/fancybox2-rails.git
-  revision: 3669cdfb51f8c1dfaf86adf90ae98561c0256b15
-  specs:
-    fancybox2-rails (0.3.0)
-      railties (>= 4.2.0, < 6.0)
-
-GIT
   remote: https://github.com/avitus/bloggity.git
   revision: 0d40daf7df16683f4975f535b3c0a5e735e76b29
   specs:
@@ -778,7 +771,6 @@ DEPENDENCIES
   email_spec
   factory_bot_rails
   faker
-  fancybox2-rails (~> 0.3.0)!
   ffi (~> 1.15.5)
   foreman
   friendly_id

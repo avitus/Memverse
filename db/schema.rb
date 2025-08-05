@@ -971,6 +971,8 @@ ActiveRecord::Schema.define(version: 2025_07_07_213038) do
     t.index ["versenum"], name: "index_verses_on_versenum"
   end
 
+  add_foreign_key "thredded_messageboard_users", "thredded_messageboards", on_delete: :cascade
+  add_foreign_key "thredded_messageboard_users", "thredded_user_details", on_delete: :cascade
   add_foreign_key "thredded_user_post_notifications", "thredded_posts", column: "post_id", on_delete: :cascade
   add_foreign_key "thredded_user_post_notifications", "users", on_delete: :cascade
 end

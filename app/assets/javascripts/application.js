@@ -7,7 +7,7 @@
 //= require jquery
 //= require jquery-ui
 //= require thredded
-//= require fancybox
+//= require micromodal.min
 //= require i18n
 //= require i18n/translations
 //= require jquery.purr

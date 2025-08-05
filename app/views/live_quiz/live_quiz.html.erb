@@ -119,9 +119,9 @@ $(document).ready(function() {
     });
 
     // Display welcome and quiz instructions
-    $.fancybox($("#welcome-box").html(), {padding: 20});
+    openContentModal($("#welcome-box").html(), "Quiz Instructions");
 
-    // TODO: Get this working. This is selecting the select-trans that is invisible, not the one in the fancybox.
+    // TODO: Get this working. This is selecting the select-trans that is invisible, not the one in the modal.
     $("#select-trans").delegate("a", "click", function(e){
     	e.preventDefault();
 

@@ -2,6 +2,11 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Related Documentation
+- **[STYLE_GUIDE.md](./STYLE_GUIDE.md)** - Visual design standards and CSS conventions
+- **[UPGRADE_PLAN.md](./UPGRADE_PLAN.md)** - Rails/Ruby modernization roadmap
+- **[GEM_COMPATIBILITY_AUDIT.md](./GEM_COMPATIBILITY_AUDIT.md)** - Gem compatibility analysis
+
 ## Commands
 
 ### Testing

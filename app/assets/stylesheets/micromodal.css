@@ -1,0 +1,310 @@
+/**************************\
+  MicroModal Styles
+  Replacement for FancyBox
+\**************************/
+
+.micromodal-slide {
+  color: #333;
+  display: none;
+  font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+}
+
+.micromodal-slide.is-open {
+  display: block;
+}
+
+.micromodal-slide[aria-hidden="false"] .modal__overlay {
+  animation: mmfadeIn .3s cubic-bezier(0.0, 0.0, 0.2, 1);
+}
+
+.micromodal-slide[aria-hidden="false"] .modal__container {
+  animation: mmslideIn .3s cubic-bezier(0, 0, .2, 1);
+}
+
+.micromodal-slide[aria-hidden="true"] .modal__overlay {
+  animation: mmfadeOut .3s cubic-bezier(0.0, 0.0, 0.2, 1);
+}
+
+.micromodal-slide[aria-hidden="true"] .modal__container {
+  animation: mmslideOut .3s cubic-bezier(0, 0, .2, 1);
+}
+
+.micromodal-slide .modal__overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(31, 34, 41, 0.75); /* Using #1F2229 (site's dark color) */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  overflow: auto;
+}
+
+.micromodal-slide .modal__container {
+  background-color: #f2f1f1; /* Light grey background matching site */
+  border: 1px solid #bfbebe; /* Medium grey border */
+  padding: 25px 30px;
+  max-width: 80%;
+  max-height: 90%;
+  border-radius: 5px;
+  overflow-y: auto;
+  box-sizing: border-box;
+  position: relative;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.micromodal-slide .modal__container.modal__container--video {
+  max-width: 90%;
+  max-height: 90%;
+  width: 80%;
+  min-width: 640px;
+  padding: 0;
+  background: #000;
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .micromodal-slide .modal__container.modal__container--video {
+    width: 95%;
+    min-width: unset;
+  }
+}
+
+.micromodal-slide .modal__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #bfbebe;
+}
+
+.micromodal-slide .modal__title {
+  margin-top: 0;
+  margin-bottom: 0;
+  font-weight: 600;
+  font-size: 1.25rem;
+  line-height: 1.25;
+  color: #1F2229; /* Site's dark text color */
+  box-sizing: border-box;
+}
+
+.micromodal-slide .modal__close {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font-size: 24px;
+  color: #666; /* Site's secondary text color */
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  padding: 5px;
+  line-height: 1;
+  transition: color 0.2s ease;
+}
+
+.micromodal-slide .modal__close:hover {
+  color: #1F2229; /* Site's dark color */
+}
+
+.micromodal-slide .modal__content {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+  color: #333; /* Site's main text color */
+  font-size: 0.875rem; /* Match site's font sizing */
+}
+
+.micromodal-slide .modal__btn {
+  font-size: .875rem;
+  padding: 0.5rem 1rem;
+  background-color: #bfbebe; /* Site's medium grey */
+  color: #333;
+  border-radius: 4px;
+  border: 1px solid #afaeae;
+  cursor: pointer;
+  -webkit-appearance: button;
+  text-transform: none;
+  overflow: visible;
+  line-height: 1.15;
+  margin: 0 0.25rem;
+  font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+  transition: all 0.2s ease;
+}
+
+.micromodal-slide .modal__btn:hover {
+  background-color: #afaeae;
+  border-color: #717171;
+}
+
+.micromodal-slide .modal__btn-primary {
+  background-color: #6B9620; /* Site's green color */
+  color: #fff;
+  border-color: #577a1a;
+  text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.25);
+  font-weight: bold;
+}
+
+.micromodal-slide .modal__btn-primary:hover {
+  background-color: #7ca529;
+  border-color: #577a1a;
+}
+
+.micromodal-slide .modal__video-container {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  background: #000;
+  overflow: hidden;
+}
+
+.micromodal-slide .modal__video-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* Ensure video modal close button is visible */
+.micromodal-slide .modal__container--video .modal__close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.micromodal-slide .modal__container--video .modal__close:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+/**************************\
+  Animations
+\**************************/
+
+@keyframes mmfadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes mmfadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes mmslideIn {
+  from { transform: translateY(15%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes mmslideOut {
+  from { transform: translateY(0); }
+  to { transform: translateY(-10%); }
+}
+
+/**************************\
+  Content Styling
+\**************************/
+
+/* Style for content within modals */
+.micromodal-slide .modal__content p {
+  margin-bottom: 1em;
+  line-height: 1.6;
+}
+
+.micromodal-slide .modal__content h3,
+.micromodal-slide .modal__content h4 {
+  color: #1F2229;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+.micromodal-slide .modal__content ul,
+.micromodal-slide .modal__content ol {
+  margin: 1em 0;
+  padding-left: 2em;
+}
+
+.micromodal-slide .modal__content li {
+  margin-bottom: 0.5em;
+}
+
+.micromodal-slide .modal__content a {
+  color: #1F2229;
+  text-decoration: none;
+}
+
+.micromodal-slide .modal__content a:hover {
+  text-decoration: underline;
+}
+
+/* Style for tables within modals */
+.micromodal-slide .modal__content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1em 0;
+}
+
+.micromodal-slide .modal__content th,
+.micromodal-slide .modal__content td {
+  padding: 0.5em;
+  text-align: left;
+  border-bottom: 1px solid #bfbebe;
+}
+
+.micromodal-slide .modal__content th {
+  background-color: #afaeae;
+  color: #1F2229;
+  font-weight: 600;
+}
+
+/**************************\
+  Responsive Design
+\**************************/
+
+@media only screen and (min-device-width: 768px) {
+  .micromodal-slide .modal__container {
+    max-width: 70%;
+  }
+}
+
+/* Green button styling to match existing site design */
+.micromodal-slide .green-button {
+  padding: 0.5em 1em;
+  font-size: 18px;
+  margin-top: 1em;
+  border-radius: 4px;
+  background-color: #6B9620 !important; /* Site's green color */
+  text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.25);
+  line-height: 1;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.25);
+  color: #EEE !important;
+  font-weight: bold;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.2s ease;
+  font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+}
+
+.micromodal-slide .green-button:hover {
+  background-color: #7ca529 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}

@@ -135,11 +135,14 @@
 		// focus cursor on verse entry box
 		$verseguess.focus();
 
-		//fancybox info
-		$("a#inline").fancybox({
-			'autoDimensions' : false,
-			'width'          : '80%',
-			'height'         : '90%'
+		// MicroModal info
+		$("a#inline").click(function(e) {
+			e.preventDefault();
+			var href = $(this).attr('href');
+			if (href && href.charAt(0) === '#') {
+				var content = $(href).html();
+				openContentModal(content, "Information");
+			}
 		});
 
 		// ==== Show/Hide mnemonic ====
