@@ -210,10 +210,15 @@ class Api::V1::UsersController < Api::V1::ApiController
       error! :bad_request, metadata: {reason: 'User could not be found'}
     elsif @user != current_resource_owner
       error! :bad_request, metadata: {reason: 'User is not the signed-in user'}
-    elsif @user.destroy
-      expose @user
     else
-      error! :bad_request, metadata: {reason: 'User could not be deleted'}
+      # Capture user attributes before destruction
+      user_attributes = @user.attributes
+      if @user.destroy
+        # Create a temporary object-like structure for serialization
+        render json: { response: user_attributes }, status: :ok
+      else
+        error! :bad_request, metadata: {reason: 'User could not be deleted'}
+      end
     end
   end
 

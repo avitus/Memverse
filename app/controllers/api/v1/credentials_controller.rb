@@ -92,7 +92,8 @@ class Api::V1::CredentialsController < Api::V1::ApiController
 	end
 
 	def me
-		expose current_resource_owner # equivalent to current user
+		# Use serializable_hash instead of as_json to match RocketPants behavior
+		render json: { response: current_resource_owner.serializable_hash }, status: :ok
 	end
 
 end # of class

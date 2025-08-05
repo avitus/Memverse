@@ -189,6 +189,7 @@ class Memverse < ActiveRecord::Base
   def as_json(options={})
     {
       :id            => self.id,
+      :user_id       => self.user_id,
       :verse_id      => self.verse.id,
       :passage_id    => self.passage.id,
       :ref           => self.verse.ref,
@@ -196,6 +197,7 @@ class Memverse < ActiveRecord::Base
       :text          => self.verse.text,
       :versenum      => self.verse.versenum,
       :next_test     => self.next_test,
+      :next_ref_test => self.next_ref_test,
       :test_interval => self.test_interval,
       :skippable     => !self.due? ? ( !self.next_verse_due(true).nil? ? self.next_verse_due(true).verse.ref : false ) : false,
       :mnemonic      => self.needs_mnemonic? ? self.verse.mnemonic : "",
@@ -204,7 +206,9 @@ class Memverse < ActiveRecord::Base
       :rep_n         => self.rep_n,
       :efactor       => self.efactor,
       :subsection    => self.subsection,
-      :prev_verse    => self.prev_verse    # needed for iOS app
+      :ref_interval  => self.ref_interval,
+      :prev_verse    => self.prev_verse,    # needed for iOS app
+      :verse         => self.verse.as_json   # nested verse object for RocketPants compatibility
     }
   end
 

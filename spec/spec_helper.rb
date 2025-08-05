@@ -88,9 +88,9 @@ RSpec.configure do |config|
   config.include ControllerMacros,                type: :controller  # ALV: need to use 'include' and not 'extend' as indicated in Devise Wiki
   config.include Requests::JsonHelpers,           type: :controller  # ALV: helpers for testing API
 
-  # Add support for RocketPants test helpers
-  config.include RocketPants::TestHelper,    :type => :controller
-  config.include RocketPants::RSpecMatchers, :type => :controller
+  # RocketPants test helpers removed - using Rails API mode instead
+  # config.include RocketPants::TestHelper,    :type => :controller
+  # config.include RocketPants::RSpecMatchers, :type => :controller
 
 end
 

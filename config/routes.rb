@@ -79,27 +79,30 @@ MemverseApp::Application.routes.draw do
   
   resources :apidocs, only: [:index]    # for Swagger UI documentation
 
-  api versions: 1, module: "api/v1" do
-    resources :users, :only => [:show, :update, :create, :destroy]
-    resources :verses do
-      get 'lookup', :on => :collection
-      get 'chapter', :on => :collection
-      get 'search', :on => :collection
-    end
-    resources :memverses
-    resources :passages do
-      get 'due', :on => :collection
+  # API v1 routes (converted from rocket_pants to Rails namespace)
+  namespace :api do
+    namespace :v1 do
+      resources :users, :only => [:show, :update, :create, :destroy]
+      resources :verses do
+        get 'lookup', :on => :collection
+        get 'chapter', :on => :collection
+        get 'search', :on => :collection
+      end
       resources :memverses
-    end
-    resources :quizzes do
-      get 'upcoming', :on => :collection
-    end
-    resources :translations, :only => [:index, :show]
-    resources :final_verses, :only => [:index]
-    resources :progress_reports, :only => [:index]
+      resources :passages do
+        get 'due', :on => :collection
+        resources :memverses
+      end
+      resources :quizzes do
+        get 'upcoming', :on => :collection
+      end
+      resources :translations, :only => [:index, :show]
+      resources :final_verses, :only => [:index]
+      resources :progress_reports, :only => [:index]
 
-    get '/me'            => "credentials#me"
-    post '/record_score' => 'live_quiz#record_score'
+      get '/me'            => "credentials#me"
+      post '/record_score' => 'live_quiz#record_score'
+    end
   end
   # ---------------------------------------------------------------------------------------------------------
   # END: API

@@ -1,10 +1,11 @@
-# Base controller for API
-class Api::V1::ApiController < RocketPants::Base
+# Base controller for API - Converted from RocketPants to Rails API mode
+class Api::V1::ApiController < ActionController::API
 
-  # See http://stackoverflow.com/questions/11383111/how-to-use-both-rocket-pants-and-doorkeeper-in-the-same-rails-application
-  # ... and also https://github.com/doorkeeper-gem/doorkeeper/wiki/ActionController::Metal-with-doorkeeper
-  include ActionController::Head
+  # OAuth integration with Doorkeeper
   include Doorkeeper::Rails::Helpers
+
+  # API response helpers
+  include ApiResponseHelpers
 
   # Airbrake support
   # use_named_exception_notifier :airbrake

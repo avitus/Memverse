@@ -13,7 +13,7 @@
 
 class Verse < ActiveRecord::Base
 
-  include RocketPants::Cacheable   # Allow for access via API
+  # include RocketPants::Cacheable   # Allow for access via API - REMOVED (converted to Rails API mode)
 
   # ----------------------------------------------------------------------------------------------------------
   # Swagger-Blocks DSL [START]
@@ -135,13 +135,18 @@ class Verse < ActiveRecord::Base
   # Convert to JSON format
   def as_json(options={})
     {
-      :id   => self.id,
-      :bk   => self.book,
-      :ch   => self.chapter,
-      :vs   => self.versenum,
-      :tl   => self.translation,
-      :ref  => self.ref,
-      :text => self.text
+      :id         => self.id,
+      :bk         => self.book,
+      :book       => self.book,          # RocketPants compatibility  
+      :ch         => self.chapter,
+      :chapter    => self.chapter,       # RocketPants compatibility
+      :vs         => self.versenum,
+      :versenum   => self.versenum,      # RocketPants compatibility
+      :tl         => self.translation,
+      :translation => self.translation,  # RocketPants compatibility
+      :book_index => self.book_index,    # RocketPants compatibility
+      :ref        => self.ref,
+      :text       => self.text
     }
   end
 

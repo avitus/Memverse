@@ -98,9 +98,9 @@ gem 'ffi', '~> 1.15.5'                                                          
 ############################################################
 # API
 ############################################################
-# Use this version only until Rails 5 support in master branch
-gem 'rocket_pants', github: 'NBuhinicek/rocket_pants'                              # API goodness
-gem 'api_smith', '~> 1.3', github: 'youroute/api_smith'                        # Dependency of rocket_pant
+# Replaced rocket_pants with Rails API mode + custom ApiResponseHelpers
+# gem 'rocket_pants', github: 'NBuhinicek/rocket_pants'                              # API goodness - REMOVED
+# gem 'api_smith', '~> 1.3', github: 'youroute/api_smith'                        # Dependency of rocket_pant - REMOVED
 gem 'doorkeeper'                                                               # Oauth for API
 gem 'swagger-blocks'                                                           # Generates swagger-ui json files
 gem 'jbuilder'

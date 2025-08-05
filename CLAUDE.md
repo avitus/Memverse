@@ -5,6 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ### Testing
+- This project follows a test-driven development approach. 100% test coverage and 100% passing tests are a core tenet of the project.
 - **Unit tests**: `bundle exec rspec`
 - **Integration tests**: `bundle exec cucumber features`
 - **JavaScript tests**: `bundle exec rake spec:javascript RAILS_ENV=test`
@@ -12,6 +13,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Run specific cucumber feature**: `bundle exec cucumber features/path/to/feature.feature`
 - When asked to run tests, always run the unit tests (Rspec) the Javascript tests (Jasmine) and the integration specs (Cucumber). Summarize the results in a clear table at the end of the test run.
 - Never proceed without fixing failing tests.
+- Never propose moving forward until 100% of tests pass
+- Never claim that you are done with a task until 100% of tests pass
 
 ### Development
 - **Start server**: `bundle exec rails server` or `foreman start` (manages multiple processes)
