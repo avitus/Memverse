@@ -12,9 +12,9 @@ describe ProfileController do
 
     it "should unsubsribe user from all emails" do
       get :unsubscribe, params: {email: @user.email}
-      response.should be_success
-      @user.reload.newsletters.should be false
-      @user.reminder_freq.should == "Never"
+      expect(response).to be_success
+      expect(@user.reload.newsletters).to be false
+      expect(@user.reminder_freq).to eq("Never")
     end
 
   end

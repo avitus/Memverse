@@ -19,12 +19,12 @@ describe Api::V1::VersesController do
 
       it 'responds with 200' do
         get :show, params: {id: verse.id, version: 1}, format: :json
-        response.status.should eq(200)
+        expect(response.status).to eq(200)
       end
 
       it 'returns a verse in JSON format' do
         get :show, params: {id: verse.id, version: 1}, format: :json
-        json["text"].should == JSON.parse(verse.to_json)["text"]
+        expect(json["text"]).to eq(JSON.parse(verse.to_json)["text"])
       end
 
     end
@@ -34,7 +34,7 @@ describe Api::V1::VersesController do
 
       it 'responds with 401 when unauthorized' do
         get :show, params: {id: verse.id, version: 1}, format: :json
-        response.status.should eq(401)
+        expect(response.status).to eq(401)
       end
     
     end
@@ -53,8 +53,8 @@ describe Api::V1::VersesController do
 
       it 'lookups a verse' do
         get :lookup, params: {tl: 'NIV', bk: 'Galatians', ch: 5, vs: 22, version: 1}, format: :json
-        response.status.should eq(200)
-        json["text"].should == 'But the fruit of the Spirit is love, joy, peace, patience, kindness, goodness, faithfulness,'
+        expect(response.status).to eq(200)
+        expect(json["text"]).to eq('But the fruit of the Spirit is love, joy, peace, patience, kindness, goodness, faithfulness,')
       end
 
     end

@@ -79,6 +79,21 @@ class UserMailer < ActionMailer::Base
   end
 
   # ----------------------------------------------------------------------------------------------------------
+  # User Registration and Activation Emails (replacing UserObserver functionality)
+  # ----------------------------------------------------------------------------------------------------------
+  def signup_notification(user)
+    setup_email(user)
+    headers['X-MC-Tags'] = "signup-notification"
+    mail(:to => @email_with_name, :subject => "Welcome to Memverse!")
+  end
+
+  def activation(user)
+    setup_email(user)
+    headers['X-MC-Tags'] = "account-activation"
+    mail(:to => @email_with_name, :subject => "Your Memverse account has been activated!")
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
   # Protected
   # ----------------------------------------------------------------------------------------------------------
   protected

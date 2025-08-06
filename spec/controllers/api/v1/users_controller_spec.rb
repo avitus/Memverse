@@ -10,7 +10,7 @@ describe Api::V1::UsersController do
       expect {
         post :create, params: {user: {name: 'Test User', email: 'test@memverse.com', password: 'password123' }, version: 1}, format: :json
       }.to change(User, :count).by(1)
-      response.status.should eq(200)
+      expect(response.status).to eq(200)
     end
 
     it 'should not allow duplicate emails' do 
@@ -18,7 +18,7 @@ describe Api::V1::UsersController do
         post :create, params: {user: {name: 'Duplicate User 1', email: 'duplicate@memverse.com', password: 'password123' }, version: 1}, format: :json
         post :create, params: {user: {name: 'Duplicate User 2', email: 'duplicate@memverse.com', password: 'password123' }, version: 1}, format: :json
       }.to change(User, :count).by(1)
-      response.status.should eq(403)  # 403 = this operation is forbidden by server
+      expect(response.status).to eq(403)  # 403 = this operation is forbidden by server
     end
 
   end
@@ -35,12 +35,12 @@ describe Api::V1::UsersController do
 
       it 'responds with 200' do
         get :show, params: {id: user.id, version: 1}, format: :json
-        response.status.should eq(200)
+        expect(response.status).to eq(200)
       end
 
       #it 'returns user attributes as json' do
       #  get :show, id: user.id, version: 1, format: :json, access_token: token.token
-      #  json.should == JSON.parse(user.to_json)
+      #   json).to eq(JSON.parse(user.to_json))
       #end
 
     end
@@ -48,7 +48,7 @@ describe Api::V1::UsersController do
     context 'no valid access token' do
       it 'responds with 401 when unauthorized' do
         get :show, params: {id: user.id, version: 1}, format: :json
-        response.status.should eq(401)
+        expect(response.status).to eq(401)
       end
     end
 
@@ -73,7 +73,7 @@ describe Api::V1::UsersController do
 
         it 'responds with 200' do
           delete :destroy, params: {id: user_to_delete.id, version: 1}, format: :json
-          response.status.should eq(200)
+          expect(response.status).to eq(200)
         end
 
         it 'deletes the user from the database' do
@@ -101,7 +101,7 @@ describe Api::V1::UsersController do
 
         it 'responds with 400 (bad request)' do
           delete :destroy, params: {id: user_to_delete.id, version: 1}, format: :json
-          response.status.should eq(400)
+          expect(response.status).to eq(400)
         end
 
         it 'does not delete the user from the database' do
@@ -131,7 +131,7 @@ describe Api::V1::UsersController do
 
         it 'responds with 400 (bad request)' do
           delete :destroy, params: {id: nonexistent_id, version: 1}, format: :json
-          response.status.should eq(400)
+          expect(response.status).to eq(400)
         end
 
         it 'returns an error message about user not found' do
@@ -147,7 +147,7 @@ describe Api::V1::UsersController do
       
       it 'responds with 401 when unauthorized' do
         delete :destroy, params: {id: user_to_delete.id, version: 1}, format: :json
-        response.status.should eq(401)
+        expect(response.status).to eq(401)
       end
 
       it 'does not delete the user' do
@@ -182,7 +182,7 @@ describe Api::V1::UsersController do
 
         it 'still deletes the user successfully' do
           delete :destroy, params: {id: user_to_delete.id, version: 1}, format: :json
-          response.status.should eq(200)
+          expect(response.status).to eq(200)
           expect { User.find(user_to_delete.id) }.to raise_error(ActiveRecord::RecordNotFound)
         end
       end
@@ -195,7 +195,7 @@ describe Api::V1::UsersController do
 
         it 'responds with 400 (bad request)' do
           delete :destroy, params: {id: user_to_delete.id, version: 1}, format: :json
-          response.status.should eq(400)
+          expect(response.status).to eq(400)
         end
 
         it 'returns an error message about deletion failure' do

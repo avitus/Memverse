@@ -22,11 +22,11 @@ describe Badge do
     end
     
     it "should value a gold medal more than a silver medal" do
-      @gold_badge.should be > @silver_badge
+      expect(@gold_badge).to be > @silver_badge
     end
     
     it "should value a silver medal more than a bronze medal" do
-      @silver_badge.should be > @bronze_badge
+      expect(@silver_badge).to be > @bronze_badge
     end    
         
   end
@@ -53,11 +53,11 @@ describe Badge do
         
     it "show a badge as earned if all quests are complete" do
       @quests.each { |q| @user.quests << q }
-      @badge.achieved?(@user).should be true
+      expect(@badge.achieved?(@user)).to be true
     end
 
     it "should not show a badge as earned if a quest is incomplete" do
-      @badge.achieved?(@user).should be false
+      expect(@badge.achieved?(@user)).to be false
     end
     
     it "should not show a badge as earned if user already has a higher level badge" do
@@ -67,7 +67,7 @@ describe Badge do
       bronze_quests = bronze_badge.quests      
       bronze_quests.each { |q| @user.quests << q }
       
-      bronze_badge.achieved?(@user).should be false  
+      expect(bronze_badge.achieved?(@user)).to be false  
     end
     
     it "should remove lower level badges when a higher level badge is earned" do
@@ -79,9 +79,9 @@ describe Badge do
       gold_badge.award_badge(@user) 
       
       # user should no longer have the silver badge ...
-      @badge.achieved?(@user).should be false
+      expect(@badge.achieved?(@user)).to be false
       # ... but it should still exist and be able to be awarded to other users
-      Badge.exists?(:name => "Consistency", :color => "silver").should be true
+      expect(Badge.exists?(:name => "Consistency", :color => "silver")).to be true
     end
     
   end
@@ -98,8 +98,8 @@ describe Badge do
     @bronze.award_badge(@user)
     @gold.award_badge(@user)
     
-    @user.badges.where(:name => "Consistency").length.should == 1
-    @user.badges.where(:name => "Consistency").first.color.should == "gold"
+    expect(@user.badges.where(:name => "Consistency").length).to eq(1)
+    expect(@user.badges.where(:name => "Consistency").first.color).to eq("gold")
   end
     
 end

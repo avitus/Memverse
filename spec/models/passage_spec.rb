@@ -77,32 +77,32 @@ describe Passage do
     it "should divide passages into subsections automagically" do
       psg = FactoryBot.create(:passage, book: 'Psalms', chapter: 22, first_verse: 1, last_verse: 6, length: 6)
       psg.auto_subsection
-      psg.memverses.first.subsection.should == 0
-      psg.memverses.last.subsection.should  == 1
+      expect(psg.memverses.first.subsection).to eq(0)
+      expect(psg.memverses.last.subsection).to eq(1)
     end
 
     it "should find the most likely breakpoint in the passage" do
       psg = FactoryBot.create(:passage, book: 'Psalms', chapter: 22, first_verse: 7, last_verse: 13, length: 7)
       psg.auto_subsection # Should create only two subsections with verse 10 at end of 1st subsection
-      psg.memverses.first.subsection.should == 0
-      psg.memverses.last.subsection.should  == 1
-      psg.memverses.where(:subsection => 1).first.verse.versenum.should == 11
+      expect(psg.memverses.first.subsection).to eq(0)
+      expect(psg.memverses.last.subsection).to eq(1)
+      expect(psg.memverses.where(:subsection => 1).first.verse.versenum).to eq(11)
     end
 
     it "should limit the number of subsections in a passage" do
       psg = FactoryBot.create(:passage, book: 'Psalms', chapter: 22, first_verse: 1, last_verse: 13, length: 13)
       psg.auto_subsection(5)
-      psg.memverses.first.subsection.should == 0
-      psg.memverses.last.subsection.should  == 2
-      psg.memverses.where(:subsection => 1).first.verse.versenum.should ==  4
-      psg.memverses.where(:subsection => 2).first.verse.versenum.should == 11
+      expect(psg.memverses.first.subsection).to eq(0)
+      expect(psg.memverses.last.subsection).to eq(2)
+      expect(psg.memverses.where(:subsection => 1).first.verse.versenum).to eq(4)
+      expect(psg.memverses.where(:subsection => 2).first.verse.versenum).to eq(11)
     end
 
     it "should not subsection passages which have no information about ending verses" do
       psg = FactoryBot.create(:passage, book: 'Psalms', chapter: 22, first_verse: 13, last_verse: 22, length: 10)
       psg.auto_subsection
-      psg.memverses.first.subsection.should == 0
-      psg.memverses.last.subsection.should  == 0
+      expect(psg.memverses.first.subsection).to eq(0)
+      expect(psg.memverses.last.subsection).to eq(0)
     end
 
   end
@@ -119,13 +119,14 @@ describe Passage do
     # add an extra memory verse with a different eFactor
     # rep_n = 2, eFactor = 1.4, interval = 1
     vs = FactoryBot.create(:verse, book: 'Nahum', chapter: 1, versenum: 6)
-    mv = FactoryBot.create(:memverse_without_supermemo_init, :verse => vs, :efactor => 1.4, :rep_n => 2, :test_interval => 3)
+    mv = FactoryBot.create(:memverse_without_supermemo_init, :verse => vs, :user => psg.user, :efactor => 1.4, :rep_n => 2, :test_interval => 3, :status => 'Learning')
 
     psg.expand( mv )
+    psg.reload
 
-    psg.test_interval.should == 3
-    psg.rep_n.should         == 2
-    psg.efactor.should       == 1.8
+    expect(psg.test_interval).to eq(3)
+    expect(psg.rep_n).to eq(2)
+    expect(psg.efactor.to_f).to eq(1.8)
 
   end
 
@@ -144,10 +145,10 @@ describe Passage do
         psg1.absorb( psg2 )
       }.to change(Passage, :count).by(-1)
 
-      psg1.first_verse.should == 2
-      psg1.last_verse.should  == 8
-      psg1.book_index.should == 42
-      psg2.memverses.first.passage_id.should == psg1.id # now associated with first passage
+      expect(psg1.first_verse).to eq(2)
+      expect(psg1.last_verse).to eq(8)
+      expect(psg1.book_index).to eq(42)
+      expect(psg2.memverses.first.passage_id).to eq(psg1.id) # now associated with first passage
 
     end
 
@@ -170,12 +171,12 @@ describe Passage do
       mv2.reload
 
       # Assertions
-      psg1.first_verse.should == 2
-      psg1.last_verse.should  == 8
-      psg1.length.should      == 7
-      psg1.book_index.should  == 41
+      expect(psg1.first_verse).to eq(2)
+      expect(psg1.last_verse).to eq(8)
+      expect(psg1.length).to eq(7)
+      expect(psg1.book_index).to eq(41)
       mv.passage_id           == psg1.id # link mv associated with first passage
-      mv2.passage_id.should   == psg1.id # now associated with first passage
+      expect(mv2.passage_id).to eq(psg1.id) # now associated with first passage
 
     end
 
@@ -196,10 +197,10 @@ describe Passage do
 
       @psg.expand( mv )
 
-      @psg.first_verse.should == 2
-      @psg.last_verse.should == 6
-      @psg.book_index.should == 3
-      mv.passage_id.should == @psg.id
+      expect(@psg.first_verse).to eq(2)
+      expect(@psg.last_verse).to eq(6)
+      expect(@psg.book_index).to eq(3)
+      expect(mv.passage_id).to eq(@psg.id)
     end
 
     it "should correctly add a subsequent verse" do
@@ -208,10 +209,10 @@ describe Passage do
 
       @psg.expand( mv )
 
-      @psg.first_verse.should == 3
-      @psg.last_verse.should == 7
-      @psg.book_index.should == 3
-      mv.passage_id.should == @psg.id
+      expect(@psg.first_verse).to eq(3)
+      expect(@psg.last_verse).to eq(7)
+      expect(@psg.book_index).to eq(3)
+      expect(mv.passage_id).to eq(@psg.id)
     end
 
   end
@@ -229,18 +230,18 @@ describe Passage do
       mv = @psg.memverses.includes(:verse).order('verses.versenum').first
       mv.destroy
 
-      @psg.reload.length.should == 8
-      @psg.first_verse.should == 3
-      @psg.last_verse.should == 10
+      expect(@psg.reload.length).to eq(8)
+      expect(@psg.first_verse).to eq(3)
+      expect(@psg.last_verse).to eq(10)
     end
 
     it "should correctly delete the last verse of the passage" do
       mv = @psg.memverses.includes(:verse).order('verses.versenum').last
       mv.destroy
 
-      @psg.reload.length.should == 8
-      @psg.first_verse.should == 2
-      @psg.last_verse.should == 9
+      expect(@psg.reload.length).to eq(8)
+      expect(@psg.first_verse).to eq(2)
+      expect(@psg.last_verse).to eq(9)
     end
 
     it "should correctly delete a verse in the middle of the passage" do
@@ -254,16 +255,16 @@ describe Passage do
       last_mv.reload
       psg2 = last_mv.passage
 
-      @psg.reload.length.should == 3
-      @psg.first_verse.should == 2
-      @psg.last_verse.should == 4
-      @psg.reference.should == "Proverbs 3:2-4"
+      expect(@psg.reload.length).to eq(3)
+      expect(@psg.first_verse).to eq(2)
+      expect(@psg.last_verse).to eq(4)
+      expect(@psg.reference).to eq("Proverbs 3:2-4")
 
-      psg2.first_verse.should == 6
-      psg2.last_verse.should == 10
-      psg2.length.should == 5
-      psg2.memverses.count.should == 5
-      psg2.reference.should == "Proverbs 3:6-10"
+      expect(psg2.first_verse).to eq(6)
+      expect(psg2.last_verse).to eq(10)
+      expect(psg2.length).to eq(5)
+      expect(psg2.memverses.count).to eq(5)
+      expect(psg2.reference).to eq("Proverbs 3:6-10")
     end
 
 
@@ -283,16 +284,16 @@ describe Passage do
       psg2 = last_mv.passage
 
       @psg.reload
-      @psg.length.should == 3
-      @psg.first_verse.should == 2
-      @psg.last_verse.should == 4
-      @psg.reference.should == "Proverbs 3:2-4"
+      expect(@psg.length).to eq(3)
+      expect(@psg.first_verse).to eq(2)
+      expect(@psg.last_verse).to eq(4)
+      expect(@psg.reference).to eq("Proverbs 3:2-4")
 
-      psg2.first_verse.should == 7
-      psg2.last_verse.should == 10
-      psg2.length.should == 4
-      psg2.memverses.count.should == 4
-      psg2.reference.should == "Proverbs 3:7-10"
+      expect(psg2.first_verse).to eq(7)
+      expect(psg2.last_verse).to eq(10)
+      expect(psg2.length).to eq(4)
+      expect(psg2.memverses.count).to eq(4)
+      expect(psg2.reference).to eq("Proverbs 3:7-10")
     end
 
     it "should remove passage from database if it has no verses" do
@@ -315,9 +316,9 @@ describe Passage do
       vs = FactoryBot.create(:verse, book: 'Esther', chapter: 10, versenum: 3)
       mv = FactoryBot.create(:memverse, :verse => vs)
 
-      psg.complete_chapter.should be false
+      expect(psg.complete_chapter).to be false
       psg.expand( mv )
-      psg.complete_chapter.should be true
+      expect(psg.complete_chapter).to be true
 
     end
 
@@ -327,9 +328,9 @@ describe Passage do
       vs  = FactoryBot.create(:verse, book: 'Psalms', chapter: 53, versenum: 6)
       mv  = FactoryBot.create(:memverse, :verse => vs)
 
-      psg.complete_chapter.should be false
+      expect(psg.complete_chapter).to be false
       psg.expand( mv )
-      psg.complete_chapter.should be true
+      expect(psg.complete_chapter).to be true
 
     end
 
@@ -340,9 +341,9 @@ describe Passage do
         vs = FactoryBot.create(:verse, book: '3 John', chapter: 1, versenum: 14)
         mv = FactoryBot.create(:memverse, :verse => vs)
 
-        psg.complete_chapter.should be false
+        expect(psg.complete_chapter).to be false
         psg.expand( mv )
-        psg.complete_chapter.should be true
+        expect(psg.complete_chapter).to be true
       end
 
       it "and 15 verses in ESV" do
@@ -350,9 +351,9 @@ describe Passage do
         vs  = FactoryBot.create(:verse, book: '3 John', chapter: 1, versenum: 15)
         mv  = FactoryBot.create(:memverse, :verse => vs)
 
-        psg.complete_chapter.should be false
+        expect(psg.complete_chapter).to be false
         psg.expand( mv )
-        psg.complete_chapter.should be true
+        expect(psg.complete_chapter).to be true
       end
 
     end

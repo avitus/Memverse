@@ -231,6 +231,10 @@ class User < ActiveRecord::Base
 
   before_save :generate_login
 
+  # Callbacks for email notifications (replacing rails-observers functionality)
+  after_create :send_signup_notification
+  after_update :send_activation_notification, if: :recently_activated?
+
   # Include default devise modules. Others available are:
   # :token_authenticatable, :lockable, trackable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable, :omniauthable,
@@ -1353,11 +1357,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  def normalize_identity_url
-    self.identity_url = OpenIdAuthentication.normalize_url(identity_url) unless not_using_openid?
-  rescue URI::InvalidURIError
-    errors.add_to_base("Invalid OpenID URL")
-  end
 
   def generate_login
     if !self.login?
@@ -1369,6 +1368,44 @@ class User < ActiveRecord::Base
 	  end
 	  self.login = login
 	end
+  end
+
+  # Check if user is not using OpenID (identity_url is blank)
+  #
+  # @return [Boolean]
+  def not_using_openid?
+    identity_url.blank?
+  end
+
+  # Check if user was recently activated (for Devise confirmable)
+  # This checks if the user just confirmed their account
+  #
+  # @return [Boolean]
+  def recently_activated?
+    confirmed_at_changed? && confirmed_at.present? && confirmed_at_was.nil?
+  end
+
+  private
+
+  # Send signup notification email (replacing UserObserver functionality)
+  #
+  # @return [void]
+  def send_signup_notification
+    # Only send signup notification if not using OpenID
+    if not_using_openid?
+      UserMailer.signup_notification(self).deliver_later
+    end
+  rescue => e
+    Rails.logger.error "Failed to send signup notification for user #{id}: #{e.message}"
+  end
+
+  # Send activation notification email (replacing UserObserver functionality)
+  #
+  # @return [void]
+  def send_activation_notification
+    UserMailer.activation(self).deliver_later
+  rescue => e
+    Rails.logger.error "Failed to send activation notification for user #{id}: #{e.message}"
   end
 
 end

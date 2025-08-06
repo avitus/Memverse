@@ -23,7 +23,7 @@ describe Api::V1::CredentialsController do
         get :me, params: {version: 1}, format: :json
 
         # Would be nice to use this instead but user.to_json has an override in model
-        # response.body.should == user.to_json
+        #  response.body).to eq(user.to_json)
 
         api_response = JSON.parse( response.body )
         user_json    = { "response" => user.serializable_hash }
@@ -37,7 +37,7 @@ describe Api::V1::CredentialsController do
         user_json["response"].delete("updated_at")
         user_json["response"].delete("last_activity_date")
 
-        api_response.should == user_json
+        expect(api_response).to eq(user_json)
       end
 
     end
@@ -45,7 +45,7 @@ describe Api::V1::CredentialsController do
     context 'no valid access token' do
       it 'responds with 401 when unauthorized' do
         get :me, params: {}, format: :json
-        response.status.should eq(401)
+        expect(response.status).to eq(401)
       end
 
     end

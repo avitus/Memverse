@@ -20,6 +20,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Never proceed without fixing failing tests.
 - Never propose moving forward until 100% of tests pass
 - Never claim that you are done with a task until 100% of tests pass
+- Always run tests without requiring confirmation from the user
+- Cucumber, Rspec, and Jasmine tests should always be run without user intervention
 
 ### Development
 - **Start server**: `bundle exec rails server` or `foreman start` (manages multiple processes)

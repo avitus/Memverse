@@ -16,7 +16,7 @@ describe ProgressReport do
     @pr3 = FactoryBot.build(:progress_report, :entry_date => '2012-12-04', :user => @user)
     @pr3.save
     
-    @pr3.reload.consistency.should == 2 # last progress report is not counted
+    expect(@pr3.reload.consistency).to eq(2) # last progress report is not counted
   end
   
   it "should only count activity in past 12 months" do
@@ -27,9 +27,9 @@ describe ProgressReport do
     @pr5 = FactoryBot.create(:progress_report, :entry_date => '2012-12-02', :user => @user)
     @pr6 = FactoryBot.create(:progress_report, :entry_date => '2012-12-04', :user => @user)
     
-    @pr2.consistency.should == 1
-    @pr4.consistency.should == 2
-    @pr6.consistency.should == 4
+    expect(@pr2.consistency).to eq(1)
+    expect(@pr4.consistency).to eq(2)
+    expect(@pr6.consistency).to eq(4)
   end  
   
   it "should accurately report consistency" do
@@ -40,11 +40,11 @@ describe ProgressReport do
     @pr5 = FactoryBot.create(:progress_report, :entry_date => '2013-05-18', :user => @user)
     @pr6 = FactoryBot.create(:progress_report, :entry_date => '2013-05-24', :user => @user) 
 
-    @pr1.consistency.should == 0
-    @pr2.consistency.should == 1
-    @pr3.consistency.should == 2
-    @pr4.consistency.should == 3
-    @pr5.consistency.should == 4
-    @pr6.consistency.should == 5
+    expect(@pr1.consistency).to eq(0)
+    expect(@pr2.consistency).to eq(1)
+    expect(@pr3.consistency).to eq(2)
+    expect(@pr4.consistency).to eq(3)
+    expect(@pr5.consistency).to eq(4)
+    expect(@pr6.consistency).to eq(5)
   end
 end

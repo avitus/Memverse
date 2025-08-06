@@ -51,7 +51,7 @@ describe PassagesController do
     it "assigns all passages as @passages" do
       passage = Passage.create! valid_attributes
       get :index, params: {}, session: valid_session
-      assigns(:passages).should eq([passage])
+      expect(assigns(:passages)).to eq([passage])
     end
   end
 
@@ -59,14 +59,14 @@ describe PassagesController do
     it "assigns the requested passage as @passage" do
       passage = Passage.create! valid_attributes
       get :show, params: {id: passage.to_param}, session: valid_session
-      assigns(:passage).should eq(passage)
+      expect(assigns(:passage)).to eq(passage)
     end
   end
 
   describe "GET new" do
     it "assigns a new passage as @passage" do
       get :new, params: {}, session: valid_session
-      assigns(:passage).should be_a_new(Passage)
+      expect(assigns(:passage)).to be_a_new(Passage)
     end
   end
 
@@ -74,7 +74,7 @@ describe PassagesController do
     it "assigns the requested passage as @passage" do
       passage = Passage.create! valid_attributes
       get :edit, params: {id: passage.to_param}, session: valid_session
-      assigns(:passage).should eq(passage)
+      expect(assigns(:passage)).to eq(passage)
     end
   end
 
@@ -88,29 +88,29 @@ describe PassagesController do
 
       it "assigns a newly created passage as @passage" do
         post :create, params: {passage: valid_attributes}, session: valid_session
-        assigns(:passage).should be_a(Passage)
-        assigns(:passage).should be_persisted
+        expect(assigns(:passage)).to be_a(Passage)
+        expect(assigns(:passage)).to be_persisted
       end
 
       it "redirects to the created passage" do
         post :create, params: {passage: valid_attributes}, session: valid_session
-        response.should redirect_to(Passage.last)
+        expect(response).to redirect_to(Passage.last)
       end
     end
 
     describe "with invalid params" do
       it "assigns a newly created but unsaved passage as @passage" do
         # Trigger the behavior that occurs when invalid params are submitted
-        Passage.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Passage).to receive(:save).and_return(false)
         post :create, params: {passage: { book: "invalid value" }}, session: valid_session
-        assigns(:passage).should be_a_new(Passage)
+        expect(assigns(:passage)).to be_a_new(Passage)
       end
 
       it "re-renders the 'new' template" do
         # Trigger the behavior that occurs when invalid params are submitted
-        Passage.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Passage).to receive(:save).and_return(false)
         post :create, params: {passage: { book: "invalid value" }}, session: valid_session
-        response.should render_template("new")
+        expect(response).to render_template("new")
       end
     end
   end
@@ -123,20 +123,20 @@ describe PassagesController do
         # specifies that the Passage created on the previous line
         # receives the :update_attributes message with whatever params are
         # submitted in the request.
-        Passage.any_instance.should_receive(:update_attributes).with({ "last_verse" => "7" })
+        expect_any_instance_of(Passage).to receive(:update_attributes).with({ "last_verse" => "7" })
         put :update, params: {id: passage.to_param, passage: { last_verse: "7" }}, session: valid_session
       end
 
       it "assigns the requested passage as @passage" do
         passage = Passage.create! valid_attributes
         put :update, params: {id: passage.to_param, passage: valid_attributes}, session: valid_session
-        assigns(:passage).should eq(passage)
+        expect(assigns(:passage)).to eq(passage)
       end
 
       it "redirects to the passage" do
         passage = Passage.create! valid_attributes
         put :update, params: {id: passage.to_param, passage: valid_attributes}, session: valid_session
-        response.should redirect_to(passage)
+        expect(response).to redirect_to(passage)
       end
     end
 
@@ -144,17 +144,17 @@ describe PassagesController do
       it "assigns the passage as @passage" do
         passage = Passage.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
-        Passage.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Passage).to receive(:save).and_return(false)
         put :update, params: {id: passage.to_param, passage: { book: "invalid value" }}, session: valid_session
-        assigns(:passage).should eq(passage)
+        expect(assigns(:passage)).to eq(passage)
       end
 
       it "re-renders the 'edit' template" do
         passage = Passage.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
-        Passage.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Passage).to receive(:save).and_return(false)
         put :update, params: {id: passage.to_param, passage: { book: "invalid value" }}, session: valid_session
-        response.should render_template("edit")
+        expect(response).to render_template("edit")
       end
     end
   end
@@ -170,7 +170,7 @@ describe PassagesController do
     it "redirects to the passages list" do
       passage = Passage.create! valid_attributes
       delete :destroy, params: {id: passage.to_param}, session: valid_session
-      response.should redirect_to(passages_url)
+      expect(response).to redirect_to(passages_url)
     end
   end
 

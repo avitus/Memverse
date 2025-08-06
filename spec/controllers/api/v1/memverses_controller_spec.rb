@@ -16,7 +16,7 @@ describe Api::V1::MemversesController do
 
     it 'responds with 200' do
       get :index, params: {version: 1}, format: :json
-      response.status.should eq(200)
+      expect(response.status).to eq(200)
     end
 
     # The API uses serializable_hash to create the response. It does not use to_json
@@ -65,8 +65,8 @@ describe Api::V1::MemversesController do
       expect {
         post :create, params: {id: verse.id, version: 1}, format: :json
       }.to change(Memverse, :count).by(1)
-      response.status.should eq(201)
-      json["verse"]["id"].should == verse.id
+      expect(response.status).to eq(201)
+      expect(json["verse"]["id"]).to eq(verse.id)
     end
   end
 
@@ -78,28 +78,28 @@ describe Api::V1::MemversesController do
 
     it 'updates the memverse' do
       put :update, params: {id: mv.id, q: 5, version: 1}, format: :json
-      response.status.should eq(200)
-      json["test_interval"].should         == 4
-      json["efactor"].to_f.should          == 2.1
-      json["rep_n"].should                 == 2
-      json["ref_interval"].should          == 6      # Don't make changes to the reference interval 
-      Date.parse(json["next_test"]).should == Date.today + 4
+      expect(response.status).to eq(200)
+      expect(json["test_interval"]).to eq(4)
+      expect(json["efactor"].to_f).to eq(2.1)
+      expect(json["rep_n"]).to eq(2)
+      expect(json["ref_interval"]).to eq(6) # Don't make changes to the reference interval
+      expect(Date.parse(json["next_test"])).to eq(Date.today + 4)
     end
 
     it 'increases the reference interval correctly' do
       put :update, params: {id: mv.id, ref_recalled: "true", version: 1}, format: :json
-      response.status.should eq(200)
-      json["ref_interval"].should              == 9
-      json["test_interval"].should             == 1   # Don't make changes to the test_interval
-      Date.parse(json["next_ref_test"]).should == Date.today + 9
+      expect(response.status).to eq(200)
+      expect(json["ref_interval"]).to eq(9)
+      expect(json["test_interval"]).to eq(1) # Don't make changes to the test_interval
+      expect(Date.parse(json["next_ref_test"])).to eq(Date.today + 9)
     end
 
     it 'decreases the reference interval correctly' do
       put :update, params: {id: mv.id, ref_recalled: "false", version: 1}, format: :json
-      response.status.should eq(200)
-      json["ref_interval"].should              == 4
-      json["test_interval"].should             == 1   # Don't make changes to the test_interval
-      Date.parse(json["next_ref_test"]).should == Date.today + 4
+      expect(response.status).to eq(200)
+      expect(json["ref_interval"]).to eq(4)
+      expect(json["test_interval"]).to eq(1) # Don't make changes to the test_interval
+      expect(Date.parse(json["next_ref_test"])).to eq(Date.today + 4)
     end
   end
 
@@ -113,7 +113,7 @@ describe Api::V1::MemversesController do
       expect {
         delete :destroy, params: {id: mv.id, version: 1}, format: :json
       }.to change(Memverse, :count).by(-1)
-      response.status.should eq (204)  # server executed the request but body of response contains no data
+      expect(response.status).to eq(204)  # server executed the request but body of response contains no data
     end
   end
 

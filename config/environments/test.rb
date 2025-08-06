@@ -28,6 +28,9 @@ MemverseApp::Application.configure do
 
   # Use null store for caching in test environment (no external dependencies)
   config.cache_store = :null_store
+  
+  # Disable active job queue for testing
+  config.active_job.queue_adapter = :test
 
   # Tell Action Mailer not to deliver emails to the real world.
   # The :test delivery method accumulates sent emails in the

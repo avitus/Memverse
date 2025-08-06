@@ -12,11 +12,11 @@ describe Verse do
       categories = [:history, :wisdom, :prophecy, :gospel, :epistle]
 
       # verse should be in given category scope
-      Verse.public_send(category).should include(verse)
+      expect(Verse.public_send(category)).to include(verse)
 
       # verse should not be in any other category scope
       for category in categories - [category]
-        Verse.public_send(category).should_not include(verse)
+        expect(Verse.public_send(category)).not_to include(verse)
       end
 
     end
@@ -98,7 +98,7 @@ describe Verse do
       vs1 = FactoryBot.create(:verse, book: "Philippians", book_index: 50, chapter: 2, versenum: 3, translation: "NKJV")
       vs2 = FactoryBot.create(:verse, book: "Philippians", book_index: 50, chapter: 2, versenum: 3, translation: "ESV")
 
-      vs1.alternative_translations.include?(vs2).should == true
+      expect(vs1.alternative_translations.include?(vs2)).to eq(true)
     end
   end
 
@@ -107,44 +107,44 @@ describe Verse do
       vs1 = FactoryBot.create(:verse, book: "Colossians", book_index: 51, chapter: 2, versenum: 3, translation: "NKJV")
       vs2 = FactoryBot.create(:verse, book: "Colossians", book_index: 51, chapter: 2, versenum: 3, translation: "ESV")
 
-      vs1.switch_tl("ESV").should == vs2
+      expect(vs1.switch_tl("ESV")).to eq(vs2)
     end
   end
 
   it "should return correct mnemonic" do
     verse = FactoryBot.create(:verse, :text => "This is an (extremely) important - mnemonic 'method' 'test'; don't you think?")
-    verse.mnemonic.should == "T i a (e) i — m 'm' 't'; d y t?"
+    expect(verse.mnemonic).to eq("T i a (e) i — m 'm' 't'; d y t?")
   end
 
   it "mnemonic method should support Portuguese" do
     verse = FactoryBot.create(:verse, :text => "Á têst for mnémonic support of thé íncredíbly speciâl Portuguese çharacters.")
-    verse.mnemonic.should == "Á t f m s o t í s P ç."
+    expect(verse.mnemonic).to eq("Á t f m s o t í s P ç.")
   end
   
   it "mnemonic method should support Korean" do
     verse = FactoryBot.create(:verse, :text => "모든 사람이 죄를 범하였으매 하나님의 영광에 이르지 못하더니")
-    verse.mnemonic.should == "ᄆᄃ ᄉᄅᄋ ᄌᄅ ᄇᄒᄋᄋᄆ ᄒᄂᄂᄋ ᄋᄀᄋ ᄋᄅᄌ ᄆᄒᄃᄂ"
+    expect(verse.mnemonic).to eq("ᄆᄃ ᄉᄅᄋ ᄌᄅ ᄇᄒᄋᄋᄆ ᄒᄂᄂᄋ ᄋᄀᄋ ᄋᄅᄌ ᄆᄒᄃᄂ")
   end
 
   it "should clean up the verse text" do
     verse = FactoryBot.create(:verse, versenum: 10, text: "This is a \r\n \r\n \n test test   \n   teest. ")
-    verse.text.should == "This is a test test teest."
+    expect(verse.text).to eq("This is a test test teest.")
   end
 
   it "should remove HTML tags (XSS prevention)" do
     verse = FactoryBot.create(:verse, versenum: 11, text: "<script>test();</script>")
-    verse.text.should == "scripttest();/script"
+    expect(verse.text).to eq("scripttest();/script")
   end
 
   it "should use em dashes when appropriate" do
     verse1 = FactoryBot.create(:verse, versenum: 12, text: "This is a test -")
-    verse1.text.should == "This is a test —"
+    expect(verse1.text).to eq("This is a test —")
 
     verse2 = FactoryBot.create(:verse, versenum: 13, text: "- which was a test")
-    verse2.text.should == "— which was a test"
+    expect(verse2.text).to eq("— which was a test")
 
     verse3 = FactoryBot.create(:verse, versenum: 14, text: "This is a hyphenated-word")
-    verse3.text.should == "This is a hyphenated-word"
+    expect(verse3.text).to eq("This is a hyphenated-word")
 
   end
 
@@ -153,7 +153,7 @@ describe Verse do
       final_verse = FactoryBot.create(:final_verse, book: "Psalms", chapter: 117, last_verse: 2)
       verse1 = FactoryBot.create(:verse, book: "Psalms", chapter: 117, versenum: 1)
 
-      verse1.entire_chapter_available.should be false
+      expect(verse1.entire_chapter_available).to be false
     end
 
     it "should think a complete chapter is available" do
@@ -161,7 +161,7 @@ describe Verse do
       verse1 = FactoryBot.create(:verse, :book => "Psalms", :chapter => 117, :versenum => 1)
       verse2 = FactoryBot.create(:verse, :book => "Psalms", :chapter => 117, :versenum => 2)
 
-      verse1.entire_chapter_available.should be true
+      expect(verse1.entire_chapter_available).to be true
     end
   end
 
@@ -179,7 +179,7 @@ describe Verse do
 
       # verse = FactoryBot.create(:verse, :book => "Psalms", :chapter => 151, :versenum => 1)
       # verse.save.should be false
-      # verse.errors.full_messages.first.should == "Invalid chapter"
+      # verse.errors.full_messages.first.should eq("Invalid chapter")
     end
 
     it "should reject an invalid versenum" do
@@ -197,7 +197,7 @@ describe Verse do
       verse1 = FactoryBot.create(:verse, book: "John", book_index: 43, chapter: 1, versenum: 1)
       verse2 = FactoryBot.create(:verse, book: "Matthew", book_index: 40, chapter: 10, versenum: 10)
 
-      (verse1 <=> verse2).should == 1
+      expect((verse1 <=> verse2)).to eq(1)
     end
 
     it "should compare chapter second" do
@@ -205,23 +205,23 @@ describe Verse do
       verse1 = FactoryBot.create(:verse, book: "Matthew", book_index: 40, chapter: 11, versenum: 1)
       verse2 = FactoryBot.create(:verse, book: "Matthew", book_index: 40, chapter: 10, versenum: 10)
 
-      (verse1 <=> verse2).should == 1
+      expect((verse1 <=> verse2)).to eq(1)
     end
 
     it "should consider versenum third" do
       verse1 = FactoryBot.create(:verse, book: "Matthew", book_index: 40, chapter: 10, versenum: 1)
       verse2 = FactoryBot.create(:verse, book: "Matthew", book_index: 40, chapter: 10, versenum: 2)
 
-      (verse1 <=> verse2).should == -1
+      expect((verse1 <=> verse2)).to eq(-1)
     end
 
     it "should fall back on ID when all else identical" do
       verse1 = FactoryBot.create(:verse, book: "Matthew", book_index: 40, chapter: 10, versenum: 1)
       verse2 = FactoryBot.create(:verse, book: "Matthew", book_index: 40, chapter: 10, versenum: 0)
 
-      verse2.stub(:versenum) { 1 } # two identical verses can't pass validations
+      allow(verse2).to receive(:versenum) { 1 } # two identical verses can't pass validations
 
-      (verse1 <=> verse2).should == -1
+      expect((verse1 <=> verse2)).to eq(-1)
     end
   end
 
@@ -231,44 +231,44 @@ describe Verse do
   describe "web_check" do
     it "should say the verse matches in the database" do
       verse = FactoryBot.create(:verse, :book => "John", :chapter => 3, :versenum => 16, :translation => "NNV", :text => "For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life.")
-      verse.database_text.should == "For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life."
+      expect(verse.database_text).to eq("For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life.")
     end
 
     it "should say normal verses match on Bible Gateway" do
       verse = FactoryBot.create(:verse, :book => "John", :chapter => 3, :versenum => 16, :translation => "KJV", :text => "For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.")
-      verse.database_text.should == "For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life."
-      verse.web_text.should == verse.database_text
+      expect(verse.database_text).to eq("For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.")
+      expect(verse.web_text).to eq(verse.database_text)
     end
 
     it "should say the first verses of chapters match on Bible Gateway" do
       verse = FactoryBot.create(:verse, :book => "Genesis", :chapter => 1, :versenum => 1, :translation => "KJV", :text => "In the beginning God created the heaven and the earth.")
       verse.database_text == "In the beginning God created the heaven and the earth."
-      verse.web_text.should == verse.database_text
+      expect(verse.web_text).to eq(verse.database_text)
     end
 
     it "should say poetry verses match on Bible Gateway" do
       verse = FactoryBot.create(:verse, :book => "Psalms", :chapter => 35, :versenum => 2, :translation => "NNV", :text => "Take up shield and armor; arise and come to my aid.")
-      verse.database_text.should == "Take up shield and armor; arise and come to my aid."
-      verse.web_text.should == verse.database_text
+      expect(verse.database_text).to eq("Take up shield and armor; arise and come to my aid.")
+      expect(verse.web_text).to eq(verse.database_text)
     end
 
     it "should say verses with 'LORD' in them match on Bible Gateway" do
       verse = FactoryBot.create(:verse, :book => "Hosea", :chapter => 14, :versenum => 2, :translation => "NNV", :text => 'Take words with you and return to the LORD. Say to him: “Forgive all our sins and receive us graciously, that we may offer the fruit of our lips.')
-      verse.database_text.should == 'Take words with you and return to the LORD. Say to him: "Forgive all our sins and receive us graciously, that we may offer the fruit of our lips.'
-      verse.web_text.should == verse.database_text
+      expect(verse.database_text).to eq('Take words with you and return to the LORD. Say to him: "Forgive all our sins and receive us graciously, that we may offer the fruit of our lips.')
+      expect(verse.web_text).to eq(verse.database_text)
     end
 
     it "should say verses with all of the above exceptions together match on Bible Gateway" do
       verse = FactoryBot.create(:verse, :book => "Psalms", :chapter => 9, :versenum => 1, :translation => "NNV", :text => "I will give thanks to you, LORD, with all my heart; I will tell of all your wonderful deeds.")
-      verse.database_text.should == "I will give thanks to you, LORD, with all my heart; I will tell of all your wonderful deeds."
-      verse.web_text.should == verse.database_text
+      expect(verse.database_text).to eq("I will give thanks to you, LORD, with all my heart; I will tell of all your wonderful deeds.")
+      expect(verse.web_text).to eq(verse.database_text)
     end
 
 
     it "should say incorrect verses are incorrect" do
       verse = FactoryBot.create(:verse, :book => "Psalms", :chapter => 35, :versenum => 3, :translation => "NNV", :text => "This is incorrect")
-      verse.database_text.should_not == "Brandish spear and javelin against those who pursue me.  Say to my soul, “I am your salvation.”"
-      verse.web_text.should_not == verse.database_text
+      expect(verse.database_text).not_to eq("Brandish spear and javelin against those who pursue me.  Say to my soul, “I am your salvation.”")
+      expect(verse.web_text).not_to eq(verse.database_text)
     end
   end
 

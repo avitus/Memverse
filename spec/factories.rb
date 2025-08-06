@@ -73,8 +73,12 @@ FactoryBot.define do
 
     after(:create) do |psg, evaluator|
       for i in evaluator.first_verse..evaluator.last_verse
-        vs = FactoryBot.create(:verse, book: evaluator.book, chapter: evaluator.chapter, versenum: i, translation: evaluator.translation)
-        FactoryBot.create(:memverse_without_passage, user: evaluator.user, verse: vs, passage: psg, test_interval: i, rep_n: i)
+        # Find or create verse to avoid conflicts
+        vs = Verse.find_by(book: evaluator.book, chapter: evaluator.chapter, versenum: i, translation: evaluator.translation)
+        if vs.nil?
+          vs = FactoryBot.create(:verse, book: evaluator.book, chapter: evaluator.chapter, versenum: i, translation: evaluator.translation)
+        end
+        FactoryBot.create(:memverse_without_passage, user: evaluator.user, verse: vs, passage_id: psg.id, test_interval: [i, 1].max, rep_n: [i, 1].max, status: 'Learning')
       end
     end
   end
@@ -94,14 +98,24 @@ FactoryBot.define do
     ref_interval { 6 }
     next_ref_test { Date.today }
 
-    after(:build) { |memverse| memverse.class.set_callback(:create, :after, :add_to_passage) }
-
     factory :memverse_without_passage do
-      after(:build) { |memverse| memverse.class.skip_callback(:create, :after, :add_to_passage) }
+      # Skip the passage callback to avoid circular dependencies in tests
+      after(:build) do |memverse|
+        memverse.class.skip_callback(:create, :after, :add_to_passage)
+      end
+      after(:create) do |memverse|
+        memverse.class.set_callback(:create, :after, :add_to_passage)  # Re-enable for other tests
+      end
     end
 
     factory :memverse_without_supermemo_init do
-      after(:build) { |memverse| memverse.class.skip_callback(:create, :before, :supermemo_init, raise: false) }
+      # Skip supermemo initialization for testing
+      after(:build) do |memverse|
+        memverse.class.skip_callback(:create, :before, :supermemo_init)
+      end
+      after(:create) do |memverse|
+        memverse.class.set_callback(:create, :before, :supermemo_init)  # Re-enable for other tests
+      end
     end
   end
 
@@ -113,8 +127,8 @@ FactoryBot.define do
     title { 'Memverse Blog' }
   end
 
-  factory :blog_post do |f|
-    f.association :posted_by_id, :factory => :user
+  factory :blog_post do
+    association :posted_by, factory: :user
   end
 
   factory :blog_comment do
@@ -207,6 +221,47 @@ FactoryBot.define do
     versenum { 1 }
     book_index { 1 }
     subsection_end { 0 }
+  end
+
+  # ==============================================================================================
+  # American States
+  # ==============================================================================================
+  factory :american_state do
+    name { Faker::Address.state }
+    abbrev { Faker::Address.state_abbr }
+    users_count { 0 }
+    population { Faker::Number.between(from: 500000, to: 40000000) }
+  end
+
+  # ==============================================================================================
+  # Devotions
+  # ==============================================================================================
+  factory :devotion do
+    name { 'Spurgeon Morning' }
+    month { Faker::Number.between(from: 1, to: 12) }
+    day { Faker::Number.between(from: 1, to: 28) }
+    thought { Faker::Lorem.paragraph(sentence_count: 5) }
+    ref { "#{Faker::Lorem.word.capitalize} #{Faker::Number.between(from: 1, to: 150)}:#{Faker::Number.between(from: 1, to: 50)}" }
+  end
+
+  # ==============================================================================================
+  # Daily Stats
+  # ==============================================================================================
+  factory :daily_stats do
+    entry_date { Date.today }
+    segment { 'Global' }
+    users { Faker::Number.between(from: 100, to: 10000) }
+    users_active_in_month { Faker::Number.between(from: 50, to: 1000) }
+    verses { Faker::Number.between(from: 1000, to: 50000) }
+    memverses { Faker::Number.between(from: 500, to: 25000) }
+    memverses_memorized { Faker::Number.between(from: 100, to: 5000) }
+    memverses_learning { Faker::Number.between(from: 200, to: 8000) }
+    memverses_memorized_not_overdue { Faker::Number.between(from: 50, to: 2500) }
+    memverses_learning_active_in_month { Faker::Number.between(from: 150, to: 6000) }
+
+    trait :american do
+      segment { 'United States' }
+    end
   end
 
   # ==============================================================================================

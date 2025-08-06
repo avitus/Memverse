@@ -21,12 +21,12 @@ describe Api::V1::TranslationsController do
 
       it 'responds with 200' do
         get :index, params: {version: 1}, :format => :json
-        response.status.should eq(200)
+        expect(response.status).to eq(200)
       end
 
       it 'returns translations as json' do
         get :index, params: {version: 1}, :format => :json
-        json.should == JSON.parse(Translation.for_api.to_json)
+        expect(json).to eq(JSON.parse(Translation.for_api.to_json))
       end
 
     end
@@ -35,7 +35,7 @@ describe Api::V1::TranslationsController do
 
       it 'responds with 401' do
         get :index, params: {version: 1}, :format => :json
-        response.status.should eq(401)
+        expect(response.status).to eq(401)
       end
 
     end

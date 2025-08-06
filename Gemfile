@@ -40,7 +40,6 @@ group :development, :test do
   # gem 'phantomjs'                                             # For wercker jasmine specs
   gem 'guard', '>= 0.6.2'
   gem 'guard-minitest'
-  gem 'guard-spork'
   gem 'guard-rspec'
   gem 'guard-cucumber'
   gem 'guard-jasmine'
@@ -75,11 +74,11 @@ gem 'jquery-ui-rails'
 # Rails Support Gems
 ############################################################
 # gem 'compass-rails'                                                             # Now has Rails 4 support - removed as not needed
-gem 'sass-rails', '~> 5.0'
+gem 'sass-rails', '~> 6.0'
 gem 'autoprefixer-rails', '~> 8.6.5'                                           # Use older stable version compatible with Rails 5.2
-gem 'uglifier', '>= 1.3.0'                                                      # Compressor for JS assets
-gem 'coffee-rails', '~> 4.2' 
-gem 'rails-observers'                                                           # Needed as of Rails 5.1 to observe user model                     
+gem 'uglifier', '~> 4.2'                                                      # Compressor for JS assets
+gem 'coffee-rails', '~> 5.0' 
+# gem 'rails-observers'                                                           # REMOVED: Replaced with callbacks in User model                     
 gem "mimemagic", "~> 0.3.10"                                                    # For mime type detection. Prev version yanked      
 gem 'ffi', '~> 1.15.5'                                                          # Use older version compatible with older GLIBC
 
@@ -112,7 +111,7 @@ gem 'devise'                                                                   #
 gem 'devise-encryptable'                                                       # TODO: Is this required?
 gem 'omniauth'                                                                 # Multi-provider authentication
 gem 'omniauth-windowslive', github: 'kayle/omniauth-windowslive'               # Windows Live strategy (repo fork)
-gem 'cancancan', '~> 1.10'                                                     # Role-based authorization
+gem 'cancancan', '~> 3.4'                                                     # Role-based authorization
 
 ############################################################
 # Major Engines (Admin, Forem, Blog)
@@ -170,7 +169,7 @@ gem 'thinking-sphinx'                                                          #
 gem "i18n-js", ">= 3.0.0.rc11"                                                 # Uses config/locale files to build a JavaScript equivalent of i18n in Rails
 # gem 'localeapp'                                                                # Translation service for i18n
 gem 'breadcrumbs_on_rails', '>=2.0.0'                                          # For breadcrumb navigation bar
-gem 'dalli', '~> 2.7'
+gem 'dalli', '~> 3.2'
 gem 'friendly_id'                                                              # Makes nice IDs for models
 gem 'foreman'                                                                  # Helps manage multiple processes when running app in development.
 gem 'best_in_place'                                                            # In-place editing support

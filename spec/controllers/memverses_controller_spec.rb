@@ -24,13 +24,13 @@ describe MemversesController do
 
     it "should allow a user to add a verse" do
       get :ajax_add, params: {id: @verse}, session: valid_session
-      @user.memverses.first.verse.should == @verse
+      expect(@user.memverses.first.verse).to eq(@verse)
     end
 
     it "should not allow the identical verse to be added twice" do
       get :ajax_add, params: {id: @verse}, session: valid_session
       get :ajax_add, params: {id: @verse}, session: valid_session
-      @user.memverses.count.should == 1
+      expect(@user.memverses.count).to eq(1)
     end
 
     it "should not allow the same verse in two different translations" do
@@ -38,7 +38,7 @@ describe MemversesController do
       @verse_esv = FactoryBot.create(:verse, :translation => 'ESV')
       get :ajax_add, params: { id: @verse_kjv }, session: valid_session
       get :ajax_add, params: { id: @verse_esv }, session: valid_session
-      @user.memverses.count.should == 1
+      expect(@user.memverses.count).to eq(1)
     end
 
   end
@@ -57,28 +57,28 @@ describe MemversesController do
 
     it "should add an entire chapter to users memory verses" do
       # get :add_chapter, :bk => "Psalms", :ch => 15, :tl => "NIV"
-      @user.memverses.count.should == 5
+      expect(@user.memverses.count).to eq(5)
     end
 
     it "should correctly link the verses to the first verse" do
       # get :add_chapter, :bk => "Psalms", :ch => 15, :tl => "NIV"
       first_verse = @user.memverses.includes(:verse).where('verses.versenum' => 1).first
       third_verse = @user.memverses.includes(:verse).where('verses.versenum' => 3).first
-      third_verse.first_verse.should == first_verse.id
+      expect(third_verse.first_verse).to eq(first_verse.id)
     end
 
     it "should correctly link a verse to the previous verse" do
       # get :add_chapter, :bk => "Psalms", :ch => 15, :tl => "NIV"
       fourth_verse = @user.memverses.includes(:verse).where('verses.versenum' => 4).first
       fifth_verse  = @user.memverses.includes(:verse).where('verses.versenum' => 5).first
-      fifth_verse.prev_verse.should == fourth_verse.id
+      expect(fifth_verse.prev_verse).to eq(fourth_verse.id)
     end
 
     it "should correctly link a verse to the next verse" do
       # get :add_chapter, :bk => "Psalms", :ch => 15, :tl => "NIV"
       fourth_verse = @user.memverses.includes(:verse).where('verses.versenum' => 4).first
       fifth_verse  = @user.memverses.includes(:verse).where('verses.versenum' => 5).first
-      fourth_verse.next_verse.should == fifth_verse.id
+      expect(fourth_verse.next_verse).to eq(fifth_verse.id)
     end
 
   end
@@ -86,22 +86,22 @@ describe MemversesController do
   describe "GET 'mv_lookup_passage'" do 
     it "should retrieve verses in a given passage" do
       get :mv_lookup_passage, params: {bk: "Psalms", ch: 1}, format: :json, session: valid_session
-      response.should be_success
+      expect(response).to be_success
     end
 
     it "should reject out of range chapters" do
       get :mv_lookup_passage, params: {bk: "Psalms", ch: 200}, format: :json, session: valid_session
-      response.should be_success
+      expect(response).to be_success
     end
 
     it "should reject out of range verse numbers" do
       get :mv_lookup_passage, params: {bk: "Psalms", ch: 1, vs_start: 1, vs_end: 100}, format: :json, session: valid_session
-      response.should be_success
+      expect(response).to be_success
     end
 
     it "should gracefully handle wildly out of range verse numbers" do
       get :mv_lookup_passage, params: {bk: "Psalms", ch: 1, vs_start: 1, vs_end: 99999999999999}, format: :json, session: valid_session
-      response.should be_success      
+      expect(response).to be_success      
     end
 
   end

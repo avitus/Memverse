@@ -337,17 +337,23 @@ class Memverse < ActiveRecord::Base
 
     if self.user.sync_subsections && self.part_of_subsection?
 
-      subsection_array = self.not_due_today_subsection
+      # Get all verses in the subsection that were tested today
+      tested_today_subsection = Memverse.where(passage_id: self.passage_id, subsection: self.subsection, last_tested: Date.today)
+      
+      if tested_today_subsection.any?
+        min_test_interval = tested_today_subsection.minimum(:test_interval)
+        subsection_status = min_test_interval > 30 ? "Memorized" : "Learning"
 
-      min_test_interval   = subsection_array.minimum(:test_interval)
-      earliest_next_test  = subsection_array.minimum(:next_test)
-      subsection_status   = min_test_interval > 30 ? "Memorized" : "Learning"
-
-      subsection_array.each do |mv|
-        mv.test_interval = [min_test_interval,1].max
-        mv.next_test     = Date.today + min_test_interval
-        mv.status        = subsection_status
-        mv.save!
+        # Synchronize ALL verses in subsection (including those not tested today)
+        entire_subsection.each do |mv|
+          # Only sync if this verse wasn't already tested today (to avoid overwriting the supermemo results)
+          unless mv.last_tested == Date.today
+            mv.test_interval = [min_test_interval, 1].max
+            mv.next_test     = Date.today + min_test_interval
+            mv.status        = subsection_status
+            mv.save!
+          end
+        end
       end
 
     end

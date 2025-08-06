@@ -31,10 +31,10 @@ describe Quest do
         quest = FactoryBot.create(:quest, objective: 'Gospels', qualifier: 'Learning', quantity: 1)
 
         FactoryBot.create(:memverse, user: @user, verse: prophet)
-        quest.complete?(@user).should == false
+        expect(quest.complete?(@user)).to eq(false)
 
         FactoryBot.create(:memverse, user: @user, verse: gospel)
-        quest.complete?(@user).should == true
+        expect(quest.complete?(@user)).to eq(true)
       end
 
       it "for 'Memorized'" do
@@ -43,10 +43,10 @@ describe Quest do
         mv.update_attributes(test_interval: 31, status: "Memorized")
 
         mv.update_attribute(:verse, gospel)
-        quest.complete?(@user).should == false
+        expect(quest.complete?(@user)).to eq(false)
 
         mv.update_attribute(:verse, prophet)
-        quest.complete?(@user).should == true
+        expect(quest.complete?(@user)).to eq(true)
       end
     end
 
@@ -64,30 +64,30 @@ describe Quest do
         quest = FactoryBot.create(:quest, objective: 'Chapters', qualifier: 'Learning', quantity: 2)
 
         create_chapter("Psalms", 11, @user, "Learning")
-        quest.complete?(@user).should == false
+        expect(quest.complete?(@user)).to eq(false)
 
         create_chapter("Psalms", 12, @user, "Learning")
-        quest.complete?(@user).should == true
+        expect(quest.complete?(@user)).to eq(true)
       end
 
       it "for 'Memorized'" do
         quest = FactoryBot.create(:quest, objective: 'Chapters', qualifier: 'Memorized', quantity: 2)
 
         create_chapter("Psalms", 13, @user, "Memorized")
-        quest.complete?(@user).should == false
+        expect(quest.complete?(@user)).to eq(false)
 
         create_chapter("Psalms", 14, @user, "Memorized")
-        quest.complete?(@user).should == true
+        expect(quest.complete?(@user)).to eq(true)
       end
 
       it "for memorizing particular chapter" do
         quest = FactoryBot.create(:quest, objective: 'Chapters', qualifier: 'Psalm 8', quantity: 1)
 
         create_chapter("Psalms", 23, @user, "Memorized")
-        quest.complete?(@user).should == false
+        expect(quest.complete?(@user)).to eq(false)
 
         create_chapter("Psalms", 8, @user, "Memorized")
-        quest.complete?(@user).should == true
+        expect(quest.complete?(@user)).to eq(true)
       end
     end
 
@@ -96,7 +96,7 @@ describe Quest do
         quest = FactoryBot.create(:quest, objective: 'Books', qualifier: 'Learning', quantity: 1)
 
         create_chapter("Jude", 1, @user, "Learning")
-        quest.complete?(@user).should == false
+        expect(quest.complete?(@user)).to eq(false)
       end
     end
 
@@ -105,13 +105,13 @@ describe Quest do
         quest = FactoryBot.create(:quest, objective: 'Accuracy', quantity: 70)
 
         # incomplete without doing anything
-        quest.complete?(@user).should == false
+        expect(quest.complete?(@user)).to eq(false)
 
         @user.accuracy = 69
-        quest.complete?(@user).should == false
+        expect(quest.complete?(@user)).to eq(false)
 
         @user.accuracy = 70
-        quest.complete?(@user).should == true
+        expect(quest.complete?(@user)).to eq(true)
       end
     end
 
@@ -120,13 +120,13 @@ describe Quest do
         quest = FactoryBot.create(:quest, objective: 'References', quantity: 70)
 
         # incomplete without doing anything
-        quest.complete?(@user).should == false
+        expect(quest.complete?(@user)).to eq(false)
 
         @user.ref_grade = 69
-        quest.complete?(@user).should == false
+        expect(quest.complete?(@user)).to eq(false)
 
         @user.ref_grade = 70
-        quest.complete?(@user).should == true
+        expect(quest.complete?(@user)).to eq(true)
       end
     end
 
@@ -135,13 +135,13 @@ describe Quest do
         quest = FactoryBot.create(:quest, objective: 'Sessions', quantity: 3)
 
         # incomplete without doing anything
-        quest.complete?(@user).should == false
+        expect(quest.complete?(@user)).to eq(false)
 
         for i in 1..3
           FactoryBot.create(:progress_report, user: @user, entry_date: Date.today - i.days)
         end
 
-        quest.complete?(@user).should == true
+        expect(quest.complete?(@user)).to eq(true)
       end
     end
 
@@ -151,7 +151,7 @@ describe Quest do
       end
 
       it "should be incomplete without doing anything" do
-        @quest.complete?(@user).should == false
+        expect(@quest.complete?(@user)).to eq(false)
       end
 
       it "should not count sessions from over a year ago" do
@@ -159,7 +159,7 @@ describe Quest do
           FactoryBot.create(:progress_report, user: @user, entry_date: Date.today - (12+i).months)
         end
 
-        @quest.complete?(@user).should == false
+        expect(@quest.complete?(@user)).to eq(false)
       end
 
       it "should count sessions from present year" do
@@ -167,7 +167,7 @@ describe Quest do
           FactoryBot.create(:progress_report, user: @user, entry_date: Date.today - i.months)
         end
 
-        @quest.complete?(@user).should == true
+        expect(@quest.complete?(@user)).to eq(true)
       end
     end
 
@@ -177,7 +177,7 @@ describe Quest do
       end
 
       it "should be incomplete without doing anything" do
-        @quest.complete?(@user).should == false
+        expect(@quest.complete?(@user)).to eq(false)
       end
 
       it "should count referrals" do
@@ -185,7 +185,7 @@ describe Quest do
           FactoryBot.create(:user, referred_by: @user.id)
         end
 
-        @quest.complete?(@user).should == true
+        expect(@quest.complete?(@user)).to eq(true)
       end
     end
 

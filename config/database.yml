@@ -19,7 +19,6 @@
 
 # == Rails ===========
 development: &default
-
   database: memverse_development
   adapter: mysql2
   encoding: utf8
@@ -27,7 +26,8 @@ development: &default
   username: root
   password: 
   host: 127.0.0.1
-  socket: /run/mysqld/mysqld.sock
+  port: 3306
+  timeout: 5000
 
 test: &test
   adapter: mysql2
@@ -38,6 +38,10 @@ test: &test
   host: 127.0.0.1
   port: 3306
   database: memverse_test
+  timeout: 5000
+  connect_timeout: 5
+  read_timeout: 5
+  write_timeout: 5
 
 production:
    adapter: mysql2

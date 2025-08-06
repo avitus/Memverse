@@ -44,7 +44,7 @@ describe VersesController do
   #   it "assigns all Verses as @Verses" do
   #     verse = Verse.create! valid_attributes
   #     get :index, {}, valid_session
-  #     assigns(:verses).should eq([verse])
+  #      assigns(:verses)).to eq([verse])
   #   end
   # end
 
@@ -52,14 +52,14 @@ describe VersesController do
     it "assigns the requested Verse as @Verse" do
       verse = Verse.create! valid_attributes
       get :show, params: {id: verse.to_param}, session: valid_session
-      assigns(:verse).should eq(verse)
+      expect(assigns(:verse)).to eq(verse)
     end
   end
 
   # describe "GET new" do
   #   it "assigns a new Verse as @Verse" do
   #     get :new, {}, valid_session
-  #     assigns(:verse).should be_a_new(Verse)
+  #      assigns(:verse)).to be_a_new(Verse)
   #   end
   # end
 
@@ -67,7 +67,7 @@ describe VersesController do
     it "assigns the requested Verse as @Verse" do
       verse = Verse.create! valid_attributes
       get :edit, params: {id: verse.to_param}, session: valid_session
-      assigns(:verse).should eq(verse)
+      expect(assigns(:verse)).to eq(verse)
     end
   end
 
@@ -81,29 +81,29 @@ describe VersesController do
 
       it "assigns a newly created Verse as @Verse" do
         post :create, params: {verse: valid_attributes}, session: valid_session
-        assigns(:verse).should be_a(Verse)
-        assigns(:verse).should be_persisted
+        expect(assigns(:verse)).to be_a(Verse)
+        expect(assigns(:verse)).to be_persisted
       end
 
       it "redirects to the created Verse" do
         post :create, params: {verse: valid_attributes}, session: valid_session
-        response.should redirect_to(Verse.last)
+        expect(response).to redirect_to(Verse.last)
       end
     end
 
     # describe "with invalid params" do
     #   it "assigns a newly created but unsaved Verse as @Verse" do
     #     # Trigger the behavior that occurs when invalid params are submitted
-    #     Verse.any_instance.stub(:save).and_return(false)
+    #     allow_any_instance_of(Verse).to receive(:save).and_return(false)
     #     post :create, {:verse => { :book => "invalid value" }}, valid_session
-    #     assigns(:verse).should be_a_new(verse)
+    #      assigns(:verse)).to be_a_new(verse)
     #   end
 
     #   it "re-renders the 'new' template" do
     #     # Trigger the behavior that occurs when invalid params are submitted
-    #     Verse.any_instance.stub(:save).and_return(false)
+    #     allow_any_instance_of(Verse).to receive(:save).and_return(false)
     #     post :create, {:verse => { :book => "invalid value" }}, valid_session
-    #     response.should render_template("new")
+    #      response).to render_template("new")
     #   end
     # end
   end
@@ -132,7 +132,7 @@ describe VersesController do
       # it "assigns the requested Verse as @Verse -- admin making change" do
       #   verse = Verse.create! valid_attributes
       #   patch :update, {:id => Verse.to_param, :verse => valid_attributes}, {}
-      #   assigns(:verse).should eq(verse)
+      #    assigns(:verse)).to eq(verse)
       # end
 
       # it "assigns the requested Verse as @Verse -- user making change" do
@@ -144,7 +144,7 @@ describe VersesController do
       it "redirects to the Verse" do
         verse = Verse.create! valid_attributes
         put :update, params: {id: verse.to_param, verse: valid_attributes}, session: valid_session
-        response.should redirect_to(verse)
+        expect(response).to redirect_to(verse)
       end
       
     end
@@ -153,17 +153,17 @@ describe VersesController do
       it "assigns the Verse as @Verse" do
         verse = Verse.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
-        Verse.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Verse).to receive(:save).and_return(false)
         put :update, params: {id: verse.to_param, verse: { book: "invalid value" }}, session: valid_session
-        assigns(:verse).should eq(verse)
+        expect(assigns(:verse)).to eq(verse)
       end
 
       it "re-renders the 'edit' template" do
         verse = Verse.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
-        Verse.any_instance.stub(:save).and_return(false)
+        allow_any_instance_of(Verse).to receive(:save).and_return(false)
         put :update, params: {id: verse.to_param, verse: { book: "invalid value" }}, session: valid_session
-        response.should render_template("edit")
+        expect(response).to render_template("edit")
       end
     end
   end
@@ -179,7 +179,7 @@ describe VersesController do
     it "redirects to the Verses list" do
       verse = Verse.create! valid_attributes
       delete :destroy, params: {id: verse.to_param}, session: valid_session
-      response.should redirect_to(verses_url)
+      expect(response).to redirect_to(verses_url)
     end
   end
 

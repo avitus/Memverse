@@ -4,8 +4,8 @@ describe QuizQuestion do
     qq = FactoryBot.create(:quiz_question, :times_answered => 10, :perc_correct => 50)
     qq.update_difficulty(10, 100)  # answer count, percentage_correct
     qq.reload
-    qq.times_answered.should == 20
-    qq.perc_correct.should == 75.0
+    expect(qq.times_answered).to eq(20)
+    expect(qq.perc_correct).to eq(75.0)
   end
 
   describe "validations" do
@@ -20,26 +20,26 @@ describe QuizQuestion do
         qq.question_type = "mcq"
         qq.mc_answer = ""
 
-        qq.save.should be false
+        expect(qq.save).to be false
 
         qq.mc_answer = "A"
-        qq.save.should be true
+        expect(qq.save).to be true
 
         qq.mc_answer = "AA"
-        qq.save.should be false
+        expect(qq.save).to be false
       end
 
       it "rejects mc_options too long" do
         for option in [:mc_option_a=, :mc_option_b=, :mc_option_c=, :mc_option_d=]
           qq.send(option, "X" * 160)
-          qq.save.should be false
+          expect(qq.save).to be false
         end
       end
 
       it "accepts mc_options of reasonable length" do
         for option in [:mc_option_a=, :mc_option_b=, :mc_option_c=, :mc_option_d=]
           qq.send(option, "Answer choice")
-          qq.save.should be true
+          expect(qq.save).to be true
         end
       end
     end
@@ -49,10 +49,10 @@ describe QuizQuestion do
       let(:qq) { FactoryBot.create(:quiz_question, question_type: "reference", supporting_ref: uv) }
 
       it "does not need MC options or answer" do
-        qq.question_type.should == "reference"
+        expect(qq.question_type).to eq("reference")
 
         for mc in [:mc_question, :mc_option_a, :mc_option_b, :mc_option_c, :mc_option_d, :mc_answer]
-          qq.send(mc).should == nil
+          expect(qq.send(mc)).to eq(nil)
         end
       end
     end
