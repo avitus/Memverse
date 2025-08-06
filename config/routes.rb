@@ -164,6 +164,10 @@ MemverseApp::Application.routes.draw do
 
   # Bible Reading
   get  '/read/:tl/:bk/:ch'        => 'reading#chapter'
+  get  '/chapter'                 => 'reading#chapter'
+  
+  # Starter pack
+  get  '/starter_pack/:translation' => 'memverses#starter_pack', :as => 'starter_pack'
 
   # Verse search
   get '/lookup_user_verse'        => 'memverses#mv_lookup',             :as => 'lookup_user_verse'
@@ -188,6 +192,7 @@ MemverseApp::Application.routes.draw do
   get '/admin_search_verse'       => 'utils#search_verse',              :as => 'admin_search_verse'
   get '/utils_verify_verse/:id'   => 'utils#verify_verse',              :as => 'utils_verify_verse'
   get '/utils_dashboard'          => 'utils#dashboard',                 :as => 'utils_dashboard'
+  get '/show_users'               => 'utils#show_users',                :as => 'show_users'
   get '/progression/(:yr)/(:mo)'  => 'utils#user_progression',          :as => 'progression'
 
   # Doesn't require a login
@@ -303,14 +308,8 @@ MemverseApp::Application.routes.draw do
   # Additional popverses routes (for tests)
   get '/popverses/show' => 'popverses#show', as: 'popverses_show' if Rails.env.test?
 
-  # Install the default routes as the lowest priority.
-  # SECURITY: Default routes are restricted to authenticated users only
-  # Most controllers now have explicit routes defined above
-  # This is kept temporarily for backward compatibility with less critical actions
-  match '/:controller(/:action(/:id))', :via => [:get, :post], constraints: -> (req) { 
-    # Only allow default routes for authenticated requests
-    # This prevents anonymous users from discovering and accessing unmapped controller actions
-    req.session[:warden].present?
-  }
+  # Default routes have been removed to comply with Rails 6.0
+  # All controller actions must now have explicit routes defined above
+  # This improves security by preventing access to unmapped controller actions
 
 end

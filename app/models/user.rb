@@ -365,7 +365,7 @@ class User < ActiveRecord::Base
   # Check whether current user is memorizing a given chapter in any translation
   # 
   # @param book [String] e.g., "John"
-  # @param chapter [Fixnum] e.g., 3
+  # @param chapter [Integer] e.g., 3
   #
   # @return [Array<Memverse>, nil] Array of Memverses from chapter if present.
   #   Otherwise, nil.
@@ -382,8 +382,8 @@ class User < ActiveRecord::Base
   # Check whether current user is memorizing a given verse in any translation
   #
   # @param book [String]
-  # @param chapter [Fixnum]
-  # @param versenum [Fixnum]
+  # @param chapter [Integer]
+  # @param versenum [Integer]
   #
   # @return Boolean
   def has_verse?(book, chapter, versenum)
@@ -394,7 +394,7 @@ class User < ActiveRecord::Base
   # Check whether current user is memorizing a given verse
   # @see #has_verse?
   #
-  # @param vs_id [Fixnum] 
+  # @param vs_id [Integer] 
   # @return [Memverse, nil]
   def has_verse_id?(vs_id)
     self.memverses.where(verse_id: vs_id).first
@@ -402,7 +402,7 @@ class User < ActiveRecord::Base
 
   # Minutes required daily
   #
-  # @return [Fixnum]
+  # @return [Integer]
   # 
   # @todo This method occasionally returned infinity due to test_interval being zero. This is not the best place
   #       to fix the problem but good enough hack for now.
@@ -448,7 +448,7 @@ class User < ActiveRecord::Base
 
   # User progression
   #
-  # @return [Fixnum] Scale of 0 to 9 representing user progression.
+  # @return [Integer] Scale of 0 to 9 representing user progression.
   def progression
 
     has_reviewed_one = memverses.sum(:attempts) > 0         # TRUE if user has reviewed one verse
@@ -547,7 +547,7 @@ class User < ActiveRecord::Base
   # 
   # @param time_period [Symbol] :week, :month, :year, :total
   #
-  # @return [Fixnum] Sessions completed in last time_period (e.g., last week).
+  # @return [Integer] Sessions completed in last time_period (e.g., last week).
   def completed_sessions(time_period = :total)
     sessions = self.progress_reports
 
@@ -581,7 +581,7 @@ class User < ActiveRecord::Base
   #
   # @param cat [Symbol] :ot, :nt, :history, :wisdom, :prophecy, :gospel, :epistle
   #
-  # @return [Fixnum] Percentage of verses in category
+  # @return [Integer] Percentage of verses in category
   def category_perc(cat)
     return 0 if !self.has_active?
 
@@ -726,7 +726,7 @@ class User < ActiveRecord::Base
   #
   # @param active Boolean If true, only active referrals will be counted.
   #   Otherwise, all referrals will be returned.
-  # @return [Fixnum]
+  # @return [Integer]
   def num_referrals( active = false )
     self.referrals(active).count
   end
@@ -759,7 +759,7 @@ class User < ActiveRecord::Base
 
   # Number of tags a user has applied
   #
-  # @return [Fixnum]
+  # @return [Integer]
   def num_taggings
     ActsAsTaggableOn::Tagging.where(tagger_type: "user", tagger: self).count
   end
@@ -926,21 +926,21 @@ class User < ActiveRecord::Base
 
   # Number of overdue verses (does not include verses that are due today)
   #
-  # @return [Fixnum]
+  # @return [Integer]
   def overdue_verses
     self.memverses.active.where("next_test < ?", Date.today).count
   end
 
   # Number of due verses
   #
-  # @return [Fixnum]
+  # @return [Integer]
   def due_verses
     self.memverses.active.where("next_test <= ?", Date.today).count
   end
 
   # Number of due verse references
   #
-  # @return [Fixnum]
+  # @return [Integer]
   def due_refs
     return self.memverses.active.ref_due.count if self.all_refs
 
@@ -1251,7 +1251,7 @@ class User < ActiveRecord::Base
 
   # Days since we last contacted user or they logged in
   #
-  # @return [Fixnum]
+  # @return [Integer]
   def days_since_contact_or_login
 
     last_reminded = self.last_reminder || self.created_at.to_date

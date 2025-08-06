@@ -142,7 +142,7 @@ gem 'mail', '>= 2.2.15'                                                        #
 ############################################################
 # Scheduled Tasks
 ############################################################
-gem 'sidekiq', '~> 6.5'                                                                  # Background jobs; used for quizzes. TODO: Version 4 might be incompatible with Sidetiq
+gem 'sidekiq', '~> 6.5'                                                                  # Background jobs; keep at 6.5 until Rails 6+ upgrade
 gem "sidekiq-cron", "~> 1.12.0"                                                 # Scheduler for Sidekiq
 gem 'ice_cube'                                                                 # For calculating next quiz
 gem 'capistrano-sidekiq', group: :development

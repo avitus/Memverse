@@ -86,22 +86,22 @@ describe MemversesController do
   describe "GET 'mv_lookup_passage'" do 
     it "should retrieve verses in a given passage" do
       get :mv_lookup_passage, params: {bk: "Psalms", ch: 1}, format: :json, session: valid_session
-      expect(response).to be_success
+      expect(response).to be_successful
     end
 
     it "should reject out of range chapters" do
       get :mv_lookup_passage, params: {bk: "Psalms", ch: 200}, format: :json, session: valid_session
-      expect(response).to be_success
+      expect(response).to be_successful
     end
 
     it "should reject out of range verse numbers" do
       get :mv_lookup_passage, params: {bk: "Psalms", ch: 1, vs_start: 1, vs_end: 100}, format: :json, session: valid_session
-      expect(response).to be_success
+      expect(response).to be_successful
     end
 
     it "should gracefully handle wildly out of range verse numbers" do
       get :mv_lookup_passage, params: {bk: "Psalms", ch: 1, vs_start: 1, vs_end: 99999999999999}, format: :json, session: valid_session
-      expect(response).to be_success      
+      expect(response).to be_successful
     end
 
   end

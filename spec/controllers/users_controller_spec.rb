@@ -10,7 +10,7 @@ describe UsersController do
 
     it "should be successful" do
       get :show, params: {id: @user.id}
-      expect(response).to be_success
+      expect(response).to be_successful
     end
 
     it "should find the right user" do

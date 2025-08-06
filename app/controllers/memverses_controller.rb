@@ -157,7 +157,7 @@ class MemversesController < ApplicationController
 
     # Otherwise, show some nice statistics and direct user to memorization page if necessary
     if (!@user_has_no_verses)
-      mv = Memverse.where(:user_id => current_user.id).order("next_test ASC").first
+      mv = Memverse.where(:user_id => current_user.id).order(Arel.sql("next_test ASC")).first
       if !mv.nil?
         @user_has_test_today = (mv.next_test <= Date.today)
       end
@@ -173,8 +173,8 @@ class MemversesController < ApplicationController
     end
 
     # === Get Recent Tweets ===
-    @tweets1 = Tweet.where(:importance => 1..2).limit(12).order("created_at DESC")  # Most important tweets
-    @tweets2 = Tweet.where(:importance => 3..4).limit(12).order("created_at DESC")  # Moderate importance
+    @tweets1 = Tweet.where(:importance => 1..2).limit(12).order(Arel.sql("created_at DESC"))  # Most important tweets
+    @tweets2 = Tweet.where(:importance => 3..4).limit(12).order(Arel.sql("created_at DESC"))  # Moderate importance
 
     # === RSS Devotional ===
     @dd = Rails.cache.fetch(["devotion", Date.today.month, Date.today.day], :expires_in => 24.hours) do
@@ -676,11 +676,10 @@ class MemversesController < ApplicationController
       if sanitized_sort
         if ['next_test', 'next_ref_test'].include?(params[:sort_order])
           # Order: active verses at the top, inactive (pending) at the bottom
-          # Using sanitize_sql_for_order for the complex SQL
-          status_order = ActiveRecord::Base.sanitize_sql_for_order("status != 'Pending' DESC")
-          @my_verses = @my_verses.order(status_order).order(sanitized_sort)
+          # Using Arel.sql for the status ordering
+          @my_verses = @my_verses.order(Arel.sql("status != 'Pending' DESC")).order(Arel.sql(sanitized_sort))
         else
-          @my_verses = @my_verses.order(sanitized_sort)
+          @my_verses = @my_verses.order(Arel.sql(sanitized_sort))
         end
       else
         # Fall back to default sort if invalid parameter
@@ -1073,9 +1072,9 @@ class MemversesController < ApplicationController
     if !mv
       due_refs = 0
       if current_user.all_refs
-        mv = current_user.memverses.active.order("ref_interval ASC").limit(50).sort_by{ rand }.first
+        mv = current_user.memverses.active.order(Arel.sql("ref_interval ASC")).limit(50).sort_by{ rand }.first
       else
-        mv = current_user.memverses.active.passage_start.order("ref_interval ASC").limit(50).sort_by{ rand }.first
+        mv = current_user.memverses.active.passage_start.order(Arel.sql("ref_interval ASC")).limit(50).sort_by{ rand }.first
       end
     end
 

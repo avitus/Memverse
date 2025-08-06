@@ -177,9 +177,9 @@ class Memverse < ActiveRecord::Base
 
   # Exposed via API
   def serializable_hash(options = {})
-    super only: [:id, :user_id, :next_test, :test_interval, :status, :rep_n, :efactor, :subsection, :prev_verse, :passage_id, :next_ref_test, :ref_interval],
+    super({only: [:id, :user_id, :next_test, :test_interval, :status, :rep_n, :efactor, :subsection, :prev_verse, :passage_id, :next_ref_test, :ref_interval],
           methods: [:ref],
-          include: [verse: {only: [:id, :translation, :text, :book_index, :book, :chapter, :versenum]}]
+          include: [verse: {only: [:id, :translation, :text, :book_index, :book, :chapter, :versenum]}]})
   end
 
   # Convert to JSON format (for AJAX goodness on main memorization page)
