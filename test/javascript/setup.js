@@ -56,9 +56,14 @@ Object.assign(jQuerySelector, {
   getJSON: () => Promise.resolve({}),
   each: (arr, fn) => {
     if (Array.isArray(arr)) {
-      arr.forEach((item, index) => fn(index, item));
+      for (let i = 0; i < arr.length; i++) {
+        if (fn(i, arr[i]) === false) break;
+      }
     } else {
-      Object.keys(arr).forEach(key => fn(key, arr[key]));
+      const keys = Object.keys(arr);
+      for (let i = 0; i < keys.length; i++) {
+        if (fn(keys[i], arr[keys[i]]) === false) break;
+      }
     }
   },
   map: (arr, fn) => {
