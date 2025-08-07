@@ -90,3 +90,8 @@ global.word_width = function(word) {
   };
   return widths[word] || word.length * 8;
 };
+
+// Add parseJSON to jQuery if not present
+if (!jQuerySelector.parseJSON) {
+  jQuerySelector.parseJSON = JSON.parse;
+}
