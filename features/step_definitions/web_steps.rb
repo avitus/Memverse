@@ -55,7 +55,15 @@ When /^(?:|I )press "([^"]*)"$/ do |button|
 end
 
 When /^(?:|I )follow "([^"]*)"$/ do |link|
-  click_link(link)
+  # Handle ambiguous Profile links by preferring the submenu Profile link for editing
+  if link == "Profile"
+    # Look for the Profile link in the submenu context
+    within('#profile') do
+      click_link(link)
+    end
+  else
+    click_link(link)
+  end
 end
 
 When /^(?:|I )click inside "([^"]*)"$/ do |selector|

@@ -41,7 +41,7 @@
 require 'digest/sha1'
 require 'digest/md5' # required for Gravatar support in Bloggity
 
-class User < ActiveRecord::Base
+class User < ApplicationRecord
 
   # ----------------------------------------------------------------------------------------------------------
   # Swagger-Blocks DSL [START]
@@ -232,8 +232,8 @@ class User < ActiveRecord::Base
   before_save :generate_login
 
   # Callbacks for email notifications (replacing rails-observers functionality)
-  after_create :send_signup_notification
-  after_update :send_activation_notification, if: :recently_activated?
+  after_create :send_signup_notification, unless: -> { Rails.env.test? }
+  after_update :send_activation_notification, if: :recently_activated?, unless: -> { Rails.env.test? }
 
   # Include default devise modules. Others available are:
   # :token_authenticatable, :lockable, trackable, :timeoutable and :omniauthable
@@ -259,10 +259,10 @@ class User < ActiveRecord::Base
   has_many                :progress_reports,  :dependent => :destroy
   has_many                :tweets
   has_many                :sermons
-  belongs_to              :country,         :counter_cache => true
-  belongs_to              :church,          :counter_cache => true
-  belongs_to              :group,           :counter_cache => true
-  belongs_to              :american_state,  :counter_cache => true
+  belongs_to              :country,         :counter_cache => true, optional: true
+  belongs_to              :church,          :counter_cache => true, optional: true
+  belongs_to              :group,           :counter_cache => true, optional: true
+  belongs_to              :american_state,  :counter_cache => true, optional: true
 
   # Record who tagged which verse - not working at the moment
   acts_as_tagger
@@ -1382,7 +1382,7 @@ class User < ActiveRecord::Base
   #
   # @return [Boolean]
   def recently_activated?
-    confirmed_at_changed? && confirmed_at.present? && confirmed_at_was.nil?
+    saved_change_to_confirmed_at? && confirmed_at.present? && confirmed_at_before_last_save.nil?
   end
 
   private

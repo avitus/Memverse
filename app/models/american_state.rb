@@ -1,4 +1,4 @@
-class AmericanState < ActiveRecord::Base
+class AmericanState < ApplicationRecord
 
 #    t.string  "abbrev",      :limit => 20, :default => "", :null => false
 #    t.string  "name",        :limit => 50, :default => "", :null => false
@@ -11,8 +11,8 @@ class AmericanState < ActiveRecord::Base
 
   # Validations
   validates_presence_of :name, :abbrev
-  validates :name,   uniqueness: true
-  validates :abbrev, uniqueness: true
+  validates :name,   uniqueness: { case_sensitive: true }
+  validates :abbrev, uniqueness: { case_sensitive: true }
 
   scope :vibrant, -> { where('users_count >= 3') }
 

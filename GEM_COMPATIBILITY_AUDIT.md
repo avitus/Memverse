@@ -71,7 +71,7 @@
 | `capybara` | Latest | ✅ Yes | ✅ Yes | Integration testing |
 | `selenium-webdriver` | Latest | ✅ Yes | ✅ Yes | Browser automation |
 | `cucumber-rails` | Latest | ✅ Yes | ✅ Yes | BDD testing |
-| `jasmine` | Latest | ⚠️ **DEPRECATED** | ⚠️ **DEPRECATED** | **Consider Jest/Vitest** |
+| ~~`jasmine`~~ | ~~Latest~~ | ✅ **REMOVED** | ✅ **REMOVED** | **Migrated to Vitest** |
 | `factory_bot_rails` | Latest | ✅ Yes | ✅ Yes | Test data generation |
 | `database_cleaner` | Latest | ✅ Yes | ✅ Yes | Test database management |
 
@@ -90,7 +90,7 @@
 3. **ckeditor** - Switch from GitHub fork to official gem
 
 ### **📝 MEDIUM PRIORITY (Can fix after Rails 6)**
-1. **jasmine** - Consider modern JS testing framework
+1. ~~**jasmine**~~ - ✅ Migrated to Vitest (August 2025)
 2. **omniauth-windowslive** - Check official gem availability
 3. **mimemagic**, **ffi** - Update to latest versions
 
@@ -131,7 +131,7 @@
 
 ### **Deprecated Features to Address:**
 - `rails-observers` - Migrate to ActiveRecord callbacks
-- `jasmine` - Plan JavaScript testing modernization
+- ~~`jasmine`~~ - ✅ Migrated to Vitest (August 2025)
 
 ---
 
@@ -140,7 +140,7 @@
 While upgrading, consider these improvements:
 1. **Active Storage** vs `paperclip` for file uploads
 2. **Action Cable** vs `pubnub` for real-time features  
-3. **Modern JS testing** (Jest/Vitest) vs `jasmine`
+3. ~~**Modern JS testing** (Jest/Vitest) vs `jasmine`~~ - ✅ Vitest implemented
 4. **Hotwire/Turbo** for modern JavaScript patterns
 
 ---

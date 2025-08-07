@@ -81,6 +81,17 @@ doc/*
 # vim artifacts
 **.swp
 
+# Test result files
+results.xml/
+test_results/
+TEST-*.xml
+
+# Node.js / npm
+node_modules/
+npm-debug.log*
+coverage/
+.vitest/
+
 # Local sitemap files
 /public/sitemap*
 

@@ -10,6 +10,7 @@
 # See github.com/sferik/rails_admin for more informations
 
 RailsAdmin.config do |config|
+  config.asset_source = :sprockets
 
   config.current_user_method { current_user } #auto-generated
 

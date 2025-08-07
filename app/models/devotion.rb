@@ -1,4 +1,4 @@
-class Devotion < ActiveRecord::Base
+class Devotion < ApplicationRecord
   
   # Get devotion for the day and save in database
   # @return [Devotion, nil]

@@ -2,12 +2,24 @@ begin
   require 'database_cleaner'
   require 'database_cleaner/cucumber'
 
-  DatabaseCleaner.strategy = :truncation
-  #https://github.com/DatabaseCleaner/database_cleaner/issues/445
-  DatabaseCleaner.clean_with :truncation, except: %w(ar_internal_metadata)
+  # Use truncation strategy consistently and exclude tables that should persist
+  DatabaseCleaner[:active_record].strategy = :truncation, {except: %w[final_verses ar_internal_metadata]}
+  
+  # Only clean if database connection is available
+  begin
+    if ActiveRecord::Base.connection.active?
+      #https://github.com/DatabaseCleaner/database_cleaner/issues/445
+      DatabaseCleaner[:active_record].clean_with :truncation, except: %w[final_verses ar_internal_metadata]
+    end
+  rescue ActiveRecord::ConnectionNotEstablished
+    puts "Database connection not established during setup, skipping initial clean"
+  end
   
 rescue NameError
   raise "You need to add database_cleaner to your Gemfile (in the :test group) if you wish to use it."
+rescue ActiveRecord::ConnectionNotEstablished
+  # Database not connected yet, skip initial cleaning
+  puts "Database connection not established, skipping initial clean"
 end
 
 Before do
@@ -16,7 +28,7 @@ Before do
   # ----------------------------------------------------------------------------------------------------------
   # Create Final Verse data table. Probably not necessary to load Final Verse data for every chapter
   # ----------------------------------------------------------------------------------------------------------
-  config = ActiveRecord::Base.configurations[Rails.env]
+  config = ActiveRecord::Base.configurations.configs_for(env_name: Rails.env).first.configuration_hash
   if config['adapter'] == 'mysql2'
     system("mysql --user=#{config['username']} --password=#{config['password']} --host=#{config['host']} #{config['database']} < iso_final_verses.sql")
   elsif config['adapter'] == 'sqlite3'
@@ -28,6 +40,25 @@ Before do
 end
 
 Before('@badges') do
+  # Helper method to retry database operations
+  def with_db_retry(&block)
+    retries = 3
+    begin
+      # Ensure connection is active
+      ActiveRecord::Base.connection.reconnect! unless ActiveRecord::Base.connection.active?
+      yield
+    rescue ActiveRecord::ConnectionNotEstablished => e
+      retries -= 1
+      if retries > 0
+        puts "Database connection lost, retrying... (#{retries} attempts left)"
+        ActiveRecord::Base.establish_connection
+        sleep 0.1
+        retry
+      else
+        raise e
+      end
+    end
+  end
 
   # Add 50 quest levels
   puts 'SETTING UP QUESTS'
@@ -60,15 +91,19 @@ Before('@badges') do
     chapters_memorized = ((i-7).to_f / 3.0).round
 
     # Learning quests
-    q = Quest.where(:level => i, :objective => 'Verses', :qualifier => 'Learning')
-    if q.empty?
-      Quest.create(:level => i, :objective => 'Verses', :qualifier => 'Learning', :quantity => learning_verses, :task => "Learn #{learning_verses} verses.")
+    with_db_retry do
+      q = Quest.where(:level => i, :objective => 'Verses', :qualifier => 'Learning')
+      if q.empty?
+        Quest.create(:level => i, :objective => 'Verses', :qualifier => 'Learning', :quantity => learning_verses, :task => "Learn #{learning_verses} verses.")
+      end
     end
 
     # Memorized quests
-    q = Quest.where(:level => i, :objective => 'Verses', :qualifier => 'Memorized')
-    if q.empty?
-      Quest.create(:level => i, :objective => 'Verses', :qualifier => 'Memorized', :quantity => memorized_verses, :task => "Memorize #{memorized_verses} verses.")
+    with_db_retry do
+      q = Quest.where(:level => i, :objective => 'Verses', :qualifier => 'Memorized')
+      if q.empty?
+        Quest.create(:level => i, :objective => 'Verses', :qualifier => 'Memorized', :quantity => memorized_verses, :task => "Memorize #{memorized_verses} verses.")
+      end
     end
 
     # Gospel quests

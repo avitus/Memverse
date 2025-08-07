@@ -32,37 +32,48 @@ ActionController::Base.allow_rescue = false
 # Remove/comment out the lines below if your app doesn't have a database.
 # For some databases (like MongoDB and CouchDB) you may need to use :truncation instead.
 begin
-  DatabaseCleaner.strategy = :transaction
+  # Use truncation strategy consistently to avoid "Table definition has changed" errors
+  # Exclude final_verses table to preserve FinalVerse data
+  DatabaseCleaner[:active_record].strategy = :truncation, {except: %w[final_verses ar_internal_metadata]}
 rescue NameError
   raise "You need to add database_cleaner to your Gemfile (in the :test group) if you wish to use it."
 end
 
-Before('@javascript') do
-  DatabaseCleaner.strategy = :truncation
-end
-
-Before('not @javascript') do
-  DatabaseCleaner.strategy = :transaction
-end
-
-Before('@tag_verse') do
-  DatabaseCleaner.strategy = :truncation
-end
-
-After('@tag_verse') do
-  DatabaseCleaner.strategy = :transaction
-end
-
-# Force transaction strategy for all features to avoid data persistence issues
+# Use truncation strategy consistently for all scenarios to avoid MySQL transaction issues
 Around do |scenario, block|
-  if scenario.tags.any? { |tag| tag.name == '@javascript' || tag.name == '@tag_verse' }
-    DatabaseCleaner.strategy = :truncation
-  else
-    DatabaseCleaner.strategy = :transaction
+  # Disable background jobs during tests to prevent deadlocks
+  ActiveJob::Base.queue_adapter = :test
+  DatabaseCleaner[:active_record].strategy = :truncation, {except: %w[final_verses ar_internal_metadata]}
+  
+  retry_count = 0
+  begin
+    # Ensure database connection is active
+    ActiveRecord::Base.connection.reconnect! unless ActiveRecord::Base.connection.active?
+    DatabaseCleaner[:active_record].start
+    block.call
+  rescue ActiveRecord::Deadlocked, ActiveRecord::ConnectionNotEstablished
+    retry_count += 1
+    if retry_count < 3
+      begin
+        ActiveRecord::Base.connection.reconnect!
+        DatabaseCleaner[:active_record].clean
+      rescue ActiveRecord::ConnectionNotEstablished
+        # Connection lost, try to reconnect
+        ActiveRecord::Base.establish_connection
+        DatabaseCleaner[:active_record].clean
+      end
+      sleep 0.2
+      retry
+    else
+      raise
+    end
+  ensure
+    begin
+      DatabaseCleaner[:active_record].clean if ActiveRecord::Base.connection.active?
+    rescue ActiveRecord::ConnectionNotEstablished
+      # Connection already lost, nothing to clean
+    end
   end
-  DatabaseCleaner.start
-  block.call
-  DatabaseCleaner.clean
 end
 
 # You may also want to configure DatabaseCleaner to use different strategies for certain features and scenarios.
@@ -72,11 +83,11 @@ end
 #     # { :except => [:widgets] } may not do what you expect here
 #     # as Cucumber::Rails::Database.javascript_strategy overrides
 #     # this setting.
-#     DatabaseCleaner.strategy = :truncation
+#     DatabaseCleaner[:active_record].strategy = :truncation
 #   end
 #
 #   Before('~@no-txn', '~@selenium', '~@culerity', '~@celerity', '~@javascript') do
-#     DatabaseCleaner.strategy = :transaction
+#     DatabaseCleaner[:active_record].strategy = :transaction
 #   end
 #
 

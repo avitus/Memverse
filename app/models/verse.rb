@@ -11,7 +11,7 @@
 #    t.boolean  "verified",    :default => false, :null => false
 #    t.boolean  "error_flag",  :default => false, :null => false
 
-class Verse < ActiveRecord::Base
+class Verse < ApplicationRecord
 
   # include RocketPants::Cacheable   # Allow for access via API - REMOVED (converted to Rails API mode)
 
@@ -94,7 +94,7 @@ class Verse < ActiveRecord::Base
 
   # Relationships
   has_many :memverses
-  belongs_to :uberverse
+  belongs_to :uberverse, optional: true
 
   # Validations
   validates_presence_of :translation, :book, :chapter, :versenum, :text

@@ -10,8 +10,8 @@ describe ScribeController do
   # Verse. As you add validations to Verse, be sure to
   # update the return value of this method accordingly.
   def valid_attributes
-    { translation: "NIV", book_index: 43, book: "John", chapter: 11, versenum: 35,
-      text: "Jesus wept.", verified: false, error_flag: true }
+    { translation: "NIV", book_index: 19, book: "Psalms", chapter: 117, versenum: 1,
+      text: "Praise the LORD, all you nations; extol him, all you peoples.", verified: false, error_flag: true }
   end
 
   # This should return the minimal set of values that should be in the session

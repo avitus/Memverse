@@ -1,4 +1,4 @@
-class Passage < ActiveRecord::Base
+class Passage < ApplicationRecord
 
   # ----------------------------------------------------------------------------------------------------------
   # Swagger-Blocks DSL [START]
@@ -231,7 +231,8 @@ class Passage < ActiveRecord::Base
     else
 
       # Only look up FinalVerse when first_verse is 1 or 0
-      if ( self.first_verse == 1 || self.first_verse == 0 ) && ( self.last_verse == FinalVerse.where(:book => book, :chapter => chapter).first.last_verse )
+      final_verse_record = FinalVerse.where(:book => book, :chapter => chapter).first
+      if ( self.first_verse == 1 || self.first_verse == 0 ) && final_verse_record && ( self.last_verse == final_verse_record.last_verse )
         update_attribute( :complete_chapter, true )
       else
         update_attribute( :complete_chapter, false )

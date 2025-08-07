@@ -111,7 +111,7 @@
 		current.mnemonic = "<%= @mnemonic %>";
 
 		live.correct     = false; // Can currently toggle verse (show/hide)
-		live.feedtext    = "Waiting for you to begin typing..."; // Live Feedback text
+		live.feedtext    = "<%= t('memverses.test_verse_quick.feedback') %>"; // Live Feedback text
 
 		live = getverseFeedback($verseguess.val()); // Run this once when page first loads
 
@@ -276,7 +276,11 @@
 <script language="JavaScript" type="text/javascript">
 	$(document).ready(function() {
 	    $('#verseguess').click( function() {
-			$('#instr-1').fadeOut(1000, function () { $('#instr-2').fadeIn(2000) } )
+			$('#instr-1').fadeOut(1000, function () { $('#instr-2').fadeIn(2000) } );
+			// Initialize feedback display when user clicks in the text area
+			if ($feedback.text().trim() === '') {
+				$feedback.html(live.feedtext);
+			}
 		});
 	});
 </script>

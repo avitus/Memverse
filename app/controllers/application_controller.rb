@@ -305,7 +305,7 @@ class ApplicationController < ActionController::Base
 
   # Automatically respond with 415 for ActionController::UnknownFormat
   def raise_not_found
-    render text: 'Not Found', status: :unsupported_media_type
+    render plain: 'Not Found', status: :unsupported_media_type
   end
 
   # ALV (Mar 2018) Was being used to debug problems with strong parameters.

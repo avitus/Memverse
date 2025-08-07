@@ -11,7 +11,7 @@ class TagController < ApplicationController
     @tag = ActsAsTaggableOn::Tag.find(params[:id])
 
     respond_to do |format|
-      if @tag.update_attributes(params[:tag])
+      if @tag.update(params[:tag])
         flash[:notice] = 'Tag was successfully updated.'
         format.html { redirect_to(show_tags_url) }
         format.xml  { head :ok }

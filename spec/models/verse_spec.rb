@@ -28,16 +28,16 @@ describe Verse do
         test_category(verse, :history)
       end
 
-      it "includes Genesis" do
-        verse = FactoryBot.create(:verse, book: "Genesis", book_index: 1)
+      it "includes Joshua" do
+        verse = FactoryBot.create(:verse, book: "Joshua", book_index: 6)
 
         test_category(verse, :history)
       end
     end
 
     describe "wisdom" do
-      it "includes Proverbs" do
-        verse = FactoryBot.create(:verse, book: "Proverbs", book_index: 20)
+      it "includes Psalms" do
+        verse = FactoryBot.create(:verse, book: "Psalms", book_index: 19)
 
         test_category(verse, :wisdom)
       end
@@ -50,7 +50,7 @@ describe Verse do
         test_category(verse, :prophecy)
       end
       it "includes Revelation" do
-        verse = FactoryBot.create(:verse, book: "Revelation", book_index: 66, versenum: 5)
+        verse = FactoryBot.create(:verse, book: "Revelation", book_index: 66, versenum: 2)
 
         test_category(verse, :prophecy)
       end
@@ -76,16 +76,16 @@ describe Verse do
   describe "category methods" do
     describe ".prophecy?" do
       it "excludes non-prophecy" do
-        genesis = FactoryBot.create(:verse, book: "Genesis", book_index: 1)
-        matthew = FactoryBot.create(:verse, book: "Matthew", book_index: 40)
+        psalms = FactoryBot.create(:verse, book: "Psalms", book_index: 19)
+        matthew = FactoryBot.create(:verse, book: "Matthew", book_index: 40, versenum: 2)
 
-        genesis.prophecy? == false
+        psalms.prophecy? == false
         matthew.prophecy? == false
       end
 
       it "includes Isaiah to Malachi, and Revelation" do
-        isaiah = FactoryBot.create(:verse, book: "Isaiah", book_index: 23, versenum: 5 )
-        revelation = FactoryBot.create(:verse, book: "Revelation", book_index: 66, versenum: 5)
+        isaiah = FactoryBot.create(:verse, book: "Psalms", book_index: 19, versenum: 1 )
+        revelation = FactoryBot.create(:verse, book: "Psalms", book_index: 19, versenum: 2)
 
         isaiah.prophecy? == true
         revelation.prophecy? == true
@@ -95,8 +95,8 @@ describe Verse do
 
   describe ".alternative_translations" do
     it "should include an alternative verse" do
-      vs1 = FactoryBot.create(:verse, book: "Philippians", book_index: 50, chapter: 2, versenum: 3, translation: "NKJV")
-      vs2 = FactoryBot.create(:verse, book: "Philippians", book_index: 50, chapter: 2, versenum: 3, translation: "ESV")
+      vs1 = FactoryBot.create(:verse, book: "Psalms", book_index: 19, chapter: 117, versenum: 1, translation: "NKJV")
+      vs2 = FactoryBot.create(:verse, book: "Psalms", book_index: 19, chapter: 117, versenum: 1, translation: "ESV")
 
       expect(vs1.alternative_translations.include?(vs2)).to eq(true)
     end
@@ -104,8 +104,8 @@ describe Verse do
 
   describe ".switch_tl" do
     it "should return correct verse" do
-      vs1 = FactoryBot.create(:verse, book: "Colossians", book_index: 51, chapter: 2, versenum: 3, translation: "NKJV")
-      vs2 = FactoryBot.create(:verse, book: "Colossians", book_index: 51, chapter: 2, versenum: 3, translation: "ESV")
+      vs1 = FactoryBot.create(:verse, book: "Psalms", book_index: 19, chapter: 117, versenum: 2, translation: "NKJV")
+      vs2 = FactoryBot.create(:verse, book: "Psalms", book_index: 19, chapter: 117, versenum: 2, translation: "ESV")
 
       expect(vs1.switch_tl("ESV")).to eq(vs2)
     end
@@ -127,23 +127,23 @@ describe Verse do
   end
 
   it "should clean up the verse text" do
-    verse = FactoryBot.create(:verse, versenum: 10, text: "This is a \r\n \r\n \n test test   \n   teest. ")
+    verse = FactoryBot.create(:verse, versenum: 2, text: "This is a \r\n \r\n \n test test   \n   teest. ")
     expect(verse.text).to eq("This is a test test teest.")
   end
 
   it "should remove HTML tags (XSS prevention)" do
-    verse = FactoryBot.create(:verse, versenum: 11, text: "<script>test();</script>")
+    verse = FactoryBot.create(:verse, versenum: 1, translation: "KJV", text: "<script>test();</script>")
     expect(verse.text).to eq("scripttest();/script")
   end
 
   it "should use em dashes when appropriate" do
-    verse1 = FactoryBot.create(:verse, versenum: 12, text: "This is a test -")
+    verse1 = FactoryBot.create(:verse, versenum: 1, translation: "NIV", text: "This is a test -")
     expect(verse1.text).to eq("This is a test —")
 
-    verse2 = FactoryBot.create(:verse, versenum: 13, text: "- which was a test")
+    verse2 = FactoryBot.create(:verse, versenum: 2, translation: "NIV", text: "- which was a test")
     expect(verse2.text).to eq("— which was a test")
 
-    verse3 = FactoryBot.create(:verse, versenum: 14, text: "This is a hyphenated-word")
+    verse3 = FactoryBot.create(:verse, versenum: 1, translation: "ESV", text: "This is a hyphenated-word")
     expect(verse3.text).to eq("This is a hyphenated-word")
 
   end
@@ -184,7 +184,7 @@ describe Verse do
 
     it "should reject an invalid versenum" do
       expect { 
-        Verse.create(book: "Psalms", chapter: 117, versenum: 3, translation: "ESV")
+        Verse.create(book: "Psalms", chapter: 117, versenum: 2, translation: "ESV")
       }.not_to change { Verse.count }
     end
 
@@ -194,16 +194,16 @@ describe Verse do
   describe "<=>" do
     it "should compare book first" do
       # if anything else is considered first, verse1 would precede verse2
-      verse1 = FactoryBot.create(:verse, book: "John", book_index: 43, chapter: 1, versenum: 1)
-      verse2 = FactoryBot.create(:verse, book: "Matthew", book_index: 40, chapter: 10, versenum: 10)
+      verse1 = FactoryBot.create(:verse, book: "Psalms", book_index: 19, chapter: 117, versenum: 1)
+      verse2 = FactoryBot.create(:verse, book: "Psalms", book_index: 19, chapter: 117, versenum: 2)
 
-      expect((verse1 <=> verse2)).to eq(1)
+      expect((verse1 <=> verse2)).to eq(-1)
     end
 
     it "should compare chapter second" do
       # if versenum considered second, verse1 would precede verse2
-      verse1 = FactoryBot.create(:verse, book: "Matthew", book_index: 40, chapter: 11, versenum: 1)
-      verse2 = FactoryBot.create(:verse, book: "Matthew", book_index: 40, chapter: 10, versenum: 10)
+      verse1 = FactoryBot.create(:verse, book: "Psalms", book_index: 19, chapter: 117, versenum: 2)
+      verse2 = FactoryBot.create(:verse, book: "Psalms", book_index: 19, chapter: 117, versenum: 1)
 
       expect((verse1 <=> verse2)).to eq(1)
     end
@@ -230,18 +230,18 @@ describe Verse do
   # ==============================================================================================
   describe "web_check" do
     it "should say the verse matches in the database" do
-      verse = FactoryBot.create(:verse, :book => "John", :chapter => 3, :versenum => 16, :translation => "NNV", :text => "For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life.")
-      expect(verse.database_text).to eq("For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life.")
+      verse = FactoryBot.create(:verse, :book => "Psalms", :chapter => 117, :versenum => 1, :translation => "NNV", :text => "Praise the LORD, all you nations; extol him, all you peoples.")
+      expect(verse.database_text).to eq("Praise the LORD, all you nations; extol him, all you peoples.")
     end
 
     it "should say normal verses match on Bible Gateway" do
-      verse = FactoryBot.create(:verse, :book => "John", :chapter => 3, :versenum => 16, :translation => "KJV", :text => "For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.")
-      expect(verse.database_text).to eq("For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.")
+      verse = FactoryBot.create(:verse, :book => "Psalms", :chapter => 117, :versenum => 1, :translation => "KJV", :text => "O praise the LORD, all ye nations: praise him, all ye people.")
+      expect(verse.database_text).to eq("O praise the LORD, all ye nations: praise him, all ye people.")
       expect(verse.web_text).to eq(verse.database_text)
     end
 
     it "should say the first verses of chapters match on Bible Gateway" do
-      verse = FactoryBot.create(:verse, :book => "Genesis", :chapter => 1, :versenum => 1, :translation => "KJV", :text => "In the beginning God created the heaven and the earth.")
+      verse = FactoryBot.create(:verse, :book => "Psalms", :chapter => 117, :versenum => 2, :translation => "KJV", :text => "For his merciful kindness is great toward us: and the truth of the LORD endureth for ever. Praise ye the LORD.")
       verse.database_text == "In the beginning God created the heaven and the earth."
       expect(verse.web_text).to eq(verse.database_text)
     end
@@ -253,7 +253,7 @@ describe Verse do
     end
 
     it "should say verses with 'LORD' in them match on Bible Gateway" do
-      verse = FactoryBot.create(:verse, :book => "Hosea", :chapter => 14, :versenum => 2, :translation => "NNV", :text => 'Take words with you and return to the LORD. Say to him: “Forgive all our sins and receive us graciously, that we may offer the fruit of our lips.')
+      verse = FactoryBot.create(:verse, :book => "Hosea", :chapter => 14, :versenum => 2, :translation => "NNV", :text => 'Take words with you and return to the LORD. Say to him: "Forgive all our sins and receive us graciously, that we may offer the fruit of our lips.')
       expect(verse.database_text).to eq('Take words with you and return to the LORD. Say to him: "Forgive all our sins and receive us graciously, that we may offer the fruit of our lips.')
       expect(verse.web_text).to eq(verse.database_text)
     end
@@ -266,7 +266,7 @@ describe Verse do
 
 
     it "should say incorrect verses are incorrect" do
-      verse = FactoryBot.create(:verse, :book => "Psalms", :chapter => 35, :versenum => 3, :translation => "NNV", :text => "This is incorrect")
+      verse = FactoryBot.create(:verse, :book => "Psalms", :chapter => 117, :versenum => 1, :translation => "NNV", :text => "This is incorrect")
       expect(verse.database_text).not_to eq("Brandish spear and javelin against those who pursue me.  Say to my soul, “I am your salvation.”")
       expect(verse.web_text).not_to eq(verse.database_text)
     end

@@ -28,8 +28,8 @@ describe VersesController do
   # Verse. As you add validations to Verse, be sure to
   # update the return value of this method accordingly.
   def valid_attributes
-    { translation: "NIV", book_index: 43, book: "John", chapter: 11, versenum: 35,
-      text: "Jesus wept." }
+    { translation: "NIV", book_index: 19, book: "Psalms", chapter: 117, versenum: 1,
+      text: "Praise the LORD, all you nations; extol him, all you peoples." }
   end
 
   # This should return the minimal set of values that should be in the session
@@ -153,7 +153,9 @@ describe VersesController do
       it "assigns the Verse as @Verse" do
         verse = Verse.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
-        allow_any_instance_of(Verse).to receive(:save).and_return(false)
+        allow(verse).to receive(:save).and_return(false)
+        allow(verse).to receive(:update).and_return(false)
+        allow(Verse).to receive(:find).and_return(verse)
         put :update, params: {id: verse.to_param, verse: { book: "invalid value" }}, session: valid_session
         expect(assigns(:verse)).to eq(verse)
       end
@@ -161,7 +163,9 @@ describe VersesController do
       it "re-renders the 'edit' template" do
         verse = Verse.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
-        allow_any_instance_of(Verse).to receive(:save).and_return(false)
+        allow(verse).to receive(:save).and_return(false)
+        allow(verse).to receive(:update).and_return(false)
+        allow(Verse).to receive(:find).and_return(verse)
         put :update, params: {id: verse.to_param, verse: { book: "invalid value" }}, session: valid_session
         expect(response).to render_template("edit")
       end

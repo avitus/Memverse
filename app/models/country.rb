@@ -1,4 +1,4 @@
-class Country < ActiveRecord::Base
+class Country < ApplicationRecord
 
   #  t.string    :name            VARCHAR(80) :null => false
   #  t.string    :printable_name  VARCHAR(80) :null => false

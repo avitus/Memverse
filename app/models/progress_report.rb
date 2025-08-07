@@ -1,4 +1,4 @@
-class ProgressReport < ActiveRecord::Base
+class ProgressReport < ApplicationRecord
 
   # ----------------------------------------------------------------------------------------------------------
   # Swagger-Blocks DSL [START]

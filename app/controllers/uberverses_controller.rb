@@ -63,7 +63,7 @@ class UberversesController < ApplicationController
     @uberverse = Uberverse.find(params[:id])
 
     respond_to do |format|
-      if @uberverse.update_attributes(params[:uberverse])
+      if @uberverse.update(params[:uberverse])
         flash[:notice] = 'Uberverse was successfully updated.'
         format.html { redirect_to(@uberverse) }
         format.xml  { head :ok }

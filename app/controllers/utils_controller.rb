@@ -445,7 +445,7 @@ class UtilsController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   def update_church
     @church = Church.find(params[:id])
-    if @church.update_attributes(params[:church])
+    if @church.update(params[:church])
       flash[:notice] = "Church successfully updated"
       redirect_to :action => 'show_churches'
     else
@@ -506,7 +506,7 @@ class UtilsController < ApplicationController
 
   def update_verse
     @verse = Verse.find(params[:id])
-    if @verse.update_attributes(params[:verse])
+    if @verse.update(params[:verse])
       flash[:notice] = "Verse successfully updated"
       redirect_to :action => 'search_verses'
     else
@@ -782,7 +782,7 @@ class UtilsController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   def update_user
     @user = User.find(params[:id])
-    if @user.update_attributes(params[:user])
+    if @user.update(params[:user])
       flash[:notice] = "User successfully updated"
       redirect_to :action => 'show_users'
     else

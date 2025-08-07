@@ -19,14 +19,14 @@
   #    t.datetime :created_at
   #    t.datetime :updated_at
 
-class QuizQuestion < ActiveRecord::Base
+class QuizQuestion < ApplicationRecord
 
   include Parser
 
   # Relationships
   belongs_to :quiz
-  belongs_to :user,           :foreign_key => "submitted_by",   :class_name => "User"
-  belongs_to :supporting_ref, :foreign_key => "supporting_ref", :class_name => "Uberverse"
+  belongs_to :user,           :foreign_key => "submitted_by",   :class_name => "User", optional: true
+  belongs_to :supporting_ref, :foreign_key => "supporting_ref", :class_name => "Uberverse", optional: true
 
   # Query scopes
   scope :mcq,         -> { where( :question_type   => "mcq"                 ) }

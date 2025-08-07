@@ -1,4 +1,4 @@
-class Uberverse < ActiveRecord::Base
+class Uberverse < ApplicationRecord
 
   has_many :sermons
   has_many :verses

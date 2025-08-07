@@ -4,6 +4,7 @@ describe Memverse do
 
   before(:each) do
     @user  = User.create!(:name => "Test User", :email => "test@memverse.com", :password => "secret", :password_confirmation => "secret")
+    @user.confirm if @user.respond_to?(:confirm)  # Skip email confirmation in tests
   end
 
   #  --------------------------------------------------------------------------------------------------------------
@@ -11,7 +12,7 @@ describe Memverse do
   #  Would prefer to have it at the model level, though
   #  --------------------------------------------------------------------------------------------------------------
   it "should create a new instance given a valid attribute" do
-    @verse = Verse.create!(:book_index => 1, :book => "Genesis", :chapter => 12, :versenum => 1, :text => "This is a test", :translation => "NIV")
+    @verse = Verse.create!(:book_index => 19, :book => "Psalms", :chapter => 117, :versenum => 1, :text => "Praise the LORD, all you nations; extol him, all you peoples.", :translation => "NIV")
     Memverse.create!(:user => @user, :verse => @verse)
   end
 
@@ -179,8 +180,9 @@ describe Memverse do
 
       @passage = Array.new
 
+      # Create 6 consecutive verses to form a passage
       for i in 1..6
-        verse       = FactoryBot.create(:verse, book_index: 20, book: "Proverbs", chapter: 1, versenum: i, text: "This is a test")
+        verse = FactoryBot.create(:verse, book_index: 19, book: "Psalms", chapter: 117, versenum: i, text: "This is verse #{i}")
         @passage[i] = FactoryBot.create(:memverse, user: @user, verse: verse)
       end
 

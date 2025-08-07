@@ -73,6 +73,12 @@ jobs:
           paths:
             - vendor/bundle
 
+      # Restore node_modules cache
+      - restore_cache:
+          keys:
+            - memverse-node-{{ checksum "package.json" }}
+            - memverse-node-
+
       # Only necessary if app uses webpacker or yarn in some other way
       # - restore_cache:
       #     keys:
@@ -150,11 +156,23 @@ jobs:
                             --format progress \
                             $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
 
-      # Run Jasmine tests in parallel
+      # Install Node.js dependencies for Vitest
       - run:
-          name: Jasmine tests 
+          name: Install Node.js dependencies
           command: |
-            bundle exec rake spec:javascript
+            npm install
+
+      # Store node_modules cache
+      - save_cache:
+          key: memverse-node-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+
+      # Run Vitest JavaScript tests
+      - run:
+          name: JavaScript tests (Vitest)
+          command: |
+            npm run test:run
           when: always
 
       # Run cucumber in parallel

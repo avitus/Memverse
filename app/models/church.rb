@@ -1,4 +1,4 @@
-class Church < ActiveRecord::Base
+class Church < ApplicationRecord
 
   #  t.string    :name,          :null => false
   #  t.text      :description
@@ -10,11 +10,11 @@ class Church < ActiveRecord::Base
   has_many    :users
   has_many    :tweets
   has_many    :sermons
-  belongs_to  :country
+  belongs_to  :country, optional: true
 
   # Validations
   validates_presence_of   :name
-  validates_uniqueness_of :name
+  validates_uniqueness_of :name, case_sensitive: true
 
   # attr_accessible :name, :description
 

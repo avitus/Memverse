@@ -6,7 +6,7 @@
 	<%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :post }) do |f| %>
 		<div>
 			<h2>Forgot your password?</h2>
-		  	<%= devise_error_messages! %>
+		  	<%= render "devise/shared/error_messages", resource: resource %>
 			<ul>
 				<li>
 					<%= f.email_field		:email, :placeholder => "Email address" %>					

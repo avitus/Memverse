@@ -1,4 +1,4 @@
-class DailyStats < ActiveRecord::Base
+class DailyStats < ApplicationRecord
 
   # Structure
   # - Date [entry_date]

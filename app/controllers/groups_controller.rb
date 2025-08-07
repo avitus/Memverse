@@ -39,7 +39,7 @@ class GroupsController < ApplicationController
     @group = Group.find(params[:id])
 
     respond_to do |format|
-      if @group.update_attributes( group_params )
+      if @group.update( group_params )
         flash[:notice] = 'Your group was successfully updated.'
         format.html { redirect_to(@group) }
         format.json { respond_with_bip(@group) }

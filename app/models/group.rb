@@ -1,4 +1,4 @@
-class Group < ActiveRecord::Base
+class Group < ApplicationRecord
 
   #  t.string    :name,          :null => false
   #  t.text      :description
@@ -10,11 +10,11 @@ class Group < ActiveRecord::Base
   has_many    :users
   has_many    :tweets
 
-  belongs_to :leader, :foreign_key => "leader_id", :class_name => "User"
+  belongs_to :leader, :foreign_key => "leader_id", :class_name => "User", optional: true
 
   # Validations
   validates_presence_of   :name
-  validates_uniqueness_of :name
+  validates_uniqueness_of :name, case_sensitive: true
 
   # attr_accessible :name, :description, :leader_id
 

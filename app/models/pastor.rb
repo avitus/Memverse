@@ -1,4 +1,4 @@
-class Pastor < ActiveRecord::Base
+class Pastor < ApplicationRecord
   
   has_many  :sermons  
   

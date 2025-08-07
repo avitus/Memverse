@@ -84,7 +84,7 @@ Thredded.email_outgoing_prefix = '[Memverse] '
 
 # ==> View Configuration
 # Set the layout for rendering the thredded views.
-Thredded.layout = '/application'  # This is needed to use Memverse styling. Don't remove
+Thredded.layout = 'application'  # This is needed to use Memverse styling. Don't remove
 
 # ==> URLs
 # How Thredded generates URL slugs from text.

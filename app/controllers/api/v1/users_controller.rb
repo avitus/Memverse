@@ -196,7 +196,7 @@ class Api::V1::UsersController < Api::V1::ApiController
       error! :bad_request, metadata: {reason: 'User could not be found'}
     elsif @user != current_resource_owner
       error! :bad_request, metadata: {reason: 'User is not the signed-in user'}
-    elsif @user.update_attributes( user_params )
+    elsif @user.update( user_params )
       expose @user
     else
       error! :bad_request, metadata: {reason: 'User could not be updated'}

@@ -3,8 +3,12 @@
 		<div class="strip-right">
 			<div class="scrollable">
 				<div class="items">
-					<% for vs in @vsillumination %>
-					<div><span><%= link_to vs.book + " " + vs.chapter + ":" + vs.versenum, :controller => 'info', :action => 'show_vs', :vs => vs.niv%></span> <%= truncate(vs.niv_text, :length => 80, :separator => ' ') %> (NIV)</div>
+					<% if @vsillumination && @vsillumination.any? %>
+						<% for vs in @vsillumination %>
+						<div><span><%= link_to vs.book + " " + vs.chapter + ":" + vs.versenum, :controller => 'info', :action => 'show_vs', :vs => vs.niv%></span> <%= truncate(vs.niv_text, :length => 80, :separator => ' ') %> (NIV)</div>
+						<% end %>
+					<% else %>
+						<div><span>No verses available</span></div>
 					<% end %>
 				</div>
 			</div>

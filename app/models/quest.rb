@@ -14,9 +14,9 @@
 # | 200 | 16    | Memorize 13 verses of biblical prophecy |             | Prophecy  | Memorized | 13       |     | 2011-01-14 15:31:25 UTC | 2011-01-14 15:32:17 UTC |
 # +-----+-------+-----------------------------------------+-------------+-----------+-----------+----------+-----+-------------------------+-------------------------+
 
-class Quest < ActiveRecord::Base
+class Quest < ApplicationRecord
   has_and_belongs_to_many :users
-  belongs_to :badge
+  belongs_to :badge, optional: true
 
   # Is task complete?
   # @return [Boolean]

@@ -33,9 +33,9 @@ describe PassagesController do
   # Passage. As you add validations to Passage, be sure to
   # update the return value of this method accordingly.
   def valid_attributes
-    { user_id: @user.id, length: 2, reference: "John 3:16-17",
-      translation: "NIV", book: "John", chapter: 3,
-      first_verse: 16, last_verse: 17,
+    { user_id: @user.id, length: 2, reference: "Psalms 117:1-2",
+      translation: "NIV", book: "Psalms", chapter: 117,
+      first_verse: 1, last_verse: 2,
       efactor: 2.0, test_interval: 1, rep_n: 1 }
 
   end
@@ -101,14 +101,20 @@ describe PassagesController do
     describe "with invalid params" do
       it "assigns a newly created but unsaved passage as @passage" do
         # Trigger the behavior that occurs when invalid params are submitted
-        allow_any_instance_of(Passage).to receive(:save).and_return(false)
+        passage_instance = instance_double(Passage)
+        allow(Passage).to receive(:new).and_return(passage_instance)
+        allow(passage_instance).to receive(:save).and_return(false)
+        allow(passage_instance).to receive(:persisted?).and_return(false)
         post :create, params: {passage: { book: "invalid value" }}, session: valid_session
-        expect(assigns(:passage)).to be_a_new(Passage)
+        expect(assigns(:passage)).to eq(passage_instance)
       end
 
       it "re-renders the 'new' template" do
         # Trigger the behavior that occurs when invalid params are submitted
-        allow_any_instance_of(Passage).to receive(:save).and_return(false)
+        passage_instance = instance_double(Passage)
+        allow(Passage).to receive(:new).and_return(passage_instance)
+        allow(passage_instance).to receive(:save).and_return(false)
+        allow(passage_instance).to receive(:persisted?).and_return(false)
         post :create, params: {passage: { book: "invalid value" }}, session: valid_session
         expect(response).to render_template("new")
       end
@@ -119,11 +125,13 @@ describe PassagesController do
     describe "with valid params" do
       it "updates the requested passage" do
         passage = Passage.create! valid_attributes
+        # Mock the Passage.find to return the passage we expect to be updated
+        allow(Passage).to receive(:find).with(passage.to_param).and_return(passage)
         # Assuming there are no other passages in the database, this
         # specifies that the Passage created on the previous line
-        # receives the :update_attributes message with whatever params are
+        # receives the :update message with whatever params are
         # submitted in the request.
-        expect_any_instance_of(Passage).to receive(:update_attributes).with({ "last_verse" => "7" })
+        expect(passage).to receive(:update).with({ "last_verse" => "7" })
         put :update, params: {id: passage.to_param, passage: { last_verse: "7" }}, session: valid_session
       end
 
@@ -144,7 +152,9 @@ describe PassagesController do
       it "assigns the passage as @passage" do
         passage = Passage.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
-        allow_any_instance_of(Passage).to receive(:save).and_return(false)
+        allow(passage).to receive(:save).and_return(false)
+        allow(passage).to receive(:update).and_return(false)
+        allow(Passage).to receive(:find).and_return(passage)
         put :update, params: {id: passage.to_param, passage: { book: "invalid value" }}, session: valid_session
         expect(assigns(:passage)).to eq(passage)
       end
@@ -152,7 +162,9 @@ describe PassagesController do
       it "re-renders the 'edit' template" do
         passage = Passage.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
-        allow_any_instance_of(Passage).to receive(:save).and_return(false)
+        allow(passage).to receive(:save).and_return(false)
+        allow(passage).to receive(:update).and_return(false)
+        allow(Passage).to receive(:find).and_return(passage)
         put :update, params: {id: passage.to_param, passage: { book: "invalid value" }}, session: valid_session
         expect(response).to render_template("edit")
       end

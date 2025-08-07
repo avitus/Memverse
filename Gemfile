@@ -11,12 +11,13 @@ HOST_OS = RbConfig::CONFIG['host_os']
 source 'http://rubygems.org'
 
 group :development do
-  gem 'web-console'
+  gem 'web-console', '~> 4.2'                                              # Rails 7 compatible version
   # gem 'rails-footnotes', '>= 3.7'  # Commented out due to Rails 5.1 compatibility issues
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'byebug'
-  gem 'spring'
+  gem 'spring', '~> 2.1'                                                 # Application preloader for Rails 6 compatibility
+  gem 'listen', '~> 3.2'                                                 # File system change monitoring for Rails 6
   gem 'brakeman', :require => false                             # Scan for security vulnerabilities
 end
 
@@ -24,7 +25,7 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'rspec_junit_formatter'                                   # Automatic test metadata collection for CirclCI
   gem 'rails-controller-testing'                                # To use 'assigns' in controller tests
-  gem 'jasmine'
+  # gem 'jasmine'  # REMOVED: Replaced with Vitest for JavaScript testing
   # gem 'jasmine-rails'
   # gem 'sqlite3', '~> 1.4.2'  # Not used - project uses MySQL
   gem 'factory_bot_rails'                                       # Add to development group for debugging in console
@@ -42,7 +43,7 @@ group :development, :test do
   gem 'guard-minitest'
   gem 'guard-rspec'
   gem 'guard-cucumber'
-  gem 'guard-jasmine'
+  # gem 'guard-jasmine'  # REMOVED: Replaced with Vitest for JavaScript testing
   gem 'faker'                                                   # Generates fake test data
 end
 
@@ -62,11 +63,21 @@ gem 'redis', '~> 4.0'                                                          #
 ############################################################
 # Frameworks
 #
+# Rails 7.0 - Upgraded from 6.1 for modernization and security
 # Currently using jQuery 1.12.4 (upgrading to 3.0 will require work)
 # Thredded specifies jQuery version in javascripts/threddeded/dependencies
 #
+# Rails 7 Changes Made:
+# - Upgraded rails gem to ~> 7.0.0
+# - Updated actionmailbox and actiontext to ~> 7.0.0
+# - Replaced uglifier with terser (Rails 7 standard)
+# - Commented out coffee-rails (deprecated in Rails 7)
+# - Added sprockets-rails, importmap-rails, turbo-rails, stimulus-rails
+# - Removed version constraint from sidekiq for Rails 7 compatibility
+# - Updated web-console to ~> 4.2
+#
 ############################################################
-gem 'rails', '~> 5.1'                                                            
+gem 'rails', '~> 7.0.0'                                                 # Upgraded to Rails 7.0 for modernization                                                            
 gem 'jquery-rails'                                                              # Currently using jQuery 1.12.4
 gem 'jquery-ui-rails'
 
@@ -74,13 +85,22 @@ gem 'jquery-ui-rails'
 # Rails Support Gems
 ############################################################
 # gem 'compass-rails'                                                             # Now has Rails 4 support - removed as not needed
-gem 'sass-rails', '~> 6.0'
-gem 'autoprefixer-rails', '~> 8.6.5'                                           # Use older stable version compatible with Rails 5.2
-gem 'uglifier', '~> 4.2'                                                      # Compressor for JS assets
-gem 'coffee-rails', '~> 5.0' 
+gem 'bootsnap', '>= 1.4.2', require: false                                     # Boot optimization for Rails 6
+gem 'sass-rails', '>= 6.0'
+gem 'autoprefixer-rails', '~> 8.6.5'                                            # CSS vendor prefixes
+gem 'terser'                                                            # JS compressor (replaces uglifier for Rails 7)
+# gem 'coffee-rails', '~> 5.0'                                                # Deprecated in Rails 7 - migrate to modern JS 
 # gem 'rails-observers'                                                           # REMOVED: Replaced with callbacks in User model                     
 gem "mimemagic", "~> 0.3.10"                                                    # For mime type detection. Prev version yanked      
 gem 'ffi', '~> 1.15.5'                                                          # Use older version compatible with older GLIBC
+
+# Rails 7 components
+gem 'actionmailbox', '~> 7.0.0'                                               # Inbound email handling
+gem 'actiontext', '~> 7.0.0'                                                  # Rich text content
+gem 'sprockets-rails'                                                          # Asset pipeline for Rails 7
+gem 'importmap-rails'                                                          # Modern JS without webpack
+gem 'turbo-rails'                                                              # Hotwire Turbo for SPA-like performance
+gem 'stimulus-rails'                                                           # Hotwire Stimulus for JS behavior
 
 
 ############################################################
@@ -116,8 +136,8 @@ gem 'cancancan', '~> 3.4'                                                     # 
 ############################################################
 # Major Engines (Admin, Forem, Blog)
 ############################################################
-gem 'rails_admin'                                                              # Admin console
-gem 'thredded', '~> 1.0.1'                                                    # Forum engine
+gem 'rails_admin'                                                                # Admin dashboard
+gem 'thredded', '~> 1.0.1'                                                    # Forum engine - check for Rails 6 compatibility
 gem 'bloggity', github: 'avitus/bloggity'                                      # Blog engine
 # gem 'bloggity', :path => "../bloggity"                                       # Blog engine (dev environment)
 
@@ -136,13 +156,13 @@ gem "sentry-raven"                                                             #
 # Messaging
 ############################################################
 gem 'pubnub'                                                                   # Real-time messaging service
-gem 'rpush'                                                                    # Push notification service
+gem 'rpush', '~> 8.0.0'                                                        # Push notification service - Rails 7 compatible with Ruby 2.7
 gem 'mail', '>= 2.2.15'                                                        # Emails
 
 ############################################################
 # Scheduled Tasks
 ############################################################
-gem 'sidekiq', '~> 6.5'                                                                  # Background jobs; keep at 6.5 until Rails 6+ upgrade
+gem 'sidekiq'                                                                    # Background jobs - version constraint removed for Rails 7 compatibility
 gem "sidekiq-cron", "~> 1.12.0"                                                 # Scheduler for Sidekiq
 gem 'ice_cube'                                                                 # For calculating next quiz
 gem 'capistrano-sidekiq', group: :development
@@ -151,7 +171,7 @@ gem 'capistrano-sidekiq', group: :development
 # Blog
 ############################################################
 gem 'ckeditor', github: 'galetahub/ckeditor'                                   # WYSIWYG editing
-gem 'paperclip'                                                                # Attachment handling
+gem 'paperclip'                                                                # TO BE REMOVED after Active Storage migration is complete in production
 
 ############################################################
 # Other Gems -- should be grouped better
@@ -162,7 +182,7 @@ gem 'rinku', require: 'rails_rinku'                                            #
 gem 'randumb'                                                                  # Retrieve a random record
 gem 'prawn'                                                                    # PDF support
 gem "prawnto_2", require: "prawnto"                                            # Integrating prawn into Rails
-gem 'acts-as-taggable-on'                                                      # :source => "http://gemcutter.org", Taggable gem,
+gem 'acts-as-taggable-on', '~> 10.0'                                          # Updated for Rails 7 compatibility
 gem 'nokogiri', '>=1.5.0'                                                      # HTML/XML parsing
 gem 'json'                                                                     # Javascript Object Notation support
 gem 'thinking-sphinx'                                                          # Connector to Sphinx - for global search
@@ -172,13 +192,13 @@ gem 'breadcrumbs_on_rails', '>=2.0.0'                                          #
 gem 'dalli', '~> 3.2'
 gem 'friendly_id'                                                              # Makes nice IDs for models
 gem 'foreman'                                                                  # Helps manage multiple processes when running app in development.
-gem 'best_in_place'                                                            # In-place editing support
-# gem 'best_in_place', git: "https://github.com/bernat/best_in_place"            # In-place editing support
+# gem 'best_in_place'                                                            # In-place editing support
+gem 'best_in_place', git: "https://github.com/mmotherwell/best_in_place"       # In-place editing support (Rails 6.1 compatible fork)
 # gem 'split', require: 'split/dashboard'                                        # AB testing framework
 # gem 'backup'                                                                 # Used to backup MySQL database and uploaded site assets
 gem 'dropbox-sdk'                                                              # Used with backup above
 gem 'rack-utf8_sanitizer'                                                      # Used to fix EasouSpider invalid UTF-8 byte sequences
-gem 'responders', '~> 2.4'                                                     # Support for respond_to and respond_with in Rails 4.2
+gem 'responders', '~> 3.0'                                                     # Support for respond_to and respond_with
 
 group :console do
   gem 'wirble'
@@ -191,3 +211,4 @@ end
 # rake acts_as_taggable_on_engine:install:migration  <-- this fails
 # find replacement for best_in_place gem
 # Add backup gem back in ... couldn't resolve nokogiri dependency to match that of Thredded
+gem "sassc-rails"

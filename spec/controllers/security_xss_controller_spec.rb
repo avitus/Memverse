@@ -51,20 +51,20 @@ describe "XSS Protection" do
         # Create a verse with HTML content
         verse = Verse.create!(
           translation: "NIV",
-          book: "Genesis",
-          book_index: 1,
-          chapter: 1,
-          versenum: 1,
-          text: '<script>alert("XSS")</script>In the beginning...'
+          book: "Psalms",
+          book_index: 19,
+          chapter: 117,
+          versenum: 2,
+          text: '<script>alert("XSS")</script>For great is his love toward us...'
         )
         
-        get :chapter, params: { bk: "Genesis", ch: 1 }, format: :html
+        get :chapter, params: { bk: "Psalms", ch: 117 }, format: :html
         
         expect(response).to be_successful
         # Check that the script tag is not executed
         expect(response.body).not_to include('<script>alert')
         # The content should be escaped or stripped
-        expect(response.body).to include('In the beginning')
+        expect(response.body).to include('For great is his love toward us')
       end
     end
   end

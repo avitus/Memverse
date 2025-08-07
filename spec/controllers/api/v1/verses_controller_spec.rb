@@ -52,9 +52,12 @@ describe Api::V1::VersesController do
       let(:token) { double :acceptable? => true }
 
       it 'lookups a verse' do
-        get :lookup, params: {tl: 'NIV', bk: 'Galatians', ch: 5, vs: 22, version: 1}, format: :json
+        # Create the specific verse that the test is looking for
+        FactoryBot.create(:verse, book: 'Psalms', chapter: 117, versenum: 1, translation: 'NIV')
+        
+        get :lookup, params: {tl: 'NIV', bk: 'Psalms', ch: 117, vs: 1, version: 1}, format: :json
         expect(response.status).to eq(200)
-        expect(json["text"]).to eq('But the fruit of the Spirit is love, joy, peace, patience, kindness, goodness, faithfulness,')
+        expect(json["text"]).to eq('Praise the LORD, all you nations; extol him, all you peoples.')
       end
 
     end

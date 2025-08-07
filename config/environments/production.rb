@@ -1,105 +1,93 @@
-MemverseApp::Application.configure do
+require "active_support/core_ext/integer/time"
 
-  # Settings specified here will take precedence over those in config/application.rb
+Rails.application.configure do
+  # Settings specified here will take precedence over those in config/application.rb.
 
-  #===============================
-  # Secrets
-  #===============================
-  config.read_encrypted_secrets = true
+  # Code is not reloaded between requests.
+  config.cache_classes = true
 
-  #===============================
-  # Caching
-  #===============================
-  if Rails.env.production?
-    # Use Dalli for Memcached only if the gem is loaded
-    if defined?(Dalli)
-      config.cache_store = :dalli_store, { :namespace => 'Memverse', :expires_in => 1.day, :compress => true }
-    else
-      # Fallback to memory store if dalli is not available
-      config.cache_store = :memory_store
-    end
-  end
-  config.cache_classes = true                      # Code is not reloaded between requests
-  config.consider_all_requests_local = false       # Full error reports are disabled
-  config.action_controller.perform_caching = true
+  # Eager load code on boot. This eager loads most of Rails and
+  # your application in memory, allowing both threaded web servers
+  # and those relying on copy on write to perform better.
+  # Rake tasks automatically ignore this option for performance.
   config.eager_load = true
 
-  #===============================
-  # Asset Pipeline
-  #===============================
-  config.assets.js_compressor   = :uglifier           # Javascript compression
-  config.assets.css_compressor  = :sass               # CSS compression
-  config.assets.digests         = true                # Generate digests for assets URLs
-  config.public_file_server.enabled = false           # Disable Rails's static asset server (Apache or nginx will already do this)
+  # Full error reports are disabled and caching is turned on.
+  config.consider_all_requests_local       = false
+  config.action_controller.perform_caching = true
 
-  # Don't fallback to assets pipeline if a precompiled asset is missed
-  # http://stackoverflow.com/questions/8821864/config-assets-compile-true-in-rails-production-why-not
-  config.assets.compile         = false
+  # Ensures that a master key has been made available in either ENV["RAILS_MASTER_KEY"]
+  # or in config/master.key. This key is used to decrypt credentials (and other encrypted files).
+  # config.require_master_key = true
 
-  # Precompile additional assets (application.js, application.css, and all non-JS/CSS are already added)
-  # http://stackoverflow.com/questions/14194752/rails-4-asset-pipeline-vendor-assets-images-are-not-being-precompiled
-  config.assets.precompile     += %w(*.png *.jpg *.jpeg *.gif)  # Support compilation of images for various UI components
+  # Disable serving static files from the `/public` folder by default since
+  # Apache or NGINX already handles this.
+  config.public_file_server.enabled = ENV["RAILS_SERVE_STATIC_FILES"].present?
 
-  # Ensure that Ckeditor assets are precompiled
-  config.assets.precompile     += Ckeditor.assets
-  config.assets.precompile     += %w(ckeditor/*)
+  # Compress CSS using a preprocessor.
+  # config.assets.css_compressor = :sass
 
-  # Defaults to Rails.root.join("public/assets")
-  # config.assets.manifest      = YOUR_PATH
+  # Do not fallback to assets pipeline if a precompiled asset is missed.
+  config.assets.compile = false
 
-  #===============================
-  # Content Delivery Network
-  #===============================
-  config.action_controller.asset_host = "https://d1r0kpcohdg1bn.cloudfront.net"  # Amazon Cloudfront
-  config.public_file_server.headers = { 'Cache-Control' => 'public, max-age=3600' }
-  config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # Header that Nginx uses for sending files
+  # Enable serving of images, stylesheets, and JavaScripts from an asset server.
+  # config.asset_host = "http://assets.example.com"
 
-  #===============================
-  # Logging
-  #===============================
-  # Log file rotation no longer seems to be possible from within Rails 4
-  # config.logger = Logger.new(config.paths['log'].first, 5, 100.megabytes)  # Let Rails handle log rotation
+  # Specifies the header that your server uses for sending files.
+  # config.action_dispatch.x_sendfile_header = "X-Sendfile" # for Apache
+  # config.action_dispatch.x_sendfile_header = "X-Accel-Redirect" # for NGINX
+
+  # Store uploaded files on the local file system (see config/storage.yml for options).
+  config.active_storage.service = :local
+
+  # Mount Action Cable outside main process or domain.
+  # config.action_cable.mount_path = nil
+  # config.action_cable.url = "wss://example.com/cable"
+  # config.action_cable.allowed_request_origins = [ "http://example.com", /http:\/\/example.*/ ]
+
+  # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
+  # config.force_ssl = true
+
+  # Include generic and useful information about system operation, but avoid logging too much
+  # information to avoid inadvertent exposure of personally identifiable information (PII).
   config.log_level = :info
-  config.active_support.deprecation = :notify     # Send deprecation notices to registered listeners
 
-  #===============================
-  # Email
-  #===============================
-  config.action_mailer.default_url_options = { :host => 'memverse.com' }
-  config.action_mailer.perform_deliveries = true
-  config.action_mailer.raise_delivery_errors = false  # ignore bad email addresses
-  config.action_mailer.default :charset => "utf-8"
-  config.action_mailer.delivery_method = :smtp
+  # Prepend all log lines with the following tags.
+  config.log_tags = [ :request_id ]
 
-  # Sendgrid
-  config.action_mailer.smtp_settings = {
-    :user_name => 'apikey',
-    :password => Rails.application.secrets[:sendgrid],
-    :domain => 'www.memverse.com',
-    :address => 'smtp.sendgrid.net',
-    :port => 587,
-    :authentication => :plain,
-    :enable_starttls_auto => true
-  }
+  # Use a different cache store in production.
+  # config.cache_store = :mem_cache_store
 
-  #===============================
-  # Miscellaneous
-  #===============================
+  # Use a real queuing backend for Active Job (and separate queues per environment).
+  # config.active_job.queue_adapter     = :resque
+  # config.active_job.queue_name_prefix = "memverse_app_production"
 
-  # Enable locale fallbacks for I18n (makes lookups for any locale fall back to the I18n.default_locale when a translation can not be found)
+  config.action_mailer.perform_caching = false
+
+  # Ignore bad email addresses and do not raise email delivery errors.
+  # Set this to true and configure the email server for immediate delivery to raise delivery errors.
+  # config.action_mailer.raise_delivery_errors = false
+
+  # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
+  # the I18n.default_locale when a translation cannot be found).
   config.i18n.fallbacks = true
 
-  # Configure Paperclip to access ImageMagick - this is the path returned by 'which convert'
-  Paperclip.options[:command_path] = "/usr/local/bin/"
+  # Don't log any deprecations.
+  config.active_support.report_deprecations = false
 
-  # Enable threaded mode
-  # config.threadsafe!
+  # Use default logging formatter so that PID and timestamp are not suppressed.
+  config.log_formatter = ::Logger::Formatter.new
 
-  # Load dependencies when running a rake task
-  config.dependency_loading = true if $rails_rake_task
+  # Use a different logger for distributed setups.
+  # require "syslog/logger"
+  # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new "app-name")
 
-  # Enable garbage collection in NewRelic
-  # http://technology.customink.com/blog/2012/03/16/simple-garbage-collection-tuning-for-rails/
-  GC.enable_stats if defined?(GC) && GC.respond_to?(:enable_stats)
+  if ENV["RAILS_LOG_TO_STDOUT"].present?
+    logger           = ActiveSupport::Logger.new(STDOUT)
+    logger.formatter = config.log_formatter
+    config.logger    = ActiveSupport::TaggedLogging.new(logger)
+  end
 
+  # Do not dump schema after migrations.
+  config.active_record.dump_schema_after_migration = false
 end

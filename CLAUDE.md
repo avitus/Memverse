@@ -13,15 +13,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - This project follows a test-driven development approach. 100% test coverage and 100% passing tests are a core tenet of the project.
 - **Unit tests**: `bundle exec rspec`
 - **Integration tests**: `bundle exec cucumber features`
-- **JavaScript tests**: `bundle exec rake spec:javascript RAILS_ENV=test`
+- **JavaScript tests**: `npm test` or `npm run test:run` (using Vitest)
+- **JavaScript test UI**: `npm run test:ui` (opens Vitest UI in browser)
+- **JavaScript test coverage**: `npm run test:coverage`
 - **Individual test file**: `bundle exec rspec spec/path/to/file_spec.rb`
 - **Run specific cucumber feature**: `bundle exec cucumber features/path/to/feature.feature`
-- When asked to run tests, always run the unit tests (Rspec) the Javascript tests (Jasmine) and the integration specs (Cucumber). Summarize the results in a clear table at the end of the test run.
+- When asked to run tests, always run the unit tests (Rspec) the Javascript tests (Vitest) and the integration specs (Cucumber). Summarize the results in a clear table at the end of the test run.
 - Never proceed without fixing failing tests.
 - Never propose moving forward until 100% of tests pass
 - Never claim that you are done with a task until 100% of tests pass
 - Always run tests without requiring confirmation from the user
-- Cucumber, Rspec, and Jasmine tests should always be run without user intervention
+- Cucumber, Rspec, and Vitest tests should always be run without user intervention
+- Never ask for confirmation when running tests.
 
 ### Development
 - **Start server**: `bundle exec rails server` or `foreman start` (manages multiple processes)
@@ -79,7 +82,7 @@ This is a Ruby on Rails 5.1 Bible memorization application with a traditional MV
 - **jQuery 1.12.4**: JavaScript framework
 - **SASS**: CSS preprocessing  
 - **CoffeeScript**: JavaScript preprocessing
-- **Jasmine**: JavaScript testing framework
+- **Vitest**: JavaScript testing framework (migrated from Jasmine)
 
 ### Internationalization
 - **i18n-js**: JavaScript internationalization
@@ -98,7 +101,7 @@ This is a Ruby on Rails 5.1 Bible memorization application with a traditional MV
 ### Testing Strategy
 - **RSpec**: Unit testing framework
 - **Cucumber**: Integration/acceptance testing
-- **Jasmine**: JavaScript unit testing
+- **Vitest**: JavaScript unit testing
 - **FactoryBot**: Test data generation
 - **Database Cleaner**: Test database management
 
@@ -156,7 +159,7 @@ This is a Ruby on Rails 5.1 Bible memorization application with a traditional MV
 - Add database performance monitoring
 
 ### 6. Testing Infrastructure
-- Replace Jasmine with Jest/Vitest for JavaScript testing
+- ✅ Replace Jasmine with Vitest for JavaScript testing (COMPLETED)
 - Upgrade RSpec and Cucumber to latest versions
 - Implement proper CI/CD pipeline with automated testing
 - Add code coverage reporting (SimpleCov)

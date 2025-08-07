@@ -190,7 +190,12 @@ describe Api::V1::UsersController do
       context 'when deletion fails due to database constraints' do
         before do
           # Mock the destroy method to return false
-          allow_any_instance_of(User).to receive(:destroy).and_return(false)
+          user_instance = instance_double(User)
+          allow(User).to receive(:find_by).with(id: user_to_delete.id.to_s).and_return(user_instance)
+          allow(user_instance).to receive(:destroy).and_return(false)
+          allow(user_instance).to receive(:id).and_return(user_to_delete.id)
+          allow(user_instance).to receive(:!=).and_return(false)  # Mock comparison with current_resource_owner
+          allow(user_instance).to receive(:attributes).and_return(user_to_delete.attributes)
         end
 
         it 'responds with 400 (bad request)' do

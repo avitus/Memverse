@@ -12,7 +12,8 @@ describe User do
   end
 
   it "should create a new instance given a valid attribute" do
-    User.create!(@attr)
+    user = User.create!(@attr)
+    user.confirm if user.respond_to?(:confirm)  # Skip email confirmation in tests
   end
 
   it "should require an email address" do
@@ -38,14 +39,16 @@ describe User do
   end
 
   it "should reject duplicate email addresses" do
-    User.create!(@attr)
+    user = User.create!(@attr)
+    user.confirm if user.respond_to?(:confirm)  # Skip email confirmation in tests
     user_with_duplicate_email = User.new(@attr)
     expect(user_with_duplicate_email).not_to be_valid
   end
 
   it "should reject email addresses identical up to case" do
     upcased_email = @attr[:email].upcase
-    User.create!(@attr.merge(:email => upcased_email))
+    user = User.create!(@attr.merge(:email => upcased_email))
+    user.confirm if user.respond_to?(:confirm)  # Skip email confirmation in tests
     user_with_duplicate_email = User.new(@attr)
     expect(user_with_duplicate_email).not_to be_valid
   end
@@ -87,6 +90,7 @@ describe User do
 
     before(:each) do
       @user = User.create!(@attr)
+      @user.confirm if @user.respond_to?(:confirm)  # Skip email confirmation in tests
     end
 
     it "should have an encrypted password attribute" do
@@ -107,7 +111,8 @@ describe User do
       @user = FactoryBot.create(:user, :time_allocation => 5)
       expect(@user.work_load).to eq(2)
       for i in 1..3
-        verse = FactoryBot.create(:verse, :book_index => 1, :book => "Genesis", :chapter => 3, :versenum => i)
+        # Use unique verses to avoid duplicate key errors
+        verse = FactoryBot.create(:verse, :book_index => 19, :book => "Psalms", :chapter => 117, :versenum => i)
         FactoryBot.create(:memverse, :user => @user, :verse => verse)
       end
       expect(@user.work_load).to eq(5)
@@ -120,7 +125,7 @@ describe User do
       for i in 5..14 # setup learning verses
         verse = FactoryBot.create(:verse, :book_index => 2, :book => "Exodus", :chapter => 20, :versenum => i)
         mv = FactoryBot.create(:memverse, :user => @user, :verse => verse)
-        mv.update_attributes!(:test_interval => i, :next_test => Date.today + i, :status => "Learning")
+        mv.update!(:test_interval => i, :next_test => Date.today + i, :status => "Learning")
       end
 
       for i in 1..5 # setup pending verses

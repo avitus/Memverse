@@ -1,6 +1,6 @@
 		<h2 style="color:#111">Register for Memverse</h2><br />
 
-		<%= devise_error_messages! %>
+		<%= render "devise/shared/error_messages", resource: resource %>
 		<div class="signup name">
 			<%= f.text_field		:name, :placeholder => "Name" %>
 			<div class="sidetip">

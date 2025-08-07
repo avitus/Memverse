@@ -1,4 +1,4 @@
-class Popverse < ActiveRecord::Base
+class Popverse < ApplicationRecord
  
   # Structure  
   #      t.string    :pop_ref,     :null => false

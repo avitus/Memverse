@@ -64,7 +64,7 @@ class QuestsController < ApplicationController
     @quest = Quest.find(params[:id])
 
     respond_to do |format|
-      if @quest.update_attributes(params[:quest])
+      if @quest.update(params[:quest])
         flash[:notice] = 'Quest was successfully updated.'
         format.html { redirect_to(@quest) }
         format.xml  { head :ok }

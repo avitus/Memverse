@@ -4,7 +4,7 @@
 # | 1  | Sermon on the Mount | Memorize Jesus' entire Sermon on the Mount (Matthew 5-7) | solo  | 2012-03-21 23:57:27 UTC | 2012-03-21 23:57:27 UTC |
 # +----+---------------------+----------------------------------------------------------+-------+-------------------------+-------------------------+
 
-class Badge < ActiveRecord::Base
+class Badge < ApplicationRecord
   
   include Comparable
   

@@ -10,10 +10,10 @@ require 'factory_bot_rails'
 
 puts "====> Seeding #{Rails.env} environment"
 puts "============================================================"
-puts ActiveRecord::Base.configurations
+puts ActiveRecord::Base.configurations.configs_for(env_name: Rails.env).first.configuration_hash
 puts "============================================================"
 
-DatabaseCleaner.clean
+DatabaseCleaner[:active_record].clean
 
 
 # puts 'SETTING UP ADMIN USER'
@@ -376,7 +376,7 @@ end
 # Create Final Verse data table
 # ----------------------------------------------------------------------------------------------------------
 puts "Adding final verse data (last verse of each chapter of the Bible) for #{Rails.env} environment"
-config = ActiveRecord::Base.configurations[Rails.env]
+config = ActiveRecord::Base.configurations.configs_for(env_name: Rails.env).first.configuration_hash
 if config['adapter'] == 'mysql2'
   puts "  Configuration:"
   puts "    mysql --user=#{config['username']} --password=\"#{config['password']}\" --host=#{config['host']} #{config['database']} < iso_final_verses.sql" 
@@ -394,7 +394,7 @@ puts "Created #{FinalVerse.count} entries"
 # ALV: Seeding the database with real verses currently breaks a lot of the Rspec tests.
 # ----------------------------------------------------------------------------------------------------------
 puts "Adding seed verses for #{Rails.env} environment"
-config = ActiveRecord::Base.configurations[Rails.env]
+config = ActiveRecord::Base.configurations.configs_for(env_name: Rails.env).first.configuration_hash
 if config['adapter'] == 'mysql2'
   puts "  ... Using MySQL database"
   system("mysql --user=#{config['username']} --password=\"#{config['password']}\" --host=#{config['host']} #{config['database']} < seed_verses.sql")

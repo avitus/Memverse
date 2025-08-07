@@ -1,4 +1,4 @@
-class Tweet < ActiveRecord::Base
+class Tweet < ApplicationRecord
 
 #    t.integer  "importance", :default => 5
 #    t.integer  "user_id"
@@ -10,11 +10,11 @@ class Tweet < ActiveRecord::Base
 #    t.datetime "updated_at"
 
   # Relationships
-  belongs_to  :user
-  belongs_to  :church
-  belongs_to  :group
-  belongs_to  :country
-  belongs_to  :american_state
+  belongs_to  :user, optional: true
+  belongs_to  :church, optional: true
+  belongs_to  :group, optional: true
+  belongs_to  :country, optional: true
+  belongs_to  :american_state, optional: true
   
   # Validations
   validates_presence_of   :news

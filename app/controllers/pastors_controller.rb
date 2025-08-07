@@ -61,7 +61,7 @@ class PastorsController < ApplicationController
     @pastor = Pastor.find(params[:id])
 
     respond_to do |format|
-      if @pastor.update_attributes(params[:pastor])
+      if @pastor.update(params[:pastor])
         flash[:notice] = 'Pastor was successfully updated.'
         format.html { redirect_to(@pastor) }
         format.xml  { head :ok }

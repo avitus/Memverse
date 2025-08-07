@@ -1,4 +1,4 @@
-class FinalVerse < ActiveRecord::Base
+class FinalVerse < ApplicationRecord
 
   # ----------------------------------------------------------------------------------------------------------
   # Swagger-Blocks DSL [START]

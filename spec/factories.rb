@@ -39,23 +39,32 @@ FactoryBot.define do
   # ==============================================================================================
   # Verses
   # ==============================================================================================
+  sequence :verse_sequence do |n|
+    n
+  end
+
   factory :verse do
     translation { 'NIV' }
-    book_index { 48 }
-    book { 'Galatians' }
-    chapter { 5 }
-    versenum { 22 }
-    text { 'But the fruit of the Spirit is love, joy, peace, patience, kindness, goodness, faithfulness,' }
+    book_index { 19 }
+    book { 'Psalms' }
+    chapter { generate(:verse_sequence) }
+    versenum { 1 }
+    text { 'Praise the LORD, all you nations; extol him, all you peoples.' }
 
     # This ugliness is required to skip the validate_ref callback since the FinalVerse records are often not available during testing
     # For details see: http://stackoverflow.com/questions/8751175/skip-callbacks-on-factory-girl-and-rspec
-    # after(:build) { |verse| verse.class.skip_callback(:create, :before, :validate_ref, raise: false) }
+    after(:build) { |verse| verse.define_singleton_method(:validate_ref) { true } }
 
     # # Use this factory for testing out of bound verses
     # # TODO: these tests are not yet passing ... not sure how this works
     # factory :verse_with_validate_ref do
     #   after(:build) { |verse| verse.class.set_callback(:create, :before, :validate_ref) }
     # end
+
+    factory :verse2 do
+      versenum { 2 }
+      text { 'For great is his love toward us, and the faithfulness of the LORD endures forever. Praise the LORD.' }
+    end
 
   end
 
@@ -65,11 +74,11 @@ FactoryBot.define do
   factory :passage do
     association :user, factory: :user
     translation { 'NIV' }
-    length { 9 }
-    book { 'Proverbs' }
-    chapter { 3 }
-    first_verse { 2 }
-    last_verse { 10 }
+    length { 2 }
+    book { 'Psalms' }
+    chapter { 117 }
+    first_verse { 1 }
+    last_verse { 2 }
 
     after(:create) do |psg, evaluator|
       for i in evaluator.first_verse..evaluator.last_verse
@@ -141,9 +150,9 @@ FactoryBot.define do
   # Final Verse
   # ==============================================================================================
   factory :final_verse do
-    book { 'Genesis' }
-    chapter { 1 }
-    last_verse { 31 }
+    book { 'Psalms' }
+    chapter { 117 }
+    last_verse { 2 }
   end
 
   # ==============================================================================================
@@ -216,10 +225,10 @@ FactoryBot.define do
   # Uberverses
   # ==============================================================================================
   factory :uberverse do
-    book { 'Genesis' }
-    chapter { 1 }
+    book { 'Psalms' }
+    chapter { 117 }
     versenum { 1 }
-    book_index { 1 }
+    book_index { 19 }
     subsection_end { 0 }
   end
 
@@ -307,6 +316,32 @@ FactoryBot.define do
     association :user, factory: :user
     association :last_user, factory: :user
     users { build_list :user, 1 }
+  end
+
+  # ==============================================================================================
+  # CKEditor
+  # ==============================================================================================
+  factory :ckeditor_picture, class: 'Ckeditor::Picture' do
+    data_file_name { 'test_image.jpg' }
+    data_content_type { 'image/jpeg' }
+    data_file_size { 1024 }
+    type { 'Ckeditor::Picture' }
+  end
+
+  factory :ckeditor_attachment_file, class: 'Ckeditor::AttachmentFile' do
+    data_file_name { 'test_document.pdf' }
+    data_content_type { 'application/pdf' }
+    data_file_size { 2048 }
+    type { 'Ckeditor::AttachmentFile' }
+  end
+
+  # ==============================================================================================
+  # Sermons
+  # ==============================================================================================
+  factory :sermon do
+    title { 'Test Sermon' }
+    summary { 'This is a test sermon' }
+    association :user, factory: :user
   end
 
 end

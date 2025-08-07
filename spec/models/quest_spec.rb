@@ -40,7 +40,7 @@ describe Quest do
       it "for 'Memorized'" do
         quest = FactoryBot.create(:quest, objective: 'Prophecy', qualifier: 'Memorized', quantity: 1)
         mv = FactoryBot.create(:memverse, user: @user)
-        mv.update_attributes(test_interval: 31, status: "Memorized")
+        mv.update(test_interval: 31, status: "Memorized")
 
         mv.update_attribute(:verse, gospel)
         expect(quest.complete?(@user)).to eq(false)

@@ -3,7 +3,7 @@
   #    t.text      :description
   #    t.integer   :no_questions, :default => "0"
 
-class Quiz < ActiveRecord::Base
+class Quiz < ApplicationRecord
 
   # ----------------------------------------------------------------------------------------------------------
   # Swagger-Blocks DSL [START]

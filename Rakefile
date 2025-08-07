@@ -6,11 +6,5 @@ require File.expand_path('../config/application', __FILE__)
 
 MemverseApp::Application.load_tasks
 
-begin
-  require 'jasmine'
-  load 'jasmine/tasks/jasmine.rake'
-rescue LoadError
-  task :jasmine do
-    abort "Jasmine is not available. In order to run jasmine, you must: (sudo) gem install jasmine"
-  end
-end
+# Jasmine has been replaced with Vitest for JavaScript testing
+# To run JavaScript tests, use: npm test or npm run test:run

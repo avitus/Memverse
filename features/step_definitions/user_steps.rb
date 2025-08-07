@@ -9,24 +9,46 @@ Given /^no user exists with an email of "(.*)"$/ do |email|
 end
 
 Given /^I am a user named "([^"]*)" with an email "([^"]*)" and password "([^"]*)"$/ do |name, email, password|
-  user = FactoryBot.create(:user, :name => name,
-                     :email => email,
-                     :password => password,
-                     :password_confirmation => password)
-  user.confirm
-  user.save!
-  @current_user_email = email
+  retry_count = 0
+  begin
+    user = FactoryBot.create(:user, :name => name,
+                       :email => email,
+                       :password => password,
+                       :password_confirmation => password)
+    user.confirm
+    user.save!
+    @current_user_email = email
+  rescue ActiveRecord::Deadlocked
+    retry_count += 1
+    if retry_count < 3
+      sleep 0.1
+      retry
+    else
+      raise
+    end
+  end
 end
 
 Given /^I am an admin named "([^"]*)" with an email "([^"]*)" and password "([^"]*)"$/ do |name, email, password|
-  user = FactoryBot.create(:user, :name => name,
-                     :email => email,
-                     :password => password,
-                     :password_confirmation => password,
-                     :admin => true )
-  user.confirm
-  user.save!
-  @current_user_email = email
+  retry_count = 0
+  begin
+    user = FactoryBot.create(:user, :name => name,
+                       :email => email,
+                       :password => password,
+                       :password_confirmation => password,
+                       :admin => true )
+    user.confirm
+    user.save!
+    @current_user_email = email
+  rescue ActiveRecord::Deadlocked
+    retry_count += 1
+    if retry_count < 3
+      sleep 0.1
+      retry
+    else
+      raise
+    end
+  end
 end
 
 # Helper method to generate unique user data
@@ -260,7 +282,20 @@ Given /^the user with the email of "(.*)" has (\d+) verses in his list$/ do |ema
     vs = FactoryBot.create(:verse, :chapter => 2, :versenum => i+1)
     FactoryBot.create(:memverse, :user_id => user.id, :verse_id => vs.id)
   }
-  user.memorized = 10
+  
+  # Create the specific verse that the learn_verse test expects
+  # Galatians 5:22 with the "But the fruit of the Spirit" text
+  gal_verse = FactoryBot.create(:verse, 
+    :book => 'Galatians', 
+    :book_index => 48, 
+    :chapter => 5, 
+    :versenum => 22,
+    :text => 'But the fruit of the Spirit is love, joy, peace, patience, kindness, goodness, faithfulness,')
+  
+  # Create a memverse record so the user can search for this verse
+  FactoryBot.create(:memverse, :user_id => user.id, :verse_id => gal_verse.id)
+  
+  user.memorized = 11  # Updated count to include the Galatians verse
   user.save
 end
 

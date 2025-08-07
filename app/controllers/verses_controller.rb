@@ -109,7 +109,7 @@ class VersesController < ApplicationController
         flash[:notice] = 'This verse has multiple users and can only be edited by a Memverse employee.'
         format.html { redirect_to( @verse ) }
         format.xml  { head :ok }
-      elsif @verse.update_attributes(verse_params)
+      elsif @verse.update(verse_params)
         flash[:notice] = 'Verse was successfully updated.'
         format.html { redirect_to( @verse ) }
         format.xml  { head :ok }

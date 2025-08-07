@@ -1,4 +1,4 @@
-class Memverse < ActiveRecord::Base
+class Memverse < ApplicationRecord
 
   # ----------------------------------------------------------------------------------------------------------
   # Swagger-Blocks DSL [START]
@@ -111,7 +111,7 @@ class Memverse < ActiveRecord::Base
   # Relationships
   belongs_to :user
   belongs_to :verse
-  belongs_to :passage
+  belongs_to :passage, optional: true
 
   has_one :country, :through => :user
 

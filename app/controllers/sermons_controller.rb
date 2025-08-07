@@ -43,7 +43,7 @@ class SermonsController < ApplicationController
   # POST /sermons
   # POST /sermons.xml
   def create
-    @sermon = Sermon.new(params[:sermon])
+    @sermon = Sermon.new(sermon_params)
     
     errorcode, bk, ch, vs = parse_verse(params[:sermon][:uberverse_id])
     @sermon.uberverse = Uberverse.first(:conditions => {:book => bk, :chapter => ch, :versenum => vs}) || Uberverse.create(:book => bk, :chapter => ch, :versenum => vs)
@@ -72,7 +72,7 @@ class SermonsController < ApplicationController
     # TODO - need to enable update of church/pastor/verse when editing sermon
 
     respond_to do |format|
-      if @sermon.update_attributes(params[:sermon])
+      if @sermon.update(sermon_params)
         flash[:notice] = 'Sermon was successfully updated.'
         format.html { redirect_to(@sermon) }
         format.xml  { head :ok }
@@ -95,5 +95,11 @@ class SermonsController < ApplicationController
     end
   end  
   
+  private
+  
+  def sermon_params
+    # Allow both Paperclip and Active Storage parameters during migration
+    params.require(:sermon).permit(:title, :summary, :church_id, :pastor_id, :user_id, :uberverse_id, :mp3, :mp3_attachment)
+  end
   
 end

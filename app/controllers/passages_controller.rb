@@ -80,7 +80,7 @@ class PassagesController < ApplicationController
     @passage = Passage.find(params[:id])
 
     respond_to do |format|
-      if @passage.update_attributes( passage_params )
+      if @passage.update( passage_params )
         format.html { redirect_to @passage, notice: 'Passage was successfully updated.' }
         format.json { head :no_content }
       else

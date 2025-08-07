@@ -78,7 +78,7 @@ class ScribeController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   def verify_verse
     @verse = Verse.find(params[:id])
-    @verse.update_attributes(verified: true, error_flag: false)
+    @verse.update(verified: true, error_flag: false)
 
     # render :text => "Verified"
 

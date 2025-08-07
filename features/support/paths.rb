@@ -23,6 +23,9 @@ module NavigationHelpers
     when /the learn verse page/
       '/learn'.dup
 
+    when /the demo page/
+      '/demo'.dup
+
     when /(.*)'s referrer page/
       "/?referrer=#{$1}".dup
 
