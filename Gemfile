@@ -5,7 +5,7 @@ require 'rbconfig'
 git_source(:github) { |name| "https://github.com/#{name}.git" }
 
 # Set Ruby version (we are using RVM)
-ruby "2.7.8"
+ruby "3.2.6"
 
 HOST_OS = RbConfig::CONFIG['host_os']
 source 'http://rubygems.org'
@@ -51,7 +51,7 @@ end
 # Database
 ############################################################
 gem 'mysql2', '>= 0.4'
-gem 'redis', '~> 4.0'                                                          # Redis Key-value store
+gem 'redis', '~> 5.0'                                                          # Redis Key-value store - updated for Ruby 3.2 compatibility
 
 ############################################################
 # Javascript Rutime
@@ -87,12 +87,12 @@ gem 'jquery-ui-rails'
 # gem 'compass-rails'                                                             # Now has Rails 4 support - removed as not needed
 gem 'bootsnap', '>= 1.4.2', require: false                                     # Boot optimization for Rails 6
 gem 'sass-rails', '>= 6.0'
-gem 'autoprefixer-rails', '~> 8.6.5'                                            # CSS vendor prefixes
+gem 'autoprefixer-rails', '~> 10.4.21'                                          # CSS vendor prefixes - Rails 7 and Ruby 3.2 compatible
 gem 'terser'                                                            # JS compressor (replaces uglifier for Rails 7)
 # gem 'coffee-rails', '~> 5.0'                                                # Deprecated in Rails 7 - migrate to modern JS 
 # gem 'rails-observers'                                                           # REMOVED: Replaced with callbacks in User model                     
 gem "mimemagic", "~> 0.3.10"                                                    # For mime type detection. Prev version yanked      
-gem 'ffi', '~> 1.15.5'                                                          # Use older version compatible with older GLIBC
+gem 'ffi', '~> 1.16.0'                                                          # FFI library - Ruby 3.2 compatible
 
 # Rails 7 components
 gem 'actionmailbox', '~> 7.0.0'                                               # Inbound email handling
@@ -101,18 +101,6 @@ gem 'sprockets-rails'                                                          #
 gem 'importmap-rails'                                                          # Modern JS without webpack
 gem 'turbo-rails'                                                              # Hotwire Turbo for SPA-like performance
 gem 'stimulus-rails'                                                           # Hotwire Stimulus for JS behavior
-
-
-############################################################
-# For Rails 4 Upgrade ... should be removed eventually
-############################################################
-# gem 'protected_attributes'                                                   # Only officially supported until Rails 5
-# gem 'rails-observers' 
-# gem 'actionpack-page_caching'
-# gem 'actionpack-action_caching'
-# gem 'activerecord-deprecated_finders'
-# gem 'activerecord-session_store'                                               # We should store sessions in cookies
-# gem 'activeresource', require: 'active_resource'
 
 ############################################################
 # API
@@ -137,7 +125,7 @@ gem 'cancancan', '~> 3.4'                                                     # 
 # Major Engines (Admin, Forem, Blog)
 ############################################################
 gem 'rails_admin'                                                                # Admin dashboard
-gem 'thredded', '~> 1.0.1'                                                    # Forum engine - check for Rails 6 compatibility
+gem 'thredded', '~> 1.2.1'                                                    # Forum engine - Rails 7 and Ruby 3.2 compatible
 gem 'bloggity', github: 'avitus/bloggity'                                      # Blog engine
 # gem 'bloggity', :path => "../bloggity"                                       # Blog engine (dev environment)
 
@@ -171,7 +159,7 @@ gem 'capistrano-sidekiq', group: :development
 # Blog
 ############################################################
 gem 'ckeditor', github: 'galetahub/ckeditor'                                   # WYSIWYG editing
-gem 'paperclip'                                                                # TO BE REMOVED after Active Storage migration is complete in production
+# gem 'paperclip' # REMOVED: Migration to Active Storage completed
 
 ############################################################
 # Other Gems -- should be grouped better
@@ -189,10 +177,11 @@ gem 'thinking-sphinx'                                                          #
 gem "i18n-js", ">= 3.0.0.rc11"                                                 # Uses config/locale files to build a JavaScript equivalent of i18n in Rails
 # gem 'localeapp'                                                                # Translation service for i18n
 gem 'breadcrumbs_on_rails', '>=2.0.0'                                          # For breadcrumb navigation bar
-gem 'dalli', '~> 3.2'
+gem 'dalli', '~> 3.2'                                                            # Memcached client - Rails 7 compatible
 gem 'friendly_id'                                                              # Makes nice IDs for models
 gem 'foreman'                                                                  # Helps manage multiple processes when running app in development.
 # gem 'best_in_place'                                                            # In-place editing support
+# gem 'best_in_place', git: "https://github.com/mmotherwell/best_in_place"     # DEPRECATED: Consider migrating to Stimulus/Turbo for Rails 7+
 gem 'best_in_place', git: "https://github.com/mmotherwell/best_in_place"       # In-place editing support (Rails 6.1 compatible fork)
 # gem 'split', require: 'split/dashboard'                                        # AB testing framework
 # gem 'backup'                                                                 # Used to backup MySQL database and uploaded site assets
@@ -209,6 +198,18 @@ end
 # TODO
 
 # rake acts_as_taggable_on_engine:install:migration  <-- this fails
-# find replacement for best_in_place gem
+# DONE: Updated thredded gem to ~> 1.2.1 for Ruby 3.2 compatibility
+# DONE: Updated autoprefixer-rails to ~> 10.4.21 for Ruby 3.2 compatibility  
+# DONE: Updated redis to ~> 5.0 for better Rails 7 support
+# DONE: Updated ffi to ~> 1.16.0 for Ruby 3.2 compatibility
+# DONE: Added net-http gem for Ruby 3.2 standard library changes
+# TODO: Consider migrating from best_in_place to Stimulus/Turbo for Rails 7+
 # Add backup gem back in ... couldn't resolve nokogiri dependency to match that of Thredded
 gem "sassc-rails"
+
+############################################################
+# Ruby 3.2 Standard Library Gems 
+# These gems were moved out of the standard library and need to be explicitly included
+############################################################
+gem 'net-http'                                                 # HTTP client library - used in app/lib/esv.rb
+gem 'rss'                                                      # RSS parser library - used in app/lib/rss_reader.rb

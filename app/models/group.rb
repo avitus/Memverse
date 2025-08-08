@@ -22,7 +22,7 @@ class Group < ApplicationRecord
 
   # Top groups, sorted by number of verses memorized
   #
-  # @param numgroups [Fixnum]
+  # @param numgroups [Integer]
   # @return [Array<Group>]
   def self.top_groups(numgroups=70)
 

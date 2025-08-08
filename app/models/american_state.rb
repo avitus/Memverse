@@ -20,7 +20,7 @@ class AmericanState < ApplicationRecord
   friendly_id :name, use: :slugged
 
   # Returns hash of top states (sorted by number of verses memorized)
-  # @param numstates [Fixnum] Max number of states to return
+  # @param numstates [Integer] Max number of states to return
   # @return [Hash] Keys are state names and values are verses memorized.
   def self.top_states(numstates = 50)
 

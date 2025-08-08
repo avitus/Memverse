@@ -26,25 +26,15 @@
     <%= f.label :uberverse_id %><br />
     <%= f.text_field :uberverse_id %>
   </p>
-  <% if @sermon.mp3_attachment.attached? || @sermon.mp3.present? %>
+  <% if @sermon.mp3_attachment.attached? %>
   <p>
     <b>Current MP3:</b>
-    <% if @sermon.mp3_attachment.attached? %>
-      <%= @sermon.mp3_attachment.filename %> (Active Storage)
-    <% else %>
-      <%= @sermon.mp3_file_name %> (Paperclip)
-    <% end %>
+    <%= @sermon.mp3_attachment.filename %>
   </p>
   <% end %>
   <p>
     <%= f.label :mp3_attachment, "Replace MP3 Audio File" %><br />
     <%= f.file_field :mp3_attachment, accept: "audio/mp3,audio/mpeg" %>
-    <br><small>Upload new MP3 file (preferred)</small>
-  </p>
-  <% # Keep legacy Paperclip field for backward compatibility during migration %>
-  <p style="display: none;">
-    <%= f.label :mp3 %><br />
-    <%= f.file_field :mp3 %>
   </p>
   <p>
     <%= f.submit 'Update' %>

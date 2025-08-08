@@ -16,7 +16,7 @@ class Book
   end
 
   # Find book by index. User language is used.
-  # @param index [Fixnum] Index of Bible book
+  # @param index [Integer] Index of Bible book
   # @return [Book]
   def self.find(index)
     locale = I18n.locale

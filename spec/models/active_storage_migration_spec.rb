@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'Active Storage Migration', type: :model do
+RSpec.describe 'Active Storage', type: :model do
   describe 'Sermon model' do
     let(:sermon) { FactoryBot.create(:sermon) }
     
@@ -21,25 +21,8 @@ RSpec.describe 'Active Storage Migration', type: :model do
         expect(sermon.mp3_url).to include('rails/active_storage/blobs')
       end
       
-      it 'prefers Active Storage over Paperclip' do
-        # Even if Paperclip data exists, Active Storage should take precedence
-        sermon.mp3_file_name = 'old_paperclip.mp3'
+      it 'returns Active Storage attachment' do
         expect(sermon.mp3).to eq(sermon.mp3_attachment)
-      end
-    end
-    
-    context 'with Paperclip attachment only' do
-      before do
-        sermon.mp3_file_name = 'paperclip_audio.mp3'
-        sermon.mp3_content_type = 'audio/mpeg'
-        sermon.mp3_file_size = 1024
-        sermon.mp3_updated_at = Time.current
-      end
-      
-      it 'falls back to Paperclip url' do
-        allow(sermon).to receive_message_chain(:mp3, :url).and_return('/system/sermons/mp3s/test.mp3')
-        allow(sermon).to receive_message_chain(:mp3, :present?).and_return(true)
-        expect(sermon.mp3_url).to eq('/system/sermons/mp3s/test.mp3')
       end
     end
     
@@ -47,23 +30,19 @@ RSpec.describe 'Active Storage Migration', type: :model do
       it 'returns nil for mp3_url' do
         expect(sermon.mp3_url).to be_nil
       end
+      
+      it 'returns nil for mp3' do
+        expect(sermon.mp3).to be_nil
+      end
     end
   end
   
   describe 'CKEditor::Picture model' do
-    # Temporarily skip due to Paperclip/Rails 7 compatibility issues
     let(:picture) { FactoryBot.create(:ckeditor_picture) }
     
-    xcontext 'with Active Storage attachment' do
-      before do
-        picture.data_attachment.attach(
-          io: File.open(Rails.root.join('spec', 'fixtures', 'files', 'test_image.jpg')),
-          filename: 'test_image.jpg',
-          content_type: 'image/jpeg'
-        )
-      end
+    context 'with Active Storage attachment' do
       
-      xit 'has attached data_attachment' do
+      it 'has attached data_attachment' do
         expect(picture.data_attachment).to be_attached
       end
       
@@ -91,32 +70,25 @@ RSpec.describe 'Active Storage Migration', type: :model do
       end
     end
     
-    xcontext 'with Paperclip attachment only' do
+    context 'without attachment' do
+      let(:picture_without_attachment) { FactoryBot.build(:ckeditor_picture) }
+      
       before do
-        picture.data_file_name = 'paperclip_image.jpg'
-        picture.data_content_type = 'image/jpeg'
-        picture.data_file_size = 1024
+        # Clear any attached files from the factory
+        picture_without_attachment.data_attachment.purge if picture_without_attachment.data_attachment.attached?
       end
       
-      it 'falls back to Paperclip url methods' do
-        allow(picture).to receive(:url).and_call_original
-        expect(picture.url(:content)).to include('/ckeditor_assets/pictures')
+      it 'validates attachment presence' do
+        picture_without_attachment.valid?
+        expect(picture_without_attachment.errors[:data_attachment]).to include("can't be blank")
       end
     end
   end
   
   describe 'CKEditor::AttachmentFile model' do
-    # Temporarily skip due to Paperclip/Rails 7 compatibility issues  
     let(:attachment) { FactoryBot.create(:ckeditor_attachment_file) }
     
-    xcontext 'with Active Storage attachment' do
-      before do
-        attachment.data_attachment.attach(
-          io: File.open(Rails.root.join('spec', 'fixtures', 'files', 'test_document.pdf')),
-          filename: 'test_document.pdf',
-          content_type: 'application/pdf'
-        )
-      end
+    context 'with Active Storage attachment' do
       
       it 'has attached data_attachment' do
         expect(attachment.data_attachment).to be_attached
@@ -142,20 +114,25 @@ RSpec.describe 'Active Storage Migration', type: :model do
       end
     end
     
-    xcontext 'with Paperclip attachment only' do
+    context 'without attachment' do
+      let(:attachment_without_file) { FactoryBot.build(:ckeditor_attachment_file) }
+      
       before do
-        attachment.data_file_name = 'paperclip_doc.pdf'
-        attachment.data_content_type = 'application/pdf'
-        attachment.data_file_size = 1024
+        # Clear any attached files from the factory
+        attachment_without_file.data_attachment.purge if attachment_without_file.data_attachment.attached?
       end
       
-      it 'returns Paperclip filename' do
-        expect(attachment.filename).to eq('paperclip_doc.pdf')
+      it 'returns nil for filename' do
+        expect(attachment_without_file.filename).to be_nil
       end
       
-      it 'falls back to Paperclip url' do
-        allow(attachment).to receive(:url).and_call_original
-        expect(attachment.url).to include('/ckeditor_assets/attachments')
+      it 'returns nil for url' do
+        expect(attachment_without_file.url).to be_nil
+      end
+      
+      it 'validates attachment presence' do
+        attachment_without_file.valid?
+        expect(attachment_without_file.errors[:data_attachment]).to include("can't be blank")
       end
     end
   end

@@ -22,14 +22,7 @@
 <% if @sermon.mp3_url.present? %>
 <p>
   <b>Mp3:</b>
-  <% if @sermon.mp3_attachment.attached? %>
-    <%= link_to @sermon.mp3_attachment.filename, @sermon.mp3_url %>
-    <span style="color: #666; font-size: 0.9em;">(Active Storage)</span>
-  <% else %>
-    <%= link_to @sermon.mp3_file_name, @sermon.mp3_url %>
-    <span style="color: #666; font-size: 0.9em;">(Paperclip)</span>
-  <% end %>
-  <br>
+  <%= link_to @sermon.mp3_attachment.filename, @sermon.mp3_url %>
 </p>
 
 <audio src="<%= @sermon.mp3_url %>" controls="controls">

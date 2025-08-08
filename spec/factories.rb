@@ -319,20 +319,30 @@ FactoryBot.define do
   end
 
   # ==============================================================================================
-  # CKEditor
+  # CKEditor - Using Active Storage
   # ==============================================================================================
   factory :ckeditor_picture, class: 'Ckeditor::Picture' do
-    data_file_name { 'test_image.jpg' }
-    data_content_type { 'image/jpeg' }
-    data_file_size { 1024 }
     type { 'Ckeditor::Picture' }
+    
+    after(:build) do |picture|
+      picture.data_attachment.attach(
+        io: File.open(Rails.root.join('spec', 'fixtures', 'files', 'test_image.jpg')),
+        filename: 'test_image.jpg',
+        content_type: 'image/jpeg'
+      )
+    end
   end
 
   factory :ckeditor_attachment_file, class: 'Ckeditor::AttachmentFile' do
-    data_file_name { 'test_document.pdf' }
-    data_content_type { 'application/pdf' }
-    data_file_size { 2048 }
     type { 'Ckeditor::AttachmentFile' }
+    
+    after(:build) do |attachment|
+      attachment.data_attachment.attach(
+        io: File.open(Rails.root.join('spec', 'fixtures', 'files', 'test_document.pdf')),
+        filename: 'test_document.pdf',
+        content_type: 'application/pdf'
+      )
+    end
   end
 
   # ==============================================================================================

@@ -1,7 +1,6 @@
 # coding: utf-8
 
-require 'rss/1.0'
-require 'rss/2.0'
+require 'rss'
 require 'open-uri'
 
 class RssReader

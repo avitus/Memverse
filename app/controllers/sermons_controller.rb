@@ -46,7 +46,7 @@ class SermonsController < ApplicationController
     @sermon = Sermon.new(sermon_params)
     
     errorcode, bk, ch, vs = parse_verse(params[:sermon][:uberverse_id])
-    @sermon.uberverse = Uberverse.first(:conditions => {:book => bk, :chapter => ch, :versenum => vs}) || Uberverse.create(:book => bk, :chapter => ch, :versenum => vs)
+    @sermon.uberverse = Uberverse.where(:book => bk, :chapter => ch, :versenum => vs).first || Uberverse.create(:book => bk, :chapter => ch, :versenum => vs)
     
     @sermon.church    = Church.find_by_name(params[:sermon][:church_id]) || Church.create(:name => params[:sermon][:church_id].titleize )
     @sermon.pastor    = Pastor.find_by_name(params[:sermon][:pastor_id]) || Pastor.create(:name => params[:sermon][:pastor_id].titleize )
@@ -98,8 +98,7 @@ class SermonsController < ApplicationController
   private
   
   def sermon_params
-    # Allow both Paperclip and Active Storage parameters during migration
-    params.require(:sermon).permit(:title, :summary, :church_id, :pastor_id, :user_id, :uberverse_id, :mp3, :mp3_attachment)
+    params.require(:sermon).permit(:title, :summary, :church_id, :pastor_id, :user_id, :uberverse_id, :mp3_attachment)
   end
   
 end

@@ -79,7 +79,7 @@ class Quiz < ApplicationRecord
   end
 
   # Hours till quiz starts
-  # @return [Fixnum]
+  # @return [Integer]
   def hours_till_start
     return (start_time - Time.now)/3600
   end

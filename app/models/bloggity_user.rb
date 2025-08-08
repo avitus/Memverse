@@ -9,7 +9,7 @@ module BloggityUser
 
   # Can user post to given blog?
   #
-  # @param blog_id [Fixnum, nil]
+  # @param blog_id [Integer, nil]
   # @return [Boolean]
   def can_blog?(blog_id = nil)
     self.has_role?("blogger") or self.admin?
@@ -17,7 +17,7 @@ module BloggityUser
 
   # Can user moderate the comments for a given blog?
   #
-  # @param blog_id [Fixnum, nil]
+  # @param blog_id [Integer, nil]
   # @return [Boolean]
   def can_moderate_blog_comments?(blog_id = nil)
     self.admin?
@@ -26,7 +26,7 @@ module BloggityUser
   # Are user's comments on given blog automatically approved?
   # If not, they will be queued until a moderator approves them
   #
-  # @param blog_id [Fixnum, nil]
+  # @param blog_id [Integer, nil]
   # @return [Boolean]
   def blog_comment_auto_approved?(blog_id = nil)
     self.memverses.learning.count > 10  or self.completed_sessions >= 5
@@ -34,7 +34,7 @@ module BloggityUser
 
   # Can user comment on given blog?
   #
-  # @param blog_id [Fixnum, nil]
+  # @param blog_id [Integer, nil]
   # @return [Boolean]
   def can_comment?(blog_id = nil)
   	self.completed_sessions >= 2 or self.admin? # We need this to control the spammers

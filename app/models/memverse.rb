@@ -239,7 +239,7 @@ class Memverse < ApplicationRecord
   #
   # Changes interval and eFactor.
   #
-  # @param q [Fixnum] result of test
+  # @param q [Integer] result of test
   # @return [Boolean] true if Memverse changes to "Memorized"
   def supermemo(q)
 
@@ -362,7 +362,7 @@ class Memverse < ApplicationRecord
 
   # ----------------------------------------------------------------------------------------------------------
   # Return length of verse sequence
-  # @return [Fixnum] length of memory verse sequence
+  # @return [Integer] length of memory verse sequence
   def sequence_length
     return 1 if self.solo_verse? # not part of a sequence
 
@@ -781,7 +781,7 @@ class Memverse < ApplicationRecord
 
   # Retrieve previous memory verse
   # @note Replacement for method in application_controller.rb
-  # @return [Fixnum] Memverse ID
+  # @return [Integer] Memverse ID
   def get_prev_verse
 
     book    = self.verse.book
@@ -801,7 +801,7 @@ class Memverse < ApplicationRecord
 
   # Retrieve next memory verse
   # @note Replacement for method in application_controller.rb
-  # @return [Fixnum] Memverse ID
+  # @return [Integer] Memverse ID
   def get_next_verse
 
     book    = self.verse.book
@@ -827,7 +827,7 @@ class Memverse < ApplicationRecord
 
   # Return first verse in a series but does not use any of the linkage stored in the DB
   #
-  # @return [Fixnum] Memverse ID or `nil` (if no first verse)
+  # @return [Integer] Memverse ID or `nil` (if no first verse)
   def get_first_verse
 
     book    = self.verse.book

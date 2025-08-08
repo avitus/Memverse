@@ -25,12 +25,6 @@
   <p>
     <%= f.label 		:mp3_attachment, "MP3 Audio File" %><br />
     <%= f.file_field 	:mp3_attachment, accept: "audio/mp3,audio/mpeg" %>
-    <br><small>Upload new MP3 file (preferred)</small>
-  </p>
-  <% # Keep legacy Paperclip field for backward compatibility during migration %>
-  <p style="display: none;">
-    <%= f.label 		:mp3 %><br />
-    <%= f.file_field 	:mp3 %>
   </p>
   <p>
     <%= f.submit 'Create' %>

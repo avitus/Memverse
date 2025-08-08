@@ -200,8 +200,8 @@ class Verse < ApplicationRecord
   end
 
   # Returns hash of verses and number of users for each verse
-  # @param limit [Fixnum]
-  # @param book [Fixnum]
+  # @param limit [Integer]
+  # @param book [Integer]
   # @return [Hash]
   def self.rank_verse_popularity(limit=25, book=nil)
     vs_popularity = Hash.new(0)
@@ -223,8 +223,8 @@ class Verse < ApplicationRecord
   # Check whether verse exists in DB
   # @note Checking for verse in database requires full length book name
   # @param bk [String] Must be full length book name
-  # @param ch [Fixnum]
-  # @param vs [Fixnum]
+  # @param ch [Integer]
+  # @param vs [Integer]
   # @param tl [String] Abbreviation of translation (e.g., "NIV")
   # @return [Verse]
   def self.exists_in_db(bk, ch, vs, tl)
@@ -463,7 +463,7 @@ class Verse < ApplicationRecord
 
   # Returns Bible book index; case insensitive input
   # @param str [String] Example: 'Deuteronomy' or 'Deut' or 'DEUT'
-  # @return [Fixnum, nil] index or nil, if not found
+  # @return [Integer, nil] index or nil, if not found
   # @note This breaks if string is not a valid book because you can't add 1 + nil
   # @todo This should not be an instance method, and maybe should not be in this class at all.
   def book_index(str=self.book)

@@ -96,7 +96,7 @@ class QuizQuestion < ApplicationRecord
   end
 
   # Update difficulty of quiz question based on number of users getting question correct
-  # @param answer_count [Fixnum] Number of times question answered during quiz
+  # @param answer_count [Integer] Number of times question answered during quiz
   # @param percentage_correct
   def update_difficulty( answer_count, percentage_correct )
     new_total_answers   = answer_count + self.times_answered
@@ -109,7 +109,7 @@ class QuizQuestion < ApplicationRecord
   # * Multiple choice: 0.4 seconds per word + 10 seconds
   # * Recitation: 2.5 seconds per word (24 WPM) + 15 seconds
   # * Reference: 25 seconds
-  # @return [Fixnum]
+  # @return [Integer]
   def time_allocation
     case self.question_type
       when 'mcq'
@@ -154,7 +154,7 @@ class QuizQuestion < ApplicationRecord
   # * Recitation: 2.5 seconds per word (24 WPM) + 15 seconds
   # * Reference: 25 seconds
   # * Other: 20 seconds
-  # @return [Fixnum]
+  # @return [Integer]
   def time_alloc
     case self.question_type
     when "recitation"

@@ -102,3 +102,9 @@ config/master.key
 # CircleCI deploy key
 circleci_deploy_key
 circleci_deploy_key.pub
+
+# Serena AI assistant cache
+.serena/
+
+# Claude AI assistant files
+.claude/

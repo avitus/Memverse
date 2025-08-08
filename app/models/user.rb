@@ -1116,7 +1116,7 @@ class User < ApplicationRecord
   # Tweet about user
   #
   # @param news [String] Announcement about the user
-  # @param importance [Fixnum] The importance of the announcement (Tweet).
+  # @param importance [Integer] The importance of the announcement (Tweet).
   def broadcast(news, importance)
     Tweet.create(news: "#{self} #{news}", user: self, importance: importance)
   end

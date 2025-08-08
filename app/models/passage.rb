@@ -243,7 +243,7 @@ class Passage < ApplicationRecord
   end
 
   # Return array containing the memorization interval of each memverse in passage
-  # @return [Array<Fixnum>]
+  # @return [Array<Integer>]
   def interval_array
     self.memverses.pluck(:test_interval)
   end

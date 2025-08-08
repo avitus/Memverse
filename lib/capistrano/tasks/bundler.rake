@@ -18,7 +18,7 @@ namespace :bundler do
         # Check if RubyGems needs updating (ffi requires >= 3.3.22)
         if Gem::Version.new(current_gem_version) < Gem::Version.new("3.3.22")
           puts "RubyGems version #{current_gem_version} is too old. Installing compatible version..."
-          # Install a RubyGems version that's compatible with Ruby 2.7.8 but >= 3.3.22
+          # Install a RubyGems version that's compatible with Ruby 3.2.6 but >= 3.3.22
           execute "~/.rvm/bin/rvm default do gem install rubygems-update -v 3.4.22"
           execute "~/.rvm/bin/rvm default do update_rubygems"
           puts "RubyGems updated successfully"
@@ -150,7 +150,7 @@ namespace :bundler do
         
         # Update RubyGems
         puts "Updating RubyGems to compatible version..."
-        # Install a RubyGems version that's compatible with Ruby 2.7.8 but >= 3.3.22
+        # Install a RubyGems version that's compatible with Ruby 3.2.6 but >= 3.3.22
         execute "~/.rvm/bin/rvm default do gem install rubygems-update -v 3.4.22"
         execute "~/.rvm/bin/rvm default do update_rubygems"
         

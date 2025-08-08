@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_08_07_052459) do
+ActiveRecord::Schema[7.0].define(version: 2025_08_07_100000) do
   create_table "active_storage_attachments", charset: "utf8mb3", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -146,9 +146,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_08_07_052459) do
   end
 
   create_table "ckeditor_assets", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
-    t.string "data_file_name", null: false
-    t.string "data_content_type"
-    t.integer "data_file_size"
     t.integer "assetable_id"
     t.string "assetable_type", limit: 30
     t.string "type", limit: 30
@@ -610,10 +607,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_08_07_052459) do
     t.integer "pastor_id"
     t.integer "user_id"
     t.integer "uberverse_id"
-    t.string "mp3_file_name"
-    t.string "mp3_content_type"
-    t.integer "mp3_file_size"
-    t.datetime "mp3_updated_at", precision: nil
     t.datetime "created_at", precision: nil
     t.datetime "updated_at", precision: nil
     t.index ["church_id"], name: "index_sermons_on_church_id"
