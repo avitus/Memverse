@@ -1,22 +1,25 @@
 # Memverse Modernization Roadmap
 
-*Last Updated: January 7, 2025*
+*Last Updated: August 8, 2025*
 
 ## Executive Summary
 
-The Memverse Bible memorization application has successfully completed significant modernization milestones, upgrading from Rails 5.2 to Rails 7.0 while achieving 100% test coverage. This document consolidates all upgrade planning and provides a comprehensive roadmap for completing the modernization journey.
+The Memverse Bible memorization application has successfully completed significant modernization milestones, upgrading from Rails 5.2 to Rails 7.0 and from Ruby 2.7.8 to Ruby 3.2.6 while maintaining 100% test coverage. This document consolidates all upgrade planning and provides a comprehensive roadmap for completing the modernization journey.
 
 ### Current Status
 - **Rails**: Successfully upgraded from 5.2.8.1 → 7.0.8.7 ✅
-- **Ruby**: 2.7.8 (requires upgrade to 3.2.6)
-- **Test Coverage**: 100% pass rate (RSpec, Cucumber, Vitest)
-- **Security**: All critical vulnerabilities patched
+- **Ruby**: Successfully upgraded from 2.7.8 → 3.2.6 ✅
+- **Test Coverage**: 100% pass rate (RSpec: 325/325, Cucumber: 33/33, Vitest: 69/69) ✅
+- **Security**: All critical vulnerabilities patched ✅
+- **File Storage**: Active Storage migration for CKEditor completed ✅
 
 ### Major Achievements
 - Fixed 14 critical security vulnerabilities (SQL injection, XSS, dangerous sends)
 - Replaced unmaintained dependencies (RocketPants → Rails API, FancyBox2 → MicroModal)
 - Migrated JavaScript testing from Jasmine to Vitest
-- Achieved 100% test pass rate across all test suites
+- Successfully upgraded Ruby from 2.7.8 to 3.2.6 with all tests passing
+- Completed Active Storage migration for CKEditor assets
+- Added RSS gem for Ruby 3.2 compatibility (RSS removed from stdlib)
 
 ---
 
@@ -41,7 +44,7 @@ The Memverse Bible memorization application has successfully completed significa
 - **APIs**: Rails API mode with Swagger documentation
 - **Authentication**: Devise with OAuth support
 - **Authorization**: CanCanCan
-- **File Storage**: Paperclip (to be migrated to Active Storage)
+- **File Storage**: Active Storage (CKEditor migrated, Paperclip migration in progress)
 
 ### Key Features
 - Spaced repetition algorithm for Bible verse memorization
@@ -109,6 +112,31 @@ The Memverse Bible memorization application has successfully completed significa
 - Cucumber: 33/33 scenarios passing (100%)
 - Vitest: 12/12 tests passing (100%)
 
+### Phase 4: Ruby 3.2.6 Upgrade (August 2025)
+**Objective**: Upgrade Ruby from 2.7.8 to 3.2.6 for performance and security
+
+**Key Changes**:
+- Rebuilt all native gem extensions with `gem pristine --all`
+- Added `gem 'rss'` for Ruby 3.2 compatibility (RSS moved out of stdlib)
+- Updated `app/lib/rss_reader.rb` to use modern RSS library imports
+- Fixed CKEditor Active Storage integration:
+  - Updated factories to use Active Storage instead of Paperclip
+  - Removed Paperclip backend from CKEditor Asset model
+  - Added Active Storage compatibility methods
+- Fixed deprecated ActiveRecord syntax in controllers for Rails 7
+- Updated test fixtures for proper admin authentication
+
+**Issues Resolved**:
+- Native extension compilation errors for mysql2, ffi, bcrypt, sassc
+- RSS library LoadError (20 test failures)
+- CKEditor Paperclip attribute errors (17 test failures)
+- Sermon controller Active Storage test failures
+
+**Final Test Results**:
+- RSpec: 325/325 passing (100%)
+- Cucumber: 33/33 scenarios passing (100%)
+- Vitest: 69/69 tests passing (100%)
+
 ---
 
 ## Current Technical Stack
@@ -116,12 +144,12 @@ The Memverse Bible memorization application has successfully completed significa
 ### Core Dependencies
 | Component | Current Version | Status | Notes |
 |-----------|----------------|---------|-------|
-| Ruby | 2.7.8 | ⚠️ EOL | Upgrade to 3.2.6 required |
+| Ruby | 3.2.6 | ✅ Current | Active support until March 2026 |
 | Rails | 7.0.8.7 | ✅ Current | Ready for 7.1.5 upgrade |
 | MySQL | 5.7+ | ✅ Supported | Compatible with 8.0 |
 | Redis | 4.x | ✅ Supported | Compatible with 7.x |
-| Sidekiq | 6.5.12 | ⚠️ Update available | 8.0.6 requires Ruby 3.0+ |
-| Paperclip | 6.1.0 | ❌ Deprecated | Must migrate to Active Storage |
+| Sidekiq | 6.5.12 | ✅ Compatible | Can now upgrade to 8.0.6 with Ruby 3.2.6 |
+| Paperclip | 6.1.0 | ⚠️ Partially migrated | CKEditor migrated, other models pending |
 
 ### Testing Infrastructure
 - **RSpec**: Unit testing framework
@@ -150,26 +178,27 @@ bundle exec rake db:migrate   # Run migrations
 
 ## Future Modernization Phases
 
-### Phase 5: Ruby 3.2.6 Upgrade
+### Phase 5: Complete Paperclip Migration
+**Timeline**: 2-3 weeks (August-September 2025)  
+**Prerequisites**: Ruby 3.2.6 complete ✅
 
-**Benefits**:
-- 15-40% performance improvement with YJIT
-- Active security support until 2026
-- Better memory management
-- Modern Ruby features
+**Remaining Models to Migrate**:
+- User model (avatar attachments)
+- Sermon model (remaining attachments)
+- Blog assets
+- Other Paperclip-dependent models
 
 **Steps**:
-1. Update development environment
-2. Update .ruby-version and Gemfile
-3. Upgrade Bundler to 2.4+
-4. Update Sidekiq to 8.0.6
-5. Fix any compatibility issues
-6. Performance benchmarking
-7. Staged deployment
+1. Audit all remaining Paperclip usage
+2. Create Active Storage migrations
+3. Write data migration scripts
+4. Test thoroughly with production data subset
+5. Execute migration with rollback plan
+6. Remove Paperclip gem completely
 
 ### Phase 6: Rails 7.1.5 Upgrade
-**Timeline**: 3-4 weeks (March 2025)  
-**Prerequisites**: Ruby 3.2.6 complete
+**Timeline**: 3-4 weeks (September 2025)  
+**Prerequisites**: Paperclip migration complete
 
 **Major Changes**:
 - Migrate secrets.yml to credentials system
@@ -266,7 +295,8 @@ bundle exec rake db:migrate   # Run migrations
 ### Technical Metrics
 - ✅ Test coverage maintained at 100%
 - ✅ Zero security vulnerabilities
-- ⏳ Performance improvement >15% (post Ruby 3.2)
+- ✅ Ruby 3.2.6 upgrade complete with YJIT ready
+- ⏳ Performance improvement >15% (measure after YJIT enabled)
 - ⏳ Page load time <2 seconds
 - ⏳ Background job processing <100ms average
 
@@ -281,21 +311,23 @@ bundle exec rake db:migrate   # Run migrations
 | Phase | Description | Timeline | Status |
 |-------|------------|----------|---------|
 | 1-3 | Security & Rails 7.0 | Completed | ✅ Done |
-| 4 | Paperclip Migration | Jan-Feb 2025 | 🔄 Next |
-| 5 | Ruby 3.2.6 | Feb 2025 | ⏳ Waiting |
-| 6 | Rails 7.1.5 | Mar 2025 | ⏳ Waiting |
-| 7 | Frontend Modern. | Apr-May 2025 | 📋 Optional |
-| 8 | Infrastructure | Q2 2025 | 📋 Optional |
+| 4 | Ruby 3.2.6 | August 2025 | ✅ Done |
+| 5 | Complete Paperclip Migration | Aug-Sep 2025 | 🔄 Next |
+| 6 | Rails 7.1.5 | Sep 2025 | ⏳ Waiting |
+| 7 | Sidekiq 8.0 Upgrade | Sep 2025 | ⏳ Waiting |
+| 8 | Frontend Modern. | Oct-Nov 2025 | 📋 Optional |
+| 9 | Infrastructure | Q4 2025 | 📋 Optional |
 
 ---
 
 ## Conclusion
 
-The Memverse application has made exceptional progress in its modernization journey, successfully reaching Rails 7.0.8.7 with comprehensive test coverage. The critical next step is migrating from Paperclip to Active Storage, which will unlock the Ruby 3.2.6 upgrade and subsequent improvements.
+The Memverse application has made exceptional progress in its modernization journey, successfully reaching Rails 7.0.8.7 and Ruby 3.2.6 with 100% test coverage maintained throughout. The successful Ruby upgrade unlocks significant performance improvements through YJIT and ensures security support through March 2026.
 
-The phased approach has proven successful, minimizing risk while delivering continuous value. With clear priorities and comprehensive testing, the application is well-positioned to complete its modernization journey by Q2 2025.
+The phased approach has proven highly successful, with all major technical debt addressed systematically. The critical next step is completing the Paperclip to Active Storage migration for remaining models, followed by the Rails 7.1.5 upgrade.
 
-**Critical Path**: Paperclip migration → Ruby 3.2.6 → Rails 7.1.5
+**Completed**: Security fixes → Rails 7.0 → Ruby 3.2.6 ✅
+**Critical Path Forward**: Complete Paperclip migration → Rails 7.1.5 → Sidekiq 8.0
 
 **Success Factors**:
 - Maintain 100% test coverage
