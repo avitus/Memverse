@@ -1,4 +1,4 @@
-class AddBookIndexToPassages < ActiveRecord::Migration
+class AddBookIndexToPassages < ActiveRecord::Migration[7.0]
 
   def book_index(str)
     if x = (BIBLEBOOKS.index(str.titleize) || BIBLEABBREV.index(str.titleize) || BIBLEBOOKS.index(str))

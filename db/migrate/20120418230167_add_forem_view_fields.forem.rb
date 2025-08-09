@@ -1,5 +1,5 @@
 # This migration comes from forem (originally 20120302152918)
-class AddForemViewFields < ActiveRecord::Migration
+class AddForemViewFields < ActiveRecord::Migration[7.0]
   def up
     add_column :forem_views, :current_viewed_at, :datetime
     add_column :forem_views, :past_viewed_at, :datetime

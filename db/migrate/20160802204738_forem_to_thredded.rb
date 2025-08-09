@@ -1,5 +1,5 @@
 # Copy Forem data to Thredded
-class ForemToThredded < ActiveRecord::Migration
+class ForemToThredded < ActiveRecord::Migration[7.0]
 
   def up
 

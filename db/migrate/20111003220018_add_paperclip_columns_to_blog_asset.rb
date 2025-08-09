@@ -1,4 +1,4 @@
-class AddPaperclipColumnsToBlogAsset < ActiveRecord::Migration
+class AddPaperclipColumnsToBlogAsset < ActiveRecord::Migration[7.0]
   def change
     add_column :blog_assets, :blog_attachment_file_name,    :string
     add_column :blog_assets, :blog_attachment_content_type, :string

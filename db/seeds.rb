@@ -377,14 +377,14 @@ end
 # ----------------------------------------------------------------------------------------------------------
 puts "Adding final verse data (last verse of each chapter of the Bible) for #{Rails.env} environment"
 config = ActiveRecord::Base.configurations.configs_for(env_name: Rails.env).first.configuration_hash
-if config['adapter'] == 'mysql2'
+if config[:adapter] == 'mysql2'
   puts "  Configuration:"
-  puts "    mysql --user=#{config['username']} --password=\"#{config['password']}\" --host=#{config['host']} #{config['database']} < iso_final_verses.sql" 
-  system("mysql --user=#{config['username']} --password=\"#{config['password']}\" --host=#{config['host']} #{config['database']} < iso_final_verses.sql")
-elsif config['adapter'] == 'sqlite3'
-  system("sqlite3 #{config['database']} < iso_final_verses.sql")
+  puts "    mysql --user=#{config[:username]} --password=\"#{config[:password]}\" --host=#{config[:host]} #{config[:database]} < iso_final_verses.sql" 
+  system("mysql --user=#{config[:username]} --password=\"#{config[:password]}\" --host=#{config[:host]} #{config[:database]} < iso_final_verses.sql")
+elsif config[:adapter] == 'sqlite3'
+  system("sqlite3 #{config[:database]} < iso_final_verses.sql")
 else
-  puts "WARNING: FinalVerse data could not be seeded for #{config['adapter']}. Please see db/seeds.rb."
+  puts "WARNING: FinalVerse data could not be seeded for #{config[:adapter]}. Please see db/seeds.rb."
 end
 
 puts "Created #{FinalVerse.count} entries"
@@ -395,14 +395,14 @@ puts "Created #{FinalVerse.count} entries"
 # ----------------------------------------------------------------------------------------------------------
 puts "Adding seed verses for #{Rails.env} environment"
 config = ActiveRecord::Base.configurations.configs_for(env_name: Rails.env).first.configuration_hash
-if config['adapter'] == 'mysql2'
+if config[:adapter] == 'mysql2'
   puts "  ... Using MySQL database"
-  system("mysql --user=#{config['username']} --password=\"#{config['password']}\" --host=#{config['host']} #{config['database']} < seed_verses.sql")
-elsif config['adapter'] == 'sqlite3'
+  system("mysql --user=#{config[:username]} --password=\"#{config[:password]}\" --host=#{config[:host]} #{config[:database]} < seed_verses.sql")
+elsif config[:adapter] == 'sqlite3'
   puts "  ... Using Sqlite database"
-  system("sqlite3 #{config['database']} < seed_verses.sql")
+  system("sqlite3 #{config[:database]} < seed_verses.sql")
 else
-  puts "WARNING: FinalVerse data could not be seeded for #{config['adapter']}. Please see db/seeds.rb."
+  puts "WARNING: FinalVerse data could not be seeded for #{config[:adapter]}. Please see db/seeds.rb."
 end
 
 # ----------------------------------------------------------------------------------------------------------

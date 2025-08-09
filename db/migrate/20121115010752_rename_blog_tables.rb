@@ -1,4 +1,4 @@
-class RenameBlogTables < ActiveRecord::Migration
+class RenameBlogTables < ActiveRecord::Migration[7.0]
 
   def change
     rename_table :blogs, 			:bloggity_blogs

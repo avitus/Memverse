@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class UpgradeThreddedToV08 < ActiveRecord::Migration
+class UpgradeThreddedToV08 < ActiveRecord::Migration[7.0]
   def up
     closed_messageboards = Thredded::Messageboard.unscoped.where(closed: true).to_a
     if closed_messageboards.present?

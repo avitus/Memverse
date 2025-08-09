@@ -1,5 +1,5 @@
 # coding: utf-8
-class CleanseVerses < ActiveRecord::Migration
+class CleanseVerses < ActiveRecord::Migration[7.0]
   def up
     Verse.all.each do |vs|
       

@@ -1,4 +1,4 @@
-class AddBookIndexToUberverses < ActiveRecord::Migration
+class AddBookIndexToUberverses < ActiveRecord::Migration[7.0]
   def change
     add_column :uberverses, :book_index, :integer
     add_index :uberverses, :book_index

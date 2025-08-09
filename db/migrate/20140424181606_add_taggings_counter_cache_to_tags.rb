@@ -1,4 +1,4 @@
-class AddTaggingsCounterCacheToTags < ActiveRecord::Migration
+class AddTaggingsCounterCacheToTags < ActiveRecord::Migration[7.0]
   def self.up
     add_column :tags, :taggings_count, :integer, default: 0
 

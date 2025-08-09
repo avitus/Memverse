@@ -1,5 +1,5 @@
 # This migration comes from forem (originally 20120616193448)
-class AddForemAutoSubscribe < ActiveRecord::Migration
+class AddForemAutoSubscribe < ActiveRecord::Migration[7.0]
   def change
     unless column_exists?(user_class, :forem_admin)
       add_column user_class, :forem_auto_subscribe, :boolean, :default => false

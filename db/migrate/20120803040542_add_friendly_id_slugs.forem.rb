@@ -1,5 +1,5 @@
 # This migration comes from forem (originally 20120718073130)
-class AddFriendlyIdSlugs < ActiveRecord::Migration
+class AddFriendlyIdSlugs < ActiveRecord::Migration[7.0]
   def change
     add_column :forem_forums, :slug, :string
     add_index :forem_forums, :slug, :unique => true

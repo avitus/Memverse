@@ -1,4 +1,4 @@
-class GenerateLoginsAndSlugs < ActiveRecord::Migration
+class GenerateLoginsAndSlugs < ActiveRecord::Migration[7.0]
   def up
     User.find_each(&:save) # Generate logins as needed (since before_save :generate_login in user model)
     AmericanState.find_each(&:save) # This and below will generate slugs

@@ -1,5 +1,5 @@
 # This migration comes from forem (originally 20120222155549)
-class CreateForemGroups < ActiveRecord::Migration
+class CreateForemGroups < ActiveRecord::Migration[7.0]
   def change
     create_table :forem_groups do |t|
       t.string :name

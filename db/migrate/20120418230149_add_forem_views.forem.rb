@@ -1,5 +1,5 @@
 # This migration comes from forem (originally 20110520150056)
-class AddForemViews < ActiveRecord::Migration
+class AddForemViews < ActiveRecord::Migration[7.0]
   def change
     create_table :forem_views do |t|
       t.integer :user_id

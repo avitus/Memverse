@@ -1,4 +1,4 @@
-class RemoveTranslationDefault < ActiveRecord::Migration
+class RemoveTranslationDefault < ActiveRecord::Migration[7.0]
   def up
     change_column_default(:users, :translation, nil)
   end

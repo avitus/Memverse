@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class UpgradeThreddedToV07 < ActiveRecord::Migration
+class UpgradeThreddedToV07 < ActiveRecord::Migration[7.0]
   def up
     Thredded::MessageboardGroup.transaction do
       Thredded::MessageboardGroup.where(

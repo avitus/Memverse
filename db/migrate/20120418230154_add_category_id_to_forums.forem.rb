@@ -1,5 +1,5 @@
 # This migration comes from forem (originally 20111103214432)
-class AddCategoryIdToForums < ActiveRecord::Migration
+class AddCategoryIdToForums < ActiveRecord::Migration[7.0]
   def change
     add_column :forem_forums, :category_id, :integer
 

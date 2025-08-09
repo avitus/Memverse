@@ -1,5 +1,5 @@
 # This migration comes from forem (originally 20120227195911)
-class RemovePendingReviewAddStateToForemPosts < ActiveRecord::Migration
+class RemovePendingReviewAddStateToForemPosts < ActiveRecord::Migration[7.0]
   def change
     remove_column :forem_posts, :pending_review
     add_column :forem_posts, :state, :string, :default => 'pending_review'

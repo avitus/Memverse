@@ -1,4 +1,4 @@
-class GetEsv07Started < ActiveRecord::Migration
+class GetEsv07Started < ActiveRecord::Migration[7.0]
   def up
     verses = Verse.where(:translation => "ESV")
     for verse in verses

@@ -1,4 +1,4 @@
-class AddTweetedToBlogPost < ActiveRecord::Migration
+class AddTweetedToBlogPost < ActiveRecord::Migration[7.0]
   class BlogPost < ActiveRecord::Base
   end
   def change

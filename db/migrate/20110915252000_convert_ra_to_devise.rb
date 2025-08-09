@@ -1,4 +1,4 @@
-class ConvertRaToDevise < ActiveRecord::Migration
+class ConvertRaToDevise < ActiveRecord::Migration[7.0]
   def self.up
 
     #encrypting passwords and authentication related fields

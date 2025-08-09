@@ -1,4 +1,4 @@
-class AddConsistencyToProgressReports < ActiveRecord::Migration
+class AddConsistencyToProgressReports < ActiveRecord::Migration[7.0]
 
   # ================================================================================================
   # This migration is commented out since for some reason it was run out of sequence and now Rails

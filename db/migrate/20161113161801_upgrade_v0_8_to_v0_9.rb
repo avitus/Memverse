@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 # rubocop:disable Metrics/MethodLength
-class UpgradeV08ToV09 < ActiveRecord::Migration
+class UpgradeV08ToV09 < ActiveRecord::Migration[7.0]
   def up
     create_table :thredded_notifications_for_private_topics do |t|
       t.integer :user_id, null: false

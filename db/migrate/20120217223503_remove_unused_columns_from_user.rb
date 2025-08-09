@@ -1,4 +1,4 @@
-class RemoveUnusedColumnsFromUser < ActiveRecord::Migration
+class RemoveUnusedColumnsFromUser < ActiveRecord::Migration[7.0]
   def up
     remove_column :users, :state
     remove_column :users, :blog_attachment_file_name    # Seems as though the 4 blog_attachment columns didn't exist on production DB

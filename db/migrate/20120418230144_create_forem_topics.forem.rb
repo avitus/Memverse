@@ -1,5 +1,5 @@
 # This migration comes from forem (originally 20110221092741)
-class CreateForemTopics < ActiveRecord::Migration
+class CreateForemTopics < ActiveRecord::Migration[7.0]
   def change
     create_table :forem_topics do |t|
       t.integer :forum_id

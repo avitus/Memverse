@@ -1,4 +1,4 @@
-class Rpush200Updates < ActiveRecord::Migration
+class Rpush200Updates < ActiveRecord::Migration[7.0]
   module Rpush
     class App < ActiveRecord::Base
       self.table_name = 'rpush_apps'

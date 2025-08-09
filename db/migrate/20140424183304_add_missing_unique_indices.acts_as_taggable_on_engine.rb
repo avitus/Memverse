@@ -7,7 +7,7 @@
 # ActsAsTaggableOn::Tag.select("id, count(id) as quantity").group(:name).having("quantity > 1")
 #
 
-class AddMissingUniqueIndices < ActiveRecord::Migration
+class AddMissingUniqueIndices < ActiveRecord::Migration[7.0]
 
   # def self.up
   #   add_index :tags, :name, unique: true
