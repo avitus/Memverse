@@ -10,58 +10,58 @@
 
 .sermon-on-the-mount {
   @include badge-properties;
-  // @include Sermon-on-the-Mount-sprite(teaser);
-  //   &:hover      { @include Sermon-on-the-Mount-sprite(hover); };
+  background: image-url('badges/Sermon-on-the-Mount/teaser.png') no-repeat;
+  &:hover { background: image-url('badges/Sermon-on-the-Mount/hover.png') no-repeat; }
 }
 
 .sermon-on-the-mount.earned {
-  // @include Sermon-on-the-Mount-sprite(badge);
+  background: image-url('badges/Sermon-on-the-Mount/badge.png') no-repeat;
 }
 
 // @import "badges/Referrer/*.png";
 
 .referrer.unearned {
   @include badge-properties;         
-  // @include Referrer-sprite(teaser);
-  // &:hover { @include Referrer-sprite(hover); };
+  background: image-url('badges/Referrer/teaser.png') no-repeat;
+  &:hover { background: image-url('badges/Referrer/hover.png') no-repeat; }
 }
 
 .referrer.earned-gold {
   @include badge-properties;         
-  // @include Referrer-sprite(gold);
+  background: image-url('badges/Referrer/gold.png') no-repeat;
 }
 
 .referrer.earned-silver {
   @include badge-properties;         
-  // @include Referrer-sprite(silver);
+  background: image-url('badges/Referrer/silver.png') no-repeat;
 }
 
 .referrer.earned-bronze {
   @include badge-properties;         
-  // @include Referrer-sprite(bronze);
+  background: image-url('badges/Referrer/bronze.png') no-repeat;
 }
 
 // @import "badges/Consistency/*.png";
 
 .consistency.unearned {
   @include badge-properties;         
-  // @include Consistency-sprite(teaser);
-  // &:hover { @include Consistency-sprite(hover); };
+  background: image-url('badges/Consistency/teaser.png') no-repeat;
+  &:hover { background: image-url('badges/Consistency/hover.png') no-repeat; }
 }
 
 .consistency.earned-gold {
   @include badge-properties;         
-  // @include Consistency-sprite(gold);
+  background: image-url('badges/Consistency/gold.png') no-repeat;
 }
 
 .consistency.earned-silver {
   @include badge-properties;         
-  // @include Consistency-sprite(silver);
+  background: image-url('badges/Consistency/silver.png') no-repeat;
 }
 
 .consistency.earned-bronze {
   @include badge-properties;         
-  // @include Consistency-sprite(bronze);
+  background: image-url('badges/Consistency/bronze.png') no-repeat;
 }
 
 /*========== End: Badges ==========*/
