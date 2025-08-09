@@ -40,3 +40,4 @@ set :rvm_ruby_version, '3.2.6'
 
 # Load custom tasks from `lib/capistrano/tasks` if you have any defined
 Dir.glob("lib/capistrano/tasks/*.rake").each { |r| import r }
+Dir.glob('lib/capistrano/tasks/rails7*.rake').each { |r| import r }
