@@ -20,6 +20,7 @@ module MemverseApp
     # config.eager_load_paths << Rails.root.join("extras")
     
     # Add app/lib to autoload paths for Rails 7.0 with Zeitwerk
-    config.autoload_paths << Rails.root.join("app/lib")
+    # Use += instead of << to avoid frozen array issues
+    config.autoload_paths += [Rails.root.join("app/lib")]
   end
 end

@@ -126,7 +126,7 @@ gem 'cancancan', '~> 3.4'                                                     # 
 ############################################################
 gem 'rails_admin'                                                                # Admin dashboard
 gem 'thredded', '~> 1.2.1'                                                    # Forum engine - Rails 7 and Ruby 3.2 compatible
-gem 'bloggity', github: 'avitus/bloggity'                                      # Blog engine
+gem 'bloggity', github: 'avitus/bloggity', branch: 'rails7-upgrade'            # Blog engine (Rails 7 compatible)
 # gem 'bloggity', :path => "../bloggity"                                       # Blog engine (dev environment)
 
 ############################################################
