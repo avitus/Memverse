@@ -9,7 +9,7 @@ set :rails_env, "production"
 server 'www.memverse.com', user: 'avitus', roles: %w{app db web}
 
 # Deploy from the upgrade branch instead of master
-set :branch, 'rails7-upgrade'
+set :branch, 'rails-7-upgrade'
 set :rvm_ruby_version, '3.2.6'
 
 # server 'memverse.com', user: 'avitus', roles: %w{app db web}, my_property: :my_value
