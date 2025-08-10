@@ -167,3 +167,30 @@ en:
   
   page_descriptions:
     default: "A free online tool for memorizing the Bible."
+  
+  profile:
+    update_profile:
+      Update profile: "Update Profile"
+      Name: "Name"
+      Email: "Email"
+      Gender: "Gender"
+      Translation: "Translation"
+      Country: "Country"
+      State: "State"
+      Church: "Church"
+      Group: "Group"
+      Receive newsletters: "Receive newsletters"
+      Reminder frequency: "Reminder frequency"
+      Language: "Language"
+      Target Time: "Target Time"
+      Max Repetition Interval: "Max Repetition Interval"
+      1st Letter Prompts: "1st Letter Prompts"
+      Add verses as needed: "Add verses as needed"
+      Synchronize subsections: "Synchronize subsections"
+      Test all references: "Test all references"
+      Always show feedback: "Always show feedback"
+      Show email: "Show email"
+      Photo Upload A: "To upload a photo of yourself, please visit"
+      Photo Upload B: "and associate your photo with the email address you have used to register at Memverse."
+      Profile Saved Flash: "Profile saved successfully"
+      Confirm Email Flash: "Profile saved. Please check your email to confirm your new email address."

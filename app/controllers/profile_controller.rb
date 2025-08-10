@@ -125,7 +125,7 @@ class ProfileController < ApplicationController
     query         = params[:term]
     query_length  = query.length
 
-    all_countries = Country.find(:all, :select => 'printable_name')
+    all_countries = Country.select(:printable_name)
 
     all_countries.each { |country|
       name = country.printable_name
@@ -157,7 +157,7 @@ class ProfileController < ApplicationController
     query         = params[:term]
     query_length  = query.length
 
-    all_states = AmericanState.find(:all, :select => 'name')
+    all_states = AmericanState.select(:name)
 
     all_states.each { |state|
       name = state.name
@@ -189,7 +189,7 @@ class ProfileController < ApplicationController
     query         = params[:term]
     query_length  = query.length
 
-    all_churches = Church.find(:all, :select => 'name')
+    all_churches = Church.select(:name)
 
     all_churches.each { |church|
       name = church.name
@@ -220,7 +220,7 @@ class ProfileController < ApplicationController
     query         = params[:term]
     query_length  = query.length
 
-    all_groups = Group.find(:all, :select => 'name')
+    all_groups = Group.select(:name)
 
     all_groups.each { |group|
       name = group.name

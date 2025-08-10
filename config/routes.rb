@@ -230,6 +230,12 @@ MemverseApp::Application.routes.draw do
   get '/search_user'              => 'profile#search_user',             :as => 'search_user'
   get '/set_translation/:tl'      => 'profile#set_translation',         :as => 'set_translation'
   get '/set_time_alloc/:time'     => 'profile#set_time_alloc',          :as => 'set_time_alloc'
+  
+  # Autocomplete routes for profile
+  get '/profile/country_autocomplete' => 'profile#country_autocomplete', :as => 'profile_country_autocomplete'
+  get '/profile/state_autocomplete'   => 'profile#state_autocomplete',   :as => 'profile_state_autocomplete'
+  get '/profile/church_autocomplete'  => 'profile#church_autocomplete',  :as => 'profile_church_autocomplete'
+  get '/profile/group_autocomplete'   => 'profile#group_autocomplete',   :as => 'profile_group_autocomplete'
 
   get '/earned_badges/:id'        => 'badges#earned_badges',            :as => 'earned_badges'
   get '/badge_completion_check'   => 'badges#badge_completion_check',   :as => 'badge_completion_check'

@@ -349,16 +349,16 @@
 			togglestate();
 		});
 
-		a = $('#user_country').focus().autocomplete({ source:'profile/country_autocomplete', change: function(event, ui) { togglestate(); }
+		a = $('#user_country').focus().autocomplete({ source:'/profile/country_autocomplete', change: function(event, ui) { togglestate(); }
 		});
 
-		c = $('#user_american_state').focus().autocomplete({ source:'profile/state_autocomplete'
+		c = $('#user_american_state').focus().autocomplete({ source:'/profile/state_autocomplete'
 		});
 
-		b = $('#user_church').focus().autocomplete({ source:'profile/church_autocomplete'
+		b = $('#user_church').focus().autocomplete({ source:'/profile/church_autocomplete'
 		});
 
-		d = $('#user_group').focus().autocomplete({ source:'profile/group_autocomplete'
+		d = $('#user_group').focus().autocomplete({ source:'/profile/group_autocomplete'
 		});
 	});
 </script>

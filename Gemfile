@@ -118,7 +118,6 @@ gem 'jbuilder'
 gem 'devise'                                                                   # Authentication
 gem 'devise-encryptable'                                                       # TODO: Is this required?
 gem 'omniauth'                                                                 # Multi-provider authentication
-gem 'omniauth-windowslive', github: 'kayle/omniauth-windowslive'               # Windows Live strategy (repo fork)
 gem 'cancancan', '~> 3.4'                                                     # Role-based authorization
 
 ############################################################

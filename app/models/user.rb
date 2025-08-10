@@ -289,34 +289,8 @@ class User < ApplicationRecord
   #                 :provider, :uid, :translation, :time_allocation, :quiz_alert,
   #                 :device_token, :device_type
 
-  # Single Sign On support
-  def self.find_for_windowslive_oauth2( access_token, signed_in_resource=nil )
-
-    data = access_token.extra.raw_info
-
-    user = User.where( :email => data.emails.account ).first
-
-    # Create new user if one doesn't exist
-    #<OmniAuth::AuthHash
-    #   emails=#<OmniAuth::AuthHash account="kayle.hinkle@live.com" business=nil personal=nil preferred="kayle.hinkle@live.com">
-    #   first_name="Kayle"
-    #   gender=nil
-    #   id="cfd5745452f3201b"
-    #   last_name=nil
-    #   locale="en_US"
-    #   name="Kayle"
-    # >
-
-    unless user
-      user = User.create(name: data.name, login: data.name, email: data.emails.account, password: Devise.friendly_token[0,20],
-                         provider: access_token.provider, uid: access_token.uid )
-
-      user.confirm # we can confirm the user since we can rely on a valid email address
-    end
-
-    user
-
-  end
+  # Windows Live Single Sign On support has been removed
+  # If you need to add other OAuth providers in the future, add their finder methods here
 
   # Convert to JSON format
   def as_json(options={})
