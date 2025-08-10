@@ -699,6 +699,34 @@ class MemversesController < ApplicationController
   end
 
   # ----------------------------------------------------------------------------------------------------------
+  # Handle form submission from manage_verses page - routes to appropriate action based on button clicked
+  # ----------------------------------------------------------------------------------------------------------
+  def handle_verse_action
+    mv_ids = params[:mv]
+    
+    if params['Show']
+      # Show selected verses
+      if mv_ids.present? && mv_ids.length == 1
+        redirect_to memory_verse_path(mv_ids.first)
+      elsif mv_ids.present?
+        # Multiple verses selected - show them
+        show
+      else
+        flash[:notice] = "Please select verses using the checkboxes in the first column."
+        redirect_to manage_verses_path
+      end
+    elsif params['Prompt']
+      # Show prompt for selected verses
+      show_prompt
+    elsif params['Delete']
+      # Delete selected verses
+      delete_verses
+    else
+      redirect_to manage_verses_path
+    end
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
   # Delete memory verses - used to handle the manage verses form (delete a lot of verses or show selected)
   # ----------------------------------------------------------------------------------------------------------
   def delete_verses

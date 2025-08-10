@@ -148,6 +148,8 @@ MemverseApp::Application.routes.draw do
   get '/manage_verses'            => 'memverses#manage_verses',         :as => 'manage_verses'
   get '/show_all_my_verses'       => 'memverses#manage_verses'        # :as => 'manage_verses'
   post '/delete_memverses'        => 'memverses#delete_verses'
+  post '/show_prompt'             => 'memverses#show_prompt',           :as => 'show_prompt'
+  post '/handle_verse_action'     => 'memverses#handle_verse_action',   :as => 'handle_verse_action'
   get '/reset_schedule'           => 'users#reset_schedule',            :as => 'reset_schedule'
 
   get '/progress'                 => 'memverses#show_progress',         :as => 'progress'

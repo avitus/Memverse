@@ -10,7 +10,7 @@
 
 		<div id="scontainer"><div id="searchico"><%= image_tag("search.png", :alt => "") %></div><div id="vsfilter"><input type="text" name="filter" id="filter" value="Filter verses" style="width:150px;height:20px;padding:4px;" class="idleField" /></div></div>
 		<div class="verse-list">
-		<%= form_tag( {:action => 'show'}, :method => :post, :name => "manage_verses" ) do %>
+		<%= form_tag( '/handle_verse_action', :method => :post, :name => "manage_verses" ) do %>
 		  	<table class="memverse-standard">
 			    <thead>
 				    <tr>
