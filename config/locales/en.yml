@@ -42,6 +42,7 @@ en:
     blog: "Blog"
     help: "Help"
     demo: "Memorize Demo"
+    quiz: "Quiz"
     
   learn_menu:
     Learn: "Learn"
@@ -49,6 +50,52 @@ en:
     Tutorial: "Tutorial"
     "Video Tutorial": "Video Tutorial"
     "SuperMemo Algorithm": "Supermemo Algorithm"
+    
+  home_menu:
+    "Add Verse": "Add Verse"
+    "My Verses": "My Verses" 
+    "My Progress": "My Progress"
+    "Popular Verses": "Popular Verses"
+    "Search Bible": "Search Bible"
+    "Tag Cloud": "Tag Cloud"
+    News: "News"
+    
+  memorize_menu:
+    Verses: "Verses"
+    References: "References"
+    "Accuracy Test": "Accuracy Test"
+    "Chapter Review": "Chapter Review"
+    "Passage Review": "Passage Review"
+    
+  leader_menu:
+    Leaderboard: "Leaderboard"
+    "State Leaderboard": "State Leaderboard"
+    "Country Leaderboard": "Country Leaderboard"
+    "Church Leaderboard": "Church Leaderboard"
+    "Group Leaderboard": "Group Leaderboard"
+    "Referral Leaderboard": "Referral Leaderboard"
+    "One Church": "One Church"
+    
+  blog_menu:
+    "View Blog": "View Blog"
+    Chat: "Chat"
+    Forums: "Forums"
+    "Recent Comments": "Recent Comments"
+    "Blog Search": "Blog Search"
+    
+  contact_menu:
+    Contact: "Contact"
+    Volunteer: "Volunteer"
+    
+  help_menu:
+    faq: "FAQ"
+    
+  profile_menu:
+    Dashboard: "Dashboard"
+    Profile: "Profile"
+    Referrals: "Referrals"
+    "My Church": "My Church"
+    "My Group": "My Group"
     
   memverses:
     test_verse_quick:
@@ -67,6 +114,21 @@ en:
       show_selected: "Show Selected"
       show_prompt: "Show Prompt"
   
+  label:
+    verse: "Verse"
+    
+  js_msgs:
+    all_selected: "All verses are selected"
+    delete_one: "Delete 1 verse?"
+    none_selected: "No verses are selected"
+    some_selected: "%{count} verses are selected"
+    
+  errors:
+    messages:
+      not_saved:
+        one: "1 error prohibited this %{resource} from being saved:"
+        other: "%{count} errors prohibited this %{resource} from being saved:"
+        
   language:
     af: "Afrikaans"
     de: "German"
@@ -164,13 +226,22 @@ en:
   page_titles:
     my_dashboard: "My Dashboard"
     user_profile: "%{name}'s Profile"
+    help_support: "Help & Support"
+    news_network: "News Network"
+    supermemo: "SuperMemo Algorithm"
+    tag_cloud: "Tag Cloud"
+    pop_verses_by_book: "Popular Verses by Book"
+    view_vs_s: "View %{name}'s Verses"
+  
+  messages:
+    today_msg_html: "You have <span>%{due_today} verses</span> to review today. You currently need about <span>%{time} minutes</span> per day."
   
   page_descriptions:
     default: "A free online tool for memorizing the Bible."
   
   profile:
     update_profile:
-      Update profile: "Update Profile"
+      "Update profile": "Update Profile"
       Name: "Name"
       Email: "Email"
       Gender: "Gender"
@@ -179,18 +250,18 @@ en:
       State: "State"
       Church: "Church"
       Group: "Group"
-      Receive newsletters: "Receive newsletters"
-      Reminder frequency: "Reminder frequency"
+      "Receive newsletters": "Receive newsletters"
+      "Reminder frequency": "Reminder frequency"
       Language: "Language"
-      Target Time: "Target Time"
-      Max Repetition Interval: "Max Repetition Interval"
-      1st Letter Prompts: "1st Letter Prompts"
-      Add verses as needed: "Add verses as needed"
-      Synchronize subsections: "Synchronize subsections"
-      Test all references: "Test all references"
-      Always show feedback: "Always show feedback"
-      Show email: "Show email"
-      Photo Upload A: "To upload a photo of yourself, please visit"
-      Photo Upload B: "and associate your photo with the email address you have used to register at Memverse."
-      Profile Saved Flash: "Profile saved successfully"
-      Confirm Email Flash: "Profile saved. Please check your email to confirm your new email address."
+      "Target Time": "Target Time"
+      "Max Repetition Interval": "Max Repetition Interval"
+      "1st Letter Prompts": "1st Letter Prompts"
+      "Add verses as needed": "Add verses as needed"
+      "Synchronize subsections": "Synchronize subsections"
+      "Test all references": "Test all references"
+      "Always show feedback": "Always show feedback"
+      "Show email": "Show email"
+      "Photo Upload A": "To upload a photo of yourself, please visit"
+      "Photo Upload B": "and associate your photo with the email address you have used to register at Memverse."
+      "Profile Saved Flash": "Profile saved successfully"
+      "Confirm Email Flash": "Profile saved. Please check your email to confirm your new email address."
