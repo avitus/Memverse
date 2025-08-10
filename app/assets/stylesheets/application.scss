@@ -1,6 +1,7 @@
 /*
  *= require micromodal
  *= require jquery-ui
+ *= require thredded
  */
 
 // @import "compass"; // Commented out to fix test issues
@@ -12,7 +13,6 @@
 @import "joyride-2.0.3";
 @import "extras";
 @import "mv_thredded";
-@import "thredded";
 @import "mv_add_verse";
 @import "mv_chat";
 @import "mv_test_verse_quick";
