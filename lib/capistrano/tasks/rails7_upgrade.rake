@@ -57,18 +57,20 @@ namespace :rails7 do
       
       # Backup database
       info "Backing up database..."
+      info "Note: For a verified backup with password handling, use deployment_scripts/verified_backup.sh"
+      
+      # Create a simple backup without PROCESS privilege requirements
       within backup_dir do
+        # This is a basic backup - for production use verified_backup.sh
         execute :mysqldump, 
           "-u", fetch(:database_username, "memverse"),
+          "-p",  # Will prompt for password
           "--single-transaction",
-          "--routines",
-          "--triggers", 
-          "--events",
-          "--hex-blob",
-          "--complete-insert",
-          "--add-drop-database",
-          "--databases", fetch(:database_name, "memverse_production"),
-          "| gzip > database_full.sql.gz"
+          "--no-tablespaces",  # Avoid PROCESS privilege requirement
+          fetch(:database_name, "memverse_production"),
+          "> database_full.sql"
+        
+        execute :gzip, "database_full.sql"
       end
       
       # Backup current code
