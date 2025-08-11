@@ -51,6 +51,9 @@ module NavigationHelpers
     when /the forum home page/
       '/forum'.dup
 
+    when /the manage verses page/
+      '/manage_verses'.dup
+
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
     when /^(.*)'s dashboard$/i

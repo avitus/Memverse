@@ -34,7 +34,7 @@
 					<% for mv in @my_verses %>
 					<tr valign="top" class=<%= cycle("gray2", "white2") %>>
 					<td align="center"><input class="boxes" id="mv_" name="mv[]" type="checkbox" value="<%= mv.id %>" /></td>
-					<td align="left">  <%= link_to mv.verse.ref, {:action => 'show', :id => mv.id } %></td>
+					<td align="left">  <%= link_to mv.verse.ref_long, {:action => 'show', :id => mv.id } %></td>
 					<td align="center"><%= mv.verse.translation	%></td>
 					<td align="center"><%= number_with_precision( mv.efactor, :precision => 1 ) %></td>
 					<td align="center" class="mv-status"><%= link_to mv.status, toggle_mv_status_path(mv.id, format: 'json'), remote: true %></td>

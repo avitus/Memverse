@@ -52,6 +52,14 @@ end
 
 When /^(?:|I )press "([^"]*)"$/ do |button|
   click_button(button)
+  # Handle any alerts that might appear
+  if page.driver.browser.respond_to?(:switch_to)
+    begin
+      page.driver.browser.switch_to.alert.accept
+    rescue Selenium::WebDriver::Error::NoSuchAlertError
+      # No alert, continue normally
+    end
+  end
 end
 
 When /^(?:|I )follow "([^"]*)"$/ do |link|
@@ -75,7 +83,23 @@ When /^(?:|I )click inside the first "([^"]*)"$/ do |selector|
 end
 
 When /^(?:|I )fill in "([^"]*)" with "([^"]*)"$/ do |field, value|
+  # Wait for the field to be present
+  expect(page).to have_field(field, wait: 10)
+  
+  # Clear any existing value first if it's a filter field
+  if field == "filter"
+    # The filter field has a default value, need to clear it
+    filter_field = find_field(field)
+    filter_field.click
+    filter_field.set('')
+  end
+  
   fill_in(field, :with => value)
+  
+  # Trigger keyup event for filter fields
+  if field == "filter"
+    find_field(field).native.send_keys(:return)
+  end
 end
 
 When /^(?:|I )fill in "([^"]*)" for "([^"]*)"$/ do |value, field|
@@ -252,7 +276,7 @@ Then /^the "([^"]*)" checkbox(?: within (.*))? should not be checked$/ do |label
   end
 end
 
-Then /^(?:|I )should be on (.+)$/ do |page_name|
+Then /^(?:|I )should be on ([^"]+(?:\s[^"]+)*)$/ do |page_name|
   current_path = URI.parse(current_url).path
   if current_path.respond_to? :should
     current_path.should == path_to(page_name)

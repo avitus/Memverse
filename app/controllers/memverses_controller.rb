@@ -666,7 +666,8 @@ class MemversesController < ApplicationController
     allowed_sort_columns = [
       'next_test', 'next_ref_test', 'created_at', 'updated_at', 'last_tested', 
       'rep_n', 'efactor', 'test_interval', 'verses.book_index', 'verses.chapter', 
-      'verses.versenum', 'book_index', 'chapter', 'versenum'
+      'verses.versenum', 'book_index', 'chapter', 'versenum', 'status', 'attempts', 
+      'ref_interval', 'next_ref_test'
     ]
     
     if params[:sort_order].present?

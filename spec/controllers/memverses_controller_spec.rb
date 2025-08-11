@@ -111,4 +111,172 @@ describe MemversesController do
 
   end
 
+  describe "GET 'manage_verses'" do
+    context "when user is logged in" do
+      before(:each) do
+        # Create some verses for the user with correct book indices
+        # John = 43, Romans = 45, Philippians = 50
+        @verse1 = FactoryBot.create(:verse, book: "John", chapter: "3", versenum: 16, book_index: 43)
+        @verse2 = FactoryBot.create(:verse, book: "Romans", chapter: "8", versenum: 28, book_index: 45)
+        @verse3 = FactoryBot.create(:verse, book: "Philippians", chapter: "4", versenum: 13, book_index: 50)
+        
+        # Use the without_supermemo_init factory to avoid status being overridden
+        @mv1 = FactoryBot.create(:memverse_without_supermemo_init, user: @user, verse: @verse1, status: "Learning")
+        @mv2 = FactoryBot.create(:memverse_without_supermemo_init, user: @user, verse: @verse2, status: "Memorized") 
+        @mv3 = FactoryBot.create(:memverse_without_supermemo_init, user: @user, verse: @verse3, status: "Pending")
+      end
+
+      it "should be successful" do
+        get :manage_verses, session: valid_session
+        expect(response).to be_successful
+      end
+
+      it "should render the manage_verses template" do
+        get :manage_verses, session: valid_session
+        expect(response).to render_template("manage_verses")
+      end
+
+      it "should assign the user's memory verses" do
+        get :manage_verses, session: valid_session
+        expect(assigns(:my_verses)).to match_array([@mv1, @mv2, @mv3])
+      end
+
+      it "should include verse and tag associations" do
+        get :manage_verses, session: valid_session
+        # Check that associations are loaded to avoid N+1 queries
+        assigns(:my_verses).each do |mv|
+          expect(mv.association(:verse)).to be_loaded
+          expect(mv.association(:tags)).to be_loaded
+        end
+      end
+
+      it "should order verses by book, chapter, versenum by default" do
+        get :manage_verses, session: valid_session
+        verses = assigns(:my_verses)
+        expect(verses.first.verse.book).to eq("John")
+        expect(verses.second.verse.book).to eq("Romans")
+        expect(verses.third.verse.book).to eq("Philippians")
+      end
+
+      context "with sort parameters" do
+        it "should sort by next_test date" do
+          @mv1.update(next_test: 3.days.from_now)
+          @mv2.update(next_test: 1.day.from_now)
+          @mv3.update(status: "Learning", next_test: 2.days.from_now)
+          
+          get :manage_verses, params: { sort_order: "next_test" }, session: valid_session
+          verses = assigns(:my_verses)
+          # Active verses should be sorted by next_test, pending verses should be at the bottom
+          expect(verses.first).to eq(@mv2)  # 1 day from now
+          expect(verses.second).to eq(@mv3) # 2 days from now
+          expect(verses.third).to eq(@mv1)  # 3 days from now
+        end
+
+        it "should sort by efactor" do
+          @mv1.update(efactor: 2.5)
+          @mv2.update(efactor: 1.3)
+          @mv3.update(efactor: 2.8)
+          
+          get :manage_verses, params: { sort_order: "efactor" }, session: valid_session
+          verses = assigns(:my_verses)
+          expect(verses.first.efactor).to eq(1.3)
+          expect(verses.second.efactor).to eq(2.5)
+          expect(verses.third.efactor).to eq(2.8)
+        end
+
+        it "should sort by status" do
+          # Ensure the statuses are correctly set
+          expect(@mv1.reload.status).to eq("Learning")
+          expect(@mv2.reload.status).to eq("Memorized")
+          expect(@mv3.reload.status).to eq("Pending")
+          
+          get :manage_verses, params: { sort_order: "status" }, session: valid_session
+          verses = assigns(:my_verses)
+          # Should be sorted alphabetically by status: Learning, Memorized, Pending
+          expect(verses.map(&:status)).to eq(["Learning", "Memorized", "Pending"])
+        end
+
+        it "should handle invalid sort parameters safely" do
+          get :manage_verses, params: { sort_order: "invalid_column; DROP TABLE users;" }, session: valid_session
+          expect(response).to be_successful
+          # Should fall back to default sort
+          verses = assigns(:my_verses)
+          expect(verses.first.verse.book).to eq("John")
+        end
+      end
+
+      context "when user has no verses" do
+        before(:each) do
+          @user.memverses.destroy_all
+        end
+
+        it "should still be successful" do
+          get :manage_verses, session: valid_session
+          expect(response).to be_successful
+        end
+
+        it "should assign an empty array" do
+          get :manage_verses, session: valid_session
+          expect(assigns(:my_verses)).to be_empty
+        end
+      end
+    end
+
+    context "when user is not logged in" do
+      it "should redirect to login page" do
+        sign_out @user
+        get :manage_verses
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+  end
+
+  describe "POST 'handle_verse_action'" do
+    before(:each) do
+      @verse1 = FactoryBot.create(:verse)
+      @verse2 = FactoryBot.create(:verse)
+      @mv1 = FactoryBot.create(:memverse, user: @user, verse: @verse1)
+      @mv2 = FactoryBot.create(:memverse, user: @user, verse: @verse2)
+    end
+
+    context "when Show button is clicked" do
+      it "should redirect to single verse when one is selected" do
+        post :handle_verse_action, params: { mv: [@mv1.id.to_s], Show: "Show Selected" }, session: valid_session
+        expect(response).to redirect_to(memory_verse_path(@mv1.id))
+      end
+
+      it "should call show action when multiple verses are selected" do
+        expect(controller).to receive(:show)
+        post :handle_verse_action, params: { mv: [@mv1.id.to_s, @mv2.id.to_s], Show: "Show Selected" }, session: valid_session
+      end
+
+      it "should show flash message when no verses are selected" do
+        post :handle_verse_action, params: { Show: "Show Selected" }, session: valid_session
+        expect(flash[:notice]).to eq("Please select verses using the checkboxes in the first column.")
+        expect(response).to redirect_to(manage_verses_path)
+      end
+    end
+
+    context "when Prompt button is clicked" do
+      it "should call show_prompt action" do
+        expect(controller).to receive(:show_prompt)
+        post :handle_verse_action, params: { mv: [@mv1.id.to_s], Prompt: "Show Prompt" }, session: valid_session
+      end
+    end
+
+    context "when Delete button is clicked" do
+      it "should call delete_verses action" do
+        expect(controller).to receive(:delete_verses)
+        post :handle_verse_action, params: { mv: [@mv1.id.to_s], Delete: "Delete Selected" }, session: valid_session
+      end
+    end
+
+    context "when no recognized button is clicked" do
+      it "should redirect to manage_verses" do
+        post :handle_verse_action, params: { mv: [@mv1.id.to_s] }, session: valid_session
+        expect(response).to redirect_to(manage_verses_path)
+      end
+    end
+  end
+
 end
