@@ -10,7 +10,14 @@ install_plugin Capistrano::SCM::Git
 require 'capistrano/bundler'
 require 'capistrano/rails/assets'
 require 'capistrano/rails/migrations'
-require 'capistrano/sidekiq'
+
+# Load capistrano-sidekiq if available
+begin
+  require 'capistrano/sidekiq'
+rescue LoadError
+  puts "WARNING: capistrano-sidekiq not found. Sidekiq tasks will not be available."
+end
+
 # require 'airbrake/capistrano'
 require 'thinking_sphinx/capistrano'
 
