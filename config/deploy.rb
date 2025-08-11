@@ -38,10 +38,9 @@ set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', '
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
 
 # Ensure we use the correct bundler version
-set :bundle_flags, '--deployment --full-index'
+set :bundle_flags, '--deployment'
 set :bundle_jobs, 4
 set :bundle_path, -> { shared_path.join('bundle') }
-set :bundle_git_depth, nil  # Disable shallow clones for git gems
 set :bundle_without, %w{development test}.join(' ')
 set :bundle_binstubs, -> { shared_path.join('bin') }
 

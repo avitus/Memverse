@@ -157,7 +157,7 @@ gem 'capistrano-sidekiq', group: :development
 ############################################################
 # Blog
 ############################################################
-gem 'ckeditor', github: 'galetahub/ckeditor', branch: 'master'                 # WYSIWYG editing
+gem 'ckeditor', '~> 5.1'                                                       # WYSIWYG editing
 # gem 'paperclip' # REMOVED: Migration to Active Storage completed
 
 ############################################################
