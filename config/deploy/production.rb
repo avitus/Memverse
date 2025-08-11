@@ -76,8 +76,8 @@ namespace :deploy do
     task :precompile do
       on roles(:app) do
         within release_path do
-          with rails_env: fetch(:rails_env) do
-            execute :bash, '-c', 'source ~/.nvm/nvm.sh && nvm use default && bundle exec rake assets:precompile'
+          with rails_env: fetch(:rails_env), path: "/home/avitus/.nvm/versions/node/v16.20.2/bin:$PATH" do
+            execute :bundle, :exec, :rake, 'assets:precompile'
           end
         end
       end
