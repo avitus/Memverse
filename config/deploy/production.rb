@@ -54,10 +54,36 @@ set :ssh_options, {
 # https://github.com/seuros/capistrano-sidekiq/issues/124
 set :rvm_map_bins, %w{rake gem bundle ruby rails sidekiq sidekiqctl}
 
-# Load NVM and use the default Node version
-# This dynamically loads NVM without hardcoding paths or versions
-SSHKit.config.command_map[:rake] = "source ~/.nvm/nvm.sh && nvm use default && rake"
-SSHKit.config.command_map[:bundle] = "source ~/.nvm/nvm.sh && nvm use default && bundle"
+# Load NVM for asset compilation
+# This ensures Node.js is available when running asset precompilation
+namespace :deploy do
+  namespace :assets do
+    before :precompile, :setup_nvm do
+      on roles(:app) do
+        # Source NVM and set up the environment for asset compilation
+        with rails_env: fetch(:rails_env) do
+          execute :bash, '-c', 'source ~/.nvm/nvm.sh && nvm use default && which node'
+        end
+      end
+    end
+  end
+end
+
+# Alternative: Override the entire assets:precompile task to use NVM
+Rake::Task["deploy:assets:precompile"].clear
+namespace :deploy do
+  namespace :assets do
+    task :precompile do
+      on roles(:app) do
+        within release_path do
+          with rails_env: fetch(:rails_env) do
+            execute :bash, '-c', 'source ~/.nvm/nvm.sh && nvm use default && bundle exec rake assets:precompile'
+          end
+        end
+      end
+    end
+  end
+end
 
 # The server-based syntax can be used to override options:
 # ------------------------------------
