@@ -95,9 +95,9 @@ GEM
       execjs (~> 2.0)
     base64 (0.3.0)
     bcrypt (3.1.20)
-    best_in_place (3.1.1)
-      actionpack (>= 3.2)
-      railties (>= 3.2)
+    best_in_place (4.0.0)
+      actionpack (>= 7.0)
+      railties (>= 7.0)
     better_errors (2.10.1)
       erubi (>= 1.0.0)
       rack (>= 0.9.0)
@@ -713,7 +713,7 @@ DEPENDENCIES
   actiontext (~> 7.0.0)
   acts-as-taggable-on (~> 10.0)
   autoprefixer-rails (~> 10.4.21)
-  best_in_place (~> 3.1)
+  best_in_place (~> 4.0)
   better_errors
   binding_of_caller
   bloggity!

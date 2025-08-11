@@ -179,7 +179,7 @@ gem 'breadcrumbs_on_rails', '>=2.0.0'                                          #
 gem 'dalli', '~> 3.2'                                                            # Memcached client - Rails 7 compatible
 gem 'friendly_id'                                                              # Makes nice IDs for models
 gem 'foreman'                                                                  # Helps manage multiple processes when running app in development.
-gem 'best_in_place', '~> 3.1'                                                  # In-place editing support
+gem 'best_in_place', '~> 4.0'                                                  # In-place editing support (Rails 7 compatible)
 # gem 'split', require: 'split/dashboard'                                        # AB testing framework
 # gem 'backup'                                                                 # Used to backup MySQL database and uploaded site assets
 gem 'dropbox-sdk'                                                              # Used with backup above
