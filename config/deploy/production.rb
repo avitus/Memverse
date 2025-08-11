@@ -54,6 +54,11 @@ set :ssh_options, {
 # https://github.com/seuros/capistrano-sidekiq/issues/124
 set :rvm_map_bins, %w{rake gem bundle ruby rails sidekiq sidekiqctl}
 
+# Load NVM and use the default Node version
+# This dynamically loads NVM without hardcoding paths or versions
+SSHKit.config.command_map[:rake] = "source ~/.nvm/nvm.sh && nvm use default && rake"
+SSHKit.config.command_map[:bundle] = "source ~/.nvm/nvm.sh && nvm use default && bundle"
+
 # The server-based syntax can be used to override options:
 # ------------------------------------
 # server 'example.com',
