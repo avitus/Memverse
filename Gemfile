@@ -152,7 +152,7 @@ gem 'mail', '>= 2.2.15'                                                        #
 gem 'sidekiq'                                                                    # Background jobs - version constraint removed for Rails 7 compatibility
 gem "sidekiq-cron", "~> 1.12.0"                                                 # Scheduler for Sidekiq
 gem 'ice_cube'                                                                 # For calculating next quiz
-gem 'capistrano-sidekiq', group: :development
+gem 'capistrano-sidekiq'                                                        # Sidekiq integration for Capistrano
 
 ############################################################
 # Blog
