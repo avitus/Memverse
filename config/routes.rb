@@ -218,6 +218,7 @@ MemverseApp::Application.routes.draw do
   get '/news'                     => 'info#news'
   get '/stt_setia'                => 'info#stt_setia'
   get '/bible_bee_tool'           => 'info#bible_bee_tool'
+  get '/show_vs'                  => 'info#show_vs',                   :as => 'show_vs'
 
   get '/finish_experiment'        => 'experiment#finish'
 
