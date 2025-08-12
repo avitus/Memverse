@@ -58,7 +58,7 @@
 		  </tr>
 		<% for mv in @mv_list %>
 			<td> <%= mv.id			%></td>
-			<td> <%= link_to mv.verse.ref, rails_admin.edit_path(model_name: 'verse', id: mv.verse.id) %></td>
+			<td> <%= link_to mv.verse.ref, rails_admin.edit_path(model_name: 'verse', id: mv.verse.id) if mv.verse %></td>
 		 	<td> <%= mv.efactor				%></td>
 		 	<td> <%= mv.status				%></td>
 		 	<td> <%= mv.last_tested			%></td>

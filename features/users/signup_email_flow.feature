@@ -1,0 +1,122 @@
+Feature: User Signup Email Flow
+  As a new user
+  I want to receive a welcome email when I sign up
+  So that I know my account was created successfully and get started with Memverse
+
+  Background:
+    Given the following translations exist:
+      | name   | translation        | language | translation_code |
+      | NASB95 | New American Bible | English  | NASB95           |
+    And email deliveries are enabled
+
+  @javascript
+  Scenario: New user receives welcome email after successful signup
+    Given I am not logged in
+    And no user exists with an email of "newuser@test.com"
+    When I go to the sign up page
+    And I fill in the following:
+      | user_login                 | testuser        |
+      | user_name                  | Test User       |
+      | user_email                 | newuser@test.com |
+      | user_password              | password123     |
+      | user_password_confirmation | password123     |
+    And I select "New American Bible" from "user_bible_translation_id"
+    And I press "Sign up"
+    Then I should see "A message with a confirmation link has been sent to your email address"
+    And "newuser@test.com" should receive an email
+    When I open the email
+    Then I should see "Welcome to Memverse!" in the email subject
+    And I should see "Test User" in the email body
+    And I should see "admin@memverse.com" in the email from
+    And the email should have tag "signup-notification"
+    And the email should have message stream "outbound"
+    And the email should have unsubscribe link
+
+  @javascript
+  Scenario: Welcome email contains proper Postmark headers
+    Given I am not logged in
+    And no user exists with an email of "headers@test.com"
+    When I go to the sign up page
+    And I fill in the following:
+      | user_login                 | headertest      |
+      | user_name                  | Header Test     |
+      | user_email                 | headers@test.com |
+      | user_password              | password123     |
+      | user_password_confirmation | password123     |
+    And I select "New American Bible" from "user_bible_translation_id"
+    And I press "Sign up"
+    Then "headers@test.com" should receive an email
+    When I open the email
+    Then the email should have correct Postmark configuration:
+      | tag            | signup-notification |
+      | message_stream | outbound           |
+      | from           | "Memverse" <admin@memverse.com> |
+
+  @javascript
+  Scenario: Welcome email includes unsubscribe functionality
+    Given I am not logged in
+    And no user exists with an email of "unsubscribe@test.com"
+    When I go to the sign up page
+    And I fill in the following:
+      | user_login                 | unsubuser       |
+      | user_name                  | Unsub User      |
+      | user_email                 | unsubscribe@test.com |
+      | user_password              | password123     |
+      | user_password_confirmation | password123     |
+    And I select "New American Bible" from "user_bible_translation_id"
+    And I press "Sign up"
+    Then "unsubscribe@test.com" should receive an email
+    When I open the email
+    Then the email should have header "List-Unsubscribe" containing "https://memverse.com/unsubscribe/unsubscribe@test.com"
+    And the email should have header "List-Unsubscribe-Post" containing "List-Unsubscribe=One-Click"
+
+  Scenario: No welcome email sent when signup fails
+    Given I am not logged in
+    And a user exists with an email of "existing@test.com"
+    When I go to the sign up page
+    And I fill in the following:
+      | user_login                 | existinguser    |
+      | user_name                  | Existing User   |
+      | user_email                 | existing@test.com |
+      | user_password              | password123     |
+      | user_password_confirmation | password123     |
+    And I select "New American Bible" from "user_bible_translation_id"
+    And I press "Sign up"
+    Then I should see "Email has already been taken"
+    And "existing@test.com" should receive no emails
+
+  @javascript
+  Scenario: Welcome email content verification
+    Given I am not logged in
+    And no user exists with an email of "content@test.com"
+    When I go to the sign up page
+    And I fill in the following:
+      | user_login                 | contentuser     |
+      | user_name                  | Content User    |
+      | user_email                 | content@test.com |
+      | user_password              | password123     |
+      | user_password_confirmation | password123     |
+    And I select "New American Bible" from "user_bible_translation_id"
+    And I press "Sign up"
+    Then "content@test.com" should receive an email
+    When I open the email
+    Then I should see "Welcome to Memverse!" in the email subject
+    And I should see "Content User" in the email body
+    And the email should be multipart with HTML and text versions
+    And both email parts should contain "Content User"
+
+  Scenario: Email delivery in test environment
+    Given email deliveries are disabled for testing
+    And I am not logged in
+    And no user exists with an email of "testenv@test.com"
+    When I go to the sign up page
+    And I fill in the following:
+      | user_login                 | testenvuser     |
+      | user_name                  | Test Env User   |
+      | user_email                 | testenv@test.com |
+      | user_password              | password123     |
+      | user_password_confirmation | password123     |
+    And I select "New American Bible" from "user_bible_translation_id"
+    And I press "Sign up"
+    Then I should see "A message with a confirmation link has been sent to your email address"
+    But "testenv@test.com" should receive no emails

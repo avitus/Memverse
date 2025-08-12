@@ -1,7 +1,7 @@
-<div>
-	<div class="sermon-on-the-mount unearned"></div>		
-	<div class="consistency         unearned"></div>
-	<div class="referrer            unearned"></div>
+<div class="badges-container">
+	<div class="sermon-on-the-mount unearned" title="Sermon on the Mount"></div>		
+	<div class="consistency         unearned" title="Consistency"></div>
+	<div class="referrer            unearned" title="Referrer"></div>
 </div>
 
 <script type="text/javascript">
@@ -16,6 +16,8 @@ $(document).ready(function() {
 				case 'solo'  : $("." + badgeclass).removeClass("unearned").addClass("earned");        break;
 			}
 		});
+	}).fail(function(jqXHR, textStatus, errorThrown) {
+		console.log("Failed to load badges: " + textStatus);
 	});
 });
 </script>

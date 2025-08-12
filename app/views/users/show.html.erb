@@ -10,7 +10,7 @@
     	<div class="user-details">
 
         	<div class="user-details-img">
-            	<span class="avatar"><a href="#"><%= image_tag @user.blog_avatar_url -%></a></span>
+            	<span class="avatar"><a href="#"><%= image_tag @user.blog_avatar_url, alt: @user.name_or_login, onerror: "this.onerror=null; this.src='/assets/default-avatar.png';" -%></a></span>
             </div>
 
             <div class="user-details-text">
@@ -72,7 +72,7 @@
     </div> <!-- end: user-info-top-box -->
 </div> <!-- end: user-details -->
 
-<div><%= image_tag("trans.png", :size => "1x10", :alt => "") %></div>
+<div style="height: 10px; clear: both;"></div>
 
 <div class="main-content"><!--main-content start-->
 	<div class="main-left"><!--main-left start-->
@@ -88,13 +88,13 @@
 	        <div class="left-widget-item">
 				<h2>Ref Recall</h2>
 				<div class="lightbulb">
-					<%= @user.ref_grade %> %
+					<%= @user.ref_grade %>%
 				</div>
 	        </div>
 	        <div class="left-widget-item">
 				<h2>Accuracy</h2>
 				<div class="bullseye">
-					<%= @user.accuracy %> %
+					<%= @user.accuracy %>%
 				</div>
 			</div>
 		</div> <!-- end: left-widget -->

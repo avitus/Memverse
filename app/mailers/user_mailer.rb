@@ -13,8 +13,12 @@ class UserMailer < ActionMailer::Base
   def newsletter_email(user)
     # @headers = {content_type => 'text/html'}
     setup_email(user)
-    headers['X-MC-Tags'] = "newsletter"
-    mail(:to => @email_with_name, :subject => "Memverse Newsletter")
+    mail(
+      :to => @email_with_name, 
+      :subject => "Memverse Newsletter",
+      :tag => "newsletter",
+      :message_stream => "broadcast"
+    )
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -22,60 +26,92 @@ class UserMailer < ActionMailer::Base
   # ----------------------------------------------------------------------------------------------------------
   def progression_email_9(user)
     setup_email(user)
-    headers['X-MC-Tags'] = "progression-9"
     @verse = user.random_verse.verse
-    mail(:to => @email_with_name, :subject => "Memverse Reminder")
+    mail(
+      :to => @email_with_name, 
+      :subject => "Memverse Reminder",
+      :tag => "progression-9",
+      :message_stream => "broadcast"
+    )
   end
 
 
   def progression_email_8(user)
     setup_email(user)
-    headers['X-MC-Tags'] = "progression-8"
     @verse = user.random_verse.verse
-    mail(:to => @email_with_name, :subject => "Memverse Reminder")
+    mail(
+      :to => @email_with_name, 
+      :subject => "Memverse Reminder",
+      :tag => "progression-8",
+      :message_stream => "broadcast"
+    )
   end
 
 
   def progression_email_7(user)
     setup_email(user)
-    headers['X-MC-Tags'] = "progression-7"
     @verse = user.random_verse.verse
-    mail(:to => @email_with_name, :subject => "Memverse Reminder")
+    mail(
+      :to => @email_with_name, 
+      :subject => "Memverse Reminder",
+      :tag => "progression-7",
+      :message_stream => "broadcast"
+    )
   end
 
 
   def progression_email_6(user)
     setup_email(user)
-    headers['X-MC-Tags'] = "progression-6"
     @verse = user.random_verse.verse
-    mail(:to => @email_with_name, :subject => "Memverse Reminder")
+    mail(
+      :to => @email_with_name, 
+      :subject => "Memverse Reminder",
+      :tag => "progression-6",
+      :message_stream => "broadcast"
+    )
   end
 
   def progression_email_5(user)
     setup_email(user)
-    headers['X-MC-Tags'] = "progression-5"
     @verse = user.random_verse.verse
-    mail(:to => @email_with_name, :subject => "Memverse Reminder")
+    mail(
+      :to => @email_with_name, 
+      :subject => "Memverse Reminder",
+      :tag => "progression-5",
+      :message_stream => "broadcast"
+    )
   end
 
   def progression_email_4(user)
     setup_email(user)
-    headers['X-MC-Tags'] = "progression-4"
     @verse = user.random_verse.verse
-    mail(:to => @email_with_name, :subject => "Memverse Reminder")
+    mail(
+      :to => @email_with_name, 
+      :subject => "Memverse Reminder",
+      :tag => "progression-4",
+      :message_stream => "broadcast"
+    )
   end
 
   def progression_email_3(user)
     setup_email(user)
-    headers['X-MC-Tags'] = "progression-3"
     @verse = user.random_verse.verse
-    mail(:to => @email_with_name, :subject => "Memverse Reminder")
+    mail(
+      :to => @email_with_name, 
+      :subject => "Memverse Reminder",
+      :tag => "progression-3",
+      :message_stream => "broadcast"
+    )
   end
 
   def progression_email_2(user)
     setup_email(user)
-    headers['X-MC-Tags'] = "progression-2"
-    mail(:to => @email_with_name, :subject => "Memverse Reminder")
+    mail(
+      :to => @email_with_name, 
+      :subject => "Memverse Reminder",
+      :tag => "progression-2",
+      :message_stream => "broadcast"
+    )
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -83,14 +119,22 @@ class UserMailer < ActionMailer::Base
   # ----------------------------------------------------------------------------------------------------------
   def signup_notification(user)
     setup_email(user)
-    headers['X-MC-Tags'] = "signup-notification"
-    mail(:to => @email_with_name, :subject => "Welcome to Memverse!")
+    mail(
+      :to => @email_with_name, 
+      :subject => "Welcome to Memverse!",
+      :tag => "signup-notification",
+      :message_stream => "outbound"
+    )
   end
 
   def activation(user)
     setup_email(user)
-    headers['X-MC-Tags'] = "account-activation"
-    mail(:to => @email_with_name, :subject => "Your Memverse account has been activated!")
+    mail(
+      :to => @email_with_name, 
+      :subject => "Your Memverse account has been activated!",
+      :tag => "account-activation",
+      :message_stream => "outbound"
+    )
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -104,7 +148,9 @@ class UserMailer < ActionMailer::Base
     @user		          = user
     @email_with_name  = "#{@user.name} <#{@user.email}>"
     @url              = ApplicationSettings.config['url']
-    @unsubscribe_url	= "#{ApplicationSettings.config['url']}/unsubscribe/#{user.email}"
+    
+    # Use the Postmark unsubscribe method to add proper headers
+    add_postmark_unsubscribe_link(user)
   end
 
 end

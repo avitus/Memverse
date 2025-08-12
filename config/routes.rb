@@ -118,6 +118,9 @@ MemverseApp::Application.routes.draw do
   # Core Review Pages
   get '/learn'                    => 'memverses#learn',                 :as => 'learn'
   get '/review'                   => 'passages#review',                 :as => 'passage_review'
+  
+  # AJAX endpoints
+  get '/memverses/memverse_counter' => 'memverses#memverse_counter',    :as => 'memverse_counter'
 
   # Current single verse test
   get '/test_verse_quick'         => 'memverses#test_verse_quick',      :as => 'test_verse_quick'

@@ -36,6 +36,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ### Other Tasks
 - **Custom rake tasks**: Available in `lib/tasks/` - memverse.rake, quiz.rake, roster.rake, etc.
 
+### Configuration Management
+- **Rails Credentials**: This project uses Rails encrypted credentials for sensitive configuration
+  - Edit credentials: `EDITOR="nano" rails credentials:edit`
+  - Access in code: `Rails.application.credentials.dig(:service, :api_key)`
+  - Master key location: `config/master.key` (never commit this file)
+  - Production setup: Copy master.key to server or set `RAILS_MASTER_KEY` environment variable
+  - Current credentials include:
+    - Postmark API token: `Rails.application.credentials.dig(:postmark, :api_token)`
+
 ## Architecture Overview
 
 This is a Ruby on Rails 5.1 Bible memorization application with a traditional MVC architecture.
@@ -67,6 +76,9 @@ This is a Ruby on Rails 5.1 Bible memorization application with a traditional MV
 ### Background Processing
 - **Sidekiq**: Background job processing with cron scheduling
 - **Workers**: Located in `app/workers/` for reminders, metrics, quizzes
+- **Monitoring Sidekiq**:
+  - View real-time logs: `sudo journalctl -u sidekiq -f`
+  - Check service status: `sudo systemctl status sidekiq`
 
 ### API & Documentation
 - **RocketPants**: API framework 
@@ -76,6 +88,10 @@ This is a Ruby on Rails 5.1 Bible memorization application with a traditional MV
 ### Database
 - **MySQL**: Primary database
 - **Redis**: Caching and background job queue
+  - Stores Sidekiq job queues and retry information
+  - Manages temporary quiz session data (scores, participants)
+  - Tracks chat channel status
+  - No persistent business data - all Redis data is ephemeral
 - **Thinking Sphinx**: Full-text search integration
 
 ### Frontend & Assets

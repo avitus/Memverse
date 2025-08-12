@@ -155,6 +155,7 @@
 .book
 {
   // @include user-dashboard-sprite(book);
+  background: image-url('user-dashboard/book.png') no-repeat;
   height:36px;
   font:39px Georgia,"Times New Roman",Times,serif;
   color:#666;
@@ -166,6 +167,7 @@
 .lightbulb
 {
   // @include user-dashboard-sprite(light-bulb);
+  background: image-url('user-dashboard/light-bulb.png') no-repeat;
   height:55px;
   font:39px Georgia,"Times New Roman",Times,serif;
   color:#666;
@@ -177,6 +179,7 @@
 .bullseye
 {
   // @include user-dashboard-sprite(bulls-eye);
+  background: image-url('user-dashboard/bulls-eye.png') no-repeat;
   height:52px;
   font:39px Georgia,"Times New Roman",Times,serif;
   color:#666;
@@ -188,6 +191,7 @@
 .level-icon
 {
   // @include user-dashboard-sprite(medal-icon);
+  background: image-url('user-dashboard/medal-icon.png') no-repeat;
   height:50px;
   font:39px Georgia,"Times New Roman",Times,serif;
   color:#666;

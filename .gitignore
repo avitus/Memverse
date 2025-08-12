@@ -108,3 +108,5 @@ circleci_deploy_key.pub
 
 # Claude AI assistant files
 .claude/
+
+/config/master.key

@@ -63,6 +63,30 @@ RailsAdmin.config do |config|
   #  ==> Included models
   # Add all excluded models here:
   # config.excluded_models << [User]
+  
+  # Exclude Thredded models from RailsAdmin to avoid routing conflicts
+  config.excluded_models = [
+    'Thredded::UserDetail',
+    'Thredded::UserPreference',
+    'Thredded::UserPostNotification',
+    'Thredded::UserPrivateTopicReadState',
+    'Thredded::UserTopicReadState',
+    'Thredded::UserTopicFollow',
+    'Thredded::Post',
+    'Thredded::Topic',
+    'Thredded::PrivateTopic',
+    'Thredded::PrivatePost',
+    'Thredded::PrivateUser',
+    'Thredded::Messageboard',
+    'Thredded::MessageboardUser',
+    'Thredded::MessageboardGroup',
+    'Thredded::TopicCategory',
+    'Thredded::PostModerationRecord',
+    'Thredded::NotificationsForFollowedTopics',
+    'Thredded::NotificationsForPrivateTopics',
+    'Thredded::MessageboardNotificationsForFollowedTopics',
+    'Thredded::UserMessageboardPreference'
+  ]
 
   # Add models here if you want to go 'whitelist mode':
   # config.included_models << [User]
