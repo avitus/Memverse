@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/avitus/bloggity.git
-  revision: 5cc64d56542f69dc42892368d1bb59ba0c25536d
+  revision: 6264695c76ecbddcec905657655546b7b4e9e8ee
   branch: rails7-upgrade
   specs:
     bloggity (0.2.27)
