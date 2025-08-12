@@ -13,6 +13,7 @@ class UserMailer < ActionMailer::Base
   def newsletter_email(user)
     # @headers = {content_type => 'text/html'}
     setup_email(user)
+    headers['X-MC-Tags'] = 'newsletter'
     mail(
       :to => @email_with_name, 
       :subject => "Memverse Newsletter",
@@ -27,6 +28,7 @@ class UserMailer < ActionMailer::Base
   def progression_email_9(user)
     setup_email(user)
     @verse = user.random_verse.verse
+    headers['X-MC-Tags'] = 'progression-9'
     mail(
       :to => @email_with_name, 
       :subject => "Memverse Reminder",
@@ -39,6 +41,7 @@ class UserMailer < ActionMailer::Base
   def progression_email_8(user)
     setup_email(user)
     @verse = user.random_verse.verse
+    headers['X-MC-Tags'] = 'progression-8'
     mail(
       :to => @email_with_name, 
       :subject => "Memverse Reminder",
@@ -51,6 +54,7 @@ class UserMailer < ActionMailer::Base
   def progression_email_7(user)
     setup_email(user)
     @verse = user.random_verse.verse
+    headers['X-MC-Tags'] = 'progression-7'
     mail(
       :to => @email_with_name, 
       :subject => "Memverse Reminder",
@@ -63,6 +67,7 @@ class UserMailer < ActionMailer::Base
   def progression_email_6(user)
     setup_email(user)
     @verse = user.random_verse.verse
+    headers['X-MC-Tags'] = 'progression-6'
     mail(
       :to => @email_with_name, 
       :subject => "Memverse Reminder",
@@ -74,6 +79,7 @@ class UserMailer < ActionMailer::Base
   def progression_email_5(user)
     setup_email(user)
     @verse = user.random_verse.verse
+    headers['X-MC-Tags'] = 'progression-5'
     mail(
       :to => @email_with_name, 
       :subject => "Memverse Reminder",
@@ -85,6 +91,7 @@ class UserMailer < ActionMailer::Base
   def progression_email_4(user)
     setup_email(user)
     @verse = user.random_verse.verse
+    headers['X-MC-Tags'] = 'progression-4'
     mail(
       :to => @email_with_name, 
       :subject => "Memverse Reminder",
@@ -96,6 +103,7 @@ class UserMailer < ActionMailer::Base
   def progression_email_3(user)
     setup_email(user)
     @verse = user.random_verse.verse
+    headers['X-MC-Tags'] = 'progression-3'
     mail(
       :to => @email_with_name, 
       :subject => "Memverse Reminder",
@@ -106,6 +114,7 @@ class UserMailer < ActionMailer::Base
 
   def progression_email_2(user)
     setup_email(user)
+    headers['X-MC-Tags'] = 'progression-2'
     mail(
       :to => @email_with_name, 
       :subject => "Memverse Reminder",
@@ -119,6 +128,7 @@ class UserMailer < ActionMailer::Base
   # ----------------------------------------------------------------------------------------------------------
   def signup_notification(user)
     setup_email(user)
+    headers['X-MC-Tags'] = 'signup-notification'
     mail(
       :to => @email_with_name, 
       :subject => "Welcome to Memverse!",
@@ -129,6 +139,7 @@ class UserMailer < ActionMailer::Base
 
   def activation(user)
     setup_email(user)
+    headers['X-MC-Tags'] = 'account-activation'
     mail(
       :to => @email_with_name, 
       :subject => "Your Memverse account has been activated!",

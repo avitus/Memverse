@@ -165,6 +165,7 @@ MemverseApp::Application.routes.draw do
 
   # Tagging verses
   post '/add_tag'                 => 'memverses#add_mv_tag'
+  post '/remove_verse_tag'        => 'memverses#remove_verse_tag'
   get  '/tag_autocomplete'        => 'memverses#tag_autocomplete'
 
   # Bible Reading
