@@ -313,10 +313,10 @@ var quizRoom = {
      * Check if user present
      ******************************************************************************/
 
-     userPresent: function(uuid) {
+     userPresent: function(userId) {
 
-        for(x = 0; x < quizRoom.userIDArray; x++){
-            if (quizRoom.userIDArray[x].id == uuid) return true;
+        for(x = 0; x < quizRoom.userIDArray.length; x++){
+            if (quizRoom.userIDArray[x].id == userId) return true;
         }
 
         return false;
@@ -376,9 +376,23 @@ function mvConnect( pubnub ) {
 
     console.log('=======> Checking quiz occupancy')
 
-    pubnub.here_now({  // returns message: { "uuids": ["1","2","3"], "occupancy": 3 }
-        channel  : channel,
-        callback : mvInitRoster
+    // PubNub v7+ API with Promise-based approach
+    pubnub.hereNow({
+        channels: [channel],
+        includeUUIDs: true,
+        includeState: false
+    }).then(function(response) {
+        // Extract channel data and convert to v4 format for compatibility
+        var channelData = response.channels[channel];
+        if (channelData) {
+            var message = {
+                uuids: channelData.uuids || [],
+                occupancy: channelData.occupancy || 0
+            };
+            mvInitRoster(message);
+        }
+    }).catch(function(error) {
+        console.error('Error getting presence data:', error);
     });
 };
 
@@ -422,7 +436,8 @@ function mvInitRoster ( message, env, channel ) {
  ******************************************************************************/
 function mvPresence ( message ) {
 
-    var roster_uid   = message.uuid;
+    // PubNub v7+ uses 'uuid' for backward compatibility, but also supports 'userId'
+    var roster_uid   = message.uuid || message.userId;
 
     // --- User joins quiz ---
     if (message.action == "join") {
@@ -430,9 +445,9 @@ function mvPresence ( message ) {
         console.log("     --> A user has joined")
 
         // Don't add user if they are already in the array
-        if( quizRoom.userPresent(message.uuid) ) return;
+        if( quizRoom.userPresent(roster_uid) ) return;
 
-        $.getJSON('/users/'+ message.uuid +'.json', function( data ) {
+        $.getJSON('/users/'+ roster_uid +'.json', function( data ) {
 
             var userName    = data.name;
             var gravatarURL = data.avatar_url;

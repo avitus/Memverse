@@ -62,31 +62,29 @@ class LiveQuizController < ApplicationController
   #-----------------------------------------------------------------------------------------------------------
   def record_score
 
-    # Redis keys
-    usr_id      = "user-" + params[:usr_id].to_s
-    q_num       = "qnum-" + params[:question_num].to_s # Question number in Quiz
+    # Extract parameters
+    quiz_id = params[:quiz_id] || 1  # Default to knowledge quiz
+    usr_id = params[:usr_id].to_i
+    usr_name = params[:usr_name]
+    usr_login = params[:usr_login]
+    qq_id = params[:question_id]  # ID of Quiz Question
+    question_num = params[:question_num].to_i
+    score = params[:score]        # Score out of 10
 
-    usr_name    = params[:usr_name]
-    usr_login   = params[:usr_login]
-    qq_id       = params[:question_id]  # ID of Quiz Question
-    score       = params[:score]        # Score out of 10
-
-    if score != "false"
-
-      # Update user scores. Store the score in Redis store
-      $redis.hincrby(usr_id, 'score', score)
-      # Capture user's name and login if we don't have them
-      $redis.hmset(usr_id, 'name', usr_name, 'login', usr_login, 'id', params[:usr_id].to_s)
-
-      # Update question difficulty
-      $redis.hincrby(q_num, 'total_score', score)  # Add user's score to combined score for that question
-      $redis.hincrby(q_num, 'answered', 1)         # Increment count for that quiz
-      $redis.hsetnx(q_num, 'qq_id', qq_id)         # Store QuizQuestion ID if we don't have it yet
-
+    if score != "false" && score.to_i > 0
+      # Initialize QuizSession service
+      quiz_session = QuizSession.new(quiz_id)
+      
+      # Add participant if not already added
+      quiz_session.add_participant(usr_id, usr_name, usr_login)
+      
+      # Update user's score
+      quiz_session.update_score(usr_id, question_num, score.to_i)
+      
+      # Update question statistics
+      quiz_session.update_question_stats(question_num, qq_id)
     else
-
       Rails.logger.info("*** Score was submitted as false for #{usr_name}")
-
     end
 
     respond_to do |format|

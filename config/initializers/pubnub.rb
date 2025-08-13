@@ -19,15 +19,35 @@ PN = Pubnub.new(
    subscribe_key: 'sub-c-bcc87aee-e8b7-11e2-acbe-02ee2ddab7fe', # required
    secret_key:    nil,                                          # optional, if used, message signing is enabled
    cipher_key:    nil,                                          # optional, if used, encryption is enabled
-   ssl:           true,                                         # true or default is false
+   ssl:           true,                                         # SSL enabled for security
    logger:        pubnub_logger,                                # use the standard logger
-   user_id:       'memverse_user'                               # static user_id for compatibility
+   user_id:       'memverse_server',                            # unique user_id for server (updated from uuid)
+   retry_configuration: {
+     retries_after_network_failure: 3,                         # retry 3 times on network failure
+     retry_delay_on_network_failure: 1.0                       # wait 1 second between retries
+   },
+   heartbeat:     30,                                           # send heartbeat every 30 seconds
+   presence_timeout: 60                                         # consider user offline after 60 seconds
 )
 
+# Enhanced callback function with better error handling
 PN_CALLBACK = lambda { |envelope|
   if envelope.error
-    # if message is not sent we should probably try to send it again
-    puts("==== ! Failed to send message ! ==========")
-    puts( envelope.inspect )
+    Rails.logger.error("PubNub Error: #{envelope.error_message}")
+    Rails.logger.error("Error details: #{envelope.inspect}")
+    
+    # Log specific error categories for debugging
+    case envelope.status
+    when 403
+      Rails.logger.error("PubNub: Access denied - check publish/subscribe keys")
+    when 400
+      Rails.logger.error("PubNub: Bad request - check message format")
+    when 0, nil
+      Rails.logger.error("PubNub: Network connectivity issue")
+    else
+      Rails.logger.error("PubNub: Unknown error with status: #{envelope.status}")
+    end
+  else
+    Rails.logger.debug("PubNub message sent successfully: #{envelope.timetoken}")
   end
 }

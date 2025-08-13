@@ -87,14 +87,17 @@ $(document).ready(function() {
     translation = "<%= current_user.translation %>";
     console.log("==> Connected to channel " + channel);
 
-	// Initialize PubNub
+	// Initialize PubNub with v7+ SDK
     var pubnub = new PubNub({
 	    subscribeKey: 		'<%= PN.env[:subscribe_key] %>',
 	    publishKey: 		'<%= PN.env[:publish_key] %>',
 	    logVerbosity: 		false,
-	    uuid: 				memverseUserID,
+	    userId: 			memverseUserID,				// Updated from deprecated 'uuid' to 'userId'
 	    ssl: 				true,
-	    presenceTimeout: 	130
+	    presenceTimeout: 	130,
+	    heartbeatInterval: 	30,						// Send heartbeat every 30 seconds
+	    suppressLeaveEvents: false,					// Keep presence events
+	    restore: 			true						// Restore subscriptions on reconnect
 	});
 
     // Listen
