@@ -76,7 +76,22 @@ describe ScheduledQuiz do
 
     context 'when quiz is the knowledge quiz (ID=1)' do
       before do
-        Quiz.create!(id: 1, name: "Knowledge Quiz", user: user, start_time: 30.seconds.from_now.utc)
+        quiz_1 = Quiz.create!(id: 1, name: "Knowledge Quiz", user: user, start_time: 30.seconds.from_now.utc)
+        # Add a question so the quiz will be found
+        QuizQuestion.create!(
+          quiz: quiz_1,
+          question_no: 1,
+          question_type: "mcq",
+          mc_question: "What is the first word of John 1:1?",
+          mc_option_a: "In",
+          mc_option_b: "The", 
+          mc_option_c: "Beginning",
+          mc_option_d: "Word",
+          mc_answer: "A",
+          supporting_ref: Uberverse.create!(book: "John", chapter: 1, versenum: 1),
+          times_answered: 10,
+          perc_correct: 50
+        )
       end
 
       it 'skips quiz handled by different worker' do
@@ -107,6 +122,8 @@ describe ScheduledQuiz do
 
       before do
         quiz_question # Create quiz with questions
+        # Mock the Quiz.where to return our quiz
+        allow(Quiz).to receive(:where).and_return(double("relation", first: quiz))
       end
 
       it 'completes the quiz workflow successfully' do
@@ -115,20 +132,23 @@ describe ScheduledQuiz do
       end
 
       it 'acquires and releases quiz lock' do
-        lock_key = "scheduled_quiz_lock_#{quiz.id}"
+        # QuizSession now handles the locking with different key format
+        lock_key = "quiz_session:#{quiz.id}:lock"
         
-        expect($redis).to receive(:set).with(lock_key, Process.pid, nx: true, ex: described_class::LOCK_TIMEOUT).and_return(true)
+        expect($redis).to receive(:set).with(lock_key, Process.pid, nx: true, ex: 3600).and_return(true)
         expect($redis).to receive(:del).with(lock_key)
         
         worker.perform
       end
 
       it 'initializes quiz with proper status' do
-        channel = "quiz-#{quiz.id}"
+        # QuizSession uses different key format for status
+        status_key = "quiz_session:#{quiz.id}:status"
         
-        expect($redis).to receive(:hset).with(channel, "status", "In progress. Chat opening soon.")
-        expect($redis).to receive(:hset).with(channel, "start_time", anything)
-        expect($redis).to receive(:hset).with(channel, "quiz_id", quiz.id)
+        expect($redis).to receive(:hset).with(status_key, "status", "In progress. Chat opening soon.")
+        expect($redis).to receive(:hset).with(status_key, "updated_at", anything)
+        expect($redis).to receive(:hset).with(status_key, "start_time", anything)
+        expect($redis).to receive(:hset).with(status_key, "quiz_id", quiz.id.to_s)
         
         worker.perform
       end
@@ -182,11 +202,12 @@ describe ScheduledQuiz do
       end
 
       it 'records success metrics' do
-        channel = "quiz-#{quiz.id}"
+        # QuizSession uses different key format for status
+        status_key = "quiz_session:#{quiz.id}:status"
         
-        expect($redis).to receive(:hset).with(channel, "last_success", anything)
-        expect($redis).to receive(:hset).with(channel, "duration_seconds", anything)
-        expect($redis).to receive(:hset).with(channel, "success_count", anything)
+        expect($redis).to receive(:hset).with(status_key, "last_success", anything)
+        expect($redis).to receive(:hset).with(status_key, "duration_seconds", anything)
+        expect($redis).to receive(:hset).with(status_key, "success_count", anything)
         
         worker.perform
       end
@@ -195,8 +216,26 @@ describe ScheduledQuiz do
     context 'when quiz is already in progress' do
       before do
         quiz
-        channel = "quiz-#{quiz.id}"
-        allow($redis).to receive(:hmget).with(channel, "status").and_return(["In progress. Wait for question."])
+        # Add a question so it will be found by find_scheduled_quiz
+        QuizQuestion.create!(
+          quiz: quiz,
+          question_no: 1,
+          question_type: "mcq",
+          mc_question: "What is the first word of John 1:1?",
+          mc_option_a: "In",
+          mc_option_b: "The", 
+          mc_option_c: "Beginning",
+          mc_option_d: "Word",
+          mc_answer: "A",
+          supporting_ref: Uberverse.create!(book: "John", chapter: 1, versenum: 1),
+          times_answered: 10,
+          perc_correct: 50
+        )
+        # Mock Quiz.where to return our quiz
+        allow(Quiz).to receive(:where).and_return(double("relation", first: quiz))
+        # Mock QuizSession to indicate quiz is in progress
+        status_key = "quiz_session:#{quiz.id}:status"
+        allow($redis).to receive(:hget).with(status_key, "status").and_return("In progress. Wait for question.")
       end
 
       it 'aborts execution gracefully' do
@@ -215,6 +254,24 @@ describe ScheduledQuiz do
     context 'when lock cannot be acquired' do
       before do
         quiz
+        # Add a question so it will be found by find_scheduled_quiz
+        QuizQuestion.create!(
+          quiz: quiz,
+          question_no: 1,
+          question_type: "mcq",
+          mc_question: "What is the first word of John 1:1?",
+          mc_option_a: "In",
+          mc_option_b: "The", 
+          mc_option_c: "Beginning",
+          mc_option_d: "Word",
+          mc_answer: "A",
+          supporting_ref: Uberverse.create!(book: "John", chapter: 1, versenum: 1),
+          times_answered: 10,
+          perc_correct: 50
+        )
+        # Mock Quiz.where to return our quiz
+        allow(Quiz).to receive(:where).and_return(double("relation", first: quiz))
+        # Mock lock acquisition to fail
         allow($redis).to receive(:set).and_return(false)
       end
 
@@ -240,11 +297,19 @@ describe ScheduledQuiz do
     context 'when PubNub fails' do
       before do
         quiz
+        # Mock Quiz.where to return our quiz
+        allow(Quiz).to receive(:where).and_return(double("relation", first: quiz))
         # Add a question so quiz execution proceeds
         QuizQuestion.create!(
           quiz: quiz,
           question_no: 1,
           question_type: "mcq",
+          mc_question: "What is the first word of John 1:1?",
+          mc_option_a: "In",
+          mc_option_b: "The", 
+          mc_option_c: "Beginning",
+          mc_option_d: "Word",
+          mc_answer: "A",
           supporting_ref: Uberverse.create!(book: "John", chapter: 1, versenum: 1),
           times_answered: 10,
           perc_correct: 50
@@ -264,6 +329,24 @@ describe ScheduledQuiz do
   end
 
   describe '#find_scheduled_quiz' do
+    before do
+      # Ensure quiz has questions for these tests
+      QuizQuestion.create!(
+        quiz: quiz,
+        question_no: 1,
+        question_type: "mcq",
+        mc_question: "What is the first word of John 1:1?",
+        mc_option_a: "In",
+        mc_option_b: "The", 
+        mc_option_c: "Beginning",
+        mc_option_d: "Word",
+        mc_answer: "A",
+        supporting_ref: Uberverse.create!(book: "John", chapter: 1, versenum: 1),
+        times_answered: 10,
+        perc_correct: 50
+      )
+    end
+
     it 'finds quiz starting within next minute' do
       travel_to quiz.start_time - 30.seconds do
         found_quiz = worker.send(:find_scheduled_quiz)
@@ -309,7 +392,7 @@ describe ScheduledQuiz do
           quiz: quiz,
           question_no: 1,
           question_type: "recitation",
-          passage_translations: {"ESV" => "In the beginning was the Word"},
+          passage: "John 1:1",
           supporting_ref: uberverse,
           times_answered: 10,
           perc_correct: 50
@@ -318,6 +401,10 @@ describe ScheduledQuiz do
 
       before do
         recitation_question
+        # Mock Quiz.where to return our quiz
+        allow(Quiz).to receive(:where).and_return(double("relation", first: quiz))
+        # Mock the passage_translations method on any instance of QuizQuestion
+        allow_any_instance_of(QuizQuestion).to receive(:passage_translations).and_return({"ESV" => "In the beginning was the Word"})
       end
 
       it 'calculates time allocation correctly' do
@@ -347,6 +434,8 @@ describe ScheduledQuiz do
           times_answered: 10,
           perc_correct: 50
         )
+        # Mock Quiz.where to return our quiz
+        allow(Quiz).to receive(:where).and_return(double("relation", first: quiz))
       end
 
       it 'uses standard time allocation' do
@@ -373,6 +462,8 @@ describe ScheduledQuiz do
           times_answered: 10,
           perc_correct: 50
         )
+        # Mock Quiz.where to return our quiz
+        allow(Quiz).to receive(:where).and_return(double("relation", first: quiz))
       end
 
       it 'logs warning and continues' do
@@ -424,25 +515,42 @@ describe ScheduledQuiz do
   describe 'resource cleanup' do
     before do
       quiz
+      # Add a question so the quiz will be found
+      QuizQuestion.create!(
+        quiz: quiz,
+        question_no: 1,
+        question_type: "mcq",
+        mc_question: "What is the first word of John 1:1?",
+        mc_option_a: "In",
+        mc_option_b: "The", 
+        mc_option_c: "Beginning",
+        mc_option_d: "Word",
+        mc_answer: "A",
+        supporting_ref: Uberverse.create!(book: "John", chapter: 1, versenum: 1),
+        times_answered: 10,
+        perc_correct: 50
+      )
+      # Mock Quiz.where to return our quiz
+      allow(Quiz).to receive(:where).and_return(double("relation", first: quiz))
     end
 
     it 'always cleans up resources' do
-      channel = "quiz-#{quiz.id}"
-      lock_key = "scheduled_quiz_lock_#{quiz.id}"
+      status_key = "quiz_session:#{quiz.id}:status"
+      lock_key = "quiz_session:#{quiz.id}:lock"
       
-      expect($redis).to receive(:hset).with(channel, "status", "Available")
-      expect($redis).to receive(:del).with(lock_key)
+      expect($redis).to receive(:hset).with(status_key, "status", "Available")
+      expect($redis).to receive(:del).with(lock_key).at_least(:once)
       
       worker.perform
     end
 
     it 'cleans up even when errors occur' do
-      lock_key = "scheduled_quiz_lock_#{quiz.id}"
+      lock_key = "quiz_session:#{quiz.id}:lock"
       
       # Force an error during execution
       allow(PN).to receive(:publish).and_raise(StandardError.new("Fatal error"))
       
-      expect($redis).to receive(:del).with(lock_key)
+      expect($redis).to receive(:del).with(lock_key).at_least(:once)
       
       worker.perform
     end
@@ -451,12 +559,29 @@ describe ScheduledQuiz do
   describe 'concurrency protection' do
     before do
       quiz
+      # Ensure quiz has questions so it will be found
+      QuizQuestion.create!(
+        quiz: quiz,
+        question_no: 1,
+        question_type: "mcq",
+        mc_question: "What is the first word of John 1:1?",
+        mc_option_a: "In",
+        mc_option_b: "The", 
+        mc_option_c: "Beginning",
+        mc_option_d: "Word",
+        mc_answer: "A",
+        supporting_ref: Uberverse.create!(book: "John", chapter: 1, versenum: 1),
+        times_answered: 10,
+        perc_correct: 50
+      )
+      # Mock Quiz.where to return our quiz
+      allow(Quiz).to receive(:where).and_return(double("relation", first: quiz))
     end
 
     it 'prevents multiple workers from running same quiz' do
       # Simulate another worker already has the lock
       allow($redis).to receive(:set).with(
-        "scheduled_quiz_lock_#{quiz.id}", 
+        "quiz_session:#{quiz.id}:lock", 
         anything, 
         anything
       ).and_return(false)

@@ -2,7 +2,7 @@ class UpdateMetrics
 
   include Sidekiq::Worker
 
-  sidekiq_options :retry => true
+  sidekiq_options queue: :default, retry: true
 
   def perform
     DailyStats.update()

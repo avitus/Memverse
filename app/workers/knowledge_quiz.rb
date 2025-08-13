@@ -4,7 +4,7 @@ class KnowledgeQuiz
   include IceCube
   include PushNotification
 
-  sidekiq_options retry: false # Don't retry quiz if something goes wrong
+  sidekiq_options queue: :critical, retry: false # Don't retry quiz if something goes wrong
 
   # Redis lock key for preventing concurrent quiz execution
   QUIZ_LOCK_KEY = "knowledge_quiz_lock".freeze
@@ -442,11 +442,19 @@ class KnowledgeQuiz
   end
   
   def cleanup_quiz_resources
-    # Mark quiz as available again
-    @quiz_session.set_quiz_status("Available")
+    begin
+      # Mark quiz as available again
+      @quiz_session.set_quiz_status("Available")
+    rescue => e
+      Sidekiq.logger.error "Failed to set quiz status to Available: #{e.message}"
+    end
     
-    # Clean up any stale locks
-    @quiz_session.unlock_quiz
+    begin
+      # Clean up any stale locks
+      @quiz_session.unlock_quiz
+    rescue => e
+      Sidekiq.logger.error "Failed to unlock quiz: #{e.message}"
+    end
     
     Sidekiq.logger.info "Quiz resources cleaned up"
   end

@@ -2,7 +2,7 @@ class SendReminders
 
   include Sidekiq::Worker
 
-  sidekiq_options :retry => false
+  sidekiq_options queue: :high, retry: false
 
   def perform
 

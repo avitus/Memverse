@@ -2,7 +2,7 @@ class ScheduledQuiz
 
   include Sidekiq::Worker
 
-  sidekiq_options retry: false # Don't retry quiz if something goes wrong
+  sidekiq_options queue: :critical, retry: false # Don't retry quiz if something goes wrong
 
   # Redis lock key for preventing concurrent quiz execution
   LOCK_TIMEOUT = 3600 # 1 hour in seconds
