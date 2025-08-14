@@ -47,7 +47,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Architecture Overview
 
-This is a Ruby on Rails 5.1 Bible memorization application with a traditional MVC architecture.
+This is a Ruby on Rails 7.1 Bible memorization application with a traditional MVC architecture.
 
 ### Core Models & Domain
 - **User**: Central model managing authentication, preferences, and Bible translation settings
