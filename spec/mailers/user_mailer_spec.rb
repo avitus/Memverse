@@ -229,7 +229,7 @@ RSpec.describe UserMailer, type: :mailer do
     end
 
     it "sets the correct default URL options host" do
-      expect(UserMailer.default_url_options[:host]).to eq("memverse.com")
+      expect(UserMailer.default_url_options[:host]).to eq(Rails.application.config.action_mailer.default_url_options[:host])
     end
   end
 
