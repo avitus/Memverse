@@ -4,7 +4,7 @@ describe ProfileController do
 
   before (:each) do
     @user = FactoryBot.create(:user)
-    @user.confirm
+    @user.update!(confirmed_at: Time.current)
     sign_in @user
   end
 

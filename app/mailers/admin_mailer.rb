@@ -11,7 +11,6 @@ class AdminMailer < ActionMailer::Base
 
     if @posts.present? # || @topics.present?
       emails = %w(admin@memverse.com alexcwatt@memverse.com)
-      headers['X-MC-Tags'] = 'forum-review'
       mail(
         to: emails, 
         subject: "Forum: Posts and topics to review",

@@ -49,27 +49,7 @@ RSpec.describe "Email Headers", type: :mailer do
     end
   end
 
-  describe "Email tagging headers" do
-    it "sets correct X-MC-Tags header for newsletter email" do
-      mail = UserMailer.newsletter_email(user)
-      expect(mail.header['X-MC-Tags'].to_s).to eq("newsletter")
-    end
-
-    it "sets correct X-MC-Tags header for signup notification" do
-      mail = UserMailer.signup_notification(user)
-      expect(mail.header['X-MC-Tags'].to_s).to eq("signup-notification")
-    end
-
-    it "sets correct X-MC-Tags header for activation email" do
-      mail = UserMailer.activation(user)
-      expect(mail.header['X-MC-Tags'].to_s).to eq("account-activation")
-    end
-
-    it "sets correct X-MC-Tags header for progression emails" do
-      mail = UserMailer.progression_email_2(user)
-      expect(mail.header['X-MC-Tags'].to_s).to eq("progression-2")
-    end
-
+  describe "Email tagging validation" do
     it "can deliver all email types successfully" do
       email_methods = [:newsletter_email, :signup_notification, :activation, :progression_email_2]
       
@@ -209,9 +189,6 @@ RSpec.describe "Email Headers", type: :mailer do
         expect(mail.to).to be_present  
         expect(mail.subject).to be_present
         # Note: Date and Message-ID headers not set in test environment
-        
-        # Email tagging headers
-        expect(mail.header['X-MC-Tags']).to be_present
       end
     end
   end
