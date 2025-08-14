@@ -234,7 +234,7 @@ en:
     view_vs_s: "View %{name}'s Verses"
   
   messages:
-    today_msg_html: "You have <span>%{due_today} verses</span> to review today. You currently need about <span>%{time} minutes</span> per day."
+    today_msg_html: "You have <span>%{due_today} verses</span> and <span>%{due_refs} references</span> to review today. You currently need about <span>%{time} minutes</span> per day."
   
   page_descriptions:
     default: "A free online tool for memorizing the Bible."

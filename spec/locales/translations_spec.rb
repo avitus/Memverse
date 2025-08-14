@@ -31,6 +31,15 @@ describe "Translations" do
     keys.map { |k| k.sub(/^#{locale}\./, '') }.sort
   end
 
+  # Helper method to safely get nested value
+  def get_nested_value(hash, key_path)
+    keys = key_path.split('.')
+    keys.reduce(hash) do |current_hash, key|
+      return nil unless current_hash.is_a?(Hash)
+      current_hash[key]
+    end
+  end
+
   describe "locale consistency" do
     let(:locale_files) { app_locale_files }
     let(:reference_locale) { 'en' }
@@ -109,17 +118,9 @@ describe "Translations" do
         'profile.update_profile.Name',
         'profile.update_profile.Email',
         'profile.update_profile.Country',
-        'profile.update_profile.Profile Saved Flash'
+        'profile.update_profile.Profile Saved Flash',
+        'messages.today_msg_html'
       ]
-    end
-
-    # Helper method to safely get nested value
-    def get_nested_value(hash, key_path)
-      keys = key_path.split('.')
-      keys.reduce(hash) do |current_hash, key|
-        return nil unless current_hash.is_a?(Hash)
-        current_hash[key]
-      end
     end
 
     it "English locale should have all critical translation keys" do
@@ -165,6 +166,57 @@ describe "Translations" do
       
       # Pass the test but show warnings - this ensures English works while alerting about other locales
       expect(true).to be true
+    end
+  end
+
+  describe "dashboard reminder message" do
+    it "should include both verses and references placeholders in all locales" do
+      locale_files = app_locale_files
+      
+      locale_files.each do |locale_file|
+        locale_name = File.basename(locale_file, '.yml')
+        locale_data = load_locale_file(locale_file)
+        
+        # Get the today_msg_html value
+        today_msg = get_nested_value(locale_data[locale_name], 'messages.today_msg_html')
+        
+        # Skip if this locale doesn't have the message (will fall back to English)
+        next if today_msg.nil?
+        
+        # Check that the message includes both placeholders
+        expect(today_msg).to include('%{due_today}'),
+          "#{locale_name}.yml: messages.today_msg_html missing %{due_today} placeholder for verse count"
+        
+        expect(today_msg).to include('%{due_refs}'),
+          "#{locale_name}.yml: messages.today_msg_html missing %{due_refs} placeholder for reference count"
+        
+        expect(today_msg).to include('%{time}'),
+          "#{locale_name}.yml: messages.today_msg_html missing %{time} placeholder for time estimate"
+      end
+    end
+
+    it "should properly interpolate verses and references in the dashboard message" do
+      # Test that the translation actually works with interpolation
+      result = I18n.t('messages.today_msg_html', 
+                      due_today: 5, 
+                      due_refs: 10, 
+                      time: 15)
+      
+      expect(result).to include('5'),
+        "Dashboard message should include verse count"
+      
+      expect(result).to include('10'),
+        "Dashboard message should include reference count"
+      
+      expect(result).to include('15'),
+        "Dashboard message should include time estimate"
+      
+      # Ensure it mentions both verses and references
+      expect(result.downcase).to match(/verse/),
+        "Dashboard message should mention verses"
+      
+      expect(result.downcase).to match(/reference/),
+        "Dashboard message should mention references"
     end
   end
 end

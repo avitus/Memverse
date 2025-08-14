@@ -3,6 +3,9 @@ require 'spec_helper'
 describe MemversesController do
 
   before (:each) do
+    # Stub Sidekiq to avoid Redis dependency in tests
+    allow(VerseWebCheck).to receive(:perform_async).and_return(true)
+    
     @user = FactoryBot.create(:user)
     @user.confirm
     sign_in @user
@@ -44,6 +47,53 @@ describe MemversesController do
       expect(JSON.parse(response.body)["msg"]).to eq("Added")  # Due to transaction rollback, detection doesn't work in tests
     end
 
+  end
+
+  describe "GET 'home'" do
+    before(:each) do
+      # Create some test verses for the user
+      @memverse1 = FactoryBot.create(:memverse, user: @user, verse: @verse, next_test: Date.today)
+      @memverse2 = FactoryBot.create(:memverse, user: @user, verse: FactoryBot.create(:verse), next_test: Date.today - 1)
+      @memverse3 = FactoryBot.create(:memverse, user: @user, verse: FactoryBot.create(:verse), next_ref_test: Date.today)
+    end
+
+    it "should set flash notice with verses and references count" do
+      # Stub the user methods to return predictable values
+      allow_any_instance_of(User).to receive(:due_verses).and_return(3)
+      allow_any_instance_of(User).to receive(:due_refs).and_return(6)
+      allow_any_instance_of(User).to receive(:work_load).and_return(10)
+      allow_any_instance_of(User).to receive(:first_verse_today).and_return(true)
+      allow_any_instance_of(User).to receive(:needs_quick_start?).and_return(false)
+      allow_any_instance_of(User).to receive(:overdue_verses).and_return(0)
+      allow_any_instance_of(User).to receive(:current_uncompleted_quests).and_return([])
+      allow_any_instance_of(User).to receive(:learning).and_return(5)
+      allow_any_instance_of(User).to receive(:memorized).and_return(5)
+
+      get :home, session: valid_session
+      
+      expect(response).to be_successful
+      
+      # Check that the flash message contains both verses and references
+      flash_message = flash[:notice]
+      expect(flash_message).to include("3 verses")
+      expect(flash_message).to include("6 references")
+      expect(flash_message).to include("10 minutes")
+    end
+
+    it "should include both verses and references in dashboard message when displayed" do
+      # This simpler test verifies the translation works correctly
+      # The controller may not always show the message (depends on other flash messages)
+      # but when it does, it must include both counts
+      
+      result = I18n.t('messages.today_msg_html', 
+                      due_today: 5, 
+                      due_refs: 10, 
+                      time: 15)
+      
+      expect(result).to include('5 verses')
+      expect(result).to include('10 references')
+      expect(result).to include('15 minutes')
+    end
   end
 
   describe "POST 'add_chapter'" do
