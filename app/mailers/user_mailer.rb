@@ -1,8 +1,7 @@
 class UserMailer < ActionMailer::Base
 
-  # Use environment-specific host configuration
-  default_url_options[:host] = Rails.application.config.action_mailer.default_url_options[:host]
-  default_url_options[:port] = Rails.application.config.action_mailer.default_url_options[:port]
+  # UserMailer will inherit default URL options from ActionMailer::Base
+  # which are set in config/initializers/action_mailer.rb
 
   # default :from => "admin@memverse.com"
   default :from => '"Memverse" <admin@memverse.com>'

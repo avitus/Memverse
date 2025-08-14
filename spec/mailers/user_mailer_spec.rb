@@ -229,7 +229,8 @@ RSpec.describe UserMailer, type: :mailer do
     end
 
     it "sets the correct default URL options host" do
-      expect(UserMailer.default_url_options[:host]).to eq(Rails.application.config.action_mailer.default_url_options[:host])
+      # UserMailer inherits from ActionMailer::Base
+      expect(UserMailer.default_url_options[:host]).to eq(ActionMailer::Base.default_url_options[:host])
     end
   end
 
