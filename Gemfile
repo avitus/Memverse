@@ -77,7 +77,7 @@ gem 'redis', '~> 5.0'                                                          #
 # - Updated web-console to ~> 4.2
 #
 ############################################################
-gem 'rails', '~> 7.0.0'                                                 # Upgraded to Rails 7.0 for modernization                                                            
+gem 'rails', '~> 7.1.0'                                                 # Upgraded to Rails 7.1 for modernization                                                            
 gem 'jquery-rails'                                                              # Currently using jQuery 1.12.4
 gem 'jquery-ui-rails'
 
@@ -95,8 +95,8 @@ gem "mimemagic", "~> 0.3.10"                                                    
 gem 'ffi', '~> 1.16.0'                                                          # FFI library - Ruby 3.2 compatible
 
 # Rails 7 components
-gem 'actionmailbox', '~> 7.0.0'                                               # Inbound email handling
-gem 'actiontext', '~> 7.0.0'                                                  # Rich text content
+gem 'actionmailbox', '~> 7.1.0'                                               # Inbound email handling
+gem 'actiontext', '~> 7.1.0'                                                  # Rich text content
 gem 'sprockets-rails'                                                          # Asset pipeline for Rails 7
 gem 'importmap-rails'                                                          # Modern JS without webpack
 gem 'turbo-rails'                                                              # Hotwire Turbo for SPA-like performance
@@ -143,7 +143,7 @@ gem "sentry-raven"                                                             #
 # Messaging
 ############################################################
 gem 'pubnub'                                                                   # Real-time messaging service
-gem 'rpush', '~> 8.0.0'                                                        # Push notification service - Rails 7 compatible with Ruby 2.7
+gem 'rpush', '~> 9.2.0'                                                        # Push notification service - Rails 7.1 compatible
 gem 'mail', '>= 2.2.15'                                                        # Emails
 gem 'postmark-rails', '~> 0.22'                                                # Postmark email delivery service
 

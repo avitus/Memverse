@@ -568,6 +568,7 @@ class MemversesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   def ajax_add
   	vs = Verse.find(params[:id])
+    msg = "Error"  # Initialize msg with default value
 
   	if vs and current_user
 
@@ -584,20 +585,16 @@ class MemversesController < ApplicationController
         else
           # Save verse as a memory verse for user
           begin
-            Memverse.create(:user_id => current_user.id, :verse_id => vs.id)
+            Memverse.create!(:user_id => current_user.id, :verse_id => vs.id)
+            msg = "Added"
           rescue Exception => e
             Rails.logger.error("=====> [Memverse save error] Exception while saving #{vs.ref} for user #{current_user.id}: #{e}")
-          else
-            msg = "Added"
-            render :json => { msg: msg }
-            return
+            msg = "Error"
           end
         end
 
       end # of transaction
 
-    else
-      msg = "Error"
     end
 
   	render :json => { msg: msg }

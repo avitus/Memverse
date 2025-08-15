@@ -131,7 +131,7 @@ describe PassagesController do
         # specifies that the Passage created on the previous line
         # receives the :update message with whatever params are
         # submitted in the request.
-        expect(passage).to receive(:update).with({ "last_verse" => "7" })
+        expect(passage).to receive(:update).with(ActionController::Parameters.new({ "last_verse" => "7" }).permit!)
         put :update, params: {id: passage.to_param, passage: { last_verse: "7" }}, session: valid_session
       end
 
