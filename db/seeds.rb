@@ -83,7 +83,7 @@ AmericanState.create(abbrev: 'WY', name: 'Wyoming')
 
 # Add 50 quest levels
 puts 'Setting up quests'
-for i in 19..50
+for i in 1..50
 
   learning_verses   = (i-6)*25 + 50
   memorized_verses  = learning_verses - 50

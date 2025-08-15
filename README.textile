@@ -10,6 +10,14 @@ Unit tests: @bundle exec rspec@
 Integration tests: @bundle exec cucumber features@
 Javascript tests: @npm test@ or @npm run test:run@
 
+h2. Configuration
+
+This project uses the Rails credentials system for managing sensitive configuration values like API keys. To edit credentials:
+
+@EDITOR="nano" rails credentials:edit@
+
+The master key is required for decryption and should never be committed to version control.
+
 h2. Documentation and Support
 
 See the GitHub Wiki

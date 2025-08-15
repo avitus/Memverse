@@ -24,7 +24,10 @@ MemverseApp::Application.routes.draw do
   # }
 
   # Oauth
-  devise_for :users, :controllers => { :omniauth_callbacks => "omniauth_callbacks" }
+  devise_for :users, :controllers => { 
+    :omniauth_callbacks => "omniauth_callbacks",
+    :confirmations => "users/confirmations"
+  }
 
   # Should be able to remove this route once Forem allows configurable sign_in path
   get '/users/sign_in', :to => "devise/sessions#new", :as => "sign_in"
@@ -118,6 +121,9 @@ MemverseApp::Application.routes.draw do
   # Core Review Pages
   get '/learn'                    => 'memverses#learn',                 :as => 'learn'
   get '/review'                   => 'passages#review',                 :as => 'passage_review'
+  
+  # AJAX endpoints
+  get '/memverses/memverse_counter' => 'memverses#memverse_counter',    :as => 'memverse_counter'
 
   # Current single verse test
   get '/test_verse_quick'         => 'memverses#test_verse_quick',      :as => 'test_verse_quick'
@@ -162,6 +168,7 @@ MemverseApp::Application.routes.draw do
 
   # Tagging verses
   post '/add_tag'                 => 'memverses#add_mv_tag'
+  post '/remove_verse_tag'        => 'memverses#remove_verse_tag'
   get  '/tag_autocomplete'        => 'memverses#tag_autocomplete'
 
   # Bible Reading
@@ -218,6 +225,7 @@ MemverseApp::Application.routes.draw do
   get '/news'                     => 'info#news'
   get '/stt_setia'                => 'info#stt_setia'
   get '/bible_bee_tool'           => 'info#bible_bee_tool'
+  get '/show_vs'                  => 'info#show_vs',                   :as => 'show_vs'
 
   get '/finish_experiment'        => 'experiment#finish'
 

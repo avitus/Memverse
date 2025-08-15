@@ -145,6 +145,7 @@ gem "sentry-raven"                                                             #
 gem 'pubnub'                                                                   # Real-time messaging service
 gem 'rpush', '~> 8.0.0'                                                        # Push notification service - Rails 7 compatible with Ruby 2.7
 gem 'mail', '>= 2.2.15'                                                        # Emails
+gem 'postmark-rails', '~> 0.22'                                                # Postmark email delivery service
 
 ############################################################
 # Scheduled Tasks

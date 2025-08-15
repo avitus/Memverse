@@ -29,11 +29,110 @@ module EmailHelpers
     # Replace with your a way to find your current email. e.g @current_user.email
     # last_email_address will return the last email address used by email spec to find an email.
     # Note that last_email_address will be reset after each Scenario.
-    last_email_address || @current_user.email
+    last_email_address || @current_user&.email || @last_signup_email
+  end
+  
+  def remember_email_for_test(email)
+    @last_signup_email = email
+  end
+  
+  # Helper methods for action_mailer_cache_delivery integration
+  def cached_emails
+    return [] unless ActionMailer::Base.delivery_method == :cache
+    ActionMailer::Base.cached_deliveries
+  end
+  
+  def cached_emails_for(address)
+    address = address.strip if address.is_a?(String)
+    cached_emails.select do |email|
+      email_addresses = [email.to, email.cc, email.bcc].flatten.compact
+      email_addresses.any? { |addr| addr.strip == address }
+    end
+  end
+  
+  def reset_cached_emails
+    ActionMailer::Base.clear_cache if ActionMailer::Base.delivery_method == :cache
+  end
+  
+  # Override email_spec methods to work with cached emails in JavaScript tests
+  def mailbox_for(address)
+    if ActionMailer::Base.delivery_method == :cache
+      email_address = address.present? ? address : current_email_address
+      cached_emails_for(email_address)
+    else
+      super
+    end
+  end
+  
+  def unread_emails_for(address)
+    if ActionMailer::Base.delivery_method == :cache
+      email_address = address.present? ? address : current_email_address
+      cached_emails_for(email_address)
+    else
+      super
+    end
+  end
+  
+  def read_emails_for(address)
+    if ActionMailer::Base.delivery_method == :cache
+      email_address = address.present? ? address : current_email_address
+      cached_emails_for(email_address)
+    else
+      super
+    end
+  end
+  
+  def find_email(address, opts={})
+    if ActionMailer::Base.delivery_method == :cache
+      emails = cached_emails_for(address)
+      if opts[:with_subject]
+        pattern = opts[:with_subject].is_a?(Regexp) ? opts[:with_subject] : /#{Regexp.escape(opts[:with_subject])}/
+        emails = emails.select { |m| m.subject =~ pattern }
+      end
+      if opts[:with_text]
+        pattern = opts[:with_text].is_a?(Regexp) ? opts[:with_text] : /#{Regexp.escape(opts[:with_text])}/
+        emails = emails.select { |m| m.default_part_body.to_s =~ pattern }
+      end
+      emails.last
+    else
+      super
+    end
+  end
+  
+  def open_email(address, opts={})
+    if ActionMailer::Base.delivery_method == :cache
+      # Use current_email_address if no address provided (e.g., when step uses "I")
+      email_address = address.present? ? address : current_email_address
+      @current_email = find_email(email_address, opts)
+      raise "Could not find email for #{email_address}" unless @current_email
+      @current_email
+    else
+      super
+    end
+  end
+  
+  def current_email
+    if ActionMailer::Base.delivery_method == :cache
+      @current_email
+    else
+      super
+    end
   end
 end
 
 World(EmailHelpers)
+
+# Parse email count from natural language
+def parse_email_count(amount)
+  case amount
+  when 'an', 'a'
+    1
+  when 'no'
+    0
+  else
+    amount.to_i
+  end
+end
 
 #
 # Reset the e-mail queue within a scenario.
@@ -41,7 +140,13 @@ World(EmailHelpers)
 #
 
 Given /^(?:a clear email queue|no emails have been sent)$/ do
-  reset_mailer
+  if ActionMailer::Base.delivery_method == :cache
+    # For JavaScript tests using cached delivery
+    ActionMailer::Base.clear_cache
+  else
+    # For regular tests using test delivery
+    reset_mailer
+  end
 end
 
 #
@@ -49,7 +154,9 @@ end
 #
 
 Then /^(?:I|they|"([^"]*?)") should receive (an|no|\d+) emails?$/ do |address, amount|
-  unread_emails_for(address).size.should == parse_email_count(amount)
+  # Remember this email address for subsequent steps that don't specify an address
+  remember_email_for_test(address) if address.present?
+  expect(unread_emails_for(address).size).to eq(parse_email_count(amount))
 end
 
 Then /^(?:I|they|"([^"]*?)") should have (an|no|\d+) emails?$/ do |address, amount|
@@ -203,4 +310,112 @@ end
 
 Then /^save and open all raw emails$/ do
   EmailSpec::EmailViewer::save_and_open_all_raw_emails
+end
+
+# Email configuration steps
+Given /^email deliveries are enabled$/ do
+  ActionMailer::Base.perform_deliveries = true
+  # Set thread-local variable for cross-process communication
+  Thread.current[:send_emails_in_test] = true
+end
+
+Given /^email deliveries are disabled for testing$/ do
+  ActionMailer::Base.perform_deliveries = false
+end
+
+# Postmark-specific email verification steps
+Then /^I should see "([^"]*)" in the email from$/ do |expected_from|
+  current_email.from.first.should eq(expected_from)
+end
+
+Then /^the email should have tag "([^"]*)"$/ do |expected_tag|
+  # Check for Postmark tag header
+  if ActionMailer::Base.delivery_method == :cache
+    tag_header = current_email.header_fields.find { |h| h.name == 'X-PM-Tag' }
+    expect(tag_header).to be_present, "Expected X-PM-Tag header to be present"
+    expect(tag_header.value).to eq(expected_tag)
+  else
+    current_email.should have_header('X-PM-Tag', expected_tag)
+  end
+end
+
+Then /^the email should have message stream "([^"]*)"$/ do |expected_stream|
+  # Check for Postmark message stream header
+  if ActionMailer::Base.delivery_method == :cache
+    stream_header = current_email.header_fields.find { |h| h.name == 'X-PM-Message-Stream' }
+    expect(stream_header).to be_present, "Expected X-PM-Message-Stream header to be present"
+    expect(stream_header.value).to eq(expected_stream)
+  else
+    current_email.should have_header('X-PM-Message-Stream', expected_stream)
+  end
+end
+
+Then /^the email should have unsubscribe link$/ do
+  # Check for List-Unsubscribe header
+  if ActionMailer::Base.delivery_method == :cache
+    unsubscribe_header = current_email.header_fields.find { |h| h.name == 'List-Unsubscribe' }
+    expect(unsubscribe_header).to be_present, "Expected List-Unsubscribe header to be present"
+  else
+    current_email.headers['List-Unsubscribe'].should be_present
+  end
+end
+
+Then /^the email should have correct Postmark configuration:$/ do |table|
+  table.rows_hash.each do |key, expected_value|
+    case key
+    when 'tag'
+      current_email.should have_header('X-PM-Tag', expected_value)
+    when 'message_stream'
+      current_email.should have_header('X-PM-Message-Stream', expected_value)
+    when 'from'
+      current_email.from.first.should eq(expected_value)
+    end
+  end
+end
+
+Then /^the email should have header "([^"]*)" containing "([^"]*)"$/ do |header_name, expected_content|
+  if ActionMailer::Base.delivery_method == :cache
+    header = current_email.header_fields.find { |h| h.name == header_name }
+    expect(header).to be_present, "Expected #{header_name} header to be present"
+    expect(header.value.to_s).to include(expected_content)
+  else
+    header_value = current_email.headers[header_name]
+    header_value.should be_present
+    header_value.to_s.should include(expected_content)
+  end
+end
+
+# Email counting and validation steps
+Then /^"([^"]*)" should receive only the signup email$/ do |address|
+  emails = mailbox_for(address)
+  emails.size.should eq(1)
+  emails.first.subject.should include("confirm")
+end
+
+Then /^"([^"]*)" should receive exactly (\d+) emails total$/ do |address, count|
+  mailbox_for(address).size.should eq(count.to_i)
+end
+
+Then /^"([^"]*)" should still receive exactly (\d+) emails total$/ do |address, count|
+  mailbox_for(address).size.should eq(count.to_i)
+end
+
+Then /^the email should be multipart with HTML and text versions$/ do
+  current_email.should be_multipart
+  current_email.html_part.should be_present
+  current_email.text_part.should be_present
+end
+
+Then /^both email parts should contain "([^"]*)"$/ do |text|
+  current_email.html_part.body.to_s.should include(text)
+  current_email.text_part.body.to_s.should include(text)
+end
+
+# Removed duplicate - this is already handled by the existing email steps
+
+# Step to clear all emails from mailboxes 
+Given /^all emails have been delivered$/ do
+  reset_mailer
+  # Also clear cached emails if using cache delivery
+  ActionMailer::Base.clear_cache if ActionMailer::Base.delivery_method == :cache
 end

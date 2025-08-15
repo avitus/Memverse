@@ -1,12 +1,46 @@
-// Are these used anywhere? Part of Forem?
-$light-bg1: #eee;
-$mid-bg1: #bbb;
-$mid-bg1-highlight: #aaa;
-$bar1-topbg: #eee;
-$bar1-midbg: #bbb;
-$bar1-bottombg: #aaa;
-$lighter-text: #777;
-$visited-text: #333;
-$default-text: #000;
-$darkbg: #333;
-$darkbg-highlight: #222;
+// Modern color variables for Memverse
+// These may be used by forum engine (Thredded)
+$light-bg1: #f5f5f7;
+$mid-bg1: #c7c7cc;
+$mid-bg1-highlight: #b0b0b5;
+$bar1-topbg: #f5f5f7;
+$bar1-midbg: #c7c7cc;
+$bar1-bottombg: #b0b0b5;
+$lighter-text: #6e6e73;
+$visited-text: #2c2c2e;
+$default-text: #1c1c1e;
+$darkbg: #2c2c2e;
+$darkbg-highlight: #1c1c1e;
+
+// Modern color palette for site-wide use
+// Grays (modernized with slight blue undertones)
+$gray-900: #1a1a1d;
+$gray-800: #2d2d30;
+$gray-700: #48484a;
+$gray-600: #636366;
+$gray-500: #6e6e73;
+$gray-400: #a1a1a6;
+$gray-300: #b0b0b5;
+$gray-200: #c7c7cc;
+$gray-100: #f5f5f7;
+
+// Reds (original palette)
+$red-dark: #993333;
+$red-primary: #983626;
+$red-bright: #aa0101;
+$red-orange: #b95c2e;
+$red-light: #e17329;
+
+// Greens (more vibrant and modern)
+$green-dark: #365314;
+$green-medium-dark: #4d7c0f;
+$green-medium: #65a30d;
+$green-primary: #84cc16;
+$green-light: #a3e635;
+
+// Accent colors
+$yellow-primary: #facc15;
+$blue-primary: #3b82f6;
+
+// Background colors
+$body-bg: #e5e5e7;

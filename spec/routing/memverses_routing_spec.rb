@@ -16,6 +16,13 @@ describe "Routing to memverses" do
 	)
   end
 
+  it "route to remove a verse tag" do
+	expect(:post => "/remove_verse_tag").to route_to(
+	  :controller => "memverses",
+	  :action     => "remove_verse_tag"
+	)
+  end
+
   it "route to autocomplete tag" do
 	expect(:get => "/tag_autocomplete").to route_to(
 	  :controller => "memverses",

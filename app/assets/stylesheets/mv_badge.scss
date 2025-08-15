@@ -3,15 +3,24 @@
   width: 120px;
   height: 120px;
   float: left;
-  margin: 0 1em;  
+  margin: 0 1em;
+  display: block;
+  background-size: contain;
+}
+
+.badges-container {
+  overflow: hidden;
+  padding: 1em 0;
 }
 
 // @import "badges/Sermon-on-the-Mount/*.png";
 
 .sermon-on-the-mount {
   @include badge-properties;
-  background: image-url('badges/Sermon-on-the-Mount/teaser.png') no-repeat;
-  &:hover { background: image-url('badges/Sermon-on-the-Mount/hover.png') no-repeat; }
+  &.unearned {
+    background: image-url('badges/Sermon-on-the-Mount/teaser.png') no-repeat;
+    &:hover { background: image-url('badges/Sermon-on-the-Mount/hover.png') no-repeat; }
+  }
 }
 
 .sermon-on-the-mount.earned {
