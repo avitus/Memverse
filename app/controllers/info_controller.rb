@@ -254,9 +254,11 @@ class InfoController < ApplicationController
 
     # === RSS News feed ===
     # Poached from http://www.robbyonrails.com/articles/2005/05/11/parsing-a-rss-feed
-    feed_urls << 'http://feeds.christianitytoday.com/christianitytoday/ctmag'
-    feed_urls << 'http://feeds.feedburner.com/tgcblog'
-    feed_urls << 'https://blog.truthforlife.org/rss.xml'
+    feed_urls << 'https://www.christianitytoday.com/feed/'
+    feed_urls << 'https://www.christiantoday.com/rss.xml'
+    feed_urls << 'https://www.christianity.com/rss/'
+    # feed_urls << 'http://feeds.feedburner.com/tgcblog'
+    # feed_urls << 'https://blog.truthforlife.org/rss.xml'
 
     feed_urls.each { |fd_url|
 	   @feeds[ feed_urls.index(fd_url) ] = RssReader.posts_for(fd_url, length=5, perform_validation=false)
