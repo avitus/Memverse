@@ -7,8 +7,220 @@ $thredded-brand: #99cc33 !default;
 $thredded-grid-container-max-width: 67rem !default;
 $thredded-grid-breakpoint-max-widths: (mobile: 34rem, tablet: 48rem) !default;
 
+// Override the main container width to match site width (1080px)
 .thredded--main-container {
+  max-width: 67.5rem !important; // 1080px to match #wrapper
   padding: 0.5rem 0 1rem 0 !important;
+}
+
+// Override blue theme colors with green theme
+.thredded--button, 
+.thredded--form--button, 
+a.thredded--button {
+  background-color: #99cc33 !important; // Your brand green
+  border-color: #7ca529 !important;
+  
+  &:hover {
+    background-color: #7ca529 !important;
+    border-color: #577a1a !important;
+  }
+}
+
+// Override blue link colors
+.thredded--content a,
+.thredded--post--content a {
+  color: #577a1a !important; // Your site's link color
+  
+  &:hover {
+    color: #99cc33 !important;
+  }
+}
+
+// Override topic link colors
+.thredded--topics--topic a,
+.thredded--topic-link {
+  color: #577a1a !important;
+  
+  &:hover {
+    color: #7ca529 !important;
+  }
+}
+
+// Override any blue accent colors
+.thredded--topic--follow-button--following {
+  background-color: #99cc33 !important;
+  border-color: #7ca529 !important;
+}
+
+// Override navigation and toolbar colors
+.thredded--navigation,
+.thredded--moderation-tools {
+  a {
+    color: #577a1a !important;
+    
+    &:hover {
+      color: #99cc33 !important;
+    }
+  }
+}
+
+// Override form focus states
+.thredded--form--input:focus,
+.thredded--form--textarea:focus {
+  border-color: #99cc33 !important;
+  box-shadow: 0 0 0 0.2rem rgba(153, 204, 51, 0.25) !important;
+}
+
+// Override messageboard group titles (the specific one mentioned)
+.thredded--messageboards-group--title {
+  color: #577a1a !important;
+}
+
+// Override alert/flash messages
+.thredded--flash-message--notice, 
+.thredded--alert-info {
+  color: #577a1a !important;
+  
+  a {
+    color: #7ca529 !important;
+    
+    &:hover {
+      color: #99cc33 !important;
+    }
+  }
+}
+
+// Override dropdown menus
+.thredded--post--dropdown--toggle {
+  color: #7ca529 !important;
+}
+
+.thredded--post--dropdown:hover .thredded--post--dropdown--toggle {
+  color: #99cc33 !important;
+}
+
+.thredded--post--dropdown--actions--item {
+  &:active, 
+  &:focus, 
+  &:hover {
+    background-color: #99cc33 !important;
+    color: #fff !important;
+  }
+}
+
+// Override all form element focus states
+.thredded--form {
+  [type='color']:focus, 
+  [type='date']:focus, 
+  [type='datetime']:focus, 
+  [type='datetime-local']:focus, 
+  [type='email']:focus, 
+  [type='month']:focus,
+  [type='number']:focus, 
+  [type='password']:focus, 
+  [type='search']:focus, 
+  [type='tel']:focus, 
+  [type='text']:focus, 
+  [type='time']:focus, 
+  [type='url']:focus,
+  [type='week']:focus, 
+  input:focus:not([type]), 
+  textarea:focus, 
+  select[multiple=multiple]:focus {
+    border-color: #99cc33 !important;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06), 0 0 3px #99cc33 !important;
+  }
+}
+
+// Override navigation active states
+.thredded--navigation-breadcrumbs a,
+.thredded--moderation-navigation--item a,
+.thredded--user-navigation--item a {
+  &:active, 
+  &:focus, 
+  &:hover {
+    color: #99cc33 !important;
+  }
+}
+
+.thredded--moderation-users .thredded--moderation-navigation--users a,
+.thredded--moderation-user .thredded--moderation-navigation--users a,
+.thredded--moderation-activity .thredded--moderation-navigation--activity a, 
+.thredded--user-navigation--item.thredded--is-current a {
+  color: #7ca529 !important;
+}
+
+.thredded--moderation-users .thredded--moderation-navigation--users,
+.thredded--moderation-user .thredded--moderation-navigation--users,
+.thredded--moderation-activity .thredded--moderation-navigation--activity, 
+.thredded--user-navigation--item.thredded--is-current {
+  border-bottom: 1px solid #99cc33 !important;
+}
+
+// Override badges and count elements
+.thredded--messageboard--unread-followed-topics-count, 
+.thredded--user-navigation--private-topics--unread,
+.thredded--user-navigation--moderation--pending-count,
+.thredded--user-navigation--unread-topics--followed-count,
+.thredded--topic-unread > .thredded--topics--posts-count {
+  background: #99cc33 !important;
+  color: #fff !important;
+}
+
+// Override all blue links in various locations
+.thredded--topics--updated-by a,
+.thredded--topics--messageboard a, 
+.thredded--topics--title a, 
+.thredded--topic-header--follow-info form input[type=submit], 
+.thredded--topic-header--follow-info form button, 
+.thredded--topic-header--edit-topic, 
+.thredded--topic-header--started-by a, 
+.thredded--topic-header--participants--participant > a, 
+.thredded--post--content--spoiler--summary, 
+.thredded--post--user a,
+.thredded--post--topic a,
+.thredded--post--user-and-topic a, 
+.thredded--messageboard, 
+.thredded--link, 
+.thredded--post-moderation-record--content-changed-notice a, 
+.thredded--post-moderation-record--moderation-state-notice a,
+.thredded--post-moderation .thredded--post--user a,
+.thredded--post-moderation-record .thredded--post--user a {
+  color: #577a1a !important;
+  
+  &:hover {
+    color: #99cc33 !important;
+  }
+}
+
+// Override search placeholder
+.thredded--navigation--search input[type="search"] {
+  &:hover:not(:focus) {
+    &::-webkit-input-placeholder,
+    &::-moz-placeholder,
+    &::placeholder {
+      color: #7ca529 !important;
+    }
+  }
+}
+
+// Override autocomplete/mention elements
+ul.thredded--textcomplete-dropdown {
+  border-color: #99cc33 !important;
+  box-shadow: 0 1px 1px #99cc33 !important;
+  
+  li.textcomplete-item.active {
+    background: #99cc33 !important;
+    color: #fff !important;
+  }
+}
+
+// Override pagination
+.thredded--pagination > span > a {
+  &:focus, 
+  &:hover {
+    color: #99cc33 !important;
+  }
 }
 
 /*========== List of Message Boards ==========*/

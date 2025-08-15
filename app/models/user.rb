@@ -232,8 +232,8 @@ class User < ApplicationRecord
   before_save :generate_login
 
   # Callbacks for email notifications (replacing rails-observers functionality)
-  after_create :send_signup_notification, unless: -> { Rails.env.test? }
-  after_update :send_activation_notification, if: :recently_activated?, unless: -> { Rails.env.test? }
+  after_create :send_signup_notification
+  after_update :send_activation_notification, if: :recently_activated?
 
   # Include default devise modules. Others available are:
   # :token_authenticatable, :lockable, trackable, :timeoutable and :omniauthable
@@ -1356,7 +1356,9 @@ class User < ApplicationRecord
   #
   # @return [Boolean]
   def recently_activated?
-    saved_change_to_confirmed_at? && confirmed_at.present? && confirmed_at_before_last_save.nil?
+    result = saved_change_to_confirmed_at? && confirmed_at.present? && confirmed_at_before_last_save.nil?
+    Rails.logger.info "recently_activated? for user #{id}: #{result} (confirmed_at: #{confirmed_at}, before: #{confirmed_at_before_last_save})"
+    result
   end
 
   private
@@ -1365,9 +1367,24 @@ class User < ApplicationRecord
   #
   # @return [void]
   def send_signup_notification
+    Rails.logger.info "send_signup_notification called for user #{id} (#{email})"
     # Only send signup notification if not using OpenID
     if not_using_openid?
-      UserMailer.signup_notification(self).deliver_later
+      if Rails.env.test?
+        UserMailer.signup_notification(self).deliver_now
+        Rails.logger.info "Signup email sent via deliver_now"
+      else
+        # For development/production, use deliver_now for cache testing
+        if ActionMailer::Base.delivery_method == :cache
+          UserMailer.signup_notification(self).deliver_now
+          Rails.logger.info "Signup email sent via deliver_now (cache mode)"
+        else
+          UserMailer.signup_notification(self).deliver_later
+          Rails.logger.info "Signup email queued via deliver_later"
+        end
+      end
+    else
+      Rails.logger.info "Not sending signup notification - user is using OpenID"
     end
   rescue => e
     Rails.logger.error "Failed to send signup notification for user #{id}: #{e.message}"
@@ -1377,9 +1394,36 @@ class User < ApplicationRecord
   #
   # @return [void]
   def send_activation_notification
-    UserMailer.activation(self).deliver_later
+    Rails.logger.info "send_activation_notification called for user #{id} (#{email})"
+    if Rails.env.test?
+      UserMailer.activation(self).deliver_now
+      Rails.logger.info "Activation email sent via deliver_now"
+    else
+      # For development/production, use deliver_now for cache testing
+      if ActionMailer::Base.delivery_method == :cache
+        UserMailer.activation(self).deliver_now
+        Rails.logger.info "Activation email sent via deliver_now (cache mode)"
+      else
+        UserMailer.activation(self).deliver_later
+        Rails.logger.info "Activation email queued via deliver_later"
+      end
+    end
   rescue => e
     Rails.logger.error "Failed to send activation notification for user #{id}: #{e.message}"
+  end
+
+  # Override Devise's confirm! method to ensure activation email is sent
+  def confirm!(*args)
+    was_unconfirmed = !confirmed?
+    result = super
+    
+    # If user was just confirmed, send activation notification
+    if was_unconfirmed && confirmed?
+      Rails.logger.info "User #{id} was just confirmed, sending activation notification"
+      send_activation_notification
+    end
+    
+    result
   end
 
 end

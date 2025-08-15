@@ -45,7 +45,7 @@ Rails.application.configure do
   # Configure Postmark for email delivery in development
   config.action_mailer.delivery_method = :postmark
   config.action_mailer.postmark_settings = {
-    api_token: ENV['POSTMARK_API_TOKEN'] || '6b4a7191-6750-46e4-95d9-72ad17c45156'
+    api_token: ENV['POSTMARK_API_TOKEN'] || Rails.application.credentials.dig(:postmark, :api_token)
   }
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
 

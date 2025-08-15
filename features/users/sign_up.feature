@@ -17,8 +17,8 @@ Feature: Sign up
         | user_password_confirmation | please!123      |
       And I press "Create my account"
       Then I should see "A MESSAGE WITH A CONFIRMATION LINK HAS BEEN SENT TO YOUR EMAIL ADDRESS. PLEASE OPEN THE LINK TO ACTIVATE YOUR ACCOUNT."
-      And "user@test.com" should receive an email
-      When I open the email
+      And "user@test.com" should receive an email with subject "Confirmation instructions"
+      When "user@test.com" opens the email with subject "Confirmation instructions"
       Then I should see "confirm your account" in the email body
       When I follow "Confirm my account" in the email
       Then I should see "YOUR ACCOUNT WAS SUCCESSFULLY CONFIRMED."

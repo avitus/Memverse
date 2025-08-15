@@ -1,10 +1,12 @@
 Given /^the following verses exist:$/ do |table|
-
   # table is a Cucumber::Ast::Table
-	table.hashes.each do |hash|
-		FactoryBot.create(:verse, hash)
-	end
-
+  table.hashes.each do |hash|
+    # Map verse_number to versenum since that's the actual field name
+    if hash['verse_number']
+      hash['versenum'] = hash.delete('verse_number')
+    end
+    FactoryBot.create(:verse, hash)
+  end
 end
 
 When /^I search for "(.*?)"$/ do |search_term|

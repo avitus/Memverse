@@ -1,17 +1,17 @@
 # Test helper for email functionality
 # 
 # This helper is no longer needed since the current implementation uses
-# X-MC-Tags headers instead of Postmark tag/message_stream attributes.
+# Postmark's native :tag and :message_stream parameters in the mail() method.
 # 
-# The functionality is now handled directly by ActionMailer headers in
-# the UserMailer class.
+# The functionality is now handled directly by the :tag and :message_stream
+# parameters in UserMailer and AdminMailer classes.
 
 module PostmarkTestHelper
   # This module is kept for backward compatibility but is no longer used
-  # since the mailers now use X-MC-Tags headers directly
+  # since the mailers now use native Postmark parameters directly
   
   def self.setup_postmark_for_tests
-    # No setup needed with current X-MC-Tags implementation
+    # No setup needed with current Postmark implementation
   end
   
   def self.reset

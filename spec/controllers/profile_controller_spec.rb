@@ -4,7 +4,7 @@ describe ProfileController do
 
   before (:each) do
     @user = FactoryBot.create(:user)
-    @user.confirm
+    @user.update!(confirmed_at: Time.current)
     sign_in @user
   end
 
@@ -56,11 +56,11 @@ describe ProfileController do
 
     describe "GET 'state_autocomplete'" do
       before do
-        # Create test states
-        FactoryBot.create(:american_state, name: "Michigan")
-        FactoryBot.create(:american_state, name: "Minnesota")
-        FactoryBot.create(:american_state, name: "Mississippi")
-        FactoryBot.create(:american_state, name: "Texas")
+        # Create test states with explicit abbreviations to avoid duplicates
+        FactoryBot.create(:american_state, name: "Michigan", abbrev: "MI")
+        FactoryBot.create(:american_state, name: "Minnesota", abbrev: "MN")
+        FactoryBot.create(:american_state, name: "Mississippi", abbrev: "MS")
+        FactoryBot.create(:american_state, name: "Texas", abbrev: "TX")
       end
 
       it "returns matching states starting with query" do

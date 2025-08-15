@@ -41,7 +41,17 @@ Rails.application.configure do
   # Tell Action Mailer not to deliver emails to the real world.
   # The :test delivery method accumulates sent emails in the
   # ActionMailer::Base.deliveries array.
-  config.action_mailer.delivery_method = :test
+  # Configure email delivery method based on environment needs
+  if ENV['CACHE_EMAILS'] == 'true'
+    # For Capybara tests that need shared email state
+    config.action_mailer.delivery_method = :cache
+  else
+    # For standard RSpec tests
+    config.action_mailer.delivery_method = :test
+  end
+  
+  # Enable email deliveries in test environment
+  config.action_mailer.perform_deliveries = true
   
   # Set default URL options for email generation in tests
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }

@@ -6,6 +6,12 @@
 
 require 'cucumber/rails'
 require 'email_spec/cucumber'
+require 'action_mailer_cache_delivery'
+
+# Initialize cache delivery method to prevent nil file handle issues
+if defined?(ActionMailer::CacheDelivery)
+  ActionMailer::Base.add_delivery_method :cache, ActionMailer::CacheDelivery
+end
 
 # Capybara defaults to CSS3 selectors rather than XPath.
 # If you'd prefer to use XPath, just uncomment this line and adjust any

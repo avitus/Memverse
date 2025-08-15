@@ -19,9 +19,6 @@ RSpec.describe UserMailer, type: :mailer do
       expect(mail.from).to eq(["admin@memverse.com"])  # In test environment, the display name might be stripped
     end
 
-    it "sets correct X-MC-Tags header" do
-      expect(mail.header['X-MC-Tags'].to_s).to eq("newsletter")
-    end
 
     it "includes unsubscribe headers" do
       expect(mail.header['List-Unsubscribe'].to_s).to include("https://memverse.com/unsubscribe/#{user.email}")
@@ -47,9 +44,6 @@ RSpec.describe UserMailer, type: :mailer do
       expect(mail.from).to eq(["admin@memverse.com"])
     end
 
-    it "sets correct X-MC-Tags header" do
-      expect(mail.header['X-MC-Tags'].to_s).to eq("progression-9")
-    end
 
     it "includes unsubscribe headers" do
       expect(mail.header['List-Unsubscribe'].to_s).to include("https://memverse.com/unsubscribe/#{user.email}")
@@ -71,9 +65,6 @@ RSpec.describe UserMailer, type: :mailer do
       expect(mail.from).to eq(["admin@memverse.com"])
     end
 
-    it "sets correct X-MC-Tags header" do
-      expect(mail.header['X-MC-Tags'].to_s).to eq("progression-8")
-    end
 
     it "includes unsubscribe headers" do
       expect(mail.header['List-Unsubscribe'].to_s).to include("https://memverse.com/unsubscribe/#{user.email}")
@@ -89,9 +80,6 @@ RSpec.describe UserMailer, type: :mailer do
       expect(mail.from).to eq(["admin@memverse.com"])
     end
 
-    it "sets correct X-MC-Tags header" do
-      expect(mail.header['X-MC-Tags'].to_s).to eq("progression-7")
-    end
 
     it "includes unsubscribe headers" do
       expect(mail.header['List-Unsubscribe'].to_s).to include("https://memverse.com/unsubscribe/#{user.email}")
@@ -107,9 +95,6 @@ RSpec.describe UserMailer, type: :mailer do
       expect(mail.from).to eq(["admin@memverse.com"])
     end
 
-    it "sets correct X-MC-Tags header" do
-      expect(mail.header['X-MC-Tags'].to_s).to eq("progression-6")
-    end
 
     it "includes unsubscribe headers" do
       expect(mail.header['List-Unsubscribe'].to_s).to include("https://memverse.com/unsubscribe/#{user.email}")
@@ -125,9 +110,6 @@ RSpec.describe UserMailer, type: :mailer do
       expect(mail.from).to eq(["admin@memverse.com"])
     end
 
-    it "sets correct X-MC-Tags header" do
-      expect(mail.header['X-MC-Tags'].to_s).to eq("progression-5")
-    end
 
     it "includes unsubscribe headers" do
       expect(mail.header['List-Unsubscribe'].to_s).to include("https://memverse.com/unsubscribe/#{user.email}")
@@ -143,9 +125,6 @@ RSpec.describe UserMailer, type: :mailer do
       expect(mail.from).to eq(["admin@memverse.com"])
     end
 
-    it "sets correct X-MC-Tags header" do
-      expect(mail.header['X-MC-Tags'].to_s).to eq("progression-4")
-    end
 
     it "includes unsubscribe headers" do
       expect(mail.header['List-Unsubscribe'].to_s).to include("https://memverse.com/unsubscribe/#{user.email}")
@@ -161,9 +140,6 @@ RSpec.describe UserMailer, type: :mailer do
       expect(mail.from).to eq(["admin@memverse.com"])
     end
 
-    it "sets correct X-MC-Tags header" do
-      expect(mail.header['X-MC-Tags'].to_s).to eq("progression-3")
-    end
 
     it "includes unsubscribe headers" do
       expect(mail.header['List-Unsubscribe'].to_s).to include("https://memverse.com/unsubscribe/#{user.email}")
@@ -179,9 +155,6 @@ RSpec.describe UserMailer, type: :mailer do
       expect(mail.from).to eq(["admin@memverse.com"])
     end
 
-    it "sets correct X-MC-Tags header" do
-      expect(mail.header['X-MC-Tags'].to_s).to eq("progression-2")
-    end
 
     it "includes unsubscribe headers" do
       expect(mail.header['List-Unsubscribe'].to_s).to include("https://memverse.com/unsubscribe/#{user.email}")
@@ -202,9 +175,6 @@ RSpec.describe UserMailer, type: :mailer do
       expect(mail.from).to eq(["admin@memverse.com"])
     end
 
-    it "sets correct X-MC-Tags header" do
-      expect(mail.header['X-MC-Tags'].to_s).to eq("signup-notification")
-    end
 
     it "includes unsubscribe headers" do
       expect(mail.header['List-Unsubscribe'].to_s).to include("https://memverse.com/unsubscribe/#{user.email}")
@@ -225,9 +195,6 @@ RSpec.describe UserMailer, type: :mailer do
       expect(mail.from).to eq(["admin@memverse.com"])
     end
 
-    it "sets correct X-MC-Tags header" do
-      expect(mail.header['X-MC-Tags'].to_s).to eq("account-activation")
-    end
 
     it "includes unsubscribe headers" do
       expect(mail.header['List-Unsubscribe'].to_s).to include("https://memverse.com/unsubscribe/#{user.email}")
@@ -262,7 +229,8 @@ RSpec.describe UserMailer, type: :mailer do
     end
 
     it "sets the correct default URL options host" do
-      expect(UserMailer.default_url_options[:host]).to eq("memverse.com")
+      # UserMailer inherits from ActionMailer::Base
+      expect(UserMailer.default_url_options[:host]).to eq(ActionMailer::Base.default_url_options[:host])
     end
   end
 

@@ -49,20 +49,14 @@ RSpec.describe AdminMailer, type: :mailer do
         expect(mail.from).to eq(["admin@memverse.com"]) # Rails may strip display name in test
       end
 
-      it "sets correct X-MC-Tags header" do
-        expect(mail.header['X-MC-Tags'].to_s).to eq("forum-review")
-      end
-
       it "includes pending posts in the body" do
-        expect(mail.body.encoded).to be_present
+        expect(mail.body.encoded).to include("TestUser")
       end
 
       it "includes the posts variable" do
-        # Trigger delivery to populate instance variables
-        mail.deliver_now
-        # Since we can't directly access the mailer instance variables after delivery,
-        # we verify the posts are accessible by checking that the method was called
-        expect(Thredded::Post).to have_received(:pending_moderation)
+        mail.deliver_now  # This ensures the view is rendered
+        # Check that @posts is properly set up
+        expect(mail.body.encoded).to include("Test Topic")  # Topic title should be in email
       end
     end
 

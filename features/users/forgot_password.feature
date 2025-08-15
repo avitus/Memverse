@@ -8,6 +8,7 @@ Feature: Forgot password
 
     Scenario: User enters wrong password and requests to reset
       Given I am a confirmed user named "forgetful" with an email "amnesiac@test.com" and password "easytoforget"
+      And all emails have been delivered
       When I go to the sign in page
       And I sign in as "amnesiac@test.com/wrongpassword"
       Then I should see "Invalid email or password."
