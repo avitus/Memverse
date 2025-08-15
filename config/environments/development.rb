@@ -42,11 +42,16 @@ Rails.application.configure do
 
   config.action_mailer.perform_caching = false
 
-  # Configure Postmark for email delivery in development
-  config.action_mailer.delivery_method = :postmark
-  config.action_mailer.postmark_settings = {
-    api_token: ENV['POSTMARK_API_TOKEN'] || Rails.application.credentials.dig(:postmark, :api_token)
-  }
+  # Configure email delivery in development - using test mode to avoid sending real emails
+  # To use Postmark, set USE_POSTMARK=true environment variable
+  if ENV['USE_POSTMARK'] == 'true'
+    config.action_mailer.delivery_method = :postmark
+    config.action_mailer.postmark_settings = {
+      api_token: ENV['POSTMARK_API_TOKEN'] || (Rails.application.credentials.dig(:postmark, :api_token) rescue nil)
+    }
+  else
+    config.action_mailer.delivery_method = :test
+  end
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
 
   # Print deprecation notices to the Rails logger.

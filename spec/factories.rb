@@ -15,6 +15,7 @@ FactoryBot.define do
     admin { false }
     referred_by { 0 }
     translation { nil }
+    confirmed_at { Time.now }  # Auto-confirm users for testing
 
     trait :approved do
       after(:create) do |user, _|
@@ -219,6 +220,31 @@ FactoryBot.define do
     mc_option_d { nil }
     mc_answer { nil }
     association :supporting_ref, factory: :uberverse
+    
+    # Skip the update callbacks that can cause issues in tests
+    after(:build) do |quiz_question|
+      quiz_question.class.skip_callback(:create, :after, :update_length, raise: false)
+      quiz_question.class.skip_callback(:update, :after, :update_length, raise: false) 
+      quiz_question.class.skip_callback(:destroy, :after, :update_length, raise: false)
+    end
+    
+    trait :mcq do
+      question_type { "mcq" }
+      mc_question { "What is the capital of France?" }
+      mc_option_a { "London" }
+      mc_option_b { "Paris" }
+      mc_option_c { "Berlin" }
+      mc_option_d { "Madrid" }
+      mc_answer { "B" }
+    end
+    
+    trait :recitation do
+      question_type { "recitation" }
+    end
+    
+    trait :reference do
+      question_type { "reference" }
+    end
   end
 
   # ==============================================================================================

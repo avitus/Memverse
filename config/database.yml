@@ -47,7 +47,7 @@ production:
    adapter: mysql2
    database: memverse_production
    username: memverse
-   password: <%= Rails.application.credentials.dig(:mysql) || Rails.application.secrets[:mysql] %>
+   password: <%= Rails.application.credentials.dig(:mysql) rescue Rails.application.secrets[:mysql] rescue ENV['MYSQL_PASSWORD'] %>
    host: localhost
    socket: /var/run/mysqld/mysqld.sock
    pool: 30 # ACW increased 08-13-2014

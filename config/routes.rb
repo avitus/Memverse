@@ -23,6 +23,23 @@ MemverseApp::Application.routes.draw do
       post 'sidekiq_health/clear_failed_jobs', to: 'sidekiq_health#clear_failed_jobs', as: 'sidekiq_clear_failed_jobs'
       post 'sidekiq_health/retry_failed_jobs', to: 'sidekiq_health#retry_failed_jobs', as: 'sidekiq_retry_failed_jobs'
       post 'sidekiq_health/toggle_queue/:queue_name/:action_type', to: 'sidekiq_health#toggle_queue', as: 'sidekiq_toggle_queue'
+      
+      # Quiz admin dashboard routes
+      resources :quiz_dashboards do
+        member do
+          post :start
+          post :stop
+          get :monitor
+          get :participants
+        end
+        collection do
+          get :health_check
+          get :error_logs
+          get :statistics
+          get :schedule
+          post :bulk_manage
+        end
+      end
     end
   end
 
@@ -284,6 +301,7 @@ MemverseApp::Application.routes.draw do
   get  '/live_quiz'                 => 'live_quiz#live_quiz',             :as => 'live_quiz'     # Main quiz URL
   get  '/live_quiz/channel1'        => 'live_quiz#channel1'                                      # Chat channel
   get  '/live_quiz/scoreboard'      => 'live_quiz#scoreboard'                                    # Scoreboard for quiz
+  get  '/live_quiz/till_start/:id'  => 'live_quiz#till_start',            :defaults => { :format => 'json' }
   get  '/live_quiz/:quiz'           => 'live_quiz#live_quiz'
   post '/record_score'              => 'live_quiz#record_score'
 

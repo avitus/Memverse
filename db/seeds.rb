@@ -17,10 +17,10 @@ DatabaseCleaner[:active_record].clean
 
 
 # puts 'SETTING UP ADMIN USER'
-user = User.create :name => 'Andy', :email => 'admin@test.com', :password => 'please', :password_confirmation => 'please'
-user.confirm
+user = User.new :name => 'Andy', :email => 'admin@test.com', :password => 'please', :password_confirmation => 'please'
+user.skip_confirmation!
 user.admin = true
-user.save
+user.save!
 puts 'Creating admin user: ' << user.name
 
 # TODO: Add popular verses
@@ -373,6 +373,13 @@ if !q
 end
 
 # ----------------------------------------------------------------------------------------------------------
+# Create Knowledge Quiz Questions
+# ----------------------------------------------------------------------------------------------------------
+puts "Adding knowledge quiz questions"
+load Rails.root.join('db/seeds/quiz_questions.rb')
+# system("mysql --user=#{config[:username]} --password=\"#{config[:password]}\" --host=#{config[:host]} #{config[:database]} < knowledge_quiz_questions.sql")
+
+# ----------------------------------------------------------------------------------------------------------
 # Create Final Verse data table
 # ----------------------------------------------------------------------------------------------------------
 puts "Adding final verse data (last verse of each chapter of the Bible) for #{Rails.env} environment"
@@ -430,6 +437,11 @@ module Thredded
 
     def self.run(users: 50, topics: 15, posts: (1..25))
       STDERR.puts 'Seeding the forum'
+      
+      # Disable email delivery during seeding
+      original_delivery_method = ActionMailer::Base.delivery_method
+      ActionMailer::Base.delivery_method = :test
+      
       # Disable callbacks to avoid creating notifications and performing unnecessary updates
       SKIP_CALLBACKS.each { |(klass, *args)| klass.skip_callback(*args) }
       s = new
@@ -446,6 +458,8 @@ module Thredded
     ensure
       # Re-enable callbacks
       SKIP_CALLBACKS.each { |(klass, *args)| klass.set_callback(*args) }
+      # Restore original email delivery method
+      ActionMailer::Base.delivery_method = original_delivery_method
     end
 
     def log(message)
