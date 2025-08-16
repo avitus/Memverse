@@ -1,19 +1,22 @@
 set :rails_env, "production" 
 
-# server-based syntax
-# ======================
-# Defines a single server with a list of roles and multiple properties.
-# You can define all roles on a single server, or split them:
-
-# server 'memverse.com', user: 'avitus', roles: %w{app db web}
+# Server configuration
 server 'www.memverse.com', user: 'avitus', roles: %w{app db web}
 
-# Deploy from the main branch (production)
-# Note: This inherits from config/deploy.rb which sets branch to 'main'
-# set :branch, 'main'  # Commented out to use default from deploy.rb
+# Deploy from rails-7-upgrade branch
+set :branch, 'main'
+
+# Ruby version
 set :rvm_ruby_version, '3.2.6'
 
-# Additional linked directories for Rails 7 and Active Storage
+# Additional linked files for Rails 7
+set :linked_files, fetch(:linked_files, []).push(
+  'config/secrets.yml.key',
+  'config/master.key',  # Rails 7 credentials
+  'config/database.yml' # If not in repo
+)
+
+# Additional linked directories for Rails 7
 set :linked_dirs, fetch(:linked_dirs, []).push(
   'log',
   'tmp/pids',
@@ -24,88 +27,104 @@ set :linked_dirs, fetch(:linked_dirs, []).push(
   'storage'            # Active Storage
 )
 
-# server 'memverse.com', user: 'avitus', roles: %w{app db web}, my_property: :my_value
-# server 'example.com', user: 'deploy', roles: %w{app web}, other_property: :other_value
-# server 'db.example.com', user: 'deploy', roles: %w{db}
+# Rails 7 specific settings
+set :keep_assets, 2  # Keep fewer assets to save space
 
-# role-based syntax
-# ==================
+# Puma configuration (if using Puma)
+set :puma_threads, [4, 16]
+set :puma_workers, 2
+set :puma_bind, "unix://#{shared_path}/tmp/sockets/puma.sock"
+set :puma_state, "#{shared_path}/tmp/pids/puma.state"
+set :puma_pid, "#{shared_path}/tmp/pids/puma.pid"
+set :puma_access_log, "#{shared_path}/log/puma_access.log"
+set :puma_error_log, "#{shared_path}/log/puma_error.log"
 
-# Defines a role with one or multiple servers. The primary server in each
-# group is considered to be the first unless any  hosts have the primary
-# property set. Specify the username and a domain or IP for the server.
-# Don't use `:all`, it's a meta role.
+# Sidekiq configuration
+set :sidekiq_config, -> { File.join(shared_path, 'config', 'sidekiq.yml') }
+set :sidekiq_log, -> { File.join(shared_path, 'log', 'sidekiq.log') }
+set :sidekiq_pid, -> { File.join(shared_path, 'tmp', 'pids', 'sidekiq.pid') }
 
-# role :app, %w{deploy@example.com}, my_property: :my_value
-# role :web, %w{user1@primary.com user2@additional.com}, other_property: :other_value
-# role :db,  %w{deploy@example.com}
-
-# Configuration
-# =============
-# You can set any configuration variable like in config/deploy.rb
-# These variables are then only loaded and set in this stage.
-# For available Capistrano configuration variables see the documentation page.
-# http://capistranorb.com/documentation/getting-started/configuration/
-# Feel free to add new variables to customise your setup.
-
-# Custom SSH Options
-# ==================
-# You may pass any option but keep in mind that net/ssh understands a
-# limited set of options, consult the Net::SSH documentation.
-# http://net-ssh.github.io/net-ssh/classes/Net/SSH.html#method-c-start
-#
-# Global options
-# --------------
+# SSH options
 set :ssh_options, {
-	keys: [File.join(ENV["HOME"], ".ssh", "id_rsa")],
-	forward_agent: true,
-	auth_methods: %w(publickey password)
+  keys: [File.join(ENV["HOME"], ".ssh", "id_rsa")],
+  forward_agent: true,
+  auth_methods: %w(publickey password)
 }
 
-# Handle some weird issues with Sidekiq and Capistrano
-# https://github.com/seuros/capistrano-sidekiq/issues/124
+# RVM configuration for Rails 7
+set :rvm_type, :user
+set :rvm_custom_path, '/home/avitus/.rvm'
 set :rvm_map_bins, %w{rake gem bundle ruby rails sidekiq sidekiqctl}
 
-# Load NVM for asset compilation
-# This ensures Node.js is available when running asset precompilation
+# Deployment hooks specific to Rails 7
 namespace :deploy do
+  # Override compile assets to handle Rails 7 specifics
   namespace :assets do
-    before :precompile, :setup_nvm do
-      on roles(:app) do
-        # Source NVM and set up the environment for asset compilation
-        with rails_env: fetch(:rails_env) do
-          execute :bash, '-c', 'source ~/.nvm/nvm.sh && nvm use default && which node'
-        end
-      end
-    end
-  end
-end
-
-# Alternative: Override the entire assets:precompile task to use NVM
-Rake::Task["deploy:assets:precompile"].clear
-namespace :deploy do
-  namespace :assets do
+    desc 'Precompile assets with Rails 7 optimizations'
     task :precompile do
-      on roles(:app) do
+      on roles(:web) do
         within release_path do
-          with rails_env: fetch(:rails_env), path: "/home/avitus/.nvm/versions/node/v16.20.2/bin:$PATH" do
-            execute :bundle, :exec, :rake, 'assets:precompile'
+          with rails_env: fetch(:rails_env), rails_groups: fetch(:rails_assets_groups) do
+            # Clear old assets first
+            execute :bundle, "exec rails assets:clean"
+            
+            # Compile new assets
+            execute :bundle, "exec rails assets:precompile"
           end
         end
       end
     end
   end
+
+  # Custom restart for Rails 7
+  desc 'Restart application with Rails 7 considerations'
+  task :restart do
+    on roles(:app), in: :sequence, wait: 5 do
+      # Touch restart file for Passenger
+      execute :touch, release_path.join('tmp/restart.txt')
+      
+      # If using Puma
+      # invoke 'puma:restart'
+    end
+  end
+
+  # Rails 7 specific checks
+  before :starting, :check_rails_7 do
+    on roles(:app) do
+      # Verify Ruby 3.2.6
+      ruby_version = capture("cd #{repo_path} && ruby -v")
+      unless ruby_version.include?("3.2.6")
+        error "Ruby 3.2.6 required but not found!"
+        exit 1
+      end
+    end
+  end
+
+  # Clear cache after deployment
+  after :published, :clear_cache do
+    on roles(:web), in: :groups, limit: 3, wait: 10 do
+      within release_path do
+        execute :bundle, "exec rails r 'Rails.cache.clear' RAILS_ENV=production"
+      end
+    end
+  end
+
+  # Update crontab for whenever gem (if used)
+  after :finishing, :update_cron do
+    on roles(:app) do
+      within release_path do
+        execute :bundle, "exec whenever --update-crontab #{fetch(:application)}"
+      end
+    end
+  end
 end
 
-# The server-based syntax can be used to override options:
-# ------------------------------------
-# server 'example.com',
-#   user: 'user_name',
-#   roles: %w{web app},
-#   ssh_options: {
-#     user: 'user_name', # overrides user setting above
-#     keys: %w(/home/user_name/.ssh/id_rsa),
-#     forward_agent: false,
-#     auth_methods: %w(publickey password)
-#     # password: 'please use keys'
-#   }
+# Rails 7 specific tasks
+after 'deploy:publishing', 'deploy:restart'
+after 'deploy:finishing', 'thinking_sphinx:index'
+after 'deploy:finishing', 'thinking_sphinx:restart'
+after 'deploy:finishing', 'deploy:cleanup'
+
+# Maintenance mode handling
+before 'deploy:starting', 'rails7:enable_maintenance'
+after 'deploy:finished', 'rails7:disable_maintenance'
