@@ -121,14 +121,8 @@ namespace :deploy do
     end
   end
 
-  # Update crontab for whenever gem (if used)
-  after :finishing, :update_cron do
-    on roles(:app) do
-      within release_path do
-        execute :bundle, "exec whenever --update-crontab #{fetch(:application)}"
-      end
-    end
-  end
+  # Note: Whenever gem is not used in this project
+  # Cron jobs are managed by Sidekiq's cron scheduling instead
 end
 
 # Rails 7 specific tasks
