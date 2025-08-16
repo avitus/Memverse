@@ -131,6 +131,5 @@ after 'deploy:finishing', 'thinking_sphinx:index'
 after 'deploy:finishing', 'thinking_sphinx:restart'
 after 'deploy:finishing', 'deploy:cleanup'
 
-# Maintenance mode handling
-before 'deploy:starting', 'rails7:enable_maintenance'
-after 'deploy:finished', 'rails7:disable_maintenance'
+# Note: Maintenance mode is not needed for regular deployments
+# Capistrano handles zero-downtime deployments by default

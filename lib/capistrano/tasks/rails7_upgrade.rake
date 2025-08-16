@@ -121,7 +121,7 @@ namespace :rails7 do
     end
   end
 
-  desc "Enable maintenance mode"
+  desc "Enable maintenance mode (only for major upgrades that require downtime)"
   task :enable_maintenance do
     on roles(:web) do
       info "Enabling maintenance mode..."
