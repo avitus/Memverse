@@ -154,4 +154,157 @@ describe ProfileController do
     end
   end
 
+  describe "referral features" do
+    
+    describe "GET 'set_referrer'" do
+      it "renders the set_referrer template" do
+        get :set_referrer
+        expect(response).to be_successful
+        expect(response).to render_template('set_referrer')
+      end
+
+      it "initializes empty user list" do
+        get :set_referrer
+        expect(assigns(:user_list)).to eq([])
+      end
+    end
+
+    describe "GET 'set_as_referrer'" do
+      let(:referrer) { FactoryBot.create(:user) }
+      
+      it "sets the referrer for current user" do
+        get :set_as_referrer, params: { id: referrer.id }
+        expect(@user.reload.referred_by).to eq(referrer.id)
+        expect(flash[:notice]).to eq("You have set your referrer as: #{referrer.name_or_login}")
+        expect(response).to redirect_to(referrals_path(@user))
+      end
+
+      it "prevents self-referral" do
+        # Ensure user starts with no referrer
+        @user.update(referred_by: nil)
+        
+        get :set_as_referrer, params: { id: @user.id }
+        expect(@user.reload.referred_by).to be_nil
+        expect(flash[:notice]).to eq("You cannot refer yourself!")
+        expect(response).to redirect_to(referrals_path(@user))
+      end
+
+      it "prevents circular referrals" do
+        @user.update(referred_by: referrer.id)
+        referrer.update(referred_by: @user.id)
+        
+        get :set_as_referrer, params: { id: referrer.id }
+        expect(@user.reload.referred_by).to eq(referrer.id) # Should remain unchanged
+        expect(flash[:notice]).to eq("You cannot be referred by a person you referred.")
+        expect(response).to redirect_to(referrals_path(@user))
+      end
+    end
+
+    describe "GET 'referrals'" do
+      let(:referrer) { FactoryBot.create(:user) }
+      let(:referee1) { FactoryBot.create(:user, referred_by: @user.id) }
+      let(:referee2) { FactoryBot.create(:user, referred_by: @user.id) }
+      let(:level_two_referee) { FactoryBot.create(:user, referred_by: referee1.id) }
+      
+      before do
+        @user.update(referred_by: referrer.id)
+        referee1
+        referee2
+        level_two_referee
+      end
+
+      it "shows referral information for current user" do
+        get :referrals, params: { id: @user.id }
+        expect(response).to be_successful
+        expect(response).to render_template('referrals')
+        expect(assigns(:user)).to eq(@user)
+        expect(assigns(:referrer)).to eq(referrer)
+        expect(assigns(:referees)).to include(referee1, referee2)
+        expect(assigns(:level_two)).to include(level_two_referee)
+      end
+
+      it "shows referral information for other users" do
+        get :referrals, params: { id: referee1.id }
+        expect(response).to be_successful
+        expect(assigns(:user)).to eq(referee1)
+        expect(assigns(:referrer)).to eq(@user)
+        expect(assigns(:referees)).to include(level_two_referee)
+      end
+
+      it "handles users with no referrer" do
+        # Create a user with no referrer
+        lonely_user = FactoryBot.create(:user, referred_by: nil)
+        lonely_user.update!(confirmed_at: Time.current)
+        
+        # Sign in as this user
+        sign_in lonely_user
+        
+        # Access their own referrals page
+        get :referrals, params: { id: lonely_user.id }
+        
+        expect(response).to be_successful
+        expect(assigns(:user)).to eq(lonely_user)
+        expect(assigns(:referrer)).to be_nil
+        expect(assigns(:referees)).to be_empty
+        expect(assigns(:level_two)).to be_empty
+      end
+
+      it "cleans up self-referrals" do
+        # Create a user that somehow referred themselves (should be prevented now)
+        self_referral_user = FactoryBot.create(:user)
+        self_referral_user.update_column(:referred_by, self_referral_user.id) # Bypass validation
+        
+        get :referrals, params: { id: self_referral_user.id }
+        expect(response).to be_successful
+        expect(assigns(:referrer)).to be_nil
+        expect(self_referral_user.reload.referred_by).to be_nil
+        expect(flash[:notice]).to eq("You can't refer yourself!")
+      end
+    end
+
+    describe "POST 'search_user'" do
+      let!(:john_doe) { FactoryBot.create(:user, name: "John Doe", email: "john@example.com", login: "johndoe") }
+      let!(:jane_smith) { FactoryBot.create(:user, name: "Jane Smith", email: "jane@example.com", login: "janesmith") }
+      
+      it "finds users by name" do
+        post :search_user, params: { search_param: "John Doe" }, xhr: true
+        expect(response).to be_successful
+        expect(assigns(:user_list)).to include(john_doe)
+        expect(assigns(:user_list)).not_to include(jane_smith)
+      end
+
+      it "finds users by email" do
+        post :search_user, params: { search_param: "jane@example.com" }, xhr: true
+        expect(response).to be_successful
+        expect(assigns(:user_list)).to include(jane_smith)
+        expect(assigns(:user_list)).not_to include(john_doe)
+      end
+
+      it "finds users by login" do
+        post :search_user, params: { search_param: "johndoe" }, xhr: true
+        expect(response).to be_successful
+        expect(assigns(:user_list)).to include(john_doe)
+        expect(assigns(:user_list)).not_to include(jane_smith)
+      end
+
+      it "returns empty array for no matches" do
+        post :search_user, params: { search_param: "nonexistent" }, xhr: true
+        expect(response).to be_successful
+        expect(assigns(:user_list)).to be_empty
+      end
+
+      it "returns empty array for empty search" do
+        post :search_user, params: { search_param: "" }, xhr: true
+        expect(response).to be_successful
+        expect(assigns(:user_list)).to be_empty
+      end
+
+      it "limits results to 5 users" do
+        6.times { FactoryBot.create(:user, name: "Test User") }
+        post :search_user, params: { search_param: "Test User" }, xhr: true
+        expect(assigns(:user_list).count).to eq(5)
+      end
+    end
+  end
+
 end

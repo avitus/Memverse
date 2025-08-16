@@ -241,6 +241,10 @@ MemverseApp::Application.routes.draw do
   get '/set_translation/:tl'      => 'profile#set_translation',         :as => 'set_translation'
   get '/set_time_alloc/:time'     => 'profile#set_time_alloc',          :as => 'set_time_alloc'
   
+  # Referrer routes
+  get '/set_referrer'             => 'profile#set_referrer',            :as => 'set_referrer'
+  get '/set_as_referrer/:id'      => 'profile#set_as_referrer',        :as => 'set_as_referrer'
+
   # Autocomplete routes for profile
   get '/profile/country_autocomplete' => 'profile#country_autocomplete', :as => 'profile_country_autocomplete'
   get '/profile/state_autocomplete'   => 'profile#state_autocomplete',   :as => 'profile_state_autocomplete'
