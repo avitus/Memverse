@@ -105,6 +105,7 @@ The following files are shared between deployments and not stored in Git:
 - `config/secrets.yml`
 - `config/secrets.yml.key`
 - `config/master.key`
+- `config/database.yml`
 
 ### Shared Directories
 The following directories persist between deployments:
@@ -113,6 +114,8 @@ The following directories persist between deployments:
 - `tmp/cache/`
 - `tmp/sockets/`
 - `public/ckeditor_assets/`
+- `public/uploads/` (Paperclip legacy files)
+- `storage/` (Active Storage files)
 
 ### Background Jobs
 After deployment, Sidekiq is automatically restarted to pick up code changes.

@@ -13,6 +13,17 @@ server 'www.memverse.com', user: 'avitus', roles: %w{app db web}
 # set :branch, 'main'  # Commented out to use default from deploy.rb
 set :rvm_ruby_version, '3.2.6'
 
+# Additional linked directories for Rails 7 and Active Storage
+set :linked_dirs, fetch(:linked_dirs, []).push(
+  'log',
+  'tmp/pids',
+  'tmp/cache',
+  'tmp/sockets',
+  'public/ckeditor_assets',
+  'public/uploads',     # Paperclip legacy
+  'storage'            # Active Storage
+)
+
 # server 'memverse.com', user: 'avitus', roles: %w{app db web}, my_property: :my_value
 # server 'example.com', user: 'deploy', roles: %w{app web}, other_property: :other_value
 # server 'db.example.com', user: 'deploy', roles: %w{db}
