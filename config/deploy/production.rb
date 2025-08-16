@@ -51,6 +51,12 @@ set :ssh_options, {
   auth_methods: %w(publickey password)
 }
 
+# Ensure correct Node.js version is used
+set :default_env, { 
+  path: "/home/avitus/.nvm/versions/node/v16.20.2/bin:$PATH",
+  NODE_ENV: 'production'
+}
+
 # RVM configuration for Rails 7
 set :rvm_type, :user
 set :rvm_custom_path, '/home/avitus/.rvm'

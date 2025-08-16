@@ -41,7 +41,11 @@ set :linked_files, fetch(:linked_files, []).push('config/secrets.yml', 'config/s
 set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'public/ckeditor_assets')
 
 # Default value for default_env is {}
-# set :default_env, { path: "/opt/ruby/bin:$PATH" }
+# Ensure Node.js from NVM is available during deployment
+set :default_env, { 
+  path: "/home/avitus/.nvm/versions/node/v16.20.2/bin:$PATH",
+  NODE_ENV: 'production'
+}
 
 # Ensure we use the correct bundler version
 set :bundle_flags, '--deployment --quiet'
