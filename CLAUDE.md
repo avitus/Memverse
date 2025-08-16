@@ -249,18 +249,26 @@ This is a Ruby on Rails 7.1 Bible memorization application with a traditional MV
    ```
 
 #### Deployment Steps
+
+**IMPORTANT**: The production branch has been changed from `master` to `main`.
+
 ```bash
-# Deploy using Capistrano
+# Deploy using Capistrano (now uses main branch)
 cap production deploy
 
 # Or manual deployment:
-git pull origin master
+git pull origin main  # Changed from master
 bundle install --deployment --without development test
 npm ci --production
 bundle exec rake db:migrate RAILS_ENV=production
 bundle exec rake assets:precompile RAILS_ENV=production
 touch tmp/restart.txt
 ```
+
+**Capistrano Configuration**: 
+- Branch is set to `main` in `config/deploy.rb`
+- All deployments will now pull from the `main` branch
+- Ensure your local `main` branch is up to date before deploying
 
 #### Post-Deployment Verification
 - Test all critical user paths (login, memorization, uploads)
