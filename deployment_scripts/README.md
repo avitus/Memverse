@@ -2,6 +2,15 @@
 
 This guide provides step-by-step instructions for deploying the Rails 7 upgrade to production using Capistrano.
 
+## 🔐 Database Configuration Update
+
+**Important**: As of Rails 7.1, we use Rails encrypted credentials for database configuration instead of a shared database.yml file. This provides:
+- Encrypted storage of sensitive data
+- Version-controlled configuration
+- No plaintext passwords on servers
+
+See `MODERN_CREDENTIALS_DEPLOYMENT.md` for setup instructions.
+
 ## 🚨 CRITICAL REQUIREMENTS
 
 Before starting, you MUST verify:
