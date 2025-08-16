@@ -91,11 +91,17 @@ namespace :deploy do
   # Rails 7 specific checks
   before :starting, :check_rails_7 do
     on roles(:app) do
-      # Verify Ruby 3.2.6
-      ruby_version = capture("cd #{repo_path} && ruby -v")
-      unless ruby_version.include?("3.2.6")
-        error "Ruby 3.2.6 required but not found!"
-        exit 1
+      # Verify Ruby 3.2.6 using RVM
+      within fetch(:rvm_custom_path, '/home/avitus/.rvm') do
+        ruby_version = capture("#{fetch(:rvm_custom_path, '/home/avitus/.rvm')}/bin/rvm current")
+        info "Current RVM Ruby: #{ruby_version}"
+        
+        unless ruby_version.include?("ruby-3.2.6")
+          error "Ruby 3.2.6 required but not found!"
+          error "Current Ruby: #{ruby_version}"
+          error "Please ensure RVM is using Ruby 3.2.6 by running: rvm use 3.2.6"
+          exit 1
+        end
       end
     end
   end
