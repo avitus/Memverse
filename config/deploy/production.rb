@@ -10,10 +10,10 @@ set :branch, 'main'
 set :rvm_ruby_version, '3.2.6'
 
 # Additional linked files for Rails 7
+# Note: database.yml is no longer linked - we use Rails credentials now
 set :linked_files, fetch(:linked_files, []).push(
   'config/secrets.yml.key',
-  'config/master.key',  # Rails 7 credentials
-  'config/database.yml' # If not in repo
+  'config/master.key'  # Rails 7 credentials (required for database password)
 )
 
 # Additional linked directories for Rails 7
