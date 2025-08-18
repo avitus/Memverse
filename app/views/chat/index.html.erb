@@ -152,6 +152,7 @@ const init = () => {
 
       // when a user goes offline, remove them from the online list
       myChat.on('$.offline.*', (data) => {
+        // Note: ChatEngine SDK still uses 'uuid' (this is different from the PubNub v7+ SDK)
         $('#people-list ul').find('#' + data.user.uuid).remove();
       });
 
@@ -208,6 +209,7 @@ const renderMessage = (message, isHistory = false) => {
     let template = userTemplate;
 
     // if I happened to send the message, use the special template for myself
+    // Note: ChatEngine SDK still uses 'uuid' (this is different from the PubNub v7+ SDK)
     if (message.sender.uuid == me.uuid) {
         template = meTemplate;
     }

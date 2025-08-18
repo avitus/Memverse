@@ -146,6 +146,63 @@ class Quiz < ApplicationRecord
     Tweet.create(news: broadcast, user_id: 1, importance: 2)  # Admin tweet => user_id = 1
   end
 
+  # Get QuizSession service instance for this quiz
+  # @return [QuizSession]
+  def quiz_session
+    @quiz_session ||= QuizSession.new(self.id)
+  end
+
+  # Get scoreboard using QuizSession service (new method)
+  # @return [Array<Hash>] Sorted scoreboard
+  def scoreboard
+    quiz_session.get_scoreboard
+  end
+
+  # Get participants using QuizSession service (new method)
+  # @return [Array<Hash>] Array of participant data
+  def participants
+    quiz_session.get_participants
+  end
+
+  # Check if quiz is currently locked
+  # @return [Boolean]
+  def locked?
+    quiz_session.quiz_locked?
+  end
+
+  # Lock quiz for exclusive access
+  # @param duration [Integer] Lock duration in seconds
+  # @return [Boolean] Success status
+  def lock!(duration = QuizSession::LOCK_TIMEOUT)
+    quiz_session.lock_quiz(duration)
+  end
+
+  # Unlock quiz
+  # @return [Boolean] Success status
+  def unlock!
+    quiz_session.unlock_quiz
+  end
+
+  # Check if quiz is in progress using QuizSession service
+  # @return [Boolean]
+  def in_progress?
+    quiz_session.quiz_in_progress?
+  end
+
+  # Set quiz status using QuizSession service
+  # @param new_status [String] Status to set
+  # @param metadata [Hash] Additional metadata
+  # @return [Boolean] Success status
+  def set_status(new_status, metadata = {})
+    quiz_session.set_quiz_status(new_status, metadata)
+  end
+
+  # Clean up all quiz session data
+  # @return [Boolean] Success status
+  def cleanup_session_data!
+    quiz_session.cleanup_quiz_data
+  end
+
   # ============= Protected below this line ==================================================================
   protected
 

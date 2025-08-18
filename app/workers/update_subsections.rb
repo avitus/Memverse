@@ -3,7 +3,7 @@ class UpdateSubsections
   include Sidekiq::Worker
   include IceCube
 
-  sidekiq_options :retry => false
+  sidekiq_options queue: :low, retry: false
 
   def perform
 

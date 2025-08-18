@@ -1,0 +1,278 @@
+<% content_for :title, "Sidekiq Health Dashboard" %>
+
+<div class="row">
+  <div class="col-md-12">
+    <h2>Sidekiq Health Dashboard</h2>
+    <p class="text-muted">Monitor background job processing, queue depths, and system health</p>
+    
+    <!-- Quick Actions -->
+    <div class="mb-3">
+      <%= link_to "Sidekiq Web UI", "/sidekiq", class: "btn btn-primary", target: "_blank" %>
+      <%= link_to "Health Check API", admin_sidekiq_health_check_path, class: "btn btn-info", target: "_blank" %>
+      <%= link_to "Metrics API", admin_sidekiq_health_metrics_path, class: "btn btn-secondary", target: "_blank" %>
+    </div>
+  </div>
+</div>
+
+<!-- System Stats Overview -->
+<div class="row mb-4">
+  <div class="col-md-3">
+    <div class="card text-center">
+      <div class="card-body">
+        <h5 class="card-title text-success"><%= @stats.processed %></h5>
+        <p class="card-text">Jobs Processed</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-center">
+      <div class="card-body">
+        <h5 class="card-title text-danger"><%= @stats.failed %></h5>
+        <p class="card-text">Jobs Failed</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-center">
+      <div class="card-body">
+        <h5 class="card-title text-primary"><%= @stats.enqueued %></h5>
+        <p class="card-text">Jobs Enqueued</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-center">
+      <div class="card-body">
+        <h5 class="card-title text-warning"><%= @stats.busy %></h5>
+        <p class="card-text">Workers Busy</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Queue Status -->
+<div class="row mb-4">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0">Queue Status</h5>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Queue</th>
+                <th>Size</th>
+                <th>Latency (seconds)</th>
+                <th>Status</th>
+                <th>Recent Jobs</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @queues.each do |queue_name, details| %>
+                <tr>
+                  <td>
+                    <span class="badge badge-<%= details[:paused] ? 'warning' : 'success' %>">
+                      <%= queue_name %>
+                    </span>
+                  </td>
+                  <td>
+                    <span class="<%= 'text-danger' if details[:size] > 10 %>">
+                      <%= details[:size] %>
+                    </span>
+                  </td>
+                  <td><%= details[:latency] %></td>
+                  <td>
+                    <% if details[:paused] %>
+                      <span class="badge badge-warning">Paused</span>
+                    <% else %>
+                      <span class="badge badge-success">Active</span>
+                    <% end %>
+                  </td>
+                  <td>
+                    <% details[:jobs].first(2).each do |job| %>
+                      <small class="d-block">
+                        <%= job[:class] %>
+                        <% if job[:retries] > 0 %>
+                          <span class="text-danger">(retries: <%= job[:retries] %>)</span>
+                        <% end %>
+                      </small>
+                    <% end %>
+                  </td>
+                  <td>
+                    <% if details[:paused] %>
+                      <%= link_to "Resume", sidekiq_toggle_queue_path(queue_name, 'resume'), 
+                          method: :post, class: "btn btn-sm btn-success" %>
+                    <% else %>
+                      <%= link_to "Pause", sidekiq_toggle_queue_path(queue_name, 'pause'), 
+                          method: :post, class: "btn btn-sm btn-warning", 
+                          confirm: "Are you sure you want to pause the #{queue_name} queue?" %>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Scheduled Jobs -->
+<div class="row mb-4">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0">Scheduled Jobs (Cron)</h5>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Class</th>
+                <th>Schedule</th>
+                <th>Status</th>
+                <th>Last Run</th>
+                <th>Next Run</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @scheduled_jobs.each do |job| %>
+                <tr>
+                  <td><%= job[:name] %></td>
+                  <td><code><%= job[:class] %></code></td>
+                  <td><code><%= job[:cron] %></code></td>
+                  <td>
+                    <% if job[:enabled] %>
+                      <span class="badge badge-success">Enabled</span>
+                    <% else %>
+                      <span class="badge badge-secondary">Disabled</span>
+                    <% end %>
+                  </td>
+                  <td>
+                    <%= job[:last_run] ? time_ago_in_words(job[:last_run]) + " ago" : "Never" %>
+                  </td>
+                  <td>
+                    <%= job[:next_run] ? "Scheduled" : "Not scheduled" %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Failed Jobs -->
+<% if @recent_failures.any? %>
+<div class="row mb-4">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Recent Failed Jobs</h5>
+        <div>
+          <%= link_to "Retry All Failed", sidekiq_retry_failed_jobs_path, 
+              method: :post, class: "btn btn-sm btn-warning",
+              confirm: "Are you sure you want to retry all failed jobs?" %>
+          <%= link_to "Clear All Failed", sidekiq_clear_failed_jobs_path, 
+              method: :post, class: "btn btn-sm btn-danger",
+              confirm: "Are you sure you want to permanently delete all failed jobs?" %>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Class</th>
+                <th>Queue</th>
+                <th>Error</th>
+                <th>Failed At</th>
+                <th>Retries</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @recent_failures.each do |failure| %>
+                <tr>
+                  <td><code><%= failure[:class] %></code></td>
+                  <td><span class="badge badge-secondary"><%= failure[:queue] %></span></td>
+                  <td>
+                    <strong><%= failure[:error_class] %></strong><br>
+                    <small class="text-muted"><%= truncate(failure[:error_message], length: 100) %></small>
+                  </td>
+                  <td>
+                    <%= time_ago_in_words(failure[:failed_at]) %> ago<br>
+                    <small class="text-muted"><%= failure[:failed_at].strftime("%Y-%m-%d %H:%M") %></small>
+                  </td>
+                  <td>
+                    <span class="<%= 'text-danger' if failure[:retries] > 5 %>">
+                      <%= failure[:retries] %>
+                    </span>
+                  </td>
+                  <td>
+                    <% if failure[:dead] %>
+                      <span class="badge badge-danger">Dead</span>
+                    <% else %>
+                      <span class="badge badge-warning">Retrying</span>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<% end %>
+
+<!-- Job Performance Metrics -->
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0">Job Performance Metrics</h5>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Job Class</th>
+                <th>Executions Today</th>
+                <th>Last Duration</th>
+                <th>Avg Duration</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @job_metrics.each do |job_class, metrics| %>
+                <tr>
+                  <td><code><%= job_class %></code></td>
+                  <td><%= metrics[:executions_today] %></td>
+                  <td><%= metrics[:last_duration] %></td>
+                  <td><%= metrics[:avg_duration] %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Auto-refresh the page every 30 seconds
+  setTimeout(function() {
+    window.location.reload();
+  }, 30000);
+</script>

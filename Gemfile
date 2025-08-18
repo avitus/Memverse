@@ -150,8 +150,8 @@ gem 'postmark-rails', '~> 0.22'                                                #
 ############################################################
 # Scheduled Tasks
 ############################################################
-gem 'sidekiq'                                                                    # Background jobs - version constraint removed for Rails 7 compatibility
-gem "sidekiq-cron", "~> 1.12.0"                                                 # Scheduler for Sidekiq
+gem 'sidekiq', '~> 7.3'                                                          # Background jobs - latest stable version
+gem "sidekiq-cron", "~> 2.0"                                                    # Scheduler for Sidekiq - major version upgrade
 gem 'ice_cube'                                                                 # For calculating next quiz
 gem 'capistrano-sidekiq'                                                        # Sidekiq integration for Capistrano
 

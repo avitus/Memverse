@@ -1,4 +1,43 @@
+# Basic configuration
 :verbose: false
 :pidfile: ./tmp/pids/sidekiq.pid
 :logfile: ./log/sidekiq.log
-:concurrency:  25
+:concurrency: 25
+
+# Queue configuration with priorities
+# Higher weight = higher priority
+# Jobs are processed in order: critical, high, default, low
+:queues:
+  - [critical, 8]    # User-facing, time-sensitive operations (live quiz)
+  - [high, 4]        # Important but not urgent (reminders, notifications)
+  - [default, 2]     # Regular background tasks
+  - [low, 1]         # Maintenance tasks, bulk operations
+
+# Dead job retention (keep for 6 months instead of default 6 months)
+:dead_timeout_in_seconds: 15552000  # 6 months
+
+# Retry configuration
+:max_retries: 25
+
+# Redis configuration
+:redis:
+  :url: <%= ENV.fetch('REDIS_URL', 'redis://127.0.0.1:6379/0') %>
+  :pool_timeout: 1
+  :size: <%= ENV.fetch('SIDEKIQ_REDIS_POOL_SIZE', 30).to_i %>
+
+# Development/Test environment overrides
+development:
+  :concurrency: 5
+  :queues:
+    - [critical, 8]
+    - [high, 4]  
+    - [default, 2]
+    - [low, 1]
+
+test:
+  :concurrency: 2
+  :queues:
+    - [critical, 1]
+    - [high, 1]
+    - [default, 1]
+    - [low, 1]

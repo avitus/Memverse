@@ -14,6 +14,16 @@ MemverseApp::Application.routes.draw do
   authenticate :user, lambda { |u| u.admin? } do
     mount Sidekiq::Web => '/sidekiq'
     get '/volunteers' => 'volunteer#index', as: 'volunteers'
+    
+    # Sidekiq health monitoring routes
+    namespace :admin do
+      get 'sidekiq_health/dashboard', to: 'sidekiq_health#dashboard', as: 'sidekiq_health_dashboard'
+      get 'sidekiq_health/health_check', to: 'sidekiq_health#health_check', as: 'sidekiq_health_check'
+      get 'sidekiq_health/metrics', to: 'sidekiq_health#metrics', as: 'sidekiq_health_metrics'
+      post 'sidekiq_health/clear_failed_jobs', to: 'sidekiq_health#clear_failed_jobs', as: 'sidekiq_clear_failed_jobs'
+      post 'sidekiq_health/retry_failed_jobs', to: 'sidekiq_health#retry_failed_jobs', as: 'sidekiq_retry_failed_jobs'
+      post 'sidekiq_health/toggle_queue/:queue_name/:action_type', to: 'sidekiq_health#toggle_queue', as: 'sidekiq_toggle_queue'
+    end
   end
 
   # Routes for A/B testing

@@ -18,6 +18,9 @@ RSpec.configure do |config|
   # config.mock_with :rr
   config.mock_with :rspec
 
+  # Add ActiveSupport time helpers for time travel in tests
+  config.include ActiveSupport::Testing::TimeHelpers
+
   # Add metadata to specs based on file location
   config.infer_spec_type_from_file_location!
 
