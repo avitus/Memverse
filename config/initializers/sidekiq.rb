@@ -46,11 +46,10 @@ Sidekiq.configure_server do |config|
   # ========================================================================
   # Server-side Middleware for Job Lifecycle Management
   # ========================================================================
+  # Note: In Sidekiq 7.x, logging middleware is included by default
+  # and Sidekiq::Middleware::Server::Logging no longer exists
   config.server_middleware do |chain|
-    # Add job execution time tracking middleware
-    chain.add Sidekiq::Middleware::Server::Logging
-    
-    # Add uniqueness middleware for server
+    # Add uniqueness middleware for server if available
     # chain.add SidekiqUniqueJobs::Middleware::Server if defined?(SidekiqUniqueJobs)
   end
   
@@ -115,22 +114,24 @@ Sidekiq.configure_server do |config|
   Rails.cache.write('sidekiq:server:last_startup', Time.current, expires_in: 1.week)
   Rails.cache.write('sidekiq:server:status', 'healthy', expires_in: 1.hour)
   
-  # Periodic health check (every 5 minutes)
-  config.periodic do |mgr|
-    # This runs in a separate thread every 30 seconds by default
-    Rails.cache.write('sidekiq:server:last_heartbeat', Time.current, expires_in: 5.minutes)
-  end
+  # Note: config.periodic was removed in Sidekiq 7.x
+  # Health checks should be implemented using a scheduled job or external monitoring
 end
 
 # ========================================================================
 # Global Sidekiq Configuration
 # ========================================================================
 
-# Set default queue for jobs that don't specify one
-Sidekiq.default_job_options = { queue: :default, retry: 3, backtrace: true }
+# Set default options for jobs
+# Note: In Sidekiq 7.x, use default_job_options= method
+Sidekiq.default_job_options = { 
+  'queue' => 'default', 
+  'retry' => 3, 
+  'backtrace' => true
+}
 
-# Configure job timeout (25 minutes for long-running jobs like quizzes)
-Sidekiq.default_job_options[:timeout] = 25.minutes.to_i
+# Note: Job timeout is not a standard Sidekiq option
+# Timeouts should be handled within the job itself or using job_options in the worker class
 
 # ========================================================================
 # Custom Logging Configuration
