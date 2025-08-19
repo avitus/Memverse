@@ -323,6 +323,10 @@ touch tmp/restart.txt
 - [ ] Gradually replace jQuery with vanilla JS
 - [ ] Implement modern build pipeline (Vite/esbuild)
 - [ ] Consider Tailwind CSS for new components
+- [ ] Replace Raphael.js/JustGage with modern alternatives:
+  - Native SVG/Canvas API for simple gauges
+  - Chart.js or D3.js for complex visualizations
+  - CSS-only gauge implementations for performance
 
 #### Phase 3: Architecture Improvements (12+ months)
 - [ ] Implement service object pattern
