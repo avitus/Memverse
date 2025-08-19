@@ -207,7 +207,7 @@ RSpec.describe VerseWebCheck, type: :worker do
     end
 
     it 'uses the default queue' do
-      expect(described_class.sidekiq_options['queue']).to eq(:default)
+      expect(described_class.sidekiq_options['queue']).to eq('default')
     end
   end
 
