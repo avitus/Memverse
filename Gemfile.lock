@@ -826,7 +826,7 @@ DEPENDENCIES
   postmark-rails (~> 0.22)
   prawn
   prawnto_2
-  pubnub
+  pubnub (~> 5.5)
   puma
   rack-utf8_sanitizer
   rails (~> 7.1.0)
