@@ -135,6 +135,11 @@ gem 'capistrano-sidekiq'                                                       #
 gem 'ckeditor', '~> 5.1'                                                       # WYSIWYG editing
 
 ############################################################
+# Voting System
+############################################################
+gem 'acts_as_votable'                                                          # Add voting to any model
+
+############################################################
 # Other Gems -- should be grouped better
 ############################################################
 # gem 'fancybox2-rails'                                                        # REMOVED: Replaced with MicroModal for video/modal displays

@@ -6,6 +6,15 @@ MemverseApp::Application.routes.draw do
 
   mount Thredded::Engine      => '/forum'
   mount Bloggity::Engine, :at => '/blog'
+  
+  # Voting routes for Thredded topics
+  resources :thredded_votes, only: [] do
+    member do
+      post 'upvote'
+      post 'downvote'
+      delete 'unvote'
+    end
+  end
   mount RailsAdmin::Engine    => '/admin', :as => 'rails_admin'
   mount Ckeditor::Engine      => '/ckeditor'
   mount JasmineRails::Engine  => '/specs' if defined?(JasmineRails)

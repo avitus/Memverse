@@ -97,6 +97,7 @@ GEM
       tzinfo (~> 2.0)
     acts-as-taggable-on (10.0.0)
       activerecord (>= 6.1, < 7.2)
+    acts_as_votable (0.14.0)
     addressable (2.8.7)
       public_suffix (>= 2.0.2, < 7.0)
     airbrussh (1.5.3)
@@ -772,6 +773,7 @@ DEPENDENCIES
   actionmailbox (~> 7.1.0)
   actiontext (~> 7.1.0)
   acts-as-taggable-on (~> 10.0)
+  acts_as_votable
   autoprefixer-rails (~> 10.4.21)
   best_in_place (~> 4.0)
   better_errors
