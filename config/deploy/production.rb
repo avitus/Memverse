@@ -46,9 +46,9 @@ set :sidekiq_pid, -> { File.join(shared_path, 'tmp', 'pids', 'sidekiq.pid') }
 
 # SSH options
 set :ssh_options, {
-  keys: [File.join(ENV["HOME"], ".ssh", "id_rsa")],
+  keys: [File.join(ENV["HOME"], ".ssh", "id_ed25519")],
   forward_agent: true,
-  auth_methods: %w(publickey password)
+  auth_methods: %w(publickey)
 }
 
 # Ensure correct Node.js version is used
