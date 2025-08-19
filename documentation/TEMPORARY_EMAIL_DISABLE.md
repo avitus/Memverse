@@ -1,18 +1,20 @@
 # Temporary Email Reminder Disablement
 
 **Date:** August 13, 2025  
+**Updated:** August 19, 2025  
 **Reason:** Email provider transition  
-**Status:** DISABLED
+**Status:** ✅ RE-ENABLED (August 19, 2025)
 
 ## What Was Changed
 
-The `SendReminders` worker has been temporarily modified to skip sending all reminder emails while maintaining user cleanup functionality.
+The `SendReminders` worker was temporarily modified to skip sending all reminder emails while the email provider transition was in progress. **As of August 19, 2025, email reminders have been re-enabled** following the successful completion of the Sendgrid → Postmark migration.
 
 ### Changes Made
 
 1. **File Modified:** `app/workers/send_reminders.rb`
-   - Added early return with feature flag at the beginning of `perform` method
-   - All email sending is bypassed
+   - ~~Added early return with feature flag at the beginning of `perform` method~~ **REMOVED**
+   - ~~All email sending is bypassed~~ **RE-ENABLED** 
+   - **August 19, 2025:** Changed `if true` to `if false` to re-enable all email sending
 
 ### How It Works
 

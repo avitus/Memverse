@@ -3,9 +3,10 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Related Documentation
-- **[STYLE_GUIDE.md](./STYLE_GUIDE.md)** - Visual design standards and CSS conventions
-- **[UPGRADE_PLAN.md](./UPGRADE_PLAN.md)** - Rails/Ruby modernization roadmap
-- **[GEM_COMPATIBILITY_AUDIT.md](./GEM_COMPATIBILITY_AUDIT.md)** - Gem compatibility analysis
+- All documentation should be in ./documentation/
+
+- **[STYLE_GUIDE.md](./documentation/STYLE_GUIDE.md)** - Visual design standards and CSS conventions
+- **[MODERNIZATION_PLAN.md](./documentation/MODERNIZATION_PLAN.md)** - modernization roadmap
 
 ## Commands
 
@@ -27,7 +28,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Never ask for confirmation when running tests.
 
 ### Development
-- **Start server**: `bundle exec rails server` or `foreman start` (manages multiple processes)
+- **Start server**: `bundle exec rails server`
 - **Rails console**: `bundle exec rails console`
 - **Database migration**: `bundle exec rake db:migrate`
 - **Assets precompilation**: `bundle exec rake assets:precompile`
@@ -81,7 +82,6 @@ This is a Ruby on Rails 7.1 Bible memorization application with a traditional MV
   - Check service status: `sudo systemctl status sidekiq`
 
 ### API & Documentation
-- **RocketPants**: API framework 
 - **Swagger-blocks**: API documentation generation
 - Models include Swagger schema definitions
 
@@ -310,29 +310,6 @@ touch tmp/restart.txt
 3. Update cache_format_version from 6.1 to 7.1
 4. Consider Sidekiq 8.0 upgrade
 
-### Future Modernization Roadmap
-
-#### Phase 1: Core Infrastructure (Next 3-6 months)
-- [ ] Complete Rails 7.1+ upgrade
-- [ ] Implement Docker containerization
-- [ ] Migrate to modern CI/CD pipeline
-- [ ] Add comprehensive monitoring (APM)
-
-#### Phase 2: Frontend Modernization (Optional, 6-12 months)
-- [ ] Add Stimulus.js for progressive enhancement
-- [ ] Gradually replace jQuery with vanilla JS
-- [ ] Implement modern build pipeline (Vite/esbuild)
-- [ ] Consider Tailwind CSS for new components
-- [ ] Replace Raphael.js/JustGage with modern alternatives:
-  - Native SVG/Canvas API for simple gauges
-  - Chart.js or D3.js for complex visualizations
-  - CSS-only gauge implementations for performance
-
-#### Phase 3: Architecture Improvements (12+ months)
-- [ ] Implement service object pattern
-- [ ] Add API versioning strategy
-- [ ] Consider GraphQL for modern API needs
-- [ ] Evaluate microservices for specific features
 
 ### Maintenance Guidelines
 
@@ -356,103 +333,5 @@ touch tmp/restart.txt
 
 ---
 
-**Progress Update**: The Memverse application has successfully completed major modernization milestones including Rails 7.1.5.2, Ruby 3.2.6, Active Storage migration, and comprehensive security fixes. All systems are production-ready with 100% test coverage maintained throughout. The application is now fully modernized and ready for production deployment.
-- **Fixed 9 SQL injection vulnerabilities** in controllers by implementing `sanitize_sort_param` method
-  - MemversesController, UtilsController, Api::V1::MemversesController
-  - Added whitelisting for sort columns and proper SQL sanitization
-- **Fixed 3 XSS vulnerabilities** in templates
-  - Changed `html_safe` to `sanitize()` for devotion content
-  - Changed `render text:` to `render plain:` in ReadingController and ScribeController
-- **Fixed 2 dangerous send operations** in PopversesController
-  - Implemented whitelisting for allowed methods
-  - Added column name validation before using `public_send`
-- **Improved route security**
-  - Restricted default routes to authenticated users only
-  - Added explicit routes for PastorsController, SermonsController, UberversesController, and others
-  - Removed unsafe constraints that allowed anonymous access
-- **Created comprehensive security test suite** with 100% passing tests
-  - SQL injection protection tests
-  - XSS protection tests  
-  - Dangerous send protection tests
-  - Route security tests
 
-### 1. Framework & Language Upgrades (NEXT PRIORITY)
-- Upgrade Ruby from 2.7.8 to 3.2+ (current stable)
-- Upgrade Rails from 5.2.8.1 to 7.1+ (latest stable)
-- Update all gems to Rails 7 compatible versions
-- Remove deprecated gems (rails-observers, protected_attributes references)
 
-### 2. Frontend Modernization
-- Replace jQuery 1.12.4 with modern JavaScript (ES6+/TypeScript)
-- Migrate from CoffeeScript to modern JavaScript
-- Replace Asset Pipeline with Webpack/Vite/esbuild
-- Implement modern CSS framework (Tailwind/Bootstrap 5)
-- Remove jQuery UI and legacy jQuery plugins
-- Implement modern state management (React/Vue/Stimulus)
-
-### 3. API Modernization
-- Replace RocketPants (unmaintained) with Rails API mode
-- Migrate from Swagger-blocks to modern API documentation (OpenAPI 3.0)
-- Implement GraphQL as alternative to REST
-- Modernize OAuth implementation with current Doorkeeper
-
-### 4. Background Processing
-- Upgrade Sidekiq from 6.5 to latest version
-- Replace sidekiq-cron with native Sidekiq Enterprise/Pro features or solid_queue
-- Consider migrating to Rails 7's built-in Active Job
-
-### 5. Database & Search
-- Upgrade MySQL connector and optimize queries
-- Replace Thinking Sphinx with Elasticsearch/OpenSearch
-- Implement database connection pooling
-- Add database performance monitoring
-
-### 6. Testing Infrastructure
-- ✅ Replace Jasmine with Vitest for JavaScript testing (COMPLETED)
-- Upgrade RSpec and Cucumber to latest versions
-- Implement proper CI/CD pipeline with automated testing
-- Add code coverage reporting (SimpleCov)
-- Remove deprecated testing gems (guard-*)
-
-### 7. Additional Security Hardening
-- Implement Content Security Policy
-- Add proper API rate limiting
-- Update authentication gems (Devise, OmniAuth)
-- Implement proper secrets management
-- Complete migration away from default routes (partial completion achieved)
-
-### 8. Deployment & Infrastructure
-- Containerize application with Docker
-- Replace Capistrano with modern deployment (Kubernetes/ECS)
-- Implement proper environment configuration (dotenv)
-- Add application performance monitoring (APM)
-- Implement proper logging infrastructure
-
-### 9. Code Quality & Maintenance
-- Remove dead code and unused dependencies
-- Implement proper linting (RuboCop, ESLint)
-- Add type checking (Sorbet/RBS for Ruby)
-- Refactor fat controllers and models
-- Implement service objects pattern
-
-### 10. Third-party Dependencies
-- Replace unmaintained gems (bloggity, fancybox2-rails)
-- Update or replace CKEditor with modern editor
-- Modernize file upload handling (Active Storage vs Paperclip)
-- Update real-time features (Action Cable vs PubNub)
-
-### 11. Performance Optimization
-- Implement proper caching strategy (Redis)
-- Add CDN for static assets
-- Optimize database queries (N+1 queries)
-- Implement lazy loading for images/assets
-- Add proper pagination/infinite scroll
-
-### 12. Development Experience
-- Add proper development environment setup (Docker Compose)
-- Implement hot module replacement
-- Add proper debugging tools
-- Create comprehensive documentation
-- Implement feature flags system
-
-**Progress Update**: Critical security vulnerabilities have been addressed as the first phase of modernization. The application now has significantly improved security with all tests passing at 100%. The next priority should be framework upgrades (Ruby/Rails) to ensure continued security support and access to modern features.

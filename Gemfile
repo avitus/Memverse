@@ -133,7 +133,6 @@ gem 'capistrano-sidekiq'                                                       #
 # Blog
 ############################################################
 gem 'ckeditor', '~> 5.1'                                                       # WYSIWYG editing
-# gem 'paperclip' # REMOVED: Migration to Active Storage completed
 
 ############################################################
 # Other Gems -- should be grouped better
@@ -171,7 +170,6 @@ end
 # DONE: Updated autoprefixer-rails to ~> 10.4.21 for Ruby 3.2 compatibility  
 # DONE: Updated redis to ~> 5.0 for better Rails 7 support
 # DONE: Updated ffi to ~> 1.16.0 for Ruby 3.2 compatibility
-# DONE: Added net-http gem for Ruby 3.2 standard library changes
 # TODO: Consider migrating from best_in_place to Stimulus/Turbo for Rails 7+
 # Add backup gem back in ... couldn't resolve nokogiri dependency to match that of Thredded
 gem "sassc-rails"

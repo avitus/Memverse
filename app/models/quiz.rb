@@ -81,6 +81,7 @@ class Quiz < ApplicationRecord
   # Hours till quiz starts
   # @return [Integer]
   def hours_till_start
+    return nil unless start_time
     return (start_time - Time.now)/3600
   end
 

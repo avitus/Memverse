@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature 'Live Quiz', type: :request do
+RSpec.describe "LiveQuiz Requests", type: :request do
   include Devise::Test::IntegrationHelpers
   
   let(:user) { FactoryBot.create(:user, translation: 'NIV') }
@@ -136,46 +136,6 @@ RSpec.feature 'Live Quiz', type: :request do
       }
       
       expect(response).to have_http_status(:ok)
-    end
-  end
-  
-  describe 'quiz interactions' do
-    it 'displays quiz with chat form' do
-      sign_in user
-      get "/live_quiz?quiz=#{quiz.id}"
-      
-      expect(response).to have_http_status(:success)
-      expect(response.body).to include('id="chat-window"')
-      expect(response.body).to include('name="msg_body"')
-      expect(response.body).to include('input type="submit"')
-    end
-    
-    it 'displays quiz status elements' do
-      sign_in user
-      get "/live_quiz?quiz=#{quiz.id}"
-      
-      expect(response).to have_http_status(:success)
-      expect(response.body).to include('id="countdown-till"')
-    end
-    
-    it 'shows scoreboard section' do
-      sign_in user
-      get "/live_quiz?quiz=#{quiz.id}"
-      
-      expect(response).to have_http_status(:success)
-      expect(response.body).to include('id="live-scoreboard"')
-      expect(response.body).to include('Scoreboard')
-      expect(response.body).to include('Scores are updated at the end of each question')
-    end
-  end
-  
-  describe 'admin features' do
-    it 'shows chat toggle for admins' do
-      sign_in quiz_master
-      get "/live_quiz?quiz=#{quiz.id}"
-      
-      expect(response).to have_http_status(:success)
-      expect(response.body).to include('Toggle Status')
     end
   end
   

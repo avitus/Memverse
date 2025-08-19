@@ -203,6 +203,7 @@ FactoryBot.define do
   factory :quiz do
     association :user, factory: :user
     name { 'Weekly Bible Knowledge' }
+    start_time { 1.hour.from_now }
   end
 
   # ==============================================================================================
