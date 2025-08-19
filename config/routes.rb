@@ -165,6 +165,7 @@ MemverseApp::Application.routes.draw do
   get '/show_all_my_verses'       => 'memverses#manage_verses'        # :as => 'manage_verses'
   post '/delete_memverses'        => 'memverses#delete_verses'
   post '/show_prompt'             => 'memverses#show_prompt',           :as => 'show_prompt'
+  post '/memverses/show_prompt'   => 'memverses#handle_verse_action'  # Redirect incorrect path to handle_verse_action
   post '/handle_verse_action'     => 'memverses#handle_verse_action',   :as => 'handle_verse_action'
   get '/reset_schedule'           => 'users#reset_schedule',            :as => 'reset_schedule'
 

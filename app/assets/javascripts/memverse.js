@@ -154,7 +154,7 @@ function checkAllFields(ref) {
         if ( totalChecked == 1 ) {
         var agree=confirm(I18n.t("js_msgs.delete_one"));
          if (agree) {
-          document.manage_verses.action = '/delete_memverses';
+          $('#manage_verses_form')[0].action = '/delete_memverses';
           return true;
          }
          else {
@@ -168,7 +168,7 @@ function checkAllFields(ref) {
         else if ( totalChecked == visibleboxLength ) {
         var agree=confirm(I18n.t("js_msgs.all_selected", {quantity: totalChecked}));
          if (agree) {
-          document.manage_verses.action = '/delete_memverses';
+          $('#manage_verses_form')[0].action = '/delete_memverses';
           return true;
          }
          else
@@ -177,7 +177,7 @@ function checkAllFields(ref) {
         else { // User is deleting between one and all of their verses. Need to alert them if some of these are invisible. This is not necessary in other cases.
         var agree=confirm(I18n.t("js_msgs.some_selected", {quantity: totalChecked}));
          if (agree) {
-          document.manage_verses.action = '/delete_memverses';
+          $('#manage_verses_form')[0].action = '/delete_memverses';
           return true;
          }
          else
@@ -194,6 +194,7 @@ function checkAllFields(ref) {
         return false;
         }
         else {
+        // Form already has the correct action (/handle_verse_action), just return true
         return true;
         }
     }
@@ -207,7 +208,7 @@ function checkAllFields(ref) {
         	return false;
         }
         else {
-			document.manage_verses.action = '/memverses/show_prompt';
+			// Don't change the action - let it go through handle_verse_action
         	return true;
         }
     }
