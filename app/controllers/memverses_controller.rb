@@ -388,7 +388,7 @@ class MemversesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   # Display prompterizations/mnemonics for single memory verse or several verses as POSTed from manage_verses
   # ----------------------------------------------------------------------------------------------------------
-  def show_prompt
+  def show_prompt(skip_render = false)
 
     @tab = "home"
     @sub = "manage"
@@ -396,7 +396,8 @@ class MemversesController < ApplicationController
     mv_ids = params[:mv]
 
     # ==== Verse IDs were passed from manage_verses or similar form ====
-    if (!mv_ids.blank?) and (params[:Prompt])
+    # Check for both :Prompt (direct form submission) and when called from handle_verse_action
+    if !mv_ids.blank?
 
       @mv_list = Memverse.includes(:verse).find(mv_ids)
       @mv_list.sort! # Sort by book. TODO: Pass paramaters from manage_verses and sort by that order...
@@ -404,7 +405,7 @@ class MemversesController < ApplicationController
       add_breadcrumb I18n.t("home_menu.My Verses"), :manage_verses_path
       add_breadcrumb I18n.t("memverses.manage_verses.show_prompt"), {:action => "show_prompt", :controller => "memverses"}
 
-    elsif (mv_ids.blank?)
+    elsif mv_ids.blank?
 
       flash[:notice] = "Please select verses using the checkboxes in the first column."
       redirect_to :action => 'manage_verses' and return
@@ -415,10 +416,13 @@ class MemversesController < ApplicationController
 
     end
 
-    respond_to do |format|
-      format.html
-      format.pdf { render :layout => false } # if params[:format] == 'pdf'
-        prawnto :filename => "Memverse.pdf", :prawn => { }
+    # Only render if not called from handle_verse_action
+    unless skip_render
+      respond_to do |format|
+        format.html
+        format.pdf { render :layout => false } # if params[:format] == 'pdf'
+          prawnto :filename => "Memverse.pdf", :prawn => { }
+      end
     end
 
   end
@@ -709,13 +713,15 @@ class MemversesController < ApplicationController
       elsif mv_ids.present?
         # Multiple verses selected - show them
         show
+        render :show
       else
         flash[:notice] = "Please select verses using the checkboxes in the first column."
         redirect_to manage_verses_path
       end
     elsif params['Prompt']
       # Show prompt for selected verses
-      show_prompt
+      show_prompt(true)  # Pass true to skip render in show_prompt
+      render :show_prompt unless performed?
     elsif params['Delete']
       # Delete selected verses
       delete_verses

@@ -44,6 +44,7 @@ RSpec.configure do |config|
   # Enable system test configuration
   config.include Capybara::DSL, type: :system
   config.include Devise::Test::IntegrationHelpers, type: :system
+  config.include Devise::Test::ControllerHelpers, type: :controller
 
   # Configure system tests to use headless Chrome
   config.before(:each, type: :system) do

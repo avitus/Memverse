@@ -15,6 +15,7 @@ FactoryBot.define do
     admin { false }
     referred_by { 0 }
     translation { nil }
+    confirmed_at { Time.now }  # Confirm the user for Devise
 
     trait :approved do
       after(:create) do |user, _|
