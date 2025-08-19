@@ -1,0 +1,222 @@
+<% page_title "Live Quiz :: " + @quiz.name %>
+
+<!-- Quiz instructions : Pop-up box -->
+<%= render partial: "instructions" %>
+
+<div class="white-box-with-margins" 
+     data-controller="live-quiz"
+     data-live-quiz-quiz-id-value="<%= @quiz.id %>"
+     data-live-quiz-user-id-value="<%= current_user.id %>"
+     data-live-quiz-user-name-value="<%= current_user.name_or_login %>"
+     data-live-quiz-user-login-value="<%= current_user.login %>"
+     data-live-quiz-translation-value="<%= current_user.translation %>"
+     data-live-quiz-num-questions-value="<%= @num_questions %>"
+     data-live-quiz-pubnub-subscribe-key-value="<%= PN.env[:subscribe_key] %>"
+     data-live-quiz-pubnub-publish-key-value="<%= PN.env[:publish_key] %>"
+     style="position:relative">
+
+	<!-- TOP QUIZ HEADER -->
+	<div id="quiz-header" class="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4 rounded-t-lg">
+		<div class="flex justify-between items-center">
+			<h1 id="quiz-name" class="text-2xl font-bold"><%= @quiz.name %></h1>
+			<div class="flex items-center space-x-4">
+				<div data-live-quiz-target="timer" class="text-xl font-mono">
+					<%= @minutes %>:<%= @seconds.to_s.rjust(2, '0') %>
+				</div>
+				<div class="quiz-button bg-white text-blue-600 px-3 py-1 rounded">
+					Participants: <span data-live-quiz-target="participantCount">0</span>
+				</div>
+			</div>
+		</div>
+		<div id="countdown-till" class="text-sm mt-2 opacity-90">
+			<!-- Status will be shown here -->
+		</div>
+	</div>
+
+	<!-- QUIZ QUESTIONS -->
+	<div id="live-quiz" class="p-6">
+		<div id="questions-answers">
+			<!-- Progress Dots -->
+			<div class="mb-6">
+				<h3 class="text-lg font-semibold mb-3">Questions</h3>
+				<div class="flex flex-wrap gap-2">
+					<% for q in 1..@num_questions %>
+						<span class="q-dot w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-sm font-medium hover:bg-gray-300 transition-colors cursor-pointer"
+						      data-live-quiz-target="questionDot"
+						      id="dot-<%= q %>">
+							<%= q %>
+						</span>
+					<% end %>
+				</div>
+			</div>
+
+			<!-- Question Display Area -->
+			<div class="space-y-4">
+				<% for q in 1..@num_questions %>
+					<div data-live-quiz-target="question"
+					     data-question-number="<%= q %>"
+					     id="question-<%= q %>" 
+					     class="question bg-gray-50 p-6 rounded-lg hidden">
+						<div class="q-msg text-sm text-gray-600 mb-2"></div>
+						<div class="q-question text-lg"></div>
+						<div data-live-quiz-target="answer" class="q-answer mt-4 p-4 bg-green-50 rounded hidden"></div>
+					</div>
+				<% end %>
+			</div>
+		</div>
+	</div>
+
+	<div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
+		<!-- SCOREBOARD -->
+		<div id="live-scoreboard" class="bg-gray-50 p-4 rounded-lg">
+			<h3 class="text-lg font-semibold mb-3">Scoreboard</h3>
+			<div data-live-quiz-target="scoreboard" id="live-quiz-scores">
+				<p class="text-sm text-gray-600">Scores are updated at the end of each question.</p>
+			</div>
+		</div>
+
+		<!-- CHAT WINDOW -->
+		<div id="chat-window" class="bg-gray-50 p-4 rounded-lg">
+			<div class="flex justify-between items-center mb-3">
+				<h3 class="text-lg font-semibold">
+					Chat (<span data-live-quiz-target="chatStatus" id="chat_status"><%= @channel.status %></span>)
+				</h3>
+				<% if can? :manage, Quiz %>
+					<%= link_to "Toggle Status", 
+					    { controller: "chat", action: "toggle_channel", channel: @channel.channel }, 
+					    remote: true,
+					    class: "text-sm text-blue-600 hover:underline" %>
+				<% end %>
+			</div>
+
+			<div data-live-quiz-target="chatArea" 
+			     id="chat-stream-narrow" 
+			     class="h-64 overflow-y-auto bg-white p-3 rounded border mb-3">
+				<!-- Chat messages will appear here -->
+			</div>
+
+			<div class="flex space-x-2">
+				<input type="text" 
+				       data-live-quiz-target="chatInput"
+				       placeholder="Type your message..." 
+				       class="flex-1 px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+				       autocomplete="off">
+				<button data-action="click->live-quiz#sendChat"
+				        class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
+					Send
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Styles for quiz elements -->
+<style>
+	.q-dot.current {
+		@apply bg-blue-500 text-white;
+	}
+	
+	.q-dot.completed {
+		@apply bg-green-500 text-white;
+	}
+	
+	.question.active {
+		@apply block;
+	}
+	
+	.question.hidden {
+		@apply hidden;
+	}
+	
+	.mcq-option {
+		@apply w-full text-left px-4 py-3 bg-white border rounded hover:bg-blue-50 transition-colors;
+	}
+	
+	.mcq-option.selected {
+		@apply bg-blue-100 border-blue-500;
+	}
+	
+	.chat-entry {
+		@apply mb-2 text-sm;
+	}
+	
+	.chat-timestamp {
+		@apply text-gray-500 mr-2;
+	}
+	
+	.chat-user {
+		@apply font-semibold mr-1;
+	}
+	
+	.chat-system .chat-user {
+		@apply text-blue-600;
+	}
+	
+	.notification {
+		@apply fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg z-50;
+		animation: slideIn 0.3s ease-out;
+	}
+	
+	.notification-success {
+		@apply bg-green-500 text-white;
+	}
+	
+	.notification-error {
+		@apply bg-red-500 text-white;
+	}
+	
+	.notification-warning {
+		@apply bg-yellow-500 text-white;
+	}
+	
+	.notification-info {
+		@apply bg-blue-500 text-white;
+	}
+	
+	@keyframes slideIn {
+		from {
+			transform: translateX(100%);
+			opacity: 0;
+		}
+		to {
+			transform: translateX(0);
+			opacity: 1;
+		}
+	}
+	
+	.answer-reveal {
+		animation: fadeIn 0.5s ease-out;
+	}
+	
+	@keyframes fadeIn {
+		from {
+			opacity: 0;
+		}
+		to {
+			opacity: 1;
+		}
+	}
+</style>
+
+<!-- Fallback to legacy JavaScript if Stimulus is not available -->
+<script type="text/javascript">
+	// Check if Stimulus is available
+	if (typeof Stimulus === 'undefined') {
+		console.log('Falling back to legacy quiz JavaScript');
+		
+		// Set global variables for legacy code
+		var memverseUserID    = "<%= current_user.id %>";
+		var memverseUserName  = "<%= current_user.name_or_login.html_safe %>";
+		var memverseUserLogin = "<%= current_user.login.html_safe %>";
+		var channel = "quiz-<%= @quiz.id %>";
+		var translation = "<%= current_user.translation %>";
+		
+		// Load legacy quiz code
+		document.addEventListener('DOMContentLoaded', function() {
+			// Initialize legacy quiz room
+			if (typeof quizRoom !== 'undefined') {
+				quizRoom.initialize('<%= @num_questions %>');
+			}
+		});
+	}
+</script>

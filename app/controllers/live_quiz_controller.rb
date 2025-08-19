@@ -17,7 +17,7 @@ class LiveQuizController < ApplicationController
     # Redirect users who haven't chosen a translation
     if current_user.translation.nil?
       flash[:notice] = "Please choose a translation and then return to the quiz."
-      redirect_to update_profile_path
+      redirect_to update_profile_path and return
     end
 
     @quiz = Quiz.find(params[:quiz] || 1 )
@@ -40,6 +40,17 @@ class LiveQuizController < ApplicationController
       @num_questions =  @quiz.quiz_questions.length
     end
 
+    # Feature flag for modern quiz interface
+    # Can be controlled via environment variable or user preference
+    use_modern_interface = ENV.fetch('USE_MODERN_QUIZ_INTERFACE', 'false') == 'true' ||
+                          params[:modern] == 'true' ||
+                          current_user.admin? && params[:modern] != 'false'
+    
+    if use_modern_interface
+      render 'live_quiz_modern'
+    else
+      render 'live_quiz'
+    end
   end
 
   #-----------------------------------------------------------------------------------------------------------
@@ -110,7 +121,7 @@ class LiveQuizController < ApplicationController
 
       render :json => {:time => "+#{hours}h +#{minutes}m +#{seconds}s"}
 
-    elsif $redis.exists("quiz-#{@quiz.id}") && status = $redis.hmget("quiz-#{@quiz.id}", "status")
+    elsif $redis.exists?("quiz-#{@quiz.id}") && status = $redis.hmget("quiz-#{@quiz.id}", "status").first
 
       render :json => {:status => status}
 

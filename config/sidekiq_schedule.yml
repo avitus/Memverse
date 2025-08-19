@@ -2,6 +2,9 @@
 
 # https://crontab.guru
 
+# IMPORTANT: These are plain Sidekiq::Worker classes, NOT ActiveJob classes
+# Do not use active_job: true or the jobs will not be enqueued
+
 # This is the main twice-weekly quiz
 # Runs Tuesday at 9am and Saturday at 3pm. Use UTC time
 schedule_knowledge_quiz_tuesday:
