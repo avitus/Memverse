@@ -109,6 +109,8 @@ GEM
       execjs (~> 2.0)
     base64 (0.3.0)
     bcrypt (3.1.20)
+    bcrypt_pbkdf (1.1.1)
+    bcrypt_pbkdf (1.1.1-arm64-darwin)
     benchmark (0.4.1)
     best_in_place (4.0.0)
       actionpack (>= 7.0)
@@ -259,6 +261,7 @@ GEM
       dry-initializer (~> 3.2)
       dry-schema (~> 1.14)
       zeitwerk (~> 2.6)
+    ed25519 (1.4.0)
     email_spec (2.3.0)
       htmlentities (~> 4.3.3)
       launchy (>= 2.1, < 4.0)
@@ -773,6 +776,7 @@ DEPENDENCIES
   actiontext (~> 7.1.0)
   acts-as-taggable-on (~> 10.0)
   autoprefixer-rails (~> 10.4.21)
+  bcrypt_pbkdf (>= 1.0, < 2.0)
   best_in_place (~> 4.0)
   better_errors
   binding_of_caller
@@ -795,6 +799,7 @@ DEPENDENCIES
   devise-encryptable
   doorkeeper
   dropbox-sdk
+  ed25519 (>= 1.2, < 2.0)
   email_spec
   factory_bot_rails
   faker

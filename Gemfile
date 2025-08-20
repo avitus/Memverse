@@ -108,6 +108,8 @@ gem 'bloggity', github: 'avitus/bloggity', branch: 'rails7-upgrade'            #
 gem 'capistrano', "~> 3.8"                                                     # Deploy with Capistrano
 gem 'capistrano-rails'                                                         # Rails-specific tasks for Capistrano
 gem 'capistrano-rvm'                                                           # RVM-specific config for Capistrano
+gem 'ed25519', '>= 1.2', '< 2.0'                                              # SSH ED25519 key support for deployment
+gem 'bcrypt_pbkdf', '>= 1.0', '< 2.0'                                         # SSH key encryption support for deployment
 gem 'sitemap_generator'                                                        # Sitemap generator
 gem 'newrelic_rpm', '>=3.3.0'                                                  # Performance monitoring
 gem "sentry-raven"                                                             # Error tracking
