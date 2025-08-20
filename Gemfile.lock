@@ -393,6 +393,8 @@ GEM
       addressable (~> 2.8)
       childprocess (~> 5.0)
       logger (~> 1.6)
+    letter_opener (1.10.0)
+      launchy (>= 2.2, < 4)
     listen (3.9.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -817,6 +819,7 @@ DEPENDENCIES
   json
   kaminari
   launchy (>= 2.0.5)
+  letter_opener
   listen (~> 3.2)
   mail (>= 2.2.15)
   mimemagic (~> 0.3.10)
