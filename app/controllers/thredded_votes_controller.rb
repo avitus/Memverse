@@ -4,25 +4,31 @@ class ThreddedVotesController < ApplicationController
 
   def upvote
     @topic.upvote_by current_user
+    @topic.reload
     respond_to do |format|
-      format.html { redirect_back(fallback_location: thredded.topic_path(@topic)) }
+      format.html { redirect_back(fallback_location: thredded.messageboard_topic_path(@topic.messageboard, @topic)) }
       format.json { render json: { score: @topic.vote_score, voted: 'up' } }
+      format.js { render json: { score: @topic.vote_score, voted: 'up' }, content_type: 'application/json' }
     end
   end
 
   def downvote
     @topic.downvote_by current_user
+    @topic.reload
     respond_to do |format|
-      format.html { redirect_back(fallback_location: thredded.topic_path(@topic)) }
+      format.html { redirect_back(fallback_location: thredded.messageboard_topic_path(@topic.messageboard, @topic)) }
       format.json { render json: { score: @topic.vote_score, voted: 'down' } }
+      format.js { render json: { score: @topic.vote_score, voted: 'down' }, content_type: 'application/json' }
     end
   end
 
   def unvote
     @topic.unvote_by current_user
+    @topic.reload
     respond_to do |format|
-      format.html { redirect_back(fallback_location: thredded.topic_path(@topic)) }
+      format.html { redirect_back(fallback_location: thredded.messageboard_topic_path(@topic.messageboard, @topic)) }
       format.json { render json: { score: @topic.vote_score, voted: nil } }
+      format.js { render json: { score: @topic.vote_score, voted: nil }, content_type: 'application/json' }
     end
   end
 

@@ -104,6 +104,7 @@ This document tracks the technical modernization progress of the Memverse applic
 - [ ] Replace Thinking Sphinx with Elasticsearch/OpenSearch
 - [ ] Implement database connection pooling
 - [ ] Add database performance monitoring
+- [ ] Upgrade database character set from utf8mb3 to utf8mb4 (emoji support)
 
 ### Deployment & Infrastructure
 - [x] Maintain Capistrano deployment (v3.19.2)

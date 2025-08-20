@@ -29,6 +29,15 @@ Instead of Uservoice, we now use the existing Thredded forum with added voting f
    rake feedback:setup
    ```
 
+## Post-Setup Steps
+
+1. **Create a Welcome Topic** (optional but recommended)
+   - Go to `/forum/feedback`
+   - Click "New Topic" 
+   - Create a pinned topic explaining how the feedback system works
+   - You can use the content from `FEEDBACK_WELCOME_TOPIC.md`
+   - **Important**: Topics must be created through the web interface to ensure they have the required initial post
+
 ## How It Works
 
 ### For Users
@@ -116,3 +125,11 @@ $.ajax({
 - Archive completed feature requests
 - Use Thredded's built-in moderation for spam control
 - Consider pinning important topics or roadmap updates
+
+## Technical Notes
+
+### Topic Creation Requirements
+Thredded requires all topics to have at least one post. Topics created programmatically without posts will cause errors when viewed. Always create topics through the web interface or ensure you create an initial post when creating topics via code.
+
+### Database Character Set Limitation  
+The current MySQL database uses `utf8mb3` character set which doesn't support 4-byte Unicode characters (emojis). This is noted in the modernization plan for future upgrade to `utf8mb4`.

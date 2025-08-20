@@ -1,0 +1,71 @@
+# Custom array class for maintaining Kaminari pagination with sorted topics
+class SortedTopicArray < Array
+  attr_accessor :current_page, :total_pages, :limit_value, :total_count
+  
+  def current_page
+    @current_page || 1
+  end
+  
+  def total_pages
+    @total_pages || 1
+  end
+  
+  def limit_value
+    @limit_value || Thredded.topics_per_page
+  end
+  
+  def total_count
+    @total_count || size
+  end
+  
+  def last_page?
+    current_page >= total_pages
+  end
+  
+  def first_page?
+    current_page == 1
+  end
+end
+
+# Add voting sort functionality to Thredded topics controller
+Rails.application.config.to_prepare do
+  if defined?(Thredded::TopicsController)
+    Thredded::TopicsController.class_eval do
+      # Store original index method
+      alias_method :original_index, :index unless method_defined?(:original_index)
+      
+      def index
+        # Only apply vote sorting on feedback board
+        if params[:sort] == 'votes' && params[:messageboard_id] == 'feedback'
+          # Call original method first to set up authorization and base variables
+          original_index
+          
+          # Now override @topics with vote-sorted version
+          if @topics.present?
+            # Get all topic IDs and their vote scores
+            topics_array = @topics.to_a
+            topics_with_scores = topics_array.map { |topic_view|
+              topic = topic_view.is_a?(Thredded::TopicView) ? topic_view.instance_variable_get(:@topic) : topic_view
+              [topic_view, topic.vote_score]
+            }
+            
+            # Sort by vote score (highest first)
+            sorted_topics = topics_with_scores.sort_by { |_, score| -score }.map(&:first)
+            
+            # Replace @topics while maintaining pagination metadata
+            sorted_array = SortedTopicArray.new(sorted_topics)
+            sorted_array.current_page = @topics.current_page if @topics.respond_to?(:current_page)
+            sorted_array.total_pages = @topics.total_pages if @topics.respond_to?(:total_pages)
+            sorted_array.limit_value = @topics.limit_value if @topics.respond_to?(:limit_value)
+            sorted_array.total_count = @topics.total_count if @topics.respond_to?(:total_count)
+            
+            @topics = sorted_array
+          end
+        else
+          # Call original index for non-vote sorting
+          original_index
+        end
+      end
+    end
+  end
+end

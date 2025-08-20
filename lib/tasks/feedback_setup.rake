@@ -26,63 +26,11 @@ namespace :feedback do
       puts "✓ Created category: #{category.name}"
     end
     
-    # Create a welcome/instruction topic
-    admin = User.where(admin: true).first
-    if admin
-      welcome_topic = feedback_board.topics.find_or_create_by(
-        slug: 'how-to-use-feedback-board'
-      ) do |topic|
-        topic.user = admin
-        topic.title = "📌 How to Use the Feedback Board"
-        topic.locked = true
-        topic.sticky = true
-      end
-      
-      if welcome_topic.posts.empty?
-        Thredded::Post.create!(
-          topic: welcome_topic,
-          user: admin,
-          content: <<~CONTENT
-            Welcome to the Memverse Feedback & Feature Requests board!
-            
-            This is where you can:
-            - **Suggest new features** for Memverse
-            - **Report bugs** you encounter
-            - **Vote on ideas** from other users
-            
-            ## How Voting Works
-            
-            Each topic can be voted up or down. The most popular suggestions will be given priority consideration.
-            
-            - Click ▲ to upvote a suggestion you support
-            - Click ▼ to downvote if you don't think it's needed
-            - You can remove your vote at any time
-            
-            ## Before Posting
-            
-            1. **Search first** - someone may have already suggested your idea
-            2. **Be specific** - provide details and examples
-            3. **One idea per topic** - this makes voting more effective
-            4. **Choose the right category**:
-               - **Feature Request**: New functionality
-               - **Bug Report**: Something broken
-               - **Improvement**: Enhance existing features
-            
-            ## What Happens Next?
-            
-            We regularly review the highest-voted suggestions. When we decide to implement something, we'll update the topic with our plans.
-            
-            Thank you for helping make Memverse better! 🙏
-          CONTENT
-        )
-      end
-      
-      puts "✓ Created welcome topic"
-    else
-      puts "⚠ No admin user found - skipping welcome topic"
-    end
+    # Skip welcome topic creation for now - can be added manually later
+    puts "\n[INFO] Skipping welcome topic creation due to Thredded validation requirements"
+    puts "       You can manually create a welcome topic through the web interface"
     
-    puts "\n✅ Feedback messageboard setup complete!"
+    puts "\n[SUCCESS] Feedback messageboard setup complete!"
     puts "\nTo integrate voting into your Thredded views:"
     puts "1. Run: bundle install"
     puts "2. Run: rails generate acts_as_votable:migration"

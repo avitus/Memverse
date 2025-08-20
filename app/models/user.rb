@@ -266,6 +266,7 @@ class User < ApplicationRecord
 
   # Record who tagged which verse - not working at the moment
   acts_as_tagger
+  acts_as_voter
 
   # Associations for bloggity
   has_many :blog_posts, :foreign_key => "posted_by_id", :class_name => 'Bloggity::BlogPost'

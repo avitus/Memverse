@@ -1,6 +1,8 @@
 module ThreddedVotingHelper
   def thredded_topic_voting(topic)
-    render partial: 'shared/thredded_voting', locals: { topic: topic }
+    # Handle both TopicView and Topic objects
+    actual_topic = topic.is_a?(Thredded::Topic) ? topic : topic.instance_variable_get(:@topic)
+    render partial: 'shared/thredded_voting', locals: { topic: actual_topic }
   end
   
   def feedback_category_label(topic)
@@ -22,7 +24,9 @@ module ThreddedVotingHelper
     content_tag :span, category_name.capitalize, class: "label #{label_class}", style: "margin-right: 10px;"
   end
   
-  def topic_vote_count_badge(topic)
+  def topic_vote_count_badge(topic_or_view)
+    # Handle both TopicView and Topic objects
+    topic = topic_or_view.is_a?(Thredded::Topic) ? topic_or_view : topic_or_view.instance_variable_get(:@topic)
     score = topic.vote_score
     return if score == 0
     

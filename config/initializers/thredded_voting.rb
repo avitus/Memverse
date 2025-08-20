@@ -18,9 +18,12 @@ Rails.application.config.to_prepare do
       # Get vote direction for user
       def vote_direction_by(user)
         return nil unless user
-        return 'up' if user.voted_up_on?(self)
-        return 'down' if user.voted_down_on?(self)
-        nil
+        
+        if user.voted_for?(self)
+          user.voted_as_when_voted_for(self) ? 'up' : 'down'
+        else
+          nil
+        end
       end
     end
   end
