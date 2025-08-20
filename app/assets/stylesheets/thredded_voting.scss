@@ -1,0 +1,88 @@
+// Voting styles for Thredded topics
+
+// Vote score badge
+.badge {
+  display: inline-block;
+  margin-left: 10px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.85em;
+  font-weight: bold;
+  
+  &.badge-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+  
+  &.badge-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+  }
+}
+
+// Voting UI component
+.thredded-voting {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 15px;
+  padding: 5px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  
+  .vote-button {
+    text-decoration: none;
+    color: #999;
+    padding: 2px 8px;
+    font-size: 18px;
+    transition: color 0.2s;
+    
+    &:hover {
+      color: #333;
+      text-decoration: none;
+    }
+    
+    &.voted {
+      color: #4CAF50;
+      font-weight: bold;
+      
+      &.downvote {
+        color: #f44336;
+      }
+    }
+  }
+  
+  .vote-score {
+    margin: 0 10px;
+    font-weight: bold;
+    font-size: 16px;
+    min-width: 30px;
+    text-align: center;
+  }
+  
+  .remove-vote-link {
+    color: #666;
+    text-decoration: none;
+    font-size: 0.8em;
+    margin-left: 10px;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  
+  .login-to-vote {
+    font-size: 0.8em;
+    color: #666;
+    margin-left: 10px;
+  }
+}
+
+// Voting in topic header
+.thredded--topic-header {
+  .thredded-voting {
+    float: right;
+    margin-top: 5px;
+  }
+}

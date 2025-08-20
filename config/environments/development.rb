@@ -42,15 +42,16 @@ Rails.application.configure do
 
   config.action_mailer.perform_caching = false
 
-  # Configure email delivery in development - using test mode to avoid sending real emails
-  # To use Postmark, set USE_POSTMARK=true environment variable
-  if ENV['USE_POSTMARK'] == 'true'
+  # Configure email delivery in development
+  # Default: Use letter_opener to preview emails in browser
+  # For Postmark testing: Set USE_POSTMARK=true AND REAL_EMAIL_TEST=true
+  if ENV['USE_POSTMARK'] == 'true' && ENV['REAL_EMAIL_TEST'] == 'true'
     config.action_mailer.delivery_method = :postmark
     config.action_mailer.postmark_settings = {
       api_token: ENV['POSTMARK_API_TOKEN'] || (Rails.application.credentials.dig(:postmark, :api_token) rescue nil)
     }
   else
-    config.action_mailer.delivery_method = :test
+    config.action_mailer.delivery_method = :letter_opener
   end
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
 

@@ -26,6 +26,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Always run tests without requiring confirmation from the user
 - Cucumber, Rspec, and Vitest tests should always be run without user intervention
 - Never ask for confirmation when running tests.
+- Do not distinguish between critical tests and other, less important tests. All tests must pass all the time.
 
 ### Development
 - **Start server**: `bundle exec rails server`

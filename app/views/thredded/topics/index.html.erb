@@ -1,0 +1,39 @@
+<% content_for :thredded_page_title, messageboard.name %>
+<% content_for :thredded_page_id, 'thredded--topics-index' %>
+<% content_for :thredded_breadcrumbs, render('thredded/shared/breadcrumbs') %>
+
+<%= thredded_page do %>
+  <%= define_svg_icons('thredded/follow.svg', 'thredded/unfollow.svg') %>
+
+  <% if messageboard.slug == 'feedback' %>
+    <div class="thredded--topics-sorting" style="text-align: right; margin-bottom: 20px;">
+      <label style="margin-right: 10px;">Sort by:</label>
+      <%= link_to "Most Recent", thredded.messageboard_topics_path(messageboard), 
+          class: "btn btn-sm #{params[:sort] != 'votes' ? 'btn-primary' : 'btn-default'}" %>
+      <%= link_to "Most Votes", thredded.messageboard_topics_path(messageboard, sort: 'votes'), 
+          class: "btn btn-sm #{params[:sort] == 'votes' ? 'btn-primary' : 'btn-default'}" %>
+    </div>
+  <% end %>
+
+  <%= content_tag :section,
+                  class: 'thredded--main-section thredded--topics',
+                  'data-thredded-topics' => true,
+                  'data-thredded-topic-posts-per-page' => Thredded.posts_per_page do %>
+    <%= render 'thredded/topics/form',
+               topic: @new_topic,
+               css_class: 'thredded--is-compact',
+               placeholder: t('thredded.topics.form.title_placeholder_start') if @new_topic %>
+    <%= render partial: 'thredded/topics/topic',
+               collection: @topics,
+               locals: {
+                   sticky_topics_divider: true,
+                   topics: @topics
+               } %>
+  <% end %>
+
+  <footer class="thredded--pagination-bottom">
+    <%= paginate @topics %>
+  </footer>
+
+  <%= render 'thredded/messageboards/messageboard_actions', messageboard: messageboard %>
+<% end %>

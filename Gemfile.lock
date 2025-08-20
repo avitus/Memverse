@@ -97,6 +97,7 @@ GEM
       tzinfo (~> 2.0)
     acts-as-taggable-on (10.0.0)
       activerecord (>= 6.1, < 7.2)
+    acts_as_votable (0.14.0)
     addressable (2.8.7)
       public_suffix (>= 2.0.2, < 7.0)
     airbrussh (1.5.3)
@@ -395,6 +396,8 @@ GEM
       addressable (~> 2.8)
       childprocess (~> 5.0)
       logger (~> 1.6)
+    letter_opener (1.10.0)
+      launchy (>= 2.2, < 4)
     listen (3.9.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -775,6 +778,7 @@ DEPENDENCIES
   actionmailbox (~> 7.1.0)
   actiontext (~> 7.1.0)
   acts-as-taggable-on (~> 10.0)
+  acts_as_votable
   autoprefixer-rails (~> 10.4.21)
   bcrypt_pbkdf (>= 1.0, < 2.0)
   best_in_place (~> 4.0)
@@ -820,6 +824,7 @@ DEPENDENCIES
   json
   kaminari
   launchy (>= 2.0.5)
+  letter_opener
   listen (~> 3.2)
   mail (>= 2.2.15)
   mimemagic (~> 0.3.10)

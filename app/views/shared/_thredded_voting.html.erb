@@ -1,0 +1,88 @@
+<div class="thredded-voting" data-topic-id="<%= topic.id %>">
+  <% if user_signed_in? %>
+    <% vote_direction = topic.vote_direction_by(current_user) %>
+    
+    <%= link_to main_app.upvote_thredded_vote_path(topic), 
+        class: "vote-button upvote #{vote_direction == 'up' ? 'voted' : ''}",
+        data: { action: 'upvote' } do %>
+      <span class="vote-arrow">▲</span>
+    <% end %>
+    
+    <span class="vote-score"><%= topic.vote_score %></span>
+    
+    <%= link_to main_app.downvote_thredded_vote_path(topic), 
+        class: "vote-button downvote #{vote_direction == 'down' ? 'voted' : ''}",
+        data: { action: 'downvote' } do %>
+      <span class="vote-arrow">▼</span>
+    <% end %>
+    
+    <% if vote_direction.present? %>
+      <%= link_to "(remove vote)", main_app.unvote_thredded_vote_path(topic), 
+          class: "remove-vote-link",
+          data: { action: 'unvote' },
+          style: "font-size: 0.8em; margin-left: 10px;" %>
+    <% end %>
+  <% else %>
+    <span class="vote-score"><%= topic.vote_score %></span>
+    <span class="login-to-vote" style="font-size: 0.8em; color: #666; margin-left: 10px;">
+      <%= link_to "Login to vote", main_app.new_user_session_path %>
+    </span>
+  <% end %>
+</div>
+
+<script>
+$(document).ready(function() {
+  // Handle voting button clicks
+  $(document).on('click', '.thredded-voting a.vote-button, .thredded-voting a.remove-vote-link', function(e) {
+    e.preventDefault();
+    
+    var link = $(this);
+    var votingDiv = link.closest('.thredded-voting');
+    var url = link.attr('href');
+    var action = link.data('action');
+    var method = 'POST';
+    
+    if (action === 'unvote') {
+      method = 'DELETE';
+    }
+    
+    $.ajax({
+      url: url,
+      type: method,
+      dataType: 'json',
+      headers: {
+        'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content'),
+        'Accept': 'application/json'
+      },
+      success: function(data) {
+        // Update score
+        votingDiv.find('.vote-score').text(data.score);
+        
+        // Update vote button states
+        votingDiv.find('.vote-button').removeClass('voted');
+        if (data.voted === 'up') {
+          votingDiv.find('.upvote').addClass('voted');
+        } else if (data.voted === 'down') {
+          votingDiv.find('.downvote').addClass('voted');
+        }
+        
+        // Update remove vote link
+        var removeLink = votingDiv.find('.remove-vote-link');
+        if (data.voted) {
+          if (removeLink.length === 0) {
+            var topicId = votingDiv.data('topic-id');
+            var unvoteLink = $('<a href="/thredded_votes/' + topicId + '/unvote" class="remove-vote-link" style="font-size: 0.8em; margin-left: 10px;" data-action="unvote">(remove vote)</a>');
+            votingDiv.append(' ').append(unvoteLink);
+          }
+        } else {
+          removeLink.remove();
+        }
+      },
+      error: function(xhr, status, error) {
+        console.error('Voting error:', error);
+        alert('There was an error processing your vote. Please try again.');
+      }
+    });
+  });
+});
+</script>

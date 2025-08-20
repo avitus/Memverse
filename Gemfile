@@ -18,6 +18,7 @@ group :development do
   gem 'spring', '~> 2.1'                                        # Application preloader for Rails 6 compatibility
   gem 'listen', '~> 3.2'                                        # File system change monitoring for Rails 6
   gem 'brakeman', :require => false                             # Scan for security vulnerabilities
+  gem 'letter_opener'                                           # Preview email in development browser
 end
 
 group :development, :test do
@@ -135,6 +136,11 @@ gem 'capistrano-sidekiq'                                                       #
 # Blog
 ############################################################
 gem 'ckeditor', '~> 5.1'                                                       # WYSIWYG editing
+
+############################################################
+# Voting System
+############################################################
+gem 'acts_as_votable'                                                          # Add voting to any model
 
 ############################################################
 # Other Gems -- should be grouped better
