@@ -248,6 +248,72 @@ section.thredded--main-section {
   padding: 1em 4em;
 }
 
+/*========== Semantic HTML Structure Support ==========*/
+
+// Support the new semantic structure while maintaining backwards compatibility
+.thredded--topics--topic {
+  // Header section containing meta info and title
+  .thredded--topics--header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 1rem;
+    
+    .thredded--topics--meta {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      order: 2; // Move meta to the right
+      margin-left: auto;
+    }
+    
+    .thredded--topics--title {
+      order: 1; // Keep title on the left
+      flex: 1 1 auto;
+      margin: 0; // Reset h3 default margin
+      font-size: 1.2rem; // Appropriate size for h3
+    }
+    
+    .thredded--topics--vote-badge {
+      order: 3;
+    }
+  }
+  
+  // Categories navigation
+  nav.thredded--topics--categories {
+    margin: 0.5rem 0;
+    
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+  }
+  
+  // Footer section with metadata
+  .thredded--topics--footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    
+    .thredded--topics--updated-by {
+      display: flex;
+      gap: 0.5rem;
+      
+      time {
+        color: #666;
+      }
+    }
+    
+    .thredded--topics--moderation-state {
+      margin-top: 0.5rem;
+      width: 100%;
+    }
+  }
+}
+
 
 
 

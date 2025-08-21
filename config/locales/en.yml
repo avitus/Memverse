@@ -32,6 +32,16 @@
 en:
   hello: "Hello world"
   
+  thredded:
+    topics:
+      post_count:
+        one: "%{count} post"
+        other: "%{count} posts"
+      followed: "Following this topic"
+      not_followed: "Not following this topic"
+      votes: "Topic votes"
+      categories: "Topic categories"
+  
   menu:
     home: "Home"
     review: "Review"

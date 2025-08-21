@@ -7,48 +7,63 @@
                     unread: !topic.read? || nil,
                     followed: topic.followed? || nil
                 } do %>
-  <div class="thredded--topics--posts-count"><%= topic.posts_count %></div>
+  <header class="thredded--topics--header">
+    <div class="thredded--topics--meta">
+      <span class="thredded--topics--posts-count" aria-label="<%= t('thredded.topics.post_count', count: topic.posts_count) %>">
+        <%= topic.posts_count %>
+      </span>
 
-  <div class="thredded--topics--follow-info" title="<%= topic_follow_reason_text topic.follow_reason %>">
-    <% if topic.followed? %>
-      <%= shared_inline_svg "thredded/follow.svg", class: "thredded--topics--follow-icon", role: "img" %>
-    <% else %>
-      <%= shared_inline_svg "thredded/unfollow.svg", class: "thredded--topics--follow-icon", role: "img" %>
-    <% end %>
-  </div>
-
-  <h1 class="thredded--topics--title">
-    <%= link_to topic.title, topic.path %>
-  </h1>
-  <% if topic.messageboard_id && Thredded::Messageboard.find_by(id: topic.messageboard_id)&.slug == 'feedback' %>
-    <div class="thredded--topics--vote-badge">
-      <%= topic_vote_count_badge(topic) %>
+      <div class="thredded--topics--follow-info" title="<%= topic_follow_reason_text topic.follow_reason %>">
+        <% if topic.followed? %>
+          <%= shared_inline_svg "thredded/follow.svg", class: "thredded--topics--follow-icon", role: "img", 'aria-label': t('thredded.topics.followed') %>
+        <% else %>
+          <%= shared_inline_svg "thredded/unfollow.svg", class: "thredded--topics--follow-icon", role: "img", 'aria-label': t('thredded.topics.not_followed') %>
+        <% end %>
+      </div>
     </div>
-  <% end %>
+
+    <h3 class="thredded--topics--title">
+      <%= link_to topic.title, topic.path %>
+    </h3>
+
+    <% if topic.messageboard_id && Thredded::Messageboard.find_by(id: topic.messageboard_id)&.slug == 'feedback' %>
+      <aside class="thredded--topics--vote-badge" aria-label="<%= t('thredded.topics.votes') %>">
+        <%= topic_vote_count_badge(topic) %>
+      </aside>
+    <% end %>
+  </header>
 
   <% if topic.categories.any? %>
-    <ul class="thredded--topics--categories">
-      <%= render topic.categories %>
-    </ul>
+    <nav class="thredded--topics--categories" aria-label="<%= t('thredded.topics.categories') %>">
+      <ul>
+        <%= render topic.categories %>
+      </ul>
+    </nav>
   <% end %>
 
-  <cite class="thredded--topics--updated-by">
-    <%= time_ago topic.last_post_at %>
-    <%= user_link topic.last_user %>
-  </cite>
+  <footer class="thredded--topics--footer">
+    <div class="thredded--topics--updated-by">
+      <time datetime="<%= topic.last_post_at.iso8601 %>">
+        <%= time_ago topic.last_post_at %>
+      </time>
+      <span class="thredded--topics--author">
+        <%= user_link topic.last_user %>
+      </span>
+    </div>
 
-  <% if local_assigns[:show_messageboard] %>
-    <span class="thredded--topics--messageboard">
-      <%= t 'thredded.topics.in_messageboard_html',
-            messageboard_link: link_to(topic.messageboard_name, topic.messageboard_path) %>
-    </span>
-  <% end %>
+    <% if local_assigns[:show_messageboard] %>
+      <div class="thredded--topics--messageboard">
+        <%= t 'thredded.topics.in_messageboard_html',
+              messageboard_link: link_to(topic.messageboard_name, topic.messageboard_path) %>
+      </div>
+    <% end %>
 
-  <% if topic.blocked? && topic.can_moderate? %>
-    <span class="thredded--topics--moderation-state thredded--alert thredded--alert-danger">
-      <%= render 'thredded/shared/content_moderation_blocked_state', moderation_record: topic.last_moderation_record %>
-    </span>
-  <% end %>
+    <% if topic.blocked? && topic.can_moderate? %>
+      <div class="thredded--topics--moderation-state thredded--alert thredded--alert-danger" role="alert">
+        <%= render 'thredded/shared/content_moderation_blocked_state', moderation_record: topic.last_moderation_record %>
+      </div>
+    <% end %>
+  </footer>
 <% end %>
 
 <% if local_assigns[:sticky_topics_divider] &&
