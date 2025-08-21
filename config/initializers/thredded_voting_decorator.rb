@@ -50,8 +50,19 @@ Rails.application.config.to_prepare do
             }
             
             if params[:sort] == 'votes'
-              # Explicit vote sorting - strictly by score descending
-              sorted_topics = topics_with_scores.sort_by { |_, score, _| -score }.map(&:first)
+              # Explicit vote sorting - topics with any votes first (by score desc), then topics with no votes (by recency)
+              sorted_topics = topics_with_scores.sort_by { |topic_view, score, updated_at| 
+                topic = topic_view.is_a?(Thredded::TopicView) ? topic_view.instance_variable_get(:@topic) : topic_view
+                total_votes = topic.get_upvotes.size + topic.get_downvotes.size
+                
+                if total_votes > 0
+                  # Has votes: group 0, sort by score desc
+                  [0, -score]
+                else  
+                  # No votes: group 1, sort by recency desc
+                  [1, -updated_at.to_i]
+                end
+              }.map(&:first)
             else
               # Default feedback board sorting - positive votes first, zero votes by recency, then negative votes
               sorted_topics = topics_with_scores.sort_by { |_, score, updated_at| 

@@ -233,7 +233,7 @@
                 <tbody>
                   <% @memverses.each do |memverse| %>
                     <tr>
-                      <td><%= memverse.verse.reference if memverse.verse %></td>
+                      <td><%= memverse.verse.ref if memverse.verse %></td>
                       <td>
                         <span class="badge bg-<%= memverse.status == 'Memorized' ? 'success' : 'primary' %>">
                           <%= memverse.status %>

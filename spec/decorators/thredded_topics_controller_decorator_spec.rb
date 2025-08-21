@@ -56,13 +56,20 @@ RSpec.describe "Thredded Topics Controller Decorator", type: :request do
       expect(response).to be_successful
       body = response.body
       
-      # Topics should appear in order of vote score
-      popular_index = body.index("Popular")
-      neutral_index = body.index("Neutral") 
-      unpopular_index = body.index("Unpopular")
+      # Topics should appear in order of engagement (topics with votes first, then by score)
+      popular_index = body.index("Popular")       # 5 votes, score +5
+      controversial_index = body.index("Controversial") # 6 votes, score 0  
+      unpopular_index = body.index("Unpopular")   # 2 votes, score -2
+      neutral_index = body.index("Neutral")       # 0 votes, score 0
       
+      # Topics with votes should come before topics without votes
       expect(popular_index).to be < neutral_index
-      expect(neutral_index).to be < unpopular_index
+      expect(controversial_index).to be < neutral_index  
+      expect(unpopular_index).to be < neutral_index
+      
+      # Among topics with votes, sort by score descending
+      expect(popular_index).to be < controversial_index
+      expect(controversial_index).to be < unpopular_index
     end
     
     it "uses default sorting when sort parameter is absent" do

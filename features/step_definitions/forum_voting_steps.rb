@@ -163,6 +163,7 @@ When('I visit the general discussion board') do
 end
 
 When('I visit the topic {string}') do |topic_title|
+  @current_topic_title = topic_title  # Store for potential re-navigation
   topic = Thredded::Topic.find_by!(title: topic_title)
   
   # For JavaScript tests, navigate through the forum properly
@@ -214,53 +215,190 @@ When('I visit the topic {string} in the general board') do |topic_title|
 end
 
 When('I click the upvote button') do
-  # For JavaScript tests, ensure we're authenticated before looking for voting buttons
+  # For JavaScript tests, ensure we're authenticated and voting interface is available
   if Capybara.current_driver != :rack_test
-    # If we see "Login to vote", the session is lost - need to re-authenticate
-    if page.has_content?('Login to vote')
-      # Re-establish authentication by signing in again
-      if @current_user
-        step %{I sign in as "#{@current_user.email}/password123"}
-        # Wait for authentication to be established
-        expect(page).to have_content('Logout', wait: 10)
-        # Navigate back to the current page
-        page.refresh
-        sleep 3  # Give more time for the voting interface to render
+    # Check authentication state multiple times with retries
+    max_retries = 3
+    retries = 0
+    
+    while retries < max_retries
+      # Check if we're authenticated
+      if page.has_content?('Login to vote', wait: 2) || !page.has_content?('Logout', wait: 2)
+        # Session may be lost, re-authenticate
+        if @current_user
+          puts "Re-authenticating user #{@current_user.email} (attempt #{retries + 1})"
+          visit '/users/sign_in'
+          fill_in 'user[email]', with: @current_user.email
+          fill_in 'user[password]', with: 'password123'
+          # Try different button texts that might exist
+          if page.has_button?('Sign in')
+            click_button 'Sign in'
+          elsif page.has_button?('Log in')
+            click_button 'Log in'
+          elsif page.has_button?('Login')
+            click_button 'Login'
+          else
+            click_button 'commit'  # Default form submit
+          end
+          
+          # Wait for authentication to be established
+          expect(page).to have_content('Logout', wait: 15)
+          sleep 2
+          
+          # Navigate back to the current page if needed
+          unless current_url.include?('/topics/')
+            # We need to get back to the topic page
+            topic_title = @current_topic_title if @current_topic_title
+            if topic_title
+              step %{I visit the topic "#{topic_title}"}
+            else
+              page.refresh
+              sleep 3
+            end
+          else
+            page.refresh
+            sleep 3
+          end
+        else
+          raise "No current user available to re-authenticate"
+        end
       else
-        raise "No current user available to re-authenticate"
+        # We appear to be authenticated, break out of retry loop
+        break
+      end
+      
+      retries += 1
+    end
+    
+    # Final authentication check
+    expect(page).to have_content('Logout', wait: 10)
+    
+    # Wait for the voting interface to load with retries
+    voting_interface_found = false
+    3.times do |attempt|
+      if page.has_css?('.thredded-voting', wait: 5)
+        if page.has_css?('.vote-button.upvote', wait: 5)
+          voting_interface_found = true
+          break
+        else
+          puts "Voting interface found but upvote button missing (attempt #{attempt + 1})"
+          sleep 2
+          page.refresh
+          sleep 3
+        end
+      else
+        puts "Voting interface not found (attempt #{attempt + 1})"
+        sleep 2
+        page.refresh
+        sleep 3
       end
     end
     
-    # Verify we're authenticated
-    expect(page).to have_content('Logout', wait: 10)
+    unless voting_interface_found
+      puts "Page content: #{page.body[0..1000]}"
+      raise "Voting interface not found after retries"
+    end
   end
   
-  # Wait for the voting interface to be present
-  expect(page).to have_css('.vote-button.upvote', wait: 15)
+  # Click the upvote button
+  expect(page).to have_css('.vote-button.upvote', wait: 10)
   find('.vote-button.upvote').click
+  
   # Wait for the AJAX response to complete and page to update
-  sleep 2
+  sleep 3
 end
 
 When('I click the downvote button') do
-  # For JavaScript tests, ensure we're authenticated before looking for voting buttons
+  # For JavaScript tests, ensure we're authenticated and voting interface is available
   if Capybara.current_driver != :rack_test
-    # If we see "Login to vote", the page loaded before authentication was established
-    if page.has_content?('Login to vote')
-      # Refresh the page to get the authenticated version
-      page.refresh
-      sleep 2
+    # Check authentication state with retries (similar to upvote)
+    max_retries = 3
+    retries = 0
+    
+    while retries < max_retries
+      # Check if we're authenticated
+      if page.has_content?('Login to vote', wait: 2) || !page.has_content?('Logout', wait: 2)
+        # Session may be lost, re-authenticate
+        if @current_user
+          puts "Re-authenticating user for downvote #{@current_user.email} (attempt #{retries + 1})"
+          visit '/users/sign_in'
+          fill_in 'user[email]', with: @current_user.email
+          fill_in 'user[password]', with: 'password123'
+          # Try different button texts that might exist
+          if page.has_button?('Sign in')
+            click_button 'Sign in'
+          elsif page.has_button?('Log in')
+            click_button 'Log in'
+          elsif page.has_button?('Login')
+            click_button 'Login'
+          else
+            click_button 'commit'  # Default form submit
+          end
+          
+          # Wait for authentication to be established
+          expect(page).to have_content('Logout', wait: 15)
+          sleep 2
+          
+          # Navigate back to the current page if needed
+          unless current_url.include?('/topics/')
+            topic_title = @current_topic_title if @current_topic_title
+            if topic_title
+              step %{I visit the topic "#{topic_title}"}
+            else
+              page.refresh
+              sleep 3
+            end
+          else
+            page.refresh
+            sleep 3
+          end
+        else
+          raise "No current user available to re-authenticate"
+        end
+      else
+        # We appear to be authenticated, break out of retry loop
+        break
+      end
+      
+      retries += 1
     end
     
-    # Now verify we're authenticated
+    # Final authentication check
     expect(page).to have_content('Logout', wait: 10)
+    
+    # Wait for the voting interface to load with retries
+    voting_interface_found = false
+    3.times do |attempt|
+      if page.has_css?('.thredded-voting', wait: 5)
+        if page.has_css?('.vote-button.downvote', wait: 5)
+          voting_interface_found = true
+          break
+        else
+          puts "Voting interface found but downvote button missing (attempt #{attempt + 1})"
+          sleep 2
+          page.refresh
+          sleep 3
+        end
+      else
+        puts "Voting interface not found for downvote (attempt #{attempt + 1})"
+        sleep 2
+        page.refresh
+        sleep 3
+      end
+    end
+    
+    unless voting_interface_found
+      puts "Page content: #{page.body[0..1000]}"
+      raise "Voting interface not found for downvote after retries"
+    end
   end
   
-  # Wait for the voting interface to be present
+  # Click the downvote button
   expect(page).to have_css('.vote-button.downvote', wait: 10)
   find('.vote-button.downvote').click
+  
   # Wait for the AJAX response to complete and page to update
-  sleep 2
+  sleep 3
 end
 
 When('I log in as {string}') do |username|
