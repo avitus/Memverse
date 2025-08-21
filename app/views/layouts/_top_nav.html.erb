@@ -9,6 +9,9 @@
         <li <%= tab(@tab=="blog"        ) %> rel="blog">        <%= link_to t('menu.blog'),         bloggity.root_path %></li>
         <li <%= tab(@tab=="quiz"        ) %> rel="quiz">        <%= link_to t('menu.quiz'),         main_app.live_quiz_path %></li>
         <li <%= tab(@tab=="help"        ) %> rel="help">        <%= link_to t('menu.help'),         main_app.faq_path %></li>
+        <% if current_user.admin? %>
+            <li <%= tab(@tab=="admin"       ) %> rel="admin">       <%= link_to 'Admin',                main_app.admin_dashboard_path %></li>
+        <% end %>
         <li>&nbsp;</li>
     </ul>
 
@@ -103,6 +106,18 @@
                     <li <%= sub(@sub=="vidtut"      )%>><%= link_to t('learn_menu.Video Tutorial'),         "https://www.youtube.com/watch?v=MAWn3qfkGrA&fs=1&feature=player_embedded&rel=0".html_safe, :class => 'tut-video' %></li>
                 </ul>
             </div>
+            
+            <% if current_user.admin? %>
+            <div id="admin" class="submenustyle">
+                <ul>
+                    <li <%= sub(@sub=="dashboard"    )%>><%= link_to 'Dashboard',                           main_app.admin_dashboard_path %></li>
+                    <li <%= sub(@sub=="onboarding"   )%>><%= link_to 'User Onboarding',                     main_app.admin_onboarding_dashboard_index_path %></li>
+                    <li <%= sub(@sub=="rails_admin"  )%>><%= link_to 'Database Admin',                      main_app.rails_admin_path %></li>
+                    <li <%= sub(@sub=="sidekiq"      )%>><%= link_to 'Background Jobs',                     main_app.sidekiq_web_path, target: '_blank' %></li>
+                    <li <%= sub(@sub=="quiz_admin"   )%>><%= link_to 'Quiz Management',                     main_app.admin_quiz_dashboards_path %></li>
+                </ul>
+            </div>
+            <% end %>
         </div><!--submenu-left end-->
         <div class="clr"></div>
 

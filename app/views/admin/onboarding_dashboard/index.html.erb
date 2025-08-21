@@ -1,0 +1,366 @@
+<div class="onboarding-dashboard">
+  <div class="container-fluid">
+    <!-- Header -->
+    <div class="dashboard-header">
+      <div class="d-flex justify-content-between align-items-center flex-wrap">
+        <div>
+          <h1>New User Onboarding Dashboard</h1>
+          <p class="header-subtitle">Tracking <%= @metrics[:total_users] %> new users from <%= @date_range.first.to_date.strftime('%B %d') %> to <%= @date_range.last.to_date.strftime('%B %d, %Y') %></p>
+        </div>
+        <div class="header-actions">
+          <%= link_to "Export CSV", admin_onboarding_dashboard_index_path(format: :csv, date_range: params[:date_range]), 
+                      class: "btn-export" %>
+          <%= link_to "Email Unengaged", email_unengaged_admin_onboarding_dashboard_index_path,
+                      method: :post,
+                      data: { confirm: "This will send reminder emails to unengaged users. Continue?" },
+                      class: "btn-email" %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Primary Metrics Cards -->
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-label">Total New Users</div>
+        <h3 class="metric-value"><%= @metrics[:total_users] %></h3>
+        <% if @previous_metrics[:total_users] > 0 %>
+          <span class="metric-change <%= metric_change_class(@metrics[:total_users], @previous_metrics[:total_users]) %>">
+            <%= metric_change_percentage(@metrics[:total_users], @previous_metrics[:total_users]) %>% vs previous
+          </span>
+        <% end %>
+      </div>
+      
+      <div class="metric-card">
+        <div class="metric-label">Activation Rate</div>
+        <h3 class="metric-value"><%= @metrics[:activation_rate] %>%</h3>
+        <div class="metric-detail"><%= @metrics[:activated] %> of <%= @metrics[:total_users] %> confirmed</div>
+        <% if @previous_metrics[:activation_rate] %>
+          <span class="metric-change <%= metric_change_class(@metrics[:activation_rate], @previous_metrics[:activation_rate]) %>">
+            <%= metric_change_percentage(@metrics[:activation_rate], @previous_metrics[:activation_rate]) %>%
+          </span>
+        <% end %>
+      </div>
+      
+      <div class="metric-card">
+        <div class="metric-label">Engagement Rate</div>
+        <h3 class="metric-value"><%= @metrics[:engagement_rate] %>%</h3>
+        <div class="metric-detail"><%= @metrics[:added_verses] %> users added verses</div>
+        <% if @previous_metrics[:engagement_rate] %>
+          <span class="metric-change <%= metric_change_class(@metrics[:engagement_rate], @previous_metrics[:engagement_rate]) %>">
+            <%= metric_change_percentage(@metrics[:engagement_rate], @previous_metrics[:engagement_rate]) %>%
+          </span>
+        <% end %>
+      </div>
+      
+      <div class="metric-card">
+        <div class="metric-label">7-Day Retention</div>
+        <h3 class="metric-value"><%= @metrics[:retention_rate_7d] %>%</h3>
+        <div class="metric-detail">Still active after 7 days</div>
+        <% if @previous_metrics[:retention_rate_7d] %>
+          <span class="metric-change <%= metric_change_class(@metrics[:retention_rate_7d], @previous_metrics[:retention_rate_7d]) %>">
+            <%= metric_change_percentage(@metrics[:retention_rate_7d], @previous_metrics[:retention_rate_7d]) %>%
+          </span>
+        <% end %>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-label">Memorization Success</div>
+        <h3 class="metric-value"><%= @metrics[:memorization_rate] %>%</h3>
+        <div class="metric-detail"><%= @metrics[:memorized_any] %> users memorized</div>
+      </div>
+      
+      <div class="metric-card">
+        <div class="metric-label">Avg Verses Added</div>
+        <h3 class="metric-value"><%= @metrics[:avg_verses_added].round(1) %></h3>
+        <div class="metric-detail">Per engaged user</div>
+      </div>
+      
+      <div class="metric-card">
+        <div class="metric-label">Avg Progression</div>
+        <h3 class="metric-value"><%= @metrics[:avg_progression].round(1) %></h3>
+        <div class="metric-detail">Scale of 0-9</div>
+      </div>
+      
+      <div class="metric-card">
+        <div class="metric-label">Currently Active</div>
+        <h3 class="metric-value"><%= @metrics[:still_active] %></h3>
+        <div class="metric-detail">Active in last 7 days</div>
+      </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-header">
+          <h5>Daily Registrations</h5>
+        </div>
+        <div class="chart-body">
+          <canvas id="registrationChart" height="200"></canvas>
+        </div>
+      </div>
+      
+      <div class="chart-card">
+        <div class="chart-header">
+          <h5>Onboarding Funnel</h5>
+        </div>
+        <div class="chart-body">
+          <canvas id="funnelChart" height="200"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filters Section -->
+    <div class="filters-card">
+      <%= form_with url: admin_onboarding_dashboard_index_path, method: :get, local: true, class: 'filters-form' do |f| %>
+        <div class="filter-group">
+          <%= label_tag :date_range, 'Date Range' %>
+          <%= select_tag :date_range, 
+              options_for_select(date_range_options, params[:date_range] || 14),
+              class: 'form-select' %>
+        </div>
+        
+        <div class="filter-group">
+          <%= label_tag :progression_level, 'Progression' %>
+          <%= select_tag :progression_level,
+              options_for_select(progression_level_options, params[:progression_level]),
+              class: 'form-select' %>
+        </div>
+        
+        <div class="filter-group">
+          <%= label_tag :activity_status, 'Activity' %>
+          <%= select_tag :activity_status,
+              options_for_select(activity_status_options, params[:activity_status]),
+              class: 'form-select' %>
+        </div>
+        
+        <div class="filter-group">
+          <%= label_tag :email_status, 'Email' %>
+          <%= select_tag :email_status,
+              options_for_select(email_status_options, params[:email_status]),
+              class: 'form-select' %>
+        </div>
+        
+        <div class="filter-group">
+          <%= label_tag :translation_status, 'Translation' %>
+          <%= select_tag :translation_status,
+              options_for_select(translation_status_options, params[:translation_status]),
+              class: 'form-select' %>
+        </div>
+        
+        <%= submit_tag 'Apply Filters', class: 'btn-apply' %>
+      <% end %>
+    </div>
+
+    <!-- Users Table -->
+    <div class="users-table-card">
+      <div class="table-header">
+        <h5>New Users Details</h5>
+      </div>
+      <div class="table-responsive">
+        <table class="users-table">
+          <thead>
+            <tr>
+              <th>Status</th>
+              <th>User</th>
+              <th>Registered</th>
+              <th>Days</th>
+              <th>Progress</th>
+              <th>Email</th>
+              <th>Verses</th>
+              <th>Memorized</th>
+              <th>Learning</th>
+              <th>Last Active</th>
+              <th>Translation</th>
+              <th>Location</th>
+              <th>Risk</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @users_paginated.each do |user| %>
+              <tr>
+                <td>
+                  <span class="status-indicator <%= activity_status_class(user) %>"></span>
+                </td>
+                <td>
+                  <%= link_to user.name_or_login, user_path(user) %>
+                  <% if user.referred_by %>
+                    <br><span class="text-muted">Ref: <%= user.referred_by %></span>
+                  <% end %>
+                </td>
+                <td><%= user.created_at.strftime('%m/%d %H:%M') %></td>
+                <td><%= days_since_registration(user) %></td>
+                <td>
+                  <span class="progression-badge level-<%= user.progression %>">
+                    <%= user.progression %>
+                  </span>
+                </td>
+                <td>
+                  <span class="email-badge <%= user.confirmed_at? ? 'confirmed' : 'unconfirmed' %>">
+                    <%= user.confirmed_at? ? '✓' : '✗' %>
+                  </span>
+                </td>
+                <td><%= user.memverses.count %></td>
+                <td><%= user.memorized %></td>
+                <td><%= user.learning %></td>
+                <td><%= format_date_short(user.last_activity_date) %></td>
+                <td><%= user.translation || '-' %></td>
+                <td>
+                  <%= user_location_info(user) %>
+                  <% if user.church || user.group %>
+                    <br><span class="text-muted"><%= user_community_info(user) %></span>
+                  <% end %>
+                </td>
+                <td>
+                  <span class="risk-score <%= onboarding_risk_class(user) %>">
+                    <%= onboarding_risk_level(user) %>
+                  </span>
+                </td>
+                <td>
+                  <%= link_to 'View', admin_onboarding_dashboard_path(user), 
+                              class: 'btn-view' %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+      
+      <% if @users_paginated.total_pages > 1 %>
+        <div class="table-footer">
+          <%= paginate @users_paginated %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Registration Trend Chart
+  const registrationCtx = document.getElementById('registrationChart').getContext('2d');
+  new Chart(registrationCtx, {
+    type: 'line',
+    data: {
+      labels: <%= @chart_data[:registration_trend].keys.map { |d| d.strftime('%m/%d') }.to_json.html_safe %>,
+      datasets: [{
+        label: 'New Registrations',
+        data: <%= @chart_data[:registration_trend].values.to_json %>,
+        borderColor: '#3b82f6',
+        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+        tension: 0.3,
+        pointBackgroundColor: '#3b82f6',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+        pointRadius: 4,
+        pointHoverRadius: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          backgroundColor: 'rgba(26, 26, 29, 0.9)',
+          titleColor: '#fff',
+          bodyColor: '#fff',
+          borderColor: '#3b82f6',
+          borderWidth: 1,
+          cornerRadius: 4,
+          padding: 10
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            stepSize: 1,
+            color: '#6e6e73'
+          },
+          grid: {
+            color: 'rgba(0, 0, 0, 0.05)',
+            drawBorder: false
+          }
+        },
+        x: {
+          ticks: {
+            color: '#6e6e73'
+          },
+          grid: {
+            display: false,
+            drawBorder: false
+          }
+        }
+      }
+    }
+  });
+
+  // Funnel Chart
+  const funnelCtx = document.getElementById('funnelChart').getContext('2d');
+  new Chart(funnelCtx, {
+    type: 'bar',
+    data: {
+      labels: <%= @chart_data[:progression_funnel].keys.to_json.html_safe %>,
+      datasets: [{
+        label: 'Users',
+        data: <%= @chart_data[:progression_funnel].values.to_json %>,
+        backgroundColor: [
+          '#dc2626',
+          '#ea580c',
+          '#facc15',
+          '#84cc16',
+          '#3b82f6',
+          '#9333ea'
+        ],
+        borderWidth: 0,
+        borderRadius: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          backgroundColor: 'rgba(26, 26, 29, 0.9)',
+          titleColor: '#fff',
+          bodyColor: '#fff',
+          borderColor: '#6e6e73',
+          borderWidth: 1,
+          cornerRadius: 4,
+          padding: 10
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            color: '#6e6e73'
+          },
+          grid: {
+            color: 'rgba(0, 0, 0, 0.05)',
+            drawBorder: false
+          }
+        },
+        x: {
+          ticks: {
+            color: '#6e6e73',
+            maxRotation: 45,
+            minRotation: 45
+          },
+          grid: {
+            display: false,
+            drawBorder: false
+          }
+        }
+      }
+    }
+  });
+});
+</script>

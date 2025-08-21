@@ -1,0 +1,296 @@
+<div class="container-fluid px-4 py-4">
+  <!-- Header -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h1 class="h2 mb-0">User Onboarding Details: <%= @user.name_or_login %></h1>
+          <p class="text-muted mt-2">
+            Registered <%= @user.created_at.strftime('%B %d, %Y at %I:%M %p') %> 
+            (<%= pluralize(days_since_registration(@user), 'day') %> ago)
+          </p>
+        </div>
+        <div>
+          <%= link_to "← Back to Dashboard", admin_onboarding_dashboard_index_path, class: "btn btn-secondary" %>
+          <%= link_to "View Profile", user_path(@user), class: "btn btn-primary", target: "_blank" %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- User Status Overview -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Onboarding Status</h5>
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <h6 class="text-muted mb-2">Account Information</h6>
+              <table class="table table-sm">
+                <tr>
+                  <td class="text-muted">Email:</td>
+                  <td>
+                    <%= @user.email %>
+                    <%= email_confirmation_badge(@user) %>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="text-muted">Progression Level:</td>
+                  <td><%= progression_badge(@user.progression) %></td>
+                </tr>
+                <tr>
+                  <td class="text-muted">Activity Status:</td>
+                  <td>
+                    <%= activity_status_indicator(@user) %>
+                    <% if @user.last_activity_date %>
+                      Last active <%= format_date_short(@user.last_activity_date) %>
+                    <% else %>
+                      Never active
+                    <% end %>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="text-muted">Risk Score:</td>
+                  <td><%= onboarding_risk_score(@user) %></td>
+                </tr>
+              </table>
+            </div>
+            
+            <div class="col-md-6">
+              <h6 class="text-muted mb-2">Memorization Stats</h6>
+              <table class="table table-sm">
+                <tr>
+                  <td class="text-muted">Verses Added:</td>
+                  <td><strong><%= @user.memverses.count %></strong></td>
+                </tr>
+                <tr>
+                  <td class="text-muted">Currently Learning:</td>
+                  <td><strong><%= @user.learning %></strong></td>
+                </tr>
+                <tr>
+                  <td class="text-muted">Memorized:</td>
+                  <td><strong><%= @user.memorized %></strong></td>
+                </tr>
+                <tr>
+                  <td class="text-muted">Translation:</td>
+                  <td><%= translation_indicator(@user) %></td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          
+          <div class="row g-3 mt-3">
+            <div class="col-md-6">
+              <h6 class="text-muted mb-2">Profile Settings</h6>
+              <table class="table table-sm">
+                <tr>
+                  <td class="text-muted">Location:</td>
+                  <td><%= user_location_info(@user) %></td>
+                </tr>
+                <tr>
+                  <td class="text-muted">Community:</td>
+                  <td><%= user_community_info(@user) %></td>
+                </tr>
+                <tr>
+                  <td class="text-muted">Language:</td>
+                  <td><%= @user.language || 'English' %></td>
+                </tr>
+                <tr>
+                  <td class="text-muted">Time Zone:</td>
+                  <td><%= @user.time_zone || 'Not set' %></td>
+                </tr>
+              </table>
+            </div>
+            
+            <div class="col-md-6">
+              <h6 class="text-muted mb-2">Communication Preferences</h6>
+              <table class="table table-sm">
+                <tr>
+                  <td class="text-muted">Reminder Frequency:</td>
+                  <td><%= @user.reminder_freq || 'Not set' %></td>
+                </tr>
+                <tr>
+                  <td class="text-muted">Newsletters:</td>
+                  <td><%= @user.newsletters ? 'Subscribed' : 'Not subscribed' %></td>
+                </tr>
+                <tr>
+                  <td class="text-muted">Last Reminder:</td>
+                  <td><%= @user.last_reminder ? @user.last_reminder.strftime('%m/%d/%Y') : 'Never' %></td>
+                </tr>
+                <tr>
+                  <td class="text-muted">Referred By:</td>
+                  <td>
+                    <% if @user.referred_by %>
+                      User #<%= @user.referred_by %>
+                    <% else %>
+                      Direct registration
+                    <% end %>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Onboarding Checklist</h5>
+        </div>
+        <div class="card-body">
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox" <%= 'checked' if @user.created_at %> disabled>
+            <label class="form-check-label">
+              Account created
+            </label>
+          </div>
+          
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox" <%= 'checked' if @user.confirmed_at %> disabled>
+            <label class="form-check-label">
+              Email confirmed
+              <% if @user.confirmed_at %>
+                <small class="text-muted d-block">
+                  <%= time_ago_in_words(@user.confirmed_at) %> after registration
+                </small>
+              <% end %>
+            </label>
+          </div>
+          
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox" <%= 'checked' if @user.translation.present? %> disabled>
+            <label class="form-check-label">
+              Bible translation selected
+            </label>
+          </div>
+          
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox" <%= 'checked' if @user.memverses.any? %> disabled>
+            <label class="form-check-label">
+              First verse added
+              <% if @user.memverses.any? %>
+                <small class="text-muted d-block">
+                  <%= time_ago_in_words(@user.memverses.first.created_at) %> after registration
+                </small>
+              <% end %>
+            </label>
+          </div>
+          
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox" <%= 'checked' if @user.memverses.where('attempts > 0').any? %> disabled>
+            <label class="form-check-label">
+              First review completed
+            </label>
+          </div>
+          
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox" <%= 'checked' if @user.progress_reports.any? %> disabled>
+            <label class="form-check-label">
+              First session completed
+              <% if @user.progress_reports.any? %>
+                <small class="text-muted d-block">
+                  <%= @user.progress_reports.count %> total sessions
+                </small>
+              <% end %>
+            </label>
+          </div>
+          
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox" <%= 'checked' if @user.memorized > 0 %> disabled>
+            <label class="form-check-label">
+              First verse memorized
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Activity -->
+  <div class="row g-3">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Recent Verses Added</h5>
+        </div>
+        <div class="card-body">
+          <% if @memverses.any? %>
+            <div class="table-responsive">
+              <table class="table table-sm">
+                <thead>
+                  <tr>
+                    <th>Reference</th>
+                    <th>Status</th>
+                    <th>Added</th>
+                    <th>Attempts</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @memverses.each do |memverse| %>
+                    <tr>
+                      <td><%= memverse.verse.reference if memverse.verse %></td>
+                      <td>
+                        <span class="badge bg-<%= memverse.status == 'Memorized' ? 'success' : 'primary' %>">
+                          <%= memverse.status %>
+                        </span>
+                      </td>
+                      <td><%= memverse.created_at.strftime('%m/%d') %></td>
+                      <td><%= memverse.attempts %></td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          <% else %>
+            <p class="text-muted mb-0">No verses added yet</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Recent Progress Reports</h5>
+        </div>
+        <div class="card-body">
+          <% if @progress_reports.any? %>
+            <div class="table-responsive">
+              <table class="table table-sm">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Verses</th>
+                    <th>Time</th>
+                    <th>Completed</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @progress_reports.each do |report| %>
+                    <tr>
+                      <td><%= report.created_at.strftime('%m/%d %I:%M %p') %></td>
+                      <td><%= report.verses_tested %></td>
+                      <td><%= report.total_time %> min</td>
+                      <td>
+                        <%= report.session_complete? ? 
+                            content_tag(:span, '✓', class: 'text-success') : 
+                            content_tag(:span, '✗', class: 'text-danger') %>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          <% else %>
+            <p class="text-muted mb-0">No progress reports yet</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
