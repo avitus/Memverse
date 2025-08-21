@@ -1,0 +1,95 @@
+<div class="container-fluid px-4 py-4">
+  <h1 class="h2 mb-4">Admin Dashboard</h1>
+  
+  <div class="row g-4">
+    <!-- User Management -->
+    <div class="col-md-4">
+      <div class="card h-100">
+        <div class="card-header bg-primary text-white">
+          <h5 class="card-title mb-0">User Management</h5>
+        </div>
+        <div class="card-body">
+          <div class="list-group list-group-flush">
+            <%= link_to admin_onboarding_dashboard_index_path, class: "list-group-item list-group-item-action" do %>
+              <strong>New User Onboarding Dashboard</strong>
+              <p class="mb-0 small text-muted">Track and analyze new user onboarding effectiveness</p>
+            <% end %>
+            <%= link_to rails_admin_path, class: "list-group-item list-group-item-action" do %>
+              <strong>Rails Admin Interface</strong>
+              <p class="mb-0 small text-muted">Full database management interface</p>
+            <% end %>
+            <%= link_to volunteers_path, class: "list-group-item list-group-item-action" do %>
+              <strong>Volunteer Management</strong>
+              <p class="mb-0 small text-muted">Manage volunteer roles and permissions</p>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- System Monitoring -->
+    <div class="col-md-4">
+      <div class="card h-100">
+        <div class="card-header bg-success text-white">
+          <h5 class="card-title mb-0">System Monitoring</h5>
+        </div>
+        <div class="card-body">
+          <div class="list-group list-group-flush">
+            <%= link_to sidekiq_web_path, class: "list-group-item list-group-item-action", target: "_blank" do %>
+              <strong>Sidekiq Dashboard</strong>
+              <p class="mb-0 small text-muted">Monitor background jobs and queues</p>
+            <% end %>
+            <%= link_to admin_sidekiq_health_dashboard_path, class: "list-group-item list-group-item-action" do %>
+              <strong>Sidekiq Health Monitor</strong>
+              <p class="mb-0 small text-muted">Health checks and performance metrics</p>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Content Management -->
+    <div class="col-md-4">
+      <div class="card h-100">
+        <div class="card-header bg-info text-white">
+          <h5 class="card-title mb-0">Content Management</h5>
+        </div>
+        <div class="card-body">
+          <div class="list-group list-group-flush">
+            <%= link_to admin_quiz_dashboards_path, class: "list-group-item list-group-item-action" do %>
+              <strong>Quiz Management</strong>
+              <p class="mb-0 small text-muted">Manage live quizzes and questions</p>
+            <% end %>
+            <%= link_to quiz_question_approval_path, class: "list-group-item list-group-item-action" do %>
+              <strong>Question Approvals</strong>
+              <p class="mb-0 small text-muted">Review and approve submitted quiz questions</p>
+            <% end %>
+            <%= link_to bloggity.root_path, class: "list-group-item list-group-item-action" do %>
+              <strong>Blog Management</strong>
+              <p class="mb-0 small text-muted">Manage blog posts and comments</p>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Quick Stats -->
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Quick Links</h5>
+        </div>
+        <div class="card-body">
+          <div class="btn-group" role="group">
+            <%= link_to "View All Users", rails_admin_path + "/user", class: "btn btn-outline-primary" %>
+            <%= link_to "View All Verses", rails_admin_path + "/verse", class: "btn btn-outline-primary" %>
+            <%= link_to "View All Groups", rails_admin_path + "/group", class: "btn btn-outline-primary" %>
+            <%= link_to "View All Churches", rails_admin_path + "/church", class: "btn btn-outline-primary" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

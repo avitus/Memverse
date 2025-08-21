@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h2>Welcome to Memverse, <%= @user.name || @user.login %>!</h2>
+    
+    <p>We noticed you haven't started memorizing Bible verses yet. Memverse makes it easy and enjoyable to memorize Scripture!</p>
+    
+    <h3>Getting Started is Easy:</h3>
+    <ol>
+      <li><strong>Choose your Bible translation</strong> - Pick the version you're most comfortable with</li>
+      <li><strong>Add your first verse</strong> - Start with something meaningful to you</li>
+      <li><strong>Review daily</strong> - Just 5 minutes a day can make a big difference</li>
+    </ol>
+    
+    <p style="text-align: center; margin: 30px 0;">
+      <%= link_to "Start Memorizing Now", add_verse_url, 
+                  style: "background-color: #4CAF50; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; display: inline-block;" %>
+    </p>
+    
+    <h3>Why Memorize Scripture?</h3>
+    <ul>
+      <li>Hide God's word in your heart (Psalm 119:11)</li>
+      <li>Be ready to give an answer (1 Peter 3:15)</li>
+      <li>Renew your mind (Romans 12:2)</li>
+    </ul>
+    
+    <p>Join thousands of believers who are memorizing Scripture together. Our spaced repetition system makes memorization easier and more effective.</p>
+    
+    <p>If you have any questions, feel free to <%= link_to "contact us", contact_url %>.</p>
+    
+    <p>
+      Blessings,<br>
+      The Memverse Team
+    </p>
+    
+    <hr style="margin-top: 40px; border: 1px solid #eee;">
+    <p style="font-size: 12px; color: #666;">
+      You're receiving this email because you signed up for Memverse. 
+      <%= link_to "Update your email preferences", update_profile_url %> or 
+      <%= link_to "unsubscribe", update_profile_url %>.
+    </p>
+  </body>
+</html>
