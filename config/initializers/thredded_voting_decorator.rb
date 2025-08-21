@@ -50,8 +50,8 @@ Rails.application.config.to_prepare do
             }
             
             if params[:sort] == 'votes'
-              # Explicit vote sorting - by engagement first (topics with votes, regardless of direction), then by score
-              sorted_topics = topics_with_scores.sort_by { |_, score, _| [score == 0 ? 1 : 0, -score] }.map(&:first)
+              # Explicit vote sorting - strictly by score descending
+              sorted_topics = topics_with_scores.sort_by { |_, score, _| -score }.map(&:first)
             else
               # Default feedback board sorting - positive votes first, zero votes by recency, then negative votes
               sorted_topics = topics_with_scores.sort_by { |_, score, updated_at| 
