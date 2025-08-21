@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe Admin::OnboardingDashboardController, type: :controller do
-  let(:admin_user) { FactoryBot.create(:user, admin: true) }
-  let(:regular_user) { FactoryBot.create(:user, admin: false) }
+  let(:admin_user) { FactoryBot.create(:user, admin: true, created_at: 20.days.ago) }
+  let(:regular_user) { FactoryBot.create(:user, admin: false, created_at: 20.days.ago) }
   
   describe 'authentication' do
     context 'when user is not logged in' do
@@ -134,6 +134,10 @@ RSpec.describe Admin::OnboardingDashboardController, type: :controller do
       end
       
       it 'calculates correct metrics' do
+        # Force reload users and update memorized counts
+        users.first.reload.update_column(:memorized, 5)
+        users.last.reload.update_column(:memorized, 2)
+        
         get :index
         metrics = assigns(:metrics)
         
@@ -175,7 +179,7 @@ RSpec.describe Admin::OnboardingDashboardController, type: :controller do
     it 'loads recent progress reports' do
       report = FactoryBot.create(:progress_report, user: user)
       get :show, params: { id: user.id }
-      expect(assigns(:progress_reports)).to include(report)
+      expect(assigns(:progress_reports).to_a).to include(report)
     end
   end
   
@@ -186,15 +190,42 @@ RSpec.describe Admin::OnboardingDashboardController, type: :controller do
     let!(:engaged_user) { FactoryBot.create(:user, created_at: 5.days.ago, confirmed_at: 4.days.ago) }
     let!(:unconfirmed_user) { FactoryBot.create(:user, created_at: 5.days.ago, confirmed_at: nil) }
     
+    before do
+      # Clear any previous deliveries
+      ActionMailer::Base.deliveries.clear
+      
+      # Mock progression for users - need to stub on User class since controller loads fresh instances
+      allow_any_instance_of(User).to receive(:progression) do |user|
+        case user.id
+        when unengaged_user.id
+          1  # Unengaged
+        when engaged_user.id
+          5  # Engaged
+        else
+          0  # Default
+        end
+      end
+    end
+    
     it 'sends emails to unengaged confirmed users' do
+      # Use deliver_now instead of deliver_later for testing
+      expect_any_instance_of(ActionMailer::MessageDelivery).to receive(:deliver_later).and_wrap_original do |method, *args|
+        method.receiver.deliver_now
+      end
+      
       expect {
         post :email_unengaged
       }.to change { ActionMailer::Base.deliveries.count }.by(1)
+      
+      # Verify it's sent to the correct user
+      expect(ActionMailer::Base.deliveries.last.to).to include(unengaged_user.email)
     end
     
     it 'does not send emails to engaged users' do
-      # Add verses to engaged user to increase progression
-      5.times { engaged_user.memverses.create!(verse: FactoryBot.create(:verse), status: 'Learning') }
+      # Use deliver_now instead of deliver_later for testing
+      expect_any_instance_of(ActionMailer::MessageDelivery).to receive(:deliver_later).and_wrap_original do |method, *args|
+        method.receiver.deliver_now
+      end
       
       post :email_unengaged
       

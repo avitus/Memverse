@@ -143,11 +143,11 @@ RSpec.describe Admin::OnboardingDashboardHelper, type: :helper do
   end
   
   describe '#onboarding_risk_score' do
-    let(:user) { build(:user, created_at: 5.days.ago) }
+    let(:user) { FactoryBot.build(:user, created_at: 5.days.ago) }
     
     it 'returns low risk for engaged user' do
       user.confirmed_at = 4.days.ago
-      user.progression = 5
+      allow(user).to receive(:progression).and_return(5)
       user.last_activity_date = 1.day.ago
       user.translation = 'NIV'
       allow(user).to receive_message_chain(:memverses, :count).and_return(5)
@@ -159,7 +159,7 @@ RSpec.describe Admin::OnboardingDashboardHelper, type: :helper do
     
     it 'returns high risk for unengaged user' do
       user.confirmed_at = nil
-      user.progression = 1
+      allow(user).to receive(:progression).and_return(1)
       user.last_activity_date = nil
       user.translation = nil
       allow(user).to receive_message_chain(:memverses, :count).and_return(0)

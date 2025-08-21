@@ -37,9 +37,10 @@ Then(/^I should see "([^"]*)" new users in the past (\d+) days$/) do |count, day
   end
 end
 
-Then(/^I should not see "([^"]*)"$/) do |text|
-  expect(page).not_to have_content(text)
-end
+# This step is already defined in web_steps.rb
+# Then(/^I should not see "([^"]*)"$/) do |text|
+#   expect(page).not_to have_content(text)
+# end
 
 Then(/^I should see the following metrics:$/) do |table|
   table.hashes.each do |row|
@@ -63,9 +64,10 @@ When(/^I click "([^"]*)"$/) do |button|
   click_button button
 end
 
-Then(/^I should see "([^"]*)"$/) do |text|
-  expect(page).to have_content(text)
-end
+# This step is already defined in web_steps.rb
+# Then(/^I should see "([^"]*)"$/) do |text|
+#   expect(page).to have_content(text)
+# end
 
 When(/^I click "View" for "([^"]*)"$/) do |user_name|
   within('tr', text: user_name) do

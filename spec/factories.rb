@@ -270,6 +270,27 @@ FactoryBot.define do
   end
 
   # ==============================================================================================
+  # Countries
+  # ==============================================================================================
+  factory :country do
+    name { Faker::Address.country }
+    printable_name { name }
+    iso3 { Faker::Address.country_code_long }
+    numcode { Faker::Number.between(from: 1, to: 999) }
+    users_count { 0 }
+  end
+
+  # ==============================================================================================
+  # Churches
+  # ==============================================================================================
+  factory :church do
+    name { "#{Faker::Company.name} Church" }
+    description { Faker::Lorem.paragraph(sentence_count: 3) }
+    association :country, factory: :country
+    users_count { 0 }
+  end
+
+  # ==============================================================================================
   # Devotions
   # ==============================================================================================
   factory :devotion do

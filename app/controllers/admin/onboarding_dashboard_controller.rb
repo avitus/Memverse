@@ -45,7 +45,7 @@ class Admin::OnboardingDashboardController < ApplicationController
   def show
     @user = User.find(params[:id])
     @memverses = @user.memverses.includes(:verse).order(created_at: :desc).limit(10)
-    @progress_reports = @user.progress_reports.order(created_at: :desc).limit(10)
+    @progress_reports = @user.progress_reports.order(entry_date: :desc).limit(10)
   end
   
   def email_unengaged
