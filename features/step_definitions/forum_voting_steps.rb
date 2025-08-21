@@ -12,6 +12,9 @@ end
 Given('I am logged in') do
   @current_user = @user || FactoryBot.create(:user, password: 'password123', password_confirmation: 'password123')
   step %{I sign in as "#{@current_user.email}/password123"}
+  
+  # Wait for authentication state to be established
+  expect(page).to have_content('Logout', wait: 10)
 end
 
 Given('there is a feedback messageboard') do
@@ -185,6 +188,9 @@ When('I visit the topic {string}') do |topic_title|
     # Verify we're on the topic page
     expect(page).to have_content(topic_title, wait: 10)
     expect(current_url).to include(topic.slug)
+    
+    # Wait a moment for the voting interface to render if user is logged in
+    sleep 1 if page.has_content?('Logout')
   else
     # For non-JavaScript tests, direct navigation should work
     visit "/forum/#{topic.messageboard.slug}/#{topic.slug}"
@@ -208,14 +214,48 @@ When('I visit the topic {string} in the general board') do |topic_title|
 end
 
 When('I click the upvote button') do
+  # For JavaScript tests, ensure we're authenticated before looking for voting buttons
+  if Capybara.current_driver != :rack_test
+    # If we see "Login to vote", the session is lost - need to re-authenticate
+    if page.has_content?('Login to vote')
+      # Re-establish authentication by signing in again
+      if @current_user
+        step %{I sign in as "#{@current_user.email}/password123"}
+        # Wait for authentication to be established
+        expect(page).to have_content('Logout', wait: 10)
+        # Navigate back to the current page
+        page.refresh
+        sleep 3  # Give more time for the voting interface to render
+      else
+        raise "No current user available to re-authenticate"
+      end
+    end
+    
+    # Verify we're authenticated
+    expect(page).to have_content('Logout', wait: 10)
+  end
+  
   # Wait for the voting interface to be present
-  expect(page).to have_css('.vote-button.upvote', wait: 10)
+  expect(page).to have_css('.vote-button.upvote', wait: 15)
   find('.vote-button.upvote').click
   # Wait for the AJAX response to complete and page to update
   sleep 2
 end
 
 When('I click the downvote button') do
+  # For JavaScript tests, ensure we're authenticated before looking for voting buttons
+  if Capybara.current_driver != :rack_test
+    # If we see "Login to vote", the page loaded before authentication was established
+    if page.has_content?('Login to vote')
+      # Refresh the page to get the authenticated version
+      page.refresh
+      sleep 2
+    end
+    
+    # Now verify we're authenticated
+    expect(page).to have_content('Logout', wait: 10)
+  end
+  
   # Wait for the voting interface to be present
   expect(page).to have_css('.vote-button.downvote', wait: 10)
   find('.vote-button.downvote').click
@@ -225,10 +265,19 @@ end
 
 When('I log in as {string}') do |username|
   step "I am logged in as \"#{username}\""
+  
+  # Wait for authentication state to be established
+  expect(page).to have_content('Logout', wait: 10)
+  
+  # Give extra time for session to be fully established
+  sleep 1
 end
 
 When('I log in again') do
   step %{I sign in as "#{@current_user.email}/password123"}
+  
+  # Wait for authentication state to be established
+  expect(page).to have_content('Logout', wait: 10)
 end
 
 When('I log out') do

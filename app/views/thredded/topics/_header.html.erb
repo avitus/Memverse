@@ -2,6 +2,7 @@
   <%= view_hooks.topic_page.title.render self, topic: topic do %>
     <h1 class="thredded--topic-header--title">
       <%= topic.title %>
+      <!-- CUSTOM TEMPLATE BEING USED -->
       <% if topic.messageboard_id && Thredded::Messageboard.find_by(id: topic.messageboard_id)&.slug == 'feedback' %>
         <%= thredded_topic_voting(topic) %>
       <% end %>

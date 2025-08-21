@@ -126,7 +126,23 @@ Given /^I am not logged in$/ do
       Capybara.current_driver = current_driver
     end
   else
+    # For JavaScript scenarios, use GET request to sign out
     visit "/users/sign_out"
+    sleep 1
+    
+    # If still logged in, try the DELETE method
+    if page.has_content?("Logout") || current_url.include?('/quick_start')
+      page.execute_script("
+        $.ajax({
+          url: '/users/sign_out',
+          type: 'DELETE',
+          headers: {
+            'X-CSRF-Token': $('meta[name=\"csrf-token\"]').attr('content')
+          }
+        });
+      ")
+      sleep 2
+    end
   end
 end
 
@@ -141,9 +157,33 @@ When /^I sign in as "(.*)\/(.*)"$/ do |email, password|
     step %{I fill in "user[password]" with "#{password}"}
     step %{I press "signinbutton"}
   else
-    # For JavaScript scenarios, use a more direct approach
-    visit "/users/sign_out" if page.has_content?("Logout")
-    visit "/users/sign_in"
+    # For JavaScript scenarios, ensure proper logout first
+    step %{I am not logged in}
+    
+    # Try multiple times to reach the sign in page
+    attempt = 0
+    max_attempts = 3
+    
+    while attempt < max_attempts
+      visit "/users/sign_in"
+      sleep 2
+      
+      if current_url.include?('/sign_in')
+        break
+      else
+        attempt += 1
+        if attempt < max_attempts
+          step %{I am not logged in}
+        end
+      end
+    end
+    
+    # Check if we finally reached the sign in page
+    if !current_url.include?('/sign_in')
+      raise "Failed to reach sign in page after #{max_attempts} attempts. Current URL: #{current_url}"
+    end
+    
+    # Fill in the form fields
     fill_in "user[email]", with: email
     fill_in "user[password]", with: password
     click_button "signinbutton"

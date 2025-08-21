@@ -8,8 +8,8 @@
   <% if messageboard.slug == 'feedback' %>
     <div class="thredded--topics-sorting" style="text-align: right; margin-bottom: 20px;">
       <label style="margin-right: 10px;">Sort by:</label>
-      <%= link_to "Most Recent", thredded.messageboard_topics_path(messageboard), 
-          class: "btn btn-sm #{params[:sort] != 'votes' ? 'btn-primary' : 'btn-default'}" %>
+      <%= link_to "Most Recent", thredded.messageboard_topics_path(messageboard, sort: 'recent'), 
+          class: "btn btn-sm #{params[:sort] == 'recent' ? 'btn-primary' : 'btn-default'}" %>
       <%= link_to "Most Votes", thredded.messageboard_topics_path(messageboard, sort: 'votes'), 
           class: "btn btn-sm #{params[:sort] == 'votes' ? 'btn-primary' : 'btn-default'}" %>
     </div>

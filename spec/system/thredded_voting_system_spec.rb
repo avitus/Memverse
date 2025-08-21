@@ -178,9 +178,10 @@ RSpec.describe "Thredded Voting System", type: :system, js: true, heavy_db: true
     it "sorts topics by vote count when requested" do
       visit "/forum/feedback"
       
-      # Default sort (most recent)
+      # Default sort (feedback board custom: positive votes first, zero votes by recency, negative votes last)
       topic_titles = all(".thredded--topics--title a").map(&:text)
-      expect(topic_titles).to eq(topics.reverse.map(&:title))
+      expected_order = ["Feature 0", "Feature 1", "Feature 4", "Feature 3", "Feature 2"]
+      expect(topic_titles).to eq(expected_order)
       
       # Sort by votes
       click_link "Most Votes"

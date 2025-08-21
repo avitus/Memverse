@@ -35,8 +35,7 @@ Rails.application.config.to_prepare do
       alias_method :original_index, :index unless method_defined?(:original_index)
       
       def index
-        # Only apply vote sorting on feedback board
-        if params[:sort] == 'votes' && params[:messageboard_id] == 'feedback'
+        if params[:messageboard_id] == 'feedback' && (params[:sort] == 'votes' || params[:sort].blank?)
           # Call original method first to set up authorization and base variables
           original_index
           
@@ -46,11 +45,25 @@ Rails.application.config.to_prepare do
             topics_array = @topics.to_a
             topics_with_scores = topics_array.map { |topic_view|
               topic = topic_view.is_a?(Thredded::TopicView) ? topic_view.instance_variable_get(:@topic) : topic_view
-              [topic_view, topic.vote_score]
+              score = topic.vote_score
+              [topic_view, score, topic.updated_at]
             }
             
-            # Sort by vote score (highest first)
-            sorted_topics = topics_with_scores.sort_by { |_, score| -score }.map(&:first)
+            if params[:sort] == 'votes'
+              # Explicit vote sorting - by engagement first (topics with votes, regardless of direction), then by score
+              sorted_topics = topics_with_scores.sort_by { |_, score, _| [score == 0 ? 1 : 0, -score] }.map(&:first)
+            else
+              # Default feedback board sorting - positive votes first, zero votes by recency, then negative votes
+              sorted_topics = topics_with_scores.sort_by { |_, score, updated_at| 
+                if score > 0
+                  [0, -score]  # Positive scores: group 0, sorted by score desc
+                elsif score == 0
+                  [1, -updated_at.to_i]  # Zero scores: group 1, sorted by recency desc  
+                else
+                  [2, -score]  # Negative scores: group 2, sorted by score desc (less negative first)
+                end
+              }.map(&:first)
+            end
             
             # Replace @topics while maintaining pagination metadata
             sorted_array = SortedTopicArray.new(sorted_topics)

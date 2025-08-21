@@ -19,10 +19,12 @@
 
   <h1 class="thredded--topics--title">
     <%= link_to topic.title, topic.path %>
-    <% if topic.messageboard_id && Thredded::Messageboard.find_by(id: topic.messageboard_id)&.slug == 'feedback' %>
-      <%= topic_vote_count_badge(topic) %>
-    <% end %>
   </h1>
+  <% if topic.messageboard_id && Thredded::Messageboard.find_by(id: topic.messageboard_id)&.slug == 'feedback' %>
+    <div class="thredded--topics--vote-badge">
+      <%= topic_vote_count_badge(topic) %>
+    </div>
+  <% end %>
 
   <% if topic.categories.any? %>
     <ul class="thredded--topics--categories">
