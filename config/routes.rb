@@ -15,7 +15,6 @@ MemverseApp::Application.routes.draw do
       delete 'unvote'
     end
   end
-  mount RailsAdmin::Engine    => '/admin', :as => 'rails_admin'
   mount Ckeditor::Engine      => '/ckeditor'
   mount JasmineRails::Engine  => '/specs' if defined?(JasmineRails)
 
@@ -26,6 +25,9 @@ MemverseApp::Application.routes.draw do
     
     # Sidekiq health monitoring routes
     namespace :admin do
+      # Admin main dashboard
+      get 'dashboard', to: 'dashboard#index', as: 'dashboard'
+      
       get 'sidekiq_health/dashboard', to: 'sidekiq_health#dashboard', as: 'sidekiq_health_dashboard'
       get 'sidekiq_health/health_check', to: 'sidekiq_health#health_check', as: 'sidekiq_health_check'
       get 'sidekiq_health/metrics', to: 'sidekiq_health#metrics', as: 'sidekiq_health_metrics'
@@ -49,8 +51,18 @@ MemverseApp::Application.routes.draw do
           post :bulk_manage
         end
       end
+      
+      # Onboarding dashboard routes
+      resources :onboarding_dashboard, only: [:index, :show] do
+        collection do
+          post :email_unengaged
+        end
+      end
     end
   end
+  
+  # Mount RailsAdmin after custom admin routes to prevent route conflicts
+  mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
 
   # Routes for A/B testing
   # match "/split" => Split::Dashboard, via: [:get, :post, :delete], :anchor => false, :constraints => lambda { |request|

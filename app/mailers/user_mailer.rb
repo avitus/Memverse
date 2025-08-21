@@ -30,6 +30,26 @@ class UserMailer < ActionMailer::Base
   end
 
   # ----------------------------------------------------------------------------------------------------------
+  # Onboarding Reminder Email
+  # ----------------------------------------------------------------------------------------------------------
+  def onboarding_reminder(user)
+    setup_email(user)
+    
+    # Set Postmark headers manually for test environments
+    if Rails.env.test?
+      headers['X-PM-Tag'] = 'onboarding-reminder'
+      headers['X-PM-Message-Stream'] = 'outbound'
+    end
+    
+    mail(
+      :to => @email_with_name, 
+      :subject => "Get Started with Memverse",
+      :tag => "onboarding-reminder",
+      :message_stream => "outbound"
+    )
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
   # User Progression Emails
   # ----------------------------------------------------------------------------------------------------------
   def progression_email_9(user)
