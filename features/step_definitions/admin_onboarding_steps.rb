@@ -1,5 +1,5 @@
 Given(/^I am logged in as an admin user$/) do
-  @admin_user = FactoryBot.create(:user, admin: true, email: 'admin@example.com', password: 'password123', password_confirmation: 'password123')
+  @admin_user = FactoryBot.create(:user, admin: true, email: 'admin@example.com', password: 'password123', password_confirmation: 'password123', created_at: 1.day.ago)
   visit new_user_session_path
   fill_in 'user[email]', with: @admin_user.email
   fill_in 'user[password]', with: 'password123'
