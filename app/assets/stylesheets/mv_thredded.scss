@@ -248,6 +248,37 @@ section.thredded--main-section {
   padding: 1em 4em;
 }
 
+/*========== Follow Button Fix ==========*/
+
+// Prevent "Follow this topic" button from wrapping
+.thredded--topic-header--follow-info {
+  .thredded--topic-header--follow-info--follow {
+    display: inline-block;
+    
+    button {
+      white-space: nowrap;
+      min-width: fit-content;
+    }
+  }
+}
+
+// Fix spacing in "started by" text
+.thredded--topic-header--started-by {
+  padding: 0.3em !important; 
+  margin: 0.1em !important; 
+  
+  > time,
+  time[data-time-ago] {
+    margin: 0 0.1em !important;
+    padding: 0 !important;
+  }
+  
+  // Also target any links inside
+  a {
+    margin: 0 0.1em;
+  }
+}
+
 /*========== Semantic HTML Structure Support ==========*/
 
 // Support the new semantic structure while maintaining backwards compatibility
