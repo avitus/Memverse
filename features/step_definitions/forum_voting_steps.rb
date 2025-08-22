@@ -448,6 +448,10 @@ Then('I should see the vote score is {string}') do |score|
   expect(page).to have_css('.vote-score', text: score, wait: 10)
 end
 
+Then('I should not see the vote score is {string}') do |score|
+  expect(page).not_to have_css('.vote-score', text: score)
+end
+
 Then('the upvote button should be highlighted') do
   expect(page).to have_css('.vote-button.upvote.voted', wait: 10)
 end

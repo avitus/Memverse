@@ -160,6 +160,52 @@ RSpec.describe ThreddedVotesController, type: :controller do
         expect(response).to have_http_status(:ok)
       end
     end
+    
+    context "bug fix: user votes then unvotes on topic with 0 score" do
+      it "should return to 0 score, not -1" do
+        # Start with topic at 0 votes
+        expect(topic.vote_score).to eq(0)
+        expect(topic.get_upvotes.size).to eq(0)
+        expect(topic.get_downvotes.size).to eq(0)
+        
+        # User upvotes
+        post :upvote, params: { id: topic.id }, format: :json
+        topic.reload
+        expect(topic.vote_score).to eq(1)
+        expect(topic.get_upvotes.size).to eq(1)
+        expect(topic.get_downvotes.size).to eq(0)
+        
+        # User unvotes - should go back to 0, not -1
+        delete :unvote, params: { id: topic.id }, format: :json
+        topic.reload
+        expect(topic.vote_score).to eq(0)
+        expect(topic.get_upvotes.size).to eq(0)
+        expect(topic.get_downvotes.size).to eq(0)
+        
+        json_response = JSON.parse(response.body)
+        expect(json_response["score"]).to eq(0)
+      end
+      
+      it "should correctly handle multiple users voting scenario" do
+        # Simulate the exact bug scenario
+        # Topic starts at 0
+        expect(topic.vote_score).to eq(0)
+        
+        # First user upvotes
+        sign_in user
+        post :upvote, params: { id: topic.id }, format: :json
+        expect(topic.reload.vote_score).to eq(1)
+        
+        # First user removes vote
+        delete :unvote, params: { id: topic.id }, format: :json
+        topic.reload
+        
+        # Check that score is 0, not -1
+        expect(topic.vote_score).to eq(0)
+        expect(topic.get_upvotes.size).to eq(0)
+        expect(topic.get_downvotes.size).to eq(0)
+      end
+    end
   end
   
   describe "authorization" do

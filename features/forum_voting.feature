@@ -67,6 +67,19 @@ Feature: Forum Voting System
     And no vote buttons should be highlighted
 
   @javascript
+  Scenario: Bug fix - User votes then unvotes on topic with 0 score
+    Given I am logged in
+    When I visit the topic "Improve search feature"
+    Then I should see the vote score is "0"
+    When I click the upvote button
+    Then I should see the vote score is "1"
+    And I should see "remove vote"
+    When I remove my vote
+    Then I should see the vote score is "0"
+    And I should not see the vote score is "-1"
+    And no vote buttons should be highlighted
+
+  @javascript
   Scenario: Topics can be sorted by vote count
     Given I am logged in
     When I visit the feedback board
