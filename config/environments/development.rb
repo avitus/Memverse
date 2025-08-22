@@ -73,6 +73,26 @@ Rails.application.configure do
   # Suppress logger output for asset requests.
   config.assets.quiet = true
 
+  # Debug mode disables concatenation and preprocessing of assets.
+  # This option may cause significant delays in view rendering with a large
+  # number of complex assets.
+  config.assets.debug = true
+
+  # Asset digests allow you to set far-future HTTP expiration dates on all assets,
+  # yet still be able to expire them through the digest params.
+  config.assets.digest = false
+
+  # Adds additional error checking when serving assets at runtime.
+  # Checks for improperly declared sprockets dependencies.
+  # Raises helpful error messages.
+  config.assets.raise_runtime_errors = true
+
+  # Live compilation - assets are compiled on-the-fly in development
+  config.assets.compile = true
+
+  # Precompile additional assets (if needed for production parity)
+  # config.assets.precompile += %w( admin.js admin.css )
+
   # Raises error for missing translations.
   # config.i18n.raise_on_missing_translations = true
 

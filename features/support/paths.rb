@@ -48,6 +48,9 @@ module NavigationHelpers
     when /the utils dashboard/
       '/utils_dashboard'.dup
 
+    when /the onboarding dashboard page/
+      '/admin/onboarding_dashboard'.dup
+
     when /the forum home page/
       '/forum'.dup
 
