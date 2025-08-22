@@ -22,6 +22,7 @@ set :linked_dirs, fetch(:linked_dirs, []).push(
   'tmp/pids',
   'tmp/cache',
   'tmp/sockets',
+  'public/assets',      # Shared compiled assets
   'public/ckeditor_assets',
   'public/uploads',     # Paperclip legacy
   'storage'            # Active Storage
@@ -71,8 +72,8 @@ namespace :deploy do
       on roles(:web) do
         within release_path do
           with rails_env: fetch(:rails_env), rails_groups: fetch(:rails_assets_groups) do
-            # Clear old assets first
-            execute :bundle, "exec rails assets:clean"
+            # Clear ALL assets first (clobber removes everything, not just old ones)
+            execute :bundle, "exec rails assets:clobber"
             
             # Compile new assets
             execute :bundle, "exec rails assets:precompile"
