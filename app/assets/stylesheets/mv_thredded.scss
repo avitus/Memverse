@@ -252,7 +252,8 @@ section.thredded--main-section {
 
 // Prevent "Follow this topic" button from wrapping
 .thredded--topic-header--follow-info {
-  .thredded--topic-header--follow-info--follow {
+  .thredded--topic-header--follow-info--follow,
+  .thredded--topic-header--follow-info--unfollow {
     display: inline-block;
     
     button {
@@ -276,6 +277,24 @@ section.thredded--main-section {
   // Also target any links inside
   a {
     margin: 0 0.1em;
+  }
+}
+
+// Position follow button below started-by section
+.thredded--topic-header--actions {
+  clear: both;
+  margin-top: 1em;
+  
+  // Fix alignment - override Thredded's default positioning
+  .thredded--topic-header--follow-info {
+    float: none !important;
+    text-align: left !important;
+    
+    form {
+      position: static !important;
+      right: auto !important;
+      top: auto !important;
+    }
   }
 }
 

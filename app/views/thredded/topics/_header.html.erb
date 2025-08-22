@@ -18,23 +18,25 @@
                 class: 'thredded--topic-header--edit-topic',
                 rel: 'nofollow' %>
   <% end %>
-  <% if thredded_current_user %>
-    <% if topic.followed? %>
-      <div class="thredded--topic-header--follow-info">
-        <span class="thredded--topic-header--follow-info--reason">
-          <%= topic_follow_reason_text topic.follow_reason %>
-        </span>
-        <%= button_to topic.unfollow_path, form: {class: 'thredded--topic-header--follow-info--unfollow'} do %>
-          <%= t('thredded.topics.unfollow') %>
-          <%= inline_svg_tag 'thredded/follow.svg', class: 'thredded--topic-header--follow-icon' %>
-        <% end %>
-      </div>
-    <% else %>
-      <div class="thredded--topic-header--follow-info">
-        <%= button_to t('thredded.topics.follow'), topic.follow_path,
-                      form: {class: 'thredded--topic-header--follow-info--follow'} %>
-      </div>
+  
+  <!-- Follow button moved below started-by section -->
+  <div class="thredded--topic-header--actions">
+    <% if thredded_current_user %>
+      <% if topic.followed? %>
+        <div class="thredded--topic-header--follow-info">
+          <%= button_to topic.unfollow_path, form: {class: 'thredded--topic-header--follow-info--unfollow'} do %>
+            <%= t('thredded.topics.unfollow') %>
+            <%= inline_svg_tag 'thredded/follow.svg', class: 'thredded--topic-header--follow-icon' %>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="thredded--topic-header--follow-info">
+          <%= button_to t('thredded.topics.follow'), topic.follow_path,
+                        form: {class: 'thredded--topic-header--follow-info--follow'} %>
+        </div>
+      <% end %>
     <% end %>
-  <% end %>
+  </div>
+  
   <%= render partial: 'thredded/topics/followers', locals: {topic: topic} %>
 </header>
