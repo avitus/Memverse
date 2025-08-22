@@ -1,114 +1,132 @@
-/* -- Memverse overrides -- */
+/* -- Memverse Theme Overrides for Thredded -- */
 
-/*========== Theme Overrides ==========*/
+/*========== Color Variables ==========*/
+$memverse-green: #99cc33;
+$memverse-green-dark: #7ca529;
+$memverse-green-darker: #577a1a;
 
-// Named colors
-$thredded-brand: #99cc33 !default;
-$thredded-grid-container-max-width: 67rem !default;
-$thredded-grid-breakpoint-max-widths: (mobile: 34rem, tablet: 48rem) !default;
-
-// Override the main container width to match site width (1080px)
+/*========== Layout Integration ==========*/
+/* Make Thredded use full width of its container */
 .thredded--main-container {
-  max-width: 67.5rem !important; // 1080px to match #wrapper
-  padding: 0.5rem 0 1rem 0 !important;
+  max-width: 100%; // Use full width of parent container
+  width: 100%;
+  padding: 0.5rem 2rem 1rem 2rem; // Add horizontal padding for content
+  margin: 0 auto;
+  box-sizing: border-box;
 }
 
-// Override blue theme colors with green theme
+/* Customize white-box-bg when containing the forum */
+.white-box-bg {
+  // When it contains the forum, adjust styling
+  &#thredded--container-wrapper,
+  &:has(#thredded--container) {
+    width: 1080px; // Standard site width
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 2em; // Consistent padding
+    box-sizing: border-box;
+  }
+}
+
+/*========== Color Theme Overrides Only ==========*/
+/* These overrides ONLY change colors and cosmetics, not layout */
+
+// Buttons - color only
 .thredded--button, 
 .thredded--form--button, 
 a.thredded--button {
-  background-color: #99cc33 !important; // Your brand green
-  border-color: #7ca529 !important;
+  background-color: $memverse-green;
+  border-color: $memverse-green-dark;
   
   &:hover {
-    background-color: #7ca529 !important;
-    border-color: #577a1a !important;
+    background-color: $memverse-green-dark;
+    border-color: $memverse-green-darker;
   }
 }
 
-// Override blue link colors
+// Links - color only
 .thredded--content a,
 .thredded--post--content a {
-  color: #577a1a !important; // Your site's link color
+  color: $memverse-green-darker;
   
   &:hover {
-    color: #99cc33 !important;
+    color: $memverse-green;
   }
 }
 
-// Override topic link colors
+// Topic links - color only
 .thredded--topics--topic a,
 .thredded--topic-link {
-  color: #577a1a !important;
+  color: $memverse-green-darker;
   
   &:hover {
-    color: #7ca529 !important;
+    color: $memverse-green-dark;
   }
 }
 
-// Override any blue accent colors
+// Follow button when following - color only
 .thredded--topic--follow-button--following {
-  background-color: #99cc33 !important;
-  border-color: #7ca529 !important;
+  background-color: $memverse-green;
+  border-color: $memverse-green-dark;
 }
 
-// Override navigation and toolbar colors
+// Navigation links - color only
 .thredded--navigation,
 .thredded--moderation-tools {
   a {
-    color: #577a1a !important;
+    color: $memverse-green-darker;
     
     &:hover {
-      color: #99cc33 !important;
+      color: $memverse-green;
     }
   }
 }
 
-// Override form focus states
+// Form focus states - color only
 .thredded--form--input:focus,
 .thredded--form--textarea:focus {
-  border-color: #99cc33 !important;
-  box-shadow: 0 0 0 0.2rem rgba(153, 204, 51, 0.25) !important;
+  border-color: $memverse-green;
+  box-shadow: 0 0 0 0.2rem rgba(153, 204, 51, 0.25);
 }
 
-// Override messageboard group titles (the specific one mentioned)
+// Messageboard group titles - color only
 .thredded--messageboards-group--title {
-  color: #577a1a !important;
+  color: $memverse-green-darker;
 }
 
-// Override alert/flash messages
+// Alert/flash messages - color only
 .thredded--flash-message--notice, 
 .thredded--alert-info {
-  color: #577a1a !important;
+  color: $memverse-green-darker;
   
   a {
-    color: #7ca529 !important;
+    color: $memverse-green-dark;
     
     &:hover {
-      color: #99cc33 !important;
+      color: $memverse-green;
     }
   }
 }
 
-// Override dropdown menus
+// Dropdown menus - color only
 .thredded--post--dropdown--toggle {
-  color: #7ca529 !important;
+  color: $memverse-green-dark;
 }
 
 .thredded--post--dropdown:hover .thredded--post--dropdown--toggle {
-  color: #99cc33 !important;
+  color: $memverse-green;
 }
 
 .thredded--post--dropdown--actions--item {
   &:active, 
   &:focus, 
   &:hover {
-    background-color: #99cc33 !important;
-    color: #fff !important;
+    background-color: $memverse-green;
+    color: #fff;
   }
 }
 
-// Override all form element focus states
+// Form element focus states - color only
 .thredded--form {
   [type='color']:focus, 
   [type='date']:focus, 
@@ -127,19 +145,19 @@ a.thredded--button {
   input:focus:not([type]), 
   textarea:focus, 
   select[multiple=multiple]:focus {
-    border-color: #99cc33 !important;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06), 0 0 3px #99cc33 !important;
+    border-color: $memverse-green;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06), 0 0 3px $memverse-green;
   }
 }
 
-// Override navigation active states
+// Navigation active states - color only
 .thredded--navigation-breadcrumbs a,
 .thredded--moderation-navigation--item a,
 .thredded--user-navigation--item a {
   &:active, 
   &:focus, 
   &:hover {
-    color: #99cc33 !important;
+    color: $memverse-green;
   }
 }
 
@@ -147,27 +165,27 @@ a.thredded--button {
 .thredded--moderation-user .thredded--moderation-navigation--users a,
 .thredded--moderation-activity .thredded--moderation-navigation--activity a, 
 .thredded--user-navigation--item.thredded--is-current a {
-  color: #7ca529 !important;
+  color: $memverse-green-dark;
 }
 
 .thredded--moderation-users .thredded--moderation-navigation--users,
 .thredded--moderation-user .thredded--moderation-navigation--users,
 .thredded--moderation-activity .thredded--moderation-navigation--activity, 
 .thredded--user-navigation--item.thredded--is-current {
-  border-bottom: 1px solid #99cc33 !important;
+  border-bottom: 1px solid $memverse-green;
 }
 
-// Override badges and count elements
+// Badges and count elements - color only
 .thredded--messageboard--unread-followed-topics-count, 
 .thredded--user-navigation--private-topics--unread,
 .thredded--user-navigation--moderation--pending-count,
 .thredded--user-navigation--unread-topics--followed-count,
 .thredded--topic-unread > .thredded--topics--posts-count {
-  background: #99cc33 !important;
-  color: #fff !important;
+  background: $memverse-green;
+  color: #fff;
 }
 
-// Override all blue links in various locations
+// Various link colors throughout
 .thredded--topics--updated-by a,
 .thredded--topics--messageboard a, 
 .thredded--topics--title a, 
@@ -186,184 +204,99 @@ a.thredded--button {
 .thredded--post-moderation-record--moderation-state-notice a,
 .thredded--post-moderation .thredded--post--user a,
 .thredded--post-moderation-record .thredded--post--user a {
-  color: #577a1a !important;
+  color: $memverse-green-darker;
   
   &:hover {
-    color: #99cc33 !important;
+    color: $memverse-green;
   }
 }
 
-// Override search placeholder
+// Search placeholder - color only
 .thredded--navigation--search input[type="search"] {
   &:hover:not(:focus) {
     &::-webkit-input-placeholder,
     &::-moz-placeholder,
     &::placeholder {
-      color: #7ca529 !important;
+      color: $memverse-green-dark;
     }
   }
 }
 
-// Override autocomplete/mention elements
+// Autocomplete/mention elements - color only
 ul.thredded--textcomplete-dropdown {
-  border-color: #99cc33 !important;
-  box-shadow: 0 1px 1px #99cc33 !important;
+  border-color: $memverse-green;
+  box-shadow: 0 1px 1px $memverse-green;
   
   li.textcomplete-item.active {
-    background: #99cc33 !important;
-    color: #fff !important;
+    background: $memverse-green;
+    color: #fff;
   }
 }
 
-// Override pagination
+// Pagination - color only
 .thredded--pagination > span > a {
   &:focus, 
   &:hover {
-    color: #99cc33 !important;
+    color: $memverse-green;
   }
 }
 
-/*========== List of Message Boards ==========*/
+/*========== Cosmetic Enhancements (Non-Layout) ==========*/
 
+// Add white background to message boards (cosmetic only)
 .thredded--messageboard {
   background-color: white;
 }
 
+// Add white background to user navigation (cosmetic only)
 ul.thredded--user-navigation {
   background-color: white;
-  padding: 0 1em;
 }
 
-h2.thredded--messageboard--title {
-  line-height: 24px;
-  margin-right: .4em;
-  font-size: 20px;
-}
-
-
-/*========== List of Topics in a Message Board ==========*/
-
+// Add white background to main section (cosmetic only)
 section.thredded--main-section {
   background-color: white;
-  padding: 1em 4em;
 }
 
-/*========== Follow Button Fix ==========*/
+/*========== Minor Layout Adjustments ==========*/
+/* These are minimal adjustments that don't break the responsive grid */
 
-// Prevent "Follow this topic" button from wrapping
+// Slight padding adjustment for better visual spacing
+ul.thredded--user-navigation {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+// Main section inherits padding from container now
+section.thredded--main-section {
+  padding: 1rem 0; // Vertical padding only, horizontal from container
+}
+
+// Ensure follow button doesn't wrap
 .thredded--topic-header--follow-info {
-  .thredded--topic-header--follow-info--follow,
-  .thredded--topic-header--follow-info--unfollow {
-    display: inline-block;
-    
-    button {
-      white-space: nowrap;
-      min-width: fit-content;
-    }
+  button {
+    white-space: nowrap;
   }
 }
 
-// Fix spacing in "started by" text
-.thredded--topic-header--started-by {
-  padding: 0.3em !important; 
-  margin: 0.1em !important; 
-  
-  > time,
-  time[data-time-ago] {
-    margin: 0 0.1em !important;
-    padding: 0 !important;
-  }
-  
-  // Also target any links inside
-  a {
-    margin: 0 0.1em;
-  }
-}
-
-// Position follow button below started-by section
-.thredded--topic-header--actions {
-  clear: both;
-  margin-top: 1em;
-  
-  // Fix alignment - override Thredded's default positioning
-  .thredded--topic-header--follow-info {
-    float: none !important;
-    text-align: left !important;
-    
-    form {
-      position: static !important;
-      right: auto !important;
-      top: auto !important;
-    }
-  }
-}
-
-/*========== Semantic HTML Structure Support ==========*/
-
-// Support the new semantic structure while maintaining backwards compatibility
+/*========== Layout Fixes ==========*/
+/* Fix posts count positioning to prevent overflow */
 .thredded--topics--topic {
-  // Header section containing meta info and title
-  .thredded--topics--header {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    gap: 1rem;
-    
-    .thredded--topics--meta {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      order: 2; // Move meta to the right
-      margin-left: auto;
-    }
-    
-    .thredded--topics--title {
-      order: 1; // Keep title on the left
-      flex: 1 1 auto;
-      margin: 0; // Reset h3 default margin
-      font-size: 1.2rem; // Appropriate size for h3
-    }
-    
-    .thredded--topics--vote-badge {
-      order: 3;
-    }
-  }
+  // Ensure enough left margin for the posts count circle
+  margin-left: 2.5rem; // Space for the absolutely positioned posts count
+  position: relative; // Ensure positioning context
   
-  // Categories navigation
-  nav.thredded--topics--categories {
-    margin: 0.5rem 0;
-    
-    ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-  }
-  
-  // Footer section with metadata
-  .thredded--topics--footer {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-top: 0.5rem;
-    font-size: 0.875rem;
-    
-    .thredded--topics--updated-by {
-      display: flex;
-      gap: 0.5rem;
-      
-      time {
-        color: #666;
-      }
-    }
-    
-    .thredded--topics--moderation-state {
-      margin-top: 0.5rem;
-      width: 100%;
-    }
+  // Keep the posts count from overflowing off the page
+  .thredded--topics--posts-count {
+    left: -2.25rem; // Adjust position to stay within bounds
   }
 }
 
-
-
-
+/*========== Voting Integration Support ==========*/
+/* Support for voting badge positioning without breaking layout */
+.thredded--topics--topic {
+  .thredded--topics--vote-badge {
+    display: inline-block;
+    margin-left: 0.5rem;
+  }
+}
