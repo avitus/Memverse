@@ -98,18 +98,22 @@ jobs:
       #     paths:
       #       - ~/.yarn-cache
 
-      # We can probably remove the next three run commands once the Gecko driver is more widely available
+      # Install Chrome dependencies and verify Chrome/ChromeDriver versions
       - run:
-          name: Download Geckodriver
+          name: Setup Chrome and ChromeDriver
           command: |
-            curl -L https://github.com/mozilla/geckodriver/releases/download/v0.19.1/geckodriver-v0.19.1-linux64.tar.gz | tar xz
-            chmod +x geckodriver
-            sudo mv geckodriver /usr/local/bin
-
-      - run:
-          name: Install Gecko Gemfile
-          command: |
-            gem install selenium-webdriver -v '~> 3.142.3'
+            # The cimg/ruby:3.2.6-browsers image includes Chrome and ChromeDriver
+            # Verify they are installed and matching versions
+            google-chrome --version
+            chromedriver --version
+            
+            # Install additional dependencies for headless Chrome
+            sudo apt-get update --allow-releaseinfo-change
+            sudo apt-get install -y \
+              libgconf-2-4 \
+              libxss1 \
+              libappindicator1 \
+              libindicator7
 
       - run:
           name: Wait for DB
@@ -138,13 +142,34 @@ jobs:
           command: RAILS_ENV=test bundle exec rake db:test:prepare
 
       - run:
-          name: Wait for Redis
+          name: Install Redis CLI
           command: |
-            until nc -z localhost 6379; do
-              echo "Waiting for Redis to be ready..."
+            sudo apt-get update --allow-releaseinfo-change
+            sudo apt-get install -y redis-tools
+
+      - run:
+          name: Wait for Redis with verification
+          command: |
+            for i in {1..30}; do
+              if redis-cli -h localhost ping > /dev/null 2>&1; then
+                echo "Redis is ready!"
+                redis-cli -h localhost INFO server | head -n 5
+                break
+              fi
+              echo "Waiting for Redis... (attempt $i/30)"
               sleep 2
             done
-            echo "Redis is ready!"
+            
+            # Verify Redis is actually working
+            redis-cli -h localhost SET test_key "test_value"
+            TEST_VALUE=$(redis-cli -h localhost GET test_key)
+            if [ "$TEST_VALUE" = "test_value" ]; then
+              echo "Redis verification successful!"
+            else
+              echo "Redis verification failed!"
+              exit 1
+            fi
+            redis-cli -h localhost DEL test_key
 
       # Run rspec in parallel
       - type: shell

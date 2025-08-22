@@ -22,21 +22,30 @@ rescue ActiveRecord::ConnectionNotEstablished
   puts "Database connection not established, skipping initial clean"
 end
 
+# One-time setup for FinalVerse data - only seed if not already present
+BeforeAll do
+  # Only seed FinalVerse data if it's not already present
+  if FinalVerse.count == 0
+    puts "Seeding FinalVerse data (one-time setup)..."
+    config = ActiveRecord::Base.configurations.configs_for(env_name: Rails.env).first.configuration_hash
+    
+    if config['adapter'] == 'mysql2'
+      system("mysql --user=#{config['username']} --password=#{config['password']} --host=#{config['host']} #{config['database']} < iso_final_verses.sql")
+    elsif config['adapter'] == 'sqlite3'
+      system("sqlite3 #{config['database']} < iso_final_verses.sql")
+    else
+      puts "WARNING: FinalVerse data could not be seeded for #{config['adapter']}. Please see db/seeds.rb."
+    end
+    
+    puts "FinalVerse data seeded: #{FinalVerse.count} records"
+  else
+    puts "FinalVerse data already present: #{FinalVerse.count} records"
+  end
+end
+
 Before do
   # Database cleaning is now handled in env.rb Around hook
-
-  # ----------------------------------------------------------------------------------------------------------
-  # Create Final Verse data table. Probably not necessary to load Final Verse data for every chapter
-  # ----------------------------------------------------------------------------------------------------------
-  config = ActiveRecord::Base.configurations.configs_for(env_name: Rails.env).first.configuration_hash
-  if config['adapter'] == 'mysql2'
-    system("mysql --user=#{config['username']} --password=#{config['password']} --host=#{config['host']} #{config['database']} < iso_final_verses.sql")
-  elsif config['adapter'] == 'sqlite3'
-    system("sqlite3 #{config['database']} < iso_final_verses.sql")
-  else
-    puts "WARNING: FinalVerse data could not be seeded for #{config['adapter']}. Please see db/seeds.rb."
-  end
-
+  # FinalVerse data is seeded once in BeforeAll hook above
 end
 
 Before('@badges') do

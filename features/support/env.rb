@@ -45,41 +45,37 @@ rescue NameError
   raise "You need to add database_cleaner to your Gemfile (in the :test group) if you wish to use it."
 end
 
-# Use truncation strategy consistently for all scenarios to avoid MySQL transaction issues
+# Simplified database cleaning strategy to avoid race conditions and connection issues
 Around do |scenario, block|
-  # Disable background jobs during tests to prevent deadlocks
+  # Disable background jobs during tests to prevent interference
   ActiveJob::Base.queue_adapter = :test
-  DatabaseCleaner[:active_record].strategy = :truncation, {except: %w[final_verses ar_internal_metadata]}
   
-  retry_count = 0
-  begin
-    # Ensure database connection is active
-    ActiveRecord::Base.connection.reconnect! unless ActiveRecord::Base.connection.active?
-    DatabaseCleaner[:active_record].start
+  # Use truncation consistently with proper exclusions
+  DatabaseCleaner[:active_record].strategy = :truncation, {
+    except: %w[final_verses ar_internal_metadata schema_migrations]
+  }
+  
+  # Use the cleaning block pattern for automatic cleanup
+  DatabaseCleaner[:active_record].cleaning do
     block.call
-  rescue ActiveRecord::Deadlocked, ActiveRecord::ConnectionNotEstablished
-    retry_count += 1
-    if retry_count < 3
-      begin
-        ActiveRecord::Base.connection.reconnect!
-        DatabaseCleaner[:active_record].clean
-      rescue ActiveRecord::ConnectionNotEstablished
-        # Connection lost, try to reconnect
-        ActiveRecord::Base.establish_connection
-        DatabaseCleaner[:active_record].clean
-      end
-      sleep 0.2
-      retry
-    else
-      raise
-    end
-  ensure
-    begin
-      DatabaseCleaner[:active_record].clean if ActiveRecord::Base.connection.active?
-    rescue ActiveRecord::ConnectionNotEstablished
-      # Connection already lost, nothing to clean
-    end
   end
+end
+
+# Ensure proper Capybara reset between scenarios
+After do |scenario|
+  # Reset sessions and cookies
+  Capybara.reset_sessions!
+  
+  # Clear any browser cookies if using Selenium
+  if Capybara.current_driver == :selenium_chrome_headless
+    page.driver.browser.manage.delete_all_cookies rescue nil
+  end
+  
+  # Reset to default driver
+  Capybara.use_default_driver
+  
+  # Clear ActionMailer deliveries
+  ActionMailer::Base.deliveries.clear if defined?(ActionMailer)
 end
 
 # You may also want to configure DatabaseCleaner to use different strategies for certain features and scenarios.
