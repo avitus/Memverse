@@ -31,24 +31,30 @@ Given('there is a general discussion board') do
 end
 
 Given('the following feedback topics exist:') do |table|
-  table.hashes.each do |row|
+  table.hashes.each_with_index do |row, index|
     author = User.find_by(login: row['author']) || FactoryBot.create(:user, login: row['author'], password: 'password123', password_confirmation: 'password123')
     
     topic = nil
     Thredded::Topic.transaction do
+      # Set created_at to ensure consistent ordering
+      created_time = index.hours.ago
       topic = Thredded::Topic.create!(
         messageboard: @feedback_board,
         user: author,
         title: row['title'],
         sticky: false,
-        locked: false
+        locked: false,
+        created_at: created_time,
+        updated_at: created_time
       )
       
       Thredded::Post.create!(
         postable: topic,
         user: author,
         content: "Initial content for #{row['title']}",
-        messageboard: @feedback_board
+        messageboard: @feedback_board,
+        created_at: created_time,
+        updated_at: created_time
       )
     end
     
