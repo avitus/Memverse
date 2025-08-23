@@ -4,8 +4,8 @@ Given(/^I am logged in as an admin user$/) do
     email: 'admin@example.com', 
     password: 'password123', 
     password_confirmation: 'password123',
-    created_at: 60.days.ago,
-    confirmed_at: 60.days.ago
+    created_at: 20.days.ago,
+    confirmed_at: 20.days.ago
   )
   step %{I go to the sign in page}
   step %{I fill in "user[email]" with "#{@admin_user.email}"}
