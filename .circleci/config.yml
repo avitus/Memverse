@@ -98,22 +98,61 @@ jobs:
       #     paths:
       #       - ~/.yarn-cache
 
-      # Install Chrome dependencies and verify Chrome/ChromeDriver versions
+      # Install Chrome dependencies and setup matching ChromeDriver
       - run:
           name: Setup Chrome and ChromeDriver
           command: |
-            # The cimg/ruby:3.2.6-browsers image includes Chrome and ChromeDriver
-            # Verify they are installed and matching versions
-            google-chrome --version
-            chromedriver --version
-            
             # Install additional dependencies for headless Chrome
             sudo apt-get update --allow-releaseinfo-change
             sudo apt-get install -y \
               libgconf-2-4 \
               libxss1 \
               libappindicator1 \
-              libindicator7
+              libindicator7 \
+              wget \
+              unzip
+            
+            # Detect installed Chrome version
+            echo "Detecting Chrome version..."
+            CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+\.\d+')
+            echo "Chrome version detected: $CHROME_VERSION"
+            
+            # Get the major version for ChromeDriver compatibility
+            CHROME_MAJOR_VERSION=$(echo $CHROME_VERSION | cut -d. -f1)
+            echo "Chrome major version: $CHROME_MAJOR_VERSION"
+            
+            # Download and install matching ChromeDriver
+            echo "Downloading ChromeDriver for Chrome $CHROME_MAJOR_VERSION..."
+            
+            # Get the latest ChromeDriver version for this Chrome major version
+            CHROMEDRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_MAJOR_VERSION" 2>/dev/null || echo "")
+            
+            if [ -z "$CHROMEDRIVER_VERSION" ]; then
+              echo "Warning: Could not determine ChromeDriver version from API, trying generic latest..."
+              CHROMEDRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE")
+            fi
+            
+            echo "ChromeDriver version to install: $CHROMEDRIVER_VERSION"
+            
+            # Download ChromeDriver
+            wget -O chromedriver.zip "https://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip"
+            
+            # Install ChromeDriver
+            unzip chromedriver.zip
+            chmod +x chromedriver
+            sudo mv chromedriver /usr/local/bin/chromedriver
+            
+            # Clean up
+            rm chromedriver.zip
+            
+            # Verify installation
+            echo "Verifying Chrome and ChromeDriver installation..."
+            google-chrome --version
+            chromedriver --version
+            
+            # Test that Chrome can run in headless mode
+            echo "Testing headless Chrome..."
+            google-chrome --headless --disable-gpu --no-sandbox --remote-debugging-port=9222 --disable-dev-shm-usage --version
 
       - run:
           name: Wait for DB

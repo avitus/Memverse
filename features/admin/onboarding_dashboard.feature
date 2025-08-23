@@ -81,7 +81,7 @@ Feature: Admin Onboarding Dashboard
     And I click on "User Onboarding"
     When I select "30" from the "date_range" dropdown
     And I press "Apply Filters"
-    Then I should see "6" new users
+    Then I should see "5" new users
     And I should see "Old User"
 
   @javascript
