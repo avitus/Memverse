@@ -26,7 +26,7 @@ Capybara.register_driver :selenium_chrome_headless do |app|
   options.unhandled_prompt_behavior = :accept
   
   # Set page load strategy to ensure page is fully loaded
-  options.add_option('pageLoadStrategy', 'normal')
+  options.page_load_strategy = 'normal'
   
   Capybara::Selenium::Driver.new(app, 
     browser: :chrome,

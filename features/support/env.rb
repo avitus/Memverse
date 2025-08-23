@@ -45,15 +45,20 @@ rescue NameError
   raise "You need to add database_cleaner to your Gemfile (in the :test group) if you wish to use it."
 end
 
-# Simplified database cleaning strategy to avoid race conditions and connection issues
+# Optimized database cleaning strategy for better performance
 Around do |scenario, block|
   # Disable background jobs during tests to prevent interference
   ActiveJob::Base.queue_adapter = :test
   
-  # Use truncation consistently with proper exclusions
-  DatabaseCleaner[:active_record].strategy = :truncation, {
-    except: %w[final_verses ar_internal_metadata schema_migrations]
-  }
+  # Use transaction strategy for non-JavaScript scenarios (much faster)
+  # Use truncation only for JavaScript scenarios that need it
+  if scenario.source_tag_names.include?('@javascript')
+    DatabaseCleaner[:active_record].strategy = :truncation, {
+      except: %w[final_verses ar_internal_metadata schema_migrations]
+    }
+  else
+    DatabaseCleaner[:active_record].strategy = :transaction
+  end
   
   # Use the cleaning block pattern for automatic cleanup
   DatabaseCleaner[:active_record].cleaning do
