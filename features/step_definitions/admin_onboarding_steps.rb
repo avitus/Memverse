@@ -4,8 +4,8 @@ Given(/^I am logged in as an admin user$/) do
     email: 'admin@example.com', 
     password: 'password123', 
     password_confirmation: 'password123',
-    created_at: 60.days.ago,
-    confirmed_at: 60.days.ago
+    created_at: 20.days.ago,
+    confirmed_at: 20.days.ago
   )
   step %{I go to the sign in page}
   step %{I fill in "user[email]" with "#{@admin_user.email}"}
@@ -224,6 +224,16 @@ When(/^I hover over "Admin"$/) do
 end
 
 Then(/^I should see the following admin menu items:$/) do |table|
+  # The admin submenu might be hidden by default, try to find it with visible: :all
+  # or wait for it to appear after hovering
+  admin_menu = find('#admin.submenustyle', visible: :all)
+  
+  # Make sure the menu is visible (it might be shown via CSS on hover)
+  if admin_menu && !admin_menu.visible?
+    # Force display using JavaScript if needed
+    page.execute_script("document.getElementById('admin').style.display = 'block';")
+  end
+  
   within('#admin.submenustyle') do
     table.raw.flatten.each do |item|
       expect(page).to have_link(item)

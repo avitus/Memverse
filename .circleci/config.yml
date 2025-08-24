@@ -110,7 +110,8 @@ jobs:
               libappindicator1 \
               libindicator7 \
               wget \
-              unzip
+              unzip \
+              jq
             
             # Detect installed Chrome version
             echo "Detecting Chrome version..."
@@ -121,34 +122,123 @@ jobs:
             CHROME_MAJOR_VERSION=$(echo $CHROME_VERSION | cut -d. -f1)
             echo "Chrome major version: $CHROME_MAJOR_VERSION"
             
-            # Download and install matching ChromeDriver
-            echo "Downloading ChromeDriver for Chrome $CHROME_MAJOR_VERSION..."
+            # Function to download ChromeDriver with retries
+            download_chromedriver() {
+              local url=$1
+              local max_retries=3
+              local retry_count=0
+              
+              while [ $retry_count -lt $max_retries ]; do
+                echo "Attempt $((retry_count + 1)) of $max_retries: Downloading ChromeDriver..."
+                if wget -O chromedriver.zip "$url"; then
+                  echo "ChromeDriver download successful!"
+                  return 0
+                else
+                  echo "Download failed, retrying in 5 seconds..."
+                  sleep 5
+                  retry_count=$((retry_count + 1))
+                fi
+              done
+              
+              echo "Failed to download ChromeDriver after $max_retries attempts"
+              return 1
+            }
             
-            # Get the latest ChromeDriver version for this Chrome major version
-            CHROMEDRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_MAJOR_VERSION" 2>/dev/null || echo "")
+            # Download and install matching ChromeDriver using Chrome for Testing API
+            echo "Using Chrome for Testing API to find ChromeDriver for Chrome $CHROME_MAJOR_VERSION..."
             
-            if [ -z "$CHROMEDRIVER_VERSION" ]; then
-              echo "Warning: Could not determine ChromeDriver version from API, trying generic latest..."
-              CHROMEDRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE")
+            # Try to get ChromeDriver version from Chrome for Testing API with retries
+            for attempt in 1 2 3; do
+              echo "Attempt $attempt: Fetching Chrome for Testing API data..."
+              if API_RESPONSE=$(curl -s --connect-timeout 10 --max-time 30 "https://googlechromelabs.github.io/chrome-for-testing/known-good-versions-with-downloads.json"); then
+                echo "API response received successfully"
+                break
+              else
+                echo "API request failed, retrying in 5 seconds..."
+                sleep 5
+                if [ $attempt -eq 3 ]; then
+                  echo "Failed to fetch API data after 3 attempts"
+                  exit 1
+                fi
+              fi
+            done
+            
+            # Parse JSON to find the latest ChromeDriver for the installed Chrome major version
+            CHROMEDRIVER_URL=$(echo "$API_RESPONSE" | jq -r --arg major "$CHROME_MAJOR_VERSION" '
+              .versions[] | 
+              select(.version | startswith($major + ".")) | 
+              .downloads.chromedriver[]? | 
+              select(.platform == "linux64") | 
+              .url' | tail -n 1)
+            
+            if [ -z "$CHROMEDRIVER_URL" ] || [ "$CHROMEDRIVER_URL" = "null" ]; then
+              echo "Could not find ChromeDriver for Chrome $CHROME_MAJOR_VERSION using Chrome for Testing API"
+              echo "Trying to find the latest stable version..."
+              
+              # Fallback: get the latest stable ChromeDriver
+              CHROMEDRIVER_URL=$(echo "$API_RESPONSE" | jq -r '
+                .versions[] | 
+                select(.version | test("^[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+$")) | 
+                .downloads.chromedriver[]? | 
+                select(.platform == "linux64") | 
+                .url' | tail -n 1)
             fi
             
+            if [ -z "$CHROMEDRIVER_URL" ] || [ "$CHROMEDRIVER_URL" = "null" ]; then
+              echo "ERROR: Could not determine ChromeDriver download URL"
+              echo "API Response (first 1000 chars): $(echo "$API_RESPONSE" | head -c 1000)"
+              exit 1
+            fi
+            
+            echo "ChromeDriver download URL: $CHROMEDRIVER_URL"
+            
+            # Extract version from URL for verification
+            CHROMEDRIVER_VERSION=$(echo "$CHROMEDRIVER_URL" | grep -oP '/\K[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(?=/)')
             echo "ChromeDriver version to install: $CHROMEDRIVER_VERSION"
             
-            # Download ChromeDriver
-            wget -O chromedriver.zip "https://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip"
+            # Download ChromeDriver with retries
+            if ! download_chromedriver "$CHROMEDRIVER_URL"; then
+              echo "ERROR: Failed to download ChromeDriver"
+              exit 1
+            fi
             
             # Install ChromeDriver
-            unzip chromedriver.zip
-            chmod +x chromedriver
-            sudo mv chromedriver /usr/local/bin/chromedriver
+            echo "Installing ChromeDriver..."
+            unzip -q chromedriver.zip
+            
+            # Handle different archive structures
+            if [ -f "chromedriver" ]; then
+              CHROMEDRIVER_BINARY="chromedriver"
+            elif [ -f "chromedriver-linux64/chromedriver" ]; then
+              CHROMEDRIVER_BINARY="chromedriver-linux64/chromedriver"
+            else
+              echo "ERROR: Could not find ChromeDriver binary in archive"
+              ls -la
+              exit 1
+            fi
+            
+            chmod +x "$CHROMEDRIVER_BINARY"
+            sudo mv "$CHROMEDRIVER_BINARY" /usr/local/bin/chromedriver
             
             # Clean up
-            rm chromedriver.zip
+            rm -rf chromedriver.zip chromedriver-linux64 chromedriver 2>/dev/null || true
             
             # Verify installation
             echo "Verifying Chrome and ChromeDriver installation..."
             google-chrome --version
             chromedriver --version
+            
+            # Verify version compatibility
+            INSTALLED_CHROMEDRIVER_VERSION=$(chromedriver --version | grep -oP '\d+\.\d+\.\d+\.\d+')
+            echo "Installed ChromeDriver version: $INSTALLED_CHROMEDRIVER_VERSION"
+            
+            CHROMEDRIVER_MAJOR=$(echo "$INSTALLED_CHROMEDRIVER_VERSION" | cut -d. -f1)
+            if [ "$CHROMEDRIVER_MAJOR" != "$CHROME_MAJOR_VERSION" ]; then
+              echo "WARNING: ChromeDriver major version ($CHROMEDRIVER_MAJOR) does not match Chrome major version ($CHROME_MAJOR_VERSION)"
+              echo "This may cause compatibility issues, but continuing..."
+            else
+              echo "SUCCESS: ChromeDriver and Chrome major versions match!"
+            fi
             
             # Test that Chrome can run in headless mode
             echo "Testing headless Chrome..."
@@ -224,7 +314,43 @@ jobs:
       - run:
           name: Install Node.js dependencies
           command: |
-            npm install
+            # Remove corrupted node_modules if they exist (but keep package-lock.json)
+            if [ -d "node_modules" ]; then
+              echo "Removing existing node_modules directory to ensure clean state..."
+              rm -rf node_modules
+            fi
+            
+            # Clear npm cache to prevent potential corruption issues
+            echo "Clearing npm cache..."
+            npm cache clean --force
+            
+            # Use npm ci for deterministic, faster installs in CI
+            echo "Installing dependencies with npm ci..."
+            npm ci --no-optional || {
+              echo "npm ci failed, attempting to fix native module issues..."
+              
+              # Force install the specific rollup platform module that's missing
+              echo "Installing @rollup/rollup-linux-x64-gnu explicitly..."
+              npm install @rollup/rollup-linux-x64-gnu --no-save --force || true
+              
+              # Rebuild native modules to ensure compatibility
+              echo "Rebuilding native modules..."
+              npm rebuild || true
+              
+              # Retry npm ci
+              echo "Retrying npm ci..."
+              npm ci --no-optional
+            }
+            
+            # Verify Vitest installation
+            echo "Verifying Vitest installation..."
+            npx vitest --version || {
+              echo "Vitest verification failed, attempting to fix..."
+              npm install vitest --no-save --force
+              npx vitest --version
+            }
+            
+            echo "Node.js dependencies installation completed successfully"
 
       # Store node_modules cache
       - save_cache:
@@ -236,7 +362,18 @@ jobs:
       - run:
           name: JavaScript tests (Vitest)
           command: |
-            npm run test:run
+            # Set NODE_ENV for test environment
+            export NODE_ENV=test
+            
+            # Run tests with error handling
+            echo "Running Vitest tests..."
+            npm run test:run || {
+              echo "Vitest tests failed, checking installation..."
+              npx vitest --version
+              echo "Node modules structure:"
+              ls -la node_modules/.bin/ | grep vitest || echo "vitest not found in .bin"
+              exit 1
+            }
           when: always
 
       # Run cucumber with optimized settings and parallelization

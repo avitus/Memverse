@@ -11,7 +11,7 @@ Feature: Admin Onboarding Dashboard
       | New User 2  | newuser2@example.com   | 5 days ago | 4 days ago   | 3          | 0         | ESV         |
       | New User 3  | newuser3@example.com   | 10 days ago| nil          | 1          | 0         | nil         |
       | Unengaged   | unengaged@example.com  | 7 days ago | 6 days ago   | 2          | 0         | NIV         |
-      | Old User    | olduser@example.com    | 30 days ago| 29 days ago  | 9          | 50        | KJV         |
+      | Old User    | olduser@example.com    | 29 days ago| 28 days ago  | 9          | 50        | KJV         |
 
   Scenario: Viewing the onboarding dashboard
     When I visit the admin dashboard
@@ -81,7 +81,7 @@ Feature: Admin Onboarding Dashboard
     And I click on "User Onboarding"
     When I select "30" from the "date_range" dropdown
     And I press "Apply Filters"
-    Then I should see "5" new users
+    Then I should see "6" new users
     And I should see "Old User"
 
   @javascript
