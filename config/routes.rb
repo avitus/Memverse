@@ -91,7 +91,25 @@ MemverseApp::Application.routes.draw do
   resources :quizzes do
     get 'search', on: :collection
   end
-  resources :verses
+  resources :verses do
+    member do
+      post 'set_verse_text'
+      get 'toggle_flag'
+      get 'check_verse'
+    end
+    collection do
+      get 'add_verse_tag'
+      get 'tag_cloud'
+      get 'check_verses'
+      get 'lookup'
+      get 'major_tl_lookup'
+      get 'lookup_passage'
+      get 'chapter_available'
+      get 'verify_format'
+      get 'verse_search'
+      get 'show_verses_with_tag'
+    end
+  end
 
   resources :quiz_questions do
     collection do
