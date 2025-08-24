@@ -55,12 +55,12 @@ RSpec.describe VersesController, type: :controller do
     end
     
     it 'multiple verses with same reference but different checked_by status' do
-      # Create another verse with same reference but different translation
+      # Create another verse with same translation but different reference
       verse2 = FactoryBot.create(:verse, 
         book: 'Revelation',
         book_index: 66,
         chapter: '3', 
-        versenum: '12', 
+        versenum: '13', 
         translation: 'NAS',
         text: verse_text_with_quote,
         verified: false,
