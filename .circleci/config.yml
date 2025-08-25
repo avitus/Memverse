@@ -89,11 +89,22 @@ jobs:
           keys:
             - apt-cache-v1-{{ arch }}
       
+      # Generate asset checksum for better cache invalidation
+      - run:
+          name: Generate asset checksum
+          command: |
+            # Create a checksum of all asset files for cache key
+            find app/assets -type f -name "*.scss" -o -name "*.css" -o -name "*.js" -o -name "*.coffee" | \
+              sort | xargs cat | md5sum > asset_checksum.txt
+            echo "Asset checksum: $(cat asset_checksum.txt)"
+      
       # Restore precompiled assets
       - restore_cache:
           keys:
-            - assets-cache-v1-{{ checksum "app/assets" }}-{{ checksum "Gemfile.lock" }}
-            - assets-cache-v1-
+            # Use asset checksum for precise cache invalidation
+            - assets-cache-v3-{{ checksum "asset_checksum.txt" }}-{{ checksum "Gemfile.lock" }}
+            - assets-cache-v3-{{ checksum "Gemfile.lock" }}
+            - assets-cache-v3-
 
       # Only necessary if app uses webpacker or yarn in some other way
       # - restore_cache:
@@ -472,7 +483,7 @@ jobs:
             fi
       
       - save_cache:
-          key: assets-cache-v1-{{ checksum "app/assets" }}-{{ checksum "Gemfile.lock" }}
+          key: assets-cache-v3-{{ checksum "asset_checksum.txt" }}-{{ checksum "Gemfile.lock" }}
           paths:
             - public/assets
             - tmp/cache/assets
