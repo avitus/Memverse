@@ -102,9 +102,14 @@ Sidekiq.configure_server do |config|
   # ========================================================================
   # Dead Job Cleanup (Runs at server startup)
   # ========================================================================
-  dead_set = Sidekiq::DeadSet.new
-  if dead_set.size > 1000
-    Rails.logger.warn "Large number of dead jobs detected (#{dead_set.size}). Consider investigating."
+  begin
+    require 'sidekiq/api'
+    dead_set = Sidekiq::DeadSet.new
+    if dead_set.size > 1000
+      Rails.logger.warn "Large number of dead jobs detected (#{dead_set.size}). Consider investigating."
+    end
+  rescue => e
+    Rails.logger.warn "Could not check dead set: #{e.message}"
   end
   
   # ========================================================================
