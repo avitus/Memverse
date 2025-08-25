@@ -1,12 +1,18 @@
 Given(/^I am logged in as an admin user$/) do
-  @admin_user = FactoryBot.create(:user, 
-    admin: true, 
-    email: 'admin@example.com', 
-    password: 'password123', 
-    password_confirmation: 'password123',
-    created_at: 20.days.ago,
-    confirmed_at: 20.days.ago
-  )
+  # Check if admin user already exists (from background)
+  @admin_user = User.find_by(email: 'admin@example.com')
+  
+  unless @admin_user
+    @admin_user = FactoryBot.create(:user, 
+      admin: true, 
+      email: 'admin@example.com', 
+      password: 'password123', 
+      password_confirmation: 'password123',
+      created_at: 20.days.ago,
+      confirmed_at: 20.days.ago
+    )
+  end
+  
   step %{I go to the sign in page}
   step %{I fill in "user[email]" with "#{@admin_user.email}"}
   step %{I fill in "user[password]" with "password123"}
@@ -218,22 +224,18 @@ Then(/^I should see "Admin" in the main navigation$/) do
 end
 
 When(/^I hover over "Admin"$/) do
-  # Hovering is not supported in default Capybara driver
-  # Just visit the admin page directly
-  visit admin_dashboard_path
+  # Use JavaScript to simulate hover on the Admin link in the main navigation
+  admin_link = find('li[rel="admin"] a')
+  admin_link.hover
+  # Give it a moment for the CSS hover effect to activate
+  sleep(0.5)
 end
 
 Then(/^I should see the following admin menu items:$/) do |table|
-  # The admin submenu might be hidden by default, try to find it with visible: :all
-  # or wait for it to appear after hovering
-  admin_menu = find('#admin.submenustyle', visible: :all)
+  # Wait a moment for any JavaScript to complete after hover
+  sleep(0.5)
   
-  # Make sure the menu is visible (it might be shown via CSS on hover)
-  if admin_menu && !admin_menu.visible?
-    # Force display using JavaScript if needed
-    page.execute_script("document.getElementById('admin').style.display = 'block';")
-  end
-  
+  # Find the admin submenu that should now be visible after hover
   within('#admin.submenustyle') do
     table.raw.flatten.each do |item|
       expect(page).to have_link(item)

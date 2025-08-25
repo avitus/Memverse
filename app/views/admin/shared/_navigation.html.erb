@@ -1,0 +1,45 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+  <div class="container-fluid">
+    <%= link_to "Admin", admin_dashboard_path, class: "navbar-brand" %>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavbar" aria-controls="adminNavbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    
+    <div class="collapse navbar-collapse" id="adminNavbar">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <%= link_to "Dashboard", admin_dashboard_path, class: "nav-link #{'active' if current_page?(admin_dashboard_path)}" %>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Analytics
+          </a>
+          <ul class="dropdown-menu">
+            <li><%= link_to "Quiz Dashboard", admin_quiz_dashboards_path, class: "dropdown-item" %></li>
+            <li><%= link_to "Onboarding Analytics", admin_onboarding_dashboard_index_path, class: "dropdown-item" %></li>
+            <li><%= link_to "Sidekiq Health", admin_sidekiq_health_dashboard_path, class: "dropdown-item" %></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <%= link_to "Database", rails_admin_path, class: "nav-link" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to "Sidekiq", sidekiq_web_path, class: "nav-link", target: "_blank" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to "Forum", thredded.root_path, class: "nav-link" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to "Blog", bloggity.root_path, class: "nav-link" %>
+        </li>
+      </ul>
+      
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <%= link_to "Main Site", root_path, class: "nav-link" %>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

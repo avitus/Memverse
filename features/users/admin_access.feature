@@ -19,7 +19,7 @@ Feature: Admin panel access
     Scenario: Admin successfully accesses admin dashboard
       Given I sign in as an admin user
       When I go to the admin dashboard
-      Then I should see "Site Administration"
+      Then I should see "Admin Dashboard"
 
     Scenario: Admin successfully accesses utils dashboard
       Given I sign in as an admin user

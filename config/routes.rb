@@ -18,6 +18,9 @@ MemverseApp::Application.routes.draw do
   mount Ckeditor::Engine      => '/ckeditor'
   mount JasmineRails::Engine  => '/specs' if defined?(JasmineRails)
 
+  # Admin redirect - available to all users, authentication handled in controller
+  get '/admin', to: 'admin/dashboard#index'
+  
   # Allow Admin users to monitor Sidekiq - used for quiz schedule
   authenticate :user, lambda { |u| u.admin? } do
     mount Sidekiq::Web => '/sidekiq'
@@ -51,18 +54,21 @@ MemverseApp::Application.routes.draw do
           post :bulk_manage
         end
       end
-      
-      # Onboarding dashboard routes
-      resources :onboarding_dashboard, only: [:index, :show] do
-        collection do
-          post :email_unengaged
-        end
+    end
+  end
+  
+  # Admin namespace routes that handle their own authentication
+  namespace :admin do
+    # Onboarding dashboard routes - authentication handled in controller
+    resources :onboarding_dashboard, only: [:index, :show] do
+      collection do
+        post :email_unengaged
       end
     end
   end
   
   # Mount RailsAdmin after custom admin routes to prevent route conflicts
-  mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
+  mount RailsAdmin::Engine => '/admin/database', :as => 'rails_admin'
 
   # Routes for A/B testing
   # match "/split" => Split::Dashboard, via: [:get, :post, :delete], :anchor => false, :constraints => lambda { |request|

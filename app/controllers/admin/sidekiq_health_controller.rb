@@ -3,6 +3,7 @@
 # Admin controller for monitoring Sidekiq health and performance
 # Provides endpoints for queue monitoring, job metrics, and system health checks
 class Admin::SidekiqHealthController < ApplicationController
+  layout 'admin'
   # Ensure only admin users can access these endpoints
   before_action :authenticate_admin!
   

@@ -1,7 +1,7 @@
 require 'csv'
 
 class Admin::OnboardingDashboardController < ApplicationController
-  layout 'application'
+  layout 'admin'
   before_action :authenticate_admin!
   
   def index

@@ -74,6 +74,68 @@
     </div>
   </div>
   
+  <!-- Second Row of Management Sections -->
+  <div class="row g-4 mt-2">
+    <!-- Community Management -->
+    <div class="col-md-4">
+      <div class="card h-100">
+        <div class="card-header bg-warning text-dark">
+          <h5 class="card-title mb-0">Community Management</h5>
+        </div>
+        <div class="card-body">
+          <div class="list-group list-group-flush">
+            <%= link_to thredded.root_path, class: "list-group-item list-group-item-action" do %>
+              <strong>Forum Administration</strong>
+              <p class="mb-0 small text-muted">Manage forum categories, posts, and moderation</p>
+            <% end %>
+            <%= link_to rails_admin.index_path(model_name: 'group'), class: "list-group-item list-group-item-action" do %>
+              <strong>Groups Management</strong>
+              <p class="mb-0 small text-muted">Manage user groups and memberships</p>
+            <% end %>
+            <%= link_to rails_admin.index_path(model_name: 'church'), class: "list-group-item list-group-item-action" do %>
+              <strong>Churches Management</strong>
+              <p class="mb-0 small text-muted">Manage church organizations and affiliations</p>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Reports & Analytics -->
+    <div class="col-md-4">
+      <div class="card h-100">
+        <div class="card-header bg-secondary text-white">
+          <h5 class="card-title mb-0">Reports & Analytics</h5>
+        </div>
+        <div class="card-body">
+          <div class="list-group list-group-flush">
+            <%= link_to admin_search_verse_path, class: "list-group-item list-group-item-action" do %>
+              <strong>Verse Search Tool</strong>
+              <p class="mb-0 small text-muted">Advanced verse search and analysis tools</p>
+            <% end %>
+            <%= link_to rails_admin.index_path(model_name: 'daily_stats'), class: "list-group-item list-group-item-action" do %>
+              <strong>Daily Statistics</strong>
+              <p class="mb-0 small text-muted">View daily activity and usage statistics</p>
+            <% end %>
+            <%= link_to rails_admin.index_path(model_name: 'badge'), class: "list-group-item list-group-item-action" do %>
+              <strong>Badge Management</strong>
+              <p class="mb-0 small text-muted">Manage achievement badges and rewards</p>
+            <% end %>
+            <%= link_to rails_admin.index_path(model_name: 'quest'), class: "list-group-item list-group-item-action" do %>
+              <strong>Quest Management</strong>
+              <p class="mb-0 small text-muted">Manage quests and challenges</p>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Placeholder for future expansion -->
+    <div class="col-md-4">
+      <!-- This column can be used for future admin sections -->
+    </div>
+  </div>
+  
   <!-- Quick Stats -->
   <div class="row mt-4">
     <div class="col-12">
@@ -83,10 +145,10 @@
         </div>
         <div class="card-body">
           <div class="btn-group" role="group">
-            <%= link_to "View All Users", rails_admin_path + "/user", class: "btn btn-outline-primary" %>
-            <%= link_to "View All Verses", rails_admin_path + "/verse", class: "btn btn-outline-primary" %>
-            <%= link_to "View All Groups", rails_admin_path + "/group", class: "btn btn-outline-primary" %>
-            <%= link_to "View All Churches", rails_admin_path + "/church", class: "btn btn-outline-primary" %>
+            <%= link_to "View All Users", rails_admin.index_path(model_name: 'user'), class: "btn btn-outline-primary" %>
+            <%= link_to "View All Verses", rails_admin.index_path(model_name: 'verse'), class: "btn btn-outline-primary" %>
+            <%= link_to "View All Groups", rails_admin.index_path(model_name: 'group'), class: "btn btn-outline-primary" %>
+            <%= link_to "View All Churches", rails_admin.index_path(model_name: 'church'), class: "btn btn-outline-primary" %>
           </div>
         </div>
       </div>

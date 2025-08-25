@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title><%= page_title %> - Admin</title>
+
+<meta name="distribution" content="all" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="resource-type" content="document" />
+
+<meta name="description" content="Memverse Administration Panel" />
+
+<!-- Rails 7 CSRF protection -->
+<%= csrf_meta_tag %>
+
+<!-- Main Stylesheet Manifest -->
+<%= stylesheet_link_tag "application" %>
+
+<!-- Bootstrap CSS for admin styling -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Main Javascript Manifest -->
+<%= javascript_include_tag "application" %>
+
+<!-- Bootstrap JS for admin functionality -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Auxiliary stylesheets, scripts, etc -->
+<%= yield(:head) %>
+
+<style type="text/css">
+body {
+  background-color: #f8f9fa;
+}
+.admin-container {
+  min-height: 100vh;
+  padding-bottom: 2rem;
+}
+</style>
+
+</head>
+
+<body class="admin-layout <%= controller_name %> <%= action_name %>">
+
+<noscript><div class="alert alert-warning">Memverse Admin requires Javascript to function properly.</div></noscript>
+
+<div class="admin-container">
+  <!-- Admin Navigation -->
+  <%= render 'admin/shared/navigation' %>
+  
+  <!-- Flash message notification -->
+  <div class="container-fluid">
+    <%= flash_messages %>
+  </div>
+
+  <!-- Main Admin Content -->
+  <main role="main">
+    <%= content_for?(:content) ? yield(:content) : yield %>
+  </main>
+</div>
+
+<!-- Start of I18n-js code  -->
+<script type="text/javascript">
+  I18n.defaultLocale = "<%= I18n.default_locale %>";
+  I18n.locale = "<%= I18n.locale %>";
+</script>
+<!-- End of I18n-js code  -->
+
+</body>
+</html>
