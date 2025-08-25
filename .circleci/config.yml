@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     
-    parallelism: 4
+    parallelism: 6
     
     docker:
 
@@ -88,6 +88,12 @@ jobs:
       - restore_cache:
           keys:
             - apt-cache-v1-{{ arch }}
+      
+      # Restore precompiled assets
+      - restore_cache:
+          keys:
+            - assets-cache-v1-{{ checksum "app/assets" }}-{{ checksum "Gemfile.lock" }}
+            - assets-cache-v1-
 
       # Only necessary if app uses webpacker or yarn in some other way
       # - restore_cache:
@@ -112,8 +118,9 @@ jobs:
       - run:
           name: Setup Chrome and ChromeDriver
           command: |
-            # Skip ChromeDriver setup for RSpec-only containers (container 0 and 1)
-            if [ "$CIRCLE_NODE_INDEX" = "0" ] || [ "$CIRCLE_NODE_INDEX" = "1" ]; then
+            # Skip ChromeDriver setup for RSpec-only containers (containers 0, 1, and 2)
+            # With 6 containers: 3 for RSpec, 3 for Cucumber
+            if [ "$CIRCLE_NODE_INDEX" -lt "3" ]; then
               echo "Skipping ChromeDriver setup for container $CIRCLE_NODE_INDEX (RSpec only)"
               exit 0
             fi
@@ -290,6 +297,30 @@ jobs:
           command: |
             # Combine database setup into a single step to reduce overhead
             RAILS_ENV=test bundle exec rake db:create db:schema:load --trace
+      
+      # Precompile assets once on container 0
+      - run:
+          name: Asset Precompilation
+          command: |
+            if [ "$CIRCLE_NODE_INDEX" = "0" ]; then
+              if [ ! -d "public/assets" ] || [ ! -f "public/assets/.cache_marker" ]; then
+                echo "Precompiling assets on container 0..."
+                RAILS_ENV=test bundle exec rake assets:precompile
+                touch public/assets/.cache_marker
+              else
+                echo "Using cached precompiled assets"
+              fi
+            else
+              echo "Waiting for assets from container 0..."
+              # Wait up to 60 seconds for assets to be available
+              for i in {1..12}; do
+                if [ -f "public/assets/.cache_marker" ]; then
+                  echo "Assets ready!"
+                  break
+                fi
+                sleep 5
+              done
+            fi
 
       - run:
           name: Install Redis CLI
@@ -410,9 +441,10 @@ jobs:
       - run:
           name: Save ChromeDriver to cache
           command: |
-            if [ "$CIRCLE_NODE_INDEX" = "2" ] || [ "$CIRCLE_NODE_INDEX" = "3" ]; then
+            # Only cache from Cucumber containers
+            if [ "$CIRCLE_NODE_INDEX" -ge "3" ]; then
               if [ -f /usr/local/bin/chromedriver ]; then
-                echo "ChromeDriver found, will be cached"
+                echo "ChromeDriver found, will be cached from container $CIRCLE_NODE_INDEX"
               else
                 echo "ChromeDriver not found at /usr/local/bin/chromedriver"
               fi
@@ -429,6 +461,21 @@ jobs:
           key: apt-cache-v1-{{ arch }}
           paths:
             - /var/cache/apt/archives
+          when: on_success
+      
+      # Save precompiled assets (only from container 0)
+      - run:
+          name: Prepare assets for caching
+          command: |
+            if [ "$CIRCLE_NODE_INDEX" = "0" ] && [ -d "public/assets" ]; then
+              echo "Assets will be cached from container 0"
+            fi
+      
+      - save_cache:
+          key: assets-cache-v1-{{ checksum "app/assets" }}-{{ checksum "Gemfile.lock" }}
+          paths:
+            - public/assets
+            - tmp/cache/assets
           when: on_success
 
       # Run Vitest JavaScript tests only on container 0 to avoid duplication
