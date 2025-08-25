@@ -5,10 +5,8 @@ module WaitHelpers
   # Wait for a specific condition with custom timeout
   def wait_for(timeout: Capybara.default_max_wait_time)
     Timeout.timeout(timeout) do
-      loop do
-        return true if yield
-        sleep 0.1
-      end
+      loop until yield
+      sleep 0.1
     end
   rescue Timeout::Error
     false
