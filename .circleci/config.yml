@@ -83,6 +83,11 @@ jobs:
       - restore_cache:
           keys:
             - chromedriver-cache-v3-{{ arch }}
+      
+      # Restore apt cache to speed up package installation
+      - restore_cache:
+          keys:
+            - apt-cache-v1-{{ arch }}
 
       # Only necessary if app uses webpacker or yarn in some other way
       # - restore_cache:
@@ -281,22 +286,22 @@ jobs:
             mysql -h 127.0.0.1 -P 3306 -u root -pdemo -e "SHOW DATABASES;"
 
       - run:
-          name: Database (Create)
-          command: RAILS_ENV=test bundle exec rake db:create
-
-      - run:
-          name: Database (Load Schema)
-          command: RAILS_ENV=test bundle exec rake db:schema:load
-
-      - run:
-          name: Database (Prepare)
-          command: RAILS_ENV=test bundle exec rake db:test:prepare
+          name: Database Setup (Optimized)
+          command: |
+            # Combine database setup into a single step to reduce overhead
+            RAILS_ENV=test bundle exec rake db:create db:schema:load --trace
 
       - run:
           name: Install Redis CLI
           command: |
-            sudo apt-get update --allow-releaseinfo-change
-            sudo apt-get install -y redis-tools
+            # Redis CLI is only needed for tests that use background jobs
+            # For now, install on all containers but could be optimized further
+            if command -v redis-cli &> /dev/null; then
+              echo "Redis CLI already installed"
+            else
+              sudo apt-get update --allow-releaseinfo-change
+              sudo apt-get install -y redis-tools
+            fi
 
       - run:
           name: Wait for Redis with verification
@@ -326,7 +331,9 @@ jobs:
       - type: shell
         name: Rspec tests
         command: |
-          bundle exec rspec --profile 10 \
+          # Use fail-fast to stop on first failure (saves time in CI)
+          bundle exec rspec --fail-fast \
+                            --profile 10 \
                             --format RspecJunitFormatter \
                             --out test_results/rspec.xml \
                             --format progress \
@@ -340,13 +347,16 @@ jobs:
             if [ "$CIRCLE_NODE_INDEX" = "0" ]; then
               echo "Installing Node.js dependencies on container 0..."
               
-              # Remove corrupted node_modules if they exist (but keep package-lock.json)
-              if [ -d "node_modules" ]; then
-                echo "Removing existing node_modules directory to ensure clean state..."
+              # Only remove node_modules if cache miss
+              if [ ! -f "node_modules/.cache_marker" ]; then
+                echo "Cache miss, cleaning up..."
                 rm -rf node_modules
+              else
+                echo "Using cached node_modules"
+                exit 0
               fi
               
-              # Clear npm cache to prevent potential corruption issues
+              # Clear npm cache only if needed
               echo "Clearing npm cache..."
               npm cache clean --force
               
@@ -413,6 +423,13 @@ jobs:
           paths:
             - /usr/local/bin/chromedriver
           when: on_success
+      
+      # Save apt cache
+      - save_cache:
+          key: apt-cache-v1-{{ arch }}
+          paths:
+            - /var/cache/apt/archives
+          when: on_success
 
       # Run Vitest JavaScript tests only on container 0 to avoid duplication
       - run:
@@ -467,13 +484,14 @@ jobs:
             echo "$FEATURES" | tr ' ' '\n'
             echo "---"
             
-            # Run the assigned features with appropriate retries
+            # Run the assigned features with fail-fast and reduced retries for CI speed
             bundle exec cucumber $FEATURES \
               --format progress \
               --format junit --out test_results/cucumber.xml \
-              --retry 2
+              --fail-fast \
+              --retry 1
           when: always
-          no_output_timeout: 30m
+          no_output_timeout: 15m
 
       # Save test results for timing analysis
       - store_test_results:
