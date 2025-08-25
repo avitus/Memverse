@@ -1,6 +1,6 @@
 namespace :sidekiq do
-  desc "Setup Sidekiq systemd service"
-  task :setup_service do
+  desc "Generate Sidekiq systemd service file"
+  task :generate_service do
     on roles(:app) do
       # Service template content
       template = <<~SERVICE
@@ -44,14 +44,14 @@ namespace :sidekiq do
       require 'erb'
       service_content = ERB.new(template).result(binding)
       
-      # Write service file
-      upload! StringIO.new(service_content), "/tmp/sidekiq.service"
+      # Write service file to shared directory
+      upload! StringIO.new(service_content), "#{shared_path}/sidekiq.service"
       
-      # Install service file
-      execute :sudo, "mv /tmp/sidekiq.service /etc/systemd/system/sidekiq.service"
-      execute :sudo, "systemctl daemon-reload"
-      
-      info "Sidekiq service file updated. Logs will be written to #{shared_path.join('log', 'sidekiq.log')}"
+      info "Sidekiq service file generated at: #{shared_path}/sidekiq.service"
+      info "To install, SSH to server and run:"
+      info "  sudo cp #{shared_path}/sidekiq.service /etc/systemd/system/sidekiq.service"
+      info "  sudo systemctl daemon-reload"
+      info "  sudo systemctl restart sidekiq"
     end
   end
   
@@ -91,6 +91,7 @@ namespace :sidekiq do
   end
 end
 
-# Hook into Capistrano deployment
-after 'deploy:published', 'sidekiq:setup_service'
-after 'sidekiq:setup_service', 'sidekiq:restart'
+# Manual service setup - run with: cap production sidekiq:setup_service
+# Commented out automatic hooks to avoid sudo issues during deployment
+# after 'deploy:published', 'sidekiq:setup_service'
+# after 'sidekiq:setup_service', 'sidekiq:restart'
