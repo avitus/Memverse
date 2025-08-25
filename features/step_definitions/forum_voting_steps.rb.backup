@@ -118,12 +118,12 @@ When('I visit the feedback board') do
   
   # For JavaScript tests, we might need to wait longer for redirects
   if Capybara.current_driver != :rack_test
-    wait_for_forum_load
+    sleep 2
     
     # Check if we got redirected and need to visit forum again
     unless current_url.include?('/forum') || page.has_content?('Messageboards')
       visit '/forum'
-      wait_for(timeout: 1) { current_url.include?('/forum') || page.has_content?('Messageboards') }
+      sleep 1
     end
   end
   
@@ -153,10 +153,10 @@ When('I visit the general discussion board') do
   
   # For JavaScript tests, wait for page load
   if Capybara.current_driver != :rack_test
-    wait_for_forum_load
+    sleep 2
     unless current_url.include?('/forum') || page.has_content?('Messageboards')
       visit '/forum'
-      wait_for(timeout: 1) { current_url.include?('/forum') || page.has_content?('Messageboards') }
+      sleep 1
     end
   end
   
@@ -175,10 +175,10 @@ When('I visit the topic {string}') do |topic_title|
   # For JavaScript tests, navigate through the forum properly
   if Capybara.current_driver != :rack_test
     visit '/forum'
-    wait_for_forum_load
+    sleep 2
     unless current_url.include?('/forum') || page.has_content?('Messageboards')
       visit '/forum'
-      wait_for(timeout: 1) { current_url.include?('/forum') || page.has_content?('Messageboards') }
+      sleep 1
     end
     
     # Navigate to the messageboard first
@@ -196,8 +196,8 @@ When('I visit the topic {string}') do |topic_title|
     expect(page).to have_content(topic_title, wait: 10)
     expect(current_url).to include(topic.slug)
     
-    # Wait for the voting interface to render if user is logged in
-    wait_for_voting_interface if page.has_content?('Logout')
+    # Wait a moment for the voting interface to render if user is logged in
+    sleep 1 if page.has_content?('Logout')
   else
     # For non-JavaScript tests, direct navigation should work
     visit "/forum/#{topic.messageboard.slug}/#{topic.slug}"
@@ -249,7 +249,7 @@ When('I click the upvote button') do
           
           # Wait for authentication to be established
           expect(page).to have_content('Logout', wait: 15)
-          wait_for_authentication
+          sleep 2
           
           # Navigate back to the current page if needed
           unless current_url.include?('/topics/')
@@ -259,11 +259,11 @@ When('I click the upvote button') do
               step %{I visit the topic "#{topic_title}"}
             else
               page.refresh
-              wait_for_voting_interface
+              sleep 3
             end
           else
             page.refresh
-            wait_for_voting_interface
+            sleep 3
           end
         else
           raise "No current user available to re-authenticate"
@@ -288,14 +288,15 @@ When('I click the upvote button') do
           break
         else
           puts "Voting interface found but upvote button missing (attempt #{attempt + 1})"
-          wait_for(timeout: 1) { page.has_css?('.thredded-voting') }
+          sleep 2
           page.refresh
-          wait_for_voting_interface
+          sleep 3
         end
       else
         puts "Voting interface not found (attempt #{attempt + 1})"
+        sleep 2
         page.refresh
-        wait_for_voting_interface
+        sleep 3
       end
     end
     
@@ -310,7 +311,7 @@ When('I click the upvote button') do
   find('.vote-button.upvote').click
   
   # Wait for the AJAX response to complete and page to update
-  wait_for_vote_update
+  sleep 3
 end
 
 When('I click the downvote button') do
@@ -342,7 +343,7 @@ When('I click the downvote button') do
           
           # Wait for authentication to be established
           expect(page).to have_content('Logout', wait: 15)
-          wait_for_authentication
+          sleep 2
           
           # Navigate back to the current page if needed
           unless current_url.include?('/topics/')
@@ -351,11 +352,11 @@ When('I click the downvote button') do
               step %{I visit the topic "#{topic_title}"}
             else
               page.refresh
-              wait_for_voting_interface
+              sleep 3
             end
           else
             page.refresh
-            wait_for_voting_interface
+            sleep 3
           end
         else
           raise "No current user available to re-authenticate"
@@ -380,14 +381,15 @@ When('I click the downvote button') do
           break
         else
           puts "Voting interface found but downvote button missing (attempt #{attempt + 1})"
-          wait_for(timeout: 1) { page.has_css?('.thredded-voting') }
+          sleep 2
           page.refresh
-          wait_for_voting_interface
+          sleep 3
         end
       else
         puts "Voting interface not found for downvote (attempt #{attempt + 1})"
+        sleep 2
         page.refresh
-        wait_for_voting_interface
+        sleep 3
       end
     end
     
@@ -402,7 +404,7 @@ When('I click the downvote button') do
   find('.vote-button.downvote').click
   
   # Wait for the AJAX response to complete and page to update
-  wait_for_vote_update
+  sleep 3
 end
 
 When('I log in as {string}') do |username|
@@ -411,8 +413,8 @@ When('I log in as {string}') do |username|
   # Wait for authentication state to be established
   expect(page).to have_content('Logout', wait: 10)
   
-  # Wait for session to be fully established
-  wait_for_authentication
+  # Give extra time for session to be fully established
+  sleep 1
 end
 
 When('I log in again') do
@@ -431,7 +433,7 @@ When('I remove my vote') do
   expect(page).to have_link('remove vote', wait: 10)
   click_link('remove vote')
   # Wait for the AJAX response to complete and page to update
-  wait_for_vote_update
+  sleep 3
 end
 
 When('I click on the topic {string}') do |topic_title|

@@ -1,6 +1,6 @@
 # Custom Capybara configuration for handling JavaScript alerts and other issues
 
-# Configure Selenium Chrome driver with proper options for stability
+# Configure Selenium Chrome driver with proper options for stability and SPEED
 Capybara.register_driver :selenium_chrome_headless do |app|
   options = Selenium::WebDriver::Chrome::Options.new
   
@@ -11,22 +11,32 @@ Capybara.register_driver :selenium_chrome_headless do |app|
   options.add_argument('--disable-dev-shm-usage')
   options.add_argument('--window-size=1920,1080')
   
-  # Disable animations and transitions for more stable tests
+  # Disable animations and transitions for FASTER tests
   options.add_argument('--disable-web-animations')
   options.add_argument('--disable-smooth-scrolling')
+  options.add_argument('--disable-blink-features=AutomationControlled')
+  options.add_argument('--disable-site-isolation-trials')
   
-  # Improve stability in CI environment
+  # Improve stability and speed in CI environment
   options.add_argument('--disable-features=VizDisplayCompositor')
   options.add_argument('--disable-background-timer-throttling')
   options.add_argument('--disable-backgrounding-occluded-windows')
   options.add_argument('--disable-renderer-backgrounding')
+  options.add_argument('--disable-features=TranslateUI')
+  options.add_argument('--disable-ipc-flooding-protection')
+  
+  # Faster page loads
+  options.add_argument('--aggressive-cache-discard')
+  options.add_argument('--disable-extensions')
+  options.add_argument('--disable-default-apps')
   
   # Handle alerts automatically
   options.add_preference('profile.default_content_setting_values.notifications', 1)
   options.unhandled_prompt_behavior = :accept
   
-  # Set page load strategy to ensure page is fully loaded
-  options.page_load_strategy = 'normal'
+  # Use eager page load strategy for faster test execution
+  # 'eager' returns control as soon as DOM is ready (not waiting for images/stylesheets)
+  options.page_load_strategy = 'eager'
   
   Capybara::Selenium::Driver.new(app, 
     browser: :chrome,
@@ -34,8 +44,8 @@ Capybara.register_driver :selenium_chrome_headless do |app|
   )
 end
 
-# Increase timeouts for CI environment
-Capybara.default_max_wait_time = ENV['CI'] ? 15 : 10
+# Optimize timeouts - reduce wait times for faster failures
+Capybara.default_max_wait_time = ENV['CI'] ? 5 : 3
 
 # Configure Capybara to automatically accept JavaScript confirms and alerts
 Capybara.automatic_reload = false
