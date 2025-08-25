@@ -121,9 +121,13 @@ When('I visit the feedback board') do
     wait_for_forum_load
     
     # Check if we got redirected and need to visit forum again
-    unless current_url.include?('/forum') || page.has_content?('Messageboards')
+    current_path = current_url.to_s
+    has_forum = current_path.include?('/forum')
+    has_messageboards = page.has_content?('Messageboards')
+    
+    unless has_forum || has_messageboards
       visit '/forum'
-      wait_for(timeout: 1) { current_url.include?('/forum') || page.has_content?('Messageboards') }
+      wait_for(timeout: 1) { current_url.to_s.include?('/forum') || page.has_content?('Messageboards') }
     end
   end
   
@@ -154,9 +158,14 @@ When('I visit the general discussion board') do
   # For JavaScript tests, wait for page load
   if Capybara.current_driver != :rack_test
     wait_for_forum_load
-    unless current_url.include?('/forum') || page.has_content?('Messageboards')
+    
+    current_path = current_url.to_s
+    has_forum = current_path.include?('/forum')
+    has_messageboards = page.has_content?('Messageboards')
+    
+    unless has_forum || has_messageboards
       visit '/forum'
-      wait_for(timeout: 1) { current_url.include?('/forum') || page.has_content?('Messageboards') }
+      wait_for(timeout: 1) { current_url.to_s.include?('/forum') || page.has_content?('Messageboards') }
     end
   end
   
@@ -176,9 +185,14 @@ When('I visit the topic {string}') do |topic_title|
   if Capybara.current_driver != :rack_test
     visit '/forum'
     wait_for_forum_load
-    unless current_url.include?('/forum') || page.has_content?('Messageboards')
+    
+    current_path = current_url.to_s
+    has_forum = current_path.include?('/forum')
+    has_messageboards = page.has_content?('Messageboards')
+    
+    unless has_forum || has_messageboards
       visit '/forum'
-      wait_for(timeout: 1) { current_url.include?('/forum') || page.has_content?('Messageboards') }
+      wait_for(timeout: 1) { current_url.to_s.include?('/forum') || page.has_content?('Messageboards') }
     end
     
     # Navigate to the messageboard first
@@ -194,7 +208,7 @@ When('I visit the topic {string}') do |topic_title|
     
     # Verify we're on the topic page
     expect(page).to have_content(topic_title, wait: 10)
-    expect(current_url).to include(topic.slug)
+    expect(current_url.to_s).to include(topic.slug)
     
     # Wait for the voting interface to render if user is logged in
     wait_for_voting_interface if page.has_content?('Logout')
@@ -252,7 +266,7 @@ When('I click the upvote button') do
           wait_for_authentication
           
           # Navigate back to the current page if needed
-          unless current_url.include?('/topics/')
+          unless current_url.to_s.include?('/topics/')
             # We need to get back to the topic page
             topic_title = @current_topic_title if @current_topic_title
             if topic_title
@@ -345,7 +359,7 @@ When('I click the downvote button') do
           wait_for_authentication
           
           # Navigate back to the current page if needed
-          unless current_url.include?('/topics/')
+          unless current_url.to_s.include?('/topics/')
             topic_title = @current_topic_title if @current_topic_title
             if topic_title
               step %{I visit the topic "#{topic_title}"}
