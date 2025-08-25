@@ -78,6 +78,11 @@ jobs:
           keys:
             - memverse-node-{{ checksum "package.json" }}
             - memverse-node-
+      
+      # Restore ChromeDriver cache to avoid re-downloading
+      - restore_cache:
+          keys:
+            - chromedriver-cache-v3-{{ arch }}
 
       # Only necessary if app uses webpacker or yarn in some other way
       # - restore_cache:
@@ -98,10 +103,27 @@ jobs:
       #     paths:
       #       - ~/.yarn-cache
 
-      # Install Chrome dependencies and setup matching ChromeDriver
+      # Install Chrome dependencies and setup matching ChromeDriver (only for Cucumber tests)
       - run:
           name: Setup Chrome and ChromeDriver
           command: |
+            # Skip ChromeDriver setup for RSpec-only containers (container 0 and 1)
+            if [ "$CIRCLE_NODE_INDEX" = "0" ] || [ "$CIRCLE_NODE_INDEX" = "1" ]; then
+              echo "Skipping ChromeDriver setup for container $CIRCLE_NODE_INDEX (RSpec only)"
+              exit 0
+            fi
+            
+            echo "Setting up ChromeDriver for container $CIRCLE_NODE_INDEX (Cucumber tests)"
+            
+            # Check if ChromeDriver is already cached
+            if [ -f /usr/local/bin/chromedriver ]; then
+              echo "ChromeDriver found in cache!"
+              chromedriver --version
+              echo "Chrome version: $(google-chrome --version)"
+              exit 0
+            fi
+            
+            echo "ChromeDriver not in cache, downloading..."
             # Install additional dependencies for headless Chrome
             sudo apt-get update --allow-releaseinfo-change
             sudo apt-get install -y \
@@ -372,6 +394,24 @@ jobs:
           key: memverse-node-{{ checksum "package.json" }}
           paths:
             - node_modules
+          when: on_success
+      
+      # Save ChromeDriver cache (only from containers that installed it)
+      - run:
+          name: Save ChromeDriver to cache
+          command: |
+            if [ "$CIRCLE_NODE_INDEX" = "2" ] || [ "$CIRCLE_NODE_INDEX" = "3" ]; then
+              if [ -f /usr/local/bin/chromedriver ]; then
+                echo "ChromeDriver found, will be cached"
+              else
+                echo "ChromeDriver not found at /usr/local/bin/chromedriver"
+              fi
+            fi
+      
+      - save_cache:
+          key: chromedriver-cache-v3-{{ arch }}
+          paths:
+            - /usr/local/bin/chromedriver
           when: on_success
 
       # Run Vitest JavaScript tests only on container 0 to avoid duplication
