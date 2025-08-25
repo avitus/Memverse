@@ -32,9 +32,7 @@ module TestHelpers
   # Check if all jQuery AJAX requests are finished
   def finished_all_ajax_requests?
     return true unless page.evaluate_script('typeof jQuery !== "undefined"')
-    active_count = page.evaluate_script('jQuery.active')
-    return true if active_count.nil?
-    active_count == 0 || (active_count.respond_to?(:zero?) && active_count.zero?)
+    page.evaluate_script('jQuery.active').zero?
   rescue Capybara::NotSupportedByDriverError
     true
   end

@@ -7,7 +7,6 @@
 require 'cucumber/rails'
 require 'email_spec/cucumber'
 require 'action_mailer_cache_delivery'
-require_relative 'wait_helpers'
 
 # Initialize cache delivery method to prevent nil file handle issues
 if defined?(ActionMailer::CacheDelivery)
@@ -110,12 +109,4 @@ Capybara.javascript_driver = :selenium_chrome_headless
 
 # Configure webdrivers to automatically manage driver versions
 require 'webdrivers'
-
-# Additional Capybara optimizations for speed
-Capybara.server = :puma, { Silent: true } # Reduce server output noise
-Capybara.asset_host = 'http://localhost:3000' # Avoid asset compilation in tests
-
-# Disable CSS and image loading for faster tests (when not testing visual elements)
-Capybara.automatic_reload = false # Don't reload page between actions
-Capybara.threadsafe = true # Enable threadsafe mode for parallel execution
 

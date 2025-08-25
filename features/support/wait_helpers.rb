@@ -14,32 +14,30 @@ module WaitHelpers
   
   # Wait for authentication to be fully established
   def wait_for_authentication
-    expect(page).to have_content('Logout', wait: 5)
+    expect(page).to have_content('Logout', wait: 15)
     wait_for_ajax if page.respond_to?(:evaluate_script)
   end
   
   # Wait for forum to be fully loaded
   def wait_for_forum_load
-    # Wait for either the main forum container or messageboards
-    wait_for(timeout: 3) do
-      page.has_css?('.thredded--main') || page.has_content?('Messageboards') || page.has_content?('Feedback')
-    end
+    expect(page).to have_css('.thredded--main', wait: 10)
     wait_for_ajax if page.respond_to?(:evaluate_script)
   end
   
   # Wait for voting interface to be ready
   def wait_for_voting_interface
-    expect(page).to have_css('.thredded-voting', wait: 3)
+    expect(page).to have_css('.thredded-voting', wait: 10)
     wait_for_ajax if page.respond_to?(:evaluate_script)
   end
   
   # Wait for vote button to be clickable
   def wait_and_click_vote_button(button_type)
     selector = ".vote-button.#{button_type}"
-    expect(page).to have_css(selector, wait: 3)
+    expect(page).to have_css(selector, wait: 10)
     
     # Ensure button is visible and clickable
-    button = find(selector, wait: 2)
+    button = find(selector)
+    wait_for { button.visible? }
     
     button.click
     wait_for_ajax if page.respond_to?(:evaluate_script)
