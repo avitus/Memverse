@@ -1,0 +1,199 @@
+<% page_title "Quiz Admin Dashboard" %>
+
+<div class="quiz-dashboard">
+  <div class="dashboard-header">
+    <h1>Quiz Management Dashboard</h1>
+    <%= link_to "Create New Quiz", new_admin_quiz_dashboard_path, 
+                class: "btn-new-quiz" %>
+  </div>
+
+  <!-- System Health Status -->
+  <div class="system-health-grid">
+    <% @system_health.each do |component, status| %>
+      <div class="health-card">
+        <h3><%= component.to_s.humanize %></h3>
+        <% if status == true || (status.is_a?(Hash) && !status[:error]) %>
+          <div class="status-operational">
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+            </svg>
+            <span>Operational</span>
+          </div>
+        <% else %>
+          <div class="status-error">
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+            </svg>
+            <span>Error</span>
+          </div>
+          <% if status.is_a?(Hash) && status[:error] %>
+            <p class="error-message"><%= status[:error] %></p>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Live Quizzes -->
+  <% if @live_quizzes.any? %>
+    <div class="live-quizzes-alert">
+      <div class="alert-content">
+        <div class="alert-icon">
+          <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+          </svg>
+        </div>
+        <div class="alert-body">
+          <h3>Live Quizzes in Progress</h3>
+          <ul>
+            <% @live_quizzes.each do |quiz| %>
+              <li>
+                <%= link_to quiz.name, monitor_admin_quiz_dashboard_path(quiz) %>
+                - Started <%= time_ago_in_words(quiz.start_time) %> ago
+                <%= link_to "Monitor", monitor_admin_quiz_dashboard_path(quiz), 
+                            class: "btn-monitor" %>
+                <%= link_to "Stop", stop_admin_quiz_dashboard_path(quiz), 
+                            method: :post,
+                            data: { confirm: "Are you sure you want to stop this quiz?" },
+                            class: "btn-stop" %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Upcoming Quizzes -->
+  <div class="section-container">
+    <h2>Upcoming Quizzes (Next 24 Hours)</h2>
+    <% if @upcoming_quizzes.any? %>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Start Time</th>
+              <th>Questions</th>
+              <th>Creator</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @upcoming_quizzes.each do |quiz| %>
+              <tr>
+                <td>
+                  <%= link_to quiz.name, admin_quiz_dashboard_path(quiz) %>
+                </td>
+                <td>
+                  <%= quiz.start_time.strftime("%b %d, %I:%M %p %Z") %>
+                  <br>
+                  <small style="color: #6b7280;">
+                    (<%= time_ago_in_words(quiz.start_time) %> from now)
+                  </small>
+                </td>
+                <td>
+                  <%= quiz.quiz_questions.count %>
+                </td>
+                <td>
+                  <%= quiz.user.name_or_login %>
+                </td>
+                <td>
+                  <div class="action-links">
+                    <%= link_to "Start Now", start_admin_quiz_dashboard_path(quiz), 
+                                method: :post,
+                                class: "link-green" %>
+                    <%= link_to "Edit", edit_quiz_path(quiz) %>
+                    <%= link_to "Cancel", admin_quiz_dashboard_path(quiz), 
+                                method: :delete,
+                                data: { confirm: "Are you sure?" },
+                                class: "link-red" %>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <p class="empty-message">No upcoming quizzes scheduled in the next 24 hours.</p>
+    <% end %>
+  </div>
+
+  <!-- All Quizzes -->
+  <div class="section-container">
+    <h2>All Quizzes</h2>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Start Time</th>
+            <th>Questions</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @quizzes.each do |quiz| %>
+            <tr>
+              <td>
+                #<%= quiz.id %>
+              </td>
+              <td>
+                <%= link_to quiz.name, admin_quiz_dashboard_path(quiz) %>
+              </td>
+              <td>
+                <% if quiz.start_time && quiz.start_time < Time.current %>
+                  <span class="status-badge status-completed">
+                    Completed
+                  </span>
+                <% elsif quiz.start_time && quiz.start_time > Time.current %>
+                  <span class="status-badge status-scheduled">
+                    Scheduled
+                  </span>
+                <% else %>
+                  <span class="status-badge status-draft">
+                    Draft
+                  </span>
+                <% end %>
+              </td>
+              <td>
+                <%= quiz.start_time&.strftime("%b %d, %Y %I:%M %p") || "Not scheduled" %>
+              </td>
+              <td>
+                <%= quiz.quiz_questions.count %>
+              </td>
+              <td>
+                <div class="action-links">
+                  <%= link_to "View", admin_quiz_dashboard_path(quiz) %>
+                  <%= link_to "Monitor", monitor_admin_quiz_dashboard_path(quiz), 
+                              class: "link-green" %>
+                  <%= link_to "Participants", participants_admin_quiz_dashboard_path(quiz), 
+                              class: "link-purple" %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      
+      <div class="pagination-container">
+        <%= paginate @quizzes %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="quick-actions">
+    <%= link_to "View Schedule", schedule_admin_quiz_dashboards_path, 
+                class: "btn-gray" %>
+    <%= link_to "Statistics", statistics_admin_quiz_dashboards_path, 
+                class: "btn-purple" %>
+    <%= link_to "Error Logs", error_logs_admin_quiz_dashboards_path, 
+                class: "btn-red" %>
+    <%= link_to "Health Check", health_check_admin_quiz_dashboards_path, 
+                class: "btn-green" %>
+  </div>
+</div>

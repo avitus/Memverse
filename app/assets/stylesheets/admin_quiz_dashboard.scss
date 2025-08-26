@@ -1,0 +1,324 @@
+// Admin Quiz Dashboard Styles
+
+.quiz-dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+
+  .dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+
+    h1 {
+      font-size: 1.875rem;
+      font-weight: bold;
+    }
+
+    .btn-new-quiz {
+      background-color: #3b82f6;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 0.25rem;
+      text-decoration: none;
+      display: inline-block;
+
+      &:hover {
+        background-color: #2563eb;
+      }
+    }
+  }
+
+  // System Health Cards
+  .system-health-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+
+    .health-card {
+      background: white;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+      h3 {
+        font-weight: 600;
+        color: #4b5563;
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+        text-transform: capitalize;
+      }
+
+      .status-operational {
+        display: flex;
+        align-items: center;
+        color: #16a34a;
+
+        svg {
+          width: 20px;
+          height: 20px;
+          margin-right: 8px;
+        }
+      }
+
+      .status-error {
+        display: flex;
+        align-items: center;
+        color: #dc2626;
+
+        svg {
+          width: 20px;
+          height: 20px;
+          margin-right: 8px;
+        }
+      }
+
+      .error-message {
+        font-size: 0.75rem;
+        color: #6b7280;
+        margin-top: 0.25rem;
+      }
+    }
+  }
+
+  // Live Quizzes Alert
+  .live-quizzes-alert {
+    background-color: #fef3c7;
+    border-left: 4px solid #facc15;
+    padding: 1rem;
+    margin-bottom: 2rem;
+
+    .alert-content {
+      display: flex;
+
+      .alert-icon {
+        flex-shrink: 0;
+
+        svg {
+          width: 20px;
+          height: 20px;
+          color: #facc15;
+        }
+      }
+
+      .alert-body {
+        margin-left: 0.75rem;
+
+        h3 {
+          font-size: 0.875rem;
+          font-weight: 500;
+          color: #92400e;
+          margin-bottom: 0.5rem;
+        }
+
+        ul {
+          list-style: disc;
+          list-style-position: inside;
+          font-size: 0.875rem;
+          color: #92400e;
+
+          li {
+            margin-bottom: 0.25rem;
+
+            a {
+              color: #92400e;
+              text-decoration: underline;
+
+              &:hover {
+                color: #78350f;
+              }
+            }
+
+            .btn-monitor {
+              margin-left: 0.5rem;
+              background-color: #facc15;
+              color: white;
+              padding: 0.125rem 0.5rem;
+              border-radius: 0.25rem;
+              font-size: 0.75rem;
+              text-decoration: none;
+              display: inline-block;
+            }
+
+            .btn-stop {
+              margin-left: 0.25rem;
+              background-color: #dc2626;
+              color: white;
+              padding: 0.125rem 0.5rem;
+              border-radius: 0.25rem;
+              font-size: 0.75rem;
+              text-decoration: none;
+              display: inline-block;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Tables Section
+  .section-container {
+    margin-bottom: 2rem;
+
+    h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .table-container {
+      background: white;
+      border-radius: 0.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+
+        thead {
+          background-color: #f9fafb;
+
+          th {
+            padding: 0.75rem 1.5rem;
+            text-align: left;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid #e5e7eb;
+          }
+        }
+
+        tbody {
+          background-color: white;
+
+          tr {
+            border-bottom: 1px solid #e5e7eb;
+
+            &:last-child {
+              border-bottom: none;
+            }
+          }
+
+          td {
+            padding: 1rem 1.5rem;
+            font-size: 0.875rem;
+            white-space: nowrap;
+
+            a {
+              color: #3b82f6;
+              text-decoration: none;
+
+              &:hover {
+                text-decoration: underline;
+              }
+            }
+
+            .status-badge {
+              padding: 0.125rem 0.5rem;
+              display: inline-flex;
+              font-size: 0.75rem;
+              line-height: 1.25rem;
+              font-weight: 600;
+              border-radius: 9999px;
+
+              &.status-completed {
+                background-color: #f3f4f6;
+                color: #1f2937;
+              }
+
+              &.status-scheduled {
+                background-color: #dbeafe;
+                color: #1e40af;
+              }
+
+              &.status-draft {
+                background-color: #fef3c7;
+                color: #92400e;
+              }
+            }
+
+            .action-links {
+              display: flex;
+              gap: 0.5rem;
+
+              a {
+                font-size: 0.875rem;
+
+                &.link-green {
+                  color: #16a34a;
+                }
+
+                &.link-purple {
+                  color: #9333ea;
+                }
+
+                &.link-red {
+                  color: #dc2626;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .pagination-container {
+        background-color: white;
+        padding: 0.75rem 1.5rem;
+        border-top: 1px solid #e5e7eb;
+      }
+    }
+
+    .empty-message {
+      color: #6b7280;
+      font-style: italic;
+    }
+  }
+
+  // Quick Actions
+  .quick-actions {
+    margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
+
+    a {
+      padding: 0.5rem 1rem;
+      border-radius: 0.25rem;
+      text-decoration: none;
+      color: white;
+      display: inline-block;
+
+      &.btn-gray {
+        background-color: #6b7280;
+        &:hover {
+          background-color: #4b5563;
+        }
+      }
+
+      &.btn-purple {
+        background-color: #9333ea;
+        &:hover {
+          background-color: #7e22ce;
+        }
+      }
+
+      &.btn-red {
+        background-color: #dc2626;
+        &:hover {
+          background-color: #b91c1c;
+        }
+      }
+
+      &.btn-green {
+        background-color: #16a34a;
+        &:hover {
+          background-color: #15803d;
+        }
+      }
+    }
+  }
+}

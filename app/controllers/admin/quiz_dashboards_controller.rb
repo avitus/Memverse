@@ -207,11 +207,21 @@ class Admin::QuizDashboardsController < ApplicationController
   end
   
   def get_live_quizzes
-    Quiz.joins("LEFT JOIN redis_sessions ON redis_sessions.quiz_id = quizzes.id")
-        .where("redis_sessions.status = 'in_progress' OR quizzes.start_time BETWEEN ? AND ?",
-               5.minutes.ago, Time.current)
-        .distinct
-  rescue
+    # Check for quizzes that recently started or are in progress
+    recent_quizzes = Quiz.where("start_time BETWEEN ? AND ?", 5.minutes.ago, Time.current)
+    
+    # Check Redis for active quiz sessions
+    live_quiz_ids = []
+    recent_quizzes.find_each do |quiz|
+      quiz_session = QuizSession.new(quiz.id)
+      if quiz_session.quiz_in_progress?
+        live_quiz_ids << quiz.id
+      end
+    end
+    
+    Quiz.where(id: live_quiz_ids)
+  rescue => e
+    Rails.logger.error "Error getting live quizzes: #{e.message}"
     []
   end
   
@@ -310,11 +320,11 @@ class Admin::QuizDashboardsController < ApplicationController
   end
   
   def get_active_participants_count
-    Quiz.where('start_time > ?', 1.hour.ago)
-        .joins(:participants)
-        .distinct
-        .count('participants.user_id')
-  rescue
+    # Count users who participated in recent quizzes
+    # For now, return 0 since we don't have a participants association
+    0
+  rescue => e
+    Rails.logger.error "Error getting active participants: #{e.message}"
     0
   end
   
@@ -324,10 +334,11 @@ class Admin::QuizDashboardsController < ApplicationController
   end
   
   def get_popular_questions
-    QuizQuestion.joins(:quiz_question_stats)
-                .order('quiz_question_stats.times_used DESC')
-                .limit(10)
-  rescue
+    # Return top quiz questions
+    # For now, just return recent questions since we don't have stats table
+    QuizQuestion.order(created_at: :desc).limit(10)
+  rescue => e
+    Rails.logger.error "Error getting popular questions: #{e.message}"
     []
   end
   
