@@ -107,6 +107,6 @@ circleci_deploy_key.pub
 .serena/
 
 # Claude AI assistant files
-.claude/
+# .claude/ - Now tracked in git
 
 /config/master.key
