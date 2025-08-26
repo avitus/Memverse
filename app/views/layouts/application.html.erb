@@ -252,5 +252,18 @@
 		});
 	});
 </script>
+
+<!-- Catch hard bounces of email addresses -->
+<script>
+  window.ReboundSettings = {
+    publicToken: "maujjna3rpxukxjw8puhcc",
+    email: "<%= current_user.email %> unless current_user.nil?",
+    color: "orange",
+    actionLabel: "Update email",
+    actionUrl: "https://www.memverse.com/update_profile",
+  }
+</script>
+<script>(function(r,e,b,o,u,n,d){if(r.Rebound)return;d=function(){o="script";u=e.createElement(o);u.type="text/javascript";u.src=b;u.async=true;n=e.getElementsByTagName(o)[0];n.parentNode.insertBefore(u,n)};if(r.attachEvent){r.attachEvent("onload",d)}else{r.addEventListener("load",d,false)}})(window,document,"https://rebound.postmarkapp.com/widget/1.0");</script>
+
 </body>
 </html>
