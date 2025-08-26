@@ -1,13 +1,13 @@
-if Rails.env.production?
+# Redis connection configuration
+redis_options = {
+  host: Rails.env.production? ? 'localhost' : '127.0.0.1',
+  port: 6379,
+  db: 0,
+  # Timeout settings to match Sidekiq configuration
+  timeout: 5,        # General timeout
+  read_timeout: 5,   # Prevent ReadTimeoutError
+  write_timeout: 5,  # Write operations timeout
+  connect_timeout: 2 # Connection establishment timeout
+}
 
-	# In production Redis is on localhost listening on port 6379
-	$redis = Redis.new(:host => 'localhost', :port => 6379)
-
-else
-
-	# In dev/test we will be using a docker container called 'redis'
-	# $redis = Redis.new(:host => (ENV['REDIS_HOST'] || 'redis'), :port => 6379)
-	$redis = Redis.new(:host => '127.0.0.1', :port => 6379)
-
-
-end
+$redis = Redis.new(redis_options)

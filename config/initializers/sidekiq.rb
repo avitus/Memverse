@@ -1,10 +1,13 @@
 # Shared Redis configuration for both client and server
 redis_config = {
   url: ENV.fetch('REDIS_URL', 'redis://127.0.0.1:6379/0'),
-  pool_timeout: 1,
+  pool_timeout: 5,  # Increased from 1 to 5 seconds
   size: ENV.fetch('SIDEKIQ_REDIS_POOL_SIZE', 30).to_i,
   # Redis timeout settings (compatible with redis-client gem)
-  timeout: 1
+  timeout: 5,
+  read_timeout: 5,   # Add explicit read timeout to prevent ReadTimeoutError
+  write_timeout: 5,  # Add explicit write timeout
+  connect_timeout: 2 # Add connection timeout
 }
 
 # Configure Sidekiq client (for enqueueing jobs)
