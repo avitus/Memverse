@@ -257,8 +257,7 @@
 <script>
   window.ReboundSettings = {
     publicToken: "maujjna3rpxukxjw8puhcc",
-    email: "<%= current_user.email %> unless current_user.nil?",
-    color: "orange",
+	email: "<%= current_user&.email || '' %>", color: "orange",
     actionLabel: "Update email",
     actionUrl: "https://www.memverse.com/update_profile",
   }
