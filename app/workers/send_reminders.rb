@@ -7,7 +7,7 @@ class SendReminders
   def perform
     # TEMPORARY: Disable reminder emails while email provider transition is in progress
     # To re-enable: Comment out or remove the following lines
-    if false  # Set to false to re-enable emails
+    if true  # Set to false to re-enable emails
       Rails.logger.info(" *** Email reminder: TEMPORARILY DISABLED - Skipping email reminders")
       return
     end
