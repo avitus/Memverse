@@ -1,4 +1,4 @@
-class Admin::QuizDashboardController < ApplicationController
+class Admin::QuizDashboardsController < ApplicationController
   layout 'admin'
   before_action :authenticate_admin!
   before_action :set_quiz, only: [:show, :start, :stop, :monitor, :participants]
