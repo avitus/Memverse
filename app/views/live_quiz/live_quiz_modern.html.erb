@@ -208,4 +208,103 @@
 	var memverseUserLogin = "<%= current_user.login.html_safe %>";
 	var channel = "quiz-<%= @quiz.id %>";
 	var translation = "<%= current_user.translation %>";
+	
+	// Initialize quiz when document is ready
+	$(document).ready(function() {
+		// Set up quiz room for user
+		quizRoom.initialize('<%= @num_questions %>');
+		
+		console.log("==> Connected to channel " + channel);
+		
+		// Initialize PubNub with v7+ SDK
+		var pubnub = new PubNub({
+			subscribeKey: '<%= PN.env[:subscribe_key] %>',
+			publishKey: '<%= PN.env[:publish_key] %>',
+			logVerbosity: false,
+			userId: memverseUserID,
+			ssl: true,
+			restore: true,
+			keepAlive: true
+		});
+		
+		// Add PubNub event listeners
+		pubnub.addListener({
+			message: function(message) {
+				console.log("Received message:", message);
+				quizRoom.handleMessage(message.message);
+			},
+			presence: function(presenceEvent) {
+				console.log("Presence event:", presenceEvent);
+				// Handle presence events if needed
+			},
+			status: function(statusEvent) {
+				console.log("Status event:", statusEvent);
+				if (statusEvent.category === "PNConnectedCategory") {
+					console.log("Successfully connected to PubNub");
+				}
+			}
+		});
+		
+		// Subscribe to the quiz channel
+		pubnub.subscribe({
+			channels: [channel]
+		});
+		
+		// Make PubNub instance globally available
+		window.pubnub = pubnub;
+		
+		// Set quiz status
+		$.getJSON('/live_quiz/till_start/<%= @quiz.id %>.json', function(data) {
+			if (data.status) {
+				$("#countdown-till").html("<strong>Quiz Status:</strong> " + data.status);
+			} else {
+				$('#quiz-timer').countdown({until: data.time, significant: 2});
+				$("#countdown-till").text("till quiz starts");
+			}
+		});
+		
+		// Handle chat input
+		$('[data-live-quiz-target="chatInput"]').on('keypress', function(e) {
+			if (e.which === 13) {
+				sendQuizChat();
+			}
+		});
+		
+		// Show previous questions functionality
+		$("#questions-answers").delegate("span.q-dot", "click", function(){
+			var active_question = !($(".q-dot.current").hasClass("completed"));
+			if(!active_question && $(this).hasClass("completed")) {
+				$(".q-dot.current").removeClass("current");
+				$(this).addClass("current");
+				
+				var q_no = $(this).attr("id").replace("dot-","");
+				
+				$(".question").removeClass("active").addClass("hidden");
+				$("#question-"+q_no).removeClass("hidden").addClass("active");
+			}
+		});
+	});
+	
+	// Global function for sending chat messages
+	function sendQuizChat() {
+		var input = $('[data-live-quiz-target="chatInput"]');
+		var message = input.val().trim();
+		
+		if (message && window.pubnub) {
+			window.pubnub.publish({
+				channel: channel,
+				message: {
+					type: 'chat',
+					user: memverseUserLogin,
+					text: message
+				}
+			}, function(status, response) {
+				if (!status.error) {
+					input.val('');
+				} else {
+					console.error("Failed to send chat:", status);
+				}
+			});
+		}
+	}
 </script>

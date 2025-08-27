@@ -96,7 +96,9 @@
       "WebSearch",
       "Bash(git check-ignore:*)",
       "Bash(./bin/dev)",
-      "Bash(open http://localhost:3000/live_quiz/2)"
+      "Bash(open http://localhost:3000/live_quiz/2)",
+      "Bash(./test_quiz_full.rb)",
+      "Bash(./validate_quiz_fix.sh:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"
