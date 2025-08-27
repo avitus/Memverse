@@ -34,7 +34,7 @@ class QuizFullTester
     log("\n=== Checking Services ===")
     
     services = {
-      "Rails server" => "pgrep -f 'rails server'",
+      "Rails server" => "pgrep -f puma",
       "Sidekiq" => "pgrep -f sidekiq",
       "Redis" => "pgrep -f redis-server"
     }

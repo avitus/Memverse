@@ -1,0 +1,31 @@
+[2025-08-26 21:07:24] === Quiz Full Test Started ===
+[2025-08-26 21:07:24] Test directory: quiz_test_20250826_210724
+[2025-08-26 21:07:24] 
+=== Checking Services ===
+[2025-08-26 21:07:24] Running: Checking Rails server
+[2025-08-26 21:07:25] ✗ Rails server is NOT running!
+[2025-08-26 21:07:25] Running: Checking Sidekiq
+[2025-08-26 21:07:25] Output: 23077
+23467
+35703
+39302
+46229
+46384
+46386
+[2025-08-26 21:07:25] ✓ Sidekiq is running (PID: 23077
+23467
+35703
+39302
+46229
+46384
+46386)
+[2025-08-26 21:07:25] Running: Checking Redis
+[2025-08-26 21:07:25] Output: 1264
+84414
+[2025-08-26 21:07:25] ✓ Redis is running (PID: 1264
+84414)
+[2025-08-26 21:07:25] ERROR: Not all required services are running!
+[2025-08-26 21:07:25] Please ensure Rails, Sidekiq, and Redis are running before testing.
+[2025-08-26 21:07:25] 
+=== Cleaning Up ===
+[2025-08-26 21:07:25] Cleanup complete

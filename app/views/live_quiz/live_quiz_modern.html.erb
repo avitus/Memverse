@@ -241,6 +241,10 @@
 				console.log("Status event:", statusEvent);
 				if (statusEvent.category === "PNConnectedCategory") {
 					console.log("Successfully connected to PubNub");
+					// Call the connection callback from memverse_live_quiz.js
+					if (typeof mvConnect === 'function') {
+						mvConnect(pubnub);
+					}
 				}
 			}
 		});
@@ -252,6 +256,7 @@
 		
 		// Make PubNub instance globally available
 		window.pubnub = pubnub;
+		window.PUBNUB = pubnub; // Some legacy code might use uppercase
 		
 		// Set quiz status
 		$.getJSON('/live_quiz/till_start/<%= @quiz.id %>.json', function(data) {
@@ -291,12 +296,16 @@
 		var message = input.val().trim();
 		
 		if (message && window.pubnub) {
+			// Send chat through PubNub using the format expected by memverse_live_quiz.js
 			window.pubnub.publish({
 				channel: channel,
 				message: {
-					type: 'chat',
-					user: memverseUserLogin,
-					text: message
+					meta: 'chat',
+					data: {
+						user: memverseUserLogin,
+						user_id: memverseUserID,
+						msg: message
+					}
 				}
 			}, function(status, response) {
 				if (!status.error) {
