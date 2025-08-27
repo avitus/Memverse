@@ -91,23 +91,17 @@ var quizRoom = {
                 qShow = 'Error'
         }
 
-        // Use modern display function if available
-        if (typeof showQuizQuestion === 'function') {
-            var $question = showQuizQuestion(qNum, qShow, qAnswer, qType, data);
-            var q = "#question-" + qNum;
-        } else {
-            $(".q-dot.current").removeClass("current");
-            $("#dot-"+qNum).addClass("current");
+        $(".q-dot.current").removeClass("current");
+        $("#dot-"+qNum).addClass("current");
 
-            var p   = $("<p/>").text(qShow);
-            var q   = "#question-"+qNum;
+        var p   = $("<p/>").text(qShow);
+        var q   = "#question-"+qNum;
 
-            $(q+" #q-question").html(p);
-            $(q+" #q-question").scrollTop($(q)[0].scrollHeight);
+        $(q+" #q-question").html(p);
+        $(q+" #q-question").scrollTop($(q)[0].scrollHeight);
 
-            $(".question").hide();
-            $(q).show();
-        }
+        $(".question").hide();
+        $(q).show();
 
         // Set up question depending on type
         if (qType == 'reference' || qType == 'recitation') {
@@ -131,18 +125,6 @@ var quizRoom = {
         // countdown clock
         $('#quiz-timer').countdown('destroy').removeClass('red-highlight');
         $('#quiz-timer').countdown({until: +questionDuration, onTick: this.highlightLast5, onExpiry: this.disableSubmission, format: 'S'});
-        
-        // Also update modern timer if showTime function is available
-        if (typeof showTime === 'function') {
-            var timerInterval = setInterval(function() {
-                questionDuration--;
-                if (questionDuration >= 0) {
-                    showTime(questionDuration);
-                } else {
-                    clearInterval(timerInterval);
-                }
-            }, 1000);
-        }
 
         if (questionNum == this.numQuestions ) { // if last question
 
@@ -260,11 +242,6 @@ var quizRoom = {
      * Add message to chat window
      ******************************************************************************/
     putChat: function (user,message,meta,sender_id){
-        // Use modern display function if available
-        if (typeof displayQuizChat === 'function') {
-            displayQuizChat(user, message, meta, sender_id);
-            return;
-        }
 
         var u = $("<li/>").text(user).addClass("chat-username");
         var m = $("<li/>").text(message).addClass("chat-message");
@@ -285,11 +262,6 @@ var quizRoom = {
      * Update quiz scoreboard
      ******************************************************************************/
     updateScoreboard: function (data){
-        // Use modern display function if available
-        if (typeof displayScoreboard === 'function') {
-            displayScoreboard(data.scoreboard);
-            return;
-        }
 
         $("#live-quiz-scores").empty();
 

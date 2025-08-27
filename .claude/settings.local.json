@@ -95,7 +95,8 @@
       "Bash(do echo \"Run $i:\")",
       "WebSearch",
       "Bash(git check-ignore:*)",
-      "Bash(./bin/dev)"
+      "Bash(./bin/dev)",
+      "Bash(open http://localhost:3000/live_quiz/2)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"
