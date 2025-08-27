@@ -163,7 +163,8 @@ var quizRoom = {
         if (grade.score != null) {
 
             // Record score and update question difficulty
-            $.post("/record_score", {   usr_id:       memverseUserID,
+            $.post("/record_score", {   quiz_id:      quizID,
+                                        usr_id:       memverseUserID,
                                         usr_name:     memverseUserName,
                                         usr_login:    memverseUserLogin,
                                         question_id:  questionID,
@@ -276,7 +277,7 @@ var quizRoom = {
             u.text(user).addClass("scoreboard-username");
             s.text(score).addClass("scoreboard-score");
 
-            if(item.login == "<%= current_user.login %>"){
+            if(item.login == memverseUserLogin){
                 li.addClass("hilite");
             }
 
@@ -302,10 +303,10 @@ var quizRoom = {
     toggleQuizzersWindow: function () {
         if( $('#roster-window').is(':visible') ) {
             $('#roster-window').slideUp();
-            $(this).removeClass('expanded');
+            $('#quizzers-stats').removeClass('expanded');
         } else {
             $('#roster-window').slideDown();
-            $(this).addClass('expanded');
+            $('#quizzers-stats').addClass('expanded');
         }
     },
 

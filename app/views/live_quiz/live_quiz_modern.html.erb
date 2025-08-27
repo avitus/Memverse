@@ -20,17 +20,22 @@
 		<div class="flex justify-between items-center">
 			<h1 id="quiz-name" class="text-2xl font-bold"><%= @quiz.name %></h1>
 			<div class="flex items-center space-x-4">
-				<div data-live-quiz-target="timer" class="text-xl font-mono">
+				<div id="quiz-timer" data-live-quiz-target="timer" class="text-xl font-mono">
 					<%= @minutes %>:<%= @seconds.to_s.rjust(2, '0') %>
 				</div>
-				<div class="quiz-button bg-white text-blue-600 px-3 py-1 rounded">
-					Participants: <span data-live-quiz-target="participantCount">0</span>
+				<div id="quizzers-stats" class="quiz-button bg-white text-blue-600 px-3 py-1 rounded cursor-pointer">
+					Participants: <span id="quizzers-count" data-live-quiz-target="participantCount">0</span>
 				</div>
 			</div>
 		</div>
 		<div id="countdown-till" class="text-sm mt-2 opacity-90">
 			<!-- Status will be shown here -->
 		</div>
+	</div>
+
+	<!-- ROSTER WINDOW -->
+	<div id="roster-window" class="hidden absolute top-16 right-3 w-80 max-h-96 overflow-y-auto bg-gray-50 p-4 rounded-lg shadow-lg z-10">
+		<!-- Participants will be dynamically added here -->
 	</div>
 
 	<!-- QUIZ QUESTIONS -->
@@ -120,6 +125,7 @@
 	var memverseUserID    = "<%= current_user.id %>";
 	var memverseUserName  = "<%= current_user.name_or_login.html_safe %>";
 	var memverseUserLogin = "<%= current_user.login.html_safe %>";
+	var quizID = "<%= @quiz.id %>";
 	var channel = "quiz-<%= @quiz.id %>";
 	var translation = "<%= current_user.translation %>";
 	
@@ -149,7 +155,9 @@
 			},
 			presence: function(presenceEvent) {
 				console.log("Presence event:", presenceEvent);
-				// Handle presence events if needed
+				if (typeof mvPresence === 'function') {
+					mvPresence(presenceEvent);
+				}
 			},
 			status: function(statusEvent) {
 				console.log("Status event:", statusEvent);
@@ -163,9 +171,10 @@
 			}
 		});
 		
-		// Subscribe to the quiz channel
+		// Subscribe to the quiz channel with presence
 		pubnub.subscribe({
-			channels: [channel]
+			channels: [channel],
+			withPresence: true
 		});
 		
 		// Make PubNub instance globally available
@@ -188,6 +197,9 @@
 				sendQuizChat();
 			}
 		});
+		
+		// Show roster window
+		$("#quizzers-stats").click(quizRoom.toggleQuizzersWindow);
 		
 		// Show previous questions functionality
 		$("#questions-answers").delegate("span.q-dot", "click", function(){
