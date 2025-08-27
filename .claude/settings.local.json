@@ -99,7 +99,8 @@
       "Bash(open http://localhost:3000/live_quiz/2)",
       "Bash(./test_quiz_full.rb)",
       "Bash(./validate_quiz_fix.sh:*)",
-      "Bash(./verify_quiz_working.rb)"
+      "Bash(./verify_quiz_working.rb)",
+      "Bash(./run_all_tests.sh)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"
