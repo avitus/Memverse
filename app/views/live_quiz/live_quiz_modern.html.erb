@@ -57,9 +57,9 @@
 					     data-question-number="<%= q %>"
 					     id="question-<%= q %>" 
 					     class="question bg-gray-50 p-6 rounded-lg hidden">
-						<div class="q-msg text-sm text-gray-600 mb-2"></div>
-						<div class="q-question text-lg"></div>
-						<div data-live-quiz-target="answer" class="q-answer mt-4 p-4 bg-green-50 rounded hidden"></div>
+						<div id="q-msg" class="text-sm text-gray-600 mb-2"></div>
+						<div id="q-question" class="text-lg"></div>
+						<div id="q-answer" data-live-quiz-target="answer" class="mt-4 p-4 bg-green-50 rounded hidden"></div>
 					</div>
 				<% end %>
 			</div>
@@ -118,8 +118,12 @@
 		@apply bg-blue-500 text-white;
 	}
 	
-	.q-dot.completed {
+	.q-dot.green, .q-dot.completed {
 		@apply bg-green-500 text-white;
+	}
+	
+	.q-dot.red {
+		@apply bg-red-500 text-white;
 	}
 	
 	.question.active {
@@ -197,6 +201,17 @@
 		to {
 			opacity: 1;
 		}
+	}
+	
+	.red-highlight {
+		@apply text-red-600 font-bold;
+		animation: pulse 1s infinite;
+	}
+	
+	@keyframes pulse {
+		0% { opacity: 1; }
+		50% { opacity: 0.5; }
+		100% { opacity: 1; }
 	}
 </style>
 
