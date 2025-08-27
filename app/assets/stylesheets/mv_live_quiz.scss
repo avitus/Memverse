@@ -1,4 +1,10 @@
 /*========== Live Quiz ==========*/
+/* Override white-box for quiz to ensure proper containment */
+.white-box-with-margins {
+	overflow: visible;
+	min-height: 640px;
+}
+
 #quiz-header {
 	border-top: 1px solid #BFBEBE;
 	border-bottom: 1px solid #bfbebe;
@@ -7,10 +13,11 @@
 	overflow: hidden; /* Clear floats */
 }
 
-/* First row - quiz name and right side elements */
+/* First row - quiz name and stats button */
 #quiz-header > div:first-child {
 	display: block;
 	overflow: hidden; /* Clear floats */
+	position: relative;
 }
 
 /* Override default div styling for direct children only */
@@ -32,42 +39,61 @@
 	line-height: 30px;
 }
 
-/* Container for timer and stats button */
-#quiz-header > div:first-child > div:last-child {
-	float: right;
+/* Container for timer with its text - centered */
+#quiz-header > div > div:last-child {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	text-align: center;
+	white-space: nowrap;
+	display: flex;
+	align-items: center;
+	gap: 10px;
 }
 
 #quiz-timer {
 	display: inline-block;
-	padding: 5px 15px;
-	margin-right: 10px;
-	font-size: 1.1em;
+	font-size: 0.95em;
 	font-weight: bold;
-	vertical-align: middle;
+}
+
+/* Countdown status text - next to timer */
+#countdown-till {
+	display: inline-block;
+	font-size: 0.75em;
+	color: #636366;
+	white-space: nowrap;
+}
+
+/* Customize countdown plugin labels */
+#quiz-timer .countdown_section {
+	text-align: center;
+}
+
+#quiz-timer .countdown_amount {
+	font-size: 1.2em;
+}
+
+#quiz-timer .countdown_descr {
+	font-size: 0.8em;
+	text-transform: none;
 }
 
 #quizzers-stats {
-	display: inline-block;
+	float: right;
 	padding: 5px 15px;
 	border: 1px solid #d1d1d6;
 	border-radius: 4px;
 	background-color: white;
 	cursor: pointer;
 	font-weight: bold;
-	vertical-align: middle;
+	font-size: 0.9em;
 }
 
 #quizzers-stats:hover, #quizzers-stats.expanded {
 	background-color: #f2f1f1;
 	border-color: #b0b0b5;
-}
-
-/* Second row - countdown status */
-#countdown-till {
-	clear: both;
-	padding: 5px 0 0 0;
-	font-size: 0.9em;
-	color: #636366;
 }
 
 #quizzers-stats h2 {
@@ -311,16 +337,18 @@ ul.mcq li.incorrect {
 /* === Chat === */
 #chat-window {
 	width:340px;
-	max-height:600px;
+	max-height:580px;
 	float:right;
-	padding:0 10px;
+	padding:0 10px 20px 5px;
+	box-sizing:border-box;
 }
 
 div#chat-stream-narrow {
-	height:520px;
+	height:480px;
 	overflow:auto;
 	list-style:none;
 	border-right:5px;
+	margin-bottom:10px;
 }
 
 .chat-username {
@@ -392,6 +420,46 @@ div#chat-stream-narrow {
 
 .chat-system .chat-user {
 	color: #3b82f6;
+}
+
+/* Chat input container */
+#chat-window form,
+#chat-window > div:last-child {
+	margin-bottom: 0;
+}
+
+/* Chat input styling */
+#chat-window input[type="text"],
+#msg_body {
+	background-color: #f5f5f7;
+	border: 1px solid #d1d1d6;
+	padding: 6px 10px;
+	border-radius: 4px;
+	width: 225px;
+}
+
+#chat-window input[type="text"]:focus,
+#msg_body:focus {
+	outline: none;
+	border-color: #577a1a;
+	background-color: #fafafa;
+}
+
+/* Chat send button */
+#chat-window input[type="submit"],
+#chat-window button {
+	background-color: #577a1a;
+	color: white;
+	border: none;
+	padding: 6px 12px;
+	border-radius: 4px;
+	cursor: pointer;
+	font-weight: bold;
+}
+
+#chat-window input[type="submit"]:hover,
+#chat-window button:hover {
+	background-color: #4d6c17;
 }
 
 /* Notification styles */

@@ -16,20 +16,20 @@
      style="position:relative">
 
 	<!-- TOP QUIZ HEADER -->
-	<div id="quiz-header" class="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4 rounded-t-lg">
-		<div class="flex justify-between items-center">
-			<h1 id="quiz-name" class="text-2xl font-bold"><%= @quiz.name %></h1>
-			<div class="flex items-center space-x-4">
-				<div id="quiz-timer" data-live-quiz-target="timer" class="text-xl font-mono">
+	<div id="quiz-header">
+		<div>
+			<h1 id="quiz-name"><%= @quiz.name %></h1>
+			<div id="quizzers-stats">
+				Participants: <span id="quizzers-count" data-live-quiz-target="participantCount">0</span>
+			</div>
+			<div>
+				<div id="quiz-timer" data-live-quiz-target="timer">
 					<%= @minutes %>:<%= @seconds.to_s.rjust(2, '0') %>
 				</div>
-				<div id="quizzers-stats" class="quiz-button bg-white text-blue-600 px-3 py-1 rounded cursor-pointer">
-					Participants: <span id="quizzers-count" data-live-quiz-target="participantCount">0</span>
+				<div id="countdown-till">
+					<!-- Status will be shown here -->
 				</div>
 			</div>
-		</div>
-		<div id="countdown-till" class="text-sm mt-2 opacity-90">
-			<!-- Status will be shown here -->
 		</div>
 	</div>
 
@@ -186,7 +186,12 @@
 			if (data.status) {
 				$("#countdown-till").html("<strong>Quiz Status:</strong> " + data.status);
 			} else {
-				$('#quiz-timer').countdown({until: data.time, significant: 2});
+				$('#quiz-timer').countdown({
+					until: data.time, 
+					significant: 2,
+					labels: ['Years', 'Months', 'Weeks', 'Days', 'Hours', 'Mins', 'Secs'],
+					labels1: ['Year', 'Month', 'Week', 'Day', 'Hour', 'Min', 'Sec']
+				});
 				$("#countdown-till").text("till quiz starts");
 			}
 		});

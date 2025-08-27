@@ -82,20 +82,22 @@ class LiveQuizController < ApplicationController
     question_num = params[:question_num].to_i
     score = params[:score]        # Score out of 10
 
+    # Initialize QuizSession service
+    quiz_session = QuizSession.new(quiz_id)
+    
+    # Add participant if not already added (even with zero score)
+    quiz_session.add_participant(usr_id, usr_name, usr_login)
+    
     if score != "false" && score.to_i > 0
-      # Initialize QuizSession service
-      quiz_session = QuizSession.new(quiz_id)
-      
-      # Add participant if not already added
-      quiz_session.add_participant(usr_id, usr_name, usr_login)
-      
       # Update user's score
       quiz_session.update_score(usr_id, question_num, score.to_i)
       
       # Update question statistics
       quiz_session.update_question_stats(question_num, qq_id)
     else
-      Rails.logger.info("*** Score was submitted as false for #{usr_name}")
+      Rails.logger.info("*** Score was submitted as false or zero for #{usr_name}")
+      # Update question statistics even for incorrect answers
+      quiz_session.update_question_stats(question_num, qq_id)
     end
 
     respond_to do |format|
@@ -110,7 +112,7 @@ class LiveQuizController < ApplicationController
   def till_start
 
     @quiz = Quiz.find(params[:id] || 1)
-    @till = @quiz.start_time - Time.now + 300 # Remaining time in seconds, including chat time
+    @till = @quiz.start_time - Time.now # Remaining time in seconds
 
     if @till >= 0
 

@@ -171,7 +171,12 @@ $(document).ready(function() {
 		if (data.status) {
 			$("#countdown-till").html("<strong>Quiz Status:</strong> " + data.status);
 		} else {
-			$('#quiz-timer').countdown({until: data.time, significant: 2});
+			$('#quiz-timer').countdown({
+				until: data.time, 
+				significant: 2,
+				labels: ['Years', 'Months', 'Weeks', 'Days', 'Hours', 'Mins', 'Secs'],
+				labels1: ['Year', 'Month', 'Week', 'Day', 'Hour', 'Min', 'Sec']
+			});
 			$("#countdown-till").text("till quiz starts");
 		}
 	});

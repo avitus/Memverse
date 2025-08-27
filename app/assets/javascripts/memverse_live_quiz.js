@@ -124,7 +124,14 @@ var quizRoom = {
     setCountdownClock: function( questionDuration, questionNum ) {
         // countdown clock
         $('#quiz-timer').countdown('destroy').removeClass('red-highlight');
-        $('#quiz-timer').countdown({until: +questionDuration, onTick: this.highlightLast5, onExpiry: this.disableSubmission, format: 'S'});
+        $('#quiz-timer').countdown({
+            until: +questionDuration, 
+            onTick: this.highlightLast5, 
+            onExpiry: this.disableSubmission, 
+            format: 'S',
+            labels: ['Years', 'Months', 'Weeks', 'Days', 'Hours', 'Mins', 'Secs'],
+            labels1: ['Year', 'Month', 'Week', 'Day', 'Hour', 'Min', 'Sec']
+        });
 
         if (questionNum == this.numQuestions ) { // if last question
 
@@ -193,9 +200,32 @@ var quizRoom = {
     },
 
     /******************************************************************************
-     * Disable question submission
+     * Disable question submission and auto-submit zero score if not answered
      ******************************************************************************/
     disableSubmission: function () {
+        // Check if submit button still exists (user hasn't answered)
+        if ($('input#submit-answer').length > 0) {
+            // Get current question info from the visible question
+            var currentQuestion = $('.question:visible');
+            var questionNum = currentQuestion.attr('id').replace('question-', '');
+            var questionType = currentQuestion.data('qtype');
+            var questionID = currentQuestion.data('qid');
+            
+            // Submit zero score for unanswered question
+            $.post("/record_score", {
+                quiz_id: quizID,
+                usr_id: memverseUserID,
+                usr_name: memverseUserName,
+                usr_login: memverseUserLogin,
+                question_id: questionID,
+                question_num: questionNum,
+                score: 0
+            });
+            
+            // Add feedback message
+            $('#q-msg').html("<span style='color:#B95C2E'>Time's up! No points awarded.</span>");
+        }
+        
         $('input#submit-answer').hide();
     },
 

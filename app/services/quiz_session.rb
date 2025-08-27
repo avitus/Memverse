@@ -37,7 +37,7 @@ class QuizSession
   # Participant Management
   # ========================================================================
   
-  # Add a participant to the quiz session
+  # Add a participant to the quiz session (only if not already exists)
   # @param user_id [Integer] User ID
   # @param user_name [String] Display name
   # @param user_login [String] Login/email
@@ -46,14 +46,23 @@ class QuizSession
     user_key = participant_key(user_id)
     
     with_redis_error_handling("add_participant") do
-      @redis.pipelined do |pipe|
-        pipe.hmset(user_key, 
-          'name', user_name,
-          'login', user_login, 
-          'id', user_id.to_s,
-          'score', 0
-        )
-        pipe.expire(user_key, DEFAULT_TTL)
+      # Check if participant already exists
+      exists = @redis.exists(user_key)
+      
+      # Redis.exists returns 1 if key exists, 0 if not
+      unless exists == 1
+        @redis.pipelined do |pipe|
+          pipe.hmset(user_key, 
+            'name', user_name,
+            'login', user_login, 
+            'id', user_id.to_s,
+            'score', 0
+          )
+          pipe.expire(user_key, DEFAULT_TTL)
+        end
+      else
+        # Just refresh the TTL if participant already exists
+        @redis.expire(user_key, DEFAULT_TTL)
       end
       true
     end
