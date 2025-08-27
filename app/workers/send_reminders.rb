@@ -13,7 +13,7 @@ class SendReminders
     end
 
     @emails_sent        = 0
-    @throttle           = 50 # email send limit per recurrence period
+    @throttle           = 100  # email send limit per recurrence period
 
     # Delete users who never activated
     User.pending.where('created_at < ?', 2.days.ago ).delete_all

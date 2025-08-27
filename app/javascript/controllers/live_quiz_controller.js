@@ -54,7 +54,7 @@ export default class extends Controller {
     })
 
     // Subscribe to quiz channel with presence
-    const channel = `live_quiz_${this.quizIdValue}`
+    const channel = `quiz-${this.quizIdValue}`
     this.pubnub.subscribe({
       channels: [channel],
       withPresence: true
@@ -338,7 +338,7 @@ export default class extends Controller {
     const message = this.chatInputTarget.value.trim()
     if (!message) return
     
-    const channel = `live_quiz_${this.quizIdValue}`
+    const channel = `quiz-${this.quizIdValue}`
     
     this.pubnub.publish({
       channel: channel,
@@ -472,7 +472,7 @@ export default class extends Controller {
     this.stopTimer()
     
     if (this.pubnub) {
-      const channel = `live_quiz_${this.quizIdValue}`
+      const channel = `quiz-${this.quizIdValue}`
       this.pubnub.unsubscribe({ channels: [channel] })
       this.pubnub.removeListener(this)
     }

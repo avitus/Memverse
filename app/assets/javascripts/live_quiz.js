@@ -1,6 +1,6 @@
 setupMCQ = function(q_option_a, q_option_b, q_option_c, q_option_d, mc_answer, q_num){
 	var q = "q" + q_num + "_";
-	output = ["<ul class='mcq'>",
+	output = ["<ul class='mcq' style='margin-top: 1.5rem;'>",
 				"<li><input type='radio' name='mcq' value='a' id='"+q+"opt_a' /> <label for='"+q+"opt_a'>(A) " + q_option_a + "</label></li>",
 				"<li><input type='radio' name='mcq' value='b' id='"+q+"opt_b' /> <label for='"+q+"opt_b'>(B) " + q_option_b + "</label></li>",
 				"<li><input type='radio' name='mcq' value='c' id='"+q+"opt_c' /> <label for='"+q+"opt_c'>(C) " + q_option_c + "</label></li>",

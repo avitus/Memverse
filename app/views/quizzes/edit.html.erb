@@ -68,6 +68,7 @@
         
         <div class="quick-schedule-buttons">
           <p>Quick scheduling options:</p>
+          <button type="button" class="btn-schedule-quick btn-schedule-now" data-minutes="2">2 minutes from now</button>
           <button type="button" class="btn-schedule-quick" data-offset="1">Tomorrow</button>
           <button type="button" class="btn-schedule-quick" data-offset="7">Next Week</button>
           <button type="button" class="btn-schedule-quick" data-time="14:00">2:00 PM UTC</button>
@@ -263,6 +264,18 @@
     background: #f0f0f0;
     border-color: #3b82f6;
   }
+  
+  .btn-schedule-now {
+    background: #e3f2fd;
+    border-color: #2196f3;
+    color: #1976d2;
+    font-weight: 600;
+  }
+  
+  .btn-schedule-now:hover {
+    background: #bbdefb;
+    border-color: #1976d2;
+  }
 
   .scheduled-time-preview {
     background: #fff;
@@ -432,10 +445,14 @@
       button.addEventListener('click', function() {
         const offset = this.getAttribute('data-offset');
         const fixedTime = this.getAttribute('data-time');
+        const minutesFromNow = this.getAttribute('data-minutes');
         
         const date = new Date();
         
-        if (offset) {
+        if (minutesFromNow) {
+          // Add minutes to current time
+          date.setUTCMinutes(date.getUTCMinutes() + parseInt(minutesFromNow));
+        } else if (offset) {
           date.setUTCDate(date.getUTCDate() + parseInt(offset));
         }
         

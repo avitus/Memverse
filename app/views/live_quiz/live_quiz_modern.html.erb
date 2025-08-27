@@ -101,13 +101,15 @@
 				       placeholder="Type your message..." 
 				       class="flex-1 px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
 				       autocomplete="off">
-				<button data-action="click->live-quiz#sendChat"
+				<button onclick="sendQuizChat()"
 				        class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
 					Send
 				</button>
 			</div>
 		</div>
 	</div>
+	
+	<div class="clr"></div>
 </div>
 
 <!-- Styles for quiz elements -->
@@ -198,25 +200,201 @@
 	}
 </style>
 
-<!-- Fallback to legacy JavaScript if Stimulus is not available -->
+<!-- Use legacy JavaScript since Stimulus controller isn't loaded -->
 <script type="text/javascript">
-	// Check if Stimulus is available
-	if (typeof Stimulus === 'undefined') {
-		console.log('Falling back to legacy quiz JavaScript');
+	// Set global variables for legacy code
+	var memverseUserID    = "<%= current_user.id %>";
+	var memverseUserName  = "<%= current_user.name_or_login.html_safe %>";
+	var memverseUserLogin = "<%= current_user.login.html_safe %>";
+	var channel = "quiz-<%= @quiz.id %>";
+	var translation = "<%= current_user.translation %>";
+	
+	$(document).ready(function() {
+		console.log('Initializing legacy quiz JavaScript');
 		
-		// Set global variables for legacy code
-		var memverseUserID    = "<%= current_user.id %>";
-		var memverseUserName  = "<%= current_user.name_or_login.html_safe %>";
-		var memverseUserLogin = "<%= current_user.login.html_safe %>";
-		var channel = "quiz-<%= @quiz.id %>";
-		var translation = "<%= current_user.translation %>";
+		// Initialize legacy quiz room
+		quizRoom.initialize('<%= @num_questions %>');
 		
-		// Load legacy quiz code
-		document.addEventListener('DOMContentLoaded', function() {
-			// Initialize legacy quiz room
-			if (typeof quizRoom !== 'undefined') {
-				quizRoom.initialize('<%= @num_questions %>');
+		// Initialize PubNub with v7+ SDK
+		var pubnub = new PubNub({
+			subscribeKey: '<%= PN.env[:subscribe_key] %>',
+			publishKey: '<%= PN.env[:publish_key] %>',
+			logVerbosity: true,
+			userId: memverseUserID,
+			uuid: memverseUserID, // Also set uuid for legacy compatibility
+			ssl: true,
+			presenceTimeout: 130,
+			heartbeatInterval: 30,
+			suppressLeaveEvents: false,
+			restore: true
+		});
+
+		console.log("==> Connecting to channel " + channel);
+
+		// Add message listener for v7 API
+		pubnub.addListener({
+			message: function(event) {
+				console.log("==> Message received:", event.message);
+				quizRoom.handleMessage(event.message);
+			},
+			presence: function(event) {
+				console.log("==> Presence event:", event);
+				// Update participant count
+				if (event.occupancy !== undefined) {
+					updateParticipantCount(event.occupancy);
+				}
+				// Handle legacy presence callback
+				if (typeof mvPresence === 'function') {
+					mvPresence(event);
+				}
+			},
+			status: function(event) {
+				console.log("==> Status event:", event);
+				if (event.category === "PNConnectedCategory") {
+					console.log("==> Successfully connected to PubNub");
+				}
 			}
 		});
-	}
+
+		// Subscribe to quiz channel with presence
+		pubnub.subscribe({
+			channels: [channel],
+			withPresence: true
+		});
+
+		// Connect function called after subscription
+		setTimeout(function() {
+			mvConnect(pubnub);
+		}, 1000);
+		
+		// Adapt legacy quiz functions to work with modern HTML
+		window.showQuizQuestion = function(qNum, qShow, qAnswer, qType, qData) {
+			console.log("==> Showing question " + qNum + " (type: " + qType + "): " + qShow);
+			
+			// Update progress dots
+			$('.q-dot').removeClass('current completed');
+			for (var i = 1; i < qNum; i++) {
+				$('#dot-' + i).addClass('completed');
+			}
+			$('#dot-' + qNum).addClass('current');
+			
+			// Hide all questions and show current one
+			$('.question').removeClass('active').addClass('hidden');
+			var $question = $('#question-' + qNum);
+			$question.removeClass('hidden').addClass('active');
+			
+			// Set question content
+			$question.find('.q-question').html(qShow);
+			
+			// Handle MCQ questions specially
+			if (qType === 'mcq' && qData) {
+				var mcqHtml = setupMCQ(qData.mc_option_a, qData.mc_option_b, qData.mc_option_c, qData.mc_option_d, qData.mc_answer, qNum);
+				$question.find('.q-answer').html(mcqHtml).removeClass('hidden');
+			} else {
+				$question.find('.q-answer').html(qAnswer).addClass('hidden');
+			}
+			
+			return $question;
+		};
+		
+		// Override the legacy showTime function to work with modern timer
+		window.showTime = function(seconds) {
+			var minutes = Math.floor(seconds / 60);
+			var secs = seconds % 60;
+			var timeStr = minutes + ':' + (secs < 10 ? '0' : '') + secs;
+			$('[data-live-quiz-target="timer"]').text(timeStr);
+			$('#quiz-timer').text(timeStr);
+		};
+		
+		// Override legacy chat display to work with modern HTML
+		window.displayQuizChat = function(user, message, type, userId) {
+			var timestamp = new Date().toLocaleTimeString('en-US', { 
+				hour: '2-digit', 
+				minute: '2-digit' 
+			});
+			
+			var chatHtml = '<div class="chat-entry chat-' + type + '">' +
+				'<span class="chat-timestamp">' + timestamp + '</span>' +
+				'<span class="chat-user" data-user-id="' + (userId || '') + '">' + user + ':</span> ' +
+				'<span class="chat-message">' + message + '</span>' +
+				'</div>';
+			
+			$('[data-live-quiz-target="chatArea"]').append(chatHtml);
+			$('#chat-stream-narrow').append(chatHtml);
+			
+			// Auto-scroll to bottom
+			var chatArea = $('[data-live-quiz-target="chatArea"]')[0];
+			if (chatArea) {
+				chatArea.scrollTop = chatArea.scrollHeight;
+			}
+		};
+		
+		// Override participant count update
+		window.updateParticipantCount = function(count) {
+			$('[data-live-quiz-target="participantCount"]').text(count);
+			$('#quizzers-count').text(count);
+		};
+		
+		// Override scoreboard display
+		window.displayScoreboard = function(scoreboard) {
+			if (!scoreboard || scoreboard.length === 0) return;
+			
+			var sortedScores = scoreboard.sort(function(a, b) {
+				return b.score - a.score;
+			});
+			
+			var html = '<h4 class="font-bold mb-2">Leaderboard</h4><ol class="space-y-1">';
+			sortedScores.slice(0, 10).forEach(function(participant, index) {
+				var medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '';
+				html += '<li class="flex justify-between">' +
+					'<span>' + medal + ' ' + (index + 1) + '. ' + participant.name + '</span>' +
+					'<span class="font-mono">' + participant.score + '</span>' +
+					'</li>';
+			});
+			html += '</ol>';
+			
+			$('[data-live-quiz-target="scoreboard"]').html(html);
+			$('#live-quiz-scores').html(html);
+		};
+		
+		// Make PubNub global for chat functionality
+		window.pubnub = pubnub;
+		
+		// Add chat sending functionality
+		window.sendQuizChat = function() {
+			var $input = $('[data-live-quiz-target="chatInput"]');
+			var message = $input.val().trim();
+			
+			if (message === '') {
+				alert("Please put text in your message.");
+				return false;
+			}
+			
+			// Publish chat message
+			window.pubnub.publish({
+				channel: channel,
+				message: {
+					meta: 'chat',
+					data: {
+						user: memverseUserName,
+						user_id: memverseUserID,
+						msg: message
+					}
+				}
+			}).then(function(response) {
+				console.log("Chat message sent:", response);
+				$input.val(''); // Clear input
+			}).catch(function(error) {
+				console.error("Failed to send chat:", error);
+			});
+		};
+		
+		// Handle Enter key for chat
+		$('[data-live-quiz-target="chatInput"]').on('keypress', function(e) {
+			if (e.which === 13) { // Enter key
+				sendQuizChat();
+				return false;
+			}
+		});
+	});
 </script>
