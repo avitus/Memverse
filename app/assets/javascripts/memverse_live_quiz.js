@@ -176,9 +176,9 @@ var quizRoom = {
             $(selector + " #q-msg").html("<p>" + grade.msg + "</p>").children("p").effect('highlight', {}, 3000);
 
             if (grade.score != 10){ // if it's wrong
-                $(".q-dot.current").addClass("red");
+                $(".q-dot.current").addClass("red completed");
             } else {
-                $(".q-dot.current").addClass("green");
+                $(".q-dot.current").addClass("green completed");
             }
 
             if(questionType == "mcq"){

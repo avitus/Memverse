@@ -1,41 +1,73 @@
 /*========== Live Quiz ==========*/
 #quiz-header {
 	border-top: 1px solid #BFBEBE;
-	border-bottom:1px solid #bfbebe;
-	height:60px;
-	width:100%;
-	display:table;
+	border-bottom: 1px solid #bfbebe;
+	padding: 10px 20px;
+	background-color: #f5f5f7;
+	overflow: hidden; /* Clear floats */
 }
 
-#quiz-header div {
-	display:table-cell;
-	vertical-align:middle;
-	padding:33px;
-	line-height:0;
-	font-size:14px;
-	height:100%;
+/* First row - quiz name and right side elements */
+#quiz-header > div:first-child {
+	display: block;
+	overflow: hidden; /* Clear floats */
+}
+
+/* Override default div styling for direct children only */
+#quiz-header > div {
+	display: block;
+	padding: 0;
+	line-height: normal;
+	font-size: 14px;
+	height: auto;
+	vertical-align: baseline;
 }
 
 #quiz-name {
-	padding-right:10px;
+	float: left;
+	margin: 0;
+	padding: 5px 10px 5px 0;
+	font-size: 1.2em;
+	font-weight: bold;
+	line-height: 30px;
 }
 
-#quiz-name, #quiz-timer, #countdown-till {
-	float:left;
+/* Container for timer and stats button */
+#quiz-header > div:first-child > div:last-child {
+	float: right;
 }
 
-div#countdown-till {
-	padding-left:0;
+#quiz-timer {
+	display: inline-block;
+	padding: 5px 15px;
+	margin-right: 10px;
+	font-size: 1.1em;
+	font-weight: bold;
+	vertical-align: middle;
 }
 
 #quizzers-stats {
-	float:right;
-	cursor:pointer;
-	font-weight:bold;
+	display: inline-block;
+	padding: 5px 15px;
+	border: 1px solid #d1d1d6;
+	border-radius: 4px;
+	background-color: white;
+	cursor: pointer;
+	font-weight: bold;
+	vertical-align: middle;
 }
 
 #quizzers-stats:hover, #quizzers-stats.expanded {
-	background-color:#f2f1f1;
+	background-color: #f2f1f1;
+	border-color: #b0b0b5;
+}
+
+/* Second row - countdown status */
+#countdown-till {
+	clear: both;
+	padding: 5px 0 0 0;
+	font-size: 0.9em;
+	color: #636366;
 }
 
 #quizzers-stats h2 {
@@ -83,16 +115,6 @@ div.roster-item img {
 	border-radius: 4px;
 }
 
-
-div#quiz-timer {
-	line-height:normal;
-	padding:12px 3px 12px 30px;
-	border:none;
-	background:none;
-	height:100%;
-	width:100px;
-}
-
 .q-dot {
     width:26px;
     height:26px;
@@ -115,16 +137,24 @@ div#quiz-timer {
 	color:black;
 }
 
-.q-dot.green:hover, .q-dot.green.current {
-	background-color:green;
-	color:white;
-	cursor:pointer;
+.q-dot.green {
+	background-color: #65a30d;
+	color: white;
+	cursor: pointer;
 }
 
-.q-dot.red:hover, .q-dot.red.current {
-	background-color:red;
-	color:white;
-	cursor:pointer;
+.q-dot.green:hover {
+	background-color: #4d7c0f;
+}
+
+.q-dot.red {
+	background-color: #b95c2e;
+	color: white;
+	cursor: pointer;
+}
+
+.q-dot.red:hover {
+	background-color: #983626;
 }
 
 /* === Quiz Questions and Answers === */
