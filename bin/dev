@@ -1,0 +1,35 @@
+#!/usr/bin/env ruby
+
+# This script starts the Rails development environment with all necessary processes
+# It uses foreman to manage multiple processes defined in the Procfile
+
+require 'fileutils'
+
+# Ensure log directory exists
+FileUtils.mkdir_p('log')
+FileUtils.touch('log/sidekiq.log')
+
+# Check if foreman is installed
+unless system('which foreman > /dev/null 2>&1')
+  puts "Installing foreman gem..."
+  system('gem install foreman')
+end
+
+# Check if Redis is running
+if system('redis-cli ping > /dev/null 2>&1')
+  puts "Redis is already running"
+else
+  puts "Starting Redis..."
+  system('redis-server --daemonize yes')
+  sleep 1
+end
+
+# Start all processes
+puts "Starting Memverse development environment..."
+puts "- Rails server on http://localhost:3000"
+puts "- Sidekiq worker (logs to log/sidekiq.log)"
+puts "- Redis server"
+puts "\nPress Ctrl-C to stop all processes"
+puts "=" * 60
+
+exec('foreman start')
