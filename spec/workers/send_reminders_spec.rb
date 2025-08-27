@@ -16,6 +16,8 @@ RSpec.describe SendReminders, type: :worker do
     before do
       # Mock Rails logger to capture logging
       allow(Rails.logger).to receive(:info)
+      allow(Rails.logger).to receive(:warn)
+      allow(Rails.logger).to receive(:error)
       
       # Mock UserMailer methods to avoid actual email sending
       (2..9).each do |level|
@@ -63,7 +65,7 @@ RSpec.describe SendReminders, type: :worker do
 
     describe 'email throttling' do
       let!(:users_needing_reminders) do
-        (1..60).map do |i|
+        (1..120).map do |i|
           user = FactoryBot.create(:user,
                                   confirmed_at: 1.week.ago,
                                   email: "user#{i}@example.com",
@@ -86,13 +88,13 @@ RSpec.describe SendReminders, type: :worker do
         end
       end
 
-      it 'limits emails to 50 per run' do
-        expect(UserMailer).to receive(:progression_email_2).exactly(50).times
+      it 'limits emails to 100 per run' do
+        expect(UserMailer).to receive(:progression_email_2).exactly(100).times
         worker.perform
       end
 
       it 'logs the number of emails sent' do
-        expect(Rails.logger).to receive(:info).with(/Sent 50 reminder emails/)
+        expect(Rails.logger).to receive(:info).with(/Sent 100 reminder emails/)
         worker.perform
       end
     end
@@ -202,7 +204,26 @@ RSpec.describe SendReminders, type: :worker do
         end
 
         expect(UserMailer).not_to receive(:progression_email_2)
-        expect(Rails.logger).to receive(:info).with(/Error: Unable to email user with id: #{user_with_blank_email.id}/)
+        expect(Rails.logger).to receive(:info).with(/Error: Unable to email user with id: #{user_with_blank_email.id} - blank email address/)
+        
+        worker.perform
+      end
+
+      it 'skips users with invalid email format' do
+        user_invalid_email = FactoryBot.create(:user, 
+                                             confirmed_at: 1.week.ago,
+                                             reminder_freq: 'Weekly')
+        # Set invalid email format that bypasses validation
+        user_invalid_email.update_column(:email, 'JR')  # No @ symbol
+        
+        allow(user_invalid_email).to receive(:needs_reminder?).and_return(true)
+        allow(user_invalid_email).to receive(:update_reminder_freq)
+        allow(User).to receive(:find_each) do |&block|
+          [user_invalid_email].each(&block)
+        end
+
+        expect(UserMailer).not_to receive(:progression_email_2)
+        expect(Rails.logger).to receive(:warn).with(/Error: Unable to email user with id: #{user_invalid_email.id} - invalid email format: 'JR'/)
         
         worker.perform
       end
@@ -359,6 +380,132 @@ RSpec.describe SendReminders, type: :worker do
         expect(UserMailer).to receive(:progression_email_2).exactly(3).times.and_return(email_double)
         expect(Rails.logger).to receive(:info).with(/Sent 3 reminder emails/)
         worker.perform
+      end
+    end
+
+    describe 'email sending error handling' do
+      let(:user_with_email_error) do
+        user = FactoryBot.create(:user,
+                               confirmed_at: 1.week.ago,
+                               email: 'error@example.com',
+                               reminder_freq: 'Weekly')
+        allow(user).to receive(:needs_reminder?).and_return(true)
+        allow(user).to receive(:progression).and_return(5)
+        allow(user).to receive(:update_reminder_freq)
+        allow(user).to receive(:name_or_login).and_return('Test User')
+        user
+      end
+
+      it 'continues processing other users when one email fails' do
+        successful_user = FactoryBot.create(:user,
+                                          confirmed_at: 1.week.ago,
+                                          email: 'success@example.com',
+                                          reminder_freq: 'Weekly')
+        allow(successful_user).to receive(:needs_reminder?).and_return(true)
+        allow(successful_user).to receive(:progression).and_return(2)
+        allow(successful_user).to receive(:update_reminder_freq)
+        allow(successful_user).to receive(:update_attribute)
+        allow(successful_user).to receive(:name_or_login).and_return('Successful User')
+
+        allow(User).to receive(:find_each) do |&block|
+          [user_with_email_error, successful_user].each(&block)
+        end
+
+        # Mock first email to fail
+        failing_email = double('failing_email')
+        expect(failing_email).to receive(:deliver).and_raise(StandardError.new('Email service error'))
+        expect(UserMailer).to receive(:progression_email_5).with(user_with_email_error).and_return(failing_email)
+
+        # Mock second email to succeed
+        success_email = double('success_email')
+        expect(success_email).to receive(:deliver)
+        expect(UserMailer).to receive(:progression_email_2).with(successful_user).and_return(success_email)
+
+        # Expect error logging for failed email
+        expect(Rails.logger).to receive(:error).with(/Error: Failed to send progression email to user #{user_with_email_error.id}.*Email service error/)
+
+        # Expect successful processing to continue
+        expect(successful_user).to receive(:update_attribute).with(:last_reminder, Date.today)
+
+        worker.perform
+      end
+
+      it 'logs detailed error information when email sending fails' do
+        allow(User).to receive(:find_each) do |&block|
+          [user_with_email_error].each(&block)
+        end
+
+        failing_email = double('failing_email')
+        postmark_error = StandardError.new('Invalid email address')
+        expect(failing_email).to receive(:deliver).and_raise(postmark_error)
+        expect(UserMailer).to receive(:progression_email_5).and_return(failing_email)
+
+        expect(Rails.logger).to receive(:error).with(
+          "** Error: Failed to send progression email to user #{user_with_email_error.id} (error@example.com): StandardError - Invalid email address"
+        )
+
+        worker.perform
+      end
+
+      it 'does not increment email counter when email sending fails' do
+        allow(User).to receive(:find_each) do |&block|
+          [user_with_email_error].each(&block)
+        end
+
+        failing_email = double('failing_email')
+        expect(failing_email).to receive(:deliver).and_raise(StandardError.new('Service error'))
+        expect(UserMailer).to receive(:progression_email_5).and_return(failing_email)
+
+        expect(Rails.logger).to receive(:info).with(/ \*\*\* Email reminder: Sent 0 reminder emails at/)
+        
+        worker.perform
+      end
+
+      it 'does not update last_reminder when email sending fails' do
+        allow(User).to receive(:find_each) do |&block|
+          [user_with_email_error].each(&block)
+        end
+
+        failing_email = double('failing_email')
+        expect(failing_email).to receive(:deliver).and_raise(StandardError.new('Service error'))
+        expect(UserMailer).to receive(:progression_email_5).and_return(failing_email)
+
+        expect(user_with_email_error).not_to receive(:update_attribute)
+
+        worker.perform
+      end
+    end
+
+    describe '#valid_email?' do
+      it 'returns true for valid email addresses' do
+        valid_emails = [
+          'user@example.com',
+          'test.email+tag@domain.co.uk',
+          'user123@test-domain.org',
+          'first.last@subdomain.example.com'
+        ]
+
+        valid_emails.each do |email|
+          expect(worker.send(:valid_email?, email)).to be(true), "Expected #{email} to be valid"
+        end
+      end
+
+      it 'returns false for invalid email addresses' do
+        invalid_emails = [
+          'JR',                    # No @ symbol (the original issue)
+          '',                      # Blank
+          nil,                     # Nil
+          'invalid',               # No @ symbol
+          '@domain.com',           # No local part
+          'user@',                 # No domain
+          'user..name@domain.com', # Double dots
+          'user@domain',           # No TLD
+          'user name@domain.com'   # Space in email
+        ]
+
+        invalid_emails.each do |email|
+          expect(worker.send(:valid_email?, email)).to be(false), "Expected #{email} to be invalid"
+        end
       end
     end
   end
