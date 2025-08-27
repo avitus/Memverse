@@ -310,3 +310,126 @@ div#chat-stream-narrow {
 	color:#777;
 	font-style:italic;
 }
+
+/* === Modern Quiz Styles === */
+/* These styles enhance the quiz with Tailwind-like classes while maintaining compatibility */
+
+/* Question states */
+.question.active {
+	display: block !important;
+}
+
+.question.hidden {
+	display: none !important;
+}
+
+/* Multiple choice options */
+.mcq-option {
+	width: 100%;
+	text-align: left;
+	padding: 0.75rem 1rem;
+	background-color: white;
+	border: 1px solid #e5e7eb;
+	border-radius: 0.25rem;
+	cursor: pointer;
+	transition: background-color 0.15s ease;
+}
+
+.mcq-option:hover {
+	background-color: #dbeafe;
+}
+
+.mcq-option.selected {
+	background-color: #dbeafe;
+	border-color: #3b82f6;
+}
+
+/* Chat styling */
+.chat-entry {
+	margin-bottom: 0.5rem;
+	font-size: 0.875rem;
+}
+
+.chat-timestamp {
+	color: #6b7280;
+	margin-right: 0.5rem;
+}
+
+.chat-user {
+	font-weight: 600;
+	margin-right: 0.25rem;
+}
+
+.chat-system .chat-user {
+	color: #3b82f6;
+}
+
+/* Notification styles */
+.notification {
+	position: fixed;
+	bottom: 1rem;
+	right: 1rem;
+	padding: 0.75rem 1.5rem;
+	border-radius: 0.5rem;
+	box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+	z-index: 50;
+	animation: slideIn 0.3s ease-out;
+}
+
+.notification-success {
+	background-color: #10b981;
+	color: white;
+}
+
+.notification-error {
+	background-color: #ef4444;
+	color: white;
+}
+
+.notification-warning {
+	background-color: #f59e0b;
+	color: white;
+}
+
+.notification-info {
+	background-color: #3b82f6;
+	color: white;
+}
+
+@keyframes slideIn {
+	from {
+		transform: translateX(100%);
+		opacity: 0;
+	}
+	to {
+		transform: translateX(0);
+		opacity: 1;
+	}
+}
+
+/* Answer reveal animation */
+.answer-reveal {
+	animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+/* Timer highlight for last 5 seconds */
+.red-highlight {
+	color: #dc2626;
+	font-weight: bold;
+	animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+	0% { opacity: 1; }
+	50% { opacity: 0.5; }
+	100% { opacity: 1; }
+}
