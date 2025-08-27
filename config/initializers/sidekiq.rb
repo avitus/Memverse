@@ -26,6 +26,49 @@ Sidekiq.configure_server do |config|
   config.redis = redis_config
   
   # ========================================================================
+  # Configure Logging to File
+  # ========================================================================
+  require 'logger'
+  log_file = Rails.root.join('log', 'sidekiq.log')
+  file_logger = Logger.new(log_file)
+  file_logger.level = Logger::INFO
+  
+  if Rails.env.production?
+    # Use structured logging in production
+    file_logger.formatter = proc do |severity, datetime, progname, msg|
+      {
+        timestamp: datetime.iso8601,
+        level: severity,
+        progname: progname,
+        message: msg,
+        pid: Process.pid,
+        thread: Thread.current.object_id
+      }.to_json + "\n"
+    end
+  else
+    # Human-readable logging in development
+    file_logger.formatter = proc do |severity, datetime, progname, msg|
+      "[#{datetime.strftime('%Y-%m-%d %H:%M:%S')}] #{severity}: #{msg}\n"
+    end
+  end
+  
+  # Set Sidekiq's logger through the config object
+  config.logger = file_logger
+  
+  # In development, also log to stdout for easier debugging
+  if Rails.env.development?
+    # Create stdout logger with same formatter
+    stdout_logger = Logger.new(STDOUT)
+    stdout_logger.level = Logger::INFO
+    stdout_logger.formatter = file_logger.formatter
+    
+    # Create a broadcasting logger that writes to both
+    require 'active_support/logger'
+    broadcast_logger = ActiveSupport::BroadcastLogger.new(file_logger, stdout_logger)
+    config.logger = broadcast_logger
+  end
+  
+  # ========================================================================
   # Error Handlers for Monitoring and Alerting
   # ========================================================================
   config.error_handlers << proc do |exception, context_hash|
@@ -144,21 +187,5 @@ Sidekiq.default_job_options = {
 # ========================================================================
 # Custom Logging Configuration
 # ========================================================================
-if Rails.env.production?
-  # Use structured logging in production
-  Sidekiq.logger.formatter = proc do |severity, datetime, progname, msg|
-    {
-      timestamp: datetime.iso8601,
-      level: severity,
-      progname: progname,
-      message: msg,
-      pid: Process.pid,
-      thread: Thread.current.object_id
-    }.to_json + "\n"
-  end
-else
-  # Human-readable logging in development
-  Sidekiq.logger.formatter = proc do |severity, datetime, progname, msg|
-    "[#{datetime.strftime('%Y-%m-%d %H:%M:%S')}] #{severity}: #{msg}\n"
-  end
-end
+# Note: Logging is configured inside the configure_server block above
+# This ensures Sidekiq's logger is properly initialized before we modify it

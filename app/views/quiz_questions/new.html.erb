@@ -1,46 +1,130 @@
 <% page_title "New Quiz Question" %>
 
-<div class="white-box-with-margins">
+<div class="new-question-container">
+  <!-- Header with quiz context -->
+  <div class="question-header">
+    <div class="header-content">
+      <h1>Add New Question</h1>
+      <p class="quiz-context">
+        <% if @quiz %>
+          for <strong><%= @quiz.name %></strong>
+        <% end %>
+      </p>
+    </div>
+    
+    <div class="header-actions">
+      <%= link_to quiz_path(@quiz), class: "btn btn-light" do %>
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" style="margin-right: 4px;">
+          <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"/>
+        </svg>
+        Back to Quiz
+      <% end %>
+    </div>
+  </div>
 
-	<h1>New Quiz Question</h1>
-
-	<%= render :partial => "form" %>
-
+  <!-- Form content -->
+  <div class="form-content">
+    <%= render :partial => "form" %>
+  </div>
 </div>
 
+<style>
+  .new-question-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .question-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #e5e7eb;
+  }
+
+  .header-content h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0;
+  }
+
+  .quiz-context {
+    color: #6b7280;
+    margin: 4px 0 0 0;
+    font-size: 1.1rem;
+  }
+
+  .quiz-context strong {
+    color: #3b82f6;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 10px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+
+  .btn-light {
+    background: #f3f4f6;
+    color: #374151;
+    border: 1px solid #d1d5db;
+  }
+
+  .btn-light:hover {
+    background: #e5e7eb;
+  }
+
+  .form-content {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 32px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  }
+</style>
 
 <script type="text/javascript">
+  //------ Show either form to enter verse reference or form to enter MCQ  -------------------
+  var $passage, $mcq, $submit;
 
-	//------ Show either form to enter verse reference or form to enter MCQ  -------------------
-    $passage = $("p#passage");
-    $mcq     = $("div#mcq");
-    $submit  = $("#non-mcq-submit"); // MCQ form has its own submit
+  function questionType(qtype) {
+    $passage = $passage || $("p#passage");
+    $mcq = $mcq || $("div#mcq");
+    $submit = $submit || $("#non-mcq-submit");
+    
+    if (qtype == 'mcq') {
+      $passage.hide();
+      $mcq.show();
+      $submit.hide();
+    } else {
+      $passage.show();
+      $mcq.hide();
+      $submit.show();
+    }
+  }
 
-
-    function questionType(qtype) {
-        if (qtype == 'mcq') {
-            $passage.hide();
-            $mcq.show();
-            $submit.hide();
-        } else {
-            $passage.show();
-            $mcq.hide();
-            $submit.show();
-        }
-    };
-
-	questionType($("select#quiz_question_question_type").val()); // called when the question type is changed
-
-	$(document).ready(function() {
-
-	    //------- Show verse in major translations ----------------
-	    $("#quiz_question_supporting_ref").observe_field(0.2, function( ) {
-	        // search and display results with callback function
-	        multiTranslationSearch( this.value, displayMultiTranslationSearchResultsFn );
-	        // show other questions associated with this verse
-	        relatedQuestionsSearch( this.value, displayRelatedQuestionsSearchResultsFn );
-	    });
-
+  $(document).ready(function() {
+    // Initialize form based on current selection
+    questionType($("select#quiz_question_question_type").val());
+    
+    //------- Show verse in major translations ----------------
+    $("#quiz_question_supporting_ref").observe_field(0.2, function() {
+      // search and display results with callback function
+      multiTranslationSearch(this.value, displayMultiTranslationSearchResultsFn);
+      // show other questions associated with this verse
+      relatedQuestionsSearch(this.value, displayRelatedQuestionsSearchResultsFn);
     });
-
+  });
 </script>

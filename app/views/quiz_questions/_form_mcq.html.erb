@@ -1,84 +1,258 @@
-<div id="mcq">
-
-    <!-- Left side : Question and answers -->
-    <div class="left-question">
-
-        <p>
-            <%= f.label         :mc_question, "Question text" %><br />
-            <%= f.text_area     :mc_question, size: "44x7" %>
-        </p>
-
-        <p>
-            <%= f.label         :mc_option_a, "Answer A" %><br />
-            <%= f.text_field    :mc_option_a, size: 44, autocomplete: "off" %>
-            <%= f.radio_button  :mc_answer, "A" %>
-        </p>
-
-        <p>
-            <%= f.label         :mc_option_b, "Answer B" %><br />
-            <%= f.text_field    :mc_option_b, size: 44, autocomplete: "off" %>
-            <%= f.radio_button  :mc_answer, "B" %>
-        </p>
-
-        <p>
-            <%= f.label         :mc_option_c, "Answer C" %><br />
-            <%= f.text_field    :mc_option_c, size: 44, autocomplete: "off" %>
-            <%= f.radio_button  :mc_answer, "C" %>
-        </p>
-
-        <p>
-            <%= f.label         :mc_option_d, "Answer D" %><br />
-            <%= f.text_field    :mc_option_d, size: 44, autocomplete: "off" %>
-            <%= f.radio_button  :mc_answer, "D" %>
-        </p>
-
-        <!-- Submit button -->
-        <div class="quiz-submit">
-            <%= f.submit 'Submit' %>
-        </div>
-
+<div id="mcq" class="mcq-section" style="display: none;">
+  
+  <!-- Question Content Section -->
+  <div class="form-section">
+    <h2 class="section-title">Multiple Choice Question</h2>
+    
+    <div class="form-group">
+      <%= f.label :mc_question, "Question Text", class: "form-label required" %>
+      <%= f.text_area :mc_question, class: "form-textarea", rows: 5, 
+                      placeholder: "Enter your question here..." %>
+      <p class="form-help">Write a clear, concise question that tests Biblical knowledge</p>
     </div>
+  </div>
 
-    <!-- Right: Other information -->
-    <div class="right-other-info">
-
-        <!-- MCQ category -->
-        <p>
-            <%= f.label     :mcq_category, "Type of question" %><br />
-            <%= f.select    :mcq_category, [ ['History',              'History'              ],
-                                             ['The Law',              'The Law'              ],
-                                             ['Prophecy',             'Prophecy'             ],
-                                             ['Wisdom',               'Wisdom'               ],
-                                             ['People',               'People'               ],
-                                             ['Plants & Animals',     'Plants & Animals'     ],
-                                             ['Geography',            'Geography'            ],
-                                             ['Life of Christ',       'Life of Christ'       ],
-                                             ['Miracles',             'Miracles'             ],
-                                             ['Parables',             'Parables'             ],
-                                             ['Disciples & Apostles', 'Disciples & Apostles' ],
-                                             ['Theology',             'Theology'             ],
-                                             ['Life in Christ',       'Life in Christ'       ],
-                                             ['Quotations',           'Quotations'           ],
-                                             ['Greek Words',          'Greek Words'          ],
-                                             ['Hebrew Words',         'Hebrew Words'         ] ] %>
-        </p>
-
-        <!-- Supporting reference -->
-        <p>
-            <%= f.label      :supporting_ref, "Supporting Reference" %><br />
-            <%= f.text_field :supporting_ref, :value => @quiz_question.supporting_ref.try(:long_ref) %>
-        </p>
-
-        <!-- Display supporting references -->
-        <div class="related-quiz-questions">
+  <!-- Answer Options Section -->
+  <div class="form-section">
+    <h2 class="section-title">Answer Options</h2>
+    <p class="section-help">Enter four possible answers and select the correct one</p>
+    
+    <div class="answer-options">
+      <!-- Option A -->
+      <div class="answer-option">
+        <div class="option-header">
+          <span class="option-label">A</span>
+          <%= f.radio_button :mc_answer, "A", class: "answer-radio" %>
         </div>
-
-        <!-- Display supporting references -->
-        <div class="supporting-ref-display">
+        <div class="option-input">
+          <%= f.text_field :mc_option_a, class: "form-input", 
+                          placeholder: "Enter option A...", 
+                          autocomplete: "off" %>
         </div>
+      </div>
 
+      <!-- Option B -->
+      <div class="answer-option">
+        <div class="option-header">
+          <span class="option-label">B</span>
+          <%= f.radio_button :mc_answer, "B", class: "answer-radio" %>
+        </div>
+        <div class="option-input">
+          <%= f.text_field :mc_option_b, class: "form-input", 
+                          placeholder: "Enter option B...", 
+                          autocomplete: "off" %>
+        </div>
+      </div>
+
+      <!-- Option C -->
+      <div class="answer-option">
+        <div class="option-header">
+          <span class="option-label">C</span>
+          <%= f.radio_button :mc_answer, "C", class: "answer-radio" %>
+        </div>
+        <div class="option-input">
+          <%= f.text_field :mc_option_c, class: "form-input", 
+                          placeholder: "Enter option C...", 
+                          autocomplete: "off" %>
+        </div>
+      </div>
+
+      <!-- Option D -->
+      <div class="answer-option">
+        <div class="option-header">
+          <span class="option-label">D</span>
+          <%= f.radio_button :mc_answer, "D", class: "answer-radio" %>
+        </div>
+        <div class="option-input">
+          <%= f.text_field :mc_option_d, class: "form-input", 
+                          placeholder: "Enter option D...", 
+                          autocomplete: "off" %>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <div class="clr"></div>
+  <!-- Additional Information Section -->
+  <div class="form-section">
+    <h2 class="section-title">Additional Information</h2>
+    
+    <div class="form-row">
+      <!-- Category -->
+      <div class="form-group">
+        <%= f.label :mcq_category, "Question Category", class: "form-label" %>
+        <%= f.select :mcq_category, 
+                     [['History', 'History'],
+                      ['The Law', 'The Law'],
+                      ['Prophecy', 'Prophecy'],
+                      ['Wisdom', 'Wisdom'],
+                      ['People', 'People'],
+                      ['Plants & Animals', 'Plants & Animals'],
+                      ['Geography', 'Geography'],
+                      ['Life of Christ', 'Life of Christ'],
+                      ['Miracles', 'Miracles'],
+                      ['Parables', 'Parables'],
+                      ['Disciples & Apostles', 'Disciples & Apostles'],
+                      ['Theology', 'Theology'],
+                      ['Life in Christ', 'Life in Christ'],
+                      ['Quotations', 'Quotations'],
+                      ['Greek Words', 'Greek Words'],
+                      ['Hebrew Words', 'Hebrew Words']], 
+                     { include_blank: "Select a category..." },
+                     { class: "form-select" } %>
+      </div>
 
+      <!-- Supporting Reference -->
+      <div class="form-group">
+        <%= f.label :supporting_ref, "Supporting Reference", class: "form-label" %>
+        <%= f.text_field :supporting_ref, 
+                        value: @quiz_question.supporting_ref.try(:long_ref),
+                        class: "form-input",
+                        placeholder: "e.g., Matthew 5:3-12" %>
+        <p class="form-help">Bible verse that supports this question</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dynamic Content Areas -->
+  <div class="dynamic-content">
+    <div class="related-quiz-questions"></div>
+    <div class="supporting-ref-display"></div>
+  </div>
+
+  <!-- Submit Actions -->
+  <div class="form-actions">
+    <%= f.submit 'Create Question', class: "btn btn-primary" %>
+    <%= link_to "Cancel", quiz_path(@quiz), class: "btn btn-light" %>
+  </div>
 </div>
+
+<style>
+  .mcq-section {
+    animation: fadeIn 0.3s ease-in;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .section-help {
+    color: #6b7280;
+    margin: -10px 0 20px 0;
+    font-size: 0.875rem;
+  }
+
+  .form-textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 120px;
+    transition: all 0.2s;
+  }
+
+  .form-textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+
+  /* Answer Options */
+  .answer-options {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .answer-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    background: #f9fafb;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    transition: all 0.2s;
+  }
+
+  .answer-option:hover {
+    border-color: #d1d5db;
+  }
+
+  .answer-option:has(.answer-radio:checked) {
+    border-color: #3b82f6;
+    background: #eff6ff;
+  }
+
+  .option-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+
+  .option-label {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border: 2px solid #d1d5db;
+    border-radius: 50%;
+    font-weight: 700;
+    color: #6b7280;
+  }
+
+  .answer-option:has(.answer-radio:checked) .option-label {
+    background: #3b82f6;
+    border-color: #3b82f6;
+    color: white;
+  }
+
+  .answer-radio {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+  }
+
+  .option-input {
+    flex: 1;
+  }
+
+  .option-input .form-input {
+    margin: 0;
+  }
+
+  /* Dynamic Content */
+  .dynamic-content {
+    margin-top: 24px;
+  }
+
+  .related-quiz-questions:not(:empty),
+  .supporting-ref-display:not(:empty) {
+    padding: 16px;
+    background: #f3f4f6;
+    border-radius: 8px;
+    margin-bottom: 16px;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .answer-option {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .option-header {
+      width: 100%;
+    }
+    
+    .option-input {
+      width: 100%;
+    }
+  }
+</style>

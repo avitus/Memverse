@@ -131,8 +131,11 @@ app/assets/stylesheets/
    - `#filter` - Search/filter inputs
    - `.focusField` / `.idleField` - Input states
 
-3. **Containers**
-   - `.white-box-bg` - Primary content containers
+3. **Containers** ⚠️
+   - **`.white-box-bg`** - **REQUIRED**: Primary content container for ALL pages
+     - Always use this as your main wrapper
+     - Provides consistent styling across the application
+     - Do not create custom containers with duplicate styling
    - `.mnemonic` - Mnemonic help boxes
    - `.feedback` - Feedback sections
    - `.tooltip` - Tooltip containers
@@ -144,6 +147,9 @@ app/assets/stylesheets/
 ## Layout Patterns
 
 ### Standard Page Structure
+
+**IMPORTANT**: Always use the `.white-box-bg` class as the main container for all content pages. This provides consistent padding, background, and styling across the application.
+
 ```html
 <div class="white-box-bg">
   <div class="[feature-name]">
@@ -156,6 +162,13 @@ app/assets/stylesheets/
   </div>
 </div>
 ```
+
+#### Container Classes Usage:
+- **`.white-box-bg`** - Primary container for ALL main content areas (forms, lists, dashboards, etc.)
+  - Provides white background, proper padding, and consistent margins
+  - Do NOT create custom container classes with similar styling
+  - Located in base styles, available globally
+- **`.white-box-with-margins`** - Legacy variant with additional margins (avoid in new code)
 
 ### Grid System
 - Uses floats with classes like `.flt_rht` (float right)

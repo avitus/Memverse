@@ -1,0 +1,253 @@
+<% page_title "Quiz Dashboard: #{@quiz.name}" %>
+
+<div class="quiz-dashboard">
+  <div class="dashboard-header">
+    <h1><%= @quiz.name %> - Admin Dashboard</h1>
+    <div class="header-actions">
+      <%= link_to "View Quiz", quiz_path(@quiz), class: "btn-gray" %>
+      <%= link_to "Edit Quiz", edit_quiz_path(@quiz), class: "btn-gray" %>
+      <%= link_to "Back to All Quizzes", admin_quiz_dashboards_path, class: "btn-gray" %>
+    </div>
+  </div>
+
+  <!-- Quiz Information -->
+  <div class="info-grid">
+    <div class="info-card">
+      <h3>Quiz Details</h3>
+      <dl>
+        <dt>Created by</dt>
+        <dd><%= @quiz.user.name_or_login %></dd>
+        
+        <dt>Start Time</dt>
+        <dd><%= @quiz.start_time&.strftime("%b %d, %Y at %I:%M %p %Z") || "Not scheduled" %></dd>
+        
+        <dt>Questions</dt>
+        <dd><%= @quiz.quiz_questions.count %></dd>
+        
+        <dt>Duration</dt>
+        <dd><%= @quiz.quiz_length || 10 %> minutes</dd>
+      </dl>
+    </div>
+
+    <div class="info-card">
+      <h3>Quiz Status</h3>
+      <% if @quiz_status %>
+        <dl>
+          <dt>Status</dt>
+          <dd>
+            <% case @quiz_status['status'] %>
+            <% when QuizSession::STATUS_WAITING %>
+              <span class="status-badge status-scheduled">Waiting to Start</span>
+            <% when QuizSession::STATUS_IN_PROGRESS %>
+              <span class="status-badge status-in-progress">In Progress</span>
+            <% when QuizSession::STATUS_FINISHED %>
+              <span class="status-badge status-completed">Finished</span>
+            <% else %>
+              <span class="status-badge status-draft">Not Started</span>
+            <% end %>
+          </dd>
+          
+          <% if @quiz_status['current_question'] %>
+            <dt>Current Question</dt>
+            <dd><%= @quiz_status['current_question'] %> of <%= @quiz.quiz_questions.count %></dd>
+          <% end %>
+        </dl>
+      <% else %>
+        <p>Quiz has not started yet.</p>
+      <% end %>
+    </div>
+
+    <div class="info-card">
+      <h3>Participants</h3>
+      <dl>
+        <dt>Total Participants</dt>
+        <dd><%= @participants.count %></dd>
+        
+        <% if @participants.any? %>
+          <dt>Active Now</dt>
+          <dd><%= @participants.select { |p| p['active'] }.count %></dd>
+        <% end %>
+      </dl>
+      
+      <% if @participants.any? %>
+        <%= link_to "View All Participants", 
+                    participants_admin_quiz_dashboard_path(@quiz), 
+                    class: "btn-small" %>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="action-section">
+    <h3>Quiz Controls</h3>
+    <div class="action-buttons">
+      <% if @quiz.start_time && @quiz.start_time > Time.current %>
+        <%= link_to "Start Quiz Now", 
+                    start_admin_quiz_dashboard_path(@quiz), 
+                    method: :post,
+                    class: "btn-green",
+                    data: { confirm: "Start this quiz immediately?" } %>
+      <% elsif @quiz_status && @quiz_status['status'] == QuizSession::STATUS_IN_PROGRESS %>
+        <%= link_to "Stop Quiz", 
+                    stop_admin_quiz_dashboard_path(@quiz), 
+                    method: :post,
+                    class: "btn-red",
+                    data: { confirm: "Are you sure you want to stop this quiz?" } %>
+      <% end %>
+      
+      <%= link_to "Monitor Live", 
+                  monitor_admin_quiz_dashboard_path(@quiz), 
+                  class: "btn-purple" %>
+    </div>
+  </div>
+
+  <!-- Top Scoreboard -->
+  <% if @scoreboard && @scoreboard.any? %>
+    <div class="section-container">
+      <h3>Top Scores</h3>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>User</th>
+              <th>Score</th>
+              <th>Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @scoreboard.first(10).each_with_index do |score, index| %>
+              <tr>
+                <td><%= index + 1 %></td>
+                <td><%= score['name'] || score['login'] %></td>
+                <td><%= score['score'] %></td>
+                <td><%= score['time'] ? "#{score['time']}s" : "-" %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Question Statistics -->
+  <% if @question_stats && @question_stats.any? %>
+    <div class="section-container">
+      <h3>Question Performance</h3>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Question #</th>
+              <th>Correct</th>
+              <th>Incorrect</th>
+              <th>Success Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @question_stats.each do |q_num, stats| %>
+              <tr>
+                <td><%= q_num %></td>
+                <td><%= stats['correct'] || 0 %></td>
+                <td><%= stats['incorrect'] || 0 %></td>
+                <td>
+                  <% total = (stats['correct'] || 0) + (stats['incorrect'] || 0) %>
+                  <% if total > 0 %>
+                    <%= ((stats['correct'].to_f / total) * 100).round(1) %>%
+                  <% else %>
+                    -
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<style>
+  .quiz-dashboard { padding: 20px; }
+  
+  .dashboard-header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 30px;
+  }
+  
+  .header-actions { display: flex; gap: 10px; }
+  
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+  
+  .info-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 20px;
+  }
+  
+  .info-card h3 {
+    margin-bottom: 15px;
+    color: #1f2937;
+  }
+  
+  .info-card dl {
+    margin: 0;
+  }
+  
+  .info-card dt {
+    font-weight: 600;
+    color: #6b7280;
+    margin-top: 10px;
+  }
+  
+  .info-card dd {
+    margin: 5px 0 15px 0;
+    color: #1f2937;
+  }
+  
+  .action-section {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30ующих;
+  }
+  
+  .action-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+  }
+  
+  .btn-green { background: #10b981; color: white; }
+  .btn-red { background: #ef4444; color: white; }
+  .btn-purple { background: #8b5cf6; color: white; }
+  .btn-gray { background: #6b7280; color: white; }
+  
+  .btn-green, .btn-red, .btn-purple, .btn-gray {
+    padding: 8px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    display: inline-block;
+  }
+  
+  .status-badge {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  
+  .status-scheduled { background: #fbbf24; color: #78350f; }
+  .status-in-progress { background: #3b82f6; color: white; }
+  .status-completed { background: #10b981; color: white; }
+  .status-draft { background: #9ca3af; color: white; }
+</style>

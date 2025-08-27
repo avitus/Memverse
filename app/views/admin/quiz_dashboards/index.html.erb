@@ -3,7 +3,7 @@
 <div class="quiz-dashboard">
   <div class="dashboard-header">
     <h1>Quiz Management Dashboard</h1>
-    <%= link_to "Create New Quiz", new_admin_quiz_dashboard_path, 
+    <%= link_to "Create New Quiz", new_quiz_path, 
                 class: "btn-new-quiz" %>
   </div>
 
@@ -83,7 +83,7 @@
             <% @upcoming_quizzes.each do |quiz| %>
               <tr>
                 <td>
-                  <%= link_to quiz.name, admin_quiz_dashboard_path(quiz) %>
+                  <%= link_to quiz.name, quiz_path(quiz) %>
                 </td>
                 <td>
                   <%= quiz.start_time.strftime("%b %d, %I:%M %p %Z") %>
@@ -104,7 +104,7 @@
                                 method: :post,
                                 class: "link-green" %>
                     <%= link_to "Edit", edit_quiz_path(quiz) %>
-                    <%= link_to "Cancel", admin_quiz_dashboard_path(quiz), 
+                    <%= link_to "Cancel", quiz_path(quiz), 
                                 method: :delete,
                                 data: { confirm: "Are you sure?" },
                                 class: "link-red" %>
@@ -142,7 +142,7 @@
                 #<%= quiz.id %>
               </td>
               <td>
-                <%= link_to quiz.name, admin_quiz_dashboard_path(quiz) %>
+                <%= link_to quiz.name, quiz_path(quiz) %>
               </td>
               <td>
                 <% if quiz.start_time && quiz.start_time < Time.current %>
@@ -167,7 +167,7 @@
               </td>
               <td>
                 <div class="action-links">
-                  <%= link_to "View", admin_quiz_dashboard_path(quiz) %>
+                  <%= link_to "View", quiz_path(quiz) %>
                   <%= link_to "Monitor", monitor_admin_quiz_dashboard_path(quiz), 
                               class: "link-green" %>
                   <%= link_to "Participants", participants_admin_quiz_dashboard_path(quiz), 

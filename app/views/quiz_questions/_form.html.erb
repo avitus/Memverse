@@ -1,72 +1,279 @@
-<%= form_for( @quiz_question ) do |f| %>
-
-    <!-- Flag any errors -->
-    <% if @quiz_question.errors.any? %>
-        <div id="errorExplanation">
-            <h2><%= pluralize(@quiz_question.errors.count, "error") %> prohibited this quiz from being saved:</h2>
-            <ul>
-                <% @quiz_question.errors.full_messages.each do |msg| %>
-                    <li><%= msg %></li>
-                <% end %>
-            </ul>
-        </div>
-    <% end %>
-
-    <!-- Associate with a quiz and user -->
-    <p>
-        <%= f.hidden_field  :quiz_id,         :value => @quiz.id %>
-        <%= f.hidden_field  :submitted_by,    :value => @quiz_question.submitted_by || current_user.id %>
-        <%= f.hidden_field  :approval_status, :value => current_user.admin? ? "Approved" : "Pending" %>
-    </p>
-
-    <% if can? :manage, Quiz %>
-        <%= text_field_tag :quiz, @quiz.name, id: "quiz_search" %>
-    <% end %>
-
-    <!-- Question number -->
-    <div class="quiz-question-num">
-        <%= f.label         :question_no, "Question number" %><br />
-        <%= f.select        :question_no, (1..25) %>
+<%= form_for(@quiz_question, html: { class: 'quiz-question-form' }) do |f| %>
+  
+  <!-- Error Messages -->
+  <% if @quiz_question.errors.any? %>
+    <div class="error-messages">
+      <div class="error-icon">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+        </svg>
+      </div>
+      <div class="error-content">
+        <h3><%= pluralize(@quiz_question.errors.count, "error") %> found:</h3>
+        <ul>
+          <% @quiz_question.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
     </div>
+  <% end %>
 
-    <!-- Question type -->
-    <div class="quiz-question-type">
-        <%= f.label         :question_type, "Type of question" %><br />
-        <%= f.select        :question_type, [ ['Multiple Choice', 'mcq'        ],
-                                              ['Recite verse',    'recitation' ],
-                                              ['Give reference',  'reference'  ]],
-                            {}, {:onchange => "questionType(this.value)"} %>
+  <!-- Hidden Fields -->
+  <%= f.hidden_field :quiz_id, value: @quiz.id %>
+  <%= f.hidden_field :submitted_by, value: @quiz_question.submitted_by || current_user.id %>
+  <%= f.hidden_field :approval_status, value: current_user.admin? ? "Approved" : "Pending" %>
+
+  <!-- Quiz Selection (Admin Only) -->
+  <% if can? :manage, Quiz %>
+    <div class="form-section">
+      <div class="form-group">
+        <label for="quiz_search" class="form-label">
+          <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" style="margin-right: 4px;">
+            <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+            <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 1 1 0 000 2H6a2 2 0 00-2 2v6a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2v1h2v6H6V7h2V6H6a2 2 0 00-2-2z" clip-rule="evenodd"/>
+          </svg>
+          Quiz
+        </label>
+        <%= text_field_tag :quiz, @quiz.name, id: "quiz_search", class: "form-input" %>
+        <p class="form-help">Start typing to search for a different quiz</p>
+      </div>
     </div>
+  <% end %>
 
-    <p id="passage">
-        <%= f.label         :passage, "Passage Reference" %><br />
-        <%= f.text_field    :passage %>
-    </p>
+  <!-- Basic Question Settings -->
+  <div class="form-section">
+    <h2 class="section-title">Question Settings</h2>
+    
+    <div class="form-row">
+      <div class="form-group">
+        <%= f.label :question_no, "Question Number", class: "form-label" %>
+        <%= f.select :question_no, options_for_select((1..50).map { |n| [n, n] }, @quiz_question.question_no), 
+                     {}, class: "form-select" %>
+      </div>
 
-    <%= f.submit 'Submit', id: "non-mcq-submit" %>
+      <div class="form-group">
+        <%= f.label :question_type, "Question Type", class: "form-label" %>
+        <%= f.select :question_type, 
+                     [['Multiple Choice', 'mcq'],
+                      ['Recite Verse', 'recitation'],
+                      ['Give Reference', 'reference']], 
+                     {}, 
+                     { class: "form-select", onchange: "questionType(this.value)" } %>
+        <p class="form-help">Choose how the question will be presented</p>
+      </div>
+    </div>
+  </div>
 
-    <!-- Entry form for MCQ -->
-    <%= render :partial => "form_mcq", :locals=>{ :f => f } %>
+  <!-- Passage Reference (for non-MCQ) -->
+  <div id="passage" class="form-section">
+    <div class="form-group">
+      <%= f.label :passage, "Passage Reference", class: "form-label required" %>
+      <%= f.text_field :passage, class: "form-input", placeholder: "e.g., John 3:16 or Genesis 1:1-5" %>
+      <p class="form-help">Enter the Bible verse or passage for this question</p>
+    </div>
+  </div>
 
-<% end %> <!-- Form -->
+  <!-- Submit Button (for non-MCQ) -->
+  <div class="form-actions" id="non-mcq-submit-wrapper">
+    <%= f.submit 'Create Question', id: "non-mcq-submit", class: "btn btn-primary" %>
+    <%= link_to "Cancel", quiz_path(@quiz), class: "btn btn-light" %>
+  </div>
+
+  <!-- MCQ Form Section -->
+  <%= render partial: "form_mcq", locals: { f: f } %>
+
+<% end %>
+
+<style>
+  .quiz-question-form {
+    max-width: 100%;
+  }
+
+  /* Error Messages */
+  .error-messages {
+    display: flex;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 24px;
+    color: #991b1b;
+  }
+
+  .error-icon {
+    flex-shrink: 0;
+    margin-right: 12px;
+    color: #dc2626;
+  }
+
+  .error-content h3 {
+    margin: 0 0 8px 0;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .error-content ul {
+    margin: 0;
+    padding-left: 20px;
+  }
+
+  .error-content li {
+    margin-bottom: 4px;
+  }
+
+  /* Form Sections */
+  .form-section {
+    margin-bottom: 32px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .form-section:last-of-type {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 20px 0;
+  }
+
+  /* Form Groups */
+  .form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 24px;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-label {
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 8px;
+    font-size: 0.875rem;
+  }
+
+  .form-label.required::after {
+    content: "*";
+    color: #ef4444;
+    margin-left: 4px;
+  }
+
+  .form-input,
+  .form-select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: all 0.2s;
+    background-color: white;
+  }
+
+  .form-input:focus,
+  .form-select:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+
+  .form-input::placeholder {
+    color: #9ca3af;
+  }
+
+  .form-help {
+    margin-top: 4px;
+    font-size: 0.875rem;
+    color: #6b7280;
+  }
+
+  /* Form Actions */
+  .form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 32px;
+  }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 1rem;
+    text-decoration: none;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-primary {
+    background: #3b82f6;
+    color: white;
+    border-color: #3b82f6;
+  }
+
+  .btn-primary:hover {
+    background: #2563eb;
+    border-color: #2563eb;
+  }
+
+  .btn-light {
+    background: #f3f4f6;
+    color: #374151;
+    border-color: #d1d5db;
+  }
+
+  .btn-light:hover {
+    background: #e5e7eb;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+    
+    .form-actions {
+      flex-direction: column;
+    }
+    
+    .btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>
 
 <script type="text/javascript">
+  <% if can? :manage, Quiz %>
     $("#quiz_search").autocomplete({
-        minLength: 2,
-        source: function(query, process) {
-            return $.post('/quizzes/search.json', { query: query.term }, function(data) {
-                var suggestions = [];
-                $.each(data, function(i, val) {
-                    suggestions.push({
-                        label: val.name,
-                        id:    val.id
-                    });
-                });
-                process(suggestions);
+      minLength: 2,
+      source: function(query, process) {
+        return $.post('/quizzes/search.json', { query: query.term }, function(data) {
+          var suggestions = [];
+          $.each(data, function(i, val) {
+            suggestions.push({
+              label: val.name,
+              id: val.id
             });
-        },
-        select: function(e, ui) {
-            $("#quiz_question_quiz_id").val(ui.item.id);
-        }
+          });
+          process(suggestions);
+        });
+      },
+      select: function(e, ui) {
+        $("#quiz_question_quiz_id").val(ui.item.id);
+      }
     });
+  <% end %>
 </script>

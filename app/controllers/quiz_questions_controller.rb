@@ -98,7 +98,10 @@ class QuizQuestionsController < ApplicationController
       @quiz_question = QuizQuestion.new(params[:quiz_question])
     else
       @quiz          = Quiz.find(params[:quiz] || 1)
-      @quiz_question = QuizQuestion.new(quiz: @quiz, question_no: params[:qno])
+      # Calculate the next question number
+      last_question_no = @quiz.quiz_questions.maximum(:question_no) || 0
+      next_question_no = params[:qno] || (last_question_no + 1)
+      @quiz_question = QuizQuestion.new(quiz: @quiz, question_no: next_question_no)
     end
 
     respond_to do |format|
