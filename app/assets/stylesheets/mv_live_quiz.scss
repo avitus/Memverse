@@ -316,11 +316,11 @@ div#chat-stream-narrow {
 
 /* Question states */
 .question.active {
-	display: block !important;
+	display: block;
 }
 
 .question.hidden {
-	display: none !important;
+	display: none;
 }
 
 /* Multiple choice options */

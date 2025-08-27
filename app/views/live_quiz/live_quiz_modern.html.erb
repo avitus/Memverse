@@ -56,10 +56,11 @@
 					<div data-live-quiz-target="question"
 					     data-question-number="<%= q %>"
 					     id="question-<%= q %>" 
-					     class="question bg-gray-50 p-6 rounded-lg hidden">
+					     class="question bg-gray-50 p-6 rounded-lg"
+					     style="display:none">
 						<div id="q-msg" class="text-sm text-gray-600 mb-2"></div>
 						<div id="q-question" class="text-lg"></div>
-						<div id="q-answer" data-live-quiz-target="answer" class="mt-4 p-4 bg-green-50 rounded hidden"></div>
+						<div id="q-answer" data-live-quiz-target="answer" class="mt-4 p-4 bg-green-50 rounded"></div>
 					</div>
 				<% end %>
 			</div>
