@@ -851,3 +851,252 @@ textarea.form-control {
     grid-template-columns: 1fr;
   }
 }
+
+/* ===================================================================== */
+/* Compact Quiz Schedule Styles - Following Memverse Style Guide         */
+/* ===================================================================== */
+.quiz-schedule-compact {
+  // Uses white-box-bg as main container per style guide
+  padding: 1.5rem 2rem;
+  
+  .top-heading {
+    margin-bottom: 1.5rem;
+    
+    h2 {
+      font-size: 1.5rem;
+      color: #1a1a1d; // gray-900
+      margin: 0;
+      
+      i {
+        margin-right: 0.5rem;
+        color: #84cc16; // green-primary
+      }
+    }
+  }
+}
+
+.quiz-schedule-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.quiz-card {
+  background: #f5f5f7; // gray-100
+  border: 1px solid #b0b0b5; // gray-300
+  border-radius: 8px;
+  overflow: hidden;
+  
+  &.next-quiz-card {
+    .quiz-card-header {
+      background: linear-gradient(135deg, #84cc16, #65a30d); // green-primary to green-medium
+      color: white;
+    }
+  }
+}
+
+.quiz-card-header {
+  background: #c7c7cc; // gray-200
+  padding: 0.75rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #b0b0b5; // gray-300
+  
+  h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #2d2d30; // gray-800
+  }
+}
+
+.quiz-badge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 600;
+  
+  &.quiz-badge-upcoming {
+    background: rgba(255, 255, 255, 0.3);
+    color: white;
+  }
+  
+  &.quiz-badge-urgent {
+    background: #983626; // red-primary
+    color: white;
+    animation: pulse 2s ease-in-out infinite;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+.quiz-card-content {
+  padding: 1rem;
+}
+
+// Next quiz specific styles
+.next-quiz-time {
+  text-align: center;
+  margin-bottom: 1rem;
+  
+  .quiz-day {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1a1a1d; // gray-900
+    margin-bottom: 0.25rem;
+  }
+  
+  .quiz-datetime {
+    font-size: 0.9rem;
+    color: #48484a; // gray-700
+  }
+  
+  .quiz-local-time {
+    font-size: 0.8rem;
+    color: #48484a; // gray-700
+    font-weight: 600;
+    margin-top: 0.25rem;
+  }
+}
+
+.quiz-countdown-compact {
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #84cc16; // green-primary
+  padding: 0.75rem;
+  background: rgba(132, 204, 22, 0.1);
+  border-radius: 6px;
+  
+  .countdown-expired {
+    color: #983626; // red-primary
+    animation: pulse 1s ease-in-out infinite;
+  }
+}
+
+// Schedule card styles
+.schedule-times {
+  .schedule-time-item {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #b0b0b5; // gray-300
+    display: flex;
+    flex-direction: column;
+    
+    &:last-child {
+      border-bottom: none;
+    }
+    
+    .schedule-day-name {
+      font-weight: 600;
+      color: #1a1a1d; // gray-900
+      font-size: 0.95rem;
+      margin-bottom: 0.25rem;
+    }
+    
+    .schedule-utc-time {
+      color: #48484a; // gray-700
+      font-size: 0.85rem;
+    }
+    
+    .schedule-local {
+      color: #48484a; // gray-700
+      font-size: 0.8rem;
+      margin-top: 0.25rem;
+      font-weight: 600;
+    }
+  }
+}
+
+// Details card styles
+.quiz-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  
+  .quiz-stat {
+    text-align: center;
+    padding: 0.5rem;
+    
+    i {
+      display: block;
+      font-size: 1.5rem;
+      color: #84cc16; // green-primary
+      margin-bottom: 0.25rem;
+    }
+    
+    span {
+      display: block;
+      font-size: 0.8rem;
+      color: #48484a; // gray-700
+    }
+  }
+}
+
+.quiz-action-compact {
+  text-align: center;
+  
+  .submit {
+    // Uses standard submit button class from style guide
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    width: 100%;
+    
+    i {
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+.quiz-footer-note {
+  text-align: center;
+  font-size: 0.85rem;
+  color: #636366; // gray-600
+  padding: 1rem;
+  background: #f5f5f7; // gray-100
+  border-radius: 6px;
+  
+  i {
+    color: #3b82f6; // blue-primary
+    margin-right: 0.5rem;
+  }
+  
+  a {
+    color: #3b82f6; // blue-primary
+    font-weight: 600;
+  }
+}
+
+/* Compact schedule responsive */
+@media (max-width: 768px) {
+  .quiz-schedule-compact {
+    padding: 1rem;
+    
+    .quiz-schedule-grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    
+    .quiz-stats {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+      
+      .quiz-stat {
+        display: flex;
+        align-items: center;
+        text-align: left;
+        
+        i {
+          display: inline-block;
+          font-size: 1.25rem;
+          margin-right: 0.75rem;
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}

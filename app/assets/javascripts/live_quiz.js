@@ -172,4 +172,104 @@ function getScore(questionAnswer, userAnswer, questionType) {
 
 }
 
+/******************************************************************************
+ * Quiz Schedule Functions
+ ******************************************************************************/
+var quizSchedule = {
+  // Initialize quiz schedule functionality
+  init: function() {
+    if ($('.quiz-schedule-compact').length > 0) {
+      this.updateCountdown();
+      setInterval(this.updateCountdown.bind(this), 60000); // Update every minute
+      this.showLocalTimes();
+      this.showNextQuizLocalTime();
+    }
+  },
+  
+  // Update countdown timer
+  updateCountdown: function() {
+    var countdownEl = $('#quiz-countdown');
+    if (!countdownEl.length) return;
+    
+    var targetTime = new Date(countdownEl.data('target-time'));
+    var now = new Date();
+    var diff = targetTime - now;
+    
+    if (diff <= 0) {
+      countdownEl.html('<span class="countdown-expired">Starting now!</span>');
+      return;
+    }
+    
+    var days = Math.floor(diff / 86400000);
+    var hours = Math.floor((diff % 86400000) / 3600000);
+    var minutes = Math.floor((diff % 3600000) / 60000);
+    
+    var parts = [];
+    if (days > 0) parts.push(days + 'd');
+    if (hours > 0) parts.push(hours + 'h');
+    parts.push(minutes + 'm');
+    
+    countdownEl.html('<i class="fa fa-clock-o"></i> ' + parts.join(' '));
+  },
+  
+  // Show local times for quiz schedule
+  showLocalTimes: function() {
+    $('.schedule-local').each(function() {
+      var utcTimeStr = $(this).data('utc-time');
+      var timeParts = utcTimeStr.split(':');
+      var utcHours = parseInt(timeParts[0]);
+      var utcMinutes = parseInt(timeParts[1]);
+      
+      // Create a date object for today at the specified UTC time
+      var now = new Date();
+      var utcDate = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), utcHours, utcMinutes, 0));
+      
+      // Format in user's local time
+      var localTimeStr = utcDate.toLocaleString([], {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
+        timeZoneName: 'short'
+      });
+      
+      $(this).text(localTimeStr);
+    });
+  },
+  
+  // Show local time for next quiz
+  showNextQuizLocalTime: function() {
+    var nextQuizEl = $('.quiz-local-time[data-utc-datetime]');
+    var dayEl = $('.quiz-day[data-utc-datetime]');
+    if (!nextQuizEl.length) return;
+    
+    var utcDatetime = nextQuizEl.data('utc-datetime');
+    var utcDate = new Date(utcDatetime);
+    
+    // Get day of week in local timezone
+    var localDay = utcDate.toLocaleDateString([], {
+      weekday: 'long'
+    });
+    
+    // Format the full date and time in user's local timezone
+    var localDateTimeStr = utcDate.toLocaleString([], {
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+      timeZoneName: 'short'
+    });
+    
+    dayEl.text(localDay);
+    nextQuizEl.html('<i class="fa fa-clock-o"></i> ' + localDateTimeStr);
+  }
+};
+
+// Initialize quiz schedule on document ready
+if (typeof $ !== 'undefined' && $.fn && $.fn.ready) {
+  $(document).ready(function() {
+    quizSchedule.init();
+  });
+}
+
 
