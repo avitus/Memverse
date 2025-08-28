@@ -103,6 +103,9 @@
       "Bash(./run_all_tests.sh)"
     ],
     "deny": [],
-    "defaultMode": "acceptEdits"
+    "defaultMode": "acceptEdits",
+    "additionalDirectories": [
+      "/private/tmp"
+    ]
   }
 }

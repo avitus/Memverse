@@ -62,7 +62,12 @@ class LiveQuizController < ApplicationController
     end
 
     # Render the quiz view
-    render 'live_quiz'
+    # Feature flag: Use legacy view only if explicitly requested
+    if params[:legacy] == 'true'
+      render 'live_quiz'
+    else
+      render 'live_quiz_modern'
+    end
   end
 
   #-----------------------------------------------------------------------------------------------------------
