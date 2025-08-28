@@ -1,516 +1,128 @@
 <% page_title @quiz.name %>
 
-<div class="quiz-show-container">
-  <!-- Header Section -->
-  <div class="quiz-header">
-    <div class="quiz-title-section">
-      <h1 class="quiz-title"><%= @quiz.name %></h1>
-      <% if @quiz.description.present? %>
-        <p class="quiz-description"><%= @quiz.description.html_safe %></p>
-      <% end %>
-    </div>
-    
-    <div class="quiz-actions">
-      <% if can? :manage, @quiz %>
-        <%= link_to edit_quiz_path(@quiz), class: "btn btn-primary" do %>
-          <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" style="margin-right: 4px;">
-            <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
-          </svg>
-          Edit Quiz
-        <% end %>
-        
-        <% if current_user&.admin? %>
-          <%= link_to admin_quiz_dashboard_path(@quiz), class: "btn btn-secondary" do %>
-            <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" style="margin-right: 4px;">
-              <path fill-rule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-            </svg>
-            Admin Dashboard
+<div class="white-box-bg">
+  <div class="compact-quiz-show">
+    <h1 class="compact-header">
+      <%= @quiz.name %>
+      <div class="quiz-actions-compact">
+        <% if can? :manage, @quiz %>
+          <%= link_to edit_quiz_path(@quiz), class: "btn btn-primary btn-compact" do %>
+            <i class="fa fa-pencil"></i> Edit
           <% end %>
         <% end %>
-      <% end %>
-      
-      <%= link_to admin_quiz_dashboards_path, class: "btn btn-light" do %>
-        <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" style="margin-right: 4px;">
-          <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"/>
-        </svg>
-        Back to Quiz Management
-      <% end %>
-    </div>
-  </div>
+        <%= link_to admin_quiz_dashboards_path, class: "btn btn-secondary btn-compact" do %>
+          <i class="fa fa-arrow-left"></i> Back
+        <% end %>
+      </div>
+    </h1>
 
-  <!-- Quiz Info Cards -->
-  <div class="quiz-info-grid">
-    <div class="info-card">
-      <div class="info-icon">
-        <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
-        </svg>
-      </div>
-      <div class="info-content">
-        <label>Created by</label>
-        <div class="info-value">
-          <%= link_to @quiz.user.name_or_login, @quiz.user, class: "creator-link" %>
-        </div>
-      </div>
-    </div>
+    <% if @quiz.description.present? %>
+      <p class="quiz-description-compact"><%= @quiz.description.html_safe %></p>
+    <% end %>
 
-    <div class="info-card">
-      <div class="info-icon">
-        <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zM4 8h12v8H4V8z" clip-rule="evenodd"/>
-        </svg>
+    <!-- Compact Info Grid -->
+    <div class="compact-info-grid">
+      <div class="compact-info-item">
+        <i class="fa fa-user"></i>
+        <span class="info-label">Created by:</span>
+        <span class="info-value"><%= link_to @quiz.user.name_or_login, @quiz.user %></span>
       </div>
-      <div class="info-content">
-        <label>Start Time</label>
-        <div class="info-value">
+      <div class="compact-info-item">
+        <i class="fa fa-calendar"></i>
+        <span class="info-label">Start:</span>
+        <span class="info-value">
           <% if @quiz.start_time %>
-            <%= @quiz.start_time.strftime("%B %d, %Y at %l:%M %p %Z") %>
+            <%= @quiz.start_time.strftime("%b %d, %I:%M %p") %>
           <% else %>
-            <span class="text-muted">Not scheduled</span>
+            Not scheduled
           <% end %>
-        </div>
+        </span>
+      </div>
+      <div class="compact-info-item">
+        <i class="fa fa-question-circle"></i>
+        <span class="info-label">Questions:</span>
+        <span class="info-value"><%= @quizquestions.count %></span>
+      </div>
+      <div class="compact-info-item">
+        <i class="fa fa-clock-o"></i>
+        <span class="info-label">Duration:</span>
+        <span class="info-value">
+          <% if @quiz.quiz_length %>
+            <% if @quiz.quiz_length >= 60 %>
+              <%= (@quiz.quiz_length / 60.0).round(1) %> min
+            <% else %>
+              <%= @quiz.quiz_length %> sec
+            <% end %>
+          <% else %>
+            10 min
+          <% end %>
+        </span>
       </div>
     </div>
 
-    <div class="info-card">
-      <div class="info-icon">
-        <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
-          <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
-          <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 1 1 0 000 2H6a2 2 0 00-2 2v6a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2v1h2v6H6V7h2V6H6a2 2 0 00-2-2z" clip-rule="evenodd"/>
-        </svg>
-      </div>
-      <div class="info-content">
-        <label>Questions</label>
-        <div class="info-value">
-          <%= pluralize(@quizquestions.count, 'question') %>
-        </div>
-      </div>
-    </div>
-
-    <div class="info-card">
-      <div class="info-icon">
-        <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
-        </svg>
-      </div>
-      <div class="info-content">
-        <label>Duration</label>
-        <div class="info-value">
-          <%= @quiz.quiz_length || 10 %> minutes
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Questions Section -->
-  <div class="questions-section">
-    <div class="section-header">
-      <h2>Questions</h2>
-      <% if can? :manage, @quiz %>
-        <%= link_to new_quiz_question_path(:quiz => @quiz.id), class: "btn btn-success btn-sm" do %>
-          <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20" style="margin-right: 4px;">
-            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/>
-          </svg>
-          Add Question
+    <!-- Questions Section -->
+    <div class="compact-questions-section">
+      <div class="section-header-compact">
+        <h2><i class="fa fa-list"></i> Questions</h2>
+        <% if can? :manage, @quiz %>
+          <%= link_to new_quiz_question_path(:quiz => @quiz.id), class: "btn btn-success btn-compact" do %>
+            <i class="fa fa-plus"></i> Add Question
+          <% end %>
         <% end %>
-      <% end %>
-    </div>
+      </div>
 
-    <% if @quizquestions.any? %>
-      <div class="questions-list">
-        <% @quizquestions.each do |question| %>
-          <div class="question-card">
-            <div class="question-header">
-              <span class="question-number">#<%= question.question_no %></span>
-              <span class="question-type <%= question.question_type&.downcase %>">
-                <%= question.question_type || 'MCQ' %>
-              </span>
-              <% if can? :manage, @quiz %>
-                <div class="question-actions">
-                  <%= link_to "Edit", edit_quiz_question_path(question), class: "action-link edit" %>
-                  <%= link_to "Delete", quiz_question_path(question), 
+      <% if @quizquestions.any? %>
+        <div class="compact-questions-list">
+          <% @quizquestions.each do |question| %>
+            <div class="compact-question-card">
+              <div class="question-left">
+                <span class="question-number-compact">#<%= question.question_no %></span>
+                <span class="question-type-badge <%= question.question_type&.downcase %>">
+                  <%= question.question_type || 'MCQ' %>
+                </span>
+              </div>
+              
+              <div class="question-middle">
+                <% if question.passage.present? %>
+                  <div class="question-passage-compact">
+                    <strong>Passage:</strong> <%= truncate(question.passage, length: 100) %>
+                  </div>
+                <% end %>
+                <div class="question-text-compact">
+                  <%= truncate(question.mc_question, length: 150) %>
+                </div>
+              </div>
+              
+              <div class="question-right">
+                <% if can? :manage, @quiz %>
+                  <%= link_to edit_quiz_question_path(question), class: "action-btn edit", title: "Edit" do %>
+                    <i class="fa fa-pencil"></i>
+                  <% end %>
+                  <%= link_to quiz_question_path(question), 
                               method: :delete, 
                               data: { confirm: "Are you sure?" }, 
-                              class: "action-link delete" %>
-                </div>
-              <% end %>
-            </div>
-            
-            <% if question.passage.present? %>
-              <div class="question-passage">
-                <strong>Passage:</strong> <%= question.passage %>
+                              class: "action-btn delete",
+                              title: "Delete" do %>
+                    <i class="fa fa-trash"></i>
+                  <% end %>
+                <% end %>
+                <%= link_to quiz_question_path(question), class: "action-btn view", title: "View Details" do %>
+                  <i class="fa fa-eye"></i>
+                <% end %>
               </div>
-            <% end %>
-            
-            <div class="question-content">
-              <%= question.mc_question %>
             </div>
-            
-            <div class="question-footer">
-              <%= link_to "View Details", quiz_question_path(question), class: "details-link" %>
-            </div>
-          </div>
-        <% end %>
-      </div>
-    <% else %>
-      <div class="empty-state">
-        <svg width="48" height="48" fill="currentColor" viewBox="0 0 20 20" opacity="0.3">
-          <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/>
-        </svg>
-        <p>No questions added yet.</p>
-        <% if can? :manage, @quiz %>
-          <%= link_to "Add First Question", new_quiz_question_path(:quiz => @quiz.id), 
-                      class: "btn btn-primary" %>
-        <% end %>
-      </div>
-    <% end %>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="empty-state-compact">
+          <i class="fa fa-question-circle"></i>
+          <p>No questions added yet.</p>
+          <% if can? :manage, @quiz %>
+            <%= link_to "Add First Question", new_quiz_question_path(:quiz => @quiz.id), 
+                        class: "btn btn-primary btn-compact" %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
   </div>
 </div>
-
-<style>
-  .quiz-show-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-
-  /* Header Section */
-  .quiz-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 30px;
-    padding-bottom: 20px;
-    border-bottom: 2px solid #e5e7eb;
-  }
-
-  .quiz-title-section {
-    flex: 1;
-  }
-
-  .quiz-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #1f2937;
-    margin: 0 0 10px 0;
-  }
-
-  .quiz-description {
-    font-size: 1.1rem;
-    color: #6b7280;
-    margin: 0;
-    max-width: 600px;
-  }
-
-  .quiz-actions {
-    display: flex;
-    gap: 10px;
-    flex-shrink: 0;
-  }
-
-  /* Buttons */
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    padding: 8px 16px;
-    border-radius: 6px;
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.2s;
-    border: 1px solid transparent;
-  }
-
-  .btn-primary {
-    background: #3b82f6;
-    color: white;
-  }
-
-  .btn-primary:hover {
-    background: #2563eb;
-  }
-
-  .btn-secondary {
-    background: #8b5cf6;
-    color: white;
-  }
-
-  .btn-secondary:hover {
-    background: #7c3aed;
-  }
-
-  .btn-success {
-    background: #10b981;
-    color: white;
-  }
-
-  .btn-success:hover {
-    background: #059669;
-  }
-
-  .btn-light {
-    background: #f3f4f6;
-    color: #374151;
-    border-color: #d1d5db;
-  }
-
-  .btn-light:hover {
-    background: #e5e7eb;
-  }
-
-  .btn-sm {
-    padding: 6px 12px;
-    font-size: 0.875rem;
-  }
-
-  /* Info Cards */
-  .quiz-info-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    margin-bottom: 40px;
-  }
-
-  .info-card {
-    display: flex;
-    align-items: center;
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    padding: 20px;
-    transition: box-shadow 0.2s;
-  }
-
-  .info-card:hover {
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  }
-
-  .info-icon {
-    flex-shrink: 0;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #eff6ff;
-    border-radius: 8px;
-    margin-right: 16px;
-    color: #3b82f6;
-  }
-
-  .info-content {
-    flex: 1;
-  }
-
-  .info-content label {
-    display: block;
-    font-size: 0.875rem;
-    color: #6b7280;
-    margin-bottom: 4px;
-  }
-
-  .info-value {
-    font-size: 1rem;
-    font-weight: 600;
-    color: #1f2937;
-  }
-
-  .creator-link {
-    color: #3b82f6;
-    text-decoration: none;
-  }
-
-  .creator-link:hover {
-    text-decoration: underline;
-  }
-
-  .text-muted {
-    color: #9ca3af;
-    font-style: italic;
-  }
-
-  /* Questions Section */
-  .questions-section {
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    padding: 24px;
-  }
-
-  .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-
-  .section-header h2 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #1f2937;
-    margin: 0;
-  }
-
-  /* Question Cards */
-  .questions-list {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .question-card {
-    background: #f9fafb;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    padding: 20px;
-    transition: all 0.2s;
-  }
-
-  .question-card:hover {
-    border-color: #d1d5db;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-  }
-
-  .question-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 12px;
-  }
-
-  .question-number {
-    font-weight: 700;
-    color: #6b7280;
-    font-size: 1.125rem;
-  }
-
-  .question-type {
-    padding: 4px 12px;
-    border-radius: 16px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    background: #dbeafe;
-    color: #1e40af;
-  }
-
-  .question-type.matching {
-    background: #fef3c7;
-    color: #92400e;
-  }
-
-  .question-type.completion {
-    background: #d1fae5;
-    color: #065f46;
-  }
-
-  .question-actions {
-    margin-left: auto;
-    display: flex;
-    gap: 12px;
-  }
-
-  .action-link {
-    font-size: 0.875rem;
-    text-decoration: none;
-    padding: 4px 8px;
-    border-radius: 4px;
-    transition: all 0.2s;
-  }
-
-  .action-link.edit {
-    color: #3b82f6;
-  }
-
-  .action-link.edit:hover {
-    background: #eff6ff;
-  }
-
-  .action-link.delete {
-    color: #ef4444;
-  }
-
-  .action-link.delete:hover {
-    background: #fee;
-  }
-
-  .question-passage {
-    margin-bottom: 12px;
-    padding: 12px;
-    background: white;
-    border-radius: 6px;
-    font-size: 0.875rem;
-    color: #374151;
-    border: 1px solid #e5e7eb;
-  }
-
-  .question-content {
-    font-size: 1rem;
-    color: #1f2937;
-    line-height: 1.6;
-    margin-bottom: 12px;
-  }
-
-  .question-footer {
-    padding-top: 12px;
-    border-top: 1px solid #e5e7eb;
-  }
-
-  .details-link {
-    color: #6b7280;
-    text-decoration: none;
-    font-size: 0.875rem;
-    font-weight: 500;
-  }
-
-  .details-link:hover {
-    color: #3b82f6;
-  }
-
-  /* Empty State */
-  .empty-state {
-    text-align: center;
-    padding: 60px 20px;
-  }
-
-  .empty-state svg {
-    margin: 0 auto 20px;
-  }
-
-  .empty-state p {
-    color: #6b7280;
-    font-size: 1.125rem;
-    margin-bottom: 20px;
-  }
-
-  /* Responsive */
-  @media (max-width: 768px) {
-    .quiz-header {
-      flex-direction: column;
-      gap: 20px;
-    }
-    
-    .quiz-actions {
-      width: 100%;
-      justify-content: flex-start;
-    }
-    
-    .btn {
-      font-size: 0.875rem;
-      padding: 6px 12px;
-    }
-    
-    .quiz-info-grid {
-      grid-template-columns: 1fr;
-    }
-    
-    .question-header {
-      flex-wrap: wrap;
-    }
-    
-    .question-actions {
-      width: 100%;
-      margin-left: 0;
-      margin-top: 8px;
-    }
-  }
-</style>

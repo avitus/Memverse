@@ -659,6 +659,52 @@ RSpec.describe KnowledgeQuiz, type: :worker do
       
       worker.perform
     end
+
+    describe 'scoring calculation from quiz scores out of 10' do
+      it 'correctly converts scores out of 10 to percentages' do
+        # Test different scoring scenarios
+        test_cases = [
+          { 'qq_id' => '201', 'answered' => '5', 'total_score' => '50' },  # All perfect scores: 50/5*10 = 100%
+          { 'qq_id' => '202', 'answered' => '4', 'total_score' => '28' },  # Mixed scores: 28/4*10 = 70%
+          { 'qq_id' => '203', 'answered' => '10', 'total_score' => '56' }, # Many answers: 56/10*10 = 56%
+          { 'qq_id' => '204', 'answered' => '2', 'total_score' => '5' }    # Low scores: 5/2*10 = 25%
+        ]
+        
+        allow(quiz_session).to receive(:get_question_stats).and_return(test_cases)
+        
+        test_cases.each do |stat|
+          q_id = stat['qq_id'].to_i
+          test_question = instance_double(QuizQuestion)
+          allow(QuizQuestion).to receive(:find).with(q_id).and_return(test_question)
+          allow(test_question).to receive(:update_difficulty)
+        end
+        
+        worker.perform
+        
+        # Verify each percentage calculation
+        expect(QuizQuestion.find(201)).to have_received(:update_difficulty).with(5, 100.0)
+        expect(QuizQuestion.find(202)).to have_received(:update_difficulty).with(4, 70.0)
+        expect(QuizQuestion.find(203)).to have_received(:update_difficulty).with(10, 56.0)
+        expect(QuizQuestion.find(204)).to have_received(:update_difficulty).with(2, 25.0)
+      end
+
+      it 'handles partial credit scores correctly' do
+        # Scenario: Question with scores like 7/10, 5/10, 3/10, 9/10
+        # Total: 24 out of 40 possible = 60%
+        question_stats = [
+          { 'qq_id' => '300', 'answered' => '4', 'total_score' => '24' }
+        ]
+        
+        test_question = instance_double(QuizQuestion)
+        allow(quiz_session).to receive(:get_question_stats).and_return(question_stats)
+        allow(QuizQuestion).to receive(:find).with(300).and_return(test_question)
+        allow(test_question).to receive(:update_difficulty)
+        
+        worker.perform
+        
+        expect(test_question).to have_received(:update_difficulty).with(4, 60.0)
+      end
+    end
   end
 
   describe 'winner announcement' do

@@ -20,11 +20,32 @@ class LiveQuizController < ApplicationController
       redirect_to update_profile_path and return
     end
 
-    @quiz = Quiz.find(params[:quiz] || 1 )
+    quiz_id = (params[:quiz] || 1).to_i
+    @quiz = Quiz.find(quiz_id)
     @quiz_master = @quiz.user
 
     # Check status of chat channel
     @channel = ChatChannel.find("quiz-#{@quiz.id}")
+    
+    # Check if quiz is currently running
+    quiz_session = QuizSession.new(@quiz.id)
+    @quiz_running = quiz_session.quiz_in_progress?
+    
+    # Get next scheduled quiz time if quiz is not running
+    unless @quiz_running
+      if @quiz.id.to_i == 1  # Knowledge quiz uses cron schedule
+        # Calculate next occurrence using IceCube (same as KnowledgeQuiz worker)
+        require 'ice_cube'
+        schedule = IceCube::Schedule.new(Time.current.utc)
+        # Wednesday 9 AM UTC
+        schedule.add_recurrence_rule(IceCube::Rule.weekly.day(:wednesday).hour_of_day(9).minute_of_hour(0).second_of_minute(0))
+        # Saturday 3 PM UTC  
+        schedule.add_recurrence_rule(IceCube::Rule.weekly.day(:saturday).hour_of_day(15).minute_of_hour(0).second_of_minute(0))
+        @next_quiz_time = schedule.next_occurrence
+      elsif @quiz.start_time && @quiz.start_time > Time.current
+        @next_quiz_time = @quiz.start_time
+      end
+    end
 
     # Set up quiz time and number of questions - show when user first enters quiz room
     if @quiz.id == 1
@@ -40,17 +61,8 @@ class LiveQuizController < ApplicationController
       @num_questions =  @quiz.quiz_questions.length
     end
 
-    # Feature flag for modern quiz interface
-    # Can be controlled via environment variable or user preference
-    use_modern_interface = ENV.fetch('USE_MODERN_QUIZ_INTERFACE', 'false') == 'true' ||
-                          params[:modern] == 'true' ||
-                          current_user.admin? && params[:modern] != 'false'
-    
-    if use_modern_interface
-      render 'live_quiz_modern'
-    else
-      render 'live_quiz'
-    end
+    # Render the quiz view
+    render 'live_quiz'
   end
 
   #-----------------------------------------------------------------------------------------------------------

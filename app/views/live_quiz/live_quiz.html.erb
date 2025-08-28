@@ -1,9 +1,14 @@
 <% page_title "Live Quiz :: " + @quiz.name %>
 
-<!-- Quiz instructions : Pop-up box -->
-<%= render partial: "instructions" %>
+<% if !@quiz_running && @next_quiz_time %>
+	<!-- Show schedule when no quiz is running -->
+	<%= render partial: "quiz_schedule" %>
+<% else %>
+	<!-- Show normal quiz interface when quiz is running or about to start -->
+	<!-- Quiz instructions : Pop-up box -->
+	<%= render partial: "instructions" %>
 
-<div class="white-box-with-margins" style="position:relative">
+	<div class="white-box-with-margins" style="position:relative">
 
 	<!-- TOP QUIZ HEADER -->
 	<div id="quiz-header">
@@ -183,3 +188,4 @@ $(document).ready(function() {
 
 });
 </script>
+<% end %> <!-- End of quiz interface conditional -->

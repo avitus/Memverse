@@ -62,6 +62,12 @@ RSpec.describe "LiveQuiz Requests", type: :request do
     end
     
     context 'when quiz is ready' do
+      before do
+        # Mark quiz as running
+        quiz_session = QuizSession.new(quiz.id)
+        quiz_session.set_quiz_status(QuizSession::STATUS_IN_PROGRESS)
+      end
+      
       it 'displays quiz interface' do
         sign_in user
         get "/live_quiz?quiz=#{quiz.id}"
@@ -85,42 +91,6 @@ RSpec.describe "LiveQuiz Requests", type: :request do
     end
   end
   
-  describe 'modern interface feature flag' do
-    context 'when modern interface is enabled' do
-      it 'renders modern interface for admin users' do
-        sign_in quiz_master
-        get "/live_quiz?quiz=#{quiz.id}&modern=true"
-        
-        expect(response).to have_http_status(:success)
-        expect(response.body).to include('data-controller="live-quiz"')
-        expect(response.body).to include('data-live-quiz-target="timer"')
-        expect(response.body).to include('data-live-quiz-target="chatArea"')
-      end
-      
-      it 'renders modern interface when environment variable is set' do
-        ENV['USE_MODERN_QUIZ_INTERFACE'] = 'true'
-        sign_in user
-        get "/live_quiz?quiz=#{quiz.id}"
-        
-        expect(response).to have_http_status(:success)
-        expect(response.body).to include('data-controller="live-quiz"')
-        
-        ENV['USE_MODERN_QUIZ_INTERFACE'] = 'false'
-      end
-    end
-    
-    context 'when modern interface is disabled' do
-      it 'renders legacy interface by default' do
-        sign_in user
-        get "/live_quiz?quiz=#{quiz.id}"
-        
-        expect(response).to have_http_status(:success)
-        expect(response.body).not_to include('data-controller="live-quiz"')
-        expect(response.body).to include('id="quiz-header"')
-      end
-    end
-  end
-  
   describe 'POST /record_score' do
     it 'records score successfully' do
       sign_in user
@@ -140,6 +110,12 @@ RSpec.describe "LiveQuiz Requests", type: :request do
   end
   
   describe 'quiz timing' do
+    before do
+      # Mark quiz as running
+      quiz_session = QuizSession.new(quiz.id)
+      quiz_session.set_quiz_status(QuizSession::STATUS_IN_PROGRESS)
+    end
+    
     it 'calculates quiz duration correctly' do
       sign_in user
       get "/live_quiz?quiz=#{quiz.id}"
@@ -157,6 +133,10 @@ RSpec.describe "LiveQuiz Requests", type: :request do
         user: quiz_master,
         name: 'Knowledge Quiz'
       )
+      
+      # Mark knowledge quiz as running
+      quiz_session = QuizSession.new(1)
+      quiz_session.set_quiz_status(QuizSession::STATUS_IN_PROGRESS)
       
       sign_in user
       get '/live_quiz?quiz=1'

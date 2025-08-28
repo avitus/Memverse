@@ -1,388 +1,99 @@
 <% page_title "Edit Quiz" %>
 
 <div class="white-box-bg">
-  <div class="form-header">
-    <h1>Edit Quiz</h1>
-    <p class="form-subtitle">Update quiz details and scheduling</p>
-  </div>
+  <div class="compact-quiz-edit">
+    <h1 class="compact-header">
+      Edit Quiz
+      <span class="quiz-info-badges">
+        <span class="info-badge"><i class="fa fa-question-circle"></i> <%= @quiz.quiz_questions.count %> questions</span>
+        <% if @quiz.start_time && @quiz.start_time < Time.current %>
+          <span class="info-badge completed"><i class="fa fa-check-circle"></i> Completed</span>
+        <% end %>
+      </span>
+    </h1>
 
-  <%= form_for(@quiz, html: { multipart: true, class: 'quiz-form' }) do |f| %>
+  <%= form_for(@quiz, html: { multipart: true, class: 'quiz-form compact' }) do |f| %>
 
     <% if @quiz.errors.any? %>
-      <div class="error-explanation">
-        <h3><i class="fa fa-exclamation-circle"></i> Please fix the following errors:</h3>
-        <ul>
-          <% @quiz.errors.full_messages.each do |msg| %>
-            <li><%= msg %></li>
-          <% end %>
-        </ul>
+      <div class="compact-errors">
+        <i class="fa fa-exclamation-circle"></i>
+        <span class="error-text">
+          <%= @quiz.errors.full_messages.join(', ') %>
+        </span>
       </div>
     <% end %>
 
-    <div class="form-section">
-      <h2>Quiz Details</h2>
-      
-      <div class="form-group">
-        <%= f.label :name, 'Quiz Name', class: 'required' %>
-        <span class="field-hint">Give your quiz a clear, descriptive name</span>
-        <%= f.text_field :name, class: 'form-control' %>
-      </div>
-      
-      <div class="form-group">
-        <%= f.label :description, 'Description' %>
-        <span class="field-hint">Provide details about the quiz content or theme</span>
-        <%= f.text_area :description, rows: 4, class: 'form-control' %>
-      </div>
-    </div>
-
-    <div class="form-section">
-      <h2>Schedule Your Quiz</h2>
-      
-      <div class="timezone-notice">
-        <i class="fa fa-info-circle"></i>
-        <strong>Time Zone:</strong> All times are shown in <strong>UTC</strong> (Coordinated Universal Time)
-        <div class="timezone-help">
-          <p>Current UTC time: <span id="current-utc-time"><%= Time.current.utc.strftime("%B %d, %Y %I:%M %p UTC") %></span></p>
-          <p>Common conversions:</p>
-          <ul>
-            <li>Eastern (EST): UTC - 5 hours</li>
-            <li>Central (CST): UTC - 6 hours</li>
-            <li>Pacific (PST): UTC - 8 hours</li>
-            <li>London (GMT): UTC + 0 hours</li>
-          </ul>
+    <div class="compact-grid">
+      <div class="compact-section details-section">
+        <h3><i class="fa fa-info-circle"></i> Details</h3>
+        
+        <div class="compact-field">
+          <%= f.label :name, 'Name *' %>
+          <%= f.text_field :name, class: 'form-control' %>
+        </div>
+        
+        <div class="compact-field">
+          <%= f.label :description %>
+          <%= f.text_area :description, rows: 3, class: 'form-control' %>
         </div>
       </div>
-      
-      <div class="form-group">
-        <%= f.label :start_time, "Quiz Start Time (UTC)", class: 'required' %>
-        <span class="field-hint">Select when your quiz should begin</span>
+
+      <div class="compact-section schedule-section">
+        <h3><i class="fa fa-calendar"></i> Schedule</h3>
         
-        <div class="datetime-inputs">
-          <div class="date-input">
+        <div class="compact-field">
+          <%= f.label :start_time, 'Start Time (UTC) *' %>
+          <div class="datetime-compact">
             <%= f.date_field :start_time, value: @quiz.start_time&.strftime("%Y-%m-%d"), class: 'form-control' %>
-          </div>
-          <div class="time-input">
             <%= f.time_field :start_time, value: @quiz.start_time&.strftime("%H:%M"), class: 'form-control' %>
           </div>
         </div>
         
-        <div class="quick-schedule-buttons">
-          <p>Quick scheduling options:</p>
-          <button type="button" class="btn-schedule-quick btn-schedule-now" data-minutes="2">2 minutes from now</button>
-          <button type="button" class="btn-schedule-quick" data-offset="1">Tomorrow</button>
-          <button type="button" class="btn-schedule-quick" data-offset="7">Next Week</button>
-          <button type="button" class="btn-schedule-quick" data-time="14:00">2:00 PM UTC</button>
-          <button type="button" class="btn-schedule-quick" data-time="19:00">7:00 PM UTC</button>
+        <div class="time-preview">
+          <span id="scheduled-time-display"></span>
+          <span id="time-until"></span>
         </div>
       </div>
-      
-      <div class="scheduled-time-preview">
-        <h3>Quiz will start:</h3>
-        <p id="scheduled-time-display" class="time-display"></p>
-        <p id="time-until" class="time-until"></p>
+
+      <div class="compact-section quick-section">
+        <h3><i class="fa fa-bolt"></i> Quick Schedule</h3>
+        
+        <div class="utc-notice">
+          <i class="fa fa-clock-o"></i> UTC: <span id="current-utc-time"><%= Time.current.utc.strftime("%H:%M") %></span>
+        </div>
+        
+        <div class="quick-btns-vertical">
+          <button type="button" class="quick-btn primary" data-minutes="2">Now + 2 min</button>
+          <button type="button" class="quick-btn" data-offset="1">Tomorrow</button>
+          <button type="button" class="quick-btn" data-offset="7">Next Week</button>
+          <button type="button" class="quick-btn" data-time="14:00">2:00 PM UTC</button>
+          <button type="button" class="quick-btn" data-time="19:00">7:00 PM UTC</button>
+        </div>
       </div>
     </div>
 
-    <div class="form-section">
-      <h2>Quiz Information</h2>
-      <ul class="info-list">
-        <li><i class="fa fa-question-circle"></i> This quiz has <%= pluralize(@quiz.quiz_questions.count, 'question') %></li>
-        <li><i class="fa fa-user"></i> Created by <%= @quiz.user.name_or_login %></li>
-        <% if @quiz.start_time && @quiz.start_time < Time.current %>
-          <li><i class="fa fa-check-circle"></i> This quiz has already been conducted</li>
-        <% end %>
-      </ul>
-    </div>
-
-    <div class="form-actions">
-      <div class="left-actions">
-        <%= link_to 'Cancel', @quiz, class: 'btn btn-secondary' %>
-      </div>
-      <div class="right-actions">
-        <%= link_to 'View Quiz', @quiz, class: 'btn btn-info' %>
-        <%= f.submit 'Update Quiz', class: 'btn btn-primary' %>
+    <div class="compact-actions">
+      <%= link_to 'Cancel', @quiz, class: 'btn btn-secondary' %>
+      <div class="right-btns">
+        <%= link_to 'View', @quiz, class: 'btn btn-info' %>
+        <%= f.submit 'Update', class: 'btn btn-primary' %>
       </div>
     </div>
 
   <% end %>
+  </div>
 </div>
-
-<style>
-  .form-header {
-    text-align: center;
-    margin-bottom: 2rem;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid #eee;
-  }
-
-  .form-header h1 {
-    margin-bottom: 0.5rem;
-    color: #333;
-  }
-
-  .form-subtitle {
-    color: #666;
-    font-size: 1.1rem;
-  }
-
-  .quiz-form {
-    margin-top: 2rem;
-  }
-
-  .form-section {
-    margin-bottom: 2.5rem;
-    padding: 1.5rem;
-    background: #f9f9f9;
-    border-radius: 6px;
-  }
-
-  .form-section h2 {
-    margin-top: 0;
-    margin-bottom: 1.5rem;
-    color: #444;
-    font-size: 1.4rem;
-    border-bottom: 2px solid #3b82f6;
-    padding-bottom: 0.5rem;
-  }
-
-  .form-group {
-    margin-bottom: 1.5rem;
-  }
-
-  .form-group label {
-    display: block;
-    font-weight: 600;
-    margin-bottom: 0.25rem;
-    color: #555;
-  }
-
-  .form-group label.required::after {
-    content: " *";
-    color: #e74c3c;
-  }
-
-  .field-hint {
-    display: block;
-    font-size: 0.85rem;
-    color: #666;
-    margin-bottom: 0.5rem;
-    font-style: italic;
-  }
-
-  .form-control {
-    width: 100%;
-    padding: 0.75rem;
-    font-size: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    transition: border-color 0.2s;
-  }
-
-  .form-control:focus {
-    outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-  }
-
-  textarea.form-control {
-    resize: vertical;
-    min-height: 100px;
-  }
-
-  .error-explanation {
-    background: #fee;
-    border: 1px solid #fcc;
-    border-radius: 4px;
-    padding: 1rem;
-    margin-bottom: 2rem;
-  }
-
-  .error-explanation h3 {
-    margin-top: 0;
-    color: #c00;
-  }
-
-  .error-explanation ul {
-    margin-bottom: 0;
-    padding-left: 1.5rem;
-  }
-
-  .timezone-notice {
-    background: #e3f2fd;
-    border: 1px solid #90caf9;
-    border-radius: 4px;
-    padding: 1rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .timezone-notice i {
-    color: #1976d2;
-    margin-right: 0.5rem;
-  }
-
-  .timezone-help {
-    margin-top: 1rem;
-    font-size: 0.9rem;
-  }
-
-  .timezone-help ul {
-    margin: 0.5rem 0 0 1.5rem;
-    padding: 0;
-  }
-
-  .datetime-inputs {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 1rem;
-  }
-
-  .date-input, .time-input {
-    flex: 1;
-  }
-
-  .quick-schedule-buttons {
-    margin-top: 1rem;
-  }
-
-  .quick-schedule-buttons p {
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-  }
-
-  .btn-schedule-quick {
-    background: #fff;
-    border: 1px solid #ddd;
-    padding: 0.5rem 1rem;
-    margin-right: 0.5rem;
-    margin-bottom: 0.5rem;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .btn-schedule-quick:hover {
-    background: #f0f0f0;
-    border-color: #3b82f6;
-  }
-  
-  .btn-schedule-now {
-    background: #e3f2fd;
-    border-color: #2196f3;
-    color: #1976d2;
-    font-weight: 600;
-  }
-  
-  .btn-schedule-now:hover {
-    background: #bbdefb;
-    border-color: #1976d2;
-  }
-
-  .scheduled-time-preview {
-    background: #fff;
-    border: 2px solid #4caf50;
-    border-radius: 4px;
-    padding: 1rem;
-    margin-top: 1.5rem;
-    text-align: center;
-  }
-
-  .scheduled-time-preview h3 {
-    margin: 0 0 0.5rem 0;
-    color: #4caf50;
-  }
-
-  .time-display {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #333;
-    margin: 0.5rem 0;
-  }
-
-  .time-until {
-    color: #666;
-    font-style: italic;
-  }
-
-  .info-list {
-    list-style: none;
-    padding: 0;
-  }
-
-  .info-list li {
-    padding: 0.5rem 0;
-    padding-left: 2rem;
-    position: relative;
-  }
-
-  .info-list li i {
-    position: absolute;
-    left: 0;
-    top: 0.5rem;
-    color: #3b82f6;
-  }
-
-  .form-actions {
-    margin-top: 2rem;
-    padding-top: 2rem;
-    border-top: 1px solid #eee;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .right-actions {
-    display: flex;
-    gap: 1rem;
-  }
-
-  .btn {
-    padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: 4px;
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-block;
-    transition: all 0.2s;
-  }
-
-  .btn-primary {
-    background: #3b82f6;
-    color: white;
-  }
-
-  .btn-primary:hover {
-    background: #2563eb;
-  }
-
-  .btn-secondary {
-    background: #6c757d;
-    color: white;
-  }
-
-  .btn-secondary:hover {
-    background: #5a6268;
-  }
-
-  .btn-info {
-    background: #17a2b8;
-    color: white;
-  }
-
-  .btn-info:hover {
-    background: #138496;
-  }
-</style>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     // Update current UTC time every second
     function updateCurrentTime() {
       const now = new Date();
-      const utcString = now.toUTCString().replace('GMT', 'UTC');
-      document.getElementById('current-utc-time').textContent = utcString;
+      const hours = String(now.getUTCHours()).padStart(2, '0');
+      const minutes = String(now.getUTCMinutes()).padStart(2, '0');
+      document.getElementById('current-utc-time').textContent = `${hours}:${minutes}`;
     }
+    updateCurrentTime();
     setInterval(updateCurrentTime, 1000);
 
     // Date and time inputs
@@ -396,8 +107,16 @@
       if (dateInput.value && timeInput.value) {
         const scheduledDate = new Date(dateInput.value + 'T' + timeInput.value + ':00Z');
         
-        // Display the scheduled time
-        timeDisplay.textContent = scheduledDate.toUTCString().replace('GMT', 'UTC');
+        // Display the scheduled time in a compact format
+        const options = { 
+          month: 'short', 
+          day: 'numeric', 
+          hour: '2-digit', 
+          minute: '2-digit',
+          timeZone: 'UTC',
+          hour12: false
+        };
+        timeDisplay.textContent = scheduledDate.toLocaleString('en-US', options) + ' UTC';
         
         // Calculate time until
         const now = new Date();
@@ -410,29 +129,24 @@
           const remainingHours = hours % 24;
           const remainingMinutes = minutes % 60;
           
-          let untilText = 'In ';
+          let untilText = '';
           if (days > 0) {
-            untilText += days + ' day' + (days > 1 ? 's' : '');
-            if (remainingHours > 0 || remainingMinutes > 0) {
-              untilText += ', ';
-            }
-          }
-          if (remainingHours > 0) {
-            untilText += remainingHours + ' hour' + (remainingHours !== 1 ? 's' : '');
-            if (remainingMinutes > 0) {
-              untilText += ' and ';
-            }
-          }
-          if (remainingMinutes > 0 || (days === 0 && remainingHours === 0)) {
-            untilText += remainingMinutes + ' minute' + (remainingMinutes !== 1 ? 's' : '');
+            untilText = days + 'd ' + remainingHours + 'h';
+          } else if (hours > 0) {
+            untilText = hours + 'h ' + remainingMinutes + 'm';
+          } else {
+            untilText = minutes + ' minutes';
           }
           
-          timeUntil.textContent = untilText;
-          timeUntil.style.color = '#666';
+          timeUntil.textContent = '(' + untilText + ')';
+          timeUntil.style.color = '#6b7280';
         } else {
-          timeUntil.textContent = 'This time is in the past';
-          timeUntil.style.color = '#e74c3c';
+          timeUntil.textContent = '(Past date)';
+          timeUntil.style.color = '#ef4444';
         }
+      } else {
+        timeDisplay.textContent = 'Select date and time';
+        timeUntil.textContent = '';
       }
     }
 
@@ -440,7 +154,7 @@
     timeInput.addEventListener('change', updatePreview);
 
     // Quick schedule buttons
-    const quickButtons = document.querySelectorAll('.btn-schedule-quick');
+    const quickButtons = document.querySelectorAll('.quick-btn');
     quickButtons.forEach(button => {
       button.addEventListener('click', function() {
         const offset = this.getAttribute('data-offset');

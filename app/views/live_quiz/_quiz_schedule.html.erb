@@ -1,0 +1,129 @@
+<div class="quiz-schedule-container">
+  <div class="quiz-schedule-content">
+    <div class="quiz-schedule-header">
+      <i class="fa fa-calendar-check-o fa-3x"></i>
+      <h1>Bible Knowledge Quiz Schedule</h1>
+    </div>
+    
+    <div class="quiz-schedule-main">
+      <% if @next_quiz_time %>
+        <div class="next-quiz-box">
+          <h2>Next Quiz</h2>
+          <div class="quiz-time-display">
+            <div class="quiz-date"><%= @next_quiz_time.strftime("%A, %B %d") %></div>
+            <div class="quiz-time"><%= @next_quiz_time.strftime("%l:%M %p %Z") %></div>
+          </div>
+          <div class="quiz-countdown" id="quiz-countdown" data-target-time="<%= @next_quiz_time.iso8601 %>">
+            <!-- Countdown will be inserted by JavaScript -->
+          </div>
+        </div>
+      <% end %>
+      
+      <div class="regular-schedule">
+        <h3>Regular Quiz Times</h3>
+        <div class="schedule-grid">
+          <div class="schedule-item">
+            <div class="schedule-day">Wednesday</div>
+            <div class="schedule-time">9:00 AM UTC</div>
+            <div class="schedule-local-time" data-utc-time="09:00"></div>
+          </div>
+          <div class="schedule-item">
+            <div class="schedule-day">Saturday</div>
+            <div class="schedule-time">3:00 PM UTC</div>
+            <div class="schedule-local-time" data-utc-time="15:00"></div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="quiz-info">
+        <h3>About the Quiz</h3>
+        <ul>
+          <li><i class="fa fa-clock-o"></i> Duration: 20 minutes</li>
+          <li><i class="fa fa-question-circle"></i> 25 multiple choice questions</li>
+          <li><i class="fa fa-book"></i> Tests your Bible knowledge</li>
+          <li><i class="fa fa-trophy"></i> Compete with other members worldwide</li>
+        </ul>
+      </div>
+      
+      <div class="quiz-actions">
+        <button class="btn btn-primary btn-lg" id="notify-me-btn">
+          <i class="fa fa-bell"></i> Notify Me Before Next Quiz
+        </button>
+        <div class="quiz-help-text">
+          Quiz will automatically begin when the scheduled time arrives
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Countdown timer
+function updateCountdown() {
+  const countdownEl = document.getElementById('quiz-countdown');
+  if (!countdownEl) return;
+  
+  const targetTime = new Date(countdownEl.dataset.targetTime);
+  const now = new Date();
+  const diff = targetTime - now;
+  
+  if (diff <= 0) {
+    countdownEl.innerHTML = '<div class="countdown-expired">Quiz starting soon! Please refresh the page.</div>';
+    return;
+  }
+  
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+  
+  let countdownHTML = '<div class="countdown-label">Starts in</div><div class="countdown-units">';
+  
+  if (days > 0) {
+    countdownHTML += `<div class="countdown-unit"><div class="countdown-value">${days}</div><div class="countdown-unit-label">day${days !== 1 ? 's' : ''}</div></div>`;
+  }
+  countdownHTML += `<div class="countdown-unit"><div class="countdown-value">${hours}</div><div class="countdown-unit-label">hour${hours !== 1 ? 's' : ''}</div></div>`;
+  countdownHTML += `<div class="countdown-unit"><div class="countdown-value">${minutes}</div><div class="countdown-unit-label">minute${minutes !== 1 ? 's' : ''}</div></div>`;
+  countdownHTML += `<div class="countdown-unit"><div class="countdown-value">${seconds}</div><div class="countdown-unit-label">second${seconds !== 1 ? 's' : ''}</div></div>`;
+  countdownHTML += '</div>';
+  
+  countdownEl.innerHTML = countdownHTML;
+}
+
+// Show local times
+function showLocalTimes() {
+  const localTimeEls = document.querySelectorAll('.schedule-local-time');
+  localTimeEls.forEach(el => {
+    const utcTime = el.dataset.utcTime;
+    const [hours, minutes] = utcTime.split(':').map(n => parseInt(n));
+    
+    // Create a date object for next occurrence of this time
+    const now = new Date();
+    const utcDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), hours, minutes));
+    
+    // Convert to local time
+    const localTime = utcDate.toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      timeZoneName: 'short'
+    });
+    
+    el.innerHTML = `(${localTime} your time)`;
+  });
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+  showLocalTimes();
+  
+  // Notify button handler
+  const notifyBtn = document.getElementById('notify-me-btn');
+  if (notifyBtn) {
+    notifyBtn.addEventListener('click', function() {
+      alert('Quiz notifications are sent to all active members. Make sure your email preferences are set to receive quiz reminders.');
+    });
+  }
+});
+</script>

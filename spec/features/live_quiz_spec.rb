@@ -62,61 +62,55 @@ RSpec.feature 'Live Quiz', type: :request do
     end
     
     context 'when quiz is ready' do
-      it 'displays quiz interface' do
-        sign_in user
-        get "/live_quiz?quiz=#{quiz.id}"
+      context 'and quiz is running' do
+        before do
+          # Mark quiz as running
+          quiz_session = QuizSession.new(quiz.id)
+          quiz_session.set_quiz_status(QuizSession::STATUS_IN_PROGRESS)
+        end
         
-        expect(response).to have_http_status(:success)
-        expect(response.body).to include(quiz.name)
-        expect(response.body).to include('id="quiz-header"')
-        expect(response.body).to include('id="live-quiz"')
-        expect(response.body).to include('id="chat-window"')
-        expect(response.body).to include('id="live-scoreboard"')
+        it 'displays quiz interface' do
+          sign_in user
+          get "/live_quiz?quiz=#{quiz.id}"
+          
+          expect(response).to have_http_status(:success)
+          expect(response.body).to include(quiz.name)
+          expect(response.body).to include('id="quiz-header"')
+          expect(response.body).to include('id="live-quiz"')
+          expect(response.body).to include('id="chat-window"')
+          expect(response.body).to include('id="live-scoreboard"')
+        end
+        
+        it 'shows correct number of question dots' do
+          sign_in user
+          get "/live_quiz?quiz=#{quiz.id}"
+          
+          expect(response).to have_http_status(:success)
+          # Count the number of question dots
+          expect(response.body.scan(/class="q-dot"/).count).to eq(quiz_questions.length)
+        end
       end
       
-      it 'shows correct number of question dots' do
-        sign_in user
-        get "/live_quiz?quiz=#{quiz.id}"
-        
-        expect(response).to have_http_status(:success)
-        # Count the number of question dots
-        expect(response.body.scan(/class="q-dot"/).count).to eq(quiz_questions.length)
-      end
-    end
-  end
-  
-  describe 'modern interface feature flag' do
-    context 'when modern interface is enabled' do
-      it 'renders modern interface for admin users' do
-        sign_in quiz_master
-        get "/live_quiz?quiz=#{quiz.id}&modern=true"
-        
-        expect(response).to have_http_status(:success)
-        expect(response.body).to include('data-controller="live-quiz"')
-        expect(response.body).to include('data-live-quiz-target="timer"')
-        expect(response.body).to include('data-live-quiz-target="chatArea"')
-      end
-      
-      it 'renders modern interface when environment variable is set' do
-        ENV['USE_MODERN_QUIZ_INTERFACE'] = 'true'
-        sign_in user
-        get "/live_quiz?quiz=#{quiz.id}"
-        
-        expect(response).to have_http_status(:success)
-        expect(response.body).to include('data-controller="live-quiz"')
-        
-        ENV['USE_MODERN_QUIZ_INTERFACE'] = 'false'
-      end
-    end
-    
-    context 'when modern interface is disabled' do
-      it 'renders legacy interface by default' do
-        sign_in user
-        get "/live_quiz?quiz=#{quiz.id}"
-        
-        expect(response).to have_http_status(:success)
-        expect(response.body).not_to include('data-controller="live-quiz"')
-        expect(response.body).to include('id="quiz-header"')
+      context 'and quiz is not running' do
+        it 'displays quiz schedule' do
+          sign_in user
+          # For knowledge quiz (ID=1), it should calculate next time
+          knowledge_quiz = Quiz.find_or_create_by!(id: 1) do |q|
+            q.user = quiz_master
+            q.name = 'Knowledge Quiz'
+            q.quiz_length = 1200
+          end
+          
+          # Ensure quiz is not marked as running
+          quiz_session = QuizSession.new(1)
+          quiz_session.cleanup_quiz_data
+          
+          get "/live_quiz"
+          
+          expect(response).to have_http_status(:success)
+          expect(response.body).to include('Bible Knowledge Quiz Schedule')
+          expect(response.body).to include('Next Quiz')
+        end
       end
     end
   end
@@ -140,6 +134,12 @@ RSpec.feature 'Live Quiz', type: :request do
   end
   
   describe 'quiz interactions' do
+    before do
+      # Mark quiz as running
+      quiz_session = QuizSession.new(quiz.id)
+      quiz_session.set_quiz_status(QuizSession::STATUS_IN_PROGRESS)
+    end
+    
     it 'displays quiz with chat form' do
       sign_in user
       get "/live_quiz?quiz=#{quiz.id}"
@@ -170,6 +170,12 @@ RSpec.feature 'Live Quiz', type: :request do
   end
   
   describe 'admin features' do
+    before do
+      # Mark quiz as running
+      quiz_session = QuizSession.new(quiz.id)
+      quiz_session.set_quiz_status(QuizSession::STATUS_IN_PROGRESS)
+    end
+    
     it 'shows chat toggle for admins' do
       sign_in quiz_master
       get "/live_quiz?quiz=#{quiz.id}"
@@ -180,6 +186,12 @@ RSpec.feature 'Live Quiz', type: :request do
   end
   
   describe 'quiz timing' do
+    before do
+      # Mark quiz as running
+      quiz_session = QuizSession.new(quiz.id)
+      quiz_session.set_quiz_status(QuizSession::STATUS_IN_PROGRESS)
+    end
+    
     it 'calculates quiz duration correctly' do
       sign_in user
       get "/live_quiz?quiz=#{quiz.id}"
@@ -197,6 +209,10 @@ RSpec.feature 'Live Quiz', type: :request do
         user: quiz_master,
         name: 'Knowledge Quiz'
       )
+      
+      # Mark knowledge quiz as running
+      quiz_session = QuizSession.new(1)
+      quiz_session.set_quiz_status(QuizSession::STATUS_IN_PROGRESS)
       
       sign_in user
       get '/live_quiz?quiz=1'

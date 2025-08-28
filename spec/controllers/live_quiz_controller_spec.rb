@@ -39,6 +39,68 @@ RSpec.describe LiveQuizController, type: :controller do
       end
     end
     
+    context 'quiz running status and next scheduled time' do
+      let(:quiz_session) { instance_double(QuizSession) }
+      
+      before do
+        sign_in user
+        allow(QuizSession).to receive(:new).and_return(quiz_session)
+      end
+      
+      context 'when quiz is not running' do
+        before do
+          allow(quiz_session).to receive(:quiz_in_progress?).and_return(false)
+        end
+        
+        it 'calculates next scheduled quiz time for knowledge quiz (ID=1)' do
+          quiz1 = Quiz.create!(id: 1, user: user, name: 'Knowledge Quiz')
+          
+          travel_to Time.parse('2025-01-06 10:00:00 UTC') do # Monday
+            get :live_quiz
+            
+            expect(assigns(:quiz_running)).to eq(false)
+            expect(assigns(:next_quiz_time)).to be_present
+            expect(assigns(:next_quiz_time).wday).to eq(3) # Wednesday
+            expect(assigns(:next_quiz_time).hour).to eq(9)
+            expect(assigns(:next_quiz_time).zone).to eq('UTC')
+          end
+        end
+        
+        it 'uses quiz start_time for non-knowledge quizzes' do
+          future_time = 2.days.from_now
+          quiz.update!(start_time: future_time)
+          
+          get :live_quiz, params: { quiz: quiz.id }
+          
+          expect(assigns(:quiz_running)).to eq(false)
+          expect(assigns(:next_quiz_time)).to eq(quiz.start_time)
+        end
+        
+        it 'does not set next_quiz_time if start_time is in the past' do
+          past_time = 2.days.ago
+          quiz.update!(start_time: past_time)
+          
+          get :live_quiz, params: { quiz: quiz.id }
+          
+          expect(assigns(:quiz_running)).to eq(false)
+          expect(assigns(:next_quiz_time)).to be_nil
+        end
+      end
+      
+      context 'when quiz is running' do
+        before do
+          allow(quiz_session).to receive(:quiz_in_progress?).and_return(true)
+        end
+        
+        it 'does not calculate next quiz time' do
+          get :live_quiz, params: { quiz: quiz.id }
+          
+          expect(assigns(:quiz_running)).to eq(true)
+          expect(assigns(:next_quiz_time)).to be_nil
+        end
+      end
+    end
+    
     context 'when quiz is not ready' do
       let(:unready_quiz) { FactoryBot.create(:quiz, quiz_length: nil) }
       
@@ -65,28 +127,6 @@ RSpec.describe LiveQuizController, type: :controller do
         quiz1 = Quiz.create!(id: 1, user: user, name: 'Knowledge Quiz')
         get :live_quiz
         expect(assigns(:quiz)).to eq(quiz1)
-      end
-      
-      context 'with modern interface flag' do
-        it 'renders modern interface for admin with modern param' do
-          sign_in admin_user
-          get :live_quiz, params: { quiz: quiz.id, modern: 'true' }
-          expect(response).to render_template('live_quiz_modern')
-        end
-        
-        it 'renders legacy interface by default' do
-          sign_in user
-          get :live_quiz, params: { quiz: quiz.id }
-          expect(response).to render_template('live_quiz')
-        end
-        
-        it 'renders modern interface when environment variable is set' do
-          sign_in user
-          ENV['USE_MODERN_QUIZ_INTERFACE'] = 'true'
-          get :live_quiz, params: { quiz: quiz.id }
-          expect(response).to render_template('live_quiz_modern')
-          ENV['USE_MODERN_QUIZ_INTERFACE'] = 'false'
-        end
       end
     end
   end
