@@ -70,7 +70,7 @@ class QuizQuestion < ApplicationRecord
   def passage_translations
 
     passages = Hash.new
-    quiz_translations = ["NAS", "NKJ", "KJV", "ESV"] # MAJORS.keys.collect { |k| k.to_s }
+    quiz_translations = ["NAS", "NKJ", "KJV", "ESV", "NIV", "NNV"] # MAJORS.keys.collect { |k| k.to_s }
     # NOTE: If this is changed, update live_quiz message about choosing a version to reflect
 
     error_flag, bk, ch, vs_start, vs_end = parse_passage(self.passage)
