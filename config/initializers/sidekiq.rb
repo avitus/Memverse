@@ -112,8 +112,21 @@ Sidekiq.configure_server do |config|
         ensure
           duration = Time.current - start_time
           
-          # Log slow jobs (>30 seconds) for performance monitoring
-          if duration > 30
+          # Different thresholds for different job types
+          slow_job_threshold = case job['class']
+          when 'ScheduledQuiz', 'KnowledgeQuiz'
+            600  # 10 minutes for quiz jobs
+          when 'SendReminders'
+            120  # 2 minutes for reminder jobs
+          when 'UpdateMetrics', 'UpdateSubsections', 'UpdateVerseDifficulty'
+            300  # 5 minutes for bulk data processing jobs
+          when 'RefreshTagCloud', 'SubsectionPassages'
+            60   # 1 minute for medium processing jobs
+          else
+            30   # 30 seconds for everything else
+          end
+
+          if duration > slow_job_threshold
             Rails.logger.warn "SLOW JOB: #{job['class']} took #{duration.round(2)}s (Queue: #{queue})"
           end
           

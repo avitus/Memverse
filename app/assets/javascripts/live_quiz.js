@@ -179,11 +179,44 @@ var quizSchedule = {
   // Initialize quiz schedule functionality
   init: function() {
     if ($('.quiz-schedule-compact').length > 0) {
+      // Clear any existing intervals
+      if (this.intervalId) {
+        clearInterval(this.intervalId);
+      }
+      this.fastInterval = false;
+      
       this.updateCountdown();
-      setInterval(this.updateCountdown.bind(this), 60000); // Update every minute
+      // Update more frequently as quiz approaches
+      this.startCountdownInterval();
       this.showLocalTimes();
       this.showNextQuizLocalTime();
     }
+  },
+  
+  // Start countdown interval with dynamic frequency
+  startCountdownInterval: function() {
+    var self = this;
+    self.intervalId = setInterval(function() {
+      self.updateCountdown();
+      
+      // Check if we need to switch to more frequent updates
+      var countdownEl = $('#quiz-countdown');
+      if (countdownEl.length) {
+        var targetTime = new Date(countdownEl.data('target-time'));
+        var now = new Date();
+        var diff = targetTime - now;
+        
+        // If less than 60 seconds remaining and not already updating every second
+        if (diff > 0 && diff <= 60000 && !self.fastInterval) {
+          clearInterval(self.intervalId);
+          self.fastInterval = true;
+          // Start updating every second
+          self.intervalId = setInterval(function() {
+            self.updateCountdown();
+          }, 1000);
+        }
+      }
+    }, 5000); // Update every 5 seconds initially
   },
   
   // Update countdown timer
@@ -195,19 +228,34 @@ var quizSchedule = {
     var now = new Date();
     var diff = targetTime - now;
     
+    // Auto-refresh 20 seconds before quiz starts
+    if (diff > 0 && diff <= 20000) { // 20 seconds = 20000 milliseconds
+      countdownEl.html('<span class="countdown-expired">Preparing quiz...</span>');
+      // Refresh the page to load the quiz interface
+      setTimeout(function() {
+        window.location.reload();
+      }, 500); // Small delay to show the message
+      return;
+    }
+    
     if (diff <= 0) {
-      countdownEl.html('<span class="countdown-expired">Starting now!</span>');
+      countdownEl.html('<span class="countdown-expired">Quiz has started!</span>');
       return;
     }
     
     var days = Math.floor(diff / 86400000);
     var hours = Math.floor((diff % 86400000) / 3600000);
     var minutes = Math.floor((diff % 3600000) / 60000);
+    var seconds = Math.floor((diff % 60000) / 1000);
     
     var parts = [];
     if (days > 0) parts.push(days + 'd');
     if (hours > 0) parts.push(hours + 'h');
-    parts.push(minutes + 'm');
+    if (minutes > 0) parts.push(minutes + 'm');
+    // Always show seconds when less than 1 minute remains
+    if (diff < 60000 || (days === 0 && hours === 0 && minutes === 0)) {
+      parts.push(seconds + 's');
+    }
     
     countdownEl.html('<i class="fa fa-clock-o"></i> ' + parts.join(' '));
   },

@@ -10,6 +10,8 @@ RSpec.feature 'Live Quiz', type: :request do
     user.roles << admin_role
     user
   end
+  # Create a knowledge quiz with ID 1 first so our test quiz gets a different ID
+  let!(:knowledge_quiz) { FactoryBot.create(:quiz, id: 1, user: quiz_master, name: 'Bible Knowledge') }
   let(:quiz) { FactoryBot.create(:quiz, user: quiz_master, name: 'Test Quiz', quiz_length: 1200) }
   let!(:quiz_questions) do
     # Stub update_length to prevent errors due to missing passage_translations
@@ -87,7 +89,9 @@ RSpec.feature 'Live Quiz', type: :request do
           
           expect(response).to have_http_status(:success)
           # Count the number of question dots
-          expect(response.body.scan(/class="q-dot"/).count).to eq(quiz_questions.length)
+          # Modern view uses different class structure than legacy
+          dots_count = response.body.scan(/class="q-dot[^"]*"/).count
+          expect(dots_count).to eq(quiz_questions.length)
         end
       end
       
@@ -108,8 +112,9 @@ RSpec.feature 'Live Quiz', type: :request do
           get "/live_quiz"
           
           expect(response).to have_http_status(:success)
-          expect(response.body).to include('Bible Knowledge Quiz Schedule')
+          expect(response.body).to include(knowledge_quiz.name)  # Dynamic quiz name
           expect(response.body).to include('Next Quiz')
+          expect(response.body).to include('Weekly Schedule')
         end
       end
     end
@@ -137,7 +142,10 @@ RSpec.feature 'Live Quiz', type: :request do
     before do
       # Mark quiz as running
       quiz_session = QuizSession.new(quiz.id)
-      quiz_session.set_quiz_status(QuizSession::STATUS_IN_PROGRESS)
+      quiz_session.set_quiz_status(QuizSession::STATUS_IN_PROGRESS, {
+        current_question: 1,
+        started_at: Time.current.to_s
+      })
     end
     
     it 'displays quiz with chat form' do
@@ -145,9 +153,19 @@ RSpec.feature 'Live Quiz', type: :request do
       get "/live_quiz?quiz=#{quiz.id}"
       
       expect(response).to have_http_status(:success)
+      
+      # Check for chat window
       expect(response.body).to include('id="chat-window"')
-      expect(response.body).to include('name="msg_body"')
-      expect(response.body).to include('input type="submit"')
+      
+      # Look for either modern or legacy chat input
+      has_chat_input = response.body.include?('data-live-quiz-target="chatInput"') || 
+                       response.body.include?('name="msg_body"')
+      expect(has_chat_input).to be true
+      
+      # Look for either modern button or legacy submit
+      has_submit = response.body.include?('<button') && response.body.include?('Send') ||
+                   response.body.include?('input type="submit"')
+      expect(has_submit).to be true
     end
     
     it 'displays quiz status elements' do
@@ -203,19 +221,12 @@ RSpec.feature 'Live Quiz', type: :request do
     end
     
     it 'uses default timing for knowledge quiz' do
-      # Create a quiz with ID 1 (knowledge quiz)
-      knowledge_quiz = Quiz.create!(
-        id: 1, 
-        user: quiz_master,
-        name: 'Knowledge Quiz'
-      )
-      
-      # Mark knowledge quiz as running
-      quiz_session = QuizSession.new(1)
+      # Mark knowledge quiz (ID 1) as running
+      quiz_session = QuizSession.new(knowledge_quiz.id)
       quiz_session.set_quiz_status(QuizSession::STATUS_IN_PROGRESS)
       
       sign_in user
-      get '/live_quiz?quiz=1'
+      get "/live_quiz?quiz=#{knowledge_quiz.id}"
       
       expect(response).to have_http_status(:success)
       expect(response.body).to include('20') # minutes

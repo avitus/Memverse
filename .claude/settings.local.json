@@ -100,7 +100,8 @@
       "Bash(./test_quiz_full.rb)",
       "Bash(./validate_quiz_fix.sh:*)",
       "Bash(./verify_quiz_working.rb)",
-      "Bash(./run_all_tests.sh)"
+      "Bash(./run_all_tests.sh)",
+      "Bash(./validate_modal_fix.sh:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits",

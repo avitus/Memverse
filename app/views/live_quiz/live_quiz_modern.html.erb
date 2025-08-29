@@ -1,14 +1,11 @@
 <% page_title "Live Quiz :: " + @quiz.name %>
 
-<% if !@quiz_running && @next_quiz_time %>
+<% if !@quiz_running %>
 	<!-- Show schedule when no quiz is running -->
 	<%= render partial: "quiz_schedule" %>
 <% else %>
 	<!-- Show normal quiz interface when quiz is running or about to start -->
-	<!-- Quiz instructions : Pop-up box -->
-	<%= render partial: "instructions" %>
-
-<div class="white-box-with-margins" 
+	<div class="white-box-with-margins" 
      data-controller="live-quiz"
      data-live-quiz-quiz-id-value="<%= @quiz.id %>"
      data-live-quiz-user-id-value="<%= current_user.id %>"
@@ -123,6 +120,8 @@
 	<div class="clr"></div>
 </div>
 
+<!-- Quiz instructions : Pop-up box -->
+<%= render partial: "instructions" %>
 
 <!-- Initialize legacy JavaScript variables and load quiz scripts -->
 <script type="text/javascript">
@@ -140,6 +139,28 @@
 		quizRoom.initialize('<%= @num_questions %>');
 		
 		console.log("==> Connected to channel " + channel);
+		
+		// Display welcome modal only if quiz is starting soon or running
+		// Check if quiz is running or within 5 minutes of starting
+		$.getJSON('/live_quiz/till_start/<%= @quiz.id %>.json', function(data) {
+			if (data.status) {
+				// Quiz is already in progress, show instructions
+				openContentModal($("#welcome-box").html(), "Quiz Instructions");
+			} else if (data.time) {
+				// Parse the time string to get seconds until start
+				var timeMatch = data.time.match(/\+(\d+)h \+(\d+)m \+(\d+)s/);
+				if (timeMatch) {
+					var hours = parseInt(timeMatch[1]);
+					var minutes = parseInt(timeMatch[2]);
+					var totalMinutes = hours * 60 + minutes;
+					
+					// Only show modal if quiz starts within 5 minutes
+					if (totalMinutes <= 5) {
+						openContentModal($("#welcome-box").html(), "Quiz Instructions");
+					}
+				}
+			}
+		});
 		
 		// Initialize PubNub with v7+ SDK
 		var pubnub = new PubNub({
@@ -252,4 +273,6 @@
 			});
 		}
 	}
-</script><% end %> <!-- End of quiz interface conditional -->
+</script>
+
+<% end %> <!-- End of quiz interface conditional -->

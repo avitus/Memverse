@@ -1,13 +1,10 @@
 <% page_title "Live Quiz :: " + @quiz.name %>
 
-<% if !@quiz_running && @next_quiz_time %>
+<% if !@quiz_running %>
 	<!-- Show schedule when no quiz is running -->
 	<%= render partial: "quiz_schedule" %>
 <% else %>
 	<!-- Show normal quiz interface when quiz is running or about to start -->
-	<!-- Quiz instructions : Pop-up box -->
-	<%= render partial: "instructions" %>
-
 	<div class="white-box-with-margins" style="position:relative">
 
 	<!-- TOP QUIZ HEADER -->
@@ -76,6 +73,9 @@
 	<div class="clr"></div>
 </div>
 
+<!-- Quiz instructions : Pop-up box -->
+<%= render partial: "instructions" %>
+
 <script type="text/javascript" charset="utf-8">
 
 var memverseUserID    = "<%= current_user.id %>";                      // global variable
@@ -126,8 +126,8 @@ $(document).ready(function() {
         withPresence: 	true
     });
 
-    // Display welcome and quiz instructions
-    openContentModal($("#welcome-box").html(), "Quiz Instructions");
+    // Display welcome modal only if quiz is starting soon or running
+    // Modal will show based on quiz status check below
 
     // TODO: Get this working. This is selecting the select-trans that is invisible, not the one in the modal.
     $("#select-trans").delegate("a", "click", function(e){
@@ -171,10 +171,12 @@ $(document).ready(function() {
 		}
 	});
 
-	// Set quiz status
+	// Set quiz status and conditionally show welcome modal
 	$.getJSON('/live_quiz/till_start/<%= @quiz.id %>.json', function(data) {
 		if (data.status) {
 			$("#countdown-till").html("<strong>Quiz Status:</strong> " + data.status);
+			// Quiz is already in progress, show instructions
+			openContentModal($("#welcome-box").html(), "Quiz Instructions");
 		} else {
 			$('#quiz-timer').countdown({
 				until: data.time, 
@@ -183,6 +185,21 @@ $(document).ready(function() {
 				labels1: ['Year', 'Month', 'Week', 'Day', 'Hour', 'Min', 'Sec']
 			});
 			$("#countdown-till").text("till quiz starts");
+			
+			// Check if quiz starts within 5 minutes
+			if (data.time) {
+				var timeMatch = data.time.match(/\+(\d+)h \+(\d+)m \+(\d+)s/);
+				if (timeMatch) {
+					var hours = parseInt(timeMatch[1]);
+					var minutes = parseInt(timeMatch[2]);
+					var totalMinutes = hours * 60 + minutes;
+					
+					// Only show modal if quiz starts within 5 minutes
+					if (totalMinutes <= 5) {
+						openContentModal($("#welcome-box").html(), "Quiz Instructions");
+					}
+				}
+			}
 		}
 	});
 

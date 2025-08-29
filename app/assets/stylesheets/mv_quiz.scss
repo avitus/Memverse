@@ -969,13 +969,18 @@ textarea.form-control {
   font-weight: 600;
   color: #84cc16; // green-primary
   padding: 0.75rem;
-  background: rgba(132, 204, 22, 0.1);
-  border-radius: 6px;
   
   .countdown-expired {
-    color: #983626; // red-primary
-    animation: pulse 1s ease-in-out infinite;
+    color: #28a745;
+    font-weight: bold;
+    animation: pulse 1s infinite;
   }
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
 }
 
 // Schedule card styles
