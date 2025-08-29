@@ -67,6 +67,21 @@ class SendReminders
               @emails_sent += 1
               u.update_attribute(:last_reminder, Date.today)
               
+            rescue Postmark::InvalidEmailRequestError => e
+              # Detailed logging for Postmark email errors to help identify problematic users
+              Rails.logger.error("** POSTMARK ERROR for User #{u.id}:")
+              Rails.logger.error("   User ID: #{u.id}")
+              Rails.logger.error("   User name: '#{u.name}'")
+              Rails.logger.error("   User login: '#{u.login}'")
+              Rails.logger.error("   User email: '#{u.email}'")
+              Rails.logger.error("   Name or login: '#{u.name_or_login}'")
+              Rails.logger.error("   Progression level: #{u.progression}")
+              Rails.logger.error("   Error message: #{e.message}")
+              Rails.logger.error("   Email format attempted: '#{u.name} <#{u.email}>'")
+              # Log additional debugging info
+              Rails.logger.error("   Name bytes: #{u.name.bytes.inspect}") if u.name
+              Rails.logger.error("   Name encoding: #{u.name.encoding}") if u.name
+              # Continue processing other users even if one email fails
             rescue => e
               Rails.logger.error("** Error: Failed to send progression email to user #{u.id} (#{u.email}): #{e.class} - #{e.message}")
               # Continue processing other users even if one email fails
