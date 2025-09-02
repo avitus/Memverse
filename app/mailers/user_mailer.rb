@@ -59,14 +59,14 @@ class UserMailer < ActionMailer::Base
     # Set Postmark headers manually for test environments
     if Rails.env.test?
       headers['X-PM-Tag'] = 'progression-9'
-      headers['X-PM-Message-Stream'] = 'broadcast'
+      headers['X-PM-Message-Stream'] = 'reminder-stream'
     end
     
     mail(
       :to => @email_with_name, 
       :subject => "Memverse Reminder",
       :tag => "progression-9",
-      :message_stream => "broadcast"
+      :message_stream => "reminder-stream"
     )
   end
 
@@ -78,14 +78,14 @@ class UserMailer < ActionMailer::Base
     # Set Postmark headers manually for test environments
     if Rails.env.test?
       headers['X-PM-Tag'] = 'progression-8'
-      headers['X-PM-Message-Stream'] = 'broadcast'
+      headers['X-PM-Message-Stream'] = 'reminder-stream'
     end
     
     mail(
       :to => @email_with_name, 
       :subject => "Memverse Reminder",
       :tag => "progression-8",
-      :message_stream => "broadcast"
+      :message_stream => "reminder-stream"
     )
   end
 
@@ -97,14 +97,14 @@ class UserMailer < ActionMailer::Base
     # Set Postmark headers manually for test environments
     if Rails.env.test?
       headers['X-PM-Tag'] = 'progression-7'
-      headers['X-PM-Message-Stream'] = 'broadcast'
+      headers['X-PM-Message-Stream'] = 'reminder-stream'
     end
     
     mail(
       :to => @email_with_name, 
       :subject => "Memverse Reminder",
       :tag => "progression-7",
-      :message_stream => "broadcast"
+      :message_stream => "reminder-stream"
     )
   end
 
@@ -116,14 +116,14 @@ class UserMailer < ActionMailer::Base
     # Set Postmark headers manually for test environments
     if Rails.env.test?
       headers['X-PM-Tag'] = 'progression-6'
-      headers['X-PM-Message-Stream'] = 'broadcast'
+      headers['X-PM-Message-Stream'] = 'reminder-stream'
     end
     
     mail(
       :to => @email_with_name, 
       :subject => "Memverse Reminder",
       :tag => "progression-6",
-      :message_stream => "broadcast"
+      :message_stream => "reminder-stream"
     )
   end
 
@@ -134,14 +134,14 @@ class UserMailer < ActionMailer::Base
     # Set Postmark headers manually for test environments
     if Rails.env.test?
       headers['X-PM-Tag'] = 'progression-5'
-      headers['X-PM-Message-Stream'] = 'broadcast'
+      headers['X-PM-Message-Stream'] = 'reminder-stream'
     end
     
     mail(
       :to => @email_with_name, 
       :subject => "Memverse Reminder",
       :tag => "progression-5",
-      :message_stream => "broadcast"
+      :message_stream => "reminder-stream"
     )
   end
 
@@ -152,14 +152,14 @@ class UserMailer < ActionMailer::Base
     # Set Postmark headers manually for test environments
     if Rails.env.test?
       headers['X-PM-Tag'] = 'progression-4'
-      headers['X-PM-Message-Stream'] = 'broadcast'
+      headers['X-PM-Message-Stream'] = 'reminder-stream'
     end
     
     mail(
       :to => @email_with_name, 
       :subject => "Memverse Reminder",
       :tag => "progression-4",
-      :message_stream => "broadcast"
+      :message_stream => "reminder-stream"
     )
   end
 
@@ -170,14 +170,14 @@ class UserMailer < ActionMailer::Base
     # Set Postmark headers manually for test environments
     if Rails.env.test?
       headers['X-PM-Tag'] = 'progression-3'
-      headers['X-PM-Message-Stream'] = 'broadcast'
+      headers['X-PM-Message-Stream'] = 'reminder-stream'
     end
     
     mail(
       :to => @email_with_name, 
       :subject => "Memverse Reminder",
       :tag => "progression-3",
-      :message_stream => "broadcast"
+      :message_stream => "reminder-stream"
     )
   end
 
@@ -187,14 +187,14 @@ class UserMailer < ActionMailer::Base
     # Set Postmark headers manually for test environments
     if Rails.env.test?
       headers['X-PM-Tag'] = 'progression-2'
-      headers['X-PM-Message-Stream'] = 'broadcast'
+      headers['X-PM-Message-Stream'] = 'reminder-stream'
     end
     
     mail(
       :to => @email_with_name, 
       :subject => "Memverse Reminder",
       :tag => "progression-2",
-      :message_stream => "broadcast"
+      :message_stream => "reminder-stream"
     )
   end
 

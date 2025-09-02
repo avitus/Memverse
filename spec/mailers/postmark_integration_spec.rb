@@ -109,35 +109,35 @@ RSpec.describe "Email Integration", type: :mailer do
     end
 
     it "sets correct Postmark tag and message stream for progression_email_9" do
-      test_email_tag(:progression_email_9, "progression-9")
+      test_email_tag(:progression_email_9, "progression-9", "reminder-stream")
     end
 
     it "sets correct Postmark tag and message stream for progression_email_8" do
-      test_email_tag(:progression_email_8, "progression-8")
+      test_email_tag(:progression_email_8, "progression-8", "reminder-stream")
     end
 
     it "sets correct Postmark tag and message stream for progression_email_7" do
-      test_email_tag(:progression_email_7, "progression-7")
+      test_email_tag(:progression_email_7, "progression-7", "reminder-stream")
     end
 
     it "sets correct Postmark tag and message stream for progression_email_6" do
-      test_email_tag(:progression_email_6, "progression-6")
+      test_email_tag(:progression_email_6, "progression-6", "reminder-stream")
     end
 
     it "sets correct Postmark tag and message stream for progression_email_5" do
-      test_email_tag(:progression_email_5, "progression-5")
+      test_email_tag(:progression_email_5, "progression-5", "reminder-stream")
     end
 
     it "sets correct Postmark tag and message stream for progression_email_4" do
-      test_email_tag(:progression_email_4, "progression-4")
+      test_email_tag(:progression_email_4, "progression-4", "reminder-stream")
     end
 
     it "sets correct Postmark tag and message stream for progression_email_3" do
-      test_email_tag(:progression_email_3, "progression-3")
+      test_email_tag(:progression_email_3, "progression-3", "reminder-stream")
     end
 
     it "sets correct Postmark tag and message stream for progression_email_2" do
-      test_email_tag(:progression_email_2, "progression-2")
+      test_email_tag(:progression_email_2, "progression-2", "reminder-stream")
     end
 
     it "sets correct Postmark tag and message stream for signup_notification" do
