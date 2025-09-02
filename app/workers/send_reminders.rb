@@ -13,13 +13,16 @@ class SendReminders
     end
 
     @emails_sent        = 0
-    @throttle           = 100  # email send limit per recurrence period
+    @throttle           = 2  # email send limit per recurrence period
 
     # Delete users who never activated
     User.pending.where('created_at < ?', 2.days.ago ).delete_all
 
-    # Retrieve records for all users - find_each does it in batches of 1000
-    User.find_each { |u|
+    # Retrieve records for all users ordered by newest first
+    # Process newest users first to prioritize recently registered users
+    # Note: Using in_batches with order instead of find_each which ignores order
+    User.order(created_at: :desc).in_batches(of: 100) do |batch|
+      batch.each do |u|
 
       # Change reminder frequency (if necessary) to not be annoying
       u.update_reminder_freq
@@ -92,7 +95,8 @@ class SendReminders
 
       end # block for users who want reminders
 
-    }
+      end # batch.each
+    end # in_batches
 
     Rails.logger.info(" *** Email reminder: Sent #{@emails_sent} reminder emails at #{Time.now}")
 

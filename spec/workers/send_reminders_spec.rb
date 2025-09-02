@@ -13,6 +13,19 @@ RSpec.describe SendReminders, type: :worker do
   describe '#perform' do
     let!(:email_double) { double('email', deliver: true) }
     
+    # Helper method to mock User.order.in_batches chain
+    def mock_user_find_each(users)
+      batch_relation = double('batch_relation')
+      allow(batch_relation).to receive(:each) do |&block|
+        users.each(&block)
+      end
+      
+      allow(User).to receive(:order).with(created_at: :desc).and_return(User)
+      allow(User).to receive(:in_batches).with(of: 1000) do |&block|
+        block.call(batch_relation) if block
+      end
+    end
+    
     before do
       # Mock Rails logger to capture logging
       allow(Rails.logger).to receive(:info)
@@ -82,10 +95,8 @@ RSpec.describe SendReminders, type: :worker do
       end
 
       before do
-        # Mock User.find_each to iterate over our test users
-        allow(User).to receive(:find_each) do |&block|
-          users_needing_reminders.each(&block)
-        end
+        # Mock User.order.find_each to iterate over our test users
+        mock_user_find_each(users_needing_reminders)
       end
 
       it 'limits emails to 100 per run' do
@@ -121,9 +132,7 @@ RSpec.describe SendReminders, type: :worker do
         it "sends progression_email_#{level} for progression level #{level}" do
           user = FactoryBot.create(:user, base_user_attrs)
           allow(user).to receive(:progression).and_return(level)
-          allow(User).to receive(:find_each) do |&block|
-            [user].each(&block)
-          end
+          mock_user_find_each([user])
 
           expect(UserMailer).to receive("progression_email_#{level}").with(user).and_return(email_double)
           expect(email_double).to receive(:deliver)
@@ -139,9 +148,7 @@ RSpec.describe SendReminders, type: :worker do
       it 'does not send email for progression level 1 (unconfirmed users)' do
         user = FactoryBot.create(:user, base_user_attrs.merge(confirmed_at: nil))
         allow(user).to receive(:progression).and_return(1)
-        allow(User).to receive(:find_each) do |&block|
-          [user].each(&block)
-        end
+        mock_user_find_each([user])
 
         expect(UserMailer).not_to receive(:progression_email_1)
         worker.perform
@@ -151,9 +158,7 @@ RSpec.describe SendReminders, type: :worker do
         user = FactoryBot.create(:user, base_user_attrs)
         allow(user).to receive(:progression).and_return(5)
         allow(user).to receive(:name_or_login).and_return('John Doe')
-        allow(User).to receive(:find_each) do |&block|
-          [user].each(&block)
-        end
+        mock_user_find_each([user])
 
         expect(Rails.logger).to receive(:info).with(/Sending progression email to John Doe.*progression level 5/)
         worker.perform
@@ -190,18 +195,14 @@ RSpec.describe SendReminders, type: :worker do
       end
 
       it 'calls update_reminder_freq for all users' do
-        allow(User).to receive(:find_each) do |&block|
-          [user_with_blank_email].each(&block)
-        end
+        mock_user_find_each([user_with_blank_email])
         expect(user_with_blank_email).to receive(:update_reminder_freq)
         worker.perform
       end
 
       it 'skips users with blank email addresses' do
         allow(user_with_blank_email).to receive(:needs_reminder?).and_return(true)
-        allow(User).to receive(:find_each) do |&block|
-          [user_with_blank_email].each(&block)
-        end
+        mock_user_find_each([user_with_blank_email])
 
         expect(UserMailer).not_to receive(:progression_email_2)
         expect(Rails.logger).to receive(:info).with(/Error: Unable to email user with id: #{user_with_blank_email.id} - blank email address/)
@@ -218,9 +219,7 @@ RSpec.describe SendReminders, type: :worker do
         
         allow(user_invalid_email).to receive(:needs_reminder?).and_return(true)
         allow(user_invalid_email).to receive(:update_reminder_freq)
-        allow(User).to receive(:find_each) do |&block|
-          [user_invalid_email].each(&block)
-        end
+        mock_user_find_each([user_invalid_email])
 
         expect(UserMailer).not_to receive(:progression_email_2)
         expect(Rails.logger).to receive(:warn).with(/Error: Unable to email user with id: #{user_invalid_email.id} - invalid email format: 'JR'/)
@@ -229,9 +228,7 @@ RSpec.describe SendReminders, type: :worker do
       end
 
       it 'skips users who do not want reminders' do
-        allow(User).to receive(:find_each) do |&block|
-          [user_never_reminders].each(&block)
-        end
+        mock_user_find_each([user_never_reminders])
         
         expect(UserMailer).not_to receive(:progression_email_2)
         worker.perform
@@ -239,9 +236,7 @@ RSpec.describe SendReminders, type: :worker do
 
       it 'skips users who do not need reminders' do
         allow(user_no_reminder_needed).to receive(:needs_reminder?).and_return(false)
-        allow(User).to receive(:find_each) do |&block|
-          [user_no_reminder_needed].each(&block)
-        end
+        mock_user_find_each([user_no_reminder_needed])
         
         expect(UserMailer).not_to receive(:progression_email_2)
         worker.perform
@@ -255,9 +250,7 @@ RSpec.describe SendReminders, type: :worker do
         
         allow(user).to receive(:needs_reminder?).and_return(true)
         allow(user).to receive(:progression).and_return(3)
-        allow(User).to receive(:find_each) do |&block|
-          [user].each(&block)
-        end
+        mock_user_find_each([user])
 
         expect(user).to receive(:update_attribute).with(:last_reminder, Date.today)
         worker.perform
@@ -271,9 +264,7 @@ RSpec.describe SendReminders, type: :worker do
         allow(user).to receive(:needs_reminder?).and_return(true)
         allow(user).to receive(:update_reminder_freq)
         allow(user).to receive(:update_attribute)
-        allow(User).to receive(:find_each) do |&block|
-          [user].each(&block)
-        end
+        mock_user_find_each([user])
       end
 
       it 'handles users with no memverses (progression level 2)' do
@@ -300,12 +291,13 @@ RSpec.describe SendReminders, type: :worker do
     end
 
     describe 'batch processing behavior' do
-      it 'processes users in batches using find_each' do
-        expect(User).to receive(:find_each)
+      it 'processes users in batches using in_batches ordered by newest first' do
+        expect(User).to receive(:order).with(created_at: :desc).and_return(User)
+        expect(User).to receive(:in_batches).with(of: 1000)
         worker.perform
       end
 
-      it 'processes users in batches using find_each without error handling' do
+      it 'processes users in batches ordered by newest first' do
         user1 = FactoryBot.create(:user, confirmed_at: 1.week.ago, email: 'user1@example.com')
         user2 = FactoryBot.create(:user, confirmed_at: 1.week.ago, email: 'user2@example.com')
 
@@ -316,9 +308,7 @@ RSpec.describe SendReminders, type: :worker do
         allow(user2).to receive(:progression).and_return(2)
         allow(user2).to receive(:update_attribute)
 
-        allow(User).to receive(:find_each) do |&block|
-          [user1, user2].each(&block)
-        end
+        mock_user_find_each([user1, user2])
 
         # Should process both users, sending email only for user2
         expect(UserMailer).to receive(:progression_email_2).and_return(email_double)
@@ -338,9 +328,7 @@ RSpec.describe SendReminders, type: :worker do
         allow(user).to receive(:update_reminder_freq)
         allow(user).to receive(:update_attribute)
         allow(user).to receive(:name_or_login).and_return('Test User')
-        allow(User).to receive(:find_each) do |&block|
-          [user].each(&block)
-        end
+        mock_user_find_each([user])
       end
 
       it 'logs email sending activity' do
@@ -371,9 +359,7 @@ RSpec.describe SendReminders, type: :worker do
       end
 
       before do
-        allow(User).to receive(:find_each) do |&block|
-          users.each(&block)
-        end
+        mock_user_find_each(users)
       end
 
       it 'increments email counter for each email sent' do
@@ -407,9 +393,7 @@ RSpec.describe SendReminders, type: :worker do
         allow(successful_user).to receive(:update_attribute)
         allow(successful_user).to receive(:name_or_login).and_return('Successful User')
 
-        allow(User).to receive(:find_each) do |&block|
-          [user_with_email_error, successful_user].each(&block)
-        end
+        mock_user_find_each([user_with_email_error, successful_user])
 
         # Mock first email to fail
         failing_email = double('failing_email')
@@ -431,9 +415,7 @@ RSpec.describe SendReminders, type: :worker do
       end
 
       it 'logs detailed error information when email sending fails' do
-        allow(User).to receive(:find_each) do |&block|
-          [user_with_email_error].each(&block)
-        end
+        mock_user_find_each([user_with_email_error])
 
         failing_email = double('failing_email')
         postmark_error = StandardError.new('Invalid email address')
@@ -448,9 +430,7 @@ RSpec.describe SendReminders, type: :worker do
       end
 
       it 'does not increment email counter when email sending fails' do
-        allow(User).to receive(:find_each) do |&block|
-          [user_with_email_error].each(&block)
-        end
+        mock_user_find_each([user_with_email_error])
 
         failing_email = double('failing_email')
         expect(failing_email).to receive(:deliver).and_raise(StandardError.new('Service error'))
@@ -462,9 +442,7 @@ RSpec.describe SendReminders, type: :worker do
       end
 
       it 'does not update last_reminder when email sending fails' do
-        allow(User).to receive(:find_each) do |&block|
-          [user_with_email_error].each(&block)
-        end
+        mock_user_find_each([user_with_email_error])
 
         failing_email = double('failing_email')
         expect(failing_email).to receive(:deliver).and_raise(StandardError.new('Service error'))
