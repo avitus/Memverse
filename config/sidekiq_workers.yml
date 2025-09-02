@@ -1,0 +1,19 @@
+# Sidekiq configuration for WORKER processes
+# These processes handle job execution and can run multiple instances
+:verbose: false
+:concurrency: 25  # Higher concurrency for workers
+:timeout: 30
+:max_retries: 3
+
+# Queues for worker processes (all main queues)
+:queues:
+  - [critical, 5]    # Quiz and important user-facing jobs
+  - [high, 3]        # Reminders and notifications
+  - [default, 2]     # Standard processing
+  - [low, 1]         # Background maintenance
+
+# This process will NOT load cron jobs
+:scheduler: false
+
+# Logging  
+:logfile: ./log/sidekiq_workers.log

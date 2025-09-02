@@ -40,10 +40,11 @@ set :puma_pid, "#{shared_path}/tmp/pids/puma.pid"
 set :puma_access_log, "#{shared_path}/log/puma_access.log"
 set :puma_error_log, "#{shared_path}/log/puma_error.log"
 
-# Sidekiq configuration
-set :sidekiq_config, -> { File.join(shared_path, 'config', 'sidekiq.yml') }
-set :sidekiq_log, -> { File.join(shared_path, 'log', 'sidekiq.log') }
-set :sidekiq_pid, -> { File.join(shared_path, 'tmp', 'pids', 'sidekiq.pid') }
+# Sidekiq configuration - Using custom multi-process setup
+# We use systemd services instead of capistrano-sidekiq's default behavior
+# See lib/capistrano/tasks/sidekiq_multi.rake for custom tasks
+set :sidekiq_default_hooks, false  # Disable default capistrano-sidekiq hooks
+set :sidekiq_workers, ENV.fetch('SIDEKIQ_WORKERS', 3)  # Number of worker processes
 
 # SSH options
 set :ssh_options, {

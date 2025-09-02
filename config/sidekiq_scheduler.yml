@@ -1,0 +1,18 @@
+# Sidekiq configuration for the SCHEDULER process
+# This process handles cron jobs and should run as a single instance
+:verbose: true
+:concurrency: 5  # Low concurrency since this mainly schedules jobs
+:timeout: 30
+:max_retries: 3
+
+# Queues for the scheduler process (low priority queues)
+:queues:
+  - [critical, 2]    # Still process critical jobs if needed
+  - [scheduler, 5]   # Dedicated queue for scheduled jobs
+  - [low, 1]         # Low priority maintenance tasks
+
+# This process WILL load cron jobs
+:scheduler: true
+
+# Logging
+:logfile: ./log/sidekiq_scheduler.log

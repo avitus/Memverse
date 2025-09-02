@@ -143,19 +143,47 @@ Sidekiq.configure_server do |config|
   end
   
   # ========================================================================
-  # Load Cron Schedule (Enhanced with better error handling)
+  # Cron Schedule Loading - Only for Scheduler Process
   # ========================================================================
-  schedule_file = "config/sidekiq_schedule.yml"
+  # IMPORTANT: Only load cron jobs if this is the scheduler process
+  # This prevents duplicate job execution when running multiple workers
   
-  if File.exist?(schedule_file) && Sidekiq.server?
-    begin
-      schedule = YAML.load_file(schedule_file)
-      Sidekiq::Cron::Job.load_from_hash(schedule)
-      Rails.logger.info "Loaded #{schedule.keys.size} scheduled jobs from #{schedule_file}"
-    rescue => e
-      Rails.logger.error "Failed to load Sidekiq schedule: #{e.message}"
-      raise e if Rails.env.production? # Fail fast in production
+  # Check if this process should load cron jobs
+  # This is determined by:
+  # 1. ENV variable SIDEKIQ_SCHEDULER=true
+  # 2. OR by config file (sidekiq_scheduler.yml sets :scheduler: true)
+  # 3. OR by command line option --scheduler
+  
+  should_load_cron = ENV['SIDEKIQ_SCHEDULER'] == 'true' || 
+                     config[:scheduler] == true ||
+                     ARGV.include?('--scheduler')
+  
+  if should_load_cron
+    schedule_file = "config/sidekiq_schedule.yml"
+    
+    if File.exist?(schedule_file)
+      begin
+        Rails.logger.info "[SIDEKIQ SCHEDULER] This process will handle cron jobs"
+        
+        # Load the cron schedule
+        schedule = YAML.load_file(schedule_file)
+        Sidekiq::Cron::Job.load_from_hash(schedule)
+        
+        Rails.logger.info "[SIDEKIQ SCHEDULER] Loaded #{schedule.keys.size} scheduled jobs:"
+        schedule.each do |name, job_config|
+          Rails.logger.info "[SIDEKIQ SCHEDULER]   - #{name}: #{job_config['cron']} (#{job_config['class']})"
+        end
+      rescue => e
+        Rails.logger.error "[SIDEKIQ SCHEDULER] Failed to load schedule: #{e.message}"
+        raise e if Rails.env.production?
+      end
+    else
+      Rails.logger.warn "[SIDEKIQ SCHEDULER] Schedule file not found: #{schedule_file}"
     end
+  else
+    Rails.logger.info "[SIDEKIQ WORKER] This process will NOT handle cron jobs (worker only)"
+    # Ensure no cron jobs are loaded
+    Sidekiq::Cron::Job.destroy_all! if defined?(Sidekiq::Cron::Job)
   end
   
   # ========================================================================

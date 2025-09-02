@@ -10,6 +10,10 @@ class KnowledgeQuiz
   QUIZ_LOCK_KEY = "knowledge_quiz_lock".freeze
   QUIZ_STATUS_KEY = "quiz-bible-knowledge".freeze
   LOCK_TIMEOUT = 3600 # 1 hour in seconds
+  
+  # Add a unique execution key to prevent duplicate runs within the same time window
+  EXECUTION_WINDOW_KEY = "knowledge_quiz_execution_window".freeze
+  EXECUTION_WINDOW = 300 # 5 minutes - prevent re-execution within this window
 
   def perform
     quiz_start_time = Time.current.utc
@@ -17,20 +21,35 @@ class KnowledgeQuiz
     channel = "quiz-#{quiz_id}"
     
     Sidekiq.logger.info "===> Knowledge Quiz Worker starting at #{quiz_start_time}"
+    Sidekiq.logger.info "===> Process ID: #{Process.pid}, Thread: #{Thread.current.object_id}"
     
     # Initialize QuizSession service
     @quiz_session = QuizSession.new(quiz_id)
     
     begin
       # ========================================================================
-      # Idempotency check - prevent duplicate quiz execution
+      # Enhanced idempotency check - prevent duplicate quiz execution
       # ========================================================================
+      
+      # First check if quiz was recently executed (within execution window)
+      if quiz_recently_executed?
+        Sidekiq.logger.warn "===> Knowledge quiz was recently executed within the last #{EXECUTION_WINDOW} seconds, aborting"
+        return
+      end
+      
+      # Try to acquire execution window lock - this prevents any other process from running quiz
+      unless acquire_execution_window_lock
+        Sidekiq.logger.warn "===> Another process is already running the knowledge quiz, aborting"
+        return
+      end
+      
+      # Now acquire the regular quiz lock
       unless acquire_quiz_lock
-        Sidekiq.logger.warn "===> Knowledge quiz already running, aborting this execution"
+        Sidekiq.logger.warn "===> Knowledge quiz already running (regular lock held), aborting this execution"
         return
       end
 
-      # Check if quiz is already in progress
+      # Check if quiz is already in progress (belt and suspenders)
       if quiz_in_progress?
         Sidekiq.logger.warn "===> Knowledge quiz already in progress, aborting"
         return
@@ -109,8 +128,43 @@ class KnowledgeQuiz
   private
 
   # ========================================================================
-  # Idempotency and lock management
+  # Enhanced idempotency and lock management
   # ========================================================================
+  
+  def quiz_recently_executed?
+    # Check if quiz was executed within the execution window
+    last_execution = $redis.get(EXECUTION_WINDOW_KEY)
+    return false unless last_execution
+    
+    last_execution_time = Time.parse(last_execution)
+    time_since_execution = Time.current.utc - last_execution_time
+    
+    Sidekiq.logger.info "===> Last quiz execution was #{time_since_execution.round(2)} seconds ago"
+    time_since_execution < EXECUTION_WINDOW
+  rescue => e
+    Sidekiq.logger.error "Error checking recent execution: #{e.message}"
+    false
+  end
+  
+  def acquire_execution_window_lock
+    # Use Redis SET with NX (only set if not exists) and EX (expiry)
+    # This is an atomic operation that prevents race conditions
+    lock_key = "#{QUIZ_LOCK_KEY}_execution"
+    lock_value = "#{Process.pid}:#{Thread.current.object_id}:#{Time.current.utc.iso8601}"
+    
+    # Try to acquire lock with a short expiry (5 minutes)
+    result = $redis.set(lock_key, lock_value, nx: true, ex: EXECUTION_WINDOW)
+    
+    if result
+      # Also set the execution window timestamp
+      $redis.set(EXECUTION_WINDOW_KEY, Time.current.utc.iso8601, ex: EXECUTION_WINDOW)
+      Sidekiq.logger.info "===> Successfully acquired execution window lock"
+      true
+    else
+      Sidekiq.logger.warn "===> Failed to acquire execution window lock - another process has it"
+      false
+    end
+  end
   
   def acquire_quiz_lock
     @quiz_session.lock_quiz(LOCK_TIMEOUT)
@@ -142,8 +196,14 @@ class KnowledgeQuiz
   
   def announce_quiz_start
     with_retry("quiz announcement") do
+      # Log the announcement to help debug duplicates
+      Sidekiq.logger.info "===> Creating quiz start announcement tweet (Process: #{Process.pid})"
+      
       broadcast = "The Bible knowledge quiz is starting. <a href=\"live_quiz\">Join now!</a>"
-      Tweet.create!(news: broadcast, user_id: 1, importance: 2)
+      tweet = Tweet.create!(news: broadcast, user_id: 1, importance: 2)
+      
+      Sidekiq.logger.info "===> Created tweet ID: #{tweet.id} at #{tweet.created_at}"
+      
       ios_quiz_alert("The Bible trivia quiz is starting now.")
     end
   end
@@ -339,8 +399,14 @@ class KnowledgeQuiz
       unless final_scoreboard.empty?
         gold_ribbon_name = final_scoreboard[0]['name']
         gold_ribbon_id = final_scoreboard[0]['id']
+        
+        # Log winner announcement to help debug duplicates
+        Sidekiq.logger.info "===> Creating winner announcement tweet for #{gold_ribbon_name} (Process: #{Process.pid})"
+        
         broadcast = "#{gold_ribbon_name} won the Bible knowledge quiz"
-        Tweet.create!(news: broadcast, user_id: gold_ribbon_id, importance: 2)
+        tweet = Tweet.create!(news: broadcast, user_id: gold_ribbon_id, importance: 2)
+        
+        Sidekiq.logger.info "===> Created winner tweet ID: #{tweet.id} at #{tweet.created_at}"
       end
     end
   end
@@ -454,6 +520,13 @@ class KnowledgeQuiz
       @quiz_session.unlock_quiz
     rescue => e
       Sidekiq.logger.error "Failed to unlock quiz: #{e.message}"
+    end
+    
+    begin
+      # Clean up execution window lock
+      $redis.del("#{QUIZ_LOCK_KEY}_execution")
+    rescue => e
+      Sidekiq.logger.error "Failed to clean up execution lock: #{e.message}"
     end
     
     Sidekiq.logger.info "Quiz resources cleaned up"

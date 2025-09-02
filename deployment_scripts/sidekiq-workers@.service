@@ -1,0 +1,33 @@
+[Unit]
+Description=Sidekiq Worker %i (Job Processing Only)
+After=syslog.target network.target redis.service mysql.service
+
+[Service]
+Type=simple
+WorkingDirectory=/home/avitus/memverse.com/current
+ExecStart=/home/avitus/.rvm/bin/rvm 3.2.6 do bundle exec sidekiq -e production -C config/sidekiq_workers.yml
+User=avitus
+Group=avitus
+UMask=0002
+
+# Restart policy - more aggressive for workers
+Restart=always
+RestartSec=10
+StandardOutput=append:/home/avitus/memverse.com/shared/log/sidekiq_worker_%i.log
+StandardError=append:/home/avitus/memverse.com/shared/log/sidekiq_worker_%i.log
+
+# Environment variables
+Environment="RAILS_ENV=production"
+Environment="SIDEKIQ_SCHEDULER=false"
+
+# Resource limits
+LimitNOFILE=65535
+LimitNPROC=4096
+
+# Kill signal and timeout
+KillMode=mixed
+KillSignal=SIGTERM
+TimeoutStopSec=90
+
+[Install]
+WantedBy=multi-user.target

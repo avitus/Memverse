@@ -1,0 +1,33 @@
+[Unit]
+Description=Sidekiq Scheduler (Single Instance for Cron Jobs)
+After=syslog.target network.target redis.service mysql.service
+
+[Service]
+Type=simple
+WorkingDirectory=/home/avitus/memverse.com/current
+ExecStart=/home/avitus/.rvm/bin/rvm 3.2.6 do bundle exec sidekiq -e production -C config/sidekiq_scheduler.yml
+User=avitus
+Group=avitus
+UMask=0002
+
+# Restart policy - less aggressive for scheduler
+Restart=on-failure
+RestartSec=30
+StandardOutput=append:/home/avitus/memverse.com/shared/log/sidekiq_scheduler.log
+StandardError=append:/home/avitus/memverse.com/shared/log/sidekiq_scheduler.log
+
+# Environment variables
+Environment="RAILS_ENV=production"
+Environment="SIDEKIQ_SCHEDULER=true"
+
+# Resource limits
+LimitNOFILE=65535
+LimitNPROC=4096
+
+# Kill signal and timeout
+KillMode=mixed
+KillSignal=SIGTERM
+TimeoutStopSec=90
+
+[Install]
+WantedBy=multi-user.target
