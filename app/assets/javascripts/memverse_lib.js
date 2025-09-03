@@ -245,6 +245,59 @@ scrub_text = function(text) {
 };
 
 /******************************************************************************
+ * Flexible text matching for passage review
+ * Handles common punctuation variations that users might omit
+ ******************************************************************************/
+function flexibleTextMatch(correctWord, userInput) {
+    // Get basic scrubbed versions
+    var scrubbed_correct = scrub_text(correctWord);
+    var scrubbed_input = scrub_text(userInput);
+    
+    // Exact match after scrubbing
+    if (scrubbed_correct === scrubbed_input) {
+        return true;
+    }
+    
+    // Handle common apostrophe cases
+    // "children's" should accept "children", "childrens"
+    if (correctWord.includes("'")) {
+        // Try removing the entire apostrophe + following text
+        var withoutApostrophe = correctWord.replace(/'.*$/, "");
+        if (scrub_text(withoutApostrophe) === scrubbed_input) {
+            return true;
+        }
+        
+        // Also try just removing apostrophe but keeping letters
+        var apostropheReplaced = correctWord.replace(/'/g, "");
+        if (scrub_text(apostropheReplaced) === scrubbed_input) {
+            return true;
+        }
+    }
+    
+    // Handle quotation marks at beginning
+    // "The should accept "The" or just "The"
+    if (correctWord.match(/^["'"]/)) {
+        var withoutQuote = correctWord.replace(/^["'"]/, "");
+        if (scrub_text(withoutQuote) === scrubbed_input) {
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+/******************************************************************************
+ * Calculate input width with buffer to prevent layout shifts
+ ******************************************************************************/
+function calculateInputWidth(word) {
+    // Calculate width for the word that will actually be displayed when correct
+    var baseWidth = word_width(word);
+    
+    // Add small buffer to prevent text overflow and layout shifts
+    return baseWidth + 8;
+}
+
+/******************************************************************************
  * Return width of word for blankify (hackish - would like a better way)
  * TODO: Should accept array of words and perform operations in bulk
  ******************************************************************************/
@@ -307,7 +360,11 @@ function blankifyVerse(versetext, reduction_percentage) {
 	            return "<span>" + x + " " + "</span>";
 	        }
 	        else {
-	            return "<input name='" + x.replace(/'/, "'") + "' class='blank-word' style='width:" + word_width(x) + "px' autocomplete='off'>";
+	            // Use enhanced width calculation to prevent layout shifts
+	            var inputWidth = calculateInputWidth(x);
+	            // Properly escape apostrophes for HTML attribute
+	            var escapedWord = x.replace(/'/g, "'");
+	            return "<input name='" + escapedWord + "' class='blank-word' style='width:" + inputWidth + "px' autocomplete='off'>";
 	        };
 	    });
 
