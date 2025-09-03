@@ -1,5 +1,37 @@
-<!-- Sent to user after activation is complete -->
-
-<%= @user.name %>, your account has been activated.  Welcome aboard!
-
-<%= @url %>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>Your Memverse account has been activated!</title>
+	</head>
+	<body>
+		
+		<p>Dear <%= @user.name %>,</p>
+		
+		<p>Welcome to Memverse! Your account has been activated and you're now ready to start your online Bible memorization journey.</p>
+		
+		<p>Your login email is: <%= @user.email %></p>
+		
+		<p>To get started, we recommend:</p>
+		
+		<ul>
+			<li><a href="<%= @url %>/profile/update">Complete your profile</a></li>
+			<li><a href="<%= @url %>/profile/update">Set your email preferences</a> to control how often we contact you</li>
+			<li><a href="<%= @url %>/add_verse">Add your first five or six verses</a> that you would like to memorize</li>
+		</ul>
+		
+		<p>You can log in to your account at: <a href="<%= @url %>"><%= @url %></a></p>
+		
+		<p>We're excited to have you join our community of Bible memorizers!</p>
+				
+		<p>Blessings,</p>
+		
+		<p>The Memverse Team</p>
+		
+		<hr style="margin: 40px 0 20px 0; border: 0; border-top: 1px solid #e5e5e5;" />
+		<p style="font-size: 12px; color: #666;">
+			If you need help getting started, check out our <a href="<%= @url %>/help">help section</a> or 
+			<a href="<%= @url %>/contact">contact us</a> anytime.
+		</p>
+	</body>
+</html>

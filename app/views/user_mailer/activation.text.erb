@@ -1,5 +1,22 @@
-<!-- Sent to user after activation is complete -->
+Dear <%= @user.name %>,
 
-<%= @user.name %>, your account has been activated.  Welcome aboard!
+Welcome to Memverse! Your account has been activated and you're now ready to start your online Bible memorization journey.
 
-<%= @url %>
+Your login email is: <%= @user.email %>
+
+To get started, we recommend:
+
+* Complete your profile: <%= @url %>/profile/update
+* Set your email preferences to control how often we contact you
+* Add your first five or six verses that you would like to memorize: <%= @url %>/add_verse
+
+You can log in to your account at: <%= @url %>
+
+We're excited to have you join our community of Bible memorizers!
+
+Blessings,
+
+The Memverse Team
+
+--
+If you need help getting started, check out our help section at <%= @url %>/help or contact us anytime at <%= @url %>/contact
