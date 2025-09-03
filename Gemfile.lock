@@ -810,6 +810,7 @@ DEPENDENCIES
   ffi (~> 1.16.0)
   foreman
   friendly_id
+  fugit
   guard (>= 0.6.2)
   guard-cucumber
   guard-minitest

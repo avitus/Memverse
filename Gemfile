@@ -130,6 +130,7 @@ gem 'postmark-rails', '~> 0.22'                                                #
 gem 'sidekiq', '~> 7.3'                                                        # Background jobs - latest stable version
 gem "sidekiq-cron", "~> 2.0"                                                   # Scheduler for Sidekiq - major version upgrade
 gem 'ice_cube'                                                                 # For calculating next quiz
+gem 'fugit'                                                                    # Cron expression parser for next run calculations
 gem 'capistrano-sidekiq'                                                       # Sidekiq integration for Capistrano
 
 ############################################################

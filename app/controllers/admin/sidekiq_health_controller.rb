@@ -78,6 +78,11 @@ class Admin::SidekiqHealthController < ApplicationController
     @scheduled_jobs = scheduled_job_details
     @recent_failures = recent_job_failures
     @job_metrics = job_performance_metrics
+    @redis_info = redis_info_details
+    @process_info = process_info_details
+    @scheduler_status = scheduler_status_details
+    @worker_status = worker_status_details
+    @system_health = system_health_summary
   end
   
   # ========================================================================
@@ -417,7 +422,10 @@ class Admin::SidekiqHealthController < ApplicationController
     failures = []
     
     # Get recent failures from retry set
-    Sidekiq::RetrySet.new.each(limit: limit) do |job|
+    count = 0
+    Sidekiq::RetrySet.new.each do |job|
+      break if count >= limit
+      
       failures << {
         class: job.klass,
         queue: job.queue,
@@ -427,10 +435,15 @@ class Admin::SidekiqHealthController < ApplicationController
         failed_at: Time.at(job['failed_at']),
         retries: job['retry_count']
       }
+      count += 1
     end
     
     # Get recent failures from dead set
-    Sidekiq::DeadSet.new.each(limit: limit - failures.size) do |job|
+    remaining = limit - failures.size
+    count = 0
+    Sidekiq::DeadSet.new.each do |job|
+      break if count >= remaining
+      
       failures << {
         class: job.klass,
         queue: job.queue,
@@ -441,6 +454,7 @@ class Admin::SidekiqHealthController < ApplicationController
         retries: job['retry_count'],
         dead: true
       }
+      count += 1
     end
     
     failures
@@ -461,5 +475,220 @@ class Admin::SidekiqHealthController < ApplicationController
     end
     
     metrics
+  end
+  
+  def redis_info_details
+    info = {}
+    
+    Sidekiq.redis do |conn|
+      redis_info = conn.info
+      
+      info = {
+        version: redis_info['redis_version'],
+        uptime_days: (redis_info['uptime_in_seconds'].to_i / 86400.0).round(1),
+        memory_used: redis_info['used_memory_human'],
+        memory_peak: redis_info['used_memory_peak_human'],
+        connected_clients: redis_info['connected_clients'],
+        total_connections_received: redis_info['total_connections_received'],
+        total_commands_processed: redis_info['total_commands_processed'],
+        instantaneous_ops_per_sec: redis_info['instantaneous_ops_per_sec'],
+        keyspace: extract_keyspace_info(redis_info),
+        persistence: {
+          rdb_last_save_time: Time.at(redis_info['rdb_last_save_time'].to_i),
+          rdb_changes_since_last_save: redis_info['rdb_changes_since_last_save'],
+          aof_enabled: redis_info['aof_enabled'] == '1'
+        }
+      }
+    end
+    
+    info
+  rescue => e
+    { error: e.message }
+  end
+  
+  def extract_keyspace_info(redis_info)
+    keyspace = {}
+    
+    redis_info.each do |key, value|
+      if key.start_with?('db')
+        db_stats = value.split(',').each_with_object({}) do |stat, h|
+          k, v = stat.split('=')
+          h[k] = v.to_i if k && v
+        end
+        keyspace[key] = db_stats
+      end
+    end
+    
+    keyspace
+  end
+  
+  def process_info_details
+    processes = []
+    
+    Sidekiq::ProcessSet.new.each do |process|
+      processes << {
+        hostname: process['hostname'],
+        pid: process['pid'],
+        tag: process['tag'] || 'default',
+        concurrency: process['concurrency'],
+        busy: process['busy'],
+        queues: process['queues'],
+        started_at: Time.at(process['started_at']),
+        version: process['version'],
+        identity: process['identity']
+      }
+    end
+    
+    processes
+  end
+  
+  def scheduler_status_details
+    scheduler_info = {
+      enabled: false,
+      process_found: false,
+      cron_jobs: [],
+      schedule_file: Rails.root.join('config/sidekiq_schedule.yml'),
+      schedule_exists: File.exist?(Rails.root.join('config/sidekiq_schedule.yml'))
+    }
+    
+    # Check if scheduler process is running
+    Sidekiq::ProcessSet.new.each do |process|
+      if process['tag'] == 'scheduler' || process['queues'].include?('scheduler')
+        scheduler_info[:enabled] = true
+        scheduler_info[:process_found] = true
+        scheduler_info[:scheduler_process] = {
+          hostname: process['hostname'],
+          pid: process['pid'],
+          started_at: Time.at(process['started_at']),
+          busy: process['busy'],
+          concurrency: process['concurrency']
+        }
+      end
+    end
+    
+    # Get cron job details
+    begin
+      if defined?(Sidekiq::Cron::Job)
+        scheduler_info[:cron_jobs] = Sidekiq::Cron::Job.all.map do |job|
+          {
+            name: job.name,
+            class: job.klass,
+            cron: job.cron,
+            enabled: job.enabled?,
+            last_enqueue_time: job.last_enqueue_time,
+            next_enqueue_time: calculate_next_cron_time(job.cron),
+            status: job.enabled? ? 'active' : 'disabled'
+          }
+        end
+      end
+    rescue => e
+      scheduler_info[:error] = e.message
+    end
+    
+    scheduler_info
+  end
+  
+  def worker_status_details
+    worker_info = {
+      total_processes: 0,
+      total_concurrency: 0,
+      total_busy: 0,
+      processes: []
+    }
+    
+    Sidekiq::ProcessSet.new.each do |process|
+      next if process['tag'] == 'scheduler'
+      
+      worker_info[:total_processes] += 1
+      worker_info[:total_concurrency] += process['concurrency']
+      worker_info[:total_busy] += process['busy']
+      
+      worker_info[:processes] << {
+        hostname: process['hostname'],
+        pid: process['pid'],
+        tag: process['tag'] || 'worker',
+        concurrency: process['concurrency'],
+        busy: process['busy'],
+        utilization: (process['busy'].to_f / process['concurrency'] * 100).round(1),
+        queues: process['queues'],
+        started_at: Time.at(process['started_at']),
+        uptime: Time.current - Time.at(process['started_at'])
+      }
+    end
+    
+    worker_info[:overall_utilization] = if worker_info[:total_concurrency] > 0
+      (worker_info[:total_busy].to_f / worker_info[:total_concurrency] * 100).round(1)
+    else
+      0
+    end
+    
+    worker_info
+  end
+  
+  def system_health_summary
+    health = {
+      status: 'healthy',
+      issues: [],
+      warnings: []
+    }
+    
+    # Check Redis connectivity
+    begin
+      Sidekiq.redis { |conn| conn.ping }
+    rescue => e
+      health[:status] = 'critical'
+      health[:issues] << "Redis connection error: #{e.message}"
+    end
+    
+    # Check queue depths
+    @queues.each do |queue_name, details|
+      if details[:size] > 1000
+        health[:warnings] << "Queue '#{queue_name}' has #{details[:size]} jobs pending"
+      end
+      if details[:latency] > 300
+        health[:warnings] << "Queue '#{queue_name}' latency is #{details[:latency]}s"
+      end
+    end
+    
+    # Check failed jobs
+    retry_count = Sidekiq::RetrySet.new.size
+    dead_count = Sidekiq::DeadSet.new.size
+    
+    if dead_count > 100
+      health[:status] = 'warning' if health[:status] == 'healthy'
+      health[:issues] << "#{dead_count} jobs in dead set"
+    end
+    
+    if retry_count > 50
+      health[:warnings] << "#{retry_count} jobs in retry queue"
+    end
+    
+    # Check scheduler
+    if @scheduler_status[:enabled] == false
+      health[:status] = 'critical'
+      health[:issues] << "Scheduler process not running!"
+    end
+    
+    # Check workers
+    if @worker_status[:total_processes] == 0
+      health[:status] = 'critical'
+      health[:issues] << "No worker processes running!"
+    elsif @worker_status[:overall_utilization] > 90
+      health[:warnings] << "Worker utilization at #{@worker_status[:overall_utilization]}%"
+    end
+    
+    health[:status] = 'warning' if health[:warnings].any? && health[:status] == 'healthy'
+    
+    health
+  end
+  
+  def calculate_next_cron_time(cron_expression)
+    begin
+      require 'fugit'
+      cron = Fugit::Cron.parse(cron_expression)
+      cron.next_time.to_time
+    rescue => e
+      nil
+    end
   end
 end
