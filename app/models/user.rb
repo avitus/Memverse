@@ -1347,7 +1347,7 @@ class User < ApplicationRecord
   end
 
   # Check if user is not using OpenID (identity_url is blank)
-  #
+  # 
   # @return [Boolean]
   def not_using_openid?
     identity_url.blank?

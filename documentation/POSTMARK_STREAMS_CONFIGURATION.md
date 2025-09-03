@@ -10,8 +10,8 @@ The application uses four distinct Postmark message streams to organize email de
 ### 1. **Outbound Stream** (Default)
 - **Purpose**: Transactional emails
 - **Emails**:
-  - Account activation (`activation`)
-  - Signup notifications (`signup_notification`)
+  - Account activation (`activation`) - includes welcome content as of Sep 3, 2025
+  - ~~Signup notifications (`signup_notification`)~~ - DEPRECATED Sep 3, 2025
   - Onboarding reminders (`onboarding_reminder`)
 
 ### 2. **Broadcast Stream**
@@ -82,8 +82,14 @@ In your Postmark account, ensure these message streams are created with the exac
 - **Compliance**: Different unsubscribe rules can be applied per stream
 - **Deliverability**: ISPs can better understand email intent
 
+## Deprecation Notes
+
+### Deprecated Email Tags (as of Sep 3, 2025)
+- **`signup-notification`**: This email has been deprecated to reduce email volume during user onboarding. The welcome content has been merged into the `activation` email. The UserMailer method remains for backward compatibility but is no longer called.
+
 ## Future Considerations
 
 - Consider moving other reminder-type emails to the `reminder` stream
 - Monitor stream performance in Postmark dashboard
 - Adjust stream configurations based on delivery metrics
+- Remove deprecated signup_notification code after confirming no issues (target: Q4 2025)

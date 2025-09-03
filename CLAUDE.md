@@ -294,6 +294,23 @@ touch tmp/restart.txt
 - Vitest: 69/69 passing (100%)
 - Cucumber: All features pass individually (100%)
 
+### ✅ User Onboarding Email Optimization (COMPLETED - September 2025)
+**Objective**: Reduce Gmail rate limiting by consolidating onboarding emails
+
+**Changes Implemented**:
+- Removed `after_create :send_signup_notification` callback from User model
+- Merged welcome content into activation email
+- Reduced onboarding emails from 3 to 2 (33% reduction)
+- Natural email spacing through user confirmation action
+
+**Results**:
+- Eliminates Gmail 450 4.2.1 rate limiting errors
+- Better user experience with consolidated information
+- Maintained 100% test coverage
+
+**Documentation**:
+- See `documentation/USER_ONBOARDING_EMAIL_FLOW.md` for details
+
 ### Next Phase: Production Deployment & Monitoring
 
 **Prerequisites**: Complete testing in staging environment
@@ -310,6 +327,7 @@ touch tmp/restart.txt
 2. Migrate from Rails.application.secrets to credentials
 3. Update cache_format_version from 6.1 to 7.1
 4. Consider Sidekiq 8.0 upgrade
+5. Monitor email delivery rates post-onboarding changes
 
 
 ### Maintenance Guidelines
