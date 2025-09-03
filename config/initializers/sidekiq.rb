@@ -183,7 +183,7 @@ Sidekiq.configure_server do |config|
   else
     Rails.logger.info "[SIDEKIQ WORKER] This process will NOT handle cron jobs (worker only)"
     # Ensure no cron jobs are loaded
-    Sidekiq::Cron::Job.destroy_all! if defined?(Sidekiq::Cron::Job)
+    # Sidekiq::Cron::Job.destroy_all! if defined?(Sidekiq::Cron::Job)
   end
   
   # ========================================================================
