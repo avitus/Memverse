@@ -106,12 +106,18 @@
       "Bash(if [ -f \"$file\" ])",
       "Bash(then)",
       "Bash(else)",
-      "Bash(fi)"
+      "Bash(fi)",
+      "Bash(RAILS_ENV=test bundle exec rspec spec/requests/verse_editing_quotation_bug_spec.rb --format documentation)",
+      "Bash(RAILS_ENV=test bundle exec rspec debug_test.rb)",
+      "Bash(RAILS_ENV=test bundle exec rails console -e \"puts FinalVerse.where(book: ''Revelation'').pluck(:book, :chapter, :last_verse)\")",
+      "Bash(RAILS_ENV=test bundle exec rails console)",
+      "Bash(FinalVerse.count)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits",
     "additionalDirectories": [
-      "/private/tmp"
+      "/private/tmp",
+      "/"
     ]
   }
 }

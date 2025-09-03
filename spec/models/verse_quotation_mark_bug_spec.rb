@@ -11,8 +11,8 @@ RSpec.describe Verse, type: :model do
         verse = FactoryBot.create(:verse, 
           book: 'Revelation',
           book_index: 66,
-          chapter: '3', 
-          versenum: '12', 
+          chapter: 3, 
+          versenum: 12, 
           translation: 'NAS',
           text: verse_text_with_quote
         )
@@ -33,8 +33,8 @@ RSpec.describe Verse, type: :model do
         verse = FactoryBot.create(:verse, 
           book: 'Revelation',
           book_index: 66,
-          chapter: '3', 
-          versenum: '10', 
+          chapter: 3, 
+          versenum: 10, 
           translation: 'NAS',
           text: verse_with_quote
         )
@@ -52,8 +52,8 @@ RSpec.describe Verse, type: :model do
         verse = FactoryBot.create(:verse, 
           book: 'Revelation',
           book_index: 66,
-          chapter: '3', 
-          versenum: '11', 
+          chapter: 3, 
+          versenum: 11, 
           translation: 'NAS',
           text: verse_with_quote
         )

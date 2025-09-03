@@ -21,7 +21,7 @@ RSpec.describe SendReminders, type: :worker do
       end
       
       allow(User).to receive(:order).with(created_at: :desc).and_return(User)
-      allow(User).to receive(:in_batches).with(of: 1000) do |&block|
+      allow(User).to receive(:in_batches).with(of: 100) do |&block|
         block.call(batch_relation) if block
       end
     end
@@ -99,13 +99,13 @@ RSpec.describe SendReminders, type: :worker do
         mock_user_find_each(users_needing_reminders)
       end
 
-      it 'limits emails to 100 per run' do
-        expect(UserMailer).to receive(:progression_email_2).exactly(100).times
+      it 'limits emails to 2 per run due to throttle' do
+        expect(UserMailer).to receive(:progression_email_2).exactly(2).times
         worker.perform
       end
 
       it 'logs the number of emails sent' do
-        expect(Rails.logger).to receive(:info).with(/Sent 100 reminder emails/)
+        expect(Rails.logger).to receive(:info).with(/Sent 2 reminder emails/)
         worker.perform
       end
     end
@@ -293,7 +293,7 @@ RSpec.describe SendReminders, type: :worker do
     describe 'batch processing behavior' do
       it 'processes users in batches using in_batches ordered by newest first' do
         expect(User).to receive(:order).with(created_at: :desc).and_return(User)
-        expect(User).to receive(:in_batches).with(of: 1000)
+        expect(User).to receive(:in_batches).with(of: 100)
         worker.perform
       end
 
@@ -363,8 +363,8 @@ RSpec.describe SendReminders, type: :worker do
       end
 
       it 'increments email counter for each email sent' do
-        expect(UserMailer).to receive(:progression_email_2).exactly(3).times.and_return(email_double)
-        expect(Rails.logger).to receive(:info).with(/Sent 3 reminder emails/)
+        expect(UserMailer).to receive(:progression_email_2).exactly(2).times.and_return(email_double)
+        expect(Rails.logger).to receive(:info).with(/Sent 2 reminder emails/)
         worker.perform
       end
     end
