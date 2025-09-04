@@ -38,14 +38,22 @@
       </div>
       <div class="quiz-card-content">
         <div class="schedule-times">
-          <div class="schedule-time-item">
-            <span class="schedule-day-name">Wednesday</span>
-            <span class="schedule-local" data-utc-time="09:00"></span>
-          </div>
-          <div class="schedule-time-item">
-            <span class="schedule-day-name">Saturday</span>
-            <span class="schedule-local" data-utc-time="15:00"></span>
-          </div>
+          <% if @quiz_schedule %>
+            <% @quiz_schedule.each do |schedule_time| %>
+              <div class="schedule-time-item">
+                <span class="schedule-day-and-time"><%= schedule_time %></span>
+              </div>
+            <% end %>
+          <% else %>
+            <div class="schedule-time-item">
+              <span class="schedule-day-name">Tuesday</span>
+              <span class="schedule-local" data-utc-time="17:00"></span>
+            </div>
+            <div class="schedule-time-item">
+              <span class="schedule-day-name">Saturday</span>
+              <span class="schedule-local" data-utc-time="23:00"></span>
+            </div>
+          <% end %>
         </div>
       </div>
     </div>

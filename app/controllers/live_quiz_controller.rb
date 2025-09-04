@@ -34,14 +34,8 @@ class LiveQuizController < ApplicationController
     # Get next scheduled quiz time if quiz is not running
     unless @quiz_running
       if @quiz.id.to_i == 1  # Knowledge quiz uses cron schedule
-        # Calculate next occurrence using IceCube (same as KnowledgeQuiz worker)
-        require 'ice_cube'
-        schedule = IceCube::Schedule.new(Time.current.utc)
-        # Wednesday 9 AM UTC
-        schedule.add_recurrence_rule(IceCube::Rule.weekly.day(:wednesday).hour_of_day(9).minute_of_hour(0).second_of_minute(0))
-        # Saturday 3 PM UTC  
-        schedule.add_recurrence_rule(IceCube::Rule.weekly.day(:saturday).hour_of_day(15).minute_of_hour(0).second_of_minute(0))
-        @next_quiz_time = schedule.next_occurrence
+        @next_quiz_time = Quiz.next_knowledge_quiz_time
+        @quiz_schedule = Quiz.knowledge_quiz_schedule
       elsif @quiz.start_time && @quiz.start_time > Time.current
         @next_quiz_time = @quiz.start_time
       end

@@ -211,10 +211,10 @@ class KnowledgeQuiz
   def calculate_next_quiz_time
     # Use UTC timezone for all scheduling calculations
     schedule = IceCube::Schedule.new(Time.current.utc)
-    # Wednesday 9 AM UTC
-    schedule.add_recurrence_rule(IceCube::Rule.weekly.day(:wednesday).hour_of_day(9).minute_of_hour(0).second_of_minute(0))
-    # Saturday 3 PM UTC  
-    schedule.add_recurrence_rule(IceCube::Rule.weekly.day(:saturday).hour_of_day(15).minute_of_hour(0).second_of_minute(0))
+    # Tuesday at 17:00 UTC (9am Pacific)
+    schedule.add_recurrence_rule(IceCube::Rule.weekly.day(:tuesday).hour_of_day(17).minute_of_hour(0).second_of_minute(0))
+    # Saturday at 23:00 UTC (3pm Pacific)
+    schedule.add_recurrence_rule(IceCube::Rule.weekly.day(:saturday).hour_of_day(23).minute_of_hour(0).second_of_minute(0))
     schedule.next_occurrence
   end
 

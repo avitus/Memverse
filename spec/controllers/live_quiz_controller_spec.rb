@@ -60,8 +60,8 @@ RSpec.describe LiveQuizController, type: :controller do
             
             expect(assigns(:quiz_running)).to eq(false)
             expect(assigns(:next_quiz_time)).to be_present
-            expect(assigns(:next_quiz_time).wday).to eq(3) # Wednesday
-            expect(assigns(:next_quiz_time).hour).to eq(9)
+            expect(assigns(:next_quiz_time).wday).to eq(2) # Tuesday
+            expect(assigns(:next_quiz_time).hour).to eq(17)
             expect(assigns(:next_quiz_time).zone).to eq('UTC')
           end
         end
