@@ -16,7 +16,11 @@ RSpec.describe SendReminders, type: :worker do
     # Helper method to mock User.order.in_batches chain
     def mock_user_find_each(users)
       batch_relation = double('batch_relation')
-      allow(batch_relation).to receive(:each) do |&block|
+      ordered_batch = double('ordered_batch')
+      
+      # Mock the batch.order.each chain
+      allow(batch_relation).to receive(:order).with(created_at: :desc).and_return(ordered_batch)
+      allow(ordered_batch).to receive(:each) do |&block|
         users.each(&block)
       end
       

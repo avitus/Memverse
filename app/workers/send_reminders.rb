@@ -22,7 +22,8 @@ class SendReminders
     # Process newest users first to prioritize recently registered users
     # Note: Using in_batches with order instead of find_each which ignores order
     User.order(created_at: :desc).in_batches(of: 100) do |batch|
-      batch.each do |u|
+      # Apply ordering to the batch before iterating to ensure order is preserved
+      batch.order(created_at: :desc).each do |u|
 
       # Change reminder frequency (if necessary) to not be annoying
       u.update_reminder_freq

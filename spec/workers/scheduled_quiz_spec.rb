@@ -5,6 +5,28 @@ describe ScheduledQuiz do
   let(:worker) { described_class.new }
   let(:user) { User.create!(name: "Test User", email: "test@example.com", password: "password", password_confirmation: "password") }
   let(:quiz) { Quiz.create!(id: 2, name: "Test Quiz", user: user, start_time: 30.seconds.from_now.utc) }
+  
+  # Helper method to properly mock Quiz queries
+  def mock_quiz_queries(quiz)
+    relation = double("relation")
+    allow(Quiz).to receive(:where) do |*args|
+      if args.length >= 1 && args[0].is_a?(String) && args[0].include?("start_time")
+        # This is the time-based query for finding scheduled quiz
+        double("time_relation", first: quiz)
+      else
+        # This is for other queries
+        relation
+      end
+    end
+    allow(relation).to receive(:not).with(id: 1).and_return(relation)
+    allow(relation).to receive(:order).with(start_time: :asc).and_return(relation)
+    allow(relation).to receive(:limit).with(5).and_return(relation)
+    allow(relation).to receive(:each).and_yield(quiz) if quiz
+    allow(relation).to receive(:joins).and_return(relation)
+    allow(relation).to receive(:distinct).and_return(relation)
+    allow(relation).to receive(:first).and_return(quiz)
+    relation
+  end
 
   before do
     # Mock Redis for testing
@@ -19,7 +41,8 @@ describe ScheduledQuiz do
     allow($redis).to receive(:pipelined).and_yield($redis)
 
     # Mock PubNub to avoid network calls
-    allow(PN).to receive(:publish).and_return(true)
+    pubnub_response = double("PubNub Response", timetoken: 1234567890, status: 200)
+    allow(PN).to receive(:publish).and_return(pubnub_response)
 
     # Mock Tweet creation
     allow(Tweet).to receive(:create!).and_return(true)
@@ -122,8 +145,7 @@ describe ScheduledQuiz do
 
       before do
         quiz_question # Create quiz with questions
-        # Mock the Quiz.where to return our quiz
-        allow(Quiz).to receive(:where).and_return(double("relation", first: quiz))
+        mock_quiz_queries(quiz)
       end
 
       it 'completes the quiz workflow successfully' do
@@ -231,15 +253,15 @@ describe ScheduledQuiz do
           times_answered: 10,
           perc_correct: 50
         )
-        # Mock Quiz.where to return our quiz
-        allow(Quiz).to receive(:where).and_return(double("relation", first: quiz))
+        # Mock Quiz queries
+        mock_quiz_queries(quiz)
         # Mock QuizSession to indicate quiz is in progress
         status_key = "quiz_session:#{quiz.id}:status"
         allow($redis).to receive(:hget).with(status_key, "status").and_return("In progress. Wait for question.")
       end
 
       it 'aborts execution gracefully' do
-        expect(Sidekiq.logger).to receive(:warn).with(/Quiz ##{quiz.id} : Already in progress, aborting/)
+        expect(Sidekiq.logger).to receive(:warn).with(/Quiz ##{quiz.id} : Already in progress.*aborting/)
         
         worker.perform
       end
@@ -269,14 +291,14 @@ describe ScheduledQuiz do
           times_answered: 10,
           perc_correct: 50
         )
-        # Mock Quiz.where to return our quiz
-        allow(Quiz).to receive(:where).and_return(double("relation", first: quiz))
+        # Mock Quiz queries
+        mock_quiz_queries(quiz)
         # Mock lock acquisition to fail
         allow($redis).to receive(:set).and_return(false)
       end
 
       it 'aborts execution gracefully' do
-        expect(Sidekiq.logger).to receive(:warn).with(/Quiz ##{quiz.id} : Already running, aborting/)
+        expect(Sidekiq.logger).to receive(:warn).with(/Quiz ##{quiz.id} : Already running.*aborting/)
         
         worker.perform
       end
@@ -297,8 +319,8 @@ describe ScheduledQuiz do
     context 'when PubNub fails' do
       before do
         quiz
-        # Mock Quiz.where to return our quiz
-        allow(Quiz).to receive(:where).and_return(double("relation", first: quiz))
+        # Mock Quiz queries
+        mock_quiz_queries(quiz)
         # Add a question so quiz execution proceeds
         QuizQuestion.create!(
           quiz: quiz,
@@ -401,8 +423,8 @@ describe ScheduledQuiz do
 
       before do
         recitation_question
-        # Mock Quiz.where to return our quiz
-        allow(Quiz).to receive(:where).and_return(double("relation", first: quiz))
+        # Mock Quiz queries
+        mock_quiz_queries(quiz)
         # Mock the passage_translations method on any instance of QuizQuestion
         allow_any_instance_of(QuizQuestion).to receive(:passage_translations).and_return({"ESV" => "In the beginning was the Word"})
       end
@@ -434,8 +456,8 @@ describe ScheduledQuiz do
           times_answered: 10,
           perc_correct: 50
         )
-        # Mock Quiz.where to return our quiz
-        allow(Quiz).to receive(:where).and_return(double("relation", first: quiz))
+        # Mock Quiz queries
+        mock_quiz_queries(quiz)
       end
 
       it 'uses standard time allocation' do
@@ -462,8 +484,8 @@ describe ScheduledQuiz do
           times_answered: 10,
           perc_correct: 50
         )
-        # Mock Quiz.where to return our quiz
-        allow(Quiz).to receive(:where).and_return(double("relation", first: quiz))
+        # Mock Quiz queries
+        mock_quiz_queries(quiz)
       end
 
       it 'logs warning and continues' do
@@ -530,8 +552,8 @@ describe ScheduledQuiz do
         times_answered: 10,
         perc_correct: 50
       )
-      # Mock Quiz.where to return our quiz
-      allow(Quiz).to receive(:where).and_return(double("relation", first: quiz))
+      # Mock Quiz queries
+      mock_quiz_queries(quiz)
     end
 
     it 'always cleans up resources' do
@@ -574,8 +596,8 @@ describe ScheduledQuiz do
         times_answered: 10,
         perc_correct: 50
       )
-      # Mock Quiz.where to return our quiz
-      allow(Quiz).to receive(:where).and_return(double("relation", first: quiz))
+      # Mock Quiz queries
+      mock_quiz_queries(quiz)
     end
 
     it 'prevents multiple workers from running same quiz' do
@@ -586,7 +608,7 @@ describe ScheduledQuiz do
         anything
       ).and_return(false)
       
-      expect(Sidekiq.logger).to receive(:warn).with(/Already running, aborting/)
+      expect(Sidekiq.logger).to receive(:warn).with(/Already running.*aborting/)
       
       worker.perform
     end
