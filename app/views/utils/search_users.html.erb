@@ -23,14 +23,24 @@
 	</div>
 </div>
 
-<script language="JavaScript" type="text/javascript"><!--		
+<script type="text/javascript">
 	$(document).ready(function() {
-		$("#search_param").observe_field(0.5, function( ) { 
-			$.get("/utils/search_user", { search_param: this.value },
-				function(data){	
-					$("#search_results").html(data);
-			}, "html" );
-        });
-    });
-      
---></script>
+		var searchTimeout;
+		$("#search_param").on('keyup', function() {
+			clearTimeout(searchTimeout);
+			var searchValue = $(this).val();
+			
+			// Show spinner
+			$("#ajax_spinner").show();
+			
+			// Debounce the search to 500ms after user stops typing
+			searchTimeout = setTimeout(function() {
+				$.get("/utils/search_user", { search_param: searchValue },
+					function(data){	
+						$("#search_results").html(data);
+						$("#ajax_spinner").hide();
+				}, "html" );
+			}, 500);
+		});
+	});
+</script>

@@ -275,6 +275,14 @@ MemverseApp::Application.routes.draw do
   get '/utils_verify_verse/:id'   => 'utils#verify_verse',              :as => 'utils_verify_verse'
   get '/utils_dashboard'          => 'utils#dashboard',                 :as => 'utils_dashboard'
   get '/show_users'               => 'utils#show_users',                :as => 'show_users'
+  get '/search_users'             => 'utils#search_users',              :as => 'search_users'
+  get '/utils/search_user'        => 'utils#search_user',               :as => 'utils_search_user'
+  get '/utils/edit_user/:id'      => 'utils#edit_user',                 :as => 'edit_user'
+  put '/utils/update_user/:id'    => 'utils#update_user',               :as => 'update_user'
+  post '/utils/destroy_user/:id'  => 'utils#destroy_user',              :as => 'destroy_user'
+  post '/utils/fix_verse_linkage/:id' => 'utils#fix_verse_linkage',     :as => 'fix_verse_linkage'
+  get '/utils/show_memory_verses/:id' => 'utils#show_memory_verses',    :as => 'show_memory_verses'
+  post '/utils/destroy_mv/:id'    => 'utils#destroy_mv',                :as => 'destroy_mv'
   get '/progression/(:yr)/(:mo)'  => 'utils#user_progression',          :as => 'progression'
 
   # Doesn't require a login
