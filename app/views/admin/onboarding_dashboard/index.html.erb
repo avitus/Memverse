@@ -235,33 +235,58 @@
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  // Registration Trend Chart
-  const registrationCtx = document.getElementById('registrationChart').getContext('2d');
-  
-  // Get all unique dates from both registration and activation trends
-  const regDates = <%= @chart_data[:registration_trend].keys.map { |d| d.strftime('%Y-%m-%d') }.to_json.html_safe %>;
-  const actDates = <%= @chart_data[:activation_trend].keys.map { |d| d.strftime('%Y-%m-%d') }.to_json.html_safe %>;
-  const allDatesSet = new Set([...regDates, ...actDates]);
-  const allDates = Array.from(allDatesSet).sort();
-  
-  // Create data maps for easy lookup
-  const regMap = <%= @chart_data[:registration_trend].transform_keys { |k| k.strftime('%Y-%m-%d') }.to_json %>;
-  const actMap = <%= @chart_data[:activation_trend].transform_keys { |k| k.strftime('%Y-%m-%d') }.to_json %>;
-  
-  // Build data arrays with 0 for missing dates
-  const registrationData = allDates.map(date => regMap[date] || 0);
-  const activationData = allDates.map(date => actMap[date] || 0);
-  
-  new Chart(registrationCtx, {
+// Load Chart.js dynamically to avoid conflicts
+(function() {
+  var script = document.createElement('script');
+  script.src = 'https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js';
+  script.onload = function() {
+    // Chart.js loaded, now initialize charts
+    initializeCharts();
+  };
+  document.head.appendChild(script);
+})();
+
+function initializeCharts() {
+  // Wait a moment for Chart.js to fully load
+  setTimeout(function() {
+    // Check if Chart.js is loaded
+    if (typeof Chart === 'undefined') {
+      console.error('Chart.js is not loaded!');
+      return;
+    }
+    
+    // Registration Trend Chart
+    const registrationCanvas = document.getElementById('registrationChart');
+    if (!registrationCanvas) {
+      console.error('registrationChart canvas not found!');
+      return;
+    }
+    
+    const registrationCtx = registrationCanvas.getContext('2d');
+    
+    // Original data format from Ruby
+    const regTrendData = <%= @chart_data[:registration_trend].to_json.html_safe %>;
+    const actTrendData = <%= @chart_data[:activation_trend].to_json.html_safe %>;
+    
+    // Convert to arrays for Chart.js
+    const dates = Object.keys({...regTrendData, ...actTrendData}).sort();
+    const registrationData = [];
+    const activationData = [];
+    const labels = [];
+    
+    dates.forEach(dateStr => {
+      const parts = dateStr.split('-');
+      labels.push(`${parts[1]}/${parts[2]}`);
+      registrationData.push(regTrendData[dateStr] || 0);
+      activationData.push(actTrendData[dateStr] || 0);
+    });
+    
+    try {
+      new Chart(registrationCtx, {
     type: 'line',
     data: {
-      labels: allDates.map(d => {
-        const [year, month, day] = d.split('-');
-        return `${month}/${day}`;
-      }),
+      labels: labels,
       datasets: [{
         label: 'New Registrations',
         data: registrationData,
@@ -339,16 +364,28 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
   });
+  } catch (error) {
+    console.error('Error creating registration chart:', error);
+  }
 
   // Funnel Chart
-  const funnelCtx = document.getElementById('funnelChart').getContext('2d');
-  new Chart(funnelCtx, {
+  const funnelCanvas = document.getElementById('funnelChart');
+  if (!funnelCanvas) {
+    console.error('funnelChart canvas not found!');
+    return;
+  }
+  
+  const funnelCtx = funnelCanvas.getContext('2d');
+  const funnelData = <%= @chart_data[:progression_funnel].to_json.html_safe %>;
+  
+  try {
+    new Chart(funnelCtx, {
     type: 'bar',
     data: {
-      labels: <%= @chart_data[:progression_funnel].keys.to_json.html_safe %>,
+      labels: Object.keys(funnelData),
       datasets: [{
         label: 'Users',
-        data: <%= @chart_data[:progression_funnel].values.to_json %>,
+        data: Object.values(funnelData),
         backgroundColor: [
           '#dc2626',
           '#ea580c',
@@ -403,5 +440,9 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
   });
-});
+  } catch (error) {
+    console.error('Error creating funnel chart:', error);
+  }
+  }, 100); // End of setTimeout
+}
 </script>
