@@ -92,7 +92,7 @@
     <div class="charts-row">
       <div class="chart-card">
         <div class="chart-header">
-          <h5>Daily Registrations</h5>
+          <h5>Daily Registrations & Activations</h5>
         </div>
         <div class="chart-body">
           <canvas id="registrationChart" height="200"></canvas>
@@ -240,17 +240,46 @@
 document.addEventListener('DOMContentLoaded', function() {
   // Registration Trend Chart
   const registrationCtx = document.getElementById('registrationChart').getContext('2d');
+  
+  // Get all unique dates from both registration and activation trends
+  const regDates = <%= @chart_data[:registration_trend].keys.map { |d| d.strftime('%Y-%m-%d') }.to_json.html_safe %>;
+  const actDates = <%= @chart_data[:activation_trend].keys.map { |d| d.strftime('%Y-%m-%d') }.to_json.html_safe %>;
+  const allDatesSet = new Set([...regDates, ...actDates]);
+  const allDates = Array.from(allDatesSet).sort();
+  
+  // Create data maps for easy lookup
+  const regMap = <%= @chart_data[:registration_trend].transform_keys { |k| k.strftime('%Y-%m-%d') }.to_json %>;
+  const actMap = <%= @chart_data[:activation_trend].transform_keys { |k| k.strftime('%Y-%m-%d') }.to_json %>;
+  
+  // Build data arrays with 0 for missing dates
+  const registrationData = allDates.map(date => regMap[date] || 0);
+  const activationData = allDates.map(date => actMap[date] || 0);
+  
   new Chart(registrationCtx, {
     type: 'line',
     data: {
-      labels: <%= @chart_data[:registration_trend].keys.map { |d| d.strftime('%m/%d') }.to_json.html_safe %>,
+      labels: allDates.map(d => {
+        const [year, month, day] = d.split('-');
+        return `${month}/${day}`;
+      }),
       datasets: [{
         label: 'New Registrations',
-        data: <%= @chart_data[:registration_trend].values.to_json %>,
+        data: registrationData,
         borderColor: '#3b82f6',
         backgroundColor: 'rgba(59, 130, 246, 0.1)',
         tension: 0.3,
         pointBackgroundColor: '#3b82f6',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+        pointRadius: 4,
+        pointHoverRadius: 6
+      }, {
+        label: 'Activations',
+        data: activationData,
+        borderColor: '#10b981',
+        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+        tension: 0.3,
+        pointBackgroundColor: '#10b981',
         pointBorderColor: '#fff',
         pointBorderWidth: 2,
         pointRadius: 4,
@@ -262,16 +291,28 @@ document.addEventListener('DOMContentLoaded', function() {
       maintainAspectRatio: false,
       plugins: {
         legend: {
-          display: false
+          display: true,
+          position: 'top',
+          align: 'end',
+          labels: {
+            usePointStyle: true,
+            padding: 15,
+            font: {
+              size: 12
+            },
+            color: '#6e6e73'
+          }
         },
         tooltip: {
           backgroundColor: 'rgba(26, 26, 29, 0.9)',
           titleColor: '#fff',
           bodyColor: '#fff',
-          borderColor: '#3b82f6',
+          borderColor: '#6e6e73',
           borderWidth: 1,
           cornerRadius: 4,
-          padding: 10
+          padding: 10,
+          mode: 'index',
+          intersect: false
         }
       },
       scales: {

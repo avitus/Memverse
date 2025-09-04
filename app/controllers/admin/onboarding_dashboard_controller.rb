@@ -198,6 +198,13 @@ class Admin::OnboardingDashboardController < ApplicationController
                             .count
                             .transform_keys { |k| k.to_date }
     
+    # Daily activation trend (users who confirmed their email)
+    activation_trend = User.where(id: users.select(:id))
+                          .where.not(confirmed_at: nil)
+                          .group("DATE(confirmed_at)")
+                          .count
+                          .transform_keys { |k| k.to_date }
+    
     # Progression funnel (progression is a method, need to calculate in memory)
     users_array = users.to_a
     progression_funnel = {
@@ -217,6 +224,7 @@ class Admin::OnboardingDashboardController < ApplicationController
     
     {
       registration_trend: registration_trend,
+      activation_trend: activation_trend,
       progression_funnel: progression_funnel,
       progression_distribution: progression_distribution,
       activity_heatmap: activity_heatmap
