@@ -13,18 +13,17 @@ RSpec.describe SendReminders, type: :worker do
   describe '#perform' do
     let!(:email_double) { double('email', deliver: true) }
     
-    # Helper method to mock User.order.in_batches chain
+    # Helper method to mock User.in_batches chain
     def mock_user_find_each(users)
       batch_relation = double('batch_relation')
       ordered_batch = double('ordered_batch')
       
-      # Mock the batch.order.each chain
-      allow(batch_relation).to receive(:order).with(created_at: :desc).and_return(ordered_batch)
+      # Mock the batch.reorder.each chain
+      allow(batch_relation).to receive(:reorder).with(created_at: :desc).and_return(ordered_batch)
       allow(ordered_batch).to receive(:each) do |&block|
         users.each(&block)
       end
       
-      allow(User).to receive(:order).with(created_at: :desc).and_return(User)
       allow(User).to receive(:in_batches).with(of: 100) do |&block|
         block.call(batch_relation) if block
       end
@@ -295,8 +294,7 @@ RSpec.describe SendReminders, type: :worker do
     end
 
     describe 'batch processing behavior' do
-      it 'processes users in batches using in_batches ordered by newest first' do
-        expect(User).to receive(:order).with(created_at: :desc).and_return(User)
+      it 'processes users in batches using in_batches' do
         expect(User).to receive(:in_batches).with(of: 100)
         worker.perform
       end
