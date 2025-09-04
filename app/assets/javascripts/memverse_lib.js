@@ -249,41 +249,46 @@ scrub_text = function(text) {
  * Handles common punctuation variations that users might omit
  ******************************************************************************/
 function flexibleTextMatch(correctWord, userInput) {
-    // Get basic scrubbed versions
-    var scrubbed_correct = scrub_text(correctWord);
-    var scrubbed_input = scrub_text(userInput);
-    
-    // Exact match after scrubbing
-    if (scrubbed_correct === scrubbed_input) {
+    // First, check for exact match (case-insensitive)
+    if (correctWord.toLowerCase() === userInput.toLowerCase()) {
         return true;
     }
     
-    // Handle common apostrophe cases
-    // "children's" should accept "children", "childrens"
+    // Handle apostrophe words - critical for preventing premature matches
+    // "children's" should NOT match "children"
+    // "Jesus'" should NOT match "Jesus"
     if (correctWord.includes("'")) {
-        // Try removing the entire apostrophe + following text
-        var withoutApostrophe = correctWord.replace(/'.*$/, "");
-        if (scrub_text(withoutApostrophe) === scrubbed_input) {
-            return true;
-        }
+        // Check if apostrophe has letters after it (possessive 's) or is just trailing (')
+        var apostrophePattern = /'(.)/;
+        var match = correctWord.match(apostrophePattern);
         
-        // Also try just removing apostrophe but keeping letters
-        var apostropheReplaced = correctWord.replace(/'/g, "");
-        if (scrub_text(apostropheReplaced) === scrubbed_input) {
-            return true;
+        if (match && match[1]) {
+            // Apostrophe has letters after it (e.g., "children's")
+            // Accept the word without any apostrophes (e.g., "childrens")
+            var withoutAllApostrophes = correctWord.replace(/'/g, "");
+            if (withoutAllApostrophes.toLowerCase() === userInput.toLowerCase()) {
+                return true;
+            }
         }
+        // For trailing apostrophes (e.g., "Jesus'") or any other apostrophe case,
+        // do NOT allow partial matches - this prevents the bug
+        return false;
     }
     
     // Handle quotation marks at beginning
-    // "The should accept "The" or just "The"
+    // "The should accept The (without quotes)
     if (correctWord.match(/^["'"]/)) {
         var withoutQuote = correctWord.replace(/^["'"]/, "");
-        if (scrub_text(withoutQuote) === scrubbed_input) {
+        if (withoutQuote.toLowerCase() === userInput.toLowerCase()) {
             return true;
         }
     }
     
-    return false;
+    // For all other cases, use standard scrubbing
+    var scrubbed_correct = scrub_text(correctWord);
+    var scrubbed_input = scrub_text(userInput);
+    
+    return scrubbed_correct === scrubbed_input;
 }
 
 /******************************************************************************

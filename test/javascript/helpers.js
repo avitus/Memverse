@@ -31,7 +31,8 @@ export function loadJavaScriptFile(filePath) {
     'blankifyVerse', 'parseVerseRef', 'parsePassageRef', 'verseFeedback', 
     'accTestState', 'splitByWords', 'BIBLEBOOKS', 'scrub_text', 
     'calculate_levenshtein_distance', 'word_width', 'flexibleTextMatch',
-    'calculateInputWidth'
+    'calculateInputWidth', 'mvPassageReviewHandleInput', 'mvMirrorNextInput',
+    'mvDisplayPassageForReview', 'buildVerseBlank'
   ];
   
   // Create a function that executes in the global context
@@ -75,6 +76,7 @@ loadJavaScriptFile('memverse_lib.js');
 loadJavaScriptFile('memverse.js');
 loadJavaScriptFile('memverse_accuracy_test.js');
 loadJavaScriptFile('live_quiz.js');
+loadJavaScriptFile('memverse_passage_review.js');
 
 // Create the memverseLib object with all the functions from globalThis
 export const memverseLib = {
@@ -96,7 +98,11 @@ export const memverseLib = {
   calculate_levenshtein_distance: globalThis.calculate_levenshtein_distance || globalContext.calculate_levenshtein_distance,
   word_width: global.word_width,
   flexibleTextMatch: globalThis.flexibleTextMatch || globalContext.flexibleTextMatch,
-  calculateInputWidth: globalThis.calculateInputWidth || globalContext.calculateInputWidth
+  calculateInputWidth: globalThis.calculateInputWidth || globalContext.calculateInputWidth,
+  mvPassageReviewHandleInput: globalThis.mvPassageReviewHandleInput || globalContext.mvPassageReviewHandleInput,
+  mvMirrorNextInput: globalThis.mvMirrorNextInput || globalContext.mvMirrorNextInput,
+  mvDisplayPassageForReview: globalThis.mvDisplayPassageForReview || globalContext.mvDisplayPassageForReview,
+  buildVerseBlank: globalThis.buildVerseBlank || globalContext.buildVerseBlank
 };
 
 // Export other objects
