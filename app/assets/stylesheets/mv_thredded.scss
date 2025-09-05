@@ -59,6 +59,10 @@ a.thredded--button {
 .thredded--topic-link {
   color: $memverse-green-darker;
   
+  &:visited {
+    color: $memverse-green-darker; // Keep visited links the same color
+  }
+  
   &:hover {
     color: $memverse-green-dark;
   }
@@ -206,6 +210,10 @@ a.thredded--button {
 .thredded--post-moderation-record .thredded--post--user a {
   color: $memverse-green-darker;
   
+  &:visited {
+    color: $memverse-green-darker; // Ensure visited links maintain the same color
+  }
+  
   &:hover {
     color: $memverse-green;
   }
@@ -298,5 +306,45 @@ section.thredded--main-section {
   .thredded--topics--vote-badge {
     display: inline-block;
     margin-left: 0.5rem;
+  }
+}
+
+/*========== Alternate Row Styling ==========*/
+/* Add subtle alternate row background for better topic demarcation */
+.thredded--topics--topic {
+  // Add subtle borders and padding for better separation
+  // Extend padding to the left to include the posts count circle
+  padding: 0.75rem;
+  padding-left: 2.5rem; // Match the left margin to extend background
+  margin-left: 0; // Remove margin since we're using padding
+  border-bottom: 1px solid #f0f0f0;
+  margin-bottom: 0.5rem;
+  
+  // Alternate row backgrounds
+  &:nth-child(even) {
+    background-color: #fafafa;
+  }
+  
+  &:nth-child(odd) {
+    background-color: #ffffff;
+  }
+  
+  // Hover effect for better interactivity
+  &:hover {
+    background-color: #f5f5f7;
+  }
+  
+  // Adjust posts count position since we changed margin/padding
+  .thredded--topics--posts-count {
+    left: 0.25rem; // Position from the new padding edge
+    top: 38%;
+    transform: translateY(-60%);
+  }
+  
+  // Fix positioning of follow/notification icon
+  .thredded--topics--follow-icon {
+    right: 0.75rem; // Override the -1.6rem to move icon inside the padding area
+    top: 50%;
+    transform: translateY(-50%);
   }
 }
