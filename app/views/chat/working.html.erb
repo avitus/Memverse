@@ -1,0 +1,118 @@
+<% page_title "Working Chat" %>
+
+<div class="white-box-with-margins">
+    <h3>Simple Working Chat</h3>
+    
+    <div id="status" style="padding: 10px; background: #f0f0f0; margin-bottom: 10px;">
+        Status: <span id="connection-status">Initializing...</span>
+    </div>
+    
+    <div id="messages" style="height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; background: white; margin-bottom: 10px;">
+        <!-- Messages will appear here -->
+    </div>
+    
+    <div>
+        <input type="text" id="message-input" style="width: 70%;" placeholder="Type your message">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+<script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.29.11.min.js"></script>
+
+<script>
+// User info
+const userId = "<%= current_user.id %>";
+const userName = "<%= j current_user.name_or_login %>";
+
+// Simple channel name
+const CHANNEL = 'memverse-chat';
+
+// Messages container
+const messagesDiv = document.getElementById('messages');
+const statusSpan = document.getElementById('connection-status');
+
+// Try with Memverse server keys that we know work
+const pubnub = new PubNub({
+    publishKey: 'pub-c-dc9e4561-d42a-4270-84b9-a9f268cd2cd2',
+    subscribeKey: 'sub-c-bcc87aee-e8b7-11e2-acbe-02ee2ddab7fe',
+    uuid: userId
+});
+
+// Add listener
+pubnub.addListener({
+    message: function(m) {
+        console.log('Message received:', m);
+        addMessage(m.message.user + ': ' + m.message.text, m.message.userId === userId);
+    },
+    status: function(s) {
+        console.log('Status:', s);
+        if (s.category === 'PNConnectedCategory') {
+            statusSpan.textContent = 'Connected';
+            statusSpan.style.color = 'green';
+        } else {
+            statusSpan.textContent = s.category;
+        }
+    }
+});
+
+// Subscribe
+console.log('Subscribing to channel:', CHANNEL);
+pubnub.subscribe({
+    channels: [CHANNEL]
+});
+
+// Send message function
+function sendMessage() {
+    const input = document.getElementById('message-input');
+    const text = input.value.trim();
+    
+    if (!text) return;
+    
+    const msg = {
+        text: text,
+        user: userName,
+        userId: userId
+    };
+    
+    console.log('Sending:', msg);
+    
+    pubnub.publish({
+        channel: CHANNEL,
+        message: msg
+    }, function(status, response) {
+        console.log('Publish result:', status, response);
+        if (!status.error) {
+            input.value = '';
+        } else {
+            alert('Send failed: ' + JSON.stringify(status));
+        }
+    });
+}
+
+// Add message to UI
+function addMessage(text, isMe) {
+    const div = document.createElement('div');
+    div.style.padding = '5px';
+    div.style.marginBottom = '5px';
+    div.style.background = isMe ? '#e3f2fd' : '#f5f5f5';
+    div.textContent = text;
+    messagesDiv.appendChild(div);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+
+// Enter key to send
+document.getElementById('message-input').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        sendMessage();
+    }
+});
+
+// Test message on load
+setTimeout(() => {
+    console.log('Sending test message...');
+    pubnub.publish({
+        channel: CHANNEL,
+        message: {text: 'User joined', user: userName, userId: userId}
+    });
+}, 1000);
+</script>

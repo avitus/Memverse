@@ -1,0 +1,197 @@
+<% page_title "Chat Debug" %>
+
+<div class="white-box-with-margins">
+    <h2>Chat Debug Console</h2>
+    
+    <div id="debug-status" style="padding: 20px; background: #f5f5f5; margin-bottom: 20px;">
+        <h3>Connection Status</h3>
+        <p>PubNub Loaded: <span id="pubnub-loaded">Checking...</span></p>
+        <p>ChatEngine Loaded: <span id="chatengine-loaded">Checking...</span></p>
+        <p>Connection State: <span id="connection-state">Not connected</span></p>
+        <p>User ID: <span id="user-id"><%= current_user.id %></span></p>
+        <p>Channel: <span id="channel-name">Not set</span></p>
+    </div>
+
+    <div id="debug-log" style="padding: 20px; background: #333; color: #0f0; font-family: monospace; height: 200px; overflow-y: auto; margin-bottom: 20px;">
+        <div>Debug Log:</div>
+    </div>
+
+    <div style="padding: 20px;">
+        <h3>Test Message Sending</h3>
+        <input type="text" id="test-message" placeholder="Type test message" style="width: 300px;">
+        <button onclick="testSend()">Send Test</button>
+        <button onclick="testDirect()">Direct PubNub Test</button>
+    </div>
+
+    <div id="messages" style="padding: 20px; background: #fff; border: 1px solid #ccc; min-height: 100px;">
+        <h3>Received Messages:</h3>
+    </div>
+</div>
+
+<script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.29.11.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chat-engine@0.10.0/dist/chat-engine.min.js"></script>
+
+<script>
+function log(message, type = 'info') {
+    const logDiv = document.getElementById('debug-log');
+    const timestamp = new Date().toLocaleTimeString();
+    const color = type === 'error' ? '#f00' : type === 'success' ? '#0f0' : '#ff0';
+    logDiv.innerHTML += `<div style="color: ${color}">[${timestamp}] ${message}</div>`;
+    logDiv.scrollTop = logDiv.scrollHeight;
+    console.log(`[${type}]`, message);
+}
+
+// Check if libraries are loaded
+document.getElementById('pubnub-loaded').textContent = typeof PubNub !== 'undefined' ? 'Yes' : 'No';
+document.getElementById('chatengine-loaded').textContent = typeof ChatEngineCore !== 'undefined' ? 'Yes' : 'No';
+
+let myChat;
+let me;
+let directPubnub;
+
+// Test 1: Try ChatEngine with original keys
+log('Testing ChatEngine with original keys...');
+
+try {
+    const ChatEngine = ChatEngineCore.create({
+        publishKey: 'pub-c-816b4160-11c9-43fa-a1ea-4a1ca6cde79d',
+        subscribeKey: 'sub-c-0e83b538-e6a1-11e7-a7db-e6c6e9cd0a3f',
+        debug: true
+    });
+
+    log('ChatEngine created successfully');
+
+    ChatEngine.on('$.error.*', function(error) {
+        log('ChatEngine Error: ' + JSON.stringify(error), 'error');
+        document.getElementById('connection-state').textContent = 'Error';
+    });
+
+    const userId = 'debug-user-<%= current_user.id %>';
+    const userName = '<%= j current_user.name_or_login %>';
+    
+    log(`Connecting as ${userId} (${userName})...`);
+    ChatEngine.connect(userId, {username: userName});
+
+    ChatEngine.on('$.ready', function(data) {
+        log('ChatEngine Ready!', 'success');
+        document.getElementById('connection-state').textContent = 'Connected';
+        
+        me = data.me;
+        
+        const channelName = 'memverse-debug-channel';
+        document.getElementById('channel-name').textContent = channelName;
+        
+        log(`Creating chat on channel: ${channelName}`);
+        myChat = new ChatEngine.Chat(channelName);
+        
+        myChat.on('$.connected', () => {
+            log('Connected to chat channel!', 'success');
+        });
+        
+        myChat.on('message', (message) => {
+            log(`Message received from ${message.sender.uuid}: ${message.data.text}`, 'success');
+            document.getElementById('messages').innerHTML += 
+                `<p><strong>${message.sender.uuid}:</strong> ${message.data.text}</p>`;
+        });
+        
+        myChat.on('$.error.*', (error) => {
+            log('Chat error: ' + JSON.stringify(error), 'error');
+        });
+        
+        // Try sending a test message after connection
+        setTimeout(() => {
+            log('Sending automatic test message...');
+            myChat.emit('message', {text: 'Auto test from ' + userId});
+        }, 2000);
+    });
+
+} catch (e) {
+    log('Failed to initialize ChatEngine: ' + e.message, 'error');
+}
+
+// Test 2: Direct PubNub connection
+log('Creating direct PubNub instance for testing...');
+directPubnub = new PubNub({
+    publishKey: 'pub-c-816b4160-11c9-43fa-a1ea-4a1ca6cde79d',
+    subscribeKey: 'sub-c-0e83b538-e6a1-11e7-a7db-e6c6e9cd0a3f',
+    uuid: 'direct-test-<%= current_user.id %>'
+});
+
+directPubnub.addListener({
+    message: function(event) {
+        log(`Direct PubNub message: ${JSON.stringify(event.message)}`, 'success');
+    },
+    presence: function(event) {
+        log(`Direct PubNub presence: ${event.action}`, 'info');
+    },
+    status: function(event) {
+        log(`Direct PubNub status: ${event.category}`, 'info');
+    }
+});
+
+directPubnub.subscribe({
+    channels: ['memverse-debug-channel']
+});
+
+function testSend() {
+    const msg = document.getElementById('test-message').value;
+    if (!msg) {
+        log('Please enter a message', 'error');
+        return;
+    }
+    
+    if (myChat) {
+        log(`Attempting to send via ChatEngine: "${msg}"`);
+        try {
+            myChat.emit('message', {text: msg});
+            log('Message emitted to ChatEngine', 'success');
+        } catch (e) {
+            log('Failed to emit message: ' + e.message, 'error');
+        }
+    } else {
+        log('ChatEngine not initialized yet', 'error');
+    }
+}
+
+function testDirect() {
+    const msg = document.getElementById('test-message').value || 'Direct test message';
+    log(`Sending direct PubNub message: "${msg}"`);
+    
+    directPubnub.publish({
+        channel: 'memverse-debug-channel',
+        message: {
+            text: msg,
+            sender: 'direct-test-<%= current_user.id %>'
+        }
+    }, function(status, response) {
+        if (status.error) {
+            log('Direct publish failed: ' + JSON.stringify(status), 'error');
+        } else {
+            log('Direct publish successful: ' + response.timetoken, 'success');
+        }
+    });
+}
+
+// Test 3: Try with alternative keys (Memverse server keys)
+setTimeout(() => {
+    log('Testing with alternative Memverse keys...');
+    
+    const altPubnub = new PubNub({
+        publishKey: 'pub-c-dc9e4561-d42a-4270-84b9-a9f268cd2cd2',
+        subscribeKey: 'sub-c-bcc87aee-e8b7-11e2-acbe-02ee2ddab7fe',
+        uuid: 'alt-test-<%= current_user.id %>'
+    });
+    
+    altPubnub.publish({
+        channel: 'test-channel',
+        message: {test: 'Alternative keys test'}
+    }, function(status, response) {
+        if (status.error) {
+            log('Alternative keys test failed: ' + JSON.stringify(status), 'error');
+        } else {
+            log('Alternative keys work!', 'success');
+        }
+    });
+}, 3000);
+
+</script>

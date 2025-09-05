@@ -1,0 +1,226 @@
+<% page_title "Simple Chat" %>
+
+<div class="white-box-with-margins main-chat" id="main-chat" style="position:relative">
+    <div class="container clearfix">
+        <div class="people-list" id="people-list">
+            <h4 style="padding: 20px; color: white;">Online Users</h4>
+            <ul class="list" id="user-list"></ul>
+        </div>
+
+        <div class="chat">
+            <div class="chat-header clearfix">
+                <%= image_tag("MemverseIcon.PNG", :size => "40x35", :alt => "MemverseIcon") %>
+                <div class="chat-about">
+                    <div class="chat-with">Memverse Chat (Simple)</div>
+                    <div class="chat-num-messages">Direct PubNub Implementation</div>
+                </div>
+            </div>
+
+            <div class="chat-history" id="chat-history">
+                <ul id="messages-list"></ul>
+            </div>
+
+            <form id="sendMessage" class="chat-message clearfix" onsubmit="return sendMessage()">
+                <input type="text" name="message-to-send" id="message-to-send" placeholder="Type your message" rows="1">
+                <input type="submit" value="Send">
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.29.11.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.8/handlebars.min.js"></script>
+
+<script id="message-template" type="text/x-handlebars-template">
+    <li class="clearfix">
+        <div class="main-chat message-data {{#if isMe}}align-right{{/if}}">
+            <span class="message-data-time">{{time}}</span> &nbsp; &nbsp;
+            <span class="message-data-name">{{username}}</span>
+        </div>
+        <div class="main-chat message {{#if isMe}}other-message float-right{{else}}my-message{{/if}}">
+            {{text}}
+        </div>
+    </li>
+</script>
+
+<script>
+// User information
+const userId = "<%= current_user.id %>";
+const userName = "<%= j current_user.name_or_login %>";
+const userAvatar = "<%= j current_user.blog_avatar_url %>";
+
+// Compile template
+const messageTemplate = Handlebars.compile(document.getElementById("message-template").innerHTML);
+
+// Online users tracking
+const onlineUsers = new Set();
+
+// Initialize PubNub directly (no ChatEngine)
+const pubnub = new PubNub({
+    publishKey: 'pub-c-816b4160-11c9-43fa-a1ea-4a1ca6cde79d',
+    subscribeKey: 'sub-c-0e83b538-e6a1-11e7-a7db-e6c6e9cd0a3f',
+    uuid: userId,
+    ssl: true,
+    presenceTimeout: 60,
+    heartbeatInterval: 30
+});
+
+// Set up listener
+pubnub.addListener({
+    message: function(event) {
+        console.log('Message received:', event);
+        displayMessage(event.message);
+    },
+    presence: function(event) {
+        console.log('Presence event:', event);
+        updateUserList(event);
+    },
+    status: function(event) {
+        console.log('Status:', event);
+        if (event.category === 'PNConnectedCategory') {
+            console.log('Connected to PubNub!');
+            // Send a join message
+            publishMessage({
+                type: 'join',
+                userId: userId,
+                username: userName,
+                text: userName + ' joined the chat'
+            });
+        }
+    }
+});
+
+// Subscribe to channel with presence
+pubnub.subscribe({
+    channels: ['memverse-simple-chat'],
+    withPresence: true
+});
+
+// Get history when connected
+setTimeout(() => {
+    pubnub.history({
+        channel: 'memverse-simple-chat',
+        count: 50,
+        reverse: false
+    }, function(status, response) {
+        if (!status.error) {
+            console.log('History loaded:', response);
+            response.messages.forEach(msg => {
+                displayMessage(msg.entry);
+            });
+        }
+    });
+    
+    // Get current occupancy
+    pubnub.hereNow({
+        channels: ['memverse-simple-chat'],
+        includeUUIDs: true,
+        includeState: true
+    }, function(status, response) {
+        if (!status.error) {
+            console.log('Here now:', response);
+            const channelData = response.channels['memverse-simple-chat'];
+            if (channelData && channelData.occupants) {
+                channelData.occupants.forEach(occupant => {
+                    onlineUsers.add(occupant.uuid);
+                    updateUserListDisplay();
+                });
+            }
+        }
+    });
+}, 1000);
+
+function publishMessage(messageObj) {
+    pubnub.publish({
+        channel: 'memverse-simple-chat',
+        message: messageObj
+    }, function(status, response) {
+        if (status.error) {
+            console.error('Publish failed:', status);
+            alert('Failed to send message. Check console for details.');
+        } else {
+            console.log('Message published:', response.timetoken);
+        }
+    });
+}
+
+function sendMessage() {
+    const input = document.getElementById('message-to-send');
+    const text = input.value.trim();
+    
+    if (text) {
+        const messageObj = {
+            type: 'message',
+            userId: userId,
+            username: userName,
+            text: text,
+            timestamp: new Date().toISOString()
+        };
+        
+        console.log('Sending message:', messageObj);
+        publishMessage(messageObj);
+        
+        // Clear input
+        input.value = '';
+    }
+    
+    return false; // Prevent form submission
+}
+
+function displayMessage(msg) {
+    if (!msg || !msg.text) return;
+    
+    const messageHtml = messageTemplate({
+        username: msg.username || 'Unknown',
+        text: msg.text,
+        time: new Date(msg.timestamp || Date.now()).toLocaleTimeString(),
+        isMe: msg.userId === userId
+    });
+    
+    document.getElementById('messages-list').innerHTML += messageHtml;
+    
+    // Scroll to bottom
+    const chatHistory = document.getElementById('chat-history');
+    chatHistory.scrollTop = chatHistory.scrollHeight;
+}
+
+function updateUserList(event) {
+    if (event.action === 'join') {
+        onlineUsers.add(event.uuid);
+    } else if (event.action === 'leave' || event.action === 'timeout') {
+        onlineUsers.delete(event.uuid);
+    }
+    updateUserListDisplay();
+}
+
+function updateUserListDisplay() {
+    const userListEl = document.getElementById('user-list');
+    userListEl.innerHTML = '';
+    
+    onlineUsers.forEach(uuid => {
+        const li = document.createElement('li');
+        li.className = 'clearfix';
+        li.innerHTML = `
+            <div class="main-chat about">
+                <div class="main-chat name">User ${uuid}</div>
+                <div class="status">
+                    <i class="fa fa-circle online"></i> online
+                </div>
+            </div>
+        `;
+        userListEl.appendChild(li);
+    });
+}
+
+// Add unload handler to announce leaving
+window.addEventListener('beforeunload', function() {
+    publishMessage({
+        type: 'leave',
+        userId: userId,
+        username: userName,
+        text: userName + ' left the chat'
+    });
+});
+
+console.log('Simple chat initialized. User:', userName, 'ID:', userId);
+</script>

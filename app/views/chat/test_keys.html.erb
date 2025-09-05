@@ -1,0 +1,125 @@
+<% page_title "Test PubNub Keys" %>
+
+<div class="white-box-with-margins">
+    <h2>PubNub Keys Test</h2>
+    
+    <div id="test-results" style="padding: 20px;">
+        <h3>Testing Different Key Sets...</h3>
+    </div>
+</div>
+
+<script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.29.11.min.js"></script>
+
+<script>
+const testResults = document.getElementById('test-results');
+
+function addResult(title, success, details) {
+    const color = success ? 'green' : 'red';
+    testResults.innerHTML += `
+        <div style="margin: 10px 0; padding: 10px; border: 1px solid ${color}; color: ${color};">
+            <strong>${title}:</strong> ${success ? 'SUCCESS' : 'FAILED'}<br>
+            <small>${details}</small>
+        </div>
+    `;
+}
+
+// Test 1: ChatEngine Keys
+console.log('Testing ChatEngine keys...');
+const pubnub1 = new PubNub({
+    publishKey: 'pub-c-816b4160-11c9-43fa-a1ea-4a1ca6cde79d',
+    subscribeKey: 'sub-c-0e83b538-e6a1-11e7-a7db-e6c6e9cd0a3f',
+    uuid: 'test-user-1'
+});
+
+pubnub1.publish({
+    channel: 'test-channel-1',
+    message: {test: 'ChatEngine keys test'}
+}, function(status, response) {
+    if (status.error) {
+        addResult('ChatEngine Keys', false, 'Error: ' + JSON.stringify(status));
+    } else {
+        addResult('ChatEngine Keys', true, 'Timetoken: ' + response.timetoken);
+    }
+});
+
+// Test 2: Memverse Server Keys
+console.log('Testing Memverse server keys...');
+const pubnub2 = new PubNub({
+    publishKey: 'pub-c-dc9e4561-d42a-4270-84b9-a9f268cd2cd2',
+    subscribeKey: 'sub-c-bcc87aee-e8b7-11e2-acbe-02ee2ddab7fe',
+    uuid: 'test-user-2'
+});
+
+pubnub2.publish({
+    channel: 'test-channel-2',
+    message: {test: 'Memverse server keys test'}
+}, function(status, response) {
+    if (status.error) {
+        addResult('Memverse Server Keys', false, 'Error: ' + JSON.stringify(status));
+    } else {
+        addResult('Memverse Server Keys', true, 'Timetoken: ' + response.timetoken);
+    }
+});
+
+// Test 3: Demo Keys (PubNub's public demo keys)
+console.log('Testing PubNub demo keys...');
+const pubnub3 = new PubNub({
+    publishKey: 'demo',
+    subscribeKey: 'demo',
+    uuid: 'test-user-3'
+});
+
+pubnub3.publish({
+    channel: 'test-channel-3',
+    message: {test: 'Demo keys test'}
+}, function(status, response) {
+    if (status.error) {
+        addResult('PubNub Demo Keys', false, 'Error: ' + JSON.stringify(status));
+    } else {
+        addResult('PubNub Demo Keys', true, 'Timetoken: ' + response.timetoken);
+    }
+});
+
+// Test 4: Subscribe test with working keys
+setTimeout(() => {
+    testResults.innerHTML += '<h3>Subscribe Test</h3>';
+    
+    const pubnubSub = new PubNub({
+        publishKey: 'demo',
+        subscribeKey: 'demo',
+        uuid: 'test-subscriber'
+    });
+    
+    let received = false;
+    
+    pubnubSub.addListener({
+        message: function(event) {
+            received = true;
+            addResult('Subscribe Test', true, 'Received: ' + JSON.stringify(event.message));
+        },
+        status: function(event) {
+            if (event.category === 'PNConnectedCategory') {
+                addResult('Subscribe Connection', true, 'Connected to channel');
+                
+                // Send test message
+                pubnubSub.publish({
+                    channel: 'test-subscribe',
+                    message: {test: 'Subscribe test message'}
+                });
+            }
+        }
+    });
+    
+    pubnubSub.subscribe({
+        channels: ['test-subscribe']
+    });
+    
+    setTimeout(() => {
+        if (!received) {
+            addResult('Subscribe Test', false, 'No message received after 3 seconds');
+        }
+        pubnubSub.unsubscribe({channels: ['test-subscribe']});
+    }, 3000);
+}, 1000);
+
+</script>

@@ -346,6 +346,10 @@ MemverseApp::Application.routes.draw do
   post '/chat/send'                 => 'chat#send_message'
   get  '/chat/toggle_ban'           => 'chat#toggle_ban'
   get  '/chat'                      => 'chat#index'
+  get  '/chat/debug'                => 'chat#debug'
+  get  '/chat/simple'               => 'chat#simple'
+  get  '/chat/test_keys'            => 'chat#test_keys'
+  get  '/chat/working'              => 'chat#working'
 
   # Routes for live quiz
   get  '/live_quiz'                 => 'live_quiz#live_quiz',             :as => 'live_quiz'     # Main quiz URL

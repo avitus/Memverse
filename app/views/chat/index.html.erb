@@ -1,249 +1,324 @@
-<% page_title "Chat Room :: " + @channel.channel %>
+<% page_title "Chat Room" %>
 
-<head>
-    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"></link>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.0/handlebars.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.1.1/list.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chat-engine@0.8.4/dist/chat-engine.min.js" type="text/javascript"></script>
-</head>
+<%= content_for :head do %>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.8/handlebars.min.js"></script>
+    <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.29.11.min.js"></script>
+<% end %>
 
 <div class="white-box-with-margins main-chat" id="main-chat" style="position:relative">
-
     <div class="container clearfix">
-
         <div class="people-list" id="people-list">
-            <ul class="list">
-            </ul>
+            <ul class="list" id="online-users-list"></ul>
         </div>
 
         <div class="chat">
-
             <div class="chat-header clearfix">
                 <%= image_tag("MemverseIcon.PNG", :size => "40x35", :alt => "MemverseIcon") %>
                 <div class="chat-about">
                     <div class="chat-with">Memverse Chat</div>
+                    <div class="chat-num-messages" id="connection-status">Connecting...</div>
                 </div>
             </div>
 
             <div class="chat-history">
-                <ul></ul>
+                <ul id="messages-list"></ul>
             </div>
 
             <form id="sendMessage" class="chat-message clearfix">
-                <input type="text" name="message-to-send" id="message-to-send" placeholder="Type your message" rows="1"></input>
-                <input type="submit" value="Send"></input>
-            </form><!-- end chat-message -->
-
-        </div><!-- end chat -->
-
-    </div><!-- end container -->
-
+                <input type="text" name="message-to-send" id="message-to-send" placeholder="Type your message" rows="1">
+                <input type="submit" value="Send">
+            </form>
+        </div>
+    </div>
 </div>
-    
-
 
 <script id="message-template" type="text/x-handlebars-template">
     <li class="clearfix">
-        <div class="main-chat message-data align-right">
+        <div class="main-chat message-data {{#if isMe}}align-right{{/if}}">
             <span class="message-data-time">{{time}}, Today</span> &nbsp; &nbsp;
-            <span class="message-data-name">{{user.full}}</span> <i class="fa fa-circle me"></i>
+            <span class="message-data-name">{{user}}</span> 
+            {{#if isMe}}<i class="fa fa-circle me"></i>{{else}}<i class="fa fa-circle online"></i>{{/if}}
         </div>
-        <div class="main-chat message other-message float-right">
+        <div class="main-chat message {{#if isMe}}other-message float-right{{else}}my-message{{/if}}">
             {{messageOutput}}
         </div>
     </li>
 </script>
-
-
-<script id="message-response-template" type="text/x-handlebars-template">
-    <li>
-        <div class="main-chat message-data">
-            <span class="message-data-name"><i class="fa fa-circle online"></i> {{user.full}}</span>
-            <span class="message-data-time">{{time}}, Today</span>
-        </div>
-        <div class="main-chat message my-message">
-            {{messageOutput}}
-        </div>
-    </li>
-</script>
-
 
 <script id="person-template" type="text/x-handlebars-template">
-    {{#if state.full}}
-    <li class="clearfix" id="{{uuid}}">
-        <img src="{{state.avatar}}" alt="avatar" />
+    <li class="clearfix" id="user-{{uuid}}">
+        <img src="{{avatar}}" alt="avatar" style="width: 40px; height: 40px; border-radius: 50%;" />
         <div class="main-chat about">
-            <div class="main-chat name">{{state.full}}</div>
+            <div class="main-chat name">{{name}}</div>
             <div class="status">
                 <i class="fa fa-circle online"></i> online
             </div>
         </div>
     </li>
-    {{/if}}
 </script>
-  
 
-<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.0/handlebars.min.js'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/list.js/1.1.1/list.min.js'></script>
-<script src='https://dogaan.github.io/chat-engine.js'></script>
-<!-- 
-<script src='https://dogaan.github.io/generateperson.js'></script>
--->
-
-<script type="text/javascript" charset="utf-8">
-
-var memverseUserID    = "<%= current_user.id %>";                      // global variable
-var memverseUserName  = "<%= current_user.name_or_login.html_safe %>"; // global variable
-var memverseUserLogin = "<%= current_user.login.html_safe %>";         // global variable
-var memverseAvatar    = "<%= current_user.blog_avatar_url %>";         // global variable
-
-// create a new instance of ChatEngine
-ChatEngine = ChatEngineCore.create({
-    publishKey: 'pub-c-816b4160-11c9-43fa-a1ea-4a1ca6cde79d',
-    subscribeKey: 'sub-c-0e83b538-e6a1-11e7-a7db-e6c6e9cd0a3f'
-});
-
-// use a helper function to generate a new profile
-// let newPerson = generatePerson(true);
-
-// create a bucket to store our ChatEngine Chat object
-let myChat;
-
-// create a bucket to store 
-let me;
-
-// compile handlebars templates and store them for use later
-let peopleTemplate = Handlebars.compile($("#person-template").html());
-let meTemplate = Handlebars.compile($("#message-template").html());
-let userTemplate = Handlebars.compile($("#message-response-template").html());
-
-// this is our main function that starts our chat app
-const init = () => {
-  
-  // connect to ChatEngine with current user
-  console.log("Connecting to PubNub Chat Engine with current user")
-  ChatEngine.connect(memverseUserID, {username: memverseUserName});
-
-  // when ChatEngine is booted, it returns your new User as `data.me`
-  ChatEngine.on('$.ready', function(data) {
-
-      // store my new user as `me`
-      me = data.me;
-      me.update({full: memverseUserName});
-      me.update({avatar: memverseAvatar});
-      console.log(me)
-
-      // create a new ChatEngine Chat
-      myChat = new ChatEngine.Chat('chatengine-demo-chat');
-
-      // when we recieve messages in this chat, render them
-      myChat.on('message', (message) => {
-          renderMessage(message);
-      });
-
-      // when a user comes online, render them in the online list
-      myChat.on('$.online.*', (data) => {   
-        $('#people-list ul').append(peopleTemplate(data.user));
-        console.log(data.user)
-        console.log(" has joined the room.")
-      });
-
-      // when a user goes offline, remove them from the online list
-      myChat.on('$.offline.*', (data) => {
-        // Note: ChatEngine SDK still uses 'uuid' (this is different from the PubNub v7+ SDK)
-        $('#people-list ul').find('#' + data.user.uuid).remove();
-      });
-
-      // wait for our chat to be connected to the internet
-      myChat.on('$.connected', () => {
-
-          // search for 50 old `message` events
-          myChat.search({
-            event: 'message',
-            limit: 50
-          }).on('message', (data) => {
+<script type="text/javascript">
+(function() {
+    // User information
+    const userId = "<%= j current_user.id.to_s %>";
+    const userName = "<%= j current_user.name_or_login %>";
+    const userAvatar = "<%= j current_user.blog_avatar_url %>";
+    
+    // Chat channel
+    const CHANNEL = 'memverse-main-chat';
+    
+    // Compile templates
+    const messageTemplate = Handlebars.compile(document.getElementById("message-template").innerHTML);
+    const personTemplate = Handlebars.compile(document.getElementById("person-template").innerHTML);
+    
+    // Track online users
+    const onlineUsers = {};
+    
+    // Track connection state
+    let isConnected = false;
+    
+    // Initialize PubNub with Memverse server keys
+    const pubnub = new PubNub({
+        publishKey: 'pub-c-dc9e4561-d42a-4270-84b9-a9f268cd2cd2',
+        subscribeKey: 'sub-c-bcc87aee-e8b7-11e2-acbe-02ee2ddab7fe',
+        uuid: userId,
+        ssl: true,
+        presenceTimeout: 60,
+        heartbeatInterval: 30
+    });
+    
+    // Add PubNub listeners
+    pubnub.addListener({
+        message: function(event) {
+            console.log('Message received:', event);
+            renderMessage(event.message);
+        },
+        presence: function(event) {
+            console.log('Presence event:', event);
+            handlePresence(event);
+        },
+        status: function(event) {
+            console.log('Status event:', event);
+            console.log('Status category:', event.category);
+            console.log('Status operation:', event.operation);
             
-            // when messages are returned, render them like normal messages
-            renderMessage(data, true);
+            // Update UI with status
+            const statusEl = document.getElementById('connection-status');
             
-          });
-        
-      });
-
-      // bind our "send" button and return key to send message
-      $('#sendMessage').on('submit', sendMessage)
-
-  });
-
-};
-
-// send a message to the Chat
-const sendMessage = () => {
-
-    // get the message text from the text input
-    let message = $('#message-to-send').val().trim();
-  
-    // if the message isn't empty
-    if (message.length) {
-      
-        // emit the `message` event to everyone in the Chat
-        myChat.emit('message', {
-            text: message
+            if (event.category === 'PNConnectedCategory') {
+                statusEl.textContent = 'Connected';
+                statusEl.style.color = 'green';
+                isConnected = true;
+                console.log('✓ Successfully connected to PubNub');
+                loadHistory();
+                getCurrentUsers();
+                
+                // Send a join notification
+                setTimeout(() => {
+                    pubnub.publish({
+                        channel: CHANNEL,
+                        message: {
+                            text: userName + ' joined the chat',
+                            user: 'System',
+                            userId: 'system',
+                            timestamp: new Date().toISOString()
+                        }
+                    });
+                }, 500);
+            } else if (event.category === 'PNNetworkDownCategory') {
+                statusEl.textContent = 'Disconnected - Reconnecting...';
+                statusEl.style.color = 'orange';
+            } else if (event.category === 'PNNetworkUpCategory') {
+                statusEl.textContent = 'Reconnected';
+                statusEl.style.color = 'green';
+            } else if (event.error) {
+                statusEl.textContent = 'Connection Error';
+                statusEl.style.color = 'red';
+                console.error('Connection error:', event);
+            } else {
+                statusEl.textContent = 'Status: ' + event.category;
+            }
+        }
+    });
+    
+    // Subscribe to channel
+    pubnub.subscribe({
+        channels: [CHANNEL],
+        withPresence: true
+    });
+    
+    // Set user state
+    pubnub.setState({
+        channels: [CHANNEL],
+        state: {
+            name: userName,
+            avatar: userAvatar
+        }
+    });
+    
+    // Load message history
+    function loadHistory() {
+        pubnub.history({
+            channel: CHANNEL,
+            count: 50,
+            reverse: false
+        }, function(status, response) {
+            if (!status.error && response.messages) {
+                response.messages.forEach(function(msg) {
+                    renderMessage(msg.entry, true);
+                });
+                scrollToBottom();
+            }
         });
-
-        // clear out the text input
-        $('#message-to-send').val('');
     }
     
-    // stop form submit from bubbling
-    return false;
-
-};
-
-// render messages in the list
-const renderMessage = (message, isHistory = false) => {
-
-    // use the generic user template by default
-    let template = userTemplate;
-
-    // if I happened to send the message, use the special template for myself
-    // Note: ChatEngine SDK still uses 'uuid' (this is different from the PubNub v7+ SDK)
-    if (message.sender.uuid == me.uuid) {
-        template = meTemplate;
+    // Get current users
+    function getCurrentUsers() {
+        pubnub.hereNow({
+            channels: [CHANNEL],
+            includeUUIDs: true,
+            includeState: true
+        }, function(status, response) {
+            if (!status.error) {
+                const channelData = response.channels[CHANNEL];
+                if (channelData && channelData.occupants) {
+                    channelData.occupants.forEach(function(occupant) {
+                        if (occupant.state) {
+                            onlineUsers[occupant.uuid] = occupant.state;
+                            addUserToList(occupant.uuid, occupant.state);
+                        }
+                    });
+                }
+            }
+        });
     }
-
-    let el = template({
-        messageOutput: message.data.text,
-        time: getCurrentTime(),
-        user: message.sender.state
+    
+    // Handle presence events
+    function handlePresence(event) {
+        if (event.action === 'join' || event.action === 'state-change') {
+            pubnub.getState({
+                channels: [CHANNEL],
+                uuid: event.uuid
+            }, function(status, response) {
+                if (!status.error && response.channels[CHANNEL]) {
+                    onlineUsers[event.uuid] = response.channels[CHANNEL];
+                    addUserToList(event.uuid, response.channels[CHANNEL]);
+                }
+            });
+        } else if (event.action === 'leave' || event.action === 'timeout') {
+            delete onlineUsers[event.uuid];
+            removeUserFromList(event.uuid);
+        }
+    }
+    
+    // Add user to online list
+    function addUserToList(uuid, state) {
+        removeUserFromList(uuid); // Remove if exists to avoid duplicates
+        
+        const html = personTemplate({
+            uuid: uuid,
+            name: state.name || 'User ' + uuid,
+            avatar: state.avatar || '/assets/default-avatar.png'
+        });
+        
+        document.getElementById('online-users-list').innerHTML += html;
+    }
+    
+    // Remove user from online list
+    function removeUserFromList(uuid) {
+        const element = document.getElementById('user-' + uuid);
+        if (element) {
+            element.remove();
+        }
+    }
+    
+    // Send message
+    function sendMessage() {
+        const input = document.getElementById('message-to-send');
+        const text = input.value.trim();
+        
+        // Check if connected
+        if (!isConnected) {
+            alert('Not connected to chat yet. Please wait...');
+            return false;
+        }
+        
+        if (text) {
+            const message = {
+                text: text,
+                user: userName,
+                userId: userId,
+                avatar: userAvatar,
+                timestamp: new Date().toISOString()
+            };
+            
+            console.log('Publishing message:', message);
+            
+            pubnub.publish({
+                channel: CHANNEL,
+                message: message
+            }, function(status, response) {
+                if (status.error) {
+                    console.error('Publish error:', status);
+                    alert('Failed to send message. Please try again.');
+                } else {
+                    // Clear input on success
+                    input.value = '';
+                }
+            });
+        }
+        
+        return false;
+    }
+    
+    // Render message
+    function renderMessage(message, isHistory) {
+        if (!message || !message.text) return;
+        
+        const html = messageTemplate({
+            messageOutput: message.text,
+            time: getCurrentTime(message.timestamp),
+            user: message.user || 'Unknown',
+            isMe: message.userId === userId
+        });
+        
+        const messagesList = document.getElementById('messages-list');
+        if (isHistory) {
+            messagesList.innerHTML = html + messagesList.innerHTML;
+        } else {
+            messagesList.innerHTML += html;
+            scrollToBottom();
+        }
+    }
+    
+    // Scroll to bottom
+    function scrollToBottom() {
+        const chatHistory = document.querySelector('.chat-history');
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+    }
+    
+    // Get current time
+    function getCurrentTime(timestamp) {
+        const date = timestamp ? new Date(timestamp) : new Date();
+        return date.toLocaleTimeString().replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, "$1$3");
+    }
+    
+    // Bind send button
+    document.getElementById('sendMessage').addEventListener('submit', function(e) {
+        e.preventDefault();
+        sendMessage();
+        return false;
     });
-  
-    // render the message
-    if(isHistory) {
-      $('.chat-history ul').prepend(el); 
+    
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Chat initialized');
+        });
     } else {
-      $('.chat-history ul').append(el); 
+        console.log('Chat initialized');
     }
-  
-    // scroll to the bottom of the chat
-    scrollToBottom();
-
-};
-
-// scroll to the bottom of the window
-const scrollToBottom = () => {
-    $('.chat-history').scrollTop($('.chat-history')[0].scrollHeight);
-};
-
-// get the current time in a nice format
-const getCurrentTime = () => {
-    return new Date().toLocaleTimeString().replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, "$1$3");
-};
-
-// boot the app
-init();
-
-
+})();
 </script>
