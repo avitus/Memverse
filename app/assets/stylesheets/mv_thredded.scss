@@ -334,17 +334,85 @@ section.thredded--main-section {
     background-color: #f5f5f7;
   }
   
-  // Adjust posts count position since we changed margin/padding
-  .thredded--topics--posts-count {
-    left: 0.25rem; // Position from the new padding edge
-    top: 38%;
-    transform: translateY(-60%);
+  // Position the header for proper alignment
+  .thredded--topics--header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 2rem; // Ensure consistent height
   }
   
-  // Fix positioning of follow/notification icon
-  .thredded--topics--follow-icon {
-    right: 0.75rem; // Override the -1.6rem to move icon inside the padding area
+  // Position meta container (posts count and follow icon)
+  .thredded--topics--meta {
+    position: absolute;
     top: 50%;
     transform: translateY(-50%);
+    width: 100%;
+    pointer-events: none; // Allow clicks to pass through to the title
+    
+    > * {
+      pointer-events: auto; // Re-enable clicks on child elements
+    }
+  }
+  
+  // Adjust posts count position
+  .thredded--topics--posts-count {
+    position: absolute;
+    left: -2rem; // Move it back closer to original position
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  // Fix positioning of follow/notification icon  
+  .thredded--topics--follow-icon {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  // Ensure title has proper spacing
+  .thredded--topics--title {
+    margin: 0;
+    padding-left: 0.5rem; // Minimal left padding since posts count is positioned absolutely
+    padding-right: 3rem; // Space for follow icon
+  }
+  
+  // Position categories in bottom right
+  .thredded--topics--categories {
+    position: absolute;
+    bottom: 0.5rem;
+    right: 0.75rem;
+    margin: 0;
+    
+    ul {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      gap: 0.5rem;
+      flex-direction: row;
+      justify-content: flex-end;
+    }
+    
+    // Style category tags as subtle, non-intrusive elements
+    li {
+      list-style: none;
+      color: #a1a1a6; // gray-400 - muted text
+      background-color: #f5f5f7; // gray-100 - very light background
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+      font-size: 0.75rem; // Smaller font for less visual importance
+      display: inline-block;
+      transition: all 0.2s ease;
+      
+      &:hover {
+        background-color: #e5e5e7; // Slightly darker background on hover
+      }
+    }
+  }
+  
+  // Ensure footer has space for categories
+  .thredded--topics--footer {
+    padding-bottom: 1rem; // Make room for absolutely positioned categories
   }
 }
