@@ -242,12 +242,37 @@ en:
     tag_cloud: "Tag Cloud"
     pop_verses_by_book: "Popular Verses by Book"
     view_vs_s: "View %{name}'s Verses"
+    memory_verse_review: "Memory Verse Review"
+    progress: "My Progress"
+    accuracy_test: "Accuracy Test"
+    add_new_verses: "Add New Verses"
+    chapter_review: "Chapter Review"
+    church_leaderboard: "Church Leaderboard"
+    contact_feedback: "Contact & Feedback"
+    demo_memory_verse_review: "Memory Verse Review Demo"
+    edit_verse: "Edit Verse"
+    global_challenge: "Global Challenge"
+    global_stats: "Global Statistics"
+    group_leaderboard: "Group Leaderboard"
+    leaderboard: "Leaderboard"
+    mainpage: "Bible Memory Verse Tool"
+    memory_verse_practice: "Memory Verse Practice"
+    mission: "Our Mission"
+    my_memory_verses: "My Memory Verses"
+    popular_verses: "Popular Verses"
+    referralboard: "Referral Leaderboard"
+    reftest: "Reference Test"
+    signup: "Sign Up"
+    tutorial: "Tutorial"
+    us_state_challenge: "US State Challenge"
+    volunteer: "Volunteer"
   
   messages:
     today_msg_html: "You have <span>%{due_today} verses</span> and <span>%{due_refs} references</span> to review today. You currently need about <span>%{time} minutes</span> per day."
   
   page_descriptions:
     default: "A free online tool for memorizing the Bible."
+    progress: "Track your Bible memorization progress and statistics."
   
   profile:
     update_profile:

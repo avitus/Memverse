@@ -1,83 +1,393 @@
-<div class="white-box-with-margins">
-	<div class="verse-list">
-		<table class="sortable" id="usertable" cellpadding="6" cellspacing="0">
+<div class="white-box-bg">
+  <div class="user-admin-view">
+    <div class="top-heading">
+      <h2>User Admin View: <%= @user.login %></h2>
+    </div>
 
-			<tr>
-				<th>ID</th>
-				<th align="left">Name</th>
-				<th align="left">Login</th>
-				<th align="left">Email</th>
-				<th align="left">Church</th>
-				<th>Last Activity</th>
-				<th>Last Reminder</th>
-				<th>Reminder Freq</th>
-				<th colspan="2">Memverses</th>
-				<th>Newsletter</th>
-			</tr>
+    <!-- User Information Section -->
+    <div class="admin-section">
+      <div class="row">
+        <!-- Basic Info -->
+        <div class="col-md-6 mb-4">
+          <div class="admin-info-box">
+            <h3 class="section-title">User Information</h3>
+            <div class="info-content">
+              <dl class="info-list">
+                <dt>User ID:</dt>
+                <dd><%= @user.id %></dd>
+                
+                <dt>Name:</dt>
+                <dd><%= @user.name || "(not provided)" %></dd>
+                
+                <dt>Login:</dt>
+                <dd><%= @user.login %></dd>
+                
+                <dt>Email:</dt>
+                <dd><%= mail_to @user.email %></dd>
+                
+                <dt>Church:</dt>
+                <dd><%= @user.church ? @user.church.name : "(none)" %></dd>
+                
+                <dt>Country:</dt>
+                <dd><%= @user.country ? @user.country.printable_name : "(not set)" %></dd>
+                
+                <dt>Created:</dt>
+                <dd><%= @user.created_at.strftime("%B %d, %Y") %></dd>
+              </dl>
+              <div class="action-buttons mt-3">
+                <%= link_to "Edit User", edit_user_path(@user), class: "submit btn-primary" %>
+                <%= link_to "View in Rails Admin", rails_admin.edit_path(model_name: 'user', id: @user.id), class: "info-button" %>
+              </div>
+            </div>
+          </div>
+        </div>
 
-			<tr>
-				<td> <%= @user.id				%></td>
-				<td> <%= @user.name				%></td>
-				<td> <%= link_to @user.login, :controller => 'utils', :action => 'show_memory_verses', :id => @user.id %></td>
-				<td> <%= @user.email				%> </td>
-				<td> <%= @user.church ? @user.church.name : ""	%> </td>
-				<td align = center> <%= @user.last_activity_date %> </td>
-				<td align = center> <%= @user.last_reminder		%> </td>
-				<td align = center> <%= @user.reminder_freq		%> </td>
-				<td align = right> <%= @user.memverses.length	%> </td>
-				<td align = right>[<%= @user.memorized			%>]</td>
-				<td align = center> <%= @user.newsletters		%> </td>
+        <!-- Activity Stats -->
+        <div class="col-md-6 mb-4">
+          <div class="admin-info-box">
+            <h3 class="section-title">Activity & Settings</h3>
+            <div class="info-content">
+              <dl class="info-list">
+                <dt>Last Activity:</dt>
+                <dd><%= @user.last_activity_date || "Never" %></dd>
+                
+                <dt>Last Reminder Sent:</dt>
+                <dd><%= @user.last_reminder || "Never" %></dd>
+                
+                <dt>Reminder Frequency:</dt>
+                <dd><%= @user.reminder_freq %> days</dd>
+                
+                <dt>Newsletter Subscribed:</dt>
+                <dd>
+                  <% if @user.newsletters %>
+                    <span class="status-badge status-success">Yes</span>
+                  <% else %>
+                    <span class="status-badge status-inactive">No</span>
+                  <% end %>
+                </dd>
+                
+                <dt>Account Confirmed:</dt>
+                <dd>
+                  <% if @user.confirmed? %>
+                    <span class="status-badge status-success">Yes</span>
+                  <% else %>
+                    <span class="status-badge status-warning">No</span>
+                  <% end %>
+                </dd>
+                
+                <dt>Recent Activity (30d):</dt>
+                <dd><%= @recent_activity %> verses tested</dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-				<td><%= link_to 'Edit',   :controller => 'utils', :action => 'edit_user', :id => @user %></td>
-				<td><%= link_to 'X', { :action => 'destroy_user',  :id => @user }, :confirm => 'Are you sure?', :method => :post %></td>
+    <!-- Verse Statistics -->
+    <div class="admin-section">
+      <div class="admin-stats-box">
+        <h3 class="section-title">Memorization Statistics</h3>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-number"><%= @total_verses %></div>
+            <div class="stat-label">Total Verses</div>
+          </div>
+          <div class="stat-item stat-success">
+            <div class="stat-number"><%= @memorized_count %></div>
+            <div class="stat-label">Memorized</div>
+          </div>
+          <div class="stat-item stat-warning">
+            <div class="stat-number"><%= @learning_count %></div>
+            <div class="stat-label">Learning</div>
+          </div>
+          <div class="stat-item stat-inactive">
+            <div class="stat-number"><%= @pending_count %></div>
+            <div class="stat-label">Pending</div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-			</tr>
-		</table>
-	</div>
+    <!-- Quick Actions -->
+    <div class="admin-section">
+      <div class="admin-actions-box">
+        <h3 class="section-title">Quick Actions</h3>
+        <div class="action-buttons">
+          <%= button_to 'Repair Verse Links', fix_verse_linkage_path(id: @user), method: :post, class: "submit btn-warning" %>
+          <%= link_to 'View Memory Verses', show_memory_verses_path(id: @user.id), class: "info-button" %>
+          <%= link_to 'Delete User', destroy_user_path(@user), method: :post, data: { confirm: 'Are you sure you want to delete this user? This action cannot be undone.' }, class: "submit btn-danger" %>
+        </div>
+      </div>
+    </div>
 
-	<%= button_to 'Repair Links',   :controller => 'utils', :action => 'fix_verse_linkage', 	:id => @user %>
-
-	<div class="verse-list">
-
-		<table cellpadding="8" cellspacing="6">
-		  <tr>
-			  <th>MV ID</th>
-			  <td><b>Ref</b></td>
-			  <td><b><%= link_to 'eFactor',		:action => 'manage_verses', :sort_order => 'efactor'		%></b></td>
-			  <td><b><%= link_to 'Status', 		:action => 'manage_verses', :sort_order => 'status'		%></b></td>
-			  <td><b><%= link_to 'Last Tested',	:action => 'manage_verses', :sort_order => 'last_tested'	%></b></td>
-			  <td><b><%= link_to 'Next Test',	:action => 'manage_verses', :sort_order => 'next_test'		%></b></td>
-			  <td><b><%= link_to 'N', 			:action => 'manage_verses', :sort_order => 'rep_n'			%></b></td>
-			  <td><b><%= link_to 'Interval', 	:action => 'manage_verses', :sort_order => 'test_interval'	%></b></td>
-			  <td><b><%= link_to 'Attempts', 	:action => 'manage_verses', :sort_order => 'attempts'		%></b></td>
-			  <td><b><%= link_to 'Started', 	:action => 'manage_verses', :sort_order => 'started'		%></b></td>
-			  <th>First</th>
-			  <th>Prev</th>
-			  <th>Next</th>
-
-		  </tr>
-		<% for mv in @mv_list %>
-			<td> <%= mv.id			%></td>
-			<td> <%= link_to mv.verse.ref, rails_admin.edit_path(model_name: 'verse', id: mv.verse.id) if mv.verse %></td>
-		 	<td> <%= mv.efactor				%></td>
-		 	<td> <%= mv.status				%></td>
-		 	<td> <%= mv.last_tested			%></td>
-		 	<td> <%= mv.next_test			%></td>
-		 	<td> <%= mv.rep_n				%></td>
-		 	<td> <%= mv.test_interval		%></td>
-		 	<td> <%= mv.attempts			%></td>
-		 	<td> <%= mv.created_at.to_date	%></td>
-		 	<td> <%= mv.first_verse			%></td>
-		 	<td> <%= mv.prev_verse			%></td>
-			<td> <%= mv.next_verse			%></td>
-
-			<td><%= link_to 'Edit', rails_admin.edit_path(model_name: 'memverse', id: mv.id) %></td>
-			<td><%= link_to 'X', { :action => 'destroy_mv', :id => mv }, :confirm => 'Are you sure?', :method => :post %></td>
-
-		  </tr>
-		<% end %>
-
-		</table>
-
-	</div>
+    <!-- Memory Verses Table -->
+    <div class="admin-section">
+      <div class="verse-list">
+        <h3 class="section-title">Memory Verses (<%= @mv_list.count %>)</h3>
+        <div class="table-responsive">
+          <table cellpadding="8" cellspacing="0">
+            <thead>
+              <tr>
+                <th>MV ID</th>
+                <th>Reference</th>
+                <th>eFactor</th>
+                <th>Status</th>
+                <th>Last Tested</th>
+                <th>Next Test</th>
+                <th>N</th>
+                <th>Interval</th>
+                <th>Attempts</th>
+                <th>Started</th>
+                <th colspan="2">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @mv_list.each_with_index do |mv, index| %>
+                <tr class="<%= cycle('list-line-odd', 'list-line-even') %>">
+                  <td><%= mv.id %></td>
+                  <td class="ref">
+                    <% if mv.verse %>
+                      <%= link_to mv.verse.ref, rails_admin.edit_path(model_name: 'verse', id: mv.verse.id) %>
+                    <% else %>
+                      <span class="error-text">Missing verse</span>
+                    <% end %>
+                  </td>
+                  <td><%= number_with_precision(mv.efactor, precision: 2) %></td>
+                  <td>
+                    <% case mv.status %>
+                    <% when 'Memorized' %>
+                      <span class="status-badge status-success"><%= mv.status %></span>
+                    <% when 'Learning' %>
+                      <span class="status-badge status-warning"><%= mv.status %></span>
+                    <% else %>
+                      <span class="status-badge status-inactive"><%= mv.status %></span>
+                    <% end %>
+                  </td>
+                  <td><%= mv.last_tested ? mv.last_tested.strftime("%m/%d/%Y") : "-" %></td>
+                  <td><%= mv.next_test ? mv.next_test.strftime("%m/%d/%Y") : "-" %></td>
+                  <td><%= mv.rep_n %></td>
+                  <td><%= mv.test_interval %></td>
+                  <td><%= mv.attempts %></td>
+                  <td><%= mv.created_at.strftime("%m/%d/%Y") %></td>
+                  <td><%= link_to 'Edit', rails_admin.edit_path(model_name: 'memverse', id: mv.id) %></td>
+                  <td><%= link_to 'X', { action: 'destroy_mv', id: mv }, method: :post, data: { confirm: 'Are you sure?' }, class: 'delete-link' %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+<style>
+.white-box-bg {
+  padding: 30px;
+}
+
+.user-admin-view {
+  /* Using style guide patterns */
+}
+
+.admin-section {
+  margin-bottom: 30px;
+}
+
+.admin-info-box, .admin-stats-box, .admin-actions-box {
+  background: #ffffff;
+  border: 1px solid #c7c7cc;
+  border-radius: 4px;
+  padding: 20px;
+  height: 100%;
+}
+
+.section-title {
+  font-size: 1.2em;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #1a1a1d;
+  border-bottom: 1px solid #c7c7cc;
+  padding-bottom: 10px;
+}
+
+.info-content {
+  padding-top: 10px;
+}
+
+.info-list {
+  margin: 0;
+}
+
+.info-list dt {
+  font-weight: 600;
+  color: #48484a;
+  display: inline-block;
+  width: 45%;
+  margin-bottom: 10px;
+}
+
+.info-list dd {
+  display: inline-block;
+  width: 50%;
+  margin-bottom: 10px;
+  color: #2d2d30;
+}
+
+.action-buttons {
+  margin-top: 15px;
+}
+
+.action-buttons .submit,
+.action-buttons .info-button {
+  margin-right: 10px;
+  margin-bottom: 10px;
+  display: inline-block;
+  padding: 8px 16px;
+  text-decoration: none;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+
+.submit {
+  background-color: #84cc16;
+  color: #ffffff;
+}
+
+.submit:hover {
+  background-color: #65a30d;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.submit.btn-primary {
+  background-color: #3b82f6;
+}
+
+.submit.btn-primary:hover {
+  background-color: #2563eb;
+}
+
+.submit.btn-warning {
+  background-color: #facc15;
+  color: #1a1a1d;
+}
+
+.submit.btn-warning:hover {
+  background-color: #eab308;
+}
+
+.submit.btn-danger {
+  background-color: #aa0101;
+}
+
+.submit.btn-danger:hover {
+  background-color: #993333;
+}
+
+.info-button {
+  background-color: #6e6e73;
+  color: #ffffff;
+}
+
+.info-button:hover {
+  background-color: #48484a;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.status-badge {
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 0.85em;
+  font-weight: 600;
+}
+
+.status-success {
+  background-color: #84cc16;
+  color: #ffffff;
+}
+
+.status-warning {
+  background-color: #facc15;
+  color: #1a1a1d;
+}
+
+.status-inactive {
+  background-color: #a1a1a6;
+  color: #ffffff;
+}
+
+.stats-grid {
+  display: flex;
+  justify-content: space-around;
+  text-align: center;
+  padding: 20px 0;
+}
+
+.stat-item {
+  flex: 1;
+  padding: 20px;
+}
+
+.stat-number {
+  font-size: 2.5em;
+  font-weight: 700;
+  color: #1a1a1d;
+  margin-bottom: 5px;
+}
+
+.stat-success .stat-number {
+  color: #65a30d;
+}
+
+.stat-warning .stat-number {
+  color: #b95c2e;
+}
+
+.stat-inactive .stat-number {
+  color: #6e6e73;
+}
+
+.stat-label {
+  font-size: 0.9em;
+  color: #636366;
+  text-transform: uppercase;
+}
+
+.error-text {
+  color: #aa0101;
+  font-style: italic;
+}
+
+.delete-link {
+  color: #aa0101;
+  font-weight: bold;
+}
+
+.delete-link:hover {
+  color: #993333;
+  text-decoration: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .info-list dt,
+  .info-list dd {
+    display: block;
+    width: 100%;
+  }
+  
+  .stats-grid {
+    flex-wrap: wrap;
+  }
+  
+  .stat-item {
+    flex-basis: 50%;
+    margin-bottom: 20px;
+  }
+}
+</style>

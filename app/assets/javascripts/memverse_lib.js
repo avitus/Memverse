@@ -245,6 +245,64 @@ scrub_text = function(text) {
 };
 
 /******************************************************************************
+ * Flexible text matching for passage review
+ * Handles common punctuation variations that users might omit
+ ******************************************************************************/
+function flexibleTextMatch(correctWord, userInput) {
+    // First, check for exact match (case-insensitive)
+    if (correctWord.toLowerCase() === userInput.toLowerCase()) {
+        return true;
+    }
+    
+    // Handle apostrophe words - critical for preventing premature matches
+    // "children's" should NOT match "children"
+    // "Jesus'" should NOT match "Jesus"
+    if (correctWord.includes("'")) {
+        // Check if apostrophe has letters after it (possessive 's) or is just trailing (')
+        var apostrophePattern = /'(.)/;
+        var match = correctWord.match(apostrophePattern);
+        
+        if (match && match[1]) {
+            // Apostrophe has letters after it (e.g., "children's")
+            // Accept the word without any apostrophes (e.g., "childrens")
+            var withoutAllApostrophes = correctWord.replace(/'/g, "");
+            if (withoutAllApostrophes.toLowerCase() === userInput.toLowerCase()) {
+                return true;
+            }
+        }
+        // For trailing apostrophes (e.g., "Jesus'") or any other apostrophe case,
+        // do NOT allow partial matches - this prevents the bug
+        return false;
+    }
+    
+    // Handle quotation marks at beginning
+    // "The should accept The (without quotes)
+    if (correctWord.match(/^["'"]/)) {
+        var withoutQuote = correctWord.replace(/^["'"]/, "");
+        if (withoutQuote.toLowerCase() === userInput.toLowerCase()) {
+            return true;
+        }
+    }
+    
+    // For all other cases, use standard scrubbing
+    var scrubbed_correct = scrub_text(correctWord);
+    var scrubbed_input = scrub_text(userInput);
+    
+    return scrubbed_correct === scrubbed_input;
+}
+
+/******************************************************************************
+ * Calculate input width with buffer to prevent layout shifts
+ ******************************************************************************/
+function calculateInputWidth(word) {
+    // Calculate width for the word that will actually be displayed when correct
+    var baseWidth = word_width(word);
+    
+    // Add small buffer to prevent text overflow and layout shifts
+    return baseWidth + 8;
+}
+
+/******************************************************************************
  * Return width of word for blankify (hackish - would like a better way)
  * TODO: Should accept array of words and perform operations in bulk
  ******************************************************************************/
@@ -307,7 +365,11 @@ function blankifyVerse(versetext, reduction_percentage) {
 	            return "<span>" + x + " " + "</span>";
 	        }
 	        else {
-	            return "<input name='" + x.replace(/'/, "'") + "' class='blank-word' style='width:" + word_width(x) + "px' autocomplete='off'>";
+	            // Use enhanced width calculation to prevent layout shifts
+	            var inputWidth = calculateInputWidth(x);
+	            // Properly escape apostrophes for HTML attribute
+	            var escapedWord = x.replace(/'/g, "'");
+	            return "<input name='" + escapedWord + "' class='blank-word' style='width:" + inputWidth + "px' autocomplete='off'>";
 	        };
 	    });
 

@@ -16,8 +16,8 @@ RSpec.describe 'Verse editing quotation mark bug', type: :request do
         verse = FactoryBot.create(:verse, 
           book: 'Revelation',
           book_index: 66,
-          chapter: '3', 
-          versenum: '12', 
+          chapter: 3, 
+          versenum: 12, 
           translation: 'NAS',
           text: verse_text_with_quote
         )
@@ -42,8 +42,8 @@ RSpec.describe 'Verse editing quotation mark bug', type: :request do
         verse = FactoryBot.create(:verse, 
           book: 'Revelation',
           book_index: 66,
-          chapter: '3', 
-          versenum: '12', 
+          chapter: 3, 
+          versenum: 12, 
           translation: 'NAS',
           text: verse_text_with_quote
         )

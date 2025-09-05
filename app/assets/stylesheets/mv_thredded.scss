@@ -59,6 +59,10 @@ a.thredded--button {
 .thredded--topic-link {
   color: $memverse-green-darker;
   
+  &:visited {
+    color: $memverse-green-darker; // Keep visited links the same color
+  }
+  
   &:hover {
     color: $memverse-green-dark;
   }
@@ -206,6 +210,10 @@ a.thredded--button {
 .thredded--post-moderation-record .thredded--post--user a {
   color: $memverse-green-darker;
   
+  &:visited {
+    color: $memverse-green-darker; // Ensure visited links maintain the same color
+  }
+  
   &:hover {
     color: $memverse-green;
   }
@@ -298,5 +306,113 @@ section.thredded--main-section {
   .thredded--topics--vote-badge {
     display: inline-block;
     margin-left: 0.5rem;
+  }
+}
+
+/*========== Alternate Row Styling ==========*/
+/* Add subtle alternate row background for better topic demarcation */
+.thredded--topics--topic {
+  // Add subtle borders and padding for better separation
+  // Extend padding to the left to include the posts count circle
+  padding: 0.75rem;
+  padding-left: 2.5rem; // Match the left margin to extend background
+  margin-left: 0; // Remove margin since we're using padding
+  border-bottom: 1px solid #f0f0f0;
+  margin-bottom: 0.5rem;
+  
+  // Alternate row backgrounds
+  &:nth-child(even) {
+    background-color: #fafafa;
+  }
+  
+  &:nth-child(odd) {
+    background-color: #ffffff;
+  }
+  
+  // Hover effect for better interactivity
+  &:hover {
+    background-color: #f5f5f7;
+  }
+  
+  // Position the header for proper alignment
+  .thredded--topics--header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 2rem; // Ensure consistent height
+  }
+  
+  // Position meta container (posts count and follow icon)
+  .thredded--topics--meta {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100%;
+    pointer-events: none; // Allow clicks to pass through to the title
+    
+    > * {
+      pointer-events: auto; // Re-enable clicks on child elements
+    }
+  }
+  
+  // Adjust posts count position
+  .thredded--topics--posts-count {
+    position: absolute;
+    left: -2rem; // Move it back closer to original position
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  // Fix positioning of follow/notification icon  
+  .thredded--topics--follow-icon {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  // Ensure title has proper spacing
+  .thredded--topics--title {
+    margin: 0;
+    padding-left: 0.5rem; // Minimal left padding since posts count is positioned absolutely
+    padding-right: 3rem; // Space for follow icon
+  }
+  
+  // Position categories in bottom right
+  .thredded--topics--categories {
+    position: absolute;
+    bottom: 0.5rem;
+    right: 0.75rem;
+    margin: 0;
+    
+    ul {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      gap: 0.5rem;
+      flex-direction: row;
+      justify-content: flex-end;
+    }
+    
+    // Style category tags as subtle, non-intrusive elements
+    li {
+      list-style: none;
+      color: #a1a1a6; // gray-400 - muted text
+      background-color: #f5f5f7; // gray-100 - very light background
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+      font-size: 0.75rem; // Smaller font for less visual importance
+      display: inline-block;
+      transition: all 0.2s ease;
+      
+      &:hover {
+        background-color: #e5e5e7; // Slightly darker background on hover
+      }
+    }
+  }
+  
+  // Ensure footer has space for categories
+  .thredded--topics--footer {
+    padding-bottom: 1rem; // Make room for absolutely positioned categories
   }
 }

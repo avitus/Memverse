@@ -7,10 +7,10 @@ class SendReminders
   def perform
     # TEMPORARY: Disable reminder emails while email provider transition is in progress
     # To re-enable: Comment out or remove the following lines
-    if true  # Set to false to re-enable emails
-      Rails.logger.info(" *** Email reminder: TEMPORARILY DISABLED - Skipping email reminders")
-      return
-    end
+    # if true  # Set to false to re-enable emails
+    #   Rails.logger.info(" *** Email reminder: TEMPORARILY DISABLED - Skipping email reminders")
+    #   return
+    # end
 
     @emails_sent        = 0
     @throttle           = 2  # email send limit per recurrence period
@@ -21,8 +21,11 @@ class SendReminders
     # Retrieve records for all users ordered by newest first
     # Process newest users first to prioritize recently registered users
     # Note: Using in_batches with order instead of find_each which ignores order
-    User.order(created_at: :desc).in_batches(of: 100) do |batch|
-      batch.each do |u|
+    # IMPORTANT: in_batches loads by primary key, so we need to reorder within each batch
+    User.in_batches(of: 100) do |batch|
+      # Apply ordering to the batch before iterating to ensure order is preserved
+      # This is critical to ensure newest users are processed first within each batch
+      batch.reorder(created_at: :desc).each do |u|
 
       # Change reminder frequency (if necessary) to not be annoying
       u.update_reminder_freq

@@ -118,6 +118,7 @@ class Memverse < ApplicationRecord
   # Named Scopes
   scope :memorized,     -> { where(status: "Memorized") }
   scope :learning,      -> { where(status: "Learning" ) }
+  scope :pending,       -> { where(status: "Pending") }
 
   scope :active,        -> { where(status: ["Learning", "Memorized"]) }
   scope :inactive,      -> { where(status: "Pending") }

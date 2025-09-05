@@ -411,20 +411,14 @@ class UtilsController < ApplicationController
   # Outputs:
   # ----------------------------------------------------------------------------------------------------------
   def search_user
-
     search_param = params[:search_param]
-
-    # TODO: Is there a better way to do this search?
-
-    @user_list = User.where(login: search_param).limit(5)
-
-    if @user_list.empty?
-      @user_list = User.where(email: search_param).limit(5)
-
-    end
-
-    if @user_list.empty?
-      @user_list = User.where(name: search_param).limit(5)
+    
+    if search_param.present?
+      # Search by login, email, or name (case-insensitive partial match)
+      search_term = "%#{search_param}%"
+      @user_list = User.where("login LIKE ? OR email LIKE ? OR name LIKE ?", search_term, search_term, search_term).limit(20)
+    else
+      @user_list = []
     end
 
     render :partial => 'search_user', :layout=>false
@@ -435,9 +429,19 @@ class UtilsController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   def show_user_info
     @user = User.find(params[:id])
-
-    @mv_list = Memverse.find(:all, :conditions => ["user_id = ?", @user.id]).sort!
-
+    @mv_list = @user.memverses.includes(:verse).order(:id)
+    
+    # Additional admin-relevant data
+    @recent_activity = @user.memverses.where("last_tested > ?", 30.days.ago).count
+    @total_verses = @user.memverses.count
+    @memorized_count = @user.memverses.memorized.count
+    @learning_count = @user.memverses.learning.count
+    @pending_count = @user.memverses.pending.count
+    
+    # Set breadcrumbs
+    add_breadcrumb "Admin", admin_path
+    add_breadcrumb "Search Users", search_users_path
+    add_breadcrumb @user.login, show_user_info_path(:id => @user)
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -627,18 +631,31 @@ class UtilsController < ApplicationController
       sanitize_sort_param(params[:sort_order], allowed_user_sort_columns) : 
       'created_at DESC'
     
+    # Start with base query based on period
     case period
       when 'Today' then
-        @user_list = User.where("created_at > ?", Date.today).order(safe_sort_order || 'created_at DESC')
+        @user_list = User.where("created_at > ?", Date.today)
       when 'Active' then
         @user_list = User.where("last_activity_date = ?", Date.today)
       when 'Pending' then
-        @user_list = User.where(:confirmed_at => nil).order(safe_sort_order || 'created_at DESC')
+        @user_list = User.where(:confirmed_at => nil)
       when 'All' then
-        @user_list = User.order(safe_sort_order || 'created_at DESC')
+        @user_list = User.all
       else
-        @user_list = User.where("created_at > ?", Date.today).order(safe_sort_order || 'created_at DESC')
+        @user_list = User.where("created_at > ?", Date.today)
     end
+    
+    # Apply search filter if present
+    if params[:search].present?
+      search_term = "%#{params[:search]}%"
+      @user_list = @user_list.where("name LIKE ? OR email LIKE ? OR login LIKE ?", search_term, search_term, search_term)
+    end
+    
+    # Apply sorting
+    @user_list = @user_list.order(safe_sort_order || 'created_at DESC')
+    
+    # Store search term for view
+    @search_term = params[:search]
   end
 
   # ----------------------------------------------------------------------------------------------------------

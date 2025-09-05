@@ -232,7 +232,8 @@ class User < ApplicationRecord
   before_save :generate_login
 
   # Callbacks for email notifications (replacing rails-observers functionality)
-  after_create :send_signup_notification
+  # Removed after_create :send_signup_notification to prevent too many onboarding emails
+  # The signup content is now merged into the activation email as of Sep 3, 2025
   after_update :send_activation_notification, if: :recently_activated?
 
   # Include default devise modules. Others available are:
@@ -1346,7 +1347,7 @@ class User < ApplicationRecord
   end
 
   # Check if user is not using OpenID (identity_url is blank)
-  #
+  # 
   # @return [Boolean]
   def not_using_openid?
     identity_url.blank?

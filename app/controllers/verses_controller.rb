@@ -342,10 +342,21 @@ class VersesController < ApplicationController
   def set_verse_text
     @verse = Verse.find(params[:id])
     new_text = params[:value] # need to clean this up with hpricot or equivalent
+    
+    Rails.logger.debug "Setting verse text for verse #{@verse.id}: '#{@verse.text}' -> '#{new_text}'"
+    
     @verse.text = new_text
     @verse.checked_by = current_user.login
-    @verse.save
-    render plain: @verse.text
+    
+    if @verse.save
+      Rails.logger.debug "Successfully saved verse #{@verse.id} with new text: '#{@verse.text}'"
+      render plain: @verse.text
+    else
+      Rails.logger.error "Failed to save verse #{@verse.id}: #{@verse.errors.full_messages.join(', ')}"
+      # Since save failed, reload the verse to get the original text
+      @verse.reload
+      render plain: @verse.text
+    end
   end
 
   # ----------------------------------------------------------------------------------------------------------

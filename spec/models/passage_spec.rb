@@ -106,6 +106,25 @@ describe Passage do
       expect(psg.memverses.last.subsection).to eq(0)
     end
 
+    it "should handle nil subsection_end values gracefully" do
+      # Use the same pattern as the other subsection tests - create passage in Psalms
+      psg = FactoryBot.create(:passage, book: 'Psalms', chapter: 119, first_verse: 1, last_verse: 10, length: 10)
+      
+      # Ensure uberverses exist for this passage
+      (1..10).each do |vs|
+        Uberverse.find_or_create_by(book: 'Psalms', chapter: 119, versenum: vs, book_index: 19)
+      end
+      
+      # Set all uberverses to have nil subsection_end values to simulate completely missing data
+      Uberverse.where(book: 'Psalms', chapter: 119, versenum: 1..10).update_all(subsection_end: nil)
+      
+      # This should not raise an error (the main fix we're testing)
+      expect { psg.auto_subsection }.not_to raise_error
+      
+      # The method should handle nil values gracefully without crashing
+      # The specific behavior when all values are nil is to set subsection to 0
+    end
+
   end
 
   # ==============================================================================================

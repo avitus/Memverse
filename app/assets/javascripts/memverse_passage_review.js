@@ -210,10 +210,17 @@ function mvMirrorNextInput( $inputCell ) {
 
 function mvPassageReviewHandleInput( $inputCell, correctWord, userGuess, e ) {
 
-    // Word correct ==> next word
-    if ( scrub_text( correctWord ) === scrub_text( userGuess ) ) {
+    // Word correct ==> next word (using flexible matching)
+    if ( flexibleTextMatch( correctWord, userGuess ) ) {
 
-        $inputCell.before( "<span>" + correctWord + " </span>" ); // insert the correct word into the verse
+        // Calculate the width the span will need and preserve input width to prevent layout shift
+        var currentWidth = $inputCell.width();
+        var $span = $("<span>").text(correctWord + " ").css({
+            'display': 'inline-block',
+            'min-width': currentWidth + 'px'
+        });
+        
+        $inputCell.before( $span );                               // insert the correct word with preserved width
         $inputCell.before( $inputCell.nextUntil("input") );       // move subsequent revealed words ahead of input
         mvMirrorNextInput( $inputCell );                          // update the input box
 

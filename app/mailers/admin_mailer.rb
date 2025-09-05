@@ -15,7 +15,7 @@ class AdminMailer < ActionMailer::Base
         to: emails, 
         subject: "Forum: Posts and topics to review",
         tag: "forum-review",
-        message_stream: "outbound"
+        message_stream: "forum-stream"
       )
     end
   end

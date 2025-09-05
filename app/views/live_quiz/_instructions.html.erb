@@ -25,8 +25,13 @@
         <h3>Quiz Schedule</h3>
         <p>The Bible knowledge quiz currently runs on the following weekly schedule:</p>
         <ul>
-            <li>Wednesdays at 9am (Pacific Time)</li>
-            <li>Saturdays at 3pm (Pacific Time)</li>
+            <% if @quiz_schedule %>
+                <% @quiz_schedule.each do |schedule_time| %>
+                    <li><%= schedule_time %></li>
+                <% end %>
+            <% else %>
+                <li>Schedule information unavailable</li>
+            <% end %>
         </ul>
 
         <p>The next quiz starts in <strong><%=h distance_of_time_in_words(Time.now, @quiz.start_time) %></strong>

@@ -116,20 +116,39 @@ class Passage < ApplicationRecord
                               .order('verses.versenum')
 
       section_dividers = auto_ss.pluck(:subsection_end) # Array of probabilities that each verse ends a section
+      
+      # Filter out nil values and convert to integers to ensure consistency
+      valid_dividers = section_dividers.compact.map(&:to_i)
+
+      # Check if we have any valid dividers to work with
+      if valid_dividers.empty?
+        # If no valid subsection data, set all memverses to subsection 0
+        auto_ss.each { |mv| 
+          Memverse.find(mv.id).update_attribute(:subsection, 0)
+        }
+        return
+      end
 
       # Calculate the desired number of subsections
       num_sections = (self.length / subsection_length).to_i
 
       # Set threshold based on number of subsections needed. Don't set threshold below 1.
-      threshold = [ section_dividers.sort[-num_sections], 1].max
+      # Handle case where we have fewer valid dividers than sections needed
+      if valid_dividers.length >= num_sections
+        threshold = [ valid_dividers.sort[-num_sections], 1].max
+      else
+        threshold = 1 # Default threshold if insufficient data
+      end
 
       # puts ("Section dividers: #{section_dividers.inspect}")
       # puts ("Number of sections: #{num_sections}")
-      # puts ("Sorted section dividers: #{section_dividers.sort}")
+      # puts ("Sorted section dividers: #{valid_dividers.sort}")
       # puts ("Setting threshold: #{threshold}")
 
       auto_ss.each_with_index { |mv, index|
-        Memverse.find(mv.id).update_attribute(:subsection, section_dividers[0...index].select{ |div| div>=threshold }.count)
+        # Use original section_dividers array but handle nil values in comparison
+        dividers_to_check = section_dividers[0...index].compact
+        Memverse.find(mv.id).update_attribute(:subsection, dividers_to_check.select{ |div| div.to_i >= threshold }.count)
       }
     end
 
