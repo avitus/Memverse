@@ -61,11 +61,7 @@ Given(/^the admin has quiz management permissions$/) do
   allow_any_instance_of(User).to receive(:can?).with(:manage, Quiz).and_return(true)
 end
 
-When(/^I go to the chat page$/) do
-  visit '/chat'
-end
-
-When(/^I go to the chat page for channel (\d+)$/) do |channel_number|
+When(/^I visit the chat page for channel (\d+)$/) do |channel_number|
   visit "/chat?channel=#{channel_number}"
 end
 

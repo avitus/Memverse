@@ -21,7 +21,7 @@ Feature: Chat functionality
 
   Scenario: User can access specific chat channel
     Given I am signed in as "testuser"
-    When I go to the chat page for channel 5
+    When I visit the chat page for channel 5
     Then I should see "Memverse Chat"
     And the page should load the correct channel
 
