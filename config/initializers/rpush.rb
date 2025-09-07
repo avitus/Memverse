@@ -133,3 +133,23 @@ Rpush.reflect do |on|
   # on.error do |error|
   # end
 end
+
+# Temporary monkey patch to fix RPush 9.2.0 compatibility issue with Rails 7.1
+# The gem is trying to access a 'thread_id' attribute that doesn't exist
+# This can be removed when RPush is updated to fix the issue
+if defined?(Rpush::Client::ActiveRecord::Apns::Notification)
+  module Rpush
+    module Client
+      module ActiveRecord
+        module Apns
+          class Notification < Rpush::Client::ActiveRecord::Notification
+            # Define thread_id as an attribute accessor if it doesn't exist
+            unless method_defined?(:thread_id)
+              attr_accessor :thread_id
+            end
+          end
+        end
+      end
+    end
+  end
+end
