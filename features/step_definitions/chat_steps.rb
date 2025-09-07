@@ -55,8 +55,16 @@ Given(/^the admin has quiz management permissions$/) do
   admin = User.find_by(admin: true)
   expect(admin).not_to be_nil, "Admin user not found"
   
-  # Admin users should already have quiz management permissions via CanCan
-  # No need to mock - the admin flag should be sufficient
+  # Create admin role if it doesn't exist and assign it to the admin user
+  admin_role = Role.find_or_create_by(name: 'admin')
+  unless admin.roles.include?(admin_role)
+    admin.roles << admin_role
+    admin.save!
+  end
+  
+  # Verify the admin can manage Quiz
+  ability = Ability.new(admin)
+  expect(ability.can?(:manage, Quiz)).to be true
 end
 
 When(/^I visit the chat page for channel (\d+)$/) do |channel_number|
@@ -90,8 +98,8 @@ When(/^I ban user "([^"]*)" from chat$/) do |username|
   end
   expect(user).not_to be_nil, "User #{username} not found"
   
-  page.driver.header 'X-Requested-With', 'XMLHttpRequest'
-  page.driver.get("/chat/toggle_ban?user_id=#{user.id}")
+  # Make the AJAX request to ban the user
+  visit "/chat/toggle_ban?user_id=#{user.id}"
 end
 
 When(/^I unban user "([^"]*)" from chat$/) do |username|
@@ -181,7 +189,8 @@ Then(/^user "([^"]*)" should be banned from chat$/) do |username|
   elsif username == 'admin'
     User.find_by(email: 'admin@test.com')
   end
-  expect($redis).to have_received(:set).with("banned-#{user.id}", "banned")
+  # Check that the user is actually banned in Redis
+  expect($redis.exists("banned-#{user.id}")).to eq(1)
 end
 
 Then(/^I should receive a JSON response confirming the ban$/) do
@@ -196,7 +205,8 @@ Then(/^user "([^"]*)" should not be banned from chat$/) do |username|
   elsif username == 'admin'
     User.find_by(email: 'admin@test.com')
   end
-  expect($redis).to have_received(:del).with("banned-#{user.id}")
+  # Check that the user is not banned in Redis
+  expect($redis.exists("banned-#{user.id}")).to eq(0)
 end
 
 Then(/^I should receive a JSON response confirming the unban$/) do
@@ -217,20 +227,20 @@ end
 
 Then(/^the page should contain my user ID in JavaScript variables$/) do
   current_user = User.find_by(email: 'testuser@test.com')
-  # Check that the user ID is in the JavaScript variables
-  expect(page).to have_content("const userId = \"#{current_user.id}\"")
+  # Check that the user ID is in the JavaScript variables (including non-visible text)
+  expect(page).to have_content("const userId = \"#{current_user.id}\"", visible: :all)
 end
 
 Then(/^the page should contain my username in JavaScript variables$/) do
   current_user = User.find_by(email: 'testuser@test.com')
-  # Check that the username is in the JavaScript variables
-  expect(page).to have_content("const userName = \"#{current_user.name_or_login}\"")
+  # Check that the username is in the JavaScript variables (including non-visible text)
+  expect(page).to have_content("const userName = \"#{current_user.name_or_login}\"", visible: :all)
 end
 
 Then(/^the page should contain my avatar URL in JavaScript variables$/) do
   current_user = User.find_by(email: 'testuser@test.com')
-  # Check that the avatar URL is in the JavaScript variables
-  expect(page).to have_content("const userAvatar = \"#{current_user.blog_avatar_url}\"")
+  # Check that the avatar URL is in the JavaScript variables (including non-visible text)
+  expect(page).to have_content("const userAvatar = \"#{current_user.blog_avatar_url}\"", visible: :all)
 end
 
 Then(/^the message should not be published to PubNub$/) do
