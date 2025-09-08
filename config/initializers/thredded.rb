@@ -74,7 +74,7 @@ Thredded.messageboards_order = :position
 
 # ==> Email Configuration
 # Email "From:" field will use the following
-Thredded.email_from = 'admin@memverse.com'
+Thredded.email_from = '"Memverse" <admin@memverse.com>'
 
 # Emails going out will prefix the "Subject:" with the following string
 Thredded.email_outgoing_prefix = '[Memverse] '

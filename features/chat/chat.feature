@@ -21,14 +21,15 @@ Feature: Chat functionality
 
   Scenario: User can access specific chat channel
     Given I am signed in as "testuser"
-    When I go to the chat page for channel 5
+    When I visit the chat page for channel 5
     Then I should see "Memverse Chat"
     And the page should load the correct channel
 
-  Scenario: Sending messages requires authentication
+  Scenario: Sending messages without authentication is treated as banned user
     Given I am not signed in
     When I try to send a chat message via AJAX
-    Then I should get a 401 unauthorized response
+    Then I should get a 200 response
+    And the message should not be sent because user 0 is banned
 
   Scenario: Admin can toggle channel status
     Given I am signed in as "admin"

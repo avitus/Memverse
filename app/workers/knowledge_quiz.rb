@@ -195,7 +195,8 @@ class KnowledgeQuiz
   # ========================================================================
   
   def announce_quiz_start
-    with_retry("quiz announcement") do
+    # Create tweet announcement - only retry this if it fails
+    with_retry("tweet creation") do
       # Log the announcement to help debug duplicates
       Sidekiq.logger.info "===> Creating quiz start announcement tweet (Process: #{Process.pid})"
       
@@ -203,8 +204,18 @@ class KnowledgeQuiz
       tweet = Tweet.create!(news: broadcast, user_id: 1, importance: 2)
       
       Sidekiq.logger.info "===> Created tweet ID: #{tweet.id} at #{tweet.created_at}"
-      
+    end
+    
+    # Send iOS notifications - don't let failures stop the quiz
+    begin
+      Sidekiq.logger.info "===> Attempting to send iOS push notifications"
       ios_quiz_alert("The Bible trivia quiz is starting now.")
+      Sidekiq.logger.info "===> iOS push notifications sent successfully"
+    rescue => e
+      # Log the error but don't fail the quiz
+      Sidekiq.logger.error "===> iOS push notification failed (non-fatal): #{e.class} - #{e.message}"
+      Sidekiq.logger.error e.backtrace.first(5).join("\n")
+      # Continue with the quiz even if push notifications fail
     end
   end
   
