@@ -17,6 +17,22 @@ unless system('which foreman > /dev/null 2>&1')
   system('gem install foreman')
 end
 
+# Check if MySQL is running
+if system('mysqladmin ping --silent 2>/dev/null')
+  puts "MySQL is already running"
+else
+  puts "Starting MySQL..."
+  # Try to start MySQL using common methods
+  if system('which mysql.server > /dev/null 2>&1')
+    system('mysql.server start')
+  elsif system('which brew > /dev/null 2>&1')
+    system('brew services start mysql')
+  else
+    puts "Warning: Could not start MySQL. Please start it manually."
+  end
+  sleep 2
+end
+
 # Check if Redis is running
 if system('redis-cli ping > /dev/null 2>&1')
   puts "Redis is already running"
@@ -31,6 +47,7 @@ puts "Starting Memverse development environment..."
 puts "- Rails server on http://localhost:3000"
 puts "- Sidekiq scheduler (handles cron jobs, logs to log/sidekiq_scheduler.log)"
 puts "- Sidekiq worker (processes jobs, logs to log/sidekiq_workers.log)"
+puts "- MySQL database server"
 puts "- Redis server"
 puts "\nSidekiq Web UI: http://localhost:3000/sidekiq"
 puts "Cron Jobs: http://localhost:3000/sidekiq/cron"
