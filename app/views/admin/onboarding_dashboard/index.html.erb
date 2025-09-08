@@ -162,17 +162,16 @@
             <tr>
               <th>Status</th>
               <th>User</th>
+              <th>Email</th>
               <th>Registered</th>
               <th>Days</th>
               <th>Progress</th>
-              <th>Email</th>
+              <th>Confirmed</th>
               <th>Verses</th>
               <th>Memorized</th>
               <th>Learning</th>
               <th>Last Active</th>
               <th>Translation</th>
-              <th>Location</th>
-              <th>Risk</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -188,6 +187,7 @@
                     <br><span class="text-muted">Ref: <%= user.referred_by %></span>
                   <% end %>
                 </td>
+                <td><%= user.email %></td>
                 <td><%= user.created_at.strftime('%m/%d %H:%M') %></td>
                 <td><%= days_since_registration(user) %></td>
                 <td>
@@ -205,17 +205,6 @@
                 <td><%= user.learning %></td>
                 <td><%= format_date_short(user.last_activity_date) %></td>
                 <td><%= user.translation || '-' %></td>
-                <td>
-                  <%= user_location_info(user) %>
-                  <% if user.church || user.group %>
-                    <br><span class="text-muted"><%= user_community_info(user) %></span>
-                  <% end %>
-                </td>
-                <td>
-                  <span class="risk-score <%= onboarding_risk_class(user) %>">
-                    <%= onboarding_risk_level(user) %>
-                  </span>
-                </td>
                 <td>
                   <%= link_to 'View', admin_onboarding_dashboard_path(user), 
                               class: 'btn-view' %>
