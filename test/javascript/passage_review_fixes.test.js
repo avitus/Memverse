@@ -48,6 +48,7 @@ describe("Passage Review Input Field Sizing Fixes", () => {
       expect(memverseLib.flexibleTextMatch("children's", "children")).toBe(false);
       expect(memverseLib.flexibleTextMatch("Lord's", "Lord")).toBe(false);
       expect(memverseLib.flexibleTextMatch("Jesus'", "Jesus")).toBe(false);
+      expect(memverseLib.flexibleTextMatch("man's", "man")).toBe(false);
       
       // But contractions should still work normally
       expect(memverseLib.flexibleTextMatch("won't", "wont")).toBe(true);
@@ -97,7 +98,7 @@ describe("Passage Review Input Field Sizing Fixes", () => {
       
       // Should contain properly escaped apostrophe
       expect(result).toContain("Lord's");
-      expect(result).toContain("name='Lord's'");
+      expect(result).toContain('name="Lord\'s"');
       
       // Should use enhanced width (48 + 8 = 56)
       expect(result).toContain("width:56px");
@@ -107,20 +108,20 @@ describe("Passage Review Input Field Sizing Fixes", () => {
       var testText = "For God's glory and children's sake we pray";
       var result = memverseLib.blankifyVerse(testText, 50);
       
-      // Should have proper HTML entity encoding for apostrophes
-      expect(result).toContain("name='God's'");
-      expect(result).toContain("name='children's'");
+      // Should have proper HTML with double quotes for apostrophes
+      expect(result).toContain('name="God\'s"');
+      expect(result).toContain('name="children\'s"');
       
-      // The apostrophes should be properly escaped
-      expect(result).toMatch(/name='[^']*'/g); // Should match properly quoted attributes
+      // The attributes should use double quotes
+      expect(result).toMatch(/name="[^"]*"/g); // Should match properly quoted attributes
     });
     
     it("should handle quotation marks correctly", () => {
       var testText = '"The Lord is my shepherd," he said proudly';
       var result = memverseLib.blankifyVerse(testText, 40);
       
-      // Should preserve quotation marks in the name attribute
-      expect(result).toContain('name=\'"The');
+      // Should properly escape quotation marks in the name attribute
+      expect(result).toContain('name="&quot;The');
     });
   });
 
@@ -170,12 +171,12 @@ describe("Passage Review Input Field Sizing Fixes", () => {
       var blankified = memverseLib.blankifyVerse(verseText, 50);
       
       // 2. Should create input with enhanced width
-      expect(blankified).toContain("name='Lord's'");
+      expect(blankified).toContain('name="Lord\'s"');
       expect(blankified).toContain("width:56px"); // 48 + 8
       
       // 3. Flexible matching should work correctly (prevent apostrophe bug)
-      expect(memverseLib.flexibleTextMatch("Lord", "Lord's")).toBe(false); // Base should NOT match possessive
-      expect(memverseLib.flexibleTextMatch("Lords", "Lord's")).toBe(true); // No-apostrophe version should match
+      expect(memverseLib.flexibleTextMatch("Lord's", "Lord")).toBe(false); // Base should NOT match possessive
+      expect(memverseLib.flexibleTextMatch("Lord's", "Lords")).toBe(true); // No-apostrophe version should match
       expect(memverseLib.flexibleTextMatch("Lord's", "Lord's")).toBe(true); // Exact match should work
     });
   });
@@ -199,7 +200,7 @@ describe("Passage Review Input Field Sizing Fixes", () => {
       expect(memverseLib.flexibleTextMatch("Jesus'", "Jesus")).toBe(false);
       expect(memverseLib.flexibleTextMatch("James'", "James")).toBe(false);
       
-      // But exact matches and proper variations should work
+      // But exact matches should work
       expect(memverseLib.flexibleTextMatch("Jesus'", "Jesus'")).toBe(true);
       expect(memverseLib.flexibleTextMatch("James'", "James'")).toBe(true);
     });

@@ -247,6 +247,10 @@ scrub_text = function(text) {
 /******************************************************************************
  * Flexible text matching for passage review
  * Handles common punctuation variations that users might omit
+ * 
+ * IMPORTANT: For apostrophe words like "man's", we do NOT match the base word
+ * alone (e.g., "man") to prevent issues where the field advances prematurely.
+ * Users must type either the full word with apostrophe or without (e.g., "mans").
  ******************************************************************************/
 function flexibleTextMatch(correctWord, userInput) {
     // First, check for exact match (case-insensitive)
@@ -254,24 +258,22 @@ function flexibleTextMatch(correctWord, userInput) {
         return true;
     }
     
-    // Handle apostrophe words - critical for preventing premature matches
-    // "children's" should NOT match "children"
-    // "Jesus'" should NOT match "Jesus"
+    // Handle apostrophe words - special logic for possessives and contractions
     if (correctWord.includes("'")) {
         // Check if apostrophe has letters after it (possessive 's) or is just trailing (')
         var apostrophePattern = /'(.)/;
         var match = correctWord.match(apostrophePattern);
         
         if (match && match[1]) {
-            // Apostrophe has letters after it (e.g., "children's")
-            // Accept the word without any apostrophes (e.g., "childrens")
+            // Apostrophe has letters after it (e.g., "children's", "don't")
+            // Accept the word without any apostrophes (e.g., "childrens", "dont")
             var withoutAllApostrophes = correctWord.replace(/'/g, "");
             if (withoutAllApostrophes.toLowerCase() === userInput.toLowerCase()) {
                 return true;
             }
         }
-        // For trailing apostrophes (e.g., "Jesus'") or any other apostrophe case,
-        // do NOT allow partial matches - this prevents the bug
+        // For ALL apostrophe cases, do NOT allow base word match
+        // This prevents "man" from matching "man's" and advancing prematurely
         return false;
     }
     
@@ -367,9 +369,10 @@ function blankifyVerse(versetext, reduction_percentage) {
 	        else {
 	            // Use enhanced width calculation to prevent layout shifts
 	            var inputWidth = calculateInputWidth(x);
-	            // Properly escape apostrophes for HTML attribute
-	            var escapedWord = x.replace(/'/g, "'");
-	            return "<input name='" + escapedWord + "' class='blank-word' style='width:" + inputWidth + "px' autocomplete='off'>";
+	            // Escape double quotes for HTML attributes, but keep apostrophes as-is
+	            // This handles both "brother's" and '"Why' correctly
+	            var escapedWord = x.replace(/"/g, '&quot;');
+	            return '<input name="' + escapedWord + '" class="blank-word" style="width:' + inputWidth + 'px" autocomplete="off">';
 	        };
 	    });
 

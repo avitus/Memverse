@@ -113,7 +113,12 @@
       "Bash(RAILS_ENV=test bundle exec rails console)",
       "Bash(FinalVerse.count)",
       "Read(/Users/avitus/.rvm/gems/ruby-3.2.6/bundler/gems/bloggity-221ecdbaec42/app/models/bloggity/**)",
-      "Read(/Users/avitus/.rvm/gems/ruby-3.2.6/bundler/gems/bloggity-221ecdbaec42/app/views/bloggity/blog_posts/**)"
+      "Read(/Users/avitus/.rvm/gems/ruby-3.2.6/bundler/gems/bloggity-221ecdbaec42/app/views/bloggity/blog_posts/**)",
+      "Bash(open test_apostrophe.html)",
+      "Bash(open test_apostrophe2.html)",
+      "Bash(open test_realistic.html)",
+      "Bash(open test_space_issue.html)",
+      "Bash(open test_apostrophe_final.html)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits",
