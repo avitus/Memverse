@@ -72,7 +72,7 @@ class ChatController < ApplicationController
     user_id = params[:user_id]
 
     if user_id && (can? :manage, Quiz)
-      if $redis.exists("banned-#{user_id}")
+      if $redis.exists("banned-#{user_id}") > 0
         $redis.del("banned-#{user_id}")
         status = "Ban revoked"
       else

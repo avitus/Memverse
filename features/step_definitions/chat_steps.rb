@@ -99,7 +99,8 @@ When(/^I ban user "([^"]*)" from chat$/) do |username|
   expect(user).not_to be_nil, "User #{username} not found"
   
   # Make the AJAX request to ban the user
-  visit "/chat/toggle_ban?user_id=#{user.id}"
+  page.driver.header 'X-Requested-With', 'XMLHttpRequest'
+  page.driver.get("/chat/toggle_ban?user_id=#{user.id}")
 end
 
 When(/^I unban user "([^"]*)" from chat$/) do |username|
@@ -227,20 +228,20 @@ end
 
 Then(/^the page should contain my user ID in JavaScript variables$/) do
   current_user = User.find_by(email: 'testuser@test.com')
-  # Check that the user ID is in the JavaScript variables (including non-visible text)
-  expect(page).to have_content("const userId = \"#{current_user.id}\"", visible: :all)
+  # Check that the user ID is in the JavaScript variables by checking page source
+  expect(page.html).to include("const userId = \"#{current_user.id}\"")
 end
 
 Then(/^the page should contain my username in JavaScript variables$/) do
   current_user = User.find_by(email: 'testuser@test.com')
-  # Check that the username is in the JavaScript variables (including non-visible text)
-  expect(page).to have_content("const userName = \"#{current_user.name_or_login}\"", visible: :all)
+  # Check that the username is in the JavaScript variables by checking page source
+  expect(page.html).to include("const userName = \"#{current_user.name_or_login}\"")
 end
 
 Then(/^the page should contain my avatar URL in JavaScript variables$/) do
   current_user = User.find_by(email: 'testuser@test.com')
-  # Check that the avatar URL is in the JavaScript variables (including non-visible text)
-  expect(page).to have_content("const userAvatar = \"#{current_user.blog_avatar_url}\"", visible: :all)
+  # Check that the avatar URL is in the JavaScript variables by checking page source
+  expect(page.html).to include("const userAvatar = \"#{current_user.blog_avatar_url}\"")
 end
 
 Then(/^the message should not be published to PubNub$/) do

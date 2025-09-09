@@ -42,6 +42,7 @@ Feature: Chat functionality
     Given I am signed in as "admin" 
     And the admin has quiz management permissions
     And user "testuser" exists
+    And user "testuser" is not banned from chat
     When I ban user "testuser" from chat
     Then user "testuser" should be banned from chat
     And I should receive a JSON response confirming the ban
