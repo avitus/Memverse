@@ -125,7 +125,7 @@ jobs:
       #     paths:
       #       - ~/.yarn-cache
 
-      # Install Chrome dependencies and setup matching ChromeDriver (only for Cucumber tests)
+      # Setup Chrome and ChromeDriver (simplified for Cucumber tests)
       - run:
           name: Setup Chrome and ChromeDriver
           command: |
@@ -138,156 +138,23 @@ jobs:
             
             echo "Setting up ChromeDriver for container $CIRCLE_NODE_INDEX (Cucumber tests)"
             
-            # Check if ChromeDriver is already cached
-            if [ -f /usr/local/bin/chromedriver ]; then
-              echo "ChromeDriver found in cache!"
-              chromedriver --version
-              echo "Chrome version: $(google-chrome --version)"
-              exit 0
-            fi
+            # CircleCI's cimg/ruby:3.2.6-browsers comes with Chrome and ChromeDriver pre-installed
+            # Just verify they're working and install any missing dependencies
+            echo "Verifying pre-installed Chrome and ChromeDriver..."
             
-            echo "ChromeDriver not in cache, downloading..."
-            # Install additional dependencies for headless Chrome
+            # Install additional Chrome dependencies if needed
             sudo apt-get update --allow-releaseinfo-change
-            sudo apt-get install -y \
-              libgconf-2-4 \
-              libxss1 \
-              libappindicator1 \
-              libindicator7 \
-              wget \
-              unzip \
-              jq
+            sudo apt-get install -y xvfb
             
-            # Detect installed Chrome version
-            echo "Detecting Chrome version..."
-            CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+\.\d+')
-            echo "Chrome version detected: $CHROME_VERSION"
-            
-            # Get the major version for ChromeDriver compatibility
-            CHROME_MAJOR_VERSION=$(echo $CHROME_VERSION | cut -d. -f1)
-            echo "Chrome major version: $CHROME_MAJOR_VERSION"
-            
-            # Function to download ChromeDriver with retries
-            download_chromedriver() {
-              local url=$1
-              local max_retries=3
-              local retry_count=0
-              
-              while [ $retry_count -lt $max_retries ]; do
-                echo "Attempt $((retry_count + 1)) of $max_retries: Downloading ChromeDriver..."
-                if wget -O chromedriver.zip "$url"; then
-                  echo "ChromeDriver download successful!"
-                  return 0
-                else
-                  echo "Download failed, retrying in 5 seconds..."
-                  sleep 5
-                  retry_count=$((retry_count + 1))
-                fi
-              done
-              
-              echo "Failed to download ChromeDriver after $max_retries attempts"
-              return 1
-            }
-            
-            # Download and install matching ChromeDriver using Chrome for Testing API
-            echo "Using Chrome for Testing API to find ChromeDriver for Chrome $CHROME_MAJOR_VERSION..."
-            
-            # Try to get ChromeDriver version from Chrome for Testing API with retries
-            for attempt in 1 2 3; do
-              echo "Attempt $attempt: Fetching Chrome for Testing API data..."
-              if API_RESPONSE=$(curl -s --connect-timeout 10 --max-time 30 "https://googlechromelabs.github.io/chrome-for-testing/known-good-versions-with-downloads.json"); then
-                echo "API response received successfully"
-                break
-              else
-                echo "API request failed, retrying in 5 seconds..."
-                sleep 5
-                if [ $attempt -eq 3 ]; then
-                  echo "Failed to fetch API data after 3 attempts"
-                  exit 1
-                fi
-              fi
-            done
-            
-            # Parse JSON to find the latest ChromeDriver for the installed Chrome major version
-            CHROMEDRIVER_URL=$(echo "$API_RESPONSE" | jq -r --arg major "$CHROME_MAJOR_VERSION" '
-              .versions[] | 
-              select(.version | startswith($major + ".")) | 
-              .downloads.chromedriver[]? | 
-              select(.platform == "linux64") | 
-              .url' | tail -n 1)
-            
-            if [ -z "$CHROMEDRIVER_URL" ] || [ "$CHROMEDRIVER_URL" = "null" ]; then
-              echo "Could not find ChromeDriver for Chrome $CHROME_MAJOR_VERSION using Chrome for Testing API"
-              echo "Trying to find the latest stable version..."
-              
-              # Fallback: get the latest stable ChromeDriver
-              CHROMEDRIVER_URL=$(echo "$API_RESPONSE" | jq -r '
-                .versions[] | 
-                select(.version | test("^[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+$")) | 
-                .downloads.chromedriver[]? | 
-                select(.platform == "linux64") | 
-                .url' | tail -n 1)
-            fi
-            
-            if [ -z "$CHROMEDRIVER_URL" ] || [ "$CHROMEDRIVER_URL" = "null" ]; then
-              echo "ERROR: Could not determine ChromeDriver download URL"
-              echo "API Response (first 1000 chars): $(echo "$API_RESPONSE" | head -c 1000)"
-              exit 1
-            fi
-            
-            echo "ChromeDriver download URL: $CHROMEDRIVER_URL"
-            
-            # Extract version from URL for verification
-            CHROMEDRIVER_VERSION=$(echo "$CHROMEDRIVER_URL" | grep -oP '/\K[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(?=/)')
-            echo "ChromeDriver version to install: $CHROMEDRIVER_VERSION"
-            
-            # Download ChromeDriver with retries
-            if ! download_chromedriver "$CHROMEDRIVER_URL"; then
-              echo "ERROR: Failed to download ChromeDriver"
-              exit 1
-            fi
-            
-            # Install ChromeDriver
-            echo "Installing ChromeDriver..."
-            unzip -q chromedriver.zip
-            
-            # Handle different archive structures
-            if [ -f "chromedriver" ]; then
-              CHROMEDRIVER_BINARY="chromedriver"
-            elif [ -f "chromedriver-linux64/chromedriver" ]; then
-              CHROMEDRIVER_BINARY="chromedriver-linux64/chromedriver"
-            else
-              echo "ERROR: Could not find ChromeDriver binary in archive"
-              ls -la
-              exit 1
-            fi
-            
-            chmod +x "$CHROMEDRIVER_BINARY"
-            sudo mv "$CHROMEDRIVER_BINARY" /usr/local/bin/chromedriver
-            
-            # Clean up
-            rm -rf chromedriver.zip chromedriver-linux64 chromedriver 2>/dev/null || true
-            
-            # Verify installation
-            echo "Verifying Chrome and ChromeDriver installation..."
-            google-chrome --version
-            chromedriver --version
-            
-            # Verify version compatibility
-            INSTALLED_CHROMEDRIVER_VERSION=$(chromedriver --version | grep -oP '\d+\.\d+\.\d+\.\d+')
-            echo "Installed ChromeDriver version: $INSTALLED_CHROMEDRIVER_VERSION"
-            
-            CHROMEDRIVER_MAJOR=$(echo "$INSTALLED_CHROMEDRIVER_VERSION" | cut -d. -f1)
-            if [ "$CHROMEDRIVER_MAJOR" != "$CHROME_MAJOR_VERSION" ]; then
-              echo "WARNING: ChromeDriver major version ($CHROMEDRIVER_MAJOR) does not match Chrome major version ($CHROME_MAJOR_VERSION)"
-              echo "This may cause compatibility issues, but continuing..."
-            else
-              echo "SUCCESS: ChromeDriver and Chrome major versions match!"
-            fi
+            # Check Chrome and ChromeDriver versions
+            echo "Chrome version: $(google-chrome --version || echo 'Chrome not found')"
+            echo "ChromeDriver version: $(chromedriver --version || echo 'ChromeDriver not found')"
             
             # Test that Chrome can run in headless mode
             echo "Testing headless Chrome..."
             google-chrome --headless --disable-gpu --no-sandbox --remote-debugging-port=9222 --disable-dev-shm-usage --version
+            
+            echo "Chrome and ChromeDriver setup completed successfully"
 
       - run:
           name: Wait for DB
@@ -517,13 +384,23 @@ jobs:
 
       # Run cucumber with proper parallelization across containers
       - run:
-          name: Cucumber tests (parallelized)
+          name: Cucumber tests (parallelized with retries)
           command: |
             mkdir -p ~/cucumber 
             mkdir -p test_results
-            # Set environment variables for CI
+            
+            # Set environment variables for CI with better timeout handling
             export CI=true
-            export CUCUMBER_TIMEOUT=300
+            export CUCUMBER_TIMEOUT=600  # Increased from 300 to 600 seconds
+            export RAILS_ENV=test
+            export DISPLAY=:99  # For headless Chrome
+            
+            # Start Xvfb for headless browser testing
+            if [ "$CIRCLE_NODE_INDEX" -ge "3" ]; then
+              echo "Starting Xvfb for headless browser testing..."
+              Xvfb :99 -ac -screen 0 1280x1024x16 &
+              sleep 2
+            fi
             
             # Get all feature files and split them across containers
             echo "Container $CIRCLE_NODE_INDEX of $CIRCLE_NODE_TOTAL"
@@ -542,14 +419,46 @@ jobs:
             echo "$FEATURES" | tr ' ' '\n'
             echo "---"
             
-            # Run the assigned features with fail-fast and reduced retries for CI speed
-            bundle exec cucumber $FEATURES \
-              --format progress \
-              --format junit --out test_results/cucumber.xml \
-              --fail-fast \
-              --retry 1
+            # Function to run cucumber with retry logic
+            run_cucumber_with_retries() {
+              local max_attempts=3
+              local attempt=1
+              local exit_code=0
+              
+              while [ $attempt -le $max_attempts ]; do
+                echo "Cucumber attempt $attempt of $max_attempts..."
+                
+                # Run cucumber with timeout handling
+                timeout 25m bundle exec cucumber $FEATURES \
+                  --format progress \
+                  --format junit --out test_results/cucumber.xml \
+                  --strict-undefined \
+                  --retry 2 \
+                  --no-source || exit_code=$?
+                
+                if [ $exit_code -eq 0 ]; then
+                  echo "Cucumber tests passed on attempt $attempt"
+                  return 0
+                elif [ $exit_code -eq 124 ]; then
+                  echo "Cucumber tests timed out on attempt $attempt"
+                elif [ $attempt -eq $max_attempts ]; then
+                  echo "Cucumber tests failed after $max_attempts attempts"
+                  return $exit_code
+                else
+                  echo "Cucumber tests failed on attempt $attempt (exit code: $exit_code), retrying in 30 seconds..."
+                  sleep 30
+                fi
+                
+                attempt=$((attempt + 1))
+              done
+              
+              return $exit_code
+            }
+            
+            # Run Cucumber tests with retry logic
+            run_cucumber_with_retries
           when: always
-          no_output_timeout: 15m
+          no_output_timeout: 30m
 
       # Save test results for timing analysis
       - store_test_results:

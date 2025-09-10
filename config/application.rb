@@ -23,5 +23,8 @@ module MemverseApp
     # Create a new array to avoid frozen array issues
     config.autoload_paths = config.autoload_paths.dup
     config.autoload_paths << Rails.root.join("app/lib")
+    
+    # Set cache format version to 7.1 for Rails 7.1 compatibility
+    config.active_support.cache_format_version = 7.1
   end
 end
