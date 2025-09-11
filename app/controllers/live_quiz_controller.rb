@@ -123,7 +123,7 @@ class LiveQuizController < ApplicationController
   def till_start
 
     @quiz = Quiz.find(params[:id] || 1)
-    @till = @quiz.start_time - Time.now # Remaining time in seconds
+    @till = @quiz.start_time - Time.current # Remaining time in seconds
 
     if @till >= 0
 

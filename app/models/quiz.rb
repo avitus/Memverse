@@ -82,7 +82,7 @@ class Quiz < ApplicationRecord
   # @return [Integer]
   def hours_till_start
     return nil unless start_time
-    return (start_time - Time.now)/3600
+    return (start_time - Time.current)/3600
   end
 
   # Quiz participants from redis

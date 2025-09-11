@@ -19,7 +19,7 @@ namespace :quiz do
 
     ### Open chat 10 minutes before quiz
     puts "Setting up 'sleep' to open chat 10 minutes before quiz"
-    sleep_time = quiz.start_time - (10 * 60) - Time.now
+    sleep_time = quiz.start_time - (10 * 60) - Time.current
     sleep(sleep_time)
 
     puts 'Opening chat'
@@ -45,7 +45,7 @@ namespace :quiz do
 
     ### Start quiz on time
     puts "Setting up 'sleep' to start quiz"
-    sleep_time = quiz.start_time - Time.now
+    sleep_time = quiz.start_time - Time.current
     puts "Will be sleeping for #{sleep_time}"
     sleep(sleep_time)
 

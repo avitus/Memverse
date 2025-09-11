@@ -34,7 +34,7 @@
             <% end %>
         </ul>
 
-        <p>The next quiz starts in <strong><%=h distance_of_time_in_words(Time.now, @quiz.start_time) %></strong>
+        <p>The next quiz starts in <strong><%=h distance_of_time_in_words(Time.current, @quiz.start_time) %></strong>
 
         <p><input type="button" class="green-button" onclick="closeModal()" value="OK" />
 

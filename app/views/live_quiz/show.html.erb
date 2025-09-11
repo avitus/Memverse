@@ -17,7 +17,7 @@
 	  <% elsif @quiz.finished? %>
 	  	Expired (<%=h @quiz.datetime %>)
 	  <% else %>
-	  	<%=h @quiz.datetime %> - <%=h distance_of_time_in_words(Time.now, @quiz.datetime) %>
+	  	<%=h @quiz.datetime %> - <%=h distance_of_time_in_words(Time.current, @quiz.datetime) %>
 	  <% end %>
 	</p>
 	<p><%=h @quiz.description.html_safe %></p>
