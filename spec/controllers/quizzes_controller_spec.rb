@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe QuizzesController do
+  include FactoryBot::Syntax::Methods
 
   before(:each) do
     login_quizmaster
@@ -41,6 +42,41 @@ describe QuizzesController do
       end
     end
 
+  end
+
+  describe "GET show" do
+    let(:quiz_with_user) { create(:quiz, user: create(:user)) }
+    
+    it "assigns the requested quiz as @quiz" do
+      get :show, params: { id: quiz_with_user.id }, session: valid_session
+      expect(assigns(:quiz)).to eq(quiz_with_user)
+    end
+
+    it "renders the show template" do
+      get :show, params: { id: quiz_with_user.id }, session: valid_session
+      expect(response).to render_template("show")
+    end
+
+    it "handles quizzes without associated users gracefully" do
+      # Create a quiz with a user, then simulate the user being deleted
+      quiz = create(:quiz)
+      quiz.user.destroy
+      quiz.reload
+      
+      get :show, params: { id: quiz.id }, session: valid_session
+      expect(response).to render_template("show")
+      expect(response).to be_successful
+    end
+
+    it "assigns quiz questions ordered by question number" do
+      quiz = create(:quiz)
+      q1 = create(:quiz_question, quiz: quiz, question_no: 2)
+      q2 = create(:quiz_question, quiz: quiz, question_no: 1)
+      
+      get :show, params: { id: quiz.id }, session: valid_session
+      
+      expect(assigns(:quizquestions)).to eq([q2, q1])
+    end
   end
 
 

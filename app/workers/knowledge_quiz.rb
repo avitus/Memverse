@@ -289,7 +289,7 @@ class KnowledgeQuiz
   # ========================================================================
   
   def run_quiz_questions(quiz, channel)
-    question_count = Rails.env.production? ? 25 : 3
+    question_count = Rails.env.production? ? 25 : 5
     q_num_array = Array(1..question_count)
 
     Sidekiq.logger.info "===> Starting quiz at #{Time.current.utc} with #{question_count} questions"

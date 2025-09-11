@@ -25,7 +25,13 @@
       <div class="compact-info-item">
         <i class="fa fa-user"></i>
         <span class="info-label">Created by:</span>
-        <span class="info-value"><%= link_to @quiz.user.name_or_login, @quiz.user %></span>
+        <span class="info-value">
+          <% if @quiz.user %>
+            <%= link_to @quiz.user.name_or_login, @quiz.user %>
+          <% else %>
+            <span class="text-muted">Unknown</span>
+          <% end %>
+        </span>
       </div>
       <div class="compact-info-item">
         <i class="fa fa-calendar"></i>

@@ -16,7 +16,7 @@
       <h3>Quiz Details</h3>
       <dl>
         <dt>Created by</dt>
-        <dd><%= @quiz.user.name_or_login %></dd>
+        <dd><%= @quiz.user&.name_or_login || 'Unknown' %></dd>
         
         <dt>Start Time</dt>
         <dd><%= @quiz.start_time&.strftime("%b %d, %Y at %I:%M %p %Z") || "Not scheduled" %></dd>

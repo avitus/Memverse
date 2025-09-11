@@ -96,7 +96,7 @@
                   <%= quiz.quiz_questions.count %>
                 </td>
                 <td>
-                  <%= quiz.user.name_or_login %>
+                  <%= quiz.user&.name_or_login || 'Unknown' %>
                 </td>
                 <td>
                   <div class="action-links">

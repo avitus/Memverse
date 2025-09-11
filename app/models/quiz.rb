@@ -57,7 +57,7 @@ class Quiz < ApplicationRecord
 
 
   # Relationships
-  belongs_to :user
+  belongs_to :user, optional: true
   has_many :quiz_questions
 
   # Validations

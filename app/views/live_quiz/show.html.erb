@@ -3,7 +3,12 @@
 	<h1><%=h @quiz.name %></h1>
 
 	<p>
-	  <b>Host:</b> <%=h link_to(@quiz.user.name_or_login, @quiz.user) %> | 
+	  <b>Host:</b> 
+	  <% if @quiz.user %>
+	    <%=h link_to(@quiz.user.name_or_login, @quiz.user) %>
+	  <% else %>
+	    Unknown
+	  <% end %> | 
 	  <b>Time:</b> 
 	  <% if @quiz.open? %>
 	  	Now Open <%= link_to("(Join now!)", :action => "live", :id => @quiz) %>

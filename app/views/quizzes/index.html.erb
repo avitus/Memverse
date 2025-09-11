@@ -14,7 +14,7 @@
 		<% @quizzes.each do |quiz| %>
 		  <tr>
 		    <td><%=h link_to(quiz.name, quiz) %></td>
-		    <td><%=h quiz.user.name_or_login %></td>
+		    <td><%=h quiz.user&.name_or_login || 'Unknown' %></td>
 		    <td><%=h quiz.start_time %></td>
 		  </tr>
 		<% end %>
