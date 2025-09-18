@@ -1,0 +1,38 @@
+WARNING: High Queue Latency Detected
+====================================
+
+The <%= @queue_name %> queue has high latency: <%= @latency.round %> seconds
+
+This means jobs are taking too long to be picked up for processing.
+
+POSSIBLE CAUSES:
+- Too many jobs queued
+- Not enough Sidekiq workers
+- Long-running jobs blocking the queue
+- Database or Redis performance issues
+
+RECOMMENDED ACTIONS:
+1. Check queue size and job types:
+   $ bundle exec rails console -e production
+   > queue = Sidekiq::Queue.new("<%= @queue_name %>")
+   > queue.size
+   > queue.first(10).map(&:klass)
+
+2. Add more workers if needed:
+   $ sudo systemctl start sidekiq-workers@4
+   $ sudo systemctl start sidekiq-workers@5
+
+3. Check for stuck jobs:
+   > Sidekiq::Workers.new.each { |p, t, m| puts "#{m['queue']}: #{m['payload']['class']}" }
+
+4. Monitor Redis performance:
+   $ redis-cli --stat
+
+5. Check system resources:
+   $ top
+   $ free -h
+   $ df -h
+
+Time detected: <%= Time.current %>
+Current latency: <%= @latency.round %> seconds
+Queue: <%= @queue_name %>

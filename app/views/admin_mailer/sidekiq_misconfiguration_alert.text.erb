@@ -1,0 +1,28 @@
+CRITICAL ALERT: ActiveJob Misconfiguration Detected
+==================================================
+
+The production website is currently using the <%= @adapter %> queue adapter instead of Sidekiq.
+This means all background jobs are running synchronously in the web server process!
+
+IMMEDIATE IMPACT:
+- Slow page loads when background jobs are triggered
+- "Queue full" errors under load
+- Poor user experience
+- Potential memory issues
+
+REQUIRED ACTIONS:
+1. SSH to production server immediately
+2. Update config/environments/production.rb:
+   config.active_job.queue_adapter = :sidekiq
+3. Deploy the change: cap production deploy
+4. Restart web servers to pick up the configuration
+
+VERIFICATION:
+$ bundle exec rails console -e production
+> Rails.application.config.active_job.queue_adapter
+Should return: :sidekiq
+
+This is a critical issue affecting site performance and user experience.
+Please address immediately.
+
+Time detected: <%= Time.current %>

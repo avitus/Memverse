@@ -1,0 +1,36 @@
+CRITICAL ALERT: Sidekiq Processes Not Running
+=============================================
+
+No Sidekiq worker processes are currently running in production!
+This means NO background jobs are being processed.
+
+IMPACT:
+- Email reminders not being sent
+- Quiz sessions not being processed
+- Forum notifications not working
+- Metrics not being updated
+- All background tasks are queued but not executing
+
+REQUIRED ACTIONS:
+1. SSH to production server immediately
+2. Check Sidekiq service status:
+   $ sudo systemctl status sidekiq-scheduler
+   $ sudo systemctl status sidekiq-workers@1
+
+3. Start Sidekiq services:
+   $ sudo systemctl start sidekiq-scheduler
+   $ sudo systemctl start sidekiq-workers@1
+   $ sudo systemctl start sidekiq-workers@2
+   $ sudo systemctl start sidekiq-workers@3
+
+4. Verify processes are running:
+   $ ps aux | grep sidekiq
+   $ sudo journalctl -u sidekiq-scheduler -f
+
+MONITORING:
+Check queue sizes and processing:
+$ bundle exec rails console -e production
+> Sidekiq::Stats.new.to_h
+> Sidekiq::ProcessSet.new.size
+
+Time detected: <%= Time.current %>
