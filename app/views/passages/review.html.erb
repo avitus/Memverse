@@ -39,6 +39,15 @@
             reviewState.selectPassage( $(this).text(), $(this).attr('id') );
         });
 
+        //------- Prevent leading spaces and periods ---
+        $(".passage-text").on( "keydown", "input.blank-word", function( e ) {
+            // Prevent space (32) or period (190) if input is empty or cursor is at position 0
+            if ((e.keyCode === 32 || e.keyCode === 190) && (this.value === '' || this.selectionStart === 0)) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
         //------- Typing a verse ----------------------
         $(".passage-text").on( "keyup", "input.blank-word", function( e ) {
 
