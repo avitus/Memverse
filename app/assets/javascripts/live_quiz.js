@@ -173,7 +173,7 @@ function getScore(questionAnswer, userAnswer, questionType) {
 }
 
 /******************************************************************************
- * Quiz Schedule Functions
+ * Quiz Schedule Functions (Fixed Version)
  ******************************************************************************/
 var quizSchedule = {
   // Initialize quiz schedule functionality
@@ -184,7 +184,8 @@ var quizSchedule = {
         clearInterval(this.intervalId);
       }
       this.fastInterval = false;
-      
+      this.reloadScheduled = false; // Flag to prevent multiple reloads
+
       this.updateCountdown();
       // Update more frequently as quiz approaches
       this.startCountdownInterval();
@@ -192,20 +193,20 @@ var quizSchedule = {
       this.showNextQuizLocalTime();
     }
   },
-  
+
   // Start countdown interval with dynamic frequency
   startCountdownInterval: function() {
     var self = this;
     self.intervalId = setInterval(function() {
       self.updateCountdown();
-      
+
       // Check if we need to switch to more frequent updates
       var countdownEl = $('#quiz-countdown');
       if (countdownEl.length) {
         var targetTime = new Date(countdownEl.data('target-time'));
         var now = new Date();
         var diff = targetTime - now;
-        
+
         // If less than 60 seconds remaining and not already updating every second
         if (diff > 0 && diff <= 60000 && !self.fastInterval) {
           clearInterval(self.intervalId);
@@ -218,36 +219,52 @@ var quizSchedule = {
       }
     }, 5000); // Update every 5 seconds initially
   },
-  
+
   // Update countdown timer
   updateCountdown: function() {
     var countdownEl = $('#quiz-countdown');
     if (!countdownEl.length) return;
-    
+
     var targetTime = new Date(countdownEl.data('target-time'));
     var now = new Date();
     var diff = targetTime - now;
-    
-    // Auto-refresh 20 seconds before quiz starts
-    if (diff > 0 && diff <= 20000) { // 20 seconds = 20000 milliseconds
+
+    // Auto-refresh 20 seconds before quiz starts (FIXED: only reload once)
+    if (diff > 0 && diff <= 20000 && !this.reloadScheduled) {
+      this.reloadScheduled = true; // Prevent multiple reloads
+      clearInterval(this.intervalId); // Stop the countdown immediately
+
       countdownEl.html('<span class="countdown-expired">Preparing quiz...</span>');
-      // Refresh the page to load the quiz interface
+
+      // Use Turbo if available, otherwise fall back to window.location.reload
       setTimeout(function() {
-        window.location.reload();
-      }, 500); // Small delay to show the message
+        if (typeof Turbo !== 'undefined') {
+          // Use Turbo for smooth transition
+          Turbo.visit(window.location.href, { action: 'replace' });
+        } else {
+          // Fallback to regular reload
+          window.location.reload();
+        }
+      }, 500);
       return;
     }
-    
+
+    // Don't update countdown if reload is scheduled
+    if (this.reloadScheduled) {
+      return;
+    }
+
     if (diff <= 0) {
       countdownEl.html('<span class="countdown-expired">Quiz has started!</span>');
+      clearInterval(this.intervalId);
       return;
     }
-    
+
     var days = Math.floor(diff / 86400000);
     var hours = Math.floor((diff % 86400000) / 3600000);
     var minutes = Math.floor((diff % 3600000) / 60000);
     var seconds = Math.floor((diff % 60000) / 1000);
-    
+
     var parts = [];
     if (days > 0) parts.push(days + 'd');
     if (hours > 0) parts.push(hours + 'h');
@@ -256,10 +273,10 @@ var quizSchedule = {
     if (diff < 60000 || (days === 0 && hours === 0 && minutes === 0)) {
       parts.push(seconds + 's');
     }
-    
+
     countdownEl.html('<i class="fa fa-clock-o"></i> ' + parts.join(' '));
   },
-  
+
   // Show local times for quiz schedule
   showLocalTimes: function() {
     $('.schedule-local').each(function() {
@@ -267,11 +284,11 @@ var quizSchedule = {
       var timeParts = utcTimeStr.split(':');
       var utcHours = parseInt(timeParts[0]);
       var utcMinutes = parseInt(timeParts[1]);
-      
+
       // Create a date object for today at the specified UTC time
       var now = new Date();
       var utcDate = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), utcHours, utcMinutes, 0));
-      
+
       // Format in user's local time
       var localTimeStr = utcDate.toLocaleString([], {
         hour: 'numeric',
@@ -279,25 +296,25 @@ var quizSchedule = {
         hour12: true,
         timeZoneName: 'short'
       });
-      
+
       $(this).text(localTimeStr);
     });
   },
-  
+
   // Show local time for next quiz
   showNextQuizLocalTime: function() {
     var nextQuizEl = $('.quiz-local-time[data-utc-datetime]');
     var dayEl = $('.quiz-day[data-utc-datetime]');
     if (!nextQuizEl.length) return;
-    
+
     var utcDatetime = nextQuizEl.data('utc-datetime');
     var utcDate = new Date(utcDatetime);
-    
+
     // Get day of week in local timezone
     var localDay = utcDate.toLocaleDateString([], {
       weekday: 'long'
     });
-    
+
     // Format the full date and time in user's local timezone
     var localDateTimeStr = utcDate.toLocaleString([], {
       month: 'short',
@@ -307,7 +324,7 @@ var quizSchedule = {
       hour12: true,
       timeZoneName: 'short'
     });
-    
+
     dayEl.text(localDay);
     nextQuizEl.html('<i class="fa fa-clock-o"></i> ' + localDateTimeStr);
   }
