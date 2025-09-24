@@ -247,36 +247,31 @@ scrub_text = function(text) {
 /******************************************************************************
  * Flexible text matching for passage review
  * Handles common punctuation variations that users might omit
- * 
- * IMPORTANT: For apostrophe words like "man's", we do NOT match the base word
- * alone (e.g., "man") to prevent issues where the field advances prematurely.
- * Users must type either the full word with apostrophe or without (e.g., "mans").
+ *
+ * Enhanced to allow base words to match possessive forms:
+ * - "neighbor" matches "neighbor's"
+ * - "dont" or "don" matches "don't"
+ * - "Jesus" matches "Jesus'"
+ * This provides a better user experience while maintaining accuracy.
  ******************************************************************************/
 function flexibleTextMatch(correctWord, userInput) {
     // First, check for exact match (case-insensitive)
     if (correctWord.toLowerCase() === userInput.toLowerCase()) {
         return true;
     }
-    
-    // Handle apostrophe words - special logic for possessives and contractions
+
+    // Handle apostrophe words - enhanced logic for possessives and contractions
     if (correctWord.includes("'")) {
-        // Check if apostrophe has letters after it (possessive 's) or is just trailing (')
-        var apostrophePattern = /'(.)/;
-        var match = correctWord.match(apostrophePattern);
-        
-        if (match && match[1]) {
-            // Apostrophe has letters after it (e.g., "children's", "don't")
-            // Accept the word without any apostrophes (e.g., "childrens", "dont")
-            var withoutAllApostrophes = correctWord.replace(/'/g, "");
-            if (withoutAllApostrophes.toLowerCase() === userInput.toLowerCase()) {
-                return true;
-            }
+        // Accept the word without any apostrophes (e.g., "childrens", "dont")
+        var withoutAllApostrophes = correctWord.replace(/'/g, "");
+        if (withoutAllApostrophes.toLowerCase() === userInput.toLowerCase()) {
+            return true;
         }
-        // For ALL apostrophe cases, do NOT allow base word match
-        // This prevents "man" from matching "man's" and advancing prematurely
-        return false;
+
+        // Don't accept base words here - they need space-triggered completion
+        // This prevents premature advancement
     }
-    
+
     // Handle quotation marks at beginning
     // "The should accept The (without quotes)
     if (correctWord.match(/^["'"]/)) {
@@ -285,12 +280,30 @@ function flexibleTextMatch(correctWord, userInput) {
             return true;
         }
     }
-    
+
     // For all other cases, use standard scrubbing
     var scrubbed_correct = scrub_text(correctWord);
     var scrubbed_input = scrub_text(userInput);
-    
+
     return scrubbed_correct === scrubbed_input;
+}
+
+// Enhanced flexible matching that includes base words - used for space-triggered completion
+function flexibleTextMatchWithBase(correctWord, userInput) {
+    // First try the regular flexible match
+    if (flexibleTextMatch(correctWord, userInput)) {
+        return true;
+    }
+    
+    // Additionally accept base words for apostrophe words
+    if (correctWord.includes("'")) {
+        var baseWord = correctWord.split("'")[0];
+        if (baseWord.toLowerCase() === userInput.toLowerCase()) {
+            return true;
+        }
+    }
+    
+    return false;
 }
 
 /******************************************************************************

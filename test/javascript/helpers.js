@@ -26,13 +26,13 @@ export function loadJavaScriptFile(filePath) {
   
   // List of functions to export
   const functionsToExport = [
-    'mnemonic', 'unabbreviate', 'validVerseRef', 'validPassageRef', 
-    'validChapterRef', 'validSubChapterPassage', 'cleanseVerseText', 
-    'blankifyVerse', 'parseVerseRef', 'parsePassageRef', 'verseFeedback', 
-    'accTestState', 'splitByWords', 'BIBLEBOOKS', 'scrub_text', 
+    'mnemonic', 'unabbreviate', 'validVerseRef', 'validPassageRef',
+    'validChapterRef', 'validSubChapterPassage', 'cleanseVerseText',
+    'blankifyVerse', 'parseVerseRef', 'parsePassageRef', 'verseFeedback',
+    'accTestState', 'splitByWords', 'BIBLEBOOKS', 'scrub_text',
     'calculate_levenshtein_distance', 'word_width', 'flexibleTextMatch',
-    'calculateInputWidth', 'mvPassageReviewHandleInput', 'mvMirrorNextInput',
-    'mvDisplayPassageForReview', 'buildVerseBlank'
+    'flexibleTextMatchWithBase', 'calculateInputWidth', 'mvPassageReviewHandleInput',
+    'mvMirrorNextInput', 'mvDisplayPassageForReview', 'buildVerseBlank'
   ];
   
   // Create a function that executes in the global context
@@ -98,6 +98,7 @@ export const memverseLib = {
   calculate_levenshtein_distance: globalThis.calculate_levenshtein_distance || globalContext.calculate_levenshtein_distance,
   word_width: global.word_width,
   flexibleTextMatch: globalThis.flexibleTextMatch || globalContext.flexibleTextMatch,
+  flexibleTextMatchWithBase: globalThis.flexibleTextMatchWithBase || globalContext.flexibleTextMatchWithBase,
   calculateInputWidth: globalThis.calculateInputWidth || globalContext.calculateInputWidth,
   mvPassageReviewHandleInput: globalThis.mvPassageReviewHandleInput || globalContext.mvPassageReviewHandleInput,
   mvMirrorNextInput: globalThis.mvMirrorNextInput || globalContext.mvMirrorNextInput,

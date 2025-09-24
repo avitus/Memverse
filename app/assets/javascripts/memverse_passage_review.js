@@ -211,6 +211,8 @@ function mvMirrorNextInput( $inputCell ) {
 function mvPassageReviewHandleInput( $inputCell, correctWord, userGuess, e ) {
 
     // Word correct ==> next word (using flexible matching)
+    // Note: We already checked for match in the keyup handler, so this check is redundant
+    // but kept for compatibility with arrow key handling
     if ( flexibleTextMatch( correctWord, userGuess ) ) {
 
         // Calculate the width the span will need and preserve input width to prevent layout shift
@@ -219,7 +221,7 @@ function mvPassageReviewHandleInput( $inputCell, correctWord, userGuess, e ) {
             'display': 'inline-block',
             'min-width': currentWidth + 'px'
         });
-        
+
         $inputCell.before( $span );                               // insert the correct word with preserved width
         $inputCell.before( $inputCell.nextUntil("input") );       // move subsequent revealed words ahead of input
         mvMirrorNextInput( $inputCell );                          // update the input box

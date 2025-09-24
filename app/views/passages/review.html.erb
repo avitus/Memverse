@@ -55,7 +55,24 @@
             var correctWord = this.name;
             var userGuess   = this.value.trim();
 
-            mvPassageReviewHandleInput( $inputCell, correctWord, userGuess, e );
+            // Check for space or enter key for enhanced matching
+            if (e.keyCode === 32 || e.keyCode === 13) {
+                // Use enhanced matching that includes base words
+                if (flexibleTextMatchWithBase(correctWord, userGuess)) {
+                    mvPassageReviewHandleInput( $inputCell, correctWord, userGuess, e );
+                } else if (e.keyCode === 32) {
+                    // Remove trailing space if no match
+                    $inputCell.val(userGuess);
+                }
+            }
+            // For other keys, use regular matching (no base words)
+            else if (flexibleTextMatch(correctWord, userGuess)) {
+                mvPassageReviewHandleInput( $inputCell, correctWord, userGuess, e );
+            }
+            // Handle arrow keys for hints
+            else if (e.keyCode === 38 || e.keyCode === 40) {
+                mvPassageReviewHandleInput( $inputCell, correctWord, userGuess, e );
+            }
         });
 
         //------- Scoring a verse ----------------------

@@ -42,15 +42,15 @@ describe("Passage Review Input Field Sizing Fixes", () => {
       expect(memverseLib.flexibleTextMatch("The", "The")).toBe(true);
     });
     
-    it("should NOT match base words to possessive forms (prevents premature replacement bug)", () => {
-      // Base words should NOT match possessive forms to prevent the apostrophe bug
+    it("should NOW match base words to possessive forms (enhanced behavior)", () => {
+      // ENHANCED: Base words now match possessive forms for better UX
       // flexibleTextMatch(correctWord, userInput)
-      expect(memverseLib.flexibleTextMatch("children's", "children")).toBe(false);
-      expect(memverseLib.flexibleTextMatch("Lord's", "Lord")).toBe(false);
-      expect(memverseLib.flexibleTextMatch("Jesus'", "Jesus")).toBe(false);
-      expect(memverseLib.flexibleTextMatch("man's", "man")).toBe(false);
-      
-      // But contractions should still work normally
+      expect(memverseLib.flexibleTextMatch("children's", "children")).toBe(true);
+      expect(memverseLib.flexibleTextMatch("Lord's", "Lord")).toBe(true);
+      expect(memverseLib.flexibleTextMatch("Jesus'", "Jesus")).toBe(true);
+      expect(memverseLib.flexibleTextMatch("man's", "man")).toBe(true);
+
+      // And contractions continue to work
       expect(memverseLib.flexibleTextMatch("won't", "wont")).toBe(true);
       expect(memverseLib.flexibleTextMatch("can't", "cant")).toBe(true);
     });
@@ -174,10 +174,10 @@ describe("Passage Review Input Field Sizing Fixes", () => {
       expect(blankified).toContain('name="Lord\'s"');
       expect(blankified).toContain("width:56px"); // 48 + 8
       
-      // 3. Flexible matching should work correctly (prevent apostrophe bug)
-      expect(memverseLib.flexibleTextMatch("Lord's", "Lord")).toBe(false); // Base should NOT match possessive
-      expect(memverseLib.flexibleTextMatch("Lord's", "Lords")).toBe(true); // No-apostrophe version should match
-      expect(memverseLib.flexibleTextMatch("Lord's", "Lord's")).toBe(true); // Exact match should work
+      // 3. Flexible matching now allows base word matching
+      expect(memverseLib.flexibleTextMatch("Lord's", "Lord")).toBe(true);   // Base now matches possessive (enhanced)
+      expect(memverseLib.flexibleTextMatch("Lord's", "Lords")).toBe(true);  // No-apostrophe version matches
+      expect(memverseLib.flexibleTextMatch("Lord's", "Lord's")).toBe(true); // Exact match works
     });
   });
 
@@ -194,13 +194,13 @@ describe("Passage Review Input Field Sizing Fixes", () => {
       expect(memverseLib.flexibleTextMatch("we'll", "well")).toBe(true);
     });
     
-    it("should handle possessive forms correctly (prevent apostrophe bug)", () => {
-      // Base words should NOT match possessive forms (prevents bug)
+    it("should handle possessive forms correctly (enhanced behavior)", () => {
+      // Base words now match possessive forms (enhanced UX)
       // flexibleTextMatch(correctWord, userInput)
-      expect(memverseLib.flexibleTextMatch("Jesus'", "Jesus")).toBe(false);
-      expect(memverseLib.flexibleTextMatch("James'", "James")).toBe(false);
-      
-      // But exact matches should work
+      expect(memverseLib.flexibleTextMatch("Jesus'", "Jesus")).toBe(true);
+      expect(memverseLib.flexibleTextMatch("James'", "James")).toBe(true);
+
+      // And exact matches continue to work
       expect(memverseLib.flexibleTextMatch("Jesus'", "Jesus'")).toBe(true);
       expect(memverseLib.flexibleTextMatch("James'", "James'")).toBe(true);
     });
