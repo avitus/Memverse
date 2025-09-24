@@ -267,9 +267,6 @@ function flexibleTextMatch(correctWord, userInput) {
         if (withoutAllApostrophes.toLowerCase() === userInput.toLowerCase()) {
             return true;
         }
-
-        // Don't accept base words here - they need space-triggered completion
-        // This prevents premature advancement
     }
 
     // Handle quotation marks at beginning
@@ -288,23 +285,6 @@ function flexibleTextMatch(correctWord, userInput) {
     return scrubbed_correct === scrubbed_input;
 }
 
-// Enhanced flexible matching that includes base words - used for space-triggered completion
-function flexibleTextMatchWithBase(correctWord, userInput) {
-    // First try the regular flexible match
-    if (flexibleTextMatch(correctWord, userInput)) {
-        return true;
-    }
-    
-    // Additionally accept base words for apostrophe words
-    if (correctWord.includes("'")) {
-        var baseWord = correctWord.split("'")[0];
-        if (baseWord.toLowerCase() === userInput.toLowerCase()) {
-            return true;
-        }
-    }
-    
-    return false;
-}
 
 /******************************************************************************
  * Calculate input width with buffer to prevent layout shifts
