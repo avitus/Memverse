@@ -186,7 +186,9 @@ var quizSchedule = {
       this.fastInterval = false;
       this.reloadScheduled = false; // Flag to prevent multiple reloads
 
-      // Check if we're in the preparation phase (within 20 seconds of quiz start)
+      // Check if we're in the preparation phase
+      // The countdown shows time until the worker starts (T-5:00)
+      // We want to reload shortly after the worker has started and set the quiz status
       var countdownEl = $('#quiz-countdown');
       if (countdownEl.length) {
         var targetTime = new Date(countdownEl.data('target-time'));
@@ -196,16 +198,16 @@ var quizSchedule = {
         // Check if we already marked this as preparation phase
         var inPreparation = sessionStorage.getItem('quiz_preparation_' + targetTime.getTime());
 
-        // If we're already in the preparation phase, don't reinitialize countdown
-        if ((diff > 0 && diff <= 20000) || inPreparation === 'true') {
-          countdownEl.html('<span class="countdown-expired">Preparing quiz...</span>');
+        // If countdown has expired (worker should have started) or we're in prep phase
+        if (diff <= 0 || inPreparation === 'true') {
+          countdownEl.html('<span class="countdown-expired">Loading quiz...</span>');
 
           // Only schedule reload if we haven't already done so
           if (!inPreparation) {
             sessionStorage.setItem('quiz_preparation_' + targetTime.getTime(), 'true');
 
-            // Schedule the next reload after the preparation time
-            var reloadTime = diff > 0 ? diff + 1000 : 1000; // Add 1 second buffer
+            // Reload after a short delay to give the worker time to set status
+            // Worker starts at countdown=0 and sets status immediately
             setTimeout(function() {
               // Clean up the session storage
               sessionStorage.removeItem('quiz_preparation_' + targetTime.getTime());
@@ -215,9 +217,15 @@ var quizSchedule = {
               } else {
                 window.location.reload();
               }
-            }, reloadTime);
+            }, 2000); // 2-second delay after worker should have started
           }
           return; // Skip normal initialization
+        }
+
+        // If we're within 20 seconds of worker start, show preparing message
+        if (diff > 0 && diff <= 20000) {
+          countdownEl.html('<span class="countdown-expired">Preparing quiz...</span>');
+          // Don't reload yet - wait for countdown to reach 0
         }
       }
 
@@ -264,24 +272,30 @@ var quizSchedule = {
     var now = new Date();
     var diff = targetTime - now;
 
-    // Auto-refresh 20 seconds before quiz starts (FIXED: only reload once)
-    if (diff > 0 && diff <= 20000 && !this.reloadScheduled) {
+    // Show preparing message when within 20 seconds of worker start
+    if (diff > 0 && diff <= 20000) {
+      countdownEl.html('<span class="countdown-expired">Preparing quiz...</span>');
+      // Continue countdown - don't reload yet
+    }
+
+    // Auto-refresh shortly after worker starts (when countdown reaches 0)
+    if (diff <= 0 && !this.reloadScheduled) {
       // Check if we're already in preparation phase from a previous reload
       var inPreparation = sessionStorage.getItem('quiz_preparation_' + targetTime.getTime());
       if (inPreparation === 'true') {
-        countdownEl.html('<span class="countdown-expired">Preparing quiz...</span>');
+        countdownEl.html('<span class="countdown-expired">Loading quiz...</span>');
         return; // Don't schedule another reload
       }
 
       this.reloadScheduled = true; // Prevent multiple reloads
       clearInterval(this.intervalId); // Stop the countdown immediately
 
-      countdownEl.html('<span class="countdown-expired">Preparing quiz...</span>');
+      countdownEl.html('<span class="countdown-expired">Loading quiz...</span>');
 
       // Mark that we're entering preparation phase
       sessionStorage.setItem('quiz_preparation_' + targetTime.getTime(), 'true');
 
-      // Use Turbo if available, otherwise fall back to window.location.reload
+      // Reload after 2 seconds to give worker time to initialize
       setTimeout(function() {
         if (typeof Turbo !== 'undefined') {
           // Use Turbo for smooth transition
@@ -290,7 +304,7 @@ var quizSchedule = {
           // Fallback to regular reload
           window.location.reload();
         }
-      }, 500);
+      }, 2000);
       return;
     }
 
@@ -300,8 +314,8 @@ var quizSchedule = {
     }
 
     if (diff <= 0) {
-      countdownEl.html('<span class="countdown-expired">Quiz has started!</span>');
-      clearInterval(this.intervalId);
+      // Don't just say "Quiz has started" - we need to trigger the reload
+      // This will be handled by the code above
       return;
     }
 
