@@ -186,6 +186,41 @@ var quizSchedule = {
       this.fastInterval = false;
       this.reloadScheduled = false; // Flag to prevent multiple reloads
 
+      // Check if we're in the preparation phase (within 20 seconds of quiz start)
+      var countdownEl = $('#quiz-countdown');
+      if (countdownEl.length) {
+        var targetTime = new Date(countdownEl.data('target-time'));
+        var now = new Date();
+        var diff = targetTime - now;
+
+        // Check if we already marked this as preparation phase
+        var inPreparation = sessionStorage.getItem('quiz_preparation_' + targetTime.getTime());
+
+        // If we're already in the preparation phase, don't reinitialize countdown
+        if ((diff > 0 && diff <= 20000) || inPreparation === 'true') {
+          countdownEl.html('<span class="countdown-expired">Preparing quiz...</span>');
+
+          // Only schedule reload if we haven't already done so
+          if (!inPreparation) {
+            sessionStorage.setItem('quiz_preparation_' + targetTime.getTime(), 'true');
+
+            // Schedule the next reload after the preparation time
+            var reloadTime = diff > 0 ? diff + 1000 : 1000; // Add 1 second buffer
+            setTimeout(function() {
+              // Clean up the session storage
+              sessionStorage.removeItem('quiz_preparation_' + targetTime.getTime());
+
+              if (typeof Turbo !== 'undefined') {
+                Turbo.visit(window.location.href, { action: 'replace' });
+              } else {
+                window.location.reload();
+              }
+            }, reloadTime);
+          }
+          return; // Skip normal initialization
+        }
+      }
+
       this.updateCountdown();
       // Update more frequently as quiz approaches
       this.startCountdownInterval();
@@ -231,10 +266,20 @@ var quizSchedule = {
 
     // Auto-refresh 20 seconds before quiz starts (FIXED: only reload once)
     if (diff > 0 && diff <= 20000 && !this.reloadScheduled) {
+      // Check if we're already in preparation phase from a previous reload
+      var inPreparation = sessionStorage.getItem('quiz_preparation_' + targetTime.getTime());
+      if (inPreparation === 'true') {
+        countdownEl.html('<span class="countdown-expired">Preparing quiz...</span>');
+        return; // Don't schedule another reload
+      }
+
       this.reloadScheduled = true; // Prevent multiple reloads
       clearInterval(this.intervalId); // Stop the countdown immediately
 
       countdownEl.html('<span class="countdown-expired">Preparing quiz...</span>');
+
+      // Mark that we're entering preparation phase
+      sessionStorage.setItem('quiz_preparation_' + targetTime.getTime(), 'true');
 
       // Use Turbo if available, otherwise fall back to window.location.reload
       setTimeout(function() {
