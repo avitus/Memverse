@@ -123,25 +123,53 @@ class LiveQuizController < ApplicationController
   def till_start
 
     @quiz = Quiz.find(params[:id] || 1)
-    @till = @quiz.start_time - Time.current # Remaining time in seconds
 
-    if @till >= 0
+    # For knowledge quiz (ID=1), check if it's currently running using QuizSession
+    if @quiz.id == 1
+      quiz_session = QuizSession.new(@quiz.id)
+      current_status = quiz_session.get_quiz_status
 
-      # Calculate time left in HH:MM:SS
-  	  hours   = (@till/3600).to_i
-  	  minutes = (@till/60 - hours * 60).to_i
-  	  seconds = (@till - (minutes * 60 + hours * 3600)).to_i
-
-      render :json => {:time => "+#{hours}h +#{minutes}m +#{seconds}s"}
-
-    elsif $redis.exists?("quiz-#{@quiz.id}") && status = $redis.hmget("quiz-#{@quiz.id}", "status").first
-
-      render :json => {:status => status}
-
+      if current_status && current_status.include?("progress")
+        # Quiz is in progress (either initializing, waiting, or running)
+        render :json => {:status => current_status}
+      else
+        # Quiz is not running, return "Finished" or similar
+        render :json => {:status => "Finished"}
+      end
     else
+      # For other quizzes, use start_time if available
+      if @quiz.start_time
+        @till = @quiz.start_time - Time.current # Remaining time in seconds
 
-      render :json => {:status => "Finished"}
+        if @till >= 0
+          # Calculate time left in HH:MM:SS
+          hours   = (@till/3600).to_i
+          minutes = (@till/60 - hours * 60).to_i
+          seconds = (@till - (minutes * 60 + hours * 3600)).to_i
 
+          render :json => {:time => "+#{hours}h +#{minutes}m +#{seconds}s"}
+        else
+          # Check quiz status using QuizSession service
+          quiz_session = QuizSession.new(@quiz.id)
+          current_status = quiz_session.get_quiz_status
+
+          if current_status
+            render :json => {:status => current_status}
+          else
+            render :json => {:status => "Finished"}
+          end
+        end
+      else
+        # No start time, check if quiz is in progress
+        quiz_session = QuizSession.new(@quiz.id)
+        current_status = quiz_session.get_quiz_status
+
+        if current_status && current_status.include?("progress")
+          render :json => {:status => current_status}
+        else
+          render :json => {:status => "Finished"}
+        end
+      end
     end
 
   end

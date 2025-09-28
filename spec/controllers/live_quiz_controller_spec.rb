@@ -196,21 +196,25 @@ RSpec.describe LiveQuizController, type: :controller do
     
     context 'when quiz is in progress' do
       let(:current_quiz) { FactoryBot.create(:quiz, start_time: 10.minutes.ago) }
-      
+
       before do
-        $redis.hmset("quiz-#{current_quiz.id}", "status", "in_progress")
+        # Use QuizSession service to set the status properly
+        quiz_session = QuizSession.new(current_quiz.id)
+        quiz_session.set_quiz_status("In progress. Wait for question.")
       end
-      
+
       after do
-        $redis.del("quiz-#{current_quiz.id}")
+        # Clean up using QuizSession service
+        quiz_session = QuizSession.new(current_quiz.id)
+        quiz_session.cleanup_quiz_data
       end
-      
+
       it 'returns quiz status' do
         get :till_start, params: { id: current_quiz.id, format: :json }
-        
+
         json_response = JSON.parse(response.body)
         expect(json_response).to have_key('status')
-        expect(json_response['status']).to include('in_progress')
+        expect(json_response['status']).to include('progress')
       end
     end
     
@@ -226,6 +230,46 @@ RSpec.describe LiveQuizController, type: :controller do
         json_response = JSON.parse(response.body)
         expect(json_response).to have_key('status')
         expect(json_response['status']).to eq('Finished')
+      end
+    end
+
+    context 'knowledge quiz (ID=1) scenarios' do
+      context 'when knowledge quiz is running during chat period' do
+        before do
+          # Ensure knowledge quiz exists with ID=1
+          FactoryBot.create(:quiz, id: 1, start_time: nil)
+
+          quiz_session = QuizSession.new(1)
+          quiz_session.set_quiz_status("In progress. Wait for question.")
+        end
+
+        after do
+          quiz_session = QuizSession.new(1)
+          quiz_session.cleanup_quiz_data
+        end
+
+        it 'returns the in progress status' do
+          get :till_start, params: { id: 1, format: :json }
+
+          json_response = JSON.parse(response.body)
+          expect(json_response).to have_key('status')
+          expect(json_response['status']).to eq('In progress. Wait for question.')
+        end
+      end
+
+      context 'when knowledge quiz is not running' do
+        before do
+          # Ensure knowledge quiz exists with ID=1
+          FactoryBot.create(:quiz, id: 1, start_time: nil)
+        end
+
+        it 'returns finished status' do
+          get :till_start, params: { id: 1, format: :json }
+
+          json_response = JSON.parse(response.body)
+          expect(json_response).to have_key('status')
+          expect(json_response['status']).to eq('Finished')
+        end
       end
     end
   end
