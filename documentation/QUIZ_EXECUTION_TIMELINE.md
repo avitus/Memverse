@@ -169,10 +169,16 @@ The quiz system follows a carefully orchestrated sequence spanning approximately
 - Switches to **1-second updates** when ≤ 60 seconds remain
 - Location: `app/assets/javascripts/live_quiz.js:210,216`
 
-**Auto-Refresh Behavior**:
-- Page refreshes **20 seconds** before quiz start
-- Shows "Preparing quiz..." message
-- Location: `app/assets/javascripts/live_quiz.js:232-238`
+**Auto-Refresh Behavior** (Updated September 2025):
+- **T-0:20**: Shows "Preparing quiz..." message (20 seconds before worker starts)
+- **T-0:00**: Countdown expires, shows "Loading quiz..." message
+- **T+0:02**: Page refreshes (2 seconds after worker starts)
+- Uses session storage to prevent re-initialization during transitions
+- Location: `app/assets/javascripts/live_quiz.js:275-307`
+
+**Important Timing Note**:
+The countdown timer shows time until the quiz worker starts (T-5:00), not when questions begin.
+The page reload is timed to occur AFTER the worker has started and set the quiz status.
 
 ### Question Timer Display
 - Shows countdown for current question
@@ -303,19 +309,38 @@ wait_duration = Rails.env.production? ? 600 : 30
 ### Frontend Timing Changes
 Modify JavaScript constants in `app/assets/javascripts/live_quiz.js`:
 ```javascript
-// Auto-refresh threshold (line 232)
-if (diff > 0 && diff <= 20000) { // 20 seconds
+// Preparation phase threshold (line 276)
+if (diff > 0 && diff <= 20000) { // 20 seconds before worker starts
+
+// Auto-refresh delay after countdown expires (line 298)
+}, 2000); // 2-second delay after worker should have started
 
 // Update frequencies (lines 216, 219)
 }, 1000); // Fast updates (1 second)
 }, 5000); // Slow updates (5 seconds)
 ```
 
+## Recent Timing Fixes (September 2025)
+
+### Flashing During Preparation Phase
+**Problem**: Page was flashing repeatedly when entering "Preparing Quiz" phase.
+**Cause**: Countdown timer was re-initializing on each page reload.
+**Solution**: Use session storage to track preparation state and prevent re-initialization.
+
+### Page Not Transitioning to Quiz
+**Problem**: Page stayed on "Preparing Quiz" and never showed the quiz interface.
+**Cause**: Page was reloading 20 seconds BEFORE the worker started, when no quiz status was set yet.
+**Solution**: Changed reload timing to occur 2 seconds AFTER the worker starts, ensuring quiz status is set.
+
+### Key Timing Insight
+The countdown timer shows time until the quiz worker STARTS (T-5:00), not when questions begin.
+The worker needs time to initialize and set the quiz status before the page can transition to the quiz interface.
+
 ## Future Improvements
 
 ### Suggested Enhancements
 - Make pre/post chat durations configurable per quiz
-- Add configuration UI for timing parameters  
+- Add configuration UI for timing parameters
 - Support variable question timing within single quiz
 - Add grace period for network latency compensation
 - Implement question preview/preparation time
