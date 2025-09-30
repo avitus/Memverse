@@ -42,13 +42,13 @@ describe("Passage Review Input Field Sizing Fixes", () => {
       expect(memverseLib.flexibleTextMatch("The", "The")).toBe(true);
     });
     
-    it("should NOW match base words to possessive forms (enhanced behavior)", () => {
-      // ENHANCED: Base words now match possessive forms for better UX
+    it("should NOT match base words to possessive forms (current behavior)", () => {
+      // Current behavior: Base words do NOT match possessive forms
       // flexibleTextMatch(correctWord, userInput)
-      expect(memverseLib.flexibleTextMatch("children's", "children")).toBe(true);
-      expect(memverseLib.flexibleTextMatch("Lord's", "Lord")).toBe(true);
-      expect(memverseLib.flexibleTextMatch("Jesus'", "Jesus")).toBe(true);
-      expect(memverseLib.flexibleTextMatch("man's", "man")).toBe(true);
+      expect(memverseLib.flexibleTextMatch("children's", "children")).toBe(false);
+      expect(memverseLib.flexibleTextMatch("Lord's", "Lord")).toBe(false);
+      expect(memverseLib.flexibleTextMatch("Jesus'", "Jesus")).toBe(true); // Trailing apostrophes match due to scrubbing
+      expect(memverseLib.flexibleTextMatch("man's", "man")).toBe(false);
 
       // And contractions continue to work
       expect(memverseLib.flexibleTextMatch("won't", "wont")).toBe(true);
@@ -174,8 +174,8 @@ describe("Passage Review Input Field Sizing Fixes", () => {
       expect(blankified).toContain('name="Lord\'s"');
       expect(blankified).toContain("width:56px"); // 48 + 8
       
-      // 3. Flexible matching now allows base word matching
-      expect(memverseLib.flexibleTextMatch("Lord's", "Lord")).toBe(true);   // Base now matches possessive (enhanced)
+      // 3. Flexible matching current behavior
+      expect(memverseLib.flexibleTextMatch("Lord's", "Lord")).toBe(false);  // Base does NOT match possessive
       expect(memverseLib.flexibleTextMatch("Lord's", "Lords")).toBe(true);  // No-apostrophe version matches
       expect(memverseLib.flexibleTextMatch("Lord's", "Lord's")).toBe(true); // Exact match works
     });

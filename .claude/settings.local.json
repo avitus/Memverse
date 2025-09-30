@@ -118,7 +118,8 @@
       "Bash(open test_apostrophe2.html)",
       "Bash(open test_realistic.html)",
       "Bash(open test_space_issue.html)",
-      "Bash(open test_apostrophe_final.html)"
+      "Bash(open test_apostrophe_final.html)",
+      "Bash(./run_all_tests_ci.sh)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits",

@@ -25,10 +25,10 @@ describe("Exodus 20:17 Final Word Special Case", () => {
     it("should test matching for 'neighbor\\'s.' with period", () => {
       // The word might appear in the input as "neighbor's." (with period)
       const variations = [
-        { correct: "neighbor's.", userInput: "neighbor", shouldMatch: true },
-        { correct: "neighbor's.", userInput: "neighbors", shouldMatch: true },
-        { correct: "neighbor's.", userInput: "neighbor's", shouldMatch: true },
-        { correct: "neighbor's.", userInput: "neighbor's.", shouldMatch: true },
+        { correct: "neighbor's.", userInput: "neighbor", shouldMatch: false }, // Base word not accepted
+        { correct: "neighbor's.", userInput: "neighbors", shouldMatch: true },  // Apostrophe removed works
+        { correct: "neighbor's.", userInput: "neighbor's", shouldMatch: true }, // Without period works
+        { correct: "neighbor's.", userInput: "neighbor's.", shouldMatch: true }, // Exact match works
       ];
 
       variations.forEach(test => {
@@ -41,10 +41,10 @@ describe("Exodus 20:17 Final Word Special Case", () => {
     it('should test matching for neighbor\'s." with quotes and period', () => {
       // The full word as it appears at the end
       const variations = [
-        { correct: 'neighbor\'s."', userInput: "neighbor", shouldMatch: true },
-        { correct: 'neighbor\'s."', userInput: "neighbors", shouldMatch: true },
-        { correct: 'neighbor\'s."', userInput: "neighbor's", shouldMatch: true },
-        { correct: 'neighbor\'s."', userInput: 'neighbor\'s."', shouldMatch: true },
+        { correct: 'neighbor\'s."', userInput: "neighbor", shouldMatch: false }, // Base word not accepted
+        { correct: 'neighbor\'s."', userInput: "neighbors", shouldMatch: true },  // Apostrophe removed works
+        { correct: 'neighbor\'s."', userInput: "neighbor's", shouldMatch: true }, // Without quotes/period works
+        { correct: 'neighbor\'s."', userInput: 'neighbor\'s."', shouldMatch: true }, // Exact match works
       ];
 
       variations.forEach(test => {

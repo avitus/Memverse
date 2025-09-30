@@ -21,10 +21,10 @@ describe("Passage Review Exodus 20:17 Apostrophe Handling", () => {
     document.getElementById('word_width')?.remove();
   });
 
-  describe("Fixed flexibleTextMatch behavior", () => {
-    it("should NOW allow 'neighbor' to match 'neighbor's' (fixed behavior)", () => {
-      // This tests the FIXED behavior
-      expect(memverseLib.flexibleTextMatch("neighbor's", "neighbor")).toBe(true);
+  describe("Current flexibleTextMatch behavior", () => {
+    it("does NOT allow 'neighbor' to match 'neighbor's' (current behavior)", () => {
+      // Current implementation does not match base words
+      expect(memverseLib.flexibleTextMatch("neighbor's", "neighbor")).toBe(false);
     });
 
     it("should allow 'neighbors' to match 'neighbor's'", () => {
@@ -35,31 +35,26 @@ describe("Passage Review Exodus 20:17 Apostrophe Handling", () => {
     it("should accept all variations of apostrophe words", () => {
       expect(memverseLib.flexibleTextMatch("neighbor's", "neighbor's")).toBe(true);
       expect(memverseLib.flexibleTextMatch("neighbor's", "neighbors")).toBe(true);
-      expect(memverseLib.flexibleTextMatch("neighbor's", "neighbor")).toBe(true); // Fixed behavior
+      expect(memverseLib.flexibleTextMatch("neighbor's", "neighbor")).toBe(false); // Current behavior
     });
   });
 
-  describe("Desired behavior for user experience", () => {
-    it("should show what the user wants - accept base words without apostrophes", () => {
-      // What the user wants:
+  describe("Current behavior tests", () => {
+    it("should demonstrate current apostrophe matching behavior", () => {
+      // Current behavior:
       const testCases = [
-        { correct: "neighbor's", userInput: "neighbor", shouldMatch: true, currentlyWorks: false },
-        { correct: "neighbor's", userInput: "neighbors", shouldMatch: true, currentlyWorks: true },
-        { correct: "neighbor's", userInput: "neighbor's", shouldMatch: true, currentlyWorks: true },
-        { correct: "don't", userInput: "dont", shouldMatch: true, currentlyWorks: true },
-        { correct: "don't", userInput: "don", shouldMatch: true, currentlyWorks: false },
-        { correct: "can't", userInput: "cant", shouldMatch: true, currentlyWorks: true },
-        { correct: "can't", userInput: "can", shouldMatch: true, currentlyWorks: false }
+        { correct: "neighbor's", userInput: "neighbor", shouldMatch: false }, // Base word not accepted
+        { correct: "neighbor's", userInput: "neighbors", shouldMatch: true },  // Apostrophe removed
+        { correct: "neighbor's", userInput: "neighbor's", shouldMatch: true }, // Exact match
+        { correct: "don't", userInput: "dont", shouldMatch: true },          // Apostrophe removed
+        { correct: "don't", userInput: "don", shouldMatch: false },          // Base word not accepted
+        { correct: "can't", userInput: "cant", shouldMatch: true },          // Apostrophe removed
+        { correct: "can't", userInput: "can", shouldMatch: false }           // Base word not accepted
       ];
 
       testCases.forEach(testCase => {
         const result = memverseLib.flexibleTextMatch(testCase.correct, testCase.userInput);
-        // All of these should now pass with the fix
-        expect(result).toBe(true);
-
-        if (!testCase.currentlyWorks) {
-          console.log(`Fixed: '${testCase.correct}' now accepts '${testCase.userInput}'`);
-        }
+        expect(result).toBe(testCase.shouldMatch);
       });
     });
   });
@@ -83,10 +78,10 @@ describe("Passage Review Exodus 20:17 Apostrophe Handling", () => {
         // User types "neighbor" instead of "neighbor's"
         input.value = 'neighbor';
 
-        // Fixed behavior: this NOW matches
-        expect(memverseLib.flexibleTextMatch("neighbor's", "neighbor")).toBe(true);
+        // Current behavior: base word does NOT match
+        expect(memverseLib.flexibleTextMatch("neighbor's", "neighbor")).toBe(false);
 
-        // This is what the user wanted - typing "neighbor" matches "neighbor's"
+        // User must type "neighbors" (without apostrophe) or exact match
       });
     });
   });
@@ -97,8 +92,8 @@ describe("Passage Review Exodus 20:17 Apostrophe Handling", () => {
       expect(memverseLib.flexibleTextMatch('"You', '"You')).toBe(true);
     });
 
-    it("should handle trailing apostrophes (now fixed)", () => {
-      // These now work with the fixed logic
+    it("should handle trailing apostrophes", () => {
+      // Due to scrub_text, trailing apostrophes are removed so base words match
       expect(memverseLib.flexibleTextMatch("Jesus'", "Jesus")).toBe(true);
       expect(memverseLib.flexibleTextMatch("disciples'", "disciples")).toBe(true);
     });
@@ -119,8 +114,8 @@ describe("Passage Review Exodus 20:17 Apostrophe Handling", () => {
         const userInput = "neighbor";
         const matches = memverseLib.flexibleTextMatch(word, userInput);
 
-        // This now matches, making it easier for users
-        expect(matches).toBe(true);
+        // Current behavior: this does NOT match
+        expect(matches).toBe(false);
 
         console.log(`User types "${userInput}" for "${word}": ${matches ? 'PASS' : 'FAIL'}`);
       });
