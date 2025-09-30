@@ -69,8 +69,21 @@
 }
 
 .consistency.earned-bronze {
-  @include badge-properties;         
+  @include badge-properties;
   background: image-url('badges/Consistency/bronze.png') no-repeat;
+}
+
+// @import "badges/Quiz/*.png";
+
+.quiz-champion.unearned {
+  @include badge-properties;
+  background: image-url('badges/Quiz/teaser.png') no-repeat;
+  &:hover { background: image-url('badges/Quiz/hover.png') no-repeat; }
+}
+
+.quiz-champion.earned {
+  @include badge-properties;
+  background: image-url('badges/Quiz/gold.png') no-repeat;
 }
 
 /*========== End: Badges ==========*/
