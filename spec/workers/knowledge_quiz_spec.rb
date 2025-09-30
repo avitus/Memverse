@@ -233,4 +233,122 @@ RSpec.describe KnowledgeQuiz, type: :worker do
       end
     end
   end
+
+  describe 'badge awarding' do
+    let(:quiz_champion_badge) { FactoryBot.create(:badge, name: 'Quiz Champion', color: 'solo', description: 'Won a weekly Bible knowledge quiz') }
+    let(:winner_user) { FactoryBot.create(:user) }
+
+    before do
+      allow(worker).to receive(:quiz_recently_executed?).and_return(false)
+      allow(worker).to receive(:acquire_execution_window_lock).and_return(true)
+      allow(quiz_session).to receive(:lock_quiz).and_return(true)
+      allow(quiz_session).to receive(:quiz_in_progress?).and_return(false)
+
+      # Create approved quiz questions
+      FactoryBot.create_list(:quiz_question, 3, :mcq, approval_status: 'Approved', last_asked: 1.month.ago)
+
+      # Mock sleep to speed up tests
+      allow(worker).to receive(:sleep)
+
+      # Mock iOS notifications
+      allow(worker).to receive(:ios_quiz_alert)
+
+      # Create the badge
+      quiz_champion_badge
+    end
+
+    context 'when there is a quiz winner' do
+      before do
+        # Mock a winner
+        allow(quiz_session).to receive(:get_scoreboard).and_return([
+          { 'name' => winner_user.name, 'id' => winner_user.id, 'score' => 100 },
+          { 'name' => 'Jane Smith', 'id' => 456, 'score' => 80 }
+        ])
+
+        allow(Tweet).to receive(:create!).and_return(
+          instance_double(Tweet, id: 1, created_at: Time.current)
+        )
+      end
+
+      it 'awards the Quiz Champion badge to the winner' do
+        expect_any_instance_of(Badge).to receive(:award_badge).with(winner_user)
+
+        worker.perform
+      end
+
+      it 'logs badge awarding success' do
+        allow_any_instance_of(Badge).to receive(:award_badge)
+
+        expect(Sidekiq.logger).to receive(:info).with(/Awarded Quiz Champion badge to #{winner_user.name}/)
+        allow(Sidekiq.logger).to receive(:info)
+
+        worker.perform
+      end
+
+      it 'does not award badge if user already has it' do
+        # User already has the badge
+        winner_user.badges << quiz_champion_badge
+
+        expect_any_instance_of(Badge).to receive(:award_badge).with(winner_user).and_call_original
+
+        worker.perform
+
+        # Should still have only one badge
+        expect(winner_user.badges.count).to eq(1)
+      end
+    end
+
+    context 'when Quiz Champion badge does not exist' do
+      before do
+        # Delete the badge
+        quiz_champion_badge.destroy
+
+        # Create admin user for tweet creation
+        FactoryBot.create(:user, id: 1, admin: true)
+
+        # Mock a winner
+        allow(quiz_session).to receive(:get_scoreboard).and_return([
+          { 'name' => winner_user.name, 'id' => winner_user.id, 'score' => 100 }
+        ])
+
+        allow(Tweet).to receive(:create!).and_return(
+          instance_double(Tweet, id: 1, created_at: Time.current)
+        )
+      end
+
+      it 'logs an error and continues quiz execution' do
+        expect(Sidekiq.logger).to receive(:error).with(/Quiz Champion badge not found/)
+        allow(Sidekiq.logger).to receive(:info)
+        allow(Sidekiq.logger).to receive(:error)
+
+        # Should not raise an error
+        expect { worker.perform }.not_to raise_error
+      end
+    end
+
+    context 'when badge awarding fails' do
+      before do
+        # Create admin user for tweet creation
+        FactoryBot.create(:user, id: 1, admin: true)
+
+        # Mock a winner
+        allow(quiz_session).to receive(:get_scoreboard).and_return([
+          { 'name' => 'Invalid User', 'id' => 999999, 'score' => 100 }
+        ])
+
+        allow(Tweet).to receive(:create!).and_return(
+          instance_double(Tweet, id: 1, created_at: Time.current)
+        )
+      end
+
+      it 'logs the error and continues quiz execution' do
+        expect(Sidekiq.logger).to receive(:error).with(/Failed to award Quiz Champion badge/)
+        allow(Sidekiq.logger).to receive(:info)
+        allow(Sidekiq.logger).to receive(:error)
+
+        # Should not raise an error
+        expect { worker.perform }.not_to raise_error
+      end
+    end
+  end
 end

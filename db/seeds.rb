@@ -372,6 +372,13 @@ if !q
   Quest.create(:badge_id => consistency_bronze.id, :objective => 'Annual Sessions', :quantity => 300, :task => "Complete 300 sessions in a year")
 end
 
+# ---- Quiz Champion Badge ----------------------------
+quiz_champion = Badge.where(:name => 'Quiz Champion').first
+if !quiz_champion
+  puts ' - Creating Quiz Champion Badge'
+  quiz_champion = Badge.create(:name => 'Quiz Champion', :color => 'solo', :description => "Won a weekly Bible knowledge quiz")
+end
+
 # ----------------------------------------------------------------------------------------------------------
 # Create Knowledge Quiz Questions
 # ----------------------------------------------------------------------------------------------------------

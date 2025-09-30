@@ -416,8 +416,23 @@ class KnowledgeQuiz
         
         broadcast = "#{gold_ribbon_name} won the Bible knowledge quiz"
         tweet = Tweet.create!(news: broadcast, user_id: gold_ribbon_id, importance: 2)
-        
+
         Sidekiq.logger.info "===> Created winner tweet ID: #{tweet.id} at #{tweet.created_at}"
+
+        # Award Quiz Champion badge to winner
+        begin
+          quiz_champion_badge = Badge.where(name: 'Quiz Champion').first
+          if quiz_champion_badge
+            winner_user = User.find(gold_ribbon_id)
+            quiz_champion_badge.award_badge(winner_user)
+            Sidekiq.logger.info "===> Awarded Quiz Champion badge to #{gold_ribbon_name} (ID: #{gold_ribbon_id})"
+          else
+            Sidekiq.logger.error "===> Quiz Champion badge not found - cannot award to winner"
+          end
+        rescue => e
+          Sidekiq.logger.error "===> Failed to award Quiz Champion badge: #{e.message}"
+          Sidekiq.logger.error e.backtrace.first(5).join("\n")
+        end
       end
     end
   end
