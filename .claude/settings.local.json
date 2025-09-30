@@ -119,7 +119,11 @@
       "Bash(open test_realistic.html)",
       "Bash(open test_space_issue.html)",
       "Bash(open test_apostrophe_final.html)",
-      "Bash(./run_all_tests_ci.sh)"
+      "Bash(./run_all_tests_ci.sh)",
+      "Bash(python3:*)",
+      "Bash(open app/assets/images/badges/Consistency/gold.png app/assets/images/badges/Referrer/gold.png)",
+      "Bash(open:*)",
+      "Bash(git restore:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits",
