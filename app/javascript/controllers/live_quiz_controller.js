@@ -4,11 +4,11 @@ import PubNub from 'pubnub'
 // Connects to data-controller="live-quiz"
 export default class extends Controller {
   static targets = [
-    "chatArea", "chatInput", "chatStatus", 
+    "chatArea", "chatInput", "chatStatus",
     "question", "answer", "timer", "scoreboard",
-    "questionDot", "participantCount"
+    "questionDot", "participantCount", "preparingOverlay"
   ]
-  
+
   static values = {
     quizId: Number,
     userId: Number,
@@ -16,14 +16,22 @@ export default class extends Controller {
     userLogin: String,
     translation: String,
     numQuestions: Number,
+    quizPreparing: Boolean,
     pubnubSubscribeKey: String,
     pubnubPublishKey: String
   }
 
   connect() {
-    this.initializePubNub()
-    this.initializeQuiz()
-    this.bindEvents()
+    // If quiz is preparing, start polling for status changes
+    if (this.quizPreparingValue) {
+      console.log('LiveQuizController: Quiz is preparing, starting status polling...')
+      this.startPreparingPolling()
+    } else {
+      // Normal quiz initialization
+      this.initializePubNub()
+      this.initializeQuiz()
+      this.bindEvents()
+    }
   }
 
   disconnect() {
@@ -468,9 +476,65 @@ export default class extends Controller {
     this.userScore = 0
   }
 
+  // Quiz Preparation Methods
+  startPreparingPolling() {
+    // Poll every 2 seconds to check if quiz is ready
+    this.preparingInterval = setInterval(() => {
+      this.checkQuizStatus()
+    }, 2000)
+
+    // Also check immediately
+    this.checkQuizStatus()
+  }
+
+  async checkQuizStatus() {
+    try {
+      const response = await fetch(`/live_quiz/till_start?id=${this.quizIdValue}`, {
+        headers: {
+          'Accept': 'application/json'
+        }
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch quiz status')
+      }
+
+      const data = await response.json()
+      console.log('LiveQuizController: Quiz status check:', data)
+
+      // Check if quiz is ready (status changed from "Initializing" to "Wait for question")
+      if (data.status && data.status.includes('Wait for question')) {
+        console.log('LiveQuizController: Quiz is ready! Refreshing page...')
+
+        // Stop polling
+        if (this.preparingInterval) {
+          clearInterval(this.preparingInterval)
+          this.preparingInterval = null
+        }
+
+        // Reload the page
+        setTimeout(() => {
+          if (typeof Turbo !== 'undefined') {
+            Turbo.visit(window.location.href, { action: 'replace' })
+          } else {
+            window.location.reload()
+          }
+        }, 500) // Small delay to ensure smooth transition
+      }
+    } catch (error) {
+      console.error('LiveQuizController: Error checking quiz status:', error)
+    }
+  }
+
   cleanup() {
     this.stopTimer()
-    
+
+    // Stop preparing polling if active
+    if (this.preparingInterval) {
+      clearInterval(this.preparingInterval)
+      this.preparingInterval = null
+    }
+
     if (this.pubnub) {
       const channel = `quiz-${this.quizIdValue}`
       this.pubnub.unsubscribe({ channels: [channel] })

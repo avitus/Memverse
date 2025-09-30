@@ -50,6 +50,7 @@ RSpec.describe LiveQuizController, type: :controller do
       context 'when quiz is not running' do
         before do
           allow(quiz_session).to receive(:quiz_in_progress?).and_return(false)
+          allow(quiz_session).to receive(:get_quiz_status).and_return(nil)
         end
         
         it 'calculates next scheduled quiz time for knowledge quiz (ID=1)' do
@@ -90,13 +91,35 @@ RSpec.describe LiveQuizController, type: :controller do
       context 'when quiz is running' do
         before do
           allow(quiz_session).to receive(:quiz_in_progress?).and_return(true)
+          allow(quiz_session).to receive(:get_quiz_status).and_return("In progress. Wait for question.")
         end
-        
+
         it 'does not calculate next quiz time' do
           get :live_quiz, params: { quiz: quiz.id }
-          
+
           expect(assigns(:quiz_running)).to eq(true)
           expect(assigns(:next_quiz_time)).to be_nil
+        end
+
+        it 'sets quiz_preparing to false when quiz is waiting for question' do
+          get :live_quiz, params: { quiz: quiz.id }
+
+          expect(assigns(:quiz_running)).to eq(true)
+          expect(assigns(:quiz_preparing)).to eq(false)
+        end
+      end
+
+      context 'when quiz is in preparing state' do
+        before do
+          allow(quiz_session).to receive(:quiz_in_progress?).and_return(true)
+          allow(quiz_session).to receive(:get_quiz_status).and_return("In progress. Initializing...")
+        end
+
+        it 'sets quiz_preparing to true' do
+          get :live_quiz, params: { quiz: quiz.id }
+
+          expect(assigns(:quiz_running)).to eq(true)
+          expect(assigns(:quiz_preparing)).to eq(true)
         end
       end
     end

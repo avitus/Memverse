@@ -5,7 +5,7 @@
 	<%= render partial: "quiz_schedule" %>
 <% else %>
 	<!-- Show normal quiz interface when quiz is running or about to start -->
-	<div class="white-box-with-margins" 
+	<div class="white-box-with-margins"
      data-controller="live-quiz"
      data-live-quiz-quiz-id-value="<%= @quiz.id %>"
      data-live-quiz-user-id-value="<%= current_user.id %>"
@@ -13,9 +13,26 @@
      data-live-quiz-user-login-value="<%= current_user.login %>"
      data-live-quiz-translation-value="<%= current_user.translation %>"
      data-live-quiz-num-questions-value="<%= @num_questions %>"
+     data-live-quiz-quiz-preparing-value="<%= @quiz_preparing %>"
      data-live-quiz-pubnub-subscribe-key-value="<%= PN.env[:subscribe_key] %>"
      data-live-quiz-pubnub-publish-key-value="<%= PN.env[:publish_key] %>"
      style="position:relative">
+
+	<!-- Quiz Preparing Overlay -->
+	<% if @quiz_preparing %>
+		<div data-live-quiz-target="preparingOverlay"
+		     id="quiz-preparing-overlay"
+		     class="absolute inset-0 bg-white bg-opacity-95 z-50 flex items-center justify-center">
+			<div class="text-center">
+				<div class="mb-4">
+					<i class="fa fa-spinner fa-spin fa-3x text-blue-600"></i>
+				</div>
+				<h2 class="text-2xl font-bold mb-2">Preparing Quiz...</h2>
+				<p class="text-gray-600 mb-4">The quiz is initializing. This page will automatically refresh when ready.</p>
+				<p class="text-sm text-gray-500">If the page doesn't refresh in 10 seconds, please <a href="#" onclick="window.location.reload(); return false;" class="text-blue-600 underline">click here</a>.</p>
+			</div>
+		</div>
+	<% end %>
 
 	<!-- TOP QUIZ HEADER -->
 	<div id="quiz-header">
@@ -137,8 +154,9 @@
 	$(document).ready(function() {
 		// Set up quiz room for user
 		quizRoom.initialize('<%= @num_questions %>');
-		
+
 		console.log("==> Connected to channel " + channel);
+		console.log("==> Quiz preparing state: <%= @quiz_preparing %>");
 		
 		// Display welcome modal only if quiz is starting soon or running
 		// Check if quiz is running or within 5 minutes of starting

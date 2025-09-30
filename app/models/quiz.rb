@@ -228,17 +228,63 @@ class Quiz < ApplicationRecord
   end
 
   # Get next quiz time for knowledge quiz
-  # @return [Time] Next scheduled quiz time
+  # @return [Time] Next scheduled quiz time (checks both cron and scheduled jobs)
   def self.next_knowledge_quiz_time
+    # First check if there's a scheduled Sidekiq job
+    scheduled_time = next_scheduled_sidekiq_quiz_time
+
+    if scheduled_time
+      Rails.logger.info "Quiz.next_knowledge_quiz_time: Found scheduled Sidekiq job at #{scheduled_time}"
+      return scheduled_time
+    end
+
+    # Fall back to cron schedule
     require 'ice_cube'
-    
+
     schedule = IceCube::Schedule.new(Time.current.utc)
     # Tuesday at 17:00 UTC
     schedule.add_recurrence_rule(IceCube::Rule.weekly.day(:tuesday).hour_of_day(17).minute_of_hour(0).second_of_minute(0))
     # Saturday at 23:00 UTC
     schedule.add_recurrence_rule(IceCube::Rule.weekly.day(:saturday).hour_of_day(23).minute_of_hour(0).second_of_minute(0))
-    
-    schedule.next_occurrence
+
+    cron_time = schedule.next_occurrence
+    Rails.logger.info "Quiz.next_knowledge_quiz_time: Using cron schedule, next at #{cron_time}"
+    cron_time
+  end
+
+  # Check for manually scheduled knowledge quiz in Sidekiq
+  # @return [Time, nil] Time of next scheduled quiz or nil if none found
+  def self.next_scheduled_sidekiq_quiz_time
+    begin
+      require 'sidekiq/api'
+
+      # Check scheduled jobs
+      scheduled_set = Sidekiq::ScheduledSet.new
+
+      knowledge_quiz_jobs = scheduled_set.select do |job|
+        job.klass == 'KnowledgeQuiz'
+      end
+
+      if knowledge_quiz_jobs.any?
+        # Get the earliest scheduled job
+        next_job = knowledge_quiz_jobs.min_by(&:at)
+        return Time.at(next_job.at)
+      end
+
+      # Also check if a job is currently being processed
+      workers = Sidekiq::Workers.new
+      workers.each do |_process_id, _thread_id, work|
+        if work['payload']['class'] == 'KnowledgeQuiz'
+          # Quiz is currently running, return current time
+          return Time.current
+        end
+      end
+
+      nil
+    rescue => e
+      Rails.logger.error "Error checking Sidekiq scheduled jobs: #{e.message}"
+      nil
+    end
   end
 
   # ============= Protected below this line ==================================================================

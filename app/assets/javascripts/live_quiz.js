@@ -179,6 +179,7 @@ var quizSchedule = {
   // Initialize quiz schedule functionality
   init: function() {
     if ($('.quiz-schedule-compact').length > 0) {
+
       // Clear any existing intervals
       if (this.intervalId) {
         clearInterval(this.intervalId);
@@ -195,11 +196,13 @@ var quizSchedule = {
         var now = new Date();
         var diff = targetTime - now;
 
+
         // Check if we already marked this as preparation phase
         var inPreparation = sessionStorage.getItem('quiz_preparation_' + targetTime.getTime());
 
         // If countdown has expired (worker should have started) or we're in prep phase
         if (diff <= 0 || inPreparation === 'true') {
+
           countdownEl.html('<span class="countdown-expired">Loading quiz...</span>');
 
           // Only schedule reload if we haven't already done so
@@ -266,7 +269,9 @@ var quizSchedule = {
   // Update countdown timer
   updateCountdown: function() {
     var countdownEl = $('#quiz-countdown');
-    if (!countdownEl.length) return;
+    if (!countdownEl.length) {
+      return;
+    }
 
     var targetTime = new Date(countdownEl.data('target-time'));
     var now = new Date();

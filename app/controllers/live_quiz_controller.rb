@@ -30,7 +30,12 @@ class LiveQuizController < ApplicationController
     # Check if quiz is currently running
     quiz_session = QuizSession.new(@quiz.id)
     @quiz_running = quiz_session.quiz_in_progress?
-    
+
+    # Check if quiz is in preparing/initializing state
+    quiz_status = quiz_session.get_quiz_status
+    @quiz_preparing = quiz_status == "In progress. Initializing..."
+
+
     # Get next scheduled quiz time if quiz is not running
     unless @quiz_running
       if @quiz.id.to_i == 1  # Knowledge quiz uses cron schedule
