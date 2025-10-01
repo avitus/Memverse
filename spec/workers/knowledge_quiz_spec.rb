@@ -235,7 +235,7 @@ RSpec.describe KnowledgeQuiz, type: :worker do
   end
 
   describe 'badge awarding' do
-    let(:quiz_champion_badge) { FactoryBot.create(:badge, name: 'Quiz Champion', color: 'solo', description: 'Won a weekly Bible knowledge quiz') }
+    let(:quiz_champion_badge) { FactoryBot.create(:badge, name: 'Quiz Champion', color: 'solo', description: 'Won a weekly Bible knowledge quiz', auto_award: false) }
     let(:winner_user) { FactoryBot.create(:user) }
 
     before do
