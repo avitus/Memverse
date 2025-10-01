@@ -200,26 +200,22 @@ var quizSchedule = {
         // Check if we already marked this as preparation phase
         var inPreparation = sessionStorage.getItem('quiz_preparation_' + targetTime.getTime());
 
-        // If countdown has expired (worker should have started) or we're in prep phase
-        if (diff <= 0 || inPreparation === 'true') {
-
+        // If countdown has expired (worker should have started)
+        if (diff <= 0) {
           countdownEl.html('<span class="countdown-expired">Loading quiz...</span>');
 
-          // Only schedule reload if we haven't already done so
-          if (!inPreparation) {
+          // Only schedule reload if we haven't already done so in this page session
+          if (!inPreparation && !this.reloadScheduled) {
+            this.reloadScheduled = true; // Prevent multiple reloads
             sessionStorage.setItem('quiz_preparation_' + targetTime.getTime(), 'true');
 
-            // Reload after a short delay to give the worker time to set status
-            // Worker starts at countdown=0 and sets status immediately
+            // Clear the session storage and reload after a short delay
             setTimeout(function() {
-              // Clean up the session storage
+              // Clean up the session storage BEFORE reloading
               sessionStorage.removeItem('quiz_preparation_' + targetTime.getTime());
 
-              if (typeof Turbo !== 'undefined') {
-                Turbo.visit(window.location.href, { action: 'replace' });
-              } else {
-                window.location.reload();
-              }
+              // Reload the page
+              window.location.reload();
             }, 2000); // 2-second delay after worker should have started
           }
           return; // Skip normal initialization
@@ -286,10 +282,11 @@ var quizSchedule = {
     // Auto-refresh shortly after worker starts (when countdown reaches 0)
     if (diff <= 0 && !this.reloadScheduled) {
       // Check if we're already in preparation phase from a previous reload
+      // Don't schedule multiple reloads from the same countdown
       var inPreparation = sessionStorage.getItem('quiz_preparation_' + targetTime.getTime());
-      if (inPreparation === 'true') {
+      if (inPreparation === 'true' || this.reloadScheduled) {
         countdownEl.html('<span class="countdown-expired">Loading quiz...</span>');
-        return; // Don't schedule another reload
+        return; // Already scheduled a reload
       }
 
       this.reloadScheduled = true; // Prevent multiple reloads
@@ -302,13 +299,11 @@ var quizSchedule = {
 
       // Reload after 2 seconds to give worker time to initialize
       setTimeout(function() {
-        if (typeof Turbo !== 'undefined') {
-          // Use Turbo for smooth transition
-          Turbo.visit(window.location.href, { action: 'replace' });
-        } else {
-          // Fallback to regular reload
-          window.location.reload();
-        }
+        // Clear session storage before reloading
+        sessionStorage.removeItem('quiz_preparation_' + targetTime.getTime());
+
+        // Reload the page
+        window.location.reload();
       }, 2000);
       return;
     }
