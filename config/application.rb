@@ -19,10 +19,11 @@ module MemverseApp
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
     
-    # Add app/lib to autoload paths for Rails 7.0 with Zeitwerk
+    # Add app/lib and app/middleware to autoload paths for Rails 7.0 with Zeitwerk
     # Create a new array to avoid frozen array issues
     config.autoload_paths = config.autoload_paths.dup
     config.autoload_paths << Rails.root.join("app/lib")
+    config.autoload_paths << Rails.root.join("app/middleware")
     
     # Set cache format version to 7.1 for Rails 7.1 compatibility
     config.active_support.cache_format_version = 7.1
