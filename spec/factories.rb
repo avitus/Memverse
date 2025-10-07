@@ -163,6 +163,7 @@ FactoryBot.define do
     name { 'Sermon on the Mount' }
     description { 'Memorize the Sermon on the Mount' }
     color { 'solo' }
+    auto_award { true }  # Default to true for most badges
   end
 
   # ==============================================================================================

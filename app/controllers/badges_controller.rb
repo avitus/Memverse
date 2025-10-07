@@ -34,6 +34,9 @@ class BadgesController < ApplicationController
     badges_to_check = current_user.badges_to_strive_for.sort.reverse
 
     badges_to_check.each do |badge|
+      # Skip badges that should not be auto-awarded (e.g., Quiz Champion)
+      # These badges are awarded through specific actions only
+      next unless badge.auto_award
 
       if badge.achieved?(current_user)
         badge.award_badge(current_user)

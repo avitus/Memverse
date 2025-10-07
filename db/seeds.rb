@@ -376,7 +376,15 @@ end
 quiz_champion = Badge.where(:name => 'Quiz Champion').first
 if !quiz_champion
   puts ' - Creating Quiz Champion Badge'
-  quiz_champion = Badge.create(:name => 'Quiz Champion', :color => 'solo', :description => "Won a weekly Bible knowledge quiz")
+  quiz_champion = Badge.create(
+    :name => 'Quiz Champion',
+    :color => 'solo',
+    :description => "Won a weekly Bible knowledge quiz",
+    :auto_award => false  # This badge is only awarded by winning a quiz, not through badge checks
+  )
+else
+  # Ensure existing Quiz Champion badge has auto_award set to false
+  quiz_champion.update(auto_award: false) if quiz_champion.auto_award != false
 end
 
 # ----------------------------------------------------------------------------------------------------------
