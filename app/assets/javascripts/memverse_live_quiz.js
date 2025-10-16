@@ -510,7 +510,9 @@ function mvPresence ( message ) {
 
             // Remove user from visual roster
             $("div#" + roster_uid).remove();
-            $("#quizzers-count").html("(" + message.occupancy + ")");
+            // Subtract 1 from occupancy to exclude the quiz bot from the participant count
+            var actualParticipantCount = Math.max(0, message.occupancy - 1);
+            $("#quizzers-count").html("(" + actualParticipantCount + ")");
 
             // Add "[user] leavs" message to chat window
             chat_stream_scroll( function () { $("#chat-stream-narrow").append(li) } );
@@ -552,8 +554,10 @@ function addUserToRoster( userID, userName, gravatarURL, userCount ) {
     userDiv.effect('highlight', {}, 3000);
 
     // Increase number of quizzers
+    // Subtract 1 from userCount to exclude the quiz bot from the participant count
+    var actualParticipantCount = Math.max(0, userCount - 1);
     $("#quizzers-stats").effect('highlight', {}, 3000);
-    $("#quizzers-count").html("(" + userCount + ")");
+    $("#quizzers-count").html("(" + actualParticipantCount + ")");
 }
 
 /******************************************************************************
