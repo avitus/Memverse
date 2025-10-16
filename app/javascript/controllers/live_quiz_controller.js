@@ -506,14 +506,31 @@ export default class extends Controller {
       if (data.status && data.status.includes('Wait for question')) {
         console.log('LiveQuizController: Quiz is ready! Refreshing page...')
 
+        // Check if a reload is already scheduled by jQuery countdown
+        if (sessionStorage.getItem('quiz_reload_scheduled') === 'true') {
+          console.log('LiveQuizController: Reload already scheduled by countdown timer')
+          // Stop polling but don't reload
+          if (this.preparingInterval) {
+            clearInterval(this.preparingInterval)
+            this.preparingInterval = null
+          }
+          return
+        }
+
         // Stop polling
         if (this.preparingInterval) {
           clearInterval(this.preparingInterval)
           this.preparingInterval = null
         }
 
+        // Mark that we're scheduling a reload
+        sessionStorage.setItem('quiz_reload_scheduled', 'true')
+
         // Reload the page
         setTimeout(() => {
+          // Clear the flag before reloading
+          sessionStorage.removeItem('quiz_reload_scheduled')
+
           if (typeof Turbo !== 'undefined') {
             Turbo.visit(window.location.href, { action: 'replace' })
           } else {

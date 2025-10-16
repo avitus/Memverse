@@ -180,6 +180,14 @@ var quizSchedule = {
   init: function() {
     if ($('.quiz-schedule-compact').length > 0) {
 
+      // Check if Stimulus controller is already handling the quiz preparation
+      // This prevents conflicts between jQuery countdown and Stimulus polling
+      if ($('[data-controller="live-quiz"]').length > 0 &&
+          $('[data-live-quiz-quiz-preparing-value="true"]').length > 0) {
+        console.log('Quiz preparation is being handled by Stimulus controller');
+        return; // Exit early to prevent dual refresh mechanisms
+      }
+
       // Clear any existing intervals
       if (this.intervalId) {
         clearInterval(this.intervalId);
@@ -209,14 +217,28 @@ var quizSchedule = {
             this.reloadScheduled = true; // Prevent multiple reloads
             sessionStorage.setItem('quiz_preparation_' + targetTime.getTime(), 'true');
 
-            // Clear the session storage and reload after a short delay
+            // Clear the session storage immediately to prevent re-entry
+            var storageKey = 'quiz_preparation_' + targetTime.getTime();
+
+            // Set a more specific flag to indicate reload is in progress
+            sessionStorage.setItem('quiz_reload_scheduled', 'true');
+
+            // Schedule reload after a short delay
             setTimeout(function() {
-              // Clean up the session storage BEFORE reloading
-              sessionStorage.removeItem('quiz_preparation_' + targetTime.getTime());
+              // Clean up ALL quiz-related session storage
+              sessionStorage.removeItem(storageKey);
+              sessionStorage.removeItem('quiz_reload_scheduled');
+
+              // Clear any abandoned preparation flags from previous attempts
+              for (var key in sessionStorage) {
+                if (key.startsWith('quiz_preparation_')) {
+                  sessionStorage.removeItem(key);
+                }
+              }
 
               // Reload the page
               window.location.reload();
-            }, 2000); // 2-second delay after worker should have started
+            }, 3000); // 3-second delay to ensure worker has time to update status
           }
           return; // Skip normal initialization
         }
@@ -281,6 +303,13 @@ var quizSchedule = {
 
     // Auto-refresh shortly after worker starts (when countdown reaches 0)
     if (diff <= 0 && !this.reloadScheduled) {
+      // Check if ANY reload is already scheduled
+      var reloadScheduled = sessionStorage.getItem('quiz_reload_scheduled');
+      if (reloadScheduled === 'true') {
+        countdownEl.html('<span class="countdown-expired">Loading quiz...</span>');
+        return; // Another reload is already in progress
+      }
+
       // Check if we're already in preparation phase from a previous reload
       // Don't schedule multiple reloads from the same countdown
       var inPreparation = sessionStorage.getItem('quiz_preparation_' + targetTime.getTime());
@@ -297,14 +326,25 @@ var quizSchedule = {
       // Mark that we're entering preparation phase
       sessionStorage.setItem('quiz_preparation_' + targetTime.getTime(), 'true');
 
-      // Reload after 2 seconds to give worker time to initialize
+      // Set flag to indicate reload is in progress
+      sessionStorage.setItem('quiz_reload_scheduled', 'true');
+
+      // Reload after 3 seconds to give worker time to initialize
       setTimeout(function() {
-        // Clear session storage before reloading
+        // Clear all quiz-related session storage before reloading
         sessionStorage.removeItem('quiz_preparation_' + targetTime.getTime());
+        sessionStorage.removeItem('quiz_reload_scheduled');
+
+        // Clear any abandoned preparation flags
+        for (var key in sessionStorage) {
+          if (key.startsWith('quiz_preparation_')) {
+            sessionStorage.removeItem(key);
+          }
+        }
 
         // Reload the page
         window.location.reload();
-      }, 2000);
+      }, 3000);
       return;
     }
 

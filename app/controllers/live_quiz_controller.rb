@@ -33,7 +33,10 @@ class LiveQuizController < ApplicationController
 
     # Check if quiz is in preparing/initializing state
     quiz_status = quiz_session.get_quiz_status
-    @quiz_preparing = quiz_status == "In progress. Initializing..."
+    # Consider quiz as preparing if it's in any initialization state
+    @quiz_preparing = quiz_status.to_s.include?("Initializing") ||
+                      quiz_status == "In progress. Chat opening soon." ||
+                      quiz_status == "In progress. Chat open. Wait for question."
 
 
     # Get next scheduled quiz time if quiz is not running
