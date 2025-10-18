@@ -60,7 +60,7 @@ class ApidocsController < ActionController::Base
     end
 
     key :host, Rails.env.production? ? 'www.memverse.com' : 'localhost:3000'
-    key :basePath, '/1'
+    key :basePath, '/api/v1'
     key :consumes, ['application/json']
     key :produces, ['application/json']
   end

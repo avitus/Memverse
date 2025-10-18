@@ -71,6 +71,8 @@ module ApiResponseHelpers
   # Generate cache key for current action
   def cache_key_for_action
     parts = [controller_name, action_name]
+    # Include user ID in cache key to prevent users from seeing each other's data
+    parts << current_resource_owner.id if respond_to?(:current_resource_owner) && current_resource_owner
     parts << params[:id] if params[:id].present?
     parts << params[:page] if params[:page].present?
     parts.join('/')

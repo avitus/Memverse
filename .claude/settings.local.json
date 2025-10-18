@@ -124,7 +124,8 @@
       "Bash(open app/assets/images/badges/Consistency/gold.png app/assets/images/badges/Referrer/gold.png)",
       "Bash(open:*)",
       "Bash(git restore:*)",
-      "Bash(lsof:*)"
+      "Bash(lsof:*)",
+      "Bash(kill:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits",
