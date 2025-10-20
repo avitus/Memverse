@@ -16,5 +16,8 @@
     "@vitest/ui": "^3.2.4",
     "jsdom": "^26.1.0",
     "vitest": "^3.2.4"
+  },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "*"
   }
 }
