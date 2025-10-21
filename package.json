@@ -18,6 +18,6 @@
     "vitest": "^3.2.4"
   },
   "optionalDependencies": {
-    "@rollup/rollup-linux-x64-gnu": "*"
+    "@rollup/rollup-linux-x64-gnu": "^4.28.1"
   }
 }

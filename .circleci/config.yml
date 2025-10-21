@@ -265,27 +265,14 @@ jobs:
                 exit 0
               fi
               
-              # Clear npm cache only if needed
-              echo "Clearing npm cache..."
-              npm cache clean --force
-              
-              # Use npm ci for deterministic, faster installs in CI
-              echo "Installing dependencies with npm ci..."
-              npm ci --no-optional || {
-                echo "npm ci failed, attempting to fix native module issues..."
-                
-                # Force install the specific rollup platform module that's missing
-                echo "Installing @rollup/rollup-linux-x64-gnu explicitly..."
-                npm install @rollup/rollup-linux-x64-gnu --no-save --force || true
-                
-                # Rebuild native modules to ensure compatibility
-                echo "Rebuilding native modules..."
-                npm rebuild || true
-                
-                # Retry npm ci
-                echo "Retrying npm ci..."
-                npm ci --no-optional
-              }
+              # Fix for npm optional dependency bug with Rollup
+              # See: https://github.com/npm/cli/issues/4828
+              echo "Removing node_modules and package-lock.json to fix npm optional dependency bug..."
+              rm -rf node_modules package-lock.json
+
+              # Install dependencies with npm install (not ci)
+              echo "Installing dependencies with npm install..."
+              npm install
               
               # Verify Vitest installation
               echo "Verifying Vitest installation..."
