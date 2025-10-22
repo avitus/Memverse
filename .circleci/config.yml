@@ -264,7 +264,15 @@ jobs:
               # Install dependencies with npm install (not ci)
               echo "Installing dependencies with npm install..."
               npm install
-              
+
+              # Explicitly install the Linux Rollup binary for CircleCI environment
+              echo "Installing Linux Rollup binary for CircleCI..."
+              npm install @rollup/rollup-linux-x64-gnu --no-save
+
+              # Verify Rollup installation
+              echo "Verifying Rollup installation..."
+              ls -la node_modules/@rollup/ || echo "Rollup directory not found"
+
               # Verify Vitest installation
               echo "Verifying Vitest installation..."
               npx vitest --version || {
@@ -272,7 +280,7 @@ jobs:
                 npm install vitest --no-save --force
                 npx vitest --version
               }
-              
+
               echo "Node.js dependencies installation completed successfully"
             else
               echo "Skipping Node.js dependency installation on container $CIRCLE_NODE_INDEX"

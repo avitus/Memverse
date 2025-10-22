@@ -125,7 +125,8 @@
       "Bash(open:*)",
       "Bash(git restore:*)",
       "Bash(lsof:*)",
-      "Bash(kill:*)"
+      "Bash(kill:*)",
+      "Bash(npx vitest:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits",
