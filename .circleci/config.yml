@@ -73,11 +73,11 @@ jobs:
           paths:
             - vendor/bundle
 
-      # Restore node_modules cache
-      - restore_cache:
-          keys:
-            - memverse-node-v2-{{ checksum "package.json" }}
-            - memverse-node-v2-
+      # Restore node_modules cache - TEMPORARILY DISABLED to fix Rollup issue
+      # - restore_cache:
+      #     keys:
+      #       - memverse-node-v2-{{ checksum "package.json" }}
+      #       - memverse-node-v2-
       
       # Restore ChromeDriver cache to avoid re-downloading
       - restore_cache:
@@ -295,11 +295,12 @@ jobs:
             else
               echo "Skipping cache save on container $CIRCLE_NODE_INDEX"
             fi
-      - save_cache:
-          key: memverse-node-v2-{{ checksum "package.json" }}
-          paths:
-            - node_modules
-          when: on_success
+      # Save node_modules cache - TEMPORARILY DISABLED to fix Rollup issue
+      # - save_cache:
+      #     key: memverse-node-v2-{{ checksum "package.json" }}
+      #     paths:
+      #       - node_modules
+      #     when: on_success
       
       # Save ChromeDriver cache (only from containers that installed it)
       - run:
