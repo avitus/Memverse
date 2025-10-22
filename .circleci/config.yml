@@ -76,8 +76,8 @@ jobs:
       # Restore node_modules cache
       - restore_cache:
           keys:
-            - memverse-node-{{ checksum "package.json" }}
-            - memverse-node-
+            - memverse-node-v2-{{ checksum "package.json" }}
+            - memverse-node-v2-
       
       # Restore ChromeDriver cache to avoid re-downloading
       - restore_cache:
@@ -296,7 +296,7 @@ jobs:
               echo "Skipping cache save on container $CIRCLE_NODE_INDEX"
             fi
       - save_cache:
-          key: memverse-node-{{ checksum "package.json" }}
+          key: memverse-node-v2-{{ checksum "package.json" }}
           paths:
             - node_modules
           when: on_success
