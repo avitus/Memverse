@@ -236,6 +236,59 @@ jobs:
             fi
             redis-cli -h localhost DEL test_key
 
+      # Install Node.js dependencies for Vitest (only on container 0)
+      - run:
+          name: Install Node.js dependencies
+          command: |
+            # Debug info
+            echo "=== NPM INSTALLATION DEBUG ==="
+            echo "Container index: $CIRCLE_NODE_INDEX"
+            echo "Current directory: $(pwd)"
+            echo "Node version: $(node --version)"
+            echo "NPM version: $(npm --version)"
+
+            # Check if node_modules already exists
+            if [ -d "node_modules" ]; then
+              echo "WARNING: node_modules directory already exists!"
+              echo "Contents:"
+              ls -la node_modules/ | head -20
+            else
+              echo "node_modules directory does not exist (good)"
+            fi
+
+            # Only install Node dependencies on container 0 since that's where Vitest runs
+            if [ "$CIRCLE_NODE_INDEX" = "0" ]; then
+              echo "Installing Node.js dependencies on container 0..."
+
+              # Clean install
+              echo "Removing node_modules and package-lock.json for clean install..."
+              rm -rf node_modules package-lock.json
+
+              # Install dependencies with npm install
+              echo "Installing dependencies with npm install..."
+              npm install --verbose
+
+              # Check if installation succeeded
+              echo "Checking installation results..."
+              if [ -d "node_modules/@rollup" ]; then
+                echo "Rollup modules found:"
+                ls -la node_modules/@rollup/
+              else
+                echo "ERROR: No @rollup modules found after installation!"
+              fi
+
+              # Verify Vitest installation
+              echo "Verifying Vitest installation..."
+              npx vitest --version || {
+                echo "Vitest verification failed"
+                exit 1
+              }
+
+              echo "Node.js dependencies installation completed successfully"
+            else
+              echo "Skipping Node.js dependency installation on container $CIRCLE_NODE_INDEX"
+            fi
+
       # Run rspec in parallel
       - type: shell
         name: Rspec tests
@@ -247,35 +300,6 @@ jobs:
                             --out test_results/rspec.xml \
                             --format progress \
                             $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
-
-      # Install Node.js dependencies for Vitest (only on container 0)
-      - run:
-          name: Install Node.js dependencies
-          command: |
-            # Only install Node dependencies on container 0 since that's where Vitest runs
-            if [ "$CIRCLE_NODE_INDEX" = "0" ]; then
-              echo "Installing Node.js dependencies on container 0..."
-
-              # Clean install to use WebAssembly version of Rollup
-              echo "Removing node_modules and package-lock.json for clean install..."
-              rm -rf node_modules package-lock.json
-
-              # Install dependencies with npm install
-              echo "Installing dependencies with npm install..."
-              npm install
-
-              # Verify Vitest installation
-              echo "Verifying Vitest installation..."
-              npx vitest --version || {
-                echo "Vitest verification failed, attempting to fix..."
-                npm install vitest --no-save --force
-                npx vitest --version
-              }
-
-              echo "Node.js dependencies installation completed successfully"
-            else
-              echo "Skipping Node.js dependency installation on container $CIRCLE_NODE_INDEX"
-            fi
 
       # Store node_modules cache (only from container 0)
       - run:
