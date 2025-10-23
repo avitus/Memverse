@@ -3,8 +3,69 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+// Import setup to ensure jQuery is available
+import './setup.js';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Ensure jQuery is available - import from setup if not already global
+if (typeof global.$ === 'undefined' || typeof global.jQuery === 'undefined') {
+  console.warn('jQuery not found in global scope, using fallback mock');
+  // Create a complete jQuery mock if needed
+  const jQueryFallback = function(selector) {
+    const obj = {
+      _selector: selector,
+      val: () => '',
+      text: () => '',
+      html: () => '',
+      attr: () => '',
+      prop: () => '',
+      css: () => {},
+      width: () => 100,
+      hide: () => obj,
+      show: () => obj,
+      remove: () => obj,
+      empty: () => obj,
+      append: () => obj,
+      prepend: () => obj,
+      on: () => obj,
+      off: () => obj,
+      trigger: () => obj,
+      focus: () => obj,
+      clone: () => obj,
+      prependTo: () => obj,
+      each: (fn) => obj,
+      ready: (fn) => obj,
+      get: () => obj,
+      eq: () => obj,
+      length: 0
+    };
+    return obj;
+  };
+  // Add static methods
+  jQueryFallback.parseJSON = (str) => JSON.parse(str);
+  jQueryFallback.ajax = () => Promise.resolve({});
+  jQueryFallback.get = () => Promise.resolve({});
+  jQueryFallback.post = () => Promise.resolve({});
+  jQueryFallback.getJSON = () => Promise.resolve({});
+  jQueryFallback.isFunction = (obj) => typeof obj === 'function';
+  jQueryFallback.trim = (str) => (str || '').trim();
+  jQueryFallback.each = (obj, fn) => {
+    if (Array.isArray(obj)) {
+      obj.forEach((val, idx) => fn.call(val, idx, val));
+    } else if (typeof obj === 'object' && obj !== null) {
+      Object.keys(obj).forEach(key => fn.call(obj[key], key, obj[key]));
+    }
+    return obj;
+  };
+  jQueryFallback.inArray = (value, array) => {
+    if (!Array.isArray(array)) return -1;
+    return array.indexOf(value);
+  };
+  global.$ = global.$ || jQueryFallback;
+  global.jQuery = global.jQuery || jQueryFallback;
+}
 
 // Create a shared global context for all JavaScript files
 const globalContext = {
@@ -35,10 +96,32 @@ export function loadJavaScriptFile(filePath) {
     'mvMirrorNextInput', 'mvDisplayPassageForReview', 'buildVerseBlank'
   ];
   
+  // Filter out any undefined values from globalContext
+  const contextKeys = Object.keys(globalContext).filter(key => globalContext[key] !== undefined);
+  const contextValues = contextKeys.map(key => globalContext[key]);
+
+  // Debug logging for CI
+  if (process.env.CI) {
+    console.log('Running in CI environment');
+    console.log('Context keys:', contextKeys);
+    console.log('Context values defined:', contextValues.map(v => v !== undefined));
+  }
+
   // Create a function that executes in the global context
-  const executeCode = new Function(...Object.keys(globalContext), 'context', `
+  // Wrap in try-catch to provide better error messages
+  let executeCode;
+  try {
+    executeCode = new Function(...contextKeys, 'context', `
     // Variables used in the library that need to be declared
     var book_index, possibilities, i, lang_, bi, vs_start, vs_end;
+
+    // Ensure jQuery is available in this execution context
+    if (typeof $ === 'undefined' && typeof jQuery !== 'undefined') {
+      var $ = jQuery;
+    }
+    if (typeof jQuery === 'undefined' && typeof $ !== 'undefined') {
+      var jQuery = $;
+    }
     
     // Check if word_width is already defined globally and preserve it
     const globalWordWidth = typeof word_width !== 'undefined' ? word_width : null;
@@ -56,14 +139,26 @@ export function loadJavaScriptFile(filePath) {
     ).join('\n')}
     
     // Also export BIBLEBOOKS if it exists
-    if (typeof BIBLEBOOKS !== 'undefined') { 
-      context.BIBLEBOOKS = BIBLEBOOKS; 
-      globalThis.BIBLEBOOKS = BIBLEBOOKS; 
+    if (typeof BIBLEBOOKS !== 'undefined') {
+      context.BIBLEBOOKS = BIBLEBOOKS;
+      globalThis.BIBLEBOOKS = BIBLEBOOKS;
     }
   `);
-  
-  // Execute with the global context
-  executeCode(...Object.values(globalContext), context);
+  } catch (error) {
+    console.error('Failed to create executeCode function:', error);
+    console.error('Context keys:', contextKeys);
+    console.error('File path:', filePath);
+    throw error;
+  }
+
+  // Execute with the filtered context values
+  try {
+    executeCode(...contextValues, context);
+  } catch (error) {
+    console.error('Failed to execute code for file:', filePath);
+    console.error('Error:', error);
+    throw error;
+  }
   
   // Also make functions available globally
   Object.assign(globalContext, context);
