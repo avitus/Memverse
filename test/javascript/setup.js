@@ -123,9 +123,15 @@ jQueryMock.isFunction = (obj) => typeof obj === 'function'
 jQueryMock.trim = (str) => (str || '').trim()
 jQueryMock.each = (obj, fn) => {
   if (Array.isArray(obj)) {
-    obj.forEach((val, idx) => fn.call(val, idx, val))
-  } else if (typeof obj === 'object') {
-    Object.keys(obj).forEach(key => fn.call(obj[key], key, obj[key]))
+    for (let idx = 0; idx < obj.length; idx++) {
+      if (fn.call(obj[idx], idx, obj[idx]) === false) break;
+    }
+  } else if (typeof obj === 'object' && obj !== null) {
+    const keys = Object.keys(obj);
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
+      if (fn.call(obj[key], key, obj[key]) === false) break;
+    }
   }
   return obj
 }

@@ -53,9 +53,15 @@ if (typeof global.$ === 'undefined' || typeof global.jQuery === 'undefined') {
   jQueryFallback.trim = (str) => (str || '').trim();
   jQueryFallback.each = (obj, fn) => {
     if (Array.isArray(obj)) {
-      obj.forEach((val, idx) => fn.call(val, idx, val));
+      for (let idx = 0; idx < obj.length; idx++) {
+        if (fn.call(obj[idx], idx, obj[idx]) === false) break;
+      }
     } else if (typeof obj === 'object' && obj !== null) {
-      Object.keys(obj).forEach(key => fn.call(obj[key], key, obj[key]));
+      const keys = Object.keys(obj);
+      for (let i = 0; i < keys.length; i++) {
+        const key = keys[i];
+        if (fn.call(obj[key], key, obj[key]) === false) break;
+      }
     }
     return obj;
   };
@@ -123,6 +129,20 @@ export function loadJavaScriptFile(filePath) {
     if (typeof jQuery === 'undefined' && typeof $ !== 'undefined') {
       var jQuery = $;
     }
+
+    // Make $ and jQuery available globally for the functions
+    if (typeof window !== 'undefined') {
+      window.$ = window.$ || $;
+      window.jQuery = window.jQuery || jQuery;
+    }
+    if (typeof global !== 'undefined') {
+      global.$ = global.$ || $;
+      global.jQuery = global.jQuery || jQuery;
+    }
+    if (typeof globalThis !== 'undefined') {
+      globalThis.$ = globalThis.$ || $;
+      globalThis.jQuery = globalThis.jQuery || jQuery;
+    }
     
     // Check if word_width is already defined globally and preserve it
     const globalWordWidth = typeof word_width !== 'undefined' ? word_width : null;
@@ -160,9 +180,29 @@ export function loadJavaScriptFile(filePath) {
     console.error('Error:', error);
     throw error;
   }
-  
+
   // Also make functions available globally
   Object.assign(globalContext, context);
+
+  // Make the required variables available globally for the functions
+  if (typeof global !== 'undefined') {
+    global.book_index = global.book_index || undefined;
+    global.possibilities = global.possibilities || undefined;
+    global.i = global.i || undefined;
+    global.lang_ = global.lang_ || undefined;
+    global.bi = global.bi || undefined;
+    global.vs_start = global.vs_start || undefined;
+    global.vs_end = global.vs_end || undefined;
+  }
+  if (typeof globalThis !== 'undefined') {
+    globalThis.book_index = globalThis.book_index || undefined;
+    globalThis.possibilities = globalThis.possibilities || undefined;
+    globalThis.i = globalThis.i || undefined;
+    globalThis.lang_ = globalThis.lang_ || undefined;
+    globalThis.bi = globalThis.bi || undefined;
+    globalThis.vs_start = globalThis.vs_start || undefined;
+    globalThis.vs_end = globalThis.vs_end || undefined;
+  }
   
   return context;
 }
@@ -176,6 +216,9 @@ loadJavaScriptFile('memverse_passage_review.js');
 
 // Create the memverseLib object with all the functions from globalThis
 export const memverseLib = {
+  // jQuery is needed by the library functions
+  $: globalThis.$ || globalContext.$ || global.$,
+  jQuery: globalThis.jQuery || globalContext.jQuery || global.jQuery,
   mnemonic: globalThis.mnemonic || globalContext.mnemonic,
   unabbreviate: globalThis.unabbreviate || globalContext.unabbreviate,
   validVerseRef: globalThis.validVerseRef || globalContext.validVerseRef,
