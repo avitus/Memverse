@@ -74,7 +74,8 @@ const globalContext = {
   jQuery: global.jQuery,
   Object: global.Object,
   console: global.console,
-  word_width: global.word_width
+  word_width: global.word_width,
+  BIBLEBOOKS: global.BIBLEBOOKS
 };
 
 // Function to load and evaluate JavaScript files in a shared context
