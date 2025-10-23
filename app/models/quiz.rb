@@ -204,6 +204,26 @@ class Quiz < ApplicationRecord
     quiz_session.cleanup_quiz_data
   end
 
+  # Check if quiz is open
+  # A quiz is considered open if it's currently running or about to start
+  # @return [Boolean]
+  def open?
+    # Check if quiz session indicates it's in progress
+    return true if in_progress?
+
+    # Check if quiz is starting soon (within 5 minutes)
+    if start_time && start_time > Time.current && start_time <= 5.minutes.from_now
+      return true
+    end
+
+    false
+  end
+
+  # For backward compatibility with code that checks @quiz.open
+  def open
+    open?
+  end
+
   # Get human-readable schedule for knowledge quiz
   # @return [Array<String>] Array of schedule descriptions
   def self.knowledge_quiz_schedule

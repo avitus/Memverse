@@ -24,6 +24,8 @@ class QuizzesController < ApplicationController
       redirect_to @quiz
       return false
     end
+    # Redirect to the actual live quiz page
+    redirect_to "/live_quiz/#{@quiz.id}"
   end
 
   # GET /quizzes/1

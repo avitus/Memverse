@@ -96,6 +96,9 @@ MemverseApp::Application.routes.draw do
   resources :quests
   resources :quizzes do
     get 'search', on: :collection
+    member do
+      get 'live', as: :quiz_live  # Different name to avoid conflict with live_quiz route
+    end
   end
   resources :verses do
     member do

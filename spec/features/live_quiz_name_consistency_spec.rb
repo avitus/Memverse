@@ -1,9 +1,14 @@
 require 'rails_helper'
+require_relative '../support/live_quiz_helpers'
 
-RSpec.describe "Live Quiz Name Consistency", type: :feature do
+RSpec.describe "Live Quiz Name Consistency", type: :feature, js: true do
+  # Force truncation strategy for all tests in this describe block
+  before(:all) do
+    DatabaseCleaner[:active_record].strategy = :truncation, {except: %w[final_verses]}
+  end
   let(:user) { FactoryBot.create(:user, name: "John Doe", login: "johndoe") }
   let(:other_user) { FactoryBot.create(:user, name: "Jane Smith", login: "janesmith") }
-  let(:quiz) { FactoryBot.create(:quiz) }
+  let(:quiz) { FactoryBot.create(:live_ready_quiz) }
 
   describe "scoreboard displays correct names" do
     it "shows user names (not logins) in the scoreboard" do
@@ -43,38 +48,47 @@ RSpec.describe "Live Quiz Name Consistency", type: :feature do
     end
   end
 
-  describe "chat configuration", js: true do
+  describe "chat configuration" do
     before do
+      # Temporarily enable exception details in test
+      Rails.application.config.action_dispatch.show_exceptions = true
+
       user.update(translation: 'NIV')
       sign_in user
+
+      # Debug quiz setup
+      puts "\nQuiz ID: #{quiz.id}"
+      puts "Quiz Length: #{quiz.quiz_length}"
+      puts "Quiz Open?: #{quiz.open?}"
+      puts "Quiz User: #{quiz.user.inspect}"
+
+      # Set up the quiz session with synchronization
+      setup_quiz_session_with_sync(quiz.id, "in_progress", { started_at: Time.current })
+
+      # Create the chat channel
+      setup_quiz_chat_channel(quiz.id)
+    end
+
+    after do
+      # Reset to default
+      Rails.application.config.action_dispatch.show_exceptions = false
     end
 
     it "uses user name (not login) for chat messages" do
-      # Visit the quiz page
-      visit "/live_quiz?quiz=#{quiz.id}"
+      # Visit the live quiz page and wait for it to load
+      visit_live_quiz_and_wait(quiz)
 
-      # Wait for page to load
-      expect(page).to have_css('.white-box-with-margins', wait: 5)
+      # Verify the quiz interface is showing (not the schedule)
+      expect(quiz_interface_visible?).to be true
 
-      # Check JavaScript variables are set correctly
-      user_name = page.evaluate_script("typeof memverseUserName !== 'undefined' ? memverseUserName : null")
-      user_login = page.evaluate_script("typeof memverseUserLogin !== 'undefined' ? memverseUserLogin : null")
+      # Wait for JavaScript to initialize
+      sleep 0.5
 
-      # If the variables are available, verify them
-      if user_name && user_login
-        expect(user_name).to eq("John Doe")
-        expect(user_login).to eq("johndoe")
-
-        # Verify the sendQuizChat function would use the correct name
-        # by checking what value it would send
-        chat_user_value = page.evaluate_script("memverseUserName")
-        expect(chat_user_value).to eq("John Doe")
-      else
-        # If we can't access the JavaScript, at least verify the data attributes
-        quiz_element = find('[data-controller="live-quiz"]', visible: false)
-        expect(quiz_element['data-live-quiz-user-name-value']).to eq("John Doe")
-        expect(quiz_element['data-live-quiz-user-login-value']).to eq("johndoe")
-      end
+      # Verify JavaScript variables for modern view
+      verify_modern_chat_config(
+        expected_name: "John Doe",
+        expected_login: "johndoe"
+      )
     end
   end
 end

@@ -126,7 +126,8 @@
       "Bash(git restore:*)",
       "Bash(lsof:*)",
       "Bash(kill:*)",
-      "Bash(npx vitest:*)"
+      "Bash(npx vitest:*)",
+      "Bash(git stash:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits",

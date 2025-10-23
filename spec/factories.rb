@@ -205,6 +205,21 @@ FactoryBot.define do
     association :user, factory: :user
     name { 'Weekly Bible Knowledge' }
     start_time { 1.hour.from_now }
+    quiz_length { nil } # Default to nil to match database default
+
+    # Factory for a quiz that's ready for live participation
+    factory :live_ready_quiz do
+      quiz_length { 1200 } # 20 minutes
+      start_time { 1.minute.ago } # Already started
+
+      after(:create) do |quiz|
+        # Create one quiz question to make the quiz "ready"
+        create(:quiz_question, quiz: quiz, question_no: 1)
+
+        # Update the quiz length based on questions (mimics quiz.update_length)
+        quiz.update_length
+      end
+    end
   end
 
   # ==============================================================================================

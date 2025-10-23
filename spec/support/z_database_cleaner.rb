@@ -8,9 +8,10 @@ RSpec.configure do |config|
   config.before(:each) do |example|
     # Disable background jobs during tests to prevent deadlocks
     ActiveJob::Base.queue_adapter = :test
-    
+
     # Use truncation for tests that involve complex data setup or heavy database usage
-    if example.metadata[:heavy_db] || example.full_description.include?('subsection')
+    # Also force truncation for JavaScript tests to avoid transaction isolation issues
+    if example.metadata[:heavy_db] || example.full_description.include?('subsection') || example.metadata[:js]
       DatabaseCleaner[:active_record].strategy = :truncation, {except: %w[final_verses]}
     else
       # Use transaction strategy for most tests for better performance

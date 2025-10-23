@@ -10,7 +10,6 @@ class LiveQuizController < ApplicationController
   # Weekly Wednesday/Saturday quiz will use ID=1
   #-----------------------------------------------------------------------------------------------------------
   def live_quiz
-
     @tab = "quiz"
     @sub = "livequiz"
 
@@ -21,7 +20,9 @@ class LiveQuizController < ApplicationController
     end
 
     quiz_id = (params[:quiz] || 1).to_i
+
     @quiz = Quiz.find(quiz_id)
+
     @quiz_master = @quiz.user
 
     # Check status of chat channel
