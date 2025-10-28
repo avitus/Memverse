@@ -54,49 +54,46 @@ describe('Quiz Participant Count Display', () => {
     delete global.buildRosterItem
   })
 
-  it('subtracts 1 from PubNub occupancy when adding user to exclude quiz bot', () => {
+  it('displays the exact PubNub occupancy count when adding user', () => {
     // Import the function (it would be defined globally in the actual app)
     const addUserToRoster = function(userID, userName, gravatarURL, userCount) {
       var userDiv = $(buildRosterItem(userID, userName, gravatarURL));
       $("#roster-window").scrollTop($("#roster-window")[0].scrollHeight).append(userDiv);
       userDiv.effect('highlight', {}, 3000);
 
-      // This is the fix: subtract 1 from userCount to exclude the quiz bot
-      var actualParticipantCount = Math.max(0, userCount - 1);
+      // Display the exact PubNub occupancy count
       $("#quizzers-stats").effect('highlight', {}, 3000);
-      $("#quizzers-count").html("(" + actualParticipantCount + ")");
+      $("#quizzers-count").html("(" + userCount + ")");
     }
 
-    // Test with 3 PubNub connections (2 users + 1 bot)
+    // Test with 3 PubNub connections (3 actual users)
     addUserToRoster('user123', 'Test User', 'avatar.jpg', 3)
 
-    // Verify the displayed count is 2 (3 - 1)
-    expect(mockElements['#quizzers-count'].html).toHaveBeenCalledWith('(2)')
+    // Verify the displayed count is 3 (exact count)
+    expect(mockElements['#quizzers-count'].html).toHaveBeenCalledWith('(3)')
   })
 
-  it('handles single participant correctly (bot + 1 user)', () => {
+  it('handles single participant correctly', () => {
     const addUserToRoster = function(userID, userName, gravatarURL, userCount) {
-      var actualParticipantCount = Math.max(0, userCount - 1);
-      $("#quizzers-count").html("(" + actualParticipantCount + ")");
+      $("#quizzers-count").html("(" + userCount + ")");
     }
 
-    // Test with 2 PubNub connections (1 user + 1 bot)
-    addUserToRoster('user123', 'Test User', 'avatar.jpg', 2)
+    // Test with 1 PubNub connection (1 user)
+    addUserToRoster('user123', 'Test User', 'avatar.jpg', 1)
 
-    // Verify the displayed count is 1 (2 - 1)
+    // Verify the displayed count is 1 (exact count)
     expect(mockElements['#quizzers-count'].html).toHaveBeenCalledWith('(1)')
   })
 
-  it('never shows negative count when only bot is present', () => {
+  it('handles zero participants correctly', () => {
     const addUserToRoster = function(userID, userName, gravatarURL, userCount) {
-      var actualParticipantCount = Math.max(0, userCount - 1);
-      $("#quizzers-count").html("(" + actualParticipantCount + ")");
+      $("#quizzers-count").html("(" + userCount + ")");
     }
 
-    // Test with 1 PubNub connection (just the bot)
-    addUserToRoster('user123', 'Test User', 'avatar.jpg', 1)
+    // Test with 0 PubNub connections (no participants)
+    addUserToRoster('user123', 'Test User', 'avatar.jpg', 0)
 
-    // Verify the displayed count is 0, not -1
+    // Verify the displayed count is 0
     expect(mockElements['#quizzers-count'].html).toHaveBeenCalledWith('(0)')
   })
 
@@ -104,29 +101,27 @@ describe('Quiz Participant Count Display', () => {
     // Mock the presence callback for user leaving
     const mvPresence = function(message) {
       if (message.action === "leave") {
-        // Subtract 1 from occupancy to exclude the quiz bot
-        var actualParticipantCount = Math.max(0, message.occupancy - 1);
-        $("#quizzers-count").html("(" + actualParticipantCount + ")");
+        // Display the exact occupancy count
+        $("#quizzers-count").html("(" + message.occupancy + ")");
       }
     }
 
-    // Test user leaving - occupancy goes from 3 to 2 (1 user left)
+    // Test user leaving - occupancy goes from 3 to 2
     mvPresence({ action: "leave", occupancy: 2 })
 
-    // Verify the displayed count is 1 (2 - 1)
-    expect(mockElements['#quizzers-count'].html).toHaveBeenCalledWith('(1)')
+    // Verify the displayed count is 2 (exact count)
+    expect(mockElements['#quizzers-count'].html).toHaveBeenCalledWith('(2)')
   })
 
-  it('handles edge case of zero occupancy', () => {
+  it('displays large participant counts correctly', () => {
     const addUserToRoster = function(userID, userName, gravatarURL, userCount) {
-      var actualParticipantCount = Math.max(0, userCount - 1);
-      $("#quizzers-count").html("(" + actualParticipantCount + ")");
+      $("#quizzers-count").html("(" + userCount + ")");
     }
 
-    // Test with 0 PubNub connections (edge case)
-    addUserToRoster('user123', 'Test User', 'avatar.jpg', 0)
+    // Test with many participants
+    addUserToRoster('user123', 'Test User', 'avatar.jpg', 25)
 
-    // Verify the displayed count is 0 (Math.max ensures no negative)
-    expect(mockElements['#quizzers-count'].html).toHaveBeenCalledWith('(0)')
+    // Verify the displayed count is 25 (exact count)
+    expect(mockElements['#quizzers-count'].html).toHaveBeenCalledWith('(25)')
   })
 })
