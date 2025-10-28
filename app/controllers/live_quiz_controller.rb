@@ -139,8 +139,35 @@ class LiveQuizController < ApplicationController
       current_status = quiz_session.get_quiz_status
 
       if current_status && current_status.include?("progress")
-        # Quiz is in progress (either initializing, waiting, or running)
-        render :json => {:status => current_status}
+        # Check if we're in the chat period and should show a countdown
+        if current_status == "In progress. Chat open. Wait for question."
+          metadata = quiz_session.get_quiz_metadata
+
+          if metadata["chat_start_time"] && metadata["chat_duration"]
+            chat_start = Time.parse(metadata["chat_start_time"])
+            chat_duration = metadata["chat_duration"].to_i
+            chat_end = chat_start + chat_duration
+            remaining_seconds = (chat_end - Time.current.utc).to_i
+
+            if remaining_seconds > 0
+              # Return countdown info for chat period
+              render :json => {
+                :status => current_status,
+                :chat_countdown => true,
+                :countdown_seconds => remaining_seconds
+              }
+            else
+              # Chat period is over, just return status
+              render :json => {:status => current_status}
+            end
+          else
+            # No chat timing info, just return status
+            render :json => {:status => current_status}
+          end
+        else
+          # Quiz is in progress but not in chat period
+          render :json => {:status => current_status}
+        end
       else
         # Quiz is not running, return "Finished" or similar
         render :json => {:status => "Finished"}
@@ -163,7 +190,34 @@ class LiveQuizController < ApplicationController
           current_status = quiz_session.get_quiz_status
 
           if current_status
-            render :json => {:status => current_status}
+            # Check if we're in the chat period for non-knowledge quizzes too
+            if current_status == "In progress. Chat open. Wait for question."
+              metadata = quiz_session.get_quiz_metadata
+
+              if metadata["chat_start_time"] && metadata["chat_duration"]
+                chat_start = Time.parse(metadata["chat_start_time"])
+                chat_duration = metadata["chat_duration"].to_i
+                chat_end = chat_start + chat_duration
+                remaining_seconds = (chat_end - Time.current.utc).to_i
+
+                if remaining_seconds > 0
+                  # Return countdown info for chat period
+                  render :json => {
+                    :status => current_status,
+                    :chat_countdown => true,
+                    :countdown_seconds => remaining_seconds
+                  }
+                else
+                  # Chat period is over, just return status
+                  render :json => {:status => current_status}
+                end
+              else
+                # No chat timing info, just return status
+                render :json => {:status => current_status}
+              end
+            else
+              render :json => {:status => current_status}
+            end
           else
             render :json => {:status => "Finished"}
           end

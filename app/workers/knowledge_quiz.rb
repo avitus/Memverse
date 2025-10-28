@@ -281,6 +281,14 @@ class KnowledgeQuiz
     # 5 minutes for chatting (shorter in non-production for testing)
     chat_duration = Rails.env.production? ? 300 : 30
     Sidekiq.logger.info "===> Waiting #{chat_duration} seconds for chat period"
+
+    # Store chat start time and duration for countdown display
+    chat_start_time = Time.current.utc
+    @quiz_session.set_quiz_status("In progress. Chat open. Wait for question.", {
+      chat_start_time: chat_start_time.iso8601,
+      chat_duration: chat_duration
+    })
+
     sleep(chat_duration)
   end
 

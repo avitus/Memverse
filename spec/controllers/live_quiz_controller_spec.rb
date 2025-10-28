@@ -239,6 +239,38 @@ RSpec.describe LiveQuizController, type: :controller do
         expect(json_response).to have_key('status')
         expect(json_response['status']).to include('progress')
       end
+
+      context 'during chat period' do
+        let(:chat_quiz) { FactoryBot.create(:quiz, start_time: 5.minutes.ago) }
+
+        before do
+          quiz_session = QuizSession.new(chat_quiz.id)
+          chat_start_time = 2.minutes.ago.utc
+          chat_duration = 300 # 5 minutes
+
+          quiz_session.set_quiz_status("In progress. Chat open. Wait for question.", {
+            chat_start_time: chat_start_time.iso8601,
+            chat_duration: chat_duration
+          })
+        end
+
+        after do
+          quiz_session = QuizSession.new(chat_quiz.id)
+          quiz_session.cleanup_quiz_data
+        end
+
+        it 'returns countdown information for non-knowledge quizzes' do
+          get :till_start, params: { id: chat_quiz.id, format: :json }
+
+          json_response = JSON.parse(response.body)
+          expect(json_response).to have_key('status')
+          expect(json_response['status']).to eq('In progress. Chat open. Wait for question.')
+          expect(json_response).to have_key('chat_countdown')
+          expect(json_response['chat_countdown']).to eq(true)
+          expect(json_response).to have_key('countdown_seconds')
+          expect(json_response['countdown_seconds']).to be_between(1, 180).inclusive # About 3 minutes left
+        end
+      end
     end
     
     context 'when quiz is finished' do
@@ -263,7 +295,7 @@ RSpec.describe LiveQuizController, type: :controller do
           FactoryBot.create(:quiz, id: 1, start_time: nil)
 
           quiz_session = QuizSession.new(1)
-          quiz_session.set_quiz_status("In progress. Wait for question.")
+          quiz_session.set_quiz_status("In progress. Chat open. Wait for question.")
         end
 
         after do
@@ -276,7 +308,71 @@ RSpec.describe LiveQuizController, type: :controller do
 
           json_response = JSON.parse(response.body)
           expect(json_response).to have_key('status')
-          expect(json_response['status']).to eq('In progress. Wait for question.')
+          expect(json_response['status']).to eq('In progress. Chat open. Wait for question.')
+        end
+      end
+
+      context 'when quiz is in chat period with countdown' do
+        before do
+          # Ensure knowledge quiz exists with ID=1
+          FactoryBot.create(:quiz, id: 1, start_time: nil)
+
+          quiz_session = QuizSession.new(1)
+          chat_start_time = Time.current.utc
+          chat_duration = 300 # 5 minutes
+
+          quiz_session.set_quiz_status("In progress. Chat open. Wait for question.", {
+            chat_start_time: chat_start_time.iso8601,
+            chat_duration: chat_duration
+          })
+        end
+
+        after do
+          quiz_session = QuizSession.new(1)
+          quiz_session.cleanup_quiz_data
+        end
+
+        it 'returns countdown information during chat period' do
+          get :till_start, params: { id: 1, format: :json }
+
+          json_response = JSON.parse(response.body)
+          expect(json_response).to have_key('status')
+          expect(json_response['status']).to eq('In progress. Chat open. Wait for question.')
+          expect(json_response).to have_key('chat_countdown')
+          expect(json_response['chat_countdown']).to eq(true)
+          expect(json_response).to have_key('countdown_seconds')
+          expect(json_response['countdown_seconds']).to be_between(1, 300).inclusive
+        end
+      end
+
+      context 'when chat period has expired' do
+        before do
+          # Ensure knowledge quiz exists with ID=1
+          FactoryBot.create(:quiz, id: 1, start_time: nil)
+
+          quiz_session = QuizSession.new(1)
+          chat_start_time = 10.minutes.ago.utc # Started 10 minutes ago
+          chat_duration = 300 # 5 minutes duration
+
+          quiz_session.set_quiz_status("In progress. Chat open. Wait for question.", {
+            chat_start_time: chat_start_time.iso8601,
+            chat_duration: chat_duration
+          })
+        end
+
+        after do
+          quiz_session = QuizSession.new(1)
+          quiz_session.cleanup_quiz_data
+        end
+
+        it 'returns status without countdown when chat period is over' do
+          get :till_start, params: { id: 1, format: :json }
+
+          json_response = JSON.parse(response.body)
+          expect(json_response).to have_key('status')
+          expect(json_response['status']).to eq('In progress. Chat open. Wait for question.')
+          expect(json_response).not_to have_key('chat_countdown')
+          expect(json_response).not_to have_key('countdown_seconds')
         end
       end
 

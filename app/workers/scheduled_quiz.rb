@@ -278,7 +278,7 @@ class ScheduledQuiz
     with_retry("opening chat channel", quiz.id) do
       status = nil
       chat_key = "chat-#{channel}"
-      
+
       Sidekiq.logger.info "===> Quiz ##{quiz.id} : Checking if chat channel exists in Redis (key: #{chat_key})"
       if $redis.exists(chat_key)
         status = $redis.hmget(chat_key, "status").first
@@ -291,7 +291,7 @@ class ScheduledQuiz
         new_status = "Open"
         Sidekiq.logger.info "===> Quiz ##{quiz.id} : Setting chat status to '#{new_status}'"
         $redis.hset(chat_key, "status", new_status)
-        
+
         Sidekiq.logger.info "===> Quiz ##{quiz.id} : Publishing chat_status message via PubNub"
         publish_with_retry(channel, {
           meta: "chat_status",
@@ -306,6 +306,14 @@ class ScheduledQuiz
     chat_duration = Rails.env.production? ? 300 : 30
     Sidekiq.logger.info "===> Quiz ##{quiz.id} : Chat period started - waiting #{chat_duration} seconds"
     Sidekiq.logger.info "===> Quiz ##{quiz.id} : Participants can now join at /live_quiz/#{quiz.id}"
+
+    # Store chat start time and duration for countdown display
+    chat_start_time = Time.current.utc
+    @quiz_session.set_quiz_status("In progress. Chat open. Wait for question.", {
+      chat_start_time: chat_start_time.iso8601,
+      chat_duration: chat_duration
+    })
+
     sleep(chat_duration)
     Sidekiq.logger.info "===> Quiz ##{quiz.id} : Chat period ended, proceeding to questions"
   end

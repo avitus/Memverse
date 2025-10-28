@@ -174,12 +174,34 @@ $(document).ready(function() {
 	// Set quiz status and conditionally show welcome modal
 	$.getJSON('/live_quiz/till_start/<%= @quiz.id %>.json', function(data) {
 		if (data.status) {
-			$("#countdown-till").html("<strong>Quiz Status:</strong> " + data.status);
-			// Quiz is already in progress, show instructions
-			openContentModal($("#welcome-box").html(), "Quiz Instructions");
+			// Check if we're in the chat period and should show a countdown
+			if (data.chat_countdown && data.countdown_seconds) {
+				// Show countdown for chat period
+				var now = new Date();
+				var chatEndTime = new Date(now.getTime() + data.countdown_seconds * 1000);
+
+				$('#quiz-timer').countdown({
+					until: chatEndTime,
+					significant: 2,
+					labels: ['Years', 'Months', 'Weeks', 'Days', 'Hours', 'Mins', 'Secs'],
+					labels1: ['Year', 'Month', 'Week', 'Day', 'Hour', 'Min', 'Sec'],
+					onExpiry: function() {
+						// When countdown expires, update the status
+						$("#countdown-till").html("<strong>Quiz Status:</strong> First question starting soon...");
+					}
+				});
+				$("#countdown-till").html("<strong>Time until first question:</strong>");
+				// Show instructions during chat period
+				openContentModal($("#welcome-box").html(), "Quiz Instructions");
+			} else {
+				// Regular status display
+				$("#countdown-till").html("<strong>Quiz Status:</strong> " + data.status);
+				// Quiz is already in progress, show instructions
+				openContentModal($("#welcome-box").html(), "Quiz Instructions");
+			}
 		} else {
 			$('#quiz-timer').countdown({
-				until: data.time, 
+				until: data.time,
 				significant: 2,
 				labels: ['Years', 'Months', 'Weeks', 'Days', 'Hours', 'Mins', 'Secs'],
 				labels1: ['Year', 'Month', 'Week', 'Day', 'Hour', 'Min', 'Sec']
