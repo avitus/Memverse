@@ -4,19 +4,24 @@ module SwaggerResponseSchemas
   included do
     include Swagger::Blocks
 
-    # Base response wrapper for single objects
-    swagger_schema :ResponseWrapper do
+    # Note: ResponseWrapper and CollectionResponseWrapper schemas were removed
+    # because they contained invalid Swagger 2.0 definitions (objects without
+    # properties or $ref) that break old Swagger UI versions.
+    # We now use explicit response schemas for each model instead.
+
+    # Specific wrapped response schemas for each model
+    swagger_schema :MemverseResponse do
       property :response do
-        key :type, :object
-        key :description, 'The actual response data'
+        key :'$ref', :Memverse
       end
     end
 
-    # Collection response wrapper for paginated results
-    swagger_schema :CollectionResponseWrapper do
+    swagger_schema :MemverseCollectionResponse do
       property :response do
         key :type, :array
-        key :description, 'Array of response objects'
+        items do
+          key :'$ref', :Memverse
+        end
       end
       property :count do
         key :type, :integer
@@ -47,29 +52,6 @@ module SwaggerResponseSchemas
       end
     end
 
-    # Specific wrapped response schemas for each model
-    swagger_schema :MemverseResponse do
-      property :response do
-        key :'$ref', :Memverse
-      end
-    end
-
-    swagger_schema :MemverseCollectionResponse do
-      allOf do
-        schema do
-          key :'$ref', :CollectionResponseWrapper
-        end
-        schema do
-          property :response do
-            key :type, :array
-            items do
-              key :'$ref', :Memverse
-            end
-          end
-        end
-      end
-    end
-
     swagger_schema :VerseResponse do
       property :response do
         key :'$ref', :Verse
@@ -92,17 +74,37 @@ module SwaggerResponseSchemas
     end
 
     swagger_schema :PassageCollectionResponse do
-      allOf do
-        schema do
-          key :'$ref', :CollectionResponseWrapper
+      property :response do
+        key :type, :array
+        items do
+          key :'$ref', :Passage
         end
-        schema do
-          property :response do
-            key :type, :array
-            items do
-              key :'$ref', :Passage
-            end
-          end
+      end
+      property :count do
+        key :type, :integer
+        key :description, 'Total number of items'
+      end
+      property :page do
+        key :type, :integer
+        key :description, 'Current page number'
+      end
+      property :page_count do
+        key :type, :integer
+        key :description, 'Total number of pages'
+      end
+      property :per_page do
+        key :type, :integer
+        key :description, 'Items per page'
+      end
+      property :pagination do
+        key :type, :object
+        property :pages do
+          key :type, :integer
+          key :description, 'Total number of pages'
+        end
+        property :count do
+          key :type, :integer
+          key :description, 'Total number of items'
         end
       end
     end
@@ -123,17 +125,37 @@ module SwaggerResponseSchemas
     end
 
     swagger_schema :FinalVerseCollectionResponse do
-      allOf do
-        schema do
-          key :'$ref', :CollectionResponseWrapper
+      property :response do
+        key :type, :array
+        items do
+          key :'$ref', :FinalVerse
         end
-        schema do
-          property :response do
-            key :type, :array
-            items do
-              key :'$ref', :FinalVerse
-            end
-          end
+      end
+      property :count do
+        key :type, :integer
+        key :description, 'Total number of items'
+      end
+      property :page do
+        key :type, :integer
+        key :description, 'Current page number'
+      end
+      property :page_count do
+        key :type, :integer
+        key :description, 'Total number of pages'
+      end
+      property :per_page do
+        key :type, :integer
+        key :description, 'Items per page'
+      end
+      property :pagination do
+        key :type, :object
+        property :pages do
+          key :type, :integer
+          key :description, 'Total number of pages'
+        end
+        property :count do
+          key :type, :integer
+          key :description, 'Total number of items'
         end
       end
     end
@@ -145,17 +167,37 @@ module SwaggerResponseSchemas
     end
 
     swagger_schema :QuizCollectionResponse do
-      allOf do
-        schema do
-          key :'$ref', :CollectionResponseWrapper
+      property :response do
+        key :type, :array
+        items do
+          key :'$ref', :Quiz
         end
-        schema do
-          property :response do
-            key :type, :array
-            items do
-              key :'$ref', :Quiz
-            end
-          end
+      end
+      property :count do
+        key :type, :integer
+        key :description, 'Total number of items'
+      end
+      property :page do
+        key :type, :integer
+        key :description, 'Current page number'
+      end
+      property :page_count do
+        key :type, :integer
+        key :description, 'Total number of pages'
+      end
+      property :per_page do
+        key :type, :integer
+        key :description, 'Items per page'
+      end
+      property :pagination do
+        key :type, :object
+        property :pages do
+          key :type, :integer
+          key :description, 'Total number of pages'
+        end
+        property :count do
+          key :type, :integer
+          key :description, 'Total number of items'
         end
       end
     end
@@ -167,17 +209,37 @@ module SwaggerResponseSchemas
     end
 
     swagger_schema :ProgressReportCollectionResponse do
-      allOf do
-        schema do
-          key :'$ref', :CollectionResponseWrapper
+      property :response do
+        key :type, :array
+        items do
+          key :'$ref', :ProgressReport
         end
-        schema do
-          property :response do
-            key :type, :array
-            items do
-              key :'$ref', :ProgressReport
-            end
-          end
+      end
+      property :count do
+        key :type, :integer
+        key :description, 'Total number of items'
+      end
+      property :page do
+        key :type, :integer
+        key :description, 'Current page number'
+      end
+      property :page_count do
+        key :type, :integer
+        key :description, 'Total number of pages'
+      end
+      property :per_page do
+        key :type, :integer
+        key :description, 'Items per page'
+      end
+      property :pagination do
+        key :type, :object
+        property :pages do
+          key :type, :integer
+          key :description, 'Total number of pages'
+        end
+        property :count do
+          key :type, :integer
+          key :description, 'Total number of items'
         end
       end
     end

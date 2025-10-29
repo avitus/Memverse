@@ -39,8 +39,8 @@ class Memverse < ApplicationRecord
       key :format, :date
     end
     property :skippable do
-      key :type, [:boolean, :string]
-      key :description, 'Either false or a verse reference string'
+      key :type, :string
+      key :description, 'Verse reference string or "false"'
     end
     property :mnemonic do
       key :type, :string
@@ -120,17 +120,11 @@ class Memverse < ApplicationRecord
   end
 
   swagger_schema :MemverseInput do
-    allOf do
-      schema do
-        key :'$ref', :Memverse
-      end
-      schema do
-        key :required, [:id]
-        property :id do
-          key :type, :integer
-          key :format, :int64
-        end
-      end
+    key :required, [:id]
+    property :id do
+      key :type, :integer
+      key :format, :int64
+      key :description, 'ID of the verse to add as a memory verse'
     end
   end
 

@@ -30,22 +30,18 @@ class ProgressReport < ApplicationRecord
     property :time_allocation do
       key :type, :integer
       key :format, :int64
-      key :'x-nullable', true
     end
     property :consistency do
       key :type, :integer
       key :format, :int64
-      key :'x-nullable', true
     end
     property :reviewed do
       key :type, :integer
       key :format, :int64
-      key :'x-nullable', true
       key :description, 'Number of verses reviewed'
     end
     property :session_complete do
       key :type, :boolean
-      key :'x-nullable', true
       key :description, 'Whether the session was completed'
     end
   end

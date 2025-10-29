@@ -21,7 +21,7 @@ class Api::V1::LiveQuizController < Api::V1::ApiController
 
       parameter do
         key :name, :quiz_id
-        key :in, :body
+        key :in, :formData
         key :description, 'Quiz ID (defaults to 1 if not provided)'
         key :required, false
         key :type, :integer
@@ -30,7 +30,7 @@ class Api::V1::LiveQuizController < Api::V1::ApiController
 
       parameter do
         key :name, :usr_id
-        key :in, :body
+        key :in, :formData
         key :description, 'Memverse user ID'
         key :required, true
         key :type, :string
@@ -38,7 +38,7 @@ class Api::V1::LiveQuizController < Api::V1::ApiController
 
       parameter do
         key :name, :usr_name
-        key :in, :body
+        key :in, :formData
         key :description, 'Memverse user name'
         key :required, true
         key :type, :string
@@ -46,7 +46,7 @@ class Api::V1::LiveQuizController < Api::V1::ApiController
 
       parameter do
         key :name, :usr_login
-        key :in, :body
+        key :in, :formData
         key :description, 'Memverse user login (email address)'
         key :required, true
         key :type, :string
@@ -54,7 +54,7 @@ class Api::V1::LiveQuizController < Api::V1::ApiController
 
       parameter do
         key :name, :question_id
-        key :in, :body
+        key :in, :formData
         key :description, 'Quiz question ID (primary key)'
         key :required, true
         key :type, :integer
@@ -63,7 +63,7 @@ class Api::V1::LiveQuizController < Api::V1::ApiController
 
       parameter do
         key :name, :question_num
-        key :in, :body
+        key :in, :formData
         key :description, 'Quiz question number'
         key :required, true
         key :type, :integer
@@ -72,11 +72,10 @@ class Api::V1::LiveQuizController < Api::V1::ApiController
 
       parameter do
         key :name, :score
-        key :in, :body
+        key :in, :formData
         key :description, 'The user score (max=10) or "false" to skip scoring'
         key :required, true
-        key :type, [:integer, :string]
-        key :format, :int64
+        key :type, :string
       end
 
       security do

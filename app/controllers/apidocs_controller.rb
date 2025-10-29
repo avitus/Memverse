@@ -40,10 +40,6 @@ class ApidocsController < ActionController::Base
     tags do
       key :name, 'Memverse'
       key :description, 'Memverse operations'
-      externalDocs do
-        key :description, 'Find more info here'
-        key :url, 'https://swagger.io'
-      end
     end
 
     security_definition :oauth2 do

@@ -2,8 +2,8 @@
 <html>
 <head>
   <title>Swagger UI</title>
-  <link rel="icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32" />
-  <link rel="icon" type="image/png" href="images/favicon-16x16.png" sizes="16x16" />
+  <link rel="icon" type="image/png" href="swagger-ui/images/favicon-32x32.png" sizes="32x32" />
+  <link rel="icon" type="image/png" href="swagger-ui/images/favicon-16x16.png" sizes="16x16" />
   <link href='swagger-ui/css/typography.css' media='screen' rel='stylesheet' type='text/css'/>
   <link href='swagger-ui/css/reset.css' media='screen' rel='stylesheet' type='text/css'/>
   <link href='swagger-ui/css/screen.css' media='screen' rel='stylesheet' type='text/css'/>
@@ -29,50 +29,63 @@
       } else {
         url = "/apidocs.json";
       }
+
+      // Initialize SwaggerUI
       window.swaggerUi = new SwaggerUi({
         url: url,
         dom_id: "swagger-ui-container",
         supportedSubmitMethods: ['get', 'post', 'put', 'delete', 'patch'],
         onComplete: function(swaggerApi, swaggerUi){
+          console.log("SwaggerUI loaded successfully");
+
+          // Initialize OAuth if available
           if(typeof initOAuth == "function") {
-            initOAuth({
-              clientId: "27fe637fbd8c430efac4c2ba97bc490eb1c01604d7c16b70b9cd66d8427c53e5", // Production environment
-              // clientId: "4de48df25daf2e1b144f56e2e567cb3a46435aa471d0fdac95b4013b5b94c9bf", // ALV - For local testing
-              realm: "/",
-              appName: "Memverse"
+            try {
+              initOAuth({
+                clientId: "27fe637fbd8c430efac4c2ba97bc490eb1c01604d7c16b70b9cd66d8427c53e5",
+                realm: "/",
+                appName: "Memverse"
+              });
+            } catch (e) {
+              console.warn("OAuth initialization failed:", e);
+            }
+          }
+
+          // Highlight code blocks
+          if (typeof hljs !== 'undefined') {
+            $('pre code').each(function(i, e) {
+              hljs.highlightBlock(e)
             });
           }
-          $('pre code').each(function(i, e) {
-            hljs.highlightBlock(e)
-          });
         },
         onFailure: function(data) {
-          log("Unable to Load SwaggerUI");
+          console.error("Unable to Load SwaggerUI", data);
         },
         docExpansion: "none",
         sorter : "alpha"
       });
 
+      // API key functionality
       function addApiKeyAuthorization() {
         var key = encodeURIComponent($('#input_apiKey')[0].value);
-        log("key: " + key);
+        console.log("API key changed:", key);
         if(key && key.trim() != "") {
-            var apiKeyAuth = new SwaggerClient.ApiKeyAuthorization("api_key", key, "query");
-            window.swaggerUi.api.clientAuthorizations.add("api_key", apiKeyAuth);
-            log("added key " + key);
+            // Check if SwaggerClient is available
+            if (window.SwaggerClient && window.SwaggerClient.ApiKeyAuthorization) {
+                var apiKeyAuth = new SwaggerClient.ApiKeyAuthorization("api_key", key, "query");
+                window.swaggerUi.api.clientAuthorizations.add("api_key", apiKeyAuth);
+                console.log("Added API key");
+            } else {
+                console.warn("SwaggerClient.ApiKeyAuthorization not available");
+            }
         }
       }
 
       $('#input_apiKey').change(addApiKeyAuthorization);
 
-      // if you have an apiKey you would like to pre-populate on the page for demonstration purposes...
-      /*
-        var apiKey = "myApiKeyXXXX123456789";
-        $('#input_apiKey').val(apiKey);
-        addApiKeyAuthorization();
-      */
-
+      // Load SwaggerUI
       window.swaggerUi.load();
+      console.log("SwaggerUI load() called");
 
       function log() {
         if ('console' in window) {
@@ -86,16 +99,16 @@
 <body class="swagger-section">
 <div id='header'>
   <div class="swagger-ui-wrap">
-    <a id="logo" href="http://swagger.io">swagger</a>
+    <a id="logo" href="http://swagger.io"><img class="logo__img" alt="swagger" height="30" width="30" src="swagger-ui/images/logo_small.png" /><span class="logo__title">swagger</span></a>
     <form id='api_selector'>
       <div class='input'><input placeholder="http://example.com/api" id="input_baseUrl" name="baseUrl" type="text"/></div>
       <div class='input'><input placeholder="api_key" id="input_apiKey" name="apiKey" type="text"/></div>
-      <div class='input'><a id="explore" href="#">Explore</a></div>
+      <div class='input'><a id="explore" href="#" data-sw-translate>Explore</a></div>
     </form>
   </div>
 </div>
 
-<div id="message-bar" class="swagger-ui-wrap">&nbsp;</div>
+<div id="message-bar" class="swagger-ui-wrap" data-sw-translate>&nbsp;</div>
 <div id="swagger-ui-container" class="swagger-ui-wrap"></div>
 </body>
 </html>

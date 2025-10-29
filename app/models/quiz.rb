@@ -19,15 +19,12 @@ class Quiz < ApplicationRecord
     property :user_id do
       key :type, :integer
       key :format, :int64
-      key :'x-nullable', true
     end
     property :name do
       key :type, :string
-      key :'x-nullable', true
     end
     property :description do
       key :type, :string
-      key :'x-nullable', true
     end
     property :quiz_questions_count do
       key :type, :integer
@@ -36,12 +33,10 @@ class Quiz < ApplicationRecord
     property :quiz_length do
       key :type, :integer
       key :format, :int64
-      key :'x-nullable', true
     end
     property :start_time do
       key :type, :string
       key :format, :dateTime
-      key :'x-nullable', true
     end
   end
 

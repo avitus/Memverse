@@ -212,24 +212,18 @@ class User < ApplicationRecord
 
   end
 
+  # Note: UserInput is not currently used in any API endpoints
   swagger_schema :UserInput do
-    allOf do
-      schema do
-        key :'$ref', :User
-      end
-      schema do
-        key :required, [:id]
-        property :id do
-          key :type, :integer
-          key :format, :int64
-        end
-      end
+    key :required, [:id]
+    property :id do
+      key :type, :integer
+      key :format, :int64
     end
   end
 
   # Minimal user response returned by GET /users/{id}
   swagger_schema :UserMinimal do
-    key :required, [:id, :name, :avatar_url, :work_load]
+    key :required, [:id, :name, :avatar_url]
     property :id do
       key :type, :integer
       key :format, :int64
@@ -241,11 +235,6 @@ class User < ApplicationRecord
     property :avatar_url do
       key :type, :string
       key :description, 'URL to user avatar image'
-    end
-    property :work_load do
-      key :type, :integer
-      key :format, :int64
-      key :description, 'Estimated daily time commitment in minutes for memorization practice'
     end
   end
 
@@ -326,8 +315,7 @@ class User < ApplicationRecord
     {
       :id            => self.id,
       :name          => self.name_or_login,
-      :avatar_url    => self.blog_avatar_url,
-      :work_load     => self.work_load
+      :avatar_url    => self.blog_avatar_url
     }
   end
 
