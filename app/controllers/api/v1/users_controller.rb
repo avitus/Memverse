@@ -39,9 +39,9 @@ class Api::V1::UsersController < Api::V1::ApiController
         key :oauth2, ['write admin']
       end
       response 200 do
-        key :description, 'User response'
+        key :description, 'User response (minimal fields)'
         schema do
-          key :'$ref', :User
+          key :'$ref', :UserMinimal
         end
       end
       response :default do
@@ -57,8 +57,8 @@ class Api::V1::UsersController < Api::V1::ApiController
   swagger_path '/users/{id}' do
 
     operation :get do
-      
-      key :description, 'Returns a single user'
+
+      key :description, 'Returns a single user with limited fields'
       key :operationId, 'findUserById'
       key :tags, ['user']
       parameter do
@@ -73,15 +73,15 @@ class Api::V1::UsersController < Api::V1::ApiController
         key :oauth2, ['public read write admin']
       end
       response 200 do
-        key :description, 'User response'
+        key :description, 'User response (minimal fields)'
         schema do
-          key :'$ref', :User
+          key :'$ref', :UserMinimal
         end
       end
       response 401 do
         key :description, 'Unauthorized response'
         schema do
-          key :'$ref', :User
+          key :'$ref', :ErrorModel
         end
       end
       response :default do
@@ -108,15 +108,15 @@ class Api::V1::UsersController < Api::V1::ApiController
         key :oauth2, ['admin write read public']
       end
       response 200 do
-        key :description, 'User response'
+        key :description, 'User response (minimal fields)'
         schema do
-          key :'$ref', :User
+          key :'$ref', :UserMinimal
         end
       end
       response 401 do
         key :description, 'Unauthorized response'
         schema do
-          key :'$ref', :User
+          key :'$ref', :ErrorModel
         end
       end
       response :default do
@@ -143,7 +143,7 @@ class Api::V1::UsersController < Api::V1::ApiController
         key :oauth2, ['admin write read public']
       end
       response 200 do
-        key :description, 'User deleted successfully'
+        key :description, 'User deleted successfully (returns all user fields)'
         schema do
           key :'$ref', :User
         end
@@ -151,7 +151,7 @@ class Api::V1::UsersController < Api::V1::ApiController
       response 401 do
         key :description, 'Unauthorized response'
         schema do
-          key :'$ref', :User
+          key :'$ref', :ErrorModel
         end
       end
       response :default do

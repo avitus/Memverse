@@ -6,27 +6,34 @@ class Translation
   include Swagger::Blocks
 
   swagger_schema :Translation do
-    key :required, [:name, :abbreviation]
-    property :name do
+    key :required, [:Name, :Abbreviation]
+    property :Name do
       key :type, :string
+      key :description, 'Translation name'
     end
-    property :abbreviation do
+    property :Abbreviation do
       key :type, :string
-    end 
-    property :translations do
-      key :type, :array
+      key :description, 'Translation abbreviation'
+    end
+  end
 
-      # TODO Not sure how to specify contents of array here. The swagger-blocks documentation isn't clear
-      
-      # items do
-      #   property :name do
-      #     key :type, :string
-      #   end
-      #   property :abbreviation do
-      #     key :type, :string
-      #   end
-      # end
-    end           
+  swagger_schema :TranslationGroup do
+    key :required, [:Name, :Abbreviation, :Translations]
+    property :Name do
+      key :type, :string
+      key :description, 'Language name'
+    end
+    property :Abbreviation do
+      key :type, :string
+      key :description, 'Language code (uppercase)'
+    end
+    property :Translations do
+      key :type, :array
+      key :description, 'Array of translations for this language'
+      items do
+        key :'$ref', :Translation
+      end
+    end
   end
   # ----------------------------------------------------------------------------------------------------------
   # Swagger-Blocks DSL [END]

@@ -11,43 +11,37 @@ class Quiz < ApplicationRecord
   include Swagger::Blocks
 
   swagger_schema :Quiz do
-    key :required, [:id, :name, :description, :start_time, :quiz_length, :quiz_questions_count]
+    key :required, [:id]  # Only id is guaranteed to be present
     property :id do
       key :type, :integer
       key :format, :int64
-    end   
+    end
+    property :user_id do
+      key :type, :integer
+      key :format, :int64
+      key :'x-nullable', true
+    end
     property :name do
       key :type, :string
-    end 
+      key :'x-nullable', true
+    end
     property :description do
       key :type, :string
-    end 
+      key :'x-nullable', true
+    end
     property :quiz_questions_count do
       key :type, :integer
       key :format, :int64
-    end 
+    end
     property :quiz_length do
       key :type, :integer
       key :format, :int64
-    end 
+      key :'x-nullable', true
+    end
     property :start_time do
       key :type, :string
       key :format, :dateTime
-    end           
-  end
-
-  swagger_schema :Quiz do
-    allOf do
-      schema do
-        key :'$ref', :Quiz
-      end
-      schema do
-        key :required, [:id, :name, :description, :start_time, :quiz_length, :quiz_questions_count]
-        property :id do
-          key :type, :integer
-          key :format, :int64
-        end
-      end
+      key :'x-nullable', true
     end
   end
 

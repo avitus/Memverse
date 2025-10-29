@@ -11,19 +11,27 @@ class Api::V1::FinalVersesController < Api::V1::ApiController
       key :description, 'Returns final verse for each chapter of the Bible'
       key :operationId, 'showFinalVerses'
       key :tags, ['final_verses']
+      parameter do
+        key :name, :page
+        key :in, :query
+        key :description, 'Page number requested'
+        key :required, false
+        key :type, :integer
+        key :format, :int64
+      end
       security do
         key :oauth2, ['admin write read public']
       end
       response 200 do
-        key :description, 'Final verse response'
+        key :description, 'Paginated collection of final verses'
         schema do
-          key :'$ref', :FinalVerse
+          key :'$ref', :FinalVerseCollectionResponse
         end
       end
       response 401 do
         key :description, 'Unauthorized response'
         schema do
-          key :'$ref', :FinalVerse
+          key :'$ref', :ErrorModel
         end
       end
       response :default do

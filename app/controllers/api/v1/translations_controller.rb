@@ -15,15 +15,15 @@ class Api::V1::TranslationsController < Api::V1::ApiController
         key :oauth2, ['admin write read public']
       end
       response 200 do
-        key :description, 'User response'
+        key :description, 'Array of translation groups by language'
         schema do
-          key :'$ref', :Translation
+          key :'$ref', :TranslationArrayResponse
         end
       end
       response 401 do
         key :description, 'Unauthorized response'
         schema do
-          key :'$ref', :Translation
+          key :'$ref', :ErrorModel
         end
       end
       response :default do

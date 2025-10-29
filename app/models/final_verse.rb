@@ -6,17 +6,21 @@ class FinalVerse < ApplicationRecord
   include Swagger::Blocks
 
   swagger_schema :FinalVerse do
+    property :id do
+      key :type, :integer
+      key :format, :int64
+    end
     property :book do
       key :type, :string
     end
     property :chapter do
       key :type, :integer
       key :format, :int64
-    end 
+    end
     property :last_verse do
       key :type, :integer
       key :format, :int64
-    end           
+    end
   end
   # ----------------------------------------------------------------------------------------------------------
   # Swagger-Blocks DSL [END]

@@ -28,23 +28,46 @@ class Verse < ApplicationRecord
     end
     property :translation do
       key :type, :string
-    end 
+    end
+    property :tl do
+      key :type, :string
+      key :description, 'Abbreviated field name for translation'
+    end
     property :book_index do
       key :type, :integer
       key :format, :int64
-    end 
+    end
     property :book do
       key :type, :string
-    end 
-    property :chapter do
+    end
+    property :bk do
       key :type, :string
-    end 
+      key :description, 'Abbreviated field name for book'
+    end
+    property :chapter do
+      key :type, :integer
+      key :format, :int64
+    end
+    property :ch do
+      key :type, :integer
+      key :format, :int64
+      key :description, 'Abbreviated field name for chapter'
+    end
     property :versenum do
       key :type, :integer
       key :format, :int64
     end
+    property :vs do
+      key :type, :integer
+      key :format, :int64
+      key :description, 'Abbreviated field name for versenum'
+    end
     property :text do
       key :type, :string
+    end
+    property :ref do
+      key :type, :string
+      key :description, 'Verse reference (e.g., "John 3:16")'
     end     
     property :created_at do
       key :type, :string
@@ -56,10 +79,7 @@ class Verse < ApplicationRecord
     end 
     property :verified do
       key :type, :boolean
-    end  
-    property :verified do
-      key :type, :boolean
-    end  
+    end
     property :error_flag do
       key :type, :boolean
     end   

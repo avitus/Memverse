@@ -6,7 +6,11 @@ class ProgressReport < ApplicationRecord
   include Swagger::Blocks
 
   swagger_schema :ProgressReport do
-    key :required, [:user_id, :entry_date, :learning, :memorized, :time_allocation, :consistency]
+    key :required, [:user_id, :entry_date, :learning, :memorized]  # Based on model validations
+    property :id do
+      key :type, :integer
+      key :format, :int64
+    end
     property :user_id do
       key :type, :integer
       key :format, :int64
@@ -14,7 +18,7 @@ class ProgressReport < ApplicationRecord
     property :entry_date do
       key :type, :string
       key :format, :date
-    end 
+    end
     property :learning do
       key :type, :integer
       key :format, :int64
@@ -22,15 +26,28 @@ class ProgressReport < ApplicationRecord
     property :memorized do
       key :type, :integer
       key :format, :int64
-    end  
+    end
     property :time_allocation do
       key :type, :integer
       key :format, :int64
-    end  
+      key :'x-nullable', true
+    end
     property :consistency do
       key :type, :integer
       key :format, :int64
-    end           
+      key :'x-nullable', true
+    end
+    property :reviewed do
+      key :type, :integer
+      key :format, :int64
+      key :'x-nullable', true
+      key :description, 'Number of verses reviewed'
+    end
+    property :session_complete do
+      key :type, :boolean
+      key :'x-nullable', true
+      key :description, 'Whether the session was completed'
+    end
   end
   # ----------------------------------------------------------------------------------------------------------
   # Swagger-Blocks DSL [END]

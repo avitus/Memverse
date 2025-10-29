@@ -29,15 +29,15 @@ class Api::V1::MemversesController < Api::V1::ApiController
         key :oauth2, ['read']
       end
       response 200 do
-        key :description, 'Memverse response'
+        key :description, 'Paginated collection of memverses'
         schema do
-          key :'$ref', :Memverse
+          key :'$ref', :MemverseCollectionResponse
         end
       end
       response 401 do
         key :description, 'Unauthorized response'
         schema do
-          key :'$ref', :Memverse
+          key :'$ref', :ErrorModel
         end
       end
       response :default do
@@ -66,9 +66,9 @@ class Api::V1::MemversesController < Api::V1::ApiController
         key :oauth2, ['write admin']
       end
       response 200 do
-        key :description, 'Memverse response'
+        key :description, 'Created memverse wrapped in response'
         schema do
-          key :'$ref', :Memverse
+          key :'$ref', :MemverseResponse
         end
       end
       response :default do
@@ -106,15 +106,15 @@ class Api::V1::MemversesController < Api::V1::ApiController
         key :oauth2, ['read']
       end
       response 200 do
-        key :description, 'Memverse response'
+        key :description, 'Paginated collection of memverses for the passage'
         schema do
-          key :'$ref', :Memverse
+          key :'$ref', :MemverseCollectionResponse
         end
       end
       response 401 do
         key :description, 'Unauthorized response'
         schema do
-          key :'$ref', :Memverse
+          key :'$ref', :ErrorModel
         end
       end
       response :default do
@@ -146,21 +146,21 @@ class Api::V1::MemversesController < Api::V1::ApiController
         key :oauth2, ['read']
       end
       response 200 do
-        key :description, 'Memverse response'
+        key :description, 'Single memverse wrapped in response'
         schema do
-          key :'$ref', :Memverse
+          key :'$ref', :MemverseResponse
         end
       end
       response 401 do
         key :description, 'Unauthorized response'
         schema do
-          key :'$ref', :Memverse
+          key :'$ref', :ErrorModel
         end
       end
       response 400 do
         key :description, 'Incorrectly formed API request'
         schema do
-          key :'$ref', :Memverse
+          key :'$ref', :ErrorModel
         end
       end
       response :default do
@@ -195,15 +195,15 @@ class Api::V1::MemversesController < Api::V1::ApiController
         key :oauth2, ['admin write read public']
       end
       response 200 do
-        key :description, 'Memverse response'
+        key :description, 'Updated memverse wrapped in response'
         schema do
-          key :'$ref', :Memverse
+          key :'$ref', :MemverseResponse
         end
       end
       response 401 do
         key :description, 'Unauthorized response'
         schema do
-          key :'$ref', :Memverse
+          key :'$ref', :ErrorModel
         end
       end
       response :default do
@@ -229,16 +229,16 @@ class Api::V1::MemversesController < Api::V1::ApiController
       security do
         key :oauth2, ['admin write read public']
       end
-      response 200 do
-        key :description, 'Memverse response'
+      response 204 do
+        key :description, 'Memory verse successfully deleted'
         schema do
-          key :'$ref', :Memverse
+          key :'$ref', :NoContentResponse
         end
       end
       response 401 do
         key :description, 'Unauthorized response'
         schema do
-          key :'$ref', :Memverse
+          key :'$ref', :ErrorModel
         end
       end
       response :default do

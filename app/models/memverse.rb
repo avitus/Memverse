@@ -6,7 +6,7 @@ class Memverse < ApplicationRecord
   include Swagger::Blocks
 
   swagger_schema :Memverse do
-    key :required, [:verse_id, :user_id ]
+    key :required, [:verse_id, :user_id]
     property :id do
       key :type, :integer
       key :format, :int64
@@ -18,29 +18,61 @@ class Memverse < ApplicationRecord
     property :user_id do
       key :type, :integer
       key :format, :int64
-    end    
+    end
     property :efactor do
       key :type, :number
-    end 
+    end
     property :test_interval do
       key :type, :integer
       key :format, :int64
-    end 
+    end
     property :rep_n do
       key :type, :integer
       key :format, :int64
-    end 
+    end
     property :next_test do
       key :type, :string
       key :format, :date
-    end 
-    # property :last_tested do
-    #   key :type, :string
-    #   key :format, :date
-    # end 
+    end
+    property :next_ref_test do
+      key :type, :string
+      key :format, :date
+    end
+    property :skippable do
+      key :type, [:boolean, :string]
+      key :description, 'Either false or a verse reference string'
+    end
+    property :mnemonic do
+      key :type, :string
+    end
+    property :feedback do
+      key :type, :boolean
+    end
     property :status do
       key :type, :string
-    end 
+      key :enum, ['Learning', 'Memorized', 'Pending']
+    end
+    property :subsection do
+      key :type, :boolean
+    end
+    property :ref_interval do
+      key :type, :integer
+    end
+    property :prev_verse do
+      key :type, :string
+      key :description, 'Previous verse reference'
+    end
+    property :ref do
+      key :type, :string
+      key :description, 'Verse reference (e.g., "John 3:16")'
+    end
+    property :verse do
+      key :'$ref', :Verse
+      key :description, 'Nested verse object'
+    end
+    # property :last_tested do
+    #   key :type, :string
+    # end 
     # property :attempts do
     #   key :type, :integer
     #   key :format, :int64

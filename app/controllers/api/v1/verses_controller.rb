@@ -22,15 +22,15 @@ class Api::V1::VersesController < Api::V1::ApiController
         key :oauth2, ['admin write read public']
       end
       response 200 do
-        key :description, 'verse response'
+        key :description, 'Single verse wrapped in response'
         schema do
-          key :'$ref', :Verse
+          key :'$ref', :VerseResponse
         end
       end
       response 401 do
-        key :description, 'unauthorized response'
+        key :description, 'Unauthorized response'
         schema do
-          key :'$ref', :Verse
+          key :'$ref', :ErrorModel
         end
       end
 
@@ -142,15 +142,15 @@ class Api::V1::VersesController < Api::V1::ApiController
       end
 
       response 200 do
-        key :description, 'chapter response'
+        key :description, 'Array of verses wrapped in response'
         schema do
-          key :'$ref', :Verse
+          key :'$ref', :VerseArrayResponse
         end
       end
       response 401 do
-        key :description, 'unauthorized response'
+        key :description, 'Unauthorized response'
         schema do
-          key :'$ref', :Verse
+          key :'$ref', :ErrorModel
         end
       end
 
@@ -180,17 +180,17 @@ class Api::V1::VersesController < Api::V1::ApiController
       security do
         key :oauth2, ['admin write read public']
       end
-      
+
       response 200 do
-        key :description, 'verse response'
+        key :description, 'Array of verses matching search criteria'
         schema do
-          key :'$ref', :Verse
+          key :'$ref', :VerseArrayResponse
         end
       end
       response 401 do
-        key :description, 'unauthorized response'
+        key :description, 'Unauthorized response'
         schema do
-          key :'$ref', :Verse
+          key :'$ref', :ErrorModel
         end
       end
 

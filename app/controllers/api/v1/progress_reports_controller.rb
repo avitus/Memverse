@@ -11,19 +11,27 @@ class Api::V1::ProgressReportsController < Api::V1::ApiController
       key :description, 'Returns progress data for user'
       key :operationId, 'showUserProgress'
       key :tags, ['progress_reports']
+      parameter do
+        key :name, :page
+        key :in, :query
+        key :description, 'Page number requested'
+        key :required, false
+        key :type, :integer
+        key :format, :int64
+      end
       security do
         key :oauth2, ['admin write read public']
       end
       response 200 do
-        key :description, 'User progress response'
+        key :description, 'Paginated collection of progress reports'
         schema do
-          key :'$ref', :ProgressReport
+          key :'$ref', :ProgressReportCollectionResponse
         end
       end
       response 401 do
         key :description, 'Unauthorized response'
         schema do
-          key :'$ref', :ProgressReport
+          key :'$ref', :ErrorModel
         end
       end
       response :default do

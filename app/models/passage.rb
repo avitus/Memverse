@@ -10,28 +10,26 @@ class Passage < ApplicationRecord
     property :id do
       key :type, :integer
       key :format, :int64
-    end  
+    end
     property :user_id do
       key :type, :integer
       key :format, :int64
-    end  
+    end
     property :ref do
       key :type, :string
-    end 
+      key :description, 'The passage reference (e.g., "John 3:16-18")'
+    end
     property :book do
       key :type, :string
-    end 
+    end
     property :book_index do
       key :type, :integer
       key :format, :int64
-    end 
+    end
     property :chapter do
       key :type, :integer
       key :format, :int64
-    end 
-    property :chapter do
-      key :type, :string
-    end 
+    end
     property :first_verse do
       key :type, :integer
       key :format, :int64
@@ -39,21 +37,13 @@ class Passage < ApplicationRecord
     property :last_verse do
       key :type, :integer
       key :format, :int64
-    end           
-  end
-
-  swagger_schema :Passage do
-    allOf do
-      schema do
-        key :'$ref', :Passage
+    end
+    property :interval_array do
+      key :type, :array
+      items do
+        key :type, :integer
       end
-      schema do
-        key :required, [:id, :ref, :book, :chapter, :first_verse, :last_verse]
-        property :id do
-          key :type, :integer
-          key :format, :int64
-        end
-      end
+      key :description, 'Array of test intervals for verses in the passage'
     end
   end
 

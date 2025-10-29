@@ -20,8 +20,17 @@ class Api::V1::LiveQuizController < Api::V1::ApiController
       key :tags, ['quiz']
 
       parameter do
+        key :name, :quiz_id
+        key :in, :body
+        key :description, 'Quiz ID (defaults to 1 if not provided)'
+        key :required, false
+        key :type, :integer
+        key :format, :int64
+      end
+
+      parameter do
         key :name, :usr_id
-        key :in, :query
+        key :in, :body
         key :description, 'Memverse user ID'
         key :required, true
         key :type, :string
@@ -29,7 +38,7 @@ class Api::V1::LiveQuizController < Api::V1::ApiController
 
       parameter do
         key :name, :usr_name
-        key :in, :query
+        key :in, :body
         key :description, 'Memverse user name'
         key :required, true
         key :type, :string
@@ -37,7 +46,7 @@ class Api::V1::LiveQuizController < Api::V1::ApiController
 
       parameter do
         key :name, :usr_login
-        key :in, :query
+        key :in, :body
         key :description, 'Memverse user login (email address)'
         key :required, true
         key :type, :string
@@ -45,16 +54,16 @@ class Api::V1::LiveQuizController < Api::V1::ApiController
 
       parameter do
         key :name, :question_id
-        key :in, :query
+        key :in, :body
         key :description, 'Quiz question ID (primary key)'
         key :required, true
         key :type, :integer
         key :format, :int64
       end
-      
+
       parameter do
         key :name, :question_num
-        key :in, :query
+        key :in, :body
         key :description, 'Quiz question number'
         key :required, true
         key :type, :integer
@@ -63,10 +72,10 @@ class Api::V1::LiveQuizController < Api::V1::ApiController
 
       parameter do
         key :name, :score
-        key :in, :query
-        key :description, 'The user score (max=10)'
+        key :in, :body
+        key :description, 'The user score (max=10) or "false" to skip scoring'
         key :required, true
-        key :type, :integer
+        key :type, [:integer, :string]
         key :format, :int64
       end
 
@@ -74,14 +83,23 @@ class Api::V1::LiveQuizController < Api::V1::ApiController
         key :oauth2, ['public read write admin']
       end
 
-      response 200 do
-        key :description, 'Quiz response'
+      response 204 do
+        key :description, 'Score successfully recorded'
+        schema do
+          key :'$ref', :NoContentResponse
+        end
       end
       response 401 do
         key :description, 'Unauthorized response'
+        schema do
+          key :'$ref', :ErrorModel
+        end
       end
       response 400 do
         key :description, 'Incorrectly formed API request'
+        schema do
+          key :'$ref', :ErrorModel
+        end
       end
       response :default do
         key :description, 'Unexpected error'

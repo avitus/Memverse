@@ -22,15 +22,15 @@ class Api::V1::PassagesController < Api::V1::ApiController
         key :oauth2, ['admin read write public']
       end
       response 200 do
-        key :description, 'Passage response'
+        key :description, 'Paginated collection of passages'
         schema do
-          key :'$ref', :Passage
+          key :'$ref', :PassageCollectionResponse
         end
       end
       response 401 do
         key :description, 'Unauthorized response'
         schema do
-          key :'$ref', :Passage
+          key :'$ref', :ErrorModel
         end
       end
       response :default do
@@ -64,21 +64,21 @@ class Api::V1::PassagesController < Api::V1::ApiController
       end
 
       response 200 do
-        key :description, 'Passage response'
+        key :description, 'Single passage wrapped in response'
         schema do
-          key :'$ref', :Passage
+          key :'$ref', :PassageResponse
         end
       end
       response 401 do
         key :description, 'Unauthorized response'
         schema do
-          key :'$ref', :Passage
+          key :'$ref', :ErrorModel
         end
       end
       response 400 do
         key :description, 'Incorrectly formed API request'
         schema do
-          key :'$ref', :Passage
+          key :'$ref', :ErrorModel
         end
       end
       response :default do
@@ -105,16 +105,16 @@ class Api::V1::PassagesController < Api::V1::ApiController
       security do
         key :oauth2, ['admin write read public']
       end
-      response 200 do
-        key :description, 'Passage response'
+      response 204 do
+        key :description, 'Passage successfully deleted'
         schema do
-          key :'$ref', :Passage
+          key :'$ref', :NoContentResponse
         end
       end
       response 401 do
         key :description, 'Unauthorized response'
         schema do
-          key :'$ref', :Passage
+          key :'$ref', :ErrorModel
         end
       end
       response :default do

@@ -1,6 +1,7 @@
 class ApidocsController < ActionController::Base
-  
+
   include Swagger::Blocks
+  include SwaggerResponseSchemas
 
 
   class ErrorModel  # Required only for Swagger documentation
@@ -81,6 +82,7 @@ class ApidocsController < ActionController::Base
     Passage,
     Memverse,
     Verse,
+    Translation,
     FinalVerse,
     Quiz,
     ProgressReport,
