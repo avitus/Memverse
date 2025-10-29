@@ -135,25 +135,29 @@ jobs:
               echo "Skipping ChromeDriver setup for container $CIRCLE_NODE_INDEX (RSpec only)"
               exit 0
             fi
-            
+
             echo "Setting up ChromeDriver for container $CIRCLE_NODE_INDEX (Cucumber tests)"
-            
+
             # CircleCI's cimg/ruby:3.2.6-browsers comes with Chrome and ChromeDriver pre-installed
             # Just verify they're working and install any missing dependencies
             echo "Verifying pre-installed Chrome and ChromeDriver..."
-            
+
             # Install additional Chrome dependencies if needed
-            sudo apt-get update --allow-releaseinfo-change
-            sudo apt-get install -y xvfb
-            
+            # Use --fix-missing to handle any package availability issues
+            sudo apt-get update --allow-releaseinfo-change || true
+            sudo apt-get install -y xvfb --fix-missing || {
+              echo "Warning: xvfb installation failed, but Chrome should work in headless mode"
+              echo "Continuing with Chrome headless configuration..."
+            }
+
             # Check Chrome and ChromeDriver versions
             echo "Chrome version: $(google-chrome --version || echo 'Chrome not found')"
             echo "ChromeDriver version: $(chromedriver --version || echo 'ChromeDriver not found')"
-            
+
             # Test that Chrome can run in headless mode
             echo "Testing headless Chrome..."
             google-chrome --headless --disable-gpu --no-sandbox --remote-debugging-port=9222 --disable-dev-shm-usage --version
-            
+
             echo "Chrome and ChromeDriver setup completed successfully"
 
       - run:
@@ -397,11 +401,17 @@ jobs:
             export RAILS_ENV=test
             export DISPLAY=:99  # For headless Chrome
             
-            # Start Xvfb for headless browser testing
+            # Start Xvfb for headless browser testing (if available)
             if [ "$CIRCLE_NODE_INDEX" -ge "3" ]; then
-              echo "Starting Xvfb for headless browser testing..."
-              Xvfb :99 -ac -screen 0 1280x1024x16 &
-              sleep 2
+              if command -v Xvfb &> /dev/null; then
+                echo "Starting Xvfb for headless browser testing..."
+                Xvfb :99 -ac -screen 0 1280x1024x16 &
+                sleep 2
+              else
+                echo "Xvfb not available, using Chrome in native headless mode"
+                # Unset DISPLAY to force Chrome to use native headless mode
+                unset DISPLAY
+              fi
             fi
             
             # Get all feature files and split them across containers
