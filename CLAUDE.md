@@ -85,6 +85,14 @@ This is a Ruby on Rails 7.1 Bible memorization application with a traditional MV
 ### API & Documentation
 - **Swagger-blocks**: API documentation generation
 - Models include Swagger schema definitions
+- **CRITICAL**: Always ensure Swagger documentation matches actual API implementation:
+  - Swagger schemas must match the actual JSON serialization (e.g., `as_json` methods)
+  - Response schemas must match controller response formats
+  - Parameter definitions must match controller parameter expectations
+  - When modifying API responses, update BOTH the code AND the Swagger schemas
+  - Run `test_swagger_ui.sh` to validate Swagger documentation after changes
+  - Test actual API responses to verify documentation accuracy
+  - Swagger UI compatibility: Using v2.1.2-M2, avoid unsupported features (allOf, x-nullable, externalDocs, mixed types)
 
 ### Database
 - **MySQL**: Primary database
