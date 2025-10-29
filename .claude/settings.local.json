@@ -2,14 +2,15 @@
   "permissions": {
     "allow": [
       "Bash(user = User.first)",
-      "Bash(puts user.as_json.to_json)"
+      "Bash(puts user.as_json.to_json)",
+      "Bash(tree:*)"
     ],
     "deny": [],
+    "ask": [],
     "defaultMode": "acceptEdits",
     "additionalDirectories": [
       "/private/tmp",
       "/"
-    ],
-    "ask": []
+    ]
   }
 }

@@ -22,9 +22,6 @@ describe Api::V1::CredentialsController do
       it 'returns the user as json' do
         get :me, params: {version: 1}, format: :json
 
-        # Would be nice to use this instead but user.to_json has an override in model
-        #  response.body).to eq(user.to_json)
-
         api_response = JSON.parse( response.body )
         user_json    = { "response" => user.serializable_hash }
         user_json["response"]["work_load"] = user.work_load

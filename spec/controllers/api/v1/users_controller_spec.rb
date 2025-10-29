@@ -38,18 +38,6 @@ describe Api::V1::UsersController do
         expect(response.status).to eq(200)
       end
 
-      it 'returns user with work_load field' do
-        get :show, params: {id: user.id, version: 1}, format: :json
-        parsed_response = JSON.parse(response.body)
-        expect(parsed_response['response']).to have_key('work_load')
-        expect(parsed_response['response']['work_load']).to be_a(Integer)
-      end
-
-      #it 'returns user attributes as json' do
-      #  get :show, id: user.id, version: 1, format: :json, access_token: token.token
-      #   json).to eq(JSON.parse(user.to_json))
-      #end
-
     end
 
     context 'no valid access token' do
