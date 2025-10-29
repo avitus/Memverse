@@ -27,6 +27,7 @@ describe Api::V1::CredentialsController do
 
         api_response = JSON.parse( response.body )
         user_json    = { "response" => user.serializable_hash }
+        user_json["response"]["work_load"] = user.work_load
 
         # Remove date fields. Formats are different and we don't really care
         api_response["response"].delete("created_at")
@@ -38,6 +39,13 @@ describe Api::V1::CredentialsController do
         user_json["response"].delete("last_activity_date")
 
         expect(api_response).to eq(user_json)
+      end
+
+      it 'returns user with work_load field' do
+        get :me, params: {version: 1}, format: :json
+        parsed_response = JSON.parse(response.body)
+        expect(parsed_response['response']).to have_key('work_load')
+        expect(parsed_response['response']['work_load']).to be_a(Integer)
       end
 
     end

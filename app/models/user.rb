@@ -106,6 +106,11 @@ class User < ApplicationRecord
       key :type, :integer
       key :format, :int64
     end
+    property :work_load do
+      key :type, :integer
+      key :format, :int64
+      key :description, 'Estimated daily time commitment in minutes for memorization practice'
+    end
     property :memorized do
       key :type, :integer
       key :format, :int64
@@ -222,6 +227,28 @@ class User < ApplicationRecord
     end
   end
 
+  # Minimal user response returned by GET /users/{id}
+  swagger_schema :UserMinimal do
+    key :required, [:id, :name, :avatar_url, :work_load]
+    property :id do
+      key :type, :integer
+      key :format, :int64
+    end
+    property :name do
+      key :type, :string
+      key :description, 'User display name'
+    end
+    property :avatar_url do
+      key :type, :string
+      key :description, 'URL to user avatar image'
+    end
+    property :work_load do
+      key :type, :integer
+      key :format, :int64
+      key :description, 'Estimated daily time commitment in minutes for memorization practice'
+    end
+  end
+
   # ----------------------------------------------------------------------------------------------------------
   # Swagger-Blocks DSL [END]
   # ----------------------------------------------------------------------------------------------------------
@@ -299,7 +326,8 @@ class User < ApplicationRecord
     {
       :id            => self.id,
       :name          => self.name_or_login,
-      :avatar_url    => self.blog_avatar_url
+      :avatar_url    => self.blog_avatar_url,
+      :work_load     => self.work_load
     }
   end
 

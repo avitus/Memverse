@@ -93,7 +93,10 @@ class Api::V1::CredentialsController < Api::V1::ApiController
 
 	def me
 		# Use serializable_hash instead of as_json to match RocketPants behavior
-		render json: { response: current_resource_owner.serializable_hash }, status: :ok
+		# Include work_load as a calculated field
+		user_data = current_resource_owner.serializable_hash
+		user_data['work_load'] = current_resource_owner.work_load
+		render json: { response: user_data }, status: :ok
 	end
 
 end # of class
