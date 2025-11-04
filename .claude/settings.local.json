@@ -3,7 +3,17 @@
     "allow": [
       "Bash(user = User.first)",
       "Bash(puts user.as_json.to_json)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "mcp__serena__find_file",
+      "mcp__serena__get_symbols_overview",
+      "mcp__serena__search_for_pattern",
+      "Bash(bundle exec rspec:*)",
+      "mcp__serena__find_symbol",
+      "Bash(redis-cli:*)",
+      "Bash(redis-server:*)",
+      "Bash(brew services start:*)",
+      "Bash(npm run test:run:*)",
+      "Bash(git add:*)"
     ],
     "deny": [],
     "ask": [],

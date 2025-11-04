@@ -152,12 +152,17 @@
 	
 	// Initialize quiz when document is ready
 	$(document).ready(function() {
-		// Set up quiz room for user
+		// Set up quiz room for user (still needed for legacy quizRoom functions)
 		quizRoom.initialize('<%= @num_questions %>');
 
 		console.log("==> Connected to channel " + channel);
 		console.log("==> Quiz preparing state: <%= @quiz_preparing %>");
-		
+
+		// DISABLED: Old jQuery polling and countdown - now handled by Stimulus controller
+		// The Stimulus controller (live_quiz_controller.js) now handles all timing and refresh logic
+		// using a single server-driven state machine approach
+
+		/*
 		// Display welcome modal only if quiz is starting soon or running
 		// Check if quiz is running or within 5 minutes of starting
 		$.getJSON('/live_quiz/till_start/<%= @quiz.id %>.json', function(data) {
@@ -171,7 +176,7 @@
 					var hours = parseInt(timeMatch[1]);
 					var minutes = parseInt(timeMatch[2]);
 					var totalMinutes = hours * 60 + minutes;
-					
+
 					// Only show modal if quiz starts within 5 minutes
 					if (totalMinutes <= 5) {
 						openContentModal($("#welcome-box").html(), "Quiz Instructions");
@@ -179,8 +184,9 @@
 				}
 			}
 		});
-		
-		// Initialize PubNub with v7+ SDK
+		*/
+
+		// Initialize PubNub with v7+ SDK (still needed for quiz messaging)
 		var pubnub = new PubNub({
 			subscribeKey: '<%= PN.env[:subscribe_key] %>',
 			publishKey: '<%= PN.env[:publish_key] %>',
@@ -190,7 +196,7 @@
 			restore: true,
 			keepAlive: true
 		});
-		
+
 		// Add PubNub event listeners
 		pubnub.addListener({
 			message: function(message) {
@@ -214,17 +220,19 @@
 				}
 			}
 		});
-		
+
 		// Subscribe to the quiz channel with presence
 		pubnub.subscribe({
 			channels: [channel],
 			withPresence: true
 		});
-		
+
 		// Make PubNub instance globally available
 		window.pubnub = pubnub;
 		window.PUBNUB = pubnub; // Some legacy code might use uppercase
-		
+
+		// DISABLED: Old jQuery countdown code - now handled by Stimulus controller
+		/*
 		// Set quiz status
 		$.getJSON('/live_quiz/till_start/<%= @quiz.id %>.json', function(data) {
 			if (data.status) {
@@ -260,6 +268,7 @@
 				$("#countdown-till").text("till quiz starts");
 			}
 		});
+		*/
 		
 		// Handle chat input
 		$('[data-live-quiz-target="chatInput"]').on('keypress', function(e) {

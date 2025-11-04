@@ -238,6 +238,149 @@ class LiveQuizController < ApplicationController
   end
 
   #-----------------------------------------------------------------------------------------------------------
+  # API endpoint for quiz state - Single source of truth for quiz timing
+  #-----------------------------------------------------------------------------------------------------------
+  def quiz_state
+    quiz_id = (params[:id] || params[:quiz_id] || 1).to_i
+    quiz = Quiz.find(quiz_id)
+
+    state = calculate_quiz_state(quiz)
+
+    render json: {
+      state: state[:state],
+      next_transition_at: state[:next_transition_at],
+      transition_to: state[:transition_to],
+      should_refresh: state[:should_refresh],
+      server_time: Time.current.utc.iso8601,
+      quiz_id: quiz.id
+    }
+  end
+
+  private
+
+  def calculate_quiz_state(quiz)
+    quiz_session = QuizSession.new(quiz.id)
+    current_status = quiz_session.get_quiz_status
+    now = Time.current.utc
+
+    # Log for debugging
+    Rails.logger.debug "Quiz ##{quiz.id} status: #{current_status.inspect}"
+
+    # Check status first, regardless of quiz type
+    if current_status.present? && current_status != "Available"
+      # Quiz has an active status
+      if current_status.include?("Initializing") || current_status.include?("Chat opening soon")
+        # Quiz is initializing
+        return {
+          state: "preparing",
+          next_transition_at: (now + 5.seconds).iso8601, # Check again soon
+          transition_to: "ready",
+          should_refresh: false
+        }
+      elsif current_status.include?("Chat open. Wait for question")
+        # Quiz is ready, user should refresh if they see the preparing overlay
+        return {
+          state: "ready",
+          should_refresh: user_sees_preparing_overlay?,
+          next_transition_at: nil,
+          transition_to: "running"
+        }
+      elsif current_status.include?("Question in progress") || (current_status.include?("In progress") && !current_status.include?("Chat"))
+        # Quiz running (question in progress)
+        return {
+          state: "running",
+          should_refresh: false,
+          next_transition_at: nil,
+          transition_to: "finished"
+        }
+      elsif current_status == "Finished"
+        # Quiz explicitly finished
+        return {
+          state: "finished",
+          should_refresh: false,
+          next_transition_at: nil,
+          transition_to: nil
+        }
+      end
+    end
+
+    # No active status, check schedule
+    if quiz.id == 1
+      # Knowledge quiz uses scheduled times
+      next_quiz_time = Quiz.next_knowledge_quiz_time
+
+      if next_quiz_time && next_quiz_time > now
+        time_until_start = next_quiz_time - now
+
+        if time_until_start <= 5.seconds
+          # Worker about to start
+          {
+            state: "preparing",
+            next_transition_at: next_quiz_time.iso8601,
+            transition_to: "ready",
+            should_refresh: false
+          }
+        else
+          # Waiting for quiz
+          {
+            state: "waiting",
+            next_transition_at: (next_quiz_time - 5.seconds).iso8601,
+            transition_to: "preparing",
+            should_refresh: false
+          }
+        end
+      else
+        # No quiz scheduled or quiz finished
+        {
+          state: current_status == "Finished" ? "finished" : "none",
+          should_refresh: false,
+          next_transition_at: nil,
+          transition_to: nil
+        }
+      end
+    else
+      # Other quizzes use start_time
+      if quiz.start_time && quiz.start_time > now
+        time_until_start = quiz.start_time - now
+
+        if time_until_start <= 5.seconds
+          # Worker about to start
+          {
+            state: "preparing",
+            next_transition_at: quiz.start_time.iso8601,
+            transition_to: "ready",
+            should_refresh: false
+          }
+        else
+          # Waiting for quiz
+          {
+            state: "waiting",
+            next_transition_at: (quiz.start_time - 5.seconds).iso8601,
+            transition_to: "preparing",
+            should_refresh: false
+          }
+        end
+      else
+        # No quiz scheduled or quiz finished
+        {
+          state: current_status == "Finished" ? "finished" : "none",
+          should_refresh: false,
+          next_transition_at: nil,
+          transition_to: nil
+        }
+      end
+    end
+  end
+
+  def user_sees_preparing_overlay?
+    # Check if the request includes a header or parameter indicating the preparing overlay is visible
+    # This can be sent by the JavaScript when checking state
+    params[:preparing_visible] == "true" || request.headers["X-Quiz-Preparing"] == "true"
+  end
+
+  public
+
+  #-----------------------------------------------------------------------------------------------------------
   # Used for load testing
   #-----------------------------------------------------------------------------------------------------------
   def test_sign_in_random

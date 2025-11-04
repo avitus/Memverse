@@ -367,6 +367,7 @@ MemverseApp::Application.routes.draw do
   get  '/live_quiz/channel1'        => 'live_quiz#channel1'                                      # Chat channel
   get  '/live_quiz/scoreboard'      => 'live_quiz#scoreboard'                                    # Scoreboard for quiz
   get  '/live_quiz/till_start/:id'  => 'live_quiz#till_start',            :defaults => { :format => 'json' }
+  get  '/live_quiz/quiz_state/:id'  => 'live_quiz#quiz_state',            :defaults => { :format => 'json' }  # New unified state endpoint
   get  '/live_quiz/:quiz'           => 'live_quiz#live_quiz'
   post '/record_score'              => 'live_quiz#record_score'
 

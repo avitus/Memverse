@@ -429,11 +429,17 @@ var quizSchedule = {
   }
 };
 
+// DISABLED: quizSchedule initialization - now handled by Stimulus controller
+// The live_quiz_controller.js Stimulus controller now handles all quiz timing
+// and refresh logic using a single server-driven state machine approach.
+// This prevents multiple competing timing systems from conflicting.
+/*
 // Initialize quiz schedule on document ready
 if (typeof $ !== 'undefined' && $.fn && $.fn.ready) {
   $(document).ready(function() {
     quizSchedule.init();
   });
 }
+*/
 
 
