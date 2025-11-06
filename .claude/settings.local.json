@@ -21,7 +21,11 @@
       "Bash(./bin/status:*)",
       "Bash(xargs:*)",
       "Bash(./bin/quiz-cleanup:*)",
-      "mcp__circleci-mcp-server__get_build_failure_logs"
+      "mcp__circleci-mcp-server__get_build_failure_logs",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git worktree:*)",
+      "mcp__serena__initial_instructions"
     ],
     "deny": [],
     "ask": [],
