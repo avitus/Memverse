@@ -25,7 +25,16 @@
       "Bash(git commit:*)",
       "Bash(git push:*)",
       "Bash(git worktree:*)",
-      "mcp__serena__initial_instructions"
+      "mcp__serena__initial_instructions",
+      "mcp__serena__check_onboarding_performed",
+      "mcp__serena__onboarding",
+      "mcp__serena__list_dir",
+      "mcp__serena__list_memories",
+      "mcp__serena__think_about_collected_information",
+      "mcp__serena__write_memory",
+      "mcp__serena__think_about_whether_you_are_done",
+      "Bash(bundle exec rake:*)",
+      "Bash(bundle exec rails db:migrate:status:*)"
     ],
     "deny": [],
     "ask": [],

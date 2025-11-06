@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_10_01_210710) do
+ActiveRecord::Schema[7.1].define(version: 2025_11_06_000002) do
   create_table "active_storage_attachments", charset: "utf8mb3", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -732,6 +732,12 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_01_210710) do
     t.integer "moderation_state", null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.index ["messageboard_id"], name: "index_thredded_posts_on_messageboard_id"
+    t.index ["moderation_state", "updated_at"], name: "index_thredded_posts_for_display", order: { updated_at: :desc }
+    t.index ["moderation_state"], name: "index_thredded_posts_on_moderation_state"
+    t.index ["postable_id", "created_at"], name: "index_thredded_posts_on_postable_id_and_created_at"
+    t.index ["postable_id"], name: "index_thredded_posts_on_postable_id"
+    t.index ["user_id"], name: "index_thredded_posts_on_user_id"
   end
 
   create_table "thredded_private_posts", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
