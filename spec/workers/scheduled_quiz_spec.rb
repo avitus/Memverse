@@ -55,7 +55,7 @@ describe ScheduledQuiz do
     
     # Disable actual logging output in tests
     allow(Sidekiq.logger).to receive(:info)
-    allow(Sidekiq.logger).to receive(:warn)
+    # Don't stub :warn here - let individual tests set expectations
     allow(Sidekiq.logger).to receive(:error)
     allow(Sidekiq.logger).to receive(:debug)
   end
@@ -68,13 +68,17 @@ describe ScheduledQuiz do
 
       it 'returns early without error' do
         expect(Sidekiq.logger).to receive(:debug).with(/No scheduled quiz found/)
-        
+        # Stub warn to avoid unmet expectations
+        allow(Sidekiq.logger).to receive(:warn)
+
         worker.perform
       end
 
       it 'does not acquire any locks' do
         expect($redis).not_to receive(:set).with(/scheduled_quiz_lock/, anything, anything)
-        
+        # Stub warn to avoid unmet expectations
+        allow(Sidekiq.logger).to receive(:warn)
+
         worker.perform
       end
     end
@@ -86,13 +90,15 @@ describe ScheduledQuiz do
 
       it 'skips quiz and logs warning' do
         expect(Sidekiq.logger).to receive(:warn).with(/Quiz ##{quiz.id} has no questions, skipping/)
-        
+
         worker.perform
       end
 
       it 'does not proceed with quiz execution' do
         expect(worker).not_to receive(:execute_quiz)
-        
+        # Stub warn to avoid unmet expectations
+        allow(Sidekiq.logger).to receive(:warn)
+
         worker.perform
       end
     end
@@ -119,7 +125,9 @@ describe ScheduledQuiz do
 
       it 'skips quiz handled by different worker' do
         expect(Sidekiq.logger).to receive(:debug).with(/Quiz #1 is the Wed\/Sat quiz/)
-        
+        # Stub warn to avoid unmet expectations
+        allow(Sidekiq.logger).to receive(:warn)
+
         worker.perform
       end
     end
@@ -149,17 +157,23 @@ describe ScheduledQuiz do
       end
 
       it 'completes the quiz workflow successfully' do
+        # Stub warn to avoid unmet expectations
+        allow(Sidekiq.logger).to receive(:warn)
+
         # Just test that it doesn't raise an error and completes
         expect { worker.perform }.not_to raise_error
       end
 
       it 'acquires and releases quiz lock' do
+        # Stub warn to avoid unmet expectations
+        allow(Sidekiq.logger).to receive(:warn)
+
         # QuizSession now handles the locking with different key format
         lock_key = "quiz_session:#{quiz.id}:lock"
-        
+
         expect($redis).to receive(:set).with(lock_key, Process.pid, nx: true, ex: 3600).and_return(true)
         expect($redis).to receive(:del).with(lock_key)
-        
+
         worker.perform
       end
 
@@ -171,7 +185,9 @@ describe ScheduledQuiz do
         expect($redis).to receive(:hset).with(status_key, "updated_at", anything)
         expect($redis).to receive(:hset).with(status_key, "start_time", anything)
         expect($redis).to receive(:hset).with(status_key, "quiz_id", quiz.id.to_s)
-        
+        # Stub warn to avoid unmet expectations
+        allow(Sidekiq.logger).to receive(:warn)
+
         worker.perform
       end
 
@@ -181,7 +197,9 @@ describe ScheduledQuiz do
           user_id: 1,
           importance: 2
         )
-        
+        # Stub warn to avoid unmet expectations
+        allow(Sidekiq.logger).to receive(:warn)
+
         worker.perform
       end
 
@@ -197,7 +215,9 @@ describe ScheduledQuiz do
             )
           )
         ).at_least(:once)
-        
+        # Stub warn to avoid unmet expectations
+        allow(Sidekiq.logger).to receive(:warn)
+
         worker.perform
       end
 
@@ -219,7 +239,9 @@ describe ScheduledQuiz do
             message: hash_including(meta: "chat_status", status: "Closed")
           )
         )
-        
+        # Stub warn to avoid unmet expectations
+        allow(Sidekiq.logger).to receive(:warn)
+
         worker.perform
       end
 
@@ -230,7 +252,9 @@ describe ScheduledQuiz do
         expect($redis).to receive(:hset).with(status_key, "last_success", anything)
         expect($redis).to receive(:hset).with(status_key, "duration_seconds", anything)
         expect($redis).to receive(:hset).with(status_key, "success_count", anything)
-        
+        # Stub warn to avoid unmet expectations
+        allow(Sidekiq.logger).to receive(:warn)
+
         worker.perform
       end
     end
@@ -255,20 +279,24 @@ describe ScheduledQuiz do
         )
         # Mock Quiz queries
         mock_quiz_queries(quiz)
-        # Mock QuizSession to indicate quiz is in progress
+        # Mock QuizSession to indicate quiz is in progress with a question running
         status_key = "quiz_session:#{quiz.id}:status"
-        allow($redis).to receive(:hget).with(status_key, "status").and_return("In progress. Wait for question.")
+        allow($redis).to receive(:hget).with(status_key, "status").and_return("Question 1 in progress")
       end
 
       it 'aborts execution gracefully' do
         expect(Sidekiq.logger).to receive(:warn).with(/Quiz ##{quiz.id} : Already in progress.*aborting/)
-        
+        # Stub warn to avoid unmet expectations
+        allow(Sidekiq.logger).to receive(:warn)
+
         worker.perform
       end
 
       it 'does not execute main quiz logic' do
         expect(worker).not_to receive(:execute_quiz)
-        
+        # Stub warn to avoid unmet expectations
+        allow(Sidekiq.logger).to receive(:warn)
+
         worker.perform
       end
     end
@@ -299,7 +327,9 @@ describe ScheduledQuiz do
 
       it 'aborts execution gracefully' do
         expect(Sidekiq.logger).to receive(:warn).with(/Quiz ##{quiz.id} : Already running.*aborting/)
-        
+        # Stub warn to avoid unmet expectations
+        allow(Sidekiq.logger).to receive(:warn)
+
         worker.perform
       end
     end
@@ -311,7 +341,9 @@ describe ScheduledQuiz do
 
       it 'handles errors gracefully' do
         expect(Sidekiq.logger).to receive(:error).with(/ScheduledQuiz error during quiz initialization/)
-        
+        # Stub warn to avoid unmet expectations
+        allow(Sidekiq.logger).to receive(:warn)
+
         worker.perform
       end
     end
@@ -344,7 +376,9 @@ describe ScheduledQuiz do
       it 'retries PubNub operations' do
         expect(Sidekiq.logger).to receive(:warn).with(/PubNub publish failed/).at_least(:once)
         expect(worker).to receive(:sleep).at_least(:once)
-        
+        # Stub warn to avoid unmet expectations
+        allow(Sidekiq.logger).to receive(:warn)
+
         worker.perform
       end
     end
@@ -441,7 +475,9 @@ describe ScheduledQuiz do
             )
           )
         ).at_least(:once)
-        
+        # Stub warn to avoid unmet expectations
+        allow(Sidekiq.logger).to receive(:warn)
+
         worker.perform
       end
     end
@@ -469,7 +505,9 @@ describe ScheduledQuiz do
             )
           )
         ).at_least(:once)
-        
+        # Stub warn to avoid unmet expectations
+        allow(Sidekiq.logger).to receive(:warn)
+
         worker.perform
       end
     end
@@ -490,7 +528,9 @@ describe ScheduledQuiz do
 
       it 'logs warning and continues' do
         expect(Sidekiq.logger).to receive(:warn).with(/Unknown question type: unknown_type/)
-        
+        # Stub warn to avoid unmet expectations
+        allow(Sidekiq.logger).to receive(:warn)
+
         worker.perform
       end
     end
@@ -603,13 +643,15 @@ describe ScheduledQuiz do
     it 'prevents multiple workers from running same quiz' do
       # Simulate another worker already has the lock
       allow($redis).to receive(:set).with(
-        "quiz_session:#{quiz.id}:lock", 
-        anything, 
+        "quiz_session:#{quiz.id}:lock",
+        anything,
         anything
       ).and_return(false)
-      
+
+      # The worker logs two warnings when lock fails
       expect(Sidekiq.logger).to receive(:warn).with(/Already running.*aborting/)
-      
+      expect(Sidekiq.logger).to receive(:warn).with(/Lock status:/)
+
       worker.perform
     end
   end

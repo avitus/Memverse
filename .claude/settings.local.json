@@ -20,7 +20,8 @@
       "Bash(chmod:*)",
       "Bash(./bin/status:*)",
       "Bash(xargs:*)",
-      "Bash(./bin/quiz-cleanup:*)"
+      "Bash(./bin/quiz-cleanup:*)",
+      "mcp__circleci-mcp-server__get_build_failure_logs"
     ],
     "deny": [],
     "ask": [],

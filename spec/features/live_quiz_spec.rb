@@ -66,9 +66,9 @@ RSpec.feature 'Live Quiz', type: :request do
     context 'when quiz is ready' do
       context 'and quiz is running' do
         before do
-          # Mark quiz as running
+          # Mark quiz as running with a question in progress
           quiz_session = QuizSession.new(quiz.id)
-          quiz_session.set_quiz_status(QuizSession::STATUS_IN_PROGRESS)
+          quiz_session.set_quiz_status("Question 1 in progress")
         end
         
         it 'displays quiz interface' do
@@ -140,9 +140,9 @@ RSpec.feature 'Live Quiz', type: :request do
   
   describe 'quiz interactions' do
     before do
-      # Mark quiz as running
+      # Mark quiz as running with a question in progress
       quiz_session = QuizSession.new(quiz.id)
-      quiz_session.set_quiz_status(QuizSession::STATUS_IN_PROGRESS, {
+      quiz_session.set_quiz_status("Question 1 in progress", {
         current_question: 1,
         started_at: Time.current.to_s
       })
@@ -191,7 +191,7 @@ RSpec.feature 'Live Quiz', type: :request do
     before do
       # Mark quiz as running
       quiz_session = QuizSession.new(quiz.id)
-      quiz_session.set_quiz_status(QuizSession::STATUS_IN_PROGRESS)
+      quiz_session.set_quiz_status("Question 1 in progress")
     end
     
     it 'shows chat toggle for admins' do
@@ -207,7 +207,7 @@ RSpec.feature 'Live Quiz', type: :request do
     before do
       # Mark quiz as running
       quiz_session = QuizSession.new(quiz.id)
-      quiz_session.set_quiz_status(QuizSession::STATUS_IN_PROGRESS)
+      quiz_session.set_quiz_status("Question 1 in progress")
     end
     
     it 'calculates quiz duration correctly' do
@@ -223,7 +223,7 @@ RSpec.feature 'Live Quiz', type: :request do
     it 'uses default timing for knowledge quiz' do
       # Mark knowledge quiz (ID 1) as running
       quiz_session = QuizSession.new(knowledge_quiz.id)
-      quiz_session.set_quiz_status(QuizSession::STATUS_IN_PROGRESS)
+      quiz_session.set_quiz_status("Question 1 in progress")
       
       sign_in user
       get "/live_quiz?quiz=#{knowledge_quiz.id}"

@@ -63,7 +63,7 @@ RSpec.describe "Live Quiz Name Consistency", type: :feature, js: true do
       puts "Quiz User: #{quiz.user.inspect}"
 
       # Set up the quiz session with synchronization
-      setup_quiz_session_with_sync(quiz.id, "in_progress", { started_at: Time.current })
+      setup_quiz_session_with_sync(quiz.id, "Question 1 in progress", { started_at: Time.current })
 
       # Create the chat channel
       setup_quiz_chat_channel(quiz.id)

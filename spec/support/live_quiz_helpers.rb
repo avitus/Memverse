@@ -106,7 +106,7 @@ module LiveQuizHelpers
     end
 
     # Debug output if page doesn't load as expected
-    unless page.has_selector?('.white-box-with-margins, .quiz-schedule', wait: 2)
+    unless page.has_selector?('.white-box-with-margins, .quiz-schedule-compact', wait: 2)
       puts "\n=== Page Debug Info ==="
       puts "Current path: #{current_path}"
       puts "Page status: #{page.status_code}" rescue nil
@@ -131,7 +131,7 @@ module LiveQuizHelpers
     end
 
     # Wait for page to be ready - check for either quiz interface or schedule
-    expect(page).to have_selector('.white-box-with-margins, .quiz-schedule', wait: 5)
+    expect(page).to have_selector('.white-box-with-margins, .quiz-schedule-compact', wait: 5)
   end
 
   # Check if the quiz interface is showing (not the schedule)
