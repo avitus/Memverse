@@ -37,18 +37,21 @@ Rails.application.config.after_initialize do
     end
 
     # Also add a method to clear moderation cache when posts are moderated
-    Thredded::ModeratePost.class_eval do
-      set_callback :save, :after, :clear_moderation_cache
+    # PostModerationRecord is created whenever a post is moderated
+    if defined?(Thredded::PostModerationRecord)
+      Thredded::PostModerationRecord.class_eval do
+        after_create :clear_moderation_cache
 
-      private
+        private
 
-      def clear_moderation_cache
-        # Clear all moderation pending caches
-        Rails.cache.delete_matched('thredded_moderation_pending-*')
-        Rails.logger.info "[MODERATION CACHE] Cleared moderation cache after post moderation"
-      rescue => e
-        # Some cache stores don't support delete_matched
-        Rails.logger.warn "[MODERATION CACHE] Could not clear cache: #{e.message}"
+        def clear_moderation_cache
+          # Clear all moderation pending caches
+          Rails.cache.delete_matched('thredded_moderation_pending-*')
+          Rails.logger.info "[MODERATION CACHE] Cleared moderation cache after post moderation"
+        rescue => e
+          # Some cache stores don't support delete_matched
+          Rails.logger.warn "[MODERATION CACHE] Could not clear cache: #{e.message}"
+        end
       end
     end
   end
