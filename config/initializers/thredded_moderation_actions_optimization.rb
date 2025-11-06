@@ -117,22 +117,30 @@ Rails.application.config.after_initialize do
     end
   end
 
-  # Add an index to improve first post checking if not exists
-  if defined?(Thredded::Post) && ActiveRecord::Base.connection.table_exists?('thredded_posts')
-    # Cache first post status to avoid repeated queries
-    Thredded::Topic.class_eval do
-      # Add a method to efficiently check if a post is first
-      def first_post?(post)
-        @first_post_id ||= posts.minimum(:id)
-        post.id == @first_post_id
-      end
-    end
+  # Add helper methods for first post checking
+  # Skip database checks during asset precompilation
+  if defined?(Thredded::Post) && Rails.application.config.eager_load
+    begin
+      if ActiveRecord::Base.connection.table_exists?('thredded_posts')
+        # Cache first post status to avoid repeated queries
+        Thredded::Topic.class_eval do
+          # Add a method to efficiently check if a post is first
+          def first_post?(post)
+            @first_post_id ||= posts.minimum(:id)
+            post.id == @first_post_id
+          end
+        end
 
-    # Use the cached method in Post
-    Thredded::Post.class_eval do
-      def is_first_post?
-        postable&.first_post?(self)
+        # Use the cached method in Post
+        Thredded::Post.class_eval do
+          def is_first_post?
+            postable&.first_post?(self)
+          end
+        end
       end
+    rescue ActiveRecord::NoDatabaseError, ActiveRecord::ConnectionNotEstablished
+      # Skip if database is not available
+      Rails.logger.debug "[THREDDED OPTIMIZATION] Skipping first post helpers - database not available"
     end
   end
 
