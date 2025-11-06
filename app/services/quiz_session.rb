@@ -234,11 +234,16 @@ class QuizSession
     end
   end
 
-  # Check if quiz is in progress
-  # @return [Boolean] True if quiz is running
+  # Check if quiz is in progress (questions actively running)
+  # @return [Boolean] True if quiz questions are actively being asked
   def quiz_in_progress?
     status = get_quiz_status
-    status&.include?("progress") || status == STATUS_IN_PROGRESS
+    return false if status.nil?
+
+    # Only consider quiz in progress when questions are actually running
+    # Chat period ("Chat open. Wait for question.") is not considered "in progress" for display purposes
+    # Initializing state is also not considered "in progress" (it's "preparing")
+    status.match?(/Question \d+ in progress/)
   end
 
   # ========================================================================

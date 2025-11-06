@@ -118,7 +118,8 @@ RSpec.describe LiveQuizController, type: :controller do
         it 'sets quiz_preparing to true' do
           get :live_quiz, params: { quiz: quiz.id }
 
-          expect(assigns(:quiz_running)).to eq(true)
+          # With unified state machine, "preparing" state means not running yet
+          expect(assigns(:quiz_running)).to eq(false)
           expect(assigns(:quiz_preparing)).to eq(true)
         end
       end

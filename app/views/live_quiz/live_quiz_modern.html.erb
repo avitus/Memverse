@@ -1,11 +1,11 @@
 <% page_title "Live Quiz :: " + @quiz.name %>
 
-<% if !@quiz_running %>
-	<!-- Show schedule when no quiz is running -->
+<% if !@show_quiz_interface %>
+	<!-- Show schedule when no quiz activity -->
 	<%= render partial: "quiz_schedule" %>
 <% else %>
-	<!-- Show normal quiz interface when quiz is running or about to start -->
-	<div class="white-box-with-margins"
+	<!-- Show quiz interface when quiz is preparing, ready, or running -->
+	<div class="white-box-with-margins quiz-container"
      data-controller="live-quiz"
      data-live-quiz-quiz-id-value="<%= @quiz.id %>"
      data-live-quiz-user-id-value="<%= current_user.id %>"

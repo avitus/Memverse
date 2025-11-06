@@ -27,21 +27,23 @@ class LiveQuizController < ApplicationController
 
     # Check status of chat channel
     @channel = ChatChannel.find("quiz-#{@quiz.id}")
-    
-    # Check if quiz is currently running
-    quiz_session = QuizSession.new(@quiz.id)
-    @quiz_running = quiz_session.quiz_in_progress?
 
-    # Check if quiz is in preparing/initializing state
-    quiz_status = quiz_session.get_quiz_status
-    # Consider quiz as preparing if it's in any initialization state
-    @quiz_preparing = quiz_status.to_s.include?("Initializing") ||
-                      quiz_status == "In progress. Chat opening soon." ||
-                      quiz_status == "In progress. Chat open. Wait for question."
+    # Use server-driven state machine for quiz state
+    state = calculate_quiz_state(@quiz)
 
+    # Set quiz states based on unified state machine
+    # Quiz is only "running" when questions are in progress, not during chat
+    @quiz_running = (state[:state] == "running")
 
-    # Get next scheduled quiz time if quiz is not running
-    unless @quiz_running
+    # Quiz is preparing when in "preparing" or "ready" states
+    @quiz_preparing = (state[:state] == "preparing" || state[:state] == "ready")
+
+    # Show quiz interface when in preparing, ready, or running states
+    @show_quiz_interface = ["preparing", "ready", "running"].include?(state[:state])
+
+    # Get next scheduled quiz time only when quiz hasn't started yet
+    # Show next quiz time only during waiting, none, or finished states (not during ready/chat)
+    if ["none", "waiting", "finished"].include?(state[:state])
       if @quiz.id.to_i == 1  # Knowledge quiz uses cron schedule
         @next_quiz_time = Quiz.next_knowledge_quiz_time
         @quiz_schedule = Quiz.knowledge_quiz_schedule
@@ -285,7 +287,7 @@ class LiveQuizController < ApplicationController
           next_transition_at: nil,
           transition_to: "running"
         }
-      elsif current_status.include?("Question in progress") || (current_status.include?("In progress") && !current_status.include?("Chat"))
+      elsif current_status.match?(/Question \d+ in progress/) || (current_status.include?("In progress") && !current_status.include?("Chat") && !current_status.include?("Initializing"))
         # Quiz running (question in progress)
         return {
           state: "running",

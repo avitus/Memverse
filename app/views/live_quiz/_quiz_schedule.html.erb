@@ -30,7 +30,7 @@
         </div>
       </div>
     <% end %>
-    
+
     <!-- Schedule Card -->
     <div class="quiz-card schedule-card">
       <div class="quiz-card-header">
@@ -91,4 +91,18 @@
     <i class="fa fa-info-circle"></i> Quiz automatically starts at scheduled time. Join at <a href="/live_quiz">/live_quiz</a> when ready.
   </div>
 </div>
+
+<script type="text/javascript">
+  // Initialize quiz time display
+  $(document).ready(function() {
+    if (typeof quizSchedule !== 'undefined' && quizSchedule.showNextQuizLocalTime) {
+      quizSchedule.showNextQuizLocalTime();
+    }
+
+    // Also initialize the countdown
+    if (typeof quizSchedule !== 'undefined' && quizSchedule.initCountdown) {
+      quizSchedule.initCountdown();
+    }
+  });
+</script>
 

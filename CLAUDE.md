@@ -29,6 +29,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Do not distinguish between critical tests and other, less important tests. All tests must pass all the time.
 
 ### Development
+- **Start entire application**: `./bin/dev`
+- **Stop entire application**: `./bin/shutdown`
+- **Show application status**: `./bin/status`
 - **Start server**: `bundle exec rails server`
 - **Rails console**: `bundle exec rails console`
 - **Database migration**: `bundle exec rake db:migrate`

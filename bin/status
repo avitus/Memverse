@@ -1,0 +1,88 @@
+#!/usr/bin/env ruby
+
+# This script checks the status of all Memverse development environment processes
+
+require 'net/http'
+require 'timeout'
+
+puts "Memverse Development Environment Status"
+puts "=" * 60
+
+# Function to check if a process is running
+def process_running?(name)
+  system("pgrep -f '#{name}' > /dev/null 2>&1")
+end
+
+# Check Rails server
+print "Rails Server: "
+begin
+  uri = URI('http://localhost:3000')
+  response = Net::HTTP.get_response(uri)
+  if response.code.to_i < 500
+    puts "✓ Running on http://localhost:3000"
+  else
+    puts "⚠ Running but returning error #{response.code}"
+  end
+rescue => e
+  if process_running?("puma.*Memverse")
+    puts "⚠ Process running but not responding on port 3000"
+  else
+    puts "✗ Not running"
+  end
+end
+
+# Check Sidekiq Scheduler
+print "Sidekiq Scheduler (Cron): "
+if process_running?("sidekiq.*scheduler")
+  puts "✓ Running"
+else
+  puts "✗ Not running"
+end
+
+# Check Sidekiq Workers
+print "Sidekiq Workers: "
+worker_count = `pgrep -f 'sidekiq.*workers' | wc -l`.strip.to_i
+if worker_count > 0
+  puts "✓ Running (#{worker_count} process#{worker_count > 1 ? 'es' : ''})"
+else
+  puts "✗ Not running"
+end
+
+# Check Redis
+print "Redis: "
+if system('redis-cli ping > /dev/null 2>&1')
+  info = `redis-cli info server | grep redis_version`.strip
+  version = info.split(':').last
+  puts "✓ Running (v#{version})"
+else
+  puts "✗ Not running"
+end
+
+# Check MySQL
+print "MySQL: "
+if system('mysqladmin ping --silent 2>/dev/null')
+  version = `mysql --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1`.strip
+  puts "✓ Running (v#{version})"
+else
+  puts "✗ Not running"
+end
+
+# Check Foreman
+print "Foreman: "
+if process_running?("foreman start")
+  puts "✓ Running"
+else
+  puts "✗ Not running"
+end
+
+# Show URLs if services are running
+puts "\nAvailable URLs:" if process_running?("puma.*Memverse")
+puts "- Application: http://localhost:3000" if process_running?("puma.*Memverse")
+puts "- Sidekiq Web UI: http://localhost:3000/sidekiq" if process_running?("puma.*Memverse") && process_running?("sidekiq")
+puts "- Cron Jobs: http://localhost:3000/sidekiq/cron" if process_running?("puma.*Memverse") && process_running?("sidekiq.*scheduler")
+
+# Show commands
+puts "\nCommands:"
+puts "- Start all: ./bin/dev"
+puts "- Stop all:  ./bin/shutdown"
+puts "- Status:    ./bin/status"

@@ -5,6 +5,15 @@
 # IMPORTANT: These are plain Sidekiq::Worker classes, NOT ActiveJob classes
 # Must explicitly set active_job: false to prevent sidekiq-cron from trying to use perform_later
 
+# This is for testing the weekly quiz at a convenient time. Do not use in production. 
+schedule_knowledge_quiz_test:
+  # Set a test to start every 40 minutes from now
+  cron: "*/40 * * * *"
+  class: "KnowledgeQuiz"
+  queue: critical      # Critical priority - user-facing live quiz
+  active_job: false    # Explicitly mark as Sidekiq::Worker
+  active: false        # Explicitly mark as inactive
+
 # This is the main twice-weekly quiz
 # Runs Tuesday at 9am and Saturday at 3pm. Use UTC time
 schedule_knowledge_quiz_tuesday:

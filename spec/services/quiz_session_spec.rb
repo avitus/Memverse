@@ -189,14 +189,19 @@ RSpec.describe QuizSession, type: :service do
         expect(quiz_session.quiz_in_progress?).to be false
       end
       
-      it 'returns true for in_progress status' do
-        quiz_session.set_quiz_status(QuizSession::STATUS_IN_PROGRESS)
+      it 'returns true when questions are actively running' do
+        quiz_session.set_quiz_status("Question 1 in progress")
         expect(quiz_session.quiz_in_progress?).to be true
       end
-      
-      it 'returns true for status containing "progress"' do
-        quiz_session.set_quiz_status("In progress. Wait for question.")
-        expect(quiz_session.quiz_in_progress?).to be true
+
+      it 'returns false for chat period status' do
+        quiz_session.set_quiz_status("In progress. Chat open. Wait for question.")
+        expect(quiz_session.quiz_in_progress?).to be false
+      end
+
+      it 'returns false for initializing status' do
+        quiz_session.set_quiz_status("In progress. Initializing...")
+        expect(quiz_session.quiz_in_progress?).to be false
       end
       
       it 'returns false for finished status' do

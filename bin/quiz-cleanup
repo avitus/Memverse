@@ -1,0 +1,82 @@
+#!/usr/bin/env ruby
+
+# This script cleans up stale quiz data from Redis
+# Useful when a quiz was interrupted (e.g., server shutdown during quiz)
+
+require File.expand_path('../config/environment', __dir__)
+
+puts "Quiz Data Cleanup Utility"
+puts "=" * 60
+
+# Check for specific quiz ID or clean all
+quiz_id = ARGV[0]
+
+if quiz_id
+  # Clean specific quiz
+  puts "Cleaning up data for Quiz ##{quiz_id}..."
+
+  quiz_session = QuizSession.new(quiz_id.to_i)
+  status = quiz_session.get_quiz_status
+  in_progress = quiz_session.quiz_in_progress?
+
+  if status.present? || in_progress
+    puts "Found quiz data:"
+    puts "  Status: #{status}"
+    puts "  In Progress: #{in_progress}"
+
+    quiz_session.cleanup_quiz_data
+    $redis.del("chat-quiz-#{quiz_id}")
+
+    puts "✓ Quiz ##{quiz_id} data cleaned up"
+  else
+    puts "No data found for Quiz ##{quiz_id}"
+  end
+else
+  # Find and clean all stale quiz data
+  puts "Searching for stale quiz data..."
+
+  # Find all quiz session status keys
+  quiz_status_keys = $redis.keys("quiz_session:*:status")
+
+  if quiz_status_keys.empty?
+    puts "No quiz session data found in Redis"
+  else
+    puts "Found #{quiz_status_keys.length} quiz sessions:"
+
+    quiz_status_keys.each do |key|
+      if key =~ /quiz_session:(\d+):status/
+        quiz_id = $1
+        quiz_session = QuizSession.new(quiz_id.to_i)
+        status = quiz_session.get_quiz_status
+
+        puts "\nQuiz ##{quiz_id}:"
+        puts "  Status: #{status}"
+
+        # Clean up if quiz shows as in progress
+        if status.to_s.include?("In progress") || status.to_s.include?("Initializing")
+          print "  Cleaning up... "
+          quiz_session.cleanup_quiz_data
+          $redis.del("chat-quiz-#{quiz_id}")
+          puts "✓"
+        else
+          puts "  No cleanup needed"
+        end
+      end
+    end
+  end
+
+  # Also look for orphaned chat channels
+  chat_keys = $redis.keys("chat-quiz-*")
+  if chat_keys.any?
+    puts "\nFound #{chat_keys.length} orphaned chat channels:"
+    chat_keys.each do |key|
+      puts "  Removing #{key}..."
+      $redis.del(key)
+    end
+  end
+end
+
+puts "\nCleanup complete!"
+puts "\nUsage:"
+puts "  ./bin/quiz-cleanup       # Clean all stale quiz data"
+puts "  ./bin/quiz-cleanup 1     # Clean data for specific quiz ID"

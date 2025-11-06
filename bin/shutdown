@@ -1,0 +1,145 @@
+#!/usr/bin/env ruby
+
+# This script stops all Memverse development environment processes
+# It gracefully shuts down Rails, Sidekiq, Redis, and MySQL
+
+require 'fileutils'
+
+puts "Shutting down Memverse development environment..."
+puts "=" * 60
+
+# Function to check if a process is running
+def process_running?(name)
+  system("pgrep -f '#{name}' > /dev/null 2>&1")
+end
+
+# Kill Rails server and Puma processes
+puts "Stopping Rails server..."
+if process_running?("puma.*Memverse")
+  system("pkill -f 'puma.*Memverse'")
+  puts "✓ Rails server stopped"
+else
+  puts "- Rails server not running"
+end
+
+# Kill Sidekiq processes
+puts "\nStopping Sidekiq processes..."
+if process_running?("sidekiq")
+  # Send TERM signal for graceful shutdown (waits for jobs to complete)
+  system("pkill -TERM -f 'sidekiq'")
+  puts "✓ Sent shutdown signal to Sidekiq (waiting for jobs to complete)"
+
+  # Wait up to 10 seconds for graceful shutdown
+  timeout = 10
+  while timeout > 0 && process_running?("sidekiq")
+    sleep 1
+    timeout -= 1
+  end
+
+  # Force kill if still running
+  if process_running?("sidekiq")
+    system("pkill -9 -f 'sidekiq'")
+    puts "✓ Force stopped remaining Sidekiq processes"
+  else
+    puts "✓ Sidekiq processes stopped gracefully"
+  end
+else
+  puts "- Sidekiq not running"
+end
+
+# Kill Foreman if running
+puts "\nStopping Foreman..."
+if process_running?("foreman start")
+  system("pkill -f 'foreman start'")
+  puts "✓ Foreman stopped"
+else
+  puts "- Foreman not running"
+end
+
+# Clean up stale quiz data before stopping Redis
+puts "\nCleaning up stale quiz data..."
+if system('redis-cli ping > /dev/null 2>&1')
+  # Find all quiz session status keys
+  quiz_status_keys = `redis-cli keys "quiz_session:*:status" 2>/dev/null`.strip.split("\n")
+
+  if quiz_status_keys.any? && !quiz_status_keys.first.empty?
+    puts "Found #{quiz_status_keys.length} quiz sessions to clean up"
+
+    # Clean up each quiz session
+    quiz_status_keys.each do |key|
+      if key =~ /quiz_session:(\d+):status/
+        quiz_id = $1
+        system("redis-cli del 'quiz_session:#{quiz_id}:*' > /dev/null 2>&1")
+        system("redis-cli del 'chat-quiz-#{quiz_id}' > /dev/null 2>&1")
+      end
+    end
+    puts "✓ Quiz data cleaned up"
+  else
+    puts "- No stale quiz data found"
+  end
+
+  # Also clean up any orphaned chat channels
+  chat_keys = `redis-cli keys "chat-quiz-*" 2>/dev/null`.strip.split("\n")
+  if chat_keys.any? && !chat_keys.first.empty?
+    chat_keys.each { |key| system("redis-cli del '#{key}' > /dev/null 2>&1") }
+    puts "✓ Cleaned up #{chat_keys.length} orphaned chat channels"
+  end
+else
+  puts "- Redis not running, no quiz data to clean"
+end
+
+# Stop Redis
+puts "\nStopping Redis..."
+if system('redis-cli ping > /dev/null 2>&1')
+  system('redis-cli shutdown')
+  puts "✓ Redis server stopped"
+else
+  puts "- Redis not running"
+end
+
+# Stop MySQL
+puts "\nStopping MySQL..."
+if system('mysqladmin ping --silent 2>/dev/null')
+  # Try different methods to stop MySQL
+  if system('which mysql.server > /dev/null 2>&1')
+    system('mysql.server stop')
+  elsif system('which brew > /dev/null 2>&1')
+    system('brew services stop mysql')
+  else
+    system('mysqladmin -u root shutdown')
+  end
+  puts "✓ MySQL server stopped"
+else
+  puts "- MySQL not running"
+end
+
+# Clean up PID files if they exist
+puts "\nCleaning up PID files..."
+pids_to_clean = [
+  'tmp/pids/server.pid',
+  'tmp/pids/puma.pid',
+  'tmp/pids/*.pid'
+]
+
+pids_to_clean.each do |pid_pattern|
+  Dir.glob(pid_pattern).each do |pid_file|
+    if File.exist?(pid_file)
+      FileUtils.rm(pid_file)
+      puts "✓ Removed #{pid_file}"
+    end
+  end
+end
+
+# Clear any stale sockets
+puts "\nCleaning up sockets..."
+socket_files = Dir.glob('tmp/sockets/*')
+if socket_files.any?
+  socket_files.each { |f| FileUtils.rm_f(f) }
+  puts "✓ Removed #{socket_files.size} socket files"
+else
+  puts "- No socket files to clean"
+end
+
+puts "\n" + "=" * 60
+puts "Memverse development environment shutdown complete!"
+puts "To restart, run: ./bin/dev"
