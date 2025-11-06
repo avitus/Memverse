@@ -34,7 +34,8 @@
       "mcp__serena__write_memory",
       "mcp__serena__think_about_whether_you_are_done",
       "Bash(bundle exec rake:*)",
-      "Bash(bundle exec rails db:migrate:status:*)"
+      "Bash(bundle exec rails db:migrate:status:*)",
+      "Bash(bundle show:*)"
     ],
     "deny": [],
     "ask": [],
