@@ -150,6 +150,39 @@ OPTIMIZE TABLE thredded_posts;
    - Database partitioning for very large tables
    - Archiving old moderation data
 
+## Moderation Actions Performance Optimization
+
+### Problem Identified (Phase 2)
+After fixing the moderation page load performance, approve/block operations were still extremely slow due to:
+1. **N+1 queries** - Missing preloads for user_detail associations
+2. **Inefficient first post checking** - Using expensive first_post method
+3. **Sequential updates** - Updating posts one by one when blocking
+
+### Solutions Implemented (Phase 2)
+
+#### 1. Created Moderation Actions Optimization Initializer
+`config/initializers/thredded_moderation_actions_optimization.rb`:
+- Overrides ModeratePost.run! with optimized version
+- Uses single query to check if post is first instead of loading first_post
+- Bulk updates all user posts when blocking (single UPDATE instead of N updates)
+- Adds performance timing logs
+
+#### 2. Enhanced Controller Preloading
+- Modified preload_posts_for_moderation to include user_detail
+- Added preloading in moderate_post action to avoid N+1 queries
+
+#### 3. Added Performance Indexes (Migration 20251106232942)
+- `index_thredded_posts_on_postable_and_user` - For finding user posts in topic
+- `index_thredded_posts_for_first_post` - For efficient first post checking
+- `index_thredded_user_details_on_user_id` - For user detail joins
+- `index_thredded_user_details_on_moderation_state` - For moderation filtering
+- `index_thredded_topics_on_moderation_state` - For topic moderation queries
+
+### Performance Improvements
+- **Before**: Multiple queries per moderation action, sequential updates
+- **After**: Optimized queries, bulk updates, proper indexing
+- **Expected speedup**: 10x-50x for approve/block operations
+
 ## Production Deployment Instructions
 
 ### Step 1: Deploy the Code Changes
@@ -157,7 +190,15 @@ Deploy the following new files:
 - `config/initializers/thredded_performance_optimizations.rb`
 - `config/initializers/thredded_moderation_controller_override.rb`
 - `config/initializers/thredded_moderation_caching.rb`
+- `config/initializers/thredded_moderation_actions_optimization.rb` (NEW)
 - `scripts/diagnose_moderation_performance.rb`
+- `scripts/profile_moderation_actions.rb` (NEW)
+
+### Step 1.5: Run Database Migration (NEW)
+```bash
+RAILS_ENV=production bundle exec rake db:migrate
+```
+This will add the new performance indexes for moderation actions.
 
 ### Step 2: Run Diagnostics (Before)
 ```bash
