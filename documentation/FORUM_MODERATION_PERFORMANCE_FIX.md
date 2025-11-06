@@ -3,6 +3,9 @@
 ## Problem Identified
 The forum moderation page at `/forum/admin/moderation` was taking several minutes to load due to **missing database indexes** on the `thredded_posts` table.
 
+## Production Deployment Note (November 2025)
+The initial migration failed in production because some indexes already existed. The migration has been updated to be idempotent - it now checks for existing indexes before attempting to create them. This allows the migration to run safely in any environment regardless of the current state of indexes.
+
 ## Root Cause
 The `thredded_posts` table had **NO indexes at all**, causing:
 - Full table scans on every query filtering by `moderation_state`
