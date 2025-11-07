@@ -2,7 +2,6 @@
 
 # Performance optimizations for Thredded moderation approve/block actions
 # Addresses N+1 queries and inefficient bulk operations
-# V2: Fixed for Rails 7.1 parameter handling
 
 Rails.application.config.after_initialize do
   if defined?(Thredded::ModeratePost)
@@ -12,29 +11,8 @@ Rails.application.config.after_initialize do
 
       # Optimized version of run! with better query performance
       def run!(post:, moderation_state:, moderator:)
-        Rails.logger.info "[MODERATION OPTIMIZATION V2] Starting moderation action for post #{post.id}"
-
-        # Handle different parameter types that might come from Rails 7.1
-        state_value = case moderation_state
-                     when ActionController::Parameters
-                       moderation_state.to_s
-                     when Symbol
-                       moderation_state.to_s
-                     when String
-                       moderation_state
-                     else
-                       Rails.logger.warn "[MODERATION OPTIMIZATION V2] Unexpected moderation_state type: #{moderation_state.class}"
-                       moderation_state.to_s
-                     end
-
-        Rails.logger.info "[MODERATION OPTIMIZATION V2] Moderation state: #{state_value.inspect} (original class: #{moderation_state.class})"
-
-        # Validate the state value
-        unless Thredded::Post.moderation_states.key?(state_value)
-          Rails.logger.error "[MODERATION OPTIMIZATION V2] Invalid moderation state: #{state_value}"
-          raise ArgumentError, "Invalid moderation state: #{state_value}"
-        end
-
+        Rails.logger.info "[MODERATION OPTIMIZATION] Starting moderation action for post #{post.id}"
+        Rails.logger.info "[MODERATION OPTIMIZATION] Moderation state: #{moderation_state.inspect} (class: #{moderation_state.class})"
         start_time = Time.current
 
         Thredded::Post.transaction do
@@ -43,12 +21,12 @@ Rails.application.config.after_initialize do
             moderator: moderator,
             post: post,
             previous_moderation_state: post.moderation_state,
-            moderation_state: state_value, # Use the cleaned value
+            moderation_state: moderation_state,
           )
 
           # Update user detail if needed (only for pending users)
           if post.user_id && post.user_detail&.pending_moderation?
-            update_without_timestamping!(post.user_detail, moderation_state: state_value)
+            update_without_timestamping!(post.user_detail, moderation_state: moderation_state)
           end
 
           # Check if this is the first post more efficiently
@@ -62,16 +40,16 @@ Rails.application.config.after_initialize do
           end
 
           if is_first_post
-            Rails.logger.info "[MODERATION OPTIMIZATION V2] Post is first post of topic"
-            update_without_timestamping!(post.postable, moderation_state: state_value)
+            Rails.logger.info "[MODERATION OPTIMIZATION] Post is first post of topic"
+            update_without_timestamping!(post.postable, moderation_state: moderation_state)
 
-            if state_value == 'blocked'
+            if moderation_state.to_sym == :blocked
               # Bulk update all other posts by this user in the topic
               # Instead of loading and updating each post individually
               begin
-                # Convert the string to its enum integer value for update_all
-                moderation_state_value = Thredded::Post.moderation_states[state_value]
-                Rails.logger.info "[MODERATION OPTIMIZATION V2] Converting '#{state_value}' to enum value: #{moderation_state_value}"
+                # Convert the symbol to its enum integer value for update_all
+                moderation_state_value = Thredded::Post.moderation_states[moderation_state.to_s]
+                Rails.logger.info "[MODERATION OPTIMIZATION] Converting #{moderation_state} to enum value: #{moderation_state_value}"
 
                 other_posts_count = post.postable.posts
                                        .where(user_id: post.user_id)
@@ -80,9 +58,9 @@ Rails.application.config.after_initialize do
                                          moderation_state: moderation_state_value,
                                          updated_at: Time.current
                                        )
-                Rails.logger.info "[MODERATION OPTIMIZATION V2] Bulk updated #{other_posts_count} other posts"
+                Rails.logger.info "[MODERATION OPTIMIZATION] Bulk updated #{other_posts_count} other posts"
               rescue => e
-                Rails.logger.error "[MODERATION OPTIMIZATION V2] Error during bulk update: #{e.class} - #{e.message}"
+                Rails.logger.error "[MODERATION OPTIMIZATION] Error during bulk update: #{e.class} - #{e.message}"
                 Rails.logger.error e.backtrace.first(5).join("\n")
                 raise
               end
@@ -90,10 +68,10 @@ Rails.application.config.after_initialize do
           end
 
           # Update the main post
-          update_without_timestamping!(post, moderation_state: state_value)
+          update_without_timestamping!(post, moderation_state: moderation_state)
 
           elapsed = Time.current - start_time
-          Rails.logger.info "[MODERATION OPTIMIZATION V2] Completed moderation in #{elapsed}s"
+          Rails.logger.info "[MODERATION OPTIMIZATION] Completed moderation in #{elapsed}s"
 
           post_moderation_record
         end
@@ -126,18 +104,7 @@ Rails.application.config.after_initialize do
 
       # Override moderate_post action with better preloading
       def moderate_post
-        # Handle Rails 7.1 parameters properly
-        state_param = params[:moderation_state]
-        moderation_state = case state_param
-                          when ActionController::Parameters
-                            state_param.to_s
-                          else
-                            state_param.to_s
-                          end
-
-        Rails.logger.info "[MODERATION CONTROLLER V2] Raw param: #{state_param.inspect} (#{state_param.class})"
-        Rails.logger.info "[MODERATION CONTROLLER V2] Converted state: #{moderation_state.inspect}"
-
+        moderation_state = params[:moderation_state].to_s
         return head(:bad_request) unless Thredded::Post.moderation_states.include?(moderation_state)
 
         # Preload associations to avoid N+1
@@ -184,13 +151,12 @@ Rails.application.config.after_initialize do
       end
     rescue ActiveRecord::NoDatabaseError, ActiveRecord::ConnectionNotEstablished
       # Skip if database is not available
-      Rails.logger.debug "[THREDDED OPTIMIZATION V2] Skipping first post helpers - database not available"
+      Rails.logger.debug "[THREDDED OPTIMIZATION] Skipping first post helpers - database not available"
     end
   end
 
-  Rails.logger.info "[THREDDED OPTIMIZATION V2] Moderation actions optimizations loaded"
-  Rails.logger.info "[THREDDED OPTIMIZATION V2] ModeratePost defined: #{defined?(Thredded::ModeratePost)}"
-  Rails.logger.info "[THREDDED OPTIMIZATION V2] ModerationController defined: #{defined?(Thredded::ModerationController)}"
-  Rails.logger.info "[THREDDED OPTIMIZATION V2] Rails eager_load: #{Rails.application.config.eager_load}"
-  Rails.logger.info "[THREDDED OPTIMIZATION V2] Rails version: #{Rails.version}"
+  Rails.logger.info "[THREDDED OPTIMIZATION] Moderation actions optimizations loaded"
+  Rails.logger.info "[THREDDED OPTIMIZATION] ModeratePost defined: #{defined?(Thredded::ModeratePost)}"
+  Rails.logger.info "[THREDDED OPTIMIZATION] ModerationController defined: #{defined?(Thredded::ModerationController)}"
+  Rails.logger.info "[THREDDED OPTIMIZATION] Rails eager_load: #{Rails.application.config.eager_load}"
 end

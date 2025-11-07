@@ -35,7 +35,11 @@
       "mcp__serena__think_about_whether_you_are_done",
       "Bash(bundle exec rake:*)",
       "Bash(bundle exec rails db:migrate:status:*)",
-      "Bash(bundle show:*)"
+      "Bash(bundle show:*)",
+      "Bash(bundle exec rails generate:*)",
+      "Bash(RAILS_ENV=production bundle exec rake:*)",
+      "Bash(git reset:*)",
+      "Bash(mysql --version:*)"
     ],
     "deny": [],
     "ask": [],
