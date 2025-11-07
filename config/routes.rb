@@ -418,6 +418,9 @@ MemverseApp::Application.routes.draw do
   # Additional popverses routes (for tests)
   get '/popverses/show' => 'popverses#show', as: 'popverses_show' if Rails.env.test?
 
+  # Debug route for production troubleshooting
+  get '/debug/thredded_status' => 'debug#thredded_status', as: 'debug_thredded_status'
+
   # Default routes have been removed to comply with Rails 6.0
   # All controller actions must now have explicit routes defined above
   # This improves security by preventing access to unmapped controller actions

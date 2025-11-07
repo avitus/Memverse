@@ -1,0 +1,198 @@
+# frozen_string_literal: true
+
+# Performance optimizations for Thredded moderation approve/block actions
+# SAFE VERSION - with extensive error handling and logging
+
+Rails.application.config.after_initialize do
+  Rails.logger.info "[THREDDED SAFE] Starting to load moderation optimizations"
+
+  begin
+    if defined?(Thredded::ModeratePost)
+      Rails.logger.info "[THREDDED SAFE] ModeratePost module found, applying optimizations"
+
+      # Override the inefficient ModeratePost implementation
+      Thredded::ModeratePost.module_eval do
+        module_function
+
+        # Store the original method if it exists
+        if respond_to?(:run!)
+          alias_method :original_run!, :run!
+        end
+
+        # Optimized version of run! with better query performance
+        def run!(post:, moderation_state:, moderator:)
+          Rails.logger.info "[THREDDED SAFE] ModeratePost.run! called"
+          Rails.logger.info "[THREDDED SAFE] Post ID: #{post&.id}"
+          Rails.logger.info "[THREDDED SAFE] Raw moderation_state: #{moderation_state.inspect} (#{moderation_state.class})"
+
+          begin
+            # Handle different parameter types safely
+            state_value = moderation_state.to_s
+            Rails.logger.info "[THREDDED SAFE] Converted state: #{state_value.inspect}"
+
+            # Validate the state value
+            unless Thredded::Post.moderation_states.key?(state_value)
+              Rails.logger.error "[THREDDED SAFE] Invalid moderation state: #{state_value}"
+              Rails.logger.error "[THREDDED SAFE] Valid states: #{Thredded::Post.moderation_states.keys.inspect}"
+              raise ArgumentError, "Invalid moderation state: #{state_value}"
+            end
+
+            start_time = Time.current
+
+            Thredded::Post.transaction do
+              # Create moderation record
+              post_moderation_record = Thredded::PostModerationRecord.record!(
+                moderator: moderator,
+                post: post,
+                previous_moderation_state: post.moderation_state,
+                moderation_state: state_value,
+              )
+
+              # Update user detail if needed (only for pending users)
+              if post.user_id && post.user_detail&.pending_moderation?
+                update_without_timestamping!(post.user_detail, moderation_state: state_value)
+              end
+
+              # Check if this is the first post more efficiently
+              is_first_post = false
+              if post.postable
+                is_first_post = !post.postable.posts
+                                     .where('created_at < ?', post.created_at)
+                                     .exists?
+              end
+
+              if is_first_post
+                Rails.logger.info "[THREDDED SAFE] Post is first post of topic"
+                update_without_timestamping!(post.postable, moderation_state: state_value)
+
+                if state_value == 'blocked'
+                  # Bulk update all other posts by this user in the topic
+                  begin
+                    # Convert the string to its enum integer value for update_all
+                    moderation_state_value = Thredded::Post.moderation_states[state_value]
+                    Rails.logger.info "[THREDDED SAFE] Bulk update: Converting '#{state_value}' to enum value: #{moderation_state_value}"
+
+                    other_posts_count = post.postable.posts
+                                           .where(user_id: post.user_id)
+                                           .where.not(id: post.id)
+                                           .update_all(
+                                             moderation_state: moderation_state_value,
+                                             updated_at: Time.current
+                                           )
+                    Rails.logger.info "[THREDDED SAFE] Bulk updated #{other_posts_count} other posts"
+                  rescue => e
+                    Rails.logger.error "[THREDDED SAFE] Error during bulk update: #{e.class} - #{e.message}"
+                    Rails.logger.error e.backtrace.first(5).join("\n")
+                    raise
+                  end
+                end
+              end
+
+              # Update the main post
+              update_without_timestamping!(post, moderation_state: state_value)
+
+              elapsed = Time.current - start_time
+              Rails.logger.info "[THREDDED SAFE] Completed moderation in #{elapsed}s"
+
+              post_moderation_record
+            end
+          rescue => e
+            Rails.logger.error "[THREDDED SAFE] Error in ModeratePost.run!: #{e.class} - #{e.message}"
+            Rails.logger.error e.backtrace.first(10).join("\n")
+            raise
+          end
+        end
+
+        # Keep the original update_without_timestamping! method
+        def update_without_timestamping!(record, *attr)
+          record_timestamps_was = record.record_timestamps
+          begin
+            record.record_timestamps = false
+            record.update!(*attr)
+          ensure
+            record.record_timestamps = record_timestamps_was
+          end
+        end
+      end
+    else
+      Rails.logger.warn "[THREDDED SAFE] Thredded::ModeratePost not defined"
+    end
+  rescue => e
+    Rails.logger.error "[THREDDED SAFE] Failed to load ModeratePost optimizations: #{e.class} - #{e.message}"
+    Rails.logger.error e.backtrace.first(10).join("\n")
+  end
+
+  # Optimize the moderation controller to preload user_details
+  begin
+    if defined?(Thredded::ModerationController)
+      Rails.logger.info "[THREDDED SAFE] ModerationController found, applying optimizations"
+
+      Thredded::ModerationController.class_eval do
+        # Add logging to the moderate_post action
+        around_action :log_moderate_post_action, only: :moderate_post
+
+        private
+
+        def log_moderate_post_action
+          Rails.logger.info "[THREDDED SAFE CONTROLLER] moderate_post action started"
+          Rails.logger.info "[THREDDED SAFE CONTROLLER] Params: #{params.inspect}"
+
+          begin
+            yield
+            Rails.logger.info "[THREDDED SAFE CONTROLLER] moderate_post action completed successfully"
+          rescue => e
+            Rails.logger.error "[THREDDED SAFE CONTROLLER] moderate_post action failed: #{e.class} - #{e.message}"
+            Rails.logger.error e.backtrace.first(10).join("\n")
+            raise
+          end
+        end
+
+        # Override to include user_detail in preloads
+        def preload_posts_for_moderation(posts)
+          posts.includes(:user, :messageboard, :postable)
+               .joins("LEFT JOIN thredded_user_details ON thredded_user_details.user_id = thredded_posts.user_id")
+               .preload(user: :thredded_user_detail)
+        end
+
+        # Override moderate_post action with better preloading
+        def moderate_post
+          Rails.logger.info "[THREDDED SAFE CONTROLLER] Inside moderate_post method"
+
+          # Handle Rails 7.1 parameters properly
+          state_param = params[:moderation_state]
+          Rails.logger.info "[THREDDED SAFE CONTROLLER] Raw moderation_state param: #{state_param.inspect} (#{state_param.class})"
+
+          moderation_state = state_param.to_s
+          Rails.logger.info "[THREDDED SAFE CONTROLLER] Converted moderation_state: #{moderation_state.inspect}"
+
+          return head(:bad_request) unless Thredded::Post.moderation_states.include?(moderation_state)
+
+          # Preload associations to avoid N+1
+          post = moderatable_posts
+                 .includes(:user, :postable, user: :thredded_user_detail)
+                 .find(params[:id].to_s)
+
+          if post.moderation_state != moderation_state
+            flash[:last_moderated_record_id] = Thredded::ModeratePost.run!(
+              post: post,
+              moderation_state: moderation_state,
+              moderator: thredded_current_user,
+            ).id
+          else
+            flash[:alert] = "Post was already #{moderation_state}:"
+            flash[:last_moderated_record_id] =
+              Thredded::PostModerationRecord.order_newest_first.find_by(post_id: post.id)&.id
+          end
+          redirect_back fallback_location: pending_moderation_path
+        end
+      end
+    else
+      Rails.logger.warn "[THREDDED SAFE] Thredded::ModerationController not defined"
+    end
+  rescue => e
+    Rails.logger.error "[THREDDED SAFE] Failed to load ModerationController optimizations: #{e.class} - #{e.message}"
+    Rails.logger.error e.backtrace.first(10).join("\n")
+  end
+
+  Rails.logger.info "[THREDDED SAFE] Moderation optimizations loading completed"
+end

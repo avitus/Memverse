@@ -39,7 +39,9 @@
       "Bash(bundle exec rails generate:*)",
       "Bash(RAILS_ENV=production bundle exec rake:*)",
       "Bash(git reset:*)",
-      "Bash(mysql --version:*)"
+      "Bash(mysql --version:*)",
+      "Bash(bundle exec rails routes:*)",
+      "Bash(curl:*)"
     ],
     "deny": [],
     "ask": [],
