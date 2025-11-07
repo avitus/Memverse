@@ -45,11 +45,14 @@ Rails.application.config.after_initialize do
             if moderation_state.to_sym == :blocked
               # Bulk update all other posts by this user in the topic
               # Instead of loading and updating each post individually
+              # Convert the symbol to its enum integer value for update_all
+              moderation_state_value = Thredded::Post.moderation_states[moderation_state.to_s]
+
               other_posts_count = post.postable.posts
                                      .where(user_id: post.user_id)
                                      .where.not(id: post.id)
                                      .update_all(
-                                       moderation_state: moderation_state,
+                                       moderation_state: moderation_state_value,
                                        updated_at: Time.current
                                      )
               Rails.logger.info "[MODERATION OPTIMIZATION] Bulk updated #{other_posts_count} other posts"
