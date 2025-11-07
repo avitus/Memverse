@@ -240,6 +240,7 @@
 # When you're ready to change format, add this to `config/application.rb` (NOT
 # this file):
 #   config.active_support.cache_format_version = 7.1
+Rails.application.config.active_support.cache_format_version = 7.1
 
 ###
 # Configure Action View to use HTML5 standards-compliant sanitizers when they are supported on your

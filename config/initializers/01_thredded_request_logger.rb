@@ -2,8 +2,13 @@
 
 # This loads early (01_ prefix) to debug Thredded moderation issues
 
-Rails.application.config.middleware.insert_before 0, Proc.new { |app|
-  lambda do |env|
+# Create a simple middleware class
+class EarlyThreddedLogger
+  def initialize(app)
+    @app = app
+  end
+
+  def call(env)
     if env['PATH_INFO'] == '/forum/admin/moderation' && env['REQUEST_METHOD'] == 'POST'
       Rails.logger.info "[EARLY MIDDLEWARE] Moderation POST request intercepted"
       Rails.logger.info "[EARLY MIDDLEWARE] Headers: #{env.select { |k, v| k.start_with?('HTTP_') }.inspect}"
@@ -17,8 +22,10 @@ Rails.application.config.middleware.insert_before 0, Proc.new { |app|
         Rails.logger.warn "[EARLY MIDDLEWARE] CSRF Token missing!"
       end
     end
-    app.call(env)
+    @app.call(env)
   end
-}
+end
+
+Rails.application.config.middleware.insert_before 0, EarlyThreddedLogger
 
 Rails.logger.info "[STARTUP] Early middleware for Thredded moderation logging installed"

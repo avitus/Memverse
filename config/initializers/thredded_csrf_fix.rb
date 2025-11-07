@@ -63,14 +63,18 @@ Rails.application.config.after_initialize do
 end
 
 # Also add a general handler at the application level
-ApplicationController.class_eval do
-  rescue_from ActionController::InvalidAuthenticityToken do |exception|
-    Rails.logger.error "[APP CSRF FIX] Invalid authenticity token"
-    Rails.logger.error "[APP CSRF FIX] Path: #{request.path}"
-    Rails.logger.error "[APP CSRF FIX] Method: #{request.method}"
+Rails.application.config.after_initialize do
+  if defined?(ApplicationController)
+    ApplicationController.class_eval do
+      rescue_from ActionController::InvalidAuthenticityToken do |exception|
+        Rails.logger.error "[APP CSRF FIX] Invalid authenticity token"
+        Rails.logger.error "[APP CSRF FIX] Path: #{request.path}"
+        Rails.logger.error "[APP CSRF FIX] Method: #{request.method}"
 
-    # Log but re-raise to maintain default behavior
-    raise
+        # Log but re-raise to maintain default behavior
+        raise
+      end
+    end
   end
 end
 

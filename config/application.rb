@@ -25,10 +25,7 @@ module MemverseApp
     config.autoload_paths << Rails.root.join("app/lib")
     config.autoload_paths << Rails.root.join("app/middleware")
     
-    # Set cache format version to 7.1 for Rails 7.1 compatibility
-    config.active_support.cache_format_version = 7.1
-
-    # Add moderation debugging middleware
-    config.middleware.insert_after ActionDispatch::RequestId, ThreddedModerationLogger
+    # Cache format version is handled by load_defaults 7.1
+    # No need to set explicitly
   end
 end
