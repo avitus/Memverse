@@ -28,7 +28,10 @@ RSpec.feature "Next Quiz Box", type: :request do
         # Mock the next quiz time to be 2 hours from now
         next_quiz_time = 2.hours.from_now
         allow(Quiz).to receive(:next_knowledge_quiz_time).and_return(next_quiz_time)
-        allow(Quiz).to receive(:knowledge_quiz_schedule).and_return(["Tuesday 5:00 PM UTC", "Saturday 11:00 PM UTC"])
+        allow(Quiz).to receive(:knowledge_quiz_schedule).and_return([
+          { day: "Tuesday", utc_time: "17:00" },
+          { day: "Saturday", utc_time: "23:00" }
+        ])
       end
 
       it "displays the Next Quiz box with upcoming quiz time" do

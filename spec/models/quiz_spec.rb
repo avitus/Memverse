@@ -2,23 +2,33 @@ require 'rails_helper'
 
 RSpec.describe Quiz, type: :model do
   describe '.knowledge_quiz_schedule' do
-    it 'returns an array of schedule times in Pacific timezone' do
+    it 'returns an array of schedule data with UTC times' do
       schedule = Quiz.knowledge_quiz_schedule
-      
+
       expect(schedule).to be_an(Array)
       expect(schedule.length).to eq(2)
-      
-      # Check format includes day and time
-      schedule.each do |time_str|
-        expect(time_str).to match(/^(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)s at \d{1,2}(am|pm) \(P[SD]T\)$/)
+
+      # Check format is a hash with day and utc_time
+      schedule.each do |schedule_item|
+        expect(schedule_item).to be_a(Hash)
+        expect(schedule_item).to have_key(:day)
+        expect(schedule_item).to have_key(:utc_time)
+        expect(schedule_item[:utc_time]).to match(/^\d{2}:\d{2}$/)
       end
     end
-    
+
     it 'includes Tuesday and Saturday in the schedule' do
       schedule = Quiz.knowledge_quiz_schedule
-      
-      expect(schedule.any? { |s| s.include?('Tuesday') }).to be true
-      expect(schedule.any? { |s| s.include?('Saturday') }).to be true
+
+      expect(schedule.any? { |s| s[:day] == 'Tuesday' }).to be true
+      expect(schedule.any? { |s| s[:day] == 'Saturday' }).to be true
+
+      # Check the UTC times are correct
+      tuesday_schedule = schedule.find { |s| s[:day] == 'Tuesday' }
+      saturday_schedule = schedule.find { |s| s[:day] == 'Saturday' }
+
+      expect(tuesday_schedule[:utc_time]).to eq('17:00')
+      expect(saturday_schedule[:utc_time]).to eq('23:00')
     end
   end
   

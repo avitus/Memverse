@@ -214,26 +214,13 @@ class Quiz < ApplicationRecord
   end
 
   # Get human-readable schedule for knowledge quiz
-  # @return [Array<String>] Array of schedule descriptions
+  # @return [Array<Hash>] Array of schedule info with UTC times for client-side conversion
   def self.knowledge_quiz_schedule
-    require 'ice_cube'
-    
-    # Use the same schedule as KnowledgeQuiz worker
-    schedule = IceCube::Schedule.new(Time.current.utc)
-    # Tuesday at 17:00 UTC
-    schedule.add_recurrence_rule(IceCube::Rule.weekly.day(:tuesday).hour_of_day(17).minute_of_hour(0).second_of_minute(0))
-    # Saturday at 23:00 UTC
-    schedule.add_recurrence_rule(IceCube::Rule.weekly.day(:saturday).hour_of_day(23).minute_of_hour(0).second_of_minute(0))
-    
-    # Get next few occurrences to determine the pattern
-    occurrences = schedule.next_occurrences(2)
-    
-    # Convert to human-readable format with timezone
-    occurrences.map do |time|
-      # Convert UTC to Pacific Time
-      pacific_time = time.in_time_zone("America/Los_Angeles")
-      pacific_time.strftime("%As at %-l%P (%Z)")
-    end
+    # Return schedule data for JavaScript to convert to user's local timezone
+    [
+      { day: "Tuesday", utc_time: "17:00" },
+      { day: "Saturday", utc_time: "23:00" }
+    ]
   end
 
   # Get next quiz time for knowledge quiz
