@@ -467,7 +467,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_06_232942) do
     t.index ["user_id"], name: "index_progress_reports_on_user_id"
   end
 
-  create_table "quests", id: :integer, charset: "latin1", force: :cascade do |t|
+  create_table "quests", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.integer "level"
     t.string "task"
     t.text "description"

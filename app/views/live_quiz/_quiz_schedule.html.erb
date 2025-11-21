@@ -39,9 +39,10 @@
       <div class="quiz-card-content">
         <div class="schedule-times">
           <% if @quiz_schedule %>
-            <% @quiz_schedule.each do |schedule_time| %>
+            <% @quiz_schedule.each do |schedule_item| %>
               <div class="schedule-time-item">
-                <span class="schedule-day-and-time"><%= schedule_time %></span>
+                <span class="schedule-day-name"><%= schedule_item[:day] %></span>
+                <span class="schedule-local" data-utc-time="<%= schedule_item[:utc_time] %>"></span>
               </div>
             <% end %>
           <% else %>
@@ -95,13 +96,21 @@
 <script type="text/javascript">
   // Initialize quiz time display
   $(document).ready(function() {
-    if (typeof quizSchedule !== 'undefined' && quizSchedule.showNextQuizLocalTime) {
-      quizSchedule.showNextQuizLocalTime();
-    }
+    if (typeof quizSchedule !== 'undefined') {
+      // Convert next quiz time to local timezone
+      if (quizSchedule.showNextQuizLocalTime) {
+        quizSchedule.showNextQuizLocalTime();
+      }
 
-    // Also initialize the countdown
-    if (typeof quizSchedule !== 'undefined' && quizSchedule.initCountdown) {
-      quizSchedule.initCountdown();
+      // Convert weekly schedule times to local timezone
+      if (quizSchedule.showLocalTimes) {
+        quizSchedule.showLocalTimes();
+      }
+
+      // Also initialize the countdown
+      if (quizSchedule.initCountdown) {
+        quizSchedule.initCountdown();
+      }
     }
   });
 </script>

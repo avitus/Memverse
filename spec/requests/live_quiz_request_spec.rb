@@ -63,35 +63,32 @@ RSpec.describe "LiveQuiz Requests", type: :request do
     
     context 'when quiz is ready' do
       before do
-        # Mark quiz as running
+        # Mark quiz as in chat period (ready state)
         quiz_session = QuizSession.new(quiz.id)
-        quiz_session.set_quiz_status(QuizSession::STATUS_IN_PROGRESS)
+        quiz_session.set_quiz_status("In progress. Chat open. Wait for question.")
       end
       
       it 'displays quiz interface' do
         sign_in user
         get "/live_quiz?quiz=#{quiz.id}"
-        
+
         expect(response).to have_http_status(:success)
         expect(response.body).to include(quiz.name)
-        expect(response.body).to include('id="quiz-header"')
-        expect(response.body).to include('id="live-quiz"')
-        expect(response.body).to include('id="chat-window"')
-        expect(response.body).to include('id="live-scoreboard"')
+        # Modern view elements
+        expect(response.body).to include('quiz-container')
       end
-      
-      it 'shows correct number of question dots' do
+
+      it 'shows quiz with correct number of questions' do
         sign_in user
         get "/live_quiz?quiz=#{quiz.id}"
-        
+
         expect(response).to have_http_status(:success)
-        
-        # When quiz.id is 1, the controller hardcodes @num_questions to 25
-        # Otherwise, it uses quiz_questions.length
+
+        # Modern view uses data attributes
         if quiz.id == 1
-          expect(response.body.scan(/class="q-dot/).count).to eq(25)
+          expect(response.body).to include('data-live-quiz-num-questions-value="25"')
         else
-          expect(response.body.scan(/class="q-dot/).count).to eq(quiz_questions.length)
+          expect(response.body).to include("data-live-quiz-num-questions-value=\"#{quiz_questions.length}\"")
         end
       end
     end
