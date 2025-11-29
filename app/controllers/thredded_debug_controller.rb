@@ -1,6 +1,6 @@
 class ThreddedDebugController < ApplicationController
-  # Skip authentication for testing
-  skip_before_action :authenticate_user!, if: -> { action_name == 'test' }
+  # This controller doesn't require authentication by default
+  # No need to skip authenticate_user! as it's not defined at this level
 
   def test
     render plain: "Thredded debug test successful. Server is running latest code."
