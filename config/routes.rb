@@ -30,7 +30,10 @@ MemverseApp::Application.routes.draw do
     namespace :admin do
       # Admin main dashboard
       get 'dashboard', to: 'dashboard#index', as: 'dashboard'
-      
+
+      # Quiz health monitoring
+      get 'quiz_health/status', to: 'quiz_health#status', as: 'quiz_health_status'
+
       get 'sidekiq_health/dashboard', to: 'sidekiq_health#dashboard', as: 'sidekiq_health_dashboard'
       get 'sidekiq_health/health_check', to: 'sidekiq_health#health_check', as: 'sidekiq_health_check'
       get 'sidekiq_health/metrics', to: 'sidekiq_health#metrics', as: 'sidekiq_health_metrics'

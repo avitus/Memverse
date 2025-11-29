@@ -384,12 +384,14 @@ var quizSchedule = {
       var utcHours = parseInt(timeParts[0]);
       var utcMinutes = parseInt(timeParts[1]);
 
-      // Create a date object for today at the specified UTC time
-      var now = new Date();
-      var utcDate = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), utcHours, utcMinutes, 0));
+      // Get the day name from the sibling element
+      var dayName = $(this).siblings('.schedule-day-name').text();
+
+      // Calculate the next occurrence of this day/time combination
+      var nextOccurrence = quizSchedule.getNextOccurrence(dayName, utcHours, utcMinutes);
 
       // Format in user's local time
-      var localTimeStr = utcDate.toLocaleString([], {
+      var localTimeStr = nextOccurrence.toLocaleString([], {
         hour: 'numeric',
         minute: '2-digit',
         hour12: true,
@@ -398,6 +400,34 @@ var quizSchedule = {
 
       $(this).text(localTimeStr);
     });
+  },
+
+  // Helper function to calculate next occurrence of a specific day/time
+  getNextOccurrence: function(dayName, utcHour, utcMinute) {
+    var daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    var targetDay = daysOfWeek.indexOf(dayName);
+
+    var now = new Date();
+    var nextDate = new Date();
+
+    // Find next occurrence of target day
+    var currentUTCDay = now.getUTCDay();
+    var daysUntilTarget = (targetDay - currentUTCDay + 7) % 7;
+
+    // If it's the same day, check if the time has passed
+    if (daysUntilTarget === 0) {
+      var currentUTCHour = now.getUTCHours();
+      var currentUTCMinute = now.getUTCMinutes();
+      if (currentUTCHour > utcHour || (currentUTCHour === utcHour && currentUTCMinute >= utcMinute)) {
+        daysUntilTarget = 7; // Next week
+      }
+    }
+
+    // Set the date to the target day
+    nextDate.setUTCDate(now.getUTCDate() + daysUntilTarget);
+    nextDate.setUTCHours(utcHour, utcMinute, 0, 0);
+
+    return nextDate;
   },
 
   // Show local time for next quiz

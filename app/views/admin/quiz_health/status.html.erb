@@ -1,0 +1,206 @@
+<div class="container">
+  <div class="page-header">
+    <h1>Quiz System Health Check</h1>
+    <p class="lead">Real-time status of the Bible Knowledge Quiz system</p>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="panel panel-<%= @quiz_status[:redis_status][:error] ? 'danger' : 'default' %>">
+        <div class="panel-heading">
+          <h3 class="panel-title">Redis Status</h3>
+        </div>
+        <div class="panel-body">
+          <% if @quiz_status[:redis_status][:error] %>
+            <div class="alert alert-danger">
+              <strong>Error:</strong> <%= @quiz_status[:redis_status][:error] %>
+            </div>
+          <% else %>
+            <dl class="dl-horizontal">
+              <dt>Status:</dt>
+              <dd>
+                <span class="label label-<%= @quiz_status[:redis_status][:status] == 'Finished' ? 'success' : 'info' %>">
+                  <%= @quiz_status[:redis_status][:status] %>
+                </span>
+              </dd>
+              <dt>Current Question:</dt>
+              <dd><%= @quiz_status[:redis_status][:current_question] %> / 25</dd>
+              <dt>Last Updated:</dt>
+              <dd><%= @quiz_status[:redis_status][:last_updated] || "N/A" %></dd>
+            </dl>
+
+            <% if @quiz_status[:redis_status][:raw_data].any? %>
+              <h4>Raw Data:</h4>
+              <pre class="pre-scrollable"><%= JSON.pretty_generate(@quiz_status[:redis_status][:raw_data]) %></pre>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="panel panel-<%= @quiz_status[:next_scheduled][:is_overdue] ? 'warning' : 'default' %>">
+        <div class="panel-heading">
+          <h3 class="panel-title">Next Scheduled Quiz</h3>
+        </div>
+        <div class="panel-body">
+          <% if @quiz_status[:next_scheduled][:error] %>
+            <div class="alert alert-danger">
+              <strong>Error:</strong> <%= @quiz_status[:next_scheduled][:error] %>
+            </div>
+          <% else %>
+            <dl class="dl-horizontal">
+              <dt>Time:</dt>
+              <dd><%= @quiz_status[:next_scheduled][:time_string] %></dd>
+              <dt>Countdown:</dt>
+              <dd>
+                <%= @quiz_status[:next_scheduled][:countdown] %>
+                <% if @quiz_status[:next_scheduled][:is_overdue] %>
+                  <span class="label label-warning">OVERDUE</span>
+                <% end %>
+              </dd>
+            </dl>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Last Quiz Run</h3>
+        </div>
+        <div class="panel-body">
+          <% if @quiz_status[:last_run][:message] %>
+            <div class="alert alert-info">
+              <%= @quiz_status[:last_run][:message] %>
+            </div>
+          <% else %>
+            <dl class="dl-horizontal">
+              <dt>Run Time:</dt>
+              <dd><%= @quiz_status[:last_run][:created_at] %> (<%= @quiz_status[:last_run][:time_ago] %>)</dd>
+              <dt>Tweet ID:</dt>
+              <dd>#<%= @quiz_status[:last_run][:tweet_id] %></dd>
+              <dt>News:</dt>
+              <dd><%= @quiz_status[:last_run][:news] %></dd>
+            </dl>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Sidekiq Cron Jobs</h3>
+        </div>
+        <div class="panel-body">
+          <% if @quiz_status[:sidekiq_jobs].first&.key?(:error) %>
+            <div class="alert alert-danger">
+              <%= @quiz_status[:sidekiq_jobs].first[:error] %>
+            </div>
+          <% else %>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Job Name</th>
+                  <th>Cron Schedule</th>
+                  <th>Status</th>
+                  <th>Last Run</th>
+                  <th>Next Run</th>
+                  <th>Class</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @quiz_status[:sidekiq_jobs].each do |job| %>
+                  <tr>
+                    <td><%= job[:name] %></td>
+                    <td><code><%= job[:cron] %></code></td>
+                    <td>
+                      <span class="label label-<%= job[:enabled] ? 'success' : 'danger' %>">
+                        <%= job[:status] %>
+                      </span>
+                    </td>
+                    <td><%= job[:last_enqueue] || "Never" %></td>
+                    <td><%= job[:next_enqueue] %></td>
+                    <td><code><%= job[:klass] %></code></td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <% if @quiz_status[:recent_errors].any? %>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-danger">
+          <div class="panel-heading">
+            <h3 class="panel-title">Recent Errors</h3>
+          </div>
+          <div class="panel-body">
+            <% @quiz_status[:recent_errors].each do |error| %>
+              <div class="alert alert-danger">
+                <h4><%= error[:type] %></h4>
+                <p><%= error[:message] %></p>
+                <% if error[:details] %>
+                  <p><strong>Details:</strong> <%= error[:details] %></p>
+                <% end %>
+                <% if error[:suggestion] %>
+                  <p><strong>Suggestion:</strong> <%= error[:suggestion] %></p>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Current Participants</h3>
+        </div>
+        <div class="panel-body">
+          <% if @quiz_status[:current_participants][:error] %>
+            <div class="alert alert-danger">
+              <%= @quiz_status[:current_participants][:error] %>
+            </div>
+          <% else %>
+            <p>
+              <strong>Total Participants:</strong> <%= @quiz_status[:current_participants][:count] %>
+            </p>
+            <% if @quiz_status[:current_participants][:participant_ids].any? %>
+              <p><strong>Sample IDs:</strong> <%= @quiz_status[:current_participants][:participant_ids].join(", ") %></p>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="well">
+        <h4>Actions</h4>
+        <p>
+          <%= link_to "Refresh", admin_quiz_health_status_path, class: "btn btn-primary" %>
+          <%= link_to "View Sidekiq", sidekiq_web_path, class: "btn btn-default", target: "_blank" %>
+          <%= link_to "View Quiz Page", live_quiz_path, class: "btn btn-default", target: "_blank" %>
+        </p>
+        <p class="text-muted">
+          Last refreshed: <%= Time.current.strftime("%B %d, %Y at %I:%M:%S %p %Z") %>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
