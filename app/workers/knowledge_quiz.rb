@@ -308,17 +308,29 @@ class KnowledgeQuiz
 
         # Pick a question at random
         question = QuizQuestion.mcq.approved.order(:last_asked).first
-        
+
         if question.nil?
           Sidekiq.logger.error "===> No approved MCQ questions found for question #{q_num}"
           next
+        end
+
+        # Check if question is valid before using it
+        if question.mc_question.length > 300
+          Sidekiq.logger.warn "===> Question #{question.id} has mc_question longer than 300 chars (#{question.mc_question.length} chars). Skipping..."
+          # Try to find another question
+          question = QuizQuestion.mcq.approved.where("LENGTH(mc_question) <= 300").order(:last_asked).first
+          if question.nil?
+            Sidekiq.logger.error "===> No valid approved MCQ questions found for question #{q_num}"
+            next
+          end
         end
 
         # Store question metadata in Redis
         @quiz_session.update_question_stats(q_num, question.id)
 
         # Update question to show that it was asked today (use UTC)
-        question.update!(last_asked: Date.current)
+        # Use update_column to skip validation in case of other issues
+        question.update_column(:last_asked, Date.current)
 
         # Publish question
         publish_with_retry(channel, {
