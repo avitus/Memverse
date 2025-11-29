@@ -1,4 +1,5 @@
 class Admin::QuizHealthController < ApplicationController
+  include ActionView::Helpers::DateHelper
   before_action :authenticate_admin!
 
   def status
@@ -60,7 +61,7 @@ class Admin::QuizHealthController < ApplicationController
       {
         time: next_quiz_time,
         time_string: next_quiz_time.strftime("%B %d at %I:%M %p %Z"),
-        countdown: distance_of_time_in_words(Time.current, next_quiz_time),
+        countdown: distance_of_time_in_words_to_now(next_quiz_time),
         is_overdue: next_quiz_time < Time.current
       }
     else

@@ -42,7 +42,12 @@
       "Bash(mysql --version:*)",
       "Bash(bundle exec rails routes:*)",
       "Bash(curl:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(git log:*)",
+      "Bash(./bin/dev)",
+      "Bash(./bin/shutdown:*)",
+      "Bash(npm install:*)",
+      "Bash(node test_quiz_times.js:*)"
     ],
     "deny": [],
     "ask": [],
