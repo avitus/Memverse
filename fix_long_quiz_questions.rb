@@ -16,10 +16,9 @@ puts
 
 long_questions.each_with_index do |question, index|
   puts "#{index + 1}. Question ID: #{question.id}"
-  puts "   Book: #{question.book}"
-  puts "   Chapter: #{question.chapter}"
+  puts "   Category: #{question.mcq_category}"
   puts "   Current length: #{question.mc_question.length} characters"
-  puts "   Question: #{question.mc_question[0..100]}..."
+  puts "   Question preview: #{question.mc_question[0..100]}..."
   puts "   Full question: #{question.mc_question}"
   puts
 end
