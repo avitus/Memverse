@@ -15,11 +15,14 @@ puts "Found #{long_questions.count} questions that are too long:"
 puts
 
 long_questions.each_with_index do |question, index|
+  chars_over = question.mc_question.length - 300
   puts "#{index + 1}. Question ID: #{question.id}"
   puts "   Category: #{question.mcq_category}"
-  puts "   Current length: #{question.mc_question.length} characters"
-  puts "   Question preview: #{question.mc_question[0..100]}..."
+  puts "   Current length: #{question.mc_question.length} characters (#{chars_over} characters over limit)"
+  puts "   Must remove at least: #{chars_over} characters"
+  puts "   Question preview: #{question.mc_question[0..150]}..."
   puts "   Full question: #{question.mc_question}"
+  puts "   " + "-" * 80
   puts
 end
 
