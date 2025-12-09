@@ -74,6 +74,7 @@ class ApidocsController < ActionController::Base
     Api::V1::QuizzesController,
     Api::V1::ProgressReportsController,
     Api::V1::LiveQuizController,
+    Api::V1::PasswordResetsController,
     User,
     Passage,
     Memverse,

@@ -48,7 +48,8 @@
       "Bash(./bin/shutdown:*)",
       "Bash(npm install:*)",
       "Bash(node test_quiz_times.js:*)",
-      "mcp__serena__read_memory"
+      "mcp__serena__read_memory",
+      "Bash(bundle exec cucumber:*)"
     ],
     "deny": [],
     "ask": [],

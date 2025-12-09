@@ -183,6 +183,10 @@ MemverseApp::Application.routes.draw do
 
       get '/me'            => "credentials#me"
       post '/record_score' => 'live_quiz#record_score'
+
+      # Password reset endpoints
+      post '/password_resets' => 'password_resets#create'
+      put '/password_resets' => 'password_resets#update'
     end
   end
   # ---------------------------------------------------------------------------------------------------------
