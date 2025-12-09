@@ -110,8 +110,19 @@ RSpec.describe LiveQuizController, type: :controller do
       before do
         # Create knowledge quiz with specific ID
         @knowledge_quiz = FactoryBot.create(:quiz, id: 1)
+
+        # IMPORTANT: Clear any existing Redis data for this quiz
+        quiz_session = QuizSession.new(1)
+        quiz_session.cleanup_quiz_data
+
         # Mock the next knowledge quiz time
         allow(Quiz).to receive(:next_knowledge_quiz_time).and_return(15.minutes.from_now)
+      end
+
+      after do
+        # Clean up Redis data after test
+        quiz_session = QuizSession.new(1)
+        quiz_session.cleanup_quiz_data
       end
 
       it 'uses scheduled times for knowledge quiz' do
