@@ -129,4 +129,142 @@ RSpec.describe AdminMailer, type: :mailer do
       expect(defined?(Mail)).to be_truthy
     end
   end
+
+  describe "handling orphaned posts" do
+    context "when post.user is nil" do
+      let!(:mock_postable) { double("Postable", title: "Test Topic") }
+      let!(:orphaned_post) {
+        double("Thredded::Post",
+               content: "Post from deleted user",
+               user: nil,
+               postable: mock_postable,
+               id: 456)
+      }
+
+      before do
+        unless defined?(Thredded::Post)
+          stub_const("Thredded::Post", Class.new)
+        end
+
+        allow_any_instance_of(ActionView::Base).to receive(:thredded).and_return(
+          double("ThreddedHelpers", post_permalink_url: "http://example.com/posts/456")
+        )
+
+        allow_any_instance_of(ActionView::Base).to receive(:t).with(
+          'thredded.emails.post_notification.html.post_lead_html',
+          hash_including(:user, :post_url, :topic_title)
+        ).and_return("[Deleted User] posted in Test Topic")
+
+        allow_any_instance_of(ActionView::Base).to receive(:render).with(
+          hash_including(partial: 'thredded/posts/content')
+        ).and_return("<div>Post from deleted user</div>")
+
+        allow_any_instance_of(ActionView::Base).to receive(:cache).and_yield
+
+        allow(Thredded::Post).to receive(:pending_moderation).and_return([orphaned_post])
+      end
+
+      let(:mail) { AdminMailer.forum_review }
+
+      it "uses fallback display name for deleted user" do
+        expect(mail.body.encoded).to include("[Deleted User]")
+      end
+
+      it "still renders and delivers the email" do
+        expect(mail.subject).to eq("Forum: Posts and topics to review")
+        expect(mail.to).to eq(["admin@memverse.com", "alexcwatt@memverse.com"])
+      end
+    end
+
+    context "when post.postable is nil" do
+      let!(:mock_user) { double("User", thredded_display_name: "TestUser") }
+      let!(:orphaned_post) {
+        double("Thredded::Post",
+               content: "Post in deleted topic",
+               user: mock_user,
+               postable: nil,
+               id: 789)
+      }
+
+      before do
+        unless defined?(Thredded::Post)
+          stub_const("Thredded::Post", Class.new)
+        end
+
+        allow_any_instance_of(ActionView::Base).to receive(:thredded).and_return(
+          double("ThreddedHelpers", post_permalink_url: "http://example.com/posts/789")
+        )
+
+        allow_any_instance_of(ActionView::Base).to receive(:t).with(
+          'thredded.emails.post_notification.html.post_lead_html',
+          hash_including(:user, :post_url, :topic_title)
+        ).and_return("TestUser posted in [Deleted Topic]")
+
+        allow_any_instance_of(ActionView::Base).to receive(:render).with(
+          hash_including(partial: 'thredded/posts/content')
+        ).and_return("<div>Post in deleted topic</div>")
+
+        allow_any_instance_of(ActionView::Base).to receive(:cache).and_yield
+
+        allow(Thredded::Post).to receive(:pending_moderation).and_return([orphaned_post])
+      end
+
+      let(:mail) { AdminMailer.forum_review }
+
+      it "uses fallback title for deleted topic" do
+        expect(mail.body.encoded).to include("[Deleted Topic]")
+      end
+
+      it "still renders and delivers the email" do
+        expect(mail.subject).to eq("Forum: Posts and topics to review")
+        expect(mail.to).to eq(["admin@memverse.com", "alexcwatt@memverse.com"])
+      end
+    end
+
+    context "when both post.user and post.postable are nil" do
+      let!(:fully_orphaned_post) {
+        double("Thredded::Post",
+               content: "Fully orphaned post",
+               user: nil,
+               postable: nil,
+               id: 999)
+      }
+
+      before do
+        unless defined?(Thredded::Post)
+          stub_const("Thredded::Post", Class.new)
+        end
+
+        allow_any_instance_of(ActionView::Base).to receive(:thredded).and_return(
+          double("ThreddedHelpers", post_permalink_url: "http://example.com/posts/999")
+        )
+
+        allow_any_instance_of(ActionView::Base).to receive(:t).with(
+          'thredded.emails.post_notification.html.post_lead_html',
+          hash_including(:user, :post_url, :topic_title)
+        ).and_return("[Deleted User] posted in [Deleted Topic]")
+
+        allow_any_instance_of(ActionView::Base).to receive(:render).with(
+          hash_including(partial: 'thredded/posts/content')
+        ).and_return("<div>Fully orphaned post</div>")
+
+        allow_any_instance_of(ActionView::Base).to receive(:cache).and_yield
+
+        allow(Thredded::Post).to receive(:pending_moderation).and_return([fully_orphaned_post])
+      end
+
+      let(:mail) { AdminMailer.forum_review }
+
+      it "uses fallback values for both user and topic" do
+        expect(mail.body.encoded).to include("[Deleted User]")
+        expect(mail.body.encoded).to include("[Deleted Topic]")
+      end
+
+      it "still renders and delivers the email without errors" do
+        expect { mail.deliver_now }.not_to raise_error
+        expect(mail.subject).to eq("Forum: Posts and topics to review")
+        expect(mail.to).to eq(["admin@memverse.com", "alexcwatt@memverse.com"])
+      end
+    end
+  end
 end

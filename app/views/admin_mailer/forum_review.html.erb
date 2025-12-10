@@ -10,9 +10,9 @@
             <figure class="thredded--email-post">
                 <figcaption class="thredded--email-post--author">
                   <%= t 'thredded.emails.post_notification.html.post_lead_html',
-                        user: post.user.thredded_display_name,
+                        user: post.user&.thredded_display_name || "[Deleted User]",
                         post_url: thredded.post_permalink_url(post.id),
-                        topic_title: post.postable.title %>
+                        topic_title: post.postable&.title || "[Deleted Topic]" %>
                 </figcaption>
                 <% cache [post, 'content-onebox-placeholders'] do %>
                   <%= render partial: 'thredded/posts/content',
