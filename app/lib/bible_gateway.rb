@@ -1,38 +1,37 @@
-# coding: utf-8
 require 'open-uri'
 require 'nokogiri'
 
 class BibleGatewayError < StandardError; end
 
 class BibleGateway
-  GATEWAY_URL = "https://www.biblegateway.com"
+  GATEWAY_URL = 'https://www.biblegateway.com'
 
   VERSIONS = {
-    :NNV => "NIV",
-    :NAS => "NASB",
-    :NKJ => "NKJV",
-    :KJV => "KJV",
-    :RSV => "Revised Standard Version",
-    :NRS => "New Revised Standard Version",
-    :ESV => "ESV",
-    :NLT => "NLT",
-    :CEV => "CEV",
-    :HCS => "HCSB",
-    :DTL => "DARBY",
-    :MSG => "MSG",
-    :AMP => "AMP",
-    :IRV => "NIRV",
-    :UKJ => "KJ21",
-    :GRK => "Biblical Greek",
-    :NVI => "Nueva Version Internacional",
-    :RVR => "Reina-Valera 1960",
-    :LSV => "Louis Segond 1910",
-    :LND => "La Nuova Diodati",
-    :AFR => "Afrikaans 1983 Translation",
-    :HSV => "Herziene Statenvertaling",
-    :NBV => "De Nieuwe Bijbelvertaling",
-    :TMB => "Terjemahan Baru",
-    :SPB => "Svenska Folkbibeln"
+    NNV: 'NIV',
+    NAS: 'NASB',
+    NKJ: 'NKJV',
+    KJV: 'KJV',
+    RSV: 'Revised Standard Version',
+    NRS: 'New Revised Standard Version',
+    ESV: 'ESV',
+    NLT: 'NLT',
+    CEV: 'CEV',
+    HCS: 'HCSB',
+    DTL: 'DARBY',
+    MSG: 'MSG',
+    AMP: 'AMP',
+    IRV: 'NIRV',
+    UKJ: 'KJ21',
+    GRK: 'Biblical Greek',
+    NVI: 'Nueva Version Internacional',
+    RVR: 'Reina-Valera 1960',
+    LSV: 'Louis Segond 1910',
+    LND: 'La Nuova Diodati',
+    AFR: 'Afrikaans 1983 Translation',
+    HSV: 'Herziene Statenvertaling',
+    NBV: 'De Nieuwe Bijbelvertaling',
+    TMB: 'Terjemahan Baru',
+    SPB: 'Svenska Folkbibeln'
   }
 
   def self.versions
@@ -45,18 +44,31 @@ class BibleGateway
     self.version = version
   end
 
-  def version=(version)
-    # raise BibleGatewayError, 'Unsupported version' unless VERSIONS.keys.include? version
-    @version = version
-  end
+  attr_writer :version
 
   def lookup(passage)
-  	if VERSIONS.keys.include?(version)
-		  doc = Nokogiri::HTML(URI.open(passage_url(passage)))
-		  scrape_passage(doc)
-		else
-		  {:title => "--", :content => "--" }
-		end
+    return { title: '--', content: '--' } unless VERSIONS.keys.include?(version)
+
+    attempts = 0
+
+    begin
+      attempts += 1
+      doc = Nokogiri::HTML(URI.open(passage_url(passage)))
+      scrape_passage(doc)
+    rescue OpenURI::HTTPError => e
+      # Gracefully handle transient upstream failures (e.g. 503)
+      if e.io&.status&.first.to_i >= 500 && attempts < 3
+        sleep(attempts) # simple backoff
+        retry
+      end
+
+      Raven.tags_context(service: 'bible_gateway', http_status: e.io&.status&.first) if defined?(Raven)
+      Rails.logger.warn("BibleGateway lookup failed: #{e.message}") if defined?(Rails)
+      { title: '--', content: '--' }
+    rescue StandardError => e
+      Rails.logger.error("BibleGateway unexpected error: #{e.class}: #{e.message}") if defined?(Rails)
+      { title: '--', content: '--' }
+    end
   end
 
   def passage_url(passage)
@@ -75,26 +87,25 @@ class BibleGateway
       # Example description with section heading from Hebrews 10:1
       # "Christ’s Sacrifice Once for All - The law is only a shadow ..."
 
-      headings = doc.css("h3 span, h4 span")
+      headings = doc.css('h3 span, h4 span')
 
       for heading in headings
-        heading.search("sup").remove # remove superscripts
+        heading.search('sup').remove # remove superscripts
 
         heading_text = heading.text.strip
 
-        text = text.sub("#{heading_text} - ", "")
-        text = text.sub("#{heading_text} ", "")
+        text = text.sub("#{heading_text} - ", '')
+        text = text.sub("#{heading_text} ", '')
       end
 
       # Consistent spacing around em dashes
-      text = text.gsub("—", " — ").squeeze(" ").strip
+      text = text.gsub('—', ' — ').squeeze(' ').strip
     end
 
     if text && text.present?
-      {:title => "--", :content => text }
+      { title: '--', content: text }
     else
-      {:title => "--", :content => "--" }
+      { title: '--', content: '--' }
     end
-
   end
 end
