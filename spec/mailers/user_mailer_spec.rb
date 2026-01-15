@@ -269,4 +269,86 @@ RSpec.describe UserMailer, type: :mailer do
       end
     end
   end
+
+  describe "email formatting with special characters" do
+    # Test the format_email_with_name private method directly
+    let(:test_mailer) { UserMailer.new }
+
+    before do
+      # Make the private method accessible for testing
+      UserMailer.send(:public, :format_email_with_name)
+    end
+
+    after do
+      # Reset to private
+      UserMailer.send(:private, :format_email_with_name)
+    end
+
+    # Test cases for names that were causing Postmark errors
+    [
+      { name: "LOUIS RODRIGUEZ JR,", expected: '"LOUIS RODRIGUEZ JR," <test@example.com>' },
+      { name: "Douglas E. Heilman, Sr.", expected: '"Douglas E. Heilman, Sr." <test@example.com>' },
+      { name: "GlorifyGod<3", expected: '"GlorifyGod<3" <test@example.com>' },
+      { name: "Cory(a fool)", expected: '"Cory(a fool)" <test@example.com>' },  # Shortened version
+      { name: "Jayko Leonard, secret agent", expected: '"Jayko Leonard, secret agent" <test@example.com>' },
+      { name: "FireCracker! ;)", expected: '"FireCracker! ;)" <test@example.com>' },
+      { name: "| (˚)(˚) |,.-={Ello}", expected: '"| (˚)(˚) |,.-={Ello}" <test@example.com>' },
+      { name: "Ashley Mc <3", expected: '"Ashley Mc <3" <test@example.com>' },
+      { name: "R.E. ", expected: '"R.E. " <test@example.com>' },
+      { name: nil, expected: "test@example.com" },  # Test nil name
+      { name: "", expected: "test@example.com" }    # Test empty name
+    ].each do |test_case|
+      context "with name '#{test_case[:name]}'" do
+        it "formats the email address correctly" do
+          # Create a user mock with the test name
+          user_mock = double("User", name: test_case[:name], email: "test@example.com", id: 1)
+
+          result = test_mailer.format_email_with_name(user_mock)
+          expect(result).to eq(test_case[:expected])
+        end
+      end
+    end
+
+    context "when Mail::Address formatting fails" do
+      it "falls back to email-only format and logs warning" do
+        user_mock = double("User", name: "Test User", email: "test@example.com", id: 123)
+
+        # Simulate Mail::Address failure
+        allow(Mail::Address).to receive(:new).and_raise(StandardError.new("Formatting error"))
+
+        # Expect warning to be logged
+        expect(Rails.logger).to receive(:warn).with("Failed to format email with name for user 123: Formatting error")
+
+        result = test_mailer.format_email_with_name(user_mock)
+        expect(result).to eq("test@example.com")
+      end
+    end
+
+    # Integration test with actual email sending
+    context "integration with progression emails" do
+      let(:user_with_comma) { FactoryBot.create(:user, email: "comma@example.com", name: "John Doe, Jr.", login: "john-doe-jr-test") }
+      let(:user_with_special) { FactoryBot.create(:user, email: "special@example.com", name: "User<3", login: "user-heart-test") }
+
+      before do
+        allow(user_with_comma).to receive(:random_verse).and_return(memverse)
+        allow(user_with_special).to receive(:random_verse).and_return(memverse)
+      end
+
+      it "sends email successfully with comma in name" do
+        mail = UserMailer.progression_email_9(user_with_comma)
+        expect(mail[:to].to_s).to include('"John Doe, Jr."')
+        expect(mail[:to].to_s).to include('comma@example.com')
+        # Mail object should be valid
+        expect(mail).to respond_to(:deliver_now)
+      end
+
+      it "sends email successfully with < character in name" do
+        mail = UserMailer.progression_email_9(user_with_special)
+        expect(mail[:to].to_s).to include('"User<3"')
+        expect(mail[:to].to_s).to include('special@example.com')
+        # Mail object should be valid
+        expect(mail).to respond_to(:deliver_now)
+      end
+    end
+  end
 end

@@ -244,21 +244,39 @@ class UserMailer < ActionMailer::Base
     @subject          = "Memverse"
     @sent_on          = Time.now
     @user		          = user
-    @email_with_name  = "#{@user.name} <#{@user.email}>"
+    @email_with_name  = format_email_with_name(@user)
     @url              = ApplicationSettings.config['url'] || "https://memverse.com"
     base_url          = ApplicationSettings.config['url'] || "https://memverse.com"
     @unsubscribe_url  = "#{base_url}/unsubscribe/#{user.email}"
-    
+
     # Use the Postmark unsubscribe method to add proper headers
     add_postmark_unsubscribe_link(user)
   end
 
   private
 
+  # Format email with properly escaped display name
+  # Handles special characters in names that can break email parsing
+  def format_email_with_name(user)
+    return user.email if user.name.blank?
+
+    # Use Mail::Address to properly format email with display name
+    # This handles all special characters correctly according to RFC 5322
+    require 'mail'
+    address = Mail::Address.new
+    address.address = user.email
+    address.display_name = user.name
+    address.format
+  rescue StandardError => e
+    # If formatting fails for any reason, fall back to email only
+    Rails.logger.warn("Failed to format email with name for user #{user.id}: #{e.message}")
+    user.email
+  end
+
   def add_postmark_unsubscribe_link(user)
     # Add List-Unsubscribe headers for Postmark compliance
     return if user.nil? || user.email.blank?
-    
+
     base_url = ApplicationSettings.config['url'] || "https://memverse.com"
     unsubscribe_url = "#{base_url}/unsubscribe/#{user.email}"
     headers['List-Unsubscribe'] = "<#{unsubscribe_url}>"
