@@ -1,0 +1,157 @@
+<% page_title "Voice Practice" %>
+
+<div class="white-box-bg">
+<div class="main-verse-review">
+
+    <div class="passage-entry voice-practice">
+
+      <!-- Verse Reference Display -->
+      <div class="voice-reference">
+        <h2>
+          <span class="verse-ref"><%= @mv.verse.ref %></span>
+          <span class="verse-tl">[<%= @mv.verse.translation %>]</span>
+        </h2>
+      </div>
+
+      <!-- Microphone Control -->
+      <div class="voice-controls">
+        <button id="mic-button" class="mic-button">
+          <span class="mic-icon">🎤</span>
+        </button>
+        <div id="mic-status" class="mic-status">Click to speak</div>
+      </div>
+
+      <!-- Transcription Display -->
+      <div class="voice-transcription">
+        <h3>Your Recitation:</h3>
+        <div id="transcription" class="transcription-text">
+          <span class="placeholder">Press the microphone and speak the verse...</span>
+        </div>
+      </div>
+
+      <!-- Rating and Navigation -->
+      <div class="voice-nav">
+        <div class="tool-tip-nav">Rate Your Recall:</div>
+        <div id="test-buttons" class="score-test-buttons">
+          <span class="submit" q="1">1</span>
+          <span class="submit" q="2">2</span>
+          <span class="submit" q="3">3</span>
+          <span class="submit" q="4">4</span>
+          <span class="submit" q="5">5</span>
+        </div>
+        <button id="show-answer" class="toggle-hint">Show Verse</button>
+      </div>
+
+      <!-- Hidden Answer -->
+      <div id="verse-answer" class="verse-answer" style="display: none;">
+        <p><%= @mv.verse.text %></p>
+      </div>
+
+    </div> <!-- end: passage-entry column -->
+
+    <div class="upcoming-passages upcoming">
+        <h2>Upcoming Verses</h2>
+        <%= render partial: "upcoming_verses" %>
+    </div> <!-- end: upcoming-passages column -->
+
+</div>
+</div>
+
+<script>
+$(document).ready(function() {
+  // Verse data
+  var currentVerse = {
+    id: "<%= @mv.id %>",
+    ref: "<%= @mv.verse.ref %>",
+    text: "<%= escape_javascript(@mv.verse.text) %>"
+  };
+
+  // Web Speech API setup
+  var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+    $('#mic-button').prop('disabled', true);
+    $('#mic-status').text('Speech recognition not supported in this browser. Please use Chrome or Edge.');
+  } else {
+    var recognition = new SpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.lang = 'en-US';
+
+    var isRecording = false;
+    var finalTranscript = '';
+
+    // Microphone button click
+    $('#mic-button').click(function() {
+      if (isRecording) {
+        recognition.stop();
+      } else {
+        finalTranscript = '';
+        $('#transcription').html('');
+        recognition.start();
+      }
+    });
+
+    // Recognition started
+    recognition.onstart = function() {
+      isRecording = true;
+      $('#mic-button').addClass('recording');
+      $('#mic-status').text('Listening... (click to stop)');
+    };
+
+    // Recognition ended
+    recognition.onend = function() {
+      isRecording = false;
+      $('#mic-button').removeClass('recording');
+      $('#mic-status').text('Click to speak');
+    };
+
+    // Recognition results
+    recognition.onresult = function(event) {
+      var interimTranscript = '';
+
+      for (var i = event.resultIndex; i < event.results.length; i++) {
+        var transcript = event.results[i][0].transcript;
+        if (event.results[i].isFinal) {
+          finalTranscript += transcript + ' ';
+        } else {
+          interimTranscript += transcript;
+        }
+      }
+
+      $('#transcription').html(
+        '<span class="final">' + finalTranscript + '</span>' +
+        '<span class="interim">' + interimTranscript + '</span>'
+      );
+    };
+
+    // Recognition error
+    recognition.onerror = function(event) {
+      $('#mic-status').text('Error: ' + event.error);
+      if (event.error === 'not-allowed') {
+        $('#mic-status').text('Microphone access denied. Please allow microphone access.');
+      }
+    };
+  }
+
+  // Show/hide answer
+  $('#show-answer').click(function() {
+    $('#verse-answer').toggle();
+    $(this).text($('#verse-answer').is(':visible') ? 'Hide Verse' : 'Show Verse');
+  });
+
+  // Rating button click - submit rating and go to next verse
+  $('.score-test-buttons .submit').click(function() {
+    var q = $(this).attr('q');
+
+    // Submit the rating
+    $.getJSON("/mark_test_quick", { mv: currentVerse.id, q: q }, function(data) {
+      if (data.msg) {
+        alert(data.msg);
+      }
+      // Go to next verse
+      window.location.reload();
+    });
+  });
+});
+</script>
