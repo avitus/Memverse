@@ -55,10 +55,10 @@ Errors are highlighted in the transcription area:
 ### CSS Classes
 ```css
 .word-correct { }
-.word-wrong { color: #c0392b; text-decoration: line-through; }
-.word-missing { color: #27ae60; text-decoration: underline; }
-.word-extra { color: #c0392b; text-decoration: line-through; }
-.word-expected { color: #27ae60; margin-left: 4px; }
+.word-wrong { color: #aa0101; text-decoration: line-through; }  /* red-bright */
+.word-missing { color: #65a30d; text-decoration: underline; }   /* green-medium */
+.word-extra { color: #aa0101; text-decoration: line-through; }  /* red-bright */
+.word-expected { color: #65a30d; margin-left: 4px; }            /* green-medium */
 ```
 
 ---

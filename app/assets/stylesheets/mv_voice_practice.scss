@@ -83,13 +83,13 @@
 
 @keyframes pulse-green {
   0% {
-    box-shadow: 0 0 10px rgba(39, 174, 96, 0.5);
+    box-shadow: 0 0 10px rgba(101, 163, 13, 0.5); // green-medium #65a30d
   }
   50% {
-    box-shadow: 0 0 20px rgba(39, 174, 96, 0.8);
+    box-shadow: 0 0 20px rgba(101, 163, 13, 0.8); // green-medium #65a30d
   }
   100% {
-    box-shadow: 0 0 10px rgba(39, 174, 96, 0.5);
+    box-shadow: 0 0 10px rgba(101, 163, 13, 0.5); // green-medium #65a30d
   }
 }
 
@@ -137,22 +137,22 @@
   }
 
   .word-wrong {
-    color: #c0392b;
+    color: #aa0101; // red-bright from style guide
     text-decoration: line-through;
   }
 
   .word-missing {
-    color: #27ae60;
+    color: #65a30d; // green-medium from style guide
     text-decoration: underline;
   }
 
   .word-extra {
-    color: #c0392b;
+    color: #aa0101; // red-bright from style guide
     text-decoration: line-through;
   }
 
   .word-expected {
-    color: #27ae60;
+    color: #65a30d; // green-medium from style guide
     margin-left: 4px;
   }
 
@@ -178,8 +178,8 @@
     .submit {
       &.rating-suggested {
         animation: pulse-green 1.5s infinite;
-        border: 2px solid #27ae60;
-        box-shadow: 0 0 10px rgba(39, 174, 96, 0.5);
+        border: 2px solid #65a30d; // green-medium from style guide
+        box-shadow: 0 0 10px rgba(101, 163, 13, 0.5); // green-medium #65a30d
       }
     }
   }
@@ -210,8 +210,8 @@
 
   .rating-suggested {
     animation: pulse-green 1.5s infinite;
-    border: 2px solid #27ae60;
-    box-shadow: 0 0 10px rgba(39, 174, 96, 0.5);
+    border: 2px solid #65a30d; // green-medium from style guide
+    box-shadow: 0 0 10px rgba(101, 163, 13, 0.5); // green-medium #65a30d
   }
 
   .toggle-hint {
