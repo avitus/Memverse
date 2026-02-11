@@ -81,6 +81,18 @@
   100% { transform: scale(1); }
 }
 
+@keyframes pulse-green {
+  0% {
+    box-shadow: 0 0 10px rgba(39, 174, 96, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(39, 174, 96, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(39, 174, 96, 0.5);
+  }
+}
+
 .mic-status {
   color: #6b9620;
   font-size: 0.95em;
@@ -117,11 +129,60 @@
       color: #999;
     }
   }
+
+  // Word comparison styles for real-time verse comparison
+  .word-correct {
+    // Normal text - no special styling needed but defined for consistency
+    color: inherit;
+  }
+
+  .word-wrong {
+    color: #c0392b;
+    text-decoration: line-through;
+  }
+
+  .word-missing {
+    color: #27ae60;
+    text-decoration: underline;
+  }
+
+  .word-extra {
+    color: #c0392b;
+    text-decoration: line-through;
+  }
+
+  .word-expected {
+    color: #27ae60;
+    margin-left: 4px;
+  }
+
+  .accuracy-display {
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.3em;
+    margin-top: 15px;
+    color: #333;
+  }
 }
 
 .voice-nav {
   text-align: center;
   margin-top: 20px;
+  padding-bottom: 30px;
+
+  .score-test-buttons {
+    display: inline-flex;
+    align-items: center;
+    vertical-align: middle;
+
+    .submit {
+      &.rating-suggested {
+        animation: pulse-green 1.5s infinite;
+        border: 2px solid #27ae60;
+        box-shadow: 0 0 10px rgba(39, 174, 96, 0.5);
+      }
+    }
+  }
 
   button {
     margin: 0 10px;
@@ -147,11 +208,20 @@
     }
   }
 
+  .rating-suggested {
+    animation: pulse-green 1.5s infinite;
+    border: 2px solid #27ae60;
+    box-shadow: 0 0 10px rgba(39, 174, 96, 0.5);
+  }
+
   .toggle-hint {
     background: white;
     color: #666;
     border: 1px solid #ccc;
     border-radius: 4px;
+    min-width: 120px;
+    height: 44px;
+    white-space: nowrap;
 
     &:hover {
       background: #f5f5f5;
@@ -159,12 +229,18 @@
   }
 }
 
-.verse-answer {
+.voice-practice #verse-answer {
+  display: none;
+  clear: both;
   background: #e8f5e9;
   border: 1px solid #6b9620;
   border-radius: 8px;
   padding: 20px;
-  margin-top: 20px;
+  margin-top: 25px;
+
+  &.visible {
+    display: block;
+  }
 
   p {
     font-size: 1.1em;
