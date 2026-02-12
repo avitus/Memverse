@@ -42,9 +42,11 @@ jobs:
             gem install bundler -v '~> 2.0'
             bundle config set --local deployment 'false'
 
-      - run: 
+      - run:
           name: Install MySQL client
           command: |
+            # Remove Chrome repo to avoid GPG key issues (Chrome is pre-installed in browsers image)
+            sudo rm -f /etc/apt/sources.list.d/google-chrome.list
             sudo apt-get update --allow-releaseinfo-change
             sudo apt-get install -y default-mysql-client
 
