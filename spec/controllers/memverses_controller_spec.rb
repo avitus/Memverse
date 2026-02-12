@@ -331,4 +331,53 @@ describe MemversesController do
     end
   end
 
+  describe "GET 'voice_practice'" do
+    context "when user has memorized verses" do
+      before(:each) do
+        @verse1 = FactoryBot.create(:verse, book: "John", chapter: "3", versenum: 16)
+        @mv1 = FactoryBot.create(:memverse_without_supermemo_init, user: @user, verse: @verse1, status: "Memorized")
+      end
+
+      it "should be successful" do
+        get :voice_practice, session: valid_session
+        expect(response).to be_successful
+      end
+
+      it "should render the voice_practice template" do
+        get :voice_practice, session: valid_session
+        expect(response).to render_template("voice_practice")
+      end
+
+      it "should assign a memory verse" do
+        get :voice_practice, session: valid_session
+        expect(assigns(:mv)).to be_present
+      end
+    end
+
+    context "when user has only learning verses" do
+      before(:each) do
+        @verse1 = FactoryBot.create(:verse, book: "Romans", chapter: "8", versenum: 28)
+        @mv1 = FactoryBot.create(:memverse_without_supermemo_init, user: @user, verse: @verse1, status: "Learning")
+      end
+
+      it "should still be successful" do
+        get :voice_practice, session: valid_session
+        expect(response).to be_successful
+      end
+
+      it "should assign the learning verse" do
+        get :voice_practice, session: valid_session
+        expect(assigns(:mv)).to eq(@mv1)
+      end
+    end
+
+    context "when user has no verses" do
+      it "should redirect to add_verse with flash notice" do
+        get :voice_practice, session: valid_session
+        expect(response).to redirect_to(add_verse_path)
+        expect(flash[:notice]).to include("add some verses")
+      end
+    end
+  end
+
 end

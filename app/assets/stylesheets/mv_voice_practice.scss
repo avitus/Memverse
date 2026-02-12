@@ -1,0 +1,251 @@
+// Voice Practice page styles
+// Using hardcoded colors to match existing site theme
+// Layout uses .main-verse-review and .passage-entry from mv_passage.scss
+
+.voice-practice {
+  // Voice-specific styles (layout inherited from .passage-entry)
+  position: relative;
+}
+
+.voice-reference {
+  text-align: center;
+  margin-bottom: 20px;
+  padding-top: 5px;
+
+  h2 {
+    margin: 0;
+  }
+
+  .verse-ref {
+    font-size: 2em;
+    color: #6b9620; // Memverse green
+  }
+
+  .verse-tl {
+    font-size: 1em;
+    color: #666;
+  }
+}
+
+.voice-controls {
+  position: absolute;
+  top: -10px;
+  left: 15px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mic-button {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid #6b9620;
+  background: white;
+  cursor: pointer;
+  font-size: 1em;
+  transition: all 0.3s;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+
+  &:hover {
+    background: #f5f5f5;
+  }
+
+  &.recording {
+    background: #c0392b;
+    border-color: #c0392b;
+    animation: pulse 1s infinite;
+
+    .mic-icon {
+      color: white;
+    }
+  }
+
+  .mic-icon {
+    font-size: 1.4em;
+    line-height: 1;
+  }
+
+  .mic-text {
+    display: none;
+  }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+@keyframes pulse-green {
+  0% {
+    box-shadow: 0 0 10px rgba(101, 163, 13, 0.5); // green-medium #65a30d
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(101, 163, 13, 0.8); // green-medium #65a30d
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(101, 163, 13, 0.5); // green-medium #65a30d
+  }
+}
+
+.mic-status {
+  color: #6b9620;
+  font-size: 0.95em;
+  white-space: nowrap;
+}
+
+.voice-transcription {
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px 0;
+  min-height: 150px;
+
+  h3 {
+    margin-top: 0;
+    color: #333;
+  }
+
+  .transcription-text {
+    font-size: 1.2em;
+    line-height: 1.6;
+
+    .placeholder {
+      color: #999;
+      font-style: italic;
+    }
+
+    .final {
+      color: #333;
+    }
+
+    .interim {
+      color: #999;
+    }
+  }
+
+  // Word comparison styles for real-time verse comparison
+  .word-correct {
+    // Normal text - no special styling needed but defined for consistency
+    color: inherit;
+  }
+
+  .word-wrong {
+    color: #aa0101; // red-bright from style guide
+    text-decoration: line-through;
+  }
+
+  .word-missing {
+    color: #65a30d; // green-medium from style guide
+    text-decoration: underline;
+  }
+
+  .word-extra {
+    color: #aa0101; // red-bright from style guide
+    text-decoration: line-through;
+  }
+
+  .word-expected {
+    color: #65a30d; // green-medium from style guide
+    margin-left: 4px;
+  }
+
+  .accuracy-display {
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.3em;
+    margin-top: 15px;
+    color: #333;
+  }
+}
+
+.voice-nav {
+  text-align: center;
+  margin-top: 20px;
+  padding-bottom: 30px;
+
+  .score-test-buttons {
+    display: inline-flex;
+    align-items: center;
+    vertical-align: middle;
+
+    .submit {
+      &.rating-suggested {
+        animation: pulse-green 1.5s infinite;
+        border: 2px solid #65a30d; // green-medium from style guide
+        box-shadow: 0 0 10px rgba(101, 163, 13, 0.5); // green-medium #65a30d
+      }
+    }
+  }
+
+  button {
+    margin: 0 10px;
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 44px;
+    line-height: 1;
+    vertical-align: middle;
+  }
+
+  .submit-button {
+    background: #6b9620;
+    color: white;
+    border: none;
+    border-radius: 4px;
+
+    &:hover {
+      background: #5a7f1a;
+    }
+  }
+
+  .rating-suggested {
+    animation: pulse-green 1.5s infinite;
+    border: 2px solid #65a30d; // green-medium from style guide
+    box-shadow: 0 0 10px rgba(101, 163, 13, 0.5); // green-medium #65a30d
+  }
+
+  .toggle-hint {
+    background: white;
+    color: #666;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    min-width: 120px;
+    height: 44px;
+    white-space: nowrap;
+
+    &:hover {
+      background: #f5f5f5;
+    }
+  }
+}
+
+.voice-practice #verse-answer {
+  display: none;
+  clear: both;
+  background: #e8f5e9;
+  border: 1px solid #6b9620;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 25px;
+
+  &.visible {
+    display: block;
+  }
+
+  p {
+    font-size: 1.1em;
+    line-height: 1.6;
+    margin: 0;
+    color: #333;
+  }
+}

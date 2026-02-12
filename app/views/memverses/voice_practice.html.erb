@@ -1,0 +1,410 @@
+<% page_title "Voice Practice" %>
+
+<div class="white-box-bg">
+<div class="main-verse-review">
+
+    <div class="passage-entry voice-practice">
+
+      <!-- Verse Reference Display -->
+      <div class="voice-reference">
+        <h2>
+          <span class="verse-ref"><%= @mv.verse.ref %></span>
+          <span class="verse-tl">[<%= @mv.verse.translation %>]</span>
+        </h2>
+      </div>
+
+      <!-- Microphone Control -->
+      <div class="voice-controls">
+        <button id="mic-button" class="mic-button">
+          <span class="mic-icon">🎤</span>
+        </button>
+        <div id="mic-status" class="mic-status">Click to speak</div>
+      </div>
+
+      <!-- Transcription Display -->
+      <div class="voice-transcription">
+        <h3>Your Recitation:</h3>
+        <div id="transcription" class="transcription-text">
+          <span class="placeholder">Press the microphone and speak the verse...</span>
+        </div>
+        <div id="accuracy-display" class="accuracy-display"></div>
+      </div>
+
+      <!-- Rating and Navigation -->
+      <div class="voice-nav">
+        <div class="tool-tip-nav">Rate Your Recall:</div>
+        <div id="test-buttons" class="score-test-buttons">
+          <span class="submit" q="1">1</span>
+          <span class="submit" q="2">2</span>
+          <span class="submit" q="3">3</span>
+          <span class="submit" q="4">4</span>
+          <span class="submit" q="5">5</span>
+        </div>
+        <button id="show-answer" class="toggle-hint">Show Verse</button>
+      </div>
+
+      <!-- Hidden Answer -->
+      <div id="verse-answer">
+        <p><%= @mv.verse.text %></p>
+      </div>
+
+    </div> <!-- end: passage-entry column -->
+
+    <div class="upcoming-passages upcoming">
+        <h2>Upcoming Verses</h2>
+        <%= render partial: "upcoming_verses" %>
+    </div> <!-- end: upcoming-passages column -->
+
+</div>
+</div>
+
+<script>
+$(document).ready(function() {
+  // Verse data
+  var currentVerse = {
+    id: "<%= @mv.id %>",
+    ref: "<%= @mv.verse.ref %>",
+    text: "<%= escape_javascript(@mv.verse.text) %>"
+  };
+
+  // ========================================
+  // Voice Comparison Functions
+  // ========================================
+  // Note: scrub_text and flexibleTextMatch are provided globally by memverse_lib.js
+
+  // Normalize text for splitting into words
+  // - Convert to lowercase
+  // - Normalize whitespace (multiple spaces to single space)
+  // - Trim leading/trailing whitespace
+  // Note: We preserve punctuation here because flexibleTextMatch handles it
+  function normalizeText(text) {
+    if (!text || typeof text !== 'string') {
+      return '';
+    }
+    return text
+      .toLowerCase()
+      .replace(/\s+/g, ' ')        // Normalize whitespace
+      .trim();
+  }
+
+  // Split normalized text into array of words
+  function getWordArray(text) {
+    if (!text || typeof text !== 'string') {
+      return [];
+    }
+    var normalized = normalizeText(text);
+    if (normalized === '') {
+      return [];
+    }
+    return normalized.split(' ');
+  }
+
+  // Compare spoken words to actual verse words
+  function compareVerses(spokenWords, actualWords) {
+    var result = [];
+
+    if (!actualWords || actualWords.length === 0) {
+      spokenWords.forEach(function(word) {
+        result.push({ word: word, status: 'extra' });
+      });
+      return result;
+    }
+
+    if (!spokenWords || spokenWords.length === 0) {
+      actualWords.forEach(function(word) {
+        result.push({ word: word, status: 'missing' });
+      });
+      return result;
+    }
+
+    var i = 0; // Index in spokenWords
+    var j = 0; // Index in actualWords
+
+    while (i < spokenWords.length || j < actualWords.length) {
+      var spoken = spokenWords[i];
+      var actual = actualWords[j];
+
+      if (i >= spokenWords.length && j >= actualWords.length) {
+        break;
+      }
+
+      if (i >= spokenWords.length) {
+        result.push({ word: actual, status: 'missing' });
+        j++;
+        continue;
+      }
+
+      if (j >= actualWords.length) {
+        result.push({ word: spoken, status: 'extra' });
+        i++;
+        continue;
+      }
+
+      // Words match - correct (using flexible matching for apostrophes, etc.)
+      if (flexibleTextMatch(actual, spoken)) {
+        result.push({ word: spoken, status: 'correct' });
+        i++;
+        j++;
+        continue;
+      }
+
+      // Words don't match - need to determine if wrong, missing, or extra
+      // Look ahead to see if this is an insertion (extra) or substitution (wrong)
+      var nextSpokenMatchesActual = spokenWords[i + 1] && flexibleTextMatch(actual, spokenWords[i + 1]);
+      var spokenMatchesNextActual = actualWords[j + 1] && flexibleTextMatch(actualWords[j + 1], spoken);
+
+      if (nextSpokenMatchesActual && !spokenMatchesNextActual) {
+        // Current spoken word is extra, next spoken word matches current actual
+        result.push({ word: spoken, status: 'extra' });
+        i++;
+      } else if (spokenMatchesNextActual && !nextSpokenMatchesActual) {
+        // Current actual word is missing, current spoken matches next actual
+        result.push({ word: actual, status: 'missing' });
+        j++;
+      } else {
+        // Substitution - wrong word
+        result.push({ word: spoken, status: 'wrong', expected: actual });
+        i++;
+        j++;
+      }
+    }
+
+    return result;
+  }
+
+  // Calculate accuracy percentage
+  function calculateAccuracy(comparisonResult, totalExpectedWords) {
+    if (!comparisonResult || comparisonResult.length === 0 || totalExpectedWords === 0) {
+      return 0;
+    }
+    var correctWords = comparisonResult.filter(function(item) {
+      return item.status === 'correct';
+    }).length;
+    var accuracy = (correctWords / totalExpectedWords) * 100;
+    return Math.round(accuracy * 100) / 100;
+  }
+
+  // Get suggested rating based on accuracy
+  function getSuggestedRating(accuracy) {
+    if (accuracy >= 95) return 5;
+    if (accuracy >= 85) return 4;
+    if (accuracy >= 70) return 3;
+    if (accuracy >= 50) return 2;
+    return 1;
+  }
+
+  // Filter out trailing missing words from comparison result
+  // During real-time recitation, we don't want to show missing words
+  // that come AFTER all spoken words (they haven't been reached yet).
+  // We only want to show missing words that were skipped IN THE MIDDLE.
+  function filterTrailingMissing(comparisonResult) {
+    if (!comparisonResult || comparisonResult.length === 0) {
+      return [];
+    }
+
+    // Find the index of the last "spoken" word (correct, wrong, or extra)
+    var lastSpokenIndex = -1;
+
+    for (var i = comparisonResult.length - 1; i >= 0; i--) {
+      var status = comparisonResult[i].status;
+      if (status === 'correct' || status === 'wrong' || status === 'extra') {
+        lastSpokenIndex = i;
+        break;
+      }
+    }
+
+    // If no spoken words found (all missing), return empty array
+    if (lastSpokenIndex === -1) {
+      return [];
+    }
+
+    // Return only words up to and including the last spoken word
+    return comparisonResult.slice(0, lastSpokenIndex + 1);
+  }
+
+  // Escape HTML special characters
+  function escapeHtml(text) {
+    var div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  // Render comparison result as HTML
+  function renderComparison(comparisonResult) {
+    if (!comparisonResult || comparisonResult.length === 0) {
+      return '';
+    }
+
+    var htmlParts = comparisonResult.map(function(item) {
+      var word = item.word;
+      var status = item.status;
+      var expected = item.expected;
+
+      switch (status) {
+        case 'correct':
+          return '<span class="word-correct">' + escapeHtml(word) + '</span>';
+        case 'wrong':
+          return '<span class="word-wrong">' + escapeHtml(word) + '</span><span class="word-expected">' + escapeHtml(expected) + '</span>';
+        case 'missing':
+          return '<span class="word-missing">' + escapeHtml(word) + '</span>';
+        case 'extra':
+          return '<span class="word-extra">' + escapeHtml(word) + '</span>';
+        default:
+          return '<span>' + escapeHtml(word) + '</span>';
+      }
+    });
+
+    return htmlParts.join(' ');
+  }
+
+  // Update the display with comparison results
+  function updateComparison(spokenText) {
+    var spokenWords = getWordArray(spokenText);
+    var actualWords = getWordArray(currentVerse.text);
+
+    if (spokenWords.length === 0) {
+      $('#transcription').html('<span class="placeholder">Press the microphone and speak the verse...</span>');
+      $('#accuracy-display').text('');
+      clearSuggestedRating();
+      return;
+    }
+
+    var comparison = compareVerses(spokenWords, actualWords);
+
+    // Filter out trailing missing words for display
+    // (We only show words the user has actually spoken, plus any skipped words in the middle)
+    var filteredComparison = filterTrailingMissing(comparison);
+
+    // Calculate accuracy based on how many words spoken so far are correct
+    // Use the filtered comparison length as the denominator for real-time accuracy
+    var spokenWordCount = filteredComparison.filter(function(item) {
+      return item.status !== 'missing';
+    }).length;
+    var correctCount = filteredComparison.filter(function(item) {
+      return item.status === 'correct';
+    }).length;
+
+    // Real-time accuracy: correct words / words spoken so far
+    var accuracy = spokenWordCount > 0 ? Math.round((correctCount / spokenWordCount) * 100 * 100) / 100 : 0;
+    var rating = getSuggestedRating(accuracy);
+
+    // Render comparison with highlighted errors (filtered to show only spoken words)
+    var html = renderComparison(filteredComparison);
+    $('#transcription').html(html);
+
+    // Show accuracy
+    $('#accuracy-display').text('Accuracy: ' + accuracy + '%');
+
+    // Highlight suggested rating
+    highlightSuggestedRating(rating);
+  }
+
+  // Highlight the suggested rating button
+  function highlightSuggestedRating(rating) {
+    $('.score-test-buttons .submit').removeClass('rating-suggested');
+    $('.score-test-buttons .submit[q="' + rating + '"]').addClass('rating-suggested');
+  }
+
+  // Clear suggested rating highlight
+  function clearSuggestedRating() {
+    $('.score-test-buttons .submit').removeClass('rating-suggested');
+  }
+
+  // ========================================
+  // Web Speech API Setup
+  // ========================================
+
+  var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+    $('#mic-button').prop('disabled', true);
+    $('#mic-status').text('Speech recognition not supported in this browser. Please use Chrome or Edge.');
+  } else {
+    var recognition = new SpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.lang = 'en-US';
+
+    var isRecording = false;
+    var finalTranscript = '';
+
+    // Microphone button click
+    $('#mic-button').click(function() {
+      if (isRecording) {
+        recognition.stop();
+      } else {
+        finalTranscript = '';
+        $('#transcription').html('');
+        $('#accuracy-display').text('');
+        clearSuggestedRating();
+        recognition.start();
+      }
+    });
+
+    // Recognition started
+    recognition.onstart = function() {
+      isRecording = true;
+      $('#mic-button').addClass('recording');
+      $('#mic-status').text('Listening... (click to stop)');
+    };
+
+    // Recognition ended
+    recognition.onend = function() {
+      isRecording = false;
+      $('#mic-button').removeClass('recording');
+      $('#mic-status').text('Click to speak');
+
+      // Final comparison when recording ends
+      if (finalTranscript.trim()) {
+        updateComparison(finalTranscript);
+      }
+    };
+
+    // Recognition results - real-time comparison
+    recognition.onresult = function(event) {
+      var interimTranscript = '';
+
+      for (var i = event.resultIndex; i < event.results.length; i++) {
+        var transcript = event.results[i][0].transcript;
+        if (event.results[i].isFinal) {
+          finalTranscript += transcript + ' ';
+        } else {
+          interimTranscript += transcript;
+        }
+      }
+
+      // Combine final and interim for real-time comparison
+      var fullText = finalTranscript + interimTranscript;
+      updateComparison(fullText);
+    };
+
+    // Recognition error
+    recognition.onerror = function(event) {
+      $('#mic-status').text('Error: ' + event.error);
+      if (event.error === 'not-allowed') {
+        $('#mic-status').text('Microphone access denied. Please allow microphone access.');
+      }
+    };
+  }
+
+  // Show/hide answer
+  $('#show-answer').click(function() {
+    $('#verse-answer').toggleClass('visible');
+    $(this).text($('#verse-answer').hasClass('visible') ? 'Hide Verse' : 'Show Verse');
+  });
+
+  // Rating button click - submit rating and go to next verse
+  $('.score-test-buttons .submit').click(function() {
+    var q = $(this).attr('q');
+
+    // Submit the rating
+    $.getJSON("/mark_test_quick", { mv: currentVerse.id, q: q }, function(data) {
+      if (data.msg) {
+        alert(data.msg);
+      }
+      // Go to next verse
+      window.location.reload();
+    });
+  });
+});
+</script>

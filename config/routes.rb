@@ -232,6 +232,10 @@ MemverseApp::Application.routes.draw do
   get '/drill_verse'              => 'memverses#drill_verse',           :as => 'drill_verse'
   post '/mark_drill'              => 'memverses#mark_drill',            :as => 'mark_drill'
 
+  # Voice review (Web Speech API)
+  get '/voice_review'             => 'memverses#voice_practice',        :as => 'voice_review'
+  get '/voice_practice'           => redirect('/voice_review')          # Legacy redirect
+
   # Verse management
   get '/manage_verses'            => 'memverses#manage_verses',         :as => 'manage_verses'
   get '/show_all_my_verses'       => 'memverses#manage_verses'        # :as => 'manage_verses'

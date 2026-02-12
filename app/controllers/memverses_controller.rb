@@ -1321,6 +1321,26 @@ class MemversesController < ApplicationController
   end
 
   # ----------------------------------------------------------------------------------------------------------
+  # Voice practice - speak verses using Web Speech API
+  # ----------------------------------------------------------------------------------------------------------
+  def voice_practice
+    @tab = "learn"
+    @sub = "voice"
+
+    # Try to get a memorized verse first, then any active verse
+    @mv = current_user.memverses.active.where(status: 'Memorized').order('RAND()').first
+    @mv ||= current_user.memverses.active.order('RAND()').first
+
+    unless @mv
+      flash[:notice] = "You need to add some verses first."
+      redirect_to add_verse_path and return
+    end
+
+    # Load upcoming verses for sidebar
+    @upcoming_verses = current_user.upcoming_verses(limit = 15)
+  end
+
+  # ----------------------------------------------------------------------------------------------------------
   # Respond to AJAX request for upcoming verses
   # ----------------------------------------------------------------------------------------------------------
   def upcoming_verses(limit = 20, mode = "test")
