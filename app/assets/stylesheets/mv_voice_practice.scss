@@ -156,6 +156,13 @@
     margin-left: 4px;
   }
 
+  // Highlight-only mode: subtle background for errors (less visual clutter)
+  .word-error {
+    background-color: rgba(170, 1, 1, 0.15); // Light red background
+    border-radius: 2px;
+    padding: 0 2px;
+  }
+
   .accuracy-display {
     text-align: center;
     font-weight: bold;

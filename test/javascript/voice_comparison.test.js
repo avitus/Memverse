@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { scrubText, flexibleTextMatch, normalizeText, getWordArray, compareVerses, calculateAccuracy, getSuggestedRating, renderComparison, filterTrailingMissing } from '../../app/javascript/voice_comparison.js';
+import { scrubText, flexibleTextMatch, normalizeText, getWordArray, compareVerses, calculateAccuracy, getSuggestedRating, renderComparison, renderComparisonHighlightOnly, filterTrailingMissing } from '../../app/javascript/voice_comparison.js';
 
 describe('Voice Comparison Feature', () => {
 
@@ -644,6 +644,107 @@ describe('Voice Comparison Feature', () => {
       expect(html).toContain('word-missing');
       expect(html).toContain('word-extra');
       expect(html.match(/word-correct/g)).toHaveLength(6);
+    });
+  });
+
+  describe('renderComparisonHighlightOnly', () => {
+    it('renders correct words with word-correct class', () => {
+      const comparisonResult = [
+        { word: 'the', status: 'correct' },
+        { word: 'lord', status: 'correct' }
+      ];
+      const html = renderComparisonHighlightOnly(comparisonResult);
+
+      expect(html).toContain('<span class="word-correct">the</span>');
+      expect(html).toContain('<span class="word-correct">lord</span>');
+    });
+
+    it('renders wrong words with word-error class (no expected word)', () => {
+      const comparisonResult = [
+        { word: 'lrod', status: 'wrong', expected: 'lord' }
+      ];
+      const html = renderComparisonHighlightOnly(comparisonResult);
+
+      expect(html).toContain('<span class="word-error">lrod</span>');
+      expect(html).not.toContain('word-expected');
+      expect(html).not.toContain('lord');
+    });
+
+    it('renders extra words with word-error class', () => {
+      const comparisonResult = [
+        { word: 'um', status: 'extra' }
+      ];
+      const html = renderComparisonHighlightOnly(comparisonResult);
+
+      expect(html).toContain('<span class="word-error">um</span>');
+    });
+
+    it('filters out missing words entirely', () => {
+      const comparisonResult = [
+        { word: 'the', status: 'correct' },
+        { word: 'lord', status: 'missing' },
+        { word: 'is', status: 'correct' }
+      ];
+      const html = renderComparisonHighlightOnly(comparisonResult);
+
+      expect(html).toContain('the');
+      expect(html).toContain('is');
+      expect(html).not.toContain('lord');
+      expect(html).not.toContain('word-missing');
+    });
+
+    it('handles empty comparison result', () => {
+      const html = renderComparisonHighlightOnly([]);
+      expect(html).toBe('');
+    });
+
+    it('handles null input', () => {
+      const html = renderComparisonHighlightOnly(null);
+      expect(html).toBe('');
+    });
+
+    it('renders mixed results with simplified highlighting', () => {
+      const comparisonResult = [
+        { word: 'the', status: 'correct' },
+        { word: 'lrod', status: 'wrong', expected: 'lord' },
+        { word: 'is', status: 'missing' },
+        { word: 'um', status: 'extra' },
+        { word: 'my', status: 'correct' }
+      ];
+      const html = renderComparisonHighlightOnly(comparisonResult);
+
+      // Should have correct words
+      expect(html).toContain('<span class="word-correct">the</span>');
+      expect(html).toContain('<span class="word-correct">my</span>');
+      // Should have error words (wrong and extra)
+      expect(html).toContain('<span class="word-error">lrod</span>');
+      expect(html).toContain('<span class="word-error">um</span>');
+      // Should NOT have missing word or corrections
+      expect(html).not.toContain('is');
+      expect(html).not.toContain('lord');
+      expect(html).not.toContain('word-missing');
+      expect(html).not.toContain('word-expected');
+    });
+
+    it('includes spaces between words', () => {
+      const comparisonResult = [
+        { word: 'the', status: 'correct' },
+        { word: 'lord', status: 'correct' }
+      ];
+      const html = renderComparisonHighlightOnly(comparisonResult);
+
+      expect(html).toContain('</span> <span');
+    });
+
+    it('uses word-error for both wrong and extra (consistent highlighting)', () => {
+      const comparisonResult = [
+        { word: 'wrong-word', status: 'wrong', expected: 'correct-word' },
+        { word: 'extra-word', status: 'extra' }
+      ];
+      const html = renderComparisonHighlightOnly(comparisonResult);
+
+      // Both should use the same error class
+      expect(html.match(/word-error/g)).toHaveLength(2);
     });
   });
 

@@ -313,6 +313,43 @@ export function filterTrailingMissing(comparisonResult) {
 }
 
 /**
+ * Render comparison result in highlight-only mode
+ *
+ * This simplified view only shows the user's spoken words with errors highlighted.
+ * Missing words are not shown inline - the user can see the correct verse separately.
+ * Use this mode when accuracy is low to reduce visual clutter.
+ *
+ * @param {Array<{word: string, status: string, expected?: string}>} comparisonResult - Result from compareVerses
+ * @returns {string} HTML string with error words highlighted
+ */
+export function renderComparisonHighlightOnly(comparisonResult) {
+  if (!comparisonResult || comparisonResult.length === 0) {
+    return '';
+  }
+
+  const htmlParts = comparisonResult
+    .filter(item => item.status !== 'missing') // Only show spoken words
+    .map(item => {
+      const { word, status } = item;
+
+      switch (status) {
+        case 'correct':
+          return `<span class="word-correct">${escapeHtml(word)}</span>`;
+
+        case 'wrong':
+        case 'extra':
+          // Highlight errors with subtle background, no strikethrough or corrections
+          return `<span class="word-error">${escapeHtml(word)}</span>`;
+
+        default:
+          return `<span>${escapeHtml(word)}</span>`;
+      }
+    });
+
+  return htmlParts.join(' ');
+}
+
+/**
  * Escape HTML special characters to prevent XSS
  *
  * @param {string} text - Text to escape

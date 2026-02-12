@@ -68,6 +68,18 @@ $(document).ready(function() {
   };
 
   // ========================================
+  // Configuration
+  // ========================================
+
+  // Accuracy threshold for switching display modes:
+  // - Below threshold: highlight-only mode (simpler, less visual clutter)
+  // - At or above threshold: detailed mode (shows corrections inline)
+  var HIGHLIGHT_ONLY_THRESHOLD = 70;
+
+  // Track current accuracy for use across functions
+  var currentAccuracy = 0;
+
+  // ========================================
   // Voice Comparison Functions
   // ========================================
   // Note: scrub_text and flexibleTextMatch are provided globally by memverse_lib.js
@@ -257,6 +269,34 @@ $(document).ready(function() {
     return htmlParts.join(' ');
   }
 
+  // Render comparison in highlight-only mode (for low accuracy)
+  // Only shows spoken words with errors highlighted - no inline corrections
+  function renderComparisonHighlightOnly(comparisonResult) {
+    if (!comparisonResult || comparisonResult.length === 0) {
+      return '';
+    }
+
+    var htmlParts = comparisonResult
+      .filter(function(item) { return item.status !== 'missing'; }) // Only show spoken words
+      .map(function(item) {
+        var word = item.word;
+        var status = item.status;
+
+        switch (status) {
+          case 'correct':
+            return '<span class="word-correct">' + escapeHtml(word) + '</span>';
+          case 'wrong':
+          case 'extra':
+            // Highlight errors with subtle background, no strikethrough or corrections
+            return '<span class="word-error">' + escapeHtml(word) + '</span>';
+          default:
+            return '<span>' + escapeHtml(word) + '</span>';
+        }
+      });
+
+    return htmlParts.join(' ');
+  }
+
   // Update the display with comparison results
   function updateComparison(spokenText) {
     var spokenWords = getWordArray(spokenText);
@@ -288,8 +328,16 @@ $(document).ready(function() {
     var accuracy = spokenWordCount > 0 ? Math.round((correctCount / spokenWordCount) * 100 * 100) / 100 : 0;
     var rating = getSuggestedRating(accuracy);
 
-    // Render comparison with highlighted errors (filtered to show only spoken words)
-    var html = renderComparison(filteredComparison);
+    // Store accuracy for use in other functions (e.g., auto-show verse on recording end)
+    currentAccuracy = accuracy;
+
+    // Choose render mode based on accuracy threshold
+    // Low accuracy: highlight-only mode (less visual clutter)
+    // High accuracy: detailed mode (shows corrections inline)
+    var useHighlightOnly = accuracy < HIGHLIGHT_ONLY_THRESHOLD;
+    var html = useHighlightOnly
+      ? renderComparisonHighlightOnly(filteredComparison)
+      : renderComparison(filteredComparison);
     $('#transcription').html(html);
 
     // Show accuracy
@@ -357,6 +405,13 @@ $(document).ready(function() {
       // Final comparison when recording ends
       if (finalTranscript.trim()) {
         updateComparison(finalTranscript);
+
+        // Auto-show the correct verse when accuracy is below threshold
+        // This helps users see what they missed without extra clicks
+        if (currentAccuracy < HIGHLIGHT_ONLY_THRESHOLD && !$('#verse-answer').hasClass('visible')) {
+          $('#verse-answer').addClass('visible');
+          $('#show-answer').text('Hide Verse');
+        }
       }
     };
 
