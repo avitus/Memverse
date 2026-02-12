@@ -27,7 +27,7 @@ RSpec.describe LiveQuizController, type: :controller do
     end
 
     context 'when quiz is about to start (< 5 seconds)' do
-      let(:quiz) { FactoryBot.create(:quiz, start_time: 3.seconds.from_now) }
+      let(:quiz) { FactoryBot.create(:quiz, start_time: 1.second.from_now) }
 
       it 'returns preparing state' do
         get :quiz_state, params: { id: quiz.id, format: :json }

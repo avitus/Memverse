@@ -1,0 +1,112 @@
+# CircleCI configuration for performance and chaos tests
+# This is an example that can be included in your main .circleci/config.yml
+
+version: 2.1
+
+jobs:
+  performance_tests:
+    docker:
+      - image: cimg/ruby:3.2.6-node
+        environment:
+          RAILS_ENV: test
+          DATABASE_URL: mysql2://root:password@127.0.0.1:3306/memverse_test
+      - image: cimg/mysql:8.0
+        environment:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: memverse_test
+      - image: redis:6-alpine
+
+    resource_class: large  # Use larger instance for performance tests
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "Gemfile.lock" }}
+            - v1-dependencies-
+
+      - run:
+          name: Install dependencies
+          command: |
+            bundle install --jobs=4 --retry=3 --path vendor/bundle
+            npm ci
+
+      - save_cache:
+          paths:
+            - ./vendor/bundle
+            - ./node_modules
+          key: v1-dependencies-{{ checksum "Gemfile.lock" }}
+
+      - run:
+          name: Wait for DB
+          command: dockerize -wait tcp://localhost:3306 -timeout 1m
+
+      - run:
+          name: Database setup
+          command: |
+            bundle exec rake db:create
+            bundle exec rake db:schema:load
+
+      - run:
+          name: Run chaos engineering tests
+          command: |
+            bundle exec rspec spec/chaos/live_quiz_chaos_spec.rb \
+              --format RspecJunitFormatter \
+              --out /tmp/test-results/chaos.xml \
+              --format documentation
+
+      - run:
+          name: Run load tests
+          command: |
+            LOAD_TEST=true QUICK_TEST=true bundle exec rspec spec/performance/live_quiz_load_spec.rb \
+              --format RspecJunitFormatter \
+              --out /tmp/test-results/load.xml \
+              --format documentation
+          no_output_timeout: 30m
+
+      - run:
+          name: Run stability tests (quick mode)
+          command: |
+            STABILITY_TEST=true QUICK_TEST=true bundle exec rspec spec/stability/live_quiz_stability_spec.rb \
+              --format RspecJunitFormatter \
+              --out /tmp/test-results/stability.xml \
+              --format documentation
+          no_output_timeout: 30m
+
+      - store_test_results:
+          path: /tmp/test-results
+
+      - store_artifacts:
+          path: /tmp/test-results
+          destination: test-results
+
+      - store_artifacts:
+          path: tmp/performance_*
+          destination: performance-reports
+
+workflows:
+  version: 2
+
+  # Run performance tests nightly
+  nightly:
+    triggers:
+      - schedule:
+          cron: "0 2 * * *"  # 2 AM UTC daily
+          filters:
+            branches:
+              only:
+                - main
+                - develop
+    jobs:
+      - performance_tests
+
+  # Run on demand for specific branches
+  performance_testing:
+    jobs:
+      - performance_tests:
+          filters:
+            branches:
+              only:
+                - /perf\/.*/
+                - /performance\/.*/

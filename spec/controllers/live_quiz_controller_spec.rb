@@ -51,6 +51,7 @@ RSpec.describe LiveQuizController, type: :controller do
         before do
           allow(quiz_session).to receive(:quiz_in_progress?).and_return(false)
           allow(quiz_session).to receive(:get_quiz_status).and_return(nil)
+          allow(quiz_session).to receive(:get_quiz_metadata).and_return({})
         end
         
         it 'calculates next scheduled quiz time for knowledge quiz (ID=1)' do
@@ -92,6 +93,7 @@ RSpec.describe LiveQuizController, type: :controller do
         before do
           allow(quiz_session).to receive(:quiz_in_progress?).and_return(true)
           allow(quiz_session).to receive(:get_quiz_status).and_return("In progress. Wait for question.")
+          allow(quiz_session).to receive(:get_quiz_metadata).and_return({})
         end
 
         it 'does not calculate next quiz time' do
@@ -113,6 +115,7 @@ RSpec.describe LiveQuizController, type: :controller do
         before do
           allow(quiz_session).to receive(:quiz_in_progress?).and_return(true)
           allow(quiz_session).to receive(:get_quiz_status).and_return("In progress. Initializing...")
+          allow(quiz_session).to receive(:get_quiz_metadata).and_return({})
         end
 
         it 'sets quiz_preparing to true' do

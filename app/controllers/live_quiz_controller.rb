@@ -1,6 +1,7 @@
 # coding: utf-8
 
 class LiveQuizController < ApplicationController
+  include ActionController::Live
 
   before_action :authenticate_user!, :only => :live_quiz
 
@@ -258,119 +259,286 @@ class LiveQuizController < ApplicationController
     }
   end
 
+  #-----------------------------------------------------------------------------------------------------------
+  # Server-Sent Events endpoint for real-time quiz state updates
+  #-----------------------------------------------------------------------------------------------------------
+  def quiz_events
+    # Generate unique connection ID
+    connection_id = SecureRandom.uuid
+    user_id = current_user&.id || "anonymous-#{request.remote_ip}"
+    quiz_id = (params[:id] || params[:quiz_id] || 1).to_i
+
+    # Set SSE headers
+    response.headers['Content-Type'] = 'text/event-stream'
+    response.headers['Cache-Control'] = 'no-cache'
+    response.headers['X-Accel-Buffering'] = 'no' # Disable Nginx buffering
+    response.headers['Connection'] = 'keep-alive'
+
+    # Initialize connection manager
+    connection_manager = SseConnectionManager.instance
+
+    # Variables to track threads
+    redis_thread = nil
+    heartbeat_thread = nil
+    redis_client = nil
+    connected = false
+
+    begin
+      # Register connection with rate limiting
+      connection_manager.register_connection(user_id, quiz_id, connection_id)
+      connected = true
+
+      quiz = Quiz.find(quiz_id)
+
+      # Send initial state
+      state = calculate_quiz_state(quiz)
+      response.stream.write("event: quiz-state\n")
+      response.stream.write("data: #{state.to_json}\n\n")
+
+      # Set up Redis subscription for state changes
+      redis_thread = Thread.new do
+        begin
+          redis_client = Redis.new(
+            connect_timeout: 5,
+            read_timeout: 120,
+            write_timeout: 5
+          )
+
+          redis_client.subscribe("quiz:#{quiz_id}:state") do |on|
+            on.message do |channel, message|
+              begin
+                data = JSON.parse(message)
+
+                # Send state update to client
+                response.stream.write("event: quiz-state\n")
+                response.stream.write("data: #{data.to_json}\n\n")
+
+                # If quiz is starting, instruct client to reload
+                if data['state'] == 'running' && data['previous_state'] != 'running'
+                  reload_data = { action: 'reload', state: 'running', message: 'Quiz is starting' }
+                  response.stream.write("event: quiz-state\n")
+                  response.stream.write("data: #{reload_data.to_json}\n\n")
+                end
+              rescue IOError => e
+                # Stream closed, exit gracefully
+                Rails.logger.info "SSE stream closed for connection #{connection_id}: #{e.message}"
+                Thread.exit
+              rescue => e
+                Rails.logger.error "SSE message error for connection #{connection_id}: #{e.message}"
+              end
+            end
+          end
+        rescue => e
+          Rails.logger.error "Redis subscription error for connection #{connection_id}: #{e.message}"
+        ensure
+          redis_client&.close rescue nil
+        end
+      end
+
+      # Keep connection alive with heartbeat
+      heartbeat_thread = Thread.new do
+        begin
+          loop do
+            sleep 30
+            break unless connected
+
+            begin
+              response.stream.write(":heartbeat\n\n")
+              connection_manager.update_heartbeat(connection_id)
+            rescue IOError => e
+              # Stream closed
+              Rails.logger.info "Heartbeat failed for connection #{connection_id}: #{e.message}"
+              break
+            end
+          end
+        rescue => e
+          Rails.logger.error "Heartbeat thread error for connection #{connection_id}: #{e.message}"
+        end
+      end
+
+      # Wait for client to disconnect
+      sleep
+
+    rescue SseConnectionManager::ConnectionLimitExceeded => e
+      Rails.logger.warn "SSE connection rejected for user #{user_id}: #{e.message}"
+      response.stream.write("event: error\n")
+      response.stream.write("data: {\"error\": \"Connection limit exceeded\", \"code\": \"RATE_LIMIT\"}\n\n")
+    rescue SseConnectionManager::ConnectionTerminated => e
+      Rails.logger.info "SSE connection terminated for #{connection_id}: #{e.message}"
+    rescue ActionController::Live::ClientDisconnected => e
+      Rails.logger.info "SSE client disconnected for connection #{connection_id}"
+    rescue => e
+      Rails.logger.error "SSE error for connection #{connection_id}: #{e.class} - #{e.message}"
+      Rails.logger.error e.backtrace.join("\n") if Rails.env.development?
+    ensure
+      # Mark connection as closed
+      connected = false
+
+      # Clean up threads safely
+      [redis_thread, heartbeat_thread].each do |thread|
+        if thread&.alive?
+          thread.kill
+          thread.join(1) # Wait up to 1 second for thread to finish
+        end
+      end
+
+      # Close Redis connection
+      redis_client&.close rescue nil
+
+      # Unregister connection
+      connection_manager.unregister_connection(connection_id) rescue nil
+
+      # Close response stream
+      response.stream.close rescue nil
+
+      Rails.logger.info "SSE cleanup completed for connection #{connection_id}"
+    end
+  end
+
+  # Configuration for quiz state transitions
+  QUIZ_PREPARING_WINDOW_SECONDS = Rails.env.production? ? 5 : 2
+  QUIZ_STATE_CACHE_TTL = 2 # seconds
+
   private
 
   def calculate_quiz_state(quiz)
-    quiz_session = QuizSession.new(quiz.id)
-    current_status = quiz_session.get_quiz_status
-    now = Time.current.utc
+    # Use Redis to cache state calculations to prevent race conditions
+    cache_key = "quiz_state_cache:#{quiz.id}"
+    cached_state = Rails.cache.read(cache_key)
 
-    # Log for debugging
-    Rails.logger.debug "Quiz ##{quiz.id} status: #{current_status.inspect}"
-
-    # Check status first, regardless of quiz type
-    if current_status.present? && current_status != "Available"
-      # Quiz has an active status
-      if current_status.include?("Initializing") || current_status.include?("Chat opening soon")
-        # Quiz is initializing
-        return {
-          state: "preparing",
-          next_transition_at: (now + 5.seconds).iso8601, # Check again soon
-          transition_to: "ready",
-          should_refresh: false
-        }
-      elsif current_status.include?("Chat open. Wait for question")
-        # Quiz is ready, user should refresh if they see the preparing overlay
-        return {
-          state: "ready",
-          should_refresh: user_sees_preparing_overlay?,
-          next_transition_at: nil,
-          transition_to: "running"
-        }
-      elsif current_status.match?(/Question \d+ in progress/) || (current_status.include?("In progress") && !current_status.include?("Chat") && !current_status.include?("Initializing"))
-        # Quiz running (question in progress)
-        return {
-          state: "running",
-          should_refresh: false,
-          next_transition_at: nil,
-          transition_to: "finished"
-        }
-      elsif current_status == "Finished"
-        # Quiz explicitly finished
-        return {
-          state: "finished",
-          should_refresh: false,
-          next_transition_at: nil,
-          transition_to: nil
-        }
-      end
+    # If we have a recent cached state, use it
+    if cached_state && cached_state[:calculated_at] &&
+       cached_state[:calculated_at] > QUIZ_STATE_CACHE_TTL.seconds.ago
+      return cached_state.except(:calculated_at)
     end
 
-    # No active status, check schedule
-    if quiz.id == 1
-      # Knowledge quiz uses scheduled times
-      next_quiz_time = Quiz.next_knowledge_quiz_time
+    # Calculate fresh state with proper locking
+    Rails.cache.fetch("quiz_state_lock:#{quiz.id}", expires_in: 1.second, race_condition_ttl: 2.seconds) do
+      quiz_session = QuizSession.new(quiz.id)
+      current_status = quiz_session.get_quiz_status
+      metadata = quiz_session.get_quiz_metadata
+      now = Time.current.utc
 
-      if next_quiz_time && next_quiz_time > now
-        time_until_start = next_quiz_time - now
+      # Log for debugging
+      Rails.logger.debug "Quiz ##{quiz.id} status: #{current_status.inspect}, metadata: #{metadata.inspect}"
 
-        if time_until_start <= 5.seconds
-          # Worker about to start
-          {
+      state = nil
+
+      # Check status first, regardless of quiz type
+      if current_status.present? && current_status != "Available"
+        # Quiz has an active status
+        if current_status.include?("Initializing") || current_status.include?("Chat opening soon")
+          # Quiz is initializing
+          state = {
             state: "preparing",
-            next_transition_at: next_quiz_time.iso8601,
+            next_transition_at: (now + QUIZ_PREPARING_WINDOW_SECONDS.seconds).iso8601,
             transition_to: "ready",
-            should_refresh: false
+            should_refresh: false,
+            status_details: current_status
           }
-        else
-          # Waiting for quiz
-          {
-            state: "waiting",
-            next_transition_at: (next_quiz_time - 5.seconds).iso8601,
-            transition_to: "preparing",
-            should_refresh: false
+        elsif current_status.include?("Chat open. Wait for question")
+          # Quiz is ready, user should refresh if they see the preparing overlay
+          state = {
+            state: "ready",
+            should_refresh: user_sees_preparing_overlay?,
+            next_transition_at: nil,
+            transition_to: "running",
+            status_details: current_status
+          }
+        elsif current_status.match?(/Question \d+ in progress/) || (current_status.include?("In progress") && !current_status.include?("Chat") && !current_status.include?("Initializing"))
+          # Quiz running (question in progress)
+          state = {
+            state: "running",
+            should_refresh: false,
+            next_transition_at: nil,
+            transition_to: "finished",
+            status_details: current_status
+          }
+        elsif current_status == "Finished"
+          # Quiz explicitly finished
+          state = {
+            state: "finished",
+            should_refresh: false,
+            next_transition_at: nil,
+            transition_to: nil,
+            status_details: current_status
           }
         end
-      else
-        # No quiz scheduled or quiz finished
-        {
-          state: current_status == "Finished" ? "finished" : "none",
-          should_refresh: false,
-          next_transition_at: nil,
-          transition_to: nil
-        }
       end
-    else
-      # Other quizzes use start_time
-      if quiz.start_time && quiz.start_time > now
-        time_until_start = quiz.start_time - now
 
-        if time_until_start <= 5.seconds
-          # Worker about to start
-          {
-            state: "preparing",
-            next_transition_at: quiz.start_time.iso8601,
-            transition_to: "ready",
-            should_refresh: false
-          }
+      # No active status, check schedule
+      if state.nil?
+        if quiz.id == 1
+          # Knowledge quiz uses scheduled times
+          next_quiz_time = Quiz.next_knowledge_quiz_time
+
+          if next_quiz_time && next_quiz_time > now
+            time_until_start = next_quiz_time - now
+
+            if time_until_start <= QUIZ_PREPARING_WINDOW_SECONDS.seconds
+              # Worker about to start
+              state = {
+                state: "preparing",
+                next_transition_at: next_quiz_time.iso8601,
+                transition_to: "ready",
+                should_refresh: false
+              }
+            else
+              # Waiting for quiz
+              state = {
+                state: "waiting",
+                next_transition_at: (next_quiz_time - QUIZ_PREPARING_WINDOW_SECONDS.seconds).iso8601,
+                transition_to: "preparing",
+                should_refresh: false
+              }
+            end
+          else
+            # No quiz scheduled or quiz finished
+            state = {
+              state: current_status == "Finished" ? "finished" : "none",
+              should_refresh: false,
+              next_transition_at: nil,
+              transition_to: nil
+            }
+          end
         else
-          # Waiting for quiz
-          {
-            state: "waiting",
-            next_transition_at: (quiz.start_time - 5.seconds).iso8601,
-            transition_to: "preparing",
-            should_refresh: false
-          }
+          # Other quizzes use start_time
+          if quiz.start_time && quiz.start_time > now
+            time_until_start = quiz.start_time - now
+
+            if time_until_start <= QUIZ_PREPARING_WINDOW_SECONDS.seconds
+              # Worker about to start
+              state = {
+                state: "preparing",
+                next_transition_at: quiz.start_time.iso8601,
+                transition_to: "ready",
+                should_refresh: false
+              }
+            else
+              # Waiting for quiz
+              state = {
+                state: "waiting",
+                next_transition_at: (quiz.start_time - QUIZ_PREPARING_WINDOW_SECONDS.seconds).iso8601,
+                transition_to: "preparing",
+                should_refresh: false
+              }
+            end
+          else
+            # No quiz scheduled or quiz finished
+            state = {
+              state: current_status == "Finished" ? "finished" : "none",
+              should_refresh: false,
+              next_transition_at: nil,
+              transition_to: nil
+            }
+          end
         end
-      else
-        # No quiz scheduled or quiz finished
-        {
-          state: current_status == "Finished" ? "finished" : "none",
-          should_refresh: false,
-          next_transition_at: nil,
-          transition_to: nil
-        }
       end
+
+      # Cache the calculated state
+      Rails.cache.write(cache_key, state.merge(calculated_at: now), expires_in: QUIZ_STATE_CACHE_TTL.seconds)
+
+      state
     end
   end
 

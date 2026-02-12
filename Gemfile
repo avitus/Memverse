@@ -40,6 +40,10 @@ group :development, :test do
   gem 'guard-rspec'
   gem 'guard-cucumber'
   gem 'faker'                                                   # Generates fake test data
+  gem 'timecop'                                                # Freeze and travel through time in tests
+  gem 'get_process_mem'                                        # Get memory usage of processes
+  gem 'concurrent-ruby'                                        # Thread-safe data structures for performance tests
+  gem 'timeout'                                                # Timeout library for chaos testing
 end
 
 ############################################################

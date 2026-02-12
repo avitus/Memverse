@@ -185,7 +185,9 @@ RSpec.feature "Next Quiz Box", type: :request do
       # Check that the elements with data attributes are present
       expect(response.body).to include('class="quiz-day" data-utc-datetime="' + expected_time + '"')
       expect(response.body).to include('class="quiz-local-time" data-utc-datetime="' + expected_time + '"')
-      expect(response.body).to include('id="quiz-countdown" data-target-time="' + expected_time + '"')
+      # New SSE implementation uses different countdown structure
+      expect(response.body).to include('data-target-time="' + expected_time + '"')
+      expect(response.body).to include('data-quiz-sse-target="countdown"')
 
       # Note: The actual time display is populated by JavaScript
       # In a full JS test, we would verify the converted local time appears

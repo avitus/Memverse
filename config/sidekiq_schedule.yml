@@ -72,3 +72,9 @@ schedule_subsection_passages:
   queue: low           # Low priority - infrequent maintenance
   active_job: false    # Explicitly mark as Sidekiq::Worker
 
+schedule_cleanup_sse_connections:
+  cron: "*/5 * * * *"  # Every 5 minutes
+  class: "CleanupSseConnectionsWorker"
+  queue: low           # Low priority - background cleanup
+  active_job: false    # Explicitly mark as Sidekiq::Worker
+

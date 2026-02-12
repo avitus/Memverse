@@ -128,6 +128,46 @@ class KnowledgeQuiz
   private
 
   # ========================================================================
+  # Helper method to publish state changes for SSE with retry logic
+  # ========================================================================
+  def publish_state_change(new_state, previous_state = nil)
+    data = {
+      state: new_state,
+      previous_state: previous_state,
+      timestamp: Time.current.utc.iso8601,
+      quiz_id: 1
+    }
+
+    # Use exponential backoff with jitter for Redis publish retries
+    max_retries = 3
+    base_delay = 0.5 # 500ms
+
+    (0..max_retries).each do |attempt|
+      begin
+        $redis.publish("quiz:1:state", data.to_json)
+        Sidekiq.logger.info "Published state change: #{previous_state} -> #{new_state}"
+        return true
+      rescue Redis::BaseError => e
+        if attempt < max_retries
+          # Calculate delay with exponential backoff and jitter
+          delay = base_delay * (2 ** attempt) + (rand * 0.5)
+          Sidekiq.logger.warn "Redis publish failed (attempt #{attempt + 1}/#{max_retries + 1}): #{e.message}. Retrying in #{delay.round(2)}s..."
+          sleep(delay)
+        else
+          Sidekiq.logger.error "Failed to publish state change after #{max_retries + 1} attempts: #{e.message}"
+          # Don't raise - allow quiz to continue even if SSE updates fail
+        end
+      rescue => e
+        # For non-Redis errors, log but don't retry
+        Sidekiq.logger.error "Unexpected error publishing state change: #{e.class} - #{e.message}"
+        break
+      end
+    end
+
+    false
+  end
+
+  # ========================================================================
   # Enhanced idempotency and lock management
   # ========================================================================
   
@@ -182,6 +222,7 @@ class KnowledgeQuiz
     @quiz_session.set_quiz_status("In progress. Initializing...", {
       start_time: Time.current.utc.iso8601
     })
+    publish_state_change('preparing', 'waiting')
   end
   
   def mark_quiz_failed
@@ -270,7 +311,9 @@ class KnowledgeQuiz
       unless status&.== "Open"
         new_status = "Open"
         $redis.hset("chat-#{channel}", "status", new_status)
-        
+        # Set TTL of 24 hours for chat channel status
+        $redis.expire("chat-#{channel}", 86400)
+
         publish_with_retry(channel, {
           meta: "chat_status",
           status: new_status
@@ -288,6 +331,7 @@ class KnowledgeQuiz
       chat_start_time: chat_start_time.iso8601,
       chat_duration: chat_duration
     })
+    publish_state_change('ready', 'preparing')
 
     sleep(chat_duration)
   end
@@ -301,6 +345,9 @@ class KnowledgeQuiz
     q_num_array = Array(1..question_count)
 
     Sidekiq.logger.info "===> Starting quiz at #{Time.current.utc} with #{question_count} questions"
+
+    # Publish state change when questions start
+    publish_state_change('running', 'ready')
 
     q_num_array.each do |q_num|
       with_retry("question #{q_num}") do
@@ -467,7 +514,9 @@ class KnowledgeQuiz
     with_retry("closing chat") do
       new_status = "Closed"
       $redis.hset("chat-#{channel}", "status", new_status)
-      
+      # Set TTL of 24 hours for chat channel status
+      $redis.expire("chat-#{channel}", 86400)
+
       publish_with_retry(channel, {
         meta: "chat_status",
         status: new_status
@@ -500,26 +549,33 @@ class KnowledgeQuiz
   end
   
   def publish_with_retry(channel, message, max_retries: 3)
-    retries = 0
-    begin
-      PN.publish(
-        channel: channel,
-        message: message,
-        http_sync: true,
-        callback: PN_CALLBACK
-      )
-    rescue => e
-      retries += 1
-      if retries <= max_retries
-        wait_time = retries * 2
-        Sidekiq.logger.warn "PubNub publish failed (attempt #{retries}/#{max_retries}): #{e.message}. Retrying in #{wait_time} seconds..."
-        sleep(wait_time)
-        retry
-      else
-        Sidekiq.logger.error "PubNub publish failed after #{max_retries} attempts: #{e.message}"
-        raise e
+    base_delay = 1.0 # 1 second base delay
+
+    (0..max_retries).each do |attempt|
+      begin
+        PN.publish(
+          channel: channel,
+          message: message,
+          http_sync: true,
+          callback: PN_CALLBACK
+        )
+        return true
+      rescue => e
+        if attempt < max_retries
+          # Exponential backoff with jitter: base * 2^attempt + random jitter
+          delay = base_delay * (2 ** attempt) + (rand * 0.5)
+          Sidekiq.logger.warn "PubNub publish failed (attempt #{attempt + 1}/#{max_retries + 1}): #{e.message}. Retrying in #{delay.round(2)} seconds..."
+          sleep(delay)
+        else
+          Sidekiq.logger.error "PubNub publish failed after #{max_retries + 1} attempts: #{e.message}"
+          # For critical messages, we still raise to handle at a higher level
+          # For non-critical messages (like state updates), the caller can check return value
+          raise e
+        end
       end
     end
+
+    false
   end
   
   def handle_quiz_error(context, error, channel = nil)

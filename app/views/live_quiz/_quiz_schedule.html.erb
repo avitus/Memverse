@@ -1,4 +1,7 @@
-<div class="white-box-bg quiz-schedule-compact">
+<div class="white-box-bg quiz-schedule-compact"
+     data-controller="quiz-sse"
+     data-quiz-sse-quiz-id-value="<%= @quiz.id %>"
+     data-quiz-sse-events-url-value="/live_quiz/events">
   <div class="top-heading">
     <h2><i class="fa fa-calendar-check-o"></i> <%= @quiz.name %></h2>
   </div>
@@ -24,8 +27,13 @@
               </div>
             </div>
           </div>
-          <div class="quiz-countdown-compact" id="quiz-countdown" data-target-time="<%= @next_quiz_time.iso8601 %>">
+          <div class="quiz-countdown-compact" id="quiz-countdown"
+               data-target-time="<%= @next_quiz_time.iso8601 %>"
+               data-quiz-sse-target="countdown">
             <!-- Countdown inserted by JS -->
+          </div>
+          <div class="quiz-sse-status" data-quiz-sse-target="status" style="font-size: 0.8em; color: #666; margin-top: 5px;">
+            <!-- SSE connection status -->
           </div>
         </div>
       </div>

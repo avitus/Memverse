@@ -294,6 +294,9 @@ GEM
     fugit (1.11.1)
       et-orbi (~> 1, >= 1.2.11)
       raabro (~> 1.4)
+    get_process_mem (1.0.0)
+      bigdecimal (>= 2.0)
+      ffi (~> 1.0)
     glob (0.4.1)
     globalid (1.2.1)
       activesupport (>= 6.1)
@@ -732,6 +735,7 @@ GEM
       timeago_js (>= 3.0.2.2)
     tilt (2.6.1)
     timeago_js (3.0.2.2)
+    timecop (0.9.10)
     timeout (0.4.3)
     timers (4.4.0)
     ttfunk (1.8.0)
@@ -796,6 +800,7 @@ DEPENDENCIES
   capistrano-sidekiq
   capybara
   ckeditor (~> 5.1)
+  concurrent-ruby
   cucumber-rails
   dalli (~> 3.2)
   database_cleaner
@@ -811,6 +816,7 @@ DEPENDENCIES
   foreman
   friendly_id
   fugit
+  get_process_mem
   guard (>= 0.6.2)
   guard-cucumber
   guard-minitest
@@ -865,6 +871,8 @@ DEPENDENCIES
   terser
   thinking-sphinx
   thredded (~> 1.2.1)
+  timecop
+  timeout
   turbo-rails
   web-console (~> 4.2)
   webdrivers
