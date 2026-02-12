@@ -360,3 +360,193 @@ function escapeHtml(text) {
   div.textContent = text;
   return div.innerHTML;
 }
+
+/**
+ * Build LCS (Longest Common Subsequence) table using dynamic programming
+ *
+ * This creates a 2D table where lcs[i][j] represents the length of the
+ * longest common subsequence between spokenWords[0..i-1] and actualWords[0..j-1]
+ *
+ * @param {string[]} spokenWords - Array of words from user's speech
+ * @param {string[]} actualWords - Array of words from correct verse
+ * @returns {number[][]} LCS table
+ */
+function buildLCSTable(spokenWords, actualWords) {
+  const m = spokenWords.length;
+  const n = actualWords.length;
+
+  // Create table with (m+1) x (n+1) dimensions, initialized to 0
+  const lcs = Array(m + 1).fill(null).map(() => Array(n + 1).fill(0));
+
+  // Fill the table using dynamic programming
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      if (flexibleTextMatch(actualWords[j - 1], spokenWords[i - 1])) {
+        // Words match - extend the subsequence
+        lcs[i][j] = lcs[i - 1][j - 1] + 1;
+      } else {
+        // Words don't match - take the max from excluding either word
+        lcs[i][j] = Math.max(lcs[i - 1][j], lcs[i][j - 1]);
+      }
+    }
+  }
+
+  return lcs;
+}
+
+/**
+ * Backtrack through LCS table to find the optimal alignment
+ *
+ * Returns an array of operations that align spoken words with actual words.
+ * Each operation is either:
+ * - { type: 'match', spokenIdx, actualIdx } - words match
+ * - { type: 'extra', spokenIdx } - extra spoken word (not in actual)
+ * - { type: 'missing', actualIdx } - missing actual word (not spoken)
+ *
+ * @param {number[][]} lcs - LCS table from buildLCSTable
+ * @param {string[]} spokenWords - Array of words from user's speech
+ * @param {string[]} actualWords - Array of words from correct verse
+ * @returns {Array<{type: string, spokenIdx?: number, actualIdx?: number}>} Alignment operations
+ */
+function backtrackLCS(lcs, spokenWords, actualWords) {
+  const alignment = [];
+  let i = spokenWords.length;
+  let j = actualWords.length;
+
+  // Backtrack from bottom-right to top-left
+  while (i > 0 || j > 0) {
+    if (i > 0 && j > 0 && flexibleTextMatch(actualWords[j - 1], spokenWords[i - 1])) {
+      // Words match - they're part of the LCS
+      alignment.unshift({ type: 'match', spokenIdx: i - 1, actualIdx: j - 1 });
+      i--;
+      j--;
+    } else if (j > 0 && (i === 0 || lcs[i][j - 1] >= lcs[i - 1][j])) {
+      // Actual word not matched - it's missing from spoken
+      alignment.unshift({ type: 'missing', actualIdx: j - 1 });
+      j--;
+    } else {
+      // Spoken word not matched - it's extra
+      alignment.unshift({ type: 'extra', spokenIdx: i - 1 });
+      i--;
+    }
+  }
+
+  return alignment;
+}
+
+/**
+ * Compare spoken words to actual verse words using LCS-based diff algorithm
+ *
+ * This algorithm uses Longest Common Subsequence (LCS) to find the optimal
+ * alignment between spoken and actual words. Unlike the sequential algorithm,
+ * this handles omissions correctly without cascading errors.
+ *
+ * For example, if the user omits "and sisters" from Romans 12:1:
+ * - Actual: "therefore i urge you brothers and sisters in view of..."
+ * - Spoken: "therefore i urge you brothers in view of..."
+ *
+ * The sequential algorithm would mark everything after "brothers" as wrong.
+ * The LCS algorithm correctly identifies only "and sisters" as missing.
+ *
+ * @param {string[]} spokenWords - Array of words from user's speech
+ * @param {string[]} actualWords - Array of words from correct verse
+ * @returns {Array<{word: string, status: string, expected?: string}>} Comparison result
+ */
+export function compareVersesLCS(spokenWords, actualWords) {
+  const result = [];
+
+  // Handle empty cases
+  if (!actualWords || actualWords.length === 0) {
+    if (spokenWords && spokenWords.length > 0) {
+      spokenWords.forEach(word => {
+        result.push({ word, status: 'extra' });
+      });
+    }
+    return result;
+  }
+
+  if (!spokenWords || spokenWords.length === 0) {
+    actualWords.forEach(word => {
+      result.push({ word, status: 'missing' });
+    });
+    return result;
+  }
+
+  // Build LCS table and backtrack to find alignment
+  const lcs = buildLCSTable(spokenWords, actualWords);
+  const alignment = backtrackLCS(lcs, spokenWords, actualWords);
+
+  // Convert alignment to comparison result
+  for (const op of alignment) {
+    switch (op.type) {
+      case 'match':
+        result.push({ word: spokenWords[op.spokenIdx], status: 'correct' });
+        break;
+      case 'missing':
+        result.push({ word: actualWords[op.actualIdx], status: 'missing' });
+        break;
+      case 'extra':
+        result.push({ word: spokenWords[op.spokenIdx], status: 'extra' });
+        break;
+    }
+  }
+
+  return result;
+}
+
+/**
+ * Enhanced comparison that uses LCS for alignment, then detects substitutions
+ *
+ * This combines LCS alignment with substitution detection. When a spoken word
+ * appears immediately adjacent to a missing actual word (no correct words between),
+ * it's likely a substitution rather than separate extra/missing words.
+ *
+ * @param {string[]} spokenWords - Array of words from user's speech
+ * @param {string[]} actualWords - Array of words from correct verse
+ * @returns {Array<{word: string, status: string, expected?: string}>} Comparison result
+ */
+export function compareVersesWithLCS(spokenWords, actualWords) {
+  // Get the basic LCS comparison
+  const lcsResult = compareVersesLCS(spokenWords, actualWords);
+
+  // Post-process to detect substitutions
+  // A substitution is when an 'extra' word immediately precedes a 'missing' word
+  // (or vice versa) with no 'correct' words between them
+  const result = [];
+
+  let i = 0;
+  while (i < lcsResult.length) {
+    const current = lcsResult[i];
+
+    // Check for extra followed by missing (substitution pattern)
+    if (current.status === 'extra' && i + 1 < lcsResult.length && lcsResult[i + 1].status === 'missing') {
+      // This is a substitution: extra word where missing word should be
+      result.push({
+        word: current.word,
+        status: 'wrong',
+        expected: lcsResult[i + 1].word
+      });
+      i += 2; // Skip both the extra and the missing
+      continue;
+    }
+
+    // Check for missing followed by extra (substitution pattern - user said wrong word)
+    // This is less common but can happen with certain alignments
+    if (current.status === 'missing' && i + 1 < lcsResult.length && lcsResult[i + 1].status === 'extra') {
+      // This is a substitution: the extra word replaces the missing word
+      result.push({
+        word: lcsResult[i + 1].word,
+        status: 'wrong',
+        expected: current.word
+      });
+      i += 2; // Skip both the missing and the extra
+      continue;
+    }
+
+    // Not a substitution - keep as is
+    result.push(current);
+    i++;
+  }
+
+  return result;
+}

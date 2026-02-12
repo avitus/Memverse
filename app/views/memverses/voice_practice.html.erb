@@ -111,14 +111,82 @@ $(document).ready(function() {
     return normalized.split(' ');
   }
 
-  // Compare spoken words to actual verse words
+  // ========================================
+  // LCS-based Comparison Algorithm
+  // ========================================
+  // Uses Longest Common Subsequence (LCS) to find optimal word alignment.
+  // This prevents cascading errors when words are omitted.
+  // For example, omitting "and sisters" from Romans 12:1 only marks
+  // those two words as missing, not the entire rest of the verse.
+
+  // Build LCS table using dynamic programming
+  function buildLCSTable(spokenWords, actualWords) {
+    var m = spokenWords.length;
+    var n = actualWords.length;
+
+    // Create table with (m+1) x (n+1) dimensions, initialized to 0
+    var lcs = [];
+    for (var i = 0; i <= m; i++) {
+      lcs[i] = [];
+      for (var j = 0; j <= n; j++) {
+        lcs[i][j] = 0;
+      }
+    }
+
+    // Fill the table using dynamic programming
+    for (var i = 1; i <= m; i++) {
+      for (var j = 1; j <= n; j++) {
+        if (flexibleTextMatch(actualWords[j - 1], spokenWords[i - 1])) {
+          // Words match - extend the subsequence
+          lcs[i][j] = lcs[i - 1][j - 1] + 1;
+        } else {
+          // Words don't match - take the max from excluding either word
+          lcs[i][j] = Math.max(lcs[i - 1][j], lcs[i][j - 1]);
+        }
+      }
+    }
+
+    return lcs;
+  }
+
+  // Backtrack through LCS table to find the optimal alignment
+  function backtrackLCS(lcs, spokenWords, actualWords) {
+    var alignment = [];
+    var i = spokenWords.length;
+    var j = actualWords.length;
+
+    // Backtrack from bottom-right to top-left
+    while (i > 0 || j > 0) {
+      if (i > 0 && j > 0 && flexibleTextMatch(actualWords[j - 1], spokenWords[i - 1])) {
+        // Words match - they're part of the LCS
+        alignment.unshift({ type: 'match', spokenIdx: i - 1, actualIdx: j - 1 });
+        i--;
+        j--;
+      } else if (j > 0 && (i === 0 || lcs[i][j - 1] >= lcs[i - 1][j])) {
+        // Actual word not matched - it's missing from spoken
+        alignment.unshift({ type: 'missing', actualIdx: j - 1 });
+        j--;
+      } else {
+        // Spoken word not matched - it's extra
+        alignment.unshift({ type: 'extra', spokenIdx: i - 1 });
+        i--;
+      }
+    }
+
+    return alignment;
+  }
+
+  // Compare spoken words to actual verse words using LCS-based algorithm
   function compareVerses(spokenWords, actualWords) {
     var result = [];
 
+    // Handle empty cases
     if (!actualWords || actualWords.length === 0) {
-      spokenWords.forEach(function(word) {
-        result.push({ word: word, status: 'extra' });
-      });
+      if (spokenWords && spokenWords.length > 0) {
+        spokenWords.forEach(function(word) {
+          result.push({ word: word, status: 'extra' });
+        });
+      }
       return result;
     }
 
@@ -129,56 +197,50 @@ $(document).ready(function() {
       return result;
     }
 
-    var i = 0; // Index in spokenWords
-    var j = 0; // Index in actualWords
+    // Build LCS table and backtrack to find alignment
+    var lcs = buildLCSTable(spokenWords, actualWords);
+    var alignment = backtrackLCS(lcs, spokenWords, actualWords);
 
-    while (i < spokenWords.length || j < actualWords.length) {
-      var spoken = spokenWords[i];
-      var actual = actualWords[j];
+    // Convert alignment to comparison result, detecting substitutions
+    var i = 0;
+    while (i < alignment.length) {
+      var op = alignment[i];
 
-      if (i >= spokenWords.length && j >= actualWords.length) {
-        break;
-      }
-
-      if (i >= spokenWords.length) {
-        result.push({ word: actual, status: 'missing' });
-        j++;
+      // Check for extra followed by missing (substitution pattern)
+      if (op.type === 'extra' && i + 1 < alignment.length && alignment[i + 1].type === 'missing') {
+        result.push({
+          word: spokenWords[op.spokenIdx],
+          status: 'wrong',
+          expected: actualWords[alignment[i + 1].actualIdx]
+        });
+        i += 2; // Skip both the extra and the missing
         continue;
       }
 
-      if (j >= actualWords.length) {
-        result.push({ word: spoken, status: 'extra' });
-        i++;
+      // Check for missing followed by extra (substitution pattern)
+      if (op.type === 'missing' && i + 1 < alignment.length && alignment[i + 1].type === 'extra') {
+        result.push({
+          word: spokenWords[alignment[i + 1].spokenIdx],
+          status: 'wrong',
+          expected: actualWords[op.actualIdx]
+        });
+        i += 2; // Skip both the missing and the extra
         continue;
       }
 
-      // Words match - correct (using flexible matching for apostrophes, etc.)
-      if (flexibleTextMatch(actual, spoken)) {
-        result.push({ word: spoken, status: 'correct' });
-        i++;
-        j++;
-        continue;
+      // Not a substitution - process normally
+      switch (op.type) {
+        case 'match':
+          result.push({ word: spokenWords[op.spokenIdx], status: 'correct' });
+          break;
+        case 'missing':
+          result.push({ word: actualWords[op.actualIdx], status: 'missing' });
+          break;
+        case 'extra':
+          result.push({ word: spokenWords[op.spokenIdx], status: 'extra' });
+          break;
       }
-
-      // Words don't match - need to determine if wrong, missing, or extra
-      // Look ahead to see if this is an insertion (extra) or substitution (wrong)
-      var nextSpokenMatchesActual = spokenWords[i + 1] && flexibleTextMatch(actual, spokenWords[i + 1]);
-      var spokenMatchesNextActual = actualWords[j + 1] && flexibleTextMatch(actualWords[j + 1], spoken);
-
-      if (nextSpokenMatchesActual && !spokenMatchesNextActual) {
-        // Current spoken word is extra, next spoken word matches current actual
-        result.push({ word: spoken, status: 'extra' });
-        i++;
-      } else if (spokenMatchesNextActual && !nextSpokenMatchesActual) {
-        // Current actual word is missing, current spoken matches next actual
-        result.push({ word: actual, status: 'missing' });
-        j++;
-      } else {
-        // Substitution - wrong word
-        result.push({ word: spoken, status: 'wrong', expected: actual });
-        i++;
-        j++;
-      }
+      i++;
     }
 
     return result;

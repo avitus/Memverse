@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { scrubText, flexibleTextMatch, normalizeText, getWordArray, compareVerses, calculateAccuracy, getSuggestedRating, renderComparison, renderComparisonHighlightOnly, filterTrailingMissing } from '../../app/javascript/voice_comparison.js';
+import { scrubText, flexibleTextMatch, normalizeText, getWordArray, compareVerses, compareVersesLCS, compareVersesWithLCS, calculateAccuracy, getSuggestedRating, renderComparison, renderComparisonHighlightOnly, filterTrailingMissing } from '../../app/javascript/voice_comparison.js';
 
 describe('Voice Comparison Feature', () => {
 
@@ -385,6 +385,308 @@ describe('Voice Comparison Feature', () => {
 
       const correctCount = result.filter(r => r.status === 'correct').length;
       expect(correctCount).toBe(6);
+    });
+  });
+
+  // ==========================================
+  // LCS-based comparison tests
+  // ==========================================
+
+  describe('compareVersesLCS', () => {
+    it('identifies all correct words', () => {
+      const spokenWords = ['the', 'lord', 'is', 'my', 'shepherd'];
+      const actualWords = ['the', 'lord', 'is', 'my', 'shepherd'];
+      const result = compareVersesLCS(spokenWords, actualWords);
+
+      expect(result).toEqual([
+        { word: 'the', status: 'correct' },
+        { word: 'lord', status: 'correct' },
+        { word: 'is', status: 'correct' },
+        { word: 'my', status: 'correct' },
+        { word: 'shepherd', status: 'correct' }
+      ]);
+    });
+
+    it('handles empty spoken text (all words missing)', () => {
+      const spokenWords = [];
+      const actualWords = ['the', 'lord', 'is'];
+      const result = compareVersesLCS(spokenWords, actualWords);
+
+      expect(result).toEqual([
+        { word: 'the', status: 'missing' },
+        { word: 'lord', status: 'missing' },
+        { word: 'is', status: 'missing' }
+      ]);
+    });
+
+    it('handles empty actual text (all words extra)', () => {
+      const spokenWords = ['the', 'lord', 'is'];
+      const actualWords = [];
+      const result = compareVersesLCS(spokenWords, actualWords);
+
+      expect(result).toEqual([
+        { word: 'the', status: 'extra' },
+        { word: 'lord', status: 'extra' },
+        { word: 'is', status: 'extra' }
+      ]);
+    });
+
+    it('identifies missing word in middle without cascading errors', () => {
+      const spokenWords = ['the', 'lord', 'my', 'shepherd'];
+      const actualWords = ['the', 'lord', 'is', 'my', 'shepherd'];
+      const result = compareVersesLCS(spokenWords, actualWords);
+
+      // LCS should correctly identify only 'is' as missing
+      expect(result).toEqual([
+        { word: 'the', status: 'correct' },
+        { word: 'lord', status: 'correct' },
+        { word: 'is', status: 'missing' },
+        { word: 'my', status: 'correct' },
+        { word: 'shepherd', status: 'correct' }
+      ]);
+    });
+
+    it('identifies multiple missing words without cascading errors', () => {
+      const spokenWords = ['the', 'shepherd'];
+      const actualWords = ['the', 'lord', 'is', 'my', 'shepherd'];
+      const result = compareVersesLCS(spokenWords, actualWords);
+
+      // Should correctly identify 3 missing words
+      const missingWords = result.filter(r => r.status === 'missing');
+      expect(missingWords.length).toBe(3);
+      expect(missingWords.map(m => m.word)).toEqual(['lord', 'is', 'my']);
+
+      const correctWords = result.filter(r => r.status === 'correct');
+      expect(correctWords.length).toBe(2);
+    });
+
+    it('identifies extra word without cascading errors', () => {
+      const spokenWords = ['the', 'lord', 'um', 'is', 'my', 'shepherd'];
+      const actualWords = ['the', 'lord', 'is', 'my', 'shepherd'];
+      const result = compareVersesLCS(spokenWords, actualWords);
+
+      // 'um' should be extra, everything else correct
+      const extraWords = result.filter(r => r.status === 'extra');
+      expect(extraWords.length).toBe(1);
+      expect(extraWords[0].word).toBe('um');
+
+      const correctWords = result.filter(r => r.status === 'correct');
+      expect(correctWords.length).toBe(5);
+    });
+
+    // ==========================================
+    // Cascading error prevention tests
+    // ==========================================
+
+    describe('cascading error prevention', () => {
+      it('handles Romans 12:1 "and sisters" omission correctly', () => {
+        // This is the specific case that caused the cascading error problem
+        const actualWords = [
+          'therefore', 'i', 'urge', 'you', 'brothers', 'and', 'sisters',
+          'in', 'view', 'of', 'gods', 'mercy', 'to', 'offer', 'your',
+          'bodies', 'as', 'a', 'living', 'sacrifice', 'holy', 'and',
+          'pleasing', 'to', 'god', 'this', 'is', 'your', 'true', 'and',
+          'proper', 'worship'
+        ];
+        const spokenWords = [
+          'therefore', 'i', 'urge', 'you', 'brothers',
+          'in', 'view', 'of', 'gods', 'mercy', 'to', 'offer', 'your',
+          'bodies', 'as', 'a', 'living', 'sacrifice', 'holy', 'and',
+          'pleasing', 'to', 'god', 'this', 'is', 'your', 'true', 'and',
+          'proper', 'worship'
+        ];
+        const result = compareVersesLCS(spokenWords, actualWords);
+
+        // Should identify exactly 2 missing words: 'and' and 'sisters'
+        const missingWords = result.filter(r => r.status === 'missing');
+        expect(missingWords.length).toBe(2);
+        expect(missingWords[0].word).toBe('and');
+        expect(missingWords[1].word).toBe('sisters');
+
+        // All other words should be correct
+        const correctWords = result.filter(r => r.status === 'correct');
+        expect(correctWords.length).toBe(30);
+
+        // No words should be marked as wrong or extra
+        const wrongWords = result.filter(r => r.status === 'wrong');
+        expect(wrongWords.length).toBe(0);
+
+        const extraWords = result.filter(r => r.status === 'extra');
+        expect(extraWords.length).toBe(0);
+      });
+
+      it('handles omission of "the" in John 3:16 correctly', () => {
+        // "For God so loved world" instead of "For God so loved the world"
+        const actualWords = ['for', 'god', 'so', 'loved', 'the', 'world'];
+        const spokenWords = ['for', 'god', 'so', 'loved', 'world'];
+        const result = compareVersesLCS(spokenWords, actualWords);
+
+        const missingWords = result.filter(r => r.status === 'missing');
+        expect(missingWords.length).toBe(1);
+        expect(missingWords[0].word).toBe('the');
+
+        const correctWords = result.filter(r => r.status === 'correct');
+        expect(correctWords.length).toBe(5);
+      });
+
+      it('handles omission at the beginning correctly', () => {
+        // "Lord is my shepherd" instead of "The Lord is my shepherd"
+        const actualWords = ['the', 'lord', 'is', 'my', 'shepherd'];
+        const spokenWords = ['lord', 'is', 'my', 'shepherd'];
+        const result = compareVersesLCS(spokenWords, actualWords);
+
+        const missingWords = result.filter(r => r.status === 'missing');
+        expect(missingWords.length).toBe(1);
+        expect(missingWords[0].word).toBe('the');
+
+        const correctWords = result.filter(r => r.status === 'correct');
+        expect(correctWords.length).toBe(4);
+      });
+
+      it('handles omission at the end correctly', () => {
+        // "The Lord is my" instead of "The Lord is my shepherd"
+        const actualWords = ['the', 'lord', 'is', 'my', 'shepherd'];
+        const spokenWords = ['the', 'lord', 'is', 'my'];
+        const result = compareVersesLCS(spokenWords, actualWords);
+
+        const missingWords = result.filter(r => r.status === 'missing');
+        expect(missingWords.length).toBe(1);
+        expect(missingWords[0].word).toBe('shepherd');
+
+        const correctWords = result.filter(r => r.status === 'correct');
+        expect(correctWords.length).toBe(4);
+      });
+
+      it('handles multiple scattered omissions correctly', () => {
+        // "For so loved world" instead of "For God so loved the world"
+        const actualWords = ['for', 'god', 'so', 'loved', 'the', 'world'];
+        const spokenWords = ['for', 'so', 'loved', 'world'];
+        const result = compareVersesLCS(spokenWords, actualWords);
+
+        const missingWords = result.filter(r => r.status === 'missing');
+        expect(missingWords.length).toBe(2);
+
+        const correctWords = result.filter(r => r.status === 'correct');
+        expect(correctWords.length).toBe(4);
+      });
+
+      it('handles insertion without cascading errors', () => {
+        // "For um God so loved the world" instead of "For God so loved the world"
+        const actualWords = ['for', 'god', 'so', 'loved', 'the', 'world'];
+        const spokenWords = ['for', 'um', 'god', 'so', 'loved', 'the', 'world'];
+        const result = compareVersesLCS(spokenWords, actualWords);
+
+        const extraWords = result.filter(r => r.status === 'extra');
+        expect(extraWords.length).toBe(1);
+        expect(extraWords[0].word).toBe('um');
+
+        const correctWords = result.filter(r => r.status === 'correct');
+        expect(correctWords.length).toBe(6);
+      });
+
+      it('handles both insertion and omission in same verse', () => {
+        // "For um so loved world" instead of "For God so loved the world"
+        const actualWords = ['for', 'god', 'so', 'loved', 'the', 'world'];
+        const spokenWords = ['for', 'um', 'so', 'loved', 'world'];
+        const result = compareVersesLCS(spokenWords, actualWords);
+
+        const extraWords = result.filter(r => r.status === 'extra');
+        expect(extraWords.length).toBe(1);
+        expect(extraWords[0].word).toBe('um');
+
+        const missingWords = result.filter(r => r.status === 'missing');
+        expect(missingWords.length).toBe(2);
+
+        const correctWords = result.filter(r => r.status === 'correct');
+        expect(correctWords.length).toBe(4);
+      });
+    });
+
+    // ==========================================
+    // Apostrophe handling with LCS
+    // ==========================================
+
+    it('matches "gods" to "God\'s" as correct', () => {
+      const spokenWords = ['gods', 'love'];
+      const actualWords = ["god's", 'love'];
+      const result = compareVersesLCS(spokenWords, actualWords);
+
+      expect(result[0]).toEqual({ word: 'gods', status: 'correct' });
+      expect(result[1]).toEqual({ word: 'love', status: 'correct' });
+    });
+  });
+
+  describe('compareVersesWithLCS', () => {
+    it('identifies substitutions (extra followed by missing)', () => {
+      // User says "lrod" instead of "lord"
+      const spokenWords = ['the', 'lrod', 'is'];
+      const actualWords = ['the', 'lord', 'is'];
+      const result = compareVersesWithLCS(spokenWords, actualWords);
+
+      // 'lrod' should be marked as wrong with expected 'lord'
+      const wrongWords = result.filter(r => r.status === 'wrong');
+      expect(wrongWords.length).toBe(1);
+      expect(wrongWords[0].word).toBe('lrod');
+      expect(wrongWords[0].expected).toBe('lord');
+
+      const correctWords = result.filter(r => r.status === 'correct');
+      expect(correctWords.length).toBe(2);
+    });
+
+    it('does not create false substitutions for distant mismatches', () => {
+      // When 'um' is inserted and 'is' is missing, they shouldn't be treated as substitution
+      // because there's a 'lord' (correct) between them
+      const spokenWords = ['the', 'um', 'lord', 'my', 'shepherd'];
+      const actualWords = ['the', 'lord', 'is', 'my', 'shepherd'];
+      const result = compareVersesWithLCS(spokenWords, actualWords);
+
+      // 'um' is extra, 'is' is missing - not a substitution because 'lord' is between
+      const extraWords = result.filter(r => r.status === 'extra');
+      expect(extraWords.length).toBe(1);
+
+      const missingWords = result.filter(r => r.status === 'missing');
+      expect(missingWords.length).toBe(1);
+    });
+
+    it('handles Romans 12:1 "and sisters" omission correctly', () => {
+      // Same test as LCS but ensures substitution detection doesn't break it
+      const actualWords = [
+        'therefore', 'i', 'urge', 'you', 'brothers', 'and', 'sisters',
+        'in', 'view', 'of', 'gods', 'mercy'
+      ];
+      const spokenWords = [
+        'therefore', 'i', 'urge', 'you', 'brothers',
+        'in', 'view', 'of', 'gods', 'mercy'
+      ];
+      const result = compareVersesWithLCS(spokenWords, actualWords);
+
+      // Should identify exactly 2 missing words
+      const missingWords = result.filter(r => r.status === 'missing');
+      expect(missingWords.length).toBe(2);
+
+      // All other words should be correct
+      const correctWords = result.filter(r => r.status === 'correct');
+      expect(correctWords.length).toBe(10);
+
+      // No substitutions
+      const wrongWords = result.filter(r => r.status === 'wrong');
+      expect(wrongWords.length).toBe(0);
+    });
+
+    it('handles combination of omission and substitution', () => {
+      // "For lrod loved world" instead of "For God so loved the world"
+      // 'lrod' substitutes for something, 'so' and 'the' are missing
+      const actualWords = ['for', 'god', 'so', 'loved', 'the', 'world'];
+      const spokenWords = ['for', 'lrod', 'loved', 'world'];
+      const result = compareVersesWithLCS(spokenWords, actualWords);
+
+      // 'for', 'loved', 'world' should be correct
+      const correctWords = result.filter(r => r.status === 'correct');
+      expect(correctWords.length).toBe(3);
+
+      // Should have some wrong or missing words
+      const wrongAndMissing = result.filter(r => r.status === 'wrong' || r.status === 'missing');
+      expect(wrongAndMissing.length).toBeGreaterThanOrEqual(2);
     });
   });
 

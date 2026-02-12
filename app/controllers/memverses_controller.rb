@@ -1343,7 +1343,7 @@ class MemversesController < ApplicationController
 
     unless @mv
       flash[:notice] = "You have completed your review for today!"
-      redirect_to show_progress_path and return
+      redirect_to progress_path and return
     end
 
     # Load upcoming verses for sidebar
