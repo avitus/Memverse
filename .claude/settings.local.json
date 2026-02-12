@@ -53,7 +53,8 @@
       "Bash(ls:*)",
       "WebFetch(domain:github.com)",
       "Bash(cat:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(git checkout:*)"
     ],
     "deny": [],
     "ask": [],

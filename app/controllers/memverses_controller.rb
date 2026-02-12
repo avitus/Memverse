@@ -1327,13 +1327,23 @@ class MemversesController < ApplicationController
     @tab = "learn"
     @sub = "voice"
 
-    # Try to get a memorized verse first, then any active verse
-    @mv = current_user.memverses.active.where(status: 'Memorized').order('RAND()').first
-    @mv ||= current_user.memverses.active.order('RAND()').first
-
-    unless @mv
+    # Check if user has any verses at all
+    unless current_user.memverses.active.exists?
       flash[:notice] = "You need to add some verses first."
       redirect_to add_verse_path and return
+    end
+
+    # Get passages due for review (same as /review page)
+    passage = current_user.passages.due.active.first
+
+    if passage
+      # Get first verse in passage ordered by verse number (same as /review)
+      @mv = passage.memverses.active.includes(:verse).order('verses.versenum').first
+    end
+
+    unless @mv
+      flash[:notice] = "You have completed your review for today!"
+      redirect_to show_progress_path and return
     end
 
     # Load upcoming verses for sidebar
