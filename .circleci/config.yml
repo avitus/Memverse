@@ -274,6 +274,11 @@ jobs:
               echo "Installing dependencies with npm install..."
               npm install --verbose
 
+              # Explicitly install Linux-specific Rollup binding (npm optional deps bug workaround)
+              # See: https://github.com/npm/cli/issues/4828
+              echo "Installing Linux-specific Rollup binding..."
+              npm install @rollup/rollup-linux-x64-gnu --save-optional
+
               # Check if installation succeeded
               echo "Checking installation results..."
               if [ -d "node_modules/@rollup" ]; then
