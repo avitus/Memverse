@@ -3,14 +3,81 @@
  *
  * Compares user's spoken verse transcription to the actual verse text
  * and provides visual feedback on accuracy.
+ *
+ * Uses the same text matching logic as the passage review feature
+ * (flexibleTextMatch from memverse_lib.js) to handle apostrophes,
+ * contractions, and other punctuation variations.
  */
 
 /**
- * Normalize text for comparison
+ * Scrub text for comparison - removes all non-alphanumeric characters
+ * This mirrors the scrub_text function in memverse_lib.js
+ *
+ * @param {string} text - Raw text to scrub
+ * @returns {string} Scrubbed text (lowercase, alphanumeric only)
+ */
+export function scrubText(text) {
+  if (!text || typeof text !== 'string') {
+    return '';
+  }
+  return text
+    .toLowerCase()
+    .replace(/[^0-9a-z\u00BF-\u1FFF\u2C00-\uD7FF]+/g, '');
+}
+
+/**
+ * Flexible text matching for word comparison
+ * This mirrors the flexibleTextMatch function in memverse_lib.js
+ *
+ * Handles common variations:
+ * - Case insensitive matching
+ * - Apostrophe words: "gods" matches "God's", "dont" matches "don't"
+ * - Quotation marks: "The" matches '"The'
+ * - Falls back to scrubText comparison for other cases
+ *
+ * @param {string} correctWord - The expected word from the verse
+ * @param {string} userInput - The word from user's speech
+ * @returns {boolean} True if words match flexibly
+ */
+export function flexibleTextMatch(correctWord, userInput) {
+  if (!correctWord || !userInput) {
+    return false;
+  }
+
+  // First, check for exact match (case-insensitive)
+  if (correctWord.toLowerCase() === userInput.toLowerCase()) {
+    return true;
+  }
+
+  // Handle apostrophe words - accept word without apostrophes
+  // e.g., "childrens" matches "children's", "gods" matches "God's"
+  if (correctWord.includes("'") || correctWord.includes("'")) {
+    const withoutApostrophes = correctWord.replace(/['']/g, '');
+    if (withoutApostrophes.toLowerCase() === userInput.toLowerCase()) {
+      return true;
+    }
+  }
+
+  // Handle quotation marks at beginning
+  // e.g., "The" matches '"The' or '"The'
+  if (correctWord.match(/^["'"'"]/)) {
+    const withoutQuote = correctWord.replace(/^["'"'"]/, '');
+    if (withoutQuote.toLowerCase() === userInput.toLowerCase()) {
+      return true;
+    }
+  }
+
+  // For all other cases, use scrubText comparison
+  return scrubText(correctWord) === scrubText(userInput);
+}
+
+/**
+ * Normalize text for splitting into words
  * - Convert to lowercase
- * - Remove punctuation (periods, commas, colons, semicolons, quotes, parentheses)
  * - Normalize whitespace (multiple spaces to single space)
  * - Trim leading/trailing whitespace
+ *
+ * Note: We preserve punctuation here because flexibleTextMatch handles it
  *
  * @param {string} text - Raw text to normalize
  * @returns {string} Normalized text
@@ -22,15 +89,14 @@ export function normalizeText(text) {
 
   return text
     .toLowerCase()
-    .replace(/[.,;:'"()]/g, '') // Remove punctuation
     .replace(/\s+/g, ' ')        // Normalize whitespace
     .trim();                      // Trim leading/trailing whitespace
 }
 
 /**
- * Split normalized text into array of words
+ * Split text into array of words
  *
- * @param {string} text - Normalized text
+ * @param {string} text - Text to split
  * @returns {string[]} Array of words
  */
 export function getWordArray(text) {
@@ -50,7 +116,7 @@ export function getWordArray(text) {
  * Compare spoken words to actual verse words using sequential diff algorithm
  *
  * Algorithm:
- * - Compare word by word sequentially
+ * - Compare word by word sequentially using flexibleTextMatch
  * - Track insertions (extra words) and deletions (missing words)
  * - Mark substitutions (wrong words)
  *
@@ -105,8 +171,8 @@ export function compareVerses(spokenWords, actualWords) {
       continue;
     }
 
-    // Words match - correct
-    if (spoken === actual) {
+    // Words match - correct (using flexible matching for apostrophes, etc.)
+    if (flexibleTextMatch(actual, spoken)) {
       result.push({ word: spoken, status: 'correct' });
       i++;
       j++;
@@ -115,8 +181,8 @@ export function compareVerses(spokenWords, actualWords) {
 
     // Words don't match - need to determine if wrong, missing, or extra
     // Look ahead to see if this is an insertion (extra) or substitution (wrong)
-    const nextSpokenMatchesActual = spokenWords[i + 1] === actual;
-    const spokenMatchesNextActual = spoken === actualWords[j + 1];
+    const nextSpokenMatchesActual = spokenWords[i + 1] && flexibleTextMatch(actual, spokenWords[i + 1]);
+    const spokenMatchesNextActual = actualWords[j + 1] && flexibleTextMatch(actualWords[j + 1], spoken);
 
     if (nextSpokenMatchesActual && !spokenMatchesNextActual) {
       // Current spoken word is extra, next spoken word matches current actual

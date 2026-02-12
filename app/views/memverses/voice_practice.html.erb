@@ -70,15 +70,19 @@ $(document).ready(function() {
   // ========================================
   // Voice Comparison Functions
   // ========================================
+  // Note: scrub_text and flexibleTextMatch are provided globally by memverse_lib.js
 
-  // Normalize text for comparison
+  // Normalize text for splitting into words
+  // - Convert to lowercase
+  // - Normalize whitespace (multiple spaces to single space)
+  // - Trim leading/trailing whitespace
+  // Note: We preserve punctuation here because flexibleTextMatch handles it
   function normalizeText(text) {
     if (!text || typeof text !== 'string') {
       return '';
     }
     return text
       .toLowerCase()
-      .replace(/[.,;:'"()]/g, '') // Remove punctuation
       .replace(/\s+/g, ' ')        // Normalize whitespace
       .trim();
   }
@@ -136,24 +140,29 @@ $(document).ready(function() {
         continue;
       }
 
-      if (spoken === actual) {
+      // Words match - correct (using flexible matching for apostrophes, etc.)
+      if (flexibleTextMatch(actual, spoken)) {
         result.push({ word: spoken, status: 'correct' });
         i++;
         j++;
         continue;
       }
 
-      // Look ahead for insertions/deletions
-      var nextSpokenMatchesActual = spokenWords[i + 1] === actual;
-      var spokenMatchesNextActual = spoken === actualWords[j + 1];
+      // Words don't match - need to determine if wrong, missing, or extra
+      // Look ahead to see if this is an insertion (extra) or substitution (wrong)
+      var nextSpokenMatchesActual = spokenWords[i + 1] && flexibleTextMatch(actual, spokenWords[i + 1]);
+      var spokenMatchesNextActual = actualWords[j + 1] && flexibleTextMatch(actualWords[j + 1], spoken);
 
       if (nextSpokenMatchesActual && !spokenMatchesNextActual) {
+        // Current spoken word is extra, next spoken word matches current actual
         result.push({ word: spoken, status: 'extra' });
         i++;
       } else if (spokenMatchesNextActual && !nextSpokenMatchesActual) {
+        // Current actual word is missing, current spoken matches next actual
         result.push({ word: actual, status: 'missing' });
         j++;
       } else {
+        // Substitution - wrong word
         result.push({ word: spoken, status: 'wrong', expected: actual });
         i++;
         j++;

@@ -1,39 +1,140 @@
 import { describe, it, expect } from 'vitest';
-import { normalizeText, getWordArray, compareVerses, calculateAccuracy, getSuggestedRating, renderComparison, filterTrailingMissing } from '../../app/javascript/voice_comparison.js';
+import { scrubText, flexibleTextMatch, normalizeText, getWordArray, compareVerses, calculateAccuracy, getSuggestedRating, renderComparison, filterTrailingMissing } from '../../app/javascript/voice_comparison.js';
 
 describe('Voice Comparison Feature', () => {
 
+  describe('scrubText', () => {
+    it('converts text to lowercase', () => {
+      expect(scrubText('Hello World')).toBe('helloworld');
+    });
+
+    it('removes all punctuation', () => {
+      expect(scrubText("God's love")).toBe('godslove');
+    });
+
+    it('removes curly apostrophes', () => {
+      expect(scrubText("God\u2019s love")).toBe('godslove');
+    });
+
+    it('removes periods and commas', () => {
+      expect(scrubText('Hello, world.')).toBe('helloworld');
+    });
+
+    it('removes all non-alphanumeric characters', () => {
+      expect(scrubText('Hello! "World" (test)')).toBe('helloworldtest');
+    });
+
+    it('preserves numbers', () => {
+      expect(scrubText('John 3:16')).toBe('john316');
+    });
+
+    it('handles empty string', () => {
+      expect(scrubText('')).toBe('');
+    });
+
+    it('handles null/undefined', () => {
+      expect(scrubText(null)).toBe('');
+      expect(scrubText(undefined)).toBe('');
+    });
+
+    it('preserves unicode letters', () => {
+      // Spanish
+      expect(scrubText('señor')).toBe('señor');
+      // French
+      expect(scrubText('café')).toBe('café');
+    });
+  });
+
+  describe('flexibleTextMatch', () => {
+    // Exact matches
+    it('matches identical words', () => {
+      expect(flexibleTextMatch('hello', 'hello')).toBe(true);
+    });
+
+    it('matches case-insensitively', () => {
+      expect(flexibleTextMatch('Hello', 'hello')).toBe(true);
+      expect(flexibleTextMatch('HELLO', 'hello')).toBe(true);
+    });
+
+    // Apostrophe handling - the main use case
+    it('matches "gods" to "God\'s" (straight apostrophe)', () => {
+      expect(flexibleTextMatch("God's", 'gods')).toBe(true);
+    });
+
+    it('matches "gods" to "God\u2019s" (curly apostrophe)', () => {
+      expect(flexibleTextMatch("God\u2019s", 'gods')).toBe(true);
+    });
+
+    it('matches "dont" to "don\'t"', () => {
+      expect(flexibleTextMatch("don't", 'dont')).toBe(true);
+    });
+
+    it('matches "childrens" to "children\'s"', () => {
+      expect(flexibleTextMatch("children's", 'childrens')).toBe(true);
+    });
+
+    it('matches "im" to "I\'m"', () => {
+      expect(flexibleTextMatch("I'm", 'im')).toBe(true);
+    });
+
+    it('matches "its" to "it\'s"', () => {
+      expect(flexibleTextMatch("it's", 'its')).toBe(true);
+    });
+
+    // Quotation marks at beginning
+    it('matches "The" to "\\"The" (with opening quote)', () => {
+      expect(flexibleTextMatch('"The', 'The')).toBe(true);
+    });
+
+    it('matches "The" to ""The" (curly opening quote)', () => {
+      expect(flexibleTextMatch('"The', 'The')).toBe(true);
+    });
+
+    // Scrub fallback for other punctuation
+    it('matches words with trailing punctuation via scrub', () => {
+      expect(flexibleTextMatch('world,', 'world')).toBe(true);
+    });
+
+    it('matches words with periods via scrub', () => {
+      expect(flexibleTextMatch('end.', 'end')).toBe(true);
+    });
+
+    // Non-matches
+    it('does not match completely different words', () => {
+      expect(flexibleTextMatch('hello', 'world')).toBe(false);
+    });
+
+    it('does not match partial words', () => {
+      expect(flexibleTextMatch('hello', 'hel')).toBe(false);
+    });
+
+    // Edge cases
+    it('returns false for null/undefined inputs', () => {
+      expect(flexibleTextMatch(null, 'test')).toBe(false);
+      expect(flexibleTextMatch('test', null)).toBe(false);
+      expect(flexibleTextMatch(null, null)).toBe(false);
+    });
+
+    it('returns false for empty strings', () => {
+      expect(flexibleTextMatch('', 'test')).toBe(false);
+      expect(flexibleTextMatch('test', '')).toBe(false);
+    });
+  });
+
   describe('normalizeText', () => {
+    // Note: normalizeText now only lowercases and normalizes whitespace
+    // Punctuation is preserved because flexibleTextMatch handles it during comparison
+
     it('converts text to lowercase', () => {
       expect(normalizeText('The LORD is my Shepherd')).toBe('the lord is my shepherd');
     });
 
-    it('removes periods', () => {
-      expect(normalizeText('In the beginning. God created.')).toBe('in the beginning god created');
+    it('preserves punctuation (handled by flexibleTextMatch)', () => {
+      expect(normalizeText('In the beginning. God created.')).toBe('in the beginning. god created.');
     });
 
-    it('removes commas', () => {
-      expect(normalizeText('In the beginning, God created the heavens, and the earth')).toBe('in the beginning god created the heavens and the earth');
-    });
-
-    it('removes colons', () => {
-      expect(normalizeText('He said: "Let there be light"')).toBe('he said let there be light');
-    });
-
-    it('removes semicolons', () => {
-      expect(normalizeText('For God so loved; he gave')).toBe('for god so loved he gave');
-    });
-
-    it('removes double quotes', () => {
-      expect(normalizeText('He said "Hello" to them')).toBe('he said hello to them');
-    });
-
-    it('removes single quotes', () => {
-      expect(normalizeText("It's the Lord's doing")).toBe('its the lords doing');
-    });
-
-    it('removes parentheses', () => {
-      expect(normalizeText('The LORD (Yahweh) is God')).toBe('the lord yahweh is god');
+    it('preserves apostrophes (handled by flexibleTextMatch)', () => {
+      expect(normalizeText("God's love")).toBe("god's love");
     });
 
     it('normalizes multiple spaces to single space', () => {
@@ -52,16 +153,9 @@ describe('Voice Comparison Feature', () => {
       expect(normalizeText('')).toBe('');
     });
 
-    it('handles string with only punctuation', () => {
-      expect(normalizeText('.,;:"()')).toBe('');
-    });
-
-    it('handles complex real-world verse', () => {
-      expect(normalizeText('For God so loved the world, that he gave his one and only Son.')).toBe('for god so loved the world that he gave his one and only son');
-    });
-
-    it('handles multiple punctuation types together', () => {
-      expect(normalizeText('He said: "Yes, truly; (certainly)."')).toBe('he said yes truly certainly');
+    it('handles null/undefined', () => {
+      expect(normalizeText(null)).toBe('');
+      expect(normalizeText(undefined)).toBe('');
     });
   });
 
@@ -84,6 +178,10 @@ describe('Voice Comparison Feature', () => {
 
     it('handles string with only spaces', () => {
       expect(getWordArray('   ')).toEqual([]);
+    });
+
+    it('preserves punctuation in words (handled by flexibleTextMatch)', () => {
+      expect(getWordArray("God's love is great.")).toEqual(["god's", 'love', 'is', 'great.']);
     });
   });
 
@@ -233,6 +331,60 @@ describe('Voice Comparison Feature', () => {
       const result = compareVerses(spokenWords, actualWords);
 
       expect(result.filter(r => r.status === 'extra')).toHaveLength(3);
+    });
+
+    // Apostrophe handling tests - the key use case for flexibleTextMatch
+    it('matches "gods" to "God\'s" as correct', () => {
+      const spokenWords = ['gods', 'love'];
+      const actualWords = ["god's", 'love'];
+      const result = compareVerses(spokenWords, actualWords);
+
+      expect(result[0]).toEqual({ word: 'gods', status: 'correct' });
+      expect(result[1]).toEqual({ word: 'love', status: 'correct' });
+    });
+
+    it('matches "dont" to "don\'t" as correct', () => {
+      const spokenWords = ['dont', 'worry'];
+      const actualWords = ["don't", 'worry'];
+      const result = compareVerses(spokenWords, actualWords);
+
+      expect(result[0]).toEqual({ word: 'dont', status: 'correct' });
+      expect(result[1]).toEqual({ word: 'worry', status: 'correct' });
+    });
+
+    it('matches "childrens" to "children\'s" as correct', () => {
+      const spokenWords = ['the', 'childrens', 'toys'];
+      const actualWords = ["the", "children's", 'toys'];
+      const result = compareVerses(spokenWords, actualWords);
+
+      expect(result[0]).toEqual({ word: 'the', status: 'correct' });
+      expect(result[1]).toEqual({ word: 'childrens', status: 'correct' });
+      expect(result[2]).toEqual({ word: 'toys', status: 'correct' });
+    });
+
+    it('matches curly apostrophe words as correct', () => {
+      const spokenWords = ['gods', 'love'];
+      const actualWords = ["god\u2019s", 'love']; // curly apostrophe
+      const result = compareVerses(spokenWords, actualWords);
+
+      expect(result[0]).toEqual({ word: 'gods', status: 'correct' });
+    });
+
+    it('handles quotation marks at start of words', () => {
+      const spokenWords = ['the', 'word'];
+      const actualWords = ['"the', 'word'];
+      const result = compareVerses(spokenWords, actualWords);
+
+      expect(result[0]).toEqual({ word: 'the', status: 'correct' });
+    });
+
+    it('handles full verse with apostrophes correctly', () => {
+      const spokenWords = ['for', 'gods', 'so', 'loved', 'the', 'world'];
+      const actualWords = ['for', "god\u2019s", 'so', 'loved', 'the', 'world'];
+      const result = compareVerses(spokenWords, actualWords);
+
+      const correctCount = result.filter(r => r.status === 'correct').length;
+      expect(correctCount).toBe(6);
     });
   });
 

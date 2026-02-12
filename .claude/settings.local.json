@@ -50,7 +50,10 @@
       "Bash(node test_quiz_times.js:*)",
       "mcp__serena__read_memory",
       "Bash(bundle exec cucumber:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "WebFetch(domain:github.com)",
+      "Bash(cat:*)",
+      "Bash(grep:*)"
     ],
     "deny": [],
     "ask": [],
