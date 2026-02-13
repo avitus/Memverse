@@ -5,11 +5,17 @@
 
     <div class="passage-entry voice-practice">
 
+      <!-- Passage Title -->
+      <div class="passage-title-container">
+        <h2 class="passage-title"></h2>
+        <div class="passage-id" style="display:none;"></div>
+      </div>
+
       <!-- Verse Reference Display -->
       <div class="voice-reference">
         <h2>
-          <span class="verse-ref"><%= @mv.verse.ref %></span>
-          <span class="verse-tl">[<%= @mv.verse.translation %>]</span>
+          <span class="verse-ref"></span>
+          <span class="verse-tl"></span>
         </h2>
       </div>
 
@@ -45,14 +51,14 @@
 
       <!-- Hidden Answer -->
       <div id="verse-answer">
-        <p><%= @mv.verse.text %></p>
+        <p class="verse-text"></p>
       </div>
 
     </div> <!-- end: passage-entry column -->
 
     <div class="upcoming-passages upcoming">
-        <h2>Upcoming Verses</h2>
-        <%= render partial: "upcoming_verses" %>
+        <h2>Upcoming Passages</h2>
+        <!-- Populated dynamically like /review -->
     </div> <!-- end: upcoming-passages column -->
 
 </div>
@@ -60,11 +66,187 @@
 
 <script>
 $(document).ready(function() {
-  // Verse data
-  var currentVerse = {
-    id: <%= @mv.id %>,
-    ref: "<%= @mv.verse.ref %>",
-    text: "<%= escape_javascript(@mv.verse.text) %>"
+
+  // ========================================
+  // Voice Review State (reuses reviewState patterns)
+  // ========================================
+  var voiceReviewState = {
+    passages: [],           // List of due passages
+    currentPassageId: null, // Current passage being reviewed
+    currentPassageRef: null,
+    passageVerses: [],      // All memverses in current passage
+    currentVerseIndex: -1,  // Index of current verse being reviewed
+    currentVerse: null,     // Current verse data
+
+    // Initialize - fetch due passages and start
+    initialize: function() {
+      var self = this;
+      $.getJSON('/passages/due.json', function(data) {
+        self.passages = data;
+
+        // Build sidebar list (same as reviewState)
+        var items = [];
+        $.each(data, function(index, passage) {
+          items.push('<li class="upcoming-verse-ref white2" id="' + passage.id + '">' + passage.ref + '</li>');
+        });
+        $('<ul/>', { 'class': 'passage-list', html: items.join('') }).appendTo('.upcoming-passages');
+
+        // Load first passage
+        self.autoAdvancePassage();
+      });
+    },
+
+    // Select and load a passage
+    selectPassage: function(passageRef, passageId) {
+      var self = this;
+      self.currentPassageId = passageId;
+      self.currentPassageRef = passageRef;
+
+      // Update passage title
+      $('.passage-title').text(passageRef);
+      $('.passage-id').text(passageId);
+
+      // Fetch all memverses in passage
+      $.getJSON('/passages/' + passageId + '/memverses.json', function(data) {
+        // Ensure it's an array
+        self.passageVerses = $.isArray(data) ? data : [data];
+
+        // Find first due verse
+        self.gotoFirstDueVerse();
+      });
+    },
+
+    // Find and display the first due verse in the passage
+    gotoFirstDueVerse: function() {
+      for (var i = 0; i < this.passageVerses.length; i++) {
+        if (mvDue(this.passageVerses[i])) {
+          this.currentVerseIndex = i;
+          this.displayVerse(this.passageVerses[i]);
+          return;
+        }
+      }
+      // No due verses in this passage - shouldn't happen but handle it
+      this.autoAdvancePassage();
+    },
+
+    // Display a verse for voice review
+    displayVerse: function(verse) {
+      this.currentVerse = verse;
+
+      // Update reference display
+      $('.voice-reference .verse-ref').text(verse.ref);
+      $('.voice-reference .verse-tl').text('[' + verse.translation + ']');
+
+      // Update hidden answer
+      $('#verse-answer .verse-text').text(verse.text);
+      $('#verse-answer').removeClass('visible');
+      $('#show-answer').text('Show Verse');
+
+      // Reset transcription
+      $('#transcription').html('<span class="placeholder">Press the microphone and speak the verse...</span>');
+      $('#accuracy-display').text('');
+      clearSuggestedRating();
+
+      // Reset recording state
+      if (typeof finalTranscript !== 'undefined') {
+        finalTranscript = '';
+      }
+      currentAccuracy = 0;
+    },
+
+    // Go to next due verse (same logic as reviewState.gotoNextVerseDue)
+    gotoNextVerseDue: function() {
+      // Look for next due verse AFTER current
+      for (var i = this.currentVerseIndex + 1; i < this.passageVerses.length; i++) {
+        if (mvDue(this.passageVerses[i])) {
+          this.currentVerseIndex = i;
+          this.displayVerse(this.passageVerses[i]);
+          return;
+        }
+      }
+
+      // Check for skipped verses BEFORE current
+      for (var i = 0; i < this.currentVerseIndex; i++) {
+        if (mvDue(this.passageVerses[i])) {
+          this.currentVerseIndex = i;
+          this.displayVerse(this.passageVerses[i]);
+          return;
+        }
+      }
+
+      // No more due verses in passage - advance to next passage
+      this.autoAdvancePassage();
+    },
+
+    // Mark current verse as reviewed (update local state)
+    markCurrentVerseReviewed: function() {
+      // Set next_test to tomorrow so mvDue returns false
+      var tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      this.passageVerses[this.currentVerseIndex].next_test = tomorrow.toISOString().split('T')[0];
+    },
+
+    // Clear current passage and check if complete
+    clearCurrentPassage: function() {
+      var passageId = this.currentPassageId;
+
+      if (passageId) {
+        // Check if any verses still due
+        var stillDue = false;
+        for (var i = 0; i < this.passageVerses.length; i++) {
+          if (mvDue(this.passageVerses[i])) {
+            stillDue = true;
+            break;
+          }
+        }
+
+        if (stillDue) {
+          // Move passage to end of list
+          $('.passage-list #' + passageId).appendTo('.passage-list').fadeIn();
+        } else {
+          // Remove from upcoming passages
+          $('.passage-list #' + passageId).remove();
+        }
+      }
+
+      // Reset state
+      this.currentPassageId = null;
+      this.currentPassageRef = null;
+      this.passageVerses = [];
+      this.currentVerseIndex = -1;
+      this.currentVerse = null;
+    },
+
+    // Advance to next passage (same logic as reviewState.autoAdvancePassage)
+    autoAdvancePassage: function() {
+      this.clearCurrentPassage();
+
+      // Get next passage from list
+      var $nextPassage = $('.upcoming-passages').find('.upcoming-verse-ref').first();
+
+      if ($nextPassage.length) {
+        $nextPassage.fadeOut('slow');
+        this.selectPassage($nextPassage.text(), $nextPassage.attr('id'));
+      } else {
+        // No more passages - done for the day!
+        log_progress('<%= current_user.id %>');
+        window.location = '/progress';
+      }
+    }
+  };
+
+  // Current verse reference (for comparison functions)
+  var currentVerse = null;
+
+  // Update currentVerse when voiceReviewState changes verse
+  var originalDisplayVerse = voiceReviewState.displayVerse;
+  voiceReviewState.displayVerse = function(verse) {
+    currentVerse = {
+      id: verse.id,
+      ref: verse.ref,
+      text: verse.text
+    };
+    originalDisplayVerse.call(this, verse);
   };
 
   // ========================================
@@ -514,19 +696,35 @@ $(document).ready(function() {
   $('.score-test-buttons .submit').click(function() {
     var q = $(this).attr('q');
 
+    if (!currentVerse || !currentVerse.id) {
+      console.error('No current verse to rate');
+      return;
+    }
+
     // Submit the rating
     $.getJSON("/mark_test_quick", { mv: currentVerse.id, q: q })
       .done(function(data) {
         if (data.msg) {
-          alert(data.msg);
+          setTimeout(function() { alert(data.msg); }, 1);
         }
-        // Go to next verse
-        window.location.reload();
+        // Mark verse as reviewed locally and advance to next
+        voiceReviewState.markCurrentVerseReviewed();
+        voiceReviewState.gotoNextVerseDue();
       })
       .fail(function(jqXHR, textStatus, errorThrown) {
         console.error('Rating submission failed:', textStatus, errorThrown);
         alert('Failed to submit rating. Please try again.');
       });
   });
+
+  // Allow clicking on upcoming passages to switch (same as /review)
+  $('.upcoming-passages').on('click', '.upcoming-verse-ref', function(e) {
+    $(this).fadeOut();
+    voiceReviewState.clearCurrentPassage();
+    voiceReviewState.selectPassage($(this).text(), $(this).attr('id'));
+  });
+
+  // Initialize voice review state
+  voiceReviewState.initialize();
 });
 </script>
