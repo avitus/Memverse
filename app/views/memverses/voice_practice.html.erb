@@ -542,63 +542,81 @@ $(document).ready(function() {
   }
 
   // Update the display with comparison results
+  // confirmedText: text that has been finalized by speech recognition (stable)
+  // interimText: text that is still being processed (may change rapidly)
   // isFinal: when true, calculates accuracy against total expected words (for final score)
   //          when false, calculates accuracy against words spoken so far (for real-time feedback)
-  function updateComparison(spokenText, isFinal) {
-    var spokenWords = getWordArray(spokenText);
+  function updateComparison(confirmedText, interimText, isFinal) {
+    var confirmedWords = getWordArray(confirmedText);
     var actualWords = getWordArray(currentVerse.text);
 
-    if (spokenWords.length === 0) {
+    // Show placeholder if nothing spoken yet
+    if (confirmedWords.length === 0 && (!interimText || interimText.trim() === '')) {
       $('#transcription').html('<span class="placeholder">Press the microphone and speak the verse...</span>');
       $('#accuracy-display').text('');
       clearSuggestedRating();
       return;
     }
 
-    var comparison = compareVerses(spokenWords, actualWords);
+    var html = '';
+    var accuracy = 0;
 
-    // Filter out trailing missing words for display
-    // (We only show words the user has actually spoken, plus any skipped words in the middle)
-    var filteredComparison = filterTrailingMissing(comparison);
+    // Only compare confirmed (final) words to avoid flicker from unstable interim results
+    if (confirmedWords.length > 0) {
+      var comparison = compareVerses(confirmedWords, actualWords);
 
-    // Calculate accuracy
-    var correctCount = filteredComparison.filter(function(item) {
-      return item.status === 'correct';
-    }).length;
+      // Filter out trailing missing words for display
+      // (We only show words the user has actually spoken, plus any skipped words in the middle)
+      var filteredComparison = filterTrailingMissing(comparison);
 
-    var accuracy;
-    if (isFinal) {
-      // Final accuracy: correct words / total expected words in verse
-      // This penalizes omitting words at the end
-      accuracy = actualWords.length > 0 ? Math.round((correctCount / actualWords.length) * 100 * 100) / 100 : 0;
-    } else {
-      // Real-time accuracy: correct words / words spoken so far
-      // This gives encouraging feedback during recitation
-      var spokenWordCount = filteredComparison.filter(function(item) {
-        return item.status !== 'missing';
+      // Calculate accuracy
+      var correctCount = filteredComparison.filter(function(item) {
+        return item.status === 'correct';
       }).length;
-      accuracy = spokenWordCount > 0 ? Math.round((correctCount / spokenWordCount) * 100 * 100) / 100 : 0;
+
+      if (isFinal) {
+        // Final accuracy: correct words / total expected words in verse
+        // This penalizes omitting words at the end
+        accuracy = actualWords.length > 0 ? Math.round((correctCount / actualWords.length) * 100 * 100) / 100 : 0;
+      } else {
+        // Real-time accuracy: correct words / words spoken so far
+        // This gives encouraging feedback during recitation
+        var spokenWordCount = filteredComparison.filter(function(item) {
+          return item.status !== 'missing';
+        }).length;
+        accuracy = spokenWordCount > 0 ? Math.round((correctCount / spokenWordCount) * 100 * 100) / 100 : 0;
+      }
+
+      // Choose render mode based on accuracy threshold
+      // Low accuracy: highlight-only mode (less visual clutter)
+      // High accuracy: detailed mode (shows corrections inline)
+      var useHighlightOnly = accuracy < HIGHLIGHT_ONLY_THRESHOLD;
+      html = useHighlightOnly
+        ? renderComparisonHighlightOnly(filteredComparison)
+        : renderComparison(filteredComparison);
     }
+
+    // Append interim text (not yet confirmed) in gray without comparison styling
+    // This shows what's being heard without causing flicker from unstable comparisons
+    if (interimText && interimText.trim() !== '') {
+      html += '<span class="interim">' + escapeHtml(interimText) + '</span>';
+    }
+
+    $('#transcription').html(html);
 
     var rating = getSuggestedRating(accuracy);
 
     // Store accuracy for use in other functions (e.g., auto-show verse on recording end)
     currentAccuracy = accuracy;
 
-    // Choose render mode based on accuracy threshold
-    // Low accuracy: highlight-only mode (less visual clutter)
-    // High accuracy: detailed mode (shows corrections inline)
-    var useHighlightOnly = accuracy < HIGHLIGHT_ONLY_THRESHOLD;
-    var html = useHighlightOnly
-      ? renderComparisonHighlightOnly(filteredComparison)
-      : renderComparison(filteredComparison);
-    $('#transcription').html(html);
-
-    // Show accuracy
-    $('#accuracy-display').text('Accuracy: ' + accuracy + '%');
-
-    // Highlight suggested rating
-    highlightSuggestedRating(rating);
+    // Show accuracy (only if we have confirmed words)
+    if (confirmedWords.length > 0) {
+      $('#accuracy-display').text('Accuracy: ' + accuracy + '%');
+      highlightSuggestedRating(rating);
+    } else {
+      $('#accuracy-display').text('');
+      clearSuggestedRating();
+    }
   }
 
   // Highlight the suggested rating button
@@ -658,7 +676,7 @@ $(document).ready(function() {
 
       // Final comparison when recording ends - use isFinal=true for accuracy against total verse
       if (finalTranscript.trim()) {
-        updateComparison(finalTranscript, true);
+        updateComparison(finalTranscript, '', true);
 
         // Auto-show the correct verse when accuracy is below threshold
         // This helps users see what they missed without extra clicks
@@ -682,9 +700,8 @@ $(document).ready(function() {
         }
       }
 
-      // Combine final and interim for real-time comparison - use isFinal=false for encouraging feedback
-      var fullText = finalTranscript + interimTranscript;
-      updateComparison(fullText, false);
+      // Compare only confirmed words; show interim separately to avoid flicker
+      updateComparison(finalTranscript, interimTranscript, false);
     };
 
     // Recognition error
