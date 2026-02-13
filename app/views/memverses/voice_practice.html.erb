@@ -331,34 +331,44 @@ $(document).ready(function() {
     return lcs;
   }
 
-  // Backtrack through LCS table to find the optimal alignment
-  function backtrackLCS(lcs, spokenWords, actualWords) {
+  // Greedy sequential alignment - always prefers earliest possible match
+  // This is more appropriate for sequential verse recitation than LCS backtracking,
+  // which can match to later occurrences of repeated words.
+  function greedyAlign(spokenWords, actualWords) {
     var alignment = [];
-    var i = spokenWords.length;
-    var j = actualWords.length;
+    var minActualPos = 0; // Minimum position in actual for next match
 
-    // Backtrack from bottom-right to top-left
-    while (i > 0 || j > 0) {
-      if (i > 0 && j > 0 && flexibleTextMatch(actualWords[j - 1], spokenWords[i - 1])) {
-        // Words match - they're part of the LCS
-        alignment.unshift({ type: 'match', spokenIdx: i - 1, actualIdx: j - 1 });
-        i--;
-        j--;
-      } else if (j > 0 && (i === 0 || lcs[i][j - 1] >= lcs[i - 1][j])) {
-        // Actual word not matched - it's missing from spoken
-        alignment.unshift({ type: 'missing', actualIdx: j - 1 });
-        j--;
-      } else {
-        // Spoken word not matched - it's extra
-        alignment.unshift({ type: 'extra', spokenIdx: i - 1 });
-        i--;
+    for (var i = 0; i < spokenWords.length; i++) {
+      // Find the first matching actual word starting from minActualPos
+      var matchFound = false;
+      for (var j = minActualPos; j < actualWords.length; j++) {
+        if (flexibleTextMatch(actualWords[j], spokenWords[i])) {
+          // Found a match! First, add missing words between minActualPos and j
+          for (var k = minActualPos; k < j; k++) {
+            alignment.push({ type: 'missing', actualIdx: k });
+          }
+          // Add the match
+          alignment.push({ type: 'match', spokenIdx: i, actualIdx: j });
+          minActualPos = j + 1;
+          matchFound = true;
+          break;
+        }
       }
+      if (!matchFound) {
+        // No match found - this spoken word is extra
+        alignment.push({ type: 'extra', spokenIdx: i });
+      }
+    }
+
+    // Add remaining unmatched actual words as missing
+    for (var j = minActualPos; j < actualWords.length; j++) {
+      alignment.push({ type: 'missing', actualIdx: j });
     }
 
     return alignment;
   }
 
-  // Compare spoken words to actual verse words using LCS-based algorithm
+  // Compare spoken words to actual verse words using greedy sequential alignment
   // Each result item includes actualIdx (verse position) for proper filtering
   function compareVerses(spokenWords, actualWords) {
     var result = [];
@@ -380,9 +390,8 @@ $(document).ready(function() {
       return result;
     }
 
-    // Build LCS table and backtrack to find alignment
-    var lcs = buildLCSTable(spokenWords, actualWords);
-    var alignment = backtrackLCS(lcs, spokenWords, actualWords);
+    // Use greedy alignment to prefer earliest matches for repeated words
+    var alignment = greedyAlign(spokenWords, actualWords);
 
     // Convert alignment to comparison result, detecting substitutions
     // Track actualIdx (verse position) for each word

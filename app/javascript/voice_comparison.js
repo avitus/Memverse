@@ -421,7 +421,61 @@ function buildLCSTable(spokenWords, actualWords) {
 }
 
 /**
+ * Greedy sequential alignment - always prefers earliest possible match
+ *
+ * This algorithm goes through spoken words in order and for each one,
+ * finds the FIRST matching word in the actual verse starting from the
+ * current position. This is more appropriate for sequential verse recitation
+ * than standard LCS backtracking, which can match to later occurrences of
+ * repeated words.
+ *
+ * Returns an array of operations that align spoken words with actual words.
+ * Each operation is either:
+ * - { type: 'match', spokenIdx, actualIdx } - words match
+ * - { type: 'extra', spokenIdx } - extra spoken word (not in actual)
+ * - { type: 'missing', actualIdx } - missing actual word (not spoken)
+ *
+ * @param {string[]} spokenWords - Array of words from user's speech
+ * @param {string[]} actualWords - Array of words from correct verse
+ * @returns {Array<{type: string, spokenIdx?: number, actualIdx?: number}>} Alignment operations
+ */
+function greedyAlign(spokenWords, actualWords) {
+  const alignment = [];
+  let minActualPos = 0; // Minimum position in actual for next match
+
+  for (let i = 0; i < spokenWords.length; i++) {
+    // Find the first matching actual word starting from minActualPos
+    let matchFound = false;
+    for (let j = minActualPos; j < actualWords.length; j++) {
+      if (flexibleTextMatch(actualWords[j], spokenWords[i])) {
+        // Found a match! First, add missing words between minActualPos and j
+        for (let k = minActualPos; k < j; k++) {
+          alignment.push({ type: 'missing', actualIdx: k });
+        }
+        // Add the match
+        alignment.push({ type: 'match', spokenIdx: i, actualIdx: j });
+        minActualPos = j + 1;
+        matchFound = true;
+        break;
+      }
+    }
+    if (!matchFound) {
+      // No match found - this spoken word is extra
+      alignment.push({ type: 'extra', spokenIdx: i });
+    }
+  }
+
+  // Add remaining unmatched actual words as missing
+  for (let j = minActualPos; j < actualWords.length; j++) {
+    alignment.push({ type: 'missing', actualIdx: j });
+  }
+
+  return alignment;
+}
+
+/**
  * Backtrack through LCS table to find the optimal alignment
+ * NOTE: This is kept for reference but greedyAlign is preferred for voice review
  *
  * Returns an array of operations that align spoken words with actual words.
  * Each operation is either:
@@ -461,18 +515,21 @@ function backtrackLCS(lcs, spokenWords, actualWords) {
 }
 
 /**
- * Compare spoken words to actual verse words using LCS-based diff algorithm
+ * Compare spoken words to actual verse words using greedy sequential alignment
  *
- * This algorithm uses Longest Common Subsequence (LCS) to find the optimal
- * alignment between spoken and actual words. Unlike the sequential algorithm,
- * this handles omissions correctly without cascading errors.
+ * This algorithm uses greedy sequential matching to find the alignment between
+ * spoken and actual words. It always prefers the EARLIEST possible match for
+ * each spoken word, which is more appropriate for sequential verse recitation.
  *
+ * For example, if a verse contains "walk in it" twice and the user says
+ * "walking in it", the algorithm will match "in it" to the FIRST occurrence,
+ * not the second.
+ *
+ * The algorithm also handles omissions correctly without cascading errors.
  * For example, if the user omits "and sisters" from Romans 12:1:
  * - Actual: "therefore i urge you brothers and sisters in view of..."
  * - Spoken: "therefore i urge you brothers in view of..."
- *
- * The sequential algorithm would mark everything after "brothers" as wrong.
- * The LCS algorithm correctly identifies only "and sisters" as missing.
+ * It correctly identifies only "and sisters" as missing.
  *
  * @param {string[]} spokenWords - Array of words from user's speech
  * @param {string[]} actualWords - Array of words from correct verse
@@ -498,9 +555,8 @@ export function compareVersesLCS(spokenWords, actualWords) {
     return result;
   }
 
-  // Build LCS table and backtrack to find alignment
-  const lcs = buildLCSTable(spokenWords, actualWords);
-  const alignment = backtrackLCS(lcs, spokenWords, actualWords);
+  // Use greedy alignment to prefer earliest matches for repeated words
+  const alignment = greedyAlign(spokenWords, actualWords);
 
   // Convert alignment to comparison result, tracking verse position (actualIdx)
   for (const op of alignment) {

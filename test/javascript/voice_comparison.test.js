@@ -621,6 +621,67 @@ describe('Voice Comparison Feature', () => {
       expect(result[0]).toEqual({ word: 'gods', status: 'correct', actualIdx: 0 });
       expect(result[1]).toEqual({ word: 'love', status: 'correct', actualIdx: 1 });
     });
+
+    // ==========================================
+    // Repeated phrases - prefer earliest match
+    // ==========================================
+
+    it('prefers earliest match for repeated phrases like Jeremiah 6:16 "walk in it"', () => {
+      // Verse contains "walk in it" twice
+      // User says "walking it" instead of "walk in it"
+      // The algorithm should match "it" to the FIRST occurrence, not the second
+      const actualWords = [
+        'this', 'is', 'the', 'way', 'walk', 'in', 'it',  // First "walk in it" at positions 4,5,6
+        'and', 'you', 'will', 'find', 'rest',
+        'walk', 'in', 'it'  // Second "walk in it" at positions 12,13,14
+      ];
+      const spokenWords = [
+        'this', 'is', 'the', 'way', 'walking', 'it'  // User says "walking it" instead of "walk in it"
+      ];
+      const result = compareVersesLCS(spokenWords, actualWords);
+
+      // "this", "is", "the", "way" should be correct (positions 0-3)
+      expect(result.filter(r => r.status === 'correct' && r.actualIdx <= 3).length).toBe(4);
+
+      // "walking" should be extra (doesn't match anything)
+      const extraWords = result.filter(r => r.status === 'extra');
+      expect(extraWords.length).toBe(1);
+      expect(extraWords[0].word).toBe('walking');
+
+      // "it" should match the FIRST "it" at position 6, NOT the second at position 14
+      const itMatch = result.find(r => r.word === 'it' && r.status === 'correct');
+      expect(itMatch).toBeDefined();
+      expect(itMatch.actualIdx).toBe(6);  // First "it", not position 14
+
+      // "walk" and "in" at positions 4,5 should be missing (user skipped them)
+      const missingBeforeIt = result.filter(r => r.status === 'missing' && r.actualIdx >= 4 && r.actualIdx <= 5);
+      expect(missingBeforeIt.length).toBe(2);
+    });
+
+    it('handles partial recitation with repeated phrase correctly', () => {
+      // User recites up to "walking it" and stops - rest of verse should NOT appear
+      const actualWords = [
+        'stand', 'at', 'the', 'crossroads', 'and', 'look',
+        'ask', 'where', 'the', 'good', 'way', 'is', 'and', 'walk', 'in', 'it',
+        'and', 'you', 'will', 'find', 'rest', 'walk', 'in', 'it'
+      ];
+      const spokenWords = [
+        'stand', 'at', 'the', 'crossroads', 'and', 'look',
+        'ask', 'where', 'the', 'good', 'way', 'is', 'and', 'walking', 'it'
+      ];
+      const result = compareVersesLCS(spokenWords, actualWords);
+
+      // Find where "it" matched
+      const itMatch = result.find(r => r.word === 'it' && r.status === 'correct');
+      expect(itMatch).toBeDefined();
+      expect(itMatch.actualIdx).toBe(15);  // First "it" at position 15, not the second at 23
+
+      // "walk" and "in" should be missing (positions 13, 14)
+      const missingWalkIn = result.filter(r =>
+        r.status === 'missing' && (r.actualIdx === 13 || r.actualIdx === 14)
+      );
+      expect(missingWalkIn.length).toBe(2);
+    });
   });
 
   describe('compareVersesWithLCS', () => {
