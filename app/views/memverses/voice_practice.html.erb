@@ -62,7 +62,7 @@
 $(document).ready(function() {
   // Verse data
   var currentVerse = {
-    id: "<%= @mv.id %>",
+    id: <%= @mv.id %>,
     ref: "<%= @mv.verse.ref %>",
     text: "<%= escape_javascript(@mv.verse.text) %>"
   };
@@ -515,13 +515,18 @@ $(document).ready(function() {
     var q = $(this).attr('q');
 
     // Submit the rating
-    $.getJSON("/mark_test_quick", { mv: currentVerse.id, q: q }, function(data) {
-      if (data.msg) {
-        alert(data.msg);
-      }
-      // Go to next verse
-      window.location.reload();
-    });
+    $.getJSON("/mark_test_quick", { mv: currentVerse.id, q: q })
+      .done(function(data) {
+        if (data.msg) {
+          alert(data.msg);
+        }
+        // Go to next verse
+        window.location.reload();
+      })
+      .fail(function(jqXHR, textStatus, errorThrown) {
+        console.error('Rating submission failed:', textStatus, errorThrown);
+        alert('Failed to submit rating. Please try again.');
+      });
   });
 });
 </script>
