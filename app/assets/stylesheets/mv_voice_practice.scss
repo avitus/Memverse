@@ -255,4 +255,11 @@
     margin: 0;
     color: #333;
   }
+
+  // Override .verse-text styles from mv_verse.scss which set width:25% and float:left
+  .verse-text {
+    width: 100%;
+    float: none;
+    padding: 0;
+  }
 }
