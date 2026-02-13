@@ -135,7 +135,7 @@ $(document).ready(function() {
 
       // Update reference display
       $('.voice-reference .verse-ref').text(verse.ref);
-      $('.voice-reference .verse-tl').text('[' + verse.translation + ']');
+      $('.voice-reference .verse-tl').text('[' + verse.tl + ']');
 
       // Update hidden answer
       $('#verse-answer .verse-text').text(verse.text);
@@ -542,7 +542,9 @@ $(document).ready(function() {
   }
 
   // Update the display with comparison results
-  function updateComparison(spokenText) {
+  // isFinal: when true, calculates accuracy against total expected words (for final score)
+  //          when false, calculates accuracy against words spoken so far (for real-time feedback)
+  function updateComparison(spokenText, isFinal) {
     var spokenWords = getWordArray(spokenText);
     var actualWords = getWordArray(currentVerse.text);
 
@@ -559,17 +561,25 @@ $(document).ready(function() {
     // (We only show words the user has actually spoken, plus any skipped words in the middle)
     var filteredComparison = filterTrailingMissing(comparison);
 
-    // Calculate accuracy based on how many words spoken so far are correct
-    // Use the filtered comparison length as the denominator for real-time accuracy
-    var spokenWordCount = filteredComparison.filter(function(item) {
-      return item.status !== 'missing';
-    }).length;
+    // Calculate accuracy
     var correctCount = filteredComparison.filter(function(item) {
       return item.status === 'correct';
     }).length;
 
-    // Real-time accuracy: correct words / words spoken so far
-    var accuracy = spokenWordCount > 0 ? Math.round((correctCount / spokenWordCount) * 100 * 100) / 100 : 0;
+    var accuracy;
+    if (isFinal) {
+      // Final accuracy: correct words / total expected words in verse
+      // This penalizes omitting words at the end
+      accuracy = actualWords.length > 0 ? Math.round((correctCount / actualWords.length) * 100 * 100) / 100 : 0;
+    } else {
+      // Real-time accuracy: correct words / words spoken so far
+      // This gives encouraging feedback during recitation
+      var spokenWordCount = filteredComparison.filter(function(item) {
+        return item.status !== 'missing';
+      }).length;
+      accuracy = spokenWordCount > 0 ? Math.round((correctCount / spokenWordCount) * 100 * 100) / 100 : 0;
+    }
+
     var rating = getSuggestedRating(accuracy);
 
     // Store accuracy for use in other functions (e.g., auto-show verse on recording end)
@@ -646,9 +656,9 @@ $(document).ready(function() {
       $('#mic-button').removeClass('recording');
       $('#mic-status').text('Click to speak');
 
-      // Final comparison when recording ends
+      // Final comparison when recording ends - use isFinal=true for accuracy against total verse
       if (finalTranscript.trim()) {
-        updateComparison(finalTranscript);
+        updateComparison(finalTranscript, true);
 
         // Auto-show the correct verse when accuracy is below threshold
         // This helps users see what they missed without extra clicks
@@ -672,9 +682,9 @@ $(document).ready(function() {
         }
       }
 
-      // Combine final and interim for real-time comparison
+      // Combine final and interim for real-time comparison - use isFinal=false for encouraging feedback
       var fullText = finalTranscript + interimTranscript;
-      updateComparison(fullText);
+      updateComparison(fullText, false);
     };
 
     // Recognition error
