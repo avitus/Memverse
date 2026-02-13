@@ -399,11 +399,11 @@ describe('Voice Comparison Feature', () => {
       const result = compareVersesLCS(spokenWords, actualWords);
 
       expect(result).toEqual([
-        { word: 'the', status: 'correct' },
-        { word: 'lord', status: 'correct' },
-        { word: 'is', status: 'correct' },
-        { word: 'my', status: 'correct' },
-        { word: 'shepherd', status: 'correct' }
+        { word: 'the', status: 'correct', actualIdx: 0 },
+        { word: 'lord', status: 'correct', actualIdx: 1 },
+        { word: 'is', status: 'correct', actualIdx: 2 },
+        { word: 'my', status: 'correct', actualIdx: 3 },
+        { word: 'shepherd', status: 'correct', actualIdx: 4 }
       ]);
     });
 
@@ -413,9 +413,9 @@ describe('Voice Comparison Feature', () => {
       const result = compareVersesLCS(spokenWords, actualWords);
 
       expect(result).toEqual([
-        { word: 'the', status: 'missing' },
-        { word: 'lord', status: 'missing' },
-        { word: 'is', status: 'missing' }
+        { word: 'the', status: 'missing', actualIdx: 0 },
+        { word: 'lord', status: 'missing', actualIdx: 1 },
+        { word: 'is', status: 'missing', actualIdx: 2 }
       ]);
     });
 
@@ -425,9 +425,9 @@ describe('Voice Comparison Feature', () => {
       const result = compareVersesLCS(spokenWords, actualWords);
 
       expect(result).toEqual([
-        { word: 'the', status: 'extra' },
-        { word: 'lord', status: 'extra' },
-        { word: 'is', status: 'extra' }
+        { word: 'the', status: 'extra', actualIdx: -1 },
+        { word: 'lord', status: 'extra', actualIdx: -1 },
+        { word: 'is', status: 'extra', actualIdx: -1 }
       ]);
     });
 
@@ -438,11 +438,11 @@ describe('Voice Comparison Feature', () => {
 
       // LCS should correctly identify only 'is' as missing
       expect(result).toEqual([
-        { word: 'the', status: 'correct' },
-        { word: 'lord', status: 'correct' },
-        { word: 'is', status: 'missing' },
-        { word: 'my', status: 'correct' },
-        { word: 'shepherd', status: 'correct' }
+        { word: 'the', status: 'correct', actualIdx: 0 },
+        { word: 'lord', status: 'correct', actualIdx: 1 },
+        { word: 'is', status: 'missing', actualIdx: 2 },
+        { word: 'my', status: 'correct', actualIdx: 3 },
+        { word: 'shepherd', status: 'correct', actualIdx: 4 }
       ]);
     });
 
@@ -455,6 +455,7 @@ describe('Voice Comparison Feature', () => {
       const missingWords = result.filter(r => r.status === 'missing');
       expect(missingWords.length).toBe(3);
       expect(missingWords.map(m => m.word)).toEqual(['lord', 'is', 'my']);
+      expect(missingWords.map(m => m.actualIdx)).toEqual([1, 2, 3]);
 
       const correctWords = result.filter(r => r.status === 'correct');
       expect(correctWords.length).toBe(2);
@@ -469,6 +470,7 @@ describe('Voice Comparison Feature', () => {
       const extraWords = result.filter(r => r.status === 'extra');
       expect(extraWords.length).toBe(1);
       expect(extraWords[0].word).toBe('um');
+      expect(extraWords[0].actualIdx).toBe(-1);
 
       const correctWords = result.filter(r => r.status === 'correct');
       expect(correctWords.length).toBe(5);
@@ -524,6 +526,7 @@ describe('Voice Comparison Feature', () => {
         const missingWords = result.filter(r => r.status === 'missing');
         expect(missingWords.length).toBe(1);
         expect(missingWords[0].word).toBe('the');
+        expect(missingWords[0].actualIdx).toBe(4);
 
         const correctWords = result.filter(r => r.status === 'correct');
         expect(correctWords.length).toBe(5);
@@ -538,6 +541,7 @@ describe('Voice Comparison Feature', () => {
         const missingWords = result.filter(r => r.status === 'missing');
         expect(missingWords.length).toBe(1);
         expect(missingWords[0].word).toBe('the');
+        expect(missingWords[0].actualIdx).toBe(0);
 
         const correctWords = result.filter(r => r.status === 'correct');
         expect(correctWords.length).toBe(4);
@@ -552,6 +556,7 @@ describe('Voice Comparison Feature', () => {
         const missingWords = result.filter(r => r.status === 'missing');
         expect(missingWords.length).toBe(1);
         expect(missingWords[0].word).toBe('shepherd');
+        expect(missingWords[0].actualIdx).toBe(4);
 
         const correctWords = result.filter(r => r.status === 'correct');
         expect(correctWords.length).toBe(4);
@@ -579,6 +584,7 @@ describe('Voice Comparison Feature', () => {
         const extraWords = result.filter(r => r.status === 'extra');
         expect(extraWords.length).toBe(1);
         expect(extraWords[0].word).toBe('um');
+        expect(extraWords[0].actualIdx).toBe(-1);
 
         const correctWords = result.filter(r => r.status === 'correct');
         expect(correctWords.length).toBe(6);
@@ -593,6 +599,7 @@ describe('Voice Comparison Feature', () => {
         const extraWords = result.filter(r => r.status === 'extra');
         expect(extraWords.length).toBe(1);
         expect(extraWords[0].word).toBe('um');
+        expect(extraWords[0].actualIdx).toBe(-1);
 
         const missingWords = result.filter(r => r.status === 'missing');
         expect(missingWords.length).toBe(2);
@@ -611,8 +618,8 @@ describe('Voice Comparison Feature', () => {
       const actualWords = ["god's", 'love'];
       const result = compareVersesLCS(spokenWords, actualWords);
 
-      expect(result[0]).toEqual({ word: 'gods', status: 'correct' });
-      expect(result[1]).toEqual({ word: 'love', status: 'correct' });
+      expect(result[0]).toEqual({ word: 'gods', status: 'correct', actualIdx: 0 });
+      expect(result[1]).toEqual({ word: 'love', status: 'correct', actualIdx: 1 });
     });
   });
 
@@ -628,6 +635,7 @@ describe('Voice Comparison Feature', () => {
       expect(wrongWords.length).toBe(1);
       expect(wrongWords[0].word).toBe('lrod');
       expect(wrongWords[0].expected).toBe('lord');
+      expect(wrongWords[0].actualIdx).toBe(1);
 
       const correctWords = result.filter(r => r.status === 'correct');
       expect(correctWords.length).toBe(2);
@@ -643,9 +651,11 @@ describe('Voice Comparison Feature', () => {
       // 'um' is extra, 'is' is missing - not a substitution because 'lord' is between
       const extraWords = result.filter(r => r.status === 'extra');
       expect(extraWords.length).toBe(1);
+      expect(extraWords[0].actualIdx).toBe(-1);
 
       const missingWords = result.filter(r => r.status === 'missing');
       expect(missingWords.length).toBe(1);
+      expect(missingWords[0].actualIdx).toBe(2);
     });
 
     it('handles Romans 12:1 "and sisters" omission correctly', () => {
@@ -663,6 +673,8 @@ describe('Voice Comparison Feature', () => {
       // Should identify exactly 2 missing words
       const missingWords = result.filter(r => r.status === 'missing');
       expect(missingWords.length).toBe(2);
+      expect(missingWords[0].actualIdx).toBe(5); // 'and' at index 5
+      expect(missingWords[1].actualIdx).toBe(6); // 'sisters' at index 6
 
       // All other words should be correct
       const correctWords = result.filter(r => r.status === 'correct');
@@ -1069,19 +1081,19 @@ describe('Voice Comparison Feature', () => {
 
     it('returns all words when no missing words present', () => {
       const input = [
-        { word: 'the', status: 'correct' },
-        { word: 'lord', status: 'correct' },
-        { word: 'is', status: 'correct' }
+        { word: 'the', status: 'correct', actualIdx: 0 },
+        { word: 'lord', status: 'correct', actualIdx: 1 },
+        { word: 'is', status: 'correct', actualIdx: 2 }
       ];
       expect(filterTrailingMissing(input)).toEqual(input);
     });
 
     it('returns all words when only correct words present', () => {
       const input = [
-        { word: 'for', status: 'correct' },
-        { word: 'god', status: 'correct' },
-        { word: 'so', status: 'correct' },
-        { word: 'loved', status: 'correct' }
+        { word: 'for', status: 'correct', actualIdx: 0 },
+        { word: 'god', status: 'correct', actualIdx: 1 },
+        { word: 'so', status: 'correct', actualIdx: 2 },
+        { word: 'loved', status: 'correct', actualIdx: 3 }
       ];
       expect(filterTrailingMissing(input)).toEqual(input);
     });
@@ -1092,55 +1104,55 @@ describe('Voice Comparison Feature', () => {
 
     it('removes single trailing missing word', () => {
       const input = [
-        { word: 'the', status: 'correct' },
-        { word: 'lord', status: 'correct' },
-        { word: 'is', status: 'missing' }
+        { word: 'the', status: 'correct', actualIdx: 0 },
+        { word: 'lord', status: 'correct', actualIdx: 1 },
+        { word: 'is', status: 'missing', actualIdx: 2 }
       ];
       const expected = [
-        { word: 'the', status: 'correct' },
-        { word: 'lord', status: 'correct' }
+        { word: 'the', status: 'correct', actualIdx: 0 },
+        { word: 'lord', status: 'correct', actualIdx: 1 }
       ];
       expect(filterTrailingMissing(input)).toEqual(expected);
     });
 
     it('removes multiple trailing missing words', () => {
       const input = [
-        { word: 'for', status: 'correct' },
-        { word: 'god', status: 'correct' },
-        { word: 'so', status: 'missing' },
-        { word: 'loved', status: 'missing' },
-        { word: 'the', status: 'missing' },
-        { word: 'world', status: 'missing' }
+        { word: 'for', status: 'correct', actualIdx: 0 },
+        { word: 'god', status: 'correct', actualIdx: 1 },
+        { word: 'so', status: 'missing', actualIdx: 2 },
+        { word: 'loved', status: 'missing', actualIdx: 3 },
+        { word: 'the', status: 'missing', actualIdx: 4 },
+        { word: 'world', status: 'missing', actualIdx: 5 }
       ];
       const expected = [
-        { word: 'for', status: 'correct' },
-        { word: 'god', status: 'correct' }
+        { word: 'for', status: 'correct', actualIdx: 0 },
+        { word: 'god', status: 'correct', actualIdx: 1 }
       ];
       expect(filterTrailingMissing(input)).toEqual(expected);
     });
 
     it('removes many trailing missing words from long verse', () => {
       const input = [
-        { word: 'for', status: 'correct' },
-        { word: 'god', status: 'correct' },
-        { word: 'so', status: 'correct' },
-        { word: 'loved', status: 'correct' },
-        { word: 'the', status: 'missing' },
-        { word: 'world', status: 'missing' },
-        { word: 'that', status: 'missing' },
-        { word: 'he', status: 'missing' },
-        { word: 'gave', status: 'missing' },
-        { word: 'his', status: 'missing' },
-        { word: 'one', status: 'missing' },
-        { word: 'and', status: 'missing' },
-        { word: 'only', status: 'missing' },
-        { word: 'son', status: 'missing' }
+        { word: 'for', status: 'correct', actualIdx: 0 },
+        { word: 'god', status: 'correct', actualIdx: 1 },
+        { word: 'so', status: 'correct', actualIdx: 2 },
+        { word: 'loved', status: 'correct', actualIdx: 3 },
+        { word: 'the', status: 'missing', actualIdx: 4 },
+        { word: 'world', status: 'missing', actualIdx: 5 },
+        { word: 'that', status: 'missing', actualIdx: 6 },
+        { word: 'he', status: 'missing', actualIdx: 7 },
+        { word: 'gave', status: 'missing', actualIdx: 8 },
+        { word: 'his', status: 'missing', actualIdx: 9 },
+        { word: 'one', status: 'missing', actualIdx: 10 },
+        { word: 'and', status: 'missing', actualIdx: 11 },
+        { word: 'only', status: 'missing', actualIdx: 12 },
+        { word: 'son', status: 'missing', actualIdx: 13 }
       ];
       const expected = [
-        { word: 'for', status: 'correct' },
-        { word: 'god', status: 'correct' },
-        { word: 'so', status: 'correct' },
-        { word: 'loved', status: 'correct' }
+        { word: 'for', status: 'correct', actualIdx: 0 },
+        { word: 'god', status: 'correct', actualIdx: 1 },
+        { word: 'so', status: 'correct', actualIdx: 2 },
+        { word: 'loved', status: 'correct', actualIdx: 3 }
       ];
       expect(filterTrailingMissing(input)).toEqual(expected);
     });
@@ -1151,10 +1163,10 @@ describe('Voice Comparison Feature', () => {
 
     it('keeps single missing word in the middle', () => {
       const input = [
-        { word: 'for', status: 'correct' },
-        { word: 'god', status: 'correct' },
-        { word: 'so', status: 'missing' },
-        { word: 'loved', status: 'correct' }
+        { word: 'for', status: 'correct', actualIdx: 0 },
+        { word: 'god', status: 'correct', actualIdx: 1 },
+        { word: 'so', status: 'missing', actualIdx: 2 },
+        { word: 'loved', status: 'correct', actualIdx: 3 }
       ];
       // All words kept because 'loved' (correct) comes after 'so' (missing)
       expect(filterTrailingMissing(input)).toEqual(input);
@@ -1162,20 +1174,20 @@ describe('Voice Comparison Feature', () => {
 
     it('keeps multiple missing words in the middle', () => {
       const input = [
-        { word: 'for', status: 'correct' },
-        { word: 'god', status: 'missing' },
-        { word: 'so', status: 'missing' },
-        { word: 'loved', status: 'correct' },
-        { word: 'the', status: 'correct' }
+        { word: 'for', status: 'correct', actualIdx: 0 },
+        { word: 'god', status: 'missing', actualIdx: 1 },
+        { word: 'so', status: 'missing', actualIdx: 2 },
+        { word: 'loved', status: 'correct', actualIdx: 3 },
+        { word: 'the', status: 'correct', actualIdx: 4 }
       ];
       expect(filterTrailingMissing(input)).toEqual(input);
     });
 
     it('keeps missing word at the start when followed by spoken words', () => {
       const input = [
-        { word: 'the', status: 'missing' },
-        { word: 'lord', status: 'correct' },
-        { word: 'is', status: 'correct' }
+        { word: 'the', status: 'missing', actualIdx: 0 },
+        { word: 'lord', status: 'correct', actualIdx: 1 },
+        { word: 'is', status: 'correct', actualIdx: 2 }
       ];
       expect(filterTrailingMissing(input)).toEqual(input);
     });
@@ -1186,40 +1198,40 @@ describe('Voice Comparison Feature', () => {
 
     it('keeps middle missing but removes trailing missing', () => {
       const input = [
-        { word: 'for', status: 'correct' },
-        { word: 'god', status: 'missing' },  // skipped - should be kept
-        { word: 'so', status: 'correct' },
-        { word: 'loved', status: 'correct' },
-        { word: 'the', status: 'missing' },  // trailing - should be removed
-        { word: 'world', status: 'missing' } // trailing - should be removed
+        { word: 'for', status: 'correct', actualIdx: 0 },
+        { word: 'god', status: 'missing', actualIdx: 1 },  // skipped - should be kept
+        { word: 'so', status: 'correct', actualIdx: 2 },
+        { word: 'loved', status: 'correct', actualIdx: 3 },
+        { word: 'the', status: 'missing', actualIdx: 4 },  // trailing - should be removed
+        { word: 'world', status: 'missing', actualIdx: 5 } // trailing - should be removed
       ];
       const expected = [
-        { word: 'for', status: 'correct' },
-        { word: 'god', status: 'missing' },
-        { word: 'so', status: 'correct' },
-        { word: 'loved', status: 'correct' }
+        { word: 'for', status: 'correct', actualIdx: 0 },
+        { word: 'god', status: 'missing', actualIdx: 1 },
+        { word: 'so', status: 'correct', actualIdx: 2 },
+        { word: 'loved', status: 'correct', actualIdx: 3 }
       ];
       expect(filterTrailingMissing(input)).toEqual(expected);
     });
 
     it('handles complex scenario with multiple gaps', () => {
       const input = [
-        { word: 'the', status: 'correct' },
-        { word: 'lord', status: 'missing' },  // skipped - keep
-        { word: 'is', status: 'correct' },
-        { word: 'my', status: 'missing' },    // skipped - keep
-        { word: 'shepherd', status: 'correct' },
-        { word: 'i', status: 'missing' },     // trailing - remove
-        { word: 'shall', status: 'missing' }, // trailing - remove
-        { word: 'not', status: 'missing' },   // trailing - remove
-        { word: 'want', status: 'missing' }   // trailing - remove
+        { word: 'the', status: 'correct', actualIdx: 0 },
+        { word: 'lord', status: 'missing', actualIdx: 1 },  // skipped - keep
+        { word: 'is', status: 'correct', actualIdx: 2 },
+        { word: 'my', status: 'missing', actualIdx: 3 },    // skipped - keep
+        { word: 'shepherd', status: 'correct', actualIdx: 4 },
+        { word: 'i', status: 'missing', actualIdx: 5 },     // trailing - remove
+        { word: 'shall', status: 'missing', actualIdx: 6 }, // trailing - remove
+        { word: 'not', status: 'missing', actualIdx: 7 },   // trailing - remove
+        { word: 'want', status: 'missing', actualIdx: 8 }   // trailing - remove
       ];
       const expected = [
-        { word: 'the', status: 'correct' },
-        { word: 'lord', status: 'missing' },
-        { word: 'is', status: 'correct' },
-        { word: 'my', status: 'missing' },
-        { word: 'shepherd', status: 'correct' }
+        { word: 'the', status: 'correct', actualIdx: 0 },
+        { word: 'lord', status: 'missing', actualIdx: 1 },
+        { word: 'is', status: 'correct', actualIdx: 2 },
+        { word: 'my', status: 'missing', actualIdx: 3 },
+        { word: 'shepherd', status: 'correct', actualIdx: 4 }
       ];
       expect(filterTrailingMissing(input)).toEqual(expected);
     });
@@ -1230,33 +1242,33 @@ describe('Voice Comparison Feature', () => {
 
     it('keeps trailing missing when wrong word comes after', () => {
       const input = [
-        { word: 'the', status: 'correct' },
-        { word: 'lord', status: 'correct' },
-        { word: 'iz', status: 'wrong', expected: 'is' }
+        { word: 'the', status: 'correct', actualIdx: 0 },
+        { word: 'lord', status: 'correct', actualIdx: 1 },
+        { word: 'iz', status: 'wrong', expected: 'is', actualIdx: 2 }
       ];
       expect(filterTrailingMissing(input)).toEqual(input);
     });
 
     it('removes trailing missing after wrong word', () => {
       const input = [
-        { word: 'the', status: 'correct' },
-        { word: 'lrod', status: 'wrong', expected: 'lord' },
-        { word: 'is', status: 'missing' },
-        { word: 'my', status: 'missing' }
+        { word: 'the', status: 'correct', actualIdx: 0 },
+        { word: 'lrod', status: 'wrong', expected: 'lord', actualIdx: 1 },
+        { word: 'is', status: 'missing', actualIdx: 2 },
+        { word: 'my', status: 'missing', actualIdx: 3 }
       ];
       const expected = [
-        { word: 'the', status: 'correct' },
-        { word: 'lrod', status: 'wrong', expected: 'lord' }
+        { word: 'the', status: 'correct', actualIdx: 0 },
+        { word: 'lrod', status: 'wrong', expected: 'lord', actualIdx: 1 }
       ];
       expect(filterTrailingMissing(input)).toEqual(expected);
     });
 
     it('wrong word at the end anchors the result', () => {
       const input = [
-        { word: 'the', status: 'correct' },
-        { word: 'lord', status: 'correct' },
-        { word: 'is', status: 'missing' },
-        { word: 'mie', status: 'wrong', expected: 'my' }
+        { word: 'the', status: 'correct', actualIdx: 0 },
+        { word: 'lord', status: 'correct', actualIdx: 1 },
+        { word: 'is', status: 'missing', actualIdx: 2 },
+        { word: 'mie', status: 'wrong', expected: 'my', actualIdx: 3 }
       ];
       // 'is' (missing) comes before 'mie' (wrong), so 'is' is kept
       expect(filterTrailingMissing(input)).toEqual(input);
@@ -1268,33 +1280,33 @@ describe('Voice Comparison Feature', () => {
 
     it('keeps all words when extra word is at the end', () => {
       const input = [
-        { word: 'the', status: 'correct' },
-        { word: 'lord', status: 'correct' },
-        { word: 'um', status: 'extra' }
+        { word: 'the', status: 'correct', actualIdx: 0 },
+        { word: 'lord', status: 'correct', actualIdx: 1 },
+        { word: 'um', status: 'extra', actualIdx: -1 }
       ];
       expect(filterTrailingMissing(input)).toEqual(input);
     });
 
     it('removes trailing missing after extra word', () => {
       const input = [
-        { word: 'the', status: 'correct' },
-        { word: 'um', status: 'extra' },
-        { word: 'lord', status: 'missing' },
-        { word: 'is', status: 'missing' }
+        { word: 'the', status: 'correct', actualIdx: 0 },
+        { word: 'um', status: 'extra', actualIdx: -1 },
+        { word: 'lord', status: 'missing', actualIdx: 1 },
+        { word: 'is', status: 'missing', actualIdx: 2 }
       ];
       const expected = [
-        { word: 'the', status: 'correct' },
-        { word: 'um', status: 'extra' }
+        { word: 'the', status: 'correct', actualIdx: 0 },
+        { word: 'um', status: 'extra', actualIdx: -1 }
       ];
       expect(filterTrailingMissing(input)).toEqual(expected);
     });
 
     it('extra word in middle followed by correct word keeps missing between them', () => {
       const input = [
-        { word: 'the', status: 'correct' },
-        { word: 'um', status: 'extra' },
-        { word: 'lord', status: 'missing' },
-        { word: 'is', status: 'correct' }
+        { word: 'the', status: 'correct', actualIdx: 0 },
+        { word: 'um', status: 'extra', actualIdx: -1 },
+        { word: 'lord', status: 'missing', actualIdx: 1 },
+        { word: 'is', status: 'correct', actualIdx: 2 }
       ];
       expect(filterTrailingMissing(input)).toEqual(input);
     });
@@ -1305,37 +1317,37 @@ describe('Voice Comparison Feature', () => {
 
     it('returns empty array when all words are missing', () => {
       const input = [
-        { word: 'the', status: 'missing' },
-        { word: 'lord', status: 'missing' },
-        { word: 'is', status: 'missing' }
+        { word: 'the', status: 'missing', actualIdx: 0 },
+        { word: 'lord', status: 'missing', actualIdx: 1 },
+        { word: 'is', status: 'missing', actualIdx: 2 }
       ];
       expect(filterTrailingMissing(input)).toEqual([]);
     });
 
     it('handles single correct word', () => {
       const input = [
-        { word: 'the', status: 'correct' }
+        { word: 'the', status: 'correct', actualIdx: 0 }
       ];
       expect(filterTrailingMissing(input)).toEqual(input);
     });
 
     it('handles single missing word (returns empty)', () => {
       const input = [
-        { word: 'the', status: 'missing' }
+        { word: 'the', status: 'missing', actualIdx: 0 }
       ];
       expect(filterTrailingMissing(input)).toEqual([]);
     });
 
     it('handles single wrong word', () => {
       const input = [
-        { word: 'teh', status: 'wrong', expected: 'the' }
+        { word: 'teh', status: 'wrong', expected: 'the', actualIdx: 0 }
       ];
       expect(filterTrailingMissing(input)).toEqual(input);
     });
 
     it('handles single extra word', () => {
       const input = [
-        { word: 'um', status: 'extra' }
+        { word: 'um', status: 'extra', actualIdx: -1 }
       ];
       expect(filterTrailingMissing(input)).toEqual(input);
     });
@@ -1348,28 +1360,28 @@ describe('Voice Comparison Feature', () => {
       // User says: "For God so loved the world"
       // Actual: "For God so loved the world that he gave his one and only Son"
       const input = [
-        { word: 'for', status: 'correct' },
-        { word: 'god', status: 'correct' },
-        { word: 'so', status: 'correct' },
-        { word: 'loved', status: 'correct' },
-        { word: 'the', status: 'correct' },
-        { word: 'world', status: 'correct' },
-        { word: 'that', status: 'missing' },
-        { word: 'he', status: 'missing' },
-        { word: 'gave', status: 'missing' },
-        { word: 'his', status: 'missing' },
-        { word: 'one', status: 'missing' },
-        { word: 'and', status: 'missing' },
-        { word: 'only', status: 'missing' },
-        { word: 'son', status: 'missing' }
+        { word: 'for', status: 'correct', actualIdx: 0 },
+        { word: 'god', status: 'correct', actualIdx: 1 },
+        { word: 'so', status: 'correct', actualIdx: 2 },
+        { word: 'loved', status: 'correct', actualIdx: 3 },
+        { word: 'the', status: 'correct', actualIdx: 4 },
+        { word: 'world', status: 'correct', actualIdx: 5 },
+        { word: 'that', status: 'missing', actualIdx: 6 },
+        { word: 'he', status: 'missing', actualIdx: 7 },
+        { word: 'gave', status: 'missing', actualIdx: 8 },
+        { word: 'his', status: 'missing', actualIdx: 9 },
+        { word: 'one', status: 'missing', actualIdx: 10 },
+        { word: 'and', status: 'missing', actualIdx: 11 },
+        { word: 'only', status: 'missing', actualIdx: 12 },
+        { word: 'son', status: 'missing', actualIdx: 13 }
       ];
       const expected = [
-        { word: 'for', status: 'correct' },
-        { word: 'god', status: 'correct' },
-        { word: 'so', status: 'correct' },
-        { word: 'loved', status: 'correct' },
-        { word: 'the', status: 'correct' },
-        { word: 'world', status: 'correct' }
+        { word: 'for', status: 'correct', actualIdx: 0 },
+        { word: 'god', status: 'correct', actualIdx: 1 },
+        { word: 'so', status: 'correct', actualIdx: 2 },
+        { word: 'loved', status: 'correct', actualIdx: 3 },
+        { word: 'the', status: 'correct', actualIdx: 4 },
+        { word: 'world', status: 'correct', actualIdx: 5 }
       ];
       expect(filterTrailingMissing(input)).toEqual(expected);
     });
@@ -1378,11 +1390,11 @@ describe('Voice Comparison Feature', () => {
       // User says: "The Lord is shepherd" (skipped "my")
       // Actual: "The Lord is my shepherd"
       const input = [
-        { word: 'the', status: 'correct' },
-        { word: 'lord', status: 'correct' },
-        { word: 'is', status: 'correct' },
-        { word: 'my', status: 'missing' },
-        { word: 'shepherd', status: 'correct' }
+        { word: 'the', status: 'correct', actualIdx: 0 },
+        { word: 'lord', status: 'correct', actualIdx: 1 },
+        { word: 'is', status: 'correct', actualIdx: 2 },
+        { word: 'my', status: 'missing', actualIdx: 3 },
+        { word: 'shepherd', status: 'correct', actualIdx: 4 }
       ];
       // All kept because 'shepherd' (correct) comes after 'my' (missing)
       expect(filterTrailingMissing(input)).toEqual(input);
@@ -1392,18 +1404,18 @@ describe('Voice Comparison Feature', () => {
       // User says: "The um Lord is"
       // Actual: "The Lord is my shepherd"
       const input = [
-        { word: 'the', status: 'correct' },
-        { word: 'um', status: 'extra' },
-        { word: 'lord', status: 'correct' },
-        { word: 'is', status: 'correct' },
-        { word: 'my', status: 'missing' },
-        { word: 'shepherd', status: 'missing' }
+        { word: 'the', status: 'correct', actualIdx: 0 },
+        { word: 'um', status: 'extra', actualIdx: -1 },
+        { word: 'lord', status: 'correct', actualIdx: 1 },
+        { word: 'is', status: 'correct', actualIdx: 2 },
+        { word: 'my', status: 'missing', actualIdx: 3 },
+        { word: 'shepherd', status: 'missing', actualIdx: 4 }
       ];
       const expected = [
-        { word: 'the', status: 'correct' },
-        { word: 'um', status: 'extra' },
-        { word: 'lord', status: 'correct' },
-        { word: 'is', status: 'correct' }
+        { word: 'the', status: 'correct', actualIdx: 0 },
+        { word: 'um', status: 'extra', actualIdx: -1 },
+        { word: 'lord', status: 'correct', actualIdx: 1 },
+        { word: 'is', status: 'correct', actualIdx: 2 }
       ];
       expect(filterTrailingMissing(input)).toEqual(expected);
     });
@@ -1412,34 +1424,83 @@ describe('Voice Comparison Feature', () => {
       // User says: "The Lrod is my" (misspelled Lord, partial verse)
       // Actual: "The Lord is my shepherd I shall not want"
       const input = [
-        { word: 'the', status: 'correct' },
-        { word: 'lrod', status: 'wrong', expected: 'lord' },
-        { word: 'is', status: 'correct' },
-        { word: 'my', status: 'correct' },
-        { word: 'shepherd', status: 'missing' },
-        { word: 'i', status: 'missing' },
-        { word: 'shall', status: 'missing' },
-        { word: 'not', status: 'missing' },
-        { word: 'want', status: 'missing' }
+        { word: 'the', status: 'correct', actualIdx: 0 },
+        { word: 'lrod', status: 'wrong', expected: 'lord', actualIdx: 1 },
+        { word: 'is', status: 'correct', actualIdx: 2 },
+        { word: 'my', status: 'correct', actualIdx: 3 },
+        { word: 'shepherd', status: 'missing', actualIdx: 4 },
+        { word: 'i', status: 'missing', actualIdx: 5 },
+        { word: 'shall', status: 'missing', actualIdx: 6 },
+        { word: 'not', status: 'missing', actualIdx: 7 },
+        { word: 'want', status: 'missing', actualIdx: 8 }
       ];
       const expected = [
-        { word: 'the', status: 'correct' },
-        { word: 'lrod', status: 'wrong', expected: 'lord' },
-        { word: 'is', status: 'correct' },
-        { word: 'my', status: 'correct' }
+        { word: 'the', status: 'correct', actualIdx: 0 },
+        { word: 'lrod', status: 'wrong', expected: 'lord', actualIdx: 1 },
+        { word: 'is', status: 'correct', actualIdx: 2 },
+        { word: 'my', status: 'correct', actualIdx: 3 }
       ];
       expect(filterTrailingMissing(input)).toEqual(expected);
     });
 
     it('handles complete correct recitation (no filtering needed)', () => {
       const input = [
-        { word: 'the', status: 'correct' },
-        { word: 'lord', status: 'correct' },
-        { word: 'is', status: 'correct' },
-        { word: 'my', status: 'correct' },
-        { word: 'shepherd', status: 'correct' }
+        { word: 'the', status: 'correct', actualIdx: 0 },
+        { word: 'lord', status: 'correct', actualIdx: 1 },
+        { word: 'is', status: 'correct', actualIdx: 2 },
+        { word: 'my', status: 'correct', actualIdx: 3 },
+        { word: 'shepherd', status: 'correct', actualIdx: 4 }
       ];
       expect(filterTrailingMissing(input)).toEqual(input);
+    });
+
+    // ==========================================
+    // Repeated phrases scenario - the key fix
+    // ==========================================
+
+    it('handles repeated phrases correctly (e.g., "walk in it" appears twice)', () => {
+      // Verse: "This is the way, walk in it, when you turn... walk in it"
+      // User says "walking" instead of "walk", LCS matches to second occurrence
+      // Without verse position filtering, words 4-10 would appear as "missing"
+      const input = [
+        { word: 'this', status: 'correct', actualIdx: 0 },
+        { word: 'is', status: 'correct', actualIdx: 1 },
+        { word: 'the', status: 'correct', actualIdx: 2 },
+        { word: 'way', status: 'correct', actualIdx: 3 },
+        { word: 'walk', status: 'missing', actualIdx: 4 },    // First "walk" - skipped
+        { word: 'walking', status: 'extra', actualIdx: -1 },  // User said wrong word
+        { word: 'in', status: 'correct', actualIdx: 11 },     // Matched to second "in" at position 11
+        { word: 'it', status: 'correct', actualIdx: 12 },     // Matched to second "it" at position 12
+        { word: 'when', status: 'missing', actualIdx: 7 },    // Between first and second occurrence
+        { word: 'you', status: 'missing', actualIdx: 8 },
+        { word: 'turn', status: 'missing', actualIdx: 9 },
+        { word: 'walk', status: 'missing', actualIdx: 10 }    // Second "walk"
+      ];
+      // With verse position filtering, we keep only up to actualIdx 12 (where user has reached)
+      // But we filter out words with actualIdx > maxSpokenPosition
+      // maxSpokenPosition = max(0,1,2,3,11,12) = 12 (from "it" at index 12)
+      // So all missing words beyond user's position should be kept since they're <= 12
+      expect(filterTrailingMissing(input)).toEqual(input);
+    });
+
+    it('filters trailing missing when user has not reached later verse positions', () => {
+      // User says first 4 words correctly, rest are missing
+      const input = [
+        { word: 'this', status: 'correct', actualIdx: 0 },
+        { word: 'is', status: 'correct', actualIdx: 1 },
+        { word: 'the', status: 'correct', actualIdx: 2 },
+        { word: 'way', status: 'correct', actualIdx: 3 },
+        { word: 'walk', status: 'missing', actualIdx: 4 },
+        { word: 'in', status: 'missing', actualIdx: 5 },
+        { word: 'it', status: 'missing', actualIdx: 6 }
+      ];
+      const expected = [
+        { word: 'this', status: 'correct', actualIdx: 0 },
+        { word: 'is', status: 'correct', actualIdx: 1 },
+        { word: 'the', status: 'correct', actualIdx: 2 },
+        { word: 'way', status: 'correct', actualIdx: 3 }
+      ];
+      expect(filterTrailingMissing(input)).toEqual(expected);
     });
   });
 });

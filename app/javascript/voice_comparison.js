@@ -291,25 +291,51 @@ export function filterTrailingMissing(comparisonResult) {
     return [];
   }
 
-  // Find the index of the last "spoken" word (correct, wrong, or extra)
-  // These are words that came from the user's speech
-  let lastSpokenIndex = -1;
+  // Find the maximum verse position (actualIdx) among spoken words (correct or wrong)
+  // This represents how far the user has progressed in the verse
+  //
+  // IMPORTANT: We filter based on VERSE POSITION (actualIdx), not array position.
+  // This handles cases where repeated phrases cause LCS to match later occurrences,
+  // which would otherwise show many "missing" words in the middle.
+  //
+  // Example: If verse has "walk in it" twice and user says "walking in it",
+  // LCS might match "in it" to the second occurrence. Without verse-position
+  // filtering, all words between the two occurrences would appear as "missing".
+  let maxSpokenVersePosition = -1;
+  let hasExtraWords = false;
 
-  for (let i = comparisonResult.length - 1; i >= 0; i--) {
-    const status = comparisonResult[i].status;
-    if (status === 'correct' || status === 'wrong' || status === 'extra') {
-      lastSpokenIndex = i;
-      break;
+  for (let i = 0; i < comparisonResult.length; i++) {
+    const item = comparisonResult[i];
+    // Only consider words that have a verse position (correct, wrong, missing)
+    // and that represent user speech (correct, wrong - not missing)
+    if ((item.status === 'correct' || item.status === 'wrong') && item.actualIdx !== undefined) {
+      maxSpokenVersePosition = Math.max(maxSpokenVersePosition, item.actualIdx);
+    }
+    // Track if there are any extra words (user said something not in verse)
+    if (item.status === 'extra') {
+      hasExtraWords = true;
     }
   }
 
-  // If no spoken words found (all missing), return empty array
-  if (lastSpokenIndex === -1) {
+  // If no spoken words with verse positions found but there are extra words,
+  // return only the extra words (user said something, just nothing that matches the verse)
+  if (maxSpokenVersePosition === -1) {
+    if (hasExtraWords) {
+      return comparisonResult.filter(item => item.status === 'extra');
+    }
     return [];
   }
 
-  // Return only words up to and including the last spoken word
-  return comparisonResult.slice(0, lastSpokenIndex + 1);
+  // Filter: keep words that are at or before the user's current verse position
+  // This removes "missing" words that are beyond where the user has reached
+  return comparisonResult.filter(item => {
+    // Extra words (spoken but not in verse) have no verse position - always keep
+    if (item.actualIdx === undefined || item.actualIdx === -1) {
+      return true;
+    }
+    // Keep words at or before the user's current position in the verse
+    return item.actualIdx <= maxSpokenVersePosition;
+  });
 }
 
 /**
@@ -459,15 +485,15 @@ export function compareVersesLCS(spokenWords, actualWords) {
   if (!actualWords || actualWords.length === 0) {
     if (spokenWords && spokenWords.length > 0) {
       spokenWords.forEach(word => {
-        result.push({ word, status: 'extra' });
+        result.push({ word, status: 'extra', actualIdx: -1 });
       });
     }
     return result;
   }
 
   if (!spokenWords || spokenWords.length === 0) {
-    actualWords.forEach(word => {
-      result.push({ word, status: 'missing' });
+    actualWords.forEach((word, idx) => {
+      result.push({ word, status: 'missing', actualIdx: idx });
     });
     return result;
   }
@@ -476,17 +502,17 @@ export function compareVersesLCS(spokenWords, actualWords) {
   const lcs = buildLCSTable(spokenWords, actualWords);
   const alignment = backtrackLCS(lcs, spokenWords, actualWords);
 
-  // Convert alignment to comparison result
+  // Convert alignment to comparison result, tracking verse position (actualIdx)
   for (const op of alignment) {
     switch (op.type) {
       case 'match':
-        result.push({ word: spokenWords[op.spokenIdx], status: 'correct' });
+        result.push({ word: spokenWords[op.spokenIdx], status: 'correct', actualIdx: op.actualIdx });
         break;
       case 'missing':
-        result.push({ word: actualWords[op.actualIdx], status: 'missing' });
+        result.push({ word: actualWords[op.actualIdx], status: 'missing', actualIdx: op.actualIdx });
         break;
       case 'extra':
-        result.push({ word: spokenWords[op.spokenIdx], status: 'extra' });
+        result.push({ word: spokenWords[op.spokenIdx], status: 'extra', actualIdx: -1 });
         break;
     }
   }
@@ -524,7 +550,8 @@ export function compareVersesWithLCS(spokenWords, actualWords) {
       result.push({
         word: current.word,
         status: 'wrong',
-        expected: lcsResult[i + 1].word
+        expected: lcsResult[i + 1].word,
+        actualIdx: lcsResult[i + 1].actualIdx  // Track verse position of substituted word
       });
       i += 2; // Skip both the extra and the missing
       continue;
@@ -537,7 +564,8 @@ export function compareVersesWithLCS(spokenWords, actualWords) {
       result.push({
         word: lcsResult[i + 1].word,
         status: 'wrong',
-        expected: current.word
+        expected: current.word,
+        actualIdx: current.actualIdx  // Track verse position of substituted word
       });
       i += 2; // Skip both the missing and the extra
       continue;
