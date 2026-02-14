@@ -682,6 +682,35 @@ describe('Voice Comparison Feature', () => {
       );
       expect(missingWalkIn.length).toBe(2);
     });
+
+    it('handles wrong first word without cascading errors', () => {
+      // Ecclesiastes 5:18 - user says "And" instead of "Then"
+      // The algorithm should mark "And" as extra and "Then" as missing,
+      // but correctly match the rest of the verse
+      const actualWords = [
+        'then', 'i', 'realized', 'that', 'it', 'is', 'good', 'and', 'proper',
+        'for', 'a', 'man', 'to', 'eat', 'and', 'drink'
+      ];
+      const spokenWords = [
+        'and', 'i', 'realized', 'that', 'it', 'is', 'good', 'and', 'proper',
+        'for', 'a', 'man', 'to', 'eat', 'and', 'drink'
+      ];
+      const result = compareVersesLCS(spokenWords, actualWords);
+
+      // "then" should be missing (position 0)
+      const missingWords = result.filter(r => r.status === 'missing');
+      expect(missingWords.length).toBe(1);
+      expect(missingWords[0].actualIdx).toBe(0);
+
+      // "and" (first spoken word) should be extra
+      const extraWords = result.filter(r => r.status === 'extra');
+      expect(extraWords.length).toBe(1);
+      expect(extraWords[0].word).toBe('and');
+
+      // All other words should be correct (15 words: i, realized, that, it, is, good, and, proper, for, a, man, to, eat, and, drink)
+      const correctWords = result.filter(r => r.status === 'correct');
+      expect(correctWords.length).toBe(15);
+    });
   });
 
   describe('compareVersesWithLCS', () => {

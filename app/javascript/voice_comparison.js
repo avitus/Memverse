@@ -440,34 +440,65 @@ function buildLCSTable(spokenWords, actualWords) {
  * @returns {Array<{type: string, spokenIdx?: number, actualIdx?: number}>} Alignment operations
  */
 function greedyAlign(spokenWords, actualWords) {
-  const alignment = [];
-  let minActualPos = 0; // Minimum position in actual for next match
+  // Build suffix LCS table: suffixLcs[i][j] = LCS length of spoken[i:] and actual[j:]
+  const m = spokenWords.length;
+  const n = actualWords.length;
+  const suffixLcs = Array(m + 1).fill(null).map(() => Array(n + 1).fill(0));
 
-  for (let i = 0; i < spokenWords.length; i++) {
-    // Find the first matching actual word starting from minActualPos
-    let matchFound = false;
-    for (let j = minActualPos; j < actualWords.length; j++) {
+  // Fill table from bottom-right to top-left
+  for (let i = m - 1; i >= 0; i--) {
+    for (let j = n - 1; j >= 0; j--) {
       if (flexibleTextMatch(actualWords[j], spokenWords[i])) {
-        // Found a match! First, add missing words between minActualPos and j
-        for (let k = minActualPos; k < j; k++) {
-          alignment.push({ type: 'missing', actualIdx: k });
-        }
-        // Add the match
-        alignment.push({ type: 'match', spokenIdx: i, actualIdx: j });
-        minActualPos = j + 1;
-        matchFound = true;
-        break;
+        suffixLcs[i][j] = suffixLcs[i + 1][j + 1] + 1;
+      } else {
+        suffixLcs[i][j] = Math.max(suffixLcs[i + 1][j], suffixLcs[i][j + 1]);
       }
-    }
-    if (!matchFound) {
-      // No match found - this spoken word is extra
-      alignment.push({ type: 'extra', spokenIdx: i });
     }
   }
 
-  // Add remaining unmatched actual words as missing
-  for (let j = minActualPos; j < actualWords.length; j++) {
+  // Forward alignment using suffix LCS to guide decisions
+  const alignment = [];
+  let i = 0; // spoken index
+  let j = 0; // actual index
+
+  while (i < m && j < n) {
+    if (flexibleTextMatch(actualWords[j], spokenWords[i])) {
+      // Words match - take the match
+      alignment.push({ type: 'match', spokenIdx: i, actualIdx: j });
+      i++;
+      j++;
+    } else {
+      // Words don't match - decide whether to skip spoken or actual
+      // Compare future LCS: which skip leads to better alignment?
+      const skipSpokenFutureLcs = suffixLcs[i + 1][j];
+      const skipActualFutureLcs = suffixLcs[i][j + 1];
+
+      if (skipSpokenFutureLcs > skipActualFutureLcs) {
+        // Skipping spoken word leads to better alignment - mark spoken as extra
+        alignment.push({ type: 'extra', spokenIdx: i });
+        i++;
+      } else if (skipActualFutureLcs > skipSpokenFutureLcs) {
+        // Skipping actual word leads to better alignment - mark actual as missing
+        alignment.push({ type: 'missing', actualIdx: j });
+        j++;
+      } else {
+        // Tie: prefer marking spoken as extra (user made mistake)
+        alignment.push({ type: 'extra', spokenIdx: i });
+        i++;
+      }
+    }
+  }
+
+  // Handle remaining spoken words (extras)
+  while (i < m) {
+    alignment.push({ type: 'extra', spokenIdx: i });
+    i++;
+  }
+
+  // Handle remaining actual words (missing)
+  while (j < n) {
     alignment.push({ type: 'missing', actualIdx: j });
+    j++;
   }
 
   return alignment;

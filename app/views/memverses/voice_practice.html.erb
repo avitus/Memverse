@@ -331,38 +331,76 @@ $(document).ready(function() {
     return lcs;
   }
 
-  // Greedy sequential alignment - always prefers earliest possible match
-  // This is more appropriate for sequential verse recitation than LCS backtracking,
-  // which can match to later occurrences of repeated words.
+  // Align spoken words to actual verse using suffix LCS table for optimal decisions.
+  // This handles both repeated phrases (prefers earlier matches) and wrong words
+  // (marks as extra without cascading errors).
   function greedyAlign(spokenWords, actualWords) {
-    var alignment = [];
-    var minActualPos = 0; // Minimum position in actual for next match
+    var m = spokenWords.length;
+    var n = actualWords.length;
 
-    for (var i = 0; i < spokenWords.length; i++) {
-      // Find the first matching actual word starting from minActualPos
-      var matchFound = false;
-      for (var j = minActualPos; j < actualWords.length; j++) {
-        if (flexibleTextMatch(actualWords[j], spokenWords[i])) {
-          // Found a match! First, add missing words between minActualPos and j
-          for (var k = minActualPos; k < j; k++) {
-            alignment.push({ type: 'missing', actualIdx: k });
-          }
-          // Add the match
-          alignment.push({ type: 'match', spokenIdx: i, actualIdx: j });
-          minActualPos = j + 1;
-          matchFound = true;
-          break;
-        }
-      }
-      if (!matchFound) {
-        // No match found - this spoken word is extra
-        alignment.push({ type: 'extra', spokenIdx: i });
+    // Build suffix LCS table: suffixLcs[i][j] = LCS length of spoken[i:] and actual[j:]
+    var suffixLcs = [];
+    for (var x = 0; x <= m; x++) {
+      suffixLcs[x] = [];
+      for (var y = 0; y <= n; y++) {
+        suffixLcs[x][y] = 0;
       }
     }
 
-    // Add remaining unmatched actual words as missing
-    for (var j = minActualPos; j < actualWords.length; j++) {
-      alignment.push({ type: 'missing', actualIdx: j });
+    // Fill table from bottom-right to top-left
+    for (var i = m - 1; i >= 0; i--) {
+      for (var j = n - 1; j >= 0; j--) {
+        if (flexibleTextMatch(actualWords[j], spokenWords[i])) {
+          suffixLcs[i][j] = suffixLcs[i + 1][j + 1] + 1;
+        } else {
+          suffixLcs[i][j] = Math.max(suffixLcs[i + 1][j], suffixLcs[i][j + 1]);
+        }
+      }
+    }
+
+    // Forward alignment using suffix LCS to guide decisions
+    var alignment = [];
+    var si = 0; // spoken index
+    var ai = 0; // actual index
+
+    while (si < m && ai < n) {
+      if (flexibleTextMatch(actualWords[ai], spokenWords[si])) {
+        // Words match - take the match
+        alignment.push({ type: 'match', spokenIdx: si, actualIdx: ai });
+        si++;
+        ai++;
+      } else {
+        // Words don't match - decide whether to skip spoken or actual
+        // Compare future LCS: which skip leads to better alignment?
+        var skipSpokenFutureLcs = suffixLcs[si + 1][ai];
+        var skipActualFutureLcs = suffixLcs[si][ai + 1];
+
+        if (skipSpokenFutureLcs > skipActualFutureLcs) {
+          // Skipping spoken word leads to better alignment - mark spoken as extra
+          alignment.push({ type: 'extra', spokenIdx: si });
+          si++;
+        } else if (skipActualFutureLcs > skipSpokenFutureLcs) {
+          // Skipping actual word leads to better alignment - mark actual as missing
+          alignment.push({ type: 'missing', actualIdx: ai });
+          ai++;
+        } else {
+          // Tie: prefer marking spoken as extra (user made mistake)
+          alignment.push({ type: 'extra', spokenIdx: si });
+          si++;
+        }
+      }
+    }
+
+    // Handle remaining spoken words (extras)
+    while (si < m) {
+      alignment.push({ type: 'extra', spokenIdx: si });
+      si++;
+    }
+
+    // Handle remaining actual words (missing)
+    while (ai < n) {
+      alignment.push({ type: 'missing', actualIdx: ai });
+      ai++;
     }
 
     return alignment;
