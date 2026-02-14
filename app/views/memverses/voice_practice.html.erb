@@ -5,12 +5,6 @@
 
     <div class="passage-entry voice-practice">
 
-      <!-- Passage Title -->
-      <div class="passage-title-container">
-        <h2 class="passage-title"></h2>
-        <div class="passage-id" style="display:none;"></div>
-      </div>
-
       <!-- Verse Reference Display -->
       <div class="voice-reference">
         <h2>
@@ -28,12 +22,18 @@
       </div>
 
       <!-- Transcription Display -->
-      <div class="voice-transcription">
+      <div class="voice-transcription-wrapper">
+        <div class="passage-title-container">
+          <h2 class="passage-title"></h2>
+          <div class="passage-id" style="display:none;"></div>
+        </div>
+        <div class="voice-transcription">
         <h3>Your Recitation:</h3>
         <div id="transcription" class="transcription-text">
           <span class="placeholder">Press the microphone and speak the verse...</span>
         </div>
         <div id="accuracy-display" class="accuracy-display"></div>
+        </div>
       </div>
 
       <!-- Rating and Navigation -->

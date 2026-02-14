@@ -99,12 +99,29 @@
   white-space: nowrap;
 }
 
+.voice-transcription-wrapper {
+  position: relative;
+  margin: 20px 0;
+}
+
+.voice-transcription-wrapper .passage-title-container {
+  position: absolute;
+  top: -22px;
+  right: 10px;
+
+  .passage-title {
+    font-size: 0.9em;
+    color: #666;
+    margin: 0;
+    font-weight: normal;
+  }
+}
+
 .voice-transcription {
   background: #f9f9f9;
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 20px;
-  margin: 20px 0;
   min-height: 150px;
 
   h3 {
