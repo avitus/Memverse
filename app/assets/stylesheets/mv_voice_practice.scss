@@ -7,10 +7,17 @@
   position: relative;
 }
 
-.voice-reference {
-  text-align: center;
+.voice-header {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
   margin-bottom: 20px;
   padding-top: 5px;
+  position: relative;
+}
+
+.voice-reference {
+  text-align: center;
 
   h2 {
     margin: 0;
@@ -104,18 +111,17 @@
   margin: 20px 0;
 }
 
-// Passage title positioned at top right, aligned with verse reference
-.voice-practice .passage-title-container {
+// Passage title positioned at right, bottom-aligned with verse reference
+.voice-header .passage-title-container {
   position: absolute;
-  top: 5px;
   right: 15px;
+  bottom: 0;
 
   .passage-title {
     font-size: 0.9em;
     color: #666;
     margin: 0;
     font-weight: normal;
-    line-height: 2em; // Match verse-ref line height to align bottoms
   }
 }
 
