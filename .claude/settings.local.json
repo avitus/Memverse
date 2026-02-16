@@ -54,7 +54,8 @@
       "WebFetch(domain:github.com)",
       "Bash(cat:*)",
       "Bash(grep:*)",
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(git status:*)"
     ],
     "deny": [],
     "ask": [],
