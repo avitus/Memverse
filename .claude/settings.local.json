@@ -55,7 +55,13 @@
       "Bash(cat:*)",
       "Bash(grep:*)",
       "Bash(git checkout:*)",
-      "Bash(git status:*)"
+      "Bash(git status:*)",
+      "Bash(for branch in dev master new-reg-bug quiz-upgrade rails-7-upgrade rails-71-upgrade workload-alert)",
+      "Bash(do echo \"=== $branch ===\")",
+      "Bash(done)",
+      "Bash(while read hash msg)",
+      "Bash(do echo \"### $msg\")",
+      "Bash(git diff-tree:*)"
     ],
     "deny": [],
     "ask": [],
