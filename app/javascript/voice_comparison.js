@@ -26,6 +26,157 @@ export function scrubText(text) {
 }
 
 /**
+ * Homophone dictionary for voice comparison
+ *
+ * Maps each word to a Set of its homophones for O(1) lookup.
+ * When the speech-to-text API transcribes a word as a homophone
+ * of the expected word, we accept it as correct since the user
+ * spoke the right sound.
+ *
+ * All keys and values are lowercase.
+ */
+export const HOMOPHONES = {
+  // there / their / they're
+  "there": new Set(["their", "they're"]),
+  "their": new Set(["there", "they're"]),
+  "they're": new Set(["there", "their"]),
+  // through / threw / thru
+  "through": new Set(["threw", "thru"]),
+  "threw": new Set(["through", "thru"]),
+  "thru": new Set(["through", "threw"]),
+  // know / no
+  "know": new Set(["no"]),
+  "no": new Set(["know"]),
+  // hear / here
+  "hear": new Set(["here"]),
+  "here": new Set(["hear"]),
+  // peace / piece
+  "peace": new Set(["piece"]),
+  "piece": new Set(["peace"]),
+  // soul / sole
+  "soul": new Set(["sole"]),
+  "sole": new Set(["soul"]),
+  // son / sun
+  "son": new Set(["sun"]),
+  "sun": new Set(["son"]),
+  // whole / hole
+  "whole": new Set(["hole"]),
+  "hole": new Set(["whole"]),
+  // holy / wholly
+  "holy": new Set(["wholly"]),
+  "wholly": new Set(["holy"]),
+  // altar / alter
+  "altar": new Set(["alter"]),
+  "alter": new Set(["altar"]),
+  // prophet / profit
+  "prophet": new Set(["profit"]),
+  "profit": new Set(["prophet"]),
+  // reign / rain / rein
+  "reign": new Set(["rain", "rein"]),
+  "rain": new Set(["reign", "rein"]),
+  "rein": new Set(["reign", "rain"]),
+  // pray / prey
+  "pray": new Set(["prey"]),
+  "prey": new Set(["pray"]),
+  // right / write / rite
+  "right": new Set(["write", "rite"]),
+  "write": new Set(["right", "rite"]),
+  "rite": new Set(["right", "write"]),
+  // way / weigh
+  "way": new Set(["weigh"]),
+  "weigh": new Set(["way"]),
+  // one / won
+  "one": new Set(["won"]),
+  "won": new Set(["one"]),
+  // see / sea
+  "see": new Set(["sea"]),
+  "sea": new Set(["see"]),
+  // him / hymn
+  "him": new Set(["hymn"]),
+  "hymn": new Set(["him"]),
+  // heal / heel
+  "heal": new Set(["heel"]),
+  "heel": new Set(["heal"]),
+  // night / knight
+  "night": new Set(["knight"]),
+  "knight": new Set(["night"]),
+  // born / borne
+  "born": new Set(["borne"]),
+  "borne": new Set(["born"]),
+  // die / dye
+  "die": new Set(["dye"]),
+  "dye": new Set(["die"]),
+  // great / grate
+  "great": new Set(["grate"]),
+  "grate": new Set(["great"]),
+  // flee / flea
+  "flee": new Set(["flea"]),
+  "flea": new Set(["flee"]),
+  // raised / razed
+  "raised": new Set(["razed"]),
+  "razed": new Set(["raised"]),
+  // hour / our
+  "hour": new Set(["our"]),
+  "our": new Set(["hour"]),
+  // knot / not
+  "knot": new Set(["not"]),
+  "not": new Set(["knot"]),
+  // be / bee
+  "be": new Set(["bee"]),
+  "bee": new Set(["be"]),
+  // by / buy / bye
+  "by": new Set(["buy", "bye"]),
+  "buy": new Set(["by", "bye"]),
+  "bye": new Set(["by", "buy"]),
+  // for / four / fore
+  "for": new Set(["four", "fore"]),
+  "four": new Set(["for", "fore"]),
+  "fore": new Set(["for", "four"]),
+  // to / too / two
+  "to": new Set(["too", "two"]),
+  "too": new Set(["to", "two"]),
+  "two": new Set(["to", "too"]),
+  // in / inn
+  "in": new Set(["inn"]),
+  "inn": new Set(["in"]),
+  // i / eye
+  "i": new Set(["eye"]),
+  "eye": new Set(["i"]),
+  // we / wee
+  "we": new Set(["wee"]),
+  "wee": new Set(["we"]),
+  // meat / meet
+  "meat": new Set(["meet"]),
+  "meet": new Set(["meat"]),
+  // read / reed (present tense)
+  "read": new Set(["reed"]),
+  "reed": new Set(["read"]),
+  // lead / led (past tense)
+  "lead": new Set(["led"]),
+  "led": new Set(["lead"]),
+  // would / wood
+  "would": new Set(["wood"]),
+  "wood": new Set(["would"]),
+  // which / witch
+  "which": new Set(["witch"]),
+  "witch": new Set(["which"]),
+  // where / wear / ware
+  "where": new Set(["wear", "ware"]),
+  "wear": new Set(["where", "ware"]),
+  "ware": new Set(["where", "wear"]),
+};
+
+/**
+ * Strip trailing and leading punctuation from a word for homophone comparison
+ *
+ * @param {string} word - Word possibly with punctuation
+ * @returns {string} Word with punctuation stripped
+ */
+function stripPunctuation(word) {
+  return word.replace(/^[^a-zA-Z']+|[^a-zA-Z']+$/g, '');
+}
+
+/**
  * Flexible text matching for word comparison
  * This mirrors the flexibleTextMatch function in memverse_lib.js
  *
@@ -51,17 +202,17 @@ export function flexibleTextMatch(correctWord, userInput) {
 
   // Handle apostrophe words - accept word without apostrophes
   // e.g., "childrens" matches "children's", "gods" matches "God's"
-  if (correctWord.includes("'") || correctWord.includes("'")) {
-    const withoutApostrophes = correctWord.replace(/['']/g, '');
+  if (correctWord.includes("'") || correctWord.includes("\u2019")) {
+    const withoutApostrophes = correctWord.replace(/['\u2019]/g, '');
     if (withoutApostrophes.toLowerCase() === userInput.toLowerCase()) {
       return true;
     }
   }
 
   // Handle quotation marks at beginning
-  // e.g., "The" matches '"The' or '"The'
-  if (correctWord.match(/^["'"'"]/)) {
-    const withoutQuote = correctWord.replace(/^["'"'"]/, '');
+  // e.g., "The" matches '"The' or '\u201CThe'
+  if (correctWord.match(/^["'\u201C\u2018\u201D]/)) {
+    const withoutQuote = correctWord.replace(/^["'\u201C\u2018\u201D]/, '');
     if (withoutQuote.toLowerCase() === userInput.toLowerCase()) {
       return true;
     }
@@ -69,6 +220,40 @@ export function flexibleTextMatch(correctWord, userInput) {
 
   // For all other cases, use scrubText comparison
   return scrubText(correctWord) === scrubText(userInput);
+}
+
+/**
+ * Check whether two words are homophones
+ *
+ * @param {string} wordA - first word (may include punctuation)
+ * @param {string} wordB - second word (may include punctuation)
+ * @returns {boolean}
+ */
+export function isHomophone(wordA, wordB) {
+  const a = stripPunctuation(wordA).toLowerCase();
+  const b = stripPunctuation(wordB).toLowerCase();
+  return !!(HOMOPHONES[a] && HOMOPHONES[a].has(b));
+}
+
+/**
+ * Voice-aware flexible text match
+ *
+ * Wraps flexibleTextMatch with an additional homophone check.
+ * This keeps the typed-review matching untouched while allowing the
+ * voice pipeline to accept speech-to-text homophone transcriptions.
+ *
+ * @param {string} correctWord - The expected word from the verse
+ * @param {string} userInput - The word from user's speech
+ * @returns {boolean} True if words match flexibly or are homophones
+ */
+export function voiceFlexibleTextMatch(correctWord, userInput) {
+  if (flexibleTextMatch(correctWord, userInput)) {
+    return true;
+  }
+  if (!correctWord || !userInput) {
+    return false;
+  }
+  return isHomophone(correctWord, userInput);
 }
 
 /**
@@ -171,8 +356,8 @@ export function compareVerses(spokenWords, actualWords) {
       continue;
     }
 
-    // Words match - correct (using flexible matching for apostrophes, etc.)
-    if (flexibleTextMatch(actual, spoken)) {
+    // Words match - correct (using voice-aware matching for apostrophes, homophones, etc.)
+    if (voiceFlexibleTextMatch(actual, spoken)) {
       result.push({ word: spoken, status: 'correct' });
       i++;
       j++;
@@ -181,8 +366,8 @@ export function compareVerses(spokenWords, actualWords) {
 
     // Words don't match - need to determine if wrong, missing, or extra
     // Look ahead to see if this is an insertion (extra) or substitution (wrong)
-    const nextSpokenMatchesActual = spokenWords[i + 1] && flexibleTextMatch(actual, spokenWords[i + 1]);
-    const spokenMatchesNextActual = actualWords[j + 1] && flexibleTextMatch(actualWords[j + 1], spoken);
+    const nextSpokenMatchesActual = spokenWords[i + 1] && voiceFlexibleTextMatch(actual, spokenWords[i + 1]);
+    const spokenMatchesNextActual = actualWords[j + 1] && voiceFlexibleTextMatch(actualWords[j + 1], spoken);
 
     if (nextSpokenMatchesActual && !spokenMatchesNextActual) {
       // Current spoken word is extra, next spoken word matches current actual
@@ -339,6 +524,69 @@ export function filterTrailingMissing(comparisonResult) {
 }
 
 /**
+ * Split text into array of words preserving original casing.
+ * Only normalizes whitespace (no lowercasing).
+ *
+ * Companion to getWordArray() — use this to keep an original-cased
+ * copy of the verse words for display after comparison.
+ *
+ * @param {string} text - Text to split
+ * @returns {string[]} Array of words with original casing
+ */
+export function getOriginalWordArray(text) {
+  if (!text || typeof text !== 'string') {
+    return [];
+  }
+  const normalized = text.replace(/\s+/g, ' ').trim();
+  if (normalized === '') {
+    return [];
+  }
+  return normalized.split(' ');
+}
+
+/**
+ * Restore original casing from the verse text in comparison results.
+ *
+ * The comparison pipeline lowercases all words via normalizeText() before
+ * comparing. This function restores the original casing for display by
+ * looking up each word's position in the original (un-lowercased) verse
+ * words array using the actualIdx field.
+ *
+ * - 'correct' items: word is replaced with the original verse word
+ * - 'missing' items: word is replaced with the original verse word
+ * - 'wrong' items: expected is replaced with the original verse word
+ * - 'extra' items: left unchanged (user's spoken word, no verse source)
+ *
+ * Returns a new array (does not mutate the input).
+ *
+ * @param {Array<{word: string, status: string, expected?: string, actualIdx?: number}>} comparisonResult
+ * @param {string[]} originalVerseWords - Verse words with original casing
+ * @returns {Array<{word: string, status: string, expected?: string, actualIdx?: number}>}
+ */
+export function restoreOriginalCasing(comparisonResult, originalVerseWords) {
+  if (!comparisonResult || comparisonResult.length === 0 || !originalVerseWords) {
+    return comparisonResult || [];
+  }
+
+  return comparisonResult.map(item => {
+    const idx = item.actualIdx;
+    if (idx === undefined || idx === -1 || idx >= originalVerseWords.length) {
+      return item;
+    }
+
+    const original = originalVerseWords[idx];
+
+    if (item.status === 'correct' || item.status === 'missing') {
+      return { ...item, word: original };
+    }
+    if (item.status === 'wrong') {
+      return { ...item, expected: original };
+    }
+    return item;
+  });
+}
+
+/**
  * Render comparison result in highlight-only mode
  *
  * This simplified view only shows the user's spoken words with errors highlighted.
@@ -407,7 +655,7 @@ function buildLCSTable(spokenWords, actualWords) {
   // Fill the table using dynamic programming
   for (let i = 1; i <= m; i++) {
     for (let j = 1; j <= n; j++) {
-      if (flexibleTextMatch(actualWords[j - 1], spokenWords[i - 1])) {
+      if (voiceFlexibleTextMatch(actualWords[j - 1], spokenWords[i - 1])) {
         // Words match - extend the subsequence
         lcs[i][j] = lcs[i - 1][j - 1] + 1;
       } else {
@@ -448,7 +696,7 @@ function greedyAlign(spokenWords, actualWords) {
   // Fill table from bottom-right to top-left
   for (let i = m - 1; i >= 0; i--) {
     for (let j = n - 1; j >= 0; j--) {
-      if (flexibleTextMatch(actualWords[j], spokenWords[i])) {
+      if (voiceFlexibleTextMatch(actualWords[j], spokenWords[i])) {
         suffixLcs[i][j] = suffixLcs[i + 1][j + 1] + 1;
       } else {
         suffixLcs[i][j] = Math.max(suffixLcs[i + 1][j], suffixLcs[i][j + 1]);
@@ -462,7 +710,7 @@ function greedyAlign(spokenWords, actualWords) {
   let j = 0; // actual index
 
   while (i < m && j < n) {
-    if (flexibleTextMatch(actualWords[j], spokenWords[i])) {
+    if (voiceFlexibleTextMatch(actualWords[j], spokenWords[i])) {
       // Words match - take the match
       alignment.push({ type: 'match', spokenIdx: i, actualIdx: j });
       i++;
@@ -526,7 +774,7 @@ function backtrackLCS(lcs, spokenWords, actualWords) {
 
   // Backtrack from bottom-right to top-left
   while (i > 0 || j > 0) {
-    if (i > 0 && j > 0 && flexibleTextMatch(actualWords[j - 1], spokenWords[i - 1])) {
+    if (i > 0 && j > 0 && voiceFlexibleTextMatch(actualWords[j - 1], spokenWords[i - 1])) {
       // Words match - they're part of the LCS
       alignment.unshift({ type: 'match', spokenIdx: i - 1, actualIdx: j - 1 });
       i--;

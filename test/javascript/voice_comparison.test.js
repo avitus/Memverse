@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { scrubText, flexibleTextMatch, normalizeText, getWordArray, compareVerses, compareVersesLCS, compareVersesWithLCS, calculateAccuracy, getSuggestedRating, renderComparison, renderComparisonHighlightOnly, filterTrailingMissing } from '../../app/javascript/voice_comparison.js';
+import { scrubText, flexibleTextMatch, voiceFlexibleTextMatch, isHomophone, HOMOPHONES, normalizeText, getWordArray, getOriginalWordArray, compareVerses, compareVersesLCS, compareVersesWithLCS, calculateAccuracy, getSuggestedRating, renderComparison, renderComparisonHighlightOnly, filterTrailingMissing, restoreOriginalCasing } from '../../app/javascript/voice_comparison.js';
 
 describe('Voice Comparison Feature', () => {
 
@@ -118,6 +118,192 @@ describe('Voice Comparison Feature', () => {
     it('returns false for empty strings', () => {
       expect(flexibleTextMatch('', 'test')).toBe(false);
       expect(flexibleTextMatch('test', '')).toBe(false);
+    });
+  });
+
+  // ==========================================
+  // Homophone matching tests
+  // ==========================================
+
+  describe('HOMOPHONES dictionary', () => {
+    it('contains symmetric entries (if A is homophone of B, B is homophone of A)', () => {
+      for (const [word, homophones] of Object.entries(HOMOPHONES)) {
+        for (const homophone of homophones) {
+          expect(HOMOPHONES[homophone]).toBeDefined();
+          expect(HOMOPHONES[homophone].has(word)).toBe(true);
+        }
+      }
+    });
+  });
+
+  describe('flexibleTextMatch does NOT match homophones (typed review safety)', () => {
+    it('does not match "threw" to "through"', () => {
+      expect(flexibleTextMatch('through', 'threw')).toBe(false);
+    });
+
+    it('does not match "peace" to "piece"', () => {
+      expect(flexibleTextMatch('peace', 'piece')).toBe(false);
+    });
+
+    it('does not match "know" to "no"', () => {
+      expect(flexibleTextMatch('know', 'no')).toBe(false);
+    });
+  });
+
+  describe('voiceFlexibleTextMatch - homophones', () => {
+    // Basic homophone pairs
+    it('matches "threw" to "through"', () => {
+      expect(voiceFlexibleTextMatch('through', 'threw')).toBe(true);
+    });
+
+    it('matches "through" to "threw" (reverse)', () => {
+      expect(voiceFlexibleTextMatch('threw', 'through')).toBe(true);
+    });
+
+    it('matches "their" to "there"', () => {
+      expect(voiceFlexibleTextMatch('there', 'their')).toBe(true);
+    });
+
+    it('matches "there" to "their" (reverse)', () => {
+      expect(voiceFlexibleTextMatch('their', 'there')).toBe(true);
+    });
+
+    it('matches "peace" to "piece"', () => {
+      expect(voiceFlexibleTextMatch('peace', 'piece')).toBe(true);
+    });
+
+    it('matches "piece" to "peace" (reverse)', () => {
+      expect(voiceFlexibleTextMatch('piece', 'peace')).toBe(true);
+    });
+
+    it('matches "know" to "no"', () => {
+      expect(voiceFlexibleTextMatch('know', 'no')).toBe(true);
+    });
+
+    it('matches "no" to "know" (reverse)', () => {
+      expect(voiceFlexibleTextMatch('no', 'know')).toBe(true);
+    });
+
+    it('matches "son" to "sun"', () => {
+      expect(voiceFlexibleTextMatch('son', 'sun')).toBe(true);
+    });
+
+    it('matches "prophet" to "profit"', () => {
+      expect(voiceFlexibleTextMatch('prophet', 'profit')).toBe(true);
+    });
+
+    it('matches "him" to "hymn"', () => {
+      expect(voiceFlexibleTextMatch('him', 'hymn')).toBe(true);
+    });
+
+    it('matches "holy" to "wholly"', () => {
+      expect(voiceFlexibleTextMatch('holy', 'wholly')).toBe(true);
+    });
+
+    // Case insensitive homophones
+    it('matches homophones case-insensitively', () => {
+      expect(voiceFlexibleTextMatch('Through', 'threw')).toBe(true);
+      expect(voiceFlexibleTextMatch('through', 'Threw')).toBe(true);
+      expect(voiceFlexibleTextMatch('PEACE', 'piece')).toBe(true);
+    });
+
+    // Non-homophones should still NOT match
+    it('does not match non-homophones', () => {
+      expect(voiceFlexibleTextMatch('through', 'thought')).toBe(false);
+      expect(voiceFlexibleTextMatch('peace', 'place')).toBe(false);
+      expect(voiceFlexibleTextMatch('know', 'now')).toBe(false);
+    });
+
+    // Homophones with trailing punctuation
+    it('matches homophones with trailing comma', () => {
+      expect(voiceFlexibleTextMatch('through,', 'threw')).toBe(true);
+    });
+
+    it('matches homophones with trailing period', () => {
+      expect(voiceFlexibleTextMatch('peace.', 'piece')).toBe(true);
+    });
+
+    it('matches homophones when user input has punctuation', () => {
+      expect(voiceFlexibleTextMatch('through', 'threw,')).toBe(true);
+    });
+
+    // Triple homophones
+    it('matches "they\'re" to "there"', () => {
+      expect(voiceFlexibleTextMatch("they're", 'there')).toBe(true);
+    });
+
+    it('matches "to" to "two"', () => {
+      expect(voiceFlexibleTextMatch('to', 'two')).toBe(true);
+    });
+
+    it('matches "for" to "four"', () => {
+      expect(voiceFlexibleTextMatch('for', 'four')).toBe(true);
+    });
+
+    // Delegates to flexibleTextMatch for non-homophone cases
+    it('still handles apostrophes via delegation', () => {
+      expect(voiceFlexibleTextMatch("God's", 'gods')).toBe(true);
+      expect(voiceFlexibleTextMatch("don't", 'dont')).toBe(true);
+    });
+
+    it('still handles quotation marks via delegation', () => {
+      expect(voiceFlexibleTextMatch('"The', 'The')).toBe(true);
+    });
+
+    it('returns false for null/undefined inputs', () => {
+      expect(voiceFlexibleTextMatch(null, 'test')).toBe(false);
+      expect(voiceFlexibleTextMatch('test', null)).toBe(false);
+    });
+  });
+
+  describe('compareVersesWithLCS - homophone verse tests', () => {
+    it('"threw Christ" matches "through Christ" — both words correct', () => {
+      const spokenWords = ['threw', 'christ'];
+      const actualWords = ['through', 'christ'];
+      const result = compareVersesWithLCS(spokenWords, actualWords);
+
+      const correctWords = result.filter(r => r.status === 'correct');
+      expect(correctWords.length).toBe(2);
+    });
+
+    it('"I no that my redeemer" matches "I know that my Redeemer"', () => {
+      const spokenWords = ['i', 'no', 'that', 'my', 'redeemer'];
+      const actualWords = ['i', 'know', 'that', 'my', 'redeemer'];
+      const result = compareVersesWithLCS(spokenWords, actualWords);
+
+      const correctWords = result.filter(r => r.status === 'correct');
+      expect(correctWords.length).toBe(5);
+      expect(result.find(r => r.word === 'no').status).toBe('correct');
+    });
+
+    it('"piece be with you" matches "peace be with you"', () => {
+      const spokenWords = ['piece', 'be', 'with', 'you'];
+      const actualWords = ['peace', 'be', 'with', 'you'];
+      const result = compareVersesWithLCS(spokenWords, actualWords);
+
+      const correctWords = result.filter(r => r.status === 'correct');
+      expect(correctWords.length).toBe(4);
+      expect(result.find(r => r.word === 'piece').status).toBe('correct');
+    });
+
+    it('handles mixed homophones and real errors in same verse', () => {
+      const spokenWords = ['threw', 'him', 'we', 'have', 'piece'];
+      const actualWords = ['through', 'him', 'we', 'have', 'peace'];
+      const result = compareVersesWithLCS(spokenWords, actualWords);
+
+      const correctWords = result.filter(r => r.status === 'correct');
+      expect(correctWords.length).toBe(5);
+    });
+
+    it('non-homophone errors are still caught alongside homophones', () => {
+      const spokenWords = ['threw', 'crist'];
+      const actualWords = ['through', 'christ'];
+      const result = compareVersesWithLCS(spokenWords, actualWords);
+
+      // "threw" matches "through" (homophone)
+      expect(result.find(r => r.word === 'threw').status).toBe('correct');
+      // "crist" does NOT match "christ" (not a homophone, and scrubText won't match)
+      expect(result.find(r => r.word === 'crist').status).toBe('wrong');
     });
   });
 
@@ -1591,6 +1777,211 @@ describe('Voice Comparison Feature', () => {
         { word: 'way', status: 'correct', actualIdx: 3 }
       ];
       expect(filterTrailingMissing(input)).toEqual(expected);
+    });
+  });
+
+  // ==========================================
+  // Original casing restoration tests
+  // ==========================================
+
+  describe('getOriginalWordArray', () => {
+    it('preserves original casing', () => {
+      expect(getOriginalWordArray('For God so loved the world')).toEqual(
+        ['For', 'God', 'so', 'loved', 'the', 'world']
+      );
+    });
+
+    it('preserves LORD in all caps', () => {
+      expect(getOriginalWordArray('The LORD is my shepherd')).toEqual(
+        ['The', 'LORD', 'is', 'my', 'shepherd']
+      );
+    });
+
+    it('preserves Jesus, Christ, Bible', () => {
+      expect(getOriginalWordArray('Jesus Christ and the Bible')).toEqual(
+        ['Jesus', 'Christ', 'and', 'the', 'Bible']
+      );
+    });
+
+    it('normalizes whitespace', () => {
+      expect(getOriginalWordArray('The   LORD   is')).toEqual(['The', 'LORD', 'is']);
+    });
+
+    it('trims leading and trailing whitespace', () => {
+      expect(getOriginalWordArray('  God is love  ')).toEqual(['God', 'is', 'love']);
+    });
+
+    it('handles single word', () => {
+      expect(getOriginalWordArray('God')).toEqual(['God']);
+    });
+
+    it('handles empty string', () => {
+      expect(getOriginalWordArray('')).toEqual([]);
+    });
+
+    it('handles null/undefined', () => {
+      expect(getOriginalWordArray(null)).toEqual([]);
+      expect(getOriginalWordArray(undefined)).toEqual([]);
+    });
+  });
+
+  describe('restoreOriginalCasing', () => {
+    it('restores casing for correct words', () => {
+      const result = [
+        { word: 'for', status: 'correct', actualIdx: 0 },
+        { word: 'god', status: 'correct', actualIdx: 1 },
+        { word: 'so', status: 'correct', actualIdx: 2 }
+      ];
+      const originalWords = ['For', 'God', 'so'];
+      const restored = restoreOriginalCasing(result, originalWords);
+
+      expect(restored[0].word).toBe('For');
+      expect(restored[1].word).toBe('God');
+      expect(restored[2].word).toBe('so');
+    });
+
+    it('restores LORD in all caps', () => {
+      const result = [
+        { word: 'the', status: 'correct', actualIdx: 0 },
+        { word: 'lord', status: 'correct', actualIdx: 1 }
+      ];
+      const originalWords = ['The', 'LORD'];
+      const restored = restoreOriginalCasing(result, originalWords);
+
+      expect(restored[0].word).toBe('The');
+      expect(restored[1].word).toBe('LORD');
+    });
+
+    it('restores casing for missing words', () => {
+      const result = [
+        { word: 'the', status: 'missing', actualIdx: 0 },
+        { word: 'lord', status: 'missing', actualIdx: 1 }
+      ];
+      const originalWords = ['The', 'LORD'];
+      const restored = restoreOriginalCasing(result, originalWords);
+
+      expect(restored[0].word).toBe('The');
+      expect(restored[1].word).toBe('LORD');
+    });
+
+    it('restores casing for the expected field on wrong words', () => {
+      const result = [
+        { word: 'lrod', status: 'wrong', expected: 'lord', actualIdx: 1 }
+      ];
+      const originalWords = ['The', 'LORD', 'is'];
+      const restored = restoreOriginalCasing(result, originalWords);
+
+      expect(restored[0].word).toBe('lrod');    // spoken word unchanged
+      expect(restored[0].expected).toBe('LORD'); // expected restored
+    });
+
+    it('leaves extra words unchanged', () => {
+      const result = [
+        { word: 'um', status: 'extra', actualIdx: -1 }
+      ];
+      const originalWords = ['The', 'LORD'];
+      const restored = restoreOriginalCasing(result, originalWords);
+
+      expect(restored[0].word).toBe('um');
+    });
+
+    it('handles mixed statuses', () => {
+      const result = [
+        { word: 'for', status: 'correct', actualIdx: 0 },
+        { word: 'um', status: 'extra', actualIdx: -1 },
+        { word: 'god', status: 'missing', actualIdx: 1 },
+        { word: 'luvd', status: 'wrong', expected: 'loved', actualIdx: 2 }
+      ];
+      const originalWords = ['For', 'God', 'loved'];
+      const restored = restoreOriginalCasing(result, originalWords);
+
+      expect(restored[0].word).toBe('For');      // correct → restored
+      expect(restored[1].word).toBe('um');        // extra → unchanged
+      expect(restored[2].word).toBe('God');       // missing → restored
+      expect(restored[3].word).toBe('luvd');      // wrong word → unchanged
+      expect(restored[3].expected).toBe('loved'); // wrong expected → restored
+    });
+
+    it('handles empty result', () => {
+      expect(restoreOriginalCasing([], ['The'])).toEqual([]);
+    });
+
+    it('handles null result', () => {
+      expect(restoreOriginalCasing(null, ['The'])).toEqual([]);
+    });
+
+    it('handles null originalVerseWords gracefully', () => {
+      const result = [{ word: 'god', status: 'correct', actualIdx: 0 }];
+      expect(restoreOriginalCasing(result, null)).toEqual(result);
+    });
+
+    it('does not modify the original array (immutability)', () => {
+      const result = [
+        { word: 'god', status: 'correct', actualIdx: 0 }
+      ];
+      const originalWords = ['God'];
+      const restored = restoreOriginalCasing(result, originalWords);
+
+      expect(restored[0].word).toBe('God');
+      expect(result[0].word).toBe('god'); // original unchanged
+    });
+
+    it('handles out-of-bounds actualIdx gracefully', () => {
+      const result = [
+        { word: 'god', status: 'correct', actualIdx: 99 }
+      ];
+      const originalWords = ['God'];
+      const restored = restoreOriginalCasing(result, originalWords);
+
+      expect(restored[0].word).toBe('god'); // unchanged, idx out of bounds
+    });
+  });
+
+  describe('restoreOriginalCasing integration with renderComparison', () => {
+    it('renders properly-cased words after casing restoration', () => {
+      const comparison = [
+        { word: 'for', status: 'correct', actualIdx: 0 },
+        { word: 'god', status: 'correct', actualIdx: 1 },
+        { word: 'so', status: 'correct', actualIdx: 2 },
+        { word: 'loved', status: 'correct', actualIdx: 3 },
+        { word: 'the', status: 'missing', actualIdx: 4 },
+        { word: 'world', status: 'correct', actualIdx: 5 }
+      ];
+      const originalWords = ['For', 'God', 'so', 'loved', 'the', 'world'];
+      const restored = restoreOriginalCasing(comparison, originalWords);
+      const html = renderComparison(restored);
+
+      expect(html).toContain('<span class="word-correct">For</span>');
+      expect(html).toContain('<span class="word-correct">God</span>');
+      expect(html).toContain('<span class="word-missing">the</span>');
+    });
+
+    it('renders LORD properly in Psalm 23', () => {
+      const comparison = [
+        { word: 'the', status: 'correct', actualIdx: 0 },
+        { word: 'lord', status: 'correct', actualIdx: 1 },
+        { word: 'is', status: 'correct', actualIdx: 2 },
+        { word: 'my', status: 'correct', actualIdx: 3 },
+        { word: 'shepherd', status: 'correct', actualIdx: 4 }
+      ];
+      const originalWords = ['The', 'LORD', 'is', 'my', 'shepherd'];
+      const restored = restoreOriginalCasing(comparison, originalWords);
+      const html = renderComparison(restored);
+
+      expect(html).toContain('<span class="word-correct">The</span>');
+      expect(html).toContain('<span class="word-correct">LORD</span>');
+    });
+
+    it('renders properly-cased expected word for wrong words', () => {
+      const comparison = [
+        { word: 'lrod', status: 'wrong', expected: 'lord', actualIdx: 1 }
+      ];
+      const originalWords = ['The', 'LORD', 'is'];
+      const restored = restoreOriginalCasing(comparison, originalWords);
+      const html = renderComparison(restored);
+
+      expect(html).toContain('<span class="word-wrong">lrod</span>');
+      expect(html).toContain('<span class="word-expected">LORD</span>');
     });
   });
 });

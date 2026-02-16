@@ -267,12 +267,14 @@ $(document).ready(function() {
   // Voice Comparison Functions
   // ========================================
   // Note: scrub_text and flexibleTextMatch are provided globally by memverse_lib.js
+  // voiceFlexibleTextMatch (from voice_lib.js) wraps flexibleTextMatch with
+  // homophone support so speech-to-text homophones are accepted as correct.
 
   // Normalize text for splitting into words
   // - Convert to lowercase
   // - Normalize whitespace (multiple spaces to single space)
   // - Trim leading/trailing whitespace
-  // Note: We preserve punctuation here because flexibleTextMatch handles it
+  // Note: We preserve punctuation here because voiceFlexibleTextMatch handles it
   function normalizeText(text) {
     if (!text || typeof text !== 'string') {
       return '';
@@ -320,7 +322,7 @@ $(document).ready(function() {
     // Fill the table using dynamic programming
     for (var i = 1; i <= m; i++) {
       for (var j = 1; j <= n; j++) {
-        if (flexibleTextMatch(actualWords[j - 1], spokenWords[i - 1])) {
+        if (voiceFlexibleTextMatch(actualWords[j - 1], spokenWords[i - 1])) {
           // Words match - extend the subsequence
           lcs[i][j] = lcs[i - 1][j - 1] + 1;
         } else {
@@ -352,7 +354,7 @@ $(document).ready(function() {
     // Fill table from bottom-right to top-left
     for (var i = m - 1; i >= 0; i--) {
       for (var j = n - 1; j >= 0; j--) {
-        if (flexibleTextMatch(actualWords[j], spokenWords[i])) {
+        if (voiceFlexibleTextMatch(actualWords[j], spokenWords[i])) {
           suffixLcs[i][j] = suffixLcs[i + 1][j + 1] + 1;
         } else {
           suffixLcs[i][j] = Math.max(suffixLcs[i + 1][j], suffixLcs[i][j + 1]);
@@ -366,7 +368,7 @@ $(document).ready(function() {
     var ai = 0; // actual index
 
     while (si < m && ai < n) {
-      if (flexibleTextMatch(actualWords[ai], spokenWords[si])) {
+      if (voiceFlexibleTextMatch(actualWords[ai], spokenWords[si])) {
         // Words match - take the match
         alignment.push({ type: 'match', spokenIdx: si, actualIdx: ai });
         si++;
@@ -564,6 +566,51 @@ $(document).ready(function() {
     return div.innerHTML;
   }
 
+  // Split text into words preserving original casing (no lowercasing).
+  // Companion to getWordArray — use to keep original-cased verse words for display.
+  function getOriginalWordArray(text) {
+    if (!text || typeof text !== 'string') {
+      return [];
+    }
+    var normalized = text.replace(/\s+/g, ' ').trim();
+    if (normalized === '') {
+      return [];
+    }
+    return normalized.split(' ');
+  }
+
+  // Restore original casing from the verse text in comparison results.
+  // Uses actualIdx to look up the properly-cased word from the original verse.
+  // - correct/missing: word replaced with original verse word
+  // - wrong: expected replaced with original verse word
+  // - extra: unchanged
+  // Returns a new array (does not mutate input).
+  function restoreOriginalCasing(comparisonResult, originalVerseWords) {
+    if (!comparisonResult || comparisonResult.length === 0 || !originalVerseWords) {
+      return comparisonResult || [];
+    }
+    return comparisonResult.map(function(item) {
+      var idx = item.actualIdx;
+      if (idx === undefined || idx === -1 || idx >= originalVerseWords.length) {
+        return item;
+      }
+      var original = originalVerseWords[idx];
+      if (item.status === 'correct' || item.status === 'missing') {
+        var copy = {};
+        for (var k in item) { copy[k] = item[k]; }
+        copy.word = original;
+        return copy;
+      }
+      if (item.status === 'wrong') {
+        var copy = {};
+        for (var k in item) { copy[k] = item[k]; }
+        copy.expected = original;
+        return copy;
+      }
+      return item;
+    });
+  }
+
   // Render comparison result as HTML
   function renderComparison(comparisonResult) {
     if (!comparisonResult || comparisonResult.length === 0) {
@@ -647,6 +694,10 @@ $(document).ready(function() {
       // Filter out trailing missing words for display
       // (We only show words the user has actually spoken, plus any skipped words in the middle)
       var filteredComparison = filterTrailingMissing(comparison);
+
+      // Restore original casing for display (God, LORD, Jesus, Christ, etc.)
+      var originalVerseWords = getOriginalWordArray(currentVerse.text);
+      filteredComparison = restoreOriginalCasing(filteredComparison, originalVerseWords);
 
       // Calculate accuracy
       var correctCount = filteredComparison.filter(function(item) {
