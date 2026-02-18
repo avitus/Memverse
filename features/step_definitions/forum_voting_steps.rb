@@ -425,7 +425,13 @@ When('I log in again') do
 end
 
 When('I log out') do
-  step %{I am not logged in}
+  if Capybara.current_driver != :rack_test
+    # Devise requires DELETE for sign_out, so visiting the URL via GET is unreliable.
+    # Clear cookies directly to guarantee the session is destroyed.
+    page.driver.browser.manage.delete_all_cookies
+  else
+    step %{I am not logged in}
+  end
 end
 
 When('I remove my vote') do

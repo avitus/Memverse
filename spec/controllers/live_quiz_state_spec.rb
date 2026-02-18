@@ -10,9 +10,17 @@ RSpec.describe LiveQuizController, type: :controller do
     sign_in user
   end
 
+  after do
+    QuizSession.new(quiz.id).cleanup_quiz_data
+  end
+
   describe 'GET #quiz_state' do
     context 'when quiz has not started yet' do
       let(:quiz) { FactoryBot.create(:quiz, start_time: 10.minutes.from_now) }
+
+      before do
+        QuizSession.new(quiz.id).cleanup_quiz_data
+      end
 
       it 'returns waiting state' do
         get :quiz_state, params: { id: quiz.id, format: :json }
@@ -28,6 +36,10 @@ RSpec.describe LiveQuizController, type: :controller do
 
     context 'when quiz is about to start (< 5 seconds)' do
       let(:quiz) { FactoryBot.create(:quiz, start_time: 3.seconds.from_now) }
+
+      before do
+        QuizSession.new(quiz.id).cleanup_quiz_data
+      end
 
       it 'returns preparing state' do
         get :quiz_state, params: { id: quiz.id, format: :json }

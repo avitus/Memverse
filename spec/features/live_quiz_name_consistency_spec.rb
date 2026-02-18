@@ -70,8 +70,8 @@ RSpec.describe "Live Quiz Name Consistency", type: :feature, js: true do
     end
 
     after do
-      # Reset to default
       Rails.application.config.action_dispatch.show_exceptions = false
+      QuizSession.new(quiz.id).cleanup_quiz_data
     end
 
     it "uses user name (not login) for chat messages" do
