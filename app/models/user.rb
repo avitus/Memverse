@@ -800,6 +800,17 @@ class User < ApplicationRecord
     end
   end
 
+  # Restrict forum posting to users with at least 2 completed sessions (or admins).
+  # Matches the blog commenting requirement in BloggityUser#can_comment?.
+  # Overrides Thredded::UserPermissions::Write::All#thredded_can_write_messageboards.
+  def thredded_can_write_messageboards
+    if admin? || completed_sessions >= 2
+      Thredded::Messageboard.all
+    else
+      Thredded::Messageboard.none
+    end
+  end
+
   # Update user profile
   # 
   # @param new_params Params from 'update_profile' form
