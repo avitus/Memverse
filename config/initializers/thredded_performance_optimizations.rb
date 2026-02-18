@@ -18,17 +18,15 @@
 #    accesses user, postable, and user_detail.
 
 Rails.application.config.after_initialize do
-  # 1. Disable preload_first_topic_post (O(N) MAX subqueries)
-  if defined?(Thredded::PostCommon)
-    module Thredded
-      module PostCommon
-        module ClassMethods
-          def preload_first_topic_post
-            all
-          end
-        end
-      end
-    end
+  # 1. Disable preload_first_topic_post (O(N) MAX subqueries scanning ~50k rows)
+  #
+  # The scope is defined via `scope :preload_first_topic_post` in PostCommon,
+  # which registers it directly on the including model class (Post, PrivatePost).
+  # Overriding PostCommon::ClassMethods has no effect — we must override on the
+  # model classes themselves.
+  [Thredded::Post, Thredded::PrivatePost].each do |klass|
+    next unless klass.respond_to?(:preload_first_topic_post)
+    klass.define_singleton_method(:preload_first_topic_post) { all }
   end
 
   # 2. Optimize ModeratePost.run! to use bulk update for blocking
