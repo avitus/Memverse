@@ -96,6 +96,17 @@ Rails.application.config.after_initialize do
           .includes(:user, :postable, user: :thredded_user_detail)
           .find(params[:id].to_s)
 
+        # Find the next pending post in queue order before moderation changes state
+        posts_table = Thredded::Post.arel_table
+        next_post = moderatable_posts.pending_moderation
+          .where.not(id: post.id)
+          .where(posts_table[:created_at].gt(post.created_at)
+            .or(posts_table[:created_at].eq(post.created_at)
+              .and(posts_table[:id].gt(post.id))))
+          .order_oldest_first
+          .select(:id)
+          .first
+
         if post.moderation_state != moderation_state
           flash[:last_moderated_record_id] = Thredded::ModeratePost.run!(
             post: post,
@@ -108,7 +119,8 @@ Rails.application.config.after_initialize do
             Thredded::PostModerationRecord.order_newest_first.find_by(post_id: post.id)&.id
         end
 
-        redirect_back fallback_location: pending_moderation_path
+        anchor = next_post ? ActionView::RecordIdentifier.dom_id(next_post) : nil
+        redirect_to pending_moderation_path(anchor: anchor)
       end
     end
   end
