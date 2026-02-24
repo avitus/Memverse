@@ -95,80 +95,29 @@ RailsAdmin.config do |config|
   # config.label_methods << [:description] # Default is [:name, :title]
 
   # Configure User model to exclude Thredded associations
+  # Using exclude_fields at the model level lets RailsAdmin auto-infer all
+  # database columns and standard associations while hiding Thredded noise.
   config.model User do
-    list do
-      # Hide all Thredded-related associations in the list view
-      field :thredded_user_detail do
-        visible false
-      end
-      field :thredded_user_preference do
-        visible false
-      end
-    end
-    
-    show do
-      # Hide all Thredded-related associations in the show view
-      field :thredded_user_detail do
-        visible false
-      end
-      field :thredded_user_preference do
-        visible false
-      end
-      field :thredded_posts do
-        visible false
-      end
-      field :thredded_topics do
-        visible false
-      end
-      field :thredded_private_posts do
-        visible false
-      end
-      field :thredded_started_private_topics do
-        visible false
-      end
-      field :thredded_last_user_topics do
-        visible false
-      end
-      field :thredded_last_user_private_topics do
-        visible false
-      end
-      field :thredded_user_messageboard_preferences do
-        visible false
-      end
-      field :thredded_notifications_for_followed_topics do
-        visible false
-      end
-      field :thredded_messageboard_notifications_for_followed_topics do
-        visible false
-      end
-      field :thredded_notifications_for_private_topics do
-        visible false
-      end
-      field :thredded_post_notifications do
-        visible false
-      end
-      field :thredded_private_users do
-        visible false
-      end
-      field :thredded_topic_read_states do
-        visible false
-      end
-      field :thredded_private_topic_read_states do
-        visible false
-      end
-      field :thredded_topic_follows do
-        visible false
-      end
-      field :thredded_private_topics do
-        visible false
-      end
-      field :thredded_post_moderation_records do
-        visible false
-      end
-      field :thredded_post_moderated_records do
-        visible false
-      end
-    end
+    exclude_fields :thredded_user_detail,
+                   :thredded_user_preference,
+                   :thredded_posts,
+                   :thredded_topics,
+                   :thredded_private_posts,
+                   :thredded_started_private_topics,
+                   :thredded_last_user_topics,
+                   :thredded_last_user_private_topics,
+                   :thredded_user_messageboard_preferences,
+                   :thredded_notifications_for_followed_topics,
+                   :thredded_messageboard_notifications_for_followed_topics,
+                   :thredded_notifications_for_private_topics,
+                   :thredded_post_notifications,
+                   :thredded_private_users,
+                   :thredded_topic_read_states,
+                   :thredded_private_topic_read_states,
+                   :thredded_topic_follows,
+                   :thredded_private_topics,
+                   :thredded_post_moderation_records,
+                   :thredded_post_moderated_records
   end
 
   #  ==> Global models configuration
