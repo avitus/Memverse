@@ -658,9 +658,6 @@ class MemversesController < ApplicationController
 
     add_breadcrumb I18n.t("home_menu.My Verses"), :manage_verses_path
 
-    # TODO: select only a) verse reference and b) verse translation to speed up this page and use less memory
-    # TODO: include tags if possible
-
     @my_verses = current_user.memverses.includes(:verse, :tags)
 
     # Define allowed sort columns for security
