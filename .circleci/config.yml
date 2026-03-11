@@ -22,7 +22,14 @@ executors:
           MYSQL_ROOT_PASSWORD: demo
           MYSQL_DATABASE: memverse_test
           MYSQL_ALLOW_EMPTY_PASSWORD: true
-        command: [mysqld, --character-set-server=utf8mb4, --collation-server=utf8mb4_unicode_ci, --skip-host-cache, --skip-name-resolve]
+        command: [
+          mysqld,
+          --character-set-server=utf8mb4,
+          --collation-server=utf8mb4_unicode_ci,
+          --skip-host-cache,
+          --skip-name-resolve,
+          --default-authentication-plugin=mysql_native_password
+        ]
       - image: redis:6-alpine
     resource_class: large
     working_directory: ~/project
@@ -108,18 +115,25 @@ jobs:
       - run:
           name: Wait for DB
           command: |
-            for i in {1..90}; do
+            echo "Waiting for MySQL to start..."
+            for i in {1..150}; do
               if mysql -h 127.0.0.1 -P 3306 -u root -pdemo -e "SELECT 1" >/dev/null 2>&1; then
                 echo "MySQL is ready!"
+                mysql -h 127.0.0.1 -P 3306 -u root -pdemo -e "SHOW VARIABLES LIKE 'version';"
                 break
               fi
-              echo "Waiting for MySQL... (attempt $i/90)"
+
+              # Show progress every 15 attempts
+              if [ $((i % 15)) -eq 0 ]; then
+                echo "Still waiting for MySQL... (attempt $i/150)"
+              fi
               sleep 2
             done
-            mysql -h 127.0.0.1 -P 3306 -u root -pdemo -e "SELECT 1" >/dev/null 2>&1 || {
-              echo "ERROR: MySQL failed to become ready after 3 minutes"
+
+            if ! mysql -h 127.0.0.1 -P 3306 -u root -pdemo -e "SELECT 1" >/dev/null 2>&1; then
+              echo "ERROR: MySQL failed to become ready after 5 minutes"
               exit 1
-            }
+            fi
 
       # Database setup
       - run:
@@ -195,18 +209,25 @@ jobs:
       - run:
           name: Wait for DB
           command: |
-            for i in {1..90}; do
+            echo "Waiting for MySQL to start (RSpec job)..."
+            for i in {1..150}; do
               if mysql -h 127.0.0.1 -P 3306 -u root -pdemo -e "SELECT 1" >/dev/null 2>&1; then
                 echo "MySQL is ready!"
+                mysql -h 127.0.0.1 -P 3306 -u root -pdemo -e "SHOW VARIABLES LIKE 'version';"
                 break
               fi
-              echo "Waiting for MySQL... (attempt $i/90)"
+
+              # Show progress every 15 attempts
+              if [ $((i % 15)) -eq 0 ]; then
+                echo "Still waiting for MySQL... (attempt $i/150)"
+              fi
               sleep 2
             done
-            mysql -h 127.0.0.1 -P 3306 -u root -pdemo -e "SELECT 1" >/dev/null 2>&1 || {
-              echo "ERROR: MySQL failed to become ready after 3 minutes"
+
+            if ! mysql -h 127.0.0.1 -P 3306 -u root -pdemo -e "SELECT 1" >/dev/null 2>&1; then
+              echo "ERROR: MySQL failed to become ready after 5 minutes"
               exit 1
-            }
+            fi
 
       - run:
           name: Wait for Redis
@@ -219,6 +240,16 @@ jobs:
               echo "Waiting for Redis... (attempt $i/30)"
               sleep 2
             done
+
+      - run:
+          name: Verify Database
+          command: |
+            echo "Verifying database exists and is accessible..."
+            mysql -h 127.0.0.1 -P 3306 -u root -pdemo -e "SHOW DATABASES;" | grep memverse_test || {
+              echo "Database memverse_test not found, creating..."
+              mysql -h 127.0.0.1 -P 3306 -u root -pdemo -e "CREATE DATABASE IF NOT EXISTS memverse_test;"
+            }
+            echo "Database verified!"
 
       - run:
           name: RSpec tests
@@ -250,18 +281,25 @@ jobs:
       - run:
           name: Wait for DB
           command: |
-            for i in {1..90}; do
+            echo "Waiting for MySQL to start (Cucumber job)..."
+            for i in {1..150}; do
               if mysql -h 127.0.0.1 -P 3306 -u root -pdemo -e "SELECT 1" >/dev/null 2>&1; then
                 echo "MySQL is ready!"
+                mysql -h 127.0.0.1 -P 3306 -u root -pdemo -e "SHOW VARIABLES LIKE 'version';"
                 break
               fi
-              echo "Waiting for MySQL... (attempt $i/90)"
+
+              # Show progress every 15 attempts
+              if [ $((i % 15)) -eq 0 ]; then
+                echo "Still waiting for MySQL... (attempt $i/150)"
+              fi
               sleep 2
             done
-            mysql -h 127.0.0.1 -P 3306 -u root -pdemo -e "SELECT 1" >/dev/null 2>&1 || {
-              echo "ERROR: MySQL failed to become ready after 3 minutes"
+
+            if ! mysql -h 127.0.0.1 -P 3306 -u root -pdemo -e "SELECT 1" >/dev/null 2>&1; then
+              echo "ERROR: MySQL failed to become ready after 5 minutes"
               exit 1
-            }
+            fi
 
       - run:
           name: Wait for Redis
@@ -274,6 +312,16 @@ jobs:
               echo "Waiting for Redis... (attempt $i/30)"
               sleep 2
             done
+
+      - run:
+          name: Verify Database
+          command: |
+            echo "Verifying database exists and is accessible..."
+            mysql -h 127.0.0.1 -P 3306 -u root -pdemo -e "SHOW DATABASES;" | grep memverse_test || {
+              echo "Database memverse_test not found, creating..."
+              mysql -h 127.0.0.1 -P 3306 -u root -pdemo -e "CREATE DATABASE IF NOT EXISTS memverse_test;"
+            }
+            echo "Database verified!"
 
       - run:
           name: Start Xvfb
