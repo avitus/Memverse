@@ -1,15 +1,15 @@
-version: 2
-jobs:
-  build:
-    
-    parallelism: 6
-    
-    docker:
+version: 2.1
 
-      # App Server
+orbs:
+  ruby: circleci/ruby@2.1.0
+  node: circleci/node@5.2.0
+
+executors:
+  rails-executor:
+    docker:
       - image: cimg/ruby:3.2.6-browsers
         environment:
-          BUNDLE_JOBS: 3
+          BUNDLE_JOBS: 4
           BUNDLE_RETRY: 3
           BUNDLE_PATH: vendor/bundle
           REDIS_HOST: localhost
@@ -17,40 +17,40 @@ jobs:
           DB_HOST: 127.0.0.1
           RAILS_ENV: test
           MYSQL_ROOT_PASSWORD: demo
-
-      # Database
       - image: library/mysql:5.7
         environment:
           MYSQL_ROOT_PASSWORD: demo
           MYSQL_DATABASE: memverse_test
           MYSQL_ALLOW_EMPTY_PASSWORD: true
-        ports:
-          - 3306:3306
-
+        command: [mysqld, --character-set-server=utf8mb4, --collation-server=utf8mb4_unicode_ci]
       - image: redis:6-alpine
+    resource_class: large
+    working_directory: ~/project
 
+jobs:
+  setup:
+    executor: rails-executor
     steps:
       - add_ssh_keys:
           fingerprints:
             - "SHA256:UMuaEcfwEEAc5T38Fdx7qxeB3dMyR0TJIZCzStQkp3s circleci@memverse.com"
-
       - checkout
 
+      # Install system dependencies
+      - run:
+          name: Install System Dependencies
+          command: |
+            sudo rm -f /etc/apt/sources.list.d/google-chrome.list
+            sudo apt-get update --allow-releaseinfo-change
+            sudo apt-get install -y default-mysql-client redis-tools xvfb --fix-missing || echo "Some optional packages skipped"
+
+      # Bundler setup
       - run:
           name: Install/Update Bundler
           command: |
             gem install bundler -v '~> 2.0'
             bundle config set --local deployment 'false'
 
-      - run:
-          name: Install MySQL client
-          command: |
-            # Remove Chrome repo to avoid GPG key issues (Chrome is pre-installed in browsers image)
-            sudo rm -f /etc/apt/sources.list.d/google-chrome.list
-            sudo apt-get update --allow-releaseinfo-change
-            sudo apt-get install -y default-mysql-client
-
-      # Which version of bundler?
       - run:
           name: Which bundler?
           command: |
@@ -59,167 +59,101 @@ jobs:
             echo "Ruby version:"
             ruby -v
 
-      # Restore bundle cache
+      # Restore and install Ruby dependencies
       - restore_cache:
           keys:
             - memverse-{{ checksum "Gemfile.lock" }}
 
       - run:
           name: Bundle Install
-          command: |
-            bundle check || bundle install --jobs=3 --retry=3
+          command: bundle check || bundle install --jobs=4 --retry=3
 
-      # Store bundle cache
       - save_cache:
           key: memverse-{{ checksum "Gemfile.lock" }}
           paths:
             - vendor/bundle
 
-      # Restore node_modules cache - TEMPORARILY DISABLED to fix Rollup issue
-      # - restore_cache:
-      #     keys:
-      #       - memverse-node-v2-{{ checksum "package.json" }}
-      #       - memverse-node-v2-
-      
-      # Restore ChromeDriver cache to avoid re-downloading
+      # Restore and install Node.js dependencies
       - restore_cache:
           keys:
-            - chromedriver-cache-v3-{{ arch }}
-      
-      # Restore apt cache to speed up package installation
-      - restore_cache:
-          keys:
-            - apt-cache-v1-{{ arch }}
-      
-      # Generate asset checksum for better cache invalidation
+            - memverse-node-v3-{{ checksum "package.json" }}-{{ checksum "package-lock.json" }}
+            - memverse-node-v3-{{ checksum "package.json" }}
+            - memverse-node-v3-
+
       - run:
-          name: Generate asset checksum
+          name: Install Node.js dependencies
           command: |
-            # Create a checksum of all asset files for cache key
-            find app/assets -type f -name "*.scss" -o -name "*.css" -o -name "*.js" -o -name "*.coffee" | \
-              sort | xargs cat | md5sum > asset_checksum.txt
-            echo "Asset checksum: $(cat asset_checksum.txt)"
-      
-      # Restore precompiled assets
-      - restore_cache:
-          keys:
-            # Use asset checksum for precise cache invalidation
-            - assets-cache-v3-{{ checksum "asset_checksum.txt" }}-{{ checksum "Gemfile.lock" }}
-            - assets-cache-v3-{{ checksum "Gemfile.lock" }}
-            - assets-cache-v3-
+            echo "Node version: $(node --version)"
+            echo "NPM version: $(npm --version)"
 
-      # Only necessary if app uses webpacker or yarn in some other way
-      # - restore_cache:
-      #     keys:
-      #       - rails-demo-yarn-{{ checksum "yarn.lock" }}
-      #       - rails-demo-yarn-
-
-      # ALV: For now we are going to stick with the old school asset pipeline
-      # Eventually, we should switch to Yarn (and/or webpacker)
-
-      # - run:
-      #     name: Yarn Install
-      #     command: yarn install
-
-      # Store yarn / webpacker cache
-      # - save_cache:
-      #     key: rails-demo-yarn-{{ checksum "yarn.lock" }}
-      #     paths:
-      #       - ~/.yarn-cache
-
-      # Setup Chrome and ChromeDriver (simplified for Cucumber tests)
-      - run:
-          name: Setup Chrome and ChromeDriver
-          command: |
-            # Skip ChromeDriver setup for RSpec-only containers (containers 0, 1, and 2)
-            # With 6 containers: 3 for RSpec, 3 for Cucumber
-            if [ "$CIRCLE_NODE_INDEX" -lt "3" ]; then
-              echo "Skipping ChromeDriver setup for container $CIRCLE_NODE_INDEX (RSpec only)"
-              exit 0
+            if [ -f "node_modules/.package-lock-marker" ] && \
+               cmp -s package-lock.json node_modules/.package-lock-marker 2>/dev/null; then
+              echo "Using cached node_modules"
+            else
+              echo "Installing node_modules..."
+              rm -rf node_modules
+              npm ci --prefer-offline
+              npm install @rollup/rollup-linux-x64-gnu --save-optional
+              cp package-lock.json node_modules/.package-lock-marker
             fi
 
-            echo "Setting up ChromeDriver for container $CIRCLE_NODE_INDEX (Cucumber tests)"
+            npx vitest --version || exit 1
 
-            # CircleCI's cimg/ruby:3.2.6-browsers comes with Chrome and ChromeDriver pre-installed
-            # Just verify they're working and install any missing dependencies
-            echo "Verifying pre-installed Chrome and ChromeDriver..."
+      - save_cache:
+          key: memverse-node-v3-{{ checksum "package.json" }}-{{ checksum "package-lock.json" }}
+          paths:
+            - node_modules
 
-            # Install additional Chrome dependencies if needed
-            # Use --fix-missing to handle any package availability issues
-            sudo apt-get update --allow-releaseinfo-change || true
-            sudo apt-get install -y xvfb --fix-missing || {
-              echo "Warning: xvfb installation failed, but Chrome should work in headless mode"
-              echo "Continuing with Chrome headless configuration..."
-            }
-
-            # Check Chrome and ChromeDriver versions
-            echo "Chrome version: $(google-chrome --version || echo 'Chrome not found')"
-            echo "ChromeDriver version: $(chromedriver --version || echo 'ChromeDriver not found')"
-
-            # Test that Chrome can run in headless mode
-            echo "Testing headless Chrome..."
-            google-chrome --headless --disable-gpu --no-sandbox --remote-debugging-port=9222 --disable-dev-shm-usage --version
-
-            echo "Chrome and ChromeDriver setup completed successfully"
-
+      # Wait for database
       - run:
           name: Wait for DB
           command: |
             until mysql -h 127.0.0.1 -P 3306 -u root -pdemo -e "SELECT 1" >/dev/null 2>&1; do
-              echo "Waiting for MySQL to be ready..."
+              echo "Waiting for MySQL..."
               sleep 2
             done
 
+      # Database setup
       - run:
-          name: Verify Database Configuration
-          command: |
-            echo "Testing database connection..."
-            mysql -h 127.0.0.1 -P 3306 -u root -pdemo -e "SHOW DATABASES;"
+          name: Database Setup
+          command: RAILS_ENV=test bundle exec rake db:create db:schema:load --trace
 
+      # Generate asset checksum
       - run:
-          name: Database Setup (Optimized)
+          name: Generate asset checksum
           command: |
-            # Combine database setup into a single step to reduce overhead
-            RAILS_ENV=test bundle exec rake db:create db:schema:load --trace
-      
-      # Precompile assets once on container 0
+            find app/assets -type f \( -name "*.scss" -o -name "*.css" -o -name "*.js" -o -name "*.coffee" \) | \
+              sort | xargs cat | md5sum > asset_checksum.txt
+            echo "Asset checksum: $(cat asset_checksum.txt)"
+
+      # Restore precompiled assets
+      - restore_cache:
+          keys:
+            - assets-cache-v3-{{ checksum "asset_checksum.txt" }}-{{ checksum "Gemfile.lock" }}
+            - assets-cache-v3-{{ checksum "Gemfile.lock" }}
+            - assets-cache-v3-
+
+      # Precompile assets
       - run:
           name: Asset Precompilation
           command: |
-            if [ "$CIRCLE_NODE_INDEX" = "0" ]; then
-              if [ ! -d "public/assets" ] || [ ! -f "public/assets/.cache_marker" ]; then
-                echo "Precompiling assets on container 0..."
-                RAILS_ENV=test bundle exec rake assets:precompile
-                touch public/assets/.cache_marker
-              else
-                echo "Using cached precompiled assets"
-              fi
+            if [ -d "public/assets" ] && [ -f "public/assets/.cache_marker" ]; then
+              echo "Using cached precompiled assets"
             else
-              echo "Waiting for assets from container 0..."
-              # Wait up to 60 seconds for assets to be available
-              for i in {1..12}; do
-                if [ -f "public/assets/.cache_marker" ]; then
-                  echo "Assets ready!"
-                  break
-                fi
-                sleep 5
-              done
+              echo "Precompiling assets..."
+              RAILS_ENV=test bundle exec rake assets:precompile
+              touch public/assets/.cache_marker
             fi
 
-      - run:
-          name: Install Redis CLI
-          command: |
-            # Redis CLI is only needed for tests that use background jobs
-            # For now, install on all containers but could be optimized further
-            if command -v redis-cli &> /dev/null; then
-              echo "Redis CLI already installed"
-            else
-              sudo apt-get update --allow-releaseinfo-change
-              sudo apt-get install -y redis-tools
-            fi
+      - save_cache:
+          key: assets-cache-v3-{{ checksum "asset_checksum.txt" }}-{{ checksum "Gemfile.lock" }}
+          paths:
+            - public/assets
+            - tmp/cache/assets
 
+      # Wait for Redis
       - run:
-          name: Wait for Redis with verification
+          name: Wait for Redis
           command: |
             for i in {1..30}; do
               if redis-cli -h localhost ping > /dev/null 2>&1; then
@@ -230,261 +164,155 @@ jobs:
               echo "Waiting for Redis... (attempt $i/30)"
               sleep 2
             done
-            
-            # Verify Redis is actually working
             redis-cli -h localhost SET test_key "test_value"
-            TEST_VALUE=$(redis-cli -h localhost GET test_key)
-            if [ "$TEST_VALUE" = "test_value" ]; then
-              echo "Redis verification successful!"
-            else
-              echo "Redis verification failed!"
-              exit 1
-            fi
+            [ "$(redis-cli -h localhost GET test_key)" = "test_value" ] && echo "Redis verified!"
             redis-cli -h localhost DEL test_key
 
-      # Install Node.js dependencies for Vitest (only on container 0)
-      - run:
-          name: Install Node.js dependencies
-          command: |
-            # Debug info
-            echo "=== NPM INSTALLATION DEBUG ==="
-            echo "Container index: $CIRCLE_NODE_INDEX"
-            echo "Current directory: $(pwd)"
-            echo "Node version: $(node --version)"
-            echo "NPM version: $(npm --version)"
-
-            # Check if node_modules already exists
-            if [ -d "node_modules" ]; then
-              echo "WARNING: node_modules directory already exists!"
-              echo "Contents:"
-              ls -la node_modules/ | head -20
-            else
-              echo "node_modules directory does not exist (good)"
-            fi
-
-            # Only install Node dependencies on container 0 since that's where Vitest runs
-            if [ "$CIRCLE_NODE_INDEX" = "0" ]; then
-              echo "Installing Node.js dependencies on container 0..."
-
-              # Clean install
-              echo "Removing node_modules and package-lock.json for clean install..."
-              rm -rf node_modules package-lock.json
-
-              # Install dependencies with npm install
-              echo "Installing dependencies with npm install..."
-              npm install --verbose
-
-              # Explicitly install Linux-specific Rollup binding (npm optional deps bug workaround)
-              # See: https://github.com/npm/cli/issues/4828
-              echo "Installing Linux-specific Rollup binding..."
-              npm install @rollup/rollup-linux-x64-gnu --save-optional
-
-              # Check if installation succeeded
-              echo "Checking installation results..."
-              if [ -d "node_modules/@rollup" ]; then
-                echo "Rollup modules found:"
-                ls -la node_modules/@rollup/
-              else
-                echo "ERROR: No @rollup modules found after installation!"
-              fi
-
-              # Verify Vitest installation
-              echo "Verifying Vitest installation..."
-              npx vitest --version || {
-                echo "Vitest verification failed"
-                exit 1
-              }
-
-              echo "Node.js dependencies installation completed successfully"
-            else
-              echo "Skipping Node.js dependency installation on container $CIRCLE_NODE_INDEX"
-            fi
-
-      # Run rspec in parallel
-      - type: shell
-        name: Rspec tests
-        command: |
-          # Use fail-fast to stop on first failure (saves time in CI)
-          bundle exec rspec --fail-fast \
-                            --profile 10 \
-                            --format RspecJunitFormatter \
-                            --out test_results/rspec.xml \
-                            --format progress \
-                            $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
-
-      # Store node_modules cache (only from container 0)
-      - run:
-          name: Save node_modules cache
-          command: |
-            if [ "$CIRCLE_NODE_INDEX" = "0" ]; then
-              echo "Saving node_modules cache from container 0..."
-            else
-              echo "Skipping cache save on container $CIRCLE_NODE_INDEX"
-            fi
-      # Save node_modules cache - TEMPORARILY DISABLED to fix Rollup issue
-      # - save_cache:
-      #     key: memverse-node-v2-{{ checksum "package.json" }}
-      #     paths:
-      #       - node_modules
-      #     when: on_success
-      
-      # Save ChromeDriver cache (only from containers that installed it)
-      - run:
-          name: Save ChromeDriver to cache
-          command: |
-            # Only cache from Cucumber containers
-            if [ "$CIRCLE_NODE_INDEX" -ge "3" ]; then
-              if [ -f /usr/local/bin/chromedriver ]; then
-                echo "ChromeDriver found, will be cached from container $CIRCLE_NODE_INDEX"
-              else
-                echo "ChromeDriver not found at /usr/local/bin/chromedriver"
-              fi
-            fi
-      
-      - save_cache:
-          key: chromedriver-cache-v3-{{ arch }}
+      # Persist workspace for test jobs
+      - persist_to_workspace:
+          root: ~/project
           paths:
-            - /usr/local/bin/chromedriver
-          when: on_success
-      
-      # Save apt cache
-      - save_cache:
-          key: apt-cache-v1-{{ arch }}
-          paths:
-            - /var/cache/apt/archives
-          when: on_success
-      
-      # Save precompiled assets (only from container 0)
-      - run:
-          name: Prepare assets for caching
-          command: |
-            if [ "$CIRCLE_NODE_INDEX" = "0" ] && [ -d "public/assets" ]; then
-              echo "Assets will be cached from container 0"
-            fi
-      
-      - save_cache:
-          key: assets-cache-v3-{{ checksum "asset_checksum.txt" }}-{{ checksum "Gemfile.lock" }}
-          paths:
+            - .
+            - vendor/bundle
+            - node_modules
             - public/assets
-            - tmp/cache/assets
-          when: on_success
 
-      # Run Vitest JavaScript tests only on container 0 to avoid duplication
+  rspec:
+    executor: rails-executor
+    parallelism: 3
+    steps:
+      - attach_workspace:
+          at: ~/project
+
       - run:
-          name: JavaScript tests (Vitest)
+          name: Wait for DB
           command: |
-            # Only run Vitest on the first container to avoid running 4 times
-            if [ "$CIRCLE_NODE_INDEX" = "0" ]; then
-              echo "Running Vitest tests on container 0..."
-              # Set NODE_ENV for test environment
-              export NODE_ENV=test
-              
-              # Run tests with error handling
-              npm run test:run || {
-                echo "Vitest tests failed, checking installation..."
-                npx vitest --version
-                echo "Node modules structure:"
-                ls -la node_modules/.bin/ | grep vitest || echo "vitest not found in .bin"
-                exit 1
-              }
-            else
-              echo "Skipping Vitest tests on container $CIRCLE_NODE_INDEX (only runs on container 0)"
-              # Create a dummy test result file for this container
-              mkdir -p test_results
-              echo '<?xml version="1.0" encoding="UTF-8"?><testsuites></testsuites>' > test_results/vitest_skipped.xml
-            fi
-          when: always
+            until mysql -h 127.0.0.1 -P 3306 -u root -pdemo -e "SELECT 1" >/dev/null 2>&1; do
+              echo "Waiting for MySQL..."
+              sleep 2
+            done
 
-      # Run cucumber with proper parallelization across containers
       - run:
-          name: Cucumber tests (parallelized with retries)
+          name: Wait for Redis
           command: |
-            mkdir -p ~/cucumber 
-            mkdir -p test_results
-            
-            # Set environment variables for CI with better timeout handling
-            export CI=true
-            export CUCUMBER_TIMEOUT=600  # Increased from 300 to 600 seconds
-            export RAILS_ENV=test
-            export DISPLAY=:99  # For headless Chrome
-            
-            # Start Xvfb for headless browser testing (if available)
-            if [ "$CIRCLE_NODE_INDEX" -ge "3" ]; then
-              if command -v Xvfb &> /dev/null; then
-                echo "Starting Xvfb for headless browser testing..."
-                Xvfb :99 -ac -screen 0 1280x1024x16 &
-                sleep 2
-              else
-                echo "Xvfb not available, using Chrome in native headless mode"
-                # Unset DISPLAY to force Chrome to use native headless mode
-                unset DISPLAY
-              fi
-            fi
-            
-            # Get all feature files and split them across containers
-            echo "Container $CIRCLE_NODE_INDEX of $CIRCLE_NODE_TOTAL"
-            echo "Discovering and splitting Cucumber features..."
-            
-            # Use CircleCI's test splitting to distribute features across containers
-            FEATURES=$(circleci tests glob "features/**/*.feature" | circleci tests split --split-by=timings)
-            
-            if [ -z "$FEATURES" ]; then
-              echo "No features assigned to this container"
-              touch test_results/cucumber.xml
-              exit 0
-            fi
-            
-            echo "This container will run:"
-            echo "$FEATURES" | tr ' ' '\n'
-            echo "---"
-            
-            # Function to run cucumber with retry logic
-            run_cucumber_with_retries() {
-              local max_attempts=3
-              local attempt=1
-              local exit_code=0
-              
-              while [ $attempt -le $max_attempts ]; do
-                echo "Cucumber attempt $attempt of $max_attempts..."
-                
-                # Run cucumber with timeout handling
-                timeout 25m bundle exec cucumber $FEATURES \
-                  --format progress \
-                  --format junit --out test_results/cucumber.xml \
-                  --strict-undefined \
-                  --retry 2 \
-                  --no-source || exit_code=$?
-                
-                if [ $exit_code -eq 0 ]; then
-                  echo "Cucumber tests passed on attempt $attempt"
-                  return 0
-                elif [ $exit_code -eq 124 ]; then
-                  echo "Cucumber tests timed out on attempt $attempt"
-                elif [ $attempt -eq $max_attempts ]; then
-                  echo "Cucumber tests failed after $max_attempts attempts"
-                  return $exit_code
-                else
-                  echo "Cucumber tests failed on attempt $attempt (exit code: $exit_code), retrying in 30 seconds..."
-                  sleep 30
-                fi
-                
-                attempt=$((attempt + 1))
-              done
-              
-              return $exit_code
-            }
-            
-            # Run Cucumber tests with retry logic
-            run_cucumber_with_retries
-          when: always
-          no_output_timeout: 30m
+            for i in {1..30}; do
+              redis-cli -h localhost ping > /dev/null 2>&1 && break
+              sleep 2
+            done
 
-      # Save test results for timing analysis
+      - run:
+          name: RSpec tests
+          command: |
+            bundle exec rspec --fail-fast \
+                              --profile 10 \
+                              --format RspecJunitFormatter \
+                              --out test_results/rspec.xml \
+                              --format progress \
+                              $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
+
       - store_test_results:
           path: test_results
 
-# database: 
-#   post:
-#     - sudo cp ./config/environments/sphinx.conf /etc/sphinxsearch/sphinx.conf
-#     - sudo sed -i -e 's,START=no,START=yes,' /etc/default/sphinxsearch
-#     - service sphinxsearch start
+  cucumber:
+    executor: rails-executor
+    parallelism: 3
+    steps:
+      - attach_workspace:
+          at: ~/project
+
+      - run:
+          name: Verify Chrome and ChromeDriver
+          command: |
+            echo "Chrome version: $(google-chrome --version)"
+            echo "ChromeDriver version: $(chromedriver --version)"
+            google-chrome --headless --disable-gpu --no-sandbox --remote-debugging-port=9222 --disable-dev-shm-usage --version
+
+      - run:
+          name: Wait for DB
+          command: |
+            until mysql -h 127.0.0.1 -P 3306 -u root -pdemo -e "SELECT 1" >/dev/null 2>&1; do
+              echo "Waiting for MySQL..."
+              sleep 2
+            done
+
+      - run:
+          name: Wait for Redis
+          command: |
+            for i in {1..30}; do
+              redis-cli -h localhost ping > /dev/null 2>&1 && break
+              sleep 2
+            done
+
+      - run:
+          name: Start Xvfb
+          command: |
+            if command -v Xvfb &> /dev/null; then
+              Xvfb :99 -ac -screen 0 1280x1024x16 &
+              sleep 2
+            fi
+          background: true
+
+      - run:
+          name: Cucumber tests
+          command: |
+            mkdir -p ~/cucumber test_results
+            export CI=true
+            export CUCUMBER_TIMEOUT=600
+            export RAILS_ENV=test
+            export DISPLAY=:99
+
+            FEATURES=$(circleci tests glob "features/**/*.feature" | circleci tests split --split-by=timings)
+
+            if [ -z "$FEATURES" ]; then
+              echo "No features assigned"
+              touch test_results/cucumber.xml
+              exit 0
+            fi
+
+            echo "Running features:"
+            echo "$FEATURES" | tr ' ' '\n'
+
+            timeout 25m bundle exec cucumber $FEATURES \
+              --format progress \
+              --format junit --out test_results/cucumber.xml \
+              --strict-undefined \
+              --retry 2 \
+              --no-source
+          no_output_timeout: 30m
+
+      - store_test_results:
+          path: test_results
+
+  vitest:
+    executor: rails-executor
+    steps:
+      - attach_workspace:
+          at: ~/project
+
+      - run:
+          name: Vitest JavaScript tests
+          command: |
+            export NODE_ENV=test
+            npm run test:run || {
+              echo "Vitest tests failed"
+              npx vitest --version
+              exit 1
+            }
+
+      - store_test_results:
+          path: test_results
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - setup
+      - rspec:
+          requires:
+            - setup
+      - cucumber:
+          requires:
+            - setup
+      - vitest:
+          requires:
+            - setup
