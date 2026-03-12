@@ -28,7 +28,9 @@ executors:
           --collation-server=utf8mb4_unicode_ci,
           --skip-host-cache,
           --skip-name-resolve,
-          --default-authentication-plugin=mysql_native_password
+          --default-authentication-plugin=mysql_native_password,
+          --innodb-use-native-aio=0,
+          --max-connections=200
         ]
       - image: redis:6-alpine
     resource_class: large
