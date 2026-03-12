@@ -17,12 +17,11 @@ executors:
           DB_HOST: 127.0.0.1
           RAILS_ENV: test
           MYSQL_ROOT_PASSWORD: demo
-      - image: library/mysql:5.7
+      - image: cimg/mysql:5.7
         environment:
           MYSQL_ROOT_PASSWORD: demo
           MYSQL_DATABASE: memverse_test
           MYSQL_ALLOW_EMPTY_PASSWORD: true
-        command: [mysqld, --character-set-server=utf8mb4, --collation-server=utf8mb4_unicode_ci, --skip-host-cache, --skip-name-resolve]
       - image: redis:6-alpine
     resource_class: large
     working_directory: ~/project
@@ -108,18 +107,30 @@ jobs:
       - run:
           name: Wait for DB
           command: |
-            for i in {1..90}; do
+            echo "Waiting for MySQL to start (setup job)..."
+            ATTEMPTS=0
+            MAX_ATTEMPTS=180
+
+            while [ $ATTEMPTS -lt $MAX_ATTEMPTS ]; do
+              ATTEMPTS=$((ATTEMPTS + 1))
+
               if mysql -h 127.0.0.1 -P 3306 -u root -pdemo -e "SELECT 1" >/dev/null 2>&1; then
-                echo "MySQL is ready!"
-                break
+                echo "MySQL is ready after $ATTEMPTS attempts!"
+                mysql -h 127.0.0.1 -P 3306 -u root -pdemo -e "SHOW VARIABLES LIKE 'version';"
+                exit 0
               fi
-              echo "Waiting for MySQL... (attempt $i/90)"
+
+              if [ $((ATTEMPTS % 15)) -eq 0 ]; then
+                echo "Still waiting for MySQL... (attempt $ATTEMPTS/$MAX_ATTEMPTS)"
+              fi
+
               sleep 2
             done
-            mysql -h 127.0.0.1 -P 3306 -u root -pdemo -e "SELECT 1" >/dev/null 2>&1 || {
-              echo "ERROR: MySQL failed to become ready after 3 minutes"
-              exit 1
-            }
+
+            echo "ERROR: MySQL failed to become ready after 6 minutes"
+            echo "Checking if MySQL process is running..."
+            nc -zv 127.0.0.1 3306 || echo "Port 3306 not accessible"
+            exit 1
 
       # Database setup
       - run:
@@ -195,18 +206,29 @@ jobs:
       - run:
           name: Wait for DB
           command: |
-            for i in {1..90}; do
+            echo "Waiting for MySQL to start (RSpec job)..."
+            ATTEMPTS=0
+            MAX_ATTEMPTS=180
+
+            while [ $ATTEMPTS -lt $MAX_ATTEMPTS ]; do
+              ATTEMPTS=$((ATTEMPTS + 1))
+
               if mysql -h 127.0.0.1 -P 3306 -u root -pdemo -e "SELECT 1" >/dev/null 2>&1; then
-                echo "MySQL is ready!"
-                break
+                echo "MySQL is ready after $ATTEMPTS attempts!"
+                exit 0
               fi
-              echo "Waiting for MySQL... (attempt $i/90)"
+
+              if [ $((ATTEMPTS % 15)) -eq 0 ]; then
+                echo "Still waiting for MySQL... (attempt $ATTEMPTS/$MAX_ATTEMPTS)"
+              fi
+
               sleep 2
             done
-            mysql -h 127.0.0.1 -P 3306 -u root -pdemo -e "SELECT 1" >/dev/null 2>&1 || {
-              echo "ERROR: MySQL failed to become ready after 3 minutes"
-              exit 1
-            }
+
+            echo "ERROR: MySQL failed to become ready after 6 minutes"
+            echo "Checking if MySQL process is running..."
+            nc -zv 127.0.0.1 3306 || echo "Port 3306 not accessible"
+            exit 1
 
       - run:
           name: Wait for Redis
@@ -250,18 +272,29 @@ jobs:
       - run:
           name: Wait for DB
           command: |
-            for i in {1..90}; do
+            echo "Waiting for MySQL to start (Cucumber job)..."
+            ATTEMPTS=0
+            MAX_ATTEMPTS=180
+
+            while [ $ATTEMPTS -lt $MAX_ATTEMPTS ]; do
+              ATTEMPTS=$((ATTEMPTS + 1))
+
               if mysql -h 127.0.0.1 -P 3306 -u root -pdemo -e "SELECT 1" >/dev/null 2>&1; then
-                echo "MySQL is ready!"
-                break
+                echo "MySQL is ready after $ATTEMPTS attempts!"
+                exit 0
               fi
-              echo "Waiting for MySQL... (attempt $i/90)"
+
+              if [ $((ATTEMPTS % 15)) -eq 0 ]; then
+                echo "Still waiting for MySQL... (attempt $ATTEMPTS/$MAX_ATTEMPTS)"
+              fi
+
               sleep 2
             done
-            mysql -h 127.0.0.1 -P 3306 -u root -pdemo -e "SELECT 1" >/dev/null 2>&1 || {
-              echo "ERROR: MySQL failed to become ready after 3 minutes"
-              exit 1
-            }
+
+            echo "ERROR: MySQL failed to become ready after 6 minutes"
+            echo "Checking if MySQL process is running..."
+            nc -zv 127.0.0.1 3306 || echo "Port 3306 not accessible"
+            exit 1
 
       - run:
           name: Wait for Redis
