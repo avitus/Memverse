@@ -72,7 +72,9 @@
       "Bash(git -C /Users/avitus/Projects/Memverse log --oneline -5)",
       "Bash(git -C /Users/avitus/Projects/Memverse add:*)",
       "Bash(git -C:*)",
-      "Bash(git -C /Users/avitus/Projects/Memverse push origin main)"
+      "Bash(git -C /Users/avitus/Projects/Memverse push origin main)",
+      "Bash(sqlite3 /Users/avitus/Projects/Memverse/db/development.sqlite3 \".schema verses\")",
+      "Bash(mysql -u root memverse_development -e \"DESCRIBE verses;\")"
     ],
     "deny": [],
     "ask": [],
