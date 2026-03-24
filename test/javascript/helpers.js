@@ -97,7 +97,7 @@ export function loadJavaScriptFile(filePath) {
     'mnemonic', 'unabbreviate', 'validVerseRef', 'validPassageRef',
     'validChapterRef', 'validSubChapterPassage', 'cleanseVerseText',
     'blankifyVerse', 'parseVerseRef', 'parsePassageRef', 'verseFeedback',
-    'accTestState', 'splitByWords', 'BIBLEBOOKS', 'scrub_text',
+    'accTestState', 'refTestState', 'splitByWords', 'BIBLEBOOKS', 'scrub_text',
     'calculate_levenshtein_distance', 'word_width', 'flexibleTextMatch',
     'flexibleTextMatchWithBase', 'calculateInputWidth', 'mvPassageReviewHandleInput',
     'mvMirrorNextInput', 'mvDisplayPassageForReview', 'buildVerseBlank'
@@ -213,6 +213,7 @@ loadJavaScriptFile('memverse.js');
 loadJavaScriptFile('memverse_accuracy_test.js');
 loadJavaScriptFile('live_quiz.js');
 loadJavaScriptFile('memverse_passage_review.js');
+loadJavaScriptFile('memverse_reference_test.js');
 
 // Create the memverseLib object with all the functions from globalThis
 export const memverseLib = {
@@ -231,6 +232,7 @@ export const memverseLib = {
   parsePassageRef: globalThis.parsePassageRef || globalContext.parsePassageRef,
   verseFeedback: globalThis.verseFeedback || globalContext.verseFeedback,
   accTestState: globalThis.accTestState || globalContext.accTestState,
+  refTestState: globalThis.refTestState || globalContext.refTestState,
   splitByWords: globalThis.splitByWords || globalContext.splitByWords,
   BIBLEBOOKS: globalThis.BIBLEBOOKS || globalContext.BIBLEBOOKS,
   scrub_text: globalThis.scrub_text || globalContext.scrub_text,

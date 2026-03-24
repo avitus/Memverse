@@ -2,6 +2,7 @@ var refTestState = {
 
     currentMvID: null,
     currentRef: null,
+    altRefs: [],
     refGrade: null,
     dueRefs: null,
 
@@ -26,7 +27,7 @@ var refTestState = {
             currentRef  = data.mv.ref;
             currentMvID = data.mv.id;
             dueRefs     = data.due_refs;
-
+            altRefs     = data.alt_refs || [];
 
             $('#reftestVerse').html( mvText ).fadeIn();  // Show verse text
             $('#overdue-refs-num').html( dueRefs );
@@ -35,6 +36,23 @@ var refTestState = {
 
     },
 
+
+    // Calculate score for a single reference comparison
+    calcRefScore: function ( answerRef, correctRef ) {
+        var score = 0;
+        if ( answerRef && correctRef ) {
+            if ( answerRef.bk === correctRef.bk ) {
+                score += 1;
+                if ( answerRef.ch === correctRef.ch ) {
+                    score += 4;
+                    if ( answerRef.vs === correctRef.vs ) {
+                        score += 5;
+                    }
+                }
+            }
+        }
+        return score;
+    },
 
     // perfect                = 10 points
     // correct book & chapter = 5 points
@@ -46,14 +64,15 @@ var refTestState = {
 
         var answerRef  = parseVerseRef( user_answer );
         var correctRef = parseVerseRef( currentRef );
-        var userScore  = 0;
+        var userScore  = this.calcRefScore( answerRef, correctRef );
 
-        if ( answerRef.bk === correctRef.bk ) {
-            userScore += 1;
-            if ( answerRef.ch === correctRef.ch ) {
-                userScore += 4;
-                if ( answerRef.vs === correctRef.vs ) {
-                    userScore += 5;
+        // Check alternate valid references (identical verse text)
+        for (var i = 0; i < altRefs.length; i++) {
+            var altParsed = parseVerseRef( altRefs[i] );
+            if (altParsed) {
+                var altScore = this.calcRefScore( answerRef, altParsed );
+                if (altScore > userScore) {
+                    userScore = altScore;
                 }
             }
         }

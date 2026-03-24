@@ -331,6 +331,85 @@ describe MemversesController do
     end
   end
 
+  describe "GET 'test_next_ref'" do
+    before(:each) do
+      @verse1 = FactoryBot.create(:verse, text: 'The grace of our Lord Jesus Christ be with you all. Amen.',
+                                   book: 'Revelation', book_index: 66, chapter: '22', versenum: 21)
+      @mv1 = FactoryBot.create(:memverse_without_supermemo_init, user: @user, verse: @verse1,
+                                status: 'Memorized', next_ref_test: Date.yesterday, ref_interval: 6)
+    end
+
+    it "returns a memverse and due count" do
+      get :test_next_ref, format: :json, session: valid_session
+      expect(response).to be_successful
+      json = JSON.parse(response.body)
+      expect(json['mv']).not_to be_nil
+      expect(json['due_refs']).to be_a(Integer)
+    end
+
+    it "returns empty alt_refs when no duplicate text exists" do
+      get :test_next_ref, format: :json, session: valid_session
+      json = JSON.parse(response.body)
+      expect(json['alt_refs']).to eq([])
+    end
+
+    it "returns alt_refs when user has another verse with identical text" do
+      verse2 = FactoryBot.create(:verse, text: 'The grace of our Lord Jesus Christ be with you all. Amen.',
+                                  book: 'Philippians', book_index: 50, chapter: '4', versenum: 23)
+      FactoryBot.create(:memverse_without_supermemo_init, user: @user, verse: verse2,
+                         status: 'Memorized', next_ref_test: Date.yesterday, ref_interval: 6)
+      get :test_next_ref, format: :json, session: valid_session
+      json = JSON.parse(response.body)
+      returned_ref = json['mv']['ref']
+      expect(json['alt_refs']).to be_an(Array)
+      expect(json['alt_refs'].length).to eq(1)
+      expect(json['alt_refs'].first).not_to eq(returned_ref)
+    end
+
+    it "does not include alt_refs for verses the user is not memorizing" do
+      FactoryBot.create(:verse, text: 'The grace of our Lord Jesus Christ be with you all. Amen.',
+                         book: 'Philippians', book_index: 50, chapter: '4', versenum: 23)
+      get :test_next_ref, format: :json, session: valid_session
+      json = JSON.parse(response.body)
+      expect(json['alt_refs']).to eq([])
+    end
+
+    it "does not include pending memverses in alt_refs" do
+      verse2 = FactoryBot.create(:verse, text: 'The grace of our Lord Jesus Christ be with you all. Amen.',
+                                  book: 'Philippians', book_index: 50, chapter: '4', versenum: 23)
+      FactoryBot.create(:memverse_without_supermemo_init, user: @user, verse: verse2, status: 'Pending')
+      get :test_next_ref, format: :json, session: valid_session
+      json = JSON.parse(response.body)
+      expect(json['alt_refs']).to eq([])
+    end
+  end
+
+  describe "POST 'score_ref_test'" do
+    before(:each) do
+      @verse1 = FactoryBot.create(:verse)
+      @mv1 = FactoryBot.create(:memverse_without_supermemo_init, user: @user, verse: @verse1,
+                                ref_interval: 10, next_ref_test: Date.today, status: 'Memorized')
+    end
+
+    it "increases ref_interval on perfect score" do
+      post :score_ref_test, params: { mv: @mv1.id, score: 10 }, format: :json, session: valid_session
+      @mv1.reload
+      expect(@mv1.ref_interval).to eq(15)  # 10 * 1.5
+    end
+
+    it "decreases ref_interval on imperfect score" do
+      post :score_ref_test, params: { mv: @mv1.id, score: 5 }, format: :json, session: valid_session
+      @mv1.reload
+      expect(@mv1.ref_interval).to eq(6)  # (10 * 0.6).round
+    end
+
+    it "sets next_ref_test to today plus interval" do
+      post :score_ref_test, params: { mv: @mv1.id, score: 10 }, format: :json, session: valid_session
+      @mv1.reload
+      expect(@mv1.next_ref_test).to eq(Date.today + 15)
+    end
+  end
+
   describe "GET 'voice_practice'" do
     context "when user has memorized verses" do
       before(:each) do

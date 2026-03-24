@@ -1107,7 +1107,21 @@ class MemversesController < ApplicationController
       end
     end
 
-    render :json => { :due_refs => due_refs, :mv => mv }
+    # Find alternate valid references (other user memverses with identical verse text)
+    alt_refs = []
+    if mv
+      same_text_verse_ids = Verse.where(text: mv.verse.text)
+                                 .where.not(id: mv.verse_id)
+                                 .pluck(:id)
+      if same_text_verse_ids.any?
+        alt_refs = current_user.memverses.active
+                     .where(verse_id: same_text_verse_ids)
+                     .includes(:verse)
+                     .map { |m| m.verse.ref }
+      end
+    end
+
+    render :json => { :due_refs => due_refs, :mv => mv, :alt_refs => alt_refs }
 
   end
 
