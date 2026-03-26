@@ -1,0 +1,99 @@
+// Page-specific styles for /manage_verses
+
+.mv-manage {
+  padding: 1em;
+
+  .top-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5em;
+
+    h2 {
+      margin: 0;
+      font-size: 1.4em;
+    }
+  }
+
+  // Inline filter (replaces fixed-position search icon)
+  .mv-manage-filter {
+    display: flex;
+    align-items: center;
+
+    input[type="text"] {
+      width: 200px;
+      padding: 6px 10px;
+      font-size: 0.875em;
+      border-radius: 4px;
+    }
+  }
+
+  // Table refinements
+  table.memverse-standard {
+    width: 100%;
+
+    td, th {
+      text-align: center;
+      vertical-align: top;
+    }
+
+    td.mv-col-ref,
+    td.mv-col-tags {
+      text-align: left;
+    }
+
+    td {
+      padding: 6px 8px;
+    }
+
+    // Zebra striping via nth-child (replaces cycle("gray2","white2"))
+    tbody tr:nth-child(even) td {
+      background-color: #fff;
+    }
+
+    tbody tr:hover td {
+      background-color: #eef7e0;
+    }
+  }
+
+  // Action toolbar
+  .mv-manage-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75em;
+    margin-top: 1.25em;
+    padding: 0.75em 0;
+    border-top: 1px solid #c7c7cc;
+
+    input[type="submit"] {
+      padding: 0.4em 1em;
+      border-radius: 4px;
+      font-size: 0.875em;
+      cursor: pointer;
+      border: 1px solid #b0b0b5;
+      background: #f5f5f7;
+      color: #2d2d30;
+
+      &:hover {
+        background: #c7c7cc;
+      }
+    }
+
+    input[name="Delete"] {
+      color: #993333;
+      border-color: #993333;
+
+      &:hover {
+        background: #f5e6e6;
+      }
+    }
+
+    select {
+      padding: 0.4em 0.5em;
+      border-radius: 4px;
+      border: 1px solid #b0b0b5;
+      font-size: 0.875em;
+      background: #f5f5f7;
+    }
+  }
+}

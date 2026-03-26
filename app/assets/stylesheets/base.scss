@@ -1653,23 +1653,9 @@ table.memverse-standard {
 table.memverse-standard thead th {
 	padding:10px;
 	color:#fff;
-	border:1px solid #65a30d;
-	border-bottom:3px solid #84cc16;
-	background-color:#84cc16;
-	background: -webkit-gradient(
-		linear,
-		left bottom,
-		left top,
-		color-stop(0.02, rgb(77,124,15)),
-		color-stop(0.51, rgb(101,163,13)),
-		color-stop(0.87, rgb(132,204,22))
-		);
-	background: -moz-linear-gradient(
-		center bottom,
-		rgb(77,124,15) 2%,
-		rgb(101,163,13) 51%,
-		rgb(132,204,22) 87%
-		);
+	border:none;
+	border-bottom:2px solid #4d7c0f;
+	background-color:#65a30d;
 }
 
 table.memverse-standard thead th:empty{
@@ -1694,21 +1680,7 @@ table.memverse-standard tbody th {
 	color:#fff;
 	border:1px solid #65a30d;
 	border-right:3px solid #84cc16;
-	background-color:#84cc16;
-	background: -webkit-gradient(
-		linear,
-		left bottom,
-		left top,
-		color-stop(0.02, rgb(77,124,15)),
-		color-stop(0.51, rgb(101,163,13)),
-		color-stop(0.87, rgb(132,204,22))
-		);
-	background: -moz-linear-gradient(
-		center right,
-		rgb(77,124,15) 2%,
-		rgb(101,163,13) 51%,
-		rgb(132,204,22) 87%
-		);
+	background: linear-gradient(to top, #4d7c0f 2%, #65a30d 51%, #84cc16 87%);
 }
 
 table.memverse-standard td a
