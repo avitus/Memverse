@@ -150,13 +150,12 @@ RSpec.describe SendReminders, type: :worker do
         email_double
       end
       
-      # The worker has default throttle of 2, so it will only send 2 emails
-      # But that's enough to verify the order - we expect the 2 newest users
+      # The worker has default throttle of 4, so all 3 users will get emails
+      # We verify the order - newest users should be processed first
       worker.perform
-      
+
       # Verify that users were processed from newest to oldest
-      # With throttle=2, only the 2 newest users should get emails
-      expect(processed_users).to eq(['new@example.com', 'middle@example.com'])
+      expect(processed_users).to eq(['new@example.com', 'middle@example.com', 'old@example.com'])
     end
   end
 end
