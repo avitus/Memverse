@@ -20,8 +20,7 @@ Rails.application.configure do
   # or in config/master.key. This key is used to decrypt credentials (and other encrypted files).
   # config.require_master_key = true
   
-  # Enable reading of encrypted secrets for Rails 5 compatibility
-  config.read_encrypted_secrets = true
+  # Encrypted secrets removed — using Rails 7 credentials only (credentials.yml.enc + master.key)
 
   # Disable serving static files from the `/public` folder by default since
   # Apache or NGINX already handles this.
