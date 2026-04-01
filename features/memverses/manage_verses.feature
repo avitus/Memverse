@@ -70,7 +70,6 @@ Feature: Manage verses
   @javascript
   Scenario: User filters verses
     When I go to the manage verses page
-    And I click inside "#searchico"
     And I fill in "filter" with "John"
     Then I should see "John 3:16"
     But I should not see "Romans 8:28"
