@@ -98,8 +98,8 @@ GEM
     acts-as-taggable-on (10.0.0)
       activerecord (>= 6.1, < 7.2)
     acts_as_votable (0.14.0)
-    addressable (2.8.7)
-      public_suffix (>= 2.0.2, < 7.0)
+    addressable (2.9.0)
+      public_suffix (>= 2.0.2, < 8.0)
     airbrussh (1.5.3)
       sshkit (>= 1.6.1, != 1.7.0)
     autoprefixer-rails (10.4.21.0)
@@ -467,8 +467,7 @@ GEM
       hashie (>= 3.4.6)
       rack (>= 2.2.3)
       rack-protection
-    onebox (2.2.19)
-      addressable (~> 2.8.0)
+    onebox (1.9.24)
       htmlentities (~> 4.3)
       multi_json (~> 1.11)
       mustache
@@ -500,7 +499,7 @@ GEM
     psych (5.2.6)
       date
       stringio
-    public_suffix (6.0.2)
+    public_suffix (7.0.5)
     pubnub (5.5.0)
       addressable (>= 2.0.0)
       concurrent-ruby (~> 1.3.4)
