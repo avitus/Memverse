@@ -209,7 +209,7 @@ GEM
       activerecord (>= 5.a)
       database_cleaner-core (~> 2.0)
     database_cleaner-core (2.0.1)
-    date (3.4.1)
+    date (3.5.1)
     db_text_search (1.0.0)
       activerecord (>= 4.1.15)
     debug_inspector (1.2.0)
@@ -437,7 +437,7 @@ GEM
       connection_pool (~> 2.2, >= 2.2.4)
     net-http2 (0.19.0)
       http-2 (>= 1.0)
-    net-imap (0.5.10)
+    net-imap (0.5.14)
       date
       net-protocol
     net-pop (0.1.2)
@@ -732,7 +732,7 @@ GEM
       timeago_js (>= 3.0.2.2)
     tilt (2.6.1)
     timeago_js (3.0.2.2)
-    timeout (0.4.3)
+    timeout (0.6.1)
     timers (4.4.0)
     ttfunk (1.8.0)
       bigdecimal (~> 3.1)
