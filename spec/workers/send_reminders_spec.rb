@@ -102,13 +102,13 @@ RSpec.describe SendReminders, type: :worker do
         mock_user_find_each(users_needing_reminders)
       end
 
-      it 'limits emails to 4 per run due to throttle' do
-        expect(UserMailer).to receive(:progression_email_2).exactly(4).times
+      it 'limits emails to 8 per run due to throttle' do
+        expect(UserMailer).to receive(:progression_email_2).exactly(8).times
         worker.perform
       end
 
       it 'logs the number of emails sent' do
-        expect(Rails.logger).to receive(:info).with(/Sent 4 reminder emails/)
+        expect(Rails.logger).to receive(:info).with(/Sent 8 reminder emails/)
         worker.perform
       end
     end

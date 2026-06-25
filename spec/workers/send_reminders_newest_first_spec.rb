@@ -150,7 +150,7 @@ RSpec.describe SendReminders, type: :worker do
         email_double
       end
       
-      # The worker has default throttle of 4, so all 3 users will get emails
+      # The worker has default throttle of 8, so all 3 users will get emails
       # We verify the order - newest users should be processed first
       worker.perform
 
