@@ -13,10 +13,10 @@
     "test:coverage": "vitest run --coverage"
   },
   "devDependencies": {
-    "@vitest/ui": "^3.2.4",
+    "@vitest/ui": "^3.2.6",
     "jsdom": "^26.1.0",
     "moment-timezone": "^0.6.0",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.6"
   },
   "overrides": {
     "rollup": "npm:@rollup/wasm-node@*"
