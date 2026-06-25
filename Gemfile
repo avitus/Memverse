@@ -28,7 +28,7 @@ group :development, :test do
   gem 'factory_bot_rails'                                       # Add to development group for debugging in console
   gem 'cucumber-rails', require: false                          # Rails Generators for Cucumber with special support for Capybara and DatabaseCleaner
   gem 'capybara'                                                # Helps test web applications by simulating how a real user would interact with your app
-  gem 'puma'
+  gem 'puma', '~> 7.2'                                          # Dev/test web server (CVE-2025: PROXY protocol DoS fixed in 7.2.1); prod uses Passenger
   gem 'selenium-webdriver'                                      # Optional extension for Capybara
   gem 'webdrivers'                                              # Automatically downloads and manages webdriver versions
   gem 'database_cleaner'                                        # Clean database between tests
