@@ -58,7 +58,7 @@ gem 'redis', '~> 5.0'                                                          #
 ############################################################
 # Frameworks
 ############################################################
-gem 'rails', '~> 7.1.0'                                                        # Upgraded to Rails 7.1 for modernization                                                            
+gem 'rails', '~> 7.2.0', '>= 7.2.3.1'                                          # Rails 7.2; floor pins the 7.2.3.1 security release (else bundler picks 7.2.3)                                                            
 gem 'jquery-rails'                                                             # Currently using jQuery 1.12.4
 gem 'jquery-ui-rails'
 
@@ -73,8 +73,8 @@ gem "mimemagic", "~> 0.3.10"                                                   #
 gem 'ffi', '~> 1.16.0'                                                         # FFI library - Ruby 3.2 compatible
 
 # Rails 7 components
-gem 'actionmailbox', '~> 7.1.0'                                                # Inbound email handling
-gem 'actiontext', '~> 7.1.0'                                                   # Rich text content
+gem 'actionmailbox', '~> 7.2.0'                                                # Inbound email handling
+gem 'actiontext', '~> 7.2.0'                                                   # Rich text content
 gem 'sprockets-rails'                                                          # Asset pipeline for Rails 7
 gem 'importmap-rails'                                                          # Modern JS without webpack
 gem 'turbo-rails'                                                              # Hotwire Turbo for SPA-like performance
@@ -152,7 +152,7 @@ gem 'rinku', require: 'rails_rinku'                                            #
 gem 'randumb'                                                                  # Retrieve a random record
 gem 'prawn'                                                                    # PDF support
 gem "prawnto_2", require: "prawnto"                                            # Integrating prawn into Rails
-gem 'acts-as-taggable-on', '~> 10.0'                                           # Updated for Rails 7 compatibility
+gem 'acts-as-taggable-on', '~> 11.0'                                           # 11.0 supports activerecord < 8.0 (Rails 7.2)
 gem 'nokogiri', '>=1.5.0'                                                      # HTML/XML parsing
 gem 'json'                                                                     # Javascript Object Notation support
 gem 'thinking-sphinx'                                                          # Connector to Sphinx - for global search
