@@ -1,0 +1,36 @@
+# CodeRabbit configuration
+# Docs: https://docs.coderabbit.ai/guides/configure-coderabbit
+language: en-US
+
+reviews:
+  profile: chill                 # less nitpicky; use "assertive" for more comments
+  request_changes_workflow: false
+  high_level_summary: true
+  poem: false
+  review_status: true
+  auto_review:
+    enabled: true
+    drafts: false
+    base_branches:
+      - main
+  path_instructions:
+    - path: "**/*.rb"
+      instructions: >-
+        Ruby 3.2 / Rails 7.2 app. Flag SQL injection, mass-assignment, and
+        unsafe html_safe / send / public_send, plus missing CanCanCan
+        authorization. The project targets 100% test coverage — new or changed
+        behavior should be covered by RSpec or Cucumber. API responses must keep
+        their Swagger schemas (as_json) in sync.
+    - path: "spec/**/*.rb"
+      instructions: >-
+        RSpec with FactoryBot and DatabaseCleaner (transactional fixtures are
+        off). Prefer factories over fixtures.
+    - path: "features/**/*"
+      instructions: >-
+        Cucumber + Capybara acceptance tests. Keep step definitions reusable.
+  tools:
+    brakeman:
+      enabled: true
+
+chat:
+  auto_reply: true
