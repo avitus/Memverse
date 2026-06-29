@@ -25,7 +25,7 @@ RSpec.configure do |config|
   config.infer_spec_type_from_file_location!
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  config.fixture_paths = ["#{::Rails.root}/spec/fixtures"]
+  config.fixture_paths = [Rails.root.join("spec/fixtures").to_s]
 
   # Disable transactional fixtures since we're using DatabaseCleaner
   config.use_transactional_fixtures = false
