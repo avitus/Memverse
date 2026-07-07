@@ -52,7 +52,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Architecture Overview
 
-This is a Ruby on Rails 7.1 Bible memorization application with a traditional MVC architecture.
+This is a Ruby on Rails 7.2 Bible memorization application with a traditional MVC architecture.
 
 ### Core Models & Domain
 - **User**: Central model managing authentication, preferences, and Bible translation settings
@@ -221,7 +221,7 @@ This is a Ruby on Rails 7.1 Bible memorization application with a traditional MV
 | Component | Previous Version | Current Version | Status |
 |-----------|-----------------|-----------------|---------|
 | Ruby | 2.7.8 | 3.2.6 | ✅ Complete |
-| Rails | 5.2.8.1 | 7.1.5.2 | ✅ Complete |
+| Rails | 5.2.8.1 | 7.2.3.1 | ✅ Complete |
 | File Storage | Paperclip | Active Storage | ✅ Complete |
 | JavaScript Testing | Jasmine | Vitest | ✅ Complete |
 | API Framework | RocketPants | Rails API | ✅ Complete |
@@ -304,6 +304,16 @@ touch tmp/restart.txt
 - RSpec: 474/474 passing (100%)
 - Vitest: 69/69 passing (100%)
 - Cucumber: All features pass individually (100%)
+
+### ✅ Rails 7.2 Upgrade (COMPLETED - 2026)
+**Progression**: Rails 7.1.5.2 → 7.2.3.1
+
+**Key Changes**:
+- Upgraded the Rails gem from 7.1.5.2 to 7.2.3.1
+- Adopted Rails 7.2 framework defaults (config.load_defaults 7.2)
+- Addressed DeepSource and CodeRabbit review comments; added CodeRabbit config
+- See `documentation/plans/2026-06-26-rails-7.2-upgrade.md` and
+  `documentation/specs/2026-06-26-rails-7.2-upgrade-design.md`
 
 ### ✅ User Onboarding Email Optimization (COMPLETED - September 2025)
 **Objective**: Reduce Gmail rate limiting by consolidating onboarding emails

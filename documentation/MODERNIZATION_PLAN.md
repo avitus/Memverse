@@ -26,10 +26,10 @@ This document tracks the technical modernization progress of the Memverse applic
 
 ### ✅ Framework & Language Upgrades (COMPLETED - August 2025)
 - [x] Upgrade Ruby from 2.7.8 to 3.2.6 (current stable)
-- [x] Upgrade Rails from 5.2.8.1 to 7.1.5.2 (latest stable)
+- [x] Upgrade Rails from 5.2.8.1 to 7.2.3.1 (latest stable)
 - [x] Update all gems to Rails 7 compatible versions
 - [x] Remove deprecated gems (rails-observers, protected_attributes references)
-- [x] Apply Rails 7.1 configuration defaults (config.load_defaults 7.1)
+- [x] Apply Rails 7.2 configuration defaults (config.load_defaults 7.2)
 - [x] Create ApplicationRecord base class for all models
 - [x] Add bootsnap for improved boot performance
 - [x] Add Ruby 3.2 standard library gems (net-http, rss)
@@ -81,6 +81,18 @@ This document tracks the technical modernization progress of the Memverse applic
 - [x] Update acts-as-taggable-on to v10.0 (Rails 7 compatible)
 - [x] Update PubNub to v5.5.0 (latest stable)
 - [x] Update RPush to v9.2.0 (Rails 7.1 compatible)
+
+### 🔒 Blocked Dependency Bumps (transitive version pins)
+These Dependabot proposals **cannot be applied** without first upgrading the gem
+that pins them. Documented here so they aren't repeatedly re-triaged:
+- **jwt → 3.x** — blocked. `googleauth`, `signet`, and `web-push` all require
+  `jwt < 3.0`. Requires coordinated upgrade of those gems first.
+- **addressable → 2.9.0** — blocked. `onebox (~> 2.8.0)` caps it at `< 2.9.0`.
+  Requires upgrading `onebox` (Discourse link-preview gem used by Thredded) first.
+
+All other Dependabot bumps (bcrypt, devise, sidekiq-cron, rack, faraday, nokogiri,
+net-imap, erb, vite, picomatch, flatted) were already satisfied by the
+`patch-independent-gems` work — the lockfiles are at or above the proposed versions.
 
 ## ⚠️ In Progress / Partially Completed
 
@@ -168,7 +180,7 @@ This document tracks the technical modernization progress of the Memverse applic
 ### Overall Progress: ~55% Complete
 
 The Memverse application has successfully completed critical modernization milestones:
-- ✅ Ruby 3.2.6 and Rails 7.1.5.2 upgrades
+- ✅ Ruby 3.2.6 and Rails 7.2.3.1 upgrades
 - ✅ Security vulnerabilities fixed
 - ✅ Core infrastructure modernized (email, file storage, background jobs)
 - ✅ 100% test coverage maintained
