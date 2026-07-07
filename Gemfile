@@ -90,7 +90,7 @@ gem 'jbuilder'
 ############################################################
 # Authentication and Authorization
 ############################################################
-gem 'devise'                                                                   # Authentication
+gem 'devise', '~> 5.0'                                                          # Authentication
 gem 'devise-encryptable'                                                       # TODO: Is this required?
 gem 'omniauth'                                                                 # Multi-provider authentication
 gem 'cancancan', '~> 3.4'                                                      # Role-based authorization
