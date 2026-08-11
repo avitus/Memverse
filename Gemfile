@@ -123,6 +123,7 @@ gem "sentry-sidekiq"                                                           #
 ############################################################
 gem 'pubnub', '~> 5.5.0'                                                      # Real-time messaging service - updated to latest
 gem 'rpush', '~> 9.2.0'                                                        # Push notification service - Rails 7.1 compatible
+gem 'openssl', '~> 3.3.0'                                                      # web-push dependency; 4.x needs OpenSSL >= 1.1.1, prod (Ubuntu 16.04) has 1.0.2g
 gem 'mail', '>= 2.2.15'                                                        # Emails
 gem 'postmark-rails', '~> 0.22'                                                # Postmark email delivery service
 
