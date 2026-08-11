@@ -33,11 +33,14 @@ RSpec.describe BibleGateway do
       error = OpenURI::HTTPError.new('503 Service Unavailable', io)
 
       allow(URI).to receive(:open).and_raise(error)
-      allow(gateway).to receive(:sleep) # skip retry backoff delays
       allow(Sentry).to receive(:set_tags)
+      # Stubbing sleep also skips the real backoff delays
+      expect(gateway).to receive(:sleep).with(1).ordered
+      expect(gateway).to receive(:sleep).with(2).ordered
 
       gateway.lookup('John 3:16')
 
+      expect(URI).to have_received(:open).exactly(3).times
       expect(Sentry).to have_received(:set_tags)
         .with(service: 'bible_gateway', http_status: '503')
     end

@@ -6,7 +6,7 @@
 
 **Architecture:** Three self-contained changes: (1) swap the gems and rewrite `config/initializers/sentry.rb` as `Sentry.init` with behavior parity (production-only, no PII); (2) migrate the single legacy `Raven.tags_context` call site in `BibleGateway`; (3) verify with the full test suites. No deploy-side changes: Capistrano already writes `REVISION`, which the modern SDK detects natively.
 
-**Tech Stack:** Rails 7.2.3.1, Ruby 3.2.6, RSpec, sentry-ruby/sentry-rails/sentry-sidekiq (latest 5.x from RubyGems).
+**Tech Stack:** Rails 7.2.3.1, Ruby 3.2.6, RSpec, sentry-ruby/sentry-rails/sentry-sidekiq (6.7.0, latest from RubyGems at implementation time).
 
 **Spec:** `documentation/specs/2026-08-11-sentry-release-tracking-design.md`
 
@@ -18,7 +18,7 @@
 - Sentry must send events **only** from the `production` environment (parity with the old raven config).
 - No PII in events: `send_default_pii` stays `false` (SDK default — do not set it to true).
 - DSN (modern format, no secret key): `https://a1106f25de724396a866c6ab9386b11b@sentry.io/299442`
-- Do NOT set `config.release` explicitly — the SDK's built-in detection (SENTRY_RELEASE env → Capistrano `REVISION` file → git SHA) is the feature under delivery.
+- Do NOT set `config.release` explicitly — the SDK's built-in detection (SENTRY_RELEASE env → git SHA → Capistrano `REVISION` file) is the feature under delivery.
 - Do NOT stage `node_modules/` churn in any commit (only `package.json` + `package-lock.json` would ever be committed for npm changes; this plan makes no npm changes).
 - Commit messages end with: `Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>`
 
@@ -92,7 +92,7 @@ gem "sentry-sidekiq"                                                           #
 ```
 
 Then run: `bundle install`
-Expected: resolves cleanly; `sentry-raven` removed from `Gemfile.lock`, three `sentry-*` gems (same version, 5.x) added. `faraday` remains in the lockfile (other gems still need it) — that is fine.
+Expected: resolves cleanly; `sentry-raven` removed from `Gemfile.lock`, three `sentry-*` gems (same version, 6.7.0) added. `faraday` remains in the lockfile (other gems still need it) — that is fine.
 
 - [ ] **Step 4: Rewrite the initializer**
 
