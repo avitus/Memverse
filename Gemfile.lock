@@ -661,8 +661,16 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
-    sentry-raven (3.1.2)
-      faraday (>= 1.0)
+    sentry-rails (6.7.0)
+      railties (>= 5.2.0)
+      sentry-ruby (~> 6.7.0)
+    sentry-ruby (6.7.0)
+      bigdecimal
+      concurrent-ruby (~> 1.0, >= 1.0.2)
+      logger
+    sentry-sidekiq (6.7.0)
+      sentry-ruby (~> 6.7.0)
+      sidekiq (>= 5.0)
     shellany (0.0.1)
     sidekiq (7.3.10)
       base64
@@ -861,7 +869,9 @@ DEPENDENCIES
   sass-rails (>= 6.0)
   sassc-rails
   selenium-webdriver
-  sentry-raven
+  sentry-rails
+  sentry-ruby
+  sentry-sidekiq
   sidekiq (~> 7.3)
   sidekiq-cron (~> 2.0)
   sitemap_generator

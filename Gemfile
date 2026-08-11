@@ -113,7 +113,9 @@ gem 'ed25519', '>= 1.2', '< 2.0'                                              # 
 gem 'bcrypt_pbkdf', '>= 1.0', '< 2.0'                                         # SSH key encryption support for deployment
 gem 'sitemap_generator'                                                        # Sitemap generator
 gem 'newrelic_rpm', '>=3.3.0'                                                  # Performance monitoring
-gem "sentry-raven"                                                             # Error tracking
+gem "sentry-ruby"                                                              # Error tracking
+gem "sentry-rails"                                                             # Error tracking - Rails integration
+gem "sentry-sidekiq"                                                           # Error tracking - Sidekiq worker errors
 
 
 ############################################################

@@ -62,7 +62,7 @@ class BibleGateway
         retry
       end
 
-      Raven.tags_context(service: 'bible_gateway', http_status: e.io&.status&.first) if defined?(Raven)
+      Sentry.set_tags(service: 'bible_gateway', http_status: e.io&.status&.first) if defined?(Sentry)
       Rails.logger.warn("BibleGateway lookup failed: #{e.message}") if defined?(Rails)
       { title: '--', content: '--' }
     rescue StandardError => e
