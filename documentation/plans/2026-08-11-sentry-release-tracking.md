@@ -135,7 +135,7 @@ Decision rule: if (and only if) the installed version populates request data unc
 - [ ] **Step 7: Smoke-check release detection wiring**
 
 Run: `bundle exec rails runner "puts Sentry.configuration.release.inspect"`
-Expected: prints the current git SHA as a string (the dev-checkout fallback of the same detection chain that reads `REVISION` in production). Any non-error output is a pass; an exception is a failure.
+Expected: prints `nil` — on sentry-ruby 6.x, release detection only runs where sending is allowed (production), so `nil` outside production is the correct result; an exception is a failure.
 
 - [ ] **Step 8: Commit**
 

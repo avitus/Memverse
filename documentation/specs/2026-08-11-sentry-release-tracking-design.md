@@ -70,8 +70,9 @@ Behavior parity with the raven config:
 No explicit `config.release`. The modern SDK detects the release in this order:
 
 1. `SENTRY_RELEASE` environment variable
-2. Capistrano `REVISION` file at the project root
-3. Current git SHA (development checkouts)
+2. Current git SHA (wins in development checkouts; Capistrano release
+   directories contain no `.git`, so this is skipped in production)
+3. Capistrano `REVISION` file at the project root
 
 Capistrano already writes `REVISION` (full 40-char SHA) into every release
 directory — production revision `f370078e9f33…` was confirmed present on
@@ -79,7 +80,7 @@ directory — production revision `f370078e9f33…` was confirmed present on
 **no deploy-side changes**. Sentry creates the release record when the first
 tagged event arrives.
 
-Verification in any console: `Sentry.configuration.release`.
+Verification: `Sentry.configuration.release` from a **production** console. Outside `enabled_environments` the SDK skips release detection entirely, so development/test consoles print `nil` — expected, not a failure.
 
 ### 4. Call-site migration
 
