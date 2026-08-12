@@ -1335,7 +1335,7 @@ class MemversesController < ApplicationController
   # Voice practice - speak verses using Web Speech API
   # ----------------------------------------------------------------------------------------------------------
   def voice_practice
-    @tab = "learn"
+    @tab = "mem"
     @sub = "voice"
 
     # Check if user has any verses at all

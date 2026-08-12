@@ -41,6 +41,11 @@
   display: flex;
   align-items: center;
   gap: 12px;
+
+  // Absolutely positioned over .voice-header, so long status messages
+  // (e.g. "Speech recognition not supported...") must wrap within the
+  // left gutter instead of extending under the centered verse reference
+  max-width: 25%;
 }
 
 .mic-button {
@@ -103,7 +108,15 @@
 .mic-status {
   color: #6b9620;
   font-size: 0.95em;
-  white-space: nowrap;
+}
+
+// When speech recognition is unavailable (e.g. Firefox), the mic is dead
+// anyway — show the controls as a normal full-width row under the header
+// so the long status message can't collide with the verse reference
+.voice-practice.speech-unsupported .voice-controls {
+  position: static;
+  max-width: none;
+  margin-bottom: 15px;
 }
 
 .voice-transcription-wrapper {

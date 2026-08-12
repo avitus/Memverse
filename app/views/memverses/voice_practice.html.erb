@@ -767,6 +767,9 @@ $(document).ready(function() {
   var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
   if (!SpeechRecognition) {
+    // Full-width notice row (see .speech-unsupported) so the long message
+    // doesn't collide with the verse reference (e.g. in Firefox)
+    $('.voice-practice').addClass('speech-unsupported');
     $('#mic-button').prop('disabled', true);
     $('#mic-status').text('Speech recognition not supported in this browser. Please use Chrome or Edge.');
   } else {

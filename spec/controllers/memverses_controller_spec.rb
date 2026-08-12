@@ -431,6 +431,12 @@ describe MemversesController do
         get :voice_practice, session: valid_session
         expect(assigns(:mv)).to be_present
       end
+
+      it "should highlight the Review tab with the voice submenu" do
+        get :voice_practice, session: valid_session
+        expect(assigns(:tab)).to eq("mem")
+        expect(assigns(:sub)).to eq("voice")
+      end
     end
 
     context "when user has only learning verses" do
