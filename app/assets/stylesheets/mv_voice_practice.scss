@@ -41,6 +41,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
+
   // Absolutely positioned over .voice-header, so long status messages
   // (e.g. "Speech recognition not supported...") must wrap within the
   // left gutter instead of extending under the centered verse reference
