@@ -20,6 +20,8 @@ jobs:
 
       # Database
       - image: library/mysql:5.7
+        # Native AIO can fail on shared CI hosts (io_setup() EAGAIN), aborting InnoDB at startup
+        command: ["--innodb-use-native-aio=0"]
         environment:
           MYSQL_ROOT_PASSWORD: demo
           MYSQL_DATABASE: memverse_test
@@ -165,10 +167,17 @@ jobs:
       - run:
           name: Wait for DB
           command: |
-            until mysql -h 127.0.0.1 -P 3306 -u root -pdemo -e "SELECT 1" >/dev/null 2>&1; do
-              echo "Waiting for MySQL to be ready..."
-              sleep 2
+            # Bounded wait: if the MySQL container died, fail fast instead of hitting the job timeout
+            for i in {1..60}; do
+              if timeout 5 mysql -h 127.0.0.1 -P 3306 -u root -pdemo -e "SELECT 1" >/dev/null 2>&1; then
+                echo "MySQL is ready!"
+                exit 0
+              fi
+              echo "Waiting for MySQL to be ready... (attempt $i/60)"
+              if [ "$i" -lt 60 ]; then sleep 2; fi
             done
+            echo "MySQL did not become ready after 60 attempts (check the mysql container log)"
+            exit 1
 
       - run:
           name: Verify Database Configuration
