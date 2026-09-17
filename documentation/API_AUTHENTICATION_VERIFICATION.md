@@ -11,7 +11,29 @@
 - **Configuration**:
   - Authorization URL: `/oauth/authorize`
   - Token endpoint: `/oauth/token`
-  - Supported flows: Authorization Code, Implicit (for Swagger UI)
+  - Supported flow: Authorization Code with required PKCE (`S256`)
+  - Public browser clients do not use a client secret
+  - Access tokens expire after two hours
+  - Refresh tokens rotate when used
+
+### Browser Client CORS Configuration
+
+Browser-hosted clients may call `/oauth/token` and `/api/v1/**` cross-origin. Set
+`MEMVERSE_CORS_ALLOWED_ORIGINS` to a comma-separated list of exact origins:
+
+```bash
+MEMVERSE_CORS_ALLOWED_ORIGINS=https://avitus.github.io,http://localhost:5078
+```
+
+The policy permits `GET`, `POST`, `PATCH`, `PUT`, `DELETE`, and `OPTIONS` with
+the `Authorization` and `Content-Type` request headers. The hosted PWA origin
+`https://avitus.github.io` and local testing
+origins `http://localhost:5078`, `http://localhost:5000`, and
+`https://localhost:5001` are allowed by default in every environment, so a
+local PWA can call the production API.
+Setting the environment variable replaces these defaults, which supports
+explicit staging or preview origins. Do not include paths or trailing slashes
+in origin values. Configure exact origins rather than a wildcard.
 
 ### 2. Authentication Implementation ✅
 
@@ -88,21 +110,36 @@ All endpoints return appropriate data:
 ### Creating OAuth Application
 ```ruby
 Doorkeeper::Application.create!(
-  name: "Your App Name",
-  redirect_uri: "urn:ietf:wg:oauth:2.0:oob",  # For native apps
+  name: "Memverse PWA",
+  uid: "memverse-pwa",
+  redirect_uri: "https://avitus.github.io/Memverse/authentication/login-callback",
+  confidential: false,
   scopes: "public read write admin"
 )
 ```
 
-### Creating Access Token
-```ruby
-Doorkeeper::AccessToken.create!(
-  application: app,
-  resource_owner_id: user.id,
-  scopes: "read write",
-  expires_in: 7200  # 2 hours
-)
+The PWA sends the application's public `uid` as its `client_id`. It must not
+embed or send the generated application secret. Authorization requests must
+include an `S256` PKCE challenge, and token exchanges must include the matching
+verifier. Use the returned rotating refresh token to keep users signed in
+without storing their Memverse password in the PWA.
+
+The deployment migration creates this application with the deterministic
+client ID `memverse-pwa` and both hosted and
+`http://localhost:5078/authentication/login-callback` redirect URIs. Reconcile
+the record idempotently after changing redirect configuration:
+
+```bash
+bundle exec rake oauth:ensure_pwa_application
 ```
+
+Set `MEMVERSE_PWA_REDIRECT_URIS` to a comma-separated URI list before running
+that task to replace the defaults.
+
+The authorization endpoint uses the existing Devise session. Users without an
+active Memverse browser session are presented with the Memverse login flow.
+Logout should clear PWA tokens and post the access or refresh token with the
+public `client_id` to `/oauth/revoke`; public clients do not send a secret.
 
 ## Swagger UI Integration ✅
 
@@ -111,7 +148,8 @@ Doorkeeper::AccessToken.create!(
 security_definition :oauth2 do
   key :type, :oauth2
   key :authorizationUrl, '/oauth/authorize'
-  key :flow, :implicit
+  key :tokenUrl, '/oauth/token'
+  key :flow, :accessCode
   scopes do
     key 'public', 'Read public information'
     key 'read',   'Read your information'

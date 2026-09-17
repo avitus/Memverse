@@ -15,16 +15,6 @@ Doorkeeper.configure do
     current_user || warden.authenticate!(:scope => :user)
   end
 
-  # ALV added this section
-  # In this flow, a token is requested in exchange for the resource owner credentials (username and password)
-  resource_owner_from_credentials do |routes|
-    request.params[:user] = {:email => request.params[:username], :password => request.params[:password]}
-    request.env["devise.allow_params_authentication"] = true
-    user = request.env["warden"].authenticate!(:scope => :user)
-    request.env["warden"].logout
-    user
-  end
-
   # If you want to restrict access to the web interface for adding oauth authorized applications, you need to declare the block below.
   admin_authenticator do
     #   # Put your admin authentication logic here.
@@ -39,7 +29,7 @@ Doorkeeper.configure do
   # Access token expiration time (default 2 hours).
   # If you want to disable expiration, set this to nil.
   # access_token_expires_in 2.hours (ALV - this is the default)
-  access_token_expires_in nil
+  access_token_expires_in 2.hours
 
   # Assign a custom TTL for implicit grants.
   # custom_access_token_expires_in do |oauth_client|
@@ -54,8 +44,11 @@ Doorkeeper.configure do
   # Rationale: https://github.com/doorkeeper-gem/doorkeeper/issues/383
   # reuse_access_token
 
-  # Issue access tokens with refresh token (disabled by default)
-  # use_refresh_token
+  # Public browser clients use rotating refresh tokens for persistent sessions.
+  use_refresh_token
+
+  # Require public clients to prove they initiated each authorization request.
+  force_pkce
 
   # Provide support for an owner to be assigned to each registered application (disabled by default)
   # Optional parameter :confirmation => true (default false) if you want to enforce ownership of
@@ -93,6 +86,7 @@ Doorkeeper.configure do
   # communication to the HTTPS protocol so it is wise to keep this enabled.
   #
   # force_ssl_in_redirect_uri !Rails.env.development?
+  force_ssl_in_redirect_uri { |uri| uri.host != 'localhost' }
 
   # Specify what grant flows are enabled in array of Strings. The valid
   # strings and the flows they enable are:
@@ -110,7 +104,7 @@ Doorkeeper.configure do
   #   http://tools.ietf.org/html/rfc6819#section-4.4.2
   #   http://tools.ietf.org/html/rfc6819#section-4.4.3
   #
-  grant_flows %w(authorization_code implicit password client_credentials)  # ALV - enable all flows for now
+  grant_flows %w[authorization_code]
 
   # Under some circumstances you might want to have applications auto-approved,
   # so that the user skips the authorization step.
