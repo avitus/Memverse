@@ -5,7 +5,7 @@ var clientId;
 var realm;
 var oauth2KeyName;
 var redirect_uri;
-var codeVerifier;
+var codeVerifiers = {};
 
 function base64UrlEncode(bytes) {
   var binary = '';
@@ -187,8 +187,9 @@ function handleLogin() {
     if (!authWindow) {
       return;
     }
-    codeVerifier = generateCodeVerifier();
-    generateCodeChallenge(codeVerifier).then(function(challenge) {
+    var verifier = generateCodeVerifier();
+    codeVerifiers[state] = verifier;
+    generateCodeChallenge(verifier).then(function(challenge) {
       url += '&code_challenge=' + encodeURIComponent(challenge);
       url += '&code_challenge_method=S256';
       authWindow.location.href = url;
@@ -242,14 +243,18 @@ function initOAuth(opts) {
 }
 
 window.processOAuthCode = function processOAuthCode(data) {
+  // Consume only this attempt's verifier, so a second authorization started
+  // before this callback returned does not invalidate either exchange.
+  var verifier = codeVerifiers[data.state];
+  delete codeVerifiers[data.state];
+
   var params = {
     'client_id': clientId,
     'code': data.code,
     'grant_type': 'authorization_code',
     'redirect_uri': redirect_uri,
-    'code_verifier': codeVerifier
+    'code_verifier': verifier
   }
-  codeVerifier = null;
   $.ajax(
   {
     url : window.swaggerUi.tokenUrl,
