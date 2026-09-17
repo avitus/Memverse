@@ -32,6 +32,41 @@ RSpec.describe 'OAuth PKCE flow', type: :request do
     )
   end
 
+  def authorize(code_challenge:, code_challenge_method:)
+    get '/oauth/authorize', params: {
+      response_type: 'code',
+      client_id: application.uid,
+      redirect_uri: redirect_uri,
+      scope: 'public read write',
+      state: 'pkce-state',
+      code_challenge: code_challenge,
+      code_challenge_method: code_challenge_method
+    }
+  end
+
+  it 'issues an authorization code for an S256 challenge' do
+    sign_in user
+
+    expect do
+      authorize(code_challenge: challenge, code_challenge_method: 'S256')
+    end.to change(Doorkeeper::AccessGrant, :count).by(1)
+
+    expect(response).to have_http_status(:found)
+    expect(response.location).to start_with("#{redirect_uri}?code=")
+    expect(Doorkeeper::AccessGrant.last.code_challenge_method).to eq('S256')
+  end
+
+  it 'rejects a plain PKCE challenge' do
+    sign_in user
+
+    expect do
+      authorize(code_challenge: verifier, code_challenge_method: 'plain')
+    end.not_to change(Doorkeeper::AccessGrant, :count)
+
+    expect(response).to have_http_status(:bad_request)
+    expect(response.location).to be_nil
+  end
+
   it 'exchanges a PKCE authorization code without a client secret' do
     grant = create_access_grant
 

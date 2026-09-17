@@ -5,6 +5,29 @@ var clientId;
 var realm;
 var oauth2KeyName;
 var redirect_uri;
+var codeVerifier;
+
+function base64UrlEncode(bytes) {
+  var binary = '';
+  for (var i = 0; i < bytes.length; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+// RFC 7636 PKCE: a 43-character verifier and its S256 challenge.
+function generateCodeVerifier() {
+  var bytes = new Uint8Array(32);
+  window.crypto.getRandomValues(bytes);
+  return base64UrlEncode(bytes);
+}
+
+function generateCodeChallenge(verifier) {
+  return window.crypto.subtle.digest('SHA-256', new TextEncoder().encode(verifier))
+    .then(function(digest) {
+      return base64UrlEncode(new Uint8Array(digest));
+    });
+}
 
 function handleLogin() {
   var scopes = [];
@@ -154,7 +177,22 @@ function handleLogin() {
     url += '&scope=' + encodeURIComponent(scopes.join(' '));
     url += '&state=' + encodeURIComponent(state);
 
-    window.open(url);
+    if (!window.swaggerUi.tokenUrl) {
+      window.open(url);
+      return;
+    }
+
+    // Open the popup synchronously so the async digest doesn't trip popup blockers.
+    var authWindow = window.open('', '_blank');
+    if (!authWindow) {
+      return;
+    }
+    codeVerifier = generateCodeVerifier();
+    generateCodeChallenge(codeVerifier).then(function(challenge) {
+      url += '&code_challenge=' + encodeURIComponent(challenge);
+      url += '&code_challenge_method=S256';
+      authWindow.location.href = url;
+    });
   });
 
   popupMask.show();
@@ -208,8 +246,10 @@ window.processOAuthCode = function processOAuthCode(data) {
     'client_id': clientId,
     'code': data.code,
     'grant_type': 'authorization_code',
-    'redirect_uri': redirect_uri
+    'redirect_uri': redirect_uri,
+    'code_verifier': codeVerifier
   }
+  codeVerifier = null;
   $.ajax(
   {
     url : window.swaggerUi.tokenUrl,

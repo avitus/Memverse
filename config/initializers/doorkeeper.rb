@@ -50,6 +50,10 @@ Doorkeeper.configure do
   # Require public clients to prove they initiated each authorization request.
   force_pkce
 
+  # Only accept hashed PKCE challenges; `plain` exposes the verifier in the
+  # authorization request.
+  pkce_code_challenge_methods %w[S256]
+
   # Provide support for an owner to be assigned to each registered application (disabled by default)
   # Optional parameter :confirmation => true (default false) if you want to enforce ownership of
   # a registered application

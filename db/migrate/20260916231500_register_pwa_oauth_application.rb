@@ -5,7 +5,7 @@ class RegisterPwaOauthApplication < ActiveRecord::Migration[7.2]
     PwaOauthApplication.ensure!
   end
 
-  def down
-    Doorkeeper::Application.find_by(uid: PwaOauthApplication::UID)&.destroy!
-  end
+  # `up` may have updated an application that existed before this migration,
+  # so rolling back must not destroy it. Re-running `up` is idempotent.
+  def down; end
 end

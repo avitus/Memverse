@@ -114,7 +114,7 @@ Doorkeeper::Application.create!(
   uid: "memverse-pwa",
   redirect_uri: "https://avitus.github.io/Memverse/authentication/login-callback",
   confidential: false,
-  scopes: "public read write admin"
+  scopes: "public read write"
 )
 ```
 
@@ -161,10 +161,16 @@ end
 
 ### How Swagger Authentication Works
 1. User clicks "Authorize" in Swagger UI
-2. Redirected to `/oauth/authorize`
+2. Swagger UI generates a PKCE verifier and opens `/oauth/authorize` with its
+   `S256` code challenge
 3. User logs in and approves access
-4. Swagger receives token via implicit flow
-5. Token included in all subsequent API calls
+4. Swagger UI receives an authorization code at `/api/o2c.html`
+5. Swagger UI exchanges the code and verifier for a token at `/oauth/token`
+6. Token included in all subsequent API calls
+
+The Swagger UI client ID in `public/api/index.html` must belong to a
+non-confidential application with `/api/o2c.html` registered as a redirect URI,
+because the browser cannot hold a client secret.
 
 ## API Request Examples
 
