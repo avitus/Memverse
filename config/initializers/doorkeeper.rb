@@ -15,6 +15,22 @@ Doorkeeper.configure do
     current_user || warden.authenticate!(:scope => :user)
   end
 
+  # Resource owner lookup for the legacy `password` grant.
+  #
+  # DEPRECATED: retained only for the shipped iOS and Flutter/Android clients,
+  # which authenticate with username + password. `allow_grant_flow_for_client`
+  # below confines this flow to those legacy clients. Remove this block, the
+  # `password` entry in `grant_flows`, and the `allow_grant_flow_for_client`
+  # and `custom_access_token_expires_in` blocks once both apps have shipped an
+  # authorization code + PKCE release.
+  resource_owner_from_credentials do |_routes|
+    request.params[:user] = { email: request.params[:username], password: request.params[:password] }
+    request.env['devise.allow_params_authentication'] = true
+    user = request.env['warden'].authenticate!(scope: :user)
+    request.env['warden'].logout
+    user
+  end
+
   # If you want to restrict access to the web interface for adding oauth authorized applications, you need to declare the block below.
   admin_authenticator do
     #   # Put your admin authentication logic here.
@@ -30,6 +46,19 @@ Doorkeeper.configure do
   # If you want to disable expiration, set this to nil.
   # access_token_expires_in 2.hours (ALV - this is the default)
   access_token_expires_in 2.hours
+
+  # The legacy mobile clients parse neither `expires_in` nor `refresh_token`,
+  # and persist the access token indefinitely. Expiring their tokens would
+  # leave them presenting a dead token with no code path to recover, so the
+  # legacy password grant keeps the non-expiring behaviour it was built
+  # against. Everything else (PWA, Swagger UI) gets the 2 hour default.
+  #
+  # NOTE: returning nil here does NOT mean "never expires" - it falls through
+  # to `access_token_expires_in`. Float::INFINITY is what disables expiry.
+  # See doorkeeper-5.8.2 lib/doorkeeper/oauth/authorization/token.rb:26-35.
+  custom_access_token_expires_in do |context|
+    context.grant_type == Doorkeeper::OAuth::PASSWORD ? Float::INFINITY : 2.hours
+  end
 
   # Assign a custom TTL for implicit grants.
   # custom_access_token_expires_in do |oauth_client|
@@ -108,7 +137,14 @@ Doorkeeper.configure do
   #   http://tools.ietf.org/html/rfc6819#section-4.4.2
   #   http://tools.ietf.org/html/rfc6819#section-4.4.3
   #
-  grant_flows %w[authorization_code]
+  grant_flows %w[authorization_code password]
+
+  # The `password` grant is available only to the legacy mobile clients. The
+  # PWA is a public client and must use authorization code + PKCE, so it is
+  # refused here even though the grant is enabled server-wide.
+  allow_grant_flow_for_client do |grant_flow, client|
+    grant_flow != Doorkeeper::OAuth::PASSWORD || client&.uid != PwaOauthApplication::UID
+  end
 
   # Under some circumstances you might want to have applications auto-approved,
   # so that the user skips the authorization step.
