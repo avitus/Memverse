@@ -169,14 +169,14 @@ jobs:
           command: |
             # Bounded wait: if the MySQL container died, fail fast instead of hitting the job timeout
             for i in {1..60}; do
-              if mysql -h 127.0.0.1 -P 3306 -u root -pdemo -e "SELECT 1" >/dev/null 2>&1; then
+              if timeout 5 mysql -h 127.0.0.1 -P 3306 -u root -pdemo -e "SELECT 1" >/dev/null 2>&1; then
                 echo "MySQL is ready!"
                 exit 0
               fi
               echo "Waiting for MySQL to be ready... (attempt $i/60)"
-              sleep 2
+              if [ "$i" -lt 60 ]; then sleep 2; fi
             done
-            echo "MySQL did not become ready after 2 minutes (check the mysql container log)"
+            echo "MySQL did not become ready after 60 attempts (check the mysql container log)"
             exit 1
 
       - run:
