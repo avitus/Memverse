@@ -100,6 +100,7 @@ RSpec.describe "Swagger UI", type: :request do
       expect(score_param["type"]).not_to be_an(Array)
       expect(score_param["in"]).to eq("formData")  # Should use formData, not body
     end
+
   end
 
   describe "Swagger UI assets" do

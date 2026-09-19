@@ -84,6 +84,7 @@ gem 'stimulus-rails'                                                           #
 # API
 ############################################################
 gem 'doorkeeper'                                                               # Oauth for API
+gem 'rack-cors', '~> 2.0'                                                      # Cross-origin access for browser API clients
 gem 'swagger-blocks'                                                           # Generates swagger-ui json files
 gem 'jbuilder'
 
