@@ -62,7 +62,10 @@
       "Bash(git -C /Users/avitus/Projects/Memverse push origin main)",
       "Bash(sqlite3 /Users/avitus/Projects/Memverse/db/development.sqlite3 \".schema verses\")",
       "Bash(mysql -u root memverse_development -e \"DESCRIBE verses;\")",
-      "mcp__sentry__find_organizations"
+      "mcp__sentry__find_organizations",
+      "Bash(find /Users/avitus/Projects/Memverse -type f \\\\\\(-name nginx.conf -o -name *.conf -o -name passenger_wsgi.py \\\\\\))",
+      "Bash(gh pr *)",
+      "Bash(glen search *)"
     ],
     "deny": [],
     "ask": [],
