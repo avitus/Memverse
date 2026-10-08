@@ -1,4 +1,4 @@
-version: 2
+version: 2.1
 jobs:
   build:
     
@@ -26,8 +26,6 @@ jobs:
           MYSQL_ROOT_PASSWORD: demo
           MYSQL_DATABASE: memverse_test
           MYSQL_ALLOW_EMPTY_PASSWORD: true
-        ports:
-          - 3306:3306
 
       - image: redis:6-alpine
 
@@ -310,16 +308,16 @@ jobs:
             fi
 
       # Run rspec in parallel
-      - type: shell
-        name: Rspec tests
-        command: |
-          # Use fail-fast to stop on first failure (saves time in CI)
-          bundle exec rspec --fail-fast \
-                            --profile 10 \
-                            --format RspecJunitFormatter \
-                            --out test_results/rspec.xml \
-                            --format progress \
-                            $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
+      - run:
+          name: Rspec tests
+          command: |
+            # Use fail-fast to stop on first failure (saves time in CI)
+            bundle exec rspec --fail-fast \
+                              --profile 10 \
+                              --format RspecJunitFormatter \
+                              --out test_results/rspec.xml \
+                              --format progress \
+                              $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
 
       # Store node_modules cache (only from container 0)
       - run:
@@ -497,3 +495,8 @@ jobs:
 #     - sudo cp ./config/environments/sphinx.conf /etc/sphinxsearch/sphinx.conf
 #     - sudo sed -i -e 's,START=no,START=yes,' /etc/default/sphinxsearch
 #     - service sphinxsearch start
+
+workflows:
+  build:
+    jobs:
+      - build
