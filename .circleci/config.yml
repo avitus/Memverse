@@ -454,6 +454,10 @@ jobs:
               while [ $attempt -le $max_attempts ]; do
                 echo "Cucumber attempt $attempt of $max_attempts..."
                 
+                # Reset per attempt: `|| exit_code=$?` only fires on failure, so a
+                # passing attempt would otherwise inherit the previous failure's code
+                exit_code=0
+                
                 # Run cucumber with timeout handling
                 timeout 25m bundle exec cucumber $FEATURES \
                   --format progress \
