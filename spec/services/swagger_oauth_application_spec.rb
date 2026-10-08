@@ -60,15 +60,18 @@ RSpec.describe SwaggerOauthApplication do
   end
 
   context 'when an existing redirect URI fails validation' do
-    # Simulates a record saved before force_ssl_in_redirect_uri existed.
+    # Simulates a record saved while plaintext callbacks were still permitted.
     let!(:existing) do
-      Doorkeeper::Application.create!(
+      allow(Doorkeeper.config).to receive(:force_ssl_in_redirect_uri).and_return(false)
+      application = Doorkeeper::Application.create!(
         name: 'Legacy Swagger client',
         uid: described_class::UID,
-        redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
+        redirect_uri: 'http://www.memverse.com/api/o2c.html',
         confidential: true,
         scopes: 'public read write'
-      ).tap { |application| application.update_column(:redirect_uri, 'http://www.memverse.com/api/o2c.html') }
+      )
+      allow(Doorkeeper.config).to receive(:force_ssl_in_redirect_uri).and_call_original
+      application
     end
 
     it 'raises and leaves the stored record unchanged' do
