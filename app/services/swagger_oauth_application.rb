@@ -17,13 +17,18 @@ class SwaggerOauthApplication
   DEFAULT_REDIRECT_URIS = ['https://www.memverse.com/api/o2c.html'].freeze
 
   def self.ensure!
+    callbacks = redirect_uris
+    # Existing URIs would keep the record valid, so an empty override would
+    # otherwise save successfully while leaving the Swagger callback missing.
+    raise ArgumentError, 'MEMVERSE_SWAGGER_REDIRECT_URIS is set but lists no redirect URIs' if callbacks.empty?
+
     application = Doorkeeper::Application.find_or_initialize_by(uid: UID)
     if application.new_record?
       application.name = NAME
       application.scopes = SCOPES
     end
     application.confidential = false
-    application.redirect_uri = (application.redirect_uri.to_s.split | redirect_uris).join("\n")
+    application.redirect_uri = (application.redirect_uri.to_s.split | callbacks).join("\n")
     application.save!
     application
   end

@@ -17,5 +17,7 @@ namespace :oauth do
       Redirect URIs it would have saved: #{e.record.redirect_uri.split.join(', ')}
       Fix or remove the invalid URI on this record, then re-run this task.
     MSG
+  rescue ArgumentError => e
+    abort "Swagger UI OAuth client was NOT changed: #{e.message}"
   end
 end

@@ -83,6 +83,31 @@ RSpec.describe SwaggerOauthApplication do
     end
   end
 
+  context 'when MEMVERSE_SWAGGER_REDIRECT_URIS is set but empty' do
+    let!(:existing) do
+      Doorkeeper::Application.create!(
+        name: 'Legacy Swagger client',
+        uid: described_class::UID,
+        redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
+        confidential: true,
+        scopes: 'public read write'
+      )
+    end
+
+    before do
+      allow(ENV).to receive(:fetch).and_call_original
+      allow(ENV).to receive(:fetch).with('MEMVERSE_SWAGGER_REDIRECT_URIS', anything).and_return(' , ')
+    end
+
+    it 'raises instead of reporting success without the callback' do
+      expect { described_class.ensure! }.to raise_error(ArgumentError, /lists no redirect URIs/)
+
+      existing.reload
+      expect(existing).to be_confidential
+      expect(existing.redirect_uri).to eq('urn:ietf:wg:oauth:2.0:oob')
+    end
+  end
+
   it 'replaces the default callback with MEMVERSE_SWAGGER_REDIRECT_URIS' do
     allow(ENV).to receive(:fetch).and_call_original
     allow(ENV).to receive(:fetch).with('MEMVERSE_SWAGGER_REDIRECT_URIS', anything)
