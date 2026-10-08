@@ -170,7 +170,9 @@ end
 
 The Swagger UI client ID in `public/api/index.html` must belong to a
 non-confidential application with `/api/o2c.html` registered as a redirect URI,
-because the browser cannot hold a client secret.
+because the browser cannot hold a client secret. Reconcile it idempotently with
+`bundle exec rake oauth:ensure_swagger_application`; see
+[OAUTH_PKCE_DEPLOY_RUNBOOK.md](./OAUTH_PKCE_DEPLOY_RUNBOOK.md).
 
 ## API Request Examples
 
