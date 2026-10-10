@@ -1,0 +1,17 @@
+# Keeps Sphinx searchd alive across reboots. Capistrano's thinking_sphinx:restart still stops and
+# starts searchd through its pid file on every deploy; Restart=on-failure means systemd does not
+# fight a clean stop, and after a reboot the unit brings searchd back with the indices on disk.
+[Unit]
+Description=Sphinx searchd for Memverse
+After=network.target mysql.service
+
+[Service]
+Type=simple
+User=avitus
+Group=avitus
+ExecStart=/usr/bin/searchd --config /home/avitus/memverse.com/shared/production.sphinx.conf --nodetach
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

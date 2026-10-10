@@ -1,0 +1,10 @@
+# Memverse deploy user on martial-eagle. Mirrors what lib/capistrano/tasks/sidekiq_multi.rake
+# needs on fish-eagle, narrowed to the Memverse units. Install with:
+#   sudo install -m 0440 sudoers-avitus-memverse /etc/sudoers.d/avitus-memverse && sudo visudo -cf /etc/sudoers.d/avitus-memverse
+avitus ALL=(root) NOPASSWD: /usr/bin/systemctl daemon-reload
+avitus ALL=(root) NOPASSWD: /usr/bin/systemctl * sidekiq-scheduler, /usr/bin/systemctl * sidekiq-scheduler.service
+avitus ALL=(root) NOPASSWD: /usr/bin/systemctl * sidekiq-workers@*, /usr/bin/systemctl * sidekiq-workers@*.service
+avitus ALL=(root) NOPASSWD: /usr/bin/systemctl * memverse-searchd, /usr/bin/systemctl * memverse-searchd.service
+avitus ALL=(root) NOPASSWD: /usr/bin/systemctl reload nginx
+avitus ALL=(root) NOPASSWD: /usr/bin/journalctl -u sidekiq-*
+avitus ALL=(root) NOPASSWD: /usr/bin/mv /tmp/sidekiq-scheduler.service /etc/systemd/system/, /usr/bin/mv /tmp/sidekiq-workers@.service /etc/systemd/system/

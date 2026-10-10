@@ -1,6 +1,6 @@
 [Unit]
 Description=Sidekiq Worker %i (Job Processing Only)
-After=syslog.target network.target redis.service mysql.service
+After=network.target redis-server.service mysql.service
 
 [Service]
 Type=simple

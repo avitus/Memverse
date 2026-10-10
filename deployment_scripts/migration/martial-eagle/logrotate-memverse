@@ -1,0 +1,10 @@
+/home/avitus/memverse.com/shared/log/*.log {
+    daily
+    rotate 14
+    missingok
+    notifempty
+    compress
+    delaycompress
+    copytruncate
+    su avitus avitus
+}
