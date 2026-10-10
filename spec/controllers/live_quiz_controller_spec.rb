@@ -278,8 +278,10 @@ RSpec.describe LiveQuizController, type: :controller do
       let(:past_quiz) { FactoryBot.create(:quiz, start_time: 2.hours.ago) }
       
       it 'returns finished status' do
-        # Ensure no Redis entry exists for this quiz
-        $redis.del("quiz-#{past_quiz.id}")
+        # Ensure no Redis state exists for this quiz. Quiz ids are reused across examples after the
+        # database is cleaned, while Redis is not, so a status key left by an earlier example would
+        # make till_start report that quiz as still running. cleanup_quiz_data removes every key.
+        QuizSession.new(past_quiz.id).cleanup_quiz_data
         
         get :till_start, params: { id: past_quiz.id, format: :json }
         

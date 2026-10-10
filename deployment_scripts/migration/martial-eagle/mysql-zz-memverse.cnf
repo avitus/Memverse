@@ -1,0 +1,14 @@
+# Memverse MySQL 8.0 settings for martial-eagle. Mirrors fish-eagle's 5.7 semantics:
+# same strict sql_mode minus NO_AUTO_CREATE_USER (removed in 8.0); server default charset
+# matches the memverse_production database (utf8 / utf8_general_ci on fish-eagle).
+# query_cache_* and expire_logs_days no longer exist in 8.0 and must not be set.
+[mysqld]
+bind-address               = 127.0.0.1
+sql_mode                   = ONLY_FULL_GROUP_BY,NO_AUTO_VALUE_ON_ZERO,STRICT_TRANS_TABLES,STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION
+character_set_server       = utf8mb3
+collation_server           = utf8mb3_general_ci
+innodb_buffer_pool_size    = 1G
+innodb_redo_log_capacity   = 256M
+max_connections            = 200
+max_allowed_packet         = 64M
+binlog_expire_logs_seconds = 259200
