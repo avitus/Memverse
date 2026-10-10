@@ -8,13 +8,15 @@ DB=memverse_production
 TS=$(date +%Y%m%d_%H%M%S)
 OUT=/var/backups/memverse/cutover_$TS
 mkdir -p "$OUT"
-echo "MySQL root password:"; read -rs MYSQL_PWD; export MYSQL_PWD
-mysql -u root -e "SELECT 1" "$DB" >/dev/null
-COMMON=(-u root --single-transaction --quick --hex-blob --no-tablespaces --default-character-set=utf8mb4)
+# Password goes into a mode-600 options file that is removed on exit, never into the environment.
+CNF=$(mktemp); chmod 600 "$CNF"
+trap 'rm -f "$CNF"' EXIT
+echo "MySQL root password:"; read -rs PW; printf '[client]\nuser=root\npassword=%s\n' "$PW" > "$CNF"; unset PW
+mysql --defaults-extra-file="$CNF" -e "SELECT 1" "$DB" >/dev/null
+COMMON=(--defaults-extra-file="$CNF" --single-transaction --quick --hex-blob --no-tablespaces --default-character-set=utf8mb4)
 echo "Dumping $DB (all tables except sessions data)..."
 time mysqldump "${COMMON[@]}" --routines --triggers --events --ignore-table=$DB.sessions "$DB" | gzip -1 > "$OUT/full.sql.gz"
 mysqldump "${COMMON[@]}" --no-data "$DB" sessions > "$OUT/sessions_schema.sql"
-unset MYSQL_PWD
 ( cd "$OUT" && sha256sum full.sql.gz sessions_schema.sql > SHA256SUMS && ls -lh && cat SHA256SUMS )
 echo "Dump at $OUT"
 echo "Next: rsync -avP $OUT/ martial-eagle:/home/avitus/cutover/ && ssh martial-eagle 'cd cutover && sha256sum -c SHA256SUMS'"

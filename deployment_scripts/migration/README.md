@@ -21,4 +21,5 @@ The plan is the runbook; these files are what it installs. Section numbers below
 | `scripts/smoke.sh` | run from a workstation, DNS-independent | 9, A.4 |
 
 The Sidekiq unit templates stay where Capistrano expects them: `deployment_scripts/sidekiq-scheduler.service`
-and `deployment_scripts/sidekiq-workers@.service` (installed by `cap production sidekiq:multi:setup`).
+and `deployment_scripts/sidekiq-workers@.service`. On martial-eagle they are installed once **by root** (plan §7.6);
+`cap production sidekiq:multi:setup` is not used there, because the deploy user deliberately cannot write unit files.

@@ -1,10 +1,10 @@
-# Memverse deploy user on martial-eagle. Mirrors what lib/capistrano/tasks/sidekiq_multi.rake
-# needs on fish-eagle, narrowed to the Memverse units. Install with:
+# Memverse deploy user on martial-eagle: only the service verbs lib/capistrano/tasks/sidekiq_multi.rake
+# issues, enumerated so that `systemctl edit`, `set-property`, `link` and similar cannot be reached.
+# The unit files themselves are installed once by root (plan §7.6) and are never writable by avitus,
+# so there is no path from this file to running code as root. Install with:
 #   sudo install -m 0440 sudoers-avitus-memverse /etc/sudoers.d/avitus-memverse && sudo visudo -cf /etc/sudoers.d/avitus-memverse
-avitus ALL=(root) NOPASSWD: /usr/bin/systemctl daemon-reload
-avitus ALL=(root) NOPASSWD: /usr/bin/systemctl * sidekiq-scheduler, /usr/bin/systemctl * sidekiq-scheduler.service
-avitus ALL=(root) NOPASSWD: /usr/bin/systemctl * sidekiq-workers@*, /usr/bin/systemctl * sidekiq-workers@*.service
-avitus ALL=(root) NOPASSWD: /usr/bin/systemctl * memverse-searchd, /usr/bin/systemctl * memverse-searchd.service
+avitus ALL=(root) NOPASSWD: /usr/bin/systemctl start sidekiq-scheduler, /usr/bin/systemctl stop sidekiq-scheduler, /usr/bin/systemctl restart sidekiq-scheduler, /usr/bin/systemctl status sidekiq-scheduler*, /usr/bin/systemctl enable sidekiq-scheduler, /usr/bin/systemctl disable sidekiq-scheduler, /usr/bin/systemctl kill -s TSTP sidekiq-scheduler
+avitus ALL=(root) NOPASSWD: /usr/bin/systemctl start sidekiq-workers@*, /usr/bin/systemctl stop sidekiq-workers@*, /usr/bin/systemctl restart sidekiq-workers@*, /usr/bin/systemctl status sidekiq-workers@*, /usr/bin/systemctl enable sidekiq-workers@*, /usr/bin/systemctl disable sidekiq-workers@*, /usr/bin/systemctl kill -s TSTP sidekiq-workers@*
+avitus ALL=(root) NOPASSWD: /usr/bin/systemctl start memverse-searchd, /usr/bin/systemctl stop memverse-searchd, /usr/bin/systemctl restart memverse-searchd, /usr/bin/systemctl status memverse-searchd*
 avitus ALL=(root) NOPASSWD: /usr/bin/systemctl reload nginx
-avitus ALL=(root) NOPASSWD: /usr/bin/journalctl -u sidekiq-*
-avitus ALL=(root) NOPASSWD: /usr/bin/mv /tmp/sidekiq-scheduler.service /etc/systemd/system/, /usr/bin/mv /tmp/sidekiq-workers@.service /etc/systemd/system/
+avitus ALL=(root) NOPASSWD: /usr/bin/journalctl -u sidekiq-scheduler*, /usr/bin/journalctl -u sidekiq-workers@*

@@ -49,7 +49,7 @@ set :sidekiq_workers, ENV.fetch('SIDEKIQ_WORKERS', 3)  # Number of worker proces
 
 # SSH options
 set :ssh_options, {
-  keys: [File.join(ENV["HOME"], ".ssh", "id_ed25519")],
+  keys: [File.join(ENV.fetch("HOME"), ".ssh", "id_ed25519")],
   forward_agent: true,
   auth_methods: %w(publickey)
 }
@@ -108,8 +108,7 @@ namespace :deploy do
         unless ruby_version.include?("ruby-3.2.6")
           error "Ruby 3.2.6 required but not found!"
           error "Current Ruby: #{ruby_version}"
-          error "Please ensure RVM is using Ruby 3.2.6 by running: rvm use 3.2.6"
-          exit 1
+          raise "Ruby 3.2.6 required on #{host} but RVM reports #{ruby_version.strip}; run: rvm use 3.2.6 --default"
         end
       end
     end
@@ -124,7 +123,7 @@ namespace :deploy do
     end
   end
 
-  # Note: Whenever gem is not used in this project
+  # NOTE: Whenever gem is not used in this project
   # Cron jobs are managed by Sidekiq's cron scheduling instead
 end
 
@@ -134,5 +133,5 @@ after 'deploy:finishing', 'thinking_sphinx:index'
 after 'deploy:finishing', 'thinking_sphinx:restart'
 after 'deploy:finishing', 'deploy:cleanup'
 
-# Note: Maintenance mode is not needed for regular deployments
+# NOTE: Maintenance mode is not needed for regular deployments
 # Capistrano handles zero-downtime deployments by default

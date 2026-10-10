@@ -8,7 +8,7 @@ require 'fugit'
 # plus an export) would silently move the quizzes by seven hours. Pinning the zone makes
 # the schedule independent of the host.
 RSpec.describe 'config/sidekiq_schedule.yml' do
-  schedule_path = Rails.root.join('config', 'sidekiq_schedule.yml')
+  schedule_path = Rails.root.join('config/sidekiq_schedule.yml')
   schedule = YAML.load_file(schedule_path)
 
   it 'defines the production schedule' do
