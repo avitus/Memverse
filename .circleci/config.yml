@@ -18,10 +18,13 @@ jobs:
           RAILS_ENV: test
           MYSQL_ROOT_PASSWORD: demo
 
-      # Database
-      - image: library/mysql:5.7
-        # Native AIO can fail on shared CI hosts (io_setup() EAGAIN), aborting InnoDB at startup
-        command: ["--innodb-use-native-aio=0"]
+      # Database - MySQL 8.0 matches the martial-eagle production target (Ubuntu 24.04 ships 8.0.x);
+      # production was 5.7 on fish-eagle until the 2026-10 migration.
+      - image: mysql:8.0
+        # Native AIO can fail on shared CI hosts (io_setup() EAGAIN), aborting InnoDB at startup.
+        # mysql_native_password keeps the readiness check working with the MariaDB-flavoured
+        # default-mysql-client installed below; the app itself is fine with caching_sha2_password.
+        command: ["--innodb-use-native-aio=0", "--default-authentication-plugin=mysql_native_password"]
         environment:
           MYSQL_ROOT_PASSWORD: demo
           MYSQL_DATABASE: memverse_test

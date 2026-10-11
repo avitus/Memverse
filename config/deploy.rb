@@ -43,7 +43,7 @@ set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', '
 # Default value for default_env is {}
 # Ensure Node.js from NVM is available during deployment
 set :default_env, { 
-  path: "/home/avitus/.nvm/versions/node/v16.20.2/bin:$PATH",
+  path: "/home/avitus/.nvm/versions/node/v24.21.0/bin:$PATH",
   NODE_ENV: 'production'
 }
 

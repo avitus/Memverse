@@ -30,8 +30,8 @@ namespace :sidekiq do
           info "Starting Sidekiq scheduler..."
           execute :sudo, "systemctl start sidekiq-scheduler"
           
-          # Start worker processes (configurable via ENV or default to 3)
-          worker_count = ENV.fetch('SIDEKIQ_WORKERS', '3').to_i
+          # Start worker processes (stage :sidekiq_workers, SIDEKIQ_WORKERS env, or default 2)
+          worker_count = fetch(:sidekiq_workers, ENV.fetch('SIDEKIQ_WORKERS', '2')).to_i
           info "Starting #{worker_count} Sidekiq workers..."
           
           worker_count.times do |i|
@@ -68,7 +68,7 @@ namespace :sidekiq do
         # Now restart the services
         execute :sudo, "systemctl restart sidekiq-scheduler"
         
-        worker_count = ENV.fetch('SIDEKIQ_WORKERS', '3').to_i
+        worker_count = fetch(:sidekiq_workers, ENV.fetch('SIDEKIQ_WORKERS', '2')).to_i
         worker_count.times do |i|
           execute :sudo, "systemctl restart sidekiq-workers@#{i + 1}"
         end
@@ -92,7 +92,7 @@ namespace :sidekiq do
         info "Enabling Sidekiq services..."
         execute :sudo, "systemctl enable sidekiq-scheduler"
         
-        worker_count = ENV.fetch('SIDEKIQ_WORKERS', '3').to_i
+        worker_count = fetch(:sidekiq_workers, ENV.fetch('SIDEKIQ_WORKERS', '2')).to_i
         worker_count.times do |i|
           execute :sudo, "systemctl enable sidekiq-workers@#{i + 1}"
         end
@@ -116,7 +116,7 @@ namespace :sidekiq do
       on roles(:app) do
         info "Performing rolling restart of Sidekiq workers..."
         
-        worker_count = ENV.fetch('SIDEKIQ_WORKERS', '3').to_i
+        worker_count = fetch(:sidekiq_workers, ENV.fetch('SIDEKIQ_WORKERS', '2')).to_i
         
         # Restart workers one by one
         worker_count.times do |i|

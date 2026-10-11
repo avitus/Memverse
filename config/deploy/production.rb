@@ -1,7 +1,11 @@
 set :rails_env, "production" 
 
 # Server configuration
-server 'www.memverse.com', user: 'avitus', roles: %w{app db web}
+# martial-eagle (DigitalOcean sfo3, Ubuntu 24.04). Addressed by IP on purpose: www.memverse.com
+# pointed at fish-eagle until the 2026-10 migration and must never decide where a deploy lands.
+# The legacy host is reachable as the `fish_eagle` stage until it is decommissioned.
+# See documentation/plans/2026-10-10-fish-eagle-to-martial-eagle-migration.md
+server '64.23.176.115', user: 'avitus', roles: %w{app db web}
 
 # Deploy from rails-7-upgrade branch
 set :branch, 'main'
@@ -42,18 +46,18 @@ set :puma_error_log, "#{shared_path}/log/puma_error.log"
 # We use systemd services instead of capistrano-sidekiq's default behavior
 # See lib/capistrano/tasks/sidekiq_multi.rake for custom tasks
 set :sidekiq_default_hooks, false  # Disable default capistrano-sidekiq hooks
-set :sidekiq_workers, ENV.fetch('SIDEKIQ_WORKERS', 3)  # Number of worker processes
+set :sidekiq_workers, ENV.fetch('SIDEKIQ_WORKERS', 2)  # Number of worker processes (2 on martial-eagle, shared with other apps)
 
 # SSH options
 set :ssh_options, {
-  keys: [File.join(ENV["HOME"], ".ssh", "id_ed25519")],
+  keys: [File.join(ENV.fetch("HOME"), ".ssh", "id_ed25519")],
   forward_agent: true,
   auth_methods: %w(publickey)
 }
 
 # Ensure correct Node.js version is used
 set :default_env, { 
-  path: "/home/avitus/.nvm/versions/node/v16.20.2/bin:$PATH",
+  path: "/home/avitus/.nvm/versions/node/v24.21.0/bin:$PATH",
   NODE_ENV: 'production'
 }
 
@@ -105,8 +109,7 @@ namespace :deploy do
         unless ruby_version.include?("ruby-3.2.6")
           error "Ruby 3.2.6 required but not found!"
           error "Current Ruby: #{ruby_version}"
-          error "Please ensure RVM is using Ruby 3.2.6 by running: rvm use 3.2.6"
-          exit 1
+          raise "Ruby 3.2.6 required on #{host} but RVM reports #{ruby_version.strip}; run: rvm use 3.2.6 --default"
         end
       end
     end
@@ -121,7 +124,7 @@ namespace :deploy do
     end
   end
 
-  # Note: Whenever gem is not used in this project
+  # NOTE: Whenever gem is not used in this project
   # Cron jobs are managed by Sidekiq's cron scheduling instead
 end
 
@@ -131,5 +134,5 @@ after 'deploy:finishing', 'thinking_sphinx:index'
 after 'deploy:finishing', 'thinking_sphinx:restart'
 after 'deploy:finishing', 'deploy:cleanup'
 
-# Note: Maintenance mode is not needed for regular deployments
+# NOTE: Maintenance mode is not needed for regular deployments
 # Capistrano handles zero-downtime deployments by default
