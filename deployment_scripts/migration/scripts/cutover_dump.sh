@@ -21,7 +21,8 @@ else
   mysql_config_editor set --login-path="$LP" --host=localhost --user=root --password
   AUTH=(--login-path="$LP")
 fi
-mysql "${AUTH[@]}" -e "SELECT 1" "$DB" >/dev/null
+# Connectivity check with mysqldump itself: the backup options file may carry only a [mysqldump] section.
+mysqldump "${AUTH[@]}" --no-tablespaces --no-data "$DB" sessions >/dev/null
 COMMON=("${AUTH[@]}" --single-transaction --quick --hex-blob --no-tablespaces --default-character-set=utf8mb4)
 echo "Dumping $DB (all tables except sessions data)..."
 time mysqldump "${COMMON[@]}" --routines --triggers --events --ignore-table=$DB.sessions "$DB" | gzip -1 > "$OUT/full.sql.gz"
