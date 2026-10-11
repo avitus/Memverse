@@ -1,7 +1,7 @@
 # Memverse migration: fish-eagle → martial-eagle
 
 **Date:** 2026-10-10
-**Status:** Plan, decisions D1–D6 confirmed by Andy on 2026-10-10 (nothing has been changed on either droplet or in DNS)
+**Status:** Phases 0–2 complete and Phase 3 mostly complete as of 2026-10-11 (see the ticked boxes); cutover fixed for **Sunday 2026-11-08, 02:00–03:30 PST (10:00–11:30 UTC)**
 **Goal:** Move the whole Memverse production stack from the fish-eagle droplet (Ubuntu 16.04, never rebooted in 8.5 years) to the martial-eagle droplet (Ubuntu 24.04) with one short, announced maintenance window.
 
 **Approach in one paragraph.** Build martial-eagle as a complete second production host while fish-eagle keeps serving. Rehearse the full data move against a copy of the database until the restore-and-verify sequence is timed and boring. Then, in a single window of roughly 30–45 minutes: put fish-eagle into maintenance mode, stop its background workers, take a final consistent dump, restore it on martial-eagle, verify row counts, start the stack, smoke test, and flip DNS. After the flip, fish-eagle reverse-proxies to martial-eagle so clients with cached DNS keep working. fish-eagle is kept intact (database untouched, workers disabled) for two weeks as the rollback asset, then decommissioned.
@@ -81,7 +81,7 @@ Sudoers on fish-eagle for `avitus` (needed by `lib/capistrano/tasks/sidekiq_mult
 | D1 ✅ | Unix user on martial-eagle | **Create `avitus`**, same home layout | `/home/avitus/...` is hardcoded in `config/thinking_sphinx.yml`, `config/deploy.rb`, `config/deploy/production.rb`, both Sidekiq unit templates and the nginx vhost. A `memverse` service account is tidier but costs a config PR and a second set of things to get wrong. |
 | D2 ✅ | Memory | **Resize martial-eagle to 16 GB (CPU/RAM-only resize, reversible)** before building, and still trim Memverse a little (2 workers instead of 3, Passenger pool capped at 4). | Memverse (≈ 3.8 GB) + the existing 3.3 GB leaves ~0.7 GB on an 8 GB box, and deploys (asset precompile, bundle install) spike well above that. Retiring fish-eagle offsets most of the cost. Fallback if you decline: §7.9 "8 GB variant". The resize powers the droplet off for 1–3 minutes, so it needs a slot acceptable to mankunku and veetbot. |
 | D3 ✅ | Time zone | **Decided: set the whole droplet to America/Los_Angeles** (`timedatectl`), after auditing the other tenants (§7.0). Cron strings still get an explicit ` UTC` suffix as a guard (0.2). | Mirrors fish-eagle exactly with no env or code dependency: verse due dates roll over at midnight Pacific, quizzes stay at 17:00/23:00 UTC. The alternative (TZ only on Memverse processes) was offered and declined. |
-| D4 ✅ | Maintenance window | **Sunday 02:00–03:30 PDT (09:00–10:30 UTC)**, after the 08:00 UTC forum notifier, before the 12:00 UTC metrics job, far from the Tuesday 17:00 UTC and Saturday 23:00 UTC quizzes. | Lowest traffic; two hourly reminder runs (09:00, 10:00 UTC) are skipped, which is acceptable. |
+| D4 ✅ | Maintenance window | **Sunday 2026-11-08, 02:00–03:30 PST (10:00–11:30 UTC)**, after the 08:00 UTC forum notifier, before the 12:00 UTC metrics job, far from the Tuesday 17:00 UTC and Saturday 23:00 UTC quizzes. Not 2026-11-01: the clocks fall back at 02:00 that night. | Lowest traffic; two hourly reminder runs (09:00, 10:00 UTC) are skipped, which is acceptable. |
 | D5 ✅ | MySQL | **8.0.46 from the Ubuntu 24.04 archive** (not 8.4, not managed DB). | Matches what CI will test; `mysql_native_password` still available for Sphinx's indexer if needed; one fewer moving part than a managed cluster. |
 | D6 ✅ | Decommission | **Keep fish-eagle fully intact for 14 days** after cutover, then destroy. Decided: **realm.andyvitus.com is retired** (not migrated); **andyvitus.com moves to martial-eagle** as a small follow-on (§12.1) before fish-eagle is destroyed. | Rollback asset; the remaining site is a small Rails app on the same Ruby/Passenger stack. |
 
@@ -111,15 +111,15 @@ Everything here is safe to deploy to fish-eagle *before* the move; that is the p
 - [x] **0.4 Deploy target.** In `config/deploy/production.rb` change `server 'www.memverse.com'` to `server '64.23.176.115'` (never deploy by a name that is about to change). Add `config/deploy/fish_eagle.rb` as a copy of the current production stage pointing at `192.241.205.154`, so `cap fish_eagle deploy` remains possible during the overlap. Change the `SIDEKIQ_WORKERS` default from 3 to 2 (D2) in both `config/deploy/production.rb` and the four `ENV.fetch('SIDEKIQ_WORKERS', '3')` calls in `lib/capistrano/tasks/sidekiq_multi.rake`.
 - [x] **0.5 Node path.** In both `config/deploy.rb` and `config/deploy/production.rb` replace `/home/avitus/.nvm/versions/node/v16.20.2/bin` with `/home/avitus/.nvm/versions/node/v24.21.0/bin` (Node 24 LTS, pinned; 7.5 installs exactly that version). The `fish_eagle` stage keeps v16.
 - [x] **0.6 Add the server-side files to the repo** under `deployment_scripts/migration/` (`martial-eagle/`, `fish-eagle/`, `scripts/`, with a README mapping each file to its install path): the nginx vhost and Passenger limits (§7.7), `memverse-searchd.service` (§7.6), sudoers (§7.3), MySQL config (§7.4), logrotate, the fish-eagle maintenance and proxy vhosts (§9), and the scripts in Appendix A. The copies in this document are for reading; the files in the repo are what gets installed.
-- [ ] **0.7 Run the full suite** (`bundle exec rspec`, `bundle exec cucumber features`, `npm run test:run`) and merge. Then `cap fish_eagle deploy` (or `cap production deploy` *before* 0.4 is merged) and confirm in `shared/log/sidekiq_scheduler.log` that all 10 jobs load and that the next hourly `schedule_send_reminders` `last_enqueue` is still on the hour UTC.
+- [x] **0.7 Run the full suite** (`bundle exec rspec`, `bundle exec cucumber features`, `npm run test:run`) and merge. Then `cap fish_eagle deploy` (or `cap production deploy` *before* 0.4 is merged) and confirm in `shared/log/sidekiq_scheduler.log` that all 10 jobs load and that the next hourly `schedule_send_reminders` `last_enqueue` is still on the hour UTC.
 
 ---
 
 ## 6. Phase 1 — DNS preparation (≥ 48 h before cutover)
 
-- [ ] **1.1** In the Linode DNS Manager, set the TTL of the `memverse.com` A record and the `www.memverse.com` A record to **300 s** (5 min). Leave the values unchanged.
-- [ ] **1.2** Verify at the authority (Linode publishes within ~15 min): `dig +noall +answer @ns1.linode.com www.memverse.com A` shows `300`.
-- [ ] **1.3** Wait at least 24 h (resolvers cached the old 86400 s TTL), ideally 48 h, before Phase 4.
+- [x] **1.1** In the Linode DNS Manager, set the TTL of the `memverse.com` A record and the `www.memverse.com` A record to **300 s** (5 min). Leave the values unchanged.
+- [x] **1.2** Verify at the authority (Linode publishes within ~15 min): `dig +noall +answer @ns1.linode.com www.memverse.com A` shows `300`.
+- [x] **1.3** Wait at least 24 h (resolvers cached the old 86400 s TTL), ideally 48 h, before Phase 4.
 
 ---
 
@@ -127,13 +127,13 @@ Everything here is safe to deploy to fish-eagle *before* the move; that is the p
 
 ### 7.0 Set the droplet time zone to Pacific (D3) **[root]**
 Do this first so every Memverse process, MySQL and log line is born under Pacific time, exactly like fish-eagle.
-- [ ] **Audit the other tenants for local-time assumptions.** Pre-checked on 2026-10-10 (as `deploy`): `veetbot-backup.timer` (03:30), `mankunku-backup.timer` (03:50) and `memverse-backup.timer` (04:10) all carry an explicit `UTC` suffix, so they do not move; `certbot.timer` (00:00/12:00 local) will shift by 7–8 h, which is harmless; the `deploy` crontab is empty; `/etc/cron.d` has only certbot, e2scrub_all and sysstat; the `veetbot-*` unit files set no `TZ=`. Still to check as root before the change: `crontab -l` for root and `veetbot`, and whether any veetbot service or the Mankunku app formats or schedules anything in local time (they have been running under UTC since birth). Docker containers keep their own UTC.
-- [ ] `sudo timedatectl set-timezone America/Los_Angeles` and confirm `timedatectl` / `date`.
-- [ ] Long-running processes cache the zone: restart Mankunku (`pm2 restart mankunku` as deploy) and the native veetbot services at a quiet moment so they all agree. Expect log timestamps on the box to change from UTC to PDT/PST from this point.
-- [ ] Note for later: MySQL installed in 7.4 will report `system_time_zone=PDT` like fish-eagle; harmless (no TIMESTAMP columns) and consistent.
+- [x] **Audit the other tenants for local-time assumptions.** Pre-checked on 2026-10-10 (as `deploy`): `veetbot-backup.timer` (03:30), `mankunku-backup.timer` (03:50) and `memverse-backup.timer` (04:10) all carry an explicit `UTC` suffix, so they do not move; `certbot.timer` (00:00/12:00 local) will shift by 7–8 h, which is harmless; the `deploy` crontab is empty; `/etc/cron.d` has only certbot, e2scrub_all and sysstat; the `veetbot-*` unit files set no `TZ=`. Still to check as root before the change: `crontab -l` for root and `veetbot`, and whether any veetbot service or the Mankunku app formats or schedules anything in local time (they have been running under UTC since birth). Docker containers keep their own UTC.
+- [x] `sudo timedatectl set-timezone America/Los_Angeles` and confirm `timedatectl` / `date`. Also write the legacy file: `echo America/Los_Angeles > /etc/timezone` (timedatectl only updates the symlink).
+- [x] Long-running processes cache the zone: restart Mankunku (`pm2 restart mankunku` as deploy) and the native veetbot services at a quiet moment so they all agree. Expect log timestamps on the box to change from UTC to PDT/PST from this point.
+- [x] Note for later: MySQL installed in 7.4 will report `system_time_zone=PDT` like fish-eagle; harmless (no TIMESTAMP columns) and consistent.
 
 ### 7.1 Resize (D2) **[DO control panel]**
-- [ ] Take a snapshot of martial-eagle. Resize → "CPU and RAM only" → 16 GB. Power-off is required; schedule it. Confirm `free -h` afterwards and that mankunku/veetbot came back (`pm2 ls`, `systemctl status veetbot-api`).
+- [x] Done 2026-10-11 with `doctl`: snapshot 3464835246, graceful shutdown, `droplet-action resize --size s-4vcpu-16gb-amd` (no `--resize-disk`), power-on; 139 s outage; all tenants back within 2 min. Delete the snapshot once martial-eagle has run a few days.
 
 ### 7.2 Create the `avitus` user **[root]**
 ```bash
@@ -149,30 +149,34 @@ Host martial-eagle
     User avitus
     IdentityFile ~/.ssh/id_ed25519
 ```
-Verify `ssh martial-eagle hostname` prints `martial-eagle`. Also `ssh -T git@github.com` from the box with agent forwarding (`ssh -A martial-eagle`) and `ssh-keyscan github.com >> ~/.ssh/known_hosts` as avitus, because Capistrano clones with `forward_agent: true`.
+**Ubuntu 24.04 creates home directories as mode 750.** nginx's worker (`www-data`) must be able to traverse `/home/avitus` to reach the app, or Passenger fails with a 500 and `Permission denied ... Passengerfile.json` in the nginx error log. Run `sudo chmod o+x /home/avitus` (751 is enough; fish-eagle's is 755).
 
-### 7.3 Sudoers for avitus **[root]**
+Verify `ssh martial-eagle hostname` prints `martial-eagle`. Also `ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts` as avitus, because Capistrano clones with `forward_agent: true`.
+
+### 7.3 Sudoers for avitus **[root]** ✅ 2026-10-11
 Narrower than fish-eagle on purpose: each entry is the exact argument string that `lib/capistrano/tasks/sidekiq_multi.rake` sends (no sudoers wildcards, so no extra arguments, unit paths or pagers can be appended), worker instances 1 and 2 are enumerated (add lines for a third), and there is **no** rule that lets `avitus` place unit files under `/etc/systemd/system` (that would be a one-step path to root). The unit files are installed once by root in §7.6. Install the versioned file:
 ```bash
 sudo install -m 0440 deployment_scripts/migration/martial-eagle/sudoers-avitus-memverse /etc/sudoers.d/avitus-memverse && sudo visudo -cf /etc/sudoers.d/avitus-memverse
 ```
 Test as avitus: `sudo -n systemctl status sidekiq-scheduler --no-pager` must not ask for a password (it fails only because the unit is not installed yet); `sudo -n systemctl status sidekiq-scheduler` (no `--no-pager`), `sudo -n systemctl edit sidekiq-scheduler` and `sudo -n systemctl enable sidekiq-workers@1` must all be refused.
 
-### 7.4 Packages **[root]**
+### 7.4 Packages **[root]** ✅ 2026-10-11 (MySQL 8.0.46, Redis 7.0.15, Sphinx 2.2.11, Passenger 6.2.0)
 ```bash
 sudo apt-get update
-sudo apt-get install -y build-essential git curl gnupg2 dirmngr \
+sudo apt-get install -y build-essential git curl gnupg2 dirmngr pkg-config \
   libssl-dev libreadline-dev zlib1g-dev libyaml-dev libffi-dev libgdbm-dev libncurses-dev \
   libxml2-dev libxslt1-dev libcurl4-openssl-dev default-libmysqlclient-dev shared-mime-info \
   mysql-server-8.0 redis-server sphinxsearch
 ```
-Phusion Passenger module for Ubuntu's nginx (noble repo verified to exist):
+(`pkg-config` is not optional: without it nokogiri cannot locate the libxml2 headers and `bundle install` fails.) Phusion Passenger module for Ubuntu's nginx (noble repo verified to exist). The key file Phusion publishes did **not** contain the key that signs the noble release on 2026-10-11 (`NO_PUBKEY D870AB033FB45BD1`); fetch that key from the Ubuntu keyserver as well:
 ```bash
 sudo install -d /etc/apt/keyrings
 curl -fsSL https://oss-binaries.phusionpassenger.com/auto-software-signing-gpg-key.txt | gpg --dearmor | sudo tee /etc/apt/keyrings/phusion.gpg >/dev/null
 echo "deb [signed-by=/etc/apt/keyrings/phusion.gpg] https://oss-binaries.phusionpassenger.com/apt/passenger noble main" | sudo tee /etc/apt/sources.list.d/passenger.list
+gpg --keyserver hkps://keyserver.ubuntu.com --recv-keys D870AB033FB45BD1 && gpg --export D870AB033FB45BD1 | sudo tee /etc/apt/keyrings/phusion-2.gpg >/dev/null
+echo "deb [signed-by=/etc/apt/keyrings/phusion.gpg,/etc/apt/keyrings/phusion-2.gpg] https://oss-binaries.phusionpassenger.com/apt/passenger noble main" | sudo tee /etc/apt/sources.list.d/passenger.list
 sudo apt-get update && sudo apt-get install -y libnginx-mod-http-passenger
-ls /etc/nginx/modules-enabled/   # expect 50-mod-http-passenger.conf
+ls /etc/nginx/modules-enabled/   # expect 50-mod-http-passenger.conf (Passenger 6.2.0 on 2026-10-11)
 sudo passenger-config validate-install --auto
 ```
 MySQL: create `/etc/mysql/mysql.conf.d/zz-memverse.cnf` (match fish-eagle's semantics, drop the 5.7-only options):
@@ -203,7 +207,7 @@ FLUSH PRIVILEGES;
 ```
 Redis: defaults are fine (binds 127.0.0.1, RDB snapshots). Sphinx: leave `/etc/default/sphinxsearch` at `START=no` and `sudo systemctl disable --now sphinxsearch`; the package cron in `/etc/cron.d/sphinxsearch` is then inert. Do **not** install memcached.
 
-### 7.5 Ruby and Node (as avitus)
+### 7.5 Ruby and Node (as avitus) ✅ 2026-10-11 (Ruby 3.2.6 / OpenSSL 3.0.13, bundler 2.4.22, Node 24.21.0)
 ```bash
 gpg2 --keyserver keyserver.ubuntu.com --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
 curl -sSL https://get.rvm.io | bash -s stable
@@ -217,7 +221,7 @@ source ~/.nvm/nvm.sh && nvm install 24.21.0 && nvm alias default 24.21.0 && ls ~
 ```
 `rvm current` must print `ruby-3.2.6` in a fresh non-interactive login (`ssh martial-eagle '~/.rvm/bin/rvm current'`); the Capistrano `check_rails_7` task depends on it.
 
-### 7.6 Directory layout and systemd units
+### 7.6 Directory layout and systemd units ✅ 2026-10-11
 As avitus:
 ```bash
 mkdir -p ~/memverse.com/shared/{config,log,tmp/pids,tmp/cache,tmp/sockets,public/assets,public/ckeditor_assets,public/uploads,storage,db/sphinx,binlog}
@@ -245,7 +249,7 @@ WantedBy=multi-user.target
 ```
 `sudo systemctl enable memverse-searchd` only after the first deploy has generated `shared/production.sphinx.conf`. Capistrano's `thinking_sphinx:restart` still stops/starts `searchd` via its pid file on each deploy; `Restart=on-failure` means systemd does not fight it, and after a reboot the unit brings `searchd` back with the indices on disk.
 
-### 7.7 nginx vhost **[root]**
+### 7.7 nginx vhost **[root]** ✅ 2026-10-11
 Create `/etc/nginx/conf.d/passenger-memverse.conf`:
 ```nginx
 passenger_max_pool_size 4;
@@ -308,12 +312,10 @@ server {
     location = /500.html { root /home/avitus/memverse.com/current/public; }
 }
 ```
-Before enabling it, bring over the live certificate so the vhost is valid pre-cutover (the cert is good until 2026-11-23 and will be reissued in §10):
+Before enabling it, bring over the live certificate so the vhost is valid pre-cutover (the cert is good until 2026-11-23 and will be reissued in §10). Done 2026-10-11 this way: on fish-eagle `sudo tar -C /etc/letsencrypt -czf /tmp/le-memverse.tgz live/memverse.com archive/memverse.com renewal/memverse.com.conf && sudo chown avitus /tmp/le-memverse.tgz && sudo chmod 600 /tmp/le-memverse.tgz`, stream it to martial-eagle (`ssh memverse cat /tmp/le-memverse.tgz | ssh martial-eagle-root 'tar -C /etc/letsencrypt -xzf -'`), delete the archive on fish-eagle afterwards.
 ```bash
-# on fish-eagle (sudo), then copy to martial-eagle (sudo) preserving the live/ + archive/ + renewal/ layout
-sudo tar -C /etc/letsencrypt -czf /tmp/le-memverse.tgz live/memverse.com archive/memverse.com renewal/memverse.com.conf
-# martial-eagle:
-sudo tar -C /etc/letsencrypt -xzf le-memverse.tgz && sudo chmod 600 /etc/letsencrypt/archive/memverse.com/privkey*.pem
+# martial-eagle, after extracting:
+sudo chmod 600 /etc/letsencrypt/archive/memverse.com/privkey*.pem
 sudo ln -s /etc/nginx/sites-available/memverse /etc/nginx/sites-enabled/memverse
 sudo nginx -t && sudo systemctl reload nginx
 ```
@@ -321,7 +323,7 @@ sudo nginx -t && sudo systemctl reload nginx
 
 Log rotation: add `/etc/logrotate.d/memverse` for `/home/avitus/memverse.com/shared/log/*.log` (daily, 14 rotations, `compress`, `delaycompress`, `copytruncate`), which fish-eagle does informally today.
 
-### 7.8 Firewall and reboot safety **[root]**
+### 7.8 Firewall and reboot safety **[root]** ✅ 2026-10-11 (no cloud firewall is attached to the droplet; the only one in the account, `sfo3-migration-quarantine`, has no droplets; unattended-upgrades does not auto-reboot; root SSH set to `prohibit-password`)
 - Confirm the DO cloud firewall (if any) on martial-eagle allows 22/80/443 (it already serves the other sites). MySQL, Redis, Sphinx bind to 127.0.0.1 only.
 - `grep -E 'Automatic-Reboot' /etc/apt/apt.conf.d/50unattended-upgrades`: if automatic reboots are on, every Memverse unit must be `enabled` (they will be) so an unattended reboot is survivable.
 - When the build is complete, make root SSH explicitly key-only: `/etc/ssh/sshd_config.d/10-root.conf` with `PermitRootLogin prohibit-password`, then `sudo sshd -t && sudo systemctl reload ssh`. (Password auth is already off globally; this removes the ambiguity.)
@@ -335,16 +337,16 @@ Log rotation: add `/etc/logrotate.d/memverse` for `/home/avitus/memverse.com/sha
 
 The order matters: the database must exist with data **before** the first `cap production deploy`, otherwise `deploy:migrations`/`thinking_sphinx:index` would run against an empty schema.
 
-- [ ] **3.1 Get a database copy.** Either the daily off-host backup already landing on martial-eagle (locate it with `sudo systemctl cat memverse-backup.service` and `sudo cat /usr/local/sbin/memverse-backup.sh`; the destination is root-only), or run Appendix A.1 on fish-eagle outside the window (it is `--single-transaction`, so it is safe while live).
-- [ ] **3.2 Restore** with Appendix A.2 and **time it**. Record wall-clock for dump, transfer and restore; this sizes the window. (Estimate: dump 2–4 min, transfer < 1 min for ~250 MB, restore 5–12 min.)
-- [ ] **3.3 Verify** with Appendix A.3: run it on both hosts and `diff` the outputs; the only expected differences are `sessions` (0 rows) and any rows written on fish-eagle since the dump.
-- [ ] **3.4 First deploy** from the Mac on the Phase 0 branch/merge: `cap production deploy:check` then `cap production deploy`. Watch for: `bundle install` native builds (mysql2, nokogiri with system libs, ffi, sassc, rinku), asset precompile under Node 24.21.0, `db:migrate` reporting nothing to do, `thinking_sphinx:index` and `:restart` succeeding, `Rails.cache.clear` hook. Then enable the nginx vhost (§7.7) and `sudo systemctl enable memverse-searchd`.
-- [ ] **3.5 Sphinx indexer vs MySQL 8 auth.** If `ts:index` fails to connect, the packaged `indexer` cannot do `caching_sha2_password`; fix with `ALTER USER 'memverse'@'localhost' IDENTIFIED WITH mysql_native_password BY '<same password>'` and note it in this doc.
-- [ ] **3.6 Sandbox outbound email, then start Sidekiq.** The rehearsal scheduler enqueues real cron jobs against the restored data (hourly reminder emails to real users), and a job can fire the moment the scheduler starts, so stopping it afterward is not a safeguard. **Before** `sidekiq:multi:start`, point the whole rehearsal stack at a Postmark sandbox server token **[root]**: create `/etc/systemd/system/sidekiq-scheduler.service.d/rehearsal.conf` and `/etc/systemd/system/sidekiq-workers@.service.d/rehearsal.conf`, each containing `[Service]` / `Environment="POSTMARK_API_TOKEN=<sandbox token>"`, and add `passenger_env_var POSTMARK_API_TOKEN <sandbox token>;` to the vhost. The token is a secret, so lock the three files down before reloading anything: `sudo chown root:root /etc/systemd/system/sidekiq-scheduler.service.d/rehearsal.conf /etc/systemd/system/sidekiq-workers@.service.d/rehearsal.conf /etc/nginx/sites-available/memverse && sudo chmod 600 /etc/systemd/system/sidekiq-scheduler.service.d/rehearsal.conf /etc/systemd/system/sidekiq-workers@.service.d/rehearsal.conf /etc/nginx/sites-available/memverse` (systemd and the nginx master both read as root). Then `sudo systemctl daemon-reload` and `sudo nginx -t && sudo systemctl reload nginx` (`config/environments/production.rb` prefers the env var over credentials). An nginx reload does not restart Passenger's app processes, so as avitus `touch ~/memverse.com/current/tmp/restart.txt` and confirm a fresh process picked up the token (`sudo passenger-status` shows new PIDs). Then `cap production sidekiq:multi:start` (units were enabled by root in 7.6), check `shared/log/sidekiq_scheduler.log` for `Loaded 10 scheduled jobs`, and confirm the rehearsal's first messages land in the Postmark sandbox, not a real inbox. Stop Sidekiq before Phase 4 (pre-flight).
-- [ ] **3.7 Smoke test without touching DNS.** On the Mac add `64.23.176.115 www.memverse.com memverse.com` to `/etc/hosts` (remove afterwards!) or use `curl --resolve`. Run Appendix A.4. Then in a browser: sign in with your own account (the cookie is signed by the same `secret_key_base`, so existing sessions carry over), review a verse, open the forum and blog, open `/admin`, run a verse search (`/verses/verse_search`, the only Thinking Sphinx check that a signed-out smoke test cannot do), request a password reset (lands in the Postmark sandbox, which also proves outbound HTTPS from the new IP), and trigger `Sentry.capture_message("martial-eagle rehearsal")` via `rails runner` to see the new host in Sentry. Check New Relic shows a second host.
+- [x] **3.1 Get a database copy.** The daily off-host backup is encrypted and shipped off the box (no local copy), but the same read-only MySQL user it uses has its options file at `/home/avitus/.my.backup.cnf` on fish-eagle, so a fresh dump needs no root password: `scripts/cutover_dump.sh` uses that file automatically when present (A.1). It is `--single-transaction`, safe while live.
+- [x] **3.2 Restore** with Appendix A.2 and **time it**. Measured 2026-10-11: dump **16 s**, transfer **15 s** (via the Mac, ~250 MB), restore **3 min 15 s**, 83 tables. The data move is about four minutes.
+- [x] **3.3 Verify** (2026-10-11: users 45,777, memverses 1,675,613, sessions 0, schema_migrations 149 on the target; run A.3 on both sides for the full per-table diff before cutover) with Appendix A.3: run it on both hosts and `diff` the outputs; the only expected differences are `sessions` (0 rows) and any rows written on fish-eagle since the dump.
+- [x] **3.4 First deploy** (2026-10-11, release 20261011225915, second attempt after adding `pkg-config`; migrations no-op; Sphinx indexed; home-dir permission fix in 7.2) from the Mac on the Phase 0 branch/merge: `cap production deploy:check` then `cap production deploy`. Watch for: `bundle install` native builds (mysql2, nokogiri with system libs, ffi, sassc, rinku), asset precompile under Node 24.21.0, `db:migrate` reporting nothing to do, `thinking_sphinx:index` and `:restart` succeeding, `Rails.cache.clear` hook. Then enable the nginx vhost (§7.7) and `sudo systemctl enable memverse-searchd`.
+- [x] **3.5 Sphinx indexer vs MySQL 8 auth** (not needed: the indexer connected fine with `caching_sha2_password`). If `ts:index` fails to connect, the packaged `indexer` cannot do `caching_sha2_password`; fix with `ALTER USER 'memverse'@'localhost' IDENTIFIED WITH mysql_native_password BY '<same password>'` and note it in this doc.
+- [x] **3.6 Make outbound email inert, then start Sidekiq.** The rehearsal scheduler enqueues real cron jobs against the restored data (hourly reminder emails to real users), and a job can fire the moment the scheduler starts, so stopping it afterward is not a safeguard. Capistrano's hooks start Sidekiq on every deploy, so this must be in place **before the first deploy**. Use Postmark's documented test token `POSTMARK_API_TEST` (requests are accepted and validated, nothing is delivered; it is public, not a secret) **[root]**: create `/etc/systemd/system/sidekiq-scheduler.service.d/rehearsal.conf` and `/etc/systemd/system/sidekiq-workers@.service.d/rehearsal.conf`, each containing `[Service]` / `Environment="POSTMARK_API_TOKEN=POSTMARK_API_TEST"`, add `passenger_env_var POSTMARK_API_TOKEN POSTMARK_API_TEST;` to the vhost, then `sudo systemctl daemon-reload` and `sudo nginx -t && sudo systemctl reload nginx` (`config/environments/production.rb` prefers the env var over credentials). An nginx reload does not restart Passenger's app processes, so as avitus `touch ~/memverse.com/current/tmp/restart.txt` and confirm a fresh process picked up the token (`sudo passenger-status` shows new PIDs). Then `cap production sidekiq:multi:start` (units were enabled by root in 7.6), check `shared/log/sidekiq_scheduler.log` for `Loaded 10 scheduled jobs`, and confirm no rehearsal message reaches a real inbox (Postmark's activity view shows nothing from martial-eagle). Stop Sidekiq before Phase 4 (pre-flight).
+- [ ] **3.7 Smoke test without touching DNS.** On the Mac add `64.23.176.115 www.memverse.com memverse.com` to `/etc/hosts` (remove afterwards!) or use `curl --resolve`. Run Appendix A.4. Then in a browser: sign in with your own account (the cookie is signed by the same `secret_key_base`, so existing sessions carry over), review a verse, open the forum and blog, open `/admin`, run a verse search (`/verses/verse_search`, the only Thinking Sphinx check that a signed-out smoke test cannot do), request a password reset (accepted by Postmark's test token, nothing delivered; proves outbound HTTPS from the new IP), and trigger `Sentry.capture_message("martial-eagle rehearsal")` via `rails runner` to see the new host in Sentry. Check New Relic shows a second host.
 - [ ] **3.8 Reboot test (optional but valuable).** If an agreed slot exists for mankunku/veetbot, `sudo reboot` martial-eagle and confirm mysql, redis-server, nginx, memverse-searchd and the Sidekiq units all come back `active`.
 - [ ] **3.9 Repeat 3.1–3.3 once more** right before the cutover week so the procedure and its timings are fresh, and so the rehearsal DB is close to production (makes the final restore's "diff" small).
-- [ ] **3.10 Confirm fish-eagle can verify martial-eagle's certificate** (the post-cutover proxy in A.6 uses `proxy_ssl_verify on`): on fish-eagle run `openssl s_client -connect 64.23.176.115:443 -servername www.memverse.com -CAfile /etc/ssl/certs/ca-certificates.crt </dev/null 2>/dev/null | grep 'Verify return code'` and expect `0 (ok)`. If Ubuntu 16.04's bundle is too old for the Let's Encrypt roots, build `/etc/nginx/le-roots.pem` from https://letsencrypt.org/certs/isrgrootx1.pem and isrg-root-x2.pem, re-run the check with `-CAfile /etc/nginx/le-roots.pem`, and point `proxy_ssl_trusted_certificate` at it.
+- [x] **3.10 Confirm fish-eagle can verify martial-eagle's certificate** (2026-10-11: `Verify return code: 0 (ok)` with the 16.04 bundle, which has ISRG Root X1) (the post-cutover proxy in A.6 uses `proxy_ssl_verify on`): on fish-eagle run `openssl s_client -connect 64.23.176.115:443 -servername www.memverse.com -CAfile /etc/ssl/certs/ca-certificates.crt </dev/null 2>/dev/null | grep 'Verify return code'` and expect `0 (ok)`. If Ubuntu 16.04's bundle is too old for the Let's Encrypt roots, build `/etc/nginx/le-roots.pem` from https://letsencrypt.org/certs/isrgrootx1.pem and isrg-root-x2.pem, re-run the check with `-CAfile /etc/nginx/le-roots.pem`, and point `proxy_ssl_trusted_certificate` at it.
 
 ---
 
@@ -355,7 +357,7 @@ The order matters: the database must exist with data **before** the first `cap p
 - [ ] CI green on MySQL 8.0 (0.1); Phase 0 merged and deployed; `cap production deploy` to martial-eagle is at the **same revision** fish-eagle runs (`cat /home/avitus/memverse.com/current/REVISION` on both).
 - [ ] Deploy freeze announced to yourself and alexcwatt (the other user on fish-eagle).
 - [ ] martial-eagle Sidekiq units **stopped** (`cap production sidekiq:multi:stop`) and `searchd` stopped (`sudo systemctl stop memverse-searchd`; `pgrep searchd` empty).
-- [ ] Rehearsal email sandbox **removed** **[root]**: delete both `rehearsal.conf` drop-ins (`ls /etc/systemd/system/sidekiq-*.d/` shows nothing), `sudo systemctl daemon-reload`, remove the `passenger_env_var POSTMARK_API_TOKEN` line from the vhost and restore its normal mode (`sudo chmod 644 /etc/nginx/sites-available/memverse`), `sudo nginx -t && sudo systemctl reload nginx`, then `touch ~/memverse.com/current/tmp/restart.txt` as avitus so no Passenger process still carries the sandbox token (step 11 restarts Passenger again after the restore). Production email must use the real token from credentials from step 10 onward.
+- [ ] Rehearsal email test token **removed** **[root]**: delete both `rehearsal.conf` drop-ins (`ls /etc/systemd/system/sidekiq-*.d/` shows nothing), `sudo systemctl daemon-reload`, remove the `passenger_env_var POSTMARK_API_TOKEN` line from the vhost, `sudo nginx -t && sudo systemctl reload nginx`, then `touch ~/memverse.com/current/tmp/restart.txt` as avitus so no Passenger process still carries the test token (step 11 restarts Passenger again after the restore). Production email must use the real token from credentials from step 10 onward.
 - [ ] Live DO snapshot of fish-eagle (safety net; takes a while, do it the night before).
 - [ ] Maintenance page in place on fish-eagle but **not enabled**: `/var/www/maintenance/index.html` (from `deployment_scripts/migration/fish-eagle/`) and `/etc/nginx/sites-available/memverse-maintenance.conf` (A.5); post-cutover proxy staged as `/etc/nginx/sites-available/memverse-proxy.conf` (A.6). `nginx -t` only parses enabled files, so validate each staged file in isolation: `printf 'events {}\nhttp { include /etc/nginx/mime.types; include /etc/nginx/sites-available/memverse-maintenance.conf; }\n' | sudo tee /tmp/nginx-check.conf >/dev/null && sudo nginx -t -c /tmp/nginx-check.conf`, then the same for `memverse-proxy.conf`.
 - [ ] Note the filenames: on **fish-eagle** the enabled vhost is `/etc/nginx/sites-enabled/memverse.conf` (verified 2026-10-10); on **martial-eagle** it is `/etc/nginx/sites-enabled/memverse` (§7.7). The cutover commands below run on fish-eagle.
@@ -365,7 +367,7 @@ The order matters: the database must exist with data **before** the first `cap p
 1. [ ] **Maintenance on.** `sudo rm /etc/nginx/sites-enabled/memverse.conf && sudo ln -s /etc/nginx/sites-available/memverse-maintenance.conf /etc/nginx/sites-enabled/ && sudo nginx -t && sudo systemctl reload nginx`. Verify `curl -sI https://www.memverse.com/ | head -1` → `503`.
 2. [ ] **Quiet and stop Sidekiq.** `sudo systemctl kill -s TSTP sidekiq-scheduler 'sidekiq-workers@*'`, wait ~30 s, `sudo systemctl stop sidekiq-scheduler 'sidekiq-workers@*'`, then `sudo systemctl disable sidekiq-scheduler sidekiq-workers@1 sidekiq-workers@2 sidekiq-workers@3` so they can never restart and double-run cron against the old DB. `redis-cli -n 0 LLEN queue:critical` etc. should be 0.
 3. [ ] **Confirm no app writes:** `sudo passenger-status` shows 0 processing; `mysql -u root -p -e "SHOW PROCESSLIST"` shows only sleeping/your connections.
-4. [ ] **Final dump:** run Appendix A.1. Note the sizes and `sha256sum` both files.
+4. [ ] **Final dump:** run Appendix A.1 (no password prompt: it uses the read-only backup user's options file). Expect ~16 s. Note the sizes and `sha256sum` both files.
 5. [ ] **Transfer:** `rsync -avP /var/backups/memverse/cutover_<TS>/ martial-eagle:/home/avitus/cutover/` then `sha256sum -c` on martial-eagle.
 
 ### On martial-eagle
@@ -458,7 +460,7 @@ andyvitus.com is a **Rails 7.2.2.2 / Ruby 3.2.6 / mysql2** app at `/home/avitus/
 
 The files live in `deployment_scripts/migration/` (README there maps each to its install path); this appendix only says what each one does so the runbook above stays short.
 
-- **A.1 `scripts/cutover_dump.sh`** (fish-eagle): consistent `mysqldump --single-transaction --hex-blob` of everything except the data of the dead `sessions` table, plus a schema-only dump of `sessions`, with SHA256SUMS. Prompts once for the MySQL root password via `mysql_config_editor` (a temporary login path, removed on exit; no quoting rules to get wrong). `--default-character-set=utf8mb4` is lossless for the `latin1` and `utf8` tables.
+- **A.1 `scripts/cutover_dump.sh`** (fish-eagle): consistent `mysqldump --single-transaction --hex-blob` of everything except the data of the dead `sessions` table, plus a schema-only dump of `sessions`, with SHA256SUMS. Uses the read-only backup user's `~/.my.backup.cnf` when present (no prompt at all); otherwise prompts once for the MySQL root password via `mysql_config_editor` (a temporary login path, removed on exit). `--default-character-set=utf8mb4` is lossless for the `latin1` and `utf8` tables.
 - **A.2 `scripts/cutover_restore.sh <dir>`** (martial-eagle, as root): verifies checksums, drops and recreates `memverse_production` as `utf8mb3`/`utf8mb3_general_ci`, loads the dump with `foreign_key_checks`/`unique_checks`/`sql_log_bin` off and `innodb_flush_log_at_trx_commit=2` for the duration, then reports the table count (expect 83).
 - **A.3 `scripts/verify_counts.rb`** (both hosts via `rails runner`, then `diff`): row count, max id and max `updated_at` per table.
 - **A.4 `scripts/smoke.sh <ip>`** (from a workstation, DNS-independent via `--resolve`): redirects, sign-in, forum, blog, admin, apidocs (`accessCode`), the verse-search route (redirects anonymous users; Sphinx needs a signed-in check, see 3.7), bot block, a fingerprinted asset, and certificate validity. Every request is bounded (20 s), every check is compared with its expected status, and the script **exits non-zero on any failure**, so it gates step 11.
