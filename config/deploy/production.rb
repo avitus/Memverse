@@ -130,8 +130,11 @@ end
 
 # Rails 7 specific tasks
 after 'deploy:publishing', 'deploy:restart'
+# searchd runs under systemd on martial-eagle (deployment_scripts/migration/martial-eagle/memverse-searchd.service).
+# Thinking Sphinx's `ts:start` daemonises searchd while it keeps the SSH session's output pipe open, so
+# Capistrano never sees the command finish; restarting the unit avoids that and survives reboots.
 after 'deploy:finishing', 'thinking_sphinx:index'
-after 'deploy:finishing', 'thinking_sphinx:restart'
+after 'deploy:finishing', 'memverse:searchd:restart'
 after 'deploy:finishing', 'deploy:cleanup'
 
 # NOTE: Maintenance mode is not needed for regular deployments
