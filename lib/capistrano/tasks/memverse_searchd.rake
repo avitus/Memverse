@@ -22,7 +22,7 @@ namespace :memverse do
         # the indices first, so allow up to 30 s). Neither check needs sudo.
         execute :systemctl, 'is-active', '--quiet', 'memverse-searchd'
         execute :bash, '-c', %q('for i in $(seq 1 30); do ss -tln | grep -q ":9312 " && exit 0; sleep 1; done; echo "searchd not listening on 9312 after 30s" >&2; exit 1')
-        execute :sudo, 'systemctl status memverse-searchd --no-pager', raise_on_non_zero_exit: false
+        execute :sudo, 'systemctl status memverse-searchd --no-pager'
       end
     end
   end
