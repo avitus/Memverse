@@ -1,4 +1,5 @@
 require "active_support/core_ext/integer/time"
+require_relative "../../lib/resilient_file_store"
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -57,8 +58,9 @@ Rails.application.configure do
   # Prepend all log lines with the following tags.
   config.log_tags = [ :request_id ]
 
-  # Use a different cache store in production.
-  # config.cache_store = :mem_cache_store
+  # Rails' default FileStore directory, minus its ENOENT races under concurrent access.
+  # The serializer is pinned because this runs before Rails applies cache_format_version 7.1.
+  config.cache_store = ResilientFileStore.new(Rails.root.join("tmp/cache").to_s, serializer: :marshal_7_1)
 
   # Use Sidekiq for Active Job queue backend
   config.active_job.queue_adapter = :sidekiq
