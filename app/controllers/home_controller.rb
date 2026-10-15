@@ -21,11 +21,21 @@ class HomeController < ApplicationController
     # end
     @vsillumination = Popverse.order(Arel.sql("RAND()")).limit(10)
 
-    render :layout => false
+    # Only HTML templates exist; bots asking for JSON get a 406 rather than a
+    # MissingTemplate 500 (Sentry MEMVERSE-9E)
+    respond_to do |format|
+      format.html { render :layout => false }
+      format.any  { head :not_acceptable }
+    end
   end
 
   def quick_start
     @hide_select = true # hide translation dropdown
+
+    respond_to do |format|
+      format.html
+      format.any  { head :not_acceptable }
+    end
   end
 
 end
