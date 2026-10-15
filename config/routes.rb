@@ -83,7 +83,8 @@ MemverseApp::Application.routes.draw do
   # Oauth
   devise_for :users, :controllers => { 
     :omniauth_callbacks => "omniauth_callbacks",
-    :confirmations => "users/confirmations"
+    :confirmations => "users/confirmations",
+    :registrations => "users/registrations"
   }
 
   # Should be able to remove this route once Forem allows configurable sign_in path

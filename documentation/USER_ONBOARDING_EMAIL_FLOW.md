@@ -15,6 +15,16 @@ When a new user signs up:
 - **Devise Confirmation Email** is sent automatically
 - ~~Signup notification email~~ (DEPRECATED - removed to reduce email volume)
 
+#### Undeliverable addresses (October 2026)
+Postmark rejects mail to addresses on its inactive list (hard bounce, spam complaint,
+manual suppression) with `Postmark::InactiveRecipientError`, and to malformed addresses
+with `Postmark::InvalidEmailRequestError`. `User#send_devise_notification` rescues both
+for every Devise email, logs a warning, and records the notification in
+`User#undelivered_devise_notification`; `InvalidEmailRequestError` is also reported to
+Sentry as a warning because a misconfigured message raises it too. The account is still
+created, and `Users::RegistrationsController#create` replaces the "confirmation sent"
+notice with an alert (`devise.registrations.signed_up_but_email_undeliverable`).
+
 ### 2. Email Confirmation
 When user clicks the confirmation link:
 - Devise marks the account as confirmed (`confirmed_at` is set)
