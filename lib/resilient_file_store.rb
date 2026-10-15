@@ -8,6 +8,7 @@ require "active_support/cache"
 class ResilientFileStore < ActiveSupport::Cache::FileStore
   private
 
+  # Retries once if the bucket directory vanished; gives up quietly after that.
   def write_serialized_entry(key, payload, **options)
     super
   rescue Errno::ENOENT

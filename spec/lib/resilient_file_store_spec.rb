@@ -10,6 +10,7 @@ RSpec.describe ResilientFileStore do
 
   after { FileUtils.rm_rf(cache_dir) }
 
+  # On-disk path FileStore uses for +key+.
   def entry_path(cache_store)
     cache_store.send(:normalize_key, key, {})
   end

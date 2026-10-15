@@ -60,7 +60,7 @@ Rails.application.configure do
 
   # Rails' default FileStore directory, minus its ENOENT races under concurrent access.
   # The serializer is pinned because this runs before Rails applies cache_format_version 7.1.
-  config.cache_store = ResilientFileStore.new(Rails.root.join("tmp", "cache").to_s, serializer: :marshal_7_1)
+  config.cache_store = ResilientFileStore.new(Rails.root.join("tmp/cache").to_s, serializer: :marshal_7_1)
 
   # Use Sidekiq for Active Job queue backend
   config.active_job.queue_adapter = :sidekiq
