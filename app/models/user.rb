@@ -1390,7 +1390,7 @@ class User < ApplicationRecord
       base  = self.name.parameterize
       login = base.first(LOGIN_MAX_LENGTH)
       x = 1
-      while User.find_by_login(login) do
+      while User.find_by(login: login) do
         x += 1
         suffix = "--#{x}"
         login  = base.first(LOGIN_MAX_LENGTH - suffix.length) + suffix
