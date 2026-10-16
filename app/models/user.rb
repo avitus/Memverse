@@ -258,7 +258,12 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :confirmable, :validatable,
          :encryptable, :encryptor => :restful_authentication_sha1
 
+  # Size of the users.login column in db/schema.rb
+  LOGIN_MAX_LENGTH = 40
+
   validates :name,  :length     => { :maximum => 60 },
+                    :allow_nil  => true
+  validates :login, :length     => { :maximum => LOGIN_MAX_LENGTH },
                     :allow_nil  => true
 
   # "validatable" module of devise already handles email validation
@@ -1339,9 +1344,26 @@ class User < ApplicationRecord
     return report
   end
 
+  # Devise notification (e.g. :confirmation_instructions) that Postmark refused to
+  # deliver, so controllers can tell the user the email is not on its way
+  attr_reader :undelivered_devise_notification
+
   # ============= Protected below this line ==================================================================
 
   protected
+
+  # Postmark refuses to send to addresses it has suppressed after a hard bounce or
+  # spam complaint, and to addresses it considers malformed. Devise sends from
+  # after_commit callbacks, so letting those errors escape turns an already-saved
+  # signup into a 500. Invalid requests are still reported because a misconfigured
+  # message (rather than a bad recipient) raises the same error.
+  def send_devise_notification(notification, *args)
+    super
+  rescue Postmark::InactiveRecipientError, Postmark::InvalidEmailRequestError => e
+    @undelivered_devise_notification = notification
+    Rails.logger.warn "Devise #{notification} email for user #{id} not delivered: #{e.class} (Postmark error #{e.error_code})"
+    Sentry.capture_exception(e, level: :warning) if e.is_a?(Postmark::InvalidEmailRequestError)
+  end
 
   def make_activation_code
     self.deleted_at = nil
@@ -1361,16 +1383,20 @@ class User < ApplicationRecord
   end
 
 
+  # Runs before_save, after validation, so the generated login is truncated to fit
+  # the column rather than validated: names may be longer than LOGIN_MAX_LENGTH.
   def generate_login
     if !self.login?
-      login = self.name.parameterize
-	  x = 1
-	  while User.find_by_login(login) do
-	    x += 1
-	    login = self.name.parameterize + "--" + x.to_s
-	  end
-	  self.login = login
-	end
+      base  = self.name.parameterize
+      login = base.first(LOGIN_MAX_LENGTH)
+      x = 1
+      while User.find_by(login: login) do
+        x += 1
+        suffix = "--#{x}"
+        login  = base.first(LOGIN_MAX_LENGTH - suffix.length) + suffix
+      end
+      self.login = login
+    end
   end
 
   # Check if user is not using OpenID (identity_url is blank)
