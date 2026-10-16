@@ -39,6 +39,12 @@ RSpec.describe "Bloggity admin pages", type: :request do
 
         expect(blog.reload.title).to eq("Memverse News")
       end
+
+      it "saves the feedburner URL submitted by the edit form" do
+        patch "/blog/blogs/#{blog.id}", params: { blog: { feedburner_url: "https://feeds.example.com/memverse" } }
+
+        expect(blog.reload.feedburner_url).to eq("https://feeds.example.com/memverse")
+      end
     end
 
     context "as a signed-in non-admin" do
