@@ -41,7 +41,8 @@ ssh-keygen -F 127.0.0.1 -f "$KNOWN" >/dev/null ||
   printf '127.0.0.1 %s\n' "$(cut -d' ' -f1,2 /etc/ssh/ssh_host_ed25519_key.pub)" >> "$KNOWN"
 
 # 4. Prove the path exactly as memverse-backup.sh will use it: key, known_hosts, options file, grants.
-ssh -i "$CFG/memverse_id_ed25519" -o IdentitiesOnly=yes -o BatchMode=yes -o StrictHostKeyChecking=yes \
+#    -n: this script arrives on stdin (bash -s), and ssh would otherwise swallow the rest of it.
+ssh -n -i "$CFG/memverse_id_ed25519" -o IdentitiesOnly=yes -o BatchMode=yes -o StrictHostKeyChecking=yes \
     -o UserKnownHostsFile="$KNOWN" avitus@127.0.0.1 \
     'mysqldump --defaults-extra-file=$HOME/.my.backup.cnf --single-transaction --no-tablespaces --routines --triggers --events --no-data --databases memverse_production | grep -c "CREATE TABLE"' |
   sed 's/^/self-backup path OK, tables visible: /'
