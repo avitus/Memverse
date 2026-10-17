@@ -17,6 +17,9 @@ jobs:
           DB_HOST: 127.0.0.1
           RAILS_ENV: test
           MYSQL_ROOT_PASSWORD: demo
+          # config/database.yml defaults to 5 s; build 1031 timed out in db:schema:load on the first CREATE TABLE.
+          MYSQL_READ_TIMEOUT: 30
+          MYSQL_WRITE_TIMEOUT: 30
 
       # Database - MySQL 8.0 matches the martial-eagle production target (Ubuntu 24.04 ships 8.0.x);
       # production was 5.7 on fish-eagle until the 2026-10 migration.

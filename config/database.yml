@@ -40,8 +40,10 @@ test: &test
   database: memverse_test
   timeout: 5000
   connect_timeout: 5
-  read_timeout: 5
-  write_timeout: 5
+  # 5 s fails a hung test query fast. CI raises it: the first DDL on a cold MySQL container
+  # (native AIO off, see .circleci/config.yml) can take longer during db:schema:load.
+  read_timeout: <%= ENV.fetch('MYSQL_READ_TIMEOUT', 5) %>
+  write_timeout: <%= ENV.fetch('MYSQL_WRITE_TIMEOUT', 5) %>
 
 production:
    adapter: mysql2
