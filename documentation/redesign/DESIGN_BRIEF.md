@@ -21,8 +21,10 @@ The data says the product is healthy at its core and broken at its edges:
   been members for over a decade and carry hundreds of verses. They are the product.
 - ~1,650 people sign up each year and almost none stay (42 of the 212 monthly actives
   joined this year). The onboarding path is where growth is lost.
-- 30% of core-page traffic is already on a phone or tablet, on a layout that was never
-  designed for it.
+- 70% of core-page traffic is desktop (Safari 52%, Chrome 37%). This is a desktop product
+  used at a desk, and the redesign should make the most of that: wide verse text, keyboard
+  flow, dense progress views. The 30% on phone or tablet needs a layout that works, not a
+  layout that leads.
 - Nine top-level tabs and 36 sub-tabs expose ~150 pages, of which eight carry the product.
 
 *[Andy: add the personal "why" here: what prompted this, what a successful outcome looks
@@ -34,7 +36,8 @@ like to you in one sentence.]*
 |---|---|---|---|
 | Keep the daily reviewers | Reviewing users per weekday | 75–86 | no drop during or after rollout |
 | Retain new sign-ups | 30-day actives who signed up in the last 12 months | ~45 | *[150?]* |
-| Make it work on a phone | Share of core-page loads from phone/tablet | 30% | *[50%?]* |
+| Keep desktop first-class | Share of core-page loads from desktop | 70% | hold or grow |
+| Make the phone layout usable | Verse ratings completed on phone/tablet per session, vs desktop | *[unmeasured]* | parity |
 | Shorten time to first review | Sign-up → first `mark_test_quick` | *[unmeasured]* | same session |
 | Reduce surface area | User-facing HTML pages | ~150 | *[~40]* |
 
@@ -46,15 +49,17 @@ before anything ships.
 
 ## 3. Who it is for
 
-**Persona A: the veteran reviewer (≈ 60% of actives).** Signed up 2009–2016, desktop
-Safari or Chrome, hundreds of verses, often "Never" on reminder emails because the habit is
-self-sustaining. Comes in, hits Review, rates 10–30 verses with the keyboard (1–5 keys),
+**Persona A: the veteran reviewer (≈ 60% of actives, and the design target).** Signed up
+2009–2016, desktop Safari or Chrome, hundreds of verses, often "Never" on reminder emails
+because the habit is self-sustaining. Comes in, hits Review, rates 10–30 verses with the keyboard (1–5 keys),
 glances at Progress, leaves. Will notice any change to the rating flow and will complain if
-it gets slower. Must not be forced through onboarding or a mobile-first layout that hides
-the keyboard shortcuts.
+it gets slower. Must not be forced through onboarding, and must never get a mobile-style
+layout on a 27-inch screen: no giant tap targets, no hidden keyboard shortcuts, no single
+narrow column with the verse text squeezed into it.
 
 **Persona B: the new arrival (≈ 40 sign-ups/week, few retained).** Finds the site from
-Google or a church recommendation, often on a phone. Lands on `/`, maybe tries `/demo`,
+Google or a church recommendation, on a desktop more often than not but sometimes on a
+phone. Lands on `/`, maybe tries `/demo`,
 signs up, lands on a dashboard with eleven things on it and nine tabs, and does not yet have
 a verse to review. Needs: one verse in the queue within sixty seconds, one obvious next
 action, and a reason to come back tomorrow.
@@ -75,8 +80,11 @@ question bank suggest a seasonal audience.]*
    remaining widgets demoted. Review itself is one click away, never buried.
 2. **One primary action per screen.** Rate this verse. Add a verse. Start learning. The
    current pages show six to ten competing links.
-3. **Keyboard on desktop, thumbs on phone, same flow.** Rating buttons 1–5 stay as keys;
-   on a phone they become a bottom-anchored button row. No separate mobile site.
+3. **Desktop first, phone second, one codebase.** Design every core screen for a desktop
+   browser at full width first: keyboard rating (1–5, skip), verse text at a comfortable
+   measure, progress alongside review. Then make the same page collapse to a phone layout
+   (rating row at the bottom, one column). No separate mobile site, and no phone-shaped
+   layout stretched across a desktop.
 4. **Progress is a reward, not a report.** Users check it almost every session (46% weekly
    reach). It should be glanceable in two seconds and live next to the review flow, not
    behind a tab.
@@ -117,7 +125,7 @@ What goes away or merges:
 
 | Page | Scope | Why |
 |---|---|---|
-| Review (`test_verse_quick`) | **Redesign.** Verse-first layout, hint toggle, rating row, "next due" preview, progress micro-bar. Phone layout. | 52% reach; the product. |
+| Review (`test_verse_quick`) | **Redesign.** Verse-first desktop layout, hint toggle, keyboard rating row, "next due" preview, progress micro-bar beside the verse. Collapses to a phone layout. | 52% reach; the product. |
 | Dashboard (`memverses#home`) | **Redesign.** Becomes "today": due count + Start, streak, verse of the day, one community item. Drop the five-tab widget wall. | First screen of every session. |
 | Progress (`show_progress`) | **Redesign.** Replace Raphael/JustGage gauges and Highcharts with one modern chart library (Chart.js renders to canvas; hand-written SVG for simple gauges). Fold badges/quests in. | 46% reach; oldest JS on the site. |
 | My Verses (`manage_verses`) | **Redesign** as a filterable table/list with inline status toggle. | 33% reach; dense legacy table. |
@@ -142,8 +150,9 @@ What goes away or merges:
   density, not colour.
 - **Typography**: raise base size from 13px to 16px; verse text deserves a readable serif
   *[e.g. Source Serif / Literata]* at 18–20px; UI stays in a sans *[Inter / keep Open Sans]*.
-- **Layout**: fluid, max-width ~72ch for verse content, single column on phone, two columns
-  on desktop only where the second column is the progress strip or upcoming queue.
+- **Layout**: a real desktop layout, roughly 1100–1200px wide, with verse text at ~72ch and
+  a second column for the progress strip, upcoming queue or hints. It collapses to a
+  single column under ~768px. Today's fixed 13px shell wastes most of a modern screen.
 - **Dark mode**: *[yes/no]*. Cheap if colours are tokens from day one.
 - **Logo**: keep *[yes]*; the `logo.png` is 253×31 raster, needs an SVG.
 - **Illustration / imagery**: *[none / light line icons only]*.
@@ -167,8 +176,9 @@ What goes away or merges:
   scope for the redesign, not as removable, until those clients' status is confirmed.
 - Tests: Cucumber features cover the core flows and will break on markup changes; budget
   for updating them alongside each page.
-- Performance: the review page should be usable in under one second on a phone over 4G;
-  the current page ships ~40 JS files through Sprockets.
+- Performance: the review page should render in well under a second on desktop and be
+  usable in under two on a phone over 4G; the current page ships ~40 JS files through
+  Sprockets.
 
 ## 9. Non-goals
 
@@ -185,8 +195,9 @@ What goes away or merges:
 2. **Foundation** (2 weeks): tokens, type scale, new layout shell with the new navigation,
    feature-flagged per user (`users.level` or a boolean). Old pages still render inside the
    new shell.
-3. **Review + dashboard** (3 weeks): the two T1 pages, phone-first. Ship to volunteers
-   first (`/volunteer` list), then to everyone with a "switch back" link for a month.
+3. **Review + dashboard** (3 weeks): the two T1 pages, designed on desktop and then made
+   to collapse. Ship to volunteers first (`/volunteer` list), then to everyone with a
+   "switch back" link for a month.
 4. **Progress + My Verses + Add** (3 weeks).
 5. **Onboarding funnel** (2 weeks): landing, sign-up, demo, starter pack.
 6. **Restyle pass** (2 weeks): everything in the Restyle rows; retire the Retire rows.
@@ -197,7 +208,7 @@ What goes away or merges:
 ## 11. Open questions
 
 1. Is the goal growth (new users) or care (existing users)? The answer changes whether
-   phase 5 comes before phase 3.
+   phase 5 comes before phase 3. (The desktop-first decision leans toward care.)
 2. ~~Should "Review" be the logged-in landing page when verses are due?~~ Decided: the
    dashboard stays, with review first on it (Principle 1).
 3. Which of the zero-traffic features are sentimental keeps: sermons, chat, scribe,
