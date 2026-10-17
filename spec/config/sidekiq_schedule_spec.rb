@@ -25,7 +25,6 @@ RSpec.describe 'config/sidekiq_schedule.yml' do
 
   it 'defines the production schedule' do
     expect(schedule.keys).to include(
-      'schedule_quiz',
       'schedule_send_reminders',
       'schedule_knowledge_quiz_tuesday',
       'schedule_knowledge_quiz_saturday',

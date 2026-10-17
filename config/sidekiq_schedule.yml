@@ -26,12 +26,6 @@ schedule_knowledge_quiz_saturday:
   queue: critical      # Critical priority - user-facing live quiz
   active_job: false    # Explicitly mark as Sidekiq::Worker
 
-schedule_quiz:  
-  cron: "*/1 * * * * UTC"  # check every minute
-  class: "ScheduledQuiz"
-  queue: critical      # Critical priority - live quiz functionality
-  active_job: false    # Explicitly mark as Sidekiq::Worker
-
 schedule_forum_review_notifier:
   cron: "0 8 * * * UTC"   # 8am every day
   class: "ForumReviewNotifier"
