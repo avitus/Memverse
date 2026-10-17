@@ -98,7 +98,7 @@ verses, add verse).
 | `/users/:id` | `users#show` | User dashboard / public profile | 11,180 | 2,119 | 71 | **T3** for users | 2,119 IPs is crawler traffic on public profiles; real reach is 17%. |
 | `/leaderboard` | `info#leaderboard` | Leaderboard | 693 | 125 | 48 | **T3** | Also public. |
 | `/churchboard`, `/groupboard` | `info#*board` | Church / group leaderboards | 97, 85 | 52, 41 | 36, 31 | **T3** | |
-| `/countryboard`, `/stateboard`, `/referralboard` | `info#*board` | Other leaderboards | 16, 4, 6 | 6, 4, 6 | ≤6, ≤4, ≤6 | **T4** | Reach is bounded by the all-visitor IPs; at most 1.4%. Fold into one leaderboard page with a filter. |
+| `/countryboard`, `/stateboard`, `/referralboard` | `info#*board` | Other leaderboards | 16, 4, 6 | 6, 4, 6 | ≤6, ≤4, ≤6 | **T4/T5**, **T5**, **T4/T5** | Reach is bounded by the all-visitor IPs: at most 1.4% for country and referral (either tier possible, exact reach not measured), under 1% for state. Fold all three into one leaderboard page with a filter. |
 | `/memverse_clock` | `info#memverse_clock` | "One Church" counter | 26 | 16 | | **T4** | |
 | `/update_profile` | `profile#update_profile` | Edit profile and preferences | 64 | 32 | 21 | **T4** | Linked from reminder emails. |
 | `/users/edit` | `users/registrations#edit` | Account (email/password) | ~0 | | | **T5** | |
