@@ -97,6 +97,11 @@ GEM
     acts_as_votable (0.14.0)
     addressable (2.8.10)
       public_suffix (>= 2.0.2, < 8.0)
+    ahoy_matey (5.4.2)
+      activesupport (>= 7.1)
+      cgi
+      device_detector (>= 1)
+      safely_block (>= 0.4)
     airbrussh (1.5.3)
       sshkit (>= 1.6.1, != 1.7.0)
     autoprefixer-rails (10.4.21.0)
@@ -211,6 +216,7 @@ GEM
     db_text_search (1.0.0)
       activerecord (>= 4.1.15)
     debug_inspector (1.2.0)
+    device_detector (1.1.3)
     devise (5.0.4)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -515,6 +521,8 @@ GEM
     raabro (1.4.0)
     racc (1.8.1)
     rack (2.2.23)
+    rack-attack (6.8.0)
+      rack (>= 1.0, < 4)
     rack-cors (2.0.2)
       rack (>= 2.0.0)
     rack-protection (3.2.0)
@@ -645,6 +653,7 @@ GEM
       ffi (~> 1.12)
       logger
     rubyzip (2.4.1)
+    safely_block (0.5.0)
     sanitize (7.0.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.16.8)
@@ -796,6 +805,7 @@ DEPENDENCIES
   actiontext (~> 7.2.0)
   acts-as-taggable-on (~> 11.0)
   acts_as_votable
+  ahoy_matey
   autoprefixer-rails (~> 10.4.21)
   bcrypt_pbkdf (>= 1.0, < 2.0)
   best_in_place (~> 4.0)
@@ -857,6 +867,7 @@ DEPENDENCIES
   prawnto_2
   pubnub (~> 5.5.0)
   puma (~> 7.2)
+  rack-attack
   rack-cors (~> 2.0)
   rack-utf8_sanitizer
   rails (~> 7.2.0, >= 7.2.3.1)

@@ -599,6 +599,10 @@ class MemversesController < ApplicationController
 
       end # of transaction
 
+      if msg == "Added"
+        ahoy.track "verse_added", verse_id: vs.id, ref: vs.ref, first_verse: current_user.memverses.count == 1
+      end
+
     end
 
   	render :json => { msg: msg }
@@ -992,6 +996,7 @@ class MemversesController < ApplicationController
 
       # Execute Supermemo algorithm
       newly_memorized = mv.supermemo(q)
+      ahoy.track "verse_rated", memverse_id: mv.id, verse_id: mv.verse_id, rating: q, newly_memorized: newly_memorized
 
       # Give encouragement if verse transitions from "Learning" to "Memorized"
       if newly_memorized
@@ -1146,6 +1151,7 @@ class MemversesController < ApplicationController
     # Update date for next ref test
     mv.next_ref_test = Date.today + mv.ref_interval
     mv.save
+    ahoy.track "reference_tested", memverse_id: mv.id, verse_id: mv.verse_id, correct: score == 10
 
     render :json => {:msg => 'Score recorded' }
 

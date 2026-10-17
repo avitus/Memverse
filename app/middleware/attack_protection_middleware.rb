@@ -54,6 +54,18 @@ class AttackProtectionMiddleware
     /acunetix/i
   ].freeze
 
+  # Crawlers that ignore robots.txt and walk the blog and forum exhaustively
+  # (identified from production nginx logs, October 2026). Search engines that
+  # send real visitors (Googlebot, bingbot) are deliberately not listed here.
+  BLOCKED_SCRAPER_AGENTS = [
+    /ShapBot/i,
+    /Reflectionbot/i,
+    /KeenableBot/i,
+    /SemrushBot/i,
+    /SERankingBacklinksBot/i,
+    /Amzn-SearchBot/i
+  ].freeze
+
   def initialize(app)
     @app = app
   end
@@ -90,7 +102,7 @@ class AttackProtectionMiddleware
   def blocked_user_agent?(user_agent)
     return false if user_agent.nil?
 
-    BLOCKED_USER_AGENTS.any? { |pattern| user_agent.match?(pattern) }
+    (BLOCKED_USER_AGENTS + BLOCKED_SCRAPER_AGENTS).any? { |pattern| user_agent.match?(pattern) }
   end
 
   def handle_ip_spoofing_attempt(request, error)

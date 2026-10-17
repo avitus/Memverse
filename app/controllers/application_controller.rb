@@ -2,6 +2,9 @@
 
 class ApplicationController < ActionController::Base
 
+  include AnalyticsTracking
+  include RobotsDirectives
+
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_locale, :prepare_for_mobile
 

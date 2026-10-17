@@ -117,6 +117,8 @@ gem 'newrelic_rpm', '>=3.3.0'                                                  #
 gem "sentry-ruby"                                                              # Error tracking
 gem "sentry-rails"                                                             # Error tracking - Rails integration
 gem "sentry-sidekiq"                                                           # Error tracking - Sidekiq worker errors
+gem "ahoy_matey"                                                                # First-party analytics: visits, page views, events
+gem "rack-attack"                                                               # Throttle anonymous crawler traffic on blog/forum
 
 
 ############################################################
