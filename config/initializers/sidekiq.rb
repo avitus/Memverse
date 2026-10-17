@@ -165,9 +165,12 @@ Sidekiq.configure_server do |config|
       begin
         Rails.logger.info "[SIDEKIQ SCHEDULER] This process will handle cron jobs"
         
-        # Load the cron schedule
+        # Load the cron schedule. The bang form destroys any job that is registered in
+        # Redis with source "schedule" but no longer present in the YAML, so deleting an
+        # entry from the file is enough to stop it. The plain load_from_hash left removed
+        # entries firing (see documentation/QUIZ_CRON_DUPLICATE_RUNS_2026-10.md).
         schedule = YAML.load_file(schedule_file)
-        Sidekiq::Cron::Job.load_from_hash(schedule)
+        Sidekiq::Cron::Job.load_from_hash!(schedule, source: "schedule")
         
         Rails.logger.info "[SIDEKIQ SCHEDULER] Loaded #{schedule.keys.size} scheduled jobs:"
         schedule.each do |name, job_config|
