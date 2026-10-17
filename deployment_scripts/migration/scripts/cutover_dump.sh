@@ -27,6 +27,9 @@ COMMON=("${AUTH[@]}" --single-transaction --quick --hex-blob --no-tablespaces --
 echo "Dumping $DB (all tables except sessions data)..."
 time mysqldump "${COMMON[@]}" --routines --triggers --events --ignore-table=$DB.sessions "$DB" | gzip -1 > "$OUT/full.sql.gz"
 mysqldump "${COMMON[@]}" --no-data "$DB" sessions > "$OUT/sessions_schema.sql"
+# mysqldump can exit 0 on a partial failure; require the end marker in both files.
+zcat "$OUT/full.sql.gz" | tail -3 | grep -q '^-- Dump completed' || { echo "full.sql.gz is truncated" >&2; exit 1; }
+tail -3 "$OUT/sessions_schema.sql" | grep -q '^-- Dump completed' || { echo "sessions_schema.sql is truncated" >&2; exit 1; }
 ( cd "$OUT" && sha256sum full.sql.gz sessions_schema.sql > SHA256SUMS && ls -lh && cat SHA256SUMS )
-echo "Dump at $OUT"
-echo "Next: rsync -avP $OUT/ martial-eagle:/home/avitus/cutover/ && ssh martial-eagle 'cd cutover && sha256sum -c SHA256SUMS'"
+# cutover.sh dump reads this line to carry the exact directory into the transfer step.
+echo "DUMP_DIR=$OUT"
