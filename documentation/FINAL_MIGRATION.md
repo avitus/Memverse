@@ -10,7 +10,7 @@
 
 **Status as of 2026-10-17:** Phases 0–3 of the [migration runbook](plans/2026-10-10-fish-eagle-to-martial-eagle-migration.md) are complete. martial-eagle is a fully built, tested production copy at the same revision as fish-eagle (`7dc9864b`). This file is the executable checklist for everything that remains. The runbook stays the reference for background and rationale; where the two differ, this file wins because it is newer.
 
-**Window (decided 2026-10-17):** Sunday **2026-10-18, 02:00–03:30 PDT (09:00–10:30 UTC)**, brought forward from 8 November. Pacific is still PDT (UTC-7) until 1 November. Andy is available from about 02:20 PDT for the DNS change.
+**Window (historical):** planned for Sunday 2026-10-18, 02:00–03:30 PDT; **actually run Saturday 2026-10-17, 12:58–13:12 PDT** (see Outcome above). Sections 1 and 2 are a record and must not be executed again; sections 3–5 stay actionable. Originally brought forward from 8 November. Pacific is still PDT (UTC-7) until 1 November. Andy is available from about 02:20 PDT for the DNS change.
 
 **Who does what:** Claude runs every server step as root over the `fish-eagle-root` and `martial-eagle-root` SSH aliases and as `avitus` over `memverse`/`martial-eagle` (while the `/etc/hosts` override is on the Mac, fish-eagle is reached as `ssh -o HostName=192.241.205.154 memverse`). Andy merges PRs, changes DNS at Linode, and gives the go/no-go.
 
@@ -43,7 +43,9 @@
 
 ---
 
-## 1. Before cutover (Saturday 2026-10-17; no production impact)
+## 1. Before cutover — COMPLETED 2026-10-17 (historical)
+
+> ⚠️ **COMPLETED — do not run again.** martial-eagle is production now; a `restore` here drops its live database. Use 1.2/1.3 only as a template for a future migration.
 
 ### 1.0 Fence martial-eagle's Sidekiq — Claude, 1 min, before any deploy
 Capistrano starts Sidekiq after every deploy (`after :published`), so `cap production deploy` would start martial-eagle's workers against rehearsal data. Two layers stop that: `SKIP_SIDEKIQ_START=1` on every martial-eagle deploy until 2.9, and a systemd fence that makes any start fail loudly even if the variable is forgotten.
@@ -122,7 +124,9 @@ Exercises the exact cutover path. fish-eagle stays live, so `verify --report` wi
 
 ---
 
-## 2. Cutover window (~35–50 min)
+## 2. Cutover window — COMPLETED 2026-10-17 12:58–13:12 PDT (historical)
+
+> ⚠️ **COMPLETED — do not run again.** martial-eagle is production now; a `restore` here drops its live database. Its timings are in the Outcome at the top; rollback from here is 4.2.
 
 **Rollback boundary.** Through 2.6 nothing but Andy's own signed-in check writes to martial-eagle, and martial-eagle runs no Sidekiq, so rollback 4.1 loses nothing except that check. From 2.7 on, users write to martial-eagle and rolling back is 4.2.
 
