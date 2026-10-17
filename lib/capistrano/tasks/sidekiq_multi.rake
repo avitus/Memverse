@@ -184,9 +184,15 @@ namespace :deploy do
     invoke 'sidekiq:multi:stop'
   end
   
-  # Start Sidekiq after deployment is published
+  # Start Sidekiq after deployment is published. SKIP_SIDEKIQ_START=1 leaves it stopped: a host that
+  # must not run jobs yet (martial-eagle before the cutover, documentation/FINAL_MIGRATION.md) can be
+  # deployed without its workers starting against the wrong data.
   after :published, :start_sidekiq do
-    invoke 'sidekiq:multi:start'
+    if ENV['SKIP_SIDEKIQ_START'] == '1'
+      run_locally { warn 'SKIP_SIDEKIQ_START=1: Sidekiq left stopped' }
+    else
+      invoke 'sidekiq:multi:start'
+    end
   end
   
   # Alternative: Use rolling restart for zero-downtime deployments

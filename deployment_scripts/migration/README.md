@@ -14,10 +14,14 @@ The plan is the runbook; these files are what it installs. Section numbers below
 | `martial-eagle/logrotate-memverse` | `/etc/logrotate.d/memverse` | 7.7 |
 | `fish-eagle/memverse-maintenance.conf` | `/etc/nginx/sites-available/memverse-maintenance.conf` | 9, A.5 |
 | `fish-eagle/memverse-proxy.conf` | `/etc/nginx/sites-available/memverse-proxy.conf` | 9, A.6 |
-| `fish-eagle/maintenance-index.html` | `/var/www/maintenance/index.html` | 9 |
-| `scripts/cutover_dump.sh` | run on fish-eagle | 9, A.1 |
-| `scripts/cutover_restore.sh` | run as root on martial-eagle | 9, A.2 |
-| `scripts/verify_counts.rb` | `rails runner` on both hosts, then `diff` | 9, A.3 |
+| `fish-eagle/maintenance-index.html` | `/var/www/maintenance/index.html` on both hosts | 9 |
+| `martial-eagle/memverse-maintenance.conf` | `/etc/nginx/sites-available/memverse-maintenance` (rollback only) | FINAL_MIGRATION 1.3, 4 |
+| `martial-eagle/memverse-rollback-proxy.conf` | `/etc/nginx/sites-available/memverse-rollback-proxy` (rollback only) | FINAL_MIGRATION 1.3, 4.2 |
+| `martial-eagle/prepare_self_backup.sh` | run as root on martial-eagle; readies the backup to dump martial-eagle itself | FINAL_MIGRATION 1.3, 2.10 |
+| `scripts/cutover.sh` | run on the Mac; gated drain, dump, transfer, restore, verify, schedule and vhost checks | FINAL_MIGRATION 1.2, 2 |
+| `scripts/cutover_dump.sh` | run on fish-eagle (by `cutover.sh dump`) | 9, A.1 |
+| `scripts/cutover_restore.sh` | run as root on martial-eagle (by `cutover.sh restore`) | 9, A.2 |
+| `scripts/verify_counts.rb` | `rails runner` on both hosts (by `cutover.sh verify`) | 9, A.3 |
 | `scripts/smoke.sh` | run from a workstation, DNS-independent | 9, A.4 |
 
 The Sidekiq unit templates stay where Capistrano expects them: `deployment_scripts/sidekiq-scheduler.service`
