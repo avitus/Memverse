@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe "Robots directives", type: :request do
   include BrowserUserAgent
 
-  NOINDEX = "noindex, nofollow"
+  let(:noindex) { "noindex, nofollow" }
 
   before { Bloggity::Blog.create!(id: 9, title: "Memverse Blog", subtitle: "News and updates", url_identifier: "main") }
 
@@ -40,14 +40,14 @@ RSpec.describe "Robots directives", type: :request do
     get "/blog?page=2"
 
     expect(response).to have_http_status(:ok)
-    expect(response.headers["X-Robots-Tag"]).to eq(NOINDEX)
-    expect(robots_meta).to eq(NOINDEX)
+    expect(response.headers["X-Robots-Tag"]).to eq(noindex)
+    expect(robots_meta).to eq(noindex)
   end
 
   it "marks tagged blog listings noindex" do
     get "/blog?tag_name=Bible%20Bee"
 
-    expect(response.headers["X-Robots-Tag"]).to eq(NOINDEX)
+    expect(response.headers["X-Robots-Tag"]).to eq(noindex)
   end
 
   it "leaves a blog listing with only tracking parameters indexable" do
@@ -66,7 +66,7 @@ RSpec.describe "Robots directives", type: :request do
     get "/forum/posts/#{post.id}"
 
     expect(response).to have_http_status(:found)
-    expect(response.headers["X-Robots-Tag"]).to eq(NOINDEX)
+    expect(response.headers["X-Robots-Tag"]).to eq(noindex)
   end
 
   it "leaves forum topic pages indexable" do
@@ -86,6 +86,6 @@ RSpec.describe "Robots directives", type: :request do
 
     get "/forum/#{topic.messageboard.slug}/page-2"
 
-    expect(response.headers["X-Robots-Tag"]).to eq(NOINDEX)
+    expect(response.headers["X-Robots-Tag"]).to eq(noindex)
   end
 end
