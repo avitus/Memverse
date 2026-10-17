@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
   helper :all # include all helpers, all the time
   protect_from_forgery prepend: true
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
-  rescue_from ActionController::UnknownFormat, :with => :raise_not_found
+  rescue_from ActionController::UnknownFormat, :with => :render_not_acceptable
   # rescue_from ActionController::UnfilteredParameters, :with => :show_params
 
   # Admin Authorization
@@ -303,9 +303,10 @@ class ApplicationController < ActionController::Base
     render :file => File.join(Rails.root, 'public', '404.html'), :status => 404
   end
 
-  # Automatically respond with 415 for ActionController::UnknownFormat
-  def raise_not_found
-    render plain: 'Not Found', status: :unsupported_media_type
+  # Automatically respond with 406 Not Acceptable for ActionController::UnknownFormat,
+  # i.e. when no template matches the request's Accept header
+  def render_not_acceptable
+    head :not_acceptable
   end
 
   # ALV (Mar 2018) Was being used to debug problems with strong parameters.
