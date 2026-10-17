@@ -2,7 +2,7 @@
 
 **Status as of 2026-10-17:** Phases 0–3 of the [migration runbook](plans/2026-10-10-fish-eagle-to-martial-eagle-migration.md) are complete. martial-eagle is a fully built, tested production copy at the same revision as fish-eagle (`7dc9864b`). This file is the executable checklist for everything that remains. The runbook stays the reference for background and rationale; where the two differ, this file wins because it is newer.
 
-**Proposed window:** Sunday **2026-10-19, 02:00–03:30 PDT (09:00–10:30 UTC)**, brought forward from 8 November. Any quiet night works; avoid Tuesday 17:00 UTC and Saturday 23:00 UTC (quizzes). Pacific is still PDT (UTC-7) until 1 November.
+**Window (decided 2026-10-17):** Sunday **2026-10-18, 02:00–03:30 PDT (09:00–10:30 UTC)**, brought forward from 8 November. Pacific is still PDT (UTC-7) until 1 November. Andy is available from about 02:20 PDT for the DNS change.
 
 **Who does what:** Claude runs every server step as root over the `fish-eagle-root` and `martial-eagle-root` SSH aliases and as `avitus` over `memverse`/`martial-eagle` (while the `/etc/hosts` override is on the Mac, fish-eagle is reached as `ssh -o HostName=192.241.205.154 memverse`). Andy merges PRs, changes DNS at Linode, and gives the go/no-go.
 
@@ -22,8 +22,8 @@
 
 ## 0. Decisions still open
 
-- [ ] **D7 `schedule_quiz`.** The every-minute `ScheduledQuiz` cron entry has been *disabled only in fish-eagle's Redis* since 2025-09-11. martial-eagle starts from a clean Redis, so after cutover it would run again. Options: **(a) remove it from `config/sidekiq_schedule.yml`** (recommended; same fix as the 2026-10-16 quiz incident, PR #411), or (b) decide it should run in production from now on. Redis-only disabling is not acceptable (it does not survive to a new host).
-- [ ] **D8 Cutover date** confirmed.
+- [x] **D7 `schedule_quiz` — decided 2026-10-17: remove it** (branch `claude/remove-schedule-quiz`). The every-minute `ScheduledQuiz` cron entry has been *disabled only in fish-eagle's Redis* since 2025-09-11. martial-eagle starts from a clean Redis, so after cutover it would run again. Options: **(a) remove it from `config/sidekiq_schedule.yml`** (recommended; same fix as the 2026-10-16 quiz incident, PR #411), or (b) decide it should run in production from now on. Redis-only disabling is not acceptable (it does not survive to a new host).
+- [x] **D8 Cutover date** confirmed: Sunday 2026-10-18 02:00 PDT.
 
 ---
 
@@ -66,6 +66,10 @@
   ```bash
   ssh fish-eagle-root 'for f in memverse-maintenance.conf memverse-proxy.conf; do printf "events {}\nhttp { include /etc/nginx/mime.types; include /etc/nginx/sites-available/%s; }\n" "$f" > /tmp/nginx-check.conf; printf "%-26s " "$f"; nginx -t -c /tmp/nginx-check.conf 2>&1 | tail -1; done; rm -f /tmp/nginx-check.conf; test -s /var/www/maintenance/index.html && echo "maintenance page present"; systemctl is-active sidekiq-scheduler sidekiq-workers@1 sidekiq-workers@2 sidekiq-workers@3 | paste -sd" " -'
   ```
+- [ ] martial-eagle: stage the rollback proxy vhost (not enabled; used only in 4.2) and validate it in isolation:
+  ```bash
+  scp deployment_scripts/migration/martial-eagle/memverse-rollback-proxy.conf martial-eagle-root:/etc/nginx/sites-available/memverse-rollback-proxy && ssh martial-eagle-root 'printf "events {}\nhttp { include /etc/nginx/mime.types; include /etc/nginx/sites-available/memverse-rollback-proxy; }\n" > /tmp/nginx-check.conf && nginx -t -c /tmp/nginx-check.conf 2>&1 | tail -1; rm -f /tmp/nginx-check.conf'
+  ```
 - [ ] Live snapshot of fish-eagle (~5 min; safety net, delete a month after decommission):
   ```bash
   doctl compute droplet-action snapshot 18498427 --snapshot-name "fish-eagle-pre-cutover-$(date +%Y%m%d)" --wait --format ID,Status
@@ -88,7 +92,11 @@ Rollback is loss-free through step 2.6. From 2.7 on, rolling back means losing w
   ssh fish-eagle-root 'rm /etc/nginx/sites-enabled/memverse.conf && ln -s /etc/nginx/sites-available/memverse-maintenance.conf /etc/nginx/sites-enabled/ && nginx -t && nginx -s reload && sleep 2 && curl -sS -o /dev/null -w "www -> %{http_code} (want 503)\n" --resolve www.memverse.com:443:127.0.0.1 https://www.memverse.com/'
   ```
 
-### 2.2 Stop writes — fish-eagle, Claude, 2 min, reversible
+### 2.2 Stop writes — fish-eagle, Claude, 3 min, reversible
+- [ ] **Drain web requests.** `nginx -s reload` lets the old workers finish requests they had already accepted, and a request accepted before the reload could still write after the dump's snapshot starts. Wait until no old worker is left (they show as `nginx: worker process is shutting down`) and Passenger reports no active sessions; the maintenance vhost means no new request reaches the app:
+  ```bash
+  ssh fish-eagle-root 'for i in $(seq 1 45); do old=$(pgrep -fc "worker process is shutting down"); busy=$(passenger-status 2>/dev/null | grep -E "^\s+\* PID" | grep -vc "Sessions: 0"); [ "$old" -eq 0 ] && [ "$busy" -eq 0 ] && break; sleep 2; done; echo "old nginx workers=$old busy passenger processes=$busy (both must be 0)"'
+  ```
 - [ ] Quiet, stop and **disable** Sidekiq (disabled so it can never restart and double-run cron against the old database); confirm nothing in flight:
   ```bash
   ssh fish-eagle-root 'systemctl kill -s TSTP sidekiq-scheduler "sidekiq-workers@*"; sleep 30; systemctl stop sidekiq-scheduler "sidekiq-workers@*"; systemctl disable sidekiq-scheduler sidekiq-workers@1 sidekiq-workers@2 sidekiq-workers@3 2>&1 | grep -v Removed; systemctl is-active sidekiq-scheduler sidekiq-workers@1 sidekiq-workers@2 sidekiq-workers@3 | paste -sd" " -; for q in critical high default low; do printf "queue:%s=%s " $q "$(redis-cli -n 0 LLEN queue:$q)"; done; echo; passenger-status 2>/dev/null | grep -E "Processed|Sessions" | head -4'
@@ -160,9 +168,18 @@ ssh fish-eagle-root 'rm -f /etc/nginx/sites-enabled/memverse-maintenance.conf &&
 Then stop Sidekiq on martial-eagle (`cap production sidekiq:multi:stop`). Nothing was written anywhere else.
 
 ### 4.2 After the flip, within hours — a decision, not a reflex
-1. Stop Sidekiq on martial-eagle; on fish-eagle `SET GLOBAL read_only = 0; SET GLOBAL super_read_only = 0;` and run 4.1.
-2. Either accept the loss of writes made since the flip, or dump martial-eagle with the **5.7 client on fish-eagle** over an SSH tunnel (an 8.0 `mysqldump` emits `utf8mb3`/`utf8mb4_0900_ai_ci` that 5.7 rejects) and restore into fish-eagle.
-3. Andy points DNS back to 192.241.205.154; Claude switches martial-eagle's vhost to proxy toward fish-eagle (mirror of A.6) for stale-DNS clients.
+At no point may both databases accept writes. fish-eagle is already read-only (2.8); martial-eagle is made read-only first, the data decision is taken with both quiesced, and only then is one host reopened.
+1. **Quiesce martial-eagle** (Claude): stop Sidekiq there and make its database read-only, so writes stop everywhere:
+   ```bash
+   ssh martial-eagle-root 'systemctl stop sidekiq-scheduler sidekiq-workers@1 sidekiq-workers@2 && mysql -e "SET GLOBAL read_only = 1; SET GLOBAL super_read_only = 1; SELECT @@read_only, @@super_read_only;"'
+   ```
+2. **Data decision** (Andy): either accept the loss of writes made on martial-eagle since the flip, or carry them back: dump martial-eagle with the **5.7 client on fish-eagle** over an SSH tunnel (an 8.0 `mysqldump` emits `utf8mb3`/`utf8mb4_0900_ai_ci` that 5.7 rejects) and restore into fish-eagle while both databases are still read-only for the application (the restore itself runs as root with `super_read_only` lifted only for that session).
+3. **Reopen fish-eagle only** (Claude): `SET GLOBAL read_only = 0; SET GLOBAL super_read_only = 0;` then section 4.1 (production vhost back, Sidekiq enabled and started).
+4. **martial-eagle proxies to fish-eagle** (Claude) so clients that already resolve the new IP keep working on the one writable host:
+   ```bash
+   ssh martial-eagle-root 'rm -f /etc/nginx/sites-enabled/memverse && ln -s /etc/nginx/sites-available/memverse-rollback-proxy /etc/nginx/sites-enabled/memverse-rollback-proxy && nginx -t && systemctl reload nginx'
+   ```
+5. **Andy** points the two A records back to 192.241.205.154.
 
 ### 4.3 After a day
 No rollback; fix forward on martial-eagle.
@@ -184,7 +201,8 @@ No rollback; fix forward on martial-eagle.
 |---|---|---|
 | 2.1–2.6 | None beyond the maintenance page | Every step reversible in minutes (4.1) |
 | 2.5 counts mismatch | Silent data loss | Hard stop; diff must be `sessions` only |
-| 2.7 → 2.8 and after | Writes land on martial-eagle; rollback loses them | Go/no-go at 2.6 with smoke test and signed-in check; proxy keeps stragglers on the new data |
+| 2.7 → 2.8 and after | Writes land on martial-eagle; rollback loses them | Go/no-go at 2.6 with smoke test and signed-in check; proxy keeps stragglers on the new data; 4.2 quiesces martial-eagle before reopening fish-eagle so two hosts never accept writes |
+| In-flight requests at 2.1 | A write accepted before the maintenance reload lands after the dump snapshot | 2.2 drain barrier: old nginx workers gone, Passenger sessions 0, before the dump |
 | Cron state on a fresh Redis | Jobs disabled only in fish-eagle's Redis revive (`schedule_quiz`) | D7 resolved before cutover; Redis flushed at 2.4 so the YAML is the only source |
 | Rehearsal email token | Real users emailed from the rehearsal | Removed at 1.3 and verified; Passenger restarted |
 | Stale cache after restore | Pages showing rehearsal-era data | Cache cleared at 2.4 |
