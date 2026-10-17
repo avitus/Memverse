@@ -573,6 +573,7 @@ class MemversesController < ApplicationController
   def ajax_add
   	vs = Verse.find(params[:id])
     msg = "Error"  # Initialize msg with default value
+    first_verse = false
 
   	if vs and current_user
 
@@ -591,6 +592,7 @@ class MemversesController < ApplicationController
           begin
             Memverse.create!(:user_id => current_user.id, :verse_id => vs.id)
             msg = "Added"
+            first_verse = current_user.memverses.count == 1 # counted while the user lock is held
           rescue Exception => e
             Rails.logger.error("=====> [Memverse save error] Exception while saving #{vs.ref} for user #{current_user.id}: #{e}")
             msg = "Error"
@@ -598,6 +600,8 @@ class MemversesController < ApplicationController
         end
 
       end # of transaction
+
+      ahoy.track "verse_added", verse_id: vs.id, ref: vs.ref, first_verse: first_verse if msg == "Added"
 
     end
 
@@ -992,6 +996,7 @@ class MemversesController < ApplicationController
 
       # Execute Supermemo algorithm
       newly_memorized = mv.supermemo(q)
+      ahoy.track "verse_rated", memverse_id: mv.id, verse_id: mv.verse_id, rating: q, newly_memorized: newly_memorized
 
       # Give encouragement if verse transitions from "Learning" to "Memorized"
       if newly_memorized
@@ -1134,6 +1139,11 @@ class MemversesController < ApplicationController
     mv     = Memverse.find( params[:mv] )
     score  = params[:score].to_i
 
+    unless mv.user == current_user
+      render :json => {:msg => "You are attempting to modify a memory verse that belongs to another user." }
+      return
+    end
+
     # Update interval
 
     if score == 10    # correct
@@ -1146,6 +1156,7 @@ class MemversesController < ApplicationController
     # Update date for next ref test
     mv.next_ref_test = Date.today + mv.ref_interval
     mv.save
+    ahoy.track "reference_tested", memverse_id: mv.id, verse_id: mv.verse_id, correct: score == 10
 
     render :json => {:msg => 'Score recorded' }
 

@@ -13,6 +13,41 @@ Disallow: /charts/							# Old flash charts
 Disallow: /blogs/9/     					# Old blog route that should not exist any more
 Disallow: /memverses/show_all_my_verses     # Old URL that no longer exists
 Disallow: /chat/channel1                    # Old URL that no longer exists
+Disallow: /forum/posts/                     # Post permalinks only redirect to the topic page
+Disallow: /forum/private-topics/            # Private messages
+Disallow: /forum/*/page-                    # Paginated forum listings
+Disallow: /blog/blogs/                      # Legacy blog routes; posts are indexed under /blog/<slug>
+Disallow: /blog/main                        # Legacy blog route
+Disallow: /blog*?tag_name=                  # Tagged, searched and categorised blog listings
+Disallow: /blog*&tag_name=                  # (a tracking-only query such as ?utm_source= stays crawlable)
+Disallow: /blog*?search=
+Disallow: /blog*&search=
+Disallow: /blog*?category_id=
+Disallow: /blog*&category_id=
+Disallow: /*?page=                          # Any paginated listing, blog included
+Disallow: /*&page=
+
+# Scrapers seen walking the blog and forum exhaustively (also blocked by AttackProtectionMiddleware)
+User-agent: ShapBot
+Disallow: /
+
+User-agent: Reflectionbot
+Disallow: /
+
+User-agent: KeenableBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: SERankingBacklinksBot
+Disallow: /
+
+User-agent: Amzn-SearchBot
+Disallow: /
+
+User-agent: PetalBot
+Disallow: /
 
 # Block OpenAI
 User-agent: GPTBot

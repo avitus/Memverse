@@ -199,6 +199,30 @@ RSpec.describe AttackProtectionMiddleware do
     end
   end
 
+  describe 'scraper user agent blocking' do
+    [
+      'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko); compatible; ShapBot/1.0',
+      'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; Reflectionbot/1.0; +https://reflection.ai/bot) Chrome/120 Safari/537.36',
+      'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; KeenableBot/1.0; +https://keenable.ai/bot)',
+      'Mozilla/5.0 (compatible; SemrushBot/7~bl; +http://www.semrush.com/bot.html)',
+      'Mozilla/5.0 (compatible; SERankingBacklinksBot/1.0; +https://seranking.com/backlinks-crawler)',
+      'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; Amzn-SearchBot/1.0) Chrome/120 Safari/537.36'
+    ].each do |agent|
+      it "returns 403 for #{agent[/compatible; ([A-Za-z-]+)/, 1] || 'ShapBot'}" do
+        status, _headers, _body = make_request(path: '/forum/posts/123', user_agent: agent)
+        expect(status).to eq(403)
+      end
+    end
+
+    it 'lets search engines that send visitors through' do
+      status, _headers, _body = make_request(
+        path: '/blog',
+        user_agent: 'Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)'
+      )
+      expect(status).to eq(200)
+    end
+  end
+
   describe 'IP spoofing protection' do
     let(:spoofing_app) do
       lambda do |env|
