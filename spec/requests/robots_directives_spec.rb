@@ -50,6 +50,14 @@ RSpec.describe "Robots directives", type: :request do
     expect(response.headers["X-Robots-Tag"]).to eq(NOINDEX)
   end
 
+  it "leaves a blog listing with only tracking parameters indexable" do
+    get "/blog?utm_source=newsletter"
+
+    expect(response).to have_http_status(:ok)
+    expect(response.headers["X-Robots-Tag"]).to be_nil
+    expect(robots_meta).to eq("all")
+  end
+
   it "marks forum post permalinks noindex, including the redirect to the topic" do
     author = FactoryBot.create(:user, :approved)
     topic  = FactoryBot.create(:topic, user: author)

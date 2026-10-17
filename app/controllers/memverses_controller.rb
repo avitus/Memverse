@@ -573,6 +573,7 @@ class MemversesController < ApplicationController
   def ajax_add
   	vs = Verse.find(params[:id])
     msg = "Error"  # Initialize msg with default value
+    first_verse = false
 
   	if vs and current_user
 
@@ -591,6 +592,7 @@ class MemversesController < ApplicationController
           begin
             Memverse.create!(:user_id => current_user.id, :verse_id => vs.id)
             msg = "Added"
+            first_verse = current_user.memverses.count == 1 # counted while the user lock is held
           rescue Exception => e
             Rails.logger.error("=====> [Memverse save error] Exception while saving #{vs.ref} for user #{current_user.id}: #{e}")
             msg = "Error"
@@ -599,9 +601,7 @@ class MemversesController < ApplicationController
 
       end # of transaction
 
-      if msg == "Added"
-        ahoy.track "verse_added", verse_id: vs.id, ref: vs.ref, first_verse: current_user.memverses.count == 1
-      end
+      ahoy.track "verse_added", verse_id: vs.id, ref: vs.ref, first_verse: first_verse if msg == "Added"
 
     end
 
@@ -1138,6 +1138,11 @@ class MemversesController < ApplicationController
 
     mv     = Memverse.find( params[:mv] )
     score  = params[:score].to_i
+
+    unless mv.user == current_user
+      render :json => {:msg => "You are attempting to modify a memory verse that belongs to another user." }
+      return
+    end
 
     # Update interval
 

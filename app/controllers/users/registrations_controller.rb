@@ -6,7 +6,11 @@ module Users
     # (see User#send_devise_notification), warn the user instead of leaving them waiting.
     def create
       super
-      ahoy.track "signed_up", user_id: resource.id, login: resource.login if resource.persisted?
+      if resource.persisted?
+        # Confirmable leaves the new user signed out, so attribute the visit explicitly.
+        ahoy.authenticate(resource)
+        ahoy.track "signed_up", user_id: resource.id, login: resource.login
+      end
       return unless resource.undelivered_devise_notification
 
       flash.delete(:notice)

@@ -12,6 +12,9 @@ module RobotsDirectives
 
   PERMALINK_CONTROLLERS = %w[thredded/post_permalinks thredded/private_post_permalinks].freeze
   ENGINE_PREFIXES       = %w[thredded/ bloggity/].freeze
+  # Query parameters that turn a blog or forum page into a listing permutation.
+  # Other parameters (utm_source, ref) leave the page indexable.
+  LISTING_PARAMS        = %w[page tag_name search category_id].freeze
 
   included do
     after_action :set_robots_header
@@ -32,9 +35,13 @@ module RobotsDirectives
     return true if PERMALINK_CONTROLLERS.include?(controller_path)
     return false unless ENGINE_PREFIXES.any? { |prefix| controller_path.start_with?(prefix) }
 
-    # Legacy blog routes (/blog/blogs/:id/blog_posts) and any listing permutation
+    # Legacy blog routes (/blog/blogs/:id/blog_posts) and listing permutations
     # (?page=, ?tag_name=, ?search=, /page-2) are crawl noise, not content.
-    legacy_blog_listing? || params[:page].present? || request.query_parameters.any?
+    legacy_blog_listing? || listing_permutation?
+  end
+
+  def listing_permutation?
+    LISTING_PARAMS.any? { |name| params[name].present? }
   end
 
   def legacy_blog_listing?

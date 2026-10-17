@@ -29,6 +29,18 @@ RSpec.describe "Rack::Attack crawler throttling", type: :request do
     expect(response.body).to include("Too many requests")
   end
 
+  it "throttles any forum or blog traffic after 120 requests from one IP" do
+    120.times do
+      get "/forum"
+      expect(response).not_to have_http_status(:too_many_requests)
+    end
+
+    get "/forum"
+
+    expect(response).to have_http_status(:too_many_requests)
+    expect(response.headers["Retry-After"]).to eq("600")
+  end
+
   it "does not throttle pages outside /blog and /forum" do
     31.times { get "/faq" }
     expect(response).to have_http_status(:ok)

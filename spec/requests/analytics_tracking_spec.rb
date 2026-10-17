@@ -17,7 +17,7 @@ RSpec.describe "Analytics tracking (Ahoy)", type: :request do
 
   describe "page views" do
     it "records a $view event with controller, action and path for an HTML page" do
-      expect { get "/faq" }.to change { page_views.count }.by(1)
+      expect { get "/faq" }.to(change { page_views.count }.by(1))
 
       event = page_views.last
       expect(event.properties).to include("controller" => "info", "action" => "faq", "path" => "/faq")
@@ -35,27 +35,27 @@ RSpec.describe "Analytics tracking (Ahoy)", type: :request do
     end
 
     it "ignores crawlers" do
-      expect {
+      expect do
         get "/faq", headers: { "User-Agent" => "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)" }
-      }.not_to change { Ahoy::Event.count }
+      end.not_to(change { Ahoy::Event.count })
     end
 
     it "ignores requests with no user agent" do
-      expect { get "/faq", headers: { "User-Agent" => "" } }.not_to change { Ahoy::Event.count }
+      expect { get "/faq", headers: { "User-Agent" => "" } }.not_to(change { Ahoy::Event.count })
     end
 
-    it "ignores admin pages" do
+    it "ignores admin pages and creates no visit for them" do
       sign_in FactoryBot.create(:user, admin: true)
-      expect { get "/admin/dashboard" }.not_to change { page_views.count }
+      expect { get "/admin/dashboard" }.not_to(change { [page_views.count, Ahoy::Visit.count] })
       expect(response).to have_http_status(:ok)
     end
 
     it "ignores XHR requests" do
-      expect { get "/faq", xhr: true }.not_to change { page_views.count }
+      expect { get "/faq", xhr: true }.not_to(change { page_views.count })
     end
 
     it "ignores redirects" do
-      expect { get "/manage_verses" }.not_to change { page_views.count }
+      expect { get "/manage_verses" }.not_to(change { page_views.count })
       expect(response).to be_redirect
     end
   end
@@ -67,25 +67,26 @@ RSpec.describe "Analytics tracking (Ahoy)", type: :request do
       sign_out user
       params = { name: "New Member", email: "new.member@example.com", password: "please", password_confirmation: "please" }
 
-      expect { post user_registration_path, params: { user: params } }.to change { events("signed_up").count }.by(1)
+      expect { post user_registration_path, params: { user: params } }.to(change { events("signed_up").count }.by(1))
 
       event = events("signed_up").last
       new_user = User.find_by(email: "new.member@example.com")
+      expect(event.user_id).to eq(new_user.id)
       expect(event.properties["user_id"]).to eq(new_user.id)
     end
 
     it "does not record signed_up when registration fails" do
       sign_out user
-      expect {
+      expect do
         post user_registration_path, params: { user: { email: "", password: "x", password_confirmation: "y" } }
-      }.not_to change { events("signed_up").count }
+      end.not_to(change { events("signed_up").count })
     end
 
     it "records verse_added, flagging the user's first verse" do
       first_verse  = FactoryBot.create(:verse)
       second_verse = FactoryBot.create(:verse2)
 
-      expect { post "/add/#{first_verse.id}" }.to change { events("verse_added").count }.by(1)
+      expect { post "/add/#{first_verse.id}" }.to(change { events("verse_added").count }.by(1))
       expect(events("verse_added").last.properties).to include("verse_id" => first_verse.id, "first_verse" => true)
 
       post "/add/#{second_verse.id}"
@@ -96,14 +97,14 @@ RSpec.describe "Analytics tracking (Ahoy)", type: :request do
       verse = FactoryBot.create(:verse)
       post "/add/#{verse.id}"
 
-      expect { post "/add/#{verse.id}" }.not_to change { events("verse_added").count }
+      expect { post "/add/#{verse.id}" }.not_to(change { events("verse_added").count })
       expect(JSON.parse(response.body)["msg"]).to eq("Previously Added")
     end
 
     it "records verse_rated with the rating" do
       mv = FactoryBot.create(:memverse, user: user)
 
-      expect { get "/mark_test_quick", params: { mv: mv.id, q: 4 } }.to change { events("verse_rated").count }.by(1)
+      expect { get "/mark_test_quick", params: { mv: mv.id, q: 4 } }.to(change { events("verse_rated").count }.by(1))
 
       event = events("verse_rated").last
       expect(event.user_id).to eq(user.id)
@@ -114,13 +115,21 @@ RSpec.describe "Analytics tracking (Ahoy)", type: :request do
     it "does not record verse_rated for another user's verse" do
       mv = FactoryBot.create(:memverse)
 
-      expect { get "/mark_test_quick", params: { mv: mv.id, q: 4 } }.not_to change { events("verse_rated").count }
+      expect { get "/mark_test_quick", params: { mv: mv.id, q: 4 } }.not_to(change { events("verse_rated").count })
+    end
+
+    it "does not score or record a reference test for another user's verse" do
+      mv = FactoryBot.create(:memverse, ref_interval: 6)
+
+      expect { post "/score_ref/#{mv.id}/10" }.not_to(change { events("reference_tested").count })
+      expect(mv.reload.ref_interval).to eq(6)
+      expect(JSON.parse(response.body)["msg"]).to match(/belongs to another user/)
     end
 
     it "records reference_tested with whether the answer was correct" do
       mv = FactoryBot.create(:memverse, user: user)
 
-      expect { post "/score_ref/#{mv.id}/10" }.to change { events("reference_tested").count }.by(1)
+      expect { post "/score_ref/#{mv.id}/10" }.to(change { events("reference_tested").count }.by(1))
       expect(events("reference_tested").last.properties).to include("memverse_id" => mv.id, "correct" => true)
 
       post "/score_ref/#{mv.id}/0"

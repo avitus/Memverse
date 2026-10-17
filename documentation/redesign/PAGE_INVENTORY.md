@@ -63,8 +63,11 @@ Tiers are assigned from measured reach among the 420 active IPs, not from guessw
 - **Admin**: admin-only.
 - **XHR**: JSON/partial endpoints behind a page.
 
-Columns: **Loads** = HTML page loads in 7 days (all IPs). **IPs** = unique IPs in 7 days (all).
-**Reach** = unique active-user IPs out of 420.
+Columns: **Loads** = HTML page loads in 7 days (all IPs). **IPs** = unique IPs making
+HTML requests to the action in 7 days (all visitors). **Reach** = unique active-user IPs
+(out of 420) that hit the action in any format, HTML or XHR, so it can slightly exceed the
+HTML-only IPs column for actions that also serve partials or JSON (dashboard, manage
+verses, add verse).
 
 ## 1. Logged-in: the core loop
 
@@ -95,7 +98,7 @@ Columns: **Loads** = HTML page loads in 7 days (all IPs). **IPs** = unique IPs i
 | `/users/:id` | `users#show` | User dashboard / public profile | 11,180 | 2,119 | 71 | **T3** for users | 2,119 IPs is crawler traffic on public profiles; real reach is 17%. |
 | `/leaderboard` | `info#leaderboard` | Leaderboard | 693 | 125 | 48 | **T3** | Also public. |
 | `/churchboard`, `/groupboard` | `info#*board` | Church / group leaderboards | 97, 85 | 52, 41 | 36, 31 | **T3** | |
-| `/countryboard`, `/stateboard`, `/referralboard` | `info#*board` | Other leaderboards | 16, 4, 6 | | <10 | **T5** | Fold into one leaderboard page with a filter. |
+| `/countryboard`, `/stateboard`, `/referralboard` | `info#*board` | Other leaderboards | 16, 4, 6 | 6, 4, 6 | ≤6, ≤4, ≤6 | **T4** | Reach is bounded by the all-visitor IPs; at most 1.4%. Fold into one leaderboard page with a filter. |
 | `/memverse_clock` | `info#memverse_clock` | "One Church" counter | 26 | 16 | | **T4** | |
 | `/update_profile` | `profile#update_profile` | Edit profile and preferences | 64 | 32 | 21 | **T4** | Linked from reminder emails. |
 | `/users/edit` | `users/registrations#edit` | Account (email/password) | ~0 | | | **T5** | |
@@ -176,7 +179,7 @@ Thredded moderation, Bloggity management.
 
 | Area | HTML pages | Templates | Weekly reach (of 420 active) |
 |---|---|---|---|
-| Core loop (dashboard, review, progress, manage, add, search, ref test) | 8 | memverses 30 | 50–56% each |
+| Core loop (dashboard, review, progress, manage, add, search, ref test) | 8 | memverses 30 | 56%, 52%, 46%, 33%, 20%, 19%, 19% |
 | Secondary memorisation (learn, drill, chapter, passage, accuracy, voice) | 8 | passages 8 | 3–13% each |
 | Profile / leaderboards / groups / church | ~20 | users 9, profile 7, info 28 | 2–17% |
 | Onboarding (landing, sign-up, confirm, quick start, tutorial, demo) | 8 | home 2, devise 16 | ~40 new users/week |

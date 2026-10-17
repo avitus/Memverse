@@ -7,9 +7,11 @@ Analytics snippet and the only usage data was in server logs.
 ## What is tracked
 
 Analytics are first-party, server-side, via the `ahoy_matey` gem. Nothing is sent to a
-third party and no analytics cookies are set (`Ahoy.cookies = :none`; a visitor is a hash
-of IP + user agent for the day, IPs are stored masked). Logged-in activity is attributed by
-`user_id`.
+third party. Visitors are identified by two first-party cookies (`ahoy_visitor`,
+`ahoy_visit`; the cookieless mode was rejected because it merges people behind one
+network and can attach one user's events to another user's visit). IPs are stored masked.
+Logged-in activity is attributed by `user_id`, set on the visit at sign-in and on the
+sign-up event explicitly.
 
 Tables: `ahoy_visits` (one row per visitor per day, with landing page, referrer, browser,
 OS, device type, user) and `ahoy_events` (name, JSON properties, time, visit, user).
@@ -23,8 +25,9 @@ OS, device type, user) and `ahoy_events` (name, JSON properties, time, visit, us
 | `reference_tested` | `MemversesController#score_ref_test` | `memverse_id`, `verse_id`, `correct` |
 
 Not tracked: anything under `admin/`, `utils`, `rails_admin/`, `api/`, `apidocs`,
-`ckeditor/`, `turbo/`; crawlers (Ahoy's `browser`-based bot detection); redirects and
-error responses; JSON/XHR calls.
+`ckeditor/`, `turbo/` (neither page views nor visits, via `Ahoy.exclude_method`);
+crawlers and requests with no user agent (Ahoy's `browser`-based bot detection);
+redirects and error responses; JSON/XHR calls.
 
 Configuration lives in `config/initializers/ahoy.rb`. Models are `Ahoy::Visit` and
 `Ahoy::Event` (`app/models/ahoy/`).
@@ -37,18 +40,18 @@ and the four `ahoy.track` calls listed above. Do not reintroduce the UA snippet.
 
 ## Queries
 
-Weekly reach per page, matching the method used in `documentation/redesign/PAGE_INVENTORY.md`
-(unique users, with visitor as fallback for anonymous traffic):
+Weekly reach per page (unique users, with visitor as fallback for anonymous traffic).
+Group by `path` to rank individual URLs; swap in `controller` and `action` to match the
+per-action method used in `documentation/redesign/PAGE_INVENTORY.md`:
 
 ```sql
-SELECT JSON_UNQUOTE(JSON_EXTRACT(e.properties, '$.controller')) AS controller,
-       JSON_UNQUOTE(JSON_EXTRACT(e.properties, '$.action'))     AS action,
-       COUNT(*)                                                 AS page_views,
-       COUNT(DISTINCT COALESCE(e.user_id, v.visitor_token))     AS reach
+SELECT JSON_UNQUOTE(JSON_EXTRACT(e.properties, '$.path'))   AS path,
+       COUNT(*)                                             AS page_views,
+       COUNT(DISTINCT COALESCE(e.user_id, v.visitor_token)) AS reach
 FROM ahoy_events e
 JOIN ahoy_visits v ON v.id = e.visit_id
 WHERE e.name = '$view' AND e.time >= NOW() - INTERVAL 7 DAY
-GROUP BY controller, action
+GROUP BY path
 ORDER BY reach DESC;
 ```
 
@@ -92,10 +95,16 @@ In a Rails console the same data is reachable as `Ahoy::Event.where(name: "$view
 ### Retention
 
 `ahoy_events` grows by roughly one row per page view and per rating (on the order of
-20k rows a day at October 2026 volumes). Prune with
-`Ahoy::Event.where("time < ?", 1.year.ago).delete_all` and
-`Ahoy::Visit.where("started_at < ?", 1.year.ago).delete_all` from a cron or rake task when
-it matters.
+20k rows a day at October 2026 volumes). Prune old visits together with their events, in
+that order, so no event is left pointing at a deleted visit:
+
+```ruby
+old_visits = Ahoy::Visit.where("started_at < ?", 1.year.ago)
+Ahoy::Event.where(visit_id: old_visits.select(:id)).delete_all
+old_visits.delete_all
+```
+
+Run it from a cron or rake task when it matters.
 
 ## Bot mitigation
 

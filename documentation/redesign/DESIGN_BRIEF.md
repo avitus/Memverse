@@ -34,13 +34,15 @@ like to you in one sentence.]*
 |---|---|---|---|
 | Keep the daily reviewers | Reviewing users per weekday | 75–86 | no drop during or after rollout |
 | Retain new sign-ups | 30-day actives who signed up in the last 12 months | ~45 | *[150?]* |
-| Make it work on a phone | Share of verse ratings from phone/tablet | *[measure: 30% of page loads]* | *[50%?]* |
+| Make it work on a phone | Share of core-page loads from phone/tablet | 30% | *[50%?]* |
 | Shorten time to first review | Sign-up → first `mark_test_quick` | *[unmeasured]* | same session |
 | Reduce surface area | User-facing HTML pages | ~150 | *[~40]* |
 
-Prerequisite: **we have no analytics**. The first deliverable of the project is a working
-page-view and event pipeline (GA4, Plausible, or Ahoy in-app), so the baseline column above
-can be filled in properly before anything ships.
+Prerequisite: server-side analytics (Ahoy) now record page views and the sign-up, verse
+added, verse rated and reference test events (see `documentation/ANALYTICS.md`). The
+first deliverable is four weeks of that data, checked against the log-derived numbers
+above, plus any instrumentation gaps it reveals, so the baseline column is settled
+before anything ships.
 
 ## 3. Who it is for
 
@@ -68,9 +70,9 @@ question bank suggest a seasonal audience.]*
 
 ## 4. Design principles
 
-1. **Review is the home screen.** When there are verses due, the first thing a logged-in
-   user sees is the first due verse, not a dashboard. The dashboard becomes the "nothing due"
-   state and the progress view.
+1. **The dashboard stays the landing page** (decided 2026-10-17), but it leads with
+   today's review: due count and a Start button above everything else, with the
+   remaining widgets demoted. Review itself is one click away, never buried.
 2. **One primary action per screen.** Rate this verse. Add a verse. Start learning. The
    current pages show six to ten competing links.
 3. **Keyboard on desktop, thumbs on phone, same flow.** Rating buttons 1–5 stay as keys;
@@ -117,7 +119,7 @@ What goes away or merges:
 |---|---|---|
 | Review (`test_verse_quick`) | **Redesign.** Verse-first layout, hint toggle, rating row, "next due" preview, progress micro-bar. Phone layout. | 52% reach; the product. |
 | Dashboard (`memverses#home`) | **Redesign.** Becomes "today": due count + Start, streak, verse of the day, one community item. Drop the five-tab widget wall. | First screen of every session. |
-| Progress (`show_progress`) | **Redesign.** Replace Raphael/JustGage gauges and Highcharts with one modern chart lib (or SVG via Chart.js). Fold badges/quests in. | 46% reach; oldest JS on the site. |
+| Progress (`show_progress`) | **Redesign.** Replace Raphael/JustGage gauges and Highcharts with one modern chart library (Chart.js renders to canvas; hand-written SVG for simple gauges). Fold badges/quests in. | 46% reach; oldest JS on the site. |
 | My Verses (`manage_verses`) | **Redesign** as a filterable table/list with inline status toggle. | 33% reach; dense legacy table. |
 | Add verse / search | **Redesign** as one flow: type a reference or words → preview → add. Starter pack as a first-run variant. | 20% reach; the onboarding bottleneck. |
 | Learn / drill | **Restyle** on the review page's component system. | 13% / 8%. |
@@ -157,8 +159,12 @@ What goes away or merges:
   views depend on it.
 - i18n: all six locales must render; no hard-coded English in new templates.
 - Keyboard shortcuts on the review page (1–5, skip) are a contract.
-- The API and the mobile layout are dead; remove `application.mobile.erb` and the
-  `mobile_device?` plumbing rather than reviving them.
+- The mobile layout is dead (`mobile_device?` is hard-coded off); remove
+  `application.mobile.erb` and that plumbing rather than reviving it.
+- The API carried 3 requests in the measured week and 7 OAuth tokens in 30 days, but it
+  has registered clients: the iOS app, the Android/Flutter app, and a PWA client created in
+  September 2026 (`documentation/OAUTH_PKCE_DEPLOY_RUNBOOK.md`). Treat the API as out of
+  scope for the redesign, not as removable, until those clients' status is confirmed.
 - Tests: Cucumber features cover the core flows and will break on markup changes; budget
   for updating them alongside each page.
 - Performance: the review page should be usable in under one second on a phone over 4G;
@@ -167,14 +173,15 @@ What goes away or merges:
 ## 9. Non-goals
 
 - No new memorisation features during the redesign (no algorithm changes, no new modes).
-- No native app, no API revival.
+- No native app work; no API changes beyond what the existing clients need.
 - No changes to admin, `utils`, RailsAdmin, Sidekiq UI.
 - No data model changes beyond what a page needs.
 
 ## 10. Phasing (proposal)
 
-1. **Instrument** (1 week): add analytics, capture a four-week baseline. Add bot mitigation
-   for blog/forum so logs are usable.
+1. **Baseline** (4 weeks of data, little effort): validate the Ahoy tracking and bot
+   mitigation already in place, fill in the baseline column, add instrumentation only
+   where a gap shows up.
 2. **Foundation** (2 weeks): tokens, type scale, new layout shell with the new navigation,
    feature-flagged per user (`users.level` or a boolean). Old pages still render inside the
    new shell.
@@ -191,7 +198,8 @@ What goes away or merges:
 
 1. Is the goal growth (new users) or care (existing users)? The answer changes whether
    phase 5 comes before phase 3.
-2. Should "Review" be the logged-in landing page when verses are due? (Principle 1.)
+2. ~~Should "Review" be the logged-in landing page when verses are due?~~ Decided: the
+   dashboard stays, with review first on it (Principle 1).
 3. Which of the zero-traffic features are sentimental keeps: sermons, chat, scribe,
    verse scramble, quests?
 4. Blog and forum: keep hosting them, or freeze as static and stop paying the crawler tax?
