@@ -1,5 +1,13 @@
 # Final Migration: fish-eagle → martial-eagle
 
+> **Outcome: cutover completed Saturday 2026-10-17**, moved up from the 02:00 window at Andy's request.
+> - **Outage ~12 min:** maintenance on 12:58:27 PDT; fish-eagle proxying to martial-eagle 13:10:31 PDT.
+> - **Drain:** the gate caught one interrupted `SendReminders` job (the 13:00 run); Andy chose to drop it, since the worker records `last_reminder` per email and the 14:00 run covers the rest.
+> - **Data:** dump `cutover_20261017_130327`; verify COUNTS IDENTICAL (83 tables, `sessions` excepted), 149 migrations up.
+> - **Go:** smoke 14/14; Andy's signed-in check passed; Andy flipped DNS about 13:09, visible at the Linode authority and 8.8.8.8 by 13:12.
+> - **After:** Sidekiq on martial-eagle 13:11 (8 cron jobs); off-host backup retargeted, first run `memverse-20261017T201127Z` done 13:11:54. TLS reissued as ECDSA 13:19 (valid to 2027-01-15); fish-eagle proxy verified against it.
+> - **Rollback from here is 4.2.** Remaining: the rest of section 3 and section 5.
+
 **Status as of 2026-10-17:** Phases 0–3 of the [migration runbook](plans/2026-10-10-fish-eagle-to-martial-eagle-migration.md) are complete. martial-eagle is a fully built, tested production copy at the same revision as fish-eagle (`7dc9864b`). This file is the executable checklist for everything that remains. The runbook stays the reference for background and rationale; where the two differ, this file wins because it is newer.
 
 **Window (decided 2026-10-17):** Sunday **2026-10-18, 02:00–03:30 PDT (09:00–10:30 UTC)**, brought forward from 8 November. Pacific is still PDT (UTC-7) until 1 November. Andy is available from about 02:20 PDT for the DNS change.
@@ -187,9 +195,10 @@ Exercises the exact cutover path. fish-eagle stays live, so `verify --report` wi
 
 ## 3. Same day, after the window — Claude, ~1 h spread over the day
 
-- [ ] **Reissue TLS on martial-eagle** once public resolvers return the new IP (~15 min after the flip); the copied certificate stays valid to 2026-11-23 as fallback:
+- [x] **Done 2026-10-17 13:19 PDT** (ECDSA, valid to 2027-01-15). The original command failed: changing the key type from RSA needs `--cert-name`, and `| tail` hid the failure without `pipefail`. Both are fixed below.
+- [x] **Reissue TLS on martial-eagle** once public resolvers return the new IP (~15 min after the flip); the copied certificate stays valid to 2026-11-23 as fallback:
   ```bash
-  ssh martial-eagle-root 'certbot certonly --webroot -w /var/www/certbot -d memverse.com -d www.memverse.com --key-type ecdsa --non-interactive --agree-tos --keep-until-expiring --force-renewal 2>&1 | tail -3 && nginx -t && systemctl reload nginx && certbot renew --dry-run 2>&1 | tail -2'
+  ssh martial-eagle-root 'set -o pipefail; certbot certonly --webroot -w /var/www/certbot --cert-name memverse.com -d memverse.com -d www.memverse.com --key-type ecdsa --non-interactive --agree-tos --force-renewal 2>&1 | tail -4 && nginx -t 2>&1 | tail -1 && systemctl reload nginx && certbot renew --dry-run --cert-name memverse.com --no-random-sleep-on-renew 2>&1 | tail -2'
   ```
 - [ ] Watch for an hour: `shared/log/production.log`, `shared/log/nginx_error.log`, Sentry (host `martial-eagle`), New Relic, `free -h`.
 - [ ] Confirm the next hourly `schedule_send_reminders` fired on the hour UTC (`shared/log/sidekiq.log`), then the next day's 08:00 and 12:00 UTC jobs, and the Tuesday 17:00 UTC quiz.
