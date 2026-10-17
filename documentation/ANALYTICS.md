@@ -136,7 +136,10 @@ and `?search=` permutation of `/blog`. Three layers now apply, in order:
    crawlers that ignore all of the above: 120 GETs per IP per 10 minutes under `/forum` or
    `/blog` (GET and HEAD), and 30 per IP per 10 minutes for `/blog` URLs carrying a
    listing parameter (`page`, `tag_name`, `search`, `category_id`). Throttled requests
-   get a 429 with `Retry-After` set to the time left in the window. The counter store is Redis in production
+   get a 429 with `Retry-After` set to the time left in the window. Client IPs come from
+   Rack's forwarded-for handling; loopback and private proxies are trusted by default and
+   `TRUSTED_PROXY_IPS` (default: fish-eagle's address, for the migration overlap) adds
+   public ones. The counter store is Redis in production
    (`REDIS_URL`, namespace `rack_attack`) and an in-memory store elsewhere. Logged-in users
    are not exempt; the limits are far above human reading speed.
 

@@ -6,6 +6,14 @@
 # See documentation/ANALYTICS.md ("Bot mitigation").
 require "rack/attack"
 
+# Rack already treats loopback and private addresses as proxies when reading
+# X-Forwarded-For. Add any public proxy in front of this host (TRUSTED_PROXY_IPS,
+# comma-separated); the default is fish-eagle, which forwards traffic to the new
+# server while DNS moves, so throttles key on the real client, not the proxy.
+trusted_proxy_ips = ENV.fetch("TRUSTED_PROXY_IPS", "192.241.205.154").split(",").map(&:strip).reject(&:empty?)
+default_ip_filter = Rack::Request.ip_filter
+Rack::Request.ip_filter = ->(ip) { default_ip_filter.call(ip) || trusted_proxy_ips.include?(ip) }
+
 crawl_paths = %r{\A/(forum|blog)(/|\z)}
 listing_params = %w[page tag_name search category_id].freeze
 

@@ -52,6 +52,18 @@ RSpec.describe "Rack::Attack crawler throttling", type: :request do
     expect(response.headers["Retry-After"].to_i).to be_between(1, 600)
   end
 
+  it "keys the limit on the forwarded client when the request comes through the trusted proxy" do
+    via_proxy = ->(client) { { "REMOTE_ADDR" => "192.241.205.154", "X-Forwarded-For" => client } }
+
+    30.times { get "/blog?page=2", headers: via_proxy.call("203.0.113.10") }
+
+    get "/blog?page=2", headers: via_proxy.call("203.0.113.20")
+    expect(response).not_to have_http_status(:too_many_requests)
+
+    get "/blog?page=2", headers: via_proxy.call("203.0.113.10")
+    expect(response).to have_http_status(:too_many_requests)
+  end
+
   it "does not throttle pages outside /blog and /forum" do
     31.times { get "/faq" }
     expect(response).to have_http_status(:ok)

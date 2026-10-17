@@ -22,6 +22,9 @@ module Users
       ahoy.reset_visit
       Ahoy::Tracker.new(controller: self, visit_token: SecureRandom.uuid, user: user)
                    .track("signed_up", user_id: user.id, login: user.login)
+    rescue StandardError => e
+      # Analytics must never break sign-up or the undelivered-email warning that follows.
+      Rails.logger.warn("[analytics] signed_up not recorded: #{e.class}: #{e.message}")
     end
   end
 end

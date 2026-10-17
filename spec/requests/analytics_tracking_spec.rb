@@ -102,6 +102,17 @@ RSpec.describe "Analytics tracking (Ahoy)", type: :request do
       expect(previous_visit.reload.user_id).to eq(user.id)
     end
 
+    it "still completes sign-up when analytics storage fails" do
+      sign_out user
+      allow_any_instance_of(Ahoy::Tracker).to receive(:track).and_raise(ActiveRecord::StatementInvalid, "ahoy down")
+      params = { name: "Resilient", email: "resilient@example.com", password: "please", password_confirmation: "please" }
+
+      post user_registration_path, params: { user: params }
+
+      expect(response).to be_redirect
+      expect(User.find_by(email: "resilient@example.com")).to be_present
+    end
+
     it "does not record signed_up when registration fails" do
       sign_out user
       expect do
