@@ -17,7 +17,7 @@
 | IP | 192.241.205.154 | 64.23.176.115 |
 | Enabled vhost | `/etc/nginx/sites-enabled/memverse.conf` | `/etc/nginx/sites-enabled/memverse` |
 | Staged vhosts (`sites-available`) | `memverse-maintenance.conf`, `memverse-proxy.conf` | `memverse-maintenance`, `memverse-rollback-proxy` (both rollback only) |
-| nginx reload | `nginx -t && nginx -s reload` (not under systemd) | `nginx -t && systemctl reload nginx` |
+| nginx reload | `/opt/nginx/sbin/nginx -t && /opt/nginx/sbin/nginx -s reload` (not under systemd; bare `nginx` is Ubuntu's unused binary) | `nginx -t && systemctl reload nginx` |
 | Sidekiq units | `sidekiq-scheduler`, `sidekiq-workers@{1,2,3}` | `sidekiq-scheduler`, `sidekiq-workers@{1,2}` |
 | Sidekiq fence | `systemctl disable` (2.2) | `cutover-fence.conf` drop-ins (`AssertPathExists` on a path that never exists, so `systemctl start` fails); unit files live in `/etc/systemd/system`, so `systemctl mask` is impossible |
 | Database fence | No Memverse vhost + Sidekiq disabled. Root MySQL needs a password, and a global `read_only` would also freeze `andyvitus_production` on the same server, so there is no DB-level fence | `SET GLOBAL read_only` as root over the socket (rollback 4.2 only) |
@@ -79,13 +79,18 @@ Exercises the exact cutover path. fish-eagle stays live, so `verify --report` wi
   ssh martial-eagle-root 'rm -f /etc/systemd/system/sidekiq-scheduler.service.d/rehearsal.conf /etc/systemd/system/sidekiq-workers@.service.d/rehearsal.conf; systemctl daemon-reload; sed -i "/passenger_env_var POSTMARK_API_TOKEN/d" /etc/nginx/sites-available/memverse; nginx -t && systemctl reload nginx; su - avitus -c "touch ~/memverse.com/current/tmp/restart.txt"; echo "token lines left: $(grep -c POSTMARK /etc/nginx/sites-available/memverse)"; ls /etc/systemd/system/sidekiq-*.d/; systemctl is-active sidekiq-scheduler sidekiq-workers@1 sidekiq-workers@2 memverse-searchd mysql redis-server nginx | paste -sd" " -'
   ```
   Expect `token lines left: 0`, only `cutover-fence.conf` in both drop-in directories, and `inactive inactive inactive active active active active`.
+- [ ] martial-eagle: nginx temp directories owned by `www-data` again. An isolated `nginx -t -c` check without a `user` line (run on 2026-10-17) chowned them to `nobody`, so every request body larger than the in-memory buffer (uploads, long forum posts) failed with 500 for all three sites on the host:
+  ```bash
+  ssh martial-eagle-root 'chown -R www-data:root /var/lib/nginx/body /var/lib/nginx/fastcgi /var/lib/nginx/proxy /var/lib/nginx/scgi /var/lib/nginx/uwsgi && stat -c "%U %n" /var/lib/nginx/* && sudo -u www-data test -w /var/lib/nginx/body && echo "body dir writable by www-data"'
+  ```
+  Expect five `www-data` lines and `body dir writable by www-data`; the next `smoke.sh` run shows `large POST -> 302`.
 - [ ] martial-eagle: stage the two rollback-only vhosts and the maintenance page, validate each in isolation (none is enabled):
   ```bash
-  ssh martial-eagle-root 'install -D -m 0644 /dev/stdin /var/www/maintenance/index.html' < deployment_scripts/migration/fish-eagle/maintenance-index.html && scp deployment_scripts/migration/martial-eagle/memverse-maintenance.conf martial-eagle-root:/etc/nginx/sites-available/memverse-maintenance && scp deployment_scripts/migration/martial-eagle/memverse-rollback-proxy.conf martial-eagle-root:/etc/nginx/sites-available/memverse-rollback-proxy && ssh martial-eagle-root 'for f in memverse-maintenance memverse-rollback-proxy; do printf "events {}\nhttp { include /etc/nginx/mime.types; include /etc/nginx/sites-available/%s; }\n" "$f" > /tmp/nginx-check.conf; printf "%-26s " "$f"; nginx -t -c /tmp/nginx-check.conf 2>&1 | tail -1; done; rm -f /tmp/nginx-check.conf; ls /etc/nginx/sites-enabled/'
+  ssh martial-eagle-root 'install -D -m 0644 /dev/stdin /var/www/maintenance/index.html' < deployment_scripts/migration/fish-eagle/maintenance-index.html && scp deployment_scripts/migration/martial-eagle/memverse-maintenance.conf martial-eagle-root:/etc/nginx/sites-available/memverse-maintenance && scp deployment_scripts/migration/martial-eagle/memverse-rollback-proxy.conf martial-eagle-root:/etc/nginx/sites-available/memverse-rollback-proxy && ssh martial-eagle-root 'for f in memverse-maintenance memverse-rollback-proxy; do printf "user www-data;\nevents {}\nhttp { include /etc/nginx/mime.types; include /etc/nginx/sites-available/%s; }\n" "$f" > /tmp/nginx-check.conf; printf "%-26s " "$f"; nginx -t -c /tmp/nginx-check.conf 2>&1 | tail -1; done; rm -f /tmp/nginx-check.conf; ls /etc/nginx/sites-enabled/'
   ```
 - [ ] fish-eagle: re-stage the proxy vhost (its `Connection` handling changed), check both staged vhosts in isolation, Sidekiq healthy:
   ```bash
-  scp deployment_scripts/migration/fish-eagle/memverse-proxy.conf fish-eagle-root:/etc/nginx/sites-available/memverse-proxy.conf && ssh fish-eagle-root 'for f in memverse-maintenance.conf memverse-proxy.conf; do printf "events {}\nhttp { include /etc/nginx/mime.types; include /etc/nginx/sites-available/%s; }\n" "$f" > /tmp/nginx-check.conf; printf "%-26s " "$f"; nginx -t -c /tmp/nginx-check.conf 2>&1 | tail -1; done; rm -f /tmp/nginx-check.conf; test -s /var/www/maintenance/index.html && echo "maintenance page present"; systemctl is-active sidekiq-scheduler sidekiq-workers@1 sidekiq-workers@2 sidekiq-workers@3 | paste -sd" " -'
+  scp deployment_scripts/migration/fish-eagle/memverse-proxy.conf fish-eagle-root:/etc/nginx/sites-available/memverse-proxy.conf && ssh fish-eagle-root 'for f in memverse-maintenance.conf memverse-proxy.conf; do printf "user www-data;\nevents {}\nhttp { include /etc/nginx/mime.types; include /etc/nginx/sites-available/%s; }\n" "$f" > /tmp/nginx-check.conf; printf "%-26s " "$f"; /opt/nginx/sbin/nginx -t -c /tmp/nginx-check.conf 2>&1 | tail -1; done; rm -f /tmp/nginx-check.conf; test -s /var/www/maintenance/index.html && echo "maintenance page present"; systemctl is-active sidekiq-scheduler sidekiq-workers@1 sidekiq-workers@2 sidekiq-workers@3 | paste -sd" " -'
   ```
 - [ ] `bash deployment_scripts/migration/scripts/cutover.sh sites` → fish-eagle `memverse.conf`, martial-eagle `memverse`, `SITES OK`.
 - [ ] martial-eagle: prepare the self-backup (read-only MySQL user, `~avitus/.my.backup.cnf`, backup key for `avitus@127.0.0.1`, known_hosts entry). It proves the path with a schema-only dump and does **not** change the current target:
@@ -112,7 +117,7 @@ Exercises the exact cutover path. fish-eagle stays live, so `verify --report` wi
 ### 2.1 Maintenance on — fish-eagle, Claude, 1 min, reversible in seconds
 - [ ] Note the start time. Start at 02:00 or later; the 09:00 UTC hourly reminder job is caught by the drain gate in 2.2 if it is still running.
   ```bash
-  ssh fish-eagle-root 'rm /etc/nginx/sites-enabled/memverse.conf && ln -s /etc/nginx/sites-available/memverse-maintenance.conf /etc/nginx/sites-enabled/ && nginx -t && nginx -s reload && sleep 2 && curl -sS -o /dev/null -w "www -> %{http_code} (want 503)\n" --resolve www.memverse.com:443:127.0.0.1 https://www.memverse.com/'
+  ssh fish-eagle-root 'rm /etc/nginx/sites-enabled/memverse.conf && ln -s /etc/nginx/sites-available/memverse-maintenance.conf /etc/nginx/sites-enabled/ && /opt/nginx/sbin/nginx -t && /opt/nginx/sbin/nginx -s reload && sleep 2 && curl -sS -o /dev/null -w "www -> %{http_code} (want 503)\n" --resolve www.memverse.com:443:127.0.0.1 https://www.memverse.com/'
   ```
 
 ### 2.2 Stop writes — fish-eagle, Claude, 2 min, reversible
@@ -154,7 +159,7 @@ Exercises the exact cutover path. fish-eagle stays live, so `verify --report` wi
 ### 2.8 fish-eagle becomes a proxy — Claude, 1 min
 - [ ] Switch maintenance → reverse proxy, so clients with cached DNS reach martial-eagle through fish-eagle (upstream certificate verified). The fish-eagle app stays unreachable and its Sidekiq disabled, which is its write fence:
   ```bash
-  ssh fish-eagle-root 'rm /etc/nginx/sites-enabled/memverse-maintenance.conf && ln -s /etc/nginx/sites-available/memverse-proxy.conf /etc/nginx/sites-enabled/ && nginx -t && nginx -s reload && sleep 2 && curl -sS -o /dev/null -w "via fish-eagle -> %{http_code} (want 200)\n" --resolve www.memverse.com:443:127.0.0.1 https://www.memverse.com/users/sign_in'
+  ssh fish-eagle-root 'rm /etc/nginx/sites-enabled/memverse-maintenance.conf && ln -s /etc/nginx/sites-available/memverse-proxy.conf /etc/nginx/sites-enabled/ && /opt/nginx/sbin/nginx -t && /opt/nginx/sbin/nginx -s reload && sleep 2 && curl -sS -o /dev/null -w "via fish-eagle -> %{http_code} (want 200)\n" --resolve www.memverse.com:443:127.0.0.1 https://www.memverse.com/users/sign_in'
   ```
 - [ ] `bash deployment_scripts/migration/scripts/cutover.sh sites` → fish-eagle `memverse-proxy.conf`, martial-eagle `memverse`, `SITES OK`.
 
@@ -201,7 +206,7 @@ Rule for every rollback: **fence the host being abandoned first, reopen the othe
    ```
 2. **Reopen fish-eagle.** Remove maintenance *and* proxy (whichever is enabled), restore the production vhost, re-enable Sidekiq:
    ```bash
-   ssh fish-eagle-root 'rm -f /etc/nginx/sites-enabled/memverse-maintenance.conf /etc/nginx/sites-enabled/memverse-proxy.conf && ln -sf /etc/nginx/sites-available/memverse.conf /etc/nginx/sites-enabled/memverse.conf && nginx -t && nginx -s reload && systemctl enable --now sidekiq-scheduler sidekiq-workers@1 sidekiq-workers@2 sidekiq-workers@3 && systemctl is-active sidekiq-scheduler sidekiq-workers@1 sidekiq-workers@2 sidekiq-workers@3 | paste -sd" " -'
+   ssh fish-eagle-root 'rm -f /etc/nginx/sites-enabled/memverse-maintenance.conf /etc/nginx/sites-enabled/memverse-proxy.conf && ln -sf /etc/nginx/sites-available/memverse.conf /etc/nginx/sites-enabled/memverse.conf && /opt/nginx/sbin/nginx -t && /opt/nginx/sbin/nginx -s reload && systemctl enable --now sidekiq-scheduler sidekiq-workers@1 sidekiq-workers@2 sidekiq-workers@3 && systemctl is-active sidekiq-scheduler sidekiq-workers@1 sidekiq-workers@2 sidekiq-workers@3 | paste -sd" " -'
    ```
 3. `bash deployment_scripts/migration/scripts/cutover.sh sites` → fish-eagle `memverse.conf`, martial-eagle `memverse-maintenance`, `SITES OK`. martial-eagle keeps the maintenance vhost until the next attempt starts again at 1.2.
 
@@ -249,6 +254,7 @@ No rollback; fix forward on martial-eagle.
 | Cron state on a fresh Redis | Jobs disabled only in fish-eagle's Redis revive (`schedule_quiz`) | D7 removed it; Redis flushed at 2.4; `cutover.sh schedule` requires the loaded jobs to equal the YAML |
 | Rehearsal email token | Real users emailed from the rehearsal | Removed at 1.3 and verified; Passenger restarted; Sidekiq fenced until 2.9 anyway |
 | Stale cache after restore | Pages showing rehearsal-era data | Cache cleared at 2.4 |
-| fish-eagle nginx | `systemctl reload` is a silent no-op there | All fish-eagle reloads use `nginx -s reload` |
+| fish-eagle nginx | `systemctl reload` is a silent no-op there, and bare `nginx` is Ubuntu's unused `/usr/sbin/nginx` (the live master is `/opt/nginx/sbin/nginx`) | All fish-eagle checks and reloads call `/opt/nginx/sbin/nginx` |
+| Isolated `nginx -t -c` checks | Without a `user` line nginx chowns its temp paths to `nobody`; on martial-eagle (2026-10-17) that made every request body over the memory buffer fail with 500 | Each check config starts with `user www-data;`; 1.3 restores the ownership; `smoke.sh` POSTs a 200 KB body |
 | TLS after flip | Browser warnings | Copied cert valid to 2026-11-23; reissued same day |
 | fish-eagle reboot | Rollback asset may not come back | Never reboot or update it until decommission |
