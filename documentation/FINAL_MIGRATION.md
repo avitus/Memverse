@@ -92,6 +92,10 @@ Exercises the exact cutover path. fish-eagle stays live, so `verify --report` wi
   ```bash
   scp deployment_scripts/migration/fish-eagle/memverse-proxy.conf fish-eagle-root:/etc/nginx/sites-available/memverse-proxy.conf && ssh fish-eagle-root 'rc=0; for f in memverse-maintenance.conf memverse-proxy.conf; do printf "user www-data;\nevents {}\nhttp { include /etc/nginx/mime.types; include /etc/nginx/sites-available/%s; }\n" "$f" > /tmp/nginx-check.conf; printf "%-26s " "$f"; out=$(/opt/nginx/sbin/nginx -t -c /tmp/nginx-check.conf 2>&1) || rc=1; echo "$out" | tail -1; done; rm -f /tmp/nginx-check.conf; if test -s /var/www/maintenance/index.html; then echo "maintenance page present"; else echo "maintenance page MISSING"; rc=1; fi; systemctl is-active sidekiq-scheduler sidekiq-workers@1 sidekiq-workers@2 sidekiq-workers@3 | paste -sd" " -; exit $rc'
   ```
+- [x] fish-eagle: preserve the production vhost. `sites-enabled/memverse.conf` is a regular file, not a symlink, and was the only copy; 2.1 removes it and 4.1/4.2 relink `sites-available/memverse.conf`. **Done 2026-10-17 12:54 PDT** (md5 `641926319b06083cbe3db74f9163ca0c`, also in `/root/memverse.conf.pre-cutover-20261017`):
+  ```bash
+  ssh fish-eagle-root 'cp -p /etc/nginx/sites-enabled/memverse.conf /etc/nginx/sites-available/memverse.conf && cp -p /etc/nginx/sites-enabled/memverse.conf /root/memverse.conf.pre-cutover-$(date +%Y%m%d) && md5sum /etc/nginx/sites-enabled/memverse.conf /etc/nginx/sites-available/memverse.conf'
+  ```
 - [ ] `bash deployment_scripts/migration/scripts/cutover.sh sites` → fish-eagle `memverse.conf`, martial-eagle `memverse`, `SITES OK`.
 - [ ] martial-eagle: prepare the self-backup (read-only MySQL user, `~avitus/.my.backup.cnf`, backup key for `avitus@127.0.0.1`, known_hosts entry). It proves the path with a schema-only dump and does **not** change the current target:
   ```bash
