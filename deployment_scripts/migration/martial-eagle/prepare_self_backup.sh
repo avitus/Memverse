@@ -15,6 +15,7 @@ AUTH=/home/avitus/.ssh/authorized_keys
 # 1. Read-only MySQL user; the password is generated here, kept only in the 0600 options file, never printed.
 if [ -s "$CNF" ]; then
   PW=$(sed -n 's/^password=//p' "$CNF")
+  [ -n "$PW" ] || { echo "$CNF exists but has no password= line; fix or remove it" >&2; exit 1; }
 else
   PW=$(openssl rand -hex 24)
   install -o avitus -g avitus -m 0600 /dev/null "$CNF"
@@ -29,6 +30,9 @@ SQL
 unset PW
 
 # 2. The backup key may log in as avitus from this host only, with the same restrictions fish-eagle applies.
+#    authorized_keys must already exist, owned by avitus and writable by nobody else (sshd's StrictModes).
+[ -f "$AUTH" ] && [ "$(stat -c %U "$AUTH")" = avitus ] && [ $(( 0$(stat -c %a "$AUTH") & 022 )) -eq 0 ] ||
+  { echo "$AUTH must exist, be owned by avitus and not be group/world writable" >&2; exit 1; }
 grep -qF "$(cut -d' ' -f2 "$KEY")" "$AUTH" ||
   printf 'from="127.0.0.1,::1",no-agent-forwarding,no-port-forwarding,no-X11-forwarding,no-pty %s\n' "$(cat "$KEY")" >> "$AUTH"
 
