@@ -23,8 +23,8 @@ The data says the product is healthy at its core and broken at its edges:
   joined this year). The onboarding path is where growth is lost.
 - 70% of core-page traffic is desktop (Safari 52%, Chrome 37%). This is a desktop product
   used at a desk, and the redesign should make the most of that: wide verse text, keyboard
-  flow, dense progress views. The 30% on phone or tablet needs a layout that works, not a
-  layout that leads.
+  flow, dense progress views. Mobile is served by the native apps (iOS, Android/Flutter,
+  and the PWA), so the web app only needs to stay usable on a phone, not lead there.
 - Nine top-level tabs and 36 sub-tabs expose ~150 pages, of which eight carry the product.
 
 *[Andy: add the personal "why" here: what prompted this, what a successful outcome looks
@@ -37,7 +37,7 @@ like to you in one sentence.]*
 | Keep the daily reviewers | Reviewing users per weekday | 75–86 | no drop during or after rollout |
 | Retain new sign-ups | 30-day actives who signed up in the last 12 months | ~45 | *[150?]* |
 | Keep desktop first-class | Share of core-page loads from desktop | 70% | hold or grow |
-| Make the phone layout usable | Verse ratings completed on phone/tablet per session, vs desktop | *[unmeasured]* | parity |
+| Keep the phone web layout usable | Phone/tablet visitors who complete a rating | *[unmeasured]* | no regression; native apps are the mobile channel |
 | Shorten time to first review | Sign-up → first `mark_test_quick` | *[unmeasured]* | same session |
 | Reduce surface area | User-facing HTML pages | ~150 | *[~40]* |
 
@@ -58,8 +58,8 @@ layout on a 27-inch screen: no giant tap targets, no hidden keyboard shortcuts, 
 narrow column with the verse text squeezed into it.
 
 **Persona B: the new arrival (≈ 40 sign-ups/week, few retained).** Finds the site from
-Google or a church recommendation, on a desktop more often than not but sometimes on a
-phone. Lands on `/`, maybe tries `/demo`,
+Google or a church recommendation, on a desktop more often than not. A phone arrival
+should be pointed at the native app, not asked to memorise verses in a mobile browser. Lands on `/`, maybe tries `/demo`,
 signs up, lands on a dashboard with eleven things on it and nine tabs, and does not yet have
 a verse to review. Needs: one verse in the queue within sixty seconds, one obvious next
 action, and a reason to come back tomorrow.
@@ -80,11 +80,12 @@ question bank suggest a seasonal audience.]*
    remaining widgets demoted. Review itself is one click away, never buried.
 2. **One primary action per screen.** Rate this verse. Add a verse. Start learning. The
    current pages show six to ten competing links.
-3. **Desktop first, phone second, one codebase.** Design every core screen for a desktop
-   browser at full width first: keyboard rating (1–5, skip), verse text at a comfortable
-   measure, progress alongside review. Then make the same page collapse to a phone layout
-   (rating row at the bottom, one column). No separate mobile site, and no phone-shaped
-   layout stretched across a desktop.
+3. **Desktop first; mobile belongs to the native apps.** Design every core screen for a
+   desktop browser at full width: keyboard rating (1–5, skip), verse text at a comfortable
+   measure, progress alongside review. The same pages must still collapse to a readable
+   single column on a phone, but no feature is designed around the phone browser. No
+   separate mobile site, no phone-shaped layout stretched across a desktop, and a visible
+   "get the app" path for phone visitors.
 4. **Progress is a reward, not a report.** Users check it almost every session (46% weekly
    reach). It should be glanceable in two seconds and live next to the review flow, not
    behind a tab.
@@ -152,7 +153,8 @@ What goes away or merges:
   *[e.g. Source Serif / Literata]* at 18–20px; UI stays in a sans *[Inter / keep Open Sans]*.
 - **Layout**: a real desktop layout, roughly 1100–1200px wide, with verse text at ~72ch and
   a second column for the progress strip, upcoming queue or hints. It collapses to a
-  single column under ~768px. Today's fixed 13px shell wastes most of a modern screen.
+  single column under ~768px, enough to read and rate, nothing more. Today's fixed 13px
+  shell wastes most of a modern screen.
 - **Dark mode**: *[yes/no]*. Cheap if colours are tokens from day one.
 - **Logo**: keep *[yes]*; the `logo.png` is 253×31 raster, needs an SVG.
 - **Illustration / imagery**: *[none / light line icons only]*.
@@ -168,22 +170,23 @@ What goes away or merges:
   views depend on it.
 - i18n: all six locales must render; no hard-coded English in new templates.
 - Keyboard shortcuts on the review page (1–5, skip) are a contract.
-- The mobile layout is dead (`mobile_device?` is hard-coded off); remove
-  `application.mobile.erb` and that plumbing rather than reviving it.
-- The API carried 3 requests in the measured week and 7 OAuth tokens in 30 days, but it
-  has registered clients: the iOS app, the Android/Flutter app, and a PWA client created in
-  September 2026 (`documentation/OAUTH_PKCE_DEPLOY_RUNBOOK.md`). Treat the API as out of
-  scope for the redesign, not as removable, until those clients' status is confirmed.
+- The old mobile web layout is dead (`mobile_device?` is hard-coded off); remove
+  `application.mobile.erb` and that plumbing rather than reviving it. Mobile is the
+  native apps' job.
+- The API (`/api/v1`, OAuth) is what the iOS app, the Android/Flutter app and the PWA
+  client (`documentation/OAUTH_PKCE_DEPLOY_RUNBOOK.md`) run on. It carried little traffic
+  in the measured week, but it is the mobile channel: keep it stable and out of the web
+  redesign's scope. Nothing in this project may change an API response.
 - Tests: Cucumber features cover the core flows and will break on markup changes; budget
   for updating them alongside each page.
-- Performance: the review page should render in well under a second on desktop and be
-  usable in under two on a phone over 4G; the current page ships ~40 JS files through
-  Sprockets.
+- Performance: the review page should render in well under a second on desktop; the
+  current page ships ~40 JS files through Sprockets.
 
 ## 9. Non-goals
 
 - No new memorisation features during the redesign (no algorithm changes, no new modes).
-- No native app work; no API changes beyond what the existing clients need.
+- No native app work, and no API changes: the apps are a separate track.
+- No mobile-web feature work beyond keeping pages readable on a phone.
 - No changes to admin, `utils`, RailsAdmin, Sidekiq UI.
 - No data model changes beyond what a page needs.
 
