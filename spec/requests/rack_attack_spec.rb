@@ -25,8 +25,19 @@ RSpec.describe "Rack::Attack crawler throttling", type: :request do
     get "/blog?page=2"
 
     expect(response).to have_http_status(:too_many_requests)
-    expect(response.headers["Retry-After"]).to eq("600")
+    expect(response.headers["Retry-After"].to_i).to be_between(1, 600)
     expect(response.body).to include("Too many requests")
+  end
+
+  it "keeps a tracking-only query string on the ordinary blog limit" do
+    31.times { get "/blog?utm_source=newsletter" }
+    expect(response).to have_http_status(:ok)
+  end
+
+  it "counts HEAD requests against the limit" do
+    30.times { head "/blog?page=2" }
+    head "/blog?page=2"
+    expect(response).to have_http_status(:too_many_requests)
   end
 
   it "throttles any forum or blog traffic after 120 requests from one IP" do
@@ -38,7 +49,7 @@ RSpec.describe "Rack::Attack crawler throttling", type: :request do
     get "/forum"
 
     expect(response).to have_http_status(:too_many_requests)
-    expect(response.headers["Retry-After"]).to eq("600")
+    expect(response.headers["Retry-After"].to_i).to be_between(1, 600)
   end
 
   it "does not throttle pages outside /blog and /forum" do

@@ -13,8 +13,11 @@ network and can attach one user's events to another user's visit). IPs are store
 Logged-in activity is attributed by `user_id`, set on the visit at sign-in and on the
 sign-up event explicitly.
 
-Tables: `ahoy_visits` (one row per visitor per day, with landing page, referrer, browser,
-OS, device type, user) and `ahoy_events` (name, JSON properties, time, visit, user).
+Tables: `ahoy_visits` (one row per visit, with landing page, referrer, browser, OS,
+device type, user) and `ahoy_events` (name, JSON properties, time, visit, user). The
+landing page and referrer are stored without query strings (`Ahoy::Store#track_visit`),
+so confirmation and password-reset tokens never reach the table; `utm_*` values are
+extracted into their own columns first.
 
 | Event | Where it is recorded | Properties |
 |---|---|---|
@@ -24,10 +27,13 @@ OS, device type, user) and `ahoy_events` (name, JSON properties, time, visit, us
 | `verse_rated` | `MemversesController#mark_test_quick` | `memverse_id`, `verse_id`, `rating` (1–5), `newly_memorized` |
 | `reference_tested` | `MemversesController#score_ref_test` | `memverse_id`, `verse_id`, `correct` |
 
-Not tracked: anything under `admin/`, `utils`, `rails_admin/`, `api/`, `apidocs`,
-`ckeditor/`, `turbo/` (neither page views nor visits, via `Ahoy.exclude_method`);
-crawlers and requests with no user agent (Ahoy's `browser`-based bot detection);
-redirects and error responses; JSON/XHR calls.
+Not tracked at all (no visit, no event): anything under `admin/`, `utils`,
+`rails_admin/`, `api/`, `apidocs`, `ckeditor/`, `turbo/` (`Ahoy.exclude_method`), and
+crawlers or requests with no user agent (Ahoy's `browser`-based bot detection).
+
+No `$view` event, but a visit may still be created (Ahoy tracks visits in a
+`before_action`, the page-view hook runs afterwards): redirects, error responses, and
+JSON/XHR calls to tracked controllers.
 
 Configuration lives in `config/initializers/ahoy.rb`. Models are `Ahoy::Visit` and
 `Ahoy::Event` (`app/models/ahoy/`).
@@ -118,17 +124,19 @@ and `?search=` permutation of `/blog`. Three layers now apply, in order:
    ShapBot, Reflectionbot, KeenableBot, SemrushBot, SERankingBacklinksBot,
    Amzn-SearchBot. Googlebot and bingbot are not blocked.
 2. **robots.txt** (`public/robots.txt`): disallows `/forum/posts/`, `/forum/private-topics/`,
-   forum `/page-N` listings, legacy `/blog/blogs/` and `/blog/main` routes, any `/blog/*?`
-   query permutation and any `?page=` URL; plus explicit disallow-all entries for the
-   scrapers above and PetalBot.
+   forum `/page-N` listings, legacy `/blog/blogs/` and `/blog/main` routes, blog URLs with
+   a `page`, `tag_name`, `search` or `category_id` parameter, and any `page=` URL; plus
+   explicit disallow-all entries for the scrapers above and PetalBot. A tracking-only
+   query string stays crawlable.
 3. **X-Robots-Tag / meta robots** (`RobotsDirectives` concern): `noindex, nofollow` on forum
    post permalinks (including their 302 to the topic), on legacy blog listing routes, and
    on any Thredded or Bloggity page with a `page` param or a query string. Top-level
    `/blog`, individual posts, `/forum` and topic pages stay indexable.
 4. **Rack::Attack throttle** (`config/initializers/rack_attack.rb`) as a backstop for
    crawlers that ignore all of the above: 120 GETs per IP per 10 minutes under `/forum` or
-   `/blog`, and 30 per IP per 10 minutes for `/blog` URLs with a query string. Throttled
-   requests get a 429 with `Retry-After`. The counter store is Redis in production
+   `/blog` (GET and HEAD), and 30 per IP per 10 minutes for `/blog` URLs carrying a
+   listing parameter (`page`, `tag_name`, `search`, `category_id`). Throttled requests
+   get a 429 with `Retry-After` set to the time left in the window. The counter store is Redis in production
    (`REDIS_URL`, namespace `rack_attack`) and an in-memory store elsewhere. Logged-in users
    are not exempt; the limits are far above human reading speed.
 

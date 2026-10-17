@@ -18,9 +18,12 @@ Disallow: /forum/private-topics/            # Private messages
 Disallow: /forum/*/page-                    # Paginated forum listings
 Disallow: /blog/blogs/                      # Legacy blog routes; posts are indexed under /blog/<slug>
 Disallow: /blog/main                        # Legacy blog route
-Disallow: /blog/*?                          # Paginated, tagged and searched blog listings
-Disallow: /blog?                            # Same, on /blog itself (?page=, ?tag_name=, ?search=)
+Disallow: /blog*?*page=                     # Paginated, tagged and searched blog listings
+Disallow: /blog*?*tag_name=                 # (a tracking-only query such as ?utm_source= stays crawlable)
+Disallow: /blog*?*search=
+Disallow: /blog*?*category_id=
 Disallow: /*?page=                          # Any other paginated listing
+Disallow: /*&page=
 
 # Scrapers seen walking the blog and forum exhaustively (also blocked by AttackProtectionMiddleware)
 User-agent: ShapBot
