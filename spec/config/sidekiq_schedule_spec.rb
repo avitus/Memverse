@@ -18,7 +18,7 @@ RSpec.describe 'config/sidekiq_schedule.yml' do
   # The per-entry keys Sidekiq::Cron::Job#initialize reads in sidekiq-cron 2.4
   # (lib/sidekiq/cron/job.rb). Anything else is silently ignored, which is exactly how
   # `active: false` failed to disable a job. `status: disabled` is the only off switch.
-  SIDEKIQ_CRON_KEYS = %w[
+  sidekiq_cron_keys = %w[
     cron class queue active_job status description args namespace symbolize_args
     date_as_argument retry
   ].freeze
@@ -53,7 +53,7 @@ RSpec.describe 'config/sidekiq_schedule.yml' do
       end
 
       it 'uses only keys that sidekiq-cron 2.4 understands' do
-        unknown = job.keys - SIDEKIQ_CRON_KEYS
+        unknown = job.keys - sidekiq_cron_keys
         message = "#{name} uses key(s) #{unknown.inspect} that sidekiq-cron ignores. " \
                   'The only way to switch an entry off is `status: disabled`; ' \
                   'to remove it, delete the entry (the loader destroys removed jobs at boot).'
