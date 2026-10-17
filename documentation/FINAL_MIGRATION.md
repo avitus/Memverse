@@ -208,7 +208,7 @@ Exercises the exact cutover path. fish-eagle stays live, so `verify --report` wi
 - [x] Watch for an hour: `shared/log/production.log`, `shared/log/nginx_error.log`, Sentry (host `martial-eagle`), New Relic, `free -h`.
 - [ ] Confirm the next hourly `schedule_send_reminders` fired on the hour UTC (`shared/log/sidekiq.log`), then the next day's 08:00 and 12:00 UTC jobs, and the Tuesday 17:00 UTC quiz.
   - Hourly part **done 2026-10-17 14:00 PDT**: enqueued 21:00:00Z, `done` after 140 s, 4 reminders sent; the `Postmark::InactiveRecipientError` lines are pre-existing (fish-eagle had the same ratio). Still to confirm: 08:00 and 12:00 UTC on 2026-10-18, the 23:00 UTC Saturday quiz on 2026-10-17, and the Tuesday quiz.
-- [ ] Confirm Sunday's ~21:10 PDT timer run backed up martial-eagle (`journalctl -u memverse-backup.service`, MANIFEST `source=127.0.0.1`).
+- [ ] Confirm Sunday's ~21:10 PDT timer run backed up martial-eagle in `journalctl -u memverse-backup.service` (`dumping memverse_production from 127.0.0.1`).
   - The timer also runs Saturday 2026-10-17 21:12 PDT. `MANIFEST` sits inside the encrypted archive (`memverse-backup.sh` line 83), so the log line `dumping memverse_production from 127.0.0.1` is the check.
 - [ ] After 48 h: **Andy** raises the two A-record TTLs to 3600 at Linode.
 - [ ] Record the outcome and timings at the top of this file.
