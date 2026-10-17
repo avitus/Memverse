@@ -94,7 +94,7 @@ Exercises the exact cutover path. fish-eagle stays live, so `verify --report` wi
   ```
 - [x] fish-eagle: preserve the production vhost. `sites-enabled/memverse.conf` is a regular file, not a symlink, and was the only copy; 2.1 removes it and 4.1/4.2 relink `sites-available/memverse.conf`. **Done 2026-10-17 12:54 PDT** (md5 `641926319b06083cbe3db74f9163ca0c`, also in `/root/memverse.conf.pre-cutover-20261017`):
   ```bash
-  ssh fish-eagle-root 'cp -p /etc/nginx/sites-enabled/memverse.conf /etc/nginx/sites-available/memverse.conf && cp -p /etc/nginx/sites-enabled/memverse.conf /root/memverse.conf.pre-cutover-$(date +%Y%m%d) && md5sum /etc/nginx/sites-enabled/memverse.conf /etc/nginx/sites-available/memverse.conf'
+  ssh fish-eagle-root 'b=/root/memverse.conf.pre-cutover-$(date +%Y%m%d); cp -p /etc/nginx/sites-enabled/memverse.conf /etc/nginx/sites-available/memverse.conf && cp -p /etc/nginx/sites-enabled/memverse.conf "$b" && md5sum /etc/nginx/sites-enabled/memverse.conf /etc/nginx/sites-available/memverse.conf "$b"'
   ```
 - [ ] `bash deployment_scripts/migration/scripts/cutover.sh sites` → fish-eagle `memverse.conf`, martial-eagle `memverse`, `SITES OK`.
 - [ ] martial-eagle: prepare the self-backup (read-only MySQL user, `~avitus/.my.backup.cnf`, backup key for `avitus@127.0.0.1`, known_hosts entry). It proves the path with a schema-only dump and does **not** change the current target:
