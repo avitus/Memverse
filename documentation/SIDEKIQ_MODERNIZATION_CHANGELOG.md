@@ -78,7 +78,12 @@ gem "sidekiq-cron", "~> 2.0"  # Major version upgrade
 ### Breaking Changes Fixed
 - Updated `config/initializers/sidekiq.rb`:
   - Changed `Sidekiq::Cron::Job.load_from_hash!` to `Sidekiq::Cron::Job.load_from_hash`
-  - Fixed sidekiq-cron 2.0 compatibility
+    for sidekiq-cron 2.0 compatibility. **Reverted in October 2026**: the bang form exists
+    and works in sidekiq-cron 2.4.0 (`lib/sidekiq/cron/job.rb`, `load_from_hash!` calls
+    `destroy_removed_jobs` then `load_from_hash`), and the non-bang form left entries removed
+    from the YAML registered in Redis and firing. The initializer now calls
+    `load_from_hash!(schedule, source: "schedule")`; see
+    `documentation/QUIZ_CRON_DUPLICATE_RUNS_2026-10.md`.
 
 ### Version Results
 - Sidekiq: Upgraded to 7.3.9
