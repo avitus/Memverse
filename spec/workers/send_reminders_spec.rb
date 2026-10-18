@@ -92,7 +92,7 @@ RSpec.describe SendReminders, type: :worker do
           allow(user).to receive(:needs_reminder?).and_return(true)
           allow(user).to receive(:progression).and_return(2)
           allow(user).to receive(:update_reminder_freq)
-          allow(user).to receive(:update_attribute)
+          allow(user).to receive(:update_column)
           user
         end
       end
@@ -126,7 +126,7 @@ RSpec.describe SendReminders, type: :worker do
       before do
         # Mock update methods
         allow_any_instance_of(User).to receive(:update_reminder_freq)
-        allow_any_instance_of(User).to receive(:update_attribute)
+        allow_any_instance_of(User).to receive(:update_column)
         allow_any_instance_of(User).to receive(:needs_reminder?).and_return(true)
         allow_any_instance_of(User).to receive(:name_or_login).and_return('Test User')
       end
@@ -255,8 +255,9 @@ RSpec.describe SendReminders, type: :worker do
         allow(user).to receive(:progression).and_return(3)
         mock_user_find_each([user])
 
-        expect(user).to receive(:update_attribute).with(:last_reminder, Date.today)
         worker.perform
+
+        expect(user.reload.last_reminder).to eq(Time.zone.today)
       end
     end
 
@@ -266,7 +267,7 @@ RSpec.describe SendReminders, type: :worker do
       before do
         allow(user).to receive(:needs_reminder?).and_return(true)
         allow(user).to receive(:update_reminder_freq)
-        allow(user).to receive(:update_attribute)
+        allow(user).to receive(:update_column)
         mock_user_find_each([user])
       end
 
@@ -308,7 +309,7 @@ RSpec.describe SendReminders, type: :worker do
         allow(user2).to receive(:update_reminder_freq)
         allow(user2).to receive(:needs_reminder?).and_return(true)
         allow(user2).to receive(:progression).and_return(2)
-        allow(user2).to receive(:update_attribute)
+        allow(user2).to receive(:update_column)
 
         mock_user_find_each([user1, user2])
 
@@ -328,7 +329,7 @@ RSpec.describe SendReminders, type: :worker do
         allow(user).to receive(:needs_reminder?).and_return(true)
         allow(user).to receive(:progression).and_return(2)
         allow(user).to receive(:update_reminder_freq)
-        allow(user).to receive(:update_attribute)
+        allow(user).to receive(:update_column)
         allow(user).to receive(:name_or_login).and_return('Test User')
         mock_user_find_each([user])
       end
@@ -355,7 +356,7 @@ RSpec.describe SendReminders, type: :worker do
           allow(user).to receive(:needs_reminder?).and_return(true)
           allow(user).to receive(:progression).and_return(2)
           allow(user).to receive(:update_reminder_freq)
-          allow(user).to receive(:update_attribute)
+          allow(user).to receive(:update_column)
           user
         end
       end
@@ -392,7 +393,6 @@ RSpec.describe SendReminders, type: :worker do
         allow(successful_user).to receive(:needs_reminder?).and_return(true)
         allow(successful_user).to receive(:progression).and_return(2)
         allow(successful_user).to receive(:update_reminder_freq)
-        allow(successful_user).to receive(:update_attribute)
         allow(successful_user).to receive(:name_or_login).and_return('Successful User')
 
         mock_user_find_each([user_with_email_error, successful_user])
@@ -410,10 +410,10 @@ RSpec.describe SendReminders, type: :worker do
         # Expect error logging for failed email
         expect(Rails.logger).to receive(:error).with(/Error: Failed to send progression email to user #{user_with_email_error.id}.*Email service error/)
 
-        # Expect successful processing to continue
-        expect(successful_user).to receive(:update_attribute).with(:last_reminder, Date.today)
-
         worker.perform
+
+        # Expect successful processing to continue
+        expect(successful_user.reload.last_reminder).to eq(Time.zone.today)
       end
 
       it 'logs detailed error information when email sending fails' do
@@ -450,13 +450,11 @@ RSpec.describe SendReminders, type: :worker do
         expect(failing_email).to receive(:deliver).and_raise(StandardError.new('Service error'))
         expect(UserMailer).to receive(:progression_email_5).and_return(failing_email)
 
-        expect(user_with_email_error).not_to receive(:update_attribute)
-
-        worker.perform
+        expect { worker.perform }.not_to(change { user_with_email_error.reload.last_reminder })
       end
     end
 
-    describe 'when Postmark will not deliver to the recipient' do
+    describe 'when Postmark will not deliver the email' do
       # A real user and mailer, so needs_reminder? and last_reminder behave as they do
       # in production; only the Postmark API call is replaced by the error it returns.
       let!(:user) do
@@ -466,22 +464,11 @@ RSpec.describe SendReminders, type: :worker do
       before do
         allow(UserMailer).to receive(:progression_email_2).and_call_original
         allow(Sentry).to receive(:capture_exception)
+        allow(Sentry).to receive(:capture_message)
         stub_mail_delivery_failure(error)
       end
 
-      shared_examples 'an undeliverable recipient' do
-        it 'attempts the reminder once per reminder cycle, not on every hourly run' do
-          2.times { described_class.new.perform }
-
-          expect(UserMailer).to have_received(:progression_email_2).with(user).once
-        end
-
-        it 'records the attempt as the last reminder' do
-          worker.perform
-
-          expect(user.reload.last_reminder).to eq(Date.today)
-        end
-
+      shared_examples 'a failed delivery' do
         it 'logs the user id and Postmark error code' do
           worker.perform
 
@@ -505,6 +492,42 @@ RSpec.describe SendReminders, type: :worker do
         end
       end
 
+      shared_examples 'an undeliverable recipient' do
+        include_examples 'a failed delivery'
+
+        it 'attempts the reminder once per reminder cycle, not on every hourly run' do
+          2.times { described_class.new.perform }
+
+          expect(UserMailer).to have_received(:progression_email_2).with(user).once
+        end
+
+        it 'records the attempt as the last reminder' do
+          worker.perform
+
+          expect(user.reload.last_reminder).to eq(Time.zone.today)
+        end
+
+        it 'records the attempt even when the user record no longer passes validation' do
+          user.update_column(:name, 'x' * 61) # legacy names may exceed the current 60-character limit
+
+          worker.perform
+
+          expect(user.reload.last_reminder).to eq(Time.zone.today)
+        end
+      end
+
+      shared_examples 'a reported invalid request' do
+        it 'reports it to Sentry as a warning without the address, since a misconfigured message also lands here' do
+          worker.perform
+
+          expect(Sentry).to have_received(:capture_message).with(
+            "Postmark rejected a progression email: #{error.class} (error #{error.error_code})",
+            level: :warning, extra: { user_id: user.id }
+          )
+          expect(Sentry).not_to have_received(:capture_exception)
+        end
+      end
+
       context 'because Postmark has suppressed the address' do
         let(:error) { postmark_inactive_recipient_error(user.email) }
 
@@ -514,18 +537,33 @@ RSpec.describe SendReminders, type: :worker do
           worker.perform
 
           expect(Sentry).not_to have_received(:capture_exception)
+          expect(Sentry).not_to have_received(:capture_message)
         end
       end
 
-      context 'because Postmark rejects the message as an invalid request' do
+      context "because Postmark rejects the 'To' address" do
         let(:error) { postmark_invalid_email_request_error(user.email) }
 
         include_examples 'an undeliverable recipient'
+        include_examples 'a reported invalid request'
+      end
 
-        it 'reports it to Sentry as a warning, since a misconfigured message also lands here' do
+      context 'because Postmark rejects the message itself' do
+        let(:error) { postmark_invalid_message_error }
+
+        include_examples 'a failed delivery'
+        include_examples 'a reported invalid request'
+
+        it 'retries on the next hourly run, since the same message fails for every user' do
+          2.times { described_class.new.perform }
+
+          expect(UserMailer).to have_received(:progression_email_2).with(user).twice
+        end
+
+        it 'does not record a reminder' do
           worker.perform
 
-          expect(Sentry).to have_received(:capture_exception).with(error, level: :warning)
+          expect(user.reload.last_reminder).to be_nil
         end
       end
     end
