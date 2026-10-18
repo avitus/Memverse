@@ -116,7 +116,7 @@ class SendReminders
   # record that fails a newer validation must still be marked or it is retried every hour
   # @param u [User]
   def record_reminder(u)
-    u.update_column(:last_reminder, Time.zone.today)
+    u.update_column(:last_reminder, Time.zone.today) # skipcq: RB-RL1053
   end
 
   # Validate email format to prevent Postmark errors

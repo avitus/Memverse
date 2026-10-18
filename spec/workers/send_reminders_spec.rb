@@ -508,7 +508,8 @@ RSpec.describe SendReminders, type: :worker do
         end
 
         it 'records the attempt even when the user record no longer passes validation' do
-          user.update_column(:name, 'x' * 61) # legacy names may exceed the current 60-character limit
+          # A legacy name longer than the current 60-character limit; the column allows 100
+          user.update_column(:name, 'x' * 61) # skipcq: RB-RL1053
 
           worker.perform
 
