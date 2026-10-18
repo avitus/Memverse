@@ -38,10 +38,12 @@ RSpec.describe User, 'Devise notifications Postmark refuses to deliver' do
 
     it 'does not report the expected suppression to Sentry' do
       allow(Sentry).to receive(:capture_exception)
+      allow(Sentry).to receive(:capture_message)
 
       User.create!(attrs)
 
       expect(Sentry).not_to have_received(:capture_exception)
+      expect(Sentry).not_to have_received(:capture_message)
     end
 
     it 'does not raise when sending password reset instructions' do
@@ -65,12 +67,18 @@ RSpec.describe User, 'Devise notifications Postmark refuses to deliver' do
       expect(User.create!(attrs).undelivered_devise_notification).to eq(:confirmation_instructions)
     end
 
-    it 'reports it to Sentry as a warning, since a misconfigured message also lands here' do
+    # The exception message names the recipient, so only the class and code go to Sentry
+    it 'reports it to Sentry as a warning without the address, since a misconfigured message also lands here' do
       allow(Sentry).to receive(:capture_exception)
+      allow(Sentry).to receive(:capture_message)
 
-      User.create!(attrs)
+      user = User.create!(attrs)
 
-      expect(Sentry).to have_received(:capture_exception).with(error, level: :warning)
+      expect(Sentry).to have_received(:capture_message).with(
+        "Postmark rejected a Devise confirmation_instructions email: #{error.class} (error #{error.error_code})",
+        level: :warning, extra: { user_id: user.id }
+      )
+      expect(Sentry).not_to have_received(:capture_exception)
     end
   end
 

@@ -1362,7 +1362,11 @@ class User < ApplicationRecord
   rescue Postmark::InactiveRecipientError, Postmark::InvalidEmailRequestError => e
     @undelivered_devise_notification = notification
     Rails.logger.warn "Devise #{notification} email for user #{id} not delivered: #{e.class} (Postmark error #{e.error_code})"
-    Sentry.capture_exception(e, level: :warning) if e.is_a?(Postmark::InvalidEmailRequestError)
+    # Postmark's message names the recipient, so only the class and code go to Sentry
+    if e.is_a?(Postmark::InvalidEmailRequestError)
+      Sentry.capture_message("Postmark rejected a Devise #{notification} email: #{e.class} (error #{e.error_code})",
+                             level: :warning, extra: { user_id: id })
+    end
   end
 
   def make_activation_code
