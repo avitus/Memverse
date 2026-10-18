@@ -425,7 +425,7 @@ RSpec.describe SendReminders, type: :worker do
         expect(UserMailer).to receive(:progression_email_5).and_return(failing_email)
 
         expect(Rails.logger).to receive(:error).with(
-          "** Error: Failed to send progression email to user #{user_with_email_error.id} (error@example.com): StandardError - Invalid email address"
+          "** Error: Failed to send progression email to user #{user_with_email_error.id}: StandardError - Invalid email address"
         )
 
         worker.perform
@@ -453,6 +453,80 @@ RSpec.describe SendReminders, type: :worker do
         expect(user_with_email_error).not_to receive(:update_attribute)
 
         worker.perform
+      end
+    end
+
+    describe 'when Postmark will not deliver to the recipient' do
+      # A real user and mailer, so needs_reminder? and last_reminder behave as they do
+      # in production; only the Postmark API call is replaced by the error it returns.
+      let!(:user) do
+        FactoryBot.create(:user, reminder_freq: 'Weekly', last_reminder: nil, last_activity_date: 2.weeks.ago.to_date)
+      end
+
+      before do
+        allow(UserMailer).to receive(:progression_email_2).and_call_original
+        allow(Sentry).to receive(:capture_exception)
+        stub_mail_delivery_failure(error)
+      end
+
+      shared_examples 'an undeliverable recipient' do
+        it 'attempts the reminder once per reminder cycle, not on every hourly run' do
+          2.times { described_class.new.perform }
+
+          expect(UserMailer).to have_received(:progression_email_2).with(user).once
+        end
+
+        it 'records the attempt as the last reminder' do
+          worker.perform
+
+          expect(user.reload.last_reminder).to eq(Date.today)
+        end
+
+        it 'logs the user id and Postmark error code' do
+          worker.perform
+
+          expect(Rails.logger).to have_received(:warn).with(
+            "** Progression email for user #{user.id} not delivered: #{error.class} (Postmark error #{error.error_code})"
+          )
+        end
+
+        it 'does not log the email address' do
+          worker.perform
+
+          %i[info warn error].each do |level|
+            expect(Rails.logger).not_to have_received(level).with(/#{Regexp.escape(user.email)}/)
+          end
+        end
+
+        it 'does not count toward the hourly send limit' do
+          worker.perform
+
+          expect(Rails.logger).to have_received(:info).with(/Sent 0 reminder emails/)
+        end
+      end
+
+      context 'because Postmark has suppressed the address' do
+        let(:error) { postmark_inactive_recipient_error(user.email) }
+
+        include_examples 'an undeliverable recipient'
+
+        it 'does not report the expected suppression to Sentry' do
+          worker.perform
+
+          expect(Sentry).not_to have_received(:capture_exception)
+        end
+      end
+
+      context 'because Postmark rejects the message as an invalid request' do
+        let(:error) { postmark_invalid_email_request_error(user.email) }
+
+        include_examples 'an undeliverable recipient'
+
+        it 'reports it to Sentry as a warning, since a misconfigured message also lands here' do
+          worker.perform
+
+          expect(Sentry).to have_received(:capture_exception).with(error, level: :warning)
+        end
       end
     end
 
