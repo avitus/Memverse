@@ -1,3 +1,5 @@
+require_relative '../../lib/sentry_email_scrubber'
+
 # Error tracking.
 # Release is intentionally NOT set here: sentry-ruby auto-detects it —
 # SENTRY_RELEASE env var, then the local git SHA, then Capistrano's REVISION
@@ -7,4 +9,5 @@ Sentry.init do |config|
   config.dsn = 'https://a1106f25de724396a866c6ab9386b11b@sentry.io/299442'
   config.enabled_environments = %w[production]
   config.breadcrumbs_logger = [:active_support_logger]
+  config.before_send = SentryEmailScrubber
 end
