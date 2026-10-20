@@ -17,6 +17,11 @@ module PostmarkErrorHelpers
     postmark_api_input_error(Postmark::InvalidEmailRequestError, 300, "Invalid 'To' address: '#{address}'.")
   end
 
+  # Error 300 for a problem with the message itself rather than its recipient
+  def postmark_invalid_message_error
+    postmark_api_input_error(Postmark::InvalidEmailRequestError, 300, 'Provide either email TextBody or HtmlBody or both.')
+  end
+
   def stub_mail_delivery_failure(error)
     allow_any_instance_of(Mail::TestMailer).to receive(:deliver!).and_raise(error)
   end
