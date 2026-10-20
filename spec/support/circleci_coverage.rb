@@ -9,7 +9,7 @@ if ENV['CIRCLECI_COVERAGE']
     next unless File.exist?(coverage_file)
 
     data = JSON.parse(File.read(coverage_file))
-    every_example = data.values.flat_map(&:keys).uniq.to_h { |key| [key, true] }
+    every_example = data.values.flat_map(&:keys).uniq.index_with(true)
     project_root = "#{Dir.pwd}/"
     Coverage.peek_result.each_key do |file|
       next unless file.start_with?(project_root) && !file.match?(%r{/(gems|vendor|\.bundle)/}) && !file.end_with?('_spec.rb')

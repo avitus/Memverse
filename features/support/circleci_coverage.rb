@@ -10,6 +10,7 @@ if ENV['CIRCLECI_COVERAGE'] && !defined?(CIRCLECI_COVERAGE_DATA)
   # { "app/models/user.rb" => { "features/users/sign_in.feature!!User signs in|run" => true } }
   CIRCLECI_COVERAGE_DATA = Hash.new { |hash, file| hash[file] = {} }
 
+  # Reads Ruby's Coverage results for the hooks below
   module CircleCICoverage
     PROJECT_ROOT = "#{Dir.pwd}/".freeze
 
@@ -18,6 +19,7 @@ if ENV['CIRCLECI_COVERAGE'] && !defined?(CIRCLECI_COVERAGE_DATA)
       file.delete_prefix(PROJECT_ROOT) if file.start_with?(PROJECT_ROOT) && !file.match?(%r{/(gems|vendor|\.bundle)/})
     end
 
+    # Per-line run counts from a Coverage result entry (a Hash when started with lines: true)
     def self.lines(coverage)
       coverage.is_a?(Hash) ? coverage[:lines] : coverage
     end
@@ -51,7 +53,7 @@ if ENV['CIRCLECI_COVERAGE'] && !defined?(CIRCLECI_COVERAGE_DATA)
     # Files whose lines all ran while loading, such as a model of only associations and validations
     # under CI's eager loading, map to no scenario. Map them to every scenario instead, so changing
     # one runs the whole suite rather than nothing.
-    every_scenario = CIRCLECI_COVERAGE_DATA.values.flat_map(&:keys).uniq.to_h { |key| [key, true] }
+    every_scenario = CIRCLECI_COVERAGE_DATA.values.flat_map(&:keys).uniq.index_with(true)
     Coverage.peek_result.each_key do |file|
       path = CircleCICoverage.project_path(file)
       CIRCLECI_COVERAGE_DATA[path] = every_scenario if path && !CIRCLECI_COVERAGE_DATA.key?(path)
