@@ -8,11 +8,11 @@ require 'fileutils'
 require 'tmpdir'
 
 XML_DECLARATION = /\A<\?xml[^>]*\?>\s*/
-# Cucumber writes <system-out> and <system-err> into every test case, mostly empty. CircleCI
-# records any test case with a <system-err> as "system-err" rather than "success", and testsuite
-# then has no timings to size the job with. So drop the empty ones and keep stderr as stdout.
-EMPTY_OUTPUT = %r{\s*<system-(out|err)>\s*<!\[CDATA\[\]\]>\s*</system-\1>}
-SYSTEM_ERR_TAG = %r{<(/?)system-err>}
+# Cucumber writes <system-out> and <system-err> into every test case, after any <failure> or
+# <skipped>. CircleCI records a passing test case with either as "system-out" or "system-err"
+# rather than "success", and testsuite then has no timings to size the job with. So drop them;
+# the output is still in the step log.
+CAPTURED_OUTPUT = %r{\s*<system-(out|err)>.*?</system-\1>}m
 
 report, *cucumber_args = ARGV
 abort "Usage: #{$PROGRAM_NAME} REPORT [cucumber args...]" unless report
@@ -22,7 +22,7 @@ status = Dir.mktmpdir('cucumber-junit') do |dir|
   exit_status = $?.exitstatus
 
   suites = Dir[File.join(dir, '*.xml')].sort.map do |file|
-    File.read(file).sub(XML_DECLARATION, '').gsub(EMPTY_OUTPUT, '').gsub(SYSTEM_ERR_TAG, '<\1system-out>')
+    File.read(file).sub(XML_DECLARATION, '').gsub(CAPTURED_OUTPUT, '')
   end
   FileUtils.mkdir_p(File.dirname(report))
   File.write(report, %(<?xml version="1.0" encoding="UTF-8"?>\n<testsuites>\n#{suites.join}</testsuites>\n))
