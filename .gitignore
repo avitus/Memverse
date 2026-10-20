@@ -85,6 +85,9 @@ doc/*
 results.xml/
 test_results/
 TEST-*.xml
+# Local CircleCI Smarter Testing impact data and branch state (written by circleci testsuite)
+.circleci/impact-*.json
+.circleci/state-*
 
 # Node.js / npm
 node_modules/

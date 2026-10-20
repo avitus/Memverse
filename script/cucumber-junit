@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+# Usage: script/cucumber-junit REPORT [cucumber args...]
+#
+# Cucumber's JUnit formatter writes one XML file per feature into a directory, but CircleCI
+# Smarter Testing (.circleci/test-suites.yml) reads a single JUnit file. Runs Cucumber, merges
+# the per-feature reports into REPORT and exits with Cucumber's status.
+require 'fileutils'
+require 'tmpdir'
+
+report, *cucumber_args = ARGV
+abort "Usage: #{$PROGRAM_NAME} REPORT [cucumber args...]" unless report
+
+status = Dir.mktmpdir('cucumber-junit') do |dir|
+  system('bundle', 'exec', 'cucumber', '--format', 'junit,fileattribute=true', '--out', dir, *cucumber_args)
+  exit_status = $?.exitstatus
+
+  suites = Dir[File.join(dir, '*.xml')].sort.map { |file| File.read(file).sub(/\A<\?xml[^>]*\?>\s*/, '') }
+  FileUtils.mkdir_p(File.dirname(report))
+  File.write(report, %(<?xml version="1.0" encoding="UTF-8"?>\n<testsuites>\n#{suites.join}</testsuites>\n))
+  exit_status
+end
+
+exit(status || 1)

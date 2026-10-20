@@ -1,4 +1,9 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
+
+# Per-test coverage for CircleCI Smarter Testing test impact analysis; a no-op unless
+# CIRCLECI_COVERAGE is set. Required before the Rails environment so code loaded at boot is tracked.
+require 'rspec-circleci-coverage'
+
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'

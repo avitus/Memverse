@@ -628,6 +628,8 @@ GEM
       rspec-core (~> 3.13.0)
       rspec-expectations (~> 3.13.0)
       rspec-mocks (~> 3.13.0)
+    rspec-circleci-coverage (0.1.659)
+      rspec-core (~> 3.13)
     rspec-core (3.13.5)
       rspec-support (~> 3.13.0)
     rspec-expectations (3.13.5)
@@ -878,6 +880,7 @@ DEPENDENCIES
   responders (~> 3.0)
   rinku
   rpush (~> 9.2.0)
+  rspec-circleci-coverage (= 0.1.659)
   rspec-rails
   rspec_junit_formatter
   rss

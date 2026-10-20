@@ -4,6 +4,7 @@
 # instead of editing this one. Cucumber will automatically load all features/**/*.rb
 # files.
 
+require_relative 'circleci_coverage' # must come before the Rails environment loads
 require 'cucumber/rails'
 require 'email_spec/cucumber'
 require 'action_mailer_cache_delivery'
