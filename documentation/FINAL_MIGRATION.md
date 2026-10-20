@@ -6,7 +6,7 @@
 > - **Data:** dump `cutover_20261017_130327`; verify COUNTS IDENTICAL (83 tables, `sessions` excepted), 149 migrations up.
 > - **Go:** smoke 14/14; Andy's signed-in check passed; Andy flipped DNS about 13:09, visible at the Linode authority and 8.8.8.8 by 13:12.
 > - **After:** Sidekiq on martial-eagle 13:11 (8 cron jobs); off-host backup retargeted, first run `memverse-20261017T201127Z` done 13:11:54. TLS reissued as ECDSA 13:19 (valid to 2027-01-15); fish-eagle proxy verified against it.
-> - **Section 3 done 2026-10-20.** Every cron job fired once on martial-eagle, three nightly backups dumped 127.0.0.1, and TTLs are 3600. All 5xx since the flip are Passenger resets during nginx reloads (TLS reissue, co-tenant veetbot deploys); there were no Rails 500s.
+> - **Section 3 done 2026-10-20.** Each of the 4 cron jobs due by then fired once on martial-eagle (the other 4 run only in March and September); the Sat–Mon backups dumped 127.0.0.1; TTLs are 3600. The 17 nginx 5xx from the flip to 2026-10-20 10:30 PDT were all 502s within seconds of an nginx reload (TLS reissue, co-tenant veetbot deploys); no Rails 500s in that span.
 > - **Past a day, so 4.3 applies: fix forward on martial-eagle.** Remaining: section 5.
 
 **Status as of 2026-10-17:** Phases 0–3 of the [migration runbook](plans/2026-10-10-fish-eagle-to-martial-eagle-migration.md) are complete. martial-eagle is a fully built, tested production copy at the same revision as fish-eagle (`7dc9864b`). This file is the executable checklist for everything that remains. The runbook stays the reference for background and rationale; where the two differ, this file wins because it is newer.
