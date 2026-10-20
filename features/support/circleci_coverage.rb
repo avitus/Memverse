@@ -13,6 +13,11 @@ if ENV['CIRCLECI_COVERAGE'] && !defined?(CIRCLECI_COVERAGE_DATA)
   module CircleCICoverage
     PROJECT_ROOT = "#{Dir.pwd}/".freeze
 
+    # Path relative to the project, or nil for gems and files outside it
+    def self.project_path(file)
+      file.delete_prefix(PROJECT_ROOT) if file.start_with?(PROJECT_ROOT) && !file.match?(%r{/(gems|vendor|\.bundle)/})
+    end
+
     def self.lines(coverage)
       coverage.is_a?(Hash) ? coverage[:lines] : coverage
     end
@@ -20,12 +25,10 @@ if ENV['CIRCLECI_COVERAGE'] && !defined?(CIRCLECI_COVERAGE_DATA)
     # Project files with any line run more often than in the before snapshot
     def self.executed_files(before, after)
       after.filter_map do |file, coverage|
-        next unless file.start_with?(PROJECT_ROOT) && !file.match?(%r{/(gems|vendor|\.bundle)/})
-
+        path = project_path(file) or next
         after_lines = lines(coverage) or next
         before_lines = lines(before[file]) || []
-        ran = after_lines.each_with_index.any? { |count, i| count && count > (before_lines[i] || 0) }
-        file.delete_prefix(PROJECT_ROOT) if ran
+        path if after_lines.each_with_index.any? { |count, i| count && count > (before_lines[i] || 0) }
       end
     end
   end
@@ -45,6 +48,15 @@ if ENV['CIRCLECI_COVERAGE'] && !defined?(CIRCLECI_COVERAGE_DATA)
   end
 
   AfterAll do
+    # Files whose lines all ran while loading, such as a model of only associations and validations
+    # under CI's eager loading, map to no scenario. Map them to every scenario instead, so changing
+    # one runs the whole suite rather than nothing.
+    every_scenario = CIRCLECI_COVERAGE_DATA.values.flat_map(&:keys).uniq.to_h { |key| [key, true] }
+    Coverage.peek_result.each_key do |file|
+      path = CircleCICoverage.project_path(file)
+      CIRCLECI_COVERAGE_DATA[path] = every_scenario if path && !CIRCLECI_COVERAGE_DATA.key?(path)
+    end
+
     File.write(ENV['CIRCLECI_COVERAGE'], JSON.pretty_generate(CIRCLECI_COVERAGE_DATA))
   end
 end
