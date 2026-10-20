@@ -6,7 +6,8 @@
 > - **Data:** dump `cutover_20261017_130327`; verify COUNTS IDENTICAL (83 tables, `sessions` excepted), 149 migrations up.
 > - **Go:** smoke 14/14; Andy's signed-in check passed; Andy flipped DNS about 13:09, visible at the Linode authority and 8.8.8.8 by 13:12.
 > - **After:** Sidekiq on martial-eagle 13:11 (8 cron jobs); off-host backup retargeted, first run `memverse-20261017T201127Z` done 13:11:54. TLS reissued as ECDSA 13:19 (valid to 2027-01-15); fish-eagle proxy verified against it.
-> - **Rollback from here is 4.2.** Remaining: the rest of section 3 and section 5.
+> - **Section 3 done 2026-10-20.** Each of the 5 cron jobs due by then fired once per scheduled run on martial-eagle (the other 3 run only in March and September); the Sat–Mon backups dumped 127.0.0.1; TTLs are 3600. The 17 nginx 5xx from the flip to 2026-10-20 10:30 PDT were all 502s within seconds of an nginx reload (TLS reissue, co-tenant veetbot deploys); no Rails 500s in that span.
+> - **Past a day, so 4.3 applies: fix forward on martial-eagle.** Remaining: section 5.
 
 **Status as of 2026-10-17:** Phases 0–3 of the [migration runbook](plans/2026-10-10-fish-eagle-to-martial-eagle-migration.md) are complete. martial-eagle is a fully built, tested production copy at the same revision as fish-eagle (`7dc9864b`). This file is the executable checklist for everything that remains. The runbook stays the reference for background and rationale; where the two differ, this file wins because it is newer.
 
@@ -206,12 +207,14 @@ Exercises the exact cutover path. fish-eagle stays live, so `verify --report` wi
   ```
 - [x] **Done 2026-10-17 14:13 PDT.** Six 502s at 13:19:02–03, the Passenger connection resets from the TLS reload; none in the 3,869 requests after. No Rails 500s; errors are bot `RoutingError`s, two invalid-encoding `BadRequest`s and one Onebox fetch. `free -h` 9.2Gi available, swap 1.3Mi. Sentry and New Relic not checked.
 - [x] Watch for an hour: `shared/log/production.log`, `shared/log/nginx_error.log`, Sentry (host `martial-eagle`), New Relic, `free -h`.
-- [ ] Confirm the next hourly `schedule_send_reminders` fired on the hour UTC (`shared/log/sidekiq.log`), then the next day's 08:00 and 12:00 UTC jobs, and the Tuesday 17:00 UTC quiz.
-  - Hourly part **done 2026-10-17 14:00 PDT**: enqueued 21:00:00Z, `done` after 140 s, 4 reminders sent; the `Postmark::InactiveRecipientError` lines are pre-existing (fish-eagle had the same ratio). Still to confirm: 08:00 and 12:00 UTC on 2026-10-18, the 23:00 UTC Saturday quiz on 2026-10-17, and the Tuesday quiz.
-- [ ] Confirm Sunday's ~21:10 PDT timer run backed up martial-eagle in `journalctl -u memverse-backup.service` (`dumping memverse_production from 127.0.0.1`).
+- [x] Confirm the next hourly `schedule_send_reminders` fired on the hour UTC (`shared/log/sidekiq.log`), then the next day's 08:00 and 12:00 UTC jobs, and the Tuesday 17:00 UTC quiz.
+  - Hourly part **done 2026-10-17 14:00 PDT**: enqueued 21:00:00Z, `done` after 140 s, 4 reminders sent; the `Postmark::InactiveRecipientError` lines are pre-existing (fish-eagle had the same ratio). Every hourly run since has finished.
+  - **Done 2026-10-20 10:23 PDT.** 2026-10-18: `forum_review_notifier` 08:00Z (01:00 PDT) and `update_metrics` 12:00Z (05:00 PDT, 14 s). Saturday quiz 23:00Z and Tuesday quiz 17:00Z each started once, took the execution lock, ran 25 questions and logged `completed successfully` (~23 min).
+- [x] Confirm Sunday's ~21:10 PDT timer run backed up martial-eagle in `journalctl -u memverse-backup.service` (`dumping memverse_production from 127.0.0.1`).
   - The timer also runs Saturday 2026-10-17 21:12 PDT. `MANIFEST` sits inside the encrypted archive (`memverse-backup.sh` line 83), so the log line `dumping memverse_production from 127.0.0.1` is the check.
-- [ ] After 48 h: **Andy** raises the two A-record TTLs to 3600 at Linode.
-- [ ] Record the outcome and timings at the top of this file.
+  - **Done.** Sat 21:14 `memverse-20261018T041430Z`, Sun 21:15 `memverse-20261019T041504Z`, Mon 21:12 `memverse-20261020T041238Z`: each dumped from 127.0.0.1 and ended `done:`.
+- [x] After 48 h: **Andy** raises the two A-record TTLs to 3600 at Linode. **Done 2026-10-19 ~14:15 PDT**; `@ns1.linode.com` shows 3600 on both.
+- [x] Record the outcome and timings at the top of this file.
 
 ---
 
