@@ -4,6 +4,7 @@
 # instead of editing this one. Cucumber will automatically load all features/**/*.rb
 # files.
 
+require_relative 'circleci_coverage' # must come before the Rails environment loads
 require 'cucumber/rails'
 require 'email_spec/cucumber'
 require 'action_mailer_cache_delivery'
@@ -52,13 +53,12 @@ Around do |scenario, block|
   
   # Use transaction strategy for non-JavaScript scenarios (much faster)
   # Use truncation only for JavaScript scenarios that need it
-  if scenario.source_tag_names.include?('@javascript')
-    DatabaseCleaner[:active_record].strategy = :truncation, {
-      except: %w[final_verses ar_internal_metadata schema_migrations]
-    }
-  else
-    DatabaseCleaner[:active_record].strategy = :transaction
-  end
+  DatabaseCleaner[:active_record].strategy =
+    if scenario.source_tag_names.include?('@javascript')
+      [:truncation, { except: %w[final_verses ar_internal_metadata schema_migrations] }]
+    else
+      :transaction
+    end
   
   # Use the cleaning block pattern for automatic cleanup
   DatabaseCleaner[:active_record].cleaning do
@@ -67,7 +67,7 @@ Around do |scenario, block|
 end
 
 # Ensure proper Capybara reset between scenarios
-After do |scenario|
+After do
   # Reset sessions and cookies
   Capybara.reset_sessions!
   

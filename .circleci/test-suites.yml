@@ -1,0 +1,65 @@
+# CircleCI Smarter Testing suites, run in CI with `circleci testsuite run "<name>"`.
+# Reference: https://circleci.com/docs/reference/testsuite-configuration-reference/
+#
+# Test impact analysis only follows Ruby coverage, so files coverage can't see (YAML, routes and
+# initializers run at boot, schema, assets the browser runs) are listed in full-test-run-paths.
+name: rspec
+discover: find spec -type f -name '*_spec.rb'
+run: >-
+  bundle exec rspec --profile 10
+  --format RspecJunitFormatter --out "<< outputs.junit >>"
+  --format progress
+  << test.atoms >>
+analysis: CIRCLECI_COVERAGE="<< outputs.circleci-coverage >>" bundle exec rspec << test.atoms >>
+outputs:
+  junit: test_results/rspec/rspec.xml
+options:
+  test-impact-analysis: true
+  impact-key: rspec
+  full-test-run-paths:
+    - Gemfile.lock
+    - .circleci/*.yml
+    - config/**
+    - db/**
+    - spec/*.rb
+    - spec/support/**
+  dynamic-test-splitting: true
+  max-auto-rerun: 2
+---
+name: cucumber
+discover: find features -type f -name '*.feature'
+run: >-
+  script/cucumber-junit "<< outputs.junit >>"
+  --format progress
+  --strict-undefined
+  --retry 2
+  --no-source
+  << test.atoms >>
+analysis: CIRCLECI_COVERAGE="<< outputs.circleci-coverage >>" bundle exec cucumber --format progress << test.atoms >>
+outputs:
+  junit: test_results/cucumber/cucumber.xml
+options:
+  test-impact-analysis: true
+  impact-key: cucumber
+  full-test-run-paths:
+    - Gemfile.lock
+    - .circleci/*.yml
+    - config/**
+    - db/**
+    - app/assets/**
+    - features/support/**
+    - script/cucumber-junit
+  dynamic-test-splitting: true
+  max-auto-rerun: 2
+---
+# No test impact analysis: the specs load app JavaScript with new Function (test/javascript/helpers.js),
+# which coverage can't attribute to source files. One container, so no test splitting either.
+name: vitest
+discover: npx vitest list --filesOnly
+run: >-
+  npx vitest run --reporter=junit --outputFile="<< outputs.junit >>" --bail 0
+  << test.atoms >>
+outputs:
+  junit: test_results/vitest/vitest.xml
+options:
+  max-auto-rerun: 2

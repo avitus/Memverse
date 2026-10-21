@@ -24,6 +24,7 @@ end
 group :development, :test do
   gem 'rspec-rails'
   gem 'rspec_junit_formatter'                                   # Automatic test metadata collection for CirclCI
+  gem 'rspec-circleci-coverage', '0.1.659', require: false       # Per-test coverage for CircleCI Smarter Testing test impact analysis
   gem 'rails-controller-testing'                                # To use 'assigns' in controller tests
   gem 'factory_bot_rails'                                       # Add to development group for debugging in console
   gem 'cucumber-rails', require: false                          # Rails Generators for Cucumber with special support for Capybara and DatabaseCleaner

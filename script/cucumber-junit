@@ -1,0 +1,32 @@
+#!/usr/bin/env ruby
+# Usage: script/cucumber-junit REPORT [cucumber args...]
+#
+# Cucumber's JUnit formatter writes one XML file per feature into a directory, but CircleCI
+# Smarter Testing (.circleci/test-suites.yml) reads a single JUnit file. Runs Cucumber, merges
+# the per-feature reports into REPORT and exits with Cucumber's status.
+require 'fileutils'
+require 'tmpdir'
+
+XML_DECLARATION = /\A<\?xml[^>]*\?>\s*/
+# Cucumber writes <system-out> and <system-err> into every test case, after any <failure> or
+# <skipped>. CircleCI records a passing test case with either as "system-out" or "system-err"
+# rather than "success", and testsuite then has no timings to size the job with. So drop them;
+# the output is still in the step log.
+CAPTURED_OUTPUT = %r{\s*<system-(out|err)>.*?</system-\1>}m
+
+report, *cucumber_args = ARGV
+abort "Usage: #{$PROGRAM_NAME} REPORT [cucumber args...]" unless report
+
+status = Dir.mktmpdir('cucumber-junit') do |dir|
+  system('bundle', 'exec', 'cucumber', '--format', 'junit,fileattribute=true', '--out', dir, *cucumber_args)
+  exit_status = $?.exitstatus
+
+  suites = Dir[File.join(dir, '*.xml')].sort.map do |file|
+    File.read(file).sub(XML_DECLARATION, '').gsub(CAPTURED_OUTPUT, '')
+  end
+  FileUtils.mkdir_p(File.dirname(report))
+  File.write(report, %(<?xml version="1.0" encoding="UTF-8"?>\n<testsuites>\n#{suites.join}</testsuites>\n))
+  exit_status
+end
+
+exit(status || 1)
