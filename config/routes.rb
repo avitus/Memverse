@@ -73,13 +73,6 @@ MemverseApp::Application.routes.draw do
   # Mount RailsAdmin after custom admin routes to prevent route conflicts
   mount RailsAdmin::Engine => '/admin/database', :as => 'rails_admin'
 
-  # Routes for A/B testing
-  # match "/split" => Split::Dashboard, via: [:get, :post, :delete], :anchor => false, :constraints => lambda { |request|
-  #   request.env['warden'].authenticated?    # are we authenticated?
-  #   request.env['warden'].authenticate!     # authenticate if not already
-  #   request.env['warden'].user.try(:admin?) # check if admin
-  # }
-
   # Oauth
   devise_for :users, :controllers => { 
     :omniauth_callbacks => "omniauth_callbacks",
@@ -322,8 +315,6 @@ MemverseApp::Application.routes.draw do
   get '/stt_setia'                => 'info#stt_setia'
   get '/bible_bee_tool'           => 'info#bible_bee_tool'
   get '/show_vs'                  => 'info#show_vs',                   :as => 'show_vs'
-
-  get '/finish_experiment'        => 'experiment#finish'
 
   # Route for users who haven't yet joined a group
   get '/mygroup'                  => 'groups#show',                     :as => 'mygroup'

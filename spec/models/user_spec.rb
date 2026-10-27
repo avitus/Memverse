@@ -22,7 +22,7 @@ describe User do
   end
 
   it "should accept valid email addresses" do
-    addresses = %w[user@foo.com THE_USER@foo.bar.org first.last@foo.jp]
+    addresses = %w[user@foo.com THE_USER@foo.bar.org first.last@foo.jp o'brien@foo.com first+tag@foo.com]
     addresses.each do |address|
       valid_email_user = User.new(@attr.merge(:email => address))
       expect(valid_email_user).to be_valid
@@ -32,6 +32,15 @@ describe User do
   it "should reject invalid email addresses" do
     addresses = %w[user@foo,com user_at_foo.org example.user@foo.]
     # addresses = %w[ user_at_foo.org ]
+    addresses.each do |address|
+      invalid_email_user = User.new(@attr.merge(:email => address))
+      expect(invalid_email_user).not_to be_valid
+    end
+  end
+
+  # MEMVERSE-9N: Postmark rejects these, so they must fail validation instead of signup
+  it "should reject email addresses with more than one @" do
+    addresses = %w[someone@aol.com@outlook.com a@b@foo.com]
     addresses.each do |address|
       invalid_email_user = User.new(@attr.merge(:email => address))
       expect(invalid_email_user).not_to be_valid
