@@ -296,7 +296,7 @@ class ProfileController < ApplicationController
   def search_user
 
     search_param = params[:search_param]
-    @user_list   = Array.new
+    @user_list   = []
 
     logger.debug("Searching for ... #{search_param.inspect}")
 
@@ -323,7 +323,7 @@ class ProfileController < ApplicationController
   # Init for set referrer page
   # ----------------------------------------------------------------------------------------------------------
   def set_referrer
-    @user_list = Array.new
+    @user_list = []
   end
 
-end # Class
+end

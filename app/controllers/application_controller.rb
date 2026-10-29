@@ -275,8 +275,6 @@ class ApplicationController < ActionController::Base
     return str =~ /([0-3]?\s+)?[a-záéíóúüñ]+\s+[0-9]+(:|(\s?vs\s?))[0-9]+/i
   end
 
-  protected
-
   # https://github.com/plataformatec/devise#strong-parameters
   def configure_permitted_parameters
     devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :email, :password, :password_confirmation, :referred_by])

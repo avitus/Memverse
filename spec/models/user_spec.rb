@@ -161,7 +161,7 @@ describe User do
       @user.reset_memorization_schedule
       new_load_for_today = @user.memverses.active.where("next_test <= ?", Date.today).count # skipcq: RB-RL1014 (Memverse scopes use Date.today) # skipcq: RB-RL1014 (Memverse scopes use Date.today)
       expect(new_load_for_today).to be < load_for_today
-      load_for_tomorrow  = @user.memverses.active.where(next_test: Date.tomorrow).count
+      load_for_tomorrow  = @user.memverses.active.where(next_test: Date.today + 1).count # skipcq: RB-RL1014 (Memverse scopes use Date.today)
       expect(load_for_tomorrow).to eq(new_load_for_today)
     end
   end

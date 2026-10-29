@@ -81,11 +81,11 @@ RSpec.describe Memverse, 'spaced repetition' do
     end
 
     it 'leaves the schedule alone for a verse that is not yet due' do
-      mv = memverse_with(efactor: 2.0, test_interval: 8, rep_n: 3, next_test: Date.tomorrow)
+      mv = memverse_with(efactor: 2.0, test_interval: 8, rep_n: 3, next_test: today + 1)
       mv.supermemo(5)
       mv.reload
       expect([mv.test_interval, mv.rep_n, mv.efactor]).to eq([8, 3, 2.0])
-      expect(mv.next_test).to eq(Date.tomorrow)
+      expect(mv.next_test).to eq(today + 1)
       expect(mv.attempts).to eq(1)
     end
   end
@@ -93,8 +93,8 @@ RSpec.describe Memverse, 'spaced repetition' do
   describe '#due?' do
     it 'is due on or before today and not after' do
       expect(memverse_with(next_test: today)).to be_due
-      expect(memverse_with(next_test: Date.yesterday)).to be_due
-      expect(memverse_with(next_test: Date.tomorrow)).not_to be_due
+      expect(memverse_with(next_test: today - 1)).to be_due
+      expect(memverse_with(next_test: today + 1)).not_to be_due
     end
   end
 

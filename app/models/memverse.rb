@@ -275,13 +275,13 @@ class Memverse < ApplicationRecord
     was_due = self.due?
 
     if was_due
-      if q<3 # answer was incorrect
-        n_new = 1  # Start from the beginning
+      n_new = if q < 3
+        1               # answer was incorrect: start from the beginning
       else
-        n_new = self.rep_n + 1 # Go on to next iteration
+        self.rep_n + 1  # go on to the next repetition
       end
 
-      efactor_new = [ self.efactor - 0.8 + (0.28 * q) - (0.02 * q * q), 2.5 ].min # Cap eFactor at 2.5
+      efactor_new = [ self.efactor - 0.8 + (q * 0.28) - (q * q * 0.02), 2.5 ].min # Cap eFactor at 2.5
       if efactor_new < 1.3
         efactor_new = 1.3 # Set minimum efactor to 1.3 (Orig algorithm was 1.3)
       end
@@ -319,10 +319,10 @@ class Memverse < ApplicationRecord
   # ----------------------------------------------------------------------------------------------------------
   def change_ref_interval(recalled)
 
-    if recalled
-      self.ref_interval = [ (self.ref_interval * 1.5), self.user.max_interval.to_i ].min.round
+    self.ref_interval = if recalled
+      [ (self.ref_interval * 1.5), self.user.max_interval.to_i ].min.round
     else
-      self.ref_interval = [ (self.ref_interval * 0.6), 1 ].max.round
+      [ (self.ref_interval * 0.6), 1 ].max.round
     end
 
     self.next_ref_test = Date.today + self.ref_interval
@@ -334,22 +334,16 @@ class Memverse < ApplicationRecord
   # Return all verses in subsection
   # ----------------------------------------------------------------------------------------------------------
   def entire_subsection
-    if self.subsection  # subsection is nil if the passage has not yet been subsectioned
-      Memverse.where(passage_id: self.passage_id, subsection: self.subsection)
-    else
-      nil
-    end
+    # subsection is nil if the passage has not yet been subsectioned
+    Memverse.where(passage_id: self.passage_id, subsection: self.subsection) if self.subsection
   end
 
   # ----------------------------------------------------------------------------------------------------------
   # Memory verses from the same subsection that are not due for review today or have already been reviewd
   # ----------------------------------------------------------------------------------------------------------
   def not_due_today_subsection
-    if self.subsection  # subsection is nil if the passage has not yet been subsectioned
-      Memverse.where(passage_id: self.passage_id, subsection: self.subsection).not_due
-    else
-      nil
-    end
+    # subsection is nil if the passage has not yet been subsectioned
+    Memverse.where(passage_id: self.passage_id, subsection: self.subsection).not_due if self.subsection
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -400,7 +394,7 @@ class Memverse < ApplicationRecord
     initial_mv = self.first_verse? ? Memverse.find(self.first_verse) : self
     x = initial_mv
 
-    while x.next_verse && x = Memverse.find(x.next_verse)
+    while x.next_verse && (x = Memverse.find(x.next_verse))
       length += 1
     end
 
@@ -426,7 +420,7 @@ class Memverse < ApplicationRecord
   # @todo Is this method ever used?
   def self.check_for_duplicates
 
-    users_with_problems = Array.new
+    users_with_problems = []
 
     mv_num = 0
     all_mv = self.count
@@ -438,13 +432,11 @@ class Memverse < ApplicationRecord
       if to_check
         # get the next verse in the database
         the_next_mv = find(:first, :conditions => {:id => mv_num+1})
-        if the_next_mv
-          # check for same verse_id and user_id
-          if (to_check.verse_id == the_next_mv.verse_id) and (to_check.user_id == the_next_mv.user_id)
-            logger.warn("*** Alert: #{to_check.user.login} has verse #{to_check.verse.ref} twice in his/her list")
-            users_with_problems << to_check.user
-            # TODO: remove duplicate verse, then fix verse linkage
-          end
+        # the same verse_id and user_id twice in a row means the verse is in the list twice
+        if the_next_mv && to_check.verse_id == the_next_mv.verse_id && to_check.user_id == the_next_mv.user_id
+          logger.warn("*** Alert: #{to_check.user.login} has verse #{to_check.verse.ref} twice in his/her list")
+          users_with_problems << to_check.user
+          # TODO: remove duplicate verse, then fix verse linkage
         end
       end
       mv_num += 1
@@ -571,11 +563,7 @@ class Memverse < ApplicationRecord
   #
   # @return [Memverse]
   def first_verse_in_sequence
-    if self.first_verse
-      initial_mv = find( self.first_verse )
-    else
-      initial_mv = self
-    end
+    initial_mv = self.first_verse ? find( self.first_verse ) : self
 
     return initial_mv
 
@@ -596,11 +584,7 @@ class Memverse < ApplicationRecord
 
       # find the first verse - we don't know whether this is the first verse so need to check
       # @todo Can replace with #first_verse_in_sequence method above (once thoroughly tested)
-      if self.first_verse
-        initial_mv = Memverse.find( self.first_verse )
-      else
-        initial_mv = self
-      end
+      initial_mv = self.first_verse ? Memverse.find( self.first_verse ) : self
 
       x = initial_mv
 
