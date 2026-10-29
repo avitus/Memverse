@@ -81,7 +81,7 @@ class InfoController < ApplicationController
 
     add_breadcrumb I18n.t("home_menu.Popular Verses"), :popular_path
 
-    @page       = params[:page].to_i     # page number
+    @page       = [params[:page].to_i, 0].max  # page number; a negative OFFSET is a MySQL syntax error
     @page_size  = 10                     # number of verses per page
 
     @vs_list = Popverse.limit( @page_size ).offset( @page*@page_size )

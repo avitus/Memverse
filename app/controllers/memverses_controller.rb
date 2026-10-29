@@ -319,7 +319,7 @@ class MemversesController < ApplicationController
 
     add_breadcrumb I18n.t("home_menu.Popular Verses"), :popular_verses_path
 
-    @page       = [params[:page].to_i, 99].min     # page number
+    @page       = params[:page].to_i.clamp(0, 99)  # page number; a negative OFFSET is a MySQL syntax error
     @page_size  = 20                               # number of verses per page
 
     @vs_list = Popverse.limit( @page_size ).offset( @page*@page_size )
