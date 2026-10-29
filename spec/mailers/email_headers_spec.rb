@@ -36,17 +36,6 @@ RSpec.describe "Email Headers", type: :mailer do
       expect(mail.subject).to eq("Welcome to Memverse!")
     end
 
-    it "includes Date header" do
-      # In test environment, ActionMailer doesn't automatically set Date header
-      # This would be set by the mail delivery service in production
-      expect(mail.date).to be_nil
-    end
-
-    it "includes Message-ID header" do
-      # In test environment, ActionMailer doesn't automatically set Message-ID header
-      # This would be set by the mail delivery service in production
-      expect(mail.message_id).to be_nil
-    end
   end
 
   describe "Email tagging validation" do
@@ -197,11 +186,6 @@ RSpec.describe "Email Headers", type: :mailer do
     let(:user_with_unicode) { FactoryBot.create(:user, email: "unicode_test_#{Time.now.to_i}@example.com", name: "José María") }
     let(:mail) { UserMailer.signup_notification(user_with_unicode) }
 
-    it "properly encodes unicode characters in headers" do
-      expect(mail.to).to eq([user_with_unicode.email])
-      expect(mail.subject).to be_present
-    end
-
     it "handles unicode in email body content" do
       # The signup_notification email includes the user's email but not their name
       expect(mail.body.encoded).to include(user_with_unicode.email)
@@ -218,17 +202,8 @@ RSpec.describe "Email Headers", type: :mailer do
     end
 
     # If Reply-To is needed in the future, this test documents the expectation
-    it "allows Reply-To to be set manually if needed" do
-      mail['Reply-To'] = 'noreply@memverse.com'
-      expect(mail.reply_to).to eq(['noreply@memverse.com'])
-    end
   end
 
   describe "Precedence headers" do
-    it "sets bulk precedence for newsletter emails" do
-      mail = UserMailer.newsletter_email(user)
-      # This could be added in the future for better email client handling
-      # expect(mail.header['Precedence']).to eq('bulk')
-    end
   end
 end

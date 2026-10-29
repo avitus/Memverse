@@ -79,16 +79,18 @@ describe Verse do
         psalms = FactoryBot.create(:verse, book: "Psalms", book_index: 19)
         matthew = FactoryBot.create(:verse, book: "Matthew", book_index: 40, versenum: 2)
 
-        psalms.prophecy? == false
-        matthew.prophecy? == false
+        expect(psalms.prophecy?).to be false
+        expect(matthew.prophecy?).to be false
       end
 
       it "includes Isaiah to Malachi, and Revelation" do
-        isaiah = FactoryBot.create(:verse, book: "Psalms", book_index: 19, versenum: 1 )
-        revelation = FactoryBot.create(:verse, book: "Psalms", book_index: 19, versenum: 2)
+        isaiah = FactoryBot.create(:verse, book: "Isaiah", book_index: 23, versenum: 1)
+        malachi = FactoryBot.create(:verse, book: "Malachi", book_index: 39, versenum: 1)
+        revelation = FactoryBot.create(:verse, book: "Revelation", book_index: 66, versenum: 2)
 
-        isaiah.prophecy? == true
-        revelation.prophecy? == true
+        expect(isaiah.prophecy?).to be true
+        expect(malachi.prophecy?).to be true
+        expect(revelation.prophecy?).to be true
       end
     end
   end
@@ -225,50 +227,32 @@ describe Verse do
     end
   end
 
-  # ==============================================================================================
-  # Spec for BibleGateway API
-  # ==============================================================================================
+  # web_text normalizes what BibleGateway returns so it can be compared with database_text.
+  # The scraper itself is covered by spec/lib/bible_gateway_spec.rb; no network here.
   describe "web_check" do
-    it "should say the verse matches in the database" do
-      verse = FactoryBot.create(:verse, :book => "Psalms", :chapter => 117, :versenum => 1, :translation => "NNV", :text => "Praise the LORD, all you nations; extol him, all you peoples.")
-      expect(verse.database_text).to eq("Praise the LORD, all you nations; extol him, all you peoples.")
+    let(:verse) do
+      FactoryBot.create(:verse, book: "Psalms", chapter: 117, versenum: 1, translation: "NNV",
+                                text: 'Praise the LORD, all you nations; extol him, all you "peoples".')
     end
 
-    it "should say normal verses match on Bible Gateway" do
-      verse = FactoryBot.create(:verse, :book => "Psalms", :chapter => 117, :versenum => 1, :translation => "KJV", :text => "O praise the LORD, all ye nations: praise him, all ye people.")
-      expect(verse.database_text).to eq("O praise the LORD, all ye nations: praise him, all ye people.")
+    def bible_gateway_returns(content)
+      gateway = instance_double(BibleGateway, lookup: { content: content })
+      allow(BibleGateway).to receive(:new).with(:NNV).and_return(gateway)
+    end
+
+    it "matches the database text when BibleGateway differs only in curly quotes" do
+      bible_gateway_returns("Praise the LORD, all you nations; extol him, all you \u201cpeoples\u201d.")
       expect(verse.web_text).to eq(verse.database_text)
     end
 
-    it "should say the first verses of chapters match on Bible Gateway" do
-      verse = FactoryBot.create(:verse, :book => "Psalms", :chapter => 117, :versenum => 2, :translation => "KJV", :text => "For his merciful kindness is great toward us: and the truth of the LORD endureth for ever. Praise ye the LORD.")
-      verse.database_text == "In the beginning God created the heaven and the earth."
-      expect(verse.web_text).to eq(verse.database_text)
-    end
-
-    it "should say poetry verses match on Bible Gateway" do
-      verse = FactoryBot.create(:verse, :book => "Psalms", :chapter => 35, :versenum => 2, :translation => "NNV", :text => "Take up shield and armor; arise and come to my aid.")
-      expect(verse.database_text).to eq("Take up shield and armor; arise and come to my aid.")
-      expect(verse.web_text).to eq(verse.database_text)
-    end
-
-    it "should say verses with 'LORD' in them match on Bible Gateway" do
-      verse = FactoryBot.create(:verse, :book => "Hosea", :chapter => 14, :versenum => 2, :translation => "NNV", :text => 'Take words with you and return to the LORD. Say to him: "Forgive all our sins and receive us graciously, that we may offer the fruit of our lips.')
-      expect(verse.database_text).to eq('Take words with you and return to the LORD. Say to him: "Forgive all our sins and receive us graciously, that we may offer the fruit of our lips.')
-      expect(verse.web_text).to eq(verse.database_text)
-    end
-
-    it "should say verses with all of the above exceptions together match on Bible Gateway" do
-      verse = FactoryBot.create(:verse, :book => "Psalms", :chapter => 9, :versenum => 1, :translation => "NNV", :text => "I will give thanks to you, LORD, with all my heart; I will tell of all your wonderful deeds.")
-      expect(verse.database_text).to eq("I will give thanks to you, LORD, with all my heart; I will tell of all your wonderful deeds.")
-      expect(verse.web_text).to eq(verse.database_text)
-    end
-
-
-    it "should say incorrect verses are incorrect" do
-      verse = FactoryBot.create(:verse, :book => "Psalms", :chapter => 117, :versenum => 1, :translation => "NNV", :text => "This is incorrect")
-      expect(verse.database_text).not_to eq("Brandish spear and javelin against those who pursue me.  Say to my soul, “I am your salvation.”")
+    it "does not match when BibleGateway has different words" do
+      bible_gateway_returns("This is incorrect")
       expect(verse.web_text).not_to eq(verse.database_text)
+    end
+
+    it "is nil when BibleGateway has no content for the reference" do
+      bible_gateway_returns(nil)
+      expect(verse.web_text).to be_nil
     end
   end
 

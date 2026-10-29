@@ -56,6 +56,45 @@ describe Api::V1::MemversesController do
 
   end
 
+  describe 'GET #show' do
+
+    let!(:user)        { FactoryBot.create(:user) }
+    let!(:verse)       { FactoryBot.create(:verse)}
+    let!(:mv)          { FactoryBot.create(:memverse, :user => user, :verse => verse)}
+
+    # The properties documented on the Swagger `Memverse` schema (app/models/memverse.rb)
+    let(:documented_keys) do
+      Memverse.send(:_swagger_nodes)[:schema_node_map][:Memverse].data[:properties].data.keys.map(&:to_s)
+    end
+
+    it 'returns the owner\'s memverse with every documented field' do
+      get :show, params: {id: mv.id, version: 1}, format: :json
+
+      expect(response.status).to eq(200)
+      expect(json['id']).to eq(mv.id)
+      expect(json['verse']['id']).to eq(verse.id)
+      expect(json.keys).to include(*documented_keys)
+    end
+
+    it 'answers 404 JSON for another user\'s memverse' do
+      other_mv = FactoryBot.create(:memverse, user: FactoryBot.create(:user))
+
+      get :show, params: {id: other_mv.id, version: 1}, format: :json
+
+      expect(response.status).to eq(404)
+      expect(JSON.parse(response.body)).to eq("error" => "not_found", "reason" => "Could not find memverse")
+    end
+
+    context 'without an access token' do
+      let(:token) { nil }
+
+      it 'responds with 401' do
+        get :show, params: {id: mv.id, version: 1}, format: :json
+        expect(response.status).to eq(401)
+      end
+    end
+  end
+
   describe 'POST #create (with scopes)' do
 
     let!(:user)        { FactoryBot.create(:user) }

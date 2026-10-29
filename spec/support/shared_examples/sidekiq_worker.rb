@@ -42,10 +42,3 @@ RSpec.shared_examples 'performs logging' do
     expect(Rails.logger).to have_received(:info).at_least(:once)
   end
 end
-
-RSpec.shared_examples 'handles errors gracefully' do |error_class|
-  it "handles #{error_class} errors" do
-    allow(subject).to receive(:perform).and_raise(error_class)
-    expect { subject.perform(*perform_args) }.to raise_error(error_class)
-  end
-end

@@ -40,13 +40,6 @@ describe VersesController do
   end
 
 
-  # describe "GET index" do
-  #   it "assigns all Verses as @Verses" do
-  #     verse = Verse.create! valid_attributes
-  #     get :index, {}, valid_session
-  #      assigns(:verses)).to eq([verse])
-  #   end
-  # end
 
   describe "GET show" do
     it "assigns the requested Verse as @Verse" do
@@ -56,12 +49,6 @@ describe VersesController do
     end
   end
 
-  # describe "GET new" do
-  #   it "assigns a new Verse as @Verse" do
-  #     get :new, {}, valid_session
-  #      assigns(:verse)).to be_a_new(Verse)
-  #   end
-  # end
 
   describe "GET edit" do
     it "assigns the requested Verse as @Verse" do
@@ -91,21 +78,6 @@ describe VersesController do
       end
     end
 
-    # describe "with invalid params" do
-    #   it "assigns a newly created but unsaved Verse as @Verse" do
-    #     # Trigger the behavior that occurs when invalid params are submitted
-    #     allow_any_instance_of(Verse).to receive(:save).and_return(false)
-    #     post :create, {:verse => { :book => "invalid value" }}, valid_session
-    #      assigns(:verse)).to be_a_new(verse)
-    #   end
-
-    #   it "re-renders the 'new' template" do
-    #     # Trigger the behavior that occurs when invalid params are submitted
-    #     allow_any_instance_of(Verse).to receive(:save).and_return(false)
-    #     post :create, {:verse => { :book => "invalid value" }}, valid_session
-    #      response).to render_template("new")
-    #   end
-    # end
   end
 
   describe "PUT update" do
@@ -123,23 +95,6 @@ describe VersesController do
           expect(verse[key]).to eq(value)
         end
       end
-
-      #==============================================================================================
-      # TODO: Need tests to ensure that only an Admin user can make changes to a verse that is used
-      #       by multiple users. The two specs below don't currently test this functionality correctly.
-      #==============================================================================================
-
-      # it "assigns the requested Verse as @Verse -- admin making change" do
-      #   verse = Verse.create! valid_attributes
-      #   patch :update, {:id => Verse.to_param, :verse => valid_attributes}, {}
-      #    assigns(:verse)).to eq(verse)
-      # end
-
-      # it "assigns the requested Verse as @Verse -- user making change" do
-      #   verse = Verse.create! valid_attributes
-      #   patch :update, {:id => Verse.to_param, :verse => valid_attributes}, valid_session
-      #   assigns(:verse).should_not eq(verse)
-      # end
 
       it "redirects to the Verse" do
         verse = Verse.create! valid_attributes

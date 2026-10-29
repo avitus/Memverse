@@ -142,9 +142,9 @@ class MemversesController < ApplicationController
       redirect_to :controller => "home", :action => "quick_start" and return
     end
 
-    @due_today	= current_user.due_verses unless mobile_device?
-    @due_refs   = current_user.due_refs unless mobile_device?
-    @overdue		= current_user.overdue_verses unless mobile_device?
+    @due_today	= current_user.due_verses
+    @due_refs   = current_user.due_refs
+    @overdue		= current_user.overdue_verses
 
     # Level information
     quests_remaining = current_user.current_uncompleted_quests.length
@@ -753,8 +753,9 @@ class MemversesController < ApplicationController
             mem_queue.delete( mv_id ) # Remove verse from the memorization queue if it is sitting in there
           end
 
-          mv = Memverse.find( mv_id )
-          mv.destroy
+          # Only the current user's own memory verses may be deleted
+          mv = current_user.memverses.find_by( id: mv_id )
+          mv.destroy if mv
 
         end # of transaction
 
@@ -967,7 +968,7 @@ class MemversesController < ApplicationController
     end
 
     # --- Load upcoming verses ---
-    @upcoming_verses = current_user.upcoming_verses unless mobile_device?
+    @upcoming_verses = current_user.upcoming_verses
 
     # We should never receive a JS request for this URL but this is an attempted fix for the following error
 
@@ -1321,7 +1322,7 @@ class MemversesController < ApplicationController
     end
 
     # --- Load upcoming verses ---
-    @upcoming_verses = current_user.upcoming_verses(limit = 15, mode = "drills" ) unless mobile_device?
+    @upcoming_verses = current_user.upcoming_verses(limit = 15, mode = "drills" )
 
   end
 

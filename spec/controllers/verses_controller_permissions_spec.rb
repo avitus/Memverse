@@ -43,10 +43,9 @@ RSpec.describe VersesController, type: :controller do
         sign_in scribe_user
       end
       
-      it 'should allow editing verses (but currently may not due to missing authorization check)' do
+      it 'allows editing verses' do
         post :set_verse_text, params: { id: verse.id, value: verse_text_without_quote }
         
-        # This SHOULD work since scribes have :manage permission on Verse
         expect(response).to be_successful
         expect(response.body).to eq(verse_text_without_quote)
         
@@ -62,16 +61,18 @@ RSpec.describe VersesController, type: :controller do
         sign_in regular_user
       end
       
-      it 'should NOT allow editing verses (but currently allows due to missing authorization check)' do
+      it 'refuses to edit the verse' do
         post :set_verse_text, params: { id: verse.id, value: verse_text_without_quote }
-        
-        # Currently this succeeds when it should fail!
-        # There's no authorization check in the set_verse_text action
-        expect(response).to be_successful
-        
-        # This shows the security issue - any logged in user can edit verses!
-        verse.reload
-        expect(verse.text).to eq(verse_text_without_quote)
+
+        expect(response).to have_http_status(:forbidden)
+        expect(verse.reload.text).to eq(verse_text_with_quote)
+      end
+
+      it 'refuses to mark the verse as checked' do
+        get :check_verse, params: { id: verse.id }
+
+        expect(response).to have_http_status(:forbidden)
+        expect(verse.reload.checked_by).to be_nil
       end
     end
     

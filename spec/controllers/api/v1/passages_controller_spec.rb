@@ -50,13 +50,14 @@ describe Api::V1::PassagesController do
       expect(body["response"]["id"]).to eq(passage.id)
     end
 
-    it "only returns passages belonging to current user" do
+    it "answers 404 JSON for another user's passage" do
       other_user = FactoryBot.create(:user)
       other_passage = FactoryBot.create(:passage, user: other_user)
 
-      expect {
-        get :show, params: {id: other_passage.id, version: 1}, format: :json
-      }.to raise_error(ActiveRecord::RecordNotFound)
+      get :show, params: {id: other_passage.id, version: 1}, format: :json
+
+      expect(response.status).to eq(404)
+      expect(JSON.parse(response.body)).to eq("error" => "not_found", "reason" => "Could not find passage")
     end
   end
 
@@ -73,20 +74,24 @@ describe Api::V1::PassagesController do
       }.to change { user.passages.count }.by(-1)
     end
 
-    it "only deletes passages belonging to current user" do
+    it "answers 404 JSON and keeps another user's passage" do
       other_user = FactoryBot.create(:user)
       other_passage = FactoryBot.create(:passage, user: other_user)
 
       expect {
         delete :destroy, params: {id: other_passage.id, version: 1}, format: :json
-      }.to raise_error(ActiveRecord::RecordNotFound)
+      }.not_to change(Passage, :count)
+
+      expect(response.status).to eq(404)
+      expect(JSON.parse(response.body)["error"]).to eq("not_found")
     end
 
     context "when passage cannot be found" do
-      it "raises RecordNotFound error" do
-        expect {
-          delete :destroy, params: {id: 99999, version: 1}, format: :json
-        }.to raise_error(ActiveRecord::RecordNotFound)
+      it "answers 404 JSON" do
+        delete :destroy, params: {id: 99999, version: 1}, format: :json
+
+        expect(response.status).to eq(404)
+        expect(JSON.parse(response.body)).to eq("error" => "not_found", "reason" => "Could not find passage")
       end
     end
   end

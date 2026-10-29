@@ -33,16 +33,6 @@ Feature: Forum Voting System
     And I should see "remove vote"
 
   @javascript
-  Scenario: Logged in user can downvote a topic
-    Given I am logged in
-    When I visit the feedback board
-    And I click on the topic "Export to PDF"
-    Then I should see the vote score is "-1"
-    When I click the downvote button
-    Then I should see the vote score is "-2"
-    And the downvote button should be highlighted
-
-  @javascript
   Scenario: User can change their vote
     Given I am logged in
     And I have upvoted "Add dark mode"
@@ -54,29 +44,18 @@ Feature: Forum Voting System
     And the upvote button should not be highlighted
 
   @javascript
-  Scenario: User can remove their vote
-    Given I am logged in
-    When I visit the topic "Export to PDF" 
-    Then I should see the vote score is "-1"
-    When I click the downvote button
-    Then I should see the vote score is "-2"
-    And I should see "remove vote"
-    When I remove my vote
-    Then I should see the vote score is "-1"
-    And I should not see "remove vote"
-    And no vote buttons should be highlighted
-
-  @javascript
-  Scenario: Bug fix - User votes then unvotes on topic with 0 score
+  Scenario: Logged in user can downvote a topic and remove the vote again
     Given I am logged in
     When I visit the topic "Improve search feature"
     Then I should see the vote score is "0"
-    When I click the upvote button
-    Then I should see the vote score is "1"
+    When I click the downvote button
+    Then I should see the vote score is "-1"
+    And the downvote button should be highlighted
     And I should see "remove vote"
     When I remove my vote
     Then I should see the vote score is "0"
     And I should not see the vote score is "-1"
+    And I should not see "remove vote"
     And no vote buttons should be highlighted
 
   @javascript

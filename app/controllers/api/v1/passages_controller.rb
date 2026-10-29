@@ -81,6 +81,12 @@ class Api::V1::PassagesController < Api::V1::ApiController
           key :'$ref', :ErrorModel
         end
       end
+      response 404 do
+        key :description, 'Passage not found for current user'
+        schema do
+          key :'$ref', :ErrorModel
+        end
+      end
       response :default do
         key :description, 'Unexpected error'
         schema do
@@ -117,6 +123,12 @@ class Api::V1::PassagesController < Api::V1::ApiController
           key :'$ref', :ErrorModel
         end
       end
+      response 404 do
+        key :description, 'Passage not found for current user'
+        schema do
+          key :'$ref', :ErrorModel
+        end
+      end
       response :default do
         key :description, 'Unexpected error'
         schema do
@@ -134,6 +146,11 @@ class Api::V1::PassagesController < Api::V1::ApiController
   # Scopes
   before_action only: [:index, :show, :update, :create, :destroy] do
     doorkeeper_authorize! :admin, :write, :read, :public  # Allow all scopes access for now
+  end
+
+  # A passage id that does not belong to the current user is a 404 for the client
+  rescue_from ActiveRecord::RecordNotFound do
+    error! :not_found, metadata: {reason: 'Could not find passage'}
   end
 
 

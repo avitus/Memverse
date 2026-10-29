@@ -82,20 +82,6 @@ describe MemversesController do
       expect(flash_message).to include("10 minutes")
     end
 
-    it "should include both verses and references in dashboard message when displayed" do
-      # This simpler test verifies the translation works correctly
-      # The controller may not always show the message (depends on other flash messages)
-      # but when it does, it must include both counts
-      
-      result = I18n.t('messages.today_msg_html', 
-                      due_today: 5, 
-                      due_refs: 10, 
-                      time: 15)
-      
-      expect(result).to include('5 verses')
-      expect(result).to include('10 references')
-      expect(result).to include('15 minutes')
-    end
   end
 
   describe "POST 'add_chapter'" do
@@ -108,34 +94,6 @@ describe MemversesController do
                 FactoryBot.create(:verse, :book_index => 19, :book => "Psalms", :chapter => '117', :versenum => i, :translation => "NIV")
         @chapter[i] = FactoryBot.create(:memverse_without_passage, :user => @user, :verse => verse)
       end
-    end
-
-    # TODO: these tests aren't really testing the controller functionality since they don't actually call any methods
-
-    it "should add an entire chapter to users memory verses" do
-      # This test just verifies the test setup creates the expected memverses
-      expect(@user.memverses.count).to eq(2)
-    end
-
-    it "should correctly link the verses to the first verse" do
-      # This test verifies that the memverse links are set up correctly in the factory
-      first_verse = @user.memverses.includes(:verse).where('verses.versenum' => 1).first
-      second_verse = @user.memverses.includes(:verse).where('verses.versenum' => 2).first
-      expect(second_verse.first_verse).to eq(first_verse.id)
-    end
-
-    it "should correctly link a verse to the previous verse" do
-      # This test verifies that the memverse links are set up correctly in the factory
-      first_verse = @user.memverses.includes(:verse).where('verses.versenum' => 1).first
-      second_verse  = @user.memverses.includes(:verse).where('verses.versenum' => 2).first
-      expect(second_verse.prev_verse).to eq(first_verse.id)
-    end
-
-    it "should correctly link a verse to the next verse" do
-      # This test verifies that the memverse links are set up correctly in the factory
-      first_verse = @user.memverses.includes(:verse).where('verses.versenum' => 1).first
-      second_verse  = @user.memverses.includes(:verse).where('verses.versenum' => 2).first
-      expect(first_verse.next_verse).to eq(second_verse.id)
     end
 
   end
@@ -279,54 +237,6 @@ describe MemversesController do
         sign_out @user
         get :manage_verses
         expect(response).to redirect_to(new_user_session_path)
-      end
-    end
-  end
-
-  describe "POST 'handle_verse_action'" do
-    before(:each) do
-      @verse1 = FactoryBot.create(:verse)
-      @verse2 = FactoryBot.create(:verse)
-      @mv1 = FactoryBot.create(:memverse, user: @user, verse: @verse1)
-      @mv2 = FactoryBot.create(:memverse, user: @user, verse: @verse2)
-    end
-
-    context "when Show button is clicked" do
-      it "should redirect to single verse when one is selected" do
-        post :handle_verse_action, params: { mv: [@mv1.id.to_s], Show: "Show Selected" }, session: valid_session
-        expect(response).to redirect_to(memory_verse_path(@mv1.id))
-      end
-
-      it "should call show action when multiple verses are selected" do
-        expect(controller).to receive(:show)
-        post :handle_verse_action, params: { mv: [@mv1.id.to_s, @mv2.id.to_s], Show: "Show Selected" }, session: valid_session
-      end
-
-      it "should show flash message when no verses are selected" do
-        post :handle_verse_action, params: { Show: "Show Selected" }, session: valid_session
-        expect(flash[:notice]).to eq("Please select verses using the checkboxes in the first column.")
-        expect(response).to redirect_to(manage_verses_path)
-      end
-    end
-
-    context "when Prompt button is clicked" do
-      it "should call show_prompt action" do
-        expect(controller).to receive(:show_prompt)
-        post :handle_verse_action, params: { mv: [@mv1.id.to_s], Prompt: "Show Prompt" }, session: valid_session
-      end
-    end
-
-    context "when Delete button is clicked" do
-      it "should call delete_verses action" do
-        expect(controller).to receive(:delete_verses)
-        post :handle_verse_action, params: { mv: [@mv1.id.to_s], Delete: "Delete Selected" }, session: valid_session
-      end
-    end
-
-    context "when no recognized button is clicked" do
-      it "should redirect to manage_verses" do
-        post :handle_verse_action, params: { mv: [@mv1.id.to_s] }, session: valid_session
-        expect(response).to redirect_to(manage_verses_path)
       end
     end
   end

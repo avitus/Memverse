@@ -28,13 +28,6 @@ RSpec.describe "Thredded Topic Voting", type: :model do
   end
   
   describe "voting methods" do
-    it "responds to acts_as_votable methods" do
-      expect(topic).to respond_to(:vote_score)
-      expect(topic).to respond_to(:voted_by?)
-      expect(topic).to respond_to(:vote_direction_by)
-      expect(topic).to respond_to(:get_upvotes)
-      expect(topic).to respond_to(:get_downvotes)
-    end
   end
   
   describe "#vote_score" do

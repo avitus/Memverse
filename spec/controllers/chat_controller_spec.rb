@@ -9,7 +9,7 @@ RSpec.describe ChatController, type: :controller do
   
   before do
     # Mock Redis
-    allow($redis).to receive(:exists).and_return(false)
+    allow($redis).to receive(:exists?).and_return(false)
     allow($redis).to receive(:set).and_return('OK')
     allow($redis).to receive(:del).and_return(1)
     
@@ -77,7 +77,7 @@ RSpec.describe ChatController, type: :controller do
 
     context 'when user is not banned' do
       before do
-        allow($redis).to receive(:exists).with("banned-#{user.id}").and_return(false)
+        allow($redis).to receive(:exists?).with("banned-#{user.id}").and_return(false)
         allow(chat_channel).to receive(:send_message).and_return(true)
       end
 
@@ -96,7 +96,7 @@ RSpec.describe ChatController, type: :controller do
 
     context 'when user is banned' do
       before do
-        allow($redis).to receive(:exists).with("banned-#{user.id}").and_return(true)
+        allow($redis).to receive(:exists?).with("banned-#{user.id}").and_return(true)
       end
 
       it 'does not send the message' do
@@ -104,12 +104,6 @@ RSpec.describe ChatController, type: :controller do
         post :send_message, params: message_params, xhr: true
       end
 
-      it 'logs that the user is banned' do
-        allow(Rails.logger).to receive(:info) # Allow all logging
-        post :send_message, params: message_params, xhr: true
-        # Test passes if response is successful and message is not sent
-        expect(response).to have_http_status(:success)
-      end
     end
   end
 
@@ -134,12 +128,6 @@ RSpec.describe ChatController, type: :controller do
       expect(JSON.parse(response.body)).to eq({ 'status' => 'Closed' })
     end
 
-    it 'logs channel information' do
-      allow(Rails.logger).to receive(:info) # Allow all logging
-      post :toggle_channel, params: channel_params
-      # Test passes if no exceptions are raised and response is successful
-      expect(response).to have_http_status(:success)
-    end
   end
 
   describe 'GET #toggle_ban' do
@@ -171,7 +159,7 @@ RSpec.describe ChatController, type: :controller do
 
       context 'when user is not currently banned' do
         before do
-          allow($redis).to receive(:exists).with("banned-#{target_user.id}").and_return(0)
+          allow($redis).to receive(:exists?).with("banned-#{target_user.id}").and_return(false)
         end
 
         it 'bans the user' do
@@ -187,7 +175,7 @@ RSpec.describe ChatController, type: :controller do
 
       context 'when user is currently banned' do
         before do
-          allow($redis).to receive(:exists).with("banned-#{target_user.id}").and_return(1)
+          allow($redis).to receive(:exists?).with("banned-#{target_user.id}").and_return(true)
         end
 
         it 'unbans the user' do

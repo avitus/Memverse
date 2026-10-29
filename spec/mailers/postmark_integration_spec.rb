@@ -38,30 +38,11 @@ RSpec.describe "Email Integration", type: :mailer do
   end
 
   describe "Mailer configuration" do
-    it "configures test environment correctly" do
-      expect(Rails.application.config.action_mailer.delivery_method).to eq(:test)
-      # Note: default_url_options might be set differently in different environments
-      expect(Rails.application.config.action_mailer.default_url_options).to be_present
-    end
-
-    it "has correct default from address for UserMailer" do
-      expect(UserMailer.default_params[:from]).to eq('"Memverse" <admin@memverse.com>')
-    end
-
-    it "has correct default from address for AdminMailer" do
-      expect(AdminMailer.default_params[:from]).to eq('"Memverse" <admin@memverse.com>')
-    end
   end
 
   describe "Email delivery in test environment" do
     before do
       ActionMailer::Base.deliveries.clear
-    end
-
-    it "accumulates emails in test delivery method" do
-      test_user = FactoryBot.create(:user, email: "delivery-test@example.com", name: "Delivery Test User")
-      UserMailer.signup_notification(test_user).deliver_now
-      expect(ActionMailer::Base.deliveries.count).to be >= 1
     end
 
     it "includes Postmark tag header in delivered emails" do

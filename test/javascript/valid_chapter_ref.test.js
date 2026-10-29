@@ -1,12 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import { memverseLib, memverse } from './helpers.js';
 
-describe("validVerseRef", () => {
+describe("validChapterRef", () => {
   it("accepts chapters", () => {
     expect(memverseLib.validChapterRef("Genesis 1")).toEqual( true );
   });
 
-  it("accepts chapters", () => {
+  it("accepts chapters with a trailing colon", () => {
     expect(memverseLib.validChapterRef("Genesis 12:")).toEqual( true );
   });
 

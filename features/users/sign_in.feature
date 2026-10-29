@@ -6,21 +6,18 @@ Feature: Sign in
     Background:
       Given I am not logged in
 
-    Scenario: User is not signed up
-      Given no user exists with an email of "user@test.com"
+    Scenario Outline: User enters credentials that do not match an account
+      Given <account>
       When I go to the sign in page
-      And I sign in as "user@test.com/please"
+      And I sign in as "user@test.com/<password>"
       Then I should see "Invalid email or password."
       And I go to the home page
       And I should be signed out
 
-    Scenario: User enters wrong password
-      Given I am a user named "foo" with an email "user@test.com" and password "please"
-      When I go to the sign in page
-      And I sign in as "user@test.com/wrongpassword"
-      Then I should see "Invalid email or password."
-      And I go to the home page
-      And I should be signed out
+      Examples:
+        | account                                                                  | password      |
+        | no user exists with an email of "user@test.com"                          | please        |
+        | I am a user named "foo" with an email "user@test.com" and password "please" | wrongpassword |
 
     Scenario: User signs in successfully with email
       Given I sign in as a normal user

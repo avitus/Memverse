@@ -186,6 +186,16 @@ RSpec.describe UserMailer, type: :mailer do
     end
   end
 
+  describe "onboarding_reminder" do
+    let(:mail) { UserMailer.onboarding_reminder(user) }
+
+    it "goes to the user on the outbound stream with the onboarding tag" do
+      expect(mail.to).to eq([user.email])
+      expect(mail.message_stream).to eq('outbound')
+      expect(mail.tag).to eq('onboarding-reminder')
+    end
+  end
+
   describe "activation" do
     let(:mail) { UserMailer.activation(user) }
 
@@ -228,36 +238,10 @@ RSpec.describe UserMailer, type: :mailer do
       expect(UserMailer.default_params[:from]).to eq('"Memverse" <admin@memverse.com>')
     end
 
-    it "sets the correct default URL options host" do
-      # UserMailer inherits from ActionMailer::Base
-      expect(UserMailer.default_url_options[:host]).to eq(ActionMailer::Base.default_url_options[:host])
-    end
   end
 
   describe "email format validation" do
     context "when user has valid email" do
-      it "all emails can be delivered" do
-        emails = [
-          UserMailer.newsletter_email(user),
-          UserMailer.progression_email_9(user),
-          UserMailer.progression_email_8(user),
-          UserMailer.progression_email_7(user),
-          UserMailer.progression_email_6(user),
-          UserMailer.progression_email_5(user),
-          UserMailer.progression_email_4(user),
-          UserMailer.progression_email_3(user),
-          UserMailer.progression_email_2(user),
-          UserMailer.signup_notification(user),
-          UserMailer.activation(user)
-        ]
-
-        emails.each do |mail|
-          expect(mail.to).to eq([user.email])
-          expect(mail.from).to eq(["admin@memverse.com"])
-          # Mail objects should be valid for delivery
-          expect(mail).to respond_to(:deliver_now)
-        end
-      end
     end
 
     context "when user has invalid email" do

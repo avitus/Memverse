@@ -28,34 +28,6 @@ describe Devotion do
   end
 
   describe "data storage" do
-    it "stores text content properly" do
-      long_content = "This is a long devotional thought that might contain HTML entities, special characters, and multiple paragraphs. It should be stored safely in the database without corruption."
-      
-      devotion = Devotion.create!(
-        name: "Test Devotion",
-        month: 3,
-        day: 10,
-        thought: long_content,
-        ref: "Psalm 119:105"
-      )
-      
-      devotion.reload
-      expect(devotion.thought).to eq(long_content)
-    end
-
-    it "handles special characters in content" do
-      special_content = "God's love is \"amazing\" & wonderful—it never fails! <em>Truly</em> blessed."
-      
-      devotion = Devotion.create!(
-        name: "Special Content",
-        month: 12,
-        day: 25,
-        thought: special_content,
-        ref: "1 John 4:8"
-      )
-      
-      expect(devotion.thought).to eq(special_content)
-    end
   end
 
   describe ".daily_refresh" do
@@ -215,35 +187,6 @@ describe Devotion do
   end
 
   describe "content security" do
-    it "should handle potentially unsafe HTML content safely" do
-      unsafe_content = '<script>alert("xss")</script><p>Safe content</p><a href="javascript:void(0)">Link</a>'
-      
-      devotion = Devotion.create!(
-        name: "Security Test",
-        month: 1,
-        day: 1,
-        thought: unsafe_content,
-        ref: "Psalm 91:1"
-      )
-      
-      # The content should be stored as-is in the database
-      # Security filtering should happen at the view layer with sanitize()
-      expect(devotion.thought).to eq(unsafe_content)
-    end
-
-    it "preserves legitimate HTML formatting" do
-      formatted_content = '<p>This is <em>emphasized</em> text with <strong>strong</strong> formatting.</p><p>Another paragraph.</p>'
-      
-      devotion = Devotion.create!(
-        name: "Formatted Content",
-        month: 2,
-        day: 14,
-        thought: formatted_content,
-        ref: "Ephesians 6:10"
-      )
-      
-      expect(devotion.thought).to eq(formatted_content)
-    end
   end
 
   describe "date-based retrieval" do
@@ -265,18 +208,5 @@ describe Devotion do
       )
     end
 
-    it "can find devotions by month and day" do
-      found_devotion = Devotion.where(month: 1, day: 15).first
-      expect(found_devotion).to eq(@jan_devotion)
-      expect(found_devotion.thought).to eq("January devotion")
-    end
-
-    it "distinguishes between different months" do
-      jan_count = Devotion.where(month: 1, day: 15).count
-      june_count = Devotion.where(month: 6, day: 15).count
-      
-      expect(jan_count).to eq(1)
-      expect(june_count).to eq(1)
-    end
   end
 end

@@ -72,13 +72,6 @@ RSpec.describe "Thredded Topics Controller Decorator", type: :request do
       expect(controversial_index).to be < unpopular_index
     end
     
-    it "uses default sorting when sort parameter is absent" do
-      get "/forum/feedback"
-      
-      expect(response).to be_successful
-      # Should use default Thredded sorting (by updated_at)
-    end
-    
     it "preserves sort parameter in pagination links" do
       # Create enough topics to trigger pagination
       15.times { |i| create_topic_with_votes(feedback_board, "Topic #{i}") }
@@ -93,12 +86,6 @@ RSpec.describe "Thredded Topics Controller Decorator", type: :request do
     let!(:topic1) { create_topic_with_votes(general_board, "Topic 1", upvotes: 10) }
     let!(:topic2) { create_topic_with_votes(general_board, "Topic 2") }
     
-    it "ignores sort=votes parameter on non-feedback boards" do
-      get "/forum/general?sort=votes"
-      
-      expect(response).to be_successful
-      # Should use default sorting even with sort=votes parameter
-    end
   end
   
   describe "sorting algorithm" do

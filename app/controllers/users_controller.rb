@@ -90,6 +90,8 @@ class UsersController < ApplicationController
 
   end
 
+  private
+
   def user_params
     params.require(:user)
       .permit(:login, :email, :name, :password, :password_confirmation, :current_password,
@@ -99,7 +101,5 @@ class UsersController < ApplicationController
               :provider, :uid, :translation, :time_allocation, :quiz_alert,
               :device_token, :device_type)
   end
-
-  protected
 
 end

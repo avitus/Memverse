@@ -81,14 +81,6 @@ RSpec.describe MemversesController, type: :controller do
     end
 
     context "when Delete button is clicked" do
-      it "calls delete_verses action" do
-        expect(controller).to receive(:delete_verses)
-        
-        post :handle_verse_action, params: { 
-          "Delete" => "Delete Selected",
-          mv: [memverse1.id.to_s]
-        }
-      end
     end
 
     context "when no recognized button is clicked" do

@@ -99,7 +99,7 @@ export function loadJavaScriptFile(filePath) {
     'blankifyVerse', 'parseVerseRef', 'parsePassageRef', 'verseFeedback',
     'accTestState', 'refTestState', 'splitByWords', 'BIBLEBOOKS', 'scrub_text',
     'calculate_levenshtein_distance', 'word_width', 'flexibleTextMatch',
-    'flexibleTextMatchWithBase', 'calculateInputWidth', 'mvPassageReviewHandleInput',
+    'calculateInputWidth', 'mvPassageReviewHandleInput',
     'mvMirrorNextInput', 'mvDisplayPassageForReview', 'buildVerseBlank'
   ];
   
@@ -239,7 +239,6 @@ export const memverseLib = {
   calculate_levenshtein_distance: globalThis.calculate_levenshtein_distance || globalContext.calculate_levenshtein_distance,
   word_width: global.word_width,
   flexibleTextMatch: globalThis.flexibleTextMatch || globalContext.flexibleTextMatch,
-  flexibleTextMatchWithBase: globalThis.flexibleTextMatchWithBase || globalContext.flexibleTextMatchWithBase,
   calculateInputWidth: globalThis.calculateInputWidth || globalContext.calculateInputWidth,
   mvPassageReviewHandleInput: globalThis.mvPassageReviewHandleInput || globalContext.mvPassageReviewHandleInput,
   mvMirrorNextInput: globalThis.mvMirrorNextInput || globalContext.mvMirrorNextInput,

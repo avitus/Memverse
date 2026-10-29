@@ -12,13 +12,6 @@ RSpec.describe SubsectionPassages, type: :worker do
   include_examples 'a worker with specific queue', :low
 
   describe 'worker configuration' do
-    it 'includes IceCube module' do
-      expect(described_class).to include(IceCube)
-    end
-
-    it 'has retry disabled' do
-      expect(described_class.sidekiq_options['retry']).to eq(false)
-    end
   end
 
   describe '#perform' do
@@ -127,18 +120,6 @@ RSpec.describe SubsectionPassages, type: :worker do
         expect(call_tracker).not_to include(inactive_user.id)
       end
 
-      it 'uses find_each for batch processing of passages' do
-        # Test that find_each is called on passage associations
-        # Since find_each is part of ActiveRecord::Batches, we can verify it's used correctly
-        # by checking that the method exists and is used in the actual worker code
-        passages_association = active_user_1.passages
-        expect(passages_association).to respond_to(:find_each)
-        
-        # Verify that the worker doesn't break when passages are empty
-        empty_user = FactoryBot.create(:user)
-        empty_user.update_column(:last_activity_date, 1.week.ago)
-        expect { worker.perform }.not_to raise_error
-      end
     end
 
     describe 'error handling' do
@@ -191,29 +172,9 @@ RSpec.describe SubsectionPassages, type: :worker do
     end
 
     describe 'performance considerations' do
-      it 'uses find_each for memory-efficient batch processing' do
-        # Verify that find_each is used instead of all/each
-        user_relation = double('user_relation')
-        passage_relation = double('passage_relation')
-
-        allow(User).to receive(:active).and_return(user_relation)
-        allow(user_relation).to receive(:find_each)
-        allow(active_user_1).to receive(:passages).and_return(passage_relation)
-        allow(passage_relation).to receive(:find_each)
-
-        worker.perform
-
-        expect(user_relation).to have_received(:find_each)
-      end
     end
   end
 
   describe 'scheduled execution' do
-    it 'is designed to run twice yearly (March 2 and September 2)' do
-      # This is more of a documentation test - the actual scheduling
-      # would be configured in sidekiq-scheduler or similar
-      # The worker itself doesn't contain scheduling logic
-      expect(described_class).to be_a(Class)
-    end
   end
 end

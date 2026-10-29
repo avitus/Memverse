@@ -117,15 +117,9 @@ When(/^I click on "([^"]*)"$/) do |link_text|
 end
 
 Then(/^I should see "([^"]*)" new users in the past (\d+) days$/) do |count, days|
-  # The page shows all users created in the date range, including the admin user
-  # So we need to check for the actual content on the page
-  expect(page).to have_content("Tracking")
-  expect(page).to have_content("new users")
-  
-  # Verify the actual users we created are shown in the table
-  expect(page).to have_content("New User 1")
-  expect(page).to have_content("New User 2") 
-  expect(page).to have_content("New User 3")
+  window_start = days.to_i.days.ago.to_date.strftime("%B %d")
+  window_end   = Date.current.strftime("%B %d, %Y")
+  expect(page).to have_content("Tracking #{count} new users from #{window_start} to #{window_end}")
 end
 
 
@@ -133,11 +127,9 @@ end
 
 Then(/^I should see the following metrics:$/) do |table|
   table.hashes.each do |row|
-    metric = row['metric']
-    value = row['value']
-    # Try to find the metric and value on the page without specific container
-    expect(page).to have_content(metric)
-    expect(page).to have_content(value)
+    within(".metric-card", text: row["metric"]) do
+      expect(page).to have_css(".metric-value", text: row["value"])
+    end
   end
 end
 
@@ -176,11 +168,6 @@ Given(/^there are unengaged users who need reminders$/) do
 end
 
 # Removed - will use generic click link step
-
-When(/^I confirm the action$/) do
-  # Capybara automatically handles Rails confirmation dialogs in test mode
-  # or we can use: page.accept_confirm { click_link 'Email Unengaged Users' }
-end
 
 Then(/^reminder emails should be sent to unengaged users$/) do
   # In test environment, Sidekiq jobs might be processed inline or we might need to check the job queue

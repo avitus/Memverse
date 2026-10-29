@@ -295,27 +295,22 @@ RSpec.describe SendReminders, type: :worker do
     end
 
     describe 'batch processing behavior' do
-      it 'processes users in batches using in_batches' do
-        expect(User).to receive(:in_batches).with(of: 100)
+      it 'emails newer users before older ones' do
+        emails = %w[old@example.com middle@example.com new@example.com]
+        [1.month.ago, 1.week.ago, 1.day.ago].zip(emails).each do |created_at, email|
+          FactoryBot.create(:user, confirmed_at: 1.week.ago, created_at: created_at, email: email,
+                                   reminder_freq: 'Weekly', last_reminder: 2.weeks.ago)
+        end
+        allow_any_instance_of(User).to receive(:update_reminder_freq)
+        allow_any_instance_of(User).to receive(:progression).and_return(2)
+        allow_any_instance_of(User).to receive(:needs_reminder?) { |u| emails.include?(u.email) }
+
+        processed = []
+        allow(UserMailer).to receive(:progression_email_2) { |u| processed << u.email; email_double }
+
         worker.perform
-      end
 
-      it 'processes users in batches ordered by newest first' do
-        user1 = FactoryBot.create(:user, confirmed_at: 1.week.ago, email: 'user1@example.com')
-        user2 = FactoryBot.create(:user, confirmed_at: 1.week.ago, email: 'user2@example.com')
-
-        allow(user1).to receive(:update_reminder_freq)
-        allow(user1).to receive(:needs_reminder?).and_return(false)
-        allow(user2).to receive(:update_reminder_freq)
-        allow(user2).to receive(:needs_reminder?).and_return(true)
-        allow(user2).to receive(:progression).and_return(2)
-        allow(user2).to receive(:update_column)
-
-        mock_user_find_each([user1, user2])
-
-        # Should process both users, sending email only for user2
-        expect(UserMailer).to receive(:progression_email_2).and_return(email_double)
-        worker.perform
+        expect(processed).to eq(emails.reverse)
       end
     end
 

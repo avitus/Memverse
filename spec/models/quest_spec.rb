@@ -50,15 +50,6 @@ describe Quest do
       end
     end
 
-    describe "for verse goals" do
-      it "for 'Learning'" do
-
-      end
-
-      it "for 'Memorized'" do
-      end
-    end
-
     describe "for chapter goals" do
       it "for 'Learning'" do
         quest = FactoryBot.create(:quest, objective: 'Chapters', qualifier: 'Learning', quantity: 2)

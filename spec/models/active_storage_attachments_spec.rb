@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'Active Storage', type: :model do
+RSpec.describe 'Active Storage attachments', type: :model do
   describe 'Sermon model' do
     let(:sermon) { FactoryBot.create(:sermon) }
     
@@ -11,10 +11,6 @@ RSpec.describe 'Active Storage', type: :model do
           filename: 'test_audio.mp3',
           content_type: 'audio/mpeg'
         )
-      end
-      
-      it 'has attached mp3_attachment' do
-        expect(sermon.mp3_attachment).to be_attached
       end
       
       it 'returns correct mp3_url' do
@@ -41,10 +37,6 @@ RSpec.describe 'Active Storage', type: :model do
     let(:picture) { FactoryBot.create(:ckeditor_picture) }
     
     context 'with Active Storage attachment' do
-      
-      it 'has attached data_attachment' do
-        expect(picture.data_attachment).to be_attached
-      end
       
       it 'returns correct url for original' do
         expect(picture.url).to include('rails/active_storage/blobs')
@@ -89,10 +81,6 @@ RSpec.describe 'Active Storage', type: :model do
     let(:attachment) { FactoryBot.create(:ckeditor_attachment_file) }
     
     context 'with Active Storage attachment' do
-      
-      it 'has attached data_attachment' do
-        expect(attachment.data_attachment).to be_attached
-      end
       
       it 'returns correct filename' do
         expect(attachment.filename).to eq('test_document.pdf')

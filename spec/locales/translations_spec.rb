@@ -139,34 +139,6 @@ describe "Translations" do
       end
     end
     
-    it "checks for missing critical translations in other locales" do
-      locale_files = app_locale_files
-      warnings = []
-      
-      locale_files.each do |locale_file|
-        locale_name = File.basename(locale_file, '.yml')
-        next if locale_name == 'en' # Skip English as it's tested separately
-        
-        locale_data = load_locale_file(locale_file)
-        
-        critical_keys.each do |key_path|
-          value = get_nested_value(locale_data[locale_name], key_path)
-          
-          if value.nil? || (value.is_a?(String) && value.strip.empty?)
-            warnings << "#{locale_name}.yml: Missing '#{key_path}'"
-          end
-        end
-      end
-      
-      unless warnings.empty?
-        puts "\nWARNING: Critical translations missing in non-English locales:"
-        warnings.each { |w| puts "  - #{w}" }
-        puts "\nConsider adding these translations to maintain consistency."
-      end
-      
-      # Pass the test but show warnings - this ensures English works while alerting about other locales
-      expect(true).to be true
-    end
   end
 
   describe "dashboard reminder message" do

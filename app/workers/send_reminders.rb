@@ -119,30 +119,12 @@ class SendReminders
     u.update_column(:last_reminder, Time.zone.today) # skipcq: RB-RL1053
   end
 
-  # Validate email format to prevent Postmark errors
-  # @param email [String] Email address to validate
-  # @return [Boolean] true if email is valid format, false otherwise
+  # Whether the address is one Devise would accept, so the reminder is not sent to an
+  # address that can only bounce.
+  # @param email [String, nil]
+  # @return [Boolean]
   def valid_email?(email)
-    return false if email.blank?
-    
-    # Basic email format validation - must contain @ and have reasonable format
-    # This is a more practical validation that will catch obvious invalid emails
-    return false unless email.include?('@')
-    return false if email.include?(' ')  # No spaces allowed
-    return false if email.include?('..') # No double dots allowed
-    return false if email.start_with?('@') || email.end_with?('@')
-    
-    # Split on @ - should have exactly 2 parts
-    parts = email.split('@')
-    return false unless parts.length == 2
-    
-    local_part, domain_part = parts
-    return false if local_part.empty? || domain_part.empty?
-    return false unless domain_part.include?('.') # Domain must have at least one dot
-    
-    # Basic format check with regex for more complex validation
-    email_regex = /\A[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\z/
-    email.match?(email_regex)
+    email.present? && email.match?(Devise.email_regexp)
   end
 
 end

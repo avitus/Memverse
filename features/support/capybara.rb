@@ -40,23 +40,3 @@ Capybara.default_max_wait_time = ENV['CI'] ? 15 : 10
 # Configure Capybara to automatically accept JavaScript confirms and alerts
 Capybara.automatic_reload = false
 
-# Helper method to handle alerts in tests
-def accept_alert
-  page.driver.browser.switch_to.alert.accept
-rescue Selenium::WebDriver::Error::NoSuchAlertError
-  # No alert present, continue
-end
-
-# Helper method to dismiss alerts in tests
-def dismiss_alert
-  page.driver.browser.switch_to.alert.dismiss
-rescue Selenium::WebDriver::Error::NoSuchAlertError
-  # No alert present, continue
-end
-
-# Helper method to get alert text
-def alert_text
-  page.driver.browser.switch_to.alert.text
-rescue Selenium::WebDriver::Error::NoSuchAlertError
-  nil
-end

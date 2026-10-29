@@ -1,9 +1,3 @@
-def wait_for_input
-  Timeout.timeout(Capybara.default_max_wait_time) do
-    loop until page.has_css?("td.edit_mv input")
-  end
-end
-
 Given /^no user exists with an email of "(.*)"$/ do |email|
   User.where(:email => email).first.should be_nil
 end
@@ -51,16 +45,6 @@ Given /^I am an admin named "([^"]*)" with an email "([^"]*)" and password "([^"
   end
 end
 
-# Helper method to generate unique user data
-def generate_unique_user_data(base_name)
-  timestamp = Time.now.to_i
-  {
-    name: "#{base_name}_#{timestamp}",
-    email: "#{base_name.downcase.gsub(/\s+/, '_')}_#{timestamp}@test.com",
-    password: "please"
-  }
-end
-
 Given /^I am a confirmed user named "([^"]*)" with an email "([^"]*)" and password "([^"]*)"$/ do |name, email, password|
   user = User.new(:name => name,
             :email => email,
@@ -92,18 +76,6 @@ end
 
 Then /^I should be already signed in$/ do
   step %{I should see "Logout"}
-end
-
-Given /^I am signed up as "(.*)\/(.*)"$/ do |email, password|
-  step %{I am not logged in}
-  step %{I go to the sign up page}
-  step %{I fill in "user_name" with "My Name"}
-  step %{I fill in "user_email" with "#{email}"}
-  step %{I fill in "user_password" with "#{password}"}
-  step %{I fill in "user_password_confirmation" with "#{password}"}
-  step %{I press "Create my account"}
-  step %{I should see "A MESSAGE WITH A CONFIRMATION LINK HAS BEEN SENT TO YOUR EMAIL ADDRESS. PLEASE OPEN THE LINK TO ACTIVATE YOUR ACCOUNT."}
-  step %{I am logout}
 end
 
 Then /^I sign out$/ do
@@ -228,38 +200,9 @@ Given /^a user with the login of "(.*)"$/ do |login|
 end
 
 Then /^there should be a user with an email of "(.*)" whose referrer's login is "(.*)"$/ do |email, login|
-  user = User.where(:email => email).first
-  if user.nil?
-    referrer = User.find_by_login(login)
-    expect(referrer).not_to be_nil
-    user = User.create!(
-      name: "Test User",
-      email: email,
-      password: "password",
-      password_confirmation: "password",
-      referred_by: referrer.id
-    )
-  end
-  expect(user).not_to be_nil
-
-  if user.referred_by.nil?
-    referrer = User.find_by_login(login)
-    expect(referrer).not_to be_nil
-    user.referred_by = referrer.id
-    user.save!
-  end
-
-  expect(user.referred_by).not_to be_nil
-  referrer = User.find(user.referred_by)
-  expect(referrer.login).to eq(login)
-end
-
-Given /^the user with the email address "([^"]*)" can blog$/ do |email|
-  # class User < ActiveRecord::Base
-  #   def can_blog?
-  #     self.id == User.where(:email => email).first.id
-  #  end
-  # end
+  user = User.find_by!(email: email)
+  expect(user.referred_by).not_to be_nil, "Expected #{email} to have a referrer"
+  expect(User.find(user.referred_by).login).to eq(login)
 end
 
 Given /^a blog titled "(.*)"$/ do |title|
@@ -277,16 +220,6 @@ Given /^I sign in as a normal user$/ do
   step %{I should be signed in}
   
   @current_user_email = email
-end
-
-Given /^I sign in as a non-blogging user$/ do
-  step %{I am a user named "blognot" with an email "blognot@test.com" and password "please"}
-  @u = User.find_by_email("blognot@test.com")
-  @u.id = 1000
-  @u.save
-  step %{the email address "blognot@test.com" is confirmed}
-  step %{I sign in as "blognot@test.com/please"}
-  step %{I should be signed in}
 end
 
 Given /^I sign in as an advanced user$/ do
@@ -346,22 +279,6 @@ Then /^the tag "(.*)" should exist for memverse #<memverse_id>$/ do |tagname|
   expect(tag_exists).to be true
 end
 
-When /^I type in "([^\"]*)" and I choose "([^\"]*)"$/ do |typed, should_select|
-  wait_for_input
-  input = find("td.edit_mv input")
-  input.native.send_keys typed
-  sleep 5
-  page.driver.browser.execute_script %Q{ $('.ui-menu-item a:contains("#{should_select}")').animate({opacity:0.4},1500); }
-  page.driver.browser.execute_script %Q{ $('.ui-menu-item a:contains("#{should_select}")').trigger("mouseenter").trigger("click"); }
-  sleep 5
-end
-
-When /^I type "([^\"]*)"$/ do |typed|
-  wait_for_input
-  input = find("td.edit_mv input")
-  input.native.send_keys typed
-end
-
 When /^I create a tag "([^\"]*)" for memverse #<memverse_id>$/ do |tag_name|
   # Use different approaches for different drivers
   if Capybara.current_driver == :rack_test
@@ -418,61 +335,3 @@ When /^I sign in as the current user$/ do
   step %{I sign in as "#{@current_user_email}/please"}
 end
 
-# Translation setup steps
-Given /^the following translations exist:$/ do |table|
-  # This step is used to set up translations in the test database
-  # For this app, translations appear to be handled differently (not as AR models)
-  # So we'll just acknowledge the setup without creating database records
-  table.hashes.each do |row|
-    # Translation exists - no database setup required for this app
-    puts "Translation available: #{row['name']} (#{row['translation_code']})"
-  end
-end
-
-# User creation steps
-Given /^I have a user "([^"]*)" with email "([^"]*)" and password "([^"]*)"$/ do |login, email, password|
-  user = FactoryBot.create(:user,
-    login: login,
-    name: login.titleize,
-    email: email,
-    password: password,
-    password_confirmation: password
-  )
-  @current_user_email = email
-end
-
-Given /^the user "([^"]*)" is not confirmed$/ do |login|
-  user = User.find_by(login: login)
-  user.update_attribute(:confirmed_at, nil)
-end
-
-When /^I visit an invalid confirmation link for "([^"]*)"$/ do |email|
-  visit "/users/confirmation?confirmation_token=invalid_token"
-end
-
-When /^the user "([^"]*)" confirms their account$/ do |login|
-  user = User.find_by(login: login)
-  user.confirm
-  user.save!
-end
-
-When /^the user "([^"]*)" updates their name to "([^"]*)"$/ do |login, new_name|
-  user = User.find_by(login: login)
-  user.update_attribute(:name, new_name)
-end
-
-# Additional user existence steps
-Given /^a user exists with an email of "([^"]*)"$/ do |email|
-  user = User.find_by_email(email)
-  if user.nil?
-    user = FactoryBot.create(:user, 
-      name: "Test User",
-      email: email,
-      password: "password123",
-      password_confirmation: "password123"
-    )
-    user.confirm
-    user.save!
-  end
-  @current_user_email = email
-end

@@ -60,6 +60,9 @@ module NavigationHelpers
     when /the chat page/
       '/chat'.dup
 
+    when /the new feedback topic page/
+      '/forum/feedback/topics/new'.dup
+
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
     when /^(.*)'s dashboard$/i

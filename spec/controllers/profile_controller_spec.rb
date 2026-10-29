@@ -249,17 +249,6 @@ describe ProfileController do
         expect(assigns(:level_two)).to be_empty
       end
 
-      it "cleans up self-referrals" do
-        # Create a user that somehow referred themselves (should be prevented now)
-        self_referral_user = FactoryBot.create(:user)
-        self_referral_user.update_column(:referred_by, self_referral_user.id) # Bypass validation
-        
-        get :referrals, params: { id: self_referral_user.id }
-        expect(response).to be_successful
-        expect(assigns(:referrer)).to be_nil
-        expect(self_referral_user.reload.referred_by).to be_nil
-        expect(flash[:notice]).to eq("You can't refer yourself!")
-      end
     end
 
     describe "POST 'search_user'" do

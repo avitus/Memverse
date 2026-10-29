@@ -27,12 +27,15 @@ BeforeAll do
   # Only seed FinalVerse data if it's not already present
   if FinalVerse.count == 0
     puts "Seeding FinalVerse data (one-time setup)..."
-    config = ActiveRecord::Base.configurations.configs_for(env_name: Rails.env).first.configuration_hash
+    # configuration_hash has symbol keys on Rails 7
+    config = ActiveRecord::Base.configurations.configs_for(env_name: Rails.env).first.configuration_hash.with_indifferent_access
     
+    seed_sql = Rails.root.join('data', 'imports', 'iso_final_verses.sql')
+
     if config['adapter'] == 'mysql2'
-      system("mysql --user=#{config['username']} --password=#{config['password']} --host=#{config['host']} #{config['database']} < iso_final_verses.sql")
+      system("mysql --user=#{config['username']} --password=\"#{config['password']}\" --host=#{config['host']} #{config['database']} < #{seed_sql}")
     elsif config['adapter'] == 'sqlite3'
-      system("sqlite3 #{config['database']} < iso_final_verses.sql")
+      system("sqlite3 #{config['database']} < #{seed_sql}")
     else
       puts "WARNING: FinalVerse data could not be seeded for #{config['adapter']}. Please see db/seeds.rb."
     end

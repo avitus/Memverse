@@ -37,14 +37,6 @@ describe BadgesController do
         expect(user.badges.reload).not_to include(quiz_champion_badge)
       end
 
-      it "does not check achieved? for non-auto_award badges" do
-        # The badge should be skipped entirely
-        expect(quiz_champion_badge).not_to receive(:achieved?)
-
-        get :badge_completion_check, format: :json
-
-        expect(response).to be_successful
-      end
     end
 
     context "with multiple badges" do

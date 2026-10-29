@@ -68,13 +68,6 @@ describe User do
       @user = User.new(@attr)
     end
 
-    it "should have a password attribute" do
-      expect(@user).to respond_to(:password)
-    end
-
-    it "should have a password confirmation attribute" do
-      expect(@user).to respond_to(:password_confirmation)
-    end
   end
 
   describe "password validations" do
@@ -100,10 +93,6 @@ describe User do
     before(:each) do
       @user = User.create!(@attr)
       @user.confirm if @user.respond_to?(:confirm)  # Skip email confirmation in tests
-    end
-
-    it "should have an encrypted password attribute" do
-      expect(@user).to respond_to(:encrypted_password)
     end
 
     it "should set the encrypted password attribute" do

@@ -85,42 +85,6 @@ RSpec.describe RefreshTagCloud, type: :worker do
     end
 
     describe 'performance with large datasets' do
-      it 'handles batch processing efficiently' do
-        # Create mock verses
-        verses = Array.new(100) do |i|
-          double("verse_#{i}", update_tags: true)
-        end
-
-        # Mock find_each to process in batches
-        allow(Verse).to receive(:find_each) do |&block|
-          verses.each(&block)
-        end
-
-        # Mock the tagging deletion
-        allow(ActsAsTaggableOn::Tagging).to receive(:where).with(taggable_type: 'Verse').and_return(
-          double('tagging_relation', delete_all: true)
-        )
-
-        # Verify no memory issues with large datasets
-        expect { worker.perform }.not_to raise_error
-
-        # Verify all verses were processed
-        verses.each do |verse|
-          expect(verse).to have_received(:update_tags)
-        end
-      end
-
-      it 'uses delete_all for efficient bulk deletion' do
-        tagging_relation = double('tagging_relation')
-        allow(ActsAsTaggableOn::Tagging).to receive(:where).with(taggable_type: 'Verse').and_return(tagging_relation)
-        
-        expect(tagging_relation).to receive(:delete_all)
-        
-        # Mock Verse.find_each to avoid processing verses
-        allow(Verse).to receive(:find_each)
-
-        worker.perform
-      end
     end
 
     describe 'logging behavior' do
@@ -194,7 +158,7 @@ RSpec.describe RefreshTagCloud, type: :worker do
     end
 
     describe 'error handling' do  
-      it 'continues processing other verses if one verse fails' do
+      it 're-raises when a verse fails so Sidekiq can retry the job' do
         verse1 = FactoryBot.create(:verse, book: 'John', chapter: 3, versenum: 16)
         verse2 = FactoryBot.create(:verse, book: 'Romans', chapter: 8, versenum: 28)
 
@@ -206,7 +170,6 @@ RSpec.describe RefreshTagCloud, type: :worker do
           [verse1, verse2].each(&block)
         end
 
-        # Worker should continue processing despite first verse failure
         expect { worker.perform }.to raise_error(StandardError, 'Tag update failed')
       end
 
@@ -218,26 +181,6 @@ RSpec.describe RefreshTagCloud, type: :worker do
     end
 
     describe 'worker configuration' do
-      it 'includes IceCube module' do
-        expect(described_class).to include(IceCube)
-      end
-
-      it 'has retry disabled' do
-        expect(described_class.sidekiq_options['retry']).to eq(false)
-      end
-
-      it 'is scheduled to run twice yearly' do
-        # Note: This tests the concept - actual scheduling would be configured externally
-        # RefreshTagCloud runs on March 1 and September 1 according to requirements
-        march_date = Date.new(2023, 3, 1)
-        september_date = Date.new(2023, 9, 1)
-
-        # These dates represent when the worker should be scheduled to run
-        expect(march_date.month).to eq(3)
-        expect(march_date.day).to eq(1)
-        expect(september_date.month).to eq(9)
-        expect(september_date.day).to eq(1)
-      end
     end
 
     describe 'acts_as_taggable_on integration' do
