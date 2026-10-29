@@ -1,6 +1,6 @@
 class ChatController < ApplicationController
 
-  before_action :authenticate_user!, :only => [:channel1, :toggle_ban, :index, :debug, :simple, :test_keys, :working]
+  before_action :authenticate_user!, :only => [:toggle_ban, :index, :debug, :simple, :test_keys, :working, :send_message]
 
   #-----------------------------------------------------------------------------------------------------------
   # Main chat room
@@ -88,9 +88,11 @@ class ChatController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   def send_message
 
-    @msg 		= params[:msg_body]
-    @usr 		= params[:sender]
-    @usr_id = params[:user_id]
+    @msg    = params[:msg_body]
+    # The sender is always the signed-in user. The page also posts sender/user_id, but trusting
+    # them would let a banned or impersonating client publish under another identity.
+    @usr    = current_user.name_or_login
+    @usr_id = current_user.id
     channel = ChatChannel.find(params[:channel])
 
     # redis-rb 5 returns an Integer from #exists, so the boolean form must be used here

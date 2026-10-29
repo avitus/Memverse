@@ -93,23 +93,9 @@ RSpec.describe RefreshTagCloud, type: :worker do
         allow(ActsAsTaggableOn::Tagging).to receive(:where).and_return(double(delete_all: true))
       end
 
-      it 'logs start of refresh process' do
-        expect($stdout).to receive(:puts).with(/=== Refreshing tag cloud at/)
-        worker.perform
-      end
-
-      it 'logs completion of refresh process' do  
-        expect($stdout).to receive(:puts).with(/=== Completed refresh at/)
-        worker.perform
-      end
-
-      it 'logs with timestamps' do
-        freeze_time = Time.parse('2023-06-01 12:00:00 UTC')
-        allow(Time).to receive(:now).and_return(freeze_time)
-
-        expect($stdout).to receive(:puts).with("=== Refreshing tag cloud at #{freeze_time} ===")
-        expect($stdout).to receive(:puts).with("=== Completed refresh at    #{freeze_time} ===")
-        
+      it 'logs the start and the completion of the refresh' do
+        expect(Sidekiq.logger).to receive(:info).with(/=== Refreshing tag cloud at/).ordered
+        expect(Sidekiq.logger).to receive(:info).with(/=== Completed refresh at/).ordered
         worker.perform
       end
     end
@@ -158,9 +144,13 @@ RSpec.describe RefreshTagCloud, type: :worker do
     end
 
     describe 'error handling' do  
-      it 're-raises when a verse fails so Sidekiq can retry the job' do
+      it 'keeps the previous tag cloud when a verse fails part-way through the rebuild' do
         verse1 = FactoryBot.create(:verse, book: 'John', chapter: 3, versenum: 16)
         verse2 = FactoryBot.create(:verse, book: 'Romans', chapter: 8, versenum: 28)
+        verse2.tag_list = ['faith', 'promise']
+        verse2.save!
+        taggings = ActsAsTaggableOn::Tagging.where(taggable_type: 'Verse')
+        expect(taggings.count).to eq(2)
 
         # Mock first verse to fail, second to succeed
         allow(verse1).to receive(:update_tags).and_raise(StandardError, 'Tag update failed')
@@ -171,6 +161,7 @@ RSpec.describe RefreshTagCloud, type: :worker do
         end
 
         expect { worker.perform }.to raise_error(StandardError, 'Tag update failed')
+        expect(taggings.count).to eq(2)
       end
 
       it 'handles empty verse collection gracefully' do

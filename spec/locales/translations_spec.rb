@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'yaml'
 
-describe "Translations" do
+describe "Translations" do # skipcq: RB-R1001 (locale helpers live in the example group)
   # Get all locale files except devise, doorkeeper, and simple_form
   def app_locale_files
     Dir[Rails.root.join('config', 'locales', '*.yml')].reject do |file|

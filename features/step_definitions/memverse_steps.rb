@@ -1,4 +1,4 @@
-Given /^the user named "(.*?)" has a memverse$/ do |name|
+Given(/^the user named "(.*?)" has a memverse$/) do |name|
   # Use the current user that was created in the background
   user = User.find_by(email: @current_user_email)
   if user.nil?
@@ -11,7 +11,7 @@ Given /^the user named "(.*?)" has a memverse$/ do |name|
   @verse_id = verse.id
 end
 
-Given /^I have the following memory verses:$/ do |table|
+Given(/^I have the following memory verses:$/) do |table|
   # Get the current user - should be set by "I sign in as a normal user" step
   user = User.last
   
@@ -43,12 +43,12 @@ Given /^I have the following memory verses:$/ do |table|
   end
 end
 
-Given /^I have no memory verses$/ do
+Given(/^I have no memory verses$/) do
   user = User.last
   user.memverses.destroy_all
 end
 
-When /^I check the verse "([^"]*)"$/ do |verse_ref|
+When(/^I check the verse "([^"]*)"$/) do |verse_ref|
   # Handle book names with spaces (e.g., "1 John", "2 Corinthians")
   parts = verse_ref.split(' ')
   # Find the colon to separate book from chapter:verse
@@ -73,7 +73,7 @@ When /^I check the verse "([^"]*)"$/ do |verse_ref|
   end
 end
 
-Then /^the verses should be sorted by status$/ do
+Then(/^the verses should be sorted by status$/) do
   # Wait for the table to be present and sorted
   expect(page).to have_css("table.memverse-standard", wait: 10)
   sleep 1 # Allow time for sort to complete
@@ -82,7 +82,7 @@ Then /^the verses should be sorted by status$/ do
   expect(verse_statuses).to eq(verse_statuses.sort)
 end
 
-Then /^the verses should be sorted by next test date$/ do
+Then(/^the verses should be sorted by next test date$/) do
   # Wait for the table to be present and sorted
   expect(page).to have_css("table.memverse-standard", wait: 10)
   sleep 1 # Allow time for sort to complete
@@ -101,7 +101,7 @@ Then /^the verses should be sorted by next test date$/ do
   expect(dates).to eq(dates.sort)
 end
 
-When /^I click "([^"]*)"$/ do |link|
+When(/^I click "([^"]*)"$/) do |link|
   # Wait for the page to be fully loaded
   expect(page).to have_css("table.memverse-standard", wait: 10)
   
@@ -113,7 +113,7 @@ When /^I click "([^"]*)"$/ do |link|
   sleep 0.5
 end
 
-Then /^I should be on the memory verse page for "([^"]*)"$/ do |verse_ref|
+Then(/^I should be on the memory verse page for "([^"]*)"$/) do |verse_ref|
   # Handle book names with spaces (e.g., "1 John", "2 Corinthians")
   parts = verse_ref.split(' ')
   # Find the colon to separate book from chapter:verse
@@ -132,7 +132,7 @@ Then /^I should be on the memory verse page for "([^"]*)"$/ do |verse_ref|
   expect(current_path).to eq(memory_verse_path(memverse.id))
 end
 
-Then /^I should see an alert with "([^"]*)"$/ do |expected_text|
+Then(/^I should see an alert with "([^"]*)"$/) do |expected_text|
   # The "I press" step accepts the alert and records its text
   expect(@last_alert_text).not_to be_nil, "Expected a JavaScript alert but none was raised"
   expect(@last_alert_text).to include(expected_text)
@@ -156,16 +156,16 @@ def current_memverse_for(verse_ref)
 end
 
 # The review page scores a verse through GET /mark_test_quick?mv=&q=, which replies with JSON
-When /^I rate the verse "([^"]*)" with a (\d)$/ do |verse_ref, quality|
+When(/^I rate the verse "([^"]*)" with a (\d)$/) do |verse_ref, quality|
   visit "/mark_test_quick?mv=#{current_memverse_for(verse_ref).id}&q=#{quality}"
   expect(JSON.parse(page.body)).to have_key("msg")
 end
 
-Then /^the verse "([^"]*)" should next be tested (\d+) days? from today$/ do |verse_ref, days|
-  expect(current_memverse_for(verse_ref).next_test).to eq(Date.today + days.to_i)
+Then(/^the verse "([^"]*)" should next be tested (\d+) days? from today$/) do |verse_ref, days|
+  expect(current_memverse_for(verse_ref).next_test).to eq(Date.today + days.to_i) # skipcq: RB-RL1014 (Memverse#supermemo uses Date.today)
 end
 
-Then /^the verse "([^"]*)" should have a repetition count of (\d+)$/ do |verse_ref, count|
+Then(/^the verse "([^"]*)" should have a repetition count of (\d+)$/) do |verse_ref, count|
   expect(current_memverse_for(verse_ref).rep_n).to eq(count.to_i)
 end
 
@@ -175,7 +175,7 @@ end
 
 # The add button is a data-remote link to /add/:id (JSON). memverse_quick_start.js
 # swaps the button for a .verse-added marker on click, and the server creates the memverse.
-Then /^the verse should be marked as added$/ do
+Then(/^the verse should be marked as added$/) do
   expect(page).to have_css(".verse-added")
   user = User.find_by!(email: @current_user_email)
   Timeout.timeout(Capybara.default_max_wait_time) do
@@ -184,6 +184,6 @@ Then /^the verse should be marked as added$/ do
   expect(user.memverses.count).to eq(1)
 end
 
-Then /^I should have (\d+) passages?$/ do |count|
+Then(/^I should have (\d+) passages?$/) do |count|
   expect(User.find_by!(email: @current_user_email).passages.count).to eq(count.to_i)
 end

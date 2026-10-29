@@ -185,7 +185,7 @@ namespace :deploy do
   end
   
   # Start Sidekiq after deployment is published. SKIP_SIDEKIQ_START=1 leaves it stopped: a host that
-  # must not run jobs yet (martial-eagle before the cutover, documentation/plans/2026-10-10-fish-eagle-to-martial-eagle-migration.md) can be
+  # must not run jobs yet (martial-eagle before the cutover, documentation/FINAL_MIGRATION.md) can be
   # deployed without its workers starting against the wrong data.
   after :published, :start_sidekiq do
     if ENV['SKIP_SIDEKIQ_START'] == '1'

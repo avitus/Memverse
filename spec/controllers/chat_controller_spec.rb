@@ -75,14 +75,40 @@ RSpec.describe ChatController, type: :controller do
       }
     end
 
+    context 'when signed out' do
+      it 'is rejected before anything is published' do
+        expect(chat_channel).not_to receive(:send_message)
+        post :send_message, params: message_params, xhr: true
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    context 'when the page posts another user\'s identity' do
+      let(:other_user) { FactoryBot.create(:user) }
+      before { sign_in user }
+
+      it 'publishes under the signed-in user, not the submitted one' do
+        allow($redis).to receive(:exists?).with("banned-#{user.id}").and_return(false)
+        expect(chat_channel).to receive(:send_message).with(hash_including(user_id: user.id, user: user.name_or_login))
+        post :send_message, params: message_params.merge(user_id: other_user.id.to_s, sender: other_user.login), xhr: true
+      end
+
+      it 'applies the ban of the signed-in user even when another id is submitted' do
+        allow($redis).to receive(:exists?).with("banned-#{user.id}").and_return(true)
+        expect(chat_channel).not_to receive(:send_message)
+        post :send_message, params: message_params.merge(user_id: other_user.id.to_s), xhr: true
+      end
+    end
+
     context 'when user is not banned' do
       before do
+        sign_in user
         allow($redis).to receive(:exists?).with("banned-#{user.id}").and_return(false)
         allow(chat_channel).to receive(:send_message).and_return(true)
       end
 
       it 'sends the message through ChatChannel' do
-        expected_message = { user: 'testuser', user_id: user.id.to_s, msg: 'Hello world' }
+        expected_message = { user: user.name_or_login, user_id: user.id, msg: 'Hello world' }
         expect(chat_channel).to receive(:send_message).with(expected_message)
         
         post :send_message, params: message_params, xhr: true
@@ -96,6 +122,7 @@ RSpec.describe ChatController, type: :controller do
 
     context 'when user is banned' do
       before do
+        sign_in user
         allow($redis).to receive(:exists?).with("banned-#{user.id}").and_return(true)
       end
 

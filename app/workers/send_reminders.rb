@@ -4,6 +4,8 @@ class SendReminders
 
   sidekiq_options queue: :high, retry: false
 
+  BATCH_SIZE = 100
+
   def perform
     # TEMPORARY: Disable reminder emails while email provider transition is in progress
     # To re-enable: Comment out or remove the following lines
@@ -18,13 +20,10 @@ class SendReminders
     # Delete users who never activated
     User.pending.where('created_at < ?', 2.days.ago ).delete_all
 
-    # Retrieve records for all users ordered by newest first
-    # Process newest users first to prioritize recently registered users
-    # Note: Using in_batches with order instead of find_each which ignores order
-    # IMPORTANT: in_batches loads by primary key, so we need to reorder within each batch
-    User.in_batches(of: 100) do |batch|
-      # Apply ordering to the batch before iterating to ensure order is preserved
-      # This is critical to ensure newest users are processed first within each batch
+    # Newest users first, so the hourly send limit goes to recent sign-ups. Ids rise with sign-up
+    # time, so walking the primary key downwards keeps that order across batches; the reorder
+    # keeps it within each batch.
+    User.in_batches(of: BATCH_SIZE, order: :desc) do |batch|
       batch.reorder(created_at: :desc).each { |u| remind(u) }
     end
 

@@ -22,20 +22,20 @@ Sidekiq.configure_client do |config|
 end
 
 # Configure Sidekiq server (for processing jobs)
-Sidekiq.configure_server do |config|
+Sidekiq.configure_server do |config| # skipcq: RB-R1001 (server setup is one linear block)
   config.redis = redis_config
   
   # ========================================================================
   # Configure Logging to File
   # ========================================================================
   require 'logger'
-  log_file = Rails.root.join('log', 'sidekiq.log')
+  log_file = Rails.root.join('log/sidekiq.log')
   file_logger = Logger.new(log_file)
   file_logger.level = Logger::INFO
   
-  if Rails.env.production?
-    # Use structured logging in production
-    file_logger.formatter = proc do |severity, datetime, progname, msg|
+  file_logger.formatter = if Rails.env.production?
+    # Structured logging in production
+    proc do |severity, datetime, progname, msg|
       {
         timestamp: datetime.iso8601,
         level: severity,
@@ -47,7 +47,7 @@ Sidekiq.configure_server do |config|
     end
   else
     # Human-readable logging in development
-    file_logger.formatter = proc do |severity, datetime, progname, msg|
+    proc do |severity, datetime, _progname, msg|
       "[#{datetime.strftime('%Y-%m-%d %H:%M:%S')}] #{severity}: #{msg}\n"
     end
   end
@@ -76,16 +76,10 @@ Sidekiq.configure_server do |config|
     Rails.logger.error "Context: #{context_hash}"
     Rails.logger.error exception.backtrace.join("\n") if exception.backtrace
     
-    # In production, you might want to send alerts to monitoring services
-    if Rails.env.production?
-      # Example: Send to error monitoring service
-      # Sentry.capture_exception(exception, extra: context_hash) if defined?(Sentry)
-      
-      # Example: Send critical alerts for specific job types
-      if context_hash[:job] && ['KnowledgeQuiz', 'SendReminders'].include?(context_hash[:job]['class'])
-        Rails.logger.fatal "CRITICAL: #{context_hash[:job]['class']} failed - immediate attention required"
-        # Send urgent alert to admin team
-      end
+    # Critical jobs get a fatal log line in production so they stand out in the log
+    critical_job = context_hash[:job] && ['KnowledgeQuiz', 'SendReminders'].include?(context_hash[:job]['class'])
+    if Rails.env.production? && critical_job
+      Rails.logger.fatal "CRITICAL: #{context_hash[:job]['class']} failed - immediate attention required"
     end
   end
   
@@ -104,7 +98,7 @@ Sidekiq.configure_server do |config|
   # ========================================================================
   config.server_middleware do |chain|
     chain.add(Class.new do
-      def call(worker, job, queue)
+      def call(_worker, job, queue)
         start_time = Time.current
         
         begin
@@ -168,7 +162,7 @@ Sidekiq.configure_server do |config|
         # Load the cron schedule. The bang form destroys any job that is registered in
         # Redis with source "schedule" but no longer present in the YAML, so deleting an
         # entry from the file is enough to stop it. The plain load_from_hash left removed
-        # entries firing (see documentation/SIDEKIQ.md).
+        # entries firing (see documentation/QUIZ_CRON_DUPLICATE_RUNS_2026-10.md).
         schedule = YAML.load_file(schedule_file)
         Sidekiq::Cron::Job.load_from_hash!(schedule, source: "schedule")
         
@@ -209,7 +203,7 @@ Sidekiq.configure_server do |config|
   Rails.cache.write('sidekiq:server:last_startup', Time.current, expires_in: 1.week)
   Rails.cache.write('sidekiq:server:status', 'healthy', expires_in: 1.hour)
   
-  # Note: config.periodic was removed in Sidekiq 7.x
+  # NOTE: config.periodic was removed in Sidekiq 7.x
   # Health checks should be implemented using a scheduled job or external monitoring
 end
 
@@ -225,7 +219,7 @@ Sidekiq.default_job_options = {
   'backtrace' => true
 }
 
-# Note: Job timeout is not a standard Sidekiq option
+# NOTE: Job timeout is not a standard Sidekiq option
 # Timeouts should be handled within the job itself or using job_options in the worker class
 
 # ========================================================================

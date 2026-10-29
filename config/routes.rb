@@ -75,7 +75,6 @@ MemverseApp::Application.routes.draw do
   # Oauth
   devise_for :users, :controllers => { 
     :omniauth_callbacks => "omniauth_callbacks",
-    :confirmations => "users/confirmations",
     :registrations => "users/registrations"
   }
 

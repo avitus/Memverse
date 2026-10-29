@@ -275,8 +275,6 @@ class ApplicationController < ActionController::Base
     return str =~ /([0-3]?\s+)?[a-záéíóúüñ]+\s+[0-9]+(:|(\s?vs\s?))[0-9]+/i
   end
 
-  private
-
   protected
 
   # https://github.com/plataformatec/devise#strong-parameters

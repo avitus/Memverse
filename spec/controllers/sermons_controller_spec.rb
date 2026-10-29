@@ -13,7 +13,7 @@ RSpec.describe SermonsController, type: :controller do
   describe 'POST #create' do
     context 'with Active Storage attachment' do
       it 'creates a sermon with mp3_attachment' do
-        expect {
+        expect do
           post :create, params: {
             sermon: {
               title: 'New Sermon',
@@ -24,7 +24,7 @@ RSpec.describe SermonsController, type: :controller do
               mp3_attachment: test_file
             }
           }
-        }.to change(Sermon, :count).by(1)
+        end.to change(Sermon, :count).by(1)
         
         new_sermon = Sermon.last
         expect(new_sermon.mp3_attachment).to be_attached

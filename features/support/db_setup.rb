@@ -30,7 +30,7 @@ BeforeAll do
     # configuration_hash has symbol keys on Rails 7
     config = ActiveRecord::Base.configurations.configs_for(env_name: Rails.env).first.configuration_hash.with_indifferent_access
     
-    seed_sql = Rails.root.join('data', 'imports', 'iso_final_verses.sql')
+    seed_sql = Rails.root.join('data/imports/iso_final_verses.sql')
 
     if config['adapter'] == 'mysql2'
       system("mysql --user=#{config['username']} --password=\"#{config['password']}\" --host=#{config['host']} #{config['database']} < #{seed_sql}")

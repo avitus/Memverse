@@ -29,7 +29,7 @@ RSpec.describe 'Memory verse review loop', type: :request do
     end
 
     it 'sends the user to their progress page when nothing is due' do
-      user.memverses.update_all(next_test: Date.tomorrow)
+      user.memverses.update_all(next_test: Date.tomorrow) # skipcq: RB-RL1053 (push every verse out of today's queue)
 
       get test_verse_quick_path
 
@@ -47,11 +47,11 @@ RSpec.describe 'Memory verse review loop', type: :request do
       mv1.reload
       expect(mv1.rep_n).to eq(2)
       expect(mv1.test_interval).to eq(4)
-      expect(mv1.next_test).to eq(Date.today + 4)
+      expect(mv1.next_test).to eq(Date.today + 4) # skipcq: RB-RL1014 (Memverse#supermemo uses Date.today)
     end
 
     it 'resets the interval after a failed recall' do
-      mv1.update_columns(test_interval: 8, rep_n: 3)
+      mv1.update!(test_interval: 8, rep_n: 3)
 
       get mark_test_quick_path, params: { mv: mv1.id, q: 1 }
 
@@ -62,7 +62,7 @@ RSpec.describe 'Memory verse review loop', type: :request do
     end
 
     it 'congratulates the user when the verse crosses into Memorized' do
-      mv1.update_columns(test_interval: 16, rep_n: 3)
+      mv1.update!(test_interval: 16, rep_n: 3)
 
       get mark_test_quick_path, params: { mv: mv1.id, q: 5 }
 
