@@ -29,7 +29,7 @@ end
 After do |scenario|
   # Take screenshot on failure for debugging
   if scenario.failed? && Capybara.current_driver == :selenium_chrome_headless
-    timestamp = Time.now.strftime('%Y%m%d_%H%M%S')
+    timestamp = Time.current.strftime('%Y%m%d_%H%M%S')
     screenshot_path = "tmp/screenshots/#{scenario.name.gsub(/[^a-zA-Z0-9]/, '_')}_#{timestamp}.png"
     FileUtils.mkdir_p('tmp/screenshots')
     page.save_screenshot(screenshot_path)

@@ -5,12 +5,13 @@ require 'rails_helper'
 # Memverse#supermemo is the SM-2 spaced-repetition step behind every review.
 RSpec.describe Memverse, 'spaced repetition' do
   let(:user) { FactoryBot.create(:user) }
+  let(:today) { Date.today } # skipcq: RB-RL1014 (Memverse#supermemo schedules with Date.today)
 
   # The before_create hook resets efactor/next_test, so the starting state is
   # written after creation.
   def memverse_with(attrs)
     mv = FactoryBot.create(:memverse, user: user)
-    mv.update_columns({ next_test: Date.today, last_tested: Date.today - 1, status: 'Learning', attempts: 0 }.merge(attrs))
+    mv.update_columns({ next_test: today, last_tested: today - 1, status: 'Learning', attempts: 0 }.merge(attrs)) # skipcq: RB-RL1053 (bypasses the before_create reset on purpose)
     mv.reload
   end
 
@@ -42,8 +43,8 @@ RSpec.describe Memverse, 'spaced repetition' do
 
         it 'schedules the next test that many days out and records the attempt' do
           mv.reload
-          expect(mv.next_test).to eq(Date.today + new_interval)
-          expect(mv.last_tested).to eq(Date.today)
+          expect(mv.next_test).to eq(today + new_interval)
+          expect(mv.last_tested).to eq(today)
           expect(mv.attempts).to eq(1)
         end
       end
@@ -56,11 +57,11 @@ RSpec.describe Memverse, 'spaced repetition' do
     end
 
     it "never schedules further out than the user's max_interval" do
-      user.update_columns(max_interval: 10)
+      user.update!(max_interval: 10)
       mv = memverse_with(efactor: 2.0, test_interval: 16, rep_n: 3)
       mv.supermemo(5)
       expect(mv.reload.test_interval).to eq(10)
-      expect(mv.next_test).to eq(Date.today + 10)
+      expect(mv.next_test).to eq(today + 10)
     end
 
     it 'returns true only when the verse has just become memorized' do
@@ -90,7 +91,7 @@ RSpec.describe Memverse, 'spaced repetition' do
 
   describe '#due?' do
     it 'is due on or before today and not after' do
-      expect(memverse_with(next_test: Date.today)).to be_due
+      expect(memverse_with(next_test: today)).to be_due
       expect(memverse_with(next_test: Date.yesterday)).to be_due
       expect(memverse_with(next_test: Date.tomorrow)).not_to be_due
     end

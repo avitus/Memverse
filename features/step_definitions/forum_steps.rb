@@ -7,11 +7,11 @@ end
 
 # Thredded only lets users with at least two completed sessions (or admins) post.
 # See User#thredded_can_write_messageboards.
-Given /^I have completed enough memorization sessions to post on the forum$/ do
+Given(/^I have completed enough memorization sessions to post on the forum$/) do
   user = @user || @current_user
   raise "No user account has been created yet" unless user
 
-  2.times { |i| FactoryBot.create(:progress_report, user_id: user.id, entry_date: Date.today - 1 - i) }
+  2.times { |i| FactoryBot.create(:progress_report, user_id: user.id, entry_date: Date.today - 1 - i) } # skipcq: RB-RL1014 (ProgressReport dates use Date.today)
   expect(user.reload.thredded_can_write_messageboards).to include(@feedback_board)
 end
 

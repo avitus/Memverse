@@ -98,13 +98,13 @@ RSpec.describe VersesController, type: :controller do
         @nas_verse = FactoryBot.create(:verse, translation: 'NAS', verified: false, checked_by: nil)
         FactoryBot.create(:memverse, verse: @nas_verse)
         FactoryBot.create(:memverse, verse: @nas_verse)
-        @nas_verse.update_column(:memverses_count, 2)
+        @nas_verse.update!(memverses_count: 2)
         
         # Create verse that should NOT show up (different translation)
         @niv_verse = FactoryBot.create(:verse, translation: 'NIV', verified: false, checked_by: nil)
         FactoryBot.create(:memverse, verse: @niv_verse)
         FactoryBot.create(:memverse, verse: @niv_verse)
-        @niv_verse.update_column(:memverses_count, 2)
+        @niv_verse.update!(memverses_count: 2)
       end
       
       it 'only shows verses in the user\'s translation' do

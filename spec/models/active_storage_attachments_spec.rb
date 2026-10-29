@@ -7,7 +7,7 @@ RSpec.describe 'Active Storage attachments', type: :model do
     context 'with Active Storage attachment' do
       before do
         sermon.mp3_attachment.attach(
-          io: File.open(Rails.root.join('spec', 'fixtures', 'files', 'test_audio.mp3')),
+          io: File.open(Rails.root.join('spec/fixtures/files/test_audio.mp3')),
           filename: 'test_audio.mp3',
           content_type: 'audio/mpeg'
         )

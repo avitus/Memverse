@@ -256,7 +256,6 @@ class LiveQuizController < ApplicationController
   # Select channel
   #-----------------------------------------------------------------------------------------------------------
   def select_channel(receiver)
-    puts "#{receiver}"
     return "/live_quiz#{receiver}"
   end
 

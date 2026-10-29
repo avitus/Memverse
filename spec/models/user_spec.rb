@@ -123,7 +123,7 @@ describe User do
       for i in 5..14 # setup learning verses
         verse = FactoryBot.create(:verse, :book_index => 2, :book => "Exodus", :chapter => 20, :versenum => i)
         mv = FactoryBot.create(:memverse, :user => @user, :verse => verse)
-        mv.update!(:test_interval => i, :next_test => Date.today + i, :status => "Learning")
+        mv.update!(:test_interval => i, :next_test => Date.today + i, :status => "Learning") # skipcq: RB-RL1014 (Memverse scopes use Date.today)
       end
 
       for i in 1..5 # setup pending verses
@@ -152,16 +152,16 @@ describe User do
 
       for i in 11..20 # setup learning verses
         verse = FactoryBot.create(:verse, :book_index => 2, :book => "Exodus", :chapter => 20, :versenum => i)
-        FactoryBot.create(:memverse, :user => @user, :verse => verse, :test_interval => i, :next_test => Date.today - i)
+        FactoryBot.create(:memverse, :user => @user, :verse => verse, :test_interval => i, :next_test => Date.today - i) # skipcq: RB-RL1014 (Memverse scopes use Date.today)
       end
 
       expect(@user.work_load).to eq(3)
-      load_for_today = @user.memverses.active.where("next_test <= ?", Date.today).count
+      load_for_today = @user.memverses.active.where("next_test <= ?", Date.today).count # skipcq: RB-RL1014 (Memverse scopes use Date.today)
 
       @user.reset_memorization_schedule
-      new_load_for_today = @user.memverses.active.where("next_test <= ?", Date.today).count
+      new_load_for_today = @user.memverses.active.where("next_test <= ?", Date.today).count # skipcq: RB-RL1014 (Memverse scopes use Date.today) # skipcq: RB-RL1014 (Memverse scopes use Date.today)
       expect(new_load_for_today).to be < load_for_today
-      load_for_tomorrow  = @user.memverses.active.where("next_test = ?", Date.tomorrow).count
+      load_for_tomorrow  = @user.memverses.active.where(next_test: Date.tomorrow).count
       expect(load_for_tomorrow).to eq(new_load_for_today)
     end
   end

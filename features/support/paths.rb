@@ -5,7 +5,7 @@ module NavigationHelpers
   #
   # step definition in web_steps.rb
   #
-  def path_to(page_name)
+  def path_to(page_name) # skipcq: RB-R1001 (one case branch per named page)
     case page_name
 
     when /the home\s?page/
@@ -61,7 +61,7 @@ module NavigationHelpers
       '/chat'.dup
 
     when /the new feedback topic page/
-      '/forum/feedback/topics/new'.dup
+      +'/forum/feedback/topics/new'
 
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
