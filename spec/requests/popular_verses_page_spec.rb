@@ -7,6 +7,7 @@ RSpec.describe "Popular verses pagination", type: :request do
     it "treats a negative page as the first page" do
       get "/popular", params: { page: -1 }
       expect(response).to have_http_status(:ok)
+      expect(response.body).to match(/Page 1\b/)
     end
   end
 
@@ -16,6 +17,7 @@ RSpec.describe "Popular verses pagination", type: :request do
     it "treats a negative page as the first page" do
       get "/popular_verses", params: { page: -1 }
       expect(response).to have_http_status(:ok)
+      expect(response.body).to match(/Page 1\b/)
     end
   end
 end
