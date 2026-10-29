@@ -86,8 +86,12 @@ The browser POSTs each answer to `/record_score` (web) or `/api/v1/record_score`
 quiz's own questions, handling all three question types (recitation questions send the verse in
 several translations). It is **not** on the cron schedule any more (the every-minute `schedule_quiz`
 entry was removed on 2026-10-17 because it had been disabled only in the old server's Redis); an
-admin starts it from `/admin/quiz_dashboards/:id` → **Start**, which calls `ScheduledQuiz.new.perform`
-inline. PubNub channel is `quiz-<id>`; no tweet, push or badge.
+admin starts it from `/admin/quiz_dashboards/:id` → **Start**. That action moves the quiz's
+`start_time` to 30 seconds ahead (inside the worker's one-minute search window) and enqueues
+`ScheduledQuiz` with `perform_async`, so a Sidekiq worker process must be running; the worker waits
+until `start_time` and then runs the quiz. (Until October 2026 the button set `start_time` to *now*
+and ran the worker inline, which never found the quiz because the window is `start_time > now`.)
+PubNub channel is `quiz-<id>`; no tweet, push or badge.
 
 ## Browser side
 
@@ -121,7 +125,7 @@ start, `{ "status": ... }` during and after) and is still served.
 - `/admin/quiz_dashboards` (admins): list, `monitor`, `participants`, `start`/`stop` per quiz;
   `health_check`, `error_logs`, `statistics`, `schedule`, `bulk_manage` for the collection.
 - `/admin/quiz_health/status`: Redis reachability, last run, next scheduled run.
-- Sidekiq UI `/sidekiq` → Cron tab shows the two `KnowledgeQuiz` entries; they must be the only ones.
+- Sidekiq UI `/sidekiq` → Cron tab must show both `KnowledgeQuiz` entries. The other entries there (forum review notifications, tag-cloud refresh, reminders, metrics, passages) are expected too; see [SIDEKIQ.md](./SIDEKIQ.md). What must *not* appear is any extra quiz entry (a test quiz, a `schedule_quiz` leftover).
 - API: `GET /api/v1/quizzes`, `/api/v1/quizzes/:id`, `/api/v1/quizzes/upcoming` (next knowledge quiz,
   from `Quiz.next_knowledge_quiz_time`, which checks Sidekiq's scheduled set and running jobs before
   the cron times). See [API.md](./API.md).

@@ -1,6 +1,6 @@
 # Memverse Rails 7 Deployment Guide
 
-This guide provides step-by-step instructions for deploying the Rails 7 upgrade to production using Capistrano.
+This guide provides step-by-step instructions for deploying the Rails 7 upgrade to production using Capistrano. It was written for the August 2025 upgrade and is kept for the Sidekiq systemd units and scripts in this directory; the current, authoritative procedure is [documentation/DEPLOYMENT.md](../documentation/DEPLOYMENT.md) (deploys from `main` with Rails encrypted credentials).
 
 ## 🔐 Database Configuration Update
 
@@ -9,7 +9,7 @@ This guide provides step-by-step instructions for deploying the Rails 7 upgrade 
 - Version-controlled configuration
 - No plaintext passwords on servers
 
-See `documentation/MODERN_CREDENTIALS_DEPLOYMENT.md` for setup instructions.
+See `documentation/DEPLOYMENT.md` (the current deployment guide) for setup instructions.
 
 ## 🚨 CRITICAL REQUIREMENTS
 
@@ -24,8 +24,7 @@ Before starting, you MUST verify:
 
 Complete ALL items before proceeding:
 
-- [ ] Current production branch is `upgrade-2026`
-- [ ] Rails 7 branch (`rails-7-upgrade`) is tested in staging
+- [ ] `main` is up to date and CI is green (Capistrano deploys `main`; see `config/deploy.rb`)
 - [ ] Recent production backup exists (< 24 hours old)
 - [ ] Team is notified of maintenance window
 - [ ] Error tracking (Sentry/Airbrake) is monitored
@@ -39,9 +38,9 @@ Complete ALL items before proceeding:
 # Navigate to your local Memverse directory
 cd /path/to/memverse
 
-# Ensure you're on the rails-7-upgrade branch
-git checkout rails-7-upgrade
-git pull origin rails-7-upgrade
+# Ensure you're on main
+git checkout main
+git pull origin main
 
 # Install deployment dependencies
 bundle install
@@ -158,21 +157,7 @@ Test these critical features manually:
 
 After successful deployment and testing:
 
-```bash
-# 1. Update production deployment branch
-cp config/deploy/production_rails7.rb config/deploy/production.rb
-
-# 2. Edit config/deploy/production.rb
-# Change line 12 from:
-#   set :branch, 'upgrade-2026'
-# To:
-#   set :branch, 'rails-7-upgrade'
-
-# 3. Commit the change
-git add config/deploy/production.rb
-git commit -m "Update production deployment to Rails 7 branch"
-git push origin rails-7-upgrade
-```
+Nothing to change: `config/deploy.rb` already deploys `main` and `config/deploy/production.rb` targets martial-eagle. (`config/deploy/production_rails7.rb` is a leftover from the upgrade and is not used.)
 
 ## 🚨 Emergency Rollback Procedures
 
@@ -273,8 +258,7 @@ bundle exec cap production rails:runner CODE='Redis.new.ping'
 
 3. **Plan final branch merge**:
    - After 1 week of stable operation
-   - Merge rails-7-upgrade into master
-   - Update default branch in deployment config
+   - Nothing to merge: production deploys from `main`
 
 ## 🔍 Verification Checklist
 

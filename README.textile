@@ -13,6 +13,14 @@ h2. Prerequisites
 * Sphinx (Thinking Sphinx full-text search)
 * Node.js (asset precompilation and the JavaScript tests)
 
+h2. First-time setup
+
+# Install Ruby 3.2.6 (@rvm install 3.2.6@) and Node.js, and make sure MySQL and Redis are installed.
+# Start MySQL (@brew services start mysql@ or your distribution's service).
+# Run @./bin/setup@: it installs the gems with Bundler and creates, migrates and seeds the development and test databases (@bin/rails db:prepare@).
+# Run @npm ci@ to install the JavaScript test dependencies.
+# Ask a maintainer for @config/master.key@ if you need the encrypted credentials (Postmark, production database); development runs without it.
+
 h2. Running the application
 
 @./bin/dev@ starts MySQL and Redis if needed, then the Rails server, the Sidekiq scheduler and a Sidekiq worker through foreman (see @Procfile@). @./bin/shutdown@ stops everything and @./bin/status@ reports what is running.
