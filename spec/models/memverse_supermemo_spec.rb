@@ -85,6 +85,7 @@ RSpec.describe Memverse, 'spaced repetition' do
       mv.supermemo(5)
       mv.reload
       expect([mv.test_interval, mv.rep_n, mv.efactor]).to eq([8, 3, 2.0])
+      expect(mv.next_test).to eq(Date.tomorrow)
       expect(mv.attempts).to eq(1)
     end
   end

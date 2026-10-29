@@ -9,7 +9,7 @@ This guide provides step-by-step instructions for deploying the Rails 7 upgrade 
 - Version-controlled configuration
 - No plaintext passwords on servers
 
-See `documentation/DEPLOYMENT.md` for setup instructions.
+See `documentation/MODERN_CREDENTIALS_DEPLOYMENT.md` for setup instructions.
 
 ## 🚨 CRITICAL REQUIREMENTS
 

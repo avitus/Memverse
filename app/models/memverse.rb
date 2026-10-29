@@ -272,7 +272,9 @@ class Memverse < ApplicationRecord
 
     prev_learning = (self.status == "Learning")
 
-    if self.due?
+    was_due = self.due?
+
+    if was_due
       if q<3 # answer was incorrect
         n_new = 1  # Start from the beginning
       else
@@ -290,7 +292,7 @@ class Memverse < ApplicationRecord
         when 2 then 4
         else [self.test_interval * efactor_new, self.user.max_interval.to_i].min.round # Don't set interval to more than one year for now
       end
-    else # don't update verses that aren't due
+    else # an early review keeps its interval, efactor, repetition count and due date
       n_new         = self.rep_n
       interval_new  = self.test_interval
       efactor_new   = self.efactor
@@ -300,7 +302,7 @@ class Memverse < ApplicationRecord
     self.rep_n          = n_new
     self.efactor        = efactor_new
     self.test_interval  = [interval_new,1].max
-    self.next_test      = Date.today + interval_new
+    self.next_test      = Date.today + interval_new if was_due
     self.last_tested    = Date.today
     self.status         = interval_new > 30 ? "Memorized" : "Learning"
     self.attempts      += 1

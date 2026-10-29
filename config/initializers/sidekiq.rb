@@ -162,7 +162,7 @@ Sidekiq.configure_server do |config| # skipcq: RB-R1001 (server setup is one lin
         # Load the cron schedule. The bang form destroys any job that is registered in
         # Redis with source "schedule" but no longer present in the YAML, so deleting an
         # entry from the file is enough to stop it. The plain load_from_hash left removed
-        # entries firing (see documentation/SIDEKIQ.md).
+        # entries firing (see documentation/QUIZ_CRON_DUPLICATE_RUNS_2026-10.md).
         schedule = YAML.load_file(schedule_file)
         Sidekiq::Cron::Job.load_from_hash!(schedule, source: "schedule")
         

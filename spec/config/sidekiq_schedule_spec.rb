@@ -8,7 +8,7 @@ require 'fugit'
 # plus an export) would silently move the quizzes by seven hours. Pinning the zone makes
 # the schedule independent of the host.
 #
-# It also guards against the October 2026 incident (documentation/SIDEKIQ.md):
+# It also guards against the October 2026 incident (documentation/QUIZ_CRON_DUPLICATE_RUNS_2026-10.md):
 # a test entry for KnowledgeQuiz was left in the file with `active: false`, a key sidekiq-cron
 # does not know, so the entry stayed enabled and the live quiz started every 40 minutes.
 RSpec.describe 'config/sidekiq_schedule.yml' do

@@ -2,8 +2,9 @@
 
 require 'rails_helper'
 
-# Users::ConfirmationsController#show confirms the account from the emailed
-# token and then sends the one activation (welcome) email.
+# Devise's ConfirmationsController#show confirms the account from the emailed
+# token; User's after_update callback (recently_activated?) then sends the one
+# activation (welcome) email.
 RSpec.describe 'Account confirmation', type: :request do
   let!(:user) { FactoryBot.create(:user, confirmed_at: nil) }
 

@@ -24,7 +24,7 @@ RSpec.describe SendReminders, type: :worker do
         users.each(&block)
       end
       
-      allow(User).to receive(:in_batches).with(of: 100) do |&block|
+      allow(User).to receive(:in_batches).with(of: SendReminders::BATCH_SIZE, order: :desc) do |&block|
         block.call(batch_relation) if block
       end
     end
@@ -295,7 +295,8 @@ RSpec.describe SendReminders, type: :worker do
     end
 
     describe 'batch processing behavior' do
-      it 'emails newer users before older ones' do
+      it 'emails newer users before older ones, across batch boundaries' do
+        stub_const('SendReminders::BATCH_SIZE', 2)
         emails = %w[old@example.com middle@example.com new@example.com]
         [1.month.ago, 1.week.ago, 1.day.ago].zip(emails).each do |created_at, email|
           FactoryBot.create(:user, confirmed_at: 1.week.ago, created_at: created_at, email: email,
@@ -310,6 +311,7 @@ RSpec.describe SendReminders, type: :worker do
 
         worker.perform
 
+        # three users over a batch size of two: the newest must still come first
         expect(processed).to eq(emails.reverse)
       end
     end
