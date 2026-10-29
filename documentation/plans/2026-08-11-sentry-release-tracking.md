@@ -1,5 +1,7 @@
 # Sentry Release Tracking Implementation Plan
 
+**Status: Completed** (sentry-ruby/rails/sidekiq 6.7.0; see `documentation/ERROR_MONITORING.md`).
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Replace the EOL `sentry-raven` SDK with `sentry-ruby`/`sentry-rails`/`sentry-sidekiq` so every production error is tagged with the deployed git SHA (read from Capistrano's `REVISION` file by the SDK's built-in release detection).

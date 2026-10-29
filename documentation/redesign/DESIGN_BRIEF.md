@@ -174,7 +174,7 @@ What goes away or merges:
   `application.mobile.erb` and that plumbing rather than reviving it. Mobile is the
   native apps' job.
 - The API (`/api/v1`, OAuth) is what the iOS app, the Android/Flutter app and the PWA
-  client (`documentation/OAUTH_PKCE_DEPLOY_RUNBOOK.md`) run on. It carried little traffic
+  client (`documentation/API.md`) run on. It carried little traffic
   in the measured week, but it is the mobile channel: keep it stable and out of the web
   redesign's scope. Nothing in this project may change an API response.
 - Tests: Cucumber features cover the core flows and will break on markup changes; budget
@@ -227,5 +227,5 @@ What goes away or merges:
 - `documentation/STYLE_GUIDE.md`: current palette, type and layout conventions.
 - `documentation/MODERNIZATION_PLAN.md` § Frontend Modernization: the technical backlog
   this redesign would close.
-- `documentation/VOICE_PRACTICE_FEATURE.md`, `QUIZ_SYSTEM_DOCUMENTATION.md`: recent
+- `documentation/VOICE_PRACTICE_FEATURE.md`, `QUIZ_SYSTEM.md`: recent
   features whose UI should be preserved.

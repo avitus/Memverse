@@ -12,9 +12,10 @@ redesign; see `DESIGN_BRIEF.md` alongside it.
 | `shared/log/nginx_access.log*` on fish-eagle | 7 days | User agents (device, browser, bots). |
 | `daily_stats` table + `users` / `memverses` tables | point in time | Registered, active, new users; verse counts; language, translation, reminder settings. |
 
-Google Analytics on the site is a dead Universal Analytics property (`UA-4539114-5` in
-`app/views/layouts/application.html.erb:97`; UA stopped collecting in July 2023), so logs are
-the only analytics. Unique IPs are a proxy for unique users: slightly over-counts (same user,
+When this inventory was taken, Google Analytics on the site was a dead Universal Analytics property
+(`UA-4539114-5`; UA stopped collecting in July 2023), so logs were the only analytics. That snippet
+has since been removed from `app/views/layouts/application.html.erb`; page views are now recorded
+server-side with Ahoy (see `../ANALYTICS.md`). Unique IPs are a proxy for unique users: slightly over-counts (same user,
 two networks) and under-counts (shared NAT). Good enough for ranking pages.
 
 **Bots dominate raw traffic.** Of ~880k Rails requests in the week, ~630k were crawler hits on

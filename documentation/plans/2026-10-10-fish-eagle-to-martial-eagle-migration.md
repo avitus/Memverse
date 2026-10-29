@@ -1,7 +1,16 @@
 # Memverse migration: fish-eagle → martial-eagle
 
 **Date:** 2026-10-10
-**Status:** Phases 0–2 complete and Phase 3 mostly complete as of 2026-10-11 (see the ticked boxes); cutover fixed for **Sunday 2026-11-08, 02:00–03:30 PST (10:00–11:30 UTC)**
+**Status:** **Complete.** The cutover ran on **Saturday 2026-10-17, 12:58–13:12 PDT** (about 12 minutes of maintenance page; originally planned for 2026-11-08, then 2026-10-18, and brought forward at Andy's request). martial-eagle has served production since; the same-day checks (TLS reissue, first cron runs, backups from the new host, TTLs raised to 3600) were all confirmed by 2026-10-20. The rest of this file is the runbook as executed, kept for reference.
+
+## Open items (as of 2026-10-29)
+
+Carried over from the executable checklist (`FINAL_MIGRATION.md` §5, now in git history):
+
+- [ ] **Backup restore proof.** Since the cutover the daily `memverse-backup.timer` dumps martial-eagle and stores the dump encrypted off-host (rclone remote). Andy decides whether that storage alone is enough or a second target is wanted; Claude proves a restore of one object into a scratch database. **Must precede the decommission.**
+- [ ] **andyvitus.com**: deploy to martial-eagle (Rails 7.2 / Ruby 3.2.6 / MySQL, same stack), certificate, Linode DNS flip; delete `realm.andyvitus.com`. ~1 h. See §12.1.
+- [ ] **Decommission fish-eagle** (no earlier than 2026-10-31, 14 days after cutover; Andy confirms): stop the proxy, take a final snapshot, destroy droplet 18498427; delete the pre-resize and pre-cutover snapshots a month later; remove the `fish_eagle` Capistrano stage (`config/deploy/fish_eagle.rb`), the `fish-eagle-root` SSH alias, the `192.241.205.154` entry from the backup's known_hosts (and the `TRUSTED_PROXY_IPS` default in `config/initializers/rack_attack.rb`), and martial-eagle's two rollback-only vhosts.
+- [x] Docs: CLAUDE.md server section, `DEPLOYMENT.md`, runbook marked complete (this change, October 2026). Still to check: any remaining Postmark test-token references.
 **Goal:** Move the whole Memverse production stack from the fish-eagle droplet (Ubuntu 16.04, never rebooted in 8.5 years) to the martial-eagle droplet (Ubuntu 24.04) with one short, announced maintenance window.
 
 **Approach in one paragraph.** Build martial-eagle as a complete second production host while fish-eagle keeps serving. Rehearse the full data move against a copy of the database until the restore-and-verify sequence is timed and boring. Then, in a single window of roughly 30–45 minutes: put fish-eagle into maintenance mode, stop its background workers, take a final consistent dump, restore it on martial-eagle, verify row counts, start the stack, smoke test, and flip DNS. After the flip, fish-eagle reverse-proxies to martial-eagle so clients with cached DNS keep working. fish-eagle is kept intact (database untouched, workers disabled) for two weeks as the rollback asset, then decommissioned.

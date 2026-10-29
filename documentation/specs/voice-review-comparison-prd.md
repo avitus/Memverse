@@ -1,5 +1,7 @@
 # Voice Review: Real-time Verse Comparison Feature
 
+**Status: Superseded by `../VOICE_PRACTICE_FEATURE.md`**, which documents what was built.
+
 ## Overview
 Compare the user's transcribed speech to the actual verse text in real-time and visually highlight errors to help users identify mistakes in their recitation.
 

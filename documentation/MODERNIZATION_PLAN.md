@@ -26,7 +26,7 @@ This document tracks the technical modernization progress of the Memverse applic
 
 ### ✅ Framework & Language Upgrades (COMPLETED - August 2025)
 - [x] Upgrade Ruby from 2.7.8 to 3.2.6 (current stable)
-- [x] Upgrade Rails from 5.2.8.1 to 7.2.3.1 (latest stable)
+- [x] Upgrade Rails from 5.2.8.1 to 7.2.3.2
 - [x] Update all gems to Rails 7 compatible versions
 - [x] Remove deprecated gems (rails-observers, protected_attributes references)
 - [x] Apply Rails 7.2 configuration defaults (config.load_defaults 7.2)
@@ -61,24 +61,24 @@ This document tracks the technical modernization progress of the Memverse applic
 
 ### ✅ Testing Infrastructure (PARTIALLY COMPLETED)
 - [x] Replace Jasmine with Vitest for JavaScript testing (COMPLETED)
-  - Migrated to Vitest 3.2.4 with UI and coverage support
-  - 69/69 tests passing (100%)
+  - Vitest 3.2.6 with UI and coverage support; specs in `test/javascript/*.test.js`
 - [x] Upgrade RSpec to v3.13 (latest stable)
 - [x] Upgrade Cucumber to v9.2.1 (latest stable)
-- [ ] Implement proper CI/CD pipeline with automated testing
+- [x] CI/CD: CircleCI with Smarter Testing (`.circleci/test-suites.yml` defines the `rspec`, `cucumber` and `vitest` suites; PR runs select impacted tests, `main` runs everything)
 - [ ] Add code coverage reporting (SimpleCov)
 - [ ] Remove deprecated testing gems (guard-*)
 
 ### ✅ Background Processing (COMPLETED - August 2025)
-- [x] Upgrade Sidekiq from 6.5 to 7.3.9 (latest version)
-- [x] Upgrade sidekiq-cron to v2.0 (major version upgrade)
-- [x] Maintain Capistrano integration with capistrano-sidekiq
+- [x] Upgrade Sidekiq from 6.5 to 7.3.10
+- [x] Upgrade sidekiq-cron to 2.4.0
+- [x] Split into one scheduler process and N workers under systemd, managed by `lib/capistrano/tasks/sidekiq_multi.rake` (see `SIDEKIQ.md`)
+- [ ] Sidekiq 8 upgrade
 - [ ] Consider migrating to Rails 7's built-in Active Job (this is a major overhaul, stay with Sidekiq for now)
 
 ### ✅ Third-party Dependencies (PARTIALLY COMPLETED)
 - [x] Replace FancyBox2 with MicroModal (modern lightbox alternative)
 - [x] Update CKEditor to v5.1 (Rails 7 compatible)
-- [x] Update acts-as-taggable-on to v10.0 (Rails 7 compatible)
+- [x] Update acts-as-taggable-on to 11.0.0
 - [x] Update PubNub to v5.5.0 (latest stable)
 - [x] Update RPush to v9.2.0 (Rails 7.1 compatible)
 
@@ -125,13 +125,15 @@ net-imap, erb, vite, picomatch, flatted) were already satisfied by the
 - [ ] Replace Capistrano with modern deployment (Kubernetes/ECS)
 - [ ] Implement proper environment configuration (dotenv)
 - [x] Add application performance monitoring (New Relic active)
-- [x] Add error tracking (Sentry active, needs SDK update)
+- [x] Error tracking: sentry-ruby/rails/sidekiq 6.7, releases tagged from Capistrano's `REVISION` (see `ERROR_MONITORING.md`)
+- [x] Production moved from fish-eagle (Ubuntu 16.04) to martial-eagle (Ubuntu 24.04, MySQL 8, systemd units) in October 2026 (see `DEPLOYMENT.md`)
 
 ## ❌ Not Started
 
 ### Additional Security Hardening
-- [ ] Implement Content Security Policy
-- [ ] Add proper API rate limiting
+- [ ] Implement Content Security Policy (`config/initializers/content_security_policy.rb` is still the commented-out Rails template)
+- [x] Rate limiting for crawlers: rack-attack throttles on `/forum` and `/blog` plus the `AttackProtectionMiddleware` blocklists (see `ATTACK_PROTECTION.md`)
+- [ ] Per-token API rate limiting
 - [ ] Complete migration away from default routes (partial completion achieved)
 
 ### Code Quality & Maintenance
@@ -166,13 +168,13 @@ net-imap, erb, vite, picomatch, flatted) were already satisfied by the
 | API Modernization | ✅ Mostly Complete | 75% |
 | File Storage | ✅ Complete | 100% |
 | Email Service | ✅ Complete | 100% |
-| Testing Infrastructure | ⚠️ Partial | 60% |
+| Testing Infrastructure | ⚠️ Partial | 80% |
 | Background Processing | ✅ Complete | 100% |
 | Frontend Modernization | ⚠️ Partial | 30% |
 | Database & Search | ⚠️ Partial | 40% |
-| Deployment & Infrastructure | ⚠️ Partial | 50% |
+| Deployment & Infrastructure | ⚠️ Partial | 60% |
 | Third-party Dependencies | ⚠️ Partial | 60% |
-| Additional Security | ❌ Not Started | 0% |
+| Additional Security | ⚠️ Partial | 30% |
 | Code Quality | ❌ Not Started | 0% |
 | Performance Optimization | ⚠️ Partial | 20% |
 | Development Experience | ❌ Not Started | 0% |
@@ -180,11 +182,9 @@ net-imap, erb, vite, picomatch, flatted) were already satisfied by the
 ### Overall Progress: ~55% Complete
 
 The Memverse application has successfully completed critical modernization milestones:
-- ✅ Ruby 3.2.6 and Rails 7.2.3.1 upgrades
+- ✅ Ruby 3.2.6 and Rails 7.2.3.2 upgrades
 - ✅ Security vulnerabilities fixed
 - ✅ Core infrastructure modernized (email, file storage, background jobs)
 - ✅ 100% test coverage maintained
 
-**Production Status**: ✅ **READY FOR DEPLOYMENT**
-
-The application is production-ready with all critical security and framework updates completed. The remaining items are primarily frontend modernization and development experience improvements that can be addressed incrementally post-deployment.
+**Production Status**: running on martial-eagle since 2026-10-17 with all of the above in place. The remaining items are primarily frontend modernization and development experience improvements that can be addressed incrementally.

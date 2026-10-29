@@ -1,7 +1,7 @@
 # Sentry Release Tracking — Design Spec
 
 **Date**: 2026-08-11
-**Status**: Approved
+**Status**: Completed
 **Branch**: `chore/sentry-sdk-migration`
 
 ## Problem

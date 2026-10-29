@@ -8,10 +8,10 @@ Scope: **entire repository**
 
 ## Project Overview
 
-- Ruby on Rails **7.1.x** application
+- Ruby on Rails **7.2.x** application
 - Ruby **3.2.6**
 - MySQL (primary DB), Redis (Sidekiq + ephemeral data)
-- Frontend: jQuery 1.12, SASS, CoffeeScript
+- Frontend: jQuery 1.12, SASS, Stimulus controllers in `app/javascript/controllers/`
 - Testing: **RSpec**, **Cucumber**, **Vitest**
 - Architecture: traditional MVC with several mounted engines (Thredded, Bloggity, RailsAdmin)
 
@@ -54,10 +54,12 @@ Scope: **entire repository**
 
 ### JavaScript (Vitest)
 
-- Run all JS tests: `npm test`
-- Watch mode: `npm run test:run`
+- JS tests live in `test/javascript/*.test.js`
+- Single pass (use this in scripts and before claiming done): `npm run test:run`
+- Watch mode: `npm test` (this is `vitest` without `run`; it does not exit)
 - Coverage: `npm run test:coverage`
-- Single test file: `npm test app/javascript/foo.test.js`
+- UI: `npm run test:ui`
+- Single test file: `npm run test:run test/javascript/foo.test.js`
 
 ### Required Test Order (when asked to run tests)
 
@@ -173,7 +175,7 @@ When modifying API endpoints:
 
 ## Documentation
 
-- All docs belong in `documentation/`
+- All docs belong in `documentation/` (index: `documentation/README.md`)
 - Do not create new docs unless requested
 - Update existing docs only if behavior changes
 

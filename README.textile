@@ -1,26 +1,43 @@
 h1. Memverse
 
-A Bible memorization application
+A Bible memorization application.
 
-!https://circleci.com/gh/avitus/Memverse.svg?style=svg&circle-token=2db30e0430b8289e66bf5ca51df6c2135c0d1d27!:https://circleci.com/gh/avitus/Memverse
+!https://circleci.com/gh/avitus/Memverse.svg?style=svg!:https://circleci.com/gh/avitus/Memverse
+
+h2. Prerequisites
+
+* Ruby 3.2.6 (RVM; see @.ruby-version@)
+* Rails 7.2 (installed by @bundle install@)
+* MySQL (development database @memverse_development@, test database @memverse_test@)
+* Redis (Sidekiq queues and ephemeral quiz state)
+* Sphinx (Thinking Sphinx full-text search)
+* Node.js (asset precompilation and the JavaScript tests)
+
+h2. Running the application
+
+@./bin/dev@ starts MySQL and Redis if needed, then the Rails server, the Sidekiq scheduler and a Sidekiq worker through foreman (see @Procfile@). @./bin/shutdown@ stops everything and @./bin/status@ reports what is running.
 
 h2. Running tests
 
-Unit tests: @bundle exec rspec@
-Integration tests: @bundle exec cucumber features@
-Javascript tests: @npm test@ or @npm run test:run@
+All three suites must pass before any change is considered done.
+
+* Unit tests: @bundle exec rspec@
+* Integration tests: @bundle exec cucumber features@
+* JavaScript tests: @npm run test:run@ (single pass; @npm test@ starts Vitest in watch mode)
 
 h2. Configuration
 
-This project uses the Rails credentials system for managing sensitive configuration values like API keys. To edit credentials:
+This project uses the Rails credentials system for sensitive configuration (database password, Postmark API token, @secret_key_base@). To edit credentials:
 
 @EDITOR="nano" rails credentials:edit@
 
-The master key is required for decryption and should never be committed to version control.
+The master key (@config/master.key@) is required for decryption and must never be committed.
 
-h2. Documentation and Support
+h2. Documentation
 
-See the GitHub Wiki
+* "documentation/README.md":documentation/README.md - index of every document (deployment, Sidekiq, email, API, quiz system, error monitoring, style guide, plans)
+* "CLAUDE.md":CLAUDE.md - project guide for Claude Code and a summary of the architecture and production setup
+* "AGENTS.md":AGENTS.md - rules for agentic coding tools working in this repository
 
 h2. Contributing
 
@@ -30,5 +47,3 @@ If you make improvements to this application, please share with others.
 * Make your feature addition or bug fix.
 * Commit with Git.
 * Send a pull request.
-
-
