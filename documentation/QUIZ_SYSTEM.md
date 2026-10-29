@@ -61,9 +61,11 @@ The cron entry fires at the published time; the countdown users see targets this
 | end | Status `Finished`. `perc_correct` and `times_answered` are updated from the answers; the final scoreboard is logged; a winner tweet is posted and the **Quiz Champion** badge (`Badge.where(name: 'Quiz Champion')`, created by migration `20250930222702`) is awarded with `award_badge`, which does not duplicate an existing award. Badge problems are logged and never abort the quiz. |
 | end → +10:00 | Chat stays open 600 s (30 s outside production), then closes; locks released. |
 
-Operations that talk to external services (tweet, PubNub publish, Redis cleanup) go through
-`with_retry` (3 attempts, growing back-off). The worker has `retry: false`, so a crashed quiz is not
-re-run. Session keys carry a 2-hour TTL (`QuizSession::DEFAULT_TTL`).
+Operations that talk to external services during the run (tweet, PubNub publishes, the setup-time
+clearing of old Redis session data, finalizing and question-difficulty updates) go through
+`with_retry` (3 attempts, growing back-off). The `ensure`-time cleanup (`cleanup_quiz_resources`:
+status update, unlock, key deletion) uses plain `rescue` blocks and is not retried. The worker has
+`retry: false`, so a crashed quiz is not re-run. Session keys carry a 2-hour TTL (`QuizSession::DEFAULT_TTL`).
 
 ### Redis keys (`QuizSession`, prefix `quiz_session`)
 
@@ -99,23 +101,29 @@ PubNub channel is `quiz-<id>`; no tweet, push or badge.
 `live_quiz_modern.html.erb`; the legacy `live_quiz.html.erb` is kept and rendered only with
 `?legacy=true`. There is no `USE_MODERN_QUIZ_INTERFACE` flag.
 
-Two JavaScript layers coexist and are coordinated:
+What actually runs in the browser today (checked October 2026):
 
-- **Stimulus** `live-quiz` controller (`app/javascript/controllers/live_quiz_controller.js`) polls
-  `GET /live_quiz/quiz_state/:id` (JSON from `LiveQuizController#quiz_state`, which classifies the
-  Redis status into `preparing`, `ready`, `running`, `finished` or `waiting`), drives the question timer and
-  calls `refreshPage()` (Turbo visit, or `location.reload()`) once the quiz is live.
-- **jQuery** `QuizSchedule` (`app/assets/javascripts/live_quiz.js`) renders the schedule block
-  (`Quiz.knowledge_quiz_schedule` → Tue 17:00 / Sat 23:00 UTC shown in local time) and the countdown
-  to the worker start: updates every 5 s, every 1 s inside the last minute, shows "Preparing quiz..."
-  in the last 20 s and "Loading quiz..." at zero, then reloads **3 s** after the target so the worker
-  has written its status.
-
-Coordination (October 2025 fix, after five attempts): jQuery exits early when a `live-quiz` Stimulus
-element with `quiz-preparing-value="true"` is present; both layers share the
-`sessionStorage` flag `quiz_reload_scheduled` (plus `quiz_preparation_<target>`), and all flags are
-cleared **before** `window.location.reload()` so a reload cannot re-trigger itself. The controller
-sets `@quiz_preparing` from the unified state (`preparing` or `ready`), not from a single status string.
+- The page's inline script (`live_quiz_modern.html.erb`) sets the user/quiz globals, calls
+  `quizRoom.initialize`, and connects to PubNub (`app/assets/javascripts/memverse_live_quiz.js`
+  handles questions, answers, presence and the scoreboard over channel `quiz-<id>`). This is the
+  live part and it works.
+- `_quiz_schedule.html.erb` calls `quizSchedule.showNextQuizLocalTime()` and `showLocalTimes()`
+  (`app/assets/javascripts/live_quiz.js`) to show the Tue 17:00 / Sat 23:00 UTC schedule in local
+  time. It also calls `quizSchedule.initCountdown()` behind a `typeof` guard, but no such method
+  exists, so that call is a no-op.
+- **There is currently no countdown and no automatic refresh when the quiz starts.** The jQuery
+  countdown/reload code (`quizSchedule.init()`, the `till_start` polling blocks in the view) is
+  commented out "because the Stimulus controller handles it", but the Stimulus controller
+  (`app/javascript/controllers/live_quiz_controller.js`, which polls `GET /live_quiz/quiz_state/:id`
+  and calls `refreshPage()`) is never delivered to the browser: the layout loads only the Sprockets
+  `application.js`, and although `importmap-rails` is in the Gemfile there is no `config/importmap.rb`
+  and no `javascript_importmap_tags`. The `data-controller="live-quiz"` attribute on the page is
+  therefore inert, and the `sessionStorage` coordination flags described in the October 2025 fix
+  (`quiz_reload_scheduled`, `quiz_preparation_<target>`) exist only in the disabled jQuery code. A
+  participant who opens the page before the start has to reload it by hand. Wiring one of the two
+  mechanisms back in is tracked in [MODERNIZATION_PLAN.md](./MODERNIZATION_PLAN.md).
+- `LiveQuizController#quiz_state` (JSON: `preparing`, `ready`, `running`, `finished`, `waiting`)
+  and `@quiz_preparing` are still computed server-side and are what a restored controller would use.
 
 `GET /live_quiz/till_start/:id.json` is the older polling endpoint (`{ "time": "+0h +5m +30s" }` before
 start, `{ "status": ... }` during and after) and is still served.

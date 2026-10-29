@@ -1,6 +1,13 @@
-# Memverse Rails 7 Deployment Guide
+# Archived: Memverse Rails 7 Deployment Guide (August 2025)
 
-This guide provides step-by-step instructions for deploying the Rails 7 upgrade to production using Capistrano. It was written for the August 2025 upgrade and is kept for the Sidekiq systemd units and scripts in this directory; the current, authoritative procedure is [documentation/DEPLOYMENT.md](../documentation/DEPLOYMENT.md) (deploys from `main` with Rails encrypted credentials).
+> **Do not follow the deployment, rollback or monitoring steps below.** They describe the one-off
+> August 2025 Rails 7 cut-over and are kept only as a record of it. The current procedure is
+> [documentation/DEPLOYMENT.md](../documentation/DEPLOYMENT.md): `cap production deploy` from `main`
+> with Rails encrypted credentials. The files in this directory that are still in use are the Sidekiq
+> systemd units (`sidekiq-scheduler.service`, `sidekiq-workers@.service`, `setup_sidekiq_services.sh`),
+> `verified_backup.sh`, and the `migration/` directory from the October 2026 server move.
+
+This guide provided step-by-step instructions for deploying the Rails 7 upgrade to production using Capistrano.
 
 ## 🔐 Database Configuration Update
 
@@ -255,10 +262,6 @@ bundle exec cap production rails:runner CODE='Redis.new.ping'
 2. **Update documentation**:
    - Record deployment date and any issues
    - Update team wikis/docs
-
-3. **Plan final branch merge**:
-   - After 1 week of stable operation
-   - Nothing to merge: production deploys from `main`
 
 ## 🔍 Verification Checklist
 

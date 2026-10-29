@@ -122,6 +122,7 @@ net-imap, erb, vite, picomatch, flatted) were already satisfied by the
 - [x] Maintain Capistrano deployment (v3.19.2)
 - [x] Change deployment branch from master to main
 - [ ] Containerize application with Docker (Dockerfile outdated)
+- Live quiz page: restore the start countdown / auto-refresh. The Stimulus controller in `app/javascript/controllers/` is never served (no importmap config or tags) and the jQuery version is commented out, so the modern page does not refresh when the quiz starts (see QUIZ_SYSTEM.md, Browser side). Decide between delivering app/javascript via importmap and reviving the jQuery path.
 - [ ] Replace Capistrano with modern deployment (Kubernetes/ECS)
 - [ ] Implement proper environment configuration (dotenv)
 - [x] Add application performance monitoring (New Relic active)
