@@ -24,8 +24,5 @@ module MemverseApp
     config.autoload_paths = config.autoload_paths.dup
     config.autoload_paths << Rails.root.join("app/lib")
     config.autoload_paths << Rails.root.join("app/middleware")
-    
-    # Cache format version is handled by load_defaults 7.2
-    # No need to set explicitly
   end
 end

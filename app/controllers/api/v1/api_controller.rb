@@ -7,9 +7,6 @@ class Api::V1::ApiController < ActionController::API
   # API response helpers
   include ApiResponseHelpers
 
-  # Airbrake support
-  # use_named_exception_notifier :airbrake
-
   #------------- Private below this line -------------------------------------------------------------------------------------
   private
 

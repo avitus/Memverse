@@ -15,7 +15,6 @@ group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'byebug'
-  gem 'spring', '~> 2.1'                                        # Application preloader for Rails 6 compatibility
   gem 'listen', '~> 3.2'                                        # File system change monitoring for Rails 6
   gem 'brakeman', :require => false                             # Scan for security vulnerabilities
   gem 'letter_opener'                                           # Preview email in development browser
@@ -70,7 +69,6 @@ gem 'bootsnap', '>= 1.4.2', require: false                                     #
 gem 'sass-rails', '>= 6.0'
 gem 'autoprefixer-rails', '~> 10.4.21'                                         # CSS vendor prefixes - Rails 7 and Ruby 3.2 compatible
 gem 'terser'                                                                   # JS compressor (replaces uglifier for Rails 7)                   
-gem "mimemagic", "~> 0.3.10"                                                   # For mime type detection. Prev version yanked      
 gem 'ffi', '~> 1.16.0'                                                         # FFI library - Ruby 3.2 compatible
 
 # Rails 7 components
@@ -87,7 +85,6 @@ gem 'stimulus-rails'                                                           #
 gem 'doorkeeper'                                                               # Oauth for API
 gem 'rack-cors', '~> 2.0'                                                      # Cross-origin access for browser API clients
 gem 'swagger-blocks'                                                           # Generates swagger-ui json files
-gem 'jbuilder'
 
 ############################################################
 # Authentication and Authorization
@@ -165,18 +162,10 @@ gem 'json'                                                                     #
 gem 'thinking-sphinx'                                                          # Connector to Sphinx - for global search
 gem "i18n-js", ">= 3.0.0.rc11"                                                 # Uses config/locale files to build a JavaScript equivalent of i18n in Rails
 gem 'breadcrumbs_on_rails', '>=2.0.0'                                          # For breadcrumb navigation bar
-gem 'dalli', '~> 3.2'                                                          # Memcached client - Rails 7 compatible
 gem 'friendly_id'                                                              # Makes nice IDs for models
 gem 'foreman'                                                                  # Helps manage multiple processes when running app in development.
 gem 'best_in_place', '~> 4.0'                                                  # In-place editing support (Rails 7 compatible)
-gem 'dropbox-sdk'                                                              # Used with backup above
-gem 'rack-utf8_sanitizer'                                                      # Used to fix EasouSpider invalid UTF-8 byte sequences
 gem 'responders', '~> 3.0'                                                     # Support for respond_to and respond_with
-
-group :console do
-  gem 'wirble'
-  gem 'hirb'
-end
 
 
 # TODO

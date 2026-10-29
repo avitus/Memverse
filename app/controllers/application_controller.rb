@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
   include RobotsDirectives
 
   before_action :configure_permitted_parameters, if: :devise_controller?
-  before_action :set_locale, :prepare_for_mobile
+  before_action :set_locale
 
   layout :layout_by_resource
 
@@ -276,23 +276,6 @@ class ApplicationController < ActionController::Base
   end
 
   private
-
-  # Check for mobile devices
-  def mobile_device?
-
-  	return false # TODO: not supporting mobile devices for now ... uncomment below and remove this line to add support
-    # if session[:mobile_param]
-    #   session[:mobile_param] == "1"
-    # else
-    #   request.user_agent =~ /Mobile|webOS/
-    # end
-  end
-  helper_method :mobile_device?
-
-  def prepare_for_mobile
-    session[:mobile_param] = params[:mobile] if params[:mobile]
-    request.format = :mobile if mobile_device?
-  end
 
   protected
 

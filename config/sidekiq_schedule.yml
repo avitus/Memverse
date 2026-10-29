@@ -9,7 +9,7 @@
 # The ONLY way to switch an entry off while keeping it here is `status: disabled`.
 # Entries deleted from this file are destroyed in Redis when the scheduler boots, because
 # config/initializers/sidekiq.rb loads this file with Sidekiq::Cron::Job.load_from_hash!.
-# Do not add test schedules to this file; see documentation/QUIZ_CRON_DUPLICATE_RUNS_2026-10.md
+# Do not add test schedules to this file; see documentation/SIDEKIQ.md
 # for how to run a one-off quiz safely. spec/config/sidekiq_schedule_spec.rb enforces all of this.
 
 # This is the main twice-weekly quiz

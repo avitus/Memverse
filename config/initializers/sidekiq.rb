@@ -118,7 +118,7 @@ Sidekiq.configure_server do |config|
             600  # 10 minutes for quiz jobs
           when 'SendReminders'
             120  # 2 minutes for reminder jobs
-          when 'UpdateMetrics', 'UpdateSubsections', 'UpdateVerseDifficulty'
+          when 'UpdateMetrics', 'UpdateSubsections'
             300  # 5 minutes for bulk data processing jobs
           when 'RefreshTagCloud', 'SubsectionPassages'
             60   # 1 minute for medium processing jobs
@@ -168,7 +168,7 @@ Sidekiq.configure_server do |config|
         # Load the cron schedule. The bang form destroys any job that is registered in
         # Redis with source "schedule" but no longer present in the YAML, so deleting an
         # entry from the file is enough to stop it. The plain load_from_hash left removed
-        # entries firing (see documentation/QUIZ_CRON_DUPLICATE_RUNS_2026-10.md).
+        # entries firing (see documentation/SIDEKIQ.md).
         schedule = YAML.load_file(schedule_file)
         Sidekiq::Cron::Job.load_from_hash!(schedule, source: "schedule")
         

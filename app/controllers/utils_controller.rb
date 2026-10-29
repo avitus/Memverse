@@ -161,18 +161,6 @@ class UtilsController < ApplicationController
   end
 
   # ----------------------------------------------------------------------------------------------------------
-  # Convert date to month label
-  # Input: 3/16/09
-  # Output: 2009 03
-  # ----------------------------------------------------------------------------------------------------------
-  def date_label(date)
-    month = date.month < 10 ? "0"+date.month.to_s : date.month.to_s
-    year  = date.year.to_s
-
-    return year + "-" + month
-  end
-
-  # ----------------------------------------------------------------------------------------------------------
   # Quantize Memory Verse per User
   # ----------------------------------------------------------------------------------------------------------
   def quantize_mvs(num_verses)
@@ -838,5 +826,18 @@ class UtilsController < ApplicationController
     redirect_to root_url
   end
 
-end
+  private
 
+  # ----------------------------------------------------------------------------------------------------------
+  # Convert date to month label
+  # Input: 3/16/09
+  # Output: 2009 03
+  # ----------------------------------------------------------------------------------------------------------
+  def date_label(date)
+    month = date.month < 10 ? "0"+date.month.to_s : date.month.to_s
+    year  = date.year.to_s
+
+    return year + "-" + month
+  end
+
+end
