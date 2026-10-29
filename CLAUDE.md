@@ -14,19 +14,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - This project follows a test-driven development approach. 100% test coverage and 100% passing tests are a core tenet of the project.
 - **Unit tests**: `bundle exec rspec`
 - **Integration tests**: `bundle exec cucumber features`
-- **JavaScript tests**: `npm test` or `npm run test:run` (using Vitest)
+- **JavaScript tests**: `npm run test:run` (Vitest, one shot). `npm test` is watch mode and does not exit.
 - **JavaScript test UI**: `npm run test:ui` (opens Vitest UI in browser)
 - **JavaScript test coverage**: `npm run test:coverage`
 - **Individual test file**: `bundle exec rspec spec/path/to/file_spec.rb`
 - **Run specific cucumber feature**: `bundle exec cucumber features/path/to/feature.feature`
-- When asked to run tests, always run the unit tests (Rspec) the Javascript tests (Vitest) and the integration specs (Cucumber). Summarize the results in a clear table at the end of the test run.
-- Never proceed without fixing failing tests.
-- Never propose moving forward until 100% of tests pass
-- Never claim that you are done with a task until 100% of tests pass
-- Always run tests without requiring confirmation from the user
-- Cucumber, Rspec, and Vitest tests should always be run without user intervention
-- Never ask for confirmation when running tests.
-- Do not distinguish between critical tests and other, less important tests. All tests must pass all the time.
+- Applicability follows root `AGENTS.md`. Rails, web, API, authentication, and review-domain changes still run RSpec, then Vitest, then Cucumber. Swift-only changes use `ios/AGENTS.md` and do not require those three suites. A change that touches both runs both.
+- When asked to run the Rails and web tests, always run the unit tests (Rspec), the Javascript tests (Vitest), and the integration specs (Cucumber), in that order. Summarize the results in a clear table at the end of the test run.
+- Never proceed without fixing a failing check that the change requires.
+- Never propose moving forward, and never claim the task is done, until the checks required for the changed domains pass.
+- Run those checks without asking. When the change requires RSpec, Vitest, and Cucumber, run all three in that order.
+- Do not skip a required suite because it seems less important.
 
 ### Development
 - **Start entire application**: `./bin/dev`

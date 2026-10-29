@@ -14,6 +14,7 @@ Scope: **entire repository**
 - Frontend: jQuery 1.12, SASS, CoffeeScript
 - Testing: **RSpec**, **Cucumber**, **Vitest**
 - Architecture: traditional MVC with several mounted engines (Thredded, Bloggity, RailsAdmin)
+- Native iOS client: `ios/` (Xcode project, SwiftUI). Working rules are in `ios/AGENTS.md`. Setup and the API contract are in `documentation/ios/`.
 
 ---
 
@@ -37,7 +38,17 @@ Scope: **entire repository**
 
 ## Testing (MANDATORY)
 
-**All changes must keep 100% tests passing. Never claim completion otherwise.**
+Run the checks for the domains you changed. A required check that fails blocks completion. Do not claim a suite passed unless that command was run.
+
+| Change | Required verification |
+| --- | --- |
+| Swift, the Xcode project, or iOS settings only | The iOS build and the affected client tests. Commands and destinations are in `ios/AGENTS.md`. Canonical setup is `documentation/ios/README.md`. |
+| Rails or web code | RSpec, then Vitest, then Cucumber, in that order. |
+| API, serialization, authentication, review logic, or a shared contract | The Rails order above, plus the iOS contract tests and a safe-backend integration when one can run. |
+| CI, build tooling, or dependencies | Validation for every affected domain. |
+| Documentation only | Confirm the docs match the code. |
+
+A Swift-only change does not require the Rails or JavaScript suites. A Rails or web change still runs all three, in order. Do not skip, reorder, or partially run that sequence unless explicitly instructed.
 
 ### Ruby (RSpec)
 
@@ -54,18 +65,18 @@ Scope: **entire repository**
 
 ### JavaScript (Vitest)
 
-- Run all JS tests: `npm test`
-- Watch mode: `npm run test:run`
+- Run all JS tests: `npm run test:run` (`npm test` starts Vitest in watch mode and does not exit)
+- Watch mode: `npm test`
 - Coverage: `npm run test:coverage`
-- Single test file: `npm test app/javascript/foo.test.js`
+- Single test file: `npm run test:run -- path/to/file.test.js`
 
-### Required Test Order (when asked to run tests)
+### Required order for Rails and web changes
 
 1. RSpec
 2. Vitest
 3. Cucumber
 
-Never skip, reorder, or partially run tests unless explicitly instructed.
+iOS commands, when that domain changed, are in `ios/AGENTS.md`. Run them in addition to this sequence when the change also touches the API, authentication, or review behavior.
 
 ---
 
@@ -189,7 +200,7 @@ When modifying API endpoints:
 
 ## Agent Behavior Rules
 
-- Never claim task completion without 100% passing tests
+- Never claim task completion without the checks required for the changed domains passing
 - Never ignore failing tests
 - Never add TODOs instead of fixes
 - Never invent behavior not present in code

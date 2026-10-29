@@ -1,0 +1,4 @@
+// Default is empty so a public checkout does not contain the production secret.
+// A local file can override it. That file is gitignored.
+OAUTH_CLIENT_SECRET =
+#include? "OAuthClient.local.xcconfig"

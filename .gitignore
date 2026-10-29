@@ -113,3 +113,15 @@ circleci_deploy_key.pub
 # .claude/ - Now tracked in git
 
 /config/master.key
+
+# iOS local build products. Shared project files, schemes, and xcconfig stay tracked.
+ios/build/
+ios/**/live-credentials.json
+ios/**/DerivedData/
+ios/**/xcuserdata/
+ios/**/*.xcuserstate
+ios/**/*.xcresult
+ios/**/*.ipa
+ios/**/*.dSYM.zip
+ios/Config/OAuthClient.local.xcconfig
+iOS/Config/OAuthClient.local.xcconfig
