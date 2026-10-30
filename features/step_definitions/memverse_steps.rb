@@ -38,7 +38,7 @@ Given(/^I have the following memory verses:$/) do |table|
     
     if row['next_test'] != 'N/A'
       days = row['next_test'].split(' ').first.to_i
-      memverse.update(next_test: days.days.from_now.to_date)
+      memverse.update(next_test: Date.today + days) # skipcq: RB-RL1014 (Memverse schedules with Date.today, not the zone)
     end
   end
 end
