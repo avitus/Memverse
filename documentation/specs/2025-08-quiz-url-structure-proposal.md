@@ -1,5 +1,7 @@
 # Quiz URL Structure Analysis: Unified vs Separate Endpoints
 
+**Status: Proposal, not adopted.** The routes are unchanged: `/live_quiz` is the knowledge quiz and `/live_quiz/:quiz` a custom quiz (see `../QUIZ_SYSTEM.md`).
+
 ## Current Structure
 
 - **Knowledge Quiz (ID=1)**: `/live_quiz` (default when no parameter)

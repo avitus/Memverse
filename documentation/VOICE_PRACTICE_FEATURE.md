@@ -49,7 +49,7 @@ Voice Practice is a feature that allows users to practice Bible verse memorizati
 
 ### 1. Controller Action
 
-**Location:** `app/controllers/memverses_controller.rb:1326`
+**Location:** `app/controllers/memverses_controller.rb:1348`
 
 ```ruby
 def voice_practice

@@ -78,6 +78,18 @@ The middleware blocks requests from known attack tools including:
 
 Pattern matching is case-insensitive to catch variations like `SQLMAP`, `SqlMap`, etc.
 
+### Blocked scraper agents (October 2026)
+
+A second list, `BLOCKED_SCRAPER_AGENTS`, holds crawlers that ignore `robots.txt` and walk the blog and
+forum exhaustively, identified from production nginx logs: `ShapBot`, `Reflectionbot`, `KeenableBot`,
+`SemrushBot`, `SERankingBacklinksBot` and `Amzn-SearchBot` (case-insensitive). `blocked_user_agent?`
+checks `BLOCKED_USER_AGENTS + BLOCKED_SCRAPER_AGENTS`, so these get the same 403 and
+`Blocked malicious user agent` log line. Search engines that send real visitors (Googlebot, bingbot)
+are deliberately not listed. Crawlers that are not on the list are slowed by `rack-attack`
+(`config/initializers/rack_attack.rb`): 120 GET/HEAD requests per IP per 10 minutes under `/forum` or
+`/blog`, 30 per 10 minutes for blog listing permutations (`?page=`, `?tag_name=`, `?search=`,
+`?category_id=`), answered with 429 and a `Retry-After` header. See `ANALYTICS.md` ("Bot mitigation").
+
 ## IP Spoofing Protection
 
 ### The Problem
@@ -141,7 +153,7 @@ Error: IP spoofing attack?! HTTP_CLIENT_IP="192.168.1.100" HTTP_X_FORWARDED_FOR=
 
 ## Testing
 
-### Unit Tests (40 examples)
+### Unit Tests
 ```bash
 bundle exec rspec spec/middleware/attack_protection_middleware_spec.rb
 ```
@@ -155,7 +167,7 @@ Tests cover:
 - Response format verification (3 tests)
 - Legitimate request handling (4 tests)
 
-### Integration Tests (17 examples)
+### Integration Tests
 ```bash
 bundle exec rspec spec/requests/attack_protection_spec.rb
 ```
@@ -222,7 +234,7 @@ To add new attack paths to the blocklist:
 
 ## Adding New Blocked User Agents
 
-To add new malicious user agent patterns:
+To add new malicious user agent patterns (or a scraper to `BLOCKED_SCRAPER_AGENTS`):
 
 1. Edit `/app/middleware/attack_protection_middleware.rb`
 2. Add the pattern to the `BLOCKED_USER_AGENTS` constant:
@@ -267,8 +279,7 @@ Impact on legitimate requests: **< 1ms overhead**
 - Created `AttackProtectionMiddleware` to block WordPress/PHP attacks
 - Added malicious user agent filtering
 - Implemented IP spoofing protection
-- Added comprehensive test coverage (57 tests total)
-- All tests passing (100% success rate)
+- Added unit and request specs
 - Documented in ATTACK_PROTECTION.md
 
 ## Support
