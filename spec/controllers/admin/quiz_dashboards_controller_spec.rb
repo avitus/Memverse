@@ -31,6 +31,16 @@ RSpec.describe Admin::QuizDashboardsController, type: :controller do
         expect(KnowledgeQuiz.jobs).to be_empty
       end
 
+      it 'does not enqueue a second run while the quiz is locked or running' do
+        allow_any_instance_of(QuizSession).to receive(:quiz_locked?).and_return(true)
+
+        post :start, params: { id: quiz.id }
+
+        expect(response).to redirect_to(admin_quiz_dashboard_path(quiz))
+        expect(flash[:error]).to include('already running')
+        expect(ScheduledQuiz.jobs).to be_empty
+      end
+
       it 'enqueues KnowledgeQuiz for the knowledge quiz without touching its schedule' do
         knowledge_quiz = FactoryBot.create(:quiz, id: 1, user: admin_user, start_time: 2.days.from_now)
 

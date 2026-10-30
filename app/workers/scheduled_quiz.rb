@@ -14,6 +14,10 @@ class ScheduledQuiz
     Sidekiq.logger.info "===> ScheduledQuiz Worker starting at #{worker_start_time}"
     Sidekiq.logger.info "===> Process ID: #{Process.pid}, Thread: #{Thread.current.object_id}"
 
+    # The quiz lock is held from acquisition until cleanup_quiz_resources releases it after the
+    # run, so a second job for the same quiz (a repeated admin Start, a delayed duplicate) cannot
+    # take over mid-quiz. It is released early only when this job acquired it and then bailed out.
+    lock_held = false
     begin
       # ========================================================================
       # Try to find quiz starting in next minute, else return false
@@ -50,6 +54,7 @@ class ScheduledQuiz
         Sidekiq.logger.warn "===> Quiz ##{quiz.id} : Lock status: #{@quiz_session.quiz_locked?}"
         return
       end
+      lock_held = true
       Sidekiq.logger.info "===> Quiz ##{quiz.id} : Successfully acquired quiz lock"
 
       Sidekiq.logger.info "===> Quiz ##{quiz.id} : Checking if quiz is already in progress..."
@@ -64,12 +69,13 @@ class ScheduledQuiz
 
       # Initialize quiz
       initialize_quiz(quiz, channel)
-      
+      lock_held = false # from here on cleanup_quiz_resources owns the release
+
     rescue => e
       handle_quiz_error("quiz initialization", e, quiz&.id)
       return
     ensure
-      release_quiz_lock(quiz&.id) if quiz
+      release_quiz_lock(quiz&.id) if lock_held
     end
 
     begin

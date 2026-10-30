@@ -52,6 +52,12 @@ class Admin::QuizDashboardsController < ApplicationController
   # twenty minutes). The custom quiz is passed by id, so the worker runs that quiz whenever it
   # is dequeued; its start_time is moved just ahead of now so the page shows it as imminent.
   def start
+    quiz_session = QuizSession.new(@quiz.id)
+    if quiz_session.quiz_locked? || quiz_session.quiz_in_progress?
+      flash[:error] = "Quiz '#{@quiz.name}' is already running"
+      return redirect_to admin_quiz_dashboard_path(@quiz)
+    end
+
     if @quiz.id == 1
       KnowledgeQuiz.perform_async
     else

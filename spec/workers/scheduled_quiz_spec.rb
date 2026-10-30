@@ -150,6 +150,42 @@ describe ScheduledQuiz do
         worker.perform(quiz.id)
       end
 
+      it 'keeps the quiz lock until the run is cleaned up, so a second job for the same quiz is rejected' do
+        lock_key = QuizSession.new(quiz.id).send(:lock_key)
+        lock_taken = false
+        allow($redis).to receive(:set) do |key, *_args, **opts|
+          if key == lock_key && opts[:nx]
+            taken_before = lock_taken
+            lock_taken = true
+            !taken_before
+          else
+            true
+          end
+        end
+        allow($redis).to receive(:exists) { |key| key == lock_key && lock_taken ? 1 : 0 }
+        allow($redis).to receive(:del) do |*keys|
+          lock_taken = false if keys.include?(lock_key)
+          keys.size
+        end
+
+        first_run = described_class.new
+        allow(first_run).to receive(:sleep)
+        released_during_run = nil
+        allow(first_run).to receive(:execute_quiz) do
+          released_during_run = !lock_taken
+          # a duplicate job arriving mid-run must neither run the quiz nor drop the lock
+          second_run = described_class.new
+          expect(second_run).not_to receive(:execute_quiz)
+          second_run.perform(quiz.id)
+          expect(lock_taken).to be(true)
+        end
+
+        first_run.perform(quiz.id)
+
+        expect(released_during_run).to be(false)
+        expect(lock_taken).to be(false) # cleanup_quiz_resources released it after the run
+      end
+
       it 'does nothing for an id that does not exist' do
         expect(worker).not_to receive(:execute_quiz)
         worker.perform(quiz.id + 1000)
