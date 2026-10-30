@@ -1,4 +1,0 @@
-spec_files:
-  - "**/*[Ss]pec.{js,coffee}"
-
-spec_dir: spec/javascripts

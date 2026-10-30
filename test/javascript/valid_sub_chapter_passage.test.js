@@ -6,7 +6,7 @@ describe("validSubChapterPassage", () => {
     expect(memverseLib.validSubChapterPassage("Genesis 1:27")).toEqual( false );
   });
 
-  it("accepts chapters", () => {
+  it("rejects whole-chapter references", () => {
     expect(memverseLib.validSubChapterPassage("Genesis 1")).toEqual( false );
   });
 

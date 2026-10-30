@@ -285,15 +285,6 @@ class ProfileController < ApplicationController
 
     @referrer  = User.find(@user.referred_by) if @user.referred_by
 
-    # Clean up users who have referred themselves
-    # TODO: This section can be removed since we now prevent this from happening
-    if @user == @referrer
-      flash[:notice] = "You can't refer yourself!"
-      @user.referred_by = nil
-      @user.save
-      @referrer = nil
-    end
-
     @referees  = @user.referrals
 
     @level_two = @referees.collect { |r| r.referrals }.flatten
@@ -305,7 +296,7 @@ class ProfileController < ApplicationController
   def search_user
 
     search_param = params[:search_param]
-    @user_list   = Array.new
+    @user_list   = []
 
     logger.debug("Searching for ... #{search_param.inspect}")
 
@@ -332,7 +323,7 @@ class ProfileController < ApplicationController
   # Init for set referrer page
   # ----------------------------------------------------------------------------------------------------------
   def set_referrer
-    @user_list = Array.new
+    @user_list = []
   end
 
-end # Class
+end

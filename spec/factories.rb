@@ -24,9 +24,6 @@ FactoryBot.define do
     end
 
     # Admin user
-    # factory :admin do
-    #   u.admin true
-    # end
 
   end
 
@@ -58,9 +55,6 @@ FactoryBot.define do
 
     # # Use this factory for testing out of bound verses
     # # TODO: these tests are not yet passing ... not sure how this works
-    # factory :verse_with_validate_ref do
-    #   after(:build) { |verse| verse.class.set_callback(:create, :before, :validate_ref) }
-    # end
 
     factory :verse2 do
       versenum { 2 }
@@ -135,16 +129,6 @@ FactoryBot.define do
   factory :blog do
     id { 1 }
     title { 'Memverse Blog' }
-  end
-
-  factory :blog_post do
-    association :posted_by, factory: :user
-  end
-
-  factory :blog_comment do
-    association :blog_post, factory: :blog_post
-    association :user, factory: :user
-    comment { 'Nice blog post!' }
   end
 
   # ==============================================================================================
@@ -309,34 +293,9 @@ FactoryBot.define do
   # ==============================================================================================
   # Devotions
   # ==============================================================================================
-  factory :devotion do
-    name { 'Spurgeon Morning' }
-    month { Faker::Number.between(from: 1, to: 12) }
-    day { Faker::Number.between(from: 1, to: 28) }
-    thought { Faker::Lorem.paragraph(sentence_count: 5) }
-    ref { "#{Faker::Lorem.word.capitalize} #{Faker::Number.between(from: 1, to: 150)}:#{Faker::Number.between(from: 1, to: 50)}" }
-  end
-
   # ==============================================================================================
   # Daily Stats
   # ==============================================================================================
-  factory :daily_stats do
-    entry_date { Date.today }
-    segment { 'Global' }
-    users { Faker::Number.between(from: 100, to: 10000) }
-    users_active_in_month { Faker::Number.between(from: 50, to: 1000) }
-    verses { Faker::Number.between(from: 1000, to: 50000) }
-    memverses { Faker::Number.between(from: 500, to: 25000) }
-    memverses_memorized { Faker::Number.between(from: 100, to: 5000) }
-    memverses_learning { Faker::Number.between(from: 200, to: 8000) }
-    memverses_memorized_not_overdue { Faker::Number.between(from: 50, to: 2500) }
-    memverses_learning_active_in_month { Faker::Number.between(from: 150, to: 6000) }
-
-    trait :american do
-      segment { 'United States' }
-    end
-  end
-
   # ==============================================================================================
   # Used to seed Thredded Forum
   # ==============================================================================================
@@ -366,20 +325,6 @@ FactoryBot.define do
     association :user, factory: :user
     association :postable, factory: :topic
     association :messageboard, factory: :messageboard
-  end
-
-  factory :private_post, class: 'Thredded::PrivatePost' do
-    content { "This is a private post content." }
-    association :user, factory: :user
-    association :postable, factory: :private_topic
-  end
-
-  factory :private_topic, class: 'Thredded::PrivateTopic' do
-    title { Faker::Lorem.sentence[0..-2] }
-    hash_id { generate(:topic_hash) }
-    association :user, factory: :user
-    association :last_user, factory: :user
-    users { build_list :user, 1 }
   end
 
   # ==============================================================================================

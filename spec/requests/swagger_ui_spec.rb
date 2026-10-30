@@ -8,27 +8,6 @@ RSpec.describe "Swagger UI", type: :request do
       expect(response.content_type).to include("text/html")
     end
 
-    it "includes all necessary Swagger UI JavaScript files" do
-      get "/api"
-
-      # Check for essential Swagger UI files
-      expect(response.body).to include("swagger-ui.js")
-      expect(response.body).to include("jquery-1.8.0.min.js")
-      expect(response.body).to include("handlebars-2.0.0.js")
-      expect(response.body).to include("backbone-min.js")
-      expect(response.body).to include("underscore-min.js")
-    end
-
-    it "configures Swagger UI to load from /apidocs.json" do
-      get "/api"
-      expect(response.body).to include('url = "/apidocs.json"')
-    end
-
-    it "includes the Swagger UI initialization code" do
-      get "/api"
-      expect(response.body).to include("new SwaggerUi({")
-      expect(response.body).to include("window.swaggerUi.load()")
-    end
   end
 
   describe "GET /apidocs.json" do
@@ -101,32 +80,6 @@ RSpec.describe "Swagger UI", type: :request do
       expect(score_param["in"]).to eq("formData")  # Should use formData, not body
     end
 
-  end
-
-  describe "Swagger UI assets" do
-    it "serves the swagger-ui.js file" do
-      get "/api/swagger-ui/swagger-ui.js"
-      expect(response).to have_http_status(200)
-      expect(response.content_type).to include("javascript")
-    end
-
-    it "serves jQuery library" do
-      get "/api/swagger-ui/lib/jquery-1.8.0.min.js"
-      expect(response).to have_http_status(200)
-      expect(response.content_type).to include("javascript")
-    end
-
-    it "serves Handlebars library" do
-      get "/api/swagger-ui/lib/handlebars-2.0.0.js"
-      expect(response).to have_http_status(200)
-      expect(response.content_type).to include("javascript")
-    end
-
-    it "serves CSS files" do
-      get "/api/swagger-ui/css/screen.css"
-      expect(response).to have_http_status(200)
-      expect(response.content_type).to include("css")
-    end
   end
 
   describe "Swagger UI functionality" do

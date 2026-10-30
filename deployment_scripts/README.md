@@ -9,7 +9,7 @@ This guide provides step-by-step instructions for deploying the Rails 7 upgrade 
 - Version-controlled configuration
 - No plaintext passwords on servers
 
-See `MODERN_CREDENTIALS_DEPLOYMENT.md` for setup instructions.
+See `documentation/MODERN_CREDENTIALS_DEPLOYMENT.md` for setup instructions.
 
 ## 🚨 CRITICAL REQUIREMENTS
 
@@ -93,18 +93,6 @@ bundle exec cap production rails7:backup
 ```
 
 ### Step 5: Deploy Rails 7
-
-**Option A: Using the Automated Script (Recommended)**
-
-```bash
-# Run the interactive deployment script
-./deployment_scripts/capistrano_deploy.sh
-
-# Follow all prompts carefully
-# The script will guide you through each step
-```
-
-**Option B: Using Capistrano Commands Directly**
 
 ```bash
 # 1. Start monitoring in a new terminal

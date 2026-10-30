@@ -28,18 +28,6 @@ Capybara.register_driver :selenium_chrome_headless do |app|
   )
 end
 
-# Register a visible Chrome driver for debugging
-Capybara.register_driver :selenium_chrome do |app|
-  options = Selenium::WebDriver::Chrome::Options.new
-  options.add_argument('--window-size=1920,1080')
-  options.add_argument('--disable-blink-features=AutomationControlled')
-  
-  Capybara::Selenium::Driver.new(app,
-    browser: :chrome,
-    options: options
-  )
-end
-
 # Configure Capybara
 Capybara.configure do |config|
   config.default_max_wait_time = 10
@@ -79,19 +67,4 @@ RSpec.configure do |config|
   
   # Include Capybara DSL for feature specs
   config.include Capybara::DSL, type: :feature
-  
-  # Handle Selenium errors gracefully
-  config.around(:each, type: :feature, js: true) do |example|
-    example.run
-  rescue Selenium::WebDriver::Error::UnknownError => e
-    if e.message.include?('Failed to decode response from marionette')
-      puts "Warning: Marionette decoding error, retrying..."
-      Capybara.reset_sessions!
-      sleep 1
-      retry if (@retries ||= 0) < 1
-      @retries += 1
-    else
-      raise
-    end
-  end
 end

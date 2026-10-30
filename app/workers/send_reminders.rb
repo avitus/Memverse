@@ -4,6 +4,8 @@ class SendReminders
 
   sidekiq_options queue: :high, retry: false
 
+  BATCH_SIZE = 100
+
   def perform
     # TEMPORARY: Disable reminder emails while email provider transition is in progress
     # To re-enable: Comment out or remove the following lines
@@ -18,13 +20,10 @@ class SendReminders
     # Delete users who never activated
     User.pending.where('created_at < ?', 2.days.ago ).delete_all
 
-    # Retrieve records for all users ordered by newest first
-    # Process newest users first to prioritize recently registered users
-    # Note: Using in_batches with order instead of find_each which ignores order
-    # IMPORTANT: in_batches loads by primary key, so we need to reorder within each batch
-    User.in_batches(of: 100) do |batch|
-      # Apply ordering to the batch before iterating to ensure order is preserved
-      # This is critical to ensure newest users are processed first within each batch
+    # Newest users first, so the hourly send limit goes to recent sign-ups. Ids rise with sign-up
+    # time, so walking the primary key downwards keeps that order across batches; the reorder
+    # keeps it within each batch.
+    User.in_batches(of: BATCH_SIZE, order: :desc) do |batch|
       batch.reorder(created_at: :desc).each { |u| remind(u) }
     end
 
@@ -119,30 +118,12 @@ class SendReminders
     u.update_column(:last_reminder, Time.zone.today) # skipcq: RB-RL1053
   end
 
-  # Validate email format to prevent Postmark errors
-  # @param email [String] Email address to validate
-  # @return [Boolean] true if email is valid format, false otherwise
+  # Whether the address is one Devise would accept, so the reminder is not sent to an
+  # address that can only bounce.
+  # @param email [String, nil]
+  # @return [Boolean]
   def valid_email?(email)
-    return false if email.blank?
-    
-    # Basic email format validation - must contain @ and have reasonable format
-    # This is a more practical validation that will catch obvious invalid emails
-    return false unless email.include?('@')
-    return false if email.include?(' ')  # No spaces allowed
-    return false if email.include?('..') # No double dots allowed
-    return false if email.start_with?('@') || email.end_with?('@')
-    
-    # Split on @ - should have exactly 2 parts
-    parts = email.split('@')
-    return false unless parts.length == 2
-    
-    local_part, domain_part = parts
-    return false if local_part.empty? || domain_part.empty?
-    return false unless domain_part.include?('.') # Domain must have at least one dot
-    
-    # Basic format check with regex for more complex validation
-    email_regex = /\A[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\z/
-    email.match?(email_regex)
+    email.present? && email.match?(Devise.email_regexp)
   end
 
 end

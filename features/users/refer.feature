@@ -3,7 +3,7 @@ Feature: Refer
   A user
   Should be able to share a referrer link
 
-    @javascript @refer
+    @refer
     Scenario: User tries valid referrer link
       Given I am not logged in
       And no user exists with an email of "user@test.com"

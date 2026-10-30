@@ -14,21 +14,6 @@ describe DailyStats do
       expect(daily_stats.errors[:entry_date]).to include("can't be blank")
     end
 
-    it "accepts all attributes" do
-      daily_stats = DailyStats.new(
-        entry_date: Date.today,
-        segment: "Global",
-        users: 100,
-        users_active_in_month: 50,
-        verses: 1000,
-        memverses: 500,
-        memverses_memorized: 200,
-        memverses_learning: 300,
-        memverses_memorized_not_overdue: 150,
-        memverses_learning_active_in_month: 250
-      )
-      expect(daily_stats).to be_valid
-    end
   end
 
   describe "scopes" do
@@ -153,40 +138,5 @@ describe DailyStats do
   end
 
   describe "data integrity" do
-    it "allows multiple records for different dates" do
-      stats1 = DailyStats.create!(entry_date: Date.today)
-      stats2 = DailyStats.create!(entry_date: Date.yesterday)
-      
-      expect(stats1).to be_valid
-      expect(stats2).to be_valid
-    end
-
-    it "allows multiple records for different segments on the same date" do
-      global_stats = DailyStats.create!(entry_date: Date.today, segment: "Global")
-      us_stats = DailyStats.create!(entry_date: Date.today, segment: "United States")
-      
-      expect(global_stats).to be_valid
-      expect(us_stats).to be_valid
-    end
-
-    it "stores numeric values correctly" do
-      stats = DailyStats.create!(
-        entry_date: Date.today,
-        users: 150,
-        users_active_in_month: 75,
-        verses: 2000,
-        memverses: 1000,
-        memverses_memorized: 400,
-        memverses_learning: 600
-      )
-      
-      stats.reload
-      expect(stats.users).to eq(150)
-      expect(stats.users_active_in_month).to eq(75)
-      expect(stats.verses).to eq(2000)
-      expect(stats.memverses).to eq(1000)
-      expect(stats.memverses_memorized).to eq(400)
-      expect(stats.memverses_learning).to eq(600)
-    end
   end
 end

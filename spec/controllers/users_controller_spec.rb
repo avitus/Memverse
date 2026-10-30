@@ -26,9 +26,10 @@ describe UsersController do
   describe "update_ref_grade" do
 
     context 'when logged in' do
-      it "should save updated reference score" do
+      it "saves the updated reference score" do
         post :update_ref_grade, params: {score: 75}, format: :json
         expect(response.status).to eq(200)
+        expect(@user.reload.ref_grade).to eq(75)
       end
     end
 
@@ -48,9 +49,10 @@ describe UsersController do
   describe "update_accuracy" do
 
     context 'when logged in' do
-      it "should save updated accuracy score" do
+      it "saves the updated accuracy score" do
         post :update_accuracy, params: {score: 75}, format: :json
         expect(response.status).to eq(200)
+        expect(@user.reload.accuracy).to eq(75)
       end
     end
 

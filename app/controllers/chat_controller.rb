@@ -1,6 +1,6 @@
 class ChatController < ApplicationController
 
-  before_action :authenticate_user!, :only => [:channel1, :toggle_ban, :index, :debug, :simple, :test_keys, :working]
+  before_action :authenticate_user!, :only => [:toggle_ban, :index, :debug, :simple, :test_keys, :working, :send_message]
 
   #-----------------------------------------------------------------------------------------------------------
   # Main chat room
@@ -12,7 +12,6 @@ class ChatController < ApplicationController
 
     channel_num = params[:channel] || 7
     @channel    = ChatChannel.find("chat-#{channel_num}")
-    puts @channel
     puts channel_num
 
   end
@@ -72,7 +71,7 @@ class ChatController < ApplicationController
     user_id = params[:user_id]
 
     if user_id && (can? :manage, Quiz)
-      if $redis.exists("banned-#{user_id}") > 0
+      if $redis.exists?("banned-#{user_id}")
         $redis.del("banned-#{user_id}")
         status = "Ban revoked"
       else
@@ -89,23 +88,26 @@ class ChatController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   def send_message
 
-    @msg 		= params[:msg_body]
-    @usr 		= params[:sender]
-    @usr_id = params[:user_id]
+    @msg    = params[:msg_body]
+    # The sender is always the signed-in user. The page also posts sender/user_id, but trusting
+    # them would let a banned or impersonating client publish under another identity.
+    @usr    = current_user.name_or_login
+    @usr_id = current_user.id
     channel = ChatChannel.find(params[:channel])
 
-    banned  = $redis.exists("banned-#{@usr_id}")
-
-    if !banned
-      channel.send_message(parse_chat_message(@msg, @usr, @usr_id))
+    # redis-rb 5 returns an Integer from #exists, so the boolean form must be used here
+    if $redis.exists?("banned-#{@usr_id}")
+      Rails.logger.info("Chat message from banned user #{@usr_id} dropped")
     else
-      puts "Could not send message. User #{@usr_id} is banned."
+      channel.send_message(parse_chat_message(@msg, @usr, @usr_id))
     end
 
     respond_to do |format|
       format.js
    end
   end
+
+  private
 
   # ----------------------------------------------------------------------------------------------------------
   # Split message into user id, name, and message

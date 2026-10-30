@@ -3,6 +3,8 @@ require 'spec_helper'
 describe "XSS Protection" do
   
   describe MemversesController, type: :controller do
+    render_views
+
     before(:each) do
       @user = FactoryBot.create(:user)
       @user.confirm
@@ -10,7 +12,7 @@ describe "XSS Protection" do
     end
     
     describe "GET 'home'" do
-      it "properly stores devotion content that will be sanitized in the view" do
+      it "renders the devotion with its script tags stripped" do
         # Make sure user doesn't need quick start
         @user.update(translation: 'NIV')
         FactoryBot.create(:memverse, user: @user)
@@ -30,11 +32,10 @@ describe "XSS Protection" do
         # Verify the action completes successfully
         expect(response.status).to eq(200)
         
-        # Verify the devotion is assigned correctly
         expect(assigns(:dd)).to eq(devotion)
-        
-        # The actual XSS protection happens in the view via sanitize()
-        # This test confirms the controller passes the data correctly
+        expect(response.body).to include("Safe content")
+        expect(response.body).not_to include('<script>alert("XSS")</script>')
+        expect(response.body).not_to include('onerror=')
       end
     end
   end

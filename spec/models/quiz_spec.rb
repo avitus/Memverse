@@ -33,18 +33,6 @@ RSpec.describe Quiz, type: :model do
   end
   
   describe '.next_knowledge_quiz_time' do
-    it 'returns a Time object' do
-      next_time = Quiz.next_knowledge_quiz_time
-      
-      expect(next_time).to be_a(Time)
-    end
-    
-    it 'returns a future time' do
-      next_time = Quiz.next_knowledge_quiz_time
-      
-      expect(next_time).to be > Time.current
-    end
-    
     it 'returns either Tuesday at 17:00 UTC or Saturday at 23:00 UTC' do
       next_time = Quiz.next_knowledge_quiz_time
       

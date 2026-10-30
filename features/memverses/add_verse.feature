@@ -32,4 +32,12 @@ Feature: Add a verse
       Then I should see "Do not fret"
       And I should see "they will soon wither"
       And I should see "Trust in the Lord"
-
+@javascript
+Scenario: User adds a verse from the search results
+  When I search for "Psalm 37:4"
+  Then I should see "Delight yourself in the Lord"
+  When I click inside "#quick-start-add"
+  Then the verse should be marked as added
+  When I go to the manage verses page
+  Then I should see "Psalm 37:4"
+  And I should see "Learning"

@@ -101,11 +101,6 @@ Given('I have upvoted {string}') do |topic_title|
   @current_user.likes topic
 end
 
-Given('I have downvoted {string}') do |topic_title|
-  topic = Thredded::Topic.find_by!(title: topic_title)
-  @current_user.dislikes topic
-end
-
 Given('I am logged in as {string}') do |username|
   @current_user = FactoryBot.create(:user, login: username, password: 'password123', password_confirmation: 'password123')
   @current_user.confirm # Ensure user is confirmed for Devise

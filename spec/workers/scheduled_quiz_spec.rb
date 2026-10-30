@@ -132,6 +132,72 @@ describe ScheduledQuiz do
       end
     end
 
+    context 'when an admin requests a quiz by id' do
+      let(:uberverse) { Uberverse.create!(book: "John", chapter: 1, versenum: 1) }
+      let!(:quiz_question) do
+        QuizQuestion.create!(quiz: quiz, question_no: 1, question_type: "mcq", mc_question: "Test question?",
+                             mc_option_a: "A", mc_option_b: "B", mc_option_c: "C", mc_option_d: "D", mc_answer: "A",
+                             supporting_ref: uberverse, times_answered: 10, perc_correct: 50)
+      end
+
+      before { allow(Sidekiq.logger).to receive(:warn) }
+
+      it 'runs that quiz even when its start time has already passed, without searching the window' do
+        quiz.update!(start_time: 2.minutes.ago.utc)
+        expect(worker).not_to receive(:find_scheduled_quiz)
+        expect(worker).to receive(:execute_quiz).with(quiz, "quiz-#{quiz.id}", anything)
+
+        worker.perform(quiz.id)
+      end
+
+      it 'keeps the quiz lock until the run is cleaned up, so a second job for the same quiz is rejected' do
+        lock_key = QuizSession.new(quiz.id).send(:lock_key)
+        lock_taken = false
+        allow($redis).to receive(:set) do |key, *_args, **opts|
+          if key == lock_key && opts[:nx]
+            taken_before = lock_taken
+            lock_taken = true
+            !taken_before
+          else
+            true
+          end
+        end
+        allow($redis).to receive(:exists) { |key| key == lock_key && lock_taken ? 1 : 0 }
+        allow($redis).to receive(:del) do |*keys|
+          lock_taken = false if keys.include?(lock_key)
+          keys.size
+        end
+
+        first_run = described_class.new
+        allow(first_run).to receive(:sleep)
+        released_during_run = nil
+        allow(first_run).to receive(:execute_quiz) do
+          released_during_run = !lock_taken
+          # a duplicate job arriving mid-run must neither run the quiz nor drop the lock
+          second_run = described_class.new
+          expect(second_run).not_to receive(:execute_quiz)
+          second_run.perform(quiz.id)
+          expect(lock_taken).to be(true)
+        end
+
+        first_run.perform(quiz.id)
+
+        expect(released_during_run).to be(false)
+        expect(lock_taken).to be(false) # cleanup_quiz_resources released it after the run
+      end
+
+      it 'does nothing for an id that does not exist' do
+        expect(worker).not_to receive(:execute_quiz)
+        worker.perform(quiz.id + 1000)
+      end
+
+      it 'leaves the knowledge quiz to KnowledgeQuiz' do
+        knowledge_quiz = Quiz.create!(id: 1, name: "Knowledge", user: user, start_time: 1.minute.from_now.utc)
+        expect(worker).not_to receive(:execute_quiz)
+        worker.perform(knowledge_quiz.id)
+      end
+    end
+
     context 'when valid quiz is found with questions' do
       let(:uberverse) { Uberverse.create!(book: "John", chapter: 1, versenum: 1) }
       let(:quiz_question) do

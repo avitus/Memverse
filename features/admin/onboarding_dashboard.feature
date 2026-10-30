@@ -67,7 +67,6 @@ Feature: Admin Onboarding Dashboard
     And I click on "User Onboarding"
     And there are unengaged users who need reminders
     When I follow "Email Unengaged"
-    And I confirm the action
     Then reminder emails should be sent to unengaged users
 
   Scenario: Accessing admin dashboard as non-admin

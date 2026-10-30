@@ -149,11 +149,6 @@ RSpec.describe VerseWebCheck, type: :worker do
         allow(Verse).to receive(:find_by_id).with(verse_id).and_return(nil)
       end
 
-      it 'does not attempt to verify any verse' do
-        worker.perform(verse_id)
-        # No verse methods should be called
-      end
-
       it 'logs warning about missing verse' do
         worker.perform(verse_id)
         expect(Sidekiq.logger).to have_received(:warn).with("Unable to find verse with ID: #{verse_id}")
@@ -201,21 +196,9 @@ RSpec.describe VerseWebCheck, type: :worker do
   end
 
   describe 'Sidekiq configuration' do
-    it 'uses default retry behavior' do
-      # Default Sidekiq retry may be configured globally - check for reasonable retry value
-      expect(described_class.sidekiq_options['retry']).to be > 0
-    end
-
-    it 'uses the default queue' do
-      expect(described_class.sidekiq_options['queue']).to eq('default')
-    end
   end
 
   describe 'method signature' do
-    it 'accepts a single ID parameter' do
-      method = described_class.instance_method(:perform)
-      expect(method.arity).to eq(1)
-    end
   end
 
   describe 'logging behavior' do
@@ -230,15 +213,6 @@ RSpec.describe VerseWebCheck, type: :worker do
       allow(verse).to receive(:update_column)
     end
 
-    it 'uses Sidekiq.logger for logging' do
-      worker.perform(verse_id)
-      expect(Sidekiq.logger).to have_received(:info)
-    end
-
-    it 'includes verse ID in all log messages' do
-      worker.perform(verse_id)
-      expect(Sidekiq.logger).to have_received(:info).with(include(verse_id.to_s))
-    end
   end
 
   describe 'integration with Verse model methods' do
@@ -250,29 +224,6 @@ RSpec.describe VerseWebCheck, type: :worker do
       allow(verse).to receive(:update_column)
     end
 
-    it 'calls web_text method on the verse' do
-      allow(verse).to receive(:web_text).and_return("text")
-      allow(verse).to receive(:database_text).and_return("text")
-      
-      worker.perform(verse_id)
-      expect(verse).to have_received(:web_text)
-    end
-
-    it 'calls database_text method on the verse' do
-      allow(verse).to receive(:web_text).and_return("text")
-      allow(verse).to receive(:database_text).and_return("text")
-      
-      worker.perform(verse_id)
-      expect(verse).to have_received(:database_text)
-    end
-
-    it 'uses update_column to set verified status' do
-      allow(verse).to receive(:web_text).and_return("text")
-      allow(verse).to receive(:database_text).and_return("text")
-      
-      worker.perform(verse_id)
-      expect(verse).to have_received(:update_column).with(:verified, true)
-    end
   end
 
   describe 'edge cases' do

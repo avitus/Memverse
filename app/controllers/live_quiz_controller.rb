@@ -76,21 +76,6 @@ class LiveQuizController < ApplicationController
   end
 
   #-----------------------------------------------------------------------------------------------------------
-  # Parse questions for quiz presentation
-  #-----------------------------------------------------------------------------------------------------------
-  def parse_quiz_question(num, type, passage)
-    return "#{num}: #{passage} (#{type.capitalize})"
-  end
-
-  #-----------------------------------------------------------------------------------------------------------
-  # Select channel
-  #-----------------------------------------------------------------------------------------------------------
-  def select_channel(receiver)
-    puts "#{receiver}"
-    return "/live_quiz#{receiver}"
-  end
-
-  #-----------------------------------------------------------------------------------------------------------
   # This method receive scores for each participant
   #-----------------------------------------------------------------------------------------------------------
   def record_score
@@ -259,6 +244,20 @@ class LiveQuizController < ApplicationController
   end
 
   private
+
+  #-----------------------------------------------------------------------------------------------------------
+  # Parse questions for quiz presentation
+  #-----------------------------------------------------------------------------------------------------------
+  def parse_quiz_question(num, type, passage)
+    return "#{num}: #{passage} (#{type.capitalize})"
+  end
+
+  #-----------------------------------------------------------------------------------------------------------
+  # Select channel
+  #-----------------------------------------------------------------------------------------------------------
+  def select_channel(receiver)
+    return "/live_quiz#{receiver}"
+  end
 
   def calculate_quiz_state(quiz)
     quiz_session = QuizSession.new(quiz.id)

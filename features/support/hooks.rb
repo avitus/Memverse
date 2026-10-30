@@ -1,8 +1,3 @@
-AfterStep('@pause') do
-  print "Press Return to continue ..."
-  STDIN.getc
-end
-
 # Email handling for JavaScript tests
 Before('@javascript') do
   # Enable cached delivery for JavaScript scenarios to share emails between processes

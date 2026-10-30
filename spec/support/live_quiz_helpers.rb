@@ -3,34 +3,6 @@
 # Helper module for live quiz feature tests
 # Provides reusable methods for setting up and testing live quiz functionality
 module LiveQuizHelpers
-  # Set up a complete quiz ready for live participation
-  # @param quiz [Quiz] The quiz to set up
-  # @param options [Hash] Options for quiz setup
-  # @option options [Integer] :quiz_length Quiz duration in seconds (default: 1200)
-  # @option options [Time] :start_time Quiz start time (default: 1.minute.ago)
-  # @option options [Integer] :question_count Number of questions to create (default: 1)
-  def setup_complete_quiz(quiz, options = {})
-    quiz_length = options[:quiz_length] || 1200
-    start_time = options[:start_time] || 1.minute.ago
-    question_count = options[:question_count] || 1
-
-    # Update quiz attributes to make it "ready"
-    quiz.update!(
-      quiz_length: quiz_length,
-      start_time: start_time
-    )
-
-    # Create quiz questions if needed
-    question_count.times do |i|
-      FactoryBot.create(:quiz_question,
-        quiz: quiz,
-        question_no: i + 1
-      )
-    end
-
-    quiz
-  end
-
   # Set up quiz session in Redis with proper synchronization
   # @param quiz_id [Integer] The quiz ID
   # @param status [String] The status to set (default: "in_progress")
@@ -159,33 +131,6 @@ module LiveQuizHelpers
     expect(js_vars['memverseUserLogin']).to eq(expected_login)
   end
 
-  # Check chat configuration for legacy view
-  # @param expected_name [String] Expected user name
-  def verify_legacy_chat_config(expected_name:)
-    within '#chat_window' do
-      sender_value = find('#sender', visible: false).value
-      expect(sender_value).to eq(expected_name)
-    end
-  end
-
-  # Debug helper to print current quiz state
-  # @param quiz [Quiz] The quiz to debug
-  def debug_quiz_state(quiz)
-    puts "=== Quiz State Debug ==="
-    puts "Quiz ID: #{quiz.id}"
-    puts "Quiz Length: #{quiz.quiz_length}"
-    puts "Start Time: #{quiz.start_time}"
-    puts "Open?: #{quiz.open?}"
-    puts "In Progress?: #{quiz.in_progress?}"
-
-    session = QuizSession.new(quiz.id)
-    puts "Session Status: #{session.get_quiz_status}"
-    puts "Session In Progress?: #{session.quiz_in_progress?}"
-
-    puts "Current Path: #{current_path}"
-    puts "Page Title: #{page.title}"
-    puts "==================="
-  end
 end
 
 # Include the helper in RSpec configuration

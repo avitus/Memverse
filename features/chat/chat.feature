@@ -19,18 +19,6 @@ Feature: Chat functionality
     When I go to the chat page
     Then I should be redirected to the sign in page
 
-  Scenario: User can access specific chat channel
-    Given I am signed in as "testuser"
-    When I visit the chat page for channel 5
-    Then I should see "Memverse Chat"
-    And the page should load the correct channel
-
-  Scenario: Sending messages without authentication is treated as banned user
-    Given I am not signed in
-    When I try to send a chat message via AJAX
-    Then I should get a 200 response
-    And the message should not be sent because user 0 is banned
-
   Scenario: Admin can toggle channel status
     Given I am signed in as "admin"
     And the admin has quiz management permissions
@@ -39,7 +27,7 @@ Feature: Chat functionality
     And I should receive a JSON response with the new status
 
   Scenario: Admin can ban users from chat
-    Given I am signed in as "admin" 
+    Given I am signed in as "admin"
     And the admin has quiz management permissions
     And user "testuser" exists
     And user "testuser" is not banned from chat
@@ -49,7 +37,7 @@ Feature: Chat functionality
 
   Scenario: Admin can unban users from chat
     Given I am signed in as "admin"
-    And the admin has quiz management permissions  
+    And the admin has quiz management permissions
     And user "testuser" is banned from chat
     When I unban user "testuser" from chat
     Then user "testuser" should not be banned from chat
@@ -66,17 +54,3 @@ Feature: Chat functionality
     Then the page should contain my user ID in JavaScript variables
     And the page should contain my username in JavaScript variables
     And the page should contain my avatar URL in JavaScript variables
-
-  Scenario: Chat channel status affects message sending
-    Given I am signed in as "testuser"
-    And the chat channel is closed
-    When I try to send a message "Hello everyone"
-    Then the message should not be published to PubNub
-    And the system should log that the channel is closed
-
-  Scenario: Banned users cannot send messages
-    Given I am signed in as "testuser"
-    And user "testuser" is banned from chat
-    When I try to send a message "Hello everyone" 
-    Then the message should not be published to PubNub
-    And the system should log that the user is banned

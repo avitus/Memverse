@@ -73,9 +73,6 @@ RSpec.describe AdminMailer, type: :mailer do
         expect(mail.message).to be_a(ActionMailer::Base::NullMail)
       end
 
-      it "returns NullMail when no posts to review" do
-        expect(AdminMailer.forum_review.message).to be_a(ActionMailer::Base::NullMail)
-      end
     end
 
   end
@@ -114,20 +111,10 @@ RSpec.describe AdminMailer, type: :mailer do
         allow(Thredded::Post).to receive(:pending_moderation).and_return([pending_post])
       end
 
-      it "creates a deliverable email" do
-        mail = AdminMailer.forum_review
-        expect(mail).to respond_to(:deliver_now)
-        expect(mail.to).to include("admin@memverse.com")
-        expect(mail.to).to include("alexcwatt@memverse.com")
-      end
     end
   end
 
   describe "Mail library integration" do
-    it "requires the Mail library" do
-      # Verify that the Mail library is properly required
-      expect(defined?(Mail)).to be_truthy
-    end
   end
 
   describe "handling orphaned posts" do

@@ -79,6 +79,5 @@ namespace :deploy do
   # Sphinx index/restart hooks are defined per stage: martial-eagle (production) runs searchd under
   # systemd (memverse:searchd:restart), fish-eagle uses Thinking Sphinx's detached start.
   after :finishing,   'deploy:cleanup'
-  # after :finished,    'airbrake:deploy'
 
 end

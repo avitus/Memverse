@@ -83,6 +83,15 @@ RSpec.describe ThreddedVotesController, type: :controller do
         expect(json_response["score"]).to eq(1)
         expect(json_response["voted"]).to eq("up")
       end
+
+      it "allows voting on a locked topic" do
+        topic.update!(locked: true)
+
+        post :upvote, params: { id: topic.id }, format: :json
+
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body)["score"]).to eq(1)
+      end
     end
   end
   

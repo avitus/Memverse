@@ -255,15 +255,6 @@ RSpec.describe ChatChannel, type: :model do
       test_channel.status
     end
 
-    it 'handles Redis connection errors gracefully' do
-      allow($redis).to receive(:hmget).and_raise(Redis::ConnectionError)
-      begin
-        test_channel.status
-      rescue Redis::ConnectionError
-        # Expected behavior - Redis error propagates
-        expect(true).to be true
-      end
-    end
   end
 
   describe 'PubNub integration' do

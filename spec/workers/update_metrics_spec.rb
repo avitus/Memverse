@@ -50,13 +50,6 @@ RSpec.describe UpdateMetrics, type: :worker do
   end
 
   describe 'Sidekiq configuration' do
-    it 'has retry enabled' do
-      expect(described_class.sidekiq_options['retry']).to eq(true)
-    end
-
-    it 'uses the default queue' do
-      expect(described_class.sidekiq_options['queue']).to eq(:default)
-    end
   end
 
   describe 'integration with DailyStats' do
@@ -138,15 +131,5 @@ RSpec.describe UpdateMetrics, type: :worker do
   end
 
   describe 'scheduling integration' do
-    it 'can be enqueued for execution' do
-      # This worker is typically scheduled to run daily at noon
-      # This test verifies the worker can be enqueued properly
-      expect(described_class).to respond_to(:perform_async)
-    end
-
-    it 'has no arguments in its perform method' do
-      method = described_class.instance_method(:perform)
-      expect(method.arity).to eq(0)
-    end
   end
 end

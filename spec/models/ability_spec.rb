@@ -5,14 +5,6 @@ describe Ability do
   let(:ability) { Ability.new(user) }
 
   describe "initialization" do
-    it "initializes with a user" do
-      expect(ability).to be_an_instance_of(Ability)
-    end
-
-    it "handles nil user as guest user" do
-      guest_ability = Ability.new(nil)
-      expect(guest_ability).to be_an_instance_of(Ability)
-    end
   end
 
   describe "admin permissions" do

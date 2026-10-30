@@ -2,6 +2,7 @@
 class VersesController < ApplicationController
 
   before_action :authenticate_user!, :except => [:index, :show]
+  before_action :require_verse_editor, :only => [:set_verse_text, :check_verse]
   skip_before_action :verify_authenticity_token, :only => [:set_verse_text, :check_verse]  # ALV: attempt to stop redirects to login page when setting verse text
 
   add_breadcrumb "Home", :root_path
@@ -374,4 +375,10 @@ class VersesController < ApplicationController
   end
   
 
+  private
+
+  # Editing or verifying verse text is a scribe/admin task (Ability: can :manage, Verse).
+  def require_verse_editor
+    head :forbidden unless can?(:manage, Verse)
+  end
 end

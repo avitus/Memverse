@@ -151,6 +151,12 @@ class Api::V1::MemversesController < Api::V1::ApiController
           key :'$ref', :MemverseResponse
         end
       end
+      response 404 do
+        key :description, 'Memverse not found for current user'
+        schema do
+          key :'$ref', :ErrorModel
+        end
+      end
       response 401 do
         key :description, 'Unauthorized response'
         schema do
@@ -200,6 +206,12 @@ class Api::V1::MemversesController < Api::V1::ApiController
           key :'$ref', :MemverseResponse
         end
       end
+      response 404 do
+        key :description, 'Memverse not found for current user'
+        schema do
+          key :'$ref', :ErrorModel
+        end
+      end
       response 401 do
         key :description, 'Unauthorized response'
         schema do
@@ -235,6 +247,12 @@ class Api::V1::MemversesController < Api::V1::ApiController
           key :'$ref', :NoContentResponse
         end
       end
+      response 404 do
+        key :description, 'Memverse not found for current user'
+        schema do
+          key :'$ref', :ErrorModel
+        end
+      end
       response 401 do
         key :description, 'Unauthorized response'
         schema do
@@ -257,6 +275,10 @@ class Api::V1::MemversesController < Api::V1::ApiController
   # Scopes
   before_action only: [:index, :show, :update, :create, :destroy] do
     doorkeeper_authorize! :admin, :write, :read, :public  # Allow all scopes access for now
+  end
+
+  rescue_from ActiveRecord::RecordNotFound do
+    error! :not_found, metadata: {reason: 'Could not find memverse'}
   end
 
   # The list of verses is paginated for 5 minutes, the verse itself is cached

@@ -16,7 +16,6 @@ MemverseApp::Application.routes.draw do
     end
   end
   mount Ckeditor::Engine      => '/ckeditor'
-  mount JasmineRails::Engine  => '/specs' if defined?(JasmineRails)
 
   # Admin redirect - available to all users, authentication handled in controller
   get '/admin', to: 'admin/dashboard#index'
@@ -76,11 +75,9 @@ MemverseApp::Application.routes.draw do
   # Oauth
   devise_for :users, :controllers => { 
     :omniauth_callbacks => "omniauth_callbacks",
-    :confirmations => "users/confirmations",
     :registrations => "users/registrations"
   }
 
-  # Should be able to remove this route once Forem allows configurable sign_in path
   get '/users/sign_in', :to => "devise/sessions#new", :as => "sign_in"
 
   # Primary resource routes
@@ -165,7 +162,6 @@ MemverseApp::Application.routes.draw do
       end
       resources :memverses
       resources :passages do
-        get 'due', :on => :collection
         resources :memverses
       end
       resources :quizzes do
@@ -367,8 +363,6 @@ MemverseApp::Application.routes.draw do
 
   # Routes for live quiz
   get  '/live_quiz'                 => 'live_quiz#live_quiz',             :as => 'live_quiz'     # Main quiz URL
-  get  '/live_quiz/channel1'        => 'live_quiz#channel1'                                      # Chat channel
-  get  '/live_quiz/scoreboard'      => 'live_quiz#scoreboard'                                    # Scoreboard for quiz
   get  '/live_quiz/till_start/:id'  => 'live_quiz#till_start',            :defaults => { :format => 'json' }
   get  '/live_quiz/quiz_state/:id'  => 'live_quiz#quiz_state',            :defaults => { :format => 'json' }  # New unified state endpoint
   get  '/live_quiz/:quiz'           => 'live_quiz#live_quiz'
@@ -385,7 +379,6 @@ MemverseApp::Application.routes.draw do
   # Legacy routes for pages that no longer exist but have incoming links
   get '/starter_pack'               => 'memverses#home'     # Retired in 2012
   get '/memverses/starter_pack'     => 'memverses#home'     # Visit from search bot causing errors
-  get '/chat/channel1'              => 'live_quiz#channel1' # Old chat route
   get '/forums/:messageboard/topics/:topic' => redirect('/forum/%{messageboard}/%{topic}')
 
   # ---------------------------------------------------------------------------------------------------------
@@ -401,12 +394,6 @@ MemverseApp::Application.routes.draw do
   
   # Church routes
   get '/church/:id' => 'church#show', as: 'show_church'
-  
-  # Sermons management  
-  resources :sermons
-  
-  # Uberverses routes
-  resources :uberverses
   
   # Additional home controller routes
   get '/quick_start' => 'home#quick_start', as: 'quick_start'

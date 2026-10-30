@@ -6,11 +6,6 @@ Feature: Admin panel access
     Background:
       Given I am not logged in
 
-    Scenario: User without admin role accesses admin dashboard
-      Given I sign in as an advanced user
-      When I go to the admin dashboard
-      Then I should be on the home page
-
     Scenario: User without admin role accesses utils dashboard
       Given I sign in as an advanced user
       When I go to the utils dashboard

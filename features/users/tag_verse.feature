@@ -17,14 +17,3 @@ Feature: Tag Verse
     When I create a tag "Fruit of the Spirit" for memverse #<memverse_id>
     Then the tag "Fruit of the Spirit" should exist for memverse #<memverse_id>
     Then the user tag table should contain "Fruit Of The Spirit"
-
-  @javascript @tag
-  Scenario: User tags with autocomplete tag
-    Given I sign in as the current user
-    And I visit the memverse page with id <memverse_id>
-    And the tag "Fruit Of The Spirit" exists
-    When I visit the memverse page with id <memverse_id>
-    Then I should see the verse text
-    When I create a tag "Fruit of the Spirit" for memverse #<memverse_id>
-    Then the tag "Fruit of the Spirit" should exist for memverse #<memverse_id>
-    Then the user tag table should contain "Fruit Of The Spirit"

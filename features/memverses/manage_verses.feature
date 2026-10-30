@@ -65,7 +65,9 @@ Feature: Manage verses
   Scenario: User tries to show verses without selecting any
     When I go to the manage verses page
     And I press "Show Selected"
-    Then I should see an alert with "No verses are selected"
+    Then I should see an alert with "You should first select the verses using the check boxes on the left."
+    And I should be on the manage verses page
+    And I should see "John 3:16"
 
   @javascript
   Scenario: User filters verses

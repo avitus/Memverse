@@ -48,20 +48,24 @@ class Admin::QuizDashboardsController < ApplicationController
     end
   end
   
+  # Hands the quiz to Sidekiq instead of running it inside this request (a quiz lasts up to
+  # twenty minutes). The custom quiz is passed by id, so the worker runs that quiz whenever it
+  # is dequeued; its start_time is moved just ahead of now so the page shows it as imminent.
   def start
-    if @quiz.start_time > Time.current
-      # Update start time to now
-      @quiz.update!(start_time: Time.current)
+    quiz_session = QuizSession.new(@quiz.id)
+    if quiz_session.quiz_locked? || quiz_session.quiz_in_progress?
+      flash[:error] = "Quiz '#{@quiz.name}' is already running"
+      return redirect_to admin_quiz_dashboard_path(@quiz)
     end
-    
-    # Trigger quiz worker
+
     if @quiz.id == 1
-      KnowledgeQuiz.new.perform
+      KnowledgeQuiz.perform_async
     else
-      ScheduledQuiz.new.perform
+      @quiz.update!(start_time: 30.seconds.from_now)
+      ScheduledQuiz.perform_async(@quiz.id)
     end
-    
-    flash[:success] = "Quiz '#{@quiz.name}' has been started manually"
+
+    flash[:success] = "Quiz '#{@quiz.name}' has been handed to the quiz worker and starts within a minute"
     redirect_to admin_quiz_dashboard_path(@quiz)
   rescue => e
     flash[:error] = "Failed to start quiz: #{e.message}"

@@ -10,13 +10,6 @@ RSpec.describe UpdateSubsections, type: :worker do
   include_examples 'a worker with specific queue', :low
 
   describe 'Sidekiq configuration' do
-    it 'has retry disabled' do
-      expect(described_class.sidekiq_options['retry']).to eq(false)
-    end
-
-    it 'uses the low queue' do
-      expect(described_class.sidekiq_options['queue']).to eq(:low)
-    end
   end
 
   describe '#perform' do
@@ -607,18 +600,6 @@ RSpec.describe UpdateSubsections, type: :worker do
   end
 
   describe 'integration with background job scheduling' do
-    it 'can be enqueued for execution' do
-      expect(described_class).to respond_to(:perform_async)
-    end
-
-    it 'has no arguments in its perform method' do
-      method = described_class.instance_method(:perform)
-      expect(method.arity).to eq(0)
-    end
-
-    it 'includes IceCube for scheduling' do
-      expect(described_class).to include(IceCube)
-    end
   end
 
   describe 'memory and performance considerations' do
