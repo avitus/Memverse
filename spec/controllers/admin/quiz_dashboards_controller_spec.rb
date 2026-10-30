@@ -20,7 +20,12 @@ RSpec.describe Admin::QuizDashboardsController, type: :controller do
     end
 
     context 'as an admin' do
-      before { sign_in admin_user }
+      before do
+        sign_in admin_user
+        # Redis is shared with the worker specs, which can leave a quiz lock or status behind
+        allow_any_instance_of(QuizSession).to receive(:quiz_locked?).and_return(false)
+        allow_any_instance_of(QuizSession).to receive(:quiz_in_progress?).and_return(false)
+      end
 
       it 'moves a custom quiz into the worker\'s one-minute window and enqueues ScheduledQuiz' do
         post :start, params: { id: quiz.id }
