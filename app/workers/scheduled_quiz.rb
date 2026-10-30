@@ -7,7 +7,9 @@ class ScheduledQuiz
   # Redis lock key for preventing concurrent quiz execution
   LOCK_TIMEOUT = 3600 # 1 hour in seconds
 
-  def perform
+  # @param quiz_id [Integer, nil] run this quiz now (admin "Start"), whatever its start_time;
+  #   without it the worker looks for a quiz whose start_time falls in the next minute
+  def perform(quiz_id = nil)
     worker_start_time = Time.current.utc
     Sidekiq.logger.info "===> ScheduledQuiz Worker starting at #{worker_start_time}"
     Sidekiq.logger.info "===> Process ID: #{Process.pid}, Thread: #{Thread.current.object_id}"
@@ -16,8 +18,12 @@ class ScheduledQuiz
       # ========================================================================
       # Try to find quiz starting in next minute, else return false
       # ========================================================================
-      Sidekiq.logger.info "===> Searching for scheduled quizzes..."
-      quiz = find_scheduled_quiz
+      quiz = if quiz_id
+        find_requested_quiz(quiz_id)
+      else
+        Sidekiq.logger.info "===> Searching for scheduled quizzes..."
+        find_scheduled_quiz
+      end
       
       if quiz.nil?
         Sidekiq.logger.info "===> No quiz found. Worker exiting."
@@ -84,6 +90,25 @@ class ScheduledQuiz
   # Quiz finding and validation
   # ========================================================================
   
+  # The quiz an admin asked to start: no time window, so a late dequeue cannot lose it
+  def find_requested_quiz(quiz_id)
+    quiz = Quiz.find_by(id: quiz_id)
+    if quiz.nil?
+      Sidekiq.logger.warn "===> Quiz ##{quiz_id} was requested but does not exist"
+      return nil
+    end
+    if quiz.id == 1
+      Sidekiq.logger.warn "===> Quiz #1 is the knowledge quiz, handled by KnowledgeQuiz"
+      return nil
+    end
+    if quiz.quiz_questions.count == 0
+      Sidekiq.logger.warn "===> Quiz ##{quiz.id} has no questions, skipping"
+      return nil
+    end
+    Sidekiq.logger.info "===> Running requested quiz ##{quiz.id} '#{quiz.name}' (start_time #{quiz.start_time})"
+    quiz
+  end
+
   def find_scheduled_quiz
     Sidekiq.logger.info "===> Looking for a scheduled quiz"
 

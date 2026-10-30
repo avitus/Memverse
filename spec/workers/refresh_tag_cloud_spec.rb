@@ -61,9 +61,10 @@ RSpec.describe RefreshTagCloud, type: :worker do
 
       it 'calls update_tags on all verses' do
         # Mock update_tags method on each verse
-        allow(verse1).to receive(:update_tags)
-        allow(verse2).to receive(:update_tags)
-        allow(verse3).to receive(:update_tags)
+        # update_tags returns save's result, so a saved verse answers true
+        allow(verse1).to receive(:update_tags).and_return(true)
+        allow(verse2).to receive(:update_tags).and_return(true)
+        allow(verse3).to receive(:update_tags).and_return(true)
 
         # Mock Verse.find_each to yield our test verses
         allow(Verse).to receive(:find_each) do |&block|
@@ -162,6 +163,21 @@ RSpec.describe RefreshTagCloud, type: :worker do
 
         expect { worker.perform }.to raise_error(StandardError, 'Tag update failed')
         expect(taggings.count).to eq(2)
+      end
+
+      it 'skips a verse that does not save, warns about it, and still rebuilds the others' do
+        verse1 = FactoryBot.create(:verse, book: 'John', chapter: 3, versenum: 16)
+        verse2 = FactoryBot.create(:verse, book: 'Romans', chapter: 8, versenum: 28)
+
+        allow(verse1).to receive(:update_tags).and_return(false) # Verse#update_tags returns save's false
+        allow(verse2).to receive(:update_tags).and_return(true)
+        allow(Verse).to receive(:find_each) do |&block|
+          [verse1, verse2].each(&block)
+        end
+
+        expect(Sidekiq.logger).to receive(:warn).with(/skipped 1 verse\(s\) that did not save: #{verse1.id}/)
+        expect { worker.perform }.not_to raise_error
+        expect(verse2).to have_received(:update_tags)
       end
 
       it 'handles empty verse collection gracefully' do

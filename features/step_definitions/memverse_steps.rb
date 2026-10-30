@@ -1,4 +1,4 @@
-Given(/^the user named "(.*?)" has a memverse$/) do |name|
+Given(/^the user named "(.*?)" has a memverse$/) do |_name|
   # Use the current user that was created in the background
   user = User.find_by(email: @current_user_email)
   if user.nil?

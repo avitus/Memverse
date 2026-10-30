@@ -27,7 +27,7 @@ RSpec.describe Admin::QuizDashboardsController, type: :controller do
 
         expect(response).to redirect_to(admin_quiz_dashboard_path(quiz))
         expect(quiz.reload.start_time).to be_between(Time.current, 1.minute.from_now)
-        expect(ScheduledQuiz.jobs.size).to eq(1)
+        expect(ScheduledQuiz.jobs.map { |job| job['args'] }).to eq([[quiz.id]])
         expect(KnowledgeQuiz.jobs).to be_empty
       end
 

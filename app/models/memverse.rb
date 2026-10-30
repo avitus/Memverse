@@ -590,7 +590,7 @@ class Memverse < ApplicationRecord
 
       # Find the first verse that is overdue or hasn't been tested within the minimum test frequency window
       # TODO: do we want to return a verse that was tested today as 'due' ?
-      while ((x.inactive?) || ((x.next_test > Date.today + slack) && (Date.today - x.last_tested < min_test_freq))) and x.next_verse
+      while ((x.inactive?) || ((x.next_test > Date.today + slack) && (Date.today - x.last_tested < min_test_freq))) && x.next_verse
         x = Memverse.find(x.next_verse)
       end
 
@@ -608,7 +608,7 @@ class Memverse < ApplicationRecord
     else
       x = Memverse.find(self.next_verse)
 
-      while ((x.inactive?) || (x.next_test > Date.today)) and x.next_verse
+      while ((x.inactive?) || (x.next_test > Date.today)) && x.next_verse
         x = Memverse.find(x.next_verse)
       end
 
@@ -655,7 +655,7 @@ class Memverse < ApplicationRecord
 
       x = Memverse.find(self.next_verse)
 
-      while ((x.status == 'Pending') || ((x.next_test > Date.today + slack) && (Date.today - x.last_tested < min_test_freq))) and x.next_verse
+      while ((x.status == 'Pending') || ((x.next_test > Date.today + slack) && (Date.today - x.last_tested < min_test_freq))) && x.next_verse
         x = Memverse.find(x.next_verse)
       end
 
@@ -761,7 +761,7 @@ class Memverse < ApplicationRecord
 
   # Find a verse that is due but not this one
   def another_due_verse
-    mv = user.memverses.where("id != ?", self.id).active.order("next_test ASC").first
+    mv = user.memverses.where.not(id: self.id).active.order("next_test ASC").first
 
     if mv && mv.due?
       return mv.first_verse_due_in_sequence
@@ -805,7 +805,7 @@ class Memverse < ApplicationRecord
     # Check for 2 conditions
     #   previous verse is in db
     #   and prev_verse is in user's list of memory verses
-    if (prev_vs = Verse.exists_in_db(book, chapter, verse-1, transl)) && prev_mv = self.user.has_verse_id?(prev_vs)
+    if (prev_vs = Verse.exists_in_db(book, chapter, verse-1, transl)) && (prev_mv = self.user.has_verse_id?(prev_vs))
       return prev_mv.id
     else
       return nil
@@ -825,7 +825,7 @@ class Memverse < ApplicationRecord
     # Check for 2 conditions
     #   next verse is in db
     #   and next verse is in user's list of memory verses
-    if (next_vs = Verse.exists_in_db(book, chapter, verse+1, transl)) && next_mv = self.user.has_verse_id?(next_vs)
+    if (next_vs = Verse.exists_in_db(book, chapter, verse+1, transl)) && (next_mv = self.user.has_verse_id?(next_vs))
       return next_mv.id
     else
       return nil
@@ -848,8 +848,8 @@ class Memverse < ApplicationRecord
     verse   = self.verse.versenum.to_i
     transl  = self.verse.translation
 
-    # TODO -- this has been hacked out ... check VERY CAREFULLY
-    while (prev_vs = Verse.exists_in_db(book, chapter, verse-1, transl)) and prev_mv = self.user.has_verse_id?(prev_vs)
+    # TODO: this has been hacked out ... check VERY CAREFULLY
+    while (prev_vs = Verse.exists_in_db(book, chapter, verse-1, transl)) && (prev_mv = self.user.has_verse_id?(prev_vs))
       verse = verse-1
       first_verse = prev_mv
     end
@@ -885,10 +885,6 @@ class Memverse < ApplicationRecord
     # Case 4 - Verse is new last verse of existing passage
     elsif prior_passage
       prior_passage.expand( self )
-
-    # Shouldn't ever arrive here
-    else
-
     end
 
   end
@@ -909,7 +905,7 @@ class Memverse < ApplicationRecord
 
         # Case 1 - Single verse passage (Note: the second condition accounts for cases where the passage length
         #          is incorrect but this is the last remaining verse)
-        if psg.length == 1 or psg.memverses.count == 1
+        if psg.length == 1 || psg.memverses.count == 1
 
           psg.destroy
 
@@ -968,7 +964,7 @@ class Memverse < ApplicationRecord
 
       end
 
-    end # of transaction
+    end
 
   end
 
