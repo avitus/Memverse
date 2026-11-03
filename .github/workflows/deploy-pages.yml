@@ -4,10 +4,6 @@ on:
   push:
     branches:
       - pwa
-    paths:
-      - "Memverse.Pwa/**"
-      - "Memverse.Core/**"
-      - ".github/workflows/deploy-pages.yml"
   workflow_dispatch:
 
 permissions:
