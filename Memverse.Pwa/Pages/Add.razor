@@ -1,0 +1,165 @@
+@page "/add"
+@inject MemverseState State
+@inject IOnlineOperations Online
+@inject NavigationManager Navigation
+
+<PageTitle>Add passage - Memverse</PageTitle>
+<div class="page-header">
+    <h1>Add passage</h1>
+</div>
+
+<div class="card add-card">
+    <div class="add-toolbar">
+        <button class="add-step @(model.SelectedBook is null ? "" : "selected")" @onclick="model.ChooseBook">
+            @(model.SelectedBook?.Abbreviation ?? "Book")
+        </button>
+        <button class="add-step @(model.SelectedChapter is null ? "" : "selected")" @onclick="model.ChooseChapter" disabled="@(!model.CanChooseChapter)">
+            @(model.SelectedChapter?.ToString() ?? "Chap")
+        </button>
+        <button class="add-action" @onclick="SelectAll" disabled="@(!model.SelectAllEnabled || model.Busy)">
+            Select All
+        </button>
+        <button class="add-action add-primary" @onclick="AddSelected" disabled="@(!model.CanAddSelectedVerses || model.Busy)">
+            Add Verses
+        </button>
+    </div>
+
+    @if (model.Busy)
+    {
+        <div class="add-progress" role="status">Loading...</div>
+    }
+    @if (!string.IsNullOrWhiteSpace(model.Error))
+    {
+        <p class="error" role="alert">@model.Error</p>
+    }
+
+    @if (model.Stage == AddVerseStage.ChooseBook)
+    {
+        <h2 class="add-prompt">Choose a book</h2>
+        <div class="add-choice-grid" aria-label="Choose a book">
+            @foreach (var book in model.Books)
+            {
+                <button class="add-choice" title="@book.Name" @onclick="() => SelectBook(book)">
+                    @book.Abbreviation
+                </button>
+            }
+        </div>
+    }
+    else if (model.Stage == AddVerseStage.ChooseChapter)
+    {
+        <h2 class="add-prompt">Choose a chapter</h2>
+        <div class="add-choice-grid" aria-label="Choose a chapter">
+            @foreach (var chapter in model.Chapters!)
+            {
+                <button class="add-choice" @onclick="() => SelectChapter(chapter)">
+                    @chapter
+                </button>
+            }
+        </div>
+    }
+    else if (!model.Busy && model.Verses?.Count > 0)
+    {
+        <div class="verse-picker">
+            @foreach (var verse in model.Verses)
+            {
+                var exists = model.Exists(verse);
+                <label class="check-row @(exists ? "disabled" : "")">
+                    <input type="checkbox"
+                           disabled="@exists"
+                           checked="@model.SelectedIds.Contains(verse.Id)"
+                           @onchange="args => Toggle(verse.Id, args)" />
+                    <span><strong>@verse.VerseNumber</strong> @verse.Text @(exists ? "(already added)" : "")</span>
+                </label>
+            }
+        </div>
+    }
+    else if (!model.Busy && model.ShowMissingVersesWarning)
+    {
+        <p class="empty">No results found.</p>
+    }
+
+    @if (model.HasMissingVerses)
+    {
+        <p class="add-missing">
+            Missing verses can be entered at
+            <a href="https://www.memverse.com/users/sign_in">www.memverse.com</a>.
+        </p>
+    }
+</div>
+
+@code {
+    private readonly AddVerseViewModel model = new();
+
+    protected override void OnInitialized() =>
+        model.Initialize(State.User, State.Verses);
+
+    private async Task SelectBook(Book book)
+    {
+        model.SelectedBook = book;
+        if (model.Stage == AddVerseStage.ChooseVerses)
+            await LoadChapter();
+    }
+
+    private async Task SelectChapter(int chapter)
+    {
+        model.SelectedChapter = chapter;
+        await LoadChapter();
+    }
+
+    private async Task LoadChapter()
+    {
+        if (State.AccessToken is null || model.SelectedBook is null ||
+            model.SelectedChapter is null)
+        {
+            model.SetError("Sign in before adding passages.");
+            return;
+        }
+
+        model.BeginLoading();
+        try
+        {
+            model.SetChapter(await Online.GetChapterAsync(
+                model.Translation!,
+                model.SelectedBook.Name,
+                model.SelectedChapter.Value));
+        }
+        catch (Exception exception) when (
+            exception is HttpRequestException or JsonException or InvalidOperationException)
+        {
+            model.SetError(
+                $"The chapter could not be loaded. Adding passages requires an online connection. {exception.Message}");
+        }
+    }
+
+    private void Toggle(long id, ChangeEventArgs args) =>
+        model.Toggle(id, args.Value is true);
+
+    private void SelectAll() => model.ToggleAll(true);
+
+    private async Task AddSelected()
+    {
+        if (State.AccessToken is null)
+            return;
+
+        var selected = model.BeginAdding();
+        var failures = new List<string>();
+        foreach (var verse in selected)
+        {
+            try
+            {
+                var added = await Online.AddMemverseAsync(verse);
+                model.Added(verse, added);
+            }
+            catch (Exception exception) when (
+                exception is HttpRequestException or JsonException or InvalidOperationException)
+            {
+                failures.Add(
+                    $"{model.SelectedBook!.Name} {verse.Chapter}:{verse.VerseNumber}: {exception.Message}");
+            }
+        }
+
+        model.CompleteAdding(failures);
+        if (model.Error is null)
+            Navigation.NavigateTo("passages");
+    }
+}

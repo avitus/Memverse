@@ -1,0 +1,75 @@
+@page "/authentication/login-callback"
+@inject PkceAuthenticationService Authentication
+@inject MemverseState State
+@inject NavigationManager Navigation
+@inject ITelemetryService Telemetry
+
+<PageTitle>Completing sign in - Memverse</PageTitle>
+<div class="auth-card card">
+    <p class="eyebrow">MEMVERSE</p>
+    <h1>Completing sign in</h1>
+    @if (errorMessage is null)
+    {
+        <p role="status">Downloading your Memverse account...</p>
+    }
+    else
+    {
+        <p class="error" role="alert">@errorMessage</p>
+        <a class="btn btn-primary" href="login">Return to sign in</a>
+    }
+</div>
+
+@code {
+    [SupplyParameterFromQuery(Name = "code")]
+    public string? Code { get; set; }
+
+    [SupplyParameterFromQuery(Name = "state")]
+    public string? StateValue { get; set; }
+
+    [SupplyParameterFromQuery(Name = "error")]
+    public string? OAuthError { get; set; }
+
+    [SupplyParameterFromQuery(Name = "error_description")]
+    public string? OAuthErrorDescription { get; set; }
+
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!string.IsNullOrWhiteSpace(OAuthError))
+        {
+            errorMessage = OAuthErrorDescription ??
+                "Memverse did not authorize this application.";
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(Code) ||
+            string.IsNullOrWhiteSpace(StateValue))
+        {
+            errorMessage = "The sign-in response was incomplete.";
+            return;
+        }
+
+        try
+        {
+            await Authentication.CompleteSignInAsync(Code, StateValue);
+            var destination = UserSetupPipeline.GetNextStep(
+                State.User,
+                State.AccessToken,
+                State.RefreshToken,
+                State.Verses);
+            Navigation.NavigateTo(
+                UserSetup.GetLandingRoute(destination),
+                replace: true);
+        }
+        catch (Exception exception) when (
+            exception is HttpRequestException or JsonException or
+            InvalidOperationException or JSException)
+        {
+            Telemetry.TrackException(exception);
+            errorMessage = exception is HttpRequestException
+                ? "Memverse could not complete sign-in. " + exception.Message
+                : exception.Message;
+        }
+    }
+}

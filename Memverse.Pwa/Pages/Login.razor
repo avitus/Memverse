@@ -1,0 +1,45 @@
+@page "/login"
+@inject PkceAuthenticationService Authentication
+
+<PageTitle>Sign in - Memverse</PageTitle>
+<div class="auth-card card">
+    <p class="eyebrow">MEMVERSE</p>
+    <h1>Redirecting to Memverse</h1>
+    @if (errorMessage is null)
+    {
+        <p role="status">Opening secure sign in...</p>
+    }
+    else
+    {
+        <p class="error" role="alert">@errorMessage</p>
+        <button class="btn btn-primary" @onclick="SignIn">
+            Try again
+        </button>
+    }
+</div>
+
+@code {
+    private string? errorMessage;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+            await SignIn();
+    }
+
+    private async Task SignIn()
+    {
+        errorMessage = null;
+        try
+        {
+            await Authentication.BeginSignInAsync();
+        }
+        catch (Exception exception) when (
+            exception is JSException or InvalidOperationException)
+        {
+            errorMessage =
+                "Secure sign-in could not be started. " + exception.Message;
+            StateHasChanged();
+        }
+    }
+}

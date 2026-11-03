@@ -1,0 +1,68 @@
+@page "/settings"
+@inject MemverseState State
+@inject IOfflineOperations Offline
+@inject IOnlineOperations Online
+@inject ITelemetryService Telemetry
+@inject NavigationManager Navigation
+
+<PageTitle>Settings - Memverse</PageTitle>
+<div class="page-header"><h1>Settings</h1></div>
+<div class="card form-card">
+    <label>Default translation</label>
+    <select class="form-control" @bind="model.Translation">
+        @foreach (var language in model.Languages)
+        {
+            <optgroup label="@language.Name">
+                @foreach (var option in language.Translations)
+                { <option value="@option.Abbreviation">@option.Name (@option.Abbreviation)</option> }
+            </optgroup>
+        }
+    </select>
+    <label>Daily time allocation (verses)</label>
+    <select class="form-control" @bind="model.TargetVersesPerDay">
+        @foreach (var value in model.Times)
+        { <option value="@value">@value</option> }
+    </select>
+    @if (!string.IsNullOrWhiteSpace(model.Message)) { <p class="@(model.Succeeded ? "success" : "error")" role="status">@model.Message</p> }
+    <button class="btn btn-primary" @onclick="Save" disabled="@model.Busy">Save settings</button>
+    <hr />
+    <h2>Reset this device</h2>
+    <p>Clears this device's cached account, passages, and pending changes. Server data is not deleted.</p>
+    <button class="btn btn-danger" @onclick="Reset">Reset local app</button>
+</div>
+
+@code {
+    private readonly UserSettingsViewModel model = new();
+    private SelectTranslationViewModel? translations;
+
+    protected override async Task OnInitializedAsync()
+    {
+        model.Initialize(State.User);
+        if (State.AccessToken is null) return;
+        translations = new SelectTranslationViewModel(
+            Offline, Online, Telemetry);
+        try
+        {
+            await translations.PopulateTranslationsAsync();
+            model.SetLanguages(translations.Languages);
+        }
+        catch (Exception ex) when (ex is HttpRequestException or JsonException)
+        { model.SetError($"Translation choices could not be refreshed: {ex.Message}"); }
+    }
+
+    private async Task Save()
+    {
+        model.BeginSave();
+        translations ??= new SelectTranslationViewModel(
+            Offline, Online, Telemetry);
+        var error = await translations.SelectTranslationAsync(
+            model.Translation!, model.TargetVersesPerDay);
+        model.CompleteSave(error);
+    }
+
+    private async Task Reset()
+    {
+        await State.SignOutAsync();
+        Navigation.NavigateTo("login", forceLoad: true);
+    }
+}

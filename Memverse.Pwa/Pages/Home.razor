@@ -1,0 +1,67 @@
+@page "/"
+@inject MemverseState State
+@inject NavigationManager Navigation
+
+<PageTitle>Memverse</PageTitle>
+@if (!State.IsSignedIn)
+{
+    <section class="hero">
+        <p class="eyebrow">MEMVERSE</p><h1>Remember what matters.</h1>
+        <p class="lead">Review passages on your schedule, even when you are offline.</p>
+        <a class="btn btn-primary" href="login">Sign in</a>
+    </section>
+}
+else
+{
+    var groups = model.Passages.AsEnumerable();
+    if (model.Passages.All(group => group.DueDate != "Today"))
+        groups = groups.Prepend(new PassagesByDueDateViewModel.Grouping(Due.Today, []));
+
+    <div class="due-groups">
+        @foreach (var group in groups)
+        {
+            <section class="card due-group">
+                <div class="due-group-header">
+                    <h2>@group.DueDate</h2>
+                    @if (group.DueDate == "Today")
+                    {
+                        <button class="btn btn-primary" disabled="@(group.Passages.Count == 0)" @onclick="StartReview">Start review</button>
+                    }
+                </div>
+                @if (group.Passages.Count == 0)
+                {
+                    <p class="due-empty">@(model.Passages.Count == 0 ? "No active passages." : "No passages due today.")</p>
+                }
+                else
+                {
+                    <ul class="due-passages">
+                        @foreach (var section in group.Passages)
+                        {
+                            <li>
+                                @if (group.DueDate == "Today")
+                                {
+                                    <a href="@($"review/{section.First.Id}")"><strong>@section.Reference</strong></a>
+                                }
+                                else
+                                {
+                                    <strong>@section.Reference</strong>
+                                }
+                            </li>
+                        }
+                    </ul>
+                }
+            </section>
+        }
+    </div>
+}
+
+@code {
+    private readonly PassagesByDueDateViewModel model = new();
+
+    protected override void OnInitialized()
+    {
+        model.Refresh(State.Verses, DateTime.Today);
+    }
+
+    private void StartReview() => Navigation.NavigateTo("review");
+}

@@ -1,0 +1,89 @@
+@page "/passages"
+@inject MemverseState State
+@inject IOfflineOperations Offline
+@inject IOnlineOperations Online
+
+<PageTitle>My passages - Memverse</PageTitle>
+<div class="page-header"><h1>My passages</h1><a class="btn btn-primary" href="add">Add passage</a></div>
+@if (!string.IsNullOrWhiteSpace(details.Message)) { <p class="@(details.Succeeded ? "success" : "error")" role="status">@details.Message</p> }
+@if (passages.Passages.Count == 0)
+{
+    <div class="card empty"><h2>Your library is empty</h2><p>Add a passage to start building your review list.</p></div>
+}
+else
+{
+    <div class="passage-list">
+        @foreach (var group in passages.Passages)
+        {
+            <h2>@group.Book</h2>
+            @foreach (var section in group.Passages)
+            {
+            <article class="card passage">
+                <button class="passage-summary" @onclick="() => ToggleDetails(section)">
+                    <span><strong>@section.Reference</strong>@section.First.Translation · @section.Verses.Count @(section.Verses.Count == 1 ? "verse" : "verses")</span>
+                    <small>@GetDueLabel(section)</small>
+                </button>
+                <p>@section.First.Text</p>
+                @if (details.OpenId == section.First.Id)
+                {
+                    <div class="passage-details">
+                        @foreach (var verse in section.Verses)
+                        {
+                            <label class="check-row">
+                                <input type="checkbox" checked="@details.SelectedIds.Contains(verse.Id)" @onchange="e => Select(verse.Id, e)" />
+                                <span><strong>@verse.Reference</strong> <em>@verse.Status</em><br />@verse.Text</span>
+                            </label>
+                        }
+                        <div class="inline-actions">
+                            <button class="btn btn-secondary" disabled="@(details.Busy || details.SelectedIds.Count == 0)" @onclick="ToggleSelected">
+                                Toggle active / pending
+                            </button>
+                            <button class="btn btn-danger" disabled="@(details.Busy || details.SelectedIds.Count == 0)" @onclick="DeleteSelected">
+                                Delete selected
+                            </button>
+                        </div>
+                    </div>
+                }
+            </article>
+            }
+        }
+    </div>
+}
+
+@code {
+    private readonly PassagesByCanonicalOrderViewModel passages = new();
+    private readonly PassageDetailsViewModel details = new();
+
+    protected override void OnInitialized()
+    {
+        passages.Refresh(State.Verses);
+    }
+
+    private void ToggleDetails(Passage section) => details.ToggleDetails(section);
+
+    private void Select(long id, ChangeEventArgs args) => details.Select(id, args.Value is true);
+
+    private static string GetDueLabel(Passage section) =>
+        !section.Verses.Any(Passage.IsActive)
+            ? "Pending"
+            : section.DueDate.Date <= DateTime.Today
+                ? "Due today"
+                : $"Due {section.DueDate:d}";
+
+    private async Task ToggleSelected()
+    {
+        foreach (var verse in details.Begin(State.Verses))
+            await Offline.ToggleStatusAsync(verse);
+        passages.Refresh(State.Verses);
+        details.Complete(null);
+    }
+
+    private async Task DeleteSelected()
+    {
+        foreach (var verse in details.Begin(State.Verses))
+            await Offline.DeleteMemverseAsync(verse);
+        await Online.FlushBackgroundTasksAsync();
+        passages.Refresh(State.Verses);
+        details.Complete(Online.LastError, closeDetails: true);
+    }
+}

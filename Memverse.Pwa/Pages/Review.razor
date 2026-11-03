@@ -1,0 +1,165 @@
+@page "/review"
+@page "/review/{PassageId:long}"
+@implements IDisposable
+@inject MemverseState State
+@inject IOfflineOperations Offline
+@inject IOnlineOperations Online
+<PageTitle>Review - Memverse</PageTitle>
+@if (model.CurrentVerse is null)
+{
+    <div class="card empty"><h2>All caught up</h2><p>There are no passages due for review.</p></div>
+}
+else
+{
+    <article class="review-card card">
+        <div class="review-heading">
+            <p class="eyebrow">@model.CurrentVerse.Reference · @model.CurrentVerse.Translation</p>
+        </div>
+
+        @if (model.PreviousVerse is { } previousVerse)
+        {
+            <div class="review-context">
+                <p><sup>@previousVerse.VerseNumber</sup> @previousVerse.Text</p>
+            </div>
+        }
+
+        <div class="review-live-text" aria-live="polite">
+            <sup>@model.CurrentVerse.VerseNumber</sup>
+            @if (model.FeedbackWords.Count == 0)
+            {
+                <span class="review-waiting">Waiting for you to begin typing...</span>
+            }
+            @foreach (var word in model.FeedbackWords)
+            {
+                var correct = word.Kind == MatchKind.Correct;
+                <span class="review-word-slot @(correct ? "review-word-correct" : "review-word-error")">
+                    <span class="review-word-measure" aria-hidden="true">@word.Text</span>
+                    <span class="review-word-value">@(correct ? word.Text : "...")</span>
+                </span>
+            }
+        </div>
+
+        <textarea id="verse-entry"
+                  @ref="verseEntry"
+                  class="form-control review-input @(model.IsCorrect ? "review-input-correct" : "")"
+                  rows="3"
+                  value="@model.InputText"
+                  @oninput="UpdateInput"
+                  @onkeydown="HandleKeyDown"
+                  disabled="@model.Submitting"
+                  aria-label="Type @model.CurrentVerse.Reference"
+                  autocomplete="off"
+                  autocapitalize="off"
+                  spellcheck="false"></textarea>
+
+        @if (!model.IsCorrect && model.ShowAnswer)
+        {
+            <p class="verse-text answer"><sup>@model.CurrentVerse.VerseNumber</sup> @model.CurrentVerse.Text</p>
+        }
+
+        <div class="review-actions">
+            @if (model.IsCorrect)
+            {
+                <p class="review-feedback success">Correct. Rate this verse to continue.</p>
+            }
+            else
+            {
+                <button class="btn btn-primary" title="Hint (Ctrl+Space)" @onclick="UseHint" disabled="@model.Submitting">
+                    Hint
+                </button>
+            }
+        </div>
+        <div class="rating-panel">
+            <div class="rating-actions">
+                <button class="rating rating-fail" @onclick="() => Rate(1)" disabled="@model.Submitting"><strong>1</strong><span>don't know</span></button>
+                <button class="rating rating-fail" @onclick="() => Rate(2)" disabled="@model.Submitting"><strong>2</strong><span>needed hint</span></button>
+                <button class="rating" @onclick="() => Rate(3)" disabled="@(!model.IsCorrect || model.Submitting)"><strong>3</strong><span>difficult</span></button>
+                <button class="rating" @onclick="() => Rate(4)" disabled="@(!model.IsCorrect || model.Submitting)"><strong>4</strong><span>hesitated</span></button>
+                <button class="rating" @onclick="() => Rate(5)" disabled="@(!model.IsCorrect || model.Submitting)"><strong>5</strong><span>perfect</span></button>
+            </div>
+        </div>
+    </article>
+}
+
+@code {
+    [Parameter] public long? PassageId { get; set; }
+
+    private ReviewVersesViewModel model = new();
+    private ElementReference verseEntry;
+    private bool focusEntryAfterRender;
+    private bool initialized;
+    private long? initializedPassageId;
+
+    protected override void OnParametersSet()
+    {
+        if (initialized && initializedPassageId == PassageId)
+            return;
+
+        if (initialized)
+        {
+            model = new ReviewVersesViewModel();
+            focusEntryAfterRender = false;
+        }
+        initialized = true;
+        initializedPassageId = PassageId;
+        model.Initialize(
+            State.Verses,
+            State.User?.TargetVersesPerDay ?? 15,
+            DateTime.Today,
+            PassageId);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (focusEntryAfterRender && model.CurrentVerse is not null)
+        {
+            focusEntryAfterRender = false;
+            await verseEntry.FocusAsync();
+        }
+    }
+
+    private void UpdateInput(ChangeEventArgs args) =>
+        model.UpdateInput(args.Value?.ToString() ?? "");
+
+    private async Task UseHint()
+    {
+        model.UseHint();
+        await verseEntry.FocusAsync();
+    }
+
+    private async Task HandleKeyDown(KeyboardEventArgs args)
+    {
+        if (args.CtrlKey && args.Code == "Space" &&
+            !model.IsCorrect && !model.Submitting)
+        {
+            await UseHint();
+            return;
+        }
+
+        if (model.IsCorrect && !model.Submitting &&
+            args.Key.Length == 1 &&
+            args.Key[0] is >= '1' and <= '5')
+            await Rate(args.Key[0] - '0');
+    }
+
+    private async Task Rate(int rating)
+    {
+        var review = model;
+        if (!review.BeginRating(rating))
+            return;
+
+        try
+        {
+            await Offline.RateMemverseAsync(review.CurrentVerse!, rating);
+            review.CompleteRating();
+            if (ReferenceEquals(model, review))
+                focusEntryAfterRender = review.CurrentVerse is not null;
+        }
+        finally
+        {
+            review.CancelRating();
+        }
+    }
+
+    public void Dispose() => _ = Online.FlushBackgroundTasksAsync();
+}

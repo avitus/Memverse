@@ -1,0 +1,102 @@
+﻿@inherits LayoutComponentBase
+@implements IAsyncDisposable
+@inject MemverseState State
+@inject IOfflineOperations Offline
+@inject IOnlineOperations Online
+@inject NavigationManager Navigation
+
+@if (!initialized)
+{
+    <div class="page-loading" role="status">Loading Memverse...</div>
+}
+else
+{
+    <div class="page">
+        @if (State.IsSignedIn)
+        {
+            <div class="sidebar">
+                <NavMenu />
+            </div>
+        }
+
+        <main>
+            <article class="content">
+                @if (!string.IsNullOrWhiteSpace(syncMessage))
+                {
+                    <p class="sync-banner error" role="status">@syncMessage</p>
+                }
+                @Body
+            </article>
+        </main>
+    </div>
+}
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await State.LoadAsync();
+        var destination = UserSetupPipeline.GetNextStep(
+            State.User, State.AccessToken, State.RefreshToken, State.Verses);
+        var requiredRoute = UserSetup.GetRequiredRoute(destination);
+        var currentRoute = Navigation.ToBaseRelativePath(Navigation.Uri)
+            .Split('?', '#')[0]
+            .Trim('/');
+        var isLoginCallback = string.Equals(
+            currentRoute,
+            "authentication/login-callback",
+            StringComparison.OrdinalIgnoreCase);
+        if (!isLoginCallback && requiredRoute is not null &&
+            !string.Equals(currentRoute, requiredRoute, StringComparison.OrdinalIgnoreCase))
+        {
+            Navigation.NavigateTo(requiredRoute, replace: true);
+        }
+
+        initialized = true;
+        StateHasChanged();
+        if (State.IsSignedIn && !string.IsNullOrWhiteSpace(State.AccessToken))
+        {
+            try
+            {
+                await Online.FlushBackgroundTasksAsync();
+                await Offline.AdjustWorkLoadAsync();
+                syncMessage = Online.LastError;
+            }
+            catch (Exception exception) when (exception is HttpRequestException or JsonException)
+            {
+                syncMessage = $"Offline: cached data is available. Pending changes will retry automatically. {exception.Message}";
+            }
+        }
+        replayLoop = ReplayLoopAsync(replayCancellation.Token);
+    }
+
+    private bool initialized;
+    private string? syncMessage;
+    private readonly CancellationTokenSource replayCancellation = new();
+    private Task? replayLoop;
+
+    private async Task ReplayLoopAsync(CancellationToken cancellationToken)
+    {
+        using var timer = new PeriodicTimer(TimeSpan.FromSeconds(30));
+        try
+        {
+            while (await timer.WaitForNextTickAsync(cancellationToken))
+            {
+                if (State.IsSignedIn && State.Mutations.Count > 0)
+                {
+                    await Online.FlushBackgroundTasksAsync();
+                    syncMessage = Online.LastError;
+                    await InvokeAsync(StateHasChanged);
+                }
+            }
+        }
+        catch (OperationCanceledException) { }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        replayCancellation.Cancel();
+        if (replayLoop is not null)
+            await replayLoop;
+        replayCancellation.Dispose();
+    }
+}

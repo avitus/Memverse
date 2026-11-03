@@ -1,0 +1,13 @@
+.page {
+    min-height: 100vh;
+}
+
+main {
+    min-height: 100vh;
+}
+
+.content {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+}
