@@ -61,6 +61,24 @@ RSpec.describe QuizAnswerSubmission do
       expect(score_of(other)).to eq(10)
     end
 
+    it 'lets the player send the answer again when saving it fails, without counting it twice' do
+      redis = session.instance_variable_get(:@redis)
+      calls = 0
+      allow_any_instance_of(redis.class).to receive(:eval).and_wrap_original do |original, *args, **options|
+        calls += 1
+        raise Redis::CannotConnectError, 'redis is away' if calls == 1
+
+        original.call(*args, **options)
+      end
+
+      expect { submit('B') }.to raise_error(Redis::CannotConnectError)
+      expect(score_of(user)).to eq(0)
+
+      expect(submit('B').score).to eq(10)
+      expect(submit('B').status).to eq(:duplicate)
+      expect(score_of(user)).to eq(10)
+    end
+
     it 'stores the name and login from the user record' do
       submit('B')
       entry = session.get_scoreboard.first
@@ -80,6 +98,19 @@ RSpec.describe QuizAnswerSubmission do
         expect(result.status).to eq(:closed)
         expect(score_of(user)).to eq(0)
       end
+    end
+
+    it 'does not score an answer whose grading finishes after the question closes' do
+      session.open_question(1, question.id, 30)
+      allow_any_instance_of(QuizQuestion).to receive(:grade_answer).and_wrap_original do |original, *args, **options|
+        travel_to(1.hour.from_now)
+        original.call(*args, **options)
+      end
+
+      expect(submit('B').status).to eq(:closed)
+      expect(score_of(user)).to eq(0)
+    ensure
+      travel_back
     end
 
     it 'still accepts an answer inside the grace period' do

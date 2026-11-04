@@ -82,7 +82,10 @@ The browser POSTs each answer to `/record_score` (web, signed in, with the page'
 `/api/v1/record_score` (OAuth) with `quiz_id`, `question_num` and `answer`. The server takes the user
 from the session or token, finds the question from `question_num`, and grades with
 `QuizQuestion#grade_answer`, so nothing about the user, question or score comes from the client.
-`QuizAnswerSubmission` holds the rules and returns JSON `{ status, score }`:
+`QuizAnswerSubmission` holds the rules and returns JSON `{ status, score }`. `QuizSession#record_answer`
+checks the deadline, takes the user's one answer and adds the score in one atomic Redis script, so no
+score can land after a question closes and a failed save can be retried (the request fails with a 500
+and nothing is kept):
 
 | Status | Meaning |
 |---|---|

@@ -29,11 +29,10 @@ class QuizAnswerSubmission
 
     question = open_question
     return Result.new(:closed, nil) unless question
-    return Result.new(:duplicate, nil) unless @quiz_session.claim_answer(@question_num, @user.id)
 
     score = question.grade_answer(@answer, translation: @user.translation)
-    @quiz_session.update_score(@user.id, @question_num, score)
-    Result.new(:graded, score)
+    status = @quiz_session.record_answer(@question_num, @user.id, score)
+    Result.new(status, status == :graded ? score : nil)
   end
 
   private

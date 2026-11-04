@@ -28,6 +28,25 @@ class QuizSession
   # How long the correct answer stays on screen before the next question
   ANSWER_REVEAL_SECONDS = 4
 
+  # Runs as one step in Redis, so a score is either saved before the question closes or not at all,
+  # and a claimed answer can't be left without its points.
+  # KEYS: question hash, user hash. ARGV: claim field, score, now, TTL.
+  RECORD_ANSWER_SCRIPT = <<~LUA.freeze
+    local closes_at = tonumber(redis.call('HGET', KEYS[1], 'closes_at'))
+    if not closes_at or tonumber(ARGV[3]) > closes_at then return 'closed' end
+    if redis.call('HSETNX', KEYS[1], ARGV[1], '1') == 0 then return 'duplicate' end
+
+    local score = tonumber(ARGV[2])
+    if score > 0 then
+      redis.call('HINCRBY', KEYS[2], 'score', score)
+      redis.call('EXPIRE', KEYS[2], ARGV[4])
+      redis.call('HINCRBY', KEYS[1], 'total_score', score)
+      redis.call('HINCRBY', KEYS[1], 'answered', 1)
+    end
+    redis.call('EXPIRE', KEYS[1], ARGV[4])
+    return 'graded'
+  LUA
+
   attr_reader :quiz_id
 
   # Everyone on the top score, ordered by name. Nobody wins if nobody scored.
@@ -92,36 +111,6 @@ class QuizSession
           pipe.expire(user_key, DEFAULT_TTL)
           pipe.expire(participant_set_key, DEFAULT_TTL)
         end
-      end
-      true
-    end
-  end
-
-  # Update a user's score for a specific question
-  # @param user_id [Integer] User ID
-  # @param question_num [Integer] Question number (1-based)
-  # @param score [Integer] Score to add (0-10)
-  # @return [Boolean] Success status
-  def update_score(user_id, question_num, score)
-    return false unless score.to_i > 0
-
-    user_key = participant_key(user_id)
-    question_key = question_key(question_num)
-
-    with_redis_error_handling("update_score") do
-      @redis.pipelined do |pipe|
-        # Update user's total score
-        pipe.hincrby(user_key, 'score', score.to_i)
-        pipe.expire(user_key, DEFAULT_TTL)
-
-        # Update question statistics
-        pipe.hincrby(question_key, 'total_score', score.to_i)
-        pipe.hincrby(question_key, 'answered', 1)
-        pipe.expire(question_key, DEFAULT_TTL)
-
-        # Track question in set
-        pipe.sadd(question_set_key, question_num.to_s)
-        pipe.expire(question_set_key, DEFAULT_TTL)
       end
       true
     end
@@ -233,14 +222,19 @@ class QuizSession
     end || nil
   end
 
-  # Atomically take the user's one answer to a question
+  # Save the user's one answer to a question and its score, if the question is still open.
+  # A Redis failure raises rather than being swallowed, because nothing was saved and the
+  # player can send the answer again.
   # @param question_num [Integer] Position of the question in the quiz
   # @param user_id [Integer] User ID
-  # @return [Boolean] True only the first time for this user and question
-  def claim_answer(question_num, user_id)
-    with_redis_error_handling("claim_answer") do
-      @redis.hsetnx(question_key(question_num), "answered_by:#{user_id}", '1')
-    end
+  # @param score [Integer] Points for the answer (0-10)
+  # @return [Symbol] :graded, :closed or :duplicate
+  def record_answer(question_num, user_id, score)
+    @redis.eval(
+      RECORD_ANSWER_SCRIPT,
+      keys: [question_key(question_num), participant_key(user_id)],
+      argv: ["answered_by:#{user_id}", score.to_i, Time.current.to_f, DEFAULT_TTL]
+    ).to_sym
   end
 
   # Get all question statistics

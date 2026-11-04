@@ -73,10 +73,11 @@ RSpec.describe QuizSession, type: :service do
         quiz_session.add_participant(3, "User 3", "user3@example.com")
         
         # Update scores
-        quiz_session.update_score(1, 1, 5)
-        quiz_session.update_score(2, 1, 10)
-        quiz_session.update_score(3, 1, 7)
-        
+        quiz_session.open_question(1, question_id, 30)
+        quiz_session.record_answer(1, 1, 5)
+        quiz_session.record_answer(1, 2, 10)
+        quiz_session.record_answer(1, 3, 7)
+
         scoreboard = quiz_session.get_scoreboard
         expect(scoreboard.length).to eq(3)
         expect(scoreboard[0]['name']).to eq("User 2")  # Highest score
@@ -92,8 +93,9 @@ RSpec.describe QuizSession, type: :service do
         quiz_session.add_participant(2, "adam", "adam@example.com")
         quiz_session.add_participant(3, "Mia", "mia@example.com")
 
-        [1, 2].each { |id| quiz_session.update_score(id, 1, 10) }
-        quiz_session.update_score(3, 1, 20)
+        quiz_session.open_question(1, question_id, 30)
+        [1, 2].each { |id| quiz_session.record_answer(1, id, 10) }
+        quiz_session.record_answer(1, 3, 20)
 
         expect(quiz_session.get_scoreboard.map { |p| p['name'] }).to eq(%w[Mia adam Zoe])
       end
@@ -204,21 +206,15 @@ RSpec.describe QuizSession, type: :service do
       expect(quiz_session.get_question_stats.first['qq_id']).to eq(question_id.to_s)
     end
 
-    it 'lets each user claim a question only once' do
+    it 'forgets answers when the quiz data is cleaned up' do
+      quiz_session.add_participant(user_id, user_name, user_login)
       quiz_session.open_question(question_num, question_id, 30)
-
-      expect(quiz_session.claim_answer(question_num, user_id)).to be true
-      expect(quiz_session.claim_answer(question_num, user_id)).to be false
-      expect(quiz_session.claim_answer(question_num, 999)).to be true
-    end
-
-    it 'forgets claims when the quiz data is cleaned up' do
-      quiz_session.open_question(question_num, question_id, 30)
-      quiz_session.claim_answer(question_num, user_id)
+      quiz_session.record_answer(question_num, user_id, score)
       quiz_session.cleanup_quiz_data
+      quiz_session.add_participant(user_id, user_name, user_login)
       quiz_session.open_question(question_num, question_id, 30)
 
-      expect(quiz_session.claim_answer(question_num, user_id)).to be true
+      expect(quiz_session.record_answer(question_num, user_id, score)).to eq(:graded)
     end
   end
 
@@ -227,31 +223,67 @@ RSpec.describe QuizSession, type: :service do
       quiz_session.add_participant(user_id, user_name, user_login)
     end
     
-    describe '#update_score' do
-      it 'updates user score successfully' do
-        result = quiz_session.update_score(user_id, question_num, score)
-        expect(result).to be true
-        
-        participants = quiz_session.get_participants
-        expect(participants.first['score']).to eq(score.to_s)
+    describe '#record_answer' do
+      before do
+        quiz_session.open_question(1, question_id, 30)
+        quiz_session.open_question(2, question_id, 30)
       end
-      
-      it 'accumulates multiple scores' do
-        quiz_session.update_score(user_id, 1, 5)
-        quiz_session.update_score(user_id, 2, 7)
-        
-        participants = quiz_session.get_participants
-        expect(participants.first['score']).to eq('12')
+
+      def question_stats(num)
+        $redis.hgetall("#{QuizSession::KEY_PREFIX}:#{quiz_id}:question:#{num}")
       end
-      
-      it 'returns false for zero score' do
-        result = quiz_session.update_score(user_id, question_num, 0)
-        expect(result).to be false
+
+      it 'saves the score and the question statistics together' do
+        expect(quiz_session.record_answer(1, user_id, score)).to eq(:graded)
+
+        expect(quiz_session.get_participants.first['score']).to eq(score.to_s)
+        stats = question_stats(1)
+        expect(stats['total_score']).to eq(score.to_s)
+        expect(stats['answered']).to eq('1')
       end
-      
-      it 'returns false for negative score' do
-        result = quiz_session.update_score(user_id, question_num, -5)
-        expect(result).to be false
+
+      it 'accumulates scores across questions' do
+        quiz_session.record_answer(1, user_id, 5)
+        quiz_session.record_answer(2, user_id, 7)
+
+        expect(quiz_session.get_participants.first['score']).to eq('12')
+      end
+
+      it 'uses up the answer but adds nothing for a zero score' do
+        expect(quiz_session.record_answer(1, user_id, 0)).to eq(:graded)
+        expect(quiz_session.record_answer(1, user_id, 10)).to eq(:duplicate)
+
+        expect(quiz_session.get_participants.first['score']).to eq('0')
+        expect(question_stats(1)).not_to include('total_score', 'answered')
+      end
+
+      it 'keeps only the first answer from each user' do
+        quiz_session.add_participant(999, "Other User", "other@example.com")
+        quiz_session.record_answer(1, user_id, 5)
+
+        expect(quiz_session.record_answer(1, user_id, 10)).to eq(:duplicate)
+        expect(quiz_session.record_answer(1, 999, 10)).to eq(:graded)
+        expect(quiz_session.get_participants.find { |p| p['id'] == user_id.to_s }['score']).to eq('5')
+        expect(question_stats(1)['answered']).to eq('2')
+      end
+
+      it 'refuses an answer after the question closes' do
+        travel_to(1.hour.from_now) do
+          expect(quiz_session.record_answer(1, user_id, 10)).to eq(:closed)
+        end
+
+        expect(quiz_session.get_participants.first['score']).to eq('0')
+        expect(quiz_session.record_answer(1, user_id, 10)).to eq(:graded)
+      end
+
+      it 'refuses an answer to a question that was never opened' do
+        expect(quiz_session.record_answer(99, user_id, 10)).to eq(:closed)
+      end
+
+      it 'raises when Redis fails, so the player can try again' do
+        allow(quiz_session.instance_variable_get(:@redis)).to receive(:eval).and_raise(Redis::CannotConnectError)
+
+        expect { quiz_session.record_answer(1, user_id, 10) }.to raise_error(Redis::CannotConnectError)
       end
     end
   end
@@ -388,7 +420,8 @@ RSpec.describe QuizSession, type: :service do
     before do
       # Set up test data
       quiz_session.add_participant(user_id, user_name, user_login)
-      quiz_session.update_score(user_id, question_num, score)
+      quiz_session.open_question(question_num, question_id, 30)
+      quiz_session.record_answer(question_num, user_id, score)
       quiz_session.update_question_stats(question_num, question_id)
       quiz_session.set_quiz_status("Test status")
       quiz_session.lock_quiz
