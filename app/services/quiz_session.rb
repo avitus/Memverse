@@ -215,11 +215,10 @@ class QuizSession
 
   # @param question_num [Integer] Position of the question in the quiz
   # @return [String, nil] ID of the QuizQuestion if it is still accepting answers
+  # A Redis failure raises, because "closed" would tell the player not to try again.
   def open_question_id(question_num)
-    with_redis_error_handling("open_question_id") do
-      question_id, closes_at = @redis.hmget(question_key(question_num), 'qq_id', 'closes_at')
-      question_id if closes_at && Time.current.to_f <= closes_at.to_f
-    end || nil
+    question_id, closes_at = @redis.hmget(question_key(question_num), 'qq_id', 'closes_at')
+    question_id if closes_at && Time.current.to_f <= closes_at.to_f
   end
 
   # Save the user's one answer to a question and its score, if the question is still open.

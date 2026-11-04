@@ -193,6 +193,12 @@ RSpec.describe QuizSession, type: :service do
       expect(quiz_session.open_question_id(99)).to be_nil
     end
 
+    it 'raises when Redis fails rather than reporting the question as closed' do
+      allow(quiz_session.instance_variable_get(:@redis)).to receive(:hmget).and_raise(Redis::CannotConnectError)
+
+      expect { quiz_session.open_question_id(question_num) }.to raise_error(Redis::CannotConnectError)
+    end
+
     it 'points at the newest question when a question number is reopened' do
       quiz_session.open_question(question_num, question_id, 30)
       quiz_session.open_question(question_num, 789, 30)
