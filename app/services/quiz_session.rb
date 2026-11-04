@@ -18,7 +18,38 @@ class QuizSession
   STATUS_FAILED = "failed".freeze
   STATUS_AVAILABLE = "available".freeze
 
+  # Length of the tweets.news column
+  ANNOUNCEMENT_MAX_LENGTH = 255
+
+  # Extra time to accept an answer after the player's timer ends, to cover network
+  # delay. The correct answer is not published until this has passed.
+  ANSWER_GRACE_SECONDS = 2
+
+  # How long the correct answer stays on screen before the next question
+  ANSWER_REVEAL_SECONDS = 4
+
   attr_reader :quiz_id
+
+  # Everyone on the top score, ordered by name. Nobody wins if nobody scored.
+  # @param scoreboard [Array<Hash>] Participant data from get_scoreboard
+  # @return [Array<Hash>] The winners; more than one means a tie
+  def self.winners(scoreboard)
+    top_score = scoreboard.map { |participant| participant['score'].to_i }.max.to_i
+    return [] unless top_score.positive?
+
+    scoreboard
+      .select { |participant| participant['score'].to_i == top_score }
+      .sort_by { |participant| participant['name'].to_s.downcase }
+  end
+
+  # @param winners [Array<Hash>] At least one participant, from QuizSession.winners
+  # @param quiz_name [String] Name of the quiz as it should read in the sentence
+  # @return [String] News text for the dashboard
+  def self.winner_announcement(winners, quiz_name)
+    names = winners.map { |winner| winner['name'] }
+    announcement = names.one? ? "#{names.first} won #{quiz_name}" : "#{names.to_sentence} tied for first in #{quiz_name}"
+    announcement.truncate(ANNOUNCEMENT_MAX_LENGTH)
+  end
 
   def initialize(quiz_id)
     @quiz_id = quiz_id.to_i
@@ -118,8 +149,8 @@ class QuizSession
         end
       end
 
-      # Sort by score descending
-      scoreboard.sort { |x, y| y['score'].to_i <=> x['score'].to_i }
+      # Sort by score descending; name keeps tied participants in a stable order
+      scoreboard.sort_by { |participant| [-participant['score'].to_i, participant['name'].to_s.downcase] }
     end
   end
 
@@ -169,6 +200,46 @@ class QuizSession
         pipe.expire(question_set_key, DEFAULT_TTL)
       end
       true
+    end
+  end
+
+  # Start accepting answers to a question
+  # @param question_num [Integer] Position of the question in the quiz
+  # @param question_id [Integer] ID of the QuizQuestion being asked
+  # @param time_allocated [Integer] Seconds shown on the player's timer
+  # @return [Boolean] Success status
+  def open_question(question_num, question_id, time_allocated)
+    key = question_key(question_num)
+    closes_at = Time.current.to_f + time_allocated + ANSWER_GRACE_SECONDS
+
+    with_redis_error_handling("open_question") do
+      @redis.pipelined do |pipe|
+        pipe.hset(key, 'qq_id', question_id.to_s)
+        pipe.hset(key, 'closes_at', closes_at.to_s)
+        pipe.expire(key, DEFAULT_TTL)
+        pipe.sadd(question_set_key, question_num.to_s)
+        pipe.expire(question_set_key, DEFAULT_TTL)
+      end
+      true
+    end
+  end
+
+  # @param question_num [Integer] Position of the question in the quiz
+  # @return [String, nil] ID of the QuizQuestion if it is still accepting answers
+  def open_question_id(question_num)
+    with_redis_error_handling("open_question_id") do
+      question_id, closes_at = @redis.hmget(question_key(question_num), 'qq_id', 'closes_at')
+      question_id if closes_at && Time.current.to_f <= closes_at.to_f
+    end || nil
+  end
+
+  # Atomically take the user's one answer to a question
+  # @param question_num [Integer] Position of the question in the quiz
+  # @param user_id [Integer] User ID
+  # @return [Boolean] True only the first time for this user and question
+  def claim_answer(question_num, user_id)
+    with_redis_error_handling("claim_answer") do
+      @redis.hsetnx(question_key(question_num), "answered_by:#{user_id}", '1')
     end
   end
 

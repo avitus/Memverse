@@ -156,52 +156,85 @@ RSpec.describe LiveQuizController, type: :controller do
   end
   
   describe 'POST #record_score' do
-    it 'records score successfully' do
-      quiz_session = instance_double(QuizSession)
-      expect(QuizSession).to receive(:new).with(quiz.id.to_s).and_return(quiz_session)
-      expect(quiz_session).to receive(:add_participant).with(user.id, user.name_or_login, user.login)
-      expect(quiz_session).to receive(:update_score).with(user.id, 1, 10)
-      expect(quiz_session).to receive(:update_question_stats).with(1, '123')
-      
-      post :record_score, params: {
-        quiz_id: quiz.id,
-        usr_id: user.id,
-        usr_name: user.name_or_login,
-        usr_login: user.login,
-        question_id: '123',
-        question_num: 1,
-        score: '10'
-      }
-      
-      expect(response).to have_http_status(:ok)
+    let(:quiz_session) { QuizSession.new(quiz.id) }
+    let(:mcq) { FactoryBot.create(:quiz_question, :mcq) }
+
+    before do
+      quiz_session.cleanup_quiz_data
+      quiz_session.open_question(1, mcq.id, 30)
     end
-    
-    it 'handles false score gracefully' do
-      post :record_score, params: {
-        quiz_id: quiz.id,
-        usr_id: user.id,
-        usr_name: user.name_or_login,
-        usr_login: user.login,
-        question_id: '123',
-        question_num: 1,
-        score: 'false'
-      }
-      
-      expect(response).to have_http_status(:ok)
+
+    after { quiz_session.cleanup_quiz_data }
+
+    def scoreboard_score(user_id)
+      quiz_session.get_scoreboard.find { |entry| entry['id'] == user_id.to_s }&.fetch('score').to_i
     end
-    
-    it 'handles zero score' do
-      post :record_score, params: {
-        quiz_id: quiz.id,
-        usr_id: user.id,
-        usr_name: user.name_or_login,
-        usr_login: user.login,
-        question_id: '123',
-        question_num: 1,
-        score: '0'
-      }
-      
-      expect(response).to have_http_status(:ok)
+
+    context 'when signed out' do
+      it 'rejects the request and records nothing' do
+        post :record_score, params: { quiz_id: quiz.id, question_num: 1, answer: 'B', usr_id: user.id }, format: :json
+
+        expect(response).to have_http_status(:unauthorized)
+        expect(quiz_session.get_scoreboard).to be_empty
+      end
+    end
+
+    context 'when signed in' do
+      before { sign_in user }
+
+      it 'grades the answer on the server and returns the score' do
+        post :record_score, params: { quiz_id: quiz.id, question_num: 1, answer: 'B' }, format: :json
+
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body)).to eq('status' => 'graded', 'score' => 10)
+        expect(scoreboard_score(user.id)).to eq(10)
+      end
+
+      it 'does not reveal the correct answer in the response' do
+        post :record_score, params: { quiz_id: quiz.id, question_num: 1, answer: 'A' }, format: :json
+
+        expect(JSON.parse(response.body)).to eq('status' => 'graded', 'score' => 0)
+      end
+
+      it 'ignores a score sent by the browser' do
+        post :record_score, params: { quiz_id: quiz.id, question_num: 1, answer: 'A', score: '10' }, format: :json
+
+        expect(scoreboard_score(user.id)).to eq(0)
+      end
+
+      it 'ignores a user id sent by the browser' do
+        victim = FactoryBot.create(:user)
+
+        post :record_score, params: {
+          quiz_id: quiz.id, question_num: 1, answer: 'B',
+          usr_id: victim.id, usr_name: 'Spoofed', usr_login: 'spoofed'
+        }, format: :json
+
+        expect(scoreboard_score(victim.id)).to eq(0)
+        expect(scoreboard_score(user.id)).to eq(10)
+        expect(quiz_session.get_scoreboard.map { |entry| entry['name'] }).not_to include('Spoofed')
+      end
+
+      it 'reports a second answer to the same question as a duplicate' do
+        post :record_score, params: { quiz_id: quiz.id, question_num: 1, answer: 'A' }, format: :json
+        post :record_score, params: { quiz_id: quiz.id, question_num: 1, answer: 'B' }, format: :json
+
+        expect(JSON.parse(response.body)).to eq('status' => 'duplicate', 'score' => nil)
+        expect(scoreboard_score(user.id)).to eq(0)
+      end
+
+      it 'reports an answer to a closed question' do
+        post :record_score, params: { quiz_id: quiz.id, question_num: 2, answer: 'B' }, format: :json
+
+        expect(JSON.parse(response.body)).to eq('status' => 'closed', 'score' => nil)
+      end
+
+      it 'lists a user who let the question time out' do
+        post :record_score, params: { quiz_id: quiz.id, question_num: 1 }, format: :json
+
+        expect(JSON.parse(response.body)).to eq('status' => 'unanswered', 'score' => nil)
+        expect(quiz_session.get_scoreboard.map { |entry| entry['id'] }).to include(user.id.to_s)
+      end
     end
   end
   

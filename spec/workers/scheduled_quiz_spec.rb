@@ -721,4 +721,88 @@ describe ScheduledQuiz do
       worker.perform
     end
   end
+
+  describe 'publishing questions' do
+    let(:session) { instance_double(QuizSession, open_question: true) }
+    let(:published) { [] }
+    let(:passages) { { 'NIV' => 'Jesus wept.' } }
+    let(:mcq) { instance_double(QuizQuestion, id: 5, mc_question: 'Q', mc_option_a: 'a', mc_option_b: 'b', mc_option_c: 'c', mc_option_d: 'd', mc_answer: 'C') }
+    let(:question) { instance_double(QuizQuestion, id: 6) }
+    let(:window) { QuizSession::ANSWER_GRACE_SECONDS }
+
+    before do
+      worker.instance_variable_set(:@quiz_session, session)
+      allow(worker).to receive(:publish_with_retry) { |_channel, message, _quiz_id| published << message }
+    end
+
+    def message(meta)
+      published.find { |entry| entry[:meta] == meta }
+    end
+
+    it 'keeps the answer out of a multiple choice question until it closes' do
+      expect(session).to receive(:open_question).with(1, 5, 30)
+      expect(worker).to receive(:sleep).with(30 + window)
+
+      worker.send(:handle_mcq_question, mcq, 1, 'quiz-2', 2)
+
+      expect(message('question')).not_to have_key(:mc_answer)
+      expect(message('answer')).to include(q_num: 1, q_type: 'mcq', mc_answer: 'C')
+      expect(published.map { |entry| entry[:meta] }).to eq(%w[question answer])
+    end
+
+    it 'keeps the reference out of a reference question until it closes' do
+      expect(session).to receive(:open_question).with(1, 6, 25)
+      expect(worker).to receive(:sleep).with(25 + window)
+
+      worker.send(:handle_reference_question, question, 1, 'John 11:35', passages, 'quiz-2', 2)
+
+      expect(message('question')).not_to have_key(:q_ref)
+      expect(message('question')[:q_passages]).to eq(passages)
+      expect(message('answer')).to include(q_num: 1, q_type: 'reference', q_ref: 'John 11:35')
+    end
+
+    it 'keeps the verse text out of a recitation question until it closes' do
+      expect(session).to receive(:open_question).with(1, 6, 20)
+      expect(worker).to receive(:sleep).with(20 + window)
+
+      worker.send(:handle_recitation_question, question, 1, 'John 11:35', passages, 'quiz-2', 2)
+
+      expect(message('question')).not_to have_key(:q_passages)
+      expect(message('question')[:q_ref]).to eq('John 11:35')
+      expect(message('answer')).to include(q_num: 1, q_type: 'recitation', q_passages: passages)
+    end
+  end
+
+  describe 'announcing the result' do
+    def record_with(scoreboard)
+      worker.instance_variable_set(:@quiz_session, double('QuizSession', get_scoreboard: scoreboard))
+      worker.send(:record_final_scoreboard, quiz, "quiz-#{quiz.id}")
+    end
+
+    it 'announces a single winner' do
+      expect(Tweet).to receive(:create!).with(news: 'Lisa won Test Quiz', user_id: '10', importance: 2)
+
+      record_with([
+        { 'name' => 'Lisa', 'id' => '10', 'score' => '150' },
+        { 'name' => 'Phil', 'id' => '20', 'score' => '90' }
+      ])
+    end
+
+    it 'announces a tie naming every winner' do
+      expect(Tweet).to receive(:create!).with(
+        news: 'Lisa and Phil tied for first in Test Quiz', user_id: '10', importance: 2
+      )
+
+      record_with([
+        { 'name' => 'Phil', 'id' => '20', 'score' => '150' },
+        { 'name' => 'Lisa', 'id' => '10', 'score' => '150' }
+      ])
+    end
+
+    it 'announces nothing when nobody scored any points' do
+      expect(Tweet).not_to receive(:create!)
+
+      record_with([{ 'name' => 'Lisa', 'id' => '10', 'score' => '0' }])
+    end
+  end
 end

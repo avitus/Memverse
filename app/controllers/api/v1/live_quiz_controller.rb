@@ -5,17 +5,11 @@ class Api::V1::LiveQuizController < Api::V1::ApiController
   # ----------------------------------------------------------------------------------------------------------
   include Swagger::Blocks
 
-  # $.post("/record_score", {   usr_id:       memverseUserID,
-  #                             usr_name:     memverseUserName,
-  #                             usr_login:    memverseUserLogin,
-  #                             question_id:  questionID,
-  #                             question_num: questionNum,
-  #                             score:        grade.score } );
   swagger_path '/record_score' do
 
     operation :post do
 
-      key :description, 'Record a user score for a live quiz question'
+      key :description, 'Submit the answer of the token owner to the open live quiz question. The server grades it and accepts one answer per user per question.'
       key :operationId, 'recordUserScore'
       key :tags, ['quiz']
 
@@ -24,39 +18,6 @@ class Api::V1::LiveQuizController < Api::V1::ApiController
         key :in, :formData
         key :description, 'Quiz ID (defaults to 1 if not provided)'
         key :required, false
-        key :type, :integer
-        key :format, :int64
-      end
-
-      parameter do
-        key :name, :usr_id
-        key :in, :formData
-        key :description, 'Memverse user ID'
-        key :required, true
-        key :type, :string
-      end
-
-      parameter do
-        key :name, :usr_name
-        key :in, :formData
-        key :description, 'Memverse user name'
-        key :required, true
-        key :type, :string
-      end
-
-      parameter do
-        key :name, :usr_login
-        key :in, :formData
-        key :description, 'Memverse user login (email address)'
-        key :required, true
-        key :type, :string
-      end
-
-      parameter do
-        key :name, :question_id
-        key :in, :formData
-        key :description, 'Quiz question ID (primary key)'
-        key :required, true
         key :type, :integer
         key :format, :int64
       end
@@ -71,10 +32,10 @@ class Api::V1::LiveQuizController < Api::V1::ApiController
       end
 
       parameter do
-        key :name, :score
+        key :name, :answer
         key :in, :formData
-        key :description, 'The user score (max=10) or "false" to skip scoring'
-        key :required, true
+        key :description, 'The answer: a, b, c or d for multiple choice, a reference such as John 3:16, or the recited verse. Omit it when the question timed out unanswered.'
+        key :required, false
         key :type, :string
       end
 
@@ -82,10 +43,19 @@ class Api::V1::LiveQuizController < Api::V1::ApiController
         key :oauth2, ['public read write admin']
       end
 
-      response 204 do
-        key :description, 'Score successfully recorded'
+      response 200 do
+        key :description, 'Submission processed'
         schema do
-          key :'$ref', :NoContentResponse
+          key :required, [:status]
+          property :status do
+            key :type, :string
+            key :description, 'graded, closed (question not open), duplicate (already answered) or unanswered (no answer sent)'
+          end
+          property :score do
+            key :type, :integer
+            key :format, :int32
+            key :description, 'Points out of 10. Present with a number only when status is graded.'
+          end
         end
       end
       response 401 do
@@ -124,34 +94,14 @@ class Api::V1::LiveQuizController < Api::V1::ApiController
   # caches :index, :show, :caches_for => 5.minutes
 
   def record_score
+    result = QuizAnswerSubmission.call(
+      user: current_resource_owner,
+      quiz_id: params[:quiz_id] || 1,  # Default to knowledge quiz
+      question_num: params[:question_num],
+      answer: params[:answer]
+    )
 
-    # Extract parameters
-    quiz_id = (params[:quiz_id] || 1).to_i  # Default to knowledge quiz
-    usr_id = params[:usr_id].to_i
-    usr_name = params[:usr_name]
-    usr_login = params[:usr_login]
-    qq_id = params[:question_id]  # ID of Quiz Question
-    question_num = params[:question_num].to_i
-    score = params[:score]        # Score out of 10
-
-    if score != "false" && score.to_i > 0
-      # Initialize QuizSession service
-      quiz_session = QuizSession.new(quiz_id)
-
-      # Add participant if not already added
-      quiz_session.add_participant(usr_id, usr_name, usr_login)
-
-      # Update user's score
-      quiz_session.update_score(usr_id, question_num, score.to_i)
-
-      # Update question statistics
-      quiz_session.update_question_stats(question_num, qq_id)
-    else
-      Rails.logger.info("*** Score was submitted as false for #{usr_name}")
-    end
-
-    # Return 204 No Content to indicate successful processing
-    head :no_content
+    render json: result.to_h
   end
 
 end

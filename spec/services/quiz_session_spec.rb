@@ -86,6 +86,139 @@ RSpec.describe QuizSession, type: :service do
         expect(scoreboard[2]['name']).to eq("User 1")  # Lowest score
         expect(scoreboard[2]['score']).to eq('5')
       end
+
+      it 'orders tied participants by name so the order is stable' do
+        quiz_session.add_participant(1, "Zoe", "zoe@example.com")
+        quiz_session.add_participant(2, "adam", "adam@example.com")
+        quiz_session.add_participant(3, "Mia", "mia@example.com")
+
+        [1, 2].each { |id| quiz_session.update_score(id, 1, 10) }
+        quiz_session.update_score(3, 1, 20)
+
+        expect(quiz_session.get_scoreboard.map { |p| p['name'] }).to eq(%w[Mia adam Zoe])
+      end
+    end
+  end
+
+  describe '.winners' do
+    it 'returns the single top scorer' do
+      scoreboard = [
+        { 'name' => 'Ann', 'id' => '1', 'score' => '30' },
+        { 'name' => 'Bob', 'id' => '2', 'score' => '20' }
+      ]
+
+      expect(described_class.winners(scoreboard).map { |w| w['name'] }).to eq(['Ann'])
+    end
+
+    it 'returns everyone tied on the top score, ordered by name' do
+      scoreboard = [
+        { 'name' => 'Cal', 'id' => '3', 'score' => '150' },
+        { 'name' => 'ann', 'id' => '1', 'score' => '150' },
+        { 'name' => 'Bob', 'id' => '2', 'score' => '90' }
+      ]
+
+      expect(described_class.winners(scoreboard).map { |w| w['name'] }).to eq(%w[ann Cal])
+    end
+
+    it 'compares scores numerically because Redis returns strings' do
+      scoreboard = [
+        { 'name' => 'Ann', 'id' => '1', 'score' => '90' },
+        { 'name' => 'Bob', 'id' => '2', 'score' => '100' }
+      ]
+
+      expect(described_class.winners(scoreboard).map { |w| w['name'] }).to eq(['Bob'])
+    end
+
+    it 'returns nobody when no one scored any points' do
+      scoreboard = [
+        { 'name' => 'Ann', 'id' => '1', 'score' => '0' },
+        { 'name' => 'Bob', 'id' => '2', 'score' => '0' }
+      ]
+
+      expect(described_class.winners(scoreboard)).to eq([])
+    end
+
+    it 'returns nobody for an empty scoreboard' do
+      expect(described_class.winners([])).to eq([])
+    end
+  end
+
+  describe '.winner_announcement' do
+    it 'names a single winner' do
+      winners = [{ 'name' => 'Ann' }]
+
+      expect(described_class.winner_announcement(winners, 'the Bible knowledge quiz'))
+        .to eq('Ann won the Bible knowledge quiz')
+    end
+
+    it 'names both people in a two-way tie' do
+      winners = [{ 'name' => 'Ann' }, { 'name' => 'Bob' }]
+
+      expect(described_class.winner_announcement(winners, 'the Bible knowledge quiz'))
+        .to eq('Ann and Bob tied for first in the Bible knowledge quiz')
+    end
+
+    it 'names everyone in a larger tie' do
+      winners = [{ 'name' => 'Ann' }, { 'name' => 'Bob' }, { 'name' => 'Cal' }]
+
+      expect(described_class.winner_announcement(winners, 'the Bible knowledge quiz'))
+        .to eq('Ann, Bob, and Cal tied for first in the Bible knowledge quiz')
+    end
+
+    it 'fits the 255 character news column when many long names tie' do
+      winners = Array.new(6) { |i| { 'name' => "#{'x' * 59}#{i}" } }
+
+      expect(described_class.winner_announcement(winners, 'the Bible knowledge quiz').length).to be <= 255
+    end
+  end
+
+  describe 'question answer window' do
+    it 'returns the question id while the question is open' do
+      quiz_session.open_question(question_num, question_id, 30)
+
+      expect(quiz_session.open_question_id(question_num)).to eq(question_id.to_s)
+    end
+
+    it 'returns nothing once the deadline has passed' do
+      quiz_session.open_question(question_num, question_id, 30)
+
+      travel_to((30 + QuizSession::ANSWER_GRACE_SECONDS + 1).seconds.from_now) do
+        expect(quiz_session.open_question_id(question_num)).to be_nil
+      end
+    end
+
+    it 'returns nothing for a question that was never opened' do
+      expect(quiz_session.open_question_id(99)).to be_nil
+    end
+
+    it 'points at the newest question when a question number is reopened' do
+      quiz_session.open_question(question_num, question_id, 30)
+      quiz_session.open_question(question_num, 789, 30)
+
+      expect(quiz_session.open_question_id(question_num)).to eq('789')
+    end
+
+    it 'exposes the opened question to the difficulty update' do
+      quiz_session.open_question(question_num, question_id, 30)
+
+      expect(quiz_session.get_question_stats.first['qq_id']).to eq(question_id.to_s)
+    end
+
+    it 'lets each user claim a question only once' do
+      quiz_session.open_question(question_num, question_id, 30)
+
+      expect(quiz_session.claim_answer(question_num, user_id)).to be true
+      expect(quiz_session.claim_answer(question_num, user_id)).to be false
+      expect(quiz_session.claim_answer(question_num, 999)).to be true
+    end
+
+    it 'forgets claims when the quiz data is cleaned up' do
+      quiz_session.open_question(question_num, question_id, 30)
+      quiz_session.claim_answer(question_num, user_id)
+      quiz_session.cleanup_quiz_data
+      quiz_session.open_question(question_num, question_id, 30)
+
+      expect(quiz_session.claim_answer(question_num, user_id)).to be true
     end
   end
 

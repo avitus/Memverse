@@ -2,7 +2,7 @@
 
 class LiveQuizController < ApplicationController
 
-  before_action :authenticate_user!, :only => :live_quiz
+  before_action :authenticate_user!, :only => [:live_quiz, :record_score]
 
   #-----------------------------------------------------------------------------------------------------------
   # Setup quiz room when user arrives
@@ -76,41 +76,17 @@ class LiveQuizController < ApplicationController
   end
 
   #-----------------------------------------------------------------------------------------------------------
-  # This method receive scores for each participant
+  # Grade the signed-in user's answer to the current question and return the result
   #-----------------------------------------------------------------------------------------------------------
   def record_score
+    result = QuizAnswerSubmission.call(
+      user: current_user,
+      quiz_id: params[:quiz_id] || 1,  # Default to knowledge quiz
+      question_num: params[:question_num],
+      answer: params[:answer]
+    )
 
-    # Extract parameters
-    quiz_id = params[:quiz_id] || 1  # Default to knowledge quiz
-    usr_id = params[:usr_id].to_i
-    usr_name = params[:usr_name]
-    usr_login = params[:usr_login]
-    qq_id = params[:question_id]  # ID of Quiz Question
-    question_num = params[:question_num].to_i
-    score = params[:score]        # Score out of 10
-
-    # Initialize QuizSession service
-    quiz_session = QuizSession.new(quiz_id)
-    
-    # Add participant if not already added (even with zero score)
-    quiz_session.add_participant(usr_id, usr_name, usr_login)
-    
-    if score != "false" && score.to_i > 0
-      # Update user's score
-      quiz_session.update_score(usr_id, question_num, score.to_i)
-      
-      # Update question statistics
-      quiz_session.update_question_stats(question_num, qq_id)
-    else
-      Rails.logger.info("*** Score was submitted as false or zero for #{usr_name}")
-      # Update question statistics even for incorrect answers
-      quiz_session.update_question_stats(question_num, qq_id)
-    end
-
-    respond_to do |format|
-      format.all { head :ok }
-    end
-
+    render json: result.to_h
   end
 
   #-----------------------------------------------------------------------------------------------------------

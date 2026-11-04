@@ -325,14 +325,16 @@ class KnowledgeQuiz
           end
         end
 
-        # Store question metadata in Redis
-        @quiz_session.update_question_stats(q_num, question.id)
+        time_allocated = question.time_allocation
+
+        # Start accepting answers to this question
+        @quiz_session.open_question(q_num, question.id, time_allocated)
 
         # Update question to show that it was asked today (use UTC)
         # Use update_column to skip validation in case of other issues
         question.update_column(:last_asked, Date.current)
 
-        # Publish question
+        # Publish question. The answer stays out of this public message until the question closes.
         publish_with_retry(channel, {
           meta: "question",
           q_id: question.id,
@@ -343,15 +345,25 @@ class KnowledgeQuiz
           mc_option_b: question.mc_option_b,
           mc_option_c: question.mc_option_c,
           mc_option_d: question.mc_option_d,
-          mc_answer: question.mc_answer,
-          time_alloc: question.time_allocation
+          time_alloc: time_allocated
         })
 
         # Time to answer question
-        sleep(question.time_allocation)
+        sleep(time_allocated + QuizSession::ANSWER_GRACE_SECONDS)
+
+        # Reveal the answer now that the question has closed
+        publish_with_retry(channel, {
+          meta: "answer",
+          q_num: q_num,
+          q_type: "mcq",
+          mc_answer: question.mc_answer
+        })
 
         # Update and publish scoreboard
         publish_scoreboard(channel)
+
+        # Leave the answer on screen before the next question replaces it
+        sleep(QuizSession::ANSWER_REVEAL_SECONDS)
       end
     end
   end
@@ -387,35 +399,37 @@ class KnowledgeQuiz
   end
   
   def update_question_difficulty_and_scoreboard
-    with_retry("updating question difficulty") do
-      quiz_table = @quiz_session.get_question_stats
+    quiz_table = @quiz_session.get_question_stats
 
-      Sidekiq.logger.info '----------------------------------------------------------------------------------------'
-      Sidekiq.logger.info '#  |  ID  |  Answers Submitted  |  Total Score'
-      Sidekiq.logger.info '----------------------------------------------------------------------------------------'
-      
-      quiz_table.each_with_index do |qq, index|
-        q_id = qq['qq_id'].to_i
-        q_count = qq['answered'].to_i
-        q_total = qq['total_score'].to_i
-        q_perc_correct = q_count > 0 ? (q_total.to_f / q_count * 10) : 0
+    Sidekiq.logger.info '----------------------------------------------------------------------------------------'
+    Sidekiq.logger.info '#  |  ID  |  Answers Submitted  |  Total Score'
+    Sidekiq.logger.info '----------------------------------------------------------------------------------------'
 
-        Sidekiq.logger.info "#{index}      #{qq['qq_id']}         #{qq['answered']}                  #{qq['total_score']}"
+    quiz_table.each_with_index do |qq, index|
+      Sidekiq.logger.info "#{index}      #{qq['qq_id']}         #{qq['answered']}                  #{qq['total_score']}"
 
-        # Update quiz question difficulty in database
-        begin
-          question = QuizQuestion.find(q_id)
-          question.update_difficulty(q_count, q_perc_correct)
-        rescue ActiveRecord::RecordNotFound => e
-          Sidekiq.logger.error "Question #{q_id} not found: #{e.message}"
-        end
-      end
+      update_question_difficulty(qq)
     end
 
     # Record final scoreboard and announce winner
     record_final_scoreboard
   end
-  
+
+  # Question statistics must never cost players the result of a quiz, so a failure is reported
+  # and the quiz carries on. There is no retry: it would count this question's answers again.
+  def update_question_difficulty(stats)
+    q_id = stats['qq_id'].to_i
+    q_count = stats['answered'].to_i
+    q_total = stats['total_score'].to_i
+    q_perc_correct = q_count > 0 ? (q_total.to_f / q_count * 10) : 0
+
+    QuizQuestion.find(q_id).update_difficulty(q_count, q_perc_correct)
+  rescue => e
+    Sidekiq.logger.error "Could not update difficulty of question #{q_id}: #{e.class} - #{e.message}"
+    Sentry.capture_exception(e)
+  end
+
+
   def record_final_scoreboard
     with_retry("recording final scoreboard") do
       final_scoreboard = @quiz_session.get_scoreboard
@@ -426,37 +440,47 @@ class KnowledgeQuiz
         Sidekiq.logger.info "[#{usr['score']}] - #{usr['name']}"
       end
 
-      # Announce winner if there are participants
-      unless final_scoreboard.empty?
-        gold_ribbon_name = final_scoreboard[0]['name']
-        gold_ribbon_id = final_scoreboard[0]['id']
-        
+      # Announce the winner, or everyone tied for first, if anyone scored
+      winners = QuizSession.winners(final_scoreboard)
+      unless winners.empty?
+        winner_names = winners.map { |winner| winner['name'] }.join(', ')
+
         # Log winner announcement to help debug duplicates
-        Sidekiq.logger.info "===> Creating winner announcement tweet for #{gold_ribbon_name} (Process: #{Process.pid})"
-        
-        broadcast = "#{gold_ribbon_name} won the Bible knowledge quiz"
-        tweet = Tweet.create!(news: broadcast, user_id: gold_ribbon_id, importance: 2)
+        Sidekiq.logger.info "===> Creating winner announcement tweet for #{winner_names} (Process: #{Process.pid})"
+
+        broadcast = QuizSession.winner_announcement(winners, "the Bible knowledge quiz")
+        tweet = Tweet.create!(news: broadcast, user_id: winners.first['id'], importance: 2)
 
         Sidekiq.logger.info "===> Created winner tweet ID: #{tweet.id} at #{tweet.created_at}"
 
-        # Award Quiz Champion badge to winner
-        begin
-          quiz_champion_badge = Badge.where(name: 'Quiz Champion').first
-          if quiz_champion_badge
-            winner_user = User.find(gold_ribbon_id)
-            quiz_champion_badge.award_badge(winner_user)
-            Sidekiq.logger.info "===> Awarded Quiz Champion badge to #{gold_ribbon_name} (ID: #{gold_ribbon_id})"
-          else
-            Sidekiq.logger.error "===> Quiz Champion badge not found - cannot award to winner"
-          end
-        rescue => e
-          Sidekiq.logger.error "===> Failed to award Quiz Champion badge: #{e.message}"
-          Sidekiq.logger.error e.backtrace.first(5).join("\n")
-        end
+        award_quiz_champion_badges(winners)
       end
     end
   end
-  
+
+  # Badge problems are logged and never abort the quiz, and one winner's failure
+  # does not cost another tied winner their badge.
+  def award_quiz_champion_badges(winners)
+    quiz_champion_badge = Badge.where(name: 'Quiz Champion').first
+    unless quiz_champion_badge
+      Sidekiq.logger.error "===> Quiz Champion badge not found - cannot award to winner"
+      return
+    end
+
+    winners.each do |winner|
+      begin
+        quiz_champion_badge.award_badge(User.find(winner['id']))
+        Sidekiq.logger.info "===> Awarded Quiz Champion badge to #{winner['name']} (ID: #{winner['id']})"
+      rescue => e
+        Sidekiq.logger.error "===> Failed to award Quiz Champion badge: #{e.message}"
+        Sidekiq.logger.error e.backtrace.first(5).join("\n")
+      end
+    end
+  rescue => e
+    Sidekiq.logger.error "===> Failed to award Quiz Champion badge: #{e.message}"
+    Sidekiq.logger.error e.backtrace.first(5).join("\n")
+  end
+
   def close_quiz_chat(channel)
     Sidekiq.logger.info "Quiz now over. Sleeping for 10 minutes, then shutting down chat."
     

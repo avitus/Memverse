@@ -57,29 +57,46 @@ The cron entry fires at the published time; the countdown users see targets this
 |---|---|
 | T+0:00 | Worker starts. Acquires an execution-window lock (`knowledge_quiz_lock_execution`, 5 min) and the quiz lock (`quiz_session:1:lock`, `QuizSession::LOCK_TIMEOUT` 3600 s). Status `In progress. Initializing...`; old session data cleared. Tweet "The Bible knowledge quiz is starting" and an iOS push. |
 | T+0:00 → T+5:00 | Chat opens (Redis hash `chat-quiz-1` status `Open`, PubNub `chat_status` on channel `quiz-1`); 300 s of chat (30 s outside production). Status `In progress. Chat open. Wait for question.` |
-| T+5:00 → ~T+25:00 | **25 questions** (5 outside production). Each is `QuizQuestion.mcq.approved.order(:last_asked).first` (falling back to questions of at most 300 characters), so the pool rotates least-recently-asked first and new approved questions go first; `last_asked` is set to today. The question is published over PubNub with its `time_alloc`, the worker sleeps that long, then publishes the scoreboard. |
-| end | Status `Finished`. `perc_correct` and `times_answered` are updated from the answers; the final scoreboard is logged; a winner tweet is posted and the **Quiz Champion** badge (`Badge.where(name: 'Quiz Champion')`, created by migration `20250930222702`) is awarded with `award_badge`, which does not duplicate an existing award. Badge problems are logged and never abort the quiz. |
+| T+5:00 → ~T+25:00 | **25 questions** (5 outside production). Each is `QuizQuestion.mcq.approved.order(:last_asked).first` (falling back to questions of at most 300 characters), so the pool rotates least-recently-asked first and new approved questions go first; `last_asked` is set to today. The question opens for answers (`QuizSession#open_question`) and is published over PubNub with its `time_alloc`, without the answer. The worker sleeps `time_alloc` plus `ANSWER_GRACE_SECONDS`, publishes the answer and the scoreboard, then waits `ANSWER_REVEAL_SECONDS` so the answer can be read before the next question. |
+| end | Status `Finished`. `perc_correct` and `times_answered` are updated from the answers; the final scoreboard is logged; everyone on the top score wins (`QuizSession.winners`), and nobody wins if nobody scored. One tweet is posted, either "X won the Bible knowledge quiz" or "X and Y tied for first in the Bible knowledge quiz", and each winner gets the **Quiz Champion** badge (`Badge.where(name: 'Quiz Champion')`, created by migration `20250930222702`) through `award_badge`, which does not duplicate an existing award. Badge problems are logged and never abort the quiz or cost another winner their badge. |
 | end → +10:00 | Chat stays open 600 s (30 s outside production), then closes; locks released. |
 
 Operations that talk to external services during the run (tweet, PubNub publishes, the setup-time
-clearing of old Redis session data, finalizing and question-difficulty updates) go through
-`with_retry` (3 attempts, growing back-off). The `ensure`-time cleanup (`cleanup_quiz_resources`:
+clearing of old Redis session data, finalizing) go through
+`with_retry` (3 attempts, growing back-off). Question-difficulty updates do not: a retry would count
+answers twice, and statistics must not cost players the result, so a failure on one question goes
+to the log and Sentry and the quiz carries on to announce the winner. The `ensure`-time cleanup (`cleanup_quiz_resources`:
 status update, unlock, key deletion) uses plain `rescue` blocks and is not retried. The worker has
 `retry: false`, so a crashed quiz is not re-run. Session keys carry a 2-hour TTL (`QuizSession::DEFAULT_TTL`).
 
 ### Redis keys (`QuizSession`, prefix `quiz_session`)
 
 `quiz_session:<quiz_id>:status` (hash: status, updated_at, metadata), `:lock`, `:participants` (set),
-`:user:<user_id>` (hash: name, login, id, score), `:questions` (set), `:question:<n>` (hash).
+`:user:<user_id>` (hash: name, login, id, score), `:questions` (set), `:question:<n>` (hash: qq_id, closes_at, total_score, answered, and an `answered_by:<user_id>` field per answer).
 `Quiz#status`/`Quiz#channel` still use the legacy `quiz<id>` hash (no dash), while the workers publish on PubNub channel `quiz-<id>` and keep the chat status in `chat-quiz-<id>`.
 `QuizSession#cleanup_quiz_data` deletes `quiz_session:<id>:*`.
 
 ### Scoring
 
-The browser POSTs each answer to `/record_score` (web) or `/api/v1/record_score` (OAuth) with
-`quiz_id`, `usr_id`, `usr_name`, `usr_login`, `question_id`, `question_num`, `score`. A score of
-`"false"` or 0 is ignored; otherwise `QuizSession#add_participant`, `#update_score` and
-`#update_question_stats` run and the scoreboard the worker publishes after the question reflects it.
+The browser POSTs each answer to `/record_score` (web, signed in, with the page's CSRF token) or
+`/api/v1/record_score` (OAuth) with `quiz_id`, `question_num` and `answer`. The server takes the user
+from the session or token, finds the question from `question_num`, and grades with
+`QuizQuestion#grade_answer`, so nothing about the user, question or score comes from the client.
+`QuizAnswerSubmission` holds the rules and returns JSON `{ status, score }`:
+
+| Status | Meaning |
+|---|---|
+| `graded` | First answer while the question was open; `score` is the points out of 10 |
+| `closed` | The question is not open (past `closes_at`, or never asked) |
+| `duplicate` | This user already answered this question; the first answer stands |
+| `unanswered` | No answer sent, which the page does on time-out so the player is still listed |
+
+The response never includes the correct answer. It reaches everyone at once in the `answer` PubNub
+message after the question closes.
+
+The PubNub publish key has to be in the page for chat, so anyone with it can publish fake `question`,
+`answer` or `scoreboard` messages that other browsers will display. Those affect only what is shown:
+winners and badges come from the Redis scores, which only `record_score` writes.
 
 ## Custom quizzes (`app/workers/scheduled_quiz.rb`)
 

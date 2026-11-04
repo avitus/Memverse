@@ -38,6 +38,11 @@ var quizRoom = {
                 this.handleQuestion(m);
                 break;
 
+            case "answer":
+                console.log("==> Incoming answer");
+                this.revealAnswer(m);
+                break;
+
             case "scoreboard":
                 console.log("==> Incoming scoreboard update");
                 this.updateScoreboard(m);
@@ -54,37 +59,27 @@ var quizRoom = {
         var qNum   = data.q_num;
         var qType  = data.q_type;
         var qTime  = data.time_alloc;
-        var qID    = data.q_id;
 
-        var qText, qRef, qShow, qAnswer;
-        var qOptionA, qOptionB, qOptionC, qOptionD, mcAnswer;
+        var qShow;
+        var qOptionA, qOptionB, qOptionC, qOptionD;
 
-        // Set what should be displayed (question) and hidden (answer)
+        // Set what should be displayed. The answer arrives once the question has closed.
         switch (qType)
         {
             case 'recitation':
-                qRef    = data.q_ref;
-                qText   = data.q_passages[translation];
-                qShow   = qRef;
-                qAnswer = qText;
+                qShow = data.q_ref;
             break;
 
             case 'reference':
-                qRef    = data.q_ref;
-                qText   = data.q_passages[translation];
-                qShow   = qText;
-                qAnswer = qRef;
+                qShow = data.q_passages[translation];
             break;
 
             case 'mcq':
-                qText    = data.mc_question;
                 qOptionA = data.mc_option_a;
                 qOptionB = data.mc_option_b;
                 qOptionC = data.mc_option_c;
                 qOptionD = data.mc_option_d;
-                mcAnswer = data.mc_answer;
-                qShow    = qText;
-                qAnswer  = data.mc_answer;
+                qShow    = data.mc_question;
             break;
 
             default:
@@ -106,13 +101,13 @@ var quizRoom = {
         // Set up question depending on type
         if (qType == 'reference' || qType == 'recitation') {
 
-            quizRoom.addInputBox( qType, qNum, qAnswer);
-            $('input#submit-answer').on( "click", function() { quizRoom.scoreUserAnswer( qAnswer, qType, qNum, qID ); } );
+            quizRoom.addInputBox( qType, qNum );
+            $('input#submit-answer').on( "click", function() { quizRoom.scoreUserAnswer( qType, qNum ); } );
 
         } else if (qType == 'mcq'){
 
-            $(q+" #q-answer").html( setupMCQ( qOptionA, qOptionB, qOptionC, qOptionD, mcAnswer, qNum ) );
-            $('input#submit-answer').on( "click", function() { quizRoom.scoreUserAnswer( qAnswer, qType, qNum, qID ); } );
+            $(q+" #q-answer").html( setupMCQ( qOptionA, qOptionB, qOptionC, qOptionD, qNum ) );
+            $('input#submit-answer').on( "click", function() { quizRoom.scoreUserAnswer( qType, qNum ); } );
 
         };
 
@@ -151,9 +146,9 @@ var quizRoom = {
     },
 
     /******************************************************************************
-     * Score and record answer
+     * Send the answer to the server, which grades and records it
      ******************************************************************************/
-    scoreUserAnswer: function( questionAnswer, questionType, questionNum, questionID ) {
+    scoreUserAnswer: function( questionType, questionNum ) {
 
         if (questionType == 'mcq'){
             var userAnswer = $('input[name=mcq]:checked').val();
@@ -163,76 +158,109 @@ var quizRoom = {
             var userAnswer = $('input#'+questionNum).val();
         }
 
+        // Leave the button in place so the player can fix the answer and try again
+        var problem = liveQuizAnswerProblem( questionType, userAnswer );
+        if (problem) {
+            alert(problem);
+            return;
+        }
+
         $('input#submit-answer').remove();  // remove answer submission button
 
-        grade = getScore( questionAnswer, userAnswer, questionType );
+        var selector = "#question-" + questionNum;
+        var dot      = $("#dot-" + questionNum);
 
-        if (grade.score != null) {
+        quizRoom.postAnswer( questionNum, userAnswer )
+            .done(function (result) {
+                quizRoom.showMessage( selector, liveQuizFeedback(result) );
 
-            // Record score and update question difficulty
-            $.post("/record_score", {   quiz_id:      quizID,
-                                        usr_id:       memverseUserID,
-                                        usr_name:     memverseUserName,
-                                        usr_login:    memverseUserLogin,
-                                        question_id:  questionID,
-                                        question_num: questionNum,
-                                        score:        grade.score } );
-
-            // Color result and give feedback on question
-            selector = "#question-" + questionNum;
-            $(selector + " #q-msg").html("<p>" + grade.msg + "</p>").children("p").effect('highlight', {}, 3000);
-
-            if (grade.score != 10){ // if it's wrong
-                $(".q-dot.current").addClass("red completed");
-            } else {
-                $(".q-dot.current").addClass("green completed");
-            }
-
-            if(questionType == "mcq"){
-                // note correct answer
-                $("#q" + questionNum + "_opt_" + questionAnswer.toLowerCase()).parent().addClass("correct");
-                // if user was wrong, strike out user answer
-                if (grade.score != 10) {
-                    $("#q" + questionNum + "_opt_" + userAnswer).parent().addClass("incorrect");
+                if (result.status == 'graded') {
+                    dot.addClass( (result.score == 10 ? "green" : "red") + " completed" );
                 }
-            }
-        }
+            })
+            .fail(function () {
+                quizRoom.showMessage( selector, "Your answer could not be recorded. Please reload the page if this keeps happening." );
+            });
     },
 
     /******************************************************************************
-     * Disable question submission and auto-submit zero score if not answered
+     * Post to the server. No answer means the question timed out unanswered, which
+     * still lists the player on the scoreboard.
+     ******************************************************************************/
+    postAnswer: function( questionNum, answer ) {
+        var data = { quiz_id: quizID, question_num: questionNum };
+        if (answer !== undefined) { data.answer = answer; }
+
+        return $.ajax({
+            url:      "/record_score",
+            type:     "POST",
+            dataType: "json",
+            headers:  { "X-CSRF-Token": $('meta[name="csrf-token"]').attr('content') },
+            data:     data
+        });
+    },
+
+    /******************************************************************************
+     * Add a message under a question
+     ******************************************************************************/
+    showMessage: function( selector, message ) {
+        $("<p/>").text(message).appendTo(selector + " #q-msg").effect('highlight', {}, 3000);
+    },
+
+    /******************************************************************************
+     * Show the correct answer once the question has closed
+     ******************************************************************************/
+    revealAnswer: function (data) {
+
+        var qNum     = data.q_num;
+        var selector = "#question-" + qNum;
+        var message;
+
+        switch (data.q_type)
+        {
+            case 'mcq':
+                var correct  = data.mc_answer.toLowerCase();
+                var selected = $(selector + " input[name=mcq]:checked");
+
+                $("#q" + qNum + "_opt_" + correct).parent().addClass("correct");
+                if (selected.length > 0 && selected.val() != correct) {
+                    selected.parent().addClass("incorrect");
+                }
+                message = "The correct answer was (" + correct.toUpperCase() + ").";
+            break;
+
+            case 'reference':
+                message = "The correct reference was " + data.q_ref + ".";
+            break;
+
+            case 'recitation':
+                message = "The verse reads: " + data.q_passages[translation];
+            break;
+        }
+
+        if (message) { quizRoom.showMessage( selector, message ); }
+    },
+
+    /******************************************************************************
+     * Disable question submission and list the player if they didn't answer
      ******************************************************************************/
     disableSubmission: function () {
-        // Check if submit button still exists (user hasn't answered)
-        if ($('input#submit-answer').length > 0) {
-            // Get current question info from the visible question
-            var currentQuestion = $('.question:visible');
-            var questionNum = currentQuestion.attr('id').replace('question-', '');
-            var questionType = currentQuestion.data('qtype');
-            var questionID = currentQuestion.data('qid');
-            
-            // Submit zero score for unanswered question
-            $.post("/record_score", {
-                quiz_id: quizID,
-                usr_id: memverseUserID,
-                usr_name: memverseUserName,
-                usr_login: memverseUserLogin,
-                question_id: questionID,
-                question_num: questionNum,
-                score: 0
-            });
-            
-            // Add feedback message
-            $('#q-msg').html("<span style='color:#B95C2E'>Time's up! No points awarded.</span>");
+        var currentQuestion = $('.question:visible');
+
+        // The button is still there only if the player hasn't answered
+        if ($('input#submit-answer').length > 0 && currentQuestion.length > 0) {
+            quizRoom.postAnswer( currentQuestion.attr('id').replace('question-', '') );
+            quizRoom.showMessage( '#' + currentQuestion.attr('id'), "Time's up! No points awarded." );
         }
-        
-        $('input#submit-answer').hide();
+
+        // Removed rather than hidden so the check above is false from here on
+        $('input#submit-answer').remove();
     },
 
     /******************************************************************************
      * Add correct question input form
      ******************************************************************************/
-    addInputBox: function (questionType, questionNum, questionAnswer) {
+    addInputBox: function (questionType, questionNum) {
 
         selector = "#question-" + questionNum;
 
@@ -255,7 +283,7 @@ var quizRoom = {
                 }
                 $(selector + ' #q-answer input[type="text"]').keypress(function(e) {
                     if(e.which == 13) {
-                        quizRoom.scoreUserAnswer( qAnswer, qType, qNum, qID );
+                        quizRoom.scoreUserAnswer( questionType, questionNum );
                     }
                 });
                 break;

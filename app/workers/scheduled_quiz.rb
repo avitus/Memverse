@@ -372,10 +372,6 @@ class ScheduledQuiz
 
         Sidekiq.logger.info "===> Quiz ##{quiz.id} : Processing Question ##{num} (#{idx+1} of #{quiz_questions.count}) [Type: #{question.question_type}]"
 
-        # Store question metadata in Redis
-        Sidekiq.logger.info "===> Quiz ##{quiz.id} : Updating question stats in Redis"
-        @quiz_session.update_question_stats(num, question.id)
-
         case question.question_type
         when "recitation"
           Sidekiq.logger.info "===> Quiz ##{quiz.id} : Question ##{num} - Recitation question for passage: #{ref}"
@@ -394,7 +390,10 @@ class ScheduledQuiz
         # Publish updated scoreboard after each question
         Sidekiq.logger.info "===> Quiz ##{quiz.id} : Publishing scoreboard after question ##{num}"
         publish_scoreboard(channel, quiz.id)
-        
+
+        # Leave the answer on screen before the next question replaces it
+        sleep(QuizSession::ANSWER_REVEAL_SECONDS)
+
         Sidekiq.logger.info "===> Quiz ##{quiz.id} : Completed question ##{num}"
       end
     end
@@ -406,51 +405,45 @@ class ScheduledQuiz
     # Calculate time allocation: 24 WPM typing speed with 15 seconds to think
     time_alloc = (passages.first.last.split(" ").length * 2.5 + 15.0).to_i
 
-    publish_with_retry(channel, {
-      meta: "question",
-      q_num: num,
-      q_id: question.id,
-      q_type: "recitation",
-      q_ref: ref,
-      q_passages: passages,
-      time_alloc: time_alloc
-    }, quiz_id)
-    
-    sleep(time_alloc + 1)
+    run_question(question, num, channel, quiz_id, time_alloc,
+                 { q_type: "recitation", q_ref: ref },
+                 { q_type: "recitation", q_passages: passages })
   end
-  
+
   def handle_reference_question(question, num, ref, passages, channel, quiz_id)
-    publish_with_retry(channel, {
-      meta: "question",
-      q_num: num,
-      q_id: question.id,
-      q_type: "reference",
-      q_ref: ref,
-      q_passages: passages,
-      time_alloc: 25
-    }, quiz_id)
-    
-    sleep(26)
+    run_question(question, num, channel, quiz_id, 25,
+                 { q_type: "reference", q_passages: passages },
+                 { q_type: "reference", q_ref: ref })
   end
-  
+
   def handle_mcq_question(question, num, channel, quiz_id)
+    run_question(question, num, channel, quiz_id, 30,
+                 { q_type: "mcq",
+                   mc_question: question.mc_question,
+                   mc_option_a: question.mc_option_a,
+                   mc_option_b: question.mc_option_b,
+                   mc_option_c: question.mc_option_c,
+                   mc_option_d: question.mc_option_d },
+                 { q_type: "mcq", mc_answer: question.mc_answer })
+  end
+
+  # Opens the question for answers and publishes it, keeping the answer out of that
+  # public message until the question has closed.
+  def run_question(question, num, channel, quiz_id, time_alloc, question_fields, answer_fields)
+    @quiz_session.open_question(num, question.id, time_alloc)
+
     publish_with_retry(channel, {
       meta: "question",
       q_num: num,
       q_id: question.id,
-      q_type: "mcq",
-      mc_question: question.mc_question,
-      mc_option_a: question.mc_option_a,
-      mc_option_b: question.mc_option_b,
-      mc_option_c: question.mc_option_c,
-      mc_option_d: question.mc_option_d,
-      mc_answer: question.mc_answer,
-      time_alloc: 30
-    }, quiz_id)
-    
-    sleep(31)
+      time_alloc: time_alloc
+    }.merge(question_fields), quiz_id)
+
+    sleep(time_alloc + QuizSession::ANSWER_GRACE_SECONDS)
+
+    publish_with_retry(channel, { meta: "answer", q_num: num }.merge(answer_fields), quiz_id)
   end
-  
+
   def publish_scoreboard(channel, quiz_id)
     with_retry("publishing scoreboard", quiz_id) do
       scoreboard = @quiz_session.get_scoreboard
@@ -485,12 +478,11 @@ class ScheduledQuiz
         Sidekiq.logger.info "[#{usr['score']}] - #{usr['name']}"
       end
 
-      # Announce winner if there are participants
-      unless final_scoreboard.empty?
-        gold_ribbon_name = final_scoreboard[0]['name']
-        gold_ribbon_id = final_scoreboard[0]['id']
-        broadcast = "#{gold_ribbon_name} won #{quiz.name}"
-        Tweet.create!(news: broadcast, user_id: gold_ribbon_id, importance: 2)
+      # Announce the winner, or everyone tied for first, if anyone scored
+      winners = QuizSession.winners(final_scoreboard)
+      unless winners.empty?
+        broadcast = QuizSession.winner_announcement(winners, quiz.name)
+        Tweet.create!(news: broadcast, user_id: winners.first['id'], importance: 2)
       end
     end
   end
