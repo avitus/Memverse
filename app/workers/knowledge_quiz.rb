@@ -398,6 +398,7 @@ class KnowledgeQuiz
     end
   end
   
+  # Updates every question's statistics, then announces the result
   def update_question_difficulty_and_scoreboard
     quiz_table = @quiz_session.get_question_stats
 
@@ -430,6 +431,7 @@ class KnowledgeQuiz
   end
 
 
+  # Logs the final scores and announces the winner, or everyone tied for first
   def record_final_scoreboard
     with_retry("recording final scoreboard") do
       final_scoreboard = @quiz_session.get_scoreboard

@@ -105,6 +105,26 @@ RSpec.describe "Live Quiz answering", type: :feature, js: true do
     expect(find('#question-1 #q-msg')).to have_text('You answered perfectly')
   end
 
+  it 'ignores Enter after a reference answer has been sent, so the player is not told they answered twice' do
+    session.open_question(1, question.id, 30)
+    deliver(meta: 'question', q_id: question.id, q_num: 1, q_type: 'reference', q_passages: { user.translation => 'Jesus wept.' }, time_alloc: 30)
+    expect(page).to have_css('#question-1 input#submit-answer')
+    page.execute_script(<<~JS)
+      window.answerPosts = 0;
+      var postAnswer = quizRoom.postAnswer;
+      quizRoom.postAnswer = function() { window.answerPosts++; return postAnswer.apply(this, arguments); };
+    JS
+
+    input = find('#question-1 input[type="text"]')
+    input.send_keys('John 11:35', :enter)
+    expect(page).not_to have_css('#question-1 input#submit-answer')
+    input.send_keys(:enter)
+
+    expect(find('#question-1 #q-msg')).to have_text('not correct')
+    expect(find('#question-1 #q-msg')).not_to have_text('already answered')
+    expect(page.evaluate_script('window.answerPosts')).to eq(1)
+  end
+
   it "shows Time's up on the current question and lists the player, past question 1" do
     ask(2, time_alloc: 1)
 

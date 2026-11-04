@@ -150,6 +150,9 @@ var quizRoom = {
      ******************************************************************************/
     scoreUserAnswer: function( questionType, questionNum ) {
 
+        // The button goes once the player has answered or time is up; Enter can still get here
+        if ($('input#submit-answer').length === 0) { return; }
+
         if (questionType == 'mcq'){
             var userAnswer = $('input[name=mcq]:checked').val();
         } else if (questionType == 'recitation') {

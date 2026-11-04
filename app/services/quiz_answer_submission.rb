@@ -21,6 +21,7 @@ class QuizAnswerSubmission
     @answer = answer
   end
 
+  # @return [Result]
   def call
     # Everyone who plays appears on the scoreboard, even with no points
     @quiz_session.add_participant(@user.id, @user.name_or_login, @user.login)
@@ -37,6 +38,7 @@ class QuizAnswerSubmission
 
   private
 
+  # The question, or nil if it is not open for answers
   def open_question
     question_id = @quiz_session.open_question_id(@question_num)
     QuizQuestion.find_by(id: question_id) if question_id

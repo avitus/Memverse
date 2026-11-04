@@ -96,8 +96,9 @@ commands:
           name: Generate asset checksum
           command: |
             # Create a checksum of everything the compiled assets depend on, for the cache key
-            find app/assets lib/assets Gemfile.lock -type f -print0 | \
-              sort -z | xargs -0 cat | md5sum > asset_checksum.txt
+            # Hashing each file with its path means a rename changes the checksum too
+            find app/assets lib/assets config/initializers/assets.rb Gemfile.lock -type f -print0 | \
+              sort -z | xargs -0 md5sum | md5sum > asset_checksum.txt
             echo "Asset checksum: $(cat asset_checksum.txt)"
 
       # Restore precompiled assets
@@ -137,8 +138,8 @@ commands:
 
       # restore_cache can fall back to assets built from older source, and tests served those would
       # run the old JavaScript. The marker records the source the assets were built from, so stale
-      # ones are rebuilt (incrementally, from the restored tmp/cache/assets). Containers share no
-      # filesystem, so each one checks for itself.
+      # ones are removed and rebuilt (incrementally, from the restored tmp/cache/assets). Containers
+      # share no filesystem, so each one checks for itself.
       - run:
           name: Asset Precompilation
           command: |
@@ -146,6 +147,7 @@ commands:
               echo "Using cached precompiled assets"
             else
               echo "Precompiling assets..."
+              rm -rf public/assets
               RAILS_ENV=test bundle exec rake assets:precompile
               cp asset_checksum.txt public/assets/.cache_marker
             fi

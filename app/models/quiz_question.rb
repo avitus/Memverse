@@ -242,6 +242,7 @@ class QuizQuestion < ApplicationRecord
   # ============= Private below this line ====================================================================
   private
 
+  # All or nothing, ignoring case
   def grade_mcq_answer(answer)
     answer.strip.casecmp?(mc_answer.to_s.strip) ? 10 : 0
   end
