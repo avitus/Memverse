@@ -105,6 +105,29 @@ RSpec.describe "Live Quiz answering", type: :feature, js: true do
     expect(find('#question-1 #q-msg')).to have_text('You answered perfectly')
   end
 
+  it 'lets the player try again when the answer could not be sent' do
+    ask(1)
+    page.execute_script(<<~JS)
+      var postAnswer = quizRoom.postAnswer;
+      quizRoom.postAnswer = function() {
+        quizRoom.postAnswer = postAnswer;
+        return $.Deferred().reject().promise();
+      };
+    JS
+
+    choose('q1_opt_b')
+    click_button('Answer!')
+
+    expect(find('#question-1 #q-msg')).to have_text('could not be recorded')
+    expect(score_on_server).to eq(0)
+
+    click_button('Answer!')
+
+    expect(find('#question-1 #q-msg')).to have_text('You answered perfectly')
+    expect(score_on_server).to eq(10)
+    expect(page).not_to have_css('#question-1 input#submit-answer')
+  end
+
   it 'ignores Enter after a reference answer has been sent, so the player is not told they answered twice' do
     session.open_question(1, question.id, 30)
     deliver(meta: 'question', q_id: question.id, q_num: 1, q_type: 'reference', q_passages: { user.translation => 'Jesus wept.' }, time_alloc: 30)
@@ -116,7 +139,7 @@ RSpec.describe "Live Quiz answering", type: :feature, js: true do
     JS
 
     input = find('#question-1 input[type="text"]')
-    input.send_keys('John 11:35', :enter)
+    input.send_keys('John 11:35', :enter, :enter)
     expect(page).not_to have_css('#question-1 input#submit-answer')
     input.send_keys(:enter)
 

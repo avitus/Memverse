@@ -150,8 +150,10 @@ var quizRoom = {
      ******************************************************************************/
     scoreUserAnswer: function( questionType, questionNum ) {
 
-        // The button goes once the player has answered or time is up; Enter can still get here
-        if ($('input#submit-answer').length === 0) { return; }
+        // An enabled button means the question is open and no answer is on its way; Enter can
+        // still get here when it isn't
+        var submitButton = $('input#submit-answer:enabled');
+        if (submitButton.length === 0) { return; }
 
         if (questionType == 'mcq'){
             var userAnswer = $('input[name=mcq]:checked').val();
@@ -168,13 +170,14 @@ var quizRoom = {
             return;
         }
 
-        $('input#submit-answer').remove();  // remove answer submission button
+        submitButton.prop('disabled', true);  // until the server replies
 
         var selector = "#question-" + questionNum;
         var dot      = $("#dot-" + questionNum);
 
         quizRoom.postAnswer( questionNum, userAnswer )
             .done(function (result) {
+                submitButton.remove();
                 quizRoom.showMessage( selector, liveQuizFeedback(result) );
 
                 if (result.status == 'graded') {
@@ -182,7 +185,9 @@ var quizRoom = {
                 }
             })
             .fail(function () {
-                quizRoom.showMessage( selector, "Your answer could not be recorded. Please reload the page if this keeps happening." );
+                // If time ran out meanwhile the button is already gone, so this changes nothing
+                submitButton.prop('disabled', false);
+                quizRoom.showMessage( selector, "Your answer could not be recorded. Please try again, and reload the page if this keeps happening." );
             });
     },
 
@@ -250,8 +255,8 @@ var quizRoom = {
     disableSubmission: function () {
         var currentQuestion = $('.question:visible');
 
-        // The button is still there only if the player hasn't answered
-        if ($('input#submit-answer').length > 0 && currentQuestion.length > 0) {
+        // The button is still enabled only if the player hasn't sent an answer
+        if ($('input#submit-answer:enabled').length > 0 && currentQuestion.length > 0) {
             quizRoom.postAnswer( currentQuestion.attr('id').replace('question-', '') );
             quizRoom.showMessage( '#' + currentQuestion.attr('id'), "Time's up! No points awarded." );
         }
