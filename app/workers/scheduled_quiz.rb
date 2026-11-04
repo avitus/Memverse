@@ -353,16 +353,20 @@ class ScheduledQuiz
   # Quiz question execution
   # ========================================================================
   
+  # Lists every question up front for debugging
+  def log_quiz_questions(quiz, quiz_questions)
+    quiz_questions.each_with_index do |q, idx|
+      Sidekiq.logger.info "===> Quiz ##{quiz.id} : Question #{idx+1}: Type=#{q.question_type}, ID=#{q.id}, Passage=#{q.passage}"
+    end
+  end
+
   def run_quiz_questions(quiz, channel)
     Sidekiq.logger.info("===> Quiz ##{quiz.id} : Starting quiz questions at #{Time.current.utc}")
 
     quiz_questions = quiz.quiz_questions.order("question_no ASC")
     Sidekiq.logger.info("===> Quiz ##{quiz.id} : Loading #{quiz_questions.count} questions")
     
-    # Log all questions for debugging
-    quiz_questions.each_with_index do |q, idx|
-      Sidekiq.logger.info "===> Quiz ##{quiz.id} : Question #{idx+1}: Type=#{q.question_type}, ID=#{q.id}, Passage=#{q.passage}"
-    end
+    log_quiz_questions(quiz, quiz_questions)
 
     quiz_questions.each_with_index do |question, idx|
       with_retry("question #{question.question_no}", quiz.id) do
