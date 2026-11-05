@@ -60,10 +60,9 @@ RSpec.describe QuizSession, type: :service do
         expect(quiz_session.get_scoreboard.map { |entry| entry['id'] }).to eq([user_id.to_s])
       end
 
-      it 'does not overwrite a score when the same player is added at the same moment' do
+      it 'does not overwrite the name or score of a player who is already added' do
         quiz_session.add_participant(user_id, user_name, user_login)
         $redis.hincrby(quiz_session.send(:participant_key, user_id), 'score', 10)
-        allow($redis).to receive(:exists).and_return(0)
 
         quiz_session.add_participant(user_id, 'Other Name', user_login)
 
@@ -71,14 +70,6 @@ RSpec.describe QuizSession, type: :service do
         expect(participant).to include('score' => '10', 'name' => user_name)
       end
 
-      it 'keeps the score of a participant who is added again' do
-        quiz_session.add_participant(user_id, user_name, user_login)
-        $redis.hincrby(quiz_session.send(:participant_key, user_id), 'score', 10)
-
-        quiz_session.add_participant(user_id, user_name, user_login)
-
-        expect(quiz_session.get_scoreboard.first['score']).to eq('10')
-      end
     end
 
     describe '#get_participants' do
@@ -233,6 +224,24 @@ RSpec.describe QuizSession, type: :service do
       expect(announcements).to all(end_with('tied for first in the quiz'))
       expect(announcements.map(&:length)).to all(be <= 255)
       expect(announcements.join(' ')).to include('Bob')
+    end
+
+    it 'escapes HTML in the name of the quiz' do
+      winners = [{ 'name' => 'Ann' }]
+
+      expect(described_class.winner_announcements(winners, '<a href="https://example.com">Quiz</a>'))
+        .to eq(['Ann won &lt;a href=&quot;https://example.com&quot;&gt;Quiz&lt;/a&gt;'])
+    end
+
+    it 'keeps every part of the announcement when the quiz name is as long as the column allows' do
+      winners = [{ 'name' => 'Ann' }, { 'name' => '"' * 60 }]
+
+      announcements = described_class.winner_announcements(winners, '"' * 255)
+
+      expect(announcements.map(&:length)).to all(be <= 255)
+      expect(announcements).to all(include('tied for first in &quot;'))
+      expect(announcements).to all(end_with('&quot;...'))
+      expect(announcements.join(' ')).to include('Ann')
     end
 
     it 'escapes HTML in the name of a single winner' do

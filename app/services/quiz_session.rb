@@ -21,6 +21,9 @@ class QuizSession
   # Length of the tweets.news column
   ANNOUNCEMENT_MAX_LENGTH = 255
 
+  # Leaves room in an announcement for the winner's name, whatever the quiz is called
+  ANNOUNCEMENT_QUIZ_NAME_MAX_LENGTH = 100
+
   # Extra time to accept an answer after the player's timer ends, to cover network
   # delay. The correct answer is not published until this has passed.
   ANSWER_GRACE_SECONDS = 2
@@ -82,28 +85,29 @@ class QuizSession
   # @return [Array<String>] News items for the dashboard. A tie too long for one item
   #   is split over several, so that every winner is named.
   def self.winner_announcements(winners, quiz_name)
-    ending = winners.one? ? " won #{quiz_name}" : " tied for first in #{quiz_name}"
+    quiz = announcement_text(quiz_name, ANNOUNCEMENT_QUIZ_NAME_MAX_LENGTH)
+    ending = winners.one? ? " won #{quiz}" : " tied for first in #{quiz}"
     room = ANNOUNCEMENT_MAX_LENGTH - ending.length
-    names = winners.map { |winner| announcement_name(winner['name'], room) }
+    names = winners.map { |winner| announcement_text(winner['name'], room) }
     batches = names.each_with_object([[]]) do |name, groups|
       groups << [] if groups.last.any? && [*groups.last, name].to_sentence.length > room
       groups.last << name
     end
-    batches.map { |batch| "#{batch.to_sentence}#{ending}".truncate(ANNOUNCEMENT_MAX_LENGTH) }
+    batches.map { |batch| "#{batch.to_sentence}#{ending}" }
   end
 
-  # News items are shown as HTML and players choose their own names, so a name is escaped.
-  # Escaping can make it too long for one item, so it is then shortened between characters,
-  # which never cuts an escape sequence in two.
-  # @param name [String] The player's name
-  # @param room [Integer] Longest the escaped name may be
-  # @return [String] The escaped name
-  def self.announcement_name(name, room)
-    escaped = ERB::Util.html_escape(name.to_s).to_str
+  # News items are shown as HTML, and players and quizmasters choose the names in them, so a
+  # name is escaped. Escaping can make it too long for one item, so it is then shortened between
+  # characters, which never cuts an escape sequence in two.
+  # @param text [String] A player's or quiz's name
+  # @param room [Integer] Longest the escaped text may be
+  # @return [String] The escaped text
+  def self.announcement_text(text, room)
+    escaped = ERB::Util.html_escape(text.to_s).to_str
     return escaped if escaped.length <= room
 
     omission = '...'
-    shortened = name.to_s.each_char.inject(+'') do |kept, char|
+    shortened = text.to_s.each_char.inject(+'') do |kept, char|
       next_char = ERB::Util.html_escape(char).to_str
       break kept if kept.length + next_char.length + omission.length > room
 
@@ -111,7 +115,7 @@ class QuizSession
     end
     "#{shortened}#{omission}"
   end
-  private_class_method :announcement_name
+  private_class_method :announcement_text
 
   def initialize(quiz_id)
     @quiz_id = quiz_id.to_i
