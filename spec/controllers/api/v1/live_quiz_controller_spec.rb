@@ -94,6 +94,16 @@ describe Api::V1::LiveQuizController do
       end
     end
 
+    context "from an old app that sends its own score and no answer" do
+      it "responds with 400 asking for an update, and records nothing" do
+        post :record_score, params: { question_num: 1, question_id: quiz_question.id, score: 10, usr_id: user.id, version: 1 }, format: :json
+
+        expect(response).to have_http_status(:bad_request)
+        expect(JSON.parse(response.body)['message']).to include('Please update')
+        expect(quiz_session.get_scoreboard).to eq([])
+      end
+    end
+
     context "with a question number that is not a positive integer" do
       [nil, '', 'abc', '1x', '0', '-1', '1.5'].each do |question_num|
         it "responds with 400 for #{question_num.inspect} and records nothing" do

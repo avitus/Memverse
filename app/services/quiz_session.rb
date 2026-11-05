@@ -28,6 +28,12 @@ class QuizSession
   # delay. The correct answer is not published until this has passed.
   ANSWER_GRACE_SECONDS = 2
 
+  # Sent as mc_answer in multiple choice question messages instead of the real answer. The
+  # iOS app (Memverse_iOS) crashes on a question without mc_answer, or with an empty one,
+  # so this keeps it running until it is updated. Its players see every answer marked wrong
+  # and score nothing, because the server grades answers and the app sends only a score.
+  IOS_ANSWER_PLACEHOLDER = '-'
+
   # How long the correct answer stays on screen before the next question
   ANSWER_REVEAL_SECONDS = 4
 

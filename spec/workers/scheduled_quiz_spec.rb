@@ -817,7 +817,7 @@ describe ScheduledQuiz do # skipcq: RB-R1001 (one example group covers the whole
 
       worker.send(:handle_mcq_question, mcq, 1, 'quiz-2', 2)
 
-      expect(message('question')).not_to have_key(:mc_answer)
+      expect(message('question')[:mc_answer]).to eq(QuizSession::IOS_ANSWER_PLACEHOLDER)
       expect(message('answer')).to include(q_num: 1, q_type: 'mcq', mc_answer: 'C')
       expect(published.map { |entry| entry[:meta] }).to eq(%w[question answer])
     end

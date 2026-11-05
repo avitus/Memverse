@@ -187,12 +187,12 @@ RSpec.describe KnowledgeQuiz, type: :worker do # skipcq: RB-R1001 (one example g
       allow(PN).to receive(:publish) { |args| published << args[:message] }
     end
 
-    it 'leaves the correct answer out of the question message' do
+    it 'leaves the correct answer out of the question message, sending the placeholder the iOS app needs' do
       worker.perform
 
       question_messages = published.select { |message| message[:meta] == 'question' }
       expect(question_messages).not_to be_empty
-      expect(question_messages).to all(satisfy { |message| !message.key?(:mc_answer) })
+      expect(question_messages.map { |message| message[:mc_answer] }).to all(eq(QuizSession::IOS_ANSWER_PLACEHOLDER))
     end
 
     it 'opens each question for its time allocation before publishing it' do

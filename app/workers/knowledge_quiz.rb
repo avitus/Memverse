@@ -343,7 +343,8 @@ class KnowledgeQuiz
       # Use update_column to skip validation in case of other issues
       question.update_column(:last_asked, Date.current) # skipcq: RB-RL1053 (a quiz must not stop on an invalid old question)
 
-      # Publish question. The answer stays out of this public message until the question closes.
+      # Publish question. The answer stays out of this public message until the question closes;
+      # mc_answer only carries a placeholder for the iOS app.
       publish_with_retry(channel, {
         meta: "question",
         q_id: question.id,
@@ -354,6 +355,7 @@ class KnowledgeQuiz
         mc_option_b: question.mc_option_b,
         mc_option_c: question.mc_option_c,
         mc_option_d: question.mc_option_d,
+        mc_answer: QuizSession::IOS_ANSWER_PLACEHOLDER,
         time_alloc: time_allocated
       })
     end

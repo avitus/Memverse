@@ -426,7 +426,8 @@ class ScheduledQuiz
                    mc_option_a: question.mc_option_a,
                    mc_option_b: question.mc_option_b,
                    mc_option_c: question.mc_option_c,
-                   mc_option_d: question.mc_option_d },
+                   mc_option_d: question.mc_option_d,
+                   mc_answer: QuizSession::IOS_ANSWER_PLACEHOLDER },
                  { q_type: "mcq", mc_answer: question.mc_answer })
   end
 

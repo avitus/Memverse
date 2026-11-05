@@ -71,7 +71,7 @@ class Api::V1::LiveQuizController < Api::V1::ApiController
         end
       end
       response 400 do
-        key :description, 'question_num is missing or is not a positive integer'
+        key :description, 'question_num is missing or is not a positive integer, or an old app sent a score without an answer'
         schema do
           key :'$ref', :ApiError
         end
@@ -100,6 +100,12 @@ class Api::V1::LiveQuizController < Api::V1::ApiController
   # caches :index, :show, :caches_for => 5.minutes
 
   def record_score
+    # The iOS app grades answers itself and sends only a score, which the server no longer accepts
+    if params[:answer].nil? && params.key?(:score)
+      error!(:bad_request, metadata: { message: 'This version of the app cannot record quiz answers. Please update it.' })
+      return
+    end
+
     unless params[:question_num].to_s.match?(/\A[1-9]\d*\z/)
       error!(:bad_request, metadata: { message: 'question_num must be a positive integer' })
       return

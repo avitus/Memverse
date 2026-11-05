@@ -101,7 +101,8 @@ actions not implemented in the controller answer 404. The `POST /api/v1/record_s
 `question_num`, `answer` (omit it when the question timed out) and optional `quiz_id` (default 1). The
 server takes the user from the token and grades the answer itself; a user with no translation chosen
 gets a 422, because recitations are graded against it, and a `question_num` that isn't a positive
-integer gets a 400. See [QUIZ_SYSTEM.md](./QUIZ_SYSTEM.md).
+integer gets a 400, as does a `score` sent without an `answer` (the iOS app, which grades answers itself;
+see [QUIZ_SYSTEM.md](./QUIZ_SYSTEM.md)). See [QUIZ_SYSTEM.md](./QUIZ_SYSTEM.md).
 
 ## Response envelope (`app/controllers/concerns/api_response_helpers.rb`)
 
