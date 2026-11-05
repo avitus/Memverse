@@ -485,8 +485,9 @@ class ScheduledQuiz
       # Announce the winner, or everyone tied for first, if anyone scored
       winners = QuizSession.winners(final_scoreboard)
       unless winners.empty?
-        broadcast = QuizSession.winner_announcement(winners, quiz.name)
-        Tweet.create!(news: broadcast, user_id: winners.first['id'], importance: 2)
+        QuizSession.winner_announcements(winners, quiz.name).each do |broadcast|
+          Tweet.create!(news: broadcast, user_id: winners.first['id'], importance: 2)
+        end
       end
     end
   end

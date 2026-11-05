@@ -63,11 +63,19 @@ class QuizSession
 
   # @param winners [Array<Hash>] At least one participant, from QuizSession.winners
   # @param quiz_name [String] Name of the quiz as it should read in the sentence
-  # @return [String] News text for the dashboard
-  def self.winner_announcement(winners, quiz_name)
+  # @return [Array<String>] News items for the dashboard. A tie too long for one item
+  #   is split over several, so that every winner is named.
+  def self.winner_announcements(winners, quiz_name)
     names = winners.map { |winner| winner['name'] }
-    announcement = names.one? ? "#{names.first} won #{quiz_name}" : "#{names.to_sentence} tied for first in #{quiz_name}"
-    announcement.truncate(ANNOUNCEMENT_MAX_LENGTH)
+    return ["#{names.first} won #{quiz_name}".truncate(ANNOUNCEMENT_MAX_LENGTH)] if names.one?
+
+    ending = " tied for first in #{quiz_name}"
+    room = ANNOUNCEMENT_MAX_LENGTH - ending.length
+    batches = names.each_with_object([[]]) do |name, groups|
+      groups << [] if groups.last.any? && [*groups.last, name].to_sentence.length > room
+      groups.last << name
+    end
+    batches.map { |batch| "#{batch.to_sentence}#{ending}".truncate(ANNOUNCEMENT_MAX_LENGTH) }
   end
 
   def initialize(quiz_id)
@@ -91,26 +99,21 @@ class QuizSession
       # Check if participant already exists
       exists = @redis.exists(user_key)
 
-      # Redis.exists returns 1 if key exists, 0 if not
-      unless exists == 1
-        @redis.pipelined do |pipe|
+      @redis.pipelined do |pipe|
+        # Redis.exists returns 1 if key exists, 0 if not
+        unless exists == 1
           pipe.hmset(user_key,
             'name', user_name,
             'login', user_login,
             'id', user_id.to_s,
             'score', 0
           )
-          pipe.expire(user_key, DEFAULT_TTL)
-          # Add to participant set for efficient retrieval
-          pipe.sadd(participant_set_key, user_id.to_s)
-          pipe.expire(participant_set_key, DEFAULT_TTL)
         end
-      else
-        # Just refresh the TTL if participant already exists
-        @redis.pipelined do |pipe|
-          pipe.expire(user_key, DEFAULT_TTL)
-          pipe.expire(participant_set_key, DEFAULT_TTL)
-        end
+        pipe.expire(user_key, DEFAULT_TTL)
+        # Add to participant set for efficient retrieval. This also runs for an existing
+        # participant, because an earlier attempt may have stopped after creating the hash.
+        pipe.sadd(participant_set_key, user_id.to_s)
+        pipe.expire(participant_set_key, DEFAULT_TTL)
       end
       true
     end

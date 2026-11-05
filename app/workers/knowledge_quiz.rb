@@ -450,10 +450,11 @@ class KnowledgeQuiz
         # Log winner announcement to help debug duplicates
         Sidekiq.logger.info "===> Creating winner announcement tweet for #{winner_names} (Process: #{Process.pid})"
 
-        broadcast = QuizSession.winner_announcement(winners, "the Bible knowledge quiz")
-        tweet = Tweet.create!(news: broadcast, user_id: winners.first['id'], importance: 2)
+        QuizSession.winner_announcements(winners, "the Bible knowledge quiz").each do |broadcast|
+          tweet = Tweet.create!(news: broadcast, user_id: winners.first['id'], importance: 2)
 
-        Sidekiq.logger.info "===> Created winner tweet ID: #{tweet.id} at #{tweet.created_at}"
+          Sidekiq.logger.info "===> Created winner tweet ID: #{tweet.id} at #{tweet.created_at}"
+        end
 
         award_quiz_champion_badges(winners)
       end

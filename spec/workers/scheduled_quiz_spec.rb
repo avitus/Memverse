@@ -799,6 +799,18 @@ describe ScheduledQuiz do
       ])
     end
 
+    it 'posts as many announcements as it takes to name everyone in a long tie' do
+      names = Array.new(12) { |i| "#{'x' * 59}#{i.to_s.rjust(2, '0')}" }
+      news = []
+      allow(Tweet).to receive(:create!) { |args| news << args[:news] }
+
+      record_with(names.each_with_index.map { |name, i| { 'name' => name, 'id' => i.to_s, 'score' => '150' } })
+
+      expect(news.length).to be > 1
+      expect(news.map(&:length)).to all(be <= 255)
+      expect(names).to all(satisfy { |name| news.join(' ').include?(name) })
+    end
+
     it 'announces nothing when nobody scored any points' do
       expect(Tweet).not_to receive(:create!)
 

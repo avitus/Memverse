@@ -49,8 +49,27 @@ RSpec.describe QuizSession, type: :service do
         expect(participant['login']).to eq(user_login)
         expect(participant['score']).to eq('0')
       end
+
+      it 'restores scoreboard membership when an earlier attempt stopped after creating the hash' do
+        quiz_session.add_participant(user_id, user_name, user_login)
+        $redis.srem(quiz_session.send(:participant_set_key), user_id.to_s)
+        expect(quiz_session.get_scoreboard).to eq([])
+
+        quiz_session.add_participant(user_id, user_name, user_login)
+
+        expect(quiz_session.get_scoreboard.map { |entry| entry['id'] }).to eq([user_id.to_s])
+      end
+
+      it 'keeps the score of a participant who is added again' do
+        quiz_session.add_participant(user_id, user_name, user_login)
+        $redis.hincrby(quiz_session.send(:participant_key, user_id), 'score', 10)
+
+        quiz_session.add_participant(user_id, user_name, user_login)
+
+        expect(quiz_session.get_scoreboard.first['score']).to eq('10')
+      end
     end
-    
+
     describe '#get_participants' do
       it 'returns empty array when no participants' do
         expect(quiz_session.get_participants).to eq([])
@@ -145,32 +164,53 @@ RSpec.describe QuizSession, type: :service do
     end
   end
 
-  describe '.winner_announcement' do
+  describe '.winner_announcements' do
     it 'names a single winner' do
       winners = [{ 'name' => 'Ann' }]
 
-      expect(described_class.winner_announcement(winners, 'the Bible knowledge quiz'))
-        .to eq('Ann won the Bible knowledge quiz')
+      expect(described_class.winner_announcements(winners, 'the Bible knowledge quiz'))
+        .to eq(['Ann won the Bible knowledge quiz'])
     end
 
     it 'names both people in a two-way tie' do
       winners = [{ 'name' => 'Ann' }, { 'name' => 'Bob' }]
 
-      expect(described_class.winner_announcement(winners, 'the Bible knowledge quiz'))
-        .to eq('Ann and Bob tied for first in the Bible knowledge quiz')
+      expect(described_class.winner_announcements(winners, 'the Bible knowledge quiz'))
+        .to eq(['Ann and Bob tied for first in the Bible knowledge quiz'])
     end
 
     it 'names everyone in a larger tie' do
       winners = [{ 'name' => 'Ann' }, { 'name' => 'Bob' }, { 'name' => 'Cal' }]
 
-      expect(described_class.winner_announcement(winners, 'the Bible knowledge quiz'))
-        .to eq('Ann, Bob, and Cal tied for first in the Bible knowledge quiz')
+      expect(described_class.winner_announcements(winners, 'the Bible knowledge quiz'))
+        .to eq(['Ann, Bob, and Cal tied for first in the Bible knowledge quiz'])
     end
 
-    it 'fits the 255 character news column when many long names tie' do
-      winners = Array.new(6) { |i| { 'name' => "#{'x' * 59}#{i}" } }
+    it 'splits a tie too long for the 255 character news column and names every winner' do
+      names = Array.new(12) { |i| "#{'x' * 59}#{i.to_s.rjust(2, '0')}" }
 
-      expect(described_class.winner_announcement(winners, 'the Bible knowledge quiz').length).to be <= 255
+      announcements = described_class.winner_announcements(names.map { |name| { 'name' => name } }, 'the Bible knowledge quiz')
+
+      expect(announcements.length).to be > 1
+      expect(announcements).to all(end_with('tied for first in the Bible knowledge quiz'))
+      expect(announcements.map(&:length)).to all(be <= 255)
+      expect(names).to all(satisfy { |name| announcements.join(' ').include?(name) })
+    end
+
+    it 'keeps a tie on one announcement when it exactly fits' do
+      ending = ' tied for first in Quiz'
+      names = ['a' * (255 - ending.length - ' and b'.length), 'b']
+
+      expect(described_class.winner_announcements(names.map { |name| { 'name' => name } }, 'Quiz'))
+        .to eq(["#{names.first} and b#{ending}"])
+    end
+
+    it 'starts a new announcement when one more name would not fit' do
+      ending = ' tied for first in Quiz'
+      names = ['a' * (255 - ending.length - ' and b'.length + 1), 'b']
+
+      expect(described_class.winner_announcements(names.map { |name| { 'name' => name } }, 'Quiz'))
+        .to eq(["#{names.first}#{ending}", "b#{ending}"])
     end
   end
 

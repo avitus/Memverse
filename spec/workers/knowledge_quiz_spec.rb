@@ -301,6 +301,20 @@ RSpec.describe KnowledgeQuiz, type: :worker do
           expect(created_tweets.last[:news]).to eq('Lisa and Phil tied for first in the Bible knowledge quiz')
           expect(created_tweets.last[:user_id]).to eq('10')
         end
+
+        it 'posts as many announcements as it takes to name everyone in a long tie' do
+          names = Array.new(12) { |i| "#{'x' * 59}#{i.to_s.rjust(2, '0')}" }
+          allow(quiz_session).to receive(:get_scoreboard).and_return(
+            names.each_with_index.map { |name, i| { 'name' => name, 'id' => i.to_s, 'score' => '150' } }
+          )
+
+          worker.perform
+
+          winner_news = created_tweets.map { |tweet| tweet[:news] }.grep(/tied for first/)
+          expect(winner_news.length).to be > 1
+          expect(winner_news.map(&:length)).to all(be <= 255)
+          expect(names).to all(satisfy { |name| winner_news.join(' ').include?(name) })
+        end
       end
 
       it 'keeps the existing wording for a single winner' do
