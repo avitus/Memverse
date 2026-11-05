@@ -214,6 +214,25 @@ RSpec.describe KnowledgeQuiz, type: :worker do # skipcq: RB-R1001 (one example g
       worker.perform
     end
 
+    it 'retries a failed restart of the answer window without publishing the question again' do
+      allow(quiz_session).to receive(:restart_answer_window).and_invoke(proc { raise Redis::CannotConnectError }, proc { true })
+
+      worker.perform
+
+      expect(quiz_session).to have_received(:open_question).exactly(5).times
+      expect(published.select { |message| message[:meta] == 'question' }.map { |message| message[:q_num] }).to eq([1, 2, 3, 4, 5])
+    end
+
+    it 'reports a restart of the answer window that keeps failing and carries on' do
+      allow(quiz_session).to receive(:restart_answer_window).and_raise(Redis::CannotConnectError)
+      allow(Sentry).to receive(:capture_exception)
+
+      worker.perform
+
+      expect(Sentry).to have_received(:capture_exception).exactly(5).times
+      expect(published.select { |message| message[:meta] == 'question' }.map { |message| message[:q_num] }).to eq([1, 2, 3, 4, 5])
+    end
+
     it 'does not publish a question that could not be opened' do
       allow(quiz_session).to receive(:open_question).and_raise(Redis::CannotConnectError)
 

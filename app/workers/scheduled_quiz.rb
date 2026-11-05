@@ -444,16 +444,27 @@ class ScheduledQuiz
         q_id: question.id,
         time_alloc: time_alloc
       }.merge(question_fields), quiz_id)
-
-      # Time spent publishing must not come off the time players get to answer
-      @quiz_session.restart_answer_window(num, time_alloc)
     end
+
+    restart_answer_window(num, time_alloc, quiz_id)
 
     sleep(time_alloc + QuizSession::ANSWER_GRACE_SECONDS)
 
     with_retry("publishing answer #{num}", quiz_id) do
       publish_with_retry(channel, { meta: "answer", q_num: num }.merge(answer_fields), quiz_id)
     end
+  end
+
+  # Time spent publishing must not come off the time players get to answer. This retries on its
+  # own so that it can't publish the question again, and if it still fails the question stays
+  # open until its first deadline, so the quiz carries on.
+  def restart_answer_window(num, time_alloc, quiz_id)
+    with_retry("restarting answer window #{num}", quiz_id) do
+      @quiz_session.restart_answer_window(num, time_alloc)
+    end
+  rescue => e
+    Sidekiq.logger.error "===> Quiz ##{quiz_id} : Could not restart answer window #{num}: #{e.class} - #{e.message}"
+    Sentry.capture_exception(e)
   end
 
   def publish_scoreboard(channel, quiz_id)

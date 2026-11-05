@@ -7,7 +7,7 @@ describe Api::V1::LiveQuizController do
   end
 
   let(:token) { double :acceptable? => true, :resource_owner_id => user.id }
-  let(:user) { FactoryBot.create(:user) }
+  let(:user) { FactoryBot.create(:user, translation: 'NIV') }
   let(:quiz_question) { FactoryBot.create(:quiz_question, :mcq) }
   let(:quiz_id) { 1 }
   let(:quiz_session) { QuizSession.new(quiz_id) }
@@ -78,6 +78,18 @@ describe Api::V1::LiveQuizController do
         post :record_score, params: { question_num: 1, answer: 'B', version: 1 }, format: :json
 
         expect(JSON.parse(response.body)).to eq('status' => 'duplicate', 'score' => nil)
+        expect(scoreboard_score(user.id)).to eq(0)
+      end
+    end
+
+    context "when the user has not chosen a translation" do
+      before { user.update!(translation: nil) }
+
+      it "responds with 422 and records nothing" do
+        post :record_score, params: { question_num: 1, answer: 'B', version: 1 }, format: :json
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(JSON.parse(response.body)).to include('error' => 'unprocessable_entity')
         expect(scoreboard_score(user.id)).to eq(0)
       end
     end

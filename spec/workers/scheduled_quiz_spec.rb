@@ -747,6 +747,26 @@ describe ScheduledQuiz do # skipcq: RB-R1001 (one example group covers the whole
       worker.send(:handle_mcq_question, mcq, 1, 'quiz-2', 2)
     end
 
+    it 'retries a failed restart of the answer window without publishing the question again' do
+      allow(session).to receive(:restart_answer_window).and_invoke(proc { raise Redis::CannotConnectError }, proc { true })
+
+      worker.send(:handle_mcq_question, mcq, 1, 'quiz-2', 2)
+
+      expect(session).to have_received(:restart_answer_window).twice
+      expect(session).to have_received(:open_question).once
+      expect(published.map { |entry| entry[:meta] }).to eq(%w[question answer])
+    end
+
+    it 'reports a restart of the answer window that keeps failing and carries on' do
+      allow(session).to receive(:restart_answer_window).and_raise(Redis::CannotConnectError)
+      allow(Sentry).to receive(:capture_exception)
+
+      worker.send(:handle_mcq_question, mcq, 1, 'quiz-2', 2)
+
+      expect(Sentry).to have_received(:capture_exception).once
+      expect(published.map { |entry| entry[:meta] }).to eq(%w[question answer])
+    end
+
     it 'does not publish a question that could not be opened' do
       allow(session).to receive(:open_question).and_raise(Redis::CannotConnectError)
 

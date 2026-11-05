@@ -99,7 +99,8 @@ All routes require a bearer token unless marked **open**.
 `resources :verses`, `:memverses`, `:passages` and `:quizzes` are declared with all seven REST routes;
 actions not implemented in the controller answer 404. The `POST /api/v1/record_score` parameters are
 `question_num`, `answer` (omit it when the question timed out) and optional `quiz_id` (default 1). The
-server takes the user from the token and grades the answer itself; see [QUIZ_SYSTEM.md](./QUIZ_SYSTEM.md).
+server takes the user from the token and grades the answer itself; a user with no translation chosen
+gets a 422, because recitations are graded against it. See [QUIZ_SYSTEM.md](./QUIZ_SYSTEM.md).
 
 ## Response envelope (`app/controllers/concerns/api_response_helpers.rb`)
 
@@ -126,7 +127,7 @@ Plain arrays (no Kaminari pagination) carry `response` and `count` only. Errors 
 ```
 
 Status codes in use: 200, 201, 204 (deletes), 400, 401 (missing or invalid token),
-404.
+404, 422.
 
 ## Swagger
 

@@ -64,6 +64,12 @@ class Api::V1::LiveQuizController < Api::V1::ApiController
           key :'$ref', :ErrorModel
         end
       end
+      response 422 do
+        key :description, 'The user has not chosen a Bible translation, which grading needs'
+        schema do
+          key :'$ref', :ErrorModel
+        end
+      end
       response 400 do
         key :description, 'Incorrectly formed API request'
         schema do
@@ -94,6 +100,12 @@ class Api::V1::LiveQuizController < Api::V1::ApiController
   # caches :index, :show, :caches_for => 5.minutes
 
   def record_score
+    # Recitations are graded against the user's translation, and the website asks for one first
+    if current_resource_owner.translation.blank?
+      error!(:unprocessable_entity, metadata: { message: 'Please choose a translation before playing the quiz' })
+      return
+    end
+
     result = QuizAnswerSubmission.call(
       user: current_resource_owner,
       quiz_id: params[:quiz_id] || 1,  # Default to knowledge quiz

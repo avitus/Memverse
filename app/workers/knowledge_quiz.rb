@@ -356,10 +356,9 @@ class KnowledgeQuiz
         mc_option_d: question.mc_option_d,
         time_alloc: time_allocated
       })
-
-      # Time spent publishing must not come off the time players get to answer
-      @quiz_session.restart_answer_window(q_num, time_allocated)
     end
+
+    restart_answer_window(q_num, time_allocated)
 
     # Time to answer question
     sleep(time_allocated + QuizSession::ANSWER_GRACE_SECONDS)
@@ -381,6 +380,18 @@ class KnowledgeQuiz
     sleep(QuizSession::ANSWER_REVEAL_SECONDS)
   end
 
+
+  # Time spent publishing must not come off the time players get to answer. This retries on its
+  # own so that it can't publish the question again, and if it still fails the question stays
+  # open until its first deadline, so the quiz carries on.
+  def restart_answer_window(q_num, time_allocated)
+    with_retry("restarting answer window #{q_num}") do
+      @quiz_session.restart_answer_window(q_num, time_allocated)
+    end
+  rescue => e
+    Sidekiq.logger.error "===> Could not restart answer window #{q_num}: #{e.class} - #{e.message}"
+    Sentry.capture_exception(e)
+  end
 
   def publish_scoreboard(channel)
     Sidekiq.logger.info "===> Updating scoreboard"
