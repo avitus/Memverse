@@ -444,6 +444,9 @@ class ScheduledQuiz
         q_id: question.id,
         time_alloc: time_alloc
       }.merge(question_fields), quiz_id)
+
+      # Time spent publishing must not come off the time players get to answer
+      @quiz_session.restart_answer_window(num, time_alloc)
     end
 
     sleep(time_alloc + QuizSession::ANSWER_GRACE_SECONDS)

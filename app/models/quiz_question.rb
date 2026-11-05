@@ -288,15 +288,21 @@ class QuizQuestion < ApplicationRecord
     text.to_s.downcase.gsub(/[[:space:]]+/, ' ').gsub(/[^a-z ]|\s-|\s—/, '').split
   end
 
-  # Levenshtein distance counted in words
-  def word_distance(first, second)
-    previous = (0..second.length).to_a
+  # Levenshtein distance counted in words, stopping at 10 because the answer scores nothing
+  # from there on. Comparing only near the diagonal keeps a very long answer cheap to grade.
+  def word_distance(first, second, limit = 10)
+    return limit if (first.length - second.length).abs >= limit
+
+    previous = (0..second.length).map { |index| [index, limit].min }
 
     first.each_with_index do |first_word, first_index|
-      current = [first_index + 1]
-      second.each_with_index do |second_word, second_index|
-        substitution = previous[second_index] + (first_word == second_word ? 0 : 1)
-        current << [previous[second_index + 1] + 1, current[second_index] + 1, substitution].min
+      row = first_index + 1
+      current = Array.new(second.length + 1, limit)
+      current[0] = [row, limit].min
+
+      ([row - limit, 1].max..[row + limit, second.length].min).each do |column|
+        substitution = previous[column - 1] + (first_word == second[column - 1] ? 0 : 1)
+        current[column] = [previous[column] + 1, current[column - 1] + 1, substitution, limit].min
       end
       previous = current
     end

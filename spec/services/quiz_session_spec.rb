@@ -243,6 +243,18 @@ RSpec.describe QuizSession, type: :service do
       end
     end
 
+    it 'can restart the answer window, keeping the question' do
+      quiz_session.open_question(question_num, question_id, 30)
+
+      travel_to(1.minute.from_now) do
+        expect(quiz_session.open_question_id(question_num)).to be_nil
+
+        quiz_session.restart_answer_window(question_num, 30)
+
+        expect(quiz_session.open_question_id(question_num)).to eq(question_id.to_s)
+      end
+    end
+
     it 'raises when Redis fails, so that the question is not published' do
       allow(quiz_session.instance_variable_get(:@redis)).to receive(:pipelined).and_raise(Redis::CannotConnectError)
 

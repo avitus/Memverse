@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ScheduledQuiz do
+describe ScheduledQuiz do # skipcq: RB-R1001 (one example group covers the whole quiz run)
 
   let(:worker) { described_class.new }
   let(:user) { User.create!(name: "Test User", email: "test@example.com", password: "password", password_confirmation: "password") }
@@ -723,7 +723,7 @@ describe ScheduledQuiz do
   end
 
   describe 'publishing questions' do
-    let(:session) { instance_double(QuizSession, open_question: true) }
+    let(:session) { instance_double(QuizSession, open_question: true, restart_answer_window: true) }
     let(:published) { [] }
     let(:passages) { { 'NIV' => 'Jesus wept.' } }
     let(:mcq) { instance_double(QuizQuestion, id: 5, mc_question: 'Q', mc_option_a: 'a', mc_option_b: 'b', mc_option_c: 'c', mc_option_d: 'd', mc_answer: 'C') }
@@ -739,6 +739,14 @@ describe ScheduledQuiz do
       published.find { |entry| entry[:meta] == meta }
     end
 
+    it 'restarts the answer window after publishing, so that publishing takes no time from players' do
+      expect(worker).to receive(:publish_with_retry).with('quiz-2', hash_including(meta: 'question'), 2).ordered
+      expect(session).to receive(:restart_answer_window).with(1, 30).ordered
+      expect(worker).to receive(:publish_with_retry).with('quiz-2', hash_including(meta: 'answer'), 2).ordered
+
+      worker.send(:handle_mcq_question, mcq, 1, 'quiz-2', 2)
+    end
+
     it 'does not publish a question that could not be opened' do
       allow(session).to receive(:open_question).and_raise(Redis::CannotConnectError)
 
@@ -748,13 +756,10 @@ describe ScheduledQuiz do
     end
 
     it 'opens the question again if publishing it fails, while the answer is still private' do
-      attempts = 0
-      allow(worker).to receive(:publish_with_retry) do |_channel, msg, _quiz_id|
-        attempts += 1
-        raise StandardError, 'PubNub is away' if attempts == 1
-
-        published << msg
-      end
+      allow(worker).to receive(:publish_with_retry).and_invoke(
+        proc { raise StandardError, 'PubNub is away' },
+        proc { |_channel, msg, _quiz_id| published << msg }
+      )
 
       worker.send(:handle_mcq_question, mcq, 1, 'quiz-2', 2)
 
@@ -763,15 +768,10 @@ describe ScheduledQuiz do
     end
 
     it 'never reopens a question after publishing its answer fails' do
-      failures = 0
-      allow(worker).to receive(:publish_with_retry) do |_channel, msg, _quiz_id|
-        if msg[:meta] == 'answer' && failures.zero?
-          failures += 1
-          raise StandardError, 'PubNub is away'
-        end
-
-        published << msg
-      end
+      allow(worker).to receive(:publish_with_retry).with(anything, hash_including(meta: 'answer'), anything).and_invoke(
+        proc { raise StandardError, 'PubNub is away' },
+        proc { |_channel, msg, _quiz_id| published << msg }
+      )
 
       worker.send(:handle_mcq_question, mcq, 1, 'quiz-2', 2)
 
@@ -782,11 +782,8 @@ describe ScheduledQuiz do
     it 'does not ask a question again when its scoreboard cannot be published' do
       quiz_question = FactoryBot.create(:quiz_question, :mcq, quiz: quiz, question_no: 1)
       allow(session).to receive(:get_scoreboard).and_return([])
-      allow(worker).to receive(:publish_with_retry) do |_channel, msg, _quiz_id|
-        raise StandardError, 'PubNub is away' if msg[:meta] == 'scoreboard'
-
-        published << msg
-      end
+      allow(worker).to receive(:publish_with_retry).with(anything, hash_including(meta: 'scoreboard'), anything)
+                                                   .and_raise(StandardError, 'PubNub is away')
 
       expect { worker.send(:run_quiz_questions, quiz, 'quiz-2') }.to raise_error(StandardError, 'PubNub is away')
 
@@ -869,31 +866,26 @@ describe ScheduledQuiz do
     it 'does not post an announcement twice when a later one fails and is retried' do
       names = Array.new(12) { |i| "#{'x' * 59}#{i.to_s.rjust(2, '0')}" }
       news = []
-      failed = false
-      allow(Tweet).to receive(:create!) do |args|
-        if news.length == 1 && !failed
-          failed = true
-          raise ActiveRecord::StatementInvalid, 'database hiccup'
-        end
-        news << args[:news]
-      end
+      save_tweet = proc { |args| news << args[:news] }
+      allow(Tweet).to receive(:create!).and_invoke(
+        save_tweet,
+        proc { raise ActiveRecord::StatementInvalid, 'database hiccup' },
+        save_tweet
+      )
 
       record_with(names.each_with_index.map { |name, i| { 'name' => name, 'id' => i.to_s, 'score' => '150' } })
 
-      expect(failed).to be true
+      expect(news.length).to be > 1
       expect(news.uniq).to eq(news)
       expect(names).to all(satisfy { |name| news.join(' ').include?(name) })
     end
 
     it 'retries the final scoreboard rather than announcing no winner when Redis fails' do
       session = instance_double(QuizSession)
-      attempts = 0
-      allow(session).to receive(:get_scoreboard).with(raise_errors: true) do
-        attempts += 1
-        raise Redis::CannotConnectError if attempts == 1
-
-        [{ 'name' => 'Lisa', 'id' => '10', 'score' => '150' }]
-      end
+      allow(session).to receive(:get_scoreboard).with(raise_errors: true).and_invoke(
+        proc { raise Redis::CannotConnectError },
+        proc { [{ 'name' => 'Lisa', 'id' => '10', 'score' => '150' }] }
+      )
       worker.instance_variable_set(:@quiz_session, session)
 
       expect(Tweet).to receive(:create!).with(news: 'Lisa won Test Quiz', user_id: '10', importance: 2)

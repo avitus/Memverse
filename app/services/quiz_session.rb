@@ -185,16 +185,24 @@ class QuizSession
   # @return [Boolean] Success status
   def open_question(question_num, question_id, time_allocated)
     key = question_key(question_num)
-    closes_at = Time.current.to_f + time_allocated + ANSWER_GRACE_SECONDS
 
     # A Redis failure raises, so that a question nobody could answer is never published
     @redis.pipelined do |pipe|
       pipe.hset(key, 'qq_id', question_id.to_s)
-      pipe.hset(key, 'closes_at', closes_at.to_s)
+      pipe.hset(key, 'closes_at', closing_time(time_allocated).to_s)
       pipe.expire(key, DEFAULT_TTL)
       pipe.sadd(question_set_key, question_num.to_s)
       pipe.expire(question_set_key, DEFAULT_TTL)
     end
+  end
+
+  # Give players their full time from now. Call this once the question has been published,
+  # because each browser starts its countdown when the question arrives, so time spent
+  # publishing must not come off the deadline.
+  # @param question_num [Integer] Position of the question in the quiz
+  # @param time_allocated [Integer] Seconds players are given to answer
+  def restart_answer_window(question_num, time_allocated)
+    @redis.hset(question_key(question_num), 'closes_at', closing_time(time_allocated).to_s)
   end
 
   # @param question_num [Integer] Position of the question in the quiz
@@ -461,6 +469,10 @@ class QuizSession
   # ========================================================================
   # Private Key Generation Methods
   # ========================================================================
+
+  def closing_time(time_allocated)
+    Time.current.to_f + time_allocated + ANSWER_GRACE_SECONDS
+  end
 
   def read_scoreboard
     # Get participant IDs from the set (O(n) where n is participants, not all Redis keys)

@@ -79,5 +79,20 @@ RSpec.describe QuizQuestion, '#grade_answer' do
     it 'gives nothing when the translation has no text to compare' do
       expect(question.grade_answer('Jesus wept', translation: 'XXX')).to eq(0)
     end
+
+    it 'does not compare a very long answer against the verse word by word' do
+      expect(question.send(:word_distance, %w[jesus wept], ['word'] * 100_000)).to eq(10)
+    end
+
+    it 'counts differences exactly up to the limit of 10' do
+      random = Random.new(435)
+
+      200.times do
+        first, second = Array.new(2) { Array.new(random.rand(25)) { %w[a b c].sample(random: random) }.join }
+
+        expect(question.send(:word_distance, first.chars, second.chars))
+          .to eq([DidYouMean::Levenshtein.distance(first, second), 10].min), "#{first.inspect} and #{second.inspect}"
+      end
+    end
   end
 end

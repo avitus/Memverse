@@ -341,7 +341,7 @@ class KnowledgeQuiz
 
       # Update question to show that it was asked today (use UTC)
       # Use update_column to skip validation in case of other issues
-      question.update_column(:last_asked, Date.current)
+      question.update_column(:last_asked, Date.current) # skipcq: RB-RL1053 (a quiz must not stop on an invalid old question)
 
       # Publish question. The answer stays out of this public message until the question closes.
       publish_with_retry(channel, {
@@ -356,6 +356,9 @@ class KnowledgeQuiz
         mc_option_d: question.mc_option_d,
         time_alloc: time_allocated
       })
+
+      # Time spent publishing must not come off the time players get to answer
+      @quiz_session.restart_answer_window(q_num, time_allocated)
     end
 
     # Time to answer question

@@ -1,7 +1,7 @@
 require 'rails_helper'
 require 'sidekiq/testing'
 
-RSpec.describe KnowledgeQuiz, type: :worker do
+RSpec.describe KnowledgeQuiz, type: :worker do # skipcq: RB-R1001 (one example group covers the whole quiz run)
   let(:worker) { described_class.new }
   let(:quiz) { FactoryBot.create(:quiz, id: 1, start_time: 1.hour.from_now) }
   let(:quiz_session) { instance_double(QuizSession) }
@@ -18,6 +18,7 @@ RSpec.describe KnowledgeQuiz, type: :worker do
     allow(quiz_session).to receive(:unlock_quiz)
     allow(quiz_session).to receive(:update_question_stats)
     allow(quiz_session).to receive(:open_question)
+    allow(quiz_session).to receive(:restart_answer_window)
 
     # Mock PubNub
     allow(PN).to receive(:publish)
@@ -204,6 +205,15 @@ RSpec.describe KnowledgeQuiz, type: :worker do
       worker.perform
     end
 
+    it 'restarts the answer window after publishing, so that publishing takes no time from players' do
+      expect(PN).to receive(:publish).with(hash_including(message: hash_including(meta: 'question', q_num: 1))).ordered
+      expect(quiz_session).to receive(:restart_answer_window).with(1, question.time_allocation).ordered
+      allow(PN).to receive(:publish)
+      allow(quiz_session).to receive(:restart_answer_window)
+
+      worker.perform
+    end
+
     it 'does not publish a question that could not be opened' do
       allow(quiz_session).to receive(:open_question).and_raise(Redis::CannotConnectError)
 
@@ -213,28 +223,21 @@ RSpec.describe KnowledgeQuiz, type: :worker do
     end
 
     it 'never reopens a question after publishing its answer fails' do
-      failed = false
-      allow(PN).to receive(:publish) do |args|
-        if args[:message][:meta] == 'answer' && !failed
-          failed = true
-          raise StandardError, 'PubNub is away'
-        end
-        published << args[:message]
-      end
+      allow(PN).to receive(:publish).with(hash_including(message: hash_including(meta: 'answer', q_num: 1))).and_invoke(
+        proc { raise StandardError, 'PubNub is away' },
+        proc { |args| published << args[:message] }
+      )
 
       worker.perform
 
-      expect(failed).to be true
+      expect(PN).to have_received(:publish).with(hash_including(message: hash_including(meta: 'answer', q_num: 1))).twice
       expect(quiz_session).to have_received(:open_question).exactly(5).times
       expect(published.select { |message| message[:meta] == 'question' }.map { |message| message[:q_num] }).to eq([1, 2, 3, 4, 5])
     end
 
     it 'does not ask a question again when its scoreboard cannot be published' do
-      allow(PN).to receive(:publish) do |args|
-        raise StandardError, 'PubNub is away' if args[:message][:meta] == 'scoreboard'
-
-        published << args[:message]
-      end
+      allow(PN).to receive(:publish).with(hash_including(message: hash_including(meta: 'scoreboard')))
+                                    .and_raise(StandardError, 'PubNub is away')
 
       worker.perform
 
@@ -345,20 +348,20 @@ RSpec.describe KnowledgeQuiz, type: :worker do
           allow(quiz_session).to receive(:get_scoreboard).and_return(
             names.each_with_index.map { |name, i| { 'name' => name, 'id' => i.to_s, 'score' => '150' } }
           )
-          failed = false
-          allow(Tweet).to receive(:create!) do |args|
-            if args[:news].include?('tied for first') && created_tweets.any? { |tweet| tweet[:news].include?('tied for first') } && !failed
-              failed = true
-              raise ActiveRecord::StatementInvalid, 'database hiccup'
-            end
+          save_tweet = proc do |args|
             created_tweets << args
             instance_double(Tweet, id: created_tweets.length, created_at: Time.current)
           end
+          allow(Tweet).to receive(:create!).with(hash_including(news: a_string_matching(/tied for first/))).and_invoke(
+            save_tweet,
+            proc { raise ActiveRecord::StatementInvalid, 'database hiccup' },
+            save_tweet
+          )
 
           worker.perform
 
           winner_news = created_tweets.map { |tweet| tweet[:news] }.grep(/tied for first/)
-          expect(failed).to be true
+          expect(winner_news.length).to be > 1
           expect(winner_news.uniq).to eq(winner_news)
           expect(names).to all(satisfy { |name| winner_news.join(' ').include?(name) })
         end
