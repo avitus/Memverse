@@ -200,6 +200,32 @@ RSpec.describe QuizSession, type: :service do
         .to eq(['Ann, Bob, and Cal tied for first in the Bible knowledge quiz'])
     end
 
+    it 'escapes HTML in the name of a single winner' do
+      winners = [{ 'name' => '<a href="https://example.com">Ann</a>' }]
+
+      expect(described_class.winner_announcements(winners, 'the quiz'))
+        .to eq(['&lt;a href=&quot;https://example.com&quot;&gt;Ann&lt;/a&gt; won the quiz'])
+    end
+
+    it 'escapes HTML in the names of a tie, counting the escaped text towards the length' do
+      name = '<' * 40
+      winners = Array.new(3) { { 'name' => name } }
+
+      announcements = described_class.winner_announcements(winners, 'the quiz')
+
+      expect(announcements.join).not_to include('<')
+      expect(announcements.map(&:length)).to all(be <= 255)
+      expect(announcements.join.scan('&lt;' * 40).length).to eq(3)
+    end
+
+    it 'shows an escaped name as plain text once the news item is sanitized' do
+      winners = [{ 'name' => '<img src="https://example.com/x.png">' }]
+
+      announcement = described_class.winner_announcements(winners, 'the quiz').first
+
+      expect(ActionController::Base.helpers.sanitize(announcement)).not_to include('<img')
+    end
+
     it 'splits a tie too long for the 255 character news column and names every winner' do
       names = Array.new(12) { |i| "#{'x' * 59}#{i.to_s.rjust(2, '0')}" }
 

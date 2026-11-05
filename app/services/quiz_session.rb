@@ -66,7 +66,8 @@ class QuizSession
   # @return [Array<String>] News items for the dashboard. A tie too long for one item
   #   is split over several, so that every winner is named.
   def self.winner_announcements(winners, quiz_name)
-    names = winners.map { |winner| winner['name'] }
+    # News items are shown as HTML and players choose their own names
+    names = winners.map { |winner| ERB::Util.html_escape(winner['name'].to_s).to_str }
     return ["#{names.first} won #{quiz_name}".truncate(ANNOUNCEMENT_MAX_LENGTH)] if names.one?
 
     ending = " tied for first in #{quiz_name}"
