@@ -466,20 +466,29 @@ class KnowledgeQuiz
     Sidekiq.logger.info "===> Creating winner announcement tweet for #{winner_names} (Process: #{Process.pid})"
 
     QuizSession.winner_announcements(winners, "the Bible knowledge quiz").each do |broadcast|
-      tweet = with_retry("announcing the winner") do
-        Tweet.create!(news: broadcast, user_id: winners.first['id'], importance: 2)
-      end
-
-      Sidekiq.logger.info "===> Created winner tweet ID: #{tweet.id} at #{tweet.created_at}"
+      post_winner_announcement(broadcast, winners.first['id'])
     end
 
-    with_retry("awarding Quiz Champion badges") { award_quiz_champion_badges(winners) }
+    award_quiz_champion_badges(winners)
+  end
+
+  # A failure is reported and the quiz carries on, so that it doesn't cost the
+  # other tied winners their announcement or anyone their badge.
+  def post_winner_announcement(broadcast, user_id)
+    tweet = with_retry("announcing the winner") do
+      Tweet.create!(news: broadcast, user_id: user_id, importance: 2)
+    end
+
+    Sidekiq.logger.info "===> Created winner tweet ID: #{tweet.id} at #{tweet.created_at}"
+  rescue => e
+    Sidekiq.logger.error "===> Winner announcement failed: #{e.class} - #{e.message}"
+    Sentry.capture_exception(e)
   end
 
   # Badge problems are logged and never abort the quiz, and one winner's failure
   # does not cost another tied winner their badge.
   def award_quiz_champion_badges(winners)
-    quiz_champion_badge = Badge.where(name: 'Quiz Champion').first
+    quiz_champion_badge = with_retry("finding the Quiz Champion badge") { Badge.where(name: 'Quiz Champion').first }
     unless quiz_champion_badge
       Sidekiq.logger.error "===> Quiz Champion badge not found - cannot award to winner"
       return

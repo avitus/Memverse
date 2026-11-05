@@ -880,6 +880,20 @@ describe ScheduledQuiz do # skipcq: RB-R1001 (one example group covers the whole
       expect(names).to all(satisfy { |name| news.join(' ').include?(name) })
     end
 
+    it 'reports an announcement that keeps failing and still posts the others' do
+      names = Array.new(12) { |i| "#{'x' * 59}#{i.to_s.rjust(2, '0')}" }
+      news = []
+      always_fail = proc { raise ActiveRecord::StatementInvalid, 'database hiccup' }
+      allow(Tweet).to receive(:create!).and_invoke(always_fail, always_fail, always_fail, always_fail, proc { |args| news << args[:news] })
+      allow(Sentry).to receive(:capture_exception)
+
+      record_with(names.each_with_index.map { |name, i| { 'name' => name, 'id' => i.to_s, 'score' => '150' } })
+
+      expect(Sentry).to have_received(:capture_exception).once
+      expect(news).not_to be_empty
+      expect(news.join(' ')).to include(names.last)
+    end
+
     it 'retries the final scoreboard rather than announcing no winner when Redis fails' do
       session = instance_double(QuizSession)
       allow(session).to receive(:get_scoreboard).with(raise_errors: true).and_invoke(

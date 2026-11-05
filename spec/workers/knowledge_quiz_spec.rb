@@ -343,6 +343,28 @@ RSpec.describe KnowledgeQuiz, type: :worker do # skipcq: RB-R1001 (one example g
           expect(created_tweets.last[:user_id]).to eq('10')
         end
 
+        it 'reports an announcement that keeps failing and still posts the others and awards the badges' do
+          names = Array.new(12) { |i| "#{'x' * 59}#{i.to_s.rjust(2, '0')}" }
+          allow(quiz_session).to receive(:get_scoreboard).and_return(
+            names.each_with_index.map { |name, i| { 'name' => name, 'id' => i.to_s, 'score' => '150' } }
+          )
+          always_fail = proc { raise ActiveRecord::StatementInvalid, 'database hiccup' }
+          save_tweet = proc do |args|
+            created_tweets << args
+            instance_double(Tweet, id: created_tweets.length, created_at: Time.current)
+          end
+          allow(Tweet).to receive(:create!).with(hash_including(news: a_string_matching(/tied for first/)))
+                                           .and_invoke(always_fail, always_fail, always_fail, always_fail, save_tweet)
+          allow(Sentry).to receive(:capture_exception)
+          allow(worker).to receive(:award_quiz_champion_badges)
+
+          worker.perform
+
+          expect(Sentry).to have_received(:capture_exception).once
+          expect(created_tweets.map { |tweet| tweet[:news] }.join(' ')).to include(names.last)
+          expect(worker).to have_received(:award_quiz_champion_badges)
+        end
+
         it 'does not post an announcement twice when a later one fails and is retried' do
           names = Array.new(12) { |i| "#{'x' * 59}#{i.to_s.rjust(2, '0')}" }
           allow(quiz_session).to receive(:get_scoreboard).and_return(

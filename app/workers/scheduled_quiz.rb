@@ -495,10 +495,19 @@ class ScheduledQuiz
     return if winners.empty?
 
     QuizSession.winner_announcements(winners, quiz.name).each do |broadcast|
-      with_retry("announcing the winner", quiz.id) do
-        Tweet.create!(news: broadcast, user_id: winners.first['id'], importance: 2)
-      end
+      post_winner_announcement(broadcast, winners.first['id'], quiz.id)
     end
+  end
+
+  # A failure is reported and the quiz carries on, so that it doesn't cost the
+  # other tied winners their announcement.
+  def post_winner_announcement(broadcast, user_id, quiz_id)
+    with_retry("announcing the winner", quiz_id) do
+      Tweet.create!(news: broadcast, user_id: user_id, importance: 2)
+    end
+  rescue => e
+    Sidekiq.logger.error "===> Quiz ##{quiz_id} : Winner announcement failed: #{e.class} - #{e.message}"
+    Sentry.capture_exception(e)
   end
   
   def close_quiz_chat(quiz, channel)
