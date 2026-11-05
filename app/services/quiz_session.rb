@@ -18,7 +18,110 @@ class QuizSession
   STATUS_FAILED = "failed".freeze
   STATUS_AVAILABLE = "available".freeze
 
+  # Length of the tweets.news column
+  ANNOUNCEMENT_MAX_LENGTH = 255
+
+  # Leaves room in an announcement for the winner's name, whatever the quiz is called
+  ANNOUNCEMENT_QUIZ_NAME_MAX_LENGTH = 100
+
+  # Extra time to accept an answer after the player's timer ends, to cover network
+  # delay. The correct answer is not published until this has passed.
+  ANSWER_GRACE_SECONDS = 2
+
+  # Sent as mc_answer in multiple choice question messages instead of the real answer. The
+  # iOS app (Memverse_iOS) crashes on a question without mc_answer, or with an empty one,
+  # so this keeps it running until it is updated. Its players see every answer marked wrong
+  # and score nothing, because the server grades answers and the app sends only a score.
+  IOS_ANSWER_PLACEHOLDER = '-'
+
+  # How long the correct answer stays on screen before the next question
+  ANSWER_REVEAL_SECONDS = 4
+
+  # Runs as one step in Redis, so that two first answers at once can't overwrite each other's score.
+  # It also restores the participant set, in case an earlier attempt stopped part way.
+  # KEYS: user hash, participant set. ARGV: name, login, user ID, TTL.
+  ADD_PARTICIPANT_SCRIPT = <<~LUA.freeze
+    if redis.call('EXISTS', KEYS[1]) == 0 then
+      redis.call('HSET', KEYS[1], 'name', ARGV[1], 'login', ARGV[2], 'id', ARGV[3], 'score', 0)
+    end
+    redis.call('EXPIRE', KEYS[1], ARGV[4])
+    redis.call('SADD', KEYS[2], ARGV[3])
+    redis.call('EXPIRE', KEYS[2], ARGV[4])
+    return 1
+  LUA
+
+  # Runs as one step in Redis, so a score is either saved before the question closes or not at all,
+  # and a claimed answer can't be left without its points. The time comes from Redis when the
+  # script runs, so an answer delayed on its way here can't land after the final scoreboard.
+  # KEYS: question hash, user hash. ARGV: claim field, score, TTL.
+  RECORD_ANSWER_SCRIPT = <<~LUA.freeze
+    local closes_at = tonumber(redis.call('HGET', KEYS[1], 'closes_at'))
+    local time = redis.call('TIME')
+    local now = tonumber(time[1]) + tonumber(time[2]) / 1000000
+    if not closes_at or now > closes_at then return 'closed' end
+    if redis.call('HSETNX', KEYS[1], ARGV[1], '1') == 0 then return 'duplicate' end
+
+    local score = tonumber(ARGV[2])
+    if score > 0 then
+      redis.call('HINCRBY', KEYS[2], 'score', score)
+      redis.call('EXPIRE', KEYS[2], ARGV[3])
+      redis.call('HINCRBY', KEYS[1], 'total_score', score)
+      redis.call('HINCRBY', KEYS[1], 'answered', 1)
+    end
+    redis.call('EXPIRE', KEYS[1], ARGV[3])
+    return 'graded'
+  LUA
+
   attr_reader :quiz_id
+
+  # Everyone on the top score, ordered by name. Nobody wins if nobody scored.
+  # @param scoreboard [Array<Hash>] Participant data from get_scoreboard
+  # @return [Array<Hash>] The winners; more than one means a tie
+  def self.winners(scoreboard)
+    top_score = scoreboard.map { |participant| participant['score'].to_i }.max.to_i
+    return [] unless top_score.positive?
+
+    scoreboard
+      .select { |participant| participant['score'].to_i == top_score }
+      .sort_by { |participant| participant['name'].to_s.downcase }
+  end
+
+  # @param winners [Array<Hash>] At least one participant, from QuizSession.winners
+  # @param quiz_name [String] Name of the quiz as it should read in the sentence
+  # @return [Array<String>] News items for the dashboard. A tie too long for one item
+  #   is split over several, so that every winner is named.
+  def self.winner_announcements(winners, quiz_name)
+    quiz = announcement_text(quiz_name, ANNOUNCEMENT_QUIZ_NAME_MAX_LENGTH)
+    ending = winners.one? ? " won #{quiz}" : " tied for first in #{quiz}"
+    room = ANNOUNCEMENT_MAX_LENGTH - ending.length
+    names = winners.map { |winner| announcement_text(winner['name'], room) }
+    batches = names.each_with_object([[]]) do |name, groups|
+      groups << [] if groups.last.any? && [*groups.last, name].to_sentence.length > room
+      groups.last << name
+    end
+    batches.map { |batch| "#{batch.to_sentence}#{ending}" }
+  end
+
+  # News items are shown as HTML, and players and quizmasters choose the names in them, so a
+  # name is escaped. Escaping can make it too long for one item, so it is then shortened between
+  # characters, which never cuts an escape sequence in two.
+  # @param text [String] A player's or quiz's name
+  # @param room [Integer] Longest the escaped text may be
+  # @return [String] The escaped text
+  def self.announcement_text(text, room)
+    escaped = ERB::Util.html_escape(text.to_s).to_str
+    return escaped if escaped.length <= room
+
+    omission = '...'
+    shortened = text.to_s.each_char.inject(+'') do |kept, char|
+      next_char = ERB::Util.html_escape(char).to_str
+      break kept if kept.length + next_char.length + omission.length > room
+
+      kept << next_char
+    end
+    "#{shortened}#{omission}"
+  end
+  private_class_method :announcement_text
 
   def initialize(quiz_id)
     @quiz_id = quiz_id.to_i
@@ -38,89 +141,23 @@ class QuizSession
     user_key = participant_key(user_id)
 
     with_redis_error_handling("add_participant") do
-      # Check if participant already exists
-      exists = @redis.exists(user_key)
-
-      # Redis.exists returns 1 if key exists, 0 if not
-      unless exists == 1
-        @redis.pipelined do |pipe|
-          pipe.hmset(user_key,
-            'name', user_name,
-            'login', user_login,
-            'id', user_id.to_s,
-            'score', 0
-          )
-          pipe.expire(user_key, DEFAULT_TTL)
-          # Add to participant set for efficient retrieval
-          pipe.sadd(participant_set_key, user_id.to_s)
-          pipe.expire(participant_set_key, DEFAULT_TTL)
-        end
-      else
-        # Just refresh the TTL if participant already exists
-        @redis.pipelined do |pipe|
-          pipe.expire(user_key, DEFAULT_TTL)
-          pipe.expire(participant_set_key, DEFAULT_TTL)
-        end
-      end
-      true
-    end
-  end
-
-  # Update a user's score for a specific question
-  # @param user_id [Integer] User ID
-  # @param question_num [Integer] Question number (1-based)
-  # @param score [Integer] Score to add (0-10)
-  # @return [Boolean] Success status
-  def update_score(user_id, question_num, score)
-    return false unless score.to_i > 0
-
-    user_key = participant_key(user_id)
-    question_key = question_key(question_num)
-
-    with_redis_error_handling("update_score") do
-      @redis.pipelined do |pipe|
-        # Update user's total score
-        pipe.hincrby(user_key, 'score', score.to_i)
-        pipe.expire(user_key, DEFAULT_TTL)
-
-        # Update question statistics
-        pipe.hincrby(question_key, 'total_score', score.to_i)
-        pipe.hincrby(question_key, 'answered', 1)
-        pipe.expire(question_key, DEFAULT_TTL)
-
-        # Track question in set
-        pipe.sadd(question_set_key, question_num.to_s)
-        pipe.expire(question_set_key, DEFAULT_TTL)
-      end
+      @redis.eval(
+        ADD_PARTICIPANT_SCRIPT,
+        keys: [user_key, participant_set_key],
+        argv: [user_name, user_login, user_id.to_s, DEFAULT_TTL]
+      )
       true
     end
   end
 
   # Get sorted scoreboard for the quiz
+  # @param raise_errors [Boolean] Raise on a Redis failure instead of returning an empty scoreboard.
+  #   Deciding the winner needs this, because an empty scoreboard means nobody played.
   # @return [Array<Hash>] Sorted array of participant data
-  def get_scoreboard
-    with_redis_error_handling("get_scoreboard") do
-      # Get participant IDs from the set (O(n) where n is participants, not all Redis keys)
-      participant_ids = @redis.smembers(participant_set_key)
-      return [] if participant_ids.empty?
+  def get_scoreboard(raise_errors: false)
+    return read_scoreboard if raise_errors
 
-      scoreboard = []
-      # Use pipelining for efficiency
-      @redis.pipelined do |pipe|
-        participant_ids.each do |user_id|
-          pipe.hgetall(participant_key(user_id))
-        end
-      end.each_with_index do |participant_data, index|
-        unless participant_data.empty?
-          # Ensure we have the user_id in the data
-          participant_data['id'] ||= participant_ids[index]
-          scoreboard << participant_data
-        end
-      end
-
-      # Sort by score descending
-      scoreboard.sort { |x, y| y['score'].to_i <=> x['score'].to_i }
-    end
+    with_redis_error_handling("get_scoreboard") { read_scoreboard }
   end
 
   # Get list of all participants
@@ -170,6 +207,57 @@ class QuizSession
       end
       true
     end
+  end
+
+  # Start accepting answers to a question
+  # @param question_num [Integer] Position of the question in the quiz
+  # @param question_id [Integer] ID of the QuizQuestion being asked
+  # @param time_allocated [Integer] Seconds shown on the player's timer
+  # @return [Boolean] Success status
+  def open_question(question_num, question_id, time_allocated)
+    key = question_key(question_num)
+    closes_at = closing_time(time_allocated)
+
+    # A Redis failure raises, so that a question nobody could answer is never published
+    @redis.pipelined do |pipe|
+      pipe.hset(key, 'qq_id', question_id.to_s)
+      pipe.hset(key, 'closes_at', closes_at.to_s)
+      pipe.expire(key, DEFAULT_TTL)
+      pipe.sadd(question_set_key, question_num.to_s)
+      pipe.expire(question_set_key, DEFAULT_TTL)
+    end
+  end
+
+  # Give players their full time from now. Call this once the question has been published,
+  # because each browser starts its countdown when the question arrives, so time spent
+  # publishing must not come off the deadline.
+  # @param question_num [Integer] Position of the question in the quiz
+  # @param time_allocated [Integer] Seconds players are given to answer
+  def restart_answer_window(question_num, time_allocated)
+    @redis.hset(question_key(question_num), 'closes_at', closing_time(time_allocated).to_s)
+  end
+
+  # @param question_num [Integer] Position of the question in the quiz
+  # @return [String, nil] ID of the QuizQuestion if it is still accepting answers
+  # A Redis failure raises, because "closed" would tell the player not to try again.
+  def open_question_id(question_num)
+    question_id, closes_at = @redis.hmget(question_key(question_num), 'qq_id', 'closes_at')
+    question_id if closes_at && redis_time <= closes_at.to_f
+  end
+
+  # Save the user's one answer to a question and its score, if the question is still open.
+  # A Redis failure raises rather than being swallowed, because nothing was saved and the
+  # player can send the answer again.
+  # @param question_num [Integer] Position of the question in the quiz
+  # @param user_id [Integer] User ID
+  # @param score [Integer] Points for the answer (0-10)
+  # @return [Symbol] :graded, :closed or :duplicate
+  def record_answer(question_num, user_id, score)
+    @redis.eval(
+      RECORD_ANSWER_SCRIPT,
+      keys: [question_key(question_num), participant_key(user_id)],
+      argv: ["answered_by:#{user_id}", score.to_i, DEFAULT_TTL]
+    ).to_sym
   end
 
   # Get all question statistics
@@ -413,6 +501,39 @@ class QuizSession
   # ========================================================================
   # Private Key Generation Methods
   # ========================================================================
+
+  def closing_time(time_allocated)
+    redis_time + time_allocated + ANSWER_GRACE_SECONDS
+  end
+
+  # Answer windows run on Redis's clock, the one RECORD_ANSWER_SCRIPT checks them against
+  def redis_time
+    seconds, microseconds = @redis.time
+    seconds + (microseconds / 1_000_000.0)
+  end
+
+  def read_scoreboard
+    # Get participant IDs from the set (O(n) where n is participants, not all Redis keys)
+    participant_ids = @redis.smembers(participant_set_key)
+    return [] if participant_ids.empty?
+
+    scoreboard = []
+    # Use pipelining for efficiency
+    @redis.pipelined do |pipe|
+      participant_ids.each do |user_id|
+        pipe.hgetall(participant_key(user_id))
+      end
+    end.each_with_index do |participant_data, index|
+      unless participant_data.empty?
+        # Ensure we have the user_id in the data
+        participant_data['id'] ||= participant_ids[index]
+        scoreboard << participant_data
+      end
+    end
+
+    # Sort by score descending; name keeps tied participants in a stable order
+    scoreboard.sort_by { |participant| [-participant['score'].to_i, participant['name'].to_s.downcase] }
+  end
 
   def participant_key(user_id)
     "#{KEY_PREFIX}:#{@quiz_id}:user:#{user_id}"

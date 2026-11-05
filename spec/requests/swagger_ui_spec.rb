@@ -67,17 +67,36 @@ RSpec.describe "Swagger UI", type: :request do
       expect(memverse_schema["type"]).not_to be_an(Array)
     end
 
-    it "properly defines score parameter as single type string with formData" do
+    it "properly defines answer parameter as single type string with formData" do
       get "/apidocs.json"
       json = JSON.parse(response.body)
 
       record_score_params = json["paths"]["/record_score"]["post"]["parameters"]
-      score_param = record_score_params.find { |p| p["name"] == "score" }
+      answer_param = record_score_params.find { |p| p["name"] == "answer" }
 
-      expect(score_param).not_to be_nil
-      expect(score_param["type"]).to eq("string")
-      expect(score_param["type"]).not_to be_an(Array)
-      expect(score_param["in"]).to eq("formData")  # Should use formData, not body
+      expect(answer_param).not_to be_nil
+      expect(answer_param["type"]).to eq("string")
+      expect(answer_param["type"]).not_to be_an(Array)
+      expect(answer_param["in"]).to eq("formData")  # Should use formData, not body
+    end
+
+    it "documents only the parameters record_score reads" do
+      get "/apidocs.json"
+      json = JSON.parse(response.body)
+
+      names = json["paths"]["/record_score"]["post"]["parameters"].map { |p| p["name"] }
+
+      expect(names).to contain_exactly("quiz_id", "question_num", "answer")
+    end
+
+    it "documents the record_score response body" do
+      get "/apidocs.json"
+      json = JSON.parse(response.body)
+
+      responses = json["paths"]["/record_score"]["post"]["responses"]
+
+      expect(responses["200"]["schema"]["properties"].keys).to contain_exactly("status", "score")
+      expect(responses).to have_key("401")
     end
 
   end

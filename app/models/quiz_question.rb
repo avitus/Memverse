@@ -42,6 +42,9 @@ class QuizQuestion < ApplicationRecord
   scope :medium,      -> { where( :perc_correct    => 34..65                ) }
   scope :hard,        -> { where( :perc_correct    =>  0..33                ) }
 
+  # Longest answer worth grading; keeps the word comparison cheap
+  MAX_ANSWER_LENGTH = 5000
+
   # Validations
   # validates_presence_of :user_id
   validates_presence_of :quiz_id
@@ -95,10 +98,27 @@ class QuizQuestion < ApplicationRecord
 
   end
 
+  # Points for an answer given during a live quiz
+  # @param answer [String] What the user submitted
+  # @param translation [String] Translation of the user, used to grade a recitation
+  # @return [Integer] Score out of 10
+  def grade_answer(answer, translation: nil)
+    answer = answer.to_s.first(MAX_ANSWER_LENGTH)
+
+    case question_type
+    when 'mcq'        then grade_mcq_answer(answer)
+    when 'reference'  then grade_reference_answer(answer)
+    when 'recitation' then grade_recitation_answer(answer, translation)
+    else 0
+    end
+  end
+
   # Update difficulty of quiz question based on number of users getting question correct
   # @param answer_count [Integer] Number of times question answered during quiz
   # @param percentage_correct
   def update_difficulty( answer_count, percentage_correct )
+    return if answer_count.zero?
+
     new_total_answers   = answer_count + self.times_answered
     self.perc_correct   = ((answer_count * percentage_correct ) + (self.times_answered * self.perc_correct )) / new_total_answers
     self.times_answered = new_total_answers
@@ -218,5 +238,76 @@ class QuizQuestion < ApplicationRecord
 
   # ============= Protected below this line ==================================================================
   protected
+
+  # ============= Private below this line ====================================================================
+  private
+
+  # All or nothing, ignoring case
+  def grade_mcq_answer(answer)
+    answer.strip.casecmp?(mc_answer.to_s.strip) ? 10 : 0
+  end
+
+  # 2 points for the book, 3 for the chapter and 5 for the verse
+  def grade_reference_answer(answer)
+    given   = reference_parts(answer)
+    correct = reference_parts(passage)
+    return 0 unless given && correct
+
+    points = 0
+    points += 2 if given[:book] == correct[:book]
+    points += 3 if given[:chapter] == correct[:chapter]
+    points += 5 if given[:verse] == correct[:verse]
+    points
+  end
+
+  # @return [Hash, nil] Book, chapter and verse, or nil if the text is not a reference
+  def reference_parts(text)
+    normalized = text.to_s.downcase.gsub(/[[:space:]]+/, ' ').strip.sub('psalm ', 'psalms ')
+    colon      = normalized.index(':')
+    last_space = normalized.rindex(' ')
+    return nil unless colon && last_space && last_space < colon
+
+    book    = normalized[0...last_space]
+    chapter = normalized[(last_space + 1)...colon]
+    verse   = normalized[(colon + 1)..]
+    return nil if [book, chapter, verse].any?(&:blank?)
+
+    { book: book, chapter: chapter, verse: verse }
+  end
+
+  # 10 points, less one for each word that differs from the verse
+  def grade_recitation_answer(answer, translation)
+    given   = recitation_words(answer)
+    correct = recitation_words(passage_translations.to_h[translation])
+    return 0 if given.empty? || correct.empty?
+
+    [10 - word_distance(correct, given), 0].max
+  end
+
+  def recitation_words(text)
+    text.to_s.downcase.gsub(/[[:space:]]+/, ' ').gsub(/[^a-z ]|\s-|\s—/, '').split
+  end
+
+  # Levenshtein distance counted in words, stopping at 10 because the answer scores nothing
+  # from there on. Comparing only near the diagonal keeps a very long answer cheap to grade.
+  def word_distance(first, second, limit = 10)
+    return limit if (first.length - second.length).abs >= limit
+
+    previous = (0..second.length).map { |index| [index, limit].min }
+
+    first.each_with_index do |first_word, first_index|
+      row = first_index + 1
+      current = Array.new(second.length + 1, limit)
+      current[0] = [row, limit].min
+
+      ([row - limit, 1].max..[row + limit, second.length].min).each do |column|
+        substitution = previous[column - 1] + (first_word == second[column - 1] ? 0 : 1)
+        current[column] = [previous[column] + 1, current[column - 1] + 1, substitution, limit].min
+      end
+      previous = current
+    end
+
+    previous.last
+  end
 
 end

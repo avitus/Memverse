@@ -121,20 +121,63 @@ RSpec.feature 'Live Quiz', type: :request do
   end
   
   describe 'POST /record_score' do
-    it 'records score successfully' do
+    let(:quiz_session) { QuizSession.new(quiz.id) }
+    let(:json_headers) { { 'Accept' => 'application/json' } }
+
+    before do
+      quiz_session.cleanup_quiz_data
+      quiz_session.open_question(1, quiz_questions.last.id, 30)
+    end
+
+    after { quiz_session.cleanup_quiz_data }
+
+    it 'records a graded answer' do
       sign_in user
-      
-      post '/record_score', params: {
-        quiz_id: quiz.id,
-        usr_id: user.id,
-        usr_name: user.name_or_login,
-        usr_login: user.login,
-        question_id: quiz_questions.first.id,
-        question_num: 1,
-        score: 10
-      }
-      
+
+      post '/record_score', params: { quiz_id: quiz.id, question_num: 1, answer: 'B' }, headers: json_headers
+
       expect(response).to have_http_status(:ok)
+      expect(JSON.parse(response.body)).to eq('status' => 'graded', 'score' => 10)
+    end
+
+    it 'rejects a signed out request' do
+      post '/record_score', params: { quiz_id: quiz.id, question_num: 1, answer: 'B', usr_id: user.id }, headers: json_headers
+
+      expect(response).to have_http_status(:unauthorized)
+      expect(quiz_session.get_scoreboard).to be_empty
+    end
+
+    context 'with forgery protection on, as in production' do
+      around do |example|
+        original = ActionController::Base.allow_forgery_protection
+        ActionController::Base.allow_forgery_protection = true
+        example.run
+      ensure
+        ActionController::Base.allow_forgery_protection = original
+      end
+
+      it 'rejects a signed in request with no CSRF token' do
+        sign_in user
+
+        post '/record_score', params: { quiz_id: quiz.id, question_num: 1, answer: 'B' }, headers: json_headers
+
+        expect(response).to have_http_status(:unauthorized)
+        expect(quiz_session.get_scoreboard).to be_empty
+      end
+
+      it 'accepts the CSRF token from the page, sent the way the quiz page sends it' do
+        sign_in user
+
+        get "/live_quiz?quiz=#{quiz.id}"
+        token = Nokogiri::HTML(response.body).at_css('meta[name="csrf-token"]')['content']
+
+        post '/record_score',
+             params: { quiz_id: quiz.id, question_num: 1, answer: 'B' },
+             headers: json_headers.merge('X-CSRF-Token' => token)
+
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body)).to eq('status' => 'graded', 'score' => 10)
+      end
     end
   end
   

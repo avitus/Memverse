@@ -49,8 +49,29 @@ RSpec.describe QuizSession, type: :service do
         expect(participant['login']).to eq(user_login)
         expect(participant['score']).to eq('0')
       end
+
+      it 'restores scoreboard membership when an earlier attempt stopped after creating the hash' do
+        quiz_session.add_participant(user_id, user_name, user_login)
+        $redis.srem(quiz_session.send(:participant_set_key), user_id.to_s)
+        expect(quiz_session.get_scoreboard).to eq([])
+
+        quiz_session.add_participant(user_id, user_name, user_login)
+
+        expect(quiz_session.get_scoreboard.map { |entry| entry['id'] }).to eq([user_id.to_s])
+      end
+
+      it 'does not overwrite the name or score of a player who is already added' do
+        quiz_session.add_participant(user_id, user_name, user_login)
+        $redis.hincrby(quiz_session.send(:participant_key, user_id), 'score', 10)
+
+        quiz_session.add_participant(user_id, 'Other Name', user_login)
+
+        participant = quiz_session.get_scoreboard.first
+        expect(participant).to include('score' => '10', 'name' => user_name)
+      end
+
     end
-    
+
     describe '#get_participants' do
       it 'returns empty array when no participants' do
         expect(quiz_session.get_participants).to eq([])
@@ -66,6 +87,20 @@ RSpec.describe QuizSession, type: :service do
     end
     
     describe '#get_scoreboard' do
+      context 'when Redis fails' do
+        before do
+          allow(quiz_session.instance_variable_get(:@redis)).to receive(:smembers).and_raise(Redis::CannotConnectError)
+        end
+
+        it 'returns an empty scoreboard by default' do
+          expect(quiz_session.get_scoreboard).to eq([])
+        end
+
+        it 'raises when asked to, so that a failed read is not taken to mean nobody played' do
+          expect { quiz_session.get_scoreboard(raise_errors: true) }.to raise_error(Redis::CannotConnectError)
+        end
+      end
+
       it 'returns participants sorted by score descending' do
         # Add participants with different scores
         quiz_session.add_participant(1, "User 1", "user1@example.com")
@@ -73,10 +108,11 @@ RSpec.describe QuizSession, type: :service do
         quiz_session.add_participant(3, "User 3", "user3@example.com")
         
         # Update scores
-        quiz_session.update_score(1, 1, 5)
-        quiz_session.update_score(2, 1, 10)
-        quiz_session.update_score(3, 1, 7)
-        
+        quiz_session.open_question(1, question_id, 30)
+        quiz_session.record_answer(1, 1, 5)
+        quiz_session.record_answer(1, 2, 10)
+        quiz_session.record_answer(1, 3, 7)
+
         scoreboard = quiz_session.get_scoreboard
         expect(scoreboard.length).to eq(3)
         expect(scoreboard[0]['name']).to eq("User 2")  # Highest score
@@ -86,6 +122,257 @@ RSpec.describe QuizSession, type: :service do
         expect(scoreboard[2]['name']).to eq("User 1")  # Lowest score
         expect(scoreboard[2]['score']).to eq('5')
       end
+
+      it 'orders tied participants by name so the order is stable' do
+        quiz_session.add_participant(1, "Zoe", "zoe@example.com")
+        quiz_session.add_participant(2, "adam", "adam@example.com")
+        quiz_session.add_participant(3, "Mia", "mia@example.com")
+
+        quiz_session.open_question(1, question_id, 30)
+        [1, 2].each { |id| quiz_session.record_answer(1, id, 10) }
+        quiz_session.record_answer(1, 3, 20)
+
+        expect(quiz_session.get_scoreboard.map { |p| p['name'] }).to eq(%w[Mia adam Zoe])
+      end
+    end
+  end
+
+  describe '.winners' do
+    it 'returns the single top scorer' do
+      scoreboard = [
+        { 'name' => 'Ann', 'id' => '1', 'score' => '30' },
+        { 'name' => 'Bob', 'id' => '2', 'score' => '20' }
+      ]
+
+      expect(described_class.winners(scoreboard).map { |w| w['name'] }).to eq(['Ann'])
+    end
+
+    it 'returns everyone tied on the top score, ordered by name' do
+      scoreboard = [
+        { 'name' => 'Cal', 'id' => '3', 'score' => '150' },
+        { 'name' => 'ann', 'id' => '1', 'score' => '150' },
+        { 'name' => 'Bob', 'id' => '2', 'score' => '90' }
+      ]
+
+      expect(described_class.winners(scoreboard).map { |w| w['name'] }).to eq(%w[ann Cal])
+    end
+
+    it 'compares scores numerically because Redis returns strings' do
+      scoreboard = [
+        { 'name' => 'Ann', 'id' => '1', 'score' => '90' },
+        { 'name' => 'Bob', 'id' => '2', 'score' => '100' }
+      ]
+
+      expect(described_class.winners(scoreboard).map { |w| w['name'] }).to eq(['Bob'])
+    end
+
+    it 'returns nobody when no one scored any points' do
+      scoreboard = [
+        { 'name' => 'Ann', 'id' => '1', 'score' => '0' },
+        { 'name' => 'Bob', 'id' => '2', 'score' => '0' }
+      ]
+
+      expect(described_class.winners(scoreboard)).to eq([])
+    end
+
+    it 'returns nobody for an empty scoreboard' do
+      expect(described_class.winners([])).to eq([])
+    end
+  end
+
+  describe '.winner_announcements' do
+    it 'names a single winner' do
+      winners = [{ 'name' => 'Ann' }]
+
+      expect(described_class.winner_announcements(winners, 'the Bible knowledge quiz'))
+        .to eq(['Ann won the Bible knowledge quiz'])
+    end
+
+    it 'names both people in a two-way tie' do
+      winners = [{ 'name' => 'Ann' }, { 'name' => 'Bob' }]
+
+      expect(described_class.winner_announcements(winners, 'the Bible knowledge quiz'))
+        .to eq(['Ann and Bob tied for first in the Bible knowledge quiz'])
+    end
+
+    it 'names everyone in a larger tie' do
+      winners = [{ 'name' => 'Ann' }, { 'name' => 'Bob' }, { 'name' => 'Cal' }]
+
+      expect(described_class.winner_announcements(winners, 'the Bible knowledge quiz'))
+        .to eq(['Ann, Bob, and Cal tied for first in the Bible knowledge quiz'])
+    end
+
+    it 'keeps the winner message when escaping makes a valid name too long' do
+      announcement = described_class.winner_announcements([{ 'name' => '"' * 43 }], 'the quiz').first
+
+      expect(announcement).to end_with('... won the quiz')
+      expect(announcement.length).to be <= 255
+      expect(announcement.delete_suffix('... won the quiz').scan('&quot;').join).to eq(announcement.delete_suffix('... won the quiz'))
+    end
+
+    it 'does not shorten a name that exactly fits once escaped' do
+      ending = ' won Quiz'
+      name = '"' * ((255 - ending.length) / '&quot;'.length)
+
+      expect(described_class.winner_announcements([{ 'name' => name }], 'Quiz'))
+        .to eq(["#{'&quot;' * name.length}#{ending}"])
+    end
+
+    it 'keeps the tie message when escaping makes a name too long' do
+      announcements = described_class.winner_announcements([{ 'name' => '"' * 60 }, { 'name' => 'Bob' }], 'the quiz')
+
+      expect(announcements).to all(end_with('tied for first in the quiz'))
+      expect(announcements.map(&:length)).to all(be <= 255)
+      expect(announcements.join(' ')).to include('Bob')
+    end
+
+    it 'escapes HTML in the name of the quiz' do
+      winners = [{ 'name' => 'Ann' }]
+
+      expect(described_class.winner_announcements(winners, '<a href="https://example.com">Quiz</a>'))
+        .to eq(['Ann won &lt;a href=&quot;https://example.com&quot;&gt;Quiz&lt;/a&gt;'])
+    end
+
+    it 'keeps every part of the announcement when the quiz name is as long as the column allows' do
+      winners = [{ 'name' => 'Ann' }, { 'name' => '"' * 60 }]
+
+      announcements = described_class.winner_announcements(winners, '"' * 255)
+
+      expect(announcements.map(&:length)).to all(be <= 255)
+      expect(announcements).to all(include('tied for first in &quot;'))
+      expect(announcements).to all(end_with('&quot;...'))
+      expect(announcements.join(' ')).to include('Ann')
+    end
+
+    it 'escapes HTML in the name of a single winner' do
+      winners = [{ 'name' => '<a href="https://example.com">Ann</a>' }]
+
+      expect(described_class.winner_announcements(winners, 'the quiz'))
+        .to eq(['&lt;a href=&quot;https://example.com&quot;&gt;Ann&lt;/a&gt; won the quiz'])
+    end
+
+    it 'escapes HTML in the names of a tie, counting the escaped text towards the length' do
+      name = '<' * 40
+      winners = Array.new(3) { { 'name' => name } }
+
+      announcements = described_class.winner_announcements(winners, 'the quiz')
+
+      expect(announcements.join).not_to include('<')
+      expect(announcements.map(&:length)).to all(be <= 255)
+      expect(announcements.join.scan('&lt;' * 40).length).to eq(3)
+    end
+
+    it 'shows an escaped name as plain text once the news item is sanitized' do
+      winners = [{ 'name' => '<img src="https://example.com/x.png">' }]
+
+      announcement = described_class.winner_announcements(winners, 'the quiz').first
+
+      expect(ActionController::Base.helpers.sanitize(announcement)).not_to include('<img')
+    end
+
+    it 'splits a tie too long for the 255 character news column and names every winner' do
+      names = Array.new(12) { |i| "#{'x' * 59}#{i.to_s.rjust(2, '0')}" }
+
+      announcements = described_class.winner_announcements(names.map { |name| { 'name' => name } }, 'the Bible knowledge quiz')
+
+      expect(announcements.length).to be > 1
+      expect(announcements).to all(end_with('tied for first in the Bible knowledge quiz'))
+      expect(announcements.map(&:length)).to all(be <= 255)
+      expect(names).to all(satisfy { |name| announcements.join(' ').include?(name) })
+    end
+
+    it 'keeps a tie on one announcement when it exactly fits' do
+      ending = ' tied for first in Quiz'
+      names = ['a' * (255 - ending.length - ' and b'.length), 'b']
+
+      expect(described_class.winner_announcements(names.map { |name| { 'name' => name } }, 'Quiz'))
+        .to eq(["#{names.first} and b#{ending}"])
+    end
+
+    it 'starts a new announcement when one more name would not fit' do
+      ending = ' tied for first in Quiz'
+      names = ['a' * (255 - ending.length - ' and b'.length + 1), 'b']
+
+      expect(described_class.winner_announcements(names.map { |name| { 'name' => name } }, 'Quiz'))
+        .to eq(["#{names.first}#{ending}", "b#{ending}"])
+    end
+  end
+
+  describe 'question answer window' do
+    def close_question(num)
+      $redis.hset(quiz_session.send(:question_key, num), 'closes_at', '1')
+    end
+
+    it 'gives players their time and the grace period, on the clock of Redis' do
+      quiz_session.open_question(question_num, question_id, 30)
+
+      closes_at = $redis.hget(quiz_session.send(:question_key, question_num), 'closes_at').to_f
+      expect(closes_at - quiz_session.send(:redis_time)).to be_within(1).of(30 + QuizSession::ANSWER_GRACE_SECONDS)
+    end
+
+    it 'returns the question id while the question is open' do
+      quiz_session.open_question(question_num, question_id, 30)
+
+      expect(quiz_session.open_question_id(question_num)).to eq(question_id.to_s)
+    end
+
+    it 'returns nothing once the deadline has passed' do
+      quiz_session.open_question(question_num, question_id, 30)
+
+      close_question(question_num)
+
+      expect(quiz_session.open_question_id(question_num)).to be_nil
+    end
+
+    it 'can restart the answer window, keeping the question' do
+      quiz_session.open_question(question_num, question_id, 30)
+
+      close_question(question_num)
+      expect(quiz_session.open_question_id(question_num)).to be_nil
+
+      quiz_session.restart_answer_window(question_num, 30)
+
+      expect(quiz_session.open_question_id(question_num)).to eq(question_id.to_s)
+    end
+
+    it 'raises when Redis fails, so that the question is not published' do
+      allow(quiz_session.instance_variable_get(:@redis)).to receive(:pipelined).and_raise(Redis::CannotConnectError)
+
+      expect { quiz_session.open_question(question_num, question_id, 30) }.to raise_error(Redis::CannotConnectError)
+    end
+
+    it 'returns nothing for a question that was never opened' do
+      expect(quiz_session.open_question_id(99)).to be_nil
+    end
+
+    it 'raises when Redis fails rather than reporting the question as closed' do
+      allow(quiz_session.instance_variable_get(:@redis)).to receive(:hmget).and_raise(Redis::CannotConnectError)
+
+      expect { quiz_session.open_question_id(question_num) }.to raise_error(Redis::CannotConnectError)
+    end
+
+    it 'points at the newest question when a question number is reopened' do
+      quiz_session.open_question(question_num, question_id, 30)
+      quiz_session.open_question(question_num, 789, 30)
+
+      expect(quiz_session.open_question_id(question_num)).to eq('789')
+    end
+
+    it 'exposes the opened question to the difficulty update' do
+      quiz_session.open_question(question_num, question_id, 30)
+
+      expect(quiz_session.get_question_stats.first['qq_id']).to eq(question_id.to_s)
+    end
+
+    it 'forgets answers when the quiz data is cleaned up' do
+      quiz_session.add_participant(user_id, user_name, user_login)
+      quiz_session.open_question(question_num, question_id, 30)
+      quiz_session.record_answer(question_num, user_id, score)
+      quiz_session.cleanup_quiz_data
+      quiz_session.add_participant(user_id, user_name, user_login)
+      quiz_session.open_question(question_num, question_id, 30)
+
+      expect(quiz_session.record_answer(question_num, user_id, score)).to eq(:graded)
     end
   end
 
@@ -94,31 +381,73 @@ RSpec.describe QuizSession, type: :service do
       quiz_session.add_participant(user_id, user_name, user_login)
     end
     
-    describe '#update_score' do
-      it 'updates user score successfully' do
-        result = quiz_session.update_score(user_id, question_num, score)
-        expect(result).to be true
-        
-        participants = quiz_session.get_participants
-        expect(participants.first['score']).to eq(score.to_s)
+    describe '#record_answer' do
+      before do
+        quiz_session.open_question(1, question_id, 30)
+        quiz_session.open_question(2, question_id, 30)
       end
-      
-      it 'accumulates multiple scores' do
-        quiz_session.update_score(user_id, 1, 5)
-        quiz_session.update_score(user_id, 2, 7)
-        
-        participants = quiz_session.get_participants
-        expect(participants.first['score']).to eq('12')
+
+      def question_stats(num)
+        $redis.hgetall("#{QuizSession::KEY_PREFIX}:#{quiz_id}:question:#{num}")
       end
-      
-      it 'returns false for zero score' do
-        result = quiz_session.update_score(user_id, question_num, 0)
-        expect(result).to be false
+
+      it 'saves the score and the question statistics together' do
+        expect(quiz_session.record_answer(1, user_id, score)).to eq(:graded)
+
+        expect(quiz_session.get_participants.first['score']).to eq(score.to_s)
+        stats = question_stats(1)
+        expect(stats['total_score']).to eq(score.to_s)
+        expect(stats['answered']).to eq('1')
       end
-      
-      it 'returns false for negative score' do
-        result = quiz_session.update_score(user_id, question_num, -5)
-        expect(result).to be false
+
+      it 'accumulates scores across questions' do
+        quiz_session.record_answer(1, user_id, 5)
+        quiz_session.record_answer(2, user_id, 7)
+
+        expect(quiz_session.get_participants.first['score']).to eq('12')
+      end
+
+      it 'uses up the answer but adds nothing for a zero score' do
+        expect(quiz_session.record_answer(1, user_id, 0)).to eq(:graded)
+        expect(quiz_session.record_answer(1, user_id, 10)).to eq(:duplicate)
+
+        expect(quiz_session.get_participants.first['score']).to eq('0')
+        expect(question_stats(1)).not_to include('total_score', 'answered')
+      end
+
+      it 'keeps only the first answer from each user' do
+        quiz_session.add_participant(999, "Other User", "other@example.com")
+        quiz_session.record_answer(1, user_id, 5)
+
+        expect(quiz_session.record_answer(1, user_id, 10)).to eq(:duplicate)
+        expect(quiz_session.record_answer(1, 999, 10)).to eq(:graded)
+        expect(quiz_session.get_participants.find { |p| p['id'] == user_id.to_s }['score']).to eq('5')
+        expect(question_stats(1)['answered']).to eq('2')
+      end
+
+      it 'refuses an answer after the question closes' do
+        $redis.hset(quiz_session.send(:question_key, 1), 'closes_at', '1')
+
+        expect(quiz_session.record_answer(1, user_id, 10)).to eq(:closed)
+        expect(quiz_session.get_participants.first['score']).to eq('0')
+      end
+
+      it 'checks the deadline when the script runs, not when the answer was sent' do
+        quiz_session.restart_answer_window(1, -(QuizSession::ANSWER_GRACE_SECONDS + 5))
+
+        travel_to(1.hour.ago) do
+          expect(quiz_session.record_answer(1, user_id, 10)).to eq(:closed)
+        end
+      end
+
+      it 'refuses an answer to a question that was never opened' do
+        expect(quiz_session.record_answer(99, user_id, 10)).to eq(:closed)
+      end
+
+      it 'raises when Redis fails, so the player can try again' do
+        allow(quiz_session.instance_variable_get(:@redis)).to receive(:eval).and_raise(Redis::CannotConnectError)
+
+        expect { quiz_session.record_answer(1, user_id, 10) }.to raise_error(Redis::CannotConnectError)
       end
     end
   end
@@ -255,7 +584,8 @@ RSpec.describe QuizSession, type: :service do
     before do
       # Set up test data
       quiz_session.add_participant(user_id, user_name, user_login)
-      quiz_session.update_score(user_id, question_num, score)
+      quiz_session.open_question(question_num, question_id, 30)
+      quiz_session.record_answer(question_num, user_id, score)
       quiz_session.update_question_stats(question_num, question_id)
       quiz_session.set_quiz_status("Test status")
       quiz_session.lock_quiz
@@ -321,8 +651,8 @@ RSpec.describe QuizSession, type: :service do
   describe 'error handling' do
     it 'handles Redis connection errors gracefully' do
       # Mock the Redis instance to raise an error
-      allow($redis).to receive(:pipelined).and_raise(Redis::CannotConnectError)
-      
+      allow($redis).to receive(:eval).and_raise(Redis::CannotConnectError)
+
       result = quiz_session.add_participant(user_id, user_name, user_login)
       expect(result).to be false
     end

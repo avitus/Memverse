@@ -95,9 +95,10 @@ commands:
       - run:
           name: Generate asset checksum
           command: |
-            # Create a checksum of all asset files for cache key
-            find app/assets -type f -name "*.scss" -o -name "*.css" -o -name "*.js" -o -name "*.coffee" | \
-              sort | xargs cat | md5sum > asset_checksum.txt
+            # Create a checksum of everything the compiled assets depend on, for the cache key
+            # Hashing each file with its path means a rename changes the checksum too
+            find app/assets lib/assets config/initializers/assets.rb Gemfile.lock -type f -print0 | \
+              sort -z | xargs -0 md5sum | md5sum > asset_checksum.txt
             echo "Asset checksum: $(cat asset_checksum.txt)"
 
       # Restore precompiled assets
@@ -135,28 +136,20 @@ commands:
             # Combine database setup into a single step to reduce overhead
             RAILS_ENV=test bundle exec rake db:create db:schema:load --trace
 
-      # Precompile assets once on container 0
+      # restore_cache can fall back to assets built from older source, and tests served those would
+      # run the old JavaScript. The marker records the source the assets were built from, so stale
+      # ones are removed and rebuilt (incrementally, from the restored tmp/cache/assets). Containers
+      # share no filesystem, so each one checks for itself.
       - run:
           name: Asset Precompilation
           command: |
-            if [ "$CIRCLE_NODE_INDEX" = "0" ]; then
-              if [ ! -d "public/assets" ] || [ ! -f "public/assets/.cache_marker" ]; then
-                echo "Precompiling assets on container 0..."
-                RAILS_ENV=test bundle exec rake assets:precompile
-                touch public/assets/.cache_marker
-              else
-                echo "Using cached precompiled assets"
-              fi
+            if [ "$(cat public/assets/.cache_marker 2>/dev/null)" = "$(cat asset_checksum.txt)" ]; then
+              echo "Using cached precompiled assets"
             else
-              echo "Waiting for assets from container 0..."
-              # Wait up to 60 seconds for assets to be available
-              for i in {1..12}; do
-                if [ -f "public/assets/.cache_marker" ]; then
-                  echo "Assets ready!"
-                  break
-                fi
-                sleep 5
-              done
+              echo "Precompiling assets..."
+              rm -rf public/assets
+              RAILS_ENV=test bundle exec rake assets:precompile
+              cp asset_checksum.txt public/assets/.cache_marker
             fi
 
       - run:

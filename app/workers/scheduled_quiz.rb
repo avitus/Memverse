@@ -353,52 +353,54 @@ class ScheduledQuiz
   # Quiz question execution
   # ========================================================================
   
+  # Lists every question up front for debugging
+  def log_quiz_questions(quiz, quiz_questions)
+    quiz_questions.each_with_index do |q, idx|
+      Sidekiq.logger.info "===> Quiz ##{quiz.id} : Question #{idx+1}: Type=#{q.question_type}, ID=#{q.id}, Passage=#{q.passage}"
+    end
+  end
+
   def run_quiz_questions(quiz, channel)
     Sidekiq.logger.info("===> Quiz ##{quiz.id} : Starting quiz questions at #{Time.current.utc}")
 
     quiz_questions = quiz.quiz_questions.order("question_no ASC")
     Sidekiq.logger.info("===> Quiz ##{quiz.id} : Loading #{quiz_questions.count} questions")
     
-    # Log all questions for debugging
-    quiz_questions.each_with_index do |q, idx|
-      Sidekiq.logger.info "===> Quiz ##{quiz.id} : Question #{idx+1}: Type=#{q.question_type}, ID=#{q.id}, Passage=#{q.passage}"
-    end
+    log_quiz_questions(quiz, quiz_questions)
 
     quiz_questions.each_with_index do |question, idx|
-      with_retry("question #{question.question_no}", quiz.id) do
-        passages = question.passage_translations
-        ref = question.passage
-        num = question.question_no
+      num = question.question_no
+      passages = with_retry("loading question #{num}", quiz.id) { question.passage_translations }
+      ref = question.passage
 
-        Sidekiq.logger.info "===> Quiz ##{quiz.id} : Processing Question ##{num} (#{idx+1} of #{quiz_questions.count}) [Type: #{question.question_type}]"
+      Sidekiq.logger.info "===> Quiz ##{quiz.id} : Processing Question ##{num} (#{idx+1} of #{quiz_questions.count}) [Type: #{question.question_type}]"
 
-        # Store question metadata in Redis
-        Sidekiq.logger.info "===> Quiz ##{quiz.id} : Updating question stats in Redis"
-        @quiz_session.update_question_stats(num, question.id)
-
-        case question.question_type
-        when "recitation"
-          Sidekiq.logger.info "===> Quiz ##{quiz.id} : Question ##{num} - Recitation question for passage: #{ref}"
-          handle_recitation_question(question, num, ref, passages, channel, quiz.id)
-        when "reference"
-          Sidekiq.logger.info "===> Quiz ##{quiz.id} : Question ##{num} - Reference question for passage: #{ref}"
-          handle_reference_question(question, num, ref, passages, channel, quiz.id)
-        when "mcq"
-          Sidekiq.logger.info "===> Quiz ##{quiz.id} : Question ##{num} - Multiple choice question"
-          handle_mcq_question(question, num, channel, quiz.id)
-        else
-          Sidekiq.logger.warn "===> Quiz ##{quiz.id} : Question ##{num} - Unknown question type: #{question.question_type}"
-          sleep(20)
-        end
-
-        # Publish updated scoreboard after each question
-        Sidekiq.logger.info "===> Quiz ##{quiz.id} : Publishing scoreboard after question ##{num}"
-        publish_scoreboard(channel, quiz.id)
-        
-        Sidekiq.logger.info "===> Quiz ##{quiz.id} : Completed question ##{num}"
+      case question.question_type
+      when "recitation"
+        Sidekiq.logger.info "===> Quiz ##{quiz.id} : Question ##{num} - Recitation question for passage: #{ref}"
+        handle_recitation_question(question, num, ref, passages, channel, quiz.id)
+      when "reference"
+        Sidekiq.logger.info "===> Quiz ##{quiz.id} : Question ##{num} - Reference question for passage: #{ref}"
+        handle_reference_question(question, num, ref, passages, channel, quiz.id)
+      when "mcq"
+        Sidekiq.logger.info "===> Quiz ##{quiz.id} : Question ##{num} - Multiple choice question"
+        handle_mcq_question(question, num, channel, quiz.id)
+      else
+        Sidekiq.logger.warn "===> Quiz ##{quiz.id} : Question ##{num} - Unknown question type: #{question.question_type}"
+        sleep(20)
       end
+
+      # Publish updated scoreboard after each question
+      Sidekiq.logger.info "===> Quiz ##{quiz.id} : Publishing scoreboard after question ##{num}"
+      publish_scoreboard(channel, quiz.id)
+
+      # Leave the answer on screen before the next question replaces it
+      sleep(QuizSession::ANSWER_REVEAL_SECONDS)
+
+      Sidekiq.logger.info "===> Quiz ##{quiz.id} : Completed question ##{num}"
     end
-    
+
+
     Sidekiq.logger.info "===> Quiz ##{quiz.id} : All questions completed"
   end
   
@@ -406,51 +408,66 @@ class ScheduledQuiz
     # Calculate time allocation: 24 WPM typing speed with 15 seconds to think
     time_alloc = (passages.first.last.split(" ").length * 2.5 + 15.0).to_i
 
-    publish_with_retry(channel, {
-      meta: "question",
-      q_num: num,
-      q_id: question.id,
-      q_type: "recitation",
-      q_ref: ref,
-      q_passages: passages,
-      time_alloc: time_alloc
-    }, quiz_id)
-    
-    sleep(time_alloc + 1)
+    run_question(question, num, channel, quiz_id, time_alloc,
+                 { q_type: "recitation", q_ref: ref },
+                 { q_type: "recitation", q_passages: passages })
   end
-  
+
   def handle_reference_question(question, num, ref, passages, channel, quiz_id)
-    publish_with_retry(channel, {
-      meta: "question",
-      q_num: num,
-      q_id: question.id,
-      q_type: "reference",
-      q_ref: ref,
-      q_passages: passages,
-      time_alloc: 25
-    }, quiz_id)
-    
-    sleep(26)
+    run_question(question, num, channel, quiz_id, 25,
+                 { q_type: "reference", q_passages: passages },
+                 { q_type: "reference", q_ref: ref })
   end
-  
+
   def handle_mcq_question(question, num, channel, quiz_id)
-    publish_with_retry(channel, {
-      meta: "question",
-      q_num: num,
-      q_id: question.id,
-      q_type: "mcq",
-      mc_question: question.mc_question,
-      mc_option_a: question.mc_option_a,
-      mc_option_b: question.mc_option_b,
-      mc_option_c: question.mc_option_c,
-      mc_option_d: question.mc_option_d,
-      mc_answer: question.mc_answer,
-      time_alloc: 30
-    }, quiz_id)
-    
-    sleep(31)
+    run_question(question, num, channel, quiz_id, 30,
+                 { q_type: "mcq",
+                   mc_question: question.mc_question,
+                   mc_option_a: question.mc_option_a,
+                   mc_option_b: question.mc_option_b,
+                   mc_option_c: question.mc_option_c,
+                   mc_option_d: question.mc_option_d,
+                   mc_answer: QuizSession::IOS_ANSWER_PLACEHOLDER },
+                 { q_type: "mcq", mc_answer: question.mc_answer })
   end
-  
+
+  # Opens the question for answers and publishes it, keeping the answer out of that
+  # public message until the question has closed. Each step retries on its own. Opening the
+  # question must never be repeated once the answer is public, or a player could score by
+  # sending the answer they had just seen.
+  def run_question(question, num, channel, quiz_id, time_alloc, question_fields, answer_fields)
+    with_retry("opening question #{num}", quiz_id) do
+      @quiz_session.open_question(num, question.id, time_alloc)
+
+      publish_with_retry(channel, {
+        meta: "question",
+        q_num: num,
+        q_id: question.id,
+        time_alloc: time_alloc
+      }.merge(question_fields), quiz_id)
+    end
+
+    restart_answer_window(num, time_alloc, quiz_id)
+
+    sleep(time_alloc + QuizSession::ANSWER_GRACE_SECONDS)
+
+    with_retry("publishing answer #{num}", quiz_id) do
+      publish_with_retry(channel, { meta: "answer", q_num: num }.merge(answer_fields), quiz_id)
+    end
+  end
+
+  # Time spent publishing must not come off the time players get to answer. This retries on its
+  # own so that it can't publish the question again, and if it still fails the question stays
+  # open until its first deadline, so the quiz carries on.
+  def restart_answer_window(num, time_alloc, quiz_id)
+    with_retry("restarting answer window #{num}", quiz_id) do
+      @quiz_session.restart_answer_window(num, time_alloc)
+    end
+  rescue => e
+    Sidekiq.logger.error "===> Quiz ##{quiz_id} : Could not restart answer window #{num}: #{e.class} - #{e.message}"
+    Sentry.capture_exception(e)
+  end
+
   def publish_scoreboard(channel, quiz_id)
     with_retry("publishing scoreboard", quiz_id) do
       scoreboard = @quiz_session.get_scoreboard
@@ -475,24 +492,34 @@ class ScheduledQuiz
     end
   end
   
+  # Each announcement retries on its own, so a failure can't post an earlier one twice.
   def record_final_scoreboard(quiz, channel)
-    with_retry("recording final scoreboard", quiz.id) do
-      final_scoreboard = @quiz_session.get_scoreboard
+    final_scoreboard = with_retry("reading final scoreboard", quiz.id) { @quiz_session.get_scoreboard(raise_errors: true) }
 
-      Sidekiq.logger.info "===> Quiz ##{quiz.id} : Final Quiz Scores"
-      Sidekiq.logger.info "==================="
-      final_scoreboard.each do |usr|
-        Sidekiq.logger.info "[#{usr['score']}] - #{usr['name']}"
-      end
-
-      # Announce winner if there are participants
-      unless final_scoreboard.empty?
-        gold_ribbon_name = final_scoreboard[0]['name']
-        gold_ribbon_id = final_scoreboard[0]['id']
-        broadcast = "#{gold_ribbon_name} won #{quiz.name}"
-        Tweet.create!(news: broadcast, user_id: gold_ribbon_id, importance: 2)
-      end
+    Sidekiq.logger.info "===> Quiz ##{quiz.id} : Final Quiz Scores"
+    Sidekiq.logger.info "==================="
+    final_scoreboard.each do |usr|
+      Sidekiq.logger.info "[#{usr['score']}] - #{usr['name']}"
     end
+
+    # Announce the winner, or everyone tied for first, if anyone scored
+    winners = QuizSession.winners(final_scoreboard)
+    return if winners.empty?
+
+    QuizSession.winner_announcements(winners, quiz.name).each do |broadcast|
+      post_winner_announcement(broadcast, winners.first['id'], quiz.id)
+    end
+  end
+
+  # A failure is reported and the quiz carries on, so that it doesn't cost the
+  # other tied winners their announcement.
+  def post_winner_announcement(broadcast, user_id, quiz_id)
+    with_retry("announcing the winner", quiz_id) do
+      Tweet.create!(news: broadcast, user_id: user_id, importance: 2)
+    end
+  rescue => e
+    Sidekiq.logger.error "===> Quiz ##{quiz_id} : Winner announcement failed: #{e.class} - #{e.message}"
+    Sentry.capture_exception(e)
   end
   
   def close_quiz_chat(quiz, channel)

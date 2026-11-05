@@ -100,7 +100,8 @@ export function loadJavaScriptFile(filePath) {
     'accTestState', 'refTestState', 'splitByWords', 'BIBLEBOOKS', 'scrub_text',
     'calculate_levenshtein_distance', 'word_width', 'flexibleTextMatch',
     'calculateInputWidth', 'mvPassageReviewHandleInput',
-    'mvMirrorNextInput', 'mvDisplayPassageForReview', 'buildVerseBlank'
+    'mvMirrorNextInput', 'mvDisplayPassageForReview', 'buildVerseBlank',
+    'liveQuizAnswerProblem', 'liveQuizFeedback'
   ];
   
   // Filter out any undefined values from globalContext
@@ -243,7 +244,9 @@ export const memverseLib = {
   mvPassageReviewHandleInput: globalThis.mvPassageReviewHandleInput || globalContext.mvPassageReviewHandleInput,
   mvMirrorNextInput: globalThis.mvMirrorNextInput || globalContext.mvMirrorNextInput,
   mvDisplayPassageForReview: globalThis.mvDisplayPassageForReview || globalContext.mvDisplayPassageForReview,
-  buildVerseBlank: globalThis.buildVerseBlank || globalContext.buildVerseBlank
+  buildVerseBlank: globalThis.buildVerseBlank || globalContext.buildVerseBlank,
+  liveQuizAnswerProblem: globalThis.liveQuizAnswerProblem || globalContext.liveQuizAnswerProblem,
+  liveQuizFeedback: globalThis.liveQuizFeedback || globalContext.liveQuizFeedback
 };
 
 // Export other objects

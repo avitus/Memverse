@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ScheduledQuiz do
+describe ScheduledQuiz do # skipcq: RB-R1001 (one example group covers the whole quiz run)
 
   let(:worker) { described_class.new }
   let(:user) { User.create!(name: "Test User", email: "test@example.com", password: "password", password_confirmation: "password") }
@@ -719,6 +719,218 @@ describe ScheduledQuiz do
       expect(Sidekiq.logger).to receive(:warn).with(/Lock status:/)
 
       worker.perform
+    end
+  end
+
+  describe 'publishing questions' do
+    let(:session) { instance_double(QuizSession, open_question: true, restart_answer_window: true) }
+    let(:published) { [] }
+    let(:passages) { { 'NIV' => 'Jesus wept.' } }
+    let(:mcq) { instance_double(QuizQuestion, id: 5, mc_question: 'Q', mc_option_a: 'a', mc_option_b: 'b', mc_option_c: 'c', mc_option_d: 'd', mc_answer: 'C') }
+    let(:question) { instance_double(QuizQuestion, id: 6) }
+    let(:window) { QuizSession::ANSWER_GRACE_SECONDS }
+
+    before do
+      worker.instance_variable_set(:@quiz_session, session)
+      allow(worker).to receive(:publish_with_retry) { |_channel, message, _quiz_id| published << message }
+    end
+
+    def message(meta)
+      published.find { |entry| entry[:meta] == meta }
+    end
+
+    it 'restarts the answer window after publishing, so that publishing takes no time from players' do
+      expect(worker).to receive(:publish_with_retry).with('quiz-2', hash_including(meta: 'question'), 2).ordered
+      expect(session).to receive(:restart_answer_window).with(1, 30).ordered
+      expect(worker).to receive(:publish_with_retry).with('quiz-2', hash_including(meta: 'answer'), 2).ordered
+
+      worker.send(:handle_mcq_question, mcq, 1, 'quiz-2', 2)
+    end
+
+    it 'retries a failed restart of the answer window without publishing the question again' do
+      allow(session).to receive(:restart_answer_window).and_invoke(proc { raise Redis::CannotConnectError }, proc { true })
+
+      worker.send(:handle_mcq_question, mcq, 1, 'quiz-2', 2)
+
+      expect(session).to have_received(:restart_answer_window).twice
+      expect(session).to have_received(:open_question).once
+      expect(published.map { |entry| entry[:meta] }).to eq(%w[question answer])
+    end
+
+    it 'reports a restart of the answer window that keeps failing and carries on' do
+      allow(session).to receive(:restart_answer_window).and_raise(Redis::CannotConnectError)
+      allow(Sentry).to receive(:capture_exception)
+
+      worker.send(:handle_mcq_question, mcq, 1, 'quiz-2', 2)
+
+      expect(Sentry).to have_received(:capture_exception).once
+      expect(published.map { |entry| entry[:meta] }).to eq(%w[question answer])
+    end
+
+    it 'does not publish a question that could not be opened' do
+      allow(session).to receive(:open_question).and_raise(Redis::CannotConnectError)
+
+      expect { worker.send(:handle_mcq_question, mcq, 1, 'quiz-2', 2) }.to raise_error(Redis::CannotConnectError)
+
+      expect(published).to be_empty
+    end
+
+    it 'opens the question again if publishing it fails, while the answer is still private' do
+      allow(worker).to receive(:publish_with_retry).and_invoke(
+        proc { raise StandardError, 'PubNub is away' },
+        proc { |_channel, msg, _quiz_id| published << msg }
+      )
+
+      worker.send(:handle_mcq_question, mcq, 1, 'quiz-2', 2)
+
+      expect(session).to have_received(:open_question).twice
+      expect(published.map { |entry| entry[:meta] }).to eq(%w[question answer])
+    end
+
+    it 'never reopens a question after publishing its answer fails' do
+      allow(worker).to receive(:publish_with_retry).with(anything, hash_including(meta: 'answer'), anything).and_invoke(
+        proc { raise StandardError, 'PubNub is away' },
+        proc { |_channel, msg, _quiz_id| published << msg }
+      )
+
+      worker.send(:handle_mcq_question, mcq, 1, 'quiz-2', 2)
+
+      expect(session).to have_received(:open_question).once
+      expect(published.map { |entry| entry[:meta] }).to eq(%w[question answer])
+    end
+
+    it 'does not ask a question again when its scoreboard cannot be published' do
+      quiz_question = FactoryBot.create(:quiz_question, :mcq, quiz: quiz, question_no: 1)
+      allow(session).to receive(:get_scoreboard).and_return([])
+      allow(worker).to receive(:publish_with_retry).with(anything, hash_including(meta: 'scoreboard'), anything)
+                                                   .and_raise(StandardError, 'PubNub is away')
+
+      expect { worker.send(:run_quiz_questions, quiz, 'quiz-2') }.to raise_error(StandardError, 'PubNub is away')
+
+      expect(session).to have_received(:open_question).once.with(quiz_question.question_no, quiz_question.id, anything)
+      expect(published.map { |entry| entry[:meta] }).to eq(%w[question answer])
+    end
+
+    it 'keeps the answer out of a multiple choice question until it closes' do
+      expect(session).to receive(:open_question).with(1, 5, 30)
+      expect(worker).to receive(:sleep).with(30 + window)
+
+      worker.send(:handle_mcq_question, mcq, 1, 'quiz-2', 2)
+
+      expect(message('question')[:mc_answer]).to eq(QuizSession::IOS_ANSWER_PLACEHOLDER)
+      expect(message('answer')).to include(q_num: 1, q_type: 'mcq', mc_answer: 'C')
+      expect(published.map { |entry| entry[:meta] }).to eq(%w[question answer])
+    end
+
+    it 'keeps the reference out of a reference question until it closes' do
+      expect(session).to receive(:open_question).with(1, 6, 25)
+      expect(worker).to receive(:sleep).with(25 + window)
+
+      worker.send(:handle_reference_question, question, 1, 'John 11:35', passages, 'quiz-2', 2)
+
+      expect(message('question')).not_to have_key(:q_ref)
+      expect(message('question')[:q_passages]).to eq(passages)
+      expect(message('answer')).to include(q_num: 1, q_type: 'reference', q_ref: 'John 11:35')
+    end
+
+    it 'keeps the verse text out of a recitation question until it closes' do
+      expect(session).to receive(:open_question).with(1, 6, 20)
+      expect(worker).to receive(:sleep).with(20 + window)
+
+      worker.send(:handle_recitation_question, question, 1, 'John 11:35', passages, 'quiz-2', 2)
+
+      expect(message('question')).not_to have_key(:q_passages)
+      expect(message('question')[:q_ref]).to eq('John 11:35')
+      expect(message('answer')).to include(q_num: 1, q_type: 'recitation', q_passages: passages)
+    end
+  end
+
+  describe 'announcing the result' do
+    def record_with(scoreboard)
+      worker.instance_variable_set(:@quiz_session, double('QuizSession', get_scoreboard: scoreboard))
+      worker.send(:record_final_scoreboard, quiz, "quiz-#{quiz.id}")
+    end
+
+    it 'announces a single winner' do
+      expect(Tweet).to receive(:create!).with(news: 'Lisa won Test Quiz', user_id: '10', importance: 2)
+
+      record_with([
+        { 'name' => 'Lisa', 'id' => '10', 'score' => '150' },
+        { 'name' => 'Phil', 'id' => '20', 'score' => '90' }
+      ])
+    end
+
+    it 'announces a tie naming every winner' do
+      expect(Tweet).to receive(:create!).with(
+        news: 'Lisa and Phil tied for first in Test Quiz', user_id: '10', importance: 2
+      )
+
+      record_with([
+        { 'name' => 'Phil', 'id' => '20', 'score' => '150' },
+        { 'name' => 'Lisa', 'id' => '10', 'score' => '150' }
+      ])
+    end
+
+    it 'posts as many announcements as it takes to name everyone in a long tie' do
+      names = Array.new(12) { |i| "#{'x' * 59}#{i.to_s.rjust(2, '0')}" }
+      news = []
+      allow(Tweet).to receive(:create!) { |args| news << args[:news] }
+
+      record_with(names.each_with_index.map { |name, i| { 'name' => name, 'id' => i.to_s, 'score' => '150' } })
+
+      expect(news.length).to be > 1
+      expect(news.map(&:length)).to all(be <= 255)
+      expect(names).to all(satisfy { |name| news.join(' ').include?(name) })
+    end
+
+    it 'does not post an announcement twice when a later one fails and is retried' do
+      names = Array.new(12) { |i| "#{'x' * 59}#{i.to_s.rjust(2, '0')}" }
+      news = []
+      save_tweet = proc { |args| news << args[:news] }
+      allow(Tweet).to receive(:create!).and_invoke(
+        save_tweet,
+        proc { raise ActiveRecord::StatementInvalid, 'database hiccup' },
+        save_tweet
+      )
+
+      record_with(names.each_with_index.map { |name, i| { 'name' => name, 'id' => i.to_s, 'score' => '150' } })
+
+      expect(news.length).to be > 1
+      expect(news.uniq).to eq(news)
+      expect(names).to all(satisfy { |name| news.join(' ').include?(name) })
+    end
+
+    it 'reports an announcement that keeps failing and still posts the others' do
+      names = Array.new(12) { |i| "#{'x' * 59}#{i.to_s.rjust(2, '0')}" }
+      news = []
+      always_fail = proc { raise ActiveRecord::StatementInvalid, 'database hiccup' }
+      allow(Tweet).to receive(:create!).and_invoke(always_fail, always_fail, always_fail, always_fail, proc { |args| news << args[:news] })
+      allow(Sentry).to receive(:capture_exception)
+
+      record_with(names.each_with_index.map { |name, i| { 'name' => name, 'id' => i.to_s, 'score' => '150' } })
+
+      expect(Sentry).to have_received(:capture_exception).once
+      expect(news).not_to be_empty
+      expect(news.join(' ')).to include(names.last)
+    end
+
+    it 'retries the final scoreboard rather than announcing no winner when Redis fails' do
+      session = instance_double(QuizSession)
+      allow(session).to receive(:get_scoreboard).with(raise_errors: true).and_invoke(
+        proc { raise Redis::CannotConnectError },
+        proc { [{ 'name' => 'Lisa', 'id' => '10', 'score' => '150' }] }
+      )
+      worker.instance_variable_set(:@quiz_session, session)
+
+      expect(Tweet).to receive(:create!).with(news: 'Lisa won Test Quiz', user_id: '10', importance: 2)
+
+      worker.send(:record_final_scoreboard, quiz, "quiz-#{quiz.id}")
+    end
+
+    it 'announces nothing when nobody scored any points' do
+      expect(Tweet).not_to receive(:create!)
+
+      record_with([{ 'name' => 'Lisa', 'id' => '10', 'score' => '0' }])
     end
   end
 end

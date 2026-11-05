@@ -94,12 +94,15 @@ All routes require a bearer token unless marked **open**.
 | `GET /api/v1/translations` | `translations#index` | |
 | `GET /api/v1/final_verses` | `final_verses#index` | last verse number of every chapter |
 | `GET /api/v1/progress_reports` | `progress_reports#index` | |
-| `POST /api/v1/record_score` | `live_quiz#record_score` | live-quiz answer; 204 |
+| `POST /api/v1/record_score` | `live_quiz#record_score` | live-quiz answer; 200 with `status`, and `score` when graded |
 
 `resources :verses`, `:memverses`, `:passages` and `:quizzes` are declared with all seven REST routes;
 actions not implemented in the controller answer 404. The `POST /api/v1/record_score` parameters are
-`usr_id`, `usr_name`, `usr_login`, `question_id`, `question_num`, `score` (0–10) and optional
-`quiz_id` (default 1); see [QUIZ_SYSTEM.md](./QUIZ_SYSTEM.md).
+`question_num`, `answer` (omit it when the question timed out) and optional `quiz_id` (default 1). The
+server takes the user from the token and grades the answer itself; a user with no translation chosen
+gets a 422, because recitations are graded against it, and a `question_num` that isn't a positive
+integer gets a 400, as does a `score` sent without an `answer` (the iOS app, which grades answers itself;
+see [QUIZ_SYSTEM.md](./QUIZ_SYSTEM.md)). See [QUIZ_SYSTEM.md](./QUIZ_SYSTEM.md).
 
 ## Response envelope (`app/controllers/concerns/api_response_helpers.rb`)
 
@@ -125,8 +128,8 @@ Plain arrays (no Kaminari pagination) carry `response` and `count` only. Errors 
 { "error": "not_found" }
 ```
 
-Status codes in use: 200, 201, 204 (deletes and `record_score`), 400, 401 (missing or invalid token),
-404.
+Status codes in use: 200, 201, 204 (deletes), 400, 401 (missing or invalid token),
+404, 422.
 
 ## Swagger
 

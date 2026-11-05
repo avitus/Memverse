@@ -1,7 +1,7 @@
 require 'rails_helper'
 require 'sidekiq/testing'
 
-RSpec.describe KnowledgeQuiz, type: :worker do
+RSpec.describe KnowledgeQuiz, type: :worker do # skipcq: RB-R1001 (one example group covers the whole quiz run)
   let(:worker) { described_class.new }
   let(:quiz) { FactoryBot.create(:quiz, id: 1, start_time: 1.hour.from_now) }
   let(:quiz_session) { instance_double(QuizSession) }
@@ -17,7 +17,9 @@ RSpec.describe KnowledgeQuiz, type: :worker do
     allow(quiz_session).to receive(:get_quiz_metadata).and_return({})
     allow(quiz_session).to receive(:unlock_quiz)
     allow(quiz_session).to receive(:update_question_stats)
-    
+    allow(quiz_session).to receive(:open_question)
+    allow(quiz_session).to receive(:restart_answer_window)
+
     # Mock PubNub
     allow(PN).to receive(:publish)
     
@@ -170,6 +172,122 @@ RSpec.describe KnowledgeQuiz, type: :worker do
     end
   end
   
+  describe 'publishing questions' do
+    let!(:question) { FactoryBot.create(:quiz_question, :mcq, approval_status: 'Approved', last_asked: 1.month.ago) }
+    let(:published) { [] }
+
+    before do
+      allow(worker).to receive(:quiz_recently_executed?).and_return(false)
+      allow(worker).to receive(:acquire_execution_window_lock).and_return(true)
+      allow(quiz_session).to receive(:lock_quiz).and_return(true)
+      allow(quiz_session).to receive(:quiz_in_progress?).and_return(false)
+      allow(worker).to receive(:sleep)
+      allow(worker).to receive(:ios_quiz_alert)
+      allow(Tweet).to receive(:create!).and_return(instance_double(Tweet, id: 1, created_at: Time.current))
+      allow(PN).to receive(:publish) { |args| published << args[:message] }
+    end
+
+    it 'leaves the correct answer out of the question message, sending the placeholder the iOS app needs' do
+      worker.perform
+
+      question_messages = published.select { |message| message[:meta] == 'question' }
+      expect(question_messages).not_to be_empty
+      expect(question_messages.map { |message| message[:mc_answer] }).to all(eq(QuizSession::IOS_ANSWER_PLACEHOLDER))
+    end
+
+    it 'opens each question for its time allocation before publishing it' do
+      expect(quiz_session).to receive(:open_question)
+        .with(1, question.id, question.time_allocation).ordered
+      expect(PN).to receive(:publish).with(hash_including(message: hash_including(meta: 'question', q_num: 1))).ordered
+      allow(quiz_session).to receive(:open_question)
+      allow(PN).to receive(:publish)
+
+      worker.perform
+    end
+
+    it 'restarts the answer window after publishing, so that publishing takes no time from players' do
+      expect(PN).to receive(:publish).with(hash_including(message: hash_including(meta: 'question', q_num: 1))).ordered
+      expect(quiz_session).to receive(:restart_answer_window).with(1, question.time_allocation).ordered
+      allow(PN).to receive(:publish)
+      allow(quiz_session).to receive(:restart_answer_window)
+
+      worker.perform
+    end
+
+    it 'retries a failed restart of the answer window without publishing the question again' do
+      allow(quiz_session).to receive(:restart_answer_window).and_invoke(proc { raise Redis::CannotConnectError }, proc { true })
+
+      worker.perform
+
+      expect(quiz_session).to have_received(:open_question).exactly(5).times
+      expect(published.select { |message| message[:meta] == 'question' }.map { |message| message[:q_num] }).to eq([1, 2, 3, 4, 5])
+    end
+
+    it 'reports a restart of the answer window that keeps failing and carries on' do
+      allow(quiz_session).to receive(:restart_answer_window).and_raise(Redis::CannotConnectError)
+      allow(Sentry).to receive(:capture_exception)
+
+      worker.perform
+
+      expect(Sentry).to have_received(:capture_exception).exactly(5).times
+      expect(published.select { |message| message[:meta] == 'question' }.map { |message| message[:q_num] }).to eq([1, 2, 3, 4, 5])
+    end
+
+    it 'does not publish a question that could not be opened' do
+      allow(quiz_session).to receive(:open_question).and_raise(Redis::CannotConnectError)
+
+      worker.perform
+
+      expect(published.map { |message| message[:meta] }).not_to include('question')
+    end
+
+    it 'never reopens a question after publishing its answer fails' do
+      allow(PN).to receive(:publish).with(hash_including(message: hash_including(meta: 'answer', q_num: 1))).and_invoke(
+        proc { raise StandardError, 'PubNub is away' },
+        proc { |args| published << args[:message] }
+      )
+
+      worker.perform
+
+      expect(PN).to have_received(:publish).with(hash_including(message: hash_including(meta: 'answer', q_num: 1))).twice
+      expect(quiz_session).to have_received(:open_question).exactly(5).times
+      expect(published.select { |message| message[:meta] == 'question' }.map { |message| message[:q_num] }).to eq([1, 2, 3, 4, 5])
+    end
+
+    it 'does not ask a question again when its scoreboard cannot be published' do
+      allow(PN).to receive(:publish).with(hash_including(message: hash_including(meta: 'scoreboard')))
+                                    .and_raise(StandardError, 'PubNub is away')
+
+      worker.perform
+
+      expect(published.count { |message| message[:meta] == 'question' }).to eq(1)
+      expect(quiz_session).to have_received(:open_question).once
+    end
+
+    it 'reveals the answer only after the answer window has closed' do
+      events = []
+      allow(worker).to receive(:sleep) { |seconds| events << [:sleep, seconds] }
+      allow(PN).to receive(:publish) { |args| events << [args[:message][:meta], args[:message]] }
+
+      worker.perform
+
+      question_at = events.index { |event| event.first == 'question' }
+      answer_at   = events.index { |event| event.first == 'answer' }
+      window      = question.time_allocation + QuizSession::ANSWER_GRACE_SECONDS
+
+      expect(events[question_at + 1]).to eq([:sleep, window])
+      expect(answer_at).to eq(question_at + 2)
+      expect(events[answer_at].last).to include(q_num: 1, q_type: 'mcq', mc_answer: 'B')
+    end
+
+    it 'reveals the answer before publishing the scoreboard for that question' do
+      worker.perform
+
+      metas = published.map { |message| message[:meta] }
+      expect(metas.index('answer')).to be < metas.index('scoreboard')
+    end
+  end
+
   describe 'tweet creation' do
     context 'during successful quiz execution' do
       before do
@@ -219,7 +337,124 @@ RSpec.describe KnowledgeQuiz, type: :worker do
         
         expect(tweet_count).to eq(1)
       end
-      
+
+      context 'with a tie for first place' do
+        let(:created_tweets) { [] }
+
+        before do
+          allow(quiz_session).to receive(:get_scoreboard).and_return([
+            { 'name' => 'Phil', 'id' => '20', 'score' => '150' },
+            { 'name' => 'Lisa', 'id' => '10', 'score' => '150' },
+            { 'name' => 'Sam', 'id' => '30', 'score' => '90' }
+          ])
+
+          allow(Tweet).to receive(:create!) do |args|
+            created_tweets << args
+            instance_double(Tweet, id: created_tweets.length, created_at: Time.current)
+          end
+        end
+
+        it 'announces one tie naming every winner and nobody else' do
+          worker.perform
+
+          expect(created_tweets.length).to eq(2)
+          expect(created_tweets.last[:news]).to eq('Lisa and Phil tied for first in the Bible knowledge quiz')
+          expect(created_tweets.last[:user_id]).to eq('10')
+        end
+
+        it 'reports an announcement that keeps failing and still posts the others and awards the badges' do
+          names = Array.new(12) { |i| "#{'x' * 59}#{i.to_s.rjust(2, '0')}" }
+          allow(quiz_session).to receive(:get_scoreboard).and_return(
+            names.each_with_index.map { |name, i| { 'name' => name, 'id' => i.to_s, 'score' => '150' } }
+          )
+          always_fail = proc { raise ActiveRecord::StatementInvalid, 'database hiccup' }
+          save_tweet = proc do |args|
+            created_tweets << args
+            instance_double(Tweet, id: created_tweets.length, created_at: Time.current)
+          end
+          allow(Tweet).to receive(:create!).with(hash_including(news: a_string_matching(/tied for first/)))
+                                           .and_invoke(always_fail, always_fail, always_fail, always_fail, save_tweet)
+          allow(Sentry).to receive(:capture_exception)
+          allow(worker).to receive(:award_quiz_champion_badges)
+
+          worker.perform
+
+          expect(Sentry).to have_received(:capture_exception).once
+          expect(created_tweets.map { |tweet| tweet[:news] }.join(' ')).to include(names.last)
+          expect(worker).to have_received(:award_quiz_champion_badges)
+        end
+
+        it 'does not post an announcement twice when a later one fails and is retried' do
+          names = Array.new(12) { |i| "#{'x' * 59}#{i.to_s.rjust(2, '0')}" }
+          allow(quiz_session).to receive(:get_scoreboard).and_return(
+            names.each_with_index.map { |name, i| { 'name' => name, 'id' => i.to_s, 'score' => '150' } }
+          )
+          save_tweet = proc do |args|
+            created_tweets << args
+            instance_double(Tweet, id: created_tweets.length, created_at: Time.current)
+          end
+          allow(Tweet).to receive(:create!).with(hash_including(news: a_string_matching(/tied for first/))).and_invoke(
+            save_tweet,
+            proc { raise ActiveRecord::StatementInvalid, 'database hiccup' },
+            save_tweet
+          )
+
+          worker.perform
+
+          winner_news = created_tweets.map { |tweet| tweet[:news] }.grep(/tied for first/)
+          expect(winner_news.length).to be > 1
+          expect(winner_news.uniq).to eq(winner_news)
+          expect(names).to all(satisfy { |name| winner_news.join(' ').include?(name) })
+        end
+
+        it 'posts as many announcements as it takes to name everyone in a long tie' do
+          names = Array.new(12) { |i| "#{'x' * 59}#{i.to_s.rjust(2, '0')}" }
+          allow(quiz_session).to receive(:get_scoreboard).and_return(
+            names.each_with_index.map { |name, i| { 'name' => name, 'id' => i.to_s, 'score' => '150' } }
+          )
+
+          worker.perform
+
+          winner_news = created_tweets.map { |tweet| tweet[:news] }.grep(/tied for first/)
+          expect(winner_news.length).to be > 1
+          expect(winner_news.map(&:length)).to all(be <= 255)
+          expect(names).to all(satisfy { |name| winner_news.join(' ').include?(name) })
+        end
+      end
+
+      it 'keeps the existing wording for a single winner' do
+        allow(quiz_session).to receive(:get_scoreboard).and_return([
+          { 'name' => 'Phil', 'id' => '20', 'score' => '150' },
+          { 'name' => 'Lisa', 'id' => '10', 'score' => '140' }
+        ])
+        created_tweets = []
+        allow(Tweet).to receive(:create!) do |args|
+          created_tweets << args
+          instance_double(Tweet, id: created_tweets.length, created_at: Time.current)
+        end
+
+        worker.perform
+
+        expect(created_tweets.last[:news]).to eq('Phil won the Bible knowledge quiz')
+      end
+
+      it 'announces no winner when nobody scored any points' do
+        allow(quiz_session).to receive(:get_scoreboard).and_return([
+          { 'name' => 'Phil', 'id' => '20', 'score' => '0' },
+          { 'name' => 'Lisa', 'id' => '10', 'score' => '0' }
+        ])
+        created_tweets = []
+        allow(Tweet).to receive(:create!) do |args|
+          created_tweets << args
+          instance_double(Tweet, id: created_tweets.length, created_at: Time.current)
+        end
+
+        worker.perform
+
+        expect(created_tweets.length).to eq(1)
+        expect(created_tweets.first[:news]).to include('is starting')
+      end
+
       it 'logs tweet creation with process ID' do
         allow(Tweet).to receive(:create!).and_return(
           instance_double(Tweet, id: 1, created_at: Time.current)
@@ -232,6 +467,61 @@ RSpec.describe KnowledgeQuiz, type: :worker do
         worker.perform
       end
     end
+  end
+
+  describe 'question statistics at the end of a quiz' do
+    let(:winner_user) { FactoryBot.create(:user, name: 'Lisa') }
+    let!(:answered_question) { FactoryBot.create(:quiz_question, :mcq, times_answered: 10, perc_correct: 50) }
+    let!(:new_question) { FactoryBot.create(:quiz_question, :mcq, times_answered: 0, perc_correct: 50) }
+
+    before do
+      allow(worker).to receive(:quiz_recently_executed?).and_return(false)
+      allow(worker).to receive(:acquire_execution_window_lock).and_return(true)
+      allow(quiz_session).to receive(:lock_quiz).and_return(true)
+      allow(quiz_session).to receive(:quiz_in_progress?).and_return(false)
+      allow(worker).to receive(:sleep)
+      allow(worker).to receive(:ios_quiz_alert)
+
+      FactoryBot.create_list(:quiz_question, 3, :mcq, approval_status: 'Approved', last_asked: 1.month.ago)
+
+      allow(quiz_session).to receive(:get_scoreboard).and_return([
+        { 'name' => winner_user.name, 'id' => winner_user.id, 'score' => 100 }
+      ])
+      allow(quiz_session).to receive(:get_question_stats).and_return([
+        { 'qq_id' => answered_question.id.to_s, 'answered' => '10', 'total_score' => '100' },
+        { 'qq_id' => new_question.id.to_s }
+      ])
+      allow(Tweet).to receive(:create!).and_call_original
+      allow(worker).to receive(:mark_quiz_failed)
+    end
+
+    def expect_winner_announced_and_quiz_completed
+      expect(Tweet).to have_received(:create!).with(hash_including(news: /Lisa won the Bible knowledge quiz/))
+      expect(worker).not_to have_received(:mark_quiz_failed)
+    end
+
+    it 'announces the winner when a question has never been answered correctly' do
+      worker.perform
+
+      expect_winner_announced_and_quiz_completed
+      expect(new_question.reload.times_answered).to eq(0)
+      expect(new_question.perc_correct).to eq(50)
+    end
+
+    it 'counts each question once and still announces the winner when one question cannot be saved' do
+      allow(QuizQuestion).to receive(:find).and_call_original
+      allow(QuizQuestion).to receive(:find).with(new_question.id).and_raise(ActiveRecord::StatementInvalid, 'database hiccup')
+      allow(Sidekiq.logger).to receive(:error)
+      allow(Sentry).to receive(:capture_exception)
+
+      worker.perform
+
+      expect_winner_announced_and_quiz_completed
+      expect(answered_question.reload.times_answered).to eq(20)
+      expect(Sidekiq.logger).to have_received(:error).with(/Could not update difficulty of question #{new_question.id}: .*database hiccup/)
+      expect(Sentry).to have_received(:capture_exception).with(an_instance_of(ActiveRecord::StatementInvalid))
+    end
+
   end
 
   describe 'badge awarding' do
@@ -295,6 +585,64 @@ RSpec.describe KnowledgeQuiz, type: :worker do
 
         # Should still have only one badge
         expect(winner_user.badges.count).to eq(1)
+      end
+    end
+
+    context 'when there is a tie for first place' do
+      let(:other_winner) { FactoryBot.create(:user) }
+      let(:runner_up) { FactoryBot.create(:user) }
+
+      before do
+        allow(quiz_session).to receive(:get_scoreboard).and_return([
+          { 'name' => winner_user.name, 'id' => winner_user.id.to_s, 'score' => '150' },
+          { 'name' => other_winner.name, 'id' => other_winner.id.to_s, 'score' => '150' },
+          { 'name' => runner_up.name, 'id' => runner_up.id.to_s, 'score' => '90' }
+        ])
+
+        allow(Tweet).to receive(:create!).and_return(
+          instance_double(Tweet, id: 1, created_at: Time.current)
+        )
+      end
+
+      it 'awards the badge to every tied winner but not the runner-up' do
+        worker.perform
+
+        expect(winner_user.badges).to include(quiz_champion_badge)
+        expect(other_winner.badges).to include(quiz_champion_badge)
+        expect(runner_up.badges).not_to include(quiz_champion_badge)
+      end
+
+      it 'still awards the other winner when one award fails' do
+        allow(quiz_session).to receive(:get_scoreboard).and_return([
+          { 'name' => 'Aaa Missing', 'id' => '999999', 'score' => '150' },
+          { 'name' => 'Zzz Present', 'id' => other_winner.id.to_s, 'score' => '150' }
+        ])
+
+        expect(Sidekiq.logger).to receive(:error).with(/Failed to award Quiz Champion badge/)
+        allow(Sidekiq.logger).to receive(:info)
+        allow(Sidekiq.logger).to receive(:error)
+
+        worker.perform
+
+        expect(other_winner.badges).to include(quiz_champion_badge)
+      end
+    end
+
+    context 'when nobody scored any points' do
+      before do
+        allow(quiz_session).to receive(:get_scoreboard).and_return([
+          { 'name' => winner_user.name, 'id' => winner_user.id.to_s, 'score' => '0' }
+        ])
+
+        allow(Tweet).to receive(:create!).and_return(
+          instance_double(Tweet, id: 1, created_at: Time.current)
+        )
+      end
+
+      it 'does not award the badge' do
+        worker.perform
+
+        expect(winner_user.badges).not_to include(quiz_champion_badge)
       end
     end
 

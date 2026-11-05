@@ -1,0 +1,161 @@
+require 'rails_helper'
+
+RSpec.describe QuizAnswerSubmission do
+  let(:quiz_id) { 77 }
+  let(:session) { QuizSession.new(quiz_id) }
+  let(:user) { FactoryBot.create(:user, translation: 'NIV') }
+  let(:question) { FactoryBot.create(:quiz_question, :mcq) }
+
+  before { session.cleanup_quiz_data }
+  after { session.cleanup_quiz_data }
+
+  def submit(answer, question_num: 1, as: user)
+    described_class.call(user: as, quiz_id: quiz_id, question_num: question_num, answer: answer)
+  end
+
+  def score_of(a_user)
+    session.get_scoreboard.find { |entry| entry['id'] == a_user.id.to_s }&.fetch('score').to_i
+  end
+
+  context 'while the question is open' do
+    before { session.open_question(1, question.id, 30) }
+
+    it 'scores a right answer for the given user' do
+      result = submit('B')
+
+      expect(result.status).to eq(:graded)
+      expect(result.score).to eq(10)
+      expect(score_of(user)).to eq(10)
+    end
+
+    it 'records a wrong answer without points' do
+      result = submit('A')
+
+      expect(result.status).to eq(:graded)
+      expect(result.score).to eq(0)
+      expect(score_of(user)).to eq(0)
+      expect(session.get_scoreboard.map { |entry| entry['id'] }).to include(user.id.to_s)
+    end
+
+    it 'counts only the first answer from a user' do
+      submit('A')
+      result = submit('B')
+
+      expect(result.status).to eq(:duplicate)
+      expect(result.score).to be_nil
+      expect(score_of(user)).to eq(0)
+    end
+
+    it 'does not let a repeated right answer add points' do
+      2.times { submit('B') }
+
+      expect(score_of(user)).to eq(10)
+    end
+
+    it 'lets another user answer the same question' do
+      other = FactoryBot.create(:user)
+      submit('B')
+      submit('B', as: other)
+
+      expect(score_of(user)).to eq(10)
+      expect(score_of(other)).to eq(10)
+    end
+
+    it 'lets the player send the answer again when saving it fails, without counting it twice' do
+      redis = session.instance_variable_get(:@redis)
+      answers_sent = 0
+      allow_any_instance_of(redis.class).to receive(:eval).and_wrap_original do |original, *args, **options|
+        answers_sent += 1 if args.first == QuizSession::RECORD_ANSWER_SCRIPT
+        raise Redis::CannotConnectError, 'redis is away' if answers_sent == 1 && args.first == QuizSession::RECORD_ANSWER_SCRIPT
+
+        original.call(*args, **options)
+      end
+
+      expect { submit('B') }.to raise_error(Redis::CannotConnectError)
+      expect(score_of(user)).to eq(0)
+
+      expect(submit('B').score).to eq(10)
+      expect(submit('B').status).to eq(:duplicate)
+      expect(score_of(user)).to eq(10)
+    end
+
+    it 'saves nothing and raises when the player cannot be added to the scoreboard' do
+      allow_any_instance_of(QuizSession).to receive(:add_participant).and_return(false)
+      expect_any_instance_of(QuizSession).not_to receive(:record_answer)
+
+      expect { submit('B') }.to raise_error(Redis::BaseError)
+    end
+
+    it 'stores the name and login from the user record' do
+      submit('B')
+      entry = session.get_scoreboard.first
+
+      expect(entry['name']).to eq(user.name_or_login)
+      expect(entry['login']).to eq(user.login)
+    end
+  end
+
+  context 'when the question is closed' do
+    def close_question(num)
+      $redis.hset(session.send(:question_key, num), 'closes_at', '1')
+    end
+
+    it 'does not score an answer after the deadline' do
+      session.open_question(1, question.id, 30)
+      close_question(1)
+
+      result = submit('B')
+
+      expect(result.status).to eq(:closed)
+      expect(score_of(user)).to eq(0)
+    end
+
+    it 'does not score an answer whose grading finishes after the question closes' do
+      session.open_question(1, question.id, 30)
+      allow_any_instance_of(QuizQuestion).to receive(:grade_answer).and_wrap_original do |original, *args, **options|
+        close_question(1)
+        original.call(*args, **options)
+      end
+
+      expect(submit('B').status).to eq(:closed)
+      expect(score_of(user)).to eq(0)
+    end
+
+    it 'still accepts an answer inside the grace period' do
+      session.open_question(1, question.id, 0)
+
+      expect(submit('B').status).to eq(:graded)
+    end
+
+    it 'does not score a question the quiz never asked' do
+      result = submit('B', question_num: 9)
+
+      expect(result.status).to eq(:closed)
+      expect(score_of(user)).to eq(0)
+    end
+
+    it 'does not score a question number with no question stored behind it' do
+      session.open_question(1, -1, 30)
+
+      expect(submit('B').status).to eq(:closed)
+    end
+  end
+
+  context 'without an answer' do
+    it 'lists the participant with no points' do
+      session.open_question(1, question.id, 30)
+      result = submit(nil)
+
+      expect(result.status).to eq(:unanswered)
+      expect(score_of(user)).to eq(0)
+      expect(session.get_scoreboard.map { |entry| entry['id'] }).to include(user.id.to_s)
+    end
+
+    it 'does not use up the one answer the user is allowed' do
+      session.open_question(1, question.id, 30)
+      submit(nil)
+
+      expect(submit('B').score).to eq(10)
+    end
+  end
+end

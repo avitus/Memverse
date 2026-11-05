@@ -46,6 +46,16 @@ describe QuizQuestion do
       expect(qq.perc_correct).to eq(50.0)  # Should remain unchanged
     end
 
+    it "leaves a question nobody has ever answered correctly unchanged when there are no new answers" do
+      qq = FactoryBot.create(:quiz_question, :times_answered => 0, :perc_correct => 50)
+
+      expect { qq.update_difficulty(0, 0) }.not_to raise_error
+
+      qq.reload
+      expect(qq.times_answered).to eq(0)
+      expect(qq.perc_correct).to eq(50.0)
+    end
+
     it "should persist changes to database" do
       qq = FactoryBot.create(:quiz_question, :times_answered => 5, :perc_correct => 40)
       qq.update_difficulty(5, 60)
