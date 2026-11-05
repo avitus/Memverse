@@ -23,6 +23,10 @@ RSpec.describe QuizQuestion, '#grade_answer' do
       expect(question.grade_answer('psalm   23:1')).to eq(10)
     end
 
+    it 'reads a non-breaking space as a space' do
+      expect(question.grade_answer("Psalm 23:1")).to eq(10)
+    end
+
     it 'treats Psalm and Psalms as the same book' do
       expect(question.grade_answer('Psalms 23:1')).to eq(10)
     end
@@ -51,6 +55,11 @@ RSpec.describe QuizQuestion, '#grade_answer' do
 
     it 'gives 10 points for a perfect recitation, ignoring case and punctuation' do
       expect(question.grade_answer('JESUS WEPT', translation: 'NIV')).to eq(10)
+    end
+
+    it 'keeps words apart when they are separated by a line break or non-breaking space' do
+      expect(question.grade_answer("Jesus\nwept", translation: 'NIV')).to eq(10)
+      expect(question.grade_answer("Jesus wept", translation: 'NIV')).to eq(10)
     end
 
     it 'grades against the translation of the user' do

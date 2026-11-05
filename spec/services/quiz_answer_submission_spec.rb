@@ -79,6 +79,13 @@ RSpec.describe QuizAnswerSubmission do
       expect(score_of(user)).to eq(10)
     end
 
+    it 'saves nothing and raises when the player cannot be added to the scoreboard' do
+      allow_any_instance_of(QuizSession).to receive(:add_participant).and_return(false)
+      expect_any_instance_of(QuizSession).not_to receive(:record_answer)
+
+      expect { submit('B') }.to raise_error(Redis::BaseError)
+    end
+
     it 'stores the name and login from the user record' do
       submit('B')
       entry = session.get_scoreboard.first

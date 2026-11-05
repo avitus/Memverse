@@ -24,7 +24,10 @@ class QuizAnswerSubmission
   # @return [Result]
   def call
     # Everyone who plays appears on the scoreboard, even with no points
-    @quiz_session.add_participant(@user.id, @user.name_or_login, @user.login)
+    unless @quiz_session.add_participant(@user.id, @user.name_or_login, @user.login)
+      # A score saved now wouldn't reach the scoreboard, so fail and let the player try again
+      raise Redis::BaseError, "Could not add user #{@user.id} to quiz #{@quiz_session.quiz_id}"
+    end
     return Result.new(:unanswered, nil) if @answer.blank?
 
     question = open_question

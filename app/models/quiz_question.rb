@@ -262,7 +262,7 @@ class QuizQuestion < ApplicationRecord
 
   # @return [Hash, nil] Book, chapter and verse, or nil if the text is not a reference
   def reference_parts(text)
-    normalized = text.to_s.downcase.gsub(/\s+/, ' ').strip.sub('psalm ', 'psalms ')
+    normalized = text.to_s.downcase.gsub(/[[:space:]]+/, ' ').strip.sub('psalm ', 'psalms ')
     colon      = normalized.index(':')
     last_space = normalized.rindex(' ')
     return nil unless colon && last_space && last_space < colon
@@ -285,7 +285,7 @@ class QuizQuestion < ApplicationRecord
   end
 
   def recitation_words(text)
-    text.to_s.downcase.gsub(/[^a-z ]|\s-|\s—/, '').split
+    text.to_s.downcase.gsub(/[[:space:]]+/, ' ').gsub(/[^a-z ]|\s-|\s—/, '').split
   end
 
   # Levenshtein distance counted in words
