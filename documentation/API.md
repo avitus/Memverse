@@ -94,13 +94,14 @@ All routes require a bearer token unless marked **open**.
 | `GET /api/v1/translations` | `translations#index` | |
 | `GET /api/v1/final_verses` | `final_verses#index` | last verse number of every chapter |
 | `GET /api/v1/progress_reports` | `progress_reports#index` | |
-| `POST /api/v1/record_score` | `live_quiz#record_score` | live-quiz answer; 200 with `status` and `score` |
+| `POST /api/v1/record_score` | `live_quiz#record_score` | live-quiz answer; 200 with `status`, and `score` when graded |
 
 `resources :verses`, `:memverses`, `:passages` and `:quizzes` are declared with all seven REST routes;
 actions not implemented in the controller answer 404. The `POST /api/v1/record_score` parameters are
 `question_num`, `answer` (omit it when the question timed out) and optional `quiz_id` (default 1). The
 server takes the user from the token and grades the answer itself; a user with no translation chosen
-gets a 422, because recitations are graded against it. See [QUIZ_SYSTEM.md](./QUIZ_SYSTEM.md).
+gets a 422, because recitations are graded against it, and a `question_num` that isn't a positive
+integer gets a 400. See [QUIZ_SYSTEM.md](./QUIZ_SYSTEM.md).
 
 ## Response envelope (`app/controllers/concerns/api_response_helpers.rb`)
 

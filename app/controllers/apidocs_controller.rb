@@ -8,6 +8,16 @@ class ApidocsController < ActionController::Base
 
     include Swagger::Blocks
 
+    swagger_schema :ApiError do
+      key :required, [:error, :message]
+      property :error do
+        key :type, :string
+      end
+      property :message do
+        key :type, :string
+      end
+    end
+
     swagger_schema :ErrorModel do
       key :required, [:code, :message]
       property :code do

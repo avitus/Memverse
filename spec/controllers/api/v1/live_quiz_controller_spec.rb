@@ -77,7 +77,7 @@ describe Api::V1::LiveQuizController do
         post :record_score, params: { question_num: 1, answer: 'A', version: 1 }, format: :json
         post :record_score, params: { question_num: 1, answer: 'B', version: 1 }, format: :json
 
-        expect(JSON.parse(response.body)).to eq('status' => 'duplicate', 'score' => nil)
+        expect(JSON.parse(response.body)).to eq('status' => 'duplicate')
         expect(scoreboard_score(user.id)).to eq(0)
       end
     end
@@ -90,7 +90,25 @@ describe Api::V1::LiveQuizController do
 
         expect(response).to have_http_status(:unprocessable_entity)
         expect(JSON.parse(response.body)).to include('error' => 'unprocessable_entity')
-        expect(scoreboard_score(user.id)).to eq(0)
+        expect(quiz_session.get_scoreboard.map { |entry| entry['id'] }).not_to include(user.id.to_s)
+      end
+    end
+
+    context "with a question number that is not a positive integer" do
+      [nil, '', 'abc', '1x', '0', '-1', '1.5'].each do |question_num|
+        it "responds with 400 for #{question_num.inspect} and records nothing" do
+          post :record_score, params: { question_num: question_num, answer: 'B', version: 1 }, format: :json
+
+          expect(response).to have_http_status(:bad_request)
+          expect(JSON.parse(response.body)).to include('error' => 'bad_request')
+          expect(quiz_session.get_scoreboard).to eq([])
+        end
+      end
+
+      it "accepts a number sent as JSON" do
+        post :record_score, params: { question_num: 1, answer: 'B', version: 1 }, as: :json
+
+        expect(response).to have_http_status(:ok)
       end
     end
 
@@ -98,7 +116,7 @@ describe Api::V1::LiveQuizController do
       it "reports it as closed" do
         post :record_score, params: { question_num: 2, answer: 'B', version: 1 }, format: :json
 
-        expect(JSON.parse(response.body)).to eq('status' => 'closed', 'score' => nil)
+        expect(JSON.parse(response.body)).to eq('status' => 'closed')
       end
     end
 

@@ -54,7 +54,7 @@ class Api::V1::LiveQuizController < Api::V1::ApiController
           property :score do
             key :type, :integer
             key :format, :int32
-            key :description, 'Points out of 10. Present with a number only when status is graded.'
+            key :description, 'Points out of 10. Present only when status is graded.'
           end
         end
       end
@@ -67,13 +67,13 @@ class Api::V1::LiveQuizController < Api::V1::ApiController
       response 422 do
         key :description, 'The user has not chosen a Bible translation, which grading needs'
         schema do
-          key :'$ref', :ErrorModel
+          key :'$ref', :ApiError
         end
       end
       response 400 do
-        key :description, 'Incorrectly formed API request'
+        key :description, 'question_num is missing or is not a positive integer'
         schema do
-          key :'$ref', :ErrorModel
+          key :'$ref', :ApiError
         end
       end
       response :default do
@@ -100,6 +100,11 @@ class Api::V1::LiveQuizController < Api::V1::ApiController
   # caches :index, :show, :caches_for => 5.minutes
 
   def record_score
+    unless params[:question_num].to_s.match?(/\A[1-9]\d*\z/)
+      error!(:bad_request, metadata: { message: 'question_num must be a positive integer' })
+      return
+    end
+
     # Recitations are graded against the user's translation, and the website asks for one first
     if current_resource_owner.translation.blank?
       error!(:unprocessable_entity, metadata: { message: 'Please choose a translation before playing the quiz' })
@@ -113,7 +118,7 @@ class Api::V1::LiveQuizController < Api::V1::ApiController
       answer: params[:answer]
     )
 
-    render json: result.to_h
+    render json: result.to_h.compact
   end
 
 end
