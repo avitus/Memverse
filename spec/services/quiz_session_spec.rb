@@ -60,6 +60,17 @@ RSpec.describe QuizSession, type: :service do
         expect(quiz_session.get_scoreboard.map { |entry| entry['id'] }).to eq([user_id.to_s])
       end
 
+      it 'does not overwrite a score when the same player is added at the same moment' do
+        quiz_session.add_participant(user_id, user_name, user_login)
+        $redis.hincrby(quiz_session.send(:participant_key, user_id), 'score', 10)
+        allow($redis).to receive(:exists).and_return(0)
+
+        quiz_session.add_participant(user_id, 'Other Name', user_login)
+
+        participant = quiz_session.get_scoreboard.first
+        expect(participant).to include('score' => '10', 'name' => user_name)
+      end
+
       it 'keeps the score of a participant who is added again' do
         quiz_session.add_participant(user_id, user_name, user_login)
         $redis.hincrby(quiz_session.send(:participant_key, user_id), 'score', 10)
@@ -200,6 +211,30 @@ RSpec.describe QuizSession, type: :service do
         .to eq(['Ann, Bob, and Cal tied for first in the Bible knowledge quiz'])
     end
 
+    it 'keeps the winner message when escaping makes a valid name too long' do
+      announcement = described_class.winner_announcements([{ 'name' => '"' * 43 }], 'the quiz').first
+
+      expect(announcement).to end_with('... won the quiz')
+      expect(announcement.length).to be <= 255
+      expect(announcement.delete_suffix('... won the quiz').scan('&quot;').join).to eq(announcement.delete_suffix('... won the quiz'))
+    end
+
+    it 'does not shorten a name that exactly fits once escaped' do
+      ending = ' won Quiz'
+      name = '"' * ((255 - ending.length) / '&quot;'.length)
+
+      expect(described_class.winner_announcements([{ 'name' => name }], 'Quiz'))
+        .to eq(["#{'&quot;' * name.length}#{ending}"])
+    end
+
+    it 'keeps the tie message when escaping makes a name too long' do
+      announcements = described_class.winner_announcements([{ 'name' => '"' * 60 }, { 'name' => 'Bob' }], 'the quiz')
+
+      expect(announcements).to all(end_with('tied for first in the quiz'))
+      expect(announcements.map(&:length)).to all(be <= 255)
+      expect(announcements.join(' ')).to include('Bob')
+    end
+
     it 'escapes HTML in the name of a single winner' do
       winners = [{ 'name' => '<a href="https://example.com">Ann</a>' }]
 
@@ -255,6 +290,17 @@ RSpec.describe QuizSession, type: :service do
   end
 
   describe 'question answer window' do
+    def close_question(num)
+      $redis.hset(quiz_session.send(:question_key, num), 'closes_at', '1')
+    end
+
+    it 'gives players their time and the grace period, on the clock of Redis' do
+      quiz_session.open_question(question_num, question_id, 30)
+
+      closes_at = $redis.hget(quiz_session.send(:question_key, question_num), 'closes_at').to_f
+      expect(closes_at - quiz_session.send(:redis_time)).to be_within(1).of(30 + QuizSession::ANSWER_GRACE_SECONDS)
+    end
+
     it 'returns the question id while the question is open' do
       quiz_session.open_question(question_num, question_id, 30)
 
@@ -264,21 +310,20 @@ RSpec.describe QuizSession, type: :service do
     it 'returns nothing once the deadline has passed' do
       quiz_session.open_question(question_num, question_id, 30)
 
-      travel_to((30 + QuizSession::ANSWER_GRACE_SECONDS + 1).seconds.from_now) do
-        expect(quiz_session.open_question_id(question_num)).to be_nil
-      end
+      close_question(question_num)
+
+      expect(quiz_session.open_question_id(question_num)).to be_nil
     end
 
     it 'can restart the answer window, keeping the question' do
       quiz_session.open_question(question_num, question_id, 30)
 
-      travel_to(1.minute.from_now) do
-        expect(quiz_session.open_question_id(question_num)).to be_nil
+      close_question(question_num)
+      expect(quiz_session.open_question_id(question_num)).to be_nil
 
-        quiz_session.restart_answer_window(question_num, 30)
+      quiz_session.restart_answer_window(question_num, 30)
 
-        expect(quiz_session.open_question_id(question_num)).to eq(question_id.to_s)
-      end
+      expect(quiz_session.open_question_id(question_num)).to eq(question_id.to_s)
     end
 
     it 'raises when Redis fails, so that the question is not published' do
@@ -372,12 +417,18 @@ RSpec.describe QuizSession, type: :service do
       end
 
       it 'refuses an answer after the question closes' do
-        travel_to(1.hour.from_now) do
+        $redis.hset(quiz_session.send(:question_key, 1), 'closes_at', '1')
+
+        expect(quiz_session.record_answer(1, user_id, 10)).to eq(:closed)
+        expect(quiz_session.get_participants.first['score']).to eq('0')
+      end
+
+      it 'checks the deadline when the script runs, not when the answer was sent' do
+        quiz_session.restart_answer_window(1, -(QuizSession::ANSWER_GRACE_SECONDS + 5))
+
+        travel_to(1.hour.ago) do
           expect(quiz_session.record_answer(1, user_id, 10)).to eq(:closed)
         end
-
-        expect(quiz_session.get_participants.first['score']).to eq('0')
-        expect(quiz_session.record_answer(1, user_id, 10)).to eq(:graded)
       end
 
       it 'refuses an answer to a question that was never opened' do
@@ -591,8 +642,8 @@ RSpec.describe QuizSession, type: :service do
   describe 'error handling' do
     it 'handles Redis connection errors gracefully' do
       # Mock the Redis instance to raise an error
-      allow($redis).to receive(:pipelined).and_raise(Redis::CannotConnectError)
-      
+      allow($redis).to receive(:eval).and_raise(Redis::CannotConnectError)
+
       result = quiz_session.add_participant(user_id, user_name, user_login)
       expect(result).to be false
     end

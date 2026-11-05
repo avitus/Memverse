@@ -28,22 +28,38 @@ class QuizSession
   # How long the correct answer stays on screen before the next question
   ANSWER_REVEAL_SECONDS = 4
 
+  # Runs as one step in Redis, so that two first answers at once can't overwrite each other's score.
+  # It also restores the participant set, in case an earlier attempt stopped part way.
+  # KEYS: user hash, participant set. ARGV: name, login, user ID, TTL.
+  ADD_PARTICIPANT_SCRIPT = <<~LUA.freeze
+    if redis.call('EXISTS', KEYS[1]) == 0 then
+      redis.call('HSET', KEYS[1], 'name', ARGV[1], 'login', ARGV[2], 'id', ARGV[3], 'score', 0)
+    end
+    redis.call('EXPIRE', KEYS[1], ARGV[4])
+    redis.call('SADD', KEYS[2], ARGV[3])
+    redis.call('EXPIRE', KEYS[2], ARGV[4])
+    return 1
+  LUA
+
   # Runs as one step in Redis, so a score is either saved before the question closes or not at all,
-  # and a claimed answer can't be left without its points.
-  # KEYS: question hash, user hash. ARGV: claim field, score, now, TTL.
+  # and a claimed answer can't be left without its points. The time comes from Redis when the
+  # script runs, so an answer delayed on its way here can't land after the final scoreboard.
+  # KEYS: question hash, user hash. ARGV: claim field, score, TTL.
   RECORD_ANSWER_SCRIPT = <<~LUA.freeze
     local closes_at = tonumber(redis.call('HGET', KEYS[1], 'closes_at'))
-    if not closes_at or tonumber(ARGV[3]) > closes_at then return 'closed' end
+    local time = redis.call('TIME')
+    local now = tonumber(time[1]) + tonumber(time[2]) / 1000000
+    if not closes_at or now > closes_at then return 'closed' end
     if redis.call('HSETNX', KEYS[1], ARGV[1], '1') == 0 then return 'duplicate' end
 
     local score = tonumber(ARGV[2])
     if score > 0 then
       redis.call('HINCRBY', KEYS[2], 'score', score)
-      redis.call('EXPIRE', KEYS[2], ARGV[4])
+      redis.call('EXPIRE', KEYS[2], ARGV[3])
       redis.call('HINCRBY', KEYS[1], 'total_score', score)
       redis.call('HINCRBY', KEYS[1], 'answered', 1)
     end
-    redis.call('EXPIRE', KEYS[1], ARGV[4])
+    redis.call('EXPIRE', KEYS[1], ARGV[3])
     return 'graded'
   LUA
 
@@ -66,18 +82,36 @@ class QuizSession
   # @return [Array<String>] News items for the dashboard. A tie too long for one item
   #   is split over several, so that every winner is named.
   def self.winner_announcements(winners, quiz_name)
-    # News items are shown as HTML and players choose their own names
-    names = winners.map { |winner| ERB::Util.html_escape(winner['name'].to_s).to_str }
-    return ["#{names.first} won #{quiz_name}".truncate(ANNOUNCEMENT_MAX_LENGTH)] if names.one?
-
-    ending = " tied for first in #{quiz_name}"
+    ending = winners.one? ? " won #{quiz_name}" : " tied for first in #{quiz_name}"
     room = ANNOUNCEMENT_MAX_LENGTH - ending.length
+    names = winners.map { |winner| announcement_name(winner['name'], room) }
     batches = names.each_with_object([[]]) do |name, groups|
       groups << [] if groups.last.any? && [*groups.last, name].to_sentence.length > room
       groups.last << name
     end
     batches.map { |batch| "#{batch.to_sentence}#{ending}".truncate(ANNOUNCEMENT_MAX_LENGTH) }
   end
+
+  # News items are shown as HTML and players choose their own names, so a name is escaped.
+  # Escaping can make it too long for one item, so it is then shortened between characters,
+  # which never cuts an escape sequence in two.
+  # @param name [String] The player's name
+  # @param room [Integer] Longest the escaped name may be
+  # @return [String] The escaped name
+  def self.announcement_name(name, room)
+    escaped = ERB::Util.html_escape(name.to_s).to_str
+    return escaped if escaped.length <= room
+
+    omission = '...'
+    shortened = name.to_s.each_char.inject(+'') do |kept, char|
+      next_char = ERB::Util.html_escape(char).to_str
+      break kept if kept.length + next_char.length + omission.length > room
+
+      kept << next_char
+    end
+    "#{shortened}#{omission}"
+  end
+  private_class_method :announcement_name
 
   def initialize(quiz_id)
     @quiz_id = quiz_id.to_i
@@ -97,25 +131,11 @@ class QuizSession
     user_key = participant_key(user_id)
 
     with_redis_error_handling("add_participant") do
-      # Check if participant already exists
-      exists = @redis.exists(user_key)
-
-      @redis.pipelined do |pipe|
-        # Redis.exists returns 1 if key exists, 0 if not
-        unless exists == 1
-          pipe.hmset(user_key,
-            'name', user_name,
-            'login', user_login,
-            'id', user_id.to_s,
-            'score', 0
-          )
-        end
-        pipe.expire(user_key, DEFAULT_TTL)
-        # Add to participant set for efficient retrieval. This also runs for an existing
-        # participant, because an earlier attempt may have stopped after creating the hash.
-        pipe.sadd(participant_set_key, user_id.to_s)
-        pipe.expire(participant_set_key, DEFAULT_TTL)
-      end
+      @redis.eval(
+        ADD_PARTICIPANT_SCRIPT,
+        keys: [user_key, participant_set_key],
+        argv: [user_name, user_login, user_id.to_s, DEFAULT_TTL]
+      )
       true
     end
   end
@@ -186,11 +206,12 @@ class QuizSession
   # @return [Boolean] Success status
   def open_question(question_num, question_id, time_allocated)
     key = question_key(question_num)
+    closes_at = closing_time(time_allocated)
 
     # A Redis failure raises, so that a question nobody could answer is never published
     @redis.pipelined do |pipe|
       pipe.hset(key, 'qq_id', question_id.to_s)
-      pipe.hset(key, 'closes_at', closing_time(time_allocated).to_s)
+      pipe.hset(key, 'closes_at', closes_at.to_s)
       pipe.expire(key, DEFAULT_TTL)
       pipe.sadd(question_set_key, question_num.to_s)
       pipe.expire(question_set_key, DEFAULT_TTL)
@@ -211,7 +232,7 @@ class QuizSession
   # A Redis failure raises, because "closed" would tell the player not to try again.
   def open_question_id(question_num)
     question_id, closes_at = @redis.hmget(question_key(question_num), 'qq_id', 'closes_at')
-    question_id if closes_at && Time.current.to_f <= closes_at.to_f
+    question_id if closes_at && redis_time <= closes_at.to_f
   end
 
   # Save the user's one answer to a question and its score, if the question is still open.
@@ -225,7 +246,7 @@ class QuizSession
     @redis.eval(
       RECORD_ANSWER_SCRIPT,
       keys: [question_key(question_num), participant_key(user_id)],
-      argv: ["answered_by:#{user_id}", score.to_i, Time.current.to_f, DEFAULT_TTL]
+      argv: ["answered_by:#{user_id}", score.to_i, DEFAULT_TTL]
     ).to_sym
   end
 
@@ -472,7 +493,13 @@ class QuizSession
   # ========================================================================
 
   def closing_time(time_allocated)
-    Time.current.to_f + time_allocated + ANSWER_GRACE_SECONDS
+    redis_time + time_allocated + ANSWER_GRACE_SECONDS
+  end
+
+  # Answer windows run on Redis's clock, the one RECORD_ANSWER_SCRIPT checks them against
+  def redis_time
+    seconds, microseconds = @redis.time
+    seconds + (microseconds / 1_000_000.0)
   end
 
   def read_scoreboard

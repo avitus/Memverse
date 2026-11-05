@@ -63,10 +63,10 @@ RSpec.describe QuizAnswerSubmission do
 
     it 'lets the player send the answer again when saving it fails, without counting it twice' do
       redis = session.instance_variable_get(:@redis)
-      calls = 0
+      answers_sent = 0
       allow_any_instance_of(redis.class).to receive(:eval).and_wrap_original do |original, *args, **options|
-        calls += 1
-        raise Redis::CannotConnectError, 'redis is away' if calls == 1
+        answers_sent += 1 if args.first == QuizSession::RECORD_ANSWER_SCRIPT
+        raise Redis::CannotConnectError, 'redis is away' if answers_sent == 1 && args.first == QuizSession::RECORD_ANSWER_SCRIPT
 
         original.call(*args, **options)
       end
@@ -96,36 +96,35 @@ RSpec.describe QuizAnswerSubmission do
   end
 
   context 'when the question is closed' do
+    def close_question(num)
+      $redis.hset(session.send(:question_key, num), 'closes_at', '1')
+    end
+
     it 'does not score an answer after the deadline' do
       session.open_question(1, question.id, 30)
+      close_question(1)
 
-      travel_to(1.hour.from_now) do
-        result = submit('B')
+      result = submit('B')
 
-        expect(result.status).to eq(:closed)
-        expect(score_of(user)).to eq(0)
-      end
+      expect(result.status).to eq(:closed)
+      expect(score_of(user)).to eq(0)
     end
 
     it 'does not score an answer whose grading finishes after the question closes' do
       session.open_question(1, question.id, 30)
       allow_any_instance_of(QuizQuestion).to receive(:grade_answer).and_wrap_original do |original, *args, **options|
-        travel_to(1.hour.from_now)
+        close_question(1)
         original.call(*args, **options)
       end
 
       expect(submit('B').status).to eq(:closed)
       expect(score_of(user)).to eq(0)
-    ensure
-      travel_back
     end
 
     it 'still accepts an answer inside the grace period' do
-      session.open_question(1, question.id, 30)
+      session.open_question(1, question.id, 0)
 
-      travel_to((30 + QuizSession::ANSWER_GRACE_SECONDS - 1).seconds.from_now) do
-        expect(submit('B').status).to eq(:graded)
-      end
+      expect(submit('B').status).to eq(:graded)
     end
 
     it 'does not score a question the quiz never asked' do
