@@ -204,6 +204,44 @@ RSpec.describe KnowledgeQuiz, type: :worker do
       worker.perform
     end
 
+    it 'does not publish a question that could not be opened' do
+      allow(quiz_session).to receive(:open_question).and_raise(Redis::CannotConnectError)
+
+      worker.perform
+
+      expect(published.map { |message| message[:meta] }).not_to include('question')
+    end
+
+    it 'never reopens a question after publishing its answer fails' do
+      failed = false
+      allow(PN).to receive(:publish) do |args|
+        if args[:message][:meta] == 'answer' && !failed
+          failed = true
+          raise StandardError, 'PubNub is away'
+        end
+        published << args[:message]
+      end
+
+      worker.perform
+
+      expect(failed).to be true
+      expect(quiz_session).to have_received(:open_question).exactly(5).times
+      expect(published.select { |message| message[:meta] == 'question' }.map { |message| message[:q_num] }).to eq([1, 2, 3, 4, 5])
+    end
+
+    it 'does not ask a question again when its scoreboard cannot be published' do
+      allow(PN).to receive(:publish) do |args|
+        raise StandardError, 'PubNub is away' if args[:message][:meta] == 'scoreboard'
+
+        published << args[:message]
+      end
+
+      worker.perform
+
+      expect(published.count { |message| message[:meta] == 'question' }).to eq(1)
+      expect(quiz_session).to have_received(:open_question).once
+    end
+
     it 'reveals the answer only after the answer window has closed' do
       events = []
       allow(worker).to receive(:sleep) { |seconds| events << [:sleep, seconds] }
@@ -300,6 +338,29 @@ RSpec.describe KnowledgeQuiz, type: :worker do
           expect(created_tweets.length).to eq(2)
           expect(created_tweets.last[:news]).to eq('Lisa and Phil tied for first in the Bible knowledge quiz')
           expect(created_tweets.last[:user_id]).to eq('10')
+        end
+
+        it 'does not post an announcement twice when a later one fails and is retried' do
+          names = Array.new(12) { |i| "#{'x' * 59}#{i.to_s.rjust(2, '0')}" }
+          allow(quiz_session).to receive(:get_scoreboard).and_return(
+            names.each_with_index.map { |name, i| { 'name' => name, 'id' => i.to_s, 'score' => '150' } }
+          )
+          failed = false
+          allow(Tweet).to receive(:create!) do |args|
+            if args[:news].include?('tied for first') && created_tweets.any? { |tweet| tweet[:news].include?('tied for first') } && !failed
+              failed = true
+              raise ActiveRecord::StatementInvalid, 'database hiccup'
+            end
+            created_tweets << args
+            instance_double(Tweet, id: created_tweets.length, created_at: Time.current)
+          end
+
+          worker.perform
+
+          winner_news = created_tweets.map { |tweet| tweet[:news] }.grep(/tied for first/)
+          expect(failed).to be true
+          expect(winner_news.uniq).to eq(winner_news)
+          expect(names).to all(satisfy { |name| winner_news.join(' ').include?(name) })
         end
 
         it 'posts as many announcements as it takes to name everyone in a long tie' do

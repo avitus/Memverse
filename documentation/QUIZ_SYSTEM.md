@@ -63,7 +63,7 @@ The cron entry fires at the published time; the countdown users see targets this
 
 Operations that talk to external services during the run (tweet, PubNub publishes, the setup-time
 clearing of old Redis session data, finalizing) go through
-`with_retry` (3 attempts, growing back-off). Question-difficulty updates do not: a retry would count
+`with_retry` (3 attempts, growing back-off). Each step retries on its own: opening a question is never repeated once its answer is public, and a failed announcement does not post an earlier one again. A Redis failure while opening a question or reading the final scoreboard raises, so a question nobody could answer is not published and a failed read is not taken to mean that nobody played. Question-difficulty updates do not: a retry would count
 answers twice, and statistics must not cost players the result, so a failure on one question goes
 to the log and Sentry and the quiz carries on to announce the winner. The `ensure`-time cleanup (`cleanup_quiz_resources`:
 status update, unlock, key deletion) uses plain `rescue` blocks and is not retried. The worker has

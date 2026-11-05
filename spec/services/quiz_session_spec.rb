@@ -85,6 +85,20 @@ RSpec.describe QuizSession, type: :service do
     end
     
     describe '#get_scoreboard' do
+      context 'when Redis fails' do
+        before do
+          allow(quiz_session.instance_variable_get(:@redis)).to receive(:smembers).and_raise(Redis::CannotConnectError)
+        end
+
+        it 'returns an empty scoreboard by default' do
+          expect(quiz_session.get_scoreboard).to eq([])
+        end
+
+        it 'raises when asked to, so that a failed read is not taken to mean nobody played' do
+          expect { quiz_session.get_scoreboard(raise_errors: true) }.to raise_error(Redis::CannotConnectError)
+        end
+      end
+
       it 'returns participants sorted by score descending' do
         # Add participants with different scores
         quiz_session.add_participant(1, "User 1", "user1@example.com")
@@ -227,6 +241,12 @@ RSpec.describe QuizSession, type: :service do
       travel_to((30 + QuizSession::ANSWER_GRACE_SECONDS + 1).seconds.from_now) do
         expect(quiz_session.open_question_id(question_num)).to be_nil
       end
+    end
+
+    it 'raises when Redis fails, so that the question is not published' do
+      allow(quiz_session.instance_variable_get(:@redis)).to receive(:pipelined).and_raise(Redis::CannotConnectError)
+
+      expect { quiz_session.open_question(question_num, question_id, 30) }.to raise_error(Redis::CannotConnectError)
     end
 
     it 'returns nothing for a question that was never opened' do

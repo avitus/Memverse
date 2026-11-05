@@ -739,6 +739,61 @@ describe ScheduledQuiz do
       published.find { |entry| entry[:meta] == meta }
     end
 
+    it 'does not publish a question that could not be opened' do
+      allow(session).to receive(:open_question).and_raise(Redis::CannotConnectError)
+
+      expect { worker.send(:handle_mcq_question, mcq, 1, 'quiz-2', 2) }.to raise_error(Redis::CannotConnectError)
+
+      expect(published).to be_empty
+    end
+
+    it 'opens the question again if publishing it fails, while the answer is still private' do
+      attempts = 0
+      allow(worker).to receive(:publish_with_retry) do |_channel, msg, _quiz_id|
+        attempts += 1
+        raise StandardError, 'PubNub is away' if attempts == 1
+
+        published << msg
+      end
+
+      worker.send(:handle_mcq_question, mcq, 1, 'quiz-2', 2)
+
+      expect(session).to have_received(:open_question).twice
+      expect(published.map { |entry| entry[:meta] }).to eq(%w[question answer])
+    end
+
+    it 'never reopens a question after publishing its answer fails' do
+      failures = 0
+      allow(worker).to receive(:publish_with_retry) do |_channel, msg, _quiz_id|
+        if msg[:meta] == 'answer' && failures.zero?
+          failures += 1
+          raise StandardError, 'PubNub is away'
+        end
+
+        published << msg
+      end
+
+      worker.send(:handle_mcq_question, mcq, 1, 'quiz-2', 2)
+
+      expect(session).to have_received(:open_question).once
+      expect(published.map { |entry| entry[:meta] }).to eq(%w[question answer])
+    end
+
+    it 'does not ask a question again when its scoreboard cannot be published' do
+      quiz_question = FactoryBot.create(:quiz_question, :mcq, quiz: quiz, question_no: 1)
+      allow(session).to receive(:get_scoreboard).and_return([])
+      allow(worker).to receive(:publish_with_retry) do |_channel, msg, _quiz_id|
+        raise StandardError, 'PubNub is away' if msg[:meta] == 'scoreboard'
+
+        published << msg
+      end
+
+      expect { worker.send(:run_quiz_questions, quiz, 'quiz-2') }.to raise_error(StandardError, 'PubNub is away')
+
+      expect(session).to have_received(:open_question).once.with(quiz_question.question_no, quiz_question.id, anything)
+      expect(published.map { |entry| entry[:meta] }).to eq(%w[question answer])
+    end
+
     it 'keeps the answer out of a multiple choice question until it closes' do
       expect(session).to receive(:open_question).with(1, 5, 30)
       expect(worker).to receive(:sleep).with(30 + window)
@@ -809,6 +864,41 @@ describe ScheduledQuiz do
       expect(news.length).to be > 1
       expect(news.map(&:length)).to all(be <= 255)
       expect(names).to all(satisfy { |name| news.join(' ').include?(name) })
+    end
+
+    it 'does not post an announcement twice when a later one fails and is retried' do
+      names = Array.new(12) { |i| "#{'x' * 59}#{i.to_s.rjust(2, '0')}" }
+      news = []
+      failed = false
+      allow(Tweet).to receive(:create!) do |args|
+        if news.length == 1 && !failed
+          failed = true
+          raise ActiveRecord::StatementInvalid, 'database hiccup'
+        end
+        news << args[:news]
+      end
+
+      record_with(names.each_with_index.map { |name, i| { 'name' => name, 'id' => i.to_s, 'score' => '150' } })
+
+      expect(failed).to be true
+      expect(news.uniq).to eq(news)
+      expect(names).to all(satisfy { |name| news.join(' ').include?(name) })
+    end
+
+    it 'retries the final scoreboard rather than announcing no winner when Redis fails' do
+      session = instance_double(QuizSession)
+      attempts = 0
+      allow(session).to receive(:get_scoreboard).with(raise_errors: true) do
+        attempts += 1
+        raise Redis::CannotConnectError if attempts == 1
+
+        [{ 'name' => 'Lisa', 'id' => '10', 'score' => '150' }]
+      end
+      worker.instance_variable_set(:@quiz_session, session)
+
+      expect(Tweet).to receive(:create!).with(news: 'Lisa won Test Quiz', user_id: '10', importance: 2)
+
+      worker.send(:record_final_scoreboard, quiz, "quiz-#{quiz.id}")
     end
 
     it 'announces nothing when nobody scored any points' do

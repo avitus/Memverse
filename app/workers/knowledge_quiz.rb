@@ -303,71 +303,82 @@ class KnowledgeQuiz
     Sidekiq.logger.info "===> Starting quiz at #{Time.current.utc} with #{question_count} questions"
 
     q_num_array.each do |q_num|
-      with_retry("question #{q_num}") do
-        Sidekiq.logger.info "===> Question: #{q_num}"
+      Sidekiq.logger.info "===> Question: #{q_num}"
 
-        # Pick a question at random
-        question = QuizQuestion.mcq.approved.order(:last_asked).first
-
-        if question.nil?
-          Sidekiq.logger.error "===> No approved MCQ questions found for question #{q_num}"
-          next
-        end
-
-        # Check if question is valid before using it
-        if question.mc_question.length > 300
-          Sidekiq.logger.warn "===> Question #{question.id} has mc_question longer than 300 chars (#{question.mc_question.length} chars). Skipping..."
-          # Try to find another question
-          question = QuizQuestion.mcq.approved.where("LENGTH(mc_question) <= 300").order(:last_asked).first
-          if question.nil?
-            Sidekiq.logger.error "===> No valid approved MCQ questions found for question #{q_num}"
-            next
-          end
-        end
-
-        time_allocated = question.time_allocation
-
-        # Start accepting answers to this question
-        @quiz_session.open_question(q_num, question.id, time_allocated)
-
-        # Update question to show that it was asked today (use UTC)
-        # Use update_column to skip validation in case of other issues
-        question.update_column(:last_asked, Date.current)
-
-        # Publish question. The answer stays out of this public message until the question closes.
-        publish_with_retry(channel, {
-          meta: "question",
-          q_id: question.id,
-          q_num: q_num,
-          q_type: "mcq",
-          mc_question: question.mc_question,
-          mc_option_a: question.mc_option_a,
-          mc_option_b: question.mc_option_b,
-          mc_option_c: question.mc_option_c,
-          mc_option_d: question.mc_option_d,
-          time_alloc: time_allocated
-        })
-
-        # Time to answer question
-        sleep(time_allocated + QuizSession::ANSWER_GRACE_SECONDS)
-
-        # Reveal the answer now that the question has closed
-        publish_with_retry(channel, {
-          meta: "answer",
-          q_num: q_num,
-          q_type: "mcq",
-          mc_answer: question.mc_answer
-        })
-
-        # Update and publish scoreboard
-        publish_scoreboard(channel)
-
-        # Leave the answer on screen before the next question replaces it
-        sleep(QuizSession::ANSWER_REVEAL_SECONDS)
-      end
+      question = with_retry("choosing question #{q_num}") { choose_question(q_num) }
+      ask_question(question, q_num, channel) if question
     end
   end
-  
+
+  # @return [QuizQuestion, nil] The next question to ask, or nil if there is none
+  def choose_question(q_num)
+    # Pick a question at random
+    question = QuizQuestion.mcq.approved.order(:last_asked).first
+
+    if question.nil?
+      Sidekiq.logger.error "===> No approved MCQ questions found for question #{q_num}"
+      return nil
+    end
+
+    # Check if question is valid before using it
+    return question unless question.mc_question.length > 300
+
+    Sidekiq.logger.warn "===> Question #{question.id} has mc_question longer than 300 chars (#{question.mc_question.length} chars). Skipping..."
+    # Try to find another question
+    question = QuizQuestion.mcq.approved.where("LENGTH(mc_question) <= 300").order(:last_asked).first
+    Sidekiq.logger.error "===> No valid approved MCQ questions found for question #{q_num}" if question.nil?
+    question
+  end
+
+  # Each step retries on its own. Opening the question must never be repeated once
+  # the answer is public, or a player could score by sending the answer they had just seen.
+  def ask_question(question, q_num, channel)
+    time_allocated = question.time_allocation
+
+    with_retry("opening question #{q_num}") do
+      # Start accepting answers to this question
+      @quiz_session.open_question(q_num, question.id, time_allocated)
+
+      # Update question to show that it was asked today (use UTC)
+      # Use update_column to skip validation in case of other issues
+      question.update_column(:last_asked, Date.current)
+
+      # Publish question. The answer stays out of this public message until the question closes.
+      publish_with_retry(channel, {
+        meta: "question",
+        q_id: question.id,
+        q_num: q_num,
+        q_type: "mcq",
+        mc_question: question.mc_question,
+        mc_option_a: question.mc_option_a,
+        mc_option_b: question.mc_option_b,
+        mc_option_c: question.mc_option_c,
+        mc_option_d: question.mc_option_d,
+        time_alloc: time_allocated
+      })
+    end
+
+    # Time to answer question
+    sleep(time_allocated + QuizSession::ANSWER_GRACE_SECONDS)
+
+    # Reveal the answer now that the question has closed
+    with_retry("publishing answer #{q_num}") do
+      publish_with_retry(channel, {
+        meta: "answer",
+        q_num: q_num,
+        q_type: "mcq",
+        mc_answer: question.mc_answer
+      })
+    end
+
+    # Update and publish scoreboard
+    publish_scoreboard(channel)
+
+    # Leave the answer on screen before the next question replaces it
+    sleep(QuizSession::ANSWER_REVEAL_SECONDS)
+  end
+
+
   def publish_scoreboard(channel)
     Sidekiq.logger.info "===> Updating scoreboard"
     
@@ -431,34 +442,35 @@ class KnowledgeQuiz
   end
 
 
-  # Logs the final scores and announces the winner, or everyone tied for first
+  # Logs the final scores and announces the winner, or everyone tied for first.
+  # Each announcement retries on its own, so a failure can't post an earlier one twice.
   def record_final_scoreboard
-    with_retry("recording final scoreboard") do
-      final_scoreboard = @quiz_session.get_scoreboard
+    final_scoreboard = with_retry("reading final scoreboard") { @quiz_session.get_scoreboard(raise_errors: true) }
 
-      Sidekiq.logger.info "Final Quiz Scores"
-      Sidekiq.logger.info "==================="
-      final_scoreboard.each do |usr|
-        Sidekiq.logger.info "[#{usr['score']}] - #{usr['name']}"
-      end
-
-      # Announce the winner, or everyone tied for first, if anyone scored
-      winners = QuizSession.winners(final_scoreboard)
-      unless winners.empty?
-        winner_names = winners.map { |winner| winner['name'] }.join(', ')
-
-        # Log winner announcement to help debug duplicates
-        Sidekiq.logger.info "===> Creating winner announcement tweet for #{winner_names} (Process: #{Process.pid})"
-
-        QuizSession.winner_announcements(winners, "the Bible knowledge quiz").each do |broadcast|
-          tweet = Tweet.create!(news: broadcast, user_id: winners.first['id'], importance: 2)
-
-          Sidekiq.logger.info "===> Created winner tweet ID: #{tweet.id} at #{tweet.created_at}"
-        end
-
-        award_quiz_champion_badges(winners)
-      end
+    Sidekiq.logger.info "Final Quiz Scores"
+    Sidekiq.logger.info "==================="
+    final_scoreboard.each do |usr|
+      Sidekiq.logger.info "[#{usr['score']}] - #{usr['name']}"
     end
+
+    # Announce the winner, or everyone tied for first, if anyone scored
+    winners = QuizSession.winners(final_scoreboard)
+    return if winners.empty?
+
+    winner_names = winners.map { |winner| winner['name'] }.join(', ')
+
+    # Log winner announcement to help debug duplicates
+    Sidekiq.logger.info "===> Creating winner announcement tweet for #{winner_names} (Process: #{Process.pid})"
+
+    QuizSession.winner_announcements(winners, "the Bible knowledge quiz").each do |broadcast|
+      tweet = with_retry("announcing the winner") do
+        Tweet.create!(news: broadcast, user_id: winners.first['id'], importance: 2)
+      end
+
+      Sidekiq.logger.info "===> Created winner tweet ID: #{tweet.id} at #{tweet.created_at}"
+    end
+
+    with_retry("awarding Quiz Champion badges") { award_quiz_champion_badges(winners) }
   end
 
   # Badge problems are logged and never abort the quiz, and one winner's failure

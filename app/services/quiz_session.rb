@@ -120,30 +120,13 @@ class QuizSession
   end
 
   # Get sorted scoreboard for the quiz
+  # @param raise_errors [Boolean] Raise on a Redis failure instead of returning an empty scoreboard.
+  #   Deciding the winner needs this, because an empty scoreboard means nobody played.
   # @return [Array<Hash>] Sorted array of participant data
-  def get_scoreboard
-    with_redis_error_handling("get_scoreboard") do
-      # Get participant IDs from the set (O(n) where n is participants, not all Redis keys)
-      participant_ids = @redis.smembers(participant_set_key)
-      return [] if participant_ids.empty?
+  def get_scoreboard(raise_errors: false)
+    return read_scoreboard if raise_errors
 
-      scoreboard = []
-      # Use pipelining for efficiency
-      @redis.pipelined do |pipe|
-        participant_ids.each do |user_id|
-          pipe.hgetall(participant_key(user_id))
-        end
-      end.each_with_index do |participant_data, index|
-        unless participant_data.empty?
-          # Ensure we have the user_id in the data
-          participant_data['id'] ||= participant_ids[index]
-          scoreboard << participant_data
-        end
-      end
-
-      # Sort by score descending; name keeps tied participants in a stable order
-      scoreboard.sort_by { |participant| [-participant['score'].to_i, participant['name'].to_s.downcase] }
-    end
+    with_redis_error_handling("get_scoreboard") { read_scoreboard }
   end
 
   # Get list of all participants
@@ -204,15 +187,13 @@ class QuizSession
     key = question_key(question_num)
     closes_at = Time.current.to_f + time_allocated + ANSWER_GRACE_SECONDS
 
-    with_redis_error_handling("open_question") do
-      @redis.pipelined do |pipe|
-        pipe.hset(key, 'qq_id', question_id.to_s)
-        pipe.hset(key, 'closes_at', closes_at.to_s)
-        pipe.expire(key, DEFAULT_TTL)
-        pipe.sadd(question_set_key, question_num.to_s)
-        pipe.expire(question_set_key, DEFAULT_TTL)
-      end
-      true
+    # A Redis failure raises, so that a question nobody could answer is never published
+    @redis.pipelined do |pipe|
+      pipe.hset(key, 'qq_id', question_id.to_s)
+      pipe.hset(key, 'closes_at', closes_at.to_s)
+      pipe.expire(key, DEFAULT_TTL)
+      pipe.sadd(question_set_key, question_num.to_s)
+      pipe.expire(question_set_key, DEFAULT_TTL)
     end
   end
 
@@ -480,6 +461,29 @@ class QuizSession
   # ========================================================================
   # Private Key Generation Methods
   # ========================================================================
+
+  def read_scoreboard
+    # Get participant IDs from the set (O(n) where n is participants, not all Redis keys)
+    participant_ids = @redis.smembers(participant_set_key)
+    return [] if participant_ids.empty?
+
+    scoreboard = []
+    # Use pipelining for efficiency
+    @redis.pipelined do |pipe|
+      participant_ids.each do |user_id|
+        pipe.hgetall(participant_key(user_id))
+      end
+    end.each_with_index do |participant_data, index|
+      unless participant_data.empty?
+        # Ensure we have the user_id in the data
+        participant_data['id'] ||= participant_ids[index]
+        scoreboard << participant_data
+      end
+    end
+
+    # Sort by score descending; name keeps tied participants in a stable order
+    scoreboard.sort_by { |participant| [-participant['score'].to_i, participant['name'].to_s.downcase] }
+  end
 
   def participant_key(user_id)
     "#{KEY_PREFIX}:#{@quiz_id}:user:#{user_id}"

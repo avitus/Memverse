@@ -369,39 +369,38 @@ class ScheduledQuiz
     log_quiz_questions(quiz, quiz_questions)
 
     quiz_questions.each_with_index do |question, idx|
-      with_retry("question #{question.question_no}", quiz.id) do
-        passages = question.passage_translations
-        ref = question.passage
-        num = question.question_no
+      num = question.question_no
+      passages = with_retry("loading question #{num}", quiz.id) { question.passage_translations }
+      ref = question.passage
 
-        Sidekiq.logger.info "===> Quiz ##{quiz.id} : Processing Question ##{num} (#{idx+1} of #{quiz_questions.count}) [Type: #{question.question_type}]"
+      Sidekiq.logger.info "===> Quiz ##{quiz.id} : Processing Question ##{num} (#{idx+1} of #{quiz_questions.count}) [Type: #{question.question_type}]"
 
-        case question.question_type
-        when "recitation"
-          Sidekiq.logger.info "===> Quiz ##{quiz.id} : Question ##{num} - Recitation question for passage: #{ref}"
-          handle_recitation_question(question, num, ref, passages, channel, quiz.id)
-        when "reference"
-          Sidekiq.logger.info "===> Quiz ##{quiz.id} : Question ##{num} - Reference question for passage: #{ref}"
-          handle_reference_question(question, num, ref, passages, channel, quiz.id)
-        when "mcq"
-          Sidekiq.logger.info "===> Quiz ##{quiz.id} : Question ##{num} - Multiple choice question"
-          handle_mcq_question(question, num, channel, quiz.id)
-        else
-          Sidekiq.logger.warn "===> Quiz ##{quiz.id} : Question ##{num} - Unknown question type: #{question.question_type}"
-          sleep(20)
-        end
-
-        # Publish updated scoreboard after each question
-        Sidekiq.logger.info "===> Quiz ##{quiz.id} : Publishing scoreboard after question ##{num}"
-        publish_scoreboard(channel, quiz.id)
-
-        # Leave the answer on screen before the next question replaces it
-        sleep(QuizSession::ANSWER_REVEAL_SECONDS)
-
-        Sidekiq.logger.info "===> Quiz ##{quiz.id} : Completed question ##{num}"
+      case question.question_type
+      when "recitation"
+        Sidekiq.logger.info "===> Quiz ##{quiz.id} : Question ##{num} - Recitation question for passage: #{ref}"
+        handle_recitation_question(question, num, ref, passages, channel, quiz.id)
+      when "reference"
+        Sidekiq.logger.info "===> Quiz ##{quiz.id} : Question ##{num} - Reference question for passage: #{ref}"
+        handle_reference_question(question, num, ref, passages, channel, quiz.id)
+      when "mcq"
+        Sidekiq.logger.info "===> Quiz ##{quiz.id} : Question ##{num} - Multiple choice question"
+        handle_mcq_question(question, num, channel, quiz.id)
+      else
+        Sidekiq.logger.warn "===> Quiz ##{quiz.id} : Question ##{num} - Unknown question type: #{question.question_type}"
+        sleep(20)
       end
+
+      # Publish updated scoreboard after each question
+      Sidekiq.logger.info "===> Quiz ##{quiz.id} : Publishing scoreboard after question ##{num}"
+      publish_scoreboard(channel, quiz.id)
+
+      # Leave the answer on screen before the next question replaces it
+      sleep(QuizSession::ANSWER_REVEAL_SECONDS)
+
+      Sidekiq.logger.info "===> Quiz ##{quiz.id} : Completed question ##{num}"
     end
-    
+
+
     Sidekiq.logger.info "===> Quiz ##{quiz.id} : All questions completed"
   end
   
@@ -432,20 +431,26 @@ class ScheduledQuiz
   end
 
   # Opens the question for answers and publishes it, keeping the answer out of that
-  # public message until the question has closed.
+  # public message until the question has closed. Each step retries on its own. Opening the
+  # question must never be repeated once the answer is public, or a player could score by
+  # sending the answer they had just seen.
   def run_question(question, num, channel, quiz_id, time_alloc, question_fields, answer_fields)
-    @quiz_session.open_question(num, question.id, time_alloc)
+    with_retry("opening question #{num}", quiz_id) do
+      @quiz_session.open_question(num, question.id, time_alloc)
 
-    publish_with_retry(channel, {
-      meta: "question",
-      q_num: num,
-      q_id: question.id,
-      time_alloc: time_alloc
-    }.merge(question_fields), quiz_id)
+      publish_with_retry(channel, {
+        meta: "question",
+        q_num: num,
+        q_id: question.id,
+        time_alloc: time_alloc
+      }.merge(question_fields), quiz_id)
+    end
 
     sleep(time_alloc + QuizSession::ANSWER_GRACE_SECONDS)
 
-    publish_with_retry(channel, { meta: "answer", q_num: num }.merge(answer_fields), quiz_id)
+    with_retry("publishing answer #{num}", quiz_id) do
+      publish_with_retry(channel, { meta: "answer", q_num: num }.merge(answer_fields), quiz_id)
+    end
   end
 
   def publish_scoreboard(channel, quiz_id)
@@ -472,22 +477,23 @@ class ScheduledQuiz
     end
   end
   
+  # Each announcement retries on its own, so a failure can't post an earlier one twice.
   def record_final_scoreboard(quiz, channel)
-    with_retry("recording final scoreboard", quiz.id) do
-      final_scoreboard = @quiz_session.get_scoreboard
+    final_scoreboard = with_retry("reading final scoreboard", quiz.id) { @quiz_session.get_scoreboard(raise_errors: true) }
 
-      Sidekiq.logger.info "===> Quiz ##{quiz.id} : Final Quiz Scores"
-      Sidekiq.logger.info "==================="
-      final_scoreboard.each do |usr|
-        Sidekiq.logger.info "[#{usr['score']}] - #{usr['name']}"
-      end
+    Sidekiq.logger.info "===> Quiz ##{quiz.id} : Final Quiz Scores"
+    Sidekiq.logger.info "==================="
+    final_scoreboard.each do |usr|
+      Sidekiq.logger.info "[#{usr['score']}] - #{usr['name']}"
+    end
 
-      # Announce the winner, or everyone tied for first, if anyone scored
-      winners = QuizSession.winners(final_scoreboard)
-      unless winners.empty?
-        QuizSession.winner_announcements(winners, quiz.name).each do |broadcast|
-          Tweet.create!(news: broadcast, user_id: winners.first['id'], importance: 2)
-        end
+    # Announce the winner, or everyone tied for first, if anyone scored
+    winners = QuizSession.winners(final_scoreboard)
+    return if winners.empty?
+
+    QuizSession.winner_announcements(winners, quiz.name).each do |broadcast|
+      with_retry("announcing the winner", quiz.id) do
+        Tweet.create!(news: broadcast, user_id: winners.first['id'], importance: 2)
       end
     end
   end
