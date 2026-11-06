@@ -113,7 +113,7 @@ then `cap production deploy:check:credentials`.
 
 - `https://www.memverse.com`: sign in, review a verse, open `/forum` and `/blog`.
 - `cap production sidekiq:multi:status`; the scheduler log should show `Loaded 8 scheduled jobs`.
-- Sentry for new issue types; `shared/log/production.log` and `shared/log/nginx_error.log` on the host.
+- Sentry for new issue types; `shared/log/production.log` and `/var/log/nginx/memverse_error.log` on the host.
 - Search: `systemctl is-active memverse-searchd` and a verse search in the UI.
 
 ## Rollback

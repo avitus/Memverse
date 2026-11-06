@@ -38,7 +38,7 @@ if [ -n "$asset" ]; then chk 200 "https://www.memverse.com$asset"; else fail "no
 # by the workers (a failed login answers 302; an unwritable temp path is one cause of a 500).
 code=$({ printf 'x='; head -c 200000 /dev/zero | tr '\0' a; } |
   curl -sS "${R[@]}" -o /dev/null -w '%{http_code}' -X POST --data-binary @- https://www.memverse.com/users/sign_in 2>/dev/null) || code=000
-if [ "$code" = "302" ]; then pass "large POST -> 302"; else fail "large POST -> $code (want 302; if 500, check the vhost nginx_error.log for a client-body temp path failure, then production.log)"; fi
+if [ "$code" = "302" ]; then pass "large POST -> 302"; else fail "large POST -> $code (want 302; if 500, check /var/log/nginx/memverse_error.log for a client-body temp path failure, then production.log)"; fi
 
 # perl alarm bounds openssl s_client, which has no timeout of its own (portable to macOS and Linux).
 if echo | perl -e 'alarm 15; exec @ARGV' openssl s_client -connect "$IP:443" -servername www.memverse.com 2>/dev/null | openssl x509 -noout -checkend 604800 >/dev/null 2>&1; then
