@@ -24,7 +24,13 @@ class HomeController < ApplicationController
     # Only HTML templates exist; bots asking for JSON get a 406 rather than a
     # MissingTemplate 500 (Sentry MEMVERSE-9E)
     respond_to do |format|
-      format.html { render :layout => false }
+      format.html do
+        if helpers.heritage_enabled?
+          render :heritage, layout: 'application'
+        else
+          render layout: false
+        end
+      end
       format.any  { head :not_acceptable }
     end
   end

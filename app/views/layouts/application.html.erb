@@ -29,17 +29,19 @@
 <!-- Identify blog feed -->
 <link rel="alternate" type="application/rss+xml" title="Memverse Blog" href="http://feeds.feedburner.com/MemverseBlog" />
 
+<% unless heritage_enabled? %>
 <!-- Load fonts: Museo Slab from TypeKit (Memverse account) -->
 <script src="https://use.typekit.net/hlw5ykm.js"></script>
 <script>try{Typekit.load({ async: true });}catch(e){}</script>
 <!-- Load fonts: Open Sans from Google Web Fonts -->
 <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,700,700italic&subset=latin,greek' rel='stylesheet' type='text/css'>
 
+<% end %>
 <!-- Rails 3 XSS protection -->
 <%= csrf_meta_tag %>
 
 <!-- Main Stylesheet Manifest -->
-<%= stylesheet_link_tag "application" %>
+<%= stylesheet_link_tag(heritage_enabled? ? "heritage_application" : "application") %>
 
 <!-- Javascript -->
 
@@ -58,6 +60,7 @@
 <!-- Auxiliary stylesheets, scripts, etc -->
 <%= yield(:head) %>
 
+<% unless heritage_enabled? %>
 <!--[if IE 6]>
 <style type="text/css">
 	.learn-area
@@ -86,6 +89,7 @@
 	behavior:url(PIE.htc);
 }
 </style>
+<% end %>
 
 <%# Page views are recorded server-side with Ahoy (see documentation/ANALYTICS.md); no client-side analytics script. %>
 
@@ -185,11 +189,13 @@
 
 	<div class="clr"></div>
 
-	<div id="footer"><!--footer start-->
+	<% if heritage_enabled? %><%= render "layouts/heritage_footer" %><% else %>
+<div id="footer"><!--footer start-->
 		<span><%= link_to 'Mission Statement', main_app.mission_path %> |</span>
 		<span>&copy; <%= Date.today.year %> Memverse | </span>
 		<span>Web Design: <a href="http://www.emekarajis.org">Emeka Rajis</a></span>
-	</div><!--footer end-->
+	</div>
+<% end %><!--footer end-->
 
 </div><!--wrapper end-->
 

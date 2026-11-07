@@ -4,41 +4,5 @@
  *= require thredded
  */
 
-// @import "compass"; // Commented out to fix test issues
-@import "normalize";
-@import "base";
-@import "layout";
-@import "bloggity";
-@import "jquery.countdown";
-@import "joyride-2.0.3";
-@import "extras";
-@import "mv_thredded";
-@import "mv_add_verse";
-@import "mv_chat";
-@import "mv_test_verse_quick";
-@import "mv_chapter_review";
-@import "mv_ref_test";
-@import "volunteer";
-@import "mv_accuracy_test";
-@import "admin_quiz_dashboard";
-@import "mv_learn_verse";
-@import "mv_passage";
-@import "mv_badge";
-@import "mv_home";
-@import "mv_info";
-@import "mv_news_feed";
-@import "mv_profile";
-@import "mv_quick_start";
-@import "mv_quiz_question";
-@import "mv_quiz";
-@import "mv_registration";
-@import "mv_users";
-@import "mv_verse";
-@import "mv_live_quiz";
-@import "mv_spritz";
-@import "mv_scribe";
-@import "mv_voice_practice";
-@import "thredded_voting";
-@import "admin_onboarding";
-@import "mv_manage_verses";
+@import "legacy_application";
 @import "heritage";

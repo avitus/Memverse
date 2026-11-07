@@ -1,3 +1,6 @@
+<% if heritage_enabled? %>
+<%= render "heritage_home" %>
+<% else %>
 <div class="two-box"><!--two-box start-->
 
 	<div class="votm">
@@ -198,3 +201,5 @@ $(document).ready(function() {
 <div class="clr"></div>
 
 
+
+<% end %>

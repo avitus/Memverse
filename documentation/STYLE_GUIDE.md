@@ -20,6 +20,12 @@ preview or `MEMVERSE_HERITAGE=0` to restore the legacy presentation without chan
 The implementation remains server-rendered Rails with progressive JavaScript; canvas preview
 forms and sample data are not deployed.
 
+`heritage_application.scss` is the redesign entry point. It places existing component mechanics
+in a lower-priority `legacy` CSS cascade layer, then loads the Heritage foundations and page
+patterns. Do not load `application.css` alongside it: that restores unlayered legacy styles.
+The public homepage, signed-in Today page, navigation and footer use the same shell. The primary
+Review action opens passage review; single-verse review remains available under Explore.
+
 `heritage.scss` scopes foundation tokens and page components under `.mv-heritage`. Use warm
 paper (#f7f4ee), white surfaces (#fffefd), navy text (#253b54), copper actions (#98512f),
 and sage success. Georgia is used for Scripture and editorial headings; Arial is used for

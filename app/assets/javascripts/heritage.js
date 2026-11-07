@@ -64,3 +64,13 @@ document.addEventListener('input', function (event) {
     var query = event.target.value.toLowerCase();
     document.querySelectorAll('#heritage-chapters tbody tr').forEach(function (row) { row.hidden = row.textContent.toLowerCase().indexOf(query) < 0; });
 });
+
+$(function () {
+  $('#heritage-reset-schedule').on('click', function (event) {
+    event.preventDefault();
+    if (!window.confirm('Reset your review schedule?')) return false;
+    var link = $(this);
+    $.getJSON(link.attr('href')).done(function () { window.location.reload(); }).fail(function () { link.after('<p role="alert">Your schedule could not be reset. Please try again.</p>'); });
+    return false;
+  });
+});

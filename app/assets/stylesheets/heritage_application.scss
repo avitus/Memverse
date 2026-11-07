@@ -1,0 +1,12 @@
+/*
+ *= require micromodal
+ *= require jquery-ui
+ *= require thredded
+ */
+
+// Keep legacy component mechanics below the Heritage visual system in the cascade.
+@layer legacy {
+  @import "legacy_application";
+}
+@import "heritage";
+@import "heritage_pages";

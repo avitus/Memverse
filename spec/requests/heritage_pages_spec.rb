@@ -39,10 +39,10 @@ RSpec.describe 'Heritage staging pages', type: :request do
     FactoryBot.create(:memverse, user: user)
     FactoryBot.create(:progress_report, user: user)
     sign_in user
-    [manage_verses_path, add_verse_path, progress_path, update_profile_path, edit_user_registration_path, user_path(user), passage_review_path].each do |path|
+    [test_verse_quick_path, manage_verses_path, add_verse_path, progress_path, update_profile_path, edit_user_registration_path, user_path(user), passage_review_path].each do |path|
       get path
       expect(response).to have_http_status(:ok), "#{path}: #{response.status}"
-      expect(response.body).to include('mv-heritage')
+      expect(response.body).to include('mv-heritage', 'heritage_application', 'heritage-footer')
       expect(response.body).not_to include('designs.magicpath.ai', 'Experimental - Use with Caution!')
       expect(response.body).to include('data-heritage-collection') if path == manage_verses_path
       expect(response.body).to include('heritage-progress') if path == progress_path
@@ -60,6 +60,35 @@ RSpec.describe 'Heritage staging pages', type: :request do
     expect(response).to have_http_status(:ok)
     expect(response.body).to include(post.body)
     expect(response.body).not_to include('addthis_widget.js')
+  end
+
+  it 'uses the shared design at the public entry point and preserves the legacy fallback' do
+    get '/'
+    expect(response).to have_http_status(:ok)
+    expect(response.body).to include('Keep the Word', 'heritage_application', 'heritage-header', 'heritage-footer')
+    expect(response.body).not_to include('id="narrow-login"', 'id="banner-bg"')
+    ENV['MEMVERSE_HERITAGE'] = '0'
+    get '/'
+    expect(response.body).to include('id="narrow-login"')
+    expect(response.body).not_to include('heritage_application')
+  end
+
+  it 'uses the shared design on the signed-in home page and links Review to passage review' do
+    user = FactoryBot.create(:user, confirmed_at: Time.current)
+    FactoryBot.create(:memverse, user: user)
+    allow(Devotion).to receive(:daily_refresh).and_return(nil)
+    sign_in user
+    get '/'
+    expect(response).to have_http_status(:ok)
+    expect(response.body).to include('heritage-today-review', 'heritage_application')
+    expect(response.body).not_to include('home-page-tabs', 'yellow-icon')
+    navigation = Nokogiri::HTML(response.body).at_css('nav[aria-label="Main navigation"]')
+    expect(navigation.css('a').find { |link| link.text == 'Review' }['href']).to eq(passage_review_path)
+    expect(navigation.css('a').find { |link| link.text == 'Today' }['href']).to eq(root_path)
+    sign_in FactoryBot.create(:user, confirmed_at: Time.current, translation: 'KJV')
+    get '/'
+    expect(response).to have_http_status(:ok)
+    expect(response.body).to include('Start with a collection of popular verses', starter_pack_path(translation: 'NIV'))
   end
 
 end
