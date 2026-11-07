@@ -227,3 +227,55 @@
 .mv-heritage .heritage-ratings .score-test-buttons button { float:none; margin:0; }
 .mv-heritage [data-heritage-chart] { min-width:0; overflow:hidden; }
 #inner1-body.mv-heritage.passages.review #word_width { font:25px Georgia,serif !important; }
+
+// Keep the passage queue within reach above the reading area.
+.mv-heritage.passages.review {
+  .heritage-passage-picker { position:relative; margin:0; max-width:100%; }
+  .heritage-passage-picker summary { padding:10px 14px; color:var(--mv-brand); font:14px/24px Arial,sans-serif; border-radius:4px; }
+  .heritage-passage-picker[open] summary { background:var(--mv-surface); color:var(--mv-action); }
+  .heritage-passage-picker .upcoming { position:absolute; right:0; top:100%; z-index:10; width:280px; max-width:calc(100vw - 88px); margin:4px 0 0; padding:8px; border:1px solid var(--mv-border); border-radius:6px; background:var(--mv-surface); box-shadow:0 8px 24px rgba(37,59,84,.12); }
+  .heritage-passage-picker .passage-list { list-style:none; margin:0; padding:0; max-height:320px; overflow-y:auto; }
+  .heritage-passage-picker .upcoming-verse-ref { width:100%; height:auto; margin:0; padding:0; background:none; }
+  .heritage-passage-picker button { display:block; width:100%; min-height:44px; padding:10px 12px; border:0; text-align:left; color:var(--mv-ink); background:transparent; font:14px/24px Arial,sans-serif; }
+  .heritage-passage-picker button:hover,.heritage-passage-picker button:focus-visible { background:var(--mv-bg); color:var(--mv-action); }
+  .heritage-passage-picker button:focus-visible { outline-offset:-2px; }
+}
+
+// Passage review follows the pinned QuietReview canvas instead of the dashboard shell.
+#inner1-body.mv-heritage.passages.review {
+  .heritage-review-header { height:100px; display:flex; align-items:center; justify-content:space-between; padding:0 48px; max-width:1600px; margin:auto; }
+  .heritage-review-brand { display:flex; align-items:center; gap:10px; font:600 22px Arial,sans-serif; letter-spacing:-1px; color:var(--mv-brand); text-decoration:none; }
+  .heritage-review-mark { display:grid; place-items:center; width:30px; height:30px; border-radius:50%; background:#284b75; color:#fff; font-size:17px; letter-spacing:-2px; padding-right:2px; }
+  .heritage-review-tools { display:flex; align-items:center; gap:32px; color:var(--mv-muted); }
+  .heritage-reading-settings { position:relative; }
+  .heritage-review-tools summary { list-style:none; cursor:pointer; padding:10px 2px; min-height:44px; color:var(--mv-muted); }
+  .heritage-review-tools summary::-webkit-details-marker { display:none; }
+  .heritage-reading-settings summary { font:20px/24px Georgia,serif; }
+  .heritage-reading-panel { position:absolute; right:0; top:100%; z-index:11; width:330px; max-width:calc(100vw - 44px); padding:24px; border:1px solid var(--mv-border); border-radius:6px; background:var(--mv-surface); font:13px/1.7 Arial,sans-serif; }
+  .heritage-reading-panel h2 { font:16px Arial,sans-serif; margin:0 0 22px; }
+  .heritage-reading-panel h3 { font:14px Arial,sans-serif; margin-top:24px; }
+  .heritage-reading-panel a { display:block; padding:10px 0; }
+  .page-content { max-width:712px; padding:0 28px 80px; margin:53px auto 0; }
+  .white-box-bg { padding:0; overflow:visible; }
+  .passage-entry { padding:0; max-width:none; }
+  .heritage-passage-heading { text-align:center; margin-bottom:48px; }
+  .heritage-passage-kicker { font:10px Arial,sans-serif; letter-spacing:.2em; text-transform:uppercase; color:var(--mv-action); margin:0 0 16px; }
+  .passage-title { font:normal 34px/1.2 Georgia,serif; letter-spacing:-.7px; margin:0 0 13px; }
+  .heritage-passage-version { font:11px Arial,sans-serif; letter-spacing:.04em; color:var(--mv-muted); }
+  .passage-text,.full-text { font:normal 25px/1.95 Georgia,serif; letter-spacing:-.025em; overflow-wrap:break-word; }
+  .versenum { font:10px/0 Arial,sans-serif; color:var(--mv-action); padding:0 6px 0 5px; }
+  .passage-text input.blank-word { height:1.14em; line-height:normal; border-bottom-color:#b4aba0; color:var(--mv-ink) !important; }
+  .passage-text input.blank-word:focus { outline:none; border-bottom:2px solid var(--mv-action); background:color-mix(in srgb,var(--mv-action) 5%,transparent); }
+  .heritage-ratings { margin-top:38px; padding-top:23px; }
+  .heritage-footer { display:none; }
+  @media(max-width:700px) {
+    .heritage-review-header { height:76px; padding:0 22px; }
+    .heritage-review-brand { font-size:19px; }
+    .heritage-review-tools { gap:20px; }
+    .page-content { margin-top:35px; padding:0 25px 50px; }
+    .heritage-passage-heading { margin-bottom:34px; }
+    .passage-title { font-size:30px; }
+    .passage-text,.full-text { font-size:22px; line-height:1.9; }
+    #word_width { font-size:22px !important; }
+  }
+}

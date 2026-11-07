@@ -45,6 +45,16 @@ RSpec.describe 'Heritage staging pages', type: :request do
       expect(response.body).to include('mv-heritage', 'heritage_application', 'heritage-footer')
       expect(response.body).not_to include('designs.magicpath.ai', 'Experimental - Use with Caution!')
       expect(response.body).to include('data-heritage-collection') if path == manage_verses_path
+      if path == passage_review_path
+        document = Nokogiri::HTML(response.body)
+        expect(document.css('.upcoming-passages').length).to eq(1)
+        expect(document.at_css('.heritage-review-header .heritage-passage-picker')).to be_present
+        expect(document.at_css('.heritage-passage-heading h1.passage-title')).to be_present
+        picker = document.at_css('details.heritage-passage-picker')
+        expect(picker['open']).to be_nil
+        expect(picker.at_css('summary').text).to eq('Passages')
+        expect(picker.at_css('.upcoming-passages')).to be_present
+      end
       expect(response.body).to include('heritage-progress') if path == progress_path
       expect(response.body).to include('heritage-discovery-guide', 'data-verse-suggestion="Psalm 23"') if path == add_verse_path
     end

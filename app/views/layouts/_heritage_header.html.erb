@@ -1,3 +1,26 @@
+<% if controller_name == 'passages' && action_name == 'review' %>
+  <header class="heritage-review-header">
+    <%= link_to main_app.root_path, class: 'heritage-review-brand', 'aria-label': 'Memverse home' do %><span class="heritage-review-mark">mv</span>memverse<% end %>
+    <div class="heritage-review-tools">
+      <details class="heritage-queue heritage-passage-picker">
+        <summary>Passages</summary>
+        <div class="upcoming-passages upcoming" aria-label="Upcoming passages"></div>
+      </details>
+      <details class="heritage-reading-settings">
+        <summary aria-label="Reading settings and help">Aa</summary>
+        <div class="heritage-reading-panel">
+          <h2>Reading settings</h2>
+          <button id="heritage-theme" type="button">Dark</button>
+          <h3>Keyboard help</h3>
+          <p>Correct words continue to the next blank. Tab moves between controls.</p>
+          <p>↓ Reveals a word briefly. ↑ Reveals a verse briefly.</p>
+          <%= link_to 'Individual verses', main_app.test_verse_quick_path %>
+          <%= link_to 'References', main_app.test_ref_path %>
+        </div>
+      </details>
+    </div>
+  </header>
+<% else %>
 <header class="heritage-header">
   <%= link_to main_app.root_path, class: 'heritage-brand', 'aria-label': 'Memverse home' do %><svg width="34" height="34" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="23" fill="currentColor"/><path d="M8 31V19c0-6 8-6 8 0v12m0-12c0-6 8-6 8 0v12m4-15 6.5 15L41 16" fill="none" stroke="var(--mv-surface)" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round"/></svg>memverse<% end %>
   <% unless heritage_auth_page? %>
@@ -20,3 +43,5 @@
   <button type="button" id="heritage-theme" aria-label="Use dark appearance">Dark</button>
   </div>
 </header>
+
+<% end %>

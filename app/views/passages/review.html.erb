@@ -7,7 +7,15 @@
 
         <div class="passage-id"></div>
 
-        <h2  class="passage-title"></h2>
+        <% if heritage_enabled? %>
+          <div class="heritage-passage-heading">
+            <p class="heritage-passage-kicker">Holy Bible</p>
+            <h1 class="passage-title"></h1>
+            <span class="heritage-passage-version"></span>
+          </div>
+        <% else %>
+          <h2 class="passage-title"></h2>
+        <% end %>
 
         <div class="passage-text">
 
@@ -16,11 +24,11 @@
 
     </div> <!-- end: passage-entry column -->
 
-    <% if heritage_enabled? %><details class="heritage-queue"><summary>Upcoming passages</summary><% end %>
+    <% unless heritage_enabled? %>
     <div class="upcoming-passages upcoming">
         <h2>Upcoming Passages</h2>
     </div> <!-- end: upcoming-passage column -->
-    <% if heritage_enabled? %></details><% end %>
+    <% end %>
 
 </div>
 </div>
@@ -36,6 +44,12 @@
 
         //------- Select passage for review -----------
         $( ".upcoming-passages" ).on( "click", ".upcoming-verse-ref", function( e ) {
+            e.preventDefault();
+            var picker = $(this).closest('details')[0];
+            if (picker) {
+                picker.open = false;
+                picker.querySelector('summary').focus();
+            }
             $(this).fadeOut();
             reviewState.clearCurrentPassage();    // clear current passage
             reviewState.selectPassage( $(this).text(), $(this).attr('id') );

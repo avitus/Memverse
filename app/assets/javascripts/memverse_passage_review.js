@@ -8,7 +8,13 @@ var reviewState = {
 
             // Build list
             $.each(data, function( index, mv ) {
-                items.push('<li class="upcoming-verse-ref white2" id="' + mv.id + '">' + mv.ref + '</li>');
+                var item = $('<li/>', { 'class': 'upcoming-verse-ref white2', id: mv.id });
+                if ($('.heritage-passage-picker').length) {
+                    $('<button/>', { type: 'button', text: mv.ref }).appendTo(item);
+                } else {
+                    item.text(mv.ref);
+                }
+                items.push(item[0].outerHTML);
             });
 
             // Add entire list
@@ -108,7 +114,7 @@ function mvDisplayPassageForReview( passageRef, passageID, verses ) {
     var $new_vs
 
     // display reference
-    $('.passage-title').html( passageRef );
+    $('.passage-title').text( passageRef );
     $('.passage-id').html( passageID );
 
     // clear out existing passage
@@ -116,6 +122,9 @@ function mvDisplayPassageForReview( passageRef, passageID, verses ) {
 
     // wrap single verse in array
     if( !($.isArray(verses)) ) { verses = [ verses ]; }
+
+    $('.heritage-passage-kicker').text(/^Psalms? /.test(passageRef) ? 'The Psalms' : 'Holy Bible');
+    $('.heritage-passage-version').text(verses.length ? verses[0].tl : '');
 
     $.each (verses, function(i, vs) {
 

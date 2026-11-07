@@ -47,6 +47,10 @@ responses, composition, translation changes, failed lookup and confirmed additio
 Progress charts use existing JSON endpoints, a 1 year/All time selector and accessible data tables.
 Review minutes are estimated daily requirements; consistency counts sessions in the preceding year.
 Passage review presents continuous Scripture and reveals ratings below the passage after typing.
+The passage review shell preserves the pinned QuietReview canvas: a compact brand header,
+top-right passage picker and reading help, centered heading, 25px Georgia Scripture with
+1.95 line spacing (22px on mobile), and copper verse numbers and focus states. Upcoming
+passages use keyboard-accessible buttons in a scrollable dropdown, above the reading area.
 Successful rating saves unlock an explicit Next passage action. Awards retain original eligibility
 and bronze/silver/gold finishes, using SVG medallions adapted from the approved canvas.
 
