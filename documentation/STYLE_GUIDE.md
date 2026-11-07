@@ -50,6 +50,52 @@ Passage review presents continuous Scripture and reveals ratings below the passa
 Successful rating saves unlock an explicit Next passage action. Awards retain original eligibility
 and bronze/silver/gold finishes, using SVG medallions adapted from the approved canvas.
 
+### Canvas coverage (November 7, 2026)
+
+The Memverse canvas (project `462325534328770560`) has 21 components. Twenty represent
+application pages or route states; the design-system component supplies shared foundations.
+Canvas-only sample accounts, preview selectors, and simulated saves are replaced with Rails data
+and existing server actions.
+
+| Canvas design | Rails destination | Component / pinned revision |
+| --- | --- | --- |
+| Navy & copper · Landing | Signed-out `/` | 462396588447387648 / 462396588447387649 |
+| Navy & copper · Today | Signed-in `/` | 462396245789532160 / 469892871043039232 |
+| Dashboard · Heritage | `/users/:id` | 469887795507384320 / 469892856572694528 |
+| Profile · Heritage settings | `/update_profile` | 469886147158487040 / 469892537562320896 |
+| Manage verses | `/manage_verses` | 469890787795161088 / 469896406883274752 |
+| Progress | `/progress` | 469897030748221440 / 469898364302028800 |
+| Add verses | `/add_verse` | 469904081952063488 / 469907004144623616 |
+| Passage review | `/review` | 462399451038912512 / 469892863430365184 |
+| Sign in | `/users/sign_in` | 469907834654568448 / 469908814318178304 |
+| Create account | `/users/sign_up` | 469907844456681472 / 469908819468750848 |
+| Forgot password | `/users/password/new` | 469907849682780160 / 469911142555353088 |
+| Reset password | `/users/password/edit` with reset token | 469907915847913472 / 469911147458498560 |
+| Confirm email | `/users/confirmation/new` and confirmation feedback | 469907923246661632 / 469911152533594112 |
+| Account access | `/users/edit` | 469907928204333056 / 469907928204333057 |
+| Blog · Index | `/blog/` | 469881757005647872 / 469884771321909248 |
+| Blog · Article and comments | `/blog/:blog/:article` | 469881751557263360 / 469881751557263361 |
+| Blog · Browse and search | `/blog/blog_search` | 469881764224053248 / 469881764224053249 |
+| Blog · Category | Blog index with `category_id` | 469881937390104576 / 469881937390104577 |
+| Blog · Tag | Blog index with `tag_name` | 469881942926577664 / 469881942926577665 |
+| Blog · Older posts | Blog index with `page` | 469881948446273536 / 469881948446273537 |
+| Memverse · Design system | Shared tokens, controls, forms, and charts | 469884063197564928 / 469908824871018496 |
+
+The public landing page includes the Scripture illustration, navy belief strip, blue/sage/copper
+feature cards, local Psalm 23:1 practice, community links, and invitation. The Today page uses
+blue review, copper retention, and sage practice panels. Its counts, queue, six-month history,
+and completed-session days come only from the signed-in account. Empty histories stay empty;
+prototype chart values are never substituted. Existing onboarding and devotional content remain
+available below the Today panels.
+
+`_heritage_landing.scss` adapts the pinned landing layout; `_heritage_canvas.scss` supplies the
+Today panels and shared accents, with matching dark tokens. Primary actions retain copper fills
+and accessible foregrounds. Blog search overrides the engine's legacy table with article results;
+category, tag, and archive views share the journal layout and preserve their server filters.
+The dashboard includes its review entry and collection distribution; Add verses includes the
+copper guidance panel and suggested passages wired to the existing live search without adding
+anything until the user chooses an Add action.
+
 ## Color Palette
 
 ### Primary Colors
@@ -306,4 +352,4 @@ As part of the modernization effort:
 
 ---
 
-*Last Updated: August 2025*
+*Last Updated: November 7, 2026*

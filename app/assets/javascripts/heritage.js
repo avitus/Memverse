@@ -74,3 +74,47 @@ $(function () {
     return false;
   });
 });
+
+// Suggested passages use the existing search and never add verses automatically.
+document.addEventListener('click', function (event) {
+  var suggestion = event.target.closest('[data-verse-suggestion]');
+  var search = document.getElementById('js_flex-verse-search');
+  if (!suggestion || !search) return;
+  search.value = suggestion.getAttribute('data-verse-suggestion');
+  flexversesearch(search.value);
+  search.focus();
+});
+
+// The public Scripture exercise is local practice; it never saves account progress.
+document.addEventListener('DOMContentLoaded', function () {
+  var exercise = document.querySelector('[data-demo-exercise]');
+  if (!exercise) return;
+  var answer = document.getElementById('heritage-demo-answer');
+  var status = document.querySelector('[data-demo-status]');
+  var reveal = document.querySelector('[data-demo-reveal]');
+  var next = document.querySelector('[data-demo-continue]');
+  var shown = false;
+  document.querySelectorAll('[data-demo-start]').forEach(function (button) {
+    button.addEventListener('click', function (event) {
+      event.preventDefault();
+      document.querySelector('[data-demo-reading]').hidden = true;
+      exercise.hidden = false;
+      answer.focus();
+    });
+  });
+  answer.addEventListener('input', function () {
+    shown = false;
+    reveal.textContent = 'Reveal the word';
+    var correct = answer.value.trim().toLowerCase() === 'shepherd';
+    status.textContent = correct ? 'Correct. You recalled the word.' : 'Recall the missing word. Reveal it if needed.';
+    next.hidden = !correct;
+  });
+  reveal.addEventListener('click', function () {
+    shown = !shown;
+    answer.value = shown ? 'shepherd' : '';
+    reveal.textContent = shown ? 'Hide the word' : 'Reveal the word';
+    status.textContent = shown ? 'Read the word, then recall it again.' : 'Recall the missing word. Reveal it if needed.';
+    next.hidden = true;
+    answer.focus();
+  });
+});

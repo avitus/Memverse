@@ -1,13 +1,17 @@
 <% page_title I18n.t :add_new_verses, :scope => 'page_titles' %>
 <% page_description I18n.t :add_new_verses, :scope => 'page_descriptions' %>
+<% if heritage_enabled? %>
+<div class="heritage-page-heading"><div><span class="heritage-eyebrow">Build your practice</span><h1>Add a verse</h1><p class="heritage-muted">Start with words you want to carry with you.</p></div><%= link_to 'My verses →', manage_verses_path %></div>
+<div class="heritage-discovery-layout"><div class="heritage-discovery-primary">
+<% end %>
 <div class="white-box-bg">
 
 	<!-- SEARCH ENTRY: LEFT COLUMN -->
 	<div id="add-verse-enter-ref" <% if heritage_enabled? %>data-owned-references="<%= current_user.memverses.includes(:verse).map { |mv| mv.verse.ref }.to_json %>"<% end %>>
 
-		<div class="top-heading">
+		<% unless heritage_enabled? %><div class="top-heading">
 	    	<h3><span>Add a New Memory Verse</span></h3>
-	    </div>
+	    </div><% end %>
 
 		<%= content_tag "div", id: "translation", data: {tl: @translation } do %>
 		<!-- Get translation -->
@@ -59,6 +63,10 @@
 
 	<div class="clr"></div><!-- Clear floats -->
 </div> <!-- white-box-bg -->
+<% if heritage_enabled? %>
+<section class="heritage-discovery-start"><span class="heritage-eyebrow">A place to begin</span><h2>One verse is a good start.</h2><p class="heritage-muted">Choose a familiar verse, or explore one of these passages.</p><div class="heritage-discovery-suggestions"><% [['John 3:16', 'God’s love'], ['Psalm 23', 'The Lord is my shepherd'], ['Psalm 46:1', 'Strength in trouble']].each do |reference, description| %><button type="button" data-verse-suggestion="<%= reference %>"><strong><%= reference %></strong><small><%= description %></small><span aria-hidden="true">↗</span></button><% end %></div></section>
+</div><aside class="heritage-discovery-guide"><span class="heritage-eyebrow">Your first verse</span><h2>A small beginning.<br>A lasting treasure.</h2><p>You don’t need a long list. Start with a verse you want to remember, and return to it a little each day.</p><details open><summary>A little guidance</summary><ol><li><strong>Find words that matter.</strong><p>Search a reference you know or a few words you remember.</p></li><li><strong>Read, then add.</strong><p>Check the wording and translation before adding it to your verses.</p></li><li><strong>Make time to practice.</strong><p>Memverse helps you review at the right time.</p></li></ol></details><%= link_to 'Explore your collection →', manage_verses_path %></aside></div>
+<% end %>
 
 <script language="JavaScript" type="text/javascript"><!--
 	$(document).ready(function() {

@@ -46,6 +46,7 @@ RSpec.describe 'Heritage staging pages', type: :request do
       expect(response.body).not_to include('designs.magicpath.ai', 'Experimental - Use with Caution!')
       expect(response.body).to include('data-heritage-collection') if path == manage_verses_path
       expect(response.body).to include('heritage-progress') if path == progress_path
+      expect(response.body).to include('heritage-discovery-guide', 'data-verse-suggestion="Psalm 23"') if path == add_verse_path
     end
   end
   it 'renders article excerpts and full articles with native comment links' do
@@ -65,8 +66,14 @@ RSpec.describe 'Heritage staging pages', type: :request do
   it 'uses the shared design at the public entry point and preserves the legacy fallback' do
     get '/'
     expect(response).to have_http_status(:ok)
-    expect(response.body).to include('Keep the Word', 'heritage_application', 'heritage-header', 'heritage-footer')
+    expect(response.body).to include('Treasure God’s word.', 'heritage_application', 'heritage-header', 'heritage-footer')
     expect(response.body).not_to include('id="narrow-login"', 'id="banner-bg"')
+    document = Nokogiri::HTML(response.body)
+    expect(document.css('.how-grid article').length).to eq(3)
+    expect(document.at_css('.sample-visual')).to be_present
+    expect(document.at_css('#heritage-demo-answer')['aria-label']).to eq('Missing word in Psalm 23:1')
+    expect(document.at_css('[data-demo-continue]')['href']).to eq(new_user_registration_path)
+    expect(document.at_css('nav[aria-label="Main navigation"]').text).to include('How it works', 'Community')
     ENV['MEMVERSE_HERITAGE'] = '0'
     get '/'
     expect(response.body).to include('id="narrow-login"')
@@ -75,13 +82,23 @@ RSpec.describe 'Heritage staging pages', type: :request do
 
   it 'uses the shared design on the signed-in home page and links Review to passage review' do
     user = FactoryBot.create(:user, confirmed_at: Time.current)
-    FactoryBot.create(:memverse, user: user)
+    verse = FactoryBot.create(:memverse, user: user, next_test: Date.yesterday)
+    FactoryBot.create(:progress_report, user: user, entry_date: Date.current, memorized: 7, session_complete: true)
+    other_user = FactoryBot.create(:user)
+    FactoryBot.create(:progress_report, user: other_user, entry_date: Date.current, memorized: 999)
     allow(Devotion).to receive(:daily_refresh).and_return(nil)
     sign_in user
     get '/'
     expect(response).to have_http_status(:ok)
     expect(response.body).to include('heritage-today-review', 'heritage_application')
     expect(response.body).not_to include('home-page-tabs', 'yellow-icon')
+    document = Nokogiri::HTML(response.body)
+    expect(document.at_css('.heritage-review-queue').text).to include(verse.verse.ref)
+    expect(document.at_css('.heritage-retained details').text).to include('7 verses memorized')
+    expect(document.at_css('.heritage-retained details').text).not_to include('999')
+    expect(document.css('.heritage-week .done').length).to eq(1)
+    expect(document.at_css('.heritage-history polyline')['points']).not_to match(/NaN|Infinity/)
+    expect(document.at_css('.heritage-collection-ribbon').text).to include('1 total verses')
     navigation = Nokogiri::HTML(response.body).at_css('nav[aria-label="Main navigation"]')
     expect(navigation.css('a').find { |link| link.text == 'Review' }['href']).to eq(passage_review_path)
     expect(navigation.css('a').find { |link| link.text == 'Today' }['href']).to eq(root_path)
@@ -89,6 +106,25 @@ RSpec.describe 'Heritage staging pages', type: :request do
     get '/'
     expect(response).to have_http_status(:ok)
     expect(response.body).to include('Start with a collection of popular verses', starter_pack_path(translation: 'NIV'))
+  end
+
+  it 'renders the canvas blog browse, category, tag, and archive states' do
+    author = FactoryBot.create(:user, admin: true)
+    blog = Bloggity::Blog.create!(title: 'Memverse Blog', url_identifier: 'main')
+    category = Bloggity::BlogCategory.create!(name: 'Memorization', blog: blog)
+    post = Bloggity::BlogPost.create!(blog: blog, posted_by: author, title: 'Scripture practice', body: 'A lasting treasure.', category: category, is_complete: true)
+    allow(Bloggity::BlogPost).to receive(:search).and_return([post])
+    get '/blog/blog_search', params: {search_param: 'Scripture'}
+    expect(response).to have_http_status(:ok)
+    expect(response.body).to include('Browse and search.', 'Scripture practice', 'heritage-blog-search')
+    get "/blog/#{blog.id}", params: {category_id: category.id}
+    expect(Nokogiri::HTML(response.body).at_css('h1').text).to eq('Memorization')
+    category_link = Nokogiri::HTML(response.body).css('#side_nav_container a').find { |link| link.text == category.name }
+    expect(category_link['href']).to include("category_id=#{category.id}")
+    get "/blog/#{blog.id}", params: {tag_name: 'Memory'}
+    expect(Nokogiri::HTML(response.body).at_css('h1').text).to eq('Articles tagged “Memory”.')
+    get "/blog/#{blog.id}", params: {page: 2}
+    expect(Nokogiri::HTML(response.body).at_css('h1').text).to eq('From the archives.')
   end
 
 end

@@ -1,8 +1,18 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import fs from 'fs';
 const source = fs.readFileSync('app/assets/javascripts/heritage.js', 'utf8');
 
 new Function(source)();
+
+it('searches a suggested passage without adding it to the account', () => {
+  document.body.innerHTML = '<input id="js_flex-verse-search"><button data-verse-suggestion="Psalm 23"><strong>Psalm 23</strong></button>';
+  globalThis.flexversesearch = vi.fn();
+  try {
+    document.querySelector('strong').click();
+    expect(globalThis.flexversesearch).toHaveBeenCalledWith('Psalm 23');
+    expect(document.activeElement.value).toBe('Psalm 23');
+  } finally { delete globalThis.flexversesearch; }
+});
 
 describe('Heritage authentication enhancements', () => {
   beforeEach(() => {
@@ -53,4 +63,33 @@ it('reveals the onboarding review action after five saved additions', () => {
     globalThis.$ = originalJQuery;
     document.body.className = '';
   }
+});
+
+describe('Heritage landing Scripture practice', () => {
+  beforeEach(() => {
+    document.body.innerHTML = '<button data-demo-start>Begin</button><div data-demo-reading>Read</div><div data-demo-exercise hidden><input id="heritage-demo-answer"><button data-demo-reveal>Reveal the word</button><span data-demo-status role="status"></span><a data-demo-continue hidden>Continue</a></div>';
+    document.dispatchEvent(new Event('DOMContentLoaded'));
+  });
+  it('opens keyboard practice and recognizes a recalled word', () => {
+    document.querySelector('[data-demo-start]').click();
+    const answer = document.getElementById('heritage-demo-answer');
+    expect(document.querySelector('[data-demo-reading]').hidden).toBe(true);
+    expect(document.querySelector('[data-demo-exercise]').hidden).toBe(false);
+    expect(document.activeElement).toBe(answer);
+    answer.value = ' Shepherd ';
+    answer.dispatchEvent(new Event('input'));
+    expect(document.querySelector('[data-demo-status]').textContent).toContain('Correct');
+    expect(document.querySelector('[data-demo-continue]').hidden).toBe(false);
+    answer.value = 'wrong'; answer.dispatchEvent(new Event('input'));
+    expect(document.querySelector('[data-demo-continue]').hidden).toBe(true);
+  });
+  it('does not count revealing the word as correct recall', () => {
+    const reveal = document.querySelector('[data-demo-reveal]');
+    reveal.click();
+    expect(document.getElementById('heritage-demo-answer').value).toBe('shepherd');
+    expect(document.querySelector('[data-demo-status]').textContent).not.toContain('Correct');
+    expect(document.querySelector('[data-demo-continue]').hidden).toBe(true);
+    reveal.click();
+    expect(document.getElementById('heritage-demo-answer').value).toBe('');
+  });
 });

@@ -1,4 +1,25 @@
 module HeritageHelper
+  def heritage_home_data(user)
+    counts = user.memverses.group(:status).count
+    history = user.progress_reports.where(entry_date: 6.months.ago.to_date..Date.current).order(:entry_date).pluck(:entry_date, :memorized)
+    {
+      counts: counts,
+      total: counts.values.sum,
+      history: history,
+      practice_dates: user.progress_reports.where(entry_date: 6.days.ago.to_date..Date.current, session_complete: true).distinct.pluck(:entry_date),
+      queue: user.memverses.active.includes(:verse).where('next_test <= ?', Date.today).order(:next_test, :id).limit(3)
+    }
+  end
+
+  def heritage_history_points(history)
+    maximum = [history.map { |_, count| count.to_i }.max.to_i, 1].max
+    history.map do |date, count|
+      days = (history.last.first - history.first.first).to_i
+      x = days.zero? ? 250 : (date - history.first.first).to_i * 500.0 / days
+      "#{x.round(2)},#{(110 - count.to_i * 100.0 / maximum).round(2)}"
+    end.join(' ')
+  end
+
   def heritage_enabled?
     ENV.fetch('MEMVERSE_HERITAGE', Rails.env.staging? ? '1' : '0') == '1'
   end

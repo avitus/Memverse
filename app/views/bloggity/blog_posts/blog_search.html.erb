@@ -1,0 +1,26 @@
+<% if heritage_enabled? %>
+<% page_title 'Browse and search · Memverse journal' %>
+<% content_for :body_css do %>id='bloggity_container'<% end %>
+<div class="heritage-page-heading"><div><span class="heritage-eyebrow">The Memverse journal</span><h1>Browse and search.</h1><p>Find encouragement for your practice.</p></div><%= link_to 'All articles →', bloggity.root_path %></div>
+<%= form_tag blog_search_path, method: :get, class: 'heritage-blog-search' do %><%= label_tag :search_param, 'Search articles' %><div class="heritage-actions"><%= search_field_tag :search_param, params[:search_param], placeholder: 'Search by title or words', maxlength: 200 %><%= submit_tag 'Search', name: nil, class: 'heritage-primary' %></div><% end %>
+<div id="search_results"><%= render 'blog_search_results' %></div>
+<% else %>
+<!-- Namespace for Bloggity styles -->
+<% content_for :body_css do %>id='bloggity_container'<% end -%>
+
+<div id="search-box" class="center">
+	<%= form_tag blog_search_path, method: :get do %>
+	  <p>
+	    <%= text_field_tag( :search_param, params[:search_param], size: 50 ) %>
+	    <%= submit_tag "Search Blog", name: nil %>
+	  </p>
+	<% end %>
+</div>
+
+<br>
+
+<div id="search_results">
+  <%= render :partial=>'blog_search_results' %>
+</div>
+
+<% end %>

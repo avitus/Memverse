@@ -18,7 +18,7 @@
 
 	<% if heritage_enabled? && show_comment_count %>
         <p><%= truncate(strip_tags(blog_post.body), length: 260) %></p>
-        <%= link_to "Read article →", blog_named_link(blog_post) %>
+        <%= link_to "Read article →", blog_named_link(blog_post), class: "heritage-article-link" %>
     <% elsif blog_post.fck_created %>
 		<%= sanitize(blog_post.body) -%>
 	<% else %>

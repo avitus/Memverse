@@ -3,13 +3,25 @@
 <!-- Namespace for Bloggity styles -->
 <% content_for :body_css do %>id='bloggity_container'<% end -%>
 
-<% if heritage_enabled? %><div class="heritage-page-heading"><div><span class="heritage-eyebrow">The Memverse journal</span><h1>Words for the journey.</h1><p>Scripture, stories, and a life of remembering.</p></div><%= link_to 'Search the journal', blog_search_path %></div><% end %>
+<% if heritage_enabled? %>
+  <% category = Bloggity::BlogCategory.find_by(id: params[:category_id]) if params[:category_id].present? %>
+  <% heading = if params[:tag_name].present?
+    "Articles tagged “#{params[:tag_name]}”."
+  elsif category
+    category.name
+  elsif params[:page].to_i > 1
+    'From the archives.'
+  else
+    'Words for the journey.'
+  end %>
+  <div class="heritage-page-heading"><div><span class="heritage-eyebrow">The Memverse journal</span><h1><%= heading %></h1><p>Scripture, stories, and a life of remembering.</p></div><%= link_to 'Search the journal', blog_search_path, class: 'heritage-secondary' %></div>
+<% end %>
 <div id="main_content">
 
 	<%= flash[:error] %>
 	<%= flash[:message] %>
 
-	<% cache(["Blog", heritage_enabled?, blog_logged_in? && current_user.can_blog?(@blog_id), params[:tag_name], params[:category_id], params[:page] ], :expires_in => 5.minutes) do %>
+	<% cache(["Blog-canvas-v2", heritage_enabled?, blog_logged_in? && current_user.can_blog?(@blog_id), params[:tag_name], params[:category_id], params[:page] ], :expires_in => 5.minutes) do %>
 
 		<!-- Create new post -->
 		<% if blog_logged_in? && current_user.can_blog?(@blog_id) %>

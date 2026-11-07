@@ -1,5 +1,5 @@
 <% if heritage_enabled? %>
-<aside id="side_nav_container"><h2>Explore the journal</h2><%= form_tag blog_search_path, method: :get do %><%= label_tag :search_param, 'Search articles' %><%= search_field_tag :search_param, params[:search_param] %><%= submit_tag 'Search', name: nil %><% end %><p><%= link_to 'All articles', blog_named_link(nil, :index, {blog: @blog}) %></p><p><%= link_to 'Subscribe to the feed', 'https://feeds.feedburner.com/MemverseBlog' %></p></aside>
+<aside id="side_nav_container"><h2>Explore the journal</h2><%= form_tag blog_search_path, method: :get do %><%= label_tag :search_param, 'Search articles' %><%= search_field_tag :search_param, params[:search_param] %><%= submit_tag 'Search', name: nil %><% end %><p><%= link_to 'All articles', blog_named_link(nil, :index, {blog: @blog}) %></p><p><%= link_to 'Subscribe to the feed', 'https://feeds.feedburner.com/MemverseBlog' %></p><h3>Browse by category</h3><% Bloggity::BlogCategory.where(blog_id: @blog_id).order(:name).each do |category| %><p><%= link_to category.name, {controller: 'blog_posts', action: :index, blog_id: @blog_id, category_id: category.id} %></p><% end %></aside>
 <% else %>
 <% cache(["side-nav", "page-#{@blog_page}", "registered-#{blog_logged_in?}" ], expires_in: 20.minutes ) do %>
 
