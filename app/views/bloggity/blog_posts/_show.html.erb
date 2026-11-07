@@ -17,7 +17,7 @@
 	<br />
 
 	<% if heritage_enabled? && show_comment_count %>
-        <p><%= truncate(strip_tags(blog_post.body), length: 260) %></p>
+        <p><%= truncate(Nokogiri::HTML.fragment(strip_tags(blog_post.body)).text, length: 260) %></p>
         <%= link_to "Read article →", blog_named_link(blog_post), class: "heritage-article-link" %>
     <% elsif blog_post.fck_created %>
 		<%= sanitize(blog_post.body) -%>
@@ -41,15 +41,15 @@
 	<!-- AddThis Button END -->
     <% end %>
 
+	<% if heritage_enabled? %><div class="heritage-article-taxonomy"><% end %>
 	<% if blog_post.category %>
-		<br />
-		<%= image_tag "bloggity/cat.gif" -%> <%= link_to strip_tags(blog_post.category.name), {:controller => 'blog_posts', :action => :index, :blog_id => blog_post.blog_id, :category_id => blog_post.category_id} %>
+		<% unless heritage_enabled? %><br /><%= image_tag "bloggity/cat.gif" %><% end %> <%= link_to strip_tags(blog_post.category.name), {:controller => 'blog_posts', :action => :index, :blog_id => blog_post.blog_id, :category_id => blog_post.category_id} %>
 	<% end %>
 
 	<% unless blog_post.tags.blank? %>
-		<br />
-		<%= image_tag "bloggity/tag.gif" -%> <%= safe_join(blog_post.tags.collect { |t| link_to(strip_tags(t.name), {:controller => 'blog_posts', :action => :index, :blog_id => blog_post.blog_id}.merge(:tag_name => t.name)) }, ", ") %>
+		<% unless heritage_enabled? %><br /><%= image_tag "bloggity/tag.gif" %><% end %> <%= safe_join(blog_post.tags.collect { |t| link_to(strip_tags(t.name), {:controller => 'blog_posts', :action => :index, :blog_id => blog_post.blog_id}.merge(:tag_name => t.name)) }, heritage_enabled? ? " " : ", ") %>
 	<% end %>
+	<% if heritage_enabled? %></div><% end %>
 
 	<% if blog_logged_in? && (current_user.can_blog?(@blog_id) || current_user.can_moderate_blog_comments?(@blog_id)) %>
 		<% actions = []

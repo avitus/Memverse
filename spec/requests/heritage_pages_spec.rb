@@ -112,11 +112,15 @@ RSpec.describe 'Heritage staging pages', type: :request do
     author = FactoryBot.create(:user, admin: true)
     blog = Bloggity::Blog.create!(title: 'Memverse Blog', url_identifier: 'main')
     category = Bloggity::BlogCategory.create!(name: 'Memorization', blog: blog)
-    post = Bloggity::BlogPost.create!(blog: blog, posted_by: author, title: 'Scripture practice', body: 'A lasting treasure.', category: category, is_complete: true)
+    post = Bloggity::BlogPost.create!(blog: blog, posted_by: author, title: 'Scripture practice', body: 'A&nbsp;lasting treasure. &lt;img src=x onerror=alert(1)&gt;', category: category, is_complete: true)
     allow(Bloggity::BlogPost).to receive(:search).and_return([post])
     get '/blog/blog_search', params: {search_param: 'Scripture'}
     expect(response).to have_http_status(:ok)
     expect(response.body).to include('Browse and search.', 'Scripture practice', 'heritage-blog-search')
+    search_document = Nokogiri::HTML(response.body)
+    expect(search_document.at_css('.one_blog p').text).to include("A\u00a0lasting treasure.")
+    expect(search_document.css('.one_blog img')).to be_empty
+    expect(search_document.at_css('.heritage-article-taxonomy').text).to include('Memorization')
     get "/blog/#{blog.id}", params: {category_id: category.id}
     expect(Nokogiri::HTML(response.body).at_css('h1').text).to eq('Memorization')
     category_link = Nokogiri::HTML(response.body).css('#side_nav_container a').find { |link| link.text == category.name }

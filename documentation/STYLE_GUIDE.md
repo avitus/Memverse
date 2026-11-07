@@ -92,6 +92,8 @@ available below the Today panels.
 Today panels and shared accents, with matching dark tokens. Primary actions retain copper fills
 and accessible foregrounds. Blog search overrides the engine's legacy table with article results;
 category, tag, and archive views share the journal layout and preserve their server filters.
+Journal categories and tags use copper labels instead of the old image icons. Excerpts decode
+HTML entities as plain text and remain escaped; journal search actions use the copper fill.
 The dashboard includes its review entry and collection distribution; Add verses includes the
 copper guidance panel and suggested passages wired to the existing live search without adding
 anything until the user chooses an Add action.

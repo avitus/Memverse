@@ -21,7 +21,7 @@
 	<%= flash[:error] %>
 	<%= flash[:message] %>
 
-	<% cache(["Blog-canvas-v2", heritage_enabled?, blog_logged_in? && current_user.can_blog?(@blog_id), params[:tag_name], params[:category_id], params[:page] ], :expires_in => 5.minutes) do %>
+	<% cache(["Blog-canvas-v3", heritage_enabled?, blog_logged_in? && current_user.can_blog?(@blog_id), params[:tag_name], params[:category_id], params[:page] ], :expires_in => 5.minutes) do %>
 
 		<!-- Create new post -->
 		<% if blog_logged_in? && current_user.can_blog?(@blog_id) %>
