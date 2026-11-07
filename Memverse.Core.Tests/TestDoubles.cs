@@ -28,18 +28,14 @@ sealed class MemoryDatabase(MemoryDatabaseStore? store = null) : IDatabase
         return Task.CompletedTask;
     }
 
-    public Task ReplaceMemversesAsync(IEnumerable<Memverse> verses)
-    {
-        store.Memverses = verses.ToList();
-        return Task.CompletedTask;
-    }
-
-    public Task ReplaceMemversesAndSaveMutationAsync(
+    public Task SaveMemversesAsync(
         IEnumerable<Memverse> verses,
-        ApiRequest request)
+        bool replaceAll = false,
+        ApiRequest? mutation = null)
     {
-        store.Memverses = verses.ToList();
-        return SaveMutationAsync(request);
+        store.Memverses = replaceAll ? verses.ToList() : store.Memverses.Concat(verses)
+            .GroupBy(verse => verse.Id).Select(group => group.Last()).ToList();
+        return mutation is null ? Task.CompletedTask : SaveMutationAsync(mutation);
     }
 
     public Task SaveUserAndMutationAsync(User user, ApiRequest request)

@@ -4,22 +4,37 @@
 @inject MemverseState State
 @inject IOfflineOperations Offline
 @inject IOnlineOperations Online
+@inject NavigationManager Navigation
+@inject IJSRuntime JS
 <PageTitle>Review - Memverse</PageTitle>
-@if (model.CurrentVerse is null)
-{
-    <div class="card empty"><h2>All caught up</h2><p>There are no passages due for review.</p></div>
-}
-else
+@if (currentReview is { } model)
 {
     <article class="review-card card">
         <div class="review-heading">
-            <p class="eyebrow">@model.CurrentVerse.Reference · @model.CurrentVerse.Translation</p>
+            <p class="eyebrow">@model.PassageReference · @model.CurrentVerse.Translation</p>
+            <small>Verse @(model.VerseIndex + 1) of @model.CurrentSection.Count</small>
         </div>
 
-        @if (model.PreviousVerse is { } previousVerse)
+        @if (model.VerseIndex > 0)
         {
-            <div class="review-context">
-                <p><sup>@previousVerse.VerseNumber</sup> @previousVerse.Text</p>
+            <div @ref="reviewHistory" class="review-context" role="region" aria-label="Verses reviewed today" tabindex="0">
+                @foreach (var verse in model.CurrentSection.Take(model.VerseIndex))
+                {
+                    <p @key="verse.Id">
+                        <sup>@verse.VerseNumber</sup> @verse.Text
+                        <span class="review-verse-ratings" role="group" aria-label="@($"{verse.Reference} rating")">
+                            @for (var rating = 1; rating <= 5; rating++)
+                            {
+                                var value = rating;
+                                <button type="button" class="review-rating-chip"
+                                        aria-pressed="@(model.GetRating(verse) == value ? "true" : "false")"
+                                        aria-label="@($"Rate {verse.Reference}: {value}")"
+                                        disabled="@savingRatings"
+                                        @onclick="() => model.ToggleRating(verse, value)">@value</button>
+                            }
+                        </span>
+                    </p>
+                }
             </div>
         }
 
@@ -40,13 +55,14 @@ else
         </div>
 
         <textarea id="verse-entry"
+                  @key="model.CurrentVerse.Id"
                   @ref="verseEntry"
                   class="form-control review-input @(model.IsCorrect ? "review-input-correct" : "")"
                   rows="3"
                   value="@model.InputText"
                   @oninput="UpdateInput"
                   @onkeydown="HandleKeyDown"
-                  disabled="@model.Submitting"
+                  disabled="@savingRatings"
                   aria-label="Type @model.CurrentVerse.Reference"
                   autocomplete="off"
                   autocapitalize="off"
@@ -60,83 +76,103 @@ else
         <div class="review-actions">
             @if (model.IsCorrect)
             {
-                <p class="review-feedback success">Correct. Rate this verse to continue.</p>
+                <p class="review-feedback success">Correct. Choose a rating below.</p>
             }
             else
             {
-                <button class="btn btn-primary" title="Hint (Ctrl+Space)" @onclick="UseHint" disabled="@model.Submitting">
+                <button class="btn btn-primary" title="Hint (Ctrl+Space)" @onclick="UseHint" disabled="@savingRatings">
                     Hint
                 </button>
             }
         </div>
         <div class="rating-panel">
             <div class="rating-actions">
-                <button class="rating rating-fail" @onclick="() => Rate(1)" disabled="@model.Submitting"><strong>1</strong><span>don't know</span></button>
-                <button class="rating rating-fail" @onclick="() => Rate(2)" disabled="@model.Submitting"><strong>2</strong><span>needed hint</span></button>
-                <button class="rating" @onclick="() => Rate(3)" disabled="@(!model.IsCorrect || model.Submitting)"><strong>3</strong><span>difficult</span></button>
-                <button class="rating" @onclick="() => Rate(4)" disabled="@(!model.IsCorrect || model.Submitting)"><strong>4</strong><span>hesitated</span></button>
-                <button class="rating" @onclick="() => Rate(5)" disabled="@(!model.IsCorrect || model.Submitting)"><strong>5</strong><span>perfect</span></button>
+                <button class="rating rating-fail" @onclick="() => Rate(1)" disabled="@savingRatings"><strong>1</strong><span>don't know</span></button>
+                <button class="rating rating-fail" @onclick="() => Rate(2)" disabled="@savingRatings"><strong>2</strong><span>needed hint</span></button>
+                <button class="rating" @onclick="() => Rate(3)" disabled="@(savingRatings || !model.IsCorrect)"><strong>3</strong><span>difficult</span></button>
+                <button class="rating" @onclick="() => Rate(4)" disabled="@(savingRatings || !model.IsCorrect)"><strong>4</strong><span>hesitated</span></button>
+                <button class="rating" @onclick="() => Rate(5)" disabled="@(savingRatings || !model.IsCorrect)"><strong>5</strong><span>perfect</span></button>
             </div>
         </div>
     </article>
+}
+else
+{
+    <div class="card empty"><h2>All caught up</h2><p>There are no passages due for review.</p></div>
 }
 
 @code {
     [Parameter] public long? PassageId { get; set; }
 
-    private ReviewVersesViewModel model = new();
+    private ReviewVersesViewModel? currentReview;
     private ElementReference verseEntry;
+    private ElementReference reviewHistory;
+    private Memverse? lastScrolledVerse;
     private bool focusEntryAfterRender;
     private bool initialized;
     private long? initializedPassageId;
+    private bool savingRatings;
 
     protected override void OnParametersSet()
     {
         if (initialized && initializedPassageId == PassageId)
             return;
 
-        if (initialized)
-        {
-            model = new ReviewVersesViewModel();
-            focusEntryAfterRender = false;
-        }
+        focusEntryAfterRender = false;
+        lastScrolledVerse = null;
         initialized = true;
         initializedPassageId = PassageId;
-        model.Initialize(
+        currentReview = ReviewVersesViewModel.Create(
             State.Verses,
             State.User?.TargetVersesPerDay ?? 15,
             DateTime.Today,
+            verses => State.SaveVersesAsync(verses),
             PassageId);
+        if (currentReview is null)
+            Navigation.NavigateTo("", replace: true);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (focusEntryAfterRender && model.CurrentVerse is not null)
+        if (currentReview is not null &&
+            (focusEntryAfterRender ||
+             currentReview.VerseIndex > 0 && currentReview.CurrentVerse != lastScrolledVerse))
         {
             focusEntryAfterRender = false;
             await verseEntry.FocusAsync();
         }
+
+        if (currentReview is { } review &&
+            review.VerseIndex > 0 && review.CurrentVerse != lastScrolledVerse)
+        {
+            lastScrolledVerse = review.CurrentVerse;
+            await using var module = await JS.InvokeAsync<IJSObjectReference>("import", "./Pages/Review.razor.js");
+            await module.InvokeVoidAsync("scrollToBottom", reviewHistory);
+        }
     }
 
-    private void UpdateInput(ChangeEventArgs args) =>
-        model.UpdateInput(args.Value?.ToString() ?? "");
+    private Task UpdateInput(ChangeEventArgs args) =>
+        currentReview!.UpdateInputAsync(args.Value?.ToString() ?? "");
 
-    private async Task UseHint()
+    private Task UseHint()
     {
-        model.UseHint();
-        await verseEntry.FocusAsync();
+        focusEntryAfterRender = true;
+        return currentReview!.UseHintAsync();
     }
 
     private async Task HandleKeyDown(KeyboardEventArgs args)
     {
+        if (savingRatings)
+            return;
+
         if (args.CtrlKey && args.Code == "Space" &&
-            !model.IsCorrect && !model.Submitting)
+            !currentReview!.IsCorrect)
         {
             await UseHint();
             return;
         }
 
-        if (model.IsCorrect && !model.Submitting &&
+        if (currentReview!.IsCorrect &&
             args.Key.Length == 1 &&
             args.Key[0] is >= '1' and <= '5')
             await Rate(args.Key[0] - '0');
@@ -144,20 +180,24 @@ else
 
     private async Task Rate(int rating)
     {
-        var review = model;
-        if (!review.BeginRating(rating))
+        var review = currentReview!;
+        if (savingRatings || rating >= 3 && !review.IsCorrect)
             return;
 
+        savingRatings = true;
         try
         {
-            await Offline.RateMemverseAsync(review.CurrentVerse!, rating);
-            review.CompleteRating();
-            if (ReferenceEquals(model, review))
-                focusEntryAfterRender = review.CurrentVerse is not null;
+            var hasMoreReview = await review.RateAsync(rating, Offline);
+            if (ReferenceEquals(currentReview, review))
+            {
+                focusEntryAfterRender = hasMoreReview;
+                if (!hasMoreReview)
+                    currentReview = null;
+            }
         }
         finally
         {
-            review.CancelRating();
+            savingRatings = false;
         }
     }
 

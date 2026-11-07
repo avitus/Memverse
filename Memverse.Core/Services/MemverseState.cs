@@ -56,19 +56,16 @@ sealed class MemverseState(IDatabase database)
         Mutations = [];
     }
 
-    public async Task SaveVersesAsync(IEnumerable<MemverseRecord> verses)
-    {
-        Verses = verses.ToList();
-        await database.ReplaceMemversesAsync(Verses);
-    }
-
-    public async Task SaveVersesAndEnqueueMutationAsync(
+    public async Task SaveVersesAsync(
         IEnumerable<MemverseRecord> verses,
-        ApiRequest request)
+        bool replaceAll = false,
+        ApiRequest? mutation = null)
     {
-        Verses = verses.ToList();
-        await database.ReplaceMemversesAndSaveMutationAsync(Verses, request);
-        AddMutation(request);
+        if (replaceAll)
+            Verses = verses.ToList();
+        await database.SaveMemversesAsync(replaceAll ? Verses : verses, replaceAll, mutation);
+        if (mutation is not null)
+            AddMutation(mutation);
     }
 
     public async Task SaveUserAndEnqueueMutationAsync(ApiRequest request)

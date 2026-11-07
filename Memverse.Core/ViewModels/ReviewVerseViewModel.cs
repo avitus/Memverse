@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using MemverseApp.Core.Data;
 
 namespace MemverseApp.Core.ViewModels;
 
@@ -197,107 +198,158 @@ sealed class Feedback
 
 sealed class ReviewVersesViewModel
 {
-    private readonly List<IReadOnlyList<MemverseApp.Core.Data.Memverse>> sections = [];
-    private MemverseApp.Core.Data.MemverseCollection allVerses = new();
+    private readonly List<IReadOnlyList<Memverse>> sections;
+    private readonly MemverseCollection allVerses;
+    private readonly DateTime today;
+    private readonly Func<IEnumerable<Memverse>, Task> saveVersesAsync;
+    private readonly Dictionary<long, int> ratings = [];
 
-    public IReadOnlyList<IReadOnlyList<MemverseApp.Core.Data.Memverse>> Sections => sections;
-    public IReadOnlyList<MemverseApp.Core.Data.Memverse>? CurrentSection { get; private set; }
-    public MemverseApp.Core.Data.Memverse? CurrentVerse { get; private set; }
+    private ReviewVersesViewModel(
+        List<Memverse> verses,
+        List<IReadOnlyList<Memverse>> sections,
+        DateTime today,
+        Func<IEnumerable<Memverse>, Task> saveVersesAsync)
+    {
+        allVerses = new MemverseCollection(verses);
+        this.sections = sections;
+        this.today = today.Date;
+        this.saveVersesAsync = saveVersesAsync;
+        SelectVerse(0);
+    }
+
+    public IReadOnlyList<IReadOnlyList<Memverse>> Sections => sections;
+    public IReadOnlyList<Memverse> CurrentSection => sections[SectionIndex];
+    public Memverse CurrentVerse => CurrentSection[VerseIndex];
     public int SectionIndex { get; private set; }
     public int VerseIndex { get; private set; }
     public string InputText { get; private set; } = "";
     public bool IsCorrect { get; private set; }
     public bool ShowAnswer { get; private set; }
-    public bool Submitting { get; private set; }
     public int HintLevel { get; private set; }
+    private bool IsLastVerse => VerseIndex == CurrentSection.Count - 1;
+    private bool AllVersesRated => ratings.Count == CurrentSection.Count;
+    private IReadOnlyList<Memverse> RatingTargets
+    {
+        get
+        {
+            if (IsLastVerse && !AllVersesRated && ratings.ContainsKey(CurrentVerse.Id))
+                return CurrentSection.Where(verse => !ratings.ContainsKey(verse.Id)).ToArray();
+            var previous = VerseIndex > 0 ? CurrentSection[VerseIndex - 1] : null;
+            if (string.IsNullOrWhiteSpace(InputText) && previous is not null &&
+                !ratings.ContainsKey(previous.Id))
+                return [previous];
+            return IsLastVerse && ratings.Count == 0 ? CurrentSection : [CurrentVerse];
+        }
+    }
+    public string PassageReference =>
+        CurrentSection[0].Reference + (CurrentSection.Count > 1 ? $"-{CurrentSection[^1].VerseNumber}" : "");
     public IReadOnlyList<Word> FeedbackWords =>
-        Feedback.ClassifyText(InputText, CurrentVerse?.Text ?? "", revealAnswer: false).Words;
+        Feedback.ClassifyText(InputText, CurrentVerse.Text!, revealAnswer: false).Words;
 
-    public MemverseApp.Core.Data.Memverse? PreviousVerse =>
-        CurrentVerse is null ? null : allVerses.GetPreviousVerse(CurrentVerse);
+    public Memverse? PreviousVerse => allVerses.GetPreviousVerse(CurrentVerse);
 
-    public void Initialize(
-        IEnumerable<MemverseApp.Core.Data.Memverse> verses,
+    public static ReviewVersesViewModel? Create(
+        IEnumerable<Memverse> verses,
         int targetVersesPerDay,
         DateTime today,
+        Func<IEnumerable<Memverse>, Task> saveVersesAsync,
         long? startingPassageId = null)
     {
         var source = verses.ToList();
-        allVerses = new MemverseApp.Core.Data.MemverseCollection(source);
-        sections.Clear();
-        sections.AddRange(MemverseApp.Core.Data.PassageLogic.SelectReviewSections(
+        var sections = PassageLogic.SelectReviewSections(
             source, targetVersesPerDay, today, startingPassageId)
-            .Select(passage => passage.Verses));
-        SectionIndex = 0;
-        VerseIndex = 0;
-        SelectCurrentVerse();
+            .Select(passage => (IReadOnlyList<Memverse>)passage.Verses).ToList();
+        return sections.Count == 0 ? null : new ReviewVersesViewModel(source, sections, today, saveVersesAsync);
     }
 
-    public void UpdateInput(string value)
+    public Task UpdateInputAsync(string value)
     {
         if (HintLevel < 3)
             HintLevel = 0;
         InputText = value;
-        IsCorrect = Feedback.ClassifyText(
-            InputText, CurrentVerse?.Text ?? "", revealAnswer: false).Correct;
-        if (IsCorrect)
-            ShowAnswer = false;
+        return UpdateFeedbackAsync();
     }
 
-    public void UseHint()
+    public Task UseHintAsync()
     {
-        if (CurrentVerse is null || IsCorrect)
-            return;
+        if (IsCorrect)
+            return Task.CompletedTask;
 
         HintLevel++;
         if (HintLevel >= 3)
         {
             ShowAnswer = true;
-            return;
+            return Task.CompletedTask;
         }
 
         InputText = Feedback.FixNextWord(InputText, CurrentVerse.Text!);
-        IsCorrect = Feedback.ClassifyText(
-            InputText, CurrentVerse.Text!, revealAnswer: false).Correct;
+        return UpdateFeedbackAsync();
     }
 
-    public bool BeginRating(int rating)
+    private Task UpdateFeedbackAsync()
     {
-        if (Submitting || CurrentVerse is null || rating >= 3 && !IsCorrect)
+        IsCorrect = Feedback.ClassifyText(
+            InputText, CurrentVerse.Text!, revealAnswer: false).Correct;
+        if (IsCorrect)
+        {
+            var verse = CurrentVerse;
+            var saveProgress = verse.LastTest != today;
+            verse.LastTest = today;
+            ShowAnswer = false;
+            if (!IsLastVerse)
+                SelectVerse(VerseIndex + 1);
+            if (saveProgress)
+                return saveVersesAsync([verse]);
+        }
+        return Task.CompletedTask;
+    }
+
+    public int? GetRating(Memverse verse) =>
+        ratings.TryGetValue(verse.Id, out var rating) ? rating : null;
+
+    public void ToggleRating(Memverse verse, int rating)
+    {
+        if (GetRating(verse) == rating)
+            ratings.Remove(verse.Id);
+        else
+            ratings[verse.Id] = rating;
+    }
+
+    public async Task<bool> RateAsync(int rating, IOfflineOperations offline)
+    {
+        var targets = RatingTargets;
+        foreach (var verse in targets)
+        {
+            ratings[verse.Id] = rating;
+            verse.LastTest = today;
+            if (!IsLastVerse && verse.Id == CurrentVerse.Id)
+                SelectVerse(VerseIndex + 1);
+        }
+
+        await saveVersesAsync(targets);
+        if (!AllVersesRated)
+            return true;
+
+        foreach (var verse in CurrentSection)
+            await offline.RateMemverseAsync(verse, ratings[verse.Id]);
+
+        if (SectionIndex == sections.Count - 1)
             return false;
 
-        Submitting = true;
+        SectionIndex++;
+        ratings.Clear();
+        SelectVerse(0);
         return true;
     }
 
-    public void CompleteRating()
+    private void SelectVerse(int verseIndex)
     {
-        VerseIndex++;
-        if (CurrentSection is not null && VerseIndex >= CurrentSection.Count)
-        {
-            SectionIndex++;
-            VerseIndex = 0;
-        }
+        VerseIndex = verseIndex;
+        while (!IsLastVerse && CurrentVerse.LastTest?.Date == today)
+            VerseIndex++;
 
-        SelectCurrentVerse();
-        Submitting = false;
-    }
-
-    public void CancelRating() => Submitting = false;
-
-    private void SelectCurrentVerse()
-    {
-        if (SectionIndex >= sections.Count)
-        {
-            CurrentSection = null;
-            CurrentVerse = null;
-            return;
-        }
-
-        CurrentSection = sections[SectionIndex];
-        CurrentVerse = CurrentSection[VerseIndex];
-        InputText = "";
         IsCorrect = false;
+        InputText = "";
         ShowAnswer = false;
         HintLevel = 0;
     }

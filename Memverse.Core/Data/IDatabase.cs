@@ -37,10 +37,10 @@ interface IDatabase
     Task<DatabaseSnapshot> LoadAsync();
     Task SaveUserAsync(User user);
     Task SaveTokensAsync(OAuthTokens tokens);
-    Task ReplaceMemversesAsync(IEnumerable<Memverse> verses);
-    Task ReplaceMemversesAndSaveMutationAsync(
+    Task SaveMemversesAsync(
         IEnumerable<Memverse> verses,
-        ApiRequest request);
+        bool replaceAll = false,
+        ApiRequest? mutation = null);
     Task SaveUserAndMutationAsync(User user, ApiRequest request);
     Task SaveMutationAsync(ApiRequest request);
     Task DeleteMutationAsync(int id);
@@ -63,7 +63,7 @@ sealed class OfflineClient(MemverseState state) : IOfflineOperations
     public async Task DeleteMemverseAsync(Memverse verse)
     {
         state.Verses.RemoveAll(candidate => candidate.Id == verse.Id);
-        await state.SaveVersesAndEnqueueMutationAsync(state.Verses, new ApiRequest
+        await state.SaveVersesAsync(state.Verses, replaceAll: true, mutation: new ApiRequest
         {
             Kind = ApiRequestKind.DeleteMemverse,
             Json = System.Text.Json.JsonSerializer.Serialize(new { verse.Id })
@@ -73,7 +73,7 @@ sealed class OfflineClient(MemverseState state) : IOfflineOperations
     public async Task RateMemverseAsync(Memverse verse, int rating)
     {
         RatingClient.RateVerse(verse, rating);
-        await state.SaveVersesAndEnqueueMutationAsync(state.Verses, new ApiRequest
+        await state.SaveVersesAsync([verse], mutation: new ApiRequest
         {
             Kind = ApiRequestKind.RateMemverse,
             Json = System.Text.Json.JsonSerializer.Serialize(new { verse.Id, Rating = rating })
@@ -83,7 +83,7 @@ sealed class OfflineClient(MemverseState state) : IOfflineOperations
     public async Task ToggleStatusAsync(Memverse verse)
     {
         verse.ToggleStatus();
-        await state.SaveVersesAsync(state.Verses);
+        await state.SaveVersesAsync([verse]);
     }
 
     public async Task UpdateUserAsync(User user)

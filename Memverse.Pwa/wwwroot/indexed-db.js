@@ -43,7 +43,7 @@ function requestResult(request) {
 function transactionComplete(transaction) {
     return new Promise((resolve, reject) => {
         transaction.oncomplete = () => resolve();
-        transaction.onerror = () => reject(transaction.error);
+        transaction.onerror = event => reject(transaction.error ?? event.target.error);
         transaction.onabort = () =>
             reject(transaction.error ?? new Error("The IndexedDB transaction was aborted."));
     });
@@ -127,39 +127,31 @@ globalThis.memverseDb = {
         }
     },
 
-    async replaceAllAndAddMutation(storeName, values, value) {
+    async save(storeName, values, replaceAll = false, mutation = null) {
         const database = await openDatabase();
         try {
             const transaction = database.transaction(
-                [storeName, "mutations"], "readwrite");
+                mutation ? [storeName, "mutations"] : [storeName], "readwrite");
             const completion = transactionComplete(transaction);
             const store = transaction.objectStore(storeName);
-            store.clear();
+            if (replaceAll) {
+                store.clear();
+            }
             for (const item of values) {
                 store.put(item);
             }
-            const mutation = { ...value };
-            delete mutation.id;
-            const id = await requestResult(
-                transaction.objectStore("mutations").add(mutation));
-            await completion;
-            registerMutationSync();
-            return id;
-        } finally {
-            database.close();
-        }
-    },
-
-    async replaceAll(storeName, values) {
-        const database = await openDatabase();
-        try {
-            const transaction = database.transaction(storeName, "readwrite");
-            const store = transaction.objectStore(storeName);
-            store.clear();
-            for (const value of values) {
-                store.put(value);
+            let id = 0;
+            if (mutation) {
+                const queuedMutation = { ...mutation };
+                delete queuedMutation.id;
+                const request = transaction.objectStore("mutations").add(queuedMutation);
+                request.onsuccess = () => { id = request.result; };
             }
-            await transactionComplete(transaction);
+            await completion;
+            if (mutation) {
+                registerMutationSync();
+            }
+            return id;
         } finally {
             database.close();
         }

@@ -214,18 +214,17 @@ static class PassageLogic
 
         foreach (var section in candidates)
         {
-            while (section.Verses.Count > 0 &&
-                section.Verses[0].LastTest?.Date == today.Date)
-                section.Verses.RemoveAt(0);
+            var remaining = section.Verses.Count -
+                section.Verses.TakeWhile(verse => verse.LastTest?.Date == today.Date).Count();
 
-            if (section.Verses.Count == 0)
+            if (remaining == 0)
                 continue;
 
-            if (selected.Count > 0 && count + section.Verses.Count > limit)
+            if (selected.Count > 0 && count + remaining > limit)
                 break;
 
             selected.Add(section);
-            count += section.Verses.Count;
+            count += remaining;
         }
 
         return selected;

@@ -42,7 +42,7 @@ sealed class BrowserDatabase(IJSRuntime js) : IDatabase
     }
 
     public Task SaveUserAsync(User user) =>
-        ReplaceAllAsync(UsersStore, new[] { user });
+        SaveAsync(UsersStore, new[] { user }, replaceAll: true);
 
     public Task SaveTokensAsync(OAuthTokens tokens) =>
         js.InvokeVoidAsync(
@@ -54,24 +54,14 @@ sealed class BrowserDatabase(IJSRuntime js) : IDatabase
                 new DatabaseSetting(RefreshTokenKey, tokens.RefreshToken)
             }).AsTask();
 
-    public Task ReplaceMemversesAsync(IEnumerable<MemverseRecord> verses) =>
-        ReplaceAllAsync(MemversesStore, verses);
-
-    public async Task ReplaceMemversesAndSaveMutationAsync(
+    public Task SaveMemversesAsync(
         IEnumerable<MemverseRecord> verses,
-        ApiRequest request) =>
-        request.Id = await js.InvokeAsync<int>(
-            "memverseDb.replaceAllAndAddMutation",
-            MemversesStore,
-            verses,
-            request);
+        bool replaceAll = false,
+        ApiRequest? mutation = null) =>
+        SaveAsync(MemversesStore, verses, replaceAll, mutation);
 
-    public async Task SaveUserAndMutationAsync(User user, ApiRequest request) =>
-        request.Id = await js.InvokeAsync<int>(
-            "memverseDb.replaceAllAndAddMutation",
-            UsersStore,
-            new[] { user },
-            request);
+    public Task SaveUserAndMutationAsync(User user, ApiRequest request) =>
+        SaveAsync(UsersStore, new[] { user }, replaceAll: true, mutation: request);
 
     public async Task SaveMutationAsync(ApiRequest request)
     {
@@ -99,8 +89,16 @@ sealed class BrowserDatabase(IJSRuntime js) : IDatabase
     private Task PutAsync<T>(string store, T value) =>
         js.InvokeVoidAsync("memverseDb.put", store, value).AsTask();
 
-    private Task ReplaceAllAsync<T>(string store, IEnumerable<T> values) =>
-        js.InvokeVoidAsync("memverseDb.replaceAll", store, values).AsTask();
+    private async Task SaveAsync<T>(
+        string store,
+        IEnumerable<T> values,
+        bool replaceAll = false,
+        ApiRequest? mutation = null)
+    {
+        var mutationId = await js.InvokeAsync<int>("memverseDb.save", store, values, replaceAll, mutation);
+        if (mutation is not null)
+            mutation.Id = mutationId;
+    }
 
     private Task DeleteAsync(string store, object key) =>
         js.InvokeVoidAsync("memverseDb.delete", store, key).AsTask();

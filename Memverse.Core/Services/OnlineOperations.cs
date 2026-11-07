@@ -23,7 +23,7 @@ sealed class OnlineOperations(
         var profile = await client.GetIdentityAsync();
         var verses = await client.GetMemversesAsync();
         await state.SignInAsync(tokens, profile);
-        await state.SaveVersesAsync(verses);
+        await state.SaveVersesAsync(verses, replaceAll: true);
     }
 
     public Task FlushBackgroundTasksAsync() => synchronizer.SyncAsync();
@@ -32,7 +32,7 @@ sealed class OnlineOperations(
     {
         var added = await client.AddMemverseAsync(verse);
         state.Verses.Add(added);
-        await state.SaveVersesAsync(state.Verses);
+        await state.SaveVersesAsync([added]);
         return added;
     }
 
