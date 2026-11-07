@@ -1,59 +1,41 @@
-set :rails_env, "production" 
-
-# server-based syntax
-# ======================
-# Defines a single server with a list of roles and multiple properties.
-# You can define all roles on a single server, or split them:
-
-server 'staging.memverse.com', user: 'avitus', roles: %w{app db web}
-# server 'memverse.com', user: 'avitus', roles: %w{app db web}, my_property: :my_value
-# server 'example.com', user: 'deploy', roles: %w{app web}, other_property: :other_value
-# server 'db.example.com', user: 'deploy', roles: %w{db}
-
-# role-based syntax
-# ==================
-
-# Defines a role with one or multiple servers. The primary server in each
-# group is considered to be the first unless any  hosts have the primary
-# property set. Specify the username and a domain or IP for the server.
-# Don't use `:all`, it's a meta role.
-
-# role :app, %w{deploy@example.com}, my_property: :my_value
-# role :web, %w{user1@primary.com user2@additional.com}, other_property: :other_value
-# role :db,  %w{deploy@example.com}
-
-# Configuration
-# =============
-# You can set any configuration variable like in config/deploy.rb
-# These variables are then only loaded and set in this stage.
-# For available Capistrano configuration variables see the documentation page.
-# http://capistranorb.com/documentation/getting-started/configuration/
-# Feel free to add new variables to customise your setup.
-
-# Custom SSH Options
-# ==================
-# You may pass any option but keep in mind that net/ssh understands a
-# limited set of options, consult the Net::SSH documentation.
-# http://net-ssh.github.io/net-ssh/classes/Net/SSH.html#method-c-start
-#
-# Global options
-# --------------
+# Temporary redesign app on martial-eagle, sharing only production data/uploads.
+set :staging_preview, true
+set :rails_env, 'staging'
+set :branch, 'staging'
+set :deploy_to, '/home/avitus/staging.memverse.com'
+set :rvm_ruby_version, '3.2.6'
+set :rvm_type, :user
+set :rvm_custom_path, '/home/avitus/.rvm'
+set :keep_releases, 3
+set :linked_dirs, %w[log tmp/pids tmp/cache tmp/sockets public/assets public/ckeditor_assets public/uploads storage]
+set :default_env, {
+  path: '/home/avitus/.nvm/versions/node/v24.21.0/bin:$PATH',
+  NODE_ENV: 'production',
+  REDIS_URL: 'redis://127.0.0.1:6381/0',
+  NEW_RELIC_AGENT_ENABLED: 'false'
+}
+server '64.23.176.115', user: 'avitus', roles: %w[app web]
 set :ssh_options, {
-	keys: [File.join(ENV["HOME"], ".ssh", "id_rsa")],
-	forward_agent: true,
-	auth_methods: %w(password)
+  keys: [File.join(ENV.fetch('HOME'), '.ssh', 'id_ed25519')],
+  forward_agent: true,
+  auth_methods: %w[publickey]
 }
 
+# Never migrate the shared database, even if deploy:migrate is invoked directly.
+Rake::Task['deploy:migrate'].clear
+namespace :deploy do
+  task :migrate do
+    puts 'Staging uses the live schema; migrations are disabled.'
+  end
 
-# The server-based syntax can be used to override options:
-# ------------------------------------
-# server 'example.com',
-#   user: 'user_name',
-#   roles: %w{web app},
-#   ssh_options: {
-#     user: 'user_name', # overrides user setting above
-#     keys: %w(/home/user_name/.ssh/id_rsa),
-#     forward_agent: false,
-#     auth_methods: %w(publickey password)
-#     # password: 'please use keys'
-#   }
+  task :restart do
+    on roles(:app) do
+      execute :touch, release_path.join('tmp/restart.txt')
+    end
+  end
+end
+
+# Legacy upgrade hooks mutate the shared Ruby installation and rebuild gems unnecessarily.
+%w[bundler:setup_environment bundler:fix_git_gems bundler:configure_platform bundler:fix_nokogiri].each do |name|
+  Rake::Task[name].clear
+end

@@ -1,3 +1,6 @@
+<% if heritage_enabled? %>
+<%= render "devise/shared/heritage", mode: "registrations/new" %>
+<% else %>
 <% page_title  I18n.t :signup, :scope => 'page_titles' %>
 
 <div class="white-box-with-margins">
@@ -118,8 +121,8 @@
 						emailtaken = false;
 					} else {
 						$("div.email div.sidetip p").hide(); // Hide other messages
-				  		$("div.email div.sidetip p.taken").show();
-				  		emailtaken = email;
+						$("div.email div.sidetip p.taken").show();
+						emailtaken = email;
 					}
 				});
 			}
@@ -142,7 +145,7 @@
 
 		$("#user_password").parent().find("div.sidetip p").hide(); // Hide old message
 
-  		if( pwd.length < 6 ) {
+		if( pwd.length < 6 ) {
 			$("#user_password").parent().find("div.sidetip p.invalid").show();
 		} else if (strongRegex.test(pwd)) {
 			$("#user_password").parent().find("div.sidetip p.perfect").show();
@@ -186,3 +189,5 @@
 		return checkForm(); // call checkForm() when form submitted (no matter how)
 	});
 </script>
+
+<% end %>

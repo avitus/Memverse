@@ -1,3 +1,6 @@
+<% if heritage_enabled? %>
+<%= render "devise/shared/heritage", mode: "confirmations/new" %>
+<% else %>
 <div class="white-box-with-margins">
 <h2>Resend confirmation instructions</h2>
 
@@ -12,3 +15,5 @@
 
 <%= render :partial => "devise/shared/links" %>
 </div>
+
+<% end %>

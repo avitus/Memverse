@@ -3,7 +3,7 @@
 <div class="white-box-bg">
 
 	<!-- SEARCH ENTRY: LEFT COLUMN -->
-	<div id="add-verse-enter-ref">
+	<div id="add-verse-enter-ref" <% if heritage_enabled? %>data-owned-references="<%= current_user.memverses.includes(:verse).map { |mv| mv.verse.ref }.to_json %>"<% end %>>
 
 		<div class="top-heading">
 	    	<h3><span>Add a New Memory Verse</span></h3>
@@ -15,12 +15,13 @@
 
 		<!-- Reference entry box -->
 		<div class="verse-field ui-widget">
-			<label class="tag">Enter a reference or keyword</label>
+			<label class="tag" for="js_flex-verse-search">Enter a reference or keyword</label>
 			<%= image_tag("indicator2.gif", alt: "Searching...", style: "display: none", class: "spinner spinner-add-verse", id: "ajax_spinner") %>
 			<%= text_field_tag(:verse, params[:verse], :class => "flex-verse-search", :id => "js_flex-verse-search" )%>
 		</div>
 
-		<!-- Add entire chapter -->
+		<% if heritage_enabled? %><details class="heritage-translation"><summary><span id="heritage-current-translation"><%= @translation %></span> · Change translation</summary><label for="heritage-translation">Bible translation</label><%= select_tag 'heritage-translation', grouped_options_for_select(Translation.select_options, @translation) %></details><p id="heritage-search-message" role="status">Try John 3:16, Psalm 23, or a word you remember.</p><% end %>
+        <!-- Add entire chapter -->
 		<div class="add-chapter">
 			<%= link_to 'Add Chapter', '#', :class => "add-chapter-button", :id => "add-chapter" %>
 		</div>
@@ -80,13 +81,18 @@
 	    });
 
 		// Setup jEditable for version changing
-		$('.js_bible-version select').change(function() {
+		$('.js_bible-version select, #heritage-translation').change(function() {
 			tl = $( this ).val(); // change tl
+            $("#heritage-current-translation").text(tl);
+            $(".js_bible-version select, #heritage-translation").val(tl);
 			flexversesearch($("#js_flex-verse-search").val()); // refresh results
 		});
 
 		// Verse entry and retrieval
-		$("#js_flex-verse-search").observe_field(0.2, function( ) {
+		var composingVerseSearch = false;
+        $("#js_flex-verse-search").on('compositionstart', function() { composingVerseSearch = true; }).on('compositionend', function() { composingVerseSearch = false; flexversesearch(this.value); });
+        $("#js_flex-verse-search").observe_field(0.2, function( ) {
+            if (composingVerseSearch) return;
 			flexversesearch(this.value);
 		});
 
@@ -104,11 +110,14 @@
 		});
 
 		// User adds entire passage
-		$('.add-chapter').on("click", ".add-chapter-button", function() {
+		$('.add-chapter').on("click", ".add-chapter-button", function(event) {
+            event.preventDefault();
 			ref = parsePassageRef( $.trim( $("#js_flex-verse-search").val() ) );
-			$.post("/add_chapter.json", { bk: ref.bk, ch: ref.ch, tl: tl }, function(response) {
-				$(".add-chapter-button").replaceWith("<div class='verse-added'></div>");
-			});
+			if (!ref) return;
+            if (document.body.classList.contains('mv-heritage') && !confirm('Add ' + ($('#add-chapter').attr('data-remaining') || 'the remaining') + ' verses from this chapter? Verses already in your account will be skipped.')) return;
+            $.post("/add_chapter.json", { bk: ref.bk, ch: ref.ch, tl: tl }, function(response) {
+				$(".add-chapter-button").replaceWith("<div class='verse-added' role='status'>In your verses</div>");
+			}).fail(function() { $("#heritage-search-message").text("We couldn’t add this chapter. Please try again."); });
 		});
 
 		// Focus on search box

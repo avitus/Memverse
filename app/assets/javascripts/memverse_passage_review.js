@@ -44,6 +44,7 @@ var reviewState = {
 
         $(".passage-text").empty();
         $(".passage-title").empty();
+        $(".heritage-ratings").remove();
     },
 
     autoAdvancePassage: function ( ) {
@@ -124,6 +125,8 @@ function mvDisplayPassageForReview( passageRef, passageID, verses ) {
         $('.passage-text').append($new_vs);
 
     });
+
+    if (document.body.classList.contains('mv-heritage')) mvHeritagePrepareRatings();
 
     // Scroll to first verse due
     reviewState.scrollToVerse( $('.passage-text').find('.due-mv').first() );
@@ -209,6 +212,7 @@ function mvMirrorNextInput( $inputCell ) {
 }
 
 function mvPassageReviewHandleInput( $inputCell, correctWord, userGuess, e ) {
+    var heritageVerse = $inputCell.closest(".single-verse-in-passage");
 
     // Word correct ==> next word (using flexible matching)
     // Note: We already checked for match in the keyup handler, so this check is redundant
@@ -225,6 +229,10 @@ function mvPassageReviewHandleInput( $inputCell, correctWord, userGuess, e ) {
         $inputCell.before( $span );                               // insert the correct word with preserved width
         $inputCell.before( $inputCell.nextUntil("input") );       // move subsequent revealed words ahead of input
         mvMirrorNextInput( $inputCell );                          // update the input box
+        if (document.body.classList.contains("mv-heritage")) {
+            if (!heritageVerse.find("input.blank-word").length) heritageVerse.nextAll().find("input.blank-word").first().focus();
+            if (!$(".passage-text input.blank-word").length) $(".heritage-ratings").prop("hidden", false);
+        }
 
     }
 
@@ -248,4 +256,30 @@ function mvPassageReviewHandleInput( $inputCell, correctWord, userGuess, e ) {
         });
     }
 
+}
+
+// Keep scoring below the complete passage. A rating changes state only after a successful save.
+function mvHeritagePrepareRatings() {
+    var panel = $('<section class="heritage-ratings" hidden><h2>How did you recall it?</h2><p role="status" class="heritage-review-status"></p></section>');
+    $('.passage-text .due-mv').each(function () {
+        var verse = $(this), id = verse.find('.mv-id').first().text();
+        var row = $('<div class="heritage-rating-row"/>').append($('<span/>').text('Verse ' + verse.find('.versenum').text()));
+        var buttons = $('<div class="score-test-buttons"/>');
+        [1,2,3,4,5].forEach(function (quality) {
+            $('<button type="button"/>').text(quality).attr('aria-label', 'Rate verse ' + verse.find('.versenum').text() + ': ' + quality + ' of 5').on('click', function () {
+                buttons.find('button').prop('disabled', true);
+                $.getJSON('/mark_test_quick', {mv:id,q:quality}).done(function (data) {
+                    if (data.msg) panel.find('.heritage-review-status').text(data.msg);
+                    verse.removeClass('due-mv');
+                    row.empty().append($('<span/>').text('Verse ' + verse.find('.versenum').text() + ' · Rated ' + quality + '/5'));
+                    panel.find('.heritage-next-passage').prop('disabled', $('.passage-text .due-mv').length > 0);
+                }).fail(function () { buttons.find('button').prop('disabled', false); panel.find('.heritage-review-status').text('Your rating could not be saved. Please try again.'); });
+            }).appendTo(buttons);
+        });
+        row.append(buttons).appendTo(panel);
+    });
+    $('<button type="button" class="heritage-next-passage" disabled>Next passage →</button>').on('click',function(){reviewState.autoAdvancePassage();}).appendTo(panel);
+    $('.passage-entry').append(panel);
+    if (!$('.passage-text input.blank-word').length) panel.prop('hidden', false);
+    panel.find('.heritage-next-passage').prop('disabled', $('.passage-text .due-mv').length > 0);
 }

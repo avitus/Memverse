@@ -24,3 +24,8 @@ production:
 #   indices_location:   /home/avitus/memverse.com/shared/db/sphinx
 #   configuration_file: /home/avitus/memverse.com/shared/production.sphinx.conf
 #   binlog_path:        /home/avitus/memverse.com/shared/binlog
+
+# Query the live index; staging deployment never configures or restarts searchd.
+staging:
+  address: localhost
+  mysql41: 9312

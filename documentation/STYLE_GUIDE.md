@@ -12,6 +12,38 @@ This document defines the visual design standards and coding conventions for the
 7. [Accessibility](#accessibility)
 8. [Responsive Design](#responsive-design)
 
+## Heritage staging redesign
+
+The staging branch uses the Heritage 1.4 design language. `HeritageHelper#heritage_enabled?`
+enables it by default in the Rails staging environment. Set `MEMVERSE_HERITAGE=1` for local
+preview or `MEMVERSE_HERITAGE=0` to restore the legacy presentation without changing data.
+The implementation remains server-rendered Rails with progressive JavaScript; canvas preview
+forms and sample data are not deployed.
+
+`heritage.scss` scopes foundation tokens and page components under `.mv-heritage`. Use warm
+paper (#f7f4ee), white surfaces (#fffefd), navy text (#253b54), copper actions (#98512f),
+and sage success. Georgia is used for Scripture and editorial headings; Arial is used for
+controls. Native selects reserve 40px on the right and inset their chevron 14px. Interactive
+controls have at least 44px targets and visible focus. The appearance control persists only
+in the browser.
+
+Shared Rails authentication lives in `devise/shared/_heritage.html.erb`. Preserve Devise
+routes, CSRF tokens, reset tokens, confirmation and referral fields. Never substitute
+prototype success messages for server responses. Fields use visible labels, password-manager
+autocomplete, and separate Show/Hide buttons. The existing validation policy remains authoritative.
+
+Verse collection selection survives filtering, sorting and pagination; all matching is additive.
+Columns use fixed declarations, including reserved sort indicators. Compact view retains access
+to all metrics through All details. Bulk deletion confirms the full selected count. Pending means
+paused and preserves review history. The live search retains its 200ms timing and handles stale
+responses, composition, translation changes, failed lookup and confirmed addition.
+
+Progress charts use existing JSON endpoints, a 1 year/All time selector and accessible data tables.
+Review minutes are estimated daily requirements; consistency counts sessions in the preceding year.
+Passage review presents continuous Scripture and reveals ratings below the passage after typing.
+Successful rating saves unlock an explicit Next passage action. Awards retain original eligibility
+and bronze/silver/gold finishes, using SVG medallions adapted from the approved canvas.
+
 ## Color Palette
 
 ### Primary Colors

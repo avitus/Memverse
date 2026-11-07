@@ -16,9 +16,11 @@
 
     </div> <!-- end: passage-entry column -->
 
+    <% if heritage_enabled? %><details class="heritage-queue"><summary>Upcoming passages</summary><% end %>
     <div class="upcoming-passages upcoming">
         <h2>Upcoming Passages</h2>
     </div> <!-- end: upcoming-passage column -->
+    <% if heritage_enabled? %></details><% end %>
 
 </div>
 </div>

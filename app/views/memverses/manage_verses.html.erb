@@ -15,16 +15,25 @@
 		<div class="top-heading">
 			<h2><%= t(:my_memory_verses, scope: 'page_titles') %></h2>
 			<div class="mv-manage-filter">
-				<input type="text" name="filter" id="filter" class="idleField" value="Filter verses" />
+				<input type="search" name="filter" id="filter" class="idleField" placeholder="Search reference or tags" aria-label="Filter verses" />
 			</div>
 		</div>
 
 		<div class="verse-list">
 		<%= form_tag( '/handle_verse_action', :method => :post, :id => "manage_verses_form", :name => "manage_verses" ) do %>
-			<table class="memverse-standard">
+			<% if heritage_enabled? %>
+            <div class="heritage-collection-tools">
+              <label>Status <select id="heritage-status"><option value="">All verses</option><option>Memorized</option><option>Learning</option><option>Pending</option></select></label>
+              <label>View <select id="heritage-detail"><option value="compact">Compact</option><option value="all">All details</option></select></label>
+              <%= link_to 'Add verses', add_verse_path, class: 'heritage-primary' %>
+            </div>
+            <div class="heritage-selection" role="status"><span id="heritage-selection-count">0 selected</span><button type="button" id="heritage-select-matching">Select all matching</button><button type="button" id="heritage-clear-selection">Clear selection</button></div>
+            <% end %>
+            <table class="memverse-standard" <%= 'data-heritage-collection' if heritage_enabled? %>>
+                <% if heritage_enabled? %><colgroup><% [50,240,90,90,170,130,130,90,90,90,130,220,220].each do |width| %><col style="width:<%= width %>px"><% end %></colgroup><% end %>
 				<thead>
 					<tr>
-					<th><input type="checkbox" onclick="checkAllFields(1);" id="checkAll" /></th>
+					<th><input type="checkbox" onclick="if (!document.body.classList.contains('mv-heritage')) checkAllFields(1);" id="checkAll" aria-label="Select current page" /></th>
 					<th><%= link_to 'Verse',		{:action => 'manage_verses'}, 									{:title => "Click to sort by verse reference"} 	%></th>
 					<th>Version</th>
 					<th><%= link_to 'eFactor',		{:action => 'manage_verses', :sort_order => 'efactor'},			{:title => "Click to sort by eFactor"} %></th>
@@ -43,11 +52,11 @@
 				<tbody>
 					<% for mv in @my_verses %>
 					<tr>
-					<td><input class="boxes" id="mv_" name="mv[]" type="checkbox" value="<%= mv.id %>" /></td>
-					<td class="mv-col-ref"><%= link_to mv.verse.ref_long, {:action => 'show', :id => mv.id } %></td>
+					<td><input class="boxes" id="mv_<%= mv.id %>" aria-label="Select <%= mv.verse.ref_long %>" name="mv[]" type="checkbox" value="<%= mv.id %>" /></td>
+					<td class="mv-col-ref" data-sort="<%= mv.verse.book_index %>.<%= mv.verse.chapter.to_s.rjust(3, '0') %>.<%= mv.verse.versenum.to_s.rjust(3, '0') %>"><%= link_to mv.verse.ref_long, {:action => 'show', :id => mv.id } %></td>
 					<td><%= mv.verse.translation	%></td>
 					<td><%= number_with_precision( mv.efactor, :precision => 1 ) %></td>
-					<td class="mv-status"><%= link_to mv.status, toggle_mv_status_path(mv.id, format: 'json'), remote: true %></td>
+					<td class="mv-status"><%= link_to mv.status, toggle_mv_status_path(mv.id, format: 'json'), remote: true, data: { status: mv.status } %></td>
 					<td><%= mv.last_tested		%></td>
 					<td><%= mv.status == "Pending" ? "N/A" : mv.next_test %></td>
 					<td><%= mv.test_interval		%></td>
@@ -73,12 +82,13 @@
 					<% end %>
 				</tbody>
 			</table>
+            <% if heritage_enabled? %><div class="heritage-pagination"><span id="heritage-range" role="status"></span><label>Per page <select id="heritage-page-size"><option>25</option><option>50</option><option>100</option></select></label><button type="button" id="heritage-prev">Previous</button><label>Page <input type="number" id="heritage-page" min="1" value="1"></label><button type="button" id="heritage-next">Next</button></div><% end %>
 
 			<div class="mv-manage-actions">
-				<%= submit_tag t('.show_selected'), :onclick => "return checkAllFields(4);", :name => "Show" %>
-				<%= submit_tag t('.show_prompt'), :onclick => "return checkAllFields(5);", :name => "Prompt" %>
+				<%= submit_tag t('.show_selected'), :onclick => "return document.body.classList.contains('mv-heritage') || checkAllFields(4);", :name => "Show" %>
+				<%= submit_tag t('.show_prompt'), :onclick => "return document.body.classList.contains('mv-heritage') || checkAllFields(5);", :name => "Prompt" %>
 				<%= select_tag :format, options_for_select([["Screen", "html"], ["Print", "pdf"]], "html") %>
-				<%= submit_tag t('.delete_selected'), :onclick => "return checkAllFields(3);", :name => "Delete" %>
+				<%= submit_tag t('.delete_selected'), :onclick => "return document.body.classList.contains('mv-heritage') || checkAllFields(3);", :name => "Delete" %>
 			</div>
 
 		<% end %>
@@ -104,14 +114,15 @@ $(document).ready(function(){
 
 		.on('ajax:success', function (event) {
   			var data = event.detail[0]
-			$(this).html(data.mv_status);
+			$(this).text(data.mv_status).attr('data-status', data.mv_status);
+            document.dispatchEvent(new Event('heritage:collection-update'));
 		});
 
 	$("table.memverse-standard").on("click", "td input.boxes", function() {
-		checkAllFields(2);
+		if (!document.body.classList.contains('mv-heritage')) checkAllFields(2);
 	});
 
-	filtersetup();
+	if (!document.body.classList.contains('mv-heritage')) filtersetup();
 
 });
 </script>

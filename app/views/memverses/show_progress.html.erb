@@ -1,3 +1,6 @@
+<% if heritage_enabled? %>
+<%= render "memverses/heritage_progress" %>
+<% else %>
 <% page_title I18n.t :progress, :scope => 'page_titles' %>
 <% page_description I18n.t :progress, :scope => 'page_descriptions' %>
 
@@ -303,3 +306,5 @@ Highcharts.setOptions({
 <% end %>
 
 
+
+<% end %>

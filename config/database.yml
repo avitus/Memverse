@@ -45,7 +45,7 @@ test: &test
   read_timeout: <%= ENV.fetch('MYSQL_READ_TIMEOUT', 5) %>
   write_timeout: <%= ENV.fetch('MYSQL_WRITE_TIMEOUT', 5) %>
 
-production:
+production: &production
    adapter: mysql2
    database: memverse_production
    username: <%= Rails.application.credentials.dig(:database, :username) || 'memverse' %>
@@ -77,3 +77,7 @@ production:
 cucumber:
   <<: *test
   # Cucumber uses the same configuration as test
+
+# This preview intentionally reads and writes live production data.
+staging:
+  <<: *production

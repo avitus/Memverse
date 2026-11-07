@@ -1,6 +1,6 @@
 # Be sure to restart your server when you modify this file.
 
-MemverseApp::Application.config.session_store :cookie_store, key: '_Memverse_session'
+MemverseApp::Application.config.session_store :cookie_store, key: Rails.env.staging? ? '_Memverse_staging_session' : '_Memverse_session'
 
 # Use the database for sessions instead of the cookie-based default,
 # which shouldn't be used to store highly confidential information

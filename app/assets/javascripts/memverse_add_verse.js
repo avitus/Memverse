@@ -1,14 +1,39 @@
 /******************************************************************************
  * Flexible verse searching
  ******************************************************************************/
+var mvVerseSearchSequence = 0;
+var mvVerseSearchPending;
 function flexversesearch(text){
+    var ref;
+    var heritage = document.body.classList.contains('mv-heritage');
+    var sequence = ++mvVerseSearchSequence;
+    if (heritage && mvVerseSearchPending) mvVerseSearchPending.abort();
+    if (heritage && !text.trim()) {
+        clearSearchResults();
+        $('#verse-search-single-result, .verse-search-results-scroll .scrollable').hide();
+        $('#heritage-search-message').text('Try John 3:16, Psalm 23, or a word you remember.');
+        return;
+    }
+    function lookup(path, params, callback, type) {
+        if (!heritage) return $.get(path, params, callback, type);
+        $('#heritage-search-message').text('Searching…');
+        mvVerseSearchPending = $.get(path, params, function(result) {
+            if (sequence !== mvVerseSearchSequence) return;
+            callback(result);
+            $('#heritage-search-message').text(Array.isArray(result) && !result.length ? 'No verses found. Try a reference or another word.' : '');
+        }, type).fail(function(_, status) {
+            if (status !== 'abort' && sequence === mvVerseSearchSequence) $('#heritage-search-message').text('Search couldn’t be completed. Edit your search to try again.');
+        });
+        return mvVerseSearchPending;
+    }
+
 
     // Truncate queries of excessive length
     // var text = jQuery.trim(user_text).substring(0, 100).split(" ").slice(0, -1).join(" ");
 
 	// User is looking for a single verse						
 	if (ref = parseVerseRef($.trim(text))) {
-		$.get("/lookup_verse.json", { bk: ref.bk, ch: ref.ch, vs: ref.vs, tl: tl },
+		lookup("/lookup_verse.json", { bk: ref.bk, ch: ref.ch, vs: ref.vs, tl: tl },
 			function(verse) {	
 
 				// Clear search results
@@ -31,7 +56,7 @@ function flexversesearch(text){
 				
 	// User is searching for a passage
 	} else if (ref = parsePassageRef($.trim(text))) {
-		$.get("/lookup_passage.json", { bk: ref.bk, ch: ref.ch, vs_start: ref.vs_start, vs_end: ref.vs_end, tl: tl },
+		lookup("/lookup_passage.json", { bk: ref.bk, ch: ref.ch, vs_start: ref.vs_start, vs_end: ref.vs_end, tl: tl },
 			function(verses) {
 				
 				// TODO: Potentially insert missing verses with option to create a new verse
@@ -39,13 +64,16 @@ function flexversesearch(text){
 				clearSearchResults();         // clear existing search results
 				displaySearchResults(verses); // display new search results
 				if (validChapterRef($.trim(text))) {
-					checkChapter(ref, tl);
+					var owned = heritage ? JSON.parse(document.getElementById('add-verse-enter-ref').getAttribute('data-owned-references') || '[]') : [];
+                    var remaining = verses.filter(function(verse) { return owned.indexOf(verse.ref) < 0; }).length;
+                    $('#add-chapter').attr('data-remaining', remaining);
+                    checkChapter(ref, tl, sequence);
 				}
 		}, "json" );
 	
 	// User didn't enter a verse reference ... do a keyword search
 	} else {
-		$.get("/search_verse.json", { searchParams: $.trim(text + " " + tl)  },
+		lookup("/search_verse.json", { searchParams: $.trim(text + " " + tl)  },
 			function(verses) {
 			
 				clearSearchResults();         // clear existing search results
@@ -63,7 +91,7 @@ function clearSearchResults () {
 	$("#foundVerse").empty();
 	$("#add-verse-button").empty();
 	$("#versetext").val('');
-	$(".verse-added").replaceWith("<a id='add-chapter' class='add-chapter-button' href='#' style='display: inline;'>Add Chapter</a>");
+	$(".add-chapter .verse-added").replaceWith("<a id='add-chapter' class='add-chapter-button' href='#' style='display: inline;'>Add Chapter</a>");
 	$("#add-chapter").fadeOut("fast");
 };
 
@@ -116,9 +144,9 @@ function createVerseAndAdd (ref, tl, txt, $button) {
 /******************************************************************************
  * Check for chapter availability
  ******************************************************************************/
-function checkChapter(ref, tl) {
+function checkChapter(ref, tl, sequence) {
 	$.get("/chapter_available.json", {bk: ref.bk, ch: ref.ch, tl: tl}, function(response) {
-		if (response === true) {
+		if (response === true && (sequence === undefined || sequence === mvVerseSearchSequence)) {
 			$("#add-chapter").fadeIn("fast");
 		}
 	});

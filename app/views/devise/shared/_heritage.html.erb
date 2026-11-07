@@ -1,0 +1,38 @@
+<% eyebrow, title, aside, copy = heritage_auth_content %>
+<% page_title title %>
+<div class="heritage-auth-layout">
+  <aside class="heritage-auth-aside">
+    <span class="heritage-eyebrow">Memverse · Scripture by heart</span>
+    <h2><%= aside %></h2><p><%= copy %></p>
+    <blockquote>“Thy word have I hid in mine heart, that I might not sin against thee.”<cite>Psalm 119:11 · KJV</cite></blockquote>
+    <small>Free to use. A practice for life.</small>
+  </aside>
+  <section class="heritage-auth-panel" aria-labelledby="auth-title">
+    <span class="heritage-eyebrow"><%= eyebrow %></span><h1 id="auth-title"><%= title %></h1>
+    <% signup = mode == 'registrations/new'; login = mode == 'sessions/new'; reset = mode == 'passwords/edit' %>
+    <p class="heritage-muted"><%= signup ? 'A free place to learn Scripture by heart.' : login ? 'Sign in to continue your practice.' : reset ? 'Set a new password to return to your account.' : mode == 'confirmations/new' ? 'Enter your email address to receive a new confirmation link.' : 'Enter the email address you use for Memverse.' %></p>
+    <% target = signup ? registration_path(resource_name) : login ? session_path(resource_name) : mode == 'confirmations/new' ? confirmation_path(resource_name) : password_path(resource_name) %>
+    <%= form_for(resource, as: resource_name, url: target, html: { method: reset ? :put : :post, class: 'heritage-auth-form' }) do |f| %>
+      <%= render 'devise/shared/error_messages', resource: resource %>
+      <%= f.hidden_field :reset_password_token if reset %>
+      <%= f.hidden_field :referred_by, value: session[:referrer] if signup && session[:referrer] %>
+      <% if signup %><div class="heritage-field"><%= f.label :name %><%= f.text_field :name, autocomplete: 'name', required: true %><small>Your name on Memverse.</small></div><% end %>
+      <% unless reset %><div class="heritage-field"><%= f.label :email, 'Email address' %><%= f.email_field :email, autocomplete: login ? 'username' : 'email', required: true %></div><% end %>
+      <% if signup || login || reset %>
+        <div class="heritage-field"><%= f.label :password, reset ? 'New password' : 'Password' %>
+          <div class="heritage-password"><%= f.password_field :password, autocomplete: login ? 'current-password' : 'new-password', required: true, minlength: login ? nil : 6, maxlength: login ? nil : 128, 'aria-describedby': login ? nil : 'password-help' %><button type="button" data-password-toggle="user_password" aria-label="Show password" aria-pressed="false">Show</button></div>
+          <% unless login %><small id="password-help">At least 6 characters. Use a unique password.</small><% end %>
+        </div>
+      <% end %>
+      <% if signup || reset %><div class="heritage-field"><%= f.label :password_confirmation, reset ? 'Confirm new password' : 'Confirm password' %><div class="heritage-password"><%= f.password_field :password_confirmation, autocomplete: 'new-password', required: true %><button type="button" data-password-toggle="user_password_confirmation" aria-label="Show password confirmation" aria-pressed="false">Show</button></div></div><% end %>
+      <% if login %><div class="heritage-auth-options"><label><%= f.check_box :remember_me %> Remember me</label><%= link_to 'Forgot password?', new_password_path(resource_name) %></div><% end %>
+      <%= f.submit signup ? 'Create my account' : login ? 'Sign in' : reset ? 'Save new password' : mode == 'confirmations/new' ? 'Resend confirmation email' : 'Send reset instructions', class: 'heritage-primary', data: { disable_with: 'Please wait…' } %>
+      <% if signup %><p class="heritage-under">We’ll email you a link to confirm your account.</p><% end %>
+    <% end %>
+    <div class="heritage-auth-links">
+      <% if login %><p>New to Memverse? <%= link_to 'Create a free account', new_registration_path(resource_name) %></p><%= link_to 'Need a confirmation email?', new_confirmation_path(resource_name) %>
+      <% else %><%= link_to 'Back to sign in', new_session_path(resource_name) %><% end %>
+      <% if reset && resource.errors[:reset_password_token].any? %><%= link_to 'Request a new reset link', new_password_path(resource_name) %><% end %>
+    </div>
+  </section>
+</div>

@@ -1,7 +1,9 @@
 <% page_title t('.Update profile') %>
 <div class="white-box-with-margins">
 <h1><%=t('.Update profile')%></h1>
+<% if heritage_enabled? %><p><%= link_to "Account access and password", edit_user_registration_path %></p><% end %>
 
+<% if heritage_enabled? %><div class="heritage-settings-layout"><nav class="heritage-profile-nav" aria-label="Profile sections"><a href="#profile-personal">Personal information</a><a href="#profile-affiliations">Affiliations</a><a href="#profile-preferences">Practice settings</a><a href="#delete-my-account">Account</a></nav><% end %>
 <div class="entry-form" id="edit-profile-form">
 
 	<%= form_for @user, :url => { :action => "update", :id => @user.id } do |f| %>
@@ -20,7 +22,7 @@
 
 		<ul>
 
-		<div class="profile-section"><h2>Personal Information</h2>
+		<div class="profile-section" id="profile-personal"><h2>Personal Information</h2>
 			<li>
 				<%= f.label 		:name, t('.Name') %>
 				<%= f.text_field 	:name, :class => "profile-wide-text-field" %>
@@ -42,20 +44,20 @@
 			<li>
 				<%= f.label 			:language, t('.Language') %>
 				<%= f.select			:language,
-							   [["English", 	      	'English'			],
-								["Spanish",           	'Spanish' 			],
-								["French",           	'French' 			],
-								["Bahasa Indonesia",  	'Bahasa Indonesia'	],
-								["Dutch",		      	'Dutch'				],
+							   [["English", 		'English'			],
+								["Spanish",     	'Spanish' 			],
+								["French",     	'French' 			],
+								["Bahasa Indonesia",	'Bahasa Indonesia'	],
+								["Dutch",			'Dutch'				],
 								["Swedish",				'Swedish'			],
-								["Afrikaans", 	       	'Afrikaans'			],
+								["Afrikaans", 	 	'Afrikaans'			],
 								["Chinese",				'Chinese'			],
 								["Korean",				'Korean'			]].sort
 							 %>
 			</li>
 		</div>
 
-		<div class="profile-section"><h2>Affiliations</h2>
+		<div class="profile-section" id="profile-affiliations"><h2>Affiliations</h2>
 
 			<li>
 				<div class="ui-widget">
@@ -87,7 +89,7 @@
 			</li>
 		</div>
 
-		<div class="profile-section"><h2>Application Settings</h2>
+		<div class="profile-section" id="profile-preferences"><h2>Application Settings</h2>
 
 			<li>
 				<%= f.label 			:reminder_freq, t('.Reminder frequency') %>
@@ -214,7 +216,7 @@
 					<span><%= link_to (image_tag("blue-icon.png", :width=>"16", :height=>"16")), "#sync-subsections-explanation", :id => "inline" %></span>
 				<% end %>
 				<%= f.check_box 		:sync_subsections %>
-				<span class="warning">Experimental - Use with Caution!</span>
+
 			</li>
 
 			<!-- Explanation for Supsection Sync -->
@@ -286,8 +288,8 @@
 
 		<div class="clr"></div>
 
-		<div class="profile-section" id="delete-my-account"><h2>Delete Account</h2>
-			
+		<div class="profile-section" id="delete-my-account"><% if heritage_enabled? %><details><summary>Delete account</summary><% else %><h2>Delete Account</h2><% end %>
+
 			<p>Click the button below to permanently delete your account.</p>
 
 			<div class="delete-button"><!--banner-bottom start-->
@@ -295,6 +297,7 @@
 					<li><%= link_to "Delete my account", registration_path(current_user), data: { confirm: "Are you sure?" }, method: :delete %></li>
 				</ul>
 			</div><!--banner-bottom end-->
+            <% if heritage_enabled? %></details><% end %>
 
 		</div>
 
@@ -314,6 +317,7 @@
 
 </div>
 
+<% if heritage_enabled? %></div><% end %>
 </div> <!-- End: White Box with Margins -->
 
 
@@ -349,16 +353,16 @@
 			togglestate();
 		});
 
-		a = $('#user_country').focus().autocomplete({ source:'/profile/country_autocomplete', change: function(event, ui) { togglestate(); }
+		a = $('#user_country').autocomplete({ source:'/profile/country_autocomplete', change: function(event, ui) { togglestate(); }
 		});
 
-		c = $('#user_american_state').focus().autocomplete({ source:'/profile/state_autocomplete'
+		c = $('#user_american_state').autocomplete({ source:'/profile/state_autocomplete'
 		});
 
-		b = $('#user_church').focus().autocomplete({ source:'/profile/church_autocomplete'
+		b = $('#user_church').autocomplete({ source:'/profile/church_autocomplete'
 		});
 
-		d = $('#user_group').focus().autocomplete({ source:'/profile/group_autocomplete'
+		d = $('#user_group').autocomplete({ source:'/profile/group_autocomplete'
 		});
 	});
 </script>

@@ -2,6 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title><%= page_title %></title>
 
 <meta name="distribution" content="all" />
@@ -91,20 +92,22 @@
 </head>
 
 <% if user_signed_in? %>
-<body id="inner1-body" class="<%= controller_name %> <%= action_name %>" >
+<body id="inner1-body" class="<%= controller_name %> <%= action_name %> <%= 'mv-heritage' if heritage_enabled? %> <%= 'heritage-auth' if heritage_enabled? && heritage_auth_page? %>" >
 <% else %>
-<body class="<%= controller_name %> <%= action_name %>">
+<body class="<%= controller_name %> <%= action_name %> <%= 'mv-heritage' if heritage_enabled? %> <%= 'heritage-auth' if heritage_enabled? && heritage_auth_page? %>">
 <% end %>
 
 <noscript><div id="no-js"><p>Memverse requires Javascript, but you&rsquo;ve got Javascript disabled. <a href="http://www.google.com/search?btnI=1&amp;q=how+to+enable+javascript+in+my+browser">Fix that problem!</a></p></div></noscript>
+<% if heritage_enabled? %><a class="heritage-skip" href="#heritage-main">Skip to content</a><% end %>
 <div id="wrapper"><!--wrapper start-->
+<% if heritage_enabled? %><%= render 'layouts/heritage_header' %><%= flash_messages %><% else %>
 	<div id="header"><!--header start-->
 
 		<!-- General messages -->
 		<div class="mvMessageBox"></div>
 
 		<div class="header-top"><!--header-top start-->
-			<div id="logo"><a href="/" title="<%= I18n.t :mainpage, :scope => 'page_titles' %> - Memverse"><%= image_tag("logo.png", :size => "253x31", :alt => "") %></a></div>
+			<div id="logo"><a href="/" aria-label="Memverse home" title="<%= I18n.t :mainpage, :scope => 'page_titles' %> - Memverse"><%= image_tag("logo.png", :size => "253x31", :alt => "") %></a></div>
 			<% if user_signed_in? %>
 				<div class="inner-top-right"><!--inner-top-right start-->
 					<strong>Welcome:</strong> <%= current_user.name_or_login %> <strong><%= link_to "(Logout)", main_app.destroy_user_session_path, :method => :delete %></strong>
@@ -165,8 +168,10 @@
 
 	</div> <!--header end-->
 
+<% end %>
+
 	<!--Content Block -->
-	<div class="page-content">
+	<div class="page-content" id="heritage-main" tabindex="-1">
 		<div <%= content_for?(:body_css) ? yield(:body_css) : "id=standard_page" %> >
 
 			<!-- Main Page Content -->
@@ -189,7 +194,7 @@
 </div><!--wrapper end-->
 
 <!-- Start of Menu Tab Code  -->
-<% if user_signed_in? %>
+<% if user_signed_in? && !heritage_enabled? %>
 	<script type="text/javascript">
 		//initialize tab menu, by passing in ID of UL
 		initalizetab("maintab")

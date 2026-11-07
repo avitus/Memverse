@@ -1,6 +1,8 @@
+raise 'Staging must not run background workers or scheduled jobs' if Rails.env.staging? && Sidekiq.server?
+
 # Shared Redis configuration for both client and server
 redis_config = {
-  url: ENV.fetch('REDIS_URL', 'redis://127.0.0.1:6379/0'),
+  url: Rails.env.staging? ? ENV.fetch('REDIS_URL') : ENV.fetch('REDIS_URL', 'redis://127.0.0.1:6379/0'),
   pool_timeout: 5,  # Increased from 1 to 5 seconds
   size: ENV.fetch('SIDEKIQ_REDIS_POOL_SIZE', 30).to_i,
   # Redis timeout settings (compatible with redis-client gem)

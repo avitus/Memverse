@@ -31,8 +31,8 @@ The old host **fish-eagle** (`192.241.205.154`, Ubuntu 16.04) served production 
 a reverse proxy for stale DNS until it is decommissioned; do not deploy to it except for an emergency
 during the overlap.
 
-`config/deploy/staging.rb` and `config/deploy/production_rails7.rb` are leftovers from the Rails 7
-upgrade and are not used.
+`config/deploy/production_rails7.rb` is a leftover from the Rails 7 upgrade and is not used.
+The temporary redesign staging environment is described below.
 
 ## Everyday commands
 
@@ -130,3 +130,45 @@ The server-side configuration that was installed during the migration (MySQL ove
 templates are `deployment_scripts/sidekiq-scheduler.service` and `sidekiq-workers@.service`.
 Rebuilding the host from scratch follows the runbook in
 `plans/2026-10-10-fish-eagle-to-martial-eagle-migration.md` §7.
+
+## Temporary redesign staging
+
+`https://staging.memverse.com` runs the `staging` branch under Rails' `staging` environment
+on martial-eagle at `/home/avitus/staging.memverse.com`. It intentionally reads and writes
+`memverse_production`: signing in, changing account settings, reviewing verses, and deleting
+records affect live data. It starts from `main`; deploy redesign changes to the `staging` branch.
+
+Run `bundle exec cap staging deploy` after committing and pushing authorized changes to that
+branch. The Heritage redesign is enabled automatically in this environment. To preview it locally,
+run `MEMVERSE_HERITAGE=1 bundle exec rails server`; use a local development database and sample
+account. Set `MEMVERSE_HERITAGE=0` in the staging application process to temporarily restore
+legacy presentation, then restart the application. This changes presentation only.
+
+The staging stage disables migrations and skips production Sidekiq hooks. It does not
+index or restart Sphinx, change the production release, or upgrade the shared Ruby installation.
+Keep the branch compatible with the existing production schema and Ruby 3.2.6. Never run database
+setup, reset, seed, or migration tasks in staging. Code rollback is `bundle exec cap staging
+deploy:rollback`; it cannot undo live database edits.
+
+Staging has separate releases, assets, logs, cache, session cookie, and Redis on localhost:6381.
+`memverse-staging-redis.service` has a 128 MB limit and no persistence. No staging workers or
+scheduler run; booting Sidekiq in staging is rejected. Enqueued jobs remain in staging Redis
+and will not execute (including asynchronous mail and processing). Email delivery is disabled.
+Live quizzes and background-driven features are therefore not suitable for testing here.
+Search queries use production's existing Sphinx index. Local uploads, CKEditor assets, and
+Active Storage files share production storage so database references remain valid; file edits
+and deletions are also live. Staging uses the existing encrypted credentials through a symlink
+to production's shared key; do not copy or modify secret contents.
+
+The site is publicly reachable with normal application authentication. `robots.txt` and
+`X-Robots-Tag` discourage indexing; these are not access controls. The TLS certificate is
+managed by certbot. Infrastructure templates are in `deployment_scripts/staging/`: install
+the Redis configuration at `/etc/redis/memverse-staging.conf`, the systemd unit under
+`/etc/systemd/system/`, and the nginx vhost at `/etc/nginx/sites-available/memverse-staging`.
+Enable the unit and vhost only after the staging release and certificate exist. Validate
+nginx before reloading it. The staging DNS A record points to `64.23.176.115`.
+
+To retire staging, remove its nginx enabled-site link, validate and reload nginx, stop and
+disable `memverse-staging-redis`, and remove the staging DNS record. Remove the staging release
+tree only after confirming production uploads and the key are symlinks; never follow those
+symlinks when cleaning up. Keep production services and data intact.

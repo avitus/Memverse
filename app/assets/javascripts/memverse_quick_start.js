@@ -1,6 +1,10 @@
 $(document).ready(function() {
 
 	var versesAdded = 0;
+    document.addEventListener('heritage:verse-added', function () {
+        versesAdded += 1;
+        if (versesAdded >= 5) $('#start-memorizing').fadeIn();
+    });
 	var tl;
 
 	$("#minor-tl").click(function() {
@@ -92,7 +96,8 @@ $(document).ready(function() {
 	// Adding an existing verse
 	$('.quick-start-add-section').on("click", ".quick-start-add-button", function() {      // Bind to DIV enclosing button to allow for event delegation
 
-		// Replace button with checkbox
+		if (document.body.classList.contains('mv-heritage')) return;
+        // Replace button with checkbox
 		$(this).fadeOut( 200, function () {
 			$(this).replaceWith("<div class='verse-added'></div>");
 		});

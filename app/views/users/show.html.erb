@@ -1,9 +1,13 @@
+<% if heritage_enabled? %>
+<%= render "users/heritage_dashboard" %>
+<% else %>
 <% if @user == current_user %>
 	<% page_title I18n.t :my_dashboard, :scope => 'page_titles' %>
 <% else %>
 	<% page_title I18n.t :user_profile, :scope => 'page_titles', :name => @user.name_or_login %>
 <% end %>
 
+<% if heritage_enabled? %><div class="heritage-page-heading"><div><span class="heritage-eyebrow">Your practice</span><h1><%= @user == current_user ? 'Welcome back.' : @user.name_or_login %></h1></div><% if @user == current_user %><%= link_to 'Begin review →', test_verse_quick_path, class: 'heritage-primary' %><% end %></div><% end %>
 <div class="user-dashboard white-box-bg">
 	<div class="user-info-top-box">
 
@@ -231,3 +235,5 @@ $( function() {
 });
 </script>
 
+
+<% end %>

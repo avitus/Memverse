@@ -10,4 +10,8 @@ redis_options = {
   connect_timeout: 2 # Connection establishment timeout
 }
 
+if Rails.env.staging?
+  redis_options = redis_options.except(:host, :port, :db).merge(url: ENV.fetch('REDIS_URL'))
+end
+
 $redis = Redis.new(redis_options)
