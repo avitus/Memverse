@@ -223,7 +223,8 @@ sealed class ReviewVersesViewModel
     public int SectionIndex { get; private set; }
     public int VerseIndex { get; private set; }
     public string InputText { get; private set; } = "";
-    public bool IsCorrect { get; private set; }
+    public Memverse? CorrectVerse { get; private set; }
+    public bool IsCorrect => CorrectVerse == CurrentVerse;
     public bool ShowAnswer { get; private set; }
     public int HintLevel { get; private set; }
     private bool IsLastVerse => VerseIndex == CurrentSection.Count - 1;
@@ -234,6 +235,8 @@ sealed class ReviewVersesViewModel
         {
             if (IsLastVerse && !AllVersesRated && ratings.ContainsKey(CurrentVerse.Id))
                 return CurrentSection.Where(verse => !ratings.ContainsKey(verse.Id)).ToArray();
+            if (!IsCorrect && CorrectVerse is { } correctVerse)
+                return [correctVerse];
             var previous = VerseIndex > 0 ? CurrentSection[VerseIndex - 1] : null;
             if (string.IsNullOrWhiteSpace(InputText) && previous is not null &&
                 !ratings.ContainsKey(previous.Id))
@@ -288,9 +291,8 @@ sealed class ReviewVersesViewModel
 
     private Task UpdateFeedbackAsync()
     {
-        IsCorrect = Feedback.ClassifyText(
-            InputText, CurrentVerse.Text!, revealAnswer: false).Correct;
-        if (IsCorrect)
+        if (Feedback.ClassifyText(
+            InputText, CurrentVerse.Text!, revealAnswer: false).Correct)
         {
             var verse = CurrentVerse;
             var saveProgress = verse.LastTest != today;
@@ -298,9 +300,12 @@ sealed class ReviewVersesViewModel
             ShowAnswer = false;
             if (!IsLastVerse)
                 SelectVerse(VerseIndex + 1);
+            CorrectVerse = verse;
             if (saveProgress)
                 return saveVersesAsync([verse]);
         }
+        else
+            CorrectVerse = null;
         return Task.CompletedTask;
     }
 
@@ -326,6 +331,8 @@ sealed class ReviewVersesViewModel
                 SelectVerse(VerseIndex + 1);
         }
 
+        if (!IsCorrect)
+            CorrectVerse = null;
         await saveVersesAsync(targets);
         if (!AllVersesRated)
             return true;
@@ -348,7 +355,7 @@ sealed class ReviewVersesViewModel
         while (!IsLastVerse && CurrentVerse.LastTest?.Date == today)
             VerseIndex++;
 
-        IsCorrect = false;
+        CorrectVerse = null;
         InputText = "";
         ShowAnswer = false;
         HintLevel = 0;

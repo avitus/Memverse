@@ -245,6 +245,7 @@ public class ReviewVerseViewModelTests
 
         model.CurrentVerse.Should().BeSameAs(due);
         model.Sections.Single().Should().Equal(alreadyRated, due, restOfPassage);
+        model.CorrectVerse.Should().BeNull();
     }
 
     [Fact]
@@ -256,6 +257,7 @@ public class ReviewVerseViewModelTests
         var third = CreateVerse(3, today);
         var model = ReviewVersesViewModel.Create([first, second, third], 15, today, _ => Task.CompletedTask)!;
         await model.RateAsync(2, new Mock<IOfflineOperations>().Object);
+        model.CorrectVerse.Should().BeNull();
         await model.UpdateInputAsync(second.Text!);
 
         model.CurrentVerse.Should().BeSameAs(third);
@@ -298,7 +300,40 @@ public class ReviewVerseViewModelTests
         model.Sections[0].Should().Equal(alreadyRated, due, ratedLater, restOfPassage);
         model.Sections[1].Should().Equal(other);
         await model.UpdateInputAsync(due.Text!);
-        (model.CurrentVerse, model.IsCorrect, model.InputText).Should().Be((restOfPassage, false, ""));
+        (model.CurrentVerse, model.CorrectVerse, model.IsCorrect, model.InputText).Should().Be((restOfPassage, due, false, ""));
+        await model.RateAsync(5, new Mock<IOfflineOperations>().Object);
+        model.GetRating(due).Should().Be(5);
+    }
+
+    [Fact]
+    public async Task ReviewShouldKeepCompletedVerseAvailableForRating()
+    {
+        var first = CreateVerse(1, DateTime.Today);
+        var second = CreateVerse(2, DateTime.Today);
+        var third = CreateVerse(3, DateTime.Today);
+        var save = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var offline = new Mock<IOfflineOperations>();
+        var model = ReviewVersesViewModel.Create([first, second, third], 15, DateTime.Today, _ => save.Task)!;
+        var completion = model.UpdateInputAsync(first.Text!);
+        (model.CurrentVerse, model.CorrectVerse, model.IsCorrect).Should().Be((second, first, false));
+        completion.IsCompleted.Should().BeFalse();
+        save.SetResult();
+        await completion;
+        (await model.RateAsync(5, offline.Object)).Should().BeTrue();
+        model.GetRating(first).Should().Be(5);
+        model.GetRating(second).Should().BeNull();
+        model.CorrectVerse.Should().BeNull();
+        await model.UpdateInputAsync(second.Text!);
+        model.CorrectVerse.Should().BeSameAs(second);
+        await model.UpdateInputAsync("wrong");
+        model.CorrectVerse.Should().BeNull();
+        await model.UpdateInputAsync(third.Text!);
+        (model.CorrectVerse, model.IsCorrect).Should().Be((third, true));
+        (await model.RateAsync(4, offline.Object)).Should().BeTrue();
+        model.IsCorrect.Should().BeTrue();
+        (await model.RateAsync(4, offline.Object)).Should().BeFalse();
+        offline.Verify(client => client.RateMemverseAsync(first, 5), Times.Once);
+        offline.Verify(client => client.RateMemverseAsync(It.IsAny<Memverse>(), It.IsAny<int>()), Times.Exactly(3));
     }
 
     [Fact]
@@ -306,9 +341,11 @@ public class ReviewVerseViewModelTests
     {
         var first = CreateVerse(1, DateTime.Today);
         var second = CreateVerse(2, DateTime.Today);
+        first.IterationNumber = second.IterationNumber = 1;
+        var other = CreateVerse(4, DateTime.Today);
         var database = new MemoryDatabase();
         var state = new MemverseState(database);
-        await state.SaveVersesAsync([first, second, CreateVerse(4, DateTime.Today.AddDays(1))], replaceAll: true);
+        await state.SaveVersesAsync([first, second, other], replaceAll: true);
         var offline = new OfflineClient(state);
         var model = ReviewVersesViewModel.Create(state.Verses, 15, DateTime.Today, verses => state.SaveVersesAsync(verses))!;
         (await model.RateAsync(2, offline)).Should().BeTrue();
@@ -317,7 +354,14 @@ public class ReviewVerseViewModelTests
         model.ToggleRating(first, 3);
         await model.UpdateInputAsync("Verse");
         await model.UseHintAsync();
-        (await model.RateAsync(4, offline)).Should().BeFalse();
+        var reloaded = new MemverseState(database);
+        await reloaded.LoadAsync();
+        var resumed = ReviewVersesViewModel.Create(
+            reloaded.Verses, 1, DateTime.Today, _ => Task.CompletedTask, first.Id)!;
+        (resumed.CurrentVerse, resumed.IsCorrect, resumed.InputText).Should().Be((second, false, ""));
+        resumed.Sections.Should().HaveCount(2);
+        (await model.RateAsync(4, offline)).Should().BeTrue();
+        ReviewVersesViewModel.Create(state.Verses, 15, DateTime.Today, _ => Task.CompletedTask)!.CurrentVerse.Should().BeSameAs(other);
         var saved = await database.LoadAsync();
         saved.Memverses.Should().HaveCount(3).And.Equal(state.Verses);
         saved.Mutations.Should().Equal(state.Mutations);

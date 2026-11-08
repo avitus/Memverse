@@ -77,25 +77,27 @@ label { display: block; font-weight: 600; margin: 1rem 0 .35rem; }
 .review-word-error { color: #b23b3b; }
 .review-input { font-size: 1.05rem; line-height: 1.5; margin-top: .75rem; resize: vertical; }
 .review-input-correct { border-color: #27815f; box-shadow: 0 0 0 2px #27815f22; }
-.review-feedback { margin: 0; text-align: center; }
+.review-feedback { align-items: center; color: #59656e; display: flex; gap: .6rem; justify-content: center; margin: 0; text-align: center; }
+.review-checkmark { flex: none; font-size: 2.5rem; line-height: 1; }
 .success { color: #27815f; font-weight: 600; }
 .answer { background: #f4f7f6; border-radius: .6rem; padding: 1rem; }
 .verse-text { font-size: 1.35rem; line-height: 1.7; }
 .hint { color: #71808a; font-style: italic; }
-.review-actions { align-items: center; display: flex; height: 2.75rem; justify-content: center; gap: .6rem; margin-top: .75rem; }
+.review-actions { align-items: center; display: flex; min-height: 3rem; justify-content: center; margin-top: .75rem; }
 .rating-panel { border-top: 1px solid #e5e9ec; margin-top: .85rem; padding-top: .85rem; text-align: center; }
-.rating-actions { display: grid; grid-template-columns: repeat(5, 1fr); gap: .6rem; }
+.rating-actions { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: .6rem; }
+.rating-actions .btn { padding: .7rem .35rem; }
 .rating { background: #e5eeeb; border: 1px solid transparent; border-radius: .6rem; color: #226b58; cursor: pointer; padding: .7rem .35rem; }
 .rating strong, .rating span { display: block; }
 .rating strong { font-size: 1.25rem; }
-.rating span { font-size: .75rem; margin-top: .2rem; }
+.rating span { font-size: .75rem; margin-top: .2rem; overflow-wrap: anywhere; }
 .rating-fail { background: #f7eaea; color: #8b3434; }
 .rating:disabled { cursor: not-allowed; opacity: .35; }
 .empty { text-align: center; padding: 4rem 1rem; }
 .page-loading { color: #59656e; padding: 12vh 1rem; text-align: center; }
 .single-instance { margin: 0; padding: 12vh 1rem; }
 .single-instance .card { margin: 0 auto; max-width: 32rem; }
-@media (max-width: 700px) { .sidebar { position: static; width: auto; min-height: auto; padding: 1rem; } .brand { padding-bottom: 1rem; } .nav { flex-direction: row; flex-wrap: wrap; } main { margin-left: 0; } .content { padding: 2rem 1rem; } .page-header, .review-heading { align-items: start; flex-direction: column; } .add-toolbar { gap: .35rem; } .add-step, .add-action { font-size: .75rem; padding: .4rem .15rem; } .rating-actions { gap: .3rem; } .rating { padding: .6rem .15rem; } .rating span { font-size: .65rem; } }
+@media (max-width: 700px) { .sidebar { position: static; width: auto; min-height: auto; padding: 1rem; } .brand { padding-bottom: 1rem; } .nav { flex-direction: row; flex-wrap: wrap; } main { margin-left: 0; } .content { padding: 2rem 1rem; } .page-header, .review-heading { align-items: start; flex-direction: column; } .add-toolbar { gap: .35rem; } .add-step, .add-action { font-size: .75rem; padding: .4rem .15rem; } .rating-actions { gap: .3rem; } .rating, .rating-actions .btn { padding: .6rem .15rem; } .rating span { font-size: .65rem; } }
 
 h1:focus {
     outline: none;

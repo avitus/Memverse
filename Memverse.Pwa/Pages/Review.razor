@@ -9,6 +9,18 @@
 <PageTitle>Review - Memverse</PageTitle>
 @if (currentReview is { } model)
 {
+    RenderFragment<Memverse> ratingChips = verse => @<span class="review-verse-ratings" role="group" aria-label="@($"{verse.Reference} rating")">
+        @for (var rating = 1; rating <= 5; rating++)
+        {
+            var value = rating;
+            <button type="button" class="review-rating-chip"
+                    aria-pressed="@(model.GetRating(verse) == value ? "true" : "false")"
+                    aria-label="@($"Rate {verse.Reference}: {value}")"
+                    disabled="@savingRatings"
+                    @onclick="() => model.ToggleRating(verse, value)">@value</button>
+        }
+    </span>;
+
     <article class="review-card card">
         <div class="review-heading">
             <p class="eyebrow">@model.PassageReference · @model.CurrentVerse.Translation</p>
@@ -22,17 +34,7 @@
                 {
                     <p @key="verse.Id">
                         <sup>@verse.VerseNumber</sup> @verse.Text
-                        <span class="review-verse-ratings" role="group" aria-label="@($"{verse.Reference} rating")">
-                            @for (var rating = 1; rating <= 5; rating++)
-                            {
-                                var value = rating;
-                                <button type="button" class="review-rating-chip"
-                                        aria-pressed="@(model.GetRating(verse) == value ? "true" : "false")"
-                                        aria-label="@($"Rate {verse.Reference}: {value}")"
-                                        disabled="@savingRatings"
-                                        @onclick="() => model.ToggleRating(verse, value)">@value</button>
-                            }
-                        </span>
+                        @ratingChips(verse)
                     </p>
                 }
             </div>
@@ -51,6 +53,10 @@
                     <span class="review-word-measure" aria-hidden="true">@word.Text</span>
                     <span class="review-word-value">@(correct ? word.Text : "...")</span>
                 </span>
+            }
+            @if (model.IsCorrect || model.GetRating(model.CurrentVerse) is not null)
+            {
+                @ratingChips(model.CurrentVerse)
             }
         </div>
 
@@ -74,24 +80,47 @@
         }
 
         <div class="review-actions">
-            @if (model.IsCorrect)
-            {
-                <p class="review-feedback success">Correct. Choose a rating below.</p>
-            }
-            else
-            {
-                <button class="btn btn-primary" title="Hint (Ctrl+Space)" @onclick="UseHint" disabled="@savingRatings">
-                    Hint
-                </button>
-            }
+            <p class="review-feedback @(model.CorrectVerse is not null ? "success" : "")" role="status">
+                @if (model.CorrectVerse is { } correctVerse)
+                {
+                    <span class="review-checkmark" aria-hidden="true">&#10003;</span>
+                    <span>
+                        @if (model.IsCorrect &&
+                            model.CurrentSection.Take(model.VerseIndex).Any(verse => model.GetRating(verse) is null))
+                        {
+                            @if (model.GetRating(correctVerse) is not null)
+                            {
+                                <text>Correct! Rate the remaining unrated verses to finish this passage.</text>
+                            }
+                            else if (model.CurrentSection.Any(verse => model.GetRating(verse) is not null))
+                            {
+                                <text>Correct! Rate @correctVerse.Reference first, then rate the remaining unrated verses.</text>
+                            }
+                            else
+                            {
+                                <text>Correct! Choose a rating for the whole passage to finish.</text>
+                            }
+                        }
+                        else
+                        {
+                            <text>Correct! Rate @correctVerse.Reference@(model.IsCorrect ? " to continue." : " or keep typing the next verse.")</text>
+                        }
+                    </span>
+                }
+                else
+                {
+                    <span>Type the verse, or use a hint if you need help.</span>
+                }
+            </p>
         </div>
         <div class="rating-panel">
             <div class="rating-actions">
                 <button class="rating rating-fail" @onclick="() => Rate(1)" disabled="@savingRatings"><strong>1</strong><span>don't know</span></button>
                 <button class="rating rating-fail" @onclick="() => Rate(2)" disabled="@savingRatings"><strong>2</strong><span>needed hint</span></button>
-                <button class="rating" @onclick="() => Rate(3)" disabled="@(savingRatings || !model.IsCorrect)"><strong>3</strong><span>difficult</span></button>
-                <button class="rating" @onclick="() => Rate(4)" disabled="@(savingRatings || !model.IsCorrect)"><strong>4</strong><span>hesitated</span></button>
-                <button class="rating" @onclick="() => Rate(5)" disabled="@(savingRatings || !model.IsCorrect)"><strong>5</strong><span>perfect</span></button>
+                <button class="rating" @onclick="() => Rate(3)" disabled="@(savingRatings || model.CorrectVerse is null)"><strong>3</strong><span>difficult</span></button>
+                <button class="rating" @onclick="() => Rate(4)" disabled="@(savingRatings || model.CorrectVerse is null)"><strong>4</strong><span>hesitated</span></button>
+                <button class="rating" @onclick="() => Rate(5)" disabled="@(savingRatings || model.CorrectVerse is null)"><strong>5</strong><span>perfect</span></button>
+                <button class="btn btn-primary" title="Hint (Ctrl+Space)" @onclick="UseHint" disabled="@(savingRatings || model.IsCorrect)">Hint</button>
             </div>
         </div>
     </article>
@@ -172,7 +201,7 @@ else
             return;
         }
 
-        if (currentReview!.IsCorrect &&
+        if (currentReview!.CorrectVerse is not null &&
             args.Key.Length == 1 &&
             args.Key[0] is >= '1' and <= '5')
             await Rate(args.Key[0] - '0');
@@ -181,7 +210,7 @@ else
     private async Task Rate(int rating)
     {
         var review = currentReview!;
-        if (savingRatings || rating >= 3 && !review.IsCorrect)
+        if (savingRatings || rating >= 3 && review.CorrectVerse is null)
             return;
 
         savingRatings = true;

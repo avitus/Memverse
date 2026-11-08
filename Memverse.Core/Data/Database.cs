@@ -214,11 +214,9 @@ static class PassageLogic
 
         foreach (var section in candidates)
         {
-            var remaining = section.Verses.Count -
-                section.Verses.TakeWhile(verse => verse.LastTest?.Date == today.Date).Count();
-
-            if (remaining == 0)
-                continue;
+            // Typing progress does not submit the passage's ratings.
+            var remaining = Math.Max(1, section.Verses.Count -
+                section.Verses.TakeWhile(verse => verse.LastTest?.Date == today.Date).Count());
 
             if (selected.Count > 0 && count + remaining > limit)
                 break;
