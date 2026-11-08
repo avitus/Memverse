@@ -191,7 +191,6 @@
   .heritage-dashboard-grid h2 { margin-top:0; } .heritage-dashboard-grid table { width:100%; }
   .heritage-tabs { display:flex; gap:12px; margin:12px 0; } .heritage-tabs button[aria-pressed=true] { background:#dce7f3; color:#284b75; }
   .heritage-awards-showcase h2 { margin-top:8px; } .heritage-awards-showcase .badges-container { gap:32px; }
-  #flash-notice,#flash-alert,#flash-error { max-width:1120px; width:auto; margin:16px auto; padding:12px 20px; border-radius:4px; background:#e2eadb; color:#446048; text-transform:none; }
   @media(max-width:700px) { .heritage-stats-four { grid-template-columns:1fr 1fr; } .heritage-dashboard-grid { grid-template-columns:1fr; } .heritage-dashboard-grid>section { overflow:auto; } }
 }
 .mv-heritage #bloggity_container { border:0; border-radius:0; padding:0; }

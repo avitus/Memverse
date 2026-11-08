@@ -33,6 +33,14 @@ controls. Native selects reserve 40px on the right and inset their chevron 14px.
 controls have at least 44px targets and visible focus. The appearance control persists only
 in the browser.
 
+Flash feedback uses `layouts/_heritage_flashes.html.erb` and `_heritage_flashes.scss`.
+Notice/success messages use sage, error/alert messages use the design-system error tokens,
+information uses blue, and warnings use copper. Use sentence case, 14px Arial, 16px padding,
+4px corners, and responsive page gutters. Links retain copper underlines and keyboard focus;
+message markup is sanitized while preserving existing link actions. Errors and warnings have
+`role="alert"`; other notices have `role="status"`. Messages remain visible until navigation,
+and all tones have dark-mode colors. The legacy presentation keeps its existing renderer.
+
 Shared Rails authentication lives in `devise/shared/_heritage.html.erb`. Preserve Devise
 routes, CSRF tokens, reset tokens, confirmation and referral fields. Never substitute
 prototype success messages for server responses. Fields use visible labels, password-manager

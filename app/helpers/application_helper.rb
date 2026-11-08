@@ -24,7 +24,9 @@ module ApplicationHelper
     end
   end
       
-  def flash_messages
+  def flash_messages(heritage: false)
+    return render('layouts/heritage_flashes') if heritage
+
     messages = ''.html_safe
     [:error, :notice, :alert].each do |t|
       if flash[t]

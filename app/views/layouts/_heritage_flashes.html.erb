@@ -1,0 +1,13 @@
+<% types = %i[error alert warning notice success info] %>
+<% if types.any? { |type| flash[type].present? } %>
+  <div class="heritage-flashes">
+    <% types.each do |type| %>
+      <% next if flash[type].blank? %>
+      <% urgent = %i[error alert warning].include?(type) %>
+      <div id="flash-<%= type %>" class="heritage-flash heritage-flash--<%= type %>" role="<%= urgent ? 'alert' : 'status' %>" aria-atomic="true">
+        <span class="heritage-flash-icon" aria-hidden="true"><%= urgent ? '!' : (type == :success ? '✓' : 'i') %></span>
+        <div class="heritage-flash-message"><%= sanitize(flash[type].to_s, tags: %w[a strong b em i span br p ul ol li], attributes: %w[href title class id rel target data-method data-remote data-confirm]) %></div>
+      </div>
+    <% end %>
+  </div>
+<% end %>

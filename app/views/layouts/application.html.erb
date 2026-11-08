@@ -104,7 +104,7 @@
 <noscript><div id="no-js"><p>Memverse requires Javascript, but you&rsquo;ve got Javascript disabled. <a href="http://www.google.com/search?btnI=1&amp;q=how+to+enable+javascript+in+my+browser">Fix that problem!</a></p></div></noscript>
 <% if heritage_enabled? %><a class="heritage-skip" href="#heritage-main">Skip to content</a><% end %>
 <div id="wrapper"><!--wrapper start-->
-<% if heritage_enabled? %><%= render 'layouts/heritage_header' %><%= flash_messages %><% else %>
+<% if heritage_enabled? %><%= render 'layouts/heritage_header' %><%= flash_messages(heritage: true) %><% else %>
 	<div id="header"><!--header start-->
 
 		<!-- General messages -->
