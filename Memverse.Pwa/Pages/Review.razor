@@ -49,9 +49,12 @@
             @foreach (var word in model.FeedbackWords)
             {
                 var correct = word.Kind == MatchKind.Correct;
-                <span class="review-word-slot @(correct ? "review-word-correct" : "review-word-error")">
+                var blank = word.Kind == MatchKind.None;
+                <span class="review-word-slot @(blank ? "review-word-blank" : correct ? "review-word-correct" : "review-word-error")"
+                      role="@(blank ? "img" : null)"
+                      aria-label="@(blank ? "Blank word" : null)">
                     <span class="review-word-measure" aria-hidden="true">@word.Text</span>
-                    <span class="review-word-value">@(correct ? word.Text : "...")</span>
+                    <span class="review-word-value">@(blank ? "" : correct ? word.Text : "...")</span>
                 </span>
             }
             @if (model.IsCorrect || model.GetRating(model.CurrentVerse) is not null)

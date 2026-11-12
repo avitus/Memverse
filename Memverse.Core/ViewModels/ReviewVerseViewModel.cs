@@ -24,7 +24,7 @@ sealed class Feedback
     public static string[] Split(string text) =>
         WordPattern.Matches(text).Cast<Match>().Select(match => match.Value).ToArray();
 
-    public static Feedback ClassifyText(string text, string actualVerse, bool revealAnswer)
+    public static Feedback ClassifyText(string text, string actualVerse, bool revealAnswer, bool completeFirstLetters = false)
     {
         var feedback = new Feedback();
         if (revealAnswer)
@@ -42,6 +42,9 @@ sealed class Feedback
         var trimmedWords = words.Select(word => word.Trim()).ToArray();
         var actual = Split(actualVerse);
 
+        if (completeFirstLetters && !text.Trim().Any(char.IsWhiteSpace))
+            return ClassifyMnemonic(text.Trim(), actual, feedback);
+
         if (trimmedWords.Length == 1 &&
             trimmedWords[0].Length >= 2 &&
             IsMatch(trimmedWords[0][0], GetFirstLetter(actual[0])) &&
@@ -58,7 +61,8 @@ sealed class Feedback
                 continue;
             }
 
-            var matchKind = IsMnemonic(trimmedWords, actual, index)
+            var matchKind = completeFirstLetters && trimmedWords[index].Length == 1 ||
+                IsMnemonic(trimmedWords, actual, index)
                 ? IsMatch(GetFirstLetter(trimmedWords[index]), GetFirstLetter(actual[index]))
                     ? MatchKind.Correct
                     : MatchKind.Error
@@ -75,9 +79,9 @@ sealed class Feedback
         return feedback.CheckCorrectness(actual.Length);
     }
 
-    public static string FixNextWord(string inputText, string actualText)
+    public static string FixNextWord(string inputText, string actualText, bool completeFirstLetters = false)
     {
-        var feedback = ClassifyText(inputText, actualText, revealAnswer: false);
+        var feedback = ClassifyText(inputText, actualText, revealAnswer: false, completeFirstLetters);
         var words = feedback.AllWords.Where(word => word.Kind != MatchKind.None).ToArray();
         var actual = Split(actualText);
         if (words.Length == 0)
@@ -88,7 +92,7 @@ sealed class Feedback
             var originalText = words[0].OriginalText.Trim();
             return words[0].Kind switch
             {
-                MatchKind.Error => actual[0],
+                MatchKind.Error => completeFirstLetters ? GetFirstLetter(actual[0]).ToString() : actual[0],
                 MatchKind.Prefix => originalText.Length == 1
                     ? words[0].OriginalText + GetFirstLetter(actual[1])
                     : actual[0],
@@ -117,7 +121,7 @@ sealed class Feedback
         {
             var inputWords = words.Select(word => word.OriginalText.Trim()).ToList();
             inputWords[index] = GetFirstLetter(actual[index]).ToString();
-            fixedWords[index] = IsMnemonic(inputWords, actual, index)
+            fixedWords[index] = completeFirstLetters || IsMnemonic(inputWords, actual, index)
                 ? (index == 0 ? string.Empty : " ") + GetFirstLetter(actual[index])
                 : actual[index];
         }
@@ -227,6 +231,7 @@ sealed class ReviewVersesViewModel
     public bool IsCorrect => CorrectVerse == CurrentVerse;
     public bool ShowAnswer { get; private set; }
     public int HintLevel { get; private set; }
+    private bool CompleteFirstLetters => CurrentVerse.TestInterval == TimeSpan.FromDays(1);
     private bool IsLastVerse => VerseIndex == CurrentSection.Count - 1;
     private bool AllVersesRated => ratings.Count == CurrentSection.Count;
     private IReadOnlyList<Memverse> RatingTargets
@@ -246,8 +251,21 @@ sealed class ReviewVersesViewModel
     }
     public string PassageReference =>
         CurrentSection[0].Reference + (CurrentSection.Count > 1 ? $"-{CurrentSection[^1].VerseNumber}" : "");
-    public IReadOnlyList<Word> FeedbackWords =>
-        Feedback.ClassifyText(InputText, CurrentVerse.Text!, revealAnswer: false).Words;
+    public IReadOnlyList<Word> FeedbackWords
+    {
+        get
+        {
+            var words = Feedback.ClassifyText(
+                    InputText, CurrentVerse.Text!, revealAnswer: false, CompleteFirstLetters)
+                .Words.Where(word => word.Kind != MatchKind.None).ToList();
+            if (CompleteFirstLetters)
+                words.AddRange(Feedback.Split(CurrentVerse.Text!)
+                    .Where(word => !string.IsNullOrWhiteSpace(word))
+                    .Skip(words.Count)
+                    .Select(word => new Word(word, MatchKind.None)));
+            return words;
+        }
+    }
 
     public Memverse? PreviousVerse => allVerses.GetPreviousVerse(CurrentVerse);
 
@@ -285,14 +303,14 @@ sealed class ReviewVersesViewModel
             return Task.CompletedTask;
         }
 
-        InputText = Feedback.FixNextWord(InputText, CurrentVerse.Text!);
+        InputText = Feedback.FixNextWord(InputText, CurrentVerse.Text!, CompleteFirstLetters);
         return UpdateFeedbackAsync();
     }
 
     private Task UpdateFeedbackAsync()
     {
         if (Feedback.ClassifyText(
-            InputText, CurrentVerse.Text!, revealAnswer: false).Correct)
+            InputText, CurrentVerse.Text!, revealAnswer: false, CompleteFirstLetters).Correct)
         {
             var verse = CurrentVerse;
             var saveProgress = verse.LastTest != today;

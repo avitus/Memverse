@@ -233,6 +233,67 @@ public class ReviewVerseViewModelTests
         input.Should().Be(@"Qh1b");
     }
 
+    [Theory]
+    [InlineData("x", nameof(MatchKind.Error))]
+    [InlineData("q", nameof(MatchKind.Correct))]
+    [InlineData("q ", nameof(MatchKind.Correct))]
+    public async Task OneDayVerseShouldKeepFeedbackAndBlankUntypedWords(string input, string expectedKind)
+    {
+        var verse = CreateVerse(1, DateTime.Today);
+        verse.TestInterval = TimeSpan.FromDays(1);
+        verse.Text = "Quote hyphen last";
+        var model = ReviewVersesViewModel.Create([verse], 15, DateTime.Today, _ => Task.CompletedTask)!;
+
+        await model.UpdateInputAsync(input);
+
+        model.FeedbackWords[0].Kind.ToString().Should().Be(expectedKind);
+        model.FeedbackWords.Skip(1).Should().OnlyContain(word => word.Kind == MatchKind.None);
+        model.FeedbackWords.Skip(1).Select(word => word.Text).Should().Equal(" hyphen", " last");
+        model.IsCorrect.Should().BeFalse();
+        await model.UpdateInputAsync("");
+        model.FeedbackWords.Should().HaveCount(3).And.OnlyContain(word => word.Kind == MatchKind.None);
+    }
+
+    [Theory]
+    [InlineData("t", 1)]
+    [InlineData("th", 2)]
+    [InlineData("th ", 2)]
+    [InlineData("t h", 2)]
+    [InlineData("tho", 3)]
+    [InlineData("t h o", 3)]
+    public async Task OneDayVerseShouldCompleteEachInitialEvenWhenItLooksLikeAWordPrefix(
+        string input, int correctCount)
+    {
+        var verse = CreateVerse(1, DateTime.Today);
+        verse.TestInterval = TimeSpan.FromDays(1);
+        verse.Text = "The hand opens";
+        var model = ReviewVersesViewModel.Create([verse], 15, DateTime.Today, _ => Task.CompletedTask)!;
+
+        await model.UpdateInputAsync(input);
+
+        model.FeedbackWords.Select(word => word.Text).Should().Equal("The", " hand", " opens");
+        model.FeedbackWords.Take(correctCount).Should().OnlyContain(word => word.Kind == MatchKind.Correct);
+        model.IsCorrect.Should().Be(correctCount == 3);
+    }
+
+    [Fact]
+    public async Task OneDayHintsShouldFixAnIncorrectInitialWithoutExpandingTheInput()
+    {
+        var verse = CreateVerse(1, DateTime.Today);
+        verse.TestInterval = TimeSpan.FromDays(1);
+        verse.Text = "The hand opens";
+        var model = ReviewVersesViewModel.Create([verse], 15, DateTime.Today, _ => Task.CompletedTask)!;
+
+        await model.UpdateInputAsync("x");
+        await model.UseHintAsync();
+        model.InputText.Should().Be("T");
+        model.FeedbackWords.Select(word => word.Kind).Should().Equal(MatchKind.Correct, MatchKind.None, MatchKind.None);
+        await model.UpdateInputAsync("tx");
+        await model.UseHintAsync();
+        model.InputText.Should().Be("th");
+        model.FeedbackWords.Select(word => word.Kind).Should().Equal(MatchKind.Correct, MatchKind.Correct, MatchKind.None);
+    }
+
     [Fact]
     public void ReviewShouldResumePassageAfterVersesRatedToday()
     {
