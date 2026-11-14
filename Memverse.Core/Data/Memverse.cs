@@ -70,6 +70,8 @@ class Memverse
 
 }
 
+sealed record VerseReviewChange(Memverse Verse, int? Rating = null);
+
 enum Due
 {
     Today,

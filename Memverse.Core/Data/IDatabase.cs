@@ -8,7 +8,7 @@ interface IOfflineOperations
     IReadOnlyList<Memverse> GetMemverses();
     User? GetUser();
     Task DeleteMemverseAsync(Memverse verse);
-    Task RateMemverseAsync(Memverse verse, int rating);
+    void QueueReviewChanges(IReadOnlyList<VerseReviewChange> changes);
     Task ToggleStatusAsync(Memverse verse);
     Task UpdateUserAsync(User user);
     Task AdjustWorkLoadAsync();
@@ -40,7 +40,7 @@ interface IDatabase
     Task SaveMemversesAsync(
         IEnumerable<Memverse> verses,
         bool replaceAll = false,
-        ApiRequest? mutation = null);
+        params ApiRequest[] mutations);
     Task SaveUserAndMutationAsync(User user, ApiRequest request);
     Task SaveMutationAsync(ApiRequest request);
     Task DeleteMutationAsync(int id);
@@ -63,21 +63,28 @@ sealed class OfflineClient(MemverseState state) : IOfflineOperations
     public async Task DeleteMemverseAsync(Memverse verse)
     {
         state.Verses.RemoveAll(candidate => candidate.Id == verse.Id);
-        await state.SaveVersesAsync(state.Verses, replaceAll: true, mutation: new ApiRequest
+        await state.SaveVersesAsync(state.Verses, replaceAll: true, mutations: [new ApiRequest
         {
             Kind = ApiRequestKind.DeleteMemverse,
             Json = System.Text.Json.JsonSerializer.Serialize(new { verse.Id })
-        });
+        }]);
     }
 
-    public async Task RateMemverseAsync(Memverse verse, int rating)
+    public void QueueReviewChanges(IReadOnlyList<VerseReviewChange> changes)
     {
-        RatingClient.RateVerse(verse, rating);
-        await state.SaveVersesAsync([verse], mutation: new ApiRequest
+        var mutations = changes.Select(change =>
         {
-            Kind = ApiRequestKind.RateMemverse,
-            Json = System.Text.Json.JsonSerializer.Serialize(new { verse.Id, Rating = rating })
-        });
+            if (change.Rating is not { } rating)
+                return null;
+
+            RatingClient.RateVerse(change.Verse, rating);
+            return new ApiRequest
+            {
+                Kind = ApiRequestKind.RateMemverse,
+                Json = System.Text.Json.JsonSerializer.Serialize(new { change.Verse.Id, Rating = rating })
+            };
+        }).OfType<ApiRequest>().ToArray();
+        _ = state.SaveVersesAsync(changes.Select(change => change.Verse), mutations: mutations);
     }
 
     public async Task ToggleStatusAsync(Memverse verse)

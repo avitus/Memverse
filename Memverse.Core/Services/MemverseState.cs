@@ -6,6 +6,7 @@ namespace MemverseApp.Core.Services;
 sealed class MemverseState(IDatabase database)
 {
     private Task? loadTask;
+    private readonly PersistenceQueue persistence = new();
 
     public User? User { get; private set; }
     public string? AccessToken { get; private set; }
@@ -19,7 +20,7 @@ sealed class MemverseState(IDatabase database)
 
     public Task LoadAsync() => loadTask ??= LoadCoreAsync();
 
-    private async Task LoadCoreAsync()
+    private Task LoadCoreAsync() => persistence.Enqueue(async () =>
     {
         var snapshot = await database.LoadAsync();
         User = snapshot.User;
@@ -27,26 +28,28 @@ sealed class MemverseState(IDatabase database)
         RefreshToken = snapshot.RefreshToken;
         Verses = snapshot.Memverses;
         Mutations = snapshot.Mutations;
-    }
+    });
 
     public async Task SignInAsync(OAuthTokens tokens, User profile)
     {
         User = profile;
-        await database.SaveUserAsync(User);
+        await SaveUserAsync();
         await SaveTokensAsync(tokens);
     }
 
-    public async Task SaveTokensAsync(OAuthTokens tokens)
+    public Task SaveTokensAsync(OAuthTokens tokens)
     {
         AccessToken = tokens.AccessToken;
         RefreshToken = tokens.RefreshToken;
-        await database.SaveTokensAsync(tokens);
+        return persistence.Enqueue(() => database.SaveTokensAsync(tokens));
     }
 
     public Task SaveUserAsync() =>
-        User is null ? Task.CompletedTask : database.SaveUserAsync(User);
+        User is { } user
+            ? persistence.Enqueue(() => database.SaveUserAsync(user))
+            : Task.CompletedTask;
 
-    public async Task SignOutAsync()
+    public Task SignOutAsync() => persistence.Enqueue(async () =>
     {
         await database.ClearAsync();
         User = null;
@@ -54,27 +57,34 @@ sealed class MemverseState(IDatabase database)
         RefreshToken = null;
         Verses = [];
         Mutations = [];
-    }
+    });
 
-    public async Task SaveVersesAsync(
+    public Task SaveVersesAsync(
         IEnumerable<MemverseRecord> verses,
         bool replaceAll = false,
-        ApiRequest? mutation = null)
+        params ApiRequest[] mutations)
     {
         if (replaceAll)
             Verses = verses.ToList();
-        await database.SaveMemversesAsync(replaceAll ? Verses : verses, replaceAll, mutation);
-        if (mutation is not null)
-            AddMutation(mutation);
+        var savedVerses = replaceAll ? Verses : verses;
+        return persistence.Enqueue(async () =>
+        {
+            await database.SaveMemversesAsync(savedVerses, replaceAll, mutations);
+            foreach (var mutation in mutations)
+                AddMutation(mutation);
+        });
     }
 
-    public async Task SaveUserAndEnqueueMutationAsync(ApiRequest request)
+    public Task SaveUserAndEnqueueMutationAsync(ApiRequest request)
     {
-        if (User is null)
-            return;
+        if (User is not { } user)
+            return Task.CompletedTask;
 
-        await database.SaveUserAndMutationAsync(User, request);
-        AddMutation(request);
+        return persistence.Enqueue(async () =>
+        {
+            await database.SaveUserAndMutationAsync(user, request);
+            AddMutation(request);
+        });
     }
 
     private void AddMutation(ApiRequest request)
@@ -83,15 +93,17 @@ sealed class MemverseState(IDatabase database)
             Mutations.Add(request);
     }
 
-    public async Task RemoveMutationAsync(int id)
+    public Task RemoveMutationAsync(int id) => persistence.Enqueue(async () =>
     {
         Mutations.RemoveAll(item => item.Id == id);
         await database.DeleteMutationAsync(id);
-    }
+    });
 
-    public async Task SaveMutationsAsync()
+    public Task SaveMutationsAsync() => persistence.Enqueue(async () =>
     {
         foreach (var request in Mutations)
             await database.SaveMutationAsync(request);
-    }
+    });
+
+    public Task FlushPersistenceAsync() => persistence.FlushAsync();
 }

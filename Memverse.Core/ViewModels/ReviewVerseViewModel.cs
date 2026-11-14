@@ -205,19 +205,19 @@ sealed class ReviewVersesViewModel
     private readonly List<IReadOnlyList<Memverse>> sections;
     private readonly MemverseCollection allVerses;
     private readonly DateTime today;
-    private readonly Func<IEnumerable<Memverse>, Task> saveVersesAsync;
+    private readonly Action<IReadOnlyList<VerseReviewChange>> saveChanges;
     private readonly Dictionary<long, int> ratings = [];
 
     private ReviewVersesViewModel(
         List<Memverse> verses,
         List<IReadOnlyList<Memverse>> sections,
         DateTime today,
-        Func<IEnumerable<Memverse>, Task> saveVersesAsync)
+        Action<IReadOnlyList<VerseReviewChange>> saveChanges)
     {
         allVerses = new MemverseCollection(verses);
         this.sections = sections;
         this.today = today.Date;
-        this.saveVersesAsync = saveVersesAsync;
+        this.saveChanges = saveChanges;
         SelectVerse(0);
     }
 
@@ -273,41 +273,41 @@ sealed class ReviewVersesViewModel
         IEnumerable<Memverse> verses,
         int targetVersesPerDay,
         DateTime today,
-        Func<IEnumerable<Memverse>, Task> saveVersesAsync,
+        Action<IReadOnlyList<VerseReviewChange>> saveChanges,
         long? startingPassageId = null)
     {
         var source = verses.ToList();
         var sections = PassageLogic.SelectReviewSections(
             source, targetVersesPerDay, today, startingPassageId)
             .Select(passage => (IReadOnlyList<Memverse>)passage.Verses).ToList();
-        return sections.Count == 0 ? null : new ReviewVersesViewModel(source, sections, today, saveVersesAsync);
+        return sections.Count == 0 ? null : new ReviewVersesViewModel(source, sections, today, saveChanges);
     }
 
-    public Task UpdateInputAsync(string value)
+    public void UpdateInput(string value)
     {
         if (HintLevel < 3)
             HintLevel = 0;
         InputText = value;
-        return UpdateFeedbackAsync();
+        UpdateFeedback();
     }
 
-    public Task UseHintAsync()
+    public void UseHint()
     {
         if (IsCorrect)
-            return Task.CompletedTask;
+            return;
 
         HintLevel++;
         if (HintLevel >= 3)
         {
             ShowAnswer = true;
-            return Task.CompletedTask;
+            return;
         }
 
         InputText = Feedback.FixNextWord(InputText, CurrentVerse.Text!, CompleteFirstLetters);
-        return UpdateFeedbackAsync();
+        UpdateFeedback();
     }
 
-    private Task UpdateFeedbackAsync()
+    private void UpdateFeedback()
     {
         if (Feedback.ClassifyText(
             InputText, CurrentVerse.Text!, revealAnswer: false, CompleteFirstLetters).Correct)
@@ -320,11 +320,10 @@ sealed class ReviewVersesViewModel
                 SelectVerse(VerseIndex + 1);
             CorrectVerse = verse;
             if (saveProgress)
-                return saveVersesAsync([verse]);
+                saveChanges([new VerseReviewChange(verse)]);
         }
         else
             CorrectVerse = null;
-        return Task.CompletedTask;
     }
 
     public int? GetRating(Memverse verse) =>
@@ -338,7 +337,7 @@ sealed class ReviewVersesViewModel
             ratings[verse.Id] = rating;
     }
 
-    public async Task<bool> RateAsync(int rating, IOfflineOperations offline)
+    public bool Rate(int rating)
     {
         var targets = RatingTargets;
         foreach (var verse in targets)
@@ -351,20 +350,23 @@ sealed class ReviewVersesViewModel
 
         if (!IsCorrect)
             CorrectVerse = null;
-        await saveVersesAsync(targets);
         if (!AllVersesRated)
+        {
+            saveChanges(targets.Select(verse => new VerseReviewChange(verse)).ToArray());
             return true;
+        }
 
-        foreach (var verse in CurrentSection)
-            await offline.RateMemverseAsync(verse, ratings[verse.Id]);
+        var changes = CurrentSection.Select(verse => new VerseReviewChange(verse, ratings[verse.Id])).ToArray();
 
-        if (SectionIndex == sections.Count - 1)
-            return false;
-
-        SectionIndex++;
-        ratings.Clear();
-        SelectVerse(0);
-        return true;
+        var hasMoreReview = SectionIndex < sections.Count - 1;
+        if (hasMoreReview)
+        {
+            SectionIndex++;
+            ratings.Clear();
+            SelectVerse(0);
+        }
+        saveChanges(changes);
+        return hasMoreReview;
     }
 
     private void SelectVerse(int verseIndex)

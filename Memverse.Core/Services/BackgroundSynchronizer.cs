@@ -17,6 +17,7 @@ sealed class BackgroundSynchronizer(
         await syncLock.WaitAsync();
         try
         {
+            await state.FlushPersistenceAsync();
             LastError = null;
             foreach (var operation in state.Mutations.OrderBy(request => request.Id).ToList())
             {

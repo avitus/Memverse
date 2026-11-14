@@ -127,11 +127,11 @@ globalThis.memverseDb = {
         }
     },
 
-    async save(storeName, values, replaceAll = false, mutation = null) {
+    async save(storeName, values, replaceAll = false, mutations = []) {
         const database = await openDatabase();
         try {
             const transaction = database.transaction(
-                mutation ? [storeName, "mutations"] : [storeName], "readwrite");
+                mutations.length > 0 ? [storeName, "mutations"] : [storeName], "readwrite");
             const completion = transactionComplete(transaction);
             const store = transaction.objectStore(storeName);
             if (replaceAll) {
@@ -140,18 +140,18 @@ globalThis.memverseDb = {
             for (const item of values) {
                 store.put(item);
             }
-            let id = 0;
-            if (mutation) {
+            const ids = [];
+            for (const [index, mutation] of mutations.entries()) {
                 const queuedMutation = { ...mutation };
                 delete queuedMutation.id;
                 const request = transaction.objectStore("mutations").add(queuedMutation);
-                request.onsuccess = () => { id = request.result; };
+                request.onsuccess = () => { ids[index] = request.result; };
             }
             await completion;
-            if (mutation) {
+            if (mutations.length > 0) {
                 registerMutationSync();
             }
-            return id;
+            return ids;
         } finally {
             database.close();
         }

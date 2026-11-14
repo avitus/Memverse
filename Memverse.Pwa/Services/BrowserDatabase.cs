@@ -57,11 +57,11 @@ sealed class BrowserDatabase(IJSRuntime js) : IDatabase
     public Task SaveMemversesAsync(
         IEnumerable<MemverseRecord> verses,
         bool replaceAll = false,
-        ApiRequest? mutation = null) =>
-        SaveAsync(MemversesStore, verses, replaceAll, mutation);
+        params ApiRequest[] mutations) =>
+        SaveAsync(MemversesStore, verses, replaceAll, mutations);
 
     public Task SaveUserAndMutationAsync(User user, ApiRequest request) =>
-        SaveAsync(UsersStore, new[] { user }, replaceAll: true, mutation: request);
+        SaveAsync(UsersStore, new[] { user }, replaceAll: true, mutations: [request]);
 
     public async Task SaveMutationAsync(ApiRequest request)
     {
@@ -93,11 +93,11 @@ sealed class BrowserDatabase(IJSRuntime js) : IDatabase
         string store,
         IEnumerable<T> values,
         bool replaceAll = false,
-        ApiRequest? mutation = null)
+        params ApiRequest[] mutations)
     {
-        var mutationId = await js.InvokeAsync<int>("memverseDb.save", store, values, replaceAll, mutation);
-        if (mutation is not null)
-            mutation.Id = mutationId;
+        var mutationIds = await js.InvokeAsync<int[]>("memverseDb.save", store, values, replaceAll, mutations);
+        for (var index = 0; index < mutations.Length; index++)
+            mutations[index].Id = mutationIds[index];
     }
 
     private Task DeleteAsync(string store, object key) =>

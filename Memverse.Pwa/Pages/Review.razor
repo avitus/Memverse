@@ -16,7 +16,6 @@
             <button type="button" class="review-rating-chip"
                     aria-pressed="@(model.GetRating(verse) == value ? "true" : "false")"
                     aria-label="@($"Rate {verse.Reference}: {value}")"
-                    disabled="@savingRatings"
                     @onclick="() => model.ToggleRating(verse, value)">@value</button>
         }
     </span>;
@@ -71,7 +70,6 @@
                   value="@model.InputText"
                   @oninput="UpdateInput"
                   @onkeydown="HandleKeyDown"
-                  disabled="@savingRatings"
                   aria-label="Type @model.CurrentVerse.Reference"
                   autocomplete="off"
                   autocapitalize="off"
@@ -118,12 +116,12 @@
         </div>
         <div class="rating-panel">
             <div class="rating-actions">
-                <button class="rating rating-fail" @onclick="() => Rate(1)" disabled="@savingRatings"><strong>1</strong><span>don't know</span></button>
-                <button class="rating rating-fail" @onclick="() => Rate(2)" disabled="@savingRatings"><strong>2</strong><span>needed hint</span></button>
-                <button class="rating" @onclick="() => Rate(3)" disabled="@(savingRatings || model.CorrectVerse is null)"><strong>3</strong><span>difficult</span></button>
-                <button class="rating" @onclick="() => Rate(4)" disabled="@(savingRatings || model.CorrectVerse is null)"><strong>4</strong><span>hesitated</span></button>
-                <button class="rating" @onclick="() => Rate(5)" disabled="@(savingRatings || model.CorrectVerse is null)"><strong>5</strong><span>perfect</span></button>
-                <button class="btn btn-primary" title="Hint (Ctrl+Space)" @onclick="UseHint" disabled="@(savingRatings || model.IsCorrect)">Hint</button>
+                <button class="rating rating-fail" @onclick="() => Rate(1)"><strong>1</strong><span>don't know</span></button>
+                <button class="rating rating-fail" @onclick="() => Rate(2)"><strong>2</strong><span>needed hint</span></button>
+                <button class="rating" @onclick="() => Rate(3)" disabled="@(model.CorrectVerse is null)"><strong>3</strong><span>difficult</span></button>
+                <button class="rating" @onclick="() => Rate(4)" disabled="@(model.CorrectVerse is null)"><strong>4</strong><span>hesitated</span></button>
+                <button class="rating" @onclick="() => Rate(5)" disabled="@(model.CorrectVerse is null)"><strong>5</strong><span>perfect</span></button>
+                <button class="btn btn-primary" title="Hint (Ctrl+Space)" @onclick="UseHint" disabled="@model.IsCorrect">Hint</button>
             </div>
         </div>
     </article>
@@ -143,7 +141,6 @@ else
     private bool focusEntryAfterRender;
     private bool initialized;
     private long? initializedPassageId;
-    private bool savingRatings;
 
     protected override void OnParametersSet()
     {
@@ -158,7 +155,7 @@ else
             State.Verses,
             State.User?.TargetVersesPerDay ?? 15,
             DateTime.Today,
-            verses => State.SaveVersesAsync(verses),
+            Offline.QueueReviewChanges,
             PassageId);
         if (currentReview is null)
             Navigation.NavigateTo("", replace: true);
@@ -183,54 +180,42 @@ else
         }
     }
 
-    private Task UpdateInput(ChangeEventArgs args) =>
-        currentReview!.UpdateInputAsync(args.Value?.ToString() ?? "");
+    private void UpdateInput(ChangeEventArgs args) =>
+        currentReview!.UpdateInput(args.Value?.ToString() ?? "");
 
-    private Task UseHint()
+    private void UseHint()
     {
         focusEntryAfterRender = true;
-        return currentReview!.UseHintAsync();
+        currentReview!.UseHint();
     }
 
-    private async Task HandleKeyDown(KeyboardEventArgs args)
+    private void HandleKeyDown(KeyboardEventArgs args)
     {
-        if (savingRatings)
+        if (currentReview is not { } review)
             return;
 
         if (args.CtrlKey && args.Code == "Space" &&
-            !currentReview!.IsCorrect)
+            !review.IsCorrect)
         {
-            await UseHint();
+            UseHint();
             return;
         }
 
-        if (currentReview!.CorrectVerse is not null &&
+        if (review.CorrectVerse is not null &&
             args.Key.Length == 1 &&
             args.Key[0] is >= '1' and <= '5')
-            await Rate(args.Key[0] - '0');
+            Rate(args.Key[0] - '0');
     }
 
-    private async Task Rate(int rating)
+    private void Rate(int rating)
     {
-        var review = currentReview!;
-        if (savingRatings || rating >= 3 && review.CorrectVerse is null)
+        if (currentReview is not { } review || rating >= 3 && review.CorrectVerse is null)
             return;
 
-        savingRatings = true;
-        try
-        {
-            var hasMoreReview = await review.RateAsync(rating, Offline);
-            if (ReferenceEquals(currentReview, review))
-            {
-                focusEntryAfterRender = hasMoreReview;
-                if (!hasMoreReview)
-                    currentReview = null;
-            }
-        }
-        finally
-        {
-            savingRatings = false;
-        }
+        var hasMoreReview = review.Rate(rating);
+        focusEntryAfterRender = hasMoreReview;
+        if (!hasMoreReview)
+            currentReview = null;
     }
 
     public void Dispose() => _ = Online.FlushBackgroundTasksAsync();

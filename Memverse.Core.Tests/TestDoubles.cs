@@ -28,14 +28,15 @@ sealed class MemoryDatabase(MemoryDatabaseStore? store = null) : IDatabase
         return Task.CompletedTask;
     }
 
-    public Task SaveMemversesAsync(
+    public async Task SaveMemversesAsync(
         IEnumerable<Memverse> verses,
         bool replaceAll = false,
-        ApiRequest? mutation = null)
+        params ApiRequest[] mutations)
     {
         store.Memverses = replaceAll ? verses.ToList() : store.Memverses.Concat(verses)
             .GroupBy(verse => verse.Id).Select(group => group.Last()).ToList();
-        return mutation is null ? Task.CompletedTask : SaveMutationAsync(mutation);
+        foreach (var mutation in mutations)
+            await SaveMutationAsync(mutation);
     }
 
     public Task SaveUserAndMutationAsync(User user, ApiRequest request)
@@ -95,10 +96,11 @@ sealed class MemoryOfflineOperations : IOfflineOperations
         memverses.Remove(verse);
         return Task.CompletedTask;
     }
-    public Task RateMemverseAsync(Memverse verse, int rating)
+    public void QueueReviewChanges(IReadOnlyList<VerseReviewChange> changes)
     {
-        RatingClient.RateVerse(verse, rating);
-        return Task.CompletedTask;
+        foreach (var change in changes)
+            if (change.Rating is { } rating)
+                RatingClient.RateVerse(change.Verse, rating);
     }
     public Task ToggleStatusAsync(Memverse verse)
     {
