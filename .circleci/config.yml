@@ -285,8 +285,8 @@ jobs:
 
   vitest:
     docker:
-      # Same Node as the cimg/ruby:3.2.6-browsers image Vitest used to run on
-      - image: cimg/node:20.18.0
+      # Vitest 5 needs Node ^22.12 or ^24; production builds assets on Node 24
+      - image: cimg/node:24.22.3
 
     steps:
       - checkout
@@ -297,10 +297,6 @@ jobs:
             # The committed node_modules and package-lock.json are stale; install fresh
             rm -rf node_modules package-lock.json
             npm install
-
-            # Explicitly install Linux-specific Rollup binding (npm optional deps bug workaround)
-            # See: https://github.com/npm/cli/issues/4828
-            npm install @rollup/rollup-linux-x64-gnu --save-optional
 
       - run:
           name: JavaScript tests (Vitest)
