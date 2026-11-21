@@ -61,7 +61,7 @@ This document tracks the technical modernization progress of the Memverse applic
 
 ### ✅ Testing Infrastructure (PARTIALLY COMPLETED)
 - [x] Replace Jasmine with Vitest for JavaScript testing (COMPLETED)
-  - Vitest 5.1.1 (Vite 8, Node 22.12+ or 24) with UI and coverage support; specs in `test/javascript/*.test.js`
+  - Vitest 5.1.1 (Vite 8, Node `^22.12.0 || ^24.0.0 || >=26.0.0`) with UI and coverage support; specs in `test/javascript/*.test.js`
 - [x] Upgrade RSpec to v3.13 (latest stable)
 - [x] Upgrade Cucumber to v9.2.1 (latest stable)
 - [x] CI/CD: CircleCI with Smarter Testing (`.circleci/test-suites.yml` defines the `rspec`, `cucumber` and `vitest` suites; PR runs select impacted tests, `main` runs everything)
