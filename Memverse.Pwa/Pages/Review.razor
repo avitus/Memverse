@@ -68,6 +68,7 @@
                   class="form-control review-input @(model.IsCorrect ? "review-input-correct" : "")"
                   rows="3"
                   value="@model.InputText"
+                  data-rating-enabled="@(model.CorrectVerse is not null ? "true" : "false")"
                   @oninput="UpdateInput"
                   @onkeydown="HandleKeyDown"
                   aria-label="Type @model.CurrentVerse.Reference"
@@ -137,7 +138,7 @@ else
     private ReviewVersesViewModel? currentReview;
     private ElementReference verseEntry;
     private ElementReference reviewHistory;
-    private Memverse? lastScrolledVerse;
+    private Memverse? lastRenderedVerse;
     private bool focusEntryAfterRender;
     private bool initialized;
     private long? initializedPassageId;
@@ -148,7 +149,7 @@ else
             return;
 
         focusEntryAfterRender = false;
-        lastScrolledVerse = null;
+        lastRenderedVerse = null;
         initialized = true;
         initializedPassageId = PassageId;
         currentReview = ReviewVersesViewModel.Create(
@@ -163,20 +164,23 @@ else
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (currentReview is not null &&
-            (focusEntryAfterRender ||
-             currentReview.VerseIndex > 0 && currentReview.CurrentVerse != lastScrolledVerse))
+        if (currentReview is not { } review)
+            return;
+
+        var verseChanged = review.CurrentVerse != lastRenderedVerse;
+        if (focusEntryAfterRender || review.VerseIndex > 0 && verseChanged)
         {
             focusEntryAfterRender = false;
             await verseEntry.FocusAsync();
         }
 
-        if (currentReview is { } review &&
-            review.VerseIndex > 0 && review.CurrentVerse != lastScrolledVerse)
+        if (verseChanged)
         {
-            lastScrolledVerse = review.CurrentVerse;
+            lastRenderedVerse = review.CurrentVerse;
             await using var module = await JS.InvokeAsync<IJSObjectReference>("import", "./Pages/Review.razor.js");
-            await module.InvokeVoidAsync("scrollToBottom", reviewHistory);
+            await module.InvokeVoidAsync("preventRatingInput", verseEntry);
+            if (review.VerseIndex > 0)
+                await module.InvokeVoidAsync("scrollToBottom", reviewHistory);
         }
     }
 
