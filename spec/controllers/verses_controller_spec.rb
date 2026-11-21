@@ -56,6 +56,19 @@ describe VersesController do
       get :edit, params: {id: verse.to_param}, session: valid_session
       expect(assigns(:verse)).to eq(verse)
     end
+
+    context "with views rendered" do
+      render_views
+
+      # Regression for Sentry MEMVERSE-9H: the breadcrumb pointed at a nonexistent
+      # 'edit_verse' action, so rendering the layout raised UrlGenerationError.
+      it "renders the page with a breadcrumb linking to the edit path" do
+        verse = Verse.create! valid_attributes
+        get :edit, params: {id: verse.to_param}, session: valid_session
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include("Edit Psalms 117:1")
+      end
+    end
   end
 
   describe "POST create" do

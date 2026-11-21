@@ -65,7 +65,7 @@ class VersesController < ApplicationController
     @verse = Verse.find(params[:id])
 
     add_breadcrumb I18n.t("home_menu.My Verses"), :manage_verses_path
-    add_breadcrumb "Edit #{@verse.book} #{@verse.chapter}:#{@verse.versenum}", {:action => 'edit_verse', :id => params[:id] }
+    add_breadcrumb "Edit #{@verse.book} #{@verse.chapter}:#{@verse.versenum}", edit_verse_path(@verse)
 
   end
 
