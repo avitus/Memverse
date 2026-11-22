@@ -22,6 +22,9 @@
 
     <article class="review-card card">
         <div class="review-heading">
+            <NavLink class="review-back" href="passages" aria-label="Back to My passages">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6M9 12h12" /></svg>
+            </NavLink>
             <p class="eyebrow">@model.PassageReference · @model.CurrentVerse.Translation</p>
             <small>Verse @(model.VerseIndex + 1) of @model.CurrentSection.Count</small>
         </div>
@@ -72,6 +75,7 @@
                   @oninput="UpdateInput"
                   @onkeydown="HandleKeyDown"
                   aria-label="Type @model.CurrentVerse.Reference"
+                  autofocus
                   autocomplete="off"
                   autocapitalize="off"
                   spellcheck="false"></textarea>
@@ -129,7 +133,12 @@
 }
 else
 {
-    <div class="card empty"><h2>All caught up</h2><p>There are no passages due for review.</p></div>
+    <div class="card empty review-empty">
+        <NavLink class="review-back" href="passages" aria-label="Back to My passages">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6M9 12h12" /></svg>
+        </NavLink>
+        <h2>All caught up</h2><p>There are no passages due for review.</p>
+    </div>
 }
 
 @code {
@@ -158,6 +167,7 @@ else
             DateTime.Today,
             Offline.QueueReviewChanges,
             PassageId);
+        focusEntryAfterRender = currentReview is not null;
         if (currentReview is null)
             Navigation.NavigateTo("", replace: true);
     }

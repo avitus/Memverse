@@ -10,6 +10,7 @@ a { color: #226b58; text-decoration: none; }
 .nav { display: flex; flex-direction: column; gap: .25rem; }
 .nav-link { color: #c9ddd7; padding: .7rem 1rem; border-radius: .5rem; }
 .nav-link.active, .nav-link:hover { background: #2c6658; color: #fff; }
+.nav-link svg { display: none; }
 main { margin-left: 240px; }
 .eyebrow { color: #66877d; font-size: .75rem; font-weight: 700; letter-spacing: .14em; margin: 0; }
 .lead { color: #59656e; font-size: 1.2rem; max-width: 36rem; }
@@ -98,7 +99,29 @@ label { display: block; font-weight: 600; margin: 1rem 0 .35rem; }
 .page-loading { color: #59656e; padding: 12vh 1rem; text-align: center; }
 .single-instance { margin: 0; padding: 12vh 1rem; }
 .single-instance .card { margin: 0 auto; max-width: 32rem; }
-@media (max-width: 700px) { .sidebar { position: static; width: auto; min-height: auto; padding: 1rem; } .brand { padding-bottom: 1rem; } .nav { flex-direction: row; flex-wrap: wrap; } main { margin-left: 0; } .content { padding: 2rem 1rem; } .page-header, .review-heading { align-items: start; flex-direction: column; } .add-toolbar { gap: .35rem; } .add-step, .add-action { font-size: .75rem; padding: .4rem .15rem; } .rating-actions { gap: .3rem; } .rating, .rating-actions .btn { padding: .6rem .15rem; } .rating span { font-size: .65rem; } }
+.review-back { display: none; }
+@media (max-width: 700px) {
+    .sidebar { background: #fff; border-top: 1px solid #e5e9ec; bottom: 0; box-shadow: 0 -4px 16px #17212b0a; color: #59656e; min-height: 0; padding: 0 0 env(safe-area-inset-bottom); position: fixed; width: 100%; z-index: 20; }
+    .brand { display: none; }
+    .nav { display: flex; flex-direction: row; gap: 0; justify-content: space-around; }
+    .nav-link { align-items: center; border-radius: 0; color: #59656e; display: flex; flex: 1; flex-direction: column; font-size: .7rem; gap: .25rem; justify-content: center; min-height: 3.75rem; padding: .45rem .25rem .35rem; }
+    .nav-link svg { display: block; fill: none; height: 1.35rem; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.7; width: 1.35rem; }
+    .nav-link.active, .nav-link:hover { background: #f4f7f6; color: #226b58; }
+    main { margin-left: 0; }
+    .page-header { align-items: start; flex-direction: column; }
+    .review-heading { align-items: center; flex-direction: row; gap: .4rem; }
+    .review-heading .eyebrow { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .review-back { align-items: center; border-radius: .5rem; color: #226b58; display: flex; flex: 0 0 2.5rem; height: 2.5rem; justify-content: center; width: 2.5rem; }
+    .review-back:hover, .review-back:focus-visible { background: #f4f7f6; }
+    .review-back svg { fill: none; height: 1.4rem; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2; width: 1.4rem; }
+    .review-card { border-left: 0; border-right: 0; border-radius: 0; padding: .75rem 0; }
+    .review-empty { padding-top: .75rem; }
+    .add-toolbar { gap: .35rem; }
+    .add-step, .add-action { font-size: .75rem; padding: .4rem .15rem; }
+    .rating-actions { gap: .3rem; }
+    .rating, .rating-actions .btn { padding: .6rem .15rem; }
+    .rating span { font-size: .65rem; }
+}
 
 h1:focus {
     outline: none;

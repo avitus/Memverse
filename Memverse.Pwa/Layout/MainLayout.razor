@@ -11,7 +11,7 @@
 }
 else
 {
-    <div class="page">
+    <div class="page @(IsReviewPage ? "review-page" : "")">
         @if (State.IsSignedIn)
         {
             <div class="sidebar">
@@ -71,6 +71,9 @@ else
 
     private bool initialized;
     private string? syncMessage;
+    [CascadingParameter] private RouteData? CurrentRoute { get; set; }
+    private bool IsReviewPage => CurrentRoute?.PageType == typeof(MemverseApp.Pwa.Pages.Review);
+
     private readonly CancellationTokenSource replayCancellation = new();
     private Task? replayLoop;
 
