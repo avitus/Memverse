@@ -11,11 +11,11 @@ a { color: #226b58; text-decoration: none; }
 .nav-link { color: #c9ddd7; padding: .7rem 1rem; border-radius: .5rem; }
 .nav-link.active, .nav-link:hover { background: #2c6658; color: #fff; }
 .nav-link svg { display: none; }
-main { margin-left: 240px; }
+.sidebar ~ main { margin-left: 240px; }
 .eyebrow { color: #66877d; font-size: .75rem; font-weight: 700; letter-spacing: .14em; margin: 0; }
 .lead { color: #59656e; font-size: 1.2rem; max-width: 36rem; }
 .hero { padding: 12vh 0; }
-.page-header { align-items: end; display: flex; justify-content: space-between; gap: 1rem; margin-bottom: 2rem; }
+.page-header { align-items: end; display: flex; justify-content: space-between; gap: 1rem; margin-bottom: .5rem; }
 .card { background: #fff; border: 1px solid #e5e9ec; border-radius: .85rem; box-shadow: 0 5px 20px #17212b0a; padding: 1.4rem; }
 .passage span, small { color: #71808a; font-size: .85rem; }
 .btn { border: 0; border-radius: .5rem; cursor: pointer; display: inline-block; font-weight: 600; padding: .7rem 1rem; }
@@ -24,9 +24,11 @@ main { margin-left: 240px; }
 .btn-danger { background: #9b3434; color: #fff; }
 .btn:disabled { cursor: not-allowed; opacity: .45; }
 .auth-card, .form-card { max-width: 500px; margin: 4rem auto; }
+.auth-card { text-align: center; }
+.form-card { margin-top: 0; }
 label { display: block; font-weight: 600; margin: 1rem 0 .35rem; }
 .form-control { border: 1px solid #ccd5d9; border-radius: .45rem; box-sizing: border-box; font: inherit; padding: .7rem; width: 100%; }
-.form-card .btn, .auth-card .btn { margin-top: 1.4rem; }
+.form-card > .btn, .auth-card .btn { margin-top: 1.4rem; }
 .error { color: #a43d3d; }
 .passage-list { display: grid; gap: 1rem; }
 .passage-book { display: grid; gap: 1rem; }
@@ -107,7 +109,7 @@ label { display: block; font-weight: 600; margin: 1rem 0 .35rem; }
     .nav-link { align-items: center; border-radius: 0; color: #59656e; display: flex; flex: 1; flex-direction: column; font-size: .7rem; gap: .25rem; justify-content: center; min-height: 3.75rem; padding: .45rem .25rem .35rem; }
     .nav-link svg { display: block; fill: none; height: 1.35rem; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.7; width: 1.35rem; }
     .nav-link.active, .nav-link:hover { background: #f4f7f6; color: #226b58; }
-    main { margin-left: 0; }
+    .sidebar ~ main { margin-left: 0; }
     .page-header { align-items: start; flex-direction: column; }
     .review-heading { align-items: center; flex-direction: row; gap: .4rem; }
     .review-heading .eyebrow { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

@@ -1,9 +1,12 @@
 @page "/settings"
+@using System.Globalization
+@using System.Reflection
 @inject MemverseState State
 @inject IOfflineOperations Offline
 @inject IOnlineOperations Online
 @inject ITelemetryService Telemetry
 @inject NavigationManager Navigation
+@inject IJSRuntime JS
 
 <PageTitle>Settings - Memverse</PageTitle>
 <div class="page-header"><h1>Settings</h1></div>
@@ -26,18 +29,46 @@
     @if (!string.IsNullOrWhiteSpace(model.Message)) { <p class="@(model.Succeeded ? "success" : "error")" role="status">@model.Message</p> }
     <button class="btn btn-primary" @onclick="Save" disabled="@model.Busy">Save settings</button>
     <hr />
+    <div>
+        <p><strong>Memverse</strong></p>
+        <p><small>Released @ReleaseDate</small></p>
+        <p><small>Last checked: @(lastChecked?.ToLocalTime().ToString($"MMMM d, yyyy, {CultureInfo.CurrentCulture.DateTimeFormat.ShortTimePattern}", CultureInfo.CurrentCulture) ?? "Not yet")</small></p>
+        @if (!string.IsNullOrWhiteSpace(updateMessage)) { <p role="status">@updateMessage</p> }
+        <button class="btn btn-secondary" @onclick="CheckForUpdates" disabled="@checkingForUpdates">
+            @(checkingForUpdates ? "Checking..." : "Check for updates")
+        </button>
+    </div>
+    <hr />
     <h2>Reset this device</h2>
     <p>Clears this device's cached account, passages, and pending changes. Server data is not deleted.</p>
     <button class="btn btn-danger" @onclick="Reset">Reset local app</button>
 </div>
 
 @code {
+    private static readonly string ReleaseDate = DateTimeOffset.Parse(
+        typeof(App).Assembly.GetCustomAttributes<AssemblyMetadataAttribute>()
+            .Single(attribute => attribute.Key == "ReleaseDateUtc").Value
+            ?? throw new InvalidOperationException("The build is missing its release date."),
+        CultureInfo.InvariantCulture).UtcDateTime.ToString("MMMM d, yyyy", CultureInfo.InvariantCulture);
     private readonly UserSettingsViewModel model = new();
     private SelectTranslationViewModel? translations;
+    private bool checkingForUpdates;
+    private string? updateMessage;
+    private DateTimeOffset? lastChecked;
 
     protected override async Task OnInitializedAsync()
     {
         model.Initialize(State.User);
+        try
+        {
+            var storedCheck = await JS.InvokeAsync<string?>("memverseGetLastUpdateCheck");
+            if (DateTimeOffset.TryParse(storedCheck, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var parsedCheck))
+                lastChecked = parsedCheck;
+        }
+        catch (JSException)
+        {
+            lastChecked = null;
+        }
         if (State.AccessToken is null) return;
         translations = new SelectTranslationViewModel(
             Offline, Online, Telemetry);
@@ -58,6 +89,28 @@
         var error = await translations.SelectTranslationAsync(
             model.Translation!, model.TargetVersesPerDay);
         model.CompleteSave(error);
+    }
+
+    private async Task CheckForUpdates()
+    {
+        checkingForUpdates = true;
+        updateMessage = null;
+        try
+        {
+            var updateAvailable = await JS.InvokeAsync<bool>("memverseCheckForUpdate");
+            lastChecked = DateTimeOffset.Now;
+            await JS.InvokeVoidAsync("memverseSetLastUpdateCheck", lastChecked.Value.ToString("O", CultureInfo.InvariantCulture));
+            if (updateAvailable)
+                await JS.InvokeVoidAsync("memverseApplyUpdate");
+        }
+        catch (JSException)
+        {
+            updateMessage = "Could not update. Please try again.";
+        }
+        finally
+        {
+            checkingForUpdates = false;
+        }
     }
 
     private async Task Reset()

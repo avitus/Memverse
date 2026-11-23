@@ -1,7 +1,35 @@
 (async () => {
     if ("serviceWorker" in navigator) {
         try {
-            await navigator.serviceWorker.register("service-worker.js");
+            const registration = await navigator.serviceWorker.register("service-worker.js");
+            window.memverseGetLastUpdateCheck = () => localStorage.getItem("memverse-last-update-check");
+            window.memverseSetLastUpdateCheck = value => localStorage.setItem("memverse-last-update-check", value);
+            window.memverseCheckForUpdate = async () => {
+                if (!registration.waiting && !registration.installing) {
+                    await registration.update();
+                }
+                const worker = registration.installing;
+                if (worker) await new Promise((resolve, reject) => {
+                    const onStateChange = () => {
+                        if (!["installed", "activated", "redundant"].includes(worker.state)) return;
+                        worker.removeEventListener("statechange", onStateChange);
+                        if (worker.state === "redundant") reject(new Error("The new version could not be installed."));
+                        else resolve();
+                    };
+                    worker.addEventListener("statechange", onStateChange);
+                    onStateChange();
+                });
+                return Boolean(navigator.serviceWorker.controller && registration.waiting);
+            };
+            window.memverseApplyUpdate = () => {
+                const waitingWorker = registration.waiting;
+                if (!waitingWorker) {
+                    throw new Error("The update is no longer available. Check for updates again.");
+                }
+
+                navigator.serviceWorker.addEventListener("controllerchange", () => window.location.reload(), { once: true });
+                waitingWorker.postMessage({ type: "SKIP_WAITING" });
+            };
         } catch (error) {
             console.error("The Memverse service worker could not be registered.", error);
         }

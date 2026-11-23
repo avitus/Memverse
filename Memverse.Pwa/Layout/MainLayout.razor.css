@@ -9,7 +9,7 @@ main {
 .content {
     max-width: 1120px;
     margin: 0 auto;
-    padding: 3rem 2rem;
+    padding: 1rem 2rem 3rem;
 }
 
 @media (max-width: 700px) {
