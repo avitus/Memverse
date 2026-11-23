@@ -3,7 +3,7 @@ body { margin: 0; }
 h1, h2 { letter-spacing: -0.03em; }
 h1 { font-size: clamp(2rem, 5vw, 3.5rem); margin: .25rem 0 1rem; }
 h2 { font-size: 1.35rem; }
-a { color: #226b58; text-decoration: none; }
+a { color: #4f7d31; text-decoration: none; }
 .sidebar { background: #173b35; box-sizing: border-box; color: #fff; min-height: 100vh; position: fixed; width: 240px; padding: 2rem 1rem; }
 .brand { font-size: 1.45rem; font-weight: 700; padding: 0 1rem 2rem; }
 .brand a { color: #fff; }
@@ -19,8 +19,8 @@ a { color: #226b58; text-decoration: none; }
 .card { background: #fff; border: 1px solid #e5e9ec; border-radius: .85rem; box-shadow: 0 5px 20px #17212b0a; padding: 1.4rem; }
 .passage span, small { color: #71808a; font-size: .85rem; }
 .btn { border: 0; border-radius: .5rem; cursor: pointer; display: inline-block; font-weight: 600; padding: .7rem 1rem; }
-.btn-primary { background: #226b58; color: #fff; }
-.btn-secondary { background: #e5eeeb; color: #226b58; }
+.btn-primary { background: #4f7d31; color: #fff; }
+.btn-secondary { background: #e5eeeb; color: #4f7d31; }
 .btn-danger { background: #9b3434; color: #fff; }
 .btn:disabled { cursor: not-allowed; opacity: .45; }
 .auth-card, .form-card { max-width: 500px; margin: 4rem auto; }
@@ -32,7 +32,7 @@ label { display: block; font-weight: 600; margin: 1rem 0 .35rem; }
 .error { color: #a43d3d; }
 .passage-list { display: grid; gap: 1rem; }
 .passage-book { display: grid; gap: 1rem; }
-.passage-book h2 { color: #226b58; font-size: 1.15rem; margin: 1.25rem 0 0; }
+.passage-book h2 { color: #4f7d31; font-size: 1.15rem; margin: 1.25rem 0 0; }
 .passage strong, .passage span { display: block; }
 .passage p { color: #4e5c64; line-height: 1.6; }
 .passage-summary { align-items: center; background: none; border: 0; cursor: pointer; display: flex; font: inherit; justify-content: space-between; padding: 0; text-align: left; width: 100%; }
@@ -44,14 +44,14 @@ label { display: block; font-weight: 600; margin: 1rem 0 .35rem; }
 .add-card { margin: 0 auto; max-width: 720px; }
 .add-toolbar { display: grid; gap: .6rem; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-bottom: 1.25rem; }
 .add-step, .add-action, .add-choice { background: #fff; border: 1px solid #ccd5d9; border-radius: .55rem; color: #17212b; cursor: pointer; font: inherit; min-height: 3rem; }
-.add-step.selected { background: #e5eeeb; border-color: #226b58; color: #226b58; font-weight: 700; }
-.add-action { color: #226b58; font-weight: 600; }
-.add-primary { background: #226b58; border-color: #226b58; color: #fff; }
+.add-step.selected { background: #e5eeeb; border-color: #4f7d31; color: #4f7d31; font-weight: 700; }
+.add-action { color: #4f7d31; font-weight: 600; }
+.add-primary { background: #4f7d31; border-color: #4f7d31; color: #fff; }
 .add-step:disabled, .add-action:disabled { cursor: not-allowed; opacity: .45; }
 .add-prompt { color: #59656e; font-size: 1rem; letter-spacing: 0; margin: 0 0 .85rem; text-align: center; }
 .add-choice-grid { display: grid; gap: .65rem; grid-template-columns: repeat(6, minmax(0, 1fr)); margin: 0 auto; max-width: 27rem; }
 .add-choice { font-size: 1.05rem; }
-.add-choice:hover, .add-choice:focus { border-color: #226b58; background: #e5eeeb; box-shadow: 0 2px 8px #17212b14; }
+.add-choice:hover, .add-choice:focus { border-color: #4f7d31; background: #e5eeeb; box-shadow: 0 2px 8px #17212b14; }
 .add-progress, .add-missing { margin: 1rem 0; text-align: center; }
 .inline-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1rem; }
 .due-groups { display: grid; gap: 1rem; }
@@ -59,14 +59,14 @@ label { display: block; font-weight: 600; margin: 1rem 0 .35rem; }
 .due-group-header h2 { margin: 0; }
 .due-passages { display: grid; gap: .75rem 1.5rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); list-style: none; margin: 0; padding: 0; }
 .due-passages li { border-top: 1px solid #edf0f1; padding-top: .75rem; }
-.due-passages a { color: #226b58; text-decoration: underline; text-underline-offset: .15em; }
+.due-passages a { color: #4f7d31; text-decoration: underline; text-underline-offset: .15em; }
 .due-empty { color: #59656e; margin: 0; }
 .sync-banner { background: #fff3d8; border-radius: .5rem; padding: .75rem 1rem; }
 .review-card { max-width: 760px; margin: 0 auto; min-height: 0; display: flex; flex-direction: column; padding: 1rem; }
 .review-heading { align-items: center; display: flex; justify-content: space-between; gap: .75rem; margin-bottom: .75rem; }
 .review-verse-ratings { display: inline-flex; gap: .25rem; margin-left: .5rem; vertical-align: middle; white-space: nowrap; }
-.review-rating-chip { background: #f4f7f6; border: 1px solid #ccd5d9; border-radius: .4rem; color: #226b58; cursor: pointer; font: inherit; font-size: .8rem; padding: .3rem .5rem; white-space: nowrap; }
-.review-rating-chip[aria-pressed="true"] { background: #226b58; border-color: #226b58; color: white; }
+.review-rating-chip { background: #f4f7f6; border: 1px solid #ccd5d9; border-radius: .4rem; color: #4f7d31; cursor: pointer; font: inherit; font-size: .8rem; padding: .3rem .5rem; white-space: nowrap; }
+.review-rating-chip[aria-pressed="true"] { background: #4f7d31; border-color: #4f7d31; color: white; }
 .review-rating-chip:disabled { cursor: not-allowed; opacity: .45; }
 .review-context { background: #f4f7f6; border-radius: .6rem; color: #59656e; max-height: 8rem; overflow-y: auto; padding: .35rem .75rem; }
 .review-context p { line-height: 1.5; margin: .5rem 0; }
@@ -91,7 +91,7 @@ label { display: block; font-weight: 600; margin: 1rem 0 .35rem; }
 .rating-panel { border-top: 1px solid #e5e9ec; margin-top: .85rem; padding-top: .85rem; text-align: center; }
 .rating-actions { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: .6rem; }
 .rating-actions .btn { padding: .7rem .35rem; }
-.rating { background: #e5eeeb; border: 1px solid transparent; border-radius: .6rem; color: #226b58; cursor: pointer; padding: .7rem .35rem; }
+.rating { background: #e5eeeb; border: 1px solid transparent; border-radius: .6rem; color: #4f7d31; cursor: pointer; padding: .7rem .35rem; }
 .rating strong, .rating span { display: block; }
 .rating strong { font-size: 1.25rem; }
 .rating span { font-size: .75rem; margin-top: .2rem; overflow-wrap: anywhere; }
@@ -108,12 +108,12 @@ label { display: block; font-weight: 600; margin: 1rem 0 .35rem; }
     .nav { display: flex; flex-direction: row; gap: 0; justify-content: space-around; }
     .nav-link { align-items: center; border-radius: 0; color: #59656e; display: flex; flex: 1; flex-direction: column; font-size: .7rem; gap: .25rem; justify-content: center; min-height: 3.75rem; padding: .45rem .25rem .35rem; }
     .nav-link svg { display: block; fill: none; height: 1.35rem; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.7; width: 1.35rem; }
-    .nav-link.active, .nav-link:hover { background: #f4f7f6; color: #226b58; }
+    .nav-link.active, .nav-link:hover { background: #f4f7f6; color: #4f7d31; }
     .sidebar ~ main { margin-left: 0; }
     .page-header { align-items: start; flex-direction: column; }
     .review-heading { align-items: center; flex-direction: row; gap: .4rem; }
     .review-heading .eyebrow { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .review-back { align-items: center; border-radius: .5rem; color: #226b58; display: flex; flex: 0 0 2.5rem; height: 2.5rem; justify-content: center; width: 2.5rem; }
+    .review-back { align-items: center; border-radius: .5rem; color: #4f7d31; display: flex; flex: 0 0 2.5rem; height: 2.5rem; justify-content: center; width: 2.5rem; }
     .review-back:hover, .review-back:focus-visible { background: #f4f7f6; }
     .review-back svg { fill: none; height: 1.4rem; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2; width: 1.4rem; }
     .review-card { border-left: 0; border-right: 0; border-radius: 0; padding: .75rem 0; }
@@ -130,13 +130,13 @@ h1:focus {
 }
 
 a, .btn-link {
-    color: #0071c1;
+    color: #4f7d31;
 }
 
 .btn-primary {
     color: #fff;
-    background-color: #1b6ec2;
-    border-color: #1861ac;
+    background-color: #4f7d31;
+    border-color: #3d612c;
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
@@ -207,7 +207,7 @@ a, .btn-link {
     }
 
         .loading-progress circle:last-child {
-            stroke: #1b6ec2;
+            stroke: #4f7d31;
             stroke-dasharray: calc(3.141 * var(--blazor-load-percentage, 0%) * 0.8), 500%;
             transition: stroke-dasharray 0.05s ease-in-out;
         }
