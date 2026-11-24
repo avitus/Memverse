@@ -1,10 +1,14 @@
 // Caution! Be sure you understand the caveats before publishing an application with
 // offline support. See https://aka.ms/blazor-offline-considerations
 
-self.importScripts('./service-worker-assets.js');
-self.importScripts('./indexed-db.js');
-self.importScripts('./oauth-config.js');
-self.importScripts('./mutation-sync.js');
+// Existing registrations may still cache imports until the updated app is loaded.
+// The Pages deployment stamps a new revision to avoid reusing stale imports.
+const importsRevision = 'local';
+self.importScripts(
+    `./service-worker-assets.js?v=${importsRevision}`,
+    `./indexed-db.js?v=${importsRevision}`,
+    `./oauth-config.js?v=${importsRevision}`,
+    `./mutation-sync.js?v=${importsRevision}`);
 self.addEventListener('install', event => event.waitUntil(onInstall(event)));
 self.addEventListener('activate', event => event.waitUntil(onActivate(event)));
 self.addEventListener('fetch', event => event.respondWith(onFetch(event)));

@@ -1,7 +1,7 @@
 (async () => {
     if ("serviceWorker" in navigator) {
         try {
-            const registration = await navigator.serviceWorker.register("service-worker.js");
+            const registration = await navigator.serviceWorker.register("service-worker.js", { updateViaCache: "none" });
             window.memverseGetLastUpdateCheck = () => localStorage.getItem("memverse-last-update-check");
             window.memverseSetLastUpdateCheck = value => localStorage.setItem("memverse-last-update-check", value);
             window.memverseCheckForUpdate = async () => {

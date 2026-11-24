@@ -34,6 +34,12 @@ jobs:
       - name: Set Pages base path
         run: sed -i 's|<base href="/" />|<base href="/Memverse/" />|' Memverse.Pwa/wwwroot/index.html
 
+      - name: Set service worker import revision
+        run: |
+          worker=Memverse.Pwa/wwwroot/service-worker.published.js
+          grep -Fq "const importsRevision = 'local';" "$worker"
+          sed -i "s|const importsRevision = 'local';|const importsRevision = '${{ github.run_id }}-${{ github.run_attempt }}';|" "$worker"
+
       - name: Publish PWA
         run: >
           dotnet publish

@@ -17,4 +17,5 @@ Open the local URL printed by the application.
 
 The deployment workflow publishes the app to
 <https://avitus.github.io/Memverse/> with the `/Memverse/` base path and a
-`404.html` fallback for direct links.
+`404.html` fallback for direct links. It also versions service-worker imports
+per deployment to prevent stale cached manifests from blocking updates.
