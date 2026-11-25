@@ -90,32 +90,43 @@ RSpec.describe 'Heritage staging pages', type: :request do
     expect(response.body).not_to include('heritage_application')
   end
 
-  it 'uses the shared design on the signed-in home page and links Review to passage review' do
-    user = FactoryBot.create(:user, confirmed_at: Time.current)
-    verse = FactoryBot.create(:memverse, user: user, next_test: Date.yesterday)
-    FactoryBot.create(:progress_report, user: user, entry_date: Date.current, memorized: 7, session_complete: true)
-    other_user = FactoryBot.create(:user)
-    FactoryBot.create(:progress_report, user: other_user, entry_date: Date.current, memorized: 999)
-    allow(Devotion).to receive(:daily_refresh).and_return(nil)
+  it 'shows the signed-in account’s due reviews, streak and collection progress' do
+    user = FactoryBot.create(:user, confirmed_at: Time.current, all_refs: true)
+    verse = FactoryBot.create(:memverse, user: user)
+    verse.update_columns(status: 'Memorized', next_test: Date.yesterday, next_ref_test: nil)
+    FactoryBot.create(:progress_report, user: user, entry_date: Date.today, session_complete: true)
+    FactoryBot.create(:memverse)
     sign_in user
     get '/'
     expect(response).to have_http_status(:ok)
-    expect(response.body).to include('heritage-today-review', 'heritage_application')
-    expect(response.body).not_to include('home-page-tabs', 'yellow-icon')
     document = Nokogiri::HTML(response.body)
-    expect(document.at_css('.heritage-review-queue').text).to include(verse.verse.ref)
-    expect(document.at_css('.heritage-retained details').text).to include('7 verses memorized')
-    expect(document.at_css('.heritage-retained details').text).not_to include('999')
-    expect(document.css('.heritage-week .done').length).to eq(1)
-    expect(document.at_css('.heritage-history polyline')['points']).not_to match(/NaN|Infinity/)
-    expect(document.at_css('.heritage-collection-ribbon').text).to include('1 total verses')
-    navigation = Nokogiri::HTML(response.body).at_css('nav[aria-label="Main navigation"]')
+    home = document.at_css('.heritage-review-home')
+    expect(home.at_css('h1').text).to eq('Today’s review')
+    expect(home.css('a.review-card').map { |a| [a['aria-label'], a['href']] }).to eq([
+      ['Review 1 verse due today', passage_review_path],
+      ['Review 1 reference due today', test_ref_path]
+    ])
+    expect(home.at_css('.first-due')['href']).to eq(passage_review_path)
+    expect(home.css('dd').map { |dd| dd.text.squish }).to eq(['1 day', '1 of 1'])
+    expect(%w[value max].map { |key| home.at_css('progress')[key] }).to eq(%w[1 1])
+    navigation = document.at_css('nav[aria-label="Main navigation"]')
     expect(navigation.css('a').find { |link| link.text == 'Review' }['href']).to eq(passage_review_path)
     expect(navigation.css('a').find { |link| link.text == 'Today' }['href']).to eq(root_path)
+
+    verse.update_columns(next_test: Date.tomorrow)
+    get '/'
+    home = Nokogiri::HTML(response.body).at_css('.heritage-review-home')
+    expect(home.at_css('section.review-card').text.squish).to include('0 verses due', 'Review complete')
+    expect(home.at_css('.first-due')['href']).to eq(test_ref_path)
+  end
+
+  it 'shows two completed cards and zero progress for an empty collection' do
     sign_in FactoryBot.create(:user, confirmed_at: Time.current, translation: 'KJV')
     get '/'
-    expect(response).to have_http_status(:ok)
-    expect(response.body).to include('Start with a collection of popular verses', starter_pack_path(translation: 'NIV'))
+    home = Nokogiri::HTML(response.body).at_css('.heritage-review-home')
+    expect(home.css('a, progress')).to be_empty
+    expect(home.css('.review-complete').length).to eq(2)
+    expect(home.css('dd').map { |dd| dd.text.squish }).to eq(['0 days', '0 of 0'])
   end
 
   it 'renders the canvas blog browse, category, tag, and archive states' do

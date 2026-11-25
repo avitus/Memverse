@@ -62,6 +62,21 @@ describe User do
     expect(user_with_duplicate_email).not_to be_valid
   end
 
+  describe '#current_review_streak' do
+    it 'counts distinct consecutive completed days and gives the current day time to finish' do
+      user = FactoryBot.create(:user)
+      today = Date.new(2026, 11, 25)
+      [1, 1, 2, 4, -1].each do |days_ago|
+        FactoryBot.create(:progress_report, user: user, entry_date: today - days_ago, session_complete: true)
+      end
+      FactoryBot.create(:progress_report, user: user, entry_date: today, session_complete: false)
+      expect(user.current_review_streak(today: today)).to eq(2)
+      expect(user.current_review_streak(today: today + 3)).to eq(0)
+      FactoryBot.create(:progress_report, user: user, entry_date: today, session_complete: true)
+      expect(user.current_review_streak(today: today)).to eq(3)
+    end
+  end
+
   describe "passwords" do
 
     before(:each) do

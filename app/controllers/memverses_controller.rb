@@ -151,6 +151,15 @@ class MemversesController < ApplicationController
 
     @due_today	= current_user.due_verses
     @due_refs   = current_user.due_refs
+
+    if helpers.heritage_enabled?
+      counts = current_user.memverses.group(:status).count
+      @memorized = counts.fetch('Memorized', 0)
+      @collection_size = counts.values.sum
+      @review_streak = current_user.current_review_streak
+      return
+    end
+
     @overdue		= current_user.overdue_verses
 
     # Level information

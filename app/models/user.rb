@@ -946,6 +946,15 @@ class User < ApplicationRecord
     self.memverses.active.where("next_test <= ?", Date.today).count
   end
 
+  # A completed review yesterday remains current until today ends.
+  def current_review_streak(today: Date.today)
+    dates = progress_reports.where(session_complete: true, entry_date: ..today)
+                            .distinct.order(entry_date: :desc).pluck(:entry_date)
+    return 0 if dates.empty? || dates.first < today.yesterday
+
+    dates.each_with_index.take_while { |date, offset| date == dates.first - offset }.length
+  end
+
   # Number of due verse references
   #
   # @return [Integer]

@@ -72,7 +72,7 @@ and existing server actions.
 | Canvas design | Rails destination | Component / pinned revision |
 | --- | --- | --- |
 | Navy & copper · Landing | Signed-out `/` | 462396588447387648 / 462396588447387649 |
-| Navy & copper · Today | Signed-in `/` | 462396245789532160 / 469892871043039232 |
+| Signed-in home · Review cards | Signed-in `/` | 476447666843291648 / 476458529327296512 |
 | Dashboard · Heritage | `/users/:id` | 469887795507384320 / 469892856572694528 |
 | Profile · Heritage settings | `/update_profile` | 469886147158487040 / 469892537562320896 |
 | Manage verses | `/manage_verses` | 469890787795161088 / 469896406883274752 |
@@ -94,14 +94,14 @@ and existing server actions.
 | Memverse · Design system | Shared tokens, controls, forms, and charts | 469884063197564928 / 469908824871018496 |
 
 The public landing page includes the Scripture illustration, navy belief strip, blue/sage/copper
-feature cards, local Psalm 23:1 practice, community links, and invitation. The Today page uses
-blue review, copper retention, and sage practice panels. Its counts, queue, six-month history,
-and completed-session days come only from the signed-in account. Empty histories stay empty;
-prototype chart values are never substituted. Existing onboarding and devotional content remain
-available below the Today panels.
+feature cards, local Psalm 23:1 practice, community links, and invitation. The signed-in Today page shows two review cards, with the copper action on the first
+card that has work due. A finished card displays “Review complete.” The cards stack on phones.
+Below them, the current streak counts consecutive completed review days through today or
+yesterday. Collection progress is the number of memorized verses out of all verses in the
+account, including pending verses.
 
-`_heritage_landing.scss` adapts the pinned landing layout; `_heritage_canvas.scss` supplies the
-Today panels and shared accents, with matching dark tokens. Primary actions retain copper fills
+`_heritage_landing.scss` adapts the public landing layout. `_heritage_canvas.scss` supplies the
+Today cards and shared accents, with matching dark tokens. Primary actions retain copper fills
 and accessible foregrounds. Blog search overrides the engine's legacy table with article results;
 category, tag, and archive views share the journal layout and preserve their server filters.
 Journal categories and tags use copper labels instead of the old image icons. Excerpts decode

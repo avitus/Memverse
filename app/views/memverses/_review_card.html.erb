@@ -1,0 +1,12 @@
+<% label = kind.pluralize(count) %>
+<%= content_tag(count.positive? ? :a : :section,
+                class: class_names('review-card', 'first-due': primary),
+                href: (path if count.positive?),
+                aria: { label: ("Review #{number_with_delimiter(count)} #{label} due today" if count.positive?) }) do %>
+  <h2 class="review-count"><strong><%= number_with_delimiter(count) %></strong> <span><%= label %> due</span></h2>
+  <% if count.positive? %>
+    <span class="<%= primary ? 'heritage-primary' : 'heritage-secondary' %>">Review <%= label %> <span aria-hidden="true">→</span></span>
+  <% else %>
+    <span class="review-complete">Review complete</span>
+  <% end %>
+<% end %>

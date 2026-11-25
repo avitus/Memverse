@@ -5,51 +5,84 @@
   .heritage-primary { color:#fff; }
   .heritage-header nav a[aria-current=page] { background:var(--mv-soft); border-radius:5px; padding:10px 14px; }
   .heritage-eyebrow { color:var(--mv-action); }
-  .heritage-today h1,.heritage-today h2 { font-family:Arial,Helvetica,sans-serif; font-weight:500; letter-spacing:-.8px; }
-  .heritage-today h1 { margin:16px 0; font-size:40px; }
-  .heritage-today h2 { font-size:23px; }
-  .heritage-today small { color:var(--mv-muted); }
-  .heritage-purpose { text-align:right; font-size:13px; color:var(--mv-muted); }
-  .heritage-purpose strong { color:var(--mv-ink); font-weight:400; }
-  .heritage-today-grid { display:grid; grid-template-columns:1.45fr 1fr; gap:24px; margin:32px 0 0; }
-  .heritage-today-review { display:block; margin:0; padding:28px 32px; background:var(--mv-soft); border-radius:12px; border-left:4px solid var(--mv-brand); }
-  .heritage-today-review .heritage-page-heading { margin-bottom:16px; }
-  .heritage-review-symbol { color:var(--mv-action); font-size:26px; }
-  .heritage-due-heading { display:flex; align-items:center; gap:24px; margin-bottom:28px; }
-  .heritage-due-heading>strong { font:90px/1.1 Arial,sans-serif; letter-spacing:-6px; }
-  .heritage-due-heading h2 { margin:0 0 8px; }
-  .heritage-today .heritage-actions { font-size:12px; }
-  .heritage-review-summary { display:flex; flex-wrap:wrap; gap:16px; font-size:11px; color:var(--mv-muted); border-top:1px solid var(--mv-border); margin-top:24px; padding-top:16px; }
-  .heritage-retained { background:var(--mv-copper-soft); border:1px solid var(--mv-border); border-radius:12px; padding:28px; }
-  .heritage-retained .heritage-page-heading { margin-bottom:24px; }
-  .heritage-retained h2 { margin:0; }
-  .heritage-retained a,.heritage-review-queue a,.heritage-practice a { font-size:12px; }
-  .heritage-retained-number { display:flex; align-items:baseline; gap:16px; }
-  .heritage-retained-number strong { font-size:44px; line-height:1.2; letter-spacing:-2px; }
-  .heritage-retained-number span { color:var(--mv-muted); font-size:12px; }
-  .heritage-history { width:100%; height:100px; margin-top:16px; overflow:visible; }
-  .heritage-history polyline { fill:none; stroke:var(--mv-action); stroke-width:2.5; vector-effect:non-scaling-stroke; }
-  .heritage-history circle { fill:var(--mv-action); }
-  .heritage-history-grid { fill:none; stroke:var(--mv-border); stroke-dasharray:3 5; }
-  .heritage-history-dates { display:flex; justify-content:space-between; font-size:10px; color:var(--mv-muted); }
-  .heritage-retained details { font-size:11px; } .heritage-retained details ul { max-height:180px; overflow:auto; }
-  .heritage-collection-ribbon { display:flex; gap:24px; flex-wrap:wrap; padding:24px 0; border-bottom:1px solid var(--mv-border); font-size:12px; }
-  .heritage-collection-ribbon a { margin-left:auto; }
-  .heritage-swatch { display:inline-block; width:7px; height:7px; border-radius:50%; margin-right:8px; }
-  .heritage-swatch.memorized { background:var(--mv-success); } .heritage-swatch.learning { background:var(--mv-gold); } .heritage-swatch.pending { background:var(--mv-purple); }
-  .heritage-queue-row { display:flex; align-items:center; gap:16px; min-height:82px; border-top:1px solid var(--mv-border); text-decoration:none; }
-  .heritage-queue-row small { display:block; } .heritage-queue-row>span:last-child { margin-left:auto; }
-  .heritage-book-icon { background:var(--mv-soft); padding:8px 12px; border-radius:6px; font-size:22px; }
-  .heritage-status { padding:4px 8px; border-radius:4px; font-size:11px; }
-  .heritage-status.memorized { color:var(--mv-success); background:var(--mv-sage-soft); }
-  .heritage-status.learning { color:var(--mv-action); background:var(--mv-gold-soft); }
-  .heritage-status.pending { color:var(--mv-purple); background:var(--mv-purple-soft); }
-  .heritage-practice { background:var(--mv-sage-soft); padding:28px; border:1px solid var(--mv-border); border-radius:12px; }
-  .heritage-practice h2 { margin:12px 0; } .heritage-practice p { font-size:12px; color:var(--mv-muted); }
-  .heritage-week { display:flex; justify-content:space-between; gap:5px; margin:20px 0; }
-  .heritage-week span { text-align:center; } .heritage-week small { display:block; font-size:10px; }
-  .heritage-week b { display:grid; place-items:center; width:30px; height:30px; margin-top:8px; border-radius:50%; font-weight:400; }
-  .heritage-week .done b { background:var(--mv-surface); color:var(--mv-success); }
+
+  .heritage-review-home {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 16px 0;
+    h1 { margin: 0 0 24px; font: 400 48px/1.17 Georgia, serif; letter-spacing: -.035em; }
+    .review-cards, .practice-summary {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+    }
+    .review-card {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 24px;
+      padding: 32px;
+      border: 1px solid var(--mv-border);
+      border-radius: 4px;
+      background: var(--mv-surface);
+      text-decoration: none;
+    }
+    .first-due { border-top-color: var(--mv-brand); box-shadow: inset 0 2px var(--mv-brand); }
+    a.review-card:hover { border-color: var(--mv-action); }
+    a.review-card:focus-visible { outline: 2px solid var(--mv-action); outline-offset: 4px; }
+    .review-count {
+      display: flex;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 0 12px;
+      margin: 0;
+      font: 400 25px/1.3 Georgia, serif;
+      strong { font: 400 64px/1 Georgia, serif; color: var(--mv-brand); font-variant-numeric: lining-nums tabular-nums; }
+    }
+    .heritage-primary, .heritage-secondary { gap: 12px; font: 14px/1.5 Arial, sans-serif; }
+    .review-complete { color: var(--mv-success); font-size: 14px; }
+    .practice-summary {
+      margin: 32px 0 0;
+      padding-top: 24px;
+      border-top: 1px solid var(--mv-border);
+      dt { font: 400 14px/20px Arial, sans-serif; color: var(--mv-muted); }
+      dd { margin: 4px 0 0; font: 400 20px/1.4 Georgia, serif; }
+      strong { font: 400 32px/1.25 Georgia, serif; }
+      progress {
+        display: block;
+        appearance: none;
+        width: 100%;
+        max-width: 240px;
+        height: 6px;
+        margin-top: 8px;
+        border: 0;
+        border-radius: 4px;
+        overflow: hidden;
+        background: var(--mv-border);
+        color: var(--mv-brand);
+        &::-webkit-progress-bar { background: var(--mv-border); }
+        &::-webkit-progress-value { background: var(--mv-brand); }
+        &::-moz-progress-bar { background: var(--mv-brand); }
+      }
+    }
+    @media (max-width: 760px) {
+      padding: 0;
+      h1 { font-size: 38px; }
+      .review-card { padding: 24px; }
+      .review-cards { gap: 16px; }
+    }
+    @media (max-width: 620px) {
+      .review-cards { grid-template-columns: 1fr; gap: 12px; }
+      .review-card { flex-direction: row; align-items: center; justify-content: space-between; padding: 16px; gap: 8px; }
+      .review-count { display: block; font-size: 18px; }
+      .review-count strong { display: block; font-size: 40px; }
+      .heritage-primary, .heritage-secondary { padding-inline: 12px; }
+      .practice-summary { gap: 16px; margin-top: 24px; }
+    }
+    @media (max-width: 350px) {
+      .review-card { flex-direction: column; align-items: flex-start; }
+    }
+  }
   .heritage-stat { border-top-color:var(--mv-action); }
   .heritage-stat:nth-child(2) { border-top-color:var(--mv-brand); }
   .heritage-stat:nth-child(3) { border-top-color:var(--mv-success); }
@@ -62,8 +95,6 @@
   .heritage-dashboard-grid>section:first-child { border-top:2px solid var(--mv-action); }
   .lp .demo-card p { font:24px/1.8 Georgia,serif; margin:16px 0; }
   .lp .belief-strip h2 { color:#fff; }
-  @media(max-width:900px) { .heritage-today-grid { grid-template-columns:1fr; } .heritage-purpose { display:none; } }
-  @media(max-width:600px) { .heritage-today h1 { font-size:32px; } .heritage-today-review,.heritage-retained,.heritage-practice { padding:24px; } .heritage-due-heading>strong { font-size:64px; } .heritage-due-heading { gap:16px; } .heritage-queue-row { gap:8px; flex-wrap:wrap; padding:12px 0; } .heritage-collection-ribbon { gap:12px; } .heritage-today .heritage-page-heading { flex-wrap:wrap; } }
 }
 .mv-heritage[data-theme=dark] {
   --mv-copper-soft:#4b342b; --mv-sage-soft:#304838; --mv-gold:#d8b266;
