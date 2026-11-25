@@ -102,3 +102,7 @@ Created comprehensive test suite in `test/javascript/correct_apostrophe_behavior
 ## Demo Files
 - `test_final_solution_working.html` - Interactive demo showing the corrected behavior
 - Demonstrates Exodus 20:17 with three instances of "neighbor's"
+
+### Moving through a passage
+
+Passage review uses `reviewState.scrollToVerse` when a passage opens, when the final blank gives way to rating, and when a grade advances the review. It centers the next blank or the completed verse’s rating control in the visible viewport. A target already near the middle stays in place. Keyboard focus moves independently of scrolling, and Reduce Motion makes repositioning immediate.

@@ -92,10 +92,23 @@ var reviewState = {
     },
 
     scrollToVerse: function ( $verse ) {
-        // Scroll to next verse
-        $('html').scrollTo($verse, { easing: 'easeInOutCubic', duration: 1500, offset: -250 } );
-        // advance cursor to first word of next verse
-        $verse.find('.blank-word').first().focus();
+        var verse = $verse[0];
+        if (!verse) return;
+
+        var input = verse.querySelector('.blank-word');
+        var target = input || verse.querySelector('.passage-rating') || verse;
+        // Focusing an input can otherwise start a second, immediate browser scroll.
+        if (input) input.focus({ preventScroll: true });
+
+        var rect = target.getBoundingClientRect();
+        var viewport = window.visualViewport;
+        var height = viewport ? viewport.height : window.innerHeight;
+        var middle = (viewport ? viewport.offsetTop : 0) + height / 2;
+        var distance = rect.top + rect.height / 2 - middle;
+        if (Math.abs(distance) <= height * 0.08) return;
+
+        var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        window.scrollBy({ top: distance, behavior: reduceMotion ? 'instant' : 'smooth' });
     }
 };
 
@@ -203,8 +216,9 @@ function mvMirrorNextInput( $inputCell ) {
 
     } else {
 
-        // remove this input... because there are no more inputs
+        var $verse = $inputCell.closest('.single-verse-in-passage');
         $inputCell.remove();
+        if (!$verse.find('.blank-word').length) reviewState.scrollToVerse($verse);
     }
 }
 
