@@ -200,6 +200,7 @@ MemverseApp::Application.routes.draw do
   # Current single verse test
   get '/test_verse_quick'         => 'memverses#test_verse_quick',      :as => 'test_verse_quick'
   get '/test_next_verse'          => 'memverses#test_next_verse',       :as => 'test_next_verse'
+  patch '/review/verses/:id/rating' => 'memverses#rate_passage', as: :passage_verse_rating
   get '/mark_test_quick'          => 'memverses#mark_test_quick',       :as => 'mark_test_quick'
   get '/upcoming_verses'          => 'memverses#upcoming_verses',       :as => 'upcoming_verses'
 

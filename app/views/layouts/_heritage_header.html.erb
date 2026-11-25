@@ -3,16 +3,21 @@
     <%= link_to main_app.root_path, class: 'heritage-review-brand', 'aria-label': 'Memverse home' do %><span class="heritage-review-mark">mv</span>memverse<% end %>
     <div class="heritage-review-tools">
       <details class="heritage-queue heritage-passage-picker">
-        <summary>Passages</summary>
-        <div class="upcoming-passages upcoming" aria-label="Upcoming passages"></div>
+        <summary>Passages<span class="heritage-queue-count"></span></summary>
+        <div class="upcoming-passages upcoming" aria-label="Upcoming passages">
+          <input class="heritage-queue-search" type="search" aria-label="Find a passage" placeholder="Find a passage…">
+        </div>
       </details>
       <details class="heritage-reading-settings">
         <summary aria-label="Reading settings and help">Aa</summary>
         <div class="heritage-reading-panel">
           <h2>Reading settings</h2>
+          <label class="reading-size-label">Text size
+            <select id="passage-reading-size"><option value="small">Small</option><option value="medium" selected>Medium</option><option value="large">Large</option></select>
+          </label>
           <button id="heritage-theme" type="button">Dark</button>
           <h3>Keyboard help</h3>
-          <p>Correct words continue to the next blank. Tab moves between controls.</p>
+          <p>Fill in the missing words, then rate the verse in the margin. Select a saved number to change it. Tab moves between controls.</p>
           <p>↓ Reveals a word briefly. ↑ Reveals a verse briefly.</p>
           <%= link_to 'Individual verses', main_app.test_verse_quick_path %>
           <%= link_to 'References', main_app.test_ref_path %>

@@ -17,9 +17,15 @@
           <h2 class="passage-title"></h2>
         <% end %>
 
-        <div class="passage-text">
-
-        </div>
+        <div class="passage-text"></div>
+        <% if heritage_enabled? %>
+          <div class="heritage-review-footer" hidden>
+            <span class="heritage-review-count"></span>
+            <button type="button" class="heritage-next-passage" hidden>Next passage →</button>
+          </div>
+          <p class="heritage-review-status" role="status"></p>
+          <p class="heritage-niv-credit" hidden>Scripture taken from the Holy Bible, New International Version®. Copyright © 1973, 1978, 1984 by International Bible Society.</p>
+        <% end %>
 
 
     </div> <!-- end: passage-entry column -->
@@ -41,6 +47,16 @@
 
         //------- Initialize session ------------------
         reviewState.initialize();
+        $('#passage-reading-size').on('change', function () {
+            document.body.dataset.readingSize = this.value;
+            $('.passage-text .blank-word').each(function () { this.style.width = calculateInputWidth(this.name) + 'px'; });
+            mvArrangeMarginRatings();
+        });
+        $('.heritage-queue-search').on('input', function () {
+            var query = this.value.trim().toLowerCase();
+            $('.passage-list li').each(function () { this.hidden = this.textContent.toLowerCase().indexOf(query) < 0; });
+        });
+        $('.heritage-next-passage').on('click', reviewState.autoAdvancePassage);
 
         //------- Select passage for review -----------
         $( ".upcoming-passages" ).on( "click", ".upcoming-verse-ref", function( e ) {
@@ -48,7 +64,7 @@
             var picker = $(this).closest('details')[0];
             if (picker) {
                 picker.open = false;
-                picker.querySelector('summary').focus();
+                picker.querySelector('summary').focus({ preventScroll: true });
             }
             $(this).fadeOut();
             reviewState.clearCurrentPassage();    // clear current passage

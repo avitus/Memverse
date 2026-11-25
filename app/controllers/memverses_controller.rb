@@ -105,7 +105,7 @@ class MemversesController < ApplicationController
 
   # Added 4/7/10 to prevent invalid authenticity token errors
   # http://ryandaigle.com/articles/2007/9/24/what-s-new-in-edge-rails-better-cross-site-request-forging-prevention
-  protect_from_forgery prepend: true, only:[:create, :update, :destroy]
+  protect_from_forgery prepend: true, only:[:create, :update, :destroy, :rate_passage]
 
   prawnto :prawn => { :top_margin     => 50 }
   prawnto :prawn => { :bottom_margin  => 50 }
@@ -121,13 +121,20 @@ class MemversesController < ApplicationController
   # ----------------------------------------------------------------------------------------------------------
   def index
 
-    passage = Passage.find(params[:passage_id])
+    passage = current_user.passages.find(params[:passage_id])
 
     @memverses = passage ? passage.memverses.active.includes(:verse).order('verses.versenum') : current_user.memverses
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @memverses }
+      format.json do
+        if params[:passage_review] == '1'
+          review = PassageRatingSession.for_passage(passage)
+          render json: @memverses.map { |mv| mv.as_json.merge(rating: review.state_for(mv)) }
+        else
+          render json: @memverses
+        end
+      end
     end
   end
 
@@ -999,30 +1006,35 @@ class MemversesController < ApplicationController
       newly_memorized = mv.supermemo(q)
       ahoy.track "verse_rated", memverse_id: mv.id, verse_id: mv.verse_id, rating: q, newly_memorized: newly_memorized
 
-      # Give encouragement if verse transitions from "Learning" to "Memorized"
-      if newly_memorized
-        msg = "Congratulations. You have memorized #{mv.verse.ref}."
-        current_user.broadcast("memorized #{mv.verse.ref}", 5)
-
-        if current_user.reaching_milestone
-          current_user.tweet_milestone
-
-          milestone = current_user.memorized+1
-
-          msg << " That was your #{milestone}th memorized verse!"
-        end
-
-        if mv.chapter_memorized?
-          msg << " You have now memorized all of #{mv.verse.chapter_name}. Great job!"
-          current_user.broadcast("memorized #{mv.verse.chapter_name}", 3)
-        end
-      end
+      msg = memorization_message(mv) if newly_memorized
 
     else
       msg = "You are attempting to modify a memory verse that belongs to another user."
     end
 
     render :json => {:msg => msg }
+  end
+
+  def rate_passage
+    mv = current_user.memverses.find(params[:id])
+    quality = Integer(params[:quality], exception: false)
+    return head :unprocessable_entity unless (1..5).cover?(quality)
+
+    review = nil
+    result = mv.passage.with_lock do
+      mv.lock!
+      review = PassageRatingSession.for_passage(mv.passage)
+      review.rate!(mv, quality, day: params[:day], attempt: Integer(params[:attempt], exception: false),
+                   previous: Integer(params[:previous], exception: false))
+    end
+    if result == :rated || result == :memorized
+      ahoy.track "verse_rated", memverse_id: mv.id, verse_id: mv.verse_id, rating: quality, newly_memorized: result == :memorized
+    elsif result == :corrected
+      ahoy.track "verse_rating_changed", memverse_id: mv.id, verse_id: mv.verse_id, rating: quality
+    end
+    render json: { rating: review.state_for(mv), msg: (memorization_message(mv) if result == :memorized) }
+  rescue PassageRatingSession::StaleRating
+    render json: { rating: review.state_for(mv) }, status: :conflict
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -1390,6 +1402,25 @@ class MemversesController < ApplicationController
   end
 
   private
+
+  def memorization_message(mv)
+    msg = "Congratulations. You have memorized #{mv.verse.ref}."
+    current_user.broadcast("memorized #{mv.verse.ref}", 5)
+
+    if current_user.reaching_milestone
+      current_user.tweet_milestone
+
+      milestone = current_user.memorized+1
+
+      msg << " That was your #{milestone}th memorized verse!"
+    end
+
+    if mv.chapter_memorized?
+      msg << " You have now memorized all of #{mv.verse.chapter_name}. Great job!"
+      current_user.broadcast("memorized #{mv.verse.chapter_name}", 3)
+    end
+    msg
+  end
 
   def set_mv
     @mv = Memverse.find(params[:id])

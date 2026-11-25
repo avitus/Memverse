@@ -357,14 +357,14 @@ function blankifyVerse(versetext, reduction_percentage) {
 
 	    text_with_blanks = split_text.map( function(x) {
 	        if ( sort_by_length.indexOf(x) < 0 ) {
-	            return "<span>" + x + " " + "</span>";
+	            return "<span>" + x.replace(/&/g, '&amp;').replace(/</g, '&lt;') + " </span>";
 	        }
 	        else {
 	            // Use enhanced width calculation to prevent layout shifts
 	            var inputWidth = calculateInputWidth(x);
 	            // Escape double quotes for HTML attributes, but keep apostrophes as-is
 	            // This handles both "brother's" and '"Why' correctly
-	            var escapedWord = x.replace(/"/g, '&quot;');
+	            var escapedWord = x.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
 	            return '<input name="' + escapedWord + '" class="blank-word" style="width:' + inputWidth + 'px" autocomplete="off">';
 	        };
 	    });

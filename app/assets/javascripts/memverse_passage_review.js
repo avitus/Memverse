@@ -29,7 +29,9 @@ var reviewState = {
 
     selectPassage: function ( passageRef, passageID ) {
         // retrieve memory verses for passage
-        $.getJSON('passages/' + passageID + '/memverses.json', function (data) {
+        if (reviewState.passageRequest) reviewState.passageRequest.abort();
+        var options = $('.heritage-passage-heading').length ? { passage_review: 1 } : {};
+        reviewState.passageRequest = $.getJSON('passages/' + passageID + '/memverses.json', options, function (data) {
             // display passage
             mvDisplayPassageForReview( passageRef, passageID, data )
         });
@@ -50,7 +52,8 @@ var reviewState = {
 
         $(".passage-text").empty();
         $(".passage-title").empty();
-        $(".heritage-ratings").remove();
+        $('.heritage-review-footer').prop('hidden', true);
+        $('.heritage-review-status').text('');
     },
 
     autoAdvancePassage: function ( ) {
@@ -75,34 +78,27 @@ var reviewState = {
 
     gotoNextVerseDue: function ( $currentVerse ) {
 
-        var $nextDue      = $currentVerse.nextAll(".due-mv").first();
-        var $firstSkipped
-
-        // If there are more verses due in the passage
-        if ($nextDue.length) {
-            // Scroll to next verse
-            reviewState.scrollToVerse( $nextDue );
-
-        // Check for earlier verses in passage that were skipped
-        } else if ( $currentVerse.siblings(".due-mv").length ) {
-            // find first skipped verse
-            $firstSkipped = $currentVerse.siblings(".due-mv").first();
-            // Scroll to prior verse
-            reviewState.scrollToVerse( $firstSkipped );
-
-        // Get next passage if no more verses on this one
-        } else {
-
-            reviewState.autoAdvancePassage();
-
-        }
+        var verses = $('.passage-text .single-verse-in-passage');
+        var later = verses.slice(verses.index($currentVerse) + 1).filter('.due-mv');
+        var next = later.length ? later.first() : verses.filter('.due-mv').first();
+        if (next.length) reviewState.scrollToVerse(next);
+        else if ($('.heritage-review-footer').length) $('.heritage-next-passage')[0].focus({ preventScroll: true });
+        else reviewState.autoAdvancePassage();
     },
 
-    scrollToVerse: function ( $verse ) {
-        // Scroll to next verse
-        $('html').scrollTo($verse, { easing: 'easeInOutCubic', duration: 1500, offset: -250 } );
-        // advance cursor to first word of next verse
-        $verse.find('.blank-word').first().focus();
+    scrollToVerse: function ($verse) {
+        var verse = $verse[0];
+        if (!verse) return;
+        var control = verse.querySelector('.blank-word, .verse-rating:not([hidden]) button:not([hidden])');
+        var target = control || verse;
+        if (control) control.focus({ preventScroll: true });
+        var bounds = target.getBoundingClientRect();
+        var viewport = window.visualViewport;
+        var height = viewport ? viewport.height : window.innerHeight;
+        var delta = bounds.top + bounds.height / 2 - (viewport ? viewport.offsetTop : 0) - height / 2;
+        if (Math.abs(delta) > height * .08) {
+            window.scrollBy({ top: delta, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+        }
     }
 };
 
@@ -123,8 +119,11 @@ function mvDisplayPassageForReview( passageRef, passageID, verses ) {
     // wrap single verse in array
     if( !($.isArray(verses)) ) { verses = [ verses ]; }
 
-    $('.heritage-passage-kicker').text(/^Psalms? /.test(passageRef) ? 'The Psalms' : 'Holy Bible');
-    $('.heritage-passage-version').text(verses.length ? verses[0].tl : '');
+    if ($('.heritage-passage-heading').length) {
+        mvDisplayHeritagePassage(passageRef, verses);
+        reviewState.scrollToVerse($('.passage-text .due-mv').first());
+        return;
+    }
 
     $.each (verses, function(i, vs) {
 
@@ -134,8 +133,6 @@ function mvDisplayPassageForReview( passageRef, passageID, verses ) {
         $('.passage-text').append($new_vs);
 
     });
-
-    if (document.body.classList.contains('mv-heritage')) mvHeritagePrepareRatings();
 
     // Scroll to first verse due
     reviewState.scrollToVerse( $('.passage-text').find('.due-mv').first() );
@@ -238,9 +235,10 @@ function mvPassageReviewHandleInput( $inputCell, correctWord, userGuess, e ) {
         $inputCell.before( $span );                               // insert the correct word with preserved width
         $inputCell.before( $inputCell.nextUntil("input") );       // move subsequent revealed words ahead of input
         mvMirrorNextInput( $inputCell );                          // update the input box
-        if (document.body.classList.contains("mv-heritage")) {
-            if (!heritageVerse.find("input.blank-word").length) heritageVerse.nextAll().find("input.blank-word").first().focus();
-            if (!$(".passage-text input.blank-word").length) $(".heritage-ratings").prop("hidden", false);
+        if (heritageVerse.hasClass('heritage-review-verse') && !heritageVerse.find('.blank-word').length) {
+            heritageVerse.find('.verse-rating').prop('hidden', false);
+            mvArrangeMarginRatings();
+            reviewState.scrollToVerse(heritageVerse);
         }
 
     }
@@ -267,28 +265,135 @@ function mvPassageReviewHandleInput( $inputCell, correctWord, userGuess, e ) {
 
 }
 
-// Keep scoring below the complete passage. A rating changes state only after a successful save.
-function mvHeritagePrepareRatings() {
-    var panel = $('<section class="heritage-ratings" hidden><h2>How did you recall it?</h2><p role="status" class="heritage-review-status"></p></section>');
-    $('.passage-text .due-mv').each(function () {
-        var verse = $(this), id = verse.find('.mv-id').first().text();
-        var row = $('<div class="heritage-rating-row"/>').append($('<span/>').text('Verse ' + verse.find('.versenum').text()));
-        var buttons = $('<div class="score-test-buttons"/>');
-        [1,2,3,4,5].forEach(function (quality) {
-            $('<button type="button"/>').text(quality).attr('aria-label', 'Rate verse ' + verse.find('.versenum').text() + ': ' + quality + ' of 5').on('click', function () {
-                buttons.find('button').prop('disabled', true);
-                $.getJSON('/mark_test_quick', {mv:id,q:quality}).done(function (data) {
-                    if (data.msg) panel.find('.heritage-review-status').text(data.msg);
-                    verse.removeClass('due-mv');
-                    row.empty().append($('<span/>').text('Verse ' + verse.find('.versenum').text() + ' · Rated ' + quality + '/5'));
-                    panel.find('.heritage-next-passage').prop('disabled', $('.passage-text .due-mv').length > 0);
-                }).fail(function () { buttons.find('button').prop('disabled', false); panel.find('.heritage-review-status').text('Your rating could not be saved. Please try again.'); });
-            }).appendTo(buttons);
-        });
-        row.append(buttons).appendTo(panel);
+// Put each control beside its verse ending. Very short verses can finish on
+// the same line: share the rail horizontally first, then stack if necessary.
+function mvArrangeMarginRatings() {
+    var label = document.querySelector('.rating-margin-label');
+    if (!label) return;
+    var railWidth = label.getBoundingClientRect().width;
+    var lastTop = -Infinity, right = 0, bottom = -Infinity;
+    $('.verse-rating:not([hidden])').each(function () {
+        var anchor = this.parentElement.getBoundingClientRect();
+        var width = this.offsetWidth, height = this.offsetHeight;
+        var top = anchor.top - height * 0.68, left = 0;
+        if (top < bottom + 3) {
+            if (right + 4 + width <= railWidth) {
+                left = right + 4;
+                top = lastTop;
+            } else {
+                top = bottom + 3;
+            }
+        }
+        this.style.transform = 'translate(' + left + 'px,' + (top - anchor.top) + 'px)';
+        right = left + width;
+        lastTop = top;
+        bottom = Math.max(bottom, top + height);
     });
-    $('<button type="button" class="heritage-next-passage" disabled>Next passage →</button>').on('click',function(){reviewState.autoAdvancePassage();}).appendTo(panel);
-    $('.passage-entry').append(panel);
-    if (!$('.passage-text input.blank-word').length) panel.prop('hidden', false);
-    panel.find('.heritage-next-passage').prop('disabled', $('.passage-text .due-mv').length > 0);
+}
+
+function mvUpdateReviewCount() {
+    var total = $('.passage-text .verse-rating').length;
+    var remaining = $('.passage-text .due-mv').length;
+    $('.heritage-review-count').text(remaining ? (total - remaining) + ' of ' + total + ' verses rated' : 'Passage reviewed.');
+    $('.heritage-next-passage').prop('hidden', remaining > 0);
+    $('.heritage-review-footer').prop('hidden', false);
+    $('.heritage-queue-count').text($('.passage-list li').length - (remaining ? 0 : 1));
+}
+
+function mvPassageRating(verse, record) {
+    var state = record.rating, number = record.versenum;
+    var control = $('<span class="verse-rating"/>');
+    var saved = $('<button type="button" class="saved-grade" aria-expanded="false"/>').appendTo(control);
+    var scale = $('<span class="rating-options" role="group"/>').attr('aria-label', 'Rate verse ' + number).appendTo(control);
+    var labels = ['Forgot', 'Difficult', 'Fair', 'Good', 'Easy'];
+
+    function display(editing) {
+        var choosing = editing || !state.quality;
+        saved.prop('hidden', choosing).text(state.quality).attr('aria-label', 'Verse ' + number + ', rated ' + state.quality + '. Change rating');
+        scale.prop('hidden', !choosing);
+        scale.children().each(function () {
+            this.setAttribute('aria-pressed', Number(this.value) === state.quality);
+        });
+        mvArrangeMarginRatings();
+    }
+
+    saved.on('click', function () {
+        display(true);
+        reviewState.scrollToVerse(verse);
+        scale.children().eq(state.quality - 1)[0].focus({ preventScroll: true });
+    });
+    scale.on('keydown', function (event) {
+        if (event.key === 'Escape' && state.quality) {
+            display(false);
+            saved[0].focus({ preventScroll: true });
+        }
+    });
+    labels.forEach(function (label, index) {
+        var quality = index + 1;
+        $('<button type="button"/>').text(quality).val(quality).attr({
+            title: label, 'aria-label': 'Verse ' + number + ', ' + quality + ' of 5, ' + label
+        }).appendTo(scale);
+    });
+    scale.on('click', 'button', function () {
+        var previous = state.quality;
+        var data = { quality: this.value, previous: previous, attempt: state.attempt, day: state.day };
+        scale.children().prop('disabled', true);
+        $.ajax({ url: '/review/verses/' + record.id + '/rating', type: 'PATCH', dataType: 'json', data: data })
+          .done(function (result) {
+            if (!verse[0].isConnected) return;
+            state = result.rating;
+            verse.removeClass('due-mv');
+            display(false);
+            mvUpdateReviewCount();
+            $('.heritage-review-status').text(result.msg || '');
+            if (!previous) reviewState.gotoNextVerseDue(verse);
+            else saved[0].focus({ preventScroll: true });
+          }).fail(function (xhr) {
+            if (!verse[0].isConnected) return;
+            var latest = xhr.responseJSON && xhr.responseJSON.rating;
+            if (xhr.status === 409 && latest && latest.day === state.day && latest.attempt === state.attempt) {
+                state = latest;
+                verse.toggleClass('due-mv', !state.quality);
+                display(false);
+                mvUpdateReviewCount();
+            }
+            $('.heritage-review-status').text(xhr.status === 409 ? 'This review has changed. Check the current rating or reload the passage.' : 'Your rating could not be saved. Please try again.');
+          }).always(function () { scale.children().prop('disabled', false); });
+    });
+    display(false);
+    return $('<span class="verse-end"/>').append(control.prop('hidden', !!verse.find('.blank-word').length));
+}
+
+function mvDisplayHeritagePassage(reference, records) {
+    var reader = $('.passage-text').empty();
+    $('<div class="rating-margin-label">Your rating</div>').appendTo(reader);
+    var romans = /^Romans 8:/.test(reference);
+    $('.heritage-passage-kicker').text(romans ? 'Paul’s letter to the Romans' : /^Psalms? /.test(reference) ? 'The Psalms' : 'Holy Bible');
+    var translation = records.length && records[0].tl;
+    $('.heritage-passage-version').text(translation === 'NIV' ? 'New International Version · 1984' : translation || '');
+    $('.heritage-niv-credit').prop('hidden', translation !== 'NIV');
+    var paragraph;
+    records.forEach(function (record, index) {
+        // Preserve a continuous reading column, independent of which verses are due.
+        if (!index || /^\s*\n/.test(record.text) || (romans && [5, 9].indexOf(record.versenum) !== -1)) {
+            paragraph = $('<p class="reading-paragraph"/>').appendTo(reader);
+        }
+        var due = !record.rating.quality && mvDue(record);
+        var verse = $('<span class="single-verse-in-passage heritage-review-verse"/>').toggleClass('due-mv', due);
+        var words = $('<span class="full-text"/>').appendTo(verse);
+        $('<sup class="versenum"/>').text(record.versenum).appendTo(words);
+        if (due) {
+            var blanks = $('<span/>').html(blankifyVerse(record.text, record.test_interval * 5 + 25)).appendTo(words);
+            blanks.find('input').each(function (i) { this.setAttribute('aria-label', 'Verse ' + record.versenum + ', blank ' + (i + 1)); });
+        } else {
+            words.append(document.createTextNode(record.text));
+        }
+        if (due || record.rating.quality) verse.append(mvPassageRating(verse, record));
+        paragraph.append(verse, ' ');
+    });
+    mvUpdateReviewCount();
+    mvArrangeMarginRatings();
+    if (reviewState.marginObserver) reviewState.marginObserver.disconnect();
+    reviewState.marginObserver = new ResizeObserver(mvArrangeMarginRatings);
+    reviewState.marginObserver.observe(reader[0]);
 }
