@@ -34,29 +34,6 @@ namespace :bundler do
           puts "Bundler not found, installing compatible version..."
           execute :gem, "install bundler -v 2.1.4"
         end
-        
-        # For major upgrades, clean the bundle to ensure fresh installation
-        puts "Checking if this is a major upgrade..."
-        begin
-          execute :test, "-d #{shared_path}/bundle"
-          puts "Existing bundle found, cleaning for fresh installation..."
-          execute :rm, "-rf #{shared_path}/bundle"
-          puts "Cleaned existing bundle for fresh installation"
-        rescue SSHKit::Command::Failed
-          puts "No existing bundle found, proceeding with fresh installation"
-        end
-        
-        # Clear any existing bundle config that might interfere
-        puts "Clearing bundle config..."
-        execute :bundle, "config --delete deployment", raise_on_non_zero_exit: false
-        execute :bundle, "config --delete path", raise_on_non_zero_exit: false
-        execute :bundle, "config --delete without", raise_on_non_zero_exit: false
-        
-        # Set up fresh bundle configuration
-        puts "Setting up bundle configuration..."
-        execute :bundle, "config set deployment 'true'"
-        execute :bundle, "config set path '#{shared_path}/bundle'"
-        execute :bundle, "config set without 'development test'"
       end
     end
   end

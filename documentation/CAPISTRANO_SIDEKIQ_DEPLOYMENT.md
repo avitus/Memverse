@@ -56,10 +56,9 @@ systemctl --user start sidekiq-workers@{1..3}
 
 ### Standard Deployment
 
-The standard deployment will automatically:
-1. Put Sidekiq in quiet mode (stop accepting new jobs)
-2. Wait for current jobs to finish
-3. Restart all Sidekiq services after deployment
+The existing scheduler and workers process jobs during release preparation. Capistrano
+stops them before migrations and starts them from the published release. During code
+rollback, it stops them before switching the release symlink.
 
 ```bash
 cap production deploy
@@ -69,12 +68,6 @@ cap production deploy
 
 ```bash
 SIDEKIQ_WORKERS=4 cap production deploy
-```
-
-### Zero-Downtime Deployment (Rolling Restart)
-
-```bash
-SIDEKIQ_DEPLOY_STRATEGY=rolling cap production deploy
 ```
 
 ## Available Capistrano Tasks
@@ -259,40 +252,6 @@ systemctl --user disable sidekiq-scheduler sidekiq-workers@{1..3}
 3. Deploy with standard sidekiq:
 ```bash
 cap production deploy
-```
-
-## Deployment Flow Diagram
-
-```
-┌──────────────┐
-│   Deploy     │
-│   Started    │
-└──────┬───────┘
-       │
-       ▼
-┌──────────────┐
-│ Sidekiq:quiet│ ◄── Stop accepting new jobs
-└──────┬───────┘
-       │
-       ▼
-┌──────────────┐
-│  Deploy Code │
-└──────┬───────┘
-       │
-       ▼
-┌──────────────┐
-│   Published  │
-└──────┬───────┘
-       │
-       ▼
-┌──────────────┐
-│Sidekiq:restart│ ◄── Restart with new code
-└──────┬───────┘
-       │
-       ▼
-┌──────────────┐
-│   Finished   │
-└──────────────┘
 ```
 
 ## Next Steps

@@ -47,8 +47,8 @@ namespace :sidekiq do
     task :stop do
       on roles(:app) do
         info "Stopping Sidekiq services..."
-        execute :sudo, "systemctl stop sidekiq-scheduler", raise_on_non_zero_exit: false
-        execute :sudo, "systemctl stop 'sidekiq-workers@*'", raise_on_non_zero_exit: false
+        execute :sudo, "systemctl stop sidekiq-scheduler"
+        execute :sudo, "systemctl stop 'sidekiq-workers@*'"
         info "Sidekiq services stopped"
       end
     end
@@ -177,29 +177,27 @@ namespace :sidekiq do
   end
 end
 
-# Hook into Capistrano deployment lifecycle
 namespace :deploy do
-  # Stop Sidekiq before deployment starts
-  before :starting, :stop_sidekiq do
-    invoke 'sidekiq:multi:stop'
+  task :stop_sidekiq do
+    invoke 'sidekiq:multi:stop' unless fetch(:staging_preview, false)
   end
-  
-  # Start Sidekiq after deployment is published
+
+  # A fenced host must stay off the queues throughout a cutover.
+  before :starting, :fence_sidekiq do
+    invoke 'deploy:stop_sidekiq' if ENV['SKIP_SIDEKIQ_START'] == '1'
+  end
+
+  # Keep jobs running through bundle install, asset compilation and credential checks.
+  before :migrate, :stop_sidekiq_for_migration do
+    invoke 'deploy:stop_sidekiq' if deploying?
+  end
+
+  # Rollback skips migrations. Stop before switching current on either path.
+  before :publishing, :stop_sidekiq
+
   after :published, :start_sidekiq do
+    next if fetch(:staging_preview, false) || ENV['SKIP_SIDEKIQ_START'] == '1'
+
     invoke 'sidekiq:multi:start'
   end
-  
-  # Alternative: Use rolling restart for zero-downtime deployments
-  # Uncomment these and comment out the above if you prefer rolling restarts
-  # after :updated, :sidekiq_quiet do
-  #   on roles(:app) do
-  #     info "Putting Sidekiq in quiet mode..."
-  #     execute :sudo, "systemctl kill -s TSTP sidekiq-scheduler", raise_on_non_zero_exit: false
-  #     execute :sudo, "systemctl kill -s TSTP 'sidekiq-workers@*'", raise_on_non_zero_exit: false
-  #   end
-  # end
-  # 
-  # after :published, :sidekiq_rolling_restart do
-  #   invoke 'sidekiq:multi:rolling_restart'
-  # end
 end

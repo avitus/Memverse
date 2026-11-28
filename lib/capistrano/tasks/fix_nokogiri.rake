@@ -35,4 +35,4 @@ end
 
 # Hook into Capistrano deployment flow
 before "bundler:install", "bundler:configure_platform"
-before "bundler:install", "bundler:fix_nokogiri"
+# Run bundler:fix_nokogiri manually only when repairing an incompatible bundle.

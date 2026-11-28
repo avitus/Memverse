@@ -57,10 +57,9 @@ Memverse uses Capistrano for deployment to production servers. As of August 2025
 cap production deploy
 ```
 
-### Deployment with Migrations
-```bash
-cap production deploy:migrations
-```
+The production deploy reuses installed gems in `shared/bundle`. Capistrano precompiles
+assets once into `shared/public/assets`, saves the manifest with the release and keeps
+two older fingerprints per asset. Old pages can still request their CSS and JavaScript.
 
 ### Check Deployment Status
 ```bash
@@ -118,7 +117,11 @@ The following directories persist between deployments:
 - `storage/` (Active Storage files)
 
 ### Background Jobs
-After deployment, Sidekiq is automatically restarted to pick up code changes.
+The scheduler and workers continue running while Capistrano prepares the release. It
+waits for both systemd stop commands to succeed before running migrations, then starts
+the services from `current` after publication. A preparation failure leaves jobs running.
+A failure after the stop requires checking the schema and the active release before restarting jobs.
+Use `SKIP_SIDEKIQ_START=1` to stop jobs at the start and keep them stopped throughout a cutover.
 
 ### Search Index
 Thinking Sphinx is automatically reindexed after deployment.
@@ -132,10 +135,9 @@ cap production deploy:assets:precompile
 ```
 
 ### Database Migration Failures
-If migrations fail, you can run them manually:
-```bash
-cap production rails:db:migrate
-```
+Keep Sidekiq stopped. Inspect the migration status and the `current` symlink, repair
+or complete the migration, then retry the deploy. Start jobs manually only after
+confirming the published code is compatible with the resulting schema.
 
 ### Sidekiq Issues
 To restart Sidekiq manually:
@@ -146,7 +148,9 @@ cap production sidekiq:restart
 ## Emergency Procedures
 
 ### Quick Rollback
-If issues are discovered immediately after deployment:
+Confirm the previous release can run against the current schema. Rollback restores
+its asset manifest and stops Sidekiq before switching `current`. It restarts jobs
+after publication. Database changes require a separate recovery decision.
 ```bash
 cap production deploy:rollback
 ```
