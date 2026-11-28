@@ -1,0 +1,43 @@
+<section class="verse-panel" id="verse-tags" aria-labelledby="verse-tags-title">
+  <h2 id="verse-tags-title"><svg width="21" height="21" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h8l10 10-7 7L3 10Z"/><circle cx="7.4" cy="7.6" r="1"/></svg>Tags</h2>
+  <div class="verse-tag-group">
+    <h3><%= owner ? 'Your tags' : 'Personal tags' %></h3>
+    <% if owner %>
+      <%= render 'detail_tag_form', community: false %>
+    <% end %>
+    <div class="verse-chips">
+      <% @user_tags.each do |tag| %>
+        <div class="verse-chip">
+          <%= link_to tag.name, show_verses_with_tag_path(tag: tag.name, tl: @verse.translation) %>
+          <% if owner %>
+            <%= button_to '×', remove_verse_tag_path, params: { id: tag.id, mv: @mv.id, verse_detail: true },
+                aria: { label: "Remove #{tag.name} tag" }, form: { data: { remove_tag_confirmation: "Remove “#{tag.name}” from your tags?" } } %>
+          <% end %>
+        </div>
+      <% end %>
+      <% if @user_tags.empty? %><small>No personal tags yet.</small><% end %>
+    </div>
+  </div>
+  <div class="verse-tag-group community">
+    <h3>Memverse tags</h3>
+    <% if current_user.has_role?('admin') %>
+      <%= render 'detail_tag_form', community: true %>
+    <% end %>
+    <div class="verse-chips">
+      <% @tags.each do |tag| %>
+        <div class="verse-chip">
+          <%= link_to tag.name, show_verses_with_tag_path(tag: tag.name, tl: @verse.translation) %>
+          <% if owner %>
+            <% if @user_tags.include?(tag) %>
+              <span class="verse-tag-added" role="img" aria-label="Already in your tags">✓</span>
+            <% else %>
+              <%= button_to '+', add_tag_path, params: { id: @mv.id, value: tag.name, verse_detail: true },
+                    aria: { label: "Add #{tag.name} to your tags" } %>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+      <% if @tags.empty? %><small>No Memverse tags yet.</small><% end %>
+    </div>
+  </div>
+</section>

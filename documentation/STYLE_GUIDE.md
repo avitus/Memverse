@@ -77,6 +77,7 @@ and existing server actions.
 | Dashboard · Heritage | `/users/:id` | 469887795507384320 / 469892856572694528 |
 | Profile · Heritage settings | `/update_profile` | 469886147158487040 / 469892537562320896 |
 | Manage verses | `/manage_verses` | 469890787795161088 / 469896406883274752 |
+| Memory verse detail · Heritage | `/memory_verse/:id` | 477309810883305472 / 477309810883305473 |
 | Progress | `/progress` | 469897030748221440 / 469898364302028800 |
 | Add verses | `/add_verse` | 469904081952063488 / 477291665074302976 |
 | Passage review | `/review` | 462399451038912512 / 477307219692634112 |
@@ -108,6 +109,14 @@ category, tag, and archive views share the journal layout and preserve their ser
 Journal categories and tags use copper labels instead of the old image icons. Excerpts decode
 HTML entities as plain text and remain escaped; journal search actions use the copper fill.
 The dashboard includes its review entry and collection distribution.
+
+### Memory verse detail
+
+The verse detail page centers the translation, reference, and Scripture above links to adjacent
+verses in the collection. The review schedule and tags share a row on desktop and stack on
+phones. Owners can pause or resume reviews and manage their personal tags. Pausing preserves
+the interval and review history and displays the next test as unscheduled. Memverse tags link
+to the tag collection and can be copied into personal tags.
 
 ### Add a verse
 

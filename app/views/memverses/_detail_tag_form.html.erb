@@ -1,0 +1,17 @@
+<details class="verse-tag-editor">
+  <summary><span class="when-closed">＋ New tag</span><span class="when-open">× Cancel</span></summary>
+  <%= form_with url: community ? add_verse_tag_verses_path : add_tag_path, local: true do |form| %>
+    <%= form.hidden_field :id, value: community ? @verse.id : @mv.id, id: nil %>
+    <% if community %>
+      <%= form.hidden_field :memory_verse_id, value: @mv.id %>
+    <% else %>
+      <%= form.hidden_field :verse_detail, value: true %>
+    <% end %>
+    <% input_id = community ? 'verse-community-tag' : 'verse-personal-tag' %>
+    <%= form.label :value, 'Tag name', for: input_id %>
+    <div>
+      <%= form.text_field :value, id: input_id, required: true, maxlength: 255, data: { tag_suggestions: tag_autocomplete_path } %>
+      <%= form.button 'Add tag', type: 'submit' %>
+    </div>
+  <% end %>
+</details>

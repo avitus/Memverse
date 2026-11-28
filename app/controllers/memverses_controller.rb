@@ -360,12 +360,11 @@ class MemversesController < ApplicationController
       add_breadcrumb I18n.t("home_menu.My Verses"), :manage_verses_path
       add_breadcrumb @mv.verse.ref_long, {:action => 'show', :id => params[:id] }
 
-      @user_tags  = @mv.tags
+      @user_tags  = @mv.tags.distinct
       @tags       = @verse.tags
       # @other_tags = @verse.all_user_tags  # TODO: this is a very expensive transaction
 
-      @next_mv = @mv.next_verse || @mv.next_verse_in_user_list
-      @prev_mv = @mv.prev_verse || @mv.prev_verse_in_user_list
+      @prev_mv, @next_mv = @mv.collection_neighbors
 
     # ==== Displaying multiple verses ====
     elsif (!mv_ids.blank?) and (params[:Show])
@@ -394,7 +393,7 @@ class MemversesController < ApplicationController
     end
 
     respond_to do |format|
-      format.html
+      format.html { render :heritage_detail if @mv && helpers.heritage_enabled? }
       format.pdf { render :layout => false } # if params[:format] == 'pdf'
         prawnto :filename => "Memverse.pdf", :prawn => { }
     end
@@ -447,28 +446,25 @@ class MemversesController < ApplicationController
   # In place editing support for tag addition
   # ----------------------------------------------------------------------------------------------------------
   def add_mv_tag
-    new_tag = params[:value].titleize # need to clean this up with hpricot or equivalent
-
-    # Notes on using the acts_as_taggable_on gem
-    #
-    # 1. Owned tags and regular tags are handled in two different modules in the library
-    # 2. The method 'tag_list' only returns tags without owners. The method 'all_tags_list' returns all tags
-    # 3. user.tag(mv, :with => 'TagA', :on => :tags) *replaces* any prior tags.
-    # 4. mv.tag_list = "tagC, tagD" does not appear to overwrite an existing tag list
-    #
-    # To clean up tag cloud:  ActsAsTaggableOn::Tagging.where(:taggable_type => 'Verse').delete_all
-
-    if !new_tag.empty?
-      tag_list = @mv.all_tags_list.to_s + ", " + new_tag
-      current_user.tag(@mv, :with => tag_list, :on => :tags)  # We're doing this for now to track which users are tagging
-
-      @mv.verse.update_tags # Update verse model with most popular tags
-
-      render :json => new_tag
-    else
-      render :json => "[Enter tag name here]"
+    new_tag = params[:value].to_s.strip.titleize
+    if new_tag.present?
+      @mv.with_lock do
+        if @mv.tags.exists?(name: new_tag)
+          flash[:notice] = "You already have this tag." if params[:verse_detail]
+        else
+          @mv.tags_from(current_user).add(new_tag)
+          @mv.save!
+          @mv.verse.update_tags
+        end
+      end
     end
 
+    if params[:verse_detail]
+      flash[:alert] = "Enter a tag name." if new_tag.blank?
+      redirect_to memory_verse_path(@mv, anchor: 'verse-tags'), status: :see_other
+    else
+      render json: new_tag.presence || "[Enter tag name here]"
+    end
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -490,26 +486,30 @@ class MemversesController < ApplicationController
   # Remove a verse tag
   # ----------------------------------------------------------------------------------------------------------
   def remove_verse_tag
-    dead_tag = ActsAsTaggableOn::Tagging
-      .where(tag_id: params[:id], taggable_id: params[:mv], taggable_type: 'Memverse')
-      .first
-
-    if dead_tag
-      dead_tag.destroy
-	    # We should remove the tag if it is no longer tagging anything
-	    if ActsAsTaggableOn::Tag.find(params[:id]).taggings.length == 0
-	      ActsAsTaggableOn::Tag.find(params[:id]).destroy
-	    end
+    mv = current_user.memverses.find(params[:mv])
+    mv.with_lock do
+      tag = mv.tags.find_by(id: params[:id])
+      if tag
+        mv.taggings.where(tag_id: tag.id, context: 'tags').destroy_all
+        tag.destroy! unless tag.taggings.exists?
+      end
     end
 
-    redirect_to(:action => 'show', :id => params[:mv])
-
+    redirect_to memory_verse_path(mv, anchor: ('verse-tags' if params[:verse_detail])), status: :see_other
   end
 
   # ----------------------------------------------------------------------------------------------------------
   # Toggle verse from 'Active' to 'Pending' status
   # ----------------------------------------------------------------------------------------------------------
   def toggle_mv_status
+
+    if request.post?
+      review_state = params[:review_state]
+      return head :unprocessable_entity unless %w[paused active].include?(review_state)
+
+      @mv.with_lock { @mv.toggle_status if @mv.inactive? != (review_state == 'paused') }
+      return redirect_to memory_verse_path(@mv, anchor: 'review-schedule'), status: :see_other
+    end
 
     new_status = @mv.toggle_status
 
@@ -1414,7 +1414,7 @@ class MemversesController < ApplicationController
   end
 
   def set_mv
-    @mv = Memverse.find(params[:id])
+    @mv = current_user.memverses.find(params[:id])
   end
 
 end

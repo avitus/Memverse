@@ -118,3 +118,13 @@ document.addEventListener('DOMContentLoaded', function () {
     answer.focus();
   });
 });
+
+$(function () {
+  var detail = $('.verse-detail');
+  detail.find('[data-tag-suggestions]').each(function () {
+    $(this).autocomplete({ source: this.dataset.tagSuggestions });
+  });
+  detail.on('submit', '[data-remove-tag-confirmation]', function (event) {
+    if (!window.confirm(this.dataset.removeTagConfirmation)) event.preventDefault();
+  });
+});

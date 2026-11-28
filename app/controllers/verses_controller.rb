@@ -265,11 +265,21 @@ class VersesController < ApplicationController
   # In place editing support
   # ----------------------------------------------------------------------------------------------------------
   def add_verse_tag
-    @verse = Verse.find(params[:id])  # TODO: Should also add tag to the other translations (?)
-    new_tag = params[:value] # need to clean this up with hpricot or equivalent
-    @verse.tag_list << new_tag
-    @verse.save
-    render plain: new_tag
+    return head :forbidden unless current_user.has_role?('admin')
+
+    @verse = Verse.find(params[:id])
+    detail = @verse.memverses.find(params[:memory_verse_id]) if params[:memory_verse_id]
+    new_tag = params[:value].to_s.strip
+    if new_tag.present?
+      @verse.tag_list.add(new_tag)
+      @verse.save!
+    end
+    if detail
+      flash[:alert] = "Enter a tag name." if new_tag.blank?
+      redirect_to memory_verse_path(detail, anchor: 'verse-tags'), status: :see_other
+    else
+      render plain: new_tag
+    end
   end
 
   # ----------------------------------------------------------------------------------------------------------

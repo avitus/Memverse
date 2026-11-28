@@ -759,6 +759,22 @@ class Memverse < ApplicationRecord
     return all_verses[position-1]
   end
 
+  # Prefer linked passage verses, then wrap around the collection in Bible order.
+  def collection_neighbors
+    previous_id, following_id = prev_verse, next_verse
+    unless previous_id && following_id
+      ids = user.memverses.canonical_sort.order(:id).pluck(:id)
+      position = ids.index(id)
+      return [nil, nil] unless position && ids.size > 1
+
+      previous_id ||= ids[position - 1]
+      following_id ||= ids[(position + 1) % ids.size]
+    end
+
+    neighbors = user.memverses.includes(:verse).where(id: [previous_id, following_id]).index_by(&:id)
+    neighbors.values_at(previous_id, following_id)
+  end
+
   # Find a verse that is due but not this one
   def another_due_verse
     mv = user.memverses.where.not(id: self.id).active.order("next_test ASC").first

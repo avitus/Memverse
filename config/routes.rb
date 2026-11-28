@@ -101,7 +101,7 @@ MemverseApp::Application.routes.draw do
       get 'check_verse'
     end
     collection do
-      get 'add_verse_tag'
+      match 'add_verse_tag', via: [:get, :post]
       get 'tag_cloud'
       get 'check_verses'
       get 'lookup'
@@ -242,7 +242,7 @@ MemverseApp::Application.routes.draw do
   get '/home'                     => 'memverses#index',                 :as => 'index'
   get '/memory_verse/:id'         => 'memverses#show',                  :as => 'memory_verse'
   get '/toggle_error_flag/:id'    => 'verses#toggle_flag',              :as => 'toggle_error_flag'
-  get '/toggle_mv_status/:id'     => 'memverses#toggle_mv_status',      :as => 'toggle_mv_status'
+  match '/toggle_mv_status/:id', to: 'memverses#toggle_mv_status', via: [:get, :post], as: :toggle_mv_status
 
   # Tagging verses
   post '/add_tag'                 => 'memverses#add_mv_tag'

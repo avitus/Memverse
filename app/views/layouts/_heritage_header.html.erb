@@ -32,7 +32,9 @@
     <nav aria-label="Main navigation">
     <% if user_signed_in? %>
       <% [['Today', main_app.root_path], ['Review', main_app.passage_review_path], ['Learn', main_app.add_verse_path], ['My verses', main_app.manage_verses_path], ['Progress', main_app.progress_path]].each do |label, path| %>
-        <%= link_to label, path, 'aria-current': (current_page?(path) || (label == 'Today' && controller_name == 'memverses' && action_name == 'home') ? 'page' : nil) %>
+        <% current = current_page?(path) || (label == 'Today' && controller_name == 'memverses' && action_name == 'home') %>
+      <% in_collection = label == 'My verses' && controller_name == 'memverses' && action_name == 'show' %>
+      <%= link_to label, path, 'aria-current': (current ? 'page' : ('location' if in_collection)) %>
       <% end %>
     <% else %>
       <%= link_to 'How it works', main_app.root_path(anchor: 'how-it-works') %><%= link_to 'Community', main_app.root_path(anchor: 'community') %><%= link_to 'Blog', bloggity.root_path %>

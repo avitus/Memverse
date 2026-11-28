@@ -64,6 +64,52 @@ RSpec.describe 'Heritage staging pages', type: :request do
       end
     end
   end
+
+  it 'omits self-navigation, preserves the legacy detail, and limits personal controls to the owner' do
+    mv = FactoryBot.create(:memverse)
+    sign_in mv.user
+    get memory_verse_path(mv)
+    document = Nokogiri::HTML(response.body)
+    expect(document.at_css('.verse-neighbors')).to be_nil
+    expect(document.at_css('.verse-tag-editor')).to be_present
+    expect(document.at_css('.verse-tag-group.community form')).to be_nil
+
+    sign_out mv.user
+    sign_in FactoryBot.create(:user, confirmed_at: Time.current)
+    get memory_verse_path(mv)
+    expect(Nokogiri::HTML(response.body).css('.verse-detail form')).to be_empty
+    expect(response.body).to include('Personal tags')
+
+    ENV['MEMVERSE_HERITAGE'] = '0'
+    get memory_verse_path(mv)
+    expect(Nokogiri::HTML(response.body).at_css('#show-verse').text.strip).to eq(mv.verse.text)
+  end
+
+  it 'preserves the schedule and restores the interval-based status after repeated pause requests' do
+    mv = FactoryBot.create(:memverse)
+    mv.update_columns(status: 'Memorized', test_interval: 35)
+    sign_in mv.user
+    2.times { post toggle_mv_status_path(mv), params: { review_state: 'paused' } }
+    expect(mv.reload.status).to eq('Pending')
+    post toggle_mv_status_path(mv), params: { review_state: 'active' }
+    expect(response).to redirect_to(memory_verse_path(mv, anchor: 'review-schedule'))
+    expect(mv.reload.status).to eq('Memorized')
+    expect(mv.test_interval).to eq(35)
+    get toggle_mv_status_path(mv, format: :json)
+    expect(response.parsed_body).to eq('mv_status' => 'Pending')
+  end
+
+  it 'lets a tag administrator add a community tag from the detail page' do
+    mv = FactoryBot.create(:memverse, verse: FactoryBot.create(:verse, chapter: 121))
+    mv.user.roles << Role.find_or_create_by!(name: 'admin')
+    sign_in mv.user
+    get memory_verse_path(mv)
+    expect(Nokogiri::HTML(response.body).at_css('.community .verse-tag-editor form')['action']).to eq(add_verse_tag_verses_path)
+    post add_verse_tag_verses_path, params: { id: mv.verse_id, memory_verse_id: mv.id, value: 'Creation' }
+    expect(response).to redirect_to(memory_verse_path(mv, anchor: 'verse-tags'))
+    expect(mv.verse.reload.tags.pluck(:name)).to include('Creation')
+  end
+
   it 'renders article excerpts and full articles with native comment links' do
     author = FactoryBot.create(:user, admin: true)
     blog = Bloggity::Blog.create!(title: 'Memverse Blog', url_identifier: 'main')

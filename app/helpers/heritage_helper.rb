@@ -3,6 +3,12 @@ module HeritageHelper
     ENV.fetch('MEMVERSE_HERITAGE', Rails.env.staging? ? '1' : '0') == '1'
   end
 
+  def heritage_scripture_text(text)
+    safe_join(text.to_s.split(/(\bLORD\b)/).map do |part|
+      part == 'LORD' ? tag.span(safe_join(['L', tag.small('ORD')]), class: 'verse-divine-name') : part
+    end)
+  end
+
   def heritage_auth_page?
     devise_controller? && %w[sessions registrations passwords confirmations].include?(controller_name) && !user_signed_in?
   end
