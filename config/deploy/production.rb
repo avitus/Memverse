@@ -30,8 +30,8 @@ set :linked_dirs, fetch(:linked_dirs, []).push(
   'storage'            # Active Storage
 )
 
-# Rails 7 specific settings
-set :keep_assets, 2  # Keep fewer assets to save space
+# Keep two older fingerprints per asset for cached pages and release rollback.
+set :keep_assets, 2
 
 # Puma configuration (if using Puma)
 set :puma_threads, [4, 16]
@@ -68,24 +68,6 @@ set :rvm_map_bins, %w{rake gem bundle ruby rails sidekiq sidekiqctl}
 
 # Deployment hooks specific to Rails 7
 namespace :deploy do
-  # Override compile assets to handle Rails 7 specifics
-  namespace :assets do
-    desc 'Precompile assets with Rails 7 optimizations'
-    task :precompile do
-      on roles(:web) do
-        within release_path do
-          with rails_env: fetch(:rails_env), rails_groups: fetch(:rails_assets_groups) do
-            # Clear ALL assets first (clobber removes everything, not just old ones)
-            execute :bundle, "exec rails assets:clobber"
-            
-            # Compile new assets
-            execute :bundle, "exec rails assets:precompile"
-          end
-        end
-      end
-    end
-  end
-
   # Custom restart for Rails 7
   desc 'Restart application with Rails 7 considerations'
   task :restart do

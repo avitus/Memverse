@@ -1,0 +1,33 @@
+require 'rspec/mocks/standalone'
+
+load File.expand_path('../../../Capfile', __dir__)
+
+# Supply the remote state that Capistrano's dry-run printer cannot discover.
+class ReleasePrinter < SSHKit::Backend::Printer
+  def capture(*args)
+    case args.join(' ')
+    when /rvm current/ then 'ruby-3.2.6'
+    when /gem --version/ then '3.4.22'
+    when /CRED_CHECK_OK/ then 'CRED_CHECK_OK'
+    when /DB_CRED_OK/ then 'DB_CRED_OK'
+    when /find .*nokogiri/ then 'cached-nokogiri-linux'
+    when /ls -xt/ then '20261106120000 20261105120000'
+    when /ls .*sprockets-manifest/ then 'public/assets/.sprockets-manifest-example.json'
+    else super
+    end
+  end
+
+  def execute(*args)
+    if ENV['FAIL_COMMAND'] && args.join(' ').include?(ENV['FAIL_COMMAND'])
+      options = args.last.is_a?(Hash) ? args.last : {}
+      raise 'Simulated release failure' if options.fetch(:raise_on_non_zero_exit, true)
+    end
+    super
+  end
+end
+
+after 'production', 'use_release_printer' do
+  SSHKit.config.backend = ReleasePrinter
+  # Skip the inter-host delays while exercising the actual publication hooks.
+  allow_any_instance_of(SSHKit::Runner::Group).to receive(:wait_interval).and_return(0)
+end

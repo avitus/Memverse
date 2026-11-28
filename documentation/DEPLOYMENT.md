@@ -57,19 +57,20 @@ pipeline for the merge (`main` is unprotected; a missing check is not a pass).
 
 `config/deploy.rb`, `config/deploy/production.rb` and `lib/capistrano/tasks/*.rake`, in order:
 
-1. `deploy:starting` → `check_rails_7` (RVM Ruby check) and **`sidekiq:multi:stop`**
-   (`systemctl stop sidekiq-scheduler`, `stop 'sidekiq-workers@*'`).
+1. `deploy:starting` checks the RVM Ruby version. The scheduler and workers keep processing jobs
+   during preparation. Setting `SKIP_SIDEKIQ_START=1` stops them immediately for a cutover.
 2. Checkout of `main` into a new `releases/<timestamp>`; `REVISION` is written there (Sentry reads it
    as the release).
 3. Linked files and directories are symlinked from `shared/`: **`config/master.key`** is the only
    linked file; linked dirs are `log`, `tmp/pids`, `tmp/cache`, `tmp/sockets`, `public/assets`,
    `public/ckeditor_assets`, `public/uploads`, `storage`.
-4. `bundle install --deployment --quiet` without `development test`, into `shared/bundle`
-   (`NOKOGIRI_USE_SYSTEM_LIBRARIES=1`); `deploy:check:credentials` (`credentials_check.rake`) confirms
-   `master.key` decrypts the credentials and that `database.password` is present, before migrations.
-5. `deploy:assets:precompile` is overridden to run `rails assets:clobber` then
-   `rails assets:precompile` (`keep_assets 2`).
-6. `deploy:migrate`.
+4. Bundler checks the release against `shared/bundle` and installs missing gems. Installed versions
+   remain available to earlier releases.
+5. Capistrano precompiles assets once in the shared assets directory, saves a manifest with the release
+   and runs `assets:clean[2]` to retain two older fingerprints per asset.
+6. After the credentials check, Capistrano stops the scheduler and workers. Both stop commands must
+   succeed before migrations run. A migration failure leaves jobs stopped. Check the active release
+   and migration status before resuming.
 7. `deploy:publishing` → `deploy:restart` (`touch current/tmp/restart.txt`), then
    `deploy:published` → `clear_cache` (`Rails.cache.clear`) and **`sidekiq:multi:start`** unless
    `SKIP_SIDEKIQ_START=1`.
@@ -118,9 +119,9 @@ then `cap production deploy:check:credentials`.
 
 ## Rollback
 
-`cap production deploy:rollback` relinks the previous release, restarts Passenger and Sidekiq and
-reindexes Sphinx. It does not undo migrations; if a migration was destructive, `ssh` in first and run
-`bin/rails db:rollback RAILS_ENV=production` under `rvm 3.2.6 do` in `current`.
+`cap production deploy:rollback` restores the previous asset manifest, stops Sidekiq before
+switching the release symlink, and starts jobs on the published code unless `SKIP_SIDEKIQ_START=1`.
+The database keeps its current schema. Confirm the rollback target can use that schema before rolling back.
 
 ## One-time host setup
 
@@ -150,7 +151,8 @@ Keep the branch compatible with the existing production schema and Ruby 3.2.6. N
 setup, reset, seed, or migration tasks in staging. Code rollback is `bundle exec cap staging
 deploy:rollback`; it cannot undo live database edits.
 
-Staging has separate releases, assets, logs, cache, session cookie, and Redis on localhost:6381.
+Staging uses the same asset compilation and two-fingerprint retention settings as production.
+It has separate releases, assets, logs, cache, session cookie, and Redis on localhost:6381.
 `memverse-staging-redis.service` has a 128 MB limit and no persistence. No staging workers or
 scheduler run; booting Sidekiq in staging is rejected. Enqueued jobs remain in staging Redis
 and will not execute (including asynchronous mail and processing). Email delivery is disabled.

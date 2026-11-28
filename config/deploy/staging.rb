@@ -7,6 +7,7 @@ set :rvm_ruby_version, '3.2.6'
 set :rvm_type, :user
 set :rvm_custom_path, '/home/avitus/.rvm'
 set :keep_releases, 3
+set :keep_assets, 2
 set :linked_dirs, %w[log tmp/pids tmp/cache tmp/sockets public/assets public/ckeditor_assets public/uploads storage]
 set :default_env, {
   path: '/home/avitus/.nvm/versions/node/v24.21.0/bin:$PATH',

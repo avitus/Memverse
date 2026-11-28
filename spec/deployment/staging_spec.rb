@@ -14,7 +14,9 @@ RSpec.describe 'Staging deployment isolation' do
     expect(status.success?).to be(true), output
     expect(output).to include('/home/avitus/staging.memverse.com/releases/')
     expect(output).to include('git archive staging')
-    expect(output).to include('migrations are disabled')
+    expect(output).to include('migrations are disabled', 'assets:clean[2]', 'assets_manifest_backup')
+    expect(output.scan(/bundle exec rake assets:precompile/).size).to eq(1)
+    expect(output).not_to match(%r{assets:clobber|rm -rf [^\n]*shared/bundle})
     expect(output).not_to match(/systemctl|db:migrate|thinking_sphinx:index|ts:configure|ts:stop/)
     expect(output).not_to include('/home/avitus/memverse.com/')
     expect(output).not_to include('gem install', 'update_rubygems')
