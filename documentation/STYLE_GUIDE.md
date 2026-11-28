@@ -78,7 +78,7 @@ and existing server actions.
 | Profile · Heritage settings | `/update_profile` | 469886147158487040 / 469892537562320896 |
 | Manage verses | `/manage_verses` | 469890787795161088 / 469896406883274752 |
 | Progress | `/progress` | 469897030748221440 / 469898364302028800 |
-| Add verses | `/add_verse` | 469904081952063488 / 469907004144623616 |
+| Add verses | `/add_verse` | 469904081952063488 / 477291665074302976 |
 | Passage review | `/review` | 462399451038912512 / 469892863430365184 |
 | Sign in | `/users/sign_in` | 469907834654568448 / 469908814318178304 |
 | Create account | `/users/sign_up` | 469907844456681472 / 469908819468750848 |
@@ -107,17 +107,21 @@ and accessible foregrounds. Blog search overrides the engine's legacy table with
 category, tag, and archive views share the journal layout and preserve their server filters.
 Journal categories and tags use copper labels instead of the old image icons. Excerpts decode
 HTML entities as plain text and remain escaped; journal search actions use the copper fill.
-The dashboard includes its review entry and collection distribution; Add verses includes the
-copper guidance panel and suggested passages wired to the existing live search without adding
-anything until the user chooses an Add action.
+The dashboard includes its review entry and collection distribution.
 
-## Color Palette
+### Add a verse
 
 The Heritage Add Verse screen mounts the React source in `app/javascript/add_verse/`.
-Each result pairs its reference and outlined copper Add verse button in a header row.
+The search field accepts a reference or phrase and includes the translation selector.
+During lookup, a small ring occupies the selector arrow’s space. It stays still when Reduce Motion is enabled.
+Results scroll in a keyboard-accessible region below the field and result count.
+Each row pairs the reference with a right-aligned, outlined copper Add verse button.
 Scripture runs at full width underneath. The saved state occupies the same action slot.
+
 After editing the JSX, run `npm ci` and `npm run build:add-verse`, and commit the resulting
 Sprockets bundle with the source. The staging asset build serves it locally.
+
+## Color Palette
 
 ### Primary Colors
 
