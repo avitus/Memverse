@@ -1,0 +1,14 @@
+<% page_title I18n.t(:add_new_verses, scope: 'page_titles') %>
+<% page_description I18n.t(:add_new_verses, scope: 'page_descriptions') %>
+<% content_for :head do %>
+  <%= stylesheet_link_tag 'heritage_add_verse' %>
+  <%= javascript_include_tag 'heritage_add_verse', defer: true %>
+<% end %>
+<%= tag.div id: 'heritage-add-verse', data: {
+  translation: @translation,
+  translations: Translation.select_options.to_json,
+  owned: current_user.memverses.joins(:verse).pluck('verses.book_index', 'verses.chapter', 'verses.versenum').map { |key| key.join(':') }.to_json,
+  collection: manage_verses_path,
+  practice: passage_review_path
+} %>
+<%= render 'add_verse_conversion' %>

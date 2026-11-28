@@ -56,7 +56,12 @@ RSpec.describe 'Heritage staging pages', type: :request do
         expect(picker.at_css('.upcoming-passages')).to be_present
       end
       expect(response.body).to include('heritage-progress') if path == progress_path
-      expect(response.body).to include('heritage-discovery-guide', 'data-verse-suggestion="Psalm 23"') if path == add_verse_path
+      if path == add_verse_path
+        root = Nokogiri::HTML(response.body).at_css('#heritage-add-verse')
+        expect(root['data-translation']).to be_present
+        expect(JSON.parse(root['data-owned']).size).to eq(1)
+        expect(response.body).to include('heritage_add_verse')
+      end
     end
   end
   it 'renders article excerpts and full articles with native comment links' do

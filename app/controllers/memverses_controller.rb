@@ -581,6 +581,7 @@ class MemversesController < ApplicationController
     add_breadcrumb I18n.t("home_menu.Add Verse"), :add_verse_path
 
     @translation  = current_user.translation? ? current_user.translation : "NIV" # fallback on NIV
+    render :heritage_add_verse if helpers.heritage_enabled?
   end
 
   # ----------------------------------------------------------------------------------------------------------
@@ -637,35 +638,16 @@ class MemversesController < ApplicationController
     # Find all the verses for the chapter
     chapter_verses = Verse.where("book = ? and chapter = ? and translation = ? and versenum not in (?)", bk, ch, tl, 0)
 
-    # Add verses one at a time
-    chapter_verses.each do |vs|
+    current_user.with_lock do
+      chapter_verses.order(:versenum).each do |verse|
+        next if current_user.has_verse?(verse.book, verse.chapter, verse.versenum)
 
-      # We need to lock the user in order to prevent a race condition when two memverses are created simultaneously
-      # Without the lock, adding two adjacent verses occasionally results in two separate passages
-      ActiveRecord::Base.transaction do
-
-        current_user.lock! # hold lock on user for each verse using pessimistic locking at database level
-
-        if current_user.has_verse?(vs.book, vs.chapter, vs.versenum)
-          msg = "You already have #{vs.ref} in a different translation"
-
-        else
-          # Save verse as a memory verse for user
-          begin
-            Memverse.create(:user_id => current_user.id, :verse_id => vs.id)
-          rescue Exception => e
-            Rails.logger.error("=====> [Memverse save error] Exception while saving #{vs.ref} for user #{current_user.id}: #{e}")
-          else
-            msg = "Added"
-          end
-        end
-
-      end # of transaction
-
+        current_user.memverses.create!(verse: verse)
+      end
     end
-
-    render :json => {:msg => "Added Chapter" }
-
+    render json: { msg: "Added Chapter" }
+  rescue ActiveRecord::RecordInvalid => error
+    render json: { msg: "Error", errors: error.record.errors.full_messages }, status: :unprocessable_entity
   end
 
   # ----------------------------------------------------------------------------------------------------------

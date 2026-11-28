@@ -10,15 +10,21 @@
     "test": "vitest",
     "test:run": "vitest run",
     "test:ui": "vitest --ui",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "build:add-verse": "esbuild app/javascript/add_verse/index.jsx --bundle --minify --target=es2019 --legal-comments=inline --outfile=vendor/assets/javascripts/heritage_add_verse.js"
   },
   "devDependencies": {
     "@vitest/ui": "^3.2.6",
+    "esbuild": "0.28.1",
     "jsdom": "^26.1.0",
     "moment-timezone": "^0.6.0",
     "vitest": "^3.2.6"
   },
   "overrides": {
     "rollup": "npm:@rollup/wasm-node@*"
+  },
+  "dependencies": {
+    "react": "19.2.9",
+    "react-dom": "19.2.9"
   }
 }

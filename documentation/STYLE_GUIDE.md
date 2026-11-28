@@ -112,6 +112,12 @@ anything until the user chooses an Add action.
 
 ## Color Palette
 
+The Heritage Add Verse screen mounts the React source in `app/javascript/add_verse/`.
+Each result pairs its reference and outlined copper Add verse button in a header row.
+Scripture runs at full width underneath. The saved state occupies the same action slot.
+After editing the JSX, run `npm ci` and `npm run build:add-verse`, and commit the resulting
+Sprockets bundle with the source. The staging asset build serves it locally.
+
 ### Primary Colors
 
 #### Grays (Modern with blue undertones)
