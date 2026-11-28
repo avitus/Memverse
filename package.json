@@ -11,7 +11,8 @@
     "test:run": "vitest run",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
-    "build:add-verse": "esbuild app/javascript/add_verse/index.jsx --bundle --minify --target=es2019 --legal-comments=inline --outfile=vendor/assets/javascripts/heritage_add_verse.js"
+    "build:add-verse": "esbuild app/javascript/add_verse/index.jsx --bundle --minify --target=es2019 --legal-comments=inline --outfile=vendor/assets/javascripts/heritage_add_verse.js",
+    "build:passage-words": "esbuild app/javascript/passage_review/index.jsx --bundle --minify --target=es2019 --legal-comments=inline --outfile=vendor/assets/javascripts/heritage_passage_words.js"
   },
   "devDependencies": {
     "@vitest/ui": "^3.2.6",

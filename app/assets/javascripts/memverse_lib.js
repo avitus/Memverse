@@ -314,50 +314,32 @@ var word_width = function (word, context) {
 /******************************************************************************
  * Blankify a verse
  ******************************************************************************/
+function verseBlankTokens(text, percentage) {
+    var words = splitByWords(text).map(function (word) { return word.trim(); });
+    var sorted = words.slice().sort(function (a, b) { return b.length - a.length; });
+    var blankWords = new Set(sorted.slice(0, Math.round(words.length * percentage / 100)));
+    return words.map(function (word) { return { word: word, blank: blankWords.has(word) }; });
+}
+
 function blankifyVerse(versetext, reduction_percentage, passageReview) {
+    if (reduction_percentage == 0) return versetext;
 
-    var split_text, sort_by_length, text_with_blanks;
+    return verseBlankTokens(versetext, reduction_percentage).map(function (token) {
+        var x = token.word;
+        var word = x.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+        if (!token.blank) {
+            return passageReview ? word : "<span>" + word + " </span>";
+        }
 
-    if  ( reduction_percentage == 0 ) {
-
-    	return versetext;
-
-    }
-
-    else {
-
-	    split_text     = splitByWords(versetext);
-	    split_text.forEach(function (e, i){
-	    	split_text[i] = e.trim();
-	    });
-	    sort_by_length = split_text.slice(0);  // make a copy of the original array
-
-	    sort_by_length.sort(function(a, b) {
-	        return b.length - a.length;
-	    });
-
-	    // select the longest words to remove
-	    sort_by_length.length = Math.round(split_text.length * reduction_percentage / 100);
-
-        text_with_blanks = split_text.map(function (x) {
-            var word = x.replace(/&/g, '&amp;').replace(/</g, '&lt;');
-            if (sort_by_length.indexOf(x) < 0) {
-                return passageReview ? word : "<span>" + word + " </span>";
-            }
-
-            var name = word.replace(/"/g, '&quot;');
-            if (passageReview) {
-                // The hidden answer occupies its natural width in the reading font.
-                return '<span class="passage-word passage-blank">' + word + '<input name="' + name +
-                    '" class="blank-word" autocomplete="off"></span>';
-            }
-            return '<input name="' + name + '" class="blank-word" style="width:' +
-                calculateInputWidth(x) + 'px" autocomplete="off">';
-        });
-
-        return text_with_blanks.join(" ");
-    }
-
+        var name = word.replace(/"/g, '&quot;');
+        if (passageReview) {
+            // The hidden answer occupies its natural width in the reading font.
+            return '<span class="passage-word passage-blank">' + word + '<input name="' + name +
+                '" class="blank-word" autocomplete="off"></span>';
+        }
+        return '<input name="' + name + '" class="blank-word" style="width:' +
+            calculateInputWidth(x) + 'px" autocomplete="off">';
+    }).join(" ");
 };
 
 /******************************************************************************

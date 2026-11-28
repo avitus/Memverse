@@ -1,4 +1,5 @@
 var reviewState = {
+    wordRoots: [],
     // setup
     initialize: function () {
         // Retrieve passages that are due for review
@@ -50,6 +51,7 @@ var reviewState = {
             }
         }
 
+        reviewState.wordRoots.splice(0).forEach(function (unmount) { unmount(); });
         $(".passage-text").empty();
         $(".passage-title").empty();
         $('.heritage-review-footer').prop('hidden', true);
@@ -226,20 +228,12 @@ function mvRevealPassageWord(input) {
 }
 
 function mvPassageReviewHandleInput( $inputCell, correctWord, userGuess, e ) {
-    var heritageVerse = $inputCell.closest(".single-verse-in-passage");
-
     // Word correct ==> next word (using flexible matching)
     // Note: We already checked for match in the keyup handler, so this check is redundant
     // but kept for compatibility with arrow key handling
     if ( flexibleTextMatch( correctWord, userGuess ) ) {
 
         mvRevealPassageWord($inputCell[0]);
-        if (heritageVerse.hasClass('heritage-review-verse') && !heritageVerse.find('.blank-word').length) {
-            heritageVerse.find('.verse-rating').prop('hidden', false);
-            mvArrangeMarginRatings();
-            reviewState.scrollToVerse(heritageVerse);
-        }
-
     }
 
     // check for down arrow keypress
@@ -382,8 +376,13 @@ function mvDisplayHeritagePassage(reference, records) {
         var words = $('<span class="full-text"/>').appendTo(verse);
         $('<sup class="versenum"/>').text(record.versenum).appendTo(words);
         if (due) {
-            var blanks = $('<span/>').html(blankifyVerse(record.text, record.test_interval * 5 + 25, true)).appendTo(words);
-            blanks.find('input').each(function (i) { this.setAttribute('aria-label', 'Verse ' + record.versenum + ', blank ' + (i + 1)); });
+            var host = $('<span/>').appendTo(words)[0];
+            var tokens = verseBlankTokens(record.text, record.test_interval * 5 + 25);
+            reviewState.wordRoots.push(window.mountHeritageVerseWords(host, tokens, record.versenum, function () {
+                var rating = verse.find('.verse-rating').prop('hidden', false);
+                mvArrangeMarginRatings();
+                rating.find('.rating-options button')[0].focus({ preventScroll: true });
+            }));
         } else {
             words.append(document.createTextNode(record.text));
         }

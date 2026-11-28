@@ -1,5 +1,11 @@
 <% page_title I18n.t :memory_verse_review, :scope => 'page_titles' %>
 
+<% if heritage_enabled? %>
+  <% content_for :head do %>
+    <%= javascript_include_tag 'heritage_passage_words', defer: true %>
+  <% end %>
+<% end %>
+
 <div class="white-box-bg">
 <div class="main-verse-review">
 
@@ -80,7 +86,7 @@
         });
 
         //------- Typing a verse ----------------------
-        $(".passage-text").on( "keyup", "input.blank-word", function( e ) {
+        $(".passage-text").on( "keyup", ".single-verse-in-passage:not(.heritage-review-verse) input.blank-word", function( e ) {
 
             var $inputCell  = $(this);
             var correctWord = this.name;

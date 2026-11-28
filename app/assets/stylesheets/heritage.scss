@@ -341,3 +341,23 @@
     .passage-text,.full-text { font-size:var(--reading-size); line-height:1.78; }
   }
 }
+
+// Keep the native editing control and its focus decoration out of text layout.
+#inner1-body.mv-heritage.passages.review .recall-word {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  &::before { content: attr(data-word); visibility: hidden; }
+  .recall-ink {
+    position: absolute; inset: 0; overflow: hidden;
+    &[aria-hidden] { pointer-events: none; }
+  }
+  input.blank-word {
+    position: absolute; inset: 0; width: 100%; height: 100%; box-sizing: border-box;
+    font: inherit; letter-spacing: inherit; line-height: inherit;
+    border: 0; padding: 0; margin: 0; background: transparent;
+    color: transparent !important; caret-color: var(--mv-ink);
+    box-shadow: inset 0 -1px #b4aba0;
+    &:focus { border: 0; box-shadow: inset 0 -2px var(--mv-action); }
+  }
+}

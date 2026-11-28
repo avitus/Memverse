@@ -54,8 +54,8 @@ responses, composition, translation changes, failed lookup and confirmed additio
 
 Progress charts use existing JSON endpoints, a 1 year/All time selector and accessible data tables.
 Review minutes are estimated daily requirements; consistency counts sessions in the preceding year.
-Passage review blanks reserve the exact width of the answer in the current reading font, including punctuation. Revealing a word preserves paragraph wrapping and leaves one space between words. For JavaScript measurements, `word_width(word, element)` returns the rendered width in CSS pixels using that element’s typography.
-Passage review centers the heading over the continuous Scripture column. When the last blank in a verse is filled, its 1–5 scale appears in the right margin at the end of the verse. A saved score becomes a numbered circle. Reopening it edits the same review attempt for that day. Focus and gentle scrolling share the same target, and Reduce Motion makes repositioning immediate.
+Passage review blanks reserve the exact width of the answer in the current reading font, including punctuation. The Heritage React reader draws the draft and accepted word on the same baseline. Completing a word keeps the paragraph and viewport stationary, including when focus advances to the rating scale. Rebuild the committed browser bundle with `npm run build:passage-words` after editing `app/javascript/passage_review/`. For JavaScript measurements, `word_width(word, element)` returns the rendered width in CSS pixels using that element’s typography.
+Passage review centers the heading over the continuous Scripture column. When the last blank in a verse is filled, its 1–5 scale appears in the right margin at the end of the verse. A saved score becomes a numbered circle. Reopening it edits the same review attempt for that day. Navigating to the next due verse centers its focused control. Reduce Motion makes that navigation immediate.
 The passage review shell preserves the pinned QuietReview canvas: a compact brand header,
 top-right passage picker and reading help, centered heading, 25px Georgia Scripture with
 1.78 line spacing (20px on mobile), and copper verse numbers and focus states. Upcoming
@@ -79,7 +79,7 @@ and existing server actions.
 | Manage verses | `/manage_verses` | 469890787795161088 / 469896406883274752 |
 | Progress | `/progress` | 469897030748221440 / 469898364302028800 |
 | Add verses | `/add_verse` | 469904081952063488 / 477291665074302976 |
-| Passage review | `/review` | 462399451038912512 / 469892863430365184 |
+| Passage review | `/review` | 462399451038912512 / 477307219692634112 |
 | Sign in | `/users/sign_in` | 469907834654568448 / 469908814318178304 |
 | Create account | `/users/sign_up` | 469907844456681472 / 469908819468750848 |
 | Forgot password | `/users/password/new` | 469907849682780160 / 469911142555353088 |
