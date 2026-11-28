@@ -108,6 +108,28 @@ $left-rating-gutter: 25%;   // Passage review page
         padding: 0 2em;
     }
 
+    // The answer sets the width, baseline and line height even while hidden.
+    .passage-word {
+        display: inline-block;
+        max-width: 100%;
+        overflow-wrap: break-word;
+    }
+
+    .passage-blank {
+        position: relative;
+        visibility: hidden;
+
+        input.blank-word {
+            position: absolute;
+            visibility: visible;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            box-sizing: border-box;
+            letter-spacing: inherit;
+        }
+    }
+
     // .passage-text {
     //     overflow-y: auto;
     //     overflow-y: scroll;

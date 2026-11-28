@@ -166,7 +166,7 @@ function buildVerseBlank( jsonMV ) {
         // verse reference
         .append( $('<div class="ref-and-text" />')
             .append($('<span class="versenum superscript"/>').text( jsonMV.versenum ))
-            .append($('<span class="full-text"           />').html( blankifyVerse(jsonMV.text, blankPercentage)))
+            .append($('<span class="full-text"           />').html( blankifyVerse(jsonMV.text, blankPercentage, true)))
             .append($('<span class="mv-id"               />').text( jsonMV.id       ))
         );
 
@@ -198,23 +198,31 @@ function buildVerseText( jsonMV ) {
  *       keep focus on a single input box and slide the verse around instead.
  *
  ******************************************************************************/
-function mvMirrorNextInput( $inputCell ) {
+function mvRevealPassageWord(input) {
+    var slot = input.parentNode;
+    var nextSlot = $(slot).nextAll('.passage-blank').first()[0];
 
-    if ( $inputCell.next().is("input") ) {
-
-        // to support iOS, we update the current input to mirror the next input
-        $inputCell.attr("name", $inputCell.next().attr("name"));
-        $inputCell.css ("width", $inputCell.next().css("width"));
-        $inputCell.val( $inputCell.next().val() );
-
-        // and then we remove the next input
-        $inputCell.next().remove();
-
-    } else {
-
-        // remove this input... because there are no more inputs
-        $inputCell.remove();
+    if (!nextSlot) {
+        input.remove();
+        slot.classList.remove('passage-blank');
+        return;
     }
+
+    // Keep the focused input in place for mobile keyboards. Move the intervening
+    // text (including its spaces) before it, then reuse it for the next answer.
+    var revealed = document.createElement('span');
+    revealed.className = 'passage-word';
+    revealed.appendChild(slot.firstChild);
+    slot.parentNode.insertBefore(revealed, slot);
+    while (slot.nextSibling !== nextSlot) {
+        slot.parentNode.insertBefore(slot.nextSibling, slot);
+    }
+    var nextInput = nextSlot.querySelector('input');
+    slot.insertBefore(nextSlot.firstChild, input);
+    input.name = nextInput.name;
+    input.value = nextInput.value;
+    if (nextInput.hasAttribute('aria-label')) input.setAttribute('aria-label', nextInput.getAttribute('aria-label'));
+    nextSlot.remove();
 }
 
 function mvPassageReviewHandleInput( $inputCell, correctWord, userGuess, e ) {
@@ -225,16 +233,7 @@ function mvPassageReviewHandleInput( $inputCell, correctWord, userGuess, e ) {
     // but kept for compatibility with arrow key handling
     if ( flexibleTextMatch( correctWord, userGuess ) ) {
 
-        // Calculate the width the span will need and preserve input width to prevent layout shift
-        var currentWidth = $inputCell.width();
-        var $span = $("<span>").text(correctWord + " ").css({
-            'display': 'inline-block',
-            'min-width': currentWidth + 'px'
-        });
-
-        $inputCell.before( $span );                               // insert the correct word with preserved width
-        $inputCell.before( $inputCell.nextUntil("input") );       // move subsequent revealed words ahead of input
-        mvMirrorNextInput( $inputCell );                          // update the input box
+        mvRevealPassageWord($inputCell[0]);
         if (heritageVerse.hasClass('heritage-review-verse') && !heritageVerse.find('.blank-word').length) {
             heritageVerse.find('.verse-rating').prop('hidden', false);
             mvArrangeMarginRatings();
@@ -255,7 +254,7 @@ function mvPassageReviewHandleInput( $inputCell, correctWord, userGuess, e ) {
     // check for up arrow keypress
     else if ( e.keyCode === 38 ) {
         // reveal entire verse
-        $inputCell.parent().find("input").each( function() {
+        $inputCell.closest(".full-text").find("input.blank-word").each( function() {
             $(this).val( this.name ).animate({ color: '#FFD' }, 2000, 'easeInExpo', function() {
                 $(this).val('');
                 $(this).css({color:'#444'}); // same color as .assistance
@@ -383,7 +382,7 @@ function mvDisplayHeritagePassage(reference, records) {
         var words = $('<span class="full-text"/>').appendTo(verse);
         $('<sup class="versenum"/>').text(record.versenum).appendTo(words);
         if (due) {
-            var blanks = $('<span/>').html(blankifyVerse(record.text, record.test_interval * 5 + 25)).appendTo(words);
+            var blanks = $('<span/>').html(blankifyVerse(record.text, record.test_interval * 5 + 25, true)).appendTo(words);
             blanks.find('input').each(function (i) { this.setAttribute('aria-label', 'Verse ' + record.versenum + ', blank ' + (i + 1)); });
         } else {
             words.append(document.createTextNode(record.text));

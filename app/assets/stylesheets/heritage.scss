@@ -213,14 +213,13 @@
   @media(max-width:700px) { #edit-profile-form .ui-widget { display:block; } #edit-profile-form .ui-widget>label { width:auto; margin-bottom:8px; } }
 }
 #inner1-body.mv-heritage.passages.review .passage-text input.blank-word {
-  font:inherit; font-weight:normal; height:1.5em; line-height:1.5; min-height:0; padding:0 1px;
+  font:inherit; font-weight:normal; height:1.5em; line-height:1.5; min-height:0; padding:0;
   border:0; border-bottom:1px solid var(--mv-border); border-radius:0; background:none; box-shadow:none; vertical-align:baseline;
 }
 #inner1-body.mv-heritage.passages.review .passage-text,#inner1-body.mv-heritage.passages.review .full-text { font:normal 25px/1.8 Georgia,serif; color:var(--mv-ink); }
 #inner1-body.mv-heritage.passages.review .white-box-bg { border:0; background:none; }
 .mv-heritage .white-box-bg,.mv-heritage .white-box-with-margins { width:100%; max-width:100%; }
 .mv-heritage [data-heritage-chart] { min-width:0; overflow:hidden; }
-#inner1-body.mv-heritage.passages.review #word_width { font:var(--reading-size) Georgia,serif !important; }
 
 // Keep the passage queue within reach above the reading area.
 .mv-heritage.passages.review {
@@ -304,13 +303,17 @@
   }
   .rating-options { display:flex; gap:3px; }
   .heritage-review-verse:has(.verse-rating:focus-within) > .full-text {
-    text-decoration:underline; text-decoration-color:color-mix(in srgb,var(--mv-action) 48%,transparent);
-    text-decoration-thickness:1px; text-underline-offset:.2em;
+    &, .passage-word {
+      text-decoration:underline; text-decoration-color:color-mix(in srgb,var(--mv-action) 48%,transparent);
+      text-decoration-thickness:1px; text-underline-offset:.2em;
+    }
   }
   @media (hover:hover) {
     .heritage-review-verse:has(.verse-rating:hover) > .full-text {
-      text-decoration:underline; text-decoration-color:color-mix(in srgb,var(--mv-action) 48%,transparent);
-      text-decoration-thickness:1px; text-underline-offset:.2em;
+      &, .passage-word {
+        text-decoration:underline; text-decoration-color:color-mix(in srgb,var(--mv-action) 48%,transparent);
+        text-decoration-thickness:1px; text-underline-offset:.2em;
+      }
     }
   }
   .heritage-review-footer {
@@ -336,6 +339,5 @@
 
     .passage-title { font-size:30px; }
     .passage-text,.full-text { font-size:var(--reading-size); line-height:1.78; }
-    #word_width { font-size:var(--reading-size) !important; }
   }
 }

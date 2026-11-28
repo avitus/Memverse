@@ -1,16 +1,16 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { memverseLib } from './helpers.js';
 
-// Input-field sizing and attribute escaping for passage-review blanks
+// Legacy practice-field sizing and shared blank markup escaping
 // (blankifyVerse / calculateInputWidth in app/assets/javascripts/memverse_lib.js).
-// Word matching lives in flexible_text_match.test.js.
+// Real pixel measurements and passage layout are covered in passage_review_word_layout_spec.rb.
 //
 // Note: calculateInputWidth closes over the word_width that helpers.js injects
 // (the setup.js mock), so widths are asserted relative to that function rather
 // than as hard-coded pixel values.
 const { blankifyVerse, calculateInputWidth, word_width } = memverseLib;
 
-describe('Passage review input field sizing and escaping', () => {
+describe('Practice input width buffer and blank attribute escaping', () => {
   beforeEach(() => {
     document.body.innerHTML = '<div class="passage-text"></div>';
   });

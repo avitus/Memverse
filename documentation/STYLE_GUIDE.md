@@ -54,6 +54,7 @@ responses, composition, translation changes, failed lookup and confirmed additio
 
 Progress charts use existing JSON endpoints, a 1 year/All time selector and accessible data tables.
 Review minutes are estimated daily requirements; consistency counts sessions in the preceding year.
+Passage review blanks reserve the exact width of the answer in the current reading font, including punctuation. Revealing a word preserves paragraph wrapping and leaves one space between words. For JavaScript measurements, `word_width(word, element)` returns the rendered width in CSS pixels using that element’s typography.
 Passage review centers the heading over the continuous Scripture column. When the last blank in a verse is filled, its 1–5 scale appears in the right margin at the end of the verse. A saved score becomes a numbered circle. Reopening it edits the same review attempt for that day. Focus and gentle scrolling share the same target, and Reduce Motion makes repositioning immediate.
 The passage review shell preserves the pinned QuietReview canvas: a compact brand header,
 top-right passage picker and reading help, centered heading, 25px Georgia Scripture with

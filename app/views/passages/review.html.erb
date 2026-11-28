@@ -49,7 +49,6 @@
         reviewState.initialize();
         $('#passage-reading-size').on('change', function () {
             document.body.dataset.readingSize = this.value;
-            $('.passage-text .blank-word').each(function () { this.style.width = calculateInputWidth(this.name) + 'px'; });
             mvArrangeMarginRatings();
         });
         $('.heritage-queue-search').on('input', function () {

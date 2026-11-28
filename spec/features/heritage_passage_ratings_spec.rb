@@ -19,10 +19,20 @@ RSpec.describe 'Heritage passage review', type: :feature, js: true do
     visit passage_review_path
     expect(page).to have_css('.reading-paragraph .heritage-review-verse', count: 2)
     expect(page).to have_no_css('.rating-options', visible: true)
-    first_verse = all('.heritage-review-verse').first
+    original_size = page.current_window.size
+    page.current_window.resize_to(390, 800)
+    find('.heritage-reading-settings summary').click
+    select 'Large', from: 'passage-reading-size'
+    find('.heritage-reading-settings summary').click
+    first_verse, next_verse = all('.heritage-review-verse')
+    next_number = next_verse.find('.versenum')
+    position = '[this.offsetLeft, this.offsetTop]'
+    next_position = next_number.evaluate_script(position)
     while (blank = first_verse.all('input.blank-word', minimum: 0, wait: 0).first)
-      blank.send_keys(blank[:name])
+      blank.send_keys(blank[:name].sub(/\W+\z/, ''))
+      expect(next_number.evaluate_script(position)).to eq(next_position)
     end
+    expect(first_verse.find('.full-text').evaluate_script('this.textContent')).to eq('1A short passage for reading.')
     first_verse.find('button[aria-label="Verse 1, 4 of 5, Good"]').click
     chip = first_verse.find('button[aria-label="Verse 1, rated 4. Change rating"]')
     chip.click
@@ -30,7 +40,6 @@ RSpec.describe 'Heritage passage review', type: :feature, js: true do
     expect(first_verse).to have_css('button[aria-label="Verse 1, rated 3. Change rating"]')
     expect(page).to have_text('1 of 2 verses rated')
     expect(verses.first.reload.attempts).to eq(1)
-    original_size = page.current_window.size
     [1280, 390, 320].each do |width|
       page.current_window.resize_to(width, 800)
       expect(page.evaluate_script(<<~JS)).to be(true)

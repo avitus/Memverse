@@ -298,39 +298,23 @@ function calculateInputWidth(word) {
 }
 
 /******************************************************************************
- * Return width of word for blankify (hackish - would like a better way)
- * TODO: Should accept array of words and perform operations in bulk
+ * Measure a word in the typography of the element that displays it.
  ******************************************************************************/
-word_width = function(word) {
-
-    if($("#word_width").length == 0) {
-
-        // style the span
-        styling = {
-            "font-size":"larger",   // note: based on current CSS settings for font-size
-            "position":"absolute",
-            "visibility":"hidden",
-            "height":"auto",
-            "width":"auto"
-        };
-
-        span = $("<span/>").attr("id","word_width").css(styling);
-
-        // make the span
-        $("body").append(span);
-    }
-
-    // add the word
-    $("#word_width").text(word);
-
-    return $("#word_width").width();
-
+var word_width = function (word, context) {
+    var parent = context || document.querySelector('.blankified, .passage-text .full-text') || document.body;
+    var probe = document.createElement('span');
+    probe.style.cssText = 'position:absolute; visibility:hidden; white-space:pre; width:max-content; padding:0; border:0';
+    probe.textContent = word;
+    parent.appendChild(probe);
+    var width = probe.getBoundingClientRect().width;
+    probe.remove();
+    return width;
 };
 
 /******************************************************************************
  * Blankify a verse
  ******************************************************************************/
-function blankifyVerse(versetext, reduction_percentage) {
+function blankifyVerse(versetext, reduction_percentage, passageReview) {
 
     var split_text, sort_by_length, text_with_blanks;
 
@@ -355,21 +339,23 @@ function blankifyVerse(versetext, reduction_percentage) {
 	    // select the longest words to remove
 	    sort_by_length.length = Math.round(split_text.length * reduction_percentage / 100);
 
-	    text_with_blanks = split_text.map( function(x) {
-	        if ( sort_by_length.indexOf(x) < 0 ) {
-	            return "<span>" + x.replace(/&/g, '&amp;').replace(/</g, '&lt;') + " </span>";
-	        }
-	        else {
-	            // Use enhanced width calculation to prevent layout shifts
-	            var inputWidth = calculateInputWidth(x);
-	            // Escape double quotes for HTML attributes, but keep apostrophes as-is
-	            // This handles both "brother's" and '"Why' correctly
-	            var escapedWord = x.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
-	            return '<input name="' + escapedWord + '" class="blank-word" style="width:' + inputWidth + 'px" autocomplete="off">';
-	        };
-	    });
+        text_with_blanks = split_text.map(function (x) {
+            var word = x.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+            if (sort_by_length.indexOf(x) < 0) {
+                return passageReview ? word : "<span>" + word + " </span>";
+            }
 
-	    return text_with_blanks.join(" ");
+            var name = word.replace(/"/g, '&quot;');
+            if (passageReview) {
+                // The hidden answer occupies its natural width in the reading font.
+                return '<span class="passage-word passage-blank">' + word + '<input name="' + name +
+                    '" class="blank-word" autocomplete="off"></span>';
+            }
+            return '<input name="' + name + '" class="blank-word" style="width:' +
+                calculateInputWidth(x) + 'px" autocomplete="off">';
+        });
+
+        return text_with_blanks.join(" ");
     }
 
 };
